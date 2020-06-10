@@ -4,47 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA34C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D637C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAEE22074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:13:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0F4E2078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:13:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OHI7Zx84"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QwUVdJWy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730602AbgFJUNy (ORCPT
+        id S1730615AbgFJUN5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 16:13:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60498 "EHLO
+        Wed, 10 Jun 2020 16:13:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730508AbgFJUNr (ORCPT
+        with ESMTP id S1730521AbgFJUNs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 16:13:47 -0400
+        Wed, 10 Jun 2020 16:13:48 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2737C08C5C1;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD356C08C5C4;
         Wed, 10 Jun 2020 13:13:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=8tGdVMSWeas8R2bSKE6AqR3+R5LRIfaVDMdjwwPPyK0=; b=OHI7Zx84YXLGrqDuDmcU2fBDIQ
-        Kce38e89HwRoAR6r6yYkS316prKjI/zonLSocwIMFA8JXimr/Jx3HITAO5qwxyt0Zk1gf8vs7ZDw9
-        sxp1p1xyYCpCTItaIQyURY+x/aBoSbu5046/kdbaE5mFzs7n7S1YUCpnG8q64AxnvIJww0hGNSovM
-        De9VvULcZNijF16zF1/4c6QMKy/aEPY1xUrunMFRes4flE6ylxT/BbN/AcLesZAnDKc0PXZNiKJpN
-        4gvAiJv5ont6iJ7JvYb/RJrk3kL13CO/dAONGdw4Sp7Vg19qQQNILBldWj9EGKpl0aJF4Y/aI2s7/
-        4H7ejRIw==;
+        bh=hN/37aRhgzzO2Cu+X3jM7dH/y9JI16FETpuj+qe6qfM=; b=QwUVdJWyV9AHqtytLyaTzSg1RZ
+        kKswsI3XPSy5+PmHAHPn+IveskrPZkD0lYCK/fdORj5YqbXlf8G6s9Dof2YbI9MRAN3tsIrsZ96hG
+        E0lGakXh9umHZL1X9hL/6QIHgX7aSvFrNX1RHgeLvolIXInjJ6egbVKpwLEFNH63bsxx509TgCDSW
+        ZaLRdHZgqSQWM9FR2vOjSaENRdjvsgKbDYKoBNjlrM+yEufRk1DOREwTa365Q4gtnmVDNgpltmZUz
+        uxeHZCGRVQQrkch+HQL0YIX8PCkPYLG5c2mwiIqeed6eILT99YYWw96fyldiEh4vXfC/g956oIZkE
+        Llbi9A2A==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jj76Z-0003TF-DG; Wed, 10 Jun 2020 20:13:47 +0000
+        id 1jj76Z-0003Tn-J6; Wed, 10 Jun 2020 20:13:47 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 05/51] mm: Simplify PageDoubleMap with PF_SECOND policy
-Date:   Wed, 10 Jun 2020 13:12:59 -0700
-Message-Id: <20200610201345.13273-6-willy@infradead.org>
+Subject: [PATCH v6 09/51] mm: Add thp_size
+Date:   Wed, 10 Jun 2020 13:13:03 -0700
+Message-Id: <20200610201345.13273-10-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200610201345.13273-1-willy@infradead.org>
 References: <20200610201345.13273-1-willy@infradead.org>
@@ -57,93 +57,122 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-Introduce the new page policy of PF_SECOND which lets us use the
-normal pageflags generation machinery to create the various DoubleMap
-manipulation functions.
+This function returns the number of bytes in a THP.  It is like
+page_size(), but compiles to just PAGE_SIZE if CONFIG_TRANSPARENT_HUGEPAGE
+is disabled.
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- include/linux/page-flags.h | 40 ++++++++++----------------------------
- 1 file changed, 10 insertions(+), 30 deletions(-)
+ drivers/nvdimm/btt.c    |  4 +---
+ drivers/nvdimm/pmem.c   |  6 ++----
+ include/linux/huge_mm.h | 11 +++++++++++
+ mm/internal.h           |  2 +-
+ mm/page_io.c            |  2 +-
+ mm/page_vma_mapped.c    |  4 ++--
+ 6 files changed, 18 insertions(+), 11 deletions(-)
 
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index de6e0696f55c..979460df4768 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -232,6 +232,9 @@ static inline void page_init_poison(struct page *page, size_t size)
-  *
-  * PF_NO_COMPOUND:
-  *     the page flag is not relevant for compound pages.
+diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
+index 90c0c4bbe77b..7255cfe6ebe2 100644
+--- a/drivers/nvdimm/btt.c
++++ b/drivers/nvdimm/btt.c
+@@ -1490,10 +1490,8 @@ static int btt_rw_page(struct block_device *bdev, sector_t sector,
+ {
+ 	struct btt *btt = bdev->bd_disk->private_data;
+ 	int rc;
+-	unsigned int len;
+ 
+-	len = hpage_nr_pages(page) * PAGE_SIZE;
+-	rc = btt_do_bvec(btt, NULL, page, len, 0, op, sector);
++	rc = btt_do_bvec(btt, NULL, page, thp_size(page), 0, op, sector);
+ 	if (rc == 0)
+ 		page_endio(page, op_is_write(op), 0);
+ 
+diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
+index d1ecd6da11a2..d1999c266b20 100644
+--- a/drivers/nvdimm/pmem.c
++++ b/drivers/nvdimm/pmem.c
+@@ -238,11 +238,9 @@ static int pmem_rw_page(struct block_device *bdev, sector_t sector,
+ 	blk_status_t rc;
+ 
+ 	if (op_is_write(op))
+-		rc = pmem_do_write(pmem, page, 0, sector,
+-				   hpage_nr_pages(page) * PAGE_SIZE);
++		rc = pmem_do_write(pmem, page, 0, sector, thp_size(page));
+ 	else
+-		rc = pmem_do_read(pmem, page, 0, sector,
+-				   hpage_nr_pages(page) * PAGE_SIZE);
++		rc = pmem_do_read(pmem, page, 0, sector, thp_size(page));
+ 	/*
+ 	 * The ->rw_page interface is subtle and tricky.  The core
+ 	 * retries on any error, so we can only invoke page_endio() in
+diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+index dd19720a8bc2..0ec3b5a73d38 100644
+--- a/include/linux/huge_mm.h
++++ b/include/linux/huge_mm.h
+@@ -469,4 +469,15 @@ static inline bool thp_migration_supported(void)
+ }
+ #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+ 
++/**
++ * thp_size - Size of a transparent huge page.
++ * @page: Head page of a transparent huge page.
 + *
-+ * PF_SECOND:
-+ *     the page flag is stored in the first tail page.
-  */
- #define PF_POISONED_CHECK(page) ({					\
- 		VM_BUG_ON_PGFLAGS(PagePoisoned(page), page);		\
-@@ -247,6 +250,9 @@ static inline void page_init_poison(struct page *page, size_t size)
- #define PF_NO_COMPOUND(page, enforce) ({				\
- 		VM_BUG_ON_PGFLAGS(enforce && PageCompound(page), page);	\
- 		PF_POISONED_CHECK(page); })
-+#define PF_SECOND(page, enforce) ({					\
-+		VM_BUG_ON_PGFLAGS(!PageHead(page), page);		\
-+		PF_POISONED_CHECK(&page[1]); })
++ * Return: Number of bytes in this page.
++ */
++static inline unsigned long thp_size(struct page *page)
++{
++	return PAGE_SIZE << thp_order(page);
++}
++
+ #endif /* _LINUX_HUGE_MM_H */
+diff --git a/mm/internal.h b/mm/internal.h
+index 9886db20d94f..de9f1d0ba5fc 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -395,7 +395,7 @@ vma_address(struct page *page, struct vm_area_struct *vma)
+ 	unsigned long start, end;
  
- /*
-  * Macros to create function definitions for page flags
-@@ -685,42 +691,15 @@ static inline int PageTransTail(struct page *page)
-  *
-  * See also __split_huge_pmd_locked() and page_remove_anon_compound_rmap().
-  */
--static inline int PageDoubleMap(struct page *page)
--{
--	return PageHead(page) && test_bit(PG_double_map, &page[1].flags);
--}
--
--static inline void SetPageDoubleMap(struct page *page)
--{
--	VM_BUG_ON_PAGE(!PageHead(page), page);
--	set_bit(PG_double_map, &page[1].flags);
--}
--
--static inline void ClearPageDoubleMap(struct page *page)
--{
--	VM_BUG_ON_PAGE(!PageHead(page), page);
--	clear_bit(PG_double_map, &page[1].flags);
--}
--static inline int TestSetPageDoubleMap(struct page *page)
--{
--	VM_BUG_ON_PAGE(!PageHead(page), page);
--	return test_and_set_bit(PG_double_map, &page[1].flags);
--}
--
--static inline int TestClearPageDoubleMap(struct page *page)
--{
--	VM_BUG_ON_PAGE(!PageHead(page), page);
--	return test_and_clear_bit(PG_double_map, &page[1].flags);
--}
--
-+PAGEFLAG(DoubleMap, double_map, PF_SECOND)
-+	TESTSCFLAG(DoubleMap, double_map, PF_SECOND)
- #else
- TESTPAGEFLAG_FALSE(TransHuge)
- TESTPAGEFLAG_FALSE(TransCompound)
- TESTPAGEFLAG_FALSE(TransCompoundMap)
- TESTPAGEFLAG_FALSE(TransTail)
- PAGEFLAG_FALSE(DoubleMap)
--	TESTSETFLAG_FALSE(DoubleMap)
--	TESTCLEARFLAG_FALSE(DoubleMap)
-+	TESTSCFLAG_FALSE(DoubleMap)
- #endif
+ 	start = __vma_address(page, vma);
+-	end = start + PAGE_SIZE * (hpage_nr_pages(page) - 1);
++	end = start + thp_size(page) - PAGE_SIZE;
  
- /*
-@@ -875,6 +854,7 @@ static inline int page_has_private(struct page *page)
- #undef PF_ONLY_HEAD
- #undef PF_NO_TAIL
- #undef PF_NO_COMPOUND
-+#undef PF_SECOND
- #endif /* !__GENERATING_BOUNDS_H */
+ 	/* page should be within @vma mapping range */
+ 	VM_BUG_ON_VMA(end < vma->vm_start || start >= vma->vm_end, vma);
+diff --git a/mm/page_io.c b/mm/page_io.c
+index e8726f3e3820..888000d1a8cc 100644
+--- a/mm/page_io.c
++++ b/mm/page_io.c
+@@ -40,7 +40,7 @@ static struct bio *get_swap_bio(gfp_t gfp_flags,
+ 		bio->bi_iter.bi_sector <<= PAGE_SHIFT - 9;
+ 		bio->bi_end_io = end_io;
  
- #endif	/* PAGE_FLAGS_H */
+-		bio_add_page(bio, page, PAGE_SIZE * hpage_nr_pages(page), 0);
++		bio_add_page(bio, page, thp_size(page), 0);
+ 	}
+ 	return bio;
+ }
+diff --git a/mm/page_vma_mapped.c b/mm/page_vma_mapped.c
+index 719c35246cfa..e65629c056e8 100644
+--- a/mm/page_vma_mapped.c
++++ b/mm/page_vma_mapped.c
+@@ -227,7 +227,7 @@ bool page_vma_mapped_walk(struct page_vma_mapped_walk *pvmw)
+ 			if (pvmw->address >= pvmw->vma->vm_end ||
+ 			    pvmw->address >=
+ 					__vma_address(pvmw->page, pvmw->vma) +
+-					hpage_nr_pages(pvmw->page) * PAGE_SIZE)
++					thp_size(pvmw->page))
+ 				return not_found(pvmw);
+ 			/* Did we cross page table boundary? */
+ 			if (pvmw->address % PMD_SIZE == 0) {
+@@ -268,7 +268,7 @@ int page_mapped_in_vma(struct page *page, struct vm_area_struct *vma)
+ 	unsigned long start, end;
+ 
+ 	start = __vma_address(page, vma);
+-	end = start + PAGE_SIZE * (hpage_nr_pages(page) - 1);
++	end = start + thp_size(page) - PAGE_SIZE;
+ 
+ 	if (unlikely(end < vma->vm_start || start >= vma->vm_end))
+ 		return 0;
 -- 
 2.26.2
 
