@@ -2,154 +2,417 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A786BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B12BAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AFA82072E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76FDF20760
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:30:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="cjyUeV+7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kmeS4bAO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727839AbgFJJ2c (ORCPT
+        id S1727812AbgFJJa3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 05:28:32 -0400
-Received: from mout.web.de ([212.227.17.11]:58825 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727041AbgFJJ2b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 05:28:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1591781280;
-        bh=oezWqI7HL3i+z/22SIzrsqLgJ1K5t78e47/mcvcy2BE=;
-        h=X-UI-Sender-Class:Subject:From:To:Cc:References:Date:In-Reply-To;
-        b=cjyUeV+7FyLH0Y/wiZb6cR98CgRwS0Dt7W+1cvv7bm80Ha0xXJuOEF0FDzgpXhdtK
-         2rUokqvd6HnueaqL5hWqWbgVp+guF1Jxr6xMI+hvoyHfFROJWKYW4U0TXAQSa0V+tv
-         M2RVYovDOtc9kE/SGHqVA77/93BXPxEOzjd7d75w=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.133.155.16]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MNOV6-1jYauw39Hm-00P0cj; Wed, 10
- Jun 2020 11:28:00 +0200
-Subject: Re: exfat: Improving exception handling in two functions
-From:   Markus Elfring <Markus.Elfring@web.de>
-To:     linux-fsdevel@vger.kernel.org,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        Sungjong Seo <sj1557.seo@samsung.com>
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        Tetsuhiro Kohada <kohada.t2@gmail.com>,
-        Wei Yongjun <weiyongjun1@huawei.com>
-References: <9b9272fb-b265-010b-0696-4c0579abd841@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <208cba7b-e535-c8e0-5ac7-f15170117a7f@web.de>
-Date:   Wed, 10 Jun 2020 11:27:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
-MIME-Version: 1.0
-In-Reply-To: <9b9272fb-b265-010b-0696-4c0579abd841@web.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:WqE5Z56HN/jah4MONpHubuHITUhC9Q6yoPvJ5lo2AbwKKwmWwza
- Kj5LyaPbiMoo7zt1cHnW3/TuRsQU1dmkbgU0cB4sUPfqMWmZSiUDE3aA8lBrlxuvWc9lGyU
- FJfJkPRFn09mloBNh7lLUoZM2TZBG7m0jPBXXUsdFrsLTYgINwFPru1TvcoRU0at74Y3vKU
- bAnAIG7quO4BN4GMyoVLw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:vPBeZXUdBXU=:6K1h/hGIidn/VoXZodVyzM
- dNHVl4WNXXI99qMlkFpiiO2R0Ly+3isacldol6Ns1ufFfWuQT5bqlLwhXg/qfABKHwv5wuj09
- Ely2zGaa+PWW3Vxs5iXlAKPAUpvd4IhoJ2rltGa/F35hqDqwaBo3MGkhw2en/19pUdtC3E6jw
- h8ItZbb3kpWXtvXV7eH9tvfhI4dV2uuUCMNUi+UG6nKJMS6cDipH1zJtA6g7ld3kyAo0LC+Ks
- 11xeLMTnG9TntYWKlvOFOoAR5fzfAax85cjHH+pdsHlHhuJlKeoYY03dsjxKCVSrq9r2BGsdT
- +mT76PCRHEXIMpHu55BargcJXvoPpBCTTn5JUh9P5tV7JAhilfS20bnAudH56t7niyMI2qQ+n
- SLSSMt5gUBfjpW8EJOilQ8ABtm/EZoAPgswdkXldWRkJTZwJxGExeVqMAQRPf+gW9QSfVKwPk
- hoSqNS7m6XhWSuNAit3bIg38mmobGakX5q+63gZN5mNr0aCds1/a7DnMKPxbwXE8oCElSllzz
- 1Cxev3+7fSY+TqsCNiFtBFtefnY3fr8d7sFl4Gq6PqYA71haIwxe3DstElJeXB2JX0DxO6tOK
- 6QkQe/yvpOmid9seHIr7xjGuHtUmVbWEjD8qxsgMxobmZjzf/r3gOiSqWOmDEHUNKfUDrlpV5
- GQMpwFM04zkf75XA7fFFRm7wpwQOmGy4xZzcSVJRcda7m7xmVXfcIaehKCFMqJPG8mIFOQCl9
- inwKMp7B20YRFRTPwi4RH78YMLUDhEx/zEhm7xGHbfrNvmBqN2+CBTr8fU0b2SVm0yxCc9Yu/
- Jk9yC8oqOpB4BA3putCMZgqioQURWAyhokscMC/diu+aEAdoqU1us+Zj20LK2CLNKoz7oeVBd
- 5lxqlDKbJkJfBpE1OY6NjrXdS+H5BNpDvIf7ycWrr6Y7gHqT9vQ7HrVdfaVniAvqlyK5DvRqY
- pH/vuHx8TnpLMEb7eZukV2kyq24UZIS9OhmavMkph4Y9eAZ7bT/5quIQ5CfYhPIqXM8/B7wZ2
- 7mi5MZuRwWcX8I5XQsyzdCPzTIYPUc9xyYaf4qYzNTcPeKdjRyvSPiqvSKB7V26sJyisCV4/3
- owa/pkVy8ZRMGjqA46vbM0KEoZTR4qW6eEJ2E2+VNbBo1Qm7QvpXCKOZH8iTKyb+LFMT8OvFl
- m+rPHt47EZ5lWkR0sAZmAzcNaaPUvWWBbbz47eTD9kTQLxXkVW6V32PswX8h7B6a0RwmjexvV
- 7lQf9G9y/g3GBGYkz
+        Wed, 10 Jun 2020 05:30:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45488 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726961AbgFJJa3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 05:30:29 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8D96C03E96B;
+        Wed, 10 Jun 2020 02:30:28 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id p5so1424961wrw.9;
+        Wed, 10 Jun 2020 02:30:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=tE3iyyCz/PdyCa0nE9kvJXdIlcRexy3wAEhGGbRHY3M=;
+        b=kmeS4bAOh8UL2XgnryhJMJxl9yuwYo3tgzMOe7YbJ78H9S6HsTmKtBqkzkpYo93hVi
+         9O3gudvJoo4cLWvTaHTBqAg/qxVJ5ZXShnYiixRZy4PBBlC/Gb2iFfSVU6O+SYIZQ4dy
+         LNc5zVRRRZCatbT7QTQqrGEbtx4x5KEG22c9Sso2pIl/IpanZOj/7wQGrI88fdWG5xa+
+         SIpEFs0bZkATo5A7sRVVVD1ieOaQ+qXwCdkUG6yucCyjYYckQRduFoq8Z8Am9vnVm11l
+         7D77xdMfyiRvECc7xM3qmoFSmM1kMLRjrnMVVtNPKIjvsPoJ+7aMGNqQbL4aHLZTdglJ
+         A8bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=tE3iyyCz/PdyCa0nE9kvJXdIlcRexy3wAEhGGbRHY3M=;
+        b=g4ij4BWA5Zve3VTYiNyFmcR9F2sdulMZQCjboRLx36K3B4QZj80QBVDRES3zBCYd24
+         nUg3DJEkyYsuU1ICu0yBGOKiQuksXHe5/uQM3TOQXwHZD0v8LLf8OomtIlwXysR9RalU
+         m2OPKRa4sphP2A/7xaUt8xxA+F+iRaawoEV12QPR2vBCasrpXyokZnv6LBfkFh6+dqTE
+         8SVqt7t9eyRK9c1QsjFF3ukoKkTXVOIhA7Tvarc5D21hur4UBmb9gdz8K/1EIn+WJxo+
+         uubFdBURwksStT2dGX6cKMkbHp6x1NzUUaOOU9mV/hxKfvY+/q3UHpc4C3ABJf+qCh8y
+         Hlqg==
+X-Gm-Message-State: AOAM533TXEcRKd2z+ZuLDz9+SGBRameoruoEUDmj0R0JeiK7iXeLrwoM
+        jKwKNJsO/HOYcNsV61restk=
+X-Google-Smtp-Source: ABdhPJzw+1OtEFcActDe7N+ms6FWkTZIU0etNdQvLFLKOGOPvMskleR1h3MbUV1kNbLSjtBh3sh4uw==
+X-Received: by 2002:a05:6000:4c:: with SMTP id k12mr2550500wrx.215.1591781427050;
+        Wed, 10 Jun 2020 02:30:27 -0700 (PDT)
+Received: from ubuntu-laptop ([2a01:598:b90a:8f5:dd1:7313:78f9:539b])
+        by smtp.googlemail.com with ESMTPSA id t129sm6699900wmf.41.2020.06.10.02.30.23
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 10 Jun 2020 02:30:26 -0700 (PDT)
+Message-ID: <4b12ed3a47f6bb444f58ad480d584f3cf4c47819.camel@gmail.com>
+Subject: Re: [PATCH v3 1/2] scsi: ufs: Add SPDX GPL-2.0 to replace GPL v2
+ boilerplate
+From:   Bean Huo <huobean@gmail.com>
+To:     "Winkler, Tomas" <tomas.winkler@intel.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "ebiggers@kernel.org" <ebiggers@kernel.org>
+Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Wed, 10 Jun 2020 11:30:22 +0200
+In-Reply-To: <b9f2970c5061433b8acc16a10885e5b4@intel.com>
+References: <20200605200520.20831-1-huobean@gmail.com>
+         <20200605200520.20831-2-huobean@gmail.com>
+         <b9f2970c5061433b8acc16a10885e5b4@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Sat, 2020-06-06 at 23:20 +0000, Winkler, Tomas wrote:
+> > 
+> > From: Bean Huo <beanhuo@micron.com>
+> > 
+> > Add SPDX GPL-2.0 to UFS driver files that specified the GPL version
+> > 2 license,
+> > remove the full boilerplate text.
+> > 
+> > Signed-off-by: Bean Huo <beanhuo@micron.com>
+> 
+> LGTM.
+> Thanks
+> Tomas
 
-I have taken another look at pointer usage after calls of the function =E2=
-=80=9Cbrelse=E2=80=9D.
-My source code analysis approach pointed implementation details
-like the following out for further software development considerations.
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/f=
-s/exfat/namei.c?id=3D3d155ae4358baf4831609c2f9cd09396a2b8badf#n1078
+Hi Tomas
 
-=E2=80=A6
-		epold =3D exfat_get_dentry(sb, p_dir, oldentry + 1, &old_bh,
-			&sector_old);
-		epnew =3D exfat_get_dentry(sb, p_dir, newentry + 1, &new_bh,
-			&sector_new);
-		if (!epold || !epnew)
-			return -EIO;
-=E2=80=A6
+would you please add your viewed or acked tag for this patch?
+thanks, 
 
-I suggest to split such an error check.
-How do you think about to release a buffer head object for the desired
-exception handling if one of these function calls succeeded?
+Bean
 
-Would you like to adjust such code in the functions =E2=80=9Cexfat_rename_=
-file=E2=80=9D
-and =E2=80=9Cexfat_move_file=E2=80=9D?
 
-Regards,
-Markus
+> 
+> > ---
+> >  drivers/scsi/ufs/ufs.h           | 27 +--------------------------
+> >  drivers/scsi/ufs/ufshcd-pci.c    | 25 +------------------------
+> >  drivers/scsi/ufs/ufshcd-pltfrm.c | 27 +--------------------------
+> >  drivers/scsi/ufs/ufshcd.c        | 30 +---------------------------
+> > --
+> >  drivers/scsi/ufs/ufshcd.h        | 27 +--------------------------
+> >  drivers/scsi/ufs/ufshci.h        | 27 +--------------------------
+> >  6 files changed, 6 insertions(+), 157 deletions(-)
+> > 
+> > diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h index
+> > c70845d41449..7df4bdc813d6 100644
+> > --- a/drivers/scsi/ufs/ufs.h
+> > +++ b/drivers/scsi/ufs/ufs.h
+> > @@ -1,36 +1,11 @@
+> > +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> >  /*
+> >   * Universal Flash Storage Host controller driver
+> > - *
+> > - * This code is based on drivers/scsi/ufs/ufs.h
+> >   * Copyright (C) 2011-2013 Samsung India Software Operations
+> >   *
+> >   * Authors:
+> >   *	Santosh Yaraganavi <santosh.sy@samsung.com>
+> >   *	Vinayak Holikatti <h.vinayak@samsung.com>
+> > - *
+> > - * This program is free software; you can redistribute it and/or
+> > - * modify it under the terms of the GNU General Public License
+> > - * as published by the Free Software Foundation; either version 2
+> > - * of the License, or (at your option) any later version.
+> > - * See the COPYING file in the top-level directory or visit
+> > - * <http://www.gnu.org/licenses/gpl-2.0.html>
+> > - *
+> > - * This program is distributed in the hope that it will be useful,
+> > - * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > - * GNU General Public License for more details.
+> > - *
+> > - * This program is provided "AS IS" and "WITH ALL FAULTS" and
+> > - * without warranty of any kind. You are solely responsible for
+> > - * determining the appropriateness of using and distributing
+> > - * the program and assume all risks associated with your exercise
+> > - * of rights with respect to the program, including but not
+> > limited
+> > - * to infringement of third party rights, the risks and costs of
+> > - * program errors, damage to or loss of data, programs or
+> > equipment,
+> > - * and unavailability or interruption of operations. Under no
+> > - * circumstances will the contributor of this Program be liable
+> > for
+> > - * any damages of any kind arising from your use or distribution
+> > of
+> > - * this program.
+> >   */
+> > 
+> >  #ifndef _UFS_H
+> > diff --git a/drivers/scsi/ufs/ufshcd-pci.c
+> > b/drivers/scsi/ufs/ufshcd-pci.c index
+> > 8f78a8151499..f407b13883ac 100644
+> > --- a/drivers/scsi/ufs/ufshcd-pci.c
+> > +++ b/drivers/scsi/ufs/ufshcd-pci.c
+> > @@ -1,3 +1,4 @@
+> > +// SPDX-License-Identifier: GPL-2.0-or-later
+> >  /*
+> >   * Universal Flash Storage Host controller PCI glue driver
+> >   *
+> > @@ -7,30 +8,6 @@
+> >   * Authors:
+> >   *	Santosh Yaraganavi <santosh.sy@samsung.com>
+> >   *	Vinayak Holikatti <h.vinayak@samsung.com>
+> > - *
+> > - * This program is free software; you can redistribute it and/or
+> > - * modify it under the terms of the GNU General Public License
+> > - * as published by the Free Software Foundation; either version 2
+> > - * of the License, or (at your option) any later version.
+> > - * See the COPYING file in the top-level directory or visit
+> > - * <http://www.gnu.org/licenses/gpl-2.0.html>
+> > - *
+> > - * This program is distributed in the hope that it will be useful,
+> > - * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > - * GNU General Public License for more details.
+> > - *
+> > - * This program is provided "AS IS" and "WITH ALL FAULTS" and
+> > - * without warranty of any kind. You are solely responsible for
+> > - * determining the appropriateness of using and distributing
+> > - * the program and assume all risks associated with your exercise
+> > - * of rights with respect to the program, including but not
+> > limited
+> > - * to infringement of third party rights, the risks and costs of
+> > - * program errors, damage to or loss of data, programs or
+> > equipment,
+> > - * and unavailability or interruption of operations. Under no
+> > - * circumstances will the contributor of this Program be liable
+> > for
+> > - * any damages of any kind arising from your use or distribution
+> > of
+> > - * this program.
+> >   */
+> > 
+> >  #include "ufshcd.h"
+> > diff --git a/drivers/scsi/ufs/ufshcd-pltfrm.c
+> > b/drivers/scsi/ufs/ufshcd-pltfrm.c
+> > index 76f9be71c31b..3db0af66c71c 100644
+> > --- a/drivers/scsi/ufs/ufshcd-pltfrm.c
+> > +++ b/drivers/scsi/ufs/ufshcd-pltfrm.c
+> > @@ -1,36 +1,11 @@
+> > +// SPDX-License-Identifier: GPL-2.0-or-later
+> >  /*
+> >   * Universal Flash Storage Host controller Platform bus based glue
+> > driver
+> > - *
+> > - * This code is based on drivers/scsi/ufs/ufshcd-pltfrm.c
+> >   * Copyright (C) 2011-2013 Samsung India Software Operations
+> >   *
+> >   * Authors:
+> >   *	Santosh Yaraganavi <santosh.sy@samsung.com>
+> >   *	Vinayak Holikatti <h.vinayak@samsung.com>
+> > - *
+> > - * This program is free software; you can redistribute it and/or
+> > - * modify it under the terms of the GNU General Public License
+> > - * as published by the Free Software Foundation; either version 2
+> > - * of the License, or (at your option) any later version.
+> > - * See the COPYING file in the top-level directory or visit
+> > - * <http://www.gnu.org/licenses/gpl-2.0.html>
+> > - *
+> > - * This program is distributed in the hope that it will be useful,
+> > - * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > - * GNU General Public License for more details.
+> > - *
+> > - * This program is provided "AS IS" and "WITH ALL FAULTS" and
+> > - * without warranty of any kind. You are solely responsible for
+> > - * determining the appropriateness of using and distributing
+> > - * the program and assume all risks associated with your exercise
+> > - * of rights with respect to the program, including but not
+> > limited
+> > - * to infringement of third party rights, the risks and costs of
+> > - * program errors, damage to or loss of data, programs or
+> > equipment,
+> > - * and unavailability or interruption of operations. Under no
+> > - * circumstances will the contributor of this Program be liable
+> > for
+> > - * any damages of any kind arising from your use or distribution
+> > of
+> > - * this program.
+> >   */
+> > 
+> >  #include <linux/platform_device.h>
+> > diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> > index
+> > ad4fc829cbb2..ec4f55211648 100644
+> > --- a/drivers/scsi/ufs/ufshcd.c
+> > +++ b/drivers/scsi/ufs/ufshcd.c
+> > @@ -1,40 +1,12 @@
+> > +// SPDX-License-Identifier: GPL-2.0-or-later
+> >  /*
+> >   * Universal Flash Storage Host controller driver Core
+> > - *
+> > - * This code is based on drivers/scsi/ufs/ufshcd.c
+> >   * Copyright (C) 2011-2013 Samsung India Software Operations
+> >   * Copyright (c) 2013-2016, The Linux Foundation. All rights
+> > reserved.
+> >   *
+> >   * Authors:
+> >   *	Santosh Yaraganavi <santosh.sy@samsung.com>
+> >   *	Vinayak Holikatti <h.vinayak@samsung.com>
+> > - *
+> > - * This program is free software; you can redistribute it and/or
+> > - * modify it under the terms of the GNU General Public License
+> > - * as published by the Free Software Foundation; either version 2
+> > - * of the License, or (at your option) any later version.
+> > - * See the COPYING file in the top-level directory or visit
+> > - * <http://www.gnu.org/licenses/gpl-2.0.html>
+> > - *
+> > - * This program is distributed in the hope that it will be useful,
+> > - * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > - * GNU General Public License for more details.
+> > - *
+> > - * This program is provided "AS IS" and "WITH ALL FAULTS" and
+> > - * without warranty of any kind. You are solely responsible for
+> > - * determining the appropriateness of using and distributing
+> > - * the program and assume all risks associated with your exercise
+> > - * of rights with respect to the program, including but not
+> > limited
+> > - * to infringement of third party rights, the risks and costs of
+> > - * program errors, damage to or loss of data, programs or
+> > equipment,
+> > - * and unavailability or interruption of operations. Under no
+> > - * circumstances will the contributor of this Program be liable
+> > for
+> > - * any damages of any kind arising from your use or distribution
+> > of
+> > - * this program.
+> > - *
+> > - * The Linux Foundation chooses to take subject only to the GPLv2
+> > - * license terms, and distributes only under these terms.
+> >   */
+> > 
+> >  #include <linux/async.h>
+> > diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+> > index
+> > bf97d616e597..ef92c4a9e378 100644
+> > --- a/drivers/scsi/ufs/ufshcd.h
+> > +++ b/drivers/scsi/ufs/ufshcd.h
+> > @@ -1,37 +1,12 @@
+> > +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> >  /*
+> >   * Universal Flash Storage Host controller driver
+> > - *
+> > - * This code is based on drivers/scsi/ufs/ufshcd.h
+> >   * Copyright (C) 2011-2013 Samsung India Software Operations
+> >   * Copyright (c) 2013-2016, The Linux Foundation. All rights
+> > reserved.
+> >   *
+> >   * Authors:
+> >   *	Santosh Yaraganavi <santosh.sy@samsung.com>
+> >   *	Vinayak Holikatti <h.vinayak@samsung.com>
+> > - *
+> > - * This program is free software; you can redistribute it and/or
+> > - * modify it under the terms of the GNU General Public License
+> > - * as published by the Free Software Foundation; either version 2
+> > - * of the License, or (at your option) any later version.
+> > - * See the COPYING file in the top-level directory or visit
+> > - * <http://www.gnu.org/licenses/gpl-2.0.html>
+> > - *
+> > - * This program is distributed in the hope that it will be useful,
+> > - * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > - * GNU General Public License for more details.
+> > - *
+> > - * This program is provided "AS IS" and "WITH ALL FAULTS" and
+> > - * without warranty of any kind. You are solely responsible for
+> > - * determining the appropriateness of using and distributing
+> > - * the program and assume all risks associated with your exercise
+> > - * of rights with respect to the program, including but not
+> > limited
+> > - * to infringement of third party rights, the risks and costs of
+> > - * program errors, damage to or loss of data, programs or
+> > equipment,
+> > - * and unavailability or interruption of operations. Under no
+> > - * circumstances will the contributor of this Program be liable
+> > for
+> > - * any damages of any kind arising from your use or distribution
+> > of
+> > - * this program.
+> >   */
+> > 
+> >  #ifndef _UFSHCD_H
+> > diff --git a/drivers/scsi/ufs/ufshci.h b/drivers/scsi/ufs/ufshci.h
+> > index
+> > c2961d37cc1c..2c1c7a277430 100644
+> > --- a/drivers/scsi/ufs/ufshci.h
+> > +++ b/drivers/scsi/ufs/ufshci.h
+> > @@ -1,36 +1,11 @@
+> > +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> >  /*
+> >   * Universal Flash Storage Host controller driver
+> > - *
+> > - * This code is based on drivers/scsi/ufs/ufshci.h
+> >   * Copyright (C) 2011-2013 Samsung India Software Operations
+> >   *
+> >   * Authors:
+> >   *	Santosh Yaraganavi <santosh.sy@samsung.com>
+> >   *	Vinayak Holikatti <h.vinayak@samsung.com>
+> > - *
+> > - * This program is free software; you can redistribute it and/or
+> > - * modify it under the terms of the GNU General Public License
+> > - * as published by the Free Software Foundation; either version 2
+> > - * of the License, or (at your option) any later version.
+> > - * See the COPYING file in the top-level directory or visit
+> > - * <http://www.gnu.org/licenses/gpl-2.0.html>
+> > - *
+> > - * This program is distributed in the hope that it will be useful,
+> > - * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > - * GNU General Public License for more details.
+> > - *
+> > - * This program is provided "AS IS" and "WITH ALL FAULTS" and
+> > - * without warranty of any kind. You are solely responsible for
+> > - * determining the appropriateness of using and distributing
+> > - * the program and assume all risks associated with your exercise
+> > - * of rights with respect to the program, including but not
+> > limited
+> > - * to infringement of third party rights, the risks and costs of
+> > - * program errors, damage to or loss of data, programs or
+> > equipment,
+> > - * and unavailability or interruption of operations. Under no
+> > - * circumstances will the contributor of this Program be liable
+> > for
+> > - * any damages of any kind arising from your use or distribution
+> > of
+> > - * this program.
+> >   */
+> > 
+> >  #ifndef _UFSHCI_H
+> > --
+> > 2.17.1
+> 
+> 
+
