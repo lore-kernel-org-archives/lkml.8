@@ -2,142 +2,86 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1F5C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB91AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 190EB206F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:34:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ngW+kKhf"
+	by mail.kernel.org (Postfix) with ESMTP id C3910206F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:35:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726121AbgFJBeV (ORCPT
+        id S1726081AbgFJBft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 21:34:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56820 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725885AbgFJBeU (ORCPT
+        Tue, 9 Jun 2020 21:35:49 -0400
+Received: from smtprelay0137.hostedemail.com ([216.40.44.137]:48530 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725885AbgFJBft (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 21:34:20 -0400
-Received: from mail-io1-xd36.google.com (mail-io1-xd36.google.com [IPv6:2607:f8b0:4864:20::d36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E2BAC05BD1E;
-        Tue,  9 Jun 2020 18:34:20 -0700 (PDT)
-Received: by mail-io1-xd36.google.com with SMTP id d5so358064ios.9;
-        Tue, 09 Jun 2020 18:34:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D4aH15SSO22KRv//RjmrlnG6X17+Svv1DvzlLOVYd3o=;
-        b=ngW+kKhf6SJziSfTZxxL1vNqjFom7hR4s8X5dKIgSrGLPkxXs6wCdBfRQGBtTVRK36
-         zYnUTutj8F0hMquKcz4NFDLCE78ekqy1E3wyRLtad+MT1uFKqrBmrxObe906H2J2xaLB
-         bGhShr7/lQ8d93ms4GpqM55lPr8iGTNBFovmwJuNAO4nkLXsXCl74MBFcX7cQ6JdDZuq
-         eLYVcam3zXwvINE2GUyUM31tmZm+M7KEqNWgIyq4CdRAPtMJmyTUwNeynK6QuDzRdid6
-         TRs1If3lM8Mv3gBb5Fk9t4qCDo4qhHvOGj6gBaRYHxfJsnFUyqRJA7fbDZqYlNlMvReh
-         pFYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D4aH15SSO22KRv//RjmrlnG6X17+Svv1DvzlLOVYd3o=;
-        b=t+RQ8dJ7+gxpsCdwmAbIdFUFqS0CrUNPo/GnkqqmWG0HzjIHYbabe/4mKBi6D03PUz
-         kCc/55ZPCk43yOlEm2K+gMEzUXZd8YIczxISMZbSbIfomo1rjEIQ6873tCAOaIlOmK45
-         Ay/xuFBMhtPqgfNLBBo0vRihtJM4pyFFsX9RlUQdLNBgGaK9gvOF2CSZ7mWNIPmWDYxs
-         N37NahaUgbN9ColtHtt8wRML+kQlCJIns6d5aZ2h+f9WqNx7XyoPpkiZt2wTUzW4aIs6
-         89Iuewk8U7LXdGZDEqHO+n6F1SaNxvWfOVRdF1VWuTdxdR3jtUfcMcS5ymR8cK08QwBp
-         O6IA==
-X-Gm-Message-State: AOAM531EBru0nKYye4RaOgGg2wqQGKyaXq6By80ypJamzk+VkB364Pk6
-        WrtQefgNpZYHRvEYhoG/lZFZ0uwo5gcd7XlznLk=
-X-Google-Smtp-Source: ABdhPJwEMTnnLXlPXBnlrmuAt383evVY9uUlUpumRO3Nas7YGaGR+fO7L1y902PECLdfkFXgVneS4zHjpxOHXTP6mVE=
-X-Received: by 2002:a05:6602:1647:: with SMTP id y7mr977606iow.75.1591752859010;
- Tue, 09 Jun 2020 18:34:19 -0700 (PDT)
+        Tue, 9 Jun 2020 21:35:49 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 5F1EB2E184;
+        Wed, 10 Jun 2020 01:35:48 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: park07_140ccfa26dc7
+X-Filterd-Recvd-Size: 1923
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf04.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 10 Jun 2020 01:35:47 +0000 (UTC)
+Message-ID: <d086a1a412de3079cefbfb15f38c4dc9aae0045d.camel@perches.com>
+Subject: Re: [PATCH v2] scripts/spelling: Recommend blocklist/allowlist
+ instead of blacklist/whitelist
+From:   Joe Perches <joe@perches.com>
+To:     SeongJae Park <sjpark@amazon.com>, akpm@linux-foundation.org
+Cc:     colin.king@canonical.com, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, SeongJae Park <sjpark@amazon.de>
+Date:   Tue, 09 Jun 2020 18:35:46 -0700
+In-Reply-To: <20200609122549.26304-1-sjpark@amazon.com>
+References: <20200609122549.26304-1-sjpark@amazon.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-References: <20200607113632.GA49147@kroah.com> <20200609210400.GA1461839@bjorn-Precision-5520>
-In-Reply-To: <20200609210400.GA1461839@bjorn-Precision-5520>
-From:   "Oliver O'Halloran" <oohall@gmail.com>
-Date:   Wed, 10 Jun 2020 11:34:06 +1000
-Message-ID: <CAOSf1CGMwHGSn18MeKYr2BESfLwq3Q8_0fC6yhiQRrAXeSosqQ@mail.gmail.com>
-Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
- "whitelisted" drivers
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rajat Jain <rajatja@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Zubin Mithra <zsm@google.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 7:04 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Tue, 2020-06-09 at 14:25 +0200, SeongJae Park wrote:
+> From: SeongJae Park <sjpark@amazon.de>
 >
-> To sketch this out, my understanding of how this would work is:
->
->   - Expose the PCI pdev->untrusted bit in sysfs.  We don't expose this
->     today, but doing so would be trivial.  I think I would prefer a
->     sysfs name like "external" so it's more descriptive and less of a
->     judgment.
->
->     This comes from either the DT "external-facing" property or the
->     ACPI "ExternalFacingPort" property.
+> This commit recommends the patches to replace 'blacklist' and
+> 'whitelist' with the 'blocklist' and 'allowlist', because the new
+> suggestions are incontrovertible, doesn't make people hurt, and more
+> self-explanatory.
 
-I don't think internal / external is the right distinction to be
-making. We have a similar trust issue with the BMC in servers even
-though they're internal devices. They're typically network accessible
-and infrequently updated so treating them as trustworthy isn't a great
-idea. We have been slowly de-privileging the BMC over the last few
-years, but the PCIe interface isn't locked down enough for my liking
-since the SoCs we use do allow software to set the VDID and perform
-arbitrary DMAs (thankfully limited to 32bit). If we're going to add in
-infrastructure for handling possibly untrustworthy PCI devices then
-I'd like to use that for BMCs too.
+nack.  Spelling is for typos not for politics.
 
->   - All devices present at boot are enumerated.  Any statically built
->     drivers will bind to them before any userspace code runs.
->
->     If you want to keep statically built drivers from binding, you'd
->     need to invent some mechanism so pci_driver_init() could clear
->     drivers_autoprobe after registering pci_bus_type.
->
->   - Early userspace code prevents modular drivers from automatically
->     binding to PCI devices:
->
->       echo 0 > /sys/bus/pci/drivers_autoprobe
->
->     This prevents modular drivers from binding to all devices, whether
->     present at boot or hot-added.
+> Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> ---
+>  scripts/spelling.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/scripts/spelling.txt b/scripts/spelling.txt
+> index d9cd24cf0d40..ea785568d8b8 100644
+> --- a/scripts/spelling.txt
+> +++ b/scripts/spelling.txt
+> @@ -230,6 +230,7 @@ beter||better
+>  betweeen||between
+>  bianries||binaries
+>  bitmast||bitmask
+> +blacklist||blocklist
+>  boardcast||broadcast
+>  borad||board
+>  boundry||boundary
+> @@ -1495,6 +1496,7 @@ whcih||which
+>  whenver||whenever
+>  wheter||whether
+>  whe||when
+> +whitelist||allowlist
+>  wierd||weird
+>  wiil||will
+>  wirte||write
 
-I don't see why this is preferable to just disabling autoprobe for
-untrusted devices. That would dovetail nicely with Rajat's whitelist
-idea if we want to go down that route and I think we might want to.
-The BMC usually provides some form of VGA console and we'd like that
-to continue working out-of-the-box without too much user (or distro)
-intervention.
-
-Oliver
