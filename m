@@ -2,116 +2,113 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F43BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:00:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B63EAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55D2A20853
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:00:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PaCgYQOU"
+	by mail.kernel.org (Postfix) with ESMTP id 94F65206F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:00:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591783218;
+	bh=VSaKKfy/V9rqADPSSuu4IkfVocrsiTN4SkeMzZaW7sU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IxTB2AiqnP9AaiTJSugxJtBC67p8dV41AM54bkPn4o+J1dnWUYYSzGzwVK+QGoLbB
+	 ap10WjT3SnV90CUljvV7cNGf3hjYugOASfVuTUt7XL+gWowA+DfCWRCsikyfepFinJ
+	 cC8FBdUkxgJtnZ0/j7RVHzZ1dYZ6xV2x0RvPveuE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgFJJ77 (ORCPT
+        id S1727984AbgFJKAP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 05:59:59 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:47556 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726134AbgFJJ77 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 05:59:59 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05A9gowQ123381;
-        Wed, 10 Jun 2020 09:59:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type : in-reply-to;
- s=corp-2020-01-29; bh=0a/U729/9KCMjjkSMy03/7Y7SeJTGruerYNr8e0q5DM=;
- b=PaCgYQOUDD2sAbpdyEkB/afye3qllfpdhd2wLAmxMjKKvJUKIFsn4i7sM7F87GrnSrOv
- tqmYqA32V2yfBc1qgLaG4wJeIFrTc/R2F3mbVRXysRg3IOrj0OKMmyjqQMjdz/H7y+z5
- Ui+Abme8N56LRJ+IKdejRGnUB95VmMXlK62efZmQFen6Yp9XuUIaYW9RrwH0mtjs0aMK
- FbbZTT5cftJGmqCO0JORpgLxeaOmWp12I2ACGpOlnZ1atstzbkPtfC0hZZALdKlXkgWU
- VJgDMstR6gDThIL9e2cv62e8U5xWzBXAefCprLvVT5wa2K0/EQgeCTdb6c9mDq2GNk1x dA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 31jepnubhq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 10 Jun 2020 09:59:46 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05A9gSIw025920;
-        Wed, 10 Jun 2020 09:59:45 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 31gmwsydwv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 10 Jun 2020 09:59:45 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05A9xg2X026069;
-        Wed, 10 Jun 2020 09:59:42 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 10 Jun 2020 02:59:41 -0700
-Date:   Wed, 10 Jun 2020 12:59:34 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-fsdevel@vger.kernel.org,
-        Sungjong Seo <sj1557.seo@samsung.com>
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Tetsuhiro Kohada <kohada.t2@gmail.com>,
-        Wei Yongjun <weiyongjun1@huawei.com>
-Subject: [PATCH] exfat: call brelse() on error path
-Message-ID: <20200610095934.GA35167@mwanda>
+        Wed, 10 Jun 2020 06:00:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41390 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726134AbgFJKAN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 06:00:13 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8777D206F7;
+        Wed, 10 Jun 2020 10:00:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591783212;
+        bh=VSaKKfy/V9rqADPSSuu4IkfVocrsiTN4SkeMzZaW7sU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YDs7MBeb2K677sLe+jsRXVpbxfgyiWtMqgAAH4UBRVDPr6G15N6APmORXYwb0GRiV
+         8+vaBwg4yMWkxljIhw0cjb2+glk+B4zRdYHRnaSZhsEefHapZURnCwnIK5CNGsPWW9
+         PssrjRNGQ367egX8GwKYwHnwj4R+zYE2Fw4pcmoo=
+Date:   Wed, 10 Jun 2020 11:00:08 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        bjorn.andersson@linaro.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH V3 1/3] dt-bindings: mmc: Supply max load for mmc supplies
+Message-ID: <20200610100008.GA5005@sirena.org.uk>
+References: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
+ <1591094883-11674-1-git-send-email-vbadigan@codeaurora.org>
+ <1591094883-11674-2-git-send-email-vbadigan@codeaurora.org>
+ <20200609230216.GA1655591@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="jI8keyz6grp/JLjh"
 Content-Disposition: inline
-In-Reply-To: <208cba7b-e535-c8e0-5ac7-f15170117a7f@web.de>
-X-Mailer: git-send-email haha only kidding
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9647 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0 adultscore=0
- mlxscore=0 mlxlogscore=999 bulkscore=0 malwarescore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006100074
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9647 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=0
- priorityscore=1501 bulkscore=0 clxscore=1011 phishscore=0 impostorscore=0
- malwarescore=0 mlxscore=0 cotscore=-2147483648 adultscore=0 spamscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006100074
+In-Reply-To: <20200609230216.GA1655591@bogus>
+X-Cookie: fortune: No such file or directory
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the second exfat_get_dentry() call fails then we need to release
-"old_bh" before returning.
 
-Reported-by: Markus Elfring <Markus.Elfring@web.de>
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- fs/exfat/namei.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+--jI8keyz6grp/JLjh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/fs/exfat/namei.c b/fs/exfat/namei.c
-index 5b0f35329d63e..fda92c824ff11 100644
---- a/fs/exfat/namei.c
-+++ b/fs/exfat/namei.c
-@@ -1077,10 +1077,14 @@ static int exfat_rename_file(struct inode *inode, struct exfat_chain *p_dir,
- 
- 		epold = exfat_get_dentry(sb, p_dir, oldentry + 1, &old_bh,
- 			&sector_old);
-+		if (!epold)
-+			return -EIO;
- 		epnew = exfat_get_dentry(sb, p_dir, newentry + 1, &new_bh,
- 			&sector_new);
--		if (!epold || !epnew)
-+		if (!epnew) {
-+			brelse(old_bh);
- 			return -EIO;
-+		}
- 
- 		memcpy(epnew, epold, DENTRY_SIZE);
- 		exfat_update_bh(sb, new_bh, sync);
--- 
-2.26.2
+On Tue, Jun 09, 2020 at 05:02:16PM -0600, Rob Herring wrote:
+> On Tue, Jun 02, 2020 at 04:17:54PM +0530, Veerabhadrarao Badiganti wrote:
 
+> > +  vmmc-supply-max-microamp:
+> > +    description: Maximum load for the card power.
+
+> > +  vqmmc-supply-max-microamp:
+> > +    description: Maximum load for the bus IO line power.
+
+> By a 'common regulator property' I meant documented with regulator=20
+> binding like *-supply, not common to MMC. How is MMC special?
+
+TBH I'm surprised that these aren't defined by the MMC spec or by the ID
+information from the part we find connected - I'd not expect the board
+to be defining these at all.
+
+> Thinking about this some more, what's wrong with the max current in the=
+=20
+> regulator nodes? I suppose you could have more than one load and need to=
+=20
+> define the loads separately?
+
+One of the bigger reasons to think about the loads would be to
+dynamically configure the mode the regulator is in to go into a more
+efficient mode when some of the devices attached to it are turned off.
+
+--jI8keyz6grp/JLjh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7gryQACgkQJNaLcl1U
+h9DsNQf/QMOcKgKBR1OfTOXetzJw0GYmTTeWBRwrDxvOzlh/codHfgyJ97CrHmOY
+1+Th0yTlUfe69S3B5iZpER3S5jU+lsZmkeaKBNfxx3qykrWDpRi3FQG5AIOEBDB6
+m43i71UuvaryROGVyZQWEXiQ+H6RpJ7MV7IUBSa9bFZBVwwJ0ous7/nzsPt5iwfr
+0P/ZivT1TK9t/Zkp7biFYiuIZqvtDaSlO6yyPIb60D0Xq4+9XVJ+kPYnvRj7CEb5
+w3RLxK78z4QCWveNCjNrhIUtynLudM63ofRP3O6qtcYQ7wRkHjvpTbOZ4JvUMoKl
+bdh2nZKb7xJazHo13G3QtNgjgoq/0g==
+=QJTj
+-----END PGP SIGNATURE-----
+
+--jI8keyz6grp/JLjh--
