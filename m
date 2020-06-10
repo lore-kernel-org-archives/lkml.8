@@ -8,268 +8,223 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F670C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 662FEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34EC9206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:29:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A7A62070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:29:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hF9VEGbS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i8/yyzCM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbgFJR3P (ORCPT
+        id S1727866AbgFJR3U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 13:29:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35030 "EHLO
+        Wed, 10 Jun 2020 13:29:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbgFJR3G (ORCPT
+        with ESMTP id S1727004AbgFJR3Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 13:29:06 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC84FC03E96B;
-        Wed, 10 Jun 2020 10:29:05 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id x14so3225222wrp.2;
-        Wed, 10 Jun 2020 10:29:05 -0700 (PDT)
+        Wed, 10 Jun 2020 13:29:16 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2192FC03E96F
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 10:29:16 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id s88so1158251pjb.5
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 10:29:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=f9xe9tX3J83roLae3xhSoDohJRvBcK6CehL8tPOzdYk=;
-        b=hF9VEGbSBOGHb3NqzfrerBqu+ieOBuqEeEs+jsWpTT+wF9ZaHmmviNUFgBN9EEyDoO
-         Bly+qN5BhW0AooZnoTvtrcCDq1StTXGXeR3mLUgBPiihFkVB33qpvrNvSmv7jhx4eIhx
-         DA3VJpHqNoTlHu7xzQCsG5IynlBOxbfBLQcD4NlnepMhq3BsB+9Qm+pS4cH/CPub68by
-         T7rk4GMdf3xLhgWrDbCtdkr1sebxEJJZ3KZPQOM8sW8Vr+o5tI2vqY0wI4CU8jspnoLq
-         EjNuvxdJBKmEXeuGXl2gAS9lUFy+LwlvARCbsLAk234BvYAl48Uzmk0CwGNThjE0vtJ7
-         oDEg==
+        bh=Y6k/7QsHaLDLvfshfaz5BRU4ZY9fb7OyvkPWjkbCUPQ=;
+        b=i8/yyzCM9b20RAxBiypRxbSOUWLB/v8YvSqCyJn/V2O+/ntCgJ8nWUklji3KjTydfo
+         X6krgZqofgBk44Z6cBw1wSQqkibasy6WtaWl4TjSHJuufhOQs9G3EO3qKRNRO8/Pt8pM
+         8o69hFFvQYYzFT2knESwDsYL4Kn9kX6TxdZxOqtJua04JpAoSPjYVppreIYD6xbmXcck
+         wSCS+d68caY8esVchPIs5/UnltJWwvA0I7kMAseyFnXtViPNyur6q5xxXn8lQMMJP/jV
+         gs+/1j3Ha0iLqUTwI42V80GyVsm1zgtmPVbQaR0uf8QxYLkF7HpW7/3KKIa3ohr75hHL
+         dz6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=f9xe9tX3J83roLae3xhSoDohJRvBcK6CehL8tPOzdYk=;
-        b=rqxYnzqxn0DN7j1YIx06ni8z2EQfClLVENFVDi0rP9jVtd7Zm6at/AdClnK8l2/EAE
-         pdQEDl9NBHSpGhN11NdEzbkUbid4sKD5dJ7jYl5vxCo3x1vEXZZsl8tBQ1dgcE7w7iAc
-         FOKd2cM7HPAvfE0ok6xFGY137m6qJdq/5XpkuXPZTWSmTrdnkexyWXmwnrfh1sm16yb2
-         ITI2yOYafnskn5a6QOWbCDEuMUfWOGlVhL7azaY5/r4mEaTiErK5X3h3j9OjsDgxipi0
-         lxYhL6RqFphaJvSv1yFU4Ju2P5WrGbdhc7WoFA2vZITOBPMDslcuYJBvM6bqcLwKZd35
-         KhMg==
-X-Gm-Message-State: AOAM530LeP8t0EYo+0NUjYcjPB4fPtHykOy0SFPfvlm2z20LHFGpFVhu
-        Cdf1mqMdLrejUNtxP/TR2Gc=
-X-Google-Smtp-Source: ABdhPJwxJVglkGrRBNNvcfbMSQmcklVGtd2OHx8pTn5AaMVYWa6SNyZNxwEaCQTTc5AYzv5ekKbVDw==
-X-Received: by 2002:a5d:4d89:: with SMTP id b9mr5199289wru.210.1591810144435;
-        Wed, 10 Jun 2020 10:29:04 -0700 (PDT)
-Received: from skynet.lan (28.red-83-49-61.dynamicip.rima-tde.net. [83.49.61.28])
-        by smtp.gmail.com with ESMTPSA id h188sm568551wmh.2.2020.06.10.10.29.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 10:29:03 -0700 (PDT)
-From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-To:     p.zabel@pengutronix.de, robh+dt@kernel.org,
-        tsbogend@alpha.franken.de, f.fainelli@gmail.com,
-        jonas.gorski@gmail.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com
-Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-Subject: [PATCH v3 3/9] reset: add BCM6345 reset controller driver
-Date:   Wed, 10 Jun 2020 19:28:53 +0200
-Message-Id: <20200610172859.466334-4-noltari@gmail.com>
+        bh=Y6k/7QsHaLDLvfshfaz5BRU4ZY9fb7OyvkPWjkbCUPQ=;
+        b=THMy4NFeCUcxHz9WUJ0TOVGrxtRT0fFZV1RAx/vKXeIQuh+fI1Si2TfZ6XnrMcQ7ds
+         UNIGf3+UUmpP1xdNhlY/DXoYarU3dsAZZ65CAO293lZF1y3umOmE+c00+0+eJpqSCfPV
+         e29aIkKCY+5jHcna9yhuH8F/yQGd4xdHxBNOhLqRW/OvmMb2yKBw6Qvj7RyguyjxtXGL
+         1kpVcAOES5hEsG9yGdlH+NTzSo2990cStnBFSYYIOiX0dBbAiKHWCvWHOPr0ZLk5OKj6
+         NE+LL33wvssbNcdiwJ3BdnPU3AWg85tTTrb1c6KeGK2k2SfUbNXpfCLAdLtHlZVvW+Pg
+         AakA==
+X-Gm-Message-State: AOAM533HUVJIyoKOVHopdDu9gS9pqZ7/d+jbVsqi704stpdO4FoX1T3o
+        9R6kjitE/BHDtXCWrlMO4+A=
+X-Google-Smtp-Source: ABdhPJyHSF6BBRt+DRbRAiQl9cvHyZSZn5HFwRHbESmV4SGcQ/a+q3ZlJDKRx4M7S8rCGDXeGQDBXA==
+X-Received: by 2002:a17:90b:252:: with SMTP id fz18mr3757996pjb.96.1591810155527;
+        Wed, 10 Jun 2020 10:29:15 -0700 (PDT)
+Received: from cvds-vagarw7.iind.intel.com ([192.55.54.40])
+        by smtp.googlemail.com with ESMTPSA id l83sm490470pfd.150.2020.06.10.10.29.05
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Jun 2020 10:29:15 -0700 (PDT)
+From:   Vaibhav Agarwal <vaibhav.sr@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alex Elder <elder@kernel.org>, Johan Hovold <johan@kernel.org>,
+        Mark Greer <mgreer@animalcreek.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Vaibhav Agarwal <vaibhav.sr@gmail.com>
+Subject: [PATCH v2 1/6] staging: greybus: audio: Update snd_jack FW usage as per new APIs
+Date:   Wed, 10 Jun 2020 22:58:25 +0530
+Message-Id: <48ba07c38dc72d272dda4d4d2c3fe3690ee71eb3.1591802243.git.vaibhav.sr@gmail.com>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200610172859.466334-1-noltari@gmail.com>
-References: <20200609160244.4139366-1-noltari@gmail.com>
- <20200610172859.466334-1-noltari@gmail.com>
+In-Reply-To: <cover.1591802243.git.vaibhav.sr@gmail.com>
+References: <cover.1591802243.git.vaibhav.sr@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for resetting blocks through the Linux reset controller
-subsystem for BCM63xx SoCs.
+snd_soc_jack APIs are modified in recent kernel versions. This patch
+updates the codec driver to resolve the compilation errors related to
+jack framework.
 
-Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+Signed-off-by: Vaibhav Agarwal <vaibhav.sr@gmail.com>
 ---
- v3: using reset-simple isn't possible since sleeping after performing the
-     reset is also needed.
- v2: add compatibility to reset-simple instead of adding a new driver.
+ drivers/staging/greybus/audio_codec.c | 54 +++++++++++++++++++++------
+ 1 file changed, 42 insertions(+), 12 deletions(-)
 
- drivers/reset/Kconfig         |   7 ++
- drivers/reset/Makefile        |   1 +
- drivers/reset/reset-bcm6345.c | 135 ++++++++++++++++++++++++++++++++++
- 3 files changed, 143 insertions(+)
- create mode 100644 drivers/reset/reset-bcm6345.c
-
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index d9efbfd29646..9f1da978cef6 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -41,6 +41,13 @@ config RESET_BERLIN
- 	help
- 	  This enables the reset controller driver for Marvell Berlin SoCs.
+diff --git a/drivers/staging/greybus/audio_codec.c b/drivers/staging/greybus/audio_codec.c
+index 08746c85dea6..5d3a5e6a8fe6 100644
+--- a/drivers/staging/greybus/audio_codec.c
++++ b/drivers/staging/greybus/audio_codec.c
+@@ -709,17 +709,26 @@ static struct snd_soc_dai_driver gbaudio_dai[] = {
+ };
  
-+config RESET_BCM6345
-+	bool "BCM6345 Reset Controller"
-+	depends on BMIPS_GENERIC || COMPILE_TEST
-+	default BMIPS_GENERIC
-+	help
-+	  This enables the reset controller driver for BCM6345 SoCs.
+ static int gbaudio_init_jack(struct gbaudio_module_info *module,
+-			     struct snd_soc_codec *codec)
++			     struct snd_soc_card *card)
+ {
+ 	int ret;
++	struct snd_soc_jack_pin *headset, *button;
+ 
+ 	if (!module->jack_mask)
+ 		return 0;
+ 
+ 	snprintf(module->jack_name, NAME_SIZE, "GB %d Headset Jack",
+ 		 module->dev_id);
+-	ret = snd_soc_jack_new(codec, module->jack_name, module->jack_mask,
+-			       &module->headset_jack);
 +
- config RESET_BRCMSTB
- 	tristate "Broadcom STB reset controller"
- 	depends on ARCH_BRCMSTB || COMPILE_TEST
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index 249ed357c997..e642aae42f0f 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -6,6 +6,7 @@ obj-$(CONFIG_ARCH_TEGRA) += tegra/
- obj-$(CONFIG_RESET_A10SR) += reset-a10sr.o
- obj-$(CONFIG_RESET_ATH79) += reset-ath79.o
- obj-$(CONFIG_RESET_AXS10X) += reset-axs10x.o
-+obj-$(CONFIG_RESET_BCM6345) += reset-bcm6345.o
- obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
- obj-$(CONFIG_RESET_BRCMSTB) += reset-brcmstb.o
- obj-$(CONFIG_RESET_BRCMSTB_RESCAL) += reset-brcmstb-rescal.o
-diff --git a/drivers/reset/reset-bcm6345.c b/drivers/reset/reset-bcm6345.c
-new file mode 100644
-index 000000000000..6c9238762ee5
---- /dev/null
-+++ b/drivers/reset/reset-bcm6345.c
-@@ -0,0 +1,135 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * BCM6345 Reset Controller Driver
-+ *
-+ * Copyright (C) 2020 Álvaro Fernández Rojas <noltari@gmail.com>
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset-controller.h>
-+
-+#define BCM6345_RESET_NUM		32
-+#define BCM6345_RESET_SLEEP_MIN_US	10000
-+#define BCM6345_RESET_SLEEP_MAX_US	20000
-+
-+struct bcm6345_reset {
-+	struct reset_controller_dev rcdev;
-+	void __iomem *base;
-+	spinlock_t lock;
-+};
-+
-+static void bcm6345_reset_update(struct reset_controller_dev *rcdev,
-+				 unsigned long id, bool assert)
-+{
-+	struct bcm6345_reset *bcm6345_reset =
-+		container_of(rcdev, struct bcm6345_reset, rcdev);
-+	unsigned long flags;
-+	uint32_t val;
-+
-+	spin_lock_irqsave(&bcm6345_reset->lock, flags);
-+	val = __raw_readl(bcm6345_reset->base);
-+	if (assert)
-+		val &= ~BIT(id);
-+	else
-+		val |= BIT(id);
-+	__raw_writel(val, bcm6345_reset->base);
-+	spin_unlock_irqrestore(&bcm6345_reset->lock, flags);
-+}
-+
-+static int bcm6345_reset_assert(struct reset_controller_dev *rcdev,
-+				unsigned long id)
-+{
-+	bcm6345_reset_update(rcdev, id, true);
-+
-+	return 0;
-+}
-+
-+static int bcm6345_reset_deassert(struct reset_controller_dev *rcdev,
-+				  unsigned long id)
-+{
-+	bcm6345_reset_update(rcdev, id, false);
-+
-+	return 0;
-+}
-+
-+static int bcm6345_reset_reset(struct reset_controller_dev *rcdev,
-+			       unsigned long id)
-+{
-+	bcm6345_reset_update(rcdev, id, true);
-+	usleep_range(BCM6345_RESET_SLEEP_MIN_US,
-+		     BCM6345_RESET_SLEEP_MAX_US);
-+
-+	bcm6345_reset_update(rcdev, id, false);
-+	usleep_range(BCM6345_RESET_SLEEP_MIN_US,
-+		     BCM6345_RESET_SLEEP_MAX_US);
-+
-+	return 0;
-+}
-+
-+static int bcm6345_reset_status(struct reset_controller_dev *rcdev,
-+				unsigned long id)
-+{
-+	struct bcm6345_reset *bcm6345_reset =
-+		container_of(rcdev, struct bcm6345_reset, rcdev);
-+
-+	return !(__raw_readl(bcm6345_reset->base) & BIT(id));
-+}
-+
-+static struct reset_control_ops bcm6345_reset_ops = {
-+	.assert = bcm6345_reset_assert,
-+	.deassert = bcm6345_reset_deassert,
-+	.reset = bcm6345_reset_reset,
-+	.status = bcm6345_reset_status,
-+};
-+
-+static int __init bcm6345_reset_probe(struct platform_device *pdev)
-+{
-+	struct bcm6345_reset *bcm6345_reset;
-+	struct resource *res;
-+	int err;
-+
-+	bcm6345_reset = devm_kzalloc(&pdev->dev,
-+				     sizeof(*bcm6345_reset), GFP_KERNEL);
-+	if (!bcm6345_reset)
++	headset = devm_kzalloc(module->dev, sizeof(*headset), GFP_KERNEL);
++	if (!headset)
 +		return -ENOMEM;
 +
-+	platform_set_drvdata(pdev, bcm6345_reset);
++	headset->pin = module->jack_name;
++	headset->mask = module->jack_mask;
 +
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	bcm6345_reset->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(bcm6345_reset->base))
-+		return PTR_ERR(bcm6345_reset->base);
++	ret = snd_soc_card_jack_new(card, module->jack_name, module->jack_mask,
++				    &module->headset_jack, headset, 1);
+ 	if (ret) {
+ 		dev_err(module->dev, "Failed to create new jack\n");
+ 		return ret;
+@@ -730,11 +739,21 @@ static int gbaudio_init_jack(struct gbaudio_module_info *module,
+ 
+ 	snprintf(module->button_name, NAME_SIZE, "GB %d Button Jack",
+ 		 module->dev_id);
+-	ret = snd_soc_jack_new(codec, module->button_name, module->button_mask,
+-			       &module->button_jack);
++	button = devm_kzalloc(module->dev, sizeof(*button), GFP_KERNEL);
++	if (!button) {
++		ret = -ENOMEM;
++		goto free_headset;
++	}
 +
-+	spin_lock_init(&bcm6345_reset->lock);
-+	bcm6345_reset->rcdev.ops = &bcm6345_reset_ops;
-+	bcm6345_reset->rcdev.owner = THIS_MODULE;
-+	bcm6345_reset->rcdev.of_node = pdev->dev.of_node;
-+	bcm6345_reset->rcdev.of_reset_n_cells = 1;
-+	bcm6345_reset->rcdev.nr_resets = BCM6345_RESET_NUM;
++	button->pin = module->button_name;
++	button->mask = module->button_mask;
 +
-+	err = devm_reset_controller_register(&pdev->dev,
-+					     &bcm6345_reset->rcdev);
-+	if (err)
-+		return err;
++	ret = snd_soc_card_jack_new(card, module->button_name,
++				    module->button_mask, &module->button_jack,
++				    button, 1);
+ 	if (ret) {
+ 		dev_err(module->dev, "Failed to create button jack\n");
+-		return ret;
++		goto free_headset;
+ 	}
+ 
+ 	/*
+@@ -750,7 +769,7 @@ static int gbaudio_init_jack(struct gbaudio_module_info *module,
+ 				       KEY_MEDIA);
+ 		if (ret) {
+ 			dev_err(module->dev, "Failed to set BTN_0\n");
+-			return ret;
++			goto free_button;
+ 		}
+ 	}
+ 
+@@ -759,7 +778,7 @@ static int gbaudio_init_jack(struct gbaudio_module_info *module,
+ 				       KEY_VOICECOMMAND);
+ 		if (ret) {
+ 			dev_err(module->dev, "Failed to set BTN_1\n");
+-			return ret;
++			goto free_button;
+ 		}
+ 	}
+ 
+@@ -768,7 +787,7 @@ static int gbaudio_init_jack(struct gbaudio_module_info *module,
+ 				       KEY_VOLUMEUP);
+ 		if (ret) {
+ 			dev_err(module->dev, "Failed to set BTN_2\n");
+-			return ret;
++			goto free_button;
+ 		}
+ 	}
+ 
+@@ -777,7 +796,7 @@ static int gbaudio_init_jack(struct gbaudio_module_info *module,
+ 				       KEY_VOLUMEDOWN);
+ 		if (ret) {
+ 			dev_err(module->dev, "Failed to set BTN_0\n");
+-			return ret;
++			goto free_button;
+ 		}
+ 	}
+ 
+@@ -788,6 +807,16 @@ static int gbaudio_init_jack(struct gbaudio_module_info *module,
+ 	*/
+ 
+ 	return 0;
 +
-+	return 0;
-+}
++free_button:
++	snd_device_free(card->snd_card, module->button_jack.jack);
++	list_del(&module->button_jack.list);
 +
-+static const struct of_device_id bcm6345_reset_of_match[] = {
-+	{ .compatible = "brcm,bcm6345-reset" },
-+	{ },
-+};
++free_headset:
++	snd_device_free(card->snd_card, module->headset_jack.jack);
++	list_del(&module->headset_jack.list);
 +
-+static struct platform_driver bcm6345_reset_driver = {
-+	.probe = bcm6345_reset_probe,
-+	.driver	= {
-+		.name = "bcm6345-reset",
-+		.of_match_table = bcm6345_reset_of_match,
-+		.suppress_bind_attrs = true,
-+	},
-+};
-+builtin_platform_driver(bcm6345_reset_driver);
++	return ret;
+ }
+ 
+ int gbaudio_register_module(struct gbaudio_module_info *module)
+@@ -815,7 +844,7 @@ int gbaudio_register_module(struct gbaudio_module_info *module)
+ 		return -EINVAL;
+ 	}
+ 
+-	ret = gbaudio_init_jack(module, codec);
++	ret = gbaudio_init_jack(module, component->card);
+ 	if (ret) {
+ 		up_write(&card->controls_rwsem);
+ 		return ret;
+@@ -942,7 +971,8 @@ void gbaudio_unregister_module(struct gbaudio_module_info *module)
+ 
+ #ifdef CONFIG_SND_JACK
+ 	/* free jack devices for this module from codec->jack_list */
+-	list_for_each_entry_safe(jack, next_j, &codec->jack_list, list) {
++	list_for_each_entry_safe(jack, next_j, &component->card->jack_list,
++				 list) {
+ 		if (jack == &module->headset_jack)
+ 			mask = GBCODEC_JACK_MASK;
+ 		else if (jack == &module->button_jack)
 -- 
 2.26.2
 
