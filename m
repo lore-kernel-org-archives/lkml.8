@@ -2,71 +2,59 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7E1C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5CACC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:31:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91F1A206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B15C7206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:31:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729033AbgFJMbG (ORCPT
+        id S1729096AbgFJMbL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 08:31:06 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:34760 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728540AbgFJMbF (ORCPT
+        Wed, 10 Jun 2020 08:31:11 -0400
+Received: from paleale.coelho.fi ([176.9.41.70]:36648 "EHLO
+        farmhouse.coelho.fi" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728728AbgFJMbG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 08:31:05 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jizsj-000343-Nf; Wed, 10 Jun 2020 12:31:01 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-usb@vger.kernel.org, linux-input@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] HID: usbhid: remove redundant assignment to variable retval
-Date:   Wed, 10 Jun 2020 13:31:01 +0100
-Message-Id: <20200610123101.1133117-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.27.0.rc0
-MIME-Version: 1.0
+        Wed, 10 Jun 2020 08:31:06 -0400
+Received: from 91-156-6-193.elisa-laajakaista.fi ([91.156.6.193] helo=[127.0.1.1])
+        by farmhouse.coelho.fi with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <luca@coelho.fi>)
+        id 1jizZE-0015Py-UK; Wed, 10 Jun 2020 15:10:53 +0300
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+From:   Luca Coelho <luca@coelho.fi>
+In-Reply-To: <20200506134217.49760-1-yuehaibing@huawei.com>
+References: <20200506134217.49760-1-yuehaibing@huawei.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     <johannes.berg@intel.com>, <emmanuel.grumbach@intel.com>,
+        <luciano.coelho@intel.com>, <linuxwifi@intel.com>,
+        <kvalo@codeaurora.org>, <davem@davemloft.net>,
+        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.8.3
+Message-Id: <E1jizZE-0015Py-UK@farmhouse.coelho.fi>
+Date:   Wed, 10 Jun 2020 15:10:52 +0300
+Subject: Re: [PATCH] iwlwifi: mvm: Remove unused inline function
+ iwl_mvm_tid_to_ac_queue
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+YueHaibing <yuehaibing@huawei.com> wrote:
 
-The variable retval is being initialized with a value that is
-never read and it is being updated later with a new value. The
-initialization is redundant and can be removed.
+> commit cfbc6c4c5b91 ("iwlwifi: mvm: support mac80211 TXQs model")
+> left behind this, remove it.
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/hid/usbhid/hid-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Patch applied to iwlwifi-next.git, thanks.
 
-diff --git a/drivers/hid/usbhid/hid-core.c b/drivers/hid/usbhid/hid-core.c
-index 17a638f15082..17a29ee0ac6c 100644
---- a/drivers/hid/usbhid/hid-core.c
-+++ b/drivers/hid/usbhid/hid-core.c
-@@ -1667,7 +1667,7 @@ struct usb_interface *usbhid_find_interface(int minor)
- 
- static int __init hid_init(void)
- {
--	int retval = -ENOMEM;
-+	int retval;
- 
- 	retval = hid_quirks_init(quirks_param, BUS_USB, MAX_USBHID_BOOT_QUIRKS);
- 	if (retval)
--- 
-2.27.0.rc0
+f12694634153 iwlwifi: mvm: Remove unused inline function iwl_mvm_tid_to_ac_queue
 
