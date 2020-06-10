@@ -2,104 +2,236 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C550AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A44C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A165D20760
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:09:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591772994;
-	bh=FL8sB9PMoiA3wZBbIbF3vDjHrhgweK5nKjNqzrG6KF4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HkkRwHreJ/OFfTYyEiPktsunN8rjj4UCJsJ/i6xcS5Uz5abkn6h4VMAYrAINScegq
-	 h12s/ZhL4CCWpSaOuKQtuXeaK2C5zwDjv8/qKY9wqvJ8DuOx0a+wwJppXojc7ywM6D
-	 3tXdBYuBQkwD7yrtpegc2A5qZfxEVapcIeP91948=
+	by mail.kernel.org (Postfix) with ESMTP id CF89A20760
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:10:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="BP3GRfS1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbgFJHJx (ORCPT
+        id S1726378AbgFJHK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 03:09:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51830 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726114AbgFJHJv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 03:09:51 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Wed, 10 Jun 2020 03:10:28 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:43855 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726114AbgFJHK1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 03:10:27 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEE3A20760;
-        Wed, 10 Jun 2020 07:09:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591772991;
-        bh=FL8sB9PMoiA3wZBbIbF3vDjHrhgweK5nKjNqzrG6KF4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UBFIbXiGP352wVQVe0VPRDSzfXCC6dQQiPXBLdUC5Ti9vO7UEiNmNsOsg3vYCe7Lu
-         cVrV7rp7ISmv4ONraVrO4CZgsOzPxU7SdouxiFl05RpK3xyguCnxRHgHO6ZsDiWRtM
-         eA2ECnnfTDzDvn5eQpoaUA6a77zy5Z6b2EnzgtmI=
-Date:   Wed, 10 Jun 2020 09:09:49 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-acpi@vger.kernel.org,
-        netdev@vger.kernel.org, Jason Baron <jbaron@akamai.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Jim Cromie <jim.cromie@gmail.com>
-Subject: Re: [PATCH v3 1/7] Documentation: dynamic-debug: Add description of
- level bitmask
-Message-ID: <20200610070949.GB1923109@kroah.com>
-References: <20200609104604.1594-1-stanimir.varbanov@linaro.org>
- <20200609104604.1594-2-stanimir.varbanov@linaro.org>
- <20200609111615.GD780233@kroah.com>
- <ba32bfa93ac2e147c2e0d3a4724815a7bbf41c59.camel@perches.com>
- <20200610063103.GD1907120@kroah.com>
- <f94b2abe85d7c849ca76677ff5a1e0b272bb3bdf.camel@perches.com>
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 6397622EEB;
+        Wed, 10 Jun 2020 09:10:18 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1591773021;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=I0rOB08jXbT35/9E6zpfxRpSFxgkN52VvN9kq0S08UI=;
+        b=BP3GRfS1Htxt164ZGINJVvvIsrhug3C3YB9iZv77clU6dqVW9V1WXPUpQ22YfpMM1ntoEr
+        YS/bN71y7HJTkKvRFG92Mzh4IerfmOY4KFbuVntCq6cb1MyP0eUbpb18EcKja3TOpxz2Jo
+        0dgVu9RjTAzPW/+Jp8nf2hTIKhyn/+o=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f94b2abe85d7c849ca76677ff5a1e0b272bb3bdf.camel@perches.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 10 Jun 2020 09:10:18 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        david.m.ertman@intel.com, shiraz.saleem@intel.com,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K?= =?UTF-8?Q?=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld management
+ controller
+In-Reply-To: <20200609194505.GQ4106@dell>
+References: <dc052a5c77171014ecc465b1da8b7ef8@walle.cc>
+ <20200608082827.GB3567@dell>
+ <CAHp75VdiH=J-ovCdh1RFJDW_bJM8=pbXRaHmB691GLb-5oBmYQ@mail.gmail.com>
+ <7d7feb374cbf5a587dc1ce65fc3ad672@walle.cc> <20200608185651.GD4106@dell>
+ <32231f26f7028d62aeda8fdb3364faf1@walle.cc> <20200609064735.GH4106@dell>
+ <32287ac0488f7cbd5a7d1259c284e554@walle.cc> <20200609151941.GM4106@dell>
+ <95e6ec9bbdf6af7a9ff9c31786f743f2@walle.cc> <20200609194505.GQ4106@dell>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <3a6931248f0efcaf8efbb5425a9bd833@walle.cc>
+X-Sender: michael@walle.cc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 11:35:31PM -0700, Joe Perches wrote:
-> On Wed, 2020-06-10 at 08:31 +0200, Greg Kroah-Hartman wrote:
-> > On Tue, Jun 09, 2020 at 09:58:07AM -0700, Joe Perches wrote:
-> > > On Tue, 2020-06-09 at 13:16 +0200, Greg Kroah-Hartman wrote:
-> > > > What is wrong with the existing control of dynamic
-> > > > debug messages that you want to add another type of arbitrary grouping
-> > > > to it? 
-> > > 
-> > > There is no existing grouping mechanism.
-> > 
-> > info/warn/err/dbg is what I am referring to.
-> > 
-> > > Many drivers and some subsystems used an internal one
-> > > before dynamic debug.
-> > > 
-> > > $ git grep "MODULE_PARM.*\bdebug\b"|wc -l
-> > > 501
-> > 
-> > Yes, and it's horrid and needs to be cleaned up, not added to.
+Am 2020-06-09 21:45, schrieb Lee Jones:
+> On Tue, 09 Jun 2020, Michael Walle wrote:
 > 
-> Or unified so driver authors have a standardized mechanism
-> rather than reinventing or doing things differently.
-
-But each "level" you all come up with will be intrepreted differently
-per driver, causing total confusion (like we have today.)  Try to make
-it better by just removing that mess.
-
-> > In the beginning, yes, adding loads of different types of debugging
-> > options to a driver is needed by the author, but by the time it is added
-> > to the kernel, all of that should be able to be removed and only a
-> > single "enable debug" should be all that is needed.
+>> Am 2020-06-09 17:19, schrieb Lee Jones:
+>> > On Tue, 09 Jun 2020, Michael Walle wrote:
+>> >
+>> > > Am 2020-06-09 08:47, schrieb Lee Jones:
+>> > > > On Mon, 08 Jun 2020, Michael Walle wrote:
+>> > > >
+>> > > > > Am 2020-06-08 20:56, schrieb Lee Jones:
+>> > > > > > On Mon, 08 Jun 2020, Michael Walle wrote:
+>> > > > > >
+>> > > > > > > Am 2020-06-08 12:02, schrieb Andy Shevchenko:
+>> > > > > > > > +Cc: some Intel people WRT our internal discussion about similar
+>> > > > > > > > problem and solutions.
+>> > > > > > > >
+>> > > > > > > > On Mon, Jun 8, 2020 at 11:30 AM Lee Jones <lee.jones@linaro.org> wrote:
+>> > > > > > > > > On Sat, 06 Jun 2020, Michael Walle wrote:
+>> > > > > > > > > > Am 2020-06-06 13:46, schrieb Mark Brown:
+>> > > > > > > > > > > On Fri, Jun 05, 2020 at 10:07:36PM +0200, Michael Walle wrote:
+>> > > > > > > > > > > > Am 2020-06-05 12:50, schrieb Mark Brown:
+>> > > > > > > >
+>> > > > > > > > ...
+>> > > > > > > >
+>> > > > > > > > > Right.  I'm suggesting a means to extrapolate complex shared and
+>> > > > > > > > > sometimes intertwined batches of register sets to be consumed by
+>> > > > > > > > > multiple (sub-)devices spanning different subsystems.
+>> > > > > > > > >
+>> > > > > > > > > Actually scrap that.  The most common case I see is a single Regmap
+>> > > > > > > > > covering all child-devices.
+>> > > > > > > >
+>> > > > > > > > Yes, because often we need a synchronization across the entire address
+>> > > > > > > > space of the (parent) device in question.
+>> > > > > > > >
+>> > > > > > > > >  It would be great if there was a way in
+>> > > > > > > > > which we could make an assumption that the entire register address
+>> > > > > > > > > space for a 'tagged' (MFD) device is to be shared (via Regmap) between
+>> > > > > > > > > each of the devices described by its child-nodes.  Probably by picking
+>> > > > > > > > > up on the 'simple-mfd' compatible string in the first instance.
+>> > > > > > > > >
+>> > > > > > > > > Rob, is the above something you would contemplate?
+>> > > > > > > > >
+>> > > > > > > > > Michael, do your register addresses overlap i.e. are they intermingled
+>> > > > > > > > > with one another?  Do multiple child devices need access to the same
+>> > > > > > > > > registers i.e. are they shared?
+>> > > > > > >
+>> > > > > > > No they don't overlap, expect for maybe the version register, which is
+>> > > > > > > just there once and not per function block.
+>> > > > > >
+>> > > > > > Then what's stopping you having each device Regmap their own space?
+>> > > > >
+>> > > > > Because its just one I2C device, AFAIK thats not possible, right?
+>> > > >
+>> > > > Not sure what (if any) the restrictions are.
+>> > >
+>> > > You can only have one device per I2C address. Therefore, I need one
+>> > > device
+>> > > which is enumerated by the I2C bus, which then enumerates its
+>> > > sub-devices.
+>> > > I thought this was one of the use cases for MFD. (Regardless of how a
+>> > > sub-device access its registers). So even in the "simple-regmap"
+>> > > case this
+>> > > would need to be an i2c device.
+>> 
+>> Here (see below)
 > 
-> No one does that.
+> Yes, it should still be an I2C device.
+> 
+>> > >
+>> > > E.g.
+>> > >
+>> > > &i2cbus {
+>> > >   mfd-device@10 {
+>> > >     compatible = "simple-regmap", "simple-mfd";
+>> > >     reg = <10>;
+>> > >     regmap,reg-bits = <8>;
+>> > >     regmap,val-bits = <8>;
+>> > >     sub-device@0 {
+>> > >       compatible = "vendor,sub-device0";
+>> > >       reg = <0>;
+>> > >     };
+>> > >     ...
+>> > > };
+>> > >
+>> > > Or if you just want the regmap:
+>> > >
+>> > > &soc {
+>> > >   regmap: regmap@fff0000 {
+>> > >     compatible = "simple-regmap";
+>> > >     reg = <0xfff0000>;
+>> > >     regmap,reg-bits = <16>;
+>> > >     regmap,val-bits = <32>;
+>> > >   };
+>> > >
+>> > >   enet-which-needs-syscon-too@1000000 {
+>> > >     vendor,ctrl-regmap = <&regmap>;
+>> > >   };
+>> > > };
+>> > >
+>> > > Similar to the current syscon (which is MMIO only..).
+>> >
+>> > We do not need a 'simple-regmap' solution for your use-case.
+>> >
+>> > Since your device's registers are segregated, just split up the
+>> > register map and allocate each sub-device with it's own slice.
+>> 
+>> I don't get it, could you make a device tree example for my
+>> use-case? (see also above)
+> 
+>     &i2cbus {
+>         mfd-device@10 {
+>             compatible = "simple-mfd";
+>             reg = <10>;
+> 
+>             sub-device@10 {
+>                 compatible = "vendor,sub-device";
+>                 reg = <10>;
+>             };
+>    };
+> 
+> The Regmap config would be present in each of the child devices.
+> 
+> Each child device would call devm_regmap_init_i2c() in .probe().
 
-We did that for USB drivers a decade ago, it can be done.
+Ah, I see. If I'm not wrong, this still means to create an i2c
+device driver with the name "simple-mfd".
 
-greg k-h
+Besides that, I don't like this, because:
+  - Rob already expressed its concerns with "simple-mfd" and so on.
+  - you need to duplicate the config in each sub device
+  - which also means you are restricting the sub devices to be
+    i2c only (unless you implement and duplicate other regmap configs,
+    too). For this driver, SPI and MMIO may be viable options.
+
+Thus, I'd rather implement a simple-mfd.c which implement a common
+I2C driver for now and populate its children using
+devm_of_platform_populate(). This could be extended to support other
+type of regmaps like SPI in the future.
+
+Also some MFD drivers could be moved to this, a likely candidate is
+the smsc-ece1099.c. Although I don't really understand its purpose,
+if don't have CONFIG_OF.
+
+Judging from the existing code, this simple-mfd.c wouldn't just be
+"a list of compatible" strings but also additional quirks and tweaks
+for particular devices in this list.
+
+-michael
