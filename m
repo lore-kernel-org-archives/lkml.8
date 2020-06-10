@@ -2,173 +2,206 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC74C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 04:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3917EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 04:38:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94C0220734
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 04:36:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6B7020734
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 04:38:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QxPlUIxU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726040AbgFJEgC (ORCPT
+        id S1726072AbgFJEia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 00:36:02 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51548 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725268AbgFJEgC (ORCPT
+        Wed, 10 Jun 2020 00:38:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56846 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbgFJEi3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 00:36:02 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05A4Wpc9115465;
-        Wed, 10 Jun 2020 00:35:30 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31ja3a87aw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 10 Jun 2020 00:35:30 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05A4WuKW115906;
-        Wed, 10 Jun 2020 00:35:29 -0400
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31ja3a87ab-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 10 Jun 2020 00:35:29 -0400
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05A4PMSs015838;
-        Wed, 10 Jun 2020 04:35:27 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma01fra.de.ibm.com with ESMTP id 31g2s7tvun-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 10 Jun 2020 04:35:27 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05A4ZP5S59244578
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 10 Jun 2020 04:35:25 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5AD744204C;
-        Wed, 10 Jun 2020 04:35:25 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D452C42045;
-        Wed, 10 Jun 2020 04:35:23 +0000 (GMT)
-Received: from JAVRIS.in.ibm.com (unknown [9.85.87.192])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 10 Jun 2020 04:35:23 +0000 (GMT)
-Subject: Re: [RFC][PATCH v4 27/32] objtool: mcount: Generic location and
- relocation table types
-To:     Matt Helsley <mhelsley@vmware.com>, linux-kernel@vger.kernel.org,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Julien Thierry <jthierry@redhat.com>
-References: <cover.1591125127.git.mhelsley@vmware.com>
- <311ccd169cec877d0c1993772818f0e5cdf11dc4.1591125127.git.mhelsley@vmware.com>
- <79552506-b994-63ce-d3d9-8053dcbc02db@linux.vnet.ibm.com>
- <20200609181231.GD1284251@rlwimi.vmware.com>
-From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Message-ID: <a9bd2caa-5e82-e7e1-b68e-b2d0bbab6d8b@linux.vnet.ibm.com>
-Date:   Wed, 10 Jun 2020 10:05:21 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 10 Jun 2020 00:38:29 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 718CFC05BD1E;
+        Tue,  9 Jun 2020 21:38:27 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id d6so361694pjs.3;
+        Tue, 09 Jun 2020 21:38:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=bYegErhvXUhKWYoec/3/c1SV8F3ijk3h3IUkeCGeUVE=;
+        b=QxPlUIxUHr9+eA/5Zu9Fz3/+FxoUWMPM1E5U2ckHJ+6Djxxv+ManRZOS2+ncEmGiul
+         gX+0GXaX0qLgyJaN9zpvTlIiq2UqJiQw3uyNuTCj5sZOO5/3qOj9wLXQih+nxka5Pw+F
+         z3PBMJ5GGY7OaM46XEl834rMuA4nh/4qfX0UEQDUTnbxmTo6xpMJAW6vr9+Ll/T3sJ3S
+         tkJjoV4SzXn5m29UcofvIZbP2Sx8UpG+AVNXLihHEkkQCL8rhI5YzY12HGcmGUN9G7es
+         AykDgjXiKv4C3NU5WrMfbqnmRel1cjlYX9NEd2UVQGjD1PWe777KrsxuWt8UmSJfjhcU
+         QVFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=bYegErhvXUhKWYoec/3/c1SV8F3ijk3h3IUkeCGeUVE=;
+        b=r/ginXKfRBM/TmkrW+DACuAtuMNWz7DC69q5r/i8Uc01Xu6foAMpcdeSWFQKeaYUN/
+         NKgbLTCdODceYsdIcgvhfaivmBLsQ//aA8P+UdKAUl6m6zufbdpgViIg1rDwu4D28XIO
+         qPc1cF/4JIxO6ADeZQDn0xcAK3toxUfTce5CU0kytZ807Wma9FzqScvF9eAFkO3DSd4H
+         6JecqfnhbQ4UhFKPNPtwP4PZ6eyJrVlF9CVsW+vHyjsHxdWQwsrYIvB8AL03ILR9y+DW
+         wwOuVQExxW5VP9uhA3+8ZRtnkWCrP+jc5mDIWuthiBjoFvQtU7fIuZ+FnEmGbWkpnm5G
+         0vuA==
+X-Gm-Message-State: AOAM530CRZq4+ZTlxg0RAIUpN5ad1i1XI98YrA1pR+ZTKjvBjJv9LyDK
+        ZoT4O9FXgboAyMCdTZiP1Os=
+X-Google-Smtp-Source: ABdhPJwobrYmsbIzKhRC/8ezHlCXe/nzhD+kLnuVdC8/nhctqZEqM5gAQ/EtclACpuhNV5aDVIv+WQ==
+X-Received: by 2002:a17:902:b710:: with SMTP id d16mr1482133pls.28.1591763906797;
+        Tue, 09 Jun 2020 21:38:26 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id h17sm9559235pgv.41.2020.06.09.21.38.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2020 21:38:26 -0700 (PDT)
+Date:   Tue, 9 Jun 2020 21:38:24 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     groeck@chromium.org, Nicolas Boichat <drinkcat@chromium.org>,
+        linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] HID: usbhid: do not sleep when opening device
+Message-ID: <20200610043824.GA171503@dtor-ws>
 MIME-Version: 1.0
-In-Reply-To: <20200609181231.GD1284251@rlwimi.vmware.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-10_01:2020-06-09,2020-06-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- suspectscore=0 priorityscore=1501 malwarescore=0 cotscore=-2147483648
- spamscore=0 phishscore=0 clxscore=1015 adultscore=0 mlxlogscore=999
- lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006100030
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/9/20 11:42 PM, Matt Helsley wrote:
+usbhid tries to give the device 50 milliseconds to drain its queues when
+opening the device, but dies it naively by simply sleeping in open handler,
+which slows down device probing (and thus may affect overall boot time).
 
-[...]
+However we do not need to sleep as we can instead mark a point of time in
+the future when we should start processing the events.
 
->> Hi Matt,
->>
->> I was trying out the patch series on ppc64le and found that __mcount_loc
->> and .rela__mcount_loc section pairs do not get generated. 
->>
->> # readelf -S fs/proc/cmdline.o|grep mcount
->> #
->>
->> Debugged the cause to get_mcountsym()'s return type.  It returns reloc
->> type from GELF_R_INFO() and expects Elf64_Xword a.k.a unsigned long
->> to be the return type but get_mcountsym() returns unsigned int on 64-bit.
->>
->> On power the _mcount is of relocation type R_PPC64_REL24 (info 0x170000000a),
->> using unsigned int truncates the value to 0xa and fails the above check.
->> Using below fix, that converts mcount_sym_info to use unsigned long, generates
->> the __mcount_loc section pairs.
->>
->> --- a/tools/objtool/mcount.c
->> +++ b/tools/objtool/mcount.c
->> @@ -163,7 +163,7 @@ static int is_mcounted_section_name(char const *const txtname)
->>                 strcmp(".cpuidle.text", txtname) == 0;
->>  }
->>  
->> -static unsigned int get_mcount_sym_info(struct reloc *reloc)
->> +static unsigned long get_mcount_sym_info(struct reloc *reloc)
->>  {
->>         struct symbol *sym = reloc->sym;
->>         char const *symname = sym->name;
->> @@ -274,7 +274,7 @@ static int nop_mcount(struct section * const rels,
->>  {
->>         struct reloc *reloc;
->>         struct section *txts = find_section_by_index(lf, rels->sh.sh_info);
->> -       unsigned int mcount_sym_info = 0;
->> +       unsigned long mcount_sym_info = 0;
->>         int once = 0;
->>  
->>         list_for_each_entry(reloc, &rels->reloc_list, list) {
->> @@ -363,7 +363,7 @@ static void sift_rel_mcount(GElf_Addr **mlocpp,
->>  {
->>         GElf_Rel *mrelp = *mrelpp;
->>         GElf_Rela *mrelap = *mrelpp;
->> -       unsigned int mcount_sym_info = 0;
->> +       unsigned long mcount_sym_info = 0;
->>         struct reloc *reloc;
->>  
->>         list_for_each_entry(reloc, &rels->reloc_list, list) {
->>
->> # readelf -S fs/proc/cmdline.o|grep mcount
->>   [31] __mcount_loc      PROGBITS         0000000000000000  00022f10
->>   [32] .rela__mcount_loc RELA             0000000000000000  00022f20
-> 
-> Fixed for next posting.
-> 
-> I've essentially added this as another patch before it moves into
-> recordmcount.c, gets renamed to get_mcount_sym_info(), etc. I did it
-> this way because it only becomes necessary to change the type before
-> moving the function (and eventually its callers) out of the wrapper.
-> 
-> I feel I should credit you as author or at least co-author of the added
-> patch since it's basically a "backported" version of the changes you
-> suggested. I reviewed the process in submitting-patches.rst and propose
-> the commit message:
-> 	
-> 	objtool: mcount: Extend mcountsym size
-> 	    
-> 	Before we can move this function out of the wrapper and into
-> 	wordsize-independent code we need to explicitly size the
-> 	type returned from get_mcountsym() to preserve the symbol info.
-> 
-> 	Reported-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-> 	Signed-off-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-> 	Signed-off-by: Matt Helsley <mhelsley@vmware.com>
-> 
-> Is that OK with you or do you have another preference?
+Reported-by: Nicolas Boichat <drinkcat@chromium.org>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
 
-Thanks, it works for me.
+v2: switched from using jiffies to ktime_t to make sure we won't have
+issues with jiffies overflowing.
+
+ drivers/hid/usbhid/hid-core.c | 53 +++++++++++++++++++----------------
+ drivers/hid/usbhid/usbhid.h   |  2 ++
+ 2 files changed, 31 insertions(+), 24 deletions(-)
+
+diff --git a/drivers/hid/usbhid/hid-core.c b/drivers/hid/usbhid/hid-core.c
+index c7bc9db5b192..72c92aab2b18 100644
+--- a/drivers/hid/usbhid/hid-core.c
++++ b/drivers/hid/usbhid/hid-core.c
+@@ -26,6 +26,7 @@
+ #include <linux/wait.h>
+ #include <linux/workqueue.h>
+ #include <linux/string.h>
++#include <linux/timekeeping.h>
+ 
+ #include <linux/usb.h>
+ 
+@@ -95,6 +96,18 @@ static int hid_start_in(struct hid_device *hid)
+ 				set_bit(HID_NO_BANDWIDTH, &usbhid->iofl);
+ 		} else {
+ 			clear_bit(HID_NO_BANDWIDTH, &usbhid->iofl);
++
++			if (test_bit(HID_RESUME_RUNNING, &usbhid->iofl)) {
++				/*
++				 * In case events are generated while nobody was
++				 * listening, some are released when the device
++				 * is re-opened. Wait 50 msec for the queue to
++				 * empty before allowing events to go through
++				 * hid.
++				 */
++				usbhid->input_start_time =
++					ktime_add_ms(ktime_get_coarse(), 50);
++			}
+ 		}
+ 	}
+ 	spin_unlock_irqrestore(&usbhid->lock, flags);
+@@ -280,20 +293,23 @@ static void hid_irq_in(struct urb *urb)
+ 		if (!test_bit(HID_OPENED, &usbhid->iofl))
+ 			break;
+ 		usbhid_mark_busy(usbhid);
+-		if (!test_bit(HID_RESUME_RUNNING, &usbhid->iofl)) {
+-			hid_input_report(urb->context, HID_INPUT_REPORT,
+-					 urb->transfer_buffer,
+-					 urb->actual_length, 1);
+-			/*
+-			 * autosuspend refused while keys are pressed
+-			 * because most keyboards don't wake up when
+-			 * a key is released
+-			 */
+-			if (hid_check_keys_pressed(hid))
+-				set_bit(HID_KEYS_PRESSED, &usbhid->iofl);
+-			else
+-				clear_bit(HID_KEYS_PRESSED, &usbhid->iofl);
++		if (test_bit(HID_RESUME_RUNNING, &usbhid->iofl)) {
++			if (ktime_before(ktime_get_coarse(),
++					 usbhid->input_start_time))
++				break;
++			clear_bit(HID_RESUME_RUNNING, &usbhid->iofl);
+ 		}
++		hid_input_report(urb->context, HID_INPUT_REPORT,
++				 urb->transfer_buffer, urb->actual_length, 1);
++		/*
++		 * autosuspend refused while keys are pressed
++		 * because most keyboards don't wake up when
++		 * a key is released
++		 */
++		if (hid_check_keys_pressed(hid))
++			set_bit(HID_KEYS_PRESSED, &usbhid->iofl);
++		else
++			clear_bit(HID_KEYS_PRESSED, &usbhid->iofl);
+ 		break;
+ 	case -EPIPE:		/* stall */
+ 		usbhid_mark_busy(usbhid);
+@@ -714,17 +730,6 @@ static int usbhid_open(struct hid_device *hid)
+ 	}
+ 
+ 	usb_autopm_put_interface(usbhid->intf);
+-
+-	/*
+-	 * In case events are generated while nobody was listening,
+-	 * some are released when the device is re-opened.
+-	 * Wait 50 msec for the queue to empty before allowing events
+-	 * to go through hid.
+-	 */
+-	if (res == 0)
+-		msleep(50);
+-
+-	clear_bit(HID_RESUME_RUNNING, &usbhid->iofl);
+ 	return res;
+ }
+ 
+diff --git a/drivers/hid/usbhid/usbhid.h b/drivers/hid/usbhid/usbhid.h
+index 8620408bd7af..0f0bcf7037f8 100644
+--- a/drivers/hid/usbhid/usbhid.h
++++ b/drivers/hid/usbhid/usbhid.h
+@@ -13,6 +13,7 @@
+ 
+ #include <linux/types.h>
+ #include <linux/slab.h>
++#include <linux/ktime.h>
+ #include <linux/list.h>
+ #include <linux/mutex.h>
+ #include <linux/timer.h>
+@@ -82,6 +83,7 @@ struct usbhid_device {
+ 
+ 	spinlock_t lock;						/* fifo spinlock */
+ 	unsigned long iofl;                                             /* I/O flags (CTRL_RUNNING, OUT_RUNNING) */
++	ktime_t input_start_time;					/* When to start handling input */
+ 	struct timer_list io_retry;                                     /* Retry timer */
+ 	unsigned long stop_retry;                                       /* Time to give up, in jiffies */
+ 	unsigned int retry_delay;                                       /* Delay length in ms */
+-- 
+2.27.0.278.ge193c7cf3a9-goog
+
 
 -- 
-Kamalesh
+Dmitry
