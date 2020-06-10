@@ -2,133 +2,121 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D856C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E31C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 439952072F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A33C220734
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:38:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730247AbgFJPhW (ORCPT
+        id S1730254AbgFJPiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 11:37:22 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34026 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726955AbgFJPhV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 11:37:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 345F3AD75;
-        Wed, 10 Jun 2020 15:37:23 +0000 (UTC)
-Message-ID: <252b688105ddff381798ec3150066288762178b0.camel@suse.de>
-Subject: Re: [PATCH v2 1/9] dt-bindings: reset: Add a binding for the RPi
- Firmware reset controller
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        gregkh@linuxfoundation.org, wahrenst@gmx.net,
-        p.zabel@pengutronix.de, linux-kernel@vger.kernel.org,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>
-Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, helgaas@kernel.org,
-        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
-        lorenzo.pieralisi@arm.com, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org
-Date:   Wed, 10 Jun 2020 17:37:15 +0200
-In-Reply-To: <c3dc9b7e-4440-7e8a-3da8-b147c48c4c40@gmail.com>
-References: <20200609175003.19793-1-nsaenzjulienne@suse.de>
-         <20200609175003.19793-2-nsaenzjulienne@suse.de>
-         <c3dc9b7e-4440-7e8a-3da8-b147c48c4c40@gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-n+aTWdme6r8Au4n90Rrf"
-User-Agent: Evolution 3.36.2 
-MIME-Version: 1.0
+        Wed, 10 Jun 2020 11:38:02 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:43200 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726955AbgFJPiB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 11:38:01 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jj2ne-0003Cl-R4; Wed, 10 Jun 2020 15:37:59 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     alex.hung@canonical.com
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org (open list:INTEL HID EVENT DRIVER),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] platform/x86: intel-hid: Use hp-wireless for rfkill on HP platforms
+Date:   Wed, 10 Jun 2020 23:37:47 +0800
+Message-Id: <20200610153747.27040-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Wireless hotkey on HP platforms can trigger two events, if both
+hp-wireless and intel-hid are supported. Two events at the same time
+renders wireless hotkey useless.
 
---=-n+aTWdme6r8Au4n90Rrf
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+HP confirmed that hp-wireless (HPQ6001) should always be the canonical
+source of wireless hotkey event, so skip registering rfkill hotkey if
+HPQ6001 is present.
 
-Hi Florian, thanks for the review :)
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/platform/x86/intel-hid.c | 31 ++++++++++++++++++++++++++++++-
+ 1 file changed, 30 insertions(+), 1 deletion(-)
 
-On Tue, 2020-06-09 at 11:07 -0700, Florian Fainelli wrote:
->=20
-> On 6/9/2020 10:49 AM, Nicolas Saenz Julienne wrote:
-> > The firmware running on the RPi VideoCore can be used to reset and
-> > initialize HW controlled by the firmware.
-> >=20
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> >=20
-> > ---
-> >=20
-> > Changes since v1:
-> >  - Correct cells binding as per Florian's comment
-> >  - Change compatible string to be more generic
-> >=20
-> >  .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 21 +++++++++++++++++++
-> >  1 file changed, 21 insertions(+)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2=
-835-
-> > firmware.yaml
-> > b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
-> > firmware.yaml
-> > index b48ed875eb8e..23a885af3a28 100644
-> > --- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
-> > firmware.yaml
-> > +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
-> > firmware.yaml
-> > @@ -39,6 +39,22 @@ properties:
-> >        - compatible
-> >        - "#clock-cells"
-> > =20
-> > +  reset:
-> > +    type: object
-> > +
-> > +    properties:
-> > +      compatible:
-> > +        const: raspberrypi,firmware-reset
-> > +
-> > +      "#reset-cells":
-> > +        const: 1
-> > +        description: >
->=20
-> Is this a stray '>' character? If so, with that fixed:
-
-No, it marks the formatting of the text below. | will keep the formatting a=
-s
-is, > will leave the formatting to whatever is going to use it.
-
-Regards,
-Nicolas
-
-
---=-n+aTWdme6r8Au4n90Rrf
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7g/isACgkQlfZmHno8
-x/5KnggAkIaMw+no0jjwGGwmLpYNI37OtXTlkJh7+vxBbP3/KDoYuOKodikYKYi7
-06IGVl60YiOtYKZmeBUpt5vxCnGpFdccflCssnih0CSXLSUYSA+0+XQ7/8WI+wDF
-iyBAZWn+BTleK3nJRM1EzWuiJvsH6hqE0X9SWqrH549wvJUKoh/EPMllsrrl2rr4
-k3MTRQ1qUaDh+m+ZxKA14Ah1Gwhm1nOnx0LLti9+W02o270Y7dQnWwzfXwlGJHPi
-kCkA5gj9PzDFq9+csd+n8ek73GJEoyQEsgphDBQbQCVb3uMpioF4jqdDxQaKFC21
-NG2lzd8rO+0Rlc3UUvOFg+sB04SUcg==
-=8jr+
------END PGP SIGNATURE-----
-
---=-n+aTWdme6r8Au4n90Rrf--
+diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
+index 9ee79b74311c..31091c8faf70 100644
+--- a/drivers/platform/x86/intel-hid.c
++++ b/drivers/platform/x86/intel-hid.c
+@@ -25,6 +25,8 @@ static const struct acpi_device_id intel_hid_ids[] = {
+ };
+ MODULE_DEVICE_TABLE(acpi, intel_hid_ids);
+ 
++static bool hp_wireless_present;
++
+ /* In theory, these are HID usages. */
+ static const struct key_entry intel_hid_keymap[] = {
+ 	/* 1: LSuper (Page 0x07, usage 0xE3) -- unclear what to do */
+@@ -49,6 +51,29 @@ static const struct key_entry intel_hid_keymap[] = {
+ 	{ KE_END },
+ };
+ 
++static const struct key_entry intel_hid_no_rfkill_keymap[] = {
++	/* 1: LSuper (Page 0x07, usage 0xE3) -- unclear what to do */
++	/* 2: Toggle SW_ROTATE_LOCK -- easy to implement if seen in wild */
++	{ KE_KEY, 3, { KEY_NUMLOCK } },
++	{ KE_KEY, 4, { KEY_HOME } },
++	{ KE_KEY, 5, { KEY_END } },
++	{ KE_KEY, 6, { KEY_PAGEUP } },
++	{ KE_KEY, 7, { KEY_PAGEDOWN } },
++	/* 8: rfkill -- use hp-wireless instead */
++	{ KE_KEY, 9, { KEY_POWER } },
++	{ KE_KEY, 11, { KEY_SLEEP } },
++	/* 13 has two different meanings in the spec -- ignore it. */
++	{ KE_KEY, 14, { KEY_STOPCD } },
++	{ KE_KEY, 15, { KEY_PLAYPAUSE } },
++	{ KE_KEY, 16, { KEY_MUTE } },
++	{ KE_KEY, 17, { KEY_VOLUMEUP } },
++	{ KE_KEY, 18, { KEY_VOLUMEDOWN } },
++	{ KE_KEY, 19, { KEY_BRIGHTNESSUP } },
++	{ KE_KEY, 20, { KEY_BRIGHTNESSDOWN } },
++	/* 27: wake -- needs special handling */
++	{ KE_END },
++};
++
+ /* 5 button array notification value. */
+ static const struct key_entry intel_array_keymap[] = {
+ 	{ KE_KEY,    0xC2, { KEY_LEFTMETA } },                /* Press */
+@@ -317,7 +342,8 @@ static int intel_hid_input_setup(struct platform_device *device)
+ 	if (!priv->input_dev)
+ 		return -ENOMEM;
+ 
+-	ret = sparse_keymap_setup(priv->input_dev, intel_hid_keymap, NULL);
++	ret = sparse_keymap_setup(priv->input_dev, hp_wireless_present ?
++			intel_hid_no_rfkill_keymap : intel_hid_keymap, NULL);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -575,6 +601,9 @@ check_acpi_dev(acpi_handle handle, u32 lvl, void *context, void **rv)
+ 			dev_info(&dev->dev,
+ 				 "intel-hid: created platform device\n");
+ 
++	if (!strcmp(acpi_device_hid(dev), "HPQ6001"))
++		hp_wireless_present = true;
++
+ 	return AE_OK;
+ }
+ 
+-- 
+2.17.1
 
