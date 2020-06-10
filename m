@@ -2,69 +2,65 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35918C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:30:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78DD5C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AB97206F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:30:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591821029;
-	bh=NIQMWSiGhugs36Pn75PkmLIGCnjwO/j8S4v2zrqpzhs=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=OrLIY6IYnCvU2v0ghlzDu2VjI/I4vJbrjafxTswWKPUv7nBAjYaeGPcM4tZBmQzQ3
-	 fIx0MnIyJRKVAor3oK2htVFvtG3H5fhhgOUWleF/KtaUgSjmIcxcUJt+kdeFVt6IOC
-	 gUGs/8nZrI4YlAa8ukdXNLMnmoHtiXYxzTO3qLLA=
+	by mail.kernel.org (Postfix) with ESMTP id 5226520760
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:30:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728386AbgFJUa2 (ORCPT
+        id S1729125AbgFJUa3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 16:30:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40376 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726375AbgFJUaZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 16:30:25 -0400
-Subject: Re: [GIT PULL] UBI changes for v5.8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591821025;
-        bh=NIQMWSiGhugs36Pn75PkmLIGCnjwO/j8S4v2zrqpzhs=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=nylvV9kv/ZqHToXHxeIcqmZeS+G1SqlXQHo4ECp2ahFrVJni6AN9LiCe3s065JGC1
-         wQDoi5RFek9epIVjXvaFY1+z++rzS7NOQd6tIrO6LeYR4Gbyqkc+fBvy1kHLa6XTmX
-         VT4lms8Z8ZP7+7rav98/yQbDEG0uqLQawM+3KaE8=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <818706511.351.1591736518682.JavaMail.zimbra@nod.at>
-References: <818706511.351.1591736518682.JavaMail.zimbra@nod.at>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <818706511.351.1591736518682.JavaMail.zimbra@nod.at>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rw/ubifs.git
- tags/for-linus-5.8-rc1
-X-PR-Tracked-Commit-Id: 4b68bf9a69d22dd512d61d5f0ba01b065b01ede6
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 0e083da7c8a26bc2674d7155bb5a0676b7dbc8ba
-Message-Id: <159182102536.16227.7583734197738613136.pr-tracker-bot@kernel.org>
-Date:   Wed, 10 Jun 2020 20:30:25 +0000
-To:     Richard Weinberger <richard@nod.at>
-Cc:     torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mtd <linux-mtd@lists.infradead.org>
+        Wed, 10 Jun 2020 16:30:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34932 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727083AbgFJUa1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 16:30:27 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90D39C03E96B;
+        Wed, 10 Jun 2020 13:30:26 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
+        id 1jj7MZ-006dAU-Oc; Wed, 10 Jun 2020 20:30:19 +0000
+Date:   Wed, 10 Jun 2020 21:30:19 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [git pull] vfs misc
+Message-ID: <20200610203019.GW23230@ZenIV.linux.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 9 Jun 2020 23:01:58 +0200 (CEST):
+	A couple of trivial patches that fell through the cracks last cycle
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rw/ubifs.git tags/for-linus-5.8-rc1
+The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/0e083da7c8a26bc2674d7155bb5a0676b7dbc8ba
+  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
 
-Thank you!
+are available in the git repository at:
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git work.misc
+
+for you to fetch changes up to cc23402c1c2de8b1815212f3924cdbc3cda02b94:
+
+  fs: fix indentation in deactivate_super() (2020-05-29 10:35:25 -0400)
+
+----------------------------------------------------------------
+Nikolay Borisov (1):
+      vfs: Remove duplicated d_mountpoint check in __is_local_mountpoint
+
+Yufen Yu (1):
+      fs: fix indentation in deactivate_super()
+
+ fs/namespace.c | 5 +----
+ fs/super.c     | 2 +-
+ 2 files changed, 2 insertions(+), 5 deletions(-)
