@@ -2,130 +2,186 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC68C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 16:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B089BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 16:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC4412067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 16:50:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z38WZdty"
+	by mail.kernel.org (Postfix) with ESMTP id 880CE2067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 16:54:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591808040;
+	bh=5l99DsraoOPZV1OU1YHuYjZOzAMxH54iUhG8bur9rnM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Q/Z8RuT+1GZT8oqOgYv768QX/vUly2BnSP8KY9l0ZOOQwkdVddTvgldf+Gl5nUwXn
+	 lBpJMUUYhpx5+fUqjANWj7KZgs67msAXcLoI4PwHK5XrTw/Qk3SDpJuL0lacZDAowW
+	 IydnC5DtRGeyCsRudbLHdF6YtFCyY7P3P0sgbhHE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729171AbgFJQue (ORCPT
+        id S1726905AbgFJQx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 12:50:34 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37294 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729072AbgFJQub (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 12:50:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591807829;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=EMwUauau342Zml1K34QLPe12sp1DuwpV44r+JLoVGLk=;
-        b=Z38WZdtyg+yuvmWZqlSR2DIgwxdH9J3PBF6TceTvikJk8f8qYiQsPCDZ0cFi7cpZI48ENs
-        S9/ncr7uVLCY2My2vf6jb5qGc4pQCyhXUC5OCZ+jd3QG4cTQvQMzgZc5TVTruq4FNFWMFA
-        lAMwd+t+MHnHgK8FxBlka6yJWzPVUm8=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-223-HPVeN3EWOgCVZxKNFLhwag-1; Wed, 10 Jun 2020 12:50:28 -0400
-X-MC-Unique: HPVeN3EWOgCVZxKNFLhwag-1
-Received: by mail-qt1-f198.google.com with SMTP id o11so2448276qtm.7
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 09:50:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=EMwUauau342Zml1K34QLPe12sp1DuwpV44r+JLoVGLk=;
-        b=BT+Bq6tIi5/+/oIqB2Xtr2NX7hC1+alI5WP3RkJADUWtn5k0oLXM6sr90YXn55Zw/z
-         wWmDS+ZCnXE6B8pHIw/MHrYI7NcQ+DbHntE1qmuCbr2YsEGX4UQMY9JsCOQJlXL3lmh9
-         qGPEaHWTJJgno708IAWdU26v+E736SXuxRRHCq4swzHKzoNaBnww2y3w3TsqPUzDy4IV
-         viG3mOkPyD4phY40QsWLGD+Y2efaPzzcKExc4TXAOxI/5T3hgir3fgiTBqWAHAwB0Fya
-         XyuXIuDXIx+Zmq0b2e7hKFzZBpTwaBW00kURW2DDFfGLYp+3rzHBLaZmzE7axigfySjp
-         +8fw==
-X-Gm-Message-State: AOAM533pZCqQEVHcMNYR7nvtS8DA5gJgjwbv2k/o99rih9iexIjfQIl8
-        CNdQQWS/mypB319tTN185T3IleuVt1CVO5pVy1ErJwDLu4gYQ21+hfdwRx/tStz2AOQpgiiuQ1M
-        /fpXZ5o2qAyl8Xc7sHwTty+TK
-X-Received: by 2002:a37:9cc7:: with SMTP id f190mr3987583qke.236.1591807826885;
-        Wed, 10 Jun 2020 09:50:26 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyn20TLNz7hD3Ni4blZzJN/2PX0jI8mrO6z2/UHNbD+ObHKXkY/kSbOK73eCMc/XFP0Ereokw==
-X-Received: by 2002:a37:9cc7:: with SMTP id f190mr3987535qke.236.1591807826580;
-        Wed, 10 Jun 2020 09:50:26 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id 207sm149672qki.134.2020.06.10.09.50.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 09:50:25 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 12:50:23 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, Michal Simek <monstr@monstr.eu>,
-        linux-mips@vger.kernel.org, Nick Hu <nickhu@andestech.com>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-        Guan Xuetao <gxt@pku.edu.cn>, linux-xtensa@linux-xtensa.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>
-Subject: Re: Possible duplicate page fault accounting on some archs after
- commit 4064b9827063
-Message-ID: <20200610165023.GA67179@xz-x1>
-References: <20200610174811.44b94525@thinkpad>
+        Wed, 10 Jun 2020 12:53:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33576 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726517AbgFJQx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 12:53:58 -0400
+Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E0ED20734;
+        Wed, 10 Jun 2020 16:53:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591808037;
+        bh=5l99DsraoOPZV1OU1YHuYjZOzAMxH54iUhG8bur9rnM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=VKAC3CH1sASX4nfgzMqpFP+edv/gqOVS5WUTKjJX0NX4h3ac+MYrPZ6yhmNCna8Fu
+         cCOVVrFS8zCmP9bLKmf948XY3+q1iIZeKKNz9AhKxOdwQpf1adSEWATaWuKuzTxCZx
+         +e4Sc4bm7L5U3Fb0ONJhJLRXQaY2M2dAzaOm4+HU=
+Received: by mail-oo1-f42.google.com with SMTP id e12so639444oou.2;
+        Wed, 10 Jun 2020 09:53:57 -0700 (PDT)
+X-Gm-Message-State: AOAM5312i7ipcBZKH5D8bs3bvX4cl423qsvIw9wyUpWT3N1+y48jMZDk
+        Wr/ak3M9rkFrCN6FtjOj4eRQhmXJ4bJdBwfXWQ==
+X-Google-Smtp-Source: ABdhPJxqdlrg8qy3QKsG2cIpbwK3twksjEC7SO767My3VTyuKvrDAhv7M8etIZefVyHhyd3wjSboxGEPLEyJMeei2C8=
+X-Received: by 2002:a4a:6156:: with SMTP id u22mr2935115ooe.50.1591808036515;
+ Wed, 10 Jun 2020 09:53:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200610174811.44b94525@thinkpad>
+References: <20200422222242.241699-1-pmalani@chromium.org> <20200511192800.GA28762@bogus>
+ <20200511204635.GC136540@google.com> <20200512134154.GC2085641@kuha.fi.intel.com>
+ <CAL_JsqJ2pbh5BbjGd9eEiD6-sV94=omk6o+mLXjCYiVnUOtO=g@mail.gmail.com>
+ <CACeCKadiiokPdPB2Q5WBQFrPuxjpm3TiDgaaerncVR_Z7Z0nvg@mail.gmail.com>
+ <CAL_Jsq+MM3-ugLvSGc_wc6RvHVyxyDUD0DkvwQaQJMYCCFpfHg@mail.gmail.com>
+ <20200609235740.GA154315@google.com> <20200610153356.GC3213128@kuha.fi.intel.com>
+In-Reply-To: <20200610153356.GC3213128@kuha.fi.intel.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 10 Jun 2020 10:53:45 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKsObFhC+J6gK2EDXdpBLO6t+rswXDipnjt4uMr2Qx2zg@mail.gmail.com>
+Message-ID: <CAL_JsqKsObFhC+J6gK2EDXdpBLO6t+rswXDipnjt4uMr2Qx2zg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Prashant Malani <pmalani@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tim Wawrzynczak <twawrzynczak@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 05:48:11PM +0200, Gerald Schaefer wrote:
-> Hi,
+On Wed, Jun 10, 2020 at 9:34 AM Heikki Krogerus
+<heikki.krogerus@linux.intel.com> wrote:
+>
+> On Tue, Jun 09, 2020 at 04:57:40PM -0700, Prashant Malani wrote:
+> > Hi Rob,
+> >
+> > Thanks again for the comments and feedback. Kindly see responses inline:
+> >
+> > (Trimming unrelated text from thread):
+> >
+> > On Tue, Jun 09, 2020 at 02:30:11PM -0600, Rob Herring wrote:
+> > > On Fri, May 29, 2020 at 5:30 PM Prashant Malani <pmalani@chromium.org> wrote:
+> > > >
+> > > > Nodes truncated and unrelated fields omitted in the interest of brevity:
+> > > >
+> > > > // Chrome OS EC Type C Port Manager.
+> > > > typec {
+> > > >     compatible = "google,cros-ec-typec";
+> > > >     #address-cells = <1>;
+> > > >     #size-cells = <0>;
+> > > >
+> > > >     connector@0 {
+> > > >         compatible = "usb-c-connector";
+> > > >         reg = <0>;
+> > > >         power-role = "dual";
+> > > >         data-role = "dual";
+> > > >         try-power-role = "source";
+> > > >         mode-switch = <&foo_mux>;
+> > > >         // Other switches can point to the same mux.
+> > > >         ....
+> > >
+> > > The connector is supposed to have 'ports' for USB2, USB3, and Aux
+> > > unless the parent is the USB controller.
+> > Understood; so, coupled with Heikki's explanation (see below for where
+> > I've pasted it), would it be something like so? (adding inline to the connector
+> > node definition):
+> >
+> >             ports {
+> >                 #address-cells = <1>;
+> >                 #size-cells = <0>;
+> >
+> >                 port@0 {
+> >                     reg = <0>;
+> >                     usb_con_hs: endpoint {
+> >                         remote-endpoint = <&foo_usb_hs_controller>;
+> >                     };
+> >                 };
+> >
+> >                 port@1 {
+> >                     reg = <1>;
+> >                     usb_con0_ss: endpoint@0 {
+> >                         remote-endpoint = <&mode_mux_in>;
+> >                     };
+> >                 };
+> >
+> >                 port@2 {
+> >                     reg = <2>;
+> >                     usb_con_sbu: endpoint {
+> >                         remote-endpoint = <&foo_dp_aux>;
+> >                     };
+> >                 };
+> >             };
+>
+> The pins that can be reassigned can in practice go anywhere. We can't
+> group them in any way. What do we do for example when the two sideband
+> pins go to different locations?
 
-Hi, Gerald,
+The sideband pins from the connector go to multiple places or the
+sideband signal from a controller go to multiple connectors? Either
+way, that's solved with multiple endpoints. In the former case, port@2
+would have multiple endpoints with all the possible connections. The
+general model of the graph is each port is a separate data channel and
+multiple endpoints are either a mux or fanout depending on the data
+direction.
 
-> 
-> Some architectures have their page fault accounting code inside the fault
-> retry loop, and rely on only going through that code once. Before commit
-> 4064b9827063 ("mm: allow VM_FAULT_RETRY for multiple times"), that was
-> ensured by testing for and clearing FAULT_FLAG_ALLOW_RETRY.
-> 
-> That commit had to remove the clearing of FAULT_FLAG_ALLOW_RETRY for all
-> architectures, and introduced a subtle change to page fault accounting
-> logic in the affected archs. It is now possible to go through the retry
-> loop multiple times, and the affected archs would then account multiple
-> page faults instead of just one.
-> 
-> This was found by coincidence in s390 code, and a quick check showed that
-> there are quite a lot of other architectures that seem to be affected in a
-> similar way. I'm preparing a fix for s390, by moving the accounting behind
-> the retry loop, similar to x86. It is not completely straight-forward, so
-> I leave the fix for other archs to the respective maintainers.
+> It looks like the OF graph for the USB Type-C connectors expects the
+> pins to be grouped like that, which is too bad, because unfortunately
+> it will not work. It would require that we have a separate port for
+> every pin that can be reassigned on the connector, and let's not even
+> consider that.
 
-Sorry for not noticing this before.  The accounting part should definitely be
-put at least into a check against fault_flag_allow_retry_first() to mimic what
-was done before.  And I agree it would be even better to put it after the retry
-logic, so if any of the page faults gets a major fault, it'll be accounted as a
-major fault which makes more sense to me, just like what x86 is doing now with:
+I guess you are referring to the 4 SS signal pairs and that they could
+be 2 USB links, 1 USB link and 1-2 Alt mode links, or 4 Alt mode
+links. I think the grouping of SS signals is fine as I'd expect
+there's a single entity deciding the routing. That would be 'mux' node
+I think, but 'mux' is the wrong abstraction here. I guess we could
+have 4 muxes (1 for each signal), but I'd hope we don't need that
+level of detail in DT. I think we're in agreement on that.
 
-	major |= fault & VM_FAULT_MAJOR;
+> We need higher level description of the connections for the USB Type-C
+> connectors. For example, a connector can be connected to this (or
+> these) DisplayPort(s), this USB 2.0 port, this USB 3.x port, this USB4
+> port, etc. And this is the mux that handles the pins on this
+> connector, and these are the retimers, etc. etc.
+>
+> We also need a way to identify those connections, and relying on
+> something like fixed port node addresses, so indexes in practice,
+> feels really risky to me. A conflict may seem unlikely now, but we
+> seen those so many times in the past other things like GPIOs, IRQs,
+> etc. We really need to define string identifiers for these
+> connections.
 
-I'm not sure what's the preference of the arch maintainers, just let me know if
-it's preferred to use a single series to address this issue for all affected
-archs (or the archs besides s390), then I'll do.
+I assume for IRQs you are referring to cases where we have a variable
+number such as 'interrupts = <1 2 3>;' where 'interrupts = <1 3>'
+doesn't work because we can't describe interrupt 2 is not present? The
+graph binding doesn't suffer from that issue since we can easily omit
+port or endpoint nodes.
 
-Thanks!
+Also, the numbering is specific to a compatible string. If we need
+different numbering, then we can do a new compatible.
 
--- 
-Peter Xu
-
+Rob
