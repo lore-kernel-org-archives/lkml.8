@@ -7,44 +7,45 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1275DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A72B0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D84F42074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:14:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79925206F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:14:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tA0NucqI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k38Y8vKb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730764AbgFJUOr (ORCPT
+        id S1730755AbgFJUOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 16:14:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60530 "EHLO
+        Wed, 10 Jun 2020 16:14:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730593AbgFJUNx (ORCPT
+        with ESMTP id S1730599AbgFJUNy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 16:13:53 -0400
+        Wed, 10 Jun 2020 16:13:54 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D78FC0085C5;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8240AC0085C8;
         Wed, 10 Jun 2020 13:13:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=S8iTV89UZwBhFOKRSSgrXr6LwEGxyfVVQ8jpCAk+4T4=; b=tA0NucqILgtgEHPhR0QOz7pyrc
-        zugbZGH0I3XvQq+j0ODT3muFUniByXxVfJLSRxJcvPAMz9m2bjaC/fRN1tNNET95jJMN4l1Jo6EbP
-        zDUoM8IVmQhJ8A3sy7ZpcUR6deIKOxefOhQ6r6hr9fab4ulNboCcNY90y3WTGBHhF8yT1c5mKx2wo
-        ZWpq0/whGdf/om/F+WMT5eITvlH4eqHcFu68r/6G+X+zyCg67O1AotBhoPTsfDvXb5DQ8N+4E+WvV
-        skfW41Kd0LZiexsBMp+ievdcW71GYsTQb2ECzNtxJdb89Jp2D9OxUS9sz65vQx8W9g1uqSkE/i+Yv
-        c6gTmipg==;
+        bh=Syv05ntpXp5OHYqqfiVzAsVsVw2vQPR8ml3h23JrCRo=; b=k38Y8vKbdkeU0De3i2bolBbeNS
+        SSCL2Q6QOBrIPOIJD3gJVAC1Xhfp5AlLeatX62Mp4ZTvK3R3F/kg/IZJGEXy5aPbOeq6qIBuVyFtN
+        eyVFm0PEI/I6PglMho1hMAsthcYPja6a+C17ZkEompoDPvse2TEvyBRMt0ZV1oellCcxXGsM0xjwD
+        tEn/46jEJQxhV9Xla/3bnL65pnz17bIyRgwGG7+s0GnrsODzEiUSZtsW9XwNRtSF4IK7cTpMAAvuG
+        Piu1/kELPZEPiwa3JpdGmZhv1iItnVAh2yu+/CvEFmUSzFtvP9pMFR97ViA07JPXTwbDunyDeUxtH
+        UgiVNH1Q==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jj76b-0003YF-8X; Wed, 10 Jun 2020 20:13:49 +0000
+        id 1jj76b-0003YY-CU; Wed, 10 Jun 2020 20:13:49 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 48/51] mm: Make __do_page_cache_readahead take a readahead_control
-Date:   Wed, 10 Jun 2020 13:13:42 -0700
-Message-Id: <20200610201345.13273-49-willy@infradead.org>
+Cc:     William Kucharski <william.kucharski@oracle.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Matthew Wilcox <willy@infradead.org>
+Subject: [PATCH v6 51/51] mm: Align THP mappings for non-DAX
+Date:   Wed, 10 Jun 2020 13:13:45 -0700
+Message-Id: <20200610201345.13273-52-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200610201345.13273-1-willy@infradead.org>
 References: <20200610201345.13273-1-willy@infradead.org>
@@ -55,130 +56,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+From: William Kucharski <william.kucharski@oracle.com>
 
-Also call __do_page_cache_readahead() directly from ondemand_readahead()
-instead of indirecting via ra_submit().
+When we have the opportunity to use transparent huge pages to map a
+file, we want to follow the same rules as DAX.
 
+Signed-off-by: William Kucharski <william.kucharski@oracle.com>
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- mm/internal.h  | 11 +++++------
- mm/readahead.c | 26 ++++++++++++++------------
- 2 files changed, 19 insertions(+), 18 deletions(-)
+ mm/huge_memory.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/mm/internal.h b/mm/internal.h
-index cd7038a36354..63c493f892e2 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -51,18 +51,17 @@ void unmap_page_range(struct mmu_gather *tlb,
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index c25d8e2310e8..0fb08e4eeb8e 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -577,13 +577,10 @@ unsigned long thp_get_unmapped_area(struct file *filp, unsigned long addr,
+ 	unsigned long ret;
+ 	loff_t off = (loff_t)pgoff << PAGE_SHIFT;
  
- void force_page_cache_readahead(struct address_space *, struct file *,
- 		pgoff_t index, unsigned long nr_to_read);
--void __do_page_cache_readahead(struct address_space *, struct file *,
--		pgoff_t index, unsigned long nr_to_read,
--		unsigned long lookahead_size);
-+void __do_page_cache_readahead(struct readahead_control *,
-+		unsigned long nr_to_read, unsigned long lookahead_size);
- 
- /*
-  * Submit IO for the read-ahead request in file_ra_state.
-  */
- static inline void ra_submit(struct file_ra_state *ra,
--		struct address_space *mapping, struct file *filp)
-+		struct address_space *mapping, struct file *file)
- {
--	__do_page_cache_readahead(mapping, filp,
--			ra->start, ra->size, ra->async_size);
-+	DEFINE_READAHEAD(rac, file, mapping, ra->start);
-+	__do_page_cache_readahead(&rac, ra->size, ra->async_size);
+-	if (!IS_DAX(filp->f_mapping->host) || !IS_ENABLED(CONFIG_FS_DAX_PMD))
+-		goto out;
+-
+ 	ret = __thp_get_unmapped_area(filp, addr, len, off, flags, PMD_SIZE);
+ 	if (ret)
+ 		return ret;
+-out:
++
+ 	return current->mm->get_unmapped_area(filp, addr, len, pgoff, flags);
  }
- 
- /**
-diff --git a/mm/readahead.c b/mm/readahead.c
-index 62da2d4beed1..74c7e1eff540 100644
---- a/mm/readahead.c
-+++ b/mm/readahead.c
-@@ -246,12 +246,11 @@ EXPORT_SYMBOL_GPL(page_cache_readahead_unbounded);
-  * behaviour which would occur if page allocations are causing VM writeback.
-  * We really don't want to intermingle reads and writes like that.
-  */
--void __do_page_cache_readahead(struct address_space *mapping,
--		struct file *file, pgoff_t index, unsigned long nr_to_read,
--		unsigned long lookahead_size)
-+void __do_page_cache_readahead(struct readahead_control *rac,
-+		unsigned long nr_to_read, unsigned long lookahead_size)
- {
--	DEFINE_READAHEAD(rac, file, mapping, index);
--	struct inode *inode = mapping->host;
-+	struct inode *inode = rac->mapping->host;
-+	unsigned long index = readahead_index(rac);
- 	loff_t isize = i_size_read(inode);
- 	pgoff_t end_index;	/* The last page we want to read */
- 
-@@ -265,7 +264,7 @@ void __do_page_cache_readahead(struct address_space *mapping,
- 	if (nr_to_read > end_index - index)
- 		nr_to_read = end_index - index + 1;
- 
--	page_cache_readahead_unbounded(&rac, nr_to_read, lookahead_size);
-+	page_cache_readahead_unbounded(rac, nr_to_read, lookahead_size);
- }
- 
- /*
-@@ -273,10 +272,11 @@ void __do_page_cache_readahead(struct address_space *mapping,
-  * memory at once.
-  */
- void force_page_cache_readahead(struct address_space *mapping,
--		struct file *filp, pgoff_t index, unsigned long nr_to_read)
-+		struct file *file, pgoff_t index, unsigned long nr_to_read)
- {
-+	DEFINE_READAHEAD(rac, file, mapping, index);
- 	struct backing_dev_info *bdi = inode_to_bdi(mapping->host);
--	struct file_ra_state *ra = &filp->f_ra;
-+	struct file_ra_state *ra = &file->f_ra;
- 	unsigned long max_pages;
- 
- 	if (unlikely(!mapping->a_ops->readpage && !mapping->a_ops->readpages &&
-@@ -294,7 +294,7 @@ void force_page_cache_readahead(struct address_space *mapping,
- 
- 		if (this_chunk > nr_to_read)
- 			this_chunk = nr_to_read;
--		__do_page_cache_readahead(mapping, filp, index, this_chunk, 0);
-+		__do_page_cache_readahead(&rac, this_chunk, 0);
- 
- 		index += this_chunk;
- 		nr_to_read -= this_chunk;
-@@ -432,10 +432,11 @@ static int try_context_readahead(struct address_space *mapping,
-  * A minimal readahead algorithm for trivial sequential/random reads.
-  */
- static void ondemand_readahead(struct address_space *mapping,
--		struct file_ra_state *ra, struct file *filp,
-+		struct file_ra_state *ra, struct file *file,
- 		bool hit_readahead_marker, pgoff_t index,
- 		unsigned long req_size)
- {
-+	DEFINE_READAHEAD(rac, file, mapping, index);
- 	struct backing_dev_info *bdi = inode_to_bdi(mapping->host);
- 	unsigned long max_pages = ra->ra_pages;
- 	unsigned long add_pages;
-@@ -516,7 +517,7 @@ static void ondemand_readahead(struct address_space *mapping,
- 	 * standalone, small random read
- 	 * Read as is, and do not pollute the readahead state.
- 	 */
--	__do_page_cache_readahead(mapping, filp, index, req_size, 0);
-+	__do_page_cache_readahead(&rac, req_size, 0);
- 	return;
- 
- initial_readahead:
-@@ -542,7 +543,8 @@ static void ondemand_readahead(struct address_space *mapping,
- 		}
- 	}
- 
--	ra_submit(ra, mapping, filp);
-+	rac._index = ra->start;
-+	__do_page_cache_readahead(&rac, ra->size, ra->async_size);
- }
- 
- /**
+ EXPORT_SYMBOL_GPL(thp_get_unmapped_area);
 -- 
 2.26.2
 
