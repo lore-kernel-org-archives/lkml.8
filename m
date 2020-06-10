@@ -7,45 +7,44 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A72B0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2CB8C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79925206F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:14:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C949D2074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:15:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k38Y8vKb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dE4Xknev"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730755AbgFJUOp (ORCPT
+        id S1730740AbgFJUOm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 16:14:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60512 "EHLO
+        Wed, 10 Jun 2020 16:14:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730599AbgFJUNy (ORCPT
+        with ESMTP id S1730606AbgFJUNy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 10 Jun 2020 16:13:54 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8240AC0085C8;
-        Wed, 10 Jun 2020 13:13:49 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76226C03E96F;
+        Wed, 10 Jun 2020 13:13:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=Syv05ntpXp5OHYqqfiVzAsVsVw2vQPR8ml3h23JrCRo=; b=k38Y8vKbdkeU0De3i2bolBbeNS
-        SSCL2Q6QOBrIPOIJD3gJVAC1Xhfp5AlLeatX62Mp4ZTvK3R3F/kg/IZJGEXy5aPbOeq6qIBuVyFtN
-        eyVFm0PEI/I6PglMho1hMAsthcYPja6a+C17ZkEompoDPvse2TEvyBRMt0ZV1oellCcxXGsM0xjwD
-        tEn/46jEJQxhV9Xla/3bnL65pnz17bIyRgwGG7+s0GnrsODzEiUSZtsW9XwNRtSF4IK7cTpMAAvuG
-        Piu1/kELPZEPiwa3JpdGmZhv1iItnVAh2yu+/CvEFmUSzFtvP9pMFR97ViA07JPXTwbDunyDeUxtH
-        UgiVNH1Q==;
+        bh=DV4ftIEdQNHLrdsOYQ9aZc9MP7MJ7x8fQ7A37yrCky8=; b=dE4XknevV4TlrEoLcQIxjzKRp+
+        BibugNzNqwmBXjnp0W2fFr9fGISsZu07NDmp0kSLEqS83i+m2dUsKWpQw/pFlTb1pxMyCr4uVuIZJ
+        GCk49SOlcF2PJhRvYT6T+KR9MifKirfYnoFeDLeSfElIwmWAxGwzNiqBo9c2O1+oSllVoaVE7wnRs
+        0uYwfG/lPWO+08wl3MxXZLN0FVYDZUoHAiSw8qY2f/gx9f6r1qTbzXncCQ2Txxjugr8/e3cNjRoRx
+        EKJBRl6912H2mNkP5vOjk6SYY4VqoVShGASvdRKYvS7NJEOu6V885vJx11f5spixepoqqPfv3Frp3
+        03+2HSxg==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jj76b-0003YY-CU; Wed, 10 Jun 2020 20:13:49 +0000
+        id 1jj76Z-0003T0-At; Wed, 10 Jun 2020 20:13:47 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org
-Cc:     William Kucharski <william.kucharski@oracle.com>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Matthew Wilcox <willy@infradead.org>
-Subject: [PATCH v6 51/51] mm: Align THP mappings for non-DAX
-Date:   Wed, 10 Jun 2020 13:13:45 -0700
-Message-Id: <20200610201345.13273-52-willy@infradead.org>
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v6 03/51] mm: Print hashed address of struct page
+Date:   Wed, 10 Jun 2020 13:12:57 -0700
+Message-Id: <20200610201345.13273-4-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200610201345.13273-1-willy@infradead.org>
 References: <20200610201345.13273-1-willy@infradead.org>
@@ -56,36 +55,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: William Kucharski <william.kucharski@oracle.com>
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-When we have the opportunity to use transparent huge pages to map a
-file, we want to follow the same rules as DAX.
+The actual address of the struct page isn't particularly helpful,
+while the hashed address helps match with other messages elsewhere.
 
-Signed-off-by: William Kucharski <william.kucharski@oracle.com>
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- mm/huge_memory.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ mm/debug.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index c25d8e2310e8..0fb08e4eeb8e 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -577,13 +577,10 @@ unsigned long thp_get_unmapped_area(struct file *filp, unsigned long addr,
- 	unsigned long ret;
- 	loff_t off = (loff_t)pgoff << PAGE_SHIFT;
+diff --git a/mm/debug.c b/mm/debug.c
+index e30e35b41d0e..b17909c16a77 100644
+--- a/mm/debug.c
++++ b/mm/debug.c
+@@ -86,23 +86,23 @@ void __dump_page(struct page *page, const char *reason)
  
--	if (!IS_DAX(filp->f_mapping->host) || !IS_ENABLED(CONFIG_FS_DAX_PMD))
--		goto out;
--
- 	ret = __thp_get_unmapped_area(filp, addr, len, off, flags, PMD_SIZE);
- 	if (ret)
- 		return ret;
--out:
-+
- 	return current->mm->get_unmapped_area(filp, addr, len, pgoff, flags);
- }
- EXPORT_SYMBOL_GPL(thp_get_unmapped_area);
+ 	if (compound)
+ 		if (hpage_pincount_available(page)) {
+-			pr_warn("page:%px refcount:%d mapcount:%d mapping:%p "
+-				"index:%#lx head:%px order:%u "
++			pr_warn("page:%p refcount:%d mapcount:%d mapping:%p "
++				"index:%#lx head:%p order:%u "
+ 				"compound_mapcount:%d compound_pincount:%d\n",
+ 				page, page_ref_count(head), mapcount,
+ 				mapping, page_to_pgoff(page), head,
+ 				compound_order(head), compound_mapcount(page),
+ 				compound_pincount(page));
+ 		} else {
+-			pr_warn("page:%px refcount:%d mapcount:%d mapping:%p "
+-				"index:%#lx head:%px order:%u "
++			pr_warn("page:%p refcount:%d mapcount:%d mapping:%p "
++				"index:%#lx head:%p order:%u "
+ 				"compound_mapcount:%d\n",
+ 				page, page_ref_count(head), mapcount,
+ 				mapping, page_to_pgoff(page), head,
+ 				compound_order(head), compound_mapcount(page));
+ 		}
+ 	else
+-		pr_warn("page:%px refcount:%d mapcount:%d mapping:%p index:%#lx\n",
++		pr_warn("page:%p refcount:%d mapcount:%d mapping:%p index:%#lx\n",
+ 			page, page_ref_count(page), mapcount,
+ 			mapping, page_to_pgoff(page));
+ 	if (PageKsm(page))
 -- 
 2.26.2
 
