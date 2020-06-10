@@ -6,91 +6,93 @@ X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32291C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AA4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 148AC206F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E41E520656
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:13:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZG3FMJb/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earth.li header.i=@earth.li header.b="AFal9wt5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730153AbgFJTLf (ORCPT
+        id S1730159AbgFJTNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 15:11:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50898 "EHLO
+        Wed, 10 Jun 2020 15:13:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729844AbgFJTLf (ORCPT
+        with ESMTP id S1726134AbgFJTNv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 15:11:35 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 307B7C03E96B;
-        Wed, 10 Jun 2020 12:11:35 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id t7so1393603pgt.3;
-        Wed, 10 Jun 2020 12:11:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VjN6PtM9eQcwFat45q7B/D/HGaIIKGoFFHYjqauxi5M=;
-        b=ZG3FMJb/s7lorhLzOiw+9VtxYoaNbteAdtUVi8jp0vu8doytYRyRWeuhiNqkZmycPo
-         FNTf1wDNuJSgQIU1uMhE7OiSDuadU2N00GKZf9KrecCaiq2Q5RjLr3BVzW5HdmE08nYD
-         H1LWYcVA4+gQ1KbPHM6w3m//SNBN35Etg1DigQBSxC/3FjZDVTG5Pmyo9X7s+4Z/6yuq
-         nobb9BpgK/I0jnFHmcDiUVbAJ30JCHEDWDcI7nJY3OvYFRcO9J0qt7d9ntwanWLnUkCE
-         CW+Y11tP4hEaatZNM5d+xRTLeK7OPOZEIjoLelduf5A8YT9aYtixH2yLBNkIrXCUXNZw
-         sEoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VjN6PtM9eQcwFat45q7B/D/HGaIIKGoFFHYjqauxi5M=;
-        b=PPss7E48HX08bpvyFIoGyLQ2ff/r3obVW0yfLVHd1GBnnSzQWH9afGhb9G13sC4/4W
-         XdNtRgMFCkKUxElDL+pqTzQYrMpwaOpu2bITa3GOkxrz3PRXRaOQbzGPlEl0HH9KoMvz
-         q7eGm8gyOCWslWrHE/jzu/yiWjQVOR3E/w49y6Y15UThWnDFR6kqoHE4lt17WYrY9s5f
-         yUQVGUYhsT1auo0OXSQLsN06pK21xIoiU3tdJLI+/9TEZVYZGsLWQdClutTCOzawLo44
-         KV1p+8ScPI8/0s3imSzX/dEHfkXr+Gu6htl+/io1IrVTvKFhLhrKZwdf6WbyWyq894RA
-         ZFCA==
-X-Gm-Message-State: AOAM530Nk0JkTp+a/pGIR//BksIa/1hObAwXjv1haxtyNOus/SlzNv0z
-        PRw4c6Y+oR/5qhz/DlAB2sU=
-X-Google-Smtp-Source: ABdhPJzWzvq+ruJBppZkgAr3qNOWvAdy8YVaJb3I3CCpg30BFY59+gNBpu0TdPma3eVaREpUBfj9GQ==
-X-Received: by 2002:a63:591e:: with SMTP id n30mr3934505pgb.429.1591816294770;
-        Wed, 10 Jun 2020 12:11:34 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id h3sm673149pfr.2.2020.06.10.12.11.34
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 10 Jun 2020 12:11:34 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 12:11:33 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.7 00/24] 5.7.2-rc1 review
-Message-ID: <20200610191133.GH232340@roeck-us.net>
-References: <20200609174149.255223112@linuxfoundation.org>
+        Wed, 10 Jun 2020 15:13:51 -0400
+Received: from the.earth.li (the.earth.li [IPv6:2a00:1098:86:4d:c0ff:ee:15:900d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C812BC03E96B;
+        Wed, 10 Jun 2020 12:13:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
+         s=the; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject
+        :Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=OiuCmt6AdtZy82Jw6Hu7vBjDb/GgJYurnLTmItW1WHA=; b=AFal9wt5jWjZ2eyqkXQCHfi/yh
+        T3xwrgHNJYxAg+yJ0ic5CkBo09d5e+6rMQze1i1EndWHLC/ohZKhaIY9idA+V8IAQyZua44YvYXwa
+        iIrxnDFqUed1gaQB2uAB4F2V/V0RZ1WLLzodBZLlr2sPHQktxyOxJcafV8W3srAbPcIHIKuCUKdmI
+        I4SQulCV7IO7kiPcO4SAHUc63mZRKGHjIqB/iW0DbrOU+BewBBD4r6nr12lFTP4P6GdA2sAOADm9P
+        osYYADbYdurdRAgzDBys+/adbQmIK0f61pkJx2GcQ9bky3u2fS4vSisleKe1xfkRm82fpe1DL7Wcz
+        su3ibyEg==;
+Received: from noodles by the.earth.li with local (Exim 4.92)
+        (envelope-from <noodles@earth.li>)
+        id 1jj6AK-0005ms-LJ; Wed, 10 Jun 2020 20:13:36 +0100
+Date:   Wed, 10 Jun 2020 20:13:36 +0100
+From:   Jonathan McDowell <noodles@earth.li>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH v3 0/2] net: dsa: qca8k: Improve SGMII interface handling
+Message-ID: <cover.1591816172.git.noodles@earth.li>
+References: <cover.1591380105.git.noodles@earth.li>
+ <8ddd76e484e1bedd12c87ea0810826b60e004a65.1591380105.git.noodles@earth.li>
+ <20200605183843.GB1006885@lunn.ch>
+ <20200606074916.GM311@earth.li>
+ <20200606083741.GK1551@shell.armlinux.org.uk>
+ <20200606105909.GN311@earth.li>
+ <20200608183953.GR311@earth.li>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200609174149.255223112@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200608183953.GR311@earth.li>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 07:45:31PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.7.2 release.
-> There are 24 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 11 Jun 2020 17:41:38 +0000.
-> Anything received after that time might be too late.
-> 
+Ok, take 3. This splits out the PHYLINK change to a separate patch which
+should have no effect on functionality, and then adds the SGMII clean-ups
+(i.e. the missing initialisation) on top of that as a second patch.
 
-Build results:
-	total: 155 pass: 155 fail: 0
-Qemu test results:
-	total: 431 pass: 431 fail: 0
+As before, tested with a device where the CPU connection is RGMII (i.e.
+the common current use case) + one where the CPU connection is SGMII. I
+don't have any devices where the SGMII interface is brought out to
+something other than the CPU.
 
-Guenter
+
+v3:
+- Move phylink changes to separate patch
+- Address rmk review comments
+v2:
+- Switch to phylink
+- Avoid need for device tree configuration options
+
+Jonathan McDowell (2):
+  net: dsa: qca8k: Switch to PHYLINK instead of PHYLIB
+  net: dsa: qca8k: Improve SGMII interface handling
+
+ drivers/net/dsa/qca8k.c | 337 ++++++++++++++++++++++++++++------------
+ drivers/net/dsa/qca8k.h |  13 ++
+ 2 files changed, 252 insertions(+), 98 deletions(-)
+
+-- 
+2.20.1
+
