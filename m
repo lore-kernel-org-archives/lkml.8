@@ -2,282 +2,69 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A28FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9500DC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60178206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:26:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Udr1IYqv"
+	by mail.kernel.org (Postfix) with ESMTP id 7771E206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:26:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729138AbgFJM0N (ORCPT
+        id S1729159AbgFJM03 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 08:26:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44530 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729034AbgFJM0L (ORCPT
+        Wed, 10 Jun 2020 08:26:29 -0400
+Received: from paleale.coelho.fi ([176.9.41.70]:36642 "EHLO
+        farmhouse.coelho.fi" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729140AbgFJM02 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 08:26:11 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 434D8C03E96B
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 05:26:11 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id c194so1860168oig.5
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 05:26:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=yzNpoBVUIzGM0jWy4CzYzFZyv4ZMyRLgTHGzYAF0h/4=;
-        b=Udr1IYqvi6qIHAbHY4mma1jfM4+F8fyym+UpFudEP3iOPClfc79jh7mYuxD9geSyBW
-         wqF0X2roOIO7E1PuOFkp9HcvutoataC22Lucpcih42JnSXmiJ0UJvcRJhs8u1RxWzaGF
-         hNLrk0c4XJr4c/c699xf6oxhxTfydvg3VIfss=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=yzNpoBVUIzGM0jWy4CzYzFZyv4ZMyRLgTHGzYAF0h/4=;
-        b=fScySq7Cmveb4vAUyuK/p0b8Zc/9/TJO5AZz9fqPgbpRkYHi0KJCRWdnH7FJM1C9EE
-         42IyAfs8i0vwDbxrKkZrHSGimcjA7DHp4ifmxqlZlFC08nj27MB33/vifcWWJj6VTqh1
-         D0a4znQMarp+0hR/UCbNT0oAn+4kUGH1Kj6X9fqJQHh67b0okj6TRzelSW0KdZvMjNLx
-         hD+My8bjI34x9FW60SAGIjvm6q5zpGpDwOMLhtzOyBHnXSsF5mZvmLt21ZSe3X2NCxry
-         sn0XlyT2SLU5+kVyAoue6HK5slNtCxDvY2pwrtDGSVURLKVa1KunoJVSm468+HicnVzC
-         hNhg==
-X-Gm-Message-State: AOAM530wJ8Xg3IhjBz13DDuiNKi1BzXEmHydGT9m3WllNP6M771fNP/a
-        nF6KuxNsqcOk4rlRWCCuT/ygcZMk+Gng+SH3sr3JuIyu
-X-Google-Smtp-Source: ABdhPJy7HqpB75fD6Jg4sB9zMPwjBriAsngvkdaN1meJQNljLuj1e/WyfJpcpBT3SMXWs6iH6T+oCNJGmM4lYUXZKX4=
-X-Received: by 2002:aca:4b91:: with SMTP id y139mr2202871oia.128.1591791970590;
- Wed, 10 Jun 2020 05:26:10 -0700 (PDT)
+        Wed, 10 Jun 2020 08:26:28 -0400
+Received: from 91-156-6-193.elisa-laajakaista.fi ([91.156.6.193] helo=[127.0.1.1])
+        by farmhouse.coelho.fi with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <luca@coelho.fi>)
+        id 1jizng-0015Qs-DI; Wed, 10 Jun 2020 15:25:48 +0300
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200604081224.863494-1-daniel.vetter@ffwll.ch>
- <20200604081224.863494-2-daniel.vetter@ffwll.ch> <15bcdddd-b560-e98b-eaec-62277b5ab4af@shipmail.org>
-In-Reply-To: <15bcdddd-b560-e98b-eaec-62277b5ab4af@shipmail.org>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Wed, 10 Jun 2020 14:25:59 +0200
-Message-ID: <CAKMK7uGF_ghH-3hT5QMKHuzToP50xj3OaDzAtdjO-d8H9svdjQ@mail.gmail.com>
-Subject: Re: [Intel-gfx] [PATCH 01/18] mm: Track mmu notifiers in fs_reclaim_acquire/release
-To:     =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28Intel=29?= 
-        <thomas_os@shipmail.org>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+From:   Luca Coelho <luca@coelho.fi>
+In-Reply-To: <20200605154112.16277-7-f.suligoi@asem.it>
+References: <20200605154112.16277-7-f.suligoi@asem.it>
+To:     Flavio Suligoi <f.suligoi@asem.it>
+Cc:     Johannes Berg <johannes@sipsolutions.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        Johan Hovold <johan@kernel.org>,
+        Saurav Girepunje <saurav.girepunje@gmail.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        <linux-wireless@vger.kernel.org>, <b43-dev@lists.infradead.org>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        <netdev@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Flavio Suligoi <f.suligoi@asem.it>
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.8.3
+Message-Id: <E1jizng-0015Qs-DI@farmhouse.coelho.fi>
+Date:   Wed, 10 Jun 2020 15:25:48 +0300
+Subject: Re: [PATCH 6/9] net: wireless: intel: fix wiki website url
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 2:01 PM Thomas Hellstr=C3=B6m (Intel)
-<thomas_os@shipmail.org> wrote:
->
-> Hi, Daniel,
->
-> Please see below.
->
-> On 6/4/20 10:12 AM, Daniel Vetter wrote:
-> > fs_reclaim_acquire/release nicely catch recursion issues when
-> > allocating GFP_KERNEL memory against shrinkers (which gpu drivers tend
-> > to use to keep the excessive caches in check). For mmu notifier
-> > recursions we do have lockdep annotations since 23b68395c7c7
-> > ("mm/mmu_notifiers: add a lockdep map for invalidate_range_start/end").
-> >
-> > But these only fire if a path actually results in some pte
-> > invalidation - for most small allocations that's very rarely the case.
-> > The other trouble is that pte invalidation can happen any time when
-> > __GFP_RECLAIM is set. Which means only really GFP_ATOMIC is a safe
-> > choice, GFP_NOIO isn't good enough to avoid potential mmu notifier
-> > recursion.
-> >
-> > I was pondering whether we should just do the general annotation, but
-> > there's always the risk for false positives. Plus I'm assuming that
-> > the core fs and io code is a lot better reviewed and tested than
-> > random mmu notifier code in drivers. Hence why I decide to only
-> > annotate for that specific case.
-> >
-> > Furthermore even if we'd create a lockdep map for direct reclaim, we'd
-> > still need to explicit pull in the mmu notifier map - there's a lot
-> > more places that do pte invalidation than just direct reclaim, these
-> > two contexts arent the same.
-> >
-> > Note that the mmu notifiers needing their own independent lockdep map
-> > is also the reason we can't hold them from fs_reclaim_acquire to
-> > fs_reclaim_release - it would nest with the acquistion in the pte
-> > invalidation code, causing a lockdep splat. And we can't remove the
-> > annotations from pte invalidation and all the other places since
-> > they're called from many other places than page reclaim. Hence we can
-> > only do the equivalent of might_lock, but on the raw lockdep map.
-> >
-> > With this we can also remove the lockdep priming added in 66204f1d2d1b
-> > ("mm/mmu_notifiers: prime lockdep") since the new annotations are
-> > strictly more powerful.
-> >
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Jason Gunthorpe <jgg@mellanox.com>
-> > Cc: linux-mm@kvack.org
-> > Cc: linux-rdma@vger.kernel.org
-> > Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> > Cc: Christian K=C3=B6nig <christian.koenig@amd.com>
-> > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> > ---
-> > This is part of a gpu lockdep annotation series simply because it
-> > really helps to catch issues where gpu subsystem locks and primitives
-> > can deadlock with themselves through allocations and mmu notifiers.
-> > But aside from that motivation it should be completely free-standing,
-> > and can land through -mm/-rdma/-hmm or any other tree really whenever.
-> > -Daniel
-> > ---
-> >   mm/mmu_notifier.c |  7 -------
-> >   mm/page_alloc.c   | 23 ++++++++++++++---------
-> >   2 files changed, 14 insertions(+), 16 deletions(-)
-> >
-> > diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
-> > index 06852b896fa6..5d578b9122f8 100644
-> > --- a/mm/mmu_notifier.c
-> > +++ b/mm/mmu_notifier.c
-> > @@ -612,13 +612,6 @@ int __mmu_notifier_register(struct mmu_notifier *s=
-ubscription,
-> >       lockdep_assert_held_write(&mm->mmap_sem);
-> >       BUG_ON(atomic_read(&mm->mm_users) <=3D 0);
-> >
-> > -     if (IS_ENABLED(CONFIG_LOCKDEP)) {
-> > -             fs_reclaim_acquire(GFP_KERNEL);
-> > -             lock_map_acquire(&__mmu_notifier_invalidate_range_start_m=
-ap);
-> > -             lock_map_release(&__mmu_notifier_invalidate_range_start_m=
-ap);
-> > -             fs_reclaim_release(GFP_KERNEL);
-> > -     }
-> > -
-> >       if (!mm->notifier_subscriptions) {
-> >               /*
-> >                * kmalloc cannot be called under mm_take_all_locks(), bu=
-t we
-> > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> > index 13cc653122b7..f8a222db4a53 100644
-> > --- a/mm/page_alloc.c
-> > +++ b/mm/page_alloc.c
-> > @@ -57,6 +57,7 @@
-> >   #include <trace/events/oom.h>
-> >   #include <linux/prefetch.h>
-> >   #include <linux/mm_inline.h>
-> > +#include <linux/mmu_notifier.h>
-> >   #include <linux/migrate.h>
-> >   #include <linux/hugetlb.h>
-> >   #include <linux/sched/rt.h>
-> > @@ -4124,7 +4125,7 @@ should_compact_retry(struct alloc_context *ac, un=
-signed int order, int alloc_fla
-> >   static struct lockdep_map __fs_reclaim_map =3D
-> >       STATIC_LOCKDEP_MAP_INIT("fs_reclaim", &__fs_reclaim_map);
-> >
-> > -static bool __need_fs_reclaim(gfp_t gfp_mask)
-> > +static bool __need_reclaim(gfp_t gfp_mask)
-> >   {
-> >       gfp_mask =3D current_gfp_context(gfp_mask);
-> >
-> > @@ -4136,10 +4137,6 @@ static bool __need_fs_reclaim(gfp_t gfp_mask)
-> >       if (current->flags & PF_MEMALLOC)
-> >               return false;
-> >
-> > -     /* We're only interested __GFP_FS allocations for now */
-> > -     if (!(gfp_mask & __GFP_FS))
-> > -             return false;
-> > -
-> >       if (gfp_mask & __GFP_NOLOCKDEP)
-> >               return false;
-> >
-> > @@ -4158,15 +4155,23 @@ void __fs_reclaim_release(void)
-> >
-> >   void fs_reclaim_acquire(gfp_t gfp_mask)
-> >   {
-> > -     if (__need_fs_reclaim(gfp_mask))
-> > -             __fs_reclaim_acquire();
-> > +     if (__need_reclaim(gfp_mask)) {
-> > +             if (!(gfp_mask & __GFP_FS))
-> Hmm. Shouldn't this be "if (gfp_mask & __GFP_FS)" or am I misunderstandin=
-g?
+Flavio Suligoi <f.suligoi@asem.it> wrote:
 
-Uh yes :-( I guess what saved me is that I immediately went for the
-lockdep splat in drivers/gpu. And I guess there's not any obvious
-inversions for GFP_NOFS/GFP_NOIO, and since I made the mistake
-consintely the GFP_FS annotation was still consistent, but simply for
-GFP_NOFS. Oops.
+> In some Intel files, the wiki url is still the old
+> "wireless.kernel.org" instead of the new
+> "wireless.wiki.kernel.org"
+> 
+> Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
 
-Will fix in the next version.
+Patch applied to iwlwifi-next.git, thanks.
 
-> > +                     __fs_reclaim_acquire();
->
->
-> #ifdef CONFIG_MMU_NOTIFIER?
+e00c6d8d491b net: wireless: intel: fix wiki website url
 
-Hm indeed. Will fix too.
-
-Thanks for your review.
-
->
-> > +
-> > +             lock_map_acquire(&__mmu_notifier_invalidate_range_start_m=
-ap);
-> > +             lock_map_release(&__mmu_notifier_invalidate_range_start_m=
-ap);
-> > +
-> > +     }
-> >   }
-> >   EXPORT_SYMBOL_GPL(fs_reclaim_acquire);
-> >
-> >   void fs_reclaim_release(gfp_t gfp_mask)
-> >   {
-> > -     if (__need_fs_reclaim(gfp_mask))
-> > -             __fs_reclaim_release();
-> > +     if (__need_reclaim(gfp_mask)) {
-> > +             if (!(gfp_mask & __GFP_FS))
-> Same here?
-> > +                     __fs_reclaim_release();
-> > +     }
-> >   }
-> >   EXPORT_SYMBOL_GPL(fs_reclaim_release);
-> >   #endif
->
-> One suggested test case would perhaps be to call madvise(madv_dontneed)
-> on a subpart of a transhuge page. That would IIRC trigger a page split
-> and interesting mmu notifier calls....
-
-The neat thing about the mmu notifier lockdep key is that we take it
-whether there's notifiers or not - it's called outside of any of these
-paths. So as long as you have ever hit a hugepage split somewhen since
-boot, and you've hit your driver's mmu_notifier paths, lockdep will
-connect the dots. Explicit testcases for all combinations not needed
-anymore. This patch here just makes sure that the same holds for
-memory allocations and direct reclaim (which is a lot harder to
-trigger intentionally in testcases).
-
-That was at least the idea, seems to have caught a few things already.
--Daniel
-
->
-> Thanks,
-> Thomas
->
->
-> _______________________________________________
-> Intel-gfx mailing list
-> Intel-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/intel-gfx
-
-
-
---=20
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
