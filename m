@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FEE9C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 16:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD19C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 16:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 785EB2070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 16:33:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5468A207C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 16:33:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OJA8GCOg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mU/hjbec"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730717AbgFJQdM (ORCPT
+        id S1730719AbgFJQdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 12:33:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54608 "EHLO
+        Wed, 10 Jun 2020 12:33:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730689AbgFJQdI (ORCPT
+        with ESMTP id S1729090AbgFJQdG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 12:33:08 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D9A0C03E96B;
-        Wed, 10 Jun 2020 09:33:08 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id t18so3003246wru.6;
-        Wed, 10 Jun 2020 09:33:08 -0700 (PDT)
+        Wed, 10 Jun 2020 12:33:06 -0400
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0938BC03E96F;
+        Wed, 10 Jun 2020 09:33:06 -0700 (PDT)
+Received: by mail-wr1-x430.google.com with SMTP id p5so2983087wrw.9;
+        Wed, 10 Jun 2020 09:33:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=mgTl/QDxn4TQmCxa1B/g2WIYRwMAAuGhWmdBVwlNgB0=;
-        b=OJA8GCOgm3W1T6mRWRrRuvk2UsIKp/aq80UWD815Q6ZWn14+pma3Rscmqr6+MHJ5Jt
-         qBJhWZ8Hq2qmtzUHSBUAA7XSzcQD2IkVvXJRyYkbowAl+4jfDsSdEQt5MjZTDSjnl8J7
-         z/oh+2P66Ld/PoDOmILlenK/i6sO/nbg2aanxeDJVJFd8Adg6efF1U2X+AUlkHSB8O4O
-         T/luR9FTh09CI+sWOC3gYv/t0wRbMsNf4uUR/PSIk2ntp0HZssNFiJH2nIgAgpzSexR6
-         VVM177a+md6mRQyUTwbovSl9aIcRSl4ctQutF+3u066KyAkI0LHdcayiYY6I1W15Y573
-         FqCw==
+        bh=nuTrMyPkP8MX6Ctw/wkm1vrkYcKiiG7dPPujumR0X/U=;
+        b=mU/hjbecbmsx+TmGH/jpg89IQXVoFggdbi7MB1DbtKv3rXmOMSi+0mRs6ISX9LAxby
+         zEhc3wG4392ERUyjTlV+hqk/v+scR7Usc3i1x4BuVrMX/fs99Ten8MeOWoqe+NENf61B
+         u7BiCBjgoNYSaM/cnJvhe5HssaYn/7kNEk0sfrqbhYzB62DKLoqdfK9PSl5fw7imbtVP
+         9YpgANzvLUh2sT/lrBJn0K9QSstXqSpcCOqW/gXqjMDKh1qXoX4ym707+xGhKf3hkZxS
+         +aCIWiazh/8fABSt8hBsF+zgzSJz/CwVn6ky9ukWq3nuKhTwyLKA0l8KitiEFnSFRNrN
+         Ni4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=mgTl/QDxn4TQmCxa1B/g2WIYRwMAAuGhWmdBVwlNgB0=;
-        b=SpoFiYx1szAxY6XRLpnuzwnVh7DRfMBjKDNa+aNXMkpJb3h9Ysu2rUnju5q6Ak8huz
-         B53LQrtNCH+oxFj8/xtv0Sa1hh1jDpGJuvKt+jIgh798H9k37+8EBNhYCRHtKrW+omIS
-         IKkxr2yiBsn8vXu25CBnNjEjxjDFPapi+DCu7EugC5TB4q9q2WZQ2mGpA7/0iOOaON11
-         Vlh9RJezrE3+xCpOqXvd/Hc2Yrf/DJSj2k5/OxrvgHZZEDT9nXRHXtfiXPrnbGLTJUua
-         ody/mHj36KY0COdRuRY+BJ4iUJo9WMKJRxTWL4Ce28/ZkliQgSaylPSMK/zwfl5fJE2c
-         QMvA==
-X-Gm-Message-State: AOAM531mmtSiqDCOtO+1poYsuYkGDFN5MvlpyQSFdBeBSOCqRgXpTiKZ
-        IDVFPNp58ZZUBftHJ82vycA=
-X-Google-Smtp-Source: ABdhPJyqjB6h1TfK5ilab4XOCrY+QpxKWAdqvFNqQCCEKtzYTj5baWJwDG77NOl0Ts3HMp9/GrKZ3Q==
-X-Received: by 2002:a5d:4a0d:: with SMTP id m13mr4925299wrq.12.1591806786682;
-        Wed, 10 Jun 2020 09:33:06 -0700 (PDT)
+        bh=nuTrMyPkP8MX6Ctw/wkm1vrkYcKiiG7dPPujumR0X/U=;
+        b=VhQ136FzRHR/thidxLQV5ad4fH7JoMoLWSvgafdFWGHxgl2eq6m/AcSx6DEvlQqI0Q
+         bfJM/RVlsgYt2muJEEFdnJa684pxooH9XuLbmkSaCPGrsPgzYvmBx0r38+rZBEnKMgxI
+         YJHqIS49zcbqlfD7V5T5IJE0o/i/IbwsSl1eMykZUj0+fHtF8Sq1vkt6yuh3CntUzxu6
+         FcRB5eGrugJLYf/2AmX7c+ARFK8sLqdk7sv83KpFN2WS+6HZ/StIP1qShPtDDl1MmAIZ
+         ZpdKvH9mT0lrjtF1CKPgbiVqqnYemO6bU7HBVmxjo+HYXFaegB1o4e4CEH90trLZ4syL
+         qyzQ==
+X-Gm-Message-State: AOAM531e6Igbw4spO+hNXbf/hS7RZUzI508mCVF9AaPGU61k2EyKLCqz
+        BYtsTF7x8hfBbVvQKA8KgTs=
+X-Google-Smtp-Source: ABdhPJy6FeF0fIzTTPvA7eNZR972kcMsDLstcxKXuRRBGYYZhynPqZ29GEHX9kxA1ZspIZQi8jgSZQ==
+X-Received: by 2002:adf:a1d3:: with SMTP id v19mr4609426wrv.245.1591806784588;
+        Wed, 10 Jun 2020 09:33:04 -0700 (PDT)
 Received: from skynet.lan (28.red-83-49-61.dynamicip.rima-tde.net. [83.49.61.28])
-        by smtp.gmail.com with ESMTPSA id t7sm414430wrq.41.2020.06.10.09.33.05
+        by smtp.gmail.com with ESMTPSA id t7sm414430wrq.41.2020.06.10.09.33.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 09:33:06 -0700 (PDT)
+        Wed, 10 Jun 2020 09:33:04 -0700 (PDT)
 From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
 To:     hauke@hauke-m.de, zajec5@gmail.com, tsbogend@alpha.franken.de,
@@ -69,9 +69,9 @@ To:     hauke@hauke-m.de, zajec5@gmail.com, tsbogend@alpha.franken.de,
         linux-arm-kernel@lists.infradead.org
 Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
-Subject: [PATCH v2 3/6] mips: bmips: dts: add BCM6328 power domain support
-Date:   Wed, 10 Jun 2020 18:32:58 +0200
-Message-Id: <20200610163301.461160-4-noltari@gmail.com>
+Subject: [PATCH v2 1/6] dt-bindings: soc: brcm: add BCM63xx power domain binding
+Date:   Wed, 10 Jun 2020 18:32:56 +0200
+Message-Id: <20200610163301.461160-2-noltari@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200610163301.461160-1-noltari@gmail.com>
 References: <20200609105244.4014823-1-noltari@gmail.com>
@@ -84,59 +84,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-BCM6328 SoCs have a power domain controller to enable/disable certain
-components in order to save power.
+BCM6318, BCM6328, BCM6362 and BCM63268 SoCs have a power domain controller
+to enable/disable certain components in order to save power.
 
 Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- v2: Add dt-bindings header files.
+ v2: Add separate YAML file.
 
- arch/mips/boot/dts/brcm/bcm6328.dtsi |  6 ++++++
- include/dt-bindings/soc/bcm6328-pm.h | 17 +++++++++++++++++
- 2 files changed, 23 insertions(+)
- create mode 100644 include/dt-bindings/soc/bcm6328-pm.h
+ .../bindings/soc/bcm/brcm,bcm63xx-power.yaml  | 44 +++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/bcm/brcm,bcm63xx-power.yaml
 
-diff --git a/arch/mips/boot/dts/brcm/bcm6328.dtsi b/arch/mips/boot/dts/brcm/bcm6328.dtsi
-index af860d06def6..1f9edd710392 100644
---- a/arch/mips/boot/dts/brcm/bcm6328.dtsi
-+++ b/arch/mips/boot/dts/brcm/bcm6328.dtsi
-@@ -110,6 +110,12 @@ leds0: led-controller@10000800 {
- 			status = "disabled";
- 		};
- 
-+		periph_pwr: power-controller@10001848 {
-+			compatible = "brcm,bcm6328-power-controller";
-+			reg = <0x10001848 0x4>;
-+			#power-domain-cells = <1>;
-+		};
-+
- 		ehci: usb@10002500 {
- 			compatible = "brcm,bcm6328-ehci", "generic-ehci";
- 			reg = <0x10002500 0x100>;
-diff --git a/include/dt-bindings/soc/bcm6328-pm.h b/include/dt-bindings/soc/bcm6328-pm.h
+diff --git a/Documentation/devicetree/bindings/soc/bcm/brcm,bcm63xx-power.yaml b/Documentation/devicetree/bindings/soc/bcm/brcm,bcm63xx-power.yaml
 new file mode 100644
-index 000000000000..557e1a69b7f7
+index 000000000000..804d8b31679e
 --- /dev/null
-+++ b/include/dt-bindings/soc/bcm6328-pm.h
-@@ -0,0 +1,17 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
++++ b/Documentation/devicetree/bindings/soc/bcm/brcm,bcm63xx-power.yaml
+@@ -0,0 +1,44 @@
++# SPDX-License-Identifier: GPL-2.0-or-later
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/soc/brcm/brcm,bcm63xx-power.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
-+#ifndef __DT_BINDINGS_BMIPS_BCM6328_PM_H
-+#define __DT_BINDINGS_BMIPS_BCM6328_PM_H
++title: BCM63xx power domain driver
 +
-+#define BCM6328_POWER_DOMAIN_ADSL2_MIPS	0
-+#define BCM6328_POWER_DOMAIN_ADSL2_PHY	1
-+#define BCM6328_POWER_DOMAIN_ADSL2_AFE	2
-+#define BCM6328_POWER_DOMAIN_SAR	3
-+#define BCM6328_POWER_DOMAIN_PCM	4
-+#define BCM6328_POWER_DOMAIN_USBD	5
-+#define BCM6328_POWER_DOMAIN_USBH	6
-+#define BCM6328_POWER_DOMAIN_PCIE	7
-+#define BCM6328_POWER_DOMAIN_ROBOSW	8
-+#define BCM6328_POWER_DOMAIN_EPHY	9
++maintainers:
++  - Álvaro Fernández Rojas <noltari@gmail.com>
 +
-+#endif /* __DT_BINDINGS_BMIPS_BCM6328_PM_H */
++description: |
++  BCM6318, BCM6328, BCM6362 and BCM63268 SoCs have a power domain controller
++  to enable/disable certain components in order to save power.
++
++properties:
++  compatible:
++    items:
++      - enum:
++          - brcm,bcm6318-power-controller
++          - brcm,bcm6328-power-controller
++          - brcm,bcm6362-power-controller
++          - brcm,bcm63268-power-controller
++
++  reg:
++    maxItems: 1
++
++  #power-domain-cells:
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - #power-domain-cells
++
++additionalProperties: false
++
++examples:
++  - |
++    periph_pwr: power-controller@10001848 {
++        compatible = "brcm,bcm6328-power-controller";
++        reg = <0x10001848 0x4>;
++        #power-domain-cells = <1>;
++    };
 -- 
 2.26.2
 
