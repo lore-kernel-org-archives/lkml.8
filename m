@@ -2,197 +2,210 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 455D2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F9A5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C49120734
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:24:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36DC32063A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:26:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="P7I8+djg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730185AbgFJPYe (ORCPT
+        id S1730188AbgFJP00 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 11:24:34 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40133 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726979AbgFJPYd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 11:24:33 -0400
-Received: by mail-lj1-f196.google.com with SMTP id n23so2977036ljh.7;
-        Wed, 10 Jun 2020 08:24:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=w3siWejRAPilHiUC6jsI5xYy2gYaS5P9S9XuSxXXOMQ=;
-        b=THX1mbbzCq4xxyXLkZkqQ28lSBsDoyV8EmYAAx0sVC36cxIOe9Q0u7OKZ1zeNAj2gY
-         7bo64u0yLekpQhathwRCPgiMV4G+XwMP9gMDSPgn63rWlWMIgrPQvjkb2QSNrPW1cRDd
-         l4etgA22PLUEAPVzR5Zw/IR5GDp0AQ3DXuiVu/FxZYxX5DJ1HDO3I8clTXxm80uT+AjN
-         mI3Pka0lh5ul1dXGpvvpQiqSDozymWA4j/dPfqHkk6jiLBblzLa/tUaLkrtSYc38q89H
-         IhkTdx+y3VwuZt4mzkUtjwdvTenyUSG2NSTgZZsxfEj/3CZLzeaYuAZMP+bRKj+i4dvV
-         bSsQ==
-X-Gm-Message-State: AOAM533zZD0LkendYaCASRy4lR5GBVERpRxJzmpcTq92Er2/gZeubTrk
-        lZkYH1qmEn3tvFFJskCX9hw=
-X-Google-Smtp-Source: ABdhPJxowAcpKm07CSV2XZBXzUPwDoILgauuX3JgUNqRvEamsMNgGVkLU/8gw9B1bFDjcmHx26rgIA==
-X-Received: by 2002:a05:651c:2d0:: with SMTP id f16mr1971844ljo.387.1591802670288;
-        Wed, 10 Jun 2020 08:24:30 -0700 (PDT)
-Received: from [192.168.42.234] ([213.87.161.124])
-        by smtp.gmail.com with ESMTPSA id 11sm9227lju.118.2020.06.10.08.24.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jun 2020 08:24:27 -0700 (PDT)
-Reply-To: alex.popov@linux.com
-Subject: Re: [PATCH 1/5] gcc-plugins/stackleak: Exclude alloca() from the
- instrumentation logic
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Jann Horn <jannh@google.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Emese Revfy <re.emese@gmail.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Sven Schnelle <svens@stackframe.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Collingbourne <pcc@google.com>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Alexander Monakov <amonakov@ispras.ru>,
-        Mathias Krause <minipli@googlemail.com>,
-        PaX Team <pageexec@freemail.hu>,
-        Brad Spengler <spender@grsecurity.net>,
-        Laura Abbott <labbott@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-kbuild@vger.kernel.org,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        kernel list <linux-kernel@vger.kernel.org>, gcc@gcc.gnu.org,
-        notify@kernel.org
-References: <20200604134957.505389-1-alex.popov@linux.com>
- <20200604134957.505389-2-alex.popov@linux.com>
- <CAG48ez05JOvqzYGr3PvyQGwFURspFWvNvf-b8Y613PX0biug8w@mail.gmail.com>
- <70319f78-2c7c-8141-d751-07f28203db7c@linux.com>
- <202006091133.412F0E89@keescook>
-From:   Alexander Popov <alex.popov@linux.com>
-Autocrypt: addr=alex.popov@linux.com; prefer-encrypt=mutual; keydata=
- mQINBFX15q4BEADZartsIW3sQ9R+9TOuCFRIW+RDCoBWNHhqDLu+Tzf2mZevVSF0D5AMJW4f
- UB1QigxOuGIeSngfmgLspdYe2Kl8+P8qyfrnBcS4hLFyLGjaP7UVGtpUl7CUxz2Hct3yhsPz
- ID/rnCSd0Q+3thrJTq44b2kIKqM1swt/F2Er5Bl0B4o5WKx4J9k6Dz7bAMjKD8pHZJnScoP4
- dzKPhrytN/iWM01eRZRc1TcIdVsRZC3hcVE6OtFoamaYmePDwWTRhmDtWYngbRDVGe3Tl8bT
- 7BYN7gv7Ikt7Nq2T2TOfXEQqr9CtidxBNsqFEaajbFvpLDpUPw692+4lUbQ7FL0B1WYLvWkG
- cVysClEyX3VBSMzIG5eTF0Dng9RqItUxpbD317ihKqYL95jk6eK6XyI8wVOCEa1V3MhtvzUo
- WGZVkwm9eMVZ05GbhzmT7KHBEBbCkihS+TpVxOgzvuV+heCEaaxIDWY/k8u4tgbrVVk+tIVG
- 99v1//kNLqd5KuwY1Y2/h2MhRrfxqGz+l/f/qghKh+1iptm6McN//1nNaIbzXQ2Ej34jeWDa
- xAN1C1OANOyV7mYuYPNDl5c9QrbcNGg3D6gOeGeGiMn11NjbjHae3ipH8MkX7/k8pH5q4Lhh
- Ra0vtJspeg77CS4b7+WC5jlK3UAKoUja3kGgkCrnfNkvKjrkEwARAQABtCZBbGV4YW5kZXIg
- UG9wb3YgPGFsZXgucG9wb3ZAbGludXguY29tPokCVwQTAQgAQQIbIwIeAQIXgAULCQgHAwUV
- CgkICwUWAgMBAAIZARYhBLl2JLAkAVM0bVvWTo4Oneu8fo+qBQJdehKcBQkLRpLuAAoJEI4O
- neu8fo+qrkgP/jS0EhDnWhIFBnWaUKYWeiwR69DPwCs/lNezOu63vg30O9BViEkWsWwXQA+c
- SVVTz5f9eB9K2me7G06A3U5AblOJKdoZeNX5GWMdrrGNLVISsa0geXNT95TRnFqE1HOZJiHT
- NFyw2nv+qQBUHBAKPlk3eL4/Yev/P8w990Aiiv6/RN3IoxqTfSu2tBKdQqdxTjEJ7KLBlQBm
- 5oMpm/P2Y/gtBiXRvBd7xgv7Y3nShPUDymjBnc+efHFqARw84VQPIG4nqVhIei8gSWps49DX
- kp6v4wUzUAqFo+eh/ErWmyBNETuufpxZnAljtnKpwmpFCcq9yfcMlyOO9/viKn14grabE7qE
- 4j3/E60wraHu8uiXJlfXmt0vG16vXb8g5a25Ck09UKkXRGkNTylXsAmRbrBrA3Moqf8QzIk9
- p+aVu/vFUs4ywQrFNvn7Qwt2hWctastQJcH3jrrLk7oGLvue5KOThip0SNicnOxVhCqstjYx
- KEnzZxtna5+rYRg22Zbfg0sCAAEGOWFXjqg3hw400oRxTW7IhiE34Kz1wHQqNif0i5Eor+TS
- 22r9iF4jUSnk1jaVeRKOXY89KxzxWhnA06m8IvW1VySHoY1ZG6xEZLmbp3OuuFCbleaW07OU
- 9L8L1Gh1rkAz0Fc9eOR8a2HLVFnemmgAYTJqBks/sB/DD0SuuQINBFX15q4BEACtxRV/pF1P
- XiGSbTNPlM9z/cElzo/ICCFX+IKg+byRvOMoEgrzQ28ah0N5RXQydBtfjSOMV1IjSb3oc23z
- oW2J9DefC5b8G1Lx2Tz6VqRFXC5OAxuElaZeoowV1VEJuN3Ittlal0+KnRYY0PqnmLzTXGA9
- GYjw/p7l7iME7gLHVOggXIk7MP+O+1tSEf23n+dopQZrkEP2BKSC6ihdU4W8928pApxrX1Lt
- tv2HOPJKHrcfiqVuFSsb/skaFf4uveAPC4AausUhXQVpXIg8ZnxTZ+MsqlwELv+Vkm/SNEWl
- n0KMd58gvG3s0bE8H2GTaIO3a0TqNKUY16WgNglRUi0WYb7+CLNrYqteYMQUqX7+bB+NEj/4
- 8dHw+xxaIHtLXOGxW6zcPGFszaYArjGaYfiTTA1+AKWHRKvD3MJTYIonphy5EuL9EACLKjEF
- v3CdK5BLkqTGhPfYtE3B/Ix3CUS1Aala0L+8EjXdclVpvHQ5qXHs229EJxfUVf2ucpWNIUdf
- lgnjyF4B3R3BFWbM4Yv8QbLBvVv1Dc4hZ70QUXy2ZZX8keza2EzPj3apMcDmmbklSwdC5kYG
- EFT4ap06R2QW+6Nw27jDtbK4QhMEUCHmoOIaS9j0VTU4fR9ZCpVT/ksc2LPMhg3YqNTrnb1v
- RVNUZvh78zQeCXC2VamSl9DMcwARAQABiQI8BBgBCAAmAhsMFiEEuXYksCQBUzRtW9ZOjg6d
- 67x+j6oFAl16ErcFCQtGkwkACgkQjg6d67x+j6q7zA/+IsjSKSJypgOImN9LYjeb++7wDjXp
- qvEpq56oAn21CvtbGus3OcC0hrRtyZ/rC5Qc+S5SPaMRFUaK8S3j1vYC0wZJ99rrmQbcbYMh
- C2o0k4pSejaINmgyCajVOhUhln4IuwvZke1CLfXe1i3ZtlaIUrxfXqfYpeijfM/JSmliPxwW
- BRnQRcgS85xpC1pBUMrraxajaVPwu7hCTke03v6bu8zSZlgA1rd9E6KHu2VNS46VzUPjbR77
- kO7u6H5PgQPKcuJwQQ+d3qa+5ZeKmoVkc2SuHVrCd1yKtAMmKBoJtSku1evXPwyBzqHFOInk
- mLMtrWuUhj+wtcnOWxaP+n4ODgUwc/uvyuamo0L2Gp3V5ItdIUDO/7ZpZ/3JxvERF3Yc1md8
- 5kfflpLzpxyl2fKaRdvxr48ZLv9XLUQ4qNuADDmJArq/+foORAX4BBFWvqZQKe8a9ZMAvGSh
- uoGUVg4Ks0uC4IeG7iNtd+csmBj5dNf91C7zV4bsKt0JjiJ9a4D85dtCOPmOeNuusK7xaDZc
- gzBW8J8RW+nUJcTpudX4TC2SGeAOyxnM5O4XJ8yZyDUY334seDRJWtS4wRHxpfYcHKTewR96
- IsP1USE+9ndu6lrMXQ3aFsd1n1m1pfa/y8hiqsSYHy7JQ9Iuo9DxysOj22UNOmOE+OYPK48D
- j3lCqPk=
-Message-ID: <3b194cd9-909d-7186-0cc4-bf0a0358fe5d@linux.com>
-Date:   Wed, 10 Jun 2020 18:24:20 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <202006091133.412F0E89@keescook>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Wed, 10 Jun 2020 11:26:26 -0400
+Received: from mx1.tq-group.com ([62.157.118.193]:50673 "EHLO mx1.tq-group.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726979AbgFJP00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 11:26:26 -0400
+IronPort-SDR: UCvVFmd+T2/3ddcGqwzY1KXKYIXifE+cRK+2f5+2GBOmMRbPjF5Goar0VwYnIPtXH/xKwHEJyk
+ hJkT4aZyr6UbMHwIOzltacS42sW0Tk2Uw4b6sUs3hERrATX552qex5XcJ9Wz4nd2HODJnIxy6X
+ dbXGnYs1yTS8YxVhirDvadT0gDfzCuTstCG75F5/MgcwmqUtrHc2qVUJhHmNwYbvpJiWI3uLOu
+ RBkJrK9+8b7HoSB523YR3qnC9y7ib5J3KsE/db5EyMbj/9JpeYuyz20C4TlWYYj6uwuiEmqH3M
+ tuA=
+X-IronPort-AV: E=Sophos;i="5.73,496,1583190000"; 
+   d="scan'208";a="12640925"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 10 Jun 2020 17:26:24 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Wed, 10 Jun 2020 17:26:24 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Wed, 10 Jun 2020 17:26:24 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1591802784; x=1623338784;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=NgpoLcQmfQK0uSFUsODXw4KgmMJLoHjdRmqi3oYQpMg=;
+  b=P7I8+djgRzLr4OXMOtTfgn4kiw8mcUWEBjMXj/IcNJR/4J8wEk9FtAIc
+   gaCY99ZgSKPKWoVvhSV/C9u7km3HM6IaRQmbFYpY2hjCGjg8yaUz5YR7x
+   ahu1gQ1hsWyxlsNMii7447HcCobyjUt0npe+NlBy3E5ypkWUXa+wweldK
+   hkSIRijK9yQROKvXQb/k3Hm9GiJ69++2mf4DcfJMC6+pfvrH0WHq9Jtr8
+   LxTPU/rzu38xo+tH35DHNxpPReeKvKSt+3ce+7ubSaimUvam7EGsHm59p
+   LjXwtXisHNG6FmhFI5/iYs2bjT1GIxYzKSXXr7geyeC+AJDg07X+MbqKJ
+   A==;
+IronPort-SDR: 58e+uR1RdbqcmyDTrw4VUBYlZWfyW5Zqijv4wjO3KBcZ6MVvCWdyaNzteqxdKknSqhcJQbYIqV
+ s6nMgfxxlqJxuDjcLT27n5viu/7Am1LbBDehEL7h1245TeM8VLbxO+A2HgJxHoRJY9a6xTBwE/
+ SvbJrGgfodtK39tRhtmKlnAWh1qSAfiuKu9CiyMjdER4/1gMk2yy2Q3UhJ7LsDM7ZAs7lqCwmB
+ aSQ5lTLfqyCH9GryLwZ/a4a9dIimZu+eUPpTuJeXwFc05Er7bWRuKHl9QKQce4CKU6X1OZqyyP
+ yRM=
+X-IronPort-AV: E=Sophos;i="5.73,496,1583190000"; 
+   d="scan'208";a="12640924"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 10 Jun 2020 17:26:24 +0200
+Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 48A4A280065;
+        Wed, 10 Jun 2020 17:26:24 +0200 (CEST)
+Message-ID: <44d3b82a11fc292f0aa3f60a8ccebd4e8ce5d3e8.camel@ew.tq-group.com>
+Subject: Re: (EXT) Re: [PATCH 3/4] drm/panel: simple: add CDTech
+ S070PWS19HP-FC21 and S070SWV29HG-DC44
+From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 10 Jun 2020 17:26:23 +0200
+In-Reply-To: <20200610145954.GA135509@ravnborg.org>
+References: <20200610120131.3069-1-matthias.schiffer@ew.tq-group.com>
+         <20200610120131.3069-4-matthias.schiffer@ew.tq-group.com>
+         <20200610145954.GA135509@ravnborg.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.06.2020 21:39, Kees Cook wrote:
-> On Thu, Jun 04, 2020 at 06:23:38PM +0300, Alexander Popov wrote:
->> On 04.06.2020 17:01, Jann Horn wrote:
->>> On Thu, Jun 4, 2020 at 3:51 PM Alexander Popov <alex.popov@linux.com> wrote:
->>>> Some time ago Variable Length Arrays (VLA) were removed from the kernel.
->>>> The kernel is built with '-Wvla'. Let's exclude alloca() from the
->>>> instrumentation logic and make it simpler. The build-time assertion
->>>> against alloca() is added instead.
->>> [...]
->>>> +                       /* Variable Length Arrays are forbidden in the kernel */
->>>> +                       gcc_assert(!is_alloca(stmt));
->>>
->>> There is a patch series from Elena and Kees on the kernel-hardening
->>> list that deliberately uses __builtin_alloca() in the syscall entry
->>> path to randomize the stack pointer per-syscall - see
->>> <https://lore.kernel.org/kernel-hardening/20200406231606.37619-4-keescook@chromium.org/>.
->>
->> Thanks, Jann.
->>
->> At first glance, leaving alloca() handling in stackleak instrumentation logic
->> would allow to integrate stackleak and this version of random_kstack_offset.
+On Wed, 2020-06-10 at 16:59 +0200, Sam Ravnborg wrote:
+> Hi Matthias.
 > 
-> Right, it seems there would be a need for this coverage to remain,
-> otherwise the depth of stack erasure might be incorrect.
+> Thanks, a few details you need to fix. See below.
 > 
-> It doesn't seem like the other patches strictly depend on alloca()
-> support being removed, though?
+> 	Sam
+> 
+> On Wed, Jun 10, 2020 at 02:01:30PM +0200, Matthias Schiffer wrote:
+> > From: Michael Krummsdorf <michael.krummsdorf@tq-group.com>
+> > 
+> > Add support for the CDTech Electronics displays S070PWS19HP-FC21
+> > (7.0" WSVGA) and S070SWV29HG-DC44 (7.0" WVGA) to panel-simple.
+> > 
+> > Signed-off-by: Michael Krummsdorf <michael.krummsdorf@tq-group.com>
+> > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com
+> > >
+> > ---
+> >  drivers/gpu/drm/panel/panel-simple.c | 60
+> > ++++++++++++++++++++++++++++
+> >  1 file changed, 60 insertions(+)
+> > 
+> > diff --git a/drivers/gpu/drm/panel/panel-simple.c
+> > b/drivers/gpu/drm/panel/panel-simple.c
+> > index b6ecd1552132..1673113e5a5a 100644
+> > --- a/drivers/gpu/drm/panel/panel-simple.c
+> > +++ b/drivers/gpu/drm/panel/panel-simple.c
+> > @@ -1315,6 +1315,60 @@ static const struct panel_desc
+> > cdtech_s043wq26h_ct7 = {
+> >  	.bus_flags = DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE,
+> >  };
+> >  
+> > +/* S070PWS19HP-FC21 2017/04/22 */
+> > +static const struct drm_display_mode cdtech_s070pws19hp_fc21_mode
+> > = {
+> > +	.clock = 51200,
+> > +	.hdisplay = 1024,
+> > +	.hsync_start = 1024 + 160,
+> > +	.hsync_end = 1024 + 160 + 20,
+> > +	.htotal = 1024 + 160 + 20 + 140,
+> > +	.vdisplay = 600,
+> > +	.vsync_start = 600 + 12,
+> > +	.vsync_end = 600 + 12 + 3,
+> > +	.vtotal = 600 + 12 + 3 + 20,
+> > +	.vrefresh = 60,
+> 
+> .vrefresh is no longer present, please drop.
 
-Ok, I will leave alloca() support, reorganize the patch series and send v2.
+I based my patches on the branch drm-next of 
+https://cgit.freedesktop.org/drm/drm, should I have used a different
+branch?
 
->> Kees, Elena, did you try random_kstack_offset with upstream stackleak?
-> 
-> I didn't try that combination yet, no. It seemed there would likely
-> still be further discussion about the offset series first (though the
-> thread has been silent -- I'll rebase and resend it after rc2).
 
-Ok, please add me to CC list.
-
-Best regards,
-Alexander
-
->> It looks to me that without stackleak erasing random_kstack_offset can be
->> weaker. I mean, if next syscall has a bigger stack randomization gap, the data
->> on thread stack from the previous syscall is not overwritten and can be used. Am
->> I right?
+> > +	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
+> > +};
+> > +
+> > +static const struct panel_desc cdtech_s070pws19hp_fc21 = {
+> > +	.modes = &cdtech_s070pws19hp_fc21_mode,
+> > +	.num_modes = 1,
+> > +	.bpc = 6,
+> > +	.size = {
+> > +		.width = 154,
+> > +		.height = 86,
+> > +	},
+> > +	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
+> > +	.bus_flags = DRM_BUS_FLAG_DE_HIGH |
+> > DRM_BUS_FLAG_PIXDATA_POSEDGE,
+> > +};
 > 
-> That's correct. I think the combination is needed, but I don't think
-> they need to be strictly tied together.
+> Please add .connector_type - it is mandatory.
+> > +
+> > +/* S070SWV29HG-DC44 2017/09/21 */
+> > +static const struct drm_display_mode cdtech_s070swv29hg_dc44_mode
+> > = {
+> > +	.clock = 33300,
+> > +	.hdisplay = 800,
+> > +	.hsync_start = 800 + 210,
+> > +	.hsync_end = 800 + 210 + 2,
+> > +	.htotal = 800 + 210 + 2 + 44,
+> > +	.vdisplay = 480,
+> > +	.vsync_start = 480 + 22,
+> > +	.vsync_end = 480 + 22 + 2,
+> > +	.vtotal = 480 + 22 + 2 + 21,
+> > +	.vrefresh = 60,
 > 
->> Another aspect: CONFIG_STACKLEAK_METRICS can be used for guessing kernel stack
->> offset, which is bad. It should be disabled if random_kstack_offset is on.
+> .vrefresh is no longer present, please drop.
+> > +	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
+> > +};
+> > +
+> > +static const struct panel_desc cdtech_s070swv29hg_dc44 = {
+> > +	.modes = &cdtech_s070swv29hg_dc44_mode,
+> > +	.num_modes = 1,
+> > +	.bpc = 6,
+> > +	.size = {
+> > +		.width = 154,
+> > +		.height = 86,
+> > +	},
+> > +	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
+> > +	.bus_flags = DRM_BUS_FLAG_DE_HIGH |
+> > DRM_BUS_FLAG_PIXDATA_POSEDGE,
 > 
-> Agreed.
+> Please add .connector_type - it is mandatory.
+> > +};
+> > +
+> >  static const struct drm_display_mode cdtech_s070wv95_ct16_mode = {
+> >  	.clock = 35000,
+> >  	.hdisplay = 800,
+> > @@ -3723,6 +3777,12 @@ static const struct of_device_id
+> > platform_of_match[] = {
+> >  	}, {
+> >  		.compatible = "cdtech,s043wq26h-ct7",
+> >  		.data = &cdtech_s043wq26h_ct7,
+> > +	}, {
+> > +		.compatible = "cdtech,s070pws19hp-fc21",
+> > +		.data = &cdtech_s070pws19hp_fc21,
+> > +	}, {
+> > +		.compatible = "cdtech,s070swv29hg-dc44",
+> > +		.data = &cdtech_s070swv29hg_dc44,
+> >  	}, {
+> >  		.compatible = "cdtech,s070wv95-ct16",
+> >  		.data = &cdtech_s070wv95_ct16,
+> > -- 
+> > 2.17.1
 
