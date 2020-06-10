@@ -2,126 +2,100 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBDBC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FA3EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6B532072F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:54:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1422E206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:55:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="jwy2W0tb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbgFJHyQ (ORCPT
+        id S1726577AbgFJHzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 03:54:16 -0400
-Received: from mga01.intel.com ([192.55.52.88]:21007 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726081AbgFJHyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 03:54:15 -0400
-IronPort-SDR: d5e1sdQbCd/XP/MHwQTfKjIFMat4BfJlDH/Q5Njesgbpspa0LEu5+DpubHJfCl2IXQTq1/PoxV
- E933IgMzqInA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2020 00:54:14 -0700
-IronPort-SDR: 469ckEW6oq1EUpOvOxSjG+uRSyu78YUaFUohwmFifokapxW+O28HdKzPrWZ8zYJiKRgNqFba/Z
- nHTbGEgibEaw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,495,1583222400"; 
-   d="scan'208";a="260066021"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 10 Jun 2020 00:54:14 -0700
-Received: from [10.249.66.120] (ekotax-MOBL.gar.corp.intel.com [10.249.66.120])
-        by linux.intel.com (Postfix) with ESMTP id 082595805B5;
-        Wed, 10 Jun 2020 00:54:11 -0700 (PDT)
-Subject: Re: [PATCH 1/2] dt-bindings: watchdog: intel: Add YAML Schemas for
- Watchdog timer
-To:     Guenter Roeck <linux@roeck-us.net>, wim@linux-watchdog.org,
-        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-        robbh@kernel.org
-Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yixin.zhu@intel.com
-References: <cover.1591584255.git.eswara.kota@linux.intel.com>
- <ac89e289b79fec0a82d1dd060e17eeca024885d5.1591584255.git.eswara.kota@linux.intel.com>
- <235d301b-3b25-bb00-bd1b-c4392fa23c63@roeck-us.net>
- <4a336f1d-68da-3356-a73a-95747ba4af4c@linux.intel.com>
- <83812b78-41e3-299d-36a0-6ce1576e7e78@roeck-us.net>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <aabceb6f-265d-fd11-eee1-6bccf2160512@linux.intel.com>
-Date:   Wed, 10 Jun 2020 15:54:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <83812b78-41e3-299d-36a0-6ce1576e7e78@roeck-us.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Wed, 10 Jun 2020 03:55:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58996 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726484AbgFJHza (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 03:55:30 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF161C03E96F
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 00:55:29 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id u13so885347wml.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 00:55:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=EnIrIGj03Y4Bw7tljoWmg+qr0vZ8tq42skzZqInftnc=;
+        b=jwy2W0tb37SqP+WwCJTfsgps4wsHjgbA1/9/PhiM1buumDf/rLO0m3mEcOlp6aStgk
+         m6E5PDh3ObL/D5EmvOP9cLJNkMeQY4RTyYpBSY4BJmFquRZxnWK52rzPA2OlpCDuqVLx
+         MZY8EVyUH8aW8Ppn8g7xR+PzwdGolsyOU4rgt8F9WREHAXxgHB6JScKugxpfEhmMjgJe
+         cJaTaavF4oCH+CCiNtSLD+4UE0PRchlbHNwtTS7T9poiKReJs396mn9TWqu4wo8oCYpT
+         OuqUGWMW0a0PmYzn/7xD4otdO3qu95HUaOExLZ9l94fmXM87Un1VXq5pcwk2qgvMjvB2
+         c6MA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=EnIrIGj03Y4Bw7tljoWmg+qr0vZ8tq42skzZqInftnc=;
+        b=OPz2M2+tMvY4IfiEtvWRaH6Ot781vPwnVbTk0GUteCZaNlRB800LGfPT96JEbiVpVO
+         C2LJ+2K0VI9NBIZ/Ya/D6lBTzs99+9TrphIv7cn5bKP+TxfEkScWUf+EvAOLxK3p9OK1
+         WwUj5TFfX7WMxhqiwWerE66sb96nXBrMypnTht/97SLKn6GY9wNuOV0FGYRylj0WiaBv
+         7bniiBhuAI0cwhyLA8eOheT7oSzf8c6SLNaLN3nhqsY6UflIYZ+jMGIRkELavG1oE0YL
+         ulJNr0iJmqCnK6c69Y0iUlMC6cJ4LN3f/nflhKoeAzcjkaSv8as/oeP1cFfpjOhubVuF
+         3fnQ==
+X-Gm-Message-State: AOAM532MceIcsm/2QuRm3hzzOVR+5hAPOlizPCmDBszTxl0/Z9ctzEe6
+        1lxOTLhtDMRZjbaW2WttNkQnSOXw1mo=
+X-Google-Smtp-Source: ABdhPJzT49tgR9+60rfN4830eLLMnTGAHQQvKlJEI8DFusTTWcDAw3O1Rr7NzXEWdzQdZL/5s+h6KA==
+X-Received: by 2002:a7b:c1c5:: with SMTP id a5mr1841091wmj.35.1591775728269;
+        Wed, 10 Jun 2020 00:55:28 -0700 (PDT)
+Received: from localhost.localdomain ([51.15.160.169])
+        by smtp.googlemail.com with ESMTPSA id k14sm6849615wrq.97.2020.06.10.00.55.27
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Jun 2020 00:55:27 -0700 (PDT)
+From:   Corentin Labbe <clabbe@baylibre.com>
+To:     davem@davemloft.net
+Cc:     linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
+        Corentin Labbe <clabbe@baylibre.com>
+Subject: [PATCH] sparc: piggyback: handle invalid image
+Date:   Wed, 10 Jun 2020 07:55:19 +0000
+Message-Id: <1591775719-28390-1-git-send-email-clabbe@baylibre.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+With an old elftoaout, the generation of tftpboot.img fail with "lseek:
+invalid argument".
+This is due to offset being negative.
 
-On 6/9/2020 9:46 PM, Guenter Roeck wrote:
-> On 6/9/20 1:57 AM, Dilip Kota wrote:
->> On 6/8/2020 9:37 PM, Guenter Roeck wrote:
->>> On 6/7/20 10:49 PM, Dilip Kota wrote:
->>>> Add YAML schemas for the watchdog timer on Intel Lightning
->>>> Mountain SoC.
->>>>
->>>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
->>>> ---
->>>>    .../bindings/watchdog/intel,lgm-gptc-wdt.yaml      | 75 ++++++++++++++++++++++
->>>>    1 file changed, 75 insertions(+)
->>>>    create mode 100644 Documentation/devicetree/bindings/watchdog/intel,lgm-gptc-wdt.yaml
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/watchdog/intel,lgm-gptc-wdt.yaml b/Documentation/devicetree/bindings/watchdog/intel,lgm-gptc-wdt.yaml
->>>> new file mode 100644
->>>> index 0000000000000..83dc39a5090c1
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/watchdog/intel,lgm-gptc-wdt.yaml
->>>> @@ -0,0 +1,75 @@
->>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>>> +%YAML 1.2
->>>> +---
->>>> +$id: http://devicetree.org/schemas/watchdog/intel,lgm-gptc-wdt.yaml#
->>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>> +
->>>> +title: Intel Lightning Mountain Watchdog timer.
->>>> +
->>>> +maintainers:
->>>> +  - Dilip Kota <eswara.kota@linux.intel.com>
->>>> +
->>>> +description: |
->>>> +  Intel Lightning Mountain SoC has General Purpose Timer Counter(GPTC) which can
->>>> +  be configured as Clocksource, real time clock and Watchdog timer.
->>>> +  Each General Purpose Timer Counter has three timers. And total four General
->>>> +  Purpose Timer Counters are present on Lightning Mountain SoC which sums up
->>>> +  to 12 timers.
->>>> +  Lightning Mountain has four CPUs and each CPU is configured with one GPTC
->>>> +  timer as watchdog timer. Total four timers are configured as watchdog timers
->>>> +  on Lightning Mountain SoC.
->>>> +
->>> Why not just one ? The watchdog subsystem does not monitor individual CPUs,
->>> it monitors the system.
->> Intel Atom based Lightning Mountain SoC, system has four CPUs. On Lightning Mountain SoC ,Watchdog subsystem is combination of GPTC timers and reset controller unit. On Lightning Mountain SoC, each CPU is configured with one GPTC timer, so that if any of the CPU hangs or freezes, the watchdog daemon running on respective CPU cannot reset/ping or pet the watchdog timer. This causes the watchdog timeout. On watchdog timeout, reset controller triggers the reset to respective CPU.
->>
-> A system watchdog driver should not duplicate functionality
-> from kernel/watchdog.c, which monitors individual CPUs.
-> If the SoC does nto provide a system watchdog timer (which
-> I think is unlikely), it should stick with that. A watchdog
-> resetting an individual CPU instead of the entire system
-> isn't something I would want to see in the watchdog subsystem.
-My bad here, complete hardware reset happens on watchdog timeout not a 
-single CPU or core.
-Could you please clarify: The complete system means, you mean, "a 
-watchdog susbsystem should monitor all the cores/cpus in the SoC. Not 
-like each core/cpu in SoC having a wdt".
+Instead of printing this error message, let's print a better one.
 
-Regards,
-Dilip
->
-> Guenter
->
+Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+---
+ arch/sparc/boot/piggyback.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/sparc/boot/piggyback.c b/arch/sparc/boot/piggyback.c
+index a7a38fb4ece0..613e23a1016e 100644
+--- a/arch/sparc/boot/piggyback.c
++++ b/arch/sparc/boot/piggyback.c
+@@ -154,6 +154,10 @@ static off_t get_hdrs_offset(int kernelfd, const char *filename)
+ 		offset -= LOOKBACK;
+ 		/* skip a.out header */
+ 		offset += AOUT_TEXT_OFFSET;
++		if (offset < 0) {
++			errno = -EINVAL;
++			die("Calculated a negative offset, probably elftoaout generated an invalid image. Did you use a recent elftoaout ?");
++		}
+ 		if (lseek(kernelfd, offset, SEEK_SET) < 0)
+ 			die("lseek");
+ 		if (read(kernelfd, buffer, BUFSIZE) != BUFSIZE)
+-- 
+2.26.2
+
