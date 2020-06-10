@@ -7,61 +7,57 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77283C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 23:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D32C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 23:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44409206D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 23:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95883206D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 23:58:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZzZXV7kG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s8IOZzWl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbgFJX6b (ORCPT
+        id S1726881AbgFJX6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 19:58:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38798 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726842AbgFJX6a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 10 Jun 2020 19:58:30 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAB03C03E96F
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 16:58:29 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id p22so4388758ybg.21
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 16:58:29 -0700 (PDT)
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38790 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726782AbgFJX63 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 19:58:29 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23D0EC03E96F
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 16:58:28 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id k186so4398446yba.18
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 16:58:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc:content-transfer-encoding;
-        bh=NYW1oslxUrjhzXJ7bTMZ4CDQ1phtBvPY5iW8pjV0AgY=;
-        b=ZzZXV7kGekCGXVvqwIeVxumkrSgFKwSD8IUN6y8gTZn1ai53K99qiqSYfeUJ7+3xMP
-         J5ruWthSpTkfiijOakKRz81y1ZqF2m9f0PSjBYQnUNLgm5UAZkCbRysdkLv0VscoQG/Z
-         8WyqSmkJQ6Ak9xOe7UV4sRWEosKc4+VoNnM09WbqV6KndRxQIU+AYxCkwwIo5TpOXa75
-         3Bq+9aJbqSQyPN++7lJfvvaREkFh9BV2Ys+UNcZJJuQwh23yhgUdpzRA3OAOHn0yDOHV
-         /qOHB3dGcXsc93n18/24dkoh/wF8yLbiDVvTUuP1+s6kI0o+1W5gpI5wWYcDlLhKMKqD
-         1Ccg==
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=eDgMkHC9aMQiQJx4OUa3bPnVaGP4eT/xeeaM2hioIaY=;
+        b=s8IOZzWlBbdJ9d2SfwmqR6+acv/xEKvItqOqz9NktuoK/1fooO3W+7ZMb5yD5F+gMB
+         8abU92bXzCC5ereV5v6xdG60bsupP0ikcpo7WzAn8oWrdznEtq4OdQQ8m/cjNTD8EodG
+         C5TLZnGlkStcdSCW4IF9D3bZbDLhHt30MRU+aqQR54t1m33WTGUQym8xn6SCE4kfP6bn
+         uvAVq4SSMtaLBi0NqATbrtBt7qQT2aVnJmA11SoQw1qmNykOI8pQxN523r0jDvUQpYEU
+         cf2P6qTJamDLVsAHJnHIADIpKe3H2UoyYgRliNlgMeRhZtRO4irRhHB/oYIZjfxLW0oN
+         6ByQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc:content-transfer-encoding;
-        bh=NYW1oslxUrjhzXJ7bTMZ4CDQ1phtBvPY5iW8pjV0AgY=;
-        b=cWseOb3q6jREECeHMbfWc+mY8NMnApoRYdSQaupYWz2Yc87X4Z948HDy8XzY6fYdMy
-         NkLBQUwjjSJpMoIOXkS6y1Ah6sXTn9Mu3jc1riyuXnf/Hvz1aG+yOBiC9Bh0kIRuzfIf
-         5WfQkndoGX+VaogRWYpzdKnusxhFzjxLlmC0QmWIJAUCKTrYYNrss0kFkFruaLFNDZ/k
-         gDbi8DcP+gtMaeovnVTTm4nk2zFPtVDNuLm65sAMMb8GtIYgvUjym1kb9PGbZLRD1Exq
-         iHYgpX7RMwr9GlaQdLIPiiPYHC7dYNBC7Yxj+5iRPVbP+pp1OWeBH8vZ5A/Nqb3dxtCm
-         nYhQ==
-X-Gm-Message-State: AOAM530Ila0PoBePWdcGreTj29E121q94rHEyS9M9/socz64dQ/PqAne
-        C41ZZMmOii2JigrNrIdkAc270oT+Q8Un
-X-Google-Smtp-Source: ABdhPJzAZC0uog7B9B1OScECN6SNqapsCHDp0QRtFVZNrOqzsRrdYi8FfOV8ZAB/m8BdMcL6e2pH23vSpqKX
-X-Received: by 2002:a25:8444:: with SMTP id r4mr9019037ybm.301.1591833509073;
- Wed, 10 Jun 2020 16:58:29 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 16:58:23 -0700
-In-Reply-To: <20200610235823.52557-1-irogers@google.com>
-Message-Id: <20200610235823.52557-2-irogers@google.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=eDgMkHC9aMQiQJx4OUa3bPnVaGP4eT/xeeaM2hioIaY=;
+        b=pYZOcxsMDtCOLQCNv+8R3Vqkjqv8aKkxUQA/3XYo4oaJyASBFPKdl3VpZaoOj1C1Ii
+         1rJbaYI3oSB3wKhQehESd5vOiPd7SuXnd/pDIzN3JjalU9wBrLbrx+Z8ZF2sIDswYmNi
+         pp2hh7eU3x0vX/KoMT3Qcp3C6fx4mvGAFytccldU/ECeHcc+kN5+bud6uo4VI+lJLofY
+         36fOQXTtCSnpTAarvixBr3h6PzBjDrlAHIvmsojOHNf2YPtbFGgA8bkrBmlnKgEnmnq0
+         wcuMLbLkcKWOt2UXY/heag0DCgfkvHGYmQ4/BpNEVATAgD6NIvcND8TmNjcmFA7GFUmU
+         ksVQ==
+X-Gm-Message-State: AOAM533MwZnE5iwDAHZhoYxKZ40UtqG8PvunW0OzbVIYF9Lf/frc6Orr
+        rA90MFwL1lIbuGo6yuUcEH2v2rJkQU6M
+X-Google-Smtp-Source: ABdhPJzqHpmuZiuqNnLummpwHjIOJAw3JRgNZVBXjPrtnonH0GuHmjES2VCPpuoH9kvW6tX+I8J0+kGTOYo5
+X-Received: by 2002:a25:b8c:: with SMTP id 134mr10405324ybl.428.1591833507248;
+ Wed, 10 Jun 2020 16:58:27 -0700 (PDT)
+Date:   Wed, 10 Jun 2020 16:58:22 -0700
+Message-Id: <20200610235823.52557-1-irogers@google.com>
 Mime-Version: 1.0
-References: <20200610235823.52557-1-irogers@google.com>
 X-Mailer: git-send-email 2.27.0.278.ge193c7cf3a9-goog
-Subject: [PATCH v2 2/2] perf expr: Add < and > operators
+Subject: [PATCH v2 1/2] perf expr: Add d_ratio operation
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -78,107 +74,100 @@ To:     Peter Zijlstra <peterz@infradead.org>,
 Cc:     Stephane Eranian <eranian@google.com>,
         linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These are broadly useful but required to handle TMA metrics. For
-example encoding Ports_Utilization from:
-https://download.01.org/perfmon/TMA_Metrics.csv
-requires '<'.
+d_ratio avoids division by 0 yielding infinity, such as when a counter
+doesn't get scheduled. An example usage is:
 
 {
-  "BriefDescription": "This metric estimates fraction of cycles the CPU per=
-formance was potentially limited due to Core computation issues (non divide=
-r-related).  Two distinct categories can be attributed into this metric: (1=
-) heavy data-dependency among contiguous instructions would manifest in thi=
-s metric - such cases are often referred to as low Instruction Level Parall=
-elism (ILP). (2) Contention on some hardware execution unit other than Divi=
-der. For example; when there are too many multiply operations.",
-  "MetricExpr": "( ( cpu@EXE_ACTIVITY.EXE_BOUND_0_PORTS@ + cpu@EXE_ACTIVITY=
-.1_PORTS_UTIL@ + ( cpu@EXE_ACTIVITY.2_PORTS_UTIL@ * ( ( ( cpu@UOPS_RETIRED.=
-RETIRE_SLOTS@ ) / ( cpu@CPU_CLK_UNHALTED.THREAD@ ) ) / ( ( 4.000000 ) + 1.0=
-00000 ) ) ) ) / ( cpu@CPU_CLK_UNHALTED.THREAD@ ) if ( cpu@ARITH.DIVIDER_ACT=
-IVE\\,cmask\\=3D1@ < cpu@EXE_ACTIVITY.EXE_BOUND_0_PORTS@ ) else ( ( cpu@EXE=
-_ACTIVITY.EXE_BOUND_0_PORTS@ + cpu@EXE_ACTIVITY.1_PORTS_UTIL@ + ( cpu@EXE_A=
-CTIVITY.2_PORTS_UTIL@ * ( ( ( cpu@UOPS_RETIRED.RETIRE_SLOTS@ ) / ( cpu@CPU_=
-CLK_UNHALTED.THREAD@ ) ) / ( ( 4.000000 ) + 1.000000 ) ) ) ) - cpu@EXE_ACTI=
-VITY.EXE_BOUND_0_PORTS@ ) / ( cpu@CPU_CLK_UNHALTED.THREAD@ ) )",
-  "MetricGroup": "Topdown_Group_Ports_Utilization",
-  "MetricName": "Topdown_Metric_Ports_Utilization"
-},
+    "BriefDescription": "DCache L1 misses",
+    "MetricExpr": "d_ratio(MEM_LOAD_RETIRED.L1_MISS, MEM_LOAD_RETIRED.L1_HIT + MEM_LOAD_RETIRED.L1_MISS + MEM_LOAD_RETIRED.FB_HIT)",
+    "MetricGroup": "DCache;DCache_L1",
+    "MetricName": "DCache_L1_Miss",
+    "ScaleUnit": "100%",
+}
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/expr.c | 6 ++++++
- tools/perf/util/expr.l  | 2 ++
- tools/perf/util/expr.y  | 5 ++++-
- 3 files changed, 12 insertions(+), 1 deletion(-)
+ tools/perf/tests/expr.c |  2 ++
+ tools/perf/util/expr.l  |  1 +
+ tools/perf/util/expr.y  | 14 ++++++++++++--
+ 3 files changed, 15 insertions(+), 2 deletions(-)
 
 diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
-index c4877b36ab58..b7e5ef3007fc 100644
+index 1cb02ca2b15f..c4877b36ab58 100644
 --- a/tools/perf/tests/expr.c
 +++ b/tools/perf/tests/expr.c
-@@ -41,6 +41,12 @@ int test__expr(struct test *t __maybe_unused, int subtes=
-t __maybe_unused)
- 	ret |=3D test(&ctx, ".1 + 2.", 2.1);
- 	ret |=3D test(&ctx, "d_ratio(1, 2)", 0.5);
- 	ret |=3D test(&ctx, "d_ratio(2.5, 0)", 0);
-+	ret |=3D test(&ctx, "1.1 < 2.2", 1);
-+	ret |=3D test(&ctx, "2.2 > 1.1", 1);
-+	ret |=3D test(&ctx, "1.1 < 1.1", 0);
-+	ret |=3D test(&ctx, "2.2 > 2.2", 0);
-+	ret |=3D test(&ctx, "2.2 < 1.1", 0);
-+	ret |=3D test(&ctx, "1.1 > 2.2", 0);
-=20
+@@ -39,6 +39,8 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
+ 	ret |= test(&ctx, "1+1 if 3*4 else 0", 2);
+ 	ret |= test(&ctx, "1.1 + 2.1", 3.2);
+ 	ret |= test(&ctx, ".1 + 2.", 2.1);
++	ret |= test(&ctx, "d_ratio(1, 2)", 0.5);
++	ret |= test(&ctx, "d_ratio(2.5, 0)", 0);
+ 
  	if (ret)
  		return ret;
 diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
-index 298d86660a96..13e5e3c75f56 100644
+index f397bf8b1a48..298d86660a96 100644
 --- a/tools/perf/util/expr.l
 +++ b/tools/perf/util/expr.l
-@@ -111,6 +111,8 @@ else		{ return ELSE; }
- "|"		{ return '|'; }
- "^"		{ return '^'; }
- "&"		{ return '&'; }
-+"<"		{ return '<'; }
-+">"		{ return '>'; }
- "-"		{ return '-'; }
- "+"		{ return '+'; }
- "*"		{ return '*'; }
+@@ -100,6 +100,7 @@ symbol		({spec}|{sym})+
+ 		}
+ 	}
+ 
++d_ratio		{ return D_RATIO; }
+ max		{ return MAX; }
+ min		{ return MIN; }
+ if		{ return IF; }
 diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-index fe145344bb39..5fcb98800f9c 100644
+index bf3e898e3055..fe145344bb39 100644
 --- a/tools/perf/util/expr.y
 +++ b/tools/perf/util/expr.y
-@@ -41,6 +41,7 @@ static double d_ratio(double val0, double val1)
+@@ -10,6 +10,14 @@
+ #include "smt.h"
+ #include <string.h>
+ 
++static double d_ratio(double val0, double val1)
++{
++	if (val1 == 0) {
++		return 0;
++	}
++	return  val0 / val1;
++}
++
+ %}
+ 
+ %define api.pure full
+@@ -28,7 +36,7 @@
+ %token <num> NUMBER
+ %token <str> ID
+ %destructor { free ($$); } <str>
+-%token MIN MAX IF ELSE SMT_ON
++%token MIN MAX IF ELSE SMT_ON D_RATIO
+ %left MIN MAX IF
  %left '|'
  %left '^'
- %left '&'
-+%left '<' '>'
- %left '-' '+'
- %left '*' '/' '%'
- %left NEG NOT
-@@ -73,7 +74,7 @@ other: ID
+@@ -64,7 +72,8 @@ other: ID
+ }
  |
- MIN | MAX | IF | ELSE | SMT_ON | NUMBER | '|' | '^' | '&' | '-' | '+' | '*=
-' | '/' | '%' | '(' | ')' | ','
- |
--D_RATIO
-+'<' | '>' | D_RATIO
-=20
- all_expr: if_expr			{ *final_val =3D $1; }
+ MIN | MAX | IF | ELSE | SMT_ON | NUMBER | '|' | '^' | '&' | '-' | '+' | '*' | '/' | '%' | '(' | ')' | ','
+-
++|
++D_RATIO
+ 
+ all_expr: if_expr			{ *final_val = $1; }
  	;
-@@ -94,6 +95,8 @@ expr:	  NUMBER
- 	| expr '|' expr		{ $$ =3D (long)$1 | (long)$3; }
- 	| expr '&' expr		{ $$ =3D (long)$1 & (long)$3; }
- 	| expr '^' expr		{ $$ =3D (long)$1 ^ (long)$3; }
-+	| expr '<' expr		{ $$ =3D $1 < $3; }
-+	| expr '>' expr		{ $$ =3D $1 > $3; }
- 	| expr '+' expr		{ $$ =3D $1 + $3; }
- 	| expr '-' expr		{ $$ =3D $1 - $3; }
- 	| expr '*' expr		{ $$ =3D $1 * $3; }
---=20
+@@ -105,6 +114,7 @@ expr:	  NUMBER
+ 	| MIN '(' expr ',' expr ')' { $$ = $3 < $5 ? $3 : $5; }
+ 	| MAX '(' expr ',' expr ')' { $$ = $3 > $5 ? $3 : $5; }
+ 	| SMT_ON		 { $$ = smt_on() > 0; }
++	| D_RATIO '(' expr ',' expr ')' { $$ = d_ratio($3,$5); }
+ 	;
+ 
+ %%
+-- 
 2.27.0.278.ge193c7cf3a9-goog
 
