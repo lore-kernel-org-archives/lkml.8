@@ -3,71 +3,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 555C1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE52DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 349F420760
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CECB82081A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:21:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbgFJUVe (ORCPT
+        id S1727828AbgFJUVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 16:21:34 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:33832 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726828AbgFJUVe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 16:21:34 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jj7E3-0000Ye-35; Wed, 10 Jun 2020 14:21:31 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jj7E2-00080u-Ef; Wed, 10 Jun 2020 14:21:30 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Alexey Gladkov <gladkov.alexey@gmail.com>
-Cc:     syzbot <syzbot+4abac52934a48af5ff19@syzkaller.appspotmail.com>,
-        adobriyan@gmail.com, keescook@chromium.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-References: <20200610130422.1197386-1-gladkov.alexey@gmail.com>
-        <20200610183549.1234214-1-gladkov.alexey@gmail.com>
-Date:   Wed, 10 Jun 2020 15:17:22 -0500
-In-Reply-To: <20200610183549.1234214-1-gladkov.alexey@gmail.com> (Alexey
-        Gladkov's message of "Wed, 10 Jun 2020 20:35:49 +0200")
-Message-ID: <87eeqmzne5.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jj7E2-00080u-Ef;;;mid=<87eeqmzne5.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18c/i2m4LzZvVR3NXfr4aSXpqcWLF2oyW0=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v2] proc: s_fs_info may be NULL when proc_kill_sb is called
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+        Wed, 10 Jun 2020 16:21:51 -0400
+Received: from mga18.intel.com ([134.134.136.126]:53249 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727045AbgFJUVu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 16:21:50 -0400
+IronPort-SDR: 4zDQ23Y+hruCLkPaIg3Eb0FTF0WJhI6e6zUNvN0Yp2BBh1HbE7wlGNPeVHJ4uP1uns5wGvn5NW
+ w9D4hZRu0SZg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2020 13:21:49 -0700
+IronPort-SDR: r1Zbibk8XXir5xJvUIE1LXJTAFKapEGUABZjG2uK6GbCFlViEbZnc8NAzbMEUYtKiF/DCc6D0q
+ XratW+5cxkrg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,497,1583222400"; 
+   d="scan'208";a="380178474"
+Received: from km-skylake-client-platform.sc.intel.com ([10.3.52.141])
+  by fmsmga001.fm.intel.com with ESMTP; 10 Jun 2020 13:21:49 -0700
+From:   Kyung Min Park <kyung.min.park@intel.com>
+To:     x86@kernel.org, linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        gregkh@linuxfoundation.org, ak@linux.intel.com,
+        dave.hansen@intel.com, tony.luck@intel.com,
+        ravi.v.shankar@intel.com, ricardo.neri@intel.com
+Subject: [RFC PATCH 0/3] Add Documentation for /proc/cpuinfo flags 
+Date:   Wed, 10 Jun 2020 13:06:58 -0700
+Message-Id: <20200610200701.16757-1-kyung.min.park@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alexey Gladkov <gladkov.alexey@gmail.com> writes:
+Currently, there isn't any documentation in the kernel about how
+/proc/cpuinfo flags are generated and what it means when they are
+missing. x86 maintainers have expressed objections on adding flags
+for features without kernel use cases and that part of the reason is
+the lack of documentation on the logic behind such flags.
 
-> syzbot found that proc_fill_super() fails before filling up sb->s_fs_info,
-> deactivate_locked_super() will be called and sb->s_fs_info will be NULL.
-> The proc_kill_sb() does not expect fs_info to be NULL which is wrong.
->
-> Link: https://lore.kernel.org/lkml/0000000000002d7ca605a7b8b1c5@google.com
-> Reported-by: syzbot+4abac52934a48af5ff19@syzkaller.appspotmail.com
-> Fixes: fa10fed30f25 ("proc: allow to mount many instances of proc in one pid namespace")
-> Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
+If users want to know if a feature is available on a given system, they
+try to find the flag in /proc/cpuinfo. If a given flag is present, it
+means that Linux supports it. If such flag represents a hardware feature,
+it also means that the hardware supports it. Therefore, it is not
+sufficient to read CPUID to determine whether a hardware feature is
+available. If the flag is missing in /proc/cpuinfo, users need to find
+out the reason why the flag is missing and how to enable it, which is
+not always easy.
 
-applied
+/proc/cpuinfo should show all of the hardware features and bugs that any
+application or end user might care about. Some of these flags are derived
+from CPUID, and others are derived from other sources, including some that
+are entirely software-based. Add documentation how features are created,
+naming of the flags and when they are missing, what it means to users.
 
-Eric
+Include two instances of features for which there are not implemented
+use cases in the kernel.
+
+Patch 1 creates a new documentation for /proc/cpuinfo flags bits.
+Patch 2 adds X86_FEATURE_SERIALIZE.
+Patch 3 adds X86_FEATURE_TSXLDTRK.
+
+This RFC series has been reviewed by Dave Hansen.
+
+Kyung Min Park (2):
+  Documentation/x86: Add documentation for /proc/cpuinfo feature flags
+  x86/cpufeatures: Enumerate TSX suspend load address tracking
+    instructions
+
+Ricardo Neri (1):
+  x86/cpufeatures: Add enumeration for SERIALIZE instruction
+
+ Documentation/x86/cpuinfo.rst      | 152 +++++++++++++++++++++++++++++
+ Documentation/x86/index.rst        |   1 +
+ arch/x86/include/asm/cpufeatures.h |   2 +
+ 3 files changed, 155 insertions(+)
+ create mode 100644 Documentation/x86/cpuinfo.rst
+
+-- 
+2.17.1
+
