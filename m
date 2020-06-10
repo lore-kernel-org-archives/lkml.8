@@ -2,105 +2,122 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B456C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF6FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 199C02072E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:09:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E3E72078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:10:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbgFJIJO (ORCPT
+        id S1726797AbgFJIKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 04:09:14 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:37998 "EHLO inva020.nxp.com"
+        Wed, 10 Jun 2020 04:10:23 -0400
+Received: from foss.arm.com ([217.140.110.172]:54400 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726652AbgFJIIs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 04:08:48 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2E0C51A1514;
-        Wed, 10 Jun 2020 10:08:46 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 88A451A1521;
-        Wed, 10 Jun 2020 10:08:41 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 06F3D40319;
-        Wed, 10 Jun 2020 16:08:35 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
-        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
-        s.hauer@pengutronix.de, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V4 4/9] pinctrl: imx8mn: Support building as module
-Date:   Wed, 10 Jun 2020 15:57:40 +0800
-Message-Id: <1591775865-26872-5-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591775865-26872-1-git-send-email-Anson.Huang@nxp.com>
-References: <1591775865-26872-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1726207AbgFJIKW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 04:10:22 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DE6251F1;
+        Wed, 10 Jun 2020 01:10:21 -0700 (PDT)
+Received: from bogus (unknown [10.37.12.97])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BAA883F6CF;
+        Wed, 10 Jun 2020 01:10:18 -0700 (PDT)
+Date:   Wed, 10 Jun 2020 09:10:11 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        tabba@google.com, qwandor@google.com, ardb@kernel.org
+Subject: Re: [RFC PATCH 0/3] firmware: Add support for PSA FF-A interface
+Message-ID: <20200610081011.GA2689@bogus>
+References: <20200601094512.50509-1-sudeep.holla@arm.com>
+ <20200604133746.GA2951@willie-the-truck>
+ <20200609174123.GA5732@bogus>
+ <20200610075711.GC15939@willie-the-truck>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200610075711.GC15939@willie-the-truck>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support building i.MX8MN pinctrl driver as module.
+Hi Will,
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-No change.
----
- drivers/pinctrl/freescale/Kconfig          |  2 +-
- drivers/pinctrl/freescale/pinctrl-imx8mn.c | 10 ++++------
- 2 files changed, 5 insertions(+), 7 deletions(-)
+On Wed, Jun 10, 2020 at 08:57:12AM +0100, Will Deacon wrote:
+> Hi Sudeep,
+>
+> On Tue, Jun 09, 2020 at 06:41:23PM +0100, Sudeep Holla wrote:
 
-diff --git a/drivers/pinctrl/freescale/Kconfig b/drivers/pinctrl/freescale/Kconfig
-index 556adc3..fe3e49c 100644
---- a/drivers/pinctrl/freescale/Kconfig
-+++ b/drivers/pinctrl/freescale/Kconfig
-@@ -132,7 +132,7 @@ config PINCTRL_IMX8MM
- 	  Say Y here to enable the imx8mm pinctrl driver
- 
- config PINCTRL_IMX8MN
--	bool "IMX8MN pinctrl driver"
-+	tristate "IMX8MN pinctrl driver"
- 	depends on ARCH_MXC
- 	select PINCTRL_IMX
- 	help
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx8mn.c b/drivers/pinctrl/freescale/pinctrl-imx8mn.c
-index 100ed8c..b6db780 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx8mn.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx8mn.c
-@@ -5,6 +5,7 @@
- 
- #include <linux/err.h>
- #include <linux/init.h>
-+#include <linux/module.h>
- #include <linux/of.h>
- #include <linux/pinctrl/pinctrl.h>
- #include <linux/platform_device.h>
-@@ -326,6 +327,7 @@ static const struct of_device_id imx8mn_pinctrl_of_match[] = {
- 	{ .compatible = "fsl,imx8mn-iomuxc", .data = &imx8mn_pinctrl_info, },
- 	{ /* sentinel */ }
- };
-+MODULE_DEVICE_TABLE(of, imx8mn_pinctrl_of_match);
- 
- static int imx8mn_pinctrl_probe(struct platform_device *pdev)
- {
-@@ -340,9 +342,5 @@ static struct platform_driver imx8mn_pinctrl_driver = {
- 	},
- 	.probe = imx8mn_pinctrl_probe,
- };
--
--static int __init imx8mn_pinctrl_init(void)
--{
--	return platform_driver_register(&imx8mn_pinctrl_driver);
--}
--arch_initcall(imx8mn_pinctrl_init);
-+module_platform_driver(imx8mn_pinctrl_driver);
-+MODULE_LICENSE("GPL v2");
--- 
-2.7.4
+[...]
 
+> >
+> > Agreed, I added for RxTx buffers and initially to build the parent/child
+> > hierarchy for all users of the driver. Initially I was assuming only
+> > in-kernel users and now I agree we should avoid any in kernel users if
+> > possible.
+> >
+> > One thing to note FFA_PARTITION_INFO_GET relies on Rx buffers to send the
+> > information to the caller. So we need to have established buffers before
+> > that and one of the reason you don't find that in this RFC. I dropped that
+> > too which I wanted initially.
+>
+> Ok, sounds like we should at least get to a position where we can enumerate
+> things, though.
+>
+
+Yes.
+
+[...]
+
+> >
+> > OK, IIUC that covers mostly KVM implementation. We still need a way to
+> > share the RxTx buffer info to the partitions and DT/ACPI(?) is one
+> > possible way. Based on you comment about not needing DT node, do you have
+> > any other way to communicate the buffer info to the partitions ?
+>
+> This is only a concern if KVM chooses to provide the Rx/Tx buffer pair
+> though, right? If we punt that down the road for the moment, then we can
+> just rely on FFA_RXTX_MAP for now.
+>
+
+Ah OK, I was under the assumption that we didn't want to use FFA_RXTX_{,UN}MAP
+
+[...]
+
+> >
+> > I am confused a bit. When you refer drivers above, are you referring to
+> > drivers in host kernel(hypervisor) or in the partitions. I fail to
+> > imagine need for the former.
+>
+> I'm referring to in-kernel users in the host kernel. For KVM-managed guests,
+> we may not need these, although signalling things like system shutdown might
+> be better off done without relying on userspace. But my point is really that
+> separating the buffer management from the users means we can serialise
+> consumers, whether they are in-kernel or out in userspace.
+>
+
+Understood.
+
+> > > What do you think, and do you reckon you can spin a cut-down driver that
+> > > implements the common part of the logic (since I know you've written much
+> > > of this code already)?
+> > >
+> >
+> > I am not sure if I am aligned with your thoughts on the buffer sharing
+> > yet.
+>
+> Ok, please let me know if you have any more questions.
+>
+
+None ATM. As I mentioned I had ruled out RXTX_{,UN}MAP which was my
+misunderstanding.
+
+--
+Regards,
+Sudeep
