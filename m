@@ -2,250 +2,599 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B979C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07115C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13A2E2067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:28:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C043A2067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:29:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="aBduEYDf"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VLu6r4rV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729842AbgFJO2r (ORCPT
+        id S1729851AbgFJO3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 10:28:47 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:65429 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbgFJO2q (ORCPT
+        Wed, 10 Jun 2020 10:29:39 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:39868 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726665AbgFJO3i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 10:28:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1591799326; x=1623335326;
-  h=references:from:to:cc:subject:in-reply-to:date:
-   message-id:mime-version;
-  bh=+jjSmmvriHDq2IKMDGiGb5G90hNLhZ/epLsZVVJPoYI=;
-  b=aBduEYDfgYPmcRTE8yilLrhEj2/YsDldexRqjdcX5qMazGRMH1bOnXGI
-   ho1ij9Iq8MQY1UFQdumbwtkmNs1+rRsSY+bFjPIqy+BfNku/Yv5qgoJzq
-   /KOtscrplDwuojIp7syoFLHvuiVjkL+rxUZ23D//ucZeJM43AoQEqHwbe
-   4eZuljlN67Uzg3e19gWqRqSDI5CaDt1sulcLEtITzd8mzC7TfDsz8IXrD
-   chJKAqELv1hu5g0lj+jnRJj16e5U9Q4ZRZf5Yxoe+SyoMlSgBeP8O4D4Y
-   abvLm80UBQbg5QTpKq4j1BHlGyq63KGZPNVaU4SjulBmC9aTqgBj4uXvN
-   g==;
-IronPort-SDR: DbPcK9BJ+sH793Gakaw6r8CMko7DoQOwQijlgsU+vYUDcj9oB+fEjURGAKSRL+iFeCx5+pl1Im
- oQY85aC5hF/r9BaHVrtOpNcme/S/cZytKwJ2Gmz601nqNTejjsDNRciCvhIWcxlMhF1g+yOaiv
- FwlOYHT03culQphd9lr76c/LewNdHCmGnVqKApoFI0otFgj/bei8mGeG1eIs9dZQEYOlbTopL4
- X/QjtZMubfBjzcZzVupxgGLt3zStSVIcDN75aRXN/BoauX0TCH2giVXIxK+GwG47udyoHI15JS
- xg4=
-X-IronPort-AV: E=Sophos;i="5.73,496,1583218800"; 
-   d="scan'208";a="78930383"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Jun 2020 07:28:46 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Wed, 10 Jun 2020 07:28:44 -0700
-Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3
- via Frontend Transport; Wed, 10 Jun 2020 07:28:42 -0700
-References: <20200513140031.25633-1-lars.povlsen@microchip.com> <20200513140031.25633-6-lars.povlsen@microchip.com> <20200513151811.GL4803@sirena.org.uk> <20200519120519.GE24801@soft-dev15.microsemi.net> <20200602211203.3lad22zvt5yagane@mobilestation>
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-List-Id: <soc.lore.kernel.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>, <devicetree@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        SoC Team <soc@kernel.org>,
-        "Microchip Linux Driver Support" <UNGLinuxDriver@microchip.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 05/10] spi: spi-dw-mmio: Spin off MSCC platforms into spi-dw-mchp
-In-Reply-To: <20200602211203.3lad22zvt5yagane@mobilestation>
-Date:   Wed, 10 Jun 2020 16:28:40 +0200
-Message-ID: <87bllrhu5j.fsf@soft-dev15.microsemi.net>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Wed, 10 Jun 2020 10:29:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591799375;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=idMIiJOT09bgESC1Xwuj+7K7gWUtR0p+u+13akNztH4=;
+        b=VLu6r4rVkrzYx/h0cNQqAA6Y/zx1w/vOy4kPNzB7LfD6aVStn1B/0MiOmk3cfqIPpqPW/K
+        F0VHMorBZgrWmNUlhIyBNXKjna3V/YsUMWOTUoetFP0iaxTZECl/H4dTlRCWNZMQVe2bvx
+        ud276D9Weu5pFlvKNQV9z2wHYXTcLis=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-423-oceVvDveOTWk9C_uZzJWUg-1; Wed, 10 Jun 2020 10:29:33 -0400
+X-MC-Unique: oceVvDveOTWk9C_uZzJWUg-1
+Received: by mail-wr1-f71.google.com with SMTP id l1so1162103wrc.8
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 07:29:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=idMIiJOT09bgESC1Xwuj+7K7gWUtR0p+u+13akNztH4=;
+        b=L5tScF/dLR9H5WM3jzhyHoav2Dumuo8Ss9OvBh3w00iuuoE3kF3TudrS9uACQrWOqF
+         MqDbtD4dEf/EiX4lFpV9MbY+iYQo+yh/5MsjbTh9TJ8dYCWyQjAxAJDyFwZmvuhcRnif
+         4y022pHRTRvRJyRSrqdOHXMANmDCLhQt3WVO7FNAKRHTFEaFQMjsq9x+bdR3YSn27Z0f
+         t3wxuiPybaCrV8BLdZWi0LV0jPQEDiNcgdC0eAIgK7YTVfdk6ZUcCZejpBkeKn9zLBDC
+         cwQRgPtp73w+BJaJXutWTdi0Q0unoSa6aQ2UnWxwTyLNhgO4jGxc6+cczKYI4Mky9QWm
+         zIOw==
+X-Gm-Message-State: AOAM533dzAOmN9JUOVRkFUGh61CX939vupL3biezbhER6AhP86j2g8zP
+        PqGo15LfdkOJe67mw5pbLrxhbMKR8l+BOeR0qH7wX7co2FhKqBL4dntDk1nrjPojq9qitGMOjeP
+        ZqbxeN4HIb4zmVQmzspbX7ybo
+X-Received: by 2002:a5d:4a04:: with SMTP id m4mr4427279wrq.153.1591799372335;
+        Wed, 10 Jun 2020 07:29:32 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxRkqAoACOukf2PaRTB33MsiFGBeXf1uA+2oE+b4+96DsfOKM8DLT/GUf7hpdTX2fy2uK5j6g==
+X-Received: by 2002:a5d:4a04:: with SMTP id m4mr4427241wrq.153.1591799371814;
+        Wed, 10 Jun 2020 07:29:31 -0700 (PDT)
+Received: from eperezma.remote.csb (109.141.78.188.dynamic.jazztel.es. [188.78.141.109])
+        by smtp.gmail.com with ESMTPSA id w17sm8425820wra.71.2020.06.10.07.29.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2020 07:29:31 -0700 (PDT)
+Message-ID: <035e82bcf4ade0017641c5b457d0c628c5915732.camel@redhat.com>
+Subject: Re: [PATCH RFC v7 03/14] vhost: use batched get_vq_desc version
+From:   Eugenio =?ISO-8859-1?Q?P=E9rez?= <eperezma@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, Jason Wang <jasowang@redhat.com>
+Date:   Wed, 10 Jun 2020 16:29:29 +0200
+In-Reply-To: <20200610113515.1497099-4-mst@redhat.com>
+References: <20200610113515.1497099-1-mst@redhat.com>
+         <20200610113515.1497099-4-mst@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-6.el8) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 2020-06-10 at 07:36 -0400, Michael S. Tsirkin wrote:
+> As testing shows no performance change, switch to that now.
+> 
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> Signed-off-by: Eugenio Pérez <eperezma@redhat.com>
+> Link: https://lore.kernel.org/r/20200401183118.8334-3-eperezma@redhat.com
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> ---
+>  drivers/vhost/test.c  |   2 +-
+>  drivers/vhost/vhost.c | 318 ++++++++----------------------------------
+>  drivers/vhost/vhost.h |   7 +-
+>  3 files changed, 65 insertions(+), 262 deletions(-)
+> 
+> diff --git a/drivers/vhost/test.c b/drivers/vhost/test.c
+> index 0466921f4772..7d69778aaa26 100644
+> --- a/drivers/vhost/test.c
+> +++ b/drivers/vhost/test.c
+> @@ -119,7 +119,7 @@ static int vhost_test_open(struct inode *inode, struct file *f)
+>  	dev = &n->dev;
+>  	vqs[VHOST_TEST_VQ] = &n->vqs[VHOST_TEST_VQ];
+>  	n->vqs[VHOST_TEST_VQ].handle_kick = handle_vq_kick;
+> -	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX, UIO_MAXIOV,
+> +	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX, UIO_MAXIOV + 64,
+>  		       VHOST_TEST_PKT_WEIGHT, VHOST_TEST_WEIGHT, true, NULL);
+>  
+>  	f->private_data = n;
+> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> index 11433d709651..28f324fd77df 100644
+> --- a/drivers/vhost/vhost.c
+> +++ b/drivers/vhost/vhost.c
+> @@ -304,6 +304,7 @@ static void vhost_vq_reset(struct vhost_dev *dev,
+>  {
+>  	vq->num = 1;
+>  	vq->ndescs = 0;
+> +	vq->first_desc = 0;
+>  	vq->desc = NULL;
+>  	vq->avail = NULL;
+>  	vq->used = NULL;
+> @@ -372,6 +373,11 @@ static int vhost_worker(void *data)
+>  	return 0;
+>  }
+>  
+> +static int vhost_vq_num_batch_descs(struct vhost_virtqueue *vq)
+> +{
+> +	return vq->max_descs - UIO_MAXIOV;
+> +}
+> +
+>  static void vhost_vq_free_iovecs(struct vhost_virtqueue *vq)
+>  {
+>  	kfree(vq->descs);
+> @@ -394,6 +400,9 @@ static long vhost_dev_alloc_iovecs(struct vhost_dev *dev)
+>  	for (i = 0; i < dev->nvqs; ++i) {
+>  		vq = dev->vqs[i];
+>  		vq->max_descs = dev->iov_limit;
+> +		if (vhost_vq_num_batch_descs(vq) < 0) {
+> +			return -EINVAL;
+> +		}
+>  		vq->descs = kmalloc_array(vq->max_descs,
+>  					  sizeof(*vq->descs),
+>  					  GFP_KERNEL);
+> @@ -1610,6 +1619,7 @@ long vhost_vring_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *arg
+>  		vq->last_avail_idx = s.num;
+>  		/* Forget the cached index value. */
+>  		vq->avail_idx = vq->last_avail_idx;
+> +		vq->ndescs = vq->first_desc = 0;
 
-Serge Semin writes:
+This is not needed if it is done in vhost_vq_set_backend, as far as I can tell.
 
-> On Tue, May 19, 2020 at 02:05:19PM +0200, Lars Povlsen wrote:
->> On 13/05/20 16:18, Mark Brown wrote:
->> > Date: Wed, 13 May 2020 16:18:11 +0100
->> > From: Mark Brown <broonie@kernel.org>
->> > To: Lars Povlsen <lars.povlsen@microchip.com>
->> > Cc: SoC Team <soc@kernel.org>, Microchip Linux Driver Support
->> >  <UNGLinuxDriver@microchip.com>, linux-spi@vger.kernel.org,
->> >  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
->> >  linux-arm-kernel@lists.infradead.org, Alexandre Belloni
->> >  <alexandre.belloni@bootlin.com>
->> > Subject: Re: [PATCH 05/10] spi: spi-dw-mmio: Spin off MSCC platforms into
->> >  spi-dw-mchp
->> > User-Agent: Mutt/1.10.1 (2018-07-13)
->> >
->> > On Wed, May 13, 2020 at 04:00:26PM +0200, Lars Povlsen wrote:
->> >
->> > > +config SPI_DW_MCHP
->> > > + tristate "Memory-mapped io interface driver using DW SPI core of MSCC SoCs"
->> > > + default y if ARCH_SPARX5
->> > > + default y if SOC_VCOREIII
->> >
->> > Why the default ys?
->>
->> The SoC will typically boot from SPI... But its not a requirement per
->> se. I will remove it.
->>
->> >
->> > > +++ b/drivers/spi/Makefile
->> > > @@ -37,6 +37,7 @@ obj-$(CONFIG_SPI_DAVINCI)               += spi-davinci.o
->> > >  obj-$(CONFIG_SPI_DLN2)                   += spi-dln2.o
->> > >  obj-$(CONFIG_SPI_DESIGNWARE)             += spi-dw.o
->> > >  obj-$(CONFIG_SPI_DW_MMIO)                += spi-dw-mmio.o
->> > > +obj-$(CONFIG_SPI_DW_MCHP)                += spi-dw-mchp.o
->> > >  obj-$(CONFIG_SPI_DW_PCI)         += spi-dw-midpci.o
->> > >  spi-dw-midpci-objs                       := spi-dw-pci.o spi-dw-mid.o
->> > >  obj-$(CONFIG_SPI_EFM32)                  += spi-efm32.o
->> >
->> > Please keep the file alphabetically sorted.
->> >
->>
->> Noted.
->>
->> > > +++ b/drivers/spi/spi-dw-mchp.c
->> > > @@ -0,0 +1,232 @@
->> > > +// SPDX-License-Identifier: GPL-2.0-only
->> > > +/*
->> > > + * Memory-mapped interface driver for MSCC SoCs
->> > > + *
->> >
->> > Please make the entire comment a C++ one so things look more
->> > intentional.
->>
->> Sure, I can do that. The presented form matches that of the other
->> spi-dw-* drivers, but I can see other using // blocks. Ack.
->>
->> >
->> > > +#define MAX_CS           4
->> >
->> > This should be namespaced.
->>
->> Ack.
->>
->
->> >
->> > > + rx_sample_dly = 0;
->> > > + device_property_read_u32(&pdev->dev, "spi-rx-delay-us", &rx_sample_dly);
->> > > + dws->rx_sample_dly = DIV_ROUND_UP(rx_sample_dly,
->> > > +                                   (dws->max_freq / 1000000));
->
-> Perhaps 100000 is better to be replace with macro USEC_PER_SEC...
->
-> Moreover are you sure the formulae is correct?
-> dws->rx_sample_dly - a number of ssi_clk periods/cycles to delay the Rx-data sample,
-> dws->max_freq - ssi_clk frequency (not period).
->
-> In real math the formulae would look like:
-> S = d * P [s], where d - number of delay cycles, P - ssi_clk period in seconds,
-> S - requested delay in seconds.
-> In the driver notation: d = dws->rx_sample_dly, P = 1 / dws->max_freq,
-> S = rx_sample_dly ("spi-rx-delay-us" property value).
->
-> dws->rx_sample_dly * (1 / dws->max_freq) = rx_sample_dly <=>
-> dws->rx_sample_dly = rx_sample_dly * dws->max_freq.
->
-> Though that's represented in seconds, so if rx_sample_dly is specified in usec,
-> then you'd need to scale it down dividing by USEC_PER_SEC.
->
-> For example, imagine we need a delay of 1 usec with ssi_clk of 50MHz.
-> By your formulae we'd have: 1 / (50000000 / 1000000) = 0 cycles (actually 1 due
-> to DIV_ROUND_UP, but incorrect anyway),
-> By mine: 1 * (500000000 / 1000000) = 50 cycles. Seems closer to reality.
->
-> Am I missing something?
+Actually, maybe it is even better to move `vq->avail_idx = vq->last_avail_idx;` line to vhost_vq_set_backend, it is part
+of the backend "set up" procedure, isn't it?
 
-No, you are perfectly right, the calculation was wrong - and I concur
-the unit should be NS.
+I tested with virtio_test + batch tests sent in 
+https://lkml.kernel.org/lkml/20200418102217.32327-1-eperezma@redhat.com/T/.
+I append here what I'm proposing in case it is clearer this way.
 
-(your example threw me off, you are using 500Mhz, typo I guess)
+Thanks!
 
-I believe the calculation should be:
+diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+index 4d198994e7be..809ad2cd2879 100644
+--- a/drivers/vhost/vhost.c
++++ b/drivers/vhost/vhost.c
+@@ -1617,9 +1617,6 @@ long vhost_vring_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *arg
+ 			break;
+ 		}
+ 		vq->last_avail_idx = s.num;
+-		/* Forget the cached index value. */
+-		vq->avail_idx = vq->last_avail_idx;
+-		vq->ndescs = vq->first_desc = 0;
+ 		break;
+ 	case VHOST_GET_VRING_BASE:
+ 		s.index = idx;
+diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+index fed36af5c444..f4902dc808e4 100644
+--- a/drivers/vhost/vhost.h
++++ b/drivers/vhost/vhost.h
+@@ -258,6 +258,7 @@ static inline void vhost_vq_set_backend(struct vhost_virtqueue *vq,
+ 					void *private_data)
+ {
+ 	vq->private_data = private_data;
++	vq->avail_idx = vq->last_avail_idx;
+ 	vq->ndescs = 0;
+ 	vq->first_desc = 0;
+ }
 
-  device_property_read_u32(&pdev->dev, "snps,rx-sample-delay-ns", &rx_sample_dly);
-  dws->rx_sample_dly = DIV_ROUND_CLOSEST(rx_sample_dly, NSEC_PER_SEC / dws->max_freq);
-        
-So for your example of 1us = 1000ns, we have a cycle time of 20 ns => 50 cycles.
+>  		break;
+>  	case VHOST_GET_VRING_BASE:
+>  		s.index = idx;
+> @@ -2078,253 +2088,6 @@ static unsigned next_desc(struct vhost_virtqueue *vq, struct vring_desc *desc)
+>  	return next;
+>  }
+>  
+> -static int get_indirect(struct vhost_virtqueue *vq,
+> -			struct iovec iov[], unsigned int iov_size,
+> -			unsigned int *out_num, unsigned int *in_num,
+> -			struct vhost_log *log, unsigned int *log_num,
+> -			struct vring_desc *indirect)
+> -{
+> -	struct vring_desc desc;
+> -	unsigned int i = 0, count, found = 0;
+> -	u32 len = vhost32_to_cpu(vq, indirect->len);
+> -	struct iov_iter from;
+> -	int ret, access;
+> -
+> -	/* Sanity check */
+> -	if (unlikely(len % sizeof desc)) {
+> -		vq_err(vq, "Invalid length in indirect descriptor: "
+> -		       "len 0x%llx not multiple of 0x%zx\n",
+> -		       (unsigned long long)len,
+> -		       sizeof desc);
+> -		return -EINVAL;
+> -	}
+> -
+> -	ret = translate_desc(vq, vhost64_to_cpu(vq, indirect->addr), len, vq->indirect,
+> -			     UIO_MAXIOV, VHOST_ACCESS_RO);
+> -	if (unlikely(ret < 0)) {
+> -		if (ret != -EAGAIN)
+> -			vq_err(vq, "Translation failure %d in indirect.\n", ret);
+> -		return ret;
+> -	}
+> -	iov_iter_init(&from, READ, vq->indirect, ret, len);
+> -
+> -	/* We will use the result as an address to read from, so most
+> -	 * architectures only need a compiler barrier here. */
+> -	read_barrier_depends();
+> -
+> -	count = len / sizeof desc;
+> -	/* Buffers are chained via a 16 bit next field, so
+> -	 * we can have at most 2^16 of these. */
+> -	if (unlikely(count > USHRT_MAX + 1)) {
+> -		vq_err(vq, "Indirect buffer length too big: %d\n",
+> -		       indirect->len);
+> -		return -E2BIG;
+> -	}
+> -
+> -	do {
+> -		unsigned iov_count = *in_num + *out_num;
+> -		if (unlikely(++found > count)) {
+> -			vq_err(vq, "Loop detected: last one at %u "
+> -			       "indirect size %u\n",
+> -			       i, count);
+> -			return -EINVAL;
+> -		}
+> -		if (unlikely(!copy_from_iter_full(&desc, sizeof(desc), &from))) {
+> -			vq_err(vq, "Failed indirect descriptor: idx %d, %zx\n",
+> -			       i, (size_t)vhost64_to_cpu(vq, indirect->addr) + i * sizeof desc);
+> -			return -EINVAL;
+> -		}
+> -		if (unlikely(desc.flags & cpu_to_vhost16(vq, VRING_DESC_F_INDIRECT))) {
+> -			vq_err(vq, "Nested indirect descriptor: idx %d, %zx\n",
+> -			       i, (size_t)vhost64_to_cpu(vq, indirect->addr) + i * sizeof desc);
+> -			return -EINVAL;
+> -		}
+> -
+> -		if (desc.flags & cpu_to_vhost16(vq, VRING_DESC_F_WRITE))
+> -			access = VHOST_ACCESS_WO;
+> -		else
+> -			access = VHOST_ACCESS_RO;
+> -
+> -		ret = translate_desc(vq, vhost64_to_cpu(vq, desc.addr),
+> -				     vhost32_to_cpu(vq, desc.len), iov + iov_count,
+> -				     iov_size - iov_count, access);
+> -		if (unlikely(ret < 0)) {
+> -			if (ret != -EAGAIN)
+> -				vq_err(vq, "Translation failure %d indirect idx %d\n",
+> -					ret, i);
+> -			return ret;
+> -		}
+> -		/* If this is an input descriptor, increment that count. */
+> -		if (access == VHOST_ACCESS_WO) {
+> -			*in_num += ret;
+> -			if (unlikely(log && ret)) {
+> -				log[*log_num].addr = vhost64_to_cpu(vq, desc.addr);
+> -				log[*log_num].len = vhost32_to_cpu(vq, desc.len);
+> -				++*log_num;
+> -			}
+> -		} else {
+> -			/* If it's an output descriptor, they're all supposed
+> -			 * to come before any input descriptors. */
+> -			if (unlikely(*in_num)) {
+> -				vq_err(vq, "Indirect descriptor "
+> -				       "has out after in: idx %d\n", i);
+> -				return -EINVAL;
+> -			}
+> -			*out_num += ret;
+> -		}
+> -	} while ((i = next_desc(vq, &desc)) != -1);
+> -	return 0;
+> -}
+> -
+> -/* This looks in the virtqueue and for the first available buffer, and converts
+> - * it to an iovec for convenient access.  Since descriptors consist of some
+> - * number of output then some number of input descriptors, it's actually two
+> - * iovecs, but we pack them into one and note how many of each there were.
+> - *
+> - * This function returns the descriptor number found, or vq->num (which is
+> - * never a valid descriptor number) if none was found.  A negative code is
+> - * returned on error. */
+> -int vhost_get_vq_desc(struct vhost_virtqueue *vq,
+> -		      struct iovec iov[], unsigned int iov_size,
+> -		      unsigned int *out_num, unsigned int *in_num,
+> -		      struct vhost_log *log, unsigned int *log_num)
+> -{
+> -	struct vring_desc desc;
+> -	unsigned int i, head, found = 0;
+> -	u16 last_avail_idx;
+> -	__virtio16 avail_idx;
+> -	__virtio16 ring_head;
+> -	int ret, access;
+> -
+> -	/* Check it isn't doing very strange things with descriptor numbers. */
+> -	last_avail_idx = vq->last_avail_idx;
+> -
+> -	if (vq->avail_idx == vq->last_avail_idx) {
+> -		if (unlikely(vhost_get_avail_idx(vq, &avail_idx))) {
+> -			vq_err(vq, "Failed to access avail idx at %p\n",
+> -				&vq->avail->idx);
+> -			return -EFAULT;
+> -		}
+> -		vq->avail_idx = vhost16_to_cpu(vq, avail_idx);
+> -
+> -		if (unlikely((u16)(vq->avail_idx - last_avail_idx) > vq->num)) {
+> -			vq_err(vq, "Guest moved used index from %u to %u",
+> -				last_avail_idx, vq->avail_idx);
+> -			return -EFAULT;
+> -		}
+> -
+> -		/* If there's nothing new since last we looked, return
+> -		 * invalid.
+> -		 */
+> -		if (vq->avail_idx == last_avail_idx)
+> -			return vq->num;
+> -
+> -		/* Only get avail ring entries after they have been
+> -		 * exposed by guest.
+> -		 */
+> -		smp_rmb();
+> -	}
+> -
+> -	/* Grab the next descriptor number they're advertising, and increment
+> -	 * the index we've seen. */
+> -	if (unlikely(vhost_get_avail_head(vq, &ring_head, last_avail_idx))) {
+> -		vq_err(vq, "Failed to read head: idx %d address %p\n",
+> -		       last_avail_idx,
+> -		       &vq->avail->ring[last_avail_idx % vq->num]);
+> -		return -EFAULT;
+> -	}
+> -
+> -	head = vhost16_to_cpu(vq, ring_head);
+> -
+> -	/* If their number is silly, that's an error. */
+> -	if (unlikely(head >= vq->num)) {
+> -		vq_err(vq, "Guest says index %u > %u is available",
+> -		       head, vq->num);
+> -		return -EINVAL;
+> -	}
+> -
+> -	/* When we start there are none of either input nor output. */
+> -	*out_num = *in_num = 0;
+> -	if (unlikely(log))
+> -		*log_num = 0;
+> -
+> -	i = head;
+> -	do {
+> -		unsigned iov_count = *in_num + *out_num;
+> -		if (unlikely(i >= vq->num)) {
+> -			vq_err(vq, "Desc index is %u > %u, head = %u",
+> -			       i, vq->num, head);
+> -			return -EINVAL;
+> -		}
+> -		if (unlikely(++found > vq->num)) {
+> -			vq_err(vq, "Loop detected: last one at %u "
+> -			       "vq size %u head %u\n",
+> -			       i, vq->num, head);
+> -			return -EINVAL;
+> -		}
+> -		ret = vhost_get_desc(vq, &desc, i);
+> -		if (unlikely(ret)) {
+> -			vq_err(vq, "Failed to get descriptor: idx %d addr %p\n",
+> -			       i, vq->desc + i);
+> -			return -EFAULT;
+> -		}
+> -		if (desc.flags & cpu_to_vhost16(vq, VRING_DESC_F_INDIRECT)) {
+> -			ret = get_indirect(vq, iov, iov_size,
+> -					   out_num, in_num,
+> -					   log, log_num, &desc);
+> -			if (unlikely(ret < 0)) {
+> -				if (ret != -EAGAIN)
+> -					vq_err(vq, "Failure detected "
+> -						"in indirect descriptor at idx %d\n", i);
+> -				return ret;
+> -			}
+> -			continue;
+> -		}
+> -
+> -		if (desc.flags & cpu_to_vhost16(vq, VRING_DESC_F_WRITE))
+> -			access = VHOST_ACCESS_WO;
+> -		else
+> -			access = VHOST_ACCESS_RO;
+> -		ret = translate_desc(vq, vhost64_to_cpu(vq, desc.addr),
+> -				     vhost32_to_cpu(vq, desc.len), iov + iov_count,
+> -				     iov_size - iov_count, access);
+> -		if (unlikely(ret < 0)) {
+> -			if (ret != -EAGAIN)
+> -				vq_err(vq, "Translation failure %d descriptor idx %d\n",
+> -					ret, i);
+> -			return ret;
+> -		}
+> -		if (access == VHOST_ACCESS_WO) {
+> -			/* If this is an input descriptor,
+> -			 * increment that count. */
+> -			*in_num += ret;
+> -			if (unlikely(log && ret)) {
+> -				log[*log_num].addr = vhost64_to_cpu(vq, desc.addr);
+> -				log[*log_num].len = vhost32_to_cpu(vq, desc.len);
+> -				++*log_num;
+> -			}
+> -		} else {
+> -			/* If it's an output descriptor, they're all supposed
+> -			 * to come before any input descriptors. */
+> -			if (unlikely(*in_num)) {
+> -				vq_err(vq, "Descriptor has out after in: "
+> -				       "idx %d\n", i);
+> -				return -EINVAL;
+> -			}
+> -			*out_num += ret;
+> -		}
+> -	} while ((i = next_desc(vq, &desc)) != -1);
+> -
+> -	/* On success, increment avail index. */
+> -	vq->last_avail_idx++;
+> -
+> -	/* Assume notifications from guest are disabled at this point,
+> -	 * if they aren't we would need to update avail_event index. */
+> -	BUG_ON(!(vq->used_flags & VRING_USED_F_NO_NOTIFY));
+> -	return head;
+> -}
+> -EXPORT_SYMBOL_GPL(vhost_get_vq_desc);
+> -
+>  static struct vhost_desc *peek_split_desc(struct vhost_virtqueue *vq)
+>  {
+>  	BUG_ON(!vq->ndescs);
+> @@ -2428,7 +2191,7 @@ static int fetch_indirect_descs(struct vhost_virtqueue *vq,
+>  
+>  /* This function returns a value > 0 if a descriptor was found, or 0 if none were found.
+>   * A negative code is returned on error. */
+> -static int fetch_descs(struct vhost_virtqueue *vq)
+> +static int fetch_buf(struct vhost_virtqueue *vq)
+>  {
+>  	unsigned int i, head, found = 0;
+>  	struct vhost_desc *last;
+> @@ -2441,7 +2204,11 @@ static int fetch_descs(struct vhost_virtqueue *vq)
+>  	/* Check it isn't doing very strange things with descriptor numbers. */
+>  	last_avail_idx = vq->last_avail_idx;
+>  
+> -	if (vq->avail_idx == vq->last_avail_idx) {
+> +	if (unlikely(vq->avail_idx == vq->last_avail_idx)) {
+> +		/* If we already have work to do, don't bother re-checking. */
+> +		if (likely(vq->ndescs))
+> +			return 1;
+> +
+>  		if (unlikely(vhost_get_avail_idx(vq, &avail_idx))) {
+>  			vq_err(vq, "Failed to access avail idx at %p\n",
+>  				&vq->avail->idx);
+> @@ -2532,6 +2299,41 @@ static int fetch_descs(struct vhost_virtqueue *vq)
+>  	return 1;
+>  }
+>  
+> +/* This function returns a value > 0 if a descriptor was found, or 0 if none were found.
+> + * A negative code is returned on error. */
+> +static int fetch_descs(struct vhost_virtqueue *vq)
+> +{
+> +	int ret;
+> +
+> +	if (unlikely(vq->first_desc >= vq->ndescs)) {
+> +		vq->first_desc = 0;
+> +		vq->ndescs = 0;
+> +	}
+> +
+> +	if (vq->ndescs)
+> +		return 1;
+> +
+> +	for (ret = 1;
+> +	     ret > 0 && vq->ndescs <= vhost_vq_num_batch_descs(vq);
+> +	     ret = fetch_buf(vq))
+> +		;
+> +
+> +	/* On success we expect some descs */
+> +	BUG_ON(ret > 0 && !vq->ndescs);
+> +	return ret;
+> +}
+> +
+> +/* Reverse the effects of fetch_descs */
+> +static void unfetch_descs(struct vhost_virtqueue *vq)
+> +{
+> +	int i;
+> +
+> +	for (i = vq->first_desc; i < vq->ndescs; ++i)
+> +		if (!(vq->descs[i].flags & VRING_DESC_F_NEXT))
+> +			vq->last_avail_idx -= 1;
+> +	vq->ndescs = 0;
+> +}
+> +
+>  /* This looks in the virtqueue and for the first available buffer, and converts
+>   * it to an iovec for convenient access.  Since descriptors consist of some
+>   * number of output then some number of input descriptors, it's actually two
+> @@ -2540,7 +2342,7 @@ static int fetch_descs(struct vhost_virtqueue *vq)
+>   * This function returns the descriptor number found, or vq->num (which is
+>   * never a valid descriptor number) if none was found.  A negative code is
+>   * returned on error. */
+> -int vhost_get_vq_desc_batch(struct vhost_virtqueue *vq,
+> +int vhost_get_vq_desc(struct vhost_virtqueue *vq,
+>  		      struct iovec iov[], unsigned int iov_size,
+>  		      unsigned int *out_num, unsigned int *in_num,
+>  		      struct vhost_log *log, unsigned int *log_num)
+> @@ -2549,7 +2351,7 @@ int vhost_get_vq_desc_batch(struct vhost_virtqueue *vq,
+>  	int i;
+>  
+>  	if (ret <= 0)
+> -		goto err_fetch;
+> +		goto err;
+>  
+>  	/* Now convert to IOV */
+>  	/* When we start there are none of either input nor output. */
+> @@ -2557,7 +2359,7 @@ int vhost_get_vq_desc_batch(struct vhost_virtqueue *vq,
+>  	if (unlikely(log))
+>  		*log_num = 0;
+>  
+> -	for (i = 0; i < vq->ndescs; ++i) {
+> +	for (i = vq->first_desc; i < vq->ndescs; ++i) {
+>  		unsigned iov_count = *in_num + *out_num;
+>  		struct vhost_desc *desc = &vq->descs[i];
+>  		int access;
+> @@ -2603,24 +2405,26 @@ int vhost_get_vq_desc_batch(struct vhost_virtqueue *vq,
+>  		}
+>  
+>  		ret = desc->id;
+> +
+> +		if (!(desc->flags & VRING_DESC_F_NEXT))
+> +			break;
+>  	}
+>  
+> -	vq->ndescs = 0;
+> +	vq->first_desc = i + 1;
+>  
+>  	return ret;
+>  
+>  err:
+> -	vhost_discard_vq_desc(vq, 1);
+> -err_fetch:
+> -	vq->ndescs = 0;
+> +	unfetch_descs(vq);
+>  
+>  	return ret ? ret : vq->num;
+>  }
+> -EXPORT_SYMBOL_GPL(vhost_get_vq_desc_batch);
+> +EXPORT_SYMBOL_GPL(vhost_get_vq_desc);
+>  
+>  /* Reverse the effect of vhost_get_vq_desc. Useful for error handling. */
+>  void vhost_discard_vq_desc(struct vhost_virtqueue *vq, int n)
+>  {
+> +	unfetch_descs(vq);
+>  	vq->last_avail_idx -= n;
+>  }
+>  EXPORT_SYMBOL_GPL(vhost_discard_vq_desc);
+> diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+> index 87089d51490d..fed36af5c444 100644
+> --- a/drivers/vhost/vhost.h
+> +++ b/drivers/vhost/vhost.h
+> @@ -81,6 +81,7 @@ struct vhost_virtqueue {
+>  
+>  	struct vhost_desc *descs;
+>  	int ndescs;
+> +	int first_desc;
+>  	int max_descs;
+>  
+>  	struct file *kick;
+> @@ -189,10 +190,6 @@ long vhost_vring_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *arg
+>  bool vhost_vq_access_ok(struct vhost_virtqueue *vq);
+>  bool vhost_log_access_ok(struct vhost_dev *);
+>  
+> -int vhost_get_vq_desc_batch(struct vhost_virtqueue *,
+> -		      struct iovec iov[], unsigned int iov_count,
+> -		      unsigned int *out_num, unsigned int *in_num,
+> -		      struct vhost_log *log, unsigned int *log_num);
+>  int vhost_get_vq_desc(struct vhost_virtqueue *,
+>  		      struct iovec iov[], unsigned int iov_count,
+>  		      unsigned int *out_num, unsigned int *in_num,
+> @@ -261,6 +258,8 @@ static inline void vhost_vq_set_backend(struct vhost_virtqueue *vq,
+>  					void *private_data)
+>  {
+>  	vq->private_data = private_data;
+> +	vq->ndescs = 0;
+> +	vq->first_desc = 0;
+>  }
+>  
+>  /**
 
-And I assume DIV_ROUND_CLOSEST() is the better instead of explicit
-rounding up/down. And I assume its fair to assume that the cycle time is
-not a fraction.
-
-Ok?
-
->
->> >
->> > If this is a standard feature of the DesignWare IP why parse it here and
->> > not in the generic code?
->>
->> This is a standard feature of the DesignWare IP, so good suggestion. I
->> will arrange with Serge.
->
-> Regarding "spi-rx-delay-us" and the sampling delay the IP supports. Here is what
-> documentation says regarding the register, which is then initialized with this
-> parameter "This register controls the number of ssi_clk cycles that are
-> delayed from the default sample time before the actual sample of the rxd input
-> signal occurs." While the "spi-rx-delay-us" property is described as: "Delay, in
-> microseconds, after a read transfer." I may misunderstand something, but IMO
-> these descriptions don't refer to the same values. The only real use of the
-> "spi-rx-delay-us" property I've found in "./drivers/input/rmi4/rmi_spi.c".
-> That driver gets the value of the property and just sets the delay_usecs
-> of some transfers, which isn't even close to the functionality the RX_SAMPLE_DLY
-> register provides.
->
-> To be clear the RX_SAMPLE_DLY register can be used to delay the RX-bits sample
-> with respect to the normal Rx sampling timing. The delay is measured in the
-> numbers of the ssi_clk periods. (Note also that the maximum delay is limited
-> with a constant parameter pre-initialized at the IP-core synthesis stage. It can
-> be defined within a range [4, 255]. In our IP it's limited with just 4 periods.)
->
-
-Yes - I was not aware of the instantiation incurred limit before. Turned
-our IP has up to 100ns worth of fifo depth - 25 cycles.
-
-> As I see it, a better way would be to either define a new vendor-specific
-> property like "snps,rx-sample-delay-ns" (note NS here, since normally the
-> ssi_clk is much higher than 1MHz), or define a new generic SPI property.
-> Mark, Andy?
-
-I'll assume "snps,rx-sample-delay-ns" for now, its easy to rename if you
-decide so.
-
-Thanks again!
-
----Lars
-
->
-> -Sergey
->
->>
->> Thank you for your comments!
->>
->> ---Lars
->>
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
--- 
-Lars Povlsen,
-Microchip
