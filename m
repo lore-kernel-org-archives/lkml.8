@@ -2,97 +2,112 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E223FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 472D0C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF30F2070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:46:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591818389;
-	bh=V8MuN/Ny5mYSCxK6kfQBnHwCVaOFlIo95wDoCgwHkk4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=C2h5Y0aSJw0b+HfSmRnP2yuFHOdXI2eXjSi9IwPgMk+jvFKhOKWvUaUtD/7z2IwUu
-	 X5+fcv9JWK2QmWi5cUpWpz3V/swwZq3yYPtiZ9o5H3RStT1TCkP42yE4C4CJFXCh07
-	 +SydNXypHo8ueHC8v/1o8hVy6VAfeTgtxIvhNB0M=
+	by mail.kernel.org (Postfix) with ESMTP id 2830F2070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:47:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730290AbgFJTq2 (ORCPT
+        id S1730317AbgFJTrj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 15:46:28 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:37068 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727775AbgFJTq2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 15:46:28 -0400
-Received: by mail-io1-f66.google.com with SMTP id r2so3690532ioo.4;
-        Wed, 10 Jun 2020 12:46:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9mGfZeBBTKc+FrE4dVawruNqiY96bl764hS1tXehIIE=;
-        b=BecvtJMdybauIYqlvP3mmq1I+zjaWUVy2T1dWLXCqVPui0f9ZrXHIw5OgZMR9jD2nz
-         6Kkenw1bpplToRE8BnldssPAk16BOX0ycFGCjDzmK1lkxgfYvlC9FFMakTmXRNoR2FMh
-         K+vbuoOeYDFTB5s/UpPSC+HNmv1Yx1WWKxoQ6jFmKmkGGEF3eXJZI+xIpHlBd0MoNWlr
-         FNDABuN/T559h36U1z7LpsGZfM3UktZaQsWPI3cBeQy7kiJjnq7+YmXm+i8UnvxBXaXT
-         F0OB7wM/ODV6QrD5ci8+ov4frah/6vVmaMjekwZhFFLK1fQsFCq/R0c80J6HgyeCpukj
-         IZ9Q==
-X-Gm-Message-State: AOAM531/4+66IXuJAmV50bbZXPfsk4uBwtBv+uSykua8O/lLf89jxhmV
-        fqRoVulh2xEJwsgihS/wC6KclbQ=
-X-Google-Smtp-Source: ABdhPJyTfZ7stvJ1zJp4PDYd4mXFlNbonBQ7OxS6Ub6k8MoKgsezkrMt64D7x1mMgr57NVmsKtVrYA==
-X-Received: by 2002:a02:2c6:: with SMTP id 189mr4797468jau.115.1591818386360;
-        Wed, 10 Jun 2020 12:46:26 -0700 (PDT)
-Received: from xps15.herring.priv ([64.188.179.251])
-        by smtp.googlemail.com with ESMTPSA id a6sm385535ilh.60.2020.06.10.12.46.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 12:46:25 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH] dt-bindings: mfd: Ensure 'syscon' has a more specific compatible
-Date:   Wed, 10 Jun 2020 13:46:25 -0600
-Message-Id: <20200610194625.3597460-1-robh@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        Wed, 10 Jun 2020 15:47:39 -0400
+Received: from mga02.intel.com ([134.134.136.20]:47507 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727038AbgFJTrj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 15:47:39 -0400
+IronPort-SDR: y7yfGGrmlytIE06CqEttsoWJHGAATeU1svuJaDXogwv5D+PPIf6q+JM0xqXHEgxd9agdc6ZU/t
+ IIAdZDzV1f1g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2020 12:47:38 -0700
+IronPort-SDR: zwsDaZkbBTj0lednQXl1zdUaM7MuxdMUT/XCO8fVZzLlLxwpQr2q5ueRRJ7kjHHo1OraSddyEs
+ 5JivjUsJxnTg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,497,1583222400"; 
+   d="scan'208";a="306723019"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by fmsmga002.fm.intel.com with ESMTP; 10 Jun 2020 12:47:38 -0700
+Date:   Wed, 10 Jun 2020 12:47:38 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] KVM: async_pf: Inject 'page ready' event only if
+ 'page not present' was previously injected
+Message-ID: <20200610194738.GE18790@linux.intel.com>
+References: <20200610175532.779793-1-vkuznets@redhat.com>
+ <20200610175532.779793-2-vkuznets@redhat.com>
+ <20200610193211.GB243520@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200610193211.GB243520@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using 'syscon' alone should be avoided as compatible strings should be
-specific enough to identify the exact set of registers contained. Update
-the schema to ensure at least 2 compatible strings are present.
+On Wed, Jun 10, 2020 at 03:32:11PM -0400, Vivek Goyal wrote:
+> On Wed, Jun 10, 2020 at 07:55:32PM +0200, Vitaly Kuznetsov wrote:
+> > 'Page not present' event may or may not get injected depending on
+> > guest's state. If the event wasn't injected, there is no need to
+> > inject the corresponding 'page ready' event as the guest may get
+> > confused. E.g. Linux thinks that the corresponding 'page not present'
+> > event wasn't delivered *yet* and allocates a 'dummy entry' for it.
+> > This entry is never freed.
+> > 
+> > Note, 'wakeup all' events have no corresponding 'page not present'
+> > event and always get injected.
+> > 
+> > s390 seems to always be able to inject 'page not present', the
+> > change is effectively a nop.
+> > 
+> > Suggested-by: Vivek Goyal <vgoyal@redhat.com>
+> > Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> > ---
+> >  arch/s390/include/asm/kvm_host.h | 2 +-
+> >  arch/s390/kvm/kvm-s390.c         | 4 +++-
+> >  arch/x86/include/asm/kvm_host.h  | 2 +-
+> >  arch/x86/kvm/x86.c               | 7 +++++--
+> >  include/linux/kvm_host.h         | 1 +
+> >  virt/kvm/async_pf.c              | 2 +-
+> >  6 files changed, 12 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm_host.h
+> > index 3d554887794e..cee3cb6455a2 100644
+> > --- a/arch/s390/include/asm/kvm_host.h
+> > +++ b/arch/s390/include/asm/kvm_host.h
+> > @@ -978,7 +978,7 @@ bool kvm_arch_can_dequeue_async_page_present(struct kvm_vcpu *vcpu);
+> >  void kvm_arch_async_page_ready(struct kvm_vcpu *vcpu,
+> >  			       struct kvm_async_pf *work);
+> >  
+> > -void kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
+> > +bool kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
+> >  				     struct kvm_async_pf *work);
+> 
+> Hi Vitaly,
+> 
+> A minor nit. Using return code to figure out if exception was injected
+> or not is little odd. How about we pass a pointer instead as parameter
+> and kvm_arch_async_page_not_present() sets it to true if page not
+> present exception was injected. This probably will be easier to
+> read.
+> 
+> If for some reason you don't like above, atleats it warrants a comment
+> explaining what do 0 and 1 mean.
+> 
+> Otherwise both the patches look good to me. I tested and I can confirm
+> that now page ready events are not being delivered to guest if page
+> not present was not injected.
 
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Maxime Ripard <maxime@cerno.tech>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-FYI, there's 43 cases of this on arm32 in my testing.
-
- Documentation/devicetree/bindings/mfd/syscon.yaml | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/mfd/syscon.yaml b/Documentation/devicetree/bindings/mfd/syscon.yaml
-index 19bdaf781853..af7a68051392 100644
---- a/Documentation/devicetree/bindings/mfd/syscon.yaml
-+++ b/Documentation/devicetree/bindings/mfd/syscon.yaml
-@@ -43,7 +43,8 @@ properties:
- 
-       - contains:
-           const: syscon
--        additionalItems: true
-+        minItems: 2
-+        maxItems: 4  # Should be enough
- 
-   reg:
-     maxItems: 1
--- 
-2.25.1
-
+Why does kvm_arch_async_page_not_present() need to "return" anything?  It
+has access to @work, e.g. simply replace "return true" with
+"work->notpresent_injected = true".
