@@ -2,96 +2,78 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E63C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD1DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 921412072E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:46:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eocK2D5f"
+	by mail.kernel.org (Postfix) with ESMTP id 11D7720734
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:47:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbgFJJqx (ORCPT
+        id S1727963AbgFJJrn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 05:46:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48020 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727866AbgFJJqx (ORCPT
+        Wed, 10 Jun 2020 05:47:43 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:56561 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727007AbgFJJrn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 05:46:53 -0400
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B73EC08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 02:46:52 -0700 (PDT)
-Received: by mail-lj1-x22a.google.com with SMTP id e4so1663336ljn.4
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 02:46:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=veq+9NOWY9jhOHWHfiSDBHJjCR3y8kFCK6ZQ7IkSXyU=;
-        b=eocK2D5fg8ysvRo0qAQELuhikgf34yW+RuZF/BmE2TJGjRV13nf2A6HeCRQ7FKHtuV
-         EDzYm0aR2R7QwSPASpqa3kqqk7z3M795lh6Sc0eTTAWV6bhE8QwyFwI90ilpCJFDLNmo
-         9RDWqA0YMEI35jjTBJZ4R3ptB8+HE2ImnV2X3kB71j9vTfu46Y9wSLBHALV0ZcqyAi1b
-         Xz065zwjZ4t0HfcIPOPx5uPrZB5kcfCI899S3wNso0KrO/SEbFORlAcVKQPiUYSmtw10
-         gI65A0Y5V0m2FfCdbDp+WkVNAAMC+9pXmSmvDmJlcVgOmWn+o61dioIjkcYQ3JOMCBKQ
-         gvUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=veq+9NOWY9jhOHWHfiSDBHJjCR3y8kFCK6ZQ7IkSXyU=;
-        b=OD+k3Exo0Wv3zc+vIluzfkxya9oZJe/II/CvbyiJazlgYI8YXYglxv9CkhlzHZeIDc
-         JoxXV4SIF5dOu3z8AqNJNA1YTohE6pQmigOdaM1TUgBMlaWDdlHjmSeabitbeG4e+inY
-         Z6f5/o4AAckbfZ2aVxaej6yEsucPbiJki+159FXsjjNPL35ZwQOHJGDTt4cFPp8ueCY2
-         caUMsUu0futl5DOcfnQebGUIzebwNaxno+T6z9cdrWbF91BF7ld8j3tE451B8C7oCdFR
-         WNZ238kcLspBkD6ZTFShWIPERw08Xbau7pi/VXnCPFZ2pL1PSQWfYY7WuGKVp4iONDQK
-         SjjA==
-X-Gm-Message-State: AOAM5326NojpA1rVu7Tegg7zbBDs2lOENd3Hu1NlUGJ29LsD46OOfHfk
-        sCZv2UdqF7zZzzrR45+BZQ+E8cLKyrizGfki+acYqQ==
-X-Google-Smtp-Source: ABdhPJx6ZhHz1m36PS68+yVtfRWfuYn7CcqJNRHrV/4hYK/YvqbJYUu3WP3KpaP9b+35/qNyI+xerrZ0ItZHfnFCHbQ=
-X-Received: by 2002:a2e:974a:: with SMTP id f10mr1351794ljj.283.1591782410483;
- Wed, 10 Jun 2020 02:46:50 -0700 (PDT)
+        Wed, 10 Jun 2020 05:47:43 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jixKb-0006ae-2c; Wed, 10 Jun 2020 09:47:37 +0000
+Date:   Wed, 10 Jun 2020 11:47:35 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Christoph Hellwig <hch@lst.de>,
+        Christian Brauner <christian@brauner.io>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] Use __scm_install_fd() more widely
+Message-ID: <20200610094735.7ewsvrfhhpioq5xe@wittgenstein>
+References: <20200610045214.1175600-1-keescook@chromium.org>
 MIME-Version: 1.0
-References: <20200605224403.181015-1-sebastian.reichel@collabora.com> <20200605224403.181015-4-sebastian.reichel@collabora.com>
-In-Reply-To: <20200605224403.181015-4-sebastian.reichel@collabora.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 10 Jun 2020 11:46:39 +0200
-Message-ID: <CACRpkdazmx7g9_gc4daqivUmM7HpR20k0HVeiGW=PaZVwDq7xQ@mail.gmail.com>
-Subject: Re: [PATCHv2 3/6] power: supply: gpio-charger: add
- charge-current-limit feature
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Russell King <linux@armlinux.org.uk>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kernel@collabora.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200610045214.1175600-1-keescook@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 6, 2020 at 12:44 AM Sebastian Reichel
-<sebastian.reichel@collabora.com> wrote:
+On Tue, Jun 09, 2020 at 09:52:12PM -0700, Kees Cook wrote:
+> Hi,
+> 
+> This extends the recent work hch did for scm_detach_fds(), and updates
+> the compat path as well, fixing bugs in the process. Additionally,
+> an effectively incomplete and open-coded __scm_install_fd() is fixed
+> in pidfd_getfd().
 
-> Add new charge-current-limit feature to gpio-charger.
->
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Since __scm_detach_fds() becomes something that is available outside of
+net/* should we provide a static inline wrapper under a different name? The
+"socket-level control message" prefix seems a bit odd in pidfd_getfd()
+and - once we make use of it there - seccomp.
 
-That's really neat and useful.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+I'd suggest we do:
 
-Yours,
-Linus Walleij
+static inline int fd_install_received(struct file *file, unsigned int flags)
+{
+	return __scm_install_fd(file, NULL, flags);
+}
+
+which can be called in pidfd_getfd() and once we have other callers that
+want the additional put_user() (e.g. seccomp_ in there we simply add:
+
+static inline fd_install_user(struct file *file, unsigned int flags, int __user *ufd)
+{
+	return __scm_install_fd(file, ufd, flags);
+}
+
+and seems the wrappers both could happily live in the fs part of the world?
+
+Christian
