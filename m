@@ -2,101 +2,163 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84548C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2BC4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A9992064C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:17:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8D8E2072F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:18:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XZIgDoS8"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="wH/wmJ7W";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="rXEK3Fuf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728226AbgFJKRm (ORCPT
+        id S1728165AbgFJKSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 06:17:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52790 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726533AbgFJKRl (ORCPT
+        Wed, 10 Jun 2020 06:18:50 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:55968 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726533AbgFJKSs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 06:17:41 -0400
-Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C44BC03E96B
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 03:17:41 -0700 (PDT)
-Received: by mail-pg1-x52c.google.com with SMTP id v10so34321pgi.8
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 03:17:41 -0700 (PDT)
+        Wed, 10 Jun 2020 06:18:48 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05AAA41q013149;
+        Wed, 10 Jun 2020 03:18:31 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
+ cc : subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=pfpt0818; bh=nPBDhy/T2tDXak+DG4xFo+yfCpfpaj3EYLwAMHKOx34=;
+ b=wH/wmJ7W8fhwg1yDC7+IzSA/YXBHttaRG6fiylu/TCo8IN6VeV/Gqq4zqIYXi0uenIxi
+ oDyC9u26NpaZAUo6LkN3uHy4gnNJq10MeLQl8eA+ESXyR5Cw90x7DyYPn/ox3URjC8dm
+ BtwfDOuuygm7eP/+5wsZ8X3x7gzgGu/3JwltcWI7Hw1sD1EwaTBXYnTIYWS5okqenR1u
+ 8gEdY+G9zmDwqkJ9sVKq/UIBH4zcvcCw7P99F4dY7AnLPnF09CSDSwdFJnC4EDPoiJok
+ lnh3/CPXziU1+XL2qnTTK+Z9w0zI4+uDjqLSM13J3y+AVrAEYSVZwEhQFUvJmDs4QYVq Xg== 
+Received: from sc-exch01.marvell.com ([199.233.58.181])
+        by mx0b-0016f401.pphosted.com with ESMTP id 31gannd96w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 10 Jun 2020 03:18:31 -0700
+Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH01.marvell.com
+ (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 10 Jun
+ 2020 03:18:30 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.101)
+ by SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Wed, 10 Jun 2020 03:18:30 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=leKidwRzaXBd4JTH9XGGnQ1K3w0P2zIHuKaqkOKDLvejAiJjMpZ2ofCRQlZKWzsBZc0fdZfy5ToS85KKQydiByWc+yGMMsRP1Usf3YYBoIHIucveOpNHoM2VcKNNHBIMpAXgQlIL5BfSe9cpYPv4WtATGYAK8IX2c7MfTj02+AjDfpNEwmeyyA0XIVxE73k3XidasOGzoYHSeNIVjzXqkWU/dxgRJk85jFcv59Zu4Eq3Lww2QUbE/mj8LbQk8axETfxRA80E0AhjTTyII48P1nyfBm2QwClIcs9Lmo7CprmQSFCn+G76Koa6BOL594/mM5N/3ThTqWAqddR/Snc/1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nPBDhy/T2tDXak+DG4xFo+yfCpfpaj3EYLwAMHKOx34=;
+ b=kCPoWaqMGx/+rf1e5ffDmd0E+e/RnMgL653C+ptn6Um08e8mja7xA8h6pjv/DYiO5OlUZaCFXv5+POn6ymh1kFDABqls05cAiDMWxFBuzUL9jiMZheWmGXyOWDLr2LauSTkzLxDHPiANu/GLKZDdHpLt11SA1udewXetmtONDT4apOVL+qCQvozNc/j2wdxsrYI/MxkXpIhnfAroACkfyvcCxctE8zwDf7vfNopaNeBehoZdXl2HT+M1UPdSvURS4bKQaS0VdwxcP628uiGv/rKyil5SDezd3cWvpzAs4sQH9uYmslf4wulmd/RnhyH3zbLPeWzcxCwJpwJ+6oBIMw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=czDYLwZNL6pjdON+4UzyuH3LlHKWcXqKlMhabBB8xHA=;
-        b=XZIgDoS8IWWqHyL/xzWRouCyK63VOQtER6cI6Kz1CuWJ4b4aUHK6w3dxjDaqfcT28m
-         gwWU4MKe4yhS3sn1v+Fi3gkafryuha/4THdfK8jgzlrrlOFZiN19/wb9A/l4wu24B4sz
-         gPzYM9WIU3ja0SOB/rjevmFG2cuPu3R22OGX1Fmsmt53q4F/7G5kI8JLq8zhlHpnqK6I
-         4nf8y8JNd+twUhSgOS/MdsdeiC/q2lzda1F2z75k4XxfyZcJXtySaRlgZXqa3K3vDKPc
-         C9a+mj9t2Zv4928f3v5T+fyT101sdz2noGqo/0eistRJv1k7yCrYepXwcuW2g+lR7a14
-         eJ8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=czDYLwZNL6pjdON+4UzyuH3LlHKWcXqKlMhabBB8xHA=;
-        b=k7I4BBIF052fPtCFOivTXUxqUXN7r5CSc6QgeeG98YS6Sh/kQGDFVEJrwRGj2d5dvD
-         nwZwm1yIyeM5GvelPQn7AHdWSt/hcMypFuORLIxGC/rS0FzqF/kQl+E1WMHT23DUqW2E
-         4At2DD8oirzlg1un3C+lIrpIRKmGDmz210z6ETWTnjMlIakLrJYK+L3nrVvB5uYGVOtj
-         iel/Ifi7ShFvDjvN8zr7DDMoOXuUIIsh9azvyLoitN+D6umRnFTZYhr2e0aIJoCWtANP
-         AVbIvFDrCjuZZTwsYpvpBSS4AFWix/N/DE6g11oANt/Xm5ksZDP2tT1j3pY7gP0sooc5
-         sYGQ==
-X-Gm-Message-State: AOAM533S1vBjcI/VMD7Cjv/w+CE244qsH/0mVkZ6AW1iw/ciD92/m2Hl
-        JxWSLiW4VHsU0w9kDpKDtMO9PYgmIMaSzwLsQgCVgHJsxPo=
-X-Google-Smtp-Source: ABdhPJxv6Y4d86vsehGlj5awW5Wd8NpXcXq+J0sWLJnzz4utal3mfd+YAZ5lzEllhbcqdKxh7QSvKL7mVxk50T+J764=
-X-Received: by 2002:a62:3103:: with SMTP id x3mr2035588pfx.130.1591784260226;
- Wed, 10 Jun 2020 03:17:40 -0700 (PDT)
+ d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nPBDhy/T2tDXak+DG4xFo+yfCpfpaj3EYLwAMHKOx34=;
+ b=rXEK3FufU7Pidg5CcDO9sHqtnenOPK0DRsetof5xeUjVnstHlASDAsaypx3oGzJhX/zHBx9h56CCVAQUpz3c3FW+QfgnD3Wp6k176wx2dPUSOCh26HbzfuPDK4/IDYdaSTxA0LsNJwU5SXkaTAEQmtwrd7+VDSiDmHClh9obkg0=
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=marvell.com;
+Received: from BYAPR18MB2661.namprd18.prod.outlook.com (2603:10b6:a03:136::26)
+ by BYAPR18MB2408.namprd18.prod.outlook.com (2603:10b6:a03:12f::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18; Wed, 10 Jun
+ 2020 10:18:28 +0000
+Received: from BYAPR18MB2661.namprd18.prod.outlook.com
+ ([fe80::5d5a:a759:2bad:f8fe]) by BYAPR18MB2661.namprd18.prod.outlook.com
+ ([fe80::5d5a:a759:2bad:f8fe%4]) with mapi id 15.20.3088.018; Wed, 10 Jun 2020
+ 10:18:28 +0000
+Date:   Wed, 10 Jun 2020 12:18:19 +0200
+From:   Robert Richter <rrichter@marvell.com>
+To:     Zhenzhong Duan <zhenzhong.duan@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>,
+        <tony.luck@intel.com>, <bp@alien8.de>, <mchehab@kernel.org>,
+        <james.morse@arm.com>
+Subject: Re: [PATCH] EDAC, {skx, i10nm}: Advice mcelog that the error were
+ handled
+Message-ID: <20200610101819.oa2ivjtxildwothl@rric.localdomain>
+References: <20200610065801.3579-1-zhenzhong.duan@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200610065801.3579-1-zhenzhong.duan@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-ClientProxiedBy: HE1PR0301CA0012.eurprd03.prod.outlook.com
+ (2603:10a6:3:76::22) To BYAPR18MB2661.namprd18.prod.outlook.com
+ (2603:10b6:a03:136::26)
 MIME-Version: 1.0
-References: <20200602223728.32722-1-richard.weiyang@gmail.com>
- <CAMuHMdUfnmm4bXVRvFOmG5DFYR+LtcZ1UviDszr9bByiN=DO+Q@mail.gmail.com>
- <20200604122805.d2ndjmkmti6wl3nz@master> <CAMuHMdXnLUS8F4nWJBqDjoKhBmF2_ihfwe4jTGxuZ1e_WKRNPQ@mail.gmail.com>
- <20200605230610.bizp2j23ivyma5rn@master> <20200605171629.d931068c1a4d720d8faa2704@linux-foundation.org>
- <20200608223112.ftncszh7hfnmqj3m@master> <20200609091649.GX2428291@smile.fi.intel.com>
- <20200609230241.gdqebrspmucnru5k@master>
-In-Reply-To: <20200609230241.gdqebrspmucnru5k@master>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 10 Jun 2020 13:17:28 +0300
-Message-ID: <CAHp75VdVUNqUsfr19jKHjba8CPTQhbSK+WfTKwZFtCfK0JtRCw@mail.gmail.com>
-Subject: Re: [Patch v2] lib: test get_count_order/long in test_bitops.c
-To:     Wei Yang <richard.weiyang@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from rric.localdomain (31.208.96.227) by HE1PR0301CA0012.eurprd03.prod.outlook.com (2603:10a6:3:76::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.19 via Frontend Transport; Wed, 10 Jun 2020 10:18:26 +0000
+X-Originating-IP: [31.208.96.227]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 4bedb116-0d0e-472c-7b8b-08d80d279e37
+X-MS-TrafficTypeDiagnostic: BYAPR18MB2408:
+X-Microsoft-Antispam-PRVS: <BYAPR18MB240880F926A0F3DDF3A46253D9830@BYAPR18MB2408.namprd18.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
+X-Forefront-PRVS: 0430FA5CB7
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 7XWWDQqyBo48ZM64QWZexdx2/u5O2khYVTZhCSXirrpNCCznyGRicILDylY05fzUNjysHTe9wBwmORPJHdEuPYoFVYA69kLsYOktFhdfjvH9A+E60NrfsafHKie8TbtOOpna9+VRriIfsheJtTo7FIohERZGygTycTWFEcjdFPhdt3lZL9XAqBkO89E7MsBnRypVtnX7dFguhdurGd/qouFdNOlJEY9LRpnARbmBB61ZeBpXdCoBMCJ91R4dqlNMr7M9i2nnAF4XNsjRGOibZ2GDKAn0/tfgnafG6doR9SWnchoZWJC5QG1HxhaBj1dCjqwJuA1stSOvCjUwwh2zMw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR18MB2661.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(136003)(39850400004)(396003)(366004)(5660300002)(53546011)(6506007)(66476007)(83380400001)(26005)(1076003)(66556008)(6666004)(66946007)(86362001)(52116002)(956004)(55016002)(316002)(7696005)(16526019)(8676002)(9686003)(2906002)(8936002)(6916009)(186003)(4326008)(478600001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: Y3jGL5E6U1nQN7gIPceAHwFWzD7zIE2+Lpq6+/Wlc7Kk2zd6uCntD304iuQvGcY/dR6k1JwNVnsU1jwwLt1dOvrKQz8V72eYwXh8Fmx48POFjUrp4DGGNGl4Ggi9y7Btxj6J5KcqQtUDsr0ImqtsmyITCgT0OFGWAYA8mhTXZELBOjjHH6r45Sx0TX0mWk15Lq5vkGP1+7vNiLeZDyTGJNqPGLRm8BULvZjRnWGeIzxxZvjxiWUfzGh1hmyelYNr2+CiZccB8iOL9gd5826EpmesvM7VLeILtKMhMUNnqAfcCdGG8VvRWubhui6CYUZOSOsN0N6T1p0z4G9bk63WO4Rliv09z+VKF80HiC0AIjfZej/qrUZZ9QeZ603HLxcLisj+P4fuYWnQzp19ZkQfHhnKTDMGQyRbUYc9j3wK13/baD+n629D0wx2dWT0+bKKZEE+2FYB0beghHQgKNg9WHzp/ga1hwTLCJppN67/pP8=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4bedb116-0d0e-472c-7b8b-08d80d279e37
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2020 10:18:28.5355
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Rb0b+PVGh8Sk/WGOcbzXyeeYPAHbatbXaFv5sEgvEsFapigkJQsEsMuTZDNz0MGjcHahV1lEXHkV3cp3KkaaYA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR18MB2408
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-10_06:2020-06-10,2020-06-10 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 2:06 AM Wei Yang <richard.weiyang@gmail.com> wrote:
-> On Tue, Jun 09, 2020 at 12:16:49PM +0300, Andy Shevchenko wrote:
-> >On Mon, Jun 08, 2020 at 10:31:12PM +0000, Wei Yang wrote:
-> >> On Fri, Jun 05, 2020 at 05:16:29PM -0700, Andrew Morton wrote:
-> >
-> >...
-> >
-> >> The test on 64bit machine pass. Since I don't have a 32bit machine by hand,
-> >
-> >Out of curiosity what that machine is?
-> >
->
-> It is a Intel Xeon Gold CPU.
+On 10.06.20 14:58:01, Zhenzhong Duan wrote:
+> If one MCE error has been processed in kernel, it's not necessory
+> to pass it to user level mcelog.
+> 
+> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
 
-I suppose it's x86 (and not ia64).
-In this case you can always build an i386 configuration and test on a
-32-bit "machine".
+Reviewed-by: Robert Richter <rrichter@marvell.com>
 
--- 
-With Best Regards,
-Andy Shevchenko
+> ---
+>  drivers/edac/skx_common.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/edac/skx_common.c b/drivers/edac/skx_common.c
+> index 46be1a7..8c0165b 100644
+> --- a/drivers/edac/skx_common.c
+> +++ b/drivers/edac/skx_common.c
+> @@ -615,7 +615,8 @@ int skx_mce_check_error(struct notifier_block *nb, unsigned long val,
+>  
+>  	skx_mce_output_error(mci, mce, &res);
+>  
+> -	return NOTIFY_DONE;
+> +	/* Advice mcelog that the error were handled */
+
+... error was ...
+
+And make a sentence out of it, so close with a dot.
+
+> +	return NOTIFY_STOP;
+
+This change aligns with other implementation in:
+
+ i7core_mce_check_error(),
+ amd_decode_mce() and
+ sbridge_mce_check_error().
+
+-Robert
+
+>  }
+>  
+>  void skx_remove(void)
+> -- 
+> 1.8.3.1
+> 
