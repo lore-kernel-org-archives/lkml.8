@@ -2,173 +2,157 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_DIGITS,
+	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D4CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB4DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E130204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:01:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ID60jriV"
+	by mail.kernel.org (Postfix) with ESMTP id C069C204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:02:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729262AbgFJRBA (ORCPT
+        id S1729282AbgFJRCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 13:01:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58920 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726560AbgFJRA7 (ORCPT
+        Wed, 10 Jun 2020 13:02:13 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:57226 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728103AbgFJRCN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 13:00:59 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 378BCC03E96B
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 10:00:59 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id h39so1526849ybj.3
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 10:00:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jAn/vEENpEbesBOWaBTuDMNJu3dq2SPxsANahUJVgJs=;
-        b=ID60jriV2Uju36JWKStG8hpF8OHlm/pfioalRdyEhRZJyNqEILQ+EYFjKBu0cIiyMP
-         oV+qiiMWde9OmhxTm9fJD4bJb6KDOCvafU/uAt+9CWXRb4Dl68EM7UVbCdbHJ98ZjhRI
-         xNpRx9j2aliYy9eKvnjqq0ouMO3vxcFJABsTM2J6gRIwILCTPgl9ksq4huinWnhqNep7
-         V6bCI9a3UIcgAEGPm4zug8zkc6OkkcnRDWce0+nhxR++abC11Rc7RpLz472uYRR7429R
-         0AQLGp8vHnYj3d3gZhhUZHyxgO+G8DxkEtjbCfCOHjN05rIcYG1w5Esrs4CIdQfAg40x
-         w1tw==
+        Wed, 10 Jun 2020 13:02:13 -0400
+Received: by mail-il1-f198.google.com with SMTP id k13so1900535ilh.23
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 10:02:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jAn/vEENpEbesBOWaBTuDMNJu3dq2SPxsANahUJVgJs=;
-        b=pbu3dSgAJPt9GLmed9Q7bo/i+v0QVvLLu8Rl6na4jyGfFt3xMyaiUgib9aS3aDRJm/
-         /SCeP8C0BycVDpkUI3L+UfHONQn/ltrN2AXiIe0USGGKpxjSfsdX6aWD53O60SQOWJ7F
-         Y9DNE9vWfZCa5iMBc4dH3r9zuFpVVsPEZ00qlfBeBSJk4hlAmSC6hlCN6egONtpkGDQr
-         Q/MWb1eat+X518NZMP3ivc0/R2lAvqeusQBoA/+VFNUjP92bKUdDMNtngj6oAauuUG72
-         pbo8mxwuK/yWW42+kvdnTH0urDj+kTqZuHDDflkp31wLr5NGesu+1rjNfcCcLdyzONyW
-         m/SA==
-X-Gm-Message-State: AOAM53005E/Ek/WuJx9b36OqlAKmtzJtSMtZRF4+1WXjnTo1TQTtYr3X
-        J+MWAcyRyWd//Q6buJ3x6LgrY6QFtJ6hq1ueU3xaKw==
-X-Google-Smtp-Source: ABdhPJw8bgDvl6gUCqh2SzcipGnhs+JBOLrAekTdtj/91HV2WxW2KAmb5VfFMYqS0Z5nscaCAUaDP48unGBE1VvM4T8=
-X-Received: by 2002:a25:3782:: with SMTP id e124mr7027440yba.403.1591808458193;
- Wed, 10 Jun 2020 10:00:58 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=KXD6766GD3cN9nGxvoovLs8rn0gVhNreN3crce2TgnA=;
+        b=DBkYHa6Tj4B2GA2ewRQaMzH07WCeDWUiMvpi6VBLMwfG6EJgykWIFQKCFn4NmSZ+Qk
+         lXQ7xkhpMc+ipRuOgOQGN4dS/cEhs2a8DNKSifILm94xOBGHHs3dpXCc45z+dufxFfRB
+         gp7KekcK0F6FSlDDxQhjYF5h5yWyiQHWWT242kBCNfKlEf4olafGM9SUYxOqkNw4HkDX
+         wvgSj0RlzlOIIQ1vVUGkRRc5K62Huca12LF2Ei4hYcqLzxvXAjvm/Bq1R5Qm1pmRlDJX
+         OrTMmUclAZzGYO4PRWChjYPXx/+X+WPtLzhOTx6V34G1l8ddRREyAbFREq0eIuGLWAxu
+         nbgA==
+X-Gm-Message-State: AOAM530oDWVz1HQszGbOoP05R7Uby4KjKewE6qyx0PvhCvfcUO1shZR6
+        teU9lRFmcBzBbCRZeulps71NTd+lSATjSakMuZYGnFh/H/sG
+X-Google-Smtp-Source: ABdhPJxGAWjBmeknqYy52Bo1OicVq8SiBy6dnuXkgiNPFH/Cai7ErFjhIOuT/Pz/lWTZFcfmXQrpne3ioC30iF2k5vhgszJLroQC
 MIME-Version: 1.0
-References: <20200609234344.3795-1-irogers@google.com> <20200609234344.3795-2-irogers@google.com>
- <20200610140526.GK24868@kernel.org> <20200610140956.GL24868@kernel.org> <20200610141817.GM24868@kernel.org>
-In-Reply-To: <20200610141817.GM24868@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 10 Jun 2020 10:00:47 -0700
-Message-ID: <CAP-5=fWnsyE07MD8oAYa8cXGsxD7sP6j3B4voBj2Gj5y44AHtQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf parse-events: enable more flex/yacc warnings
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
+X-Received: by 2002:a92:7414:: with SMTP id p20mr4099501ilc.77.1591808531395;
+ Wed, 10 Jun 2020 10:02:11 -0700 (PDT)
+Date:   Wed, 10 Jun 2020 10:02:11 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000107b4605a7bdce7d@google.com>
+Subject: KASAN: use-after-free Read in addr_handler (2)
+From:   syzbot <syzbot+a929647172775e335941@syzkaller.appspotmail.com>
+To:     chuck.lever@oracle.com, dledford@redhat.com, jgg@ziepe.ca,
+        leon@kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, parav@mellanox.com,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 7:18 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Wed, Jun 10, 2020 at 11:09:56AM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Wed, Jun 10, 2020 at 11:05:26AM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > Em Tue, Jun 09, 2020 at 04:43:44PM -0700, Ian Rogers escreveu:
-> > > > All C compiler warnings are disabled are disabled by -w. This change
-> > > > removes the -w from flex and bison targets. To avoid implicit
-> > > > declarations header files are declared as targets and included.
-> >
-> > > > Tested with GCC 9.3.0 and clang 9.0.1.
-> >
-> > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> >
-> > > > +++ b/tools/perf/util/Build
-> > <SNIP>
-> > > > -$(OUTPUT)util/parse-events-flex.c: util/parse-events.l $(OUTPUT)util/parse-events-bison.c
-> > > > +$(OUTPUT)util/parse-events-flex.c $(OUTPUT)util/parse-events-flex.h: util/parse-events.l $(OUTPUT)util/parse-events-bison.c
-> > > >   $(call rule_mkdir)
-> > > > - $(Q)$(call echo-cmd,flex)$(FLEX) -o $@ --header-file=$(OUTPUT)util/parse-events-flex.h $(PARSER_DEBUG_FLEX) util/parse-events.l
-> > > > + $(Q)$(call echo-cmd,flex)$(FLEX) -o $(OUTPUT)util/parse-events-flex.c \
-> > > > +         --header-file=$(OUTPUT)util/parse-events-flex.h \
-> > > > +         $(PARSER_DEBUG_FLEX) $<
-> >
-> > <SNIP>
-> >
-> > > And you took advantage of util/parse-events.l being
-> > > the first dependency to replace it with $<
-> >
-> > <SNIP>
-> >
-> > > Damn, Makefiles are obtuse, we better do this more piecemeal, for
-> > > instance, using $< where applicable first, etc.
-> >
-> > I mean, first this, ok? Then you do the other bits, and please try to
-> > keep the positioning as far as possible, so that visually we see what is
-> > being replaced by what.
->
-> Argh, replace all %< below with, of course, $<
+Hello,
 
-Thanks, I'll pull it into a series of changes. I'm more worried that
-the -W flags aren't going to be supported by an old clang or GCC.
-Worth the pain to get rid of the -w that introduced some issues.
+syzbot found the following crash on:
 
-Ian
+HEAD commit:    7ae77150 Merge tag 'powerpc-5.8-1' of git://git.kernel.org..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=16c0d3a6100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d195fe572fb15312
+dashboard link: https://syzkaller.appspot.com/bug?extid=a929647172775e335941
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-> - Arnaldo
-> >
-> > diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-> > index 8d18380ecd10..cc50fdfd0c2f 100644
-> > --- a/tools/perf/util/Build
-> > +++ b/tools/perf/util/Build
-> > @@ -193,27 +193,27 @@ CFLAGS_genelf_debug.o  += -Wno-packed
-> >
-> >  $(OUTPUT)util/parse-events-flex.c: util/parse-events.l $(OUTPUT)util/parse-events-bison.c
-> >       $(call rule_mkdir)
-> > -     $(Q)$(call echo-cmd,flex)$(FLEX) -o $@ --header-file=$(OUTPUT)util/parse-events-flex.h $(PARSER_DEBUG_FLEX) util/parse-events.l
-> > +     $(Q)$(call echo-cmd,flex)$(FLEX) -o $@ --header-file=$(OUTPUT)util/parse-events-flex.h $(PARSER_DEBUG_FLEX) %<
-> >
-> >  $(OUTPUT)util/parse-events-bison.c: util/parse-events.y
-> >       $(call rule_mkdir)
-> > -     $(Q)$(call echo-cmd,bison)$(BISON) -v util/parse-events.y -d $(PARSER_DEBUG_BISON) -o $@ -p parse_events_
-> > +     $(Q)$(call echo-cmd,bison)$(BISON) -v %< -d $(PARSER_DEBUG_BISON) -o $@ -p parse_events_
-> >
-> >  $(OUTPUT)util/expr-flex.c: util/expr.l $(OUTPUT)util/expr-bison.c
-> >       $(call rule_mkdir)
-> > -     $(Q)$(call echo-cmd,flex)$(FLEX) -o $@ --header-file=$(OUTPUT)util/expr-flex.h $(PARSER_DEBUG_FLEX) util/expr.l
-> > +     $(Q)$(call echo-cmd,flex)$(FLEX) -o $@ --header-file=$(OUTPUT)util/expr-flex.h $(PARSER_DEBUG_FLEX) %<
-> >
-> >  $(OUTPUT)util/expr-bison.c: util/expr.y
-> >       $(call rule_mkdir)
-> > -     $(Q)$(call echo-cmd,bison)$(BISON) -v util/expr.y -d $(PARSER_DEBUG_BISON) -o $@ -p expr_
-> > +     $(Q)$(call echo-cmd,bison)$(BISON) -v %< -d $(PARSER_DEBUG_BISON) -o $@ -p expr_
-> >
-> >  $(OUTPUT)util/pmu-flex.c: util/pmu.l $(OUTPUT)util/pmu-bison.c
-> >       $(call rule_mkdir)
-> > -     $(Q)$(call echo-cmd,flex)$(FLEX) -o $@ --header-file=$(OUTPUT)util/pmu-flex.h util/pmu.l
-> > +     $(Q)$(call echo-cmd,flex)$(FLEX) -o $@ --header-file=$(OUTPUT)util/pmu-flex.h %<
-> >
-> >  $(OUTPUT)util/pmu-bison.c: util/pmu.y
-> >       $(call rule_mkdir)
-> > -     $(Q)$(call echo-cmd,bison)$(BISON) -v util/pmu.y -d -o $@ -p perf_pmu_
-> > +     $(Q)$(call echo-cmd,bison)$(BISON) -v %< -d -o $@ -p perf_pmu_
-> >
-> >  CFLAGS_parse-events-flex.o  += -w
-> >  CFLAGS_pmu-flex.o           += -w
->
-> --
->
-> - Arnaldo
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+a929647172775e335941@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in __mutex_lock_common kernel/locking/mutex.c:938 [inline]
+BUG: KASAN: use-after-free in __mutex_lock+0x1033/0x13c0 kernel/locking/mutex.c:1103
+Read of size 8 at addr ffff888088ec33b0 by task kworker/u4:5/14014
+
+CPU: 1 PID: 14014 Comm: kworker/u4:5 Not tainted 5.7.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: ib_addr process_one_req
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd3/0x413 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ __mutex_lock_common kernel/locking/mutex.c:938 [inline]
+ __mutex_lock+0x1033/0x13c0 kernel/locking/mutex.c:1103
+ addr_handler+0xa0/0x340 drivers/infiniband/core/cma.c:3100
+ process_one_req+0xfa/0x680 drivers/infiniband/core/addr.c:643
+ process_one_work+0x965/0x16a0 kernel/workqueue.c:2268
+ worker_thread+0x96/0xe20 kernel/workqueue.c:2414
+ kthread+0x388/0x470 kernel/kthread.c:268
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
+
+Allocated by task 31499:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc mm/kasan/common.c:494 [inline]
+ __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:467
+ kmem_cache_alloc_trace+0x153/0x7d0 mm/slab.c:3551
+ kmalloc include/linux/slab.h:555 [inline]
+ kzalloc include/linux/slab.h:669 [inline]
+ __rdma_create_id+0x5b/0x850 drivers/infiniband/core/cma.c:861
+ ucma_create_id+0x1d1/0x590 drivers/infiniband/core/ucma.c:503
+ ucma_write+0x285/0x350 drivers/infiniband/core/ucma.c:1729
+ __vfs_write+0x76/0x100 fs/read_write.c:495
+ vfs_write+0x268/0x5d0 fs/read_write.c:559
+ ksys_write+0x1ee/0x250 fs/read_write.c:612
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+Freed by task 31496:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ kasan_set_free_info mm/kasan/common.c:316 [inline]
+ __kasan_slab_free+0xf7/0x140 mm/kasan/common.c:455
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x109/0x2b0 mm/slab.c:3757
+ ucma_close+0x111/0x300 drivers/infiniband/core/ucma.c:1807
+ __fput+0x33e/0x880 fs/file_table.c:281
+ task_work_run+0xf4/0x1b0 kernel/task_work.c:123
+ tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+ exit_to_usermode_loop+0x2fa/0x360 arch/x86/entry/common.c:165
+ prepare_exit_to_usermode arch/x86/entry/common.c:196 [inline]
+ syscall_return_slowpath arch/x86/entry/common.c:279 [inline]
+ do_syscall_64+0x6b1/0x7d0 arch/x86/entry/common.c:305
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+The buggy address belongs to the object at ffff888088ec3000
+ which belongs to the cache kmalloc-2k of size 2048
+The buggy address is located 944 bytes inside of
+ 2048-byte region [ffff888088ec3000, ffff888088ec3800)
+The buggy address belongs to the page:
+page:ffffea000223b0c0 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea000299f588 ffffea000263d0c8 ffff8880aa000e00
+raw: 0000000000000000 ffff888088ec3000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff888088ec3280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888088ec3300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff888088ec3380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                     ^
+ ffff888088ec3400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888088ec3480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
