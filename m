@@ -2,108 +2,139 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBD2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 176FCC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F00692078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF8322078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:02:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591797708;
-	bh=b1KRmFrJQFC3z6HDXblv42MBWZrbFpZqf35Nd9i3Vwk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ijWdabOTTx9p2E9Hw99Ljm/wQKQJT30AX4YZYYOIx9bilZpbvlsFZmJkgHes0OXki
-	 ZbnEdYrnTwQvHPudlhSn2nWIRumXW8e2OLqf6gCMSYEiTb7L5lVmnTJVlhJBQ6P1+B
-	 ev2XfeulPkqlDulhe9NblI4Wa/kRFFd93hgCZmL4=
+	s=default; t=1591797721;
+	bh=n+8D0TYlDj+cFQK2/6Jnbw0ScLdbDUi1DWb5ezOhotg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=axyHgE0Bw4I4gZIMH/Re3KfrEYECkDvdMFiGZXWvPRXUbXSUCAjJ5hXJN5PAEEiBC
+	 YlZ8FR4Jemci8slYRySexYY7ypjrIETlBs6RUADnA6V+Vzio+IrQ/+38nfPwvA1gvS
+	 K3pk/iq6HVqwy5clv113hMcQnAjeNPrgJ2Ht8Lho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729687AbgFJOBp (ORCPT
+        id S1729700AbgFJOCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 10:01:45 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38367 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726105AbgFJOBm (ORCPT
+        Wed, 10 Jun 2020 10:02:00 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:40605 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726616AbgFJOB6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 10:01:42 -0400
-Received: by mail-pg1-f193.google.com with SMTP id u5so1037503pgn.5
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 07:01:41 -0700 (PDT)
+        Wed, 10 Jun 2020 10:01:58 -0400
+Received: by mail-oi1-f195.google.com with SMTP id t25so2125349oij.7;
+        Wed, 10 Jun 2020 07:01:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rk0ghIljU9mCEy9QgEbT1h8DI09ve656Ar7pgw0dxhA=;
-        b=keAZxZ7bjtYjJ/94YrNI6lc0l7jwED5yudDkM3b+F+2oM/qoTyQOVjh3pyHrpd6ENI
-         eD4/WDST134g/vgFToUxQmorrJWNPuQtrK/PatYDXXkaCsECoqxu3kLnt1FZCO1MC2W+
-         tqcr3CzzuRBbUEiNNqB2vbv0tDVMNfY4S8B8DofZtCH+rmbqQ6U57p9QWEfiOiHrQM7w
-         yFB0NYUMWfrgpHI5QaDZ8jO6kM/aiwsx69Qa9AZWHitopkvRmMIr8HiNBYIqeqmJy/an
-         ejilEPC48Vdnj+fWx0Txw1klJPtxGqSB/889iOxyxp3JW8aEw1EHCYlB/Vwgjyu+HhwJ
-         tuDQ==
-X-Gm-Message-State: AOAM531eDhr9OKkVdEaE0oWYospU8YNLspm98Azzdww7rD/WEvAoatPF
-        l8N6+E7twGB72uHdbUbCYRdg33jWQ24=
-X-Google-Smtp-Source: ABdhPJzlC/UGjhW7h2lRO1BIXvioDT2f+9RysnK1brAAfdDlCCebMhIvBx11VmTIRLFU1mIhMnVn2g==
-X-Received: by 2002:a05:6a00:15ca:: with SMTP id o10mr2910124pfu.169.1591797700899;
-        Wed, 10 Jun 2020 07:01:40 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id h17sm58841pgv.41.2020.06.10.07.01.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 07:01:39 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 9129B403AB; Wed, 10 Jun 2020 14:01:38 +0000 (UTC)
-Date:   Wed, 10 Jun 2020 14:01:38 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        x86-ml <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] x86/microcode: Do not select FW_LOADER
-Message-ID: <20200610140138.GU11244@42.do-not-panic.com>
-References: <20200610042911.GA20058@gondor.apana.org.au>
- <20200610081609.GA14118@zn.tnic>
- <20200610131209.GT11244@42.do-not-panic.com>
- <20200610134650.GH14118@zn.tnic>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Nl62HWLkcdUncszr4NfDCSNaITirf4yc7zsH9ph91Mg=;
+        b=Qjbj7mjG42s8fdutEj5DgbH6byB8n5MLqHfiKyUWonA4a4y0blxWJtnDLzm61eXgvX
+         mLI6wOslj9O2hMC9K3JJiF2g1JilrdLbDmQyY/lXExZR2rGaXg8UCmpo7pByP+0nolyy
+         61PhVJQqEjkADfxN9cB9UJwHd0JL2u5XmF4yjVg93zdP6y6L0rjns0serLkbaJ/5SRM0
+         wk22BBjC5FcF1MCmISFrUPflEJzRFmZupj5i5P+d/0AfvqLqua0w8+It2T3T7qcCkC9T
+         mkvvvAfwSmpqTRmqEEvuQPkPc6SGvKLfymN2zZvaCkhROeBHdRAC8lKWNjxsj00LlFJZ
+         GpgQ==
+X-Gm-Message-State: AOAM532vpbd+wgSf2RJM31KV9qcPmfPSI4tGBtoqTlHzlWjz8mmSpFSJ
+        7PMWSoJ8vX5sohvV7pQOH3bNRXyc7L127yKHnzM=
+X-Google-Smtp-Source: ABdhPJzorUjsiFcKJqkTkUHEOkzCM8G8rZoea2g27dOAzap4gGLrBRRziPbedIOP6/JlYUlFFWbvc+8f9RAYMPdl7zE=
+X-Received: by 2002:aca:ad88:: with SMTP id w130mr2656825oie.103.1591797717254;
+ Wed, 10 Jun 2020 07:01:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200610134650.GH14118@zn.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <2336e15d-ff4b-bbb6-c701-dbf3aa110fcd@redhat.com>
+ <20200608112211.12125-1-andrzej.p@collabora.com> <964ca07a-3da5-101f-7edf-64bdeec98a4b@redhat.com>
+ <CAJZ5v0hB2ra2K=dd9ZjVyy1V2b1PmFHm79uDO2HtHU1D_4YUbw@mail.gmail.com>
+ <6136f26c-e090-e025-af55-4c5f3a6aec92@collabora.com> <3e61c9c1-b211-da9f-c55b-b44eb6522f2a@redhat.com>
+In-Reply-To: <3e61c9c1-b211-da9f-c55b-b44eb6522f2a@redhat.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 10 Jun 2020 16:01:45 +0200
+Message-ID: <CAJZ5v0gVBzLpQqNrV-kzV84mLB86Gd6Ws63RwBKT=r1WgbeDSQ@mail.gmail.com>
+Subject: Re: [PATCH v4 0/7] Support inhibiting input devices
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-iio@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Samsung SoC <linux-samsung-soc@vger.kernel.org>,
+        linux-input@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        patches@opensource.cirrus.com,
+        ibm-acpi-devel@lists.sourceforge.net,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Barry Song <baohua@kernel.org>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Nick Dyer <nick@shmanahar.org>,
+        Ferruh Yigit <fery@cypress.com>,
+        Sangwon Jee <jeesw@melfas.com>,
+        Peter Hutterer <peter.hutterer@redhat.com>,
+        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
+        Collabora Kernel ML <kernel@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 03:46:50PM +0200, Borislav Petkov wrote:
-> On Wed, Jun 10, 2020 at 01:12:09PM +0000, Luis Chamberlain wrote:
-> > On Wed, Jun 10, 2020 at 10:16:09AM +0200, Borislav Petkov wrote:
-> > > 
-> > > Also, I'm working on removing that homegrown get_builtin_firmware() and
-> > > use the one in the fw loader:
-> > > 
-> > > https://lkml.kernel.org/r/20200408094526.GC24663@zn.tnic
-> > 
-> > I would like to still encourage this, even with this patch in place,
-> > as I think it makes this a proper call, and reflects better how the
-> > firmware loader is used exactly.
-> > 
-> > FWIW, firmware loader will be changed soon to not be modular, and just
-> > built-in or disabled.
-> 
-> I don't mind doing the work but Herbert has a point - there's no need to
-> require a bunch of code for a trivial function.
-> 
-> What I could do in addition is move that trivial function into a
-> fw-specific header and have it defined unconditionally so that the
-> microcode loader can use it without needing the fw loader.
+On Wed, Jun 10, 2020 at 3:21 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi,
+>
+> On 6/10/20 3:12 PM, Andrzej Pietrasiewicz wrote:
+> > Hi All,
+> >
 
-Would just have to see this part. But sounds like a better place than
-today.
+[cut]
 
-> The testcases stuff then goes ontop.
+> > What would it mean to become a wakeup source if there are no users,
+> > or nobody has ever opened the device? There are no interested
+> > input handlers (users) so what's the point of becoming a wakeup
+> > source? Why would the system need to wake up?
+>
+> Well this is what we have been doing so far, so arguably we
+> need to keep doing it to avoid regressions / breaking our ABI.
+>
+> Lets for example take a laptop, where when suspended the
+> power-button is the only valid wakeup-source and this is
+> running good old slackware with fvwm2 or windowmaker as
+> "desktop environment", then likely no process will have
+> the power-button input evdev node open.  Still we should
+> wakeup the laptop on the power-button press, otherwise
+> it will never wakeup.
+>
+> Note I agree with you that the way this works is not
+> ideal, I just do not think that we can change it.
 
-Sure!
+Please note that "no users" merely means that user space is not
+interested in receiving and processing the events from that device.
 
-  Luis
+If it is configured for system wakeup, it doesn't matter whether or
+not user space will consume the related events.
+
+Thanks!
