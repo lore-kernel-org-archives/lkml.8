@@ -2,126 +2,368 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC7ACC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27BE9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8934B204EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:59:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qz5SJTsY"
+	by mail.kernel.org (Postfix) with ESMTP id 00FFA204EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:00:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbgFJI7g (ORCPT
+        id S1727005AbgFJJAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 04:59:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40682 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726794AbgFJI7f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 04:59:35 -0400
-Received: from mail-oo1-xc42.google.com (mail-oo1-xc42.google.com [IPv6:2607:f8b0:4864:20::c42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6920AC03E96B;
-        Wed, 10 Jun 2020 01:59:35 -0700 (PDT)
-Received: by mail-oo1-xc42.google.com with SMTP id z145so329854ooa.13;
-        Wed, 10 Jun 2020 01:59:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=LHb9HPZL9XpTtc79yClOxL66RppszWEIptQMEpe4Jo4=;
-        b=Qz5SJTsYGPnNegFFvLPl5enPu1KXc0mJKyVeSiX64zDTlEJGAFj9IfRDTfR78e8qyQ
-         jz4NJ6u2SaKpQLixBSxkjxHnAVt9HTtsojZUll1B3ioG0N2T9urVFb954PYcDGknzINs
-         9nBpsqGN2iGvFfiUfiARYJ0D5RBsh9A7Xue7MTK0VdJ0apzN3yrgpJMR0dEVKIZ+01O+
-         4sAxpRm4PYpPrcdInmhnCPTLCUDz1akYubPfvzwOuimqmALKLFUGhSuLULHHAj+a+Vq+
-         M0Vl+cRrNRTujRZIMCg4ozY47ndu6XXlkzxLVK2fC+MN4N9OOAVgjsbx+WrYFKK2CZIc
-         qfQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=LHb9HPZL9XpTtc79yClOxL66RppszWEIptQMEpe4Jo4=;
-        b=Hk+HOhnvta1ozVO3JFfsF59j9SHyyqOfKwCn7++4TBO1Lkh793KG2EjsHRxrYj1FOD
-         Ne6NIAu4H64g8mjaX/+0FINdw8U2YS4gFh0VGQXCGztA6Pxb4njGk9YcAKIwGfLkdt8t
-         HC3Au1IZeREMRQN4QO42fm+EJyb2anOdNJpU9lkz6qo+Y6IDAQLEw8PVDK5XVy3y/kIP
-         h0kCMPlQx07qZxjOXCE7OBJ3bogv5Cm6i4wWAuPnjjMRO8XOPIIOEOegZ3e1wzeBJxS9
-         F7xjFjBUq5cNLSNeJ8EJMB7Lanb/aeKMj55iszjaLrS8uydb2y1Zl8i1+4OQ0KTHCDgm
-         00RA==
-X-Gm-Message-State: AOAM532+gbylOqC1/bWd6k3VXhLn2J70l2ZPWXlCWKtjcgoL0CC/03RE
-        aIciQ4U39iN1Lnpt1Uim2Ds=
-X-Google-Smtp-Source: ABdhPJzU9SM/zqdoDgJz7V1IMKOR9PCRdfnwMQMGnamkCNUkkTljLE97xhJc0/R83prH0oaa+rF5aQ==
-X-Received: by 2002:a4a:c501:: with SMTP id i1mr1556787ooq.65.1591779574587;
-        Wed, 10 Jun 2020 01:59:34 -0700 (PDT)
-Received: from ubuntu-n2-xlarge-x86 ([2604:1380:4111:8b00::3])
-        by smtp.gmail.com with ESMTPSA id t11sm2764868otr.65.2020.06.10.01.59.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 01:59:34 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 01:59:32 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        ardb@kernel.org, nivedita@alum.mit.edu, keescook@chromium.org,
-        mingo@kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] efi/libstub: Fix build error with libstub
-Message-ID: <20200610085932.GA461993@ubuntu-n2-xlarge-x86>
-References: <20200610071446.3737-1-zhenzhong.duan@gmail.com>
+        Wed, 10 Jun 2020 05:00:06 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:36642 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726794AbgFJJAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 05:00:05 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id B381C58EB9EE35D5898C;
+        Wed, 10 Jun 2020 17:00:03 +0800 (CST)
+Received: from [127.0.0.1] (10.173.221.213) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Wed, 10 Jun 2020
+ 16:59:55 +0800
+Subject: Re: [RFC PATCH v4 08/10] i40e/vf_migration: VF live migration -
+ pass-through VF first
+To:     Yan Zhao <yan.y.zhao@intel.com>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <alex.williamson@redhat.com>, <cohuck@redhat.com>,
+        <zhenyuw@linux.intel.com>, <zhi.a.wang@intel.com>,
+        <kevin.tian@intel.com>, <shaopeng.he@intel.com>,
+        <yi.l.liu@intel.com>, <xin.zeng@intel.com>, <hang.yuan@intel.com>,
+        Wang Haibin <wanghaibin.wang@huawei.com>
+References: <20200518024202.13996-1-yan.y.zhao@intel.com>
+ <20200518025316.14491-1-yan.y.zhao@intel.com>
+From:   Xiang Zheng <zhengxiang9@huawei.com>
+Message-ID: <e45d5bb6-6f15-dd4d-6de2-478b36f88069@huawei.com>
+Date:   Wed, 10 Jun 2020 16:59:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200610071446.3737-1-zhenzhong.duan@gmail.com>
+In-Reply-To: <20200518025316.14491-1-yan.y.zhao@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.221.213]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 03:14:46PM +0800, Zhenzhong Duan wrote:
-> Got below error during build:
+Hi Yan,
+
+few nits below...
+
+On 2020/5/18 10:53, Yan Zhao wrote:
+> This driver intercepts all device operations as long as it's probed
+> successfully by vfio-pci driver.
 > 
->   In file included from drivers/firmware/efi/libstub/efi-stub-helper.c:16:0:
->   drivers/firmware/efi/libstub/efi-stub-helper.c: In function ‘efi_char16_puts’:
->   arch/x86/include/asm/efi.h:355:3: sorry, unimplemented: ms_abi attribute requires -maccumulate-outgoing-args or subtarget optimization implying it
->      : __efi64_thunk_map(inst, func, inst, ##__VA_ARGS__))
->      ^
->   drivers/firmware/efi/libstub/efi-stub-helper.c:37:2: note: in expansion of macro ‘efi_call_proto’
->     efi_call_proto(efi_table_attr(efi_system_table, con_out),
->     ^
->   drivers/firmware/efi/libstub/efi-stub-helper.c:37: confused by earlier errors, bailing out
+> It will process regions and irqs of its interest and then forward
+> operations to default handlers exported from vfio pci if it wishes to.
 > 
-> Fix it by adding -maccumulate-outgoing-args for efi libstub build
-> as suggested by gcc.
+> In this patch, this driver does nothing but pass through VFs to guest
+> by calling to exported handlers from driver vfio-pci.
 > 
-> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+> Cc: Shaopeng He <shaopeng.he@intel.com>
+> 
+> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
 > ---
->  drivers/firmware/efi/libstub/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/net/ethernet/intel/Kconfig            |  10 ++
+>  drivers/net/ethernet/intel/i40e/Makefile      |   2 +
+>  .../ethernet/intel/i40e/i40e_vf_migration.c   | 165 ++++++++++++++++++
+>  .../ethernet/intel/i40e/i40e_vf_migration.h   |  59 +++++++
+>  4 files changed, 236 insertions(+)
+>  create mode 100644 drivers/net/ethernet/intel/i40e/i40e_vf_migration.c
+>  create mode 100644 drivers/net/ethernet/intel/i40e/i40e_vf_migration.h
 > 
-> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-> index cce4a74..25e5d02 100644
-> --- a/drivers/firmware/efi/libstub/Makefile
-> +++ b/drivers/firmware/efi/libstub/Makefile
-> @@ -6,7 +6,7 @@
->  # enabled, even if doing so doesn't break the build.
->  #
->  cflags-$(CONFIG_X86_32)		:= -march=i386
-> -cflags-$(CONFIG_X86_64)		:= -mcmodel=small
-> +cflags-$(CONFIG_X86_64)		:= -mcmodel=small -maccumulate-outgoing-args
+> diff --git a/drivers/net/ethernet/intel/Kconfig b/drivers/net/ethernet/intel/Kconfig
+> index ad34e4335df2..31780d9a59f1 100644
+> --- a/drivers/net/ethernet/intel/Kconfig
+> +++ b/drivers/net/ethernet/intel/Kconfig
+> @@ -264,6 +264,16 @@ config I40E_DCB
+>  
+>  	  If unsure, say N.
+>  
+> +config I40E_VF_MIGRATION
+> +	tristate "XL710 Family VF live migration support -- loadable modules only"
+> +	depends on I40E && VFIO_PCI && m
+> +	help
+> +	  Say m if you want to enable live migration of
+> +	  Virtual Functions of Intel(R) Ethernet Controller XL710
+> +	  Family of devices. It must be a module.
+> +	  This module serves as vendor module of module vfio_pci.
+> +	  VFs bind to module vfio_pci directly.
+> +
+>  # this is here to allow seamless migration from I40EVF --> IAVF name
+>  # so that CONFIG_IAVF symbol will always mirror the state of CONFIG_I40EVF
+>  config IAVF
+> diff --git a/drivers/net/ethernet/intel/i40e/Makefile b/drivers/net/ethernet/intel/i40e/Makefile
+> index 2f21b3e89fd0..b80c224c2602 100644
+> --- a/drivers/net/ethernet/intel/i40e/Makefile
+> +++ b/drivers/net/ethernet/intel/i40e/Makefile
+> @@ -27,3 +27,5 @@ i40e-objs := i40e_main.o \
+>  	i40e_xsk.o
+>  
+>  i40e-$(CONFIG_I40E_DCB) += i40e_dcb.o i40e_dcb_nl.o
+> +
+> +obj-$(CONFIG_I40E_VF_MIGRATION) += i40e_vf_migration.o
+> diff --git a/drivers/net/ethernet/intel/i40e/i40e_vf_migration.c b/drivers/net/ethernet/intel/i40e/i40e_vf_migration.c
+> new file mode 100644
+> index 000000000000..96026dcf5c9d
+> --- /dev/null
+> +++ b/drivers/net/ethernet/intel/i40e/i40e_vf_migration.c
+> @@ -0,0 +1,165 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Copyright(c) 2013 - 2019 Intel Corporation. */
+> +
+> +#include <linux/module.h>
+> +#include <linux/device.h>
+> +#include <linux/vfio.h>
+> +#include <linux/pci.h>
+> +#include <linux/eventfd.h>
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/sysfs.h>
+> +#include <linux/file.h>
+> +#include <linux/pci.h>
+> +
+> +#include "i40e.h"
+> +#include "i40e_vf_migration.h"
+> +
+> +#define VERSION_STRING  "0.1"
+> +#define DRIVER_AUTHOR   "Intel Corporation"
+> +
+> +static int i40e_vf_open(void *device_data)
+> +{
+> +	struct i40e_vf_migration *i40e_vf_dev =
+> +		vfio_pci_vendor_data(device_data);
+> +	int ret;
+> +	struct vfio_device_migration_info *mig_ctl = NULL;
+> +
 
-This will need a cc-option call if this patch is necessary because clang
-does not support this flag.
+"mig_ctl" is not used in this function. Shouldn't this declaration be
+put into the next patch?
 
-clang-11: error: unknown argument: '-maccumulate-outgoing-args'
+> +	if (!try_module_get(THIS_MODULE))
+> +		return -ENODEV;
+> +
+> +	mutex_lock(&i40e_vf_dev->reflock);
+> +	if (!i40e_vf_dev->refcnt) {
+> +		vfio_pci_set_vendor_regions(device_data, 0);
+> +		vfio_pci_set_vendor_irqs(device_data, 0);
+> +	}
+> +
+> +	ret = vfio_pci_open(device_data);
+> +	if (ret)
+> +		goto error;
+> +
+> +	i40e_vf_dev->refcnt++;
+> +	mutex_unlock(&i40e_vf_dev->reflock);
+> +	return 0;
+> +error:
+> +	if (!i40e_vf_dev->refcnt) {
+> +		vfio_pci_set_vendor_regions(device_data, 0);
+> +		vfio_pci_set_vendor_irqs(device_data, 0);
+> +	}
+> +	module_put(THIS_MODULE);
+> +	mutex_unlock(&i40e_vf_dev->reflock);
+> +	return ret;
+> +}
+> +
+> +void i40e_vf_release(void *device_data)
+> +{
+> +	struct i40e_vf_migration *i40e_vf_dev =
+> +		vfio_pci_vendor_data(device_data);
+> +
+> +	mutex_lock(&i40e_vf_dev->reflock);
+> +	if (!--i40e_vf_dev->refcnt) {
+> +		vfio_pci_set_vendor_regions(device_data, 0);
+> +		vfio_pci_set_vendor_irqs(device_data, 0);
+> +	}
+> +	vfio_pci_release(device_data);
+> +	mutex_unlock(&i40e_vf_dev->reflock);
+> +	module_put(THIS_MODULE);
+> +}
+> +
+> +static long i40e_vf_ioctl(void *device_data,
+> +			  unsigned int cmd, unsigned long arg)
+> +{
+> +	return vfio_pci_ioctl(device_data, cmd, arg);
+> +}
+> +
+> +static ssize_t i40e_vf_read(void *device_data, char __user *buf,
+> +			    size_t count, loff_t *ppos)
+> +{
+> +	return vfio_pci_read(device_data, buf, count, ppos);
+> +}
+> +
+> +static ssize_t i40e_vf_write(void *device_data, const char __user *buf,
+> +			     size_t count, loff_t *ppos)
+> +{
+> +	return vfio_pci_write(device_data, buf, count, ppos);
+> +}
+> +
+> +static int i40e_vf_mmap(void *device_data, struct vm_area_struct *vma)
+> +{
+> +	return vfio_pci_mmap(device_data, vma);
+> +}
+> +
+> +static void i40e_vf_request(void *device_data, unsigned int count)
+> +{
+> +	vfio_pci_request(device_data, count);
+> +}
+> +
+> +static struct vfio_device_ops i40e_vf_device_ops_node = {
+> +	.name		= "i40e_vf",
+> +	.open		= i40e_vf_open,
+> +	.release	= i40e_vf_release,
+> +	.ioctl		= i40e_vf_ioctl,
+> +	.read		= i40e_vf_read,
+> +	.write		= i40e_vf_write,
+> +	.mmap		= i40e_vf_mmap,
+> +	.request	= i40e_vf_request,
+> +};
+> +
+> +void *i40e_vf_probe(struct pci_dev *pdev)
+> +{
+> +	struct i40e_vf_migration *i40e_vf_dev = NULL;
+> +	struct pci_dev *pf_dev, *vf_dev;
+> +	struct i40e_pf *pf;
+> +	struct i40e_vf *vf;
+> +	unsigned int vf_devfn, devfn;
+> +	int vf_id = -1;
+> +	int i;
+> +
+> +	pf_dev = pdev->physfn;
+> +	pf = pci_get_drvdata(pf_dev);
+> +	vf_dev = pdev;
+> +	vf_devfn = vf_dev->devfn;
+> +
+> +	for (i = 0; i < pci_num_vf(pf_dev); i++) {
+> +		devfn = (pf_dev->devfn + pf_dev->sriov->offset +
+> +			 pf_dev->sriov->stride * i) & 0xff;
+> +		if (devfn == vf_devfn) {
+> +			vf_id = i;
+> +			break;
+> +		}
+> +	}
+> +
+> +	if (vf_id == -1)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	i40e_vf_dev = kzalloc(sizeof(*i40e_vf_dev), GFP_KERNEL);
+> +
+> +	if (!i40e_vf_dev)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	i40e_vf_dev->vf_id = vf_id;
+> +	i40e_vf_dev->vf_vendor = pdev->vendor;
+> +	i40e_vf_dev->vf_device = pdev->device;
+> +	i40e_vf_dev->pf_dev = pf_dev;
+> +	i40e_vf_dev->vf_dev = vf_dev;
+> +	mutex_init(&i40e_vf_dev->reflock);
+> +
+> +	vf = &pf->vf[vf_id];
+> +
 
->  cflags-$(CONFIG_X86)		+= -m$(BITS) -D__KERNEL__ \
->  				   -fPIC -fno-strict-aliasing -mno-red-zone \
->  				   -mno-mmx -mno-sse -fshort-wchar \
-> -- 
-> 1.8.3.1
+"vf" is also not used in this function...
+
+> +	return i40e_vf_dev;
+> +}
+> +
+> +static void i40e_vf_remove(void *vendor_data)
+> +{
+> +	kfree(vendor_data);
+> +}
+> +
+> +#define i40e_vf_device_ops (&i40e_vf_device_ops_node)
+> +module_vfio_pci_register_vendor_handler("I40E VF", i40e_vf_probe,
+> +					i40e_vf_remove, i40e_vf_device_ops);
+> +
+> +MODULE_ALIAS("vfio-pci:8086-154c");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_INFO(supported, "Vendor driver of vfio pci to support VF live migration");
+> +MODULE_VERSION(VERSION_STRING);
+> +MODULE_AUTHOR(DRIVER_AUTHOR);
+> diff --git a/drivers/net/ethernet/intel/i40e/i40e_vf_migration.h b/drivers/net/ethernet/intel/i40e/i40e_vf_migration.h
+> new file mode 100644
+> index 000000000000..696d40601ec3
+> --- /dev/null
+> +++ b/drivers/net/ethernet/intel/i40e/i40e_vf_migration.h
+> @@ -0,0 +1,59 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/* Copyright(c) 2013 - 2019 Intel Corporation. */
+> +
+> +#ifndef I40E_MIG_H
+> +#define I40E_MIG_H
+> +
+> +#include <linux/pci.h>
+> +#include <linux/vfio.h>
+> +#include <linux/mdev.h>
+> +
+> +#include "i40e.h"
+> +#include "i40e_txrx.h"
+> +
+> +/* helper macros copied from vfio-pci */
+> +#define VFIO_PCI_OFFSET_SHIFT   40
+> +#define VFIO_PCI_OFFSET_TO_INDEX(off)   ((off) >> VFIO_PCI_OFFSET_SHIFT)
+> +#define VFIO_PCI_INDEX_TO_OFFSET(index)	((u64)(index) << VFIO_PCI_OFFSET_SHIFT)
+> +#define VFIO_PCI_OFFSET_MASK    (((u64)(1) << VFIO_PCI_OFFSET_SHIFT) - 1)
+> +
+> +/* Single Root I/O Virtualization */
+> +struct pci_sriov {
+> +	int		pos;		/* Capability position */
+> +	int		nres;		/* Number of resources */
+> +	u32		cap;		/* SR-IOV Capabilities */
+> +	u16		ctrl;		/* SR-IOV Control */
+> +	u16		total_VFs;	/* Total VFs associated with the PF */
+> +	u16		initial_VFs;	/* Initial VFs associated with the PF */
+> +	u16		num_VFs;	/* Number of VFs available */
+> +	u16		offset;		/* First VF Routing ID offset */
+> +	u16		stride;		/* Following VF stride */
+> +	u16		vf_device;	/* VF device ID */
+> +	u32		pgsz;		/* Page size for BAR alignment */
+> +	u8		link;		/* Function Dependency Link */
+> +	u8		max_VF_buses;	/* Max buses consumed by VFs */
+> +	u16		driver_max_VFs;	/* Max num VFs driver supports */
+> +	struct pci_dev	*dev;		/* Lowest numbered PF */
+> +	struct pci_dev	*self;		/* This PF */
+> +	u32		cfg_size;	/* VF config space size */
+> +	u32		class;		/* VF device */
+> +	u8		hdr_type;	/* VF header type */
+> +	u16		subsystem_vendor; /* VF subsystem vendor */
+> +	u16		subsystem_device; /* VF subsystem device */
+> +	resource_size_t	barsz[PCI_SRIOV_NUM_BARS];	/* VF BAR size */
+> +	bool		drivers_autoprobe; /* Auto probing of VFs by driver */
+> +};
+> +
+
+Can "struct pci_sriov" be extracted for common use? This should not be exclusive
+for "i40e_vf migration support".
+
+> +struct i40e_vf_migration {
+> +	__u32				vf_vendor;
+> +	__u32				vf_device;
+> +	__u32				handle;
+> +	struct pci_dev			*pf_dev;
+> +	struct pci_dev			*vf_dev;
+> +	int				vf_id;
+> +	int				refcnt;
+> +	struct				mutex reflock; /*mutex protect refcnt */
+                                                        ^                    ^
+
+stray ' '
+
+> +};
+> +
+> +#endif /* I40E_MIG_H */
+> +
 > 
 
-Cheers,
-Nathan
+-- 
+Thanks,
+Xiang
+
