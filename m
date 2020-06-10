@@ -2,255 +2,286 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E09ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED4E8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B32A9207ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:58:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD7A12074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:59:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W6J9UkKF"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="sX04N19G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgFJV6f (ORCPT
+        id S1726637AbgFJV7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 17:58:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48548 "EHLO
+        Wed, 10 Jun 2020 17:59:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726447AbgFJV6e (ORCPT
+        with ESMTP id S1726260AbgFJV7W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 17:58:34 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DB0CC08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 14:58:34 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id j13so2247806vsn.3
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 14:58:34 -0700 (PDT)
+        Wed, 10 Jun 2020 17:59:22 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 954B9C03E96B
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 14:59:22 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id n2so1478558pld.13
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 14:59:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Q55NYjy9IRmkKRciGyl293b435BFJrXWdUL8I09kIMU=;
-        b=W6J9UkKFqBOh6IZVBDPOthBCXab0QZziKeEa8pn13Vr5J8K7h1X58Xb6OmuCCjEhOb
-         92gem+OhVNk7kSF2F0BUdLkFKKg5ROVVbpsqxDgCpafDITiIZamI2Vry6Aog71jIZo8h
-         NiD26bt+GKRoofdVOB/75RW7uwmApZl8QFmK1s6MT//oW9G+svD3zlytHSextcXbDuOv
-         y9pQW8NIgzMZzDeYq/95xGCrFZR1LNU3HnOc4zwE/u+v8axp4rGvGkkNauOwDQCqQjf9
-         2j8VU13YtK2Z4G+LXtKQblPwmmZ0YbNkS/g2LzBxhn7LOE6G4a9uJFutNjZyOutkrtp+
-         BPZQ==
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:mime-version:subject:from:in-reply-to:cc
+         :date:message-id:references:to;
+        bh=NdBvIyN0+B0E+FLHRKmrKKKiEB2XJE5/pjm/mjwpHTs=;
+        b=sX04N19GXfRQX8rNdpHD5ZDiZskcch+5v3jbdpARA5u7TXiIi32qsqDk5VIUjMiPa2
+         X8LqFoF/OB4j1JOC4GVZ8EbV1Mfvkg2LF3T+k8RtHZUnmQ19eYqjoMGmBT3KPgmLgwFv
+         UG4hNosQ2YOi042eT0N2F45P0R66CMIsQfVz+yxUK1yaCLVKEtsdHWXLypRS6cs1xYX6
+         pgVE19Qe0CC0Phmni3SmHIw1H0uNU9oA1W/oxX05cmpT0ZF0SZu4Jp0g1H7Kd4Jv6dQd
+         rVe8vZeBGbjCHpwAok6aFD2Tjh5wNHKArFq1MF1lsXLCzP/SWTDNyPdwrRBtqvD/JV30
+         CQog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Q55NYjy9IRmkKRciGyl293b435BFJrXWdUL8I09kIMU=;
-        b=KjHeazCXqZPZY6NhmaI878ErxOwol6NCrsDx4S53Tg5gbxxm6NRocblOlfnxs4vbWC
-         qLsbuFPCb2t8/Tj9Uj79LK4vSmNEhYQeM/UiRiDkGOESKlgCC42o11mQWUJ7GuBjaDA7
-         NnJetoVLEeRV/JybikyBuyu5ilW8Owfis4r/iih9qM/5E9TrdP+UrmNE4qg3d70bI/9f
-         IlKbw8n4Wb+7Oekbft+tNwSLOUj+crxua7K23udUJh56JTBjpbpjTRc9CAKoSA+URcQK
-         fR0h5MNJnhD5i3OtZgICtShXB2JjK2I9kFAQaYqkJKt6QpGMNFDYabXzc+XWteYlSuzw
-         orFQ==
-X-Gm-Message-State: AOAM530hV8xjiDXkmMy7CmjpeHpUqm/WfdXdlUbNeSOF5/TVvs7PPmnl
-        5RyA/WSr9OwqB9WSQisZHQdvowbkaR5Csqf5MLYBOA==
-X-Google-Smtp-Source: ABdhPJw6lF5ItCEwInvZaqrMjCHdyoCSi+CaoOEbwdfTwpuV0Gz1ZwsXr/d3YOGarQap09er1s6bIDnIsVVF9gciZiY=
-X-Received: by 2002:a67:f982:: with SMTP id b2mr4385200vsq.202.1591826312742;
- Wed, 10 Jun 2020 14:58:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200605213853.14959-1-sean.j.christopherson@intel.com>
- <20200605213853.14959-15-sean.j.christopherson@intel.com> <CANgfPd_v31zC5-mKsT14hd7W=X2Pvg3RBPjn2d4tFSChdbsr3A@mail.gmail.com>
-In-Reply-To: <CANgfPd_v31zC5-mKsT14hd7W=X2Pvg3RBPjn2d4tFSChdbsr3A@mail.gmail.com>
-From:   Ben Gardon <bgardon@google.com>
-Date:   Wed, 10 Jun 2020 14:58:21 -0700
-Message-ID: <CANgfPd-iH8AShSPPJiaDCxV1H76kfpTOQMZSMP_+nP3LoXbYBg@mail.gmail.com>
-Subject: Re: [PATCH 14/21] KVM: Move x86's version of struct
- kvm_mmu_memory_cache to common code
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Marc Zyngier <maz@kernel.org>, Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Feiner <pfeiner@google.com>,
-        Peter Shier <pshier@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        Christoffer Dall <christoffer.dall@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:content-transfer-encoding:mime-version:subject
+         :from:in-reply-to:cc:date:message-id:references:to;
+        bh=NdBvIyN0+B0E+FLHRKmrKKKiEB2XJE5/pjm/mjwpHTs=;
+        b=q64Q/dUwBu27Lb7N+Z8kBCENFPmz/4COyUCWfqeZGUbyeZLDRO9TvAIzjn0C0xX1XT
+         xPiDp01ryqUp0Ai+SFLEgMwrkWrXReqpul6/8RdVM6F09wfEwlZaZpgIqKZ3JFN5v7cR
+         kbwehHixTzJSPdbbfjRWxC7eq8RQyQewElbwpSzSuvwVq+w2znWM1816quUoUbird8uo
+         878J9oirg6PiaAWFd/f1w3/ox1smKcotN86bG5zqLnZRkfIVj5dNQ0uQatliz+WrDMiG
+         cId7kA2ZOIUtWBjS6pC3kTarWe++W2Ozk9q3GMY4L2K05nulttx0ho60lPVj7gPAo3y1
+         fODA==
+X-Gm-Message-State: AOAM530n5LEqdg3aBkBeNeowTc8i7F2NKtiEg0Ii04yqrx2GNA7fT33M
+        rLAZEkEiDVywX/uZmDceMYRRXg==
+X-Google-Smtp-Source: ABdhPJw6F4ktaaYVa9zObAtqY6PwjWUT4r06kxEolKugT8xUrflAmSiP0imO6BwetHuudumugg7kAw==
+X-Received: by 2002:a17:90a:aa8f:: with SMTP id l15mr5402889pjq.156.1591826362035;
+        Wed, 10 Jun 2020 14:59:22 -0700 (PDT)
+Received: from ?IPv6:2600:1010:b02a:3dac:540d:35b0:24d1:3df? ([2600:1010:b02a:3dac:540d:35b0:24d1:3df])
+        by smtp.gmail.com with ESMTPSA id z1sm849071pfr.88.2020.06.10.14.59.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Jun 2020 14:59:21 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] Fix undefined operation VMXOFF during reboot and crash
+From:   Andy Lutomirski <luto@amacapital.net>
+In-Reply-To: <20200610181254.2142-1-dpreed@deepplum.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Allison Randal <allison@lohutok.net>,
+        Enrico Weigelt <info@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Martin Molnar <martin.molnar.programming@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Jann Horn <jannh@google.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 10 Jun 2020 14:59:19 -0700
+Message-Id: <3F5CEF02-0561-4E28-851B-8E993F76DC9B@amacapital.net>
+References: <20200610181254.2142-1-dpreed@deepplum.com>
+To:     "David P. Reed" <dpreed@deepplum.com>
+X-Mailer: iPhone Mail (17F80)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 12:01 PM Ben Gardon <bgardon@google.com> wrote:
->
-> On Fri, Jun 5, 2020 at 2:39 PM Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
-> >
-> > Move x86's 'struct kvm_mmu_memory_cache' to common code in anticipation
-> > of moving the entire x86 implementation code to common KVM and reusing
-> > it for arm64 and MIPS.  Add a new architecture specific asm/kvm_types.h
-> > to control the existence and parameters of the struct.  The new header
-> > is needed to avoid a chicken-and-egg problem with asm/kvm_host.h as all
-> > architectures define instances of the struct in their vCPU structs.
-> >
-> > Suggested-by: Christoffer Dall <christoffer.dall@arm.com>
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Reviewed-by: Ben Gardon <bgardon@google.com>
-> > ---
-> >  arch/arm64/include/asm/kvm_types.h   |  6 ++++++
-> >  arch/mips/include/asm/kvm_types.h    |  5 +++++
-> >  arch/powerpc/include/asm/kvm_types.h |  5 +++++
-> >  arch/s390/include/asm/kvm_types.h    |  5 +++++
-> >  arch/x86/include/asm/kvm_host.h      | 13 -------------
-> >  arch/x86/include/asm/kvm_types.h     |  7 +++++++
-> >  include/linux/kvm_types.h            | 19 +++++++++++++++++++
-> >  7 files changed, 47 insertions(+), 13 deletions(-)
-> >  create mode 100644 arch/arm64/include/asm/kvm_types.h
-> >  create mode 100644 arch/mips/include/asm/kvm_types.h
-> >  create mode 100644 arch/powerpc/include/asm/kvm_types.h
-> >  create mode 100644 arch/s390/include/asm/kvm_types.h
-> >  create mode 100644 arch/x86/include/asm/kvm_types.h
-> >
-> > diff --git a/arch/arm64/include/asm/kvm_types.h b/arch/arm64/include/asm/kvm_types.h
-> > new file mode 100644
-> > index 000000000000..d0987007d581
-> > --- /dev/null
-> > +++ b/arch/arm64/include/asm/kvm_types.h
-> > @@ -0,0 +1,6 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +#ifndef _ASM_ARM64_KVM_TYPES_H
-> > +#define _ASM_ARM64_KVM_TYPES_H
-> > +
-> > +#endif /* _ASM_ARM64_KVM_TYPES_H */
-> > +
-> > diff --git a/arch/mips/include/asm/kvm_types.h b/arch/mips/include/asm/kvm_types.h
-> > new file mode 100644
-> > index 000000000000..5efeb32a5926
-> > --- /dev/null
-> > +++ b/arch/mips/include/asm/kvm_types.h
-> > @@ -0,0 +1,5 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +#ifndef _ASM_MIPS_KVM_TYPES_H
-> > +#define _ASM_MIPS_KVM_TYPES_H
-> > +
-> > +#endif /* _ASM_MIPS_KVM_TYPES_H */
-> > diff --git a/arch/powerpc/include/asm/kvm_types.h b/arch/powerpc/include/asm/kvm_types.h
-> > new file mode 100644
-> > index 000000000000..f627eceaa314
-> > --- /dev/null
-> > +++ b/arch/powerpc/include/asm/kvm_types.h
-> > @@ -0,0 +1,5 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +#ifndef _ASM_POWERPC_KVM_TYPES_H
-> > +#define _ASM_POWERPC_KVM_TYPES_H
-> > +
-> > +#endif /* _ASM_POWERPC_KVM_TYPES_H */
-> > diff --git a/arch/s390/include/asm/kvm_types.h b/arch/s390/include/asm/kvm_types.h
-> > new file mode 100644
-> > index 000000000000..b66a81f8a354
-> > --- /dev/null
-> > +++ b/arch/s390/include/asm/kvm_types.h
-> > @@ -0,0 +1,5 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +#ifndef _ASM_S390_KVM_TYPES_H
-> > +#define _ASM_S390_KVM_TYPES_H
-> > +
-> > +#endif /* _ASM_S390_KVM_TYPES_H */
-> > diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> > index fb99e6776e27..8e8fea13b6c7 100644
-> > --- a/arch/x86/include/asm/kvm_host.h
-> > +++ b/arch/x86/include/asm/kvm_host.h
-> > @@ -193,8 +193,6 @@ struct x86_exception;
-> >  enum x86_intercept;
-> >  enum x86_intercept_stage;
-> >
-> > -#define KVM_NR_MEM_OBJS 40
-> > -
-Oops I didn't catch this on my first read through, but in patch 16 in
-this series I see some references to KVM_NR_MEM_OBJS being removed. As
-a result I would not expect this patch to build. Other references to
-this value should probably replaced with
-KVM_ARCH_NR_OBJS_PER_MEMORY_CACHE as well.
-> >  #define KVM_NR_DB_REGS 4
-> >
-> >  #define DR6_BD         (1 << 13)
-> > @@ -245,17 +243,6 @@ enum x86_intercept_stage;
-> >
-> >  struct kvm_kernel_irq_routing_entry;
-> >
-> > -/*
-> > - * We don't want allocation failures within the mmu code, so we preallocate
-> > - * enough memory for a single page fault in a cache.
-> > - */
-> > -struct kvm_mmu_memory_cache {
-> > -       int nobjs;
-> > -       gfp_t gfp_zero;
-> > -       struct kmem_cache *kmem_cache;
-> > -       void *objects[KVM_NR_MEM_OBJS];
-> > -};
-> > -
-> >  /*
-> >   * the pages used as guest page table on soft mmu are tracked by
-> >   * kvm_memory_slot.arch.gfn_track which is 16 bits, so the role bits used
-> > diff --git a/arch/x86/include/asm/kvm_types.h b/arch/x86/include/asm/kvm_types.h
-> > new file mode 100644
-> > index 000000000000..08f1b57d3b62
-> > --- /dev/null
-> > +++ b/arch/x86/include/asm/kvm_types.h
-> > @@ -0,0 +1,7 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +#ifndef _ASM_X86_KVM_TYPES_H
-> > +#define _ASM_X86_KVM_TYPES_H
-> > +
-> > +#define KVM_ARCH_NR_OBJS_PER_MEMORY_CACHE 40
-> > +
-> > +#endif /* _ASM_X86_KVM_TYPES_H */
-> > diff --git a/include/linux/kvm_types.h b/include/linux/kvm_types.h
-> > index 68e84cf42a3f..a7580f69dda0 100644
-> > --- a/include/linux/kvm_types.h
-> > +++ b/include/linux/kvm_types.h
-> > @@ -20,6 +20,8 @@ enum kvm_mr_change;
-> >
-> >  #include <linux/types.h>
-> >
-> > +#include <asm/kvm_types.h>
-> > +
-> >  /*
-> >   * Address types:
-> >   *
-> > @@ -58,4 +60,21 @@ struct gfn_to_pfn_cache {
-> >         bool dirty;
-> >  };
-> >
-> > +#ifdef KVM_ARCH_NR_OBJS_PER_MEMORY_CACHE
-> > +/*
-> > + * Memory caches are used to preallocate memory ahead of various MMU flows,
-> > + * e.g. page fault handlers.  Gracefully handling allocation failures deep in
-> > + * MMU flows is problematic, as is triggering reclaim, I/O, etc... while
-> > + * holding MMU locks.  Note, these caches act more like prefetch buffers than
-> > + * classical caches, i.e. objects are not returned to the cache on being freed.
-> > + */
-> > +struct kvm_mmu_memory_cache {
-> > +       int nobjs;
-> > +       gfp_t gfp_zero;
-> > +       struct kmem_cache *kmem_cache;
-> > +       void *objects[KVM_ARCH_NR_OBJS_PER_MEMORY_CACHE];
-> > +};
-> > +#endif
-> > +
-> > +
-> >  #endif /* __KVM_TYPES_H__ */
-> > --
-> > 2.26.0
-> >
+
+
+> On Jun 10, 2020, at 11:21 AM, David P. Reed <dpreed@deepplum.com> wrote:
+>=20
+> =EF=BB=BFIf a panic/reboot occurs when CR4 has VMX enabled, a VMXOFF is
+> done on all CPUS, to allow the INIT IPI to function, since
+> INIT is suppressed when CPUs are in VMX root operation.
+> However, VMXOFF causes an undefined operation fault if the CPU is not
+> in VMX operation, that is, VMXON has not been executed, or VMXOFF
+> has been executed, but VMX is enabled.
+
+I=E2=80=99m surprised. Wouldn=E2=80=99t this mean that emergency reboots alw=
+ays fail it a VM is running?  I would think someone would have noticed befor=
+e.
+
+> This fix makes the reboot
+> work more reliably by modifying the #UD handler to skip the VMXOFF
+> if VMX is enabled on the CPU and the VMXOFF is executed as part
+> of cpu_emergency_vmxoff().
+
+NAK. See below.
+
+> The logic in reboot.c is also corrected, since the point of forcing
+> the processor out of VMX root operation is because when VMX root
+> operation is enabled, the processor INIT signal is always masked.
+> See Intel SDM section on differences between VMX Root operation and normal=
+
+> operation. Thus every CPU must be forced out of VMX operation.
+> Since the CPU will hang rather than restart, a manual "reset" is the
+> only way out of this state (or if there is a BMC, it can issue a RESET
+> to the chip).
+>=20
+> Signed-off-by: David P. Reed <dpreed@deepplum.com>
+> ---
+> arch/x86/include/asm/virtext.h | 24 ++++++++++++----
+> arch/x86/kernel/reboot.c       | 13 ++-------
+> arch/x86/kernel/traps.c        | 52 ++++++++++++++++++++++++++++++++--
+> 3 files changed, 71 insertions(+), 18 deletions(-)
+>=20
+> diff --git a/arch/x86/include/asm/virtext.h b/arch/x86/include/asm/virtext=
+.h
+> index 9aad0e0876fb..ea2d67191684 100644
+> --- a/arch/x86/include/asm/virtext.h
+> +++ b/arch/x86/include/asm/virtext.h
+> @@ -13,12 +13,16 @@
+> #ifndef _ASM_X86_VIRTEX_H
+> #define _ASM_X86_VIRTEX_H
+>=20
+> +#include <linux/percpu.h>
+> +
+> #include <asm/processor.h>
+>=20
+> #include <asm/vmx.h>
+> #include <asm/svm.h>
+> #include <asm/tlbflush.h>
+>=20
+> +DECLARE_PER_CPU_READ_MOSTLY(int, doing_emergency_vmxoff);
+> +
+> /*
+> * VMX functions:
+> */
+> @@ -33,8 +37,8 @@ static inline int cpu_has_vmx(void)
+> /** Disable VMX on the current CPU
+> *
+> * vmxoff causes a undefined-opcode exception if vmxon was not run
+> - * on the CPU previously. Only call this function if you know VMX
+> - * is enabled.
+> + * on the CPU previously. Only call this function directly if you know VM=
+X
+> + * is enabled *and* CPU is in VMX root operation.
+> */
+
+So presumably the bug is someone calling this inappropriatelet?
+
+> static inline void cpu_vmxoff(void)
+> {
+> @@ -47,17 +51,25 @@ static inline int cpu_vmx_enabled(void)
+>   return __read_() & X86_CR4_VMXE;
+> }
+>=20
+> -/** Disable VMX if it is enabled on the current CPU
+> +/** Force disable VMX if it is enabled on the current CPU.
+> + * Note that if CPU is not in VMX root operation this
+> + * VMXOFF will fault an undefined operation fault.
+> + * So the 'doing_emergency_vmxoff' percpu flag is set,
+> + * the trap handler for just restarts execution after
+> + * the VMXOFF instruction.
+> *
+> - * You shouldn't call this if cpu_has_vmx() returns 0.
+> + * You shouldn't call this directly if cpu_has_vmx() returns 0.
+> */
+> static inline void __cpu_emergency_vmxoff(void)
+> {
+> -    if (cpu_vmx_enabled())
+> +    if (cpu_vmx_enabled()) {
+> +        this_cpu_write(doing_emergency_vmxoff, 1);
+>       cpu_vmxoff();
+> +        this_cpu_write(doing_emergency_vmxoff, 0);
+> +    }
+> }
+
+NAK. Just write this in asm with an exception handler that does the right th=
+ing.
+
+Please also try to identify the actual bug.  Because I have a sneaking suspi=
+cion that you are running an out of tree module that has issues. If so, the p=
+atch should explain this.
+
+>=20
+> -/** Disable VMX if it is supported and enabled on the current CPU
+> +/** Force disable VMX if it is supported and enabled on the current CPU
+> */
+> static inline void cpu_emergency_vmxoff(void)
+> {
+> diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+> index 3ca43be4f9cf..abc8b51a57c7 100644
+> --- a/arch/x86/kernel/reboot.c
+> +++ b/arch/x86/kernel/reboot.c
+> @@ -540,21 +540,14 @@ static void emergency_vmx_disable_all(void)
+>    *
+>    * For safety, we will avoid running the nmi_shootdown_cpus()
+>    * stuff unnecessarily, but we don't have a way to check
+> -     * if other CPUs have VMX enabled. So we will call it only if the
+> -     * CPU we are running on has VMX enabled.
+> -     *
+> -     * We will miss cases where VMX is not enabled on all CPUs. This
+> -     * shouldn't do much harm because KVM always enable VMX on all
+> -     * CPUs anyway. But we can miss it on the small window where KVM
+> -     * is still enabling VMX.
+> +     * if other CPUs have VMX enabled.
+>    */
+> -    if (cpu_has_vmx() && cpu_vmx_enabled()) {
+> +    if (cpu_has_vmx()) {
+>       /* Disable VMX on this CPU. */
+> -        cpu_vmxoff();
+> +        cpu_emergency_vmxoff();
+>=20
+>       /* Halt and disable VMX on the other CPUs */
+>       nmi_shootdown_cpus(vmxoff_nmi);
+> -
+>   }
+> }
+>=20
+> diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+> index 4cc541051994..2dcf57ef467e 100644
+> --- a/arch/x86/kernel/traps.c
+> +++ b/arch/x86/kernel/traps.c
+> @@ -39,6 +39,7 @@
+> #include <linux/io.h>
+> #include <linux/hardirq.h>
+> #include <linux/atomic.h>
+> +#include <linux/percpu.h>
+>=20
+> #include <asm/stacktrace.h>
+> #include <asm/processor.h>
+> @@ -59,6 +60,7 @@
+> #include <asm/umip.h>
+> #include <asm/insn.h>
+> #include <asm/insn-eval.h>
+> +#include <asm/virtext.h>
+>=20
+> #ifdef CONFIG_X86_64
+> #include <asm/x86_init.h>
+> @@ -70,6 +72,8 @@
+> #include <asm/proto.h>
+> #endif
+>=20
+> +DEFINE_PER_CPU_READ_MOSTLY(int, doing_emergency_vmxoff) =3D 0;
+> +
+> DECLARE_BITMAP(system_vectors, NR_VECTORS);
+>=20
+> static inline void cond_local_irq_enable(struct pt_regs *regs)
+> @@ -115,6 +119,43 @@ int fixup_bug(struct pt_regs *regs, int trapnr)
+>   return 0;
+> }
+>=20
+> +/*
+> + * Fix any unwanted undefined operation fault due to VMXOFF instruction t=
+hat
+> + * is needed to ensure that CPU is not in VMX root operation at time of
+> + * a reboot/panic CPU reset. There is no safe and reliable way to know
+> + * if a processor is in VMX root operation, other than to skip the
+> + * VMXOFF. It is safe to just skip any VMXOFF that might generate this
+> + * exception, when VMX operation is enabled in CR4. In the extremely
+> + * rare case that a VMXOFF is erroneously executed while VMX is enabled,
+> + * but VMXON has not been executed yet, the undefined opcode fault
+> + * should not be missed by valid code, though it would be an error.
+> + * To detect this, we could somehow restrict the instruction address
+> + * to the specific use during reboot/panic.
+> + */
+> +static int fixup_emergency_vmxoff(struct pt_regs *regs, int trapnr)
+> +{
+
+NAK.
+
