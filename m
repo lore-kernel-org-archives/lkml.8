@@ -2,49 +2,51 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E509C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1016C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15B28206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:25:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B387D206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:25:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="T8HZuzc3"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="b81aXxe/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729111AbgFJMZZ (ORCPT
+        id S1728956AbgFJMZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 08:25:25 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:49501 "EHLO
+        Wed, 10 Jun 2020 08:25:35 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:57614 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728957AbgFJMZU (ORCPT
+        by vger.kernel.org with ESMTP id S1728968AbgFJMZU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 10 Jun 2020 08:25:20 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05ACI9fo011911;
-        Wed, 10 Jun 2020 14:25:03 +0200
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05ACH95m025174;
+        Wed, 10 Jun 2020 14:25:06 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=zLwEj7MqWWxOTNW8GUFQe1h25GWD27n/XUQYErjbCu4=;
- b=T8HZuzc35YFPNmd9RYJdN0RxeUHNbBUfiVbuwcWWUqe+Jl1MQAHpIV2HjmfERUJsi92t
- ZuMAp+gAOXXHJOaH5aRJWd8wN8YxoycXNpk0p5XoV0Uq98dartXq2FlKWb4a6fzYztwb
- 5CX4SgDTXB2k3i3m/g1NgKeWYB5fTSJiytFzgF4NQ5Dwz6o/+lCb7idQHYnRR8e03h91
- VvvcPm+i/ZPTA33zrmzddBDHk2gN/ULHzkDMDO7suJxMzFEuzBA48IRhN6nr83no2BZl
- j7SBWBK6EqVKqalc9LK1ADMrDT8MAQclNhQbE8Q4x+iaQMug4YhzvTae5g1DkpvdX/mj SQ== 
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=UV2eXHMfLb4/QtK9KJPbsnZv2k9uIAuEYmQYk8262qk=;
+ b=b81aXxe/1h22QtO6JB1gHsEGr2qloPdkuLsbMkM0jLziCpcWhDN4V5d34b28QJXvrsCp
+ qbOfy/hNPkG6FUARoIj1KdgWuWiomSd9msJoeaRUe2/qZmwkTQsJdKplB8hWJC1jxXjO
+ aWoDW+IfvU9alwAB48aTBeFPSpe/zG1LUV+vGBNmObqd9tpS4pIDu1xs8dMxlAM//Pbd
+ umBaG+xeMCQ4FpMWuAyHDXf9pC6XiIslvICdXTvbDSvEtX3YQakV+YQfLzgryA5poeI7
+ 1LxszQLaBOg4k/0+g+sNwZqn2fsOea0UqFVXWqqwgLGvcXj02Hi3LNxQJg5SF+JvC6o0 IA== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 31g0wvw0m6-1
+        by mx07-00178001.pphosted.com with ESMTP id 31jppntqfj-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 10 Jun 2020 14:25:03 +0200
+        Wed, 10 Jun 2020 14:25:06 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 99ECE10002A;
-        Wed, 10 Jun 2020 14:25:02 +0200 (CEST)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 205C210002A;
+        Wed, 10 Jun 2020 14:25:06 +0200 (CEST)
 Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8256F2106E9;
-        Wed, 10 Jun 2020 14:25:02 +0200 (CEST)
-Received: from localhost (10.75.127.51) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 10 Jun 2020 14:25:02
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 136852106EA;
+        Wed, 10 Jun 2020 14:25:06 +0200 (CEST)
+Received: from localhost (10.75.127.48) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 10 Jun 2020 14:25:05
  +0200
 From:   Benjamin Gaignard <benjamin.gaignard@st.com>
 To:     <hugues.fruchet@st.com>, <mchehab@kernel.org>,
@@ -55,14 +57,16 @@ CC:     <linux-media@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <vincent.guittot@linaro.org>,
         <valentin.schneider@arm.com>, <rjw@rjwysocki.net>,
         Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v6 0/3] DCMI set minimum cpufreq requirement
-Date:   Wed, 10 Jun 2020 14:24:57 +0200
-Message-ID: <20200610122500.4304-1-benjamin.gaignard@st.com>
+Subject: [PATCH v6 3/3] ARM: dts: stm32: Set DCMI frequency requirement for stm32mp15x
+Date:   Wed, 10 Jun 2020 14:25:00 +0200
+Message-ID: <20200610122500.4304-4-benjamin.gaignard@st.com>
 X-Mailer: git-send-email 2.15.0
+In-Reply-To: <20200610122500.4304-1-benjamin.gaignard@st.com>
+References: <20200610122500.4304-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG7NODE2.st.com (10.75.127.20) To SFHDAG3NODE3.st.com
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG6NODE3.st.com (10.75.127.18) To SFHDAG3NODE3.st.com
  (10.75.127.9)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
  definitions=2020-06-10_07:2020-06-10,2020-06-10 signatures=0
@@ -71,38 +75,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series allow to STM32 camera interface (DCMI) to require a minimum
-frequency to the CPUs before start streaming frames from the sensor.
-The minimum frequency requirement is provided in the devide-tree node.
+Make sure that CPUs will at least run at 650Mhz when streaming
+sensor frames.
 
-Setting a minimum frequency for the CPUs is needed to ensure a quick handling
-of the interrupts between two sensor frames and avoid dropping half of them.
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+ arch/arm/boot/dts/stm32mp151.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-version 6:
-- come back to version 4 and follow Valentin's suggestions about notifier
-
-version 5:
-- add a mutex to protect dcmi_irq_notifier_notify()
-- register notifier a probe time
-
-version 4:
-- simplify irq affinity handling by using only dcmi_irq_notifier_notify() 
-
-version 3:
-- add a cpumask field to track boosted CPUs
-- add irq_affinity_notify callback
-- protect cpumask field with a mutex 
-
-Benjamin Gaignard (3):
-  dt-bindings: media: stm32-dcmi: Add DCMI min frequency property
-  media: stm32-dcmi: Set minimum cpufreq requirement
-  ARM: dts: stm32: Set DCMI frequency requirement for stm32mp15x
-
- .../devicetree/bindings/media/st,stm32-dcmi.yaml   |   8 ++
- arch/arm/boot/dts/stm32mp151.dtsi                  |   1 +
- drivers/media/platform/stm32/stm32-dcmi.c          | 138 +++++++++++++++++++--
- 3 files changed, 139 insertions(+), 8 deletions(-)
-
+diff --git a/arch/arm/boot/dts/stm32mp151.dtsi b/arch/arm/boot/dts/stm32mp151.dtsi
+index 3ea05ba48215..f6d7bf4f8231 100644
+--- a/arch/arm/boot/dts/stm32mp151.dtsi
++++ b/arch/arm/boot/dts/stm32mp151.dtsi
+@@ -1091,6 +1091,7 @@
+ 			clock-names = "mclk";
+ 			dmas = <&dmamux1 75 0x400 0x0d>;
+ 			dma-names = "tx";
++			st,stm32-dcmi-min-frequency = <650000>;
+ 			status = "disabled";
+ 		};
+ 
 -- 
 2.15.0
 
