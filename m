@@ -2,506 +2,179 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1FB0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE589C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA8DD2078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:57:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="A7INs1qh"
+	by mail.kernel.org (Postfix) with ESMTP id ACB112072F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:57:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591775841;
+	bh=i0GKyEEgP/d/WJmGZui0xw8vOIPmyZHfPnzNhX2dXNM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AezP9vqcYVqjYYJMQirZQW7smmbXMq4aw6xQkZG68nAyfNvY5t8mjLpOE+viH5ipr
+	 vZ5COg8ybkyuR47ZQEoUaZps44JL1UR6ShaVOqp79i2Xww4oHVvGeRBX/LCTdsim3Z
+	 K3ViFj/gyAlhrxIECeKAQIKuT/decXzcRZnYiL74=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbgFJH5P (ORCPT
+        id S1726689AbgFJH5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 03:57:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59280 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726512AbgFJH5O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 03:57:14 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92B63C03E96B
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 00:57:14 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id i12so530489pju.3
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 00:57:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=FFrGqJ0APYCNIrf9Lgb5bstjPt+pcoCyUnmneo/Tls8=;
-        b=A7INs1qhaRgUN9ozGAsUIQ5pKL+ak4l4WQyyZvkfQyFCfnO8hv9KZZ0FWbXsnujgWr
-         Jl9Csb/SwrCoyqLU9g726UeMKUGlpQtFfCIRE7ZpVIgfTN1/o0xqLXCZYOBzy3ksOlOv
-         Osm9ajXCNpVE7jClC9FNmlowtVg+oPR1wL8d4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=FFrGqJ0APYCNIrf9Lgb5bstjPt+pcoCyUnmneo/Tls8=;
-        b=gvTcNj+oWDgZkswPyhOMt/xgwFmNuBA8Kq0DhnCpBYlJOGD+EA1f5coKB8sOJ0Vvxq
-         +wkjGwXjtUJ/QdItjI+4weO6vUSDLmT7QRFzyg02aHnESqmCDaPe0wHuURkMPgFBKuzv
-         gyd+4OPKW+cseuew9ivSgJEsfAcGt+bSaKXSx8BWgDdRCo74130B2EoVwe/qIuh6NtnH
-         3kCR7i9hDOj1rp/OlaY1QUvcuOSXYr89xTELiAr+MT6JwgX3QajX0i7LewFJ15HoLDDK
-         cF7Dv1tdpywcIErf2AiEjUZywaUkDuC9Vr+BFdh2nxNcjc53IyMW8A2Sz/D4yA5VHeY9
-         0hiQ==
-X-Gm-Message-State: AOAM530TK+DI1FjFCg1uaEbFQLcN+eJSlNU+JJUrMRjPlP4ofG01QV4i
-        mUUPxp0CE+57wIdjX1VyjLN9CQ==
-X-Google-Smtp-Source: ABdhPJwLzepPP+zvRWn6g7YmoC/aJVD56Z7WGGzTLr7QlGa+UEG3kzeNzpjkQhPyReE0jOXvJg+vtQ==
-X-Received: by 2002:a17:90a:8c96:: with SMTP id b22mr1959269pjo.88.1591775834045;
-        Wed, 10 Jun 2020 00:57:14 -0700 (PDT)
-Received: from pihsun-glaptop.lan (180-176-97-18.dynamic.kbronet.com.tw. [180.176.97.18])
-        by smtp.googlemail.com with ESMTPSA id y26sm12035850pff.26.2020.06.10.00.57.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 00:57:13 -0700 (PDT)
-From:   Pi-Hsun Shih <pihsun@chromium.org>
-Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
-        Tzung-Bi Shih <tzungbi@google.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 2/2] regulator: Add driver for cros-ec-regulator
-Date:   Wed, 10 Jun 2020 15:56:44 +0800
-Message-Id: <20200610075649.209852-3-pihsun@chromium.org>
-X-Mailer: git-send-email 2.27.0.278.ge193c7cf3a9-goog
-In-Reply-To: <20200610075649.209852-1-pihsun@chromium.org>
-References: <20200610075649.209852-1-pihsun@chromium.org>
+        Wed, 10 Jun 2020 03:57:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36948 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726512AbgFJH5S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 03:57:18 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AE8A206C3;
+        Wed, 10 Jun 2020 07:57:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591775836;
+        bh=i0GKyEEgP/d/WJmGZui0xw8vOIPmyZHfPnzNhX2dXNM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oxMoP3RQ2ZxDZxQTVNc7pdMDGnBLbnF57UtXv+oyWa4vg9Hb5X4nGwZgiUStJ6RMQ
+         Sm9U7RUCEGHGt2X1UAxqeI3BNMCWnXNcVHvwLeZzs2JIdF+8XyUHUBX3O0Q8dM7HZb
+         vpCZBYiRTIqYWBlpmD2TuPFmrBAnDOXYjA7iEn7w=
+Date:   Wed, 10 Jun 2020 08:57:12 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        tabba@google.com, qwandor@google.com, ardb@kernel.org
+Subject: Re: [RFC PATCH 0/3] firmware: Add support for PSA FF-A interface
+Message-ID: <20200610075711.GC15939@willie-the-truck>
+References: <20200601094512.50509-1-sudeep.holla@arm.com>
+ <20200604133746.GA2951@willie-the-truck>
+ <20200609174123.GA5732@bogus>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20200609174123.GA5732@bogus>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add driver for cros-ec-regulator, representing a voltage regulator that
-is connected and controlled by ChromeOS EC, and is controlled by kernel
-with EC host commands.
+Hi Sudeep,
 
-Changes from v1:
-* Change compatible string to google,regulator-cros-ec.
-* Use reg property in device tree.
-* Address comments on code styles.
+On Tue, Jun 09, 2020 at 06:41:23PM +0100, Sudeep Holla wrote:
+> On Thu, Jun 04, 2020 at 02:37:46PM +0100, Will Deacon wrote:
+> > On Mon, Jun 01, 2020 at 10:45:09AM +0100, Sudeep Holla wrote:
+> > > Sorry for posting in the middle of merge window and I must have done
+> > > this last week itself. This is not the driver I had thought about posting
+> > > last week. After I started cleaning up and looking at Will's KVM prototype[1]
+> > > for PSA FF-A (previously known as SPCI),
+> >
+> > Yes, I need to do the Big Rename at some point. Joy.
+> >
+> 
+> 😁 
 
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
----
-This patch contains function cros_ec_cmd that is copied from the series:
-https://lore.kernel.org/patchwork/project/lkml/list/?series=428457.
+Renamed version here:
 
-I can't find the first patch in that v2 series, so the function is
-modified from v1 of that series according to reviewers comment:
-https://lore.kernel.org/patchwork/patch/1188110/
+https://android-kvm.googlesource.com/linux/+/refs/heads/willdeacon/psa-ffa
 
-I copied the function instead of depending on that series since I feel
-the function is small enough, and the series has stalled for some time.
----
- drivers/regulator/Kconfig                     |   7 +
- drivers/regulator/Makefile                    |   1 +
- drivers/regulator/cros-ec-regulator.c         | 262 ++++++++++++++++++
- .../linux/platform_data/cros_ec_commands.h    |  82 ++++++
- 4 files changed, 352 insertions(+)
- create mode 100644 drivers/regulator/cros-ec-regulator.c
+although I haven't psyched myself up to write yaml yet.
 
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index 8f677f5d79b4..3543e0fc54ca 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -238,6 +238,13 @@ config REGULATOR_CPCAP
- 	  Say y here for CPCAP regulator found on some Motorola phones
- 	  and tablets such as Droid 4.
- 
-+config REGULATOR_CROS_EC
-+	tristate "ChromeOS EC regulators"
-+	depends on CROS_EC
-+	help
-+	  This driver supports voltage regulators that is connected to ChromeOS
-+	  EC and controlled through EC host commands.
-+
- config REGULATOR_DA903X
- 	tristate "Dialog Semiconductor DA9030/DA9034 regulators"
- 	depends on PMIC_DA903X
-diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-index e8f163371071..46592c160d22 100644
---- a/drivers/regulator/Makefile
-+++ b/drivers/regulator/Makefile
-@@ -13,6 +13,7 @@ obj-$(CONFIG_REGULATOR_USERSPACE_CONSUMER) += userspace-consumer.o
- obj-$(CONFIG_REGULATOR_88PG86X) += 88pg86x.o
- obj-$(CONFIG_REGULATOR_88PM800) += 88pm800-regulator.o
- obj-$(CONFIG_REGULATOR_88PM8607) += 88pm8607.o
-+obj-$(CONFIG_REGULATOR_CROS_EC) += cros-ec-regulator.o
- obj-$(CONFIG_REGULATOR_CPCAP) += cpcap-regulator.o
- obj-$(CONFIG_REGULATOR_AAT2870) += aat2870-regulator.o
- obj-$(CONFIG_REGULATOR_AB3100) += ab3100.o
-diff --git a/drivers/regulator/cros-ec-regulator.c b/drivers/regulator/cros-ec-regulator.c
-new file mode 100644
-index 000000000000..0af3a397781c
---- /dev/null
-+++ b/drivers/regulator/cros-ec-regulator.c
-@@ -0,0 +1,262 @@
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Copyright 2020 Google LLC.
-+
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_data/cros_ec_proto.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/driver.h>
-+#include <linux/regulator/machine.h>
-+#include <linux/regulator/of_regulator.h>
-+#include <linux/slab.h>
-+
-+struct cros_ec_regulator_data {
-+	struct regulator_desc desc;
-+	struct regulator_dev *dev;
-+	struct cros_ec_device *ec_dev;
-+
-+	u32 index;
-+
-+	u16 *voltages_mV;
-+	u16 num_voltages;
-+};
-+
-+static int cros_ec_cmd(struct cros_ec_device *ec, u32 version, u32 command,
-+		       void *outdata, u32 outsize, void *indata, u32 insize)
-+{
-+	struct cros_ec_command *msg;
-+	int ret;
-+
-+	msg = kzalloc(sizeof(*msg) + max(outsize, insize), GFP_KERNEL);
-+	if (!msg)
-+		return -ENOMEM;
-+
-+	msg->version = version;
-+	msg->command = command;
-+	msg->outsize = outsize;
-+	msg->insize = insize;
-+
-+	if (outdata && outsize > 0)
-+		memcpy(msg->data, outdata, outsize);
-+
-+	ret = cros_ec_cmd_xfer_status(ec, msg);
-+	if (ret < 0) {
-+		dev_warn(ec->dev, "Command failed: %d\n", msg->result);
-+		goto cleanup;
-+	}
-+
-+	if (insize)
-+		memcpy(indata, msg->data, insize);
-+
-+cleanup:
-+	kfree(msg);
-+	return ret;
-+}
-+
-+static int cros_ec_regulator_enable(struct regulator_dev *dev)
-+{
-+	struct cros_ec_regulator_data *data = rdev_get_drvdata(dev);
-+	struct ec_params_regulator_enable cmd = {
-+		.index = data->index,
-+		.enable = 1,
-+	};
-+
-+	return cros_ec_cmd(data->ec_dev, 0, EC_CMD_REGULATOR_ENABLE, &cmd,
-+			  sizeof(cmd), NULL, 0);
-+}
-+
-+static int cros_ec_regulator_disable(struct regulator_dev *dev)
-+{
-+	struct cros_ec_regulator_data *data = rdev_get_drvdata(dev);
-+	struct ec_params_regulator_enable cmd = {
-+		.index = data->index,
-+		.enable = 0,
-+	};
-+
-+	return cros_ec_cmd(data->ec_dev, 0, EC_CMD_REGULATOR_ENABLE, &cmd,
-+			  sizeof(cmd), NULL, 0);
-+}
-+
-+static int cros_ec_regulator_is_enabled(struct regulator_dev *dev)
-+{
-+	struct cros_ec_regulator_data *data = rdev_get_drvdata(dev);
-+	struct ec_params_regulator_is_enabled cmd = {
-+		.index = data->index,
-+	};
-+	struct ec_response_regulator_is_enabled resp;
-+	int ret;
-+
-+	ret = cros_ec_cmd(data->ec_dev, 0, EC_CMD_REGULATOR_IS_ENABLED, &cmd,
-+			  sizeof(cmd), &resp, sizeof(resp));
-+	if (ret < 0)
-+		return ret;
-+	return resp.enabled;
-+}
-+
-+static int cros_ec_regulator_list_voltage(struct regulator_dev *dev,
-+					  unsigned int selector)
-+{
-+	struct cros_ec_regulator_data *data = rdev_get_drvdata(dev);
-+
-+	if (selector >= data->num_voltages)
-+		return -EINVAL;
-+
-+	return data->voltages_mV[selector] * 1000;
-+}
-+
-+static int cros_ec_regulator_get_voltage(struct regulator_dev *dev)
-+{
-+	struct cros_ec_regulator_data *data = rdev_get_drvdata(dev);
-+	struct ec_params_regulator_get_voltage cmd = {
-+		.index = data->index,
-+	};
-+	struct ec_response_regulator_get_voltage resp;
-+	int ret;
-+
-+	ret = cros_ec_cmd(data->ec_dev, 0, EC_CMD_REGULATOR_GET_VOLTAGE, &cmd,
-+			  sizeof(cmd), &resp, sizeof(resp));
-+	if (ret < 0)
-+		return ret;
-+	return resp.voltage_mv * 1000;
-+}
-+
-+static int cros_ec_regulator_set_voltage(struct regulator_dev *dev, int min_uV,
-+					 int max_uV, unsigned int *selector)
-+{
-+	struct cros_ec_regulator_data *data = rdev_get_drvdata(dev);
-+	int min_mV = DIV_ROUND_UP(min_uV, 1000);
-+	int max_mV = max_uV / 1000;
-+	struct ec_params_regulator_set_voltage cmd = {
-+		.index = data->index,
-+		.min_mv = min_mV,
-+		.max_mv = max_mV,
-+	};
-+
-+	if (min_mV > max_mV)
-+		return -EINVAL;
-+	return cros_ec_cmd(data->ec_dev, 0, EC_CMD_REGULATOR_SET_VOLTAGE, &cmd,
-+			   sizeof(cmd), NULL, 0);
-+}
-+
-+static struct regulator_ops cros_ec_regulator_voltage_ops = {
-+	.enable = cros_ec_regulator_enable,
-+	.disable = cros_ec_regulator_disable,
-+	.is_enabled = cros_ec_regulator_is_enabled,
-+	.list_voltage = cros_ec_regulator_list_voltage,
-+	.get_voltage = cros_ec_regulator_get_voltage,
-+	.set_voltage = cros_ec_regulator_set_voltage,
-+};
-+
-+static int cros_ec_regulator_init_info(struct device *dev,
-+				       struct cros_ec_regulator_data *data)
-+{
-+	struct ec_params_regulator_get_info cmd = {
-+		.index = data->index,
-+	};
-+	struct ec_response_regulator_get_info resp;
-+	int ret;
-+
-+	ret = cros_ec_cmd(data->ec_dev, 0, EC_CMD_REGULATOR_GET_INFO, &cmd,
-+			   sizeof(cmd), &resp, sizeof(resp));
-+	if (ret < 0)
-+		return ret;
-+
-+	data->num_voltages =
-+		min_t(u16, ARRAY_SIZE(resp.voltages_mv), resp.num_voltages);
-+	data->voltages_mV =
-+		devm_kmemdup(dev, resp.voltages_mv,
-+			     sizeof(u16) * data->num_voltages, GFP_KERNEL);
-+	data->desc.n_voltages = data->num_voltages;
-+	data->desc.name = kstrndup(resp.name, sizeof(resp.name), GFP_KERNEL);
-+	if (!data->desc.name)
-+		return -ENOMEM;
-+
-+	return 0;
-+}
-+
-+static int cros_ec_regulator_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	struct cros_ec_regulator_data *drvdata;
-+	struct regulator_init_data *init_data;
-+	struct regulator_config cfg = {};
-+	struct regulator_desc *desc;
-+	int ret;
-+
-+	drvdata = devm_kzalloc(
-+		&pdev->dev, sizeof(struct cros_ec_regulator_data), GFP_KERNEL);
-+	if (!drvdata)
-+		return -ENOMEM;
-+
-+	drvdata->ec_dev = dev_get_drvdata(dev->parent);
-+	desc = &drvdata->desc;
-+
-+	init_data = of_get_regulator_init_data(dev, np, desc);
-+	if (!init_data)
-+		return -EINVAL;
-+
-+	ret = of_property_read_u32(np, "reg", &drvdata->index);
-+	if (ret < 0)
-+		return ret;
-+
-+	desc->owner = THIS_MODULE;
-+	desc->type = REGULATOR_VOLTAGE;
-+	desc->ops = &cros_ec_regulator_voltage_ops;
-+
-+	ret = cros_ec_regulator_init_info(dev, drvdata);
-+	if (ret < 0)
-+		return ret;
-+
-+	cfg.dev = &pdev->dev;
-+	cfg.init_data = init_data;
-+	cfg.driver_data = drvdata;
-+	cfg.of_node = np;
-+
-+	drvdata->dev = regulator_register(&drvdata->desc, &cfg);
-+	if (IS_ERR(drvdata->dev)) {
-+		ret = PTR_ERR(drvdata->dev);
-+		dev_err(&pdev->dev, "Failed to register regulator: %d\n", ret);
-+		goto free_name;
-+	}
-+
-+	platform_set_drvdata(pdev, drvdata);
-+
-+	return 0;
-+
-+free_name:
-+	kfree(desc->name);
-+	return ret;
-+}
-+
-+static int cros_ec_regulator_remove(struct platform_device *pdev)
-+{
-+	struct cros_ec_regulator_data *drvdata = platform_get_drvdata(pdev);
-+
-+	kfree(drvdata->desc.name);
-+
-+	return 0;
-+}
-+
-+#if defined(CONFIG_OF)
-+static const struct of_device_id regulator_cros_ec_of_match[] = {
-+	{ .compatible = "google,regulator-cros-ec", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, regulator_cros_ec_of_match);
-+#endif
-+
-+static struct platform_driver cros_ec_regulator_driver = {
-+	.probe		= cros_ec_regulator_probe,
-+	.remove		= cros_ec_regulator_remove,
-+	.driver		= {
-+		.name		= "cros-ec-regulator",
-+		.of_match_table = of_match_ptr(regulator_cros_ec_of_match),
-+	},
-+};
-+
-+module_platform_driver(cros_ec_regulator_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("ChromeOS EC controlled regulator");
-diff --git a/include/linux/platform_data/cros_ec_commands.h b/include/linux/platform_data/cros_ec_commands.h
-index 69210881ebac..a417b51b5764 100644
---- a/include/linux/platform_data/cros_ec_commands.h
-+++ b/include/linux/platform_data/cros_ec_commands.h
-@@ -5430,6 +5430,88 @@ struct ec_response_rollback_info {
- /* Issue AP reset */
- #define EC_CMD_AP_RESET 0x0125
- 
-+/*****************************************************************************/
-+/* Voltage regulator controls */
-+
-+/*
-+ * Get basic info of voltage regulator for given index.
-+ *
-+ * Returns the regulator name and supported voltage list in mV.
-+ */
-+#define EC_CMD_REGULATOR_GET_INFO 0x012B
-+
-+/* Maximum length of regulator name */
-+#define EC_REGULATOR_NAME_MAX_LEN 16
-+
-+/* Maximum length of the supported voltage list. */
-+#define EC_REGULATOR_VOLTAGE_MAX_COUNT 16
-+
-+struct ec_params_regulator_get_info {
-+	uint32_t index;
-+} __ec_align4;
-+
-+struct ec_response_regulator_get_info {
-+	char name[EC_REGULATOR_NAME_MAX_LEN];
-+	uint16_t num_voltages;
-+	uint16_t voltages_mv[EC_REGULATOR_VOLTAGE_MAX_COUNT];
-+} __ec_align1;
-+
-+/*
-+ * Configure the regulator as enabled / disabled.
-+ */
-+#define EC_CMD_REGULATOR_ENABLE 0x012C
-+
-+struct ec_params_regulator_enable {
-+	uint32_t index;
-+	uint8_t enable;
-+} __ec_align4;
-+
-+/*
-+ * Query if the regulator is enabled.
-+ *
-+ * Returns 1 if the regulator is enabled, 0 if not.
-+ */
-+#define EC_CMD_REGULATOR_IS_ENABLED 0x012D
-+
-+struct ec_params_regulator_is_enabled {
-+	uint32_t index;
-+} __ec_align4;
-+
-+struct ec_response_regulator_is_enabled {
-+	uint8_t enabled;
-+} __ec_align1;
-+
-+/*
-+ * Set voltage for the voltage regulator within the range specified.
-+ *
-+ * The driver should select the voltage in range closest to min_mv.
-+ *
-+ * Also note that this might be called before the regulator is enabled, and the
-+ * setting should be in effect after the regulator is enabled.
-+ */
-+#define EC_CMD_REGULATOR_SET_VOLTAGE 0x012E
-+
-+struct ec_params_regulator_set_voltage {
-+	uint32_t index;
-+	uint32_t min_mv;
-+	uint32_t max_mv;
-+} __ec_align4;
-+
-+/*
-+ * Get the currently configured voltage for the voltage regulator.
-+ *
-+ * Note that this might be called before the regulator is enabled.
-+ */
-+#define EC_CMD_REGULATOR_GET_VOLTAGE 0x012F
-+
-+struct ec_params_regulator_get_voltage {
-+	uint32_t index;
-+} __ec_align4;
-+
-+struct ec_response_regulator_get_voltage {
-+	uint32_t voltage_mv;
-+} __ec_align4;
-+
- /*****************************************************************************/
- /* The command range 0x200-0x2FF is reserved for Rotor. */
- 
--- 
-2.27.0.278.ge193c7cf3a9-goog
+> > Setting the static RX/TX buffer allocation aside, why is a DT node needed
+> > at all for the case where Linux is running purely as an FF-A client? I
+> > thought everything should be discoverable via FFA_VERSION, FFA_FEATURES,
+> > FFA_PARTITION_INFO_GET and FFA_ID_GET? That should mean we can get away
+> > without a binding at all for the client case.
+> >
+> 
+> Agreed, I added for RxTx buffers and initially to build the parent/child
+> hierarchy for all users of the driver. Initially I was assuming only
+> in-kernel users and now I agree we should avoid any in kernel users if
+> possible.
+> 
+> One thing to note FFA_PARTITION_INFO_GET relies on Rx buffers to send the
+> information to the caller. So we need to have established buffers before
+> that and one of the reason you don't find that in this RFC. I dropped that
+> too which I wanted initially.
 
+Ok, sounds like we should at least get to a position where we can enumerate
+things, though.
+
+> > > Sorry for long email and too many questions, but I thought it is easier
+> > > this way to begin with than throwing huge code implementing loads of APIs
+> > > with no users(expect example partition) especially that I am posting this
+> > > during merge window.
+> >
+> > No problem. Maybe it would help if I described roughly what we were thinking
+> > of doing for KVM (this is open for discussion, of course):
+> >
+> >  1. Describe KVM-managed partitions in the DT, along the lines of [1]
+> >  2. Expose each partition as a file to userspace. E.g.:
+> >
+> >     /dev/spci/:
+> >
+> > 	self
+> > 	e3a48fa5-dc54-4a8b-898b-bdc4dfeeb7b8
+> > 	49f65057-d002-4ae2-b4ee-d31c7940a13d
+> >
+> >     Here, self would be a symlink to the host uuid. The host uuid file
+> >     would implement FFA_MEM operations using an ioctl(), so you could,
+> >     for example, share a user buffer with multiple partitions by issuing
+> >     a MEM_SHARE ioctl() on self, passing the fds for the borrower partitions
+> >     as arguments. Messaging would be implemented as ioctl()s on the
+> >     partition uuid files themselves.
+> >
+> 
+> OK, IIUC that covers mostly KVM implementation. We still need a way to
+> share the RxTx buffer info to the partitions and DT/ACPI(?) is one
+> possible way. Based on you comment about not needing DT node, do you have
+> any other way to communicate the buffer info to the partitions ?
+
+This is only a concern if KVM chooses to provide the Rx/Tx buffer pair
+though, right? If we punt that down the road for the moment, then we can
+just rely on FFA_RXTX_MAP for now.
+
+> > For communicating with partitions that are not managed by KVM (e.g. trusted
+> > applications), it's not clear to me how much of that will be handled in
+> > kernel or user. I think it would still be worth exposing the partitions as
+> > files, but perhaps having them root only or just returning -EPERM for the
+> > ioctl() if a kernel driver has claimed the partition as its own? Ideally,
+> > FF-A would allow us to transition some of the Trusted OS interfacing code
+> > out to userspace, but I don't know how realistic that is.
+> >
+> 
+> Ah good, so we can still manage in-kernel users this way but we need to
+> provide interface to such a driver which I agree that we need to avoid
+> if possible.
+> 
+> > Anyway, to enable this, I think we need a clear separation in the kernel
+> > between the FF-A code and the users:
+> Agreed.
+> 
+> > KVM will want to expose things as above, but if drivers need to use this
+> > stuff as well then they can plug in as additional users and we don't have to
+> > worry about tripping over the RX/TX buffers etc.
+> >
+> 
+> I am confused a bit. When you refer drivers above, are you referring to
+> drivers in host kernel(hypervisor) or in the partitions. I fail to
+> imagine need for the former.
+
+I'm referring to in-kernel users in the host kernel. For KVM-managed guests,
+we may not need these, although signalling things like system shutdown might
+be better off done without relying on userspace. But my point is really that
+separating the buffer management from the users means we can serialise
+consumers, whether they are in-kernel or out in userspace.
+
+> > What do you think, and do you reckon you can spin a cut-down driver that
+> > implements the common part of the logic (since I know you've written much
+> > of this code already)?
+> >
+> 
+> I am not sure if I am aligned with your thoughts on the buffer sharing
+> yet.
+
+Ok, please let me know if you have any more questions.
+
+Will
