@@ -2,169 +2,174 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C8DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B00BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D0E2206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:14:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="udMylkJs"
+	by mail.kernel.org (Postfix) with ESMTP id F2444206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:15:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730087AbgFJPOt (ORCPT
+        id S1730097AbgFJPPG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 11:14:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42500 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728095AbgFJPOt (ORCPT
+        Wed, 10 Jun 2020 11:15:06 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:36958 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728231AbgFJPPF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 11:14:49 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E01FC03E96B
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 08:14:49 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id s21so2354091oic.9
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 08:14:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oDtkEAKzZyv3dXNpsPsqMVmJ4Y+cSfCKakpKBa1zwUc=;
-        b=udMylkJsBkLSPX/fhP5jeC4vIZEIk7TjusiPwvDt4TqgrxhpxZ32ukAYcSJ5mMIM9/
-         gboTn/jhWul6F0UPWXzXg7jF4ZdDjjdwpiV7Sl8cLMvCDhOBOxJJGxdfWChSjWjNVmIh
-         vpKi/71gW267IO6ChJVTCWAdeNh3yRhOyFajVZn9Bcl5PFGWoWyEvfkJ6+oZQJGfuo2s
-         RumZM5ygadgjL17Q4SHDCYZLwcQ15xcngMgMDL5NNLosOL7bI+wqMcq161vNf+oWYHen
-         4LIlPYpPZ5BIuUp53K9CHX8rMpO7BHFKXoBYKpJutad2geY1d6L+GMb/Nfu0+SiUBmRr
-         F4Pw==
+        Wed, 10 Jun 2020 11:15:05 -0400
+Received: by mail-lf1-f68.google.com with SMTP id x22so1684626lfd.4;
+        Wed, 10 Jun 2020 08:15:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oDtkEAKzZyv3dXNpsPsqMVmJ4Y+cSfCKakpKBa1zwUc=;
-        b=c6kkTzBD8x9czCvL0YU+YMQw/kxDmrvO7xppto+E6Sclb+BmHKrBG+VQn3ePmGcIii
-         OooDHmGlnekpyYM2ZoeTM+Y8+N0xqV96My3qoFRGt00fHx5rB0Op/3JEzARrYOTqE13e
-         LyPhG1fMM28XCbpKZwY/kPyJPU2FHI+zOqn9yHV6LclqkYgfh2ue6bW8Rfa1N6wLGWe+
-         q4nRLPdZjrcO3GtrckWfJ6a1AqhANnlkqb0HRZagNWm9uct0EKkEqyatvNI2xsoBQSMr
-         tjUxCutimx/Enkbh5jAIkEVGevAUpy+BvhQvJ7AiDH2OEETb1GX7z3Sr9vT7Q3GdJgH1
-         gZiw==
-X-Gm-Message-State: AOAM530uZLdPV29SJm4boVPf9MjBXW10yjxnvRxk4RlHbGaaaICb64T/
-        w0qHvrL7pohRRpQe5ed/5GMsRZtaE/t1Cb6dzge0Lw==
-X-Google-Smtp-Source: ABdhPJz7VsuBtbPfx9RhfASCfcCtNEZDfA1tM4aFTMIKx3YAxZCxiJua2WBQytWigumUFZm42pnwJaUbj0Binjq2P/c=
-X-Received: by 2002:aca:1308:: with SMTP id e8mr2665439oii.119.1591802088505;
- Wed, 10 Jun 2020 08:14:48 -0700 (PDT)
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=eULLehFSRHz8x73A2t2FsqFcAztqdsXSNa1wbwBI/+s=;
+        b=BmM8NBPo22EsoBmKu32eEb87laeSoDLWnsXoD33xchXH6XpPNlsECKEOKidh+z25f9
+         TmxVVOBIsLzGIFNVEN66JPKPeHpLfcMYjoJqsLAzPDFUJBIjDgDINtdcKI9c/x34dQZL
+         RYGiBijcdCRxsGBdb39tRDwXtXEn0QAkX6kZUFZGmtbkl9g/zrWuRac+uvituNrBzL2i
+         d4IVnVAgqwQTE+5PaVQYwCOamBuRwtHbdyjVKS/yQRO+E7a8rBbG2ZIulWUZIsQJ7LFp
+         sI3pIKbYpHNSn2OLJUQa15nuonkfKokmiH9VDJlTPxZhq2QXlaYfFwFgr4IiawqoNGEO
+         6KtA==
+X-Gm-Message-State: AOAM532FwkBjwy7u5E5j7wxUmHS7QhoOzQHyI+F9PdJuuJhcyeAnB1Ui
+        9rcNVWEgmDfp14fDF04368s=
+X-Google-Smtp-Source: ABdhPJz1CK/VSXCRRUwg5UewHR1f/2+/iKm9TQze3wiiRu0Ww5STAIhHliP6V+mzw1ChxnzEVkSq7w==
+X-Received: by 2002:a19:f11c:: with SMTP id p28mr2063891lfh.0.1591802101935;
+        Wed, 10 Jun 2020 08:15:01 -0700 (PDT)
+Received: from [192.168.42.234] ([213.87.161.124])
+        by smtp.gmail.com with ESMTPSA id i8sm5923795lfo.62.2020.06.10.08.14.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Jun 2020 08:15:00 -0700 (PDT)
+Reply-To: alex.popov@linux.com
+Subject: Re: [PATCH 0/5] Improvements of the stackleak gcc plugin
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Emese Revfy <re.emese@gmail.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Sven Schnelle <svens@stackframe.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Collingbourne <pcc@google.com>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        Alexander Monakov <amonakov@ispras.ru>,
+        Mathias Krause <minipli@googlemail.com>,
+        PaX Team <pageexec@freemail.hu>,
+        Brad Spengler <spender@grsecurity.net>,
+        Laura Abbott <labbott@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        kernel-hardening@lists.openwall.com, linux-kbuild@vger.kernel.org,
+        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, gcc@gcc.gnu.org, notify@kernel.org
+References: <20200604134957.505389-1-alex.popov@linux.com>
+ <202006091210.C139883AB@keescook>
+From:   Alexander Popov <alex.popov@linux.com>
+Autocrypt: addr=alex.popov@linux.com; prefer-encrypt=mutual; keydata=
+ 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
+ j3lCqPk=
+Message-ID: <729988fe-5f92-645c-15a0-eda0f0afbbcb@linux.com>
+Date:   Wed, 10 Jun 2020 18:14:51 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200610083333.455-1-sumit.semwal@linaro.org> <CAK8P3a0PzmtWc1p-KgHzHhY+=gca0J8YsGD=ALGESWsgijQQ7w@mail.gmail.com>
-In-Reply-To: <CAK8P3a0PzmtWc1p-KgHzHhY+=gca0J8YsGD=ALGESWsgijQQ7w@mail.gmail.com>
-From:   Sumit Semwal <sumit.semwal@linaro.org>
-Date:   Wed, 10 Jun 2020 20:44:37 +0530
-Message-ID: <CAO_48GEqxOOOZupGLAa92HXcnbe6_3ZfLvaJsDnv9_XFTTFe6w@mail.gmail.com>
-Subject: Re: [PATCH] dma-buf: Move dma_buf_release() from fops to dentry_ops
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Chenbo Feng <fengc@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linaro MM SIG <linaro-mm-sig@lists.linaro.org>,
-        Charan Teja Reddy <charante@codeaurora.org>,
-        syzbot+3643a18836bce555bff6@syzkaller.appspotmail.com,
-        "# 3.4.x" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <202006091210.C139883AB@keescook>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 10 Jun 2020 at 14:57, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Wed, Jun 10, 2020 at 10:33 AM Sumit Semwal <sumit.semwal@linaro.org> wrote:
-> >
-> > Charan Teja reported a 'use-after-free' in dmabuffs_dname [1], which
-> > happens if the dma_buf_release() is called while the userspace is
-> > accessing the dma_buf pseudo fs's dmabuffs_dname() in another process,
-> > and dma_buf_release() releases the dmabuf object when the last reference
-> > to the struct file goes away.
-> >
-> > I discussed with Arnd Bergmann, and he suggested that rather than tying
-> > the dma_buf_release() to the file_operations' release(), we can tie it to
-> > the dentry_operations' d_release(), which will be called when the last ref
-> > to the dentry is removed.
-> >
-> > The path exercised by __fput() calls f_op->release() first, and then calls
-> > dput, which eventually calls d_op->d_release().
-> >
-> > In the 'normal' case, when no userspace access is happening via dma_buf
-> > pseudo fs, there should be exactly one fd, file, dentry and inode, so
-> > closing the fd will kill of everything right away.
-> >
-> > In the presented case, the dentry's d_release() will be called only when
-> > the dentry's last ref is released.
-> >
-> > Therefore, lets move dma_buf_release() from fops->release() to
-> > d_ops->d_release().
-> >
-> > Many thanks to Arnd for his FS insights :)
-> >
-> > [1]: https://lore.kernel.org/patchwork/patch/1238278/
-> >
-> > Fixes: bb2bb9030425 ("dma-buf: add DMA_BUF_SET_NAME ioctls")
-> > Reported-by: syzbot+3643a18836bce555bff6@syzkaller.appspotmail.com
-> > Cc: <stable@vger.kernel.org> [5.3+]
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Reported-by: Charan Teja Reddy <charante@codeaurora.org>
-> > Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
->
-> The patch looks correct to me.
->
-> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
->
-> Obviously this should still be verified against the original report if possible.
-Thanks, Arnd!
->
-> >  drivers/dma-buf/dma-buf.c | 13 +++++++------
-> >  1 file changed, 7 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-> > index 01ce125f8e8d..92ba4b6ef3e7 100644
-> > --- a/drivers/dma-buf/dma-buf.c
-> > +++ b/drivers/dma-buf/dma-buf.c
-> > @@ -54,8 +54,11 @@ static char *dmabuffs_dname(struct dentry *dentry, char *buffer, int buflen)
-> >                              dentry->d_name.name, ret > 0 ? name : "");
-> >  }
-> >
-> > +static void dma_buf_release(struct dentry *dentry);
-> > +
-> >  static const struct dentry_operations dma_buf_dentry_ops = {
-> >         .d_dname = dmabuffs_dname,
-> > +       .d_release = dma_buf_release,
-> >  };
->
-> I'd suggest rearranging the file to avoid the forward declaration, even
-> if it makes it a little harder to review the change, the resulting code
-> will remain organized more logically.
-Got it, will update it in v2.
->
-> >  static struct vfsmount *dma_buf_mnt;
-> > @@ -77,14 +80,14 @@ static struct file_system_type dma_buf_fs_type = {
-> >         .kill_sb = kill_anon_super,
-> >  };
-> >
-> > -static int dma_buf_release(struct inode *inode, struct file *file)
-> > +static void dma_buf_release(struct dentry *dentry)
-> >  {
-> >         struct dma_buf *dmabuf;
-> >
-> > -       if (!is_dma_buf_file(file))
-> > -               return -EINVAL;
-> > +       if (dentry->d_op != &dma_buf_dentry_ops)
-> > +               return;
->
-> I think the check here is redundant and it's clearer without it.
-Ok, will remove.
->
->           Arnd
+On 09.06.2020 22:15, Kees Cook wrote:
+> On Thu, Jun 04, 2020 at 04:49:52PM +0300, Alexander Popov wrote:
+>> In this patch series I collected various improvements of the stackleak
+>> gcc plugin.
+> 
+> Thanks!
+> 
+>> Alexander Popov (5):
+>>   gcc-plugins/stackleak: Exclude alloca() from the instrumentation logic
+>>   gcc-plugins/stackleak: Use asm instrumentation to avoid useless
+>>     register saving
+> 
+> These look like they might need tweaks (noted in their separate
+> replies).
 
-Best,
-Sumit.
+Thanks for the review, Kees.
+
+>>   gcc-plugins/stackleak: Add 'verbose' plugin parameter
+>>   gcc-plugins/stackleak: Don't instrument itself
+> 
+> If you wanted to reorder the series and move these first, I could take
+> these into my tree right away (they're logically separate from the other
+> fixes).
+
+Ok, I will put "don't instrument itself" at the beginning of v2.
+
+The patch adding 'verbose' plugin parameter depends on the previous patches, so
+I will not move it.
+
+>>   gcc-plugins/stackleak: Don't instrument vgettimeofday.c in arm64 VDSO
+> 
+> This seems good -- though I'm curious about 32-bit ARM and the other
+> HAVE_GCC_PLUGINS architectures with vDSOs (which appears to be all of
+> them except um).
+
+(going to reply in a separate email)
+
+Best regards,
+Alexander
+
