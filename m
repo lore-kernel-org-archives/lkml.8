@@ -2,90 +2,98 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C0B7C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA8BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 574F92083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:56:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591772166;
-	bh=5STvsVX/pI2NfrFCiamfYh+BDyGD5ZoTDgeDDX/5rC0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BXcFG0rG9UxQgtfjEBOH3gz/3/jVs+S6kj477Rz55UvvFXxmtM58txLDK3A8bmyAk
-	 /SS9sg3xGW4QM+pFp0hlREhGiKZxVPrhZNKoxz57f3ep5K0rUFO1v6V806fEW6K6ZE
-	 v2PbhdLBDm4Uf3YhNJSeF8PfL0F196bVlRKCevdY=
+	by mail.kernel.org (Postfix) with ESMTP id 980F320801
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:58:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RX4Ntyl+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726262AbgFJG4D (ORCPT
+        id S1726297AbgFJG6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 02:56:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50094 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726095AbgFJG4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 02:56:02 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA97720734;
-        Wed, 10 Jun 2020 06:56:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591772162;
-        bh=5STvsVX/pI2NfrFCiamfYh+BDyGD5ZoTDgeDDX/5rC0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=e0MwBkvVTHUTmDVaH2vs5miGgN/MlrVKlfR/M/NyC6z80FCNSovuYF3uG+UTFzncx
-         K0Jw9d2Q+Xdzc857h54ARg/fkhIfNgHko4RrdSNNo2BoMbGGOEBC/hqiAdlZEYOjoK
-         vbM66H6VJhracJhCR5+CRIKHf0mcX3BfwTGCSD+c=
-Date:   Tue, 9 Jun 2020 23:56:00 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     David Laight <David.Laight@aculab.com>
-Cc:     'Herbert Xu' <herbert@gondor.apana.org.au>,
-        Zhangfei Gao <zhangfei.gao@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        wangzhou1 <wangzhou1@hisilicon.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>
-Subject: Re: [PATCH] crypto: hisilicon - fix strncpy warning with strlcpy
-Message-ID: <20200610065600.GC6286@sol.localdomain>
-References: <202006032110.BEbKqovX%lkp@intel.com>
- <1591241524-6452-1-git-send-email-zhangfei.gao@linaro.org>
- <20200604033918.GA2286@gondor.apana.org.au>
- <b6ad8af2-1cb7-faac-0446-5e09e97f3616@linaro.org>
- <20200604061811.GA28759@gondor.apana.org.au>
- <b23433f8-d95d-8142-c830-fb92e5ccd4a1@linaro.org>
- <20200604065009.GA29822@gondor.apana.org.au>
- <f8dceec5-6835-c064-bb43-fd12668c2dbb@linaro.org>
- <20200605121703.GA3792@gondor.apana.org.au>
- <8c0d8f4e21794d8b80d0a3852830debb@AcuMS.aculab.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8c0d8f4e21794d8b80d0a3852830debb@AcuMS.aculab.com>
+        Wed, 10 Jun 2020 02:58:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50090 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726280AbgFJG6O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 02:58:14 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBFEEC03E96B;
+        Tue,  9 Jun 2020 23:58:13 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id 23so685337pfw.10;
+        Tue, 09 Jun 2020 23:58:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=r3H+L43taGseRC/CurkGgYqQKiqJEfVk1rlaC8npJIE=;
+        b=RX4Ntyl+nZEuVvGjjAr4FIViMs4J9FPW+jdx7fgnPo2qVWsBxBLuqfMeZIdTAvHlBn
+         pi6d7xlIRVXre+iRxUrEkwaWJUYmUvvsScijGMQgnrQPA5vcWpMZpb92h2cJGq96+QaU
+         hWr/he/D4o6n0dUZ2leMlPQZvXdrKDY5MN65RgCWZmsZnzLnLf9rXsSuq62mKCIRDjcf
+         Mo1zElwb6Xp4Wfve+PhS3akCU/YK/WGRKFgBZ0wFnajXaDNn8XyTLhKZ+PKDjgag2bDA
+         kNKflag5LdDTVpzDe869ZzlTRRibOqmTYMQFQ9tE6gbqpbYr61KA4Y3s1ZipXkdTRno1
+         E2JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=r3H+L43taGseRC/CurkGgYqQKiqJEfVk1rlaC8npJIE=;
+        b=MiM5k7dMg4IhELrUrvUkVoRqcd3NF3kYCcyPNj6lY34eW2sjX5Bd8alfvnkTR2D00B
+         UVoQ8lm9Abfst8ktMRa1ne1K8+lX0getjAJLZ4MY6PvV81L94/eiV4ILurXhNORSXcNY
+         bFwiWeAivkQLNhK3vnR4b4DpUeTZfhOBLeX87dEDynGtao41hLOZ50b5pcB4wRhbcaNd
+         a0lwIS1r146zF8HHY6FkUvQ/pfy1oKdh6m3euxRZwPkarTX+siiQKSyKqBbD7xwncx4T
+         Z6gtAAZLseoqd0PgcBk6DzPNI8lIClYnujxUNefpWEXDMIOnWr5hizGQFJG9ekGmE5GL
+         SV+g==
+X-Gm-Message-State: AOAM533rs6VdZfAWSE/FzI4rETV6M2VRMpVEDqXSjQmN/KVu2qtE/sjs
+        4aCIxptmv5dwlkz1agrS6DroILIf
+X-Google-Smtp-Source: ABdhPJxT2FVLyk+BQOCYdJDSGVCvd0yMzwzZ4tM7rdRRGEsWlzFtuY8Wt8VlMA1nw4LWZOB1IdARKw==
+X-Received: by 2002:a63:f00d:: with SMTP id k13mr1529198pgh.263.1591772292847;
+        Tue, 09 Jun 2020 23:58:12 -0700 (PDT)
+Received: from ZB-PF114XEA.360buyad.local ([103.90.76.242])
+        by smtp.gmail.com with ESMTPSA id z186sm11803481pfb.131.2020.06.09.23.58.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2020 23:58:11 -0700 (PDT)
+From:   Zhenzhong Duan <zhenzhong.duan@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org
+Cc:     tony.luck@intel.com, bp@alien8.de, mchehab@kernel.org,
+        james.morse@arm.com, rrichter@marvell.com,
+        Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Subject: [PATCH] EDAC, {skx,i10nm}: Advice mcelog that the error were handled
+Date:   Wed, 10 Jun 2020 14:58:01 +0800
+Message-Id: <20200610065801.3579-1-zhenzhong.duan@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 07, 2020 at 01:03:45PM +0000, David Laight wrote:
-> From: Herbert Xu
-> > Sent: 05 June 2020 13:17
-> ...
-> > Better yet use strscpy which will even return an error for you.
-> 
-> It really ought to return the buffer length on truncation.
-> Then you can loop:
-> 	while(...)
-> 		buf += strxxxcpy(buf, src, buf_end - buf);
-> and only check right at the end.
-> 
-> 	David
+If one MCE error has been processed in kernel, it's not necessory
+to pass it to user level mcelog.
 
-scnprintf() can be used for that.
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+---
+ drivers/edac/skx_common.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-But that doesn't seem relevant to this patch.
+diff --git a/drivers/edac/skx_common.c b/drivers/edac/skx_common.c
+index 46be1a7..8c0165b 100644
+--- a/drivers/edac/skx_common.c
++++ b/drivers/edac/skx_common.c
+@@ -615,7 +615,8 @@ int skx_mce_check_error(struct notifier_block *nb, unsigned long val,
+ 
+ 	skx_mce_output_error(mci, mce, &res);
+ 
+-	return NOTIFY_DONE;
++	/* Advice mcelog that the error were handled */
++	return NOTIFY_STOP;
+ }
+ 
+ void skx_remove(void)
+-- 
+1.8.3.1
 
-- Eric
