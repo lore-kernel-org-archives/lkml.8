@@ -2,223 +2,106 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A99FBC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 18:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A41C2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 18:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82FAB2070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 18:45:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D4132072E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 18:45:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Lcdd7tGC"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mOayfhFP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729256AbgFJSpB (ORCPT
+        id S1729290AbgFJSpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 14:45:01 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:33938 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726375AbgFJSpB (ORCPT
+        Wed, 10 Jun 2020 14:45:43 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:51410 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726668AbgFJSpm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 14:45:01 -0400
-Received: from [192.168.0.108] (user-0c9haon.cable.mindspring.com [24.152.171.23])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 9257F20B717B;
-        Wed, 10 Jun 2020 11:44:59 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9257F20B717B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1591814700;
-        bh=WKPcY/e3jl/zV0ltgVNQfGIUBw/oHdJO0Awy+2fvE8M=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Lcdd7tGCJhmgp7muaHv6uG0OO3w6K85kRjqrKqOUeVD3fVVilaVXYghYC6rGgCwAy
-         JihkItLdISoWKlD6CKXSDYOWate+QiVeh3rRBRex1f6MuXCvJO1xRktsyR8o5cOsbQ
-         DTniZ414CBBBVsppS99m6RMCIp4wYFxS6LM2VXbI=
-Subject: Re: [PATCH][RFC] kdump: append kernel build-id string to VMCOREINFO
-To:     Baoquan He <bhe@redhat.com>
-Cc:     Dave Young <dyoung@redhat.com>, clang-built-linux@googlegroups.com,
-        Tyler Hicks <tyhicks@linux.microsoft.com>,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Vivek Goyal <vgoyal@redhat.com>
-References: <1591315291-66957-1-git-send-email-vijayb@linux.microsoft.com>
- <20200610022027.GI20367@MiWiFi-R3L-srv>
-From:   Vijay Balakrishna <vijayb@linux.microsoft.com>
-Message-ID: <2a68e2ed-c937-8ef7-5eea-5fe825df3cc8@linux.microsoft.com>
-Date:   Wed, 10 Jun 2020 11:44:30 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 10 Jun 2020 14:45:42 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05AIgJmh014952;
+        Wed, 10 Jun 2020 18:45:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=1i2A2+9puBFKPLIMqJKi2z6v2w00qEnRXR6SgosD4Nk=;
+ b=mOayfhFPxbzJTIR5PVPB66eBwURPEVcdoyhgp96sIR9ddE3+gfG68MS9jmhd+HaDEoz5
+ nmtpJ9c8LSWzvC6P3Gko0Oex4F21F/rcBmBN9lkJlUFkMAAh4LF6Ey4fOrHDhQNikHzY
+ BBcEyPUJyWzAhrGsHxE5fF8qLJJXDXaU0H66QoHFcHBuAFlM6RscYP6qYrqvBYkPljRC
+ LNd2PcOpRsSBfoYZzKZl1MyO5CvSYSxMH5uJ+EDItIAN0oFZPQ4hZifvFK2Ony6BrPu2
+ tBHhLXNzA+5aDjAZ52sPS/IC6dkScbJhqQ4A5BBqQdSn4IvS9d9wvfYoaslKXRfiXZvp 6g== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 31g2jrc1np-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 10 Jun 2020 18:45:29 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05AIcQoU031618;
+        Wed, 10 Jun 2020 18:45:28 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 31gn29rb2j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 10 Jun 2020 18:45:28 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05AIjRHg009707;
+        Wed, 10 Jun 2020 18:45:27 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 10 Jun 2020 11:45:26 -0700
+Date:   Wed, 10 Jun 2020 21:45:17 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-fsdevel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Tetsuhiro Kohada <kohada.t2@gmail.com>,
+        Wei Yongjun <weiyongjun1@huawei.com>
+Subject: Re: [PATCH v2] exfat: add missing brelse() calls on error paths
+Message-ID: <20200610184517.GC4282@kadam>
+References: <20200610172213.GA90634@mwanda>
+ <740ce77a-5404-102b-832f-870cbec82d56@web.de>
 MIME-Version: 1.0
-In-Reply-To: <20200610022027.GI20367@MiWiFi-R3L-srv>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <740ce77a-5404-102b-832f-870cbec82d56@web.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9648 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0 mlxscore=0
+ phishscore=0 adultscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006100140
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9648 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
+ cotscore=-2147483648 priorityscore=1501 spamscore=0 suspectscore=0
+ lowpriorityscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0 mlxscore=0
+ phishscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006100140
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Baoquan.  See inline.
+On Wed, Jun 10, 2020 at 08:12:46PM +0200, Markus Elfring wrote:
+> > If the second exfat_get_dentry() call fails then we need to release
+> > "old_bh" before returning.  There is a similar bug in exfat_move_file().
+> 
+> Would you like to convert any information from this change description
+> into an imperative wording?
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=5b14671be58d0084e7e2d1cc9c2c36a94467f6e0#n151
 
-On 6/9/2020 7:20 PM, Baoquan He wrote:
-> On 06/04/20 at 05:01pm, Vijay Balakrishna wrote:
->> Make kernel GNU build-id available in VMCOREINFO.  Having
->> build-id in VMCOREINFO facilitates presenting appropriate kernel
->> namelist image with debug information file to kernel crash dump
->> analysis tools.  Currently VMCOREINFO lacks uniquely identifiable
->> key for crash analysis automation.
-> 
-> Looks like a good idea. I have several concerns, please check below inline
-> comments.
-> 
->>
->> Signed-off-by: Vijay Balakrishna <vijayb@linux.microsoft.com>
->> ---
->> Regarding if this patch is necessary or matching of linux_banner
->> and OSRELEASE in VMCOREINFO employed by crash(8) meets the
->> need -- IMO, build-id approach more foolproof, in most instances it
->> is a cryptographic hash generated using internal code/ELF bits unlike
->> kernel version string upon which linux_banner is based that is
->> external to the code.  I feel each is intended for a different purpose.
->> Also OSRELEASE is not suitable when two different kernel builds
->> from same version with different features enabled.
->>
->> Currently for most linux (and non-linux) systems build-id can be
->> extracted using standard methods for file types such as user mode crash
->> dumps, shared libraries, loadable kernel modules etc.  This is an
->> exception for linux kernel dump.  Having build-id in VMCOREINFO brings
->> some uniformity for automation tools.
-> 
-> These two paragraphs can be added to log too?
-Sure, I will move it too commit log in my next version.
+I really feel like imperative doesn't add anything.  I understand that
+some people feel really strongly about it, but I don't know why.  It
+doesn't make commit messages more understandable.
 
-> 
->>
->>   include/linux/crash_core.h |  6 +++++
->>   kernel/crash_core.c        | 50 ++++++++++++++++++++++++++++++++++++++
->>   2 files changed, 56 insertions(+)
->>
->> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
->> index 525510a9f965..6594dbc34a37 100644
->> --- a/include/linux/crash_core.h
->> +++ b/include/linux/crash_core.h
->> @@ -38,6 +38,8 @@ phys_addr_t paddr_vmcoreinfo_note(void);
->>   
->>   #define VMCOREINFO_OSRELEASE(value) \
->>   	vmcoreinfo_append_str("OSRELEASE=%s\n", value)
->> +#define VMCOREINFO_BUILD_ID(value) \
->> +	vmcoreinfo_append_str("BUILD-ID=%s\n", value)
->>   #define VMCOREINFO_PAGESIZE(value) \
->>   	vmcoreinfo_append_str("PAGESIZE=%ld\n", value)
->>   #define VMCOREINFO_SYMBOL(name) \
->> @@ -64,6 +66,10 @@ extern unsigned char *vmcoreinfo_data;
->>   extern size_t vmcoreinfo_size;
->>   extern u32 *vmcoreinfo_note;
->>   
->> +/* raw contents of kernel .notes section */
->> +extern const void __start_notes __weak;
->> +extern const void __stop_notes __weak;
->> +
->>   Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
->>   			  void *data, size_t data_len);
->>   void final_note(Elf_Word *buf);
->> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
->> index 9f1557b98468..c094db478803 100644
->> --- a/kernel/crash_core.c
->> +++ b/kernel/crash_core.c
->> @@ -11,6 +11,8 @@
->>   #include <asm/page.h>
->>   #include <asm/sections.h>
->>   
->> +#include <crypto/sha.h>
->> +
->>   /* vmcoreinfo stuff */
->>   unsigned char *vmcoreinfo_data;
->>   size_t vmcoreinfo_size;
->> @@ -376,6 +378,53 @@ phys_addr_t __weak paddr_vmcoreinfo_note(void)
->>   }
->>   EXPORT_SYMBOL(paddr_vmcoreinfo_note);
->>   
->> +#define NOTES_SIZE (&__stop_notes - &__start_notes)
->> +#define BUILD_ID_MAX SHA1_DIGEST_SIZE
->> +#define NT_GNU_BUILD_ID 3
->> +
->> +struct elf_note_section {
->> +	struct elf_note	n_hdr;
->> +	u8 n_data[];
->> +};
->> +
->> +/*
->> + * Add build ID from .notes section as generated by the GNU ld(1)
->> + * or LLVM lld(1) --build-id option.
->> + */
->> +static void add_build_id_vmcoreinfo(void)
->> +{
->> +	char build_id[BUILD_ID_MAX * 2 + 1];
-> 
-> Here, could you tell why we need two times the build id length?
+The important thing is that the problem is clear, the fix is clear and
+the runtime impact is clear.
 
-GNU build-id is binary data, it is converted to hex (string) 
-representation here.
+regards,
+dan carpenter
 
-> 
->> +	int n_remain = NOTES_SIZE;
->> +
->> +	while (n_remain >= sizeof(struct elf_note)) {
->> +		const struct elf_note_section *g_build_id =
-> 
-> Here naming of 'g_build_id' looks a little weird. We usually define
-> global variable with 'g_xxxx'. Maybe we can change it to 'note_sec' or
-> something else, because not all iterated elf_note_section is build_id
-> related.
-
-I will rename it in next version.
-
-Vijay
-> 
->> +			&__start_notes + NOTES_SIZE - n_remain;
->> +		const u32 n_namesz = g_build_id->n_hdr.n_namesz;
->> +
->> +		if (g_build_id->n_hdr.n_type == NT_GNU_BUILD_ID &&
->> +		    n_namesz != 0 &&
->> +		    !strcmp((char *)&g_build_id->n_data[0], "GNU")) {
->> +			if (g_build_id->n_hdr.n_descsz <= BUILD_ID_MAX) {
->> +				const u32 n_descsz = g_build_id->n_hdr.n_descsz;
->> +				const u8 *s = &g_build_id->n_data[n_namesz];
->> +
->> +				s = PTR_ALIGN(s, 4);
->> +				bin2hex(build_id, s, n_descsz);
->> +				build_id[2 * n_descsz] = '\0';
->> +				VMCOREINFO_BUILD_ID(build_id);
->> +				return;
->> +			}
->> +			pr_warn("Build ID is too large to include in vmcoreinfo: %lu > %lu\n",
->> +				g_build_id->n_hdr.n_descsz,
->> +				BUILD_ID_MAX);
->> +			return;
->> +		}
->> +		n_remain -= sizeof(struct elf_note) +
->> +			ALIGN(g_build_id->n_hdr.n_namesz, 4) +
->> +			ALIGN(g_build_id->n_hdr.n_descsz, 4);
->> +	}
->> +}
->> +
->>   static int __init crash_save_vmcoreinfo_init(void)
->>   {
->>   	vmcoreinfo_data = (unsigned char *)get_zeroed_page(GFP_KERNEL);
->> @@ -394,6 +443,7 @@ static int __init crash_save_vmcoreinfo_init(void)
->>   	}
->>   
->>   	VMCOREINFO_OSRELEASE(init_uts_ns.name.release);
->> +	add_build_id_vmcoreinfo();
->>   	VMCOREINFO_PAGESIZE(PAGE_SIZE);
->>   
->>   	VMCOREINFO_SYMBOL(init_uts_ns);
->> -- 
->> 2.26.2
->>
->>
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
->>
