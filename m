@@ -2,113 +2,111 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E8FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E86F3C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75DC8206F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:45:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5EE520734
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:46:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="O0cT0OuP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oWrZ6e9T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726046AbgFJBpR (ORCPT
+        id S1726098AbgFJBqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 21:45:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58498 "EHLO
+        Tue, 9 Jun 2020 21:46:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbgFJBpQ (ORCPT
+        with ESMTP id S1725944AbgFJBqd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 21:45:16 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CE9AC05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 18:45:16 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id w3so616657qkb.6
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 18:45:16 -0700 (PDT)
+        Tue, 9 Jun 2020 21:46:33 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A62E4C05BD1E;
+        Tue,  9 Jun 2020 18:46:32 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id dp10so330367qvb.10;
+        Tue, 09 Jun 2020 18:46:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SyG3PDT/1k7qwtsgQqq5FDrFZ5PwQThhefYVb1X2LUg=;
-        b=O0cT0OuPOQIon8tdE+8vsepQXDEPeFw84UM/G5iXWznws6X1+5ppCbJhjI7m/Ib4l+
-         neph/zHqc75eNZUcpcxLi+6jJeWzWlduBs6KWVN6WEC7zHHMNYK+sWiag2SqDa70lub1
-         8lRncKp7maiGoo4VoSr6W6HaTz4eOapitwKtP+F1xwL/OQIRUwNHAsfYzn0h6YICSKz2
-         SskErKyPjkKrz3RJV8yJeIFWXdqT88GKSLr2BIx3P/JqvYD0r8ezI4ZkDiXcpdlrMpAp
-         G606p/0Nyvc8Y6z1hlQH7aKJeV3flxzOzu/gS5xs7gpuiCsvMW2yYDEkoeHHnzVJErS9
-         5rhw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=zjEvUKOGeP0/F79VG1tPkbwEfkdJVyvg8ywjx9GcPQU=;
+        b=oWrZ6e9TU/rbxhNWPbfMhXLTZg4xruWGGcVXQ9mktslLgYxx48qz2u8cxBC7tYpZEI
+         LjwR5+JS+p7Ozd4E7Z8TmuyFDeUKg8BmeYxwQ5Xujc3rQdN/bVAoOQMS8yneUlItWdbq
+         RTOmEb+XnvIzVsivjlo9ToRTaJXrUR1s0C70dq0ZD/PxyJR60nsZERnoH5fAsiFRdY/J
+         tDPAvye0ZiFEvAUtVPWey5Uxadlp6FE2/Gahxn7PVIeHFPMzL2SwgEPf+D6LvrhVget/
+         QrcVlKQ948U1HHCDQrCBksA5G6F1NMZ+jghXW4+52PCudnWeiEizDuM+7HAsi+IICcil
+         blTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SyG3PDT/1k7qwtsgQqq5FDrFZ5PwQThhefYVb1X2LUg=;
-        b=n86NtILnQdUMW01U10yXn6Zc/HIU2i1wEwSN4OahT2pWXLIlpvuaE1SD3NgojltkDx
-         D4Xa69K0MjkBKkQi1sRSEPDoP4zziD7uF2rtEDcRywQ/yS5ppufBbvRSkHVqWkSt8nNF
-         7c7seFCtCfvoPbxEG1ybTc+o8/hID+fcc06XPd1qYN5zzoI2yvhS1OLVY8vHg9lwZDja
-         G80ZpseOuf3kljlgdwh2ITQhXk5AKXw4m/lrVhtnkGXKa/LSiRfXdbZKP1dkxA8jHocp
-         qbbFgcnqSLgeEH+ALgeDIrmxY1NNeTiculEHi+YrTD6YUkmwqI0gFTOaSKc2GH/aeyQw
-         a1fw==
-X-Gm-Message-State: AOAM533us/N4d++DHyxX02xr7vhgaeTOh3J1K0Io6uPCWlmZ1+3ljnAA
-        U/aQjgJ1QgCMYswq8UzuRfk1kA==
-X-Google-Smtp-Source: ABdhPJwmZ8+aSeZTUD4JHv3p3mVlsPu+AZd2ArmXbgxF2cry2dw1lWhW/nN0xlaPURjvFEdS8HQS3g==
-X-Received: by 2002:a37:9bd7:: with SMTP id d206mr882395qke.113.1591753515098;
-        Tue, 09 Jun 2020 18:45:15 -0700 (PDT)
-Received: from ovpn-113-201.phx2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id d14sm11601210qtr.17.2020.06.09.18.45.14
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Jun 2020 18:45:14 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH] s390: set NODES_SHIFT=0 when NUMA=n
-Date:   Tue,  9 Jun 2020 21:45:01 -0400
-Message-Id: <20200610014501.4268-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zjEvUKOGeP0/F79VG1tPkbwEfkdJVyvg8ywjx9GcPQU=;
+        b=AO+saLyPHjyWWHnWyx1lIgNxX8YTwBDX7K8WgXqecH2Vdfpnvy/FVsPf/dKjRiwRFk
+         uHXA8iXwwhFKmX1xjTlBFo7XP1jRpI1uTUXRyQT/7zKYAFeK1dBxBP6W4CdjGFC7jQnJ
+         hhnuNTFmhWppzB+VQKeYoFVmWIvh8L9JQyUIOk9LiicOvqF7+dD9RzD91iILPIL9ZYnX
+         6sj9ndXTeVrGkFEspLygBbM5AtvNvEsXT0gnKVw1/N+L3+SBja+EA2J2lHn4c6UxeeNh
+         5cbUoZk2Mpm/skkzi+04mia6PgNiESCfH8sQ0DdrMmkugFVM8fWQhnmS2lA8aaQHWVIP
+         e5uA==
+X-Gm-Message-State: AOAM531VkEB5xvntNIb0ljlLfETgSUioiEX9ZE93GbQ4k7n1/AW/trYF
+        hy1gt9kzVtiDyln4MaOF2dKdARA=
+X-Google-Smtp-Source: ABdhPJxQK5SqvejKrGmt9+oKevPj0d2I8q7utJ10aM3gzSAilCgpJsFS1MwbI2P61HEUKMFoX6J21g==
+X-Received: by 2002:ad4:42a6:: with SMTP id e6mr1002783qvr.170.1591753591894;
+        Tue, 09 Jun 2020 18:46:31 -0700 (PDT)
+Received: from moria.home.lan ([2601:19b:c500:a1:7285:c2ff:fed5:c918])
+        by smtp.gmail.com with ESMTPSA id g28sm11233434qts.88.2020.06.09.18.46.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2020 18:46:31 -0700 (PDT)
+Date:   Tue, 9 Jun 2020 21:46:29 -0400
+From:   Kent Overstreet <kent.overstreet@gmail.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        viro@zeniv.linux.org.uk, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 2/2] fs: generic_file_buffered_read() now uses
+ find_get_pages_contig
+Message-ID: <20200610014629.GB4070152@moria.home.lan>
+References: <20200610001036.3904844-1-kent.overstreet@gmail.com>
+ <20200610001036.3904844-3-kent.overstreet@gmail.com>
+ <20200610013808.GF19604@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200610013808.GF19604@bombadil.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When NUMA=n and nr_node_ids=2, in apply_wqattrs_prepare(), it has,
+On Tue, Jun 09, 2020 at 06:38:08PM -0700, Matthew Wilcox wrote:
+> On Tue, Jun 09, 2020 at 08:10:36PM -0400, Kent Overstreet wrote:
+> > Convert generic_file_buffered_read() to get pages to read from in
+> > batches, and then copy data to userspace from many pages at once - in
+> > particular, we now don't touch any cachelines that might be contended
+> > while we're in the loop to copy data to userspace.
+> > 
+> > This is is a performance improvement on workloads that do buffered reads
+> > with large blocksizes, and a very large performance improvement if that
+> > file is also being accessed concurrently by different threads.
+> 
+> Hey, you're stealing my performance improvements!
 
-for_each_node(node) {
-	if (wq_calc_node_cpumask(...
+:)
 
-where it will trigger a booting warning,
+> Granted, I haven't got to doing performance optimisations (certainly
+> not in this function), but this is one of the places where THP in the
+> page cache will have a useful performance improvement.
+> 
+> I'm not opposed to putting this in, but I may back it out as part of
+> the THP work because the THPs will get the same performance improvements
+> that you're seeing here with less code.
 
-WARNING: workqueue cpumask: online intersect > possible intersect
+I'm an _enthusiastic_ supporter of the THP stuff (as you know), but my feeling
+is that it's going to be a long time before hugepages are everywhere - and I
+think even with the pagevec stuff generic_file_buffered_read() is somewhat
+easier to read and deal with after this series than before it.
 
-because it found 2 nodes and wq_numa_possible_cpumask[1] is an empty
-cpumask. NUMA=y has no such problem because node_possible_map will be
-initialized properly containing only node 0. Fix it by setting
-NODES_SHIFT=0 when NUMA=n.
-
-Fixes: 701dc81e7412 ("s390/mm: remove fake numa support")
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- arch/s390/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-index f854faff38c3..59625356d18a 100644
---- a/arch/s390/Kconfig
-+++ b/arch/s390/Kconfig
-@@ -462,7 +462,8 @@ config NUMA
- 
- config NODES_SHIFT
- 	int
--	default "1"
-+	default "1" if NUMA
-+	default "0"
- 
- config SCHED_SMT
- 	def_bool n
--- 
-2.21.0 (Apple Git-122.2)
-
+Though I could see the pagevec stuff making hugepage support a pain, so there is
+that. Eh.
