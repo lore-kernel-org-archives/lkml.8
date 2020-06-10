@@ -2,86 +2,72 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC2EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 555C1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:21:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44990206F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:20:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591820424;
-	bh=zUv+l6eCuUka+t0W+/cq8TDwEtZ/VpuvX+Ir/0vilz0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=u3c6uP4OzNiSp8V+EI/rA3v4cnD0hOCgZXrDy+sazMHO1rwzWQCHfHmNSvdQt6l1N
-	 Wy2dnxfYKvBhaeHmEL8I7Az3glH2oxWY04IZlYlEjMUJTtaiKZdnP5I4c0cIt9M0jj
-	 /nyRMrmOUybazcze+MkJejO02LqM1qOKGYqtRtHA=
+	by mail.kernel.org (Postfix) with ESMTP id 349F420760
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:21:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbgFJUUW (ORCPT
+        id S1727002AbgFJUVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 16:20:22 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34268 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbgFJUUV (ORCPT
+        Wed, 10 Jun 2020 16:21:34 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:33832 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726828AbgFJUVe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 16:20:21 -0400
-Received: by mail-io1-f67.google.com with SMTP id m81so3832893ioa.1;
-        Wed, 10 Jun 2020 13:20:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=tl8LETKmS+P6kESj029xJGHxTqRp5D9lmw9Z1M3J9vU=;
-        b=DrfUH3zYO2X4WaBnNtd7+2SGFw03niiSjySGOfb6RQJWswHhjRy6lEdiqAMnXOkIQ/
-         /a+nks3Trd7K1fiXkIZp8xtRvVnbmaNgXq2eRrDOS6BaBN/U12kRHWJIIumNCjFtg1x0
-         o/MnXw0xK59Nc73xoeI7bxzpsEU752Jg9GLVJXdMT8ZbcAEfRwoznG4k1N/VeGEWJFmn
-         EtbnzmTBgcNK1N4YOZaymW7u2C4pU5BZXJteMawGs3TmoMTnHBT3XmcPcWQImRDpoemP
-         gf2kIPwIRPtpjH96us9xyDwYgSoJC8Bc96POmQunWLqtxQ5/ADXoMXXNF2JBnp80iJLE
-         arDg==
-X-Gm-Message-State: AOAM533KEtyNOLMCxR+1wxlUteoNPobLe+CSA/KEjW1V6/9SE6F/sPvP
-        UEx2J4pr4WRRQ5Loyd0p9Q==
-X-Google-Smtp-Source: ABdhPJwf363QrAeSH44mRLwoy+rufj4TKAIbsyKss64pemnd+VDJVxMcmbKNnoWonDT8GTc5XdYa1w==
-X-Received: by 2002:a05:6638:35d:: with SMTP id x29mr4726694jap.71.1591820420247;
-        Wed, 10 Jun 2020 13:20:20 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id k126sm423901iof.50.2020.06.10.13.20.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 13:20:19 -0700 (PDT)
-Received: (nullmailer pid 3646187 invoked by uid 1000);
-        Wed, 10 Jun 2020 20:20:18 -0000
-Date:   Wed, 10 Jun 2020 14:20:18 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     ckeepax@opensource.cirrus.com, patches@opensource.cirrus.com,
-        perex@perex.cz, alsa-devel@alsa-project.org, info@metux.net,
-        broonie@kernel.org, tiwai@suse.com, allison@lohutok.net,
-        tglx@linutronix.de, lgirdwood@gmail.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] ASoC: bindings: wm8960: Add property for headphone
- detection
-Message-ID: <20200610202018.GA3646134@bogus>
-References: <1591180013-12416-1-git-send-email-shengjiu.wang@nxp.com>
+        Wed, 10 Jun 2020 16:21:34 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jj7E3-0000Ye-35; Wed, 10 Jun 2020 14:21:31 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jj7E2-00080u-Ef; Wed, 10 Jun 2020 14:21:30 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Alexey Gladkov <gladkov.alexey@gmail.com>
+Cc:     syzbot <syzbot+4abac52934a48af5ff19@syzkaller.appspotmail.com>,
+        adobriyan@gmail.com, keescook@chromium.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+References: <20200610130422.1197386-1-gladkov.alexey@gmail.com>
+        <20200610183549.1234214-1-gladkov.alexey@gmail.com>
+Date:   Wed, 10 Jun 2020 15:17:22 -0500
+In-Reply-To: <20200610183549.1234214-1-gladkov.alexey@gmail.com> (Alexey
+        Gladkov's message of "Wed, 10 Jun 2020 20:35:49 +0200")
+Message-ID: <87eeqmzne5.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1591180013-12416-1-git-send-email-shengjiu.wang@nxp.com>
+Content-Type: text/plain
+X-XM-SPF: eid=1jj7E2-00080u-Ef;;;mid=<87eeqmzne5.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18c/i2m4LzZvVR3NXfr4aSXpqcWLF2oyW0=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v2] proc: s_fs_info may be NULL when proc_kill_sb is called
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 03 Jun 2020 18:26:52 +0800, Shengjiu Wang wrote:
-> Add two properties for headphone detection.
-> 
-> wlf,hp-cfg: A list of headphone jack detect configuration register values
-> wlf,gpio-cfg: A list of GPIO configuration register values
-> 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> ---
->  Documentation/devicetree/bindings/sound/wm8960.txt | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
+Alexey Gladkov <gladkov.alexey@gmail.com> writes:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> syzbot found that proc_fill_super() fails before filling up sb->s_fs_info,
+> deactivate_locked_super() will be called and sb->s_fs_info will be NULL.
+> The proc_kill_sb() does not expect fs_info to be NULL which is wrong.
+>
+> Link: https://lore.kernel.org/lkml/0000000000002d7ca605a7b8b1c5@google.com
+> Reported-by: syzbot+4abac52934a48af5ff19@syzkaller.appspotmail.com
+> Fixes: fa10fed30f25 ("proc: allow to mount many instances of proc in one pid namespace")
+> Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
+
+applied
+
+Eric
