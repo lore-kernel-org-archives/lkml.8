@@ -2,124 +2,108 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA237C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E13C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9697B20801
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:05:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E7E92081A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:05:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IOF8V/dI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ATgZSLoL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbgFJGE7 (ORCPT
+        id S1726299AbgFJGFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 02:04:59 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:6065 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726078AbgFJGCp (ORCPT
+        Wed, 10 Jun 2020 02:05:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42052 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726072AbgFJGFx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 02:02:45 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ee077570001>; Tue, 09 Jun 2020 23:01:59 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 09 Jun 2020 23:02:44 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 09 Jun 2020 23:02:44 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Jun
- 2020 06:02:44 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 10 Jun 2020 06:02:44 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.167.70]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ee077830002>; Tue, 09 Jun 2020 23:02:44 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
-        <helen.koike@collabora.com>
-CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
-        <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
-Subject: [RFC PATCH v1 01/18] dt-bindings: i2c: tegra: Document Tegra210 VI I2C clocks and power-domains
-Date:   Tue, 9 Jun 2020 23:02:23 -0700
-Message-ID: <1591768960-31648-2-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591768960-31648-1-git-send-email-skomatineni@nvidia.com>
-References: <1591768960-31648-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
-MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1591768919; bh=IcdTxk/KfmzbsMYHUsUoDHLf4X+jjxTur+UzaaoB62c=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=IOF8V/dIjURU1Y7kRPqnexdrMWesOJc4m59hFwXd3q8zhRnTp+sL2rdz6P9sgZw/l
-         v+qTOjHC9QRIk8ps8adfTZjvTnxUmZk1uQn+L7px3EAVb4yxuzX5D20An9CCJOdHaO
-         vlVu/vU5NcE9J3drInaF7g59ABhLMa0DNf7m3ptGs57bKmQ1A8VqwPw34vxIzrFFxl
-         kMFOEQzpk02tlsjZ3sDUcw7Q9hfozFM0RX2ZdNxesQd132ZUwnAJi/XdHkYn7fRt1T
-         0edxixeGJzbHFT98J8P2Kq3UZOhveRPvSseJBTMLFfE8WjoqBOHOkxGrSf4i5on7sG
-         m3UhI6UiZIjMg==
+        Wed, 10 Jun 2020 02:05:53 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68A9BC05BD1E;
+        Tue,  9 Jun 2020 23:05:53 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id l11so828024wru.0;
+        Tue, 09 Jun 2020 23:05:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=HKDG3+U+6weAVeJljyO+nIelAx9xC2VwujNBg2RLPlU=;
+        b=ATgZSLoLFPAgEtwbfg8ZJ/9L3MJqy4n0SOgp6B36kS28loZNkMu7LmmXT2ITJaU1oh
+         Zg5WoZSzEF59bfDUioPWgBxkHNSEyXLB8XtX0gt8nFGoW1lW1rBjF2hoQNXCoVIVY9rQ
+         7y7E1JnSAZzRHGq4hql5w6L5dZNz2UXh6RbGATHhqnJqf0PpPjOiepu9sfbpmqILzpAQ
+         H6cgut83ghJCjSTHzLIbjlRQYKvQosFMt2cgCoLApBE/i5Stg4UbcJL8qYnq9KVBckx8
+         Wrhc5ccB9tk39jpJ23xK7mAouzoVoAiriuUC7qfIHpAPNcfXN5irzyPsozvCdT0voVVd
+         gINw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=HKDG3+U+6weAVeJljyO+nIelAx9xC2VwujNBg2RLPlU=;
+        b=ojtpo4edbL0KiHPD5yzcDVlU7OAIBM/LBmeV6zqSACEOJVPUqC7j1yDWSyEa/il2LO
+         FkGmpVQuQZRumqWXinPSDGgA7+p2kxLhrS1yXa0N1A/ALu/GU1rXsMc9tVxEaL5IAR2m
+         lo2s2PZfzFY5MDdgcvCxCevf5alorKXEnCiGDCmBvWJiiRCLNPKG90jrKgz4MrZ6/mWO
+         f2XGchDwKD96vDCYYI0GrowXGyR3EbAMOslCVjaYD4LpHELC1F0aT88mNY6q+4lj8l2m
+         +uZJwjW7lJGY6Qo2bBGEZCsAYaW7azlxxSLkI+Mep0reHdgt1JEoRdgmL5vFN0w11B4k
+         GjUQ==
+X-Gm-Message-State: AOAM5339lDaI+vj4+SyVBpV4E06nP4P+LsSw6VfFuaLmjb9wTFGFMkeF
+        ckNe53n0ptd13G0nx2qfIls=
+X-Google-Smtp-Source: ABdhPJzbenTYIclXlIlMhhjjt5TCEoJgEzUtwreeLfdI5U1aCljKdkaCwip/7tX2P79Tnz5pbTjZsQ==
+X-Received: by 2002:adf:a507:: with SMTP id i7mr1840286wrb.0.1591769151744;
+        Tue, 09 Jun 2020 23:05:51 -0700 (PDT)
+Received: from macbook-pro-alvaro.lan (28.red-83-49-61.dynamicip.rima-tde.net. [83.49.61.28])
+        by smtp.gmail.com with ESMTPSA id 50sm6758395wra.1.2020.06.09.23.05.50
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Jun 2020 23:05:51 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH v2 4/7] mips: bmips: dts: add BCM6328 reset controller
+ support
+From:   =?utf-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
+In-Reply-To: <47a8def4-a32a-04d3-e4ab-bb358f1455f5@gmail.com>
+Date:   Wed, 10 Jun 2020 08:05:50 +0200
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>, robh+dt@kernel.org,
+        tsbogend@alpha.franken.de, jonas.gorski@gmail.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <63C687B9-AF45-45EB-9D21-61BD0CD4ACE8@gmail.com>
+References: <20200609134232.4084718-1-noltari@gmail.com>
+ <20200609160244.4139366-1-noltari@gmail.com>
+ <20200609160244.4139366-5-noltari@gmail.com>
+ <47a8def4-a32a-04d3-e4ab-bb358f1455f5@gmail.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch documents missing clocks and power-domains of Tegra210 VI I2C.
+Hi Florian,
 
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- .../devicetree/bindings/i2c/nvidia,tegra20-i2c.txt    | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+> El 10 jun 2020, a las 3:08, Florian Fainelli <f.fainelli@gmail.com> =
+escribi=C3=B3:
+>=20
+>=20
+>=20
+> On 6/9/2020 9:02 AM, =C3=81lvaro Fern=C3=A1ndez Rojas wrote:
+>> BCM6328 SoCs have a reset controller for certain components.
+>>=20
+>> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
+>=20
+> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+>=20
+> You should probably create include files under include/dt-bindings/
+> which designate the various reset control bits that are valid for a
+> given SoC.
 
-diff --git a/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.txt b/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.txt
-index 18c0de3..3f2f990 100644
---- a/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.txt
-+++ b/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.txt
-@@ -35,12 +35,12 @@ Required properties:
- 	Due to above changes, Tegra114 I2C driver makes incompatible with
- 	previous hardware driver. Hence, tegra114 I2C controller is compatible
- 	with "nvidia,tegra114-i2c".
--  nvidia,tegra210-i2c-vi: Tegra210 has one I2C controller that is part of the
--	host1x domain and typically used for camera use-cases. This VI I2C
--	controller is mostly compatible with the programming model of the
--	regular I2C controllers with a few exceptions. The I2C registers start
--	at an offset of 0xc00 (instead of 0), registers are 16 bytes apart
--	(rather than 4) and the controller does not support slave mode.
-+  nvidia,tegra210-i2c-vi: Tegra210 has one I2C controller that is on host1x bus
-+	and is part of VE power domain and typically used for camera use-cases.
-+	This VI I2C controller is mostly compatible with the programming model
-+	of the regular I2C controllers with a few exceptions. The I2C registers
-+	start at an offset of 0xc00 (instead of 0), registers are 16 bytes
-+	apart (rather than 4) and the controller does not support slave mode.
- - reg: Should contain I2C controller registers physical address and length.
- - interrupts: Should contain I2C controller interrupts.
- - address-cells: Address cells for I2C device address.
-@@ -53,10 +53,17 @@ Required properties:
-   - fast-clk
-   Tegra114:
-   - div-clk
-+  Tegra210:
-+  - div-clk
-+  - slow (only for nvidia,tegra210-i2c-vi compatible node)
- - resets: Must contain an entry for each entry in reset-names.
-   See ../reset/reset.txt for details.
- - reset-names: Must include the following entries:
-   - i2c
-+- power-domains: Only for nvidia,tegra210-i2c-vi compatible node and must
-+  include venc powergate node as vi i2c is part of VE power domain.
-+  tegra210-i2c-vi:
-+  - pd_venc
- - dmas: Must contain an entry for each entry in clock-names.
-   See ../dma/dma.txt for details.
- - dma-names: Must include the following entries:
--- 
-2.7.4
+I will do that in v3.
+
+> --=20
+> Florian
 
