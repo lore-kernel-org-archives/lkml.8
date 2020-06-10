@@ -2,117 +2,104 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49BC1C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9627C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03DCA204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 896AD2074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:39:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="qJkJvsLS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fs4o/drN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728634AbgFJLjC (ORCPT
+        id S1728716AbgFJLjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 07:39:02 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:2085 "EHLO mx1.tq-group.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728510AbgFJLjC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 07:39:02 -0400
-IronPort-SDR: QOZnzLdhziz0cwun+NJ8W3bVxIjr4WurjR7RBNs4PBZO+Eb4Cgyr5zPweL+8mSj6YsEbaDN2oE
- yVyWBhjMjAx+FoPoTJaFmc475fQXEyR96zKYUjy8ME6u4HtTtbe+nC+gR+OFbp44C9q6yQlE//
- NSHTzJ/4cDO9l/gq+Lm9eRINWtHlLBQR8nnCcEUOapEbihwnSDXM4zehioYXN8E0AtJisXu69N
- x14ySQG6VyUDFc61pV37PvrmTvEYO79jCuxY98akt+3QqcGqywHHsxq9HTm8la7hujvDPdkkSS
- BBg=
-X-IronPort-AV: E=Sophos;i="5.73,495,1583190000"; 
-   d="scan'208";a="12636204"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 10 Jun 2020 13:38:59 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Wed, 10 Jun 2020 13:38:59 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Wed, 10 Jun 2020 13:38:59 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1591789139; x=1623325139;
-  h=from:to:cc:subject:date:message-id;
-  bh=SCPwkIJO8ixVT8Es4oQfUibnuDS4476i4fJI4A1Ujgc=;
-  b=qJkJvsLSmJ0AZEo35xr3qVmsvWZkLFV9cPCtPxx3UWgWxVeDhbl36dll
-   5Lsp0gy/SbtXH3Gk7qc0Cktq3R+G0wyPx2M/1o7A/QjqODIFQmk3bvgVu
-   KuYMG2zrkK9VHkNM+hI045ghDiruzoqxwmnvJM+Om6Oxn/MPzd5jQQH9G
-   RtHNGPGZ9E9swqwY7rDbM71MWbVOLVd/dUGMr1dWTedfQihoXqqnC3CoS
-   3Uh1vAPvqizcsQUWweKhNkPpHtNtDNYo1VzHVEzCxr8Rw+nPy3zMNlmJw
-   c/7aMOWWJF9ThCgK+mpYyzglBbEZE5E7F4g7EgdHe/JPXLo7XSHE7uHYu
-   g==;
-IronPort-SDR: XUMlzlBV9h+REJeElJ2SARd/3O9iFEv8HKlxt0IDyFYU61iu+17k6VmCs3aBQXJ544Ayp9ykVO
- trIxKllXl0WKtlRuwCaRoODAizg/ZePSwvDfYzJiKc/v6anKBOZNML3BlSXUQCYpOp5c22nE2G
- +9FbHR+NgshCATn3WbujTigBuSB8l6ByO2Ht1tLfqj+EWYZ7kOZhXyLO2pjBh/+dGjpXmAm42N
- ltv9OmbZMc2ETh26zGY8XwWroosOMxBRNk+VgijpPwhU6blJFysmFukDQEA1GKnMPnErim7r6W
- 6cA=
-X-IronPort-AV: E=Sophos;i="5.73,495,1583190000"; 
-   d="scan'208";a="12636203"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 10 Jun 2020 13:38:59 +0200
-Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 31011280065;
-        Wed, 10 Jun 2020 13:38:59 +0200 (CEST)
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Michael Krummsdorf <michael.krummsdorf@tq-group.com>,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Subject: [PATCH] clk: qoriq: add LS1021A core pll mux options
-Date:   Wed, 10 Jun 2020 13:38:37 +0200
-Message-Id: <20200610113837.27117-1-matthias.schiffer@ew.tq-group.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 10 Jun 2020 07:39:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37198 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728510AbgFJLjH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 07:39:07 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD039C03E96B
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 04:39:06 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id q19so2058677lji.2
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 04:39:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5IPZkixoble9/9wQuqUteSrJ1tRLpLsO87Bji6xJpJI=;
+        b=Fs4o/drNCDx7tniQoQBWSActEQRqOUz2dcAPdTL8ZNB6WWRh5Vb0oWSZcFHgC2Ro1L
+         l77l0k2o8qfaW0JtpfOS+13PHSX1m3+UmY2KzMHsA7vlQcKHtx2ivdOnO2r4QawtevaI
+         7j9NkC9ArUFEuSZxtez1t766wQsYTsLWA6yTAR6HnvLINv576bZ1AUUwzlP0EMGPimvz
+         vlETonQ4KcrWVftuNARhPQaa3Uf064dugjt7lulF4Tq1FQGBmVOmARQFnox41Xak5zrq
+         vLgIYfsDXwZEpWYxWZe/hRyNgGTPN8KW6/vS4a6tg4+K0Y5llkYI3WfdJMFwkE0Oiky6
+         +g9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5IPZkixoble9/9wQuqUteSrJ1tRLpLsO87Bji6xJpJI=;
+        b=bTBiyqgGaGRh0i7FowAowkorkbD2r6ENBemSlJOC3ilqm9sBbEW+6oNWDUNOiOIROk
+         LJGGCXkmoiHOSJWa3vk0yOG2OUr8zzDoh6FDPuCb7ju0hTfkK/TzKBBvKojBqmXFKdNX
+         DVwx8E06E4MGO0gzemdvw2XmGPWCiLUVTW8Rw08+zraIroEloJukshlc9zOTdpw9sbSG
+         gtjx8nm+aSCzGAoUkv7vGlAExZvKq9NwbutzTqICvvhAyrh8Z5JBYbTqC3EZzwHF6OiL
+         Or/N0Yy6SZJV48ihJDW82RAQt5ujTMK1vmzaJYngmaSfkPEiV09jBIyqcIWfiqf/dzIK
+         zgUQ==
+X-Gm-Message-State: AOAM5308Y+dGjjClvEqfbUIAQ8VSQdc6dUJRHn9qkgWrSxr+2acZ2zJT
+        ClOymvi41vUfSASDy5mmW7gOMoNhtnEjrUdo9LK4TQ==
+X-Google-Smtp-Source: ABdhPJyDxkVv5uj9TIQspAqLtGtK38kMojGoLpSgmJlWwiTCmhxbrSgDmp2/28EuUAD5oLtrm4fiDl9lAtxNPZSgHKM=
+X-Received: by 2002:a2e:a40f:: with SMTP id p15mr1674609ljn.286.1591789145161;
+ Wed, 10 Jun 2020 04:39:05 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200608134300.76091-1-andriy.shevchenko@linux.intel.com> <20200608134300.76091-5-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20200608134300.76091-5-andriy.shevchenko@linux.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 10 Jun 2020 13:38:54 +0200
+Message-ID: <CACRpkdZer1bUSXoK4wZpQu60mA5pEST8FEFuTrvvoaZ2+1S=hw@mail.gmail.com>
+Subject: Re: [PATCH v1 4/6] mfd: intel_quark_i2c_gpio: Convert to use software nodes
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Krummsdorf <michael.krummsdorf@tq-group.com>
+Hi Andy,
 
-This allows to clock the cores with 1 GHz, 500 MHz and 250 MHz.
+On Mon, Jun 8, 2020 at 3:43 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-Signed-off-by: Michael Krummsdorf <michael.krummsdorf@tq-group.com>
-Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
----
- drivers/clk/clk-qoriq.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+> -/* The base GPIO number under GPIOLIB framework */
+> -#define INTEL_QUARK_MFD_GPIO_BASE      8
 
-diff --git a/drivers/clk/clk-qoriq.c b/drivers/clk/clk-qoriq.c
-index 374afcab89af..5942e9874bc0 100644
---- a/drivers/clk/clk-qoriq.c
-+++ b/drivers/clk/clk-qoriq.c
-@@ -244,6 +244,14 @@ static const struct clockgen_muxinfo clockgen2_cmux_cgb = {
- 	},
- };
- 
-+static const struct clockgen_muxinfo ls1021a_cmux = {
-+	{
-+		{ CLKSEL_VALID, CGA_PLL1, PLL_DIV1 },
-+		{ CLKSEL_VALID, CGA_PLL1, PLL_DIV2 },
-+		{ CLKSEL_VALID, CGA_PLL1, PLL_DIV4 },
-+	}
-+};
-+
- static const struct clockgen_muxinfo ls1028a_hwa1 = {
- 	{
- 		{ CLKSEL_VALID, PLATFORM_PLL, PLL_DIV1 },
-@@ -577,7 +585,7 @@ static const struct clockgen_chipinfo chipinfo[] = {
- 	{
- 		.compat = "fsl,ls1021a-clockgen",
- 		.cmux_groups = {
--			&t1023_cmux
-+			&ls1021a_cmux
- 		},
- 		.cmux_to_group = {
- 			0, -1
--- 
-2.17.1
+OK I see this was around before, sigh.
+So it's not your fault. It was introduced in commit
+60ae5b9f5cdd8 which I was not involved in reviewing,
+for the record I would have said "no".
 
+It is exploiting commit 3d2613c4289ff where I allowed
+pdata to set the base so it is anyway my fault for not
+noticing :(
+
+But me complaining about this doesn't make things better.
+
+Can we simply DELETE this assignment and just set base to
+-1 in a separate patch before this patch and see what happens? It's
+really unsafe to hardcode base like this.
+
++       PROPERTY_ENTRY_U32("snps,nr-gpios", 8),
+
+This is however fine in principle but just use the existing generic
+property "ngpios" and save this custom property.
+
+Yours,
+Linus Walleij
