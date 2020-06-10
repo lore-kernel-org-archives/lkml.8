@@ -2,179 +2,137 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C25CBC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02FBBC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5E372078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:42:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEDBE2078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:43:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="akUzNeGf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbgFJImx (ORCPT
+        id S1726900AbgFJIn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 04:42:53 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60294 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726424AbgFJImw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 04:42:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 4944AABE3;
-        Wed, 10 Jun 2020 08:42:53 +0000 (UTC)
-Date:   Wed, 10 Jun 2020 10:42:48 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Paul McKenney <paulmck@kernel.org>
-Subject: Re: blk->id read race: was: [PATCH v2 2/3] printk: add lockless
- buffer
-Message-ID: <20200610084248.GA4311@linux-b0ei>
-References: <20200501094010.17694-1-john.ogness@linutronix.de>
- <20200501094010.17694-3-john.ogness@linutronix.de>
- <20200609071030.GA23752@linux-b0ei>
- <87tuzkuxtw.fsf@vostro.fn.ogness.net>
+        Wed, 10 Jun 2020 04:43:26 -0400
+Received: from mail-eopbgr70049.outbound.protection.outlook.com ([40.107.7.49]:6080
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726424AbgFJInZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 04:43:25 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fj5zwNd8bzhOePPWJ63i2rWEMaQgE9gq8Vi8JCyGO8Ha50gpwfDy9/6JCdxMVrtyAQV4zlE+oYr+451r1wa2QyK6ac4Lqs7QPblSCFZwRf71CSaAhQRzdxky+z0qE+NW9lVWoFoo23cGal8I6g9yzWhcWVBtWXA8I9qksNniPb+huijMQyVbJrfgO6BZtEO16OZsDHdCJghXHBy5H/VY2s1qTMv8zu4y90WtlJBeLIVoDmE1xo3O8CFRPFz3bjOCY6uhTCsF8dpFuIlq9fIrnJE5yJoTyQFwXnkOtYDf8VFospV3GbxwEE2yJ2gsSVdLiOGjcpAroI2KllNDcJnBhw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jGRV2Hzk57GxMcCyW8+C449RRZKbfl8hoLiQa3GHiSE=;
+ b=N3bxD2UFCjcZxQktBRVzU82ILPVd/qLQBY77h/XGQC8J2yibgGTwcB1tdtYr8yXMj10/K+11P3gbzpb8MUymU+uGADmJRcKIFWADvyQgMji5IWccIBLcQO2i37Ee041Pg7SsqrL8hCn0bX8Gj38Uir75AdiYzQaRip0Ks01zI/PQae0L0t4HDyO1h2H191+xRH+pbABMJWv++2VP5MrXur6SlCWZ+oBB+q6LLB2AvMYs+kK4sVLqTBZ41WCu3Jz+gFjlhoZ1PePc8k6lJX7SBRyA5oOKg0aKG0+dB2ZgCKeekHufu6cWr1ljuNpNrREtkM4HxD7IidqSv2IqDzdA3w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jGRV2Hzk57GxMcCyW8+C449RRZKbfl8hoLiQa3GHiSE=;
+ b=akUzNeGf2DrrZos2s9pglMj9bqOz3K7cZl1qESYyJykbv7aLLXGFKvZ5c9/pJnmzZ6JwFS1fsTka7rvLISQdRBk7X/4veFeEpElSwe6VD4Qcpb2otV3yS6iUr0oonET13qgrYoZopJnXWtJ6aTKOadjWIFFU6kEM9Ns9m5BObo0=
+Authentication-Results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
+Received: from VI1PR0402MB3712.eurprd04.prod.outlook.com
+ (2603:10a6:803:1c::25) by VI1PR0402MB2862.eurprd04.prod.outlook.com
+ (2603:10a6:800:b6::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.21; Wed, 10 Jun
+ 2020 08:43:20 +0000
+Received: from VI1PR0402MB3712.eurprd04.prod.outlook.com
+ ([fe80::c8c0:bf87:1424:88ae]) by VI1PR0402MB3712.eurprd04.prod.outlook.com
+ ([fe80::c8c0:bf87:1424:88ae%6]) with mapi id 15.20.3088.019; Wed, 10 Jun 2020
+ 08:43:19 +0000
+Subject: Re: [PATCH V2] soc: imx8m: Correct i.MX8MP UID fuse offset
+To:     Anson Huang <anson.huang@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        Peng Fan <peng.fan@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     dl-linux-imx <linux-imx@nxp.com>
+References: <1591742515-7108-1-git-send-email-Anson.Huang@nxp.com>
+ <DB7PR04MB4972E7B649B935B1EFE6469880830@DB7PR04MB4972.eurprd04.prod.outlook.com>
+ <DB3PR0402MB3916F5F4C797595437D5FBE5F5830@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From:   Iuliana Prodan <iuliana.prodan@nxp.com>
+Message-ID: <552e1ae9-8b28-a462-5ee8-3e5bd6821c90@nxp.com>
+Date:   Wed, 10 Jun 2020 11:43:17 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
+In-Reply-To: <DB3PR0402MB3916F5F4C797595437D5FBE5F5830@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: VI1PR0501CA0025.eurprd05.prod.outlook.com
+ (2603:10a6:800:60::11) To VI1PR0402MB3712.eurprd04.prod.outlook.com
+ (2603:10a6:803:1c::25)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87tuzkuxtw.fsf@vostro.fn.ogness.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.1.6] (86.121.160.118) by VI1PR0501CA0025.eurprd05.prod.outlook.com (2603:10a6:800:60::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.19 via Frontend Transport; Wed, 10 Jun 2020 08:43:19 +0000
+X-Originating-IP: [86.121.160.118]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: d504dcb5-3008-45f7-6af6-08d80d1a53ae
+X-MS-TrafficTypeDiagnostic: VI1PR0402MB2862:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR0402MB28628C4F07AD738BBC1706198C830@VI1PR0402MB2862.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2449;
+X-Forefront-PRVS: 0430FA5CB7
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 521VJWBoV72fcCWAL2Y4cYP6Zp/vaoAh/dvtkMkuTyJ9S2MXKAZVlPQAK5iUmAQuf6S5FBrWk0TyfWJkl9uu4FeK+YGNnS6IdMTMAAgOBnrRP3wFpqg7I6JFIv86N1w/9icb+jYZzWBU4/86D/69QELvl2R1l8DP2ztdkQV++xmgHhWtaMAaR7wcaiIBIMkRuNaMYzvo5aW6m/Wrdhivmte2P7fr4P6jM6vO8MKVUz44+CLYrYVaKyrSQySksrUgzETNSj64AVUbUCiOsndqzd60qBAHd8aIUS5FnCihKeuY6bLuJXD2DLAkk0l0ZrfrHv0nfoBND4eWfr04BNrb5Z2S/QyUqsouYmeWURgAoybCwi0RLnVt6VkcEseJRssw9KG+zebzfO7XXc5c5FpKc+QCrcChfEpUd5H+k7gJ6UM=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3712.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(376002)(396003)(39860400002)(366004)(4326008)(52116002)(16576012)(2906002)(86362001)(478600001)(31696002)(110136005)(316002)(66946007)(66556008)(66476007)(53546011)(6486002)(31686004)(8676002)(956004)(2616005)(16526019)(44832011)(26005)(36756003)(186003)(5660300002)(4744005)(8936002)(921003)(32563001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: SHtmdFMVGn4K6F9RTGoto8lrYHdfIjmf7gVpSWCm1eMjT3cpJXyC+IHmnZ1cF8BRzTJG32eZKiZzEu0NT2qH0E+LN6fupFSZyUei+9G7/Jh1Vk4mPnGHTlYQuiGOKJR7PXFP44tVNnpULq0+7i9Ocl20gbZBaZciek2+xrGKvLg0FIDFf5jqBqqBvkxXhTK2hfNihfbf6Ha7xv6AZfFUKoDSub8WbyV872ZuQSg8nT5LwjSzH5lLvdcsmeCoyvSyCGLg7Apkb4WH5RQbemCBAbLc2j5OsHiy7hx60vitwnFHr8N8+XoyvN7AqMy7rOQeWQsHZFKBxo9uhHSw20uGZ2hEumSJoxYsGPROlpWzI9d3eJn51Nf9IUqHE4GLUJBTQO93TJVQyDvCSzX8ZXIUsQlvxNo2+4OSe/rwfHG5Z8nt0YXtdboOBV9kHOY7XLQGH3M/4Nze3qymaUut1XjwQZPeKm6AHAAnnZ9QKu0blZoySSZ2AxXg8jtkjC/EEw8f
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d504dcb5-3008-45f7-6af6-08d80d1a53ae
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2020 08:43:19.8874
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Xg2Tro1BNDcao1DXmJn5UTL/H6jBPYgpRV/1/3LVW+HZNjUJ0et1zWQ/5k6PilOpzS+yek4On+09ZWYdZ1Q+bQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2862
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 2020-06-09 16:18:35, John Ogness wrote:
-> On 2020-06-09, Petr Mladek <pmladek@suse.com> wrote:
-> >> --- /dev/null
-> >> +++ b/kernel/printk/printk_ringbuffer.c
-> >> +/*
-> >> + * Given a data ring (text or dict), put the associated descriptor of each
-> >> + * data block from @lpos_begin until @lpos_end into the reusable state.
-> >> + *
-> >> + * If there is any problem making the associated descriptor reusable, either
-> >> + * the descriptor has not yet been committed or another writer task has
-> >> + * already pushed the tail lpos past the problematic data block. Regardless,
-> >> + * on error the caller can re-load the tail lpos to determine the situation.
-> >> + */
-> >> +static bool data_make_reusable(struct printk_ringbuffer *rb,
-> >> +			       struct prb_data_ring *data_ring,
-> >> +			       unsigned long lpos_begin,
-> >> +			       unsigned long lpos_end,
-> >> +			       unsigned long *lpos_out)
-> >> +{
-> >> +	struct prb_desc_ring *desc_ring = &rb->desc_ring;
-> >> +	struct prb_data_blk_lpos *blk_lpos;
-> >> +	struct prb_data_block *blk;
-> >> +	unsigned long tail_lpos;
-> >> +	enum desc_state d_state;
-> >> +	struct prb_desc desc;
-> >> +	unsigned long id;
-> >> +
-> >> +	/*
-> >> +	 * Using the provided @data_ring, point @blk_lpos to the correct
-> >> +	 * blk_lpos within the local copy of the descriptor.
-> >> +	 */
-> >> +	if (data_ring == &rb->text_data_ring)
-> >> +		blk_lpos = &desc.text_blk_lpos;
-> >> +	else
-> >> +		blk_lpos = &desc.dict_blk_lpos;
-> >> +
-> >> +	/* Loop until @lpos_begin has advanced to or beyond @lpos_end. */
-> >> +	while ((lpos_end - lpos_begin) - 1 < DATA_SIZE(data_ring)) {
-> >> +		blk = to_block(data_ring, lpos_begin);
-> >> +		id = READ_ONCE(blk->id); /* LMM(data_make_reusable:A) */
-> >
-> > This would deserve some comment:
-> >
-> > 1. Compiler could not optimize out the read because there is a data
-> >    dependency on lpos_begin.
-> >
-> > 2. Compiler could not postpone the read because it is followed by
-> >    smp_rmb().
-> >
-> > So, is READ_ONCE() realy needed?
+
+
+On 6/10/2020 10:57 AM, Anson Huang wrote:
 > 
-> I agree that it is not needed. Both the READ_ONCE() and its countering
-> WRITE_ONCE() (data_alloc:B) only document the lockless shared access. I
-> will remove both for the next version.
-
-Sounds good.
-
-> Do we still need a comment? Is it not obvious that there is a data
-> dependency on @lpos_begin?
-
-Sigh, I just wonder why I am always confusedby this. See below.
-
-
->         blk = to_block(data_ring, lpos_begin);
->         id = blk->id;
+>> Subject: RE: [PATCH V2] soc: imx8m: Correct i.MX8MP UID fuse offset
+>>
+>>> From: Anson Huang <Anson.Huang@nxp.com>
+>>> Sent: Wednesday, June 10, 2020 6:42 AM
+>>>
+>>> Correct i.MX8MP UID fuse offset according to fuse map:
+>>>
+>>> UID_LOW: 0x420
+>>> UID_HIGH: 0x430
+>>>
+>>> Fixes: fc40200ebf82 ("soc: imx: increase build coverage for imx8m soc
+>>> driver")
+>>
+>> AFAIK "Fixes:" should point to the original patch which introduced the issue.
+>> Not the one changing file name.
 > 
-> > Well, blk->id clearly can be modified in parallel so we need to be
-> > careful. There is smp_rmb() right below. Do we needed smp_rmb() also
-> > before?
-> >
-> > What about the following scenario?:
-> >
-> >
-> > CPU0						CPU1
-> >
-> > 						data_alloc()
-> > 						  data_push_tail()
-> >
-> > 						blk = to_block(data_ring, begin_lpos)
-> > 						WRITE_ONCE(blk->id, id); /* LMM(data_alloc:B) */
-> >
-> > desc_push_tail()
-> >   data_push_tail()
-> >
-> >     tail_lpos = data_ring->tail_lpos;
-> >     // see data_ring->tail_lpos already updated by CPU1
-> >
-> >     data_make_reusable()
-> >
-> >       // lpos_begin = tail_lpos via parameter
-> >       blk = to_block(data_ring, lpos_begin);
-> >       id = blk->id
-> >
-> > Now: CPU0 might see outdated blk->id before CPU1 wrote new value
-> >      because there is no read barrier betwen reading tail_lpos
-> >      and blk->id here.
+> But the patch can NOT be applied to the kernel version with original file, how to
+> fix it?
 > 
-> In your example, CPU1 is pushing the tail and then setting the block ID
-> for the _newly_ allocated block, that is located is _before_ the new
-> tail. If CPU0 sees the new tail already, it is still reading a valid
-> block ID, which is _not_ from the block that CPU1 is in the process of
-> writing.
+I believe you can add two "Fixes:" with the two commits: the one 
+introducing the issue and the one changing the file name.
 
-Ah, I see. I wrongly assumed that both CPO0 and CPU1 are working with
-the same block address. But if CPU0 sees the new tail_lpos, it is
-already looking at another block. And it is the classic fight against
-yet another potential CPUs that try to push the tail as well.
-
-I wonder if the comment might look like:
-
-/*
- * No barrier is needed between reading tail_lpos and the related
- * blk->id. Only CPU that modifies tail_lpos via cmpxchg is allowed
- * to modify the related blk->id. CPUs that see the moved tail_lpos
- * are looking at another block related to the new tail_lpos.
- * It does not mater when the previous winner modifies the previous
- * block.
- */
-
-I am not sure how many people are confused like me. It is possible
-that it is not worth it. I just know that I did this mistake
-repeatedly ;-)
-
-Best Regards,
-Petr
+Iulia
