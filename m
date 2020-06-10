@@ -2,110 +2,160 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7057EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEDECC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53AD420734
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:59:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B3D820734
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:00:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="Qbll/Bjm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729160AbgFJM7Z (ORCPT
+        id S1729178AbgFJNAa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 08:59:25 -0400
-Received: from outbound-smtp26.blacknight.com ([81.17.249.194]:58125 "EHLO
-        outbound-smtp26.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728792AbgFJM7Y (ORCPT
+        Wed, 10 Jun 2020 09:00:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49790 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728792AbgFJNA3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 08:59:24 -0400
-Received: from mail.blacknight.com (pemlinmail04.blacknight.ie [81.17.254.17])
-        by outbound-smtp26.blacknight.com (Postfix) with ESMTPS id 55A20CAB1B
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 13:59:22 +0100 (IST)
-Received: (qmail 31682 invoked from network); 10 Jun 2020 12:59:22 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 10 Jun 2020 12:59:22 -0000
-Date:   Wed, 10 Jun 2020 13:59:20 +0100
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Jan Kara <jack@suse.cz>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] fsnotify: Rearrange fast path to minimise overhead when
- there is no watcher
-Message-ID: <20200610125920.GM3127@techsingularity.net>
-References: <20200608140557.GG3127@techsingularity.net>
- <CAOQ4uxhb1p5_rO9VjNb6assCczwQRx3xdAOXZ9S=mOA1g-0JVg@mail.gmail.com>
- <20200608160614.GH3127@techsingularity.net>
- <CAOQ4uxh=Z92ppBQbRJyQqC61k944_7qG1mYqZgGC2tU7YAH7Kw@mail.gmail.com>
- <20200608180130.GJ3127@techsingularity.net>
- <CAOQ4uxgcUHuqiXFPO5mX=rvDwP-DOoTZrXvpVNphwEMFYHtyCw@mail.gmail.com>
- <CAOQ4uxhbE46S65-icLhaJqT+jKqz-ZdX=Ypm9hAt9Paeb+huhQ@mail.gmail.com>
+        Wed, 10 Jun 2020 09:00:29 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BDC0C03E96B
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 06:00:28 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id q19so2368233lji.2
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 06:00:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=PNyrBZppNk3Cjv2T06G1zQBWJHpOfeyJqDojTtGkqc0=;
+        b=Qbll/Bjm7pPCbjqueebN+hgqtenuC0SeH2KoV1L2PcrPvu1yr0DVTGD35LdOIPOFGb
+         rIUL5CIDe3nVW7glCNLBRARyF2Hd/kOd6yH9rVut2I1yxnc5fIE4tKF1eML+3wiJYmzW
+         k47efqsigrCnZmaJOG1bj5Y+Z9GxJLHG+7y0dfoelNMlFa7Kmia9UsST1NVNP3XIh7fW
+         k1tZ1o1Gytst8WLFzGcavIjhKjKIx/zZeNFNXovrOfbLgHNNsrp6SRkyvdvBzKsj8Imh
+         v/dQO/fuSL5us9jXZoS4Ps56ircqY/aQM+akRQnc/WHRxe1jBYlFsWzNF/NGn1O71Pb/
+         rj7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=PNyrBZppNk3Cjv2T06G1zQBWJHpOfeyJqDojTtGkqc0=;
+        b=OzOQ+XQF+Z1Mv10zE2+Cp70DYCp5XgSV2tp0/aK8SEQl5zRKT+1z0lRvZqVL20Vnde
+         C5nCvxOmNEjvQ6gz8BMNPWoXu70v0gjKYRKz//sJjT/48hj4Yp07PNpZhSjnoisrJ1Nq
+         1P7uB/Q59DSN5kRfCoIsWXuXMlIqCCK6qu8KajvVxc+t6TfQlqMRI/lLohVV6HLNN+2D
+         9d61e/aJPHR/aNIFepHzmjvGb06ltqM1GGFpZTW58ZW7MqBb777KhYWZeKE5tcu5jXF8
+         kfq94AFFFN02Av356WD4gqBpQQw9ZR4UGutcKIRcEq4OGWzjlhYs1WwwAghgaIHKqUzJ
+         +76w==
+X-Gm-Message-State: AOAM530yQ/Y1QxwzhRY8yA30ScXtA1cDIcbt6aqYcbPI46+3QgwH5Ce/
+        KKdCY/wunrWSX2mbOIEx4DbLaQ==
+X-Google-Smtp-Source: ABdhPJyz49dL94Sea0DJLV1WyFieZrGEQPrJqr/qrzgylWAQVW3IiN5+3jH4CECthyOGqzH2YpP66g==
+X-Received: by 2002:a2e:8554:: with SMTP id u20mr1734783ljj.188.1591794026560;
+        Wed, 10 Jun 2020 06:00:26 -0700 (PDT)
+Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
+        by smtp.gmail.com with ESMTPSA id h15sm1001700ljk.24.2020.06.10.06.00.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2020 06:00:25 -0700 (PDT)
+Date:   Wed, 10 Jun 2020 15:00:24 +0200
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/3] media: rcar-vin: Invalidate pipeline if
+ conversion is not possible on input formats
+Message-ID: <20200610130024.GA184623@oden.dyn.berto.se>
+References: <1590581810-19317-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1590581810-19317-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAOQ4uxhbE46S65-icLhaJqT+jKqz-ZdX=Ypm9hAt9Paeb+huhQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1590581810-19317-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 11:39:26PM +0300, Amir Goldstein wrote:
-> > Let me add your optimizations on top of my branch with the needed
-> > adaptations and send you a branch for testing.
+Hi Lad,
+
+Thanks for your work.
+
+On 2020-05-27 13:16:48 +0100, Lad Prabhakar wrote:
+> Up until now the VIN was capable to convert any of its supported input mbus
+> formats to any of it's supported output pixel formats. With the addition of
+> RAW formats this is no longer true.
 > 
-> https://github.com/amir73il/linux/commits/fsnotify_name-for-mel
+> This patch invalidates the pipeline by adding a check if given vin input
+> format can be converted to supported output pixel format.
 > 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Sorry for the delay getting back. The machine was busy with other tests
-and it took a while to reach this on the queue. Fairly good news
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 
-hackbench-process-pipes
-                              5.7.0                  5.7.0                  5.7.0                  5.7.0
-                            vanilla      fastfsnotify-v1r1          amir-20200608           amir-for-mel
-Amean     1       0.4837 (   0.00%)      0.4630 *   4.27%*      0.4967 *  -2.69%*      0.4680 (   3.24%)
-Amean     3       1.5447 (   0.00%)      1.4557 (   5.76%)      1.6587 *  -7.38%*      1.4807 (   4.14%)
-Amean     5       2.6037 (   0.00%)      2.4363 (   6.43%)      2.6400 (  -1.40%)      2.4900 (   4.37%)
-Amean     7       3.5987 (   0.00%)      3.4757 (   3.42%)      3.9040 *  -8.48%*      3.5130 (   2.38%)
-Amean     12      5.8267 (   0.00%)      5.6983 (   2.20%)      6.2593 (  -7.43%)      5.6967 (   2.23%)
-Amean     18      8.4400 (   0.00%)      8.1327 (   3.64%)      8.9940 (  -6.56%)      7.7240 *   8.48%*
-Amean     24     11.0187 (   0.00%)     10.0290 *   8.98%*     11.7247 *  -6.41%*      9.5793 *  13.06%*
-Amean     30     13.1013 (   0.00%)     12.8510 (   1.91%)     14.0290 *  -7.08%*     12.1630 (   7.16%)
-Amean     32     13.9190 (   0.00%)     13.2410 (   4.87%)     14.7140 *  -5.71%*     13.2457 *   4.84%*
-
-First two sets of results are vanilla kernel and just my patch respectively
-to have two baselines. amir-20200608 is the first git branch you pointed
-me to and amir-for-mel is this latest branch. Comparing the optimisation
-and your series, we get
-
-hackbench-process-pipes
-                              5.7.0                  5.7.0
-                  fastfsnotify-v1r1           amir-for-mel
-Amean     1       0.4630 (   0.00%)      0.4680 (  -1.08%)
-Amean     3       1.4557 (   0.00%)      1.4807 (  -1.72%)
-Amean     5       2.4363 (   0.00%)      2.4900 (  -2.20%)
-Amean     7       3.4757 (   0.00%)      3.5130 (  -1.07%)
-Amean     12      5.6983 (   0.00%)      5.6967 (   0.03%)
-Amean     18      8.1327 (   0.00%)      7.7240 (   5.03%)
-Amean     24     10.0290 (   0.00%)      9.5793 (   4.48%)
-Amean     30     12.8510 (   0.00%)     12.1630 (   5.35%)
-Amean     32     13.2410 (   0.00%)     13.2457 (  -0.04%)
-
-As you can see, your patches with the optimisation layered on top is
-comparable to just the optimisation on its own. It's not universally
-better but it would not look like a regression when comparing releases.
-The differences are mostly within the noise as there is some variability
-involved for this workload so I would not worry too much about it (caveats
-are other machines may be different as well as other workloads). A minor
-issue is that this is probably a bisection hazard. If a series is merged
-and LKP points the finger somewhere in the middle of your series then
-I suggest you ask them to test the optimisation commit ID to see if the
-regression goes away.
-
-Thanks Amir.
+> ---
+>  drivers/media/platform/rcar-vin/rcar-dma.c  |  6 +++++-
+>  drivers/media/platform/rcar-vin/rcar-v4l2.c | 11 ++++++++---
+>  2 files changed, 13 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/media/platform/rcar-vin/rcar-dma.c b/drivers/media/platform/rcar-vin/rcar-dma.c
+> index 1a30cd036371..2b26204910fd 100644
+> --- a/drivers/media/platform/rcar-vin/rcar-dma.c
+> +++ b/drivers/media/platform/rcar-vin/rcar-dma.c
+> @@ -1110,11 +1110,15 @@ static int rvin_mc_validate_format(struct rvin_dev *vin, struct v4l2_subdev *sd,
+>  	case MEDIA_BUS_FMT_UYVY8_2X8:
+>  	case MEDIA_BUS_FMT_UYVY10_2X10:
+>  	case MEDIA_BUS_FMT_RGB888_1X24:
+> -		vin->mbus_code = fmt.format.code;
+> +		break;
+> +	case MEDIA_BUS_FMT_SRGGB8_1X8:
+> +		if (vin->format.pixelformat != V4L2_PIX_FMT_SRGGB8)
+> +			return -EPIPE;
+>  		break;
+>  	default:
+>  		return -EPIPE;
+>  	}
+> +	vin->mbus_code = fmt.format.code;
+>  
+>  	switch (fmt.format.field) {
+>  	case V4L2_FIELD_TOP:
+> diff --git a/drivers/media/platform/rcar-vin/rcar-v4l2.c b/drivers/media/platform/rcar-vin/rcar-v4l2.c
+> index f421e2584875..d3b6a992b4a2 100644
+> --- a/drivers/media/platform/rcar-vin/rcar-v4l2.c
+> +++ b/drivers/media/platform/rcar-vin/rcar-v4l2.c
+> @@ -350,9 +350,9 @@ static int rvin_enum_fmt_vid_cap(struct file *file, void *priv,
+>  	 * all of the related pixel formats. If mbus_code is not set enumerate
+>  	 * all possible pixelformats.
+>  	 *
+> -	 * TODO: Once raw capture formats are added to the driver this needs
+> -	 * to be extended so raw media bus codes only result in raw pixel
+> -	 * formats.
+> +	 * TODO: Once raw MEDIA_BUS_FMT_SRGGB12_1X12 format is added to the
+> +	 * driver this needs to be extended so raw media bus code only result in
+> +	 * raw pixel format.
+>  	 */
+>  	switch (f->mbus_code) {
+>  	case 0:
+> @@ -362,6 +362,11 @@ static int rvin_enum_fmt_vid_cap(struct file *file, void *priv,
+>  	case MEDIA_BUS_FMT_UYVY10_2X10:
+>  	case MEDIA_BUS_FMT_RGB888_1X24:
+>  		break;
+> +	case MEDIA_BUS_FMT_SRGGB8_1X8:
+> +		if (f->index)
+> +			return -EINVAL;
+> +		f->pixelformat = V4L2_PIX_FMT_SRGGB8;
+> +		return 0;
+>  	default:
+>  		return -EINVAL;
+>  	}
+> -- 
+> 2.17.1
+> 
 
 -- 
-Mel Gorman
-SUSE Labs
+Regards,
+Niklas Söderlund
