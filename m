@@ -2,155 +2,128 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 358E3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B8DBC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B42D206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22E58206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:53:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591804418;
+	bh=zxOntiEnO8geBqba/Y+eG4q1ysZ2OktpSI6E2C+s2Go=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=tCOLKySPuISiNangLN8pfMgEIu5YHVqP9HhJ6NBq4FQ19UKfjyDF0hMrJeotLBJMb
+	 SN3Rs0Lc2OHfQLYBTd9mhqLm61NCBcEUz6CoDloh6POoIGoACEIxr2HBuEeCqbvWv7
+	 CNFaAIZfzRcGGo9xx/SM7LcH+gJYJDtqvv05VVj4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbgFJPwc (ORCPT
+        id S1728526AbgFJPxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 11:52:32 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35802 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728217AbgFJPwc (ORCPT
+        Wed, 10 Jun 2020 11:53:36 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:41320 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728217AbgFJPxg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 11:52:32 -0400
-Received: by mail-lj1-f195.google.com with SMTP id q19so3126911lji.2;
-        Wed, 10 Jun 2020 08:52:29 -0700 (PDT)
+        Wed, 10 Jun 2020 11:53:36 -0400
+Received: by mail-lf1-f68.google.com with SMTP id u16so1740964lfl.8;
+        Wed, 10 Jun 2020 08:53:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=11ALgSq9gv/d3zitAChNViLeQS5L5+FuUfOqP20opAs=;
-        b=mIWvRihrny9n4iLgo4xjUtkn22a05Te/1aZWoXlps2Bf0u632C5J+aGqGq452F16tw
-         gDpMKDic4GUS8bYeGrGmXntziSCiifkOjbHqPFnWoMYSLnVGQ2wEZARr5PjEP2iyXFZ4
-         jOwIlsMHPnfJE4bXF6o+sPr9Bu/90d0qPOZZf0uVKfJFebN0UUeQfWARJrfbNM1+5KPz
-         8AL9eSe+Ggq9PgpBwQq5zAC2KHNHIy4D1+Pxbf9C4Vyd93OtdYi/LLl3I/Luj3WkcroP
-         3eqSR9VRomN+yx6CDSS/oZveFQnT/57p7N7yURIjCIjVOgxPhGaf6EcW1w95XqrIIkGQ
-         sXyQ==
-X-Gm-Message-State: AOAM5312Z9lsEBJ5Wmd5XZ6RPUjWiXuo529lnjyXmZUc6mBMaQW5fmZZ
-        ivC50QOSz/efp/idF+BW1YU=
-X-Google-Smtp-Source: ABdhPJxOf6x8h9JgbevXiRilQVr0KtvSmXKyYKWZvP/YIghJt7szxiaNzNcR6ibSpZohdi77kgx7cw==
-X-Received: by 2002:a2e:9a4d:: with SMTP id k13mr2102395ljj.43.1591804348403;
-        Wed, 10 Jun 2020 08:52:28 -0700 (PDT)
-Received: from [192.168.42.234] ([213.87.161.124])
-        by smtp.gmail.com with ESMTPSA id z15sm29065ljo.102.2020.06.10.08.52.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jun 2020 08:52:27 -0700 (PDT)
-Reply-To: alex.popov@linux.com
-Subject: Re: [PATCH 3/5] gcc-plugins/stackleak: Add 'verbose' plugin parameter
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Emese Revfy <re.emese@gmail.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Sven Schnelle <svens@stackframe.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Collingbourne <pcc@google.com>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Alexander Monakov <amonakov@ispras.ru>,
-        Mathias Krause <minipli@googlemail.com>,
-        PaX Team <pageexec@freemail.hu>,
-        Brad Spengler <spender@grsecurity.net>,
-        Laura Abbott <labbott@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        kernel-hardening@lists.openwall.com, linux-kbuild@vger.kernel.org,
-        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, gcc@gcc.gnu.org, notify@kernel.org
-References: <20200604134957.505389-1-alex.popov@linux.com>
- <20200604134957.505389-4-alex.popov@linux.com>
- <202006091147.193047096C@keescook>
-From:   Alexander Popov <alex.popov@linux.com>
-Autocrypt: addr=alex.popov@linux.com; prefer-encrypt=mutual; keydata=
- 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
- j3lCqPk=
-Message-ID: <fb051386-4913-9442-f051-23ed25802c9e@linux.com>
-Date:   Wed, 10 Jun 2020 18:52:10 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kHTC5ynMjdYXbR8GWvcYvNg5klsAd9eXqBm+XxUO58o=;
+        b=TmPN7DC1dCNBT1Bx5vRreyA17eIi7H1dvaVlUpiC/9zVv/d6rGjr4PhfOkxQl85oYi
+         CzhDBw/qNqL+PvkC7rEinHOFiCTX64tkR7ef+H/DI/JKkiPKJXRzzKGDUTKYjyedMm6+
+         gemLvezQpZ7GEG0ciTV7glTZPOW6XEUm+YIgCwID0tt4vHRWebfeoDFxaODXQg2513GL
+         LlqrqBrpi6ylbWijF4Qz+buTEjDXiuI+NaJNWQl0UYUm7H50lG2hnQxYuwjDXPQEKkO3
+         hKN6UbUSe+VaE9VOeAi5LswHxBNAHVFPTlV8IzodZqUKk0IiEajVm1ZoTpecBEV0Yr2V
+         cGdQ==
+X-Gm-Message-State: AOAM532VZMA+epqeAocprmptsy9g7CFy4R+kMshDLOSu/Uj8jZNCgT/+
+        SS/oYlvN+qRYaYEcjqi5zWE=
+X-Google-Smtp-Source: ABdhPJyqqx/BcJVIiBXYDw9G8HwixEOGKHpBACr+n1wBRH3ucsEekHe/2Ki7AqirrHY6cGrLrC4OEg==
+X-Received: by 2002:a05:6512:d1:: with SMTP id c17mr2068358lfp.80.1591804413811;
+        Wed, 10 Jun 2020 08:53:33 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id x69sm20823lff.19.2020.06.10.08.53.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2020 08:53:33 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@xi.terra>)
+        id 1jj32f-0003fz-W3; Wed, 10 Jun 2020 17:53:30 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jiri Slaby <jslaby@suse.com>, Lukas Wunner <lukas@wunner.de>,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH] serial: core: drop unnecessary gpio include
+Date:   Wed, 10 Jun 2020 17:51:21 +0200
+Message-Id: <20200610155121.14014-1-johan@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <202006091147.193047096C@keescook>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.06.2020 21:47, Kees Cook wrote:
-> On Thu, Jun 04, 2020 at 04:49:55PM +0300, Alexander Popov wrote:
->> Add 'verbose' plugin parameter for stackleak gcc plugin.
->> It can be used for printing additional info about the kernel code
->> instrumentation.
->>
->> For using it add the following to scripts/Makefile.gcc-plugins:
->>   gcc-plugin-cflags-$(CONFIG_GCC_PLUGIN_STACKLEAK) \
->>     += -fplugin-arg-stackleak_plugin-verbose
->>
->> Signed-off-by: Alexander Popov <alex.popov@linux.com>
-> 
-> Acked-by: Kees Cook <keescook@chromium.org>
+Drop the recently added gpio include from the serial-core header in
+favour of a forward declaration and instead include the gpio header only
+where needed.
 
-I see that I will change this patch after leaving alloca() support.
-I'm going to add debug printing about functions that call alloca().
-I have to omit your 'acked-by' for the changed patch, right?
+Signed-off-by: Johan Hovold <johan@kernel.org>
+---
+ drivers/tty/serial/8250/8250_port.c | 1 +
+ drivers/tty/serial/serial_core.c    | 1 +
+ include/linux/serial_core.h         | 2 +-
+ 3 files changed, 3 insertions(+), 1 deletion(-)
 
-Best regards,
-Alexander
+diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+index 1632f7d25acc..d64ca77d9cfa 100644
+--- a/drivers/tty/serial/8250/8250_port.c
++++ b/drivers/tty/serial/8250/8250_port.c
+@@ -16,6 +16,7 @@
+ #include <linux/ioport.h>
+ #include <linux/init.h>
+ #include <linux/console.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/sysrq.h>
+ #include <linux/delay.h>
+ #include <linux/platform_device.h>
+diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+index 3706f31b0c37..cba19f7d9ea3 100644
+--- a/drivers/tty/serial/serial_core.c
++++ b/drivers/tty/serial/serial_core.c
+@@ -14,6 +14,7 @@
+ #include <linux/sched/signal.h>
+ #include <linux/init.h>
+ #include <linux/console.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/of.h>
+ #include <linux/proc_fs.h>
+ #include <linux/seq_file.h>
+diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
+index 791f4844efeb..01fc4d9c9c54 100644
+--- a/include/linux/serial_core.h
++++ b/include/linux/serial_core.h
+@@ -10,7 +10,6 @@
+ #include <linux/bitops.h>
+ #include <linux/compiler.h>
+ #include <linux/console.h>
+-#include <linux/gpio/consumer.h>
+ #include <linux/interrupt.h>
+ #include <linux/circ_buf.h>
+ #include <linux/spinlock.h>
+@@ -30,6 +29,7 @@
+ struct uart_port;
+ struct serial_struct;
+ struct device;
++struct gpio_desc;
+ 
+ /*
+  * This structure describes all the operations that can be done on the
+-- 
+2.26.2
+
