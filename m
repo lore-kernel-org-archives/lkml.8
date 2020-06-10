@@ -2,91 +2,84 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F6DBC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7988C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20108206F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:56:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591797403;
-	bh=1Cj2Fu88LV4A1GgSyK0XUoUZIOiwmlOBdE+eZjQYBE8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=utyBiInTZukMYyndgm3VJDrJR/9J89hrIAlXWpDZpYv4p6W7C7nixsb6tvhiMaUSx
-	 a7a3rd/C9Ep5cJqSrCw73isNcaDUbZhZMd2LdxYcwDJL3xA65DSkEEbAg6KD5yJYZg
-	 HcKUfTSdWqJtUEsTF+QqdNtVCQ/HO+NIXv5e9/f8=
+	by mail.kernel.org (Postfix) with ESMTP id AFB23206F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:58:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HBosGIGE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729595AbgFJN4l (ORCPT
+        id S1729559AbgFJN66 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 09:56:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47022 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726387AbgFJN4k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 09:56:40 -0400
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 10 Jun 2020 09:58:58 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:26955 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726316AbgFJN65 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 09:58:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591797536;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=+xK1FKusim+ilFQ1Wb/m7cl9km13yzEUJrwXMyQvZtM=;
+        b=HBosGIGEC7EAmJoviMyWsHl02zxegQL1GncVnAwGUOWM2Vi8NWmpWF1XDJETtVRXKVx5mn
+        BsjnkTGlyNfRV8Vd0TGds489dtVgMYw4NJLr41x40fpR8D9QkhxdHCLKgK/MUHWdJXb9Ic
+        wQ6UFZsjV72XO1V4yOMOBsFpgph7jis=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-320-ZyrC7x46PaucaFZt8eaF4A-1; Wed, 10 Jun 2020 09:58:55 -0400
+X-MC-Unique: ZyrC7x46PaucaFZt8eaF4A-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 293A4206F7;
-        Wed, 10 Jun 2020 13:56:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591797400;
-        bh=1Cj2Fu88LV4A1GgSyK0XUoUZIOiwmlOBdE+eZjQYBE8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cxfDQV9c7q2CTPvH9bVVbFxTVYhTD/TelQG5Yq27BP7A4hg/tJgMFNm8ivwMarGjO
-         //yBZphNP8a1ZofgNgh46xyBh6cjhJOMoAjWU/nRxi9KUj5kZvUQmlGHWfusM5T/1r
-         qGtTogDeicpAsCSSiGjscw3KPco8jXPwv6C5TMzs=
-Received: by mail-ot1-f53.google.com with SMTP id k15so1749089otp.8;
-        Wed, 10 Jun 2020 06:56:40 -0700 (PDT)
-X-Gm-Message-State: AOAM531m1dZIFb+1rkI4bgBKmhKAaakL2oXHRFqarWQQcjeb7xzSCGyZ
-        z3xE15fSJTypdATcudAE3ub/b6BYsO6mgi4WEQ==
-X-Google-Smtp-Source: ABdhPJzmcV+9T4BOYZL9yyzPscKPz9ct+kzL7+78ybw2OrqunkEGa/Wxk94oESNvy8oQbfWj8DD4LjEjvLDexy9UwZ8=
-X-Received: by 2002:a9d:c29:: with SMTP id 38mr2547303otr.107.1591797399576;
- Wed, 10 Jun 2020 06:56:39 -0700 (PDT)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 01680100A614;
+        Wed, 10 Jun 2020 13:58:53 +0000 (UTC)
+Received: from vitty.brq.redhat.com (unknown [10.40.192.78])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1AE3D5C1BD;
+        Wed, 10 Jun 2020 13:58:48 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] KVM: selftests: avoid test failures with 'nested=0'
+Date:   Wed, 10 Jun 2020 15:58:45 +0200
+Message-Id: <20200610135847.754289-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-References: <20200601094512.50509-1-sudeep.holla@arm.com> <20200601094512.50509-2-sudeep.holla@arm.com>
- <20200609223551.GA1620273@bogus> <20200610074346.GB15939@willie-the-truck>
-In-Reply-To: <20200610074346.GB15939@willie-the-truck>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 10 Jun 2020 07:56:28 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKFDBmyAVjWR9ZxOjU6j2fcCOz32rnnUwBAQzzh-vMa_A@mail.gmail.com>
-Message-ID: <CAL_JsqKFDBmyAVjWR9ZxOjU6j2fcCOz32rnnUwBAQzzh-vMa_A@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/3] dt-bindings: Add ARM PSA FF binding for
- non-secure VM partitions
-To:     Will Deacon <will@kernel.org>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marc Zyngier <maz@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 1:43 AM Will Deacon <will@kernel.org> wrote:
->
-> On Tue, Jun 09, 2020 at 04:35:51PM -0600, Rob Herring wrote:
-> > On Mon, Jun 01, 2020 at 10:45:10AM +0100, Sudeep Holla wrote:
-> > > Add devicetree bindings for a Arm PSA FF-A compliant non-secure partition
-> > > at virtual interface(VMs).
-> > >
-> > > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> > > ---
-> > >  .../devicetree/bindings/arm/arm,psa-ffa.txt   | 47 +++++++++++++++++++
-> > >  1 file changed, 47 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/arm/arm,psa-ffa.txt
-> >
-> > I'm hoping this goes away if the firmware is discoverable, but if not DT
-> > bindings are DT schema now.
->
-> We'll need the binding for the kvm host side, because there are plenty
-> of partition properties that are not discoverable (e.g. number of vCPUs).
+Commit 33b22172452f ("KVM: x86: move nested-related kvm_x86_ops to a
+separate struct") made nested hooks (e.g. ->get_state(), ->enable_evmcs())
+always available, even when kvm module is loaded with 'nested=0'. Assuming
+the change was intentional, update selftests to not fail in this situation.
 
-BTW, there's already a partitioning binding for Power in ePAPR. I've
-not paid much attention to it, but maybe it could be useful here.
+Vitaly Kuznetsov (2):
+  KVM: selftests: do not substitute SVM/VMX check with
+    KVM_CAP_NESTED_STATE check
+  KVM: selftests: Don't probe KVM_CAP_HYPERV_ENLIGHTENED_VMCS when
+    nested VMX is unsupported
 
-Rob
+ .../testing/selftests/kvm/include/x86_64/svm_util.h |  1 +
+ tools/testing/selftests/kvm/include/x86_64/vmx.h    |  1 +
+ tools/testing/selftests/kvm/lib/x86_64/svm.c        | 10 +++++++---
+ tools/testing/selftests/kvm/lib/x86_64/vmx.c        |  9 +++++++--
+ tools/testing/selftests/kvm/x86_64/evmcs_test.c     |  5 +++--
+ tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c   |  3 ++-
+ tools/testing/selftests/kvm/x86_64/smm_test.c       | 13 +++++++------
+ tools/testing/selftests/kvm/x86_64/state_test.c     | 13 +++++++------
+ 8 files changed, 35 insertions(+), 20 deletions(-)
+
+-- 
+2.25.4
+
