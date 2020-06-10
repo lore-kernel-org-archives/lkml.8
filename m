@@ -2,138 +2,99 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57CBBC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A661CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27F7C206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:54:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77BCB20760
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:55:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="KhJANJU5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bvYAdsPR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbgFJJyl (ORCPT
+        id S1728031AbgFJJzA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 05:54:41 -0400
-Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:33629 "EHLO
-        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726134AbgFJJyk (ORCPT
+        Wed, 10 Jun 2020 05:55:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49270 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726134AbgFJJy7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 05:54:40 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id ixRJjgJMuCKzeixRMjw3Ui; Wed, 10 Jun 2020 11:54:37 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1591782877; bh=UKKC4lsJxXul3tVWpUH4LyGRd0yXx/B0dewcMqePNYI=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=KhJANJU5KLyLUVSaqnVwzXSx1GLZ+e77NX/312I+8A0xJG57sTACT8PBzPT9WwbMB
-         iINX/YaWFV6rQxxnkjexpMMNdEF/CavpoVpudi+AF69CLnIbYW8DtdzWhGpSqYMGVW
-         tW45nrDBEqkmqtCAIynxaWx3TTvagTqy0BjXVpjNvqs0Cr+DSdtM6HOm8iX57V2vA8
-         31/+oOM9PMPKfNqxHaKjTzrnNVJbqEEuwwYQIJ10FdBv3/gXODph20aSJ1C5tL7Lm1
-         1YJCzC/K7oMuCcaW/sj0Mx4itXdpaf8sU1WU6vfDNFX1JAY0O246t8PfLBakSu+Sp+
-         uH5tZ/mj/YO5g==
-Subject: Re: [PATCH] videobuf2: always re-init queue memory consistency
- attribute
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200609060417.8066-1-sergey.senozhatsky@gmail.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <d1ebdb9b-ceea-3582-831d-7cef5134d8f9@xs4all.nl>
-Date:   Wed, 10 Jun 2020 11:54:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 10 Jun 2020 05:54:59 -0400
+Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5CF4C03E96B
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 02:54:58 -0700 (PDT)
+Received: by mail-lj1-x235.google.com with SMTP id 9so1673246ljc.8
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 02:54:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=x3zJYnC4xPTLUvpdLo3hJwVKdm6pQi65dX2AKRAnoeU=;
+        b=bvYAdsPRtcgtKGb3QnS8DYfgeu9iZZ+3d2bED2t8THtIt6RXgj3rz6bJ0WI05t7K47
+         +S2m2gtlLbauUSYPZl432zrDFRlIBRN2mPTRZgZDiXnJNOSYx4dZAXcyf2SSaaUokmrx
+         qVB2HZbK17hqs4ANJ7RnqHLEaM7R175Avt5uOuhEsndixOsScfNf8E6yth0csDjL4++i
+         11C+CaDkudPtzHu2RUUIqkccZzBAv+hx+fUpQTfFTIjk8GRHt2BknPV2aPnw55VrtjKi
+         BxJJMY/+jFPOQCFmUxcecRWR1wsGxP/jiYvWMPeMx3abSq8ULRS6glsS4+oC4Nrlsum/
+         9Yzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=x3zJYnC4xPTLUvpdLo3hJwVKdm6pQi65dX2AKRAnoeU=;
+        b=FHFjNOVNbq9oozmWHM++ojzYC5mZRA+GjexjY9i/x3IdHZ7E8UDZ+iYdP9dOWMRHz7
+         kA6qYYyg1kyRg23/k1r8DHZzo3SKrcWcvdApOcTB+CQMCyh+2Y+QQ2ifwlnx6eilAmT6
+         fIf2s0Ht2KZAWQmja7egcp+Z+R0CV2DUUE/wwE4kyEkjCpqxVknjyjDh2Y74fF/FiW2h
+         seIG8/5xIPBHSY90xjZ0Pn/wkX57lLnajrbp1V+6pvbD1TZ8h/OChtqML76kKWXpkxub
+         0UdGxJQJCGRc5k14r4/aq0P24bky96wRwln102D7soVdJd7vcLjyzgHFTTTP6ro8bZzF
+         XXWA==
+X-Gm-Message-State: AOAM532XXnWCv34TdfROsBZz0xYa5SdhV2k7tmgcrrxralcnzPLoHi4X
+        2G5mNW38fgB6Icj9QxhgckP4FpKOvSkP+1D2CPfzgg==
+X-Google-Smtp-Source: ABdhPJyaZm9bWv1+tQfyTESsLtLgh1gwb2LxItCKaISMEvf2pjgPzCFpj8OL4bZ3WpufhOyscllUPZAmRJY1WJJKSVo=
+X-Received: by 2002:a2e:350a:: with SMTP id z10mr1288366ljz.104.1591782897430;
+ Wed, 10 Jun 2020 02:54:57 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200609060417.8066-1-sergey.senozhatsky@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfCug7zR+tx/WAQIH6jZfw/PBBpdB7WovrawVS0qZHcF/kFdNeSohTNdE55yzvLs97LFmRERZmZSCZworChSvX3f0ONgRem9Xb2RVd/cz3KqHp85jWYL7
- /w+ccgar+3XIB/Xsmqr4HQqoWN+liSmraHeBozl6HZFnLrwSBTiIW9FLYR470XwJeJqjOx3yclIyJLYNoJLoR4REoch8UT6B6AiR23Ej+Uyd2qHkQZ2CzXPV
- FeQss9oZ6o0c8rTiXWI+IbjSrREbXxk70nQcsPMqPFFcUnFmmSin5ezZ8XOO4s5ijAtgH1jjktXUlELFLRhUMA==
+References: <20200605224403.181015-1-sebastian.reichel@collabora.com> <20200605224403.181015-6-sebastian.reichel@collabora.com>
+In-Reply-To: <20200605224403.181015-6-sebastian.reichel@collabora.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 10 Jun 2020 11:54:46 +0200
+Message-ID: <CACRpkdabXvC2z3TEzChQb4MAOuFEZXQ_wN63mdSGTQh1YHxaHA@mail.gmail.com>
+Subject: Re: [PATCHv2 5/6] ARM: sa1100: Use GPIO descriptor for gpio-charger
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Russell King <linux@armlinux.org.uk>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kernel@collabora.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sergey,
+On Sat, Jun 6, 2020 at 12:44 AM Sebastian Reichel
+<sebastian.reichel@collabora.com> wrote:
 
-On 09/06/2020 08:04, Sergey Senozhatsky wrote:
-> We need a combination of two factors in order to permit modification
-> of queue's memory consistency attribute in set_queue_consistency():
->   (1) queue should allow user-space cache hints
->   (2) queue should be used for MMAP-ed I/O
-> 
-> Therefore the code in videobuf2 core looks as follows:
-> 
-> 	q->memory = req->memory;
-> 	set_queue_consistency(q, consistent);
-> 
-> This works when we do something like this (suppose that queue allows
-> cache hints)
-> 
-> 	reqbufs.memory = V4L2_MEMORY_DMABUF;
-> 	reqbufs.flags = 0;
-> 	doioctl(node, VIDIOC_REQBUFS, &reqbufs);
-> 
-> 	reqbufs.memory = V4L2_MEMORY_MMAP;
-> 	reqbufs.flags = V4L2_FLAG_MEMORY_NON_CONSISTENT;
-> 	doioctl(node, VIDIOC_REQBUFS, &reqbufs);
-> 
-> However, this doesn't work the other way around
-> 
-> 	reqbufs.memory = V4L2_MEMORY_MMAP;
-> 	reqbufs.flags = V4L2_FLAG_MEMORY_NON_CONSISTENT;
-> 	doioctl(node, VIDIOC_REQBUFS, &reqbufs);
-> 
-> 	reqbufs.memory = V4L2_MEMORY_DMABUF;
-> 	reqbufs.flags = 0;
-> 	doioctl(node, VIDIOC_REQBUFS, &reqbufs);
-> 
-> because __vb2_queue_free() doesn't clear queue's ->dma_attrs
-> once its don't freeing queue buffers, and by the time we call
-> set_queue_consistency() the queue is DMABUF so (2) is false
-> and we never clear the stale consistency attribute.
-> 
-> Re-implement set_queue_consistency() - it must always clear
-> queue's non-consistency attr and set it only if (1) and (2).
-> 
-> Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-> ---
->  drivers/media/common/videobuf2/videobuf2-core.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/media/common/videobuf2/videobuf2-core.c b/drivers/media/common/videobuf2/videobuf2-core.c
-> index 7e081716b8da..37d0186ba330 100644
-> --- a/drivers/media/common/videobuf2/videobuf2-core.c
-> +++ b/drivers/media/common/videobuf2/videobuf2-core.c
-> @@ -704,12 +704,11 @@ EXPORT_SYMBOL(vb2_verify_memory_type);
->  
->  static void set_queue_consistency(struct vb2_queue *q, bool consistent_mem)
->  {
-> +	q->dma_attrs &= ~DMA_ATTR_NON_CONSISTENT;
-> +
->  	if (!vb2_queue_allows_cache_hints(q))
->  		return;
-> -
-> -	if (consistent_mem)
-> -		q->dma_attrs &= ~DMA_ATTR_NON_CONSISTENT;
-> -	else
-> +	if (!consistent_mem)
->  		q->dma_attrs |= DMA_ATTR_NON_CONSISTENT;
->  }
->  
-> 
+> Provide AC detect GPIO via gpiod table instead of
+> legacy platform data so that legacy GPIO support
+> can be removed from the driver.
+>
+> Due to lack of hardware this has only been compile
+> tested.
+>
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-Is it OK with you if I fold this patch into the original patch series and make a
-new PR for it? I prefer to have a series merged without a bug, rather than fixing
-it in a final patch.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Regards,
-
-	Hans
+Yours,
+Linus Walleij
