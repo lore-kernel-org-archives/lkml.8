@@ -7,111 +7,98 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC44C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 03:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B93C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 03:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CF682076A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 03:10:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D26520774
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 03:11:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="avSeW6Ed"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fRVONKp+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726143AbgFJDKr (ORCPT
+        id S1726119AbgFJDLv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 23:10:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43434 "EHLO
+        Tue, 9 Jun 2020 23:11:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbgFJDKp (ORCPT
+        with ESMTP id S1725999AbgFJDLu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 23:10:45 -0400
-Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46A8AC05BD1E;
-        Tue,  9 Jun 2020 20:10:43 -0700 (PDT)
-Received: by mail-vk1-xa41.google.com with SMTP id e1so228946vkd.1;
-        Tue, 09 Jun 2020 20:10:43 -0700 (PDT)
+        Tue, 9 Jun 2020 23:11:50 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B0B9C05BD1E
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 20:11:50 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id e2so409019qvw.7
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 20:11:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KZBhwJpe3f99/5LDVB8Bc5/cCcPk7wAvZ6DTVQ9hBQo=;
-        b=avSeW6EdipkgvBtqfFwap8GyOTxynTVR7JqrquqYKuotU0/nUvlM7xlHlJ1tAitGDu
-         QUYLYb87xZef7qj3qeDE1k4EmFE1cbYmQBfwIp09ULfRs+wYjiabO06Gibetk1NLU5gJ
-         rz5CnO6egYTloKqDOFWswZX+Qro6lyuXdsGra+adGQtRrNeqz0rCxNlGxP7ZObqx4AUF
-         stvyFWZSCqViy5vTX6NLyPyMg06O5duxH5cDOYMXNueL8NZbQl9UJrPYb9l3LdrILH6E
-         mdsSwmmV1rLAh1NQeFdUB2r7ptxXppY9s3qS69KO4aMfegJuLl9rYGsN+J8hVyUg8zJP
-         qYFw==
+         :cc:content-transfer-encoding;
+        bh=PCGE0i5jShj8XCDSt3k7yuWmEi5dY5Ug2+/GmDjxlYg=;
+        b=fRVONKp+S7uG//pRPspo5Nrf6ifu8rHa/DU2rAa4lAHzRZGIe/nDBoa8miLk7F6Icc
+         VEVIk+U45HDrEklck8Ov0E4Y5iQEzvA8bfRjmMvRusZWQnJjJmcoAKUa78MkOm0XoTwY
+         QVrUP8RIVEyXgf4KrBLCirjjMlJJgCmDHwKfI35ATFvI3Xz4VbUbYepbO5Lzjjv4nXao
+         oMFd38agVxpYwuoMJKajIs81MFDfLavTEx3UJ2sV8TOL0EexI7p5jqzMpgFC4het1G8e
+         3/bQpoAQG10F6WnkKbpwi1Mc3+Y49jUaFNFElZdQ8PE8EKwvFQuBjnMOM4iRb99bFLL8
+         GGqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KZBhwJpe3f99/5LDVB8Bc5/cCcPk7wAvZ6DTVQ9hBQo=;
-        b=DWA14aZkwaQ44lR6kIP/BMdQn4DL4eG6pG7wJnebWakrj9MO9orf8XJX+UG8M0BpgG
-         S3C/EObVpyMUfau8z9puNbItd7aMAav0hZcBdcF4Ol+rEuJ0kU/sqB5rjO0mv4dMV0A+
-         3FjC1LJWCDCyw68s/RTa6DrRXby8dc1ige7lg9XPj45QlHBw5tdkIHuOvi5T1GKanGbU
-         nx2BjSqqiE5xQp/3QeP9AmvwTCb/+aVvqLe50B0ZArdkRbu0mIpzpDVB8uIpf3o1JiiP
-         DtXdOGNCOXeyolQoavxa/7o8QdQsoW5EPVLTTub2KGpz7OnFHyLaWGU0+IFVMXRyTGyr
-         IHFA==
-X-Gm-Message-State: AOAM533ajg6jBaBWKQ/YfLn6b5quzMNkN8X9ME5uK5DMTUz/4jdVOShM
-        OzOXjOR5uKdvDbKHtOKT5kxF7sqpINDNxldHZFI=
-X-Google-Smtp-Source: ABdhPJwhJJbrVDdVhPbiFe8woY8RZS6gzI8WAuQcnLKqPCqx6QB1rkMVrPvxE9COyN4yin3SLa4xOGD0F8W2ftqaENc=
-X-Received: by 2002:a1f:9094:: with SMTP id s142mr886695vkd.6.1591758642398;
- Tue, 09 Jun 2020 20:10:42 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=PCGE0i5jShj8XCDSt3k7yuWmEi5dY5Ug2+/GmDjxlYg=;
+        b=m01cdefD8HZpz5xF6ZfvyPnMa5bxGSD//B7k4EIj+ItOnW4E5fa9flpAWzvcustBF3
+         d0BorbG3izzqEnFcfMLerTHLtvN+RVS5rA6wrOP89SKCTXM/y/OwInPOodG3FKJHaSOR
+         QgCN3P5Ye+tpWJWIvLyVCPwMrxEMyphcIAOOxEw81hTIR/gIRpAG5DgQV6qnMUmS3BUp
+         4tNbJB/amhE/bcDsXyIyx8e+scpX67WMy+OARQtm0yQLjphR1ruFlKuHsYeF79notfJ+
+         vy3VW7CSHkYqD9jnPGYZ/vmhdb7uWN0ibxoI9IgHfNIvC5aH+U+Xg5qj+6LsesnDtKUr
+         cC6w==
+X-Gm-Message-State: AOAM530Dgoweh+RNgaz6rxePD5/rVhacf4uB8uaNv2bFSC6ak5FpIyT6
+        2eWgY3ZtXqQTm7+5ZXkZjZOLzlmXc0uBwUyoHwM=
+X-Google-Smtp-Source: ABdhPJxhrkEWfhv5QuiXBId0hcpxjE7i5N03/xqjKk6WQVwWEDDrUdbOkfB47BYSeQXEPEaokNih1g1UoY3KjvI9flo=
+X-Received: by 2002:ad4:4d04:: with SMTP id l4mr1277779qvl.88.1591758709588;
+ Tue, 09 Jun 2020 20:11:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200609104604.1594-1-stanimir.varbanov@linaro.org>
- <20200609111323.GA19604@bombadil.infradead.org> <c239d5df-e069-2091-589e-30f341c2cbd3@infradead.org>
- <9a79aded6981ec47f1f8b317b784e6e44158ac61.camel@perches.com>
- <CAJfuBxwyDysP30cMWDusw4CsSQitchA5hOKkpk1PktbsbCKTSw@mail.gmail.com> <6115b15ced02686f7408417411ff758445b42421.camel@perches.com>
-In-Reply-To: <6115b15ced02686f7408417411ff758445b42421.camel@perches.com>
-From:   jim.cromie@gmail.com
-Date:   Tue, 9 Jun 2020 21:10:15 -0600
-Message-ID: <CAJfuBxzd1Jmd726_zYxfjPy1YgTpcLzLU_fh=pd5FEBaVFCWrw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/7] Venus dynamic debug
-To:     Joe Perches <joe@perches.com>
-Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Linux Documentation List <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-acpi@vger.kernel.org, netdev@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jason Baron <jbaron@akamai.com>
+References: <1590561903-13186-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1590561903-13186-6-git-send-email-iamjoonsoo.kim@lge.com> <20200609134309.GG22623@dhcp22.suse.cz>
+In-Reply-To: <20200609134309.GG22623@dhcp22.suse.cz>
+From:   Joonsoo Kim <js1304@gmail.com>
+Date:   Wed, 10 Jun 2020 12:11:35 +0900
+Message-ID: <CAAmzW4N-O9+Y9xmi6WfB5_1voBQJZzPetpksdqcBx51kkY6njw@mail.gmail.com>
+Subject: Re: [PATCH v2 05/12] mm/hugetlb: unify hugetlb migration callback function
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, kernel-team@lge.com,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 9, 2020 at 4:23 PM Joe Perches <joe@perches.com> wrote:
+2020=EB=85=84 6=EC=9B=94 9=EC=9D=BC (=ED=99=94) =EC=98=A4=ED=9B=84 10:43, M=
+ichal Hocko <mhocko@kernel.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
 >
-> On Tue, 2020-06-09 at 15:21 -0600, jim.cromie@gmail.com wrote:
-> >
-> > As Joe noted, there is a lot of ad-hockery to possibly clean up,
-> > but I dont grok how these levels should be distinguished from
-> > KERN_(WARN|INFO|DEBUG) constants.
+> On Wed 27-05-20 15:44:56, Joonsoo Kim wrote:
+> [...]
+> > -/* page migration callback function */
+> >  struct page *alloc_huge_page_nodemask(struct hstate *h,
+> >                               struct alloc_control *ac)
+> >  {
+> >       ac->gfp_mask |=3D htlb_alloc_mask(h);
+> > +     if (ac->nid =3D=3D NUMA_NO_NODE)
+> > +             ac->gfp_mask &=3D ~__GFP_THISNODE;
 >
-> These are not KERN_<LEVEL> at all, all are emitted at KERN_DEBUG
+> Is this really needed? alloc_huge_page_node is currently only called
+> from numa migration code and the target node should be always defined.
 
-yes indeed.  but they are chosen by programmer, fixed by compiler.  not dynamic.
-<pmladek@suse.com> also noted the conceptual adjacency (ambiguity),
-and referenced KERN_<lvl>
+Thanks! When I read the code, I was not sure that the target node is always
+defined so I left this code. However, if it's true, this code isn't
+needed at all.
+I will consider your suggestion in the next version.
 
-
-
-If we need this extra query-term, lets call it   mbits / mflags /
-module_flags / module_bits
-it needs to be module specific, so also requiring "module foo" search
-term in the query.
-( "modflags" is no good, cuz "mod" also means "modified" - just mflags
-is better )
-
-Already, we have function, file, module, all of which convey semantic
-structure of the code,
-and they also match wildcards, so " function foo_*_* " is an effective grouping.
-Id think this would cover most cases.
-
-Finally, all "module venus +p " callsites could be explicitly
-specified individually in
-universe=`grep venus control | wc -l`
-lines, likely a small set.
-Using the semantic structure exposed by `grep venus control`, it would
-likely be far less.
+Thanks.
