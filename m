@@ -2,141 +2,157 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3096BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:54:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA979C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D4B220656
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:54:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA8602074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:57:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IYvRVub8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UlN/C4YY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730461AbgFJTyT (ORCPT
+        id S1728709AbgFJT5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 15:54:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57386 "EHLO
+        Wed, 10 Jun 2020 15:57:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730382AbgFJTxx (ORCPT
+        with ESMTP id S1726219AbgFJT5N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 15:53:53 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBAD4C03E96B
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 12:53:52 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id z2so3208231ilq.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 12:53:52 -0700 (PDT)
+        Wed, 10 Jun 2020 15:57:13 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B619C03E96B;
+        Wed, 10 Jun 2020 12:57:13 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id r16so1629392qvm.6;
+        Wed, 10 Jun 2020 12:57:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=5T05cldmDvQfb77MhXbjwDSTWhsR/a0PAAsdMXfo7+U=;
-        b=IYvRVub8FU12CaBQnSJ2Hg6GIrhJmIi6cUGltv6PVN66zyTX70sHSyd0ICHKjU6V9x
-         rLmepJu4GpTX4wNlOll08ytzCDn1Ol1D65KaSMQB5ySSrwfnKIPBXn2IAAXRjbkXLED6
-         kpEv+B1EZ4Tanfj8QYBKVQRrr27c6PPzXdubnHU3W2LPCSVV865TeTw4aSQdglLrGBvu
-         frTbFad/Pil8R+xm9KOR/uH3wS/Um+sNQxvCVnrgIvUpEN6AGYTzu1QH92R6FYFETJh6
-         qWhWvcYPVDpfp7FCAIuax4b25ffslmx+YL1e9e+k//8jIYxawuDfIzUFyPMlvXzQ2lB9
-         zQRQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=e7DTymW0dlvUI6UcJcAeZHCURN97Q9zDso/sHlDXRNA=;
+        b=UlN/C4YYYCXVSwrKjjY3uOG/wP63W4GdE1l5KDxKe8xiggNNm3xqvFGL1N44md5YZ3
+         VDoCVM46iPmYU8mpemi+nbgUZcUkSqcX9UhF613wB5Dc4ooVEWBmxwKh/nY2Nh2LxKTO
+         +RGatdPg5pWR4DsAUaN6NAlJCi1CSFPtQxcvwu/xjAEhsCZQEz9RLeeP2fJxh0EBqhGB
+         +kdiyWBeQoDR/PHlV62/5sW+ECZc29FlXzwA6HZ6zsm052EyOd0M+IxJtSgJGxf6lAmY
+         lvYyXgBsMdZAm5Dirf2hxBmO6X2rkG5BWZ++xB1Ur6VG2KGpfVVmwvQp7bGTgGAqXoYA
+         /hFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=5T05cldmDvQfb77MhXbjwDSTWhsR/a0PAAsdMXfo7+U=;
-        b=B4CDzWYXfcwaYpyf4Kr8fyM4K5bWnl5j0PUIT/ru63PN0VNkO3tzg6Zip0BVKZW1V8
-         7AyG2fR1Ya2WlTFIWkzRK8FceoljxrJg1XxSwYJViMRvmtJ8vypDBXv3K6FNQko9DYQf
-         fP1y2crdqVw4cC09C8u5NmTAnOeF4qh83/gEizP+EnOs/syrBOZWR9J5b+m7BFnYSSgx
-         MwIMxH8oTmm2JVwWK3dOWXpllyVDr+8bu66OjjtqYo8EBuSZ/LymF3Q+9VoGJOIOxo/O
-         2IyhkkZfR+EpXi4xVv4MCDpCAZ0nAWqfnWSxF0m8RrKQr+7bNbiQFvy3CWwfpmnrFsGX
-         EzVA==
-X-Gm-Message-State: AOAM5310kGUYU2WghewyBu/2sQAjC5kBEaMsClbF29x31OmeWziayPxS
-        th1rWnmNT8Kad0QVkr5F8IWj+g==
-X-Google-Smtp-Source: ABdhPJzaarLdXeahhIkS4rtJPH7St+FhJ1fUqWHoibOoLJjv5eJVw88zDBj3opnjHqvL0pAiV7Vw0g==
-X-Received: by 2002:a92:d302:: with SMTP id x2mr4710813ila.175.1591818832177;
-        Wed, 10 Jun 2020 12:53:52 -0700 (PDT)
-Received: from presto.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.gmail.com with ESMTPSA id r10sm408828ile.36.2020.06.10.12.53.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 12:53:51 -0700 (PDT)
-From:   Alex Elder <elder@linaro.org>
-To:     davem@davemloft.net, kuba@kernel.org
-Cc:     evgreen@chromium.org, subashab@codeaurora.org,
-        cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net 4/5] net: ipa: header pad field only valid for AP->modem endpoint
-Date:   Wed, 10 Jun 2020 14:53:31 -0500
-Message-Id: <20200610195332.2612233-5-elder@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200610195332.2612233-1-elder@linaro.org>
-References: <20200610195332.2612233-1-elder@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=e7DTymW0dlvUI6UcJcAeZHCURN97Q9zDso/sHlDXRNA=;
+        b=nq43tVZjOyvOxhQe+9rg++T1R51PCLx0kHXZa4aylhiGvpTtiiAY0/pNpT4BOlPNqp
+         Yz9Ue8NTACSKeD5u2l8wysQOvie9qeavnTNqmnWGt8rZsN+9Jc0cXLxSN+VdkNMewTHK
+         33XZOJPvnSYVORwXWM9MORnwFBZ41nqhyjO7a+8PsquBpyAMHPknkaCmBp5ZvJgR8X8c
+         r1YQWcmKHOop2kazLzcEKQ8bqOc+6HPBpNLjYU39lYsrHzSYZdcMwE7w3Vlf9x/Ttxn0
+         yDuOlxp5iPbAuektjQKo4gpt3x2QV5YW8jJGOP3b4ydiC/c2LxpjBod37hnskja1JQcv
+         KxlQ==
+X-Gm-Message-State: AOAM533KhHC5EpTklGl9TZxcBIIVNSp496gXhSEZeu06KR0a2DjtL80M
+        8I156piwxcf1rMNHR/+b0CEYME8xqP7iDJ3V9WzBd54mdOU=
+X-Google-Smtp-Source: ABdhPJysrd/Lk7ZFl9lvvRPWP6l9wx2xRBJWOVf6T/AKiULdAUcsa+SId5libD1DvTqTsaPkNdCuToAw+q/94pXF54w=
+X-Received: by 2002:ad4:4627:: with SMTP id x7mr3830646qvv.54.1591819032442;
+ Wed, 10 Jun 2020 12:57:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200607113632.GA49147@kroah.com> <20200609210400.GA1461839@bjorn-Precision-5520>
+ <CAOSf1CGMwHGSn18MeKYr2BESfLwq3Q8_0fC6yhiQRrAXeSosqQ@mail.gmail.com>
+In-Reply-To: <CAOSf1CGMwHGSn18MeKYr2BESfLwq3Q8_0fC6yhiQRrAXeSosqQ@mail.gmail.com>
+Reply-To: rajatxjain@gmail.com
+From:   Rajat Jain <rajatxjain@gmail.com>
+Date:   Wed, 10 Jun 2020 12:57:00 -0700
+Message-ID: <CAA93t1r37y-Shr+-oHoBoLSbE1vAguwdE2ak2F6L4Ecm5+3JKQ@mail.gmail.com>
+Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
+ "whitelisted" drivers
+To:     "Oliver O'Halloran" <oohall@gmail.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rajat Jain <rajatja@google.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Zubin Mithra <zsm@google.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Only QMAP endpoints should be configured to find a pad size field
-within packet headers.  They are found in the first byte of the QMAP
-header (and the hardware fills only the 6 bits in that byte that
-constitute the pad_len field).
+On Tue, Jun 9, 2020 at 6:34 PM Oliver O'Halloran <oohall@gmail.com> wrote:
+>
+> On Wed, Jun 10, 2020 at 7:04 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > To sketch this out, my understanding of how this would work is:
+> >
+> >   - Expose the PCI pdev->untrusted bit in sysfs.  We don't expose this
+> >     today, but doing so would be trivial.  I think I would prefer a
+> >     sysfs name like "external" so it's more descriptive and less of a
+> >     judgment.
+> >
+> >     This comes from either the DT "external-facing" property or the
+> >     ACPI "ExternalFacingPort" property.
+>
+> I don't think internal / external is the right distinction to be
+> making. We have a similar trust issue with the BMC in servers even
+> though they're internal devices. They're typically network accessible
+> and infrequently updated so treating them as trustworthy isn't a great
+> idea. We have been slowly de-privileging the BMC over the last few
+> years, but the PCIe interface isn't locked down enough for my liking
+> since the SoCs we use do allow software to set the VDID and perform
+> arbitrary DMAs (thankfully limited to 32bit). If we're going to add in
+> infrastructure for handling possibly untrustworthy PCI devices then
+> I'd like to use that for BMCs too.
+>
+> >   - All devices present at boot are enumerated.  Any statically built
+> >     drivers will bind to them before any userspace code runs.
+> >
+> >     If you want to keep statically built drivers from binding, you'd
+> >     need to invent some mechanism so pci_driver_init() could clear
+> >     drivers_autoprobe after registering pci_bus_type.
+> >
+> >   - Early userspace code prevents modular drivers from automatically
+> >     binding to PCI devices:
+> >
+> >       echo 0 > /sys/bus/pci/drivers_autoprobe
+> >
+> >     This prevents modular drivers from binding to all devices, whether
+> >     present at boot or hot-added.
+>
+> I don't see why this is preferable to just disabling autoprobe for
+> untrusted devices. That would dovetail nicely with Rajat's whitelist
+> idea if we want to go down that route and I think we might want to.
+> The BMC usually provides some form of VGA console and we'd like that
+> to continue working out-of-the-box without too much user (or distro)
+> intervention.
 
-The RMNet driver assumes the pad_len field is valid for received
-packets, so we want to ensure the pad_len field is filled in that
-case.  That driver also assumes the length in the QMAP header
-includes the pad bytes.
+I wouldn't mind introducing a kernel parameter to disable auto-probing
+of untrusted devices if there is a wider agreement here.
+The only notch is that in my opinion, if present, that parameter
+should disable auto-probing for "external" devices only (i.e.
+"external-facing" devices should still be auto-probed).
 
-The RMNet driver does *not* pad the packets it sends, so the pad_len
-field can be ignored.
+Thanks,
 
-Fix ipa_endpoint_init_hdr_ext() so it only marks the pad field
-offset valid for QMAP RX endpoints, and in that case indicates
-that the length field in the header includes the pad bytes.
+Rajat
 
-Signed-off-by: Alex Elder <elder@linaro.org>
----
- drivers/net/ipa/ipa_endpoint.c | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/ipa/ipa_endpoint.c b/drivers/net/ipa/ipa_endpoint.c
-index 59313ced7036..b35e027003b3 100644
---- a/drivers/net/ipa/ipa_endpoint.c
-+++ b/drivers/net/ipa/ipa_endpoint.c
-@@ -467,7 +467,7 @@ void ipa_endpoint_init_hdr(struct ipa_endpoint *endpoint)
- 			header_size += sizeof(struct rmnet_map_ul_csum_header);
- 		val |= u32_encode_bits(header_size, HDR_LEN_FMASK);
- 
--		/* Define how to fill mux_id in a received QMAP header */
-+		/* Define how to fill fields in a received QMAP header */
- 		if (!endpoint->toward_ipa) {
- 			u32 off;	/* Field offset within header */
- 
-@@ -499,10 +499,21 @@ static void ipa_endpoint_init_hdr_ext(struct ipa_endpoint *endpoint)
- 	u32 val = 0;
- 
- 	val |= HDR_ENDIANNESS_FMASK;		/* big endian */
--	val |= HDR_TOTAL_LEN_OR_PAD_VALID_FMASK;
--	/* HDR_TOTAL_LEN_OR_PAD is 0 (pad, not total_len) */
-+
-+	/* A QMAP header contains a 6 bit pad field at offset 0.  The RMNet
-+	 * driver assumes this field is meaningful in packets it receives,
-+	 * and assumes the header's payload length includes that padding.
-+	 * The RMNet driver does *not* pad packets it sends, however, so
-+	 * the pad field (although 0) should be ignored.
-+	 */
-+	if (endpoint->data->qmap && !endpoint->toward_ipa) {
-+		val |= HDR_TOTAL_LEN_OR_PAD_VALID_FMASK;
-+		/* HDR_TOTAL_LEN_OR_PAD is 0 (pad, not total_len) */
-+		val |= HDR_PAYLOAD_LEN_INC_PADDING_FMASK;
-+		/* HDR_TOTAL_LEN_OR_PAD_OFFSET is 0 */
-+	}
-+
- 	/* HDR_PAYLOAD_LEN_INC_PADDING is 0 */
--	/* HDR_TOTAL_LEN_OR_PAD_OFFSET is 0 */
- 	if (!endpoint->toward_ipa)
- 		val |= u32_encode_bits(pad_align, HDR_PAD_TO_ALIGNMENT_FMASK);
- 
--- 
-2.25.1
-
+>
+> Oliver
