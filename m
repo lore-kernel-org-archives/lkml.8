@@ -2,94 +2,90 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 386C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C0B7C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1226220734
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:53:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="sB8iW6+w"
+	by mail.kernel.org (Postfix) with ESMTP id 574F92083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:56:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591772166;
+	bh=5STvsVX/pI2NfrFCiamfYh+BDyGD5ZoTDgeDDX/5rC0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BXcFG0rG9UxQgtfjEBOH3gz/3/jVs+S6kj477Rz55UvvFXxmtM58txLDK3A8bmyAk
+	 /SS9sg3xGW4QM+pFp0hlREhGiKZxVPrhZNKoxz57f3ep5K0rUFO1v6V806fEW6K6ZE
+	 v2PbhdLBDm4Uf3YhNJSeF8PfL0F196bVlRKCevdY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726300AbgFJGw6 (ORCPT
+        id S1726262AbgFJG4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 02:52:58 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:58917 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbgFJGw5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 02:52:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1591771977; x=1623307977;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=jtHJNTFRuP3ZFYup2dq/Rd0J8Rl5Agllf3ZZVbrAhRc=;
-  b=sB8iW6+w+C8LFbJSZuWMBvU6gLSjWhVQf7Ku0HH+N00QUitMPZKyZNyp
-   IFBy10PmsA4pSr/dPyyBi5nxDs5XuPy8Jifn419swbPTreLHSycrUYdF4
-   awXg59J8XSd+YdGaCAyzRYvSMI6bk9OYJQNJloxDVqsGdcGbGtI5MQDsf
-   I=;
-IronPort-SDR: 2CEnfRcQ6cPukYznrgAzY/Icy5wCJDi63m9JaWltPk8cBOgqAp2WoAck2aXzm1CB6jB3GhroOW
- +KmJcZ/z6arg==
-X-IronPort-AV: E=Sophos;i="5.73,495,1583193600"; 
-   d="scan'208";a="49856665"
-Received: from sea32-co-svc-lb4-vlan2.sea.corp.amazon.com (HELO email-inbound-relay-2c-87a10be6.us-west-2.amazon.com) ([10.47.23.34])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 10 Jun 2020 06:52:55 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2c-87a10be6.us-west-2.amazon.com (Postfix) with ESMTPS id 628B0A3D39;
-        Wed, 10 Jun 2020 06:52:53 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 10 Jun 2020 06:52:52 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.65) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 10 Jun 2020 06:52:48 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>, <apw@canonical.com>, <joe@perches.com>
-CC:     <colin.king@canonical.com>, <sj38.park@gmail.com>,
-        <linux-kernel@vger.kernel.org>, SeongJae Park <sjpark@amazon.de>
-Subject: [PATCH v3 2/2] scripts/deprecated_terms: Recommend blocklist/allowlist instead of blacklist/whitelist
-Date:   Wed, 10 Jun 2020 08:52:23 +0200
-Message-ID: <20200610065223.29894-3-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200610065223.29894-1-sjpark@amazon.com>
-References: <20200610065223.29894-1-sjpark@amazon.com>
+        Wed, 10 Jun 2020 02:56:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50094 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726095AbgFJG4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 02:56:02 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA97720734;
+        Wed, 10 Jun 2020 06:56:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591772162;
+        bh=5STvsVX/pI2NfrFCiamfYh+BDyGD5ZoTDgeDDX/5rC0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=e0MwBkvVTHUTmDVaH2vs5miGgN/MlrVKlfR/M/NyC6z80FCNSovuYF3uG+UTFzncx
+         K0Jw9d2Q+Xdzc857h54ARg/fkhIfNgHko4RrdSNNo2BoMbGGOEBC/hqiAdlZEYOjoK
+         vbM66H6VJhracJhCR5+CRIKHf0mcX3BfwTGCSD+c=
+Date:   Tue, 9 Jun 2020 23:56:00 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     David Laight <David.Laight@aculab.com>
+Cc:     'Herbert Xu' <herbert@gondor.apana.org.au>,
+        Zhangfei Gao <zhangfei.gao@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        wangzhou1 <wangzhou1@hisilicon.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>
+Subject: Re: [PATCH] crypto: hisilicon - fix strncpy warning with strlcpy
+Message-ID: <20200610065600.GC6286@sol.localdomain>
+References: <202006032110.BEbKqovX%lkp@intel.com>
+ <1591241524-6452-1-git-send-email-zhangfei.gao@linaro.org>
+ <20200604033918.GA2286@gondor.apana.org.au>
+ <b6ad8af2-1cb7-faac-0446-5e09e97f3616@linaro.org>
+ <20200604061811.GA28759@gondor.apana.org.au>
+ <b23433f8-d95d-8142-c830-fb92e5ccd4a1@linaro.org>
+ <20200604065009.GA29822@gondor.apana.org.au>
+ <f8dceec5-6835-c064-bb43-fd12668c2dbb@linaro.org>
+ <20200605121703.GA3792@gondor.apana.org.au>
+ <8c0d8f4e21794d8b80d0a3852830debb@AcuMS.aculab.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.65]
-X-ClientProxiedBy: EX13P01UWB002.ant.amazon.com (10.43.161.191) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8c0d8f4e21794d8b80d0a3852830debb@AcuMS.aculab.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+On Sun, Jun 07, 2020 at 01:03:45PM +0000, David Laight wrote:
+> From: Herbert Xu
+> > Sent: 05 June 2020 13:17
+> ...
+> > Better yet use strscpy which will even return an error for you.
+> 
+> It really ought to return the buffer length on truncation.
+> Then you can loop:
+> 	while(...)
+> 		buf += strxxxcpy(buf, src, buf_end - buf);
+> and only check right at the end.
+> 
+> 	David
 
-This commit recommends the patches to replace 'blacklist' and
-'whitelist' with the 'blocklist' and 'allowlist', because the new
-suggestions are incontrovertible, doesn't make people hurt, and more
-self-explanatory.
+scnprintf() can be used for that.
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- scripts/deprecated_terms.txt | 2 ++
- 1 file changed, 2 insertions(+)
+But that doesn't seem relevant to this patch.
 
-diff --git a/scripts/deprecated_terms.txt b/scripts/deprecated_terms.txt
-index 6faa06451c3d..102a0c82c6a0 100644
---- a/scripts/deprecated_terms.txt
-+++ b/scripts/deprecated_terms.txt
-@@ -3,3 +3,5 @@
- # The format of each line is:
- # deprecated||suggested
- #
-+blacklist||blocklist
-+whitelist||allowlist
--- 
-2.17.1
-
+- Eric
