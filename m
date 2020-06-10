@@ -2,238 +2,129 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BB1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91170C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B1B220760
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63D8A2072E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:19:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591823966;
+	bh=kKyDiU0/UB9Ct/ho+PM0wjzZ9KjHfNMjLQ0wPGw7GWg=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=WXSwvZ4guoF5uPSIovVaND7ocRcRrw1KS1xhYoy6BN2jOsdCPQ2RtsoN80et+wD5d
+	 5/99JfEiaadzLdXZju1RjRPu8IjZqxJ3W3/XF1ehMd/YPX7tUbUBpv57Y1Xr/mgVmQ
+	 TlnM47uhkSR0GT6xPjq5V8c+5wSQtr9zDNlYYa4Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbgFJVQP (ORCPT
+        id S1726265AbgFJVTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 17:16:15 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:49547 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726278AbgFJVQG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 17:16:06 -0400
-Received: by mail-io1-f69.google.com with SMTP id d20so2426081iom.16
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 14:16:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=sUI1O0BTtU05qonMyEtsZi52Vb5rXo2ggrraYblD2Ao=;
-        b=RHRS+kOaaczSaIKTbRedNLiWisMlbB/3AatnqGuCWQ/N9ObaSbc1C/niblhe2jEy3t
-         OXb774c3W61q1JR1SsuS4RrgDz7VlicuWH8BOrK/9jjaWjWuKkwg+GyCUds/RT9JP16d
-         EytZ25RsW4ua+zCPv/WNkQpxq1Aka2FXuyaUuNUrbkXCldHYW6ZRXKVcsb3ec0zFRYIs
-         mktJyKrJ9ARzLHjX5uhgUo+2JdCl19jiGBtLBOCLnTKhgpAGfAA0x0//4yowPBvIMOdl
-         FTm6ZRP9w2Y6WaInKPoT0cAH4sigoHUoY+KkSd3K5tMggpYIxAzykFvpyIA2F+5ozXlR
-         N1LQ==
-X-Gm-Message-State: AOAM531d2i86OAsRh1WtokTZEkApPu5m3JWONNidGLxCp4p3Wp1Zh2jE
-        70KDb7eaM9L2peYhr3qR5KaXWqhhj9WAmOkTUT/GYtqarz1b
-X-Google-Smtp-Source: ABdhPJzP2fObnwqMht/MQg73gUpjlISw8vhKWYKTEQxMGR0styJRYuImaxvvsiNwskjE4Jp9/pIHOD29/jGcPwxGSttyFl/xpFLQ
-MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:13f4:: with SMTP id w20mr5060814ilj.294.1591823764565;
- Wed, 10 Jun 2020 14:16:04 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 14:16:04 -0700
-In-Reply-To: <20200610211019.GJ1347934@mit.edu>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000000839a705a7c15aa5@google.com>
-Subject: Re: BUG: unable to handle kernel NULL pointer dereference in
- generic_perform_write (2)
-From:   syzbot <syzbot+bca9799bf129256190da@syzkaller.appspotmail.com>
-To:     adilger.kernel@dilger.ca, akpm@linux-foundation.org,
-        dan.j.williams@intel.com, jack@suse.cz, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        syzkaller-bugs@googlegroups.com, tytso@mit.edu
+        Wed, 10 Jun 2020 17:19:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58576 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726114AbgFJVTY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 17:19:24 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 985B72072E;
+        Wed, 10 Jun 2020 21:19:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591823964;
+        bh=kKyDiU0/UB9Ct/ho+PM0wjzZ9KjHfNMjLQ0wPGw7GWg=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=K3A/3KYtsM442gkErVWP+R/oKC3+bEGFkDcxGE0Taod/Ze0sSh/kk9wGw8LPFdt83
+         VtTluqRNcgOYIqzQbIt4tzRs/dmQB2UC+QX5IifWsfiLdO2gXomYBut4GwPiy1+8Ht
+         BiwO5pGz0OPtA3UEDICp3f7Igysr3pE/+c6hZazE=
+Message-ID: <fe141babe698296f96fde39a8da85005506fd0f0.camel@kernel.org>
+Subject: Re: [PATCH][man-pages] sync.2: syncfs() now returns errors if
+ writeback fails
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 10 Jun 2020 17:19:22 -0400
+In-Reply-To: <20200610155013.GA1339@sol.localdomain>
+References: <20200610103347.14395-1-jlayton@kernel.org>
+         <20200610155013.GA1339@sol.localdomain>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, 2020-06-10 at 08:50 -0700, Eric Biggers wrote:
+> On Wed, Jun 10, 2020 at 06:33:47AM -0400, Jeff Layton wrote:
+> > A patch has been merged for v5.8 that changes how syncfs() reports
+> > errors. Change the sync() manpage accordingly.
+> > 
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > ---
+> >  man2/sync.2 | 24 +++++++++++++++++++++++-
+> >  1 file changed, 23 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/man2/sync.2 b/man2/sync.2
+> > index 7198f3311b05..27e04cff5845 100644
+> > --- a/man2/sync.2
+> > +++ b/man2/sync.2
+> > @@ -86,11 +86,26 @@ to indicate the error.
+> >  is always successful.
+> >  .PP
+> >  .BR syncfs ()
+> > -can fail for at least the following reason:
+> > +can fail for at least the following reasons:
+> >  .TP
+> >  .B EBADF
+> >  .I fd
+> >  is not a valid file descriptor.
+> > +.TP
+> > +.B EIO
+> > +An error occurred during synchronization.
+> > +This error may relate to data written to any file on the filesystem, or on
+> > +metadata related to the filesytem itself.
+> > +.TP
+> > +.B ENOSPC
+> > +Disk space was exhausted while synchronizing.
+> > +.TP
+> > +.BR ENOSPC ", " EDQUOT
+> > +Data was written to a files on NFS or another filesystem which does not
+> > +allocate space at the time of a
+> > +.BR write (2)
+> > +system call, and some previous write failed due to insufficient
+> > +storage space.
+> >  .SH VERSIONS
+> >  .BR syncfs ()
+> >  first appeared in Linux 2.6.39;
+> > @@ -121,6 +136,13 @@ or
+> >  .BR syncfs ()
+> >  provide the same guarantees as fsync called on every file in
+> >  the system or filesystem respectively.
+> > +.PP
+> > +In mainline kernel versions prior to 5.8,
+> > +.\" commit 735e4ae5ba28c886d249ad04d3c8cc097dad6336
+> > +.BR syncfs ()
+> > +will only fail with EBADF when passed a bad file descriptor. In 5.8
+> > +and later kernels, it will also report an error if one or more inodes failed
+> > +to be written back since the last syncfs call.
+> 
+> The sentence "In mainline kernel versions prior to 5.8, syncfs() will only fail
+> with EBADF when passed a bad file descriptor" is ambiguous.  It could mean that
+> EBADF can now mean other things too.
+> 
+> Maybe write: "In mainline kernel versions prior to 5.8, syncfs() will only fail
+> when passed a bad file descriptor (EBADF)."
+> 
+> - Eric
 
-syzbot tried to test the proposed patch but build/boot failed:
+Good point. Fixed in my tree using your verbiage. I'll send out a v2
+patch once I give others a chance to comment.
 
-syzkaller build failed: failed to run ["make" "target"]: exit status 2
-GOOS=linux GOARCH=amd64 go install ./syz-fuzzer
-# github.com/google/syzkaller/sys/netbsd/gen
-sys/netbsd/gen/amd64.go:41:58: undefined: Field
-sys/netbsd/gen/amd64.go:44:10: undefined: Ref
-sys/netbsd/gen/amd64.go:45:59: undefined: Ref
-sys/netbsd/gen/amd64.go:46:70: undefined: Field
-sys/netbsd/gen/amd64.go:49:66: undefined: Field
-sys/netbsd/gen/amd64.go:54:60: undefined: Field
-sys/netbsd/gen/amd64.go:58:66: undefined: Field
-sys/netbsd/gen/amd64.go:62:68: undefined: Field
-sys/netbsd/gen/amd64.go:68:62: undefined: Field
-sys/netbsd/gen/amd64.go:72:59: undefined: Ref
-sys/netbsd/gen/amd64.go:72:59: too many errors
-# github.com/google/syzkaller/sys/akaros/gen
-sys/akaros/gen/amd64.go:23:63: undefined: Field
-sys/akaros/gen/amd64.go:26:69: undefined: Field
-sys/akaros/gen/amd64.go:29:56: undefined: Field
-sys/akaros/gen/amd64.go:34:52: undefined: Field
-sys/akaros/gen/amd64.go:39:67: undefined: Field
-sys/akaros/gen/amd64.go:43:54: undefined: Field
-sys/akaros/gen/amd64.go:48:54: undefined: Field
-sys/akaros/gen/amd64.go:51:64: undefined: Field
-sys/akaros/gen/amd64.go:56:51: undefined: Field
-sys/akaros/gen/amd64.go:62:56: undefined: Field
-sys/akaros/gen/amd64.go:62:56: too many errors
-# github.com/google/syzkaller/sys/openbsd/gen
-sys/openbsd/gen/amd64.go:49:55: undefined: Field
-sys/openbsd/gen/amd64.go:53:10: undefined: Ref
-sys/openbsd/gen/amd64.go:54:60: undefined: Field
-sys/openbsd/gen/amd64.go:58:10: undefined: Ref
-sys/openbsd/gen/amd64.go:59:61: undefined: Field
-sys/openbsd/gen/amd64.go:63:10: undefined: Ref
-sys/openbsd/gen/amd64.go:64:60: undefined: Field
-sys/openbsd/gen/amd64.go:68:10: undefined: Ref
-sys/openbsd/gen/amd64.go:69:51: undefined: Field
-sys/openbsd/gen/amd64.go:72:52: undefined: Field
-sys/openbsd/gen/amd64.go:72:52: too many errors
-# github.com/google/syzkaller/sys/test/gen
-sys/test/gen/32_fork_shmem.go:29:55: unknown field 'Attrs' in struct literal of type prog.Syscall
-sys/test/gen/32_fork_shmem.go:30:45: unknown field 'Attrs' in struct literal of type prog.Syscall
-sys/test/gen/32_fork_shmem.go:31:50: undefined: Ref
-sys/test/gen/32_fork_shmem.go:31:60: unknown field 'Attrs' in struct literal of type prog.Syscall
-sys/test/gen/32_fork_shmem.go:32:53: undefined: Field
-sys/test/gen/32_fork_shmem.go:34:5: unknown field 'Attrs' in struct literal of type prog.Syscall
-sys/test/gen/32_fork_shmem.go:35:66: undefined: Ref
-sys/test/gen/32_fork_shmem.go:36:53: undefined: Field
-sys/test/gen/32_fork_shmem.go:39:62: undefined: Field
-sys/test/gen/32_fork_shmem.go:42:48: undefined: Field
-sys/test/gen/32_fork_shmem.go:42:48: too many errors
-# github.com/google/syzkaller/sys/freebsd/gen
-sys/freebsd/gen/386.go:49:76: undefined: Field
-sys/freebsd/gen/386.go:54:60: undefined: Field
-sys/freebsd/gen/386.go:58:68: undefined: Field
-sys/freebsd/gen/386.go:65:67: undefined: Field
-sys/freebsd/gen/386.go:71:68: undefined: Field
-sys/freebsd/gen/386.go:77:67: undefined: Field
-sys/freebsd/gen/386.go:83:67: undefined: Field
-sys/freebsd/gen/386.go:89:68: undefined: Field
-sys/freebsd/gen/386.go:95:69: undefined: Field
-sys/freebsd/gen/386.go:101:85: undefined: Field
-sys/freebsd/gen/386.go:101:85: too many errors
-# github.com/google/syzkaller/sys/windows/gen
-sys/windows/gen/amd64.go:23:51: undefined: Field
-sys/windows/gen/amd64.go:26:53: undefined: Field
-sys/windows/gen/amd64.go:29:59: undefined: Field
-sys/windows/gen/amd64.go:32:75: undefined: Field
-sys/windows/gen/amd64.go:35:51: undefined: Field
-sys/windows/gen/amd64.go:45:57: undefined: Field
-sys/windows/gen/amd64.go:55:85: undefined: Field
-sys/windows/gen/amd64.go:66:69: undefined: Field
-sys/windows/gen/amd64.go:77:97: undefined: Field
-sys/windows/gen/amd64.go:88:89: undefined: Field
-sys/windows/gen/amd64.go:88:89: too many errors
-# github.com/google/syzkaller/sys/fuchsia/gen
-sys/fuchsia/gen/amd64.go:96:45: undefined: Field
-sys/fuchsia/gen/amd64.go:99:45: undefined: Field
-sys/fuchsia/gen/amd64.go:103:45: undefined: Field
-sys/fuchsia/gen/amd64.go:108:45: undefined: Field
-sys/fuchsia/gen/amd64.go:111:45: undefined: Field
-sys/fuchsia/gen/amd64.go:114:10: undefined: Ref
-sys/fuchsia/gen/amd64.go:115:41: undefined: Field
-sys/fuchsia/gen/amd64.go:117:10: undefined: Ref
-sys/fuchsia/gen/amd64.go:118:43: undefined: Field
-sys/fuchsia/gen/amd64.go:121:10: undefined: Ref
-sys/fuchsia/gen/amd64.go:121:10: too many errors
-# github.com/google/syzkaller/sys/linux/gen
-sys/linux/gen/386.go:296:58: undefined: Field
-sys/linux/gen/386.go:301:10: undefined: Ref
-sys/linux/gen/386.go:302:62: undefined: Field
-sys/linux/gen/386.go:307:10: undefined: Ref
-sys/linux/gen/386.go:308:63: undefined: Field
-sys/linux/gen/386.go:313:10: undefined: Ref
-sys/linux/gen/386.go:314:67: undefined: Field
-sys/linux/gen/386.go:319:10: undefined: Ref
-sys/linux/gen/386.go:320:63: undefined: Field
-sys/linux/gen/386.go:325:10: undefined: Ref
-sys/linux/gen/386.go:325:10: too many errors
-Makefile:113: recipe for target 'target' failed
-make: *** [target] Error 2
-
-go env (err=<nil>)
-GO111MODULE=""
-GOARCH="amd64"
-GOBIN=""
-GOCACHE="/syzkaller/.cache/go-build"
-GOENV="/syzkaller/.config/go/env"
-GOEXE=""
-GOFLAGS=""
-GOHOSTARCH="amd64"
-GOHOSTOS="linux"
-GONOPROXY=""
-GONOSUMDB=""
-GOOS="linux"
-GOPATH="/syzkaller/jobs/linux/gopath"
-GOPRIVATE=""
-GOPROXY="https://proxy.golang.org,direct"
-GOROOT="/syzkaller/go"
-GOSUMDB="sum.golang.org"
-GOTMPDIR=""
-GOTOOLDIR="/syzkaller/go/pkg/tool/linux_amd64"
-GCCGO="gccgo"
-AR="ar"
-CC="gcc"
-CXX="g++"
-CGO_ENABLED="1"
-GOMOD=""
-CGO_CFLAGS="-g -O2"
-CGO_CPPFLAGS=""
-CGO_CXXFLAGS="-g -O2"
-CGO_FFLAGS="-g -O2"
-CGO_LDFLAGS="-g -O2"
-PKG_CONFIG="pkg-config"
-GOGCCFLAGS="-fPIC -m64 -pthread -fmessage-length=0 -fdebug-prefix-map=/tmp/go-build521465815=/tmp/go-build -gno-record-gcc-switches"
-
-git status (err=<nil>)
-HEAD detached at a8c6a3f8
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
-	modified:   sys/akaros/gen/amd64.go
-	modified:   sys/freebsd/gen/386.go
-	modified:   sys/freebsd/gen/amd64.go
-	modified:   sys/fuchsia/gen/amd64.go
-	modified:   sys/fuchsia/gen/arm64.go
-	modified:   sys/linux/gen/386.go
-	modified:   sys/linux/gen/amd64.go
-	modified:   sys/linux/gen/arm.go
-	modified:   sys/linux/gen/arm64.go
-	modified:   sys/linux/gen/mips64le.go
-	modified:   sys/linux/gen/ppc64le.go
-	modified:   sys/netbsd/gen/amd64.go
-	modified:   sys/openbsd/gen/amd64.go
-	modified:   sys/test/gen/32_fork_shmem.go
-	modified:   sys/test/gen/32_shmem.go
-	modified:   sys/test/gen/64.go
-	modified:   sys/test/gen/64_fork.go
-	modified:   sys/trusty/gen/arm.go
-	modified:   sys/windows/gen/amd64.go
-
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-	.descriptions
-
-no changes added to commit (use "git add" and/or "git commit -a")
-
-
-
-Tested on:
-
-commit:         [unknown 
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 5b8b9d0c6d0e0f1993c6c56deaf9646942c49d94
-dashboard link: https://syzkaller.appspot.com/bug?extid=bca9799bf129256190da
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Thanks!
+-- 
+Jeff Layton <jlayton@kernel.org>
 
