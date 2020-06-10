@@ -2,85 +2,108 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8660BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBD2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C95C206F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:01:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h8dINkly"
+	by mail.kernel.org (Postfix) with ESMTP id F00692078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:01:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591797708;
+	bh=b1KRmFrJQFC3z6HDXblv42MBWZrbFpZqf35Nd9i3Vwk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ijWdabOTTx9p2E9Hw99Ljm/wQKQJT30AX4YZYYOIx9bilZpbvlsFZmJkgHes0OXki
+	 ZbnEdYrnTwQvHPudlhSn2nWIRumXW8e2OLqf6gCMSYEiTb7L5lVmnTJVlhJBQ6P1+B
+	 ev2XfeulPkqlDulhe9NblI4Wa/kRFFd93hgCZmL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729674AbgFJOBj (ORCPT
+        id S1729687AbgFJOBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 10:01:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59384 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726105AbgFJOBj (ORCPT
+        Wed, 10 Jun 2020 10:01:45 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38367 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726105AbgFJOBm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 10:01:39 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 615C9C03E96B
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 07:01:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=GMi0Ua9JFHNIpwJn7G9f0a/rz8HG6okhtAeQWlJlfsA=; b=h8dINkly+hV2jecp86Jdq3QEF+
-        3kFYzY2nVg4KaCPFx77KC2mVEv8dZyUULOwxxI465ELnKXsss6YaOskkLecz+GDp/VK2Cd3itJv3F
-        gxI+pkh4mTvVwYwbssF2V5UTSViAFSAI2Qi5qtrlWedJGF/QjBS5j/OHPDCckGl5MpJgH/XG9mmSY
-        MusfIRVDD2szibvTUMDd/JyvjxmSzKWRTWxcOcGAXjhsBzozeUxiZAVfzUmc2DNLaEZwPkS5fM7WL
-        yWMK/W9IgMXzeFNP6ww/rWqzEkSeab3Hs0vgj8YFyV+iOMz9/zDvgiWVnM7omZMcVaI9prQCtmcJh
-        CQ7s0H2g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jj1IK-0006z1-IR; Wed, 10 Jun 2020 14:01:32 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D85FF302753;
-        Wed, 10 Jun 2020 16:01:29 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C5CCF2040BC3C; Wed, 10 Jun 2020 16:01:29 +0200 (CEST)
-Date:   Wed, 10 Jun 2020 16:01:29 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
+        Wed, 10 Jun 2020 10:01:42 -0400
+Received: by mail-pg1-f193.google.com with SMTP id u5so1037503pgn.5
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 07:01:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rk0ghIljU9mCEy9QgEbT1h8DI09ve656Ar7pgw0dxhA=;
+        b=keAZxZ7bjtYjJ/94YrNI6lc0l7jwED5yudDkM3b+F+2oM/qoTyQOVjh3pyHrpd6ENI
+         eD4/WDST134g/vgFToUxQmorrJWNPuQtrK/PatYDXXkaCsECoqxu3kLnt1FZCO1MC2W+
+         tqcr3CzzuRBbUEiNNqB2vbv0tDVMNfY4S8B8DofZtCH+rmbqQ6U57p9QWEfiOiHrQM7w
+         yFB0NYUMWfrgpHI5QaDZ8jO6kM/aiwsx69Qa9AZWHitopkvRmMIr8HiNBYIqeqmJy/an
+         ejilEPC48Vdnj+fWx0Txw1klJPtxGqSB/889iOxyxp3JW8aEw1EHCYlB/Vwgjyu+HhwJ
+         tuDQ==
+X-Gm-Message-State: AOAM531eDhr9OKkVdEaE0oWYospU8YNLspm98Azzdww7rD/WEvAoatPF
+        l8N6+E7twGB72uHdbUbCYRdg33jWQ24=
+X-Google-Smtp-Source: ABdhPJzlC/UGjhW7h2lRO1BIXvioDT2f+9RysnK1brAAfdDlCCebMhIvBx11VmTIRLFU1mIhMnVn2g==
+X-Received: by 2002:a05:6a00:15ca:: with SMTP id o10mr2910124pfu.169.1591797700899;
+        Wed, 10 Jun 2020 07:01:40 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id h17sm58841pgv.41.2020.06.10.07.01.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2020 07:01:39 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 9129B403AB; Wed, 10 Jun 2020 14:01:38 +0000 (UTC)
+Date:   Wed, 10 Jun 2020 14:01:38 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     Borislav Petkov <bp@alien8.de>
-Cc:     X86 ML <x86@kernel.org>, Tom Lendacky <thomas.lendacky@amd.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Eric Morton <Eric.Morton@amd.com>
-Subject: Re: [PATCH 3/3] x86/msr: Add an MSR write callback
-Message-ID: <20200610140129.GF2514@hirez.programming.kicks-ass.net>
-References: <20200610110037.11853-1-bp@alien8.de>
- <20200610110037.11853-4-bp@alien8.de>
- <20200610123226.GC2497@hirez.programming.kicks-ass.net>
- <20200610132131.GG14118@zn.tnic>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        x86-ml <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] x86/microcode: Do not select FW_LOADER
+Message-ID: <20200610140138.GU11244@42.do-not-panic.com>
+References: <20200610042911.GA20058@gondor.apana.org.au>
+ <20200610081609.GA14118@zn.tnic>
+ <20200610131209.GT11244@42.do-not-panic.com>
+ <20200610134650.GH14118@zn.tnic>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200610132131.GG14118@zn.tnic>
+In-Reply-To: <20200610134650.GH14118@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 03:21:31PM +0200, Borislav Petkov wrote:
-> On Wed, Jun 10, 2020 at 02:32:26PM +0200, Peter Zijlstra wrote:
-> > We cache a whole bunch of MSRs in kernel. Why is this one special?
+On Wed, Jun 10, 2020 at 03:46:50PM +0200, Borislav Petkov wrote:
+> On Wed, Jun 10, 2020 at 01:12:09PM +0000, Luis Chamberlain wrote:
+> > On Wed, Jun 10, 2020 at 10:16:09AM +0200, Borislav Petkov wrote:
+> > > 
+> > > Also, I'm working on removing that homegrown get_builtin_firmware() and
+> > > use the one in the fw loader:
+> > > 
+> > > https://lkml.kernel.org/r/20200408094526.GC24663@zn.tnic
+> > 
+> > I would like to still encourage this, even with this patch in place,
+> > as I think it makes this a proper call, and reflects better how the
+> > firmware loader is used exactly.
+> > 
+> > FWIW, firmware loader will be changed soon to not be modular, and just
+> > built-in or disabled.
 > 
-> If the others need the post-write handling, they should be added there
-> too. I did it with this one only as a start.
+> I don't mind doing the work but Herbert has a point - there's no need to
+> require a bunch of code for a trivial function.
+> 
+> What I could do in addition is move that trivial function into a
+> fw-specific header and have it defined unconditionally so that the
+> microcode loader can use it without needing the fw loader.
 
-Still, this is really weird. The msr device is per cpu (because MSRs are
-per cpu), but this shadow value is global (because we keep the same
-value on all CPUs), so you then have to broadcast IPI around to fix up
-the other CPUs, which, with a bit of bad luck will also get written by
-userspace, causing O(n^2) IPIs.
+Would just have to see this part. But sounds like a better place than
+today.
 
-Also, this gives some MSRs radically different behaviour from other
-MSRs.
+> The testcases stuff then goes ontop.
 
-Why not create a sane sysfs interface for this LS_CFG muck in cpu/bugs.c
-or so? A simple sysfs file should not me much more lines than all this.
+Sure!
+
+  Luis
