@@ -2,106 +2,100 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 430A5C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00892C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F7CA20760
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:02:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF7DE2072E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:02:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="b91mw2Nq"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O0qKoJFb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728926AbgFJMCA (ORCPT
+        id S1728936AbgFJMC5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 08:02:00 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:50363 "EHLO mx1.tq-group.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728480AbgFJMBo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 08:01:44 -0400
-IronPort-SDR: mUmeoboEu3vDQMJ8IwQQcgidPHNARVYQUZAgV0JlBUJSNHbstWTtvef2vX8zH3b9fju8aTr2Lv
- 4CK2yTS0HrNMXyOx7VNBZtHGKfqU/Yk2lDNe+Fwz7rF9dKMBpMoXSxEwvLdPl+TZsYt29qURX7
- udHLmuS8umsIduWvPmDV2r8GHo6OAoSPxXkDpjtZGl5aCTYAFkNe2SNm3J9X3HHbbbWL9tpq3t
- hyWJJuZmnGH3FgHiy6T6l8ZWxlMpotIeTW0gVcWGgJ+5yaF934gPisdZQcSuB9ElYDLFb/jFuP
- REA=
-X-IronPort-AV: E=Sophos;i="5.73,495,1583190000"; 
-   d="scan'208";a="12636792"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 10 Jun 2020 14:01:39 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Wed, 10 Jun 2020 14:01:39 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Wed, 10 Jun 2020 14:01:39 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1591790499; x=1623326499;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=PDXAYXZawwVFkPqDUx8c9ur4W53kvMuf6DO86ph2FQQ=;
-  b=b91mw2NqybIx8rJT/kmnS3ILhd8IFtRN4JLBTQt+tM4zU8AAp/KamAkm
-   sVmQe0JyaA19/mDbIipFOEsz88oCayI3BpRieuool1fzQvnI8HFnEtkjv
-   rNTPV6iGQYbPQO7V0tlcIIqHz8xYwl/t/1grBoIsH4JmS+EkI3y1o/ldq
-   GyHGeRo+ff7EVE7DApH60n5+/e6fNkJ755cfoDNXRKVzWQIzWlqqLus2m
-   ItnMG3L3nwAloXr/cZSk6SUmXtKU4hmYxrtNVgpGafMkfSGZHJHQOCc1w
-   +Eu8kWBhPR/eABv77xAV+tzBmdJ+LDdqEYrd7SrxeGPfLFd5VYKsjzbsU
-   Q==;
-IronPort-SDR: V9itYVaEPJgwGTGrseKjJ4gDL/y7xrzI0RTw5Ha8K2OfibaiBDH5fW1BraekSWQC+r3qQznDA7
- cFoPIwDHD38e5YggBHkUthAOvoH5RZO/izMGK9kxnwx7/JGJU8SOmbQGNsAK8ZjOHx9KQaVdfR
- U0UgZYuhpJ+LJj6k0m7XqFzrsYAk268BqZijMPTo9zJ30f0f3P23cBybUzbMfRuAdH5zyczM61
- dAQnfMVeB6B8aSJlfjYK21p4hjbBxqKBtQcVuzjvERXrMkfzxiAqkph+d30uqG49F0j7vtLvgW
- aes=
-X-IronPort-AV: E=Sophos;i="5.73,495,1583190000"; 
-   d="scan'208";a="12636789"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 10 Jun 2020 14:01:39 +0200
-Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 996B5280065;
-        Wed, 10 Jun 2020 14:01:39 +0200 (CEST)
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Subject: [PATCH 2/4] dt-bindings: display: simple: add Tianma TM070JVHG33
-Date:   Wed, 10 Jun 2020 14:01:29 +0200
-Message-Id: <20200610120131.3069-3-matthias.schiffer@ew.tq-group.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200610120131.3069-1-matthias.schiffer@ew.tq-group.com>
-References: <20200610120131.3069-1-matthias.schiffer@ew.tq-group.com>
+        Wed, 10 Jun 2020 08:02:57 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:44895 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728480AbgFJMC4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 08:02:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591790575;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=TNsoGvRQNqCDBEQwQWNi/36A0peQaj7a5rcaN6nMm74=;
+        b=O0qKoJFbCQHlE+jEGkzuweQIFACfqUkJnE/Kv6U0Th3mvK0fTus4FqsGJyeMMhyRbSRWFF
+        K5WMU87Mm7XnUcxpPsAsR331XDPC4ailQQ6ESSNbaen77OBKi5q+R9Yav8KX4vG+w4+d/j
+        eagnXIKb8FRw7XbdPho9vSGTol9/eAQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-154-MecNFB9ROaaure0ci4G0eg-1; Wed, 10 Jun 2020 08:02:53 -0400
+X-MC-Unique: MecNFB9ROaaure0ci4G0eg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F3826100A8EE;
+        Wed, 10 Jun 2020 12:02:51 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C28088FF86;
+        Wed, 10 Jun 2020 12:02:24 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 05AC2Ono028363;
+        Wed, 10 Jun 2020 08:02:24 -0400
+Received: from localhost (mpatocka@localhost)
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 05AC2OLN028359;
+        Wed, 10 Jun 2020 08:02:24 -0400
+X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
+Date:   Wed, 10 Jun 2020 08:02:23 -0400 (EDT)
+From:   Mikulas Patocka <mpatocka@redhat.com>
+X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, Mike Snitzer <msnitzer@redhat.com>,
+        Milan Broz <mbroz@redhat.com>, dm-devel@redhat.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: crypto API and GFP_ATOMIC
+In-Reply-To: <20200610010450.GA6449@gondor.apana.org.au>
+Message-ID: <alpine.LRH.2.02.2006100756270.27811@file01.intranet.prod.int.rdu2.redhat.com>
+References: <alpine.LRH.2.02.2006091259250.30590@file01.intranet.prod.int.rdu2.redhat.com> <20200610010450.GA6449@gondor.apana.org.au>
+User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the Tianma Micro-electronics TM070JVHG33 7.0" WXGA display to the
-panel-simple compatible list.
 
-Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
----
- .../devicetree/bindings/display/panel/panel-simple.yaml         | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-index 7749fbd14c6f..3d5edef2ebad 100644
---- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-@@ -249,6 +249,8 @@ properties:
-       - starry,kr122ea0sra
-         # Tianma Micro-electronics TM070JDHG30 7.0" WXGA TFT LCD panel
-       - tianma,tm070jdhg30
-+        # Tianma Micro-electronics TM070JVHG33 7.0" WXGA TFT LCD panel
-+      - tianma,tm070jvhg33
-         # Tianma Micro-electronics TM070RVHG71 7.0" WXGA TFT LCD panel
-       - tianma,tm070rvhg71
-         # Toshiba 8.9" WXGA (1280x768) TFT LCD panel
--- 
-2.17.1
+On Wed, 10 Jun 2020, Herbert Xu wrote:
+
+> On Tue, Jun 09, 2020 at 01:11:05PM -0400, Mikulas Patocka wrote:
+> >
+> > Do you have another idea how to solve this problem?
+> 
+> I think the better approach would be to modify the drivers to not
+> allocate any memory.  In general, any memory needed by the driver
+> to fulfil a request *should* be allocated within the crypto request
+> object.  That's why we have the reqsize field to indicate how much
+> memory could be needed per request.
+> 
+> Thanks,
+
+Yes, fixing the drivers would be the best - but you can hardly find any 
+person who has all the crypto hardware and who is willing to rewrite all 
+the drivers for it.
+
+Another possibility - I was thinking about setting 
+CRYPTO_TFM_REQ_MAY_SLEEP in dm-crypt and calling the crypto function under 
+memalloc_noio_save. But there are some drivers that do GFP_ATOMIC 
+allocation regardless of CRYPTO_TFM_REQ_MAY_SLEEP.
+
+Mikulas
 
