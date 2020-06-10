@@ -2,286 +2,195 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED4E8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16420C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 22:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD7A12074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB36F2072E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 22:00:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="sX04N19G"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="lUUpUDvp";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Ie6X6wu2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbgFJV7X (ORCPT
+        id S1726535AbgFJWAP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 17:59:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48678 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726260AbgFJV7W (ORCPT
+        Wed, 10 Jun 2020 18:00:15 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:40008 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726260AbgFJWAO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 17:59:22 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 954B9C03E96B
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 14:59:22 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id n2so1478558pld.13
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 14:59:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:mime-version:subject:from:in-reply-to:cc
-         :date:message-id:references:to;
-        bh=NdBvIyN0+B0E+FLHRKmrKKKiEB2XJE5/pjm/mjwpHTs=;
-        b=sX04N19GXfRQX8rNdpHD5ZDiZskcch+5v3jbdpARA5u7TXiIi32qsqDk5VIUjMiPa2
-         X8LqFoF/OB4j1JOC4GVZ8EbV1Mfvkg2LF3T+k8RtHZUnmQ19eYqjoMGmBT3KPgmLgwFv
-         UG4hNosQ2YOi042eT0N2F45P0R66CMIsQfVz+yxUK1yaCLVKEtsdHWXLypRS6cs1xYX6
-         pgVE19Qe0CC0Phmni3SmHIw1H0uNU9oA1W/oxX05cmpT0ZF0SZu4Jp0g1H7Kd4Jv6dQd
-         rVe8vZeBGbjCHpwAok6aFD2Tjh5wNHKArFq1MF1lsXLCzP/SWTDNyPdwrRBtqvD/JV30
-         CQog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:mime-version:subject
-         :from:in-reply-to:cc:date:message-id:references:to;
-        bh=NdBvIyN0+B0E+FLHRKmrKKKiEB2XJE5/pjm/mjwpHTs=;
-        b=q64Q/dUwBu27Lb7N+Z8kBCENFPmz/4COyUCWfqeZGUbyeZLDRO9TvAIzjn0C0xX1XT
-         xPiDp01ryqUp0Ai+SFLEgMwrkWrXReqpul6/8RdVM6F09wfEwlZaZpgIqKZ3JFN5v7cR
-         kbwehHixTzJSPdbbfjRWxC7eq8RQyQewElbwpSzSuvwVq+w2znWM1816quUoUbird8uo
-         878J9oirg6PiaAWFd/f1w3/ox1smKcotN86bG5zqLnZRkfIVj5dNQ0uQatliz+WrDMiG
-         cId7kA2ZOIUtWBjS6pC3kTarWe++W2Ozk9q3GMY4L2K05nulttx0ho60lPVj7gPAo3y1
-         fODA==
-X-Gm-Message-State: AOAM530n5LEqdg3aBkBeNeowTc8i7F2NKtiEg0Ii04yqrx2GNA7fT33M
-        rLAZEkEiDVywX/uZmDceMYRRXg==
-X-Google-Smtp-Source: ABdhPJw6F4ktaaYVa9zObAtqY6PwjWUT4r06kxEolKugT8xUrflAmSiP0imO6BwetHuudumugg7kAw==
-X-Received: by 2002:a17:90a:aa8f:: with SMTP id l15mr5402889pjq.156.1591826362035;
-        Wed, 10 Jun 2020 14:59:22 -0700 (PDT)
-Received: from ?IPv6:2600:1010:b02a:3dac:540d:35b0:24d1:3df? ([2600:1010:b02a:3dac:540d:35b0:24d1:3df])
-        by smtp.gmail.com with ESMTPSA id z1sm849071pfr.88.2020.06.10.14.59.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jun 2020 14:59:21 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] Fix undefined operation VMXOFF during reboot and crash
-From:   Andy Lutomirski <luto@amacapital.net>
-In-Reply-To: <20200610181254.2142-1-dpreed@deepplum.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Allison Randal <allison@lohutok.net>,
-        Enrico Weigelt <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Martin Molnar <martin.molnar.programming@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Wed, 10 Jun 2020 18:00:14 -0400
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 05ALxavX007493;
+        Wed, 10 Jun 2020 15:00:01 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=5YTgurXbjj/Sz+426K/l26OJasudHbFNjqbtIZIK06o=;
+ b=lUUpUDvpcoGDOgZ/Gq8Fn13Y8uawLpKbA9+cE6ZpGTVYriewRhClk1587eb3bShfTOyH
+ ofI27AFr3WDD7I+V/OBO5icmwImxvqTBIqzt/8H02n010TvVrLGwNGl3goJelQ0Z/rG7
+ qAXstekSGslcg4L39nADqzvHQNHJzM80fZU= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0089730.ppops.net with ESMTP id 31k3wj1bdv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 10 Jun 2020 15:00:01 -0700
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Wed, 10 Jun 2020 15:00:00 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=T3T1T/ZlALn7ymyGb+Q/n3s3jvOGEoocMb3hPRnsdMP9jPjjDKntPA+Yveeg/bU37neEzzasidY+McZ+Eux0A+wk+Vo1eOhta6R1olIh85vgGhJCuKd1VdV3689sJLJebOIA1+NIpiBT5pKbRuTeVnN6fwYkfrk78ycnYoX2hq52bigoDkZHlpiB6gmHTEqx3lgaO1YVt903nX0/SVf9sF14lYGlyZk10ImHN/J/1wwsGYqcQyD4jOUVbTStKpeelwDzwz2zaa3LtfK/HotqFNs3Ga7Y64379LcjgbZPdFsTuyUN3ocNzdofPyF8jXQwGpaOm8jyVHNMUBMj6133Nw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5YTgurXbjj/Sz+426K/l26OJasudHbFNjqbtIZIK06o=;
+ b=fZy4vJ5I7zrNb/MkOaWLwY4rbjc02AI55fWL+4ypKJwGqCQ2kVKCx6iY5J94azUcp7FQH7yyJ01baQR7V1M4YXGaMOjQt4+pk8Qr89kz1t5QHOtMnqlM+znQY8rC5JUfyUIW9aUxRYF/+jaP9T6WjjZxTGeaoYZofFWC3cfVAS3/rNuemJa1qv4MW8wJquLo8GB8wX8gqtxUa5veo7+Id1H0BTUjyFNwe8ahDf/LucQh9ZWZleux0MNjhnfVLqj2XDVJOF2jQDS8pHqcLBoCnme2tyK4rKiMd0Ge2Gy+B5bDmGlmQZGTghMJ5NnMOWKMUFlIFobwUF95C/+yWtYx9Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5YTgurXbjj/Sz+426K/l26OJasudHbFNjqbtIZIK06o=;
+ b=Ie6X6wu2/EZ8jszxfbo3EPSSQZvnwgn+y1xQcG165Es6opniusH8Beb4ZwobEN0dvoqY9jjBqhrUjYZTyK8iLGePxfEDnWq5soLOMHCYnZmDLx57oZOOdkSjLDuoL/vyHz/eMbeDjqLiAAhSQfx2QrcuGDDvIvCh9AwluqJAumQ=
+Authentication-Results: suse.cz; dkim=none (message not signed)
+ header.d=none;suse.cz; dmarc=none action=none header.from=fb.com;
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
+ by BYAPR15MB2950.namprd15.prod.outlook.com (2603:10b6:a03:f6::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18; Wed, 10 Jun
+ 2020 21:59:59 +0000
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::48e3:c159:703d:a2f1]) by BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::48e3:c159:703d:a2f1%5]) with mapi id 15.20.3066.023; Wed, 10 Jun 2020
+ 21:59:59 +0000
+Date:   Wed, 10 Jun 2020 14:59:55 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     Vlastimil Babka <vbabka@suse.cz>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-team@android.com>,
+        <vinmenon@codeaurora.org>, Kees Cook <keescook@chromium.org>,
+        Matthew Garrett <mjg59@google.com>,
         Jann Horn <jannh@google.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 10 Jun 2020 14:59:19 -0700
-Message-Id: <3F5CEF02-0561-4E28-851B-8E993F76DC9B@amacapital.net>
-References: <20200610181254.2142-1-dpreed@deepplum.com>
-To:     "David P. Reed" <dpreed@deepplum.com>
-X-Mailer: iPhone Mail (17F80)
+        Vijayanand Jitta <vjitta@codeaurora.org>
+Subject: Re: [PATCH 6/9] mm, slub: introduce static key for slub_debug()
+Message-ID: <20200610215955.GA702969@carbon.DHCP.thefacebook.com>
+References: <20200610163135.17364-1-vbabka@suse.cz>
+ <20200610163135.17364-7-vbabka@suse.cz>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200610163135.17364-7-vbabka@suse.cz>
+X-ClientProxiedBy: BYAPR04CA0028.namprd04.prod.outlook.com
+ (2603:10b6:a03:40::41) To BYAPR15MB4136.namprd15.prod.outlook.com
+ (2603:10b6:a03:96::24)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.DHCP.thefacebook.com (2620:10d:c090:400::5:5be9) by BYAPR04CA0028.namprd04.prod.outlook.com (2603:10b6:a03:40::41) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.19 via Frontend Transport; Wed, 10 Jun 2020 21:59:58 +0000
+X-Originating-IP: [2620:10d:c090:400::5:5be9]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 6080eb26-df06-4a94-ccfa-08d80d899e28
+X-MS-TrafficTypeDiagnostic: BYAPR15MB2950:
+X-Microsoft-Antispam-PRVS: <BYAPR15MB2950560058745712E176B0A9BE830@BYAPR15MB2950.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:3173;
+X-Forefront-PRVS: 0430FA5CB7
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: gJFfNoAC5ETfxxVruh4s3EhC/4fwkCz/ZJT15dGNwN3nLAgktVYkn9WjBa1Ip0JZsgWRFbslJuhd6ptH81BORd9HGWeaXvPF4xGWMKvUO5AtfHKphlDPUnSsS4IuIFu+qETZzcIsJJ3vANxsXui52Xq6oXYpfCaWjnqLWLOdSiiLCyJ5GDHFc/c+l9vyhCg8GZkS4b0YVYxVcAWlIQg9U+NbpvE0e8/N3XUhBhHoot2Flq4J9H4xtAR2CXNKrVJPUqvu3NyIem2F/dfpaS8eJKGRmja1wKRfpKpkyYEpDkDYJ0W6YRUADh3/LZSrU6CrholUWx8JAmlpFa0P/u1Tcg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(396003)(39860400002)(136003)(346002)(376002)(4326008)(9686003)(478600001)(186003)(316002)(2906002)(54906003)(8676002)(7416002)(7696005)(6916009)(55016002)(16526019)(8936002)(1076003)(66556008)(66476007)(86362001)(5660300002)(33656002)(6666004)(66946007)(83380400001)(6506007)(52116002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: CpScBxOYZY6m8CjHuc8ifyknpnakUQG42TKqTX3XBUjegbOnklm/9h+1sOB/FULEFtbJo3BL4ePBsR2ATVG85PgFL1A4zp1y46tP44BBVY5rbAgdbWgtHvV0XdXwQ6PA0J2dxR9BUiWcZ/KywkYXj3RtCMNAZeLH96/e0nHC4Z9QE0ACEL9Efed2iF661QQSTPwovD2veCFQ0v79OUNvkiPbzATqhYUPc4vFeoGZ3fsCP+H0M4r+gyhT0ziL8HUM5E0JWtGDgyxarsLxk+Wu9gsBfIhYh1MkXiLJY9hc1JHYa+vuq3QQdxJpVrw4NtSaVmFyiK1qpeCUCUwAVNeCEuuCmYMBZX/AQNtsO7/CnJPAK1OioTiihdBDXC+8Yt7eGQI5q3MjFIUj8SBHHzopZ27kxZOedspY1Pazs4YTbWVu6+SgtRxqyN0ByhTiqoy3itX6mQDoHrvuGDPoEmrUxe32PFvvE8rkeKUWlb7sf17kzpEjaJDCJofmmvWKNN3MZTfcR4fP/rAUaErtfLp+DA==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6080eb26-df06-4a94-ccfa-08d80d899e28
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2020 21:59:59.2687
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vSl34w51XOqDiQzVX2YalxSrjrOQkquTbZs0C/T1uUTsh3m2dLyfhAtqAgaBEFO9
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2950
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-10_13:2020-06-10,2020-06-10 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=924
+ cotscore=-2147483648 suspectscore=5 spamscore=0 mlxscore=0 malwarescore=0
+ phishscore=0 lowpriorityscore=0 adultscore=0 priorityscore=1501
+ bulkscore=0 clxscore=1015 impostorscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006100158
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 10, 2020 at 06:31:32PM +0200, Vlastimil Babka wrote:
+> One advantage of CONFIG_SLUB_DEBUG is that a generic distro kernel can be built
+> with the option enabled, but it's inactive until simply enabled on boot,
+> without rebuilding the kernel. With a static key, we can further eliminate the
+> overhead of checking whether a cache has a particular debug flag enabled if we
+> know that there are no such caches (slub_debug was not enabled during boot). We
+> use the same mechanism also for e.g.  page_owner, debug_pagealloc or kmemcg
+> functionality.
+> 
+> This patch introduces the static key and makes the general check for per-cache
+> debug flags kmem_cache_debug() use it. This benefits several call sites,
+> including (slow path but still rather frequent) __slab_free(). The next patches
+> will add more uses.
+> 
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 
+Acked-by: Roman Gushchin <guro@fb.com>
 
-> On Jun 10, 2020, at 11:21 AM, David P. Reed <dpreed@deepplum.com> wrote:
->=20
-> =EF=BB=BFIf a panic/reboot occurs when CR4 has VMX enabled, a VMXOFF is
-> done on all CPUS, to allow the INIT IPI to function, since
-> INIT is suppressed when CPUs are in VMX root operation.
-> However, VMXOFF causes an undefined operation fault if the CPU is not
-> in VMX operation, that is, VMXON has not been executed, or VMXOFF
-> has been executed, but VMX is enabled.
+Thanks!
 
-I=E2=80=99m surprised. Wouldn=E2=80=99t this mean that emergency reboots alw=
-ays fail it a VM is running?  I would think someone would have noticed befor=
-e.
-
-> This fix makes the reboot
-> work more reliably by modifying the #UD handler to skip the VMXOFF
-> if VMX is enabled on the CPU and the VMXOFF is executed as part
-> of cpu_emergency_vmxoff().
-
-NAK. See below.
-
-> The logic in reboot.c is also corrected, since the point of forcing
-> the processor out of VMX root operation is because when VMX root
-> operation is enabled, the processor INIT signal is always masked.
-> See Intel SDM section on differences between VMX Root operation and normal=
-
-> operation. Thus every CPU must be forced out of VMX operation.
-> Since the CPU will hang rather than restart, a manual "reset" is the
-> only way out of this state (or if there is a BMC, it can issue a RESET
-> to the chip).
->=20
-> Signed-off-by: David P. Reed <dpreed@deepplum.com>
 > ---
-> arch/x86/include/asm/virtext.h | 24 ++++++++++++----
-> arch/x86/kernel/reboot.c       | 13 ++-------
-> arch/x86/kernel/traps.c        | 52 ++++++++++++++++++++++++++++++++--
-> 3 files changed, 71 insertions(+), 18 deletions(-)
->=20
-> diff --git a/arch/x86/include/asm/virtext.h b/arch/x86/include/asm/virtext=
-.h
-> index 9aad0e0876fb..ea2d67191684 100644
-> --- a/arch/x86/include/asm/virtext.h
-> +++ b/arch/x86/include/asm/virtext.h
-> @@ -13,12 +13,16 @@
-> #ifndef _ASM_X86_VIRTEX_H
-> #define _ASM_X86_VIRTEX_H
->=20
-> +#include <linux/percpu.h>
+>  mm/slub.c | 16 +++++++++++++---
+>  1 file changed, 13 insertions(+), 3 deletions(-)
+> 
+> diff --git a/mm/slub.c b/mm/slub.c
+> index 8dd2925448ae..24d3e5f832aa 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -114,13 +114,21 @@
+>   * 			the fast path and disables lockless freelists.
+>   */
+>  
+> +#ifdef CONFIG_SLUB_DEBUG
+> +#ifdef CONFIG_SLUB_DEBUG_ON
+> +DEFINE_STATIC_KEY_TRUE(slub_debug_enabled);
+> +#else
+> +DEFINE_STATIC_KEY_FALSE(slub_debug_enabled);
+> +#endif
+> +#endif
 > +
-> #include <asm/processor.h>
->=20
-> #include <asm/vmx.h>
-> #include <asm/svm.h>
-> #include <asm/tlbflush.h>
->=20
-> +DECLARE_PER_CPU_READ_MOSTLY(int, doing_emergency_vmxoff);
-> +
-> /*
-> * VMX functions:
-> */
-> @@ -33,8 +37,8 @@ static inline int cpu_has_vmx(void)
-> /** Disable VMX on the current CPU
-> *
-> * vmxoff causes a undefined-opcode exception if vmxon was not run
-> - * on the CPU previously. Only call this function if you know VMX
-> - * is enabled.
-> + * on the CPU previously. Only call this function directly if you know VM=
-X
-> + * is enabled *and* CPU is in VMX root operation.
-> */
-
-So presumably the bug is someone calling this inappropriatelet?
-
-> static inline void cpu_vmxoff(void)
-> {
-> @@ -47,17 +51,25 @@ static inline int cpu_vmx_enabled(void)
->   return __read_() & X86_CR4_VMXE;
-> }
->=20
-> -/** Disable VMX if it is enabled on the current CPU
-> +/** Force disable VMX if it is enabled on the current CPU.
-> + * Note that if CPU is not in VMX root operation this
-> + * VMXOFF will fault an undefined operation fault.
-> + * So the 'doing_emergency_vmxoff' percpu flag is set,
-> + * the trap handler for just restarts execution after
-> + * the VMXOFF instruction.
-> *
-> - * You shouldn't call this if cpu_has_vmx() returns 0.
-> + * You shouldn't call this directly if cpu_has_vmx() returns 0.
-> */
-> static inline void __cpu_emergency_vmxoff(void)
-> {
-> -    if (cpu_vmx_enabled())
-> +    if (cpu_vmx_enabled()) {
-> +        this_cpu_write(doing_emergency_vmxoff, 1);
->       cpu_vmxoff();
-> +        this_cpu_write(doing_emergency_vmxoff, 0);
-> +    }
-> }
-
-NAK. Just write this in asm with an exception handler that does the right th=
-ing.
-
-Please also try to identify the actual bug.  Because I have a sneaking suspi=
-cion that you are running an out of tree module that has issues. If so, the p=
-atch should explain this.
-
->=20
-> -/** Disable VMX if it is supported and enabled on the current CPU
-> +/** Force disable VMX if it is supported and enabled on the current CPU
-> */
-> static inline void cpu_emergency_vmxoff(void)
-> {
-> diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
-> index 3ca43be4f9cf..abc8b51a57c7 100644
-> --- a/arch/x86/kernel/reboot.c
-> +++ b/arch/x86/kernel/reboot.c
-> @@ -540,21 +540,14 @@ static void emergency_vmx_disable_all(void)
->    *
->    * For safety, we will avoid running the nmi_shootdown_cpus()
->    * stuff unnecessarily, but we don't have a way to check
-> -     * if other CPUs have VMX enabled. So we will call it only if the
-> -     * CPU we are running on has VMX enabled.
-> -     *
-> -     * We will miss cases where VMX is not enabled on all CPUs. This
-> -     * shouldn't do much harm because KVM always enable VMX on all
-> -     * CPUs anyway. But we can miss it on the small window where KVM
-> -     * is still enabling VMX.
-> +     * if other CPUs have VMX enabled.
->    */
-> -    if (cpu_has_vmx() && cpu_vmx_enabled()) {
-> +    if (cpu_has_vmx()) {
->       /* Disable VMX on this CPU. */
-> -        cpu_vmxoff();
-> +        cpu_emergency_vmxoff();
->=20
->       /* Halt and disable VMX on the other CPUs */
->       nmi_shootdown_cpus(vmxoff_nmi);
-> -
->   }
-> }
->=20
-> diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-> index 4cc541051994..2dcf57ef467e 100644
-> --- a/arch/x86/kernel/traps.c
-> +++ b/arch/x86/kernel/traps.c
-> @@ -39,6 +39,7 @@
-> #include <linux/io.h>
-> #include <linux/hardirq.h>
-> #include <linux/atomic.h>
-> +#include <linux/percpu.h>
->=20
-> #include <asm/stacktrace.h>
-> #include <asm/processor.h>
-> @@ -59,6 +60,7 @@
-> #include <asm/umip.h>
-> #include <asm/insn.h>
-> #include <asm/insn-eval.h>
-> +#include <asm/virtext.h>
->=20
-> #ifdef CONFIG_X86_64
-> #include <asm/x86_init.h>
-> @@ -70,6 +72,8 @@
-> #include <asm/proto.h>
-> #endif
->=20
-> +DEFINE_PER_CPU_READ_MOSTLY(int, doing_emergency_vmxoff) =3D 0;
-> +
-> DECLARE_BITMAP(system_vectors, NR_VECTORS);
->=20
-> static inline void cond_local_irq_enable(struct pt_regs *regs)
-> @@ -115,6 +119,43 @@ int fixup_bug(struct pt_regs *regs, int trapnr)
->   return 0;
-> }
->=20
-> +/*
-> + * Fix any unwanted undefined operation fault due to VMXOFF instruction t=
-hat
-> + * is needed to ensure that CPU is not in VMX root operation at time of
-> + * a reboot/panic CPU reset. There is no safe and reliable way to know
-> + * if a processor is in VMX root operation, other than to skip the
-> + * VMXOFF. It is safe to just skip any VMXOFF that might generate this
-> + * exception, when VMX operation is enabled in CR4. In the extremely
-> + * rare case that a VMXOFF is erroneously executed while VMX is enabled,
-> + * but VMXON has not been executed yet, the undefined opcode fault
-> + * should not be missed by valid code, though it would be an error.
-> + * To detect this, we could somehow restrict the instruction address
-> + * to the specific use during reboot/panic.
-> + */
-> +static int fixup_emergency_vmxoff(struct pt_regs *regs, int trapnr)
-> +{
-
-NAK.
-
+>  static inline int kmem_cache_debug(struct kmem_cache *s)
+>  {
+>  #ifdef CONFIG_SLUB_DEBUG
+> -	return unlikely(s->flags & SLAB_DEBUG_FLAGS);
+> -#else
+> -	return 0;
+> +	if (static_branch_unlikely(&slub_debug_enabled))
+> +		return s->flags & SLAB_DEBUG_FLAGS;
+>  #endif
+> +	return 0;
+>  }
+>  
+>  void *fixup_red_left(struct kmem_cache *s, void *p)
+> @@ -1389,6 +1397,8 @@ static int __init setup_slub_debug(char *str)
+>  		slub_debug_string = saved_str;
+>  	}
+>  out:
+> +	if (slub_debug != 0 || slub_debug_string)
+> +		static_branch_enable(&slub_debug_enabled);
+>  	if ((static_branch_unlikely(&init_on_alloc) ||
+>  	     static_branch_unlikely(&init_on_free)) &&
+>  	    (slub_debug & SLAB_POISON))
+> -- 
+> 2.26.2
+> 
