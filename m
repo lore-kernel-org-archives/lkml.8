@@ -2,110 +2,194 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F55BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1EFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED1B620734
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:16:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3640D20734
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:17:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g9xaGjht"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BgLC2n+1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726277AbgFJGQn (ORCPT
+        id S1726283AbgFJGRq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 02:16:43 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:37104 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725988AbgFJGQl (ORCPT
+        Wed, 10 Jun 2020 02:17:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43874 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbgFJGRp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 02:16:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591769800;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Dd9hSPJklMgRKnOtvAiPIti1OIPB2Shfs7YNJkiFzA4=;
-        b=g9xaGjht/ceWgCHZ06Njx4//HgEk7rPdXJ3e64cy1JOqJAGkdXNfnPsoLOQFdsFLq4aoOZ
-        /rm+kiHB8oT8iDPBDWu52oJgs0y3iosqBdiONbVyWSWUX10XQeJ+bV6VzucjQvFk91aVep
-        K+WqtIfkWKkWEWLbMTmsJYcFOobRbws=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-281-WyxVb7iaOrqXm3GFQIDRNg-1; Wed, 10 Jun 2020 02:16:37 -0400
-X-MC-Unique: WyxVb7iaOrqXm3GFQIDRNg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9AA56107ACCD;
-        Wed, 10 Jun 2020 06:16:35 +0000 (UTC)
-Received: from [10.72.13.194] (ovpn-13-194.pek2.redhat.com [10.72.13.194])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DC6895D9D3;
-        Wed, 10 Jun 2020 06:16:27 +0000 (UTC)
-Subject: Re: [PATCH RESEND V2] vdpa: introduce virtio pci driver
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, rob.miller@broadcom.com,
-        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
-        shahafs@mellanox.com, hanand@xilinx.com, mhabets@solarflare.com,
-        gdawar@xilinx.com, saugatm@xilinx.com, vmireyno@marvell.com,
-        zhangweining@ruijie.com.cn, eli@mellanox.com
-References: <20200610054951.16197-1-jasowang@redhat.com>
- <20200610020728-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <0964bd2d-8329-a091-41ed-a9b912ec4283@redhat.com>
-Date:   Wed, 10 Jun 2020 14:16:26 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 10 Jun 2020 02:17:45 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1AC7C03E96F
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 23:17:44 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id y11so967113ljm.9
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 23:17:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=0hZiLWuye+wxKL58SzimuieV9qECyFNrT6vpBHkRdfo=;
+        b=BgLC2n+1Ax249jZ2gfeFMxALlDrkcvCQZabKsEG+D6DJRmosIYsRieHIq3VHuzoi3B
+         r/LMddGdRz73Uv+t4XUXBKqPM8c00QUBpAoLwprhqSDnmpd+BLeqpzsSf50qnv55I38Y
+         iue6KR5s7oFB008+IJfsysCS75DagQTXwM+YRjypT1jU4ZTeO2FgeC5QPqV7ivTb/1CI
+         CLY9wvjfnlBySMump/MJJL/aMuZbbAgqyjz0+2I42kKjpg8bKH4JB+qDAR1RvqphSMeG
+         cK7mdjVz19wQFIwmnocFegyCTf0uJxe1eLagMjBdkZ3Bp59fzhI70w0QHGdAiGu4qegR
+         NzHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=0hZiLWuye+wxKL58SzimuieV9qECyFNrT6vpBHkRdfo=;
+        b=C40zxJdQG1A1v+QTCEINjzdeI+nof8rmZRQQg81/Qo8zbT16AarHT7IRA0PqnBwi9q
+         kpNHDATOS3jaEkOaIqdw5NzqsuNpVuzkx6/lIMw0V78O6NCTil7tbJCRtMJ1GuLYESEi
+         qGbURXTrnNkqZkDaiW8jlFEhjOE+CQLY/rn6MqYkXDZ3tSS/NiRzcDDsL0kv+DuPv2a4
+         FOLbFL/naIDwIbOEdSjfWEgzw1kKZXeYGCcBgppibE8GHEoJZB/osBdtNTjKdokfYQYq
+         DLYwlsHKsFgsr50qoULN2wGF6u1IZNeyHHnh/hQgSUicjYPnquccxc+B+5Zm2Ptkh8xl
+         MQzg==
+X-Gm-Message-State: AOAM533k970/suyL3+qY5MWWppoDqcIVqkUcK5m79JYgA5uT0IdfNPjr
+        kqEqZ/xsdYb7/LkHRQ13CKA6zbJm5H9pAVO1mhBypw==
+X-Google-Smtp-Source: ABdhPJx8f3dW0vVguVq1E86iAg5Y653WpMlRP/3/wGu35t+t5y/R8dH6w96A2FJP9cqKMT2pazLfFKfH3Da2t0EU6Iw=
+X-Received: by 2002:a2e:974e:: with SMTP id f14mr872556ljj.102.1591769861837;
+ Tue, 09 Jun 2020 23:17:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200610020728-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+References: <20200609174149.255223112@linuxfoundation.org>
+In-Reply-To: <20200609174149.255223112@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 10 Jun 2020 11:47:30 +0530
+Message-ID: <CA+G9fYurJXfpg7QfsxxRPSFhG2cNkU-zA=VM==1b4E8bmjxecg@mail.gmail.com>
+Subject: Re: [PATCH 5.7 00/24] 5.7.2-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2020/6/10 下午2:07, Michael S. Tsirkin wrote:
-> On Wed, Jun 10, 2020 at 01:49:51PM +0800, Jason Wang wrote:
->> This patch introduce a vDPA driver for virtio-pci device. It bridges
->> the virtio-pci control command to the vDPA bus. This will be used for
->> developing new features for both software vDPA framework and hardware
->> vDPA feature.
->>
->> Compared to vdpa_sim, it has several advantages:
->>
->> - it's a real device driver which allow us to play with real hardware
->>    features
->> - type independent instead of networking specific
->>
->> Note that since virtio specification does not support get/restore
->> virtqueue state. So we can not use this driver for VM. This can be
->> addressed by extending the virtio specification.
->>
->> Consider the driver is mainly for testing and development for vDPA
->> features, it can only be bound via dynamic ids to make sure it's not
->> conflict with the drivers like virtio-pci or IFCVF.
->>
->> Signed-off-by: Jason Wang<jasowang@redhat.com>
-> error: sha1 information is lacking or useless (drivers/vdpa/Kconfig).
+On Tue, 9 Jun 2020 at 23:25, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> which tree is this on top of?
-
-
-Your vhost.git vhost branch, HEAD is bbea3bcfd1d6 vdpa: fix typos in the 
-comments for __vdpa_alloc_device()
-
-Do I need to use other branch?
-
-Thanks
-
-
+> This is the start of the stable review cycle for the 5.7.2 release.
+> There are 24 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
+> Responses should be made by Thu, 11 Jun 2020 17:41:38 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.7.2-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.7.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 5.7.2-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.7.y
+git commit: 00f7cc67908be43cf52f961c4c880108b00d68e8
+git describe: v5.7.1-25-g00f7cc67908b
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.7-oe/bui=
+ld/v5.7.1-25-g00f7cc67908b
+
+No regressions (compared to build v5.7-15-g676bb83805a9)
+
+No fixes (compared to build v5.7-15-g676bb83805a9)
+
+
+Ran 36794 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- juno-r2-compat
+- juno-r2-kasan
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* kselftest/net
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-controllers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-sched-tests
+* ltp-syscalls-tests
+* perf
+* v4l2-compliance
+* libgpiod
+* ltp-cve-tests
+* ltp-hugetlb-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-securebits-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-io-tests
+* ltp-open-posix-tests
+* network-basic-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+* kselftest-vsyscall-mode-native/net
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/drivers
+* kselftest-vsyscall-mode-none/filesystems
+* kselftest-vsyscall-mode-none/net
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
