@@ -2,112 +2,112 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5100C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DF3C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A68AE206C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:29:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C88BD206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:29:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591784976;
+	bh=pWbMBf+2NHLWsd74kJCHTKb/ilpX227pIQD4SgmxOzY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yjeI54pUk87zP7Zw+pETuv7KXAHP5CBCMQ1uEY67RQ9GeMMmK/3/hd40/OG9VPh+n
+	 gC4l73CCwSDs7kpb40iV35qyBbGrgx2zmPuTpVJJ+uLJjeOi7h3cKmN/pUSABfesVH
+	 1ElO3G8KVkMSRpxuTet53qELCa33vS/VaZT64l7w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728232AbgFJK3W (ORCPT
+        id S1728256AbgFJK3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 06:29:22 -0400
-Received: from foss.arm.com ([217.140.110.172]:56562 "EHLO foss.arm.com"
+        Wed, 10 Jun 2020 06:29:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726533AbgFJK3W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 06:29:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 400191FB;
-        Wed, 10 Jun 2020 03:29:21 -0700 (PDT)
-Received: from gaia (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5FE5E3F73D;
-        Wed, 10 Jun 2020 03:29:19 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 11:29:17 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Stephen Boyd <swboyd@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Manoj Gupta <manojgupta@google.com>,
-        Luis Lozano <llozano@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2] arm64: vdso32: add CONFIG_THUMB2_COMPAT_VDSO
-Message-ID: <20200610102916.GA26099@gaia>
-References: <20200528072031.GA22156@willie-the-truck>
- <20200608205711.109418-1-ndesaulniers@google.com>
- <20200609203502.GA21214@gaia>
- <CAKwvOdnDeYQ-tbyW8=tcKcbbFxtDzqk8dCUSzbBYP1amb9a2hg@mail.gmail.com>
- <20200610084755.GB17035@willie-the-truck>
+        id S1726533AbgFJK3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 06:29:23 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 762FE20656;
+        Wed, 10 Jun 2020 10:29:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591784963;
+        bh=pWbMBf+2NHLWsd74kJCHTKb/ilpX227pIQD4SgmxOzY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1XmLlrByds01M+op+BGXfLVCmQNRSnVf5dOMutgcNHgrt1Pf4i7SBvhZ9G2zTZsOG
+         KtO7gr4mFkvcNsDUD1RoMT4uuweLbOKyjlxmUI5arnGFC+9eE22vLXgefXEnpceHLD
+         fXUQQIy6V1Q9PWKQzwHPypIwFKSufu/mSvdOMHsU=
+Date:   Wed, 10 Jun 2020 11:29:20 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        robh@kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [RFC PATCH 1/2] dt-bindings: tas2562: Add firmware support for
+ tas2563
+Message-ID: <20200610102920.GC5005@sirena.org.uk>
+References: <20200609172841.22541-1-dmurphy@ti.com>
+ <20200609172841.22541-2-dmurphy@ti.com>
+ <20200609173143.GN4583@sirena.org.uk>
+ <bb7cff87-f814-1b37-c9eb-e68919e3c077@ti.com>
+ <20200609175852.GQ4583@sirena.org.uk>
+ <414a2d73-6d09-1e76-59c8-4943c0e8f720@ti.com>
+ <20200609184734.GS4583@sirena.org.uk>
+ <014b85b5-677b-569a-4eb2-74526d3f00bc@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="xo44VMWPx7vlQ2+2"
 Content-Disposition: inline
-In-Reply-To: <20200610084755.GB17035@willie-the-truck>
+In-Reply-To: <014b85b5-677b-569a-4eb2-74526d3f00bc@ti.com>
+X-Cookie: fortune: No such file or directory
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 09:47:55AM +0100, Will Deacon wrote:
-> On Tue, Jun 09, 2020 at 04:55:13PM -0700, Nick Desaulniers wrote:
-> > On Tue, Jun 9, 2020 at 1:35 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > > On Mon, Jun 08, 2020 at 01:57:08PM -0700, Nick Desaulniers wrote:
-> > > > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> > > > index 7f9d38444d6d..fe9e6b231cac 100644
-> > > > --- a/arch/arm64/Kconfig
-> > > > +++ b/arch/arm64/Kconfig
-> > > > @@ -1299,6 +1299,14 @@ config COMPAT_VDSO
-> > > >         You must have a 32-bit build of glibc 2.22 or later for programs
-> > > >         to seamlessly take advantage of this.
-> > > >
-> > > > +config THUMB2_COMPAT_VDSO
-> > > > +     bool "Compile the vDSO in THUMB2 mode"
-> > > > +     depends on COMPAT_VDSO
-> > > > +     default y
-> > > > +     help
-> > > > +       Compile the compat vDSO with -mthumb -fomit-frame-pointer if y, otherwise
-> > > > +       as -marm.
-> > >
-> > > Now that we understood the issue (I think), do we actually need this
-> > > choice? Why not going for -mthumb -fomit-frame-pointer always for the
-> > > compat vdso?
-> > 
-> > "Why should the compat vdso be configurable?" is a fair question.  I
-> > don't have an answer, but maybe some of the folks on thread do?
-> > 
-> > Our problem is more so "if the vdso is built as thumb, we need it also
-> > explicitly built with -fomit-frame-pointer."  Whether it should be
-> > built as thumb, arm, or configurable (and which default to pick in
-> > that case) are still an open questions.  Will asked for it to be
-> > configurable, so I sent a patch making it configurable.
-> 
-> It's configurable for 32-bit arm,
 
-On 32-bit, the vdso mode is a side-effect of how we build the kernel
-image. I guess we haven't put much thought into whether we want to keep
-the vdso in Thumb-2 or ARM mode.
+--xo44VMWPx7vlQ2+2
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> so I was just following that as it's
-> hardly a maintenance burden to support both. I suppose you could have
-> a toolchain that only supports one or the other, but it does seem a little
-> esoteric if you're building a kernel for an arm64 CPU.
+On Tue, Jun 09, 2020 at 02:20:29PM -0500, Dan Murphy wrote:
+> On 6/9/20 1:47 PM, Mark Brown wrote:
 
-We could leave the config option in if we ever need to change the compat
-vdso mode. But as not to confuse others with too many options, maybe
-add:
+> > That's really not very idiomatic for how Linux does stuff and seems to
+> > pretty much guarantee issues with hotplugging controls and ordering -
+> > you'd need special userspace to start up even if it was just a really
+> > simple DSP config doing only speaker correction or something.  I'm not
+> > sure what the advantage would be - what problem is this solving over
+> > static names?
 
-	bool "Compile the vDSO in THUMB2 mode" if EXPERT
+> IMO having a static name is the problem. It is an inflexible design.=A0
+> Besides the firmware-name property seems to be used in other drivers to
+> declare firmwares for the boards.
 
-Either way:
+> But if no one is complaining or submitting patches within the codecs to be
+> more flexible with firmware then I can just hard code the name like other
+> drivers do.
 
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+I'm not *completely* opposed to having the ability to suggest a name in
+firmware, the big problem is making use of the DSP completely dependent
+on having a DT property or doing some non-standard dance in userspace.
+
+--xo44VMWPx7vlQ2+2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7gtf8ACgkQJNaLcl1U
+h9CbrQf7B8RtgYmxR3DH0mpsVd3cVro2R/WpXyZk1PyY6j+8VLCYx2e1D8Qu0GJn
+6nGhVdulQbM2keMV421wGC73yoAPvIU+UHrW8JdJLJ+Se2uhqZS7DPPjcdUJBmz6
+pSt2frp+Jz4iNn+8bFV69Ubj7FoDB71r4wkSqprOW38aB7wNZOIM31mAf+hfn8ps
+juyneFqACKwv4OctOdk3A3kK8UP+EQviWvR+EAG5kJIkznLGht+Fx9U5Li8fBXEz
+IXv0w6uKhw919KWhtVQg+w2yLPCqDSopsIo7UGg9HJ/FXeVK4qgbXdpvQPo26H6m
+Gc92N1Ej/OumXlfZArpAtbFZjNhDpQ==
+=SvRr
+-----END PGP SIGNATURE-----
+
+--xo44VMWPx7vlQ2+2--
