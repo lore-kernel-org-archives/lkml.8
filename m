@@ -2,71 +2,87 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D8FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:21:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C11C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 255572072E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:21:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="U39ctksz"
+	by mail.kernel.org (Postfix) with ESMTP id 7E6242078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:24:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591795447;
+	bh=PqGKpe3pJAbiB6xHUS1NE9ElT3urY2tQdEw+LXxUfNc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dgVKf2xVgB7/w51qYcNCQHh9btec4g8hsU2jPkpTtib6q6GwzfWLkyzrD0ZzQz91m
+	 M75Ey4vvuQwli+nhYQdDay+mBL/oAIQ3qQEM6cQWbRdKuTsywgpNf0CAEyzp+beo8s
+	 jFhbnyKZBVx2KTnsMIv6M3seeEt9lMIlHZ/gjJGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729265AbgFJNVu (ORCPT
+        id S1729212AbgFJNYG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 09:21:50 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:35524 "EHLO mail.skyhub.de"
+        Wed, 10 Jun 2020 09:24:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726119AbgFJNVp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 09:21:45 -0400
-Received: from zn.tnic (p200300ec2f0c1900a8dd7bf9cd2897c1.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:1900:a8dd:7bf9:cd28:97c1])
+        id S1726321AbgFJNYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 09:24:05 -0400
+Received: from localhost (lfbn-ncy-1-1025-94.w92-138.abo.wanadoo.fr [92.138.0.94])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A9B441EC02C3;
-        Wed, 10 Jun 2020 15:21:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1591795298;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=+y6sTff02uxOaGiZSreDjcUCBtuqUc5REGpMVDTOxa4=;
-        b=U39ctkszTzmyTRiCk6asv/5/E2r2S58eQhqvOJ9ZAt45kMPFcaSwYx9UPOMyZMleL8fRap
-        /B00XBOm7ZMjE3D4O67wpW9192HJ7jcvUWc916PxHXE+uJfTyLbkoNmu0/cbD40/z+HrEf
-        xyVhKQJxgKMehEnuWfE8a5WZyIUrLeY=
-Date:   Wed, 10 Jun 2020 15:21:31 +0200
-From:   Borislav Petkov <bp@alien8.de>
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F3912072E;
+        Wed, 10 Jun 2020 13:24:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591795445;
+        bh=PqGKpe3pJAbiB6xHUS1NE9ElT3urY2tQdEw+LXxUfNc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UhBTH+zjq9UjbPZoc6Rwziv2sNqsfdxbyhZgO7j9MGR9KKLpb/vIrlV6nzdJF1qFE
+         dsx9SUb+4F0ZVqFhoAlqBFg7wed3I8Aw8jemANyCEoIyr25FqcH5OmusXv+5l4VkT5
+         JJL+emqZ8baTP2BsGXxw8OWuYRFaPd+XB6aM0AUk=
+Date:   Wed, 10 Jun 2020 15:24:03 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
 To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     X86 ML <x86@kernel.org>, Tom Lendacky <thomas.lendacky@amd.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Eric Morton <Eric.Morton@amd.com>
-Subject: Re: [PATCH 3/3] x86/msr: Add an MSR write callback
-Message-ID: <20200610132131.GG14118@zn.tnic>
-References: <20200610110037.11853-1-bp@alien8.de>
- <20200610110037.11853-4-bp@alien8.de>
- <20200610123226.GC2497@hirez.programming.kicks-ass.net>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
+        cai@lca.pw, mgorman@techsingularity.net, sfr@canb.auug.org.au,
+        linux@roeck-us.net
+Subject: Re: [RFC][PATCH 5/7] irq_work, smp: Allow irq_work on
+ call_single_queue
+Message-ID: <20200610132402.GB26639@lenoir>
+References: <20200526161057.531933155@infradead.org>
+ <20200526161908.011635912@infradead.org>
+ <20200528234031.GB551@lenoir>
+ <20200529133641.GM706495@hirez.programming.kicks-ass.net>
+ <20200605093704.GB2948@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200610123226.GC2497@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200605093704.GB2948@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 02:32:26PM +0200, Peter Zijlstra wrote:
-> We cache a whole bunch of MSRs in kernel. Why is this one special?
+On Fri, Jun 05, 2020 at 11:37:04AM +0200, Peter Zijlstra wrote:
+> On Fri, May 29, 2020 at 03:36:41PM +0200, Peter Zijlstra wrote:
+> > Maybe I can anonymous-union my way around it, dunno. I'll think about
+> > it. I'm certainly not proud of this. But at least the BUILD_BUG_ON()s
+> > should catch the more blatant breakage here.
+> 
+> How's this then? Differently ugly, but at least it compiles with that
+> horrible struct randomization junk enabled.
+> 
+> ---
+>  include/linux/irq_work.h  |   28 ++++++-------------
+>  include/linux/sched.h     |    4 +-
+>  include/linux/smp.h       |   25 ++++++-----------
+>  include/linux/smp_types.h |   66 ++++++++++++++++++++++++++++++++++++++++++++++
+>  kernel/sched/core.c       |    6 ++--
+>  kernel/smp.c              |   18 ------------
+>  6 files changed, 89 insertions(+), 58 deletions(-)
 
-If the others need the post-write handling, they should be added there
-too. I did it with this one only as a start.
 
-> If you write using the stupid msr device, you get to keep all pieces.
+Looks good. I don't have a better idea.
 
-Yes, the tainting-on-write is the next thing that goes ontop of this.
+Thanks!
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
