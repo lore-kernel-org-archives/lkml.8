@@ -2,139 +2,158 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 176FCC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0213C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF8322078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:02:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB9EB20820
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:02:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591797721;
-	bh=n+8D0TYlDj+cFQK2/6Jnbw0ScLdbDUi1DWb5ezOhotg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=axyHgE0Bw4I4gZIMH/Re3KfrEYECkDvdMFiGZXWvPRXUbXSUCAjJ5hXJN5PAEEiBC
-	 YlZ8FR4Jemci8slYRySexYY7ypjrIETlBs6RUADnA6V+Vzio+IrQ/+38nfPwvA1gvS
-	 K3pk/iq6HVqwy5clv113hMcQnAjeNPrgJ2Ht8Lho=
+	s=default; t=1591797734;
+	bh=m7fwL2s3oo3ksb2uIqUu7XXyQ5rFyLDlOvrHcGsZF/o=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=SsD572CikqfjELrzafHyyNUi3zbh+BJjKaUSul1UM2ZXWJEZg1mrQNFfQbXjLCQj5
+	 2dYpyn7mpcf1lLD5hInPo390G3X1p/0wqAw9BQKuzVPYrbsGqrwAoutB8h7mYuoKGG
+	 5WDnShqbxFDdlqEodCHZtgdIrYZuguFxWvnQ7z1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729700AbgFJOCA (ORCPT
+        id S1729707AbgFJOCM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 10:02:00 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:40605 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726616AbgFJOB6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 10:01:58 -0400
-Received: by mail-oi1-f195.google.com with SMTP id t25so2125349oij.7;
-        Wed, 10 Jun 2020 07:01:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Nl62HWLkcdUncszr4NfDCSNaITirf4yc7zsH9ph91Mg=;
-        b=Qjbj7mjG42s8fdutEj5DgbH6byB8n5MLqHfiKyUWonA4a4y0blxWJtnDLzm61eXgvX
-         mLI6wOslj9O2hMC9K3JJiF2g1JilrdLbDmQyY/lXExZR2rGaXg8UCmpo7pByP+0nolyy
-         61PhVJQqEjkADfxN9cB9UJwHd0JL2u5XmF4yjVg93zdP6y6L0rjns0serLkbaJ/5SRM0
-         wk22BBjC5FcF1MCmISFrUPflEJzRFmZupj5i5P+d/0AfvqLqua0w8+It2T3T7qcCkC9T
-         mkvvvAfwSmpqTRmqEEvuQPkPc6SGvKLfymN2zZvaCkhROeBHdRAC8lKWNjxsj00LlFJZ
-         GpgQ==
-X-Gm-Message-State: AOAM532vpbd+wgSf2RJM31KV9qcPmfPSI4tGBtoqTlHzlWjz8mmSpFSJ
-        7PMWSoJ8vX5sohvV7pQOH3bNRXyc7L127yKHnzM=
-X-Google-Smtp-Source: ABdhPJzorUjsiFcKJqkTkUHEOkzCM8G8rZoea2g27dOAzap4gGLrBRRziPbedIOP6/JlYUlFFWbvc+8f9RAYMPdl7zE=
-X-Received: by 2002:aca:ad88:: with SMTP id w130mr2656825oie.103.1591797717254;
- Wed, 10 Jun 2020 07:01:57 -0700 (PDT)
+        Wed, 10 Jun 2020 10:02:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52314 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726633AbgFJOCM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 10:02:12 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E4722078C;
+        Wed, 10 Jun 2020 14:02:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591797731;
+        bh=m7fwL2s3oo3ksb2uIqUu7XXyQ5rFyLDlOvrHcGsZF/o=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=FdMOd8XvtdGKDQUmOxPLPzcySK9mKpOernId4CifPFoLoUZSwDqxTaYLV65JjkaCD
+         zkIWTJOurym3796yQyUWORGgnitWTztypIdT5ecsX1tRSgRdkn1vG3tHNwNmzwKBiq
+         kbLq8A2WoQ5cbTr6NCTxZTzMFn3YFnJpVxej2jMk=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id D950A352265A; Wed, 10 Jun 2020 07:02:10 -0700 (PDT)
+Date:   Wed, 10 Jun 2020 07:02:10 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>
+Subject: Re: [PATCH 01/10] rcu: Directly lock rdp->nocb_lock on nocb code
+ entrypoints
+Message-ID: <20200610140210.GT4455@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200513164714.22557-1-frederic@kernel.org>
+ <20200513164714.22557-2-frederic@kernel.org>
+ <20200520122949.GB16672@google.com>
+ <20200522175739.GM2869@paulmck-ThinkPad-P72>
+ <20200604114121.GA26398@lenoir>
+ <20200604163655.GC29598@paulmck-ThinkPad-P72>
+ <20200608125715.GA30920@lenoir>
+ <20200609180227.GR4455@paulmck-ThinkPad-P72>
+ <20200610131238.GA26639@lenoir>
 MIME-Version: 1.0
-References: <2336e15d-ff4b-bbb6-c701-dbf3aa110fcd@redhat.com>
- <20200608112211.12125-1-andrzej.p@collabora.com> <964ca07a-3da5-101f-7edf-64bdeec98a4b@redhat.com>
- <CAJZ5v0hB2ra2K=dd9ZjVyy1V2b1PmFHm79uDO2HtHU1D_4YUbw@mail.gmail.com>
- <6136f26c-e090-e025-af55-4c5f3a6aec92@collabora.com> <3e61c9c1-b211-da9f-c55b-b44eb6522f2a@redhat.com>
-In-Reply-To: <3e61c9c1-b211-da9f-c55b-b44eb6522f2a@redhat.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 10 Jun 2020 16:01:45 +0200
-Message-ID: <CAJZ5v0gVBzLpQqNrV-kzV84mLB86Gd6Ws63RwBKT=r1WgbeDSQ@mail.gmail.com>
-Subject: Re: [PATCH v4 0/7] Support inhibiting input devices
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Samsung SoC <linux-samsung-soc@vger.kernel.org>,
-        linux-input@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        patches@opensource.cirrus.com,
-        ibm-acpi-devel@lists.sourceforge.net,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Barry Song <baohua@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Nick Dyer <nick@shmanahar.org>,
-        Ferruh Yigit <fery@cypress.com>,
-        Sangwon Jee <jeesw@melfas.com>,
-        Peter Hutterer <peter.hutterer@redhat.com>,
-        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
-        Collabora Kernel ML <kernel@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200610131238.GA26639@lenoir>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 3:21 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi,
->
-> On 6/10/20 3:12 PM, Andrzej Pietrasiewicz wrote:
-> > Hi All,
-> >
+On Wed, Jun 10, 2020 at 03:12:39PM +0200, Frederic Weisbecker wrote:
+> On Tue, Jun 09, 2020 at 11:02:27AM -0700, Paul E. McKenney wrote:
+> > > > > And anyway we still want to unconditionally lock on many places,
+> > > > > regardless of the offloaded state. I don't know how we could have
+> > > > > a magic helper do the unconditional lock on some places and the
+> > > > > conditional on others.
+> > > > 
+> > > > I was assuming (perhaps incorrectly) that an intermediate phase between
+> > > > not-offloaded and offloaded would take care of all of those cases.
+> > > 
+> > > Perhaps partly but I fear that won't be enough.
+> > 
+> > One approach is to rely on RCU read-side critical sections surrounding
+> > the lock acquisition and to stay in the intermediate phase until a grace
+> > period completes, preferably call_rcu() instead of synchronize_rcu().
+> > 
+> > This of course means refusing to do a transition if the CPU is still
+> > in the intermediate state from a prior transition.
+> 
+> That sounds good. But using synchronize_rcu() would be far easier. We
+> need to keep the hotplug and rcu barrier locked during the transition.
+> 
+> > > Also I've been thinking that rcu_nocb_lock() should meet any of these
+> > > requirements:
+> > > 
+> > > * hotplug is locked
+> > > * rcu barrier is locked
+> > > * rnp is locked
+> > > 
+> > > Because checking the offloaded state (when nocb isn't locked yet) of
+> > > an rdp without any of the above locks held is racy. And that should
+> > > be easy to check and prevent from copy-pasta accidents.
+> > > 
+> > > What do you think?
+> > 
+> > An RCU read-side critical section might be simpler.
+> 
+> Ok I think I can manage that.
 
-[cut]
+And just to argue against myself...
 
-> > What would it mean to become a wakeup source if there are no users,
-> > or nobody has ever opened the device? There are no interested
-> > input handlers (users) so what's the point of becoming a wakeup
-> > source? Why would the system need to wake up?
->
-> Well this is what we have been doing so far, so arguably we
-> need to keep doing it to avoid regressions / breaking our ABI.
->
-> Lets for example take a laptop, where when suspended the
-> power-button is the only valid wakeup-source and this is
-> running good old slackware with fvwm2 or windowmaker as
-> "desktop environment", then likely no process will have
-> the power-button input evdev node open.  Still we should
-> wakeup the laptop on the power-button press, otherwise
-> it will never wakeup.
->
-> Note I agree with you that the way this works is not
-> ideal, I just do not think that we can change it.
+Another approach is to maintain explicit multiple states for each
+->cblist, perhaps something like this:
 
-Please note that "no users" merely means that user space is not
-interested in receiving and processing the events from that device.
+1.	In softirq.  Transition code advances to next.
+2.	To no-CB 1.  Either GP or CB kthread for the transitioning
+	CPU advances to next.  Note that the fact that the
+	transition code runs on the transitioning CPU means that
+	the RCU softirq handler doesn't need to be involved.
+3.	To no-CB 2.  Either GP or CB kthread for the transitioning
+	CPU advances to next.
+4.	To no-CB 3.  Transitioning code advances to next.
+	At this point, the no-CBs setup is fully functional.
+5.	No-CB.  Transitioning code advances to next.
+	Again, the fact that the transitioning code is running
+	on the transitioning CPU with interrupts disabled means
+	that the RCU softirq handler need not be explicitly
+	involved.
+6.	To softirq 1.  The RCU softirq handler for the transitioning
+	CPU advances to next.
+	At this point, the RCU softirq handler is processing callbacks.
+7.	To softirq 2.  Either GP or CB kthread for the transitioning
+	CPU advances to next.
+	At this point, the softirq handler is processing callbacks.
+8.	To softirq 3.  Either GP or CB kthread for the transitioning
+	CPU advances to next.
+	At this point, the no-CBs setup is fully shut down.
+9.	To softirq 4.  Transitioning code advances to next,
+	which is the first, "In softirq".
+	(This one -might- be unnecessary, but...)
 
-If it is configured for system wakeup, it doesn't matter whether or
-not user space will consume the related events.
+All transitions are of course with the ->nocb_lock held.
 
-Thanks!
+When there is only one CPU during early boot near rcu_init() time,
+the transition from "In softirq" to "No-CB" can remain be instantaneous.
+
+This has the advantage of not slowing things down just because there
+is an RCU callback flood in progress.  It also uses an explicit
+protocol that should (give or take bugs) maintain full safety both
+in protection of ->cblist and in dealing with RCU callback floods.
+
+Thoughts?
+
+							Thanx, Paul
