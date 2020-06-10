@@ -2,96 +2,242 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E07E7C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 298B9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1EBD2074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:18:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 000F72074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:18:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ES+Sfxy+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bPiua6Vb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbgFJUSJ (ORCPT
+        id S1728015AbgFJUS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 16:18:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60502 "EHLO
+        Wed, 10 Jun 2020 16:18:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730518AbgFJUNr (ORCPT
+        with ESMTP id S1728078AbgFJUSH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 16:13:47 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4941C03E96B;
-        Wed, 10 Jun 2020 13:13:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=a6bntLUvQ0tR7N/aMeU2zpyWKO2+RHf9NYJ0TB23leA=; b=ES+Sfxy+2oGIgIAmOW/I+p76fw
-        qcPQqsG/73jemyJRer3+UjVnFFYLHVhkXkhsOZxvbDVdfaxrs8dIjC8cBBcdzK7zb/1YAMGtViobv
-        E4OSMFg5GQlh+bhKZZ51XuWVi+onf+ucWA1IeqIffN5derpB0OCxfCNSGwMrj0wvaB68R571Ft4b0
-        jS/v42UxtraBVF1FSe9nchpywSSnisn5Gu9+L5VfjTS/jm1k9qBVx01aejUktPjYOXQE77kQhM8Ml
-        8VKqo4AarBlMKAm7s/S+867z77I9uroThzBOvWBQHlR+1afGTF+QxbeIt6kkmu5ycnhjB0nhxY/W1
-        sf0IMA9w==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jj76Z-0003TU-Gq; Wed, 10 Jun 2020 20:13:47 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 07/51] mm: Move page-flags include to top of file
-Date:   Wed, 10 Jun 2020 13:13:01 -0700
-Message-Id: <20200610201345.13273-8-willy@infradead.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200610201345.13273-1-willy@infradead.org>
-References: <20200610201345.13273-1-willy@infradead.org>
+        Wed, 10 Jun 2020 16:18:07 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D574C03E96B;
+        Wed, 10 Jun 2020 13:18:07 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id j32so2838985qte.10;
+        Wed, 10 Jun 2020 13:18:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=7CkAuH/KjURv8CG9o3SLd0fsTeaBJlmewEeCSoCm5wY=;
+        b=bPiua6VblPUD0IJ3waHkiHOWs+zZiwE4eWALolbiTeVjEyl6YnjyqemPI34VUmPH4l
+         DDyhYRx4vHXfOVgbg4kWDFfVQaeokJPEnAx3qR/rgl1a1TwtaFinU2IP5UEelOhsv67n
+         QP0v2RikDJfJ+/AKeErXbAsuS+pxOg1iao8/ENr4RhjlWS/x5o8TUZK94/Suzx++NqKl
+         ifRt4EifGGW0VsW5aHrA9tJ4kjYnqzXuR5hbyPxeJZ5YdcYxjUdb/hHIM3bUJOAgaoSr
+         KiCDVkZtNqL3Xvg+yg7vf1oTg9gCrHGsoczk/f0w6gHi/dkfzKuQIhleRM7NdKDt+neD
+         aQ5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=7CkAuH/KjURv8CG9o3SLd0fsTeaBJlmewEeCSoCm5wY=;
+        b=YBQkMG3O8fcHZFPHJeXaq98UiiIBeRKQciDVysqSrO4pXhBdLDRGgp3S5IV4yja4CF
+         Rpgmgv/aCcEgHxe26NDx6VcJCDKSMTfeBwoDAoOYFoGHXsmdpH2yQAIoGhu+TQ6JchMx
+         0Qz9L6KR+j0fTsVzicxMFS389sEIdayjxP3JzNGyUZCctLJCPgSbZdwqBTBEP7l2hiT1
+         0Aoxr2fE7TrNDglQlR3diolr4SAydqEic1oU2Y954VReCBgbIWVhfACSG+J6ORe2CKqh
+         leTwjPaJc+TJTmO0CI7b/qBjdBTBErfdN5c22ArgAe4ZE+eUVof3LUYZWqwnQ4v9MApQ
+         YJKg==
+X-Gm-Message-State: AOAM532oqZBxboAwwHUyhHqh48QO3P+5nrh0KS1z3Ir9rgrLdMkMN0F+
+        YPah4mVOETbBjVIVnAL0bvnGAVmHxiKHQJejBFg=
+X-Google-Smtp-Source: ABdhPJyY3AhIfu/0DciBlS2fSciSq6ChYssUk19VEbN1X+yfNKDLG0zJvUJ3kaCMHElVQwqca5k5bwlihA/sMO2b4AE=
+X-Received: by 2002:ac8:2fb0:: with SMTP id l45mr4997434qta.260.1591820286253;
+ Wed, 10 Jun 2020 13:18:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CACK8Z6E0s-Y207sb-AqSHVB7KmhvDgJQFFaz6ijQ_0OS3Qjisw@mail.gmail.com>
+ <20200610000400.GA1473845@bjorn-Precision-5520> <CACK8Z6G3ycsXxuNiihOXiwwAum8=5aOFOshhFa7cEF__+c-v1A@mail.gmail.com>
+In-Reply-To: <CACK8Z6G3ycsXxuNiihOXiwwAum8=5aOFOshhFa7cEF__+c-v1A@mail.gmail.com>
+Reply-To: rajatxjain@gmail.com
+From:   Rajat Jain <rajatxjain@gmail.com>
+Date:   Wed, 10 Jun 2020 13:17:54 -0700
+Message-ID: <CAA93t1pFqsi2a-LGP7+eHpCmSvzoDfWEe7KSeFx6wt2caeFA1A@mail.gmail.com>
+Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
+ "whitelisted" drivers
+To:     Rajat Jain <rajatja@google.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Zubin Mithra <zsm@google.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+On Tue, Jun 9, 2020 at 5:30 PM Rajat Jain <rajatja@google.com> wrote:
+>
+> On Tue, Jun 9, 2020 at 5:04 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > On Tue, Jun 09, 2020 at 04:23:54PM -0700, Rajat Jain wrote:
+> > > Hi Bjorn,
+> > >
+> > > Thanks for sending out the summary, I was about to send it out but got lazy.
+> > >
+> > > On Tue, Jun 9, 2020 at 2:04 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > >
+> > > > On Sun, Jun 07, 2020 at 01:36:32PM +0200, Greg Kroah-Hartman wrote:
+> > > >
+> > > > > Your "problem" I think can be summed up a bit more concise:
+> > > > >       - you don't trust kernel drivers to be "secure" for untrusted
+> > > > >         devices
+> > > > >       - you only want to bind kernel drivers to "internal" devices
+> > > > >         automatically as you "trust" drivers in that situation.
+> > > > >       - you want to only bind specific kernel drivers that you somehow
+> > > > >         feel are "secure" to untrusted devices "outside" of a system
+> > > > >         when those devices are added to the system.
+> > > > >
+> > > > > Is that correct?
+> > > > >
+> > > > > If so, fine, you can do that today with the bind/unbind ability of
+> > > > > drivers, right?  After boot with your "trusted" drivers bound to
+> > > > > "internal" devices, turn off autobind of drivers to devices and then
+> > > > > manually bind them when you see new devices show up, as those "must" be
+> > > > > from external devices (see the bind/unbind files that all drivers export
+> > > > > for how to do this, and old lwn.net articles, this feature has been
+> > > > > around for a very long time.)
+> > > > >
+> > > > > I know for USB you can do this, odds are PCI you can turn off
+> > > > > autobinding as well, as I think this is a per-bus flag somewhere.  If
+> > > > > that's not exported to userspace, should be trivial to do so, should be
+> > > > > somewere in the driver model already...
+> > > > >
+> > > > > Ah, yes, look at the "drivers_autoprobe" and "drivers_probe" files in
+> > > > > sysfs for all busses.  Do those not work for you?
+> > > > >
+> > > > > My other points are the fact that you don't want to put policy in the
+> > > > > kernel, and I think that you can do everything you want in userspace
+> > > > > today, except maybe the fact that trying to determine what is "inside"
+> > > > > and "outside" is not always easy given that most hardware does not
+> > > > > export this information properly, if at all.  Go work with the firmware
+> > > > > people on that issue please, that would be most helpful for everyone
+> > > > > involved to get that finally straightened out.
+> > > >
+> > > > To sketch this out, my understanding of how this would work is:
+> > > >
+> > > >   - Expose the PCI pdev->untrusted bit in sysfs.  We don't expose this
+> > > >     today, but doing so would be trivial.  I think I would prefer a
+> > > >     sysfs name like "external" so it's more descriptive and less of a
+> > > >     judgment.
+> > >
+> > > Yes. I think we should probably semantically differentiate between
+> > > "external" and "external facing" devices. Root ports and downstream
+> > > ports can be "external facing" but are actually internal devices.
+> > > Anything below an "external facing" device is "external". So the sysfs
+> > > attribute "external" should be set only for devices that are truly
+> > > external.
+> >
+> > Good point; we (maybe you? :)) should fix that edge case.
+>
 
-Give up on the notion that we can remove page-flags.h from mm.h.
-There are currently 14 inline functions which use a PageFoo function.
-Also, two of the files directly included by mm.h include page-flags.h
-themselves, and there are probably more indirect inclusions.  So just
-include it at the top like any other header file.
+I realized that we may not need to distinguish between internal and
+external devices if we can assume that no internal PCI devices will
+show up after boot. That assumption is 99% true for our use case
+(leaving 1% out because we have some corner cases i.e. PCIe rescans,
+module insertions etc that may probably make some internal devices
+disappear and reappear).  If I find that I can do without the need for
+a UAPI to distinguish internal vs external devices, do you still want
+me to fix this edge case (i.e. "break" the pdev->untrusted flag into
+"external_facing" and "external" devices)?
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
- include/linux/mm.h | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+Thanks,
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index af0305ad090f..6c29b663135f 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -24,6 +24,7 @@
- #include <linux/resource.h>
- #include <linux/page_ext.h>
- #include <linux/err.h>
-+#include <linux/page-flags.h>
- #include <linux/page_ref.h>
- #include <linux/memremap.h>
- #include <linux/overflow.h>
-@@ -667,11 +668,6 @@ int vma_is_stack_for_current(struct vm_area_struct *vma);
- struct mmu_gather;
- struct inode;
- 
--/*
-- * FIXME: take this include out, include page-flags.h in
-- * files which need it (119 of them)
-- */
--#include <linux/page-flags.h>
- #include <linux/huge_mm.h>
- 
- /*
--- 
-2.26.2
+Rajat
 
+> Sure, happy to. I will start a fresh conversation about that (in a
+> separate thread).
+>
+> >
+> > > Just a suggestion: Do you think an enum attribute may be better
+> > > instead, whose values could be "internal" / "external" /
+> > > "external-facing" in case need arises later to distinguish between
+> > > them?
+> >
+> > I don't see the need for an enum yet.  Maybe we should add that
+> > if/when we do need it?
+>
+> Sure, no problems. (I just wanted to slip the thought into the
+> conversation as UAPI is hard to change later).
+>
+> >
+> > > >   - Early userspace code prevents modular drivers from automatically
+> > > >     binding to PCI devices:
+> > > >
+> > > >       echo 0 > /sys/bus/pci/drivers_autoprobe
+> > >
+> > > Yes.
+> > > I believe this setting will apply it equally to both modular and
+> > > statically linked drivers?
+> >
+> > Yes.  The test is in bus_probe_device(), and it does the same for both
+> > modular and statically linked drivers.
+> >
+> > But for statically linked drivers, it only prevents them from binding
+> > to *hot-added* devices.  They will claim devices present at boot even
+> > before userspace code can run.
+>
+> Yes, understood.
+>
+> >
+> > > The one thing that still needs more thought is how about the
+> > > "pcieport" driver that enumerates the PCI bridges. I'm unsure if it
+> > > needs to be whitelisted for further enumeration downstream. What do
+> > > you think?
+> >
+> > The pcieport driver is required for AER, PCIe native hotplug, PME,
+> > etc., and it cannot be a module, so the whitelist wouldn't apply to
+> > it.
+>
+> Not that I see the need, but slight clarification needed just to make
+> sure I understand it clearly:
+>
+> Since pcieport driver is statically compiled in, AER, pciehp, PME, DPC
+> etc will always be enabled for devices plugged in during boot. But I
+> can still choose to choose to allow or deny for devices added *after
+> boot* using the whitelist, right?
+>
+> Also, denying pcieport driver for hot-added PCIe bridges only disables
+> these pcieport services on those bridges, but device enumeration
+> further downstream those bridges is not an issue?
+>
+> > I assume you need hotplug support, so you would have pcieport
+> > enabled and built in statically.
+> >
+> > If you're using ACPI hotplug, that doesn't require pcieport.
+>
+> Thank you, this was indeed a long and useful thread :-)
+>
+> Best Regards,
+>
+> Rajat
