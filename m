@@ -2,224 +2,137 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE05DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 985C9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB93C20734
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:08:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7314220734
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:08:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ThsHKuaZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726281AbgFJGH5 (ORCPT
+        id S1726302AbgFJGIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 02:07:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42352 "EHLO
+        Wed, 10 Jun 2020 02:08:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726072AbgFJGHw (ORCPT
+        with ESMTP id S1725988AbgFJGIk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 02:07:52 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A53FC05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 23:07:52 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jitth-0008J3-Lj; Wed, 10 Jun 2020 08:07:37 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jittX-0001xa-5S; Wed, 10 Jun 2020 08:07:27 +0200
-Date:   Wed, 10 Jun 2020 08:07:27 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     David Miller <davem@davemloft.net>, marex@denx.de,
-        Andrew Lunn <andrew@lunn.ch>, mkubecek@suse.cz,
-        f.fainelli@gmail.com, Jonathan Corbet <corbet@lwn.net>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Netdev <netdev@vger.kernel.org>, linville@tuxdriver.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        kuba@kernel.org, mkl@pengutronix.de, kernel@pengutronix.de,
-        david@protonic.nl, amitc@mellanox.com, petrm@mellanox.com,
-        christian.herber@nxp.com, hkallweit1@gmail.com
-Subject: Re: [PATCH ethtool v1] netlink: add master/slave configuration
- support
-Message-ID: <20200610060727.q4nzryh3mp6fj2ax@pengutronix.de>
-References: <20200609101935.5716b3bd@hermes.lan>
- <20200609.113633.1866761141966326637.davem@davemloft.net>
- <4d664ff641dbf3aeab1ecd5eacda220dab9d7d17.camel@intel.com>
- <20200609.123858.466960203090925019.davem@davemloft.net>
- <CAPcyv4jr9F_0q4S-LSvHzJK7mamLW-m1Skgw7cXvkZYNtStyxA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6rzrcepciphpb3j5"
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4jr9F_0q4S-LSvHzJK7mamLW-m1Skgw7cXvkZYNtStyxA@mail.gmail.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 07:07:27 up 207 days, 20:26, 198 users,  load average: 0.05, 0.08,
- 0.02
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Wed, 10 Jun 2020 02:08:40 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F75DC05BD1E;
+        Tue,  9 Jun 2020 23:08:40 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id k26so632058wmi.4;
+        Tue, 09 Jun 2020 23:08:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=9ySIaa975PAC6SWtqNw2SdOpESGj5AY/7tdn7A1OMLM=;
+        b=ThsHKuaZK7hTG+kS22bzr/wgmpJaUAMunQgbKNhSGP+maZwbhtnrujbsyi8x0IyMV7
+         CvvD9LKQZpghColYBYuDIb9BetoNXlTiRlOPojgigKpYzyp9fLt+R1IaW0/TQ3PpIQV3
+         I/lnaTVrQgL2zP1AZYTzR/JBNkFiz9Sf1B2SU1qq4iNmhQNFxAco/NtIu4qnDJIE8dlw
+         GCDJpstesth5Uy3wdcoKIizfKiirLV/d7tcPBiyRKxFFGXX8iYCweC3rPuG2mpDGM/1W
+         QUsvzNu7rKkXbqVA2qhVoSTV9hrs2PvuiiNoBZNorkA1IicZi962wrwwC8z97/M7TJv5
+         +Xew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=9ySIaa975PAC6SWtqNw2SdOpESGj5AY/7tdn7A1OMLM=;
+        b=XZt+9ZUtZcndMvjCcT6o7JNxp0iGvHASi+aCAAUqMerDeiEn/sFsbVmE9CjrF0rr81
+         jndHdpjVBozDrEm8URwkSld1HZvPNa9Ot13vxX9xtZEnHYgqswQHcOAfXxfOfFFPYEir
+         V4P5CPRS46TmENUJdx/bhdrFLSDlQrLhlVBcPQgijw2/umJty3VmaDEhEYotkUi0IivM
+         2d6OCv/Wkeh3wESGKlnXqyCeKBdUduFe5ANFewRsqaNMGzkgMxGAp7MeO4L7qPihbtjI
+         9iZjnuync9lFr/TzwsUbCokg51xBGuhGhGe12IlpLKk6sw0bJHUMR/vDWmKNuexpl0mO
+         CkGg==
+X-Gm-Message-State: AOAM5300LYBEAxZKM3Zn63S4jIogKBVCdSqP/HIfGrgxAZNAl878Bjg3
+        aoP1LasMj55AZavKpNXYA4U=
+X-Google-Smtp-Source: ABdhPJyqylcMxelCT7+HonzeHNjeP5pFH+sbD8jAJOtfrtp0n/WuPTu/e5LL0clGw5QTctyyG5E54A==
+X-Received: by 2002:a1c:408:: with SMTP id 8mr1448165wme.15.1591769318755;
+        Tue, 09 Jun 2020 23:08:38 -0700 (PDT)
+Received: from macbook-pro-alvaro.lan (28.red-83-49-61.dynamicip.rima-tde.net. [83.49.61.28])
+        by smtp.gmail.com with ESMTPSA id u13sm5287365wmm.6.2020.06.09.23.08.37
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Jun 2020 23:08:38 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH 3/7] reset: add BCM6345 reset controller driver
+From:   =?utf-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
+In-Reply-To: <e80e5c4c-ceef-3a62-3158-02f742bf76b7@gmail.com>
+Date:   Wed, 10 Jun 2020 08:08:37 +0200
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>, robh+dt@kernel.org,
+        tsbogend@alpha.franken.de, Jonas Gorski <jonas.gorski@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <41A1CC01-BFA0-48A1-A2EE-7917B3A1323A@gmail.com>
+References: <20200609134232.4084718-1-noltari@gmail.com>
+ <20200609134232.4084718-4-noltari@gmail.com>
+ <341e8482c6bd06267633160d7358fa8331bef515.camel@pengutronix.de>
+ <729976E9-CAF7-47B6-8783-5FD3D85F9EFD@gmail.com>
+ <2a621f170574a616bcf047f6725c74552f7abbb1.camel@pengutronix.de>
+ <46614E69-578A-4782-9D72-85B2D2F38FB8@gmail.com>
+ <e80e5c4c-ceef-3a62-3158-02f742bf76b7@gmail.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Florian,
 
---6rzrcepciphpb3j5
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Jun 09, 2020 at 02:48:51PM -0700, Dan Williams wrote:
-> On Tue, Jun 9, 2020 at 12:57 PM David Miller <davem@davemloft.net> wrote:
-> >
-> > From: "Williams, Dan J" <dan.j.williams@intel.com>
-> > Date: Tue, 9 Jun 2020 19:30:50 +0000
-> >
-> > > On Tue, 2020-06-09 at 11:36 -0700, David Miller wrote:
-> > >> From: Stephen Hemminger <stephen@networkplumber.org>
-> > >> Date: Tue, 9 Jun 2020 10:19:35 -0700
-> > >>
-> > >> > Yes, words do matter and convey a lot of implied connotation and
-> > >> > meaning.
-> > >>
-> > >> What is your long term plan?  Will you change all of the UAPI for
-> > >> bonding for example?
-> > >
-> > > The long term plan in my view includes talking with standards bodies =
+> El 9 jun 2020, a las 22:17, Florian Fainelli <f.fainelli@gmail.com> =
+escribi=C3=B3:
+>=20
+>=20
+>=20
+> On 6/9/2020 9:41 AM, =C3=81lvaro Fern=C3=A1ndez Rojas wrote:
+>>>>> If you can do without this, with I think this driver could be made =
 to
-> > > move new content to, for example, master/subordinate. In other words,
-> > > practical forward steps, not retroactively changing interfaces.
-> >
-> > When that knowledge is established legitimately in standards and
-> > transferred into common knowledge of these technologies, yes then
-> > please come present your proposals.
+>>>>> use reset-simple.
+>>>>=20
+>>>> Yes, but only if I can add reset support with a configurable sleep =
+range to reset-simple. Is this possible?
+>>>=20
+>>> I should have mentioned, support for this is on the reset/next =
+branch:
+>>>=20
+>>> git://git.pengutronix.de/pza/linux.git reset/next
+>>=20
+>> Yes, but reset_us was only added to reset_simple_data, so there=E2=80=99=
+s no way to fill that value from reset_simple_devdata or device tree, =
+right?
 >=20
-> Our hands are not completely tied by the specifications, as a
-> community we have a non-zero level of influence over standards bodies,
-> even direct participation in some. So we could do something stronger
-> than passively wait for standards to catch up. For example, deprecate
-> our consideration of future specifications that include this language
-> and set a cut off date.
+> Not that I can see, but you could certainly extend it here:
 >=20
-> I understand the confusion that arises from using terminology
-> differently from the specification, but at the same time when
-> specification language actively hurts kernel code maintainability we
-> change it. For example, when I did the first iteration of what
-> eventually became libnvdimm Ingo rightly reacted to the naming being
-> too ACPI specification centric and wanting more kernel-centric naming.
->=20
-> If the common kernel name for what was formerly called a "slave"
-> device is a "subordinate" device then the confusion is lessened, only
-> one common kernel translation to consider.
->=20
-> > But right now using different words will create confusion.
-> >
-> > I also find master/subordinate an interesting proposal, what if master
-> > is a triggering term?  Why only slave?
->=20
-> "slave" has a direct connection to human suffering deployed at global sca=
-le.
->=20
-> One way I think about this is consider we have our first ever Linux
-> Plumbers on the African continent, and you had a choice about giving a
-> talk about how the git master branch operates, or a talk about slave
-> devices which one would you feel more immediately comfortable leading?
-> Any hesitation you would feel freely using the word slave with a
-> predominantly black audience is a similar speed bump a contributor
-> might feel needing to consume that term to get their job done.
->=20
-> Explaining "no, not that connotation of slave" does not scale as much
-> as transitioning to another term.
->=20
-> > I know people feel something needs to change, but do that moving
-> > forward for the technologies themselves.
->=20
-> This is the start of a process that the kernel community can take an
-> active role to lead, we have it within our control to not wait for the
-> lowest common denominator to catch up.
->=20
-> > Not how we implement support
-> > for a technology which is established already.
-> >
-> > Plant the seed, don't chop the tree down.
->=20
-> I appreciate the engagement.
+> if (devdata) {
+> 		reg_offset =3D devdata->reg_offset;
+> 		if (devdata->nr_resets)
+> 			data->rcdev.nr_resets =3D devdata->nr_resets;
+> 		data->active_low =3D devdata->active_low;
+> 		data->status_active_low =3D devdata->status_active_low;
+> 	}
 
-It is interesting to see technical mind arguing about humanitarian
-topics. Usually I need to translate IT to theologies, historic teachers
-or linguists. So, let me try to do it other way around:
+Yes, I would extend it there too, but I was just saying that it=E2=80=99s =
+a bit strange that it was only added to reset_simple_data without any =
+way to fill the value.
 
-- a language is not a snapshot. The meaning of words is changing
-  continually. For example, an ARM is buying Intel networking division and =
-all
-  i200 controller should be renamed to arm100..
-  I'm not familiar with your local history, so i give some examples to
-  German readers:
-  - The word "F=C3=BChrer" was abused by some historical person and event.
-  - The word "geil" is changed within one generation from sexual
-    erection to a positive emotion reusable in almost every context.
-  There is many language changes just within last century, please refer
-  to DUDEN to learn more about it:
-  https://www.duden.de/ueber_duden/auflagengeschichte
-  Or for more generic examples:
-  https://en.wikipedia.org/wiki/Language_change
-
-- from your argumentation I would assume, you are trying to define a
-  language. A language not historically misused, so it will be
-  acceptable by every one. Or at least by the technical community.
-  Suddenly, I should disappoint you. The number of programming
-  languages defined by technical community is is still growing and none of =
-it
-  makes happy every one. How do you thing the reality looks for spoken lang=
-uage?
-  Welcome to my reality:
-  https://en.wikipedia.org/wiki/Universal_language
-  In case the historical argumentations are too boring, let me give you
-  a modern, less boring example:
-  https://youtu.be/7C-aB09i30E
-
-- Are there any other attempts to change historical and linguistic
-  reality by removing and replacing something? Sure:
-  https://en.wikipedia.org/wiki/Book_burning
-
+>=20
+> and have an appropriate devdata structure be provided for your
+> compatible string:
+>=20
+> +	{ .compatible =3D "brcm,bcm6345-reset", .data =3D =
+bcm6345_reset_devdata },
+> --=20
+> Florian
 
 Regards,
-Oleksij
---=20
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---6rzrcepciphpb3j5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl7geJoACgkQ4omh9DUa
-UbPUVxAAtAFesYvW2blzrOec4ViiN4687g25pl4c/1E8dFBcBnGc1S7CkcxaRdLS
-dmna8qVGz8AHV0iI5xcxs9BgCvDQ0GLpHZXLVXdRNEaqzqjxeN3R71pRHAyGfLzQ
-5j+wa1GrA+aQcfCX0g8owjUkMipX+tv63KoMxMpvzKJCQvKlgwBxwnV2HIij7YIw
-HjYxfvrSzqLIPzHyJbv6ij6BXl2sfzORU5XqtGPHm0klwPOwntHAWxe8bCzkO3Xe
-o2ZH6fSFMWdFi7EppxOwGkjZclN68gklT2prGRUoSarvolgShoyl+BNsvw8+ef6v
-X+IoomBvz84xUtuigpS0BsG1dUGLF7PjAyJyPLxeW4MX1dngu9OKbOOnHE2Ek1sN
-EbWHMAFRsHgZlHYyBsI+iN0fqXvcznbuMdGUD1SkZwXF67LQvVImJ5dxoaLgjzew
-ihc1leTPojTd0+bXwZIInitD3SFqz1aalnTPry9nZSOAIo9KwQuA8pEYPCsVaPHw
-4NDr40N9euw/eDnrSnSBGH5/PkEVne7TV9C051t8IAd+UPxmBRNjeXsGpYE3obpF
-bbZzO5ogDqDE/GzHtoudUXe6s4U/BqumMtpqgO3XNV2XhQcxoabZwcalpL2nuz/H
-P4TEuVfCUH5DR3GSePnwuBFJyekn3nSMB9K58zljq9ORWb759BI=
-=aGp7
------END PGP SIGNATURE-----
-
---6rzrcepciphpb3j5--
+=C3=81lvaro.=
