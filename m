@@ -2,74 +2,102 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 871FBC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 823ADC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:59:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F03C2072E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5592D2072E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:59:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728699AbgFJL6J (ORCPT
+        id S1728758AbgFJL7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 07:58:09 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:33518 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728562AbgFJL6J (ORCPT
+        Wed, 10 Jun 2020 07:59:37 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:33607 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728480AbgFJL7g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 07:58:09 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jizMq-0000Nb-Ho; Wed, 10 Jun 2020 11:58:04 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Dave Airlie <airlied@redhat.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        dri-devel@lists.freedesktop.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/ast: fix missing break in switch statement for format->cpp[0] case 4
-Date:   Wed, 10 Jun 2020 12:58:04 +0100
-Message-Id: <20200610115804.1132338-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.27.0.rc0
+        Wed, 10 Jun 2020 07:59:36 -0400
+Received: by mail-ot1-f67.google.com with SMTP id n6so1498371otl.0;
+        Wed, 10 Jun 2020 04:59:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8ZG/HJT7rPSiNIE05gFVcJqpFa/5aewZ1WUsbuSs15s=;
+        b=Knl+eXYUL2rNk1pwnsIyVkxwPUID5ylX6uN0Cq4uGovGfoMB3X817iMRC/Fl7GeGMD
+         ZGR872roQZKuyuXcXKB85qsNl66ri4iFO+SOKJz8+TwC4ZdF/NxJGEZkLnmF8e3Un7aE
+         YSpGTsmQ8Pt0MSx3UKVIDivwVicpiYvDsd1moDm9ajyv1AnjnnD0a/8qvvEI6iC79gaa
+         e7OJKhcRZcZKXihHqgVzBLlnahWeJCRew1CCVJhQ1vyYrKFpb4b3tdyhe7ifSQs41QD6
+         DjlBW/PN4MBDGYNPQ/lmkOJRMaU5Em3b6uZ7fBPkmRQc7/bQuT5MNXQigGpt+DsJ1j55
+         YqKw==
+X-Gm-Message-State: AOAM532HmBnodkKH3ydymaA9kO9v6t6ijiGkWSt7KhFueXxlUkVeP8WE
+        G8hampJ3GXspEw5FFHOQFgWbu0lAf7S4GvKMMJ0XgvXK
+X-Google-Smtp-Source: ABdhPJz4zTu2IPb7LBk7svTC/4Ryb7wQelQ/gCq4Psv1ev4MAuApJsbFdmNc5XwduPkB767t96+jNabtE2GhD0tH3NY=
+X-Received: by 2002:a9d:c29:: with SMTP id 38mr2147470otr.107.1591790375776;
+ Wed, 10 Jun 2020 04:59:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <1591736054-568-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1591736054-568-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200610110810.GD5005@sirena.org.uk>
+In-Reply-To: <20200610110810.GD5005@sirena.org.uk>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 10 Jun 2020 13:59:24 +0200
+Message-ID: <CAMuHMdWCHeSB9mjpdSX_-qxwo33kMb1_1R93CjBtVBPFPKkEOg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: spi: renesas,sh-msiof: Add r8a7742 support
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Hi Mark,
 
-Currently the switch statement for format->cpp[0] value 4 assigns
-color_index which is never read again and then falls through to the
-default case and returns. This looks like a missing break statement
-bug. Fix this by adding a break statement.
+On Wed, Jun 10, 2020 at 1:08 PM Mark Brown <broonie@kernel.org> wrote:
+> On Tue, Jun 09, 2020 at 09:54:13PM +0100, Lad Prabhakar wrote:
+> > Document RZ/G1H (R8A7742) SoC bindings.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> > ---
+> >  Documentation/devicetree/bindings/spi/renesas,sh-msiof.yaml | 1 +
+> >  1 file changed, 1 insertion(+)
+>
+> To repeat my previous feedback I'd expect a driver update as well.
 
-Addresses-Coverity: ("Unused value")
-Fixes: 259d14a76a27 ("drm/ast: Split ast_set_vbios_mode_info()")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/gpu/drm/ast/ast_mode.c | 1 +
- 1 file changed, 1 insertion(+)
+No driver update is needed.
 
-diff --git a/drivers/gpu/drm/ast/ast_mode.c b/drivers/gpu/drm/ast/ast_mode.c
-index 7d39b858c9f1..3a3a511670c9 100644
---- a/drivers/gpu/drm/ast/ast_mode.c
-+++ b/drivers/gpu/drm/ast/ast_mode.c
-@@ -226,6 +226,7 @@ static void ast_set_vbios_color_reg(struct ast_private *ast,
- 	case 3:
- 	case 4:
- 		color_index = TrueCModeIndex;
-+		break;
- 	default:
- 		return;
- 	}
+Documentation/devicetree/bindings/spi/renesas,sh-msiof.yaml says:
+
+  compatible:
+    oneOf:
+      - items:
+          - enum:
+             - renesas,msiof-r8a7742       # RZ/G1H
+               ...
+          - const: renesas,rcar-gen2-msiof  # generic R-Car Gen2 and RZ/G1
+                                            # compatible device
+
+drivers/spi/spi-sh-msiof.c matches against "renesas,rcar-gen2-msiof".
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.27.0.rc0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
