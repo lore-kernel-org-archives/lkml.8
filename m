@@ -2,138 +2,88 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D735C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 358CDC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30DBA206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:17:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ABDE20734
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:18:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="WrTnAwhx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SA0tA79F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbgFJJRT (ORCPT
+        id S1727085AbgFJJSd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 05:17:19 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:10664 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726961AbgFJJRT (ORCPT
+        Wed, 10 Jun 2020 05:18:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43648 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726948AbgFJJSc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 05:17:19 -0400
+        Wed, 10 Jun 2020 05:18:32 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44B49C03E96F
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 02:18:32 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id z206so1026562lfc.6
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 02:18:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1591780638; x=1623316638;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   in-reply-to:content-transfer-encoding;
-  bh=yTRa4iuclDKGDxr3hcHPUWfgnxSsbA46QRlOw0aYhtg=;
-  b=WrTnAwhxAQFjLo7KM+ygP8tUzTfPQSjzSLAbURGr+MnUh8NgCpVS3JWj
-   aOa0HtJZv5zZbFmVxrqjg6cncnAwWwX+hZuGgkOfYvbRD85w5G5VFeIxq
-   hzzMPDnyY9UTseZZ5OllmTAMzY5U8tZdxW988Ki2fsK0+0u6OhM4Nuygt
-   Y=;
-IronPort-SDR: sb3XkJQpvy2MlML82JqCdr/sI1XZ9v9qBgg0lP+DmB50kMsjl6syi1tvgFFSGRakZy5XTecow3
- Lxd2RZUHzuNA==
-X-IronPort-AV: E=Sophos;i="5.73,495,1583193600"; 
-   d="scan'208";a="36829050"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-8549039f.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 10 Jun 2020 09:17:17 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-8549039f.us-west-2.amazon.com (Postfix) with ESMTPS id 93D91A1D47;
-        Wed, 10 Jun 2020 09:17:15 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 10 Jun 2020 09:17:15 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.26) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 10 Jun 2020 09:17:10 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     Jiri Slaby <jslaby@suse.cz>
-CC:     SeongJae Park <sjpark@amazon.com>, <akpm@linux-foundation.org>,
-        <colin.king@canonical.com>, <linux-kernel@vger.kernel.org>,
-        <stable@vger.kernel.org>, SeongJae Park <sjpark@amazon.de>
-Subject: Re: Re: [PATCH v2] scripts/spelling: Recommend blocklist/allowlist instead of blacklist/whitelist
-Date:   Wed, 10 Jun 2020 11:16:55 +0200
-Message-ID: <20200610091655.4682-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kxWY8XEbn8Ok7oBcgLQpTmQYtx8Wj0QtOJ7t8WxrgPg=;
+        b=SA0tA79FKZd+CfHK9ZNdbyhLb3iBKdMTTc6eqhkv2AqTV9tmVctiypXv2oeTr2DRVl
+         8Gs+ZcaQk1LUtH01XFyKgZ9jt8JjK6qje50D9wkKs6MT+eZbj3cNiKvXm+QulUk7UMpe
+         seKygmpDw9VP5DzIrqwANaflh6+C198mG6CF22bRMXmWnhEcYoUzaoxuM7NEwVuS6CrP
+         YOrYw3b9KI34l3SMG65yJW96gGEFhFb1JxzARzMRLIsrMr5F2maCTGld4jLTOGMW7Vkj
+         +I0vSWFzy8i8BrJQrWA0lrK8+dmGiXhjR+sN9nGRz0Mlw9PPqC8wf+qDRi1Pf9X8NO4U
+         ZRqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kxWY8XEbn8Ok7oBcgLQpTmQYtx8Wj0QtOJ7t8WxrgPg=;
+        b=P/CS+YJHEzVBOLe5Tu9f8PWxrDzzYVE+T1lV/pzU5w8atZ8pno0qD6DbfEfVc684fs
+         DqHHr3kVqATXjMUMkTszjjuz3YTOXscrthKy/IJoUju36FhOeNVrKwm5suad3s3Ay2KR
+         lZs+i3L6cwNLSJU7HZGi6/6BJsaFhS73nSoCKSk8wgMTB9EoVxi4qoT+V32LG0Eldxnw
+         udkQAa2vwin/Sn8U/u8yjp7iDjSUFsqS9DqhVRG8qDAl0tzFKErcADJYwXa8POuBoltk
+         WY0BYRt3Yy1YSL8KawPk6Dl8qbHcAwYF3NPsQbcnTFTzBvrMai/iR+1olgBJB8hiYaUo
+         pLFA==
+X-Gm-Message-State: AOAM532s3V++Y7VQPJiILIOKK35cZ0pzgl2c76A/3dZ2sYCNXc+LvYUi
+        YxNXZyzRlTcJmTu/iZ5wVMA5Ls8FAItfUjLwWb3HQg==
+X-Google-Smtp-Source: ABdhPJyuQQc0bMA/9zTcFme+AnpFrXQdnMxS0yR7IMoAZT2tDAyaZSMjgDtVwz5lLWcBCo2OMA53r6AE2tAh3ICuKx0=
+X-Received: by 2002:ac2:4823:: with SMTP id 3mr1194962lft.194.1591780710628;
+ Wed, 10 Jun 2020 02:18:30 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <b16e47c9-db60-4d20-6e72-bf0b5ab29a38@suse.cz> (raw)
+References: <20200605025207.65719-1-navid.emamdoost@gmail.com>
+In-Reply-To: <20200605025207.65719-1-navid.emamdoost@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 10 Jun 2020 11:18:19 +0200
+Message-ID: <CACRpkdY6dXr2J2FP8yiK-RN4G2DE6-mTRAU4oj_fxo+x3mGYQA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: arizona: handle pm_runtime_get_sync failure case
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        patches@opensource.cirrus.com,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Navid Emamdoost <emamd001@umn.edu>, wu000273@umn.edu,
+        Kangjie Lu <kjlu@umn.edu>, smccaman@umn.edu
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.43.160.26]
-X-ClientProxiedBy: EX13D40UWA003.ant.amazon.com (10.43.160.29) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 10 Jun 2020 10:50:24 +0200 Jiri Slaby <jslaby@suse.cz> wrote:
+On Fri, Jun 5, 2020 at 4:52 AM Navid Emamdoost
+<navid.emamdoost@gmail.com> wrote:
 
-> On 09. 06. 20, 14:25, SeongJae Park wrote:
-> > From: SeongJae Park <sjpark@amazon.de>
-> > 
-> > This commit recommends the patches to replace 'blacklist' and
-> > 'whitelist' with the 'blocklist' and 'allowlist', because the new
-> > suggestions are incontrovertible, doesn't make people hurt, and more
-> > self-explanatory.
-> 
-> Sorry, but no, it's definitely not.
-> 
-> > Signed-off-by: SeongJae Park <sjpark@amazon.de>
-> > ---
-> >  scripts/spelling.txt | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/scripts/spelling.txt b/scripts/spelling.txt
-> > index d9cd24cf0d40..ea785568d8b8 100644
-> > --- a/scripts/spelling.txt
-> > +++ b/scripts/spelling.txt
-> > @@ -230,6 +230,7 @@ beter||better
-> >  betweeen||between
-> >  bianries||binaries
-> >  bitmast||bitmask
-> > +blacklist||blocklist
-> 
-> Blocklist means a list of blocks here.
+> Calling pm_runtime_get_sync increments the counter even in case of
+> failure, causing incorrect ref count. Call pm_runtime_put if
+> pm_runtime_get_sync fails.
+>
+> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-How about 'denylist', then?
+Patch applied for fixes.
 
-> 
-> >  boardcast||broadcast
-> >  borad||board
-> >  boundry||boundary
-> > @@ -1495,6 +1496,7 @@ whcih||which
-> >  whenver||whenever
-> >  wheter||whether
-> >  whe||when
-> > +whitelist||allowlist
-> 
-> Wut? allowlist I am seeing for the 1st time.
-
-Wouldn't it easy to infer the intention, though?
-
-> 
-> Some purists, linguists, and politicians are true fellows at times, or
-> at least they think so. This comes in waves and even if they try hard,
-> people won't adopt their nonsense. Like we, Czechs, still call piano by
-> German Klavier, and not břinkoklapka, suggested in 19th century (among
-> many others) by the horny extremists.
-> 
-> Shall we stop using black, white, blue, and other colors only because
-> they relate to skin color of avatars now? I doubt that.
-
-Well, I have no strong opinion on this, but... if some people are really being
-hurt by use of some terms and we could avoid spread of the term with only
-little cost, I believe it's worth to make the change.
-
-
-Thanks,
-SeongJae Park
-
-> 
-> thanks,
-> -- 
-> js
-> suse labs
+Yours,
+Linus Walleij
