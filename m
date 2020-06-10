@@ -8,66 +8,67 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FACCC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 22:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C588EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 22:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F0C42074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 22:47:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A7EB2074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 22:47:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aOPAmT5q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TjbvbuP8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbgFJWr1 (ORCPT
+        id S1726785AbgFJWra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 18:47:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56072 "EHLO
+        Wed, 10 Jun 2020 18:47:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726540AbgFJWrZ (ORCPT
+        with ESMTP id S1726540AbgFJWr1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 18:47:25 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F27EBC08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 15:47:24 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id y11so4569634ljm.9
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 15:47:24 -0700 (PDT)
+        Wed, 10 Jun 2020 18:47:27 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29BF1C03E96F
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 15:47:27 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id z9so4546756ljh.13
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 15:47:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=3hdR1U1pgJ2jCq0TI+wqRp17veeSC2dFXf50rAGsQmQ=;
-        b=aOPAmT5qPIdXrvQjZrQTiIzegs+3vaL7fgwueUfXWSSIX4LyKA3791Ih3vxVTaPFZ5
-         pmi20xz3KwbgflHzHF4yPyEsPAu+lSsvsnuvjYXyk6mdxXn9vaTsD1Ofw38z61AZx1ES
-         7+Sz+sM9zzVE50+YQGPK0oTbwvioSi+Ti2MId7LOh/X+HXD0fgrMgi+2GXe4213r26LI
-         3fMZ48Rk3sosSki5DUiMpteZyjP2BUpUSJuaLN/7UWsDbEflhyM13VT2BkJjXSXfJgHA
-         eVrjW3kqmGSdYVFJLVtS/BWXJXV9yIYKBvKuJ6/L1+ZXmRmMIAIRlUD0fwzzQSQ/YyYP
-         Hvkw==
+        bh=yga3hm+EDiOZlI7uI4fAJaNWzJv8ZipojjERf4LmzU0=;
+        b=TjbvbuP8W/z/RS6vyQaYZNL2eSdge045W71vWPtAJRyPz4V15WiJKjnCLBuUx0rGQb
+         EP7hKPN6fV+lVWDsoJqOGVPelzCajyND4KJ4hk7zG7SiEzKbTYpNArtKLJh0wrE5plVr
+         fAGt7DHjkZqDGPjK+uYVhiI1w4BH8OZ8jJaBKGBx5vXYkZqV3KQXtO9KnlnzjYxMNhcG
+         hMDmQUtGC6Y5qszBPPXeG5PrKXJKPa/YRiyOSqRKgSc9+U6CCHDdOoCbTMfaUU/34lmB
+         jFyejwmYbQTEdxignq/UWvp7zkNnfrZ6qcCbAwnxy07jJc47UMlFLJ4qopIk+6oiulP9
+         zLcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=3hdR1U1pgJ2jCq0TI+wqRp17veeSC2dFXf50rAGsQmQ=;
-        b=EO1e7BxluSuDWcxvoiDTqW5FTcskRnzkwhEEowsbn7vGl6IN0zlnk7eG6zyLqyS6M0
-         T4e9Di0rkkVDnVdTQXFQnd4kWxEC2aWOOsaQTzDInT4JWHS2goKHyJwwJtrbqDxCFzM6
-         W2TUqRTlDtN0I3FFh+xIl0IMcvK7JPmKFtCWF1a855vdKTiayx8PcHVLbothaJylVK1G
-         LoqHObkRoFKVyXKQG0p9bzJcT/OvhwvIdeZfcocqIm47F9ipaSa5m0UHbyFQWzCMU4KR
-         WQSUx7Th/lHQweTDyBcNN/o2kD0/mSLNoMO2R/DfSPFDKpzWB/Xpw+nqe53uGss/T8A9
-         PVeg==
-X-Gm-Message-State: AOAM532gY+1X4+BdZQFdPs5+QkgtM2IlmOSveSM7UvbuC6SPh6s+hRdl
-        n3q1dmu0Y3ecw3/57meic2Ej7FbNMaA=
-X-Google-Smtp-Source: ABdhPJyk7L7Bfs2tzWEeEGYmP8Onu0TAiPwPQsPTGmJutewI+K0p9Tkw5ft/tbAeASzl8uyMe2GRVA==
-X-Received: by 2002:a2e:8756:: with SMTP id q22mr3003764ljj.238.1591829243201;
-        Wed, 10 Jun 2020 15:47:23 -0700 (PDT)
+        bh=yga3hm+EDiOZlI7uI4fAJaNWzJv8ZipojjERf4LmzU0=;
+        b=Cu28UjWOoEwwWHYxvslnG3pz/yiHT+g1hsTmfV8T2N75fIgikZXDmc0hV1X0dJjnyE
+         l+98fmP1sYXSeYu9cpQYUYx3He0o2aXPjcLrfrAL92pSH2qrA9TWNqwJPSXReFoak/Sg
+         TMYeB1oGtpztOMTzd+spJ2QdKd9ljowXGQTnN1a6g1LB+7SSLOwdvKNaFzwgXL+kMDq7
+         35tHMFB13sjteq0Sfm4o2iBkcP8yJ0b6acCaJAXfoIZgXwE65BfQb+n6vAxXMRgVbh8c
+         g7lNI+xfwfdNHTTS19/0aoz5vMcvok74WjMD1S8L1ETHAzed1PojfRahHx4BxwhLpLB8
+         c9RQ==
+X-Gm-Message-State: AOAM530+ZtmjKQDSppf4/4SJnirkQQ4k8C3z4w5dFVD7a0ixTC/YWsCv
+        E8aqze/oFC34f69ZjciEe7SBb4SoT1Q=
+X-Google-Smtp-Source: ABdhPJy37r8BEf6BcZzghuty0+ZX2GMEwJolyf9F9N3YbXTCt5n0Y6qLBunMAuTNWtdkefMD4TDBDw==
+X-Received: by 2002:a05:651c:544:: with SMTP id q4mr3001701ljp.310.1591829245444;
+        Wed, 10 Jun 2020 15:47:25 -0700 (PDT)
 Received: from localhost.localdomain (h-82-196-111-136.NA.cust.bahnhof.se. [82.196.111.136])
-        by smtp.gmail.com with ESMTPSA id s17sm262506ljd.51.2020.06.10.15.47.22
+        by smtp.gmail.com with ESMTPSA id s17sm262506ljd.51.2020.06.10.15.47.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 15:47:22 -0700 (PDT)
+        Wed, 10 Jun 2020 15:47:24 -0700 (PDT)
 From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
         Rikard Falkeborn <rikard.falkeborn@gmail.com>,
-        Frank Haverkamp <haver@linux.ibm.com>
-Subject: [PATCH 2/4] misc: genwqe: Constify struct pci_error_handlers
-Date:   Thu, 11 Jun 2020 00:47:02 +0200
-Message-Id: <20200610224704.27082-3-rikard.falkeborn@gmail.com>
+        Sudeep Dutt <sudeep.dutt@intel.com>,
+        Ashutosh Dixit <ashutosh.dixit@intel.com>
+Subject: [PATCH 4/4] mic: vop: Constify static structs
+Date:   Thu, 11 Jun 2020 00:47:04 +0200
+Message-Id: <20200610224704.27082-5-rikard.falkeborn@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200610224704.27082-1-rikard.falkeborn@gmail.com>
 References: <20200610224704.27082-1-rikard.falkeborn@gmail.com>
@@ -78,35 +79,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-genwqe_err_handler is never modified, so it can be made const to allow
-the compiler to put it in read-only memory.
+vop_vq_config_ops and id_table[] are never modified so make them const
+to allow the compiler to put them in read-only memory.
 
 Before:
    text    data     bss     dec     hex filename
-  20174    6104    2464   28742    7046 drivers/misc/genwqe/card_base.o
+  14889    4065     192   19146    4aca drivers/misc/mic/vop/vop_main.o
 
 After:
    text    data     bss     dec     hex filename
-  20270    6008    2464   28742    7046 drivers/misc/genwqe/card_base.o
+  15113    3841     192   19146    4aca drivers/misc/mic/vop/vop_main.o
 
 Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
 ---
- drivers/misc/genwqe/card_base.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/misc/mic/vop/vop_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/misc/genwqe/card_base.c b/drivers/misc/genwqe/card_base.c
-index 1dc6c7c5cbce..9969c0003f15 100644
---- a/drivers/misc/genwqe/card_base.c
-+++ b/drivers/misc/genwqe/card_base.c
-@@ -1324,7 +1324,7 @@ static int genwqe_sriov_configure(struct pci_dev *dev, int numvfs)
- 	return 0;
+diff --git a/drivers/misc/mic/vop/vop_main.c b/drivers/misc/mic/vop/vop_main.c
+index 85942f6717c5..51a1ab83a630 100644
+--- a/drivers/misc/mic/vop/vop_main.c
++++ b/drivers/misc/mic/vop/vop_main.c
+@@ -438,7 +438,7 @@ static int vop_find_vqs(struct virtio_device *dev, unsigned nvqs,
+ /*
+  * The config ops structure as defined by virtio config
+  */
+-static struct virtio_config_ops vop_vq_config_ops = {
++static const struct virtio_config_ops vop_vq_config_ops = {
+ 	.get_features = vop_get_features,
+ 	.finalize_features = vop_finalize_features,
+ 	.get = vop_get,
+@@ -763,7 +763,7 @@ static void vop_driver_remove(struct vop_device *vpdev)
+ 	kfree(vi);
  }
  
--static struct pci_error_handlers genwqe_err_handler = {
-+static const struct pci_error_handlers genwqe_err_handler = {
- 	.error_detected = genwqe_err_error_detected,
- 	.mmio_enabled	= genwqe_err_result_none,
- 	.slot_reset	= genwqe_err_slot_reset,
+-static struct vop_device_id id_table[] = {
++static const struct vop_device_id id_table[] = {
+ 	{ VOP_DEV_TRNSP, VOP_DEV_ANY_ID },
+ 	{ 0 },
+ };
 -- 
 2.27.0
 
