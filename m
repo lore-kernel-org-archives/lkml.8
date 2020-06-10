@@ -2,101 +2,265 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBFEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 686E2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:24:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5925206F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:24:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FEA8206F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:24:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c2GBWEym"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728494AbgFJUYB (ORCPT
+        id S1728612AbgFJUYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 16:24:01 -0400
-Received: from smtprelay0047.hostedemail.com ([216.40.44.47]:59744 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726277AbgFJUYA (ORCPT
+        Wed, 10 Jun 2020 16:24:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34000 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726982AbgFJUYc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 16:24:00 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 3B0161828F22B;
-        Wed, 10 Jun 2020 20:23:59 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: way23_5c0de7b26dce
-X-Filterd-Recvd-Size: 2982
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf05.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 10 Jun 2020 20:23:57 +0000 (UTC)
-Message-ID: <2fab7f999a6b5e5354b23d06aea31c5018b9ce18.camel@perches.com>
-Subject: Re: [PATCH v3 6/7] venus: Make debug infrastructure more flexible
-From:   Joe Perches <joe@perches.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-acpi@vger.kernel.org,
-        netdev@vger.kernel.org, Jason Baron <jbaron@akamai.com>
-Date:   Wed, 10 Jun 2020 13:23:56 -0700
-In-Reply-To: <31e1aa72b41f9ff19094476033511442bb6ccda0.camel@perches.com>
-References: <20200609104604.1594-1-stanimir.varbanov@linaro.org>
-         <20200609104604.1594-7-stanimir.varbanov@linaro.org>
-         <20200609111414.GC780233@kroah.com>
-         <dc85bf9e-e3a6-15a1-afaa-0add3e878573@linaro.org>
-         <20200610133717.GB1906670@kroah.com>
-         <31e1aa72b41f9ff19094476033511442bb6ccda0.camel@perches.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.2-0ubuntu1 
+        Wed, 10 Jun 2020 16:24:32 -0400
+Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AD7CC08C5C2
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 13:24:32 -0700 (PDT)
+Received: by mail-ua1-x943.google.com with SMTP id b13so1341172uav.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 13:24:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OYjqAVwtvPl7Y3hFy8cg2FHFUeVaZTx/znZrNTcOHyg=;
+        b=c2GBWEymOyDmHxxDIPkNDniIbX3TqlOV7Ry9nkanRvVCrSn2NMJ1GnwEfVB5/R50jP
+         77Rjx/4tfzv/21jbJwgXQWYHRcGohQXCaWO3gsp+nHajYQM5boFPucGIPLgfHX2MDKZ9
+         +OTXs9o5nIuxF0NxV+MOUmd1vMtcj2kdrDNZSP44fW4w0h/heaF22VAQQKgm2rqnMc6V
+         NJb+uAZ7l7pOtCuqjyYuB03gXscyCe3TL+JYrlC+kUJVKogfkmlGDaS6Z3tJZHdjtIyR
+         8GoO1sGjzYWFt6lmc/+nI7dUOUzM6fyQMlG2J8rvlAJmgx36NdSbKub1xcaNcasqobbn
+         Zo8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OYjqAVwtvPl7Y3hFy8cg2FHFUeVaZTx/znZrNTcOHyg=;
+        b=pLZsbJF0C2/O7VyOOKOUznpeB7RMxaMka4FGnDyUs7/N1yMXS1dJwo8+1iQY42p03f
+         AEhq5HDGXa6DmN8D/G0NzolbuLDNNqRccC/MpXS5elOJFwIzLSk4czmXSsw0eHl6LocJ
+         /YAIlwUZTmI4R4yln3sEvwuNm77W05HscgpQO0UIzMNj+vQ9Yha9HOvwhNQ0KrgmE76Z
+         vKSCmCsRRzdI5324r2OkEOkeXHSlCvsdnujnUIzyebGJ5SdqqoXBl9TQUq2EsjOMzuc9
+         RAFCbheMDSagVGxfx/Q+jUolsWzxuSnCTi4+FSEhCjq+8+zFFz1jNIsDvzAldxYAcQx5
+         j2vQ==
+X-Gm-Message-State: AOAM532HMyd2hr6jukju/LwFP1syR4McH3QD+ToYeUAXw4nkklwMa1BK
+        lZGzD+to//s6OgKYGNZqRfnVp+KhuiPb1iy2azEhjA==
+X-Google-Smtp-Source: ABdhPJzuDO175rlKEOjx+cUrssRUoDydSEqe6opXAVLnE5jRaJ0s7w5Cvs20/NG/qvzCO9X/JYv7sNtKVyijp2/LQvA=
+X-Received: by 2002:ab0:5642:: with SMTP id z2mr4013044uaa.6.1591820670801;
+ Wed, 10 Jun 2020 13:24:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200605213853.14959-1-sean.j.christopherson@intel.com> <20200605213853.14959-16-sean.j.christopherson@intel.com>
+In-Reply-To: <20200605213853.14959-16-sean.j.christopherson@intel.com>
+From:   Ben Gardon <bgardon@google.com>
+Date:   Wed, 10 Jun 2020 13:24:18 -0700
+Message-ID: <CANgfPd_oGhO4dpkejhzh1PaAc-0U068kVdoHj4_fiQveW8yXLg@mail.gmail.com>
+Subject: Re: [PATCH 15/21] KVM: Move x86's MMU memory cache helpers to common
+ KVM code
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Marc Zyngier <maz@kernel.org>, Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Feiner <pfeiner@google.com>,
+        Peter Shier <pshier@google.com>,
+        Junaid Shahid <junaids@google.com>,
+        Christoffer Dall <christoffer.dall@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-06-10 at 12:49 -0700, Joe Perches wrote:
-> On Wed, 2020-06-10 at 15:37 +0200, Greg Kroah-Hartman wrote:
-> > Please work with the infrastructure we have, we have spent a lot of time
-> > and effort to make it uniform to make it easier for users and
-> > developers.
-> 
-> Not quite.
-> 
-> This lack of debug grouping by type has been a
-> _long_ standing issue with drivers.
-> 
-> > Don't regress and try to make driver-specific ways of doing
-> > things, that way lies madness...
-> 
-> It's not driver specific, it allows driver developers to
-> better isolate various debug states instead of keeping
-> lists of specific debug messages and enabling them
-> individually.
-
-For instance, look at the homebrew content in
-drivers/gpu/drm/drm_print.c that does _not_ use
-dynamic_debug.
-
-MODULE_PARM_DESC(debug, "Enable debug output, where each bit enables a debug category.\n"
-"\t\tBit 0 (0x01)  will enable CORE messages (drm core code)\n"
-"\t\tBit 1 (0x02)  will enable DRIVER messages (drm controller code)\n"
-"\t\tBit 2 (0x04)  will enable KMS messages (modesetting code)\n"
-"\t\tBit 3 (0x08)  will enable PRIME messages (prime code)\n"
-"\t\tBit 4 (0x10)  will enable ATOMIC messages (atomic code)\n"
-"\t\tBit 5 (0x20)  will enable VBL messages (vblank code)\n"
-"\t\tBit 7 (0x80)  will enable LEASE messages (leasing code)\n"
-"\t\tBit 8 (0x100) will enable DP messages (displayport code)");
-module_param_named(debug, __drm_debug, int, 0600);
-
-void drm_dev_dbg(const struct device *dev, enum drm_debug_category category,
-		 const char *format, ...)
-{
-	struct va_format vaf;
-	va_list args;
-
-	if (!drm_debug_enabled(category))
-		return;
-
-
+On Fri, Jun 5, 2020 at 2:39 PM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> Move x86's memory cache helpers to common KVM code so that they can be
+> reused by arm64 and MIPS in future patches.
+>
+> Suggested-by: Christoffer Dall <christoffer.dall@arm.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Reviewed-by: Ben Gardon <bgardon@google.com>
+> ---
+>  arch/x86/kvm/mmu/mmu.c   | 53 --------------------------------------
+>  include/linux/kvm_host.h |  7 +++++
+>  virt/kvm/kvm_main.c      | 55 ++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 62 insertions(+), 53 deletions(-)
+>
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index b85d3e8e8403..a627437f73fd 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -1060,47 +1060,6 @@ static void walk_shadow_page_lockless_end(struct kvm_vcpu *vcpu)
+>         local_irq_enable();
+>  }
+>
+> -static inline void *mmu_memory_cache_alloc_obj(struct kvm_mmu_memory_cache *mc,
+> -                                              gfp_t gfp_flags)
+> -{
+> -       gfp_flags |= mc->gfp_zero;
+> -
+> -       if (mc->kmem_cache)
+> -               return kmem_cache_alloc(mc->kmem_cache, gfp_flags);
+> -       else
+> -               return (void *)__get_free_page(gfp_flags);
+> -}
+> -
+> -static int kvm_mmu_topup_memory_cache(struct kvm_mmu_memory_cache *mc, int min)
+> -{
+> -       void *obj;
+> -
+> -       if (mc->nobjs >= min)
+> -               return 0;
+> -       while (mc->nobjs < ARRAY_SIZE(mc->objects)) {
+> -               obj = mmu_memory_cache_alloc_obj(mc, GFP_KERNEL_ACCOUNT);
+> -               if (!obj)
+> -                       return mc->nobjs >= min ? 0 : -ENOMEM;
+> -               mc->objects[mc->nobjs++] = obj;
+> -       }
+> -       return 0;
+> -}
+> -
+> -static int kvm_mmu_memory_cache_nr_free_objects(struct kvm_mmu_memory_cache *mc)
+> -{
+> -       return mc->nobjs;
+> -}
+> -
+> -static void kvm_mmu_free_memory_cache(struct kvm_mmu_memory_cache *mc)
+> -{
+> -       while (mc->nobjs) {
+> -               if (mc->kmem_cache)
+> -                       kmem_cache_free(mc->kmem_cache, mc->objects[--mc->nobjs]);
+> -               else
+> -                       free_page((unsigned long)mc->objects[--mc->nobjs]);
+> -       }
+> -}
+> -
+>  static int mmu_topup_memory_caches(struct kvm_vcpu *vcpu, bool maybe_indirect)
+>  {
+>         int r;
+> @@ -1132,18 +1091,6 @@ static void mmu_free_memory_caches(struct kvm_vcpu *vcpu)
+>         kvm_mmu_free_memory_cache(&vcpu->arch.mmu_page_header_cache);
+>  }
+>
+> -static void *kvm_mmu_memory_cache_alloc(struct kvm_mmu_memory_cache *mc)
+> -{
+> -       void *p;
+> -
+> -       if (WARN_ON(!mc->nobjs))
+> -               p = mmu_memory_cache_alloc_obj(mc, GFP_ATOMIC | __GFP_ACCOUNT);
+> -       else
+> -               p = mc->objects[--mc->nobjs];
+> -       BUG_ON(!p);
+> -       return p;
+> -}
+> -
+>  static struct pte_list_desc *mmu_alloc_pte_list_desc(struct kvm_vcpu *vcpu)
+>  {
+>         return kvm_mmu_memory_cache_alloc(&vcpu->arch.mmu_pte_list_desc_cache);
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index d38d6b9c24be..802b9e2306f0 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -815,6 +815,13 @@ void kvm_vcpu_on_spin(struct kvm_vcpu *vcpu, bool usermode_vcpu_not_eligible);
+>  void kvm_flush_remote_tlbs(struct kvm *kvm);
+>  void kvm_reload_remote_mmus(struct kvm *kvm);
+>
+> +#ifdef KVM_ARCH_NR_OBJS_PER_MEMORY_CACHE
+> +int kvm_mmu_topup_memory_cache(struct kvm_mmu_memory_cache *mc, int min);
+> +int kvm_mmu_memory_cache_nr_free_objects(struct kvm_mmu_memory_cache *mc);
+> +void kvm_mmu_free_memory_cache(struct kvm_mmu_memory_cache *mc);
+> +void *kvm_mmu_memory_cache_alloc(struct kvm_mmu_memory_cache *mc);
+> +#endif
+> +
+>  bool kvm_make_vcpus_request_mask(struct kvm *kvm, unsigned int req,
+>                                  struct kvm_vcpu *except,
+>                                  unsigned long *vcpu_bitmap, cpumask_var_t tmp);
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index 4db151f6101e..fead5f1d5594 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -342,6 +342,61 @@ void kvm_reload_remote_mmus(struct kvm *kvm)
+>         kvm_make_all_cpus_request(kvm, KVM_REQ_MMU_RELOAD);
+>  }
+>
+> +#ifdef KVM_ARCH_NR_OBJS_PER_MEMORY_CACHE
+> +static inline void *mmu_memory_cache_alloc_obj(struct kvm_mmu_memory_cache *mc,
+> +                                              gfp_t gfp_flags)
+> +{
+> +       gfp_flags |= mc->gfp_zero;
+> +
+> +       if (mc->kmem_cache)
+> +               return kmem_cache_alloc(mc->kmem_cache, gfp_flags);
+> +       else
+> +               return (void *)__get_free_page(gfp_flags);
+> +}
+> +
+> +int kvm_mmu_topup_memory_cache(struct kvm_mmu_memory_cache *mc, int min)
+> +{
+> +       void *obj;
+> +
+> +       if (mc->nobjs >= min)
+> +               return 0;
+> +       while (mc->nobjs < ARRAY_SIZE(mc->objects)) {
+> +               obj = mmu_memory_cache_alloc_obj(mc, GFP_KERNEL_ACCOUNT);
+> +               if (!obj)
+> +                       return mc->nobjs >= min ? 0 : -ENOMEM;
+> +               mc->objects[mc->nobjs++] = obj;
+> +       }
+> +       return 0;
+> +}
+> +
+> +int kvm_mmu_memory_cache_nr_free_objects(struct kvm_mmu_memory_cache *mc)
+> +{
+> +       return mc->nobjs;
+> +}
+> +
+> +void kvm_mmu_free_memory_cache(struct kvm_mmu_memory_cache *mc)
+> +{
+> +       while (mc->nobjs) {
+> +               if (mc->kmem_cache)
+> +                       kmem_cache_free(mc->kmem_cache, mc->objects[--mc->nobjs]);
+> +               else
+> +                       free_page((unsigned long)mc->objects[--mc->nobjs]);
+> +       }
+> +}
+> +
+> +void *kvm_mmu_memory_cache_alloc(struct kvm_mmu_memory_cache *mc)
+> +{
+> +       void *p;
+> +
+> +       if (WARN_ON(!mc->nobjs))
+> +               p = mmu_memory_cache_alloc_obj(mc, GFP_ATOMIC | __GFP_ACCOUNT);
+> +       else
+> +               p = mc->objects[--mc->nobjs];
+> +       BUG_ON(!p);
+> +       return p;
+> +}
+> +#endif
+> +
+>  static void kvm_vcpu_init(struct kvm_vcpu *vcpu, struct kvm *kvm, unsigned id)
+>  {
+>         mutex_init(&vcpu->mutex);
+> --
+> 2.26.0
+>
