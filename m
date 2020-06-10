@@ -2,259 +2,201 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B00C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 652EFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B57982064C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:25:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ezhpSs3o"
+	by mail.kernel.org (Postfix) with ESMTP id 45C382064C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:25:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728204AbgFJKZP (ORCPT
+        id S1728227AbgFJKZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 06:25:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53940 "EHLO
+        Wed, 10 Jun 2020 06:25:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726533AbgFJKZO (ORCPT
+        with ESMTP id S1726533AbgFJKZQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 06:25:14 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EB0AC03E96B
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 03:25:14 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id b201so936021pfb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 03:25:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IVvxfD6LJ1VJT5bk17pFq2+4XZMLtrWkfmXcgio0a2A=;
-        b=ezhpSs3oxrpdjzLsFEbhFaEaPGKsh6XiigBpHojxQcZRj8k6Qj78xiDQ7DzhPy2UBe
-         kKCXMUQDYjsa7b6tmsp6znzSKiPSh4FaDNiS9QvgKG72vtvsy7//JfO5jLrQOwf0eEBH
-         usHQFzZGxE+7v6+UiqWWMXHexjmWC5O4pYcWXoig/H7tSk6G8CL+J32Mr348FVS1ryAQ
-         dzHQSC2Xzqpt+MqjwpZ59kCWcRBSb3LqHFP39v6z2x/7q7GIdyt/+3vHbP4LCoXb9X9o
-         mV9CCDAHEWmhpPkfxPSmEI8/HqhdKhd9EVGDHjLJowH7i6RDT/Q6VDXfkDBZ9YnWA1VO
-         8B+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IVvxfD6LJ1VJT5bk17pFq2+4XZMLtrWkfmXcgio0a2A=;
-        b=IAocMrNicJ0Ek6YpY8QLpNzE6UbtCJRfNg9/ok/QZN32mTcyUfM7D0BFZuFCScfwoV
-         XgOrUUd+Lrn0O4d5He56zWpgWdhIbe3L8p5OLaWBV4TGfCgN+mct1zRnm7uVxkzCfZ6+
-         OaafXbtqNAfFb0Xu1lHjDQtGo0A0IpchkL3ofx03g7LogTrIeLO9FrMIE2HGF1hIVUiE
-         n7EkTgTDPtXKbkevHyspg3fkvsG4/OM3IIwGCwN1oCsfx0d5KUvAsoh3zHBxnRNFEHlP
-         R3l8xaNQ6ZL+6hQTNj/YRRw5jusn29poKYWbBB5mh268p8ArjzBKlE3A7fdzV1ho3IXs
-         1Mbg==
-X-Gm-Message-State: AOAM531fxU3Pp9GiUTA9EhSf4yc0516XyObTShU0kR3foG3Iyzv24b9k
-        1eZiJPhksrw6AFNo4Fc9KOjOTwRXsotPuFTlx1c=
-X-Google-Smtp-Source: ABdhPJwZEjhfhzofthPl+xRw+pEUqn6Mn3fM/ZFFXnb7XAI6gwCa8yu696kpTwMiTNgusVFOINyHoeczzdZw4Vh3yNU=
-X-Received: by 2002:a63:ff52:: with SMTP id s18mr2130004pgk.203.1591784713836;
- Wed, 10 Jun 2020 03:25:13 -0700 (PDT)
+        Wed, 10 Jun 2020 06:25:16 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 758C6C03E96B
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 03:25:16 -0700 (PDT)
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1jixv0-0001Vl-Fr; Wed, 10 Jun 2020 12:25:14 +0200
+Date:   Wed, 10 Jun 2020 12:25:14 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Stephen Berman <stephen.berman@gmx.net>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: power-off delay/hang due to commit 6d25be57 (mainline)
+Message-ID: <20200610102514.4vdzu5u7d6vnpicn@linutronix.de>
+References: <87bln7ves7.fsf@gmx.net>
+ <20200506215713.qoo4enq32ckcjmz7@linutronix.de>
+ <87v9l65d2y.fsf@gmx.net>
+ <20200513220428.4nksinis2qs5dtmh@linutronix.de>
+ <87mu6aurfn.fsf@gmx.net>
+ <20200522164012.ynyvrjompv42jtmx@linutronix.de>
+ <87y2owwo2o.fsf@rub.de>
+ <20200609202339.cgy57twm2zdtjhje@linutronix.de>
+ <87tuzjcovq.fsf@gmx.net>
 MIME-Version: 1.0
-References: <20200610075156.GE12456@shao2-debian> <CANMq1KCf3Q2DDBMJkCM=PB8AHOPKJOhKA+C8TqY5v7AsAfD63A@mail.gmail.com>
-In-Reply-To: <CANMq1KCf3Q2DDBMJkCM=PB8AHOPKJOhKA+C8TqY5v7AsAfD63A@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 10 Jun 2020 13:25:01 +0300
-Message-ID: <CAHp75VcRmqkkPM0RPMzEcDNG4TKFtNC4O3FGjqCBGdHh-CFhVQ@mail.gmail.com>
-Subject: Re: [kmemleak] b751c52bb5: BUG:kernel_hang_in_boot_stage
-To:     Nicolas Boichat <drinkcat@chromium.org>
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <87tuzjcovq.fsf@gmx.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 12:35 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
->
-> On Wed, Jun 10, 2020 at 3:52 PM kernel test robot <rong.a.chen@intel.com> wrote:
-> >
-> > Greeting,
-> >
-> > FYI, we noticed the following commit (built with gcc-7):
-> >
-> > commit: b751c52bb587ae66f773b15204ef7a147467f4c7 ("kmemleak: increase DEBUG_KMEMLEAK_EARLY_LOG_SIZE default to 16K")
-> > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
->
-> Huh, It's not impossible there is an underlying issue, but I really
-> don't see how that change could cause any of the issues below...
+On 2020-06-10 10:21:29 [+0200], Stephen Berman wrote:
+> (GMX put your email into my spam folder, so I didn't see it before I
+> sent my followup about removing the wifi firmware.)
 
-In Linux Next we have the
+okay.
 
-commit c5665868183fec689dbab9fb8505188b2c4f0757
-Author: Catalin Marinas <catalin.marinas@arm.com>
-Date:   Mon Sep 23 15:34:05 2019 -0700
+> On Tue, 9 Jun 2020 22:23:39 +0200 Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
+> >   scripts/decode_stacktrace.sh vmlinux $(pwd)/ kernel_power_off+0x3d/0x70
+> >
+> > should reveal that.
+> 
+> I saved the call trace lines to a file and did this (with `$(pwd)/' the
+> script did not run):
+> 
+> steve [ /sources/linux-5.6.4 ]$ ./scripts/decode_stacktrace.sh vmlinux . kernel_power_off+0x3d/0x70 < /home/steve/temp/call_trace 
+> [1352.***] Call Trace:
+> [1352.***] ? __schedule (core.c:?) 
+> [1352.***] schedule (??:?) 
+> [1352.***] schedule_timeout (??:?) 
+> [1352.***] ? acpi_os_release_object (??:?) 
+> [1352.***] ? acpi_ut_update_object_reference (??:?) 
+> [1352.***] wait_for_completion (??:?) 
+> [1352.***] ? wake_up_q (??:?) 
+> [1352.***] flush_workqueue (??:?) 
+> [1352.***] kernel_power_off (??:?) 
+> [1352.***] __do_sys_reboot (reboot.c:?) 
+> [1352.***] ? do_send_sig_info (??:?) 
+> [1352.***] ? kill_pid_info (??:?) 
+> [1352.***] ? kill_something_info (signal.c:?) 
+> [1352.***] ? __x64_sys_kill (??:?) 
+> [1352.***] do_syscall_64 (??:?) 
+> [1352.***] entry_SYSCALL_64_after_hwframe (??:?) 
+> [1352.***] RIP: 0033:0x7f95dd6992c3
+> [1352.***] Code: Bad RIP value.
+> objdump: '/tmp/tmp.BlpNDdSQpG.o': No such file
+> 
+> Did I do something wrong or do I need to pass certain compiler flags
+> when building the kernel (when I build Emacs I pass CFLAGS='-Og -g3')?
 
-   mm: kmemleak: use the memory pool for early allocations
+the arguments last argument should not be kernel_power_off+0x3d/0x70. I
+should have been entered after "enter" but you can also pipe the whole
+file as you did.
+If it gives you the ?? then might need
+  CONFIG_DEBUG_INFO
 
+> > The system shutdowns. So you are facing something different. I am
+> > surprised that the workqueue stall detector did not yell here. The patch
+> > at the bottom should get rid of the sr warnings.
+> 
+> But the cdrom seems to have nothing to do with power-off failing, since
+> it happens even when the cdrom is detached (and hence there were no sr
+> warnings in the log output), or am I misunderstanding you?
 
-I'm wondering if it should be backported to fix this.
+Yes. I think it has nothing todo with it, it is just something
+irrelevant that I do understand now. Before that trace it looked like
+AHCI is failing to continue.
 
-> > in testcase: boot
-> >
-> > on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 8G
-> >
-> > caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
-> >
-> >
-> > +-------------------------------------------------+------------+------------+
-> > |                                                 | 9d5f0be0f7 | b751c52bb5 |
-> > +-------------------------------------------------+------------+------------+
-> > | boot_successes                                  | 0          | 0          |
-> > | boot_failures                                   | 3          | 4          |
-> > | WARNING:at_kernel/locking/mutex.c:#__mutex_lock | 3          |            |
-> > | EIP:__mutex_lock                                | 3          |            |
-> > | BUG:kernel_hang_in_boot_stage                   | 0          | 4          |
-> > +-------------------------------------------------+------------+------------+
-> >
-> >
-> > If you fix the issue, kindly add following tag
-> > Reported-by: kernel test robot <rong.a.chen@intel.com>
-> >
-> >
-> > [    0.247058] ------------------------
-> > [    0.247878] | Locking API testsuite:
-> > [    0.248695] ----------------------------------------------------------------------------
-> > [    0.250509]                                  | spin |wlock |rlock |mutex | wsem | rsem |
-> > [    0.252429]   --------------------------------------------------------------------------
-> > [    0.254369]                      A-A deadlock:  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |
-> > [    0.263731]                  A-B-B-A deadlock:  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |
-> > [    0.273828]              A-B-B-C-C-A deadlock:  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |
-> > [    0.284876]              A-B-C-A-B-C deadlock:  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |
-> > [    0.296642]          A-B-B-C-C-D-D-A deadlock:  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |
-> > [    0.308919]          A-B-C-D-B-D-D-A deadlock:  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |
-> > [    0.320993]          A-B-C-D-B-C-D-A deadlock:  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |
-> > [    0.333668]                     double unlock:  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |
-> > [    0.343237]                   initialize held:  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |
-> > [    0.352761]   --------------------------------------------------------------------------
-> > [    0.354703]               recursive read-lock:             |  ok  |             |  ok  |
-> > [    0.358943]            recursive read-lock #2:             |  ok  |             |  ok  |
-> > [    0.363056]             mixed read-write-lock:             |  ok  |             |  ok  |
-> > [    0.367191]             mixed write-read-lock:             |  ok  |             |  ok  |
-> > [    0.371251]   mixed read-lock/lock-write ABBA:             |FAILED|             |  ok  |
-> > [    0.373667]    mixed read-lock/lock-read ABBA:             |  ok  |             |  ok  |
-> > [    0.377895]  mixed write-lock/lock-write ABBA:             |  ok  |             |  ok  |
-> > [    0.381888]   --------------------------------------------------------------------------
-> > [    0.385416]      hard-irqs-on + irq-safe-A/12:  ok  |  ok  |  ok  |
-> > [    0.389990]      soft-irqs-on + irq-safe-A/12:  ok  |  ok  |  ok  |
-> > [    0.395489]      hard-irqs-on + irq-safe-A/21:  ok  |  ok  |  ok  |
-> > [    0.400157]      soft-irqs-on + irq-safe-A/21:  ok  |  ok  |  ok  |
-> > [    0.408936]        sirq-safe-A => hirqs-on/12:  ok  |  ok  |  ok  |
-> > [    0.413666]        sirq-safe-A => hirqs-on/21:  ok  |  ok  |  ok  |
-> > [    0.418073]          hard-safe-A + irqs-on/12:  ok  |  ok  |  ok  |
-> > [    0.422942]          soft-safe-A + irqs-on/12:  ok  |  ok  |  ok  |
-> > [    0.427616]          hard-safe-A + irqs-on/21:  ok  |  ok  |  ok  |
-> > [    0.433873]          soft-safe-A + irqs-on/21:  ok  |  ok  |  ok  |
-> > [    0.442630]     hard-safe-A + unsafe-B #1/123:  ok  |  ok  |  ok  |
-> > [    0.447955]     soft-safe-A + unsafe-B #1/123:  ok  |  ok  |  ok  |
-> > [    0.453324]     hard-safe-A + unsafe-B #1/132:  ok  |  ok  |  ok  |
-> > [    0.458298]     soft-safe-A + unsafe-B #1/132:  ok  |  ok  |  ok  |
-> > [    0.463422]     hard-safe-A + unsafe-B #1/213:  ok  |  ok  |  ok  |
-> > [    0.468262]     soft-safe-A + unsafe-B #1/213:  ok  |  ok  |  ok  |
-> > [    0.473090]     hard-safe-A + unsafe-B #1/231:  ok  |  ok  |  ok  |
-> > [    0.478066]     soft-safe-A + unsafe-B #1/231:  ok  |  ok  |  ok  |
-> > [    0.482982]     hard-safe-A + unsafe-B #1/312:  ok  |  ok  |  ok  |
-> > [    0.490885]     soft-safe-A + unsafe-B #1/312:  ok  |  ok  |  ok  |
-> > [    0.496095]     hard-safe-A + unsafe-B #1/321:  ok  |  ok  |  ok  |
-> > [    0.501193]     soft-safe-A + unsafe-B #1/321:  ok  |  ok  |  ok  |
-> > [    0.506457]     hard-safe-A + unsafe-B #2/123:  ok  |  ok  |  ok  |
-> > [    0.516060]     soft-safe-A + unsafe-B #2/123:  ok  |  ok  |  ok  |
-> > [    0.521157]     hard-safe-A + unsafe-B #2/132:  ok  |  ok  |  ok  |
-> > [    0.530477]     soft-safe-A + unsafe-B #2/132:  ok  |  ok  |  ok  |
-> > [    0.535387]     hard-safe-A + unsafe-B #2/213:  ok  |  ok  |  ok  |
-> > [    0.540393]     soft-safe-A + unsafe-B #2/213:  ok  |  ok  |  ok  |
-> > [    0.552196]     hard-safe-A + unsafe-B #2/231:  ok  |  ok  |  ok  |
-> > [    0.557088]     soft-safe-A + unsafe-B #2/231:  ok  |  ok  |  ok  |
-> > [    0.562135]     hard-safe-A + unsafe-B #2/312:  ok  |  ok  |  ok  |
-> > [    0.567072]     soft-safe-A + unsafe-B #2/312:  ok  |  ok  |  ok  |
-> > [    0.572107]     hard-safe-A + unsafe-B #2/321:  ok  |  ok  |  ok  |
-> > [    0.577276]     soft-safe-A + unsafe-B #2/321:  ok  |  ok  |  ok  |
-> > [    0.582592]       hard-irq lock-inversion/123:  ok  |  ok  |  ok  |
-> > [    0.587839]       soft-irq lock-inversion/123:  ok  |  ok  |  ok  |
-> > [    0.593347]       hard-irq lock-inversion/132:  ok  |  ok  |  ok  |
-> > [    0.598574]       soft-irq lock-inversion/132:  ok  |  ok  |  ok  |
-> > [    0.603629]       hard-irq lock-inversion/213:  ok  |  ok  |  ok  |
-> > [    0.608515]       soft-irq lock-inversion/213:  ok  |  ok  |  ok  |
-> > [    0.613650]       hard-irq lock-inversion/231:  ok  |  ok  |  ok  |
-> > [    0.620111]       soft-irq lock-inversion/231:  ok  |  ok  |  ok  |
-> > [    0.625090]       hard-irq lock-inversion/312:  ok  |  ok  |  ok  |
-> > [    0.630141]       soft-irq lock-inversion/312:  ok  |  ok  |  ok  |
-> > [    0.634948]       hard-irq lock-inversion/321:  ok  |  ok  |  ok  |
-> > [    0.639932]       soft-irq lock-inversion/321:  ok  |  ok  |  ok  |
-> > [    0.645786]       hard-irq read-recursion/123:  ok  |
-> > [    0.648025]       soft-irq read-recursion/123:  ok  |
-> > [    0.650400]       hard-irq read-recursion/132:  ok  |
-> > [    0.652820]       soft-irq read-recursion/132:  ok  |
-> > [    0.655214]       hard-irq read-recursion/213:  ok  |
-> > [    0.657531]       soft-irq read-recursion/213:  ok  |
-> > [    0.659993]       hard-irq read-recursion/231:  ok  |
-> > [    0.662498]       soft-irq read-recursion/231:  ok  |
-> > [    0.664895]       hard-irq read-recursion/312:  ok  |
-> > [    0.667422]       soft-irq read-recursion/312:  ok  |
-> > [    0.669851]       hard-irq read-recursion/321:  ok  |
-> > [    0.672222]       soft-irq read-recursion/321:  ok  |
-> > [    0.674713]   --------------------------------------------------------------------------
-> > [    0.676711]   | Wound/wait tests |
-> > [    0.677592]   ---------------------
-> > [    0.678496]                   ww api failures:  ok  |  ok  |  ok  |
-> > [    0.684457]                ww contexts mixing:  ok  |  ok  |
-> > [    0.688135]              finishing ww context:  ok  |  ok  |  ok  |  ok  |
-> > [    0.694329]                locking mismatches:  ok  |  ok  |  ok  |
-> > [    0.699328]                  EDEADLK handling:  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |  ok  |
-> > [    0.714881]            spinlock nest unlocked:  ok  |
-> > [    0.717152]   -----------------------------------------------------
-> > [    0.718723]                                  |block | try  |context|
-> > [    0.720196]   -----------------------------------------------------
-> > [    0.721677]                           context:  ok  |  ok  |  ok  |
-> > [    0.727929]                               try:  ok  |  ok  |  ok  |
-> > [    0.732790]                             block:  ok  |  ok  |  ok  |
-> > [    0.737894]                          spinlock:  ok  |  ok  |  ok  |
-> > [    0.743082] -------------------------------------------------------
-> > [    0.744547] Good, all 261 testcases passed! |
-> > [    0.745547] ---------------------------------
-> > BUG: kernel hang in boot stage
-> >
-> >
-> >
-> > To reproduce:
-> >
-> >         # build kernel
-> >         cd linux
-> >         cp config-5.3.0-11789-gb751c52bb587a .config
-> >         make HOSTCC=gcc-7 CC=gcc-7 ARCH=i386 olddefconfig prepare modules_prepare bzImage
-> >
-> >         git clone https://github.com/intel/lkp-tests.git
-> >         cd lkp-tests
-> >         bin/lkp qemu -k <bzImage> job-script # job-script is attached in this email
-> >
-> >
-> >
-> > Thanks,
-> > Rong Chen
-> >
+> By the other patch do you mean the following?  (This email was also put
+> into my spam by GMX and AFAICT has not yet shown up on the vger list.)
 
+Yes. But now that I played a little with it, I made dis:
 
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 4e01c448b4b48..e09fc41e99fc3 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -2777,6 +2777,8 @@ void flush_workqueue(struct workqueue_struct *wq)
+ 	lock_map_acquire(&wq->lockdep_map);
+ 	lock_map_release(&wq->lockdep_map);
+ 
++	if (system_state > SYSTEM_RUNNING)
++		pr_err("Flushing %s\n", wq->name);
+ 	mutex_lock(&wq->mutex);
+ 
+ 	/*
+@@ -2826,7 +2828,18 @@ void flush_workqueue(struct workqueue_struct *wq)
+ 
+ 	mutex_unlock(&wq->mutex);
+ 
+-	wait_for_completion(&this_flusher.done);
++	if (system_state > SYSTEM_RUNNING) {
++		int ret;
++try_again:
++		ret = wait_for_completion_timeout(&this_flusher.done, 3 * HZ);
++		pr_err("Flushing %s over, %d\n", wq->name, ret);
++		if (!ret) {
++			show_workqueue_state();
++			goto try_again;
++		}
++	} else {
++		wait_for_completion(&this_flusher.done);
++	}
+ 
+ 	/*
+ 	 * Wake-up-and-cascade phase
+@@ -3039,11 +3052,18 @@ static bool __flush_work(struct work_struct *work, bool from_cancel)
+ 		lock_map_release(&work->lockdep_map);
+ 	}
+ 
++	if (system_state > SYSTEM_RUNNING)
++		pr_err("Flush %pS\n", work->func);
++
+ 	if (start_flush_work(work, &barr, from_cancel)) {
+ 		wait_for_completion(&barr.done);
+ 		destroy_work_on_stack(&barr.work);
++		if (system_state > SYSTEM_RUNNING)
++			pr_err("Flush %pS done\n", work->func);
+ 		return true;
+ 	} else {
++		if (system_state > SYSTEM_RUNNING)
++			pr_err("Flush %pS done\n", work->func);
+ 		return false;
+ 	}
+ }
 
--- 
-With Best Regards,
-Andy Shevchenko
+So you should have output like:
+|[   14.131696] Flushing events_freezable_power_
+the flush that hangs
+
+|[   17.203246] Flushing events_freezable_power_ over, 0
+It has been noticed (0 at the end)
+
+|[   17.203849] Showing busy workqueues and worker pools:
+|[   17.204400] workqueue events_freezable_power_: flags=0x84
+|[   17.205009]   pwq 12: cpus=6 node=0 flags=0x0 nice=0 active=1/256 refcnt=2
+|[   17.205774]     in-flight: 2147:disk_events_workfn
+|[   17.206268] workqueue kblockd: flags=0x18
+|[   17.206682]   pwq 13: cpus=6 node=0 flags=0x0 nice=-20 active=1/256 refcnt=2
+|[   17.207428]     pending: blk_mq_requeue_work
+|[   17.207958] pool 12: cpus=6 node=0 flags=0x0 nice=0 hung=2s workers=3 idle: 535 42
+
+A dump of all pending worqueue items.
+
+|[   20.275239] Flushing events_freezable_power_ over, 0
+|[   20.275812] Showing busy workqueues and worker pools:
+|[   20.276385] workqueue events_freezable_power_: flags=0x84
+|[   20.276972]   pwq 12: cpus=6 node=0 flags=0x0 nice=0 active=1/256 refcnt=2
+|[   20.277712]     in-flight: 2147:disk_events_workfn
+|[   20.278245] workqueue kblockd: flags=0x18
+|[   20.278685]   pwq 13: cpus=6 node=0 flags=0x0 nice=-20 active=1/256 refcnt=2
+|[   20.279471]     pending: blk_mq_requeue_work
+|[   20.279989] pool 12: cpus=6 node=0 flags=0x0 nice=0 hung=5s workers=3 idle: 535 42
+
+Another atempt. As you see `blk_mq_requeue_work' is references in both
+outputs but it makes progress (it is scheduled multiple times). The item
+`disk_events_workfn' stucks.
+
+Sebastian
