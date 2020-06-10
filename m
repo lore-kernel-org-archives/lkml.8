@@ -3,185 +3,112 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7DCC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF18C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38F7D206C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:47:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02213206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:48:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730303AbgFJPrj (ORCPT
+        id S1730316AbgFJPsk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 11:47:39 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:34600 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728075AbgFJPri (ORCPT
+        Wed, 10 Jun 2020 11:48:40 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58164 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728075AbgFJPsi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 11:47:38 -0400
-Received: by mail-lf1-f66.google.com with SMTP id e125so1756525lfd.1;
-        Wed, 10 Jun 2020 08:47:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=6sU72hfmvoXtRpb7yrYdgKGitdA0Zo5oyFodEYtk0us=;
-        b=JkH/0rU9Ek/1M6HbraDLw9C15UxAwrgGTJq0k9EcVtpw8eAm65QqlwIdsS8gczE22B
-         RxIE/N0Z43Op6F5NJCw3ulsFabGSYuNRJSvU3KJkPkcIAog2IWA1nKtvUN933vrtl0Yx
-         f0jlVmjuMIXqqMybVNlWsWRXaVGW2QshOW8fUjhKzFguK9OV++wAxD5PywVNiDwXdG+r
-         vlrIEiRosBrYlOPeUmc+pOqdhc8nRPKmoyJ98kT490bpNzgplBUe103m4X7AzxksRCGt
-         AJf4z6X2QNagj2GYHxOhEWtJMVk80gD0rVN2mPNsHlY9+laoamBjTrVUv+3/jyTqSNat
-         ywyw==
-X-Gm-Message-State: AOAM533vWMzMdwJkdTe6dhRHm/vSZgsn+icMLnzstpOGyjLAWoLYt3il
-        r9xHjmqN/VCQpaii/cZpVNI=
-X-Google-Smtp-Source: ABdhPJw2jleHxl3BXvvI6W2dCEPdssYybRp9F62QQnkxdm77EFHHEjNNBH+8JAEMFV5K5Y4cVxXFgA==
-X-Received: by 2002:ac2:5cd1:: with SMTP id f17mr1951677lfq.4.1591804055359;
-        Wed, 10 Jun 2020 08:47:35 -0700 (PDT)
-Received: from [192.168.42.234] ([213.87.161.124])
-        by smtp.gmail.com with ESMTPSA id d8sm20153lfk.27.2020.06.10.08.47.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jun 2020 08:47:32 -0700 (PDT)
-Reply-To: alex.popov@linux.com
-Subject: Re: [PATCH 2/5] gcc-plugins/stackleak: Use asm instrumentation to
- avoid useless register saving
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Emese Revfy <re.emese@gmail.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Sven Schnelle <svens@stackframe.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Collingbourne <pcc@google.com>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Alexander Monakov <amonakov@ispras.ru>,
-        Mathias Krause <minipli@googlemail.com>,
-        PaX Team <pageexec@freemail.hu>,
-        Brad Spengler <spender@grsecurity.net>,
-        Laura Abbott <labbott@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        kernel-hardening@lists.openwall.com, linux-kbuild@vger.kernel.org,
-        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, gcc@gcc.gnu.org, notify@kernel.org
-References: <20200604134957.505389-1-alex.popov@linux.com>
- <20200604134957.505389-3-alex.popov@linux.com>
- <202006091143.AD1A662@keescook>
-From:   Alexander Popov <alex.popov@linux.com>
-Autocrypt: addr=alex.popov@linux.com; prefer-encrypt=mutual; keydata=
- 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
- j3lCqPk=
-Message-ID: <757cbafb-1e13-8989-e30d-33c557d33cc4@linux.com>
-Date:   Wed, 10 Jun 2020 18:47:14 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 10 Jun 2020 11:48:38 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05AFWZNE136637;
+        Wed, 10 Jun 2020 11:48:19 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31k2800emm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 10 Jun 2020 11:48:18 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05AFX7Rh138244;
+        Wed, 10 Jun 2020 11:48:18 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31k2800ekw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 10 Jun 2020 11:48:18 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05AFlSns025914;
+        Wed, 10 Jun 2020 15:48:16 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma03ams.nl.ibm.com with ESMTP id 31g2s7yyge-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 10 Jun 2020 15:48:16 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05AFkw2D393944
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 10 Jun 2020 15:46:58 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 48E3F52051;
+        Wed, 10 Jun 2020 15:48:14 +0000 (GMT)
+Received: from thinkpad (unknown [9.171.55.252])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with SMTP id 739E752054;
+        Wed, 10 Jun 2020 15:48:13 +0000 (GMT)
+Date:   Wed, 10 Jun 2020 17:48:11 +0200
+From:   Gerald Schaefer <gerald.schaefer@de.ibm.com>
+To:     Peter Xu <peterx@redhat.com>, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, Michal Simek <monstr@monstr.eu>,
+        linux-mips@vger.kernel.org, Nick Hu <nickhu@andestech.com>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+        Guan Xuetao <gxt@pku.edu.cn>, linux-xtensa@linux-xtensa.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>
+Subject: Possible duplicate page fault accounting on some archs after commit
+ 4064b9827063
+Message-ID: <20200610174811.44b94525@thinkpad>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <202006091143.AD1A662@keescook>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-10_09:2020-06-10,2020-06-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
+ suspectscore=0 mlxscore=0 phishscore=0 mlxlogscore=999
+ cotscore=-2147483648 malwarescore=0 clxscore=1011 lowpriorityscore=0
+ priorityscore=1501 spamscore=0 bulkscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006100115
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.06.2020 21:46, Kees Cook wrote:
-> On Thu, Jun 04, 2020 at 04:49:54PM +0300, Alexander Popov wrote:
->> Let's improve the instrumentation to avoid this:
->>
->> 1. Make stackleak_track_stack() save all register that it works with.
->> Use no_caller_saved_registers attribute for that function. This attribute
->> is available for x86_64 and i386 starting from gcc-7.
->>
->> 2. Insert calling stackleak_track_stack() in asm:
->>   asm volatile("call stackleak_track_stack" :: "r" (current_stack_pointer))
->> Here we use ASM_CALL_CONSTRAINT trick from arch/x86/include/asm/asm.h.
->> The input constraint is taken into account during gcc shrink-wrapping
->> optimization. It is needed to be sure that stackleak_track_stack() call is
->> inserted after the prologue of the containing function, when the stack
->> frame is prepared.
-> 
-> Very cool; nice work!
-> 
->> +static void add_stack_tracking(gimple_stmt_iterator *gsi)
->> +{
->> +	/*
->> +	 * The 'no_caller_saved_registers' attribute is used for
->> +	 * stackleak_track_stack(). If the compiler supports this attribute for
->> +	 * the target arch, we can add calling stackleak_track_stack() in asm.
->> +	 * That improves performance: we avoid useless operations with the
->> +	 * caller-saved registers in the functions from which we will remove
->> +	 * stackleak_track_stack() call during the stackleak_cleanup pass.
->> +	 */
->> +	if (lookup_attribute_spec(get_identifier("no_caller_saved_registers")))
->> +		add_stack_tracking_gasm(gsi);
->> +	else
->> +		add_stack_tracking_gcall(gsi);
->> +}
-> 
-> The build_for_x86 flag is only ever used as an assert() test against
-> no_caller_saved_registers, but we're able to test for that separately.
-> Why does the architecture need to be tested? (i.e. when this flag
-> becomes supported o other architectures, why must it still be x86-only?)
+Hi,
 
-The inline asm statement that is used for instrumentation is arch-specific.
-Trying to add
-  asm volatile("call stackleak_track_stack")
-in gcc plugin on aarch64 makes gcc break spectacularly.
-I pass the target arch name to the plugin and check it explicitly to avoid that.
+Some architectures have their page fault accounting code inside the fault
+retry loop, and rely on only going through that code once. Before commit
+4064b9827063 ("mm: allow VM_FAULT_RETRY for multiple times"), that was
+ensured by testing for and clearing FAULT_FLAG_ALLOW_RETRY.
 
-Moreover, I'm going to create a gcc enhancement request for supporting
-no_caller_saved_registers attribute on aarch64.
+That commit had to remove the clearing of FAULT_FLAG_ALLOW_RETRY for all
+architectures, and introduced a subtle change to page fault accounting
+logic in the affected archs. It is now possible to go through the retry
+loop multiple times, and the affected archs would then account multiple
+page faults instead of just one.
 
-Best regards,
-Alexander
+This was found by coincidence in s390 code, and a quick check showed that
+there are quite a lot of other architectures that seem to be affected in a
+similar way. I'm preparing a fix for s390, by moving the accounting behind
+the retry loop, similar to x86. It is not completely straight-forward, so
+I leave the fix for other archs to the respective maintainers.
+
+Added the lists for possibly affected archs on cc, but no guarantee for
+completeness.
+
+Regards,
+Gerald
