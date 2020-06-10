@@ -2,72 +2,252 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9ECC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34832C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:26:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D091220760
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:26:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ECE5206F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:26:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591820804;
+	bh=TTa4wdcfzpwDIO05PWNvhxsM11Q7VsymnhvwipIA2QM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uDlV3MmMXbXJE+MyYLCX8RrlKIf/fYgH2fmL4nq2cbjpzh+ST+BBNIcgSjRiEkM2M
+	 GSPgO5RhzyouHYQGyyj0wtHUlLbqSNkh0Cc30hNVu1uG30FgsXQzlUbvgUtL+xh6wI
+	 J4amGTNKPV2WUNwHNoZHUzloPh/DXCDZcP1KkWOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728131AbgFJU0G (ORCPT
+        id S1726706AbgFJU0m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 16:26:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34254 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726417AbgFJU0G (ORCPT
+        Wed, 10 Jun 2020 16:26:42 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:37607 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726207AbgFJU0m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 16:26:06 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 269A4C03E96B
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 13:26:06 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
-        id 1jj7IR-006d2U-12; Wed, 10 Jun 2020 20:26:03 +0000
-Date:   Wed, 10 Jun 2020 21:26:03 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org
-Subject: [git pull] sysctl fixes
-Message-ID: <20200610202602.GU23230@ZenIV.linux.org.uk>
+        Wed, 10 Jun 2020 16:26:42 -0400
+Received: by mail-io1-f67.google.com with SMTP id r2so3838750ioo.4;
+        Wed, 10 Jun 2020 13:26:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=dLb7+PK/r7ZuXzs/JmtPoYfJOAKaZP0F2k4snoGnWsU=;
+        b=k+c8qYuPb25cGW4peDqRuSLPhG8c1ugseYt1knsjVyCpHHAohFnoUXXVSrrss+/KhJ
+         klBbGFksueffg1H7P/KlWzFkA2bpjR3wW+TDdqnPpWKan+6PtHeHGrdicSdwH/h1Jrhx
+         934o3wdOZ9Pq7gP2xETitp1p2QCZwbeSbDMaI6aNkN4yteo05tYT2JTfRKOpifBMdyGd
+         /LYtB+Kf9UUyjuq7pGqPCuHufIoWewysa+bq5oBYDofbk4uWfA/0YFunBMaeA7wsECX6
+         0fIrF5HHErTZjiRnRAJaMTp/4e4YuCbvnaq28vfRruFqcK6XagC/Zyli2QqnqmHOOmQz
+         ve8w==
+X-Gm-Message-State: AOAM531ISWY+AFZqD5yIVlV5XDUIXezVHaQZ+ZeHHMeT9P2CKjGGlZzj
+        aXmr0bQOIID9VV4LlcEAKw==
+X-Google-Smtp-Source: ABdhPJyAmUHIBz4O89zykUj+XKP55VbFK+EU3Y8jWd5wfBs0TJ/1pGP+ZZc0aZlh3G9jL0gzne9Igg==
+X-Received: by 2002:a6b:ab82:: with SMTP id u124mr3783659ioe.137.1591820800305;
+        Wed, 10 Jun 2020 13:26:40 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id y12sm414686ili.83.2020.06.10.13.26.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2020 13:26:39 -0700 (PDT)
+Received: (nullmailer pid 3654596 invoked by uid 1000);
+        Wed, 10 Jun 2020 20:26:38 -0000
+Date:   Wed, 10 Jun 2020 14:26:38 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v6 2/2] devicetree: bindings: phy: Document ipq806x dwc3
+ qcom phy
+Message-ID: <20200610202638.GA3649967@bogus>
+References: <20200603132237.6036-1-ansuelsmth@gmail.com>
+ <20200603132237.6036-2-ansuelsmth@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200603132237.6036-2-ansuelsmth@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	Fixups to regressions in sysctl series.
+On Wed, Jun 03, 2020 at 03:22:35PM +0200, Ansuel Smith wrote:
+> Document dwc3 qcom phy hs and ss phy bindings needed to correctly
+> inizialize and use usb on ipq806x SoC.
+> 
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+> v6:
+> * Add maximum value
+> v5:
+> * Fix dt_binding_check error
+> v4:
+> * Add qcom to specific bindings
+> v3:
+> * Use explicit reg instead of regmap
+> 
+>  .../bindings/phy/qcom,ipq806x-usb-phy-hs.yaml | 58 ++++++++++++++
+>  .../bindings/phy/qcom,ipq806x-usb-phy-ss.yaml | 76 +++++++++++++++++++
+>  2 files changed, 134 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
+> new file mode 100644
+> index 000000000000..c019de7478e3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
+> @@ -0,0 +1,58 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/qcom,ipq806x-usb-phy-hs.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm ipq806x usb DWC3 HS PHY CONTROLLER
+> +
+> +maintainers:
+> +  - Ansuel Smith <ansuelsmth@gmail.com>
+> +
+> +description:
+> +  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
+> +  controllers used in ipq806x. Each DWC3 PHY controller should have its
+> +  own node.
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,ipq806x-usb-phy-hs
+> +
+> +  "#phy-cells":
+> +    const: 0
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  clock-names:
+> +    minItems: 1
+> +    maxItems: 2
+> +    description: |
+> +      - "ref" Is required
+> +      - "xo"	Optional external reference clock
 
-The following changes since commit 32927393dc1ccd60fb2bdc05b9e8e88753761469:
+This is just saying what the schema says. Drop it.
 
-  sysctl: pass kernel pointers to ->proc_handler (2020-04-27 02:07:40 -0400)
+> +    items:
+> +      - const: ref
+> +      - const: xo
+> +
+> +required:
+> +  - compatible
+> +  - "#phy-cells"
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
+> +
+> +    hs_phy_0: phy@110f8800 {
+> +      compatible = "qcom,ipq806x-usb-phy-hs";
+> +      reg = <0x110f8800 0x30>;
+> +      clocks = <&gcc USB30_0_UTMI_CLK>;
+> +      clock-names = "ref";
+> +      #phy-cells = <0>;
+> +    };
+> diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
+> new file mode 100644
+> index 000000000000..3696a8d7a5c7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
+> @@ -0,0 +1,76 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/qcom,ipq806x-usb-phy-ss.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm ipq806x usb DWC3 SS PHY CONTROLLER
+> +
+> +maintainers:
+> +  - Ansuel Smith <ansuelsmth@gmail.com>
+> +
+> +description:
+> +  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
+> +  controllers used in ipq806x. Each DWC3 PHY controller should have its
+> +  own node.
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,ipq806x-usb-phy-ss
+> +
+> +  "#phy-cells":
+> +    const: 0
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  clock-names:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - const: ref
+> +      - const: xo
+> +
+> +  qcom,rx-eq:
+> +    description: Override value for rx_eq.
+> +    default: 4
+> +    maximum: 7
+> +    allOf:
 
-are available in the git repository at:
+You can drop 'allOf' now and just do $ref directly.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git work.sysctl
-
-for you to fetch changes up to ef9d965bc8b6fce5bcc0ae76a4a5b3ed91ee81eb:
-
-  sysctl: reject gigantic reads/write to sysctl files (2020-06-10 14:11:33 -0400)
-
-----------------------------------------------------------------
-Christoph Hellwig (6):
-      net/sysctl: use cpumask_parse in flow_limit_cpu_sysctl
-      net/sysctl: remove leftover __user annotations on neigh_proc_dointvec*
-      random: fix an incorrect __user annotation on proc_do_entropy
-      trace: fix an incorrect __user annotation on stack_trace_sysctl
-      cdrom: fix an incorrect __user annotation on cdrom_sysctl_info
-      sysctl: reject gigantic reads/write to sysctl files
-
- drivers/cdrom/cdrom.c      | 2 +-
- drivers/char/random.c      | 2 +-
- fs/proc/proc_sysctl.c      | 4 ++++
- include/linux/ftrace.h     | 5 ++---
- include/net/neighbour.h    | 7 +++----
- kernel/trace/trace_stack.c | 5 ++---
- net/core/sysctl_net_core.c | 2 +-
- 7 files changed, 14 insertions(+), 13 deletions(-)
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +  qcom,tx-deamp-3_5db:
+> +    description: Override value for transmit preemphasis.
+> +    default: 23
+> +    maximum: 63
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +  qcom,mpll:
+> +    description: Override value for mpll.
+> +    default: 0
+> +    maximum: 7
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +required:
+> +  - compatible
+> +  - "#phy-cells"
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
+> +
+> +    ss_phy_0: phy@110f8830 {
+> +      compatible = "qcom,ipq806x-usb-phy-ss";
+> +      reg = <0x110f8830 0x30>;
+> +      clocks = <&gcc USB30_0_MASTER_CLK>;
+> +      clock-names = "ref";
+> +      #phy-cells = <0>;
+> +    };
+> -- 
+> 2.25.1
+> 
