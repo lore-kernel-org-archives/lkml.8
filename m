@@ -2,183 +2,200 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2C2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC68C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D33520760
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:29:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC62E20760
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:30:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qhMsa0bt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gj/tsU5k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbgFJH3n (ORCPT
+        id S1726508AbgFJHaJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 03:29:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54930 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726453AbgFJH3n (ORCPT
+        Wed, 10 Jun 2020 03:30:09 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36354 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726401AbgFJHaJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 03:29:43 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAC62C03E96F
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 00:29:42 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id n23so1187227ljh.7
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 00:29:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=S4520mPx6/XI4Hbtkt/4ezv66JxfySEf4E1AXaLXpxg=;
-        b=qhMsa0bt0zRQ3TZyjzZYrcnCYpgkAhVyKHP/zg1YgKDY4RIMZhqOYc+ARgJALqLbK4
-         t6N3Xw/kfHxdvi5n4PgsrhiC4d1LxselH+fWMbr6TW2SDZuFUzi453LkW2cXUitDPFMT
-         on8oQGwWwyQyZfOyFZ1PeIRL+tYWcUMo0mv8iJQ+jZzHiPOo8q+xuf+4hSI38DdDT0bI
-         6zb25NuoX3+cWMoHLw5VSMgMHryxnhgV+GdIFj3h+0qY5RN9h4hKVKvlS1/5w6e0gD22
-         N+Vo7jXv0N8cHH+538ZpzdPS9lpxm67qTk0jHwALgtp1Iz0gqX3KrRviWzlESCyal3E6
-         5Lqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=S4520mPx6/XI4Hbtkt/4ezv66JxfySEf4E1AXaLXpxg=;
-        b=EyawCHm6wFa8g5ZSQs+peHnudTjDEwKCb6W+/laoFy8ZvCsxgdB/h0Emr85IPunJMU
-         GBI+FFoYLBWYWWj4Oc0q9HPoF/n1WO54jJ1ITB3ZWumeV3wsvtFEE08q+Q2OgU6hCRXQ
-         ZsPIvHTn5wx8qjaHjq1Wp8cAg6owom5pR+6PcmhTtbm+wUlZFH5MMCEXmYIdKmWZDX3y
-         1TPNKIbvHHqfKcN5KO2Ga1k7lBkETq9hfl9Hg1MCwNlH8BgSgXWjabC11TunZXPb1IdP
-         8r2q1MCbGD43JKua+VgWl4+3QJ+olTZS9XD66TppWI0HUhCawZjglhtWtdICSK7FH9NM
-         IWDA==
-X-Gm-Message-State: AOAM531GfC8chqzHp99KVg0aK7nOqsw6/hv5qpg4PjgnKloG2AFDMW0k
-        OR17A2iU3v8ivpr8B5ridZwId1tVJJCtsdlGKVagbw==
-X-Google-Smtp-Source: ABdhPJyifAUzBsAhPXNjznTzv09gwe+IcDWUww83HInSZcklfsrMZQXPSTkdEHdjQpikUg8UyB0/UK+8is55wBOu1EA=
-X-Received: by 2002:a2e:984b:: with SMTP id e11mr976917ljj.358.1591774181157;
- Wed, 10 Jun 2020 00:29:41 -0700 (PDT)
+        Wed, 10 Jun 2020 03:30:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591774206;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=SurJWUtckwlHL/+sYCpJX5zoI0eH49onJUthp20u0gk=;
+        b=gj/tsU5kq06pTUOdujquw1eLsrm1O96ZAUKEWUanmVWTABsax/8uoyA+lRnfqqDmSdOAaS
+        FGMJJZmr5H/zbz0K5KJQiivo684OOvli/bYbI0fKc3txuYNHtRB5aVslVJWLGgEQ9W1t9x
+        mIAiKCswrp7EgOETa+EqaQBCSp7tJK0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-334-WEiOybC7NlerRH6_QIwpPQ-1; Wed, 10 Jun 2020 03:30:05 -0400
+X-MC-Unique: WEiOybC7NlerRH6_QIwpPQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 481B6107ACF2;
+        Wed, 10 Jun 2020 07:30:03 +0000 (UTC)
+Received: from [10.36.114.42] (ovpn-114-42.ams2.redhat.com [10.36.114.42])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 137F18927E;
+        Wed, 10 Jun 2020 07:30:00 +0000 (UTC)
+Subject: Re: [PATCH v2] x86/mm: use max memory block size on bare metal
+From:   David Hildenbrand <david@redhat.com>
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Sistare <steven.sistare@oracle.com>
+References: <20200609225451.3542648-1-daniel.m.jordan@oracle.com>
+ <ab4e0907-522d-7834-03f3-014e3ed904c5@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABtCREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT6JAlgEEwEIAEICGwMFCQlmAYAGCwkIBwMCBhUI
+ AgkKCwQWAgMBAh4BAheAFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl3pImkCGQEACgkQTd4Q
+ 9wD/g1o+VA//SFvIHUAvul05u6wKv/pIR6aICPdpF9EIgEU448g+7FfDgQwcEny1pbEzAmiw
+ zAXIQ9H0NZh96lcq+yDLtONnXk/bEYWHHUA014A1wqcYNRY8RvY1+eVHb0uu0KYQoXkzvu+s
+ Dncuguk470XPnscL27hs8PgOP6QjG4jt75K2LfZ0eAqTOUCZTJxA8A7E9+XTYuU0hs7QVrWJ
+ jQdFxQbRMrYz7uP8KmTK9/Cnvqehgl4EzyRaZppshruKMeyheBgvgJd5On1wWq4ZUV5PFM4x
+ II3QbD3EJfWbaJMR55jI9dMFa+vK7MFz3rhWOkEx/QR959lfdRSTXdxs8V3zDvChcmRVGN8U
+ Vo93d1YNtWnA9w6oCW1dnDZ4kgQZZSBIjp6iHcA08apzh7DPi08jL7M9UQByeYGr8KuR4i6e
+ RZI6xhlZerUScVzn35ONwOC91VdYiQgjemiVLq1WDDZ3B7DIzUZ4RQTOaIWdtXBWb8zWakt/
+ ztGhsx0e39Gvt3391O1PgcA7ilhvqrBPemJrlb9xSPPRbaNAW39P8ws/UJnzSJqnHMVxbRZC
+ Am4add/SM+OCP0w3xYss1jy9T+XdZa0lhUvJfLy7tNcjVG/sxkBXOaSC24MFPuwnoC9WvCVQ
+ ZBxouph3kqc4Dt5X1EeXVLeba+466P1fe1rC8MbcwDkoUo65Ag0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAGJAiUEGAECAA8FAlXLn5ECGwwFCQlmAYAACgkQTd4Q
+ 9wD/g1qA6w/+M+ggFv+JdVsz5+ZIc6MSyGUozASX+bmIuPeIecc9UsFRatc91LuJCKMkD9Uv
+ GOcWSeFpLrSGRQ1Z7EMzFVU//qVs6uzhsNk0RYMyS0B6oloW3FpyQ+zOVylFWQCzoyyf227y
+ GW8HnXunJSC+4PtlL2AY4yZjAVAPLK2l6mhgClVXTQ/S7cBoTQKP+jvVJOoYkpnFxWE9pn4t
+ H5QIFk7Ip8TKr5k3fXVWk4lnUi9MTF/5L/mWqdyIO1s7cjharQCstfWCzWrVeVctpVoDfJWp
+ 4LwTuQ5yEM2KcPeElLg5fR7WB2zH97oI6/Ko2DlovmfQqXh9xWozQt0iGy5tWzh6I0JrlcxJ
+ ileZWLccC4XKD1037Hy2FLAjzfoWgwBLA6ULu0exOOdIa58H4PsXtkFPrUF980EEibUp0zFz
+ GotRVekFAceUaRvAj7dh76cToeZkfsjAvBVb4COXuhgX6N4pofgNkW2AtgYu1nUsPAo+NftU
+ CxrhjHtLn4QEBpkbErnXQyMjHpIatlYGutVMS91XTQXYydCh5crMPs7hYVsvnmGHIaB9ZMfB
+ njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
+ FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
+Organization: Red Hat GmbH
+Message-ID: <0311c2e5-aa27-f59e-cd00-0c51332b73fd@redhat.com>
+Date:   Wed, 10 Jun 2020 09:30:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200609190050.275446645@linuxfoundation.org>
-In-Reply-To: <20200609190050.275446645@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 10 Jun 2020 12:59:29 +0530
-Message-ID: <CA+G9fYvZvFpS_oFjum1mv6=S0riQ0ayz=VnDozRYda2i6vg4jA@mail.gmail.com>
-Subject: Re: [PATCH 4.14 00/46] 4.14.184-rc2 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <ab4e0907-522d-7834-03f3-014e3ed904c5@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 10 Jun 2020 at 00:48, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.14.184 release.
-> There are 46 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 11 Jun 2020 19:00:37 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.14.184-rc2.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.14.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+On 10.06.20 09:20, David Hildenbrand wrote:
+> On 10.06.20 00:54, Daniel Jordan wrote:
+>> Some of our servers spend significant time at kernel boot initializing
+>> memory block sysfs directories and then creating symlinks between them
+>> and the corresponding nodes.  The slowness happens because the machines
+>> get stuck with the smallest supported memory block size on x86 (128M),
+>> which results in 16,288 directories to cover the 2T of installed RAM.
+>> The search for each memory block is noticeable even with
+>> commit 4fb6eabf1037 ("drivers/base/memory.c: cache memory blocks in
+>> xarray to accelerate lookup").
+>>
+>> Commit 078eb6aa50dc ("x86/mm/memory_hotplug: determine block size based
+>> on the end of boot memory") chooses the block size based on alignment
+>> with memory end.  That addresses hotplug failures in qemu guests, but
+>> for bare metal systems whose memory end isn't aligned to even the
+>> smallest size, it leaves them at 128M.
+>>
+>> Make kernels that aren't running on a hypervisor use the largest
+>> supported size (2G) to minimize overhead on big machines.  Kernel boot
+>> goes 7% faster on the aforementioned servers, shaving off half a second.
+>>
+>> Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Andy Lutomirski <luto@kernel.org>
+>> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+>> Cc: David Hildenbrand <david@redhat.com>
+>> Cc: Michal Hocko <mhocko@kernel.org>
+>> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+>> Cc: Peter Zijlstra <peterz@infradead.org>
+>> Cc: Steven Sistare <steven.sistare@oracle.com>
+>> Cc: linux-mm@kvack.org
+>> Cc: linux-kernel@vger.kernel.org
+>> ---
+>>
+>> Applies to 5.7 and today's mainline
+>>
+>>  arch/x86/mm/init_64.c | 10 ++++++++++
+>>  1 file changed, 10 insertions(+)
+>>
+>> diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+>> index 8b5f73f5e207c..906fbdb060748 100644
+>> --- a/arch/x86/mm/init_64.c
+>> +++ b/arch/x86/mm/init_64.c
+>> @@ -55,6 +55,7 @@
+>>  #include <asm/uv/uv.h>
+>>  #include <asm/setup.h>
+>>  #include <asm/ftrace.h>
+>> +#include <asm/hypervisor.h>
+>>  
+>>  #include "mm_internal.h"
+>>  
+>> @@ -1390,6 +1391,15 @@ static unsigned long probe_memory_block_size(void)
+>>  		goto done;
+>>  	}
+>>  
+>> +	/*
+>> +	 * Use max block size to minimize overhead on bare metal, where
+>> +	 * alignment for memory hotplug isn't a concern.
+>> +	 */
+>> +	if (hypervisor_is_type(X86_HYPER_NATIVE)) {
+>> +		bz = MAX_BLOCK_SIZE;
+>> +		goto done;
+>> +	}
+> 
+> I'd assume that bioses on physical machines >= 64GB will not align
+> bigger (>= 2GB) DIMMs to something < 2GB.
+> 
+> Acked-by: David Hildenbrand <david@redhat.com>
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+FTWT, setup_arch() does the init_hypervisor_platform() call. I assume
+that should be early enough.
 
-Summary
-------------------------------------------------------------------------
+We should really look into factoring out memory_block_size_bytes() into
+common code, turning into a simple global variable read. Then, we should
+provide an interface to configure the memory block size during boot from
+arch code (set_memory_block_size()).
 
-kernel: 4.14.184-rc2
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.14.y
-git commit: 9817cdae1b62b5a7d9c2b690e448512bbe175285
-git describe: v4.14.183-47-g9817cdae1b62
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
-ild/v4.14.183-47-g9817cdae1b62
+-- 
+Thanks,
 
-No regressions (compared to build v4.14.183)
+David / dhildenb
 
-No fixes (compared to build v4.14.183)
-
-Ran 24848 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- juno-r2-kasan
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-- x86-kasan
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* kselftest/net
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* v4l2-compliance
-* kvm-unit-tests
-* ltp-controllers-tests
-* network-basic-tests
-* ltp-open-posix-tests
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
