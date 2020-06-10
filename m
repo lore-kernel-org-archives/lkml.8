@@ -6,57 +6,62 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B63EAC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D242C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94F65206F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:00:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 056F720760
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:02:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591783218;
-	bh=VSaKKfy/V9rqADPSSuu4IkfVocrsiTN4SkeMzZaW7sU=;
+	s=default; t=1591783321;
+	bh=78d9bWu90jgVLLl5d0FL3YY9FE7pw79tHayUAi8wc/o=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IxTB2AiqnP9AaiTJSugxJtBC67p8dV41AM54bkPn4o+J1dnWUYYSzGzwVK+QGoLbB
-	 ap10WjT3SnV90CUljvV7cNGf3hjYugOASfVuTUt7XL+gWowA+DfCWRCsikyfepFinJ
-	 cC8FBdUkxgJtnZ0/j7RVHzZ1dYZ6xV2x0RvPveuE=
+	b=IozQKU1hX6NpWZ/2jYZ2Hc1/Vv+Z0qLTcPKipHPzaMabjRKbcOsq43Kc0Gk5FdPuU
+	 EebxDzm4W7A9aE8IllTlLF9xlFi1gRuPFpz1UrJb6yOkkjv819yWndP03XefnLNSUT
+	 ZYV6iOTmm5iL5lav7ndqfZuCclZLMe726ohKXTVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbgFJKAP (ORCPT
+        id S1728048AbgFJKB7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 06:00:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41390 "EHLO mail.kernel.org"
+        Wed, 10 Jun 2020 06:01:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726134AbgFJKAN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 06:00:13 -0400
+        id S1726134AbgFJKB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 06:01:58 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8777D206F7;
-        Wed, 10 Jun 2020 10:00:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAFBB206F7;
+        Wed, 10 Jun 2020 10:01:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591783212;
-        bh=VSaKKfy/V9rqADPSSuu4IkfVocrsiTN4SkeMzZaW7sU=;
+        s=default; t=1591783318;
+        bh=78d9bWu90jgVLLl5d0FL3YY9FE7pw79tHayUAi8wc/o=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YDs7MBeb2K677sLe+jsRXVpbxfgyiWtMqgAAH4UBRVDPr6G15N6APmORXYwb0GRiV
-         8+vaBwg4yMWkxljIhw0cjb2+glk+B4zRdYHRnaSZhsEefHapZURnCwnIK5CNGsPWW9
-         PssrjRNGQ367egX8GwKYwHnwj4R+zYE2Fw4pcmoo=
-Date:   Wed, 10 Jun 2020 11:00:08 +0100
+        b=Bqj2LN/U1QyVA5RVjpPoRHnxoIYvOjoaViGkCL/vJ6+p+fF0niOhfL/isATnrbi8k
+         5MQOzFLPnA87HzE5vFmB/d+Cd7VL+4CHczzTkap/WT+C+0sfawo/nEYk4beV4I1VpO
+         LhAPqug66tzfq95VOAQwJ1VCGgx7QPn11bbwsDh0=
+Date:   Wed, 10 Jun 2020 11:01:56 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        bjorn.andersson@linaro.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH V3 1/3] dt-bindings: mmc: Supply max load for mmc supplies
-Message-ID: <20200610100008.GA5005@sirena.org.uk>
-References: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
- <1591094883-11674-1-git-send-email-vbadigan@codeaurora.org>
- <1591094883-11674-2-git-send-email-vbadigan@codeaurora.org>
- <20200609230216.GA1655591@bogus>
+To:     Pi-Hsun Shih <pihsun@chromium.org>
+Cc:     Nicolas Boichat <drinkcat@chromium.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
+        Tzung-Bi Shih <tzungbi@google.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] regulator: Add driver for cros-ec-regulator
+Message-ID: <20200610100155.GB5005@sirena.org.uk>
+References: <20200609080001.121499-1-pihsun@chromium.org>
+ <20200609080001.121499-3-pihsun@chromium.org>
+ <20200609111919.GB4583@sirena.org.uk>
+ <CANdKZ0dDHo-bjX2AT0GiTPoDmY2jNNSGkTcGb-f9j1mPoecNkw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jI8keyz6grp/JLjh"
+        protocol="application/pgp-signature"; boundary="ZoaI/ZTpAVc4A5k6"
 Content-Disposition: inline
-In-Reply-To: <20200609230216.GA1655591@bogus>
+In-Reply-To: <CANdKZ0dDHo-bjX2AT0GiTPoDmY2jNNSGkTcGb-f9j1mPoecNkw@mail.gmail.com>
 X-Cookie: fortune: No such file or directory
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -65,50 +70,47 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---jI8keyz6grp/JLjh
+--ZoaI/ZTpAVc4A5k6
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 09, 2020 at 05:02:16PM -0600, Rob Herring wrote:
-> On Tue, Jun 02, 2020 at 04:17:54PM +0530, Veerabhadrarao Badiganti wrote:
+On Wed, Jun 10, 2020 at 12:31:53PM +0800, Pi-Hsun Shih wrote:
+> On Tue, Jun 9, 2020 at 7:19 PM Mark Brown <broonie@kernel.org> wrote:
+> > On Tue, Jun 09, 2020 at 03:59:55PM +0800, Pi-Hsun Shih wrote:
 
-> > +  vmmc-supply-max-microamp:
-> > +    description: Maximum load for the card power.
+> > > +     int min_mV = DIV_ROUND_UP(min_uV, 1000);
+> > > +     int max_mV = max_uV / 1000;
+> > > +     struct ec_params_regulator_set_voltage cmd = {
+> > > +             .index = data->index,
+> > > +             .min_mv = min_mV,
+> > > +             .max_mv = max_mV,
+> > > +     };
+> > > +
+> > > +     if (min_mV > max_mV)
+> > > +             return -EINVAL;
 
-> > +  vqmmc-supply-max-microamp:
-> > +    description: Maximum load for the bus IO line power.
+> > The core will do this for you.
 
-> By a 'common regulator property' I meant documented with regulator=20
-> binding like *-supply, not common to MMC. How is MMC special?
+> Since I'm doing DIV_ROUND_UP for the min_mV, so this may happen if the
+> min_uV~max_uV range given by the core doesn't contain any value that
+> can be represented exactly in mV.
 
-TBH I'm surprised that these aren't defined by the MMC spec or by the ID
-information from the part we find connected - I'd not expect the board
-to be defining these at all.
+This isn't clear from the code - I'd add a comment or move the division
+to be next to the check.
 
-> Thinking about this some more, what's wrong with the max current in the=
-=20
-> regulator nodes? I suppose you could have more than one load and need to=
-=20
-> define the loads separately?
-
-One of the bigger reasons to think about the loads would be to
-dynamically configure the mode the regulator is in to go into a more
-efficient mode when some of the devices attached to it are turned off.
-
---jI8keyz6grp/JLjh
+--ZoaI/ZTpAVc4A5k6
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7gryQACgkQJNaLcl1U
-h9DsNQf/QMOcKgKBR1OfTOXetzJw0GYmTTeWBRwrDxvOzlh/codHfgyJ97CrHmOY
-1+Th0yTlUfe69S3B5iZpER3S5jU+lsZmkeaKBNfxx3qykrWDpRi3FQG5AIOEBDB6
-m43i71UuvaryROGVyZQWEXiQ+H6RpJ7MV7IUBSa9bFZBVwwJ0ous7/nzsPt5iwfr
-0P/ZivT1TK9t/Zkp7biFYiuIZqvtDaSlO6yyPIb60D0Xq4+9XVJ+kPYnvRj7CEb5
-w3RLxK78z4QCWveNCjNrhIUtynLudM63ofRP3O6qtcYQ7wRkHjvpTbOZ4JvUMoKl
-bdh2nZKb7xJazHo13G3QtNgjgoq/0g==
-=QJTj
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7gr5MACgkQJNaLcl1U
+h9AolAf/eTZkwPoTpTJOje0SEojJboSMq6jnPBcN1uABzQD2gXGjHQvvU1GhaqB4
+S5ohE7KiXR9Vy4wHzuwRevEizFjt7KWXWUMa7r9Mb9h/e47hOAsDLctXSNaSjvw9
+SE2h/mAM6Ue8ruHFmvGCxqTMcirlTbe1aLUgv+LhLKl42K+do3s99XulJZJFICdu
+Tw3RN8AOIVyxRn9OX5+Q4nMWujsptaZHs+IYwZZr14C/nME0Fd2/vvseyLWOVZE/
+RkpdvunHM2MygVFe5SvuC1xS0NW2zir4kjPoTDn5w68ChrqiY+ZL3Gok6R3Dbs+9
+s5YQBZasCzIDCe4iAEMkPsCAZ+WI0Q==
+=z8Nh
 -----END PGP SIGNATURE-----
 
---jI8keyz6grp/JLjh--
+--ZoaI/ZTpAVc4A5k6--
