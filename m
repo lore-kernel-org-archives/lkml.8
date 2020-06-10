@@ -2,122 +2,114 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E73D1C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 02:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12064C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 02:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C383420691
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 02:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE8052074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 02:19:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fVvCEO4H"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d8fXfi1l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726046AbgFJCRM (ORCPT
+        id S1726090AbgFJCTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 22:17:12 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:38839 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725798AbgFJCRL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 22:17:11 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49hVxJ15qVz9sRR;
-        Wed, 10 Jun 2020 12:17:08 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591755430;
-        bh=+/Na9XECsFlkHA1EyyS2aYZ5J+5X/KFhBFECUZGFuDc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=fVvCEO4Hfk+a3L1gEUM0UyHbHWrIziGAeL+49KqYWthC1VgzLopQEy4sCIMQpVv8l
-         3vdDmRpr2WlXNJWWZObGGdkJBYR88fI43E2kyMGNO0CBEGic4/AJZNCs5YCwe+QjKH
-         upimPDafeR0MlpB1iVxyNOPtEszZyCoDifFevYpPoKceu0V0pscVN1kMoUytSI/Gcv
-         kNljZJiQ6Ais+HIDzdf+mlWtU394lGf9iuSvWgAxbP2MCdBX/XiceilMv46U9c6E8J
-         ZSnMxa/ye+NSaLpQWeIQrk3Kw8eGSPwi7eelHyAuX8Ht4mXhgIlvfCXCn8DtzuUE4E
-         95fMYcY1xwQIw==
-Date:   Wed, 10 Jun 2020 12:17:07 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Simon Arlott <simon@octiron.net>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-Subject: linux-next: manual merge of the scsi-mkp tree with Linus' tree
-Message-ID: <20200610121707.1f4c4355@canb.auug.org.au>
+        Tue, 9 Jun 2020 22:19:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35572 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725798AbgFJCTm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 22:19:42 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDACDC05BD1E;
+        Tue,  9 Jun 2020 19:19:41 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id w7so268231edt.1;
+        Tue, 09 Jun 2020 19:19:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=6nDD9b7w8r1Mr/3MxkpIoE8zWpfhH3upQWRgRKaz8Zc=;
+        b=d8fXfi1l7KInOy0Riqv289V5I5J1ZgSHL1mnqhUsN3TjXORhR79t8BUP4noaM6wxaV
+         oF4HRekWinwy8NGtF9jeedNMhsCBi4m+sXOFRMrd4zvoeaAFaLCp+bO5Vs9NADVkdVmb
+         E8XhMxF9b8v9mq893gxQNCngsZ/XC2oFr+hcO+higI+G2hcc+rErDQ3k1LLqDGmYSMIb
+         WvswuoE/M1rnLHZyRUGJlOBg6FMpqstb0DLvcg2oOGa9ueadZj5PNTIKZ7JeNDh/XzyT
+         EOky1jWF3pqojumstOj6V70bDCg4u20Tv8vBfPXCCddfq08EKytUPg24PfOscZ4ZNv/J
+         eCZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6nDD9b7w8r1Mr/3MxkpIoE8zWpfhH3upQWRgRKaz8Zc=;
+        b=RrF6vpttQIyGPG86B7RDWPKWHINqPLY2oWsy2LfnRS6fV+QBGJfmcxB8dFkM36Dhe4
+         xVm0DvVAkAJzsQvRpMGEEJ8FUhW3oWS26q/5/4+440ruLMuQm4slWs3OOwIQ9LDQ3Jc2
+         axvsnBukuWHnZh8Pnf4DkudgvNVjofIUGZiZJMmbncKdpf1nTaFoYmlW6JXBp4IPnyjr
+         rVqyIrwhmdaumx7ihfJCHEsOKPJ1t72Mm8q+NiQwF8jHgcoJX4zw3SAcrNiuB+Ja1sCS
+         40oRQR75iYC73H8yU5IfthhS0ft7lpnFUyckpnt/RL+XYpGbWRX0c2Lwm7DtmqWHIaVn
+         u33Q==
+X-Gm-Message-State: AOAM5338g8k5P9b1gI/QF9WbRpXg//OurhNqyWZtI8JGifUDrZFLk5aQ
+        prfd5HqBJCUB6+vRPbCFvew=
+X-Google-Smtp-Source: ABdhPJyHM8AkM6LFw1w6gnIiVHMouyYrPLgZFtrZzLehkjZn/vUa+ZeZVaI4/d8rIky9PTihQBilQA==
+X-Received: by 2002:a50:b022:: with SMTP id i31mr595400edd.301.1591755580360;
+        Tue, 09 Jun 2020 19:19:40 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id ss4sm14296639ejb.63.2020.06.09.19.19.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jun 2020 19:19:39 -0700 (PDT)
+Subject: Re: [PATCH 2/4] soc: bcm: add BCM63xx power domain driver
+To:     =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
+        hauke@hauke-m.de, zajec5@gmail.com, tsbogend@alpha.franken.de,
+        robh+dt@kernel.org, jonas.gorski@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200609105244.4014823-1-noltari@gmail.com>
+ <20200609105244.4014823-3-noltari@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <13cc694b-c643-0f68-e510-062df5352eaa@gmail.com>
+Date:   Tue, 9 Jun 2020 19:19:33 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/fW.RteAK.CvtbhyjeSxIS8O";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200609105244.4014823-3-noltari@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/fW.RteAK.CvtbhyjeSxIS8O
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-Today's linux-next merge of the scsi-mkp tree got a conflict in:
+On 6/9/2020 3:52 AM, Álvaro Fernández Rojas wrote:
+> BCM6318, BCM6328, BCM6362 and BCM63268 SoCs have a power domain controller
+> to enable/disable certain components in order to save power.
+> 
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+> ---
+>  drivers/soc/bcm/Kconfig         |   8 +
+>  drivers/soc/bcm/Makefile        |   1 +
+>  drivers/soc/bcm/bcm63xx-power.c | 374 ++++++++++++++++++++++++++++++++
 
-  drivers/scsi/sr.c
+I would create drivers/soc/bcm/bcm63xx because there are likely going to
+be more changes for BCM63xx DSL SOCs in the future that would land
+there, for instance the BCM63138 and newer SoCs have an entirely
+different reset controller using the on-chip micro controller that would
+be landing there.
 
-between commit:
+Can you also make sure that the MAINTAINERS file still matches that
+location?
 
-  a711d91cd97e ("block: add a cdrom_device_info pointer to struct gendisk")
-
-from Linus' tree and commit:
-
-  6555781b3fde ("scsi: sr: Fix sr_probe() missing deallocate of device mino=
-r")
-
-from the scsi-mkp tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/scsi/sr.c
-index 4dcd735ea49e,b9cff27e2c81..000000000000
---- a/drivers/scsi/sr.c
-+++ b/drivers/scsi/sr.c
-@@@ -790,9 -790,10 +790,9 @@@ static int sr_probe(struct device *dev
-  	set_capacity(disk, cd->capacity);
-  	disk->private_data =3D &cd->driver;
-  	disk->queue =3D sdev->request_queue;
- -	cd->cdi.disk =3D disk;
- =20
- -	if (register_cdrom(&cd->cdi))
- +	if (register_cdrom(disk, &cd->cdi))
-- 		goto fail_put;
-+ 		goto fail_minor;
- =20
-  	/*
-  	 * Initialize block layer runtime PM stuffs before the
-
---Sig_/fW.RteAK.CvtbhyjeSxIS8O
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7gQqMACgkQAVBC80lX
-0GzDYQf/YYkB+SFMb3nfh3Eu7nX9Ry0+qnnJDNRhstxIQrj3a0oC+Uv8JgTuEMe4
-+O8j3TnFtzhdHUyyF398QxY20N2BCXKtNhVsGTS58thPEuC9xAZjF7gGaDbl+l1v
-e7RYZ5VQ+N9QEvWhRzrT8i4hzcmYj7VmL2BdFJcMq0SZUaHay5PlkdlRtlNdS977
-r0vdAf5/5+QmdFIqAEQO3bTuHE3XwXCcVeNBH2hNdE1cXF1AnVMX9Wxz1yG6513L
-40eM23Tukga66Fg1QZBWE6MoKoxl2BB8EjdyQ+DiIfFSAAChvQrXwjQEseBMYWj0
-K6EziS0dCVF7073gkeVTByiKPOm5Jg==
-=bLev
------END PGP SIGNATURE-----
-
---Sig_/fW.RteAK.CvtbhyjeSxIS8O--
+With respect to the code, given that you have defined #reset-cells = <1>
+in the Device Tree binding, I would expect that you create a header
+under include/dt-bindings/ which defines constants for the various SoCs
+which you are then using within your power domain provider driver.
+bcm2835-power.c is a good example of how this works for instance.
+-- 
+Florian
