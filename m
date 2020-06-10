@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB44C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA237C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D361B20801
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:04:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9697B20801
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:05:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="DYbxS+vB"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IOF8V/dI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbgFJGEu (ORCPT
+        id S1726581AbgFJGE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 02:04:50 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:6083 "EHLO
+        Wed, 10 Jun 2020 02:04:59 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:6065 "EHLO
         hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbgFJGCq (ORCPT
+        with ESMTP id S1726078AbgFJGCp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 02:02:46 -0400
+        Wed, 10 Jun 2020 02:02:45 -0400
 Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ee07758000e>; Tue, 09 Jun 2020 23:02:00 -0700
+        id <B5ee077570001>; Tue, 09 Jun 2020 23:01:59 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 09 Jun 2020 23:02:45 -0700
+  Tue, 09 Jun 2020 23:02:44 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 09 Jun 2020 23:02:45 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Jun
- 2020 06:02:45 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 10 Jun 2020 06:02:45 +0000
+        by hqpgpgate101.nvidia.com on Tue, 09 Jun 2020 23:02:44 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Jun
+ 2020 06:02:44 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 10 Jun 2020 06:02:44 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.167.70]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ee077840005>; Tue, 09 Jun 2020 23:02:45 -0700
+        id <B5ee077830002>; Tue, 09 Jun 2020 23:02:44 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
@@ -47,9 +47,9 @@ CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
         <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
-Subject: [RFC PATCH v1 03/18] i2c: tegra: Don't mark VI I2C as IRQ safe runtime PM
-Date:   Tue, 9 Jun 2020 23:02:25 -0700
-Message-ID: <1591768960-31648-4-git-send-email-skomatineni@nvidia.com>
+Subject: [RFC PATCH v1 01/18] dt-bindings: i2c: tegra: Document Tegra210 VI I2C clocks and power-domains
+Date:   Tue, 9 Jun 2020 23:02:23 -0700
+Message-ID: <1591768960-31648-2-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1591768960-31648-1-git-send-email-skomatineni@nvidia.com>
 References: <1591768960-31648-1-git-send-email-skomatineni@nvidia.com>
@@ -57,59 +57,69 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1591768920; bh=zxB65TqmmcKmPfWkLJU50AtZToCBrCGEYlb/JsyjY+U=;
+        t=1591768919; bh=IcdTxk/KfmzbsMYHUsUoDHLf4X+jjxTur+UzaaoB62c=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=DYbxS+vBHf/CFkVU1bqvqwYINCQE2Cho4VeoNEkp27HpOM79yynDNsQYKq8zKNxqN
-         uNDDdTRfTIVchoCyH+Q/Oux/vy+Jd8snfgSva3gKEWF4YfyYb/ohGmle97s5WtpPmy
-         QFu2V/mxulfh4MLcSDRj2OuKN4p9s6OimlRDYkizr5NncHUJhRxF+u5tl+flQcwo2a
-         gK6mYo0JqzGbPWz9/fZ+sWdIuIBxLveZervEKrqsyB0b6JtbpTyYINFCaFBMgITOsz
-         KS81raaW2rPuMFxFIW+qLN/jMsugbgmAn2E3UmGiNUaHydjhGjfFzEReFGuANPaZCU
-         ucgFXExgFi8Sw==
+        b=IOF8V/dIjURU1Y7kRPqnexdrMWesOJc4m59hFwXd3q8zhRnTp+sL2rdz6P9sgZw/l
+         v+qTOjHC9QRIk8ps8adfTZjvTnxUmZk1uQn+L7px3EAVb4yxuzX5D20An9CCJOdHaO
+         vlVu/vU5NcE9J3drInaF7g59ABhLMa0DNf7m3ptGs57bKmQ1A8VqwPw34vxIzrFFxl
+         kMFOEQzpk02tlsjZ3sDUcw7Q9hfozFM0RX2ZdNxesQd132ZUwnAJi/XdHkYn7fRt1T
+         0edxixeGJzbHFT98J8P2Kq3UZOhveRPvSseJBTMLFfE8WjoqBOHOkxGrSf4i5on7sG
+         m3UhI6UiZIjMg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra VI I2C is part of VE power domain and typically used for
-camera usecases.
-
-VE power domain is not always on and is non-IRQ safe. So, IRQ safe
-device cannot be attached to a non-IRQ safe domain as it prevents
-powering off the PM domain and generic power domain driver will warn.
-
-Current driver marks all I2C devices as IRQ safe and VI I2C device
-does not require IRQ safe as it will not be used for atomic transfers.
-
-This patch has fix to make VI I2C as non-IRQ safe.
+This patch documents missing clocks and power-domains of Tegra210 VI I2C.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/i2c/busses/i2c-tegra.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/i2c/nvidia,tegra20-i2c.txt    | 19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index 1577296..3be1018 100644
---- a/drivers/i2c/busses/i2c-tegra.c
-+++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -1750,7 +1750,15 @@ static int tegra_i2c_probe(struct platform_device *pdev)
- 		goto unprepare_slow_clk;
- 	}
- 
--	pm_runtime_irq_safe(&pdev->dev);
-+	/*
-+	 * VI I2C is in VE power domain which is not always on and not
-+	 * an IRQ safe. So, IRQ safe device can't be attached to a non-IRQ
-+	 * safe domain as it prevents powering off the PM domain.
-+	 * Also, VI I2C device don't need to use runtime IRQ safe as it will
-+	 * not be used for atomic transfers.
-+	 */
-+	if (!i2c_dev->is_vi)
-+		pm_runtime_irq_safe(&pdev->dev);
- 	pm_runtime_enable(&pdev->dev);
- 	if (!pm_runtime_enabled(&pdev->dev)) {
- 		ret = tegra_i2c_runtime_resume(&pdev->dev);
+diff --git a/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.txt b/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.txt
+index 18c0de3..3f2f990 100644
+--- a/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.txt
++++ b/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.txt
+@@ -35,12 +35,12 @@ Required properties:
+ 	Due to above changes, Tegra114 I2C driver makes incompatible with
+ 	previous hardware driver. Hence, tegra114 I2C controller is compatible
+ 	with "nvidia,tegra114-i2c".
+-  nvidia,tegra210-i2c-vi: Tegra210 has one I2C controller that is part of the
+-	host1x domain and typically used for camera use-cases. This VI I2C
+-	controller is mostly compatible with the programming model of the
+-	regular I2C controllers with a few exceptions. The I2C registers start
+-	at an offset of 0xc00 (instead of 0), registers are 16 bytes apart
+-	(rather than 4) and the controller does not support slave mode.
++  nvidia,tegra210-i2c-vi: Tegra210 has one I2C controller that is on host1x bus
++	and is part of VE power domain and typically used for camera use-cases.
++	This VI I2C controller is mostly compatible with the programming model
++	of the regular I2C controllers with a few exceptions. The I2C registers
++	start at an offset of 0xc00 (instead of 0), registers are 16 bytes
++	apart (rather than 4) and the controller does not support slave mode.
+ - reg: Should contain I2C controller registers physical address and length.
+ - interrupts: Should contain I2C controller interrupts.
+ - address-cells: Address cells for I2C device address.
+@@ -53,10 +53,17 @@ Required properties:
+   - fast-clk
+   Tegra114:
+   - div-clk
++  Tegra210:
++  - div-clk
++  - slow (only for nvidia,tegra210-i2c-vi compatible node)
+ - resets: Must contain an entry for each entry in reset-names.
+   See ../reset/reset.txt for details.
+ - reset-names: Must include the following entries:
+   - i2c
++- power-domains: Only for nvidia,tegra210-i2c-vi compatible node and must
++  include venc powergate node as vi i2c is part of VE power domain.
++  tegra210-i2c-vi:
++  - pd_venc
+ - dmas: Must contain an entry for each entry in clock-names.
+   See ../dma/dma.txt for details.
+ - dma-names: Must include the following entries:
 -- 
 2.7.4
 
