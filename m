@@ -2,224 +2,180 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF2DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 00:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D86E5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 00:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89B5D206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 00:30:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ul3Kn7oE"
+	by mail.kernel.org (Postfix) with ESMTP id BA40A206F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 00:48:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726078AbgFJAa6 (ORCPT
+        id S1726046AbgFJArk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 20:30:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47044 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbgFJAa4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 20:30:56 -0400
-Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 011F0C03E96B
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 17:30:55 -0700 (PDT)
-Received: by mail-lj1-x230.google.com with SMTP id q19so314664lji.2
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 17:30:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fufpFexVpmLTY4L8tFo3Vjk8lnR9s+NHiNpeUysolls=;
-        b=Ul3Kn7oEjJ+TiA2pqfTe1kLWo8haWQ4EdIrWEOoLUcZqB1v5+Etym1PpbRykwdrFc/
-         iAvZiMia8BEQtCI23nGFox9x3pJ32ft7p7v+yGJpIsZylauMYMjm1bdqrxecJ+Bh2w7L
-         xqjrS5+XDVplaBXmaXgQk+n1G3DRidRN6A2ZW5mnYdD6v2M6D86Us+cjITRGrKA+fcVQ
-         qTwFZt6IHzcPFiyA1cnfFWD2sNzy1192NJEDLvc4U3gj6Rphyb5WtY0cDMjUBhSoxH8D
-         nZq+FsEwWFKRvGEtLNV5LwvLDS8Fi/wSy7sK5fSVwveYFysFLoQNutyCfy8hjMCQh9R9
-         0eaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fufpFexVpmLTY4L8tFo3Vjk8lnR9s+NHiNpeUysolls=;
-        b=T0EkajgnHPWMfNo/TLJR2JYrh3CRMisnbUTzlxRRbyCKoElL846bjxg3ScsFBf/IVO
-         g+4k7p6+Le7DTTdZsusAe5tM2HfJ0Oz5nsaCXbHiuk6KFrXhQ+WhUzAa3T3YtW8nREe8
-         Z755YeJDVEdh5DOX5cGGH9Jf4Zg9q8lgVQwCFi0I47hq7kdOn/GVxFlu5kG1ibxxkfpC
-         HK/e/QflXIcXJo0UdXDsjl0S5xRPyyREQLkO1nm4chJmDyLvnrD46MvgT+U6omwRLgz3
-         3Z1yLE1xYFv0RsidcoCOG6uT2rfGT+zOjeeDeDMaSUX3i0iZIcGY3hPNqfX0a1VTJWdA
-         S86g==
-X-Gm-Message-State: AOAM532TQly6Aih2IkcvRamGieG0ykXPUGAjOdombuwt4aV3TKZlF1Vn
-        +ycwW/+S3++vPg1psMnGUhJp7/eebEvMYFaU3A7XLg==
-X-Google-Smtp-Source: ABdhPJy6qIbJQYsxG/h4M6IxlW+DryqYkaC9Hj8W8gQcJx+EtUTWvi5+ZOQuks3MC2dMqcym0t+/eiVlEcv1ojBzW6c=
-X-Received: by 2002:a05:651c:1199:: with SMTP id w25mr391105ljo.301.1591749052049;
- Tue, 09 Jun 2020 17:30:52 -0700 (PDT)
+        Tue, 9 Jun 2020 20:47:40 -0400
+Received: from mga05.intel.com ([192.55.52.43]:30853 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725932AbgFJArh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 20:47:37 -0400
+IronPort-SDR: qe3auWUc1RH0C0N8i4xQ0zF9HwseXneRt97DpO14F05zgxcKr4DvY1uqV5+6OYO+xOvfctU0yk
+ yF50M750JVVQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 17:47:37 -0700
+IronPort-SDR: QHcPfuhEyFKZBZGjv+AHLb7yD2CX3AfJvttvnBGdLUuD6msGHxR475WDT/GQscKUbvJDThKhXl
+ p/p9QbJDCm7Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,494,1583222400"; 
+   d="scan'208";a="349688773"
+Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.16])
+  by orsmga001.jf.intel.com with ESMTP; 09 Jun 2020 17:47:29 -0700
+Date:   Tue, 9 Jun 2020 20:37:31 -0400
+From:   Yan Zhao <yan.y.zhao@intel.com>
+To:     "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        "cjia@nvidia.com" <cjia@nvidia.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "libvir-list@redhat.com" <libvir-list@redhat.com>,
+        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
+        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
+        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eauger@redhat.com" <eauger@redhat.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "Yang, Ziye" <ziye.yang@intel.com>,
+        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
+        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
+        "aik@ozlabs.ru" <aik@ozlabs.ru>,
+        "felipe@nutanix.com" <felipe@nutanix.com>,
+        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "eskultet@redhat.com" <eskultet@redhat.com>,
+        "Zeng, Xin" <xin.zeng@intel.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "dinechin@redhat.com" <dinechin@redhat.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "Liu, Changpeng" <changpeng.liu@intel.com>,
+        "berrange@redhat.com" <berrange@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
+        "He, Shaopeng" <shaopeng.he@intel.com>
+Subject: Re: [PATCH v5 0/4] introduction of migration_version attribute for
+ VFIO live migration
+Message-ID: <20200610003731.GA13961@joy-OptiPlex-7040>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20200429094844.GE2834@work-vm>
+ <20200430003949.GN12879@joy-OptiPlex-7040>
+ <20200602165527.34137955@x1.home>
+ <20200603031948.GB12300@joy-OptiPlex-7040>
+ <20200602215528.7a1008f0@x1.home>
+ <20200603052443.GC12300@joy-OptiPlex-7040>
+ <20200603102628.017e2896@x1.home>
+ <20200605102224.GB2936@work-vm>
+ <20200605083149.1809e783@x1.home>
+ <20200605143950.GG2897@work-vm>
 MIME-Version: 1.0
-References: <CACK8Z6E0s-Y207sb-AqSHVB7KmhvDgJQFFaz6ijQ_0OS3Qjisw@mail.gmail.com>
- <20200610000400.GA1473845@bjorn-Precision-5520>
-In-Reply-To: <20200610000400.GA1473845@bjorn-Precision-5520>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Tue, 9 Jun 2020 17:30:13 -0700
-Message-ID: <CACK8Z6G3ycsXxuNiihOXiwwAum8=5aOFOshhFa7cEF__+c-v1A@mail.gmail.com>
-Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
- "whitelisted" drivers
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Zubin Mithra <zsm@google.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200605143950.GG2897@work-vm>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 9, 2020 at 5:04 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Tue, Jun 09, 2020 at 04:23:54PM -0700, Rajat Jain wrote:
-> > Hi Bjorn,
-> >
-> > Thanks for sending out the summary, I was about to send it out but got lazy.
-> >
-> > On Tue, Jun 9, 2020 at 2:04 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Fri, Jun 05, 2020 at 03:39:50PM +0100, Dr. David Alan Gilbert wrote:
+> > > > I tried to simplify the problem a bit, but we keep going backwards.  If
+> > > > the requirement is that potentially any source device can migrate to any
+> > > > target device and we cannot provide any means other than writing an
+> > > > opaque source string into a version attribute on the target and
+> > > > evaluating the result to determine compatibility, then we're requiring
+> > > > userspace to do an exhaustive search to find a potential match.  That
+> > > > sucks.   
 > > >
-> > > On Sun, Jun 07, 2020 at 01:36:32PM +0200, Greg Kroah-Hartman wrote:
-> > >
-> > > > Your "problem" I think can be summed up a bit more concise:
-> > > >       - you don't trust kernel drivers to be "secure" for untrusted
-> > > >         devices
-> > > >       - you only want to bind kernel drivers to "internal" devices
-> > > >         automatically as you "trust" drivers in that situation.
-> > > >       - you want to only bind specific kernel drivers that you somehow
-> > > >         feel are "secure" to untrusted devices "outside" of a system
-> > > >         when those devices are added to the system.
-> > > >
-> > > > Is that correct?
-> > > >
-> > > > If so, fine, you can do that today with the bind/unbind ability of
-> > > > drivers, right?  After boot with your "trusted" drivers bound to
-> > > > "internal" devices, turn off autobind of drivers to devices and then
-> > > > manually bind them when you see new devices show up, as those "must" be
-> > > > from external devices (see the bind/unbind files that all drivers export
-> > > > for how to do this, and old lwn.net articles, this feature has been
-> > > > around for a very long time.)
-> > > >
-> > > > I know for USB you can do this, odds are PCI you can turn off
-> > > > autobinding as well, as I think this is a per-bus flag somewhere.  If
-> > > > that's not exported to userspace, should be trivial to do so, should be
-> > > > somewere in the driver model already...
-> > > >
-> > > > Ah, yes, look at the "drivers_autoprobe" and "drivers_probe" files in
-> > > > sysfs for all busses.  Do those not work for you?
-> > > >
-> > > > My other points are the fact that you don't want to put policy in the
-> > > > kernel, and I think that you can do everything you want in userspace
-> > > > today, except maybe the fact that trying to determine what is "inside"
-> > > > and "outside" is not always easy given that most hardware does not
-> > > > export this information properly, if at all.  Go work with the firmware
-> > > > people on that issue please, that would be most helpful for everyone
-> > > > involved to get that finally straightened out.
-> > >
-> > > To sketch this out, my understanding of how this would work is:
-> > >
-> > >   - Expose the PCI pdev->untrusted bit in sysfs.  We don't expose this
-> > >     today, but doing so would be trivial.  I think I would prefer a
-> > >     sysfs name like "external" so it's more descriptive and less of a
-> > >     judgment.
-> >
-> > Yes. I think we should probably semantically differentiate between
-> > "external" and "external facing" devices. Root ports and downstream
-> > ports can be "external facing" but are actually internal devices.
-> > Anything below an "external facing" device is "external". So the sysfs
-> > attribute "external" should be set only for devices that are truly
-> > external.
->
-> Good point; we (maybe you? :)) should fix that edge case.
+hi Alex and Dave,
+do you think it's good for us to put aside physical devices and mdev aggregation
+for the moment, and use Alex's original idea that
 
-Sure, happy to. I will start a fresh conversation about that (in a
-separate thread).
++  Userspace should regard two mdev devices compatible when ALL of below
++  conditions are met:
++  (0) The mdev devices are of the same type
++  (1) success when reading from migration_version attribute of one mdev device.
++  (2) success when writing migration_version string of one mdev device to
++  migration_version attribute of the other mdev device.
 
->
-> > Just a suggestion: Do you think an enum attribute may be better
-> > instead, whose values could be "internal" / "external" /
-> > "external-facing" in case need arises later to distinguish between
-> > them?
->
-> I don't see the need for an enum yet.  Maybe we should add that
-> if/when we do need it?
+and what about adding another sysfs attribute for vendors to put
+recommended migration compatible device type. e.g.
+#cat /sys/bus/pci/devices/0000:00:02.0/mdev_supported_types/i915-GVTg_V5_8/migration_compatible_devices
+parent id: 8086 591d
+mdev_type: i915-GVTg_V5_8
 
-Sure, no problems. (I just wanted to slip the thought into the
-conversation as UAPI is hard to change later).
+vendors are free to define the format and conent of this migration_compatible_devices
+and it's even not to be a full list.
 
->
-> > >   - Early userspace code prevents modular drivers from automatically
-> > >     binding to PCI devices:
-> > >
-> > >       echo 0 > /sys/bus/pci/drivers_autoprobe
-> >
-> > Yes.
-> > I believe this setting will apply it equally to both modular and
-> > statically linked drivers?
->
-> Yes.  The test is in bus_probe_device(), and it does the same for both
-> modular and statically linked drivers.
->
-> But for statically linked drivers, it only prevents them from binding
-> to *hot-added* devices.  They will claim devices present at boot even
-> before userspace code can run.
+before libvirt or user to do live migration, they have to read and test
+migration_version attributes of src/target devices to check migration compatibility.
 
-Yes, understood.
+Thanks
+Yan
 
->
-> > The one thing that still needs more thought is how about the
-> > "pcieport" driver that enumerates the PCI bridges. I'm unsure if it
-> > needs to be whitelisted for further enumeration downstream. What do
-> > you think?
->
-> The pcieport driver is required for AER, PCIe native hotplug, PME,
-> etc., and it cannot be a module, so the whitelist wouldn't apply to
-> it.
 
-Not that I see the need, but slight clarification needed just to make
-sure I understand it clearly:
-
-Since pcieport driver is statically compiled in, AER, pciehp, PME, DPC
-etc will always be enabled for devices plugged in during boot. But I
-can still choose to choose to allow or deny for devices added *after
-boot* using the whitelist, right?
-
-Also, denying pcieport driver for hot-added PCIe bridges only disables
-these pcieport services on those bridges, but device enumeration
-further downstream those bridges is not an issue?
-
-> I assume you need hotplug support, so you would have pcieport
-> enabled and built in statically.
->
-> If you're using ACPI hotplug, that doesn't require pcieport.
-
-Thank you, this was indeed a long and useful thread :-)
-
-Best Regards,
-
-Rajat
+> > > Why is the mechanism a 'write and test' why isn't it a 'write and ask'?
+> > > i.e. the destination tells the driver what type it's received from the
+> > > source, and the driver replies with a set of compatible configurations
+> > > (in some preferred order).
+> > 
+> > A 'write and ask' interface would imply some sort of session in order
+> > to not be racy with concurrent users.  More likely this would imply an
+> > ioctl interface, which I don't think we have in sysfs.  Where do we
+> > host this ioctl?
+> 
+> Or one fd?
+>   f=open()
+>   write(f, "The ID I want")
+>   do {
+>      read(f, ...)  -> The IDs we're offering that are compatible
+>   } while (!eof)
+> 
+> > > It's also not clear to me why the name has to be that opaque;
+> > > I agree it's only got to be understood by the driver but that doesn't
+> > > seem to be a reason for the driver to make it purposely obfuscated.
+> > > I wouldn't expect a user to be able to parse it necessarily; but would
+> > > expect something that would be useful for an error message.
+> > 
+> > If the name is not opaque, then we're going to rat hole on the format
+> > and the fields and evolving that format for every feature a vendor
+> > decides they want the user to be able to parse out of the version
+> > string.  Then we require a full specification of the string in order
+> > that it be parsed according to a standard such that we don't break
+> > users inferring features in subtly different ways.
+> > 
+> > This is a lot like the problems with mdev description attributes,
+> > libvirt complains they can't use description because there's no
+> > standard formatting, but even with two vendors describing the same class
+> > of device we don't have an agreed set of things to expose in the
+> > description attribute.  Thanks,
+> 
+> I'm not suggesting anything in anyway machine parsable; just something
+> human readable that you can present in a menu/choice/configuration/error
+> message.  The text would be down to the vendor, and I'd suggest it start
+> with the vendor name just as a disambiguator and to make it obvious when
+> we get it grossly wrong.
+> 
+> Dave
+> 
+> > Alex
+> --
+> Dr. David Alan Gilbert / dgilbert@redhat.com / Manchester, UK
+> 
+> _______________________________________________
+> intel-gvt-dev mailing list
+> intel-gvt-dev@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/intel-gvt-dev
