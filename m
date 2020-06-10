@@ -2,97 +2,98 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27BC6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F94AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08CF520656
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:50:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591818616;
-	bh=0CHPkKwBy/H0ULej4YXT7H5HcykHkXz+vPYoHSq6hOk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KEgL0NSIvemYlEJVu5YPFYlb1TUbiDDEPSuTIEG5cwE0naV8ASx/nFVqgE7aXobYe
-	 oWRz73XPumnuMmYhBBUivR4WvjkVoU/pFN8rY5wTMfzWrDd4/OHmrYw98m1l1UF1xE
-	 MS9WjS2PuSwbIolnaXAVdfhQEVctiaVoOBZLjPYc=
+	by mail.kernel.org (Postfix) with ESMTP id 1AEC620656
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:53:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h8JQPbsb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730357AbgFJTuO (ORCPT
+        id S1727884AbgFJTxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 15:50:14 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45905 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730085AbgFJTuM (ORCPT
+        Wed, 10 Jun 2020 15:53:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57360 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727773AbgFJTxs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 15:50:12 -0400
-Received: by mail-io1-f68.google.com with SMTP id y5so3659115iob.12;
-        Wed, 10 Jun 2020 12:50:12 -0700 (PDT)
+        Wed, 10 Jun 2020 15:53:48 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF585C03E96B
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 12:53:47 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id p20so3673533iop.11
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 12:53:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=O7/TXfQZ+QnJiUEUdXBEq+AyXg2ISr3BLixo9khgkNk=;
+        b=h8JQPbsbyoHWB2WjYedvvxIu3PJTMuBU2jVyhL4S1VpuhuiyVsHrVa+hkbVVJ2dkCb
+         84dUHwmLQ7+Lm2npW9DNjosCPg+h/syEzBmIA3pbXy478Oes03vPm3ylkhvG+vxjTcU2
+         Z9sNOJzhP+FHSyndzewU/AhVy0+EnPnO709/Dvk80GSuCZdXaf/VkP8mmt991AKEpCP/
+         vlfNJTjQqqzB8ORXCbHgSPN/kwXoP/KqGvvs9rh0IgRgh0TOdiFGujNE15my9X06/PV6
+         Z1ZLCpAWbGKLtQweD4e29VFcQQOssH1S2gLtEITECZrkCyu7yQUPmleWbWbql01VahXK
+         y0yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=1M+bkyx1XWH7KVWinjgxEZPKQ01wy/6i2E3dZnftVyk=;
-        b=ZzEpRxML6tWtIm/jZFALrpgYbkBDWNFWtV7yavAziDp5urDmFSFIyIJfAN79wmPAnb
-         0XKkClI/aMh9hqv9dEzUdDkme6XUZNAsoojRj8acj+G32r/9V5i0yPwkv3VN6eYevlVZ
-         PecbQwzv1ksetHFEcIW8QjjpLijjhp6+y6viksPAQS5oz9gYnXoxrYvqnRZqpu0MONa/
-         ep42rS7g0qVqNR1IwTYAhGBpWWhm4KMWE18xM6GtMSHN094SnRjkAsfEJePn87bNejJe
-         1R8Mg/7B1fc4tSdooctoH2vv1d0dY5zZiLJRhJ9gi1HzTLtRFAPiOxLlxPhclBhW8GVn
-         MYdw==
-X-Gm-Message-State: AOAM5307H4vlOJYqmy2Yx1uqKOMYwgvsI15J7M4UGzl+1ulnQR8Q8Wll
-        FrMQvArNYAxfEoaj4T7Xww==
-X-Google-Smtp-Source: ABdhPJwRvh/ZDpjvs6OY941xd3Y3JedADa0np5Xq47sS8wJemJewWQcJKW2EHSGQVFQz2QSMIpkUzg==
-X-Received: by 2002:a6b:249:: with SMTP id 70mr4950251ioc.146.1591818610318;
-        Wed, 10 Jun 2020 12:50:10 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id n12sm399848iog.25.2020.06.10.12.50.08
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=O7/TXfQZ+QnJiUEUdXBEq+AyXg2ISr3BLixo9khgkNk=;
+        b=D0TE6HlglO3vkEYFOg6CAqNhV5sHzw8fkFoRUthrK8tQ7EMn2qDccWkvEwPpG8W5iQ
+         ZcxOjCWewj9Fn+g0pH0E99v3eqIz0Jev7kC+6W4IDfI+3rqBYraj5V9vwCyOQIxRlLQp
+         6gZvmITn7pAGh0ROhF/uumQuohaB78JaNUE6Q73E1FaQVZU3S5Fj/6khG7oRphwlWe+u
+         8fBFkI28+0ZxwwefC06XjkSjZeSFkUXxA17zB3UZBX7kiB8hoN+OVBw0AGY72cpLNkIO
+         IbaOp/C1vhlG+/fAdchSOFjMeZJawHheoYl4uytol3/feBAt/aMCz4Lyqv/lNjkg7QAu
+         yIwg==
+X-Gm-Message-State: AOAM5310VCHIrnvECMLHGCGuBUwxw4shV46Ui7q9l//zbS8H8gXulco9
+        HicuDCsU12YFiRfqRe1Fc7+L5w==
+X-Google-Smtp-Source: ABdhPJy6JWIFDBX/oG+bShtNLcHYuInCmW4DpTZXDTg/DHaZKUZGnJyPYPT79FJPZnUuQHFZQogh7A==
+X-Received: by 2002:a5e:dd0a:: with SMTP id t10mr5148449iop.9.1591818827078;
+        Wed, 10 Jun 2020 12:53:47 -0700 (PDT)
+Received: from presto.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.gmail.com with ESMTPSA id r10sm408828ile.36.2020.06.10.12.53.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 12:50:09 -0700 (PDT)
-Received: (nullmailer pid 3606732 invoked by uid 1000);
-        Wed, 10 Jun 2020 19:50:07 -0000
-Date:   Wed, 10 Jun 2020 13:50:07 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>
-Cc:     rick.tyliu@ingenic.com, dongsheng.qiu@ingenic.com,
-        zhenwenjin@gmail.com, aric.pzqi@ingenic.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        yanfei.li@ingenic.com, tsbogend@alpha.franken.de,
-        paul@crapouillou.net, sernia.zhou@foxmail.com,
-        linux-mips@vger.kernel.org, robh+dt@kernel.org
-Subject: Re: [PATCH v2 1/1] dt-bindings: MIPS: Document Ingenic SoCs binding.
-Message-ID: <20200610195007.GA3606682@bogus>
-References: <20200602183354.39707-1-zhouyanjie@wanyeetech.com>
- <20200602183354.39707-2-zhouyanjie@wanyeetech.com>
+        Wed, 10 Jun 2020 12:53:46 -0700 (PDT)
+From:   Alex Elder <elder@linaro.org>
+To:     davem@davemloft.net, kuba@kernel.org
+Cc:     evgreen@chromium.org, subashab@codeaurora.org,
+        cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net 0/5] net: ipa: endpoint configuration fixes
+Date:   Wed, 10 Jun 2020 14:53:27 -0500
+Message-Id: <20200610195332.2612233-1-elder@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200602183354.39707-2-zhouyanjie@wanyeetech.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 03 Jun 2020 02:33:54 +0800, 周琰杰 (Zhou Yanjie) wrote:
-> Document the available properties for the SoC root node and the
-> CPU nodes of the devicetree for the Ingenic XBurst SoCs.
-> 
-> Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
-> Tested-by: Paul Boddie <paul@boddie.org.uk>
-> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-> ---
-> 
-> Notes:
->     v1->v2:
->     1.Remove unnecessary "items".
->     2.Add "clocks" as suggested by Paul Cercueil.
-> 
->  .../bindings/mips/ingenic/ingenic,cpu.yaml         | 67 ++++++++++++++++++++++
->  1 file changed, 67 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
-> 
+This series fixes four bugs in the configuration of IPA endpoints.
+See the description of each for more information.  The last patch
+changes a BUILD_BUG_ON() call into a runtime warning, because
+violating the checked condition does not consitute a real bug.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+					-Alex
+
+Alex Elder (5):
+  net: ipa: program metadata mask differently
+  net: ipa: fix modem LAN RX endpoint id
+  net: ipa: program upper nibbles of sequencer type
+  net: ipa: header pad field only valid for AP->modem endpoint
+  net: ipa: warn if gsi_trans structure is too big
+
+ drivers/net/ipa/ipa_data-sc7180.c |  2 +-
+ drivers/net/ipa/ipa_endpoint.c    | 97 ++++++++++++++++++-------------
+ drivers/net/ipa/ipa_main.c        |  7 ++-
+ drivers/net/ipa/ipa_reg.h         |  2 +
+ 4 files changed, 65 insertions(+), 43 deletions(-)
+
+-- 
+2.25.1
+
