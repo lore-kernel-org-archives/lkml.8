@@ -2,269 +2,105 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 716F0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8629DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:50:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A84D20734
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 588902076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:50:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="N/gZK7ru"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726105AbgFJBtc (ORCPT
+        id S1726127AbgFJBuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 21:49:32 -0400
-Received: from mga02.intel.com ([134.134.136.20]:10602 "EHLO mga02.intel.com"
+        Tue, 9 Jun 2020 21:50:01 -0400
+Received: from ozlabs.org ([203.11.71.1]:53073 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725944AbgFJBtc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 21:49:32 -0400
-IronPort-SDR: XMFm2SxKSaSsZ1omAUHnM8rO+0teZvhdE3vLOGb202AQeIBKwIvkYfpi//dAiZmtKUIk2/5njx
- rDEdepoS+RDA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 18:49:31 -0700
-IronPort-SDR: 7IE9Xm1dr2r/7B0uXaUz4X2dz2o/donAdiUVE/ylTM3suFOnZNDQUqaZsfmRhXj0mcx2sJ+5Qp
- Som0PwdGL7/g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,494,1583222400"; 
-   d="scan'208";a="314359275"
-Received: from shao2-debian.sh.intel.com (HELO [10.239.13.3]) ([10.239.13.3])
-  by FMSMGA003.fm.intel.com with ESMTP; 09 Jun 2020 18:49:29 -0700
-Subject: Re: [kbuild-all] Re: gcc-5: error: -gz is not supported in this
- configuration
-To:     Fangrui Song <maskray@google.com>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        kernel test robot <lkp@intel.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        kbuild-all@lists.01.org, LKML <linux-kernel@vger.kernel.org>
-References: <202006092115.nevT7m8D%lkp@intel.com>
- <CAKwvOd=jjFS7XOWyYMZgLTYJtZ7uc=4dP-S4VhuyjNmT=2EcPw@mail.gmail.com>
- <20200609174954.cckelwl6etwztmhv@google.com>
- <05c88916-7d91-ad1a-1ea6-15167a994a0b@intel.com>
- <20200610005830.s6gus7r3umwgzozk@google.com>
-From:   Rong Chen <rong.a.chen@intel.com>
-Message-ID: <c2c2c2db-439f-5c60-068d-e53adbe960c1@intel.com>
-Date:   Wed, 10 Jun 2020 09:49:01 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1725944AbgFJBuA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 21:50:00 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49hVKx341vz9sRh;
+        Wed, 10 Jun 2020 11:49:57 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591753798;
+        bh=JcCB3Jwjs8Ym9pdEb48PmqG0PTcVsLFh5SQbcLiEZG4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=N/gZK7ruVgtDgJ0nOuefiQ5U2Ck0OEQCiRy2MIXwZnhvICr4YvK9bSlE+3zU3yRFh
+         Ss4LqJgbKS1ddNB2S6rspzBM9JB0DsLcS337rEwgAtTkbTLSHnuoqOwtr/i5A7RhHB
+         Pea8BBxSNaXSK+4nwvMcshuVJcJJm7N7JdHDRUXpPJwmhjfdUUGJca3ZueLpWy69ki
+         EYcgcTezXmGYl9Kha0n/lhF91kXMUNnYBx9hhyoVkqG5J1EJJ7XCCQMKNMA60fYCf/
+         DUl48NXmcW3EBruMF9Aq0LbKkRWytdRKgCU32AvQYmGogmQwX1mcfKhMyDPMsQK2cm
+         LwNybSOixN1vA==
+Date:   Wed, 10 Jun 2020 11:49:56 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Will Deacon <will@kernel.org>
+Subject: linux-next: manual merge of the tip tree with Linus' tree
+Message-ID: <20200610114956.0b41e116@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200610005830.s6gus7r3umwgzozk@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: multipart/signed; boundary="Sig_/DPYlI0_cVmDRVpYEDWyT+Sl";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/DPYlI0_cVmDRVpYEDWyT+Sl
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 6/10/20 8:58 AM, Fangrui Song wrote:
-> On 2020-06-10, Rong Chen wrote:
->>
->>
->> On 6/10/20 1:49 AM, Fangrui Song wrote:
->>> On 2020-06-09, Nick Desaulniers wrote:
->>>> On Tue, Jun 9, 2020 at 6:12 AM kernel test robot <lkp@intel.com> 
->>>> wrote:
->>>>>
->>>>> tree: 
->>>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 
->>>>> master
->>>>> head:   abfbb29297c27e3f101f348dc9e467b0fe70f919
->>>>> commit: 10e68b02c861ccf2b3adb59d3f0c10dc6b5e3ace Makefile: support 
->>>>> compressed debug info
->>>>> date:   12 days ago
->>>>> config: x86_64-randconfig-r032-20200609 (attached as .config)
->>>>> compiler: gcc-5 (Ubuntu 5.5.0-12ubuntu1) 5.5.0 20171010
->>>>> reproduce (this is a W=1 build):
->>>>>         git checkout 10e68b02c861ccf2b3adb59d3f0c10dc6b5e3ace
->>>>>         # save the attached .config to linux build tree
->>>>>         make W=1 ARCH=x86_64
->>>>>
->>>>> If you fix the issue, kindly add following tag as appropriate
->>>>> Reported-by: kernel test robot <lkp@intel.com>
->>>>>
->>>>> All errors (new ones prefixed by >>, old ones prefixed by <<):
->>>>>
->>>>>>> gcc-5: error: -gz is not supported in this configuration
->>>>
->>>> Hmm...I wonder if the feature detection is incomplete?  I suspect it's
->>>> possible to not depend on zlib.
->>>>
->>>>> make[2]: *** [scripts/Makefile.build:277: scripts/mod/empty.o] 
->>>>> Error 1
->>>>> make[2]: Target '__build' not remade because of errors.
->>>>> make[1]: *** [Makefile:1169: prepare0] Error 2
->>>>> make[1]: Target 'prepare' not remade because of errors.
->>>>> make: *** [Makefile:185: __sub-make] Error 2
->>>
->>> The output of gcc-5 -v --version on that machine may help. The
->>> convoluted gcc_cv_ld_compress_de logic in gcc/configure.ac may be
->>> related, but I can't find any mistake that our
->>> CONFIG_DEBUG_INFO_COMPRESSED conditions may make.
->>
->> Hi Fangrui,
->>
->> Here is the output:
->>
->> $gcc-5 -v --version
->> Using built-in specs.
->> COLLECT_GCC=gcc-5
->> COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/5/lto-wrapper
->> gcc-5 (Ubuntu 5.5.0-12ubuntu1) 5.5.0 20171010
->> Copyright (C) 2015 Free Software Foundation, Inc.
->> This is free software; see the source for copying conditions. There 
->> is NO
->> warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR 
->> PURPOSE.
->>
->>
->> Target: x86_64-linux-gnu
->> Configured with: ../src/configure -v --with-pkgversion='Ubuntu 
->> 5.5.0-12ubuntu1' 
->> --with-bugurl=file:///usr/share/doc/gcc-5/README.Bugs 
->> --enable-languages=c,ada,c++,go,d,fortran,objc,obj-c++ --prefix=/usr 
->> --program-suffix=-5 --enable-shared --enable-linker-build-id 
->> --libexecdir=/usr/lib --without-included-gettext 
->> --enable-threads=posix --libdir=/usr/lib --enable-nls 
->> --with-sysroot=/ --enable-clocale=gnu --enable-libstdcxx-debug 
->> --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new 
->> --enable-gnu-unique-object --disable-vtable-verify --enable-libmpx 
->> --enable-plugin --enable-default-pie --with-system-zlib 
->> --enable-objc-gc --enable-multiarch --disable-werror 
->> --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 
->> --enable-multilib --with-tune=generic --enable-checking=release 
->> --build=x86_64-linux-gnu --host=x86_64-linux-gnu 
->> --target=x86_64-linux-gnu
->> Thread model: posix
->> gcc version 5.5.0 20171010 (Ubuntu 5.5.0-12ubuntu1)
->> COLLECT_GCC_OPTIONS='-v' '--version' '-mtune=generic' '-march=x86-64'
->>  /usr/lib/gcc/x86_64-linux-gnu/5/cc1 -quiet -v -imultiarch 
->> x86_64-linux-gnu help-dummy -quiet -dumpbase help-dummy 
->> -mtune=generic -march=x86-64 -auxbase help-dummy -version --version 
->> -fstack-protector-strong -Wformat -Wformat-security -o /tmp/ccqnZumV.s
->> GNU C11 (Ubuntu 5.5.0-12ubuntu1) version 5.5.0 20171010 
->> (x86_64-linux-gnu)
->>         compiled by GNU C version 5.5.0 20171010, GMP version 6.1.2, 
->> MPFR version 4.0.1, MPC version 1.1.0
->> warning: MPFR header version 4.0.1 differs from library version 4.0.2.
->> GGC heuristics: --param ggc-min-expand=100 --param 
->> ggc-min-heapsize=131072
->> COLLECT_GCC_OPTIONS='-v' '--version' '-mtune=generic' '-march=x86-64'
->>  as -v --64 --version -o /tmp/ccRPgs9J.o /tmp/ccqnZumV.s
->> GNU assembler version 2.34 (x86_64-linux-gnu) using BFD version (GNU 
->> Binutils for Ubuntu) 2.34
->> GNU assembler (GNU Binutils for Ubuntu) 2.34
->> Copyright (C) 2020 Free Software Foundation, Inc.
->> This program is free software; you may redistribute it under the 
->> terms of
->> the GNU General Public License version 3 or later.
->> This program has absolutely no warranty.
->> This assembler was configured for a target of `x86_64-linux-gnu'.
->> COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/ 
->>
->> LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/5/../../../:/lib/:/usr/lib/ 
->>
->> COLLECT_GCC_OPTIONS='-v' '--version' '-mtune=generic' '-march=x86-64'
->>  /usr/lib/gcc/x86_64-linux-gnu/5/collect2 -plugin 
->> /usr/lib/gcc/x86_64-linux-gnu/5/liblto_plugin.so 
->> -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/5/lto-wrapper 
->> -plugin-opt=-fresolution=/tmp/ccJLhs3y.res 
->> -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s 
->> -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc 
->> -plugin-opt=-pass-through=-lgcc_s --sysroot=/ --build-id 
->> --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed 
->> -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro 
->> --version 
->> /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/Scrt1.o 
->> /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crti.o 
->> /usr/lib/gcc/x86_64-linux-gnu/5/crtbeginS.o 
->> -L/usr/lib/gcc/x86_64-linux-gnu/5 
->> -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu 
->> -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib 
->> -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu 
->> -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/5/../../.. 
->> /tmp/ccRPgs9J.o -lgcc --push-state --as-needed -lgcc_s --pop-state 
->> -lc -lgcc --push-state --as-needed -lgcc_s --pop-state 
->> /usr/lib/gcc/x86_64-linux-gnu/5/crtend.o 
->> /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crtn.o
->> collect2 version 5.5.0 20171010
->> /usr/bin/ld -plugin /usr/lib/gcc/x86_64-linux-gnu/5/liblto_plugin.so 
->> -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/5/lto-wrapper 
->> -plugin-opt=-fresolution=/tmp/ccJLhs3y.res 
->> -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s 
->> -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc 
->> -plugin-opt=-pass-through=-lgcc_s --sysroot=/ --build-id 
->> --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed 
->> -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro 
->> --version 
->> /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/Scrt1.o 
->> /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crti.o 
->> /usr/lib/gcc/x86_64-linux-gnu/5/crtbeginS.o 
->> -L/usr/lib/gcc/x86_64-linux-gnu/5 
->> -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu 
->> -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib 
->> -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu 
->> -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/5/../../.. 
->> /tmp/ccRPgs9J.o -lgcc --push-state --as-needed -lgcc_s --pop-state 
->> -lc -lgcc --push-state --as-needed -lgcc_s --pop-state 
->> /usr/lib/gcc/x86_64-linux-gnu/5/crtend.o 
->> /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crtn.o
->> GNU ld (GNU Binutils for Ubuntu) 2.34
->> Copyright (C) 2020 Free Software Foundation, Inc.
->> This program is free software; you may redistribute it under the 
->> terms of
->> the GNU General Public License version 3 or (at your option) a later 
->> version.
->> This program has absolutely no warranty.
->>
->> Best Regards,
->> Rong Chen
->
-> Hi Rong,
->
-> binutils (both GNU as and GNU ld) is new. It oughts to support
-> --compress-debug-sections=zlib . The failure looks strange to me.
->
-> Can you extract the gcc-5 command line building scripts/mod/empty.o
-> and run it manually? 
+Today's linux-next merge of the tip tree got a conflict in:
 
-$ gcc-5 -Wp,-MMD,scripts/mod/.empty.o.d  -nostdinc -isystem 
-/usr/lib/gcc/x86_64-linux-gnu/5/include -I./arch/x86/include 
--I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi 
--I./arch/x86/include/generated/uapi -I./include/uapi 
--I./include/generated/uapi -include ./include/linux/kconfig.h -include 
-./include/linux/compiler_types.h -D__KERNEL__ -Wall -Wundef 
--Werror=strict-prototypes -Wno-trigraphs -fno-strict-aliasing 
--fno-common -fshort-wchar -fno-PIE -Werror=implicit-function-declaration 
--Werror=implicit-int -Wno-format-security -std=gnu89 -mno-sse -mno-mmx 
--mno-sse2 -mno-3dnow -mno-avx -m64 -falign-jumps=1 -falign-loops=1 
--mno-80387 -mno-fp-ret-in-387 -mpreferred-stack-boundary=3 
--mskip-rax-setup -mtune=generic -mno-red-zone -mcmodel=kernel 
--DCONFIG_X86_X32_ABI -Wno-sign-compare -fno-asynchronous-unwind-tables 
--mindirect-branch=thunk-extern -mindirect-branch-register 
--fno-jump-tables -fno-delete-null-pointer-checks -Os 
---param=allow-store-data-races=0 -Wframe-larger-than=2048 
--fstack-protector-strong -Wno-unused-but-set-variable 
--fno-omit-frame-pointer -fno-optimize-sibling-calls 
--fno-var-tracking-assignments -g -gdwarf-4 -femit-struct-debug-baseonly 
--fno-var-tracking -gz=zlib -Wdeclaration-after-statement -Wvla 
--Wno-pointer-sign -DKBUILD_MODFILE='"scripts/mod/empty"' 
--DKBUILD_BASENAME='"empty"' -DKBUILD_MODNAME='"empty"' -c -o 
-scripts/mod/empty.o scripts/mod/empty.c
-gcc-5: error: -gz is not supported in this configuration
+  arch/sparc/include/asm/pgtable_32.h
 
-> Also run gcc-5 -g -gz=zlib a.c -c on a trivial file and check whether 
-> `readelf -WS a.o`
-> has the section flag C ("compressed").
+because commits
 
-$ gcc-5 -g -gz=zlib a.c -c
-gcc-5: error: -gz is not supported in this configuration
+  3408974d0533 ("sparc32: mm: Restructure sparc32 MMU page-table layout")
+  c95be5b549d6 ("sparc32: mm: Change pgtable_t type to pte_t * instead of s=
+truct page *")
 
-and no a.o generated.
+from the tip tree also exist in Linus' tree as different commits followed
+by other changes.
 
-Best Regards,
-Rong Chen
+I fixed it up (I just used Linus' version) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/DPYlI0_cVmDRVpYEDWyT+Sl
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7gPEQACgkQAVBC80lX
+0GxVmQf9GlMYcfn4vfP4aZkeiG7V4H5Y7U9wH6paRhF5hB2N4pvq17HWsSBwDqNs
+EOmkl9Myf9Vi5Nwdw40C/vVdyPNm9Cv6eOxnj3YZPk9QtIkWkzZu9l/TG8MGnl2o
+N6+UBgbkrP8UT0wlPUvCVKBV9J1i6/FFefDlDaeq+IFe10jzfN6r1SlmZdsu39uL
+9gustVHb56sd+VUZGjFoucgi/YlyW1kwx8gc+uk15BB3+ovRRZ24cTvum678tJxF
+Gh0gQeNEb+pHLawYbARYum4M/6fSW1LpVoAczXwllnaWqchTseWJztyCptfnnSZO
+Htq6InXiQVJyMA39+WKvqlsepwomhA==
+=uERo
+-----END PGP SIGNATURE-----
+
+--Sig_/DPYlI0_cVmDRVpYEDWyT+Sl--
