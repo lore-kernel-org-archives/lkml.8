@@ -2,52 +2,113 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 837B8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE26C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 658DB20829
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:14:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A6B220829
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:15:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bdKFjNSW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgFJHOP (ORCPT
+        id S1726451AbgFJHO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 03:14:15 -0400
-Received: from verein.lst.de ([213.95.11.211]:45715 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726276AbgFJHOO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 03:14:14 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id ADF4A68AEF; Wed, 10 Jun 2020 09:14:10 +0200 (CEST)
-Date:   Wed, 10 Jun 2020 09:14:10 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     David Rientjes <rientjes@google.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>,
-        alsa-devel@alsa-project.org, bp@alien8.de, hch@infradead.org,
-        hpa@zytor.com, linux-kernel@vger.kernel.org, mingo@redhat.com,
-        Pavel Machek <pavel@ucw.cz>, perex@perex.cz,
-        tglx@linutronix.de, tiwai@suse.com, x86@kernel.org
-Subject: Re: next-0519 on thinkpad x60: sound related? window manager crash
-Message-ID: <20200610071410.GD1397@lst.de>
-References: <20200520111136.GA3802@amd> <1591545088.74ii116nf2.none@localhost> <20200608061950.GA17476@lst.de> <1591624340.z01ejtod28.none@localhost> <alpine.DEB.2.22.394.2006081928070.148886@chino.kir.corp.google.com> <20200609054306.GA9606@lst.de> <alpine.DEB.2.22.394.2006092213110.154443@chino.kir.corp.google.com>
+        Wed, 10 Jun 2020 03:14:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52658 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbgFJHO6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 03:14:58 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1431CC03E96B;
+        Wed, 10 Jun 2020 00:14:57 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id v24so614920plo.6;
+        Wed, 10 Jun 2020 00:14:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RQFi+lcF05CW4Ej031KV81/AVIbBtZMykD/fLL3QP5Y=;
+        b=bdKFjNSWC2yCB1RKei6u4m0vXXlkskpgU+WnywsEAkV95t09Oj0xHI6WJUTqGriyb7
+         Q+EKTxRFjo4dWUwcP1GlBX5ORj/+XYgaNalxQH0rr2fVfYe+PlZ+SpVfVu0w3wnPL0Dw
+         +Wj9ixr9/nqzWyZ8ijFC4hiO11RnAC5j/mzAzXlJoZzG2pcMORtzVAkD6bMGNZprBrdX
+         5bJFjQeLMb6QOIsGelnjJNrL3+fSgFni1jv+v3xG06p+V84P/dVpFoY/v2StxjGDYhAI
+         s2Vmr8n18JrIjgoY3c55ICVA0Y4Nulz49uMnLMffBiiwEP6K+Txj3L4MOWD/zoXdf2hC
+         XOkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RQFi+lcF05CW4Ej031KV81/AVIbBtZMykD/fLL3QP5Y=;
+        b=MmEtbGF+x9gvt7dNLW4x/mA2Y+YVze6M53iQ/8/6tYPnHk0YGJHcJ9L8vW8d/H6GfJ
+         KDjNUQnG8z6enfcMcmLOlt21q2QCsik4px56uQzgRddJku7uU5G6/O5dU6azLZW6Gb2S
+         G1KxT+EuM1Kj8uzQf4h66iojhZbYmfl94vMvXC+0w6h4CJ6X2BODjt2DBWDCfImI4C1Q
+         beWiZJkf2Tmr4TLDRz7K9EKOusUUAywKPms4Fp38Q5e0o/DzNLxmxJchjZwLFVrvydop
+         C2pIFrShz2FRtCe/rJktv8Gxh9AnDj1a3URN4FLwGwegHOurszZP/RAr6Z4JHHV/zxqv
+         Ysiw==
+X-Gm-Message-State: AOAM530lHPIfxkGkCUCwvawkDzZON1VAYUiTf6WqQzje2pFvLXlOmvta
+        f77nMc2VyZ0MsaPp6gILVRrGwrFF
+X-Google-Smtp-Source: ABdhPJxSIMHQUf8whPid8rW0EXwUfsfiMwZB6P1NTcxs2GVG4+xTOFaA56N8Uqefh7HHE+EFLV6XnQ==
+X-Received: by 2002:a17:902:a585:: with SMTP id az5mr1838022plb.207.1591773296946;
+        Wed, 10 Jun 2020 00:14:56 -0700 (PDT)
+Received: from ZB-PF114XEA.360buyad.local ([103.90.76.242])
+        by smtp.gmail.com with ESMTPSA id q92sm4455003pjh.12.2020.06.10.00.14.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2020 00:14:56 -0700 (PDT)
+From:   Zhenzhong Duan <zhenzhong.duan@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org
+Cc:     ardb@kernel.org, nivedita@alum.mit.edu, keescook@chromium.org,
+        mingo@kernel.org, Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Subject: [PATCH] efi/libstub: Fix build error with libstub
+Date:   Wed, 10 Jun 2020 15:14:46 +0800
+Message-Id: <20200610071446.3737-1-zhenzhong.duan@gmail.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.22.394.2006092213110.154443@chino.kir.corp.google.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 10:26:45PM -0700, David Rientjes wrote:
-> If this option should not implicitly be set for DMA_COHERENT_POOL, then I 
-> assume we need yet another Kconfig option since DMA_REMAP selected it 
-> before and DMA_COHERENT_POOL selects DMA_REMAP :)
+Got below error during build:
 
-Yes, but what do we actually need DMA_REMAP for just for the coherent
-pool?  We shuldn't really remap anything for AMD-SEV.  Sorry for not
-noticing this earlier.
+  In file included from drivers/firmware/efi/libstub/efi-stub-helper.c:16:0:
+  drivers/firmware/efi/libstub/efi-stub-helper.c: In function ‘efi_char16_puts’:
+  arch/x86/include/asm/efi.h:355:3: sorry, unimplemented: ms_abi attribute requires -maccumulate-outgoing-args or subtarget optimization implying it
+     : __efi64_thunk_map(inst, func, inst, ##__VA_ARGS__))
+     ^
+  drivers/firmware/efi/libstub/efi-stub-helper.c:37:2: note: in expansion of macro ‘efi_call_proto’
+    efi_call_proto(efi_table_attr(efi_system_table, con_out),
+    ^
+  drivers/firmware/efi/libstub/efi-stub-helper.c:37: confused by earlier errors, bailing out
+
+Fix it by adding -maccumulate-outgoing-args for efi libstub build
+as suggested by gcc.
+
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+---
+ drivers/firmware/efi/libstub/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+index cce4a74..25e5d02 100644
+--- a/drivers/firmware/efi/libstub/Makefile
++++ b/drivers/firmware/efi/libstub/Makefile
+@@ -6,7 +6,7 @@
+ # enabled, even if doing so doesn't break the build.
+ #
+ cflags-$(CONFIG_X86_32)		:= -march=i386
+-cflags-$(CONFIG_X86_64)		:= -mcmodel=small
++cflags-$(CONFIG_X86_64)		:= -mcmodel=small -maccumulate-outgoing-args
+ cflags-$(CONFIG_X86)		+= -m$(BITS) -D__KERNEL__ \
+ 				   -fPIC -fno-strict-aliasing -mno-red-zone \
+ 				   -mno-mmx -mno-sse -fshort-wchar \
+-- 
+1.8.3.1
+
