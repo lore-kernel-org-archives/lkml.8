@@ -2,142 +2,112 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F1A0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91612C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 161262072F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:53:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HPcjkcyz"
+	by mail.kernel.org (Postfix) with ESMTP id 5BC21207C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:53:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591800834;
+	bh=TC73ZRDSuoUg0mbgkZG8iBdzAr9faRcRABDM7yMly28=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xKuyGAlF4xALKhQsU6o/mIECgj5/q0u7Y4pVSofuOXCBQkeYjtEjDRu04hl2RnMcV
+	 Zpf6qpHVE2+xuCBau5G//i4Bnb6TfITt+JENfheHdgqD1HKbE2eeDFbort/pMiu1nL
+	 gTSsTin/QNUXrJa8ICtLQoBa0WHpRKzsIPAqoWTY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729938AbgFJOxr (ORCPT
+        id S1729959AbgFJOxx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 10:53:47 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43483 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726943AbgFJOxq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 10:53:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591800824;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=SEnQxAW9uQsVBSiEtzbPpC8TpA8ftH1ryZnX+gay5Vs=;
-        b=HPcjkcyzbx35eWQpX4w1b6WI3AZDGWFZ7D//ctGuUX1RHUxNa0mVpI1I8p3sy3nCPXXxrA
-        MTddUbxvz/4fcYw3HB86G8OfBxv3vjKB6ZSWmNuo8ABugU7FxkGCM3VWS4PBUSeefFW2t9
-        K1Ss4CpnoNOT2bbS6hN06SIGjtH9EwM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-249-flirENk-PkmWukFoCP548w-1; Wed, 10 Jun 2020 10:53:43 -0400
-X-MC-Unique: flirENk-PkmWukFoCP548w-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 10 Jun 2020 10:53:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43824 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726943AbgFJOxu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 10:53:50 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 79F9318A4176;
-        Wed, 10 Jun 2020 14:53:10 +0000 (UTC)
-Received: from gondolin (ovpn-112-196.ams2.redhat.com [10.36.112.196])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6CFB75C296;
-        Wed, 10 Jun 2020 14:53:08 +0000 (UTC)
-Date:   Wed, 10 Jun 2020 16:53:05 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, pasic@linux.ibm.com,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, mst@redhat.com,
-        jasowang@redhat.com, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH] s390: protvirt: virtio: Refuse device without IOMMU
-Message-ID: <20200610165305.1a34c548.cohuck@redhat.com>
-In-Reply-To: <54b28498-a6a7-4be2-9d2c-aef46c7fc642@linux.ibm.com>
-References: <1591794711-5915-1-git-send-email-pmorel@linux.ibm.com>
-        <20200610152431.358fded7.cohuck@redhat.com>
-        <54b28498-a6a7-4be2-9d2c-aef46c7fc642@linux.ibm.com>
-Organization: Red Hat GmbH
+        by mail.kernel.org (Postfix) with ESMTPSA id BDBAC2072F;
+        Wed, 10 Jun 2020 14:53:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591800830;
+        bh=TC73ZRDSuoUg0mbgkZG8iBdzAr9faRcRABDM7yMly28=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TFu/AplpxtnCVEq78ohceG29T7SYBjPC5HIAjxG+hxCRxeLrPsNRy6j26NYJwFeJ3
+         QvsLuNdCVS76nhPuHuTAwnK+XQfju0sw8jNByZiGyMECclLQF04DAR+Z4IqXPkEVqP
+         MgQGPcl1Ntz21ulzRCF6E58ON+T9q5eiGmmkIeOE=
+Date:   Wed, 10 Jun 2020 16:53:44 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-fsdevel@vger.kernel.org,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Tetsuhiro Kohada <kohada.t2@gmail.com>,
+        Wei Yongjun <weiyongjun1@huawei.com>
+Subject: Re: exfat: Improving exception handling in two functions
+Message-ID: <20200610145344.GA2102023@kroah.com>
+References: <9b9272fb-b265-010b-0696-4c0579abd841@web.de>
+ <208cba7b-e535-c8e0-5ac7-f15170117a7f@web.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <208cba7b-e535-c8e0-5ac7-f15170117a7f@web.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 10 Jun 2020 16:37:55 +0200
-Pierre Morel <pmorel@linux.ibm.com> wrote:
-
-> On 2020-06-10 15:24, Cornelia Huck wrote:
-> > On Wed, 10 Jun 2020 15:11:51 +0200
-> > Pierre Morel <pmorel@linux.ibm.com> wrote:
-> >   
-> >> Protected Virtualisation protects the memory of the guest and
-> >> do not allow a the host to access all of its memory.
-> >>
-> >> Let's refuse a VIRTIO device which does not use IOMMU
-> >> protected access.
-> >>
-> >> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> >> ---
-> >>   drivers/s390/virtio/virtio_ccw.c | 5 +++++
-> >>   1 file changed, 5 insertions(+)
-> >>
-> >> diff --git a/drivers/s390/virtio/virtio_ccw.c b/drivers/s390/virtio/virtio_ccw.c
-> >> index 5730572b52cd..06ffbc96587a 100644
-> >> --- a/drivers/s390/virtio/virtio_ccw.c
-> >> +++ b/drivers/s390/virtio/virtio_ccw.c
-> >> @@ -986,6 +986,11 @@ static void virtio_ccw_set_status(struct virtio_device *vdev, u8 status)
-> >>   	if (!ccw)
-> >>   		return;
-> >>   
-> >> +	/* Protected Virtualisation guest needs IOMMU */
-> >> +	if (is_prot_virt_guest() &&
-> >> +	    !__virtio_test_bit(vdev, VIRTIO_F_IOMMU_PLATFORM))
-> >> +			status &= ~VIRTIO_CONFIG_S_FEATURES_OK;
-> >> +  
-> > 
-> > set_status seems like an odd place to look at features; shouldn't that
-> > rather be done in finalize_features?  
+On Wed, Jun 10, 2020 at 11:27:58AM +0200, Markus Elfring wrote:
+> Hello,
 > 
-> Right, looks better to me too.
-> What about:
+> I have taken another look at pointer usage after calls of the function “brelse”.
+> My source code analysis approach pointed implementation details
+> like the following out for further software development considerations.
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/fs/exfat/namei.c?id=3d155ae4358baf4831609c2f9cd09396a2b8badf#n1078
 > 
+> …
+> 		epold = exfat_get_dentry(sb, p_dir, oldentry + 1, &old_bh,
+> 			&sector_old);
+> 		epnew = exfat_get_dentry(sb, p_dir, newentry + 1, &new_bh,
+> 			&sector_new);
+> 		if (!epold || !epnew)
+> 			return -EIO;
+> …
 > 
+> I suggest to split such an error check.
+> How do you think about to release a buffer head object for the desired
+> exception handling if one of these function calls succeeded?
 > 
-> diff --git a/drivers/s390/virtio/virtio_ccw.c 
-> b/drivers/s390/virtio/virtio_ccw.c
-> index 06ffbc96587a..227676297ea0 100644
-> --- a/drivers/s390/virtio/virtio_ccw.c
-> +++ b/drivers/s390/virtio/virtio_ccw.c
-> @@ -833,6 +833,11 @@ static int virtio_ccw_finalize_features(struct 
-> virtio_device *vdev)
->                  ret = -ENOMEM;
->                  goto out_free;
->          }
-> +
-> +       if (is_prot_virt_guest() &&
-> +           !__virtio_test_bit(vdev, VIRTIO_F_IOMMU_PLATFORM))
-
-Add a comment, and (maybe) a message?
-
-Otherwise, I think this is fine, as it should fail the probe, which is
-what we want.
-
-> +               return -EIO;
-> +
->          /* Give virtio_ring a chance to accept features. */
->          vring_transport_features(vdev);
-> 
-> 
-> 
-> Thanks,
+> Would you like to adjust such code in the functions “exfat_rename_file”
+> and “exfat_move_file”?
 > 
 > Regards,
-> Pierre
-> 
+> Markus
 
+Hi,
+
+This is the semi-friendly patch-bot of Greg Kroah-Hartman.
+
+Markus, you seem to have sent a nonsensical or otherwise pointless
+review comment to a patch submission on a Linux kernel developer mailing
+list.  I strongly suggest that you not do this anymore.  Please do not
+bother developers who are actively working to produce patches and
+features with comments that, in the end, are a waste of time.
+
+Patch submitter, please ignore Markus's suggestion; you do not need to
+follow it at all.  The person/bot/AI that sent it is being ignored by
+almost all Linux kernel maintainers for having a persistent pattern of
+behavior of producing distracting and pointless commentary, and
+inability to adapt to feedback.  Please feel free to also ignore emails
+from them.
+
+thanks,
+
+greg k-h's patch email bot
