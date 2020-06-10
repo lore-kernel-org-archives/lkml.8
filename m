@@ -2,203 +2,83 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B309C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 02:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 380CBC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 02:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 067212074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 02:13:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F238420691
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 02:14:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j0fSxe7z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726129AbgFJCNY (ORCPT
+        id S1726132AbgFJCOQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 22:13:24 -0400
-Received: from mga11.intel.com ([192.55.52.93]:2178 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725798AbgFJCNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 22:13:23 -0400
-IronPort-SDR: YL2b84haY4LFndFQeLFBbHcdN/giGriyJWsPZ72oLLx5nP5AMo7jilEgwA8/i3Ja7Tlo+IYM2L
- Ur3vb7+18AcA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 19:13:22 -0700
-IronPort-SDR: SawyiA4Z/FCBmSlc72AT0UUtM3IbxWHu0pB8nRF7JlkxVF3rLQNTGws4fPOQNSG7/2C+aTVhJI
- aFAG1GLCvBAA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,494,1583222400"; 
-   d="scan'208";a="296036010"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
-  by fmsmga004.fm.intel.com with ESMTP; 09 Jun 2020 19:13:20 -0700
-Cc:     baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>, Qian Cai <cai@lca.pw>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH v2 2/2] iommu/vt-d: Move Intel IOMMU driver into
- subdirectory
-To:     Joerg Roedel <joro@8bytes.org>
-References: <20200609130303.26974-1-joro@8bytes.org>
- <20200609130303.26974-3-joro@8bytes.org>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <240f0608-73fd-6a77-8043-3f4a8c145067@linux.intel.com>
-Date:   Wed, 10 Jun 2020 10:09:22 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 9 Jun 2020 22:14:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34728 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725798AbgFJCOP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 22:14:15 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60011C05BD1E;
+        Tue,  9 Jun 2020 19:14:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=6clucF3QXfEzAnbmB5jl3BAojfrGSwWtR1xoyvsNv9g=; b=j0fSxe7zT86tbf+E/1M9XeN6jQ
+        I8G+jEqVSzMjCHH1YaJGN5FCpHL5zo/TojHrHjU6cRfeKXgHeVPFxZb7OS+WJtxiDgDKlq77a85vl
+        oCVHQygdqVaYOpf+Z7hwGv7SUNMX/y6ovf7XOJ4PcgzV2RIb6w/pT5v04LAzLa+v7yz8x89dyfJAf
+        50kRxec9sDmggv9iB9JdlFDRZ46vG3gU0IKQ7kqUaUQDc8DV1s/bpeyNeU4pQx4we0t5ay2PHzKVw
+        fK7UV+fiTyjTsPw4KeJTEdM4pF7USyJUD0oUqvGyazphIuJtb0m1Glb4SNijeQpcw5QALkvYjWFba
+        K2zj5F3w==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jiqFl-0002oV-Lz; Wed, 10 Jun 2020 02:14:09 +0000
+Date:   Tue, 9 Jun 2020 19:14:09 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Qian Cai <cai@lca.pw>, linux-kernel@vger.kernel.org,
+        dave@stgolabs.net, manfred@colorfullife.com,
+        mm-commits@vger.kernel.org
+Subject: Re: + ipc-convert-ipcs_idr-to-xarray-update.patch added to -mm tree
+Message-ID: <20200610021409.GH19604@bombadil.infradead.org>
+References: <20200420181310.c18b3c0aa4dc5b3e5ec1be10@linux-foundation.org>
+ <20200424014753.DfBuzjmzo%akpm@linux-foundation.org>
+ <20200605195848.GB5393@lca.pw>
+ <20200605201134.GJ19604@bombadil.infradead.org>
+ <20200605142039.b8a81c08bf5ba34fa0181545@linux-foundation.org>
 MIME-Version: 1.0
-In-Reply-To: <20200609130303.26974-3-joro@8bytes.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200605142039.b8a81c08bf5ba34fa0181545@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joerg,
-
-On 6/9/20 9:03 PM, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel@suse.de>
+On Fri, Jun 05, 2020 at 02:20:39PM -0700, Andrew Morton wrote:
+> On Fri, 5 Jun 2020 13:11:34 -0700 Matthew Wilcox <willy@infradead.org> wrote:
 > 
-> Move all files related to the Intel IOMMU driver into its own
-> subdirectory.
+> > On Fri, Jun 05, 2020 at 03:58:48PM -0400, Qian Cai wrote:
+> > > This will trigger,
+> > > 
+> > > [ 8853.759549] LTP: starting semget05
+> > > [ 8867.257088] BUG: sleeping function called from invalid context at mm/slab.h:567
+> > > [ 8867.270259] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 22556, name: semget05
+> > > [ 8867.270309] 2 locks held by semget05/22556:
+> > > [ 8867.270345]  #0: 00000000512de7e0 (&ids->rwsem){++++}-{3:3}, at: ipcget+0x4e/0x230
+> > > [ 8867.270426]  #1: 00000000552b9018 (&new->lock){+.+.}-{2:2}, at: ipc_addid+0xf4/0xf50
+> > 
+> > Did the fix for this not make it into -next?
 > 
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
-
-Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
-
-Best regards,
-baolu
-
-> ---
->   MAINTAINERS                                          |  3 +--
->   drivers/iommu/Makefile                               | 12 ++++++------
->   .../iommu/{intel-iommu-debugfs.c => intel/debugfs.c} |  0
->   drivers/iommu/{ => intel}/dmar.c                     |  2 +-
->   drivers/iommu/{ => intel}/intel-pasid.h              |  0
->   drivers/iommu/{intel-iommu.c => intel/iommu.c}       |  2 +-
->   .../{intel_irq_remapping.c => intel/irq_remapping.c} |  2 +-
->   drivers/iommu/{intel-pasid.c => intel/pasid.c}       |  0
->   drivers/iommu/{intel-svm.c => intel/svm.c}           |  0
->   drivers/iommu/{intel-trace.c => intel/trace.c}       |  0
->   10 files changed, 10 insertions(+), 11 deletions(-)
->   rename drivers/iommu/{intel-iommu-debugfs.c => intel/debugfs.c} (100%)
->   rename drivers/iommu/{ => intel}/dmar.c (99%)
->   rename drivers/iommu/{ => intel}/intel-pasid.h (100%)
->   rename drivers/iommu/{intel-iommu.c => intel/iommu.c} (99%)
->   rename drivers/iommu/{intel_irq_remapping.c => intel/irq_remapping.c} (99%)
->   rename drivers/iommu/{intel-pasid.c => intel/pasid.c} (100%)
->   rename drivers/iommu/{intel-svm.c => intel/svm.c} (100%)
->   rename drivers/iommu/{intel-trace.c => intel/trace.c} (100%)
+> I don't think I've seen this fix before.  And I'm unclear on how it
+> pertains to the current patch(es) in -mm.  And it has no changelog!
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index c2c31d3f8ae4..fa2078dd57d3 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8716,8 +8716,7 @@ M:	Lu Baolu <baolu.lu@linux.intel.com>
->   L:	iommu@lists.linux-foundation.org
->   S:	Supported
->   T:	git git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git
-> -F:	drivers/iommu/dmar.c
-> -F:	drivers/iommu/intel*.[ch]
-> +F:	drivers/iommu/intel/
->   F:	include/linux/intel-iommu.h
->   F:	include/linux/intel-svm.h
->   
-> diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
-> index 3af7e374b0cb..342190196dfb 100644
-> --- a/drivers/iommu/Makefile
-> +++ b/drivers/iommu/Makefile
-> @@ -17,13 +17,13 @@ obj-$(CONFIG_AMD_IOMMU_V2) += amd/iommu_v2.o
->   obj-$(CONFIG_ARM_SMMU) += arm_smmu.o
->   arm_smmu-objs += arm-smmu.o arm-smmu-impl.o arm-smmu-qcom.o
->   obj-$(CONFIG_ARM_SMMU_V3) += arm-smmu-v3.o
-> -obj-$(CONFIG_DMAR_TABLE) += dmar.o
-> -obj-$(CONFIG_INTEL_IOMMU) += intel-iommu.o intel-pasid.o
-> -obj-$(CONFIG_INTEL_IOMMU) += intel-trace.o
-> -obj-$(CONFIG_INTEL_IOMMU_DEBUGFS) += intel-iommu-debugfs.o
-> -obj-$(CONFIG_INTEL_IOMMU_SVM) += intel-svm.o
-> +obj-$(CONFIG_DMAR_TABLE) += intel/dmar.o
-> +obj-$(CONFIG_INTEL_IOMMU) += intel/iommu.o intel/pasid.o
-> +obj-$(CONFIG_INTEL_IOMMU) += intel/trace.o
-> +obj-$(CONFIG_INTEL_IOMMU_DEBUGFS) += intel/debugfs.o
-> +obj-$(CONFIG_INTEL_IOMMU_SVM) += intel/svm.o
->   obj-$(CONFIG_IPMMU_VMSA) += ipmmu-vmsa.o
-> -obj-$(CONFIG_IRQ_REMAP) += intel_irq_remapping.o irq_remapping.o
-> +obj-$(CONFIG_IRQ_REMAP) += intel/irq_remapping.o irq_remapping.o
->   obj-$(CONFIG_MTK_IOMMU) += mtk_iommu.o
->   obj-$(CONFIG_MTK_IOMMU_V1) += mtk_iommu_v1.o
->   obj-$(CONFIG_OMAP_IOMMU) += omap-iommu.o
-> diff --git a/drivers/iommu/intel-iommu-debugfs.c b/drivers/iommu/intel/debugfs.c
-> similarity index 100%
-> rename from drivers/iommu/intel-iommu-debugfs.c
-> rename to drivers/iommu/intel/debugfs.c
-> diff --git a/drivers/iommu/dmar.c b/drivers/iommu/intel/dmar.c
-> similarity index 99%
-> rename from drivers/iommu/dmar.c
-> rename to drivers/iommu/intel/dmar.c
-> index 60a2970c37ff..cc46dff98fa0 100644
-> --- a/drivers/iommu/dmar.c
-> +++ b/drivers/iommu/intel/dmar.c
-> @@ -32,7 +32,7 @@
->   #include <asm/irq_remapping.h>
->   #include <asm/iommu_table.h>
->   
-> -#include "irq_remapping.h"
-> +#include "../irq_remapping.h"
->   
->   typedef int (*dmar_res_handler_t)(struct acpi_dmar_header *, void *);
->   struct dmar_res_callback {
-> diff --git a/drivers/iommu/intel-pasid.h b/drivers/iommu/intel/intel-pasid.h
-> similarity index 100%
-> rename from drivers/iommu/intel-pasid.h
-> rename to drivers/iommu/intel/intel-pasid.h
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel/iommu.c
-> similarity index 99%
-> rename from drivers/iommu/intel-iommu.c
-> rename to drivers/iommu/intel/iommu.c
-> index 648a785e078a..9129663a7406 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel/iommu.c
-> @@ -47,7 +47,7 @@
->   #include <asm/iommu.h>
->   #include <trace/events/intel_iommu.h>
->   
-> -#include "irq_remapping.h"
-> +#include "../irq_remapping.h"
->   #include "intel-pasid.h"
->   
->   #define ROOT_SIZE		VTD_PAGE_SIZE
-> diff --git a/drivers/iommu/intel_irq_remapping.c b/drivers/iommu/intel/irq_remapping.c
-> similarity index 99%
-> rename from drivers/iommu/intel_irq_remapping.c
-> rename to drivers/iommu/intel/irq_remapping.c
-> index a042f123b091..7f8769800815 100644
-> --- a/drivers/iommu/intel_irq_remapping.c
-> +++ b/drivers/iommu/intel/irq_remapping.c
-> @@ -21,7 +21,7 @@
->   #include <asm/pci-direct.h>
->   #include <asm/msidef.h>
->   
-> -#include "irq_remapping.h"
-> +#include "../irq_remapping.h"
->   
->   enum irq_mode {
->   	IRQ_REMAPPING,
-> diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel/pasid.c
-> similarity index 100%
-> rename from drivers/iommu/intel-pasid.c
-> rename to drivers/iommu/intel/pasid.c
-> diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel/svm.c
-> similarity index 100%
-> rename from drivers/iommu/intel-svm.c
-> rename to drivers/iommu/intel/svm.c
-> diff --git a/drivers/iommu/intel-trace.c b/drivers/iommu/intel/trace.c
-> similarity index 100%
-> rename from drivers/iommu/intel-trace.c
-> rename to drivers/iommu/intel/trace.c
-> 
+> Perhaps it would be best to do a formal send of the latest version?
+
+In testing, I discovered a lockdep warning.  I don't think it's readily
+fixable, so please drop this patch for the moment.  I'll be back with
+a patch set that rejiggers the locking in ipc to be more normal.
