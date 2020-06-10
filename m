@@ -2,112 +2,104 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5292EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 16:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18656C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 16:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC7C20734
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 16:49:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gyrl29mg"
+	by mail.kernel.org (Postfix) with ESMTP id DBC292072E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 16:49:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591807773;
+	bh=uL84iTpjcJrG49BW1qpvg+ceYzvNWcuI+EjpSNUrXtM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=G0+GA+gCdCgL/gr0+a08kG8ud8jSm5PakCw5uPIx2L/Vcykq+8YYfYUc4z7zFJWnJ
+	 p3UaztD20NGlY295SrRX87BkMqrKOo2TzVPP5Th6jRbLgeHR3Q0cb0nrRJ4zInwo62
+	 T2nAZS3wgYma+wkbWHiv+JluATKTGK2n9YuCW2uc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728540AbgFJQtW (ORCPT
+        id S1728984AbgFJQtc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 12:49:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57102 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbgFJQtT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 12:49:19 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76074C03E96B;
-        Wed, 10 Jun 2020 09:49:18 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id m2so1120558pjv.2;
-        Wed, 10 Jun 2020 09:49:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=0L6mRul+d0ij/T0+YwUu11OLWJeSvBQq7osEoU9o22g=;
-        b=Gyrl29mgzU0gGGWPNAXIufDCgZz/WcJTwme/dXo6nnRhBBKoe3YbyCm92QiFtUCZIr
-         ljpilXI7nAD3ogAwUS0CFK1HNNISgp/Feg9D2XMFU50TOa9Yk/Z/q71WjPtfdwpWWRr5
-         Zz9M+VHN4z1zeVxAU6zeowOmTnPNZw/PoJr44shxIdtIFhvChGKegEnoBHgfiRKnv5+M
-         EV1ppIKtFzYdRwpVUxvyUy56RryWsBs5tBVVgE3OFovsAmgLxSk5F0gSKaPUmVxiPezW
-         e2GUEQZd+fT42IK28EiMDhZNwXey5TMQ8c16Gjw/htxO3/+klYhR6G3iCUYxCVSekZgE
-         QBBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0L6mRul+d0ij/T0+YwUu11OLWJeSvBQq7osEoU9o22g=;
-        b=AAusyxbunpSlNZ7H/5xK9qdnPdYou4TE9uu1t8eDVpqN5XtQqDgvVJq7cD8AYp4JRQ
-         8RJHbYWCJSjuCpgOF4a9sYdT1Ldc0hNOZ+Vi5ZBNdiaiUGLhdps5dfNlU1fjndzAQ390
-         24YKy5efm6mnZbiDG2owoVQqXul7PsSkgFpVmG0APojWjpcKP2KVl/6HBCICf74FBIVy
-         J/F8A0U4LIE/pbI00XPCz6BrbGimZRZhMA2SycIR+wjpp+xCCHQo8BtujAwqODKaglef
-         d4iS3uykPG2XDnw7YKHGwaJED/UGTmKC29IOKyB/YJA8V5bxfETIN1WTfuWNNRbhJ56j
-         recQ==
-X-Gm-Message-State: AOAM530Mlbd5bhpic28SxMG5IpEwP3oeKExCPOzIrs155Hxhk0x527Xy
-        pz5K/JQ5ZQDAhDmbFEpmhC0=
-X-Google-Smtp-Source: ABdhPJyBYL9WX0FUwlh7Mm7FPNGeHAef0xvzd3jHqzul0sk1FCzs4b8Ta/4q3CQZuFG1jOY72HRTZQ==
-X-Received: by 2002:a17:902:c111:: with SMTP id 17mr3419167pli.319.1591807757697;
-        Wed, 10 Jun 2020 09:49:17 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id s11sm382597pfh.204.2020.06.10.09.49.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jun 2020 09:49:16 -0700 (PDT)
-Subject: Re: [PATCH v2 2/6] soc: bcm: add BCM63xx power domain driver
-To:     =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
-        hauke@hauke-m.de, zajec5@gmail.com, tsbogend@alpha.franken.de,
-        robh+dt@kernel.org, f.fainelli@gmail.com, jonas.gorski@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200609105244.4014823-1-noltari@gmail.com>
- <20200610163301.461160-1-noltari@gmail.com>
- <20200610163301.461160-3-noltari@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <098e7389-f41e-0493-302b-213477268b81@gmail.com>
-Date:   Wed, 10 Jun 2020 09:49:14 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        Wed, 10 Jun 2020 12:49:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59080 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726358AbgFJQtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 12:49:31 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BB2C206F4;
+        Wed, 10 Jun 2020 16:49:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591807770;
+        bh=uL84iTpjcJrG49BW1qpvg+ceYzvNWcuI+EjpSNUrXtM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=K8xkfdIgBPkyqakPBMHpmV4MHBmZijBh0k0Idbd2dWb0oW+bJ0Z4h3uPY8S7Tgxaf
+         E/80A/fJ4lmfVN43LkuA+h4k/4DiYQg6MlKgskOCiooP9v0myHwMpWRyFAx5+x2ha6
+         N55T17siJuAHSdEbNMRu/CAG+t9I2DC/f5vAYQsk=
+Date:   Wed, 10 Jun 2020 17:49:28 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: spi: renesas,sh-msiof: Add r8a7742
+ support
+Message-ID: <20200610164928.GJ5005@sirena.org.uk>
+References: <1591736054-568-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1591736054-568-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200610110810.GD5005@sirena.org.uk>
+ <CAMuHMdWCHeSB9mjpdSX_-qxwo33kMb1_1R93CjBtVBPFPKkEOg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200610163301.461160-3-noltari@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="qD3brAgIG4LbUq6d"
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWCHeSB9mjpdSX_-qxwo33kMb1_1R93CjBtVBPFPKkEOg@mail.gmail.com>
+X-Cookie: fortune: No such file or directory
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--qD3brAgIG4LbUq6d
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 6/10/2020 9:32 AM, Álvaro Fernández Rojas wrote:
-> BCM6318, BCM6328, BCM6362 and BCM63268 SoCs have a power domain controller
-> to enable/disable certain components in order to save power.
-> 
-> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+On Wed, Jun 10, 2020 at 01:59:24PM +0200, Geert Uytterhoeven wrote:
+> On Wed, Jun 10, 2020 at 1:08 PM Mark Brown <broonie@kernel.org> wrote:
 
-Thanks for addressing the previous comments, this looks good to me,
-there is just a single request below:
+> > To repeat my previous feedback I'd expect a driver update as well.
 
-[snip]
+> No driver update is needed.
 
-> +static const struct bcm63xx_power_data bcm6318_power_domains[] = {
-> +	{
-> +		.name = "pcie",
-> +		.bit = 0,
+> Documentation/devicetree/bindings/spi/renesas,sh-msiof.yaml says:
 
-All of these bits definition should use the constants that you add in
-patches 3 through 6, this means you would have to re-order the patches
-to maintain bisectability obviously.
+I'm much more comfortable explicitly listing the new compatible so that
+even if someone makes a DT that doesn't bother listing the fallbacks
+things will work.
 
-Thanks!
--- 
-Florian
+--qD3brAgIG4LbUq6d
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7hDxcACgkQJNaLcl1U
+h9DqzQf+L8N8+1ylxe1pYlV1c//i1CYnyH3GkElfL95nGobYBGb9VLgA4MOcj/0b
+TqbGACtoQm8BL+EE8XzQ3Mj+ohmTisI9JKRHsYoi78Tm8L+dl3pLiPt9Wc30li+K
+nrKA8BHndOoVpRK2SMNgUE+rcU+sImZLTLjfEnZUUGGx7sDJmfFXRHdP2pZb/BEh
+CCN3m+F74/XdRlf8USEa6B4cAN3sfhitr4Tx/hbQ3e8BS7FAhEjp+fP8x+Eji1WW
+xLFk3/DweH05qA6nU0Tm6aHfUyzRaCLbn0LQAgJRBISTdAEc2NGiRXuCZckMFsWJ
+Qguh+qafyIRn22PAoLP8jFAiYNlHbA==
+=02N9
+-----END PGP SIGNATURE-----
+
+--qD3brAgIG4LbUq6d--
