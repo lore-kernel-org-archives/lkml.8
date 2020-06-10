@@ -2,84 +2,93 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E68C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 05:43:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A41C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 05:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAE3A207F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 05:43:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A3122081A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 05:44:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="F8IQUAA3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L0Tl9bBd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726068AbgFJFnf (ORCPT
+        id S1726097AbgFJFor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 01:43:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38624 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725270AbgFJFne (ORCPT
+        Wed, 10 Jun 2020 01:44:47 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54936 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725270AbgFJFop (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 01:43:34 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1C7AC05BD1E;
-        Tue,  9 Jun 2020 22:43:33 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Wed, 10 Jun 2020 01:44:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591767884;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=UfSVmrCHCCa+bGByZwONkn+ZSARIgzp8QM/tmIKlltk=;
+        b=L0Tl9bBdV/GU4pFpdzCVBqeToqzg6BcioCYX8J6eW/sqQOueepjMj6p60kXwFwb4vtBa4p
+        /fNYOAgpI5INgHsTRthtVnQuBwaX4Eou50UdqkvXqAKQQum+fC3S9UPXN3dXPHUV/EQga7
+        y6afWkZFZaX2Fvf+OAzz1IoEtI+9ccc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-17-CJp_Q_ANOWW3kkcFEqoNuA-1; Wed, 10 Jun 2020 01:44:42 -0400
+X-MC-Unique: CJp_Q_ANOWW3kkcFEqoNuA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49hbWQ50Pcz9sRR;
-        Wed, 10 Jun 2020 15:43:30 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1591767812;
-        bh=pcbWSPwKHYKUiqwhEF2FHnUMBRR9mr+AM4yZy/n/Q8I=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=F8IQUAA3kWCkFCWuHeYkNqUREzy+4KqCzh7klNtixSzs921xmG/GxnersS77Mi9/U
-         sHdjk4Z7XhsgEB7dPXauvZKo+NcLEu3WHhqsl5ZY/4CW0u7jVAW32uOTtZ6YWGSylg
-         pFPYCAzg0F7MsWCrUBF47Sc/Oh+8/13K+3iK3IybEYtDsD2Q0N/EMOLzKlY+fP3L2E
-         K7QaVdu8KaiWPWhrmPr+YwUV2ymA7pLeI0l0Rz+FSumECm/O5gFxfyxLLFdUm7oaaP
-         Skn4eyNynDdzqfMo/nful4oZI19JZlMkg8XiWqA4xqgbRrEpMvSZ85VlksnkXwNL5M
-         EeRvhl8RR3JNQ==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     brking@us.ibm.com, Christoph Hellwig <hch@lst.de>,
-        Jens Axboe <axboe@kernel.dk>, linux-scsi@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-block@vger.kernel.org,
-        linux-ide@vger.kernel.org
-Subject: Re: ipr crashes due to NULL dma_need_drain since cc97923a5bcc ("block: move dma drain handling to scsi")
-In-Reply-To: <20200609154230.GA18426@lst.de>
-References: <87zh9cftj0.fsf@mpe.ellerman.id.au> <20200609154230.GA18426@lst.de>
-Date:   Wed, 10 Jun 2020 15:43:58 +1000
-Message-ID: <87tuzjfpb5.fsf@mpe.ellerman.id.au>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3203B1005510;
+        Wed, 10 Jun 2020 05:44:40 +0000 (UTC)
+Received: from [10.72.13.194] (ovpn-13-194.pek2.redhat.com [10.72.13.194])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2D8621001B2B;
+        Wed, 10 Jun 2020 05:44:31 +0000 (UTC)
+Subject: Re: [PATCH V2] vdpa: introduce virtio pci driver
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, rob.miller@broadcom.com,
+        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
+        shahafs@mellanox.com, hanand@xilinx.com, mhabets@solarflare.com,
+        gdawar@xilinx.com, saugatm@xilinx.com, vmireyno@marvell.com,
+        zhangweining@ruijie.com.cn, eli@mellanox.com
+References: <20200610035920.12078-1-jasowang@redhat.com>
+ <20200610004641-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <eaa0739f-4c4b-3ca5-c57d-5962b3c3dbc0@redhat.com>
+Date:   Wed, 10 Jun 2020 13:44:30 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200610004641-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christoph Hellwig <hch@lst.de> writes:
-> Can you try this patch?
->
-> ---
-> From 1c9913360a0494375c5655b133899cb4323bceb4 Mon Sep 17 00:00:00 2001
-> From: Christoph Hellwig <hch@lst.de>
-> Date: Tue, 9 Jun 2020 14:07:31 +0200
-> Subject: scsi: wire up ata_scsi_dma_need_drain for SAS HBA drivers
->
-> We need ata_scsi_dma_need_drain for all drivers wired up to drive ATAPI
-> devices through libata.  That also includes the SAS HBA drivers in
-> addition to native libata HBA drivers.
->
-> Fixes: cc97923a5bcc ("block: move dma drain handling to scsi")
-> Reported-by: Michael Ellerman <mpe@ellerman.id.au>
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Yep that works for me here with ipr.
+On 2020/6/10 下午12:47, Michael S. Tsirkin wrote:
+> On Wed, Jun 10, 2020 at 11:59:20AM +0800, Jason Wang wrote:
+>> This patch introduce a vDPA driver for virtio-pci device. It bridges
+>> the virtio-pci control command to the vDPA bus. This will be used for
+>> developing new features for both software vDPA framework and hardware
+>> vDPA feature.
+> The mail headers are mailformed here:
+>
+> Content-Type: text/plain; charset=a
+>
+> so git am can't parse it:
+>
+> error: cannot convert from a to UTF-8
+> fatal: could not parse patch
 
-Tested-by: Michael Ellerman <mpe@ellerman.id.au>
 
-cheers
+My bad, let me repost.
+
+Thanks
+
