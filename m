@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D225C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43357C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49242206F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:17:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13697206F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:17:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="t387Iyw8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eQkWOqFz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727081AbgFJURv (ORCPT
+        id S1728228AbgFJUR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 16:17:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60500 "EHLO
+        Wed, 10 Jun 2020 16:17:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730532AbgFJUNs (ORCPT
+        with ESMTP id S1730520AbgFJUNs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 10 Jun 2020 16:13:48 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4933C08C5C9;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC0EEC08C5C3;
         Wed, 10 Jun 2020 13:13:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=S5644RWSmzLKClPw4/cvpdrJ3oC3Vx5GXky4qEg0/Sw=; b=t387Iyw8XBmw/PCNwgPA8fTWvX
-        FDCT5sqoJc6buh0Ea9yw6B2Mwdne1kqZXmXFEiSPqzIShANQmCPWpqt8kJbRyg6u1hd57zpjigSLB
-        Bo2UINMBdXnjnmijOgZeH4p5NAJgF/j2o0QZDy7v7ELE1rVt7PJR8xLH2BJlaIVxyK3QlN1h+a/Dd
-        1G+Ivtl/Khg2942dOxVmkbayq7S0bA59/afBuDV5ELg3XHIOwlzCJHJbHnKOsCkZAFLS7ejdVfWBz
-        HbrUUIkv2/0kRFQFAn/aryEP/3L9xA4lNXei1WUa035YzAg4Fhhs09+aWElbFTkrguFtEvMCUlpmW
-        c/yW5gJQ==;
+        bh=rN/mlFQb7HaxIMdRoCBWWTWQlk5OHj7v1RP+jX7Yp4Y=; b=eQkWOqFzpT9FwkkpBW+oRka0dP
+        MuhOIi4m2vJrWWRLdz1++H4mVbdMhV527yj1MrHCeXjSD+s10sC1Hx8RzZEgfAZ3K4ezxW6zsDPNz
+        PUp7ckg/fBq13+BALbTfR87DIzU3yGwHp/59R30N6jpiQsKBWWRIQ2NNbtxF2X3L0FH4bJwA1UYnu
+        GiXKKAI6+15lvMolQwyh7uP6GmN3ts6bwQbHVdpiA1yqE/AfC1l4Iw0jySUprEsHSpgKoVbAqUfuF
+        LO1ynifb8BGqeso/F5sa35PicEPeraxP+ToPUlr5sE67ev85/ncOJuO6fLYmz3Vb1Y/RT9uthemeE
+        OHuocJ2Q==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jj76Z-0003UO-Qp; Wed, 10 Jun 2020 20:13:47 +0000
+        id 1jj76Z-0003Tf-I1; Wed, 10 Jun 2020 20:13:47 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 15/51] fs: Do not update nr_thps for mappings which support THPs
-Date:   Wed, 10 Jun 2020 13:13:09 -0700
-Message-Id: <20200610201345.13273-16-willy@infradead.org>
+Subject: [PATCH v6 08/51] mm: Add thp_order
+Date:   Wed, 10 Jun 2020 13:13:02 -0700
+Message-Id: <20200610201345.13273-9-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200610201345.13273-1-willy@infradead.org>
 References: <20200610201345.13273-1-willy@infradead.org>
@@ -57,96 +57,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-The nr_thps counter is to support THPs in the page cache when the
-filesystem doesn't understand THPs.  Eventually it will be removed, but
-we should still support filesystems which do not understand THPs yet.
-Move the nr_thp manipulation functions to filemap.h since they're
-page-cache specific.
+This function returns the order of a transparent huge page.  It
+compiles to 0 if CONFIG_TRANSPARENT_HUGEPAGE is disabled.
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- include/linux/fs.h      | 27 ---------------------------
- include/linux/pagemap.h | 29 +++++++++++++++++++++++++++++
- 2 files changed, 29 insertions(+), 27 deletions(-)
+ include/linux/huge_mm.h | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index ac411a08f83c..e11929152103 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2839,33 +2839,6 @@ static inline errseq_t file_sample_sb_err(struct file *file)
- 	return errseq_sample(&file->f_path.dentry->d_sb->s_wb_err);
+diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+index 71f20776b06c..dd19720a8bc2 100644
+--- a/include/linux/huge_mm.h
++++ b/include/linux/huge_mm.h
+@@ -265,6 +265,19 @@ static inline spinlock_t *pud_trans_huge_lock(pud_t *pud,
+ 	else
+ 		return NULL;
  }
- 
--static inline int filemap_nr_thps(struct address_space *mapping)
--{
--#ifdef CONFIG_READ_ONLY_THP_FOR_FS
--	return atomic_read(&mapping->nr_thps);
--#else
--	return 0;
--#endif
--}
--
--static inline void filemap_nr_thps_inc(struct address_space *mapping)
--{
--#ifdef CONFIG_READ_ONLY_THP_FOR_FS
--	atomic_inc(&mapping->nr_thps);
--#else
--	WARN_ON_ONCE(1);
--#endif
--}
--
--static inline void filemap_nr_thps_dec(struct address_space *mapping)
--{
--#ifdef CONFIG_READ_ONLY_THP_FOR_FS
--	atomic_dec(&mapping->nr_thps);
--#else
--	WARN_ON_ONCE(1);
--#endif
--}
--
- extern int vfs_fsync_range(struct file *file, loff_t start, loff_t end,
- 			   int datasync);
- extern int vfs_fsync(struct file *file, int datasync);
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index 8a45b572bcf1..644caff3e78b 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -125,6 +125,35 @@ static inline bool mapping_thp_support(struct address_space *mapping)
- 	return test_bit(AS_THP_SUPPORT, &mapping->flags);
- }
- 
-+static inline int filemap_nr_thps(struct address_space *mapping)
++
++/**
++ * thp_order - Order of a transparent huge page.
++ * @page: Head page of a transparent huge page.
++ */
++static inline unsigned int thp_order(struct page *page)
 +{
-+#ifdef CONFIG_READ_ONLY_THP_FOR_FS
-+	return atomic_read(&mapping->nr_thps);
-+#else
++	VM_BUG_ON_PGFLAGS(PageTail(page), page);
++	if (PageHead(page))
++		return HPAGE_PMD_ORDER;
 +	return 0;
-+#endif
 +}
 +
-+static inline void filemap_nr_thps_inc(struct address_space *mapping)
-+{
-+#ifdef CONFIG_READ_ONLY_THP_FOR_FS
-+	if (!mapping_thp_support(mapping))
-+		atomic_inc(&mapping->nr_thps);
-+#else
-+	WARN_ON_ONCE(1);
-+#endif
-+}
-+
-+static inline void filemap_nr_thps_dec(struct address_space *mapping)
-+{
-+#ifdef CONFIG_READ_ONLY_THP_FOR_FS
-+	if (!mapping_thp_support(mapping))
-+		atomic_dec(&mapping->nr_thps);
-+#else
-+	WARN_ON_ONCE(1);
-+#endif
-+}
-+
- void release_pages(struct page **pages, int nr);
+ static inline int hpage_nr_pages(struct page *page)
+ {
+ 	if (unlikely(PageTransHuge(page)))
+@@ -324,6 +337,12 @@ static inline struct list_head *page_deferred_list(struct page *page)
+ #define HPAGE_PUD_MASK ({ BUILD_BUG(); 0; })
+ #define HPAGE_PUD_SIZE ({ BUILD_BUG(); 0; })
  
- /*
++static inline unsigned int thp_order(struct page *page)
++{
++	VM_BUG_ON_PGFLAGS(PageTail(page), page);
++	return 0;
++}
++
+ static inline int hpage_nr_pages(struct page *page)
+ {
+ 	VM_BUG_ON_PAGE(PageTail(page), page);
 -- 
 2.26.2
 
