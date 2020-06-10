@@ -2,220 +2,156 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB3CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5527C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B90620825
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:12:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="KWlDdEFg";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KcpPr/P4"
+	by mail.kernel.org (Postfix) with ESMTP id AD38D2081A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:12:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591773167;
+	bh=pd2SzRJOzTRtTej8TfH3UhWrXB1jr/uVuRtkc+0eAOU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=drjM00G8eJkAZ7MQYrwMZi9Mug1z7hs3NO1q4rsMZGUwTjeddf2kCAbC7b9tNa5AD
+	 JUgqhTnrcJ465UQN+3P+nFqr0WC1mzsojwJTKEDjKLmE+jjvWJ0zyehFIfkorw3Mqo
+	 WjN2shDvYvmpCyfsFTqC7z4NUcX12FeVWDNT/GB0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbgFJHMm (ORCPT
+        id S1726340AbgFJHMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 10 Jun 2020 03:12:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52278 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726276AbgFJHMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 10 Jun 2020 03:12:42 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:37449 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726186AbgFJHMl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 03:12:41 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 5639C5C00B5;
-        Wed, 10 Jun 2020 03:12:40 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 10 Jun 2020 03:12:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=g01DrXYlRa2+6yU8hRXD5BjQ2RT
-        tnEPv0eJCUBaLaMk=; b=KWlDdEFghWE2OvR+qAxpbQ03RBir4WRoU6IDMf8zsUR
-        Uxf9nZd0FfTOe29ko23YeXIwS3zOinpvUa1JwzQHC+f/hChipKBmiTJIlwdQVTU8
-        OWTIl4Tf6KeEZyaH/7dDeZGxqrP9QutK13BUzTBjis428I9W7OpkeLxHBLQYYgQv
-        3ZvEo+PLnFUV5sD/v+t0WuOHT/M1Rv0XlGii76c5pEAmviwylg2+gImTLWHsI9oX
-        05lLzqIm3WmFyZPR3l6H1MGDoozqLLfoK6oXXgfJPT8ws4xco6x7rJ4H+xiZ1zXu
-        fbsL7Vq3nUGAjARkRoIaJaRrt3Z5z0skUzKBHLBrxiw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=g01DrX
-        YlRa2+6yU8hRXD5BjQ2RTtnEPv0eJCUBaLaMk=; b=KcpPr/P4/zq6AHvPomZ81x
-        Q9HS5pDooERZzDlFaJ2rPOTH5LvV1WNP9N5BO5Bf9dOp0xbeZDc+e9zEwFqSqH9h
-        8dsnpar9uZBgrLm/kxS93ufiiSl3A9SPa1tDMw9b8uuN4tX9hzRoYNN5tvnBRORM
-        IKi1xxTpIeEfRirFY66/V2yKuD1nmjZHWhwj2O9qk0qztlqjg/bRdN1Tq7/p/RYS
-        qirSmpBGV3lVOTM1/aamxmUoox+76i9AthRnrpcgU4Ck49ytcfEc0uyxLfgoI3w5
-        Zb0pFhlbdL+AlbLIwwfIAhDntTq/jfSDIJAG1RNfNm7/wttd0ejxS6BQ3KxNADMQ
-        ==
-X-ME-Sender: <xms:5ofgXmtXoZ55T9tagIPGTNrI8lk5CNU1bOr3J05dbyy8JIvDk77NBw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudehhedguddukecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvuffkfhggtggujgesghdtreertddtjeenucfhrhhomhepofgrgihi
-    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
-    htthgvrhhnpeeutdfgjeeuudehvefgvedvtedtudelfffgffekledtffekgedukeejueev
-    ieegudenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtne
-    curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:5ofgXrd21ielAMKgEjWS194dGk8YMboKPW7kdkIK4RkrcjF8jvzopg>
-    <xmx:5ofgXhxODb-380ErNpvqA3GMia1xsEgE-ufLSfQHuHD-IGx9eMIq-g>
-    <xmx:5ofgXhPWittqnw_hS4KGfzNPR9AmZRMYT_mkjPKVqHdLNhuL2r6eDA>
-    <xmx:6IfgXtb07dbhuPUaZGT0ycf4z7BCb4Mi1XJsUSn-H-pxBAeYvxrmDw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 3CFF7328005E;
-        Wed, 10 Jun 2020 03:12:38 -0400 (EDT)
-Date:   Wed, 10 Jun 2020 09:12:33 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Chen-Yu Tsai <wens@csie.org>
-Cc:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/sun4i: hdmi ddc clk: Fix size of m divider
-Message-ID: <20200610071233.umk5pfrimluv2sd4@gilmour.lan>
-References: <20200413095457.1176754-1-jernej.skrabec@siol.net>
- <1742537.tdWV9SEqCh@jernej-laptop>
- <20200415104214.ndkkxfnufkxgu53r@gilmour.lan>
- <1785843.taCxCBeP46@jernej-laptop>
- <20200422092300.444wcaurdwyrorow@gilmour.lan>
- <CAGb2v64++4rxcwdQXgz30vNbRRR5+tXehP-CFu9T7Lx7K_QOOw@mail.gmail.com>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32D712081A;
+        Wed, 10 Jun 2020 07:12:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591773161;
+        bh=pd2SzRJOzTRtTej8TfH3UhWrXB1jr/uVuRtkc+0eAOU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nyf/eaZLnteXhDufaX0guURN6YQMM5b4xLIKTqUyDX+XZpu7kzrS0c7MBd3ngO68k
+         oAxc3ugpBuJAZ/sFm9TRa9PtPBCPFrvl6H/I+GdzF+zL3SDt5XEYjnYTmlTTQESjGM
+         h/C2gY/gyXKnf02ev6qeBwVP9ZMYkbze0nAhUb7U=
+Date:   Wed, 10 Jun 2020 09:12:39 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Rajat Jain <rajatja@google.com>, Rajat Jain <rajatxjain@gmail.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Zubin Mithra <zsm@google.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
+ "whitelisted" drivers
+Message-ID: <20200610071239.GC1923109@kroah.com>
+References: <20200607113632.GA49147@kroah.com>
+ <20200609210400.GA1461839@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="aika3toolbzzx6k2"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAGb2v64++4rxcwdQXgz30vNbRRR5+tXehP-CFu9T7Lx7K_QOOw@mail.gmail.com>
+In-Reply-To: <20200609210400.GA1461839@bjorn-Precision-5520>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jun 09, 2020 at 04:04:00PM -0500, Bjorn Helgaas wrote:
+> On Sun, Jun 07, 2020 at 01:36:32PM +0200, Greg Kroah-Hartman wrote:
+> 
+> > Your "problem" I think can be summed up a bit more concise:
+> > 	- you don't trust kernel drivers to be "secure" for untrusted
+> > 	  devices
+> > 	- you only want to bind kernel drivers to "internal" devices
+> > 	  automatically as you "trust" drivers in that situation.
+> > 	- you want to only bind specific kernel drivers that you somehow
+> > 	  feel are "secure" to untrusted devices "outside" of a system
+> > 	  when those devices are added to the system.
+> > 
+> > Is that correct?
+> > 
+> > If so, fine, you can do that today with the bind/unbind ability of
+> > drivers, right?  After boot with your "trusted" drivers bound to
+> > "internal" devices, turn off autobind of drivers to devices and then
+> > manually bind them when you see new devices show up, as those "must" be
+> > from external devices (see the bind/unbind files that all drivers export
+> > for how to do this, and old lwn.net articles, this feature has been
+> > around for a very long time.)
+> > 
+> > I know for USB you can do this, odds are PCI you can turn off
+> > autobinding as well, as I think this is a per-bus flag somewhere.  If
+> > that's not exported to userspace, should be trivial to do so, should be
+> > somewere in the driver model already...
+> > 
+> > Ah, yes, look at the "drivers_autoprobe" and "drivers_probe" files in
+> > sysfs for all busses.  Do those not work for you?
+> > 
+> > My other points are the fact that you don't want to put policy in the
+> > kernel, and I think that you can do everything you want in userspace
+> > today, except maybe the fact that trying to determine what is "inside"
+> > and "outside" is not always easy given that most hardware does not
+> > export this information properly, if at all.  Go work with the firmware
+> > people on that issue please, that would be most helpful for everyone
+> > involved to get that finally straightened out.
+> 
+> To sketch this out, my understanding of how this would work is:
+> 
+>   - Expose the PCI pdev->untrusted bit in sysfs.  We don't expose this
+>     today, but doing so would be trivial.  I think I would prefer a
+>     sysfs name like "external" so it's more descriptive and less of a
+>     judgment.
+> 
+>     This comes from either the DT "external-facing" property or the
+>     ACPI "ExternalFacingPort" property.  
 
---aika3toolbzzx6k2
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Good idea, but as people have pointed out, even these don't always work
+so userspace will need to be able to override that somehow :(
 
-On Thu, Jun 04, 2020 at 01:19:32PM +0800, Chen-Yu Tsai wrote:
-> On Wed, Apr 22, 2020 at 5:23 PM Maxime Ripard <maxime@cerno.tech> wrote:
-> >
-> > Hi,
-> >
-> > On Wed, Apr 15, 2020 at 07:52:28PM +0200, Jernej =C5=A0krabec wrote:
-> > > Dne sreda, 15. april 2020 ob 12:42:14 CEST je Maxime Ripard napisal(a=
-):
-> > > > On Mon, Apr 13, 2020 at 06:09:08PM +0200, Jernej =C5=A0krabec wrote:
-> > > > > Dne ponedeljek, 13. april 2020 ob 16:12:39 CEST je Chen-Yu Tsai
-> > > napisal(a):
-> > > > > > On Mon, Apr 13, 2020 at 6:11 PM Chen-Yu Tsai <wens@csie.org> wr=
-ote:
-> > > > > > > On Mon, Apr 13, 2020 at 5:55 PM Jernej Skrabec
-> > > > > > > <jernej.skrabec@siol.net>
-> > > > >
-> > > > > wrote:
-> > > > > > > > m divider in DDC clock register is 4 bits wide. Fix that.
-> > > > > > > >
-> > > > > > > > Fixes: 9c5681011a0c ("drm/sun4i: Add HDMI support")
-> > > > > > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > > > > >
-> > > > > > > Reviewed-by: Chen-Yu Tsai <wens@csie.org>
-> > > > > >
-> > > > > > Cc stable?
-> > > > >
-> > > > > I don't think it's necessary:
-> > > > > 1. It doesn't change much (anything?) for me when reading EDID. I=
- don't
-> > > > > think it's super important to have precise DDC clock in order to =
-properly
-> > > > > read EDID. 2. No matter if it has "Cc stable" tag or not, it will=
- be
-> > > > > eventually picked for stable due to fixes tag.
-> > > > >
-> > > > > This was only small observation when I was researching EDID reado=
-ut issue
-> > > > > on A20 board, but sadly, I wasn't able to figure out why reading =
-it
-> > > > > sometimes fails. I noticed similar issue on SoCs with DE2 (most
-> > > > > prominently on OrangePi PC2 - H5), but there was easy workaround =
-- I just
-> > > > > disabled video driver in U- Boot. However, if A20 display driver =
-gets
-> > > > > disabled in U-Boot, it totally breaks video output on my TV when =
-Linux
-> > > > > boots (no output). I guess there is more fundamental problem with=
- clocks
-> > > > > than just field size. I think we should add more constraints in c=
-lock
-> > > > > driver, like preset some clock parents and not allow to change pa=
-rents
-> > > > > when setting rate, but carefully, so simplefb doesn't break. Such
-> > > > > constraints should also solve problems with dual head setups.
-> > > > I disagree here. Doing all sorts of special case just doesn't scale,
-> > > > and we'll never have the special cases sorted out on all the boards
-> > > > (and it's a nightmare to maintain).
-> > > >
-> > > > Especially since it's basically putting a blanket over the actual
-> > > > issue and looking the other way. If there's something wrong with how
-> > > > we deal with (re)parenting, we should fix that. It impacts more than
-> > > > just DRM, and all the SoCs.
-> > >
-> > > I agree with you that automatic solution would be best, but I just do=
-n't see
-> > > it how it would be done.
-> >
-> > > Dual head display pipeline is pretty complex for clock driver to get =
-it right
-> > > on it's own. There are different possible setups and some of them are=
- hot
-> > > pluggable, like HDMI.
-> >
-> > Do you have an actual scenario that is broken right now?
-> >
-> > > And there are also SoC specific quirks, like A64, where for some reas=
-on, MIPI
-> > > DPHY and HDMI PHY share same clock parent - PLL_VIDEO0. Technically, =
-MIPI DPHY
-> > > can be clocked from PLL_PERIPH0 (fixed to 600 MHz), but that's not re=
-ally
-> > > helpful. I'm not even sure if there is any good solution to this - ce=
-rtainly
-> > > HDMI and MIPI can't claim exclusivity and somehow best common rate mu=
-st be
-> > > found for PLL_VIDEO0, if that's even possible.
-> >
-> > IIRC the DSI DPHY needs a clock running at 297MHz, which is pretty much=
- what the
-> > HDMI PHY should need too (or 148.5, but that's pretty easy to generate =
-=66rom
-> > 297). So which problem do we have there?
-> >
-> > > I was sure that HDMI PHY on A64 can be clocked from PLL_VIDEO1, which=
- would
-> > > solve main issue, but to date, I didn't find any way to do that.
-> > >
-> > > That's pretty off topic, so I hope original patch can be merged as-is.
-> >
-> > It does, sorry
-> >
-> > Acked-by: Maxime Ripard <maxime@cerno.tech>
->=20
-> Looks like this hasn't landed yet.
+>   - All devices present at boot are enumerated.  Any statically built
+>     drivers will bind to them before any userspace code runs.
+> 
+>     If you want to keep statically built drivers from binding, you'd
+>     need to invent some mechanism so pci_driver_init() could clear
+>     drivers_autoprobe after registering pci_bus_type.
+> 
+>   - Early userspace code prevents modular drivers from automatically
+>     binding to PCI devices:
+> 
+>       echo 0 > /sys/bus/pci/drivers_autoprobe
+> 
+>     This prevents modular drivers from binding to all devices, whether
+>     present at boot or hot-added.
+> 
+>   - Userspace code uses the sysfs "bind" file to control which drivers
+>     are loaded and can bind to each device, e.g.,
+> 
+>       echo 0000:02:00.0 > /sys/bus/pci/drivers/nvme/bind
 
-I just applied it.
+Seems good to me, and also matches what the current USB tools do for
+this type of thing.
 
-Maxime
+thanks,
 
---aika3toolbzzx6k2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXuCH4QAKCRDj7w1vZxhR
-xReXAP9d6b29GcEjh727p/kA9oAycPXHl/4zoa+y+ez+lswzmwD+NB0Yb6YdZty0
-p+ceaQdycWA9uZfPAwFAra/NTM/IwQI=
-=63/4
------END PGP SIGNATURE-----
-
---aika3toolbzzx6k2--
+greg k-h
