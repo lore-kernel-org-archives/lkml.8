@@ -2,98 +2,62 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53335C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B1CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37EBA20760
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 190EF20734
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:45:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbgFJNnr (ORCPT
+        id S1729403AbgFJNo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 09:43:47 -0400
-Received: from mga11.intel.com ([192.55.52.93]:1502 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726157AbgFJNnr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 09:43:47 -0400
-IronPort-SDR: kGNWvz6WhEXNXLikp80oL1mo/xbbgaxAmy6895MfMvkyygQUkB0GQBdeeVnbDft5oLGaUm7zdl
- kHDYcfHu10bw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2020 06:43:47 -0700
-IronPort-SDR: GQYil1KoZD0hDsNL8ZlqWLhGiuzvHhF+Ek/QIPGYjG9ARxecfh6EX7RhubfUMbnzPiuesWH/3F
- Mmms5Z9mBX4Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,496,1583222400"; 
-   d="scan'208";a="349850031"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga001.jf.intel.com with ESMTP; 10 Jun 2020 06:43:44 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jj119-00C9Pp-Cv; Wed, 10 Jun 2020 16:43:47 +0300
-Date:   Wed, 10 Jun 2020 16:43:47 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v1 4/6] mfd: intel_quark_i2c_gpio: Convert to use
- software nodes
-Message-ID: <20200610134347.GH2428291@smile.fi.intel.com>
-References: <20200608134300.76091-1-andriy.shevchenko@linux.intel.com>
- <20200608134300.76091-5-andriy.shevchenko@linux.intel.com>
- <CACRpkdZer1bUSXoK4wZpQu60mA5pEST8FEFuTrvvoaZ2+1S=hw@mail.gmail.com>
+        Wed, 10 Jun 2020 09:44:58 -0400
+Received: from imap3.hz.codethink.co.uk ([176.9.8.87]:48880 "EHLO
+        imap3.hz.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726341AbgFJNo5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 09:44:57 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126] helo=xylophone)
+        by imap3.hz.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
+        id 1jj12E-0001Lo-Kg; Wed, 10 Jun 2020 14:44:54 +0100
+Message-ID: <5935bba37ea9f7421e316b7d554508b0f652c027.camel@codethink.co.uk>
+Subject: Re: [PATCH AUTOSEL 5.6 080/606] i2c: dev: Fix the race between the
+ release of i2c_dev and cdev
+From:   Ben Hutchings <ben.hutchings@codethink.co.uk>
+To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     Kevin Hao <haokexin@gmail.com>, Wolfram Sang <wsa@the-dreams.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-i2c@vger.kernel.org
+Date:   Wed, 10 Jun 2020 14:44:53 +0100
+In-Reply-To: <20200608231211.3363633-80-sashal@kernel.org>
+References: <20200608231211.3363633-1-sashal@kernel.org>
+         <20200608231211.3363633-80-sashal@kernel.org>
+Organization: Codethink Ltd.
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZer1bUSXoK4wZpQu60mA5pEST8FEFuTrvvoaZ2+1S=hw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 01:38:54PM +0200, Linus Walleij wrote:
-> On Mon, Jun 8, 2020 at 3:43 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
+On Mon, 2020-06-08 at 19:03 -0400, Sasha Levin wrote:
+> From: Kevin Hao <haokexin@gmail.com>
 > 
-> > -/* The base GPIO number under GPIOLIB framework */
-> > -#define INTEL_QUARK_MFD_GPIO_BASE      8
-> 
-> OK I see this was around before, sigh.
-> So it's not your fault. It was introduced in commit
-> 60ae5b9f5cdd8 which I was not involved in reviewing,
-> for the record I would have said "no".
-> 
-> It is exploiting commit 3d2613c4289ff where I allowed
-> pdata to set the base so it is anyway my fault for not
-> noticing :(
-> 
-> But me complaining about this doesn't make things better.
-> 
-> Can we simply DELETE this assignment and just set base to
-> -1 in a separate patch before this patch and see what happens? It's
-> really unsafe to hardcode base like this.
+> commit 1413ef638abae4ab5621901cf4d8ef08a4a48ba6 upstream.
+[...]
 
-I don't see easy way to do so, because as I explained in previous mail it will
-affect relation (from firmware) to the fact that the numbering of this
-controller is static for that platform.
+This was already applied in 5.6.15.
 
-> +       PROPERTY_ENTRY_U32("snps,nr-gpios", 8),
-> 
-> This is however fine in principle but just use the existing generic
-> property "ngpios" and save this custom property.
-
-This is established (not by ACPI!) property. Completely not my fault :-)
+Ben.
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Ben Hutchings, Software Developer                         Codethink Ltd
+https://www.codethink.co.uk/                 Dale House, 35 Dale Street
+                                     Manchester, M1 2HF, United Kingdom
 
