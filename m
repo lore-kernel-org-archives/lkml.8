@@ -2,109 +2,112 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEAB0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A0EEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0E0D206F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:42:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBCBC206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:42:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726434AbgFJVmd (ORCPT
+        id S1726482AbgFJVmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 17:42:33 -0400
-Received: from mga02.intel.com ([134.134.136.20]:57876 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726134AbgFJVmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 17:42:33 -0400
-IronPort-SDR: 21ohFHxs3cuTxfb8nNFa8tRH1WuWX4xZLWzqvwQEi/3kDCo3QS9PmGKKgmEhMyZ7ITcEJ2u5fr
- MbIMnoEn6w7g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2020 14:42:32 -0700
-IronPort-SDR: +V0QIYpPLZKdKGrCFZmSwGosMNWEVNmio3RcOy+ukMeFOklxh3hugwgCGopqwSi3z7ZIDg/poL
- seBJteskvaMQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,497,1583222400"; 
-   d="scan'208";a="473487394"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga006.fm.intel.com with ESMTP; 10 Jun 2020 14:42:32 -0700
-Date:   Wed, 10 Jun 2020 14:42:31 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     "David P. Reed" <dpreed@deepplum.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Allison Randal <allison@lohutok.net>,
-        Enrico Weigelt <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Martin Molnar <martin.molnar.programming@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Jann Horn <jannh@google.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Fix undefined operation VMXOFF during reboot and crash
-Message-ID: <20200610214231.GH18790@linux.intel.com>
-References: <20200610181254.2142-1-dpreed@deepplum.com>
- <878sgufvvm.fsf@nanos.tec.linutronix.de>
+        Wed, 10 Jun 2020 17:42:55 -0400
+Received: from smtprelay0149.hostedemail.com ([216.40.44.149]:54690 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726134AbgFJVmy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 17:42:54 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 727EE801B568;
+        Wed, 10 Jun 2020 21:42:53 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: wrist18_451733326dce
+X-Filterd-Recvd-Size: 3194
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf09.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 10 Jun 2020 21:42:52 +0000 (UTC)
+Message-ID: <33204a397b2d9316e09ae9829e637894b304ea00.camel@perches.com>
+Subject: Re: [PATCH] checkpatch: add check for
+ NONNETWORKING_BLOCK_COMMENT_STYLE
+From:   Joe Perches <joe@perches.com>
+To:     Scott Branden <scott.branden@broadcom.com>,
+        Andy Whitcroft <apw@canonical.com>
+Cc:     BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Date:   Wed, 10 Jun 2020 14:42:51 -0700
+In-Reply-To: <021da2ca-a8d3-d0ad-28c3-6a84464353fd@broadcom.com>
+References: <20200610202640.9020-1-scott.branden@broadcom.com>
+         <673c2ebaf7a1ca93f3b1192a77ff62167badd896.camel@perches.com>
+         <021da2ca-a8d3-d0ad-28c3-6a84464353fd@broadcom.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <878sgufvvm.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Gah, I typed too slow :-)
+On Wed, 2020-06-10 at 14:33 -0700, Scott Branden wrote:
+> Hi Joe,
+> 
+> On 2020-06-10 2:16 p.m., Joe Perches wrote:
+> > On Wed, 2020-06-10 at 13:26 -0700, Scott Branden wrote:
+> > > NETWORKING_BLOCK_COMMENT_STYLE is supported by checkpatch but there
+> > > doesn't seem to be any check for the standard block comment style.
+> > > Add support for NONNETWORKING_BLOCK_COMMENT_STYLE to check for empty /*
+> > > on first line of non-networking block comments.
+> > I think there are _way_ too many instances of this form
+> > in non-networking code to enable this.
+> > 
+> > $ git grep -P '^\s*/\*\s*\S.*[^\*][^\\]\s*$' -- '*.[ch]' | \
+> >    grep -v -P '^(drivers/net/|net/)' | \
+> >    wc -l
+> > 51407
+> That is true about many things that checkpatch now checks for that 
+> didn't previously.
 
-On Wed, Jun 10, 2020 at 11:34:21PM +0200, Thomas Gleixner wrote:
-> We have exception fixups to avoid exactly that kind of horrible
-> workarounds all over the place.
-> 
-> static inline int cpu_vmxoff_safe(void)
-> {
->         int err;
->  
-> 	asm volatile("2: vmxoff; xor %[err],%[err]\n"
-> 		     "1:\n\t"
-> 		     ".section .fixup,\"ax\"\n\t"
-> 		     "3:  mov %[fault],%[err] ; jmp 1b\n\t"
-> 		     ".previous\n\t"
-> 		     _ASM_EXTABLE(2b, 3b)
-> 		     : [err] "=a" (err)
-> 		     : [fault] "i" (-EFAULT)
-> 		     : "memory");
->         return err;
-> }
-> 
-> static inline void __cpu_emergency_vmxoff(void)
-> {
->         if (!cpu_vmx_enabled())
->         	return;
->         if (!cpu_vmxoff_safe())
->         	cr4_clear_bits(X86_CR4_VMXE);
+Not in that quantity of uses it doesn't.
 
-This bit is wrong, CR4.VMXE should be cleared even if VMXOFF faults, e.g.
-if this is called in NMI context and the NMI arrived in KVM code between
-VMXOFF and clearing CR4.VMXE.
+I specifically did _not_ add this very same test
+when I added the other comment tests.
 
-All other VMXOFF faults are mode related, i.e. any fault is guaranteed to
-be due to the !post-VMXON check unless we're magically in RM, VM86, compat
-mode, or at CPL>0.
+> But, by adding to checkpatch the coding style clearly outlined in 
+> coding-style.rst can be followed:
 
-> }
-> 
-> Problem solved.
-> 
-> Thanks,
-> 
->         tglx
+Well, because there are _so_ many false positives
+that don't need change, I'm not adding this.
+
+As is, I'm nacking it.
+
+If you need it for your use, you should keep it in
+your own tree.
+
+> > > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> > []
+> > > @@ -3408,6 +3408,16 @@ sub process {
+> > >   			     "networking block comments don't use an empty /* line, use /* Comment...\n" . $hereprev);
+> > >   		}
+> > >   
+> > > +# Non-Networking with an empty initial /*
+> > > +		if ($realfile !~ m@^(drivers/net/|net/)@ &&
+> > > +		    $prevrawline =~ /^\+[ \t]*\/\*[ \t]/ &&
+> > > +		    $prevrawline !~ /\*\/[ \t]*$/ &&		#no trailing */
+> > > +		    $rawline =~ /^\+[ \t]*\*/ &&
+> > > +		    $realline > 2) {
+> > > +			WARN("NONNETWORKING_BLOCK_COMMENT_STYLE",
+> > > +			     "non-networking block comments use an empty /* on first line\n" . $hereprev);
+
+_Maybe_ this test _might_ be useful if it did a file/patch
+test and used CHK on file, but even then I'm very dubious.
+
+			my $msg_level = \&WARN;
+			$msg_level = \&CHK if ($file);
+			&{msg_level}(etc...)
+
+
