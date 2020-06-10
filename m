@@ -2,76 +2,50 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 933C2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B635BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BC422072E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:09:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 956522072E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:10:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbgFJVJ4 (ORCPT
+        id S1726557AbgFJVKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 17:09:56 -0400
-Received: from smtprelay0202.hostedemail.com ([216.40.44.202]:46734 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726327AbgFJVJ4 (ORCPT
+        Wed, 10 Jun 2020 17:10:37 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:55207 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726095AbgFJVKg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 17:09:56 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id B460918074CAA;
-        Wed, 10 Jun 2020 21:09:55 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: crate24_3c11eaa26dce
-X-Filterd-Recvd-Size: 1924
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf15.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 10 Jun 2020 21:09:54 +0000 (UTC)
-Message-ID: <1b2d9ead79a5a035a287b7ecba8655b2c633d5cd.camel@perches.com>
-Subject: Re: [PATCH] checkpatch: ignore CamelCase for inttypes.h format
- specifiers
-From:   Joe Perches <joe@perches.com>
-To:     Scott Branden <scott.branden@broadcom.com>,
-        Andy Whitcroft <apw@canonical.com>
-Cc:     BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 10 Jun 2020 14:09:53 -0700
-In-Reply-To: <20200610203307.9344-1-scott.branden@broadcom.com>
-References: <20200610203307.9344-1-scott.branden@broadcom.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.2-0ubuntu1 
+        Wed, 10 Jun 2020 17:10:36 -0400
+Received: from callcc.thunk.org (pool-100-0-195-244.bstnma.fios.verizon.net [100.0.195.244])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 05ALAJJG020633
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 10 Jun 2020 17:10:21 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 4F88C4200DD; Wed, 10 Jun 2020 17:10:19 -0400 (EDT)
+Date:   Wed, 10 Jun 2020 17:10:19 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     syzbot <syzbot+bca9799bf129256190da@syzkaller.appspotmail.com>
+Cc:     adilger.kernel@dilger.ca, akpm@linux-foundation.org,
+        dan.j.williams@intel.com, jack@suse.cz, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: BUG: unable to handle kernel NULL pointer dereference in
+ generic_perform_write (2)
+Message-ID: <20200610211019.GJ1347934@mit.edu>
+References: <00000000000016a67305a33a11f7@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00000000000016a67305a33a11f7@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-06-10 at 13:33 -0700, Scott Branden wrote:
-> Ignore CamelCase for inttypes.h for fixed integer types format specifiers.
-> (ex. PRIx32 for uint32_t).
-
-Personally, I don't like those.
-
-> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-> ---
->  scripts/checkpatch.pl | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index 899e380782c0..9fa90457b270 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -5157,6 +5157,8 @@ sub process {
->  			    $var =~ /[A-Z][a-z]|[a-z][A-Z]/ &&
->  #Ignore Page<foo> variants
->  			    $var !~ /^(?:Clear|Set|TestClear|TestSet|)Page[A-Z]/ &&
-> +#Ignore inttypes.h scanf/printf format specifiers for fixed size integer types
-> +			    $var !~ /^(?:PRI|SCN)[dxoui](8|16|32|64|PTR|MAX)?$/ &&
->  #Ignore SI style variants like nS, mV and dB
->  #(ie: max_uV, regulator_min_uA_show, RANGE_mA_VALUE)
->  			    $var !~ /^(?:[a-z0-9_]*|[A-Z0-9_]*)?_?[a-z][A-Z](?:_[a-z0-9_]+|_[A-Z0-9_]+)?$/ &&
-
+#syz test: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 5b8b9d0c6d0e0f1993c6c56deaf9646942c49d94
