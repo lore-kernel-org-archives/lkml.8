@@ -2,153 +2,159 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6201CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 18:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B797C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 18:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B3F32083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 18:57:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDE9D2074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 18:57:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="s4uUlhbs"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Sk96oRFz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730010AbgFJS5A (ORCPT
+        id S1730057AbgFJS5q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 14:57:00 -0400
-Received: from mout.web.de ([212.227.17.11]:55065 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729901AbgFJS46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 14:56:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1591815388;
-        bh=zrM6Mstw671L2C4xtRcmtowMACOwlHKJxE3bL92A/5k=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=s4uUlhbsWkfjxBAKYA0FrJyVsEdQtY0MSTmL2Jjlae8x+MDIpJRrJhshTMqMSBXUs
-         yH2xNbh/MxMO5g8+Qnk332BE86fwIdWKo4XOHmH9IEQvKkQ2zYqztO9FYpo3Bz1aRx
-         yMgyPQq+3XJru37B4yM86q2pzZND6xHd1O2cCme0=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.133.155.16]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MOixm-1jp9ty1K3K-00655L; Wed, 10
- Jun 2020 20:56:28 +0200
-Subject: Re: [PATCH v2] exfat: add missing brelse() calls on error paths
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-fsdevel@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        Tetsuhiro Kohada <kohada.t2@gmail.com>,
-        Wei Yongjun <weiyongjun1@huawei.com>
-References: <20200610172213.GA90634@mwanda>
- <740ce77a-5404-102b-832f-870cbec82d56@web.de> <20200610184517.GC4282@kadam>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <b44caf20-d3fc-30ac-f716-2375ed55dc9a@web.de>
-Date:   Wed, 10 Jun 2020 20:56:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Wed, 10 Jun 2020 14:57:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48740 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729423AbgFJS5o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 14:57:44 -0400
+Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1980C03E96F
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 11:57:44 -0700 (PDT)
+Received: by mail-ua1-x943.google.com with SMTP id b10so1245340uaf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 11:57:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vVAD935vzmk+zCqhrKriBW6qDeJ9UbWhrYXMFyoDNbk=;
+        b=Sk96oRFzgKSljVnt+6mnQTGDFRR0sIInBe9XAnfxFeWo07PzQGUesvjTrqS2UETGbw
+         33JxIrEdcR+6sHmE/xgF9BdVMMrsqGaNijoxzDMr0BORvnpqMlkboWl1jjWyay1ys7QO
+         8bpz6ZhJVssu9zvLNYu2RNYv8V5b1aDXEFpmiTlxEmWvOQJ5IbaCgyZIBROKMbu9R0Ts
+         Q+V8y6LeyXVnKp3TlABf8aS4jdt3me7MPjKJum7oyVYTDbJvsXQXN3qWMLzNS+UjFXec
+         Q9ZEwZtxWUmmCPNxf8lT36jJYD1cIcpvnyeN9ijj5+wpG8wuuX1kDrzho+WryA2ZSCwZ
+         pqsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vVAD935vzmk+zCqhrKriBW6qDeJ9UbWhrYXMFyoDNbk=;
+        b=CumNnE6lqU4fn/9Cr1V835OSVVDer85a2xRxiCJYUQrhYu9nRWeesC4HLVn/GcLl8U
+         2/1LYyqoWteQ6/OsFRMo26kJzJaHXB+Fdt8s17ajTsZiqloQy3nPZwQktrPdjkoAviyc
+         gNrHSpXW5ipcP1Z94tl9zMa4SLP59ugxdREmB/cnj9CqtWD2SpBGbgnOop1npShHi4r0
+         CwoLiOii4FotS1ur0GlSVpg7lOxhxPWK4S7Vh59ET32e4DrKDijqB59blph+YJvFgKX3
+         ara3/520dC/z6MRPVBwH9KtGbfdE2kwY4e+doPiD0HcaWVxIkuFBMNlVpdEu7EC4VN0o
+         szug==
+X-Gm-Message-State: AOAM532Nvm1RtXa8UZsomZb7v87f4RlY7kwMkyXvMHud2+6svVpfgZTr
+        AgrJOFMaurfQYQiY/sTF0vhRfYiOBXyf+lHzoe6mXA==
+X-Google-Smtp-Source: ABdhPJwqVgX0Mxv8PTZWgFn/z7rA1Vsp5KXwbMJOCDIJ24b73HyTMCwRupwGMFcz8Y6tomohXhbM0jt7mBqkr2VcMvI=
+X-Received: by 2002:ab0:70c9:: with SMTP id r9mr3681310ual.15.1591815463735;
+ Wed, 10 Jun 2020 11:57:43 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200610184517.GC4282@kadam>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Kz2+KDJLii4lL+1Xq2+9GxI+E0FxfHagFzciCsIy+29xKVvu7mA
- fU8FYsR5LaTIj6xwHd2nstAMqXJexfBtcsDd48FeSlOmFx7n0uxCWv1lw/o5fDEw2/DK4mI
- SUyYmAcNketJS8ZPH/aGeb3bQgemmgpw467QyN++E6HJtm4Dk+pMp93SmLJgmGIld4JUwoH
- qQbV2BCmHwWKMtxBhE4dw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:avbKXkX+ZGU=:LwHUAiqxl+y2SPTQwBKMWJ
- DO7HRV4bdf0mvjFYttBISox2Xn5do32ZY1+mkRTHhf2iODnqgtnoYlkjkArQpmHaCcUFx0LSU
- GAxXHW2WcfdPZrG4kk/zFsX+qr8scYxwRLh2fBgnVutNuh/lDi05gu8Zy6i9s5L+zmyamcmJ0
- EfLRjM9CR3I/piYXStmrIZ9Vh07y6GbeXkjkxKoEyeLfRAI/lZP+mETdSbp0MUdy6xSHz9BIw
- U1CqERzQamW+wRAq13TCSVdkOBEoIHWaTuTPVM2T/EoyIQ9TTh1e9h1HZ9gZCqsw73hlqTx5r
- LTGFTCO1S9AZD6crH5WfwwzJr1Nq68Glt/1a311TF3f74uR4pZKcW5in/hDgbAgrXli1usG6w
- elzbNW5kSgVmj7qVj7SQKD6GEyec6f6pFTuYMVrrTCpU9rvPzao2R+LtC9QGPyv879zDTlHHW
- GvxLMuX5TxBsjnv+DsttXSj1TgjuZQbS3UaOIhzdsPLwoZNif0yp4kHvwEmJWP7fVOj2fkv9R
- 4ZShZONj6hmncEz8FgyLF4v4TCWIx3bm4xYbUfWQZ69zLFnvoYWk9F19PzRw6oHkPnJ0O42q5
- lVBCRXZzzqb6Wj1zIKu6xIY0JNcyvae11J0TCdGJ0iNdNW/umMYQBJ+0EJ8/4Vt6NpzwK7aGs
- WsN3EufinUbv2J+JtN8JdmHS9HjkrFJ06lRBY0M/kOr2Jqc2Qj0c0QklKmlFLaGM6CDAc3eaG
- diBjYgoxaY9rUk//nXvrmgpvdi6eHwK0KAVeSak4fEXo1xor7LuaMbSruUd/tf45qnvWW29gE
- CwYN5f4W53PLRoXzBeT9PK5WwxpNHjlvCUjRuhon9P+olBDuaL49O7106SfCahJYIfaz9EsQp
- K2PnVBs4u4AW3Di6eOSrBJXCbPoeegtrBY4MZ9WFXXtaFa+dqskjgeBFTWAk4S/E95vhi1YkT
- CV5QHm2rKevj0lU/X4OUGadgcO2dr/0gyq/XgoPm5YMJzyDnaB/g7ziBYaBGlxYx+GqMMF49T
- YpUr+xtjE0I+gUd5eS8Ap2G+paMkd6FqXCY9wKizL0h3afsMNsbqlowYZkpMkjTNs1X48hTCX
- DA2LXOwo7OeKdmPq3Au/1UKT4lJW6k2+VgmdvTshNu92QOCrfIdRmrpL0LoXOJLrQtTZZUQx+
- Zi4xeMjdnfr/nJSaoeAzTCfUY9Dzwcyx+Cyx4ELZixETwLldga8MNiuTlORYwpmIVLShbdLh+
- R6hViB9FP6V64Qunw
+References: <20200605213853.14959-1-sean.j.christopherson@intel.com> <20200605213853.14959-11-sean.j.christopherson@intel.com>
+In-Reply-To: <20200605213853.14959-11-sean.j.christopherson@intel.com>
+From:   Ben Gardon <bgardon@google.com>
+Date:   Wed, 10 Jun 2020 11:57:32 -0700
+Message-ID: <CANgfPd9_BR_2NThfEs8faDxWeooZ6OeF2HAB5mUmted5sHwDPg@mail.gmail.com>
+Subject: Re: [PATCH 10/21] KVM: x86/mmu: Make __GFP_ZERO a property of the
+ memory cache
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Marc Zyngier <maz@kernel.org>, Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Feiner <pfeiner@google.com>,
+        Peter Shier <pshier@google.com>,
+        Junaid Shahid <junaids@google.com>,
+        Christoffer Dall <christoffer.dall@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>> If the second exfat_get_dentry() call fails then we need to release
->>> "old_bh" before returning.  There is a similar bug in exfat_move_file(=
-).
->>
->> Would you like to convert any information from this change description
->> into an imperative wording?
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/Documentation/process/submitting-patches.rst?id=3D5b14671be58d0084e7e2d1c=
-c9c2c36a94467f6e0#n151
+On Fri, Jun 5, 2020 at 2:39 PM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
 >
-> I really feel like imperative doesn't add anything.  I understand that
-> some people feel really strongly about it, but I don't know why.  It
-> doesn't make commit messages more understandable.
+> Add a gfp_zero flag to 'struct kvm_mmu_memory_cache' and use it to
+> control __GFP_ZERO instead of hardcoding a call to kmem_cache_zalloc().
+> A future patch needs such a flag for the __get_free_page() path, as
+> gfn arrays do not need/want the allocator to zero the memory.  Convert
+> the kmem_cache paths to __GFP_ZERO now so as to avoid a weird and
+> inconsistent API in the future.
+>
+> No functional change intended.
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Reviewed-by: Ben Gardon <bgardon@google.com>
+> ---
+>  arch/x86/include/asm/kvm_host.h | 1 +
+>  arch/x86/kvm/mmu/mmu.c          | 7 ++++++-
+>  2 files changed, 7 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index e7a427547557..fb99e6776e27 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -251,6 +251,7 @@ struct kvm_kernel_irq_routing_entry;
+>   */
+>  struct kvm_mmu_memory_cache {
+>         int nobjs;
+> +       gfp_t gfp_zero;
+This would make more sense to me if it could be used for general extra
+gfp flags and was called gfp_flags or something, or it was a boolean
+that was later translated into the flag being set. Storing the
+gfp_zero flag here is a little counter-intuitive. Probably not worth
+changing unless you're sending out a v2 for some other reason.
 
-Do you insist to deviate from the given guideline?
-
-
-> The important thing is that the problem is clear, the fix is clear and
-> the runtime impact is clear.
-
-I have got further ideas to improve also this commit message.
-I am curious if other contributors would like to add another bit of
-patch review.
-
-Regards,
-Markus
+>         struct kmem_cache *kmem_cache;
+>         void *objects[KVM_NR_MEM_OBJS];
+>  };
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index d245acece3cd..6b0ec9060786 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -1063,8 +1063,10 @@ static void walk_shadow_page_lockless_end(struct kvm_vcpu *vcpu)
+>  static inline void *mmu_memory_cache_alloc_obj(struct kvm_mmu_memory_cache *mc,
+>                                                gfp_t gfp_flags)
+>  {
+> +       gfp_flags |= mc->gfp_zero;
+> +
+>         if (mc->kmem_cache)
+> -               return kmem_cache_zalloc(mc->kmem_cache, gfp_flags);
+> +               return kmem_cache_alloc(mc->kmem_cache, gfp_flags);
+>         else
+>                 return (void *)__get_free_page(gfp_flags);
+>  }
+> @@ -5680,7 +5682,10 @@ int kvm_mmu_create(struct kvm_vcpu *vcpu)
+>         int ret;
+>
+>         vcpu->arch.mmu_pte_list_desc_cache.kmem_cache = pte_list_desc_cache;
+> +       vcpu->arch.mmu_pte_list_desc_cache.gfp_zero = __GFP_ZERO;
+> +
+>         vcpu->arch.mmu_page_header_cache.kmem_cache = mmu_page_header_cache;
+> +       vcpu->arch.mmu_page_header_cache.gfp_zero = __GFP_ZERO;
+>
+>         vcpu->arch.mmu = &vcpu->arch.root_mmu;
+>         vcpu->arch.walk_mmu = &vcpu->arch.root_mmu;
+> --
+> 2.26.0
+>
