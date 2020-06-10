@@ -2,110 +2,160 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E88C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD172C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D87EA2078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:48:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pgYRvjiW"
+	by mail.kernel.org (Postfix) with ESMTP id C052A2078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:48:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbgFJIsl (ORCPT
+        id S1726940AbgFJIsw convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 04:48:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39010 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726673AbgFJIsk (ORCPT
+        Wed, 10 Jun 2020 04:48:52 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:23027 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726928AbgFJIsu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 04:48:40 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A1A5C03E96B;
-        Wed, 10 Jun 2020 01:48:40 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id x22so982877lfd.4;
-        Wed, 10 Jun 2020 01:48:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VC9z0YQVw/ovp7RcdPcoELOnuCQp6hRBgNQO9wmx/S4=;
-        b=pgYRvjiWI9A4AuDA7s2i4gT5VqsCkDiNA5Q+kChiJCsMF9JGQLAV6ZdXISKFy8Y6ZJ
-         NOTHCgAE1sIW3aluZnjE+2ms1ZgSQdlixIcx2+fPunWGZCFTZuPd/CQbkcMNBaq0r7VW
-         Lz+K+h6q+GyXXyc8OgJIY9GuSXlLbfHc4O/c6JY9HmCEa6vcunouYF8BJognnuFmCMzr
-         t3TtpAGHy/c9hghZlSFJ6RuDBfeqeQGU39jzyVHzqYb+YmwG3x/Lz0R2XUN9LlsJPHoJ
-         n7zOLDs4k3BF+tP9jIT/pab+/VGu+fjKBIcNckh/VOAw8MPbLUmBGp/4qBDhC8+eghYh
-         DFNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VC9z0YQVw/ovp7RcdPcoELOnuCQp6hRBgNQO9wmx/S4=;
-        b=bL8OBvBmbWK/7eos4WxZlmIPL5DPLtkRpqQmSOfjfo9WnGVUV3i6gKnFyTsgUGQ8Sp
-         QxAbv5ZFgMWNMo7lxzYIMditj9e+5gLXqxOXcv8k4I1nr6PAve5MJI5rtT04/0UVB0bw
-         skMA5s7NomeFdNvWNKqwqV7SBSbNl7MhctmTvXiUPcurDaxwQNMtGgJdqXTBPzPJWDiR
-         f0Q4m7fNNrTeNuwlWIO3++qqpMXEnf+vpTcYVJvBd3t1R3u+DpwKhcqYNcoQM6CWJ8Nz
-         zuJKquE30OCNzfs0Zfh+2VArfDLtPXiVSd/ewoa7Yp7Wt8IE3Sh4OB401ibAR77hgA9E
-         2LzQ==
-X-Gm-Message-State: AOAM531yAsSBlJcUZa4i7Dz+Cuo97cEVFoC+ym+t6IAhrClzBE8frXpl
-        tg+mbIQgXMaZf179Z47QmjMmq8qrPgnlkd+FfVE=
-X-Google-Smtp-Source: ABdhPJxsPu3S/Zw+UKXoVa8bsgKlBQqtFzO4VbdBKA+uqODD6HONKVUcUzPacw2j/I2RQ+GOYTg8BcAd9QNwnEDl+BE=
-X-Received: by 2002:ac2:55b2:: with SMTP id y18mr1128272lfg.55.1591778918010;
- Wed, 10 Jun 2020 01:48:38 -0700 (PDT)
+        Wed, 10 Jun 2020 04:48:50 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-161-0yN4TplFM4ieG9IIs6KTcQ-2; Wed, 10 Jun 2020 09:48:46 +0100
+X-MC-Unique: 0yN4TplFM4ieG9IIs6KTcQ-2
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 10 Jun 2020 09:48:45 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 10 Jun 2020 09:48:45 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Sargun Dhillon' <sargun@sargun.me>,
+        Kees Cook <keescook@chromium.org>
+CC:     Christian Brauner <christian.brauner@ubuntu.com>,
+        "containers@lists.linux-foundation.org" 
+        <containers@lists.linux-foundation.org>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Robert Sesek <rsesek@google.com>,
+        Chris Palmer <palmer@google.com>, Jann Horn <jannh@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Wagner <daniel.wagner@bmw-carit.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Matt Denton <mpdenton@google.com>,
+        John Fastabend <john.r.fastabend@intel.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Tejun Heo <tj@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: RE: [PATCH v3 1/4] fs, net: Standardize on file_receive helper to
+ move fds across processes
+Thread-Topic: [PATCH v3 1/4] fs, net: Standardize on file_receive helper to
+ move fds across processes
+Thread-Index: AQHWPv7tCi14oegu0U6J73sUpcDiU6jRh/3w
+Date:   Wed, 10 Jun 2020 08:48:45 +0000
+Message-ID: <40d76a9a4525414a8c9809cd29a7ba8e@AcuMS.aculab.com>
+References: <20200603011044.7972-2-sargun@sargun.me>
+ <20200604012452.vh33nufblowuxfed@wittgenstein>
+ <202006031845.F587F85A@keescook>
+ <20200604125226.eztfrpvvuji7cbb2@wittgenstein>
+ <20200605075435.GA3345@ircssh-2.c.rugged-nimbus-611.internal>
+ <202006091235.930519F5B@keescook>
+ <20200609200346.3fthqgfyw3bxat6l@wittgenstein>
+ <202006091346.66B79E07@keescook>
+ <037A305F-B3F8-4CFA-B9F8-CD4C9EF9090B@ubuntu.com>
+ <202006092227.D2D0E1F8F@keescook>
+ <20200610081237.GA23425@ircssh-2.c.rugged-nimbus-611.internal>
+In-Reply-To: <20200610081237.GA23425@ircssh-2.c.rugged-nimbus-611.internal>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-References: <20200610065801.3579-1-zhenzhong.duan@gmail.com> <20200610082040.GB14118@zn.tnic>
-In-Reply-To: <20200610082040.GB14118@zn.tnic>
-From:   Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Date:   Wed, 10 Jun 2020 16:48:26 +0800
-Message-ID: <CAFH1YnNsM0okzpLru9Fd__F9yp-a00+J17L2atLBrnV3vWSqLw@mail.gmail.com>
-Subject: Re: [PATCH] EDAC, {skx,i10nm}: Advice mcelog that the error were handled
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-edac@vger.kernel.org, tony.luck@intel.com,
-        mchehab@kernel.org, james.morse@arm.com, rrichter@marvell.com
-Content-Type: text/plain; charset="UTF-8"
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 4:20 PM Borislav Petkov <bp@alien8.de> wrote:
->
-> On Wed, Jun 10, 2020 at 02:58:01PM +0800, Zhenzhong Duan wrote:
-> > If one MCE error has been processed in kernel, it's not necessory
-> > to pass it to user level mcelog.
+From: Sargun Dhillon
+> Sent: 10 June 2020 09:13
+> 
+> On Tue, Jun 09, 2020 at 10:27:54PM -0700, Kees Cook wrote:
+> > On Tue, Jun 09, 2020 at 11:27:30PM +0200, Christian Brauner wrote:
+> > > On June 9, 2020 10:55:42 PM GMT+02:00, Kees Cook <keescook@chromium.org> wrote:
+> > > >LOL. And while we were debating this, hch just went and cleaned stuff up:
+> > > >
+> > > >2618d530dd8b ("net/scm: cleanup scm_detach_fds")
+> > > >
+> > > >So, um, yeah, now my proposal is actually even closer to what we already
+> > > >have there. We just add the replace_fd() logic to __scm_install_fd() and
+> > > >we're done with it.
+> > >
+> > > Cool, you have a link? :)
 > >
-> > Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
-> > ---
-> >  drivers/edac/skx_common.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > How about this:
 > >
-> > diff --git a/drivers/edac/skx_common.c b/drivers/edac/skx_common.c
-> > index 46be1a7..8c0165b 100644
-> > --- a/drivers/edac/skx_common.c
-> > +++ b/drivers/edac/skx_common.c
-> > @@ -615,7 +615,8 @@ int skx_mce_check_error(struct notifier_block *nb, unsigned long val,
+> Thank you.
 > >
-> >       skx_mce_output_error(mci, mce, &res);
+> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/commit/?h=devel/seccomp/addfd/v3.1&id=b
+> b94586b9e7cc88e915536c2e9fb991a97b62416
 > >
-> > -     return NOTIFY_DONE;
-> > +     /* Advice mcelog that the error were handled */
-> > +     return NOTIFY_STOP;
-> >  }
-> >
-> >  void skx_remove(void)
 > > --
->
-> No, we won't be doing that anymore. See here:
->
-> https://git.kernel.org/tip/23ba710a0864108910c7531dc4c73ef65eca5568
->
-> it should appear mainline soon-ish, I hope.
+> > Kees Cook
+> 
+> +		if (ufd) {
+> +			error = put_user(new_fd, ufd);
+> +			if (error) {
+> +				put_unused_fd(new_fd);
+> +				return error;
+> +			}
+> + 		}
+> I'm fairly sure this introduces a bug[1] if the user does:
+> 
+> struct msghdr msg = {};
+> struct cmsghdr *cmsg;
+> struct iovec io = {
+> 	.iov_base = &c,
+> 	.iov_len = 1,
+> };
+> 
+> msg.msg_iov = &io;
+> msg.msg_iovlen = 1;
+> msg.msg_control = NULL;
+> msg.msg_controllen = sizeof(buf);
+> 
+> recvmsg(sock, &msg, 0);
+> 
+> They will have the FD installed, no error message, but FD number wont be written
+> to memory AFAICT. If two FDs are passed, you will get an efault. They will both
+> be installed, but memory wont be written to. Maybe instead of 0, make it a
+> poison pointer, or -1 instead?
 
-I see, thanks for showing.
+IMHO if the buffer isn't big enough the nothing should happen.
+(or maybe a few of the fds be returned and the others left for later.)
 
-Zhenzhong
+OTOH if the user passed an invalid address then installing the fd
+and returning EFAULT (and hence SIGSEGV) seems reasonable.
+Properly written apps just don't do that.
+
+In essence the 'copy_to_user' is done by the wrapper code.
+The code filling in the CMSG buffer can be considered to be
+writing a kernel buffer.
+
+IIRC other kernels (eg NetBSD) do the copies for ioctl() requests
+in the ioctl syscall wrapper.
+The IOW/IOR/IOWR flags have to be right.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
