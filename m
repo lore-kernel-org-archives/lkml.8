@@ -2,109 +2,86 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C2CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FCEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B46F42078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:54:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D07E5207C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:55:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591800877;
-	bh=h4GU7pIHSH5YCQVcvAzjRoaE8142Y+WoPe3aExRwEV4=;
+	s=default; t=1591800901;
+	bh=gjvlNmhpOseNaDKedcB9GHU7iTHrdoxsgDi+ecT5hyM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=w0x+Epm2Mvl1qa0+7Vd4W76WQ8CLprXcxVxjBdimzsgKJ/ndHOrMkWkgSzzcAkAzt
-	 wM2qXXLdMwcrIteiyEEuwxAdVvAgTtUR30KDn5caReGKPiNIEWpDPxev7F5EyFZBwg
-	 MOPNKyZ8dYPjv7ZBwJ9tucMiUOncNIxmrBSxBjUs=
+	b=Xd/5sTONdj23b2z+N7UuXKq/rqfrbkAxDg7kjPSvLQCLMBp08hsG29vve7gIoBEgY
+	 Vez88Avq4NC9+B+/thU2O/gNKWULkozIBfN0SxhQelwBdXeqVOIgaFRZWGkvy7+edg
+	 X4cy/x2K5dF+Bwc0egqHNCydPWZ/K24ABquPr9vI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbgFJOyg (ORCPT
+        id S1729957AbgFJOzA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 10:54:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44132 "EHLO mail.kernel.org"
+        Wed, 10 Jun 2020 10:55:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726908AbgFJOyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 10:54:35 -0400
+        id S1726908AbgFJOzA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 10:55:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C009F2072F;
-        Wed, 10 Jun 2020 14:54:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B3B72072F;
+        Wed, 10 Jun 2020 14:54:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591800875;
-        bh=h4GU7pIHSH5YCQVcvAzjRoaE8142Y+WoPe3aExRwEV4=;
+        s=default; t=1591800899;
+        bh=gjvlNmhpOseNaDKedcB9GHU7iTHrdoxsgDi+ecT5hyM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eLXbmVHursVNIqb8JTBmWPsenKWOSKR6Eff0VmZEi5m5uq7Dh5sUSVrKCQhQ181bB
-         FCURlDVuhQUQeWxgxm4WaPOobuSG30vWKrhOrnDbMLuVaDIHmCyy1G76ucW7i5aFGp
-         2ownfxKK+kMNkyeROKw30C1cs9aRwOTq3G7r3ntM=
-Date:   Wed, 10 Jun 2020 16:54:29 +0200
+        b=eaeuDZE9aPFGn7KUakOuZK2k1QhfcTOZLuINf4/XMi0YBL2klsbQOOY/l8bGW+4cz
+         xp8VmKc3npL/FqyHiYEsi9FrCqkVBqhg2nuXSwGlsN/uPAw9BC+i5XucyjYDMT6Z/p
+         TngvQfYG7+VgaLUpoauO2RAJo+iYFHoVAzhSxWPA=
+Date:   Wed, 10 Jun 2020 16:54:53 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        linux-gpio@vger.kernel.org, patches@opensource.cirrus.com,
-        Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>,
-        Qiushi Wu <wu000273@umn.edu>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] gpio: arizona: put pm_runtime in case of failure
-Message-ID: <20200610145429.GB2102023@kroah.com>
-References: <11488e76-2ea0-6478-0800-deb0438f0136@web.de>
+Cc:     Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
+        hemantg@codeaurora.org, Johan Hedberg <johan.hedberg@gmail.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rocky Liao <rjliao@codeaurora.org>,
+        Rob Herring <robh@kernel.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Claire Chang <tientzu@chromium.org>, yshavit@google.com,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] Bluetooth: hci_qca: Fix double free during SSR timeout
+Message-ID: <20200610145453.GC2102023@kroah.com>
+References: <d3444be6-28e6-bef5-08cf-6038620f65c6@web.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <11488e76-2ea0-6478-0800-deb0438f0136@web.de>
+In-Reply-To: <d3444be6-28e6-bef5-08cf-6038620f65c6@web.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 02:14:38PM +0200, Markus Elfring wrote:
-> I recommend to replace the word “pm_runtime” by the
-> alternative “PM run time system” in the patch subject.
+On Thu, Jun 04, 2020 at 08:24:34PM +0200, Markus Elfring wrote:
+> > Due to race conditions between qca_hw_error and qca_controller_memdump
+> > during SSR timeout,the same pointer is freed twice.
+> 
+> This is an unfortunate software situation.
 > 
 > 
-> > Calling pm_runtime_get_sync increments the counter even in case of
-> > failure, causing incorrect ref count if pm_runtime_put is not called in
-> > error handling paths.
+> > Which results to double free error.
 > 
-> Should the term “reference count” be used here?
+> How do you think about to omit this sentence from the change description?
 > 
 > 
-> > Call pm_runtime_put if pm_runtime_get_sync fails.
+> > Now a lock is acquired while SSR state moved to timeout.
 > 
-> The diff hunks show an other function name.
-> 
-> 
-> …
-> > +++ b/drivers/gpio/gpio-arizona.c
-> > @@ -64,6 +64,7 @@  static int arizona_gpio_get(struct gpio_chip *chip, unsigned offset)
-> >  		ret = pm_runtime_get_sync(chip->parent);
-> >  		if (ret < 0) {
-> >  			dev_err(chip->parent, "Failed to resume: %d\n", ret);
-> > +			pm_runtime_put_autosuspend(chip->parent);
-> >  			return ret;
-> >  		}
-> 
-> You propose to use identical statements in three if branches.
-> Please add a corresponding jump target for better exception handling.
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/coding-style.rst?id=435faf5c218a47fd6258187f62d9bb1009717896#n455
-> 
+> I suggest to convert this information into an imperative wording.
 > 
 > Would you like to add the tag “Fixes” to the commit message?
-> 
-> 
-> I find it amazing how many questionable implementation details
-> you pointed out recently.
-> Were these contributions triggered by an evolving source code analysis
-> tool like CheQ?
-> https://github.com/umnsec/cheq/
 > 
 > Regards,
 > Markus
