@@ -2,116 +2,143 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D31DDC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9484CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:08:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD6402072E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:07:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EB472072E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:08:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AfuT5smW"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="l00YqhZu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbgFJVHK (ORCPT
+        id S1726339AbgFJVID (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 17:07:10 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:42211 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726134AbgFJVHJ (ORCPT
+        Wed, 10 Jun 2020 17:08:03 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:59316 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726134AbgFJVIC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 17:07:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591823227;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tu2jjGryr0LbbIINiT9lskQiUTJPT9zi4N6MojzSreQ=;
-        b=AfuT5smWTgKLg0AgXZGy3ra/HJB76khe9afG9e1W8PFOmljOa3mKEJPijxIBg+mWmGUMMN
-        ae2y1+nPqvmU+1vk41z/Rgu56Ew5ZIfVnbehHZw0sps0oZMUFZV6YAPPet+RSZhH6y7ihn
-        1JPtrYz9pZVIm/EWEQTdCUjI6fz0YeA=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-495-XMsteDERNHOIiUg-6j6Hmw-1; Wed, 10 Jun 2020 17:07:06 -0400
-X-MC-Unique: XMsteDERNHOIiUg-6j6Hmw-1
-Received: by mail-wr1-f72.google.com with SMTP id z10so1616115wrs.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 14:07:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tu2jjGryr0LbbIINiT9lskQiUTJPT9zi4N6MojzSreQ=;
-        b=YE/j0HdSSxulrIDinghDesh1N7q3WiWssTas4B1bqxcCuOLJqLeywmpCViOsRNggqK
-         iSib2g44t86pXfOCE2f0ADvnieHJQ+NQPJkGCOtD58S1ush8GmZ3K0msagIpEKUYujpj
-         YFfEk6V/NccK6hbZ5okEsfTrGxFggontKYJtoIqH3hUEd6hI8VgqC0twgO4R+oMoql9d
-         WxNY4SvVIHzeF9hqOdOjqcTXaebbpbr9s01IzvdX6EjNOB03t9FDdV1pThFF+9IIFaEv
-         ijP9srXWcPoLCQYFYSnSeX5LC/3AjVEs4tncvogepqtwsTBBM5wsQHJEboebCtJpznl5
-         yg3A==
-X-Gm-Message-State: AOAM531PONUevBo0VZmDubDvrsVL1XygNNkLUOk+YNYbjwlWrE0TdRG7
-        hizaEfRCJ9J/HGZ8Kayv4PPta/Ww6WOs+GqhyjoEppTBZ0kA9RQPdJYTnxPSPrG0jaTE4t083ab
-        R+3lFssOgisPHG1f5waN/X7Lv
-X-Received: by 2002:a1c:7903:: with SMTP id l3mr4812447wme.50.1591823222127;
-        Wed, 10 Jun 2020 14:07:02 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwB9u5OHRHTxISVcb8apV6jQZ2qzFcqJQzCsm1Vb79yhDGrB86d0X9sNVypofwaxUeYAbWMHw==
-X-Received: by 2002:a1c:7903:: with SMTP id l3mr4812425wme.50.1591823221882;
-        Wed, 10 Jun 2020 14:07:01 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:29ed:810e:962c:aa0d? ([2001:b07:6468:f312:29ed:810e:962c:aa0d])
-        by smtp.gmail.com with ESMTPSA id f11sm1369605wrm.13.2020.06.10.14.07.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jun 2020 14:07:01 -0700 (PDT)
-Subject: Re: [PATCH v2 08/10] KVM: x86: Switch KVM guest to using interrupts
- for page ready APF delivery
-To:     Vivek Goyal <vgoyal@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Gavin Shan <gshan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org
-References: <20200525144125.143875-1-vkuznets@redhat.com>
- <20200525144125.143875-9-vkuznets@redhat.com>
- <20200610205145.GC243520@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <da087813-7be4-0e3c-d93c-a29d6933b69d@redhat.com>
-Date:   Wed, 10 Jun 2020 23:06:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 10 Jun 2020 17:08:02 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05AL6ZKo049476;
+        Wed, 10 Jun 2020 21:07:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=D8dZBcbd0rS3Mfv7fJRsU05nZ7ZNUJshc+qX8byxghM=;
+ b=l00YqhZu6VQKiuY2NcMYYhH2xKq6Xu3lotQq2J9LMSOioRLNXq/0xMAMtAzNda/ERupI
+ AJmQSL8zDZ2mcKUUymKxwlxJmc9AJzVjlOMkUndwHqAq7TfVu05/+vs8F8c6X5BgLz8U
+ 9DkPoZ6HNqAn5LYJQUXlDCP/CGRlK8UywXe+S5nRw5Sm5JUttK/3Vq5tkEwO9+dW5JDg
+ crXMz5euEmReQ0XtvMRB8ET3voelroEqNITATRrCQD+C9MKKClcEqumfJWsz/gpH7csm
+ j+aL2CYKrjkDllLHyf2j3D3TvGZFXc4zo/hOBIwcTuElzOnvrK5c3Qexs2m1WP1Paqus /g== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 31g2jrcma8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 10 Jun 2020 21:07:52 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05AKiSOm132390;
+        Wed, 10 Jun 2020 21:05:51 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3020.oracle.com with ESMTP id 31gmwtve3t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 10 Jun 2020 21:05:51 +0000
+Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05AL5o8c021995;
+        Wed, 10 Jun 2020 21:05:51 GMT
+Received: from localhost.localdomain (dhcp-10-65-148-96.vpn.oracle.com [10.65.148.96])
+        by userp3020.oracle.com with ESMTP id 31gmwtve2s-2;
+        Wed, 10 Jun 2020 21:05:51 +0000
+From:   Tom Hromatka <tom.hromatka@oracle.com>
+To:     tom.hromatka@oracle.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Cc:     fweisbec@gmail.com, tglx@linutronix.de, mingo@kernel.org,
+        adobriyan@gmail.com
+Subject: [PATCH 1/2] tick-sched: Do not clear the iowait and idle times
+Date:   Wed, 10 Jun 2020 15:05:48 -0600
+Message-Id: <20200610210549.61193-2-tom.hromatka@oracle.com>
+X-Mailer: git-send-email 2.25.3
+In-Reply-To: <20200610210549.61193-1-tom.hromatka@oracle.com>
+References: <20200610210549.61193-1-tom.hromatka@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <20200610205145.GC243520@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9648 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
+ cotscore=-2147483648 priorityscore=1501 spamscore=0 suspectscore=0
+ lowpriorityscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0 mlxscore=0
+ phishscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006100155
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/06/20 22:51, Vivek Goyal wrote:
->> KVM now supports using interrupt for 'page ready' APF event delivery and
->> legacy mechanism was deprecated. Switch KVM guests to the new one.
-> Hi Vitaly,
-> 
-> I see we have all this code in guest which tries to take care of
-> cases where PAGE_READY can be delivered before PAGE_NOT_PRESENT. In
-> this new schedume of things, can it still happen. We are using
-> an exception to deliver PAGE_NOT_PRESENT while using interrupt to
-> deliver PAGE_READY.
-> 
-> If re-ordeing is not possible, then it will be good to get rid of
-> that extra complexity in guest.
+A customer reported that when a cpu goes offline and then comes back
+online, the overall cpu idle and iowait data in /proc/stat decreases.
+This is wreaking havoc with their cpu usage calculations.
 
-It is perhaps less likely but still possible, because the interrupt
-might be delivered to another CPU and race against the exception.
+Prior to this patch:
 
-Paolo
+	        user nice system    idle iowait
+	cpu  1390748  636 209444 9802206  19598
+	cpu1  178384   75  24545 1392450   3025
+
+take cpu1 offline and bring it back online
+
+	        user nice system    idle iowait
+	cpu  1391209  636 209682 8453440  16595
+	cpu1  178440   75  24572     627      0
+
+To prevent this, do not clear the idle and iowait times for the
+cpu that has come back online.
+
+With this patch:
+
+	        user nice system    idle iowait
+	cpu   129913   17  17590  166512    704
+	cpu1   15916    3   2395   20989     47
+
+take cpu1 offline and bring it back online
+
+	        user nice system    idle iowait
+	cpu   130089   17  17686  184625    711
+        cpu1   15942    3   2401   23088     47
+
+Signed-off-by: Tom Hromatka <tom.hromatka@oracle.com>
+---
+ kernel/time/tick-sched.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
+index 3e2dc9b8858c..8103bad7bbd6 100644
+--- a/kernel/time/tick-sched.c
++++ b/kernel/time/tick-sched.c
+@@ -1375,13 +1375,22 @@ void tick_setup_sched_timer(void)
+ void tick_cancel_sched_timer(int cpu)
+ {
+ 	struct tick_sched *ts = &per_cpu(tick_cpu_sched, cpu);
++	ktime_t idle_sleeptime, iowait_sleeptime;
+ 
+ # ifdef CONFIG_HIGH_RES_TIMERS
+ 	if (ts->sched_timer.base)
+ 		hrtimer_cancel(&ts->sched_timer);
+ # endif
+ 
++	/* save off and restore the idle_sleeptime and the iowait_sleeptime
++	 * to avoid discontinuities and ensure that they are monotonically
++	 * increasing
++	 */
++	idle_sleeptime = ts->idle_sleeptime;
++	iowait_sleeptime = ts->iowait_sleeptime;
+ 	memset(ts, 0, sizeof(*ts));
++	ts->idle_sleeptime = idle_sleeptime;
++	ts->iowait_sleeptime = iowait_sleeptime;
+ }
+ #endif
+ 
+-- 
+2.25.3
 
