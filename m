@@ -2,82 +2,165 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B99C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9072DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12A4420825
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:43:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591775033;
-	bh=MJzP5c5PR6Tdbg5SV0+1atLygB5fnKjJ1WvlubG9GS4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AoPC/xPfs9h68f/HQvhsGQNtafchLCfC8nk9ZJtdjmkunJGxajcb8b9XkdzdOlJrH
-	 ASH82cAaUht5q7pydAiLvvyd2ReswAaNRSU2Hr8OxGtRp/N7YwVlVPxt6Ginen/rDW
-	 3zEn8KhYd4GPElyXiX35TTPMMezugJ+kuD3GTIM8=
+	by mail.kernel.org (Postfix) with ESMTP id 5C586207ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:44:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xoSGSnf+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbgFJHnv (ORCPT
+        id S1726556AbgFJHo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 03:43:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33212 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726105AbgFJHnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 03:43:51 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A7A9207ED;
-        Wed, 10 Jun 2020 07:43:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591775031;
-        bh=MJzP5c5PR6Tdbg5SV0+1atLygB5fnKjJ1WvlubG9GS4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hf4+gnJDchJ4uO1MJWnvwmDIcd0y21EoTFChE6EaZZkEydefidjSqoYDeUwvTFisi
-         Y81pimw4KmKJySeDSaS7iN4SvDD554JqQWgX+hP/nkJkpi29NqAQFYK8wtda4WVqpr
-         /NUQE2lWjpPusrUcQB/evYER22xyO+ecj0qVgh8o=
-Date:   Wed, 10 Jun 2020 08:43:47 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Marc Zyngier <maz@kernel.org>
-Subject: Re: [RFC PATCH 1/3] dt-bindings: Add ARM PSA FF binding for
- non-secure VM partitions
-Message-ID: <20200610074346.GB15939@willie-the-truck>
-References: <20200601094512.50509-1-sudeep.holla@arm.com>
- <20200601094512.50509-2-sudeep.holla@arm.com>
- <20200609223551.GA1620273@bogus>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200609223551.GA1620273@bogus>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 10 Jun 2020 03:44:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57260 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726105AbgFJHoz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 03:44:55 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84631C03E96B
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 00:44:55 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id x22so753436pfn.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 00:44:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=3N8ySBXCAGSToWzkhjg9Ns1STm80jOJIgncP/xxN3eY=;
+        b=xoSGSnf+KLwKshKMBjlYrdmyp9I/mKgs/ehf+r0czh6W2sBdz19OUpRNf2jQNbZ8eI
+         XkpysDx8EabZpnTU0HzEI/WZZPkbYy6KjWFQPNuGSlDBhar4Rim+IjgczRpmssPjGaFq
+         5q+EEIbBcHSXNKMOCUpXLtEVG1qvGo9eU766WhzeR7aL/XssyIVigCIRHKMCWPBiOhr4
+         JfdZ8qF3+/t9Gt3fAM9CmfdZYsK7qNR0xNu9WCYztpKPmUxdeoiZWjekG5yH7MTzKmP/
+         dwSSvI89/7/RxJqGYOFBW9hIxiwSogU/vjrni1TdE7bcElzLght6o7xpzpwUEl+hEVk6
+         D16A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=3N8ySBXCAGSToWzkhjg9Ns1STm80jOJIgncP/xxN3eY=;
+        b=VZWz8bZYB7Sm4lhlEDvas3/1fNxvQBm9SMnVUh/f92arjV0KqprKt2rq1yZ2j8NtJw
+         +Qml3VYfRnegmkVJT0o3JgVwy6Ku2EOvrPnQ4u6N9uZ9I7St1wXhZXhtLHvqHf8z99Sq
+         9z7dG7Y7fyQgR2X3E8NT+AOVRcP/MUmL8NP6rK4BY+4D7hJtWuy0gVyde4KST8lzbH1l
+         Z6mGXhwsigS5wGpNv7PiVS30fz/yQjax1xxAw7NSXvDCMvKAjMtuC6+6UIeffRzpoKVj
+         MJ4PwbvFVYcqYqtuyeSTAP069C4dcbIPp3GwgS15yE+QCPB9eyp5HVqWnBxWjKWvlD7k
+         1tNQ==
+X-Gm-Message-State: AOAM533fthOpkEqAQG+BF6Va9JgJBE0k3893Bsm2H6rcyMZbJAjX4SUa
+        CE/WRNF2nF1jyUm86ApOF0dp
+X-Google-Smtp-Source: ABdhPJzoYmIM8knPdWEYW86S20yr4Ag0e99GnUnirnhqSIY4sncQXGP46ZktYkt2XLetXnM3Hw3f9w==
+X-Received: by 2002:aa7:859a:: with SMTP id w26mr1547654pfn.10.1591775094260;
+        Wed, 10 Jun 2020 00:44:54 -0700 (PDT)
+Received: from Mani-XPS-13-9360.localdomain ([2409:4072:630f:1dba:c41:a14e:6586:388a])
+        by smtp.gmail.com with ESMTPSA id a20sm11516795pff.147.2020.06.10.00.44.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2020 00:44:53 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     wg@grandegger.com, mkl@pengutronix.de
+Cc:     kernel@martin.sperl.org, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 0/6] Add Microchip MCP25XXFD CAN driver
+Date:   Wed, 10 Jun 2020 13:14:36 +0530
+Message-Id: <20200610074442.10808-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 04:35:51PM -0600, Rob Herring wrote:
-> On Mon, Jun 01, 2020 at 10:45:10AM +0100, Sudeep Holla wrote:
-> > Add devicetree bindings for a Arm PSA FF-A compliant non-secure partition
-> > at virtual interface(VMs).
-> > 
-> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> > ---
-> >  .../devicetree/bindings/arm/arm,psa-ffa.txt   | 47 +++++++++++++++++++
-> >  1 file changed, 47 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/arm/arm,psa-ffa.txt
-> 
-> I'm hoping this goes away if the firmware is discoverable, but if not DT 
-> bindings are DT schema now.
+Hello,
 
-We'll need the binding for the kvm host side, because there are plenty
-of partition properties that are not discoverable (e.g. number of vCPUs).
+This series adds CAN network driver support for Microchip MCP25XXFD CAN
+Controller with MCP2517FD as the target controller version. This series is
+mostly inspired (or taken) from the previous iterations posted by Martin Sperl.
+I've trimmed down the parts which are not necessary for the initial version
+to ease review. Still the series is relatively huge but I hope to get some
+reviews (post -rcX ofc!).
 
-I'll have a go a yamlifying what I have...
+Link to the origial series posted by Martin:
+https://www.spinics.net/lists/devicetree/msg284462.html
 
-Will
+I've not changed the functionality much but done some considerable amount of
+cleanups and also preserved the authorship of Martin for all the patches he has
+posted earlier. This series has been tested on 96Boards RB3 platform by myself
+and Martin has tested the previous version on Rpi3 with external MCP2517FD
+controller.
+
+Thanks,
+Mani
+
+Manivannan Sadhasivam (1):
+  MAINTAINERS: Add entry for Microchip MCP25XXFD CAN network driver
+
+Martin Sperl (5):
+  dt-bindings: can: Document devicetree bindings for MCP25XXFD
+  can: mcp25xxfd: Add Microchip MCP25XXFD CAN-FD driver infrastructure
+  can: mcp25xxfd: Add support for CAN reception
+  can: mcp25xxfd: Add CAN transmission support
+  can: mcp25xxfd: Optimize TEF read by avoiding unnecessary SPI
+    transfers
+
+ .../bindings/net/can/microchip,mcp25xxfd.yaml |  82 +++
+ MAINTAINERS                                   |   8 +
+ drivers/net/can/spi/Kconfig                   |   2 +
+ drivers/net/can/spi/Makefile                  |   2 +
+ drivers/net/can/spi/mcp25xxfd/Kconfig         |   5 +
+ drivers/net/can/spi/mcp25xxfd/Makefile        |  11 +
+ .../net/can/spi/mcp25xxfd/mcp25xxfd_base.c    | 177 +++++
+ .../net/can/spi/mcp25xxfd/mcp25xxfd_base.h    |  14 +
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can.c | 538 ++++++++++++++
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can.h |  52 ++
+ .../can/spi/mcp25xxfd/mcp25xxfd_can_fifo.c    | 305 ++++++++
+ .../can/spi/mcp25xxfd/mcp25xxfd_can_fifo.h    |  16 +
+ .../net/can/spi/mcp25xxfd/mcp25xxfd_can_id.h  |  69 ++
+ .../net/can/spi/mcp25xxfd/mcp25xxfd_can_int.c | 674 ++++++++++++++++++
+ .../net/can/spi/mcp25xxfd/mcp25xxfd_can_int.h |  18 +
+ .../can/spi/mcp25xxfd/mcp25xxfd_can_priv.h    | 144 ++++
+ .../net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.c  | 233 ++++++
+ .../net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.h  |  18 +
+ .../net/can/spi/mcp25xxfd/mcp25xxfd_can_tx.c  | 653 +++++++++++++++++
+ .../net/can/spi/mcp25xxfd/mcp25xxfd_can_tx.h  |  86 +++
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_cmd.c | 226 ++++++
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_cmd.h |  84 +++
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_crc.c |  31 +
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_crc.h |  15 +
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_ecc.c |  74 ++
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_ecc.h |  16 +
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_int.c |  71 ++
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd_int.h |  15 +
+ .../net/can/spi/mcp25xxfd/mcp25xxfd_priv.h    |  50 ++
+ .../net/can/spi/mcp25xxfd/mcp25xxfd_regs.h    | 661 +++++++++++++++++
+ 30 files changed, 4350 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.yaml
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/Kconfig
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/Makefile
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_base.c
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_base.h
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can.c
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can.h
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_fifo.c
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_fifo.h
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_id.h
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_int.c
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_int.h
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_priv.h
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.c
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.h
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_tx.c
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_tx.h
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_cmd.c
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_cmd.h
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_crc.c
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_crc.h
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_ecc.c
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_ecc.h
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_int.c
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_int.h
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_priv.h
+ create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_regs.h
+
+-- 
+2.17.1
+
