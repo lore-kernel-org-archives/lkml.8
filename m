@@ -2,125 +2,130 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 310EDC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C686FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 031D02072E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:51:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dz9o6gyc"
+	by mail.kernel.org (Postfix) with ESMTP id A3F7E207ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:52:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591825940;
+	bh=1mB9qo0mQqlBR2asORG2q/eNPb0O9RBr6d1/9JvB+DI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ElAPTi49lbKZ8SN0uMan/iqlA0yDGqth60FVWrrd6kJlWvcDSwEVuS7VWD1DgM9Dz
+	 IyCXfyNUFw7LcRB7rxwVAT/P/T4VUy2NJNDtXdn+80tU5hX24eCNQxH2PYabAmyW8x
+	 f8qqvsDKel8FSDKbCK4vy2DDv53XN8oClQQS6p6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbgFJVvL (ORCPT
+        id S1726809AbgFJVwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 17:51:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47394 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbgFJVvH (ORCPT
+        Wed, 10 Jun 2020 17:52:19 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45621 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726289AbgFJVwR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 17:51:07 -0400
-Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E072EC03E96B
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 14:51:06 -0700 (PDT)
-Received: by mail-qv1-xf4a.google.com with SMTP id q5so2878734qvp.23
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 14:51:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=oxqvjGtpSOsagEDpRrrAmarRkYjvCJoCXb0ZhUNa4Ts=;
-        b=dz9o6gycEEWoEVtevOUbjC8yQuzSQTLrSxSKRjEyKW6EBdxf2Hd0Bc8QameiemHA7b
-         wDGcc1H/Z1xKkXxwmTMgJEC0n8Yo4mNGwPSW5yHxIxdL3MTomnCLWZS3dRYObOvXTyfh
-         boFg9v7yXUquzjO7KUkNnCRhmF3RUcNrynDEs+YrJwLSn2bon5WPB50MzhIuLmVQPNoY
-         GvxM4xNyTyJGIGkMTtehdiao6Fz5Fb62Z59B2ES/ZymB5XMVHtLFqE5F9OG6TfLRz6oN
-         Sj+vVq3IrY+vwVWOnimHZ+RiRqGMxjhTZE9q5Rx4j32/6/0x2zb6VKlPQFWg1wLEnVe1
-         jZ0g==
+        Wed, 10 Jun 2020 17:52:17 -0400
+Received: by mail-pg1-f193.google.com with SMTP id n23so1561442pgb.12;
+        Wed, 10 Jun 2020 14:52:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=oxqvjGtpSOsagEDpRrrAmarRkYjvCJoCXb0ZhUNa4Ts=;
-        b=kmc0euLYkYxn43ZByh3gcsXBgqfBhe+rNGOiGw72gbBPnwj7NvPMS/qnw/zTbautwM
-         kjFouT2u0Lw/slkP+HyfZcbSaI9JFEMGN/zH2jvUlgyPUxPrOjWiwRTuxEf0ePn7o7UF
-         li5K7371OQsrg3N/W+YTQdrSOi+05AfrnnIll40lUd3NbkAHr39IDWBaxVsGw0w1qDwz
-         TC/zBo8XJMY5zI3YXOiPxs2XongEE7lj1/KOwsgUpG2NY8//VuW+EyvTyAUqw5rP+v+F
-         wz0XLUU2d6sqFH7m1q3FxSdvsIODMtNn6Q56r95ycpRLPnHUJQKz2nxbnIJfomGU9VlC
-         MfVQ==
-X-Gm-Message-State: AOAM533M6rEVqX35bf/rQdkakt5t7wjDvLFBLJHeTFp+yMaRIjTNIkJl
-        Iu616icVoGEHTxaTFGHkbyzFYasnGGmx
-X-Google-Smtp-Source: ABdhPJylQHsoF8+GGsyZIVn9EUTyR1EO9rAbp3orIwMSkgiDJ+iTl2H+ApxL+6hAchhQSRlLY8FdZJxGJkGs
-X-Received: by 2002:ad4:4368:: with SMTP id u8mr5008330qvt.227.1591825866104;
- Wed, 10 Jun 2020 14:51:06 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 14:50:51 -0700
-In-Reply-To: <20200610215100.256599-1-irogers@google.com>
-Message-Id: <20200610215100.256599-2-irogers@google.com>
-Mime-Version: 1.0
-References: <20200610215100.256599-1-irogers@google.com>
-X-Mailer: git-send-email 2.27.0.278.ge193c7cf3a9-goog
-Subject: [PATCH 01/10] perf parse-events: Use automatic variable for flex input
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=eRf6W4oVEmwpsh0h+K1sCW7NaH3bq1FpwEBiNryS1Wo=;
+        b=GVfmeToqAO9SEml7j9bByOpsYVyCsxug/bX6H9XLG7OC9NfuH5pjGiWLQEEZzTAsHM
+         d7EpWSbJn/Qp+6FxhUkJQJFl6QYtMS/bpQEEfnihJR6WZlA/Yr5GZzXUcRKEgvsBTh3P
+         pV6BYcZvb3atDdRmAqUaYlsLORSlWiJKVee239z+S7WD+KXNJaDxtw2j1uR7VPhNE5qr
+         deNri2wUB9Ki+IZ9rUw0l1UUYyqaW3G1Giu6nx3HjuzSO5axDQIUbvvLaNXpBfTv7iTT
+         /5eDvDQK7zHhjci9nk8KKZZnvOKIGC9XXKrky4lC+yGy3S9/Im0tyrobF0nx54nSP5J7
+         JCTA==
+X-Gm-Message-State: AOAM530EWaOzgQw5VdHOft0Yf0VERYq+euCqLCQV1dH+ZrcbR92iwMX7
+        CLlaCKtU8S9M6uU6Z1w3ank=
+X-Google-Smtp-Source: ABdhPJy992mUv5U8bhwojNTbIZ80dvsxUMVUFbzemXqKRntKpx7DGKHGnQxvq9NILxqv4J2ZE+scdw==
+X-Received: by 2002:a63:4d5a:: with SMTP id n26mr4421932pgl.85.1591825936625;
+        Wed, 10 Jun 2020 14:52:16 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id n69sm854031pfd.171.2020.06.10.14.52.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2020 14:52:14 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 038B5403AB; Wed, 10 Jun 2020 21:52:13 +0000 (UTC)
+Date:   Wed, 10 Jun 2020 21:52:13 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Jan Kara <jack@suse.cz>, axboe@kernel.dk, viro@zeniv.linux.org.uk,
+        bvanassche@acm.org, gregkh@linuxfoundation.org,
+        rostedt@goodmis.org, mingo@redhat.com, ming.lei@redhat.com,
+        nstange@suse.de, akpm@linux-foundation.org, mhocko@suse.com,
+        yukuai3@huawei.com, martin.petersen@oracle.com, jejb@linux.ibm.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
+Subject: Re: [PATCH v6 6/6] blktrace: fix debugfs use after free
+Message-ID: <20200610215213.GH13911@42.do-not-panic.com>
+References: <20200608170127.20419-1-mcgrof@kernel.org>
+ <20200608170127.20419-7-mcgrof@kernel.org>
+ <20200609150602.GA7111@infradead.org>
+ <20200609172922.GP11244@42.do-not-panic.com>
+ <20200609173218.GA7968@infradead.org>
+ <20200609175359.GR11244@42.do-not-panic.com>
+ <20200610064234.GB24975@infradead.org>
+ <20200610210917.GH11244@42.do-not-panic.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200610210917.GH11244@42.do-not-panic.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reduces the command line size slightly.
+So, upon updating the commit log, and moving the empty directory check
+into another patch, I realized we might be able to simplify this now even
+further still. Patch below. The key of the issue was that the use after free
+happens when a recursive removal happens, and then later a specific
+dentry removal happens. This happened for make_request block drivers
+when using the whole disk, but since we *don't* have any other users of
+the directory for the others cases, this in theory shuld not happen for
+them either.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/Build | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+I'll try to shoot some bullets at this.
 
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 8d18380ecd10..66cf009f78d8 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -193,7 +193,7 @@ CFLAGS_genelf_debug.o  += -Wno-packed
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index 7ff2ea5cd05e..5cea04c05e09 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -524,10 +524,16 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+ 	if (!bt->msg_data)
+ 		goto err;
  
- $(OUTPUT)util/parse-events-flex.c: util/parse-events.l $(OUTPUT)util/parse-events-bison.c
- 	$(call rule_mkdir)
--	$(Q)$(call echo-cmd,flex)$(FLEX) -o $@ --header-file=$(OUTPUT)util/parse-events-flex.h $(PARSER_DEBUG_FLEX) util/parse-events.l
-+	$(Q)$(call echo-cmd,flex)$(FLEX) -o $@ --header-file=$(OUTPUT)util/parse-events-flex.h $(PARSER_DEBUG_FLEX) $<
+-	ret = -ENOENT;
+-
+-	dir = debugfs_lookup(buts->name, blk_debugfs_root);
+-	if (!dir)
++	/*
++	 * When tracing whole make_request drivers (multiqueue) block devices,
++	 * reuse the existing debugfs directory created by the block layer on
++	 * init. For request-based block devices, all partitions block devices,
++	 * and scsi-generic block devices we create a temporary new debugfs
++	 * directory that will be removed once the trace ends.
++	 */
++	if (queue_is_mq(q))
++		dir = q->debugfs_dir;
++	else
+ 		bt->dir = dir = debugfs_create_dir(buts->name, blk_debugfs_root);
  
- $(OUTPUT)util/parse-events-bison.c: util/parse-events.y
- 	$(call rule_mkdir)
-@@ -201,7 +201,7 @@ $(OUTPUT)util/parse-events-bison.c: util/parse-events.y
+ 	bt->dev = dev;
+@@ -565,8 +571,6 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
  
- $(OUTPUT)util/expr-flex.c: util/expr.l $(OUTPUT)util/expr-bison.c
- 	$(call rule_mkdir)
--	$(Q)$(call echo-cmd,flex)$(FLEX) -o $@ --header-file=$(OUTPUT)util/expr-flex.h $(PARSER_DEBUG_FLEX) util/expr.l
-+	$(Q)$(call echo-cmd,flex)$(FLEX) -o $@ --header-file=$(OUTPUT)util/expr-flex.h $(PARSER_DEBUG_FLEX) $<
- 
- $(OUTPUT)util/expr-bison.c: util/expr.y
- 	$(call rule_mkdir)
-@@ -209,7 +209,7 @@ $(OUTPUT)util/expr-bison.c: util/expr.y
- 
- $(OUTPUT)util/pmu-flex.c: util/pmu.l $(OUTPUT)util/pmu-bison.c
- 	$(call rule_mkdir)
--	$(Q)$(call echo-cmd,flex)$(FLEX) -o $@ --header-file=$(OUTPUT)util/pmu-flex.h util/pmu.l
-+	$(Q)$(call echo-cmd,flex)$(FLEX) -o $@ --header-file=$(OUTPUT)util/pmu-flex.h $<
- 
- $(OUTPUT)util/pmu-bison.c: util/pmu.y
- 	$(call rule_mkdir)
--- 
-2.27.0.278.ge193c7cf3a9-goog
-
+ 	ret = 0;
+ err:
+-	if (dir && !bt->dir)
+-		dput(dir);
+ 	if (ret)
+ 		blk_trace_free(bt);
+ 	return ret;
