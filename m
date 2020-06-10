@@ -2,139 +2,115 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C62F8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AFB5C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFF15204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:46:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBAD6204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:47:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HuwTVqm1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728577AbgFJLqy (ORCPT
+        id S1728630AbgFJLrm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 07:46:54 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:24838 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728481AbgFJLqx (ORCPT
+        Wed, 10 Jun 2020 07:47:42 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:45662 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728468AbgFJLrm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 07:46:53 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05ABX93E097528;
-        Wed, 10 Jun 2020 07:46:48 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31jbvjwwsy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 10 Jun 2020 07:46:48 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05ABY7J9101982;
-        Wed, 10 Jun 2020 07:46:47 -0400
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31jbvjww6f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 10 Jun 2020 07:46:47 -0400
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05ABjMMJ001316;
-        Wed, 10 Jun 2020 11:45:28 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma01fra.de.ibm.com with ESMTP id 31g2s7u4ht-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 10 Jun 2020 11:45:28 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05ABjPtt56623548
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 10 Jun 2020 11:45:25 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 51090AE045;
-        Wed, 10 Jun 2020 11:45:25 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DF756AE04D;
-        Wed, 10 Jun 2020 11:45:24 +0000 (GMT)
-Received: from osiris (unknown [9.171.62.218])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 10 Jun 2020 11:45:24 +0000 (GMT)
-Date:   Wed, 10 Jun 2020 13:45:23 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-s390@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        Kirill Smelkov <kirr@nexedi.com>,
-        Alexander Egorenkov <egorenar@linux.vnet.ibm.com>
-Subject: Re: [PATCH RFC 1/2] s390/zcore: traverse resources instead of
- memblocks
-Message-ID: <20200610114523.GA5943@osiris>
-References: <20200417150151.17239-1-david@redhat.com>
- <20200417150151.17239-2-david@redhat.com>
+        Wed, 10 Jun 2020 07:47:42 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05ABlNAC099893;
+        Wed, 10 Jun 2020 06:47:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591789643;
+        bh=ioRilCxbxofFqmKinvjjfsaLPYOAZ7YlTqzwbfbXGm8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=HuwTVqm1QnbI/HMSVwLVaDVG/GwaHPuqDy0+f0dbPSlTp+/uwwXI/RgnIN+ponio5
+         n+hze31xDi/xXH8JLLNSTbKMv/3eOr0DKNJgfRklWMc2z12O5R2D16qS+Ss/gljbVb
+         FchhuVTBM3YRDa0Ppj4KPuPnWP2/llqksmaqk7VQ=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05ABlNTm105773
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 10 Jun 2020 06:47:23 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 10
+ Jun 2020 06:47:22 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 10 Jun 2020 06:47:22 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05ABlIx0077567;
+        Wed, 10 Jun 2020 06:47:19 -0500
+Subject: Re: [PATCH 1/5] drm/omap: Fix suspend resume regression after
+ platform data removal
+To:     Tony Lindgren <tony@atomide.com>
+CC:     <linux-omap@vger.kernel.org>, "Andrew F . Davis" <afd@ti.com>,
+        Dave Gerlach <d-gerlach@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <dri-devel@lists.freedesktop.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+References: <20200531193941.13179-1-tony@atomide.com>
+ <20200531193941.13179-2-tony@atomide.com>
+ <16ba1808-5c7f-573d-8dd0-c80cac2f476e@ti.com>
+ <20200603140639.GG37466@atomide.com>
+ <47e286dd-f87a-4440-5bde-1f7b53e8b672@ti.com>
+ <20200609151943.GL37466@atomide.com>
+ <9ed70121-2a53-d2b3-051a-88eb83e6c53f@ti.com>
+ <20200609165234.GM37466@atomide.com> <20200609171043.GN37466@atomide.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <7c4809d0-5262-a739-354a-61e617fe6c6e@ti.com>
+Date:   Wed, 10 Jun 2020 14:47:18 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417150151.17239-2-david@redhat.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-10_07:2020-06-10,2020-06-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 mlxlogscore=999 malwarescore=0 impostorscore=0
- cotscore=-2147483648 suspectscore=1 mlxscore=0 clxscore=1011 adultscore=0
- spamscore=0 bulkscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006100088
+In-Reply-To: <20200609171043.GN37466@atomide.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 05:01:50PM +0200, David Hildenbrand wrote:
-> The zcore memmap basically contains the first level of all system RAM from
-> /proc/iomem. We want to disable CONFIG_ARCH_KEEP_MEMBLOCK (e.g., to not
-> create memblocks for hotplugged/standby memory and save space), switch to
-> traversing system ram resources instead. During early boot, we create
-> resources for all early memblocks (including the crash kernel area). When
-> adding standby memory, we currently create both, memblocks and resources.
-> 
-> Note: As we don't have memory hotplug after boot (standby memory is added
-> via sclp during boot), we don't have to worry about races.
-> 
-> I am only able to test under KVM (where I hacked up zcore to still
-> create the memmap file)
-> 
-> root@vm0:~# cat /proc/iomem
-> 00000000-2fffffff : System RAM
->   10424000-10ec6fff : Kernel code
->   10ec7000-1139a0e3 : Kernel data
->   1177a000-11850fff : Kernel bss
-> 30000000-3fffffff : Crash kernel
-> 
-> Result without this patch:
-> root@vm0:~# cat /sys/kernel/debug/zcore/memmap
-> 0000000000000000 0000000040000000
-> 
-> Result with this patch:
-> root@vm0:~# cat /sys/kernel/debug/zcore/memmap
-> 0000000000000000 0000000030000000 0000000030000000 0000000010000000
-> 
-> The difference is due to memblocks getting merged, resources (currently)
-> not. So we might have some more entries, but they describe the same
-> memory map.
-> 
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> Cc: Philipp Rudo <prudo@linux.ibm.com>
-> Cc: Kirill Smelkov <kirr@nexedi.com>
-> Cc: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  drivers/s390/char/zcore.c | 61 ++++++++++++++++++++++++++++++---------
->  1 file changed, 48 insertions(+), 13 deletions(-)
+On 09/06/2020 20:10, Tony Lindgren wrote:
 
-I'm having a hard time to find any code that ever made use of this
-file. After all this was only meant for our zfcp dumper, but as far as
-I can tell there was never code out there that read the memmap file.
+>> On beagle-x15 I see these errors after modprobe:
+>>
+>> DSS: OMAP DSS rev 6.1
+>> omapdss_dss 58000000.dss: bound 58001000.dispc (ops dispc_component_ops [omapdss])
+>> omapdss_dss 58000000.dss: bound 58040000.encoder (ops hdmi5_component_ops [omapdss])
+>> [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
+>> omapdrm omapdrm.0: [drm] Cannot find any crtc or sizes
+>> [drm] Initialized omapdrm 1.0.0 20110917 for omapdrm.0 on minor 0
+>> omapdrm omapdrm.0: [drm] Cannot find any crtc or sizes
+>> aic_dvdd_fixed: disabling
+>> ldousb: disabling
+>>
+>> Maybe I'm missing some related module on x15?
+> 
+> Still did not figure what I might be missing on x15 :)
 
-So the pragmatic approach would be to just change its contents, or a
-more progressive variant would be to remove the file completely.
-But maybe I'm entirely wrong...
+The log above shows that nothing is missing, omapdrm has probed fine. But it cannot see anything 
+connected to the hdmi port. Are you booting with correct dtb for your x15 revision? And you have a 
+monitor connected? =)
 
-I'm leaving this up to Philipp and Alexander :)
+  Tomi
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
