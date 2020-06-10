@@ -2,128 +2,84 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B8DBC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EFA1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22E58206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:53:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591804418;
-	bh=zxOntiEnO8geBqba/Y+eG4q1ysZ2OktpSI6E2C+s2Go=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=tCOLKySPuISiNangLN8pfMgEIu5YHVqP9HhJ6NBq4FQ19UKfjyDF0hMrJeotLBJMb
-	 SN3Rs0Lc2OHfQLYBTd9mhqLm61NCBcEUz6CoDloh6POoIGoACEIxr2HBuEeCqbvWv7
-	 CNFaAIZfzRcGGo9xx/SM7LcH+gJYJDtqvv05VVj4=
+	by mail.kernel.org (Postfix) with ESMTP id DC63D206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:55:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KwMtaEzF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728526AbgFJPxg (ORCPT
+        id S1728683AbgFJPz3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 11:53:36 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:41320 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728217AbgFJPxg (ORCPT
+        Wed, 10 Jun 2020 11:55:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48772 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728431AbgFJPz2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 11:53:36 -0400
-Received: by mail-lf1-f68.google.com with SMTP id u16so1740964lfl.8;
-        Wed, 10 Jun 2020 08:53:34 -0700 (PDT)
+        Wed, 10 Jun 2020 11:55:28 -0400
+Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0163C03E96B
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 08:55:26 -0700 (PDT)
+Received: by mail-lj1-x22a.google.com with SMTP id i27so3086901ljb.12
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 08:55:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SEUPY1uSL4EEx5wS5at/fsramWYDqy3CI3YeN8vkC9s=;
+        b=KwMtaEzFz239gBKZPYXQXMqP5efm9L94Yn8Kyv8BCiint4zdYdVLG5E0Q7hDR7c2VH
+         KERXEOLbs+SIyzkDK4I53QmUViPVAGIXEMj3Ls3DghckPBJQyHR32wCDMLbYbkGZtLzE
+         or53oiqN+D4w4KaYwNWy7F2Ku4EJO26bocAN1wY0I9yPKSEnnvtlzemSIE/mQSn0by+X
+         RqR/CoA7VGtNEFb2bvMt9+JhOVpBSgiQheBgzemzmglovAhOVkLwQr9RN4+EA5luC3Rf
+         rR4MR+s9tbAjDCTgQk08lVpTWUgs2asT7KWVIemKuF7uN4PfZBsM4z/aEhUgBbsQZXz4
+         1LaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kHTC5ynMjdYXbR8GWvcYvNg5klsAd9eXqBm+XxUO58o=;
-        b=TmPN7DC1dCNBT1Bx5vRreyA17eIi7H1dvaVlUpiC/9zVv/d6rGjr4PhfOkxQl85oYi
-         CzhDBw/qNqL+PvkC7rEinHOFiCTX64tkR7ef+H/DI/JKkiPKJXRzzKGDUTKYjyedMm6+
-         gemLvezQpZ7GEG0ciTV7glTZPOW6XEUm+YIgCwID0tt4vHRWebfeoDFxaODXQg2513GL
-         LlqrqBrpi6ylbWijF4Qz+buTEjDXiuI+NaJNWQl0UYUm7H50lG2hnQxYuwjDXPQEKkO3
-         hKN6UbUSe+VaE9VOeAi5LswHxBNAHVFPTlV8IzodZqUKk0IiEajVm1ZoTpecBEV0Yr2V
-         cGdQ==
-X-Gm-Message-State: AOAM532VZMA+epqeAocprmptsy9g7CFy4R+kMshDLOSu/Uj8jZNCgT/+
-        SS/oYlvN+qRYaYEcjqi5zWE=
-X-Google-Smtp-Source: ABdhPJyqqx/BcJVIiBXYDw9G8HwixEOGKHpBACr+n1wBRH3ucsEekHe/2Ki7AqirrHY6cGrLrC4OEg==
-X-Received: by 2002:a05:6512:d1:: with SMTP id c17mr2068358lfp.80.1591804413811;
-        Wed, 10 Jun 2020 08:53:33 -0700 (PDT)
-Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id x69sm20823lff.19.2020.06.10.08.53.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 08:53:33 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.93.0.4)
-        (envelope-from <johan@xi.terra>)
-        id 1jj32f-0003fz-W3; Wed, 10 Jun 2020 17:53:30 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Jiri Slaby <jslaby@suse.com>, Lukas Wunner <lukas@wunner.de>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH] serial: core: drop unnecessary gpio include
-Date:   Wed, 10 Jun 2020 17:51:21 +0200
-Message-Id: <20200610155121.14014-1-johan@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SEUPY1uSL4EEx5wS5at/fsramWYDqy3CI3YeN8vkC9s=;
+        b=lNxdNnzdt3yDlGvOh58garXewgqpNs+GHF3wyFD8SWcxSekqVfX2wDmh4E2SKgJwrm
+         IdkMuegIgoG+rQw7SAi8zQTiHJLW8iQv5VGnK/UYTFKn/xz+GKsjRksaxO7XITjiX8wp
+         Zc/oSJiHtHiPxfZgf3qCWEqu2qDVATjcm0wuHAZzsWo2+utPWqa+NxufBVvHXHDys8J2
+         ajd/T6JQqf7bwuKsmZ3XgtULYXeepC26Z9Mh2WZmuUk/2g7rGjj8wJOGK90ZDfBdBJOi
+         zxFjRL1e6LxuLtYjBFoTsLe1L2+nsnK6xxWC8huZP/p6M6vy8NaB1ruaEFnZzztThOlf
+         Tr3w==
+X-Gm-Message-State: AOAM531JmCwP4bwV/HbiifkwaZJOqVvNuPnJ/h0PSK7iDgVfz3Yo1sEF
+        grLnzGZoa0+ytkDEdT3yEQVLB18zMJK1xwpMOHc=
+X-Google-Smtp-Source: ABdhPJzBstYjcC0H7h5ZvFx07Q3wJ2sGxtz/nfjMnDfzycjS34tkDan3rENGrm3GlLFAu3CNEGJMUoWJkeZ9BJnugkc=
+X-Received: by 2002:a2e:1558:: with SMTP id 24mr2120753ljv.202.1591804525341;
+ Wed, 10 Jun 2020 08:55:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200610125147.2782142-1-christian.brauner@ubuntu.com>
+In-Reply-To: <20200610125147.2782142-1-christian.brauner@ubuntu.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Wed, 10 Jun 2020 17:55:14 +0200
+Message-ID: <CANiq72m_p2BRXswCGhUZi-Nta2y0uNXDQLRjPUFydB7YGV-6HQ@mail.gmail.com>
+Subject: Re: [PATCH] .clang-format: update column limit
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop the recently added gpio include from the serial-core header in
-favour of a forward declaration and instead include the gpio header only
-where needed.
+Hi Christian,
 
-Signed-off-by: Johan Hovold <johan@kernel.org>
----
- drivers/tty/serial/8250/8250_port.c | 1 +
- drivers/tty/serial/serial_core.c    | 1 +
- include/linux/serial_core.h         | 2 +-
- 3 files changed, 3 insertions(+), 1 deletion(-)
+On Wed, Jun 10, 2020 at 2:51 PM Christian Brauner
+<christian.brauner@ubuntu.com> wrote:
+>
+> The provided clang-format file wraps at 80 chars. If no one minds, I'd like
+> to adjust this limit to 100 similar to what checkpatch (cf. [1]) uses now.
 
-diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-index 1632f7d25acc..d64ca77d9cfa 100644
---- a/drivers/tty/serial/8250/8250_port.c
-+++ b/drivers/tty/serial/8250/8250_port.c
-@@ -16,6 +16,7 @@
- #include <linux/ioport.h>
- #include <linux/init.h>
- #include <linux/console.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/sysrq.h>
- #include <linux/delay.h>
- #include <linux/platform_device.h>
-diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-index 3706f31b0c37..cba19f7d9ea3 100644
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -14,6 +14,7 @@
- #include <linux/sched/signal.h>
- #include <linux/init.h>
- #include <linux/console.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/of.h>
- #include <linux/proc_fs.h>
- #include <linux/seq_file.h>
-diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
-index 791f4844efeb..01fc4d9c9c54 100644
---- a/include/linux/serial_core.h
-+++ b/include/linux/serial_core.h
-@@ -10,7 +10,6 @@
- #include <linux/bitops.h>
- #include <linux/compiler.h>
- #include <linux/console.h>
--#include <linux/gpio/consumer.h>
- #include <linux/interrupt.h>
- #include <linux/circ_buf.h>
- #include <linux/spinlock.h>
-@@ -30,6 +29,7 @@
- struct uart_port;
- struct serial_struct;
- struct device;
-+struct gpio_desc;
- 
- /*
-  * This structure describes all the operations that can be done on the
--- 
-2.26.2
+Thanks! Picking this up with a few changes to the commit message.
 
+Cheers,
+Miguel
