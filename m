@@ -2,85 +2,146 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3658AC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 05:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6A3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D01420801
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 05:58:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1BD920829
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:02:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="o/oLmO/k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbgFJF6G (ORCPT
+        id S1726153AbgFJGCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 01:58:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40846 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbgFJF6F (ORCPT
+        Wed, 10 Jun 2020 02:02:45 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:10474 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726076AbgFJGCo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 01:58:05 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86BC7C05BD1E;
-        Tue,  9 Jun 2020 22:58:05 -0700 (PDT)
-Received: from p5b06d650.dip0.t-ipconnect.de ([91.6.214.80] helo=kurt)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <kurt.kanzenbach@linutronix.de>)
-        id 1jitkQ-0006Mf-Kt; Wed, 10 Jun 2020 07:58:02 +0200
-From:   Kurt Kanzenbach <kurt.kanzenbach@linutronix.de>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     linux-rt-users@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>, rcu@vger.kernel.org,
-        Colin King <colin.king@canonical.com>
-Subject: Re: stress-ng --hrtimers hangs system
-In-Reply-To: <CA+h21hp+UsW+Uc-xHyQAMrRVLX9CXZu8B2Svq+9npLtxs0_DWw@mail.gmail.com>
-References: <4781d250-9a29-cef3-268d-7d83c98bf16a@gmail.com> <87wo4lekm5.fsf@kurt> <CA+h21hqbKasMAuHL+B-2Gb-YQ3QGF+_pWGCxr8LTcusjvuqFeg@mail.gmail.com> <CA+h21hp+UsW+Uc-xHyQAMrRVLX9CXZu8B2Svq+9npLtxs0_DWw@mail.gmail.com>
-Date:   Wed, 10 Jun 2020 07:57:46 +0200
-Message-ID: <87y2ovzcmd.fsf@kurt>
+        Wed, 10 Jun 2020 02:02:44 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ee077760000>; Tue, 09 Jun 2020 23:02:30 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 09 Jun 2020 23:02:44 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 09 Jun 2020 23:02:44 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Jun
+ 2020 06:02:43 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 10 Jun 2020 06:02:43 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.167.70]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ee077830000>; Tue, 09 Jun 2020 23:02:43 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
+        <helen.koike@collabora.com>
+CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
+        <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
+Subject: [RFC PATCH v1 00/18] Support for Tegra video capture from external sensor
+Date:   Tue, 9 Jun 2020 23:02:22 -0700
+Message-ID: <1591768960-31648-1-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1591768950; bh=FXhZfk63iIGnhOl7ObWf5a0rZNtaUwqXcQ95FoPZsQU=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=o/oLmO/k+w1qnam9L4g1yDi4XMZro4JQyplhYPpSNViUombSnHD9yM+9ivDykplVT
+         C6Om7NGufPOo4rRsGAPVr/0bMdjp/TGaKUuS91KDGWaOTCShHR5YT1mlSJ/YdT4ef2
+         Os6Od+BXGQC+yQ8bkfBqaeVLHivEGwH8Jw7srs+MdrVAoBOmpJl5dUNCKEtN/DZvVn
+         yjEhJYzLoljehxwCl1BkyrXA75z4LuLk3oyl/4HtN70DEv0itsFWa/UfGGaZrm4Fpp
+         4+LOd/qbwfW6wIrH/Ji5ge9ch45AdmrGQ41WBMBQEoouAt5oBiRmWAuK+TSgX/jmiL
+         mXoDBU3LSuzTA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+This series adds support for video capture from external camera sensor to
+Tegra video driver.
 
-Hi Vladimir,
+Jetson TX1 has camera expansion connector and supports custom camera module
+designed as per TX1 design specification.
 
-On Tue Jun 09 2020, Vladimir Oltean wrote:
-> Just out of curiosity, what and how many CPU cores does your ARM64 box
-> have, and what frequency are you running them at?
-> Mine is a dual-core A72 machine running at 1500 MHz.
+This series also enables camera capture support for Jetson Nano which has
+Raspberry PI camera header.
 
-That particular machine has a dual core Cortex A53 running at 1GHz.
+This series is tested with IMX219 camera sensor.
 
-Thanks,
-Kurt
+This series include,
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+VI I2C related fixes
+- Camera sensor programming happens through VI I2C which is on host1x bus.
+- These patches includes device tree and I2C driver fixes for VI I2C.
 
------BEGIN PGP SIGNATURE-----
+Tegra video driver updates
+- TPG Vs Non-TPG based on Kconfig
+- Support for external sensor video capture based on device graph from DT.
+- Support for selection ioctl operations
+- Tegra MIPI CSI pads calibration
+- CSI T-CLK and T-HS settle time computation based on clock rates.
 
-iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl7gdloACgkQeSpbgcuY
-8KZhoA/+McQHPRNx5dbPNMribYcHMyBoTT6mtyXeKErLeU/FLLA1R6qLxGRPYb/o
-3t3lo+zLveJTxAA3ars6I9txVXGmxL/dKlGF2d5GJPDdAkB2zsZY9dzNipqxDM7u
-aIvenHzu5G/PRCsOrED9AYc+gIl8MmtGre5ODqHR4gLV/OHU2GBzc95ayBRjkLN/
-Rwk0avqNfhVRfLD4YpGxYCYvbi/8AxDhaYxXfA+08DfdTev8TLbnnj7Rd1hhZ1T9
-zfVx4iiF6s43IQu3AniZegh3C+ER4RdFWwt9Jhf6pFun3wSPLzElnOnUDB9ydLzm
-6Hf5VnAAGSBd7Qi10VPg83dDHOHko1VhnUhcA03o5STr5FU6r/DkOKCwL9iyRHGl
-w8+/Ob48Zt6z5jtd+HYPwWfOh2hLkLFlXKU2+KTPw6QvQvxiXHTLmadzadXEGGdE
-cF9FkwjqftQGULnWJfq7xCruiPh0P0voo/qFtEZ46aqrssgVwqxCF3n93AikLIDO
-lrAnQMRoRnBK7eoOaLmk/akDIgQ0AB6nQf8KU44+kBFApc3xYvSp2COgEIlKykke
-ubK8mTAQJwJ8t+JljKpybtRwYeZv2yxN58yC+7Qz4Q5uewi7E7BIINERGs91Swp0
-il3tyvjKUFNS3LDNRrcX1FtC0r4AXe3O9ECIZbVIvySR3vpsY5s=
-=osnr
------END PGP SIGNATURE-----
---=-=-=--
+Host1x driver updates
+- Adds API to allow creating mipi device for specific device node.
+- Splits MIPI pads calibrate start and waiting for calibration to be done.
+
+Device tree updates
+- Adds camera connector 2V8, 1V8, 1V2 regulator supplies to Jetson TX1 DT.
+- Enabled VI and CSI support in Jetson Nano DT.
+
+
+
+Sowjanya Komatineni (18):
+  dt-bindings: i2c: tegra: Document Tegra210 VI I2C clocks and
+    power-domains
+  arm64: tegra: Add missing clocks and power-domains to Tegra210 VI I2C
+  i2c: tegra: Don't mark VI I2C as IRQ safe runtime PM
+  i2c: tegra: Fix the error path in tegra_i2c_runtime_resume
+  i2c: tegra: Fix runtime resume to re-init VI I2C
+  i2c: tegra: Avoid tegra_i2c_init_dma() for Tegra210 vi i2c
+  media: tegra-video: Fix channel format alignment
+  media: tegra-video: Enable TPG based on kernel config
+  media: tegra-video: Update format lookup to offset based
+  dt-bindings: tegra: Document VI and CSI port nodes
+  media: tegra-video: Add support for external sensor capture
+  media: tegra-video: Add support for selection ioctl ops
+  gpu: host1x: mipi: Add of_tegra_mipi_request() API
+  gpu: host1x: mipi: Split tegra_mipi_calibrate and tegra_mipi_wait
+  media: tegra-video: Add CSI MIPI pads calibration
+  media: tegra-video: Compute settle times based on the clock rate
+  arm64: tegra: jetson-tx1: Add camera supplies
+  arm64: tegra: Enable Tegra VI CSI support for Jetson Nano
+
+ .../display/tegra/nvidia,tegra20-host1x.txt        |  87 +++
+ .../devicetree/bindings/i2c/nvidia,tegra20-i2c.txt |  19 +-
+ arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi     |  41 ++
+ arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts |  10 +
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi           |   6 +
+ drivers/gpu/drm/tegra/dsi.c                        |   7 +-
+ drivers/gpu/host1x/mipi.c                          |  33 +-
+ drivers/i2c/busses/i2c-tegra.c                     |  41 +-
+ drivers/staging/media/tegra-video/Kconfig          |   7 +
+ drivers/staging/media/tegra-video/csi.c            | 245 ++++++-
+ drivers/staging/media/tegra-video/csi.h            |   9 +
+ drivers/staging/media/tegra-video/tegra210.c       |  25 +-
+ drivers/staging/media/tegra-video/vi.c             | 770 +++++++++++++++++++--
+ drivers/staging/media/tegra-video/vi.h             |  23 +-
+ drivers/staging/media/tegra-video/video.c          |  23 +-
+ include/linux/host1x.h                             |   3 +
+ 16 files changed, 1253 insertions(+), 96 deletions(-)
+
+-- 
+2.7.4
+
