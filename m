@@ -2,147 +2,113 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D81C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCD9C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F2E720734
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:44:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591782295;
-	bh=DgudfPLHTEc2MSMs9eqwrbJDZp0N3Dn6kSW0M4scuuc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=I9vVVIfHkCfotHDEU1RplrmLghNlgHMAsZibG/NccAU8GPSPkOva76F4ivOCma4c0
-	 8ygD49j/7sSjlIzWfqXGMjHf0RjMy1izT3n/tulxShzzOw7sRWlE5xCt5xgIkEncnU
-	 mFZlwaTbte70oTnWchLhvSKCavDXSNUu/WfJSDa0=
+	by mail.kernel.org (Postfix) with ESMTP id BDD1E2072E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:45:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FPoPyctx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727937AbgFJJox (ORCPT
+        id S1727951AbgFJJpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 05:44:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52296 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727909AbgFJJox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 05:44:53 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E83A4204EC;
-        Wed, 10 Jun 2020 09:44:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591782292;
-        bh=DgudfPLHTEc2MSMs9eqwrbJDZp0N3Dn6kSW0M4scuuc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Lc1DJuxGI8LC89mVZ+B0YN7qhmzSzTNXQ1M6TpLam6lLlNl0cEN4Gv+A80PnpxC7g
-         U6l2PH1G5ZzOWIfiqS/tRYkH4doqZqjdgXpX6v/ry3mpHdbsFZ/O7Fz4xZ+qDne8jf
-         1ROAbNHyOBBVV38IyMOhFFP8Sn7QUzUeiUdHhXGE=
-Received: by pali.im (Postfix)
-        id 184B1810; Wed, 10 Jun 2020 11:44:50 +0200 (CEST)
-Date:   Wed, 10 Jun 2020 11:44:49 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Mario.Limonciello@dell.com
-Cc:     rdunlap@infradead.org, y.linux@paritcher.com,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        mjg59@srcf.ucam.org
-Subject: Re: [PATCH v2 3/3] platform/x86: dell-wmi: add new dmi keys to
- bios_to_linux_keycode
-Message-ID: <20200610094449.xltvs2y6kp7driyh@pali>
-References: <cover.1591584631.git.y.linux@paritcher.com>
- <cover.1591656154.git.y.linux@paritcher.com>
- <d585d2a0f01a6b9480352530b571dec2d1afd79f.1591656154.git.y.linux@paritcher.com>
- <8053252a-83ad-bcaa-2830-ccfbca1b4152@infradead.org>
- <20200608235508.wthtgilgmifwfgz2@pali>
- <ced5832cfe984c68b27a577cac0f02f1@AUSX13MPC105.AMER.DELL.COM>
+        Wed, 10 Jun 2020 05:45:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47746 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727909AbgFJJpG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 05:45:06 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E9B3C03E96B;
+        Wed, 10 Jun 2020 02:45:06 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id h188so1063077lfd.7;
+        Wed, 10 Jun 2020 02:45:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=knFTNygHBlvK7O+pDlbdvkQzVtQ3TgCejJaIUpEQ4jE=;
+        b=FPoPyctxOdVDSsWBW0DlRNRiIuR67mqyGK8YC9Ys9GBn2jdZt6nSY+imLjKGWfZEmy
+         TKFIRPmh0pIedVCCcigIb62Ci1dFBR8JP/pisoToHWPgSFb8TW9t0nwj40a38Ci/vY+n
+         cz552AjSVLs6oN/qPoU3US6Aaixm2HEv4HnPCGLPMiSZUVdt70G0rk8wNwq82Ssmr3k3
+         8MuTnvRqc1BzZmJPJzxO2uuYvNsVmeVdXs9mVUSI+rQpArHUPCMp+JV+uzskDaAoY6vX
+         O/QCJNNB4L1xcgJ7QBk5uolvmPxfPbuI24RABliKkdeXVhkZFEjnaArMbKHgTJoUEYNv
+         oXXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=knFTNygHBlvK7O+pDlbdvkQzVtQ3TgCejJaIUpEQ4jE=;
+        b=pk0/sCO2vmCjgOO81KwuKty7r49SKbQb//XOnZSCbiQ93TfNl64R/QcsBIrVuFyYxL
+         vmMZ+ycpQi4kMP1doP0WBRmkjgZgGmPoS4FO78LYV5Bb5X8QSMI7QLWC8UuVwz55DQPp
+         W0vb2cLrEwLcjBR0Urn4kDKcIcO1eZcIfIORsrS6OGm4p9CtUAUtDu2hzb8IBdEFARI4
+         M1fWogOFV+YPVBwKeSoH09C1JR+IrN/6YsYoDLUQcIELgQ54eIYcwT7/ONt3lc2qmUxb
+         xJnQV3OUynLRd698yBwKyU3GXiWmTEzO1sb2e5w5vIAtQmQrCy85d/xyiY6OuTdJiWtn
+         CQCQ==
+X-Gm-Message-State: AOAM5306xdndgNGsUhaxct0gb4fEM/ePWGkn1M027bKYgLvR+jot7Ocx
+        7go3M+oEBsWj6xukwRhX44fSGoioyuNxu/be2fw=
+X-Google-Smtp-Source: ABdhPJyQMlT6HI3cYl8ktA2fFE/ZTZurP+ljqqgBYUhJ8esgJ8ZgEAVUyHEYJ3Tg55Pvko91cuPxWdnhKnbyjJSPIZE=
+X-Received: by 2002:a19:5d44:: with SMTP id p4mr1244127lfj.56.1591782304769;
+ Wed, 10 Jun 2020 02:45:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ced5832cfe984c68b27a577cac0f02f1@AUSX13MPC105.AMER.DELL.COM>
-User-Agent: NeoMutt/20180716
+References: <20200610071446.3737-1-zhenzhong.duan@gmail.com>
+ <20200610085932.GA461993@ubuntu-n2-xlarge-x86> <CAMj1kXHun8-SS4L03ccp=pt1oyPSfpuPezju294NnJoKLtcvcA@mail.gmail.com>
+In-Reply-To: <CAMj1kXHun8-SS4L03ccp=pt1oyPSfpuPezju294NnJoKLtcvcA@mail.gmail.com>
+From:   Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Date:   Wed, 10 Jun 2020 17:44:53 +0800
+Message-ID: <CAFH1YnN9wDPycD59EPV406j9jkvsibi9Ewjt1ROswENv8OVupQ@mail.gmail.com>
+Subject: Re: [PATCH] efi/libstub: Fix build error with libstub
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Kees Cook <keescook@chromium.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday 09 June 2020 19:49:18 Mario.Limonciello@dell.com wrote:
-> > 
-> > Looking at the last two lines... and for me it looks like that 0x00FF
-> > and 0xFFFF are just "placeholders" or special values for unknown /
-> > custom / unsupported / reserved / special / ... codes.
-> > 
-> > It is really suspicious why first 38 values are defined, then there is
-> > gap, then one value 255 and then huge gap to 65535.
-> > 
-> > Mario, this looks like some mapping table between internal Dell BIOS key
-> > code and standard Linux key code. Are you able to get access to some
-> > documentation which contains explanation of those Dell key numbers?
-> > It could really help us to understand these gaps and what is correct
-> > interpretation of these numbers.
-> > 
-> 
-> The codes are actually 4 bytes in the table, but in practice nothing above the
-> first two bytes is used.
-> 
-> Those two called out are special though, here are their meanings:
-> 
-> 0x00FF is user programmable function
-> 0xFFFF is no function
-> 
-> For the purpose of memory consumption I think it's reasonable to ignore the
-> upper 2 bytes and special case these two.
+On Wed, Jun 10, 2020 at 5:10 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> On Wed, 10 Jun 2020 at 10:59, Nathan Chancellor
+> <natechancellor@gmail.com> wrote:
+> >
+> > On Wed, Jun 10, 2020 at 03:14:46PM +0800, Zhenzhong Duan wrote:
+> > > Got below error during build:
+...
+> > > diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+> > > index cce4a74..25e5d02 100644
+> > > --- a/drivers/firmware/efi/libstub/Makefile
+> > > +++ b/drivers/firmware/efi/libstub/Makefile
+> > > @@ -6,7 +6,7 @@
+> > >  # enabled, even if doing so doesn't break the build.
+> > >  #
+> > >  cflags-$(CONFIG_X86_32)              := -march=i386
+> > > -cflags-$(CONFIG_X86_64)              := -mcmodel=small
+> > > +cflags-$(CONFIG_X86_64)              := -mcmodel=small -maccumulate-outgoing-args
+> >
+> > This will need a cc-option call if this patch is necessary because clang
+> > does not support this flag.
+> >
+> > clang-11: error: unknown argument: '-maccumulate-outgoing-args'
+> >
+>
+> A fix was already sent for this
+>
+> https://lore.kernel.org/bpf/20200605150638.1011637-1-nivedita@alum.mit.edu/
+>
+> which does the right thing here.
+Ah, so I'm late again. Not clear if there is easy way to check queued
+patches for upstream..
 
-Thank you for information!
-
-So 0x00FF is "user programmable" button. Do I understand it correctly
-that Dell/BIOS does not explicitly provide meaning for these buttons,
-they do not have fixed functionality and therefore user should configure
-them as he want?
-
-And what does mean "no function"? I do not know what should I imagine if
-I receive key press marked as "no function".
-
-> > E.g. I remember that pressing Fn+Q or Fn+W on some Dell Latitude
-> > generates code 255, which could prove my thesis about "special codes"
-> > (which are probably not found in e.g. Windows or Linux mapping tables).
-> > 
-> > > >  };
-> > > >
-> > > >  /*
-> > > > @@ -503,10 +504,7 @@ static void handle_dmi_entry(const struct
-> > dmi_header *dm, void *opaque)
-> > > >  					&table->keymap[i];
-> > > >
-> > > >  		/* Uninitialized entries are 0 aka KEY_RESERVED. */
-> > > > -		u16 keycode = (bios_entry->keycode <
-> > > > -			       ARRAY_SIZE(bios_to_linux_keycode)) ?
-> > > > -			bios_to_linux_keycode[bios_entry->keycode] :
-> > > > -			KEY_RESERVED;
-> > > > +		u16 keycode = bios_to_linux_keycode[bios_entry->keycode];
-> > > >
-> > > >  		/*
-> > > >  		 * Log if we find an entry in the DMI table that we don't
-> > > >
-> > >
-> > > Something like:
-> > >
-> > > 		u16 keycode;
-> > >
-> > > 		keycode = bios_entry->keycode == 0xffff ? KEY_UNKNOWN :
-> > > 			(bios_entry->keycode <
-> > > 			       ARRAY_SIZE(bios_to_linux_keycode)) ?
-> > > 			bios_to_linux_keycode[bios_entry->keycode] :
-> > > 			KEY_RESERVED;
-> > >
-> > >
-> > >
-> > > Also please fix this:
-> > > (no To-header on input) <>
-> > 
-> > Hint: specifying git send-email with '--to' argument instead of '--cc'
-> > should help.
-> > 
-> > >
-> > > --
-> > > ~Randy
-> > >
+Regards
+Zhenzhong
