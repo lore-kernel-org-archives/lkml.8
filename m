@@ -2,201 +2,103 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 870CEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB47C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62AFD2070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8627D20734
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:57:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gvdgdB9j"
+	dkim=pass (2048-bit key) header.d=paritcher.com header.i=@paritcher.com header.b="xP1SoCnD";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NIPncPZ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbgFJRzs (ORCPT
+        id S1727931AbgFJR5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 13:55:48 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34282 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726965AbgFJRzp (ORCPT
+        Wed, 10 Jun 2020 13:57:21 -0400
+Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:57777 "EHLO
+        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726982AbgFJR5R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 13:55:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591811743;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xtbWANQso5ashZaAefg4iTD+YvjBiY3Rvcd86C6GIYQ=;
-        b=gvdgdB9jDOdmb3x5LtRbFX/WCTVwH34VmkPaKdx+tOvnYarZ148fSWduiyRV18FzIU+g0o
-        sKjZUlULhoNP3vBkdFaTg0CzDGOurCODbRRksSa8tBNudjCNNWs8cYyhxkV+JYn/dpYEN+
-        nJWt9+7UEg7fMpSF5tvuV0svSlMyfP4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-129-0J7IyOx8NoapTomZce-53g-1; Wed, 10 Jun 2020 13:55:41 -0400
-X-MC-Unique: 0J7IyOx8NoapTomZce-53g-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3B513107ACCD;
-        Wed, 10 Jun 2020 17:55:40 +0000 (UTC)
-Received: from vitty.brq.redhat.com (unknown [10.40.192.78])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E88FF78905;
-        Wed, 10 Jun 2020 17:55:37 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Vivek Goyal <vgoyal@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] KVM: async_pf: Inject 'page ready' event only if 'page not present' was previously injected
-Date:   Wed, 10 Jun 2020 19:55:32 +0200
-Message-Id: <20200610175532.779793-2-vkuznets@redhat.com>
-In-Reply-To: <20200610175532.779793-1-vkuznets@redhat.com>
-References: <20200610175532.779793-1-vkuznets@redhat.com>
+        Wed, 10 Jun 2020 13:57:17 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id 576EE7A3;
+        Wed, 10 Jun 2020 13:57:16 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Wed, 10 Jun 2020 13:57:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=paritcher.com;
+         h=from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm2; bh=SiHw8t1C76QbP
+        q88iFMh4v4nWIh2uDFrVmug2k4eJjA=; b=xP1SoCnDecokXmz7i+a4eF/nUQAFv
+        0HmZ2vbc2+/9+Lw71z9UU0ZrGr6F0cG+R8cGoyqfc1Ju1BSYhnlblidvvhhAzUJ+
+        F3iZ6FjuwMp61Op5JzVEzUxYfoC7Qt8mo+avO50xgKiJHBc5DG4QYur+3azsWkLO
+        GsCNhMWL46aRzeLP0R1f3fOQx3ir/e4XdtSZHAxlMDRiQTLLlzTX4oSkSNcKF47e
+        2Y7ep1ubkB/MEuAzRVvYP2hdVD1HLsrXZjN4VKzLUi+3JRQnZWzQ8XYavPKewzRN
+        yfxzTq11qIZd/7BNRn0ncJ9x8YbHR28Noojy8KhjyGhJQORHblCZlCl6g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; bh=SiHw8t1C76QbPq88iFMh4v4nWIh2uDFrVmug2k4eJjA=; b=NIPncPZ4
+        Tuwv7GU2P3lvvxPUdpaS2MISSS0U8SqgAwjlXSpf/kMT8SdXXDuYpbxNKEn1ydgr
+        2ycozcldApJHzJRo3afRfXHm4AF5jMNMUeT90lY064rZXDsjAdvvVOYv6fEDCBop
+        vbHlf2eIFOPpQrGBdi6MG045qdLWpTqxGZ31qq0c/B8fb9iFFhll+7TcgOaQM4IU
+        Gvwk3Y4nRK7sJXEatIMC0ue1borOAs4pAqyg8vzt3aA3uKZZ0DPEuBx/d5H1LzRh
+        cqG/04tq866tnzRQSSVVeO4Rbe88Nn0pthG12U4vuRf2FiNKps+c9MV1oUCpvGSX
+        GJhk0nhCYs5wWA==
+X-ME-Sender: <xms:-x7hXu7h5XoKovcPJGdbCmOjBb6uMBYYhk0cLkQECazQjid3AB1L0w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudehiedguddvvdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepjgcurfgr
+    rhhithgthhgvrhcuoeihrdhlihhnuhigsehprghrihhttghhvghrrdgtohhmqeenucggtf
+    frrghtthgvrhhnpeejgeefteelueelveetjeetteeifffggfefvdffffdvtddvvdevvefh
+    hfdthedukeenucfkphepieejrdekgedrudelgedrudejheenucevlhhushhtvghrufhiii
+    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpeihrdhlihhnuhigsehprghrihhttghh
+    vghrrdgtohhm
+X-ME-Proxy: <xmx:-x7hXn4iO9Dwl8Y5Hkt3cF6_Sgnha79OKwJ-HSxYv8x-uEuZNArc7A>
+    <xmx:-x7hXtc7s9G4DXfVR_ls6J2iGe-Mi-08NgF1tBsZ5CpDlklAvH4ehA>
+    <xmx:-x7hXrIQKzIOGENVTNyyEmz0xDf_5tEBPspuxbnCy0hGXvNdvKNkig>
+    <xmx:-x7hXkjA_Ek7wD4682TrjdEt6OVRZ97QPRBcM9oXXa_v8JyCOpnJAg>
+Received: from localhost.localdomain (ool-4354c2af.dyn.optonline.net [67.84.194.175])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 2F0B33060FE7;
+        Wed, 10 Jun 2020 13:57:15 -0400 (EDT)
+From:   Y Paritcher <y.linux@paritcher.com>
+To:     =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Mario.Limonciello@dell.com
+Subject: [PATCH v4 0/3] platform/x86: dell-wmi: new keys
+Date:   Wed, 10 Jun 2020 13:56:55 -0400
+Message-Id: <cover.1591811549.git.y.linux@paritcher.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <cover.1591584631.git.y.linux@paritcher.com>
+References: <cover.1591584631.git.y.linux@paritcher.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'Page not present' event may or may not get injected depending on
-guest's state. If the event wasn't injected, there is no need to
-inject the corresponding 'page ready' event as the guest may get
-confused. E.g. Linux thinks that the corresponding 'page not present'
-event wasn't delivered *yet* and allocates a 'dummy entry' for it.
-This entry is never freed.
+change since v3:
+    No code changes.
+    Update commit message to reflect info given by Mario at dell.
+    
+Is there anything more i have to do for the patches that were reviewed
+or will they be picked up by the maintainers?
+Thanks
 
-Note, 'wakeup all' events have no corresponding 'page not present'
-event and always get injected.
+Y Paritcher (3):
+  platform/x86: dell-wmi: add new backlight events
+  platform/x86: dell-wmi: add new keymap type 0x0012
+  platform/x86: dell-wmi: add new dmi mapping for keycode 0xffff
 
-s390 seems to always be able to inject 'page not present', the
-change is effectively a nop.
+ drivers/platform/x86/dell-wmi.c | 28 +++++++++++++++++++++++++---
+ 1 file changed, 25 insertions(+), 3 deletions(-)
 
-Suggested-by: Vivek Goyal <vgoyal@redhat.com>
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- arch/s390/include/asm/kvm_host.h | 2 +-
- arch/s390/kvm/kvm-s390.c         | 4 +++-
- arch/x86/include/asm/kvm_host.h  | 2 +-
- arch/x86/kvm/x86.c               | 7 +++++--
- include/linux/kvm_host.h         | 1 +
- virt/kvm/async_pf.c              | 2 +-
- 6 files changed, 12 insertions(+), 6 deletions(-)
-
-diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm_host.h
-index 3d554887794e..cee3cb6455a2 100644
---- a/arch/s390/include/asm/kvm_host.h
-+++ b/arch/s390/include/asm/kvm_host.h
-@@ -978,7 +978,7 @@ bool kvm_arch_can_dequeue_async_page_present(struct kvm_vcpu *vcpu);
- void kvm_arch_async_page_ready(struct kvm_vcpu *vcpu,
- 			       struct kvm_async_pf *work);
- 
--void kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
-+bool kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
- 				     struct kvm_async_pf *work);
- 
- void kvm_arch_async_page_present(struct kvm_vcpu *vcpu,
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index 06bde4bad205..33fea4488ef3 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -3923,11 +3923,13 @@ static void __kvm_inject_pfault_token(struct kvm_vcpu *vcpu, bool start_token,
- 	}
- }
- 
--void kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
-+bool kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
- 				     struct kvm_async_pf *work)
- {
- 	trace_kvm_s390_pfault_init(vcpu, work->arch.pfault_token);
- 	__kvm_inject_pfault_token(vcpu, true, work->arch.pfault_token);
-+
-+	return true;
- }
- 
- void kvm_arch_async_page_present(struct kvm_vcpu *vcpu,
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 6e03c021956a..f54e7499fc6a 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1660,7 +1660,7 @@ void kvm_make_scan_ioapic_request(struct kvm *kvm);
- void kvm_make_scan_ioapic_request_mask(struct kvm *kvm,
- 				       unsigned long *vcpu_bitmap);
- 
--void kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
-+bool kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
- 				     struct kvm_async_pf *work);
- void kvm_arch_async_page_present(struct kvm_vcpu *vcpu,
- 				 struct kvm_async_pf *work);
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 13d0b0fa1a7c..75e4c68e9586 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -10513,7 +10513,7 @@ bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu)
- 	return kvm_arch_interrupt_allowed(vcpu);
- }
- 
--void kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
-+bool kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
- 				     struct kvm_async_pf *work)
- {
- 	struct x86_exception fault;
-@@ -10530,6 +10530,7 @@ void kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
- 		fault.address = work->arch.token;
- 		fault.async_page_fault = true;
- 		kvm_inject_page_fault(vcpu, &fault);
-+		return true;
- 	} else {
- 		/*
- 		 * It is not possible to deliver a paravirtualized asynchronous
-@@ -10540,6 +10541,7 @@ void kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
- 		 * fault is retried, hopefully the page will be ready in the host.
- 		 */
- 		kvm_make_request(KVM_REQ_APF_HALT, vcpu);
-+		return false;
- 	}
- }
- 
-@@ -10557,7 +10559,8 @@ void kvm_arch_async_page_present(struct kvm_vcpu *vcpu,
- 		kvm_del_async_pf_gfn(vcpu, work->arch.gfn);
- 	trace_kvm_async_pf_ready(work->arch.token, work->cr2_or_gpa);
- 
--	if (kvm_pv_async_pf_enabled(vcpu) &&
-+	if ((work->wakeup_all || work->notpresent_injected) &&
-+	    kvm_pv_async_pf_enabled(vcpu) &&
- 	    !apf_put_user_ready(vcpu, work->arch.token)) {
- 		vcpu->arch.apf.pageready_pending = true;
- 		kvm_apic_set_irq(vcpu, &irq, NULL);
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 802b9e2306f0..2456dc5338f8 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -206,6 +206,7 @@ struct kvm_async_pf {
- 	unsigned long addr;
- 	struct kvm_arch_async_pf arch;
- 	bool   wakeup_all;
-+	bool notpresent_injected;
- };
- 
- void kvm_clear_async_pf_completion_queue(struct kvm_vcpu *vcpu);
-diff --git a/virt/kvm/async_pf.c b/virt/kvm/async_pf.c
-index ba080088da76..a36828fbf40a 100644
---- a/virt/kvm/async_pf.c
-+++ b/virt/kvm/async_pf.c
-@@ -189,7 +189,7 @@ int kvm_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
- 
- 	list_add_tail(&work->queue, &vcpu->async_pf.queue);
- 	vcpu->async_pf.queued++;
--	kvm_arch_async_page_not_present(vcpu, work);
-+	work->notpresent_injected = kvm_arch_async_page_not_present(vcpu, work);
- 
- 	schedule_work(&work->work);
- 
 -- 
-2.25.4
+2.27.0
 
