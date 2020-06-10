@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BBA2C433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8C9C433DF
 	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 16:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 858B220734
+	by mail.kernel.org (Postfix) with ESMTP id 9842320823
 	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 16:31:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729147AbgFJQbz (ORCPT
+        id S1730607AbgFJQb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 12:31:55 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60458 "EHLO mx2.suse.de"
+        Wed, 10 Jun 2020 12:31:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60438 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728859AbgFJQbx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728784AbgFJQbx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 10 Jun 2020 12:31:53 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id C1CABAD6B;
+        by mx2.suse.de (Postfix) with ESMTP id C1388AC79;
         Wed, 10 Jun 2020 16:31:53 +0000 (UTC)
 From:   Vlastimil Babka <vbabka@suse.cz>
 To:     Andrew Morton <akpm@linux-foundation.org>,
@@ -34,11 +34,11 @@ Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Kees Cook <keescook@chromium.org>,
         Matthew Garrett <mjg59@google.com>,
         Roman Gushchin <guro@fb.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Jann Horn <jannh@google.com>,
-        Vijayanand Jitta <vjitta@codeaurora.org>
-Subject: [PATCH 4/9] mm, slub: make remaining slub_debug related attributes read-only
-Date:   Wed, 10 Jun 2020 18:31:30 +0200
-Message-Id: <20200610163135.17364-5-vbabka@suse.cz>
+        Vijayanand Jitta <vjitta@codeaurora.org>,
+        Jann Horn <jannh@google.com>
+Subject: [PATCH 2/9] mm, slub: make some slub_debug related attributes read-only
+Date:   Wed, 10 Jun 2020 18:31:28 +0200
+Message-Id: <20200610163135.17364-3-vbabka@suse.cz>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200610163135.17364-1-vbabka@suse.cz>
 References: <20200610163135.17364-1-vbabka@suse.cz>
@@ -51,135 +51,155 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 SLUB_DEBUG creates several files under /sys/kernel/slab/<cache>/ that can be
 read to check if the respective debugging options are enabled for given cache.
-Some options, namely sanity_checks, trace, and failslab can be also enabled and
-disabled at runtime by writing into the files.
+The options can be also toggled at runtime by writing into the files. Some of
+those, namely red_zone, poison, and store_user can be toggled only when no
+objects yet exist in the cache.
 
-The runtime toggling is racy. Some options disable __CMPXCHG_DOUBLE when
-enabled, which means that in case of concurrent allocations, some can still use
-__CMPXCHG_DOUBLE and some not, leading to potential corruption. The s->flags
-field is also not updated or checked atomically. The simplest solution is to
-remove the runtime toggling. The extended slub_debug boot parameter syntax
-introduced by earlier patch should allow to fine-tune the debugging
-configuration during boot with same granularity.
+Vijayanand reports [1] that there is a problem with freelist randomization if
+changing the debugging option's state results in different number of objects
+per page, and the random sequence cache needs thus needs to be recomputed.
 
+However, another problem is that the check for "no objects yet exist in the
+cache" is racy, as noted by Jann [2] and fixing that would add overhead or
+otherwise complicate the allocation/freeing paths. Thus it would be much
+simpler just to remove the runtime toggling support. The documentation
+describes it's "In case you forgot to enable debugging on the kernel command
+line", but the neccessity of having no objects limits its usefulness anyway for
+many caches.
+
+Vijayanand describes an use case [3] where debugging is enabled for all but
+zram caches for memory overhead reasons, and using the runtime toggles was the
+only way to achieve such configuration. After the previous patch it's now
+possible to do that directly from the kernel boot option, so we can remove the
+dangerous runtime toggles by making the /sys attribute files read-only.
+
+While updating it, also improve the documentation of the debugging /sys files.
+
+[1] https://lkml.kernel.org/r/1580379523-32272-1-git-send-email-vjitta@codeaurora.org
+[2] https://lore.kernel.org/r/CAG48ez31PP--h6_FzVyfJ4H86QYczAFPdxtJHUEEan+7VJETAQ@mail.gmail.com
+[3] https://lore.kernel.org/r/1383cd32-1ddc-4dac-b5f8-9c42282fa81c@codeaurora.org
+
+Reported-by: Vijayanand Jitta <vjitta@codeaurora.org>
+Reported-by: Jann Horn <jannh@google.com>
 Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 Reviewed-by: Kees Cook <keescook@chromium.org>
 Acked-by: Roman Gushchin <guro@fb.com>
 ---
- Documentation/vm/slub.rst |  7 ++---
- mm/slub.c                 | 62 ++-------------------------------------
- 2 files changed, 5 insertions(+), 64 deletions(-)
+ Documentation/vm/slub.rst | 28 ++++++++++++++----------
+ mm/slub.c                 | 46 +++------------------------------------
+ 2 files changed, 20 insertions(+), 54 deletions(-)
 
 diff --git a/Documentation/vm/slub.rst b/Documentation/vm/slub.rst
-index 36241dfba024..289d231cee97 100644
+index cfccb258cf42..36241dfba024 100644
 --- a/Documentation/vm/slub.rst
 +++ b/Documentation/vm/slub.rst
-@@ -116,11 +116,8 @@ If the file contains 1, the option is enabled, 0 means disabled. The debug
- 	T	trace
- 	A	failslab
+@@ -101,20 +101,26 @@ debugged by specifying global debug options followed by a list of slab names
  
--The sanity_checks, trace and failslab files are writable, so writing 1 or 0
--will enable or disable the option at runtime. The writes to trace and failslab
--may return -EINVAL if the cache is subject to slab merging. Careful with
--tracing: It may spew out lots of information and never stop if used on the
--wrong slab.
-+Careful with tracing: It may spew out lots of information and never stop if
-+used on the wrong slab.
+ 	slub_debug=FZ;-,zs_handle,zspage
+ 
+-In case you forgot to enable debugging on the kernel command line: It is
+-possible to enable debugging manually when the kernel is up. Look at the
+-contents of::
++The state of each debug option for a slab can be found in the respective files
++under::
+ 
+ 	/sys/kernel/slab/<slab name>/
+ 
+-Look at the writable files. Writing 1 to them will enable the
+-corresponding debug option. All options can be set on a slab that does
+-not contain objects. If the slab already contains objects then sanity checks
+-and tracing may only be enabled. The other options may cause the realignment
+-of objects.
+-
+-Careful with tracing: It may spew out lots of information and never stop if
+-used on the wrong slab.
++If the file contains 1, the option is enabled, 0 means disabled. The debug
++options from the ``slub_debug`` parameter translate to the following files::
++
++	F	sanity_checks
++	Z	red_zone
++	P	poison
++	U	store_user
++	T	trace
++	A	failslab
++
++The sanity_checks, trace and failslab files are writable, so writing 1 or 0
++will enable or disable the option at runtime. The writes to trace and failslab
++may return -EINVAL if the cache is subject to slab merging. Careful with
++tracing: It may spew out lots of information and never stop if used on the
++wrong slab.
  
  Slab merging
  ============
 diff --git a/mm/slub.c b/mm/slub.c
-index c5f3f2424392..0108829838e7 100644
+index a53371426e06..e254164d6cae 100644
 --- a/mm/slub.c
 +++ b/mm/slub.c
-@@ -5056,20 +5056,6 @@ static ssize_t show_slab_objects(struct kmem_cache *s,
- 	return x + sprintf(buf + x, "\n");
+@@ -5351,61 +5351,21 @@ static ssize_t red_zone_show(struct kmem_cache *s, char *buf)
+ 	return sprintf(buf, "%d\n", !!(s->flags & SLAB_RED_ZONE));
  }
  
--#ifdef CONFIG_SLUB_DEBUG
--static int any_slab_objects(struct kmem_cache *s)
--{
--	int node;
--	struct kmem_cache_node *n;
--
--	for_each_kmem_cache_node(s, node, n)
--		if (atomic_long_read(&n->total_objects))
--			return 1;
--
--	return 0;
--}
--#endif
--
- #define to_slab_attr(n) container_of(n, struct slab_attribute, attr)
- #define to_slab(n) container_of(n, struct kmem_cache, kobj)
- 
-@@ -5291,43 +5277,13 @@ static ssize_t sanity_checks_show(struct kmem_cache *s, char *buf)
- {
- 	return sprintf(buf, "%d\n", !!(s->flags & SLAB_CONSISTENCY_CHECKS));
- }
--
--static ssize_t sanity_checks_store(struct kmem_cache *s,
+-static ssize_t red_zone_store(struct kmem_cache *s,
 -				const char *buf, size_t length)
 -{
--	s->flags &= ~SLAB_CONSISTENCY_CHECKS;
+-	if (any_slab_objects(s))
+-		return -EBUSY;
+-
+-	s->flags &= ~SLAB_RED_ZONE;
+-	if (buf[0] == '1') {
+-		s->flags |= SLAB_RED_ZONE;
+-	}
+-	calculate_sizes(s, -1);
+-	return length;
+-}
+-SLAB_ATTR(red_zone);
++SLAB_ATTR_RO(red_zone);
+ 
+ static ssize_t poison_show(struct kmem_cache *s, char *buf)
+ {
+ 	return sprintf(buf, "%d\n", !!(s->flags & SLAB_POISON));
+ }
+ 
+-static ssize_t poison_store(struct kmem_cache *s,
+-				const char *buf, size_t length)
+-{
+-	if (any_slab_objects(s))
+-		return -EBUSY;
+-
+-	s->flags &= ~SLAB_POISON;
+-	if (buf[0] == '1') {
+-		s->flags |= SLAB_POISON;
+-	}
+-	calculate_sizes(s, -1);
+-	return length;
+-}
+-SLAB_ATTR(poison);
++SLAB_ATTR_RO(poison);
+ 
+ static ssize_t store_user_show(struct kmem_cache *s, char *buf)
+ {
+ 	return sprintf(buf, "%d\n", !!(s->flags & SLAB_STORE_USER));
+ }
+ 
+-static ssize_t store_user_store(struct kmem_cache *s,
+-				const char *buf, size_t length)
+-{
+-	if (any_slab_objects(s))
+-		return -EBUSY;
+-
+-	s->flags &= ~SLAB_STORE_USER;
 -	if (buf[0] == '1') {
 -		s->flags &= ~__CMPXCHG_DOUBLE;
--		s->flags |= SLAB_CONSISTENCY_CHECKS;
+-		s->flags |= SLAB_STORE_USER;
 -	}
+-	calculate_sizes(s, -1);
 -	return length;
 -}
--SLAB_ATTR(sanity_checks);
-+SLAB_ATTR_RO(sanity_checks);
+-SLAB_ATTR(store_user);
++SLAB_ATTR_RO(store_user);
  
- static ssize_t trace_show(struct kmem_cache *s, char *buf)
+ static ssize_t validate_show(struct kmem_cache *s, char *buf)
  {
- 	return sprintf(buf, "%d\n", !!(s->flags & SLAB_TRACE));
- }
--
--static ssize_t trace_store(struct kmem_cache *s, const char *buf,
--							size_t length)
--{
--	/*
--	 * Tracing a merged cache is going to give confusing results
--	 * as well as cause other issues like converting a mergeable
--	 * cache into an umergeable one.
--	 */
--	if (s->refcount > 1)
--		return -EINVAL;
--
--	s->flags &= ~SLAB_TRACE;
--	if (buf[0] == '1') {
--		s->flags &= ~__CMPXCHG_DOUBLE;
--		s->flags |= SLAB_TRACE;
--	}
--	return length;
--}
--SLAB_ATTR(trace);
-+SLAB_ATTR_RO(trace);
- 
- static ssize_t red_zone_show(struct kmem_cache *s, char *buf)
- {
-@@ -5391,19 +5347,7 @@ static ssize_t failslab_show(struct kmem_cache *s, char *buf)
- {
- 	return sprintf(buf, "%d\n", !!(s->flags & SLAB_FAILSLAB));
- }
--
--static ssize_t failslab_store(struct kmem_cache *s, const char *buf,
--							size_t length)
--{
--	if (s->refcount > 1)
--		return -EINVAL;
--
--	s->flags &= ~SLAB_FAILSLAB;
--	if (buf[0] == '1')
--		s->flags |= SLAB_FAILSLAB;
--	return length;
--}
--SLAB_ATTR(failslab);
-+SLAB_ATTR_RO(failslab);
- #endif
- 
- static ssize_t shrink_show(struct kmem_cache *s, char *buf)
 -- 
 2.26.2
 
