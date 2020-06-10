@@ -2,210 +2,519 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE343C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 16:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEBD2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 16:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0D31206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 16:46:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="HgRMAuTW"
+	by mail.kernel.org (Postfix) with ESMTP id 88C412072E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 16:47:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgFJQqE (ORCPT
+        id S1726899AbgFJQrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 12:46:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56600 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726095AbgFJQqD (ORCPT
+        Wed, 10 Jun 2020 12:47:07 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:38320 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726358AbgFJQrG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 12:46:03 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C8CAC03E96F
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 09:46:02 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id o5so2964426iow.8
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 09:46:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sargun.me; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+KF3Wg/KxPPsJnDwGBY4BTGRIdXAYib5hVwhMtHWLfU=;
-        b=HgRMAuTWMBRBanlAB5E2bZMUR3yQzh2TAR348xhZFkKLdl6VkFbd8lfpnil/ZRcEp4
-         4LhjxroS+10lgG32UVuCCmD24KDsjkmYd6x9H9e6fKK74z86ggmWb9GYqt7BLRWc11Aa
-         +cYfguNB5oZfimX73XONF31dxBMsZOfbKNmTo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+KF3Wg/KxPPsJnDwGBY4BTGRIdXAYib5hVwhMtHWLfU=;
-        b=ewSt4vFcrbpNvgfGQu4JOGFB7JV6nVkG9mBvhKuoX0noLnUv4z6HUlLn4asTiLkQVj
-         T/tGHZR/1ccq2CQMyoS75v1XP7SFCbsCT5OTnCad1Lgt7fTQ4QDs+9cM698EZ4QHu2c+
-         cGOmVCotGHJB3c/fRcs06DY1z5l5amn+MYu212EMj8Gc1bh+7vjmpM1h8TEi5eFNtn9T
-         TbeFOvv+CUcy++H7TC5r11qX8SMKpuGDFEVfo2IlH9X27vxXyrgMfUmK8fAxikuqoEYq
-         wLk3jDqx62K82sS7o15KElx2gI4zbuXtn3W0OkKhZgSknrNw/7vCOILihjV7H3dzz8UE
-         NBag==
-X-Gm-Message-State: AOAM533LUwlVksd8QTx1Az60ufv840lDz2QRRuESw3kLTDITX5IJXvZZ
-        jFfdzuVbfBjQhNcCRFM+IrUzrA==
-X-Google-Smtp-Source: ABdhPJzAEl8tQK/3JovbXIeTrhwaRfdkvH2RM45wUhIv1vuHEWFFrbA6dYbpMJnhTGD1odepimGgVA==
-X-Received: by 2002:a6b:7611:: with SMTP id g17mr4174027iom.110.1591807561732;
-        Wed, 10 Jun 2020 09:46:01 -0700 (PDT)
-Received: from ircssh-2.c.rugged-nimbus-611.internal (80.60.198.104.bc.googleusercontent.com. [104.198.60.80])
-        by smtp.gmail.com with ESMTPSA id b8sm190113ior.35.2020.06.10.09.46.00
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 10 Jun 2020 09:46:01 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 16:45:59 +0000
-From:   Sargun Dhillon <sargun@sargun.me>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Christoph Hellwig <hch@lst.de>,
-        Christian Brauner <christian@brauner.io>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] pidfd: Replace open-coded partial __scm_install_fd()
-Message-ID: <20200610164558.GA30124@ircssh-2.c.rugged-nimbus-611.internal>
-References: <20200610045214.1175600-1-keescook@chromium.org>
- <20200610045214.1175600-3-keescook@chromium.org>
+        Wed, 10 Jun 2020 12:47:06 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 948192A0DB7
+Subject: Re: [PATCH v3 2/2] regulator: Add driver for cros-ec-regulator
+To:     Pi-Hsun Shih <pihsun@chromium.org>
+Cc:     Nicolas Boichat <drinkcat@chromium.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Tzung-Bi Shih <tzungbi@google.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Yicheng Li <yichengli@chromium.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200610090748.45908-1-pihsun@chromium.org>
+ <20200610090748.45908-3-pihsun@chromium.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <3776237e-a6d5-ccda-79e4-39545b818e34@collabora.com>
+Date:   Wed, 10 Jun 2020 18:47:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200610045214.1175600-3-keescook@chromium.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200610090748.45908-3-pihsun@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 09:52:14PM -0700, Kees Cook wrote:
-> The sock counting (sock_update_netprioidx() and sock_update_classid())
-> was missing from this implementation of fd installation, compared to
-> SCM_RIGHTS. Use the new scm helper to get the work done, after adjusting
-> it to return the installed fd and accept a NULL user pointer.
+Hi Pi-Hsun,
+
+Thank you for your patch.
+
+On 10/6/20 11:07, Pi-Hsun Shih wrote:
+> Add driver for cros-ec-regulator, representing a voltage regulator that
+> is connected and controlled by ChromeOS EC, and is controlled by kernel
+> with EC host commands.
 > 
-> Fixes: 8649c322f75c ("pid: Implement pidfd_getfd syscall")
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
 > ---
-> AFAICT, the following patches are needed for back-porting this to stable:
+> Changes from v2:
+> * Add 'depends on OF' to Kconfig.
+> * Add Kconfig description about compiling as module.
 > 
-> 0462b6bdb644 ("net: add a CMSG_USER_DATA macro")
-> 2618d530dd8b ("net/scm: cleanup scm_detach_fds")
-> 1f466e1f15cf ("net: cleanly handle kernel vs user buffers for ->msg_control")
-> 6e8a4f9dda38 ("net: ignore sock_from_file errors in __scm_install_fd")
+> Changes from v1:
+> * Change compatible string to google,regulator-cros-ec.
+> * Use reg property in device tree.
+> * Address comments on code styles.
+> 
+> This patch contains function cros_ec_cmd that is copied from the series:
+> https://lore.kernel.org/patchwork/project/lkml/list/?series=428457.
+> 
+> I can't find the first patch in that v2 series, so the function is
+> modified from v1 of that series according to reviewers comment:
+> https://lore.kernel.org/patchwork/patch/1188110/
+> 
+> I copied the function instead of depending on that series since I feel
+> the function is small enough, and the series has stalled for some time.
 > ---
->  kernel/pid.c   | 12 ++----------
->  net/compat.c   |  2 +-
->  net/core/scm.c | 27 ++++++++++++++++++++-------
->  3 files changed, 23 insertions(+), 18 deletions(-)
+>  drivers/regulator/Kconfig                     |  10 +
+>  drivers/regulator/Makefile                    |   1 +
+>  drivers/regulator/cros-ec-regulator.c         | 262 ++++++++++++++++++
+>  .../linux/platform_data/cros_ec_commands.h    |  82 ++++++
+>  4 files changed, 355 insertions(+)
+>  create mode 100644 drivers/regulator/cros-ec-regulator.c
 > 
-> diff --git a/kernel/pid.c b/kernel/pid.c
-> index f1496b757162..a7ce4ba898d3 100644
-> --- a/kernel/pid.c
-> +++ b/kernel/pid.c
-> @@ -42,6 +42,7 @@
->  #include <linux/sched/signal.h>
->  #include <linux/sched/task.h>
->  #include <linux/idr.h>
-> +#include <net/scm.h>
+> diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+> index 8f677f5d79b4..c398e90e0e73 100644
+> --- a/drivers/regulator/Kconfig
+> +++ b/drivers/regulator/Kconfig
+> @@ -238,6 +238,16 @@ config REGULATOR_CPCAP
+>  	  Say y here for CPCAP regulator found on some Motorola phones
+>  	  and tablets such as Droid 4.
 >  
->  struct pid init_struct_pid = {
->  	.count		= REFCOUNT_INIT(1),
-> @@ -635,18 +636,9 @@ static int pidfd_getfd(struct pid *pid, int fd)
->  	if (IS_ERR(file))
->  		return PTR_ERR(file);
+> +config REGULATOR_CROS_EC
+> +	tristate "ChromeOS EC regulators"
+> +	depends on CROS_EC && OF
+> +	help
+> +	  This driver supports voltage regulators that is connected to ChromeOS
+> +	  EC and controlled through EC host commands.
+> +
+> +	  This driver can also be built as a module. If so, the module
+> +	  will be called cros-ec-regulator.
+> +
+>  config REGULATOR_DA903X
+>  	tristate "Dialog Semiconductor DA9030/DA9034 regulators"
+>  	depends on PMIC_DA903X
+> diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+> index e8f163371071..46592c160d22 100644
+> --- a/drivers/regulator/Makefile
+> +++ b/drivers/regulator/Makefile
+> @@ -13,6 +13,7 @@ obj-$(CONFIG_REGULATOR_USERSPACE_CONSUMER) += userspace-consumer.o
+>  obj-$(CONFIG_REGULATOR_88PG86X) += 88pg86x.o
+>  obj-$(CONFIG_REGULATOR_88PM800) += 88pm800-regulator.o
+>  obj-$(CONFIG_REGULATOR_88PM8607) += 88pm8607.o
+> +obj-$(CONFIG_REGULATOR_CROS_EC) += cros-ec-regulator.o
+>  obj-$(CONFIG_REGULATOR_CPCAP) += cpcap-regulator.o
+>  obj-$(CONFIG_REGULATOR_AAT2870) += aat2870-regulator.o
+>  obj-$(CONFIG_REGULATOR_AB3100) += ab3100.o
+> diff --git a/drivers/regulator/cros-ec-regulator.c b/drivers/regulator/cros-ec-regulator.c
+> new file mode 100644
+> index 000000000000..0af3a397781c
+> --- /dev/null
+> +++ b/drivers/regulator/cros-ec-regulator.c
+> @@ -0,0 +1,262 @@
+> +// SPDX-License-Identifier: GPL-2.0
+
+You probably want to specify that this is GPL-2.0-only license.
+
+> +//
+> +// Copyright 2020 Google LLC.
+> +
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_data/cros_ec_proto.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regulator/driver.h>
+> +#include <linux/regulator/machine.h>
+> +#include <linux/regulator/of_regulator.h>
+> +#include <linux/slab.h>
+> +
+> +struct cros_ec_regulator_data {
+> +	struct regulator_desc desc;
+> +	struct regulator_dev *dev;
+> +	struct cros_ec_device *ec_dev;
+> +
+> +	u32 index;
+> +
+> +	u16 *voltages_mV;
+> +	u16 num_voltages;
+> +};
+> +
+> +static int cros_ec_cmd(struct cros_ec_device *ec, u32 version, u32 command,
+> +		       void *outdata, u32 outsize, void *indata, u32 insize)
+> +{
+> +	struct cros_ec_command *msg;
+> +	int ret;
+> +
+> +	msg = kzalloc(sizeof(*msg) + max(outsize, insize), GFP_KERNEL);
+> +	if (!msg)
+> +		return -ENOMEM;
+> +
+> +	msg->version = version;
+> +	msg->command = command;
+> +	msg->outsize = outsize;
+> +	msg->insize = insize;
+> +
+> +	if (outdata && outsize > 0)
+> +		memcpy(msg->data, outdata, outsize);
+> +
+> +	ret = cros_ec_cmd_xfer_status(ec, msg);
+> +	if (ret < 0) {
+> +		dev_warn(ec->dev, "Command failed: %d\n", msg->result);
+
+The cros_ec_cmd_xfer_status() will already print an error if fails, don't need
+to do this as is redundant.
+
+> +		goto cleanup;
+> +	}
+> +
+> +	if (insize)
+> +		memcpy(indata, msg->data, insize);
+> +
+> +cleanup:
+> +	kfree(msg);
+> +	return ret;
+> +}
+> +
+> +static int cros_ec_regulator_enable(struct regulator_dev *dev)
+> +{
+> +	struct cros_ec_regulator_data *data = rdev_get_drvdata(dev);
+> +	struct ec_params_regulator_enable cmd = {
+> +		.index = data->index,
+> +		.enable = 1,
+> +	};
+> +
+> +	return cros_ec_cmd(data->ec_dev, 0, EC_CMD_REGULATOR_ENABLE, &cmd,
+> +			  sizeof(cmd), NULL, 0);
+> +}
+> +
+> +static int cros_ec_regulator_disable(struct regulator_dev *dev)
+> +{
+> +	struct cros_ec_regulator_data *data = rdev_get_drvdata(dev);
+> +	struct ec_params_regulator_enable cmd = {
+> +		.index = data->index,
+> +		.enable = 0,
+> +	};
+> +
+> +	return cros_ec_cmd(data->ec_dev, 0, EC_CMD_REGULATOR_ENABLE, &cmd,
+> +			  sizeof(cmd), NULL, 0);
+> +}
+> +
+> +static int cros_ec_regulator_is_enabled(struct regulator_dev *dev)
+> +{
+> +	struct cros_ec_regulator_data *data = rdev_get_drvdata(dev);
+> +	struct ec_params_regulator_is_enabled cmd = {
+> +		.index = data->index,
+> +	};
+> +	struct ec_response_regulator_is_enabled resp;
+> +	int ret;
+> +
+> +	ret = cros_ec_cmd(data->ec_dev, 0, EC_CMD_REGULATOR_IS_ENABLED, &cmd,
+> +			  sizeof(cmd), &resp, sizeof(resp));
+> +	if (ret < 0)
+> +		return ret;
+> +	return resp.enabled;
+> +}
+> +
+> +static int cros_ec_regulator_list_voltage(struct regulator_dev *dev,
+> +					  unsigned int selector)
+> +{
+> +	struct cros_ec_regulator_data *data = rdev_get_drvdata(dev);
+> +
+> +	if (selector >= data->num_voltages)
+> +		return -EINVAL;
+> +
+> +	return data->voltages_mV[selector] * 1000;
+> +}
+> +
+> +static int cros_ec_regulator_get_voltage(struct regulator_dev *dev)
+> +{
+> +	struct cros_ec_regulator_data *data = rdev_get_drvdata(dev);
+> +	struct ec_params_regulator_get_voltage cmd = {
+> +		.index = data->index,
+> +	};
+> +	struct ec_response_regulator_get_voltage resp;
+> +	int ret;
+> +
+> +	ret = cros_ec_cmd(data->ec_dev, 0, EC_CMD_REGULATOR_GET_VOLTAGE, &cmd,
+> +			  sizeof(cmd), &resp, sizeof(resp));
+> +	if (ret < 0)
+> +		return ret;
+> +	return resp.voltage_mv * 1000;
+> +}
+> +
+> +static int cros_ec_regulator_set_voltage(struct regulator_dev *dev, int min_uV,
+> +					 int max_uV, unsigned int *selector)
+> +{
+> +	struct cros_ec_regulator_data *data = rdev_get_drvdata(dev);
+> +	int min_mV = DIV_ROUND_UP(min_uV, 1000);
+> +	int max_mV = max_uV / 1000;
+> +	struct ec_params_regulator_set_voltage cmd = {
+> +		.index = data->index,
+> +		.min_mv = min_mV,
+> +		.max_mv = max_mV,
+> +	};
+> +
+> +	if (min_mV > max_mV)
+> +		return -EINVAL;
+> +	return cros_ec_cmd(data->ec_dev, 0, EC_CMD_REGULATOR_SET_VOLTAGE, &cmd,
+> +			   sizeof(cmd), NULL, 0);
+> +}
+> +
+> +static struct regulator_ops cros_ec_regulator_voltage_ops = {
+> +	.enable = cros_ec_regulator_enable,
+> +	.disable = cros_ec_regulator_disable,
+> +	.is_enabled = cros_ec_regulator_is_enabled,
+> +	.list_voltage = cros_ec_regulator_list_voltage,
+> +	.get_voltage = cros_ec_regulator_get_voltage,
+> +	.set_voltage = cros_ec_regulator_set_voltage,
+> +};
+> +
+> +static int cros_ec_regulator_init_info(struct device *dev,
+> +				       struct cros_ec_regulator_data *data)
+> +{
+> +	struct ec_params_regulator_get_info cmd = {
+> +		.index = data->index,
+> +	};
+> +	struct ec_response_regulator_get_info resp;
+> +	int ret;
+> +
+> +	ret = cros_ec_cmd(data->ec_dev, 0, EC_CMD_REGULATOR_GET_INFO, &cmd,
+> +			   sizeof(cmd), &resp, sizeof(resp));
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	data->num_voltages =
+> +		min_t(u16, ARRAY_SIZE(resp.voltages_mv), resp.num_voltages);
+> +	data->voltages_mV =
+> +		devm_kmemdup(dev, resp.voltages_mv,
+> +			     sizeof(u16) * data->num_voltages, GFP_KERNEL);
+> +	data->desc.n_voltages = data->num_voltages;
+> +	data->desc.name = kstrndup(resp.name, sizeof(resp.name), GFP_KERNEL);
+
+Can you also use a device managed allocation here, so we can get rid of the
+cros_ec_regulator_remove() function?
+
+> +	if (!data->desc.name)
+> +		return -ENOMEM;
+> +
+> +	return 0;
+> +}
+> +
+> +static int cros_ec_regulator_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *np = dev->of_node;
+> +	struct cros_ec_regulator_data *drvdata;
+> +	struct regulator_init_data *init_data;
+> +	struct regulator_config cfg = {};
+> +	struct regulator_desc *desc;
+> +	int ret;
+> +
+> +	drvdata = devm_kzalloc(
+> +		&pdev->dev, sizeof(struct cros_ec_regulator_data), GFP_KERNEL);
+> +	if (!drvdata)
+> +		return -ENOMEM;
+> +
+> +	drvdata->ec_dev = dev_get_drvdata(dev->parent);
+> +	desc = &drvdata->desc;
+> +
+> +	init_data = of_get_regulator_init_data(dev, np, desc);
+> +	if (!init_data)
+> +		return -EINVAL;
+> +
+> +	ret = of_property_read_u32(np, "reg", &drvdata->index);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	desc->owner = THIS_MODULE;
+> +	desc->type = REGULATOR_VOLTAGE;
+> +	desc->ops = &cros_ec_regulator_voltage_ops;
+> +
+> +	ret = cros_ec_regulator_init_info(dev, drvdata);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	cfg.dev = &pdev->dev;
+> +	cfg.init_data = init_data;
+> +	cfg.driver_data = drvdata;
+> +	cfg.of_node = np;
+> +
+> +	drvdata->dev = regulator_register(&drvdata->desc, &cfg);
+> +	if (IS_ERR(drvdata->dev)) {
+> +		ret = PTR_ERR(drvdata->dev);
+> +		dev_err(&pdev->dev, "Failed to register regulator: %d\n", ret);
+> +		goto free_name;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, drvdata);
+> +
+> +	return 0;
+> +
+> +free_name:
+> +	kfree(desc->name);
+> +	return ret;
+> +}
+> +
+> +static int cros_ec_regulator_remove(struct platform_device *pdev)
+> +{
+> +	struct cros_ec_regulator_data *drvdata = platform_get_drvdata(pdev);
+> +
+> +	kfree(drvdata->desc.name);
+> +
+> +	return 0;
+> +}
+> +
+> +#if defined(CONFIG_OF)
+
+This is not really needed as this driver is OF-only.
+
+> +static const struct of_device_id regulator_cros_ec_of_match[] = {
+> +	{ .compatible = "google,regulator-cros-ec", },
+> +	{},
+
+The sentinel indicates the last item on structure/arrays so no need to add a
+comma at the end.
+
+> +};
+> +MODULE_DEVICE_TABLE(of, regulator_cros_ec_of_match);
+> +#endif
+> +
+> +static struct platform_driver cros_ec_regulator_driver = {
+> +	.probe		= cros_ec_regulator_probe,
+> +	.remove		= cros_ec_regulator_remove,
+> +	.driver		= {
+> +		.name		= "cros-ec-regulator",
+> +		.of_match_table = of_match_ptr(regulator_cros_ec_of_match),
+
+Also you can just do .of_match_table = regulator_cros_ec_of_match as this driver
+is OF-only.
+
+> +	},
+> +};
+> +
+> +module_platform_driver(cros_ec_regulator_driver);
+> +
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_DESCRIPTION("ChromeOS EC controlled regulator");
+
+MODULE_AUTHOR? :-)
+
+> diff --git a/include/linux/platform_data/cros_ec_commands.h b/include/linux/platform_data/cros_ec_commands.h
+> index 69210881ebac..a417b51b5764 100644
+> --- a/include/linux/platform_data/cros_ec_commands.h
+> +++ b/include/linux/platform_data/cros_ec_commands.h
+> @@ -5430,6 +5430,88 @@ struct ec_response_rollback_info {
+>  /* Issue AP reset */
+>  #define EC_CMD_AP_RESET 0x0125
 >  
-> -	ret = security_file_receive(file);
-> -	if (ret) {
-> -		fput(file);
-> -		return ret;
-> -	}
-> -
-> -	ret = get_unused_fd_flags(O_CLOEXEC);
-> +	ret = __scm_install_fd(file, NULL, O_CLOEXEC);
->  	if (ret < 0)
->  		fput(file);
-> -	else
-> -		fd_install(ret, file);
-> -
->  	return ret;
->  }
->  
-> diff --git a/net/compat.c b/net/compat.c
-> index 117f1869bf3b..f8575555b6d7 100644
-> --- a/net/compat.c
-> +++ b/net/compat.c
-> @@ -299,7 +299,7 @@ void scm_detach_fds_compat(struct msghdr *msg, struct scm_cookie *scm)
->  
->  	for (i = 0; i < fdmax; i++) {
->  		err = __scm_install_fd(scm->fp->fp[i], cmsg_data + i, o_flags);
-> -		if (err)
-> +		if (err < 0)
->  			break;
->  	}
->  
-> diff --git a/net/core/scm.c b/net/core/scm.c
-> index 86d96152646f..e80648fb4da7 100644
-> --- a/net/core/scm.c
-> +++ b/net/core/scm.c
-> @@ -280,6 +280,14 @@ void put_cmsg_scm_timestamping(struct msghdr *msg, struct scm_timestamping_inter
->  }
->  EXPORT_SYMBOL(put_cmsg_scm_timestamping);
->  
-> +/**
-> + * __scm_install_fd() - Install received file into file descriptor table
-Any reason not to rename this remote_install_* or similar, and move it to fs/?
+> +/*****************************************************************************/
+> +/* Voltage regulator controls */
+> +
+> +/*
+> + * Get basic info of voltage regulator for given index.
 > + *
-> + * Installs a received file into the file descriptor table, with appropriate
-> + * checks and count updates.
-> + *
-> + * Returns fd installed or -ve on error.
+> + * Returns the regulator name and supported voltage list in mV.
 > + */
->  int __scm_install_fd(struct file *file, int __user *ufd, int o_flags)
->  {
->  	struct socket *sock;
-> @@ -294,20 +302,25 @@ int __scm_install_fd(struct file *file, int __user *ufd, int o_flags)
->  	if (new_fd < 0)
->  		return new_fd;
+> +#define EC_CMD_REGULATOR_GET_INFO 0x012B
+
+This introduces a new EC command, while you are here, please also add the
+command in drivers/platform/chrome/cros_ec_trace.c, so we can trace properly the
+command. Also can you point me to the commit that introduces this command in the
+EC firmware?
+
+> +
+> +/* Maximum length of regulator name */
+> +#define EC_REGULATOR_NAME_MAX_LEN 16
+> +
+> +/* Maximum length of the supported voltage list. */
+> +#define EC_REGULATOR_VOLTAGE_MAX_COUNT 16
+> +
+> +struct ec_params_regulator_get_info {
+> +	uint32_t index;
+> +} __ec_align4;
+> +
+> +struct ec_response_regulator_get_info {
+> +	char name[EC_REGULATOR_NAME_MAX_LEN];
+> +	uint16_t num_voltages;
+> +	uint16_t voltages_mv[EC_REGULATOR_VOLTAGE_MAX_COUNT];
+> +} __ec_align1;
+> +
+> +/*
+> + * Configure the regulator as enabled / disabled.
+> + */
+> +#define EC_CMD_REGULATOR_ENABLE 0x012C
+> +
+
+Same comment here and for all the new commands introduced.
+
+> +struct ec_params_regulator_enable {
+> +	uint32_t index;
+> +	uint8_t enable;
+> +} __ec_align4;
+> +
+> +/*
+> + * Query if the regulator is enabled.
+> + *
+> + * Returns 1 if the regulator is enabled, 0 if not.
+> + */
+> +#define EC_CMD_REGULATOR_IS_ENABLED 0x012D
+> +
+> +struct ec_params_regulator_is_enabled {
+> +	uint32_t index;
+> +} __ec_align4;
+> +
+> +struct ec_response_regulator_is_enabled {
+> +	uint8_t enabled;
+> +} __ec_align1;
+> +
+> +/*
+> + * Set voltage for the voltage regulator within the range specified.
+> + *
+> + * The driver should select the voltage in range closest to min_mv.
+> + *
+> + * Also note that this might be called before the regulator is enabled, and the
+> + * setting should be in effect after the regulator is enabled.
+> + */
+> +#define EC_CMD_REGULATOR_SET_VOLTAGE 0x012E
+> +
+> +struct ec_params_regulator_set_voltage {
+> +	uint32_t index;
+> +	uint32_t min_mv;
+> +	uint32_t max_mv;
+> +} __ec_align4;
+> +
+> +/*
+> + * Get the currently configured voltage for the voltage regulator.
+> + *
+> + * Note that this might be called before the regulator is enabled.
+> + */
+> +#define EC_CMD_REGULATOR_GET_VOLTAGE 0x012F
+> +
+> +struct ec_params_regulator_get_voltage {
+> +	uint32_t index;
+> +} __ec_align4;
+> +
+> +struct ec_response_regulator_get_voltage {
+> +	uint32_t voltage_mv;
+> +} __ec_align4;
+> +
+>  /*****************************************************************************/
+>  /* The command range 0x200-0x2FF is reserved for Rotor. */
 >  
-> -	error = put_user(new_fd, ufd);
-> -	if (error) {
-> -		put_unused_fd(new_fd);
-> -		return error;
-> +	if (ufd) {
-See my comment elsewhere about not being able to use NULL here.
-> +		error = put_user(new_fd, ufd);
-> +		if (error) {
-> +			put_unused_fd(new_fd);
-> +			return error;
-> +		}
->  	}
->  
-> -	/* Bump the usage count and install the file. */
-> +	/* Bump the usage count and install the file. The resulting value of
-> +	 * "error" is ignored here since we only need to take action when
-> +	 * the file is a socket and testing "sock" for NULL is sufficient.
-> +	 */
->  	sock = sock_from_file(file, &error);
->  	if (sock) {
->  		sock_update_netprioidx(&sock->sk->sk_cgrp_data);
->  		sock_update_classid(&sock->sk->sk_cgrp_data);
->  	}
->  	fd_install(new_fd, get_file(file));
-> -	return 0;
-> +	return new_fd;
->  }
->  
->  static int scm_max_fds(struct msghdr *msg)
-> @@ -337,7 +350,7 @@ void scm_detach_fds(struct msghdr *msg, struct scm_cookie *scm)
->  
->  	for (i = 0; i < fdmax; i++) {
->  		err = __scm_install_fd(scm->fp->fp[i], cmsg_data + i, o_flags);
-> -		if (err)
-> +		if (err < 0)
->  			break;
->  	}
->  
-> -- 
-> 2.25.1
 > 
