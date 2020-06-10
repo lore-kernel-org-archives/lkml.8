@@ -2,79 +2,93 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 681DFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B1FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5161420734
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:47:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28624207C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:51:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729531AbgFJNrp (ORCPT
+        id S1729532AbgFJNvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 09:47:45 -0400
-Received: from mga07.intel.com ([134.134.136.100]:51532 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726157AbgFJNrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 09:47:45 -0400
-IronPort-SDR: amUbzYlGEX70+aOjgRc/4p68lOb+l4wuI7sbdq5Oj8za61XUb5DAsiTO8VQ7De7JElXbH8dCiX
- QJLHbrZzNVvA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2020 06:47:44 -0700
-IronPort-SDR: rNN5FT276eiwY/JkfvgFQDmi+UgXhVv2dvoLjUJEEq6wTAGiMSDfFoK4esPyVZZWmUDGI5qy9D
- 0oYc2hZfZ0UA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,496,1583222400"; 
-   d="scan'208";a="418749638"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga004.jf.intel.com with ESMTP; 10 Jun 2020 06:47:42 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jj14y-00C9SK-F5; Wed, 10 Jun 2020 16:47:44 +0300
-Date:   Wed, 10 Jun 2020 16:47:44 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v1 5/6] gpio: dwapb: Get rid of legacy platform data
-Message-ID: <20200610134744.GI2428291@smile.fi.intel.com>
-References: <20200608134300.76091-1-andriy.shevchenko@linux.intel.com>
- <20200608134300.76091-6-andriy.shevchenko@linux.intel.com>
- <CACRpkdY5wAAVmsbi3UgJR4j_oofX5sDp=x0Pmag+w=L0XfRNoQ@mail.gmail.com>
+        Wed, 10 Jun 2020 09:51:39 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5874 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726095AbgFJNvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 09:51:38 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 4109B1ADA8F5DCDEDAA9;
+        Wed, 10 Jun 2020 21:51:35 +0800 (CST)
+Received: from localhost (10.166.215.154) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Wed, 10 Jun 2020
+ 21:51:27 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <linux-ext4@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <tytso@mit.edu>, <adilger.kernel@dilger.ca>,
+        <riteshh@linux.ibm.com>
+CC:     YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] ext4: mballoc: Disable preemption before getting per-CPU pointer
+Date:   Wed, 10 Jun 2020 21:49:19 +0800
+Message-ID: <20200610134919.73688-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdY5wAAVmsbi3UgJR4j_oofX5sDp=x0Pmag+w=L0XfRNoQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain
+X-Originating-IP: [10.166.215.154]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 01:39:50PM +0200, Linus Walleij wrote:
-> On Mon, Jun 8, 2020 at 3:43 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> 
-> > Platform data is a legacy interface to supply device properties
-> > to the driver. In this case we don't have anymore in-kernel users
-> > for it. Just remove it for good.
-> >
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> 
-> I really like where this series takes us so I hope we can still apply all of
-> this in some form!
+BUG: using smp_processor_id() in preemptible [00000000] code: kworker/u16:3/2181
+caller is ext4_mb_new_blocks+0x388/0xed0
+CPU: 2 PID: 2181 Comm: kworker/u16:3 Not tainted 5.7.0+ #182
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+Workqueue: writeback wb_workfn (flush-8:0)
+Call Trace:
+ dump_stack+0xb9/0xfc
+ debug_smp_processor_id+0xc8/0xd0
+ ext4_mb_new_blocks+0x388/0xed0
+ ext4_ext_map_blocks+0xa92/0xff0
+ ext4_map_blocks+0x34e/0x580
+ ext4_writepages+0xa28/0x11b0
+ do_writepages+0x46/0xe0
+ __writeback_single_inode+0x5f/0x6b0
+ writeback_sb_inodes+0x290/0x620
+ __writeback_inodes_wb+0x62/0xb0
+ wb_writeback+0x36c/0x520
+ wb_workfn+0x319/0x680
+ process_one_work+0x271/0x640
+ worker_thread+0x3a/0x3a0
+ kthread+0x14e/0x170
+ ret_from_fork+0x27/0x40
 
-Thanks! I hope you see the benefit despite some (GPIO base) limitations.
+Disable preemption before accessing discard_pa_seq.
 
+Fixes: 07b5b8e1ac40 ("ext4: mballoc: introduce pcpu seqcnt for freeing PA to improve ENOSPC handling")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ fs/ext4/mballoc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+index a9083113a8c0..30b3bfb1e06a 100644
+--- a/fs/ext4/mballoc.c
++++ b/fs/ext4/mballoc.c
+@@ -4708,7 +4708,8 @@ ext4_fsblk_t ext4_mb_new_blocks(handle_t *handle,
+ 	}
+ 
+ 	ac->ac_op = EXT4_MB_HISTORY_PREALLOC;
+-	seq = *this_cpu_ptr(&discard_pa_seq);
++	seq = *get_cpu_ptr(&discard_pa_seq);
++	put_cpu_ptr(&discard_pa_seq);
+ 	if (!ext4_mb_use_preallocated(ac)) {
+ 		ac->ac_op = EXT4_MB_HISTORY_ALLOC;
+ 		ext4_mb_normalize_request(ac, ar);
 -- 
-With Best Regards,
-Andy Shevchenko
+2.20.1
 
 
