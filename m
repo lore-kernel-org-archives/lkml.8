@@ -2,147 +2,114 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E752C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 18:23:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEBF6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 18:23:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 303F720656
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 18:23:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBF5A20656
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 18:23:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LMnP6Aek"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a5YWD529"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728841AbgFJSW6 (ORCPT
+        id S1728855AbgFJSXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 14:22:58 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:43543 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726268AbgFJSW6 (ORCPT
+        Wed, 10 Jun 2020 14:23:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43458 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbgFJSXe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 14:22:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591813376;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OSjai+DFDzFrxMEYWRAg/j6/ardpz/bet/R5ZQH8NOQ=;
-        b=LMnP6Aekzfxar0qSobyAcOZT/WPLopkEOC6fUfW/1rL92SbEnO3yx6RRe+dcZtkUTmK+kb
-        EVi2hGYlINAK8o+xPxKf4Rdbt3pXTE5aYoQRS/hp4euEAq9q6o31A7bepNydY7SHxi37Vh
-        3Go4NYByod4zpmyhin9E/U/UMSN0YyQ=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-234-B8iv--w7N9-1-nzHXiHxmA-1; Wed, 10 Jun 2020 14:22:55 -0400
-X-MC-Unique: B8iv--w7N9-1-nzHXiHxmA-1
-Received: by mail-wr1-f71.google.com with SMTP id s7so1427528wrm.16
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 11:22:54 -0700 (PDT)
+        Wed, 10 Jun 2020 14:23:34 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1481C03E96B
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 11:23:32 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id n2so1254731pld.13
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 11:23:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Eyo+7zh1L4jeDWREBakg6eAo0YMYPGwdx3QTIkC3cqE=;
+        b=a5YWD529dgAdWo2ddTqn+wtR9NFsHDhDH9quAab1/Ts3LSpxdlSdxy6dn8UU0GmYJg
+         mF2n+LTmi5kCWCRmW9o+w4lNEWGgoOk4zlw2My0hTdaZrNFXacyNCFGb3+7n4Ab2nC6N
+         DusWKIIlMvWFsrA0CRBntWUVRbH7QMccO/RQD7cQ85pCqC8xtPC3uW01YHIYWtChIbIr
+         MKkdZHznXgRBPNojpB8Jdq2lamuckQvYy0OBF/tMLdUqaQV+bhucitSwmnuYioDBWav7
+         ZxeY74vjeQr250yLyShoxh4o49WZ/SkYC6Yp2etGuaMrgCe4BUV5Q+tC6+w5HUtpy8Qw
+         QbPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OSjai+DFDzFrxMEYWRAg/j6/ardpz/bet/R5ZQH8NOQ=;
-        b=NCRc6eUmnabZMblYpyu85dL4aiTN1mAs0VfzguuyqhUAGJmrsYXbyMCkdWhFg7Rt3v
-         2GL/9/tkXqcxCqXrSLedtlqgUNZMnmF8lHdEDjGO5gCLmi/ihC4u46W6CxtixvKGBMMV
-         BmkXS3nHhS3tZqw1xMwIZCbOwK6IDfnfGCItn4s6Det5o2PnMPaa1FXobrl6LSGw5wMs
-         z66bD3IvDY1o9WBaAETFRJz8jpdP/IjqDutPIVP/VqDOLEh+JlHKwEz5Y+BnLHAQq2kM
-         4g5tw9S3cfXMCriF+L6ajZwzcb5XclFUo5/QgQufdHUxubbVuwTWrTa9iQUp9G1EfNNH
-         yglQ==
-X-Gm-Message-State: AOAM532Z/ZBc6tPqPBc52oHfiFuRzFiJLu2DvQGMub8zZsmERBspwKPj
-        7cAeEDulZsgN8DLp7u1VyDAz1PreDVdGN289Q91u8V+TPpZbfdfqsF4hjmxy/peIbDQXODQJJyW
-        bHPusnDkOibFM2HJBYURKDcyh
-X-Received: by 2002:a5d:6391:: with SMTP id p17mr5459681wru.118.1591813373334;
-        Wed, 10 Jun 2020 11:22:53 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwL+HRgXUT5dVlw53IXZIty7joPl0qkXidchmFCFVFqHTrz1BuekJ/juSrrBdN78oDX42KGJw==
-X-Received: by 2002:a5d:6391:: with SMTP id p17mr5459653wru.118.1591813373088;
-        Wed, 10 Jun 2020 11:22:53 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:b5a1:606f:4d92:f4e1? ([2001:b07:6468:f312:b5a1:606f:4d92:f4e1])
-        by smtp.gmail.com with ESMTPSA id n23sm593760wmc.21.2020.06.10.11.22.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jun 2020 11:22:52 -0700 (PDT)
-Subject: Re: [PATCH] kselftest: runner: fix TAP output for skipped tests
-To:     "Bird, Tim" <Tim.Bird@sony.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Cc:     "shuah@kernel.org" <shuah@kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
-References: <20200610154447.15826-1-pbonzini@redhat.com>
- <ac2c1eaa-acd7-7ac6-0666-6e6c0cbd546b@linuxfoundation.org>
- <CY4PR13MB1175A17F29B281642DF05A6DFD830@CY4PR13MB1175.namprd13.prod.outlook.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <6461f067-0fea-4419-dd56-2661c44a803a@redhat.com>
-Date:   Wed, 10 Jun 2020 20:22:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Eyo+7zh1L4jeDWREBakg6eAo0YMYPGwdx3QTIkC3cqE=;
+        b=Xo7XpuDT5UxhA4kVFs3rx+fl/ac5g9aPddktaq2XWbxiP9oMZLlWgW54J180JLHU+B
+         ZoX1egp58Gi16wyDaduEmVYRj1CW5n7xw9hIW803/wTwc3XfXecNoqndMDN6sROOzdWg
+         zEJk4ZDRvbfNfafmbU5iXITM1Z02PrluJXgy9ey0LWDWjAyZPpXqjIIBfIxS4JHPHo/b
+         E7Bj3IVlEmEdkhJLoYr0CoBvkW1MBPiHIkuJC3ai4sTPQGmkdk89Gan4++5qpY1WpwOx
+         awt6RtDIP83W4SqsFjMiOV4JXHC5jG27hPXbXj5OlU2zYoj5K1biWT+wPOSYP63VRoTK
+         1rrw==
+X-Gm-Message-State: AOAM530NK+GXK5aGre56OPePOPYMt7SRKpI0Q26ajpm9ARXxaKi0i6N2
+        WErngThT+wafI2GP9eXPPYfW+0EThSEoTTfQ
+X-Google-Smtp-Source: ABdhPJwlTj9PIl3lYfVxAKZJrGw9skNy0yB4QNbnAqbu5kbKDhGJt6xeQOyHbSMwPeJUry2pOcPQXQ==
+X-Received: by 2002:a17:90b:e8f:: with SMTP id fv15mr4538238pjb.47.1591813411940;
+        Wed, 10 Jun 2020 11:23:31 -0700 (PDT)
+Received: from gmail.com ([192.55.54.40])
+        by smtp.gmail.com with ESMTPSA id 140sm577886pfv.38.2020.06.10.11.23.27
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Jun 2020 11:23:31 -0700 (PDT)
+Date:   Wed, 10 Jun 2020 23:53:24 +0530
+From:   Vaibhav Agarwal <vaibhav.sr@gmail.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alex Elder <elder@kernel.org>, Johan Hovold <johan@kernel.org>,
+        Mark Greer <mgreer@animalcreek.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v2 0/6] Enable Greybus Audio codec driver
+Message-ID: <20200610182322.GC21465@gmail.com>
+References: <cover.1591802243.git.vaibhav.sr@gmail.com>
+ <20200610173711.GK5005@sirena.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <CY4PR13MB1175A17F29B281642DF05A6DFD830@CY4PR13MB1175.namprd13.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200610173711.GK5005@sirena.org.uk>
+User-Agent: Mutt/1.10.1+3 (f9293d646485) (2018-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/06/20 19:43, Bird, Tim wrote:
->>>   		(rc=$?;	\
->>>   		if [ $rc -eq $skip_rc ]; then	\
->>> -			echo "not ok $test_num $TEST_HDR_MSG # SKIP"
->>> +			echo "ok $test_num $TEST_HDR_MSG # SKIP"
+On Wed, Jun 10, 2020 at 06:37:11PM +0100, Mark Brown wrote:
+> On Wed, Jun 10, 2020 at 10:58:24PM +0530, Vaibhav Agarwal wrote:
+> > The existing GB Audio codec driver is dependent on MSM8994 Audio driver.
+> > During the development stage, this dependency was configured due to
+> > various changes involved in MSM Audio driver to enable addtional codec
+> > card and some of the changes proposed in mainline ASoC framework.
 > 
-> This is a pretty big change, and might break upstream CIs that have come to
-> rely on kselftest's existing behavior.  I know it's going to break Fuego's parsing
-> of results.
+> I'm not sure why you're copying me on a staging driver?  I don't recall
+> the base driver having been submitted properly yet.
 
-Do you have a pointer to this code?
+Hi Mark,
 
-> kselftest has a few conventions that are different from the TAP spec, 
-> and a few items it does that are extensions to the TAP spec.
+With patch#6 in this series, I'm proposing some of the (dummy) helper 
+APIs required to link DAPM DAI widgets for the GB Audio modules 
+added/removed dynamically.
 
-Yes, there are extensions to directives are not a problem and parsers
-might raise an error on them.  That can be an issue, but it's a separate
-one (and it's easier to ignore it as long as test pass...).
+Eventually, I would like to propose relevant changes in snd-soc APIs to 
+enable dynamic linking of DAI widgets for the modules added and 
+remove/free component controls for the module removed.
 
-> IMHO, the TAP spec got this one wrong, but I could be convinced
-> otherwise.
+I'm seeking your opinion on the proposed changes. And as per the 
+recommendation I'm sharing the changes with ASoC mailing list as well.
 
-Here the TAP spec says that a skip starts with "ok" and has a "SKIP"
-directive, and anyone can parse it to treat as it as a failure if
-desirable.  But doing something else should be treated simply as a
-violation of the spec, it's not a matter of "right" or "wrong".
+Kindly suggest me the preferred way to follow on this thread. 
 
-So, if you want to use "not ok ... # SKIP", don't call it TAP.
-
-However, I noticed now that there is another instance of "not ok.*SKIP"
-in testing/selftests/kselftest.h (and also one in a comment).  So they
-should all be fixed at the same time, and I'm okay with holding this patch.
-
-Paolo
-
-> But I think we should discuss this among CI users of
-> kselftest before making the change.
-> 
-> I started work quite a while ago on an effort to document the
-> conventions used by kselftest (particularly where it deviates
-> from the TAP spec),  but never submitted it.
-> 
-> I'm going to submit what I've got as an RFC now, for discussion,
-> even though it's not finished.  I'll do that in a separate thread.
-> 
-> 
->>>   		elif [ $rc -eq $timeout_rc ]; then \
->>>   			echo "#"
->>>   			echo "not ok $test_num $TEST_HDR_MSG # TIMEOUT"
->>>
->>
->> Thanks. I will pull this in for Linux 5.8-rc2
-> Shuah - can you hold off on this until we discuss it?
-> 
-> Thanks,
->  -- Tim
-> 
-
+--
+Regards,
+Vaibhav
