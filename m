@@ -2,111 +2,97 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C69C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C9BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11AF1206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:57:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 115992070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:58:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GR/SWSFR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730425AbgFJP5O (ORCPT
+        id S1730442AbgFJP6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 11:57:14 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43328 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728899AbgFJP5O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 11:57:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 0ACD7AD0D;
-        Wed, 10 Jun 2020 15:57:16 +0000 (UTC)
-Message-ID: <07cdfbbacb0f48e3671f4c7197a1ea58d99845e1.camel@suse.de>
-Subject: Re: [PATCH v2 7/9] usb: host: pci-quirks: Bypass xHCI quirks for
- Raspberry Pi 4
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        USB <linux-usb@vger.kernel.org>,
-        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        tim.gover@raspberrypi.org, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Date:   Wed, 10 Jun 2020 17:57:10 +0200
-In-Reply-To: <CAHp75VcxjpMYgQV+Mv2_A6gT+qkG_Kihe4Ke+avJ6e6UNdZCnA@mail.gmail.com>
-References: <20200609175003.19793-1-nsaenzjulienne@suse.de>
-         <20200609175003.19793-8-nsaenzjulienne@suse.de>
-         <CAHp75VcxjpMYgQV+Mv2_A6gT+qkG_Kihe4Ke+avJ6e6UNdZCnA@mail.gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-WmpqyWN/a5eP/Qxbeom/"
-User-Agent: Evolution 3.36.2 
+        Wed, 10 Jun 2020 11:58:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49268 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728217AbgFJP6j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 11:58:39 -0400
+Received: from mail-ot1-x334.google.com (mail-ot1-x334.google.com [IPv6:2607:f8b0:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 867F6C03E96B
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 08:58:39 -0700 (PDT)
+Received: by mail-ot1-x334.google.com with SMTP id k15so2080947otp.8
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 08:58:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=0SN+q6mCsu4s+N1LLrzuE4p100GHqHC1FGVfTGwaqXU=;
+        b=GR/SWSFRZtaURduwcW76F5Ced+0XjjVPJl7VYugof1hdZ3GifLGv4TEu8UfrA1UiYM
+         clzHzyu7ZC48I6JLbtZU6Ogw2KzNTphllnI3q4M4E8ea0tiLbVRQIvUsHXcDcPBS3zub
+         M3fkBYEbhvhvNeuVN2vQBTMATWzBuxTy3TfzmRDWN7skhyKMCsFtJtSrFZLE+kjkdMs0
+         1bidJKfHzKD2jEmm65n98elEvz+KWRE9ZBVxeqXzFtVbNWmsicyfAQveO/Rc790guHSL
+         CsVmN0h3w4TTRgGeF7NcjZ0mmpL9+UUR4I3H3w4oOMYnwG7ZEns8JbOGmoUKETe1MpvY
+         nJQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=0SN+q6mCsu4s+N1LLrzuE4p100GHqHC1FGVfTGwaqXU=;
+        b=e9SD6pRu8Aw8KyQs2kY0SfrTPqc+I+O7rausJVN8wWxUJBE6N597IFvQ/nwwtfYdMZ
+         n+Y/Sk4927TFlMRpPtKLyfDS2TwR+BL8XRdm0lS2p7hHDWKynHs5+BqTGcgl6/uxDzTC
+         wt/77cR7vh3AWSRjMhY9rSTFi85A9+jrlWKE3AaHQq9yV1cV/6v8a7ZcR7TiLBbmqXcM
+         S+NvbZ7fbqBBDXrebcAZGoHqfSTkg+hAyjepEO621IVYhxi2VrLzh0ucSRT9VRE/BQOT
+         Dc+a2cvmU5ptkVQXjBBYFVSBC4Samt2uoKa1DAJ3CbLWMEsn3n6rehIJyfbsi91GDHDQ
+         OoFQ==
+X-Gm-Message-State: AOAM532bh1eMtaddg78BsQDKwVWiH3Q3s/0+iL/+W1eT/Ct/mjfOroZ8
+        ykFBXjw5uktDzpeiP7ZPmS0=
+X-Google-Smtp-Source: ABdhPJziMwWfIGwj8ox5Zhg8kLleKrhfSCHTAXEByakroOwaXdHNmz2Hge9IXzMrImDg3u3zlBIrZg==
+X-Received: by 2002:a05:6830:2151:: with SMTP id r17mr2874415otd.254.1591804718359;
+        Wed, 10 Jun 2020 08:58:38 -0700 (PDT)
+Received: from ubuntu-n2-xlarge-x86 ([2604:1380:4111:8b00::3])
+        by smtp.gmail.com with ESMTPSA id 126sm30622oii.39.2020.06.10.08.58.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2020 08:58:37 -0700 (PDT)
+Date:   Wed, 10 Jun 2020 08:58:36 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH] .clang-format: update column limit
+Message-ID: <20200610155836.GA2360592@ubuntu-n2-xlarge-x86>
+References: <20200610125147.2782142-1-christian.brauner@ubuntu.com>
+ <CANiq72m_p2BRXswCGhUZi-Nta2y0uNXDQLRjPUFydB7YGV-6HQ@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANiq72m_p2BRXswCGhUZi-Nta2y0uNXDQLRjPUFydB7YGV-6HQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 10, 2020 at 05:55:14PM +0200, Miguel Ojeda wrote:
+> Hi Christian,
+> 
+> On Wed, Jun 10, 2020 at 2:51 PM Christian Brauner
+> <christian.brauner@ubuntu.com> wrote:
+> >
+> > The provided clang-format file wraps at 80 chars. If no one minds, I'd like
+> > to adjust this limit to 100 similar to what checkpatch (cf. [1]) uses now.
+> 
+> Thanks! Picking this up with a few changes to the commit message.
+> 
+> Cheers,
+> Miguel
+> 
 
---=-WmpqyWN/a5eP/Qxbeom/
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+If it isn't too late:
 
-Hi Andy,
-Thanks for the review.
-
-On Tue, 2020-06-09 at 21:43 +0300, Andy Shevchenko wrote:
-> On Tue, Jun 9, 2020 at 8:50 PM Nicolas Saenz Julienne
-> <nsaenzjulienne@suse.de> wrote:
-> > The board doesn't need the quirks to be run, and takes care of its own
-> > initialization trough a reset controller device. So let's bypass them.
->=20
-> through
-
-Noted
-
-> ...
->=20
-> > +       if (pdev->vendor =3D=3D PCI_VENDOR_ID_VIA && pdev->device =3D=
-=3D 0x3483 &&
-> > +           of_device_is_compatible(of_get_parent(pdev->bus->dev.of_nod=
-e),
-> > +                                   "brcm,bcm2711-pcie"))
-> > +               return;
->=20
-> No put?
-
-Missed that, sorry.
-
-Regards,
-Nicolas
-
-
---=-WmpqyWN/a5eP/Qxbeom/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7hAtYACgkQlfZmHno8
-x/6pWQf/YjKJWkjl0Ry3wqgSqq6nMS36oLTSH/79Hi6/YsHTATPPaFZVfYKGHySy
-dMxtJVZ+/SUqUHcRJrl6st0RcuPMrs6y76YD/JFuDjzUTOMUcaVme2biY/nDWEEA
-1ToKs4Ia2m7bounaSimqF0w9oCjKOegt0sFWLKSCK4EGLwsSOZ2LWbSP3ctfWS1Z
-hw6QmkXus2BIZwI/QkTIZ86PK2SujUFKAkiVJFdfyYcbwNCZpWy2iK8s7pffLyyR
-t15gNXP8ocI2PVnm/DlN/HtlbQfWwB7HjeQp3FI92pNLh/KaRP8+hEhuqasynyLf
-nnR5NeCeENrzGhC4sE28IAlygd+kvw==
-=UAUo
------END PGP SIGNATURE-----
-
---=-WmpqyWN/a5eP/Qxbeom/--
-
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
