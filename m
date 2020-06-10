@@ -2,108 +2,224 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A72CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C84B5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65DC5206F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:14:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D4752074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:14:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="HFIRD0S2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gzslWAeU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730729AbgFJUO1 (ORCPT
+        id S1730635AbgFJUOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 16:14:27 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:56299 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730663AbgFJUOK (ORCPT
+        Wed, 10 Jun 2020 16:14:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60526 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730591AbgFJUNx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 16:14:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1591820049; x=1623356049;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=/zjjMaVbDmqq3wXpUWjYwp9e/G6JsSEa+Pr+btXJzbo=;
-  b=HFIRD0S2jd2xGzeGfVPImOl8whrm0oZvG+sySDFeb9+vDs5h/DnVG23t
-   g7HrYQtsra8+qKp6+RiUFZJaii7iaATx0ght1l218mCRB4cyJylysSqwu
-   vYR0OEWKsrP1E7uPIR/yDh5fKXMWNSQwr1V4IouapNguNJi9PblzXRapF
-   o=;
-IronPort-SDR: VWTjnwx3BrftDrQJamoKDCQfbyc9UdmuRrreUu/coR2zBRNaPZDAbzHzrPzdDM24LOKWEymkSA
- iMm+WNP7shvw==
-X-IronPort-AV: E=Sophos;i="5.73,497,1583193600"; 
-   d="scan'208";a="35620000"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 10 Jun 2020 20:14:07 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com (Postfix) with ESMTPS id D3A1CA260A;
-        Wed, 10 Jun 2020 20:13:56 +0000 (UTC)
-Received: from EX13D07EUA004.ant.amazon.com (10.43.165.172) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 10 Jun 2020 20:13:44 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (10.43.61.77) by
- EX13D07EUA004.ant.amazon.com (10.43.165.172) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 10 Jun 2020 20:13:43 +0000
-Received: from u908889d5e8f057.ant.amazon.com (10.1.212.33) by
- mail-relay.amazon.com (10.43.61.169) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2 via Frontend Transport; Wed, 10 Jun 2020 20:13:35 +0000
-Subject: Re: [PATCH v15 01/14] mm/page_ext: Export lookup_page_ext() to GPL
- modules
-To:     SeongJae Park <sjpark@amazon.com>, <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <foersleo@amazon.de>, <irogers@google.com>, <jolsa@redhat.com>,
-        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
-        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
-        <peterz@infradead.org>, <rdunlap@infradead.org>,
-        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
-        <sblbir@amazon.com>, <shakeelb@google.com>, <shuah@kernel.org>,
-        <sj38.park@gmail.com>, <snu@amazon.de>, <vbabka@suse.cz>,
-        <vdavydov.dev@gmail.com>, <yang.shi@linux.alibaba.com>,
-        <ying.huang@intel.com>, <david@redhat.com>,
-        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200608114047.26589-1-sjpark@amazon.com>
- <20200608114047.26589-2-sjpark@amazon.com>
-From:   <vrd@amazon.com>
-Message-ID: <e6d6f74f-0ff5-e4f3-7b6b-9ff0ce5b4f48@amazon.com>
-Date:   Wed, 10 Jun 2020 22:13:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 10 Jun 2020 16:13:53 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52A60C0085C4;
+        Wed, 10 Jun 2020 13:13:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=idZKdA+QYZwMV+ZxoObzC46KdDw/yL2GIOrIWkTdIjI=; b=gzslWAeUZmmexSew2yt137OmdW
+        SShvLXnxZK86Ft60vuDRgPt0P8y4I//kQLT5EG7MFMSQgA3iucbKNx2juCELExXL6vasD4C+IDXCh
+        3X6q8ZmXRGOfgaTTh/q7ltSxC5RQKBNf48oSlJEViO4tanp/94VI27uxgj3cgI2XQbn6+Bu1TNKv4
+        spLvOhlXgjdXxukuXE5Qyb/PnT6EOYftHFGn4VW5aYrSK0EREMv6eEp+U6s/Su88Ba+RgDBRkWwqr
+        4fgxb+B6dG8U/o0cmnzAmlTwAXDlaPtv4fKPh8GsRo2fFKGeWE/4gdQVFFmVrWHvJicmlL5sqTid3
+        slY27qOQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jj76b-0003Y5-6e; Wed, 10 Jun 2020 20:13:49 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v6 47/51] mm: Make page_cache_readahead_unbounded take a readahead_control
+Date:   Wed, 10 Jun 2020 13:13:41 -0700
+Message-Id: <20200610201345.13273-48-willy@infradead.org>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200610201345.13273-1-willy@infradead.org>
+References: <20200610201345.13273-1-willy@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200608114047.26589-2-sjpark@amazon.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNi84LzIwIDE6NDAgUE0sIFNlb25nSmFlIFBhcmsgd3JvdGU6Cj4gRnJvbTogU2VvbmdKYWUg
-UGFyayA8c2pwYXJrQGFtYXpvbi5kZT4KPiAKPiBUaGlzIGNvbW1pdCBleHBvcnRzICdsb29rdXBf
-cGFnZV9leHQoKScgdG8gR1BMIG1vZHVsZXMuICBUaGlzIHdpbGwgYmUKPiB1c2VkIGJ5IERBTU9O
-Lgo+IAo+IFNpZ25lZC1vZmYtYnk6IFNlb25nSmFlIFBhcmsgPHNqcGFya0BhbWF6b24uZGU+Cj4g
-UmV2aWV3ZWQtYnk6IExlb25hcmQgRm9lcnN0ZXIgPGZvZXJzbGVvQGFtYXpvbi5kZT4KClJldmll
-d2VkLWJ5OiBWYXJhZCBHYXV0YW0gPHZyZEBhbWF6b24uZGU+Cgo+IC0tLQo+ICBtbS9wYWdlX2V4
-dC5jIHwgMSArCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQo+IAo+IGRpZmYgLS1n
-aXQgYS9tbS9wYWdlX2V4dC5jIGIvbW0vcGFnZV9leHQuYwo+IGluZGV4IGEzNjE2ZjdhMGU5ZS4u
-OWQ4MDJkMDFmY2I1IDEwMDY0NAo+IC0tLSBhL21tL3BhZ2VfZXh0LmMKPiArKysgYi9tbS9wYWdl
-X2V4dC5jCj4gQEAgLTEzMSw2ICsxMzEsNyBAQCBzdHJ1Y3QgcGFnZV9leHQgKmxvb2t1cF9wYWdl
-X2V4dChjb25zdCBzdHJ1Y3QgcGFnZSAqcGFnZSkKPiAgCQkJCQlNQVhfT1JERVJfTlJfUEFHRVMp
-Owo+ICAJcmV0dXJuIGdldF9lbnRyeShiYXNlLCBpbmRleCk7Cj4gIH0KPiArRVhQT1JUX1NZTUJP
-TF9HUEwobG9va3VwX3BhZ2VfZXh0KTsKPiAgCj4gIHN0YXRpYyBpbnQgX19pbml0IGFsbG9jX25v
-ZGVfcGFnZV9leHQoaW50IG5pZCkKPiAgewo+IAoKCgoKQW1hem9uIERldmVsb3BtZW50IENlbnRl
-ciBHZXJtYW55IEdtYkgKS3JhdXNlbnN0ci4gMzgKMTAxMTcgQmVybGluCkdlc2NoYWVmdHNmdWVo
-cnVuZzogQ2hyaXN0aWFuIFNjaGxhZWdlciwgSm9uYXRoYW4gV2Vpc3MKRWluZ2V0cmFnZW4gYW0g
-QW10c2dlcmljaHQgQ2hhcmxvdHRlbmJ1cmcgdW50ZXIgSFJCIDE0OTE3MyBCClNpdHo6IEJlcmxp
-bgpVc3QtSUQ6IERFIDI4OSAyMzcgODc5CgoK
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+
+Define it in the callers instead of in page_cache_readahead_unbounded().
+
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+---
+ fs/ext4/verity.c        |  4 ++--
+ fs/f2fs/verity.c        |  4 ++--
+ include/linux/pagemap.h |  5 ++---
+ mm/readahead.c          | 26 ++++++++++++--------------
+ 4 files changed, 18 insertions(+), 21 deletions(-)
+
+diff --git a/fs/ext4/verity.c b/fs/ext4/verity.c
+index dec1244dd062..fe2e541543da 100644
+--- a/fs/ext4/verity.c
++++ b/fs/ext4/verity.c
+@@ -346,6 +346,7 @@ static struct page *ext4_read_merkle_tree_page(struct inode *inode,
+ 					       pgoff_t index,
+ 					       unsigned long num_ra_pages)
+ {
++	DEFINE_READAHEAD(rac, NULL, inode->i_mapping, index);
+ 	struct page *page;
+ 
+ 	index += ext4_verity_metadata_pos(inode) >> PAGE_SHIFT;
+@@ -355,8 +356,7 @@ static struct page *ext4_read_merkle_tree_page(struct inode *inode,
+ 		if (page)
+ 			put_page(page);
+ 		else if (num_ra_pages > 1)
+-			page_cache_readahead_unbounded(inode->i_mapping, NULL,
+-					index, num_ra_pages, 0);
++			page_cache_readahead_unbounded(&rac, num_ra_pages, 0);
+ 		page = read_mapping_page(inode->i_mapping, index, NULL);
+ 	}
+ 	return page;
+diff --git a/fs/f2fs/verity.c b/fs/f2fs/verity.c
+index 865c9fb774fb..707a94745472 100644
+--- a/fs/f2fs/verity.c
++++ b/fs/f2fs/verity.c
+@@ -226,6 +226,7 @@ static struct page *f2fs_read_merkle_tree_page(struct inode *inode,
+ 					       pgoff_t index,
+ 					       unsigned long num_ra_pages)
+ {
++	DEFINE_READAHEAD(rac, NULL, inode->i_mapping, index);
+ 	struct page *page;
+ 
+ 	index += f2fs_verity_metadata_pos(inode) >> PAGE_SHIFT;
+@@ -235,8 +236,7 @@ static struct page *f2fs_read_merkle_tree_page(struct inode *inode,
+ 		if (page)
+ 			put_page(page);
+ 		else if (num_ra_pages > 1)
+-			page_cache_readahead_unbounded(inode->i_mapping, NULL,
+-					index, num_ra_pages, 0);
++			page_cache_readahead_unbounded(&rac, num_ra_pages, 0);
+ 		page = read_mapping_page(inode->i_mapping, index, NULL);
+ 	}
+ 	return page;
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index 77c20da5ae99..f36714473b1e 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -715,9 +715,8 @@ void page_cache_sync_readahead(struct address_space *, struct file_ra_state *,
+ void page_cache_async_readahead(struct address_space *, struct file_ra_state *,
+ 		struct file *, struct page *, pgoff_t index,
+ 		unsigned long req_count);
+-void page_cache_readahead_unbounded(struct address_space *, struct file *,
+-		pgoff_t index, unsigned long nr_to_read,
+-		unsigned long lookahead_count);
++void page_cache_readahead_unbounded(struct readahead_control *,
++		unsigned long nr_to_read, unsigned long lookahead_count);
+ 
+ /*
+  * Like add_to_page_cache_locked, but used to add newly allocated pages:
+diff --git a/mm/readahead.c b/mm/readahead.c
+index 2126a2754e22..62da2d4beed1 100644
+--- a/mm/readahead.c
++++ b/mm/readahead.c
+@@ -159,9 +159,7 @@ static void read_pages(struct readahead_control *rac, struct list_head *pages,
+ 
+ /**
+  * page_cache_readahead_unbounded - Start unchecked readahead.
+- * @mapping: File address space.
+- * @file: This instance of the open file; used for authentication.
+- * @index: First page index to read.
++ * @rac: Readahead control.
+  * @nr_to_read: The number of pages to read.
+  * @lookahead_size: Where to start the next readahead.
+  *
+@@ -173,13 +171,13 @@ static void read_pages(struct readahead_control *rac, struct list_head *pages,
+  * Context: File is referenced by caller.  Mutexes may be held by caller.
+  * May sleep, but will not reenter filesystem to reclaim memory.
+  */
+-void page_cache_readahead_unbounded(struct address_space *mapping,
+-		struct file *file, pgoff_t index, unsigned long nr_to_read,
+-		unsigned long lookahead_size)
++void page_cache_readahead_unbounded(struct readahead_control *rac,
++		unsigned long nr_to_read, unsigned long lookahead_size)
+ {
++	struct address_space *mapping = rac->mapping;
++	unsigned long index = readahead_index(rac);
+ 	LIST_HEAD(page_pool);
+ 	gfp_t gfp_mask = readahead_gfp_mask(mapping);
+-	DEFINE_READAHEAD(rac, file, mapping, index);
+ 	unsigned long i;
+ 
+ 	/*
+@@ -200,7 +198,7 @@ void page_cache_readahead_unbounded(struct address_space *mapping,
+ 	for (i = 0; i < nr_to_read; i++) {
+ 		struct page *page = xa_load(&mapping->i_pages, index + i);
+ 
+-		BUG_ON(index + i != rac._index + rac._nr_pages);
++		BUG_ON(index + i != rac->_index + rac->_nr_pages);
+ 
+ 		if (page && !xa_is_value(page)) {
+ 			/*
+@@ -211,7 +209,7 @@ void page_cache_readahead_unbounded(struct address_space *mapping,
+ 			 * have a stable reference to this page, and it's
+ 			 * not worth getting one just for that.
+ 			 */
+-			read_pages(&rac, &page_pool, true);
++			read_pages(rac, &page_pool, true);
+ 			continue;
+ 		}
+ 
+@@ -224,12 +222,12 @@ void page_cache_readahead_unbounded(struct address_space *mapping,
+ 		} else if (add_to_page_cache_lru(page, mapping, index + i,
+ 					gfp_mask) < 0) {
+ 			put_page(page);
+-			read_pages(&rac, &page_pool, true);
++			read_pages(rac, &page_pool, true);
+ 			continue;
+ 		}
+ 		if (i == nr_to_read - lookahead_size)
+ 			SetPageReadahead(page);
+-		rac._nr_pages++;
++		rac->_nr_pages++;
+ 	}
+ 
+ 	/*
+@@ -237,7 +235,7 @@ void page_cache_readahead_unbounded(struct address_space *mapping,
+ 	 * uptodate then the caller will launch readpage again, and
+ 	 * will then handle the error.
+ 	 */
+-	read_pages(&rac, &page_pool, false);
++	read_pages(rac, &page_pool, false);
+ 	memalloc_nofs_restore(nofs);
+ }
+ EXPORT_SYMBOL_GPL(page_cache_readahead_unbounded);
+@@ -252,6 +250,7 @@ void __do_page_cache_readahead(struct address_space *mapping,
+ 		struct file *file, pgoff_t index, unsigned long nr_to_read,
+ 		unsigned long lookahead_size)
+ {
++	DEFINE_READAHEAD(rac, file, mapping, index);
+ 	struct inode *inode = mapping->host;
+ 	loff_t isize = i_size_read(inode);
+ 	pgoff_t end_index;	/* The last page we want to read */
+@@ -266,8 +265,7 @@ void __do_page_cache_readahead(struct address_space *mapping,
+ 	if (nr_to_read > end_index - index)
+ 		nr_to_read = end_index - index + 1;
+ 
+-	page_cache_readahead_unbounded(mapping, file, index, nr_to_read,
+-			lookahead_size);
++	page_cache_readahead_unbounded(&rac, nr_to_read, lookahead_size);
+ }
+ 
+ /*
+-- 
+2.26.2
 
