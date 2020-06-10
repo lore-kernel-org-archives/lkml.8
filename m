@@ -2,213 +2,348 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E37C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 05:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52715C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 05:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5776E207F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 05:28:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NVKK8Ncy"
+	by mail.kernel.org (Postfix) with ESMTP id 26AF3207F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 05:33:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726167AbgFJF2P (ORCPT
+        id S1726097AbgFJFdR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 01:28:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36248 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbgFJF2N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 01:28:13 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13844C03E96B
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 22:28:13 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id gl26so1073751ejb.11
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 22:28:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=T/jnmVd/bh9loEdDEgeb3HlsdzM3UCvTcIUqLjOK8wM=;
-        b=NVKK8Ncy1CLQa1GlK2EjqNT2z0/cxOFotcgTyS92UZqtKAixCKZm5P7LgHCa7PP2ZI
-         flclmztcZcsY97HSfIjpavaBhH70f7SwiaDd+gawqqoyVQlxTMpEdNgc/jgzcCjWhhOW
-         IgLUEocOdgu4TeJds3+h6ALqtlmtSFVLyCp72tDI98Jd5HlUjBP/m1ptwaW494vPhlbL
-         89LaiuT6ofUQDTvESFwkYMIu3CNjtgnVg8FPjvrogRE77m2XTcyS72gpTNhIcBxtoZSl
-         fKqk4/D7LjIeJA8S65IHkkW364GmTwj8Ucz4eCMw+TqvWNyuVMQclYcWPDll7rLd/V1t
-         /O9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=T/jnmVd/bh9loEdDEgeb3HlsdzM3UCvTcIUqLjOK8wM=;
-        b=rUal1bV12znnro6zVdJTvkh/z78QeTOwgpzjzrn4Q30nMkIu7b/thQhaIGflRZlRJ2
-         LKdjqtuAm3VY6aC2E01rhV6qmWuckfTCzbvjlk2HiFzwxv0kVfk39M1sqSTF85v0mK/o
-         9qQmVfdQdaMnr15BLx+cQVq2EIY4cTeNo7z7ItPKeuRJ1ZhXZ6DOrN4To3hKLiTeBWA8
-         QhR3H01WRI0glf+xazpmS3cPexS/O4XxA984mRoNqO22tYJYXEWQFu0SmuTb2fZ/S5PD
-         DXijlDfKzNAlubgL8/LKOs5FrIGuDhZhx50qOGHv0I1okmPuO2K4ax77zoqTo8g+n3kE
-         scaQ==
-X-Gm-Message-State: AOAM532iamT85xlM1EB31Cr95tDORUrsiE+iwCFTllUi4K++SCD7fj+K
-        NyBj3VrvaUQGYh3xknOsw2ABk0vUyNNpcxqJd4JANA==
-X-Google-Smtp-Source: ABdhPJz0/EqE/wsKuHGBezMRKKF5qcxIfkGPjwwqO2vlE2Lz0OqDCLBvz2CrRh6NSHlfDRU79JvbMI9q2sJ2yf+qmxg=
-X-Received: by 2002:a17:906:9a02:: with SMTP id ai2mr1671514ejc.97.1591766891357;
- Tue, 09 Jun 2020 22:28:11 -0700 (PDT)
+        Wed, 10 Jun 2020 01:33:17 -0400
+Received: from mga03.intel.com ([134.134.136.65]:46127 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725270AbgFJFdQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 01:33:16 -0400
+IronPort-SDR: MMozXifW+RzNPZcRfizINpmpm7Bjq8rp+oZVMrGCWSDuCZHiIB0YD+hjy4xQ/OgA8pw/vV81KT
+ ZmkLERuTYGCA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 22:33:15 -0700
+IronPort-SDR: 4xKoHrLTAyej4GfTZPX4Su+JPGf2mARO92yVFEl50fKH8sj1XGKbzc3g6HUqOg95M1Ho0JdDpc
+ tFCujXApbUQg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,494,1583222400"; 
+   d="scan'208";a="271118159"
+Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.16])
+  by orsmga003.jf.intel.com with ESMTP; 09 Jun 2020 22:33:13 -0700
+Date:   Wed, 10 Jun 2020 01:23:14 -0400
+From:   Yan Zhao <yan.y.zhao@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cohuck@redhat.com, zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        kevin.tian@intel.com, shaopeng.he@intel.com, yi.l.liu@intel.com,
+        xin.zeng@intel.com, hang.yuan@intel.com
+Subject: Re: [RFC PATCH v4 07/10] vfio/pci: introduce a new irq type
+ VFIO_IRQ_TYPE_REMAP_BAR_REGION
+Message-ID: <20200610052314.GB13961@joy-OptiPlex-7040>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20200601065726.GA5906@joy-OptiPlex-7040>
+ <20200601104307.259b0fe1@x1.home>
+ <20200602082858.GA8915@joy-OptiPlex-7040>
+ <20200602133435.1ab650c5@x1.home>
+ <20200603014058.GA12300@joy-OptiPlex-7040>
+ <20200603170452.7f172baf@x1.home>
+ <20200604024228.GD12300@joy-OptiPlex-7040>
+ <20200603221058.1927a0fc@x1.home>
+ <20200605020231.GE12300@joy-OptiPlex-7040>
+ <20200605101301.6abb8a3b@x1.home>
 MIME-Version: 1.0
-References: <20200610043824.GA171503@dtor-ws>
-In-Reply-To: <20200610043824.GA171503@dtor-ws>
-From:   Guenter Roeck <groeck@google.com>
-Date:   Tue, 9 Jun 2020 22:28:00 -0700
-Message-ID: <CABXOdTfdLv5iiZhyGmrmYfk15esoiJhshs_ey+9ma7hLqC4p2A@mail.gmail.com>
-Subject: Re: [PATCH v2] HID: usbhid: do not sleep when opening device
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        linux-usb@vger.kernel.org,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200605101301.6abb8a3b@x1.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 9, 2020 at 9:38 PM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
+On Fri, Jun 05, 2020 at 10:13:01AM -0600, Alex Williamson wrote:
+> On Thu, 4 Jun 2020 22:02:31 -0400
+> Yan Zhao <yan.y.zhao@intel.com> wrote:
+> 
+> > On Wed, Jun 03, 2020 at 10:10:58PM -0600, Alex Williamson wrote:
+> > > On Wed, 3 Jun 2020 22:42:28 -0400
+> > > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> > >   
+> > > > On Wed, Jun 03, 2020 at 05:04:52PM -0600, Alex Williamson wrote:  
+> > > > > On Tue, 2 Jun 2020 21:40:58 -0400
+> > > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> > > > >     
+> > > > > > On Tue, Jun 02, 2020 at 01:34:35PM -0600, Alex Williamson wrote:    
+> > > > > > > I'm not at all happy with this.  Why do we need to hide the migration
+> > > > > > > sparse mmap from the user until migration time?  What if instead we
+> > > > > > > introduced a new VFIO_REGION_INFO_CAP_SPARSE_MMAP_SAVING capability
+> > > > > > > where the existing capability is the normal runtime sparse setup and
+> > > > > > > the user is required to use this new one prior to enabled device_state
+> > > > > > > with _SAVING.  The vendor driver could then simply track mmap vmas to
+> > > > > > > the region and refuse to change device_state if there are outstanding
+> > > > > > > mmaps conflicting with the _SAVING sparse mmap layout.  No new IRQs
+> > > > > > > required, no new irqfds, an incremental change to the protocol,
+> > > > > > > backwards compatible to the extent that a vendor driver requiring this
+> > > > > > > will automatically fail migration.
+> > > > > > >       
+> > > > > > right. looks we need to use this approach to solve the problem.
+> > > > > > thanks for your guide.
+> > > > > > so I'll abandon the current remap irq way for dirty tracking during live
+> > > > > > migration.
+> > > > > > but anyway, it demos how to customize irq_types in vendor drivers.
+> > > > > > then, what do you think about patches 1-5?    
+> > > > > 
+> > > > > In broad strokes, I don't think we've found the right solution yet.  I
+> > > > > really question whether it's supportable to parcel out vfio-pci like
+> > > > > this and I don't know how I'd support unraveling whether we have a bug
+> > > > > in vfio-pci, the vendor driver, or how the vendor driver is making use
+> > > > > of vfio-pci.
+> > > > >
+> > > > > Let me also ask, why does any of this need to be in the kernel?  We
+> > > > > spend 5 patches slicing up vfio-pci so that we can register a vendor
+> > > > > driver and have that vendor driver call into vfio-pci as it sees fit.
+> > > > > We have two patches creating device specific interrupts and a BAR
+> > > > > remapping scheme that we've decided we don't need.  That brings us to
+> > > > > the actual i40e vendor driver, where the first patch is simply making
+> > > > > the vendor driver work like vfio-pci already does, the second patch is
+> > > > > handling the migration region, and the third patch is implementing the
+> > > > > BAR remapping IRQ that we decided we don't need.  It's difficult to
+> > > > > actually find the small bit of code that's required to support
+> > > > > migration outside of just dealing with the protocol we've defined to
+> > > > > expose this from the kernel.  So why are we trying to do this in the
+> > > > > kernel?  We have quirk support in QEMU, we can easily flip
+> > > > > MemoryRegions on and off, etc.  What access to the device outside of
+> > > > > what vfio-pci provides to the user, and therefore QEMU, is necessary to
+> > > > > implement this migration support for i40e VFs?  Is this just an
+> > > > > exercise in making use of the migration interface?  Thanks,
+> > > > >     
+> > > > hi Alex
+> > > > 
+> > > > There was a description of intention of this series in RFC v1
+> > > > (https://www.spinics.net/lists/kernel/msg3337337.html).
+> > > > sorry, I didn't include it in starting from RFC v2.
+> > > > 
+> > > > "
+> > > > The reason why we don't choose the way of writing mdev parent driver is
+> > > > that  
+> > > 
+> > > I didn't mention an mdev approach, I'm asking what are we accomplishing
+> > > by doing this in the kernel at all versus exposing the device as normal
+> > > through vfio-pci and providing the migration support in QEMU.  Are you
+> > > actually leveraging having some sort of access to the PF in supporting
+> > > migration of the VF?  Is vfio-pci masking the device in a way that
+> > > prevents migrating the state from QEMU?
+> > >  
+> > yes, communication to PF is required. VF state is managed by PF and is
+> > queried from PF when VF is stopped.
+> > 
+> > migration support in QEMU seems only suitable to devices with dirty
+> > pages and device state available by reading/writing device MMIOs, which
+> > is not the case for most devices.
+> 
+> Post code for such a device.
 >
-> usbhid tries to give the device 50 milliseconds to drain its queues when
-> opening the device, but dies it naively by simply sleeping in open handler,
-> which slows down device probing (and thus may affect overall boot time).
->
-> However we do not need to sleep as we can instead mark a point of time in
-> the future when we should start processing the events.
->
-> Reported-by: Nicolas Boichat <drinkcat@chromium.org>
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+hi Alex,
+There's an example in i40e vf. virtual channel related resources are in
+guest memory. dirty page tracking requires the info stored in those
+guest memory.
 
-Reviewed-by: Guenter Roeck <groeck@chromium.org>
+there're two ways to get the resources addresses:
+(1) always trap VF registers related. as in Alex Graf's qemu code.
 
-> ---
+starting from beginning, it tracks rw of Admin Queue Configuration registers.
+Then in the write handler vfio_i40evf_aq_mmio_mem_region_write(), guest
+commands are processed to record the guest dma addresses of the virtual
+channel related resources.
+e.g. vdev->vsi_config is read from the guest dma addr contained in
+command I40E_VIRTCHNL_OP_CONFIG_VSI_QUEUES.
+
+
+vfio_i40evf_initfn()
+{
+ ...
+ memory_region_init_io(&vdev->aq_mmio_mem, OBJECT(dev),
+                          &vfio_i40evf_aq_mmio_mem_region_ops,
+                          vdev, "i40evf AQ config",
+                          I40E_VFGEN_RSTAT - I40E_VF_ARQBAH1);
+ ...
+}
+
+vfio_i40evf_aq_mmio_mem_region_write()
+{
+   ...
+    switch (addr) {
+    case I40E_VF_ARQBAH1:
+    case I40E_VF_ARQBAL1:
+    case I40E_VF_ARQH1:
+    case I40E_VF_ARQLEN1:
+    case I40E_VF_ARQT1:
+    case I40E_VF_ATQBAH1:
+    case I40E_VF_ATQBAL1:
+    case I40E_VF_ATQH1:
+    case I40E_VF_ATQT1:
+    case I40E_VF_ATQLEN1:
+        vfio_i40evf_vw32(vdev, addr, data);
+        vfio_i40e_aq_update(vdev); ==> update & process atq commands
+        break;
+    default:
+        vfio_i40evf_w32(vdev, addr, data);
+        break;
+    }
+}
+vfio_i40e_aq_update(vdev)
+	|->vfio_i40e_atq_process_one(vdev, vfio_i40evf_vr32(vdev, I40E_VF_ATQH1)
+		|-> hwaddr addr = vfio_i40e_get_atqba(vdev) + (index * sizeof(desc));
+		|   pci_dma_read(pdev, addr, &desc, sizeof(desc));//read guest's command
+		|   vfio_i40e_record_atq_cmd(vdev, pdev, &desc)
+			
+		
+
+vfio_i40e_record_atq_cmd(...I40eAdminQueueDescriptor *desc) {
+	data_addr = desc->params.external.addr_high;
+	...
+
+	switch (desc->cookie_high) {
+	...
+	case I40E_VIRTCHNL_OP_CONFIG_VSI_QUEUES:
+	pci_dma_read(pdev, data_addr, &vdev->vsi_config,
+		         MIN(desc->datalen, sizeof(vdev->vsi_config)));
+	...
+	}
+	...
+}
+
+
+(2) pass through all guest MMIO accesses and only do MMIO trap when migration
+is about to start.
+This is the way we're using in the host vfio-pci vendor driver (or mdev parent driver)
+of i40e vf device (sorry for no public code available still).
+
+when migration is about to start, it's already too late to get the guest dma
+address for those virtual channel related resources merely by MMIO
+trapping, so we have to ask for them from PF.
+
+
+
+<...>
+
+> > > > for interfaces exported in patch 3/10-5/10, they anyway need to be
+> > > > exported for writing mdev parent drivers that pass through devices at
+> > > > normal time to avoid duplication. and yes, your worry about  
+> > > 
+> > > Where are those parent drivers?  What are their actual requirements?
+> > >  
+> > if this way of registering vendor ops to vfio-pci is not permitted,
+> > vendors have to resort to writing its mdev parent drivers for VFs. Those
+> > parent drivers need to pass through VFs at normal time, doing exactly what
+> > vfio-pci does and only doing what vendor ops does during migration.
+> > 
+> > if vfio-pci could export common code to those parent drivers, lots of
+> > duplicated code can be avoided.
+> 
+> There are two sides to this argument though.  We could also argue that
+> mdev has already made it too easy to implement device emulation in the
+> kernel, the barrier is that such emulation is more transparent because
+> it does require a fair bit of code duplication from vfio-pci.  If we
+> make it easier to simply re-use vfio-pci for much of this, and even
+> take it a step further by allowing vendor drivers to masquerade behind
+> vfio-pci, then we're creating an environment where vendors don't need
+> to work with QEMU to get their device emulation accepted.  They can
+> write their own vendor drivers, which are now simplified and sanctioned
+> by exported functions in vfio-pci.  They can do this easily and open up
+> massive attack vectors, hiding behind vfio-pci.
+> 
+your concern is reasonable.
+
+> I know that I was advocating avoiding user driver confusion, ie. does
+> the user bind a device to vfio-pci, i40e_vf_vfio, etc, but maybe that's
+> the barrier we need such that a user can make an informed decision
+> about what they're actually using.  If a vendor then wants to implement
+> a feature in vfio-pci, we'll need to architect an interface for it
+> rather than letting them pick and choose which pieces of vfio-pci to
+> override.
+> 
+> > > > identification of bug sources is reasonable. but if a device is binding
+> > > > to vfio-pci with a vendor module loaded, and there's a bug, they can do at
+> > > > least two ways to identify if it's a bug in vfio-pci itself.
+> > > > (1) prevent vendor modules from loading and see if the problem exists
+> > > > with pure vfio-pci.
+> > > > (2) do what's demoed in patch 8/10, i.e. do nothing but simply pass all
+> > > > operations to vfio-pci.  
+> > > 
+> > > The code split is still extremely ad-hoc, there's no API.  An mdev
+> > > driver isn't even a sub-driver of vfio-pci like you're trying to
+> > > accomplish here, there would need to be a much more defined API when
+> > > the base device isn't even a vfio_pci_device.  I don't see how this
+> > > series would directly enable an mdev use case.
+> > >   
+> > similar to Yi's series https://patchwork.kernel.org/patch/11320841/.
+> > we can parcel the vdev creation code in vfio_pci_probe() to allow calling from
+> > mdev parent probe routine. (of course, also need to parcel code to free vdev)
+> > e.g.
+> > 
+> > void *vfio_pci_alloc_vdev(struct pci_dev *pdev, const struct pci_device_id *id)
+> > {
+> > 	struct vfio_pci_device *vdev;
+> >         vdev = kzalloc(sizeof(*vdev), GFP_KERNEL);
+> >         if (!vdev) {
+> >                 ret = -ENOMEM;
+> >                 goto out_group_put;
+> >         }
+> > 
+> >         vdev->pdev = pdev;
+> >         vdev->irq_type = VFIO_PCI_NUM_IRQS;
+> >         mutex_init(&vdev->igate);
+> >         spin_lock_init(&vdev->irqlock);
+> >         mutex_init(&vdev->ioeventfds_lock);
+> >         INIT_LIST_HEAD(&vdev->ioeventfds_list);
+> > 	...
+> > 	vfio_pci_probe_power_state(vdev);
+> > 
+> >         if (!disable_idle_d3) {
+> >                 vfio_pci_set_power_state(vdev, PCI_D0);
+> >                 vfio_pci_set_power_state(vdev, PCI_D3hot);
+> >         }
+> > 	return vdev;
+> > }
+> > 
+> > static int vfio_mdev_pci_driver_probe(struct pci_dev *pdev, const struct pci_device_id *id))
+> > {
+> > 
+> >        void *vdev = vfio_pci_alloc_vdev(pdev, id);
+> > 
+> >        //save the vdev pointer 
+> > 
+> > }
+> > then all the exported interfaces from this series can also benefit the
+> > mdev use case.
+> 
+> You need to convince me that we're not just doing this for the sake of
+> re-using a migration interface.  We do need vendor specific drivers to
+> support migration, but implementing those vendor specific drivers in
+> the kernel just because we have that interface is the wrong answer.  If
+> we can implement that device specific migration support in QEMU and
+> limit the attack surface from the hypervisor or guest into the host
+> kernel, that's a better answer.  As I've noted above, I'm afraid all of
+> these attempts to parcel out vfio-pci are only going to serve to
+> proliferate vendor modules that have limited community review, expand
+> the attack surface, and potentially harm the vfio ecosystem overall
+> through bad actors and reduced autonomy.  Thanks,
 >
-> v2: switched from using jiffies to ktime_t to make sure we won't have
-> issues with jiffies overflowing.
->
->  drivers/hid/usbhid/hid-core.c | 53 +++++++++++++++++++----------------
->  drivers/hid/usbhid/usbhid.h   |  2 ++
->  2 files changed, 31 insertions(+), 24 deletions(-)
->
-> diff --git a/drivers/hid/usbhid/hid-core.c b/drivers/hid/usbhid/hid-core.c
-> index c7bc9db5b192..72c92aab2b18 100644
-> --- a/drivers/hid/usbhid/hid-core.c
-> +++ b/drivers/hid/usbhid/hid-core.c
-> @@ -26,6 +26,7 @@
->  #include <linux/wait.h>
->  #include <linux/workqueue.h>
->  #include <linux/string.h>
-> +#include <linux/timekeeping.h>
->
->  #include <linux/usb.h>
->
-> @@ -95,6 +96,18 @@ static int hid_start_in(struct hid_device *hid)
->                                 set_bit(HID_NO_BANDWIDTH, &usbhid->iofl);
->                 } else {
->                         clear_bit(HID_NO_BANDWIDTH, &usbhid->iofl);
-> +
-> +                       if (test_bit(HID_RESUME_RUNNING, &usbhid->iofl)) {
-> +                               /*
-> +                                * In case events are generated while nobody was
-> +                                * listening, some are released when the device
-> +                                * is re-opened. Wait 50 msec for the queue to
-> +                                * empty before allowing events to go through
-> +                                * hid.
-> +                                */
-> +                               usbhid->input_start_time =
-> +                                       ktime_add_ms(ktime_get_coarse(), 50);
-> +                       }
->                 }
->         }
->         spin_unlock_irqrestore(&usbhid->lock, flags);
-> @@ -280,20 +293,23 @@ static void hid_irq_in(struct urb *urb)
->                 if (!test_bit(HID_OPENED, &usbhid->iofl))
->                         break;
->                 usbhid_mark_busy(usbhid);
-> -               if (!test_bit(HID_RESUME_RUNNING, &usbhid->iofl)) {
-> -                       hid_input_report(urb->context, HID_INPUT_REPORT,
-> -                                        urb->transfer_buffer,
-> -                                        urb->actual_length, 1);
-> -                       /*
-> -                        * autosuspend refused while keys are pressed
-> -                        * because most keyboards don't wake up when
-> -                        * a key is released
-> -                        */
-> -                       if (hid_check_keys_pressed(hid))
-> -                               set_bit(HID_KEYS_PRESSED, &usbhid->iofl);
-> -                       else
-> -                               clear_bit(HID_KEYS_PRESSED, &usbhid->iofl);
-> +               if (test_bit(HID_RESUME_RUNNING, &usbhid->iofl)) {
-> +                       if (ktime_before(ktime_get_coarse(),
-> +                                        usbhid->input_start_time))
-> +                               break;
-> +                       clear_bit(HID_RESUME_RUNNING, &usbhid->iofl);
->                 }
-> +               hid_input_report(urb->context, HID_INPUT_REPORT,
-> +                                urb->transfer_buffer, urb->actual_length, 1);
-> +               /*
-> +                * autosuspend refused while keys are pressed
-> +                * because most keyboards don't wake up when
-> +                * a key is released
-> +                */
-> +               if (hid_check_keys_pressed(hid))
-> +                       set_bit(HID_KEYS_PRESSED, &usbhid->iofl);
-> +               else
-> +                       clear_bit(HID_KEYS_PRESSED, &usbhid->iofl);
->                 break;
->         case -EPIPE:            /* stall */
->                 usbhid_mark_busy(usbhid);
-> @@ -714,17 +730,6 @@ static int usbhid_open(struct hid_device *hid)
->         }
->
->         usb_autopm_put_interface(usbhid->intf);
-> -
-> -       /*
-> -        * In case events are generated while nobody was listening,
-> -        * some are released when the device is re-opened.
-> -        * Wait 50 msec for the queue to empty before allowing events
-> -        * to go through hid.
-> -        */
-> -       if (res == 0)
-> -               msleep(50);
-> -
-> -       clear_bit(HID_RESUME_RUNNING, &usbhid->iofl);
->         return res;
->  }
->
-> diff --git a/drivers/hid/usbhid/usbhid.h b/drivers/hid/usbhid/usbhid.h
-> index 8620408bd7af..0f0bcf7037f8 100644
-> --- a/drivers/hid/usbhid/usbhid.h
-> +++ b/drivers/hid/usbhid/usbhid.h
-> @@ -13,6 +13,7 @@
->
->  #include <linux/types.h>
->  #include <linux/slab.h>
-> +#include <linux/ktime.h>
->  #include <linux/list.h>
->  #include <linux/mutex.h>
->  #include <linux/timer.h>
-> @@ -82,6 +83,7 @@ struct usbhid_device {
->
->         spinlock_t lock;                                                /* fifo spinlock */
->         unsigned long iofl;                                             /* I/O flags (CTRL_RUNNING, OUT_RUNNING) */
-> +       ktime_t input_start_time;                                       /* When to start handling input */
->         struct timer_list io_retry;                                     /* Retry timer */
->         unsigned long stop_retry;                                       /* Time to give up, in jiffies */
->         unsigned int retry_delay;                                       /* Delay length in ms */
-> --
-> 2.27.0.278.ge193c7cf3a9-goog
->
->
-> --
-> Dmitry
+The requirement to access PF as mentioned above is one of the reason for
+us to implement the emulation in kernel.
+Another reason is that we don't want to duplicate a lot of kernel logic in
+QEMU as what'd done in Alex Graf's "vfio-i40e". then QEMU has to be
+updated along kernel driver changing. The effort for maintenance and
+version matching is a big burden to vendors.
+But you are right, there're less review in virtualization side to code under
+vendor specific directory. That's also the pulse for us to propose
+common helper APIs for them to call, not only for convenience and
+duplication-less, but also for code with full review.
+
+would you mind giving us some suggestions for where to go?
+
+Thanks
+Yan
