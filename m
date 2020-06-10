@@ -2,194 +2,118 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1EFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3BB6C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3640D20734
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:17:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BgLC2n+1"
+	by mail.kernel.org (Postfix) with ESMTP id 8883F20734
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:18:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbgFJGRq (ORCPT
+        id S1726287AbgFJGSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 02:17:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43874 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbgFJGRp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 02:17:45 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1AC7C03E96F
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 23:17:44 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id y11so967113ljm.9
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 23:17:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=0hZiLWuye+wxKL58SzimuieV9qECyFNrT6vpBHkRdfo=;
-        b=BgLC2n+1Ax249jZ2gfeFMxALlDrkcvCQZabKsEG+D6DJRmosIYsRieHIq3VHuzoi3B
-         r/LMddGdRz73Uv+t4XUXBKqPM8c00QUBpAoLwprhqSDnmpd+BLeqpzsSf50qnv55I38Y
-         iue6KR5s7oFB008+IJfsysCS75DagQTXwM+YRjypT1jU4ZTeO2FgeC5QPqV7ivTb/1CI
-         CLY9wvjfnlBySMump/MJJL/aMuZbbAgqyjz0+2I42kKjpg8bKH4JB+qDAR1RvqphSMeG
-         cK7mdjVz19wQFIwmnocFegyCTf0uJxe1eLagMjBdkZ3Bp59fzhI70w0QHGdAiGu4qegR
-         NzHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=0hZiLWuye+wxKL58SzimuieV9qECyFNrT6vpBHkRdfo=;
-        b=C40zxJdQG1A1v+QTCEINjzdeI+nof8rmZRQQg81/Qo8zbT16AarHT7IRA0PqnBwi9q
-         kpNHDATOS3jaEkOaIqdw5NzqsuNpVuzkx6/lIMw0V78O6NCTil7tbJCRtMJ1GuLYESEi
-         qGbURXTrnNkqZkDaiW8jlFEhjOE+CQLY/rn6MqYkXDZ3tSS/NiRzcDDsL0kv+DuPv2a4
-         FOLbFL/naIDwIbOEdSjfWEgzw1kKZXeYGCcBgppibE8GHEoJZB/osBdtNTjKdokfYQYq
-         DLYwlsHKsFgsr50qoULN2wGF6u1IZNeyHHnh/hQgSUicjYPnquccxc+B+5Zm2Ptkh8xl
-         MQzg==
-X-Gm-Message-State: AOAM533k970/suyL3+qY5MWWppoDqcIVqkUcK5m79JYgA5uT0IdfNPjr
-        kqEqZ/xsdYb7/LkHRQ13CKA6zbJm5H9pAVO1mhBypw==
-X-Google-Smtp-Source: ABdhPJx8f3dW0vVguVq1E86iAg5Y653WpMlRP/3/wGu35t+t5y/R8dH6w96A2FJP9cqKMT2pazLfFKfH3Da2t0EU6Iw=
-X-Received: by 2002:a2e:974e:: with SMTP id f14mr872556ljj.102.1591769861837;
- Tue, 09 Jun 2020 23:17:41 -0700 (PDT)
+        Wed, 10 Jun 2020 02:18:11 -0400
+Received: from mx3.molgen.mpg.de ([141.14.17.11]:42201 "EHLO mx1.molgen.mpg.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726035AbgFJGSL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 02:18:11 -0400
+Received: from [192.168.178.35] (unknown [88.130.155.186])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: pmenzel)
+        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 04AE620646DCF;
+        Wed, 10 Jun 2020 08:18:08 +0200 (CEST)
+Subject: Re: close() on some Intel CNP-LP PCI devices takes up to 2.7 s
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        it+linux-pci@molgen.mpg.de, amd-gfx@lists.freedesktop.org
+References: <b0781d0e-2894-100d-a4da-e56c225eb2a6@molgen.mpg.de>
+ <20200609154416.GU247495@lahna.fi.intel.com>
+From:   Paul Menzel <pmenzel@molgen.mpg.de>
+Message-ID: <3854150d-f193-d34e-557e-41090e4f39b5@molgen.mpg.de>
+Date:   Wed, 10 Jun 2020 08:18:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200609174149.255223112@linuxfoundation.org>
-In-Reply-To: <20200609174149.255223112@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 10 Jun 2020 11:47:30 +0530
-Message-ID: <CA+G9fYurJXfpg7QfsxxRPSFhG2cNkU-zA=VM==1b4E8bmjxecg@mail.gmail.com>
-Subject: Re: [PATCH 5.7 00/24] 5.7.2-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200609154416.GU247495@lahna.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 9 Jun 2020 at 23:25, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.7.2 release.
-> There are 24 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 11 Jun 2020 17:41:38 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.7.2-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.7.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
-
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 5.7.2-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.7.y
-git commit: 00f7cc67908be43cf52f961c4c880108b00d68e8
-git describe: v5.7.1-25-g00f7cc67908b
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.7-oe/bui=
-ld/v5.7.1-25-g00f7cc67908b
-
-No regressions (compared to build v5.7-15-g676bb83805a9)
-
-No fixes (compared to build v5.7-15-g676bb83805a9)
+Dear Mika,
 
 
-Ran 36794 total tests in the following environments and test suites.
+Am 09.06.20 um 17:44 schrieb Mika Westerberg:
+> On Tue, Jun 09, 2020 at 05:39:21PM +0200, Paul Menzel wrote:
 
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-- x86-kasan
+>> On the Intel Cannon Point-LP laptop Dell Precision 3540 with a dedicated AMD
+>> graphics card (both graphics devices can be used) with Debian Sid/unstable
+>> with Linux 5.6.14, running lspci takes quite some time, and the screen even
+>> flickers a short moment before the result is displayed.
+>>
+>> Tracing lspci with strace, shows that the close() function of the three
+>> devices takes from
+>>
+>> •   00:1d.0 PCI bridge: Intel Corporation Cannon Point-LP PCI Express Root
+>> Port #9
+>>
+>> •   04:00.0 System peripheral: Intel Corporation JHL6340 Thunderbolt 3 NHI
+>> (C step) [Alpine Ridge 2C 2016] (rev 02)
+>>
+>> •   3b:00.0 Display controller: Advanced Micro Devices, Inc. [AMD/ATI] Lexa
+>> XT [Radeon PRO WX 3100]
+>>
+>> takes from 270 ms to 2.5 s.
+>>
+>>> 11:43:21.714391 openat(AT_FDCWD, "/sys/bus/pci/devices/0000:04:00.0/config", O_RDONLY) = 3
+>>> 11:43:21.714448 pread64(3, "\206\200\331\25\6\4\20\0\2\0\200\10 \0\0\0\0\0\0\352\0\0\4\352\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0(\20\272\10\0\0\0\0\
+>>> 200\0\0\0\0\0\0\0\377\1\0\0", 64, 0) = 64
+>>> 11:43:24.487818 close(3)                = 0
+>>
+>>> 11:43:24.489508 openat(AT_FDCWD, "/sys/bus/pci/devices/0000:00:1d.0/config", O_RDONLY) = 3
+>>> 11:43:24.489598 pread64(3, "\206\200\260\235\7\4\20\0\360\0\4\6\20\0\201\0\0\0\0\0\0\0\0\0\0;;\00000\0  \354 \354\1\300\21\320\0\0\0\0\0\0\0\0\0\0\0\0
+>>> @\0\0\0\0\0\0\0\377\1\22\0", 64, 0) = 64
+>>> 11:43:24.966661 close(3)                = 0
+>>
+>>> 11:43:24.988544 openat(AT_FDCWD, "/sys/bus/pci/devices/0000:3b:00.0/config", O_RDONLY) = 3
+>>> 11:43:24.988584 pread64(3, "\2\20\205i\7\4\20\0\0\0\200\3\20\0\0\0\f\0\0\300\0\0\0\0\f\0\0\320\0\0\0\0\0010\0\0\0\0 \354\0\0\0\0(\20\272\10\0\0$\354H\0\0\0\0\0\0\0\377\1\0\0", 64, 0) = 64
+>>> 11:43:25.252745 close(3)
+>>
+>> Unfortunately, I forgot to collect the tree output, but hopefully the
+>> attached Linux messages and strace of lspci output will be enough for the
+>> start.
+>>
+>> Please tell me, if you want me to create a bug report in the Linux bug
+>> tracker.
+> 
+> Can you try this commit?
+> 
+>    https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?h=pci/pm&id=ec411e02b7a2e785a4ed9ed283207cd14f48699d
+> 
+> It should be in the mainline already as well.
+> 
+> Note we still need to obey the delays required by the PCIe spec so 100ms
+> after the link is trained but this one should at least get it down from
+> 1100ms.
 
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* kselftest/net
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-controllers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-sched-tests
-* ltp-syscalls-tests
-* perf
-* v4l2-compliance
-* libgpiod
-* ltp-cve-tests
-* ltp-hugetlb-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-io-tests
-* ltp-open-posix-tests
-* network-basic-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-native/net
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-* kselftest-vsyscall-mode-none/net
+Thank you for replying so quickly. Hopefully, I’ll be able to test the 
+commit tomorrow.
 
---=20
-Linaro LKFT
-https://lkft.linaro.org
+One question though. The commit talks about resuming from suspend. I 
+understand that training happens there.
+
+In my case the system is already running. So I wonder, why link(?) 
+training would still happening.
+
+
+Kind regards,
+
+Paul
