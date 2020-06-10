@@ -2,108 +2,103 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61815C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4712DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5EF1204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:44:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="Bp8oohoD"
+	by mail.kernel.org (Postfix) with ESMTP id 20652204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:44:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728582AbgFJLoE (ORCPT
+        id S1728618AbgFJLox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 07:44:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37974 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728338AbgFJLoD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 07:44:03 -0400
-Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A9C2C03E96B
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 04:44:02 -0700 (PDT)
-Received: by mail-lf1-x12b.google.com with SMTP id x22so1267027lfd.4
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 04:44:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=to:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=/hssy8NpzkrNMQtn9No29urAVcj42qDUd/ExF06dLJg=;
-        b=Bp8oohoDLQRa+IMKJyCQ2n8tlr7AMR+oLBy/LF4uKEL83kMjz1Z5Zmq+J5IMupzPwA
-         TjfpJ8y5eOsLblwD1ZBZvGGNwv8hRdaFwy0U4HUJPcq94G0a8xqyIOWUsrl2XmLW8lZv
-         u4US3oqnCgIV9p/tOtPjey/NCWwj4ekQHw1cY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=/hssy8NpzkrNMQtn9No29urAVcj42qDUd/ExF06dLJg=;
-        b=M9sI5WLsOk/PqupH5Mvs1ZMd0bw+C76vPe9EjJlZ+gzmZlwfEtb7bSgD0NaVWokIt0
-         StzsD0xNENDnt+9/U7Mc3/tR6dBUxajUiYHu7t1nuKw5A1nqdmmRt+UAbkalt/aQviNh
-         Z6E6J4IAQPH2tSwcEVDJ0dcibz3LU0O5v7EToi/mti1daXq2jLUTnkTawusjaWTPHmt4
-         20nVU9cNQwx4DK/0mW9HPBKeXboDwMP9FVdAcqujUXQhNMiw30WYj+yL8XHaehOqLsdT
-         fUs9SdIOdf8Y2Z6mZ2Cio7lyVs+Jx+33r7vyP3wHKzpQwRZKFBfcEBhmXUDAtebYT1LT
-         dlJA==
-X-Gm-Message-State: AOAM530P3Ig92jM6RQrPOQhUgPZkQgho6z8E0sI+Ki6oQhyAy9uYFsR2
-        kkkrSpFUrb4SYZbOgPr4lN0uuQ==
-X-Google-Smtp-Source: ABdhPJwOz1IDJ+PcISb9vsO1ok55eWQq+zdvReTSOwJ30O/nzF+U3F/uKG9O7EQDK2GUzcpS4EpFFQ==
-X-Received: by 2002:a19:8ac3:: with SMTP id m186mr1512013lfd.131.1591789439890;
-        Wed, 10 Jun 2020 04:43:59 -0700 (PDT)
-Received: from [192.168.1.149] (ip-5-186-127-38.cgn.fibianet.dk. [5.186.127.38])
-        by smtp.gmail.com with ESMTPSA id a9sm4713355ljk.116.2020.06.10.04.43.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jun 2020 04:43:58 -0700 (PDT)
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@ZenIV.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: must populate_rootfs be synchronous?
-Message-ID: <19574912-44b4-c1dc-44c3-67309968d465@rasmusvillemoes.dk>
-Date:   Wed, 10 Jun 2020 13:43:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 10 Jun 2020 07:44:53 -0400
+Received: from raptor.unsafe.ru ([5.9.43.93]:49996 "EHLO raptor.unsafe.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728562AbgFJLow (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 07:44:52 -0400
+Received: from comp-core-i7-2640m-0182e6 (ip-89-102-33-211.net.upcbroadband.cz [89.102.33.211])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by raptor.unsafe.ru (Postfix) with ESMTPSA id 6B800203BD;
+        Wed, 10 Jun 2020 11:44:46 +0000 (UTC)
+Date:   Wed, 10 Jun 2020 13:44:41 +0200
+From:   Alexey Gladkov <gladkov.alexey@gmail.com>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     viro@zeniv.linux.org.uk,
+        syzbot <syzbot+4abac52934a48af5ff19@syzkaller.appspotmail.com>,
+        adobriyan@gmail.com, ebiederm@xmission.com, keescook@chromium.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: general protection fault in proc_kill_sb
+Message-ID: <20200610114441.mw42cph3gmto7gsh@comp-core-i7-2640m-0182e6>
+References: <0000000000002d7ca605a7b8b1c5@google.com>
+ <10cd85a7-2958-57a8-aa7e-0075194fc788@I-love.SAKURA.ne.jp>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <10cd85a7-2958-57a8-aa7e-0075194fc788@I-love.SAKURA.ne.jp>
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.1 (raptor.unsafe.ru [5.9.43.93]); Wed, 10 Jun 2020 11:44:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I have worked on several boards where there is a rather "aggressive"
-external (gpio) watchdog, with timeouts between 250 and 800 ms. Combined
-with a rather slow CPU and memory, these boards often fail to make it
-through populate_rootfs, since unpacking the initramfs is rather
-time-consuming, and we haven't gotten to get the watchdog driver handle
-the watchdog. [No, GPIO_WATCHDOG_ARCH_INITCALL doesn't help, at least
-not for all cases, probably because the device isn't "discovered" until
-mpc83xx_declare_of_platform_devices runs, which is at device_initcall time].
+On Wed, Jun 10, 2020 at 08:23:33PM +0900, Tetsuo Handa wrote:
+> On 2020/06/10 19:56, syzbot wrote:
+> > Hello,
+> > 
+> > syzbot found the following crash on:
+> > 
+> > HEAD commit:    7ae77150 Merge tag 'powerpc-5.8-1' of git://git.kernel.org..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=16e12212100000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=d195fe572fb15312
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=4abac52934a48af5ff19
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > 
+> > Unfortunately, I don't have any reproducer for this crash yet.
+> 
+> The report says proc_sb_info(sb) == NULL at proc_kill_sb() which was called via
+> fs->kill_sb(s) from deactivate_locked_super(). The console log says that memory
+> allocation for proc_sb_info(sb) failed due to memory allocation fault injection.
+> 
+> [ 1492.052802][ T6840] FAULT_INJECTION: forcing a failure.
+> [ 1492.052802][ T6840] name failslab, interval 1, probability 0, space 0, times 0
+> [ 1492.077153][ T6840] CPU: 0 PID: 6840 Comm: syz-executor.2 Not tainted 5.7.0-syzkaller #0
+> [ 1492.085449][ T6840] Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> [ 1492.095511][ T6840] Call Trace:
+> [ 1492.098811][ T6840]  dump_stack+0x188/0x20d
+> [ 1492.103157][ T6840]  should_fail.cold+0x5/0xa
+> [ 1492.107686][ T6840]  ? fault_create_debugfs_attr+0x140/0x140
+> [ 1492.107721][ T6840]  ? idr_replace+0xee/0x160
+> [ 1492.127210][ T6840]  should_failslab+0x5/0xf
+> [ 1492.131638][ T6840]  kmem_cache_alloc_trace+0x2d0/0x7d0
+> [ 1492.137020][ T6840]  ? up_write+0x148/0x470
+> [ 1492.141367][ T6840]  proc_fill_super+0x79/0x5c0
+> [ 1492.146052][ T6840]  ? proc_parse_param+0x8a0/0x8a0
+> [ 1492.151092][ T6840]  vfs_get_super+0x12e/0x2d0
+> [ 1492.155694][ T6840]  vfs_get_tree+0x89/0x2f0
+> [ 1492.160126][ T6840]  do_mount+0x1306/0x1b40
+> [ 1492.164467][ T6840]  ? copy_mount_string+0x40/0x40
+> [ 1492.169411][ T6840]  ? __might_fault+0x190/0x1d0
+> [ 1492.174188][ T6840]  ? _copy_from_user+0x13c/0x1a0
+> [ 1492.179138][ T6840]  ? memdup_user+0x7c/0xd0
+> [ 1492.183575][ T6840]  __x64_sys_mount+0x18f/0x230
+> [ 1492.188351][ T6840]  do_syscall_64+0xf6/0x7d0
+> [ 1492.192861][ T6840]  entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> [ 1492.198759][ T6840] RIP: 0033:0x45ca69
+> 
+> That is, proc_kill_sb() was assuming "s->s_fs_info = fs_info;" is always
+> called from proc_fill_super() which is called via fill_super(sb, fc); from
+> vfs_get_super().
 
-So, those boards currently use some rather ugly patches to make them
-boot. I'd like to get rid of those.
+Yes. If fill_super() fails before filling up fs_info,
+deactivate_locked_super() will be called and sb->s_fs_info may be NULL.
 
-I assume there's a good reason populate_rootfs runs between fs_initcall
-and device_initcalls - perhaps one of the latter wants some firmware or
-do a request_module?
+-- 
+Rgrds, legion
 
-But, would it be possible to throw most of populate_rootfs into a work
-item, add some globally visible DECLARE_COMPLETION(initramfs_unpacked)
-which is complete_all'ed at the end, and then in the (I assume)
-relatively few places that might need to look at the filesystem add a
-wait_for_completion(initramfs_unpacked) - including of course right
-before the console_on_rootfs() call in kernel_init_freeable() (so also
-before we start asking whether there is /init or not).
-
-Rasmus
-
-
-PS: This is the slowness, .7 seconds to unpack 4MB - it got a bit better
-when switching to lz4 compression, but still in the few hundreds of
-milliseconds range, which is way too much given the external watchdog's
-requirements:
-
- [    0.047970] Trying to unpack rootfs image as initramfs...
- [    0.768516] Freeing initrd memory: 3972K
