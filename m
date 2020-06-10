@@ -2,144 +2,111 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62643C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70872C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CAB720760
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:14:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B4FD206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:15:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GyBMYKMO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="E0W97Phx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729261AbgFJNOz (ORCPT
+        id S1729270AbgFJNPH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 09:14:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52076 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728864AbgFJNOy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 09:14:54 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 250E7C03E96B;
-        Wed, 10 Jun 2020 06:14:54 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id c17so2385001lji.11;
-        Wed, 10 Jun 2020 06:14:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=UNoMv6ObyceiFWwH0mO4eRasIpDWoKfsc+bwVl1I/WQ=;
-        b=GyBMYKMOt1EDvF46kVMtzNBZaUuOqNMaTLlGlOPEtu/Fiycl6kU6QiugruCwIsCUi2
-         UW55/cYih/ZO+g2K94041aSAChSGQSV5tmQwn4khewvcssCfHhIrLe68ZBaYAAhuloHP
-         1eN28uEXxwKBNVBSXPErXi+Ppd9cqR+fIDi73hNdPfO73/AGmPrWZxV7XpHVwhNFIGne
-         Us2nvT+5UoG/uSlnJhmO4V+Ot2KEUGhsIdojS7ZV0w09n86Pp8aOuwZ5O55ekc+DSw6c
-         TdHh0iNmxeHfYu8PtxzffPm+1v9ctNAbCSfrDdekU3/fUxE4MC+wpmSVzd9GAKJfhT7u
-         OKrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UNoMv6ObyceiFWwH0mO4eRasIpDWoKfsc+bwVl1I/WQ=;
-        b=noGbtBM+LsPAFz9/oKx5ri8z9KXnjAK+5RTom+DfKR+HE/vhNMfCUK5cL9ypNiz+Za
-         9FxvtP6ATGHn03EcCR4q/hmak5cOr4bBxG+AAYLWUTr3QKL1DlvTbayAy2sAWglHaUQY
-         gf3rnwuS5T4KGeiaKgvlEL+4gdopz+1s5/BwRPXB7/6/dqTiah/4DTd8yxg95WJXcuX5
-         lAvmdh4/1Kj35PM9fKOmxLJpAYzNkHILcUnSczYyJpCdr8kxuTbEXfqJ7ixa/LExR2L8
-         FR2iLpvFsAxRSp4Mt3ZGFR8RajgpsAARxEOLXw4IIZudg9y2M6ZH1hCnR0YwzbE7H8HY
-         OSaQ==
-X-Gm-Message-State: AOAM533AQSLbZZhP4dqMirOxNHXWfEHiyMSzDwNzmhvKt9j4xUEeUR/N
-        PG6+TRvc3r/GkBLqXaSUITe9FNfE
-X-Google-Smtp-Source: ABdhPJy2Se4HKECeDeBieJjVL5HYdRqYV64/7lP07ijKUA21F2zhobNjO2Ug05l/y+2CmhdINQUacw==
-X-Received: by 2002:a05:651c:118f:: with SMTP id w15mr1783593ljo.211.1591794891947;
-        Wed, 10 Jun 2020 06:14:51 -0700 (PDT)
-Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.googlemail.com with ESMTPSA id n1sm4994529ljg.131.2020.06.10.06.14.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jun 2020 06:14:51 -0700 (PDT)
-Subject: Re: [RFC PATCH v1 05/18] i2c: tegra: Fix runtime resume to re-init VI
- I2C
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
-        helen.koike@collabora.com
-Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-References: <1591768960-31648-1-git-send-email-skomatineni@nvidia.com>
- <1591768960-31648-6-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <fcced8cd-d80d-b09c-b657-cb413ec418f9@gmail.com>
-Date:   Wed, 10 Jun 2020 16:14:49 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <1591768960-31648-6-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Wed, 10 Jun 2020 09:15:07 -0400
+Received: from mx1.tq-group.com ([62.157.118.193]:10609 "EHLO mx1.tq-group.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728864AbgFJNPG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 09:15:06 -0400
+IronPort-SDR: SOfhtoo3cpPQCaGkiVCLO+0Xcv1JaC0cxYzO1+Xr/hUPpQHW6xNnOkNnznXfSEq7ylKpH+1SV7
+ uObid5vBytdKiWX/Q3SPDPaQazWqjcedy/dE10EaQAO3n8tt+lGsKxmKiLTCQs+1LMC0oGgj7k
+ MMp+qTugf/Ct28bdM2uMduwiHeHTF9pPjTgi85Mu21/f43YJAyH7m7HN4hsr0JKvzohbyfyoL6
+ 7gpHVdCghawn6yXWUK7nIEI2ppfA2jsOQoSYEBB5+Vq//QpSJFgV4pXN0C6qPG4iIUImSQOPPR
+ vNE=
+X-IronPort-AV: E=Sophos;i="5.73,496,1583190000"; 
+   d="scan'208";a="12638479"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 10 Jun 2020 15:15:04 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Wed, 10 Jun 2020 15:15:04 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Wed, 10 Jun 2020 15:15:04 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1591794904; x=1623330904;
+  h=message-id:subject:from:to:cc:date:mime-version:
+   content-transfer-encoding;
+  bh=TGTIzXlZhILMwfzfkA0Ocp9bCG1jW+m/WMFkKoJLGXU=;
+  b=E0W97PhxpNq3lCE9RokfYjozbtzQsZDXaz+u0CawBHiyaLjqiCcVW397
+   KxtDlc1VTWewjYKpnGMBlvXNX7hjedtIqgrTHhP3SDQxZA/n4YG9vxucf
+   K6MNlPditsRGe0xj9NOO8mNs69fh8OJPBimK/vMe4DicW9CjpBDTZp28F
+   1Ye3oE6BVdckmEuanchYadA/qNwQobn3p/IpMaOGiVkt7HqxPIbG1kLWJ
+   kQO9iNw1atGGtZHSbK2w35OqQBQ5UhimKNRBHoKYiZ1A2W8WuLUNnrInW
+   t5Um83HktLc72/6QUdEmCFN81yO4I59VqpnLVm2wdvq3tIFEswaCLsr4l
+   g==;
+IronPort-SDR: H2jn5AkN840HjfNLY7chLDDFaHSLNEvxTuoZAQ2lc1MRLVISi0Y6+z5L8mlg0yysVPF4aQb8nN
+ i7ifUzS0OIrAZpbXg5rUf0tJ6+oqYKDNMeFFW3kvZuYdyNtwhc2YLStxIxuA58BDur7iRhNHlT
+ 8LPJzR0kuRNsMjyDHVe/QfynVklGu+FuQlC860YG7Xv7JTvnMVe8mSFFvA8j64eBk7qQe/yp2J
+ j0Ki0ljZaxtF+ViQbCDL5e2HeswK3BYr2jqQQIoFExNZQumqE2N6dv+Yme1fy3gmFvsyhXNsLE
+ 9Ps=
+X-IronPort-AV: E=Sophos;i="5.73,496,1583190000"; 
+   d="scan'208";a="12638478"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 10 Jun 2020 15:15:04 +0200
+Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id A04A4280065;
+        Wed, 10 Jun 2020 15:15:04 +0200 (CEST)
+Message-ID: <fb0340aaf273be84e915214a3d8bae4ac85d7c0b.camel@ew.tq-group.com>
+Subject: Consistent block device references for root= cmdline
+From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>, s.hauer@pengutronix.de
+Cc:     linux-mmc@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 10 Jun 2020 15:15:03 +0200
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-10.06.2020 09:02, Sowjanya Komatineni пишет:
-> VI I2C is on host1x bus and is part of VE power domain.
-> 
-> During suspend/resume VE power domain goes through power off/on.
-> 
-> So, controller reset followed by i2c re-initialization is required
-> after the domain power up.
-> 
-> This patch fixes it.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/i2c/busses/i2c-tegra.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-> index dba38a5..650240d 100644
-> --- a/drivers/i2c/busses/i2c-tegra.c
-> +++ b/drivers/i2c/busses/i2c-tegra.c
-> @@ -293,6 +293,8 @@ struct tegra_i2c_dev {
->  	bool is_curr_atomic_xfer;
->  };
->  
-> +static int tegra_i2c_init(struct tegra_i2c_dev *i2c_dev, bool clk_reinit);
-> +
->  static void dvc_writel(struct tegra_i2c_dev *i2c_dev, u32 val,
->  		       unsigned long reg)
->  {
-> @@ -679,8 +681,22 @@ static int __maybe_unused tegra_i2c_runtime_resume(struct device *dev)
->  		goto disable_slow_clk;
->  	}
->  
-> +	/*
-> +	 * VI I2C device is attached to VE power domain which goes through
-> +	 * power ON/OFF during PM runtime resume/suspend. So, controller
-> +	 * should go through reset and need to re-initialize after power
-> +	 * domain ON.
-> +	 */
-> +	if (i2c_dev->is_vi) {
-> +		ret = tegra_i2c_init(i2c_dev, true);
-> +		if (ret)
-> +			goto disable_div_clk;
-> +	}
-> +
->  	return 0;
->  
-> +disable_div_clk:
-> +	clk_disable(i2c_dev->div_clk);
->  disable_slow_clk:
->  	if (i2c_dev->slow_clk)
->  		clk_disable(i2c_dev->slow_clk);
-> 
+Hello all,
 
-The clk_disable() can cope with a NULL argument. Won't it be cleaner to
-remove the conditions?
+there have been numerous attempts to make the numbering of mmcblk
+devices consistent, mostly by using aliases from the DTS ([1], [2],
+[3]), but all have been (rightfully) rejected. Unless I have overlooked
+a more recent development, no attempts for a different solution were
+made.
+
+As far as I can tell, the core of the issue seems to be the following:
+
+The existing solutions like LABELs and UUIDs are viable alternatives in
+many cases, but in particular on embedded systems, this is not quite
+sufficient: In addition to the problem that more knowledge about the
+system to boot is required in the bootloader, this approach fails
+completely when the same firmware image exists on multiple devices, for
+example on an eMMC and an SD card - not an entirely uncommon situation
+during the development of embedded systems.
+
+With udev, I can refer to a specific partition using a path like
+/dev/disk/by-path/platform-2194000.usdhc-part2. In [4] it was proposed
+to add a way to refer to a device path/phandle from the kernel command
+line. Has there been any progress on this proposal?
+
+Kind regards,
+Matthias
+
+
+[1] https://patchwork.kernel.org/patch/8685711/
+[2] https://lore.kernel.org/patchwork/cover/674381/
+[3] https://www.spinics.net/lists/linux-mmc/msg26586.html
+[4] https://www.spinics.net/lists/linux-mmc/msg26708.html
+
