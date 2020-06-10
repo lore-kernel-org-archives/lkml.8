@@ -2,61 +2,147 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E19C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 521EBC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B92820734
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:11:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 240A12074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:13:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="MnUAft4o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728969AbgFJMLS (ORCPT
+        id S1728960AbgFJMN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 08:11:18 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:60338 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728558AbgFJMLP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 08:11:15 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1jizZT-0001e7-0V; Wed, 10 Jun 2020 22:11:08 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Wed, 10 Jun 2020 22:11:07 +1000
-Date:   Wed, 10 Jun 2020 22:11:07 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Mikulas Patocka <mpatocka@redhat.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org, Mike Snitzer <msnitzer@redhat.com>,
-        Milan Broz <mbroz@redhat.com>, dm-devel@redhat.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: crypto API and GFP_ATOMIC
-Message-ID: <20200610121106.GA23137@gondor.apana.org.au>
-References: <alpine.LRH.2.02.2006091259250.30590@file01.intranet.prod.int.rdu2.redhat.com>
- <20200610010450.GA6449@gondor.apana.org.au>
- <alpine.LRH.2.02.2006100756270.27811@file01.intranet.prod.int.rdu2.redhat.com>
+        Wed, 10 Jun 2020 08:13:29 -0400
+Received: from mail-m975.mail.163.com ([123.126.97.5]:53460 "EHLO
+        mail-m975.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728547AbgFJMN2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 08:13:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=JJhsv
+        FYwW+8tEWWr/oiMmbCKVPyMC4y0gNIMmx5KF+c=; b=MnUAft4oj05Sj+PgR67JH
+        pGD5zfdf9iIZRKNMRh683qj4kjFPW5bd6ArAKOtiFbvj9CKn7qcyj9m5K2jowom1
+        amYuhRMaesbgqE5nsAP4LGH54smYx6Pi/qdxLgV39HPh+zz2GVak8ljXHhSLG/24
+        HXmJMXQbrUsrgKYraHkADE=
+Received: from localhost.localdomain (unknown [114.242.249.96])
+        by smtp5 (Coremail) with SMTP id HdxpCgCX2lxNzuBekc1XBw--.277S4;
+        Wed, 10 Jun 2020 20:13:20 +0800 (CST)
+From:   YuanJunQing <yuanjunqing66@163.com>
+To:     tsbogend@alpha.franken.de
+Cc:     yszhou4tech@gmail.com, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, liulichao@loongson.cn,
+        YuanJunQing <yuanjunqing66@163.com>
+Subject: [PATCH] mips/ftrace: Fix stack backtrace in unwind_stack_by_address()
+Date:   Wed, 10 Jun 2020 20:12:54 +0800
+Message-Id: <20200610121254.1780-1-yuanjunqing66@163.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.02.2006100756270.27811@file01.intranet.prod.int.rdu2.redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: HdxpCgCX2lxNzuBekc1XBw--.277S4
+X-Coremail-Antispam: 1Uf129KBjvJXoWxAF4xXrWUuFyktFW5CFWDCFg_yoW5Gw18pr
+        ZIk3ZxtrWkXa12kryfur18Wry5JrykZa42kry7Jry5Z3ZxXF13XryI93WDKr1DJrW0ka4f
+        ury7trsrurZ0vaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UmiiDUUUUU=
+X-Originating-IP: [114.242.249.96]
+X-CM-SenderInfo: h1xd0ypxqtx0rjwwqiywtou0bp/xtbBzwA-XFaD7e0wIAAAsp
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 08:02:23AM -0400, Mikulas Patocka wrote:
->
-> Yes, fixing the drivers would be the best - but you can hardly find any 
-> person who has all the crypto hardware and who is willing to rewrite all 
-> the drivers for it.
+Calling the unwind_stack_by_address() function for stack backtrace
+will fail, when we use "echo function: stacktrace > set_ftrace_filter".
 
-We don't have to rewrite them straight away.  We could mark the
-known broken ones (or the known working ones) and then dm-crypt
-can allocate only those using the types/mask to crypto_alloc.
+The stack backtrace as follows:
+           <...>-3102  [001] ...2    63.557737: <stack trace>
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+ => 0
+ =>
+          <idle>-0     [000] .N.2    63.558793: <stack trace>
 
-Cheers,
+The reason is that when performing stack backtrace, the "ftrace_call"
+and "ftrace_graph_call" global symbols in ftrace_caller() are
+treated as functions.
+
+If CONFIG_FUNCTION_GRAPH_TRACER is defined, the value in the "ra"
+register is the address of ftrace_graph_call when the stack
+backtrace back to ftrace_caller(). ”ftrace_graph_call“ is a global
+symbol, and the value of "ofs" is set to zero when the
+kallsyms_lookup_size_offset() is called. Otherwise, the value
+in the "ra" register is the address of ftrace_call+8. "ftrace_call"
+is the global symbol, and return one when the get_frame_info() is called.
+
+Signed-off-by: YuanJunQing <yuanjunqing66@163.com>
+---
+ arch/mips/kernel/process.c | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
+
+diff --git a/arch/mips/kernel/process.c b/arch/mips/kernel/process.c
+index b2a797557825..ac4fe79bc5bc 100644
+--- a/arch/mips/kernel/process.c
++++ b/arch/mips/kernel/process.c
+@@ -53,6 +53,8 @@
+ #include <asm/inst.h>
+ #include <asm/stacktrace.h>
+ #include <asm/irq_regs.h>
++#include <linux/ftrace.h>
++#include <generated/asm-offsets.h>
+ 
+ #ifdef CONFIG_HOTPLUG_CPU
+ void arch_cpu_idle_dead(void)
+@@ -569,6 +571,13 @@ unsigned long notrace unwind_stack_by_address(unsigned long stack_page,
+ 	 * Return ra if an exception occurred at the first instruction
+ 	 */
+ 	if (unlikely(ofs == 0)) {
++#ifdef CONFIG_FUNCTION_GRAPH_TRACER
++		extern void ftrace_graph_call(void);
++		if ((pc == (unsigned long)ftrace_graph_call)) {
++			pc = ((unsigned long *)(*sp))[PT_R31/sizeof(long)];
++			*sp += PT_SIZE;
++		} else
++#endif
+ 		pc = *ra;
+ 		*ra = 0;
+ 		return pc;
+@@ -583,16 +592,23 @@ unsigned long notrace unwind_stack_by_address(unsigned long stack_page,
+ 	if (*sp < low || *sp + info.frame_size > high)
+ 		return 0;
+ 
+-	if (leaf)
++	if (leaf) {
+ 		/*
+ 		 * For some extreme cases, get_frame_info() can
+ 		 * consider wrongly a nested function as a leaf
+ 		 * one. In that cases avoid to return always the
+ 		 * same value.
+ 		 */
++#ifdef CONFIG_DYNAMIC_FTRACE
++		if (info.func == (void *)ftrace_call) {
++			pc = ((unsigned long *)(*sp))[PT_R31/sizeof(long)];
++			info.frame_size = PT_SIZE;
++		} else
++#endif
+ 		pc = pc != *ra ? *ra : 0;
+-	else
++	} else {
+ 		pc = ((unsigned long *)(*sp))[info.pc_offset];
++	}
+ 
+ 	*sp += info.frame_size;
+ 	*ra = 0;
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.17.1
+
