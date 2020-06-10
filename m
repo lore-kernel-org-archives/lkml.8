@@ -2,90 +2,136 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B960C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE3ABC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:22:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A3672070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86419206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:22:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UpNiHbMz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728377AbgFJRTP (ORCPT
+        id S1728160AbgFJRWk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 13:19:15 -0400
-Received: from mga06.intel.com ([134.134.136.31]:47811 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728057AbgFJRTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 13:19:14 -0400
-IronPort-SDR: sR9lifVVQCTHBATsQZWehFn7wpOFphzJN8y+abrU6aDd+CHM2lrZdJwIu3IzPg8UlXQlmy4YXn
- s0P+QMXUcu/Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2020 10:19:14 -0700
-IronPort-SDR: kx5x97zDI+jMG/eqid0UpxmxpyBmfYSZ6mzpplV3XC3EcPNgDsT2z0Zg8KYyLp7tK2r1pHyElA
- jjaDzawW/gvA==
-X-IronPort-AV: E=Sophos;i="5.73,496,1583222400"; 
-   d="scan'208";a="447585617"
-Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2020 10:19:13 -0700
-Date:   Wed, 10 Jun 2020 10:19:12 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        bp@alien8.de, mchehab@kernel.org, james.morse@arm.com,
-        rrichter@marvell.com
-Subject: Re: [PATCH] EDAC/mc: call edac_inc_ue_error() before panic
-Message-ID: <20200610171912.GB1474@agluck-desk2.amr.corp.intel.com>
-References: <20200610065846.3626-1-zhenzhong.duan@gmail.com>
- <20200610065846.3626-2-zhenzhong.duan@gmail.com>
+        Wed, 10 Jun 2020 13:22:40 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:51510 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728063AbgFJRWk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 13:22:40 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05AHMS6Z148213;
+        Wed, 10 Jun 2020 17:22:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type : in-reply-to;
+ s=corp-2020-01-29; bh=aL0a/xbCZCIDNKCgomY8AnMMHs27tbW+9lkiBuLKCj8=;
+ b=UpNiHbMz/tLQlpq7JPOzoDd0XPh7Y0M44PoYbGoLOkesVOZ57Seiyd8TXQpmdCuW/4J9
+ W2Dl9Ic/3H9r8Dxg6b42TMVDK+GXDLn801xoQl95WrSLXOcAPQ4m7kG/66SmPcT/Ul83
+ M7ml/b/rh1w2ZbrDQOanQU3ZiyuJCToNees4GRiuNvZgM6SuMAQYFbRQ92egqEZ5CerQ
+ rE0maflJjwXXNPgr3vxj5PwRNisWtkqYDu20XvCdYIyL4Rp8YIYF2BI4gpj0s07kTobT
+ 0ef5JLv5VXoxhV/jWcr3eJ4DPahM9SoOstZ3uxvZ1vYwIZahtiYoAc0qTwLfbUf6DRHw uw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 31g3sn3h8g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 10 Jun 2020 17:22:28 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05AHMQvU087955;
+        Wed, 10 Jun 2020 17:22:27 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 31gn29jd3s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 10 Jun 2020 17:22:27 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05AHMKkR030983;
+        Wed, 10 Jun 2020 17:22:20 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 10 Jun 2020 10:22:20 -0700
+Date:   Wed, 10 Jun 2020 20:22:13 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-fsdevel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Tetsuhiro Kohada <kohada.t2@gmail.com>,
+        Wei Yongjun <weiyongjun1@huawei.com>
+Subject: [PATCH v2] exfat: add missing brelse() calls on error paths
+Message-ID: <20200610172213.GA90634@mwanda>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200610065846.3626-2-zhenzhong.duan@gmail.com>
+In-Reply-To: <6939014a-adbf-f970-2541-df16d35de7e5@web.de>
+X-Mailer: git-send-email haha only kidding
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9648 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0 mlxscore=0
+ phishscore=0 adultscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006100133
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9648 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 impostorscore=0 cotscore=-2147483648 suspectscore=0
+ spamscore=0 bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0
+ mlxlogscore=999 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006100133
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 02:58:46PM +0800, Zhenzhong Duan wrote:
-> By calling edac_inc_ue_error() before panic, we get a correct UE error
-> count for core dump analysis.
+If the second exfat_get_dentry() call fails then we need to release
+"old_bh" before returning.  There is a similar bug in exfat_move_file().
 
-Looks accurate, and I'll add the patch to be applied. But I wonder
-how big a problem it is. Isn't most of the information deriveable
-from the panic message?
+Fixes: 5f2aa075070c ("exfat: add inode operations")
+Reported-by: Markus Elfring <Markus.Elfring@web.de>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+v2: fix exfat_move_file() as well.  Also add a Fixes tag.
 
-> 
-> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
-> ---
->  drivers/edac/edac_mc.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
-> index 75ede27..c1f23c2 100644
-> --- a/drivers/edac/edac_mc.c
-> +++ b/drivers/edac/edac_mc.c
-> @@ -1011,6 +1011,8 @@ static void edac_ue_error(struct edac_raw_error_desc *e)
->  			e->other_detail);
->  	}
->  
-> +	edac_inc_ue_error(e);
-> +
->  	if (edac_mc_get_panic_on_ue()) {
->  		panic("UE %s%son %s (%s page:0x%lx offset:0x%lx grain:%ld%s%s)\n",
->  			e->msg,
-> @@ -1020,8 +1022,6 @@ static void edac_ue_error(struct edac_raw_error_desc *e)
->  			*e->other_detail ? " - " : "",
->  			e->other_detail);
->  	}
-> -
-> -	edac_inc_ue_error(e);
->  }
->  
->  static void edac_inc_csrow(struct edac_raw_error_desc *e, int row, int chan)
-> -- 
-> 1.8.3.1
-> 
+ fs/exfat/namei.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/fs/exfat/namei.c b/fs/exfat/namei.c
+index 5b0f35329d63e..edd8023865a0e 100644
+--- a/fs/exfat/namei.c
++++ b/fs/exfat/namei.c
+@@ -1077,10 +1077,14 @@ static int exfat_rename_file(struct inode *inode, struct exfat_chain *p_dir,
+ 
+ 		epold = exfat_get_dentry(sb, p_dir, oldentry + 1, &old_bh,
+ 			&sector_old);
++		if (!epold)
++			return -EIO;
+ 		epnew = exfat_get_dentry(sb, p_dir, newentry + 1, &new_bh,
+ 			&sector_new);
+-		if (!epold || !epnew)
++		if (!epnew) {
++			brelse(old_bh);
+ 			return -EIO;
++		}
+ 
+ 		memcpy(epnew, epold, DENTRY_SIZE);
+ 		exfat_update_bh(sb, new_bh, sync);
+@@ -1161,10 +1165,14 @@ static int exfat_move_file(struct inode *inode, struct exfat_chain *p_olddir,
+ 
+ 	epmov = exfat_get_dentry(sb, p_olddir, oldentry + 1, &mov_bh,
+ 		&sector_mov);
++	if (!epmov)
++		return -EIO;
+ 	epnew = exfat_get_dentry(sb, p_newdir, newentry + 1, &new_bh,
+ 		&sector_new);
+-	if (!epmov || !epnew)
++	if (!epnew) {
++		brelse(mov_bh);
+ 		return -EIO;
++	}
+ 
+ 	memcpy(epnew, epmov, DENTRY_SIZE);
+ 	exfat_update_bh(sb, new_bh, IS_DIRSYNC(inode));
+-- 
+2.26.2
+
