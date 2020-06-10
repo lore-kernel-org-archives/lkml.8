@@ -2,174 +2,130 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1994C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C2CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A988B2078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:53:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SW9VZ65f"
+	by mail.kernel.org (Postfix) with ESMTP id B46F42078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:54:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591800877;
+	bh=h4GU7pIHSH5YCQVcvAzjRoaE8142Y+WoPe3aExRwEV4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=w0x+Epm2Mvl1qa0+7Vd4W76WQ8CLprXcxVxjBdimzsgKJ/ndHOrMkWkgSzzcAkAzt
+	 wM2qXXLdMwcrIteiyEEuwxAdVvAgTtUR30KDn5caReGKPiNIEWpDPxev7F5EyFZBwg
+	 MOPNKyZ8dYPjv7ZBwJ9tucMiUOncNIxmrBSxBjUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729972AbgFJOx5 (ORCPT
+        id S1727097AbgFJOyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 10:53:57 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:42683 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729945AbgFJOxv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 10:53:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591800829;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=IbTlbvpZrjIt//+klHw+rfy1TKM7Gl7DCLWB4vzgCck=;
-        b=SW9VZ65fSxcqT+4V6nlzi257B2k8CtFJP5wH2Wgl27nwUMzZ/dzte9Vt3dqSU8SSp6Owem
-        chNYU+tLPujGbbjb+LkgO279I8P1PquBVsfW7nijvz1vhCqcsSgUUBIvPN9qJGeLPmIerJ
-        d1jPQ0jMu3Xq2Y1+QvVKEcNjF6F/ZI4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-290-5TsqfYi9M4uGVu0V354nDg-1; Wed, 10 Jun 2020 10:53:43 -0400
-X-MC-Unique: 5TsqfYi9M4uGVu0V354nDg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 10 Jun 2020 10:54:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44132 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726908AbgFJOyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 10:54:35 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4264118A4175;
-        Wed, 10 Jun 2020 14:53:10 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.193.72])
-        by smtp.corp.redhat.com (Postfix) with SMTP id AD26E5C1BD;
-        Wed, 10 Jun 2020 14:53:07 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed, 10 Jun 2020 16:53:09 +0200 (CEST)
-Date:   Wed, 10 Jun 2020 16:53:06 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux- stable <stable@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        lkft-triage@lists.linaro.org
-Subject: Re: [PATCH 4.19 24/25] uprobes: ensure that uprobe->offset and
- ->ref_ctr_offset are properly aligned
-Message-ID: <20200610145305.GA3254@redhat.com>
-References: <20200609174048.576094775@linuxfoundation.org>
- <20200609174051.488794266@linuxfoundation.org>
- <CA+G9fYukN5V1z3g6Qwe9K5xnnXEuFafWdqGfDA1Wj2iVstoxfw@mail.gmail.com>
- <20200609190321.GA1046130@kroah.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id C009F2072F;
+        Wed, 10 Jun 2020 14:54:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591800875;
+        bh=h4GU7pIHSH5YCQVcvAzjRoaE8142Y+WoPe3aExRwEV4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eLXbmVHursVNIqb8JTBmWPsenKWOSKR6Eff0VmZEi5m5uq7Dh5sUSVrKCQhQ181bB
+         FCURlDVuhQUQeWxgxm4WaPOobuSG30vWKrhOrnDbMLuVaDIHmCyy1G76ucW7i5aFGp
+         2ownfxKK+kMNkyeROKw30C1cs9aRwOTq3G7r3ntM=
+Date:   Wed, 10 Jun 2020 16:54:29 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        linux-gpio@vger.kernel.org, patches@opensource.cirrus.com,
+        Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>,
+        Qiushi Wu <wu000273@umn.edu>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] gpio: arizona: put pm_runtime in case of failure
+Message-ID: <20200610145429.GB2102023@kroah.com>
+References: <11488e76-2ea0-6478-0800-deb0438f0136@web.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200609190321.GA1046130@kroah.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <11488e76-2ea0-6478-0800-deb0438f0136@web.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/09, Greg Kroah-Hartman wrote:
->
-> On Wed, Jun 10, 2020 at 12:25:56AM +0530, Naresh Kamboju wrote:
-> > > @@ -911,6 +907,15 @@ static int __uprobe_register(struct inod
-> > >         if (offset > i_size_read(inode))
-> > >                 return -EINVAL;
-> > >
-> > > +       /*
-> > > +        * This ensures that copy_from_page(), copy_to_page() and
-> > > +        * __update_ref_ctr() can't cross page boundary.
-> > > +        */
-> > > +       if (!IS_ALIGNED(offset, UPROBE_SWBP_INSN_SIZE))
-> > > +               return -EINVAL;
-> > > +       if (!IS_ALIGNED(ref_ctr_offset, sizeof(short)))
-> >
-> > stable-rc 4.19 build failure for x86_64, i386 and arm.
-> > make -sk KBUILD_BUILD_USER=TuxBuild -C/linux -j16 ARCH=x86 HOSTCC=gcc
-> > CC="sccache gcc" O=build
-> >
-> > 75 #
-> > 76 In file included from ../kernel/events/uprobes.c:25:
-> > 77 ../kernel/events/uprobes.c: In function ‘__uprobe_register’:
-> > 78 ../kernel/events/uprobes.c:916:18: error: ‘ref_ctr_offset’
-> > undeclared (first use in this function); did you mean
-> > ‘per_cpu_offset’?
-> > 79  916 | if (!IS_ALIGNED(ref_ctr_offset, sizeof(short)))
-> > 80  | ^~~~~~~~~~~~~~
-> > 81 ../include/linux/kernel.h:62:30: note: in definition of macro ‘IS_ALIGNED’
-> > 82  62 | #define IS_ALIGNED(x, a) (((x) & ((typeof(x))(a) - 1)) == 0)
-> > 83  | ^
-> > 84 ../kernel/events/uprobes.c:916:18: note: each undeclared identifier
-> > is reported only once for each function it appears in
-> > 85  916 | if (!IS_ALIGNED(ref_ctr_offset, sizeof(short)))
-> > 86  | ^~~~~~~~~~~~~~
-> > 87 ../include/linux/kernel.h:62:30: note: in definition of macro ‘IS_ALIGNED’
-> > 88  62 | #define IS_ALIGNED(x, a) (((x) & ((typeof(x))(a) - 1)) == 0)
-> > 89  | ^
-> > 90 make[3]: *** [../scripts/Makefile.build:304: kernel/events/uprobes.o] Error 1
-> >
-> > --
-> > Linaro LKFT
-> > https://lkft.linaro.org
->
-> Good catch, my builders just caught it too :(
->
-> 4.19, 4.14, 4.9, and 4.4 are all broken, I have a fix will test it and
-> push out -rc2 for all of those with it in a bit, thanks.
+On Fri, Jun 05, 2020 at 02:14:38PM +0200, Markus Elfring wrote:
+> I recommend to replace the word “pm_runtime” by the
+> alternative “PM run time system” in the patch subject.
+> 
+> 
+> > Calling pm_runtime_get_sync increments the counter even in case of
+> > failure, causing incorrect ref count if pm_runtime_put is not called in
+> > error handling paths.
+> 
+> Should the term “reference count” be used here?
+> 
+> 
+> > Call pm_runtime_put if pm_runtime_get_sync fails.
+> 
+> The diff hunks show an other function name.
+> 
+> 
+> …
+> > +++ b/drivers/gpio/gpio-arizona.c
+> > @@ -64,6 +64,7 @@  static int arizona_gpio_get(struct gpio_chip *chip, unsigned offset)
+> >  		ret = pm_runtime_get_sync(chip->parent);
+> >  		if (ret < 0) {
+> >  			dev_err(chip->parent, "Failed to resume: %d\n", ret);
+> > +			pm_runtime_put_autosuspend(chip->parent);
+> >  			return ret;
+> >  		}
+> 
+> You propose to use identical statements in three if branches.
+> Please add a corresponding jump target for better exception handling.
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/coding-style.rst?id=435faf5c218a47fd6258187f62d9bb1009717896#n455
+> 
+> 
+> Would you like to add the tag “Fixes” to the commit message?
+> 
+> 
+> I find it amazing how many questionable implementation details
+> you pointed out recently.
+> Were these contributions triggered by an evolving source code analysis
+> tool like CheQ?
+> https://github.com/umnsec/cheq/
+> 
+> Regards,
+> Markus
 
-Yes, SDT markers were added by 1cc33161a83d20b5462b1e93f95d3ce6388079ee in v4.20.
+Hi,
 
-See the patch for v4.4 below. It changes uprobe_register(), not __uprobe_register()
-to check IS_ALIGNED(offset, UPROBE_SWBP_INSN_SIZE) only.
+This is the semi-friendly patch-bot of Greg Kroah-Hartman.
 
-Greg, please let me know if you want me to send the patches for 4.9/4.14/4.19.
+Markus, you seem to have sent a nonsensical or otherwise pointless
+review comment to a patch submission on a Linux kernel developer mailing
+list.  I strongly suggest that you not do this anymore.  Please do not
+bother developers who are actively working to produce patches and
+features with comments that, in the end, are a waste of time.
 
-Oleg.
+Patch submitter, please ignore Markus's suggestion; you do not need to
+follow it at all.  The person/bot/AI that sent it is being ignored by
+almost all Linux kernel maintainers for having a persistent pattern of
+behavior of producing distracting and pointless commentary, and
+inability to adapt to feedback.  Please feel free to also ignore emails
+from them.
 
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -601,10 +601,6 @@ static int prepare_uprobe(struct uprobe *uprobe, struct file *file,
- 	if (ret)
- 		goto out;
- 
--	/* uprobe_write_opcode() assumes we don't cross page boundary */
--	BUG_ON((uprobe->offset & ~PAGE_MASK) +
--			UPROBE_SWBP_INSN_SIZE > PAGE_SIZE);
--
- 	smp_wmb(); /* pairs with rmb() in find_active_uprobe() */
- 	set_bit(UPROBE_COPY_INSN, &uprobe->flags);
- 
-@@ -883,6 +879,13 @@ int uprobe_register(struct inode *inode, loff_t offset, struct uprobe_consumer *
- 	if (offset > i_size_read(inode))
- 		return -EINVAL;
- 
-+	/*
-+	 * This ensures that copy_from_page() an copy_to_page()
-+	 * can't cross page boundary.
-+	 */
-+	if (!IS_ALIGNED(offset, UPROBE_SWBP_INSN_SIZE))
-+		return -EINVAL;
-+
-  retry:
- 	uprobe = alloc_uprobe(inode, offset);
- 	if (!uprobe)
-@@ -1691,6 +1694,9 @@ static int is_trap_at_addr(struct mm_struct *mm, unsigned long vaddr)
- 	uprobe_opcode_t opcode;
- 	int result;
- 
-+	if (WARN_ON_ONCE(!IS_ALIGNED(vaddr, UPROBE_SWBP_INSN_SIZE)))
-+		return -EINVAL;
-+
- 	pagefault_disable();
- 	result = __copy_from_user_inatomic(&opcode, (void __user*)vaddr,
- 							sizeof(opcode));
+thanks,
 
+greg k-h's patch email bot
