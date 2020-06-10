@@ -2,324 +2,87 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5ADDC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33478C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 968972074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAE6A20734
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:23:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="I4wK+ZGm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729094AbgFJMXt (ORCPT
+        id S1729106AbgFJMXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 08:23:49 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:42616 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728571AbgFJMXl (ORCPT
+        Wed, 10 Jun 2020 08:23:55 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:64875 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728571AbgFJMXx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 08:23:41 -0400
-Received: from 89-64-83-71.dynamic.chello.pl (89.64.83.71) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id 670f8dd764f22f7b; Wed, 10 Jun 2020 14:23:38 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>
-Cc:     rafael.j.wysocki@intel.com, Len Brown <lenb@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Ira Weiny <ira.weiny@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-nvdimm@lists.01.org, Bob Moore <robert.moore@intel.com>
-Subject: [RFT][PATCH 1/3] ACPICA: Defer unmapping of memory used in memory opregions
-Date:   Wed, 10 Jun 2020 14:20:46 +0200
-Message-ID: <4511068.xvW0IOXlyI@kreacher>
-In-Reply-To: <318372766.6LKUBsbRXE@kreacher>
-References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com> <318372766.6LKUBsbRXE@kreacher>
+        Wed, 10 Jun 2020 08:23:53 -0400
+X-UUID: e647361f7ba84d05b22da8c38c58befb-20200610
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=y0+ea5iXlIKqU9Ug7NsEdYKcsxBs8n5iuhNmG0dnYwY=;
+        b=I4wK+ZGm8EZ3imeXkdaiDZ+qha+BHuj/HRo1KKASZmyxDC4XO6bCDhKR1wH7fvWUSlNj3TvlqIGRhL5tdsKSCMj6ScvEtou/dDRAZ17paPyOuYb+TiUWXZYeV3BExE5slAUnNm+meiTaMG1/PtjRqK+sfJoCcEP+5buHDmkvoi0=;
+X-UUID: e647361f7ba84d05b22da8c38c58befb-20200610
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <frankie.chang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2120119367; Wed, 10 Jun 2020 20:23:50 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 10 Jun 2020 20:23:47 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 10 Jun 2020 20:23:47 +0800
+From:   Frankie Chang <Frankie.Chang@mediatek.com>
+To:     Todd Kjos <tkjos@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Joel Fernandes <joel@joelfernandes.org>,
+        Martijn Coenen <maco@android.com>,
+        =?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
+        Christian Brauner <christian@brauner.io>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        Jian-Min Liu <Jian-Min.Liu@mediatek.com>
+Subject: [PATCH v5] binder: transaction latency tracking for user build
+Date:   Wed, 10 Jun 2020 20:23:44 +0800
+Message-ID: <1591791827-23871-1-git-send-email-Frankie.Chang@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <20200507085544.GB1097552@kroah.com>
+References: <20200507085544.GB1097552@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-
-The ACPI OS layer in Linux uses RCU to protect the list of ACPI
-memory mappings from being walked while it is being updated.  Among
-other situations, that list can be walked in (NMI and non-NMI)
-interrupt context, so using a sleeping lock to protect it is not
-an option.
-
-However, performance issues related to the RCU usage in there
-appear, as described by Dan Williams:
-
-"Recently a performance problem was reported for a process invoking
-a non-trival ASL program. The method call in this case ends up
-repetitively triggering a call path like:
-
-    acpi_ex_store
-    acpi_ex_store_object_to_node
-    acpi_ex_write_data_to_field
-    acpi_ex_insert_into_field
-    acpi_ex_write_with_update_rule
-    acpi_ex_field_datum_io
-    acpi_ex_access_region
-    acpi_ev_address_space_dispatch
-    acpi_ex_system_memory_space_handler
-    acpi_os_map_cleanup.part.14
-    _synchronize_rcu_expedited.constprop.89
-    schedule
-
-The end result of frequent synchronize_rcu_expedited() invocation is
-tiny sub-millisecond spurts of execution where the scheduler freely
-migrates this apparently sleepy task. The overhead of frequent
-scheduler invocation multiplies the execution time by a factor
-of 2-3X."
-
-The source of this is that acpi_ex_system_memory_space_handler()
-unmaps the memory mapping currently cached by it at the access time
-it that mapping doesn't cover the memory area being accessed.
-Consequently, if there is a memory opregion with two fields
-separated from each other by an unused chunk of address space that
-is large enough for not being covered by a single mapping, and they
-happen to be used in an alternating pattern, the unmapping will
-occur on every acpi_ex_system_memory_space_handler() invocation for
-that memory opregion and that will lead to significant overhead.
-
-To remedy that, modify acpi_ex_system_memory_space_handler() so it
-can defer the unmapping of the memory mapped by it till it is
-deactivated if a special ACPI_OS_MAP_MEMORY_FAST_PATH() macro,
-allowing its users to get an extra reference to a known-existing
-memory mapping without actually mapping it again, is defined in the
-OS layer.
-
-Namely, make acpi_ex_system_memory_space_handler() manage an internal
-list of memory mappings covering all memory accesses through it that
-have occurred so far if ACPI_OS_MAP_MEMORY_FAST_PATH() is present, so
-that every new mapping is added to that list with an extra reference
-obtained via ACPI_OS_MAP_MEMORY_FAST_PATH() which prevents it from
-being unmapped by acpi_ex_system_memory_space_handler() itself.
-Of course, those mappings need to go away at one point, so change
-acpi_ev_system_memory_region_setup() to unmap them when the memory
-opregion holding them is deactivated.
-
-This should reduce the acpi_ex_system_memory_space_handler() overhead
-for memory opregions that do not appear and then go away immediately
-after a single access.  [of course, ACPI_OS_MAP_MEMORY_FAST_PATH()
-needs to be implemented by the OS for this change to take effect.]
-
-Reported-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/acpi/acpica/evrgnini.c | 14 +++++-
- drivers/acpi/acpica/exregion.c | 90 ++++++++++++++++++++++++++++++++--
- include/acpi/actypes.h         |  8 +++
- 3 files changed, 107 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/acpi/acpica/evrgnini.c b/drivers/acpi/acpica/evrgnini.c
-index aefc0145e583..48a5e6eaf9b9 100644
---- a/drivers/acpi/acpica/evrgnini.c
-+++ b/drivers/acpi/acpica/evrgnini.c
-@@ -38,6 +38,9 @@ acpi_ev_system_memory_region_setup(acpi_handle handle,
- 	union acpi_operand_object *region_desc =
- 	    (union acpi_operand_object *)handle;
- 	struct acpi_mem_space_context *local_region_context;
-+#ifdef ACPI_OS_MAP_MEMORY_FAST_PATH
-+	struct acpi_mem_mapping *mapping;
-+#endif
- 
- 	ACPI_FUNCTION_TRACE(ev_system_memory_region_setup);
- 
-@@ -46,13 +49,22 @@ acpi_ev_system_memory_region_setup(acpi_handle handle,
- 			local_region_context =
- 			    (struct acpi_mem_space_context *)*region_context;
- 
--			/* Delete a cached mapping if present */
-+			/* Delete memory mappings if present */
- 
- 			if (local_region_context->mapped_length) {
- 				acpi_os_unmap_memory(local_region_context->
- 						     mapped_logical_address,
- 						     local_region_context->
- 						     mapped_length);
-+#ifdef ACPI_OS_MAP_MEMORY_FAST_PATH
-+				while (local_region_context->first_mapping) {
-+					mapping = local_region_context->first_mapping;
-+					local_region_context->first_mapping = mapping->next;
-+					acpi_os_unmap_memory(mapping->logical_address,
-+							     mapping->length);
-+					ACPI_FREE(mapping);
-+				}
-+#endif
- 			}
- 			ACPI_FREE(local_region_context);
- 			*region_context = NULL;
-diff --git a/drivers/acpi/acpica/exregion.c b/drivers/acpi/acpica/exregion.c
-index d15a66de26c0..703868db9551 100644
---- a/drivers/acpi/acpica/exregion.c
-+++ b/drivers/acpi/acpica/exregion.c
-@@ -44,6 +44,9 @@ acpi_ex_system_memory_space_handler(u32 function,
- 	u32 length;
- 	acpi_size map_length;
- 	acpi_size page_boundary_map_length;
-+#ifdef ACPI_OS_MAP_MEMORY_FAST_PATH
-+	struct acpi_mem_mapping *mapping;
-+#endif
- #ifdef ACPI_MISALIGNMENT_NOT_SUPPORTED
- 	u32 remainder;
- #endif
-@@ -102,7 +105,7 @@ acpi_ex_system_memory_space_handler(u32 function,
- 					 mem_info->mapped_length))) {
- 		/*
- 		 * The request cannot be resolved by the current memory mapping;
--		 * Delete the existing mapping and create a new one.
-+		 * Delete the current cached mapping and get a new one.
- 		 */
- 		if (mem_info->mapped_length) {
- 
-@@ -112,6 +115,40 @@ acpi_ex_system_memory_space_handler(u32 function,
- 					     mem_info->mapped_length);
- 		}
- 
-+#ifdef ACPI_OS_MAP_MEMORY_FAST_PATH
-+		/*
-+		 * Look for an existing saved mapping matching the request at
-+		 * hand.  If found, bump up its reference counter in the OS
-+		 * layer, cache it and carry out the access.
-+		 */
-+		for (mapping = mem_info->first_mapping; mapping;
-+		     mapping = mapping->next) {
-+			if (address < mapping->physical_address)
-+				continue;
-+
-+			if ((u64)address + length >
-+					(u64)mapping->physical_address +
-+					mapping->length)
-+				continue;
-+
-+			/*
-+			 * When called on a known-existing memory mapping,
-+			 * ACPI_OS_MAP_MEMORY_FAST_PATH() must return the same
-+			 * logical address as before or NULL.
-+			 */
-+			if (!ACPI_OS_MAP_MEMORY_FAST_PATH(mapping->physical_address,
-+							  mapping->length))
-+				continue;
-+
-+			mem_info->mapped_logical_address =
-+						mapping->logical_address;
-+			mem_info->mapped_physical_address =
-+						mapping->physical_address;
-+			mem_info->mapped_length = mapping->length;
-+			goto access;
-+		}
-+#endif /* ACPI_OS_MAP_MEMORY_FAST_PATH */
-+
- 		/*
- 		 * October 2009: Attempt to map from the requested address to the
- 		 * end of the region. However, we will never map more than one
-@@ -143,9 +180,8 @@ acpi_ex_system_memory_space_handler(u32 function,
- 
- 		/* Create a new mapping starting at the address given */
- 
--		mem_info->mapped_logical_address =
--		    acpi_os_map_memory(address, map_length);
--		if (!mem_info->mapped_logical_address) {
-+		logical_addr_ptr = acpi_os_map_memory(address, map_length);
-+		if (!logical_addr_ptr) {
- 			ACPI_ERROR((AE_INFO,
- 				    "Could not map memory at 0x%8.8X%8.8X, size %u",
- 				    ACPI_FORMAT_UINT64(address),
-@@ -156,10 +192,56 @@ acpi_ex_system_memory_space_handler(u32 function,
- 
- 		/* Save the physical address and mapping size */
- 
-+		mem_info->mapped_logical_address = logical_addr_ptr;
- 		mem_info->mapped_physical_address = address;
- 		mem_info->mapped_length = map_length;
-+
-+#ifdef ACPI_OS_MAP_MEMORY_FAST_PATH
-+		/*
-+		 * Get memory to save the new mapping for removal at the
-+		 * operation region deactivation time.
-+		 */
-+		mapping = ACPI_ALLOCATE_ZEROED(sizeof(*mapping));
-+		if (!mapping) {
-+			/*
-+			 * No room to save the new mapping, but this is not
-+			 * critical.  Just log the error and carry out the
-+			 * access as requested.
-+			 */
-+			ACPI_ERROR((AE_INFO,
-+				    "Not enough memory to save memory mapping at 0x%8.8X%8.8X, size %u",
-+				    ACPI_FORMAT_UINT64(address),
-+				    (u32)map_length));
-+			goto access;
-+		}
-+		/*
-+		 * Bump up the mapping's reference counter in the OS layer to
-+		 * prevent it from getting dropped prematurely.
-+		 */
-+		if (!ACPI_OS_MAP_MEMORY_FAST_PATH(address, map_length)) {
-+			/*
-+			 * Something has gone wrong, but this is not critical.
-+			 * Log the error, free the memory that won't be used and
-+			 * carry out the access as requested.
-+			 */
-+			ACPI_ERROR((AE_INFO,
-+				    "Unable to save memory mapping at 0x%8.8X%8.8X, size %u",
-+				    ACPI_FORMAT_UINT64(address),
-+				    (u32)map_length));
-+			ACPI_FREE(mapping);
-+			goto access;
-+		}
-+		mapping->physical_address = address;
-+		mapping->logical_address = logical_addr_ptr;
-+		mapping->length = map_length;
-+		mapping->next = mem_info->first_mapping;
-+		mem_info->first_mapping = mapping;
- 	}
- 
-+access:
-+#else /* !ACPI_OS_MAP_MEMORY_FAST_PATH */
-+	}
-+#endif /* !ACPI_OS_MAP_MEMORY_FAST_PATH */
- 	/*
- 	 * Generate a logical pointer corresponding to the address we want to
- 	 * access
-diff --git a/include/acpi/actypes.h b/include/acpi/actypes.h
-index 4defed58ea33..64ab323b81b4 100644
---- a/include/acpi/actypes.h
-+++ b/include/acpi/actypes.h
-@@ -1200,12 +1200,20 @@ struct acpi_pci_id {
- 	u16 function;
- };
- 
-+struct acpi_mem_mapping {
-+	acpi_physical_address physical_address;
-+	u8 *logical_address;
-+	acpi_size length;
-+	struct acpi_mem_mapping *next;
-+};
-+
- struct acpi_mem_space_context {
- 	u32 length;
- 	acpi_physical_address address;
- 	acpi_physical_address mapped_physical_address;
- 	u8 *mapped_logical_address;
- 	acpi_size mapped_length;
-+	struct acpi_mem_mapping *first_mapping;
- };
- 
- /*
--- 
-2.26.2
-
-
-
+DQpGcmFua2llLkNoYW5nICgzKToNCiAgYmluZGVyOiBtb3ZlIHN0cnVjdHMgZnJvbSBjb3JlIGZp
+bGUgdG8gaGVhZGVyIGZpbGUNCiAgYmluZGVyOiBhZGQgdHJhY2UgYXQgZnJlZSB0cmFuc2FjdGlv
+bi4NCiAgYmluZGVyOiBhZGQgdHJhbnNhY3Rpb24gbGF0ZW5jeSB0cmFjZXINCg0KIGRyaXZlcnMv
+YW5kcm9pZC9LY29uZmlnICAgICAgICAgICAgICAgICB8ICAgOCArDQogZHJpdmVycy9hbmRyb2lk
+L01ha2VmaWxlICAgICAgICAgICAgICAgIHwgICAxICsNCiBkcml2ZXJzL2FuZHJvaWQvYmluZGVy
+LmMgICAgICAgICAgICAgICAgfCA0MDggKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCiBkcml2ZXJz
+L2FuZHJvaWQvYmluZGVyX2ludGVybmFsLmggICAgICAgfCA0MTYgKysrKysrKysrKysrKysrKysr
+KysrKysrDQogZHJpdmVycy9hbmRyb2lkL2JpbmRlcl9sYXRlbmN5X3RyYWNlci5jIHwgMTA4ICsr
+KysrKw0KIGRyaXZlcnMvYW5kcm9pZC9iaW5kZXJfdHJhY2UuaCAgICAgICAgICB8ICA0OSArKysN
+CiA2IGZpbGVzIGNoYW5nZWQsIDU4NiBpbnNlcnRpb25zKCspLCA0MDQgZGVsZXRpb25zKC0pICBj
+cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9hbmRyb2lkL2JpbmRlcl9sYXRlbmN5X3RyYWNlci5j
+DQoNCkNoYW5nZSBmcm9tIHY1Og0KICAtIGNoYW5nZSBjb25maWcgbmFtZSB0byB0aGUgcHJvcGVy
+IG9uZSwgQ09ORklHX0JJTkRFUl9UUkFOU0FDVElPTl9MQVRFTkNZX1RSQUNLSU5HLg0KICAtIGNo
+YW5nZSB0cmFjZXBvaW50IG5hbWUgdG8gbW9yZSBkZXNjcmlwdGl2ZSBvbmUsIHRyYWNlX2JpbmRl
+cl90eG5fbGF0ZW5jeV8oYWxsb2N8aW5mb3xmcmVlKQ0KICAtIGVuaGFuY2Ugc29tZSBsb2NrIHBy
+b3RlY3Rpb24uDQoNCkNoYW5nZSBmcm9tIHY0Og0KICAtIHNwbGl0IHVwIGludG8gcGF0Y2ggc2Vy
+aWVzLg0KDQpDaGFuZ2UgZnJvbSB2MzoNCiAgLSB1c2UgdHJhY2Vwb2ludHMgZm9yIGJpbmRlcl91
+cGRhdGVfaW5mbyBhbmQgcHJpbnRfYmluZGVyX3RyYW5zYWN0aW9uX2V4dCwNCiAgICBpbnN0ZWFk
+IG9mIGN1c3RvbSByZWdpc3RyYXRpb24gZnVuY3Rpb25zLg0KDQpDaGFuZ2UgZnJvbSB2MjoNCiAg
+LSBjcmVhdGUgdHJhbnNhY3Rpb24gbGF0ZW5jeSBtb2R1bGUgdG8gbW9uaXRvciBzbG93IHRyYW5z
+YWN0aW9uLg0KDQpDaGFuZ2UgZnJvbSB2MToNCiAgLSBmaXJzdCBwYXRjaHNldC4NCg==
 
