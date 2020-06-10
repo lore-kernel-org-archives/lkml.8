@@ -2,194 +2,220 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B0DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB3CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E41920760
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:11:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B90620825
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:12:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="unA+94pu"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="KWlDdEFg";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KcpPr/P4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbgFJHLD (ORCPT
+        id S1726310AbgFJHMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 03:11:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52060 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726105AbgFJHLC (ORCPT
+        Wed, 10 Jun 2020 03:12:42 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:37449 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726186AbgFJHMl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 03:11:02 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8495C03E96F
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 00:11:00 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id e4so1142767ljn.4
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 00:11:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=/Nm0Q3g/j/4B7bpmdYEoTXXfBDp03YrbvNYgYoKMM+w=;
-        b=unA+94puOuIKCYe3zEidd2KdidekSpcqwMz4XYwjesrEq8U/nbMwCjIScKcRWE+fqx
-         DMIQRGEOD8Wtvl370dIZrgr93AZODQIr4Rl80z9O7mltsXeQ+NyfVyKloSSOb9ymu1VL
-         NFQUN3+x1ocmF7bwUbnPrhTklt+OtaqqBkoOUOinkPEy44/qjnMOjB90ln0Ma7W67I2c
-         QKXRBiU551708fTTUPq9onrYNmLjkPX7tH7A3/m6n/JcZaHc9mV4qlrxuMYAxEJ21nQN
-         8ZpJprf9SWax2ea4ChpHsCq/7pHR286TeL5M9VA2UTeerPulhh5oyrDiyKxaUeqOO+M3
-         Px6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/Nm0Q3g/j/4B7bpmdYEoTXXfBDp03YrbvNYgYoKMM+w=;
-        b=GI2FA2wkXysbv+wbn22f0ve9x00faqIYE0v0hS8h79kjbykoL7MgHSOQIZNV83MCDO
-         5lQJ7pdGq+CXBNo1NnfeA61EccQTboaSk09KiOO9AGSVaiauH93dLcp+TFQw34bXs7Hh
-         GTku2QGewqCmXewZ9cFz8ooZgQ6r5/sf35KYOh+MVJmqqQJ4683Tyf5kYBOKyZeNRZFe
-         q/5/UiX3f6pRCPAf0yXGygdJU5vZVF1vle5TariaA3Eto5yVf8z47uiWa5dNEmY/0wtc
-         jwNPE8vXLV9yMcpKm1XWGJVibKoUchyJdfo1vXngSOHyyeSzPQ8e7gXpW75atuY4etYn
-         Ra6w==
-X-Gm-Message-State: AOAM530BePGR5bITYCwZPaNKSZC/aRJfAdJ2b1ICtm8MdELEPclXJG1w
-        f1Z684NoVuNhI0IlcfrfgsyzrR1bnkO+mIHPF57UnA==
-X-Google-Smtp-Source: ABdhPJx4wXpcSfxXsIqJjxGcGMI5lPyrN+46lFb8hyGL0/Q0SVTemXxEOqh5tlDMIiRl50LqgiLM5ainhuQqhlUm51I=
-X-Received: by 2002:a2e:984b:: with SMTP id e11mr941262ljj.358.1591773059027;
- Wed, 10 Jun 2020 00:10:59 -0700 (PDT)
+        Wed, 10 Jun 2020 03:12:41 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 5639C5C00B5;
+        Wed, 10 Jun 2020 03:12:40 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 10 Jun 2020 03:12:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=g01DrXYlRa2+6yU8hRXD5BjQ2RT
+        tnEPv0eJCUBaLaMk=; b=KWlDdEFghWE2OvR+qAxpbQ03RBir4WRoU6IDMf8zsUR
+        Uxf9nZd0FfTOe29ko23YeXIwS3zOinpvUa1JwzQHC+f/hChipKBmiTJIlwdQVTU8
+        OWTIl4Tf6KeEZyaH/7dDeZGxqrP9QutK13BUzTBjis428I9W7OpkeLxHBLQYYgQv
+        3ZvEo+PLnFUV5sD/v+t0WuOHT/M1Rv0XlGii76c5pEAmviwylg2+gImTLWHsI9oX
+        05lLzqIm3WmFyZPR3l6H1MGDoozqLLfoK6oXXgfJPT8ws4xco6x7rJ4H+xiZ1zXu
+        fbsL7Vq3nUGAjARkRoIaJaRrt3Z5z0skUzKBHLBrxiw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=g01DrX
+        YlRa2+6yU8hRXD5BjQ2RTtnEPv0eJCUBaLaMk=; b=KcpPr/P4/zq6AHvPomZ81x
+        Q9HS5pDooERZzDlFaJ2rPOTH5LvV1WNP9N5BO5Bf9dOp0xbeZDc+e9zEwFqSqH9h
+        8dsnpar9uZBgrLm/kxS93ufiiSl3A9SPa1tDMw9b8uuN4tX9hzRoYNN5tvnBRORM
+        IKi1xxTpIeEfRirFY66/V2yKuD1nmjZHWhwj2O9qk0qztlqjg/bRdN1Tq7/p/RYS
+        qirSmpBGV3lVOTM1/aamxmUoox+76i9AthRnrpcgU4Ck49ytcfEc0uyxLfgoI3w5
+        Zb0pFhlbdL+AlbLIwwfIAhDntTq/jfSDIJAG1RNfNm7/wttd0ejxS6BQ3KxNADMQ
+        ==
+X-ME-Sender: <xms:5ofgXmtXoZ55T9tagIPGTNrI8lk5CNU1bOr3J05dbyy8JIvDk77NBw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudehhedguddukecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujgesghdtreertddtjeenucfhrhhomhepofgrgihi
+    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
+    htthgvrhhnpeeutdfgjeeuudehvefgvedvtedtudelfffgffekledtffekgedukeejueev
+    ieegudenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtne
+    curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:5ofgXrd21ielAMKgEjWS194dGk8YMboKPW7kdkIK4RkrcjF8jvzopg>
+    <xmx:5ofgXhxODb-380ErNpvqA3GMia1xsEgE-ufLSfQHuHD-IGx9eMIq-g>
+    <xmx:5ofgXhPWittqnw_hS4KGfzNPR9AmZRMYT_mkjPKVqHdLNhuL2r6eDA>
+    <xmx:6IfgXtb07dbhuPUaZGT0ycf4z7BCb4Mi1XJsUSn-H-pxBAeYvxrmDw>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 3CFF7328005E;
+        Wed, 10 Jun 2020 03:12:38 -0400 (EDT)
+Date:   Wed, 10 Jun 2020 09:12:33 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Chen-Yu Tsai <wens@csie.org>
+Cc:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/sun4i: hdmi ddc clk: Fix size of m divider
+Message-ID: <20200610071233.umk5pfrimluv2sd4@gilmour.lan>
+References: <20200413095457.1176754-1-jernej.skrabec@siol.net>
+ <1742537.tdWV9SEqCh@jernej-laptop>
+ <20200415104214.ndkkxfnufkxgu53r@gilmour.lan>
+ <1785843.taCxCBeP46@jernej-laptop>
+ <20200422092300.444wcaurdwyrorow@gilmour.lan>
+ <CAGb2v64++4rxcwdQXgz30vNbRRR5+tXehP-CFu9T7Lx7K_QOOw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200609174052.628006868@linuxfoundation.org>
-In-Reply-To: <20200609174052.628006868@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 10 Jun 2020 12:40:47 +0530
-Message-ID: <CA+G9fYtVXRzY0aWpamnK0WcqE=hLKZwBMPKasDPoHZJPAD=sGw@mail.gmail.com>
-Subject: Re: [PATCH 5.4 00/34] 5.4.46-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="aika3toolbzzx6k2"
+Content-Disposition: inline
+In-Reply-To: <CAGb2v64++4rxcwdQXgz30vNbRRR5+tXehP-CFu9T7Lx7K_QOOw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 9 Jun 2020 at 23:22, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.4.46 release.
-> There are 34 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 11 Jun 2020 17:40:27 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.4.46-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+--aika3toolbzzx6k2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Summary
-------------------------------------------------------------------------
+On Thu, Jun 04, 2020 at 01:19:32PM +0800, Chen-Yu Tsai wrote:
+> On Wed, Apr 22, 2020 at 5:23 PM Maxime Ripard <maxime@cerno.tech> wrote:
+> >
+> > Hi,
+> >
+> > On Wed, Apr 15, 2020 at 07:52:28PM +0200, Jernej =C5=A0krabec wrote:
+> > > Dne sreda, 15. april 2020 ob 12:42:14 CEST je Maxime Ripard napisal(a=
+):
+> > > > On Mon, Apr 13, 2020 at 06:09:08PM +0200, Jernej =C5=A0krabec wrote:
+> > > > > Dne ponedeljek, 13. april 2020 ob 16:12:39 CEST je Chen-Yu Tsai
+> > > napisal(a):
+> > > > > > On Mon, Apr 13, 2020 at 6:11 PM Chen-Yu Tsai <wens@csie.org> wr=
+ote:
+> > > > > > > On Mon, Apr 13, 2020 at 5:55 PM Jernej Skrabec
+> > > > > > > <jernej.skrabec@siol.net>
+> > > > >
+> > > > > wrote:
+> > > > > > > > m divider in DDC clock register is 4 bits wide. Fix that.
+> > > > > > > >
+> > > > > > > > Fixes: 9c5681011a0c ("drm/sun4i: Add HDMI support")
+> > > > > > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > > > > >
+> > > > > > > Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+> > > > > >
+> > > > > > Cc stable?
+> > > > >
+> > > > > I don't think it's necessary:
+> > > > > 1. It doesn't change much (anything?) for me when reading EDID. I=
+ don't
+> > > > > think it's super important to have precise DDC clock in order to =
+properly
+> > > > > read EDID. 2. No matter if it has "Cc stable" tag or not, it will=
+ be
+> > > > > eventually picked for stable due to fixes tag.
+> > > > >
+> > > > > This was only small observation when I was researching EDID reado=
+ut issue
+> > > > > on A20 board, but sadly, I wasn't able to figure out why reading =
+it
+> > > > > sometimes fails. I noticed similar issue on SoCs with DE2 (most
+> > > > > prominently on OrangePi PC2 - H5), but there was easy workaround =
+- I just
+> > > > > disabled video driver in U- Boot. However, if A20 display driver =
+gets
+> > > > > disabled in U-Boot, it totally breaks video output on my TV when =
+Linux
+> > > > > boots (no output). I guess there is more fundamental problem with=
+ clocks
+> > > > > than just field size. I think we should add more constraints in c=
+lock
+> > > > > driver, like preset some clock parents and not allow to change pa=
+rents
+> > > > > when setting rate, but carefully, so simplefb doesn't break. Such
+> > > > > constraints should also solve problems with dual head setups.
+> > > > I disagree here. Doing all sorts of special case just doesn't scale,
+> > > > and we'll never have the special cases sorted out on all the boards
+> > > > (and it's a nightmare to maintain).
+> > > >
+> > > > Especially since it's basically putting a blanket over the actual
+> > > > issue and looking the other way. If there's something wrong with how
+> > > > we deal with (re)parenting, we should fix that. It impacts more than
+> > > > just DRM, and all the SoCs.
+> > >
+> > > I agree with you that automatic solution would be best, but I just do=
+n't see
+> > > it how it would be done.
+> >
+> > > Dual head display pipeline is pretty complex for clock driver to get =
+it right
+> > > on it's own. There are different possible setups and some of them are=
+ hot
+> > > pluggable, like HDMI.
+> >
+> > Do you have an actual scenario that is broken right now?
+> >
+> > > And there are also SoC specific quirks, like A64, where for some reas=
+on, MIPI
+> > > DPHY and HDMI PHY share same clock parent - PLL_VIDEO0. Technically, =
+MIPI DPHY
+> > > can be clocked from PLL_PERIPH0 (fixed to 600 MHz), but that's not re=
+ally
+> > > helpful. I'm not even sure if there is any good solution to this - ce=
+rtainly
+> > > HDMI and MIPI can't claim exclusivity and somehow best common rate mu=
+st be
+> > > found for PLL_VIDEO0, if that's even possible.
+> >
+> > IIRC the DSI DPHY needs a clock running at 297MHz, which is pretty much=
+ what the
+> > HDMI PHY should need too (or 148.5, but that's pretty easy to generate =
+=66rom
+> > 297). So which problem do we have there?
+> >
+> > > I was sure that HDMI PHY on A64 can be clocked from PLL_VIDEO1, which=
+ would
+> > > solve main issue, but to date, I didn't find any way to do that.
+> > >
+> > > That's pretty off topic, so I hope original patch can be merged as-is.
+> >
+> > It does, sorry
+> >
+> > Acked-by: Maxime Ripard <maxime@cerno.tech>
+>=20
+> Looks like this hasn't landed yet.
 
-kernel: 5.4.46-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.4.y
-git commit: 12a5ce113626ce8208aef76d4d2e9fc93ea48ddf
-git describe: v5.4.45-35-g12a5ce113626
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
-ld/v5.4.45-35-g12a5ce113626
+I just applied it.
 
-No regressions (compared to build v5.4.44-39-g0e4e419d5fc3)
+Maxime
 
-No fixes (compared to build v5.4.44-39-g0e4e419d5fc3)
+--aika3toolbzzx6k2
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-Ran 29093 total tests in the following environments and test suites.
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXuCH4QAKCRDj7w1vZxhR
+xReXAP9d6b29GcEjh727p/kA9oAycPXHl/4zoa+y+ez+lswzmwD+NB0Yb6YdZty0
+p+ceaQdycWA9uZfPAwFAra/NTM/IwQI=
+=63/4
+-----END PGP SIGNATURE-----
 
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-- x86-kasan
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* kselftest/net
-* libgpiod
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-sched-tests
-* perf
-* v4l2-compliance
-* kvm-unit-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* ltp-controllers-tests
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-native/net
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-* kselftest-vsyscall-mode-none/net
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+--aika3toolbzzx6k2--
