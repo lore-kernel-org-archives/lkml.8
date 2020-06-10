@@ -2,109 +2,65 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD50EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40CCDC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9ABD22081A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:59:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O5iZC/al"
+	by mail.kernel.org (Postfix) with ESMTP id 2431820760
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:08:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726319AbgFJG7F (ORCPT
+        id S1726264AbgFJHGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 02:59:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50218 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726109AbgFJG7D (ORCPT
+        Wed, 10 Jun 2020 03:06:21 -0400
+Received: from smtprelay0093.hostedemail.com ([216.40.44.93]:58456 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726095AbgFJHGU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 02:59:03 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F001EC03E96B;
-        Tue,  9 Jun 2020 23:59:01 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id t7so608760plr.0;
-        Tue, 09 Jun 2020 23:59:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=vRsVZdxVChzNJb9Z5j+bcaBi3tL1n0C5lCdP2Lf/NZ8=;
-        b=O5iZC/alEUVKVGDA0/rkEARQFAsb5kuo0Mv7VbbMmm6GYEWg/dKJv3A7sQrCxjhqiE
-         QRFwBGqU5dzXyCchqLg787rMvWCGTzDgqW9wz9LLiRx8Qm/QDlDz6RE2lcYGNZwLKGhH
-         vnS5nEucUHZmU80fXNNBsloivojYbJQmeeaOhMu+rZL1+h4ltWGGQZrWpov6Ehwdipw5
-         H1QSb7xf4AEPERDMeBzo8X8pKsSDewH3ltR2mr8P82N48RrHtEgO+W+At8ZGdsBe49OC
-         cuwLzpUO008Uf9dwCFgZD/bte5Q104NmSfDtQAsy4V8/jvjqm84bN5+kcPtLkTrXeoJk
-         xCGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=vRsVZdxVChzNJb9Z5j+bcaBi3tL1n0C5lCdP2Lf/NZ8=;
-        b=pXSWa78GADa1X2NeHD9InFKzG6CRmdrkhDb0QBVDBH2utc1+82mDSbfJ6HWvpTtmyy
-         Gtp1dTjxM/7pEuqir+X/c5FgwlmeIp/76eU4A10BLsNDUzI+nnrqCmeSOhivQPN4Bb3Z
-         cteJ9phDE2JQlymGgQyNodS3zVw+RMsRET1/VH1JRtgVTHBDK8QR6cqsLhEtHedFud8/
-         4L34HX31GU3DmRtXc+qavA8UuhiqB39kSHzxqnmwArEFkXi8BbP0mvfRupLVVfA0rFsI
-         ZVCB/arIas3L7sZ7T2LSQqw1AWdsV3jNpNqs5jcz+EmczteJNlgFkdK578tvqrdpIb8A
-         l2GA==
-X-Gm-Message-State: AOAM533rRf0CMSeB5JrJ3Dlzc4Lh4K1+mez62ecvRn+/j5dfSnOjrz6W
-        KjmDPlsK1QkMMhUOXU7CJEuhL8Ex
-X-Google-Smtp-Source: ABdhPJxZdcu8bXlQbSphOj5gIIoIsWc/lIo7+f6XUAxq1qltZ1/3LieeMJX/Oi2YUYI3BTL839wmVg==
-X-Received: by 2002:a17:90a:a005:: with SMTP id q5mr1641452pjp.219.1591772341211;
-        Tue, 09 Jun 2020 23:59:01 -0700 (PDT)
-Received: from ZB-PF114XEA.360buyad.local ([103.90.76.242])
-        by smtp.gmail.com with ESMTPSA id v9sm11948108pfe.198.2020.06.09.23.58.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 23:59:00 -0700 (PDT)
-From:   Zhenzhong Duan <zhenzhong.duan@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org
-Cc:     tony.luck@intel.com, bp@alien8.de, mchehab@kernel.org,
-        james.morse@arm.com, rrichter@marvell.com,
-        Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Subject: [PATCH] EDAC/mc: call edac_inc_ue_error() before panic
-Date:   Wed, 10 Jun 2020 14:58:46 +0800
-Message-Id: <20200610065846.3626-2-zhenzhong.duan@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200610065846.3626-1-zhenzhong.duan@gmail.com>
-References: <20200610065846.3626-1-zhenzhong.duan@gmail.com>
+        Wed, 10 Jun 2020 03:06:20 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id C2977180A7FF8;
+        Wed, 10 Jun 2020 07:06:19 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: art91_5d16ec026dc9
+X-Filterd-Recvd-Size: 1435
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf01.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 10 Jun 2020 07:06:18 +0000 (UTC)
+Message-ID: <21c42f96b7f2b105e863a9f4ddf87f4e95a86393.camel@perches.com>
+Subject: Re: [PATCH v3 0/2] Recommend blocklist/allowlist instead of
+ blacklist/whitelist
+From:   Joe Perches <joe@perches.com>
+To:     SeongJae Park <sjpark@amazon.com>, akpm@linux-foundation.org,
+        apw@canonical.com
+Cc:     colin.king@canonical.com, sj38.park@gmail.com,
+        linux-kernel@vger.kernel.org, SeongJae Park <sjpark@amazon.de>
+Date:   Wed, 10 Jun 2020 00:06:17 -0700
+In-Reply-To: <20200610065223.29894-1-sjpark@amazon.com>
+References: <20200610065223.29894-1-sjpark@amazon.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.2-0ubuntu1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-By calling edac_inc_ue_error() before panic, we get a correct UE error
-count for core dump analysis.
+On Wed, 2020-06-10 at 08:52 +0200, SeongJae Park wrote:
+> This patchset 1) adds support of deprecated terms in the 'checkpatch.pl'
+> and 2) set the 'blacklist' and 'whitelist' as deprecated with
+> replacement suggestion of 'blocklist' and 'allowlist', because the
+> suggestions are incontrovertible, doesn't make people hurt, and more
+> self-explanatory.
 
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
----
- drivers/edac/edac_mc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I don't care for the politics of the patch myself.
 
-diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
-index 75ede27..c1f23c2 100644
---- a/drivers/edac/edac_mc.c
-+++ b/drivers/edac/edac_mc.c
-@@ -1011,6 +1011,8 @@ static void edac_ue_error(struct edac_raw_error_desc *e)
- 			e->other_detail);
- 	}
- 
-+	edac_inc_ue_error(e);
-+
- 	if (edac_mc_get_panic_on_ue()) {
- 		panic("UE %s%son %s (%s page:0x%lx offset:0x%lx grain:%ld%s%s)\n",
- 			e->msg,
-@@ -1020,8 +1022,6 @@ static void edac_ue_error(struct edac_raw_error_desc *e)
- 			*e->other_detail ? " - " : "",
- 			e->other_detail);
- 	}
--
--	edac_inc_ue_error(e);
- }
- 
- static void edac_inc_csrow(struct edac_raw_error_desc *e, int row, int chan)
--- 
-1.8.3.1
+From a technical perspective, it may be better to
+have a single routine for both spelling and whatever
+this is called.
+
 
