@@ -2,120 +2,130 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3CCEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FDFEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:29:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76D54206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:25:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B41B2070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:29:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ytsotbX4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ICDG62e1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbgFJRZD (ORCPT
+        id S1726533AbgFJR3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 13:25:03 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:54764 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726095AbgFJRZC (ORCPT
+        Wed, 10 Jun 2020 13:29:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35014 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726441AbgFJR3D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 13:25:02 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05AHMLs9089394;
-        Wed, 10 Jun 2020 17:24:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type : in-reply-to;
- s=corp-2020-01-29; bh=6OQAg/GSkape6JgCC1S+D4gsmrbv8peyHFGiheXUuGY=;
- b=ytsotbX4vVC1gMQZ6wNSB5HRCXhWyIZPwRFurGaulP75U8v+6FR0ShkmKGm25HqUor5x
- EQWYCxvnkK2ZZUO/GFBPj7NvRGX21RTmlZSTv/r/VVPqrGF3Q9geEJFDnvya1pgHL6+D
- Suda45vGCnRUH6KKnvblowVNXVrZGw19kmWpZDAPWqY1WvrVaOZgT71oGoYPWa0jxVoS
- K7OB30e4Wn31aZts5TprlItME2C9EHFfXt0sCJUfoAYcmQhQXTPtbrB7/3kR19gKXqGQ
- jMr+UoePjjo/vg5lG4k0/0zBzc1sLGvm3TVSg4eueYdc54tUbw100ISP9np15GHHH/+f Ww== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 31g2jrbp1m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 10 Jun 2020 17:24:59 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05AHNjJo099715;
-        Wed, 10 Jun 2020 17:24:59 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 31gn2ytq9v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 10 Jun 2020 17:24:59 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05AHOw9f013073;
-        Wed, 10 Jun 2020 17:24:58 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 10 Jun 2020 10:24:57 -0700
-Date:   Wed, 10 Jun 2020 20:24:51 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Joshua Morris <josh.h.morris@us.ibm.com>,
-        Philip Kelleher <pjk1939@linux.ibm.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH 2/2] rsxx: Return -EFAULT if copy_to_user() fails
-Message-ID: <20200610172451.GC90634@mwanda>
+        Wed, 10 Jun 2020 13:29:03 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6C16C03E96B;
+        Wed, 10 Jun 2020 10:29:02 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id l26so2579048wme.3;
+        Wed, 10 Jun 2020 10:29:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=4fr+UL9O2HF9K/lBv8pVMY6XaRGJvWXm1sUH2VFByQY=;
+        b=ICDG62e1fP7sxVuWYjU4w++AldrRE/9kmK61YNF7cdPmqrwYd9/ju2jxHEvWTZdZXx
+         DV6oDoTm1MZmmgD/jDCT0mLjdSdmQTVNEC958giX5T51ZUoE6a7xnMg+jAyjlKOyr9Bm
+         CF6MuB4fXtlLjUZqrhbM3KzmRvNNZ9kpfxzNRorJ+H6tWfBp4pRP2wiEfsWyXlsSETIL
+         jqhM53H0+xW74JdyHhm4mmBwitDr0WuwAzc6csb5M8Fm0V8M/KaWf51UPDfHp2lda8Kp
+         5necvjI1Ncuh4b7P/SbP3qyDkCFdzmYJqrfhQphqjejBXcIQ/8mAI7K4h2EmcoEt8VC6
+         m9WQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=4fr+UL9O2HF9K/lBv8pVMY6XaRGJvWXm1sUH2VFByQY=;
+        b=i6HLattSK17YbWHAKP0eyp6wMXecYLDYTe2o6I9982H1B+KCWLt+nxWU1RPT9wBqZj
+         IcscFcfxamidHlVQcAma7N4gO8na85kTwxBsjTzFFO/HRJ4PGo7RuUhl5dGn88OHteli
+         IrB326ESmLYVQwFVe29O9eGa8v/ahyjR7ImGkx6vS+8ig0vUgPJ6wFeN5Tz84tlkdTNY
+         M25c8/RGPQX095AWbejsJRbU5NiWpBQVXjMg61vPwQrSYkVol3593NltiWwHIEW5IBju
+         S4nsyYcqBfsCqcBTCMbC7lFTwNjY2SxiOchHSJGK2quy0JhWV9muW7gP7JUt3yA9zAS7
+         3JKg==
+X-Gm-Message-State: AOAM532g419S0l+uPbij0fCzRycsnjBcWctgXHVC50wVoffHAL1SNHEd
+        RPF2ig/sDs6kQXrcUVsOHQA=
+X-Google-Smtp-Source: ABdhPJxJAXhHMNsMi0fgj9mX+Pbnob9fP2EQmYvwQkhuo/R5EWo4rp96a+jkyScYU/aT3XEB2VQ93g==
+X-Received: by 2002:a7b:cbce:: with SMTP id n14mr4378632wmi.66.1591810141255;
+        Wed, 10 Jun 2020 10:29:01 -0700 (PDT)
+Received: from skynet.lan (28.red-83-49-61.dynamicip.rima-tde.net. [83.49.61.28])
+        by smtp.gmail.com with ESMTPSA id h188sm568551wmh.2.2020.06.10.10.29.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2020 10:29:00 -0700 (PDT)
+From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+To:     p.zabel@pengutronix.de, robh+dt@kernel.org,
+        tsbogend@alpha.franken.de, f.fainelli@gmail.com,
+        jonas.gorski@gmail.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com
+Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+Subject: [PATCH v3 0/9] bmips: add bcm6345 reset controller support
+Date:   Wed, 10 Jun 2020 19:28:50 +0200
+Message-Id: <20200610172859.466334-1-noltari@gmail.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200609160244.4139366-1-noltari@gmail.com>
+References: <20200609160244.4139366-1-noltari@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200610172359.GB90634@mwanda>
-X-Mailer: git-send-email haha only kidding
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9648 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 malwarescore=0
- bulkscore=0 adultscore=0 mlxlogscore=999 spamscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006100133
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9648 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
- cotscore=-2147483648 priorityscore=1501 spamscore=0 suspectscore=0
- lowpriorityscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0 mlxscore=0
- phishscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006100133
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The copy_to_user() function returns the number of bytes remaining but
-we want to return -EFAULT to the user if it can't complete the copy.
-The "st" variable only holds zero on success or negative error codes on
-failure so the type should be int.
+BCM63xx SoCs have a reset controller for certain components.
 
-Fixes: 36f988e978f8 ("rsxx: Adding in debugfs entries.")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- drivers/block/rsxx/core.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+v3: using reset-simple isn't possible since sleeping after performing the
+    reset is also needed.
+    Add BCM63268 and BCM6318 support.
+v2: add compatibility to reset-simple instead of adding a new driver.
 
-diff --git a/drivers/block/rsxx/core.c b/drivers/block/rsxx/core.c
-index 6207449fa716f..558fa263acbc0 100644
---- a/drivers/block/rsxx/core.c
-+++ b/drivers/block/rsxx/core.c
-@@ -165,15 +165,17 @@ static ssize_t rsxx_cram_read(struct file *fp, char __user *ubuf,
- {
- 	struct rsxx_cardinfo *card = file_inode(fp)->i_private;
- 	char *buf;
--	ssize_t st;
-+	int st;
- 
- 	buf = kzalloc(cnt, GFP_KERNEL);
- 	if (!buf)
- 		return -ENOMEM;
- 
- 	st = rsxx_creg_read(card, CREG_ADD_CRAM + (u32)*ppos, cnt, buf, 1);
--	if (!st)
--		st = copy_to_user(ubuf, buf, cnt);
-+	if (!st) {
-+		if (copy_to_user(ubuf, buf, cnt))
-+			st = -EFAULT;
-+	}
- 	kfree(buf);
- 	if (st)
- 		return st;
+Álvaro Fernández Rojas (9):
+  mips: bmips: select ARCH_HAS_RESET_CONTROLLER
+  dt-bindings: reset: add BCM6345 reset controller bindings
+  reset: add BCM6345 reset controller driver
+  mips: bmips: dts: add BCM6328 reset controller support
+  mips: bmips: dts: add BCM6358 reset controller support
+  mips: bmips: dts: add BCM6362 reset controller support
+  mips: bmips: dts: add BCM6368 reset controller support
+  mips: bmips: dts: add BCM63268 reset controller support
+  mips: bmips: add BCM6318 reset controller definitions
+
+ .../bindings/reset/brcm,bcm6345-reset.yaml    |  37 +++++
+ arch/mips/Kconfig                             |   1 +
+ arch/mips/boot/dts/brcm/bcm63268.dtsi         |   6 +
+ arch/mips/boot/dts/brcm/bcm6328.dtsi          |   6 +
+ arch/mips/boot/dts/brcm/bcm6358.dtsi          |   6 +
+ arch/mips/boot/dts/brcm/bcm6362.dtsi          |   6 +
+ arch/mips/boot/dts/brcm/bcm6368.dtsi          |   6 +
+ drivers/reset/Kconfig                         |   7 +
+ drivers/reset/Makefile                        |   1 +
+ drivers/reset/reset-bcm6345.c                 | 135 ++++++++++++++++++
+ include/dt-bindings/reset/bcm6318-reset.h     |  20 +++
+ include/dt-bindings/reset/bcm63268-reset.h    |  26 ++++
+ include/dt-bindings/reset/bcm6328-reset.h     |  18 +++
+ include/dt-bindings/reset/bcm6358-reset.h     |  15 ++
+ include/dt-bindings/reset/bcm6362-reset.h     |  22 +++
+ include/dt-bindings/reset/bcm6368-reset.h     |  16 +++
+ 16 files changed, 328 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.yaml
+ create mode 100644 drivers/reset/reset-bcm6345.c
+ create mode 100644 include/dt-bindings/reset/bcm6318-reset.h
+ create mode 100644 include/dt-bindings/reset/bcm63268-reset.h
+ create mode 100644 include/dt-bindings/reset/bcm6328-reset.h
+ create mode 100644 include/dt-bindings/reset/bcm6358-reset.h
+ create mode 100644 include/dt-bindings/reset/bcm6362-reset.h
+ create mode 100644 include/dt-bindings/reset/bcm6368-reset.h
+
 -- 
 2.26.2
 
