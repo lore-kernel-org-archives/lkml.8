@@ -2,138 +2,91 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA12DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F6DBC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E524206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:55:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20108206F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:56:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591797403;
+	bh=1Cj2Fu88LV4A1GgSyK0XUoUZIOiwmlOBdE+eZjQYBE8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=utyBiInTZukMYyndgm3VJDrJR/9J89hrIAlXWpDZpYv4p6W7C7nixsb6tvhiMaUSx
+	 a7a3rd/C9Ep5cJqSrCw73isNcaDUbZhZMd2LdxYcwDJL3xA65DSkEEbAg6KD5yJYZg
+	 HcKUfTSdWqJtUEsTF+QqdNtVCQ/HO+NIXv5e9/f8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729584AbgFJNzH (ORCPT
+        id S1729595AbgFJN4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 09:55:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58322 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726449AbgFJNzH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 09:55:07 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCCADC03E96B
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 06:55:06 -0700 (PDT)
-Received: from localhost ([127.0.0.1] helo=vostro)
-        by Galois.linutronix.de with esmtps (TLS1.2:RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1jj1C1-0005zZ-Ex; Wed, 10 Jun 2020 15:55:01 +0200
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Paul McKenney <paulmck@kernel.org>
-Subject: Re: blk->id read race: was: [PATCH v2 2/3] printk: add lockless buffer
-References: <20200501094010.17694-1-john.ogness@linutronix.de>
-        <20200501094010.17694-3-john.ogness@linutronix.de>
-        <20200609071030.GA23752@linux-b0ei>
-        <87tuzkuxtw.fsf@vostro.fn.ogness.net>
-        <20200610084248.GA4311@linux-b0ei>
-Date:   Wed, 10 Jun 2020 15:55:00 +0200
-In-Reply-To: <20200610084248.GA4311@linux-b0ei> (Petr Mladek's message of
-        "Wed, 10 Jun 2020 10:42:48 +0200")
-Message-ID: <87k10fowjv.fsf@vostro.fn.ogness.net>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 10 Jun 2020 09:56:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47022 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726387AbgFJN4k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 09:56:40 -0400
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 293A4206F7;
+        Wed, 10 Jun 2020 13:56:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591797400;
+        bh=1Cj2Fu88LV4A1GgSyK0XUoUZIOiwmlOBdE+eZjQYBE8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cxfDQV9c7q2CTPvH9bVVbFxTVYhTD/TelQG5Yq27BP7A4hg/tJgMFNm8ivwMarGjO
+         //yBZphNP8a1ZofgNgh46xyBh6cjhJOMoAjWU/nRxi9KUj5kZvUQmlGHWfusM5T/1r
+         qGtTogDeicpAsCSSiGjscw3KPco8jXPwv6C5TMzs=
+Received: by mail-ot1-f53.google.com with SMTP id k15so1749089otp.8;
+        Wed, 10 Jun 2020 06:56:40 -0700 (PDT)
+X-Gm-Message-State: AOAM531m1dZIFb+1rkI4bgBKmhKAaakL2oXHRFqarWQQcjeb7xzSCGyZ
+        z3xE15fSJTypdATcudAE3ub/b6BYsO6mgi4WEQ==
+X-Google-Smtp-Source: ABdhPJzmcV+9T4BOYZL9yyzPscKPz9ct+kzL7+78ybw2OrqunkEGa/Wxk94oESNvy8oQbfWj8DD4LjEjvLDexy9UwZ8=
+X-Received: by 2002:a9d:c29:: with SMTP id 38mr2547303otr.107.1591797399576;
+ Wed, 10 Jun 2020 06:56:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200601094512.50509-1-sudeep.holla@arm.com> <20200601094512.50509-2-sudeep.holla@arm.com>
+ <20200609223551.GA1620273@bogus> <20200610074346.GB15939@willie-the-truck>
+In-Reply-To: <20200610074346.GB15939@willie-the-truck>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 10 Jun 2020 07:56:28 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKFDBmyAVjWR9ZxOjU6j2fcCOz32rnnUwBAQzzh-vMa_A@mail.gmail.com>
+Message-ID: <CAL_JsqKFDBmyAVjWR9ZxOjU6j2fcCOz32rnnUwBAQzzh-vMa_A@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/3] dt-bindings: Add ARM PSA FF binding for
+ non-secure VM partitions
+To:     Will Deacon <will@kernel.org>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>, devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marc Zyngier <maz@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-10, Petr Mladek <pmladek@suse.com> wrote:
->>>> --- /dev/null
->>>> +++ b/kernel/printk/printk_ringbuffer.c
->>>> +/*
->>>> + * Given a data ring (text or dict), put the associated descriptor of each
->>>> + * data block from @lpos_begin until @lpos_end into the reusable state.
->>>> + *
->>>> + * If there is any problem making the associated descriptor reusable, either
->>>> + * the descriptor has not yet been committed or another writer task has
->>>> + * already pushed the tail lpos past the problematic data block. Regardless,
->>>> + * on error the caller can re-load the tail lpos to determine the situation.
->>>> + */
->>>> +static bool data_make_reusable(struct printk_ringbuffer *rb,
->>>> +			       struct prb_data_ring *data_ring,
->>>> +			       unsigned long lpos_begin,
->>>> +			       unsigned long lpos_end,
->>>> +			       unsigned long *lpos_out)
->>>> +{
->>>> +	struct prb_desc_ring *desc_ring = &rb->desc_ring;
->>>> +	struct prb_data_blk_lpos *blk_lpos;
->>>> +	struct prb_data_block *blk;
->>>> +	unsigned long tail_lpos;
->>>> +	enum desc_state d_state;
->>>> +	struct prb_desc desc;
->>>> +	unsigned long id;
->>>> +
->>>> +	/*
->>>> +	 * Using the provided @data_ring, point @blk_lpos to the correct
->>>> +	 * blk_lpos within the local copy of the descriptor.
->>>> +	 */
->>>> +	if (data_ring == &rb->text_data_ring)
->>>> +		blk_lpos = &desc.text_blk_lpos;
->>>> +	else
->>>> +		blk_lpos = &desc.dict_blk_lpos;
->>>> +
->>>> +	/* Loop until @lpos_begin has advanced to or beyond @lpos_end. */
->>>> +	while ((lpos_end - lpos_begin) - 1 < DATA_SIZE(data_ring)) {
->>>> +		blk = to_block(data_ring, lpos_begin);
->>>> +		id = READ_ONCE(blk->id); /* LMM(data_make_reusable:A) */
->>>
->>> This would deserve some comment:
+On Wed, Jun 10, 2020 at 1:43 AM Will Deacon <will@kernel.org> wrote:
 >
-> I wonder if the comment might look like:
+> On Tue, Jun 09, 2020 at 04:35:51PM -0600, Rob Herring wrote:
+> > On Mon, Jun 01, 2020 at 10:45:10AM +0100, Sudeep Holla wrote:
+> > > Add devicetree bindings for a Arm PSA FF-A compliant non-secure partition
+> > > at virtual interface(VMs).
+> > >
+> > > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> > > ---
+> > >  .../devicetree/bindings/arm/arm,psa-ffa.txt   | 47 +++++++++++++++++++
+> > >  1 file changed, 47 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/arm/arm,psa-ffa.txt
+> >
+> > I'm hoping this goes away if the firmware is discoverable, but if not DT
+> > bindings are DT schema now.
 >
-> /*
->  * No barrier is needed between reading tail_lpos and the related
->  * blk->id. Only CPU that modifies tail_lpos via cmpxchg is allowed
->  * to modify the related blk->id. CPUs that see the moved tail_lpos
->  * are looking at another block related to the new tail_lpos.
->  * It does not mater when the previous winner modifies the previous
->  * block.
->  */
+> We'll need the binding for the kvm host side, because there are plenty
+> of partition properties that are not discoverable (e.g. number of vCPUs).
 
-Sorry, but this comment does not make sense for me. The tail is pushed
-_before_ the block ID is modified. So any kind of barrier here (where we
-read the tail, then the block ID, i.e. the same order) would be
-inappropriate anyway.
+BTW, there's already a partitioning binding for Power in ePAPR. I've
+not paid much attention to it, but maybe it could be useful here.
 
-Also, this comment only talks about when a new value is seen, but not
-about when the old value is seen. IMO it is seeing the old value that is
-worthy of a comment since that is the only case with a data race.
-
-In preparation for my next version I have added the following comment:
-
-        blk = to_block(data_ring, lpos_begin);
-
-        /*
-         * When going from lpos to block pointer, the wrap around
-         * feature of the lpos value is lost. Since another CPU could
-         * invalidate this data area at any time, the data tail must
-         * be re-checked after the block ID has been read.
-         */
-
-        id = blk->id; /* LMM(data_make_reusable:A) */
-
-I think this comment also helps to further clarify "why" the following
-data tail check occurs.
-
-John Ogness
+Rob
