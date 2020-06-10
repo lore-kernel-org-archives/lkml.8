@@ -2,97 +2,161 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C2DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 05:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86830C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 05:38:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4417207ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 05:37:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="WznV4C0T"
+	by mail.kernel.org (Postfix) with ESMTP id 63D77207F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 05:38:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726196AbgFJFhH (ORCPT
+        id S1726076AbgFJFif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 01:37:07 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:48552 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726068AbgFJFg7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 01:36:59 -0400
-X-UUID: 0fe14f12caeb45b4bbe13cb314c97ff9-20200610
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=P4ir2L+O0CL9udXrFkoeOl6qfpnyyIFELvh2AjIFg7I=;
-        b=WznV4C0Tgrn7s+stUeAl5aT1Qb3J2RYwhrDMnctCo0WcsKwQM9It9UJC0B25CLhQ5WRHbfUYbOPJ3PcEDwCcLNcz5KaIGWSguT78cNVFXn1vJSYeG5MOcVFHMY6UWnLWNctv2enVpMraKmHLFcWfIF8zXoEQje54ra8H3a19f2A=;
-X-UUID: 0fe14f12caeb45b4bbe13cb314c97ff9-20200610
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1047932995; Wed, 10 Jun 2020 13:36:55 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 10 Jun 2020 13:36:52 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 10 Jun 2020 13:36:53 +0800
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
-        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
-        <jejb@linux.ibm.com>, <asutoshd@codeaurora.org>
-CC:     <beanhuo@micron.com>, <cang@codeaurora.org>,
-        <matthias.bgg@gmail.com>, <bvanassche@acm.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
-        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
-        <andy.teng@mediatek.com>, <chaotian.jing@mediatek.com>,
-        <cc.chou@mediatek.com>, Stanley Chu <stanley.chu@mediatek.com>
-Subject: [PATCH v1 2/2] scsi: ufs: Cleanup device vendor and quirk definition
-Date:   Wed, 10 Jun 2020 13:36:45 +0800
-Message-ID: <20200610053645.19975-3-stanley.chu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200610053645.19975-1-stanley.chu@mediatek.com>
-References: <20200610053645.19975-1-stanley.chu@mediatek.com>
+        Wed, 10 Jun 2020 01:38:35 -0400
+Received: from mga17.intel.com ([192.55.52.151]:29874 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725270AbgFJFif (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 01:38:35 -0400
+IronPort-SDR: sEhrUSelEQUOvyCZfD07huhGmoYPIwGVyNgZUomdMIQrZMkTQN6nqYfpbsBDrlBq5ZGVPQwUaL
+ z7l/o6u3GQVA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 22:38:33 -0700
+IronPort-SDR: Jh98UpqBE+irruJrjuF63PYRxhFGIGJ+//fv6RL8eiITuw1f419WJTlRYg8uEx8FYtwO+2Iw5o
+ W3tLfTt8Gl1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,494,1583222400"; 
+   d="scan'208";a="314403654"
+Received: from shao2-debian.sh.intel.com (HELO [10.239.13.3]) ([10.239.13.3])
+  by FMSMGA003.fm.intel.com with ESMTP; 09 Jun 2020 22:38:31 -0700
+Subject: Re: [PATCH v7 2/4] lib/test_bitmap.c: Add for_each_set_clump test
+ cases
+To:     Syed Nayyar Waris <syednwaris@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     kbuild test robot <lkp@intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        kbuild-all@lists.01.org,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <042eddd4b87f0db3588a79d829afe6b23fa8365c.1590017578.git.syednwaris@gmail.com>
+ <202005310310.EOelU2v3%lkp@intel.com>
+ <CACG_h5oHmkAp68q0EFXZEWhG15EQSHLgx=78gZ72aLShZOztFA@mail.gmail.com>
+ <20200605122428.GD2428291@smile.fi.intel.com>
+ <CACG_h5pHC1gQ62zAatUvgHakuGO6P-OLEwMHoU4_ObNDufXFqA@mail.gmail.com>
+From:   Rong Chen <rong.a.chen@intel.com>
+Message-ID: <ff824cb9-f8ed-50e2-2ae3-6d2211054334@intel.com>
+Date:   Wed, 10 Jun 2020 13:38:03 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: ECA4F3CB4DEFF80CD6B31B8B0CD1BF9841AFE6F22FE8BBC5C983FD9B0DB3DAD22000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <CACG_h5pHC1gQ62zAatUvgHakuGO6P-OLEwMHoU4_ObNDufXFqA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Q2xlYW51cCBiZWxvdyBpdGVtcywNCi0gQXJyYW5nZSB2ZW5kb3IgbmFtZSBpbiBhbHBoYWJldGlj
-YWwgb3JkZXINCi0gU3F1YXNoIGRldmljZSBxdWlya3MgYXMgY29tcGFjdCBhcyBwb3NzaWJsZSBp
-biBkZXZpY2UgcXVpcmsgdGFibGUNCiAgdG8gZW5oYW5jZSBwZXJmb3JtYW5jZSBvZiB0aGUgbG9v
-a3VwLg0KDQpTaWduZWQtb2ZmLWJ5OiBTdGFubGV5IENodSA8c3RhbmxleS5jaHVAbWVkaWF0ZWsu
-Y29tPg0KLS0tDQogZHJpdmVycy9zY3NpL3Vmcy91ZnNfcXVpcmtzLmggfCAyICstDQogZHJpdmVy
-cy9zY3NpL3Vmcy91ZnNoY2QuYyAgICAgfCA2ICsrLS0tLQ0KIDIgZmlsZXMgY2hhbmdlZCwgMyBp
-bnNlcnRpb25zKCspLCA1IGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9zY3Np
-L3Vmcy91ZnNfcXVpcmtzLmggYi9kcml2ZXJzL3Njc2kvdWZzL3Vmc19xdWlya3MuaA0KaW5kZXgg
-ZTgwZDVmMjZhNDQyLi4yYTAwNDE0OTNlMzAgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3Njc2kvdWZz
-L3Vmc19xdWlya3MuaA0KKysrIGIvZHJpdmVycy9zY3NpL3Vmcy91ZnNfcXVpcmtzLmgNCkBAIC0x
-Myw5ICsxMyw5IEBADQogI2RlZmluZSBVRlNfQU5ZX01PREVMICAiQU5ZX01PREVMIg0KIA0KICNk
-ZWZpbmUgVUZTX1ZFTkRPUl9NSUNST04gICAgICAweDEyQw0KLSNkZWZpbmUgVUZTX1ZFTkRPUl9U
-T1NISUJBICAgICAweDE5OA0KICNkZWZpbmUgVUZTX1ZFTkRPUl9TQU1TVU5HICAgICAweDFDRQ0K
-ICNkZWZpbmUgVUZTX1ZFTkRPUl9TS0hZTklYICAgICAweDFBRA0KKyNkZWZpbmUgVUZTX1ZFTkRP
-Ul9UT1NISUJBICAgICAweDE5OA0KICNkZWZpbmUgVUZTX1ZFTkRPUl9XREMgICAgICAgICAweDE0
-NQ0KIA0KIC8qKg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMgYi9kcml2
-ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jDQppbmRleCBkZWE0ZmRkZjkzMzIuLjdjOTNjYjQ0NmY1MSAx
-MDA2NDQNCi0tLSBhL2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMNCisrKyBiL2RyaXZlcnMvc2Nz
-aS91ZnMvdWZzaGNkLmMNCkBAIC0yMTksMTAgKzIxOSw4IEBAIHN0YXRpYyBzdHJ1Y3QgdWZzX2Rl
-dl9maXggdWZzX2ZpeHVwc1tdID0gew0KIAlVRlNfRklYKFVGU19WRU5ET1JfTUlDUk9OLCBVRlNf
-QU5ZX01PREVMLA0KIAkJVUZTX0RFVklDRV9RVUlSS19ERUxBWV9CRUZPUkVfTFBNKSwNCiAJVUZT
-X0ZJWChVRlNfVkVORE9SX1NBTVNVTkcsIFVGU19BTllfTU9ERUwsDQotCQlVRlNfREVWSUNFX1FV
-SVJLX0RFTEFZX0JFRk9SRV9MUE0pLA0KLQlVRlNfRklYKFVGU19WRU5ET1JfU0FNU1VORywgVUZT
-X0FOWV9NT0RFTCwNCi0JCVVGU19ERVZJQ0VfUVVJUktfUkVDT1ZFUllfRlJPTV9ETF9OQUNfRVJS
-T1JTKSwNCi0JVUZTX0ZJWChVRlNfVkVORE9SX1NBTVNVTkcsIFVGU19BTllfTU9ERUwsDQorCQlV
-RlNfREVWSUNFX1FVSVJLX0RFTEFZX0JFRk9SRV9MUE0gfA0KKwkJVUZTX0RFVklDRV9RVUlSS19S
-RUNPVkVSWV9GUk9NX0RMX05BQ19FUlJPUlMgfA0KIAkJVUZTX0RFVklDRV9RVUlSS19IT1NUX1BB
-X1RBQ1RJVkFURSksDQogCVVGU19GSVgoVUZTX1ZFTkRPUl9UT1NISUJBLCBVRlNfQU5ZX01PREVM
-LA0KIAkJVUZTX0RFVklDRV9RVUlSS19ERUxBWV9CRUZPUkVfTFBNKSwNCi0tIA0KMi4xOC4wDQo=
 
+
+On 6/7/20 7:15 AM, Syed Nayyar Waris wrote:
+> On Fri, Jun 5, 2020 at 5:54 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+>> On Fri, Jun 05, 2020 at 02:12:54AM +0530, Syed Nayyar Waris wrote:
+>>> On Sun, May 31, 2020 at 12:50 AM kbuild test robot <lkp@intel.com> wrote:
+>>>>>> WARNING: modpost: lib/test_bitmap.o(.data+0xe80): Section mismatch in reference from the variable clump_test_data to the variable .init.rodata:clump_exp1
+>>>> The variable clump_test_data references
+>>>> the variable __initconst clump_exp1
+>>>> If the reference is valid then annotate the
+>>>> variable with or __refdata (see linux/init.h) or name the variable:
+>>>>
+>>>> --
+>>>>>> WARNING: modpost: lib/test_bitmap.o(.data+0xec8): Section mismatch in reference from the variable clump_test_data to the variable .init.rodata:clump_exp2
+>>>> The variable clump_test_data references
+>>>> the variable __initconst clump_exp2
+>>>> If the reference is valid then annotate the
+>>>> variable with or __refdata (see linux/init.h) or name the variable:
+>>>>
+>>>> --
+>>>>>> WARNING: modpost: lib/test_bitmap.o(.data+0xf10): Section mismatch in reference from the variable clump_test_data to the variable .init.rodata:clump_exp3
+>>>> The variable clump_test_data references
+>>>> the variable __initconst clump_exp3
+>>>> If the reference is valid then annotate the
+>>>> variable with or __refdata (see linux/init.h) or name the variable:
+>>>>
+>>>> --
+>>>>>> WARNING: modpost: lib/test_bitmap.o(.data+0xf58): Section mismatch in reference from the variable clump_test_data to the variable .init.rodata:clump_exp4
+>>>> The variable clump_test_data references
+>>>> the variable __initconst clump_exp4
+>>>> If the reference is valid then annotate the
+>>>> variable with or __refdata (see linux/init.h) or name the variable:
+>>> I am unable to reproduce the compilation warning.
+>> You have to enable section mismatch checker.
+>>
+>>> I ran the command:
+>>> make W=1 C=1 ARCH=x86_64 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'  lib/
+>>>
+>>> But the compilation warning didn't show up. Can anyone please point to me
+>>> what I am doing wrong here? How shall I reproduce the warning? Thanks !
+>> You put some data into init section of the object, while you are trying to
+>> access it from non-init one. It's easy-to-fix issue.
+>>
+>> --
+>> With Best Regards,
+>> Andy Shevchenko
+> Thanks! I have made code changes for the above warning. Actually I am
+> still unable to reproduce the compilation warning. But I believe the
+> following code fix will fix the compilation warning:
+>
+> In file lib/test_bitmap.c
+>
+> @@ -692,7 +692,7 @@ struct clump_test_data_params {
+>          unsigned long const *exp;
+>   };
+>
+> -struct clump_test_data_params clump_test_data[] =
+> +static struct clump_test_data_params clump_test_data[] __initdata =
+>                                          { {{0}, 2, 0, 64, 8, clump_exp1},
+>                                          {{0}, 8, 2, 240, 24, clump_exp2},
+>                                          {{0}, 8, 10, 240, 30, clump_exp3},
+>
+>
+>
+> Let me know if I should submit a new patchset (v8) for
+> 'for_each_set_clump' including above code fix.
+>
+> Just to share how I attempted to reproduce the warning (but unsuccessful):
+>
+> Step 1: Use the config file in attachment. Download, extract, rename
+> file to .config at the root of the tree.
+> Step 2: '$ make lib/'
+> No warning reproduced after above step 2.
+> Step 3: '$ make W=1 C=1 ARCH=x86_64 CF='-fdiagnostic-prefix
+> -D__CHECK_ENDIAN__' lib/'
+> After step 3 I got error in build:
+> scripts/kconfig/conf  --syncconfig Kconfig
+>    CHECK   scripts/mod/empty.c
+> No such file: asan-globals=1
+> scripts/Makefile.build:266: recipe for target 'scripts/mod/empty.o' failed
+> make[1]: *** [scripts/mod/empty.o] Error 1
+> Makefile:1147: recipe for target 'prepare0' failed
+> make: *** [prepare0] Error 2
+>
+> The command in above step 3 was mentioned in the bot mail.
+>
+> Regards
+> Syed Nayyar Waris
+>
+
+Hi Syed Nayyar Waris,
+
+We can reproduce the warning with the steps in original report,
+you may need to build the whole kernel instead of the 'lib'.
+
+Best Regards,
+Rong Chen
