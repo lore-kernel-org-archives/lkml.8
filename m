@@ -2,105 +2,138 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CDFBC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D735C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA74C206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:16:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30DBA206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:17:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="J7/1uOlt"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="WrTnAwhx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727062AbgFJJQp (ORCPT
+        id S1727107AbgFJJRT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 05:16:45 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:57510 "EHLO mx1.tq-group.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726981AbgFJJQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 05:16:45 -0400
-IronPort-SDR: QPwtd4PcZPyNZ7xjw5yFjJ4Y1Z8et1VF/uhqk0znRb+k7N/trw6xfkPltpRtHBKJf9kVll1Ct4
- cLANCzUhoyl7LUlMK6XpB7inYHhHVK09f5Uv27yn0IJJYgI9oo49QtVnEfjtQqUxcQXILqj/1h
- ZeIuq0daIKXHoA4mYfIxadWs80tVyY6fpFu9/nJ4WN+0hQOJf9Uu+OZUTLlO9HKGcBBO0gZ/Ph
- OqJvmC8Iju+rPYrS2VQSBPE//r32WPr5miET4lVykTu/BCSCYUhR/AfblD7XbBKCLZlOxiZi8A
- yHQ=
-X-IronPort-AV: E=Sophos;i="5.73,495,1583190000"; 
-   d="scan'208";a="12632101"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 10 Jun 2020 11:16:42 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Wed, 10 Jun 2020 11:16:42 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Wed, 10 Jun 2020 11:16:42 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1591780602; x=1623316602;
-  h=from:to:cc:subject:date:message-id;
-  bh=SX7bKwUUzHRTqxNVLzwW4z+x2qXT4twsmECkG5lWMXw=;
-  b=J7/1uOltcQpINyPJbQQgp6qUSG9QCxtSsrBreI40RN7h5AvFB1aAAGc4
-   MxSkcDJ2izp0362df8qY7GCRdnYjztRSkVlJFAMxqD9Bf9KC0vD7oFRAt
-   CU3sria1ZtTBYEv5lRhIL6gHpNY7Vtt6Vcx0kOFpZ4JvnhwZLlWorqpni
-   ruxYd7xpTWoRKCWzxdCuVaIcR9o1l7qel/pkZ832+Wh1wGOdW0TB67H86
-   oC25fauxtdeQ98/j/ITWGW0nS7abZYrmHCT9gofCGbAvTsEZhc2kkC6w0
-   woNk5ZwV40jJyEC1tXx/6rzFpSU/GG1QA2f6QlrRK2kI40gJpvMrBua4N
-   A==;
-IronPort-SDR: mBT2aiLqUhCJswTXYJscs4zNFhgiuH9x90QvWp81VGM3M9sbZnOfSoFS1StLCP+O8QtzP6VvWC
- vssH08/zYlyLCOvxBENWBEUSvtzWnvF1yGxMOIh72JRcTumEAzxzo2gIFl4wjwJQp7tdkop3CQ
- O3NNuJp3jsCNW2iXaUxOC4EGyUDKyuNhnzkhd5edCUnlNkJQwMRKOov5Zd1KyVMVcdVr/ifJr3
- wwLnuYcxzlxO/59jgcKveDp0aJVBaIKmkVKYusAmD0r0PvkiNteg9xbJ5h8jp4nS822BHOb/wy
- 9qg=
-X-IronPort-AV: E=Sophos;i="5.73,495,1583190000"; 
-   d="scan'208";a="12632099"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 10 Jun 2020 11:16:42 +0200
-Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id C8AB3280065;
-        Wed, 10 Jun 2020 11:16:49 +0200 (CEST)
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Michael Krummsdorf <michael.krummsdorf@tq-group.com>,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Subject: [PATCH] mtd: spi-nor: micron-st: enable 4-byte opcodes for n25q512a
-Date:   Wed, 10 Jun 2020 11:16:16 +0200
-Message-Id: <20200610091616.29555-1-matthias.schiffer@ew.tq-group.com>
+        Wed, 10 Jun 2020 05:17:19 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:10664 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726961AbgFJJRT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 05:17:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1591780638; x=1623316638;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   in-reply-to:content-transfer-encoding;
+  bh=yTRa4iuclDKGDxr3hcHPUWfgnxSsbA46QRlOw0aYhtg=;
+  b=WrTnAwhxAQFjLo7KM+ygP8tUzTfPQSjzSLAbURGr+MnUh8NgCpVS3JWj
+   aOa0HtJZv5zZbFmVxrqjg6cncnAwWwX+hZuGgkOfYvbRD85w5G5VFeIxq
+   hzzMPDnyY9UTseZZ5OllmTAMzY5U8tZdxW988Ki2fsK0+0u6OhM4Nuygt
+   Y=;
+IronPort-SDR: sb3XkJQpvy2MlML82JqCdr/sI1XZ9v9qBgg0lP+DmB50kMsjl6syi1tvgFFSGRakZy5XTecow3
+ Lxd2RZUHzuNA==
+X-IronPort-AV: E=Sophos;i="5.73,495,1583193600"; 
+   d="scan'208";a="36829050"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-8549039f.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 10 Jun 2020 09:17:17 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-8549039f.us-west-2.amazon.com (Postfix) with ESMTPS id 93D91A1D47;
+        Wed, 10 Jun 2020 09:17:15 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 10 Jun 2020 09:17:15 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.26) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 10 Jun 2020 09:17:10 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     Jiri Slaby <jslaby@suse.cz>
+CC:     SeongJae Park <sjpark@amazon.com>, <akpm@linux-foundation.org>,
+        <colin.king@canonical.com>, <linux-kernel@vger.kernel.org>,
+        <stable@vger.kernel.org>, SeongJae Park <sjpark@amazon.de>
+Subject: Re: Re: [PATCH v2] scripts/spelling: Recommend blocklist/allowlist instead of blacklist/whitelist
+Date:   Wed, 10 Jun 2020 11:16:55 +0200
+Message-ID: <20200610091655.4682-1-sjpark@amazon.com>
 X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+In-Reply-To: <b16e47c9-db60-4d20-6e72-bf0b5ab29a38@suse.cz> (raw)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.43.160.26]
+X-ClientProxiedBy: EX13D40UWA003.ant.amazon.com (10.43.160.29) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Krummsdorf <michael.krummsdorf@tq-group.com>
+On Wed, 10 Jun 2020 10:50:24 +0200 Jiri Slaby <jslaby@suse.cz> wrote:
 
-Set SPI_NOR_4B_OPCODES, as the flash supports 4-byte opcodes.
+> On 09. 06. 20, 14:25, SeongJae Park wrote:
+> > From: SeongJae Park <sjpark@amazon.de>
+> > 
+> > This commit recommends the patches to replace 'blacklist' and
+> > 'whitelist' with the 'blocklist' and 'allowlist', because the new
+> > suggestions are incontrovertible, doesn't make people hurt, and more
+> > self-explanatory.
+> 
+> Sorry, but no, it's definitely not.
+> 
+> > Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> > ---
+> >  scripts/spelling.txt | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/scripts/spelling.txt b/scripts/spelling.txt
+> > index d9cd24cf0d40..ea785568d8b8 100644
+> > --- a/scripts/spelling.txt
+> > +++ b/scripts/spelling.txt
+> > @@ -230,6 +230,7 @@ beter||better
+> >  betweeen||between
+> >  bianries||binaries
+> >  bitmast||bitmask
+> > +blacklist||blocklist
+> 
+> Blocklist means a list of blocks here.
 
-Signed-off-by: Michael Krummsdorf <michael.krummsdorf@tq-group.com>
-Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
----
- drivers/mtd/spi-nor/micron-st.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+How about 'denylist', then?
 
-diff --git a/drivers/mtd/spi-nor/micron-st.c b/drivers/mtd/spi-nor/micron-st.c
-index 3dca5b9af3b6..8edfde053f31 100644
---- a/drivers/mtd/spi-nor/micron-st.c
-+++ b/drivers/mtd/spi-nor/micron-st.c
-@@ -58,7 +58,8 @@ static const struct flash_info st_parts[] = {
- 	{ "n25q512a",    INFO(0x20bb20, 0, 64 * 1024, 1024,
- 			      SECT_4K | USE_FSR | SPI_NOR_QUAD_READ |
- 			      SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB |
--			      SPI_NOR_4BIT_BP | SPI_NOR_BP3_SR_BIT6) },
-+			      SPI_NOR_4BIT_BP | SPI_NOR_BP3_SR_BIT6 |
-+			      SPI_NOR_4B_OPCODES) },
- 	{ "n25q00",      INFO(0x20ba21, 0, 64 * 1024, 2048,
- 			      SECT_4K | USE_FSR | SPI_NOR_QUAD_READ |
- 			      SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB |
--- 
-2.17.1
+> 
+> >  boardcast||broadcast
+> >  borad||board
+> >  boundry||boundary
+> > @@ -1495,6 +1496,7 @@ whcih||which
+> >  whenver||whenever
+> >  wheter||whether
+> >  whe||when
+> > +whitelist||allowlist
+> 
+> Wut? allowlist I am seeing for the 1st time.
 
+Wouldn't it easy to infer the intention, though?
+
+> 
+> Some purists, linguists, and politicians are true fellows at times, or
+> at least they think so. This comes in waves and even if they try hard,
+> people won't adopt their nonsense. Like we, Czechs, still call piano by
+> German Klavier, and not břinkoklapka, suggested in 19th century (among
+> many others) by the horny extremists.
+> 
+> Shall we stop using black, white, blue, and other colors only because
+> they relate to skin color of avatars now? I doubt that.
+
+Well, I have no strong opinion on this, but... if some people are really being
+hurt by use of some terms and we could avoid spread of the term with only
+little cost, I believe it's worth to make the change.
+
+
+Thanks,
+SeongJae Park
+
+> 
+> thanks,
+> -- 
+> js
+> suse labs
