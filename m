@@ -2,253 +2,180 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F016C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB9FCC433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AEEE20734
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABC8620734
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:19:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="RWPUr9CK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y9ae5q6P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726372AbgFJHTX (ORCPT
+        id S1726398AbgFJHTr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 03:19:23 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:53928 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726121AbgFJHTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 03:19:22 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 49hddz0HkhzcG;
-        Wed, 10 Jun 2020 09:19:18 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1591773559; bh=7gEYY7fEDHliIe4ICwlpvlUotLaIa5/Vi0eVTaTvsf4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=RWPUr9CKHHz19QR4ikOHzJIOVVtcmJ/omgGqvqX1DQZswAuEOeiGgmVB8dY2P66in
-         34yliL9OuGsBSjEiRQI0iPEGn4SqQzco4nryZRHbC+Odw5Rw6hBfe0KLDFSUNV0Mv6
-         KjYJY1ro7EckAcLfAlGn51P8YSp0Pj3XynXc1ziLG35iGE4pH+uRiYGz1ekRlytFs5
-         3rrGpWjgTVAE/EEZTJXvMApdaDJzFXrnwBAc5vObteoZU6gXmDRTu6dfT6+Bysvory
-         CoY5QA2+0mu/kaO12riuZSZAtJR6X0iR/+5LjwPD9MJLTUG/lQOAxg3mSAERO/Zv/X
-         iB47QCEtJkwmA==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Wed, 10 Jun 2020 09:19:17 +0200
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     linux-btrfs@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: Lockdep warning after `mdadm -S`
-Message-ID: <20200610071916.GA2668@qmqm.qmqm.pl>
+        Wed, 10 Jun 2020 03:19:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53398 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726285AbgFJHTq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 03:19:46 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87189C08C5C4
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 00:19:45 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id h5so992429wrc.7
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 00:19:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=11ciiGFTUr2GF55cgml5pBiTEF8081Q9X8UCb/QcHRA=;
+        b=Y9ae5q6P3q0sJJ1zZgF5extf7FxIBPJDw9AERd1YPcixBQAP0Gr+TCXETNfkI0Ur3N
+         B8mPHGrm319rRaMA4hgm+eI0R3VG+o6oRgiiCl8INYlYZnx1OnsY1uuUZyOnYb9PXFEf
+         5Mn3qxOZjRhNgI7R7zTJRQP4nS22KepHMy5J6lwf0eqyJYSEFoUgcuipvEYeo9d5tFgj
+         uHcfLI/dm118AnKQJoCfnCkZm8DPVRTv3Mv35S+aFF9S/ifBiRJl6V58bk5CCgr3Na7f
+         VB7ylHcVoSU5G6Cgq0d1kRMjbpWguWaBM4S6/TkoWS4gIyzZL6hewxemNDEwJJG0prKJ
+         fzyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=11ciiGFTUr2GF55cgml5pBiTEF8081Q9X8UCb/QcHRA=;
+        b=r0nP/hKX1tkSu35iOt+LyhW541uV2izOvP5ShW4FTcU1j60JFeGQlBaVGf0Y5pmUZa
+         ntUh8HCGeE5cKCpIYQRKLS3NZtoH3/S0gtER6Bk/0nL2tupYFQpU+ccJFu+Zznnfkynr
+         /FO8Mgj8+q0LTpwDwYExOIvkxWM2yz9k4IgBKvJCN3s7pabCXX7F+/UYcLyn9tnFDtcs
+         D+oEb1aUxDnWaQYO1TUbBRhyP1NSkwl8Cjta0EEX+JK8y/0/m3pj68v9kX3XiMo1DFd9
+         8nFCCiv9G8yCruQlXKEbXWghtYEL7CGH+SR5oxQajJKqj8glz6pFJBapT/aHAhc3CeFv
+         I2/Q==
+X-Gm-Message-State: AOAM5314+iQrH4a5Ox3jX1yI2VkVXTYnJmQshlKoz9IuEZi79LpeqNL1
+        2VgrqoUVZhb7SvHA8vmZ7qUN4w==
+X-Google-Smtp-Source: ABdhPJx35j366zEzN8LJVnCpeR2FpiGqjvYG09aoVlwPYi548sT34jyAOpph5ZNw8v8eHkYZVutgRw==
+X-Received: by 2002:adf:e84c:: with SMTP id d12mr1957757wrn.284.1591773582952;
+        Wed, 10 Jun 2020 00:19:42 -0700 (PDT)
+Received: from dell ([2.27.167.101])
+        by smtp.gmail.com with ESMTPSA id 67sm7063666wrk.49.2020.06.10.00.19.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2020 00:19:42 -0700 (PDT)
+Date:   Wed, 10 Jun 2020 08:19:40 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        david.m.ertman@intel.com, shiraz.saleem@intel.com,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld
+ management controller
+Message-ID: <20200610071940.GS4106@dell>
+References: <CAHp75VdiH=J-ovCdh1RFJDW_bJM8=pbXRaHmB691GLb-5oBmYQ@mail.gmail.com>
+ <7d7feb374cbf5a587dc1ce65fc3ad672@walle.cc>
+ <20200608185651.GD4106@dell>
+ <32231f26f7028d62aeda8fdb3364faf1@walle.cc>
+ <20200609064735.GH4106@dell>
+ <32287ac0488f7cbd5a7d1259c284e554@walle.cc>
+ <20200609151941.GM4106@dell>
+ <95e6ec9bbdf6af7a9ff9c31786f743f2@walle.cc>
+ <20200609194505.GQ4106@dell>
+ <3a6931248f0efcaf8efbb5425a9bd833@walle.cc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <3a6931248f0efcaf8efbb5425a9bd833@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Developers,
+On Wed, 10 Jun 2020, Michael Walle wrote:
+> Am 2020-06-09 21:45, schrieb Lee Jones:
+> > On Tue, 09 Jun 2020, Michael Walle wrote:
+> > > > We do not need a 'simple-regmap' solution for your use-case.
+> > > >
+> > > > Since your device's registers are segregated, just split up the
+> > > > register map and allocate each sub-device with it's own slice.
+> > > 
+> > > I don't get it, could you make a device tree example for my
+> > > use-case? (see also above)
+> > 
+> >     &i2cbus {
+> >         mfd-device@10 {
+> >             compatible = "simple-mfd";
+> >             reg = <10>;
+> > 
+> >             sub-device@10 {
+> >                 compatible = "vendor,sub-device";
+> >                 reg = <10>;
+> >             };
+> >    };
+> > 
+> > The Regmap config would be present in each of the child devices.
+> > 
+> > Each child device would call devm_regmap_init_i2c() in .probe().
+> 
+> Ah, I see. If I'm not wrong, this still means to create an i2c
+> device driver with the name "simple-mfd".
 
-I found a lockdep warning in dmesg some after doing 'mdadm -S' while
-also having btrfs mounted (light to none I/O load).  Disks under MD and
-btrfs are unrelated.
+Yes, it does.
 
-Best Regards,
-Micha� Miros�aw
+> Besides that, I don't like this, because:
+>  - Rob already expressed its concerns with "simple-mfd" and so on.
 
-======================================================
-WARNING: possible circular locking dependency detected
-5.7.1mq+ #383 Tainted: G           O     
-------------------------------------------------------
-kworker/u16:3/8175 is trying to acquire lock:
-ffff8882f19556a0 (sb_internal#3){.+.+}-{0:0}, at: start_transaction+0x37e/0x550 [btrfs]
+Where did this take place?  I'd like to read up on this.
 
-but task is already holding lock:
-ffffc900087c7e68 ((work_completion)(&(&wb->dwork)->work)){+.+.}-{0:0}, at: process_one_work+0x235/0x620
+>  - you need to duplicate the config in each sub device
 
-which lock already depends on the new lock.
+You can have a share a single config.
 
+>  - which also means you are restricting the sub devices to be
+>    i2c only (unless you implement and duplicate other regmap configs,
+>    too). For this driver, SPI and MMIO may be viable options.
 
-the existing dependency chain (in reverse order) is:
+You could also have a shared implementation to choose between different
+busses.
 
--> #8 ((work_completion)(&(&wb->dwork)->work)){+.+.}-{0:0}:
-       __flush_work+0x331/0x490
-       wb_shutdown+0x8f/0xb0
-       bdi_unregister+0x72/0x1f0
-       del_gendisk+0x2b0/0x2c0
-       md_free+0x28/0x90
-       kobject_put+0xa6/0x1b0
-       process_one_work+0x2b6/0x620
-       worker_thread+0x35/0x3e0
-       kthread+0x143/0x160
-       ret_from_fork+0x3a/0x50
+> Thus, I'd rather implement a simple-mfd.c which implement a common
+> I2C driver for now and populate its children using
+> devm_of_platform_populate(). This could be extended to support other
+> type of regmaps like SPI in the future.
+> 
+> Also some MFD drivers could be moved to this, a likely candidate is
+> the smsc-ece1099.c. Although I don't really understand its purpose,
+> if don't have CONFIG_OF.
+> 
+> Judging from the existing code, this simple-mfd.c wouldn't just be
+> "a list of compatible" strings but also additional quirks and tweaks
+> for particular devices in this list.
 
--> #7 ((work_completion)(&mddev->del_work)){+.+.}-{0:0}:
-       process_one_work+0x28d/0x620
-       worker_thread+0x35/0x3e0
-       kthread+0x143/0x160
-       ret_from_fork+0x3a/0x50
+Hold off on the simple-mfd.c idea, as I'm not taken by it yet and
+wouldn't want you to waste your time.  I have another idea which would
+help.  Give me a few days to put something together.
 
--> #6 ((wq_completion)md_misc){+.+.}-{0:0}:
-       flush_workqueue+0xa9/0x4e0
-       __md_stop_writes+0x18/0x100
-       do_md_stop+0x165/0x2d0
-       md_ioctl+0xa52/0x1d60
-       blkdev_ioctl+0x1cc/0x2a0
-       block_ioctl+0x3a/0x40
-       ksys_ioctl+0x81/0xc0
-       __x64_sys_ioctl+0x11/0x20
-       do_syscall_64+0x4f/0x210
-       entry_SYSCALL_64_after_hwframe+0x49/0xb3
-
--> #5 (&mddev->open_mutex){+.+.}-{3:3}:
-       __mutex_lock+0x93/0x9c0
-       md_open+0x43/0xc0
-       __blkdev_get+0xea/0x560
-       blkdev_get+0x60/0x130
-       do_dentry_open+0x147/0x3e0
-       path_openat+0x84f/0xa80
-       do_filp_open+0x8e/0x100
-       do_sys_openat2+0x225/0x2e0
-       do_sys_open+0x46/0x80
-       do_syscall_64+0x4f/0x210
-       entry_SYSCALL_64_after_hwframe+0x49/0xb3
-
--> #4 (&bdev->bd_mutex){+.+.}-{3:3}:
-       __mutex_lock+0x93/0x9c0
-       __blkdev_get+0x77/0x560
-       blkdev_get+0x60/0x130
-       blkdev_get_by_path+0x41/0x80
-       btrfs_get_bdev_and_sb+0x16/0xb0 [btrfs]
-       open_fs_devices+0x9d/0x240 [btrfs]
-       btrfs_open_devices+0x89/0x90 [btrfs]
-       btrfs_mount_root+0x26a/0x4b0 [btrfs]
-       legacy_get_tree+0x2b/0x50
-       vfs_get_tree+0x23/0xc0
-       fc_mount+0x9/0x40
-       vfs_kern_mount.part.40+0x57/0x80
-       btrfs_mount+0x148/0x3f0 [btrfs]
-       legacy_get_tree+0x2b/0x50
-       vfs_get_tree+0x23/0xc0
-       do_mount+0x712/0xa40
-       __x64_sys_mount+0xbf/0xe0
-       do_syscall_64+0x4f/0x210
-       entry_SYSCALL_64_after_hwframe+0x49/0xb3
-
--> #3 (&fs_devs->device_list_mutex){+.+.}-{3:3}:
-       __mutex_lock+0x93/0x9c0
-       btrfs_run_dev_stats+0x44/0x470 [btrfs]
-       commit_cowonly_roots+0xac/0x2a0 [btrfs]
-       btrfs_commit_transaction+0x511/0xa70 [btrfs]
-       transaction_kthread+0x13c/0x160 [btrfs]
-       kthread+0x143/0x160
-       ret_from_fork+0x3a/0x50
-
--> #2 (&fs_info->tree_log_mutex){+.+.}-{3:3}:
-       __mutex_lock+0x93/0x9c0
-       btrfs_commit_transaction+0x4b6/0xa70 [btrfs]
-       transaction_kthread+0x13c/0x160 [btrfs]
-       kthread+0x143/0x160
-       ret_from_fork+0x3a/0x50
-
--> #1 (&fs_info->reloc_mutex){+.+.}-{3:3}:
-       __mutex_lock+0x93/0x9c0
-       btrfs_record_root_in_trans+0x3e/0x60 [btrfs]
-       start_transaction+0xcb/0x550 [btrfs]
-       btrfs_mkdir+0x5c/0x1e0 [btrfs]
-       vfs_mkdir+0x107/0x1d0
-       do_mkdirat+0xe7/0x110
-       do_syscall_64+0x4f/0x210
-       entry_SYSCALL_64_after_hwframe+0x49/0xb3
-
--> #0 (sb_internal#3){.+.+}-{0:0}:
-       __lock_acquire+0x11f9/0x1aa0
-       lock_acquire+0x9e/0x380
-       __sb_start_write+0x13a/0x270
-       start_transaction+0x37e/0x550 [btrfs]
-       cow_file_range_inline.constprop.74+0xe4/0x640 [btrfs]
-       cow_file_range+0xe5/0x3f0 [btrfs]
-       btrfs_run_delalloc_range+0x128/0x620 [btrfs]
-       writepage_delalloc+0xe2/0x140 [btrfs]
-       __extent_writepage+0x1a3/0x370 [btrfs]
-       extent_write_cache_pages+0x2b8/0x470 [btrfs]
-       extent_writepages+0x3f/0x90 [btrfs]
-       do_writepages+0x3c/0xe0
-       __writeback_single_inode+0x4f/0x650
-       writeback_sb_inodes+0x1f7/0x560
-       __writeback_inodes_wb+0x58/0xa0
-       wb_writeback+0x33b/0x4b0
-       wb_workfn+0x428/0x5b0
-       process_one_work+0x2b6/0x620
-       worker_thread+0x35/0x3e0
-       kthread+0x143/0x160
-       ret_from_fork+0x3a/0x50
-
-other info that might help us debug this:
-
-Chain exists of:
-  sb_internal#3 --> (work_completion)(&mddev->del_work) --> (work_completion)(&(&wb->dwork)->work)
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock((work_completion)(&(&wb->dwork)->work));
-                               lock((work_completion)(&mddev->del_work));
-                               lock((work_completion)(&(&wb->dwork)->work));
-  lock(sb_internal#3);
-
- *** DEADLOCK ***
-
-3 locks held by kworker/u16:3/8175:
- #0: ffff88840baa6948 ((wq_completion)writeback){+.+.}-{0:0}, at: process_one_work+0x235/0x620
- #1: ffffc900087c7e68 ((work_completion)(&(&wb->dwork)->work)){+.+.}-{0:0}, at: process_one_work+0x235/0x620
- #2: ffff8882f19550e8 (&type->s_umount_key#52){++++}-{3:3}, at: trylock_super+0x11/0x50
-
-stack backtrace:
-CPU: 1 PID: 8175 Comm: kworker/u16:3 Tainted: G           O      5.7.1mq+ #383
-Hardware name: System manufacturer System Product Name/P8Z68-V PRO, BIOS 3603 11/09/2012
-Workqueue: writeback wb_workfn (flush-btrfs-1)
-Call Trace:
- dump_stack+0x71/0xa0
- check_noncircular+0x165/0x180
- ? stack_trace_save+0x46/0x70
- __lock_acquire+0x11f9/0x1aa0
- lock_acquire+0x9e/0x380
- ? start_transaction+0x37e/0x550 [btrfs]
- __sb_start_write+0x13a/0x270
- ? start_transaction+0x37e/0x550 [btrfs]
- start_transaction+0x37e/0x550 [btrfs]
- ? kmem_cache_alloc+0x1b0/0x2c0
- cow_file_range_inline.constprop.74+0xe4/0x640 [btrfs]
- ? lock_acquire+0x9e/0x380
- ? test_range_bit+0x3d/0x130 [btrfs]
- cow_file_range+0xe5/0x3f0 [btrfs]
- btrfs_run_delalloc_range+0x128/0x620 [btrfs]
- ? find_lock_delalloc_range+0x1f3/0x220 [btrfs]
- writepage_delalloc+0xe2/0x140 [btrfs]
- __extent_writepage+0x1a3/0x370 [btrfs]
- extent_write_cache_pages+0x2b8/0x470 [btrfs]
- ? __lock_acquire+0x3fc/0x1aa0
- extent_writepages+0x3f/0x90 [btrfs]
- do_writepages+0x3c/0xe0
- ? find_held_lock+0x2d/0x90
- __writeback_single_inode+0x4f/0x650
- writeback_sb_inodes+0x1f7/0x560
- __writeback_inodes_wb+0x58/0xa0
- wb_writeback+0x33b/0x4b0
- wb_workfn+0x428/0x5b0
- ? sched_clock_cpu+0xe/0xd0
- process_one_work+0x2b6/0x620
- ? worker_thread+0xc7/0x3e0
- worker_thread+0x35/0x3e0
- ? process_one_work+0x620/0x620
- kthread+0x143/0x160
- ? kthread_park+0x80/0x80
- ret_from_fork+0x3a/0x50
-
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
