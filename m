@@ -2,113 +2,96 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCD9C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E63C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDD1E2072E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 921412072E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:46:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FPoPyctx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eocK2D5f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbgFJJpH (ORCPT
+        id S1727936AbgFJJqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 05:45:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47746 "EHLO
+        Wed, 10 Jun 2020 05:46:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727909AbgFJJpG (ORCPT
+        with ESMTP id S1727866AbgFJJqx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 05:45:06 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E9B3C03E96B;
-        Wed, 10 Jun 2020 02:45:06 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id h188so1063077lfd.7;
-        Wed, 10 Jun 2020 02:45:06 -0700 (PDT)
+        Wed, 10 Jun 2020 05:46:53 -0400
+Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B73EC08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 02:46:52 -0700 (PDT)
+Received: by mail-lj1-x22a.google.com with SMTP id e4so1663336ljn.4
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 02:46:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=knFTNygHBlvK7O+pDlbdvkQzVtQ3TgCejJaIUpEQ4jE=;
-        b=FPoPyctxOdVDSsWBW0DlRNRiIuR67mqyGK8YC9Ys9GBn2jdZt6nSY+imLjKGWfZEmy
-         TKFIRPmh0pIedVCCcigIb62Ci1dFBR8JP/pisoToHWPgSFb8TW9t0nwj40a38Ci/vY+n
-         cz552AjSVLs6oN/qPoU3US6Aaixm2HEv4HnPCGLPMiSZUVdt70G0rk8wNwq82Ssmr3k3
-         8MuTnvRqc1BzZmJPJzxO2uuYvNsVmeVdXs9mVUSI+rQpArHUPCMp+JV+uzskDaAoY6vX
-         O/QCJNNB4L1xcgJ7QBk5uolvmPxfPbuI24RABliKkdeXVhkZFEjnaArMbKHgTJoUEYNv
-         oXXQ==
+        bh=veq+9NOWY9jhOHWHfiSDBHJjCR3y8kFCK6ZQ7IkSXyU=;
+        b=eocK2D5fg8ysvRo0qAQELuhikgf34yW+RuZF/BmE2TJGjRV13nf2A6HeCRQ7FKHtuV
+         EDzYm0aR2R7QwSPASpqa3kqqk7z3M795lh6Sc0eTTAWV6bhE8QwyFwI90ilpCJFDLNmo
+         9RDWqA0YMEI35jjTBJZ4R3ptB8+HE2ImnV2X3kB71j9vTfu46Y9wSLBHALV0ZcqyAi1b
+         Xz065zwjZ4t0HfcIPOPx5uPrZB5kcfCI899S3wNso0KrO/SEbFORlAcVKQPiUYSmtw10
+         gI65A0Y5V0m2FfCdbDp+WkVNAAMC+9pXmSmvDmJlcVgOmWn+o61dioIjkcYQ3JOMCBKQ
+         gvUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=knFTNygHBlvK7O+pDlbdvkQzVtQ3TgCejJaIUpEQ4jE=;
-        b=pk0/sCO2vmCjgOO81KwuKty7r49SKbQb//XOnZSCbiQ93TfNl64R/QcsBIrVuFyYxL
-         vmMZ+ycpQi4kMP1doP0WBRmkjgZgGmPoS4FO78LYV5Bb5X8QSMI7QLWC8UuVwz55DQPp
-         W0vb2cLrEwLcjBR0Urn4kDKcIcO1eZcIfIORsrS6OGm4p9CtUAUtDu2hzb8IBdEFARI4
-         M1fWogOFV+YPVBwKeSoH09C1JR+IrN/6YsYoDLUQcIELgQ54eIYcwT7/ONt3lc2qmUxb
-         xJnQV3OUynLRd698yBwKyU3GXiWmTEzO1sb2e5w5vIAtQmQrCy85d/xyiY6OuTdJiWtn
-         CQCQ==
-X-Gm-Message-State: AOAM5306xdndgNGsUhaxct0gb4fEM/ePWGkn1M027bKYgLvR+jot7Ocx
-        7go3M+oEBsWj6xukwRhX44fSGoioyuNxu/be2fw=
-X-Google-Smtp-Source: ABdhPJyQMlT6HI3cYl8ktA2fFE/ZTZurP+ljqqgBYUhJ8esgJ8ZgEAVUyHEYJ3Tg55Pvko91cuPxWdnhKnbyjJSPIZE=
-X-Received: by 2002:a19:5d44:: with SMTP id p4mr1244127lfj.56.1591782304769;
- Wed, 10 Jun 2020 02:45:04 -0700 (PDT)
+        bh=veq+9NOWY9jhOHWHfiSDBHJjCR3y8kFCK6ZQ7IkSXyU=;
+        b=OD+k3Exo0Wv3zc+vIluzfkxya9oZJe/II/CvbyiJazlgYI8YXYglxv9CkhlzHZeIDc
+         JoxXV4SIF5dOu3z8AqNJNA1YTohE6pQmigOdaM1TUgBMlaWDdlHjmSeabitbeG4e+inY
+         Z6f5/o4AAckbfZ2aVxaej6yEsucPbiJki+159FXsjjNPL35ZwQOHJGDTt4cFPp8ueCY2
+         caUMsUu0futl5DOcfnQebGUIzebwNaxno+T6z9cdrWbF91BF7ld8j3tE451B8C7oCdFR
+         WNZ238kcLspBkD6ZTFShWIPERw08Xbau7pi/VXnCPFZ2pL1PSQWfYY7WuGKVp4iONDQK
+         SjjA==
+X-Gm-Message-State: AOAM5326NojpA1rVu7Tegg7zbBDs2lOENd3Hu1NlUGJ29LsD46OOfHfk
+        sCZv2UdqF7zZzzrR45+BZQ+E8cLKyrizGfki+acYqQ==
+X-Google-Smtp-Source: ABdhPJx6ZhHz1m36PS68+yVtfRWfuYn7CcqJNRHrV/4hYK/YvqbJYUu3WP3KpaP9b+35/qNyI+xerrZ0ItZHfnFCHbQ=
+X-Received: by 2002:a2e:974a:: with SMTP id f10mr1351794ljj.283.1591782410483;
+ Wed, 10 Jun 2020 02:46:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200610071446.3737-1-zhenzhong.duan@gmail.com>
- <20200610085932.GA461993@ubuntu-n2-xlarge-x86> <CAMj1kXHun8-SS4L03ccp=pt1oyPSfpuPezju294NnJoKLtcvcA@mail.gmail.com>
-In-Reply-To: <CAMj1kXHun8-SS4L03ccp=pt1oyPSfpuPezju294NnJoKLtcvcA@mail.gmail.com>
-From:   Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Date:   Wed, 10 Jun 2020 17:44:53 +0800
-Message-ID: <CAFH1YnN9wDPycD59EPV406j9jkvsibi9Ewjt1ROswENv8OVupQ@mail.gmail.com>
-Subject: Re: [PATCH] efi/libstub: Fix build error with libstub
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Kees Cook <keescook@chromium.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
+References: <20200605224403.181015-1-sebastian.reichel@collabora.com> <20200605224403.181015-4-sebastian.reichel@collabora.com>
+In-Reply-To: <20200605224403.181015-4-sebastian.reichel@collabora.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 10 Jun 2020 11:46:39 +0200
+Message-ID: <CACRpkdazmx7g9_gc4daqivUmM7HpR20k0HVeiGW=PaZVwDq7xQ@mail.gmail.com>
+Subject: Re: [PATCHv2 3/6] power: supply: gpio-charger: add
+ charge-current-limit feature
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Russell King <linux@armlinux.org.uk>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kernel@collabora.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 5:10 PM Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> On Wed, 10 Jun 2020 at 10:59, Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> >
-> > On Wed, Jun 10, 2020 at 03:14:46PM +0800, Zhenzhong Duan wrote:
-> > > Got below error during build:
-...
-> > > diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-> > > index cce4a74..25e5d02 100644
-> > > --- a/drivers/firmware/efi/libstub/Makefile
-> > > +++ b/drivers/firmware/efi/libstub/Makefile
-> > > @@ -6,7 +6,7 @@
-> > >  # enabled, even if doing so doesn't break the build.
-> > >  #
-> > >  cflags-$(CONFIG_X86_32)              := -march=i386
-> > > -cflags-$(CONFIG_X86_64)              := -mcmodel=small
-> > > +cflags-$(CONFIG_X86_64)              := -mcmodel=small -maccumulate-outgoing-args
-> >
-> > This will need a cc-option call if this patch is necessary because clang
-> > does not support this flag.
-> >
-> > clang-11: error: unknown argument: '-maccumulate-outgoing-args'
-> >
->
-> A fix was already sent for this
->
-> https://lore.kernel.org/bpf/20200605150638.1011637-1-nivedita@alum.mit.edu/
->
-> which does the right thing here.
-Ah, so I'm late again. Not clear if there is easy way to check queued
-patches for upstream..
+On Sat, Jun 6, 2020 at 12:44 AM Sebastian Reichel
+<sebastian.reichel@collabora.com> wrote:
 
-Regards
-Zhenzhong
+> Add new charge-current-limit feature to gpio-charger.
+>
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+
+That's really neat and useful.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
