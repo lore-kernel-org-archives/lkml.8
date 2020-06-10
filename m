@@ -2,79 +2,135 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F3DCC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 05:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5984C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 05:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26EFE207F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 05:24:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD2E620734
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 05:24:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sH1hR/ft"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726101AbgFJFYG (ORCPT
+        id S1726135AbgFJFYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 01:24:06 -0400
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:33441 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725844AbgFJFYF (ORCPT
+        Wed, 10 Jun 2020 01:24:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35616 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726108AbgFJFYJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 01:24:05 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01355;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U.9Jxv2_1591766642;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U.9Jxv2_1591766642)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 10 Jun 2020 13:24:03 +0800
-Subject: Re: [PATCH] docs/zh_CN: update sysfs.txt about show() usage
-To:     Chen Zhou <chenzhou10@huawei.com>, harryxiyou@gmail.com,
-        corbet@lwn.net
-Cc:     mchehab+huawei@kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200610025333.84010-1-chenzhou10@huawei.com>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <6df52c93-5f95-38b3-a724-46cdb78605ef@linux.alibaba.com>
-Date:   Wed, 10 Jun 2020 13:24:02 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Wed, 10 Jun 2020 01:24:09 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87ADDC05BD1E;
+        Tue,  9 Jun 2020 22:24:09 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id e16so865604qtg.0;
+        Tue, 09 Jun 2020 22:24:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=stGYbyy0hIe7gMKA+zTlsc1pHHaFqBnSNnTM1vxhGKQ=;
+        b=sH1hR/ftg7dbREqfBeQfywQVOoxKF3sIqXK2QX136WVvT/h4dfC3Hl8BWk2LIiO4v2
+         ebsj9ltehqZnk72848Dp/lMT7CPR/VYQTiX3pR0QmXptTFIyotit+3OGCR7ehLV2Mnd9
+         PQSeYv584hymmo/eNDDFilggT/r1hTXQxuxImm3sipYpIT69G/EXGDX76bTMhw0GehN8
+         hnJyWBrVIfEqxfWrhJHfFzP+H4XVCbgkIBpXlWxU/kNMm85NEmK3+Ma2hNzeDVHk5CIc
+         fvOdhfF/oQ5RomnARokjpgc4BYk267IDKqfhWAJD4R/QK7YWL7EhTavcnimr9zIfh8T8
+         vYUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=stGYbyy0hIe7gMKA+zTlsc1pHHaFqBnSNnTM1vxhGKQ=;
+        b=unvYGip9LWgKKdTIZaT1TvzVJBWCJ5X5e4aWCharVQiKu/hapXrnW/WtCjSix3pCfU
+         SGZ8iAtMR/QRHaS4l2g1zeuVyHyKs21fNCcL840uu5/5v8ooVpo0Z/XSLBOOWb6oauLl
+         lWv6IW785KBCbOiPV+ErgumnhExGgsorNwgk3Iph2wyBSr3QkOKaJCqzplFGyN1hn/49
+         pSppSPInZWCrWVvxS6du8Q/kK9D/8Ljv0hRHqf9ADRlh+8+ycUQKfAf3y/g4653hAcph
+         LKp7UyWba9wOBgf8h1DS2n73hJupO7XgtkazBzCsReNAuH7tOB2KdAxp9pZWVUv9/veh
+         4yQg==
+X-Gm-Message-State: AOAM533kibH7EzLwzyuUVU/fTY2WzRfBPLC34RU6bsPrn9lZqw88i60W
+        QGbfL0DJv5KNtjl7fWHNBgO+zbWVe61WflFgBeQ=
+X-Google-Smtp-Source: ABdhPJwS1Vbp0l7/qFukLruWw2/DM2AotG/IwW7Hj0E6hxH7fGTPOWujbInp5kKoPKMdHOe4g8sGnOqC62TGe3dflnw=
+X-Received: by 2002:aed:2359:: with SMTP id i25mr1440164qtc.194.1591766648490;
+ Tue, 09 Jun 2020 22:24:08 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200610025333.84010-1-chenzhou10@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+References: <20200603230303.kSkT62Lb5%akpm@linux-foundation.org>
+ <a60f7866-3b32-7a0e-5d0a-a48d77f845a8@linux.alibaba.com> <20200609144551.GA452252@cmpxchg.org>
+In-Reply-To: <20200609144551.GA452252@cmpxchg.org>
+From:   Joonsoo Kim <js1304@gmail.com>
+Date:   Wed, 10 Jun 2020 14:23:57 +0900
+Message-ID: <CAAmzW4OrmCBQC05E6Kr-pLw3VU=cthzZCpfEzDabhO5vTaq8KA@mail.gmail.com>
+Subject: Re: [patch 113/131] mm: balance LRU lists based on relative thrashing
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        Michal Hocko <mhocko@suse.com>,
+        =?UTF-8?B?6rmA66+87LCs?= <minchan@kernel.org>,
+        mm-commits@vger.kernel.org, Rik van Riel <riel@surriel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reviewed-by: Alex Shi <alex.shi@linux.alibaba.com>
+2020=EB=85=84 6=EC=9B=94 9=EC=9D=BC (=ED=99=94) =EC=98=A4=ED=9B=84 11:46, J=
+ohannes Weiner <hannes@cmpxchg.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+>
+> On Tue, Jun 09, 2020 at 05:15:33PM +0800, Alex Shi wrote:
+> >
+> >
+> > =E5=9C=A8 2020/6/4 =E4=B8=8A=E5=8D=887:03, Andrew Morton =E5=86=99=E9=
+=81=93:
+> > >
+> > > +   /* XXX: Move to lru_cache_add() when it supports new vs putback *=
+/
+> >
+> > Hi Hannes,
+> >
+> > Sorry for a bit lost, would you like to explain a bit more of your idea=
+ here?
+> >
+> > > +   spin_lock_irq(&page_pgdat(page)->lru_lock);
+> > > +   lru_note_cost(page);
+> > > +   spin_unlock_irq(&page_pgdat(page)->lru_lock);
+> > > +
+> >
+> >
+> > What could we see here w/o the lru_lock?
+>
+> It'll just be part of the existing LRU locking in
+> pagevec_lru_move_fn(), when the new pages are added to the LRU in
+> batch. See this older patch for example:
+>
+> https://lore.kernel.org/linux-mm/20160606194836.3624-6-hannes@cmpxchg.org=
+/
+>
+> I didn't include it in this series to reduce conflict with Joonsoo's
+> WIP series that also operates in this area and does something similar:
 
-Thanks
-Alex
+Thanks!
 
-在 2020/6/10 上午10:53, Chen Zhou 写道:
-> Update the show() usage according to the English version.
-> 
-> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-> ---
->  Documentation/translations/zh_CN/filesystems/sysfs.txt | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/translations/zh_CN/filesystems/sysfs.txt b/Documentation/translations/zh_CN/filesystems/sysfs.txt
-> index fcf620049d11..9481e3ed2a06 100644
-> --- a/Documentation/translations/zh_CN/filesystems/sysfs.txt
-> +++ b/Documentation/translations/zh_CN/filesystems/sysfs.txt
-> @@ -213,10 +213,12 @@ Sysfs 将会为每次读写操作调用一次这个方法。这使得这些方
->  
->  - 缓冲区应总是 PAGE_SIZE 大小。对于i386，这个值为4096。
->  
-> -- show() 方法应该返回写入缓冲区的字节数，也就是 snprintf()的
-> +- show() 方法应该返回写入缓冲区的字节数，也就是 scnprintf()的
->    返回值。
->  
-> -- show() 应始终使用 snprintf()。
-> +- show() 方法在将格式化返回值返回用户空间的时候，禁止使用snprintf()。
-> +  如果可以保证不会发生缓冲区溢出，可以使用sprintf()，否则必须使用
-> +  scnprintf()。
->  
->  - store() 应返回缓冲区的已用字节数。如果整个缓存都已填满，只需返回
->    count 参数。
-> 
+> https://lkml.org/lkml/2020/4/3/63
+
+I haven't completed the rebase of my series but I guess that referenced pat=
+ch
+"https://lkml.org/lkml/2020/4/3/63" would be removed in the next version.
+
+Before the I/O cost model, a new anonymous page contributes to the LRU recl=
+aim
+balance. But, now, a new anonymous page doesn't contributes to the I/O cost
+so this adjusting patch would not be needed anymore.
+
+If anyone wants to change this part,
+"/* XXX: Move to lru_cache_add() when it supports new vs putback */", feel =
+free
+to do it.
+
+Thanks.
