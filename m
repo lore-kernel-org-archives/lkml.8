@@ -2,69 +2,125 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9500DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF17C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7771E206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:26:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA8B5206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:26:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591792012;
+	bh=PBnbsD1r4hBJSwpcdPlA8plwD/kWkJiD61twepTwXNE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Xt22CXRCsM4xlAa2uMvHwHPKb6qqw/kqvsNftHI0aG0XD1lTKEAWyrwzdPjOE1znf
+	 1E3ufCGi2uNvvGTCg+DTAOsiJqC0tLs8oGtbr3MlN+IDD+AtyxFbW/FIodQi3NOlp5
+	 gK8mUGkhUDqBpnc2om744IghJ0IPgWKPObtgCsvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729159AbgFJM03 (ORCPT
+        id S1729177AbgFJM0u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 08:26:29 -0400
-Received: from paleale.coelho.fi ([176.9.41.70]:36642 "EHLO
-        farmhouse.coelho.fi" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729140AbgFJM02 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 08:26:28 -0400
-Received: from 91-156-6-193.elisa-laajakaista.fi ([91.156.6.193] helo=[127.0.1.1])
-        by farmhouse.coelho.fi with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <luca@coelho.fi>)
-        id 1jizng-0015Qs-DI; Wed, 10 Jun 2020 15:25:48 +0300
-Content-Type: text/plain; charset="utf-8"
+        Wed, 10 Jun 2020 08:26:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38506 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729077AbgFJM0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 08:26:48 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8D02206F4;
+        Wed, 10 Jun 2020 12:26:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591792007;
+        bh=PBnbsD1r4hBJSwpcdPlA8plwD/kWkJiD61twepTwXNE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jJpTTwI4BcRIVrN10ZRmWWQHb9uLqvUrrTbyJC1G5ckdCzOCEOBlPdgX2dMouNv0y
+         YAgEbPCewSSW4UUxn4RQtfuCNeuAdQ/VXQBBn5Ha87ZqsZt+1tcxAPrnMH0pHm3w0F
+         EFkHX/7w+geTl3Np545ZBkOWixSYUU12SBQ6Y3Ls=
+Date:   Wed, 10 Jun 2020 14:26:41 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-acpi@vger.kernel.org,
+        netdev@vger.kernel.org, Joe Perches <joe@perches.com>,
+        Jason Baron <jbaron@akamai.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH v3 1/7] Documentation: dynamic-debug: Add description of
+ level bitmask
+Message-ID: <20200610122641.GB1900758@kroah.com>
+References: <20200609104604.1594-1-stanimir.varbanov@linaro.org>
+ <20200609104604.1594-2-stanimir.varbanov@linaro.org>
+ <20200609111615.GD780233@kroah.com>
+ <0830ba57-d416-4788-351a-6d1b2ca5b7d8@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-From:   Luca Coelho <luca@coelho.fi>
-In-Reply-To: <20200605154112.16277-7-f.suligoi@asem.it>
-References: <20200605154112.16277-7-f.suligoi@asem.it>
-To:     Flavio Suligoi <f.suligoi@asem.it>
-Cc:     Johannes Berg <johannes@sipsolutions.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        Johan Hovold <johan@kernel.org>,
-        Saurav Girepunje <saurav.girepunje@gmail.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        <linux-wireless@vger.kernel.org>, <b43-dev@lists.infradead.org>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        <netdev@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Flavio Suligoi <f.suligoi@asem.it>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.8.3
-Message-Id: <E1jizng-0015Qs-DI@farmhouse.coelho.fi>
-Date:   Wed, 10 Jun 2020 15:25:48 +0300
-Subject: Re: [PATCH 6/9] net: wireless: intel: fix wiki website url
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0830ba57-d416-4788-351a-6d1b2ca5b7d8@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Flavio Suligoi <f.suligoi@asem.it> wrote:
-
-> In some Intel files, the wiki url is still the old
-> "wireless.kernel.org" instead of the new
-> "wireless.wiki.kernel.org"
+On Wed, Jun 10, 2020 at 01:29:20PM +0300, Stanimir Varbanov wrote:
+> Hi Greg,
 > 
-> Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+> On 6/9/20 2:16 PM, Greg Kroah-Hartman wrote:
+> > On Tue, Jun 09, 2020 at 01:45:58PM +0300, Stanimir Varbanov wrote:
+> >> This adds description of the level bitmask feature.
+> >>
+> >> Cc: Jonathan Corbet <corbet@lwn.net> (maintainer:DOCUMENTATION)
+> >>
+> >> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> >> ---
+> >>  Documentation/admin-guide/dynamic-debug-howto.rst | 10 ++++++++++
+> >>  1 file changed, 10 insertions(+)
+> >>
+> >> diff --git a/Documentation/admin-guide/dynamic-debug-howto.rst b/Documentation/admin-guide/dynamic-debug-howto.rst
+> >> index 0dc2eb8e44e5..c2b751fc8a17 100644
+> >> --- a/Documentation/admin-guide/dynamic-debug-howto.rst
+> >> +++ b/Documentation/admin-guide/dynamic-debug-howto.rst
+> >> @@ -208,6 +208,12 @@ line
+> >>  	line -1605          // the 1605 lines from line 1 to line 1605
+> >>  	line 1600-          // all lines from line 1600 to the end of the file
+> >>  
+> >> +level
+> >> +    The given level will be a bitmask ANDed with the level of the each ``pr_debug()``
+> >> +    callsite. This will allow to group debug messages and show only those of the
+> >> +    same level.  The -p flag takes precedence over the given level. Note that we can
+> >> +    have up to five groups of debug messages.
+> > 
+> > As was pointed out, this isn't a "level", it's some arbitrary type of
+> > "grouping".
+> 
+> Yes, it is grouping of KERN_DEBUG level messages by importance (my
+> fault, I put incorrect name).  What is important is driver author
+> decision.  Usually when the driver is huge and has a lot of debug
+> messages it is not practical to enable all of them to chasing a
+> particular bug or issue.  You know that debugging (printk) add delays
+> which could hide or rise additional issue(s) which would complicate
+> debug and waste time.
 
-Patch applied to iwlwifi-next.git, thanks.
+That is why it is possible to turn on and off debugging messages on a
+function/line basis already.  Why not just use that instead?
 
-e00c6d8d491b net: wireless: intel: fix wiki website url
+> For the Venus driver I have defined three groups of KERN_DEBUG - low,
+> medium and high (again the driver author(s) will decide what the
+> importance is depending on his past experience).
+> 
+> There is another point where the debugging is made by person who is not
+> familiar with the driver code. In that case he/she cannot enable lines
+> or range of lines because he don't know the details. Here the grouping
+> by importance could help.
 
+And they will really know what "low/medium/high" are?
+
+Anyway, that makes a bit more sense, but the documentation could use a
+lot more in order to describe this type of behavior, and what is
+expected by both driver authors, and users of the interface.
+
+thanks,
+
+greg k-h
