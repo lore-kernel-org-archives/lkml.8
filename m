@@ -2,113 +2,169 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DDDC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 04:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF684C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 04:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C5FF2072E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 04:15:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC1472072E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 04:16:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726090AbgFJEPh (ORCPT
+        id S1726115AbgFJEQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 00:15:37 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54908 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725268AbgFJEPg (ORCPT
+        Wed, 10 Jun 2020 00:16:03 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45044 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbgFJEQC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 00:15:36 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05A40rR2031382;
-        Wed, 10 Jun 2020 00:15:29 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31ja3a7u45-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 10 Jun 2020 00:15:29 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05A4BBCB006418;
-        Wed, 10 Jun 2020 04:15:29 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma03dal.us.ibm.com with ESMTP id 31hw1bjtvy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 10 Jun 2020 04:15:29 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05A4FQMa8127182
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 10 Jun 2020 04:15:26 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BEDB9BE056;
-        Wed, 10 Jun 2020 04:15:27 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 22285BE04F;
-        Wed, 10 Jun 2020 04:15:26 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.211.67.12])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Wed, 10 Jun 2020 04:15:25 +0000 (GMT)
-References: <20200609105731.14032-1-sathnaga@linux.vnet.ibm.com>
-User-agent: mu4e 1.2.0; emacs 26.3
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Ram Pai <linuxram@us.ibm.com>,
-        Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>,
-        Laurent Dufour <ldufour@linux.ibm.com>
-Subject: Re: [PATCH] powerpc/pseries/svm: Remove unwanted check for shared_lppaca_size
-In-reply-to: <20200609105731.14032-1-sathnaga@linux.vnet.ibm.com>
-Date:   Wed, 10 Jun 2020 01:15:21 -0300
-Message-ID: <873673eeue.fsf@morokweng.localdomain>
+        Wed, 10 Jun 2020 00:16:02 -0400
+Received: by mail-pl1-f194.google.com with SMTP id bh7so439842plb.11;
+        Tue, 09 Jun 2020 21:16:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=RqJlNuE+oKm71404ZfCQQBtWLTSA3KmIj1RN+yZNXxs=;
+        b=OjK9U0e9Urr1apXajP2jbz8B1039eO94176ll0KaAa1aNDT9871PW5k+ZqUV49Zxmf
+         Kg5DWaHx/Xg+FiOZJLeySg4m8SUzY4NWCTI63GiPvy8gvVsx5Bjk6tZ9lsCGTENn4cgc
+         xkeJgjxkpaI9zhHkBTuBAMKdF1qElJy+VuyfLbsk2E54vpzCQKGoQyHlLU0o81mPgCLM
+         CtiKVYe03BgyAhPNsfpGdBRgmeGMnvaGnhshs0hEF3jA+J6h3IHJhUfMkfRQA4T6MhxK
+         1h8Fwh1kcUo++/nOdWotzwXV7BVXBeLiQDVqOMrNXwm1W5ZebwzdHtug////0XVzE7T7
+         9HlA==
+X-Gm-Message-State: AOAM533o0A6gIwWpDHgZCo2sBzyedRUf+yI+7bvEB7XPDqYsDjq+u7G0
+        K64XWGHnSHClKzIZoj0bfiU=
+X-Google-Smtp-Source: ABdhPJwjFynqU6qbv9N4e8LJgf0giKNqhBQu1F2J+/XeoSw/unIKLR7cvhQUVBe2sD+HmqdPt5lwog==
+X-Received: by 2002:a17:90a:d188:: with SMTP id fu8mr1043148pjb.149.1591762561352;
+        Tue, 09 Jun 2020 21:16:01 -0700 (PDT)
+Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
+        by smtp.gmail.com with ESMTPSA id i14sm3844655pju.24.2020.06.09.21.15.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jun 2020 21:16:00 -0700 (PDT)
+Subject: Re: [RFC PATCH 2/5] scsi: ufs: Add UFS-feature layer
+To:     daejun7.park@samsung.com, ALIM AKHTAR <alim.akhtar@samsung.com>,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>
+Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+References: <963815509.21591320301642.JavaMail.epsvc@epcpadp1>
+ <231786897.01591320001492.JavaMail.epsvc@epcpadp1>
+ <CGME20200605011604epcms2p8bec8ef6682583d7248dc7d9dc1bfc882@epcms2p1>
+ <336371513.41591320902369.JavaMail.epsvc@epcpadp1>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <1319810e-a323-c022-5e27-902f88cefe8f@acm.org>
+Date:   Tue, 9 Jun 2020 21:15:58 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-09_14:2020-06-09,2020-06-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- suspectscore=0 priorityscore=1501 malwarescore=0 cotscore=-2147483648
- spamscore=0 phishscore=0 clxscore=1015 adultscore=0 mlxlogscore=999
- lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006100026
+In-Reply-To: <336371513.41591320902369.JavaMail.epsvc@epcpadp1>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-06-04 18:30, Daejun Park wrote:
+> +inline void ufsf_slave_configure(struct ufs_hba *hba,
+> +				 struct scsi_device *sdev)
+> +{
+> +	/* skip well-known LU */
+> +	if (sdev->lun >= UFS_UPIU_MAX_UNIT_NUM_ID)
+> +		return;
+> +
+> +	if (!(hba->dev_info.b_ufs_feature_sup & UFS_FEATURE_SUPPORT_HPB_BIT))
+> +		return;
+> +
+> +	atomic_inc(&hba->ufsf.slave_conf_cnt);
+> +	smp_mb__after_atomic(); /* for slave_conf_cnt */
+> +
+> +	/* waiting sdev init.*/
+> +	if (waitqueue_active(&hba->ufsf.sdev_wait))
+> +		wake_up(&hba->ufsf.sdev_wait);
+> +}
 
-Satheesh Rajendran <sathnaga@linux.vnet.ibm.com> writes:
+Guarding a wake_up() call with a waitqueue_active() check is an
+anti-pattern. Please don't do that and call wake_up() directly.
+Additionally, wake_up() includes a barrier if it wakes up a kernel
+thread so the smp_mb__after_atomic() can be left out if the
+waitqueue_active() call is removed.
 
-> Early secure guest boot hits the below crash while booting with
-> vcpus numbers aligned with page boundary for PAGE size of 64k
-> and LPPACA size of 1k i.e 64, 128 etc, due to the BUG_ON assert
-> for shared_lppaca_total_size equal to shared_lppaca_size,
->
->  [    0.000000] Partition configured for 64 cpus.
->  [    0.000000] CPU maps initialized for 1 thread per core
->  [    0.000000] ------------[ cut here ]------------
->  [    0.000000] kernel BUG at arch/powerpc/kernel/paca.c:89!
->  [    0.000000] Oops: Exception in kernel mode, sig: 5 [#1]
->  [    0.000000] LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=2048 NUMA pSeries
->
-> which is not necessary, let's remove it.
->
-> Cc: linux-kernel@vger.kernel.org
-> Cc: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-> Cc: Ram Pai <linuxram@us.ibm.com>
-> Cc: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
-> Cc: Laurent Dufour <ldufour@linux.ibm.com>
-> Signed-off-by: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-> ---
->  arch/powerpc/kernel/paca.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> +/**
+> + * struct ufsf_operation - UFS feature specific callbacks
+> + * @prep_fn: called after construct upiu structure
+> + * @reset: called after proving hba
+                           ^^^^^^^
+Is this a typo? Should "proving" perhaps be changed into "probing"?
 
-Thanks for fixing this bug! I would only add:
+> +struct ufshpb_driver {
+> +	struct device_driver drv;
+> +	struct list_head lh_hpb_lu;
+> +
+> +	struct ufsf_operation ufshpb_ops;
+> +
+> +	/* memory management */
+> +	struct kmem_cache *ufshpb_mctx_cache;
+> +	mempool_t *ufshpb_mctx_pool;
+> +	mempool_t *ufshpb_page_pool;
+> +
+> +	struct workqueue_struct *ufshpb_wq;
+> +};
 
-Fixes: bd104e6db6f0 ("powerpc/pseries/svm: Use shared memory for LPPACA structures")
+Why is a dedicated workqueue needed? Why are the standard workqueues not
+good enough?
 
-In any case:
+> @@ -2525,6 +2525,8 @@ static int ufshcd_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
+>  
+>  	ufshcd_comp_scsi_upiu(hba, lrbp);
+>  
+> +	ufsf_ops_prep_fn(hba, lrbp);
+> +
+>  	err = ufshcd_map_sg(hba, lrbp);
+>  	if (err) {
+>  		lrbp->cmd = NULL;
 
-Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+What happens if a SCSI command is retried and hence ufsf_ops_prep_fn()
+is called multiple times for the same SCSI command?
 
--- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
+Thanks,
+
+Bart.
