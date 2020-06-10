@@ -2,80 +2,101 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED255C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A6B3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7E0C206C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5561F206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:08:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fJTk0h8F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726138AbgFJBHj (ORCPT
+        id S1726154AbgFJBIF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 21:07:39 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5872 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725988AbgFJBHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 21:07:39 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C09C3D5C36590D77C739;
-        Wed, 10 Jun 2020 09:07:36 +0800 (CST)
-Received: from [127.0.0.1] (10.166.215.93) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Wed, 10 Jun 2020
- 09:07:33 +0800
-Subject: Re: [PATCH v2] sample-trace-array: Fix sleeping function called from
- invalid context
-To:     Divya Indi <divya.indi@oracle.com>, <linux-kernel@vger.kernel.org>
-CC:     Steven Rostedt <rostedt@goodmis.org>,
-        Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
-References: <0047f80f-4fff-16ff-7ac0-20181f03f06a@oracle.com>
- <20200609135125.2206637-1-wangkefeng.wang@huawei.com>
- <53201591-082d-7e42-9043-237ae4239da6@oracle.com>
-From:   Kefeng Wang <wangkefeng.wang@huawei.com>
-Message-ID: <aff79eb0-a05b-8040-ba21-007cc8d53cb1@huawei.com>
-Date:   Wed, 10 Jun 2020 09:07:32 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 9 Jun 2020 21:08:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52774 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbgFJBIE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 21:08:04 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37AC4C05BD1E;
+        Tue,  9 Jun 2020 18:08:03 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id 205so568925qkg.3;
+        Tue, 09 Jun 2020 18:08:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Vamar1imPGmNvjQrf4Z1noIseKJMzzhcgENPsA5na3U=;
+        b=fJTk0h8FxJJAQwFkQza1lwcNACtdjTFZr6vhcgsFpGKBxxZjCFMDQ6XmpukrefLhN9
+         KUBaakKsqTHUuuR1YwsgfxpQpmMj93G5eSTIsWDKRWmeSa4lm+G6xB2HIN2blsTuw91E
+         7iK0gXHiPUChe3Luig3UTJs+4gXDXGDh4oHnJ0SRqcGnUldPL/oU1flFuKB+mbsPGa/X
+         Qh8H0rzRNWxTFedfKVEa/89dvP0Zh6AFbXpYbkscc2tQbxZW9A7px3nXNNdSw3jEBrYP
+         qGViUTUf9nmTXDmkySHu68f60FFzs0/F6ssGRjXzJ0pPiRirdO6KzYi1kFy4/gqg2fvr
+         IuXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Vamar1imPGmNvjQrf4Z1noIseKJMzzhcgENPsA5na3U=;
+        b=ScrMwVGJFKXT2NbY/uxNPn4XQ7F3KBYmOnw0TifKXB0mUbpSmicNQp96BYb1HieCek
+         Sqde6Jcv6AI7h4N+5ZDDZL97j3R7MuV68DvZI9tZpDQCBFuslNnrhE6TEnW9TtC16VNs
+         MZIla7cAPWUojstlBsoVvyushDfql78DzBBfHPJdeJOIlo5ojhNYAHO/7kYaIWZKJrwk
+         mzjLvLXeAVXs5gshW7T4UoLJAxctc6K1e0MsP8cT/cug6e+Iwnb/VG3TkhLbgS7HYIrO
+         kBqqnd1DuJiAWhRvUkalc97EAxyVpyP9NsbdsJA3pFPWGrGheOelaXlmYVRQnCJz2iuL
+         kPIA==
+X-Gm-Message-State: AOAM5328dlcSZuE/BUyG+x/OYGPCCFa/xbGTXuepnU/pAaoG0qi4zTKN
+        V5LsEFYc9wGjyxF70tA20Q==
+X-Google-Smtp-Source: ABdhPJxoJ/sHIknqpkWtvAQC8xpLyu6qROAktnCeMs1TtRk3G0EWq6N4jDwOJrrSSBWGqbXcpkBRqw==
+X-Received: by 2002:ae9:c113:: with SMTP id z19mr676879qki.355.1591751282318;
+        Tue, 09 Jun 2020 18:08:02 -0700 (PDT)
+Received: from moria.home.lan ([2601:19b:c500:a1:7285:c2ff:fed5:c918])
+        by smtp.gmail.com with ESMTPSA id m53sm12341695qtb.64.2020.06.09.18.08.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2020 18:08:01 -0700 (PDT)
+Date:   Tue, 9 Jun 2020 21:08:00 -0400
+From:   Kent Overstreet <kent.overstreet@gmail.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        viro@zeniv.linux.org.uk, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 2/2] fs: generic_file_buffered_read() now uses
+ find_get_pages_contig
+Message-ID: <20200610010800.GA4070152@moria.home.lan>
+References: <20200610001036.3904844-1-kent.overstreet@gmail.com>
+ <20200610001036.3904844-3-kent.overstreet@gmail.com>
+ <20200610004753.GE19604@bombadil.infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <53201591-082d-7e42-9043-237ae4239da6@oracle.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [10.166.215.93]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200610004753.GE19604@bombadil.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jun 09, 2020 at 05:47:53PM -0700, Matthew Wilcox wrote:
+> On Tue, Jun 09, 2020 at 08:10:36PM -0400, Kent Overstreet wrote:
+> > @@ -2275,83 +2287,93 @@ static ssize_t generic_file_buffered_read(struct kiocb *iocb,
+> >  		struct iov_iter *iter, ssize_t written)
+> >  {
+> >  	struct file *filp = iocb->ki_filp;
+> > +	struct file_ra_state *ra = &filp->f_ra;
+> >  	struct address_space *mapping = filp->f_mapping;
+> >  	struct inode *inode = mapping->host;
+> > -	struct file_ra_state *ra = &filp->f_ra;
+> >  	size_t orig_count = iov_iter_count(iter);
+> > -	pgoff_t last_index;
+> > -	int error = 0;
+> > +	struct page *pages[64];
+> 
+> That's 512 bytes which seems like a lot of stack space.  Would 16 be
+> enough to see a significant fraction of the benefit?
 
-On 2020/6/10 0:29, Divya Indi wrote:
-> On 6/9/20 6:51 AM, Kefeng Wang wrote:
->>   BUG: sleeping function called from invalid context at kernel/locking/mutex.c:935
->>   in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 0, name: swapper/5
->>   1 lock held by swapper/5/0:
->>    #0: ffff80001002bd90 (samples/ftrace/sample-trace-array.c:38){+.-.}-{0:0}, at: call_timer_fn+0x8/0x3e0
->>   CPU: 5 PID: 0 Comm: swapper/5 Not tainted 5.7.0+ #8
->>   Hardware name: QEMU QEMU Virtual Machine, BIOS 0.0.0 02/06/2015
->>   Call trace:
->>    dump_backtrace+0x0/0x1a0
->>    show_stack+0x20/0x30
->>    dump_stack+0xe4/0x150
->>    ___might_sleep+0x160/0x200
->>    __might_sleep+0x58/0x90
->>    __mutex_lock+0x64/0x948
->>    mutex_lock_nested+0x3c/0x58
->>    __ftrace_set_clr_event+0x44/0x88
->>    trace_array_set_clr_event+0x24/0x38
->>    mytimer_handler+0x34/0x40 [sample_trace_array]
->>
->> mutex_lock() will be called in interrupt context, using workqueue to fix it.
-> Fixes:
-Missing it， will send v3， thanks.
->> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-> Reviewed-by: Divya Indi <divya.indi@oracle.com>
->
->
-
+Ah right, we do call into fs code for readahead from here. I'll switch it to
+kmalloc the page array if it's more than 16.
