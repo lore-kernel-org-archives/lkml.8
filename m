@@ -2,413 +2,280 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52670C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 18:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED09FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 18:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18B79206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 18:18:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1DE220656
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 18:21:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="JtZ94Gw+"
+	dkim=pass (1024-bit key) header.d=g001.emailsrvr.com header.i=@g001.emailsrvr.com header.b="rT0AfRzT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728783AbgFJSSG (ORCPT
+        id S1728804AbgFJSVw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 14:18:06 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:63125 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728505AbgFJSSG (ORCPT
+        Wed, 10 Jun 2020 14:21:52 -0400
+Received: from smtp74.ord1d.emailsrvr.com ([184.106.54.74]:50356 "EHLO
+        smtp74.ord1d.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728776AbgFJSVv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 14:18:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1591813084; x=1623349084;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6aXdeDkD5gOCGoRf0ZasILPQSJtZaN31SIP93A/isqA=;
-  b=JtZ94Gw+tdqP9YB4+ZRhmxTvqcjnjJFlfpOZp89hojgf9yvgUAUZKYR4
-   tNmhKKdU6oCACXNUKHwJeiqw6oOyrA3utXcOsowiUXTM59F3h5ahb/9EV
-   6be8J9Kp5XB3IHG9XMmYlKG3QY/pqM9vN838z+MvqUUGshZ/vIa2kJiG9
-   6xmVqHA6ei0XUm8syGrzBjOvOMQz6SE0lp5kgSxD2sAkJ8hh4R5sf5dCi
-   QqskF4mk+AcjCSI8Epo0WozeUqWmXB532jv0v2kjKyoS/IxcbleWbFri5
-   /bM6PG7uKf5jvvkhxpS5gK5Mtx6CQZA+OY0d5iQkEXYmCVmLLlZi4eCSU
-   Q==;
-IronPort-SDR: +9lfqXN9lNDwAVwa+7GZlBEXUct8btRnTMJA6mYHO1dAIwYj+P17IGdtbz4E66QjjiXG23N1Zh
- BI0h0bROve0nJ9zLRRXQdHyJ3gUEpnmPjNhD8AbMzR4lt709aB+o+fSF6M3hsw0CelkfbkGpO2
- 1M4nxvRXXjmg2iAjrAtzsPgKYKqu7xO6fYy3es6q0zXeK/yr+Y4QZmFzdF8nO6vBZsdj7Cn6jC
- MC0DkFjpRwoql//y+VWW6lLaaX7c3qUkkorUBTyMw8yrqbhuRiqeYfUxFU2mkYrvwePGbuVGtp
- Mzw=
-X-IronPort-AV: E=Sophos;i="5.73,496,1583218800"; 
-   d="scan'208";a="83016873"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Jun 2020 11:18:03 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Wed, 10 Jun 2020 11:18:03 -0700
-Received: from localhost (10.10.115.15) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.1847.3 via Frontend
- Transport; Wed, 10 Jun 2020 11:18:02 -0700
-Date:   Wed, 10 Jun 2020 20:18:02 +0200
-From:   "Allan W. Nielsen" <allan.nielsen@microchip.com>
-To:     Vladimir Oltean <olteanv@gmail.com>
-CC:     Xiaoliang Yang <xiaoliang.yang_1@nxp.com>, Po Liu <po.liu@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        "Li Yang" <leoyang.li@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Jiri Pirko" <jiri@resnulli.us>, Ido Schimmel <idosch@idosch.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        "Nikolay Aleksandrov" <nikolay@cumulusnetworks.com>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Joergen Andreasen <joergen.andreasen@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <linux-devel@linux.nxdi.nxp.com>
-Subject: Re: [PATCH v2 net-next 03/10] net: mscc: ocelot: allocated rules to
- different hardware VCAP TCAMs by chain index
-Message-ID: <20200610181802.2sqdhsoyrkd4awcg@ws.localdomain>
-References: <20200602051828.5734-1-xiaoliang.yang_1@nxp.com>
- <20200602051828.5734-4-xiaoliang.yang_1@nxp.com>
- <20200602083613.ddzjh54zxtbklytw@ws.localdomain>
- <CA+h21hocBOyuDFvnLq-sBEG5phaJPxbhvZ_P5H8HnTkBDv1x+w@mail.gmail.com>
- <20200608135633.jznoxwny6qtzxjng@ws.localdomain>
- <CA+h21hqoZdQeSxTtrEsVEHi6ZP1LrWKQGwZ9zPvjyWZ62TNfbg@mail.gmail.com>
+        Wed, 10 Jun 2020 14:21:51 -0400
+X-Greylist: delayed 460 seconds by postgrey-1.27 at vger.kernel.org; Wed, 10 Jun 2020 14:21:50 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=g001.emailsrvr.com;
+        s=20190322-9u7zjiwi; t=1591812850;
+        bh=mh+Kv2YKb+dLXMp7FflSBtwzk5puxQCfhuIontc45EI=;
+        h=From:To:Subject:Date:From;
+        b=rT0AfRzTSNUbHS3zS7Rk3KEo0cexyz7OMDGYuC3vcjU1INxfmArSE+cMqxq8CA6k5
+         cKHzpmwDbCrotKXcs3DxeaMI89StC6IU0CkvWxNzMTdiC+A50xu9pU/eedGr5YbplS
+         u4L+1qqb6g4vVZlQhTuCfilzpsT4B3HJias8cYSU=
+X-Auth-ID: dpreed@deepplum.com
+Received: by smtp2.relay.ord1d.emailsrvr.com (Authenticated sender: dpreed-AT-deepplum.com) with ESMTPSA id DE6A04039B;
+        Wed, 10 Jun 2020 14:14:08 -0400 (EDT)
+X-Sender-Id: dpreed@deepplum.com
+Received: from gyre.localnet ([UNAVAILABLE]. [209.6.10.161])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384)
+        by 0.0.0.0:465 (trex/5.7.12);
+        Wed, 10 Jun 2020 14:14:09 -0400
+From:   "David P. Reed" <dpreed@deepplum.com>
+To:     dpreed@deepplum.com
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Allison Randal <allison@lohutok.net>,
+        Enrico Weigelt <info@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Martin Molnar <martin.molnar.programming@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Jann Horn <jannh@google.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] Fix undefined operation VMXOFF during reboot and crash
+Date:   Wed, 10 Jun 2020 14:12:50 -0400
+Message-Id: <20200610181254.2142-1-dpreed@deepplum.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CA+h21hqoZdQeSxTtrEsVEHi6ZP1LrWKQGwZ9zPvjyWZ62TNfbg@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Classification-ID: 863a6ae4-a1f9-4ba7-93f9-e74dc2bfae29-1-1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.06.2020 15:55, Vladimir Oltean wrote:
->EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
->
->Hi Allan,
->
->On Mon, 8 Jun 2020 at 16:56, Allan W. Nielsen
-><allan.nielsen@microchip.com> wrote:
->>
->> On 03.06.2020 13:04, Vladimir Oltean wrote:
->> >On Tue, 2 Jun 2020 at 11:38, Allan W. Nielsen
->> ><allan.nielsen@microchip.com> wrote:
->> >>
->> >> Hi Xiaoliang,
->> >>
->> >> Happy to see that you are moving in the directions of multi chain - this
->> >> seems ilke a much better fit to me.
->> >>
->> >>
->> >> On 02.06.2020 13:18, Xiaoliang Yang wrote:
->> >> >There are three hardware TCAMs for ocelot chips: IS1, IS2 and ES0. Each
->> >> >one supports different actions. The hardware flow order is: IS1->IS2->ES0.
->> >> >
->> >> >This patch add three blocks to store rules according to chain index.
->> >> >chain 0 is offloaded to IS1, chain 1 is offloaded to IS2, and egress chain
->> >> >0 is offloaded to ES0.
->> >>
->> >> Using "static" allocation to to say chain-X goes to TCAM Y, also seems
->> >> like the right approach to me. Given the capabilities of the HW, this
->> >> will most likely be the easiest scheme to implement and to explain to
->> >> the end-user.
->> >>
->> >> But I think we should make some adjustments to this mapping schema.
->> >>
->> >> Here are some important "things" I would like to consider when defining
->> >> this schema:
->> >>
->> >> - As you explain, we have 3 TCAMs (IS1, IS2 and ES0), but we have 3
->> >>    parallel lookups in IS1 and 2 parallel lookups in IS2 - and also these
->> >>    TCAMs has a wide verity of keys.
->> >>
->> >> - We can utilize these multiple parallel lookups such that it seems like
->> >>    they are done in serial (that is if they do not touch the same
->> >>    actions), but as they are done in parallel they can not influence each
->> >>    other.
->> >>
->> >> - We can let IS1 influence the IS2 lookup (like the GOTO actions was
->> >>    intended to be used).
->> >>
->> >> - The chip also has other QoS classification facilities which sits
->> >>    before the TCAM (take a look at 3.7.3 QoS, DP, and DSCP Classification
->> >>    in vsc7514 datasheet). It we at some point in time want to enable
->> >>    this, then I think we need to do that in the same tc-flower framework.
->> >>
->> >> Here is my initial suggestion for an alternative chain-schema:
->> >>
->> >> Chain 0:           The default chain - today this is in IS2. If we proceed
->> >>                     with this as is - then this will change.
->> >> Chain 1-9999:      These are offloaded by "basic" classification.
->> >> Chain 10000-19999: These are offloaded in IS1
->> >>                     Chain 10000: Lookup-0 in IS1, and here we could limit the
->> >>                                  action to do QoS related stuff (priority
->> >>                                  update)
->> >>                     Chain 11000: Lookup-1 in IS1, here we could do VLAN
->> >>                                  stuff
->> >>                     Chain 12000: Lookup-2 in IS1, here we could apply the
->> >>                                  "PAG" which is essentially a GOTO.
->> >>
->> >> Chain 20000-29999: These are offloaded in IS2
->> >>                     Chain 20000-20255: Lookup-0 in IS2, where CHAIN-ID -
->> >>                                        20000 is the PAG value.
->> >>                     Chain 21000-21000: Lookup-1 in IS2.
->> >>
->> >> All these chains should be optional - users should only need to
->> >> configure the chains they need. To make this work, we need to configure
->> >> both the desired actions (could be priority update) and the goto action.
->> >> Remember in HW, all packets goes through this process, while in SW they
->> >> only follow the "goto" path.
->> >>
->> >> An example could be (I have not tested this yet - sorry):
->> >>
->> >> tc qdisc add dev eth0 ingress
->> >>
->> >> # Activate lookup 11000. We can not do any other rules in chain 0, also
->> >> # this implicitly means that we do not want any chains <11000.
->> >> tc filter add dev eth0 parent ffff: chain 0
->> >>     action
->> >>     matchall goto 11000
->> >>
->> >> tc filter add dev eth0 parent ffff: chain 11000 \
->> >>     flower src_mac 00:01:00:00:00:00/00:ff:00:00:00:00 \
->> >>     action \
->> >>     vlan modify id 1234 \
->> >>     pipe \
->> >>     goto 20001
->> >>
->> >> tc filter add dev eth0 parent ffff: chain 20001 ...
->> >>
->> >> Maybe it would be an idea to create some use-cases, implement them in a
->> >> test which can pass with today's SW, and then once we have a common
->> >> understanding of what we want, we can implement it?
->> >>
->> >> /Allan
->> >>
->> >> >Using action goto chain to express flow order as follows:
->> >> >        tc filter add dev swp0 chain 0 parent ffff: flower skip_sw \
->> >> >        action goto chain 1
->> >> >
->> >> >Signed-off-by: Xiaoliang Yang <xiaoliang.yang_1@nxp.com>
->> >> >---
->> >> > drivers/net/ethernet/mscc/ocelot_ace.c    | 51 +++++++++++++++--------
->> >> > drivers/net/ethernet/mscc/ocelot_ace.h    |  7 ++--
->> >> > drivers/net/ethernet/mscc/ocelot_flower.c | 46 +++++++++++++++++---
->> >> > include/soc/mscc/ocelot.h                 |  2 +-
->> >> > include/soc/mscc/ocelot_vcap.h            |  4 +-
->> >> > 5 files changed, 81 insertions(+), 29 deletions(-)
->> >
->> >> /Allan
->> >
->> >What would be the advantage, from a user perspective, in exposing the
->> >3 IS1 lookups as separate chains with orthogonal actions?
->> >If the user wants to add an IS1 action that performs QoS
->> >classification, VLAN classification and selects a custom PAG, they
->> >would have to install 3 separate filters with the same key, each into
->> >its own chain. Then the driver would be smart enough to figure out
->> >that the 3 keys are actually the same, so it could merge them.
->> >In comparison, we could just add a single filter to the IS1 chain,
->> >with 3 actions (skbedit priority, vlan modify, goto is2).
->>
->> Hi, I realize I forgot to answer this one - sorry.
->>
->> The reason for this design is that we have use-cases where the rules to
->> do QoS classification must not impact VLAN classification. The easiest
->> way to do that, it to have it in separated lookups.
->>
->
->Impact in the sense that an IS1 rule for VLAN classification might
->'steal' packets from an IS1 rule for QoS classification (since the
->TCAM stops after the first matching entry in each lookup)?
->Such as:
->
->tc filter add dev swp0 ingress protocol 802.1Q flower vlan_ethtype
->ipv4 action skbedit priority 3
->tc filter add dev swp0 ingress protocol 802.1Q flower vlan_id 0
->vlan_prio 2 action vlan modify id 12 priority 1
-Yes, this is a good example
+If a panic/reboot occurs when CR4 has VMX enabled, a VMXOFF is
+done on all CPUS, to allow the INIT IPI to function, since
+INIT is suppressed when CPUs are in VMX root operation.
+However, VMXOFF causes an undefined operation fault if the CPU is not
+in VMX operation, that is, VMXON has not been executed, or VMXOFF
+has been executed, but VMX is enabled. This fix makes the reboot
+work more reliably by modifying the #UD handler to skip the VMXOFF
+if VMX is enabled on the CPU and the VMXOFF is executed as part
+of cpu_emergency_vmxoff().
+The logic in reboot.c is also corrected, since the point of forcing
+the processor out of VMX root operation is because when VMX root
+operation is enabled, the processor INIT signal is always masked.
+See Intel SDM section on differences between VMX Root operation and normal
+operation. Thus every CPU must be forced out of VMX operation.
+Since the CPU will hang rather than restart, a manual "reset" is the
+only way out of this state (or if there is a BMC, it can issue a RESET
+to the chip).
 
->The trouble with this TCAM seems to be that it doesn't support the
->'pipe' control, so rules on overlapping keys will have unpredictable
->results.
-I think we may have a mis-understanding in what the pipe action does.
+Signed-off-by: David P. Reed <dpreed@deepplum.com>
+---
+ arch/x86/include/asm/virtext.h | 24 ++++++++++++----
+ arch/x86/kernel/reboot.c       | 13 ++-------
+ arch/x86/kernel/traps.c        | 52 ++++++++++++++++++++++++++++++++--
+ 3 files changed, 71 insertions(+), 18 deletions(-)
 
-It does not continue evaluting rules in the chain - it only continue
-evaluating the list of actions assiciated to the matched rule.
-
-At least, this is my understanding and it seems to align with the
-experiments I have done.
-
->So if we had these 2 rules in the same lookup in hardware,
->then an IPv4 packet tagged with VID 0 and PCP 2 would get classified
->to QoS class 3 but would not get retagged to VID 12 PCP 1, right?
-Yes. And you will get the same in "pure" SW.
-
->So we should error out if the rule's control is 'pipe' (I haven't
->checked if we can do that, I hope we can), and basically only 'goto'
->something.
-No - I think this is the "pipe" misunderstanding from above.
-
-But we cannot support "reclassify", "continue" and "pass". We should
-error out on that.
-
->Which brings the discussion to "goto where?".
->From the IS1 chain for QoS classification, you could goto the IS1
->chain for VLAN classification, ok, that's your example. Is this goto
->optional? (i.e. can you goto a PAG in IS2 directly, and in that case
->would VLAN classification be skipped in hardware for the packets that
->skip it in software?)
-You are right, these GOTOs are not really optional, and not as flexible
-as the SW implementation.
-
-The HW take the same path every time. But if we do not put any rules in
-IS1-lookup2, then it is the same as if IS1-lookup2 is skipped.
-
-This mean:
-   If we want to use IS1, lookup 0, 1 and 2
-    - then we need a match-all in chain 0 to goto 10000
-    - then all rules in IS1/0 (10000) must goto IS1/1 (11000).
-    - then all rules in IS1/1 (11000) must goto IS1/2 (12000).
-   If we want to use IS1, lookup 0, 1
-    - then we need a match-all in chain 0 to goto 10000
-    - then all rules in IS1/0 (10000) must goto IS1/1 (11000).
-   If we want to use IS1, lookup 0
-    - then we need a match-all in chain 0 to goto 10000
-
-I skiped the "goto" IS2 on purpose - we will get to it with your next
-question.
-
->Your suggestion of having an entire chain for PAG selection suggests
->to me that the rules in chain 10000 (IS1 for QoS classification) would
->need to have a non-optional goto to chain 11000 (IS1 for VLAN
->classification), which in turn would have a non-optional goto to chain
->12000, where there would be a bunch of rules with just a goto action
->that selects the IS2 policy. You can't have a goto from chains 10000
->or 11000 directly into an IS2 chain (either the default policy of 0 or
->a custom one).
-
-I suggest a dedicated lookup for PAG because in the TCAM/HW
-implementation this is an action, and we need the 3 parallel lookups not
-to use the same actions.
-
-This also means that this needs to be the last-is1-look chain, which can
-goto IS2 (with a dedicated PAG).
-
-
->> But we could make this more flexible to support your use-case better. A
->> alternative approach would be to assign exclusive-right-to-action on
->> first use. If the user choose to use the VLAN update in a given loopup,
->> then it cannot be used in others.
->>
->> If the user attempt to use a given action across different lookups we
->> need to return an error.
->>
->> Would that work for you? Any downside in such approach?
->
->No, I definitely wasn't trying to suggest that.
-But we may want to consider that, as it would be more flexible.
-
->If I understand correctly what you're proposing, then I don't
->necessarily have anything against breaking compatibility with the
->current single-chain layout. Our users will definitely need an extra
->book for filling in TCAM filters (the other one being on how to use tc
->in general), but on the other hand, at the end of the day, having
->things like the actions rigidly assigned to static id's per chain is
->the more sane thing to do given the TCAM design.
-I agree. Documenting this to an extend that is actually understandable
-is a challenge.
-
->My only concern was literally that duplicating filter keys in a bunch
->of different chains (all of which eventually land in the same TCAM,
->just in different lookups) might result in waste of TCAM space. In
->Felix, VCAP IS1 has space for 512 half key entries.
->Consider just the trivial example when the user wants to do something like:
->
->tc filter add dev swp0 ingress protocol 802.1Q flower \
->        vlan_ethtype ipv4 src_ip 192.168.1.1 \
->        action skbedit priority 1 \
->        action vlan modify id 101 priority 1
->tc filter add dev swp0 ingress protocol 802.1Q flower \
->        vlan_ethtype ipv4 src_ip 192.168.1.2 \
->        action skbedit priority 2 \
->        action vlan modify id 101 priority 2
->
->and 100 more rules like that.
->With a forced "1-action-per-chain" split, the rules would have to look
->like this:
->
->Chain 10000:
->tc filter add dev swp0 ingress protocol 802.1Q flower \
->        vlan_ethtype ipv4 src_ip 192.168.1.1 \
->        action skbedit priority 1
->tc filter add dev swp0 ingress protocol 802.1Q flower \
->        vlan_ethtype ipv4 src_ip 192.168.1.2 \
->        action skbedit priority 2
->
->Chain 11000:
->tc filter add dev swp0 ingress protocol 802.1Q flower \
->        vlan_ethtype ipv4 src_ip 192.168.1.1 \
->        action vlan modify id 101 priority 1
->tc filter add dev swp0 ingress protocol 802.1Q flower \
->        vlan_ethtype ipv4 src_ip 192.168.1.2 \
->        action vlan modify id 101 priority 2
->
->So I would just like to avoid this latter approach consuming 200
->entries. It sounds to me like it would need pretty complicated
->bookkeeping in the driver.
-Yes, I think it is a valid twist which we should address. I see no
-problem in "dynamic" assign what chain own what action.
-
->Also, another topic: would the lookups in VCAP IS2 be ever exposed to
->the user? Looking at the VSC7514 datasheet Table 60 "MASK_MODE and
->PORT_MASK Combinations" (for how the action vectors resulted from
->different lookups combine into a single result), I think it's
->relatively difficult to make sense out of it.
-It is not too easy to understand - but this is basically just the
-"hooks" to assign actions to a give lookup.
-
->And last question: why the large spacing between chain IDs in your example?
-It is an attempt to make the validation and documentation easier.
-
-TCAM (1, 2)
-|Lookup number (0, 1, 2)
-|| PAG ID
-|| |
-vv/-\
-20123
-
-The following chains will be valid: 0, 10000, 11000, 12000, 20000-20255,
-21000.
-
-- Rules in chain 10000 must point to a higher number, but can not "skip
-   any numbers"
-- Rules in chain 11000 must point to a higher number, but can not "skip
-   any numbers"
-- Rules in chain 12000 must point to a higher number, but can not "skip
-   any numbers"
-- Rules in chain 20000-20255 must point to none, or 21000
-- Rules in 21000 can not have any goto.
-
-The user decide how many chains to use.
-
-Example could be only to use 12000, 20010, 20020.
-
-Maybe there is a better way - I'm open for other suggestions.
-
-But be aware, this is still not fully thought through. Before
-implementing I will need to understand how the templates and the shared
-blocks works as well.
-
-/Allan
+diff --git a/arch/x86/include/asm/virtext.h b/arch/x86/include/asm/virtext.h
+index 9aad0e0876fb..ea2d67191684 100644
+--- a/arch/x86/include/asm/virtext.h
++++ b/arch/x86/include/asm/virtext.h
+@@ -13,12 +13,16 @@
+ #ifndef _ASM_X86_VIRTEX_H
+ #define _ASM_X86_VIRTEX_H
+ 
++#include <linux/percpu.h>
++
+ #include <asm/processor.h>
+ 
+ #include <asm/vmx.h>
+ #include <asm/svm.h>
+ #include <asm/tlbflush.h>
+ 
++DECLARE_PER_CPU_READ_MOSTLY(int, doing_emergency_vmxoff);
++
+ /*
+  * VMX functions:
+  */
+@@ -33,8 +37,8 @@ static inline int cpu_has_vmx(void)
+ /** Disable VMX on the current CPU
+  *
+  * vmxoff causes a undefined-opcode exception if vmxon was not run
+- * on the CPU previously. Only call this function if you know VMX
+- * is enabled.
++ * on the CPU previously. Only call this function directly if you know VMX
++ * is enabled *and* CPU is in VMX root operation.
+  */
+ static inline void cpu_vmxoff(void)
+ {
+@@ -47,17 +51,25 @@ static inline int cpu_vmx_enabled(void)
+ 	return __read_cr4() & X86_CR4_VMXE;
+ }
+ 
+-/** Disable VMX if it is enabled on the current CPU
++/** Force disable VMX if it is enabled on the current CPU.
++ * Note that if CPU is not in VMX root operation this
++ * VMXOFF will fault an undefined operation fault.
++ * So the 'doing_emergency_vmxoff' percpu flag is set,
++ * the trap handler for just restarts execution after
++ * the VMXOFF instruction.
+  *
+- * You shouldn't call this if cpu_has_vmx() returns 0.
++ * You shouldn't call this directly if cpu_has_vmx() returns 0.
+  */
+ static inline void __cpu_emergency_vmxoff(void)
+ {
+-	if (cpu_vmx_enabled())
++	if (cpu_vmx_enabled()) {
++		this_cpu_write(doing_emergency_vmxoff, 1);
+ 		cpu_vmxoff();
++		this_cpu_write(doing_emergency_vmxoff, 0);
++	}
+ }
+ 
+-/** Disable VMX if it is supported and enabled on the current CPU
++/** Force disable VMX if it is supported and enabled on the current CPU
+  */
+ static inline void cpu_emergency_vmxoff(void)
+ {
+diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+index 3ca43be4f9cf..abc8b51a57c7 100644
+--- a/arch/x86/kernel/reboot.c
++++ b/arch/x86/kernel/reboot.c
+@@ -540,21 +540,14 @@ static void emergency_vmx_disable_all(void)
+ 	 *
+ 	 * For safety, we will avoid running the nmi_shootdown_cpus()
+ 	 * stuff unnecessarily, but we don't have a way to check
+-	 * if other CPUs have VMX enabled. So we will call it only if the
+-	 * CPU we are running on has VMX enabled.
+-	 *
+-	 * We will miss cases where VMX is not enabled on all CPUs. This
+-	 * shouldn't do much harm because KVM always enable VMX on all
+-	 * CPUs anyway. But we can miss it on the small window where KVM
+-	 * is still enabling VMX.
++	 * if other CPUs have VMX enabled.
+ 	 */
+-	if (cpu_has_vmx() && cpu_vmx_enabled()) {
++	if (cpu_has_vmx()) {
+ 		/* Disable VMX on this CPU. */
+-		cpu_vmxoff();
++		cpu_emergency_vmxoff();
+ 
+ 		/* Halt and disable VMX on the other CPUs */
+ 		nmi_shootdown_cpus(vmxoff_nmi);
+-
+ 	}
+ }
+ 
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index 4cc541051994..2dcf57ef467e 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -39,6 +39,7 @@
+ #include <linux/io.h>
+ #include <linux/hardirq.h>
+ #include <linux/atomic.h>
++#include <linux/percpu.h>
+ 
+ #include <asm/stacktrace.h>
+ #include <asm/processor.h>
+@@ -59,6 +60,7 @@
+ #include <asm/umip.h>
+ #include <asm/insn.h>
+ #include <asm/insn-eval.h>
++#include <asm/virtext.h>
+ 
+ #ifdef CONFIG_X86_64
+ #include <asm/x86_init.h>
+@@ -70,6 +72,8 @@
+ #include <asm/proto.h>
+ #endif
+ 
++DEFINE_PER_CPU_READ_MOSTLY(int, doing_emergency_vmxoff) = 0;
++
+ DECLARE_BITMAP(system_vectors, NR_VECTORS);
+ 
+ static inline void cond_local_irq_enable(struct pt_regs *regs)
+@@ -115,6 +119,43 @@ int fixup_bug(struct pt_regs *regs, int trapnr)
+ 	return 0;
+ }
+ 
++/*
++ * Fix any unwanted undefined operation fault due to VMXOFF instruction that
++ * is needed to ensure that CPU is not in VMX root operation at time of
++ * a reboot/panic CPU reset. There is no safe and reliable way to know
++ * if a processor is in VMX root operation, other than to skip the
++ * VMXOFF. It is safe to just skip any VMXOFF that might generate this
++ * exception, when VMX operation is enabled in CR4. In the extremely
++ * rare case that a VMXOFF is erroneously executed while VMX is enabled,
++ * but VMXON has not been executed yet, the undefined opcode fault
++ * should not be missed by valid code, though it would be an error.
++ * To detect this, we could somehow restrict the instruction address
++ * to the specific use during reboot/panic.
++ */
++static int fixup_emergency_vmxoff(struct pt_regs *regs, int trapnr)
++{
++	const static u8 insn_vmxoff[3] = { 0x0f, 0x01, 0xc4 };
++	u8 ud[3];
++
++	if (trapnr != X86_TRAP_UD)
++		return 0;
++	if (!cpu_vmx_enabled())
++		return 0;
++	if (!this_cpu_read(doing_emergency_vmxoff))
++		return 0;
++
++	/* undefined instruction must be in kernel and be VMXOFF */
++	if (regs->ip < TASK_SIZE_MAX)
++		return 0;
++	if (probe_kernel_address((u8 *)regs->ip, ud))
++		return 0;
++	if (memcmp(ud, insn_vmxoff, sizeof(insn_vmxoff)))
++		return 0;
++
++	regs->ip += sizeof(insn_vmxoff);
++	return 1;
++}
++
+ static nokprobe_inline int
+ do_trap_no_signal(struct task_struct *tsk, int trapnr, const char *str,
+ 		  struct pt_regs *regs,	long error_code)
+@@ -193,9 +234,16 @@ static void do_error_trap(struct pt_regs *regs, long error_code, char *str,
+ 	/*
+ 	 * WARN*()s end up here; fix them up before we call the
+ 	 * notifier chain.
++	 * Also, VMXOFF causes unwanted fault during reboot
++	 * if VMX is enabled, but not in VMX root operation. Fix
++	 * before calling notifier chain.
+ 	 */
+-	if (!user_mode(regs) && fixup_bug(regs, trapnr))
+-		return;
++	if (!user_mode(regs)) {
++		if (fixup_bug(regs, trapnr))
++			return;
++		if (fixup_emergency_vmxoff(regs, trapnr))
++			return;
++	}
+ 
+ 	if (notify_die(DIE_TRAP, str, regs, error_code, trapnr, signr) !=
+ 			NOTIFY_STOP) {
+-- 
+2.26.2
 
