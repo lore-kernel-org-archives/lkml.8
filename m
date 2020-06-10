@@ -2,150 +2,90 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1128C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1245AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0047207C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:46:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591796816;
-	bh=ySu/M96+t17yNUSK2ZVv+Yrxj6RgjYRwsF77Zozd3Gk=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=cTJFAdEd6LflOB2ef2haBXJN6bF6ewHLjiS81LU2nF6zCi7lLmdjmL6EUosAHus+l
-	 /KJTCD/xCJTV49gZHfmeEYg/tTLQcYd0rMNgoEiDurhDUg/A9yW4FW3oMsGTp+bafm
-	 1Z/kRkTgnVUbrwJIFJ7VnV/+WtinGPuG8J3gIjrg=
+	by mail.kernel.org (Postfix) with ESMTP id DD2CF20734
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:47:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="qo+CIJ0Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729455AbgFJNqz (ORCPT
+        id S1729505AbgFJNrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 09:46:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40986 "EHLO mail.kernel.org"
+        Wed, 10 Jun 2020 09:47:02 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:39018 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726157AbgFJNqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 09:46:54 -0400
-Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        id S1726157AbgFJNrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 09:47:01 -0400
+Received: from zn.tnic (p200300ec2f0c1900a8dd7bf9cd2897c1.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:1900:a8dd:7bf9:cd28:97c1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1614D20734;
-        Wed, 10 Jun 2020 13:46:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591796813;
-        bh=ySu/M96+t17yNUSK2ZVv+Yrxj6RgjYRwsF77Zozd3Gk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=kabpzzP8emaF3CzGqvm/lJhyhiuL9v+rC3MsEerpO13T6RFyuFGsSEwLJ9FQEz5gg
-         Ulssu7K/SrZYKjRbtG4RTC+nGA/0e5Lok3oKGxFNxy06PgTINst0leAuG+Ektxb9SS
-         oIBT3AQvCY2EP198+Xx4X+Z5cdaHLFJjbFUJ42yI=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Oleksij Rempel <linux@rempel-privat.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Gao Pan <b54642@freescale.com>,
-        Fugang Duan <B38611@freescale.com>,
-        Wolfram Sang <wsa@kernel.org>, linux-i2c@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>, stable@vger.kernel.org
-Subject: [PATCH] i2c: imx: Fix external abort on early interrupt
-Date:   Wed, 10 Jun 2020 15:46:42 +0200
-Message-Id: <1591796802-23504-1-git-send-email-krzk@kernel.org>
-X-Mailer: git-send-email 2.7.4
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6502D1EC0337;
+        Wed, 10 Jun 2020 15:46:56 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1591796816;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=eVDam303/36URtPn/p5Stw7lgMOTp4NPKt/zvaEL4Ic=;
+        b=qo+CIJ0Q5rmXveOvAR5x3kSovwy+ODye2MR0cAGwO9Ip3M4S9HkaXoR1TWbbcGLCb7JpxM
+        VUAQR721QJAeYQlmnO7YhRvUI8OWEVdIdtaFA3yc+Ufh8m0rOtb/azZoXLQqTZNX5MA9f4
+        qhY4bz+uj45i3D28JGKoQfHIN313C6E=
+Date:   Wed, 10 Jun 2020 15:46:50 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        x86-ml <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] x86/microcode: Do not select FW_LOADER
+Message-ID: <20200610134650.GH14118@zn.tnic>
+References: <20200610042911.GA20058@gondor.apana.org.au>
+ <20200610081609.GA14118@zn.tnic>
+ <20200610131209.GT11244@42.do-not-panic.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200610131209.GT11244@42.do-not-panic.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If interrupt comes early (could be triggered with CONFIG_DEBUG_SHIRQ),
-the i2c_imx_isr() will access registers before the I2C hardware is
-initialized.  This leads to external abort on non-linefetch on Toradex
-Colibri VF50 module (with Vybrid VF5xx):
+On Wed, Jun 10, 2020 at 01:12:09PM +0000, Luis Chamberlain wrote:
+> On Wed, Jun 10, 2020 at 10:16:09AM +0200, Borislav Petkov wrote:
+> > 
+> > Also, I'm working on removing that homegrown get_builtin_firmware() and
+> > use the one in the fw loader:
+> > 
+> > https://lkml.kernel.org/r/20200408094526.GC24663@zn.tnic
+> 
+> I would like to still encourage this, even with this patch in place,
+> as I think it makes this a proper call, and reflects better how the
+> firmware loader is used exactly.
+> 
+> FWIW, firmware loader will be changed soon to not be modular, and just
+> built-in or disabled.
 
-    Unhandled fault: external abort on non-linefetch (0x1008) at 0x8882d003
-    Internal error: : 1008 [#1] ARM
-    Modules linked in:
-    CPU: 0 PID: 1 Comm: swapper Not tainted 5.7.0 #607
-    Hardware name: Freescale Vybrid VF5xx/VF6xx (Device Tree)
-      (i2c_imx_isr) from [<8017009c>] (free_irq+0x25c/0x3b0)
-      (free_irq) from [<805844ec>] (release_nodes+0x178/0x284)
-      (release_nodes) from [<80580030>] (really_probe+0x10c/0x348)
-      (really_probe) from [<80580380>] (driver_probe_device+0x60/0x170)
-      (driver_probe_device) from [<80580630>] (device_driver_attach+0x58/0x60)
-      (device_driver_attach) from [<805806bc>] (__driver_attach+0x84/0xc0)
-      (__driver_attach) from [<8057e228>] (bus_for_each_dev+0x68/0xb4)
-      (bus_for_each_dev) from [<8057f3ec>] (bus_add_driver+0x144/0x1ec)
-      (bus_add_driver) from [<80581320>] (driver_register+0x78/0x110)
-      (driver_register) from [<8010213c>] (do_one_initcall+0xa8/0x2f4)
-      (do_one_initcall) from [<80c0100c>] (kernel_init_freeable+0x178/0x1dc)
-      (kernel_init_freeable) from [<80807048>] (kernel_init+0x8/0x110)
-      (kernel_init) from [<80100114>] (ret_from_fork+0x14/0x20)
+I don't mind doing the work but Herbert has a point - there's no need to
+require a bunch of code for a trivial function.
 
-Additionally, the i2c_imx_isr() could wake up the wait queue
-(imx_i2c_struct->queue) before its initialization happens.
+What I could do in addition is move that trivial function into a
+fw-specific header and have it defined unconditionally so that the
+microcode loader can use it without needing the fw loader.
 
-Fixes: 1c4b6c3bcf30 ("i2c: imx: implement bus recovery")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/i2c/busses/i2c-imx.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+The testcases stuff then goes ontop.
 
-diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
-index 0ab5381aa012..e28a39f4840f 100644
---- a/drivers/i2c/busses/i2c-imx.c
-+++ b/drivers/i2c/busses/i2c-imx.c
-@@ -1171,14 +1171,6 @@ static int i2c_imx_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	/* Request IRQ */
--	ret = devm_request_irq(&pdev->dev, irq, i2c_imx_isr, IRQF_SHARED,
--				pdev->name, i2c_imx);
--	if (ret) {
--		dev_err(&pdev->dev, "can't claim irq %d\n", irq);
--		goto clk_disable;
--	}
--
- 	/* Init queue */
- 	init_waitqueue_head(&i2c_imx->queue);
- 
-@@ -1223,6 +1215,14 @@ static int i2c_imx_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		goto clk_notifier_unregister;
- 
-+	/* Request IRQ */
-+	ret = devm_request_irq(&pdev->dev, irq, i2c_imx_isr, IRQF_SHARED,
-+				pdev->name, i2c_imx);
-+	if (ret) {
-+		dev_err(&pdev->dev, "can't claim irq %d\n", irq);
-+		goto i2c_del_adapter;
-+	}
-+
- 	pm_runtime_mark_last_busy(&pdev->dev);
- 	pm_runtime_put_autosuspend(&pdev->dev);
- 
-@@ -1237,6 +1237,8 @@ static int i2c_imx_probe(struct platform_device *pdev)
- 
- 	return 0;   /* Return OK */
- 
-+i2c_del_adapter:
-+	i2c_del_adapter(&i2c_imx->adapter);
- clk_notifier_unregister:
- 	clk_notifier_unregister(i2c_imx->clk, &i2c_imx->clk_change_nb);
- rpm_disable:
-@@ -1244,8 +1246,6 @@ static int i2c_imx_probe(struct platform_device *pdev)
- 	pm_runtime_disable(&pdev->dev);
- 	pm_runtime_set_suspended(&pdev->dev);
- 	pm_runtime_dont_use_autosuspend(&pdev->dev);
--
--clk_disable:
- 	clk_disable_unprepare(i2c_imx->clk);
- 	return ret;
- }
+Yes, no?
+
 -- 
-2.7.4
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
