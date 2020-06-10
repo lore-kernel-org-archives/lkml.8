@@ -2,192 +2,91 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2FEC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 18:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B59FEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 18:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5E222070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 18:02:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 982ED206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 18:10:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a/0EIHUr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iikiN/nz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728418AbgFJSCs (ORCPT
+        id S1728502AbgFJSKc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 14:02:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40272 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728230AbgFJSCr (ORCPT
+        Wed, 10 Jun 2020 14:10:32 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:22620 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728420AbgFJSKc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 14:02:47 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 742B2C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 11:02:45 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id j198so5217217wmj.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 11:02:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=JxeiI81YmGg5d9U0C/O9qY0Fd0/ZtRnG2PDA0HglqPI=;
-        b=a/0EIHUrn6R4n3hmim8fYaSU+3VEc6XzE/W9OBdliAF/zvveloGdlLfeLyj/O+g0S+
-         xtGgV00xUPkUAOEq/5grpicbBu7iVxTzPCJLDkCVX4eExpPDvDyft+HwHi6O6t6ksH3Y
-         gwTO7zIdQuRfQxyrmebXQg9q0Ji4x4FAbf0y6TrEfSfCWIculPyuWE6YNUT6KQW8+agX
-         kd9q7mNOJoM/eU9Ca7bX4t6jq0Dy8hfpfOoAwmzi2B+UJN2Mip2mPsRVCPqoaqUtBSgd
-         kj+aPAukgh6gQ0GWPjFa1SHsVOhg58J1eVSu9CuTFweyULX/38yDxnzZD7r2E+cp2gi8
-         RllQ==
+        Wed, 10 Jun 2020 14:10:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591812631;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=74sBb+yxIp+tJHGKwpQ6iTCCpQrRwqCUIhMJtvCFJYM=;
+        b=iikiN/nze1zJQ7J2/P9oWlDbLjVfYn7g1OBbuuBkPCijCZMAeDNwRZbnJgYHL4PYCZcSzv
+        0t27YghHjWPMFCYIKfPvJPVrIYD8axPaoz7dAtjfCRNJm0VwbLtyuA6RUrKFC/FYTIUJEL
+        DJJjyey1ov9nP1W+jBHf3gHwVqR6ph4=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-316-IUR_ClQyNkyAzANObpTEEw-1; Wed, 10 Jun 2020 14:10:29 -0400
+X-MC-Unique: IUR_ClQyNkyAzANObpTEEw-1
+Received: by mail-qk1-f198.google.com with SMTP id a5so2833795qkk.12
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 11:10:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=JxeiI81YmGg5d9U0C/O9qY0Fd0/ZtRnG2PDA0HglqPI=;
-        b=RdfPo13PUvFdDEf1s7BN3NlQBmwilDvQm4OabPxgTy+llhFpUe4Sdg+QV3PBfL5Q5J
-         ZJm5wvQXggjSEanwU/+WjydEYfmBHfGG28gIujO/0Z5dvH83QKEnklZyCsqaxXTrXN/1
-         5PKGMyeaNGfd84ZsUfLPKVrJYQwP5+JjnQI1Ba966yrUtQK4QR16j1GH/lRLcJU1HFy7
-         sxEZWnCWTLJd6by+qRbl3cuPVvjMfgUtLaoMNltzDbh1ldimFSGAkvoUeb9cUwvSoW8o
-         4U6DTUtFYbab9Km3PiS4QTzgQeZ2RPJy/JOlgHoqPPerHuY00mQCSc75eatNreENAfQj
-         mIPA==
-X-Gm-Message-State: AOAM533HRqx8fVedZs5taKGj0+g4puBTuGdB/+CSPFKgRHJqmtgrJGOS
-        /WgBkx0x3gwe+AR2WjJwxyMoKQ==
-X-Google-Smtp-Source: ABdhPJw80wfVrkd4Pt8pEq+dAgi4oji9xyaGUc5f8gKzhaU2nyB3JgXw9lNxPsej44PCRcfJ5yA8YA==
-X-Received: by 2002:a05:600c:287:: with SMTP id 7mr4521647wmk.91.1591812164504;
-        Wed, 10 Jun 2020 11:02:44 -0700 (PDT)
-Received: from dell ([2.27.167.101])
-        by smtp.gmail.com with ESMTPSA id f11sm832108wrj.2.2020.06.10.11.02.42
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=74sBb+yxIp+tJHGKwpQ6iTCCpQrRwqCUIhMJtvCFJYM=;
+        b=tKnb65Eo+AEY4n6ZzQpYwRI/kP1XiJqpX/z8rqcg3llrL4GxXIxJ3ENYq35GGG6w9S
+         I0UpUba6U2R1gWz0GsdadAurk4AP1d1Wc4/1EkyU7ExKQKDlY1aADbGlbafIiJPS+AX3
+         +bM7qR3bXRho3is6D8hEjKBPe0VxQrfHvsozrE5DSqK3jDLogQrySe0TpIy1efFYvevu
+         3SBidXf4kMIQlHhh3kgaoB1YcYyjiyydlb5dmTD59kRe2kAGYgYzMP+yjkOtzgknRzmD
+         2iE2NfPHhoqfUJK6JpxI3of2Q7pfOSzdIqnblwY0mjRK1IChA+KfXdOjthKU2DibfaBs
+         AYnQ==
+X-Gm-Message-State: AOAM531m+1YaX7Pvi9IWSH3Yky202zQulo0zlYlNx0G1aLcYU1mLRapZ
+        16EwxBqFy6qSQZEkHXe90cwRk9r3r88fTmTHj1nSLHwm2+ED4nhqGVwe4KiYJ5B/5sKq5tjFlEH
+        pkJBE60Xd8QhCSJpmDP3xYnKY
+X-Received: by 2002:ae9:ed4c:: with SMTP id c73mr4376651qkg.309.1591812628980;
+        Wed, 10 Jun 2020 11:10:28 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyEaMK2wTrmwuS0DisPNUk+/CQtYQCLvOThCsH3bZsWrmkNzuZQ9rHWGQ2cnmbOk4hRyYZaXg==
+X-Received: by 2002:ae9:ed4c:: with SMTP id c73mr4376624qkg.309.1591812628790;
+        Wed, 10 Jun 2020 11:10:28 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id w13sm339047qkb.91.2020.06.10.11.10.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 11:02:43 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 19:02:41 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Michael Walle <michael@walle.cc>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        david.m.ertman@intel.com, shiraz.saleem@intel.com,
-        Mark Brown <broonie@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux HWMON List <linux-hwmon@vger.kernel.org>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld
- management controller
-Message-ID: <20200610180241.GU4106@dell>
-References: <20200608185651.GD4106@dell>
- <32231f26f7028d62aeda8fdb3364faf1@walle.cc>
- <20200609064735.GH4106@dell>
- <32287ac0488f7cbd5a7d1259c284e554@walle.cc>
- <20200609151941.GM4106@dell>
- <95e6ec9bbdf6af7a9ff9c31786f743f2@walle.cc>
- <20200609194505.GQ4106@dell>
- <3a6931248f0efcaf8efbb5425a9bd833@walle.cc>
- <20200610071940.GS4106@dell>
- <CAL_JsqKr1aDVzgAMjwwK8E8O_f29vSrx1HXk81FF+rd3sEe==w@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL_JsqKr1aDVzgAMjwwK8E8O_f29vSrx1HXk81FF+rd3sEe==w@mail.gmail.com>
+        Wed, 10 Jun 2020 11:10:27 -0700 (PDT)
+From:   trix@redhat.com
+To:     paul@paul-moore.com, stephen.smalley.work@gmail.com,
+        eparis@parisplace.org, omosnace@redhat.com, jeffv@google.com,
+        rgb@redhat.com
+Cc:     selinux@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tom Rix <trix@redhat.com>
+Subject: [PATCH 0/1] selinux: fix double free
+Date:   Wed, 10 Jun 2020 11:10:20 -0700
+Message-Id: <20200610181021.19209-1-trix@redhat.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 10 Jun 2020, Rob Herring wrote:
+From: Tom Rix <trix@redhat.com>
 
-> On Wed, Jun 10, 2020 at 1:19 AM Lee Jones <lee.jones@linaro.org> wrote:
-> >
-> > On Wed, 10 Jun 2020, Michael Walle wrote:
-> > > Am 2020-06-09 21:45, schrieb Lee Jones:
-> > > > On Tue, 09 Jun 2020, Michael Walle wrote:
-> > > > > > We do not need a 'simple-regmap' solution for your use-case.
-> > > > > >
-> > > > > > Since your device's registers are segregated, just split up the
-> > > > > > register map and allocate each sub-device with it's own slice.
-> > > > >
-> > > > > I don't get it, could you make a device tree example for my
-> > > > > use-case? (see also above)
-> > > >
-> > > >     &i2cbus {
-> > > >         mfd-device@10 {
-> > > >             compatible = "simple-mfd";
-> > > >             reg = <10>;
-> > > >
-> > > >             sub-device@10 {
-> > > >                 compatible = "vendor,sub-device";
-> > > >                 reg = <10>;
-> > > >             };
-> > > >    };
-> > > >
-> > > > The Regmap config would be present in each of the child devices.
-> > > >
-> > > > Each child device would call devm_regmap_init_i2c() in .probe().
-> > >
-> > > Ah, I see. If I'm not wrong, this still means to create an i2c
-> > > device driver with the name "simple-mfd".
-> >
-> > Yes, it does.
-> 
-> TBC, while fine for a driver to bind on 'simple-mfd', a DT compatible
-> with that alone is not fine.
+Repo: linux-next
+Tag: next-20200609
 
-'simple-mfd' essentially means:
+Running clang scan-view over linux-next uncovers many problem only a
+few are memory related, this one looked like the most serious.
 
-  "This device doesn't do anything useful, but the children do."
+Tom Rix (1):
+  selinux: fix double free
 
-When used with 'syscon' it means:
-
-  "Memory for this device is shared between all children"
-
-Adding more specific/descriptive compatible strings is conceptually
-fine, but they should not be forced to bind to a real driver using
-them.  Else we're creating drivers for the sake of creating drivers.
-
-This is especially true with 'simple-mfd' is used without 'syscon'.
-
-> > > Besides that, I don't like this, because:
-> > >  - Rob already expressed its concerns with "simple-mfd" and so on.
-> >
-> > Where did this take place?  I'd like to read up on this.
-> >
-> > >  - you need to duplicate the config in each sub device
-> >
-> > You can have a share a single config.
-> >
-> > >  - which also means you are restricting the sub devices to be
-> > >    i2c only (unless you implement and duplicate other regmap configs,
-> > >    too). For this driver, SPI and MMIO may be viable options.
-> >
-> > You could also have a shared implementation to choose between different
-> > busses.
-> 
-> I think it is really the syscon mfd driver you want to generalize to
-> other buses. Though with a quick look at it, there's not really a
-> whole lot to share. The regmap lookup would be the main thing. You are
-> going to need a driver instance for each bus type.
-
-On it.
+ security/selinux/ss/services.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.18.1
+
