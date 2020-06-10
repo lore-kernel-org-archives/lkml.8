@@ -2,113 +2,50 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2579C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6003C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE63D206C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:40:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h10aYUlE"
+	by mail.kernel.org (Postfix) with ESMTP id 9A56B206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:41:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbgFJVkj (ORCPT
+        id S1726407AbgFJVl0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 17:40:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45776 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726134AbgFJVki (ORCPT
+        Wed, 10 Jun 2020 17:41:26 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:60082 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726134AbgFJVl0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 17:40:38 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B40EC03E96B;
-        Wed, 10 Jun 2020 14:40:37 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id b5so1680946pfp.9;
-        Wed, 10 Jun 2020 14:40:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=pDwBTDmz3h0k/Aa3ZIm7vgzuvxX5g50pVAUx5KvQiPQ=;
-        b=h10aYUlEPNY5EN6tcEAW90D8lA7EaGATkGLiJubPsgJTNvC5lis0cvR/F3QVAxQ9Ou
-         Ty5j3hRyob2dBjMhCz+z5NdVkUgk/58htoogS3cOplw2E9YHW4qfj3eF2C6DF0A45UOt
-         T09HmnknJ/4E4xOM7dDkiFIXFzn7wACcet0+MyUYQnuHPwRR5/jUm/PKbLMZB/8mN/mH
-         aqg02scvbRuZmctCdYTWskdEv0l/dwWlHfSO1wKl/cfMDh+XkWMzgbef7glM0j/gxvjD
-         JPscCpWVjW7Djmf7ggGEHobvEON0yV8zwArP1tEwMMPobNg/afbPH+oHHgnM9MwukWRA
-         5SpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=pDwBTDmz3h0k/Aa3ZIm7vgzuvxX5g50pVAUx5KvQiPQ=;
-        b=mnVTrXsCc4h6bYNOUtywSs78m5ss5RRJyQSSkDFOBcyCL6EaiGl4kRnNMeyOITdyPy
-         wOCRlhIxohHm2GR7p/FmbZ7P1bgyJiHehWqLCwLn7LnM9HwhSdqfZ5JbkuT5Vie+pmAH
-         PRzXdBJbTNH/qlY1hvKGFzm5iQZife2RUKUTDd1Zqhi1YBcG/duSrXcXvHMrcA4dNxCv
-         0MTKxKBHhOL0/BqY9mNSv4m2uyxXD+24r7rnoUiBiOhoeA1NfXZ4WkouAf19RgtJCKJN
-         ymp9Hg2ncUCNERl3b0OB1XkjCpLJFjur1gGImMBL0V1HZmyJXkKg941kalgidSVrChWS
-         14zg==
-X-Gm-Message-State: AOAM5321+eSdBqrd88FMyUuPrA1ieYahuDkVmAh8HUMAHH8G9BcYXHv7
-        GjFlQ80VKfW9Edp6MqT/tJY=
-X-Google-Smtp-Source: ABdhPJz4PlRdz3hoskZuX2GuS4FTJZ6XL1A64DLud2JvOjheTpNwcaEuuf6RtDF7SKfYOHhsnHdywQ==
-X-Received: by 2002:a63:a363:: with SMTP id v35mr3913447pgn.95.1591825236795;
-        Wed, 10 Jun 2020 14:40:36 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id x14sm838195pfq.80.2020.06.10.14.40.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 14:40:36 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 14:40:33 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Mario.Limonciello@dell.com
-Cc:     enric.balletbo@collabora.com, rjw@rjwysocki.net, rafael@kernel.org,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        lenb@kernel.org, kernel@collabora.com, groeck@chromium.org,
-        bleung@chromium.org, dtor@chromium.org, gwendal@chromium.org,
-        vbendeb@chromium.org, andy@infradead.org, ayman.bagabas@gmail.com,
-        benjamin.tissoires@redhat.com, blaz@mxxn.io, dvhart@infradead.org,
-        gregkh@linuxfoundation.org, hdegoede@redhat.com,
-        jeremy@system76.com, 2pi@mok.nu, mchehab+samsung@kernel.org,
-        rajatja@google.com, srinivas.pandruvada@linux.intel.com,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v4] platform: x86: Add ACPI driver for ChromeOS
-Message-ID: <20200610214033.GB248110@dtor-ws>
-References: <20200413134611.478441-1-enric.balletbo@collabora.com>
- <CAJZ5v0gWZ27_DwWQadsJOUxLo4a0rAMe45d4AWXS2gHJZfgfKg@mail.gmail.com>
- <a2953d50-da22-279a-f1e4-faa796d815b1@collabora.com>
- <10490419.gsntqH5CaE@kreacher>
- <4e7f8bf3-b72b-d418-ec95-e1f8c3d61261@collabora.com>
- <59771d3689da41a5bbc67541aa6f4777@AUSX13MPC105.AMER.DELL.COM>
+        Wed, 10 Jun 2020 17:41:26 -0400
+Received: from callcc.thunk.org (pool-100-0-195-244.bstnma.fios.verizon.net [100.0.195.244])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 05ALf7ss030984
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 10 Jun 2020 17:41:08 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 7DE2D4200DD; Wed, 10 Jun 2020 17:41:07 -0400 (EDT)
+Date:   Wed, 10 Jun 2020 17:41:07 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     syzbot <syzbot+bca9799bf129256190da@syzkaller.appspotmail.com>
+Cc:     adilger.kernel@dilger.ca, akpm@linux-foundation.org,
+        dan.j.williams@intel.com, jack@suse.cz, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: BUG: unable to handle kernel NULL pointer dereference in
+ generic_perform_write (2)
+Message-ID: <20200610214107.GK1347934@mit.edu>
+References: <00000000000016a67305a33a11f7@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <59771d3689da41a5bbc67541aa6f4777@AUSX13MPC105.AMER.DELL.COM>
+In-Reply-To: <00000000000016a67305a33a11f7@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 09:28:36PM +0000, Mario.Limonciello@dell.com wrote:
-> > 
-> > To give you some references, if I'm not wrong, this prefix is used in all
-> > or
-> > almost all Intel Chromebook devices (auron, cyan, eve, fizz, hatch,
-> > octopus,
-> > poppy, strago ...) The ACPI source for this device can be found here [1],
-> > and,
-> > if not all, almost all Intel based Chromebooks are shipped with the
-> > firmware
-> > that supports this.
-> 
-> You can potentially carry a small patch in your downstream kernel for the
-> legacy stuff until it reaches EOL.  At least for the new stuff you could
-> enact a process that properly reserves unique numbers and changes the driver
-> when the interface provided by the ACPI device has changed.
-
-If we use this prefix for hatch EOL is ~7 years from now.
-
-Thanks.
-
--- 
-Dmitry
+#syz test: https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git 5b8b9d0c6d0e0f1993c6c56deaf9646942c49d94
