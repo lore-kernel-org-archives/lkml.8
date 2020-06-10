@@ -2,145 +2,93 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC3DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 16:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12BFCC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 16:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2797B2063A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 16:13:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eMxbcgxn"
+	by mail.kernel.org (Postfix) with ESMTP id ECFF62067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 16:18:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728562AbgFJQNM (ORCPT
+        id S1730604AbgFJQSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 12:13:12 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:39504 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728123AbgFJQNB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 12:13:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591805581;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:in-reply-to:in-reply-to:references:references;
-        bh=jszjpg093lUjd7SXWU6y9l2BOYmNd24mrcTabfHoHS8=;
-        b=eMxbcgxnCV3mj63RMj75DFJsk/DxIDyF+icAYFEzs+JX75A2LrHtEjgKprrZ/MAA8e8SZ2
-        WU0dq3pmeBUTM8O9LChs8jaCEHGxMraPvc3vU5wWrG3rU+2PisC2NFcTarKwO5fM7fkWAQ
-        ddGjltT+ZZcKPhz3AvOlmM6CUkYQ+44=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-19-yAvxoEUTOCaz1q_IZOKaGg-1; Wed, 10 Jun 2020 12:12:53 -0400
-X-MC-Unique: yAvxoEUTOCaz1q_IZOKaGg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 094A5805783;
-        Wed, 10 Jun 2020 16:12:52 +0000 (UTC)
-Received: from virtlab423.virt.lab.eng.bos.redhat.com (virtlab423.virt.lab.eng.bos.redhat.com [10.19.152.154])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8EF56512FE;
-        Wed, 10 Jun 2020 16:12:50 +0000 (UTC)
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-To:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        frederic@kernel.org, mtosatti@redhat.com, juri.lelli@redhat.com,
-        abelits@marvell.com, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, rostedt@goodmis.org, mingo@kernel.org,
-        peterz@infradead.org, tglx@linutronix.de
-Subject: [Patch v1 1/3] lib: restricting cpumask_local_spread to only houskeeping CPUs
-Date:   Wed, 10 Jun 2020 12:12:24 -0400
-Message-Id: <20200610161226.424337-2-nitesh@redhat.com>
-In-Reply-To: <20200610161226.424337-1-nitesh@redhat.com>
-References: <20200610161226.424337-1-nitesh@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        Wed, 10 Jun 2020 12:18:09 -0400
+Received: from mga01.intel.com ([192.55.52.88]:10548 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728157AbgFJQSH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 12:18:07 -0400
+IronPort-SDR: FYtMEJkip4VfC8YdeUSRBIFM0v8xMgbZxkdwyizMew0etLXYkuyrwxjYmFzXT3HNF+/dCj5Boa
+ fD1GDVmikrNw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2020 09:18:07 -0700
+IronPort-SDR: NSo4/NBIGqOn+vaxO10VsYFX88Xyvk3JlQuR0gjkJXXrglVtj3MN/tmT/fKDjU/A7ImkazCtde
+ smGLAKnHfg4w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,496,1583222400"; 
+   d="scan'208";a="306637274"
+Received: from sneftin-mobl.ger.corp.intel.com (HELO [10.249.92.147]) ([10.249.92.147])
+  by orsmga008.jf.intel.com with ESMTP; 10 Jun 2020 09:18:03 -0700
+Subject: Re: [Intel-wired-lan] [PATCH] e1000e: Squash an unused function
+ warning
+To:     Palmer Dabbelt <palmer@dabbelt.com>, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, Palmer Dabbelt <palmerdabbelt@google.com>,
+        linux-kernel@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+        kuba@kernel.org, kernel-team@android.com,
+        "Neftin, Sasha" <sasha.neftin@intel.com>,
+        vitaly.lifshits@intel.com, amir.avivi@intel.com
+References: <20200610014907.148473-1-palmer@dabbelt.com>
+From:   "Neftin, Sasha" <sasha.neftin@intel.com>
+Message-ID: <8b01c6d6-db4d-d05c-d8cd-733cec31094e@intel.com>
+Date:   Wed, 10 Jun 2020 19:18:02 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
+MIME-Version: 1.0
+In-Reply-To: <20200610014907.148473-1-palmer@dabbelt.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Belits <abelits@marvell.com>
-
-The current implementation of cpumask_local_spread() does not
-respect the isolated CPUs, i.e., even if a CPU has been isolated
-for Real-Time task, it will return it to the caller for pinning
-of its IRQ threads. Having these unwanted IRQ threads on an
-isolated CPU adds up to a latency overhead.
-This patch restricts the CPUs that are returned for spreading
-IRQs only to the available housekeeping CPUs.
-
-Signed-off-by: Alex Belits <abelits@marvell.com>
-Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
----
- lib/cpumask.c | 43 +++++++++++++++++++++++++------------------
- 1 file changed, 25 insertions(+), 18 deletions(-)
-
-diff --git a/lib/cpumask.c b/lib/cpumask.c
-index fb22fb266f93..cc4311a8c079 100644
---- a/lib/cpumask.c
-+++ b/lib/cpumask.c
-@@ -6,6 +6,7 @@
- #include <linux/export.h>
- #include <linux/memblock.h>
- #include <linux/numa.h>
-+#include <linux/sched/isolation.h>
- 
- /**
-  * cpumask_next - get the next cpu in a cpumask
-@@ -205,28 +206,34 @@ void __init free_bootmem_cpumask_var(cpumask_var_t mask)
-  */
- unsigned int cpumask_local_spread(unsigned int i, int node)
- {
--	int cpu;
-+	int cpu, m, n, hk_flags;
-+	const struct cpumask *mask;
- 
-+	hk_flags = HK_FLAG_DOMAIN | HK_FLAG_WQ;
-+	mask = housekeeping_cpumask(hk_flags);
-+	m = cpumask_weight(mask);
- 	/* Wrap: we always want a cpu. */
--	i %= num_online_cpus();
-+	n = i % m;
-+	while (m-- > 0) {
-+		if (node == NUMA_NO_NODE) {
-+			for_each_cpu(cpu, mask)
-+				if (n-- == 0)
-+					return cpu;
-+		} else {
-+			/* NUMA first. */
-+			for_each_cpu_and(cpu, cpumask_of_node(node), mask)
-+				if (n-- == 0)
-+					return cpu;
- 
--	if (node == NUMA_NO_NODE) {
--		for_each_cpu(cpu, cpu_online_mask)
--			if (i-- == 0)
--				return cpu;
--	} else {
--		/* NUMA first. */
--		for_each_cpu_and(cpu, cpumask_of_node(node), cpu_online_mask)
--			if (i-- == 0)
--				return cpu;
-+			for_each_cpu(cpu, mask) {
-+				/* Skip NUMA nodes, done above. */
-+				if (cpumask_test_cpu(cpu,
-+						     cpumask_of_node(node)))
-+					continue;
- 
--		for_each_cpu(cpu, cpu_online_mask) {
--			/* Skip NUMA nodes, done above. */
--			if (cpumask_test_cpu(cpu, cpumask_of_node(node)))
--				continue;
--
--			if (i-- == 0)
--				return cpu;
-+				if (n-- == 0)
-+					return cpu;
-+			}
- 		}
- 	}
- 	BUG();
--- 
-2.18.4
+On 6/10/2020 04:49, Palmer Dabbelt wrote:
+> From: Palmer Dabbelt <palmerdabbelt@google.com>
+> 
+> e1000e_check_me is only used under CONFIG_PM_SLEEP but exists
+> unconditionally, which triggers a warning.
+> 
+> Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
+> ---
+>   drivers/net/ethernet/intel/e1000e/netdev.c | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
+> index a279f4fa9962..f7148d1fcba2 100644
+> --- a/drivers/net/ethernet/intel/e1000e/netdev.c
+> +++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+> @@ -134,6 +134,7 @@ static const struct e1000e_me_supported me_supported[] = {
+>   	{0}
+>   };
+>   
+> +#ifdef CONFIG_PM_SLEEP
+Thanks Palmer for catching this warning,
+can we use "__maybe_unused" declaration instead of wrapping? I think it 
+is more convenient and consistent.
+>   static bool e1000e_check_me(u16 device_id)
+>   {
+>   	struct e1000e_me_supported *id;
+> @@ -145,6 +146,7 @@ static bool e1000e_check_me(u16 device_id)
+>   
+>   	return false;
+>   }
+> +#endif
+>   
+>   /**
+>    * __ew32_prepare - prepare to write to MAC CSR register on certain parts
+> 
 
