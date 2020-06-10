@@ -2,238 +2,115 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E69D7C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF72C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0F1C206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:09:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 038BF206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:10:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="nWWIozjE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GEWMeM91"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbgFJJJ4 (ORCPT
+        id S1727841AbgFJJKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 05:09:56 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:38221 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726961AbgFJJJz (ORCPT
+        Wed, 10 Jun 2020 05:10:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42352 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726961AbgFJJKG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 05:09:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1591780194; x=1623316194;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=KPPDIbWDIIi7NcSqSfqP/mK+TVSC91eXbOcvGk49e8c=;
-  b=nWWIozjEJsaZvpDBF2HNiKSMhlCwlvVppEcAPoeYdms8p7OqPnAKrjZT
-   pH3nD7ITiU1FsW5fe27zLB2ySOQg6EZkWZ8voLa0rqWOrUIXiZGhp9aj1
-   kJMn329fAGMiXLRkwvjDaAdic0swnjLNGRKTsMPtvU+eqEIdpeUHrPts/
-   k=;
-IronPort-SDR: 0edSOZcR2gKDa4qC/LHclU+V8vU3A6CUjYH5h59O4SLzvbQaROCJoduC9+yJqjIvWrXFweMGjp
- zPrGWzlyVzkw==
-X-IronPort-AV: E=Sophos;i="5.73,495,1583193600"; 
-   d="scan'208";a="42946930"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 10 Jun 2020 09:09:51 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com (Postfix) with ESMTPS id E9D9FA255A;
-        Wed, 10 Jun 2020 09:09:50 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 10 Jun 2020 09:09:50 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.53) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 10 Jun 2020 09:09:43 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     Joe Perches <joe@perches.com>
-CC:     SeongJae Park <sjpark@amazon.com>, <akpm@linux-foundation.org>,
-        <apw@canonical.com>, <colin.king@canonical.com>,
-        <sj38.park@gmail.com>, <linux-kernel@vger.kernel.org>,
-        SeongJae Park <sjpark@amazon.de>
-Subject: Re: Re: Re: [PATCH v3 1/2] checkpatch: support deprecated terms checking
-Date:   Wed, 10 Jun 2020 11:09:27 +0200
-Message-ID: <20200610090927.2383-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <9fcbcf91beb884ef8eac64471fe769edebce660c.camel@perches.com> (raw)
+        Wed, 10 Jun 2020 05:10:06 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C52ECC03E96B
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 02:10:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=EmvZOX3XKJAnMLDmrNxCkG2SMZZf7Tnqr5HQzs32oxY=; b=GEWMeM91x9p303KqeEjqbnd3s+
+        3U/iW3wsFB5JY6p590i/W+aaw65cZMPUR2DXxWhRp+7VkpAeBthr/loFa81iz9LrWUKXrr/3haZdr
+        W7Wz7siV55N0A6D2uOyluQ0CLOHbwkb8G/CXORaSbUMbMgjLwFyyIilox5BB1cjyqAgC/plGd1hzV
+        iegSkqlz9Wy8tbSGmsrljCwMzCelgAqsOQLc/0VnRDAjErk5J6LJ8IElmxs90ySdGXXQRndUUWjZn
+        DkgcH18OpgM+HaNceKxLKmKjwdvtImH7WYA608AGmo4M9LDMtpq4x3oUX/PjSo3IA9SHT+bxf4lrg
+        02idfCig==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jiwjm-0008Cx-6A; Wed, 10 Jun 2020 09:09:34 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EEFD430280E;
+        Wed, 10 Jun 2020 11:09:30 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DB7342041055D; Wed, 10 Jun 2020 11:09:30 +0200 (CEST)
+Date:   Wed, 10 Jun 2020 11:09:30 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Eric Biggers <ebiggers@kernel.org>, tglx@linutronix.de,
+        frederic@kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+        cai@lca.pw, mgorman@techsingularity.net
+Subject: Re: [RFC][PATCH 7/7] sched: Replace rq::wake_list
+Message-ID: <20200610090930.GE2531@hirez.programming.kicks-ass.net>
+References: <20200604141837.GA179816@roeck-us.net>
+ <20200605002433.GA148196@sol.localdomain>
+ <20200605074154.GB2750@hirez.programming.kicks-ass.net>
+ <20200605161532.GD1373@sol.localdomain>
+ <53318971-561c-b445-0408-530b3d3ba44e@roeck-us.net>
+ <20200609202134.GA1105@sol.localdomain>
+ <20200609212509.GA239889@roeck-us.net>
+ <20200609213829.GA789@sol.localdomain>
+ <20200609220601.GD2514@hirez.programming.kicks-ass.net>
+ <e8a57823-3c5a-886a-e114-b5e7b2bb4f01@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.162.53]
-X-ClientProxiedBy: EX13D02UWC003.ant.amazon.com (10.43.162.199) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e8a57823-3c5a-886a-e114-b5e7b2bb4f01@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 10 Jun 2020 01:45:41 -0700 Joe Perches <joe@perches.com> wrote:
-
-> On Wed, 2020-06-10 at 10:01 +0200, SeongJae Park wrote:
-> > On Wed, 10 Jun 2020 00:13:42 -0700 Joe Perches <joe@perches.com> wrote:
-> []
-> > > This is a direct copy of the spelling dictionary
-> > > loading code, so maybe these could be consolidated.
+On Tue, Jun 09, 2020 at 04:03:19PM -0700, Guenter Roeck wrote:
+> On 6/9/20 3:06 PM, Peter Zijlstra wrote:
+> > On Tue, Jun 09, 2020 at 02:38:29PM -0700, Eric Biggers wrote:
+> >> Does the struct actually have to be named?  How about:
+> >>
+> >> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> >> index c5d96e3e7fff42..14ca25cda19150 100644
+> >> --- a/include/linux/sched.h
+> >> +++ b/include/linux/sched.h
+> >> @@ -653,8 +653,14 @@ struct task_struct {
+> >>  	unsigned int			ptrace;
+> >>  
+> >>  #ifdef CONFIG_SMP
+> >> -	struct llist_node		wake_entry;
+> >> -	unsigned int			wake_entry_type;
+> >> +	/*
+> >> +	 * wake_entry_type must follow wake_entry, even when
+> >> +	 * CONFIG_GCC_PLUGIN_RANDSTRUCT=y.
+> >> +	 */
+> >> +	struct {
+> >> +		struct llist_node	wake_entry;
+> >> +		unsigned int		wake_entry_type;
+> >> +	};
+> >>  	int				on_cpu;
+> >>  #ifdef CONFIG_THREAD_INFO_IN_TASK
+> >>  	/* Current CPU: */
+> >>
+> >>
+> >> However, it would be preferable to not rely on different structs sharing the
+> >> same field order, but rather write proper C code that uses the same struct
+> >> everywhere to encapsulate these 2 fields...
 > > 
-> > Agreed, how about below one?
-> []
-> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> > index 524df88f9364..226f24e1f1f3 100755
-> []
-> > +sub read_word_corrections {
-> > +	my ($file) = @_;
-> > +	my $suspects;
-> > +	my %fixes;
+> > https://lkml.kernel.org/r/20200605093704.GB2948@hirez.programming.kicks-ass.net
+> > 
+> > And I have more patches on top to clean up some of the anonymous union
+> > stuff, that that's quite a lot of frobbing.
+> > 
 > 
-> Right.
-> 
-> But I think this should take a hash reference
-> as the second argument so the complete hash
-> isn't created and returned.
-> 
-> []
-> 
-> > +# Load deprecated terms and build regular expression list.
-> > +my %deprecated_terms_fix = read_word_corrections($deprecated_terms_file);
-> 
-> So this might be something like:
-> 
-> my %deprecated_terms;
-> read_word_corrections($deprecated_terms_file, \%deprecated_terms);
-> 
-> etc...
+> That is why I tried to keep it simple as hackish fixup patch.
 
-Appreciate your nice suggestion!  So, I updated the patch as below:
-
-================================= >8 ==========================================
-From 0bcba551f429b0ccec4183437098b3b961d0a724 Mon Sep 17 00:00:00 2001
-From: SeongJae Park <sjpark@amazon.de>
-Date: Wed, 10 Jun 2020 07:11:57 +0200
-Subject: [PATCH] checkpatch: support deprecated terms checking
-
-Some terms could be deprecated for various reasons, but it is hard to
-update the entire old usages.  That said, we could at least encourage
-new patches to use the suggested replacements.  This commit adds check
-of deprecated terms in the 'checkpatch.pl' for that.  The script will
-get deprecated terms and suggested replacements of those from
-'scripts/deprecated_terms.txt' file and warn if the deprecated terms are
-used.  The mechanism and the format of the file are almost the same as
-that of 'spelling.txt'.  For the reason, this commit modularizes the
-read of the 'spelling.txt' and reuses.
-
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- scripts/checkpatch.pl        | 60 +++++++++++++++++++++++++++---------
- scripts/deprecated_terms.txt |  5 +++
- 2 files changed, 50 insertions(+), 15 deletions(-)
- create mode 100644 scripts/deprecated_terms.txt
-
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 524df88f9364..c672091932bb 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -57,6 +57,7 @@ my $max_line_length = 100;
- my $ignore_perl_version = 0;
- my $minimum_perl_version = 5.10.0;
- my $min_conf_desc_length = 4;
-+my $deprecated_terms_file = "$D/deprecated_terms.txt";
- my $spelling_file = "$D/spelling.txt";
- my $codespell = 0;
- my $codespellfile = "/usr/share/codespell/dictionary.txt";
-@@ -692,29 +693,40 @@ our $allowed_asm_includes = qr{(?x:
- )};
- # memory.h: ARM has a custom one
- 
--# Load common spelling mistakes and build regular expression list.
--my $misspellings;
--my %spelling_fix;
-+sub read_word_corrections {
-+	my ($file, $fixesRef) = @_;
-+	my $suspects;
- 
--if (open(my $spelling, '<', $spelling_file)) {
--	while (<$spelling>) {
--		my $line = $_;
-+	if (open(my $corrections, '<', $file)) {
-+		while (<$corrections>) {
-+			my $line = $_;
- 
--		$line =~ s/\s*\n?$//g;
--		$line =~ s/^\s*//g;
-+			$line =~ s/\s*\n?$//g;
-+			$line =~ s/^\s*//g;
- 
--		next if ($line =~ m/^\s*#/);
--		next if ($line =~ m/^\s*$/);
-+			next if ($line =~ m/^\s*#/);
-+			next if ($line =~ m/^\s*$/);
- 
--		my ($suspect, $fix) = split(/\|\|/, $line);
-+			my ($suspect, $fix) = split(/\|\|/, $line);
- 
--		$spelling_fix{$suspect} = $fix;
-+			$fixesRef->{$suspect} = $fix;
-+		}
-+		close($corrections);
-+	} else {
-+		warn "No correction will be found - file '$file': $!\n";
- 	}
--	close($spelling);
--} else {
--	warn "No typos will be found - file '$spelling_file': $!\n";
- }
- 
-+# Load deprecated terms and build regular expression list.
-+my %deprecated_terms_fix;
-+read_word_corrections($deprecated_terms_file, \%deprecated_terms_fix);
-+my $deprecated_terms = join("|", sort keys %deprecated_terms_fix) if keys %deprecated_terms_fix;
-+
-+# Load common spelling mistakes and build regular expression list.
-+my $misspellings;
-+my %spelling_fix;
-+read_word_corrections($spelling_file, \%spelling_fix);
-+
- if ($codespell) {
- 	if (open(my $spelling, '<', $codespellfile)) {
- 		while (<$spelling>) {
-@@ -2957,6 +2969,24 @@ sub process {
- 			}
- 		}
- 
-+# Check for deprecated terms
-+		if (defined($deprecated_terms) &&
-+		    ($in_commit_log || $line =~ /^(?:\+|Subject:)/i)) {
-+			while ($rawline =~ /(?:^|[^a-z@])($deprecated_terms)(?:\b|$|[^a-z@])/gi) {
-+				my $deprecated_term = $1;
-+				my $suggested = $deprecated_terms_fix{lc($deprecated_term)};
-+				$suggested = ucfirst($suggested) if ($deprecated_term=~ /^[A-Z]/);
-+				$suggested = uc($suggested) if ($deprecated_term =~ /^[A-Z]+$/);
-+				my $msg_level = \&WARN;
-+				$msg_level = \&CHK if ($file);
-+				if (&{$msg_level}("DEPRECATED_TERM",
-+						  "Use of '$deprecated_term' is deprecated, please '$suggested', instead.\n" . $herecurr) &&
-+				    $fix) {
-+					$fixed[$fixlinenr] =~ s/(^|[^A-Za-z@])($deprecated_term)($|[^A-Za-z@])/$1$suggested$3/;
-+				}
-+			}
-+		}
-+
- # Check for various typo / spelling mistakes
- 		if (defined($misspellings) &&
- 		    ($in_commit_log || $line =~ /^(?:\+|Subject:)/i)) {
-diff --git a/scripts/deprecated_terms.txt b/scripts/deprecated_terms.txt
-new file mode 100644
-index 000000000000..6faa06451c3d
---- /dev/null
-+++ b/scripts/deprecated_terms.txt
-@@ -0,0 +1,5 @@
-+# License: GPLv2
-+#
-+# The format of each line is:
-+# deprecated||suggested
-+#
--- 
-2.17.1
-
+Fair enough; I'll try and get the above variant merged to address the
+build fail. Then I can chase down Paul's bug and finisht the cleanup.
