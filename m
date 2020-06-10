@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9ADC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36261C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29B8320825
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:03:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1307120801
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:03:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RNjlzi76"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="U+bufTyG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726312AbgFJGC7 (ORCPT
+        id S1726377AbgFJGDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 02:02:59 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:10502 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726264AbgFJGCu (ORCPT
+        Wed, 10 Jun 2020 02:03:32 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:11256 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726280AbgFJGC5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 02:02:50 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ee0777c0000>; Tue, 09 Jun 2020 23:02:36 -0700
+        Wed, 10 Jun 2020 02:02:57 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ee077320000>; Tue, 09 Jun 2020 23:01:22 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 09 Jun 2020 23:02:49 -0700
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 09 Jun 2020 23:02:54 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 09 Jun 2020 23:02:49 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Jun
- 2020 06:02:49 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 10 Jun 2020 06:02:48 +0000
+        by hqpgpgate102.nvidia.com on Tue, 09 Jun 2020 23:02:54 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Jun
+ 2020 06:02:53 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 10 Jun 2020 06:02:53 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.167.70]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ee077880000>; Tue, 09 Jun 2020 23:02:48 -0700
+        id <B5ee0778d0000>; Tue, 09 Jun 2020 23:02:53 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
@@ -47,9 +47,9 @@ CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
         <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
-Subject: [RFC PATCH v1 09/18] media: tegra-video: Update format lookup to offset based
-Date:   Tue, 9 Jun 2020 23:02:31 -0700
-Message-ID: <1591768960-31648-10-git-send-email-skomatineni@nvidia.com>
+Subject: [RFC PATCH v1 17/18] arm64: tegra: jetson-tx1: Add camera supplies
+Date:   Tue, 9 Jun 2020 23:02:39 -0700
+Message-ID: <1591768960-31648-18-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1591768960-31648-1-git-send-email-skomatineni@nvidia.com>
 References: <1591768960-31648-1-git-send-email-skomatineni@nvidia.com>
@@ -57,71 +57,99 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1591768956; bh=5U56MbpoGgbizDY87xBQZF5BWeIIcAyUuev+l62V8Co=;
+        t=1591768882; bh=znV249BjYdNn7v2dlbamoh4NYD4Ln2Jw53yQHV98OCI=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=RNjlzi76Vn2q4JBEfvLU2osE/DD4dy8kMevQ9VmOOUByhQb4Z3inJI2VcMctdQF1I
-         cI4WsINjdLOFjCsf7oPILdi52bjPkGtPpp07PQSlO0Q0wzzrNS5zMMWioBg3GraWs7
-         9e8EmABejoCWgLXwVVWPT9XHdnf8+cG9YNz4PMke7iBJYBQw6655fUcjMWOndthYhw
-         BTRP7V5mP4JpYkHhK3CNxV8G6DGToDA7VCwF8VKWnAgsWbbMtHCeXmYKL9OEYw8ry7
-         gT8xcyNpJ0tVLGsYJiEe0ckE2jdpZeHLcswRU0N9etfrUa0D7AU+gkqspRrQrDQ+Ej
-         yTt1d+IigWoiw==
+        b=U+bufTyGxeZZq+0bzplTJ2AIZQ47lCPR4aro1JIT/l3vC3/9FuW3NZmP4kNnFGJ8N
+         h++CmUN6qMesNXfxY24aFmDVMLVvYk2YlenD/6KcNBXhtWUbA7yL0XNfiRqsjNqiM3
+         dRTVLciclWXclOzdO2Vcal++QSLAMLK2izQ96fVM7lsgWpoztnTk7WA4w3lSsSktf9
+         Asd0cRJIYtDkSTAfPx9zlJVkadeaJYz/iuiKnw5dgcAmL/Tas/6CBLorUrNfDaX017
+         DMosSZd2psfQxVMSVTp7qoXQREDxBqgWg2en83ocE/X1KPCNAfMFjs3FR/IkCJjduw
+         FXnSzBV5HlWBw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra VI supported video formats are more for non TPG and there
-can be multiple pixel formats for the same media bus format.
+Jetson TX1 development board has a camera expansion connector which
+has 2V8, 1V8 and 1V2 supplies to power up the camera sensor on the
+supported camera modules.
 
-This patch updates the helper function for format lookup based on
-mbus code from pre-defined Tegra supported format list to look from
-the specified list index offset.
+Camera module designed as per Jetson TX1 camera expansion connector
+may use these supplies for camera sensor avdd 2V8, digital core 1V8,
+and digital interface 1V2 voltages.
 
-Offset based look up is used with sensor device graph (non TPG)
-where format enumeration can list all supported formats for the
-specific sensor mbus codes.
+These supplies are from fixed regulators on TX1 carrier board with
+enable control signals from I2C GPIO expanders.
+
+This patch adds these camera supplies to Jetson TX1 device tree to
+allow using these when a camera module is used.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/staging/media/tegra-video/vi.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi | 41 ++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
 
-diff --git a/drivers/staging/media/tegra-video/vi.c b/drivers/staging/media/tegra-video/vi.c
-index 0197f4e..52d751f 100644
---- a/drivers/staging/media/tegra-video/vi.c
-+++ b/drivers/staging/media/tegra-video/vi.c
-@@ -53,11 +53,12 @@ to_tegra_channel_buffer(struct vb2_v4l2_buffer *vb)
- }
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+index b57d837..5e24d7a 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+@@ -1323,6 +1323,14 @@
+ 			#gpio-cells = <2>;
+ 			gpio-controller;
+ 		};
++
++		exp2: gpio@77 {
++			compatible = "ti,tca9539";
++			reg = <0x77>;
++
++			#gpio-cells = <2>;
++			gpio-controller;
++		};
+ 	};
  
- static int tegra_get_format_idx_by_code(struct tegra_vi *vi,
--					unsigned int code)
-+					unsigned int code,
-+					unsigned int offset)
- {
- 	unsigned int i;
+ 	/* HDMI DDC */
+@@ -1667,6 +1675,39 @@
+ 			enable-active-high;
+ 			vin-supply = <&vdd_5v0_sys>;
+ 		};
++
++		vdd_cam_1v2: regulator@12 {
++			compatible = "regulator-fixed";
++			reg = <12>;
++			regulator-name = "vdd-cam-1v2";
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1200000>;
++			gpio = <&exp2 10 GPIO_ACTIVE_HIGH>;
++			enable-active-high;
++			vin-supply = <&vdd_3v3_sys>;
++		};
++
++		vdd_cam_2v8: regulator@13 {
++			compatible = "regulator-fixed";
++			reg = <13>;
++			regulator-name = "vdd-cam-2v8";
++			regulator-min-microvolt = <2800000>;
++			regulator-max-microvolt = <2800000>;
++			gpio = <&exp1 13 GPIO_ACTIVE_HIGH>;
++			enable-active-high;
++			vin-supply = <&vdd_3v3_sys>;
++		};
++
++		vdd_cam_1v8: regulator@14 {
++			compatible = "regulator-fixed";
++			reg = <14>;
++			regulator-name = "vdd-cam-1v8";
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			gpio = <&exp2 9 GPIO_ACTIVE_HIGH>;
++			enable-active-high;
++			vin-supply = <&vdd_3v3_sys>;
++		};
+ 	};
  
--	for (i = 0; i < vi->soc->nformats; ++i) {
-+	for (i = offset; i < vi->soc->nformats; ++i) {
- 		if (vi->soc->video_formats[i].code == code)
- 			return i;
- 	}
-@@ -598,11 +599,12 @@ static void vi_tpg_fmts_bitmap_init(struct tegra_vi_channel *chan)
- 	bitmap_zero(chan->tpg_fmts_bitmap, MAX_FORMAT_NUM);
- 
- 	index = tegra_get_format_idx_by_code(chan->vi,
--					     MEDIA_BUS_FMT_SRGGB10_1X10);
-+					     MEDIA_BUS_FMT_SRGGB10_1X10, 0);
- 	bitmap_set(chan->tpg_fmts_bitmap, index, 1);
- 
- 	index = tegra_get_format_idx_by_code(chan->vi,
--					     MEDIA_BUS_FMT_RGB888_1X32_PADHI);
-+					     MEDIA_BUS_FMT_RGB888_1X32_PADHI,
-+					     0);
- 	bitmap_set(chan->tpg_fmts_bitmap, index, 1);
- }
- 
+ 	gpio-keys {
 -- 
 2.7.4
 
