@@ -2,101 +2,101 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A6B3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA8FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:08:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5561F206C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB2C92078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:08:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fJTk0h8F"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iqnJFRkg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726154AbgFJBIF (ORCPT
+        id S1726173AbgFJBIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 21:08:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52774 "EHLO
+        Tue, 9 Jun 2020 21:08:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbgFJBIE (ORCPT
+        with ESMTP id S1725988AbgFJBII (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 21:08:04 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37AC4C05BD1E;
-        Tue,  9 Jun 2020 18:08:03 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id 205so568925qkg.3;
-        Tue, 09 Jun 2020 18:08:03 -0700 (PDT)
+        Tue, 9 Jun 2020 21:08:08 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC171C05BD1E;
+        Tue,  9 Jun 2020 18:08:06 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id r18so202771pgk.11;
+        Tue, 09 Jun 2020 18:08:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Vamar1imPGmNvjQrf4Z1noIseKJMzzhcgENPsA5na3U=;
-        b=fJTk0h8FxJJAQwFkQza1lwcNACtdjTFZr6vhcgsFpGKBxxZjCFMDQ6XmpukrefLhN9
-         KUBaakKsqTHUuuR1YwsgfxpQpmMj93G5eSTIsWDKRWmeSa4lm+G6xB2HIN2blsTuw91E
-         7iK0gXHiPUChe3Luig3UTJs+4gXDXGDh4oHnJ0SRqcGnUldPL/oU1flFuKB+mbsPGa/X
-         Qh8H0rzRNWxTFedfKVEa/89dvP0Zh6AFbXpYbkscc2tQbxZW9A7px3nXNNdSw3jEBrYP
-         qGViUTUf9nmTXDmkySHu68f60FFzs0/F6ssGRjXzJ0pPiRirdO6KzYi1kFy4/gqg2fvr
-         IuXA==
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=UmNa5QZXTcifMb5t+sEkwGynN0XSrtWdcarPS3DkzfM=;
+        b=iqnJFRkg2te+YESKxo2ZMUYBeKwbtBR1eF55xnbxHIFvOyY7rT0c1Cg+B9W3c1PFNO
+         zVT0M4AkC8Onf29mHrJOte8g+jXbUrCJTID7w/WUSrW/JRxxV+R3cgqfS/3Ge7Rhn81b
+         urMNyNFw/bEeK9zhet50JRTYSPdIbN0wkZvlPEXkdlmdTAC/bzGL6c8l4eHz/Zrvn0me
+         uGmgt/mKppBwGYmMYAhH+Fc2WYsbx4hwCwhDU7pgRQrBd84cPOkU6ERjfMJj4VeibiSj
+         8pXOZrnJaT7zMjN0HZTclF9GSZ1GkHfkY9jNxJpivBQZ/j6GzONHsl+k7wZkGm7d5RfF
+         Bcfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Vamar1imPGmNvjQrf4Z1noIseKJMzzhcgENPsA5na3U=;
-        b=ScrMwVGJFKXT2NbY/uxNPn4XQ7F3KBYmOnw0TifKXB0mUbpSmicNQp96BYb1HieCek
-         Sqde6Jcv6AI7h4N+5ZDDZL97j3R7MuV68DvZI9tZpDQCBFuslNnrhE6TEnW9TtC16VNs
-         MZIla7cAPWUojstlBsoVvyushDfql78DzBBfHPJdeJOIlo5ojhNYAHO/7kYaIWZKJrwk
-         mzjLvLXeAVXs5gshW7T4UoLJAxctc6K1e0MsP8cT/cug6e+Iwnb/VG3TkhLbgS7HYIrO
-         kBqqnd1DuJiAWhRvUkalc97EAxyVpyP9NsbdsJA3pFPWGrGheOelaXlmYVRQnCJz2iuL
-         kPIA==
-X-Gm-Message-State: AOAM5328dlcSZuE/BUyG+x/OYGPCCFa/xbGTXuepnU/pAaoG0qi4zTKN
-        V5LsEFYc9wGjyxF70tA20Q==
-X-Google-Smtp-Source: ABdhPJxoJ/sHIknqpkWtvAQC8xpLyu6qROAktnCeMs1TtRk3G0EWq6N4jDwOJrrSSBWGqbXcpkBRqw==
-X-Received: by 2002:ae9:c113:: with SMTP id z19mr676879qki.355.1591751282318;
-        Tue, 09 Jun 2020 18:08:02 -0700 (PDT)
-Received: from moria.home.lan ([2601:19b:c500:a1:7285:c2ff:fed5:c918])
-        by smtp.gmail.com with ESMTPSA id m53sm12341695qtb.64.2020.06.09.18.08.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 18:08:01 -0700 (PDT)
-Date:   Tue, 9 Jun 2020 21:08:00 -0400
-From:   Kent Overstreet <kent.overstreet@gmail.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        viro@zeniv.linux.org.uk, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 2/2] fs: generic_file_buffered_read() now uses
- find_get_pages_contig
-Message-ID: <20200610010800.GA4070152@moria.home.lan>
-References: <20200610001036.3904844-1-kent.overstreet@gmail.com>
- <20200610001036.3904844-3-kent.overstreet@gmail.com>
- <20200610004753.GE19604@bombadil.infradead.org>
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UmNa5QZXTcifMb5t+sEkwGynN0XSrtWdcarPS3DkzfM=;
+        b=n9fIHT50C8XM8QKI1N3B7K30y/mJd5quNui18Iqrn0TEKFTbaQoIX5LiqbX7SE4kQa
+         sFiEaZm9KJgChoyipnprEVs9QTyDdGjjc0wjo+lQtrWWBZcnc+8N9dx2vpqQDPwdMnma
+         H+BjeE7wAuuv0zxXRdpaNWNlZ52Hsdug2UUs2nwnoTblSIg9VMyd3c4oZmid3QCMTuH3
+         uXJbcfoEq3zmdKV+MV2XvwV5ZTmrWZ1lE1on5nmo+/PbZg/DfSwDe+iu99rHhIokGMrM
+         X1zklMg9PEduE3YT0gUXTkriXtFWDE30QmLOY+Wa4IIqKL0cJ5tC9OgOMshJo9x+32Jh
+         zMng==
+X-Gm-Message-State: AOAM5314ouEh11I+IZ3PCWh0qAJdPKoDhL09HDjM03j7+HxORScNM9kH
+        ftY17YtDug6OCxH6ELlSNOM=
+X-Google-Smtp-Source: ABdhPJyPnOLs8b4BbVR1sZVbbD7hTQb+uB1NhHbXovmx7InQxZ8QLWWZyTdoaqP8jpXpIqJL862v1Q==
+X-Received: by 2002:a63:fc1b:: with SMTP id j27mr614744pgi.251.1591751286328;
+        Tue, 09 Jun 2020 18:08:06 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id i197sm11111912pfe.30.2020.06.09.18.08.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jun 2020 18:08:05 -0700 (PDT)
+Subject: Re: [PATCH v2 4/7] mips: bmips: dts: add BCM6328 reset controller
+ support
+To:     =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
+        p.zabel@pengutronix.de, robh+dt@kernel.org,
+        tsbogend@alpha.franken.de, jonas.gorski@gmail.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+References: <20200609134232.4084718-1-noltari@gmail.com>
+ <20200609160244.4139366-1-noltari@gmail.com>
+ <20200609160244.4139366-5-noltari@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <47a8def4-a32a-04d3-e4ab-bb358f1455f5@gmail.com>
+Date:   Tue, 9 Jun 2020 18:08:03 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200610004753.GE19604@bombadil.infradead.org>
+In-Reply-To: <20200609160244.4139366-5-noltari@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 05:47:53PM -0700, Matthew Wilcox wrote:
-> On Tue, Jun 09, 2020 at 08:10:36PM -0400, Kent Overstreet wrote:
-> > @@ -2275,83 +2287,93 @@ static ssize_t generic_file_buffered_read(struct kiocb *iocb,
-> >  		struct iov_iter *iter, ssize_t written)
-> >  {
-> >  	struct file *filp = iocb->ki_filp;
-> > +	struct file_ra_state *ra = &filp->f_ra;
-> >  	struct address_space *mapping = filp->f_mapping;
-> >  	struct inode *inode = mapping->host;
-> > -	struct file_ra_state *ra = &filp->f_ra;
-> >  	size_t orig_count = iov_iter_count(iter);
-> > -	pgoff_t last_index;
-> > -	int error = 0;
-> > +	struct page *pages[64];
-> 
-> That's 512 bytes which seems like a lot of stack space.  Would 16 be
-> enough to see a significant fraction of the benefit?
 
-Ah right, we do call into fs code for readahead from here. I'll switch it to
-kmalloc the page array if it's more than 16.
+
+On 6/9/2020 9:02 AM, Álvaro Fernández Rojas wrote:
+> BCM6328 SoCs have a reset controller for certain components.
+> 
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+
+You should probably create include files under include/dt-bindings/
+which designate the various reset control bits that are valid for a
+given SoC.
+-- 
+Florian
