@@ -2,104 +2,76 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7119AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 260B4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 405C5206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:32:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E799C20734
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:32:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mFmvftu8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WAs0ZPp1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729092AbgFJMcg (ORCPT
+        id S1729117AbgFJMcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 08:32:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45520 "EHLO
+        Wed, 10 Jun 2020 08:32:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727927AbgFJMcg (ORCPT
+        with ESMTP id S1727927AbgFJMcu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 08:32:36 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02B16C03E96B
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 05:32:33 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id s18so1959861ioe.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 05:32:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gEwAMEos9mJeyuBEtMGoJ7WeF5TrT6RnXqrCBNOkXKo=;
-        b=mFmvftu8um4zSR74X94iYcbVafHOUT2/kfnxIJ6pJmXtt0NZ3RA0PpVJ8D/cwBTozI
-         QcOGchsvt4jIO6zcGpXfP/UNpTM2ormEecd5+Qerse5Atz4s7WgwhLW8kEv+LqVyMtrC
-         ibxnSuEP39roA3Apd+7h7YQQJPAi/+w34lpryuPYQDE9nqREIVU2xUVrBKWDL6MUtejy
-         8WU1be9W4z/vfTj6xHrkXP/dVPap963HqP7gzUskmX/VB/n1JqLl51jdAzHhkj9AuCRw
-         /hZw6aPdKa1j7o8C7nWTA1xzJEor+5oMmSxkaeC5c9rcmzrjZm+gsNJo+M2E+Zlvdzs/
-         BYmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gEwAMEos9mJeyuBEtMGoJ7WeF5TrT6RnXqrCBNOkXKo=;
-        b=rXmrN8ubOIh8TiqXQa9iD1kICpxZ0k1lNnSuELTFYT1Axuj9/VR/wxS/zt5ISZ1obb
-         PwSu0Nlwx3TmaUs3P6XI7oUs4aTQiVGhP1AO0EYb8RQKCvMxmcdhcYp2twtr3hBNq571
-         gcQjaVQ+8WUdY8hrBZEYhClihyGm5xV1UYC0LDCza/agV3Zt8DU52G9/8/T+04VV3q69
-         sc5UK3TZEPuU050SXvorRVxJ2K2nQX/UBuBm5fR8l/Aiixq+RyV4Wgr7M8uK1goJ0JtE
-         Uu8oU1n7pYwvFtwzsxq5o6Sib9npolj82XZKX0CxDOTgaI4+YJReWaKtcBD2J8aXz4W/
-         Zg4w==
-X-Gm-Message-State: AOAM530Uy/9YCYyuVgTOKIG/e5OmoRfYgdyqB8wyA1wjoT1yDZ+MPECW
-        ps8ymg/Az8OjKkwhhMi8R6v/set286pWUUTzhw==
-X-Google-Smtp-Source: ABdhPJxFtXrRZYv/jPjKUVyCn4z98p60ZiiAk2PbzG5kx1qFSlHpBWc1HBjAWzumIC8NM4BJbXItyqdA1ttpUZOo2+k=
-X-Received: by 2002:a05:6602:50:: with SMTP id z16mr3084684ioz.22.1591792353125;
- Wed, 10 Jun 2020 05:32:33 -0700 (PDT)
+        Wed, 10 Jun 2020 08:32:50 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3285AC03E96B
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 05:32:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=5o09axm2r9rIH7znUCDLHPlwkpxXzMT5u+8PhF6S94w=; b=WAs0ZPp1V1hryQHcMpUOPKNOqq
+        N2jUhScQ2Bd0WBjja1RX0xCTAIUbA5CkG9y3sDLiqKWSp9tfm2wzsgRmhS6XObhIZqylaLxe4wprB
+        CJobSB6ZREMQZS/EZE0sutrqzRMd32g8umnb5ctNyN0SHdBX16hgtFpde/A95PImUee+Uj3UmHunQ
+        goOpOinXXh1e1nPwu6PcIFaypdmh8C0D3wgy4lyGbS7owrs2J1TJlDzsp89NJ0qvfi+FLkeU+etrt
+        VanhLR//hrYd9ALTDsPFf4YB/QpwHbh4sf9CNwj+QPCA2uQscAco4dck7PbyCvmJhGFBu3gRVJqIu
+        qXLno40g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jizu9-0005Wl-L6; Wed, 10 Jun 2020 12:32:29 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AB7C83012C3;
+        Wed, 10 Jun 2020 14:32:26 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8C1E6203EE225; Wed, 10 Jun 2020 14:32:26 +0200 (CEST)
+Date:   Wed, 10 Jun 2020 14:32:26 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     X86 ML <x86@kernel.org>, Tom Lendacky <thomas.lendacky@amd.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Eric Morton <Eric.Morton@amd.com>
+Subject: Re: [PATCH 3/3] x86/msr: Add an MSR write callback
+Message-ID: <20200610123226.GC2497@hirez.programming.kicks-ass.net>
+References: <20200610110037.11853-1-bp@alien8.de>
+ <20200610110037.11853-4-bp@alien8.de>
 MIME-Version: 1.0
-References: <20200610114851.28549-1-jslaby@suse.cz>
-In-Reply-To: <20200610114851.28549-1-jslaby@suse.cz>
-From:   Brian Gerst <brgerst@gmail.com>
-Date:   Wed, 10 Jun 2020 08:32:22 -0400
-Message-ID: <CAMzpN2imDt9GZ3rFAJHQXw_GZhCHGzpCckSPZ2-2ObpbxdePiQ@mail.gmail.com>
-Subject: Re: [PATCH] syscalls: fix offset type of ksys_ftruncate
-To:     Jiri Slaby <jslaby@suse.cz>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dominik Brodowski <linux@dominikbrodowski.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200610110037.11853-4-bp@alien8.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 7:48 AM Jiri Slaby <jslaby@suse.cz> wrote:
->
-> After the commit below, truncate on i586 uses ksys_ftruncate. But
-> ksys_ftruncate truncates the offset to unsigned long. So switch the type
-> of offset to loff_t which is what the lower do_sys_ftruncate expects.
->
-> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-> Fixes: 121b32a58a3a (x86/entry/32: Use IA32-specific wrappers for syscalls taking 64-bit arguments)
-> Cc: Brian Gerst <brgerst@gmail.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Dominik Brodowski <linux@dominikbrodowski.net>
-> ---
->  include/linux/syscalls.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-> index 63ffa6dc9da3..e97ca179d0dc 100644
-> --- a/include/linux/syscalls.h
-> +++ b/include/linux/syscalls.h
-> @@ -1370,7 +1370,7 @@ static inline long ksys_lchown(const char __user *filename, uid_t user,
->
->  extern long do_sys_ftruncate(unsigned int fd, loff_t length, int small);
->
-> -static inline long ksys_ftruncate(unsigned int fd, unsigned long length)
-> +static inline long ksys_ftruncate(unsigned int fd, loff_t length)
->  {
->         return do_sys_ftruncate(fd, length, 1);
->  }
+On Wed, Jun 10, 2020 at 01:00:37PM +0200, Borislav Petkov wrote:
+> From: Borislav Petkov <bp@suse.de>
+> 
+> Add a callback which gets executed after a MSR is written from
+> userspace. This is needed because in the case of AMD's MSR_AMD64_LS_CFG
+> MSR which gets cached in the kernel, the cached value needs to be
+> updated after the write, otherwise latter doesn't stick.
 
-Reviewed-by: Brian Gerst <brgerst@gmail.com>
+We cache a whole bunch of MSRs in kernel. Why is this one special?
+
+If you write using the stupid msr device, you get to keep all pieces.
