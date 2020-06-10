@@ -2,157 +2,140 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA979C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 605B4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA8602074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:57:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3332F20656
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:57:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UlN/C4YY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GSoCbhkf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgFJT5O (ORCPT
+        id S1730398AbgFJT5d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 15:57:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57900 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726219AbgFJT5N (ORCPT
+        Wed, 10 Jun 2020 15:57:33 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26955 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730147AbgFJT5c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 15:57:13 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B619C03E96B;
-        Wed, 10 Jun 2020 12:57:13 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id r16so1629392qvm.6;
-        Wed, 10 Jun 2020 12:57:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=e7DTymW0dlvUI6UcJcAeZHCURN97Q9zDso/sHlDXRNA=;
-        b=UlN/C4YYYCXVSwrKjjY3uOG/wP63W4GdE1l5KDxKe8xiggNNm3xqvFGL1N44md5YZ3
-         VDoCVM46iPmYU8mpemi+nbgUZcUkSqcX9UhF613wB5Dc4ooVEWBmxwKh/nY2Nh2LxKTO
-         +RGatdPg5pWR4DsAUaN6NAlJCi1CSFPtQxcvwu/xjAEhsCZQEz9RLeeP2fJxh0EBqhGB
-         +kdiyWBeQoDR/PHlV62/5sW+ECZc29FlXzwA6HZ6zsm052EyOd0M+IxJtSgJGxf6lAmY
-         lvYyXgBsMdZAm5Dirf2hxBmO6X2rkG5BWZ++xB1Ur6VG2KGpfVVmwvQp7bGTgGAqXoYA
-         /hFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=e7DTymW0dlvUI6UcJcAeZHCURN97Q9zDso/sHlDXRNA=;
-        b=nq43tVZjOyvOxhQe+9rg++T1R51PCLx0kHXZa4aylhiGvpTtiiAY0/pNpT4BOlPNqp
-         Yz9Ue8NTACSKeD5u2l8wysQOvie9qeavnTNqmnWGt8rZsN+9Jc0cXLxSN+VdkNMewTHK
-         33XZOJPvnSYVORwXWM9MORnwFBZ41nqhyjO7a+8PsquBpyAMHPknkaCmBp5ZvJgR8X8c
-         r1YQWcmKHOop2kazLzcEKQ8bqOc+6HPBpNLjYU39lYsrHzSYZdcMwE7w3Vlf9x/Ttxn0
-         yDuOlxp5iPbAuektjQKo4gpt3x2QV5YW8jJGOP3b4ydiC/c2LxpjBod37hnskja1JQcv
-         KxlQ==
-X-Gm-Message-State: AOAM533KhHC5EpTklGl9TZxcBIIVNSp496gXhSEZeu06KR0a2DjtL80M
-        8I156piwxcf1rMNHR/+b0CEYME8xqP7iDJ3V9WzBd54mdOU=
-X-Google-Smtp-Source: ABdhPJysrd/Lk7ZFl9lvvRPWP6l9wx2xRBJWOVf6T/AKiULdAUcsa+SId5libD1DvTqTsaPkNdCuToAw+q/94pXF54w=
-X-Received: by 2002:ad4:4627:: with SMTP id x7mr3830646qvv.54.1591819032442;
- Wed, 10 Jun 2020 12:57:12 -0700 (PDT)
+        Wed, 10 Jun 2020 15:57:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591819051;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Nl9EIBpQI7NQMzSr/H6WnIrG3wfcWrL6AfGlOWS2QN8=;
+        b=GSoCbhkfSqq9VqDcRc4fh0sMTpEzkeXSWsGpwHBSkw747e4P2PM2js8V592cw1TaFqWcmO
+        s/tABD2aaW56c9HdVv9mrQtLYf0tsjKEtPds+ljsO0j8sDbgaQ1b++zr1UvnlqFbPriwy6
+        L64yDipAhbDAe1XpWwxjmkbwVN8p/88=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-5-CKjwj5d_P8y6-aWOzSjAvw-1; Wed, 10 Jun 2020 15:57:27 -0400
+X-MC-Unique: CKjwj5d_P8y6-aWOzSjAvw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 03A27461;
+        Wed, 10 Jun 2020 19:57:26 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-115-64.rdu2.redhat.com [10.10.115.64])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A531A7C08B;
+        Wed, 10 Jun 2020 19:57:25 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 2C3CF2205BD; Wed, 10 Jun 2020 15:57:25 -0400 (EDT)
+Date:   Wed, 10 Jun 2020 15:57:25 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] KVM: async_pf: Inject 'page ready' event only if
+ 'page not present' was previously injected
+Message-ID: <20200610195725.GA263462@redhat.com>
+References: <20200610175532.779793-1-vkuznets@redhat.com>
+ <20200610175532.779793-2-vkuznets@redhat.com>
+ <20200610193211.GB243520@redhat.com>
+ <20200610194738.GE18790@linux.intel.com>
 MIME-Version: 1.0
-References: <20200607113632.GA49147@kroah.com> <20200609210400.GA1461839@bjorn-Precision-5520>
- <CAOSf1CGMwHGSn18MeKYr2BESfLwq3Q8_0fC6yhiQRrAXeSosqQ@mail.gmail.com>
-In-Reply-To: <CAOSf1CGMwHGSn18MeKYr2BESfLwq3Q8_0fC6yhiQRrAXeSosqQ@mail.gmail.com>
-Reply-To: rajatxjain@gmail.com
-From:   Rajat Jain <rajatxjain@gmail.com>
-Date:   Wed, 10 Jun 2020 12:57:00 -0700
-Message-ID: <CAA93t1r37y-Shr+-oHoBoLSbE1vAguwdE2ak2F6L4Ecm5+3JKQ@mail.gmail.com>
-Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
- "whitelisted" drivers
-To:     "Oliver O'Halloran" <oohall@gmail.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rajat Jain <rajatja@google.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Zubin Mithra <zsm@google.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200610194738.GE18790@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 9, 2020 at 6:34 PM Oliver O'Halloran <oohall@gmail.com> wrote:
->
-> On Wed, Jun 10, 2020 at 7:04 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > To sketch this out, my understanding of how this would work is:
-> >
-> >   - Expose the PCI pdev->untrusted bit in sysfs.  We don't expose this
-> >     today, but doing so would be trivial.  I think I would prefer a
-> >     sysfs name like "external" so it's more descriptive and less of a
-> >     judgment.
-> >
-> >     This comes from either the DT "external-facing" property or the
-> >     ACPI "ExternalFacingPort" property.
->
-> I don't think internal / external is the right distinction to be
-> making. We have a similar trust issue with the BMC in servers even
-> though they're internal devices. They're typically network accessible
-> and infrequently updated so treating them as trustworthy isn't a great
-> idea. We have been slowly de-privileging the BMC over the last few
-> years, but the PCIe interface isn't locked down enough for my liking
-> since the SoCs we use do allow software to set the VDID and perform
-> arbitrary DMAs (thankfully limited to 32bit). If we're going to add in
-> infrastructure for handling possibly untrustworthy PCI devices then
-> I'd like to use that for BMCs too.
->
-> >   - All devices present at boot are enumerated.  Any statically built
-> >     drivers will bind to them before any userspace code runs.
-> >
-> >     If you want to keep statically built drivers from binding, you'd
-> >     need to invent some mechanism so pci_driver_init() could clear
-> >     drivers_autoprobe after registering pci_bus_type.
-> >
-> >   - Early userspace code prevents modular drivers from automatically
-> >     binding to PCI devices:
-> >
-> >       echo 0 > /sys/bus/pci/drivers_autoprobe
-> >
-> >     This prevents modular drivers from binding to all devices, whether
-> >     present at boot or hot-added.
->
-> I don't see why this is preferable to just disabling autoprobe for
-> untrusted devices. That would dovetail nicely with Rajat's whitelist
-> idea if we want to go down that route and I think we might want to.
-> The BMC usually provides some form of VGA console and we'd like that
-> to continue working out-of-the-box without too much user (or distro)
-> intervention.
+On Wed, Jun 10, 2020 at 12:47:38PM -0700, Sean Christopherson wrote:
+> On Wed, Jun 10, 2020 at 03:32:11PM -0400, Vivek Goyal wrote:
+> > On Wed, Jun 10, 2020 at 07:55:32PM +0200, Vitaly Kuznetsov wrote:
+> > > 'Page not present' event may or may not get injected depending on
+> > > guest's state. If the event wasn't injected, there is no need to
+> > > inject the corresponding 'page ready' event as the guest may get
+> > > confused. E.g. Linux thinks that the corresponding 'page not present'
+> > > event wasn't delivered *yet* and allocates a 'dummy entry' for it.
+> > > This entry is never freed.
+> > > 
+> > > Note, 'wakeup all' events have no corresponding 'page not present'
+> > > event and always get injected.
+> > > 
+> > > s390 seems to always be able to inject 'page not present', the
+> > > change is effectively a nop.
+> > > 
+> > > Suggested-by: Vivek Goyal <vgoyal@redhat.com>
+> > > Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> > > ---
+> > >  arch/s390/include/asm/kvm_host.h | 2 +-
+> > >  arch/s390/kvm/kvm-s390.c         | 4 +++-
+> > >  arch/x86/include/asm/kvm_host.h  | 2 +-
+> > >  arch/x86/kvm/x86.c               | 7 +++++--
+> > >  include/linux/kvm_host.h         | 1 +
+> > >  virt/kvm/async_pf.c              | 2 +-
+> > >  6 files changed, 12 insertions(+), 6 deletions(-)
+> > > 
+> > > diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm_host.h
+> > > index 3d554887794e..cee3cb6455a2 100644
+> > > --- a/arch/s390/include/asm/kvm_host.h
+> > > +++ b/arch/s390/include/asm/kvm_host.h
+> > > @@ -978,7 +978,7 @@ bool kvm_arch_can_dequeue_async_page_present(struct kvm_vcpu *vcpu);
+> > >  void kvm_arch_async_page_ready(struct kvm_vcpu *vcpu,
+> > >  			       struct kvm_async_pf *work);
+> > >  
+> > > -void kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
+> > > +bool kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
+> > >  				     struct kvm_async_pf *work);
+> > 
+> > Hi Vitaly,
+> > 
+> > A minor nit. Using return code to figure out if exception was injected
+> > or not is little odd. How about we pass a pointer instead as parameter
+> > and kvm_arch_async_page_not_present() sets it to true if page not
+> > present exception was injected. This probably will be easier to
+> > read.
+> > 
+> > If for some reason you don't like above, atleats it warrants a comment
+> > explaining what do 0 and 1 mean.
+> > 
+> > Otherwise both the patches look good to me. I tested and I can confirm
+> > that now page ready events are not being delivered to guest if page
+> > not present was not injected.
+> 
+> Why does kvm_arch_async_page_not_present() need to "return" anything?  It
+> has access to @work, e.g. simply replace "return true" with
+> "work->notpresent_injected = true".
 
-I wouldn't mind introducing a kernel parameter to disable auto-probing
-of untrusted devices if there is a wider agreement here.
-The only notch is that in my opinion, if present, that parameter
-should disable auto-probing for "external" devices only (i.e.
-"external-facing" devices should still be auto-probed).
+We could do it and I thought about it. But modifying work->notpresent_injected
+inside kvm_arch_async_page_not_present() again feels very unintuitive.
 
-Thanks,
+I personally find it better that initialization of
+work->notpresent_injected is very explicit at the site where this 
+structure has been allocated and being initialized. (Instead of a
+a callee function silently initializing a filed of this structure).
 
-Rajat
+Thanks
+Vivek
 
->
-> Oliver
