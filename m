@@ -2,120 +2,142 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F309C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1F5C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6B4120691
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:32:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 190EB206F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:34:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ROHGXgoE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ngW+kKhf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726108AbgFJBcj (ORCPT
+        id S1726121AbgFJBeV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 21:32:39 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:5007 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725885AbgFJBch (ORCPT
+        Tue, 9 Jun 2020 21:34:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56820 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725885AbgFJBeU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 21:32:37 -0400
-X-UUID: 8eb582d8398a4d0e899051ebeff39a85-20200610
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=qhYvj7zpeWIgmu8J+0ge/AWBJKAFPe78L9ZHRztXi94=;
-        b=ROHGXgoEWsN09MfFNKN7Pr9lh/OwAsSPKvpDbtvC4AyMOq1Y6PJiGT78RFNLpHHkaCsBqW4Wvy/WzTzh3V6SXWss6zjmgUN1Y4VIbLsvBpOIepoyiiZgGxm7K/IZKRKGl5GfE5Sk96e1lGEfsztjU11By/cQIq2lylthK0TEcG8=;
-X-UUID: 8eb582d8398a4d0e899051ebeff39a85-20200610
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <biao.huang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1662716289; Wed, 10 Jun 2020 09:32:33 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by mtkmbs08n1.mediatek.inc
- (172.21.101.55) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 10 Jun
- 2020 09:32:31 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 10 Jun 2020 09:32:29 +0800
-Message-ID: <1591752616.29387.26.camel@mhfsdcap03>
-Subject: Re: [PATCH] net: stmmac: Fix RX Coalesce IOC always true issue
-From:   biao huang <biao.huang@mediatek.com>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "yt.shen@mediatek.com" <yt.shen@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Wed, 10 Jun 2020 09:30:16 +0800
-In-Reply-To: <BN6PR12MB1779E6EF20FD8F5F3255CCE8D3820@BN6PR12MB1779.namprd12.prod.outlook.com>
-References: <20200609094133.11053-1-biao.huang@mediatek.com>
-         <BN6PR12MB1779E6EF20FD8F5F3255CCE8D3820@BN6PR12MB1779.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Tue, 9 Jun 2020 21:34:20 -0400
+Received: from mail-io1-xd36.google.com (mail-io1-xd36.google.com [IPv6:2607:f8b0:4864:20::d36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E2BAC05BD1E;
+        Tue,  9 Jun 2020 18:34:20 -0700 (PDT)
+Received: by mail-io1-xd36.google.com with SMTP id d5so358064ios.9;
+        Tue, 09 Jun 2020 18:34:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D4aH15SSO22KRv//RjmrlnG6X17+Svv1DvzlLOVYd3o=;
+        b=ngW+kKhf6SJziSfTZxxL1vNqjFom7hR4s8X5dKIgSrGLPkxXs6wCdBfRQGBtTVRK36
+         zYnUTutj8F0hMquKcz4NFDLCE78ekqy1E3wyRLtad+MT1uFKqrBmrxObe906H2J2xaLB
+         bGhShr7/lQ8d93ms4GpqM55lPr8iGTNBFovmwJuNAO4nkLXsXCl74MBFcX7cQ6JdDZuq
+         eLYVcam3zXwvINE2GUyUM31tmZm+M7KEqNWgIyq4CdRAPtMJmyTUwNeynK6QuDzRdid6
+         TRs1If3lM8Mv3gBb5Fk9t4qCDo4qhHvOGj6gBaRYHxfJsnFUyqRJA7fbDZqYlNlMvReh
+         pFYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D4aH15SSO22KRv//RjmrlnG6X17+Svv1DvzlLOVYd3o=;
+        b=t+RQ8dJ7+gxpsCdwmAbIdFUFqS0CrUNPo/GnkqqmWG0HzjIHYbabe/4mKBi6D03PUz
+         kCc/55ZPCk43yOlEm2K+gMEzUXZd8YIczxISMZbSbIfomo1rjEIQ6873tCAOaIlOmK45
+         Ay/xuFBMhtPqgfNLBBo0vRihtJM4pyFFsX9RlUQdLNBgGaK9gvOF2CSZ7mWNIPmWDYxs
+         N37NahaUgbN9ColtHtt8wRML+kQlCJIns6d5aZ2h+f9WqNx7XyoPpkiZt2wTUzW4aIs6
+         89Iuewk8U7LXdGZDEqHO+n6F1SaNxvWfOVRdF1VWuTdxdR3jtUfcMcS5ymR8cK08QwBp
+         O6IA==
+X-Gm-Message-State: AOAM531EBru0nKYye4RaOgGg2wqQGKyaXq6By80ypJamzk+VkB364Pk6
+        WrtQefgNpZYHRvEYhoG/lZFZ0uwo5gcd7XlznLk=
+X-Google-Smtp-Source: ABdhPJwEMTnnLXlPXBnlrmuAt383evVY9uUlUpumRO3Nas7YGaGR+fO7L1y902PECLdfkFXgVneS4zHjpxOHXTP6mVE=
+X-Received: by 2002:a05:6602:1647:: with SMTP id y7mr977606iow.75.1591752859010;
+ Tue, 09 Jun 2020 18:34:19 -0700 (PDT)
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200607113632.GA49147@kroah.com> <20200609210400.GA1461839@bjorn-Precision-5520>
+In-Reply-To: <20200609210400.GA1461839@bjorn-Precision-5520>
+From:   "Oliver O'Halloran" <oohall@gmail.com>
+Date:   Wed, 10 Jun 2020 11:34:06 +1000
+Message-ID: <CAOSf1CGMwHGSn18MeKYr2BESfLwq3Q8_0fC6yhiQRrAXeSosqQ@mail.gmail.com>
+Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
+ "whitelisted" drivers
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rajat Jain <rajatja@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Zubin Mithra <zsm@google.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTA2LTA5IGF0IDE0OjIwICswMDAwLCBKb3NlIEFicmV1IHdyb3RlOg0KPiBG
-cm9tOiBCaWFvIEh1YW5nIDxiaWFvLmh1YW5nQG1lZGlhdGVrLmNvbT4NCj4gRGF0ZTogSnVuLzA5
-LzIwMjAsIDEwOjQxOjMzIChVVEMrMDA6MDApDQo+IA0KPiA+IC0JCXJ4X3EtPnJ4X2NvdW50X2Zy
-YW1lcyArPSBwcml2LT5yeF9jb2FsX2ZyYW1lczsNCj4gPiAtCQlpZiAocnhfcS0+cnhfY291bnRf
-ZnJhbWVzID4gcHJpdi0+cnhfY29hbF9mcmFtZXMpDQo+ID4gKwkJaWYgKHJ4X3EtPnJ4X2NvdW50
-X2ZyYW1lcyA+PSBwcml2LT5yeF9jb2FsX2ZyYW1lcykNCj4gDQo+IFRoaXMgaXMgbm8gcmlnaHQu
-IElmIHlvdSB3YW50IHRvIFJYIElDIGJpdCB0byBub3QgYWx3YXlzIGJlIHNldCB5b3UgbmVlZCAN
-Cj4gdG8gY2hhbmdlIGNvYWxlc2NlIHBhcmFtZXRlcnMgdXNpbmcgZXRodG9vbC4NCg0KbGV0J3Mg
-dGFrZSBsb29rIGF0IHRoZXNlIGxpbmVzOg0KDQogCTEuIHJ4X3EtPnJ4X2NvdW50X2ZyYW1lcyAr
-PSBwcml2LT5yeF9jb2FsX2ZyYW1lczsNCgkyLiAJaWYgKHJ4X3EtPnJ4X2NvdW50X2ZyYW1lcyA+
-IHByaXYtPnJ4X2NvYWxfZnJhbWVzKQ0KCTMuIAkJcnhfcS0+cnhfY291bnRfZnJhbWVzID0gMDsN
-Cg0KYmVmb3JlIHRoZSBpZiBjb25kaXRpb24obGluZSAyIGFib3ZlKSwgdGhlcmUgaXMgInJ4X3Et
-PnJ4X2NvdW50X2ZyYW1lcw0KKz0gcHJpdi0+cnhfY29hbF9mcmFtZXMiKGxpbmUgMSBhYm92ZSkg
-c2VudGVuY2U7IHNvIHRoZSBpZiBjb25kaXRpb24NCmFsd2F5cyB0cnVlLCBhbmQgdGhlIGFzc2ln
-bm1lbnQgcnhfcS0+cnhfY291bnRfZnJhbWVzID0gMCBoYXBwZW5zLg0KDQpIZXJlIGlzIHRoZSBy
-ZXN1bHQgb24gb3VyIHBsYXRmb3JtLCBhbGwgZGVzYzNbMzBdID0gMTsgeW91IGNhbiBhbHNvDQpj
-aGVjayBpdCBvbiB5b3VyIHBsYXRmb3JtLiBubyBtYXR0ZXIgd2hhdCByeC1mcmFtZXMgeW91IHNl
-dCB3aXRoDQoiZXRodG9vbCAtQyBldGgwIHJ4LWZyYW1lcyIsIGRlc2MzWzMwXSBhbHdheXMgdHJ1
-ZS4NCg0KIyBldGh0b29sIC1jIGV0aDANCkNvYWxlc2NlIHBhcmFtZXRlcnMgZm9yIGV0aDA6DQpB
-ZGFwdGl2ZSBSWDogb2ZmICBUWDogb2ZmDQpzdGF0cy1ibG9jay11c2VjczogMA0Kc2FtcGxlLWlu
-dGVydmFsOiAwDQpwa3QtcmF0ZS1sb3c6IDANCnBrdC1yYXRlLWhpZ2g6IDANCiANCnJ4LXVzZWNz
-OiAzMDENCnJ4LWZyYW1lczogMjUNCnJ4LXVzZWNzLWlycTogMA0KcngtZnJhbWVzLWlycTogMA0K
-DQojY2QgL3N5cy9rZXJuZWwvZGVidWcvc3RtbWFjZXRoL2V0aDANCiMgY2F0IGRlc2NyaXB0b3Jz
-X3N0YXR1cw0KUlggUXVldWUgMDoNCkRlc2NyaXB0b3IgcmluZzoNCjAgWzB4NTAzOGIwMDBdOiAw
-eGE4NTQxYTgyIDB4MCAweDAgMHhjMTAwMDAwMA0KIA0KMSBbMHg1MDM4YjAxMF06IDB4YTg1NDEy
-MDIgMHgwIDB4MCAweGMxMDAwMDAwDQogDQoyIFsweDUwMzhiMDIwXTogMHhhODU0MDk4MiAweDAg
-MHgwIDB4YzEwMDAwMDANCiANCjMgWzB4NTAzOGIwMzBdOiAweGE4NTQwMTAyIDB4MCAweDAgMHhj
-MTAwMDAwMA0KIA0KNCBbMHg1MDM4YjA0MF06IDB4YTY1OGY4MDIgMHgwIDB4MCAweGMxMDAwMDAw
-DQogDQo1IFsweDUwMzhiMDUwXTogMHhhNjU4ZWY4MiAweDAgMHgwIDB4YzEwMDAwMDANCiANCjYg
-WzB4NTAzOGIwNjBdOiAweGE2NThlNzAyIDB4MCAweDAgMHhjMTAwMDAwMA0KIA0KNyBbMHg1MDM4
-YjA3MF06IDB4YTY1OGRlODIgMHgwIDB4MCAweGMxMDAwMDAwDQogDQo4IFsweDUwMzhiMDgwXTog
-MHhhNjU4ZDYwMiAweDAgMHgwIDB4YzEwMDAwMDANCiANCjkgWzB4NTAzOGIwOTBdOiAweGE2NThj
-ZDgyIDB4MCAweDAgMHhjMTAwMDAwMA0KIA0KMTAgWzB4NTAzOGIwYTBdOiAweGE2NThjNTAyIDB4
-MCAweDAgMHhjMTAwMDAwMA0KIA0KMTEgWzB4NTAzOGIwYjBdOiAweGE2NThiYzgyIDB4MCAweDAg
-MHhjMTAwMDAwMA0KIA0KMTIgWzB4NTAzOGIwYzBdOiAweGE2NThiNDAyIDB4MCAweDAgMHhjMTAw
-MDAwMA0KIA0KMTMgWzB4NTAzOGIwZDBdOiAweGE2NThhYjgyIDB4MCAweDAgMHhjMTAwMDAwMA0K
-IA0KMTQgWzB4NTAzOGIwZTBdOiAweGE2NThhMzAyIDB4MCAweDAgMHhjMTAwMDAwMA0KIA0KMTUg
-WzB4NTAzOGIwZjBdOiAweGE2NTg5YTgyIDB4MCAweDAgMHhjMTAwMDAwMA0KIA0KMTYgWzB4NTAz
-OGIxMDBdOiAweGE2NTg5MjAyIDB4MCAweDAgMHhjMTAwMDAwMA0KIA0KMTcgWzB4NTAzOGIxMTBd
-OiAweGE2NTg4OTgyIDB4MCAweDAgMHhjMTAwMDAwMA0KIA0KMTggWzB4NTAzOGIxMjBdOiAweGE2
-NTg4MTAyIDB4MCAweDAgMHhjMTAwMDAwMA0KIA0KMTkgWzB4NTAzOGIxMzBdOiAweGE0NmRmODAy
-IDB4MCAweDAgMHhjMTAwMDAwMA0KIA0KMjAgWzB4NTAzOGIxNDBdOiAweGE0NmRlZjgyIDB4MCAw
-eDAgMHhjMTAwMDAwMA0KIA0KMjEgWzB4NTAzOGIxNTBdOiAweGE0NmRlNzAyIDB4MCAweDAgMHhj
-MTAwMDAwMA0KIA0KMjIgWzB4NTAzOGIxNjBdOiAweGE0NmRkZTgyIDB4MCAweDAgMHhjMTAwMDAw
-MA0KIA0KMjMgWzB4NTAzOGIxNzBdOiAweGE0NmRkNjAyIDB4MCAweDAgMHhjMTAwMDAwMA0KIA0K
-MjQgWzB4NTAzOGIxODBdOiAweGE0NmRjZDgyIDB4MCAweDAgMHhjMTAwMDAwMA0KIA0KMjUgWzB4
-NTAzOGIxOTBdOiAweGE0NmRjNTAyIDB4MCAweDAgMHhjMTAwMDAwMA0KIA0KMjYgWzB4NTAzOGIx
-YTBdOiAweGE0NmRiYzgyIDB4MCAweDAgMHhjMTAwMDAwMA0KIA0KMjcgWzB4NTAzOGIxYjBdOiAw
-eGE0NmRiNDAyIDB4MCAweDAgMHhjMTAwMDAwMA0KIA0KMjggWzB4NTAzOGIxYzBdOiAweGE0NmRh
-YjgyIDB4MCAweDAgMHhjMTAwMDAwMA0KIA0KMjkgWzB4NTAzOGIxZDBdOiAweGE0NmRhMzAyIDB4
-MCAweDAgMHhjMTAwMDAwMA0KIA0KMzAgWzB4NTAzOGIxZTBdOiAweGE0NmQ5YTgyIDB4MCAweDAg
-MHhjMTAwMDAwMA0KLi4uDQoNCj4gLS0tDQo+IFRoYW5rcywNCj4gSm9zZSBNaWd1ZWwgQWJyZXUN
-Cg0K
+On Wed, Jun 10, 2020 at 7:04 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> To sketch this out, my understanding of how this would work is:
+>
+>   - Expose the PCI pdev->untrusted bit in sysfs.  We don't expose this
+>     today, but doing so would be trivial.  I think I would prefer a
+>     sysfs name like "external" so it's more descriptive and less of a
+>     judgment.
+>
+>     This comes from either the DT "external-facing" property or the
+>     ACPI "ExternalFacingPort" property.
 
+I don't think internal / external is the right distinction to be
+making. We have a similar trust issue with the BMC in servers even
+though they're internal devices. They're typically network accessible
+and infrequently updated so treating them as trustworthy isn't a great
+idea. We have been slowly de-privileging the BMC over the last few
+years, but the PCIe interface isn't locked down enough for my liking
+since the SoCs we use do allow software to set the VDID and perform
+arbitrary DMAs (thankfully limited to 32bit). If we're going to add in
+infrastructure for handling possibly untrustworthy PCI devices then
+I'd like to use that for BMCs too.
+
+>   - All devices present at boot are enumerated.  Any statically built
+>     drivers will bind to them before any userspace code runs.
+>
+>     If you want to keep statically built drivers from binding, you'd
+>     need to invent some mechanism so pci_driver_init() could clear
+>     drivers_autoprobe after registering pci_bus_type.
+>
+>   - Early userspace code prevents modular drivers from automatically
+>     binding to PCI devices:
+>
+>       echo 0 > /sys/bus/pci/drivers_autoprobe
+>
+>     This prevents modular drivers from binding to all devices, whether
+>     present at boot or hot-added.
+
+I don't see why this is preferable to just disabling autoprobe for
+untrusted devices. That would dovetail nicely with Rajat's whitelist
+idea if we want to go down that route and I think we might want to.
+The BMC usually provides some form of VGA console and we'd like that
+to continue working out-of-the-box without too much user (or distro)
+intervention.
+
+Oliver
