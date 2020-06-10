@@ -2,88 +2,183 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D37FBC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1275DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD74C2074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:14:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D84F42074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:14:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tA0NucqI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730780AbgFJUOw (ORCPT
+        id S1730764AbgFJUOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 16:14:52 -0400
-Received: from sender4-op-o15.zoho.com ([136.143.188.15]:17546 "EHLO
-        sender4-op-o15.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730743AbgFJUOn (ORCPT
+        Wed, 10 Jun 2020 16:14:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60530 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730593AbgFJUNx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 16:14:43 -0400
-X-Greylist: delayed 903 seconds by postgrey-1.27 at vger.kernel.org; Wed, 10 Jun 2020 16:14:43 EDT
-ARC-Seal: i=1; a=rsa-sha256; t=1591819175; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=CCM/uK+8z2LgiHjGSaoaqB2YZaB5cL+q75We67/D58WGMSwx7FYzXqiR+4/Vp6F07ZUFnzFj6OxEYE2j5Ls0P6XniBnCPbDqbllCwuISzNkQZBfyrc+QtX4ZSAxz1yPCS0ilAASGOL/KCqMrJ7oyjRFMaHRuSd6mvi0CYjTtK4k=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1591819175; h=Content-Type:Cc:Date:From:MIME-Version:Message-ID:Subject:To; 
-        bh=w0o4OowJsl4iAr761FXtE6DpOWppvwGF0W6F8ylVrDE=; 
-        b=eUo1EnNSUZ2kp67gQ/lzbN3m3rne23/SmR3etvpWrXTmXP15ToY+jnQqpiOMPw3PuZ2TDhvCxLZnFW0oUxdJBPICcYT5Pibg7LfxyM2wz1a1SYiSYSrK6eH4w/wonHPXA6/Xner3a6b2OnTfmgBJV1LYs8KKJDahGmHicwTy5Zo=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        spf=pass  smtp.mailfrom=tyler@shetrompf.com;
-        dmarc=pass header.from=<tyler@shetrompf.com> header.from=<tyler@shetrompf.com>
-Received: from archlinux.localdomain (50-232-53-226-static.hfc.comcastbusiness.net [50.232.53.226]) by mx.zohomail.com
-        with SMTPS id 1591819172538462.68323652810307; Wed, 10 Jun 2020 12:59:32 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 19:59:23 +0000
-From:   Tyler Shetrompf <tyler@shetrompf.com>
-To:     gregkh@linuxfoundation.org
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] Staging: comedi: comedi_fops: fixed a blank line coding
- style issue
-Message-ID: <20200610195923.GA12602@archlinux.localdomain>
+        Wed, 10 Jun 2020 16:13:53 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D78FC0085C5;
+        Wed, 10 Jun 2020 13:13:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=S8iTV89UZwBhFOKRSSgrXr6LwEGxyfVVQ8jpCAk+4T4=; b=tA0NucqILgtgEHPhR0QOz7pyrc
+        zugbZGH0I3XvQq+j0ODT3muFUniByXxVfJLSRxJcvPAMz9m2bjaC/fRN1tNNET95jJMN4l1Jo6EbP
+        zDUoM8IVmQhJ8A3sy7ZpcUR6deIKOxefOhQ6r6hr9fab4ulNboCcNY90y3WTGBHhF8yT1c5mKx2wo
+        ZWpq0/whGdf/om/F+WMT5eITvlH4eqHcFu68r/6G+X+zyCg67O1AotBhoPTsfDvXb5DQ8N+4E+WvV
+        skfW41Kd0LZiexsBMp+ievdcW71GYsTQb2ECzNtxJdb89Jp2D9OxUS9sz65vQx8W9g1uqSkE/i+Yv
+        c6gTmipg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jj76b-0003YF-8X; Wed, 10 Jun 2020 20:13:49 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v6 48/51] mm: Make __do_page_cache_readahead take a readahead_control
+Date:   Wed, 10 Jun 2020 13:13:42 -0700
+Message-Id: <20200610201345.13273-49-willy@infradead.org>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200610201345.13273-1-willy@infradead.org>
+References: <20200610201345.13273-1-willy@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixed a coding style issue.
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-Signed-off-by: Tyler Shetrompf <tyler@shetrompf.com>
+Also call __do_page_cache_readahead() directly from ondemand_readahead()
+instead of indirecting via ra_submit().
+
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- drivers/staging/comedi/comedi_fops.c | 3 +++
- 1 file changed, 3 insertions(+)
+ mm/internal.h  | 11 +++++------
+ mm/readahead.c | 26 ++++++++++++++------------
+ 2 files changed, 19 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/staging/comedi/comedi_fops.c b/drivers/staging/comedi/comedi_fops.c
-index e85a99b68f31..3f70e5dfac39 100644
---- a/drivers/staging/comedi/comedi_fops.c
-+++ b/drivers/staging/comedi/comedi_fops.c
-@@ -2169,6 +2169,7 @@ static long comedi_unlocked_ioctl(struct file *file, unsigned int cmd,
- 		break;
- 	case COMEDI_CHANINFO: {
- 		struct comedi_chaninfo it;
-+
- 		if (copy_from_user(&it, (void __user *)arg, sizeof(it)))
- 			rc = -EFAULT;
- 		else
-@@ -2177,6 +2178,7 @@ static long comedi_unlocked_ioctl(struct file *file, unsigned int cmd,
+diff --git a/mm/internal.h b/mm/internal.h
+index cd7038a36354..63c493f892e2 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -51,18 +51,17 @@ void unmap_page_range(struct mmu_gather *tlb,
+ 
+ void force_page_cache_readahead(struct address_space *, struct file *,
+ 		pgoff_t index, unsigned long nr_to_read);
+-void __do_page_cache_readahead(struct address_space *, struct file *,
+-		pgoff_t index, unsigned long nr_to_read,
+-		unsigned long lookahead_size);
++void __do_page_cache_readahead(struct readahead_control *,
++		unsigned long nr_to_read, unsigned long lookahead_size);
+ 
+ /*
+  * Submit IO for the read-ahead request in file_ra_state.
+  */
+ static inline void ra_submit(struct file_ra_state *ra,
+-		struct address_space *mapping, struct file *filp)
++		struct address_space *mapping, struct file *file)
+ {
+-	__do_page_cache_readahead(mapping, filp,
+-			ra->start, ra->size, ra->async_size);
++	DEFINE_READAHEAD(rac, file, mapping, ra->start);
++	__do_page_cache_readahead(&rac, ra->size, ra->async_size);
+ }
+ 
+ /**
+diff --git a/mm/readahead.c b/mm/readahead.c
+index 62da2d4beed1..74c7e1eff540 100644
+--- a/mm/readahead.c
++++ b/mm/readahead.c
+@@ -246,12 +246,11 @@ EXPORT_SYMBOL_GPL(page_cache_readahead_unbounded);
+  * behaviour which would occur if page allocations are causing VM writeback.
+  * We really don't want to intermingle reads and writes like that.
+  */
+-void __do_page_cache_readahead(struct address_space *mapping,
+-		struct file *file, pgoff_t index, unsigned long nr_to_read,
+-		unsigned long lookahead_size)
++void __do_page_cache_readahead(struct readahead_control *rac,
++		unsigned long nr_to_read, unsigned long lookahead_size)
+ {
+-	DEFINE_READAHEAD(rac, file, mapping, index);
+-	struct inode *inode = mapping->host;
++	struct inode *inode = rac->mapping->host;
++	unsigned long index = readahead_index(rac);
+ 	loff_t isize = i_size_read(inode);
+ 	pgoff_t end_index;	/* The last page we want to read */
+ 
+@@ -265,7 +264,7 @@ void __do_page_cache_readahead(struct address_space *mapping,
+ 	if (nr_to_read > end_index - index)
+ 		nr_to_read = end_index - index + 1;
+ 
+-	page_cache_readahead_unbounded(&rac, nr_to_read, lookahead_size);
++	page_cache_readahead_unbounded(rac, nr_to_read, lookahead_size);
+ }
+ 
+ /*
+@@ -273,10 +272,11 @@ void __do_page_cache_readahead(struct address_space *mapping,
+  * memory at once.
+  */
+ void force_page_cache_readahead(struct address_space *mapping,
+-		struct file *filp, pgoff_t index, unsigned long nr_to_read)
++		struct file *file, pgoff_t index, unsigned long nr_to_read)
+ {
++	DEFINE_READAHEAD(rac, file, mapping, index);
+ 	struct backing_dev_info *bdi = inode_to_bdi(mapping->host);
+-	struct file_ra_state *ra = &filp->f_ra;
++	struct file_ra_state *ra = &file->f_ra;
+ 	unsigned long max_pages;
+ 
+ 	if (unlikely(!mapping->a_ops->readpage && !mapping->a_ops->readpages &&
+@@ -294,7 +294,7 @@ void force_page_cache_readahead(struct address_space *mapping,
+ 
+ 		if (this_chunk > nr_to_read)
+ 			this_chunk = nr_to_read;
+-		__do_page_cache_readahead(mapping, filp, index, this_chunk, 0);
++		__do_page_cache_readahead(&rac, this_chunk, 0);
+ 
+ 		index += this_chunk;
+ 		nr_to_read -= this_chunk;
+@@ -432,10 +432,11 @@ static int try_context_readahead(struct address_space *mapping,
+  * A minimal readahead algorithm for trivial sequential/random reads.
+  */
+ static void ondemand_readahead(struct address_space *mapping,
+-		struct file_ra_state *ra, struct file *filp,
++		struct file_ra_state *ra, struct file *file,
+ 		bool hit_readahead_marker, pgoff_t index,
+ 		unsigned long req_size)
+ {
++	DEFINE_READAHEAD(rac, file, mapping, index);
+ 	struct backing_dev_info *bdi = inode_to_bdi(mapping->host);
+ 	unsigned long max_pages = ra->ra_pages;
+ 	unsigned long add_pages;
+@@ -516,7 +517,7 @@ static void ondemand_readahead(struct address_space *mapping,
+ 	 * standalone, small random read
+ 	 * Read as is, and do not pollute the readahead state.
+ 	 */
+-	__do_page_cache_readahead(mapping, filp, index, req_size, 0);
++	__do_page_cache_readahead(&rac, req_size, 0);
+ 	return;
+ 
+ initial_readahead:
+@@ -542,7 +543,8 @@ static void ondemand_readahead(struct address_space *mapping,
+ 		}
  	}
- 	case COMEDI_RANGEINFO: {
- 		struct comedi_rangeinfo it;
-+
- 		if (copy_from_user(&it, (void __user *)arg, sizeof(it)))
- 			rc = -EFAULT;
- 		else
-@@ -2249,6 +2251,7 @@ static long comedi_unlocked_ioctl(struct file *file, unsigned int cmd,
- 	}
- 	case COMEDI_INSN: {
- 		struct comedi_insn insn;
-+
- 		if (copy_from_user(&insn, (void __user *)arg, sizeof(insn)))
- 			rc = -EFAULT;
- 		else
+ 
+-	ra_submit(ra, mapping, filp);
++	rac._index = ra->start;
++	__do_page_cache_readahead(&rac, ra->size, ra->async_size);
+ }
+ 
+ /**
 -- 
-2.27.0
+2.26.2
 
