@@ -2,49 +2,49 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43357C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1557BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13697206F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:17:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8E3C2074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:17:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eQkWOqFz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="enb+c39t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbgFJUR4 (ORCPT
+        id S1728022AbgFJURy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 16:17:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60504 "EHLO
+        Wed, 10 Jun 2020 16:17:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730520AbgFJUNs (ORCPT
+        with ESMTP id S1730523AbgFJUNs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 10 Jun 2020 16:13:48 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC0EEC08C5C3;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7F7DC08C5C5;
         Wed, 10 Jun 2020 13:13:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=rN/mlFQb7HaxIMdRoCBWWTWQlk5OHj7v1RP+jX7Yp4Y=; b=eQkWOqFzpT9FwkkpBW+oRka0dP
-        MuhOIi4m2vJrWWRLdz1++H4mVbdMhV527yj1MrHCeXjSD+s10sC1Hx8RzZEgfAZ3K4ezxW6zsDPNz
-        PUp7ckg/fBq13+BALbTfR87DIzU3yGwHp/59R30N6jpiQsKBWWRIQ2NNbtxF2X3L0FH4bJwA1UYnu
-        GiXKKAI6+15lvMolQwyh7uP6GmN3ts6bwQbHVdpiA1yqE/AfC1l4Iw0jySUprEsHSpgKoVbAqUfuF
-        LO1ynifb8BGqeso/F5sa35PicEPeraxP+ToPUlr5sE67ev85/ncOJuO6fLYmz3Vb1Y/RT9uthemeE
-        OHuocJ2Q==;
+        bh=gx5dzaclcqLvRwdwg62Y129njOqoREHSy9PwwIfrnGA=; b=enb+c39tttjAMEhbGFU3C4fuYh
+        R4EasE+JPjlKSH8Sn5bzwqozpn3biKPMl0hwkAsw8XFfjkSvWEPrS7SGBFQkNs07fk5mky5CE7+qs
+        9qopi0rY9KJI4hB2REfzZ1iGt+uyXlr+b22RynpFdk0VNyr4jPkQj8jiJOlFBdnkmCudVD/sZMdSo
+        bKpPoO+C5QElTvYW4bnOjLwaCf49QqhXdaJKY49MhLsKJ+JDfD4i0MtB0da5Vy92NwzQhkXnWA+HB
+        SU4LPG1hv/DZhXQ4nOaYvdpTFPvzHmgO/bUCKV4WrAUd59s2kF1wn6m5UPJjSbzUePQDu460FbbHq
+        i4LHWOAw==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jj76Z-0003Tf-I1; Wed, 10 Jun 2020 20:13:47 +0000
+        id 1jj76Z-0003U1-Lf; Wed, 10 Jun 2020 20:13:47 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 08/51] mm: Add thp_order
-Date:   Wed, 10 Jun 2020 13:13:02 -0700
-Message-Id: <20200610201345.13273-9-willy@infradead.org>
+Subject: [PATCH v6 11/51] mm: Add thp_head
+Date:   Wed, 10 Jun 2020 13:13:05 -0700
+Message-Id: <20200610201345.13273-12-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200610201345.13273-1-willy@infradead.org>
 References: <20200610201345.13273-1-willy@infradead.org>
@@ -57,51 +57,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-This function returns the order of a transparent huge page.  It
-compiles to 0 if CONFIG_TRANSPARENT_HUGEPAGE is disabled.
+This is like compound_head() but compiles away when
+CONFIG_TRANSPARENT_HUGEPAGE is not enabled.
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- include/linux/huge_mm.h | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ include/linux/huge_mm.h | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
 diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-index 71f20776b06c..dd19720a8bc2 100644
+index dcdfd21763a3..bd13e9ac3437 100644
 --- a/include/linux/huge_mm.h
 +++ b/include/linux/huge_mm.h
-@@ -265,6 +265,19 @@ static inline spinlock_t *pud_trans_huge_lock(pud_t *pud,
- 	else
+@@ -266,6 +266,15 @@ static inline spinlock_t *pud_trans_huge_lock(pud_t *pud,
  		return NULL;
  }
-+
+ 
 +/**
-+ * thp_order - Order of a transparent huge page.
-+ * @page: Head page of a transparent huge page.
++ * thp_head - Head page of a transparent huge page.
++ * @page: Any page (tail, head or regular) found in the page cache.
 + */
-+static inline unsigned int thp_order(struct page *page)
++static inline struct page *thp_head(struct page *page)
 +{
-+	VM_BUG_ON_PGFLAGS(PageTail(page), page);
-+	if (PageHead(page))
-+		return HPAGE_PMD_ORDER;
-+	return 0;
++	return compound_head(page);
 +}
 +
- static inline int hpage_nr_pages(struct page *page)
- {
- 	if (unlikely(PageTransHuge(page)))
-@@ -324,6 +337,12 @@ static inline struct list_head *page_deferred_list(struct page *page)
+ /**
+  * thp_order - Order of a transparent huge page.
+  * @page: Head page of a transparent huge page.
+@@ -342,6 +351,12 @@ static inline struct list_head *page_deferred_list(struct page *page)
  #define HPAGE_PUD_MASK ({ BUILD_BUG(); 0; })
  #define HPAGE_PUD_SIZE ({ BUILD_BUG(); 0; })
  
-+static inline unsigned int thp_order(struct page *page)
++static inline struct page *thp_head(struct page *page)
 +{
 +	VM_BUG_ON_PGFLAGS(PageTail(page), page);
-+	return 0;
++	return page;
 +}
 +
- static inline int hpage_nr_pages(struct page *page)
+ static inline unsigned int thp_order(struct page *page)
  {
- 	VM_BUG_ON_PAGE(PageTail(page), page);
+ 	VM_BUG_ON_PGFLAGS(PageTail(page), page);
 -- 
 2.26.2
 
