@@ -2,170 +2,153 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 505B1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF08C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28AF5206C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88F332078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:29:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="cVxMfXgK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wGtnbNQr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728265AbgFJK3h (ORCPT
+        id S1728283AbgFJK3p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 06:29:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54594 "EHLO
+        Wed, 10 Jun 2020 06:29:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728234AbgFJK3Y (ORCPT
+        with ESMTP id S1728245AbgFJK33 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 06:29:24 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBD4FC03E96F
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 03:29:23 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id t18so1643328wru.6
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 03:29:23 -0700 (PDT)
+        Wed, 10 Jun 2020 06:29:29 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D535C08C5C6
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 03:29:24 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id k8so1004994edq.4
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 03:29:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=0x0f.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2gvb3h72zonJCVPACju41Fbw0tDgnKx5h0TrDtNmZYU=;
-        b=cVxMfXgKRNgr+F74+NX6QkCCJWBVbcaIolD7qRiQgmfdoxxyjdPNvQqSVPvDNHyU5b
-         zutGY00KZ+V2A6xa7UdrCQ4mbO4KOBSVlbJnEi24sWcxCPzWJkbKuUydpqJuzjNDhXN4
-         ztN4nLKUUI+zmTNQ1wipCZvj9rX1uD5inqNhE=
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=qsMe0GoBoD4Nd7M3gcej+GYSC/DhUz8aXH/HyUxybk8=;
+        b=wGtnbNQrXsqiFO1VSMJ2uUjSmZHAEi+S6K5ESB4qgssCjIKSqFS2b1Jyr9jtl9Pywy
+         anuLBuXoUrXZzJw/iqRHH2RsMO8D1rTZslEMlcbvzhGKZPIymt4N8o1rDRKv6lQB6yGZ
+         FxK9r5Q3A2V/uf3KPjuYvhMc9/81tbXAW3Nl/LetTqYi/0gPFqLgrrb6pSu4Cv6BYM2d
+         +VHxqYYuRzmn+RdZg1LanX1+wiI6o7ofir9fwSVxubR4GmW1bXwU003AFWTIe7ciFQsU
+         AWUibFvwi/xqQLTh54nfPyEubeUna9etlzwZyYkKWTEOzLvNZdpr+qjsijkQohXsAgV6
+         O88Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2gvb3h72zonJCVPACju41Fbw0tDgnKx5h0TrDtNmZYU=;
-        b=V4D4HgrDnb0/1WUmkycB+xvyXg9BG3h3mAUVQRo813KDdulN8bgNzVXXzgk+luo6D5
-         CDcC7rmilozatKNrAW3s24Xkyzqb6P65UdUZujw4LkM3AgkTZf6Zrl6u3hCQIhlNHzGp
-         CzLGlwZm6eAssz9fKob+MlBIXg//35tgtkip5uowGuN+fb/x6aIWFkXUSJ39kM5HI5a3
-         +zHsp9hFxGCY3sRgIBMFG+0gnbgUTyyMo5HhrNuoWIMtp+QqDyuLGdlTHTZvWv4NwBdr
-         XjYwkaazjQ60kBTrr78sWWpPAuDgLsK597rFxPfphM5DBEY2Jjr945DqUaYB8Ltw83Ye
-         5LXg==
-X-Gm-Message-State: AOAM531CN9yQfVNjjlNOpt0r+/+Zp5WL19NOW03VAVg28qLcBqYPAOGt
-        iuBPxd3hOKuKW+TeQk6h1Qe+oM4M9kUiqzkescakaw==
-X-Google-Smtp-Source: ABdhPJykAxEMxc/5PA42qda+imN1iaGFnWE/E5DN0O6oJJrD3srN7KBugNNqszuh2dH7sSY67I4FzMJcwCuoTywbwrw=
-X-Received: by 2002:adf:f990:: with SMTP id f16mr2793952wrr.311.1591784962225;
- Wed, 10 Jun 2020 03:29:22 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qsMe0GoBoD4Nd7M3gcej+GYSC/DhUz8aXH/HyUxybk8=;
+        b=QugnxeqYK+GDH1jsb8zYD5RJioTkImI4F/SackWu/r66wf+xn9Pv6rUZPc2Y6HbGLM
+         Pbi8ZwGY1gTC2x/wg8EnVzzPIVoekzpiHyY/Kw2P5nHd1yu5xFxkpbRxsuiJFW4nbPGx
+         RP1zL8MkOVPYvpoWFd/UNqQhzzKL9OrEA5UEZB5Fx0o1I1BnGTlcVloXZXLl6iS3PhP0
+         sDairgxoBT+0LnpGX6kNdmOC4iN1IxI+v+Wn0kvLMPdsKiWfmFoCvG1Ovhz8cVX6dLh5
+         iqBJdDMKdNddfCnyxvMmZywyu+3eu/qALLBuyKCXlgKNK9xysV1J6jfwjz1q+M9lLIxV
+         oi/g==
+X-Gm-Message-State: AOAM532cSeztfem0tXyqcgIVb68o6JoLl9zJ2CbQa+N/8YjzmGgVFuhW
+        Hc31E0+1P8HtO0HPcVDsWYKKlA==
+X-Google-Smtp-Source: ABdhPJz3ezkloiZYYUAR2sQCB5HFoqOKaX45ksAgj58KnQseQbSdSC9xWwnUJZpa/sd5fQLKpf9Mig==
+X-Received: by 2002:aa7:c450:: with SMTP id n16mr1914973edr.6.1591784963456;
+        Wed, 10 Jun 2020 03:29:23 -0700 (PDT)
+Received: from [192.168.1.5] (212-5-158-114.ip.btc-net.bg. [212.5.158.114])
+        by smtp.googlemail.com with ESMTPSA id bo26sm17375818edb.67.2020.06.10.03.29.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Jun 2020 03:29:22 -0700 (PDT)
+Subject: Re: [PATCH v3 1/7] Documentation: dynamic-debug: Add description of
+ level bitmask
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-acpi@vger.kernel.org,
+        netdev@vger.kernel.org, Joe Perches <joe@perches.com>,
+        Jason Baron <jbaron@akamai.com>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <20200609104604.1594-1-stanimir.varbanov@linaro.org>
+ <20200609104604.1594-2-stanimir.varbanov@linaro.org>
+ <20200609111615.GD780233@kroah.com>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <0830ba57-d416-4788-351a-6d1b2ca5b7d8@linaro.org>
+Date:   Wed, 10 Jun 2020 13:29:20 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20191014061617.10296-2-daniel@0x0f.com> <20200610090421.3428945-2-daniel@0x0f.com>
- <cafee323-841d-92ed-b4ad-a1aaa136864d@suse.de>
-In-Reply-To: <cafee323-841d-92ed-b4ad-a1aaa136864d@suse.de>
-From:   Daniel Palmer <daniel@0x0f.com>
-Date:   Wed, 10 Jun 2020 19:29:06 +0900
-Message-ID: <CAFr9PXnPPDWg-Jd_1=LgPEYa8Ru7eKm9wE90-DPR-ggv8NzGHA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] dt-bindings: arm: Initial MStar vendor prefixes
- and compatible strings
-To:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc:     Krzysztof Adamski <k@japko.eu>, tim.bird@sony.com,
-        devicetree@vger.kernel.org, Daniel Palmer <daniel@thingy.jp>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Mike Rapoport <rppt@kernel.org>,
-        Doug Anderson <armlinux@m.disordat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Gregory Fong <gregory.0xf0@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Huckleberry <nhuck15@gmail.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200609111615.GD780233@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > +
-> > +properties:
-> > +  $nodename:
-> > +    const: '/'
-> > +  compatible:
-> > +    oneOf:
-> > +      - description: thingy.jp BreadBee
-> > +        items:
-> > +          - const: thingyjp,breadbee
-> > +          - const: mstar,infinity3
-> > +
-> > +      - description: thingy.jp BreadBee Crust
-> > +        items:
-> > +          - const: thingyjp,breadbee-crust
-> > +          - const: mstar,infinity
-> > +
-> > +      - description: 70mai midrive d08
-> > +        items:
-> > +          - const: 70mai,midrived08
-> > +          - const: mstar,mercury5
->
-> I would advise to restructure these three for forward planning:
+Hi Greg,
 
-That makes a lot of sense. To be honest I basically copied something
-that was in-tree to come up with something that would make checkpatch
-happy and didn't think too much about it.
+On 6/9/20 2:16 PM, Greg Kroah-Hartman wrote:
+> On Tue, Jun 09, 2020 at 01:45:58PM +0300, Stanimir Varbanov wrote:
+>> This adds description of the level bitmask feature.
+>>
+>> Cc: Jonathan Corbet <corbet@lwn.net> (maintainer:DOCUMENTATION)
+>>
+>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+>> ---
+>>  Documentation/admin-guide/dynamic-debug-howto.rst | 10 ++++++++++
+>>  1 file changed, 10 insertions(+)
+>>
+>> diff --git a/Documentation/admin-guide/dynamic-debug-howto.rst b/Documentation/admin-guide/dynamic-debug-howto.rst
+>> index 0dc2eb8e44e5..c2b751fc8a17 100644
+>> --- a/Documentation/admin-guide/dynamic-debug-howto.rst
+>> +++ b/Documentation/admin-guide/dynamic-debug-howto.rst
+>> @@ -208,6 +208,12 @@ line
+>>  	line -1605          // the 1605 lines from line 1 to line 1605
+>>  	line 1600-          // all lines from line 1600 to the end of the file
+>>  
+>> +level
+>> +    The given level will be a bitmask ANDed with the level of the each ``pr_debug()``
+>> +    callsite. This will allow to group debug messages and show only those of the
+>> +    same level.  The -p flag takes precedence over the given level. Note that we can
+>> +    have up to five groups of debug messages.
+> 
+> As was pointed out, this isn't a "level", it's some arbitrary type of
+> "grouping".
 
-> >     # Keep list in alphabetical order.
-> > +  "^70mai,.*":
-> > +    description: 70mai
->
-> "70mai Co., Ltd." please - don't just repeat the prefix.
+Yes, it is grouping of KERN_DEBUG level messages by importance (my
+fault, I put incorrect name).  What is important is driver author
+decision.  Usually when the driver is huge and has a lot of debug
+messages it is not practical to enable all of them to chasing a
+particular bug or issue.  You know that debugging (printk) add delays
+which could hide or rise additional issue(s) which would complicate
+debug and waste time.
 
-Understood.
+For the Venus driver I have defined three groups of KERN_DEBUG - low,
+medium and high (again the driver author(s) will decide what the
+importance is depending on his past experience).
 
-> If you split the vendor prefixes to a preceding patch, they have a
-> chance of getting Reviewed-bys more quickly. You can then also CC the
-> vendors on the prefixes you're assigning for them.
+There is another point where the debugging is made by person who is not
+familiar with the driver code. In that case he/she cannot enable lines
+or range of lines because he don't know the details. Here the grouping
+by importance could help.
 
-thingy.jp is the vendor I'm using for the breadbee project. As for
-70mai and MStar/Sigmastar I have
-tried reaching out to them in the past and they don't respond. In
-70mai's case their camera doesn't
-run Linux by default so I don't think they will care much.
+> 
+> But step back, why?  What is wrong with the existing control of dynamic
+> debug messages that you want to add another type of arbitrary grouping
+> to it?  And who defines that grouping?  Will it be
+> driver/subsystem/arch/author specific?  Or kernel-wide?
+> 
+> This feels like it could easily get out of hand really quickly.
+> 
+> Why not just use tracepoints if you really want to be fine-grained?
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-If it helps I can split them out but I'm not sure if it'll be possible
-to ever get the ok from the other vendors.
-For what it's worth the "mstar" prefix is what was being used in their
-kernels up until very recently when
-they switched everything to using "sstar" for SigmaStar. I considered
-using the sstar prefix but went
-with mstar because SigmaStar is totally unknown whereas MStar is
-slightly known, would be more
-recognisable, most of the chips still have mstar written on them and so on.
-
-> > +ARM/MStar/Sigmastar ARMv7 SoC support
-> > +M:   Daniel Palmer <daniel@thingy.jp>
-> > +L:   linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-> > +S:   Maintained
-> > +F:   Documentation/devicetree/bindings/arm/mstar.yaml
-> > +
-> >   ARM/NEC MOBILEPRO 900/c MACHINE SUPPORT
-> >   M:  Michael Petchkovsky <mkpetch@internode.on.net>
-> >   S:  Maintained
->
-> In theory it's spelled Armv7 since 2017, but MAINTAINERS, subject prefix
-> conventions and many other places in Linux still use the old upper-case
-> spelling, too...
-
-Understood. I'll fix that up.
-
-Thankyou for your input,
-
-Daniel
+-- 
+regards,
+Stan
