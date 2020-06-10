@@ -2,99 +2,155 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A66EFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A6A9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 807052072F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:58:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591775924;
-	bh=l5Pz+5+fBVqy4h+8oU7TpZbl8q3eqsgxiHk9A3UrlTQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vbEzdEsMaZ3fqxEe9zcHUgiYXbwLVrXDLEjx4VhYPA9UGI1VcDdmmFy0ImW2MpG9d
-	 hB/0F8ifnelZwhvXwCQ/hiPCQAgErcTgkJe9t1aUthPzFhPm/RRIfK7ECICqsCRG1O
-	 WgIsI1wyi2mDNCHn1tXgExywqohvVeCiThplmej0=
+	by mail.kernel.org (Postfix) with ESMTP id E32E9206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:59:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M7NL44k/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbgFJH6m (ORCPT
+        id S1726679AbgFJH7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 03:58:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37436 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726081AbgFJH6m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 03:58:42 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0220206C3;
-        Wed, 10 Jun 2020 07:58:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591775921;
-        bh=l5Pz+5+fBVqy4h+8oU7TpZbl8q3eqsgxiHk9A3UrlTQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iPcl4BZDzRuBHdNBgmoqY7NjYWKLVer39Rf1Q/S9Zmna+ay/ew2xJ1+/lS2IYp0no
-         LfBPo/LwfalSfF9i/iT6u3TnyEb2cGvnOxLjzZhAR3YYEgmCvI4x+OgJGX2M2MxT2a
-         2JFFJ/DFhLIRnce+HXSm99tY7ru2QY3Sjvtw3mOE=
-Date:   Wed, 10 Jun 2020 08:58:37 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] efi/libstub/arm64: link stub lib.a conditionally
-Message-ID: <20200610075837.GD15939@willie-the-truck>
-References: <20200604022031.164207-1-masahiroy@kernel.org>
+        Wed, 10 Jun 2020 03:59:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59638 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726081AbgFJH7c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 03:59:32 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCD06C03E96B;
+        Wed, 10 Jun 2020 00:59:32 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id e18so630868pgn.7;
+        Wed, 10 Jun 2020 00:59:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ML9kdv8KWfqd+/DjpnHagHD/lBBhwolauh+PduEJYKE=;
+        b=M7NL44k/SIQ/oZqs1+OEQEsGweIwDPcq4JJ2FJOqeXIWrSzyOk/dYcJqEmw1TuNDXV
+         yfz4kiFeHX5hs+8bJQNPj225LR3utD6BGJApBERwJxYcIJeGnqf68Duiik2+dvAdSHrh
+         r+8990E9lvwOJrDoW5XBMTY3xV0Q7rWDHbqjoRvl8Tz12OjBlw+sjxZmWog9GY+rv878
+         YPRa8n9F/U7CcQ6ngGJG5tQ0TWkwdk/xQfsoYQX+B8mhpS7mx+Sr3t+ED1O869xa1b38
+         7u7eVoGIg34pj499KV99uxxtPrv8XPLvGqhYfu3LfdGmFakhCaJ8BAKXW/RsNM+VX4IH
+         2yTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ML9kdv8KWfqd+/DjpnHagHD/lBBhwolauh+PduEJYKE=;
+        b=TNv+ksJuKPdmiNV4vtuHYpV1H7JcPXJSaMdgL5e56L8zKPl0ZeZDmhw72cFqcCLVeT
+         4KH9b0l6IPPlB2G5PI9HYOifzuLh1HrWtGLpxIhxUzepkHJ+iwF1YEF0rx9eC6VQFG57
+         jedCJFXDxcjDAecUAai6wJoe2+0J1hx93XH7K/9Kr45oESJ5hINQ66HhWw8wlmxA6Ox6
+         zCce/QfoAaDJSGVOhdwuaVRfvsLjFHSZLmj+Am6hanKpKUC2LUVYZVpJKCfcAQJdXOkf
+         K5l4yur6A3e1/Wqoi8V033kei4i9ky0jrjU7opxms3xHggwLwzzOvBLtwtXPCy4K9DfM
+         Qa8w==
+X-Gm-Message-State: AOAM530ncSUUHu9+lgj+ROBn49t6FUFU2ytB1Pg5MgpnAlscnFEjlgMr
+        uyR7WGHlu2BwG4WLowEJ/2U=
+X-Google-Smtp-Source: ABdhPJyC0mPKfbMVkEXw8hn57l4wa7CCnJylhtEQhbYA+gKaae0hYsYdBYscCSrzl9pclZeuQbkLmg==
+X-Received: by 2002:a65:66d5:: with SMTP id c21mr1579258pgw.155.1591775971718;
+        Wed, 10 Jun 2020 00:59:31 -0700 (PDT)
+Received: from gmail.com ([2601:600:817f:a132:df3e:521d:99d5:710d])
+        by smtp.gmail.com with ESMTPSA id w24sm11877692pfn.11.2020.06.10.00.59.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2020 00:59:30 -0700 (PDT)
+Date:   Wed, 10 Jun 2020 00:59:28 -0700
+From:   Andrei Vagin <avagin@gmail.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Adrian Reber <areber@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Nicolas Viennot <Nicolas.Viennot@twosigma.com>,
+        =?utf-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>,
+        Kamil Yurtsever <kyurtsever@google.com>,
+        Dirk Petersen <dipeit@gmail.com>,
+        Christine Flood <chf@redhat.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        Serge Hallyn <serge@hallyn.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, selinux@vger.kernel.org,
+        Eric Paris <eparis@parisplace.org>,
+        Jann Horn <jannh@google.com>, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] capabilities: Introduce CAP_CHECKPOINT_RESTORE
+Message-ID: <20200610075928.GA172301@gmail.com>
+References: <20200603162328.854164-1-areber@redhat.com>
+ <20200603162328.854164-2-areber@redhat.com>
+ <20200609034221.GA150921@gmail.com>
+ <20200609074422.burwzfgwgqqysrzh@wittgenstein>
+ <20200609160627.GA163855@gmail.com>
+ <20200609161427.4eoozs3kkgablmaa@wittgenstein>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=koi8-r
 Content-Disposition: inline
-In-Reply-To: <20200604022031.164207-1-masahiroy@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200609161427.4eoozs3kkgablmaa@wittgenstein>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 11:20:30AM +0900, Masahiro Yamada wrote:
-> Since commit 799c43415442 ("kbuild: thin archives make default for
-> all archs"), core-y is passed to the linker with --whole-archive.
-> Hence, the whole of stub library is linked to vmlinux.
+On Tue, Jun 09, 2020 at 06:14:27PM +0200, Christian Brauner wrote:
+> On Tue, Jun 09, 2020 at 09:06:27AM -0700, Andrei Vagin wrote:
+> > On Tue, Jun 09, 2020 at 09:44:22AM +0200, Christian Brauner wrote:
+> > > On Mon, Jun 08, 2020 at 08:42:21PM -0700, Andrei Vagin wrote:
+...
+> > > > PTRACE_O_SUSPEND_SECCOMP is needed for C/R and it is protected by
+> > > > CAP_SYS_ADMIN too.
+> > > 
+> > > This is currently capable(CAP_SYS_ADMIN) (init_ns capable) why is it
+> > > safe to allow unprivileged users to suspend security policies? That
+> > > sounds like a bad idea.
+> > 
+...
+> > I don't suggest to remove or
+> > downgrade this capability check. The patch allows all c/r related
+> > operations if the current has CAP_CHECKPOINT_RESTORE.
+> > 
+> > So in this case the check:
+> >      if (!capable(CAP_SYS_ADMIN))
+> >              return -EPERM;
+> > 
+> > will be converted in:
+> >      if (!capable(CAP_SYS_ADMIN) && !capable(CAP_CHECKPOINT_RESTORE))
+> >              return -EPERM;
 > 
-> Use libs-y so that lib.a is passed after --no-whole-archive for
-> conditional linking.
+> Yeah, I got that but what's the goal here? Isn't it that you want to
+> make it safe to install the criu binary with the CAP_CHECKPOINT_RESTORE
+> fscap set so that unprivileged users can restore their own processes
+> without creating a new user namespace or am I missing something? The
+> use-cases in the cover-letter make it sound like that's what this is
+> leading up to:
+> > > > > * Checkpoint/Restore in an HPC environment in combination with a resource
+> > > > >   manager distributing jobs where users are always running as non-root.
+> > > > >   There is a desire to provide a way to checkpoint and restore long running
+> > > > >   jobs.
+> > > > > * Container migration as non-root
+> > > > > * We have been in contact with JVM developers who are integrating
+> > > > >   CRIU into a Java VM to decrease the startup time. These checkpoint/restore
+> > > > >   applications are not meant to be running with CAP_SYS_ADMIN.
 > 
-> The unused drivers/firmware/efi/libstub/relocate.o will be dropped
-> for ARCH=arm64.
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
-> 
-> This patch touches under arch/arm64/, but
-> this is more related to efi.
-> I am sending this to Ard.
+> But maybe I'm just misunderstanding crucial bits (likely (TM)).
 
-Ok, I'll ignore this then. Ard -- please yell if you want me to do anything
-else with it.
+I think you understand this right. The goal is to make it possible to
+use C/R functionality for unprivileged processes. And for me, here are
+two separate tasks. The first one is how to allow unprivileged users to
+use C/R from the root user namespace. This is what we discuss here.
 
-Will
+And another one is how to allow to use C/R functionality from a non-root
+user namespaces. The second task is about downgrading capable to
+ns_capable for map_files and PTRACE_O_SUSPEND_SECCOMP.
 
-
-> diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-> index 650e1185c190..48a6afa774fc 100644
-> --- a/arch/arm64/Makefile
-> +++ b/arch/arm64/Makefile
-> @@ -145,7 +145,7 @@ export	TEXT_OFFSET
->  
->  core-y		+= arch/arm64/
->  libs-y		:= arch/arm64/lib/ $(libs-y)
-> -core-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
-> +libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
->  
->  # Default target when executing plain make
->  boot		:= arch/arm64/boot
-> -- 
-> 2.25.1
-> 
+Thanks,
+Andrei
