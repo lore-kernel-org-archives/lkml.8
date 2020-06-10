@@ -2,104 +2,149 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60323C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 05:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C75B2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 05:17:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 386392074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 05:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95B952074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 05:17:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jTeg4CPQ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F1yJJaoh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726053AbgFJFNK (ORCPT
+        id S1726040AbgFJFR0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 01:13:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33934 "EHLO
+        Wed, 10 Jun 2020 01:17:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbgFJFNI (ORCPT
+        with ESMTP id S1726038AbgFJFRV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 01:13:08 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32B53C05BD1E
-        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 22:13:08 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id p15so486670qvr.9
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 22:13:08 -0700 (PDT)
+        Wed, 10 Jun 2020 01:17:21 -0400
+Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 933EBC03E96B
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 22:17:20 -0700 (PDT)
+Received: by mail-qk1-x749.google.com with SMTP id m29so1031184qkm.17
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 22:17:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=hLUoxt0yiIKouGw7/buAE5rk8hMNj3nZR/xKb2B/ppc=;
-        b=jTeg4CPQ7s4h9Y4F7BOUQVHOAxnY8YXCxjC/UrDVy9eN4he3dh5AFSdg94P/oYYfeP
-         dbJFi3RpFReQOhjJRvudpIken1Rzr11mWy0Hn/9l+SjQHJ3zBZ33sebrkLiwBZTfYAil
-         CzTtAtWwvGi7JAkvTpsjR5RjzUeXkjkwK39HrJH89c/k3Q/ueAbt3dJtC/E+G1iauWEd
-         nZaozL0GeaIOC4RyLqP2HhPMt5UZ3lHVp3SmZd51aei04H02KVo+K/Lu+t9Z11DOmIGv
-         4k1xEqpoQ54wrkjzleSc9ykpZV88+iwlu567Urs0h7fdZRrGYbXygA6SDIJvqR8Xa02+
-         3riA==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=bjUzZJaADYRF4NLSKw6448G2+8oa1CjvslyitcA1NeA=;
+        b=F1yJJaohPY6eu44cZvga29SFphG0UBJ5Cxa5rvKvlLQSh/fvT6tTrbxNQogH+vZIc0
+         yIImENMcR7iX4rhLmKzmpwy/oI3GfZJN5yAfoLRGYf9XTZtnhcz8r+I8zwSI/dLSgcGY
+         khVlbQfBAdXXW7OOUzQpoN0t9nMIZ7349gVTJfGbS0d5FKJpxSg8E7IR0ZToeE0PCnsR
+         PEjHSLx8f+cn3hHcPJRdn/E5S8ArwJWrrXLxllTuEgzWAM39R+bMmpoz/2fLLYIviQu/
+         UYAy1zpjikmyMluecEUcVr8KGolhbrZFqrasOKtCM9RMHowMMXUregdJuU5SjPbFmfWK
+         LF6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=hLUoxt0yiIKouGw7/buAE5rk8hMNj3nZR/xKb2B/ppc=;
-        b=O5ZrvJpl+0g4fBBOkcbInd2U0tTEkrHfU1SexFSVuuUwar9gaHfsD2aI9STLBumUhh
-         ucX55wFJe/KFHLTZe5mbVa4qVl73jiJALAG+rB8GbbTP6EY///JT9ErM3LXtVA50mv14
-         roiuiJoh/zoBp/CO2knhKgSeVPehnjDCd3HAsnDBP5PH4wTEM5HgCzkVZ0g378QsN0rD
-         4vbOIYNz5w9Ee2qhWouGEK3SZehNpFRSCWOOtr18REQk8msRz5MqA9nfn7bm32/sAu6k
-         J4AxiBfcjdOxHxEdiWjZltHNrEjDLFsZYRLPPg9h/qR/HlNtCHNLdtGrp4KQXqGsuVQH
-         5paQ==
-X-Gm-Message-State: AOAM532Y74PL3kDbVO9WR5VI4qqgHuuPmxyXM/AS82GNPnJ4H8zueZ9J
-        D5/7DbUfyNvl69wpnooy2VYqEhVQNip+WZ7+CJMWrQ==
-X-Google-Smtp-Source: ABdhPJwueE8ZjMW1bpMs2FrKsGnGX0T6gYMQdn2T3ghIBONhrFPd8wQC8+4GwNFV8+CzuFgJdOp/zChta6l90nzMsVo=
-X-Received: by 2002:ad4:4368:: with SMTP id u8mr1472220qvt.227.1591765987012;
- Tue, 09 Jun 2020 22:13:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <1590561903-13186-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1590561903-13186-8-git-send-email-iamjoonsoo.kim@lge.com> <20200609135431.GI22623@dhcp22.suse.cz>
-In-Reply-To: <20200609135431.GI22623@dhcp22.suse.cz>
-From:   Joonsoo Kim <js1304@gmail.com>
-Date:   Wed, 10 Jun 2020 14:12:56 +0900
-Message-ID: <CAAmzW4Ou-65wW2iHFDZdOYrEkb2afrSox7sVwd1zEo-VXSE30Q@mail.gmail.com>
-Subject: Re: [PATCH v2 07/12] mm/hugetlb: do not modify user provided gfp_mask
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel-team@lge.com,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=bjUzZJaADYRF4NLSKw6448G2+8oa1CjvslyitcA1NeA=;
+        b=djKttOjokYCUnc1McigNDeHaUCk/SJzdpJb/AM0t7cd7vqfoLmcxplPdSXrZMYXV0i
+         sx6n3tDe+CAAH5mqn+CMetkiPGKo9ykvpwWrpdfAnq9zurI3IxanITchoVdRAQmx9rs9
+         PoNAcu/Gi0WxA5l4efZg/AynBlYlGJ1J8rBloKkSPuG4v9q9tEfeR73N/oAjDE0o/dF+
+         0YIu1A1GtahirJ59ZhHkW8IbO7HcmD3jwfD/sjh88Yce42vxRqDIoTfeZ8teUgocTY5J
+         UDUEXnAwPlL8ezidGhki3elsG+d07+aLbnNbTKdtbYBtRrh5y++8lDjpbK7o/Ha2fjeF
+         c9lg==
+X-Gm-Message-State: AOAM531lyRsHpRHNDzEtcysSIkNK7ah/XrH2yt9uYjvc/Ic6tpXFXIZm
+        CQ2TEnMG1vmUhWVnAdqFO1wUCBqSGAxj
+X-Google-Smtp-Source: ABdhPJxdBSfpE747ZAaEyhU8E3zHGyh3p6+B4jW0woylrVVIEuPQeFAbfyo7RsKfcp++zcez40YhXL9eqFz+
+X-Received: by 2002:a0c:d6c1:: with SMTP id l1mr1434290qvi.173.1591766239585;
+ Tue, 09 Jun 2020 22:17:19 -0700 (PDT)
+Date:   Tue,  9 Jun 2020 22:17:15 -0700
+Message-Id: <20200610051717.170457-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.278.ge193c7cf3a9-goog
+Subject: [PATCH 1/2] perf expr: Add d_ratio operation
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Paul Clarke <pc@us.ibm.com>, Kajol Jain <kjain@linux.ibm.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=EB=85=84 6=EC=9B=94 9=EC=9D=BC (=ED=99=94) =EC=98=A4=ED=9B=84 10:54, M=
-ichal Hocko <mhocko@kernel.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> On Wed 27-05-20 15:44:58, Joonsoo Kim wrote:
-> > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> >
-> > It's not good practice to modify user input. Instead of using it to
-> > build correct gfp_mask for APIs, this patch introduces another gfp_mask
-> > field, __gfp_mask, for internal usage.
->
-> Ugh, this is really ugly. It is just hugetlb to add __GFP_THISNODE as a
-> special case. This is an ugly hack but I do not think we want to work
-> around it by yet another hack. Moreover it seems that the __GFP_THISNODE
-> might be not needed anymore as pointed out in a reply to earlier patch.
+This simplifies computing ratios in json expressions.
 
-If you mean __GFP_THISNODE handling is ugly, as you pointed out,
-__GFP_THISNODE handling would be removed in the next version.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/expr.l |  1 +
+ tools/perf/util/expr.y | 14 ++++++++++++--
+ 2 files changed, 13 insertions(+), 2 deletions(-)
 
-If you mean introducing __gfp_mask is ugly, I will try to use a local varia=
-ble
-to keep modified gfp_mask rather than introducing a field in alloc_control.
+diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
+index f397bf8b1a48..298d86660a96 100644
+--- a/tools/perf/util/expr.l
++++ b/tools/perf/util/expr.l
+@@ -100,6 +100,7 @@ symbol		({spec}|{sym})+
+ 		}
+ 	}
+ 
++d_ratio		{ return D_RATIO; }
+ max		{ return MAX; }
+ min		{ return MIN; }
+ if		{ return IF; }
+diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
+index bf3e898e3055..fe145344bb39 100644
+--- a/tools/perf/util/expr.y
++++ b/tools/perf/util/expr.y
+@@ -10,6 +10,14 @@
+ #include "smt.h"
+ #include <string.h>
+ 
++static double d_ratio(double val0, double val1)
++{
++	if (val1 == 0) {
++		return 0;
++	}
++	return  val0 / val1;
++}
++
+ %}
+ 
+ %define api.pure full
+@@ -28,7 +36,7 @@
+ %token <num> NUMBER
+ %token <str> ID
+ %destructor { free ($$); } <str>
+-%token MIN MAX IF ELSE SMT_ON
++%token MIN MAX IF ELSE SMT_ON D_RATIO
+ %left MIN MAX IF
+ %left '|'
+ %left '^'
+@@ -64,7 +72,8 @@ other: ID
+ }
+ |
+ MIN | MAX | IF | ELSE | SMT_ON | NUMBER | '|' | '^' | '&' | '-' | '+' | '*' | '/' | '%' | '(' | ')' | ','
+-
++|
++D_RATIO
+ 
+ all_expr: if_expr			{ *final_val = $1; }
+ 	;
+@@ -105,6 +114,7 @@ expr:	  NUMBER
+ 	| MIN '(' expr ',' expr ')' { $$ = $3 < $5 ? $3 : $5; }
+ 	| MAX '(' expr ',' expr ')' { $$ = $3 > $5 ? $3 : $5; }
+ 	| SMT_ON		 { $$ = smt_on() > 0; }
++	| D_RATIO '(' expr ',' expr ')' { $$ = d_ratio($3,$5); }
+ 	;
+ 
+ %%
+-- 
+2.27.0.278.ge193c7cf3a9-goog
 
-Thanks.
