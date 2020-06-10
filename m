@@ -2,152 +2,89 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD6B8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 18:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C2EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 18:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 470192070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 18:40:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="SSOBpvk4";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="oUMwvVek"
+	by mail.kernel.org (Postfix) with ESMTP id BD79E2072E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 18:43:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591814594;
+	bh=vk+TyI0YXDcw/F4oBBcx2/OX0Q8DCn+GCXhtsjoEvUU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=AmhZP6MygAC0P29NVMTW2trX0XLJEc3f2s/IpVWW1F3xrormXR3wnufjD6e1/EWdF
+	 EZH3QemK3UPROcMQOtjrn3mPBMQ9/ZJxmJGrX293lDylq+JmmT/WZlC/4MHqWAHgEa
+	 sQtHjF/8Zma2HHYDRNhiMLyvt+uhqpnJri/X8d+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729230AbgFJSkT (ORCPT
+        id S1729247AbgFJSnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 14:40:19 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:47001 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726105AbgFJSkS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 14:40:18 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id DBB4858015B;
-        Wed, 10 Jun 2020 14:40:16 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 10 Jun 2020 14:40:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=udqN551CwjSTVUDc0D3kSahB8HY
-        8CeSIkA8lNOgclJo=; b=SSOBpvk4b4Pw9e8QupB5MChycdXrWcxNGUbo5+QqOB2
-        EG/b6zh9og0gepAraw33BO9gskuaIRH/d0B35Z8IRps3FyOX9d09lsd8adi6iZud
-        e4LF60hPZkpPmAu/O1VqMmODBhtuiuTNUgkN6kPFd0EfVB6pqxZ0SQ+sbm/y/nRO
-        MNTEjq/SsNEpo9sa0FRTaXDvCrZLPJFIAn6DudP3qcIE9GxA/fgU8wjLHtzPcYpE
-        Nu3K+4rdJ1I2YSTF4zBggLJD53HHuXGiDBIgUIg7GAQMLxDLwTE9cIgBj8SQsIGB
-        DQ4z62PiBkuUX6hQy+lS0Tf3xRZ7FSAlI0tNzJyEtTw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=udqN55
-        1CwjSTVUDc0D3kSahB8HY8CeSIkA8lNOgclJo=; b=oUMwvVekXmmDKq3tMHHOiq
-        Oe9XPwUXSkst2D1ORd9yRYO9u/dghU0y7YQOhRV5KtF2yslH5qzusgPFowpBlrpU
-        +TGcxs6rkP28NyrODwFw+02LPte9frNWwwH6y/bNeay6zQ2ABLMb3yU7hkmLiWbK
-        TcDdko3D0PsAE3dbjz079ZwugHREMVR+ecCwNXR9JnDW+BjmFHCKW+/rOCZYsI/N
-        ZZvYdbkGu6Td/qD0nK/UgT1g/fsNMLm+PBk8ocOchxmIDUcZ/kuSo8mrQkVZO4Ck
-        snK/aDJys04wqBT2O6DV+tzzKj3CMNH827Hc5u6Pl2u7J461+KLnuKbUKy/HPfYw
-        ==
-X-ME-Sender: <xms:DCnhXtRpnDDHB7tIAsgobtDpskmMLtcq5mgmBd4ZveX-ADkzXrvmjQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudehiedgudefudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihi
-    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
-    htthgvrhhnpeelkeeghefhuddtleejgfeljeffheffgfeijefhgfeufefhtdevteegheei
-    heegudenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtne
-    curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:DCnhXmyjE-mu_wBJfFrUMjijn_JHiqCkLoIfce_gMkkOdJy5pzYR-Q>
-    <xmx:DCnhXi31HyndptgqdHeNm8rYG2sDdpk_rg8DI31Fibd1LTqMSLPWag>
-    <xmx:DCnhXlA-QYkYRubCILB4TOA-06l9HsdBHv39yzdJvOD_yWDnTM09AA>
-    <xmx:ECnhXqjgnNS8FrTCg8Qxbtz9huV6yGQNddfcwbSdHWAb8o8mOm9kaA>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 962643280064;
-        Wed, 10 Jun 2020 14:40:12 -0400 (EDT)
-Date:   Wed, 10 Jun 2020 20:40:10 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Emil Velikov <emil.l.velikov@gmail.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        Phil Elwell <phil@raspberrypi.com>,
-        LAKML <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 066/105] drm/vc4: txp: Turn the TXP into a CRTC of its
- own
-Message-ID: <20200610184010.slnn46azvxvtxp7t@gilmour.lan>
-References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
- <e9bc87e240b62c80617ea7825144121a470a2d44.1590594512.git-series.maxime@cerno.tech>
- <CACvgo50j1t5VtMgE7-pquuYRaC_ku5pZ2aBVoD-MCCktfPm-VQ@mail.gmail.com>
+        Wed, 10 Jun 2020 14:43:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34470 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726105AbgFJSnM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 14:43:12 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 610962070B;
+        Wed, 10 Jun 2020 18:43:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591814592;
+        bh=vk+TyI0YXDcw/F4oBBcx2/OX0Q8DCn+GCXhtsjoEvUU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RdP3NhHuaEqkiOhDW44QUO6Iw2GjL+5wD56VnCs+XjZUNDuVZEZ4gogpsz/dur0Mg
+         XpQD+R+KfiehPnLIpulDDFblTJoF8qD3qWzt2gtI2dmwttpIWvOpmryGKbLtsLQot0
+         B/R5TTjaAvruddHmxV4T1l46G2akDfah86nQBoUQ=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jj5gs-001rXS-U4; Wed, 10 Jun 2020 19:43:11 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zenghui Yu <yuzenghui@huawei.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kvmarm@lists.cs.columbia.edu
+Cc:     tglx@linutronix.de, jason@lakedaemon.net
+Subject: Re: [PATCH] irqchip/gic-v4.1: Use readx_poll_timeout_atomic() to fix sleep in atomic
+Date:   Wed, 10 Jun 2020 19:43:07 +0100
+Message-Id: <159181454880.1512339.2705658130320062146.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200605052345.1494-1-yuzenghui@huawei.com>
+References: <20200605052345.1494-1-yuzenghui@huawei.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="heqnr6uenmn6etam"
-Content-Disposition: inline
-In-Reply-To: <CACvgo50j1t5VtMgE7-pquuYRaC_ku5pZ2aBVoD-MCCktfPm-VQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu, tglx@linutronix.de, jason@lakedaemon.net
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 5 Jun 2020 13:23:45 +0800, Zenghui Yu wrote:
+> readx_poll_timeout() can sleep if @sleep_us is specified by the caller,
+> and is therefore unsafe to be used inside the atomic context, which is
+> this case when we use it to poll the GICR_VPENDBASER.Dirty bit in
+> irq_set_vcpu_affinity() callback.
+> 
+> Let's convert to its atomic version instead which helps to get the v4.1
+> board back to life!
+> 
+> [...]
 
---heqnr6uenmn6etam
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied to irq/irqchip-next, thanks!
 
-Hi Emil,
+[1/1] irqchip/gic-v4.1: Use readx_poll_timeout_atomic() to fix sleep in atomic
+      commit: a87d4e00eacbc95b44466e3470529f4de49b450a
 
-On Thu, May 28, 2020 at 04:51:31PM +0100, Emil Velikov wrote:
-> Have you considered splitting the series into several parts and
-> focusing on merging one at a time?
-> IIRC this the longest series _ever_ submitted to dri-devel, plus it
-> seems to be growing with each revision.
->=20
-> Due to the sheer volume, it's likely to miss various points - large or
-> small (like below).
+Cheers,
 
-Yeah, I know, I wasn't really happy about it either :/ I already removed
-some parts of it to reduce it, but I'll try to be more aggressive.
+	M.
+-- 
+Without deviation from the norm, progress is not possible.
 
-> On Thu, 28 May 2020 at 08:47, Maxime Ripard <maxime@cerno.tech> wrote:
->=20
-> > +static int vc4_txp_enable_vblank(struct drm_crtc *crtc)
-> > +{
-> > +       return 0;
-> > +}
-> > +
-> > +static void vc4_txp_disable_vblank(struct drm_crtc *crtc) {}
-> > +
-> Core should handle if these are NULL, so the stubs should not be needed.
 
-I'm really not sure actually. In the general case, you'll want to have
-vblank functions, since it doesn't really make sense to have a driver
-without it.
-
-We could argue that with writeback, it might be optional like being done
-here, but you don't really know if you're going to use a writeback
-connector in the CRTC at initialisation time, and all the other
-writeback encoders actually seem to use a real CRTC that can output to a
-real encoder, and therefore has some proper vblank handling too.
-
-So yeah, it really looks like the check is valid, and that driver is
-just the odd case.
-
-Maxime
-
---heqnr6uenmn6etam
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXuEpCgAKCRDj7w1vZxhR
-xfKbAP4guXZpKOBW0DBgderX3rva9jNmN1dH66Kel2jC5+ha2AD/f4mM9LuoVOUU
-FtD2pyxEBAUtj6eIpZBwTD4vxJiVgg0=
-=v1fz
------END PGP SIGNATURE-----
-
---heqnr6uenmn6etam--
