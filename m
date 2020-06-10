@@ -2,83 +2,122 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 380CBC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 02:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E73D1C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 02:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F238420691
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 02:14:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C383420691
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 02:17:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j0fSxe7z"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fVvCEO4H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726132AbgFJCOQ (ORCPT
+        id S1726046AbgFJCRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 22:14:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34728 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbgFJCOP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 22:14:15 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60011C05BD1E;
-        Tue,  9 Jun 2020 19:14:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=6clucF3QXfEzAnbmB5jl3BAojfrGSwWtR1xoyvsNv9g=; b=j0fSxe7zT86tbf+E/1M9XeN6jQ
-        I8G+jEqVSzMjCHH1YaJGN5FCpHL5zo/TojHrHjU6cRfeKXgHeVPFxZb7OS+WJtxiDgDKlq77a85vl
-        oCVHQygdqVaYOpf+Z7hwGv7SUNMX/y6ovf7XOJ4PcgzV2RIb6w/pT5v04LAzLa+v7yz8x89dyfJAf
-        50kRxec9sDmggv9iB9JdlFDRZ46vG3gU0IKQ7kqUaUQDc8DV1s/bpeyNeU4pQx4we0t5ay2PHzKVw
-        fK7UV+fiTyjTsPw4KeJTEdM4pF7USyJUD0oUqvGyazphIuJtb0m1Glb4SNijeQpcw5QALkvYjWFba
-        K2zj5F3w==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jiqFl-0002oV-Lz; Wed, 10 Jun 2020 02:14:09 +0000
-Date:   Tue, 9 Jun 2020 19:14:09 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Qian Cai <cai@lca.pw>, linux-kernel@vger.kernel.org,
-        dave@stgolabs.net, manfred@colorfullife.com,
-        mm-commits@vger.kernel.org
-Subject: Re: + ipc-convert-ipcs_idr-to-xarray-update.patch added to -mm tree
-Message-ID: <20200610021409.GH19604@bombadil.infradead.org>
-References: <20200420181310.c18b3c0aa4dc5b3e5ec1be10@linux-foundation.org>
- <20200424014753.DfBuzjmzo%akpm@linux-foundation.org>
- <20200605195848.GB5393@lca.pw>
- <20200605201134.GJ19604@bombadil.infradead.org>
- <20200605142039.b8a81c08bf5ba34fa0181545@linux-foundation.org>
+        Tue, 9 Jun 2020 22:17:12 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:38839 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725798AbgFJCRL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 22:17:11 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49hVxJ15qVz9sRR;
+        Wed, 10 Jun 2020 12:17:08 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591755430;
+        bh=+/Na9XECsFlkHA1EyyS2aYZ5J+5X/KFhBFECUZGFuDc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=fVvCEO4Hfk+a3L1gEUM0UyHbHWrIziGAeL+49KqYWthC1VgzLopQEy4sCIMQpVv8l
+         3vdDmRpr2WlXNJWWZObGGdkJBYR88fI43E2kyMGNO0CBEGic4/AJZNCs5YCwe+QjKH
+         upimPDafeR0MlpB1iVxyNOPtEszZyCoDifFevYpPoKceu0V0pscVN1kMoUytSI/Gcv
+         kNljZJiQ6Ais+HIDzdf+mlWtU394lGf9iuSvWgAxbP2MCdBX/XiceilMv46U9c6E8J
+         ZSnMxa/ye+NSaLpQWeIQrk3Kw8eGSPwi7eelHyAuX8Ht4mXhgIlvfCXCn8DtzuUE4E
+         95fMYcY1xwQIw==
+Date:   Wed, 10 Jun 2020 12:17:07 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Simon Arlott <simon@octiron.net>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+Subject: linux-next: manual merge of the scsi-mkp tree with Linus' tree
+Message-ID: <20200610121707.1f4c4355@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200605142039.b8a81c08bf5ba34fa0181545@linux-foundation.org>
+Content-Type: multipart/signed; boundary="Sig_/fW.RteAK.CvtbhyjeSxIS8O";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 02:20:39PM -0700, Andrew Morton wrote:
-> On Fri, 5 Jun 2020 13:11:34 -0700 Matthew Wilcox <willy@infradead.org> wrote:
-> 
-> > On Fri, Jun 05, 2020 at 03:58:48PM -0400, Qian Cai wrote:
-> > > This will trigger,
-> > > 
-> > > [ 8853.759549] LTP: starting semget05
-> > > [ 8867.257088] BUG: sleeping function called from invalid context at mm/slab.h:567
-> > > [ 8867.270259] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 22556, name: semget05
-> > > [ 8867.270309] 2 locks held by semget05/22556:
-> > > [ 8867.270345]  #0: 00000000512de7e0 (&ids->rwsem){++++}-{3:3}, at: ipcget+0x4e/0x230
-> > > [ 8867.270426]  #1: 00000000552b9018 (&new->lock){+.+.}-{2:2}, at: ipc_addid+0xf4/0xf50
-> > 
-> > Did the fix for this not make it into -next?
-> 
-> I don't think I've seen this fix before.  And I'm unclear on how it
-> pertains to the current patch(es) in -mm.  And it has no changelog!
-> 
-> Perhaps it would be best to do a formal send of the latest version?
+--Sig_/fW.RteAK.CvtbhyjeSxIS8O
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-In testing, I discovered a lockdep warning.  I don't think it's readily
-fixable, so please drop this patch for the moment.  I'll be back with
-a patch set that rejiggers the locking in ipc to be more normal.
+Hi all,
+
+Today's linux-next merge of the scsi-mkp tree got a conflict in:
+
+  drivers/scsi/sr.c
+
+between commit:
+
+  a711d91cd97e ("block: add a cdrom_device_info pointer to struct gendisk")
+
+from Linus' tree and commit:
+
+  6555781b3fde ("scsi: sr: Fix sr_probe() missing deallocate of device mino=
+r")
+
+from the scsi-mkp tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/scsi/sr.c
+index 4dcd735ea49e,b9cff27e2c81..000000000000
+--- a/drivers/scsi/sr.c
++++ b/drivers/scsi/sr.c
+@@@ -790,9 -790,10 +790,9 @@@ static int sr_probe(struct device *dev
+  	set_capacity(disk, cd->capacity);
+  	disk->private_data =3D &cd->driver;
+  	disk->queue =3D sdev->request_queue;
+ -	cd->cdi.disk =3D disk;
+ =20
+ -	if (register_cdrom(&cd->cdi))
+ +	if (register_cdrom(disk, &cd->cdi))
+- 		goto fail_put;
++ 		goto fail_minor;
+ =20
+  	/*
+  	 * Initialize block layer runtime PM stuffs before the
+
+--Sig_/fW.RteAK.CvtbhyjeSxIS8O
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7gQqMACgkQAVBC80lX
+0GzDYQf/YYkB+SFMb3nfh3Eu7nX9Ry0+qnnJDNRhstxIQrj3a0oC+Uv8JgTuEMe4
++O8j3TnFtzhdHUyyF398QxY20N2BCXKtNhVsGTS58thPEuC9xAZjF7gGaDbl+l1v
+e7RYZ5VQ+N9QEvWhRzrT8i4hzcmYj7VmL2BdFJcMq0SZUaHay5PlkdlRtlNdS977
+r0vdAf5/5+QmdFIqAEQO3bTuHE3XwXCcVeNBH2hNdE1cXF1AnVMX9Wxz1yG6513L
+40eM23Tukga66Fg1QZBWE6MoKoxl2BB8EjdyQ+DiIfFSAAChvQrXwjQEseBMYWj0
+K6EziS0dCVF7073gkeVTByiKPOm5Jg==
+=bLev
+-----END PGP SIGNATURE-----
+
+--Sig_/fW.RteAK.CvtbhyjeSxIS8O--
