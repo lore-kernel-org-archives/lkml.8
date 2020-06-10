@@ -2,134 +2,157 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC5EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBBF3C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A79C2078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:59:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591801145;
-	bh=DRAX7dZY+3rrjcvGnB5ubpqYxgmX9PBwwAzimv9gLTA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IsQV1LPHm/YMq2bmshwglfM7cBFGJhBj4rSqBCZbsGrnjpsTcHwNyBezs1AN4i4Ix
-	 vsWkxiefpm1AbkH62qRbibBVJp8mFBWISWfL+mI+5m2vfQJcMTTewLNYXq5VzcpCar
-	 ft2gQ9oy2eZ6sTLasAtFXKNYCg3BSpp56mUrhwu0=
+	by mail.kernel.org (Postfix) with ESMTP id D55E82072F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:00:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbgFJO7D (ORCPT
+        id S1727903AbgFJPAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 10:59:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45740 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726417AbgFJO7D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 10:59:03 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Wed, 10 Jun 2020 11:00:01 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:41956 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726417AbgFJPAB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 11:00:01 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2F142072F;
-        Wed, 10 Jun 2020 14:59:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591801141;
-        bh=DRAX7dZY+3rrjcvGnB5ubpqYxgmX9PBwwAzimv9gLTA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xlOVgWzFgsWsnbv75ebTDCD/cWC3mId0ZJAxNytwS6EwARFIFNcO8bw8SEj7u+kPS
-         uEG62wcIIAKYBCQsuONklLx3OXofOTwHahqjsIz96CgvCaFJ6/oeR1qsoLhwIlrCqD
-         MZzUoPDhBBR7j0aUShq4J0qqj/aghZw3ChDlvnn0=
-Date:   Wed, 10 Jun 2020 16:58:55 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux- stable <stable@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        lkft-triage@lists.linaro.org
-Subject: Re: [PATCH 4.19 24/25] uprobes: ensure that uprobe->offset and
- ->ref_ctr_offset are properly aligned
-Message-ID: <20200610145855.GA2102398@kroah.com>
-References: <20200609174048.576094775@linuxfoundation.org>
- <20200609174051.488794266@linuxfoundation.org>
- <CA+G9fYukN5V1z3g6Qwe9K5xnnXEuFafWdqGfDA1Wj2iVstoxfw@mail.gmail.com>
- <20200609190321.GA1046130@kroah.com>
- <20200610145305.GA3254@redhat.com>
+        by asavdk4.altibox.net (Postfix) with ESMTPS id B8B1780615;
+        Wed, 10 Jun 2020 16:59:55 +0200 (CEST)
+Date:   Wed, 10 Jun 2020 16:59:54 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] drm/panel: simple: add CDTech S070PWS19HP-FC21 and
+ S070SWV29HG-DC44
+Message-ID: <20200610145954.GA135509@ravnborg.org>
+References: <20200610120131.3069-1-matthias.schiffer@ew.tq-group.com>
+ <20200610120131.3069-4-matthias.schiffer@ew.tq-group.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200610145305.GA3254@redhat.com>
+In-Reply-To: <20200610120131.3069-4-matthias.schiffer@ew.tq-group.com>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=G88y7es5 c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=8f9FM25-AAAA:8 a=_tJ-VA_NSDcjsCNOPhgA:9
+        a=INdImr_puP3_IQRK:21 a=8TxJKwd5zFIMyFNg:21 a=CjuIK1q_8ugA:10
+        a=uSNRK0Bqq4PXrUp6LDpb:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 04:53:06PM +0200, Oleg Nesterov wrote:
-> On 06/09, Greg Kroah-Hartman wrote:
-> >
-> > On Wed, Jun 10, 2020 at 12:25:56AM +0530, Naresh Kamboju wrote:
-> > > > @@ -911,6 +907,15 @@ static int __uprobe_register(struct inod
-> > > >         if (offset > i_size_read(inode))
-> > > >                 return -EINVAL;
-> > > >
-> > > > +       /*
-> > > > +        * This ensures that copy_from_page(), copy_to_page() and
-> > > > +        * __update_ref_ctr() can't cross page boundary.
-> > > > +        */
-> > > > +       if (!IS_ALIGNED(offset, UPROBE_SWBP_INSN_SIZE))
-> > > > +               return -EINVAL;
-> > > > +       if (!IS_ALIGNED(ref_ctr_offset, sizeof(short)))
-> > >
-> > > stable-rc 4.19 build failure for x86_64, i386 and arm.
-> > > make -sk KBUILD_BUILD_USER=TuxBuild -C/linux -j16 ARCH=x86 HOSTCC=gcc
-> > > CC="sccache gcc" O=build
-> > >
-> > > 75 #
-> > > 76 In file included from ../kernel/events/uprobes.c:25:
-> > > 77 ../kernel/events/uprobes.c: In function ‘__uprobe_register’:
-> > > 78 ../kernel/events/uprobes.c:916:18: error: ‘ref_ctr_offset’
-> > > undeclared (first use in this function); did you mean
-> > > ‘per_cpu_offset’?
-> > > 79  916 | if (!IS_ALIGNED(ref_ctr_offset, sizeof(short)))
-> > > 80  | ^~~~~~~~~~~~~~
-> > > 81 ../include/linux/kernel.h:62:30: note: in definition of macro ‘IS_ALIGNED’
-> > > 82  62 | #define IS_ALIGNED(x, a) (((x) & ((typeof(x))(a) - 1)) == 0)
-> > > 83  | ^
-> > > 84 ../kernel/events/uprobes.c:916:18: note: each undeclared identifier
-> > > is reported only once for each function it appears in
-> > > 85  916 | if (!IS_ALIGNED(ref_ctr_offset, sizeof(short)))
-> > > 86  | ^~~~~~~~~~~~~~
-> > > 87 ../include/linux/kernel.h:62:30: note: in definition of macro ‘IS_ALIGNED’
-> > > 88  62 | #define IS_ALIGNED(x, a) (((x) & ((typeof(x))(a) - 1)) == 0)
-> > > 89  | ^
-> > > 90 make[3]: *** [../scripts/Makefile.build:304: kernel/events/uprobes.o] Error 1
-> > >
-> > > --
-> > > Linaro LKFT
-> > > https://lkft.linaro.org
-> >
-> > Good catch, my builders just caught it too :(
-> >
-> > 4.19, 4.14, 4.9, and 4.4 are all broken, I have a fix will test it and
-> > push out -rc2 for all of those with it in a bit, thanks.
+Hi Matthias.
+
+Thanks, a few details you need to fix. See below.
+
+	Sam
+
+On Wed, Jun 10, 2020 at 02:01:30PM +0200, Matthias Schiffer wrote:
+> From: Michael Krummsdorf <michael.krummsdorf@tq-group.com>
 > 
-> Yes, SDT markers were added by 1cc33161a83d20b5462b1e93f95d3ce6388079ee in v4.20.
+> Add support for the CDTech Electronics displays S070PWS19HP-FC21
+> (7.0" WSVGA) and S070SWV29HG-DC44 (7.0" WVGA) to panel-simple.
 > 
-> See the patch for v4.4 below. It changes uprobe_register(), not __uprobe_register()
-> to check IS_ALIGNED(offset, UPROBE_SWBP_INSN_SIZE) only.
+> Signed-off-by: Michael Krummsdorf <michael.krummsdorf@tq-group.com>
+> Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+> ---
+>  drivers/gpu/drm/panel/panel-simple.c | 60 ++++++++++++++++++++++++++++
+>  1 file changed, 60 insertions(+)
 > 
-> Greg, please let me know if you want me to send the patches for 4.9/4.14/4.19.
-
-Please do.  I tried to backport it to those trees, and it seems to
-build/boot/run, but I would like verification I didn't mess anything up
-:)
-
-Your 4.4 version below matched my version, so I think I'm ok...
-
-thanks,
-
-greg k-h
+> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> index b6ecd1552132..1673113e5a5a 100644
+> --- a/drivers/gpu/drm/panel/panel-simple.c
+> +++ b/drivers/gpu/drm/panel/panel-simple.c
+> @@ -1315,6 +1315,60 @@ static const struct panel_desc cdtech_s043wq26h_ct7 = {
+>  	.bus_flags = DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE,
+>  };
+>  
+> +/* S070PWS19HP-FC21 2017/04/22 */
+> +static const struct drm_display_mode cdtech_s070pws19hp_fc21_mode = {
+> +	.clock = 51200,
+> +	.hdisplay = 1024,
+> +	.hsync_start = 1024 + 160,
+> +	.hsync_end = 1024 + 160 + 20,
+> +	.htotal = 1024 + 160 + 20 + 140,
+> +	.vdisplay = 600,
+> +	.vsync_start = 600 + 12,
+> +	.vsync_end = 600 + 12 + 3,
+> +	.vtotal = 600 + 12 + 3 + 20,
+> +	.vrefresh = 60,
+.vrefresh is no longer present, please drop.
+> +	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
+> +};
+> +
+> +static const struct panel_desc cdtech_s070pws19hp_fc21 = {
+> +	.modes = &cdtech_s070pws19hp_fc21_mode,
+> +	.num_modes = 1,
+> +	.bpc = 6,
+> +	.size = {
+> +		.width = 154,
+> +		.height = 86,
+> +	},
+> +	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
+> +	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_POSEDGE,
+> +};
+Please add .connector_type - it is mandatory.
+> +
+> +/* S070SWV29HG-DC44 2017/09/21 */
+> +static const struct drm_display_mode cdtech_s070swv29hg_dc44_mode = {
+> +	.clock = 33300,
+> +	.hdisplay = 800,
+> +	.hsync_start = 800 + 210,
+> +	.hsync_end = 800 + 210 + 2,
+> +	.htotal = 800 + 210 + 2 + 44,
+> +	.vdisplay = 480,
+> +	.vsync_start = 480 + 22,
+> +	.vsync_end = 480 + 22 + 2,
+> +	.vtotal = 480 + 22 + 2 + 21,
+> +	.vrefresh = 60,
+.vrefresh is no longer present, please drop.
+> +	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
+> +};
+> +
+> +static const struct panel_desc cdtech_s070swv29hg_dc44 = {
+> +	.modes = &cdtech_s070swv29hg_dc44_mode,
+> +	.num_modes = 1,
+> +	.bpc = 6,
+> +	.size = {
+> +		.width = 154,
+> +		.height = 86,
+> +	},
+> +	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
+> +	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_POSEDGE,
+Please add .connector_type - it is mandatory.
+> +};
+> +
+>  static const struct drm_display_mode cdtech_s070wv95_ct16_mode = {
+>  	.clock = 35000,
+>  	.hdisplay = 800,
+> @@ -3723,6 +3777,12 @@ static const struct of_device_id platform_of_match[] = {
+>  	}, {
+>  		.compatible = "cdtech,s043wq26h-ct7",
+>  		.data = &cdtech_s043wq26h_ct7,
+> +	}, {
+> +		.compatible = "cdtech,s070pws19hp-fc21",
+> +		.data = &cdtech_s070pws19hp_fc21,
+> +	}, {
+> +		.compatible = "cdtech,s070swv29hg-dc44",
+> +		.data = &cdtech_s070swv29hg_dc44,
+>  	}, {
+>  		.compatible = "cdtech,s070wv95-ct16",
+>  		.data = &cdtech_s070wv95_ct16,
+> -- 
+> 2.17.1
