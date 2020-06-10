@@ -2,122 +2,131 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF6FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A57C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E3E72078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:10:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A44752072E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:11:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="eyKD4RIk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbgFJIKX (ORCPT
+        id S1726640AbgFJILF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 04:10:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:54400 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726207AbgFJIKW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 04:10:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DE6251F1;
-        Wed, 10 Jun 2020 01:10:21 -0700 (PDT)
-Received: from bogus (unknown [10.37.12.97])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BAA883F6CF;
-        Wed, 10 Jun 2020 01:10:18 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 09:10:11 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        tabba@google.com, qwandor@google.com, ardb@kernel.org
-Subject: Re: [RFC PATCH 0/3] firmware: Add support for PSA FF-A interface
-Message-ID: <20200610081011.GA2689@bogus>
-References: <20200601094512.50509-1-sudeep.holla@arm.com>
- <20200604133746.GA2951@willie-the-truck>
- <20200609174123.GA5732@bogus>
- <20200610075711.GC15939@willie-the-truck>
+        Wed, 10 Jun 2020 04:11:05 -0400
+Received: from mail-dm6nam10on2071.outbound.protection.outlook.com ([40.107.93.71]:1601
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726207AbgFJILE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 04:11:04 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fVwF+woz4A0Lx6nKrNVMkXCy5vEaWU2tHvsr5V47I0dUV4g+y+a+VZbYeulaGFaP6tI/B++5TzM9aGmEhL945cyOqKs4lU+KJ3rqVqjaLOkJBZbjvfFP5LKCbOySn4pARxxeF7Eh1TEibXeFTGxIEJQodchklEPv4g673K3qB5kzUc9gAd8hNHmBjCLqShWmpZVxcbWjP15TWMayc/HkTpzptjmTjivjOaYu/2NebJP9Q9NRCuQj9Gnqn0z3zJq7+Gb4SvQgU9CppvvoAmPRbLZFUAsCLLGTINdzOZIWSfKjstvRQdCEy/7FdDhjouyIIzUFWK115uvT7+Yb7UqeNw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZZxzLyYzUEfPT32+wlwwCf77+/PVJ0spb08GUhwPgzU=;
+ b=MpJbSIqw/YUS9FRUgd9yW2XdA2m1NixQuXg1yYbOzKm7K+9mPavPsnHJAtaepGBM8cV/McvTmfp/SWW/oyiHdZxoTIiBiWg4I3/U4m3T1fOZ9hi5jpGVsZBOgtrownB9V3QmMJZw3yQWcnHXcev40DPFzecC91MS4jV8NT0KvSdhe/qgsvnIgcvz3MbOohu75W1fABOgdtB6l2gTvTs0dKYAeqx513WqyjuritBEW5fWIR5GdjmRmGHndPyIF0BNRAu9zaWFpDZYgfQ8YvL4pexS5eRciggABvH8ocuF9nMS6fHhr0EzngmtfANID0dQ5pXzX3Z++zKasJtDeZwEMQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
+ dkim=pass header.d=silabs.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZZxzLyYzUEfPT32+wlwwCf77+/PVJ0spb08GUhwPgzU=;
+ b=eyKD4RIk5oVozk3pCDZLY1Eoe90DxjCAS40pyCgjxCue54XdtZgIh0nTWmn1A83mwLGBiBq1JiaGW98dLF+3TpIzCmmM5lt9heF90VXtVrsiZpewOtHkCjKgvVL1+YYTCPaMh0UqwYRieHfpcsJ9yKd1x8BpLqtO01fwzDGfcXU=
+Authentication-Results: linuxfoundation.org; dkim=none (message not signed)
+ header.d=none;linuxfoundation.org; dmarc=none action=none
+ header.from=silabs.com;
+Received: from SN6PR11MB2718.namprd11.prod.outlook.com (2603:10b6:805:63::18)
+ by SN6PR11MB2542.namprd11.prod.outlook.com (2603:10b6:805:60::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.20; Wed, 10 Jun
+ 2020 08:11:02 +0000
+Received: from SN6PR11MB2718.namprd11.prod.outlook.com
+ ([fe80::c504:2d66:a8f7:2336]) by SN6PR11MB2718.namprd11.prod.outlook.com
+ ([fe80::c504:2d66:a8f7:2336%7]) with mapi id 15.20.3066.023; Wed, 10 Jun 2020
+ 08:11:01 +0000
+From:   =?ISO-8859-1?Q?J=E9r=F4me?= Pouiller <jerome.pouiller@silabs.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Mohamed Dawod <mhm.dawod@gmail.com>,
+        kernelnewbies@kernelnewbies.org
+Subject: Re: [staging-testing] drivers/staging/wfx/hif_tx.c
+Date:   Wed, 10 Jun 2020 10:10:56 +0200
+Message-ID: <1949452.ECF46Ag4iX@pc-42>
+Organization: Silicon Labs
+In-Reply-To: <CAGCTLNSwM+5kzSABDN7DGFKz4FcCN-DwUmhU8dzhtyW0=kh3gg@mail.gmail.com>
+References: <CAGCTLNSwM+5kzSABDN7DGFKz4FcCN-DwUmhU8dzhtyW0=kh3gg@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+X-ClientProxiedBy: DM5PR19CA0041.namprd19.prod.outlook.com
+ (2603:10b6:3:9a::27) To SN6PR11MB2718.namprd11.prod.outlook.com
+ (2603:10b6:805:63::18)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200610075711.GC15939@willie-the-truck>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from pc-42.localnet (2a01:e35:2435:66a0:544b:f17b:7ae8:fb7) by DM5PR19CA0041.namprd19.prod.outlook.com (2603:10b6:3:9a::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.19 via Frontend Transport; Wed, 10 Jun 2020 08:11:00 +0000
+X-Originating-IP: [2a01:e35:2435:66a0:544b:f17b:7ae8:fb7]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 70ccfaf5-9417-4404-f59c-08d80d15d062
+X-MS-TrafficTypeDiagnostic: SN6PR11MB2542:
+X-Microsoft-Antispam-PRVS: <SN6PR11MB254241A81422E5939CEE9B6E93830@SN6PR11MB2542.namprd11.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 0430FA5CB7
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: tmdT2/PYlgWxno2R6vOorMz27AY/lsQTLTaRNl9V7jqHw97QBiyArRwJeoLWLK5PuGiRj4m46aa4OcRIjIQF80aVl951p8JP84lH/X1ZVOSBa9oBC0NwNS5epCqlTu9esEdO/QiWWAqVS0slerrLnZe1Vic1jl67lLvGUJMyJneQg89VhSKGrgx54gqMpO0RnHr/U9ehEQz/AOfvMXtV0btVsbMpIz/34bJwfh7POKFt8/heGkFY6wT0ZNKdEYANYGMcC1K7a2xhEI9ZPb6QRYF4B2wDZnldHUO9v4Gh+VAo2hTNkiD5JnY+W6aNhUPcurW2QHIFg3iyuzWfKOoabkTo8y+/RQWPZMW7sRx8hp9/QRQ/cEBlQsIFMnqrcL6SPE5q6doyVqEOM1tq4+BLIq6CgKEls4DA1yMOSfpAME8nGG5nTCiR3OK9cXIZjkCmDaExp9vVMOiYrwXdaPdecA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB2718.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(376002)(39850400004)(136003)(396003)(346002)(8936002)(966005)(110136005)(8676002)(36916002)(5660300002)(16526019)(478600001)(86362001)(66946007)(66476007)(66556008)(186003)(52116002)(2906002)(9686003)(33716001)(66574014)(83380400001)(6506007)(316002)(6666004)(6512007)(6486002)(39026012);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 4nRCYPUo8AZwc6ytnJs6QUOlpZfgKZ7iV4aCN2n3c5K947HjYSb71l+1waY010SFWlHTVoeqXDdiIi+lRRGUlSE/1uCuKHmYVddSKUt3KyZZc7S4XwK5tzQKB6oOdt+/yq9nq0Fcxfb3DpD6kIr4zlye5rr1rKaBQMO629q0xY7CgzpJAFI7wxK74ZekK6gGIhSWpFgima88XKWfbjahchzfmEMVgm57pmXC7x4fJAKZRubJQFCXGEuq29jFDhEAElmdkybxBSmleKWYPJrpx0NKIZ6/SCdFShvTL3E9ysXa3q1+uTDWNcnPhADFSyRIjGuQXqSSO7yceJd4Hp2WdcAt5AvGr37v/kXkAlbL436J18K3Y+EnkrOrydxzc6Qg8psH8pYpyF4AkYYSaJSCS3qykR42y4RJbTUg3z7bE2kL2FfdoQC3+7ok+1Jdy8hLxiXc8itEXo940i1Qm1RwEOsSxJvrE3QtBKmt8fHq/YJo9TWSTVyWQhrsPaLCWE8RG+vLpcux2QAcaBetaL2Eb4EliZFdP6SSp4zZrmaHLzA=
+X-OriginatorOrg: silabs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 70ccfaf5-9417-4404-f59c-08d80d15d062
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2020 08:11:01.8333
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 54dbd822-5231-4b20-944d-6f4abcd541fb
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: aN2DX3hbb+px8JnwTIpAuaW90utXEAN84F4GCOXtPReI4hR+G/bHNgRKBMfbsYO2ZZUNwYwNHboLzYT4zOT5tg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB2542
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Will,
+On Wednesday 10 June 2020 08:53:13 CEST Mohamed Dawod wrote:
+> Hello,
+>=20
+> I read this point in  staging/wfx/TODO file
+>=20
+> - In wfx_cmd_send(), "async" allow to send command without waiting the re=
+ply.
+>     It may help in some situation, but it is not yet used. In add, it may=
+ cause
+>     some trouble:
+>       https://lore.kernel.org/driverdev-devel/alpine.DEB.2.21.19100413173=
+81.2992@hadrien/
+>     So, fix it (by replacing the mutex with a semaphore) or drop it.
+>=20
+> I think that this issue has already been fixed in hif_shutdown() function=
+, hasn't it ?
 
-On Wed, Jun 10, 2020 at 08:57:12AM +0100, Will Deacon wrote:
-> Hi Sudeep,
->
-> On Tue, Jun 09, 2020 at 06:41:23PM +0100, Sudeep Holla wrote:
+Indeed, when I wrote the TODO file, the function hif_shutdown() didn't
+exist yet.
 
-[...]
+> I have another question. How can (replacing the mutex with a semaphore) s=
+olve the problem?
 
-> >
-> > Agreed, I added for RxTx buffers and initially to build the parent/child
-> > hierarchy for all users of the driver. Initially I was assuming only
-> > in-kernel users and now I agree we should avoid any in kernel users if
-> > possible.
-> >
-> > One thing to note FFA_PARTITION_INFO_GET relies on Rx buffers to send the
-> > information to the caller. So we need to have established buffers before
-> > that and one of the reason you don't find that in this RFC. I dropped that
-> > too which I wanted initially.
->
-> Ok, sounds like we should at least get to a position where we can enumerate
-> things, though.
->
+My understanding is that a mutex aims to be acquired and released from the
+same context. In some specific usages (RT-mutex? lock proving?), acquire
+mutex from a context and release it from another can produce some errors.
+In contrary a boolean semaphore does not have this restriction.=20
 
-Yes.
+(can anyone confirm that?)
 
-[...]
 
-> >
-> > OK, IIUC that covers mostly KVM implementation. We still need a way to
-> > share the RxTx buffer info to the partitions and DT/ACPI(?) is one
-> > possible way. Based on you comment about not needing DT node, do you have
-> > any other way to communicate the buffer info to the partitions ?
->
-> This is only a concern if KVM chooses to provide the Rx/Tx buffer pair
-> though, right? If we punt that down the road for the moment, then we can
-> just rely on FFA_RXTX_MAP for now.
->
 
-Ah OK, I was under the assumption that we didn't want to use FFA_RXTX_{,UN}MAP
+--=20
+J=E9r=F4me Pouiller
 
-[...]
 
-> >
-> > I am confused a bit. When you refer drivers above, are you referring to
-> > drivers in host kernel(hypervisor) or in the partitions. I fail to
-> > imagine need for the former.
->
-> I'm referring to in-kernel users in the host kernel. For KVM-managed guests,
-> we may not need these, although signalling things like system shutdown might
-> be better off done without relying on userspace. But my point is really that
-> separating the buffer management from the users means we can serialise
-> consumers, whether they are in-kernel or out in userspace.
->
-
-Understood.
-
-> > > What do you think, and do you reckon you can spin a cut-down driver that
-> > > implements the common part of the logic (since I know you've written much
-> > > of this code already)?
-> > >
-> >
-> > I am not sure if I am aligned with your thoughts on the buffer sharing
-> > yet.
->
-> Ok, please let me know if you have any more questions.
->
-
-None ATM. As I mentioned I had ruled out RXTX_{,UN}MAP which was my
-misunderstanding.
-
---
-Regards,
-Sudeep
