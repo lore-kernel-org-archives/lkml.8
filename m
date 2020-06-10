@@ -2,121 +2,82 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED2BAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D7F1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C19F52072F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12F3F2072F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:38:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbgFJIiC (ORCPT
+        id S1726918AbgFJIiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 04:38:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37352 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbgFJIiC (ORCPT
+        Wed, 10 Jun 2020 04:38:25 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:34871 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726758AbgFJIiC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 10 Jun 2020 04:38:02 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C96CC03E96B
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 01:38:01 -0700 (PDT)
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jiwF5-0000Il-SU; Wed, 10 Jun 2020 10:37:51 +0200
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jiwF2-0003Ir-R7; Wed, 10 Jun 2020 10:37:48 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Kubecek <mkubecek@suse.cz>,
-        "John W. Linville" <linville@tuxdriver.com>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        David Jander <david@protonic.nl>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>, mkl@pengutronix.de,
-        Marek Vasut <marex@denx.de>,
-        Christian Herber <christian.herber@nxp.com>,
-        Amit Cohen <amitc@mellanox.com>,
-        Petr Machata <petrm@mellanox.com>
-Subject: [PATCH v4 3/3] netlink: add LINKSTATE SQI support
-Date:   Wed, 10 Jun 2020 10:37:44 +0200
-Message-Id: <20200610083744.21322-4-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200610083744.21322-1-o.rempel@pengutronix.de>
-References: <20200610083744.21322-1-o.rempel@pengutronix.de>
+Received: by mail-oi1-f195.google.com with SMTP id k4so1380885oik.2;
+        Wed, 10 Jun 2020 01:38:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wpr/vh763HjeZP+zP2FvdrT65wytnNPLkj0hJH5/HSU=;
+        b=pLzci9jHCnsmZsXD0DiNzC3IFlDNKiVrp85s8t1tBs9HXAwxY+1OOqA1vJzYbh4+d6
+         3BbX+Rogr0hOXtkrf1pu/WDtKQedB4GBAFBTjRXjdmtVtaxffhQ+bvWT4PjYSbP/sVhQ
+         +vTUWBn7DHwPFqDc4KW3a1gb1Ph4Go/waLDaLy9J4ecO4QHtYaZyNHMCFUOzXYVIZJk8
+         U1hRqEgZlyroFNu2w3ndf3EqNArnJyI+wOcTMXAGySD1a+s5ee0XorkM+zXZcxBCmA+i
+         TzXUjREXs1sQCqjuJfBHrZyDglY6rgG1G7q33d/uKzLL7nETPo834H67JAphc3DkCGqu
+         9LKQ==
+X-Gm-Message-State: AOAM533t8HTUbbUcj8fhTCWnHdr3QwepnDExBHgL/+1EG3iHdwLkKfEI
+        HJ1UzdXBeFCsvfgM9NJYxNTwIp9tTRtXWFxghDY=
+X-Google-Smtp-Source: ABdhPJy/1U4soGDENhmLUY6tvEPackTNczKlnXGG0s9S/MpJevjbk+u+NWI9rauDUQubBnlkMAamXhasUns0Cr7+PGk=
+X-Received: by 2002:aca:4255:: with SMTP id p82mr1559149oia.153.1591778280645;
+ Wed, 10 Jun 2020 01:38:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <1591736054-568-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1591736054-568-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1591736054-568-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 10 Jun 2020 10:37:45 +0200
+Message-ID: <CAMuHMdWGs+UHCNXPc3TCAiRTX3M_8FLUAG5pke+=ZDr0uaP3_g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: spi: renesas,sh-msiof: Add r8a7742 support
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some PHYs provide Signal Quality Index (SQI) if the link is in active
-state. This information can help to diagnose cable and system design
-related issues.
+On Tue, Jun 9, 2020 at 10:54 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Document RZ/G1H (R8A7742) SoC bindings.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
----
- netlink/desc-ethtool.c |  2 ++
- netlink/settings.c     | 16 ++++++++++++++++
- 2 files changed, 18 insertions(+)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/netlink/desc-ethtool.c b/netlink/desc-ethtool.c
-index 00e6982..98b898e 100644
---- a/netlink/desc-ethtool.c
-+++ b/netlink/desc-ethtool.c
-@@ -93,6 +93,8 @@ static const struct pretty_nla_desc __linkstate_desc[] = {
- 	NLATTR_DESC_INVALID(ETHTOOL_A_LINKSTATE_UNSPEC),
- 	NLATTR_DESC_NESTED(ETHTOOL_A_LINKSTATE_HEADER, header),
- 	NLATTR_DESC_BOOL(ETHTOOL_A_LINKSTATE_LINK),
-+	NLATTR_DESC_U32(ETHTOOL_A_LINKSTATE_SQI),
-+	NLATTR_DESC_U32(ETHTOOL_A_LINKSTATE_SQI_MAX),
- };
- 
- static const struct pretty_nla_desc __debug_desc[] = {
-diff --git a/netlink/settings.c b/netlink/settings.c
-index 60e2c41..35ba2f5 100644
---- a/netlink/settings.c
-+++ b/netlink/settings.c
-@@ -627,6 +627,22 @@ int linkstate_reply_cb(const struct nlmsghdr *nlhdr, void *data)
- 		printf("\tLink detected: %s\n", val ? "yes" : "no");
- 	}
- 
-+	if (tb[ETHTOOL_A_LINKSTATE_SQI]) {
-+		uint32_t val = mnl_attr_get_u32(tb[ETHTOOL_A_LINKSTATE_SQI]);
-+
-+		print_banner(nlctx);
-+		printf("\tSQI: %u", val);
-+
-+		if (tb[ETHTOOL_A_LINKSTATE_SQI_MAX]) {
-+			uint32_t max;
-+
-+			max = mnl_attr_get_u32(tb[ETHTOOL_A_LINKSTATE_SQI_MAX]);
-+			printf("/%u\n", max);
-+		} else {
-+			printf("\n");
-+		}
-+	}
-+
- 	return MNL_CB_OK;
- }
- 
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.27.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
