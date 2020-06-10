@@ -2,153 +2,72 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF08C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9544BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88F332078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:29:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wGtnbNQr"
+	by mail.kernel.org (Postfix) with ESMTP id 7C8F52078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:29:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728283AbgFJK3p (ORCPT
+        id S1728294AbgFJK3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 06:29:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54620 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728245AbgFJK33 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 06:29:29 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D535C08C5C6
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 03:29:24 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id k8so1004994edq.4
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 03:29:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qsMe0GoBoD4Nd7M3gcej+GYSC/DhUz8aXH/HyUxybk8=;
-        b=wGtnbNQrXsqiFO1VSMJ2uUjSmZHAEi+S6K5ESB4qgssCjIKSqFS2b1Jyr9jtl9Pywy
-         anuLBuXoUrXZzJw/iqRHH2RsMO8D1rTZslEMlcbvzhGKZPIymt4N8o1rDRKv6lQB6yGZ
-         FxK9r5Q3A2V/uf3KPjuYvhMc9/81tbXAW3Nl/LetTqYi/0gPFqLgrrb6pSu4Cv6BYM2d
-         +VHxqYYuRzmn+RdZg1LanX1+wiI6o7ofir9fwSVxubR4GmW1bXwU003AFWTIe7ciFQsU
-         AWUibFvwi/xqQLTh54nfPyEubeUna9etlzwZyYkKWTEOzLvNZdpr+qjsijkQohXsAgV6
-         O88Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qsMe0GoBoD4Nd7M3gcej+GYSC/DhUz8aXH/HyUxybk8=;
-        b=QugnxeqYK+GDH1jsb8zYD5RJioTkImI4F/SackWu/r66wf+xn9Pv6rUZPc2Y6HbGLM
-         Pbi8ZwGY1gTC2x/wg8EnVzzPIVoekzpiHyY/Kw2P5nHd1yu5xFxkpbRxsuiJFW4nbPGx
-         RP1zL8MkOVPYvpoWFd/UNqQhzzKL9OrEA5UEZB5Fx0o1I1BnGTlcVloXZXLl6iS3PhP0
-         sDairgxoBT+0LnpGX6kNdmOC4iN1IxI+v+Wn0kvLMPdsKiWfmFoCvG1Ovhz8cVX6dLh5
-         iqBJdDMKdNddfCnyxvMmZywyu+3eu/qALLBuyKCXlgKNK9xysV1J6jfwjz1q+M9lLIxV
-         oi/g==
-X-Gm-Message-State: AOAM532cSeztfem0tXyqcgIVb68o6JoLl9zJ2CbQa+N/8YjzmGgVFuhW
-        Hc31E0+1P8HtO0HPcVDsWYKKlA==
-X-Google-Smtp-Source: ABdhPJz3ezkloiZYYUAR2sQCB5HFoqOKaX45ksAgj58KnQseQbSdSC9xWwnUJZpa/sd5fQLKpf9Mig==
-X-Received: by 2002:aa7:c450:: with SMTP id n16mr1914973edr.6.1591784963456;
-        Wed, 10 Jun 2020 03:29:23 -0700 (PDT)
-Received: from [192.168.1.5] (212-5-158-114.ip.btc-net.bg. [212.5.158.114])
-        by smtp.googlemail.com with ESMTPSA id bo26sm17375818edb.67.2020.06.10.03.29.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jun 2020 03:29:22 -0700 (PDT)
-Subject: Re: [PATCH v3 1/7] Documentation: dynamic-debug: Add description of
- level bitmask
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-acpi@vger.kernel.org,
-        netdev@vger.kernel.org, Joe Perches <joe@perches.com>,
-        Jason Baron <jbaron@akamai.com>,
-        Jonathan Corbet <corbet@lwn.net>
-References: <20200609104604.1594-1-stanimir.varbanov@linaro.org>
- <20200609104604.1594-2-stanimir.varbanov@linaro.org>
- <20200609111615.GD780233@kroah.com>
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Message-ID: <0830ba57-d416-4788-351a-6d1b2ca5b7d8@linaro.org>
-Date:   Wed, 10 Jun 2020 13:29:20 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 10 Jun 2020 06:29:53 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:60254 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728235AbgFJK31 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 06:29:27 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1jixyV-0008Az-TN; Wed, 10 Jun 2020 20:28:53 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Wed, 10 Jun 2020 20:28:51 +1000
+Date:   Wed, 10 Jun 2020 20:28:51 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        x86-ml <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] x86/microcode: Do not select FW_LOADER
+Message-ID: <20200610102851.GA22584@gondor.apana.org.au>
+References: <20200610042911.GA20058@gondor.apana.org.au>
+ <20200610081609.GA14118@zn.tnic>
 MIME-Version: 1.0
-In-Reply-To: <20200609111615.GD780233@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200610081609.GA14118@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+On Wed, Jun 10, 2020 at 10:16:09AM +0200, Borislav Petkov wrote:
+> On Wed, Jun 10, 2020 at 02:29:11PM +1000, Herbert Xu wrote:
+> > The x86 microcode support works just fine without FW_LOADER.  In
+> > fact these days most people load them early in boot so FW_LOADER
+> > never gets into the picture anyway.
+> 
+> What's the use case here?
 
-On 6/9/20 2:16 PM, Greg Kroah-Hartman wrote:
-> On Tue, Jun 09, 2020 at 01:45:58PM +0300, Stanimir Varbanov wrote:
->> This adds description of the level bitmask feature.
->>
->> Cc: Jonathan Corbet <corbet@lwn.net> (maintainer:DOCUMENTATION)
->>
->> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
->> ---
->>  Documentation/admin-guide/dynamic-debug-howto.rst | 10 ++++++++++
->>  1 file changed, 10 insertions(+)
->>
->> diff --git a/Documentation/admin-guide/dynamic-debug-howto.rst b/Documentation/admin-guide/dynamic-debug-howto.rst
->> index 0dc2eb8e44e5..c2b751fc8a17 100644
->> --- a/Documentation/admin-guide/dynamic-debug-howto.rst
->> +++ b/Documentation/admin-guide/dynamic-debug-howto.rst
->> @@ -208,6 +208,12 @@ line
->>  	line -1605          // the 1605 lines from line 1 to line 1605
->>  	line 1600-          // all lines from line 1600 to the end of the file
->>  
->> +level
->> +    The given level will be a bitmask ANDed with the level of the each ``pr_debug()``
->> +    callsite. This will allow to group debug messages and show only those of the
->> +    same level.  The -p flag takes precedence over the given level. Note that we can
->> +    have up to five groups of debug messages.
-> 
-> As was pointed out, this isn't a "level", it's some arbitrary type of
-> "grouping".
+Because MICROCODE is the only thing on my system that pulls it
+into the kernel.
 
-Yes, it is grouping of KERN_DEBUG level messages by importance (my
-fault, I put incorrect name).  What is important is driver author
-decision.  Usually when the driver is huge and has a lot of debug
-messages it is not practical to enable all of them to chasing a
-particular bug or issue.  You know that debugging (printk) add delays
-which could hide or rise additional issue(s) which would complicate
-debug and waste time.
+> Also, I'm working on removing that homegrown get_builtin_firmware() and
+> use the one in the fw loader:
+> 
+> https://lkml.kernel.org/r/20200408094526.GC24663@zn.tnic
 
-For the Venus driver I have defined three groups of KERN_DEBUG - low,
-medium and high (again the driver author(s) will decide what the
-importance is depending on his past experience).
+That shouldn't be a problem.  That function can simply move under
+another (hidden) Kconfig option that gets selected by both MICROCODE
+and FW_LOADER.
 
-There is another point where the debugging is made by person who is not
-familiar with the driver code. In that case he/she cannot enable lines
-or range of lines because he don't know the details. Here the grouping
-by importance could help.
-
-> 
-> But step back, why?  What is wrong with the existing control of dynamic
-> debug messages that you want to add another type of arbitrary grouping
-> to it?  And who defines that grouping?  Will it be
-> driver/subsystem/arch/author specific?  Or kernel-wide?
-> 
-> This feels like it could easily get out of hand really quickly.
-> 
-> Why not just use tracepoints if you really want to be fine-grained?
-> 
-> thanks,
-> 
-> greg k-h
-> 
-
+Cheers,
 -- 
-regards,
-Stan
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
