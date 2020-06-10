@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A661CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A16C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77BCB20760
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:55:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27ADA2072E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:55:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bvYAdsPR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KZ3GCV4o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgFJJzA (ORCPT
+        id S1728039AbgFJJzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 05:55:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49270 "EHLO
+        Wed, 10 Jun 2020 05:55:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726134AbgFJJy7 (ORCPT
+        with ESMTP id S1727966AbgFJJzr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 05:54:59 -0400
-Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5CF4C03E96B
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 02:54:58 -0700 (PDT)
-Received: by mail-lj1-x235.google.com with SMTP id 9so1673246ljc.8
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 02:54:58 -0700 (PDT)
+        Wed, 10 Jun 2020 05:55:47 -0400
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71398C03E96B
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 02:55:45 -0700 (PDT)
+Received: by mail-lf1-x12e.google.com with SMTP id x22so1089088lfd.4
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 02:55:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=x3zJYnC4xPTLUvpdLo3hJwVKdm6pQi65dX2AKRAnoeU=;
-        b=bvYAdsPRtcgtKGb3QnS8DYfgeu9iZZ+3d2bED2t8THtIt6RXgj3rz6bJ0WI05t7K47
-         +S2m2gtlLbauUSYPZl432zrDFRlIBRN2mPTRZgZDiXnJNOSYx4dZAXcyf2SSaaUokmrx
-         qVB2HZbK17hqs4ANJ7RnqHLEaM7R175Avt5uOuhEsndixOsScfNf8E6yth0csDjL4++i
-         11C+CaDkudPtzHu2RUUIqkccZzBAv+hx+fUpQTfFTIjk8GRHt2BknPV2aPnw55VrtjKi
-         BxJJMY/+jFPOQCFmUxcecRWR1wsGxP/jiYvWMPeMx3abSq8ULRS6glsS4+oC4Nrlsum/
-         9Yzw==
+        bh=IyM/A+avhJkkQHOLp+OvMDI3GG+kxptVRDbu3u0LPow=;
+        b=KZ3GCV4oQ8GoZhjx2pBRStzJRFJC/aeLvAH56Ms+z3A6pyxZAqr26DULM6tE604ET4
+         Neju+GKK0TxS2BEBiYqrK8ZAAy43gpWB8HQ971utdGJQuFszPl9QZgYYUU0sHCWRnhbd
+         6GIHn8MU1axUgQbHaAfMzacFuagYyooDoAmkS8bnScg9G7g+StfE3LYW19Uxic9LK6On
+         7FiJDSQEmMhNB5t1sCQgPq+qJ/bSCma6+45ICCeJpUzctEGgFrve+wbAlwsfoxQLe6yE
+         B2GSy1pb47oGu2/e3pTl0eh75S/BCedvE9mxxYG9LjtQNOPinBsLstTJ4vPT9T8lwVVt
+         vW3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=x3zJYnC4xPTLUvpdLo3hJwVKdm6pQi65dX2AKRAnoeU=;
-        b=FHFjNOVNbq9oozmWHM++ojzYC5mZRA+GjexjY9i/x3IdHZ7E8UDZ+iYdP9dOWMRHz7
-         kA6qYYyg1kyRg23/k1r8DHZzo3SKrcWcvdApOcTB+CQMCyh+2Y+QQ2ifwlnx6eilAmT6
-         fIf2s0Ht2KZAWQmja7egcp+Z+R0CV2DUUE/wwE4kyEkjCpqxVknjyjDh2Y74fF/FiW2h
-         seIG8/5xIPBHSY90xjZ0Pn/wkX57lLnajrbp1V+6pvbD1TZ8h/OChtqML76kKWXpkxub
-         0UdGxJQJCGRc5k14r4/aq0P24bky96wRwln102D7soVdJd7vcLjyzgHFTTTP6ro8bZzF
-         XXWA==
-X-Gm-Message-State: AOAM532XXnWCv34TdfROsBZz0xYa5SdhV2k7tmgcrrxralcnzPLoHi4X
-        2G5mNW38fgB6Icj9QxhgckP4FpKOvSkP+1D2CPfzgg==
-X-Google-Smtp-Source: ABdhPJyaZm9bWv1+tQfyTESsLtLgh1gwb2LxItCKaISMEvf2pjgPzCFpj8OL4bZ3WpufhOyscllUPZAmRJY1WJJKSVo=
-X-Received: by 2002:a2e:350a:: with SMTP id z10mr1288366ljz.104.1591782897430;
- Wed, 10 Jun 2020 02:54:57 -0700 (PDT)
+        bh=IyM/A+avhJkkQHOLp+OvMDI3GG+kxptVRDbu3u0LPow=;
+        b=C9g0xrxpXaWAYQ4MV6KGn7yHSptDbc8mRWbeeVcife22QOGuw1mMQYASm2fpdEeNtT
+         ZjEINcLrIDDJ8FamJTjg1tWyJ7E0+LvAfieb6gYaEZrVc732SCbBqYY/uqcHn6hPEKXW
+         DZEX+feLJinbzqbb7k2g47DEU9g8gmeYzr3KfKJlW8g3BRQcXk6Hpz8pRR/Qm17hVMjS
+         WoARj1KWvMpNSR+fFFdCk30GhIBupt0CdQyGbVYNJwcz019z5SWOP3I3zW65PVJEp3tY
+         3ZfcS1gkvc+kl5H3QNo7DyW6CWfYe4TUN+hZkq6aUe3/1R55zlXizpdWIteLOSh0b7No
+         LYYg==
+X-Gm-Message-State: AOAM530PYUYjVnq6ylnKs7uxRk5x7xL6nPq2MSECcV+Qr9/qFTZSFw7E
+        jh0JW6eC8hWh1DvtcbvT8wkrMRWBo3M7jdnJCiN+Zg==
+X-Google-Smtp-Source: ABdhPJw06BW9DC3WVHZ8QRBMneGYcET56eTT8DIAMhEVt8P5RXWMTPAIOnCaPj54gMD05QlYQar3OpWGUm5iy7QPfE0=
+X-Received: by 2002:ac2:5a07:: with SMTP id q7mr1267243lfn.77.1591782943164;
+ Wed, 10 Jun 2020 02:55:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200605224403.181015-1-sebastian.reichel@collabora.com> <20200605224403.181015-6-sebastian.reichel@collabora.com>
-In-Reply-To: <20200605224403.181015-6-sebastian.reichel@collabora.com>
+References: <20200605224403.181015-1-sebastian.reichel@collabora.com> <20200605224403.181015-7-sebastian.reichel@collabora.com>
+In-Reply-To: <20200605224403.181015-7-sebastian.reichel@collabora.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 10 Jun 2020 11:54:46 +0200
-Message-ID: <CACRpkdabXvC2z3TEzChQb4MAOuFEZXQ_wN63mdSGTQh1YHxaHA@mail.gmail.com>
-Subject: Re: [PATCHv2 5/6] ARM: sa1100: Use GPIO descriptor for gpio-charger
+Date:   Wed, 10 Jun 2020 11:55:32 +0200
+Message-ID: <CACRpkdZchnn8EG6HOo_QD=veHJzb_Vy5F2Ma0cEOZUjcZwHPYg@mail.gmail.com>
+Subject: Re: [PATCHv2 6/6] power: supply: gpio-charger: drop legacy GPIO support
 To:     Sebastian Reichel <sebastian.reichel@collabora.com>
 Cc:     Sebastian Reichel <sre@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -85,15 +85,13 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 On Sat, Jun 6, 2020 at 12:44 AM Sebastian Reichel
 <sebastian.reichel@collabora.com> wrote:
 
-> Provide AC detect GPIO via gpiod table instead of
-> legacy platform data so that legacy GPIO support
-> can be removed from the driver.
->
-> Due to lack of hardware this has only been compile
-> tested.
+> All board files have been converted to use boardfile GPIO
+> descriptor tables, so GPIO support can be removed from
+> platform data.
 >
 > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
+Thanks so much for doing this!
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
