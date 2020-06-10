@@ -2,183 +2,130 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BEAC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B60C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8266206F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:38:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dhG2Q0uT"
+	by mail.kernel.org (Postfix) with ESMTP id CD690206F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:39:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730272AbgFJTin (ORCPT
+        id S1730287AbgFJTjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 15:38:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55046 "EHLO
+        Wed, 10 Jun 2020 15:39:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728178AbgFJTim (ORCPT
+        with ESMTP id S1730240AbgFJTjf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 15:38:42 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A689BC03E96F
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 12:38:42 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id s23so1545947pfh.7
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 12:38:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Td+Hx06E+e9F1O9JIhYF1vMbzyy7ZP3sq7uvC8JK3wg=;
-        b=dhG2Q0uTj+7iphhFpEGZ9PWuteEaHz4NrECdrVSSGdffrYMFXVSSnT74UWtAmIOK24
-         YCcBpZE2Z7evEd5PAvkn5NPs5ZB4EuRIB7KogEkhWxRp7r9V0t20jYbwjCAdYF660sMV
-         B8rQLO7dvBjnLTXyrzzk46jixbsNwddCwLODB1AKJ65TWIbaNhcAkXRU6mTwrT6IEd2K
-         LD0xS7Rju4gSW/2BU1JYgH9ie4ALFxjNeBn/nfkjH58MEey/OYoMvv87rzxnTa2vbaCU
-         +MU/sUH5O+eWsBggarxtoAVKukHFoxo6GjiwatZy3ESngigltmot2tM0gg5oAbFDBvyh
-         gkzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Td+Hx06E+e9F1O9JIhYF1vMbzyy7ZP3sq7uvC8JK3wg=;
-        b=RoXBgsyUVi89cBvRWrvIrCavl3YL6Z5qRCUyeUH4x8X8hBcjyOHxqHu03a/KrlAIfG
-         KQWJLWaJ9KEUPbT4mGR0OHXCBhxqVjd5hts47FvGK185EOLAiZx67q/l8yL/bKfDBerD
-         Ejdg2vWJ1DnUk1Vy4og1U+r8V0MHe9cPSGVVlDk7R6x1kRi8Kob3uNgV7KGoVvSV5isp
-         wcDBSat6YJbO0Er1Ad/LVEDHa4S68oLJPYKnGt5FihD5rgdewQW9gqAtMW3PH2Zk6F2w
-         4jCQpN7q2cmH4UXfh0yuQQJwkPuOgti0mEGl1nbwIDhXSN0s/l7YEUIm78qNmLGhAvAj
-         h93w==
-X-Gm-Message-State: AOAM533YzShGM9xefO0DUyWGvpeED7BSwPjaAbrIPWbNlQqV01gfxpuI
-        rTXeT5vC3NrLa98s1Wq+PsdmHg==
-X-Google-Smtp-Source: ABdhPJwNMzK3e5aMgbzRItHsCHFq2d5DaCNeUz6V0o0/Or2vT7bu9rtBfB9dzhC6Ax/6GNC0nPiPJA==
-X-Received: by 2002:a62:86cd:: with SMTP id x196mr4080689pfd.158.1591817921979;
-        Wed, 10 Jun 2020 12:38:41 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id w18sm680040pfq.121.2020.06.10.12.38.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 12:38:41 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 12:37:57 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Jack Pham <jackp@codeaurora.org>
-Cc:     Wesley Cheng <wcheng@codeaurora.org>,
-        heikki.krogerus@linux.intel.com, gregkh@linuxfoundation.org,
-        mark.rutland@arm.com, robh+dt@kernel.org, agross@kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
-        bryan.odonoghue@linaro.org
-Subject: Re: [PATCH 1/3] usb: typec: Add QCOM PMIC typec detection driver
-Message-ID: <20200610193757.GB1246811@builder.lan>
-References: <20200609205851.30113-1-wcheng@codeaurora.org>
- <20200609205851.30113-2-wcheng@codeaurora.org>
- <20200610011837.GA14816@jackp-linux.qualcomm.com>
+        Wed, 10 Jun 2020 15:39:35 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A64F8C03E96B
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 12:39:35 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jj6Yq-0002IN-V7; Wed, 10 Jun 2020 21:38:57 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 5506C1013D0; Wed, 10 Jun 2020 21:38:56 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        Alexander Potapenko <glider@google.com>
+Subject: Re: [patch V9 10/39] x86/entry: Provide helpers for execute on irqstack
+In-Reply-To: <20200610123833.GD954@lca.pw>
+References: <87zh9cnfmg.fsf@nanos.tec.linutronix.de> <87wo4gnetx.fsf@nanos.tec.linutronix.de> <20200610123833.GD954@lca.pw>
+Date:   Wed, 10 Jun 2020 21:38:56 +0200
+Message-ID: <87h7vig17z.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200610011837.GA14816@jackp-linux.qualcomm.com>
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 09 Jun 18:20 PDT 2020, Jack Pham wrote:
+Qian Cai <cai@lca.pw> writes:
+> On Tue, Jun 09, 2020 at 10:50:50PM +0200, Thomas Gleixner wrote:
+>> Thomas Gleixner <tglx@linutronix.de> writes:
+>> >> BAD (after oom02)
+>> >> # cat /sys/kernel/debug/stackdepot/info
+>> >> Unique stacks: 140476
+>> >
+>> > That's indeed odd. I try to reproduce and figure out what really breaks
+>> > here.
+>> 
+>> I checked your config file and I think I know where this comes from. Can
+>> you plase disable KASAN just for testing purposes and compare before
+>> after again?
+>
+> It turns out I'll need a few days to be able to get ahold of those
+> affected systems again. I'll be reporting back as soon as possible.
 
-> Hi Wesley,
-> 
-> On Tue, Jun 09, 2020 at 01:58:49PM -0700, Wesley Cheng wrote:
-> > The QCOM SPMI typec driver handles the role and orientation detection, and
-> > notifies client drivers using the USB role switch framework.   It registers
-> > as a typec port, so orientation can be communicated using the typec switch
-> > APIs.  The driver also registers the VBUS output regulator, so client
-> 
-> Doesn't look like it.. As we discussed in earlier revisions we decided
-> to drop the regulator.
-> 
-> > drivers can enable the VBUS source when acting as a source/host.
-> > 
-> > Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
-> > ---
-> >  drivers/usb/typec/Kconfig           |  11 ++
-> >  drivers/usb/typec/Makefile          |   1 +
-> >  drivers/usb/typec/qcom-pmic-typec.c | 278 ++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 290 insertions(+)
-> >  create mode 100644 drivers/usb/typec/qcom-pmic-typec.c
-> > 
-> > diff --git a/drivers/usb/typec/Kconfig b/drivers/usb/typec/Kconfig
-> > index 559dd06..8de2520 100644
-> > --- a/drivers/usb/typec/Kconfig
-> > +++ b/drivers/usb/typec/Kconfig
-> > @@ -73,6 +73,17 @@ config TYPEC_TPS6598X
-> >  	  If you choose to build this driver as a dynamically linked module, the
-> >  	  module will be called tps6598x.ko.
-> >  
-> > +config TYPEC_QCOM_PMIC
-> > +	tristate "Qualcomm PMIC USB typec driver"
-> > +	depends on ARCH_QCOM
-> > +	help
-> > +	  Driver for supporting role switch over the Qualcomm PMIC.  This will
-> > +	  handle the type C role and orientation detection reported by the QCOM
-> > +	  PMIC if the PMIC has the capability to handle type C detection.
-> > +
-> > +	  It will also enable the VBUS output to connected devices when a
-> > +	  DFP connection is made.
-> > +
-> >  source "drivers/usb/typec/mux/Kconfig"
-> >  
-> >  source "drivers/usb/typec/altmodes/Kconfig"
-> > diff --git a/drivers/usb/typec/Makefile b/drivers/usb/typec/Makefile
-> > index 7753a5c3..cceffd9 100644
-> > --- a/drivers/usb/typec/Makefile
-> > +++ b/drivers/usb/typec/Makefile
-> > @@ -6,4 +6,5 @@ obj-$(CONFIG_TYPEC_TCPM)	+= tcpm/
-> >  obj-$(CONFIG_TYPEC_UCSI)	+= ucsi/
-> >  obj-$(CONFIG_TYPEC_HD3SS3220)	+= hd3ss3220.o
-> >  obj-$(CONFIG_TYPEC_TPS6598X)	+= tps6598x.o
-> > +obj-$(CONFIG_TYPEC_QCOM_PMIC)	+= qcom-pmic-typec.o
-> >  obj-$(CONFIG_TYPEC)		+= mux/
-> > diff --git a/drivers/usb/typec/qcom-pmic-typec.c b/drivers/usb/typec/qcom-pmic-typec.c
-> > new file mode 100644
-> > index 0000000..ce6319c
-> > --- /dev/null
-> > +++ b/drivers/usb/typec/qcom-pmic-typec.c
-> > @@ -0,0 +1,278 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-> > + */
-> > +
-> > +#include <linux/err.h>
-> > +#include <linux/regmap.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/of_irq.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/usb/role.h>
-> > +#include <linux/usb/typec_mux.h>
-> > +#include <linux/workqueue.h>
-> > +#include <linux/regulator/consumer.h>
-> > +#include <linux/regulator/driver.h>
-> > +#include <linux/regulator/machine.h>
-> > +
-> > +#define DCDC_BASE			0x1100
-> 
-> along with USB_BASE @ 0x1300, is it ok to allow this driver to access
-> registers outside of its 'reg' base (0x1500 according to the DT
-> bindings)?
-> 
+I figured it out. It has nothing to do with asm_call_on...(). It's also
+unrelated to page_owner. It's purely a KASAN issue.
 
-Depending on how entangled a future driver for the charger blocks would
-be one could either just upstream a dcdc regulator driver to control
-vbus today, or a "lite version" of a charging driver exposing just the
-vbus regulator.
+KASAN trims stack traces with the help of filter_irq_stacks() which
+relies on __irqentry_text_start/end
 
-Either way I would prefer this over poking the register directly from
-this driver, as it will make it tricky to migrate to a proper charger
-driver later.
+The entry rework moved the interrupt entry points out of the irqentry
+section, which breaks that filter function.
 
-Regards,
-Bjorn
+I made it work again. Here are the numbers which make that obvious:
+
+Mainline:
+Unique stacks: 23403
+Depot index:   244
+Depot offset:  4208
+
+x86/entry:
+Unique stacks: 38835
+Depot index:   464
+Depot offset:  7616
+
+x86/entry + fix:
+Unique stacks: 23607
+Depot index:   247
+Depot offset:  14224
+
+So with the non-working trimming this generates more unique stacks and
+because they are not trimmed they become larger and eat more storage
+space. The resulting average per stack shows that:
+
+Mainline:           171 bytes per stack
+x86/entry:          195 bytes per stack
+x86/entry + fix:    172 bytes per stack
+
+I'll point you to a test branch shortly.
+
+Thanks,
+
+        tglx
