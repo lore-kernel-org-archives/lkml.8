@@ -2,125 +2,190 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A3F4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78530C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 566702072F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:56:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Fh5YU57L"
+	by mail.kernel.org (Postfix) with ESMTP id 4FD552072F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:57:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbgFJO4F (ORCPT
+        id S1727807AbgFJO5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 10:56:05 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:38650 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726908AbgFJO4E (ORCPT
+        Wed, 10 Jun 2020 10:57:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39712 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726908AbgFJO5D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 10:56:04 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05AEqMPa046210;
-        Wed, 10 Jun 2020 14:53:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=+MkVzWy7hSx4wdwuzJRJZjRevMWLr+97rQSWPuRETeI=;
- b=Fh5YU57LjGtgILZhyagxCJiKu4+KGIutZ5E9PylZp1Qo5JxWx2sdx1km+teF5HpB/a6Y
- +v/mQIhiwB70zeeL6scNIb2z8RPcYg5Erj51xoP8eYmicfNMe6rRTMFP8AWdwcFHfWEh
- zUKNKLZSX6N17fHLjKr1Nd1gbAE/HEbmt2OtJogrNBJb82X7D/quTe7U5//urcAo3qs5
- 0malmVNVWml0c0tESY9EcRYvcmIGCsKFbMMN0ZrJdWOcD+Zv5Ws+fywrNKaj/F4ubd6G
- eEmoRBXwje+OuAgP6QfwhPM9kHvClr+5A6DodADS3CcKGBw03E/87H91mpCguJbEIIz4 8Q== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 31g2jravr5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 10 Jun 2020 14:53:37 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05AEi0us135392;
-        Wed, 10 Jun 2020 14:53:37 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 31gmqqdenw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 10 Jun 2020 14:53:36 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05AErZYO021813;
-        Wed, 10 Jun 2020 14:53:36 GMT
-Received: from [10.159.156.250] (/10.159.156.250)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 10 Jun 2020 07:53:34 -0700
-Subject: Re: [PATCH 1/1] nvme-fcloop: verify wwnn and wwpn format
-To:     James Smart <james.smart@broadcom.com>,
-        linux-nvme@lists.infradead.org, hch@lst.de
-Cc:     sagi@grimberg.me, chaitanya.kulkarni@wdc.com,
-        linux-kernel@vger.kernel.org
-References: <20200526042118.17836-1-dongli.zhang@oracle.com>
- <60df6752-3512-f7a9-b0df-1096b93b8eda@broadcom.com>
-From:   Dongli Zhang <dongli.zhang@oracle.com>
-Message-ID: <f93adee4-ebf0-a229-e507-4ef4e4fe812d@oracle.com>
-Date:   Wed, 10 Jun 2020 07:53:33 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 10 Jun 2020 10:57:03 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6413CC03E96B
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 07:57:03 -0700 (PDT)
+Received: from localhost ([127.0.0.1] helo=vostro)
+        by Galois.linutronix.de with esmtps (TLS1.2:RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1jj29v-0006vJ-83; Wed, 10 Jun 2020 16:56:55 +0200
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Paul McKenney <paulmck@kernel.org>
+Subject: Re: redundant check in make_data_reusable(): was [PATCH v2 2/3] printk: add lockless buffer
+References: <20200501094010.17694-1-john.ogness@linutronix.de>
+        <20200501094010.17694-3-john.ogness@linutronix.de>
+        <20200609093103.GB23752@linux-b0ei>
+        <87lfkwuwg1.fsf@vostro.fn.ogness.net>
+        <20200610093835.GB4311@linux-b0ei>
+        <87o8prp6bi.fsf@vostro.fn.ogness.net>
+Date:   Wed, 10 Jun 2020 16:56:53 +0200
+In-Reply-To: <87o8prp6bi.fsf@vostro.fn.ogness.net> (John Ogness's message of
+        "Wed, 10 Jun 2020 12:24:01 +0200")
+Message-ID: <87d067otoq.fsf@vostro.fn.ogness.net>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <60df6752-3512-f7a9-b0df-1096b93b8eda@broadcom.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9647 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 mlxscore=0
- mlxlogscore=999 adultscore=0 spamscore=0 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006100112
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9647 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
- cotscore=-2147483648 priorityscore=1501 spamscore=0 suspectscore=0
- lowpriorityscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0 mlxscore=0
- phishscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006100113
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+On 2020-06-10, Petr Mladek <pmladek@suse.com> wrote:
+>> +static bool data_make_reusable(struct printk_ringbuffer *rb,
+>> +			       struct prb_data_ring *data_ring,
+>> +			       unsigned long lpos_begin,
+>> +			       unsigned long lpos_end,
+>> +			       unsigned long *lpos_out)
+>> +{
+>> +	struct prb_desc_ring *desc_ring = &rb->desc_ring;
+>> +	struct prb_data_blk_lpos *blk_lpos;
+>> +	struct prb_data_block *blk;
+>> +	unsigned long tail_lpos;
+>> +	enum desc_state d_state;
+>> +	struct prb_desc desc;
+>> +	unsigned long id;
+>> +
+>> +	/*
+>> +	 * Using the provided @data_ring, point @blk_lpos to the correct
+>> +	 * blk_lpos within the local copy of the descriptor.
+>> +	 */
+>> +	if (data_ring == &rb->text_data_ring)
+>> +		blk_lpos = &desc.text_blk_lpos;
+>> +	else
+>> +		blk_lpos = &desc.dict_blk_lpos;
+>> +
+>> +	/* Loop until @lpos_begin has advanced to or beyond @lpos_end. */
+>> +	while ((lpos_end - lpos_begin) - 1 < DATA_SIZE(data_ring)) {
+>> +		blk = to_block(data_ring, lpos_begin);
+>> +		id = READ_ONCE(blk->id); /* LMM(data_make_reusable:A) */
+>> +
+>> +		/*
+>> +		 * Guarantee the block ID is loaded before checking the tail
+>> +		 * lpos. The loaded block ID can only be considered valid if
+>> +		 * the tail lpos has not overtaken @lpos_begin. This pairs
+>> +		 * with data_alloc:A.
+>> +		 *
+>> +		 * Memory barrier involvement:
+>> +		 *
+>> +		 * If data_make_reusable:A reads from data_alloc:B, then
+>> +		 * data_make_reusable:C reads from data_push_tail:D.
+>> +		 *
+>> +		 * Relies on:
+>> +		 *
+>> +		 * MB from data_push_tail:D to data_alloc:B
+>> +		 *    matching
+>> +		 * RMB from data_make_reusable:A to data_make_reusable:C
+>> +		 *
+>> +		 * Note: data_push_tail:D and data_alloc:B can be different
+>> +		 *       CPUs. However, the data_alloc:B CPU (which performs
+>> +		 *       the full memory barrier) must have previously seen
+>> +		 *       data_push_tail:D.
+>> +		 */
+>> +		smp_rmb(); /* LMM(data_make_reusable:B) */
+>> +
+>> +		tail_lpos = atomic_long_read(&data_ring->tail_lpos
+>> +					); /* LMM(data_make_reusable:C) */
+>> +
+>> +		/*
+>> +		 * If @lpos_begin has fallen behind the tail lpos, the read
+>> +		 * block ID cannot be trusted. Fast forward @lpos_begin to the
+>> +		 * tail lpos and try again.
+>> +		 */
+>> +		if (lpos_begin - tail_lpos >= DATA_SIZE(data_ring)) {
+>> +			lpos_begin = tail_lpos;
+>> +			continue;
+>> +		}
+>> +
+>> +		d_state = desc_read(desc_ring, id,
+>> +				    &desc); /* LMM(data_make_reusable:D) */
+>> +
+>> +		switch (d_state) {
+>> +		case desc_miss:
+>> +			return false;
+>> +		case desc_reserved:
+>> +			return false;
+>> +		case desc_committed:
+>> +			/*
+>> +			 * This data block is invalid if the descriptor
+>> +			 * does not point back to it.
+>> +			 */
+>
+> Here again the comments describe what the check does but not why.
+> I would write something like:
+>
+> 			/*
+> 			 * The block might have already been
+> 			 * reused. Make sure that the descriptor really
+> 			 * points back to the checked lpos. It covers
+> 			 * both situations. Random data might point to
+> 			 * a valid descriptor just by chance. Or the block
+> 			 * has been already reused by another descriptor.
+> 			 */
 
-Would you mind apply this one with the Reviewed-by from James and Sagi?
+Originally this check was needed because the descriptor would be read
+even if there was a data race reading the ID from the data
+block. Validating the lpos value was a kind of protection against
+reading random data that by chance yielded an ID of a committed/reusable
+descriptor.
 
-https://lore.kernel.org/linux-nvme/60df6752-3512-f7a9-b0df-1096b93b8eda@broadcom.com/
+However, after you pointed out that this check was not enough, the code
+now re-checks the data tail to make sure that no data race happened. So
+actually it is not possible that a descriptor in the committed/reusable
+state will point anywhere else. We know the ID is not random garbage or
+recycled, so the state can be trusted.
 
-https://lore.kernel.org/linux-nvme/c4ec2d9e-b08c-19b2-16a5-93520ca13c2e@grimberg.me/
+I recommend to either remove this sanity check (for committed and
+reusable) or at least change it to:
 
-Thank you very much!
+			WARN_ON_ONCE(blk_lpos->begin != lpos_begin);
 
-Dongli Zhang
+Or can you see any possibility of this case?
 
-On 6/4/20 8:20 AM, James Smart wrote:
-> On 5/25/2020 9:21 PM, Dongli Zhang wrote:
->> The nvme host and target verify the wwnn and wwpn format via
->> nvme_fc_parse_traddr(). For instance, it is required that the length of
->> wwnn to be either 21 ("nn-0x") or 19 (nn-).
->>
->> Add this verification to nvme-fcloop so that the input should always be in
->> hex and the length of input should always be 18.
->>
->> Otherwise, the user may use e.g. 0x2 to create fcloop local port, while
->> 0x0000000000000002 is required for nvme host and target. This makes the
->> requirement of format confusing.
->>
->> Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
->> ---
->>   drivers/nvme/target/fcloop.c | 29 +++++++++++++++++++++++------
->>   1 file changed, 23 insertions(+), 6 deletions(-)
->>
->>
-> 
-> Reviewed-by: James Smart <james.smart@broadcom.com>
-> 
-> Looks good. Sorry for the delay.
-> 
-> -- james
-> 
-> 
+>> +			if (blk_lpos->begin != lpos_begin)
+>> +				return false;
+>> +			desc_make_reusable(desc_ring, id);
+>> +			break;
+>> +		case desc_reusable:
+>> +			/*
+>> +			 * This data block is invalid if the descriptor
+>> +			 * does not point back to it.
+>> +			 */
+>> +			if (blk_lpos->begin != lpos_begin)
+>> +				return false;
+>> +			break;
+>> +		}
+>> +
+>> +		/* Advance @lpos_begin to the next data block. */
+>> +		lpos_begin = blk_lpos->next;
+>> +	}
+
+John Ogness
