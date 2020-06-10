@@ -2,107 +2,107 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8505C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 680A6C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9924A204EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F70A204EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:59:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="F9g9fIgK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgFJI6R (ORCPT
+        id S1726983AbgFJI7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 04:58:17 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:49274 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbgFJI6Q (ORCPT
+        Wed, 10 Jun 2020 04:59:24 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:50110 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726794AbgFJI7Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 04:58:16 -0400
-Received: by mail-il1-f198.google.com with SMTP id i7so1021501ilq.16
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 01:58:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=swBsRiPm3WFuS4YfdrHR8e1rZPo+xOvNbmYgDsiRTZk=;
-        b=WW3KvB3MdWs1jN/ocNPmEAt1GYuWGmrtTZYi1h4o6t8v6hwhTNP1tqGTpdbDVTJo9x
-         36Gx6dhn+vjlX5DMLnM4d5Zp6K8lfxEdNPyzvOc4p6qjVoHm94RerkuEbfBvXIngiuE6
-         AyrHg9dEoCCwxquTzJiwCnbCIsuNqRDycWXclifTvGgFjtbH+qaQgXXZaZz4HXup3ma8
-         t1uhr1klmEhaeJ0lqBS649JX9KJWSGcZoeZlkJetRRx7n6J8ZY0PXvYZPV7aR+SfOCBs
-         1k7yvzinyaXR2UpQ5hQECyxGRWr8VjotEIjHXNaVv7K8I4rUUKAgETzU6yD/IhiJw3W3
-         Ri7w==
-X-Gm-Message-State: AOAM530tALNNKoAVg4SAi69pINsP2hDyveV8Z63b4KRmhDEl6d7YRdei
-        CxZRHOsG83/5c2Berv9mFCWKVKwXWvj5KjbO0bkoKPAyBxyb
-X-Google-Smtp-Source: ABdhPJzAUjLiryGcHMKtP83fEZZI4qQzZPQFlOL+8Kij6iFhyuErtrxM9GbRgMLnETWQy2tHCU9unKVyiPRCetqHrGnmR9yBfV5W
+        Wed, 10 Jun 2020 04:59:24 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05A8uuKl120764;
+        Wed, 10 Jun 2020 08:59:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=l8OVWVLK/YojBt1CbcoP4Q4ZOTmKu98o9cgNBUL6IMc=;
+ b=F9g9fIgKsRXzFP6FtdbTq3QKJkuONZVmm2ELXAzpuz9fmIQ7bxAhSnuq4Yn9z59q5rhp
+ 7bu7Q5M4cuv0wqLRgykofUF28wzt7ALWZ4ej4gQel/w49LokGcBi/7cmofViAMgt3JE2
+ pa0nJCA1hcJ6NyNaQ9tFCp+bsoGxORtBCEbc2PgoQ1VImbZToicjjjsqgfa8FXbZs4V6
+ xyWQgELau8p2mQOo9GX/T8N6nBonSQCmxG6UktavCISEhFagvXHcyzF/GclSOkqrdRSo
+ VYMLyOZg0MuMq3fpZ6WGjDvEZT9dVcVCMNI00W8b33e5sHn5CIg22KaIH7lwNf0F0Aga fQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 31g3sn14qx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 10 Jun 2020 08:59:20 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05A8wQgJ139538;
+        Wed, 10 Jun 2020 08:59:19 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 31gn28e1b7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 10 Jun 2020 08:59:19 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05A8xI73013102;
+        Wed, 10 Jun 2020 08:59:18 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 10 Jun 2020 01:59:17 -0700
+Date:   Wed, 10 Jun 2020 11:59:11 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] virtio-mem: silence a static checker warning
+Message-ID: <20200610085911.GC5439@mwanda>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:7b4a:: with SMTP id m10mr2258899iop.55.1591779495178;
- Wed, 10 Jun 2020 01:58:15 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 01:58:15 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005ef79005a7b70b3c@google.com>
-Subject: upstream test error: BUG: using smp_processor_id() in preemptible
- code in ext4_ext_map_blocks
-From:   syzbot <syzbot+d541e928666fa26ff342@syzkaller.appspotmail.com>
-To:     adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        tytso@mit.edu
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9647 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0 mlxscore=0
+ phishscore=0 adultscore=0 bulkscore=0 malwarescore=0 mlxlogscore=971
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006100069
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9647 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 impostorscore=0 cotscore=-2147483648 suspectscore=0
+ spamscore=0 bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0
+ mlxlogscore=999 clxscore=1011 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006100069
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Smatch complains that "rc" can be uninitialized if we hit the "break;"
+statement on the first iteration through the loop.  I suspect that this
+can't happen in real life, but returning a zero literal is cleaner and
+silence the static checker warning.
 
-syzbot found the following crash on:
-
-HEAD commit:    5b14671b Merge tag 'fuse-update-5.8' of git://git.kernel.o..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=10993196100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d1ea633f7958e008
-dashboard link: https://syzkaller.appspot.com/bug?extid=d541e928666fa26ff342
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+d541e928666fa26ff342@syzkaller.appspotmail.com
-
-BUG: using smp_processor_id() in preemptible [00000000] code: systemd-rfkill/6724
-caller is ext4_mb_new_blocks+0xa77/0x3b30 fs/ext4/mballoc.c:4711
-CPU: 0 PID: 6724 Comm: systemd-rfkill Not tainted 5.7.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- check_preemption_disabled lib/smp_processor_id.c:47 [inline]
- debug_smp_processor_id.cold+0x88/0x9b lib/smp_processor_id.c:57
- ext4_ext_map_blocks+0x2044/0x3410 fs/ext4/extents.c:4244
- ext4_map_blocks+0x4cb/0x1640 fs/ext4/inode.c:626
- ext4_getblk+0xad/0x520 fs/ext4/inode.c:833
- ext4_bread+0x7c/0x380 fs/ext4/inode.c:883
- ext4_append+0x153/0x360 fs/ext4/namei.c:67
- ext4_init_new_dir fs/ext4/namei.c:2757 [inline]
- ext4_mkdir+0x5e0/0xdf0 fs/ext4/namei.c:2802
- vfs_mkdir+0x419/0x690 fs/namei.c:3641
- do_mkdirat+0x21e/0x280 fs/namei.c:3664
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x7fc488153687
-Code: Bad RIP value.
-RSP: 002b:00007fffc165c4d8 EFLAGS: 00000246 ORIG_RAX: 0000000000000053
-RAX: ffffffffffffffda RBX: 000055df97011985 RCX: 00007fc488153687
-RDX: 00007fffc165c3a0 RSI: 00000000000001ed RDI: 000055df97011985
-RBP: 00007fc488153680 R08: 0000000000000100 R09: 0000000000000000
-R10: 000055df97011980 R11: 0000000000000246 R12: 00000000000001ed
-R13: 00007fffc165c660 R14: 0000000000000000 R15: 0000000000000000
-
-
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/virtio/virtio_mem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
+index f658fe9149beb..893ef18060a02 100644
+--- a/drivers/virtio/virtio_mem.c
++++ b/drivers/virtio/virtio_mem.c
+@@ -1192,7 +1192,7 @@ static int virtio_mem_mb_plug_any_sb(struct virtio_mem *vm, unsigned long mb_id,
+ 						VIRTIO_MEM_MB_STATE_OFFLINE);
+ 	}
+ 
+-	return rc;
++	return 0;
+ }
+ 
+ /*
+-- 
+2.26.2
+
