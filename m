@@ -2,118 +2,115 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA6AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 03:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E24C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 03:44:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 910B5207ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 03:43:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E792020737
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 03:44:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bpUMlBXZ"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TFucXMhC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726166AbgFJDna (ORCPT
+        id S1726187AbgFJDob (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 23:43:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48442 "EHLO
+        Tue, 9 Jun 2020 23:44:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbgFJDn2 (ORCPT
+        with ESMTP id S1726038AbgFJDoa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 23:43:28 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BE5BC05BD1E;
-        Tue,  9 Jun 2020 20:43:27 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id dp10so419660qvb.10;
-        Tue, 09 Jun 2020 20:43:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id;
-        bh=qm+oX+JQzV56QUtwpMbMoKGf+j/HM4yHTB8cqsstqTg=;
-        b=bpUMlBXZEXALee+IT7Ke3lzVjM9eFpSHKJPQ7jWtW1ZCSh9fYvzftShwYgAZMP4+gm
-         72QVGyOnorRDtEdS2pC6xNakGk4m/D1H73P8jO8cJKQslHxveHNTxoqEdaY2E81TTbNF
-         MdB2DWbL/Xctu4oLqLLHa4gjPJT/01rh3q24cPTZuzh5mRamlh9Mmkvn/QewFY1MYRjS
-         PgA2Yk31L5u6bW6HniD3sLa+UE1FnkYNrnLJVFYZ2gq+mOaAXsjbnwvDF71CwSY70hzl
-         Bx0o9ZGqFMVqpNrM6PskLgIh5uDZ5I6UJW2+ZF4DEP8uXqUMK3P7mqz/efZEufNPteWJ
-         Rsdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=qm+oX+JQzV56QUtwpMbMoKGf+j/HM4yHTB8cqsstqTg=;
-        b=DWcrOFVmYggAjr3h96i6lUX6auT7aTUaiVmfAxj3xQ07+dTwcSC9wuUxRgxXFNNjdM
-         vHLwFjcTP0483cCQ93Q4nTZdDXs15RXkEk37Q8YnSQdMH+hT43QrEav4RQWokEyV8B1q
-         gusFAQMf0KuKXAve03TJSD16f0FyQQS7+XK7nC9PCRCXbSj5He8sDrhsDGq4mNuUWJLE
-         O6G4U17qlG1e2rfJ/Bal4RVLLXhHJ4znLfw2SlNr1V+Gwj9AQTZHqJV/kx4xfPiXxqOJ
-         FqGiKP+Y71w12rexf58Ee9x/miieyvOcGSnJAwoZj1/CPq/sVl/w2wLuN9qsYpHAtB+I
-         fizQ==
-X-Gm-Message-State: AOAM532VtRLaLwxZLBsl5RK03+/70WatKS5WiBfu8X3lqiYqLLQSC7x+
-        oDdpo3jTekiXIYDBGUo1NWQ=
-X-Google-Smtp-Source: ABdhPJxTJl/mAPYn1Zj+USIzItK0bT9+uv/88xJzEVVK2p+GeSYUecA0nOyh7z47J+f44eSXz1U2GA==
-X-Received: by 2002:ad4:4725:: with SMTP id l5mr1394050qvz.120.1591760605788;
-        Tue, 09 Jun 2020 20:43:25 -0700 (PDT)
-Received: from linux.home ([2604:2000:1344:41d:29ac:7979:1e2e:c67b])
-        by smtp.googlemail.com with ESMTPSA id p13sm11195403qke.135.2020.06.09.20.43.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 20:43:25 -0700 (PDT)
-From:   Gaurav Singh <gaurav1086@gmail.com>
-To:     gaurav1086@gmail.com, Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Alex Dewar <alex.dewar@gmx.co.uk>,
-        linux-um@lists.infradead.org (open list:USER-MODE LINUX (UML)),
-        linux-kernel@vger.kernel.org (open list),
-        netdev@vger.kernel.org (open list:BPF (Safe dynamic programs and tools)),
-        bpf@vger.kernel.org (open list:BPF (Safe dynamic programs and tools))
-Subject: [PATCH] Fix null pointer dereference in vector_user_bpf
-Date:   Tue,  9 Jun 2020 23:43:00 -0400
-Message-Id: <20200610034314.9290-1-gaurav1086@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 9 Jun 2020 23:44:30 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2607FC05BD1E;
+        Tue,  9 Jun 2020 20:44:29 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49hXt31FByz9sRh;
+        Wed, 10 Jun 2020 13:44:27 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591760667;
+        bh=SaSa9M+j2Bz+I/hYTyOzhlCqV7+UkOQLUzDnf8Sh9W8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=TFucXMhCiKJEZKaf9yLOlxt+cMqT2cXGh7phWQnLbg9VujB1glPrdfCGDXTzc7qwD
+         bR9TCz4d1AwTpF5KQb4RzWryUvpLvyrgQ2Zd3+uOEbEQcDBR69Er0nnxBLTSYtRAMx
+         uqGo/XRx2U4nbiRz5UpOAV9br0/bCoOxPIm9XIsRioAUYSrzoE12+O6vGleNwdIB1R
+         cTSLzzW31muZfybB/8sFtSRr8+1pgRPe/ncHg0EoHuhpFjVXozJy6CtaoGIXbNMTKW
+         COl04EBix05f8LtR9vbNDjHMYP401/bO1LpmWMEdl3XMrproQLQNNCqgnpqW1wcyB/
+         YZPhGuYZtvsPQ==
+Date:   Wed, 10 Jun 2020 13:44:25 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: linux-next: build failure after merge of the akpm-current tree
+Message-ID: <20200610134425.6dd32bf6@canb.auug.org.au>
+In-Reply-To: <20200609224252.1704eff3@canb.auug.org.au>
+References: <20200609224252.1704eff3@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/jaRZYoXuK+k4sGWRv9mqKWI";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
+--Sig_/jaRZYoXuK+k4sGWRv9mqKWI
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-The bpf_prog is being checked for !NULL after uml_kmalloc but
-later its used directly for example: 
-bpf_prog->filter = bpf and is also later returned upon success.
-Fix this, do a NULL check and return right away.
+Hi all,
 
----
- arch/um/drivers/vector_user.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+On Tue, 9 Jun 2020 22:42:52 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
+>
+> After merging the akpm-current tree, today's linux-next build (sparc
+> defconfig) failed like this:
+>=20
+> In file included from include/linux/mm.h:32:0,
+>                  from include/linux/memblock.h:13,
+>                  from arch/sparc/mm/srmmu.c:14:
+> include/linux/pgtable.h:74:27: error: redefinition of 'pte_offset_kernel'
+>  #define pte_offset_kernel pte_offset_kernel
+>                            ^
+> arch/sparc/mm/srmmu.c:144:8: note: in expansion of macro 'pte_offset_kern=
+el'
+>  pte_t *pte_offset_kernel(pmd_t *dir, unsigned long address)
+>         ^~~~~~~~~~~~~~~~~
+> include/linux/pgtable.h:70:22: note: previous definition of 'pte_offset_k=
+ernel' was here
+>  static inline pte_t *pte_offset_kernel(pmd_t *pmd, unsigned long address)
+>                       ^~~~~~~~~~~~~~~~~
+>=20
+> Caused by commit
+>=20
+>   292aa65ed13a ("mm: consolidate pte_index() and pte_offset_*() definitio=
+ns")
 
-diff --git a/arch/um/drivers/vector_user.c b/arch/um/drivers/vector_user.c
-index aa28e9eecb7b..71d043ae306f 100644
---- a/arch/um/drivers/vector_user.c
-+++ b/arch/um/drivers/vector_user.c
-@@ -730,10 +730,12 @@ void *uml_vector_user_bpf(char *filename)
- 		return false;
- 	}
- 	bpf_prog = uml_kmalloc(sizeof(struct sock_fprog), UM_GFP_KERNEL);
--	if (bpf_prog != NULL) {
--		bpf_prog->len = statbuf.st_size / sizeof(struct sock_filter);
--		bpf_prog->filter = NULL;
-+	if (bpf_prog == NULL) {
-+		printk(KERN_ERR "Failed to allocate bpf prog buffer");
-+		return NULL;
- 	}
-+	bpf_prog->len = statbuf.st_size / sizeof(struct sock_filter);
-+	bpf_prog->filter = NULL;
- 	ffd = os_open_file(filename, of_read(OPENFLAGS()), 0);
- 	if (ffd < 0) {
- 		printk(KERN_ERR "Error %d opening bpf file", -errno);
--- 
-2.17.1
+This breakage is now in Linus' tree :-(
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/jaRZYoXuK+k4sGWRv9mqKWI
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7gVxkACgkQAVBC80lX
+0Gygfwf/f9zlK/nQUK9XJiSnVO/yPBctU35cxudvmjb3+yVZyLZIx3JO0pptaEwT
+jdNEH5lT9HCL36n2Tl7lvaGMPa2p1djBml4A8GsEiHj3oO6OGcola2FW/Av/4vWL
+cNiv9YvGPu1IMK6icNDV0clcFr0jk64VrYQSV23fvvrQFZBiPRdVkC3BtPMK+6Ii
+pCliCW2D6SfrTvk2yyemYLICJjrpVvvigsRqqpfc5R88x2+o7AaTqjCmd9esje1a
+02+3qEL0bHK6EJFbIKZP5CrOqcBMwXlrnA/gVfSV7FNF7AE02zwoTzyEzS/1tjwl
+W5OB+HbZT0GaKV6t3VFoY+yuTktaQQ==
+=ydyO
+-----END PGP SIGNATURE-----
+
+--Sig_/jaRZYoXuK+k4sGWRv9mqKWI--
