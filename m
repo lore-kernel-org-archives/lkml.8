@@ -2,82 +2,80 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3029C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F472C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98FAB2067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:18:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 425B0206F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:19:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729805AbgFJOSe (ORCPT
+        id S1727913AbgFJOTg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 10:18:34 -0400
-Received: from smtp.asem.it ([151.1.184.197]:53899 "EHLO smtp.asem.it"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727913AbgFJOSe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 10:18:34 -0400
-Received: from webmail.asem.it
-        by asem.it (smtp.asem.it)
-        (SecurityGateway 6.5.2)
-        with ESMTP id SG000309593.MSG 
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 16:18:32 +0200S
-Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 10
- Jun 2020 16:18:29 +0200
-Received: from flavio-x.asem.intra (172.16.17.208) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
- Transport; Wed, 10 Jun 2020 16:18:29 +0200
-From:   Flavio Suligoi <f.suligoi@asem.it>
-To:     Russell King <linux@armlinux.org.uk>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Flavio Suligoi <f.suligoi@asem.it>
-Subject: [PATCH] arm: include: asm: fix spelling mistake
-Date:   Wed, 10 Jun 2020 16:18:28 +0200
-Message-ID: <20200610141828.20478-1-f.suligoi@asem.it>
-X-Mailer: git-send-email 2.17.1
+        Wed, 10 Jun 2020 10:19:36 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5803 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726157AbgFJOTg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 10:19:36 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 0F8C5F29553EBFAD2C53;
+        Wed, 10 Jun 2020 22:19:35 +0800 (CST)
+Received: from [127.0.0.1] (10.67.102.197) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Wed, 10 Jun 2020
+ 22:19:26 +0800
+Subject: Re: [PATCH] sysctl: Delete the code of sys_sysctl
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+CC:     <keescook@chromium.org>, <ak@linux.intel.com>,
+        <alex.huangjianhui@huawei.com>, <linzichang@huawei.com>,
+        <linux-kernel@vger.kernel.org>
+References: <1591683605-8585-1-git-send-email-nixiaoming@huawei.com>
+ <87a71c59my.fsf@x220.int.ebiederm.org>
+From:   Xiaoming Ni <nixiaoming@huawei.com>
+Message-ID: <84286450-295b-b61b-f400-f08e7eafbe7c@huawei.com>
+Date:   Wed, 10 Jun 2020 22:19:26 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
-X-SGSPF-Result: none (smtp.asem.it)
-X-SGOP-RefID: str=0001.0A09020C.5EE0EBB6.001C,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
+In-Reply-To: <87a71c59my.fsf@x220.int.ebiederm.org>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.102.197]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix typo: "triger" --> "trigger"
+On 2020/6/10 3:20, Eric W. Biederman wrote:
+> Xiaoming Ni <nixiaoming@huawei.com> writes:
+> 
+>> Since the commit 61a47c1ad3a4dc ("sysctl: Remove the sysctl system call"),
+>> sys_sysctl has lost its actual role: any input can only return an error.
+> 
+> The remaining code does have a role.  It reports programs that attempt
+> to use the removed sysctl.
+> 
+> It would help if your change description had a reason why we don't want
+> to warn people that a program has used a removed system call.
+> 
+> Probably something like:
+> 
+>    We have been warning about people using the sysctl system call for years
+>    and believe there are no more users.  Even if there are users of this
+>    interface if they have not complained or fixed their code by now they
+>    probably are not going to, so there is no point in warning them any
+>    longer.
+> 
+> With a change like that made to the patch description.
+> 
+> Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+> 
+Thanks for your guidance
+I will add it in the v2 version
 
-Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
----
- arch/arm/include/asm/cti.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Thanks
+Xiaoming Ni
 
-diff --git a/arch/arm/include/asm/cti.h b/arch/arm/include/asm/cti.h
-index f8500e5d6ea8..ddd7b73a5870 100644
---- a/arch/arm/include/asm/cti.h
-+++ b/arch/arm/include/asm/cti.h
-@@ -41,7 +41,7 @@
-  * struct cti - cross trigger interface struct
-  * @base: mapped virtual address for the cti base
-  * @irq: irq number for the cti
-- * @trig_out_for_irq: triger out number which will cause
-+ * @trig_out_for_irq: trigger out number which will cause
-  *	the @irq happen
-  *
-  * cti struct used to operate cti registers.
-@@ -57,7 +57,7 @@ struct cti {
-  * @cti: cti instance
-  * @base: mapped virtual address for the cti base
-  * @irq: irq number for the cti
-- * @trig_out: triger out number which will cause
-+ * @trig_out: trigger out number which will cause
-  *	the @irq happen
-  *
-  * called by machine code to pass the board dependent
--- 
-2.17.1
 
