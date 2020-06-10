@@ -2,196 +2,113 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE4D1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:03:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A37EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA4AB2081A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:03:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4D6220801
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:03:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ei59UQXi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mMAGEukT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbgFJGDK (ORCPT
+        id S1726364AbgFJGDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 02:03:10 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:11231 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgFJGCu (ORCPT
+        Wed, 10 Jun 2020 02:03:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41624 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726335AbgFJGDI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 02:02:50 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ee0772e0000>; Tue, 09 Jun 2020 23:01:18 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 09 Jun 2020 23:02:50 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 09 Jun 2020 23:02:50 -0700
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Jun
- 2020 06:02:49 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 10 Jun 2020 06:02:49 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.167.70]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ee077890000>; Tue, 09 Jun 2020 23:02:49 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
-        <helen.koike@collabora.com>
-CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
-        <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
-Subject: [RFC PATCH v1 10/18] dt-bindings: tegra: Document VI and CSI port nodes
-Date:   Tue, 9 Jun 2020 23:02:32 -0700
-Message-ID: <1591768960-31648-11-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591768960-31648-1-git-send-email-skomatineni@nvidia.com>
-References: <1591768960-31648-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
-MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1591768878; bh=wPUjcK5pjatayPbHQg+cG5OdMe7PMrZuDRJsqwl5MoU=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=ei59UQXi7yEOg3WW32Mp1G+liqrIbq6KgKYXkk5nfw4KS4XF6G1yTXTM4NS+8WpFB
-         74gYnQSUQz5zn6ViJqqtSIM4vz2NRmAYhgfO+U1QT4Uk2IcGrVB8/ajaCkbm8C3iVj
-         bUWH2UR0uUDnV3vvyjurqDumaWcl6tCQ5uAxKeH4EvESVuDWISRSDc3Ysn8xgh+ha4
-         nVGS/9bnwsxhQ3HLVmgoGyjACSF6pWPzN7tnqR23rr3pAzKVpxylFeR78yZnHwFq4w
-         OhV1OyaWPXqNHwyFlikaNPLlwrGQNcAUgbP0Y5uRp1HVP4HK5iw9RcpgksXCpW//UT
-         AJJlQOjq0R06g==
+        Wed, 10 Jun 2020 02:03:08 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D11DCC05BD1E;
+        Tue,  9 Jun 2020 23:03:06 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id x14so812332wrp.2;
+        Tue, 09 Jun 2020 23:03:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=mvokNqexRaegU1modB7NHhGEwXygj1rNSFFDdGJdwa0=;
+        b=mMAGEukTDdiryhtO2yW2E65dypnqCGYbqRrs7w7rKE/V+EEhAhBM27L4eNMIGkYQqd
+         EFkWD7+mPh+dpmN6keyW+8gGZxasZh2CJGRTghTOMp+Vg3YlsI1Cogf6VwyGv5oCQ9eL
+         BznuKmizzvAmZpw4YFSZHDSXMvPUYArmHD50q5r79HngvZ4P/kONZDkm+6lB3b76iBEg
+         6PHxDgbF93E8986oHdtewWko1O8gyekJ+/j/fd81jbb2rL0ICxOgPw3pEmMNDtPRRq+b
+         xPBQOlfwnIYmoMe9wzlyZZsm+UK5bPVow+Yc+d6EA4GN/ElP4+7JDH8ZV5XqI3oi9hGG
+         Sr0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=mvokNqexRaegU1modB7NHhGEwXygj1rNSFFDdGJdwa0=;
+        b=XHP0e1LismEyuhLJjelsltEtnr4wdg4drMOJUXBAtDKNubb/NhrtgSHnyOmxIZ6LvQ
+         y3dgl3nQ0zLbF5CY0uiA95x3UMS/w6w11ZiB1+XHJkubh64Tx4umeyl1GNe2ST+K7z47
+         gDhi6UtNwfZDg3IF6sIzw2hGXY1p08pckvPRe0lW0bNhb1eFh9cC6EMczpevfktwy4oc
+         4sbI0MYec34X7k9MFWa7EU7prG4COihkHIDr5ufReDLUXfc2cG6yQpCVItL5CxIHL4x5
+         UDbmGqgZBrxaxoPKEZvKC1DgPHqK+SbrJdwv7fUBQtO9Yp9Cq543IZt7WZ45MwCm1roJ
+         HTvA==
+X-Gm-Message-State: AOAM532ncCz9/c/d/2Xu5UQrqoB+Nk3224fPS3riQPqxBjiYY5NiBBbk
+        1HsSqze7K57R/DtLxO5yhuD+6okn06M=
+X-Google-Smtp-Source: ABdhPJyWv4V1rxzPNSAS30xkqIspxg9pNDEfhvr6Do6JVCr3W3NNGdGXnItKMO7FLMOxDcCF6HDvXg==
+X-Received: by 2002:a05:6000:1146:: with SMTP id d6mr1639898wrx.400.1591768984735;
+        Tue, 09 Jun 2020 23:03:04 -0700 (PDT)
+Received: from macbook-pro-alvaro.lan (28.red-83-49-61.dynamicip.rima-tde.net. [83.49.61.28])
+        by smtp.gmail.com with ESMTPSA id q5sm6449183wrm.62.2020.06.09.23.03.03
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Jun 2020 23:03:04 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH 1/4] dt-bindings: soc: brcm: add BCM63xx power domain
+ binding
+From:   =?utf-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
+In-Reply-To: <f6cbb9bb-15df-6283-a509-ea8a8b9bdaab@gmail.com>
+Date:   Wed, 10 Jun 2020 08:03:02 +0200
+Cc:     hauke@hauke-m.de, zajec5@gmail.com, tsbogend@alpha.franken.de,
+        robh+dt@kernel.org, Jonas Gorski <jonas.gorski@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <EC84127B-DFF6-4EE3-ABDF-BEFAD6BCDEFB@gmail.com>
+References: <20200609105244.4014823-1-noltari@gmail.com>
+ <20200609105244.4014823-2-noltari@gmail.com>
+ <f6cbb9bb-15df-6283-a509-ea8a8b9bdaab@gmail.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch documents Tegra VI and CSI port and endpoint nodes along
-with the other required properties.
+Ok, I will send v2 with a separate YAML file.
 
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- .../display/tegra/nvidia,tegra20-host1x.txt        | 87 ++++++++++++++++++++++
- 1 file changed, 87 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-index 4731921..f70a838 100644
---- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-+++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-@@ -65,6 +65,48 @@ of the following host1x client modules:
-       - power-domains: Must include sor powergate node as csicil is in
-         SOR partition.
- 
-+      Optional properties for csi node:
-+
-+      - channel nodes: Max upto 6 channels/streams are supported with each CSI
-+	brick can as either x4 or x2 based on hw connectivity to sensor.
-+
-+	Required properties:
-+	- reg: channel/stream index
-+	- nvidia,mipi-calibrate: Should contain a phandle and a specifier
-+	  specifying which pads are used by this CSI port and need to be
-+	  calibrated. See also ../display/tegra/nvidia,tegra114-mipi.txt.
-+
-+	- port: CSI port node and its endpoint nodes as per device graph
-+          bindings defined in Documentation/devicetree/bindings/graph.txt.
-+	  Required properties:
-+	  - reg: csi port index based on hw csi lanes connectivity to the
-+	    sensor.
-+	  - bus-width: number of lanes used by this port. Supported lanes
-+	    are 1/2/4.
-+	  - endpoint@0: sink node
-+	    Required properties:
-+	    - reg: endpoint id. This is used to retrieve pad for creating
-+	      media link
-+	    - remote-endpoint: phandle to sensor endpoint
-+	  - endpoint@1: source node
-+	    - reg: endpoint id. This is used to retrieve pad for creating
-+	      media link
-+	    - remote-endpoint: phandle to vi port endpoint
-+
-+  Optional properties for vi node:
-+  - ports: Video port nodes and endpoint nodes as per device graph bindings
-+    defined in Documentation/devicetree/bindings/graph.txt
-+    Max 6 ports are supported and each port should have one endpoint node.
-+
-+    Required properties:
-+    - port: VI port node and its sink endpoint node
-+      Required properties:
-+    - reg: should match port index
-+    - endpoint@0: sink node
-+      Required properties:
-+      - reg: endpoint id must be 0
-+      - remote-endpoint: phandle to CSI endpoint node.
-+
- - epp: encoder pre-processor
- 
-   Required properties:
-@@ -340,6 +382,22 @@ Example:
- 
- 			ranges = <0x0 0x0 0x54080000 0x2000>;
- 
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					imx219_vi_in0: endpoint@0 {
-+						reg = <0>;
-+						remote-endpoint = <&imx219_csi_out0>;
-+					};
-+				};
-+			};
-+
- 			csi@838 {
- 				compatible = "nvidia,tegra210-csi";
- 				reg = <0x838 0x1300>;
-@@ -362,6 +420,35 @@ Example:
- 					 <&tegra_car TEGRA210_CLK_CSI_TPG>;
- 				clock-names = "csi", "cilab", "cilcd", "cile", "csi_tpg";
- 				power-domains = <&pd_sor>;
-+
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				channel@0 {
-+					reg = <0>;
-+					nvidia,mipi-calibrate = <&mipi 0x001>;
-+
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					port@0 {
-+						reg = <0>;
-+						bus-width = <2>;
-+
-+						#address-cells = <1>;
-+						#size-cells = <0>;
-+
-+						imx219_csi_in0: endpoint@0 {
-+							reg = <0>;
-+							remote-endpoint = <&imx219_out0>;
-+						};
-+
-+						imx219_csi_out0: endpoint@1 {
-+							reg = <1>;
-+							remote-endpoint = <&imx219_vi_in0>;
-+						};
-+					};
-+				};
- 			};
- 		};
- 
--- 
-2.7.4
+> El 10 jun 2020, a las 3:15, Florian Fainelli <f.fainelli@gmail.com> =
+escribi=C3=B3:
+>=20
+>=20
+>=20
+> On 6/9/2020 3:52 AM, =C3=81lvaro Fern=C3=A1ndez Rojas wrote:
+>> BCM6318, BCM6328, BCM6362 and BCM63268 SoCs have a power domain =
+controller
+>> to enable/disable certain components in order to save power.
+>>=20
+>> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
+>> ---
+>> .../devicetree/bindings/mips/brcm/soc.txt       | 17 =
++++++++++++++++++
+>=20
+> You should probably create a YAML binding from the beginning that way
+> you get validation for free. This file should ultimately be broken =
+down
+> into separate YAML bindings, but I Have not had the time to do that =
+yet
+> (you are welcome to if you feel like it).
+>=20
+> Other than that, the binding definition looks good to me.
+> --=20
+> Florian
 
