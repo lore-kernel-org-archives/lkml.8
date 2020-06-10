@@ -2,304 +2,119 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD32C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4852C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFF832074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:51:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C1B42074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:51:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VVcOroS7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D+gOK5e5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbgFJUvy (ORCPT
+        id S1726938AbgFJUv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 16:51:54 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:24697 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726134AbgFJUvy (ORCPT
+        Wed, 10 Jun 2020 16:51:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38256 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726134AbgFJUv4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 16:51:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591822311;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Wx1Cvf9b4/zU+gybY0Ipd+7i6O1L1edxhTOVA+WWBZs=;
-        b=VVcOroS7LRgHyQM5qw9zgR06UzrE/VNBTlbc3Ms8yUh0u4N3SFiwZau8tmG5qpkNm4za13
-        VLkSmk2SGcQZ1hT6gKaKouXw2bNRD+I9y3C1UigzrqMZUainrhQKHrcLP0+QHwTjs5ac4k
-        BojB46vlNPu7fJYI4b4TVomln3GMENE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-164-kkLmtWrVPeapGcTAMWwRLg-1; Wed, 10 Jun 2020 16:51:49 -0400
-X-MC-Unique: kkLmtWrVPeapGcTAMWwRLg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0E150800053;
-        Wed, 10 Jun 2020 20:51:47 +0000 (UTC)
-Received: from horse.redhat.com (ovpn-115-64.rdu2.redhat.com [10.10.115.64])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 877771002388;
-        Wed, 10 Jun 2020 20:51:46 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id DDC5A2205BD; Wed, 10 Jun 2020 16:51:45 -0400 (EDT)
-Date:   Wed, 10 Jun 2020 16:51:45 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, x86@kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Gavin Shan <gshan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 08/10] KVM: x86: Switch KVM guest to using interrupts
- for page ready APF delivery
-Message-ID: <20200610205145.GC243520@redhat.com>
-References: <20200525144125.143875-1-vkuznets@redhat.com>
- <20200525144125.143875-9-vkuznets@redhat.com>
+        Wed, 10 Jun 2020 16:51:56 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40935C03E96B;
+        Wed, 10 Jun 2020 13:51:56 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id 185so1506191pgb.10;
+        Wed, 10 Jun 2020 13:51:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=BBQ0kH7eFUEzdi1aOvEKWX8Td5hf8bU8NRtY72Z+54M=;
+        b=D+gOK5e5N4uDHgaJEiVzXMr6VuyH27uOIfpnVLZCy5Svn8efbO2h827R3C7PSG9a6K
+         nSxI9rCKBM4+edb+ob89dSUUXQZZWJrsEl8UC/4RkIct10qQ6WfwWd8slAvfV1/HlK/4
+         ykKf76IVM/KVIwnVtOcQc5SFY3uoVQV1mOixWR7kBTjfcGeM6FFil+FjQMvZX2lH6/fD
+         gHslJ0At6A3/MekYWNpXmXm3Vi+6i8d7T3bOXM0tia17DDU08MIcYxt4wKKuf7x2IHoS
+         KvHq6vwU+GQ2TNficbOEiCmyrVYunxWWsavQXQOZAWvXa7y+sW3BAUPx/QOpU3y9HdG4
+         aA2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BBQ0kH7eFUEzdi1aOvEKWX8Td5hf8bU8NRtY72Z+54M=;
+        b=feUxUcRZDO0V8V2Ri9KHuLXhJsMS25TlTQpCqqgdDzzub3JQclq77b7HileB6BFH1b
+         PInBTWJeKdPHVc7LqUAH6rjz5isTqESF4mCfGagf+RRla7uwto1QojPiSTzAaeBUb2X5
+         WQdTVn6XJlL0mIzqHjZIOEKisDwBuMFuhuKi4Dn7DQ5WpjaMzDwkIgnz4bcUprBKCKgh
+         1Q6WFluAxsIViN4D/deJ4swnG/eEw0oVVqKXHSo+7BU3jADsz9dErwFSwcpvNvtqd6Vz
+         3tQC9/rYIPRIy4OnS4MGEAMSqlpdF9UnwQu2DUg82crwo+Qee2Rmqxv4c3bLiIUFK2GN
+         CClw==
+X-Gm-Message-State: AOAM531Kqp5F170BMz16+QvaIwKchDe4ZMBrzLh3ejOoc0VZyfmJh8f0
+        1CfJkURJOAmgWuj6m467m9Y=
+X-Google-Smtp-Source: ABdhPJxKo0OgffPzJUXcMIqo8lFX22kcJRM0lWIv/TfEFZDqsYln/aDXLO3H4Aw664SDq8TfeoQ80A==
+X-Received: by 2002:a62:7a89:: with SMTP id v131mr4254293pfc.38.1591822315664;
+        Wed, 10 Jun 2020 13:51:55 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id x19sm793349pfo.96.2020.06.10.13.51.54
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 10 Jun 2020 13:51:55 -0700 (PDT)
+Date:   Wed, 10 Jun 2020 13:51:54 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Emil Velikov <emil.l.velikov@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>, linux-alpha@vger.kernel.org
+Subject: Re: [PATCH 01/11] tty/sysrq: alpha: export and use
+ __sysrq_get_key_op()
+Message-ID: <20200610205154.GA14854@roeck-us.net>
+References: <20200513214351.2138580-1-emil.l.velikov@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200525144125.143875-9-vkuznets@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200513214351.2138580-1-emil.l.velikov@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 04:41:23PM +0200, Vitaly Kuznetsov wrote:
-> KVM now supports using interrupt for 'page ready' APF event delivery and
-> legacy mechanism was deprecated. Switch KVM guests to the new one.
-
-Hi Vitaly,
-
-I see we have all this code in guest which tries to take care of
-cases where PAGE_READY can be delivered before PAGE_NOT_PRESENT. In
-this new schedume of things, can it still happen. We are using
-an exception to deliver PAGE_NOT_PRESENT while using interrupt to
-deliver PAGE_READY.
-
-If re-ordeing is not possible, then it will be good to get rid of
-that extra complexity in guest.
-
-Thanks
-Vivek
-
+On Wed, May 13, 2020 at 10:43:41PM +0100, Emil Velikov wrote:
+> Export a pointer to the sysrq_get_key_op(). This way we can cleanly
+> unregister it, instead of the current solutions of modifuing it inplace.
 > 
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Since __sysrq_get_key_op() is no longer used externally, let's make it
+> a static function.
+> 
+> This patch will allow us to limit access to each and every sysrq op and
+> constify the sysrq handling.
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Jiri Slaby <jslaby@suse.com>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: Richard Henderson <rth@twiddle.net>
+> Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
+> Cc: Matt Turner <mattst88@gmail.com>
+> Cc: linux-alpha@vger.kernel.org
+> Signed-off-by: Emil Velikov <emil.l.velikov@gmail.com>
 > ---
->  arch/x86/entry/entry_32.S          |  5 ++++
->  arch/x86/entry/entry_64.S          |  5 ++++
->  arch/x86/include/asm/hardirq.h     |  3 ++
->  arch/x86/include/asm/irq_vectors.h |  6 +++-
->  arch/x86/include/asm/kvm_para.h    |  6 ++++
->  arch/x86/kernel/irq.c              |  9 ++++++
->  arch/x86/kernel/kvm.c              | 45 ++++++++++++++++++++++--------
->  7 files changed, 66 insertions(+), 13 deletions(-)
+> Please keep me in the CC list, as I'm not subscribed to the list.
 > 
-> diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
-> index b67bae7091d7..d574dadcb2a1 100644
-> --- a/arch/x86/entry/entry_32.S
-> +++ b/arch/x86/entry/entry_32.S
-> @@ -1475,6 +1475,11 @@ BUILD_INTERRUPT3(hv_stimer0_callback_vector, HYPERV_STIMER0_VECTOR,
->  
->  #endif /* CONFIG_HYPERV */
->  
-> +#ifdef CONFIG_KVM_GUEST
-> +BUILD_INTERRUPT3(kvm_async_pf_vector, KVM_ASYNC_PF_VECTOR,
-> +		 kvm_async_pf_intr)
-> +#endif
-> +
->  SYM_CODE_START(page_fault)
->  	ASM_CLAC
->  	pushl	$do_page_fault
-> diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-> index 3063aa9090f9..138f5c5aca2e 100644
-> --- a/arch/x86/entry/entry_64.S
-> +++ b/arch/x86/entry/entry_64.S
-> @@ -1190,6 +1190,11 @@ apicinterrupt3 HYPERVISOR_CALLBACK_VECTOR \
->  	acrn_hv_callback_vector acrn_hv_vector_handler
->  #endif
->  
-> +#ifdef CONFIG_KVM_GUEST
-> +apicinterrupt3 KVM_ASYNC_PF_VECTOR \
-> +	kvm_async_pf_vector kvm_async_pf_intr
-> +#endif
-> +
->  idtentry debug			do_debug		has_error_code=0	paranoid=1 shift_ist=IST_INDEX_DB ist_offset=DB_STACK_OFFSET
->  idtentry int3			do_int3			has_error_code=0	create_gap=1
->  idtentry stack_segment		do_stack_segment	has_error_code=1
-> diff --git a/arch/x86/include/asm/hardirq.h b/arch/x86/include/asm/hardirq.h
-> index 07533795b8d2..be0fbb15ad7f 100644
-> --- a/arch/x86/include/asm/hardirq.h
-> +++ b/arch/x86/include/asm/hardirq.h
-> @@ -44,6 +44,9 @@ typedef struct {
->  	unsigned int irq_hv_reenlightenment_count;
->  	unsigned int hyperv_stimer0_count;
->  #endif
-> +#ifdef CONFIG_KVM_GUEST
-> +	unsigned int kvm_async_pf_pageready_count;
-> +#endif
->  } ____cacheline_aligned irq_cpustat_t;
->  
->  DECLARE_PER_CPU_SHARED_ALIGNED(irq_cpustat_t, irq_stat);
-> diff --git a/arch/x86/include/asm/irq_vectors.h b/arch/x86/include/asm/irq_vectors.h
-> index 889f8b1b5b7f..8879a9ecd908 100644
-> --- a/arch/x86/include/asm/irq_vectors.h
-> +++ b/arch/x86/include/asm/irq_vectors.h
-> @@ -104,7 +104,11 @@
->  #define HYPERV_STIMER0_VECTOR		0xed
->  #endif
->  
-> -#define LOCAL_TIMER_VECTOR		0xec
-> +#ifdef CONFIG_KVM_GUEST
-> +#define KVM_ASYNC_PF_VECTOR		0xec
-> +#endif
-> +
-> +#define LOCAL_TIMER_VECTOR		0xeb
->  
->  #define NR_VECTORS			 256
->  
-> diff --git a/arch/x86/include/asm/kvm_para.h b/arch/x86/include/asm/kvm_para.h
-> index 2a3102fee189..a075cd8fa5c7 100644
-> --- a/arch/x86/include/asm/kvm_para.h
-> +++ b/arch/x86/include/asm/kvm_para.h
-> @@ -4,6 +4,7 @@
->  
->  #include <asm/processor.h>
->  #include <asm/alternative.h>
-> +#include <linux/interrupt.h>
->  #include <uapi/asm/kvm_para.h>
->  
->  extern void kvmclock_init(void);
-> @@ -93,6 +94,11 @@ void kvm_async_pf_task_wake(u32 token);
->  u32 kvm_read_and_reset_apf_flags(void);
->  extern void kvm_disable_steal_time(void);
->  void do_async_page_fault(struct pt_regs *regs, unsigned long error_code, unsigned long address);
-> +extern __visible void kvm_async_pf_vector(void);
-> +#ifdef CONFIG_TRACING
-> +#define trace_kvm_async_pf_vector kvm_async_pf_vector
-> +#endif
-> +__visible void __irq_entry kvm_async_pf_intr(struct pt_regs *regs);
->  
->  #ifdef CONFIG_PARAVIRT_SPINLOCKS
->  void __init kvm_spinlock_init(void);
-> diff --git a/arch/x86/kernel/irq.c b/arch/x86/kernel/irq.c
-> index c7965ff429c5..a4c2f25ad74d 100644
-> --- a/arch/x86/kernel/irq.c
-> +++ b/arch/x86/kernel/irq.c
-> @@ -159,6 +159,15 @@ int arch_show_interrupts(struct seq_file *p, int prec)
->  				   irq_stats(j)->hyperv_stimer0_count);
->  		seq_puts(p, "  Hyper-V stimer0 interrupts\n");
->  	}
-> +#endif
-> +#ifdef CONFIG_KVM_GUEST
-> +	if (test_bit(KVM_ASYNC_PF_VECTOR, system_vectors)) {
-> +		seq_printf(p, "%*s: ", prec, "APF");
-> +		for_each_online_cpu(j)
-> +			seq_printf(p, "%10u ",
-> +				   irq_stats(j)->kvm_async_pf_pageready_count);
-> +		seq_puts(p, "  KVM async PF page ready interrupts\n");
-> +	}
->  #endif
->  	seq_printf(p, "%*s: %10u\n", prec, "ERR", atomic_read(&irq_err_count));
->  #if defined(CONFIG_X86_IO_APIC)
-> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> index 340df5dab30d..79730eaef1e1 100644
-> --- a/arch/x86/kernel/kvm.c
-> +++ b/arch/x86/kernel/kvm.c
-> @@ -245,23 +245,39 @@ NOKPROBE_SYMBOL(kvm_read_and_reset_apf_flags);
->  dotraplinkage void
->  do_async_page_fault(struct pt_regs *regs, unsigned long error_code, unsigned long address)
->  {
-> -	switch (kvm_read_and_reset_apf_flags()) {
-> -	default:
-> +	u32 flags = kvm_read_and_reset_apf_flags();
-> +
-> +	if (!flags) {
-> +		/* This is a normal page fault */
->  		do_page_fault(regs, error_code, address);
-> -		break;
-> -	case KVM_PV_REASON_PAGE_NOT_PRESENT:
-> +		return;
-> +	} else if (flags & KVM_PV_REASON_PAGE_NOT_PRESENT) {
->  		/* page is swapped out by the host. */
->  		kvm_async_pf_task_wait((u32)address, !user_mode(regs));
-> -		break;
-> -	case KVM_PV_REASON_PAGE_READY:
-> -		rcu_irq_enter();
-> -		kvm_async_pf_task_wake((u32)address);
-> -		rcu_irq_exit();
-> -		break;
-> +	} else {
-> +		WARN_ONCE(1, "Unexpected async PF flags: %x\n", flags);
->  	}
->  }
->  NOKPROBE_SYMBOL(do_async_page_fault);
->  
-> +__visible void __irq_entry kvm_async_pf_intr(struct pt_regs *regs)
-> +{
-> +	u32 token;
-> +
-> +	entering_ack_irq();
-> +
-> +	inc_irq_stat(kvm_async_pf_pageready_count);
-> +
-> +	if (__this_cpu_read(apf_reason.enabled)) {
-> +		token = __this_cpu_read(apf_reason.token);
-> +		kvm_async_pf_task_wake(token);
-> +		__this_cpu_write(apf_reason.token, 0);
-> +		wrmsrl(MSR_KVM_ASYNC_PF_ACK, 1);
-> +	}
-> +
-> +	exiting_irq();
-> +}
-> +
->  static void __init paravirt_ops_setup(void)
->  {
->  	pv_info.name = "KVM";
-> @@ -305,17 +321,19 @@ static notrace void kvm_guest_apic_eoi_write(u32 reg, u32 val)
->  
->  static void kvm_guest_cpu_init(void)
->  {
-> -	if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF) && kvmapf) {
-> +	if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF_INT) && kvmapf) {
->  		u64 pa = slow_virt_to_phys(this_cpu_ptr(&apf_reason));
->  
->  #ifdef CONFIG_PREEMPTION
->  		pa |= KVM_ASYNC_PF_SEND_ALWAYS;
->  #endif
-> -		pa |= KVM_ASYNC_PF_ENABLED;
-> +		pa |= KVM_ASYNC_PF_ENABLED | KVM_ASYNC_PF_DELIVERY_AS_INT;
->  
->  		if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF_VMEXIT))
->  			pa |= KVM_ASYNC_PF_DELIVERY_AS_PF_VMEXIT;
->  
-> +		wrmsrl(MSR_KVM_ASYNC_PF_INT, KVM_ASYNC_PF_VECTOR);
-> +
->  		wrmsrl(MSR_KVM_ASYNC_PF_EN, pa);
->  		__this_cpu_write(apf_reason.enabled, 1);
->  		printk(KERN_INFO"KVM setup async PF for cpu %d\n",
-> @@ -649,6 +667,9 @@ static void __init kvm_guest_init(void)
->  	if (kvm_para_has_feature(KVM_FEATURE_PV_EOI))
->  		apic_set_eoi_write(kvm_guest_apic_eoi_write);
->  
-> +	if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF_INT))
-> +		alloc_intr_gate(KVM_ASYNC_PF_VECTOR, kvm_async_pf_vector);
-> +
->  #ifdef CONFIG_SMP
->  	smp_ops.smp_prepare_cpus = kvm_smp_prepare_cpus;
->  	smp_ops.smp_prepare_boot_cpu = kvm_smp_prepare_boot_cpu;
-> -- 
-> 2.25.4
-> 
+> IMHO it would be better if this gets merged this via the tty tree.
 
+Still observed:
+
+Building alpha:defconfig ... failed
+--------------
+Error log:
+<stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+arch/alpha/kernel/setup.c:434:13: error: initialization of 'void (*)(int)' from incompatible pointer type 'void (*)(void)' [-Werror=incompatible-pointer-types]
+  434 |  .handler = machine_halt,
+      |             ^~~~~~~~~~~~
+arch/alpha/kernel/setup.c:434:13: note: (near initialization for 'srm_sysrq_reboot_op.handler')
+
+I did not see a reply to the initial report. Is this being addressed ?
+
+Guenter
