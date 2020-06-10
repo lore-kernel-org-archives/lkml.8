@@ -2,101 +2,99 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E71FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 00:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0585AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 00:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF01C2078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 00:10:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DH9f/24y"
+	by mail.kernel.org (Postfix) with ESMTP id D3AA0206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 00:12:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726024AbgFJAKp (ORCPT
+        id S1726027AbgFJAM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 20:10:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43910 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725797AbgFJAKn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 20:10:43 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B03FC05BD1E;
-        Tue,  9 Jun 2020 17:10:43 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id c14so410529qka.11;
-        Tue, 09 Jun 2020 17:10:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XFLCZdE5vvLdiZqFWAjPf5wwSUfiIU/6H0OECncmJWY=;
-        b=DH9f/24yL7hrjzsDEOLLogDEMuNcGjw3g2xf9FJDwAwSBeIiDS2EjRpcJowMT4Q2mG
-         hqcmY+idwS5s8ZPKI0hkCh0wBe9vx4QFsNLV5JUCKwBjrxHlncsQ0XiQCTUkFdBqH+v8
-         ctkBHHUz9K9TMJqMt3mDlUHxBg+oR+32DTv360E70nJ9DAV2o5+STSds/FnTN4Pu2CIm
-         7712HDNJuNo59JvyrNwVE3hynng2GHDOx3LS9nrcw+MNVz8XLUvo/24LcNqsXUrNuLi6
-         Dx3K70+dPRHr5rYGAtH6swOXJUQzTQ6NrpS7/058ZNaJiQIbfssyqRV4ifiI4Ecruv2p
-         yJvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XFLCZdE5vvLdiZqFWAjPf5wwSUfiIU/6H0OECncmJWY=;
-        b=D26T40/xqoMw+wQNeyVWvNUn0iNMaR4BjtQ2talqF0wo81ZtupHgvAdSx1WgdeR2bT
-         ccOyDhXoUuagE21lE1tzwdfT1bc/TsgFmH2df5QFt8bb1G+8ZBUZ/bJCqOhcCUY9ewYh
-         pU7NS+mpOdo+yMDocGgHwciGSgDK6veOKo4QMJs2zKFwcD4IPATXuGgy+BNTarKVcEh4
-         z7CGkal1zUVrn7/8ywPZCUb2n2mNtWKh+c7vv6I/fuUyDe0g6VxlaAtGAPmnaxYS8uZ2
-         Om+AlvS6WyJjxYaGPdocrsMeQYUs0l4Ht4T9aZN1zvoJtEoNbiunL6QBWYYXlaxQYiOw
-         mgTQ==
-X-Gm-Message-State: AOAM530cAjFAKGNmhoFMTtaihitLz5MTR1kBvc4caY9ZeubZLsB/tUc1
-        gFHhZ4Lv8FXzL9P/HqzxvKZBUzw=
-X-Google-Smtp-Source: ABdhPJzsMjjBQX2I2CRruAFtRqgWtzvKsXzY5QaMLocolCxEE9yCB5Rt8Zlx1wd5tyDQ295jrJ1X5A==
-X-Received: by 2002:a05:620a:21cc:: with SMTP id h12mr525346qka.194.1591747841673;
-        Tue, 09 Jun 2020 17:10:41 -0700 (PDT)
-Received: from moria.home.lan ([2601:19b:c500:a1:7285:c2ff:fed5:c918])
-        by smtp.gmail.com with ESMTPSA id c2sm1757836qkl.58.2020.06.09.17.10.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 17:10:40 -0700 (PDT)
-From:   Kent Overstreet <kent.overstreet@gmail.com>
-To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        viro@zeniv.linux.org.uk, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org
-Cc:     Kent Overstreet <kent.overstreet@gmail.com>
-Subject: [PATCH 0/2] generic_file_buffered_read() refactoring & optimization
-Date:   Tue,  9 Jun 2020 20:10:34 -0400
-Message-Id: <20200610001036.3904844-1-kent.overstreet@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Tue, 9 Jun 2020 20:12:58 -0400
+Received: from mga01.intel.com ([192.55.52.88]:44463 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725797AbgFJAM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 20:12:57 -0400
+IronPort-SDR: kSYsqH3W6hayqi70e0T6Zx55UjnggGJ0nlhFdwzr6+MR9CPOJ81IHPhqsr7jm1vWa3vSQ+G4p3
+ ajwkiW7tqJ2Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 17:12:57 -0700
+IronPort-SDR: QedeotHzgzWVQLwHRxGMRasI1cjy27kXs+Ra5lTiZAiIL0fYzjcNDfW6FwS9A/bgJRLa26neoF
+ qNmadWo9oTKA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,493,1583222400"; 
+   d="scan'208";a="418566432"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by orsmga004.jf.intel.com with ESMTP; 09 Jun 2020 17:12:56 -0700
+Date:   Tue, 9 Jun 2020 17:13:10 -0700
+From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To:     Brendan Shanks <bshanks@codeweavers.com>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org, ebiederm@xmission.com,
+        andi@notmuch.email, Babu.Moger@amd.com
+Subject: Re: [PATCH v4] x86/umip: Add emulation/spoofing for SLDT and STR
+ instructions
+Message-ID: <20200610001310.GA20597@ranerica-svr.sc.intel.com>
+References: <20200609175423.31568-1-bshanks@codeweavers.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200609175423.31568-1-bshanks@codeweavers.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a small patch series that's been in the bcachefs tree for awhile.
+On Tue, Jun 09, 2020 at 10:54:23AM -0700, Brendan Shanks wrote:
+> Add emulation/spoofing of SLDT and STR for both 32- and 64-bit
+> processes.
+> 
+> Wine users have found a small number of Windows apps using SLDT that
+> were crashing when run on UMIP-enabled systems.
+> 
+> Reported-by: Andreas Rammhold <andi@notmuch.email>
+> Originally-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+> Signed-off-by: Brendan Shanks <bshanks@codeweavers.com>
+> ---
+> 
+> v4: Use braces for every clause of the conditional. I tried a switch(),
+> but it takes more lines and looks more cluttered (especially with the
+> #ifdef).
+> Also replace out-of-date comment at top of file.
+> 
+>  arch/x86/kernel/umip.c | 38 ++++++++++++++++++++++++++------------
+>  1 file changed, 26 insertions(+), 12 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/umip.c b/arch/x86/kernel/umip.c
+> index 8d5cbe1bbb3b..62f4f0afb979 100644
+> --- a/arch/x86/kernel/umip.c
+> +++ b/arch/x86/kernel/umip.c
+> @@ -45,11 +45,12 @@
+>   * value that, lies close to the top of the kernel memory. The limit for the GDT
+>   * and the IDT are set to zero.
+>   *
+> - * Given that SLDT and STR are not commonly used in programs that run on WineHQ
+> - * or DOSEMU2, they are not emulated.
+> - *
+>   * The instruction smsw is emulated to return the value that the register CR0
+>   * has at boot time as set in the head_32.
+> + * sldt and str are emulated to return the values that the kernel programmatically
+> + * assigns:
+> + * - sldt returns (GDT_ENTRY_LDT * 8) if an LDT has been set, 0 if not.
+> + * - str returns (GDT_ENTRY_TSS * 8).
 
-In the buffered read path, we look up a page in the page cache, then copy from
-that page in a loop - i.e. mixing the data copies in between looking up each
-individual page. When we're doing large reads from the page cache, this is some
-pretty major overhead.
+Probably for consistency with the rest of the document the instruction
+names should be capitalized (I know that smsw was not capitalized before
+:/). Maybe maintainers can fix this when applying?
 
-This just reworks generic_file_buffered_read() to use find_get_pages_contig()
-and work on an array of pages. It's a pretty significant performance
-improvement for large buffered reads, and doesn't regress performance on single
-page reads.
+Other than that, FWIW:
 
-As a bonus, generic_file_buffered_read() gets broken up into multiple functions
-that are _somewhat_ easier to follow.
-
-Kent Overstreet (2):
-  fs: Break generic_file_buffered_read up into multiple functions
-  fs: generic_file_buffered_read() now uses find_get_pages_contig
-
- mm/filemap.c | 486 +++++++++++++++++++++++++++++----------------------
- 1 file changed, 273 insertions(+), 213 deletions(-)
-
--- 
-2.27.0
-
+Reviewed-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Tested-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
