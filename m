@@ -2,95 +2,119 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B8FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:10:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75781C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B280D20734
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:10:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 570D620656
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:10:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CSNYMc5p"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cTcb83D4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729804AbgFJTKU (ORCPT
+        id S1729984AbgFJTKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 15:10:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50696 "EHLO
+        Wed, 10 Jun 2020 15:10:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbgFJTKT (ORCPT
+        with ESMTP id S1726266AbgFJTK3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 15:10:19 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E27DDC03E96B;
-        Wed, 10 Jun 2020 12:10:18 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id x11so1313453plv.9;
-        Wed, 10 Jun 2020 12:10:18 -0700 (PDT)
+        Wed, 10 Jun 2020 15:10:29 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27B68C03E96B;
+        Wed, 10 Jun 2020 12:10:29 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id i74so3144560oib.0;
+        Wed, 10 Jun 2020 12:10:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gavZVcqBHuODCldkSX0yr94bTWekeWExvRrNdmwS3CM=;
-        b=CSNYMc5pwj55G0OddO92lMLlQgkPwCJ6mKwfZ3BQkfIWwEeQbNb/dNfsAicpDSO4sk
-         p8MZppJVlbUpgsdyOgpTzNHK63h882W/PtzYyBDHgYBP5+u0AxqB3npKJgaGTyWr/i1a
-         vgsqVbdQ0hu8Y9bffYCowUmX76LIsnyITadnu9lz2m3VIFGQhwgqKkMD18iYxSJDqqZV
-         nd1ZbfLu6n2CB+ozmnb0P3Ge2ylmFXapom/EbUwDQ1eNhvr4coHXYyCbuL21e4M+FAB1
-         Qhb6tc5SfHnrRIzeKuPnlkzM/bavEyEKPpjYijKY24GQT4L9hbBXMWJx5PqjCwu7gGBq
-         5z/w==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zr/uGupFuGvMrFAVa6WiJ1h2V/NHtuxzOm0zL5k6jBM=;
+        b=cTcb83D44ug2dUwS+XVrUU+yCJEYXxDYasAHrnWL8Gt4Yq7IrV+9K88RpWjjaVGUZ/
+         J0pOMhK5d7tCTV7s/x+nDwvGIM/v6RhHaY69Pjw15NIhMdify9/oqAEFWoBjrXEFhPEI
+         lD1aIQ8rfaE734NB9PZplKUn6bCXuUMIeHnZbcM/i9WiQedaMbWe7D4DmksV9jQJhbYY
+         bi4IA21klGK3dTq/pv/q2wiIdeySVlQi/iuzyaQUfX6uYizQ4iZ1rFBgWRpFGOQESFXZ
+         cB6tfg3nywhQDFz2EKR8GaBzuFGmA6++rj+DFLTqri+waeBeMO+mPeiIctTeosNe0U68
+         6P/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gavZVcqBHuODCldkSX0yr94bTWekeWExvRrNdmwS3CM=;
-        b=M1UZPrjBw0eRjW75CKrWOkvzUowebYO3wrqI6840AdYVm5JgaRJ6kPZptWOioVFH+F
-         9LYci8QnfNl8IRU+YKCPnSwdCmKYl1m6HZISGfxm/WRiOGn0X4s6KkrNHyt1g0mEXNZ3
-         Tycj6Vfflqccnggt/fgSRPTnaNj/xCqXyJadJzWTb1vd1WLwGnuDZeR34eNQyyVAeQjX
-         t/Xz3O+Xb83WYKioM+nSJ3N4J1Smax2Eor+RhgPvXN9KprvpKHt8nodQgpGxp2tNq7bI
-         vUXT/RWi9c1KCn/BVOP9XH69/rp9GCmwyxU6fsDISnGr39rhkkCIzUaut3bQuM4Rv25U
-         iv7g==
-X-Gm-Message-State: AOAM533GxY4ExZgvD2wQomfF14ZC/bePA8NqDPVAWdULYcSPnCFspFln
-        yQDPmdURBv5RMGtoeK+JX6U=
-X-Google-Smtp-Source: ABdhPJwjzNwuEqs6OpMd14BGGz0INBIHAOLL5kXV4SEOGnJWZ/YGBXeKxYAOAr7AJ7ne2UYTzLPyYg==
-X-Received: by 2002:a17:902:7201:: with SMTP id ba1mr4113797plb.223.1591816218536;
-        Wed, 10 Jun 2020 12:10:18 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id p14sm455665pju.7.2020.06.10.12.10.17
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 10 Jun 2020 12:10:17 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 12:10:17 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.19 00/25] 4.19.128-rc2 review
-Message-ID: <20200610191017.GE232340@roeck-us.net>
-References: <20200609185946.866927360@linuxfoundation.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zr/uGupFuGvMrFAVa6WiJ1h2V/NHtuxzOm0zL5k6jBM=;
+        b=fInML7aBUfom3Xh7Mpo3GrrgTUrkuJ4+lDS8BIjcpjLrSDW9jbC66YG8NQegAPllxx
+         YJ6oyF0c+tLSbY5QyFkIFgquCyCeKVPZMlLlBpXwUOvEG+ai8qjA2eLf2Ju7PV68NqMd
+         6j7QkHMhkZyprwnRqKfxsJnD8C84UsA4frGrooPbZVVNPBg6pwRvvZVxwOrV5HvXIUOq
+         yQXvnbQ/HA3Ru3Gu+ABxi5XGGC+2MNfwFwTxvD8Zc2sK1aEmoI66ea7MI4qPYaTEIzvd
+         YAlUKfn977M1RhygGjO00OE7xqEB7VdkvHR5QjsxP4ZTNpk+21xzTpM6zMQQbJ+KMX8L
+         KmmA==
+X-Gm-Message-State: AOAM532d+tcwLjLoHvlWXajvTbEMo53p1h9hZWHjWYL0XjlHNGUc7ilG
+        BZRXG9qWzj/QM/Ar+vq0hBmqRfW+0seFvGdhoFM=
+X-Google-Smtp-Source: ABdhPJw6N4mxNnryIirxir6EULeXyUYgAe26nOLEfqvRZ/ZNV7eLviZMzF+VGW2gCZ2DKZAE2vnd9uQYFRbKz1Kmnz0=
+X-Received: by 2002:aca:a948:: with SMTP id s69mr3720382oie.140.1591816228579;
+ Wed, 10 Jun 2020 12:10:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200609185946.866927360@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200610181021.19209-1-trix@redhat.com> <20200610181021.19209-2-trix@redhat.com>
+In-Reply-To: <20200610181021.19209-2-trix@redhat.com>
+From:   Stephen Smalley <stephen.smalley.work@gmail.com>
+Date:   Wed, 10 Jun 2020 15:10:17 -0400
+Message-ID: <CAEjxPJ4uRG4FiBbyUxQdsLWsz4torr+rst1VKN_Gdk5PqT6Kpw@mail.gmail.com>
+Subject: Re: [PATCH 1/1] selinux: fix double free
+To:     trix@redhat.com
+Cc:     Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>, rgb@redhat.com,
+        SElinux list <selinux@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 09:18:47PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.128 release.
-> There are 25 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 11 Jun 2020 18:59:34 +0000.
-> Anything received after that time might be too late.
-> 
+On Wed, Jun 10, 2020 at 2:10 PM <trix@redhat.com> wrote:
+>
+> From: Tom Rix <trix@redhat.com>
+>
+> Clang's static analysis tool reports these double free memory errors.
+>
+> security/selinux/ss/services.c:2987:4: warning: Attempt to free released memory [unix.Malloc]
+>                         kfree(bnames[i]);
+>                         ^~~~~~~~~~~~~~~~
+> security/selinux/ss/services.c:2990:2: warning: Attempt to free released memory [unix.Malloc]
+>         kfree(bvalues);
+>         ^~~~~~~~~~~~~~
+>
+> So improve the security_get_bools error handling by freeing these variables
+> and setting their return pointers to NULL and the return len to 0
+>
+> Signed-off-by: Tom Rix <trix@redhat.com>
+> ---
+>  security/selinux/ss/services.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/security/selinux/ss/services.c b/security/selinux/ss/services.c
+> index 313919bd42f8..2dffae1feaff 100644
+> --- a/security/selinux/ss/services.c
+> +++ b/security/selinux/ss/services.c
+> @@ -2888,8 +2888,12 @@ int security_get_bools(struct selinux_state *state,
+>         if (*names) {
+>                 for (i = 0; i < *len; i++)
+>                         kfree((*names)[i]);
+> +               kfree(names);
 
-Build results:
-	total: 155 pass: 155 fail: 0
-Qemu test results:
-	total: 420 pass: 420 fail: 0
+kfree(*names)?
 
-Guenter
+>         }
+>         kfree(*values);
+> +       *len = 0;
+> +       *names = NULL;
+> +       *values = NULL;
+>         goto out;
+>  }
+
+Wondering if the caller handling ought to be changed too even though
+this should avoid the problem.
