@@ -2,161 +2,205 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE85C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 004C3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E561D20760
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:33:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XtXvu6K1"
+	by mail.kernel.org (Postfix) with ESMTP id CAB4F2078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:35:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591781724;
+	bh=shHPBdfvjaI3EtJEb11KzerLLdcslgIsNxCBWh5ZjTk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=xWZ+u0FT9VkGGt+mcdz5WAR+7EAc4xRERpBuQmEjrSIDggyHx8bEy3EZ/c+xb71Sx
+	 27Pii6G7THy8OaQYat23HV1wKfI3v3wvbxp4W1fl6Mog5RzCmkHC1JVennhiFd+ZNc
+	 nWKTc28ycxowb5qpW393s20uIx1/yjyaUwrL6X+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727858AbgFJJdj (ORCPT
+        id S1727809AbgFJJfX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 05:33:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45974 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727007AbgFJJdj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 05:33:39 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33AF6C03E96F
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 02:33:38 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id x207so868314pfc.5
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 02:33:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gDnPaCqGGqbwLUgYXT8RQfx+Yi25CTYpPlgWUh+k1DU=;
-        b=XtXvu6K1Uz1YjnpXdERt17M6pBkHDYVwHCy9UaMX6WqDUssPF9INUCclHDNNTCEEaZ
-         q4hxviUAlk/YkgC8d4X/EwOfwz635nxrXQW4fBPO0PnzM/9fvI7uDjp7TxKWdvKpPRWt
-         tf8FyeFeGTuNMIGxlY0t9umSLy84CNOoRvsoCYdYuU9yjO/H9dpOBO18GL63fSWEU9io
-         yX77jxrbWQBzjzT9xMXfRNkrzO2IEXoibRVYJORPvN3liQu8veOBPWuX1FVuqd8BuFpS
-         CYYafNkhZEc6/9ZonezXmUYWQiFzMm/As8rBg36aeU8BsKjdUtbQnDRwe6FOJLu+MlQ8
-         7BbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gDnPaCqGGqbwLUgYXT8RQfx+Yi25CTYpPlgWUh+k1DU=;
-        b=akH+GKbw8/ekHLTucxnBNoY+vqhYYOSuIsOM4O9NjgFxrpCu15l9g75MR8H6eOtZzM
-         TW4vcllErAEYVIwenpv3g9u/IyAAK9/r6Cly8BuOcsylO0kPPOg7P/lKgy36Fxq4bypG
-         tx4878WztvIOENAl4jF4GXmvLFiXw2lbvPSBLdjQouFGC9WtX5EbneyhjXMNSuUjTwd1
-         WfPs3z889yzM8M85IQ2s42Y07RqyItuHYKUmH3t2kcXcqo1V5gk+gYrdFk3WAl2p9Vss
-         F/ghhukZhOgL0F6WP5s7ne2JIr051cu51TEL80OwipkXG/Hcyq3fYGKP3bx0cbQ6urSC
-         HN4Q==
-X-Gm-Message-State: AOAM531MyU7CeM1gKGdMJNKlbEJUYlbJV1YDWxN3tgNTeyRJDoejZ+wV
-        K+n/M4WFSo3smmh0jxEgSA/VWQ==
-X-Google-Smtp-Source: ABdhPJyzL85kYroXLj9+vmzfJphNT9Bonj9nRBKzkkm5g4L1YoB1Va6xm3HiIlJ7CjmADnx7RrAx1g==
-X-Received: by 2002:a62:8106:: with SMTP id t6mr1985814pfd.103.1591781617417;
-        Wed, 10 Jun 2020 02:33:37 -0700 (PDT)
-Received: from localhost ([122.172.62.209])
-        by smtp.gmail.com with ESMTPSA id w73sm12759725pfd.113.2020.06.10.02.33.35
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jun 2020 02:33:36 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 15:03:34 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Jassi Brar <jassisinghbrar@gmail.com>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
-Message-ID: <20200610093334.yznxl2esv5ht27ns@vireshk-i7>
-References: <20200528192005.GA494874@bogus>
- <20200529040758.kneg2j4n3gxh2rfv@vireshk-i7>
- <20200603180435.GB23722@bogus>
- <CABb+yY0cW1GZHVmwEr19JRdJTmsAxw9uq83QV_aq-tdPJO5_Fg@mail.gmail.com>
- <20200604092052.GD8814@bogus>
- <CABb+yY27Ngb0C-onkU2qyt=uKgG4iVrcv8hGkC+anypQbTRA1w@mail.gmail.com>
- <20200605045645.GD12397@bogus>
- <CABb+yY2YZ99NjHYNi0=KLGFDsVUeJmqiJD3E25Chwk-THJV4iw@mail.gmail.com>
- <20200605085830.GA32372@bogus>
- <CABb+yY2TR7tuMx6u8yah6mO2GwZ5SWYOO80EQRL-i=ybgn=Wog@mail.gmail.com>
+        Wed, 10 Jun 2020 05:35:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46438 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727007AbgFJJfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 05:35:23 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09F1D204EC;
+        Wed, 10 Jun 2020 09:35:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591781722;
+        bh=shHPBdfvjaI3EtJEb11KzerLLdcslgIsNxCBWh5ZjTk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=dSd2ibiL2vMc86UmO2AWfVqGqe4bzDItFjD7ASUjGKhEH1viqqOEllRu28FRJgL4Z
+         AzRb1KJdtipjF98or7O09ES6CB/h1kqJU30EIa74mjabfcs7o37qmbIIYGMI5rbwwD
+         jPUTRVpThKrmEHixtenNWxrvZmNr4D7Qdmb/9fDY=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jix8i-001jn4-H9; Wed, 10 Jun 2020 10:35:20 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABb+yY2TR7tuMx6u8yah6mO2GwZ5SWYOO80EQRL-i=ybgn=Wog@mail.gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 10 Jun 2020 10:35:20 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Daniel Palmer <daniel@0x0f.com>
+Cc:     k@japko.eu, tim.bird@sony.com, devicetree@vger.kernel.org,
+        Daniel Palmer <daniel@thingy.jp>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Doug Anderson <armlinux@m.disordat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Gregory Fong <gregory.0xf0@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Will Deacon <will@kernel.org>,
+        Nathan Huckleberry <nhuck15@gmail.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/5] ARM: mstar: Add infinity/mercury series dtsi
+In-Reply-To: <20200610090421.3428945-4-daniel@0x0f.com>
+References: <20191014061617.10296-2-daniel@0x0f.com>
+ <20200610090421.3428945-4-daniel@0x0f.com>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <35ec0a2bf066509aa1b4b11d3eac2657@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: daniel@0x0f.com, k@japko.eu, tim.bird@sony.com, devicetree@vger.kernel.org, daniel@thingy.jp, robh+dt@kernel.org, linux@armlinux.org.uk, sam@ravnborg.org, linus.walleij@linaro.org, heiko.stuebner@theobroma-systems.com, mripard@kernel.org, lkundrak@v3.sk, stephan@gerhold.net, broonie@kernel.org, allen.chen@ite.com.tw, mchehab+huawei@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, corbet@lwn.net, arnd@arndb.de, akpm@linux-foundation.org, armlinux@m.disordat.com, benjamin.gaignard@linaro.org, gregory.0xf0@gmail.com, bgolaszewski@baylibre.com, yamada.masahiro@socionext.com, ndesaulniers@google.com, will@kernel.org, nhuck15@gmail.com, natechancellor@gmail.com, ardb@kernel.org, afaerber@suse.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05-06-20, 10:42, Jassi Brar wrote:
-> Since origin upto scmi_xfer, there can be many forms of sleep like
-> schedule/mutexlock etc.... think of some userspace triggering sensor
-> or dvfs operation. Linux does not provide real-time guarantees. Even
-> if remote (scmi) firmware guarantee RT response, it makes sense to
-> timeout a response only after the _request is on the bus_  and not
-> when you submit a request to the api (unless you serialise it).
-> IOW, start the timeout from  mbox_client.tx_prepare()  when the
-> message actually gets on the bus.
+Daniel,
 
-There are multiple purposes of the timeout IMO:
+On 2020-06-10 10:04, Daniel Palmer wrote:
+> Adds initial dtsi for the base MStar ARMv7 SoCs, family dtsis for 
+> infinity
+> and mercury families, and then some chip level dtsis for chips in those
+> families.
+> 
+> Signed-off-by: Daniel Palmer <daniel@0x0f.com>
+> ---
+>  MAINTAINERS                              |  3 +
+>  arch/arm/boot/dts/infinity-msc313.dtsi   | 14 +++++
+>  arch/arm/boot/dts/infinity.dtsi          | 10 ++++
+>  arch/arm/boot/dts/infinity3-msc313e.dtsi | 14 +++++
+>  arch/arm/boot/dts/infinity3.dtsi         | 10 ++++
+>  arch/arm/boot/dts/mercury5-ssc8336n.dtsi | 14 +++++
+>  arch/arm/boot/dts/mercury5.dtsi          | 10 ++++
+>  arch/arm/boot/dts/mstar-v7.dtsi          | 71 ++++++++++++++++++++++++
+>  8 files changed, 146 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/infinity-msc313.dtsi
+>  create mode 100644 arch/arm/boot/dts/infinity.dtsi
+>  create mode 100644 arch/arm/boot/dts/infinity3-msc313e.dtsi
+>  create mode 100644 arch/arm/boot/dts/infinity3.dtsi
+>  create mode 100644 arch/arm/boot/dts/mercury5-ssc8336n.dtsi
+>  create mode 100644 arch/arm/boot/dts/mercury5.dtsi
+>  create mode 100644 arch/arm/boot/dts/mstar-v7.dtsi
 
-- Returning early if the other side is dead/hung, in such a case the
-  timeout can be put when the request is put on the bus as we don't
-  care of the time it takes to complete the request until the time the
-  request can be fulfilled. This can be a example of i2c/spi memory
-  read.
+[...]
 
-- Ensuring maximum time in which the request needs to be serviced.
-  There may be hard requirements, like in case for DVFS from
-  scheduler's hot path (which is essential for better working of the
-  overall system). And for such a case the timeout is placed at the
-  right place IMO, i.e. right after a request is submitted to mailbox.
+> diff --git a/arch/arm/boot/dts/mstar-v7.dtsi 
+> b/arch/arm/boot/dts/mstar-v7.dtsi
+> new file mode 100644
+> index 000000000000..0fccc4ca52a4
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/mstar-v7.dtsi
+> @@ -0,0 +1,71 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019 thingy.jp.
+> + * Author: Daniel Palmer <daniel@thingy.jp>
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +/ {
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	interrupt-parent = <&gic>;
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpu0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a7";
+> +			reg = <0x0>;
+> +		};
+> +	};
+> +
+> +	arch_timer {
+> +		compatible = "arm,armv7-timer";
+> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2)
+> +				| IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2)
+> +				| IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2)
+> +				| IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2)
+> +				| IRQ_TYPE_LEVEL_LOW)>;
+> +		clock-frequency = <6000000>;
 
-And some more points I wanted to share..
+This is 2020, and not 2012 anymore. The frequency should be set
+by your favourite bootloader.
 
-- I am not sure I understood the *serializing* part you guys were
-  talking about. I believe mailbox framework is already serializing
-  the requests it is receiving on a single channel with a spin lock,
-  right ? Why does the client need to serialize them as well? Is that
-  for avoiding timeouts ?
+> +	};
+> +
+> +	pmu {
+> +		compatible = "arm,cortex-a7-pmu";
+> +		interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
+> +	};
+> +
+> +	soc: soc {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		gic: interrupt-controller@16001000 {
+> +			compatible = "arm,cortex-a7-gic";
+> +			#interrupt-cells = <3>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			interrupt-controller;
+> +			reg = <0x16001000 0x1000>,
+> +			      <0x16002000 0x1000>;
 
-- For me, and Sudeep as well IIUC, the bigger problem isn't that
-  timeouts are happening and requests are failing (and so changing the
-  timeout to a bigger value isn't going to fix anything), but the
-  problem is that it is taking too long (because of the queue of
-  requests on a channel) for a request to finish after being
-  submitted. Scheduler doesn't care of the underneath logistics for
-  example, all it cares for is the time it takes to change the
-  frequency of a CPU. If you can do it fast enough in a guaranteed
-  manner, then you can use fast switching, otherwise not.
+The GICC region is likely to be 8kB, and not 4kB.
+Missing GICH and GICV regions, as well as the maintenance interrupt.
 
-- The hardware can very well support the case today where this can be
-  done in parallel and (almost) in a guaranteed time-frame. While the
-  software wants to add a limit to that and so wants to serialize
-  requests.
+Thanks,
 
-- As many people have already suggested it (like me, Sudeep, Rob,
-  maybe Bjorn as well), it seems silly to not allow driving the h/w in
-  the most efficient way possible (and allow fast cpu switching in
-  this case).
- 
-> Interesting logs !  The time taken to complete _successful_ requests
-> are arguably better in bad_trace ... there are many <10usec responses
-> in bad_trace, while the fastest response in good_trace is  53usec.
-
-Indeed this is interesting. It may be worth looking (separately) into
-why don't we see those 3 us long requests anymore, or maybe they were
-just not there in the logs.
-
-> And the requests that 'fail/timeout' are purely the result of not
-> serialising them or checkout for timeout at wrong place as explained
-> above.
-
-We can't allow for the requests to go on for ever in some cases, while
-in other cases it may be absolutely fine.
-
+         M.
 -- 
-viresh
+Jazz is not dead. It just smells funny...
