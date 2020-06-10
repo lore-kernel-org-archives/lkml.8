@@ -2,163 +2,365 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA726C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB1ACC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1831206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8B69206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:11:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="f5BnCBdf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730011AbgFJPJG (ORCPT
+        id S1730020AbgFJPLw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 11:09:06 -0400
-Received: from mga09.intel.com ([134.134.136.24]:1532 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728108AbgFJPJF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 11:09:05 -0400
-IronPort-SDR: mZwNT1ueEh+fUNe4mjMrh95eaWwXrnGWdHGnNnxCaZhWNZKwJHpetlwkixb6sq9iMYd0DAbZDR
- F5YhWgRYDJFg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2020 08:09:04 -0700
-IronPort-SDR: us8dHsvBu3GddnIUfzQz4qtZ3P6Z2goffUnTOTMFGV7Y3f/VdI5Mq26IOBhgd46K0imsofy7lz
- ETlQxnbgVfow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,496,1583222400"; 
-   d="scan'208";a="473450467"
-Received: from lkp-server01.sh.intel.com (HELO 19cb45ee048e) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 10 Jun 2020 08:09:02 -0700
-Received: from kbuild by 19cb45ee048e with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jj2Le-0000FT-32; Wed, 10 Jun 2020 15:09:02 +0000
-Date:   Wed, 10 Jun 2020 23:08:54 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- ec0f0ded5019d1645906eba1a0708beb15247e04
-Message-ID: <5ee0f786.QUebSLfBQi1aqqSC%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Wed, 10 Jun 2020 11:11:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42022 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728108AbgFJPLv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 11:11:51 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA5ACC03E96B
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 08:11:50 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id n24so3023446ejd.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 08:11:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dpLVcpUgoShg/1XmdrA7+06VlUnO5aUWJK3XavqBXDw=;
+        b=f5BnCBdf4PM+delyIxrdfUQcONOsDcd1Mwzj17IshNZ4GcVV4fvUTZRBKAKi2QLAyr
+         1XL984LbMj5bQ3GCOHZWVc9lVitbfrt8uwhnm5UBVe5ipplb+oxgu+kg/9YrJN2b35I2
+         VmmLTSBBJnmIA8UEtbdSLZh1tJXxKuVUjfnLN3s7s2KGtd8c8vWSu35o3O8ohv+28zT7
+         kqJpfZwauYCw36xJ8nz38lvMmnjM9xy33h72Hgd/qkyT1OBnk5hkVPWcpR+XV4wa3BJR
+         1c7hb5O9a5OhJp6x0YehpenyFtKbMBeV8tPVrE0h2zosbyItEhq7qxXevfQMJniGH/4z
+         oQyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dpLVcpUgoShg/1XmdrA7+06VlUnO5aUWJK3XavqBXDw=;
+        b=kUUl3M7mCNECY4dTWGLblfOooKTJRtx+NuUeavrTUIFa8sSkzfzVzSb4acwWI6W40I
+         79Mp4qteLYXCf9pm54YWSF6b8SItnNz2f5UbKY/IQ+P+3Y6E2TDln4sbf7f1SbtBnkze
+         t17Rh5cD4gaNYwT4LcOFsr/Y0jk+wor4Q87GD/HUXkZzErOJa81pRpHLO7/gWC9d05xe
+         v4dNhAdwh/CrqzpBCSe5jsNAW3feZDsAUy3Oo2XzQHzAK+BOfYT/wpltmxGVPxyDw/pO
+         YhYrlbDssFmvzvLr4mqyXit2cRw5T521pK1lbHMPn/SIvQ5h1vlw1J2+iYP5JHNfpx5l
+         Vbmg==
+X-Gm-Message-State: AOAM532Mo3F/qLmwDA9gHOZQpw20By3WWpXYnGd55xejq/Ut4np5tctZ
+        ocg8u3tqmqpOaiMb1aRozXWE8gJO0D2tDiHrXRgnXnChKk0=
+X-Google-Smtp-Source: ABdhPJwScnLJtCFfAG60dt1Shm2haI4ZhjrwDbGzGW2nLrhzCW9NkE82J1uytD1U/55BNt3enMSmxIExt0XVpWaPd1o=
+X-Received: by 2002:a17:906:22d0:: with SMTP id q16mr3729067eja.455.1591801909256;
+ Wed, 10 Jun 2020 08:11:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <20200607131339.476036-6-vaibhav@linux.ibm.com>
+ <202006090059.o4CE5D9b%lkp@intel.com> <CAPcyv4iQo_xgRGPx_j+RPzgWGZaigGRbc_kRzKEFePfVHenx5g@mail.gmail.com>
+ <87mu5cw2gl.fsf@linux.ibm.com> <CAPcyv4jfeBoFCdg2sKP5ExpTTQ_+LyrJewTupcrTgh-qWykNxw@mail.gmail.com>
+ <87k10fw29r.fsf@linux.ibm.com>
+In-Reply-To: <87k10fw29r.fsf@linux.ibm.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 10 Jun 2020 08:11:37 -0700
+Message-ID: <CAPcyv4h_0qSqS2P0=vNk9KWy-=WZq-giNupks+Q0+wmYVt9iLA@mail.gmail.com>
+Subject: Re: [PATCH v11 5/6] ndctl/papr_scm,uapi: Add support for PAPR nvdimm
+ specific methods
+To:     Vaibhav Jain <vaibhav@linux.ibm.com>
+Cc:     kernel test robot <lkp@intel.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kbuild-all@lists.01.org,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Santosh Sivaraj <santosh@fossix.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
-branch HEAD: ec0f0ded5019d1645906eba1a0708beb15247e04  Merge branch 'WIP.fixes'
+On Wed, Jun 10, 2020 at 5:10 AM Vaibhav Jain <vaibhav@linux.ibm.com> wrote:
+>
+> Dan Williams <dan.j.williams@intel.com> writes:
+>
+> > On Tue, Jun 9, 2020 at 10:54 AM Vaibhav Jain <vaibhav@linux.ibm.com> wrote:
+> >>
+> >> Thanks Dan for the consideration and taking time to look into this.
+> >>
+> >> My responses below:
+> >>
+> >> Dan Williams <dan.j.williams@intel.com> writes:
+> >>
+> >> > On Mon, Jun 8, 2020 at 5:16 PM kernel test robot <lkp@intel.com> wrote:
+> >> >>
+> >> >> Hi Vaibhav,
+> >> >>
+> >> >> Thank you for the patch! Perhaps something to improve:
+> >> >>
+> >> >> [auto build test WARNING on powerpc/next]
+> >> >> [also build test WARNING on linus/master v5.7 next-20200605]
+> >> >> [cannot apply to linux-nvdimm/libnvdimm-for-next scottwood/next]
+> >> >> [if your patch is applied to the wrong git tree, please drop us a note to help
+> >> >> improve the system. BTW, we also suggest to use '--base' option to specify the
+> >> >> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> >> >>
+> >> >> url:    https://github.com/0day-ci/linux/commits/Vaibhav-Jain/powerpc-papr_scm-Add-support-for-reporting-nvdimm-health/20200607-211653
+> >> >> base:   https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git next
+> >> >> config: powerpc-randconfig-r016-20200607 (attached as .config)
+> >> >> compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project e429cffd4f228f70c1d9df0e5d77c08590dd9766)
+> >> >> reproduce (this is a W=1 build):
+> >> >>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+> >> >>         chmod +x ~/bin/make.cross
+> >> >>         # install powerpc cross compiling tool for clang build
+> >> >>         # apt-get install binutils-powerpc-linux-gnu
+> >> >>         # save the attached .config to linux build tree
+> >> >>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=powerpc
+> >> >>
+> >> >> If you fix the issue, kindly add following tag as appropriate
+> >> >> Reported-by: kernel test robot <lkp@intel.com>
+> >> >>
+> >> >> All warnings (new ones prefixed by >>, old ones prefixed by <<):
+> >> >>
+> >> >> In file included from <built-in>:1:
+> >> >> >> ./usr/include/asm/papr_pdsm.h:69:20: warning: field 'hdr' with variable sized type 'struct nd_cmd_pkg' not at the end of a struct or class is a GNU extension [-Wgnu-variable-sized-type-not-at-end]
+> >> >> struct nd_cmd_pkg hdr;  /* Package header containing sub-cmd */
+> >> >
+> >> > Hi Vaibhav,
+> >> >
+> >> [.]
+> >> > This looks like it's going to need another round to get this fixed. I
+> >> > don't think 'struct nd_pdsm_cmd_pkg' should embed a definition of
+> >> > 'struct nd_cmd_pkg'. An instance of 'struct nd_cmd_pkg' carries a
+> >> > payload that is the 'pdsm' specifics. As the code has it now it's
+> >> > defined as a superset of 'struct nd_cmd_pkg' and the compiler warning
+> >> > is pointing out a real 'struct' organization problem.
+> >> >
+> >> > Given the soak time needed in -next after the code is finalized this
+> >> > there's no time to do another round of updates and still make the v5.8
+> >> > merge window.
+> >>
+> >> Agreed that this looks bad, a solution will probably need some more
+> >> review cycles resulting in this series missing the merge window.
+> >>
+> >> I am investigating into the possible solutions for this reported issue
+> >> and made few observations:
+> >>
+> >> I see command pkg for Intel, Hpe, Msft and Hyperv families using a
+> >> similar layout of embedding nd_cmd_pkg at the head of the
+> >> command-pkg. struct nd_pdsm_cmd_pkg is following the same pattern.
+> >>
+> >> struct nd_pdsm_cmd_pkg {
+> >>     struct nd_cmd_pkg hdr;
+> >>     /* other members */
+> >> };
+> >>
+> >> struct ndn_pkg_msft {
+> >>     struct nd_cmd_pkg gen;
+> >>     /* other members */
+> >> };
+> >> struct nd_pkg_intel {
+> >>     struct nd_cmd_pkg gen;
+> >>     /* other members */
+> >> };
+> >> struct ndn_pkg_hpe1 {
+> >>     struct nd_cmd_pkg gen;
+> >>     /* other members */
+> [.]
+> >
+> > In those cases the other members are a union and there is no second
+> > variable length array. Perhaps that is why those definitions are not
+> > getting flagged? I'm not seeing anything in ndctl build options that
+> > would explicitly disable this warning, but I'm not sure if the ndctl
+> > build environment is missing this build warning by accident.
+>
+> I tried building ndctl master with clang-10 with CC=clang and
+> CFLAGS="". Seeing the same warning messages reported for all command
+> package struct for existing command families.
+>
+> ./hpe1.h:334:20: warning: field 'gen' with variable sized type 'struct nd_cmd_pkg' not at the end of a struct or class is a GNU extension [-Wgnu-variable-sized-type-not-at-end]
+>         struct nd_cmd_pkg gen;
+>                           ^
+> ./msft.h:59:20: warning: field 'gen' with variable sized type 'struct nd_cmd_pkg' not at the end of a struct or class is a GNU extension [-Wgnu-variable-sized-type-not-at-end]
+>         struct nd_cmd_pkg       gen;
+>                                 ^
+> ./hyperv.h:34:20: warning: field 'gen' with variable sized type 'struct nd_cmd_pkg' not at the end of a struct or class is a GNU extension [-Wgnu-variable-sized-type-not-at-end]
+>         struct nd_cmd_pkg       gen;
+>                                 ^
 
-elapsed time: 481m
+Good to know, but ugh now I'm just realizing this warning is only
+coming from clang and not gcc. Frankly I'm not as concerned about
+clang warnings and I should have been more careful looking at the
+source of this warning.
 
-configs tested: 96
-configs skipped: 3
+> >
+> > Those variable size payloads are also not being used in any code paths
+> > that would look at the size of the command payload, like the kernel
+> > ioctl() path. The payload validation code needs static sizes and the
+> > payload parsing code wants to cast the payload to a known type. I
+> > don't think you can use the same struct definition for both those
+> > cases which is why the ndctl parsing code uses the union layout, but
+> > the kernel command marshaling code does strict layering.
+> Even if I switch to union layout and replacing the flexible array 'payload'
+> at end to a fixed size array something like below, I still see
+> '-Wgnu-variable-sized-type-not-at-end' warning reported by clang:
+>
+> union nd_pdsm_cmd_payload {
+>         struct nd_papr_pdsm_health health;
+>         __u8 buf[ND_PDSM_PAYLOAD_MAX_SIZE];
+> };
+>
+> struct nd_pdsm_cmd_pkg {
+>         struct nd_cmd_pkg hdr;  /* Package header containing sub-cmd */
+>         __s32 cmd_status;       /* Out: Sub-cmd status returned back */
+>         __u16 reserved[2];      /* Ignored and to be used in future */
+>         union nd_pdsm_cmd_payload payload;
+> } __attribute__((packed));
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Even though this is a clang warning, I'm still not sure it's a good
+idea to copy the ndctl approach into the kernel. Could you perhaps
+handle this the way that drivers/acpi/nfit/intel.c handles submitting
+commands through the ND_CMD_CALL interface, i.e. by just defining the
+command locally like this (from intel_security_flags()):
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-c6x                        evmc6678_defconfig
-arc                 nsimosci_hs_smp_defconfig
-arm                        mvebu_v5_defconfig
-arm                          iop32x_defconfig
-arm                            mps2_defconfig
-arm                         shannon_defconfig
-um                                allnoconfig
-arm                         socfpga_defconfig
-arc                                 defconfig
-sh                   sh7724_generic_defconfig
-powerpc                    amigaone_defconfig
-arc                        nsim_700_defconfig
-arm                          exynos_defconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a014-20200607
-i386                 randconfig-a015-20200607
-i386                 randconfig-a011-20200607
-i386                 randconfig-a016-20200607
-i386                 randconfig-a012-20200607
-i386                 randconfig-a013-20200607
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                               allmodconfig
-um                               allyesconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
+        struct {
+                struct nd_cmd_pkg pkg;
+                struct nd_intel_get_security_state cmd;
+        } nd_cmd = {
+                .pkg = {
+                        .nd_command = NVDIMM_INTEL_GET_SECURITY_STATE,
+                        .nd_family = NVDIMM_FAMILY_INTEL,
+                        .nd_size_out =
+                                sizeof(struct nd_intel_get_security_state),
+                        .nd_fw_size =
+                                sizeof(struct nd_intel_get_security_state),
+                },
+        };
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+That way it's clear that the payload is 'struct
+nd_intel_get_security_state' without needing to have a pre-existing
+definition. For parsing in the ioctl path I think it's clearer to cast
+the payload to the local pdsm structure for the command.
+
+>
+>
+> >
+> >> };
+> >>
+> >> Even though other command families implement similar command-package
+> >> layout they were not flagged (yet) as they are (I am guessing) serviced
+> >> in vendor acpi drivers rather than in kernel like in case of papr-scm
+> >> command family.
+> >
+> > I sincerely hope there are no vendor acpi kernel drivers outside of
+> > the upstream one.
+> Apologies if I was not clear. Was referring to nvdimm vendor uefi
+> drivers which ultimately service the DSM commands. Since CMD_CALL serves
+> as a conduit to send the command payload to these vendor drivers,
+> libnvdimm never needs to peek into the nd_cmd_pkg.payload
+> field. Consequently nfit module never hit this warning in kernel before.
+
+Ah, understood, and no, that's not the root reason this problem is not
+present in the kernel. The expectation is that any payload that the
+kernel would need to consider should probably have a kernel specific
+translation defined. For example,
+
+        ND_CMD_GET_CONFIG_SIZE
+        ND_CMD_GET_CONFIG_DATA
+        ND_CMD_SET_CONFIG_DATA
+
+...are payloads that the kernel needs to understand. However instead
+of supporting each way to read / write the label area the expectation
+is that all drivers just parse this common kernel payload and
+translate it if necessary. For example ND_CMD_{GET,SET}_CONFIG_DATA is
+optionally translated to the Intel DSMs, generic ACPI _LSR/_LSW, or
+papr_scm_meta_{get,set}.
+
+Outside of validating command numbers the expectation is that the
+kernel does not validate/consume the contents of the ND_CMD_CALL
+payload, it passes it to the backend where ACPI DSM or pdsm protocol
+takes over.
+
+>
+> >
+> >>
+> >> So, I think this issue is not just specific to papr-scm command family
+> >> introduced in this patch series but rather across all other command
+> >> families. Every other command family assumes 'struct nd_cmd_pkg_hdr' to
+> >> be embeddable and puts it at the beginning of their corresponding
+> >> command-packages. And its only a matter of time when someone tries
+> >> filtering/handling of vendor specific commands in nfit module when they
+> >> hit similar issue.
+> >>
+> >> Possible Solutions:
+> >>
+> >> * One way would be to redefine 'struct nd_cmd_pkg' to mark field
+> >>   'nd_payload[]' from a flexible array to zero sized array as
+> >>   'nd_payload[0]'.
+> >
+> > I just went through a round of removing the usage of buf[0] in ndctl
+> > since gcc10 now warns about that too.
+> >
+> >> This should make 'struct nd_cmd_pkg' embeddable and
+> >>   clang shouldn't report 'gnu-variable-sized-type-not-at-end'
+> >>   warning. Also I think this change shouldn't introduce any ABI change.
+> >>
+> >> * Another way to solve this issue might be to redefine 'struct
+> >>   nd_pdsm_cmd_pkg' to below removing the 'struct nd_cmd_pkg' member. This
+> >>   struct should immediately follow the 'struct nd_cmd_pkg' command package
+> >>   when sent to libnvdimm:
+> >>
+> >>   struct nd_pdsm_cmd_pkg {
+> >>         __s32 cmd_status;       /* Out: Sub-cmd status returned back */
+> >>         __u16 reserved[2];      /* Ignored and to be used in future */
+> >>         __u8 payload[];
+> >>         };
+> >>
+> >>   This should remove the flexible member nc_cmd_pkg.nd_payload from the
+> >>   struct with just one remaining at the end. However this would make
+> >>   accessing the [in|out|fw]_size members of 'struct nd_cmd_pkg'
+> >>   difficult for the pdsm servicing functions.
+> >>
+> >>
+> >> Any other solution that you think, may solve this issue ?
+> >
+> > The union might help, but per the above I think only for parsing the
+> > command at which point I don't think the kernel needs a unified
+> > structure defining both the generic envelope and the end-point
+> > specific payload at once.
+>
+> As I tested above, switching to union too will not solve the clang
+> warning.
+>
+> Having a unified structure for a command family defining both
+> generic envelop and end-point specific payload, is what I see all the
+> existing command families doing.
+>
+> However if I split 'struct nd_pdsm_cmd_pkg' to not have an embedded
+> 'struct nd_cmd_pkg' then it goes opposite to what existing command family
+> implementations.
+>
+> So to me it looks like no clear way to address this :-(
+>
+> Another non-conventional way to fix this might be to suppress this clang
+> warning messages by adding "CFLAGS_papr_scm.o +=
+> -Wno-gnu-variable-sized-type-not-at-end" to papr_scm Makefile.
+
+No, I don't think it's appropriate to customize clang warnings. Have a
+look at splitting parsing vs local command submission following the
+approach taken in drivers/acpi/nfit/intel.c.
+
+> Current implementation 'struct nd_cmd_pkg' clearly depends on gcc
+> extension of having a flexible payload array which is allowed to be not
+> necessarily placed at the end of a containing struct. So the problem can be
+> attributed to difference in compiler implementations between GCC and
+> Clang rather than how 'struct nd_pdsm_cmd_pkg' and 'struct nd_cmd_pkg'
+> are laid out.
+>
+> --
+> Cheers
+> ~ Vaibhav
