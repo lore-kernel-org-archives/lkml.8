@@ -2,77 +2,164 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7666DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 203A9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:15:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 598DC2070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:13:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED7872072E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:15:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729286AbgFJRN2 (ORCPT
+        id S1728620AbgFJRPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 13:13:28 -0400
-Received: from smtprelay0251.hostedemail.com ([216.40.44.251]:51044 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726979AbgFJRN2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 13:13:28 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 59FF8180286EF;
-        Wed, 10 Jun 2020 17:13:27 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: coat52_230528b26dcc
-X-Filterd-Recvd-Size: 1882
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf12.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 10 Jun 2020 17:13:26 +0000 (UTC)
-Message-ID: <c8851256aa453461481233e8a7fea878f9580c5b.camel@perches.com>
-Subject: Re: [PATCH] .clang-format: update column limit
-From:   Joe Perches <joe@perches.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 10 Jun 2020 10:13:24 -0700
-In-Reply-To: <20200610125147.2782142-1-christian.brauner@ubuntu.com>
-References: <20200610125147.2782142-1-christian.brauner@ubuntu.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.2-0ubuntu1 
+        Wed, 10 Jun 2020 13:15:05 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48694 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726979AbgFJRPF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 13:15:05 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 58E21B009;
+        Wed, 10 Jun 2020 17:15:06 +0000 (UTC)
+Subject: Re: [PATCH] drm/ast: fix missing break in switch statement for
+ format->cpp[0] case 4
+To:     Colin King <colin.king@canonical.com>,
+        Dave Airlie <airlied@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200610115804.1132338-1-colin.king@canonical.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
+ BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
+ Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
+ irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
+ clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
+ mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
+ KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
+ Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
+ UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
+ RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
+ dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
+ ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
+ 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
+ wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
+ h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
+ n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
+ aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
+ HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
+ 3H26qrE=
+Message-ID: <3286283e-f202-a515-0ae1-89c0d3e855fb@suse.de>
+Date:   Wed, 10 Jun 2020 19:14:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200610115804.1132338-1-colin.king@canonical.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="UsxwGtEEheNGlAKZ6LKRC92AjTcFcuLXI"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-06-10 at 14:51 +0200, Christian Brauner wrote:
-> The provided clang-format file wraps at 80 chars. If noone minds I'd like
-> to adjust this limit to 100 similar to what checkpatch (cf. [1]) uses now.
-> 
-> [1]: commit bdc48fa11e46 ("checkpatch/coding-style: deprecate 80-column warning")
-> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-[]
-> diff --git a/.clang-format b/.clang-format
-[]
-> @@ -52,7 +52,7 @@ BreakConstructorInitializersBeforeComma: false
->  #BreakConstructorInitializers: BeforeComma # Unknown to clang-format-4.0
->  BreakAfterJavaFieldAnnotations: false
->  BreakStringLiterals: false
-> -ColumnLimit: 80
-> +ColumnLimit: 100
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--UsxwGtEEheNGlAKZ6LKRC92AjTcFcuLXI
+Content-Type: multipart/mixed; boundary="Eah6yEBgs72EXQ71v3OZ8NDYMEkLD36Kz";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Colin King <colin.king@canonical.com>, Dave Airlie <airlied@redhat.com>,
+ David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+ Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-ID: <3286283e-f202-a515-0ae1-89c0d3e855fb@suse.de>
+Subject: Re: [PATCH] drm/ast: fix missing break in switch statement for
+ format->cpp[0] case 4
+References: <20200610115804.1132338-1-colin.king@canonical.com>
+In-Reply-To: <20200610115804.1132338-1-colin.king@canonical.com>
 
-Ii think this is a not a good change.
+--Eah6yEBgs72EXQ71v3OZ8NDYMEkLD36Kz
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-If you read the commit log you provided, it ways
-"staying withing 80 columns is certainly still _preferred_"
+Hi
 
-With this change, clang would _always_ wrap to 100 columns.
+Am 10.06.20 um 13:58 schrieb Colin King:
+> From: Colin Ian King <colin.king@canonical.com>
+>=20
+> Currently the switch statement for format->cpp[0] value 4 assigns
+> color_index which is never read again and then falls through to the
+> default case and returns. This looks like a missing break statement
+> bug. Fix this by adding a break statement.
+>=20
+> Addresses-Coverity: ("Unused value")
+> Fixes: 259d14a76a27 ("drm/ast: Split ast_set_vbios_mode_info()")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-clang would not make any reasonable attempt to use 80 when
-it should.
+Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+
+Thanks for the fix. I'll test and merge the patch tomorrow.
+
+Best regards
+Thomas
+
+> ---
+>  drivers/gpu/drm/ast/ast_mode.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/gpu/drm/ast/ast_mode.c b/drivers/gpu/drm/ast/ast_m=
+ode.c
+> index 7d39b858c9f1..3a3a511670c9 100644
+> --- a/drivers/gpu/drm/ast/ast_mode.c
+> +++ b/drivers/gpu/drm/ast/ast_mode.c
+> @@ -226,6 +226,7 @@ static void ast_set_vbios_color_reg(struct ast_priv=
+ate *ast,
+>  	case 3:
+>  	case 4:
+>  		color_index =3D TrueCModeIndex;
+> +		break;
+>  	default:
+>  		return;
+>  	}
+>=20
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
 
 
+--Eah6yEBgs72EXQ71v3OZ8NDYMEkLD36Kz--
+
+--UsxwGtEEheNGlAKZ6LKRC92AjTcFcuLXI
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl7hFRUACgkQaA3BHVML
+eiNuewf+NSC3xjI5ZqB94Yy11a5/KKJtyGy9G3I638ASSLvAjH4PiqkGQCW246p7
+QrOnWTdoKlW6XreLjH06r3+9Jb6WafV/ewvzio6+SvuD64edsef6HBekhUlKwYo3
+1593l1mh+DKw3o+uGYUBo96Oj5RY3yZrSjfnhAfOd116th4V5YbOOyakfWQ0gEhX
+xE0+r9NB+BtY1rPUNDcucYn37j4twAICKVPOX2shYc/Qpoc8cE/QI9Y7J/ktpy11
+3LMItZvlevCWP/79zrdpy/buo603otmLkn5Ia8QMtFAKZ+IBIzo97fdHVqrC/aHZ
+X3f5bYnUyyOscA5mRY72K1veGuupuQ==
+=kXy7
+-----END PGP SIGNATURE-----
+
+--UsxwGtEEheNGlAKZ6LKRC92AjTcFcuLXI--
