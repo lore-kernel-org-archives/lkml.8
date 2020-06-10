@@ -2,73 +2,73 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C00FDC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B174AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AD702078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E89C2074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:38:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PD3DXviU"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XdPLzp6Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728895AbgFJLhp (ORCPT
+        id S1728590AbgFJLiK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 07:37:45 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:29258 "EHLO
+        Wed, 10 Jun 2020 07:38:10 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:60316 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728661AbgFJLgX (ORCPT
+        by vger.kernel.org with ESMTP id S1728610AbgFJLgM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 07:36:23 -0400
+        Wed, 10 Jun 2020 07:36:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591788982;
+        s=mimecast20190719; t=1591788971;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=nqpRKPPRu97i04+lEwiVZnVP4RAISD6OyeyY71/1iaw=;
-        b=PD3DXviUIXZSvLoLAGuF692PzUijlWhppV55ZYxp5ZvJhdv/oOyKxnqycdlsIKlAl05Ro9
-        vJXmZKpt9/tjiRcITzJF7kZ+lqnPFaDR6sRdKl9FT8WvPsPF/3XlmhxsbBVFUDAcD1u2C4
-        Q8BCO1YTt5uaGYZRw8wu8KRy9OYKJWc=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-194-dq12sjCyNT2fCVMm2nr8wg-1; Wed, 10 Jun 2020 07:36:20 -0400
-X-MC-Unique: dq12sjCyNT2fCVMm2nr8wg-1
-Received: by mail-wm1-f70.google.com with SMTP id v24so401502wmh.3
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 04:36:20 -0700 (PDT)
+        bh=VWXM+ipVrzQXYONFpt3zkOQmQtQZ231iT3DOSd7IMMo=;
+        b=XdPLzp6Yi30BzsB+GUxZyVsgKdzHqXb1MdeYINNj12as2B9d0qsMYNIAErN1wiaMr74/at
+        XYjbnatuZLzicIlRy+0uefzMklC1aFn3DLlgxbEc3fsolEFPScLG/3uaBKFMaJ5yX9ilJM
+        xmn+p8bapgeJNxm+y/FC2LUJioLI7S0=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-456-i-pdOom-N8665eI7jjEAkA-1; Wed, 10 Jun 2020 07:36:09 -0400
+X-MC-Unique: i-pdOom-N8665eI7jjEAkA-1
+Received: by mail-wm1-f71.google.com with SMTP id b65so400815wmb.5
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 04:36:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=nqpRKPPRu97i04+lEwiVZnVP4RAISD6OyeyY71/1iaw=;
-        b=h06zfjyWln84MFaL0M7III3AQ1SIdWcefiLl0DaPO6cI84d4PI/37rL0CnPWjhnYqb
-         LzJTLXpmL4EAPEhYkcNZ3T4pXwgiojTHeIKdeO5KNrZH+Ok6rq+A1JZrc7KJfwSD5Bju
-         nwfRmYwtMIjIpkr3vhL4/oeM5RsLW/EmQ09xnIv/Je68J8FqomjKe93Fb9WrPSlGgoMy
-         MYDvOczDQEhrEamchLjp4T6LNP3mnK158hIYmn1dCG/GCvjZxKOr3zbUjx8emk+sJlLE
-         4sQpb+hNd8KyhlbtOkabvKi8eoFzz5b7qPeN2/a93kdHygDbQ0OllqK6fU6MA6StEDGf
-         GqYQ==
-X-Gm-Message-State: AOAM532TGIvecDPLY/n8OYhpGil79kIf7gp/FxZDmownHVlXH6pO1rJf
-        ztrgca6qPV0ITVyOLyoXyPkWpb6CdpyT6PC2MfC5gfCjpbyJQfmuxuAr6xhmJo0iU9+Lv2/dtPd
-        hj4cCvP4KM5yjqF4y9OpBuelT
-X-Received: by 2002:a7b:cc94:: with SMTP id p20mr2749318wma.148.1591788979281;
-        Wed, 10 Jun 2020 04:36:19 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxk/lBSoKqQEzUm0ygb+JThKfl+fyQkS7QcmVzzuz7sF0aMX0Q8Jh3FrRflgePDOX+1hNCqVA==
-X-Received: by 2002:a7b:cc94:: with SMTP id p20mr2749304wma.148.1591788979097;
-        Wed, 10 Jun 2020 04:36:19 -0700 (PDT)
+        bh=VWXM+ipVrzQXYONFpt3zkOQmQtQZ231iT3DOSd7IMMo=;
+        b=n7xuZCPCow6KB+0UwnMAeWUIF/1i4kAMgBDMTDuJIwc7WbgDzZcwMO0xzGRcuPBLlu
+         VwmcMvnsCgFi8qlUfArTH9DdOuNdvQjSbHdZaPlh9bpAshDXe9+Nc5mGYLM/PR4mt7Sv
+         ugsJGUbvgUIdF3MHP6ChLyRokj0d7AaGul6LCUz73psaOUvKulh6xRqJqCifstWw0LQt
+         nqX2GB30P6EE2xSlwWPbeNa6cdhSNhhv94WvGV8MuKtzuXx6G98v2Q4RqmSFaX7XIhPf
+         FnF1GrwSDVo8oOVh65N9nCjjcUeZ5AMuxwF0+/tUZnAqHtq+wNccQWc9jgvqxwve9uI1
+         9uEQ==
+X-Gm-Message-State: AOAM530wgMoSBmm9lVDrpY/X/IYYwk7pdA509/+0ZJ7Fr1BqrbsuYArb
+        n+6bttZcCKBbyrfyrVZWGrhzBi/CKXswjCoZwAk529KdTt880/ArEyWvHujlTAkQwRcHSC3Y444
+        LXPc0KePKQDhhjrZo0Q4GfrK2
+X-Received: by 2002:adf:ea11:: with SMTP id q17mr3146827wrm.75.1591788968133;
+        Wed, 10 Jun 2020 04:36:08 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw+0YhjkTKfGeypFjYmQw4xelfruV1Ntm2M/rNlskwCxXmVD04EuumSwnMG+QPQp8710QWBNA==
+X-Received: by 2002:adf:ea11:: with SMTP id q17mr3146806wrm.75.1591788967929;
+        Wed, 10 Jun 2020 04:36:07 -0700 (PDT)
 Received: from redhat.com ([212.92.121.57])
-        by smtp.gmail.com with ESMTPSA id d63sm6775894wmc.22.2020.06.10.04.36.17
+        by smtp.gmail.com with ESMTPSA id a16sm7674114wrx.8.2020.06.10.04.36.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 04:36:18 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 07:36:16 -0400
+        Wed, 10 Jun 2020 04:36:07 -0700 (PDT)
+Date:   Wed, 10 Jun 2020 07:36:05 -0400
 From:   "Michael S. Tsirkin" <mst@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
         netdev@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
         eperezma@redhat.com
-Subject: [PATCH RFC v7 08/14] fixup! vhost: use batched get_vq_desc version
-Message-ID: <20200610113515.1497099-9-mst@redhat.com>
+Subject: [PATCH RFC v7 04/14] vhost/net: pass net specific struct pointer
+Message-ID: <20200610113515.1497099-5-mst@redhat.com>
 References: <20200610113515.1497099-1-mst@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -81,25 +81,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
----
- drivers/vhost/vhost.c | 4 ----
- 1 file changed, 4 deletions(-)
+In preparation for further cleanup, pass net specific pointer
+to ubuf callbacks so we can move net specific fields
+out to net structures.
 
-diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-index 7a587b13095c..03e6bca02288 100644
---- a/drivers/vhost/vhost.c
-+++ b/drivers/vhost/vhost.c
-@@ -2205,10 +2205,6 @@ static int fetch_buf(struct vhost_virtqueue *vq)
- 	last_avail_idx = vq->last_avail_idx;
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+---
+ drivers/vhost/net.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
+index bf5e1d81ae25..ff594eec8ae3 100644
+--- a/drivers/vhost/net.c
++++ b/drivers/vhost/net.c
+@@ -94,7 +94,7 @@ struct vhost_net_ubuf_ref {
+ 	 */
+ 	atomic_t refcount;
+ 	wait_queue_head_t wait;
+-	struct vhost_virtqueue *vq;
++	struct vhost_net_virtqueue *nvq;
+ };
  
- 	if (unlikely(vq->avail_idx == vq->last_avail_idx)) {
--		/* If we already have work to do, don't bother re-checking. */
--		if (likely(vq->ndescs))
--			return 1;
--
- 		if (unlikely(vhost_get_avail_idx(vq, &avail_idx))) {
- 			vq_err(vq, "Failed to access avail idx at %p\n",
- 				&vq->avail->idx);
+ #define VHOST_NET_BATCH 64
+@@ -231,7 +231,7 @@ static void vhost_net_enable_zcopy(int vq)
+ }
+ 
+ static struct vhost_net_ubuf_ref *
+-vhost_net_ubuf_alloc(struct vhost_virtqueue *vq, bool zcopy)
++vhost_net_ubuf_alloc(struct vhost_net_virtqueue *nvq, bool zcopy)
+ {
+ 	struct vhost_net_ubuf_ref *ubufs;
+ 	/* No zero copy backend? Nothing to count. */
+@@ -242,7 +242,7 @@ vhost_net_ubuf_alloc(struct vhost_virtqueue *vq, bool zcopy)
+ 		return ERR_PTR(-ENOMEM);
+ 	atomic_set(&ubufs->refcount, 1);
+ 	init_waitqueue_head(&ubufs->wait);
+-	ubufs->vq = vq;
++	ubufs->nvq = nvq;
+ 	return ubufs;
+ }
+ 
+@@ -384,13 +384,13 @@ static void vhost_zerocopy_signal_used(struct vhost_net *net,
+ static void vhost_zerocopy_callback(struct ubuf_info *ubuf, bool success)
+ {
+ 	struct vhost_net_ubuf_ref *ubufs = ubuf->ctx;
+-	struct vhost_virtqueue *vq = ubufs->vq;
++	struct vhost_net_virtqueue *nvq = ubufs->nvq;
+ 	int cnt;
+ 
+ 	rcu_read_lock_bh();
+ 
+ 	/* set len to mark this desc buffers done DMA */
+-	vq->heads[ubuf->desc].len = success ?
++	nvq->vq.heads[ubuf->desc].in_len = success ?
+ 		VHOST_DMA_DONE_LEN : VHOST_DMA_FAILED_LEN;
+ 	cnt = vhost_net_ubuf_put(ubufs);
+ 
+@@ -402,7 +402,7 @@ static void vhost_zerocopy_callback(struct ubuf_info *ubuf, bool success)
+ 	 * less than 10% of times).
+ 	 */
+ 	if (cnt <= 1 || !(cnt % 16))
+-		vhost_poll_queue(&vq->poll);
++		vhost_poll_queue(&nvq->vq.poll);
+ 
+ 	rcu_read_unlock_bh();
+ }
+@@ -1525,7 +1525,7 @@ static long vhost_net_set_backend(struct vhost_net *n, unsigned index, int fd)
+ 	/* start polling new socket */
+ 	oldsock = vhost_vq_get_backend(vq);
+ 	if (sock != oldsock) {
+-		ubufs = vhost_net_ubuf_alloc(vq,
++		ubufs = vhost_net_ubuf_alloc(nvq,
+ 					     sock && vhost_sock_zcopy(sock));
+ 		if (IS_ERR(ubufs)) {
+ 			r = PTR_ERR(ubufs);
 -- 
 MST
 
