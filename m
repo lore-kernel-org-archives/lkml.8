@@ -4,47 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E6BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE81C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32C1B2074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:15:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6FCD207C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:15:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LAoTgmZq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qA6a873s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730806AbgFJUPW (ORCPT
+        id S1730812AbgFJUPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 16:15:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60516 "EHLO
+        Wed, 10 Jun 2020 16:15:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbgFJUNv (ORCPT
+        with ESMTP id S1730576AbgFJUNv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 10 Jun 2020 16:13:51 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5901C008638;
-        Wed, 10 Jun 2020 13:13:48 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08D9AC00863A;
+        Wed, 10 Jun 2020 13:13:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=W4JF/8+4T74bu7dBYV5gPvgjn/5tVoyv2zfUGPd36qk=; b=LAoTgmZqcjMuG+HCWwA5BxKMbm
-        Nyiwbqf3Xa8NAh4iH5iThagnkB86tvgqE8VqwdsvILSa9ApozrBRx1UoRfXdTZY/Cauy6TKA4zr34
-        0CObYbAOF5vT9G/R3029RFDiAZxL7qUl2BM9V7U2lxXmSofogsIyKWzY47bfxN6z4gYrOIMB6jnJQ
-        XvDcxJqlghi4i4a7SL7APlV+VMSh5Xnl9f/Wc9y0kJ+PwBpwV6MZx2UdiRSoCuxEePDsAKtEzj6Cn
-        2cIpvBS3CHQbmUe22So5PS0HyRXQutAimltARhNfCjSbgayoieOylYetLtrB+ZvtZS2bF0Gu6vs+2
-        bqKSLVmw==;
+        bh=K+NqwcuwBBsF5gvk4uOfKfFisJ5O9Bzckjl4rjWXvjY=; b=qA6a873s/Zff6UrlIw+ycMtkmr
+        r7DXIh0LqRMxP8WmkQDOXoK4uBozwknJV1jplSMSs98TIdUIx9XWMUHtY5l3pS6At6H0Xo3WrxqxB
+        Hd4PKKJiOVr/UNzXW9P1ADiQ2BXcPTKbHqHw4Vu3jZHP/lMxn1vwvo14aDBfSs/nxM5xlnqoahpLH
+        bOivbzFTqd30i9dX6D36QV9MDuQJbVOHE7P8sXzMHd/HO5kvplNVn8doNMTZ7o47aCSZFxVTtjAEa
+        kwGXfT5L3TCXUpfoZOZ8sSz+qHMzHK1b84OTzHcsHm1cPxLrUaCSX1eV8+lK+rgZy7PRnoEdC+vgv
+        paZTSwUA==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jj76a-0003Wz-P8; Wed, 10 Jun 2020 20:13:48 +0000
+        id 1jj76a-0003XE-SA; Wed, 10 Jun 2020 20:13:48 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 37/51] mm: Remove page fault assumption of compound page size
-Date:   Wed, 10 Jun 2020 13:13:31 -0700
-Message-Id: <20200610201345.13273-38-willy@infradead.org>
+Subject: [PATCH v6 39/51] mm: Remove assumptions of THP size
+Date:   Wed, 10 Jun 2020 13:13:33 -0700
+Message-Id: <20200610201345.13273-40-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200610201345.13273-1-willy@infradead.org>
 References: <20200610201345.13273-1-willy@infradead.org>
@@ -57,36 +57,127 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-A compound page in the page cache will not necessarily be of PMD size,
-so check explicitly.
+Remove direct uses of HPAGE_PMD_NR in paths that aren't necessarily
+PMD sized.
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- mm/memory.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ mm/huge_memory.c | 15 ++++++++-------
+ mm/rmap.c        | 10 +++++-----
+ 2 files changed, 13 insertions(+), 12 deletions(-)
 
-diff --git a/mm/memory.c b/mm/memory.c
-index dc7f3543b1fd..3e6ef0ebfdd0 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -3552,13 +3552,14 @@ static vm_fault_t do_set_pmd(struct vm_fault *vmf, struct page *page)
- 	unsigned long haddr = vmf->address & HPAGE_PMD_MASK;
- 	pmd_t entry;
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 744863aa0374..c25d8e2310e8 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -2340,7 +2340,7 @@ static void remap_page(struct page *page)
+ 	if (PageTransHuge(page)) {
+ 		remove_migration_ptes(page, page, true);
+ 	} else {
+-		for (i = 0; i < HPAGE_PMD_NR; i++)
++		for (i = 0; i < thp_nr_pages(page); i++)
+ 			remove_migration_ptes(page + i, page + i, true);
+ 	}
+ }
+@@ -2415,6 +2415,7 @@ static void __split_huge_page(struct page *page, struct list_head *list,
+ 	struct lruvec *lruvec;
+ 	struct address_space *swap_cache = NULL;
+ 	unsigned long offset = 0;
++	unsigned int nr = thp_nr_pages(head);
  	int i;
--	vm_fault_t ret;
-+	vm_fault_t ret = VM_FAULT_FALLBACK;
  
- 	if (!transhuge_vma_suitable(vma, haddr))
--		return VM_FAULT_FALLBACK;
-+		return ret;
+ 	lruvec = mem_cgroup_page_lruvec(head, pgdat);
+@@ -2430,7 +2431,7 @@ static void __split_huge_page(struct page *page, struct list_head *list,
+ 		xa_lock(&swap_cache->i_pages);
+ 	}
  
--	ret = VM_FAULT_FALLBACK;
+-	for (i = HPAGE_PMD_NR - 1; i >= 1; i--) {
++	for (i = nr - 1; i >= 1; i--) {
+ 		__split_huge_page_tail(head, i, lruvec, list);
+ 		/* Some pages can be beyond i_size: drop them from page cache */
+ 		if (head[i].index >= end) {
+@@ -2471,7 +2472,7 @@ static void __split_huge_page(struct page *page, struct list_head *list,
+ 
+ 	remap_page(head);
+ 
+-	for (i = 0; i < HPAGE_PMD_NR; i++) {
++	for (i = 0; i < nr; i++) {
+ 		struct page *subpage = head + i;
+ 		if (subpage == page)
+ 			continue;
+@@ -2553,14 +2554,14 @@ int page_trans_huge_mapcount(struct page *page, int *total_mapcount)
  	page = compound_head(page);
-+	if (page_order(page) != HPAGE_PMD_ORDER)
-+		return ret;
  
- 	/*
- 	 * Archs like ppc64 need additonal space to store information
+ 	_total_mapcount = ret = 0;
+-	for (i = 0; i < HPAGE_PMD_NR; i++) {
++	for (i = 0; i < thp_nr_pages(page); i++) {
+ 		mapcount = atomic_read(&page[i]._mapcount) + 1;
+ 		ret = max(ret, mapcount);
+ 		_total_mapcount += mapcount;
+ 	}
+ 	if (PageDoubleMap(page)) {
+ 		ret -= 1;
+-		_total_mapcount -= HPAGE_PMD_NR;
++		_total_mapcount -= thp_nr_pages(page);
+ 	}
+ 	mapcount = compound_mapcount(page);
+ 	ret += mapcount;
+@@ -2577,9 +2578,9 @@ bool can_split_huge_page(struct page *page, int *pextra_pins)
+ 
+ 	/* Additional pins from page cache */
+ 	if (PageAnon(page))
+-		extra_pins = PageSwapCache(page) ? HPAGE_PMD_NR : 0;
++		extra_pins = PageSwapCache(page) ? thp_nr_pages(page) : 0;
+ 	else
+-		extra_pins = HPAGE_PMD_NR;
++		extra_pins = thp_nr_pages(page);
+ 	if (pextra_pins)
+ 		*pextra_pins = extra_pins;
+ 	return total_mapcount(page) == page_count(page) - extra_pins - 1;
+diff --git a/mm/rmap.c b/mm/rmap.c
+index c56fab5826c1..c0295282928b 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -1205,7 +1205,7 @@ void page_add_file_rmap(struct page *page, bool compound)
+ 	VM_BUG_ON_PAGE(compound && !PageTransHuge(page), page);
+ 	lock_page_memcg(page);
+ 	if (compound && PageTransHuge(page)) {
+-		for (i = 0, nr = 0; i < HPAGE_PMD_NR; i++) {
++		for (i = 0, nr = 0; i < thp_nr_pages(page); i++) {
+ 			if (atomic_inc_and_test(&page[i]._mapcount))
+ 				nr++;
+ 		}
+@@ -1246,7 +1246,7 @@ static void page_remove_file_rmap(struct page *page, bool compound)
+ 
+ 	/* page still mapped by someone else? */
+ 	if (compound && PageTransHuge(page)) {
+-		for (i = 0, nr = 0; i < HPAGE_PMD_NR; i++) {
++		for (i = 0, nr = 0; i < thp_nr_pages(page); i++) {
+ 			if (atomic_add_negative(-1, &page[i]._mapcount))
+ 				nr++;
+ 		}
+@@ -1293,7 +1293,7 @@ static void page_remove_anon_compound_rmap(struct page *page)
+ 		 * Subpages can be mapped with PTEs too. Check how many of
+ 		 * them are still mapped.
+ 		 */
+-		for (i = 0, nr = 0; i < HPAGE_PMD_NR; i++) {
++		for (i = 0, nr = 0; i < thp_nr_pages(page); i++) {
+ 			if (atomic_add_negative(-1, &page[i]._mapcount))
+ 				nr++;
+ 		}
+@@ -1303,10 +1303,10 @@ static void page_remove_anon_compound_rmap(struct page *page)
+ 		 * page of the compound page is unmapped, but at least one
+ 		 * small page is still mapped.
+ 		 */
+-		if (nr && nr < HPAGE_PMD_NR)
++		if (nr && nr < thp_nr_pages(page))
+ 			deferred_split_huge_page(page);
+ 	} else {
+-		nr = HPAGE_PMD_NR;
++		nr = thp_nr_pages(page);
+ 	}
+ 
+ 	if (unlikely(PageMlocked(page)))
 -- 
 2.26.2
 
