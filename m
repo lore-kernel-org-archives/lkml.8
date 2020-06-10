@@ -2,67 +2,113 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80029C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C0BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62DD62067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:10:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51AAC2067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:12:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729757AbgFJOK5 (ORCPT
+        id S1729759AbgFJOMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 10:10:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37284 "EHLO mx2.suse.de"
+        Wed, 10 Jun 2020 10:12:39 -0400
+Received: from mga14.intel.com ([192.55.52.115]:34281 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727022AbgFJOK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 10:10:56 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 36262ABC7;
-        Wed, 10 Jun 2020 14:10:58 +0000 (UTC)
-From:   Juergen Gross <jgross@suse.com>
-To:     xen-devel@lists.xenproject.org, linux-fbdev@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc:     Juergen Gross <jgross@suse.com>, Peter Jones <pjones@redhat.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH] efi: avoid error message when booting under Xen
-Date:   Wed, 10 Jun 2020 16:10:52 +0200
-Message-Id: <20200610141052.13258-1-jgross@suse.com>
-X-Mailer: git-send-email 2.26.2
+        id S1727022AbgFJOMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 10:12:39 -0400
+IronPort-SDR: iQw7qB8FZPr5J8lFO0Ye9tmuq5h7XIpChO0/kp/8aLNKVwy4tf7FeKqXLwwoIjrbEktLljO+fy
+ 2ZKwTM6uV5Vw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2020 07:12:39 -0700
+IronPort-SDR: fKrJXsTqhlPXdaj5uo+Plq6f24Ee0V34xRBDERFPAU1oT+dwqd1TjgEWVneFvEOvOqdcHz0O1c
+ x2BU4QuL/X4A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,496,1583222400"; 
+   d="scan'208";a="473350013"
+Received: from opolat-mobl.amr.corp.intel.com (HELO [10.251.2.3]) ([10.251.2.3])
+  by fmsmga006.fm.intel.com with ESMTP; 10 Jun 2020 07:12:38 -0700
+Subject: Re: [RFC PATCH] ALSA: compress: Fix gapless playback state machine
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        vkoul@kernel.org
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.com, broonie@kernel.org
+References: <20200610100729.362-1-srinivas.kandagatla@linaro.org>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <694dd437-3453-7328-f544-28106c1c366d@linux.intel.com>
+Date:   Wed, 10 Jun 2020 07:56:05 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200610100729.362-1-srinivas.kandagatla@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-efifb_probe() will issue an error message in case the kernel is booted
-as Xen dom0 from UEFI as EFI_MEMMAP won't be set in this case. Avoid
-that message by calling efi_mem_desc_lookup() only if EFI_PARAVIRT
-isn't set.
 
-Fixes: 38ac0287b7f4 ("fbdev/efifb: Honour UEFI memory map attributes when mapping the FB")
-Signed-off-by: Juergen Gross <jgross@suse.com>
----
- drivers/video/fbdev/efifb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/video/fbdev/efifb.c b/drivers/video/fbdev/efifb.c
-index 65491ae74808..f5eccd1373e9 100644
---- a/drivers/video/fbdev/efifb.c
-+++ b/drivers/video/fbdev/efifb.c
-@@ -453,7 +453,7 @@ static int efifb_probe(struct platform_device *dev)
- 	info->apertures->ranges[0].base = efifb_fix.smem_start;
- 	info->apertures->ranges[0].size = size_remap;
- 
--	if (efi_enabled(EFI_BOOT) &&
-+	if (efi_enabled(EFI_BOOT) && !efi_enabled(EFI_PARAVIRT) &&
- 	    !efi_mem_desc_lookup(efifb_fix.smem_start, &md)) {
- 		if ((efifb_fix.smem_start + efifb_fix.smem_len) >
- 		    (md.phys_addr + (md.num_pages << EFI_PAGE_SHIFT))) {
--- 
-2.26.2
+On 6/10/20 5:07 AM, Srinivas Kandagatla wrote:
+> For gapless playback call to snd_compr_drain_notify() after
+> partial drain should put the state to SNDRV_PCM_STATE_RUNNING
+> rather than SNDRV_PCM_STATE_SETUP as the driver is ready to
+> process the buffers for new track.
+> 
+> With existing code, if we are playing 3 tracks in gapless, after
 
+The gapless playback only deals with transitions between two tracks of 
+identical format. I am not sure what the reference to 3 tracks means.
+
+> partial drain finished on previous track 1 the state is set to
+> SNDRV_PCM_STATE_SETUP which is then moved to SNDRV_PCM_STATE_PREPARED
+> after data write. With this state calls to snd_compr_next_track() and
+> few other calls will fail as they expect the state to be in
+> SNDRV_PCM_STATE_RUNNING.
+> 
+> Here is the sequence of events and state transitions:
+> 
+> 1. set_params (Track 1), state =  SNDRV_PCM_STATE_SETUP
+> 2. set_metadata (Track 1), no state change, state = SNDRV_PCM_STATE_SETUP
+> 3. fill and trigger start (Track 1), state = SNDRV_PCM_STATE_RUNNING
+> 4. set_next_track (Track 2), state = SNDRV_PCM_STATE_RUNNING
+> 5. partial_drain (Track 1), state = SNDRV_PCM_STATE_SETUP
+> 6  snd_compr_drain_notify (Track 1), state = SNDRV_PCM_STATE_SETUP
+> 7. fill data (Track 2), state = SNDRV_PCM_STATE_PREPARED
+> 8. set_metadata (Track 3), no state change, state = SNDRV_PCM_STATE_PREPARED
+> 9. set_next_track (Track 3), !! FAILURE as state != SNDRV_PCM_STATE_RUNNING
+> 
+> Fixes: f44f2a5417b2 ("ALSA: compress: fix drain calls blocking other compress functions (v6)")
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+> 
+> I wonder who did gapless work on upstream so far?
+
+IIRC the only users of gapless playback are Android platforms, where the 
+HAL deals with the transitions. I am not aware of any plain vanilla 
+Linux solution.
+
+> 
+>   include/sound/compress_driver.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/sound/compress_driver.h b/include/sound/compress_driver.h
+> index 6ce8effa0b12..eabac33864c2 100644
+> --- a/include/sound/compress_driver.h
+> +++ b/include/sound/compress_driver.h
+> @@ -182,7 +182,7 @@ static inline void snd_compr_drain_notify(struct snd_compr_stream *stream)
+>   	if (snd_BUG_ON(!stream))
+>   		return;
+>   
+> -	stream->runtime->state = SNDRV_PCM_STATE_SETUP;
+> +	stream->runtime->state = SNDRV_PCM_STATE_RUNNING;
+>   
+>   	wake_up(&stream->runtime->sleep);
+>   }
+> 
