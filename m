@@ -2,158 +2,115 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D35C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E08D8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84E482072F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:41:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XWzr4ffD"
+	by mail.kernel.org (Postfix) with ESMTP id C1BD3207F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:42:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591803730;
+	bh=T0g/Y42kJC01OEoFBGhoaN5SHb8YsES7u1KLhw4yYQ4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=TfCpf8mRXGnQOMPDxPjSePSmLBMTxdiYlwU7HS6zFsWWBF6nhoN3nDymsVDBb/VmL
+	 dBYCjfv6V3kNcyno0MeWReFDGZvRjcfxAPWNet6iYI+/hjKPyhLmkpAzM104obS38S
+	 lTZ8F8nwWcJueEMM6niIcW1Vyszd4dTttipacgAg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730270AbgFJPlp (ORCPT
+        id S1730277AbgFJPmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 11:41:45 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:48027 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727910AbgFJPll (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 11:41:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591803699;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=hjSM67DtmOsqtTYEGUCI40HSbVxGiINgh5sSqThFUtk=;
-        b=XWzr4ffDBW/X2f8sRxhYmdmSKLFRBwjaCs0CTTU0x4aYA9+2r+aCcFC5nq7SeO2mAygF/3
-        lpQnO8EV2+I6EUroK2h1ocSVNK6UMOhi21CiLkcYQvR0dwsvJ+ZWbwteOgaX5tL2cr9UoS
-        WoKhzXbmBzYMTtWx0WYdMwuoC9e8oKY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-316-HxNOpix2OHu6zV4Sll2K6w-1; Wed, 10 Jun 2020 11:41:35 -0400
-X-MC-Unique: HxNOpix2OHu6zV4Sll2K6w-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 10 Jun 2020 11:42:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41718 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726955AbgFJPmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 11:42:08 -0400
+Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A3067464;
-        Wed, 10 Jun 2020 15:41:33 +0000 (UTC)
-Received: from krava (unknown [10.40.195.82])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 2ECE460CC0;
-        Wed, 10 Jun 2020 15:41:30 +0000 (UTC)
-Date:   Wed, 10 Jun 2020 17:41:29 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Paul Clarke <pc@us.ibm.com>, Kajol Jain <kjain@linux.ibm.com>,
-        linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/2] perf expr: Add d_ratio operation
-Message-ID: <20200610154129.GA1776102@krava>
-References: <20200610051717.170457-1-irogers@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200610051717.170457-1-irogers@google.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        by mail.kernel.org (Postfix) with ESMTPSA id DDBF42072F;
+        Wed, 10 Jun 2020 15:42:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591803728;
+        bh=T0g/Y42kJC01OEoFBGhoaN5SHb8YsES7u1KLhw4yYQ4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=tVAv3mcHxoUQwI0t9AS6dDdcA911AilkLa+olqKAf9FYYA7kqQ4ifCb5LSK9hjAYG
+         ZNkXSLGs62J4ZNSGhiDMdbyz7wOxUfd7rRRPTyW7YjhvjzMXE6IhqN+4elBKUpyq7H
+         xchBOhP2nGhV6I4aB1qWTqrXIsH9mF9MLyM6eRG0=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Mark Brown <broonie@kernel.org>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>, stable@vger.kernel.org
+Subject: [PATCH] spi: spi-fsl-dspi: Free DMA memory with matching function
+Date:   Wed, 10 Jun 2020 17:41:57 +0200
+Message-Id: <1591803717-11218-1-git-send-email-krzk@kernel.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 10:17:15PM -0700, Ian Rogers wrote:
-> This simplifies computing ratios in json expressions.
+Driver allocates DMA memory with dma_alloc_coherent() but frees it with
+dma_unmap_single().
 
-please put in the comment some usage example and add
-a test for this to tests/expr.c
+This causes DMA warning during system shutdown (with DMA debugging) on
+Toradex Colibri VF50 module:
 
-same for the '<>' operators in the other patch
+    WARNING: CPU: 0 PID: 1 at ../kernel/dma/debug.c:1036 check_unmap+0x3fc/0xb04
+    DMA-API: fsl-edma 40098000.dma-controller: device driver frees DMA memory with wrong function
+      [device address=0x0000000087040000] [size=8 bytes] [mapped as coherent] [unmapped as single]
+    Hardware name: Freescale Vybrid VF5xx/VF6xx (Device Tree)
+      (unwind_backtrace) from [<8010bb34>] (show_stack+0x10/0x14)
+      (show_stack) from [<8011ced8>] (__warn+0xf0/0x108)
+      (__warn) from [<8011cf64>] (warn_slowpath_fmt+0x74/0xb8)
+      (warn_slowpath_fmt) from [<8017d170>] (check_unmap+0x3fc/0xb04)
+      (check_unmap) from [<8017d900>] (debug_dma_unmap_page+0x88/0x90)
+      (debug_dma_unmap_page) from [<80601d68>] (dspi_release_dma+0x88/0x110)
+      (dspi_release_dma) from [<80601e4c>] (dspi_shutdown+0x5c/0x80)
+      (dspi_shutdown) from [<805845f8>] (device_shutdown+0x17c/0x220)
+      (device_shutdown) from [<80143ef8>] (kernel_restart+0xc/0x50)
+      (kernel_restart) from [<801441cc>] (__do_sys_reboot+0x18c/0x210)
+      (__do_sys_reboot) from [<80100060>] (ret_fast_syscall+0x0/0x28)
+    DMA-API: Mapped at:
+     dma_alloc_attrs+0xa4/0x130
+     dspi_probe+0x568/0x7b4
+     platform_drv_probe+0x6c/0xa4
+     really_probe+0x208/0x348
+     driver_probe_device+0x5c/0xb4
 
-I'll put documentation on this together with the rest to
-stat man page with my other changes, so no need to document
-this, but at least bit more details in changelog ;-)
+Fixes: 90ba37033cb9 ("spi: spi-fsl-dspi: Add DMA support for Vybrid")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ drivers/spi/spi-fsl-dspi.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-thanks,
-jirka
-
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/expr.l |  1 +
->  tools/perf/util/expr.y | 14 ++++++++++++--
->  2 files changed, 13 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
-> index f397bf8b1a48..298d86660a96 100644
-> --- a/tools/perf/util/expr.l
-> +++ b/tools/perf/util/expr.l
-> @@ -100,6 +100,7 @@ symbol		({spec}|{sym})+
->  		}
->  	}
->  
-> +d_ratio		{ return D_RATIO; }
->  max		{ return MAX; }
->  min		{ return MIN; }
->  if		{ return IF; }
-> diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-> index bf3e898e3055..fe145344bb39 100644
-> --- a/tools/perf/util/expr.y
-> +++ b/tools/perf/util/expr.y
-> @@ -10,6 +10,14 @@
->  #include "smt.h"
->  #include <string.h>
->  
-> +static double d_ratio(double val0, double val1)
-> +{
-> +	if (val1 == 0) {
-> +		return 0;
-> +	}
-> +	return  val0 / val1;
-> +}
-> +
->  %}
->  
->  %define api.pure full
-> @@ -28,7 +36,7 @@
->  %token <num> NUMBER
->  %token <str> ID
->  %destructor { free ($$); } <str>
-> -%token MIN MAX IF ELSE SMT_ON
-> +%token MIN MAX IF ELSE SMT_ON D_RATIO
->  %left MIN MAX IF
->  %left '|'
->  %left '^'
-> @@ -64,7 +72,8 @@ other: ID
->  }
->  |
->  MIN | MAX | IF | ELSE | SMT_ON | NUMBER | '|' | '^' | '&' | '-' | '+' | '*' | '/' | '%' | '(' | ')' | ','
-> -
-> +|
-> +D_RATIO
->  
->  all_expr: if_expr			{ *final_val = $1; }
->  	;
-> @@ -105,6 +114,7 @@ expr:	  NUMBER
->  	| MIN '(' expr ',' expr ')' { $$ = $3 < $5 ? $3 : $5; }
->  	| MAX '(' expr ',' expr ')' { $$ = $3 > $5 ? $3 : $5; }
->  	| SMT_ON		 { $$ = smt_on() > 0; }
-> +	| D_RATIO '(' expr ',' expr ')' { $$ = d_ratio($3,$5); }
->  	;
->  
->  %%
-> -- 
-> 2.27.0.278.ge193c7cf3a9-goog
-> 
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index a35faced0456..58190c94561f 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -588,14 +588,14 @@ static void dspi_release_dma(struct fsl_dspi *dspi)
+ 		return;
+ 
+ 	if (dma->chan_tx) {
+-		dma_unmap_single(dma->chan_tx->device->dev, dma->tx_dma_phys,
+-				 dma_bufsize, DMA_TO_DEVICE);
++		dma_free_coherent(dma->chan_tx->device->dev, dma_bufsize,
++				  dma->tx_dma_buf, dma->tx_dma_phys);
+ 		dma_release_channel(dma->chan_tx);
+ 	}
+ 
+ 	if (dma->chan_rx) {
+-		dma_unmap_single(dma->chan_rx->device->dev, dma->rx_dma_phys,
+-				 dma_bufsize, DMA_FROM_DEVICE);
++		dma_free_coherent(dma->chan_rx->device->dev, dma_bufsize,
++				  dma->rx_dma_buf, dma->rx_dma_phys);
+ 		dma_release_channel(dma->chan_rx);
+ 	}
+ }
+-- 
+2.7.4
 
