@@ -2,204 +2,224 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D469AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 00:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF2DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 00:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0536206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 00:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89B5D206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 00:30:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ul3Kn7oE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726053AbgFJAah (ORCPT
+        id S1726078AbgFJAa6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 20:30:37 -0400
-Received: from mga04.intel.com ([192.55.52.120]:54716 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725944AbgFJAah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 20:30:37 -0400
-IronPort-SDR: oxH38JhElLgccQMrCKdRFuitsaM6sYt7HLAH8tda4Z71JZ5umyZJTaW+Gm3GWJ4DhlGipXdULI
- yL89edZoXRDw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 17:30:37 -0700
-IronPort-SDR: rqpnuMXNA2u3kjIrspzvRGugK/k4VK/iLVhzb20AUfH1hnut5+XdCYAsxXFMXQDQYCom7ORvNV
- kbAdsrwzjtpQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,493,1583222400"; 
-   d="scan'208";a="314346217"
-Received: from shao2-debian.sh.intel.com (HELO [10.239.13.3]) ([10.239.13.3])
-  by FMSMGA003.fm.intel.com with ESMTP; 09 Jun 2020 17:30:35 -0700
-Subject: Re: [kbuild-all] Re: gcc-5: error: -gz is not supported in this
- configuration
-To:     Fangrui Song <maskray@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Cc:     kernel test robot <lkp@intel.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        kbuild-all@lists.01.org, LKML <linux-kernel@vger.kernel.org>
-References: <202006092115.nevT7m8D%lkp@intel.com>
- <CAKwvOd=jjFS7XOWyYMZgLTYJtZ7uc=4dP-S4VhuyjNmT=2EcPw@mail.gmail.com>
- <20200609174954.cckelwl6etwztmhv@google.com>
-From:   Rong Chen <rong.a.chen@intel.com>
-Message-ID: <05c88916-7d91-ad1a-1ea6-15167a994a0b@intel.com>
-Date:   Wed, 10 Jun 2020 08:30:07 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 9 Jun 2020 20:30:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47044 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbgFJAa4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 20:30:56 -0400
+Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 011F0C03E96B
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 17:30:55 -0700 (PDT)
+Received: by mail-lj1-x230.google.com with SMTP id q19so314664lji.2
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 17:30:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fufpFexVpmLTY4L8tFo3Vjk8lnR9s+NHiNpeUysolls=;
+        b=Ul3Kn7oEjJ+TiA2pqfTe1kLWo8haWQ4EdIrWEOoLUcZqB1v5+Etym1PpbRykwdrFc/
+         iAvZiMia8BEQtCI23nGFox9x3pJ32ft7p7v+yGJpIsZylauMYMjm1bdqrxecJ+Bh2w7L
+         xqjrS5+XDVplaBXmaXgQk+n1G3DRidRN6A2ZW5mnYdD6v2M6D86Us+cjITRGrKA+fcVQ
+         qTwFZt6IHzcPFiyA1cnfFWD2sNzy1192NJEDLvc4U3gj6Rphyb5WtY0cDMjUBhSoxH8D
+         nZq+FsEwWFKRvGEtLNV5LwvLDS8Fi/wSy7sK5fSVwveYFysFLoQNutyCfy8hjMCQh9R9
+         0eaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fufpFexVpmLTY4L8tFo3Vjk8lnR9s+NHiNpeUysolls=;
+        b=T0EkajgnHPWMfNo/TLJR2JYrh3CRMisnbUTzlxRRbyCKoElL846bjxg3ScsFBf/IVO
+         g+4k7p6+Le7DTTdZsusAe5tM2HfJ0Oz5nsaCXbHiuk6KFrXhQ+WhUzAa3T3YtW8nREe8
+         Z755YeJDVEdh5DOX5cGGH9Jf4Zg9q8lgVQwCFi0I47hq7kdOn/GVxFlu5kG1ibxxkfpC
+         HK/e/QflXIcXJo0UdXDsjl0S5xRPyyREQLkO1nm4chJmDyLvnrD46MvgT+U6omwRLgz3
+         3Z1yLE1xYFv0RsidcoCOG6uT2rfGT+zOjeeDeDMaSUX3i0iZIcGY3hPNqfX0a1VTJWdA
+         S86g==
+X-Gm-Message-State: AOAM532TQly6Aih2IkcvRamGieG0ykXPUGAjOdombuwt4aV3TKZlF1Vn
+        +ycwW/+S3++vPg1psMnGUhJp7/eebEvMYFaU3A7XLg==
+X-Google-Smtp-Source: ABdhPJy6qIbJQYsxG/h4M6IxlW+DryqYkaC9Hj8W8gQcJx+EtUTWvi5+ZOQuks3MC2dMqcym0t+/eiVlEcv1ojBzW6c=
+X-Received: by 2002:a05:651c:1199:: with SMTP id w25mr391105ljo.301.1591749052049;
+ Tue, 09 Jun 2020 17:30:52 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200609174954.cckelwl6etwztmhv@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <CACK8Z6E0s-Y207sb-AqSHVB7KmhvDgJQFFaz6ijQ_0OS3Qjisw@mail.gmail.com>
+ <20200610000400.GA1473845@bjorn-Precision-5520>
+In-Reply-To: <20200610000400.GA1473845@bjorn-Precision-5520>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Tue, 9 Jun 2020 17:30:13 -0700
+Message-ID: <CACK8Z6G3ycsXxuNiihOXiwwAum8=5aOFOshhFa7cEF__+c-v1A@mail.gmail.com>
+Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
+ "whitelisted" drivers
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Zubin Mithra <zsm@google.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 6/10/20 1:49 AM, Fangrui Song wrote:
-> On 2020-06-09, Nick Desaulniers wrote:
->> On Tue, Jun 9, 2020 at 6:12 AM kernel test robot <lkp@intel.com> wrote:
->>>
->>> tree: 
->>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 
->>> master
->>> head:   abfbb29297c27e3f101f348dc9e467b0fe70f919
->>> commit: 10e68b02c861ccf2b3adb59d3f0c10dc6b5e3ace Makefile: support 
->>> compressed debug info
->>> date:   12 days ago
->>> config: x86_64-randconfig-r032-20200609 (attached as .config)
->>> compiler: gcc-5 (Ubuntu 5.5.0-12ubuntu1) 5.5.0 20171010
->>> reproduce (this is a W=1 build):
->>>         git checkout 10e68b02c861ccf2b3adb59d3f0c10dc6b5e3ace
->>>         # save the attached .config to linux build tree
->>>         make W=1 ARCH=x86_64
->>>
->>> If you fix the issue, kindly add following tag as appropriate
->>> Reported-by: kernel test robot <lkp@intel.com>
->>>
->>> All errors (new ones prefixed by >>, old ones prefixed by <<):
->>>
->>> >> gcc-5: error: -gz is not supported in this configuration
->>
->> Hmm...I wonder if the feature detection is incomplete?  I suspect it's
->> possible to not depend on zlib.
->>
->>> make[2]: *** [scripts/Makefile.build:277: scripts/mod/empty.o] Error 1
->>> make[2]: Target '__build' not remade because of errors.
->>> make[1]: *** [Makefile:1169: prepare0] Error 2
->>> make[1]: Target 'prepare' not remade because of errors.
->>> make: *** [Makefile:185: __sub-make] Error 2
+On Tue, Jun 9, 2020 at 5:04 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
-> The output of gcc-5 -v --version on that machine may help.  The
-> convoluted gcc_cv_ld_compress_de logic in gcc/configure.ac may be
-> related, but I can't find any mistake that our
-> CONFIG_DEBUG_INFO_COMPRESSED conditions may make.
+> On Tue, Jun 09, 2020 at 04:23:54PM -0700, Rajat Jain wrote:
+> > Hi Bjorn,
+> >
+> > Thanks for sending out the summary, I was about to send it out but got lazy.
+> >
+> > On Tue, Jun 9, 2020 at 2:04 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > >
+> > > On Sun, Jun 07, 2020 at 01:36:32PM +0200, Greg Kroah-Hartman wrote:
+> > >
+> > > > Your "problem" I think can be summed up a bit more concise:
+> > > >       - you don't trust kernel drivers to be "secure" for untrusted
+> > > >         devices
+> > > >       - you only want to bind kernel drivers to "internal" devices
+> > > >         automatically as you "trust" drivers in that situation.
+> > > >       - you want to only bind specific kernel drivers that you somehow
+> > > >         feel are "secure" to untrusted devices "outside" of a system
+> > > >         when those devices are added to the system.
+> > > >
+> > > > Is that correct?
+> > > >
+> > > > If so, fine, you can do that today with the bind/unbind ability of
+> > > > drivers, right?  After boot with your "trusted" drivers bound to
+> > > > "internal" devices, turn off autobind of drivers to devices and then
+> > > > manually bind them when you see new devices show up, as those "must" be
+> > > > from external devices (see the bind/unbind files that all drivers export
+> > > > for how to do this, and old lwn.net articles, this feature has been
+> > > > around for a very long time.)
+> > > >
+> > > > I know for USB you can do this, odds are PCI you can turn off
+> > > > autobinding as well, as I think this is a per-bus flag somewhere.  If
+> > > > that's not exported to userspace, should be trivial to do so, should be
+> > > > somewere in the driver model already...
+> > > >
+> > > > Ah, yes, look at the "drivers_autoprobe" and "drivers_probe" files in
+> > > > sysfs for all busses.  Do those not work for you?
+> > > >
+> > > > My other points are the fact that you don't want to put policy in the
+> > > > kernel, and I think that you can do everything you want in userspace
+> > > > today, except maybe the fact that trying to determine what is "inside"
+> > > > and "outside" is not always easy given that most hardware does not
+> > > > export this information properly, if at all.  Go work with the firmware
+> > > > people on that issue please, that would be most helpful for everyone
+> > > > involved to get that finally straightened out.
+> > >
+> > > To sketch this out, my understanding of how this would work is:
+> > >
+> > >   - Expose the PCI pdev->untrusted bit in sysfs.  We don't expose this
+> > >     today, but doing so would be trivial.  I think I would prefer a
+> > >     sysfs name like "external" so it's more descriptive and less of a
+> > >     judgment.
+> >
+> > Yes. I think we should probably semantically differentiate between
+> > "external" and "external facing" devices. Root ports and downstream
+> > ports can be "external facing" but are actually internal devices.
+> > Anything below an "external facing" device is "external". So the sysfs
+> > attribute "external" should be set only for devices that are truly
+> > external.
+>
+> Good point; we (maybe you? :)) should fix that edge case.
 
-Hi Fangrui,
+Sure, happy to. I will start a fresh conversation about that (in a
+separate thread).
 
-Here is the output:
+>
+> > Just a suggestion: Do you think an enum attribute may be better
+> > instead, whose values could be "internal" / "external" /
+> > "external-facing" in case need arises later to distinguish between
+> > them?
+>
+> I don't see the need for an enum yet.  Maybe we should add that
+> if/when we do need it?
 
-$gcc-5 -v --version
-Using built-in specs.
-COLLECT_GCC=gcc-5
-COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/5/lto-wrapper
-gcc-5 (Ubuntu 5.5.0-12ubuntu1) 5.5.0 20171010
-Copyright (C) 2015 Free Software Foundation, Inc.
-This is free software; see the source for copying conditions.  There is NO
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+Sure, no problems. (I just wanted to slip the thought into the
+conversation as UAPI is hard to change later).
 
+>
+> > >   - Early userspace code prevents modular drivers from automatically
+> > >     binding to PCI devices:
+> > >
+> > >       echo 0 > /sys/bus/pci/drivers_autoprobe
+> >
+> > Yes.
+> > I believe this setting will apply it equally to both modular and
+> > statically linked drivers?
+>
+> Yes.  The test is in bus_probe_device(), and it does the same for both
+> modular and statically linked drivers.
+>
+> But for statically linked drivers, it only prevents them from binding
+> to *hot-added* devices.  They will claim devices present at boot even
+> before userspace code can run.
 
-Target: x86_64-linux-gnu
-Configured with: ../src/configure -v --with-pkgversion='Ubuntu 
-5.5.0-12ubuntu1' --with-bugurl=file:///usr/share/doc/gcc-5/README.Bugs 
---enable-languages=c,ada,c++,go,d,fortran,objc,obj-c++ --prefix=/usr 
---program-suffix=-5 --enable-shared --enable-linker-build-id 
---libexecdir=/usr/lib --without-included-gettext --enable-threads=posix 
---libdir=/usr/lib --enable-nls --with-sysroot=/ --enable-clocale=gnu 
---enable-libstdcxx-debug --enable-libstdcxx-time=yes 
---with-default-libstdcxx-abi=new --enable-gnu-unique-object 
---disable-vtable-verify --enable-libmpx --enable-plugin 
---enable-default-pie --with-system-zlib --enable-objc-gc 
---enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 
---with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic 
---enable-checking=release --build=x86_64-linux-gnu 
---host=x86_64-linux-gnu --target=x86_64-linux-gnu
-Thread model: posix
-gcc version 5.5.0 20171010 (Ubuntu 5.5.0-12ubuntu1)
-COLLECT_GCC_OPTIONS='-v' '--version' '-mtune=generic' '-march=x86-64'
-  /usr/lib/gcc/x86_64-linux-gnu/5/cc1 -quiet -v -imultiarch 
-x86_64-linux-gnu help-dummy -quiet -dumpbase help-dummy -mtune=generic 
--march=x86-64 -auxbase help-dummy -version --version 
--fstack-protector-strong -Wformat -Wformat-security -o /tmp/ccqnZumV.s
-GNU C11 (Ubuntu 5.5.0-12ubuntu1) version 5.5.0 20171010 (x86_64-linux-gnu)
-         compiled by GNU C version 5.5.0 20171010, GMP version 6.1.2, 
-MPFR version 4.0.1, MPC version 1.1.0
-warning: MPFR header version 4.0.1 differs from library version 4.0.2.
-GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
-COLLECT_GCC_OPTIONS='-v' '--version' '-mtune=generic' '-march=x86-64'
-  as -v --64 --version -o /tmp/ccRPgs9J.o /tmp/ccqnZumV.s
-GNU assembler version 2.34 (x86_64-linux-gnu) using BFD version (GNU 
-Binutils for Ubuntu) 2.34
-GNU assembler (GNU Binutils for Ubuntu) 2.34
-Copyright (C) 2020 Free Software Foundation, Inc.
-This program is free software; you may redistribute it under the terms of
-the GNU General Public License version 3 or later.
-This program has absolutely no warranty.
-This assembler was configured for a target of `x86_64-linux-gnu'.
-COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/
-LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/5/../../../:/lib/:/usr/lib/
-COLLECT_GCC_OPTIONS='-v' '--version' '-mtune=generic' '-march=x86-64'
-  /usr/lib/gcc/x86_64-linux-gnu/5/collect2 -plugin 
-/usr/lib/gcc/x86_64-linux-gnu/5/liblto_plugin.so 
--plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/5/lto-wrapper 
--plugin-opt=-fresolution=/tmp/ccJLhs3y.res 
--plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s 
--plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc 
--plugin-opt=-pass-through=-lgcc_s --sysroot=/ --build-id --eh-frame-hdr 
--m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker 
-/lib64/ld-linux-x86-64.so.2 -pie -z now -z relro --version 
-/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/Scrt1.o 
-/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crti.o 
-/usr/lib/gcc/x86_64-linux-gnu/5/crtbeginS.o 
--L/usr/lib/gcc/x86_64-linux-gnu/5 
--L/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu 
--L/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib 
--L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu 
--L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/5/../../.. 
-/tmp/ccRPgs9J.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc 
--lgcc --push-state --as-needed -lgcc_s --pop-state 
-/usr/lib/gcc/x86_64-linux-gnu/5/crtend.o 
-/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crtn.o
-collect2 version 5.5.0 20171010
-/usr/bin/ld -plugin /usr/lib/gcc/x86_64-linux-gnu/5/liblto_plugin.so 
--plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/5/lto-wrapper 
--plugin-opt=-fresolution=/tmp/ccJLhs3y.res 
--plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s 
--plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc 
--plugin-opt=-pass-through=-lgcc_s --sysroot=/ --build-id --eh-frame-hdr 
--m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker 
-/lib64/ld-linux-x86-64.so.2 -pie -z now -z relro --version 
-/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/Scrt1.o 
-/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crti.o 
-/usr/lib/gcc/x86_64-linux-gnu/5/crtbeginS.o 
--L/usr/lib/gcc/x86_64-linux-gnu/5 
--L/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu 
--L/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib 
--L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu 
--L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/5/../../.. 
-/tmp/ccRPgs9J.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc 
--lgcc --push-state --as-needed -lgcc_s --pop-state 
-/usr/lib/gcc/x86_64-linux-gnu/5/crtend.o 
-/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crtn.o
-GNU ld (GNU Binutils for Ubuntu) 2.34
-Copyright (C) 2020 Free Software Foundation, Inc.
-This program is free software; you may redistribute it under the terms of
-the GNU General Public License version 3 or (at your option) a later 
-version.
-This program has absolutely no warranty.
+Yes, understood.
+
+>
+> > The one thing that still needs more thought is how about the
+> > "pcieport" driver that enumerates the PCI bridges. I'm unsure if it
+> > needs to be whitelisted for further enumeration downstream. What do
+> > you think?
+>
+> The pcieport driver is required for AER, PCIe native hotplug, PME,
+> etc., and it cannot be a module, so the whitelist wouldn't apply to
+> it.
+
+Not that I see the need, but slight clarification needed just to make
+sure I understand it clearly:
+
+Since pcieport driver is statically compiled in, AER, pciehp, PME, DPC
+etc will always be enabled for devices plugged in during boot. But I
+can still choose to choose to allow or deny for devices added *after
+boot* using the whitelist, right?
+
+Also, denying pcieport driver for hot-added PCIe bridges only disables
+these pcieport services on those bridges, but device enumeration
+further downstream those bridges is not an issue?
+
+> I assume you need hotplug support, so you would have pcieport
+> enabled and built in statically.
+>
+> If you're using ACPI hotplug, that doesn't require pcieport.
+
+Thank you, this was indeed a long and useful thread :-)
 
 Best Regards,
-Rong Chen
+
+Rajat
