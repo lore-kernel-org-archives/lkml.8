@@ -2,153 +2,133 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41870C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D856C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21C542063A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:34:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 439952072F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:37:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730235AbgFJPeA (ORCPT
+        id S1730247AbgFJPhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 11:34:00 -0400
-Received: from mga01.intel.com ([192.55.52.88]:4941 "EHLO mga01.intel.com"
+        Wed, 10 Jun 2020 11:37:22 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34026 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726955AbgFJPeA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 11:34:00 -0400
-IronPort-SDR: xx1XglR9u2jUiy2pJtH5muznMBJTb5XKSiYOKBbOshMV5vavXSo36p8cLFiirwBz2YBu7ULt5O
- v0vSBjEnXR1Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2020 08:33:59 -0700
-IronPort-SDR: C8mpojf6rG8PFTCnkMLPkSE9uAC0MKC3wnQbTf0JKd9HMz3jyTcxx6XeQ5rqXL8jPAFdmRHChz
- eqF62gUvMNUQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,496,1583222400"; 
-   d="scan'208";a="380094962"
-Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 10 Jun 2020 08:33:56 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 10 Jun 2020 18:33:56 +0300
-Date:   Wed, 10 Jun 2020 18:33:56 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Prashant Malani <pmalani@chromium.org>,
-        Rob Herring <robh@kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tim Wawrzynczak <twawrzynczak@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>
-Subject: Re: [PATCH 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
-Message-ID: <20200610153356.GC3213128@kuha.fi.intel.com>
-References: <20200422222242.241699-1-pmalani@chromium.org>
- <20200511192800.GA28762@bogus>
- <20200511204635.GC136540@google.com>
- <20200512134154.GC2085641@kuha.fi.intel.com>
- <CAL_JsqJ2pbh5BbjGd9eEiD6-sV94=omk6o+mLXjCYiVnUOtO=g@mail.gmail.com>
- <CACeCKadiiokPdPB2Q5WBQFrPuxjpm3TiDgaaerncVR_Z7Z0nvg@mail.gmail.com>
- <CAL_Jsq+MM3-ugLvSGc_wc6RvHVyxyDUD0DkvwQaQJMYCCFpfHg@mail.gmail.com>
- <20200609235740.GA154315@google.com>
+        id S1726955AbgFJPhV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 11:37:21 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 345F3AD75;
+        Wed, 10 Jun 2020 15:37:23 +0000 (UTC)
+Message-ID: <252b688105ddff381798ec3150066288762178b0.camel@suse.de>
+Subject: Re: [PATCH v2 1/9] dt-bindings: reset: Add a binding for the RPi
+ Firmware reset controller
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        gregkh@linuxfoundation.org, wahrenst@gmx.net,
+        p.zabel@pengutronix.de, linux-kernel@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Eric Anholt <eric@anholt.net>
+Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org, helgaas@kernel.org,
+        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
+        lorenzo.pieralisi@arm.com, Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org
+Date:   Wed, 10 Jun 2020 17:37:15 +0200
+In-Reply-To: <c3dc9b7e-4440-7e8a-3da8-b147c48c4c40@gmail.com>
+References: <20200609175003.19793-1-nsaenzjulienne@suse.de>
+         <20200609175003.19793-2-nsaenzjulienne@suse.de>
+         <c3dc9b7e-4440-7e8a-3da8-b147c48c4c40@gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-n+aTWdme6r8Au4n90Rrf"
+User-Agent: Evolution 3.36.2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200609235740.GA154315@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 04:57:40PM -0700, Prashant Malani wrote:
-> Hi Rob,
-> 
-> Thanks again for the comments and feedback. Kindly see responses inline:
-> 
-> (Trimming unrelated text from thread):
-> 
-> On Tue, Jun 09, 2020 at 02:30:11PM -0600, Rob Herring wrote:
-> > On Fri, May 29, 2020 at 5:30 PM Prashant Malani <pmalani@chromium.org> wrote:
-> > >
-> > > Nodes truncated and unrelated fields omitted in the interest of brevity:
-> > >
-> > > // Chrome OS EC Type C Port Manager.
-> > > typec {
-> > >     compatible = "google,cros-ec-typec";
-> > >     #address-cells = <1>;
-> > >     #size-cells = <0>;
-> > >
-> > >     connector@0 {
-> > >         compatible = "usb-c-connector";
-> > >         reg = <0>;
-> > >         power-role = "dual";
-> > >         data-role = "dual";
-> > >         try-power-role = "source";
-> > >         mode-switch = <&foo_mux>;
-> > >         // Other switches can point to the same mux.
-> > >         ....
-> > 
-> > The connector is supposed to have 'ports' for USB2, USB3, and Aux
-> > unless the parent is the USB controller.
-> Understood; so, coupled with Heikki's explanation (see below for where
-> I've pasted it), would it be something like so? (adding inline to the connector
-> node definition):
-> 
->             ports {
->                 #address-cells = <1>;
->                 #size-cells = <0>;
-> 
->                 port@0 {
->                     reg = <0>;
->                     usb_con_hs: endpoint {
->                         remote-endpoint = <&foo_usb_hs_controller>;
->                     };
->                 };
-> 
->                 port@1 {
->                     reg = <1>;
->                     usb_con0_ss: endpoint@0 {
->                         remote-endpoint = <&mode_mux_in>;
->                     };
->                 };
-> 
->                 port@2 {
->                     reg = <2>;
->                     usb_con_sbu: endpoint {
->                         remote-endpoint = <&foo_dp_aux>;
->                     };
->                 };
->             };
 
-The pins that can be reassigned can in practice go anywhere. We can't
-group them in any way. What do we do for example when the two sideband
-pins go to different locations?
+--=-n+aTWdme6r8Au4n90Rrf
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-It looks like the OF graph for the USB Type-C connectors expects the
-pins to be grouped like that, which is too bad, because unfortunately
-it will not work. It would require that we have a separate port for
-every pin that can be reassigned on the connector, and let's not even
-consider that.
+Hi Florian, thanks for the review :)
 
-We need higher level description of the connections for the USB Type-C
-connectors. For example, a connector can be connected to this (or
-these) DisplayPort(s), this USB 2.0 port, this USB 3.x port, this USB4
-port, etc. And this is the mux that handles the pins on this
-connector, and these are the retimers, etc. etc.
+On Tue, 2020-06-09 at 11:07 -0700, Florian Fainelli wrote:
+>=20
+> On 6/9/2020 10:49 AM, Nicolas Saenz Julienne wrote:
+> > The firmware running on the RPi VideoCore can be used to reset and
+> > initialize HW controlled by the firmware.
+> >=20
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> >=20
+> > ---
+> >=20
+> > Changes since v1:
+> >  - Correct cells binding as per Florian's comment
+> >  - Change compatible string to be more generic
+> >=20
+> >  .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 21 +++++++++++++++++++
+> >  1 file changed, 21 insertions(+)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2=
+835-
+> > firmware.yaml
+> > b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
+> > firmware.yaml
+> > index b48ed875eb8e..23a885af3a28 100644
+> > --- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
+> > firmware.yaml
+> > +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
+> > firmware.yaml
+> > @@ -39,6 +39,22 @@ properties:
+> >        - compatible
+> >        - "#clock-cells"
+> > =20
+> > +  reset:
+> > +    type: object
+> > +
+> > +    properties:
+> > +      compatible:
+> > +        const: raspberrypi,firmware-reset
+> > +
+> > +      "#reset-cells":
+> > +        const: 1
+> > +        description: >
+>=20
+> Is this a stray '>' character? If so, with that fixed:
 
-We also need a way to identify those connections, and relying on
-something like fixed port node addresses, so indexes in practice,
-feels really risky to me. A conflict may seem unlikely now, but we
-seen those so many times in the past other things like GPIOs, IRQs,
-etc. We really need to define string identifiers for these
-connections.
+No, it marks the formatting of the text below. | will keep the formatting a=
+s
+is, > will leave the formatting to whatever is going to use it.
+
+Regards,
+Nicolas
 
 
-thanks,
+--=-n+aTWdme6r8Au4n90Rrf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
--- 
-heikki
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7g/isACgkQlfZmHno8
+x/5KnggAkIaMw+no0jjwGGwmLpYNI37OtXTlkJh7+vxBbP3/KDoYuOKodikYKYi7
+06IGVl60YiOtYKZmeBUpt5vxCnGpFdccflCssnih0CSXLSUYSA+0+XQ7/8WI+wDF
+iyBAZWn+BTleK3nJRM1EzWuiJvsH6hqE0X9SWqrH549wvJUKoh/EPMllsrrl2rr4
+k3MTRQ1qUaDh+m+ZxKA14Ah1Gwhm1nOnx0LLti9+W02o270Y7dQnWwzfXwlGJHPi
+kCkA5gj9PzDFq9+csd+n8ek73GJEoyQEsgphDBQbQCVb3uMpioF4jqdDxQaKFC21
+NG2lzd8rO+0Rlc3UUvOFg+sB04SUcg==
+=8jr+
+-----END PGP SIGNATURE-----
+
+--=-n+aTWdme6r8Au4n90Rrf--
+
