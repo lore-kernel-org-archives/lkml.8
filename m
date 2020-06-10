@@ -2,107 +2,125 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FCEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A3F4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D07E5207C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:55:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591800901;
-	bh=gjvlNmhpOseNaDKedcB9GHU7iTHrdoxsgDi+ecT5hyM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Xd/5sTONdj23b2z+N7UuXKq/rqfrbkAxDg7kjPSvLQCLMBp08hsG29vve7gIoBEgY
-	 Vez88Avq4NC9+B+/thU2O/gNKWULkozIBfN0SxhQelwBdXeqVOIgaFRZWGkvy7+edg
-	 X4cy/x2K5dF+Bwc0egqHNCydPWZ/K24ABquPr9vI=
+	by mail.kernel.org (Postfix) with ESMTP id 566702072F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 14:56:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Fh5YU57L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729957AbgFJOzA (ORCPT
+        id S1727123AbgFJO4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 10:55:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44328 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726908AbgFJOzA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 10:55:00 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B3B72072F;
-        Wed, 10 Jun 2020 14:54:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591800899;
-        bh=gjvlNmhpOseNaDKedcB9GHU7iTHrdoxsgDi+ecT5hyM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eaeuDZE9aPFGn7KUakOuZK2k1QhfcTOZLuINf4/XMi0YBL2klsbQOOY/l8bGW+4cz
-         xp8VmKc3npL/FqyHiYEsi9FrCqkVBqhg2nuXSwGlsN/uPAw9BC+i5XucyjYDMT6Z/p
-         TngvQfYG7+VgaLUpoauO2RAJo+iYFHoVAzhSxWPA=
-Date:   Wed, 10 Jun 2020 16:54:53 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
-        hemantg@codeaurora.org, Johan Hedberg <johan.hedberg@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rocky Liao <rjliao@codeaurora.org>,
-        Rob Herring <robh@kernel.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Claire Chang <tientzu@chromium.org>, yshavit@google.com,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] Bluetooth: hci_qca: Fix double free during SSR timeout
-Message-ID: <20200610145453.GC2102023@kroah.com>
-References: <d3444be6-28e6-bef5-08cf-6038620f65c6@web.de>
+        Wed, 10 Jun 2020 10:56:05 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:38650 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726908AbgFJO4E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 10:56:04 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05AEqMPa046210;
+        Wed, 10 Jun 2020 14:53:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=+MkVzWy7hSx4wdwuzJRJZjRevMWLr+97rQSWPuRETeI=;
+ b=Fh5YU57LjGtgILZhyagxCJiKu4+KGIutZ5E9PylZp1Qo5JxWx2sdx1km+teF5HpB/a6Y
+ +v/mQIhiwB70zeeL6scNIb2z8RPcYg5Erj51xoP8eYmicfNMe6rRTMFP8AWdwcFHfWEh
+ zUKNKLZSX6N17fHLjKr1Nd1gbAE/HEbmt2OtJogrNBJb82X7D/quTe7U5//urcAo3qs5
+ 0malmVNVWml0c0tESY9EcRYvcmIGCsKFbMMN0ZrJdWOcD+Zv5Ws+fywrNKaj/F4ubd6G
+ eEmoRBXwje+OuAgP6QfwhPM9kHvClr+5A6DodADS3CcKGBw03E/87H91mpCguJbEIIz4 8Q== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 31g2jravr5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 10 Jun 2020 14:53:37 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05AEi0us135392;
+        Wed, 10 Jun 2020 14:53:37 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 31gmqqdenw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 10 Jun 2020 14:53:36 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05AErZYO021813;
+        Wed, 10 Jun 2020 14:53:36 GMT
+Received: from [10.159.156.250] (/10.159.156.250)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 10 Jun 2020 07:53:34 -0700
+Subject: Re: [PATCH 1/1] nvme-fcloop: verify wwnn and wwpn format
+To:     James Smart <james.smart@broadcom.com>,
+        linux-nvme@lists.infradead.org, hch@lst.de
+Cc:     sagi@grimberg.me, chaitanya.kulkarni@wdc.com,
+        linux-kernel@vger.kernel.org
+References: <20200526042118.17836-1-dongli.zhang@oracle.com>
+ <60df6752-3512-f7a9-b0df-1096b93b8eda@broadcom.com>
+From:   Dongli Zhang <dongli.zhang@oracle.com>
+Message-ID: <f93adee4-ebf0-a229-e507-4ef4e4fe812d@oracle.com>
+Date:   Wed, 10 Jun 2020 07:53:33 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <60df6752-3512-f7a9-b0df-1096b93b8eda@broadcom.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <d3444be6-28e6-bef5-08cf-6038620f65c6@web.de>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9647 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 mlxscore=0
+ mlxlogscore=999 adultscore=0 spamscore=0 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006100112
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9647 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
+ cotscore=-2147483648 priorityscore=1501 spamscore=0 suspectscore=0
+ lowpriorityscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0 mlxscore=0
+ phishscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006100113
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 08:24:34PM +0200, Markus Elfring wrote:
-> > Due to race conditions between qca_hw_error and qca_controller_memdump
-> > during SSR timeout,the same pointer is freed twice.
-> 
-> This is an unfortunate software situation.
-> 
-> 
-> > Which results to double free error.
-> 
-> How do you think about to omit this sentence from the change description?
-> 
-> 
-> > Now a lock is acquired while SSR state moved to timeout.
-> 
-> I suggest to convert this information into an imperative wording.
-> 
-> Would you like to add the tag “Fixes” to the commit message?
-> 
-> Regards,
-> Markus
+Hi Christoph,
 
-Hi,
+Would you mind apply this one with the Reviewed-by from James and Sagi?
 
-This is the semi-friendly patch-bot of Greg Kroah-Hartman.
+https://lore.kernel.org/linux-nvme/60df6752-3512-f7a9-b0df-1096b93b8eda@broadcom.com/
 
-Markus, you seem to have sent a nonsensical or otherwise pointless
-review comment to a patch submission on a Linux kernel developer mailing
-list.  I strongly suggest that you not do this anymore.  Please do not
-bother developers who are actively working to produce patches and
-features with comments that, in the end, are a waste of time.
+https://lore.kernel.org/linux-nvme/c4ec2d9e-b08c-19b2-16a5-93520ca13c2e@grimberg.me/
 
-Patch submitter, please ignore Markus's suggestion; you do not need to
-follow it at all.  The person/bot/AI that sent it is being ignored by
-almost all Linux kernel maintainers for having a persistent pattern of
-behavior of producing distracting and pointless commentary, and
-inability to adapt to feedback.  Please feel free to also ignore emails
-from them.
+Thank you very much!
 
-thanks,
+Dongli Zhang
 
-greg k-h's patch email bot
+On 6/4/20 8:20 AM, James Smart wrote:
+> On 5/25/2020 9:21 PM, Dongli Zhang wrote:
+>> The nvme host and target verify the wwnn and wwpn format via
+>> nvme_fc_parse_traddr(). For instance, it is required that the length of
+>> wwnn to be either 21 ("nn-0x") or 19 (nn-).
+>>
+>> Add this verification to nvme-fcloop so that the input should always be in
+>> hex and the length of input should always be 18.
+>>
+>> Otherwise, the user may use e.g. 0x2 to create fcloop local port, while
+>> 0x0000000000000002 is required for nvme host and target. This makes the
+>> requirement of format confusing.
+>>
+>> Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+>> ---
+>>   drivers/nvme/target/fcloop.c | 29 +++++++++++++++++++++++------
+>>   1 file changed, 23 insertions(+), 6 deletions(-)
+>>
+>>
+> 
+> Reviewed-by: James Smart <james.smart@broadcom.com>
+> 
+> Looks good. Sorry for the delay.
+> 
+> -- james
+> 
+> 
