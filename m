@@ -2,213 +2,212 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 158F0C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 23:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E7D8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 23:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E126920760
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 23:29:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DFE620760
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 23:30:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lj2HOLr9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t5CGcKvu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbgFJX3R (ORCPT
+        id S1726847AbgFJXav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 19:29:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34248 "EHLO
+        Wed, 10 Jun 2020 19:30:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726374AbgFJX3Q (ORCPT
+        with ESMTP id S1726374AbgFJXav (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 19:29:16 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08344C03E96B
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 16:29:15 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id s135so1010248pgs.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 16:29:15 -0700 (PDT)
+        Wed, 10 Jun 2020 19:30:51 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F08D7C03E96B
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 16:30:49 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id q8so3886949qkm.12
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 16:30:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6TzxZ6stD3PZjH0rWRteIpP64wnrZhSQ8+LWOmjBhiU=;
-        b=lj2HOLr9iGR0sii8IdZYZlccMRuGca3x5VcEhEGrSh34BhdgEFcSdgBk8bJsoYMUx1
-         prS9LECFeLy4xxl5E9OYJaZeRZpY9gzb3EnaA4hxO4bXaCi++Ob5GRDUsGLykemwPyVX
-         UCoDPMAPXBGy+ZPUg+DDgKVgcdUabL38lJ7bLWewlJFB+xJ5OhsDY/M99TZgcX3gaZX+
-         UlsHEGmjL0mK8c2UP2x7t8h4JyvX2ZxL4Ghf5SL74brwo/8Ypi1sZIKuhz9L2/57OAaN
-         4foUYKfm3kChXnBkT6NdsxYwXfo5a3FWsfWFQhINnYsk+NZwJ/itpj+c+hGLboSWCgwT
-         l0lg==
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=EqxFOEid1yw84Q1FNZAR72QP068PBSmquC7v1z9apLE=;
+        b=t5CGcKvuoX3CG7zJYULItgVy06tVzd0hd3wR8qPdboQ++0yabyR+9R41tUtsNvPYxd
+         dERjOdXgOzm2+J+Vt7TyD9unYbiJzzQHD0uVEMYg0vNNGAjTf2YubJ2yeuUJ6qWZCI/Q
+         ivmFjOg+KGE7I0M5QbMLYw8BD71iVj3NsHbUW7QB9QleT+TEV1Ai+CREucHOVZ9xlsRQ
+         t6NzINvzjg0UzNRiPRQY6WN15NU1QCD8w5/emgcp5BIXAFXQh4j9vXtggkKIjP7iBPpk
+         LYQ8d3dZC+41WFPgze1qYoINVyDzK/1aDBUuKPfnm41iQYv+tREZnDnd1r3l0XJXstj+
+         aLCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6TzxZ6stD3PZjH0rWRteIpP64wnrZhSQ8+LWOmjBhiU=;
-        b=D6uuzMZhBU25fkIh3TLbervXC3IZX+/2i3idHqWk/ugN7quYVhokF3VDDTN+qnGDRq
-         0aQjDba3JzUQgSN+EkJLJDgt3TbMb+9kevgxZw+LPpPUngPYufwHFgVQWDLEzwwp6BiZ
-         2rWZPjwLe7g2vn+zZYqsRB0tYw0QN4MJyeTG9TKM5gPxUcmOTDHWaucofzJts/ZUr6x9
-         lQ8FkjV3FseKE4rTFqRfqQa0RhKTsegQp9S91nF3d6AJWucLWyKUEaGTatSDP6Q0bLpY
-         BD/PyKB6sL5A9WYfi9/NBB2QQzFSKXphQj4XJ36ZZ7VE0oMQPboyb/J/RBf4f3RJoROh
-         AQng==
-X-Gm-Message-State: AOAM530sl4Oykjug7KBENMx2Qgqmf8AYwF5BXPW1oCzY1z4gAt24L6/k
-        Bx7Z0AITlZEqPynBDI87inQkwjsohGGlQ9A2ZR4qTQ==
-X-Google-Smtp-Source: ABdhPJxQRDNnAU0Fg7jLTwWaxkipk37vBBsJBUw1TBH6wYrDUsNqKgyiSXPYWOFrzX3DfS/Sn15K1bfnQtN/cMO4w5M=
-X-Received: by 2002:a63:5644:: with SMTP id g4mr4354362pgm.381.1591831754212;
- Wed, 10 Jun 2020 16:29:14 -0700 (PDT)
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=EqxFOEid1yw84Q1FNZAR72QP068PBSmquC7v1z9apLE=;
+        b=oUyqnLLezlhA5StdeR/+cZH0SNDzt2/e7Z9GoQqtjTckHYusFiINZTSJ2vxkGHPO3o
+         09m3p2K8KXPDAWSwGr0KfyEaRrNVF1XYFuCfDRxZ4XH4mIuUJf+yMDQYF8jYG9tnD0LR
+         2lMA/pLP40399d2/wpjC8WnP38NtMFWgngTVwup2QzdSknVDtL+gNozH7iYlWNafPVVk
+         olC24zv1ba+HFep6MNvQPNFBlXlP86tTgEz5Fd+MXixS8jaJMx4NGnb+0ttJw6y9NrSo
+         2RxVuy3lrd48kqWoYyu1v7xC+rWvKUskJHZyyGYvTIs/esiiVUUZ6NoNIpeDQUIb3H2D
+         l4Dg==
+X-Gm-Message-State: AOAM532i90qYpcASx/pqvSxBDOeEcDA795trCqwN3p9GPmK8b2RhraLB
+        FMEtMvDyWQuuOpKrd8i+/JU=
+X-Google-Smtp-Source: ABdhPJzcpySUfvdvmJoQWTBzEe8NelzmoxQhWHXcUtIiMt1xshl7OB/D2JDVRzQsKVBq0R1ygEfJOA==
+X-Received: by 2002:a05:620a:5e9:: with SMTP id z9mr5397165qkg.459.1591831849011;
+        Wed, 10 Jun 2020 16:30:49 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id s4sm873822qkh.120.2020.06.10.16.30.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2020 16:30:48 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Wed, 10 Jun 2020 19:30:46 -0400
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Fangrui Song <maskray@google.com>,
+        Rong Chen <rong.a.chen@intel.com>,
+        kernel test robot <lkp@intel.com>, kbuild-all@lists.01.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Makefile: Improve compressed debug info support detection
+Message-ID: <20200610233046.GA2941409@rani.riverdale.lan>
+References: <20200610063715.v2qrqvwtegdxdwzl@google.com>
+ <20200610191106.2662548-1-nivedita@alum.mit.edu>
+ <CAKwvOdnF9xhrs+FP4QXo6uXxgHMfHO8NvPYs1=KDE2ZyhCw2QQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <CAMj1kXErFuvOoG=DB6sz5HBvDuHDiKwWD8uOyLuxaX-u8-+dbA@mail.gmail.com>
- <20200601231805.207441-1-ndesaulniers@google.com> <BYAPR11MB3096A0EA2D03BCB76C91F80AF0830@BYAPR11MB3096.namprd11.prod.outlook.com>
-In-Reply-To: <BYAPR11MB3096A0EA2D03BCB76C91F80AF0830@BYAPR11MB3096.namprd11.prod.outlook.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 10 Jun 2020 16:29:02 -0700
-Message-ID: <CAKwvOdnh6Zh+P9SM_qFiy-9u7Y21fn=byTJtG4fTTRJqqU9bcQ@mail.gmail.com>
-Subject: Re: [PATCH] ACPICA: fix UBSAN warning using __builtin_offsetof
-To:     "Kaneda, Erik" <erik.kaneda@intel.com>
-Cc:     "Moore, Robert" <robert.moore@intel.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        Len Brown <lenb@kernel.org>, Jung-uk Kim <jkim@freebsd.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "dvyukov@google.com" <dvyukov@google.com>,
-        "glider@google.com" <glider@google.com>,
-        "guohanjun@huawei.com" <guohanjun@huawei.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "pcc@google.com" <pcc@google.com>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "will@kernel.org" <will@kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "devel@acpica.org" <devel@acpica.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdnF9xhrs+FP4QXo6uXxgHMfHO8NvPYs1=KDE2ZyhCw2QQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 4:07 PM Kaneda, Erik <erik.kaneda@intel.com> wrote:
->
-> +JKim (for FreeBSD's perspective)
->
-> > -----Original Message-----
-> > From: Nick Desaulniers <ndesaulniers@google.com>
-> > Sent: Monday, June 1, 2020 4:18 PM
-> > To: Moore, Robert <robert.moore@intel.com>; Kaneda, Erik
-> > <erik.kaneda@intel.com>; Wysocki, Rafael J <rafael.j.wysocki@intel.com>;
-> > Len Brown <lenb@kernel.org>
-> > Cc: Ard Biesheuvel <ardb@kernel.org>; dvyukov@google.com;
-> > glider@google.com; guohanjun@huawei.com; linux-arm-
-> > kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
-> > lorenzo.pieralisi@arm.com; mark.rutland@arm.com;
-> > ndesaulniers@google.com; pcc@google.com; rjw@rjwysocki.net;
-> > will@kernel.org; stable@vger.kernel.org; linux-acpi@vger.kernel.org;
-> > devel@acpica.org
-> > Subject: [PATCH] ACPICA: fix UBSAN warning using __builtin_offsetof
+On Wed, Jun 10, 2020 at 02:27:55PM -0700, Nick Desaulniers wrote:
+> On Wed, Jun 10, 2020 at 12:11 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
 > >
-> > Will reported UBSAN warnings:
-> > UBSAN: null-ptr-deref in drivers/acpi/acpica/tbfadt.c:459:37
-> > UBSAN: null-ptr-deref in arch/arm64/kernel/smp.c:596:6
+> > Commit
+> >   10e68b02c861 ("Makefile: support compressed debug info")
+> > added support for compressed debug sections.
 > >
-> Hi,
->
-> > Looks like the emulated offsetof macro ACPI_OFFSET is causing these. We
-> > can avoid this by using the compiler builtin, __builtin_offsetof.
+> > Support is detected by checking
+> > - does the compiler support -gz=zlib
+> > - does the assembler support --compressed-debug-sections=zlib
+> > - does the linker support --compressed-debug-sections=zlib
 > >
-> This doesn't really fly because __builtin_offsetof is a compiler extension.
->
-> It looks like a lot of stddef.h files do this:
->
-> #define offsetof(a,b) __builtin_offset(a,b)
->
-> So does anyone have objections to ACPI_OFFSET being defined to offsetof()?
->
-> This will allow a host OS project project to use their own definitions of offsetof in place of ACPICA's.
-> If they don't have a definition for offsetof, we can supply the old one as a fallback.
->
-> Here's a patch:
->
-> --- a/include/acpi/actypes.h
-> +++ b/include/acpi/actypes.h
-> @@ -504,11 +504,17 @@ typedef u64 acpi_integer;
->  #define ACPI_SUB_PTR(t, a, b)           ACPI_CAST_PTR (t, (ACPI_CAST_PTR (u8, (a)) - (acpi_size)(b)))
->  #define ACPI_PTR_DIFF(a, b)             ((acpi_size) (ACPI_CAST_PTR (u8, (a)) - ACPI_CAST_PTR (u8, (b))))
->
-> +/* Use an existing definiton for offsetof */
-
-s/definiton/definition/
-
-> +
-> +#ifndef offsetof
-> +#define offsetof(d,f)                   ACPI_PTR_DIFF (&(((d *) 0)->f), (void *) 0)
-> +#endif
-
-If this header doesn't explicitly include <stddef.h> or
-<linux/stddef.h>, won't translation units that include
-<acpi/actypes.h> get different definitions of ACPI_OFFSET based on
-whether they explicitly or transitively included <stddef.h> before
-including <acpi/actypes.h>?  Theoretically, a translation unit in the
-kernel could include actypes.h, have no includes of linux/stddef.h,
-then get UBSAN errors again from using this definition?
-
-I don't mind using offsetof in place of the builtin (since it
-typically will be implemented in terms of the builtin, or is at least
-for the case specific to the Linux kernel). But if it's used, we
-should include the header that defines it properly, and we should not
-use the host's <stddef.h> IMO.  Is there a platform specific way to
-include the platform's stddef.h here?
-
-Maybe linux/stddef.h should be included in
-include/acpi/platform/aclinux.h, then include/acpi/platform/acenv.h
-included in include/acpi/actypes.h, such that ACPI_OFFSET is defined
-in terms of offsetof defined from that transitive dependency of
-headers? (or do we get a circular inclusion trying to do that?)
-
-> +
->  /* Pointer/Integer type conversions */
->
->  #define ACPI_TO_POINTER(i)              ACPI_CAST_PTR (void, (acpi_size) (i))
->  #define ACPI_TO_INTEGER(p)              ACPI_PTR_DIFF (p, (void *) 0)
-> -#define ACPI_OFFSET(d, f)               ACPI_PTR_DIFF (&(((d *) 0)->f), (void *) 0)
-> +#define ACPI_OFFSET(d, f)               offsetof (d,f)
->  #define ACPI_PHYSADDR_TO_PTR(i)         ACPI_TO_POINTER(i)
->  #define ACPI_PTR_TO_PHYSADDR(i)         ACPI_TO_INTEGER(i)
->
-> Thanks,
-> Erik
->
-> > The non-kernel runtime of UBSAN would print:
-> > runtime error: member access within null pointer of type for this macro.
+> > However, the gcc driver's support for this option is somewhat
+> > convoluted. The driver's builtin specs are set based on the version of
+> > binutils that it was configured with, and it reports an error only if
+> > the assembler (or linker) is actually invoked.
 > >
-> > Link: https://lore.kernel.org/lkml/20200521100952.GA5360@willie-the-truck/
-> > Cc: stable@vger.kernel.org
-> > Reported-by: Will Deacon <will@kernel.org>
-> > Suggested-by: Ard Biesheuvel <ardb@kernel.org>
-> > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> > The cc-option check in scripts/Kconfig.include does not invoke the
+> > assembler, so the gcc driver reports success even if it does not support
+> > the option being passed to the assembler.
+> 
+> Thanks for the patch! In that case, should we consider dropping the
+> cc-option check from the Kconfg then, too?
+> 
+> It seems it would help for clang-4 and older, since they do error
+> about the unknown option, but I'm not too worried about trying to
+> support that version of Clang with this config.
+
+Also for gcc4 which doesn't support this at all -- that will report
+error on cc-option. We don't need to support it, but we shouldn't let it
+be enabled either.
+
+> 
+> > Combined with an installed
+> > version of binutils that is more recent than the one the compiler was
+> > built with, it is possible for all three tests to succeed, yet an actual
+> > compilation with -gz=zlib to fail.
+> 
+> It kind of sounds like the assembler must be invoked to verify this
+> will work for the cflags then?
+> 
+
+Yes, the gcc driver reports an error when deciding what to pass to the
+assembler for -gz=zlib, if it was configured with a linker that does not
+support the flag. It's even more weird actually -- if it was configured
+with a linker that supports the flag but an assembler that doesn't, it
+will silently eat the flag when calling the assembler. At least that
+won't break anything, though none of the .o files will be compressed.
+
+> >
+> > Moreover, it is unnecessary to explicitly pass
+> > --compressed-debug-sections=zlib to the assembler via -Wa, since the
+> > driver will do that automatically.
+> >
+> > Convert the as-option to just -gz=zlib, simplifying it as well as
+> > performing a better test of the gcc driver's capabilities.
+> >
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> 
+> Does this imply all feature tests of as-option with -W(comma)... are
+> broken?  IIUC, then the assembler is still not invoked, much as in
+> this case?  (as in they all pass when maybe they should not?)  (or
+> based on below, maybe just the Kconfig from 74afda4016a74 in
+> arch/arm64/Kconfig, AS_HAS_PAC)
+
+No, as-option does invoke the assembler. The problem here is that with
+-Wa, the option is only seen by the assembler, not the gcc driver. So it
+will succeed because the assembler supports it, but it will not test
+whether the gcc driver also supports it.
+
+> 
+> In the other thread, you discussed -c vs -s.  It looks like -c is used
+> for as-option, so I expect the assembler to be invoked.
+> 
+> Maybe we should look at the mismatch between Kbuild and Kconfig
+> regarding -c vs -s in scripts/Kbuild.include vs
+> scripts/Kconfig.include?  Otherwise it sounds like cc-option cannot be
+> used to check for `-Wa,` flags in Kconfig, since if the assembler is
+> never invoked, it may appear that GCC has support for
+> -Wa,--compress-debug-sections=zlib when it indeed does not.
+> 
+
+Yeah, we might want to fix the mismatch there.  In Kconfig, there aren't
+any instances of cc-option being used with -Wa, but there certainly are
+in Kbuild. It actually originally used to only run the preprocessor and
+got fixed to at least run the compiler in commit
+  3bed1b7b9d79 ("kbuild: use -S instead of -E for precise cc-option test in Kconfig")
+
 > > ---
-> >  include/acpi/actypes.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >  Makefile          | 2 +-
+> >  lib/Kconfig.debug | 2 +-
+> >  2 files changed, 2 insertions(+), 2 deletions(-)
 > >
-> > diff --git a/include/acpi/actypes.h b/include/acpi/actypes.h index
-> > 4defed58ea33..04359c70b198 100644
-> > --- a/include/acpi/actypes.h
-> > +++ b/include/acpi/actypes.h
-> > @@ -508,7 +508,7 @@ typedef u64 acpi_integer;
+> > diff --git a/Makefile b/Makefile
+> > index 839f9fee22cb..cb29e56f227a 100644
+> > --- a/Makefile
+> > +++ b/Makefile
+> > @@ -842,7 +842,7 @@ endif
 > >
-> >  #define ACPI_TO_POINTER(i)              ACPI_CAST_PTR (void, (acpi_size) (i))
-> >  #define ACPI_TO_INTEGER(p)              ACPI_PTR_DIFF (p, (void *) 0)
-> > -#define ACPI_OFFSET(d, f)               ACPI_PTR_DIFF (&(((d *) 0)->f), (void *)
-> > 0)
-> > +#define ACPI_OFFSET(d, f)               __builtin_offsetof(d, f)
-> >  #define ACPI_PHYSADDR_TO_PTR(i)         ACPI_TO_POINTER(i)
-> >  #define ACPI_PTR_TO_PHYSADDR(i)         ACPI_TO_INTEGER(i)
+> >  ifdef CONFIG_DEBUG_INFO_COMPRESSED
+> >  DEBUG_CFLAGS   += -gz=zlib
+> > -KBUILD_AFLAGS  += -Wa,--compress-debug-sections=zlib
+> > +KBUILD_AFLAGS  += -gz=zlib
+> >  KBUILD_LDFLAGS += --compress-debug-sections=zlib
+> >  endif
 > >
+> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> > index cb98741601bd..94ce36be470c 100644
+> > --- a/lib/Kconfig.debug
+> > +++ b/lib/Kconfig.debug
+> > @@ -229,7 +229,7 @@ config DEBUG_INFO_COMPRESSED
+> >         bool "Compressed debugging information"
+> >         depends on DEBUG_INFO
+> >         depends on $(cc-option,-gz=zlib)
+> > -       depends on $(as-option,-Wa$(comma)--compress-debug-sections=zlib)
+> > +       depends on $(as-option,-gz=zlib)
+> >         depends on $(ld-option,--compress-debug-sections=zlib)
+> >         help
+> >           Compress the debug information using zlib.  Requires GCC 5.0+ or Clang
 > > --
-> > 2.27.0.rc2.251.g90737beb825-goog
->
-
-
--- 
-Thanks,
-~Nick Desaulniers
+> > 2.26.2
+> >
+> 
+> 
+> --
+> Thanks,
+> ~Nick Desaulniers
