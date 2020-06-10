@@ -2,82 +2,154 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2EFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CB0C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 855F920734
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:24:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="LMAKZMUa"
+	by mail.kernel.org (Postfix) with ESMTP id 367952072E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 09:27:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727098AbgFJJYj (ORCPT
+        id S1727118AbgFJJ1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 05:24:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44592 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726134AbgFJJYi (ORCPT
+        Wed, 10 Jun 2020 05:27:15 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:56809 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbgFJJ1O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 05:24:38 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5637C03E96B;
-        Wed, 10 Jun 2020 02:24:37 -0700 (PDT)
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id E886329E;
-        Wed, 10 Jun 2020 11:24:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1591781076;
-        bh=d7/Z3a/cNXkRgco/e+DWGswAhTOHqw7Q8TykDvLriX8=;
-        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=LMAKZMUapn0fLuAWidUbhBH38o8aScAIFM4BG6euiZ8or5w/1QY1TP0uo+Wc2O8yY
-         EWvalSfx2HB+GpIFSASFCpM/gIg7hzL/He47JjlZ6o3h98fOeU6+9NN9L+Dy71g85k
-         3KQKaX/4TVxBytCf6iiw1LaFAmyQts+Z+LCHBTvE=
-Reply-To: kieran.bingham+renesas@ideasonboard.com
-Subject: Re: [PATCH v2] drm/rcar-du: DRM_RCAR_WRITEBACK depends on DRM
-To:     Qian Cai <cai@lca.pw>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200608031622.GQ22208@pendragon.ideasonboard.com>
- <1DA4E5B7-BB3A-476B-B09A-24EC89583C3D@lca.pw>
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Organization: Ideas on Board
-Message-ID: <ed5d28ac-3168-b331-bb9e-63fd8c043ae2@ideasonboard.com>
-Date:   Wed, 10 Jun 2020 10:24:33 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 10 Jun 2020 05:27:14 -0400
+Received: from mail-qv1-f44.google.com ([209.85.219.44]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MBUyX-1jeF6W2B4R-00Cvz2; Wed, 10 Jun 2020 11:27:11 +0200
+Received: by mail-qv1-f44.google.com with SMTP id ec10so712608qvb.5;
+        Wed, 10 Jun 2020 02:27:11 -0700 (PDT)
+X-Gm-Message-State: AOAM533/O/ROVS3ob1Ld997sj6V/4FCWUVgXa9pb+8LhpfAEEgE9ys5l
+        f+Am1dGBbhGpuSUnr0wGs7XZtz3LXcxbDHO1c50=
+X-Google-Smtp-Source: ABdhPJxyWtH9LofwEdTYxXzu1ldBiowqiR86mkHaGO4qq++n7gDHop60yxQeWpkgQAbZwvP05ibJC+11h2MwvKlB+/o=
+X-Received: by 2002:a05:6214:846:: with SMTP id dg6mr2067587qvb.210.1591781230032;
+ Wed, 10 Jun 2020 02:27:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1DA4E5B7-BB3A-476B-B09A-24EC89583C3D@lca.pw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20200610083333.455-1-sumit.semwal@linaro.org>
+In-Reply-To: <20200610083333.455-1-sumit.semwal@linaro.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 10 Jun 2020 11:26:53 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0PzmtWc1p-KgHzHhY+=gca0J8YsGD=ALGESWsgijQQ7w@mail.gmail.com>
+Message-ID: <CAK8P3a0PzmtWc1p-KgHzHhY+=gca0J8YsGD=ALGESWsgijQQ7w@mail.gmail.com>
+Subject: Re: [PATCH] dma-buf: Move dma_buf_release() from fops to dentry_ops
+To:     Sumit Semwal <sumit.semwal@linaro.org>
+Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Chenbo Feng <fengc@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linaro-mm-sig@lists.linaro.org,
+        Charan Teja Reddy <charante@codeaurora.org>,
+        syzbot+3643a18836bce555bff6@syzkaller.appspotmail.com,
+        "# 3.4.x" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:4KN5z80BV4ZSYGD0r4ZJ1xhRvF6rNz4GWsh1vKT87FfSqkxdz1z
+ lvdlx/VXv0nPAvhF2ezZ5SVVlk7hWd4T16B9jUnYYgPrDlj8c3hZt6aFCUF4uEHBm3rGbQy
+ y8uUxG1Exr0XON0fuZWhe4Z+bugiEEEDIT1mYIBV/wvPzeKvZZc7KptuOmzmDrkYpQ3yMQg
+ glUzEvAv6WhhbX9IYETQA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:5QuMWLLE2XQ=:KiybF5yfbBVTge3bNZ1H5O
+ 5cyNKx2tDt29s4nkbkmno0eAPBJKhAcliQtgcWeuNZ9dByBhXObim7dGifMy/9EZmGOao569M
+ uXrZk06TkrDbZPJPaLSjry8DNoX/93EMxWPywCq4OrP9JfFJ2Jp7+RnHOPniByLkk+83aEkpb
+ 8JGsHn4QQqR5x+0mGImScGJ1vkUUUMS8vNLRaER2tRvgDh8yKDkQjpoNIEe3WnGmfm0d2Z0X7
+ IuzhYa0ayXpn6VyeXC6gbLklDG9y3YLBS4Y8AXwl94KBSHNXA/RAcCPpulyMjCpJIPdrT2rK8
+ ysI5mWk8a3g5kCkliPJpfALOp3OFUlLw93EzRxCe6udmhpi+SjYxo3gFueyJ+nFc1KH7nK3qz
+ /4+uFQ5MPfTDQ228MRk6bWDxZEnuWWgxhtbQQzADtQM1upXQCfsIXrw4mLq+73buxNYK+IG24
+ ygkm501eH5YF//09TsS/9q9bT/I6X+IoNqoibiNQGBTUjjbaA9LELXqp6JpFz1I2FpIxvYPEe
+ IdCgAwbMi7KJ+RZ0RC2p0PIgeFi7aI+30th8IrCgbE5qtPbtYF422+rPdLjZnRChsxSHrWk74
+ aeTwJEG/d8Qx5cQz/f1Xx627eUw6TQn5NogdlUMCpBnRboG8qCB3Ggim+71hlSKAnmz9oTYYj
+ d60J80qs6oEFySsuSNnO/b+PY6iK7S7UWJe8glfWbVpO9f6V4pfOz/y1cRURUO1hZ6QPUd7Vi
+ qthnN7h7WEQDDGxk7JGwb+p2O0eLb8VlV5DDvv85PlBqPiAzBnJMhrknOkXYzKk1vIZ4rI84n
+ TTbkJiRGlB5BkapdTaNR/FSOWj7Bl2f+accO6PMwr7OtunThxY=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Qian, Laurent,
+On Wed, Jun 10, 2020 at 10:33 AM Sumit Semwal <sumit.semwal@linaro.org> wrote:
+>
+> Charan Teja reported a 'use-after-free' in dmabuffs_dname [1], which
+> happens if the dma_buf_release() is called while the userspace is
+> accessing the dma_buf pseudo fs's dmabuffs_dname() in another process,
+> and dma_buf_release() releases the dmabuf object when the last reference
+> to the struct file goes away.
+>
+> I discussed with Arnd Bergmann, and he suggested that rather than tying
+> the dma_buf_release() to the file_operations' release(), we can tie it to
+> the dentry_operations' d_release(), which will be called when the last ref
+> to the dentry is removed.
+>
+> The path exercised by __fput() calls f_op->release() first, and then calls
+> dput, which eventually calls d_op->d_release().
+>
+> In the 'normal' case, when no userspace access is happening via dma_buf
+> pseudo fs, there should be exactly one fd, file, dentry and inode, so
+> closing the fd will kill of everything right away.
+>
+> In the presented case, the dentry's d_release() will be called only when
+> the dentry's last ref is released.
+>
+> Therefore, lets move dma_buf_release() from fops->release() to
+> d_ops->d_release().
+>
+> Many thanks to Arnd for his FS insights :)
+>
+> [1]: https://lore.kernel.org/patchwork/patch/1238278/
+>
+> Fixes: bb2bb9030425 ("dma-buf: add DMA_BUF_SET_NAME ioctls")
+> Reported-by: syzbot+3643a18836bce555bff6@syzkaller.appspotmail.com
+> Cc: <stable@vger.kernel.org> [5.3+]
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Reported-by: Charan Teja Reddy <charante@codeaurora.org>
+> Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
 
-On 08/06/2020 05:30, Qian Cai wrote:
-> 
-> 
->> On Jun 7, 2020, at 11:16 PM, Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
->>
->> I forgot to mention, I think the subject line should be
->>
->> drm/rcar-du: Make DRM_RCAR_WRITEBACK depend on DRM_RCAR_DU
->>
->> Could you please let me know if you're OK with these two small changes ?
-> 
-> Yes, I am fine with those.
-> 
+The patch looks correct to me.
 
-With the fixups,
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 
-Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Obviously this should still be verified against the original report if possible.
 
---
-Kieran
+>  drivers/dma-buf/dma-buf.c | 13 +++++++------
+>  1 file changed, 7 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+> index 01ce125f8e8d..92ba4b6ef3e7 100644
+> --- a/drivers/dma-buf/dma-buf.c
+> +++ b/drivers/dma-buf/dma-buf.c
+> @@ -54,8 +54,11 @@ static char *dmabuffs_dname(struct dentry *dentry, char *buffer, int buflen)
+>                              dentry->d_name.name, ret > 0 ? name : "");
+>  }
+>
+> +static void dma_buf_release(struct dentry *dentry);
+> +
+>  static const struct dentry_operations dma_buf_dentry_ops = {
+>         .d_dname = dmabuffs_dname,
+> +       .d_release = dma_buf_release,
+>  };
+
+I'd suggest rearranging the file to avoid the forward declaration, even
+if it makes it a little harder to review the change, the resulting code
+will remain organized more logically.
+
+>  static struct vfsmount *dma_buf_mnt;
+> @@ -77,14 +80,14 @@ static struct file_system_type dma_buf_fs_type = {
+>         .kill_sb = kill_anon_super,
+>  };
+>
+> -static int dma_buf_release(struct inode *inode, struct file *file)
+> +static void dma_buf_release(struct dentry *dentry)
+>  {
+>         struct dma_buf *dmabuf;
+>
+> -       if (!is_dma_buf_file(file))
+> -               return -EINVAL;
+> +       if (dentry->d_op != &dma_buf_dentry_ops)
+> +               return;
+
+I think the check here is redundant and it's clearer without it.
+
+          Arnd
