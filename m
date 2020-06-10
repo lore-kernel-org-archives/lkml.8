@@ -3,88 +3,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA322C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85399C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9820020734
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:19:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69ED52074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:19:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728967AbgFJMTC (ORCPT
+        id S1728982AbgFJMTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 08:19:02 -0400
-Received: from mga11.intel.com ([192.55.52.93]:57083 "EHLO mga11.intel.com"
+        Wed, 10 Jun 2020 08:19:35 -0400
+Received: from mga07.intel.com ([134.134.136.100]:42305 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728540AbgFJMTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 08:19:01 -0400
-IronPort-SDR: s/bi49aKySkiwbs8663bQJ+alHT+8HYSYrFHTWHHR7jBY08gcg2eOEmKybHG3rxx8cTZEs1jnX
- GgwojsqzKWBw==
+        id S1728540AbgFJMTf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 08:19:35 -0400
+IronPort-SDR: 3syKbqmVcKn19g8fhwDnbCBDjWXMLOZF8nQcVFYR9buNqI2TgWtAdmjBBDJ3T6l+dsMpQUFZl4
+ YbWU8ScOLvoQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2020 05:18:55 -0700
-IronPort-SDR: xyBzLieBBLsKIOmAea68QV63E8nLmS/k0Ib31fTDfHW9z0qJeN1wDvYkmntxkSU0fGdiImspmd
- f+zeTjf78rEQ==
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2020 05:19:34 -0700
+IronPort-SDR: iQnS+2TeSpXWWy9Frd9LkLSM0b66DreyvmOvysbvmcLDc1I9YpoQAV3Sx6hGwjO1bkt3tENwlH
+ 3LP1GlgHJvUA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,495,1583222400"; 
-   d="scan'208";a="473405781"
-Received: from tstralma-mobl.ger.corp.intel.com ([10.249.254.134])
-  by fmsmga005.fm.intel.com with ESMTP; 10 Jun 2020 05:18:52 -0700
-Message-ID: <1cbbb0dab91cad4ecf76cb6ca92f3c3bfe6ee5f7.camel@intel.com>
-Subject: Re: [PATCH 02/15] iwlwifi: mvm: fix gcc-10 zero-length-bounds
- warning
-From:   Luciano Coelho <luciano.coelho@intel.com>
-To:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sara Sharon <sara.sharon@intel.com>
-Cc:     Andrei Otcheretianski <andrei.otcheretianski@intel.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Date:   Wed, 10 Jun 2020 15:18:52 +0300
-In-Reply-To: <20200430213101.135134-3-arnd@arndb.de>
-References: <20200430213101.135134-1-arnd@arndb.de>
-         <20200430213101.135134-3-arnd@arndb.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2-1 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+   d="scan'208";a="473405887"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by fmsmga005.fm.intel.com with ESMTP; 10 Jun 2020 05:19:31 -0700
+From:   Amireddy Mallikarjuna reddy <mallikarjunax.reddy@linux.intel.com>
+To:     dmaengine@vger.kernel.org, vkoul@kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org
+Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        chuanhua.lei@linux.intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, malliamireddy009@gmail.com,
+        Amireddy Mallikarjuna reddy 
+        <mallikarjunax.reddy@linux.intel.com>
+Subject: [PATCH 0/2] Add Intel LGM soc DMA support
+Date:   Wed, 10 Jun 2020 20:17:54 +0800
+Message-Id: <cover.1591790337.git.mallikarjunax.reddy@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-04-30 at 23:30 +0200, Arnd Bergmann wrote:
-> gcc-10 complains when a zero-length array is accessed:
-> 
-> drivers/net/wireless/intel/iwlwifi/mvm/tx.c: In function 'iwl_mvm_rx_ba_notif':
-> drivers/net/wireless/intel/iwlwifi/mvm/tx.c:1929:17: warning: array subscript 9 is outside the bounds of an interior zero-length array 'struct iwl_mvm_compressed_ba_tfd[0]' [-Wzero-length-bounds]
->  1929 |     &ba_res->tfd[i];
->       |      ~~~~~~~~~~~^~~
-> In file included from drivers/net/wireless/intel/iwlwifi/mvm/../fw/api/tdls.h:68,
->                  from drivers/net/wireless/intel/iwlwifi/mvm/fw-api.h:68,
->                  from drivers/net/wireless/intel/iwlwifi/mvm/sta.h:73,
->                  from drivers/net/wireless/intel/iwlwifi/mvm/mvm.h:83,
->                  from drivers/net/wireless/intel/iwlwifi/mvm/tx.c:72:
-> drivers/net/wireless/intel/iwlwifi/mvm/../fw/api/tx.h:769:35: note: while referencing 'tfd'
->   769 |  struct iwl_mvm_compressed_ba_tfd tfd[0];
->       |                                   ^~~
-> 
-> Change this structure to use a flexible-array member for 'tfd' instead,
-> along with the various structures using an zero-length ieee80211_hdr
-> array that do not show warnings today but might be affected by similar
-> issues in the future.
-> 
-> Fixes: 6f68cc367ab6 ("iwlwifi: api: annotate compressed BA notif array sizes")
-> Fixes: c46e7724bfe9 ("iwlwifi: mvm: support new BA notification response")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Add DMA controller driver for Lightning Mountain(LGM) family of SoCs.
 
-Patch applied to iwlwifi-next.git, thanks.
+The main function of the DMA controller is the transfer of data from/to any
+DPlus compliant peripheral to/from the memory. A memory to memory copy
+capability can also be configured.
+This ldma driver is used for configure the device and channnels for data
+and control paths.
 
-9cec1d547cb7 iwlwifi: mvm: fix gcc-10 zero-length-bounds warning
+These controllers provide DMA capabilities for a variety of on-chip
+devices such as SSC, HSNAND and GSWIP.
+
+-------------
+Future Plans:
+-------------
+LGM SOC also supports Hardware Memory Copy engine.
+The role of the HW Memory copy engine is to offload memory copy operations
+from the CPU.
+
+Amireddy Mallikarjuna reddy (2):
+  dt-bindings: dma: Add bindings for intel LGM SOC
+  Add Intel LGM soc DMA support.
+
+ .../devicetree/bindings/dma/intel,ldma.yaml        |  428 +++++
+ drivers/dma/Kconfig                                |    2 +
+ drivers/dma/Makefile                               |    1 +
+ drivers/dma/lgm/Kconfig                            |    9 +
+ drivers/dma/lgm/Makefile                           |    2 +
+ drivers/dma/lgm/lgm-dma.c                          | 1951 ++++++++++++++++++++
+ 6 files changed, 2393 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/intel,ldma.yaml
+ create mode 100644 drivers/dma/lgm/Kconfig
+ create mode 100644 drivers/dma/lgm/Makefile
+ create mode 100644 drivers/dma/lgm/lgm-dma.c
+
+-- 
+2.11.0
 
