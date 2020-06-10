@@ -2,93 +2,110 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B1FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1AD6C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28624207C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:51:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1B45206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:52:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591797120;
+	bh=FO7RsyaUEx43/J7tctMgmBtj/nqhDVrP5YnsEE6aoDs=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=C3U7P6HfkRTkPjC6n6IhkI4Al/3PZRBCnEaYVQ9tzRUYFOuwbtZFec4n0LbUCmdpc
+	 lmdMkOe/KAkwI4SBAI9NcFQbQMb74kA3gt9DS6Uh7RV5YsWsmSi4bzBNoBrfOHkHRe
+	 1ghn5gpDHTwA8kzaErujTLG5PUxbKyyENs7Y6MRE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729532AbgFJNvj (ORCPT
+        id S1729544AbgFJNv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 09:51:39 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5874 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726095AbgFJNvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 09:51:38 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 4109B1ADA8F5DCDEDAA9;
-        Wed, 10 Jun 2020 21:51:35 +0800 (CST)
-Received: from localhost (10.166.215.154) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Wed, 10 Jun 2020
- 21:51:27 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <linux-ext4@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <tytso@mit.edu>, <adilger.kernel@dilger.ca>,
-        <riteshh@linux.ibm.com>
-CC:     YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] ext4: mballoc: Disable preemption before getting per-CPU pointer
-Date:   Wed, 10 Jun 2020 21:49:19 +0800
-Message-ID: <20200610134919.73688-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 10 Jun 2020 09:51:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57844 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729535AbgFJNv7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 09:51:59 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE3FFC03E96F
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 06:51:58 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id a21so2087310oic.8
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 06:51:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=rw9Mj0/+zzahZvyDMEuzuvW0Rn8QEeky5cPhAciCJPw=;
+        b=MUaQd6f/BXiIREv15GSwQVLeIhm4Wa2S6Q0t8CHFYR7CME4+8bThfnPUpI9gTi21wt
+         w553O7sARRIPJ0pkWVfikDPaLsjFvKTFjE8Y5sf1Kvr+3YaBdnImkWxSTt/8XQyAwV2d
+         lM8IqHeCuVDN0YSSSECwnn8vzQb4GRR/kC1H8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rw9Mj0/+zzahZvyDMEuzuvW0Rn8QEeky5cPhAciCJPw=;
+        b=eKX38L2MBVY40efQNaZEiG0ZCbcqpV0CZz/GqPxKknEtMrDDaOSM51OHzM7jijCpyd
+         jUX03tQ6CPXb2s6zcpSmfMGMjzgg47MHl40H+etOxm+uiyQrI51qpKtobzR1pxYglTTg
+         LwqNI03FBQkM3u5vc4dUPzNYeHqQnfyROEiB0g4tuQNMEBsZDc+NV2SovyD7OwCkF8F3
+         wy1im2raWMoEjLHQMrh/oi/ipenHhAHxrfk3fDXjFJrezaihRSKHRixrz85mnT0A6hxq
+         nqwfzY0jglwPpsTdDEJioUfVEdp86NU20BbTrGV3mTviCRp2RFIAq0fjElFHuctrveYo
+         RU/g==
+X-Gm-Message-State: AOAM531bzbQCBmwmofz7PyXnbvgBN7AhSZaohkfA/2L+Ts7lYbysWN13
+        bzZ60GU2I3XfQ1T+YBCgut3RFgJ/cJk=
+X-Google-Smtp-Source: ABdhPJxtlQuwQmxDLMoDK57a9/HXESSPe9khaYCy0R14MDk7Rimx4iT8K/X5OC/DbN9zfqtovRPIZg==
+X-Received: by 2002:a05:6808:ab0:: with SMTP id r16mr2574689oij.24.1591797117980;
+        Wed, 10 Jun 2020 06:51:57 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id y89sm12308ota.16.2020.06.10.06.51.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Jun 2020 06:51:57 -0700 (PDT)
+Subject: Re: [PATCH 5.6 00/41] 5.6.18-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, skhan@linuxfoundation.org
+References: <20200609174112.129412236@linuxfoundation.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <9696dbd3-0ee3-a511-076a-98bb924bda8e@linuxfoundation.org>
+Date:   Wed, 10 Jun 2020 07:51:56 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.166.215.154]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200609174112.129412236@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-BUG: using smp_processor_id() in preemptible [00000000] code: kworker/u16:3/2181
-caller is ext4_mb_new_blocks+0x388/0xed0
-CPU: 2 PID: 2181 Comm: kworker/u16:3 Not tainted 5.7.0+ #182
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-Workqueue: writeback wb_workfn (flush-8:0)
-Call Trace:
- dump_stack+0xb9/0xfc
- debug_smp_processor_id+0xc8/0xd0
- ext4_mb_new_blocks+0x388/0xed0
- ext4_ext_map_blocks+0xa92/0xff0
- ext4_map_blocks+0x34e/0x580
- ext4_writepages+0xa28/0x11b0
- do_writepages+0x46/0xe0
- __writeback_single_inode+0x5f/0x6b0
- writeback_sb_inodes+0x290/0x620
- __writeback_inodes_wb+0x62/0xb0
- wb_writeback+0x36c/0x520
- wb_workfn+0x319/0x680
- process_one_work+0x271/0x640
- worker_thread+0x3a/0x3a0
- kthread+0x14e/0x170
- ret_from_fork+0x27/0x40
+On 6/9/20 11:45 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.6.18 release.
+> There are 41 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 11 Jun 2020 17:40:51 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.18-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-Disable preemption before accessing discard_pa_seq.
+Compiled and booted on my test system. No dmesg regressions.
 
-Fixes: 07b5b8e1ac40 ("ext4: mballoc: introduce pcpu seqcnt for freeing PA to improve ENOSPC handling")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- fs/ext4/mballoc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-index a9083113a8c0..30b3bfb1e06a 100644
---- a/fs/ext4/mballoc.c
-+++ b/fs/ext4/mballoc.c
-@@ -4708,7 +4708,8 @@ ext4_fsblk_t ext4_mb_new_blocks(handle_t *handle,
- 	}
- 
- 	ac->ac_op = EXT4_MB_HISTORY_PREALLOC;
--	seq = *this_cpu_ptr(&discard_pa_seq);
-+	seq = *get_cpu_ptr(&discard_pa_seq);
-+	put_cpu_ptr(&discard_pa_seq);
- 	if (!ext4_mb_use_preallocated(ac)) {
- 		ac->ac_op = EXT4_MB_HISTORY_ALLOC;
- 		ext4_mb_normalize_request(ac, ar);
--- 
-2.20.1
-
-
+thanks,
+-- Shuah
