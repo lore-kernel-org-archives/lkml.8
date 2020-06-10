@@ -2,87 +2,113 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33478C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 759B5C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAE6A20734
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52B7020734
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:25:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="I4wK+ZGm"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="lK9774uv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729106AbgFJMXz (ORCPT
+        id S1729015AbgFJMZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 08:23:55 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:64875 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728571AbgFJMXx (ORCPT
+        Wed, 10 Jun 2020 08:25:20 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:3998 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728973AbgFJMZU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 08:23:53 -0400
-X-UUID: e647361f7ba84d05b22da8c38c58befb-20200610
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=y0+ea5iXlIKqU9Ug7NsEdYKcsxBs8n5iuhNmG0dnYwY=;
-        b=I4wK+ZGm8EZ3imeXkdaiDZ+qha+BHuj/HRo1KKASZmyxDC4XO6bCDhKR1wH7fvWUSlNj3TvlqIGRhL5tdsKSCMj6ScvEtou/dDRAZ17paPyOuYb+TiUWXZYeV3BExE5slAUnNm+meiTaMG1/PtjRqK+sfJoCcEP+5buHDmkvoi0=;
-X-UUID: e647361f7ba84d05b22da8c38c58befb-20200610
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <frankie.chang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2120119367; Wed, 10 Jun 2020 20:23:50 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 10 Jun 2020 20:23:47 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 10 Jun 2020 20:23:47 +0800
-From:   Frankie Chang <Frankie.Chang@mediatek.com>
-To:     Todd Kjos <tkjos@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Joel Fernandes <joel@joelfernandes.org>,
-        Martijn Coenen <maco@android.com>,
-        =?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
-        Christian Brauner <christian@brauner.io>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        Jian-Min Liu <Jian-Min.Liu@mediatek.com>
-Subject: [PATCH v5] binder: transaction latency tracking for user build
-Date:   Wed, 10 Jun 2020 20:23:44 +0800
-Message-ID: <1591791827-23871-1-git-send-email-Frankie.Chang@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <20200507085544.GB1097552@kroah.com>
-References: <20200507085544.GB1097552@kroah.com>
+        Wed, 10 Jun 2020 08:25:20 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05ACI8aY011853;
+        Wed, 10 Jun 2020 14:25:04 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=zWShjHdtkDP9KEzM3tiXokZkb+o6dSeLDNYRf6d3oDE=;
+ b=lK9774uvrYbZCJxM/8TyE1xEC0G84Bwoa9/uAW5IojR7iydzTmokegAkuXHbSWfLYDsP
+ +Enf1x2pLmDln/EkdQphXrjbaPWSY9iQuUKsV3YCqOLUAJVoXz5F2JQ8RKzPhctOenAy
+ HD8kV1tzJtVRPBytgRNKWN4Nwm0DeQUj8DcmMCAE0mYJmWXvaw3fUF2GrTdeDYHrOnux
+ wf96AS3Wdzt9Kfg9tHhOWcYiDNd9g0lnSFQuV5vfZjmXKRqu52YXzY8lyx6mr1KmXh44
+ NRQDz0SKR8oDyvVF8U5Q4U+OiP+T4aVomn+uRa9tcUnp9wFLwfQq4DpNjiIKRSKqe01p hA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 31g0wvw0m9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 10 Jun 2020 14:25:04 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id ACD9B10002A;
+        Wed, 10 Jun 2020 14:25:03 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 978802106E9;
+        Wed, 10 Jun 2020 14:25:03 +0200 (CEST)
+Received: from localhost (10.75.127.49) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 10 Jun 2020 14:25:03
+ +0200
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <hugues.fruchet@st.com>, <mchehab@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>
+CC:     <linux-media@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <vincent.guittot@linaro.org>,
+        <valentin.schneider@arm.com>, <rjw@rjwysocki.net>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH v6 1/3] dt-bindings: media: stm32-dcmi: Add DCMI min frequency property
+Date:   Wed, 10 Jun 2020 14:24:58 +0200
+Message-ID: <20200610122500.4304-2-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
+In-Reply-To: <20200610122500.4304-1-benjamin.gaignard@st.com>
+References: <20200610122500.4304-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG5NODE2.st.com (10.75.127.14) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-10_07:2020-06-10,2020-06-10 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpGcmFua2llLkNoYW5nICgzKToNCiAgYmluZGVyOiBtb3ZlIHN0cnVjdHMgZnJvbSBjb3JlIGZp
-bGUgdG8gaGVhZGVyIGZpbGUNCiAgYmluZGVyOiBhZGQgdHJhY2UgYXQgZnJlZSB0cmFuc2FjdGlv
-bi4NCiAgYmluZGVyOiBhZGQgdHJhbnNhY3Rpb24gbGF0ZW5jeSB0cmFjZXINCg0KIGRyaXZlcnMv
-YW5kcm9pZC9LY29uZmlnICAgICAgICAgICAgICAgICB8ICAgOCArDQogZHJpdmVycy9hbmRyb2lk
-L01ha2VmaWxlICAgICAgICAgICAgICAgIHwgICAxICsNCiBkcml2ZXJzL2FuZHJvaWQvYmluZGVy
-LmMgICAgICAgICAgICAgICAgfCA0MDggKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCiBkcml2ZXJz
-L2FuZHJvaWQvYmluZGVyX2ludGVybmFsLmggICAgICAgfCA0MTYgKysrKysrKysrKysrKysrKysr
-KysrKysrDQogZHJpdmVycy9hbmRyb2lkL2JpbmRlcl9sYXRlbmN5X3RyYWNlci5jIHwgMTA4ICsr
-KysrKw0KIGRyaXZlcnMvYW5kcm9pZC9iaW5kZXJfdHJhY2UuaCAgICAgICAgICB8ICA0OSArKysN
-CiA2IGZpbGVzIGNoYW5nZWQsIDU4NiBpbnNlcnRpb25zKCspLCA0MDQgZGVsZXRpb25zKC0pICBj
-cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9hbmRyb2lkL2JpbmRlcl9sYXRlbmN5X3RyYWNlci5j
-DQoNCkNoYW5nZSBmcm9tIHY1Og0KICAtIGNoYW5nZSBjb25maWcgbmFtZSB0byB0aGUgcHJvcGVy
-IG9uZSwgQ09ORklHX0JJTkRFUl9UUkFOU0FDVElPTl9MQVRFTkNZX1RSQUNLSU5HLg0KICAtIGNo
-YW5nZSB0cmFjZXBvaW50IG5hbWUgdG8gbW9yZSBkZXNjcmlwdGl2ZSBvbmUsIHRyYWNlX2JpbmRl
-cl90eG5fbGF0ZW5jeV8oYWxsb2N8aW5mb3xmcmVlKQ0KICAtIGVuaGFuY2Ugc29tZSBsb2NrIHBy
-b3RlY3Rpb24uDQoNCkNoYW5nZSBmcm9tIHY0Og0KICAtIHNwbGl0IHVwIGludG8gcGF0Y2ggc2Vy
-aWVzLg0KDQpDaGFuZ2UgZnJvbSB2MzoNCiAgLSB1c2UgdHJhY2Vwb2ludHMgZm9yIGJpbmRlcl91
-cGRhdGVfaW5mbyBhbmQgcHJpbnRfYmluZGVyX3RyYW5zYWN0aW9uX2V4dCwNCiAgICBpbnN0ZWFk
-IG9mIGN1c3RvbSByZWdpc3RyYXRpb24gZnVuY3Rpb25zLg0KDQpDaGFuZ2UgZnJvbSB2MjoNCiAg
-LSBjcmVhdGUgdHJhbnNhY3Rpb24gbGF0ZW5jeSBtb2R1bGUgdG8gbW9uaXRvciBzbG93IHRyYW5z
-YWN0aW9uLg0KDQpDaGFuZ2UgZnJvbSB2MToNCiAgLSBmaXJzdCBwYXRjaHNldC4NCg==
+Document st,stm32-dcmi-min-frequency property which is used to
+request CPUs minimum frequency when streaming frames.
+
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+ Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml b/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
+index 3fe778cb5cc3..05ca85a2411a 100644
+--- a/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
++++ b/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
+@@ -44,6 +44,13 @@ properties:
+       bindings defined in
+       Documentation/devicetree/bindings/media/video-interfaces.txt.
+ 
++  st,stm32-dcmi-min-frequency:
++    description: DCMI minimum CPUs frequency requirement (in KHz).
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - minimum: 0
++      - default: 0
++
+ required:
+   - compatible
+   - reg
+@@ -71,6 +78,7 @@ examples:
+         clock-names = "mclk";
+         dmas = <&dmamux1 75 0x400 0x0d>;
+         dma-names = "tx";
++        st,stm32-dcmi-min-frequency = <650000>;
+ 
+         port {
+              dcmi_0: endpoint {
+-- 
+2.15.0
 
