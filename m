@@ -2,157 +2,121 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_DIGITS,
-	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB4DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:02:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CADC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C069C204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:02:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B233204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:03:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PIR7AKWK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729282AbgFJRCN (ORCPT
+        id S1728119AbgFJRDI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 13:02:13 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:57226 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728103AbgFJRCN (ORCPT
+        Wed, 10 Jun 2020 13:03:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59244 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726560AbgFJRDH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 13:02:13 -0400
-Received: by mail-il1-f198.google.com with SMTP id k13so1900535ilh.23
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 10:02:11 -0700 (PDT)
+        Wed, 10 Jun 2020 13:03:07 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 747A3C03E96F
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 10:03:06 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id s88so1129721pjb.5
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 10:03:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=WnFhsHiRkjL5CKHVcJANd7l4RT2J9uPwXvDpKNqYxnE=;
+        b=PIR7AKWKofwN1umcHuM09ZxByEVhsJVOX+V/OkCyg+RRtageSmj5AXBOw1PgAVS82M
+         nNByVjXpoDHIG7eGGtgax/8dEArheP0Cpq0o02PdjBud76Rvs9QkyZ3aBIhNBoYq68xw
+         0mWR8ibZsAqaCi+pwdrY/Z2pKEems7YkZMReI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=KXD6766GD3cN9nGxvoovLs8rn0gVhNreN3crce2TgnA=;
-        b=DBkYHa6Tj4B2GA2ewRQaMzH07WCeDWUiMvpi6VBLMwfG6EJgykWIFQKCFn4NmSZ+Qk
-         lXQ7xkhpMc+ipRuOgOQGN4dS/cEhs2a8DNKSifILm94xOBGHHs3dpXCc45z+dufxFfRB
-         gp7KekcK0F6FSlDDxQhjYF5h5yWyiQHWWT242kBCNfKlEf4olafGM9SUYxOqkNw4HkDX
-         wvgSj0RlzlOIIQ1vVUGkRRc5K62Huca12LF2Ei4hYcqLzxvXAjvm/Bq1R5Qm1pmRlDJX
-         OrTMmUclAZzGYO4PRWChjYPXx/+X+WPtLzhOTx6V34G1l8ddRREyAbFREq0eIuGLWAxu
-         nbgA==
-X-Gm-Message-State: AOAM530oDWVz1HQszGbOoP05R7Uby4KjKewE6qyx0PvhCvfcUO1shZR6
-        teU9lRFmcBzBbCRZeulps71NTd+lSATjSakMuZYGnFh/H/sG
-X-Google-Smtp-Source: ABdhPJxGAWjBmeknqYy52Bo1OicVq8SiBy6dnuXkgiNPFH/Cai7ErFjhIOuT/Pz/lWTZFcfmXQrpne3ioC30iF2k5vhgszJLroQC
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WnFhsHiRkjL5CKHVcJANd7l4RT2J9uPwXvDpKNqYxnE=;
+        b=H2vO+PkjZGYZ37X8q47UelBe+vuZl+DMJFGqaE+JIv11P5+Ikc0HV4c5Rgux2FAOZF
+         PMKV0mf5ph1YL5zQxiXeuNaVnV9VyCa7mTm5yxV0yLiNQVR+RxmcUSAPTseqLbTBO9rJ
+         bQI1+3Auf7IZoLx9+Xm+mdjSFyy24XX1DSDobyv250peHVnDSInARZ5JQdgpIHEJxSP3
+         Y+ikgrsar3p8povyFu7zT3uii9wAVMHuLrAp5JjWaFy7F5wfT/o4O5BpAe3VLQp//LnT
+         /u/+ljfE+vMCaGUqc+O31s8QTnn6r++GShSlbrgZGJd7PlwARRik12MRfvyTeDTafZ44
+         X05Q==
+X-Gm-Message-State: AOAM530/14wqJlm4duAZSEbgoxx+dZjH9cpg9pStbnGJq9EajNAAPBjo
+        9SfLqkDw+jCZzPGLWAk5EP91XABmUr5+nw==
+X-Google-Smtp-Source: ABdhPJw4PWREPUlcxU0tV+ltlwQoUM1QOuUEjsfwJs5U+2uv2dt2CRp1VjaG5JfN4FoaNx1oCuRJ4g==
+X-Received: by 2002:a17:90a:fa95:: with SMTP id cu21mr3859547pjb.56.1591808585874;
+        Wed, 10 Jun 2020 10:03:05 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id n189sm449402pfn.108.2020.06.10.10.03.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2020 10:03:04 -0700 (PDT)
+Date:   Wed, 10 Jun 2020 10:03:03 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Christoph Hellwig <hch@lst.de>,
+        Christian Brauner <christian@brauner.io>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] Use __scm_install_fd() more widely
+Message-ID: <202006101001.6738CA0@keescook>
+References: <20200610045214.1175600-1-keescook@chromium.org>
+ <20200610094735.7ewsvrfhhpioq5xe@wittgenstein>
 MIME-Version: 1.0
-X-Received: by 2002:a92:7414:: with SMTP id p20mr4099501ilc.77.1591808531395;
- Wed, 10 Jun 2020 10:02:11 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 10:02:11 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000107b4605a7bdce7d@google.com>
-Subject: KASAN: use-after-free Read in addr_handler (2)
-From:   syzbot <syzbot+a929647172775e335941@syzkaller.appspotmail.com>
-To:     chuck.lever@oracle.com, dledford@redhat.com, jgg@ziepe.ca,
-        leon@kernel.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, parav@mellanox.com,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200610094735.7ewsvrfhhpioq5xe@wittgenstein>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Jun 10, 2020 at 11:47:35AM +0200, Christian Brauner wrote:
+> On Tue, Jun 09, 2020 at 09:52:12PM -0700, Kees Cook wrote:
+> > Hi,
+> > 
+> > This extends the recent work hch did for scm_detach_fds(), and updates
+> > the compat path as well, fixing bugs in the process. Additionally,
+> > an effectively incomplete and open-coded __scm_install_fd() is fixed
+> > in pidfd_getfd().
+> 
+> Since __scm_detach_fds() becomes something that is available outside of
+> net/* should we provide a static inline wrapper under a different name? The
+> "socket-level control message" prefix seems a bit odd in pidfd_getfd()
+> and - once we make use of it there - seccomp.
+> 
+> I'd suggest we do:
+> 
+> static inline int fd_install_received(struct file *file, unsigned int flags)
+> {
+> 	return __scm_install_fd(file, NULL, flags);
+> }
+> 
+> which can be called in pidfd_getfd() and once we have other callers that
+> want the additional put_user() (e.g. seccomp_ in there we simply add:
+> 
+> static inline fd_install_user(struct file *file, unsigned int flags, int __user *ufd)
+> {
+> 	return __scm_install_fd(file, ufd, flags);
+> }
+> 
+> and seems the wrappers both could happily live in the fs part of the world?
 
-syzbot found the following crash on:
+I combined your and Sargun's suggestions. (It can't live in any more
+net/core/scm.c in the case of CONFIG_NET=n, but the wrappers make the
+changes much nicer looking.)
 
-HEAD commit:    7ae77150 Merge tag 'powerpc-5.8-1' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16c0d3a6100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d195fe572fb15312
-dashboard link: https://syzkaller.appspot.com/bug?extid=a929647172775e335941
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=devel/seccomp/addfd/v3.2
 
-Unfortunately, I don't have any reproducer for this crash yet.
+If 0-day doesn't kick anything back on this tree, I'll resend the
+series...
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+a929647172775e335941@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: use-after-free in __mutex_lock_common kernel/locking/mutex.c:938 [inline]
-BUG: KASAN: use-after-free in __mutex_lock+0x1033/0x13c0 kernel/locking/mutex.c:1103
-Read of size 8 at addr ffff888088ec33b0 by task kworker/u4:5/14014
-
-CPU: 1 PID: 14014 Comm: kworker/u4:5 Not tainted 5.7.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: ib_addr process_one_req
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xd3/0x413 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- __mutex_lock_common kernel/locking/mutex.c:938 [inline]
- __mutex_lock+0x1033/0x13c0 kernel/locking/mutex.c:1103
- addr_handler+0xa0/0x340 drivers/infiniband/core/cma.c:3100
- process_one_req+0xfa/0x680 drivers/infiniband/core/addr.c:643
- process_one_work+0x965/0x16a0 kernel/workqueue.c:2268
- worker_thread+0x96/0xe20 kernel/workqueue.c:2414
- kthread+0x388/0x470 kernel/kthread.c:268
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
-
-Allocated by task 31499:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc mm/kasan/common.c:494 [inline]
- __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:467
- kmem_cache_alloc_trace+0x153/0x7d0 mm/slab.c:3551
- kmalloc include/linux/slab.h:555 [inline]
- kzalloc include/linux/slab.h:669 [inline]
- __rdma_create_id+0x5b/0x850 drivers/infiniband/core/cma.c:861
- ucma_create_id+0x1d1/0x590 drivers/infiniband/core/ucma.c:503
- ucma_write+0x285/0x350 drivers/infiniband/core/ucma.c:1729
- __vfs_write+0x76/0x100 fs/read_write.c:495
- vfs_write+0x268/0x5d0 fs/read_write.c:559
- ksys_write+0x1ee/0x250 fs/read_write.c:612
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-
-Freed by task 31496:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- kasan_set_free_info mm/kasan/common.c:316 [inline]
- __kasan_slab_free+0xf7/0x140 mm/kasan/common.c:455
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x109/0x2b0 mm/slab.c:3757
- ucma_close+0x111/0x300 drivers/infiniband/core/ucma.c:1807
- __fput+0x33e/0x880 fs/file_table.c:281
- task_work_run+0xf4/0x1b0 kernel/task_work.c:123
- tracehook_notify_resume include/linux/tracehook.h:188 [inline]
- exit_to_usermode_loop+0x2fa/0x360 arch/x86/entry/common.c:165
- prepare_exit_to_usermode arch/x86/entry/common.c:196 [inline]
- syscall_return_slowpath arch/x86/entry/common.c:279 [inline]
- do_syscall_64+0x6b1/0x7d0 arch/x86/entry/common.c:305
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-
-The buggy address belongs to the object at ffff888088ec3000
- which belongs to the cache kmalloc-2k of size 2048
-The buggy address is located 944 bytes inside of
- 2048-byte region [ffff888088ec3000, ffff888088ec3800)
-The buggy address belongs to the page:
-page:ffffea000223b0c0 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea000299f588 ffffea000263d0c8 ffff8880aa000e00
-raw: 0000000000000000 ffff888088ec3000 0000000100000001 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff888088ec3280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff888088ec3300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff888088ec3380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                     ^
- ffff888088ec3400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff888088ec3480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+-- 
+Kees Cook
