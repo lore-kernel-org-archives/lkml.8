@@ -2,769 +2,224 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BD2C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE05DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:08:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6BA920734
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:08:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HhrrJBBd"
+	by mail.kernel.org (Postfix) with ESMTP id BB93C20734
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 06:08:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726271AbgFJGH7 (ORCPT
+        id S1726281AbgFJGH5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 02:07:59 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:27991 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725988AbgFJGHx (ORCPT
+        Wed, 10 Jun 2020 02:07:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42352 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726072AbgFJGHw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 02:07:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591769268;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NzeOFsK7paj5bcPOCxRYbw7HjKDJ1Cs1lUAb0+D84mQ=;
-        b=HhrrJBBd2zwBwBrjXz4cvEo+oRyNvwngOBRuyMVMthcZ+TZrse6BZuVDkTwcN6Ww9hQqqv
-        4OJy9c0FzBohWMkHKQQfMwmc2E+yZJ8pdTyW8gkVThH3j7YLqTqZ6WZRAeF275C/f2Sc/j
-        u5ibxXrcnYDvjFEpZC35ix8GqkpnGKU=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-387-fLNk-2jRNuW2Ma0Ux97C2w-1; Wed, 10 Jun 2020 02:07:47 -0400
-X-MC-Unique: fLNk-2jRNuW2Ma0Ux97C2w-1
-Received: by mail-wm1-f71.google.com with SMTP id b65so138293wmb.5
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 23:07:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=NzeOFsK7paj5bcPOCxRYbw7HjKDJ1Cs1lUAb0+D84mQ=;
-        b=AF06ea7K1vJSarnzAXh9ILFBNVyb/EjbnVRBs5pq9JEfLoDEEMhpIEb1sLzRN6RAB2
-         VTfbXWKB4pwuvhgsditTrvPoMPQ4lIVFv6vfyyGsXVt313/b9homiW/dgG2e6VS2RZay
-         CtQugZj+vtgSZL3zSDv27JK4EJOtIxwx0yvZA494yzvhr3vdKPxG+LUct5ZYqTlmNMNA
-         xtrq91w2M+NXOqK860pJYenXckkA8A9Yu7+SfcJu84Gst2PHvP7GII9Iq9u0U13VNWLZ
-         uG8XbYeRIhib16BudxmBUe605KmHiJv50iLyzkHwFQjn83QAip+kKRRE0nLwK++dVdqY
-         tGfA==
-X-Gm-Message-State: AOAM532egn7ZhY168jxgkeWGAIOV+NCxrls9s4rTil92Fbm79VT0j5mB
-        nNmg+gUBSIj2xPqJC4ucggleFxjNeCvcUFwsrFi96cVKkwi9GVMn5oetezFE/wblPif9zZuZO1W
-        ZWBQh/b8A7b0TyibyuU1RfK4u
-X-Received: by 2002:a5d:4446:: with SMTP id x6mr1609816wrr.119.1591769265690;
-        Tue, 09 Jun 2020 23:07:45 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwNJh4uDu7W3HntDY2ADyNX+U6cq931CYG47/dpll8D5hvXsv8nucZKN/sPt1DLUaB6r/ILXQ==
-X-Received: by 2002:a5d:4446:: with SMTP id x6mr1609777wrr.119.1591769265248;
-        Tue, 09 Jun 2020 23:07:45 -0700 (PDT)
-Received: from redhat.com (bzq-79-181-55-232.red.bezeqint.net. [79.181.55.232])
-        by smtp.gmail.com with ESMTPSA id o10sm6652127wrj.37.2020.06.09.23.07.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 23:07:44 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 02:07:41 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, rob.miller@broadcom.com,
-        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
-        shahafs@mellanox.com, hanand@xilinx.com, mhabets@solarflare.com,
-        gdawar@xilinx.com, saugatm@xilinx.com, vmireyno@marvell.com,
-        zhangweining@ruijie.com.cn, eli@mellanox.com
-Subject: Re: [PATCH RESEND V2] vdpa: introduce virtio pci driver
-Message-ID: <20200610020728-mutt-send-email-mst@kernel.org>
-References: <20200610054951.16197-1-jasowang@redhat.com>
+        Wed, 10 Jun 2020 02:07:52 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A53FC05BD1E
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jun 2020 23:07:52 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jitth-0008J3-Lj; Wed, 10 Jun 2020 08:07:37 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jittX-0001xa-5S; Wed, 10 Jun 2020 08:07:27 +0200
+Date:   Wed, 10 Jun 2020 08:07:27 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     David Miller <davem@davemloft.net>, marex@denx.de,
+        Andrew Lunn <andrew@lunn.ch>, mkubecek@suse.cz,
+        f.fainelli@gmail.com, Jonathan Corbet <corbet@lwn.net>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Netdev <netdev@vger.kernel.org>, linville@tuxdriver.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        kuba@kernel.org, mkl@pengutronix.de, kernel@pengutronix.de,
+        david@protonic.nl, amitc@mellanox.com, petrm@mellanox.com,
+        christian.herber@nxp.com, hkallweit1@gmail.com
+Subject: Re: [PATCH ethtool v1] netlink: add master/slave configuration
+ support
+Message-ID: <20200610060727.q4nzryh3mp6fj2ax@pengutronix.de>
+References: <20200609101935.5716b3bd@hermes.lan>
+ <20200609.113633.1866761141966326637.davem@davemloft.net>
+ <4d664ff641dbf3aeab1ecd5eacda220dab9d7d17.camel@intel.com>
+ <20200609.123858.466960203090925019.davem@davemloft.net>
+ <CAPcyv4jr9F_0q4S-LSvHzJK7mamLW-m1Skgw7cXvkZYNtStyxA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="6rzrcepciphpb3j5"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200610054951.16197-1-jasowang@redhat.com>
+In-Reply-To: <CAPcyv4jr9F_0q4S-LSvHzJK7mamLW-m1Skgw7cXvkZYNtStyxA@mail.gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 07:07:27 up 207 days, 20:26, 198 users,  load average: 0.05, 0.08,
+ 0.02
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 01:49:51PM +0800, Jason Wang wrote:
-> This patch introduce a vDPA driver for virtio-pci device. It bridges
-> the virtio-pci control command to the vDPA bus. This will be used for
-> developing new features for both software vDPA framework and hardware
-> vDPA feature.
-> 
-> Compared to vdpa_sim, it has several advantages:
-> 
-> - it's a real device driver which allow us to play with real hardware
->   features
-> - type independent instead of networking specific
-> 
-> Note that since virtio specification does not support get/restore
-> virtqueue state. So we can not use this driver for VM. This can be
-> addressed by extending the virtio specification.
-> 
-> Consider the driver is mainly for testing and development for vDPA
-> features, it can only be bound via dynamic ids to make sure it's not
-> conflict with the drivers like virtio-pci or IFCVF.
-> 
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
 
-error: sha1 information is lacking or useless (drivers/vdpa/Kconfig).
+--6rzrcepciphpb3j5
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-which tree is this on top of?
+On Tue, Jun 09, 2020 at 02:48:51PM -0700, Dan Williams wrote:
+> On Tue, Jun 9, 2020 at 12:57 PM David Miller <davem@davemloft.net> wrote:
+> >
+> > From: "Williams, Dan J" <dan.j.williams@intel.com>
+> > Date: Tue, 9 Jun 2020 19:30:50 +0000
+> >
+> > > On Tue, 2020-06-09 at 11:36 -0700, David Miller wrote:
+> > >> From: Stephen Hemminger <stephen@networkplumber.org>
+> > >> Date: Tue, 9 Jun 2020 10:19:35 -0700
+> > >>
+> > >> > Yes, words do matter and convey a lot of implied connotation and
+> > >> > meaning.
+> > >>
+> > >> What is your long term plan?  Will you change all of the UAPI for
+> > >> bonding for example?
+> > >
+> > > The long term plan in my view includes talking with standards bodies =
+to
+> > > move new content to, for example, master/subordinate. In other words,
+> > > practical forward steps, not retroactively changing interfaces.
+> >
+> > When that knowledge is established legitimately in standards and
+> > transferred into common knowledge of these technologies, yes then
+> > please come present your proposals.
+>=20
+> Our hands are not completely tied by the specifications, as a
+> community we have a non-zero level of influence over standards bodies,
+> even direct participation in some. So we could do something stronger
+> than passively wait for standards to catch up. For example, deprecate
+> our consideration of future specifications that include this language
+> and set a cut off date.
+>=20
+> I understand the confusion that arises from using terminology
+> differently from the specification, but at the same time when
+> specification language actively hurts kernel code maintainability we
+> change it. For example, when I did the first iteration of what
+> eventually became libnvdimm Ingo rightly reacted to the naming being
+> too ACPI specification centric and wanting more kernel-centric naming.
+>=20
+> If the common kernel name for what was formerly called a "slave"
+> device is a "subordinate" device then the confusion is lessened, only
+> one common kernel translation to consider.
+>=20
+> > But right now using different words will create confusion.
+> >
+> > I also find master/subordinate an interesting proposal, what if master
+> > is a triggering term?  Why only slave?
+>=20
+> "slave" has a direct connection to human suffering deployed at global sca=
+le.
+>=20
+> One way I think about this is consider we have our first ever Linux
+> Plumbers on the African continent, and you had a choice about giving a
+> talk about how the git master branch operates, or a talk about slave
+> devices which one would you feel more immediately comfortable leading?
+> Any hesitation you would feel freely using the word slave with a
+> predominantly black audience is a similar speed bump a contributor
+> might feel needing to consume that term to get their job done.
+>=20
+> Explaining "no, not that connotation of slave" does not scale as much
+> as transitioning to another term.
+>=20
+> > I know people feel something needs to change, but do that moving
+> > forward for the technologies themselves.
+>=20
+> This is the start of a process that the kernel community can take an
+> active role to lead, we have it within our control to not wait for the
+> lowest common denominator to catch up.
+>=20
+> > Not how we implement support
+> > for a technology which is established already.
+> >
+> > Plant the seed, don't chop the tree down.
+>=20
+> I appreciate the engagement.
 
-> ---
-> Changes since V1:
-> - use NULL id_table to allow dynamic ids only
-> - squash the doorbell reporting
-> ---
->  drivers/vdpa/Kconfig           |   8 +
->  drivers/vdpa/Makefile          |   1 +
->  drivers/vdpa/vp_vdpa/Makefile  |   2 +
->  drivers/vdpa/vp_vdpa/vp_vdpa.c | 601 +++++++++++++++++++++++++++++++++
->  4 files changed, 612 insertions(+)
->  create mode 100644 drivers/vdpa/vp_vdpa/Makefile
->  create mode 100644 drivers/vdpa/vp_vdpa/vp_vdpa.c
-> 
-> diff --git a/drivers/vdpa/Kconfig b/drivers/vdpa/Kconfig
-> index e8140065c8a5..5cef3a4872e3 100644
-> --- a/drivers/vdpa/Kconfig
-> +++ b/drivers/vdpa/Kconfig
-> @@ -28,4 +28,12 @@ config IFCVF
->  	  To compile this driver as a module, choose M here: the module will
->  	  be called ifcvf.
->  
-> +config VP_VDPA
-> +	tristate "Virtio PCI bridge vDPA driver"
-> +	depends on PCI_MSI
-> +	help
-> +	  This kernel module that bridges virtio PCI device to vDPA
-> +	  bus. It allows us to test and develop vDPA subsystem inside
-> +	  an VM with the emulated virtio-pci device
-> +
->  endif # VDPA
-> diff --git a/drivers/vdpa/Makefile b/drivers/vdpa/Makefile
-> index 8bbb686ca7a2..37d00f49b3bf 100644
-> --- a/drivers/vdpa/Makefile
-> +++ b/drivers/vdpa/Makefile
-> @@ -2,3 +2,4 @@
->  obj-$(CONFIG_VDPA) += vdpa.o
->  obj-$(CONFIG_VDPA_SIM) += vdpa_sim/
->  obj-$(CONFIG_IFCVF)    += ifcvf/
-> +obj-$(CONFIG_VP_VDPA)    += vp_vdpa/
-> diff --git a/drivers/vdpa/vp_vdpa/Makefile b/drivers/vdpa/vp_vdpa/Makefile
-> new file mode 100644
-> index 000000000000..231088d3af7d
-> --- /dev/null
-> +++ b/drivers/vdpa/vp_vdpa/Makefile
-> @@ -0,0 +1,2 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +obj-$(CONFIG_VP_VDPA) += vp_vdpa.o
-> diff --git a/drivers/vdpa/vp_vdpa/vp_vdpa.c b/drivers/vdpa/vp_vdpa/vp_vdpa.c
-> new file mode 100644
-> index 000000000000..2070298ab9fc
-> --- /dev/null
-> +++ b/drivers/vdpa/vp_vdpa/vp_vdpa.c
-> @@ -0,0 +1,601 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * vDPA bridge driver for modern virtio-pci device
-> + *
-> + * Copyright (c) 2020, Red Hat Inc. All rights reserved.
-> + * Author: Jason Wang <jasowang@redhat.com>
-> + *
-> + * Based on virtio_pci_modern.c.
-> + */
-> +
-> +#include <linux/interrupt.h>
-> +#include <linux/module.h>
-> +#include <linux/pci.h>
-> +#include <linux/vdpa.h>
-> +#include <linux/virtio.h>
-> +#include <linux/virtio_config.h>
-> +#include <linux/virtio_ring.h>
-> +#include <linux/virtio_pci.h>
-> +
-> +/* TBD: read from config space */
-> +#define VP_VDPA_MAX_QUEUE 2
-> +#define VP_VDPA_DRIVER_NAME "vp_vdpa"
-> +
-> +#define VP_VDPA_FEATURES \
-> +	((1ULL << VIRTIO_F_ANY_LAYOUT)			| \
-> +	 (1ULL << VIRTIO_F_VERSION_1)			| \
-> +	 (1ULL << VIRTIO_F_ORDER_PLATFORM)		| \
-> +	 (1ULL << VIRTIO_F_IOMMU_PLATFORM))
-> +
-> +struct vp_vring {
-> +	void __iomem *notify;
-> +	char msix_name[256];
-> +	resource_size_t notify_pa;
-> +	struct vdpa_callback cb;
-> +	int irq;
-> +};
-> +
-> +struct vp_vdpa {
-> +	struct vdpa_device vdpa;
-> +	struct pci_dev *pdev;
-> +
-> +	struct virtio_device_id id;
-> +
-> +	struct vp_vring vring[VP_VDPA_MAX_QUEUE];
-> +
-> +	/* The IO mapping for the PCI config space */
-> +	void __iomem * const *base;
-> +	struct virtio_pci_common_cfg __iomem *common;
-> +	void __iomem *device;
-> +	/* Base of vq notifications */
-> +	void __iomem *notify;
-> +
-> +	/* Multiplier for queue_notify_off. */
-> +	u32 notify_off_multiplier;
-> +
-> +	int modern_bars;
-> +	int vectors;
-> +};
-> +
-> +static struct vp_vdpa *vdpa_to_vp(struct vdpa_device *vdpa)
-> +{
-> +	return container_of(vdpa, struct vp_vdpa, vdpa);
-> +}
-> +
-> +/*
-> + * Type-safe wrappers for io accesses.
-> + * Use these to enforce at compile time the following spec requirement:
-> + *
-> + * The driver MUST access each field using the “natural” access
-> + * method, i.e. 32-bit accesses for 32-bit fields, 16-bit accesses
-> + * for 16-bit fields and 8-bit accesses for 8-bit fields.
-> + */
-> +static inline u8 vp_ioread8(u8 __iomem *addr)
-> +{
-> +	return ioread8(addr);
-> +}
-> +static inline u16 vp_ioread16(__le16 __iomem *addr)
-> +{
-> +	return ioread16(addr);
-> +}
-> +
-> +static inline u32 vp_ioread32(__le32 __iomem *addr)
-> +{
-> +	return ioread32(addr);
-> +}
-> +
-> +static inline void vp_iowrite8(u8 value, u8 __iomem *addr)
-> +{
-> +	iowrite8(value, addr);
-> +}
-> +
-> +static inline void vp_iowrite16(u16 value, __le16 __iomem *addr)
-> +{
-> +	iowrite16(value, addr);
-> +}
-> +
-> +static inline void vp_iowrite32(u32 value, __le32 __iomem *addr)
-> +{
-> +	iowrite32(value, addr);
-> +}
-> +
-> +static void vp_iowrite64_twopart(u64 val,
-> +				 __le32 __iomem *lo, __le32 __iomem *hi)
-> +{
-> +	vp_iowrite32((u32)val, lo);
-> +	vp_iowrite32(val >> 32, hi);
-> +}
-> +
-> +static int find_capability(struct pci_dev *dev, u8 cfg_type,
-> +			   u32 ioresource_types, int *bars)
-> +{
-> +	int pos;
-> +
-> +	for (pos = pci_find_capability(dev, PCI_CAP_ID_VNDR);
-> +	     pos > 0;
-> +	     pos = pci_find_next_capability(dev, pos, PCI_CAP_ID_VNDR)) {
-> +		u8 type, bar;
-> +
-> +		pci_read_config_byte(dev, pos + offsetof(struct virtio_pci_cap,
-> +							 cfg_type),
-> +				     &type);
-> +		pci_read_config_byte(dev, pos + offsetof(struct virtio_pci_cap,
-> +							 bar),
-> +				     &bar);
-> +
-> +		/* Ignore structures with reserved BAR values */
-> +		if (bar > 0x5)
-> +			continue;
-> +
-> +		if (type == cfg_type) {
-> +			if (pci_resource_len(dev, bar) &&
-> +			    pci_resource_flags(dev, bar) & ioresource_types) {
-> +				*bars |= (1 << bar);
-> +				return pos;
-> +			}
-> +		}
-> +	}
-> +	return 0;
-> +}
-> +
-> +static void __iomem *map_capability(struct vp_vdpa *vp_vdpa, int off,
-> +				    resource_size_t *pa)
-> +{
-> +	struct pci_dev *pdev = vp_vdpa->pdev;
-> +	u32 offset;
-> +	u8 bar;
-> +
-> +	pci_read_config_byte(pdev,
-> +			     off + offsetof(struct virtio_pci_cap, bar),
-> +			     &bar);
-> +	pci_read_config_dword(pdev,
-> +			      off + offsetof(struct virtio_pci_cap, offset),
-> +			      &offset);
-> +
-> +	if (pa)
-> +		*pa = pci_resource_start(pdev, bar) + offset;
-> +
-> +	return vp_vdpa->base[bar] + offset;
-> +}
-> +
-> +static u64 vp_vdpa_get_features(struct vdpa_device *vdpa)
-> +{
-> +	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
-> +	u64 features;
-> +
-> +	vp_iowrite32(0, &vp_vdpa->common->device_feature_select);
-> +	features = vp_ioread32(&vp_vdpa->common->device_feature);
-> +	vp_iowrite32(1, &vp_vdpa->common->device_feature_select);
-> +	features |= ((u64)vp_ioread32(&vp_vdpa->common->device_feature) << 32);
-> +	features &= VP_VDPA_FEATURES;
-> +
-> +	return features;
-> +}
-> +
-> +static int vp_vdpa_set_features(struct vdpa_device *vdpa, u64 features)
-> +{
-> +	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
-> +
-> +	vp_iowrite32(0, &vp_vdpa->common->guest_feature_select);
-> +	vp_iowrite32((u32)features, &vp_vdpa->common->guest_feature);
-> +	vp_iowrite32(1, &vp_vdpa->common->guest_feature_select);
-> +	vp_iowrite32(features >> 32, &vp_vdpa->common->guest_feature);
-> +
-> +	return 0;
-> +}
-> +
-> +static u8 vp_vdpa_get_status(struct vdpa_device *vdpa)
-> +{
-> +	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
-> +
-> +	return vp_ioread8(&vp_vdpa->common->device_status);
-> +}
-> +
-> +static void vp_vdpa_free_irq(struct vp_vdpa *vp_vdpa)
-> +{
-> +	struct pci_dev *pdev = vp_vdpa->pdev;
-> +	int i;
-> +
-> +	for (i = 0; i < VP_VDPA_MAX_QUEUE; i++) {
-> +		if (vp_vdpa->vring[i].irq != -1) {
-> +			vp_iowrite16(i, &vp_vdpa->common->queue_select);
-> +			vp_iowrite16(VIRTIO_MSI_NO_VECTOR,
-> +				     &vp_vdpa->common->queue_msix_vector);
-> +			devm_free_irq(&pdev->dev, vp_vdpa->vring[i].irq,
-> +				      &vp_vdpa->vring[i]);
-> +			vp_vdpa->vring[i].irq = -1;
-> +		}
-> +	}
-> +
-> +	if (vp_vdpa->vectors) {
-> +		pci_free_irq_vectors(pdev);
-> +		vp_vdpa->vectors = 0;
-> +	}
-> +}
-> +
-> +static irqreturn_t vp_vdpa_intr_handler(int irq, void *arg)
-> +{
-> +	struct vp_vring *vring = arg;
-> +
-> +	if (vring->cb.callback)
-> +		return vring->cb.callback(vring->cb.private);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int vp_vdpa_request_irq(struct vp_vdpa *vp_vdpa)
-> +{
-> +	struct pci_dev *pdev = vp_vdpa->pdev;
-> +	int i, ret, irq;
-> +
-> +	ret = pci_alloc_irq_vectors(pdev, VP_VDPA_MAX_QUEUE,
-> +				    VP_VDPA_MAX_QUEUE, PCI_IRQ_MSIX);
-> +	if (ret != VP_VDPA_MAX_QUEUE) {
-> +		dev_err(&pdev->dev, "vp_vdpa: fail to allocate irq vectors\n");
-> +		return ret;
-> +	}
-> +
-> +	vp_vdpa->vectors = VP_VDPA_MAX_QUEUE;
-> +
-> +	for (i = 0; i < VP_VDPA_MAX_QUEUE; i++) {
-> +		snprintf(vp_vdpa->vring[i].msix_name, 256,
-> +			"vp-vdpa[%s]-%d\n", pci_name(pdev), i);
-> +		irq = pci_irq_vector(pdev, i);
-> +		ret = devm_request_irq(&pdev->dev, irq,
-> +				       vp_vdpa_intr_handler,
-> +				       0, vp_vdpa->vring[i].msix_name,
-> +				       &vp_vdpa->vring[i]);
-> +		if (ret) {
-> +			dev_err(&pdev->dev, "vp_vdpa: fail to request irq for vq %d\n",
-> +				i);
-> +			goto err;
-> +		}
-> +		vp_iowrite16(i, &vp_vdpa->common->queue_select);
-> +		vp_iowrite16(i, &vp_vdpa->common->queue_msix_vector);
-> +		vp_vdpa->vring[i].irq = irq;
-> +	}
-> +
-> +	return 0;
-> +err:
-> +	vp_vdpa_free_irq(vp_vdpa);
-> +	return ret;
-> +}
-> +
-> +static void vp_vdpa_set_status(struct vdpa_device *vdpa, u8 status)
-> +{
-> +	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
-> +	u8 s = vp_vdpa_get_status(vdpa);
-> +
-> +	if (status & VIRTIO_CONFIG_S_DRIVER_OK &&
-> +	    !(s & VIRTIO_CONFIG_S_DRIVER_OK)) {
-> +		vp_vdpa_request_irq(vp_vdpa);
-> +	}
-> +
-> +	vp_iowrite8(status, &vp_vdpa->common->device_status);
-> +
-> +	if (!(status & VIRTIO_CONFIG_S_DRIVER_OK) &&
-> +	    (s & VIRTIO_CONFIG_S_DRIVER_OK))
-> +		vp_vdpa_free_irq(vp_vdpa);
-> +}
-> +
-> +static u16 vp_vdpa_get_vq_num_max(struct vdpa_device *vdpa)
-> +{
-> +	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
-> +
-> +	return vp_ioread16(&vp_vdpa->common->queue_size);
-> +}
-> +
-> +static u64 vp_vdpa_get_vq_state(struct vdpa_device *vdpa, u16 qid)
-> +{
-> +	return 0;
-> +}
-> +
-> +static struct vdpa_notification_area
-> +vp_vdpa_get_vq_notification(struct vdpa_device *vdpa, u16 qid)
-> +{
-> +	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
-> +	struct vdpa_notification_area notify;
-> +
-> +	notify.addr = vp_vdpa->vring[qid].notify_pa;
-> +	notify.size = vp_vdpa->notify_off_multiplier;
-> +
-> +	return notify;
-> +}
-> +
-> +static int vp_vdpa_set_vq_state(struct vdpa_device *vdpa, u16 qid,
-> +				u64 num)
-> +{
-> +	/* Note that this is not supported by virtio specification, so
-> +	 * we return -ENOTSUPP here. This means we can't support live
-> +	 * migration, vhost device start/stop.
-> +	 */
-> +
-> +	return -ENOTSUPP;
-> +}
-> +
-> +static void vp_vdpa_set_vq_cb(struct vdpa_device *vdpa, u16 qid,
-> +			      struct vdpa_callback *cb)
-> +{
-> +	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
-> +
-> +	vp_vdpa->vring[qid].cb = *cb;
-> +}
-> +
-> +static void vp_vdpa_set_vq_ready(struct vdpa_device *vdpa,
-> +				 u16 qid, bool ready)
-> +{
-> +	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
-> +
-> +	vp_iowrite16(qid, &vp_vdpa->common->queue_select);
-> +	vp_iowrite16(ready, &vp_vdpa->common->queue_enable);
-> +}
-> +
-> +static bool vp_vdpa_get_vq_ready(struct vdpa_device *vdpa, u16 qid)
-> +{
-> +	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
-> +
-> +	vp_iowrite16(qid, &vp_vdpa->common->queue_select);
-> +
-> +	return vp_ioread16(&vp_vdpa->common->queue_enable);
-> +}
-> +
-> +static void vp_vdpa_set_vq_num(struct vdpa_device *vdpa, u16 qid,
-> +			       u32 num)
-> +{
-> +	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
-> +
-> +	vp_iowrite16(num, &vp_vdpa->common->queue_size);
-> +}
-> +
-> +static int vp_vdpa_set_vq_address(struct vdpa_device *vdpa, u16 qid,
-> +				  u64 desc_area, u64 driver_area,
-> +				  u64 device_area)
-> +{
-> +	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
-> +	struct virtio_pci_common_cfg __iomem *cfg = vp_vdpa->common;
-> +
-> +	vp_iowrite16(qid, &cfg->queue_select);
-> +	vp_iowrite64_twopart(desc_area,
-> +			     &cfg->queue_desc_lo, &cfg->queue_desc_hi);
-> +	vp_iowrite64_twopart(driver_area,
-> +			     &cfg->queue_avail_lo, &cfg->queue_avail_hi);
-> +	vp_iowrite64_twopart(device_area,
-> +			     &cfg->queue_used_lo, &cfg->queue_used_hi);
-> +
-> +	return 0;
-> +}
-> +
-> +static void vp_vdpa_kick_vq(struct vdpa_device *vdpa, u16 qid)
-> +{
-> +	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
-> +
-> +	vp_iowrite16(qid, vp_vdpa->vring[qid].notify);
-> +}
-> +
-> +static u32 vp_vdpa_get_generation(struct vdpa_device *vdpa)
-> +{
-> +	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
-> +
-> +	return vp_ioread8(&vp_vdpa->common->config_generation);
-> +}
-> +
-> +static u32 vp_vdpa_get_device_id(struct vdpa_device *vdpa)
-> +{
-> +	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
-> +
-> +	return vp_vdpa->id.device;
-> +}
-> +
-> +static u32 vp_vdpa_get_vendor_id(struct vdpa_device *vdpa)
-> +{
-> +	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
-> +
-> +	return vp_vdpa->id.vendor;
-> +}
-> +
-> +static u32 vp_vdpa_get_vq_align(struct vdpa_device *vdpa)
-> +{
-> +	return PAGE_SIZE;
-> +}
-> +
-> +static void vp_vdpa_get_config(struct vdpa_device *vdpa,
-> +			       unsigned int offset,
-> +			       void *buf, unsigned int len)
-> +{
-> +	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
-> +	u8 old, new;
-> +	u8 *p;
-> +	int i;
-> +
-> +	do {
-> +		old = vp_ioread8(&vp_vdpa->common->config_generation);
-> +		p = buf;
-> +		for (i = 0; i < len; i++)
-> +			*p++ = vp_ioread8(vp_vdpa->device + offset + i);
-> +
-> +		new = vp_ioread8(&vp_vdpa->common->config_generation);
-> +	} while (old != new);
-> +}
-> +
-> +static void vp_vdpa_set_config(struct vdpa_device *vdpa,
-> +			       unsigned int offset, const void *buf,
-> +			       unsigned int len)
-> +{
-> +	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
-> +	const u8 *p = buf;
-> +	int i;
-> +
-> +	for (i = 0; i < len; i++)
-> +		vp_iowrite8(*p++, vp_vdpa->device + offset + i);
-> +}
-> +
-> +static void vp_vdpa_set_config_cb(struct vdpa_device *vdpa,
-> +				  struct vdpa_callback *cb)
-> +{
-> +	/* We don't support config interrupt */
-> +}
-> +
-> +static const struct vdpa_config_ops vp_vdpa_ops = {
-> +	.get_features	= vp_vdpa_get_features,
-> +	.set_features	= vp_vdpa_set_features,
-> +	.get_status	= vp_vdpa_get_status,
-> +	.set_status	= vp_vdpa_set_status,
-> +	.get_vq_num_max	= vp_vdpa_get_vq_num_max,
-> +	.get_vq_state	= vp_vdpa_get_vq_state,
-> +	.get_vq_notification = vp_vdpa_get_vq_notification,
-> +	.set_vq_state	= vp_vdpa_set_vq_state,
-> +	.set_vq_cb	= vp_vdpa_set_vq_cb,
-> +	.set_vq_ready	= vp_vdpa_set_vq_ready,
-> +	.get_vq_ready	= vp_vdpa_get_vq_ready,
-> +	.set_vq_num	= vp_vdpa_set_vq_num,
-> +	.set_vq_address	= vp_vdpa_set_vq_address,
-> +	.kick_vq	= vp_vdpa_kick_vq,
-> +	.get_generation	= vp_vdpa_get_generation,
-> +	.get_device_id	= vp_vdpa_get_device_id,
-> +	.get_vendor_id	= vp_vdpa_get_vendor_id,
-> +	.get_vq_align	= vp_vdpa_get_vq_align,
-> +	.get_config	= vp_vdpa_get_config,
-> +	.set_config	= vp_vdpa_set_config,
-> +	.set_config_cb  = vp_vdpa_set_config_cb,
-> +};
-> +
-> +static int vp_vdpa_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct vp_vdpa *vp_vdpa;
-> +	int common, notify, device, ret, i;
-> +	struct virtio_device_id virtio_id;
-> +	resource_size_t notify_pa;
-> +	u16 notify_off;
-> +
-> +	/* We only own devices >= 0x1000 and <= 0x107f: leave the rest. */
-> +	if (pdev->device < 0x1000 || pdev->device > 0x107f)
-> +		return -ENODEV;
-> +
-> +	if (pdev->device < 0x1040) {
-> +		/* Transitional devices: use the PCI subsystem device id as
-> +		 * virtio device id, same as legacy driver always did.
-> +		 */
-> +		virtio_id.device = pdev->subsystem_device;
-> +	} else {
-> +		/* Modern devices: simply use PCI device id,
-> +		 * but start from 0x1040.
-> +		 */
-> +		virtio_id.device = pdev->device - 0x1040;
-> +	}
-> +	virtio_id.vendor = pdev->subsystem_vendor;
-> +
-> +	ret = pcim_enable_device(pdev);
-> +	if (ret) {
-> +		dev_err(dev, "vp_vdpa: Fail to enable PCI device\n");
-> +		return ret;
-> +	}
-> +
-> +	vp_vdpa = vdpa_alloc_device(struct vp_vdpa, vdpa,
-> +				    dev, &vp_vdpa_ops);
-> +	if (vp_vdpa == NULL) {
-> +		dev_err(dev, "vp_vdpa: Failed to allocate vDPA structure\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	pci_set_master(pdev);
-> +	pci_set_drvdata(pdev, vp_vdpa);
-> +
-> +	vp_vdpa->pdev = pdev;
-> +	vp_vdpa->vdpa.dma_dev = &pdev->dev;
-> +
-> +	common = find_capability(pdev, VIRTIO_PCI_CAP_COMMON_CFG,
-> +				 IORESOURCE_IO | IORESOURCE_MEM,
-> +				 &vp_vdpa->modern_bars);
-> +	if (!common) {
-> +		dev_err(&pdev->dev,
-> +			"vp_vdpa: legacy device is not supported\n");
-> +		ret = -ENODEV;
-> +		goto err;
-> +	}
-> +
-> +	notify = find_capability(pdev, VIRTIO_PCI_CAP_NOTIFY_CFG,
-> +				 IORESOURCE_IO | IORESOURCE_MEM,
-> +				 &vp_vdpa->modern_bars);
-> +	if (!notify) {
-> +		dev_err(&pdev->dev,
-> +			"vp_vdpa: missing notification capabilities\n");
-> +		ret = -EINVAL;
-> +		goto err;
-> +	}
-> +
-> +	device = find_capability(pdev, VIRTIO_PCI_CAP_DEVICE_CFG,
-> +				 IORESOURCE_IO | IORESOURCE_MEM,
-> +				 &vp_vdpa->modern_bars);
-> +	if (!device) {
-> +		dev_err(&pdev->dev,
-> +			"vp_vdpa: missing device capabilities\n");
-> +		ret = -EINVAL;
-> +		goto err;
-> +	}
-> +
-> +	ret = pcim_iomap_regions(pdev, vp_vdpa->modern_bars,
-> +				 VP_VDPA_DRIVER_NAME);
-> +	if (ret)
-> +		goto err;
-> +
-> +	vp_vdpa->base = pcim_iomap_table(pdev);
-> +
-> +	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
-> +	if (ret)
-> +		ret = dma_set_mask_and_coherent(&pdev->dev,
-> +						DMA_BIT_MASK(32));
-> +	if (ret)
-> +		dev_warn(&pdev->dev, "Failed to enable 64-bit or 32-bit DMA.  Trying to continue, but this might not work.\n");
-> +
-> +	vp_vdpa->device = map_capability(vp_vdpa, device, NULL);
-> +	vp_vdpa->notify = map_capability(vp_vdpa, notify, &notify_pa);
-> +	vp_vdpa->common = map_capability(vp_vdpa, common, NULL);
-> +	vp_vdpa->id = virtio_id;
-> +
-> +	ret = vdpa_register_device(&vp_vdpa->vdpa);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to register to vdpa bus\n");
-> +		goto err;
-> +	}
-> +
-> +	pci_read_config_dword(pdev, notify + sizeof(struct virtio_pci_cap),
-> +			      &vp_vdpa->notify_off_multiplier);
-> +
-> +	for (i = 0; i < VP_VDPA_MAX_QUEUE; i++) {
-> +		vp_iowrite16(i, &vp_vdpa->common->queue_select);
-> +		notify_off = vp_ioread16(&vp_vdpa->common->queue_notify_off);
-> +		vp_vdpa->vring[i].irq = -1;
-> +		vp_vdpa->vring[i].notify = vp_vdpa->notify +
-> +			notify_off * vp_vdpa->notify_off_multiplier;
-> +		vp_vdpa->vring[i].notify_pa = notify_pa +
-> +			notify_off * vp_vdpa->notify_off_multiplier;
-> +	}
-> +
-> +	return 0;
-> +
-> +err:
-> +	put_device(&vp_vdpa->vdpa.dev);
-> +	return ret;
-> +}
-> +
-> +static void vp_vdpa_remove(struct pci_dev *pdev)
-> +{
-> +	struct vp_vdpa *vp_vdpa = pci_get_drvdata(pdev);
-> +
-> +	vdpa_unregister_device(&vp_vdpa->vdpa);
-> +}
-> +
-> +static struct pci_driver vp_vdpa_driver = {
-> +	.name		= "vp-vdpa",
-> +	.id_table	= NULL, /* only dynamic ids */
-> +	.probe		= vp_vdpa_probe,
-> +	.remove		= vp_vdpa_remove,
-> +};
-> +
-> +module_pci_driver(vp_vdpa_driver);
-> +
-> +MODULE_AUTHOR("Jason Wang <jasowang@redhat.com>");
-> +MODULE_DESCRIPTION("vp-vdpa");
-> +MODULE_LICENSE("GPL");
-> +MODULE_VERSION("1");
-> -- 
-> 2.20.1
+It is interesting to see technical mind arguing about humanitarian
+topics. Usually I need to translate IT to theologies, historic teachers
+or linguists. So, let me try to do it other way around:
 
+- a language is not a snapshot. The meaning of words is changing
+  continually. For example, an ARM is buying Intel networking division and =
+all
+  i200 controller should be renamed to arm100..
+  I'm not familiar with your local history, so i give some examples to
+  German readers:
+  - The word "F=C3=BChrer" was abused by some historical person and event.
+  - The word "geil" is changed within one generation from sexual
+    erection to a positive emotion reusable in almost every context.
+  There is many language changes just within last century, please refer
+  to DUDEN to learn more about it:
+  https://www.duden.de/ueber_duden/auflagengeschichte
+  Or for more generic examples:
+  https://en.wikipedia.org/wiki/Language_change
+
+- from your argumentation I would assume, you are trying to define a
+  language. A language not historically misused, so it will be
+  acceptable by every one. Or at least by the technical community.
+  Suddenly, I should disappoint you. The number of programming
+  languages defined by technical community is is still growing and none of =
+it
+  makes happy every one. How do you thing the reality looks for spoken lang=
+uage?
+  Welcome to my reality:
+  https://en.wikipedia.org/wiki/Universal_language
+  In case the historical argumentations are too boring, let me give you
+  a modern, less boring example:
+  https://youtu.be/7C-aB09i30E
+
+- Are there any other attempts to change historical and linguistic
+  reality by removing and replacing something? Sure:
+  https://en.wikipedia.org/wiki/Book_burning
+
+
+Regards,
+Oleksij
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--6rzrcepciphpb3j5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl7geJoACgkQ4omh9DUa
+UbPUVxAAtAFesYvW2blzrOec4ViiN4687g25pl4c/1E8dFBcBnGc1S7CkcxaRdLS
+dmna8qVGz8AHV0iI5xcxs9BgCvDQ0GLpHZXLVXdRNEaqzqjxeN3R71pRHAyGfLzQ
+5j+wa1GrA+aQcfCX0g8owjUkMipX+tv63KoMxMpvzKJCQvKlgwBxwnV2HIij7YIw
+HjYxfvrSzqLIPzHyJbv6ij6BXl2sfzORU5XqtGPHm0klwPOwntHAWxe8bCzkO3Xe
+o2ZH6fSFMWdFi7EppxOwGkjZclN68gklT2prGRUoSarvolgShoyl+BNsvw8+ef6v
+X+IoomBvz84xUtuigpS0BsG1dUGLF7PjAyJyPLxeW4MX1dngu9OKbOOnHE2Ek1sN
+EbWHMAFRsHgZlHYyBsI+iN0fqXvcznbuMdGUD1SkZwXF67LQvVImJ5dxoaLgjzew
+ihc1leTPojTd0+bXwZIInitD3SFqz1aalnTPry9nZSOAIo9KwQuA8pEYPCsVaPHw
+4NDr40N9euw/eDnrSnSBGH5/PkEVne7TV9C051t8IAd+UPxmBRNjeXsGpYE3obpF
+bbZzO5ogDqDE/GzHtoudUXe6s4U/BqumMtpqgO3XNV2XhQcxoabZwcalpL2nuz/H
+P4TEuVfCUH5DR3GSePnwuBFJyekn3nSMB9K58zljq9ORWb759BI=
+=aGp7
+-----END PGP SIGNATURE-----
+
+--6rzrcepciphpb3j5--
