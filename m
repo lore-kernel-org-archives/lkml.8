@@ -2,120 +2,192 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D365C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A28DFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 709CC204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:39:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="UTlj2Y1Z"
+	by mail.kernel.org (Postfix) with ESMTP id 881FE204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:41:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbgFJRjx (ORCPT
+        id S1726620AbgFJRlO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 13:39:53 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:19580 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726254AbgFJRjw (ORCPT
+        Wed, 10 Jun 2020 13:41:14 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:46896 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbgFJRlN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 13:39:52 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ee11a8c0000>; Wed, 10 Jun 2020 10:38:20 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 10 Jun 2020 10:39:52 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 10 Jun 2020 10:39:52 -0700
-Received: from krypton.plattnerplace.us (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Jun
- 2020 17:39:52 +0000
-Subject: Re: [PATCH] ALSA: hda: Add NVIDIA codec IDs 9a & 9d through a0 to
- patch table
-To:     Takashi Iwai <tiwai@suse.de>
-CC:     Takashi Iwai <tiwai@suse.com>, <alsa-devel@alsa-project.org>,
-        "Jaroslav Kysela" <perex@perex.cz>, <linux-kernel@vger.kernel.org>,
-        Nikhil Mahale <nmahale@nvidia.com>
-References: <20200605171707.8587-1-aplattner@nvidia.com>
- <s5h36787heo.wl-tiwai@suse.de>
-X-Nvconfidentiality: public
-From:   Aaron Plattner <aplattner@nvidia.com>
-Message-ID: <b64129f4-dfd2-1e1c-4034-6d784d6c41ab@nvidia.com>
-Date:   Wed, 10 Jun 2020 10:39:51 -0700
+        Wed, 10 Jun 2020 13:41:13 -0400
+Received: from mail-pf1-f197.google.com ([209.85.210.197])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <alex.hung@canonical.com>)
+        id 1jj4is-0000ht-Tb
+        for linux-kernel@vger.kernel.org; Wed, 10 Jun 2020 17:41:11 +0000
+Received: by mail-pf1-f197.google.com with SMTP id 137so2402231pfw.5
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 10:41:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nuT88j+Mklv7GLmEhalqmxpxwoOBOcrzhFFLKY+heTQ=;
+        b=Yv0ajVmOPfXDR5v/iHA+gOsN+jJv82KLLnjvY6o20+LfuB9fbIlQf/bWqEPPARsWJa
+         L6KpfN2SqkS4PKy2PM8lzcFplQkkCmoXHJCiBmz5xAFT+0xFZMaFwt7OxKmFjNdbPlDt
+         yH1IZYxhSV17sI4Us0qopbazqFIF0gwKNAnEtXu82MegJbBcRivsTg4CssPX0cH8OVVX
+         Io48QRb/MdhIBRKHpZDCi55GlddtOEGA1kS4aapxEA9/mDIO8FDYtqihMLwpUp5dLERL
+         mLm4RgzuInAOqOiyi7BULCWuoxAcPLzsDknFZTlwCw9gSujq7C+NDXAFzMy7T7Mnln2E
+         0d3w==
+X-Gm-Message-State: AOAM530CrJo9EojavchWVXhMiDBEQKYjFBT/3OM5RonGe5i4rj+zreXf
+        vyrnGbmuwSQG8tqnUmGG3yxCWxJWmL+wdZc2iz2AKt/ZdPLJeas/F8Vm4AFLlkNQ1+3dyYudKEZ
+        7KDdiO7HsssctCoJqbw+lGBVRGiV/nEtJUKYhWgGKQg==
+X-Received: by 2002:a62:2545:: with SMTP id l66mr3606251pfl.12.1591810869131;
+        Wed, 10 Jun 2020 10:41:09 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzmMMfRw6JstLTtGTJmFoegbukw+1UJuJOa7bAjjumQCZGx+8xA+8diqIe7hIyigUaS2SBcGA==
+X-Received: by 2002:a62:2545:: with SMTP id l66mr3606226pfl.12.1591810868767;
+        Wed, 10 Jun 2020 10:41:08 -0700 (PDT)
+Received: from [192.168.0.119] (d66-222-144-129.abhsia.telus.net. [66.222.144.129])
+        by smtp.gmail.com with ESMTPSA id p16sm400985pgj.53.2020.06.10.10.41.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Jun 2020 10:41:07 -0700 (PDT)
+Subject: Re: [PATCH] platform/x86: intel-hid: Use hp-wireless for rfkill on HP
+ platforms
+To:     kai.heng.feng@canonical.com
+Cc:     Mario.Limonciello@dell.com, dvhart@infradead.org,
+        andy@infradead.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200610153747.27040-1-kai.heng.feng@canonical.com>
+ <4d0714fe5e2548b6b638ea447ad19490@AUSX13MPC105.AMER.DELL.COM>
+From:   Alex Hung <alex.hung@canonical.com>
+Message-ID: <0affa00e-8a52-9e29-56d4-39dff952d736@canonical.com>
+Date:   Wed, 10 Jun 2020 11:41:06 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <s5h36787heo.wl-tiwai@suse.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <4d0714fe5e2548b6b638ea447ad19490@AUSX13MPC105.AMER.DELL.COM>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1591810700; bh=dkJK8uhHxSkGlkS1wCRSDT9sGT6285+nfvdIw4vwg4I=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:Content-Type:
-         Content-Language:Content-Transfer-Encoding:X-Originating-IP:
-         X-ClientProxiedBy;
-        b=UTlj2Y1Z0Y0bXkN8N5DMd5u6n8t1xLaUeTU3UNMeiwDNVysZ6B2DLLH3lZzz8zBbD
-         zGGWl+RXP5OUYr2+DsRf3mxfOXjQhMNxut74N6HS9E5a5Ee2lGaPZJ7W9DZNIfYraY
-         +qGsvkTNOKce1aW2RenK4nXIPgYa9uxPwA0JsYTYKA9JaTSIlVkYqRg2KbW/BFjOZ4
-         NUvT0wczxZjRQMsu4dZrTIF4AbYmFdWbsCqhqQCWjjD1X+/InWUw5MgRe+PIB6FrX8
-         3FWgv0epamlOUcKv/NENkzG8CHPvjES/xSlU0M007stJR69s4y7Etn/RFn5R1xWvMH
-         Uv6pjszoyIgdg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/6/20 1:00 AM, Takashi Iwai wrote:
-> On Fri, 05 Jun 2020 19:17:07 +0200,
-> Aaron Plattner wrote:
+On 2020-06-10 9:49 a.m., Mario.Limonciello@dell.com wrote:
+>> -----Original Message-----
+>> From: platform-driver-x86-owner@vger.kernel.org <platform-driver-x86-
+>> owner@vger.kernel.org> On Behalf Of Kai-Heng Feng
+>> Sent: Wednesday, June 10, 2020 10:38 AM
+>> To: alex.hung@canonical.com
+>> Cc: Kai-Heng Feng; Darren Hart; Andy Shevchenko; open list:INTEL HID EVENT
+>> DRIVER; open list
+>> Subject: [PATCH] platform/x86: intel-hid: Use hp-wireless for rfkill on HP
+>> platforms
 >>
->> Signed-off-by: Aaron Plattner <aplattner@nvidia.com>
-> 
-> Could you give a bit more information?
-
-Hi Takashi. Sorry for the slow reply and the terse commit message. I 
-can't say a whole lot about these but I can say that they're for 
-upcoming chips with audio functions that are largely similar to the 
-existing ones.
-
--- Aaron
-
-> We have no idea whether they've tested, whether they are already in
-> market, whether any feature changes on those chips or compatible with
-> others, etc.
-> 
-> 
-> thanks,
-> 
-> Takashi
-> 
+>>
+>> [EXTERNAL EMAIL]
+>>
+>> Wireless hotkey on HP platforms can trigger two events, if both
+>> hp-wireless and intel-hid are supported. Two events at the same time
+>> renders wireless hotkey useless.
+>>
+>> HP confirmed that hp-wireless (HPQ6001) should always be the canonical
+>> source of wireless hotkey event, so skip registering rfkill hotkey if
+>> HPQ6001 is present.
+>>
+>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 >> ---
->>   sound/pci/hda/patch_hdmi.c | 5 +++++
->>   1 file changed, 5 insertions(+)
+>>  drivers/platform/x86/intel-hid.c | 31 ++++++++++++++++++++++++++++++-
+>>  1 file changed, 30 insertions(+), 1 deletion(-)
 >>
->> diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
->> index fbd7cc6026d8..e2b21ef5d7d1 100644
->> --- a/sound/pci/hda/patch_hdmi.c
->> +++ b/sound/pci/hda/patch_hdmi.c
->> @@ -4145,6 +4145,11 @@ HDA_CODEC_ENTRY(0x10de0095, "GPU 95 HDMI/DP",	patch_nvhdmi),
->>   HDA_CODEC_ENTRY(0x10de0097, "GPU 97 HDMI/DP",	patch_nvhdmi),
->>   HDA_CODEC_ENTRY(0x10de0098, "GPU 98 HDMI/DP",	patch_nvhdmi),
->>   HDA_CODEC_ENTRY(0x10de0099, "GPU 99 HDMI/DP",	patch_nvhdmi),
->> +HDA_CODEC_ENTRY(0x10de009a, "GPU 9a HDMI/DP",	patch_nvhdmi),
->> +HDA_CODEC_ENTRY(0x10de009d, "GPU 9d HDMI/DP",	patch_nvhdmi),
->> +HDA_CODEC_ENTRY(0x10de009e, "GPU 9e HDMI/DP",	patch_nvhdmi),
->> +HDA_CODEC_ENTRY(0x10de009f, "GPU 9f HDMI/DP",	patch_nvhdmi),
->> +HDA_CODEC_ENTRY(0x10de00a0, "GPU a0 HDMI/DP",	patch_nvhdmi),
->>   HDA_CODEC_ENTRY(0x10de8001, "MCP73 HDMI",	patch_nvhdmi_2ch),
->>   HDA_CODEC_ENTRY(0x10de8067, "MCP67/68 HDMI",	patch_nvhdmi_2ch),
->>   HDA_CODEC_ENTRY(0x11069f80, "VX900 HDMI/DP",	patch_via_hdmi),
->> -- 
->> 2.27.0
+>> diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-
+>> hid.c
+>> index 9ee79b74311c..31091c8faf70 100644
+>> --- a/drivers/platform/x86/intel-hid.c
+>> +++ b/drivers/platform/x86/intel-hid.c
+>> @@ -25,6 +25,8 @@ static const struct acpi_device_id intel_hid_ids[] = {
+>>  };
+>>  MODULE_DEVICE_TABLE(acpi, intel_hid_ids);
 >>
+>> +static bool hp_wireless_present;
+>> +
+>>  /* In theory, these are HID usages. */
+>>  static const struct key_entry intel_hid_keymap[] = {
+>>  	/* 1: LSuper (Page 0x07, usage 0xE3) -- unclear what to do */
+>> @@ -49,6 +51,29 @@ static const struct key_entry intel_hid_keymap[] = {
+>>  	{ KE_END },
+>>  };
+>>
+>> +static const struct key_entry intel_hid_no_rfkill_keymap[] = {
+>> +	/* 1: LSuper (Page 0x07, usage 0xE3) -- unclear what to do */
+>> +	/* 2: Toggle SW_ROTATE_LOCK -- easy to implement if seen in wild */
+>> +	{ KE_KEY, 3, { KEY_NUMLOCK } },
+>> +	{ KE_KEY, 4, { KEY_HOME } },
+>> +	{ KE_KEY, 5, { KEY_END } },
+>> +	{ KE_KEY, 6, { KEY_PAGEUP } },
+>> +	{ KE_KEY, 7, { KEY_PAGEDOWN } },
+>> +	/* 8: rfkill -- use hp-wireless instead */
+>> +	{ KE_KEY, 9, { KEY_POWER } },
+>> +	{ KE_KEY, 11, { KEY_SLEEP } },
+>> +	/* 13 has two different meanings in the spec -- ignore it. */
+>> +	{ KE_KEY, 14, { KEY_STOPCD } },
+>> +	{ KE_KEY, 15, { KEY_PLAYPAUSE } },
+>> +	{ KE_KEY, 16, { KEY_MUTE } },
+>> +	{ KE_KEY, 17, { KEY_VOLUMEUP } },
+>> +	{ KE_KEY, 18, { KEY_VOLUMEDOWN } },
+>> +	{ KE_KEY, 19, { KEY_BRIGHTNESSUP } },
+>> +	{ KE_KEY, 20, { KEY_BRIGHTNESSDOWN } },
+>> +	/* 27: wake -- needs special handling */
+>> +	{ KE_END },
+>> +};
+>> +
+>>  /* 5 button array notification value. */
+>>  static const struct key_entry intel_array_keymap[] = {
+>>  	{ KE_KEY,    0xC2, { KEY_LEFTMETA } },                /* Press */
+>> @@ -317,7 +342,8 @@ static int intel_hid_input_setup(struct platform_device
+>> *device)
+>>  	if (!priv->input_dev)
+>>  		return -ENOMEM;
+>>
+>> -	ret = sparse_keymap_setup(priv->input_dev, intel_hid_keymap, NULL);
+>> +	ret = sparse_keymap_setup(priv->input_dev, hp_wireless_present ?
+>> +			intel_hid_no_rfkill_keymap : intel_hid_keymap, NULL);
+>>  	if (ret)
+>>  		return ret;
+>>
+>> @@ -575,6 +601,9 @@ check_acpi_dev(acpi_handle handle, u32 lvl, void
+>> *context, void **rv)
+>>  			dev_info(&dev->dev,
+>>  				 "intel-hid: created platform device\n");
+>>
+>> +	if (!strcmp(acpi_device_hid(dev), "HPQ6001"))
+>> +		hp_wireless_present = true;
+
+(Resend with format removed)
+
+This can impact all HP systems that do not have this problem. How about
+a DMI quirk that is limited to this particular system?
+
+
+> 
+> Just having the ACPI device present doesn't actually mean that the user
+> has a kernel compiled with hp-wireless or that it has finished initializing.
+> 
+> I would think this needs a better handshake in case hp-wireless was unloaded
+> or not present so the event could still come through intel-hid in this
+> circumstance.
+> 
+>> +
+>>  	return AE_OK;
+>>  }
+>>
+>> --
+>> 2.17.1
+> 
+
+
+-- 
+Cheers,
+Alex Hung
