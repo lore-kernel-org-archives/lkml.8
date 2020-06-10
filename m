@@ -2,150 +2,141 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC60C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C08C5C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF29B2074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9817920734
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:08:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="cg6ZckV/"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="XT6oiPRX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728934AbgFJMH5 (ORCPT
+        id S1728964AbgFJMIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 08:07:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41710 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728549AbgFJMH4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 08:07:56 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78169C03E96F
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 05:07:56 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id g7so860184qvx.11
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 05:07:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=lro6qhLL0P88qN7ekMirUkTClLvqbIrZ+9sE8Oe/PY4=;
-        b=cg6ZckV/Z2EIx+t+s118UZQfhcDtNQtRVo5hRWK0390A7cOKKmZ9afuS/hLhNpkzEA
-         J/u3IzApEiFX3FulGKsCxqJGtjSMDUFKXn7nbMtI2kg2s2DrnfEfBniXGCnxclIdvad/
-         oXyXigpG4sSHfnEy5EM1w/TidSnhfxDxA+gUtMZhxfFjzNloH7tj0FixiT3XxhL7wXqI
-         EE6ZWSEFqSdEmMEPQ7KNvWdTqmlX/uiT0QfCNn3DjpqH+k96HTJ1UAGKAZK+gnHms6xU
-         j+WFwrDSNlXzokpSV4c/bcmJBeHFSM8El1vRd0NI824WjqOInMQhH02riUvo4+Aj+wXo
-         YGfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lro6qhLL0P88qN7ekMirUkTClLvqbIrZ+9sE8Oe/PY4=;
-        b=pzGLdf2TRCi2ILg2ohMiOn0wHIdTNPGRVlA62Hyi2XmlMb4fbAs5opKeBbMBbUr0ni
-         XRxuOSq6+PquTO9CoImWq5DbbCx+w6gtASSNw2paV//ZSrzvM5c09pKlDAFWoiphIsYw
-         s/MBLRdH6t1egi7cotITYIYxy1gdXLJoadDG766ITee4errn9SNwHu9+3nOPT8YsHjL+
-         7q+g+xHEeDGuVEAmkjwn4BNJdRAuZAz8mXdKdaiKPTl4e4ffKEt85H6s/+VdY0DMnm4B
-         7ScLNTeVihBi3UP3VmWiKRFKlLba0as0My4azeHSq3QGo5xEsgJcT6vO2MqhDXkfiodd
-         kmLg==
-X-Gm-Message-State: AOAM531KOz5AvrfkXyVm4iNFOeAVTlRQ54GWSzymg2plW/IWCtHLE5b7
-        iLcSnQrkmFOlph7nMMGanTGDyQ==
-X-Google-Smtp-Source: ABdhPJxb8/gCRbVz6ieNFA5DjYzSCSNnlTH0asHu842as71W+WpWLNO2QpDK1mRMvSt/9yx4ythZRg==
-X-Received: by 2002:ad4:552b:: with SMTP id ba11mr1727278qvb.145.1591790875533;
-        Wed, 10 Jun 2020 05:07:55 -0700 (PDT)
-Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id l19sm12236941qtq.13.2020.06.10.05.07.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 05:07:54 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 08:07:48 -0400
-From:   Qian Cai <cai@lca.pw>
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc:     gor@linux.ibm.com, borntraeger@de.ibm.com,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] s390: set NODES_SHIFT=0 when NUMA=n
-Message-ID: <20200610120748.GA954@lca.pw>
-References: <20200610014501.4268-1-cai@lca.pw>
- <20200610084553.GB4894@osiris>
+        Wed, 10 Jun 2020 08:08:06 -0400
+Received: from mout.web.de ([212.227.17.12]:44881 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728549AbgFJMIF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 08:08:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1591790861;
+        bh=Rbfz1tSx1gAVqb9pVfW8xCQg7XrzBdujlG0Xi2jOCPs=;
+        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
+        b=XT6oiPRXBlPlhxV6U/j4UjIZV9qc7DlH6cXNTeiN3QRh8KSiwRXeZKF5nw/f+3fOI
+         Dnt2cs0116Q6RDXGZ2no32kq3GyZgCRCneloMT+BDZEqTIxLJDAXt+wrQC/454TiEd
+         HC30pcHQOF5pbrrSNM+W0ujFJkA0eayNRUH1Q1hw=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.133.155.16]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1Mr7am-1j6xLu3LlO-00oGBe; Wed, 10
+ Jun 2020 14:07:40 +0200
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        Tetsuhiro Kohada <kohada.t2@gmail.com>,
+        Wei Yongjun <weiyongjun1@huawei.com>
+Subject: Re: [PATCH] exfat: call brelse() on error path
+From:   Markus Elfring <Markus.Elfring@web.de>
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        linux-fsdevel@vger.kernel.org
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <6939014a-adbf-f970-2541-df16d35de7e5@web.de>
+Date:   Wed, 10 Jun 2020 14:07:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200610084553.GB4894@osiris>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:BS/IQ7W2d0RfMg3aks/aA42iFUz+07KoT5lAtzL3qf4Dd6CEyam
+ qPskKd5Ql1HYYl+55qLqIPI2Nh7tixb6dxeqgg7dzPlfeyxupx4nQYYpbuJartn8oFesQSu
+ kfFDEQhNWn4F748jbc7x+kNSmxBPmgPzTN+6+WkFtfFxed9RBXWXxpDjDi/Z+MJvHciPqVx
+ BIyRQgnfTltYbHsCc+25A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:3oz132EGEAs=:vnFx1atC4mPv4V71l5BBHs
+ fIuZz7PrJK0iosf21wXBs+oYZFeUONlbW2IUa6slZPQ3rjub7V2OnE+D/ningS75Vr0i7nuH7
+ 9wF4gVty8ymk9LK0Iqk0A/hgtm1ZOCay/hEskAV7sBWJtTx66PxC4UTtd6nMHz4cT8PL7zxHG
+ oICzU+4M3D3dsRGEkVV7saqcTaqCoYgd803ECesHyyBh/3JRyqOUdTW9lUYIotRH0rXhYkhSG
+ NSYwvCEuOMH/EyagkndX1d/Ocq329Z2NW0MFtPu74EijyzJwGjQkzWT2d7BgMaH/nYVg6cuUX
+ UQdXF8972dXsi6V8hUasIrU6htF7mjJJ7XmzmmBEgzL+R/jMvEAOH01ez7pGik7cfA/hHpf9H
+ CQHrCq5NXHsihlQdKoAECAVRzM/ppm9SEzLEg2QLshZMA+C1f+H7rBlIchH06c/wLZfBUdtHf
+ ZDrO9qxsSEEjJlF+oNM0VcUKcs5VF3FXpiXkm1hYogrnDj7/SV48AcEjBkfT3OPAYYSdAgCzc
+ o1I6V5gjOVmV0LlAiutbS9Mo2X8BBlvUhl/tRHQcfRikempbPNg8mfcx3j3w00ksDFRDRvkWX
+ /S+VNW7Sp9KRZPq4oCv6zjmdoT3E/HzRhqnqOjNmGKZjxH8lwc9zrtVEYPDyMIsl8oNEua5qY
+ QClFpR5pmHIunUOfmLd2f37TJwBxrPpG4Qb/4Wkt62AM9vJrlQiyc/0TcXieTKvSfhXNEDLwV
+ zN4EA3iB/QGgH4PWCWz0J9ILoxZRhCyeckC+PVtT7SmSw595e7tYX0Kg0tP0uhtgjG1wOKnpa
+ z0XoIjMNf7Z09RBiG62rdPu85AFhcIosJfGyRyYWn1fbtGceaxOZHpLBFyoj6pqMazejf0936
+ JFrBlUb6QEwMgfXo+ziaf2R6vnkb1vbmnc8nr70V0Y4IfIVOSgy55zr7/H9o6kfIPa9OCHXPg
+ vGeLaG6svbHC8o5XIRuBb/T0LzxPRkhRdsJsnHafLvEtsSOSbjlxUxiGxfxjWRU5MsbUh7D/F
+ POfH1017Py+MqkN0hECKbWaJ3KgUQBvtsLELVIgEGLLF8mUjt0Eu9oEHSmJBJXsdlAJZzvid1
+ vo1e763RIR+ML/2/Y7rdX/DJ6UQ+j9rzASm+9Y00XPgmMJkRTSUxp9QvqTYeviBOMjgCJB/nR
+ FffhVEUQwbxHlzALBuN8RTsy+ajZ5+6fHdPEMwKS9Wwo4IWMvZ311iO+CWVNM5eE9TNu0HHuC
+ 6Jcfy6Ljw0sqAdYHq
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 10:45:53AM +0200, Heiko Carstens wrote:
-> On Tue, Jun 09, 2020 at 09:45:01PM -0400, Qian Cai wrote:
-> > When NUMA=n and nr_node_ids=2, in apply_wqattrs_prepare(), it has,
-> > 
-> > for_each_node(node) {
-> > 	if (wq_calc_node_cpumask(...
-> > 
-> > where it will trigger a booting warning,
-> > 
-> > WARNING: workqueue cpumask: online intersect > possible intersect
-> > 
-> > because it found 2 nodes and wq_numa_possible_cpumask[1] is an empty
-> > cpumask. NUMA=y has no such problem because node_possible_map will be
-> > initialized properly containing only node 0. Fix it by setting
-> > NODES_SHIFT=0 when NUMA=n.
-> > 
-> > Fixes: 701dc81e7412 ("s390/mm: remove fake numa support")
-> > Signed-off-by: Qian Cai <cai@lca.pw>
-> > ---
-> >  arch/s390/Kconfig | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> Thanks! However I committed a different solution. Hope you don't mind:
+> If the second exfat_get_dentry() call fails then we need to release
+> "old_bh" before returning.
 
-No problem with that at all.
+Thanks you picked a bit of information up from my source code analysis
+for a possible adjustment of the function =E2=80=9Cexfat_rename_file=E2=80=
+=9D.
 
-> 
-> From dd3f1f08f2317768b35b2df3ff8285185df7e195 Mon Sep 17 00:00:00 2001
-> From: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Date: Wed, 10 Jun 2020 10:36:05 +0200
-> Subject: [PATCH] s390/numa: let NODES_SHIFT depend on NEED_MULTIPLE_NODES
-> 
-> Qian Cai reported:
-> ---
-> When NUMA=n and nr_node_ids=2, in apply_wqattrs_prepare(), it has,
-> 
-> for_each_node(node) {
->         if (wq_calc_node_cpumask(...
-> 
-> where it will trigger a booting warning,
-> 
-> WARNING: workqueue cpumask: online intersect > possible intersect
-> 
-> because it found 2 nodes and wq_numa_possible_cpumask[1] is an empty
-> cpumask.
-> ---
-> 
-> Let NODES_SHIFT depend on NEED_MULTIPLE_NODES like it is done
-> on other architectures in order to fix this.
-> 
-> Fixes: 701dc81e7412 ("s390/mm: remove fake numa support")
-> Reported-by: Qian Cai <cai@lca.pw>
-> Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-> ---
->  arch/s390/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-> index 2167bce993ff..ae01be202204 100644
-> --- a/arch/s390/Kconfig
-> +++ b/arch/s390/Kconfig
-> @@ -462,6 +462,7 @@ config NUMA
->  
->  config NODES_SHIFT
->  	int
-> +	depends on NEED_MULTIPLE_NODES
->  	default "1"
->  
->  config SCHED_SMT
-> -- 
-> 2.17.1
-> 
+exfat: Improving exception handling in two functions
+https://lore.kernel.org/linux-fsdevel/208cba7b-e535-c8e0-5ac7-f15170117a7f=
+@web.de/
+https://lkml.org/lkml/2020/6/10/272
+
+Would you like to adjust the implementation of the function =E2=80=9Cexfat=
+_move_file=E2=80=9D
+in a similar way in a subsequent patch variant?
+
+Regards,
+Markus
