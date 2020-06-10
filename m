@@ -2,348 +2,122 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52715C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 05:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D88EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 05:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26AF3207F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 05:33:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AFA820734
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 05:33:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ttMtVBuf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726097AbgFJFdR (ORCPT
+        id S1726127AbgFJFd4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 01:33:17 -0400
-Received: from mga03.intel.com ([134.134.136.65]:46127 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725270AbgFJFdQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 01:33:16 -0400
-IronPort-SDR: MMozXifW+RzNPZcRfizINpmpm7Bjq8rp+oZVMrGCWSDuCZHiIB0YD+hjy4xQ/OgA8pw/vV81KT
- ZmkLERuTYGCA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 22:33:15 -0700
-IronPort-SDR: 4xKoHrLTAyej4GfTZPX4Su+JPGf2mARO92yVFEl50fKH8sj1XGKbzc3g6HUqOg95M1Ho0JdDpc
- tFCujXApbUQg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,494,1583222400"; 
-   d="scan'208";a="271118159"
-Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.16])
-  by orsmga003.jf.intel.com with ESMTP; 09 Jun 2020 22:33:13 -0700
-Date:   Wed, 10 Jun 2020 01:23:14 -0400
-From:   Yan Zhao <yan.y.zhao@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cohuck@redhat.com, zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        kevin.tian@intel.com, shaopeng.he@intel.com, yi.l.liu@intel.com,
-        xin.zeng@intel.com, hang.yuan@intel.com
-Subject: Re: [RFC PATCH v4 07/10] vfio/pci: introduce a new irq type
- VFIO_IRQ_TYPE_REMAP_BAR_REGION
-Message-ID: <20200610052314.GB13961@joy-OptiPlex-7040>
-Reply-To: Yan Zhao <yan.y.zhao@intel.com>
-References: <20200601065726.GA5906@joy-OptiPlex-7040>
- <20200601104307.259b0fe1@x1.home>
- <20200602082858.GA8915@joy-OptiPlex-7040>
- <20200602133435.1ab650c5@x1.home>
- <20200603014058.GA12300@joy-OptiPlex-7040>
- <20200603170452.7f172baf@x1.home>
- <20200604024228.GD12300@joy-OptiPlex-7040>
- <20200603221058.1927a0fc@x1.home>
- <20200605020231.GE12300@joy-OptiPlex-7040>
- <20200605101301.6abb8a3b@x1.home>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200605101301.6abb8a3b@x1.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Wed, 10 Jun 2020 01:33:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37118 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726035AbgFJFdy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 01:33:54 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87853C05BD1E;
+        Tue,  9 Jun 2020 22:33:54 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id h5so732964wrc.7;
+        Tue, 09 Jun 2020 22:33:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to;
+        bh=T5+YAtcRgziqO5C2N6ia15+cgn+tR71qagnrzljPNOs=;
+        b=ttMtVBufZEb4GP86ouNkVbgpx6OQWXQgsqEYjbatjSoiIybJXHEoQIqEJ9vq8yJDVu
+         TrL+CNpV9RHEFWxbrJsN60j8/Qk55Q44C3201FxJ/7WDA/nB6mehgVVzj8yItZcaurJo
+         IvrjWspMWYRAL7eeD4e8fj5a6Hl6mBNW7qfTOCyi3eIrSY7OiK3SaT1Ejy+/no1v35wX
+         /sxtSLuf1coUxyojIaC170ui1Aw+h7J3xwsw7Ex2cIBtY2Eu+qUan8f3EG6Y6fidibkH
+         u/ZyxNuZ6Tj5oHjp16y5h7SQKbBZo9Z8uL8SP1xLPpRrEveoQdTQs+9LOxZIXRb27UgL
+         ntNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to;
+        bh=T5+YAtcRgziqO5C2N6ia15+cgn+tR71qagnrzljPNOs=;
+        b=gxRd/TCofXBSf2Wy7qWNowTq0e9FL3GqAfGH9BVXpf63TXDOkLlH5K7LhTBAXCag3G
+         ScfmaW5wza0by5mEFbzjlATHHKZPGfL0wxa6UwOGAvY0pP/UjKKH4mrykbaknr1Vvk7f
+         5a9/5iRfx/L1UX/JtLiK/sLNImWOzewHwVoc831UCrQ6YnTksqPkSeP7+TLWei6xXc4w
+         8TH1InGEnG0R4azNmPctVohYKfeV8cCU/HnZYRYj78PIq+sYs6jZnDGQhdTKxPYXbP2h
+         7Za5rj0J7sUwpMV4uQDBor7J5roQiUjj3uGwOctdKOxD+dg8u/pP9UZN/rzsXuWbLhMe
+         A1Fw==
+X-Gm-Message-State: AOAM532Xx5m35c81E3aLb0f4/Yv9jtaEP1yb8wFWPsNb9y+xQOURSzP1
+        7Zcgcp27NDZVtOUB2NoiidFwRuDF
+X-Google-Smtp-Source: ABdhPJzDaJLm3wmW3nYGhhj+Tlq7KEQxisVm3BiXyC3yISOKVqTilrpaLpgrhji+o239Lgl/FCi9bg==
+X-Received: by 2002:a5d:4a04:: with SMTP id m4mr1685879wrq.153.1591767230649;
+        Tue, 09 Jun 2020 22:33:50 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:2450:10d2:194d:bdc8:ea26:f7b2:4ad5])
+        by smtp.gmail.com with ESMTPSA id n23sm5238254wmc.0.2020.06.09.22.33.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2020 22:33:49 -0700 (PDT)
+From:   SeongJae Park <sj38.park@gmail.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     SeongJae Park <sjpark@amazon.com>, akpm@linux-foundation.org,
+        colin.king@canonical.com, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, SeongJae Park <sjpark@amazon.de>
+Subject: Re: Re: [PATCH v2] scripts/spelling: Recommend blocklist/allowlist instead of blacklist/whitelist
+Date:   Wed, 10 Jun 2020 07:33:35 +0200
+Message-Id: <20200610053335.14684-1-sj38.park@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <d086a1a412de3079cefbfb15f38c4dc9aae0045d.camel@perches.com> (raw)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 10:13:01AM -0600, Alex Williamson wrote:
-> On Thu, 4 Jun 2020 22:02:31 -0400
-> Yan Zhao <yan.y.zhao@intel.com> wrote:
+On Tue, 09 Jun 2020 18:35:46 -0700 Joe Perches <joe@perches.com> wrote:
+
+> On Tue, 2020-06-09 at 14:25 +0200, SeongJae Park wrote:
+> > From: SeongJae Park <sjpark@amazon.de>
+> >
+> > This commit recommends the patches to replace 'blacklist' and
+> > 'whitelist' with the 'blocklist' and 'allowlist', because the new
+> > suggestions are incontrovertible, doesn't make people hurt, and more
+> > self-explanatory.
 > 
-> > On Wed, Jun 03, 2020 at 10:10:58PM -0600, Alex Williamson wrote:
-> > > On Wed, 3 Jun 2020 22:42:28 -0400
-> > > Yan Zhao <yan.y.zhao@intel.com> wrote:
-> > >   
-> > > > On Wed, Jun 03, 2020 at 05:04:52PM -0600, Alex Williamson wrote:  
-> > > > > On Tue, 2 Jun 2020 21:40:58 -0400
-> > > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
-> > > > >     
-> > > > > > On Tue, Jun 02, 2020 at 01:34:35PM -0600, Alex Williamson wrote:    
-> > > > > > > I'm not at all happy with this.  Why do we need to hide the migration
-> > > > > > > sparse mmap from the user until migration time?  What if instead we
-> > > > > > > introduced a new VFIO_REGION_INFO_CAP_SPARSE_MMAP_SAVING capability
-> > > > > > > where the existing capability is the normal runtime sparse setup and
-> > > > > > > the user is required to use this new one prior to enabled device_state
-> > > > > > > with _SAVING.  The vendor driver could then simply track mmap vmas to
-> > > > > > > the region and refuse to change device_state if there are outstanding
-> > > > > > > mmaps conflicting with the _SAVING sparse mmap layout.  No new IRQs
-> > > > > > > required, no new irqfds, an incremental change to the protocol,
-> > > > > > > backwards compatible to the extent that a vendor driver requiring this
-> > > > > > > will automatically fail migration.
-> > > > > > >       
-> > > > > > right. looks we need to use this approach to solve the problem.
-> > > > > > thanks for your guide.
-> > > > > > so I'll abandon the current remap irq way for dirty tracking during live
-> > > > > > migration.
-> > > > > > but anyway, it demos how to customize irq_types in vendor drivers.
-> > > > > > then, what do you think about patches 1-5?    
-> > > > > 
-> > > > > In broad strokes, I don't think we've found the right solution yet.  I
-> > > > > really question whether it's supportable to parcel out vfio-pci like
-> > > > > this and I don't know how I'd support unraveling whether we have a bug
-> > > > > in vfio-pci, the vendor driver, or how the vendor driver is making use
-> > > > > of vfio-pci.
-> > > > >
-> > > > > Let me also ask, why does any of this need to be in the kernel?  We
-> > > > > spend 5 patches slicing up vfio-pci so that we can register a vendor
-> > > > > driver and have that vendor driver call into vfio-pci as it sees fit.
-> > > > > We have two patches creating device specific interrupts and a BAR
-> > > > > remapping scheme that we've decided we don't need.  That brings us to
-> > > > > the actual i40e vendor driver, where the first patch is simply making
-> > > > > the vendor driver work like vfio-pci already does, the second patch is
-> > > > > handling the migration region, and the third patch is implementing the
-> > > > > BAR remapping IRQ that we decided we don't need.  It's difficult to
-> > > > > actually find the small bit of code that's required to support
-> > > > > migration outside of just dealing with the protocol we've defined to
-> > > > > expose this from the kernel.  So why are we trying to do this in the
-> > > > > kernel?  We have quirk support in QEMU, we can easily flip
-> > > > > MemoryRegions on and off, etc.  What access to the device outside of
-> > > > > what vfio-pci provides to the user, and therefore QEMU, is necessary to
-> > > > > implement this migration support for i40e VFs?  Is this just an
-> > > > > exercise in making use of the migration interface?  Thanks,
-> > > > >     
-> > > > hi Alex
-> > > > 
-> > > > There was a description of intention of this series in RFC v1
-> > > > (https://www.spinics.net/lists/kernel/msg3337337.html).
-> > > > sorry, I didn't include it in starting from RFC v2.
-> > > > 
-> > > > "
-> > > > The reason why we don't choose the way of writing mdev parent driver is
-> > > > that  
-> > > 
-> > > I didn't mention an mdev approach, I'm asking what are we accomplishing
-> > > by doing this in the kernel at all versus exposing the device as normal
-> > > through vfio-pci and providing the migration support in QEMU.  Are you
-> > > actually leveraging having some sort of access to the PF in supporting
-> > > migration of the VF?  Is vfio-pci masking the device in a way that
-> > > prevents migrating the state from QEMU?
-> > >  
-> > yes, communication to PF is required. VF state is managed by PF and is
-> > queried from PF when VF is stopped.
-> > 
-> > migration support in QEMU seems only suitable to devices with dirty
-> > pages and device state available by reading/writing device MMIOs, which
-> > is not the case for most devices.
+> nack.  Spelling is for typos not for politics.
+
+Agreed, I'm abusing the spell checking.  I personally believe the terms will
+eventually removed from the dictionary and become typos, though.
+
+I will update checkpatch to support deprecated terms checking, and set the
+'blacklist' and 'whitelist' as the deprecated terms in the next spin.
+
+
+Thanks,
+SeongJae Park
+
 > 
-> Post code for such a device.
->
-hi Alex,
-There's an example in i40e vf. virtual channel related resources are in
-guest memory. dirty page tracking requires the info stored in those
-guest memory.
-
-there're two ways to get the resources addresses:
-(1) always trap VF registers related. as in Alex Graf's qemu code.
-
-starting from beginning, it tracks rw of Admin Queue Configuration registers.
-Then in the write handler vfio_i40evf_aq_mmio_mem_region_write(), guest
-commands are processed to record the guest dma addresses of the virtual
-channel related resources.
-e.g. vdev->vsi_config is read from the guest dma addr contained in
-command I40E_VIRTCHNL_OP_CONFIG_VSI_QUEUES.
-
-
-vfio_i40evf_initfn()
-{
- ...
- memory_region_init_io(&vdev->aq_mmio_mem, OBJECT(dev),
-                          &vfio_i40evf_aq_mmio_mem_region_ops,
-                          vdev, "i40evf AQ config",
-                          I40E_VFGEN_RSTAT - I40E_VF_ARQBAH1);
- ...
-}
-
-vfio_i40evf_aq_mmio_mem_region_write()
-{
-   ...
-    switch (addr) {
-    case I40E_VF_ARQBAH1:
-    case I40E_VF_ARQBAL1:
-    case I40E_VF_ARQH1:
-    case I40E_VF_ARQLEN1:
-    case I40E_VF_ARQT1:
-    case I40E_VF_ATQBAH1:
-    case I40E_VF_ATQBAL1:
-    case I40E_VF_ATQH1:
-    case I40E_VF_ATQT1:
-    case I40E_VF_ATQLEN1:
-        vfio_i40evf_vw32(vdev, addr, data);
-        vfio_i40e_aq_update(vdev); ==> update & process atq commands
-        break;
-    default:
-        vfio_i40evf_w32(vdev, addr, data);
-        break;
-    }
-}
-vfio_i40e_aq_update(vdev)
-	|->vfio_i40e_atq_process_one(vdev, vfio_i40evf_vr32(vdev, I40E_VF_ATQH1)
-		|-> hwaddr addr = vfio_i40e_get_atqba(vdev) + (index * sizeof(desc));
-		|   pci_dma_read(pdev, addr, &desc, sizeof(desc));//read guest's command
-		|   vfio_i40e_record_atq_cmd(vdev, pdev, &desc)
-			
-		
-
-vfio_i40e_record_atq_cmd(...I40eAdminQueueDescriptor *desc) {
-	data_addr = desc->params.external.addr_high;
-	...
-
-	switch (desc->cookie_high) {
-	...
-	case I40E_VIRTCHNL_OP_CONFIG_VSI_QUEUES:
-	pci_dma_read(pdev, data_addr, &vdev->vsi_config,
-		         MIN(desc->datalen, sizeof(vdev->vsi_config)));
-	...
-	}
-	...
-}
-
-
-(2) pass through all guest MMIO accesses and only do MMIO trap when migration
-is about to start.
-This is the way we're using in the host vfio-pci vendor driver (or mdev parent driver)
-of i40e vf device (sorry for no public code available still).
-
-when migration is about to start, it's already too late to get the guest dma
-address for those virtual channel related resources merely by MMIO
-trapping, so we have to ask for them from PF.
-
-
-
-<...>
-
-> > > > for interfaces exported in patch 3/10-5/10, they anyway need to be
-> > > > exported for writing mdev parent drivers that pass through devices at
-> > > > normal time to avoid duplication. and yes, your worry about  
-> > > 
-> > > Where are those parent drivers?  What are their actual requirements?
-> > >  
-> > if this way of registering vendor ops to vfio-pci is not permitted,
-> > vendors have to resort to writing its mdev parent drivers for VFs. Those
-> > parent drivers need to pass through VFs at normal time, doing exactly what
-> > vfio-pci does and only doing what vendor ops does during migration.
+> > Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> > ---
+> >  scripts/spelling.txt | 2 ++
+> >  1 file changed, 2 insertions(+)
 > > 
-> > if vfio-pci could export common code to those parent drivers, lots of
-> > duplicated code can be avoided.
-> 
-> There are two sides to this argument though.  We could also argue that
-> mdev has already made it too easy to implement device emulation in the
-> kernel, the barrier is that such emulation is more transparent because
-> it does require a fair bit of code duplication from vfio-pci.  If we
-> make it easier to simply re-use vfio-pci for much of this, and even
-> take it a step further by allowing vendor drivers to masquerade behind
-> vfio-pci, then we're creating an environment where vendors don't need
-> to work with QEMU to get their device emulation accepted.  They can
-> write their own vendor drivers, which are now simplified and sanctioned
-> by exported functions in vfio-pci.  They can do this easily and open up
-> massive attack vectors, hiding behind vfio-pci.
-> 
-your concern is reasonable.
-
-> I know that I was advocating avoiding user driver confusion, ie. does
-> the user bind a device to vfio-pci, i40e_vf_vfio, etc, but maybe that's
-> the barrier we need such that a user can make an informed decision
-> about what they're actually using.  If a vendor then wants to implement
-> a feature in vfio-pci, we'll need to architect an interface for it
-> rather than letting them pick and choose which pieces of vfio-pci to
-> override.
-> 
-> > > > identification of bug sources is reasonable. but if a device is binding
-> > > > to vfio-pci with a vendor module loaded, and there's a bug, they can do at
-> > > > least two ways to identify if it's a bug in vfio-pci itself.
-> > > > (1) prevent vendor modules from loading and see if the problem exists
-> > > > with pure vfio-pci.
-> > > > (2) do what's demoed in patch 8/10, i.e. do nothing but simply pass all
-> > > > operations to vfio-pci.  
-> > > 
-> > > The code split is still extremely ad-hoc, there's no API.  An mdev
-> > > driver isn't even a sub-driver of vfio-pci like you're trying to
-> > > accomplish here, there would need to be a much more defined API when
-> > > the base device isn't even a vfio_pci_device.  I don't see how this
-> > > series would directly enable an mdev use case.
-> > >   
-> > similar to Yi's series https://patchwork.kernel.org/patch/11320841/.
-> > we can parcel the vdev creation code in vfio_pci_probe() to allow calling from
-> > mdev parent probe routine. (of course, also need to parcel code to free vdev)
-> > e.g.
-> > 
-> > void *vfio_pci_alloc_vdev(struct pci_dev *pdev, const struct pci_device_id *id)
-> > {
-> > 	struct vfio_pci_device *vdev;
-> >         vdev = kzalloc(sizeof(*vdev), GFP_KERNEL);
-> >         if (!vdev) {
-> >                 ret = -ENOMEM;
-> >                 goto out_group_put;
-> >         }
-> > 
-> >         vdev->pdev = pdev;
-> >         vdev->irq_type = VFIO_PCI_NUM_IRQS;
-> >         mutex_init(&vdev->igate);
-> >         spin_lock_init(&vdev->irqlock);
-> >         mutex_init(&vdev->ioeventfds_lock);
-> >         INIT_LIST_HEAD(&vdev->ioeventfds_list);
-> > 	...
-> > 	vfio_pci_probe_power_state(vdev);
-> > 
-> >         if (!disable_idle_d3) {
-> >                 vfio_pci_set_power_state(vdev, PCI_D0);
-> >                 vfio_pci_set_power_state(vdev, PCI_D3hot);
-> >         }
-> > 	return vdev;
-> > }
-> > 
-> > static int vfio_mdev_pci_driver_probe(struct pci_dev *pdev, const struct pci_device_id *id))
-> > {
-> > 
-> >        void *vdev = vfio_pci_alloc_vdev(pdev, id);
-> > 
-> >        //save the vdev pointer 
-> > 
-> > }
-> > then all the exported interfaces from this series can also benefit the
-> > mdev use case.
-> 
-> You need to convince me that we're not just doing this for the sake of
-> re-using a migration interface.  We do need vendor specific drivers to
-> support migration, but implementing those vendor specific drivers in
-> the kernel just because we have that interface is the wrong answer.  If
-> we can implement that device specific migration support in QEMU and
-> limit the attack surface from the hypervisor or guest into the host
-> kernel, that's a better answer.  As I've noted above, I'm afraid all of
-> these attempts to parcel out vfio-pci are only going to serve to
-> proliferate vendor modules that have limited community review, expand
-> the attack surface, and potentially harm the vfio ecosystem overall
-> through bad actors and reduced autonomy.  Thanks,
->
-The requirement to access PF as mentioned above is one of the reason for
-us to implement the emulation in kernel.
-Another reason is that we don't want to duplicate a lot of kernel logic in
-QEMU as what'd done in Alex Graf's "vfio-i40e". then QEMU has to be
-updated along kernel driver changing. The effort for maintenance and
-version matching is a big burden to vendors.
-But you are right, there're less review in virtualization side to code under
-vendor specific directory. That's also the pulse for us to propose
-common helper APIs for them to call, not only for convenience and
-duplication-less, but also for code with full review.
-
-would you mind giving us some suggestions for where to go?
-
-Thanks
-Yan
+> > diff --git a/scripts/spelling.txt b/scripts/spelling.txt
+> > index d9cd24cf0d40..ea785568d8b8 100644
+> > --- a/scripts/spelling.txt
+> > +++ b/scripts/spelling.txt
+> > @@ -230,6 +230,7 @@ beter||better
+> >  betweeen||between
+> >  bianries||binaries
+> >  bitmast||bitmask
+> > +blacklist||blocklist
+> >  boardcast||broadcast
+> >  borad||board
+> >  boundry||boundary
+> > @@ -1495,6 +1496,7 @@ whcih||which
+> >  whenver||whenever
+> >  wheter||whether
+> >  whe||when
+> > +whitelist||allowlist
+> >  wierd||weird
+> >  wiil||will
+> >  wirte||write
