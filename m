@@ -2,145 +2,96 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35AF5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:33:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 251CEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 136332072E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:33:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rbro13WW"
+	by mail.kernel.org (Postfix) with ESMTP id E288F2072F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:37:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591810636;
+	bh=utG4SogSUZldhtrkFrDEcO0SomUMTV8zNf9Bc9crx+Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Rbkc8YtMac4nZ64BUJ+lg/mivh27fhNE3+48KJ+OhIJEDjQovoBRwAbfDdtz/rmTF
+	 Gq43pnzzuy/cIA0VBhlrE6WCbSAEdApYwZgId5On2U74OksZBg+e2oFWYYLXiuYmlv
+	 g1IaB1XnqdTM5ugH688BBJFPACF+WFvD56pU5VuQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbgFJRdu (ORCPT
+        id S1726441AbgFJRhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 13:33:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35770 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726524AbgFJRdu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 13:33:50 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62228C03E96B;
-        Wed, 10 Jun 2020 10:33:49 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id z9so3502402ljh.13;
-        Wed, 10 Jun 2020 10:33:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PsWz3Kzzab46qx3onkQFKgH83NJFRs0Wzw42VhTXFgQ=;
-        b=rbro13WWD8hxWSxH64bIu9g0y+p9UijRN1aCyeHu94o6qRvVVp+f+RgnUS+S4/tmz+
-         5qEFC0QaFZlLVS9ihygGymaUpUOwRGJX5noGlZFToJv+Stqvz0T8kMt5a4K23X1cI8qY
-         80JREjPMkpL5jQ2Xi25TvD/r60++vJKjsjebxNfdWed/XGSdqUTt8wUygh9hZAfOfh/h
-         3IKO8nbIWzpp1uijno1iCHmiZLZleQUwBOPMMf0RpkgXgBvQVoPjoI8OcC0PL3PdYWYc
-         frPUQ4AETdzZmSAUO6XP4cof6yFhAHYQC+Pgo634BB9gRv4XAidKPx5+ahKhLD7KNnY9
-         ZxWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PsWz3Kzzab46qx3onkQFKgH83NJFRs0Wzw42VhTXFgQ=;
-        b=KhgvfIuB6mJu+47gE5VrrPLUhBrWLG+iBtq3wWVt89BKS5kYvdlSPq2p9WTy/Ix8HC
-         lLtf1FiWMwhLCwpugz2xKp0Z1CmHlCWYrV2iP/aSxFP4Vikt0dkwh49DlcDBIqby6Hjz
-         +qLEj36ZgGcgvCercPoGGIx5qWEqElL9FywIvaWgYnXKpQqqs/ojp3k8u4pqPe9Tf3AS
-         2YJKSDg6s00dz+U+wpuArBDcfQCwYWN6M0+eRq6bQ/D+dSQCYo/a5LoKcBR8P5EaxF6u
-         m1KLuwDAQrqnRbxYK2wUG0Vvm28ItoGEYSjIbqKFFOpkxYhRXAgHCYDTe2dK1k29AhUN
-         3x0g==
-X-Gm-Message-State: AOAM530D7T1m36OVSjs4iHhT06ES+DNYcfCioau+4rN800mxM2Q3q984
-        WUdWuiAPlizSqTcXOKj3cZZ5sDE9LB+fb4o1n0b+95SYUdo=
-X-Google-Smtp-Source: ABdhPJzGNXDX3o1AcABLRVRmoybCavPSQ9yrAf2np88UTcWSvE/lhONOdQYhxC8zwSobesUTHpqf4WTEOsvu0o15j3o=
-X-Received: by 2002:a2e:8e94:: with SMTP id z20mr2114433ljk.21.1591810427683;
- Wed, 10 Jun 2020 10:33:47 -0700 (PDT)
+        Wed, 10 Jun 2020 13:37:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36494 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726307AbgFJRhO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 13:37:14 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35D01204EC;
+        Wed, 10 Jun 2020 17:37:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591810633;
+        bh=utG4SogSUZldhtrkFrDEcO0SomUMTV8zNf9Bc9crx+Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EhlvajO+Sj3UaawAk83wrJJ3AnCgi4UDhNSl2AqvNYAnOPDjnxEaCjzA7uHkP/TKX
+         FYThE/vd7Gm9pv/M49vtKTTD8Ug+p2Qxu/v4Tf/kJtZNPlBxhPhZCFCAPsYc4hzIMY
+         oXTO1oIkY7YTpPnN9Iagl7dcMSq4UelELdwXaFgs=
+Date:   Wed, 10 Jun 2020 18:37:11 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Vaibhav Agarwal <vaibhav.sr@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alex Elder <elder@kernel.org>, Johan Hovold <johan@kernel.org>,
+        Mark Greer <mgreer@animalcreek.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v2 0/6] Enable Greybus Audio codec driver
+Message-ID: <20200610173711.GK5005@sirena.org.uk>
+References: <cover.1591802243.git.vaibhav.sr@gmail.com>
 MIME-Version: 1.0
-References: <fb0340aaf273be84e915214a3d8bae4ac85d7c0b.camel@ew.tq-group.com> <CAPDyKFq+RiwbDj+58+W5GTcT7=ZOpZFmc02+FxjRGYwbBgA8oQ@mail.gmail.com>
-In-Reply-To: <CAPDyKFq+RiwbDj+58+W5GTcT7=ZOpZFmc02+FxjRGYwbBgA8oQ@mail.gmail.com>
-From:   Roger Heflin <rogerheflin@gmail.com>
-Date:   Wed, 10 Jun 2020 12:33:36 -0500
-Message-ID: <CAAMCDef2g8t5u1GuVH7p4bM1C7UMsC=fV4RKGU9jSG1rScPc9g@mail.gmail.com>
-Subject: Re: Consistent block device references for root= cmdline
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jens Axboe <axboe@kernel.dk>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="5dNcufZ4prhark0F"
+Content-Disposition: inline
+In-Reply-To: <cover.1591802243.git.vaibhav.sr@gmail.com>
+X-Cookie: fortune: No such file or directory
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No idea if this would still work, but back before label/uuid and lvm
-in initird I had a staticly linked "C" program that ran inside initrd,
-it searched for likely places a boot device could be (mounted them and
-looked for a file to confirm it was the right device, then unmounted
-it), and when it found the right one, it then echo's is major/minor
-numbers into /proc/sys/kernel/real-root-dev and that is used for root=
-without it being on the command line.  Assuming you could get
-something similar started by sytemd and/or udev inside the initrd it
-might still work.
 
-On Wed, Jun 10, 2020 at 11:51 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
->
-> On Wed, 10 Jun 2020 at 15:15, Matthias Schiffer
-> <matthias.schiffer@ew.tq-group.com> wrote:
-> >
-> > Hello all,
-> >
-> > there have been numerous attempts to make the numbering of mmcblk
-> > devices consistent, mostly by using aliases from the DTS ([1], [2],
-> > [3]), but all have been (rightfully) rejected. Unless I have overlooked
-> > a more recent development, no attempts for a different solution were
-> > made.
->
-> According to aliases attempts, I think those have failed, mainly
-> because of two reasons.
->
-> 1. Arguments stating that LABELs/UUIDs are variable alternatives. This
-> isn't the case, which I think was also concluded from the several
-> earlier discussions.
-> 2. Patches that tried adding support for mmc aliases, were not
-> correctly coded. More precisely, what needs to be addressed is that
-> the mmc core also preserves the same ids to be set for the host class
-> as the block device, mmc[n] must correspond to mmcblk[n].
->
-> >
-> > As far as I can tell, the core of the issue seems to be the following:
-> >
-> > The existing solutions like LABELs and UUIDs are viable alternatives in
-> > many cases, but in particular on embedded systems, this is not quite
-> > sufficient: In addition to the problem that more knowledge about the
-> > system to boot is required in the bootloader, this approach fails
-> > completely when the same firmware image exists on multiple devices, for
-> > example on an eMMC and an SD card - not an entirely uncommon situation
-> > during the development of embedded systems.
-> >
-> > With udev, I can refer to a specific partition using a path like
-> > /dev/disk/by-path/platform-2194000.usdhc-part2. In [4] it was proposed
-> > to add a way to refer to a device path/phandle from the kernel command
-> > line. Has there been any progress on this proposal?
->
-> Lots of time during the years I have been approached, both publicly
-> and offlist, about whether it would be possible to add support for
-> "consistent" mmcblk devices. To me, I am fine with the aliases
-> approach, as long as it gets implemented correctly.
->
-> >
-> > Kind regards,
-> > Matthias
-> >
-> >
-> > [1] https://patchwork.kernel.org/patch/8685711/
-> > [2] https://lore.kernel.org/patchwork/cover/674381/
-> > [3] https://www.spinics.net/lists/linux-mmc/msg26586.html
-> > [4] https://www.spinics.net/lists/linux-mmc/msg26708.html
-> >
->
-> Kind regards
-> Uffe
+--5dNcufZ4prhark0F
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Jun 10, 2020 at 10:58:24PM +0530, Vaibhav Agarwal wrote:
+> The existing GB Audio codec driver is dependent on MSM8994 Audio driver.
+> During the development stage, this dependency was configured due to
+> various changes involved in MSM Audio driver to enable addtional codec
+> card and some of the changes proposed in mainline ASoC framework.
+
+I'm not sure why you're copying me on a staging driver?  I don't recall
+the base driver having been submitted properly yet.
+
+--5dNcufZ4prhark0F
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7hGkYACgkQJNaLcl1U
+h9CrqAf+PTr4Z6aVY9XOlKtwcNflVCkOCX3qxnt1cwrgLmhUdXwDJ7MRRcKyzi2i
+vCqjsn1rj9GAkhIwt0CC9FRnC+jq7pGLNucnbEugF6VuEr4GWTxKkS2P+yldMV2x
+pdq12Re+x3tXN6oqziMyMcVWnqXXWdcxVaacEx2jqeXADr9pYkiQtN9ScJaERvPy
+ComnaHl20yeooKklC7JdWutUyFCxijoMdkqhTPtO8lu5MoSk7DxuRlFgWD6EhyoP
+Xx+2OdPgBaQMaIMk4GBm5Arornj2W80mLsVorGWV0SdWQ6gYuvoCn3U3h/IW6YS5
+0/RCEd2Bon5c7Hd0v5eAUxPVChr5+A==
+=yTza
+-----END PGP SIGNATURE-----
+
+--5dNcufZ4prhark0F--
