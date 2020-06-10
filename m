@@ -2,99 +2,109 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBCFAC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E79F7C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99A8520734
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C352720734
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:28:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eJlXWXK3"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bvvdjAg8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728462AbgFJL1O (ORCPT
+        id S1728498AbgFJL2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 07:27:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35298 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728264AbgFJL1N (ORCPT
+        Wed, 10 Jun 2020 07:28:13 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:14116 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728412AbgFJL2N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 07:27:13 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82CE0C03E96B
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 04:27:11 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id n24so1967686lji.10
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 04:27:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XvVT0Q6Hk8gXd3AYI+J/EIVEwNiVTODM/dshgyMDZU4=;
-        b=eJlXWXK3K5XrtvFPG7WyT6EXN1A2QpNzdCQR8UdhjweohwHMPIAfLe5THR/v4OWxZW
-         gT88jxdjvmN/se7OGh129REdPvN5JDnuhuc9sXKlF3NxbAZcJDuBD1S7in1wdtwjL0aw
-         w7W/oyY4iyLgTrMqvZIdlx/ZjNOidsb7RfSP8uC2Rn3BecNlv6LX9NJvAA1W4iNR1ZQ/
-         MN9OCNDZxfg+pIbfSoGZMI99CqN8dztkduCqXhFamv1W2ZmFK89Satd4uQJQOrHcCtZW
-         t+E+oMcDt3s+2IlY3tTiRm8zrqi1Cz9ZBJL+jfDOLEp6KfO0V8e+hsLtBpysqWbqB74X
-         gciw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XvVT0Q6Hk8gXd3AYI+J/EIVEwNiVTODM/dshgyMDZU4=;
-        b=LIgBKlS2/fpCRywDAbvvXyQnRnUcNFX7CCDfGEMKWh3ljd04de8pxh0Nx+mABfhlPF
-         jhZGFLZOBCkXECczHJAvgGwa/8pyxFWYvs08s+W+l3/6UmTPvpnftLROpljxfx3hexPU
-         HYJdI7MBvvhRIUxS0JUAUiEQzxSdZoR/VnKd92+M73A0SIpuZUKpeOmOQJBUzPSg0UdH
-         WsjndIo3YM2in/IeahFKNUvjCtj6RlHCbnNgeL5Ay7jOb03ELN5I1rgStnHyjb8MtlEK
-         1HEN1y1X0nilypmPr2dcoV15uOxK3Wn6e5aT1GOaud40ul87keYvNSkDXf+C4kl4ntEz
-         SmLQ==
-X-Gm-Message-State: AOAM530cA6+GiC6fvlC/I1CJDjTN0g3/TXtwS+4Ey7Fb0mE8/9R8vpK3
-        T1mhoAOsqA2NVEo8Vlg+NwIZpPTMfHYmUExq5hnYNA==
-X-Google-Smtp-Source: ABdhPJwNdb4XRg+9MmMDiZBQ2MdKsAyMHvs0gAkzW5F+xrKheuex5CzAkMV3Bl/mxWe97JW6UDqlvoZNaQDjG2HnEf0=
-X-Received: by 2002:a05:651c:112e:: with SMTP id e14mr1425096ljo.338.1591788429960;
- Wed, 10 Jun 2020 04:27:09 -0700 (PDT)
+        Wed, 10 Jun 2020 07:28:13 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ee0c3710000>; Wed, 10 Jun 2020 04:26:41 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 10 Jun 2020 04:28:12 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 10 Jun 2020 04:28:12 -0700
+Received: from [10.26.72.59] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Jun
+ 2020 11:28:09 +0000
+Subject: Re: [PATCH 4.4 00/36] 4.4.227-rc2 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20200609190211.793882726@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <36f2ca95-cdbf-14c9-87dc-d6746ff696ce@nvidia.com>
+Date:   Wed, 10 Jun 2020 12:28:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200608134300.76091-1-andriy.shevchenko@linux.intel.com> <20200608134300.76091-3-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20200608134300.76091-3-andriy.shevchenko@linux.intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 10 Jun 2020 13:26:59 +0200
-Message-ID: <CACRpkdZD5VNxZzycwbFWrzpT1TxkkViBuzAp5P0KQOW4oWjpVw@mail.gmail.com>
-Subject: Re: [PATCH v1 2/6] gpio: dwapb: Read GPIO base from snps,gpio-base property
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Lee Jones <lee.jones@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200609190211.793882726@linuxfoundation.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1591788401; bh=6daNWnj3djyNP2X6nMQ+uudIPivF6fz5MO5w51QjKkY=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=bvvdjAg8jSvOpHjWV4eZ1ZgGLYk+pzQ844ULWVrSZfhYGuEXGIHAyKjUtd4YgPqrn
+         /hBqDUAzYvEotligb3NY68WGC8zgXE/2o9rTsQKugOKgfpY1bUzHTaqHg7j/AVXtm/
+         oGu5COLjawBYk0vsLE2bzFdjvU7es5NyJXgG1hFp13vlrY/8nPXnN1g5Pe758B4jXo
+         HEgO9Xz2Vj3HgF9QV+kVUfW8xr6ZHIAkzB+8Ct0i5CZRHrc6gNMJPhR94s4UoI+m9y
+         frLRN+Cc4PLv4mkW6d3Mkbteyy6zdAthrUBfeh6vffQrLvbfFvRSW4i/2IhPFjQZ1K
+         Eu8D9Q5UzNNAQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 8, 2020 at 3:43 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
 
-> For backward compatibility with some legacy devices, introduce
-> a new property snps,gpio-base to read GPIO base. Don't advertise
-> to discourage users from utilizing it.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On 09/06/2020 20:18, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.227 release.
+> There are 36 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 11 Jun 2020 19:02:00 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.227-rc2.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-I usually have a very negative gut reaction to any attempts to hardcode
-the heavily deprecated use of the gpio_base for the global GPIO
-numberspace. The reason is clear from drivers/gpio/TODO I think.
 
-I need a really good explanation why this is needed, the only reason
-people have been pushing this in the past is "oh we are using the
-sysfs and we don't wanna change the GPIO numbers in our scripts"
-which I really want to push back on now that we have the chardev and
-the libgpiod utils.
+All tests are passing for Tegra ...
 
-If this is needed for something driver internal, it should stay in a
-driver-local
-variable.
+Test results for stable-v4.4:
+    6 builds:	6 pass, 0 fail
+    12 boots:	12 pass, 0 fail
+    23 tests:	23 pass, 0 fail
 
-Yours,
-Linus Walleij
+Linux version:	4.4.227-rc2-g61ef7e7aaf1d
+Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
+                tegra30-cardhu-a04
+
+Cheers
+Jon
+
+-- 
+nvpublic
