@@ -2,173 +2,572 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFA8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 00:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4D7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 00:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA134206F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 00:04:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591747457;
-	bh=TgYBh3hFmyr+9S0dXASc57F/8jC83xEDq/nM7svbx5s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=JwOLhusNJ4JyM3O3obaVNmmZzBUoYXDYetN0jO1wMHdARbEV/4IZVI/Qy+7zvDMXk
-	 uyq1i6TGmYDW/g2a9V1ZfyH0fE8lbu0l9PcijaBxqfzsSA+tDxFn66olGt6cHxYbu5
-	 bngpbI0FcX6QoAiPzYS5omjJLCxPB0oSiFfSYykM=
+	by mail.kernel.org (Postfix) with ESMTP id 560B2206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 00:10:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fpx/AANq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725963AbgFJAEE (ORCPT
+        id S1726045AbgFJAKp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 20:04:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49740 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725797AbgFJAED (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 20:04:03 -0400
-Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B3F5206F7;
-        Wed, 10 Jun 2020 00:04:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591747443;
-        bh=TgYBh3hFmyr+9S0dXASc57F/8jC83xEDq/nM7svbx5s=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Dp0+uMvreY94yy95BJjMnXIuKuk/WslM4u9jyUmvrdKoWkPey1gf5FLb07g9E05fz
-         DuxmoZYpnYcGHHV7cM8vw59TlYi0LIB6wrBhlQdcDr4sRV+zjiS23NNMAyHstPIP/H
-         e3Y1JGu1/jya/vYUhTDZVRewZe4laq72HIUXB1Hg=
-Date:   Tue, 9 Jun 2020 19:04:00 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Rajat Jain <rajatja@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Zubin Mithra <zsm@google.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
- "whitelisted" drivers
-Message-ID: <20200610000400.GA1473845@bjorn-Precision-5520>
+        Tue, 9 Jun 2020 20:10:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43918 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725885AbgFJAKo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 20:10:44 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEC25C08C5C2;
+        Tue,  9 Jun 2020 17:10:43 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id q8so405646qkm.12;
+        Tue, 09 Jun 2020 17:10:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=hWQexmQUlzSZE4PPulpbm6+Oxh4nRfJcBg27VaoObWo=;
+        b=fpx/AANqnBM+xS1zAGGrHg/DYV48FCL9BQ8EKiZhvE/wXUWfz0U3fz4WmCG29qCb04
+         j9FrWlU8dUqkYkZFX1rmNRmO9AVHsQKnltz4aJsqe/vmXa8SoQkxj9VhtGrAwb3QV8KV
+         f59ypfXuL8RPf2wEkNH+UitKBGfY1H/whuesSMB62f0QjldKnIT5FioQSGzdxOuUmKON
+         kwzmPbTJM+yzNUe2Dvl7ddbOhgHpQG+Jw9YH5oGhgNjwbfGxahlNSNDDo5Loqh57lBPJ
+         kVTXxO0+CFpHq87JkF8Ug7LiT904iC5n1TsJWiEHbiEkI/Fm3DU9sF3fWH4i6tenUd+j
+         80Jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=hWQexmQUlzSZE4PPulpbm6+Oxh4nRfJcBg27VaoObWo=;
+        b=maSd6CYjO8c/VZrV1WquoFrJZ3A7WTsnnBLzJlDLwD6AcHIvm9Qn+xRu+OlB+HSKma
+         FltGGu6DmRllueZCOOpBiaFOWbnlJvs+BdxgxLiUhU75Vvp4LNfm0xoPRl+n5VLBNH9D
+         LAGt83N3pk1WgVDSkPfjOjT4iPh3eeaFpEEsTGHQwji42nYTpUGa4wk15kCed4huWnab
+         bREn0kQIMqK9TVaIHI7e0OphCW0TBIayyAtp8jLUn9upNXytPgCBBjPaGgvHYkbPgzbw
+         xInwOwOeCFKsP58q0z4GP6ZS2eEy02s3Wqba+gZAEXijXtimf/lxWUGX/4wkRGYk/xcE
+         RgaA==
+X-Gm-Message-State: AOAM530KgiJjnQ0hW8cu0X9B++ZdxNdZppISYMHYeaZI5/BDoJCYlt8I
+        mm16nmmVqx8efV3iI636/E0Supc=
+X-Google-Smtp-Source: ABdhPJwonJPuCDUdHnhNz8a1XOnMtDKXPtodpyEpFzHboWQCHfHyc/+jeSSe5T2O84Oy2Mi1ygkZ/A==
+X-Received: by 2002:a05:620a:9d8:: with SMTP id y24mr505674qky.274.1591747842547;
+        Tue, 09 Jun 2020 17:10:42 -0700 (PDT)
+Received: from moria.home.lan ([2601:19b:c500:a1:7285:c2ff:fed5:c918])
+        by smtp.gmail.com with ESMTPSA id c2sm1757836qkl.58.2020.06.09.17.10.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2020 17:10:42 -0700 (PDT)
+From:   Kent Overstreet <kent.overstreet@gmail.com>
+To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        viro@zeniv.linux.org.uk, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org
+Cc:     Kent Overstreet <kent.overstreet@gmail.com>
+Subject: [PATCH 1/2] fs: Break generic_file_buffered_read up into multiple functions
+Date:   Tue,  9 Jun 2020 20:10:35 -0400
+Message-Id: <20200610001036.3904844-2-kent.overstreet@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200610001036.3904844-1-kent.overstreet@gmail.com>
+References: <20200610001036.3904844-1-kent.overstreet@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACK8Z6E0s-Y207sb-AqSHVB7KmhvDgJQFFaz6ijQ_0OS3Qjisw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 04:23:54PM -0700, Rajat Jain wrote:
-> Hi Bjorn,
-> 
-> Thanks for sending out the summary, I was about to send it out but got lazy.
-> 
-> On Tue, Jun 9, 2020 at 2:04 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > On Sun, Jun 07, 2020 at 01:36:32PM +0200, Greg Kroah-Hartman wrote:
-> >
-> > > Your "problem" I think can be summed up a bit more concise:
-> > >       - you don't trust kernel drivers to be "secure" for untrusted
-> > >         devices
-> > >       - you only want to bind kernel drivers to "internal" devices
-> > >         automatically as you "trust" drivers in that situation.
-> > >       - you want to only bind specific kernel drivers that you somehow
-> > >         feel are "secure" to untrusted devices "outside" of a system
-> > >         when those devices are added to the system.
-> > >
-> > > Is that correct?
-> > >
-> > > If so, fine, you can do that today with the bind/unbind ability of
-> > > drivers, right?  After boot with your "trusted" drivers bound to
-> > > "internal" devices, turn off autobind of drivers to devices and then
-> > > manually bind them when you see new devices show up, as those "must" be
-> > > from external devices (see the bind/unbind files that all drivers export
-> > > for how to do this, and old lwn.net articles, this feature has been
-> > > around for a very long time.)
-> > >
-> > > I know for USB you can do this, odds are PCI you can turn off
-> > > autobinding as well, as I think this is a per-bus flag somewhere.  If
-> > > that's not exported to userspace, should be trivial to do so, should be
-> > > somewere in the driver model already...
-> > >
-> > > Ah, yes, look at the "drivers_autoprobe" and "drivers_probe" files in
-> > > sysfs for all busses.  Do those not work for you?
-> > >
-> > > My other points are the fact that you don't want to put policy in the
-> > > kernel, and I think that you can do everything you want in userspace
-> > > today, except maybe the fact that trying to determine what is "inside"
-> > > and "outside" is not always easy given that most hardware does not
-> > > export this information properly, if at all.  Go work with the firmware
-> > > people on that issue please, that would be most helpful for everyone
-> > > involved to get that finally straightened out.
-> >
-> > To sketch this out, my understanding of how this would work is:
-> >
-> >   - Expose the PCI pdev->untrusted bit in sysfs.  We don't expose this
-> >     today, but doing so would be trivial.  I think I would prefer a
-> >     sysfs name like "external" so it's more descriptive and less of a
-> >     judgment.
-> 
-> Yes. I think we should probably semantically differentiate between
-> "external" and "external facing" devices. Root ports and downstream
-> ports can be "external facing" but are actually internal devices.
-> Anything below an "external facing" device is "external". So the sysfs
-> attribute "external" should be set only for devices that are truly
-> external.
+This is prep work for changing generic_file_buffered_read() to use
+find_get_pages_contig() to batch up all the pagecache lookups.
 
-Good point; we (maybe you? :)) should fix that edge case.
+This patch should be functionally identical to the existing code and
+changes as little as of the flow control as possible. More refactoring
+could be done, this patch is intended to be relatively minimal.
 
-> Just a suggestion: Do you think an enum attribute may be better
-> instead, whose values could be "internal" / "external" /
-> "external-facing" in case need arises later to distinguish between
-> them?
+Signed-off-by: Kent Overstreet <kent.overstreet@gmail.com>
+---
+ mm/filemap.c | 418 ++++++++++++++++++++++++++++-----------------------
+ 1 file changed, 228 insertions(+), 190 deletions(-)
 
-I don't see the need for an enum yet.  Maybe we should add that
-if/when we do need it?
+diff --git a/mm/filemap.c b/mm/filemap.c
+index e67fa8ab48..206d51a1c9 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -2051,6 +2051,210 @@ static void shrink_readahead_size_eio(struct file_ra_state *ra)
+ 	ra->ra_pages /= 4;
+ }
+ 
++static int generic_file_buffered_read_page_ok(struct kiocb *iocb,
++			struct iov_iter *iter,
++			struct page *page)
++{
++	struct address_space *mapping = iocb->ki_filp->f_mapping;
++	struct inode *inode = mapping->host;
++	struct file_ra_state *ra = &iocb->ki_filp->f_ra;
++	unsigned offset = iocb->ki_pos & ~PAGE_MASK;
++	unsigned bytes, copied;
++	loff_t isize, end_offset;
++
++	BUG_ON(iocb->ki_pos >> PAGE_SHIFT != page->index);
++
++	/*
++	 * i_size must be checked after we know the page is Uptodate.
++	 *
++	 * Checking i_size after the check allows us to calculate
++	 * the correct value for "bytes", which means the zero-filled
++	 * part of the page is not copied back to userspace (unless
++	 * another truncate extends the file - this is desired though).
++	 */
++
++	isize = i_size_read(inode);
++	if (unlikely(iocb->ki_pos >= isize))
++		return 1;
++
++	end_offset = min_t(loff_t, isize, iocb->ki_pos + iter->count);
++
++	bytes = min_t(loff_t, end_offset - iocb->ki_pos, PAGE_SIZE - offset);
++
++	/* If users can be writing to this page using arbitrary
++	 * virtual addresses, take care about potential aliasing
++	 * before reading the page on the kernel side.
++	 */
++	if (mapping_writably_mapped(mapping))
++		flush_dcache_page(page);
++
++	/*
++	 * Ok, we have the page, and it's up-to-date, so
++	 * now we can copy it to user space...
++	 */
++
++	copied = copy_page_to_iter(page, offset, bytes, iter);
++
++	iocb->ki_pos += copied;
++
++	/*
++	 * When a sequential read accesses a page several times,
++	 * only mark it as accessed the first time.
++	 */
++	if (iocb->ki_pos >> PAGE_SHIFT != ra->prev_pos >> PAGE_SHIFT)
++		mark_page_accessed(page);
++
++	ra->prev_pos = iocb->ki_pos;
++
++	if (copied < bytes)
++		return -EFAULT;
++
++	return !iov_iter_count(iter) || iocb->ki_pos == isize;
++}
++
++static struct page *
++generic_file_buffered_read_readpage(struct file *filp,
++				    struct address_space *mapping,
++				    struct page *page)
++{
++	struct file_ra_state *ra = &filp->f_ra;
++	int error;
++
++	/*
++	 * A previous I/O error may have been due to temporary
++	 * failures, eg. multipath errors.
++	 * PG_error will be set again if readpage fails.
++	 */
++	ClearPageError(page);
++	/* Start the actual read. The read will unlock the page. */
++	error = mapping->a_ops->readpage(filp, page);
++
++	if (unlikely(error)) {
++		put_page(page);
++		return error != AOP_TRUNCATED_PAGE ? ERR_PTR(error) : NULL;
++	}
++
++	if (!PageUptodate(page)) {
++		error = lock_page_killable(page);
++		if (unlikely(error)) {
++			put_page(page);
++			return ERR_PTR(error);
++		}
++		if (!PageUptodate(page)) {
++			if (page->mapping == NULL) {
++				/*
++				 * invalidate_mapping_pages got it
++				 */
++				unlock_page(page);
++				put_page(page);
++				return NULL;
++			}
++			unlock_page(page);
++			shrink_readahead_size_eio(ra);
++			put_page(page);
++			return ERR_PTR(-EIO);
++		}
++		unlock_page(page);
++	}
++
++	return page;
++}
++
++static struct page *
++generic_file_buffered_read_pagenotuptodate(struct file *filp,
++					   struct iov_iter *iter,
++					   struct page *page,
++					   loff_t pos, loff_t count)
++{
++	struct address_space *mapping = filp->f_mapping;
++	struct inode *inode = mapping->host;
++	int error;
++
++	/*
++	 * See comment in do_read_cache_page on why
++	 * wait_on_page_locked is used to avoid unnecessarily
++	 * serialisations and why it's safe.
++	 */
++	error = wait_on_page_locked_killable(page);
++	if (unlikely(error)) {
++		put_page(page);
++		return ERR_PTR(error);
++	}
++
++	if (PageUptodate(page))
++		return page;
++
++	if (inode->i_blkbits == PAGE_SHIFT ||
++	    !mapping->a_ops->is_partially_uptodate)
++		goto page_not_up_to_date;
++	/* pipes can't handle partially uptodate pages */
++	if (unlikely(iov_iter_is_pipe(iter)))
++		goto page_not_up_to_date;
++	if (!trylock_page(page))
++		goto page_not_up_to_date;
++	/* Did it get truncated before we got the lock? */
++	if (!page->mapping)
++		goto page_not_up_to_date_locked;
++
++	if (!mapping->a_ops->is_partially_uptodate(page,
++				pos & ~PAGE_MASK, count))
++		goto page_not_up_to_date_locked;
++	unlock_page(page);
++	return page;
++
++page_not_up_to_date:
++	/* Get exclusive access to the page ... */
++	error = lock_page_killable(page);
++	if (unlikely(error)) {
++		put_page(page);
++		return ERR_PTR(error);
++	}
++
++page_not_up_to_date_locked:
++	/* Did it get truncated before we got the lock? */
++	if (!page->mapping) {
++		unlock_page(page);
++		put_page(page);
++		return NULL;
++	}
++
++	/* Did somebody else fill it already? */
++	if (PageUptodate(page)) {
++		unlock_page(page);
++		return page;
++	}
++
++	return generic_file_buffered_read_readpage(filp, mapping, page);
++}
++
++static struct page *
++generic_file_buffered_read_no_cached_page(struct kiocb *iocb,
++					  struct iov_iter *iter)
++{
++	struct file *filp = iocb->ki_filp;
++	struct address_space *mapping = filp->f_mapping;
++	pgoff_t index = iocb->ki_pos >> PAGE_SHIFT;
++	struct page *page;
++	int error;
++
++	/*
++	 * Ok, it wasn't cached, so we need to create a new
++	 * page..
++	 */
++	page = page_cache_alloc(mapping);
++	if (!page)
++		return ERR_PTR(-ENOMEM);
++
++	error = add_to_page_cache_lru(page, mapping, index,
++				      mapping_gfp_constraint(mapping, GFP_KERNEL));
++	if (error) {
++		put_page(page);
++		return error != -EEXIST ? ERR_PTR(error) : NULL;
++	}
++
++	return generic_file_buffered_read_readpage(filp, mapping, page);
++}
++
+ /**
+  * generic_file_buffered_read - generic file read routine
+  * @iocb:	the iocb to read
+@@ -2074,29 +2278,19 @@ static ssize_t generic_file_buffered_read(struct kiocb *iocb,
+ 	struct address_space *mapping = filp->f_mapping;
+ 	struct inode *inode = mapping->host;
+ 	struct file_ra_state *ra = &filp->f_ra;
+-	loff_t *ppos = &iocb->ki_pos;
+-	pgoff_t index;
++	size_t orig_count = iov_iter_count(iter);
+ 	pgoff_t last_index;
+-	pgoff_t prev_index;
+-	unsigned long offset;      /* offset into pagecache page */
+-	unsigned int prev_offset;
+ 	int error = 0;
+ 
+-	if (unlikely(*ppos >= inode->i_sb->s_maxbytes))
++	if (unlikely(iocb->ki_pos >= inode->i_sb->s_maxbytes))
+ 		return 0;
+ 	iov_iter_truncate(iter, inode->i_sb->s_maxbytes);
+ 
+-	index = *ppos >> PAGE_SHIFT;
+-	prev_index = ra->prev_pos >> PAGE_SHIFT;
+-	prev_offset = ra->prev_pos & (PAGE_SIZE-1);
+-	last_index = (*ppos + iter->count + PAGE_SIZE-1) >> PAGE_SHIFT;
+-	offset = *ppos & ~PAGE_MASK;
++	last_index = (iocb->ki_pos + iter->count + PAGE_SIZE-1) >> PAGE_SHIFT;
+ 
+ 	for (;;) {
++		pgoff_t index = iocb->ki_pos >> PAGE_SHIFT;
+ 		struct page *page;
+-		pgoff_t end_index;
+-		loff_t isize;
+-		unsigned long nr, ret;
+ 
+ 		cond_resched();
+ find_page:
+@@ -2113,8 +2307,15 @@ static ssize_t generic_file_buffered_read(struct kiocb *iocb,
+ 					ra, filp,
+ 					index, last_index - index);
+ 			page = find_get_page(mapping, index);
+-			if (unlikely(page == NULL))
+-				goto no_cached_page;
++			if (unlikely(page == NULL)) {
++				page = generic_file_buffered_read_no_cached_page(iocb, iter);
++				if (!page)
++					goto find_page;
++				if (IS_ERR(page)) {
++					error = PTR_ERR(page);
++					goto out;
++				}
++			}
+ 		}
+ 		if (PageReadahead(page)) {
+ 			page_cache_async_readahead(mapping,
+@@ -2124,199 +2325,36 @@ static ssize_t generic_file_buffered_read(struct kiocb *iocb,
+ 		if (!PageUptodate(page)) {
+ 			if (iocb->ki_flags & IOCB_NOWAIT) {
+ 				put_page(page);
+-				goto would_block;
+-			}
+-
+-			/*
+-			 * See comment in do_read_cache_page on why
+-			 * wait_on_page_locked is used to avoid unnecessarily
+-			 * serialisations and why it's safe.
+-			 */
+-			error = wait_on_page_locked_killable(page);
+-			if (unlikely(error))
+-				goto readpage_error;
+-			if (PageUptodate(page))
+-				goto page_ok;
+-
+-			if (inode->i_blkbits == PAGE_SHIFT ||
+-					!mapping->a_ops->is_partially_uptodate)
+-				goto page_not_up_to_date;
+-			/* pipes can't handle partially uptodate pages */
+-			if (unlikely(iov_iter_is_pipe(iter)))
+-				goto page_not_up_to_date;
+-			if (!trylock_page(page))
+-				goto page_not_up_to_date;
+-			/* Did it get truncated before we got the lock? */
+-			if (!page->mapping)
+-				goto page_not_up_to_date_locked;
+-			if (!mapping->a_ops->is_partially_uptodate(page,
+-							offset, iter->count))
+-				goto page_not_up_to_date_locked;
+-			unlock_page(page);
+-		}
+-page_ok:
+-		/*
+-		 * i_size must be checked after we know the page is Uptodate.
+-		 *
+-		 * Checking i_size after the check allows us to calculate
+-		 * the correct value for "nr", which means the zero-filled
+-		 * part of the page is not copied back to userspace (unless
+-		 * another truncate extends the file - this is desired though).
+-		 */
+-
+-		isize = i_size_read(inode);
+-		end_index = (isize - 1) >> PAGE_SHIFT;
+-		if (unlikely(!isize || index > end_index)) {
+-			put_page(page);
+-			goto out;
+-		}
+-
+-		/* nr is the maximum number of bytes to copy from this page */
+-		nr = PAGE_SIZE;
+-		if (index == end_index) {
+-			nr = ((isize - 1) & ~PAGE_MASK) + 1;
+-			if (nr <= offset) {
+-				put_page(page);
++				error = -EAGAIN;
+ 				goto out;
+ 			}
+-		}
+-		nr = nr - offset;
+-
+-		/* If users can be writing to this page using arbitrary
+-		 * virtual addresses, take care about potential aliasing
+-		 * before reading the page on the kernel side.
+-		 */
+-		if (mapping_writably_mapped(mapping))
+-			flush_dcache_page(page);
+-
+-		/*
+-		 * When a sequential read accesses a page several times,
+-		 * only mark it as accessed the first time.
+-		 */
+-		if (prev_index != index || offset != prev_offset)
+-			mark_page_accessed(page);
+-		prev_index = index;
+-
+-		/*
+-		 * Ok, we have the page, and it's up-to-date, so
+-		 * now we can copy it to user space...
+-		 */
+-
+-		ret = copy_page_to_iter(page, offset, nr, iter);
+-		offset += ret;
+-		index += offset >> PAGE_SHIFT;
+-		offset &= ~PAGE_MASK;
+-		prev_offset = offset;
+ 
+-		put_page(page);
+-		written += ret;
+-		if (!iov_iter_count(iter))
+-			goto out;
+-		if (ret < nr) {
+-			error = -EFAULT;
+-			goto out;
+-		}
+-		continue;
+-
+-page_not_up_to_date:
+-		/* Get exclusive access to the page ... */
+-		error = lock_page_killable(page);
+-		if (unlikely(error))
+-			goto readpage_error;
+-
+-page_not_up_to_date_locked:
+-		/* Did it get truncated before we got the lock? */
+-		if (!page->mapping) {
+-			unlock_page(page);
+-			put_page(page);
+-			continue;
+-		}
+-
+-		/* Did somebody else fill it already? */
+-		if (PageUptodate(page)) {
+-			unlock_page(page);
+-			goto page_ok;
+-		}
+-
+-readpage:
+-		/*
+-		 * A previous I/O error may have been due to temporary
+-		 * failures, eg. multipath errors.
+-		 * PG_error will be set again if readpage fails.
+-		 */
+-		ClearPageError(page);
+-		/* Start the actual read. The read will unlock the page. */
+-		error = mapping->a_ops->readpage(filp, page);
+-
+-		if (unlikely(error)) {
+-			if (error == AOP_TRUNCATED_PAGE) {
+-				put_page(page);
+-				error = 0;
++			page = generic_file_buffered_read_pagenotuptodate(filp,
++					iter, page, iocb->ki_pos, iter->count);
++			if (!page)
+ 				goto find_page;
++			if (IS_ERR(page)) {
++				error = PTR_ERR(page);
++				goto out;
+ 			}
+-			goto readpage_error;
+-		}
+-
+-		if (!PageUptodate(page)) {
+-			error = lock_page_killable(page);
+-			if (unlikely(error))
+-				goto readpage_error;
+-			if (!PageUptodate(page)) {
+-				if (page->mapping == NULL) {
+-					/*
+-					 * invalidate_mapping_pages got it
+-					 */
+-					unlock_page(page);
+-					put_page(page);
+-					goto find_page;
+-				}
+-				unlock_page(page);
+-				shrink_readahead_size_eio(ra);
+-				error = -EIO;
+-				goto readpage_error;
+-			}
+-			unlock_page(page);
+ 		}
+ 
+-		goto page_ok;
+-
+-readpage_error:
+-		/* UHHUH! A synchronous read error occurred. Report it */
++		error = generic_file_buffered_read_page_ok(iocb, iter, page);
+ 		put_page(page);
+-		goto out;
+ 
+-no_cached_page:
+-		/*
+-		 * Ok, it wasn't cached, so we need to create a new
+-		 * page..
+-		 */
+-		page = page_cache_alloc(mapping);
+-		if (!page) {
+-			error = -ENOMEM;
+-			goto out;
+-		}
+-		error = add_to_page_cache_lru(page, mapping, index,
+-				mapping_gfp_constraint(mapping, GFP_KERNEL));
+ 		if (error) {
+-			put_page(page);
+-			if (error == -EEXIST) {
++			if (error > 0)
+ 				error = 0;
+-				goto find_page;
+-			}
+ 			goto out;
+ 		}
+-		goto readpage;
+ 	}
+ 
+ would_block:
+ 	error = -EAGAIN;
+ out:
+-	ra->prev_pos = prev_index;
+-	ra->prev_pos <<= PAGE_SHIFT;
+-	ra->prev_pos |= prev_offset;
+-
+-	*ppos = ((loff_t)index << PAGE_SHIFT) + offset;
+ 	file_accessed(filp);
++	written += orig_count - iov_iter_count(iter);
++
+ 	return written ? written : error;
+ }
+ 
+-- 
+2.27.0
 
-> >   - Early userspace code prevents modular drivers from automatically
-> >     binding to PCI devices:
-> >
-> >       echo 0 > /sys/bus/pci/drivers_autoprobe
-> 
-> Yes.
-> I believe this setting will apply it equally to both modular and
-> statically linked drivers?
-
-Yes.  The test is in bus_probe_device(), and it does the same for both
-modular and statically linked drivers.
-
-But for statically linked drivers, it only prevents them from binding
-to *hot-added* devices.  They will claim devices present at boot even
-before userspace code can run.
-
-> The one thing that still needs more thought is how about the
-> "pcieport" driver that enumerates the PCI bridges. I'm unsure if it
-> needs to be whitelisted for further enumeration downstream. What do
-> you think?
-
-The pcieport driver is required for AER, PCIe native hotplug, PME,
-etc., and it cannot be a module, so the whitelist wouldn't apply to
-it.  I assume you need hotplug support, so you would have pcieport
-enabled and built in statically.
-
-If you're using ACPI hotplug, that doesn't require pcieport.
