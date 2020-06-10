@@ -2,62 +2,66 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4295DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E76B4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10D5820814
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:51:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA8732072E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:51:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Kz975543"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LA1/0Km2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726507AbgFJVvF (ORCPT
+        id S1726581AbgFJVvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 17:51:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47388 "EHLO
+        Wed, 10 Jun 2020 17:51:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbgFJVvF (ORCPT
+        with ESMTP id S1726294AbgFJVvJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 17:51:05 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0318DC03E96B
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 14:51:05 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id f16so4078020ybp.5
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 14:51:04 -0700 (PDT)
+        Wed, 10 Jun 2020 17:51:09 -0400
+Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B5C4C03E96F
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 14:51:09 -0700 (PDT)
+Received: by mail-qt1-x84a.google.com with SMTP id x6so3132651qts.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 14:51:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=rWF/ki1/Yh6gHIVywi4l8h1I3LPzmZjQym2kiDmagOU=;
-        b=Kz975543C6Q/egJ+6V6244sjdLgzr8Mo//mkbKXG2BMHVPomlKBPc1o5vkFLbpJ0TQ
-         EnCra+KPjGVscR5o4IKn3MqLXKPpDsY871REMqmq9JWPKwT4dLZ0ynPfg1PQkdPb1mi3
-         gDvBaX+m+UZGbrkk+Ij5tS7Gj+MKEmJd09mtQj62qkuh21ma9FJSsloiJbO3iGSJGuki
-         Wu6/NwpV1kbGU4IT2fZvOEJ1edEyEV/c2+9uuioTvdHznra3TI12fDcluvKu4ahyqXja
-         YIZympQAGGI4lYRoaLcW04dv/aAG3O1TjkEk+ia5IDv/3o6F+vuiIoYaNoTOqW0S5HZ6
-         yLgA==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=GaZ5yNVujUQuXOGBEqSALglLcJ45S/WJV+13DFibPQE=;
+        b=LA1/0Km2mwIXaj77u2/XU/apZxKBoqS6v4QV7EB/f3gM96+B+n931Jy2NYfzyqSbm/
+         45RXwHq8HQnzOJnDOcdaOkw8tzRyb7t5U2V+t/rz3VjBb0W4AHC1zCvXZ7B61OO8ZiNF
+         j+wMHQQ6bxeHhJ6tGYN82omniQTzBNZvPEvx3oUYfnJBX/cULG4mLH4Qgr1n/KK1ejM+
+         34qtyGv+wpBc0nvVARxKWx1etIjzNtx+EOF66DAmvbxGmnmFtVQynKkqxgeCKXUze3BZ
+         VAt+lwYN2pGvVADYkTvxj9NAQmvGE3JZX6mc+cy08Q4EX0KxPOyqOe0hPOvmL956FyAn
+         U2ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=rWF/ki1/Yh6gHIVywi4l8h1I3LPzmZjQym2kiDmagOU=;
-        b=A4+kFPxXzYVY7OvJqkWaSTL2bPigzHwa3wp+i1+guGagVfrJaHVhicOfn14tBuoARR
-         cebp2YNDLI6vKkNKge+GOBYenFqckMarevTSLM4Z/Dr8twvrcgw6qKFmZDjXqJdyMR7h
-         XNo9FGQQymiiepp9UEINgu+hUWBquU+CaKAZkbHMmRNh/VPVIlqzq5DRJjeoyG0VBy7e
-         EO9iDysW+LTtVGmwabcI3Fe7grFtOozLiLZxo6TLOzSwbkpiGr7KHUTEldgMaB7Atvjr
-         PRJgcZDgyjvUugcZ6speUOUg7gzGV8T+hqRX6SO8RvpDaYX8sLqaCfhYN+Cmdff4zqJL
-         51pw==
-X-Gm-Message-State: AOAM533KwY3M8wJ21e2QDY4P3IRzM9cyhz+s9gnIjcwPHwhgUV90ComA
-        liTeJ3RjPQdBHzBn+v7/H90lZxK28Z7c
-X-Google-Smtp-Source: ABdhPJx4chO/ehT1h76uyuUdiuC72KQgiCHLrDnmR2Nc+ebOQhx7pV9tjE/kEHxsnSly+aDSnLYEXzaLTJRJ
-X-Received: by 2002:a25:2d4c:: with SMTP id s12mr8322618ybe.307.1591825864204;
- Wed, 10 Jun 2020 14:51:04 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 14:50:50 -0700
-Message-Id: <20200610215100.256599-1-irogers@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=GaZ5yNVujUQuXOGBEqSALglLcJ45S/WJV+13DFibPQE=;
+        b=cuZvfh4CyP5ayPrIx0jPqEW7p8ZDoE+ZhYoGKYZHoONImwTPzGAKx79gtt/ufEFnY2
+         ln7Rrzlg10Zjb65SVnrQDatldHr18ovcc74Ing8MJ+SdGqSHtIHx5BbUc5CBmQC/zEdB
+         Hw7q2XA6lW0C2hkZWcx74F3drrG0633hQZjWbWsb5ioKd9VVOYtAyO6mOkfPwPf+cvKn
+         f4hRoRd0+td3DAKvejFNJgSeKegTM0xJJsx9XZCtiHTQVPrvTyd+Ke23OQpD2Rtf5s9B
+         6O/hm4lDxh084naapwXlB4FkpAvbhejqVfVPo2KL6gelf5malYvoWhNug8YAmp6JBnZf
+         Pm9w==
+X-Gm-Message-State: AOAM532Txdj1stmn5A2rlM+d6JPU5AbxFG6wtdrWOAnCBm3W9QRJMtrI
+        ZVRk2sxjkrMM7ne6FiUVpjGF5qwVkFik
+X-Google-Smtp-Source: ABdhPJwpFNLo0e/9mKtERtZ4a4qHU2viFMGyKLu03DBSMuGnAk2iIRRv/VoJcgnaJtkHnrew7lw1z1s0zkA4
+X-Received: by 2002:a05:6214:15c3:: with SMTP id p3mr4867252qvz.192.1591825868082;
+ Wed, 10 Jun 2020 14:51:08 -0700 (PDT)
+Date:   Wed, 10 Jun 2020 14:50:52 -0700
+In-Reply-To: <20200610215100.256599-1-irogers@google.com>
+Message-Id: <20200610215100.256599-3-irogers@google.com>
 Mime-Version: 1.0
+References: <20200610215100.256599-1-irogers@google.com>
 X-Mailer: git-send-email 2.27.0.278.ge193c7cf3a9-goog
-Subject: [PATCH 00/10] perf parse-events: enable more flex/bison warnings
+Subject: [PATCH 02/10] perf parse-events: Use automatic variable for yacc input
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -79,32 +83,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All C compiler warnings are disabled are disabled by -w. This change
-removes the -w from flex and bison targets. To avoid implicit
-declarations header files are declared as targets and included.
+This reduces the command line size slightly.
 
-Tested with GCC 9.3.0 and clang 9.0.1.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/Build | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Previously posted as a single change:
-https://lore.kernel.org/lkml/20200609234344.3795-2-irogers@google.com/
-
-Ian Rogers (10):
-  perf parse-events: Use automatic variable for flex input
-  perf parse-events: Use automatic variable for yacc input
-  perf pmu: Add bison debug build flag
-  perf pmu: Add flex debug build flag
-  perf parse-events: Declare flex header file output
-  perf parse-events: Declare bison header file output
-  perf parse-events: Disable a subset of flex warnings
-  perf expr: Avoid implicit lex function declaration
-  perf parse-events: Avoid implicit lex function declaration
-  perf parse-events: Disable a subset of bison warnings
-
- tools/perf/util/Build          | 50 +++++++++++++++++++++-------------
- tools/perf/util/expr.y         |  2 ++
- tools/perf/util/parse-events.y |  1 +
- 3 files changed, 34 insertions(+), 19 deletions(-)
-
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 66cf009f78d8..4e1aa52d75a8 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -197,7 +197,7 @@ $(OUTPUT)util/parse-events-flex.c: util/parse-events.l $(OUTPUT)util/parse-event
+ 
+ $(OUTPUT)util/parse-events-bison.c: util/parse-events.y
+ 	$(call rule_mkdir)
+-	$(Q)$(call echo-cmd,bison)$(BISON) -v util/parse-events.y -d $(PARSER_DEBUG_BISON) -o $@ -p parse_events_
++	$(Q)$(call echo-cmd,bison)$(BISON) -v $< -d $(PARSER_DEBUG_BISON) -o $@ -p parse_events_
+ 
+ $(OUTPUT)util/expr-flex.c: util/expr.l $(OUTPUT)util/expr-bison.c
+ 	$(call rule_mkdir)
+@@ -205,7 +205,7 @@ $(OUTPUT)util/expr-flex.c: util/expr.l $(OUTPUT)util/expr-bison.c
+ 
+ $(OUTPUT)util/expr-bison.c: util/expr.y
+ 	$(call rule_mkdir)
+-	$(Q)$(call echo-cmd,bison)$(BISON) -v util/expr.y -d $(PARSER_DEBUG_BISON) -o $@ -p expr_
++	$(Q)$(call echo-cmd,bison)$(BISON) -v $< -d $(PARSER_DEBUG_BISON) -o $@ -p expr_
+ 
+ $(OUTPUT)util/pmu-flex.c: util/pmu.l $(OUTPUT)util/pmu-bison.c
+ 	$(call rule_mkdir)
+@@ -213,7 +213,7 @@ $(OUTPUT)util/pmu-flex.c: util/pmu.l $(OUTPUT)util/pmu-bison.c
+ 
+ $(OUTPUT)util/pmu-bison.c: util/pmu.y
+ 	$(call rule_mkdir)
+-	$(Q)$(call echo-cmd,bison)$(BISON) -v util/pmu.y -d -o $@ -p perf_pmu_
++	$(Q)$(call echo-cmd,bison)$(BISON) -v $< -d -o $@ -p perf_pmu_
+ 
+ CFLAGS_parse-events-flex.o  += -w
+ CFLAGS_pmu-flex.o           += -w
 -- 
 2.27.0.278.ge193c7cf3a9-goog
 
