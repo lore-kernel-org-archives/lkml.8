@@ -2,121 +2,176 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E31C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED790C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A33C220734
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:38:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD79D2072F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:38:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730254AbgFJPiC (ORCPT
+        id S1730267AbgFJPiI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 11:38:02 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:43200 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726955AbgFJPiB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 11:38:01 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jj2ne-0003Cl-R4; Wed, 10 Jun 2020 15:37:59 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     alex.hung@canonical.com
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org (open list:INTEL HID EVENT DRIVER),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] platform/x86: intel-hid: Use hp-wireless for rfkill on HP platforms
-Date:   Wed, 10 Jun 2020 23:37:47 +0800
-Message-Id: <20200610153747.27040-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 10 Jun 2020 11:38:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34326 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726955AbgFJPiH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 11:38:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 9CE7BAE33;
+        Wed, 10 Jun 2020 15:38:09 +0000 (UTC)
+Message-ID: <82a21cbdca6bced2ee8e4e5a857faaa31a672193.camel@suse.de>
+Subject: Re: [PATCH v2 2/9] reset: Add Raspberry Pi 4 firmware reset
+ controller
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Florian Fainelli <florian.fainelli@broadcom.com>,
+        f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
+        p.zabel@pengutronix.de, linux-kernel@vger.kernel.org
+Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org, helgaas@kernel.org,
+        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
+        lorenzo.pieralisi@arm.com
+Date:   Wed, 10 Jun 2020 17:37:58 +0200
+In-Reply-To: <6ab60539-5aa2-17dc-21d5-1bae9ec259f6@broadcom.com>
+References: <20200609175003.19793-1-nsaenzjulienne@suse.de>
+         <20200609175003.19793-3-nsaenzjulienne@suse.de>
+         <6ab60539-5aa2-17dc-21d5-1bae9ec259f6@broadcom.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-iY+/tawMFmcwHBpEZ1lp"
+User-Agent: Evolution 3.36.2 
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wireless hotkey on HP platforms can trigger two events, if both
-hp-wireless and intel-hid are supported. Two events at the same time
-renders wireless hotkey useless.
 
-HP confirmed that hp-wireless (HPQ6001) should always be the canonical
-source of wireless hotkey event, so skip registering rfkill hotkey if
-HPQ6001 is present.
+--=-iY+/tawMFmcwHBpEZ1lp
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
- drivers/platform/x86/intel-hid.c | 31 ++++++++++++++++++++++++++++++-
- 1 file changed, 30 insertions(+), 1 deletion(-)
+On Tue, 2020-06-09 at 11:14 -0700, Florian Fainelli wrote:
+>=20
+> On 6/9/2020 10:49 AM, Nicolas Saenz Julienne wrote:
+> > Raspberry Pi 4's co-processor controls some of the board's HW
+> > initialization process, but it's up to Linux to trigger it when
+> > relevant. Introduce a reset controller capable of interfacing with
+> > RPi4's co-processor that models these firmware initialization routines =
+as
+> > reset lines.
+> >=20
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> >=20
+> > ---
+> >=20
+> > Changes since v1:
+> >   - Make the whole driver less USB centric as per Florian's comments
+> >=20
+> >  drivers/reset/Kconfig             |  11 +++
+> >  drivers/reset/Makefile            |   1 +
+> >  drivers/reset/reset-raspberrypi.c | 126 ++++++++++++++++++++++++++++++
+> >  3 files changed, 138 insertions(+)
+> >  create mode 100644 drivers/reset/reset-raspberrypi.c
+> >=20
+> > diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+> > index d9efbfd29646..97e848740e13 100644
+> > --- a/drivers/reset/Kconfig
+> > +++ b/drivers/reset/Kconfig
+> > @@ -140,6 +140,17 @@ config RESET_QCOM_PDC
+> >  	  to control reset signals provided by PDC for Modem, Compute,
+> >  	  Display, GPU, Debug, AOP, Sensors, Audio, SP and APPS.
+> > =20
+> > +config RESET_RASPBERRYPI
+> > +	tristate "Raspberry Pi 4 Firmware Reset Driver"
+> > +	depends on RASPBERRYPI_FIRMWARE || (RASPBERRYPI_FIRMWARE=3Dn &&
+> > COMPILE_TEST)
+> > +	default USB_XHCI_PCI
+> > +	help
+> > +	  Raspberry Pi 4's co-processor controls some of the board's HW
+> > +	  initialization process, but it's up to Linux to trigger it when
+> > +	  relevant. This driver provides a reset controller capable of
+> > +	  interfacing with RPi4's co-processor and model these firmware
+> > +	  initialization routines as reset lines.
+> > +
+> >  config RESET_SCMI
+> >  	tristate "Reset driver controlled via ARM SCMI interface"
+> >  	depends on ARM_SCMI_PROTOCOL || COMPILE_TEST
+> > diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+> > index 249ed357c997..16947610cc3b 100644
+> > --- a/drivers/reset/Makefile
+> > +++ b/drivers/reset/Makefile
+> > @@ -21,6 +21,7 @@ obj-$(CONFIG_RESET_OXNAS) +=3D reset-oxnas.o
+> >  obj-$(CONFIG_RESET_PISTACHIO) +=3D reset-pistachio.o
+> >  obj-$(CONFIG_RESET_QCOM_AOSS) +=3D reset-qcom-aoss.o
+> >  obj-$(CONFIG_RESET_QCOM_PDC) +=3D reset-qcom-pdc.o
+> > +obj-$(CONFIG_RESET_RASPBERRYPI) +=3D reset-raspberrypi.o
+> >  obj-$(CONFIG_RESET_SCMI) +=3D reset-scmi.o
+> >  obj-$(CONFIG_RESET_SIMPLE) +=3D reset-simple.o
+> >  obj-$(CONFIG_RESET_STM32MP157) +=3D reset-stm32mp1.o
+> > diff --git a/drivers/reset/reset-raspberrypi.c b/drivers/reset/reset-
+> > raspberrypi.c
+> > new file mode 100644
+> > index 000000000000..5fc8c6319a20
+> > --- /dev/null
+> > +++ b/drivers/reset/reset-raspberrypi.c
+> > @@ -0,0 +1,126 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Raspberry Pi 4 firmware reset driver
+> > + *
+> > + * Copyright (C) 2020 Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > + */
+> > +#include <linux/delay.h>
+> > +#include <linux/device.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/reset-controller.h>
+> > +#include <soc/bcm2835/raspberrypi-firmware.h>
+> > +
+> > +struct rpi_reset {
+> > +	struct reset_controller_dev rcdev;
+> > +	struct rpi_firmware *fw;
+> > +};
+> > +
+> > +enum rpi_reset_ids {
+> > +	RASPBERRYPI_FIRMWARE_RESET_ID_USB,
+>=20
+> You should probably move this to a header file under
+> include/dt-bindings/reset/ in order to ensure that what gets referenced
+> by the DTS is in sync with what the driver knows about.
+>=20
+> With that:
+>=20
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 
-diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
-index 9ee79b74311c..31091c8faf70 100644
---- a/drivers/platform/x86/intel-hid.c
-+++ b/drivers/platform/x86/intel-hid.c
-@@ -25,6 +25,8 @@ static const struct acpi_device_id intel_hid_ids[] = {
- };
- MODULE_DEVICE_TABLE(acpi, intel_hid_ids);
- 
-+static bool hp_wireless_present;
-+
- /* In theory, these are HID usages. */
- static const struct key_entry intel_hid_keymap[] = {
- 	/* 1: LSuper (Page 0x07, usage 0xE3) -- unclear what to do */
-@@ -49,6 +51,29 @@ static const struct key_entry intel_hid_keymap[] = {
- 	{ KE_END },
- };
- 
-+static const struct key_entry intel_hid_no_rfkill_keymap[] = {
-+	/* 1: LSuper (Page 0x07, usage 0xE3) -- unclear what to do */
-+	/* 2: Toggle SW_ROTATE_LOCK -- easy to implement if seen in wild */
-+	{ KE_KEY, 3, { KEY_NUMLOCK } },
-+	{ KE_KEY, 4, { KEY_HOME } },
-+	{ KE_KEY, 5, { KEY_END } },
-+	{ KE_KEY, 6, { KEY_PAGEUP } },
-+	{ KE_KEY, 7, { KEY_PAGEDOWN } },
-+	/* 8: rfkill -- use hp-wireless instead */
-+	{ KE_KEY, 9, { KEY_POWER } },
-+	{ KE_KEY, 11, { KEY_SLEEP } },
-+	/* 13 has two different meanings in the spec -- ignore it. */
-+	{ KE_KEY, 14, { KEY_STOPCD } },
-+	{ KE_KEY, 15, { KEY_PLAYPAUSE } },
-+	{ KE_KEY, 16, { KEY_MUTE } },
-+	{ KE_KEY, 17, { KEY_VOLUMEUP } },
-+	{ KE_KEY, 18, { KEY_VOLUMEDOWN } },
-+	{ KE_KEY, 19, { KEY_BRIGHTNESSUP } },
-+	{ KE_KEY, 20, { KEY_BRIGHTNESSDOWN } },
-+	/* 27: wake -- needs special handling */
-+	{ KE_END },
-+};
-+
- /* 5 button array notification value. */
- static const struct key_entry intel_array_keymap[] = {
- 	{ KE_KEY,    0xC2, { KEY_LEFTMETA } },                /* Press */
-@@ -317,7 +342,8 @@ static int intel_hid_input_setup(struct platform_device *device)
- 	if (!priv->input_dev)
- 		return -ENOMEM;
- 
--	ret = sparse_keymap_setup(priv->input_dev, intel_hid_keymap, NULL);
-+	ret = sparse_keymap_setup(priv->input_dev, hp_wireless_present ?
-+			intel_hid_no_rfkill_keymap : intel_hid_keymap, NULL);
- 	if (ret)
- 		return ret;
- 
-@@ -575,6 +601,9 @@ check_acpi_dev(acpi_handle handle, u32 lvl, void *context, void **rv)
- 			dev_info(&dev->dev,
- 				 "intel-hid: created platform device\n");
- 
-+	if (!strcmp(acpi_device_hid(dev), "HPQ6001"))
-+		hp_wireless_present = true;
-+
- 	return AE_OK;
- }
- 
--- 
-2.17.1
+Thanks! Will fix that on v3.
+
+Regards,
+Nicolas
+
+
+--=-iY+/tawMFmcwHBpEZ1lp
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7g/lYACgkQlfZmHno8
+x/64wwf/RYKRcYtQrYP84kh2wNnt3cg/Wpd0S0ByYf3aEG+uXl+47UxwFvgXD9Tt
+BK/xqLnRFfh/6zlU/3EDUB3zsWySdJbXHr2zRLZeTbRF7oAQ3cEcWBs91l8hmc8V
+Rjm8Fhv7PlmW8EsPmR8uhlI2aCqtN4zJfppNClZP4SNL3L1aLTO1RwQkwwWLdZbp
+ffSWvsFeGUIKvEeWj+UTgABfQN9KDnDFfsLvLXsmHEhLjYJ8Nc+HHLiuWcseU2Bg
+amIjktOYU2r6oUihyqB5Sou67Cq5zEJXHCKN/WFzCLc+5KsAaAMsIQa9tABTBOcp
+N2OVcD5P30BJgAL8WcjZJsWtKqDftg==
+=8vmx
+-----END PGP SIGNATURE-----
+
+--=-iY+/tawMFmcwHBpEZ1lp--
 
