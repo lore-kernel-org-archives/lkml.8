@@ -2,107 +2,97 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67560C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E223FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 467242064C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:45:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="T/bw5Wnl"
+	by mail.kernel.org (Postfix) with ESMTP id AF30F2070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:46:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591818389;
+	bh=V8MuN/Ny5mYSCxK6kfQBnHwCVaOFlIo95wDoCgwHkk4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=C2h5Y0aSJw0b+HfSmRnP2yuFHOdXI2eXjSi9IwPgMk+jvFKhOKWvUaUtD/7z2IwUu
+	 X5+fcv9JWK2QmWi5cUpWpz3V/swwZq3yYPtiZ9o5H3RStT1TCkP42yE4C4CJFXCh07
+	 +SydNXypHo8ueHC8v/1o8hVy6VAfeTgtxIvhNB0M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730078AbgFJTph (ORCPT
+        id S1730290AbgFJTq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 15:45:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56110 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728237AbgFJTpg (ORCPT
+        Wed, 10 Jun 2020 15:46:28 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:37068 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727775AbgFJTq2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 15:45:36 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF6ECC03E96F
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 12:45:35 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id b5so1549909pfp.9
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 12:45:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=n0HyvUu4I8/Tk1QZlxgaik2t+t1oOltizttrT4rEXFQ=;
-        b=T/bw5WnlXMhjbRkHFHu2+YA12ULZrzFF9wV+ez7jTxHqPfYHAmfIE6TnelBqB4jg30
-         Jy+N0DSNfUbyG+VbQIy3OYzJhFzb6mRdLhRAQfgfhUo21aanTsUJ31Z6jJG0cIGs4uFo
-         Y3a1qpTQ+syktszuJrAqIw3ZhZJsCh2qIPh0M=
+        Wed, 10 Jun 2020 15:46:28 -0400
+Received: by mail-io1-f66.google.com with SMTP id r2so3690532ioo.4;
+        Wed, 10 Jun 2020 12:46:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=n0HyvUu4I8/Tk1QZlxgaik2t+t1oOltizttrT4rEXFQ=;
-        b=lwvKim+db1tWwyJTwEKAVXT2b5I2t70nBfPwqvBFb+1BQL9VMJ0B67rEPMUqbfkuKm
-         aOJ6BL9W7EAm10UAZN+aZ7k3wQJ3AlsnejrMQ3P4Z+/eUKwS642ZWOI4kGk/iELdO/kJ
-         TH7BMUTpjIso31Sz7bk8l261xiN7qINgoL6W3saDNhSIvgERdCqFGyD8vIcO2YmSsxNW
-         chnyOCF0wO6dhWa+OK1tlxv54OWPE0kbcaOvD4rXZEjchr2/B3AY2jgPoWhkV0qxDrRC
-         9/x8R9e4MmDIR6GBgNzZofq+NchY9dm1y+Qiun+rlSMG0pHJAZvlhkXHrFGb6+7X2G+V
-         qgeA==
-X-Gm-Message-State: AOAM532G7bNdlDk8mYnk7CFY8jhAITLKDFsJ9ytwj1ivxtjADwGyzKtc
-        lry0mT5Oz9up1r0WMWQ6OhPTeA==
-X-Google-Smtp-Source: ABdhPJxQazKAaDQdrS3kMhaPahisDHZnR720ERs2fv3PGWdFox4bysbcjyaTdO4nNWLofCje+hi9Cw==
-X-Received: by 2002:a63:2216:: with SMTP id i22mr1705849pgi.31.1591818334976;
-        Wed, 10 Jun 2020 12:45:34 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id o20sm488717pjw.19.2020.06.10.12.45.33
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9mGfZeBBTKc+FrE4dVawruNqiY96bl764hS1tXehIIE=;
+        b=BecvtJMdybauIYqlvP3mmq1I+zjaWUVy2T1dWLXCqVPui0f9ZrXHIw5OgZMR9jD2nz
+         6Kkenw1bpplToRE8BnldssPAk16BOX0ycFGCjDzmK1lkxgfYvlC9FFMakTmXRNoR2FMh
+         K+vbuoOeYDFTB5s/UpPSC+HNmv1Yx1WWKxoQ6jFmKmkGGEF3eXJZI+xIpHlBd0MoNWlr
+         FNDABuN/T559h36U1z7LpsGZfM3UktZaQsWPI3cBeQy7kiJjnq7+YmXm+i8UnvxBXaXT
+         F0OB7wM/ODV6QrD5ci8+ov4frah/6vVmaMjekwZhFFLK1fQsFCq/R0c80J6HgyeCpukj
+         IZ9Q==
+X-Gm-Message-State: AOAM531/4+66IXuJAmV50bbZXPfsk4uBwtBv+uSykua8O/lLf89jxhmV
+        fqRoVulh2xEJwsgihS/wC6KclbQ=
+X-Google-Smtp-Source: ABdhPJyTfZ7stvJ1zJp4PDYd4mXFlNbonBQ7OxS6Ub6k8MoKgsezkrMt64D7x1mMgr57NVmsKtVrYA==
+X-Received: by 2002:a02:2c6:: with SMTP id 189mr4797468jau.115.1591818386360;
+        Wed, 10 Jun 2020 12:46:26 -0700 (PDT)
+Received: from xps15.herring.priv ([64.188.179.251])
+        by smtp.googlemail.com with ESMTPSA id a6sm385535ilh.60.2020.06.10.12.46.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 12:45:34 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 12:45:33 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Christoph Hellwig <hch@lst.de>,
-        Christian Brauner <christian@brauner.io>,
-        Sargun Dhillon <sargun@sargun.me>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] Use __scm_install_fd() more widely
-Message-ID: <202006101245.DED83052@keescook>
-References: <20200610045214.1175600-1-keescook@chromium.org>
- <20200610094735.7ewsvrfhhpioq5xe@wittgenstein>
- <202006101001.6738CA0@keescook>
- <20200610113800.5d7846ce@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        Wed, 10 Jun 2020 12:46:25 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Lee Jones <lee.jones@linaro.org>,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: [PATCH] dt-bindings: mfd: Ensure 'syscon' has a more specific compatible
+Date:   Wed, 10 Jun 2020 13:46:25 -0600
+Message-Id: <20200610194625.3597460-1-robh@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200610113800.5d7846ce@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 11:38:00AM -0700, Jakub Kicinski wrote:
-> On Wed, 10 Jun 2020 10:03:03 -0700 Kees Cook wrote:
-> > If 0-day doesn't kick anything back on this tree, I'll resend the
-> > series...
-> 
-> Well, 0-day may find more, but I can already tell you that patch 1 has
-> a checkpatch error:
-> 
-> ERROR: "(foo*)" should be "(foo *)"
-> #149: FILE: net/core/scm.c:323:
-> +		(__force struct cmsghdr __user*)msg->msg_control;
-> 
-> total: 1 errors, 0 warnings, 0 checks, 131 lines checked
-> 
-> And patch 2 makes W=1 builds unhappy:
-> 
-> net/core/scm.c:292: warning: Function parameter or member 'file' not described in '__scm_install_fd'
-> net/core/scm.c:292: warning: Function parameter or member 'ufd' not described in '__scm_install_fd'
-> net/core/scm.c:292: warning: Function parameter or member 'o_flags' not described in '__scm_install_fd'
+Using 'syscon' alone should be avoided as compatible strings should be
+specific enough to identify the exact set of registers contained. Update
+the schema to ensure at least 2 compatible strings are present.
 
-Yeah, there are a few more problems too. I'll get it nailed down
-hopefully this week and send a v2.
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: Maxime Ripard <maxime@cerno.tech>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+FYI, there's 43 cases of this on arm32 in my testing.
 
-Thanks for looking at it!
+ Documentation/devicetree/bindings/mfd/syscon.yaml | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/Documentation/devicetree/bindings/mfd/syscon.yaml b/Documentation/devicetree/bindings/mfd/syscon.yaml
+index 19bdaf781853..af7a68051392 100644
+--- a/Documentation/devicetree/bindings/mfd/syscon.yaml
++++ b/Documentation/devicetree/bindings/mfd/syscon.yaml
+@@ -43,7 +43,8 @@ properties:
+ 
+       - contains:
+           const: syscon
+-        additionalItems: true
++        minItems: 2
++        maxItems: 4  # Should be enough
+ 
+   reg:
+     maxItems: 1
 -- 
-Kees Cook
+2.25.1
+
