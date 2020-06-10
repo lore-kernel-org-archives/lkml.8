@@ -2,124 +2,95 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE48C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A90C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A1E1206F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:00:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FBDB206F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:02:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="J6cLlSM4"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CF/wuS5V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbgFJLAy (ORCPT
+        id S1728358AbgFJLCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 07:00:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59464 "EHLO
+        Wed, 10 Jun 2020 07:02:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728391AbgFJLAu (ORCPT
+        with ESMTP id S1728304AbgFJLCS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 07:00:50 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4462CC03E96B
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 04:00:50 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f0c190029f750dc462a5b02.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:1900:29f7:50dc:462a:5b02])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C87C91EC0337;
-        Wed, 10 Jun 2020 13:00:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1591786848;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8D/Xd4asti5WQ80/nNPSNC21MIxmP2e26aliItYjwlQ=;
-        b=J6cLlSM4lAeA5Zda4NkEZZIoTvZnDv7pdBuFBtw/tpMfkBTrj3wEzGUwD6Cx43nK/GxX3Q
-        pGj5ikcGvPEViMrZRTQ+Kvhpm02ppqzRO5ld2NTy0X7lgTmCKCbtXa7ZSqE6G++QRJzhbc
-        sE6Qhh4r9oNsCFfE5sBIKNqDO5KF9DM=
-From:   Borislav Petkov <bp@alien8.de>
-To:     X86 ML <x86@kernel.org>
-Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/3] x86/msr: Add wrmsrl_val_on_cpus()
-Date:   Wed, 10 Jun 2020 13:00:36 +0200
-Message-Id: <20200610110037.11853-3-bp@alien8.de>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200610110037.11853-1-bp@alien8.de>
-References: <20200610110037.11853-1-bp@alien8.de>
+        Wed, 10 Jun 2020 07:02:18 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08F49C03E96B
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 04:02:18 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id u26so4378555wmn.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 04:02:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7rhDhb7XG1irEJ3s4PZgrsrHfWLraefC8nvpXB2M8Mc=;
+        b=CF/wuS5VIaKoRFRb1edURv8iEQYjyR3CNEeytRlAMvA21wqwMjjYcRQRDMcvSaZUt5
+         sIxLF4nAiFukzYUzqFoM9F0M6EEuJnIeUdTzfS0wbtKfeKBl+oMFBvPxFZSnGFuGTJLn
+         SLTnN0OH3CuV5KXtb4twhKhkNGT2rkhLsQdYrg4ECSvDpDw3KYMeiCGxsBnH7TBD/r9B
+         VzJkPzGsPN92P+dzDdnjqTGCgJtXDQyDWZZlbW01anZrpC2hZ6eMvX8D1mJRHzoVfodx
+         i01NcDUjuR3gVvm8teMjg8uDLv1MVDoe2pkZwjgDi1Sx4EmzwBMadua3PgiovyaVXVdW
+         VbvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7rhDhb7XG1irEJ3s4PZgrsrHfWLraefC8nvpXB2M8Mc=;
+        b=kJ+pnEzAr4hE/Bq0uYfNIFffYum64KfhgH/00yV62A6zix2e3c+2KzuGQIGJzLo9Ag
+         moxJ9Qdy9ehR4kxygieCHMrIDkt2t6hvdfp5lp0q+bSzUIGZOBAAcXUCZOra/gdVfkdW
+         wEHi3kU6AzZYpxFEclpAt2F01aocidP5IEBOXpb8mumZPXBfetV7BTJZOq5Yvxs4g8ND
+         zm4UDUtEkgj7/nwG84oSf3zEnrgpu+AwdJMpEfg/LqnVa71OQC8NdCkyXXzyeqqjC80G
+         hp54gJxbGHMnBe662RQgf6DHzDxk0Uc7BFUmeUD6a7HtmM8zzesuaawyQ0li4tRtkPZY
+         H3uA==
+X-Gm-Message-State: AOAM531e9h2QSD5nx+XogTXw/b/7eVpLbrctKvyKWHC8qYQG25XOe8KF
+        nFPH4bi50ux9tyPWzXOuihUFPVFWU9jeyFxhaclgQg==
+X-Google-Smtp-Source: ABdhPJxWkdQzPjV7iJo60NGhf0b8aUxJU7l5zHaNMqK0GiMoKSAB8Ny3tlpYWzYCUR5SkGOV1LyzRNZv8bHwF8oZDuo=
+X-Received: by 2002:a1c:2082:: with SMTP id g124mr2706952wmg.21.1591786936358;
+ Wed, 10 Jun 2020 04:02:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200610052154.5180-1-cai@lca.pw> <CACT4Y+Ze=cddKcU_bYf4L=GaHuJRUjY=AdFFpM7aKy2+aZrmyQ@mail.gmail.com>
+In-Reply-To: <CACT4Y+Ze=cddKcU_bYf4L=GaHuJRUjY=AdFFpM7aKy2+aZrmyQ@mail.gmail.com>
+From:   Alexander Potapenko <glider@google.com>
+Date:   Wed, 10 Jun 2020 13:02:04 +0200
+Message-ID: <CAG_fn=X-da3V0OC-Bzd2rmkNuZ_bVpH_n7Sp5P_hSGXD4ryyBA@mail.gmail.com>
+Subject: Re: [PATCH] mm/page_alloc: silence a KASAN false positive
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Kees Cook <keescook@chromium.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+On Wed, Jun 10, 2020 at 7:55 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+>
+> On Wed, Jun 10, 2020 at 7:22 AM Qian Cai <cai@lca.pw> wrote:
+> >
+> > kernel_init_free_pages() will use memset() on s390 to clear all pages
+> > from kmalloc_order() which will override KASAN redzones because a
+> > redzone was setup from the end of the allocation size to the end of the
+> > last page. Silence it by not reporting it there. An example of the
+> > report is,
+>
+> Interesting. The reason why we did not hit it on x86_64 is because
+> clear_page is implemented in asm (arch/x86/lib/clear_page_64.S) and
+> thus is not instrumented. Arm64 probably does the same. However, on
+> s390 clear_page is defined to memset.
 
-Add a helper which writes the same MSR value on a set of CPUs.
-
-Signed-off-by: Borislav Petkov <bp@suse.de>
----
- arch/x86/include/asm/msr.h |  8 ++++++++
- arch/x86/lib/msr-smp.c     | 15 +++++++++++++++
- 2 files changed, 23 insertions(+)
-
-diff --git a/arch/x86/include/asm/msr.h b/arch/x86/include/asm/msr.h
-index 86f20d520a07..71393a4c2104 100644
---- a/arch/x86/include/asm/msr.h
-+++ b/arch/x86/include/asm/msr.h
-@@ -342,6 +342,7 @@ int rdmsrl_on_cpu(unsigned int cpu, u32 msr_no, u64 *q);
- int wrmsrl_on_cpu(unsigned int cpu, u32 msr_no, u64 q);
- void rdmsr_on_cpus(const struct cpumask *mask, u32 msr_no, struct msr *msrs);
- void wrmsr_on_cpus(const struct cpumask *mask, u32 msr_no, struct msr *msrs);
-+void wrmsrl_val_on_cpus(const struct cpumask *mask, u32 msr_no, u64 reg_val);
- int rdmsr_safe_on_cpu(unsigned int cpu, u32 msr_no, u32 *l, u32 *h);
- int wrmsr_safe_on_cpu(unsigned int cpu, u32 msr_no, u32 l, u32 h);
- int rdmsrl_safe_on_cpu(unsigned int cpu, u32 msr_no, u64 *q);
-@@ -379,6 +380,13 @@ static inline void wrmsr_on_cpus(const struct cpumask *m, u32 msr_no,
- {
- 	wrmsr_on_cpu(0, msr_no, msrs[0].l, msrs[0].h);
- }
-+
-+static inline void wrmsrl_val_on_cpus(const struct cpumask *mask, u32 msr_no,
-+				      u64 reg_val)
-+{
-+	wrmsrl(msr_no, reg_val);
-+}
-+
- static inline int rdmsr_safe_on_cpu(unsigned int cpu, u32 msr_no,
- 				    u32 *l, u32 *h)
- {
-diff --git a/arch/x86/lib/msr-smp.c b/arch/x86/lib/msr-smp.c
-index 15e1157d6b29..f67ee2fdec69 100644
---- a/arch/x86/lib/msr-smp.c
-+++ b/arch/x86/lib/msr-smp.c
-@@ -149,6 +149,21 @@ void wrmsr_on_cpus(const struct cpumask *mask, u32 msr_no, struct msr *msrs)
- }
- EXPORT_SYMBOL(wrmsr_on_cpus);
- 
-+/*
-+ * wrmsr a single MSR value on a bunch of CPUs. To be used for MSRs which are
-+ * the same on each core.
-+ *
-+ * @mask:       which CPUs
-+ * @msr_no:     which MSR
-+ * @reg_val:	MSR value
-+ *
-+ */
-+void wrmsrl_val_on_cpus(const struct cpumask *mask, u32 msr_no, u64 reg_val)
-+{
-+	__rwmsr_on_cpus(mask, msr_no, NULL, reg_val, __wrmsr_on_cpu);
-+}
-+EXPORT_SYMBOL(wrmsrl_val_on_cpus);
-+
- struct msr_info_completion {
- 	struct msr_info		msr;
- 	struct completion	done;
--- 
-2.21.0
-
+Can we define it to __memset() instead?
+__memset() is supposed to be ignored by KASAN, e.g. KASAN runtime uses
+it in the places where we don't care about bugs.
