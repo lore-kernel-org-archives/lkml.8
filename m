@@ -4,67 +4,106 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA75DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15854C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD9ED206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:10:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0842206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 13:12:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729217AbgFJNKI (ORCPT
+        id S1729223AbgFJNMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 09:10:08 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5802 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728844AbgFJNKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 09:10:08 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 183B73717472DD83013D;
-        Wed, 10 Jun 2020 21:10:06 +0800 (CST)
-Received: from huawei.com (10.175.101.78) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Wed, 10 Jun 2020
- 21:09:56 +0800
-From:   Yang Yingliang <yangyingliang@huawei.com>
-To:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <slava@dubeyko.com>
-CC:     <yangyingliang@huawei.com>
-Subject: [PATCH] hfsplus: fix null-ptr-deref in hfs_find_init()
-Date:   Wed, 10 Jun 2020 21:43:35 +0800
-Message-ID: <1591796615-96336-1-git-send-email-yangyingliang@huawei.com>
-X-Mailer: git-send-email 1.8.3
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.101.78]
-X-CFilter-Loop: Reflected
+        Wed, 10 Jun 2020 09:12:01 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32074 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728826AbgFJNMA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 09:12:00 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05AD3D1S038699;
+        Wed, 10 Jun 2020 09:11:58 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31k02k8aaa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 10 Jun 2020 09:11:58 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05AD4fTd050863;
+        Wed, 10 Jun 2020 09:11:57 -0400
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31k02k8a98-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 10 Jun 2020 09:11:57 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05AD0Rpt008390;
+        Wed, 10 Jun 2020 13:11:55 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma03fra.de.ibm.com with ESMTP id 31jf1grhpf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 10 Jun 2020 13:11:55 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05ADBrZY29491288
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 10 Jun 2020 13:11:53 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EA9584C050;
+        Wed, 10 Jun 2020 13:11:52 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6D3544C04E;
+        Wed, 10 Jun 2020 13:11:52 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.158.19])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 10 Jun 2020 13:11:52 +0000 (GMT)
+From:   Pierre Morel <pmorel@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     pasic@linux.ibm.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
+        mst@redhat.com, jasowang@redhat.com, cohuck@redhat.com,
+        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH] s390: protvirt: virtio: Refuse device without IOMMU
+Date:   Wed, 10 Jun 2020 15:11:51 +0200
+Message-Id: <1591794711-5915-1-git-send-email-pmorel@linux.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-10_07:2020-06-10,2020-06-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ spamscore=0 impostorscore=0 clxscore=1011 cotscore=-2147483648 mlxscore=0
+ malwarescore=0 phishscore=0 bulkscore=0 priorityscore=1501 adultscore=0
+ mlxlogscore=779 suspectscore=1 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006100093
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It may lead a null-ptr-deref in hfs_find_init() by
-mounting a crafted hfs filesystem. So We need check
-tree in hfs_find_init().
+Protected Virtualisation protects the memory of the guest and
+do not allow a the host to access all of its memory.
 
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+Let's refuse a VIRTIO device which does not use IOMMU
+protected access.
+
+Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
 ---
- fs/hfsplus/bfind.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/s390/virtio/virtio_ccw.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/hfsplus/bfind.c b/fs/hfsplus/bfind.c
-index ca2ba8c..85bef3e 100644
---- a/fs/hfsplus/bfind.c
-+++ b/fs/hfsplus/bfind.c
-@@ -16,6 +16,9 @@ int hfs_find_init(struct hfs_btree *tree, struct hfs_find_data *fd)
- {
- 	void *ptr;
+diff --git a/drivers/s390/virtio/virtio_ccw.c b/drivers/s390/virtio/virtio_ccw.c
+index 5730572b52cd..06ffbc96587a 100644
+--- a/drivers/s390/virtio/virtio_ccw.c
++++ b/drivers/s390/virtio/virtio_ccw.c
+@@ -986,6 +986,11 @@ static void virtio_ccw_set_status(struct virtio_device *vdev, u8 status)
+ 	if (!ccw)
+ 		return;
  
-+	if (!tree)
-+		return -EINVAL;
++	/* Protected Virtualisation guest needs IOMMU */
++	if (is_prot_virt_guest() &&
++	    !__virtio_test_bit(vdev, VIRTIO_F_IOMMU_PLATFORM))
++			status &= ~VIRTIO_CONFIG_S_FEATURES_OK;
 +
- 	fd->tree = tree;
- 	fd->bnode = NULL;
- 	ptr = kmalloc(tree->max_key_len * 2 + 4, GFP_KERNEL);
+ 	/* Write the status to the host. */
+ 	vcdev->dma_area->status = status;
+ 	ccw->cmd_code = CCW_CMD_WRITE_STATUS;
 -- 
-1.8.3
+2.25.1
 
