@@ -2,117 +2,255 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 443BEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E09ADC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A8D92072E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B32A9207ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:58:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P/Mp0GsJ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W6J9UkKF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbgFJV53 (ORCPT
+        id S1726605AbgFJV6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 17:57:29 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39624 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726531AbgFJV52 (ORCPT
+        Wed, 10 Jun 2020 17:58:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48548 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726447AbgFJV6e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 17:57:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591826245;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=EmDVUV812Um/BnCfmKxviR5G7cIbPJybAe69FI9PP8c=;
-        b=P/Mp0GsJU6x7noigR7GhbVYS8xUVaoO+PxgS/0mUIw20HTlwC5RQwGizqrNR7RV+kXbWS9
-        TOpLEQoUjWf2vfNpr27XiAt4563SNtcBBim8dFGETZpFO7uf95ZI0Izd6V/tQEh3aZP1dk
-        c7xeXrJupGr2xoLD2Gc11bwN5ZL1x3s=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-155-3sdLEYJsMcaUCq403d_LRg-1; Wed, 10 Jun 2020 17:57:24 -0400
-X-MC-Unique: 3sdLEYJsMcaUCq403d_LRg-1
-Received: by mail-qt1-f197.google.com with SMTP id l1so3122953qtv.13
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 14:57:24 -0700 (PDT)
+        Wed, 10 Jun 2020 17:58:34 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DB0CC08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 14:58:34 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id j13so2247806vsn.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 14:58:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Q55NYjy9IRmkKRciGyl293b435BFJrXWdUL8I09kIMU=;
+        b=W6J9UkKFqBOh6IZVBDPOthBCXab0QZziKeEa8pn13Vr5J8K7h1X58Xb6OmuCCjEhOb
+         92gem+OhVNk7kSF2F0BUdLkFKKg5ROVVbpsqxDgCpafDITiIZamI2Vry6Aog71jIZo8h
+         NiD26bt+GKRoofdVOB/75RW7uwmApZl8QFmK1s6MT//oW9G+svD3zlytHSextcXbDuOv
+         y9pQW8NIgzMZzDeYq/95xGCrFZR1LNU3HnOc4zwE/u+v8axp4rGvGkkNauOwDQCqQjf9
+         2j8VU13YtK2Z4G+LXtKQblPwmmZ0YbNkS/g2LzBxhn7LOE6G4a9uJFutNjZyOutkrtp+
+         BPZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=EmDVUV812Um/BnCfmKxviR5G7cIbPJybAe69FI9PP8c=;
-        b=I5wGumA+Q3tofvK3z+5TBZzLQXHNYnMHU10nSdGQOfuZx8asF2SVLcacNIs8sjekuw
-         3HOrs0EWj81ho4q0yiggvWSiEkr2czYUfvM3p8ookzststw+ybWEfL+OPli1ULZXRYMO
-         12wKNYz9zJog7jns1+U4p6pBcxgEcKRadrRAiN+Xgr/dPoFusk5z+XyzPElSEPI680IQ
-         nkCwMsnHUNYubhedbmfZzy3duTgCqAnucrgOTp6Y0CWJfxewUEin1CvX+4BCn9QHVOC9
-         uYtPaFumaJbGkrBqpz2IHLKFLpNx8I7AZo2Tm3s5erYUJWseoWfEPOeME7MWASAz5mQl
-         noEQ==
-X-Gm-Message-State: AOAM532+xuLtwSlOVPxzGiQyeQIgm9WH5SOrlaIhKEYpx/RmcHN/KuLb
-        ileORbAE/y6cwPYn25scypYQqlJOMANtkdcOhevezu4ztIB9OVLPX0a8i8akhJ+8DG858FyTlC4
-        ielJHWWhQdqvfrQb7yjm1uoMh
-X-Received: by 2002:a37:7c6:: with SMTP id 189mr5121395qkh.24.1591826244090;
-        Wed, 10 Jun 2020 14:57:24 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxk72KKo1Ch5zw2WW6aFj5l1fiGONWuH1WvqLC0CrvwcuDgU3Kc7we6z0zk1fANufD9rEpO6A==
-X-Received: by 2002:a37:7c6:: with SMTP id 189mr5121378qkh.24.1591826243867;
-        Wed, 10 Jun 2020 14:57:23 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id t13sm934883qtc.77.2020.06.10.14.57.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 14:57:23 -0700 (PDT)
-From:   trix@redhat.com
-To:     paul@paul-moore.com, stephen.smalley.work@gmail.com,
-        eparis@parisplace.org, omosnace@redhat.com, jeffv@google.com,
-        rgb@redhat.com
-Cc:     selinux@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tom Rix <trix@redhat.com>
-Subject: [PATCH v2 1/1] selinux: fix double free
-Date:   Wed, 10 Jun 2020 14:57:13 -0700
-Message-Id: <20200610215713.5319-2-trix@redhat.com>
-X-Mailer: git-send-email 2.18.1
-In-Reply-To: <20200610215713.5319-1-trix@redhat.com>
-References: <20200610215713.5319-1-trix@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Q55NYjy9IRmkKRciGyl293b435BFJrXWdUL8I09kIMU=;
+        b=KjHeazCXqZPZY6NhmaI878ErxOwol6NCrsDx4S53Tg5gbxxm6NRocblOlfnxs4vbWC
+         qLsbuFPCb2t8/Tj9Uj79LK4vSmNEhYQeM/UiRiDkGOESKlgCC42o11mQWUJ7GuBjaDA7
+         NnJetoVLEeRV/JybikyBuyu5ilW8Owfis4r/iih9qM/5E9TrdP+UrmNE4qg3d70bI/9f
+         IlKbw8n4Wb+7Oekbft+tNwSLOUj+crxua7K23udUJh56JTBjpbpjTRc9CAKoSA+URcQK
+         fR0h5MNJnhD5i3OtZgICtShXB2JjK2I9kFAQaYqkJKt6QpGMNFDYabXzc+XWteYlSuzw
+         orFQ==
+X-Gm-Message-State: AOAM530hV8xjiDXkmMy7CmjpeHpUqm/WfdXdlUbNeSOF5/TVvs7PPmnl
+        5RyA/WSr9OwqB9WSQisZHQdvowbkaR5Csqf5MLYBOA==
+X-Google-Smtp-Source: ABdhPJw6lF5ItCEwInvZaqrMjCHdyoCSi+CaoOEbwdfTwpuV0Gz1ZwsXr/d3YOGarQap09er1s6bIDnIsVVF9gciZiY=
+X-Received: by 2002:a67:f982:: with SMTP id b2mr4385200vsq.202.1591826312742;
+ Wed, 10 Jun 2020 14:58:32 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200605213853.14959-1-sean.j.christopherson@intel.com>
+ <20200605213853.14959-15-sean.j.christopherson@intel.com> <CANgfPd_v31zC5-mKsT14hd7W=X2Pvg3RBPjn2d4tFSChdbsr3A@mail.gmail.com>
+In-Reply-To: <CANgfPd_v31zC5-mKsT14hd7W=X2Pvg3RBPjn2d4tFSChdbsr3A@mail.gmail.com>
+From:   Ben Gardon <bgardon@google.com>
+Date:   Wed, 10 Jun 2020 14:58:21 -0700
+Message-ID: <CANgfPd-iH8AShSPPJiaDCxV1H76kfpTOQMZSMP_+nP3LoXbYBg@mail.gmail.com>
+Subject: Re: [PATCH 14/21] KVM: Move x86's version of struct
+ kvm_mmu_memory_cache to common code
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Marc Zyngier <maz@kernel.org>, Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Feiner <pfeiner@google.com>,
+        Peter Shier <pshier@google.com>,
+        Junaid Shahid <junaids@google.com>,
+        Christoffer Dall <christoffer.dall@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
-
-Clang's static analysis tool reports these double free memory errors.
-
-security/selinux/ss/services.c:2987:4: warning: Attempt to free released memory [unix.Malloc]
-                        kfree(bnames[i]);
-                        ^~~~~~~~~~~~~~~~
-security/selinux/ss/services.c:2990:2: warning: Attempt to free released memory [unix.Malloc]
-        kfree(bvalues);
-        ^~~~~~~~~~~~~~
-
-So improve the security_get_bools error handling by freeing these variables
-and setting their return pointers to NULL and the return len to 0
-
-Signed-off-by: Tom Rix <trix@redhat.com>
----
- security/selinux/ss/services.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/security/selinux/ss/services.c b/security/selinux/ss/services.c
-index 313919bd42f8..ef0afd878bfc 100644
---- a/security/selinux/ss/services.c
-+++ b/security/selinux/ss/services.c
-@@ -2888,8 +2888,12 @@ int security_get_bools(struct selinux_state *state,
- 	if (*names) {
- 		for (i = 0; i < *len; i++)
- 			kfree((*names)[i]);
-+		kfree(*names);
- 	}
- 	kfree(*values);
-+	*len = 0;
-+	*names = NULL;
-+	*values = NULL;
- 	goto out;
- }
- 
--- 
-2.18.1
-
+On Wed, Jun 10, 2020 at 12:01 PM Ben Gardon <bgardon@google.com> wrote:
+>
+> On Fri, Jun 5, 2020 at 2:39 PM Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
+> >
+> > Move x86's 'struct kvm_mmu_memory_cache' to common code in anticipation
+> > of moving the entire x86 implementation code to common KVM and reusing
+> > it for arm64 and MIPS.  Add a new architecture specific asm/kvm_types.h
+> > to control the existence and parameters of the struct.  The new header
+> > is needed to avoid a chicken-and-egg problem with asm/kvm_host.h as all
+> > architectures define instances of the struct in their vCPU structs.
+> >
+> > Suggested-by: Christoffer Dall <christoffer.dall@arm.com>
+> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Reviewed-by: Ben Gardon <bgardon@google.com>
+> > ---
+> >  arch/arm64/include/asm/kvm_types.h   |  6 ++++++
+> >  arch/mips/include/asm/kvm_types.h    |  5 +++++
+> >  arch/powerpc/include/asm/kvm_types.h |  5 +++++
+> >  arch/s390/include/asm/kvm_types.h    |  5 +++++
+> >  arch/x86/include/asm/kvm_host.h      | 13 -------------
+> >  arch/x86/include/asm/kvm_types.h     |  7 +++++++
+> >  include/linux/kvm_types.h            | 19 +++++++++++++++++++
+> >  7 files changed, 47 insertions(+), 13 deletions(-)
+> >  create mode 100644 arch/arm64/include/asm/kvm_types.h
+> >  create mode 100644 arch/mips/include/asm/kvm_types.h
+> >  create mode 100644 arch/powerpc/include/asm/kvm_types.h
+> >  create mode 100644 arch/s390/include/asm/kvm_types.h
+> >  create mode 100644 arch/x86/include/asm/kvm_types.h
+> >
+> > diff --git a/arch/arm64/include/asm/kvm_types.h b/arch/arm64/include/asm/kvm_types.h
+> > new file mode 100644
+> > index 000000000000..d0987007d581
+> > --- /dev/null
+> > +++ b/arch/arm64/include/asm/kvm_types.h
+> > @@ -0,0 +1,6 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +#ifndef _ASM_ARM64_KVM_TYPES_H
+> > +#define _ASM_ARM64_KVM_TYPES_H
+> > +
+> > +#endif /* _ASM_ARM64_KVM_TYPES_H */
+> > +
+> > diff --git a/arch/mips/include/asm/kvm_types.h b/arch/mips/include/asm/kvm_types.h
+> > new file mode 100644
+> > index 000000000000..5efeb32a5926
+> > --- /dev/null
+> > +++ b/arch/mips/include/asm/kvm_types.h
+> > @@ -0,0 +1,5 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +#ifndef _ASM_MIPS_KVM_TYPES_H
+> > +#define _ASM_MIPS_KVM_TYPES_H
+> > +
+> > +#endif /* _ASM_MIPS_KVM_TYPES_H */
+> > diff --git a/arch/powerpc/include/asm/kvm_types.h b/arch/powerpc/include/asm/kvm_types.h
+> > new file mode 100644
+> > index 000000000000..f627eceaa314
+> > --- /dev/null
+> > +++ b/arch/powerpc/include/asm/kvm_types.h
+> > @@ -0,0 +1,5 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +#ifndef _ASM_POWERPC_KVM_TYPES_H
+> > +#define _ASM_POWERPC_KVM_TYPES_H
+> > +
+> > +#endif /* _ASM_POWERPC_KVM_TYPES_H */
+> > diff --git a/arch/s390/include/asm/kvm_types.h b/arch/s390/include/asm/kvm_types.h
+> > new file mode 100644
+> > index 000000000000..b66a81f8a354
+> > --- /dev/null
+> > +++ b/arch/s390/include/asm/kvm_types.h
+> > @@ -0,0 +1,5 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +#ifndef _ASM_S390_KVM_TYPES_H
+> > +#define _ASM_S390_KVM_TYPES_H
+> > +
+> > +#endif /* _ASM_S390_KVM_TYPES_H */
+> > diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> > index fb99e6776e27..8e8fea13b6c7 100644
+> > --- a/arch/x86/include/asm/kvm_host.h
+> > +++ b/arch/x86/include/asm/kvm_host.h
+> > @@ -193,8 +193,6 @@ struct x86_exception;
+> >  enum x86_intercept;
+> >  enum x86_intercept_stage;
+> >
+> > -#define KVM_NR_MEM_OBJS 40
+> > -
+Oops I didn't catch this on my first read through, but in patch 16 in
+this series I see some references to KVM_NR_MEM_OBJS being removed. As
+a result I would not expect this patch to build. Other references to
+this value should probably replaced with
+KVM_ARCH_NR_OBJS_PER_MEMORY_CACHE as well.
+> >  #define KVM_NR_DB_REGS 4
+> >
+> >  #define DR6_BD         (1 << 13)
+> > @@ -245,17 +243,6 @@ enum x86_intercept_stage;
+> >
+> >  struct kvm_kernel_irq_routing_entry;
+> >
+> > -/*
+> > - * We don't want allocation failures within the mmu code, so we preallocate
+> > - * enough memory for a single page fault in a cache.
+> > - */
+> > -struct kvm_mmu_memory_cache {
+> > -       int nobjs;
+> > -       gfp_t gfp_zero;
+> > -       struct kmem_cache *kmem_cache;
+> > -       void *objects[KVM_NR_MEM_OBJS];
+> > -};
+> > -
+> >  /*
+> >   * the pages used as guest page table on soft mmu are tracked by
+> >   * kvm_memory_slot.arch.gfn_track which is 16 bits, so the role bits used
+> > diff --git a/arch/x86/include/asm/kvm_types.h b/arch/x86/include/asm/kvm_types.h
+> > new file mode 100644
+> > index 000000000000..08f1b57d3b62
+> > --- /dev/null
+> > +++ b/arch/x86/include/asm/kvm_types.h
+> > @@ -0,0 +1,7 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +#ifndef _ASM_X86_KVM_TYPES_H
+> > +#define _ASM_X86_KVM_TYPES_H
+> > +
+> > +#define KVM_ARCH_NR_OBJS_PER_MEMORY_CACHE 40
+> > +
+> > +#endif /* _ASM_X86_KVM_TYPES_H */
+> > diff --git a/include/linux/kvm_types.h b/include/linux/kvm_types.h
+> > index 68e84cf42a3f..a7580f69dda0 100644
+> > --- a/include/linux/kvm_types.h
+> > +++ b/include/linux/kvm_types.h
+> > @@ -20,6 +20,8 @@ enum kvm_mr_change;
+> >
+> >  #include <linux/types.h>
+> >
+> > +#include <asm/kvm_types.h>
+> > +
+> >  /*
+> >   * Address types:
+> >   *
+> > @@ -58,4 +60,21 @@ struct gfn_to_pfn_cache {
+> >         bool dirty;
+> >  };
+> >
+> > +#ifdef KVM_ARCH_NR_OBJS_PER_MEMORY_CACHE
+> > +/*
+> > + * Memory caches are used to preallocate memory ahead of various MMU flows,
+> > + * e.g. page fault handlers.  Gracefully handling allocation failures deep in
+> > + * MMU flows is problematic, as is triggering reclaim, I/O, etc... while
+> > + * holding MMU locks.  Note, these caches act more like prefetch buffers than
+> > + * classical caches, i.e. objects are not returned to the cache on being freed.
+> > + */
+> > +struct kvm_mmu_memory_cache {
+> > +       int nobjs;
+> > +       gfp_t gfp_zero;
+> > +       struct kmem_cache *kmem_cache;
+> > +       void *objects[KVM_ARCH_NR_OBJS_PER_MEMORY_CACHE];
+> > +};
+> > +#endif
+> > +
+> > +
+> >  #endif /* __KVM_TYPES_H__ */
+> > --
+> > 2.26.0
+> >
