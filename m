@@ -2,221 +2,207 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA746C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 23:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 508BFC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 23:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFD7320760
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 23:31:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XG9A+T23"
+	by mail.kernel.org (Postfix) with ESMTP id 2E295207ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 23:31:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgFJXbf (ORCPT
+        id S1726922AbgFJXbl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 19:31:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34610 "EHLO
+        Wed, 10 Jun 2020 19:31:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726374AbgFJXbe (ORCPT
+        with ESMTP id S1726374AbgFJXbi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 19:31:34 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D63DFC03E96B
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 16:31:32 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id n23so4649819ljh.7
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 16:31:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=tHyLqUmtTTMIbIqoDwVSMrkpYuG5yIqYL6HxByUSF1k=;
-        b=XG9A+T23tcxH5dzLrr0ymPt9XR35a61ozhwFwcrizTaPccaz9PvTnfAwC6+xJe1Z32
-         bQhAZj7s4dptgCg/IUpHZopInAaxskDR5LI7XPW1MILHn0fk8E+x6zcGc6ilRrbp8SnT
-         0VL2rAodo13s6qbJTM69fmuhCZ9qbEVDVdV/2Zz+cB/lML5pIoOSGlF/0d2OEVoYGTCK
-         OVIjFc/CcuNMS/VhJcZZ3ZY0cLO0MwTvwS8WkKRkL2HVZXP+3BbcKE7YIkvRBL5UVPwz
-         WAZkh9HrMoFlVUtr9z7OnyENLfUF+7/yqwuTBZFZJ9HiNSPWJhV3i4RijqKxyVTSBW1G
-         eSww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=tHyLqUmtTTMIbIqoDwVSMrkpYuG5yIqYL6HxByUSF1k=;
-        b=K8pxtCDGhaQ+dMzIAtLnujp9ygLKbzYsndEucc69BytSMFxGijh92oN4IqEAWgd/J+
-         Kw9yauoJqfOpLcfZxb9HBdv54nPjtF4a8sLek3TSWY6+poTfyofTU8bStTBwf6NfpMoN
-         1FrISzU2hfsLujEJQf6KRPHgC2P7OdvBxCH47lVl2f6xSM2jd+WFXy0Mw9iD9UMNgB7v
-         dLKLb1gkt7cLqIKQDbw2YsWPf7aXouPkIL5YgpUBcBz85lefwbdXlnhdf83tohjcbiZS
-         +NFHk05EmbkiLjS1/y/V5w6QE1R4e19TWif2Fwy64e5H2Lt5s2u6m57JmTmtN0Md0MWj
-         zr7w==
-X-Gm-Message-State: AOAM531Yvp+vsyGOK/6TZ2N/lNzpSH04Q7Jq8vJcN9VmWgPxWOCe5cAb
-        HfSJRDiGihvni1M2KxeihhN/FzSMSO0Ih7ISBFLmHJXNAflZjw==
-X-Google-Smtp-Source: ABdhPJwWUXJSo7FIMR1sitkboYnLRaxiaNIMacyQbEajwe57eYp5VZ0caRZ+BgIp7IlUX8p+8hBglJH8Pks+BRRxhT8=
-X-Received: by 2002:a2e:92cf:: with SMTP id k15mr2988702ljh.333.1591831891058;
- Wed, 10 Jun 2020 16:31:31 -0700 (PDT)
+        Wed, 10 Jun 2020 19:31:38 -0400
+Received: from mx2.freebsd.org (mx2.freebsd.org [IPv6:2610:1c1:1:606c::19:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9DC2C03E96B;
+        Wed, 10 Jun 2020 16:31:37 -0700 (PDT)
+Received: from mx1.freebsd.org (mx1.freebsd.org [96.47.72.80])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits)
+         client-signature RSA-PSS (4096 bits))
+        (Client CN "mx1.freebsd.org", Issuer "Let's Encrypt Authority X3" (verified OK))
+        by mx2.freebsd.org (Postfix) with ESMTPS id 11EE370000;
+        Wed, 10 Jun 2020 23:31:35 +0000 (UTC)
+        (envelope-from jkim@FreeBSD.org)
+Received: from smtp.freebsd.org (smtp.freebsd.org [IPv6:2610:1c1:1:606c::24b:4])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "smtp.freebsd.org", Issuer "Let's Encrypt Authority X3" (verified OK))
+        by mx1.freebsd.org (Postfix) with ESMTPS id 49j3Cp62CRz3SqX;
+        Wed, 10 Jun 2020 23:31:34 +0000 (UTC)
+        (envelope-from jkim@FreeBSD.org)
+Received: from freefall.freebsd.org (static-71-168-218-4.cmdnnj.fios.verizon.net [71.168.218.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: jkim/mail)
+        by smtp.freebsd.org (Postfix) with ESMTPSA id 9A3D115F7E;
+        Wed, 10 Jun 2020 23:31:34 +0000 (UTC)
+        (envelope-from jkim@FreeBSD.org)
+Subject: Re: [PATCH] ACPICA: fix UBSAN warning using __builtin_offsetof
+To:     "Kaneda, Erik" <erik.kaneda@intel.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "Moore, Robert" <robert.moore@intel.com>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        Len Brown <lenb@kernel.org>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        "dvyukov@google.com" <dvyukov@google.com>,
+        "glider@google.com" <glider@google.com>,
+        "guohanjun@huawei.com" <guohanjun@huawei.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "pcc@google.com" <pcc@google.com>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "will@kernel.org" <will@kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "devel@acpica.org" <devel@acpica.org>
+References: <CAMj1kXErFuvOoG=DB6sz5HBvDuHDiKwWD8uOyLuxaX-u8-+dbA@mail.gmail.com>
+ <20200601231805.207441-1-ndesaulniers@google.com>
+ <BYAPR11MB3096A0EA2D03BCB76C91F80AF0830@BYAPR11MB3096.namprd11.prod.outlook.com>
+From:   Jung-uk Kim <jkim@FreeBSD.org>
+Autocrypt: addr=jkim@FreeBSD.org; keydata=
+ mQENBFJBztUBCAChqNyGqmFuNo0U7MBzsD+q/G6Cv0l7LGVrOAsgh34M8wIWhD+tztDWMVfn
+ AhxNDd0ceCj2bYOe67sTQxAScEcbt2FfvPOLp9MEXb9qohZj172Gwkk7dnhOhZZKhVGVZKM4
+ NcsuBDUzgf4f3Vdzj4wg6WlqplnTZo8lPE4hZWvZHoFIyunPTJWenybeV1xnxK7JkUdSvQR0
+ fA59RfTTECMwTrSEfYGUnxIDBraxJ7Ecs/0hGQ7sljIj8WBvlRDU5fU1xfF35aw56T8POQRq
+ F4E6RVJW3YGuTpSwgtGZOTfygcLRhAiq3dFC3JNLaTVTpM8PjOinJyt9AU6RoITGOKwDABEB
+ AAG0Hkp1bmctdWsgS2ltIDxqa2ltQEZyZWVCU0Qub3JnPokBPQQTAQoAJwUCUkHO1QIbAwUJ
+ E0/POwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgAAKCRB8n5Ym/NvxRqyzB/wL7QtsIpeGfGIA
+ ZPMtgXMucM3NWzomyQMln2j2efUkDKthzh9jBxgF53TjOr7imwIt0PT2k1bqctPrq5IRqnu9
+ mGroqaCLE3LG2/E3jEaao4k9PO6efwlioyivUo5NrqIQOQ4k3EAXw7d2y0Dk1VpTgdMrnUAB
+ hj7lGlLqS4ydcrf24DdbCRGdEQwqd9DBeBgbWynxAJMgbZBhYVEyIHuQKkJ8qY0ibIPXXuF0
+ KYDeH0qUHtWV2K3srNyPtymUkBQD84Pl1GWRYx05XdUHDmnX0JV3lg0BfYJZgZv0ehPQrMfY
+ Fd9abTkf9FHQYz1JtsC8wUuRgqElRd6+YAGf8Tt9uQENBFJBztUBCADLtSrP44El2VoJmH14
+ OFrlOgxzZnbn+Y/Gf1k12mJBiR+A+pBeRLD50p7AiTrjHRxO3cHcl9Dh0uf1VSbXgp8Or0ye
+ iP/86fZPd4k5HXNmDTLL0HecPE08SCqGZ0W8vllQrokB1QxxRUB+fFMPJyMCjDAZ7P9fFTOS
+ dTw1bJSTtOD8Sx8MpZUa9ti06bXFlVYDlaqSdgk181SSx+ZbSKkQR8CIMARlHwiLsa3Z9q9O
+ EJr20HPyxe0AlTvwvFndH61hg7ds63eRvglwRnNON28VXO/lvKXq7Br/CiiyhFdKfINIx2Z5
+ htYq22tgGTW7mBURbIKoECFBTX9Lv6BXz6w9ABEBAAGJASUEGAEKAA8FAlJBztUCGwwFCRNP
+ zzsACgkQfJ+WJvzb8UZcJQf+IsTCxUEqY7W/pT84sMg5/QD3s6ufTRncvq14fEOxCNq1Rf4Q
+ 9P+tOFa8GZfKDGB2BFGIrW7uT5mlmKdK1vO6ZIA930y5kUsnCmBUEBJkE2ciSQk01aB/1o62
+ Q3Gk/F6BwtNY9OXiqF7AcAo+K/BMIaqb26QKeh+IIgK1NN9dQiq3ByTbl4zpGZa6MmsnnRTu
+ mzGKt2nkz7vBzH6+hZp1OzGZikgjjhYWVFoJo1dvf/rv4obs0ZJEqFPQs/1Qa1dbkKBv6odB
+ XJpPH0ssOluTY24d1XxTiKTwmWvHeQkOKRAIfD7VTtF4TesoZYkf7hsh3e3VwXhptSLFnEOi
+ WwYofg==
+Organization: FreeBSD.org
+Message-ID: <a896ac5c-dbea-cc06-befd-b59b8e5b1c78@FreeBSD.org>
+Date:   Wed, 10 Jun 2020 19:31:30 -0400
+User-Agent: Mozilla/5.0 (X11; FreeBSD amd64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200609060137.143501-1-daeho43@gmail.com> <20200609165107.GA228564@gmail.com>
- <CACOAw_xEZ+au9yhFerq9amkRO62Dzxj7h71gEc=i16ReYu5xrg@mail.gmail.com>
- <20200610031532.GA6286@sol.localdomain> <CACOAw_wErOPC=Kf3UU8nFGhWRy84ZnCeJbsyPhSCcXv51B_XxQ@mail.gmail.com>
-In-Reply-To: <CACOAw_wErOPC=Kf3UU8nFGhWRy84ZnCeJbsyPhSCcXv51B_XxQ@mail.gmail.com>
-From:   Daeho Jeong <daeho43@gmail.com>
-Date:   Thu, 11 Jun 2020 08:31:20 +0900
-Message-ID: <CACOAw_zka6d06RxFOUTwEV7B6o8A2-_6FvqWh_A1nJ0+7FU9yQ@mail.gmail.com>
-Subject: Re: [f2fs-dev] [PATCH] f2fs: add F2FS_IOC_SEC_TRIM_FILE ioctl
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com,
-        Daeho Jeong <daehojeong@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <BYAPR11MB3096A0EA2D03BCB76C91F80AF0830@BYAPR11MB3096.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > > > +
-> > > > > +     if (f2fs_readonly(sbi->sb))
-> > > > > +             return -EROFS;
-> > > >
-> > > > Isn't this redundant with mnt_want_write_file()?
-> > > >
-> > > > Also, shouldn't write access to the file be required, i.e.
-> > > > (filp->f_mode & FMODE_WRITE)?  Then the f2fs_readonly() and
-> > > > mnt_want_write_file() checks would be unnecessary.
-> > > >
-> > >
-> > > Using FMODE_WRITE is more proper for this case, since we're going to
-> > > modify the data. But I think mnt_want_write_file() is still required
-> > > to prevent the filesystem from freezing or something else.
-> >
-> > Right, the freezing check is actually still necessary.  But getting wri=
-te access
-> > to the mount is not necessary.  I think you should use file_start_write=
-() and
-> > file_end_write(), like vfs_write() does.
+On 20. 6. 10., Kaneda, Erik wrote:
+> +JKim (for FreeBSD's perspective)
+> 
+>> -----Original Message-----
+>> From: Nick Desaulniers <ndesaulniers@google.com>
+>> Sent: Monday, June 1, 2020 4:18 PM
+>> To: Moore, Robert <robert.moore@intel.com>; Kaneda, Erik
+>> <erik.kaneda@intel.com>; Wysocki, Rafael J <rafael.j.wysocki@intel.com>;
+>> Len Brown <lenb@kernel.org>
+>> Cc: Ard Biesheuvel <ardb@kernel.org>; dvyukov@google.com;
+>> glider@google.com; guohanjun@huawei.com; linux-arm-
+>> kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
+>> lorenzo.pieralisi@arm.com; mark.rutland@arm.com;
+>> ndesaulniers@google.com; pcc@google.com; rjw@rjwysocki.net;
+>> will@kernel.org; stable@vger.kernel.org; linux-acpi@vger.kernel.org;
+>> devel@acpica.org
+>> Subject: [PATCH] ACPICA: fix UBSAN warning using __builtin_offsetof
+>>
+>> Will reported UBSAN warnings:
+>> UBSAN: null-ptr-deref in drivers/acpi/acpica/tbfadt.c:459:37
+>> UBSAN: null-ptr-deref in arch/arm64/kernel/smp.c:596:6
+>>
+> Hi,
+> 
+>> Looks like the emulated offsetof macro ACPI_OFFSET is causing these. We
+>> can avoid this by using the compiler builtin, __builtin_offsetof.
+>>
+> This doesn't really fly because __builtin_offsetof is a compiler extension.
+> 
+> It looks like a lot of stddef.h files do this:
+> 
+> #define offsetof(a,b) __builtin_offset(a,b)
+> 
+> So does anyone have objections to ACPI_OFFSET being defined to offsetof()?
+> 
+> This will allow a host OS project project to use their own definitions of offsetof in place of ACPICA's.
+> If they don't have a definition for offsetof, we can supply the old one as a fallback.
+> 
+> Here's a patch:
+> 
+> --- a/include/acpi/actypes.h
+> +++ b/include/acpi/actypes.h
+> @@ -504,11 +504,17 @@ typedef u64 acpi_integer;
+>  #define ACPI_SUB_PTR(t, a, b)           ACPI_CAST_PTR (t, (ACPI_CAST_PTR (u8, (a)) - (acpi_size)(b)))
+>  #define ACPI_PTR_DIFF(a, b)             ((acpi_size) (ACPI_CAST_PTR (u8, (a)) - ACPI_CAST_PTR (u8, (b))))
+> 
+> +/* Use an existing definiton for offsetof */
+> +
+> +#ifndef offsetof
+> +#define offsetof(d,f)                   ACPI_PTR_DIFF (&(((d *) 0)->f), (void *) 0)
+> +#endif
+> +
+>  /* Pointer/Integer type conversions */
+> 
+>  #define ACPI_TO_POINTER(i)              ACPI_CAST_PTR (void, (acpi_size) (i))
+>  #define ACPI_TO_INTEGER(p)              ACPI_PTR_DIFF (p, (void *) 0)
+> -#define ACPI_OFFSET(d, f)               ACPI_PTR_DIFF (&(((d *) 0)->f), (void *) 0)
+> +#define ACPI_OFFSET(d, f)               offsetof (d,f)
+>  #define ACPI_PHYSADDR_TO_PTR(i)         ACPI_TO_POINTER(i)
+>  #define ACPI_PTR_TO_PHYSADDR(i)         ACPI_TO_INTEGER(i)
 
-I've checked this again.
+LGTM.
 
-But I think mnt_want_write_file() looks better than the combination of
-checking FMODE_WRITE and file_start_write(), because
-mnt_want_write_file() handles all the things we need.
-It checks FMODE_WRITER, which is set in do_dentry_open() when
-FMODE_WRITE is already set, and does the stuff that file_start_write()
-is doing. This is why the other filesystem system calls use it.
+Jung-uk Kim
 
-What do you think?
+>> The non-kernel runtime of UBSAN would print:
+>> runtime error: member access within null pointer of type for this macro.
+>>
+>> Link: https://lore.kernel.org/lkml/20200521100952.GA5360@willie-the-truck/
+>> Cc: stable@vger.kernel.org
+>> Reported-by: Will Deacon <will@kernel.org>
+>> Suggested-by: Ard Biesheuvel <ardb@kernel.org>
+>> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+>> ---
+>>  include/acpi/actypes.h | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/include/acpi/actypes.h b/include/acpi/actypes.h index
+>> 4defed58ea33..04359c70b198 100644
+>> --- a/include/acpi/actypes.h
+>> +++ b/include/acpi/actypes.h
+>> @@ -508,7 +508,7 @@ typedef u64 acpi_integer;
+>>
+>>  #define ACPI_TO_POINTER(i)              ACPI_CAST_PTR (void, (acpi_size) (i))
+>>  #define ACPI_TO_INTEGER(p)              ACPI_PTR_DIFF (p, (void *) 0)
+>> -#define ACPI_OFFSET(d, f)               ACPI_PTR_DIFF (&(((d *) 0)->f), (void *)
+>> 0)
+>> +#define ACPI_OFFSET(d, f)               __builtin_offsetof(d, f)
+>>  #define ACPI_PHYSADDR_TO_PTR(i)         ACPI_TO_POINTER(i)
+>>  #define ACPI_PTR_TO_PHYSADDR(i)         ACPI_TO_INTEGER(i)
+>>
+>> --
+>> 2.27.0.rc2.251.g90737beb825-goog
+> 
 
-2020=EB=85=84 6=EC=9B=94 10=EC=9D=BC (=EC=88=98) =EC=98=A4=ED=9B=84 12:55, =
-Daeho Jeong <daeho43@gmail.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> > >
-> > > To prevent the file data from garbage collecting, the user needs to
-> > > use pinfile ioctl and fallocate system call after creating the file.
-> > > The sequence is like below.
-> > > 1. create an empty file
-> > > 2. pinfile
-> > > 3. fallocate()
-> >
-> > Is that persistent?  So the file will never be moved afterwards?
-> >
-> > Is there a place where this is (or should be) documented?
->
-> Yes, this is persistent. F2FS_IOC_SET_PIN_FILE ioctl is to prevent
-> file data from moving and being garbage collected, and further update
-> to the file will be handled in in-place update manner.
-> I don't see any document on this, but you can find the below in
-> Documentation/filesystems/f2fs.rst
->
-> However, once F2FS receives ioctl(fd, F2FS_IOC_SET_PIN_FILE) in prior to
-> fallocate(fd, DEFAULT_MODE), it allocates on-disk blocks addresses having
-> zero or random data, which is useful to the below scenario where:
->
->  1. create(fd)
->  2. ioctl(fd, F2FS_IOC_SET_PIN_FILE)
->  3. fallocate(fd, 0, 0, size)
->  4. address =3D fibmap(fd, offset)
->  5. open(blkdev)
->  6. write(blkdev, address)
->
-> > Right, the freezing check is actually still necessary.  But getting wri=
-te access
-> > to the mount is not necessary.  I think you should use file_start_write=
-() and
-> > file_end_write(), like vfs_write() does.
->
-> Yes, agreed.
->
-> 2020=EB=85=84 6=EC=9B=94 10=EC=9D=BC (=EC=88=98) =EC=98=A4=ED=9B=84 12:15=
-, Eric Biggers <ebiggers@kernel.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
-> >
-> > On Wed, Jun 10, 2020 at 11:05:46AM +0900, Daeho Jeong wrote:
-> > > > > Added a new ioctl to send discard commands or/and zero out
-> > > > > to whole data area of a regular file for security reason.
-> > > >
-> > > > With this ioctl available, what is the exact procedure to write and=
- then later
-> > > > securely erase a file on f2fs?  In particular, how can the user pre=
-vent f2fs
-> > > > from making multiple copies of file data blocks as part of garbage =
-collection?
-> > > >
-> > >
-> > > To prevent the file data from garbage collecting, the user needs to
-> > > use pinfile ioctl and fallocate system call after creating the file.
-> > > The sequence is like below.
-> > > 1. create an empty file
-> > > 2. pinfile
-> > > 3. fallocate()
-> >
-> > Is that persistent?  So the file will never be moved afterwards?
-> >
-> > Is there a place where this is (or should be) documented?
-> >
-> > > > > +
-> > > > > +     if (f2fs_readonly(sbi->sb))
-> > > > > +             return -EROFS;
-> > > >
-> > > > Isn't this redundant with mnt_want_write_file()?
-> > > >
-> > > > Also, shouldn't write access to the file be required, i.e.
-> > > > (filp->f_mode & FMODE_WRITE)?  Then the f2fs_readonly() and
-> > > > mnt_want_write_file() checks would be unnecessary.
-> > > >
-> > >
-> > > Using FMODE_WRITE is more proper for this case, since we're going to
-> > > modify the data. But I think mnt_want_write_file() is still required
-> > > to prevent the filesystem from freezing or something else.
-> >
-> > Right, the freezing check is actually still necessary.  But getting wri=
-te access
-> > to the mount is not necessary.  I think you should use file_start_write=
-() and
-> > file_end_write(), like vfs_write() does.
-> >
-> > > >
-> > > > > +
-> > > > > +     if (get_user(flags, (u32 __user *)arg))
-> > > > > +             return -EFAULT;
-> > > > > +     if (!(flags & F2FS_TRIM_FILE_MASK))
-> > > > > +             return -EINVAL;
-> > > >
-> > > > Need to reject unknown flags:
-> > > >
-> > > >         if (flags & ~F2FS_TRIM_FILE_MASK)
-> > > >                 return -EINVAL;
-> > >
-> > > I needed a different thing here. This was to check neither discard no=
-r
-> > > zeroing out are not here. But we still need to check unknown flags,
-> > > too.
-> > > The below might be better.
-> > > if (!flags || flags & ~F2FS_TRIM_FILE_MASK)
-> > >        return -EINVAL;
-> >
-> > Sure, but please put parentheses around the second clause:
-> >
-> >         if (flags =3D=3D 0 || (flags & ~F2FS_TRIM_FILE_MASK))
-> >                 return -EINVAL;
-> >
-> > - Eric
