@@ -2,114 +2,111 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEBF6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 18:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B56A2C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 18:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBF5A20656
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 18:23:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a5YWD529"
+	by mail.kernel.org (Postfix) with ESMTP id 982AD20656
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 18:28:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591813716;
+	bh=AkhotJ+S2EMQnKyF8xEYpq7d6875ra2T1iK2xNVl7OA=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=CWQpNYtoj7OV+iLonC0Cy6KpN3+fbis4nh37XJszNwxld3fuQhGuAWvZGeC0mEOTN
+	 HWRjqcafebnIAeSkfCvglAqLkmGXmREG8axtVKm1FGebpDWUqPtatFMl8ltOwShj5k
+	 oUerPLjR6Mvw6GmYjE60c7J7+sIUmwAZUf9vTBrM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728855AbgFJSXe (ORCPT
+        id S1728904AbgFJS2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 14:23:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43458 "EHLO
+        Wed, 10 Jun 2020 14:28:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgFJSXe (ORCPT
+        with ESMTP id S1727024AbgFJS2e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 14:23:34 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1481C03E96B
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 11:23:32 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id n2so1254731pld.13
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 11:23:32 -0700 (PDT)
+        Wed, 10 Jun 2020 14:28:34 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 846B3C03E96F
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 11:28:33 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id u23so2479573otq.10
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 11:28:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Eyo+7zh1L4jeDWREBakg6eAo0YMYPGwdx3QTIkC3cqE=;
-        b=a5YWD529dgAdWo2ddTqn+wtR9NFsHDhDH9quAab1/Ts3LSpxdlSdxy6dn8UU0GmYJg
-         mF2n+LTmi5kCWCRmW9o+w4lNEWGgoOk4zlw2My0hTdaZrNFXacyNCFGb3+7n4Ab2nC6N
-         DusWKIIlMvWFsrA0CRBntWUVRbH7QMccO/RQD7cQ85pCqC8xtPC3uW01YHIYWtChIbIr
-         MKkdZHznXgRBPNojpB8Jdq2lamuckQvYy0OBF/tMLdUqaQV+bhucitSwmnuYioDBWav7
-         ZxeY74vjeQr250yLyShoxh4o49WZ/SkYC6Yp2etGuaMrgCe4BUV5Q+tC6+w5HUtpy8Qw
-         QbPQ==
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zyv1EVC5aQ7p40tg97oP6U8UUyPJu7Y8g2caqHmmDMU=;
+        b=JmthF9888oAGJCcqQME0wV2BsV7zzmVSwLn3tbKObFtqJM6cwBJU76dSXH6zyfSFuV
+         8udvfTCNLy3oTQr4YqEl6PpsfDV4HsiyNWq+T1y+zqqsLwx8hhehv5GYoqhKhFFZADAb
+         Mt4iF97vmgS4f4h2Xy2iJx+riY2ezAvSgqs5c=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Eyo+7zh1L4jeDWREBakg6eAo0YMYPGwdx3QTIkC3cqE=;
-        b=Xo7XpuDT5UxhA4kVFs3rx+fl/ac5g9aPddktaq2XWbxiP9oMZLlWgW54J180JLHU+B
-         ZoX1egp58Gi16wyDaduEmVYRj1CW5n7xw9hIW803/wTwc3XfXecNoqndMDN6sROOzdWg
-         zEJk4ZDRvbfNfafmbU5iXITM1Z02PrluJXgy9ey0LWDWjAyZPpXqjIIBfIxS4JHPHo/b
-         E7Bj3IVlEmEdkhJLoYr0CoBvkW1MBPiHIkuJC3ai4sTPQGmkdk89Gan4++5qpY1WpwOx
-         awt6RtDIP83W4SqsFjMiOV4JXHC5jG27hPXbXj5OlU2zYoj5K1biWT+wPOSYP63VRoTK
-         1rrw==
-X-Gm-Message-State: AOAM530NK+GXK5aGre56OPePOPYMt7SRKpI0Q26ajpm9ARXxaKi0i6N2
-        WErngThT+wafI2GP9eXPPYfW+0EThSEoTTfQ
-X-Google-Smtp-Source: ABdhPJwlTj9PIl3lYfVxAKZJrGw9skNy0yB4QNbnAqbu5kbKDhGJt6xeQOyHbSMwPeJUry2pOcPQXQ==
-X-Received: by 2002:a17:90b:e8f:: with SMTP id fv15mr4538238pjb.47.1591813411940;
-        Wed, 10 Jun 2020 11:23:31 -0700 (PDT)
-Received: from gmail.com ([192.55.54.40])
-        by smtp.gmail.com with ESMTPSA id 140sm577886pfv.38.2020.06.10.11.23.27
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jun 2020 11:23:31 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 23:53:24 +0530
-From:   Vaibhav Agarwal <vaibhav.sr@gmail.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alex Elder <elder@kernel.org>, Johan Hovold <johan@kernel.org>,
-        Mark Greer <mgreer@animalcreek.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v2 0/6] Enable Greybus Audio codec driver
-Message-ID: <20200610182322.GC21465@gmail.com>
-References: <cover.1591802243.git.vaibhav.sr@gmail.com>
- <20200610173711.GK5005@sirena.org.uk>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zyv1EVC5aQ7p40tg97oP6U8UUyPJu7Y8g2caqHmmDMU=;
+        b=Ubw0OOWGhaZDp2L2BlhGf7a/Huj41FgpnIFRLT7uK77E79uCzdpelc8iwyIybO6WET
+         o1svM8oCMtB/A+TgUzG5jxaGwTP4Sp339oWB7115WKHrA4h3tA9oAXIu+8zYkYqfs6ZW
+         KyIHohFFe3vzTonK/A6yqxYjSQN2yBU7nnY5ytT6KmUjR1W0+TzBaeF+aj5p/V+AKNG1
+         hZZz36WE+VSZgJR6rDgog6XayiPe80WD+YD7n4uCYWkc30z4wOFZwvq3JpG4woHuSrsq
+         wQsx8N75Bo0LdBtwEwPUMFV6Ksre3tuX6KvDSn3BjZRNlEhl2Jkrt9lMf1SoQ++K4g9E
+         1hDQ==
+X-Gm-Message-State: AOAM530QdzLvZJcLGjlO5c7WKPl6/cZLZD+xaTOSgZv3+pqib0MQzoqt
+        pCS7y7IVofiPhMTWCibvYmKxDg==
+X-Google-Smtp-Source: ABdhPJyoPbqBrHmCEpSP2rYJC3OybCisfNTjpANhnhJoNrKpjjhZ2j4130VgDowrT04pkISFdnN7qA==
+X-Received: by 2002:a9d:7b46:: with SMTP id f6mr3843182oto.286.1591813711180;
+        Wed, 10 Jun 2020 11:28:31 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id g51sm162045otg.17.2020.06.10.11.28.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Jun 2020 11:28:30 -0700 (PDT)
+Subject: Re: [PATCH 4.19 00/25] 4.19.128-rc2 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+References: <20200609185946.866927360@linuxfoundation.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <0c600bf6-f032-ae5b-76ff-907efacabf8f@linuxfoundation.org>
+Date:   Wed, 10 Jun 2020 12:28:29 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200610173711.GK5005@sirena.org.uk>
-User-Agent: Mutt/1.10.1+3 (f9293d646485) (2018-09-22)
+In-Reply-To: <20200609185946.866927360@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 06:37:11PM +0100, Mark Brown wrote:
-> On Wed, Jun 10, 2020 at 10:58:24PM +0530, Vaibhav Agarwal wrote:
-> > The existing GB Audio codec driver is dependent on MSM8994 Audio driver.
-> > During the development stage, this dependency was configured due to
-> > various changes involved in MSM Audio driver to enable addtional codec
-> > card and some of the changes proposed in mainline ASoC framework.
+On 6/9/20 1:18 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.128 release.
+> There are 25 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> I'm not sure why you're copying me on a staging driver?  I don't recall
-> the base driver having been submitted properly yet.
+> Responses should be made by Thu, 11 Jun 2020 18:59:34 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.128-rc2.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-Hi Mark,
+Compiled and booted on my test system. No dmesg regressions.
 
-With patch#6 in this series, I'm proposing some of the (dummy) helper 
-APIs required to link DAPM DAI widgets for the GB Audio modules 
-added/removed dynamically.
+thanks,
+-- Shuah
 
-Eventually, I would like to propose relevant changes in snd-soc APIs to 
-enable dynamic linking of DAI widgets for the modules added and 
-remove/free component controls for the module removed.
-
-I'm seeking your opinion on the proposed changes. And as per the 
-recommendation I'm sharing the changes with ASoC mailing list as well.
-
-Kindly suggest me the preferred way to follow on this thread. 
-
---
-Regards,
-Vaibhav
