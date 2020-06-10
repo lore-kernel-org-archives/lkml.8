@@ -2,206 +2,236 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE740C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E2BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B99520656
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:36:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hm1CJi+k"
+	by mail.kernel.org (Postfix) with ESMTP id E977520656
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:38:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591785531;
+	bh=LPJigDYBhiQuj2b2v8nN1rxTLw+7xk4pJbRTzwRJ0kw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=z4mUZ7jA/Ykn0UCroHMiHluJgA2js9sQ4+wjI8ERCgnzA1G4VUgvNimBsSg8hd1Zm
+	 BakPmd4un1RPWbhBBshBn2QV5/lx/zKwcCGfL0nNonl1D8COF2kgWUEnmkGFzbIGG2
+	 l1u+zs6H8H1RiZhQsVXCzz7sLGDD+CArAmJON7JM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728320AbgFJKgv (ORCPT
+        id S1728274AbgFJKit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 06:36:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55742 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726754AbgFJKgs (ORCPT
+        Wed, 10 Jun 2020 06:38:49 -0400
+Received: from mail-oo1-f66.google.com ([209.85.161.66]:46008 "EHLO
+        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728149AbgFJKio (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 06:36:48 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93513C03E96B
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 03:36:47 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id u13so1344603wml.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 03:36:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ct74x8QzTMiVHLIqtse4haJrkCu8RNQLYYWYvUjLwLQ=;
-        b=Hm1CJi+kEcbRVQFtpTOZN8udhh8/3hHFsmWU8cKKb7GgkBWdzplDWxbxca7QPhiQOP
-         yobx7OEX2ZL5XTjutp86nlWL5aIdX0DnOO9baFragUdKi/Pz2r9ThbZjpPT4Qpx4mNHR
-         kq7wGhBzR7XaruQKWlIYVoirXRCylhmMSMntHMX2gZqavRGqOXoIgMVd1oVXlBGYbFin
-         LvvUEDQy+f7Vidlgd8+19JawnPA6bz0cAKJoSvGmnRstw5iPZvs9eXnnkCMSvVtWxPk2
-         p1OJZfmhfCBnzlfMp31/+4epi1DOa/f0jxOAREiEw+mGS4ciRpsah7V5xwPBDpXnu7KB
-         nxmg==
+        Wed, 10 Jun 2020 06:38:44 -0400
+Received: by mail-oo1-f66.google.com with SMTP id k7so381743ooo.12;
+        Wed, 10 Jun 2020 03:38:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ct74x8QzTMiVHLIqtse4haJrkCu8RNQLYYWYvUjLwLQ=;
-        b=VFJeoBgKSiJkXdUrf7k4slLeP5bv+Zo5RRejZCTHyWwPoi8qBKHRdh1aV38gPznh+k
-         aqO6HDbZYdrW73pwYfKBGpxf7LXjq618fOrgiR/bHgOCB3cJYisINzgYv96kkFn0+Thx
-         Xahxm0EG5DXvNq8Hpqx2vzih96va1j0bCdq3fXLJpZir36JNciRIe/nhDSaZq8V8HpZa
-         +Dt2noNiLG4U2DrmcP6b9aoyxHeLEzRXGGQ3aSxnRFKtNJgjKsnjNEYbMwrlv+AT6KEc
-         272qY94hDuOf8oPNdOHCNUCysNyFAKhw1vmMnho2E5taZUrGq8/iMCFKjMHFtCciRWW5
-         KwOA==
-X-Gm-Message-State: AOAM531vLZdkITC8Hk4yGFtsNtIcb/3PTRdZ0frPynMDHLbvlMgxisis
-        snuGCDQ9dp91uCz5wYYhzbsVucIcFP4=
-X-Google-Smtp-Source: ABdhPJz7r8bS7kNganx4qUD7P1fKicq2Q1nsivL8aGH8+2HEDFcVBi5XCoyamjLXo6DhqnROBkY57Q==
-X-Received: by 2002:a1c:2506:: with SMTP id l6mr2605714wml.34.1591785405839;
-        Wed, 10 Jun 2020 03:36:45 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id h27sm8781671wrb.18.2020.06.10.03.36.44
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jun 2020 03:36:45 -0700 (PDT)
-Subject: Re: [PATCH 4/5] soundwire: qcom: avoid dependency on CONFIG_SLIMBUS
-To:     Jonathan Marek <jonathan@marek.ca>, alsa-devel@alsa-project.org
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Sanyog Kale <sanyog.r.kale@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>
-References: <20200608204347.19685-1-jonathan@marek.ca>
- <20200608204347.19685-5-jonathan@marek.ca>
- <f3eabdb9-da43-9502-352a-1696babc114d@linaro.org>
- <dc8f59c6-2fa9-f3a3-6d77-2d03a6d2776b@marek.ca>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <29a216a7-a76f-a4de-b62d-3043e7e25c18@linaro.org>
-Date:   Wed, 10 Jun 2020 11:36:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yhj0O7kXqY+B3Lbx8zL7czuREuKE1xDVmkNkh9W0Ff8=;
+        b=BU24NqxValo/t5E9HveQinLgNcLH0DDjrUCw6bXH35NoScXxOArJddEDrkUVanE2C2
+         YIB4UolTJuFCOidWQiDYNt1XjkN5+irEaOgq48VJ8uYKTavD6rFj2lBUEQ2I/60MwuUP
+         iMeOWFUU9obrB9VMSGBJrqA7DBiySjzOpJ/FmydghJCgbR+TB1LCT7FuBTcwtCoB0EA5
+         r+MIVTZL9srq4vvf7ixA8EHDbg7q5tmD6C+3B3nPzTTHfiQ9ZGKibEyxdjOUlNr33qlt
+         vNLab4NGYFfyeTNOxIb60a1H91DHQ9l7eDn9KCk39wpVQOh6fDJDwzoxL+5BjD1PZqvg
+         BrmQ==
+X-Gm-Message-State: AOAM531LMKx73UliXLrvY1IcCp3QlcqAW7Y50nJobpXhlT/tZn8wmWaA
+        vfukiz74WrK4XVqr4wnZBkq3ZRnGg0DxFUvC9C3H5Q==
+X-Google-Smtp-Source: ABdhPJxAdTpO7LhYnf0dQcSTZJQHhIdlLN/4PFslP7TgkSlriS32Yc+I7+BmEpE6ZYiAWqbF26joucvNTE5ZFDcQo+M=
+X-Received: by 2002:a4a:3c1a:: with SMTP id d26mr1875366ooa.38.1591785522478;
+ Wed, 10 Jun 2020 03:38:42 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <dc8f59c6-2fa9-f3a3-6d77-2d03a6d2776b@marek.ca>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <2336e15d-ff4b-bbb6-c701-dbf3aa110fcd@redhat.com>
+ <20200608112211.12125-1-andrzej.p@collabora.com> <964ca07a-3da5-101f-7edf-64bdeec98a4b@redhat.com>
+In-Reply-To: <964ca07a-3da5-101f-7edf-64bdeec98a4b@redhat.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 10 Jun 2020 12:38:30 +0200
+Message-ID: <CAJZ5v0hB2ra2K=dd9ZjVyy1V2b1PmFHm79uDO2HtHU1D_4YUbw@mail.gmail.com>
+Subject: Re: [PATCH v4 0/7] Support inhibiting input devices
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-iio@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Samsung SoC <linux-samsung-soc@vger.kernel.org>,
+        linux-input@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        patches@opensource.cirrus.com,
+        ibm-acpi-devel@lists.sourceforge.net,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Barry Song <baohua@kernel.org>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Nick Dyer <nick@shmanahar.org>,
+        Ferruh Yigit <fery@cypress.com>,
+        Sangwon Jee <jeesw@melfas.com>,
+        Peter Hutterer <peter.hutterer@redhat.com>,
+        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
+        Collabora Kernel ML <kernel@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 10, 2020 at 11:50 AM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi All,
+>
+> On 6/8/20 1:22 PM, Andrzej Pietrasiewicz wrote:
+> > This is a quick respin of v3, with just two small changes, please see
+> > the changelog below.
+> >
+> > Userspace might want to implement a policy to temporarily disregard input
+> > from certain devices.
+> >
+> > An example use case is a convertible laptop, whose keyboard can be folded
+> > under the screen to create tablet-like experience. The user then must hold
+> > the laptop in such a way that it is difficult to avoid pressing the keyboard
+> > keys. It is therefore desirable to temporarily disregard input from the
+> > keyboard, until it is folded back. This obviously is a policy which should
+> > be kept out of the kernel, but the kernel must provide suitable means to
+> > implement such a policy.
+>
+> First of all sorry to start a somewhat new discussion about this
+> while this patch set is also somewhat far along in the review process,
+> but I believe what I discuss below needs to be taken into account.
+>
+> Yesterday I have been looking into why an Asus T101HA would not stay
+> suspended when the LID is closed. The cause is that the USB HID multi-touch
+> touchpad in the base of the device starts sending events when the screen
+> gets close to the touchpad (so when the LID is fully closed) and these
+> events are causing a wakeup from suspend. HID multi-touch devices
+> do have a way to tell them to fully stop sending events, also disabling
+> the USB remote wakeup the device is doing. The question is when to tell
+> it to not send events though ...
+>
+> So now I've been thinking about how to fix this and I believe that there
+> is some interaction between this problem and this patch-set.
+>
+> The problem I'm seeing on the T101HA is about wakeups, so the question
+> which I want to discuss is:
+>
+> 1. How does inhibiting interact with enabling /
+> disabling the device as a wakeup source ?
+>
+> 2. Since we have now made inhibiting equal open/close how does open/close
+> interact with a device being a wakeup source ?
+>
+> And my own initial (to be discussed) answers to these questions:
+>
+> 1. It seems to me that when a device is inhibited it should not be a
+> wakeup source, so where possible a input-device-driver should disable
+> a device's wakeup capabilities on suspend if inhibited
 
+If "inhibit" means "do not generate any events going forward", then
+this must also cover wakeup events, so I agree.
 
-On 09/06/2020 12:33, Jonathan Marek wrote:
-> On 6/9/20 5:52 AM, Srinivas Kandagatla wrote:
->>
->>
->> On 08/06/2020 21:43, Jonathan Marek wrote:
->>> The driver may be used without slimbus, so don't depend on slimbus.
->>>
->>> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
->>> ---
->>>   drivers/soundwire/Kconfig | 1 -
->>>   drivers/soundwire/qcom.c  | 5 +++++
->>>   2 files changed, 5 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/soundwire/Kconfig b/drivers/soundwire/Kconfig
->>> index fa2b4ab92ed9..d121cf739090 100644
->>> --- a/drivers/soundwire/Kconfig
->>> +++ b/drivers/soundwire/Kconfig
->>> @@ -33,7 +33,6 @@ config SOUNDWIRE_INTEL
->>>   config SOUNDWIRE_QCOM
->>>       tristate "Qualcomm SoundWire Master driver"
->>> -    depends on SLIMBUS
->>>       depends on SND_SOC
->>
->> Why not move this to imply SLIMBUS this will give more flexibility!
->>
->>
-> 
-> If you mean to change it to "select SLIMBUS", I'd prefer not to, because 
-> this would increase code size unnecessarily in my kernel.
+> 2. This one is trickier I don't think we have really clearly specified
+> any behavior here. The default behavior of most drivers seems to be
+> using something like this in their suspend callback:
+>
+>          if (device_may_wakeup(dev))
+>                  enable_irq_wake(data->irq);
+>          else if (input->users)
+>                  foo_stop_receiving_events(data);
+>
+> Since this is what most drivers seem to do I believe we should keep
+> this as is and that we should just clearly document that if the
+> input_device has users (has been opened) or not does not matter
+> for its wakeup behavior.
+>
+> Combining these 2 answers leads to this new pseudo code template
+> for an input-device's suspend method:
+>
+>         /*
+>          * If inhibited we have already disabled events and
+>          * we do NOT want to setup the device as wake source.
+>          */
+>         if (input->inhibited)
+>                 return 0;
+>
+>          if (device_may_wakeup(dev))
+>                  enable_irq_wake(data->irq);
+>          else if (input->users)
+>                  foo_stop_receiving_events(data);
+>
+> ###
 
-imply is week select, which means that this driver can be built without 
-SLIMBus selected. So removing reference to slimbus_bus is necessary in 
-this case.
+Sounds reasonable to me.
 
-On the other hand, SLIMBus is going to be used sm8250 for BT audio, so 
-this would not be unnecessary. Also mostly these are build as modules, 
-so not sure why kernel size will increase here!
+> A different, but related issue is how to make devices actually use the
+> new inhibit support on the builtin keyboard + touchpad when say the lid
+> is closed.   Arguably this is an userspace problem, but it is a tricky
+> one. Currently on most modern Linux distributions suspend-on-lid-close
+> is handled by systemd-logind and most modern desktop-environments are
+> happy to have logind handle this for them.
+>
+> But most knowledge about input devices and e.g. heurisitics to decide
+> if a touchpad is internal or external are part of libinput. Now we could
+> have libinput use the new inhibit support (1), but then when the lid
+> closes we get race between whatever process is using libinput trying
+> to inhibit the touchpad (which must be done before to suspend to disable
+> it as wakeup source) and logind trying to suspend the system.
+>
+> One solution here would be to move the setting of the inhibit sysfs
+> attr into logind, but that requires adding a whole bunch of extra
+> knowledge to logind which does not really belong there IMHO.
+>
+> I've been thinking a bit about this and to me it seems that the kernel
+> is in the ideal position to automatically inhibit some devices when
+> some EV_SW transitions from 0->1 (and uninhibit again on 1->0). The
+> issue here is to chose on which devices to enable this. I believe
+> that the auto inhibit on some switches mechanism is best done inside
+> the kernel (disabled by default) and then we can have a sysfs
+> attr called auto_inhibit_ev_sw_mask which can be set to e.g.
+> (1 << SW_LID) to make the kernel auto-inhibit the input-device whenever
+> the lid is closed, or to ((1 << SW_LID) | (1 << SW_TABLET_MODE)) to
+> inhibit both when the lid is closed or when switched to tablet mode.
 
-Am not 100% sure if SLIMBus will be kept on all SoCs, but keeping 
-depends or imply in place would enforce or spell out some level of 
-dependency on this.
+I agree that the kernel is the right place to handle this, but it
+requires some extra knowledge about dependencies between devices.
 
-> 
->>>       help
->>>         SoundWire Qualcomm Master driver.
->>> diff --git a/drivers/soundwire/qcom.c b/drivers/soundwire/qcom.c
->>> index 14334442615f..ac81c64768ea 100644
->>> --- a/drivers/soundwire/qcom.c
->>> +++ b/drivers/soundwire/qcom.c
->>> @@ -769,13 +769,18 @@ static int qcom_swrm_probe(struct 
->>> platform_device *pdev)
->>>       if (!ctrl)
->>>           return -ENOMEM;
->>> +#ifdef CONFIG_SLIMBUS
->>>       if (dev->parent->bus == &slimbus_bus) {
->>> +#else
->>> +    if (false) {
->>> +#endif
->>
->> May be you can do bit more cleanup here, which could endup like:
->>
->>
->> ctrl->regmap = dev_get_regmap(dev->parent, NULL);
->> if (!ctrl->regmap) {
->>      res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>      if (res) {
->>          ctrl->mmio = devm_ioremap_resource(dev, res);
->>          if (IS_ERR(ctrl->mmio)) {
->>              dev_err(dev, "No valid mem resource found\n");
->>              return PTR_ERR(ctrl->mmio);
->>          }
->>
->>          ctrl->reg_read = qcom_swrm_cpu_reg_read;
->>          ctrl->reg_write = qcom_swrm_cpu_reg_write;
->>      } else {
->>          dev_err(dev, "No valid slim resource found\n");
->>          return -EINVAL;
->>      }
->> } else {
->>      ctrl->reg_read = qcom_swrm_ahb_reg_read;
->>      ctrl->reg_write = qcom_swrm_ahb_reg_write;
->> }
->>
->>
->>
->> thanks,
->> srini
-> 
-> I don't think this is better, it feels more obfuscated, and I think its 
-> possible we may end up with the mmio sdw having a parent with a regmap. 
-> (it is not how I did things up in my upstream stack, but in downstream 
-> the sdw nodes are inside the "macro" codec nodes)
-> 
-> I understand the '#ifdef CONFIG_SLIMBUS'/'dev->parent->bus == 
-> &slimbus_bus' is ugly, but at least its clear what's going on. Unless 
-> you have a better suggestion?
+It'd be kind of like power resources in ACPI, so for each state of a
+"master" device (in principle, there may be more states of it than
+just two) there would be a list of "dependent" intput devices that
+need to be inhibited when the "master" device goes into that state.
 
-Other suggestion I had in my mind was to use compatible strings to get 
-reg_read, reg_write callbacks + some flags like (if_type) populated. 
-This can help looking up resources correctly.
-
-Thanks,
-srini
-
-> 
->>>           ctrl->reg_read = qcom_swrm_ahb_reg_read;
->>>           ctrl->reg_write = qcom_swrm_ahb_reg_write;
->>>           ctrl->regmap = dev_get_regmap(dev->parent, NULL);
->>>           if (!ctrl->regmap)
->>>               return -EINVAL;
->>>       } else {
->>> +
->>>           res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>>           ctrl->reg_read = qcom_swrm_cpu_reg_read;
->>>
+> This could then be combined with a userspace utility run from an
+> udev rule which makes the actual decision what auto_inhibit_ev_sw_mask
+> should be set for a given input device.
+>
+> This will put the mechanism for what we want inside the kernel and
+> leaves the policy on which switches we want this for out of the
+> kernel.
+>
+> Note adding this new auto_inhibit_ev_sw_mask sysfs attr falls
+> somewhat outside the context of this patchset and could be done
+> as a follow up to this patch-set. But I do believe that we need to
+> figure out how (non ChromeOS) userspace can / will use the new inhibit
+> interface before merging it.
