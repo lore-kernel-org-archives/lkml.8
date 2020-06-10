@@ -2,240 +2,212 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD5FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8899FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A2062074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:22:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56CE220734
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:22:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zbMnvAud"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="yW/pR62p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729048AbgFJMWa (ORCPT
+        id S1729056AbgFJMWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 08:22:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43954 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728544AbgFJMW1 (ORCPT
+        Wed, 10 Jun 2020 08:22:35 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:17372 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729037AbgFJMWb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 08:22:27 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FDF1C03E96F
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 05:22:26 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id s1so2232085ljo.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 05:22:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=nXCz1ikPs5SUZ7bBHCgz1YNMvzk/jWfLOTt8iV/R7HU=;
-        b=zbMnvAudhTNt3umbISgu7r0KCqmisDAmJjsWJrGeunN/+MvoQDkcpyBUKzQtY7EL0u
-         8849lGZLUS3+vRHscbh6ZpbSpxlmImMPHJzQCKBli0jH2cUnNh2+qiNw7jCpRZBUWqMd
-         HhAQL2NL2c4elTYF0znQeOd5lD5bG1A80/RjaxAwwdjOF51L3dkad3WkbeBljjxy++1w
-         xlsZ30qxUcXvYzp/u3gU6fMax9eWvCzuoermibg9dxyjkwN9WYIS7AMZAF3KjFf6Ttmj
-         oMnHjcG7UqayfHXv5h8uwF/PLGHVGGFdjZujZAQb0lZ/2DCQRpzCWJig/BHe8L+j7tCM
-         alnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=nXCz1ikPs5SUZ7bBHCgz1YNMvzk/jWfLOTt8iV/R7HU=;
-        b=SK5Ic4J8V3IGmFw7yrafHsL2OzWSv7AT1aGSXhfHNooTOASFKj7UUu3jxQqTYmSsqW
-         CBpt0MX25uCoPYIUrlt0A6NKdPMhmbjx7xug/Aqxmp8PO0/W4pxuN5NPsa/V/aW6LwFh
-         QUl8qtw5v7B9F0+xFTLmoLcFeuRAaStuEhDhlNLqD2yj5mM+qpYKJgvbIXgptKxv5oG5
-         vt1Jhh7mLezMgNdVLViDMCg+jtlj8AFL8fpySYUCX+/jPSgnAjXbW9w8DWtcWDQeGHKs
-         cFb/l0ij/ryFjBrCcZGq7PvC0MyoBmoA7MPfKW6KTjBk6V/dmX6dN67pClOW3p1IrhHY
-         TdYQ==
-X-Gm-Message-State: AOAM531FHQALcqnk6QMPBX/k0vAFWLqxtSLRuAE22PekN6C8Wc6dVqfG
-        2V29Uznp6OkMO5ah7hCdAQvi4RfYAXMIOjV7xkkjjQ==
-X-Google-Smtp-Source: ABdhPJwDkn1WiZTE86h/ajzWx0MwKheL0zJo1WcgtpXekqptbPEqPCfCX2urtmAgy+6WKC0gIcRtSiMH2B35HOpeNFE=
-X-Received: by 2002:a2e:b88c:: with SMTP id r12mr1674101ljp.266.1591791744293;
- Wed, 10 Jun 2020 05:22:24 -0700 (PDT)
+        Wed, 10 Jun 2020 08:22:31 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05ACH9O9025176;
+        Wed, 10 Jun 2020 14:22:11 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=Ogt7kzdY+2u4HiQMwxF0C/6ggbmSoaxy/EAlQct2Trk=;
+ b=yW/pR62pcvAr+WT+FnE5474MdUVzpX+SupEdiB5AXPQ5h/x2D5zkQ4yLnH4v4FqTLx+c
+ C3GElqXURNjT4HlKppybYEEXALEVzG2iAructlOvIylJcznOBXc1hYwpHweROBVZO/mm
+ I2muRfWfpHSb3RMqzp4IIsbd2mV2pzvxUJaB6QcXlA+xjgIHBuk6vumVsSNUM1x/yqTE
+ USdbSY364zHhrXCncqiRpdptsSFO3t7v3il0NiDROYWE8Z7HcMWPQ9kE2WVHP2I3xk2G
+ scxCGQM/nQiBKlnsdlDFXKIowuWvrcKMsmyXIOj6ZO/+cp9/veBfqz9UzIAy8arxh90U Yw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 31jppntq1t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 10 Jun 2020 14:22:11 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9F8B810002A;
+        Wed, 10 Jun 2020 14:22:10 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 34BF92B9C66;
+        Wed, 10 Jun 2020 14:22:08 +0200 (CEST)
+Received: from SFHDAG6NODE1.st.com (10.75.127.16) by SFHDAG6NODE2.st.com
+ (10.75.127.17) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 10 Jun
+ 2020 14:22:07 +0200
+Received: from SFHDAG6NODE1.st.com ([fe80::8d96:4406:44e3:eb27]) by
+ SFHDAG6NODE1.st.com ([fe80::8d96:4406:44e3:eb27%20]) with mapi id
+ 15.00.1473.003; Wed, 10 Jun 2020 14:22:07 +0200
+From:   Yannick FERTRE <yannick.fertre@st.com>
+To:     Adrian Ratiu <adrian.ratiu@collabora.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "Heiko Stuebner" <heiko@sntech.de>,
+        Philippe CORNU <philippe.cornu@st.com>,
+        "Jernej Skrabec" <jernej.skrabec@siol.net>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        "Jonas Karlman" <jonas@kwiboo.se>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        "kernel@collabora.com" <kernel@collabora.com>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Adrian Pop <pop.adrian61@gmail.com>,
+        Arnaud Ferraris <arnaud.ferraris@collabora.com>
+Subject: Re: [PATCH v9 10/11] drm: bridge: dw-mipi-dsi: fix bad register field
+ offsets
+Thread-Topic: [PATCH v9 10/11] drm: bridge: dw-mipi-dsi: fix bad register
+ field offsets
+Thread-Index: AQHWPoY3sOkL2THKq0y5LpEfOytE3qjRpO2A
+Date:   Wed, 10 Jun 2020 12:22:07 +0000
+Message-ID: <673a3961-d5ef-b7cd-4301-43c1c2786ed1@st.com>
+References: <20200609174959.955926-1-adrian.ratiu@collabora.com>
+ <20200609174959.955926-11-adrian.ratiu@collabora.com>
+In-Reply-To: <20200609174959.955926-11-adrian.ratiu@collabora.com>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.44]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <13E4D089CC2D1740B364E43D624E547D@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200609190211.793882726@linuxfoundation.org>
-In-Reply-To: <20200609190211.793882726@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 10 Jun 2020 17:52:12 +0530
-Message-ID: <CA+G9fYto-j6-_ddO5Jb7-BtUykz5ofPAWtqAetWLoXiqT1RNXg@mail.gmail.com>
-Subject: Re: [PATCH 4.4 00/36] 4.4.227-rc2 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-10_07:2020-06-10,2020-06-10 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 10 Jun 2020 at 00:48, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.4.227 release.
-> There are 36 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 11 Jun 2020 19:02:00 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.4.227-rc2.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
-
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.4.227-rc2
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.4.y
-git commit: 61ef7e7aaf1df32b9a53dda1cdde0caff1293c17
-git describe: v4.4.226-37-g61ef7e7aaf1d
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.4-oe/bui=
-ld/v4.4.226-37-g61ef7e7aaf1d
-
-No regressions (compared to build v4.4.226)
-
-No fixes (compared to build v4.4.226)
-
-Ran 19926 total tests in the following environments and test suites.
-
-Environments
---------------
-- i386
-- juno-r2 - arm64
-- juno-r2-compat
-- juno-r2-kasan
-- x15 - arm
-- x86_64
-- x86-kasan
-
-Test Suites
------------
-* build
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-controllers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-open-posix-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* perf
-* v4l2-compliance
-* kvm-unit-tests
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest/net
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.4.227-rc2
-git repo: https://git.linaro.org/lkft/arm64-stable-rc.git
-git branch: 4.4.227-rc2-hikey-20200609-744
-git commit: 4ec7bf05c50a96f516df037f490178044c7fba39
-git describe: 4.4.227-rc2-hikey-20200609-744
-Test details: https://qa-reports.linaro.org/lkft/linaro-hikey-stable-rc-4.4=
--oe/build/4.4.227-rc2-hikey-20200609-744
-
-
-No regressions (compared to build 4.4.227-rc1-hikey-20200607-742)
-
-
-No fixes (compared to build 4.4.227-rc1-hikey-20200607-742)
-
-Ran 748 total tests in the following environments and test suites.
-
-Environments
---------------
-- hi6220-hikey - arm64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+SGkgQWRyaWFuLA0KDQp0aGFua3MgZm9yIHRoZSBwYWNoOiB0ZXN0ZWQgb24gc3RtMzJtcDEuDQoN
+ClRlc3RlZC1ieTogWWFubmljayBGZXJ0csOpIDx5YW5uaWNrLmZlcnRyZUBzdC5jb20+DQoNCk9u
+IDYvOS8yMCA3OjQ5IFBNLCBBZHJpYW4gUmF0aXUgd3JvdGU6DQo+IEFjY29yZGluZyB0byB0aGUg
+RFNJIEhvc3QgUmVnaXN0ZXJzIHNlY3Rpb25zIGF2YWlsYWJsZSBpbiB0aGUgSU1YLA0KPiBTVE0g
+YW5kIFJLIHJlZiBtYW51YWxzIGZvciAxLjAxLCAxLjMwIGFuZCAxLjMxLCB0aGUgcmVnaXN0ZXIg
+ZmllbGRzDQo+IGFyZSBzbWFsbGVyIG9yIGJpZ2dlciB0aGFuIHdoYXQncyBjb2RlZCBpbiB0aGUg
+ZHJpdmVyLCBsZWFkaW5nIHRvDQo+IHIvdyBpbiByZXNlcnZlZCBzcGFjZXMgd2hpY2ggbWlnaHQg
+Y2F1c2UgdW5kZWZpbmVkIGJlaGF2aW91cnMuDQo+DQo+IFRlc3RlZC1ieTogQWRyaWFuIFBvcCA8
+cG9wLmFkcmlhbjYxQGdtYWlsLmNvbT4NCj4gVGVzdGVkLWJ5OiBBcm5hdWQgRmVycmFyaXMgPGFy
+bmF1ZC5mZXJyYXJpc0Bjb2xsYWJvcmEuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBBZHJpYW4gUmF0
+aXUgPGFkcmlhbi5yYXRpdUBjb2xsYWJvcmEuY29tPg0KPiAtLS0NCj4gTmV3IGluIHY2Lg0KPiAt
+LS0NCj4gICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LW1pcGktZHNpLmMgfCA0
+NiArKysrKysrKystLS0tLS0tLS0tDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDIzIGluc2VydGlvbnMo
+KyksIDIzIGRlbGV0aW9ucygtKQ0KPg0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2Jy
+aWRnZS9zeW5vcHN5cy9kdy1taXBpLWRzaS5jIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zeW5v
+cHN5cy9kdy1taXBpLWRzaS5jDQo+IGluZGV4IDFlNDdkNDBiNWJlY2IuLmQyNzQyMTZjNWE3YzIg
+MTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctbWlwaS1k
+c2kuYw0KPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LW1pcGktZHNp
+LmMNCj4gQEAgLTMxNiw3ICszMTYsNyBAQCBzdHJ1Y3QgZHdfbWlwaV9kc2lfdmFyaWFudCB7DQo+
+ICAgc3RhdGljIGNvbnN0IHN0cnVjdCBkd19taXBpX2RzaV92YXJpYW50IGR3X21pcGlfZHNpX3Yx
+MzBfdjEzMV9sYXlvdXQgPSB7DQo+ICAgCS5jZmdfZHBpX2NvbG9yX2NvZGluZyA9CQlSRUdfRklF
+TEQoRFNJX0RQSV9DT0xPUl9DT0RJTkcsIDAsIDMpLA0KPiAgIAkuY2ZnX2RwaV8xOGxvb3NlbHlf
+ZW4gPQkJUkVHX0ZJRUxEKERTSV9EUElfQ09MT1JfQ09ESU5HLCA4LCA4KSwNCj4gLQkuY2ZnX2Rw
+aV92aWQgPQkJCVJFR19GSUVMRChEU0lfRFBJX1ZDSUQsIDAsIDIpLA0KPiArCS5jZmdfZHBpX3Zp
+ZCA9CQkJUkVHX0ZJRUxEKERTSV9EUElfVkNJRCwgMCwgMSksDQo+ICAgCS5jZmdfZHBpX3ZzeW5j
+X2FjdGl2ZV9sb3cgPQlSRUdfRklFTEQoRFNJX0RQSV9DRkdfUE9MLCAxLCAxKSwNCj4gICAJLmNm
+Z19kcGlfaHN5bmNfYWN0aXZlX2xvdyA9CVJFR19GSUVMRChEU0lfRFBJX0NGR19QT0wsIDIsIDIp
+LA0KPiAgIAkuY2ZnX2NtZF9tb2RlX2Fja19ycXN0X2VuID0JUkVHX0ZJRUxEKERTSV9DTURfTU9E
+RV9DRkcsIDEsIDEpLA0KPiBAQCAtMzI1LDI5ICszMjUsMjkgQEAgc3RhdGljIGNvbnN0IHN0cnVj
+dCBkd19taXBpX2RzaV92YXJpYW50IGR3X21pcGlfZHNpX3YxMzBfdjEzMV9sYXlvdXQgPSB7DQo+
+ICAgCS5jZmdfY21kX21vZGVfZGNzX3N3X3NyX2VuID0JUkVHX0ZJRUxEKERTSV9DTURfTU9ERV9D
+RkcsIDE2LCAxOCksDQo+ICAgCS5jZmdfY21kX21vZGVfZGNzX2x3X2VuID0JUkVHX0ZJRUxEKERT
+SV9DTURfTU9ERV9DRkcsIDE5LCAxOSksDQo+ICAgCS5jZmdfY21kX21vZGVfbWF4X3JkX3BrdF9z
+aXplID0JUkVHX0ZJRUxEKERTSV9DTURfTU9ERV9DRkcsIDI0LCAyNCksDQo+IC0JLmNmZ19jbWRf
+bW9kZV9lbiA9CQlSRUdfRklFTEQoRFNJX01PREVfQ0ZHLCAwLCAzMSksDQo+IC0JLmNmZ19jbWRf
+cGt0X3N0YXR1cyA9CQlSRUdfRklFTEQoRFNJX0NNRF9QS1RfU1RBVFVTLCAwLCAzMSksDQo+IC0J
+LmNmZ192aWRfbW9kZV9lbiA9CQlSRUdfRklFTEQoRFNJX01PREVfQ0ZHLCAwLCAzMSksDQo+ICsJ
+LmNmZ19jbWRfbW9kZV9lbiA9CQlSRUdfRklFTEQoRFNJX01PREVfQ0ZHLCAwLCAwKSwNCj4gKwku
+Y2ZnX2NtZF9wa3Rfc3RhdHVzID0JCVJFR19GSUVMRChEU0lfQ01EX1BLVF9TVEFUVVMsIDAsIDYp
+LA0KPiArCS5jZmdfdmlkX21vZGVfZW4gPQkJUkVHX0ZJRUxEKERTSV9NT0RFX0NGRywgMCwgMCks
+DQo+ICAgCS5jZmdfdmlkX21vZGVfdHlwZSA9CQlSRUdfRklFTEQoRFNJX1ZJRF9NT0RFX0NGRywg
+MCwgMSksDQo+ICAgCS5jZmdfdmlkX21vZGVfbG93X3Bvd2VyID0JUkVHX0ZJRUxEKERTSV9WSURf
+TU9ERV9DRkcsIDgsIDEzKSwNCj4gICAJLmNmZ192aWRfbW9kZV92cGdfZW4gPQkJUkVHX0ZJRUxE
+KERTSV9WSURfTU9ERV9DRkcsIDE2LCAxNiksDQo+ICAgCS5jZmdfdmlkX21vZGVfdnBnX2hvcml6
+ID0JUkVHX0ZJRUxEKERTSV9WSURfTU9ERV9DRkcsIDI0LCAyNCksDQo+IC0JLmNmZ192aWRfcGt0
+X3NpemUgPQkJUkVHX0ZJRUxEKERTSV9WSURfUEtUX1NJWkUsIDAsIDEwKSwNCj4gLQkuY2ZnX3Zp
+ZF9oc2FfdGltZSA9CQlSRUdfRklFTEQoRFNJX1ZJRF9IU0FfVElNRSwgMCwgMzEpLA0KPiAtCS5j
+ZmdfdmlkX2hicF90aW1lID0JCVJFR19GSUVMRChEU0lfVklEX0hCUF9USU1FLCAwLCAzMSksDQo+
+IC0JLmNmZ192aWRfaGxpbmVfdGltZSA9CQlSRUdfRklFTEQoRFNJX1ZJRF9ITElORV9USU1FLCAw
+LCAzMSksDQo+IC0JLmNmZ192aWRfdnNhX3RpbWUgPQkJUkVHX0ZJRUxEKERTSV9WSURfVlNBX0xJ
+TkVTLCAwLCAzMSksDQo+IC0JLmNmZ192aWRfdmJwX3RpbWUgPQkJUkVHX0ZJRUxEKERTSV9WSURf
+VkJQX0xJTkVTLCAwLCAzMSksDQo+IC0JLmNmZ192aWRfdmZwX3RpbWUgPQkJUkVHX0ZJRUxEKERT
+SV9WSURfVkZQX0xJTkVTLCAwLCAzMSksDQo+IC0JLmNmZ192aWRfdmFjdGl2ZV90aW1lID0JCVJF
+R19GSUVMRChEU0lfVklEX1ZBQ1RJVkVfTElORVMsIDAsIDMxKSwNCj4gKwkuY2ZnX3ZpZF9wa3Rf
+c2l6ZSA9CQlSRUdfRklFTEQoRFNJX1ZJRF9QS1RfU0laRSwgMCwgMTMpLA0KPiArCS5jZmdfdmlk
+X2hzYV90aW1lID0JCVJFR19GSUVMRChEU0lfVklEX0hTQV9USU1FLCAwLCAxMSksDQo+ICsJLmNm
+Z192aWRfaGJwX3RpbWUgPQkJUkVHX0ZJRUxEKERTSV9WSURfSEJQX1RJTUUsIDAsIDExKSwNCj4g
+KwkuY2ZnX3ZpZF9obGluZV90aW1lID0JCVJFR19GSUVMRChEU0lfVklEX0hMSU5FX1RJTUUsIDAs
+IDE0KSwNCj4gKwkuY2ZnX3ZpZF92c2FfdGltZSA9CQlSRUdfRklFTEQoRFNJX1ZJRF9WU0FfTElO
+RVMsIDAsIDkpLA0KPiArCS5jZmdfdmlkX3ZicF90aW1lID0JCVJFR19GSUVMRChEU0lfVklEX1ZC
+UF9MSU5FUywgMCwgOSksDQo+ICsJLmNmZ192aWRfdmZwX3RpbWUgPQkJUkVHX0ZJRUxEKERTSV9W
+SURfVkZQX0xJTkVTLCAwLCA5KSwNCj4gKwkuY2ZnX3ZpZF92YWN0aXZlX3RpbWUgPQkJUkVHX0ZJ
+RUxEKERTSV9WSURfVkFDVElWRV9MSU5FUywgMCwgMTMpLA0KPiAgIAkuY2ZnX3BoeV90eHJlcXVl
+c3RjbGtocyA9CVJFR19GSUVMRChEU0lfTFBDTEtfQ1RSTCwgMCwgMCksDQo+IC0JLmNmZ19waHlf
+YnRhX3RpbWUgPQkJUkVHX0ZJRUxEKERTSV9CVEFfVE9fQ05ULCAwLCAzMSksDQo+IC0JLmNmZ19w
+aHlfbWF4X3JkX3RpbWUgPQkJUkVHX0ZJRUxEKERTSV9QSFlfVE1SX0NGRywgMCwgMTUpLA0KPiAr
+CS5jZmdfcGh5X2J0YV90aW1lID0JCVJFR19GSUVMRChEU0lfQlRBX1RPX0NOVCwgMCwgMTUpLA0K
+PiArCS5jZmdfcGh5X21heF9yZF90aW1lID0JCVJFR19GSUVMRChEU0lfUEhZX1RNUl9DRkcsIDAs
+IDE0KSwNCj4gICAJLmNmZ19waHlfbHAyaHNfdGltZSA9CQlSRUdfRklFTEQoRFNJX1BIWV9UTVJf
+Q0ZHLCAxNiwgMjMpLA0KPiAgIAkuY2ZnX3BoeV9oczJscF90aW1lID0JCVJFR19GSUVMRChEU0lf
+UEhZX1RNUl9DRkcsIDI0LCAzMSksDQo+IC0JLmNmZ19waHlfbWF4X3JkX3RpbWVfdjEzMSA9CVJF
+R19GSUVMRChEU0lfUEhZX1RNUl9SRF9DRkcsIDAsIDE1KSwNCj4gLQkuY2ZnX3BoeV9scDJoc190
+aW1lX3YxMzEgPQlSRUdfRklFTEQoRFNJX1BIWV9UTVJfQ0ZHLCAwLCAxNSksDQo+IC0JLmNmZ19w
+aHlfaHMybHBfdGltZV92MTMxID0JUkVHX0ZJRUxEKERTSV9QSFlfVE1SX0NGRywgMTYsIDMxKSwN
+Cj4gKwkuY2ZnX3BoeV9tYXhfcmRfdGltZV92MTMxID0JUkVHX0ZJRUxEKERTSV9QSFlfVE1SX1JE
+X0NGRywgMCwgMTQpLA0KPiArCS5jZmdfcGh5X2xwMmhzX3RpbWVfdjEzMSA9CVJFR19GSUVMRChE
+U0lfUEhZX1RNUl9DRkcsIDAsIDkpLA0KPiArCS5jZmdfcGh5X2hzMmxwX3RpbWVfdjEzMSA9CVJF
+R19GSUVMRChEU0lfUEhZX1RNUl9DRkcsIDE2LCAyNSksDQo+ICAgCS5jZmdfcGh5X2Nsa2xwMmhz
+X3RpbWUgPQlSRUdfRklFTEQoRFNJX1BIWV9UTVJfTFBDTEtfQ0ZHLCAwLCAxNSksDQo+ICAgCS5j
+ZmdfcGh5X2Nsa2hzMmxwX3RpbWUgPQlSRUdfRklFTEQoRFNJX1BIWV9UTVJfTFBDTEtfQ0ZHLCAx
+NiwgMzEpLA0KPiAgIAkuY2ZnX3BoeV90ZXN0Y2xyID0JCVJFR19GSUVMRChEU0lfUEhZX1RTVF9D
+VFJMMCwgMCwgMCksDQo+IEBAIC0zNjEsMTEgKzM2MSwxMSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0
+IGR3X21pcGlfZHNpX3ZhcmlhbnQgZHdfbWlwaV9kc2lfdjEzMF92MTMxX2xheW91dCA9IHsNCj4g
+ICAJLmNmZ19wY2toZGxfY2ZnID0JCVJFR19GSUVMRChEU0lfUENLSERMX0NGRywgMCwgNCksDQo+
+ICAgCS5jZmdfaHN0eF90aW1lb3V0X2NvdW50ZXIgPQlSRUdfRklFTEQoRFNJX1RPX0NOVF9DRkcs
+IDE2LCAzMSksDQo+ICAgCS5jZmdfbHByeF90aW1lb3V0X2NvdW50ZXIgPQlSRUdfRklFTEQoRFNJ
+X1RPX0NOVF9DRkcsIDAsIDE1KSwNCj4gLQkuY2ZnX2ludF9zdGF0MCA9CQlSRUdfRklFTEQoRFNJ
+X0lOVF9TVDAsIDAsIDMxKSwNCj4gLQkuY2ZnX2ludF9zdGF0MSA9CQlSRUdfRklFTEQoRFNJX0lO
+VF9TVDEsIDAsIDMxKSwNCj4gLQkuY2ZnX2ludF9tYXNrMCA9CQlSRUdfRklFTEQoRFNJX0lOVF9N
+U0swLCAwLCAzMSksDQo+IC0JLmNmZ19pbnRfbWFzazEgPQkJUkVHX0ZJRUxEKERTSV9JTlRfTVNL
+MSwgMCwgMzEpLA0KPiAtCS5jZmdfZ2VuX2hkciA9CQkJUkVHX0ZJRUxEKERTSV9HRU5fSERSLCAw
+LCAzMSksDQo+ICsJLmNmZ19pbnRfc3RhdDAgPQkJUkVHX0ZJRUxEKERTSV9JTlRfU1QwLCAwLCAy
+MCksDQo+ICsJLmNmZ19pbnRfc3RhdDEgPQkJUkVHX0ZJRUxEKERTSV9JTlRfU1QxLCAwLCAxMiks
+DQo+ICsJLmNmZ19pbnRfbWFzazAgPQkJUkVHX0ZJRUxEKERTSV9JTlRfTVNLMCwgMCwgMjApLA0K
+PiArCS5jZmdfaW50X21hc2sxID0JCVJFR19GSUVMRChEU0lfSU5UX01TSzEsIDAsIDEyKSwNCj4g
+KwkuY2ZnX2dlbl9oZHIgPQkJCVJFR19GSUVMRChEU0lfR0VOX0hEUiwgMCwgMjMpLA0KPiAgIAku
+Y2ZnX2dlbl9wYXlsb2FkID0JCVJFR19GSUVMRChEU0lfR0VOX1BMRF9EQVRBLCAwLCAzMSksDQo+
+ICAgfTsNCj4gICANCj4gQEAgLTM4Miw3ICszODIsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGR3
+X21pcGlfZHNpX3ZhcmlhbnQgZHdfbWlwaV9kc2lfdjEwMV9sYXlvdXQgPSB7DQo+ICAgCS5jZmdf
+Y21kX21vZGVfZ2VuX2x3X2VuID0JUkVHX0ZJRUxEKERTSV9DTURfTU9ERV9DRkcsIDExLCAxMSks
+DQo+ICAgCS5jZmdfY21kX21vZGVfZGNzX2x3X2VuID0JUkVHX0ZJRUxEKERTSV9DTURfTU9ERV9D
+RkcsIDEyLCAxMiksDQo+ICAgCS5jZmdfY21kX21vZGVfYWNrX3Jxc3RfZW4gPQlSRUdfRklFTEQo
+RFNJX0NNRF9NT0RFX0NGR19WMTAxLCAxMywgMTMpLA0KPiAtCS5jZmdfY21kX3BrdF9zdGF0dXMg
+PQkJUkVHX0ZJRUxEKERTSV9DTURfUEtUX1NUQVRVU19WMTAxLCAwLCAxNCksDQo+ICsJLmNmZ19j
+bWRfcGt0X3N0YXR1cyA9CQlSRUdfRklFTEQoRFNJX0NNRF9QS1RfU1RBVFVTX1YxMDEsIDAsIDYp
+LA0KPiAgIAkuY2ZnX3ZpZF9tb2RlX2VuID0JCVJFR19GSUVMRChEU0lfVklEX01PREVfQ0ZHX1Yx
+MDEsIDAsIDApLA0KPiAgIAkuY2ZnX3ZpZF9tb2RlX3R5cGUgPQkJUkVHX0ZJRUxEKERTSV9WSURf
+TU9ERV9DRkdfVjEwMSwgMSwgMiksDQo+ICAgCS5jZmdfdmlkX21vZGVfbG93X3Bvd2VyID0JUkVH
+X0ZJRUxEKERTSV9WSURfTU9ERV9DRkdfVjEwMSwgMywgOCksDQo=
