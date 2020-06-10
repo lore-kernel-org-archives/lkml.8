@@ -2,69 +2,98 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C77ABC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B240C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:50:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB76920760
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E286C20812
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:50:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591789859;
+	bh=YIB/QxY+kFi44EYUQu8N4ZO01G6LNQ6fIC2Z+fyL0SQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=e6GKJvBprUMw0fFni9/rMuXHb3iEC7IwxxVQ9t8xjr76L4JNTEop9S5lvSdTl3dYd
+	 9IkgxeI44vbqj1fQ+aUj2z0YSHeEfIJ+bPgVNLuxlIeGPPMANSDSJ39Xn0AWwzEq2O
+	 OyzvoqyiKdubCdaL3xQMtT/Q/vPoGzmWy5YzzgMA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728646AbgFJLsy (ORCPT
+        id S1728600AbgFJLu6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 07:48:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35534 "EHLO mx2.suse.de"
+        Wed, 10 Jun 2020 07:50:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728468AbgFJLsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 07:48:53 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D0839AE63;
-        Wed, 10 Jun 2020 11:48:55 +0000 (UTC)
-From:   Jiri Slaby <jslaby@suse.cz>
-To:     tglx@linutronix.de
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Jiri Slaby <jslaby@suse.cz>, Brian Gerst <brgerst@gmail.com>,
-        Dominik Brodowski <linux@dominikbrodowski.net>
-Subject: [PATCH] syscalls: fix offset type of ksys_ftruncate
-Date:   Wed, 10 Jun 2020 13:48:51 +0200
-Message-Id: <20200610114851.28549-1-jslaby@suse.cz>
-X-Mailer: git-send-email 2.27.0
+        id S1728558AbgFJLu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 07:50:57 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DC482072E;
+        Wed, 10 Jun 2020 11:50:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591789857;
+        bh=YIB/QxY+kFi44EYUQu8N4ZO01G6LNQ6fIC2Z+fyL0SQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jvQbJrlbXL8rAGRZ2n6o31brUUNYgSzxi0ypyNyzGQz5wrfmtO/UiHrlwFsQ+aZzt
+         EMcDBHwB/OFJj4cCltecSwl7aotJE4vG4kfHvTz8IudZ24IGXAMUmqMSg2HiqUiBlU
+         Dv4znIEp6z30PTKKpRVFsjLC39vzKiukrGKPh2TA=
+Date:   Wed, 10 Jun 2020 13:50:51 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 5.7 00/24] 5.7.2-rc1 review
+Message-ID: <20200610115051.GB1896587@kroah.com>
+References: <20200609174149.255223112@linuxfoundation.org>
+ <7208a2cc-c439-57bc-f154-a23e6ac683f5@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7208a2cc-c439-57bc-f154-a23e6ac683f5@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After the commit below, truncate on i586 uses ksys_ftruncate. But
-ksys_ftruncate truncates the offset to unsigned long. So switch the type
-of offset to loff_t which is what the lower do_sys_ftruncate expects.
+On Wed, Jun 10, 2020 at 12:30:28PM +0100, Jon Hunter wrote:
+> 
+> On 09/06/2020 18:45, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.7.2 release.
+> > There are 24 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Thu, 11 Jun 2020 17:41:38 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.2-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.7.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> 
+> All tests are passing for Tegra ...
+> 
+> Test results for stable-v5.7:
+>     11 builds:	11 pass, 0 fail
+>     26 boots:	26 pass, 0 fail
+>     50 tests:	50 pass, 0 fail
+> 
+> Linux version:	5.7.2-rc1-g00f7cc67908b
+> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+>                 tegra194-p2972-0000, tegra20-ventana,
+>                 tegra210-p2371-2180, tegra210-p3450-0000,
+>                 tegra30-cardhu-a04
 
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Fixes: 121b32a58a3a (x86/entry/32: Use IA32-specific wrappers for syscalls taking 64-bit arguments)
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Dominik Brodowski <linux@dominikbrodowski.net>
----
- include/linux/syscalls.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Wonderful, thanks for testing all of these and letting me know.
 
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index 63ffa6dc9da3..e97ca179d0dc 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -1370,7 +1370,7 @@ static inline long ksys_lchown(const char __user *filename, uid_t user,
- 
- extern long do_sys_ftruncate(unsigned int fd, loff_t length, int small);
- 
--static inline long ksys_ftruncate(unsigned int fd, unsigned long length)
-+static inline long ksys_ftruncate(unsigned int fd, loff_t length)
- {
- 	return do_sys_ftruncate(fd, length, 1);
- }
--- 
-2.27.0
-
+greg k-h
