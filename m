@@ -2,100 +2,96 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A58C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 906F1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 617CB2078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:08:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591787295;
-	bh=GtO9Z2fQWlJlkwPZR0qQDLQqjFBevy/f60LY5/mvLmA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DH7tEh3Oo8jRTmU2DTlEx2aCuDUD5jAxPow+Dkl/9Ng6v4XW9PKh9uqSuC8qq42or
-	 WZ6G3PtgXWAxKOWo9WP3B1ucmjxwWWkWt4IzjX60BP3BnDP4t8EQM9yPBYRBO8003N
-	 3+AHnRpauh4vxAl12S9jw5X7BcXZqAFs0wLDPQlI=
+	by mail.kernel.org (Postfix) with ESMTP id 5B3DC206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:09:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DMtVd9Yv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728419AbgFJLIO (ORCPT
+        id S1728410AbgFJLJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 07:08:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32788 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728298AbgFJLIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 07:08:13 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00743206F4;
-        Wed, 10 Jun 2020 11:08:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591787292;
-        bh=GtO9Z2fQWlJlkwPZR0qQDLQqjFBevy/f60LY5/mvLmA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VJHvBXUl3ioJQiOAgUHpbiHUtJJxPObvJMIxTw/d/ldKSZPhNT1QaomsR+8T4Jhpn
-         cRaqRJcP+xPhei12Q16vTObYenaC3BQ7x7Zi+HJKOBJaZ71I4AMblN3ZqRsNA74xsL
-         JMFQBid0MQQQ7fFiBfOj6Wdy1+MR0M3mhVHe9qUc=
-Date:   Wed, 10 Jun 2020 12:08:10 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-spi@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: spi: renesas,sh-msiof: Add r8a7742
- support
-Message-ID: <20200610110810.GD5005@sirena.org.uk>
-References: <1591736054-568-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1591736054-568-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Wed, 10 Jun 2020 07:09:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60812 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728298AbgFJLJf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 07:09:35 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 374BEC03E96F
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 04:09:35 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id y11so1923652ljm.9
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 04:09:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=JTxJ0V+tkINvi/5XahhTkNwUPIq8Y7XaD42/R2v4jCY=;
+        b=DMtVd9YvbrtbtU/UGaEYJLtcE34ggycudhebhrhlx6vekMfbfj0+lckx5WqPKeijcL
+         FTMA4iqATUDSCAG3gGP8Bc6fbw11dKnNgS/aBtdbZS5g/dICPlVUW/qRq0NvSZ4QHUdD
+         UNpXn7b0ABYXAkbFgOFLikYCQ9dfJYOFH2l1kcAfKa0v0Jd3p1Wsw0snEcSn/9KO5EUL
+         E6/X/+/Orm9a322JKmpn2e9QyBK1L0YS3ShoUPspI50/tg/10SIpGHg/fY5cAL0KsRY9
+         yV58JjGgxZHuzZjGn1/vrBnT65sdcgcAqkr2THswbnrp9SI0q8fVG/l6Cxde9froeEQn
+         QM8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=JTxJ0V+tkINvi/5XahhTkNwUPIq8Y7XaD42/R2v4jCY=;
+        b=ZTWcp/LlrYWPXF9+ueykHt0OQOYz80Ra7a9QeilvdS9mS5M/kLuFzHfPD7+cBiVjvM
+         JlJdRzWp0/bOBdFS9aIyjAMyFziecErf0tFriDHCvGJvRxPKyK/66ZVwc3hfw1yUUouG
+         1itjoZhIE6vvzlO8BK8apmi3pl9kdxUrqd7mg+OixOmfp4wblojLA2JtrDR/R9dElbEK
+         SGcvPlZhqWj5Gzd/Y14MZmrcA4FjaSZtAAut1ZiwfqBzSMreXuLpMXamUSV8u4z8qHWR
+         mYlM7s0p40Euqr87vfhnafg4fbOO1/0+8+zSwXtab1Tm3HvAmN41Ek6MZVu8YiUoY5Po
+         m7uA==
+X-Gm-Message-State: AOAM533mXUrSx+Mp6X0fU8bQASq2Mtj0N0GyxswRAkqACrV9eIGI7/4r
+        dz5WlSm0yF3uAXVZdbvQ8aDjklHojXRrLgxSwk2lDg==
+X-Google-Smtp-Source: ABdhPJypSN5QorFkNeGSsLkCxGsAL4uoIO8FrcW1T9gcz8KEfc93JWeEnCkciFpnvoow6wpHCzy9rqY/fQMwVBpAAVU=
+X-Received: by 2002:a2e:880c:: with SMTP id x12mr663585ljh.293.1591787373343;
+ Wed, 10 Jun 2020 04:09:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wLAMOaPNJ0fu1fTG"
-Content-Disposition: inline
-In-Reply-To: <1591736054-568-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Cookie: fortune: No such file or directory
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <202006080944.vTmpp64f%lkp@intel.com> <20200608010253.GA79576@44f7ab9e8d59>
+In-Reply-To: <20200608010253.GA79576@44f7ab9e8d59>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 10 Jun 2020 13:09:21 +0200
+Message-ID: <CACRpkdaOcaf2W6-sbULK_FogHg=1YYn0_sUsuHZUEafPLP_MPA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: mcp23s08: Split to three parts: fix
+ ptr_ret.cocci warnings
+To:     kernel test robot <lkp@intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        kbuild-all@lists.01.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 8, 2020 at 3:03 AM kernel test robot <lkp@intel.com> wrote:
 
---wLAMOaPNJ0fu1fTG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> From: kernel test robot <lkp@intel.com>
+>
+> drivers/pinctrl/pinctrl-mcp23s08_spi.c:129:1-3: WARNING: PTR_ERR_OR_ZERO =
+can be used
+>
+>
+>  Use PTR_ERR_OR_ZERO rather than if(IS_ERR(...)) + PTR_ERR
+>
+> Generated by: scripts/coccinelle/api/ptr_ret.cocci
+>
+> Fixes: 0f04a81784fe ("pinctrl: mcp23s08: Split to three parts: core, I=E6=
+=B6=8E, SPI")
+> CC: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: kernel test robot <lkp@intel.com>
 
-On Tue, Jun 09, 2020 at 09:54:13PM +0100, Lad Prabhakar wrote:
-> Document RZ/G1H (R8A7742) SoC bindings.
->=20
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renes=
-as.com>
-> ---
->  Documentation/devicetree/bindings/spi/renesas,sh-msiof.yaml | 1 +
->  1 file changed, 1 insertion(+)
+Patch applied with Andy's ACK.
 
-To repeat my previous feedback I'd expect a driver update as well.
-
---wLAMOaPNJ0fu1fTG
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7gvxkACgkQJNaLcl1U
-h9D32Qf/X5Q/azyJ8kwxCwKPK7q2OsgAoWrCGEXmWtrCzKN9lNlsJKGNPM9ctmS1
-4cNWCrs7jQjyPhH1QI9chm/tmAGT+Xe1DDGipVvyW/2fWRm11l48Vv6lIO5plSGA
-QyJ9tQHmH0Dk51aIZuxvYWIL4k+4bK3cJfQ0MbuGK+fQFX2RDV2GTca4I4FTiSY8
-lq82HJzpI+39pYY6KnHyyZCy8rDchZT7pQLJ15lI/6cyoLmb248nR2dobAuyvFKS
-3ZFp+DVJhXtPlULNdgrHfoQEzZHiSrwhIy1lmhOIZYOTlGTgv5kF/BaLZE/RjlVb
-sIrgNDH/TrF6mXyMm4rkw1DVN3ILag==
-=qYRC
------END PGP SIGNATURE-----
-
---wLAMOaPNJ0fu1fTG--
+Yours,
+Linus Walleij
