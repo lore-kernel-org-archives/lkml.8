@@ -2,196 +2,134 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92133C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22AD3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6334D206F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:55:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jDje1DsU"
+	by mail.kernel.org (Postfix) with ESMTP id 091F9206F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 10:56:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728238AbgFJKz3 (ORCPT
+        id S1728361AbgFJK4O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 06:55:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58624 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728149AbgFJKz1 (ORCPT
+        Wed, 10 Jun 2020 06:56:14 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:39592 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728330AbgFJK4N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 06:55:27 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30F59C03E96B
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 03:55:27 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id x14so1747112wrp.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 03:55:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=p2RFeiibpKE23Dhz521nn9ShSJ5sAPi1377fNv5lHps=;
-        b=jDje1DsUWjt5BwPhCsIxSFOh4TVXM6BxGMjn2SXZHm4M5KayIthJd41xFmMn6abbFC
-         we/86rJxUniHyQlzT3WDJ+xrVZyGh8Ebjd/Fva7BIRw7EiEPVZGq45uI9n2eUCmRqZbZ
-         4uT5b3dekz9fqlIE9knKyVReElGHAfF56C0cA7S84OvNDEwBifaUB/OuIunopHsbiZx2
-         6sm6kggCyoDQ2q3B7hsO/heTOg8OA2pPqvIpQd5PtzbLUNg8nlNZORT6SHX/Tz9YlwCt
-         GNB3t+57OUwSn2Y0pm7Bwht0r2r1Q02kwM+mrIHPKdfmLuqMB/04JM1U4kvtGRJYwjdn
-         Hg3Q==
+        Wed, 10 Jun 2020 06:56:13 -0400
+Received: by mail-io1-f71.google.com with SMTP id 5so1301930iou.6
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 03:56:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=p2RFeiibpKE23Dhz521nn9ShSJ5sAPi1377fNv5lHps=;
-        b=FCHsZulQOEh2AV8lV/oYKFQ6xzX0arJTardFTmaDP2GuZG/V9HSjAsifvmJOrrn5+g
-         sOkDJvl99QM3QM637zDpfJvlnxd4SfE0/+mZcfRspzyFvkg2NOK/07Ul0u29SDwTs4+k
-         SKEHtYeGjVSGoOJqO8rOHX8NznO7Sq6DW2++7kepaw+edMqDmAbvPCP5A+/IHAidLx9f
-         kvnTdQswqWVYjZvk3CbkKyI6ikqVcnpaetTfwtJtStJU0uI8X9TSYHBhd8aTGofBSiuQ
-         U/oebH0sAKWusPe/pXdoJFSO8CIdMMNhQhjI285Kcj5n9gBXnjjk8MYTW/ju36PI68S+
-         kVyg==
-X-Gm-Message-State: AOAM533re3EAv3YA8hzq3emxvSW56ATfDcyUMoYhFoCn7TvJ3w5FT2+x
-        pWcKShHeeyEBasOZxUZ0IozBOS9++fw=
-X-Google-Smtp-Source: ABdhPJy1TIM86aeyGmfk+tAc3Hlf5KZ9+WSN/YPjeDex6TRfEFnPxsUozlQeAdsky2C/99YWVoZ91A==
-X-Received: by 2002:adf:d84a:: with SMTP id k10mr2999635wrl.336.1591786525398;
-        Wed, 10 Jun 2020 03:55:25 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id g3sm8326829wrb.46.2020.06.10.03.55.24
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jun 2020 03:55:24 -0700 (PDT)
-Subject: Re: [PATCH 2/5] soundwire: qcom: add support for mmio soundwire
- devices
-To:     Jonathan Marek <jonathan@marek.ca>, alsa-devel@alsa-project.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Sanyog Kale <sanyog.r.kale@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200608204347.19685-1-jonathan@marek.ca>
- <20200608204347.19685-3-jonathan@marek.ca>
- <1b29db61-2394-8f88-9ebb-219568fb9306@linaro.org>
- <009dd6c1-276f-4ac5-b68b-1fe2de50ad8c@marek.ca>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <d72ffc03-c20e-60a6-19df-d8b4a1486358@linaro.org>
-Date:   Wed, 10 Jun 2020 11:55:23 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=LwSI8L+D98YJR3RL9cyL/ndGk3cpdIv1WYci/0oBLUw=;
+        b=Fr16uMLYAtmz4jQIms/CjxIYUR6Oy3D3Mv/xy6lR8jePeqM+kJNXxBiVQwzoFwj3D0
+         QgCVNnMzbKa0y4M7Zpk3M1BmZVOsUlsid/gIcxUOXOfX7WBf7YugcHnE38XHO9OMi5nw
+         QUGmaYA6xYAb9A/oj6MjzjrrR5QOlPQ9h69eP7XsK/gcvg6mDi3CgmY3XCVFQbGMSOZu
+         3vJf/zTKkQZU6pAtJRA9XSbdNYzVtxwgfptp7UfM7Yvh9EIxlb4ZQ5QuZZhzSqnZlOGD
+         Dbfn7plpnRLQyTqpmRByX2nRHFHoTl4I1xFoTuMopbgb/PHaFX+NZgvff/+AQgyOL8qf
+         LzFg==
+X-Gm-Message-State: AOAM530aKH6cB6sbtLe6qkD/QCI+/1b1ocf1OP5SzlNA9jENZCS2jrlU
+        dwgBHF6S8f7xde4OnRRA9ubgyoiZgTHrobYXxUV0TTW/bYNJ
+X-Google-Smtp-Source: ABdhPJzzwGUERjgq/5SoOOh/LDcmjlfsZEiRVIrdfFLs/3z0l6dwlvS07MAqvb31OSyfcta1eXTL6DXT9oNnXSkM7Ev2fD0vIplj
 MIME-Version: 1.0
-In-Reply-To: <009dd6c1-276f-4ac5-b68b-1fe2de50ad8c@marek.ca>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a5d:87c4:: with SMTP id q4mr2660123ios.169.1591786571921;
+ Wed, 10 Jun 2020 03:56:11 -0700 (PDT)
+Date:   Wed, 10 Jun 2020 03:56:11 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002d7ca605a7b8b1c5@google.com>
+Subject: general protection fault in proc_kill_sb
+From:   syzbot <syzbot+4abac52934a48af5ff19@syzkaller.appspotmail.com>
+To:     adobriyan@gmail.com, ebiederm@xmission.com,
+        gladkov.alexey@gmail.com, keescook@chromium.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    7ae77150 Merge tag 'powerpc-5.8-1' of git://git.kernel.org..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=16e12212100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d195fe572fb15312
+dashboard link: https://syzkaller.appspot.com/bug?extid=4abac52934a48af5ff19
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+4abac52934a48af5ff19@syzkaller.appspotmail.com
+
+RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000005
+R13: 0000000000000751 R14: 00000000004ca3ea R15: 00007f8970ff76d4
+general protection fault, probably for non-canonical address 0xdffffc0000000001: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000008-0x000000000000000f]
+CPU: 0 PID: 6840 Comm: syz-executor.2 Not tainted 5.7.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:proc_kill_sb+0x4d/0x110 fs/proc/root.c:267
+Code: c1 ea 03 80 3c 02 00 0f 85 ad 00 00 00 49 8b ac 24 68 06 00 00 48 b8 00 00 00 00 00 fc ff df 48 8d 7d 08 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 a1 00 00 00 4c 8b 6d 08 4d 85 ed 74 0d e8 cb 51
+RSP: 0018:ffffc90007b67d48 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: 0000000000000001 RCX: ffffc9000d6d1000
+RDX: 0000000000000001 RSI: ffffffff81e37c9d RDI: 0000000000000008
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000001
+R10: ffffffff8c347a2f R11: fffffbfff1868f45 R12: ffff888059e1a000
+R13: 00000000fffffff4 R14: 0000000000000000 R15: ffff888059e1a068
+FS:  00007f8970ff7700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000000073c138 CR3: 00000000588dc000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ deactivate_locked_super+0x8c/0xf0 fs/super.c:335
+ vfs_get_super+0x258/0x2d0 fs/super.c:1212
+ vfs_get_tree+0x89/0x2f0 fs/super.c:1547
+ do_new_mount fs/namespace.c:2874 [inline]
+ do_mount+0x1306/0x1b40 fs/namespace.c:3199
+ __do_sys_mount fs/namespace.c:3409 [inline]
+ __se_sys_mount fs/namespace.c:3386 [inline]
+ __x64_sys_mount+0x18f/0x230 fs/namespace.c:3386
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x45ca69
+Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f8970ff6c78 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 00000000004f62c0 RCX: 000000000045ca69
+RDX: 00000000200000c0 RSI: 0000000020000200 RDI: 0000000020000340
+RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000005
+R13: 0000000000000751 R14: 00000000004ca3ea R15: 00007f8970ff76d4
+Modules linked in:
+---[ end trace 7f26d357bd21d77e ]---
+RIP: 0010:proc_kill_sb+0x4d/0x110 fs/proc/root.c:267
+Code: c1 ea 03 80 3c 02 00 0f 85 ad 00 00 00 49 8b ac 24 68 06 00 00 48 b8 00 00 00 00 00 fc ff df 48 8d 7d 08 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 a1 00 00 00 4c 8b 6d 08 4d 85 ed 74 0d e8 cb 51
+RSP: 0018:ffffc90007b67d48 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: 0000000000000001 RCX: ffffc9000d6d1000
+RDX: 0000000000000001 RSI: ffffffff81e37c9d RDI: 0000000000000008
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000001
+R10: ffffffff8c347a2f R11: fffffbfff1868f45 R12: ffff888059e1a000
+R13: 00000000fffffff4 R14: 0000000000000000 R15: ffff888059e1a068
+FS:  00007f8970ff7700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f19326ab000 CR3: 00000000588dc000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
 
-On 09/06/2020 12:04, Jonathan Marek wrote:
-> On 6/9/20 5:19 AM, Srinivas Kandagatla wrote:
->>
->>
->> On 08/06/2020 21:43, Jonathan Marek wrote:
->>> Adds support for qcom soundwire devices with memory mapped IO registers.
->>>
->>> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
->>> ---
->>
->> In general patch itself looks pretty trivial, but I would like to see 
->> what 1.5.1 controller provides in terms of error reporting of 
->> SoundWire slave register reads/writes. On WCD based controller we did 
->> not have a mechanism to report things like if the read is ignored or 
->> not. I was hoping that this version of controller would be able to 
->> report that.
->>
->> I will be nice to those patches if that is something which is 
->> supported in this version.
->>
->> --srini
->>
-> 
-> It does seem to support additional error reporting (it gets an error 
-> during enumeration after finding the 2 WSA slaves). However the 
-> downstream driver seems to disable this by setting BIT(31) in 
-> FIFO_CFG_ADDR (the comment says "For SWR master version 1.5.1, continue 
-> execute on command ignore"). Outside of the initial enumeration, it 
-> doesn't seem to produce any extra errors (still relying on the timeout 
-> mechanism to know if read/write is ignored).
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-1.5.* versions support reporting CMD_NACKED in FIFO_STATUS register, so 
-you should use that instead of timeout mechanism which is used for 1.3.0 
-which did not have support for this.
-
-
-thanks,
-srini
-
-
-> 
->>>   drivers/soundwire/qcom.c | 25 +++++++++++++++++++++++--
->>>   1 file changed, 23 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/soundwire/qcom.c b/drivers/soundwire/qcom.c
->>> index f38d1fd3679f..628747df1c75 100644
->>> --- a/drivers/soundwire/qcom.c
->>> +++ b/drivers/soundwire/qcom.c
->>> @@ -90,6 +90,7 @@ struct qcom_swrm_ctrl {
->>>       struct sdw_bus bus;
->>>       struct device *dev;
->>>       struct regmap *regmap;
->>> +    void __iomem *mmio;
->>>       struct completion *comp;
->>>       struct work_struct slave_work;
->>>       /* read/write lock */
->>> @@ -154,6 +155,20 @@ static int qcom_swrm_ahb_reg_write(struct 
->>> qcom_swrm_ctrl *ctrl,
->>>       return SDW_CMD_OK;
->>>   }
->>> +static int qcom_swrm_cpu_reg_read(struct qcom_swrm_ctrl *ctrl, int reg,
->>> +                  u32 *val)
->>> +{
->>> +    *val = readl(ctrl->mmio + reg);
->>> +    return SDW_CMD_OK;
->>> +}
->>> +
->>> +static int qcom_swrm_cpu_reg_write(struct qcom_swrm_ctrl *ctrl, int 
->>> reg,
->>> +                   int val)
->>> +{
->>> +    writel(val, ctrl->mmio + reg);
->>> +    return SDW_CMD_OK;
->>> +}
->>> +
->>>   static int qcom_swrm_cmd_fifo_wr_cmd(struct qcom_swrm_ctrl *ctrl, 
->>> u8 cmd_data,
->>>                        u8 dev_addr, u16 reg_addr)
->>>   {
->>> @@ -746,6 +761,7 @@ static int qcom_swrm_probe(struct platform_device 
->>> *pdev)
->>>       struct sdw_master_prop *prop;
->>>       struct sdw_bus_params *params;
->>>       struct qcom_swrm_ctrl *ctrl;
->>> +    struct resource *res;
->>>       int ret;
->>>       u32 val;
->>> @@ -760,8 +776,13 @@ static int qcom_swrm_probe(struct 
->>> platform_device *pdev)
->>>           if (!ctrl->regmap)
->>>               return -EINVAL;
->>>       } else {
->>> -        /* Only WCD based SoundWire controller is supported */
->>> -        return -ENOTSUPP;
->>> +        res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>> +
->>> +        ctrl->reg_read = qcom_swrm_cpu_reg_read;
->>> +        ctrl->reg_write = qcom_swrm_cpu_reg_write;
->>> +        ctrl->mmio = devm_ioremap_resource(dev, res);
->>> +        if (IS_ERR(ctrl->mmio))
->>> +            return PTR_ERR(ctrl->mmio);
->>>       }
->>>       ctrl->irq = of_irq_get(dev->of_node, 0);
->>>
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
