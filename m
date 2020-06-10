@@ -2,168 +2,96 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2897C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C8E0C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A214C20656
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:15:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earth.li header.i=@earth.li header.b="HjEzXVS3"
+	by mail.kernel.org (Postfix) with ESMTP id 26E8920656
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:18:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730184AbgFJTPS (ORCPT
+        id S1728108AbgFJTSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 15:15:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51466 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728111AbgFJTPR (ORCPT
+        Wed, 10 Jun 2020 15:18:34 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:33472 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728111AbgFJTSd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 15:15:17 -0400
-Received: from the.earth.li (the.earth.li [IPv6:2a00:1098:86:4d:c0ff:ee:15:900d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55000C03E96B;
-        Wed, 10 Jun 2020 12:15:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
-         s=the; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject
-        :Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=Zo74S6Tgm/5tnXKJIYWaheG+mRE/yn79KpLHWNR0tJU=; b=HjEzXVS3xT209+YOf9LTgpWiPK
-        bIi08pg3fWQLgQ34DKbUfsiINdOI+KaGodkIadlu9cjnF9lgVVQnWT4Bu5/Vrrt4izF5IDLxiOU7X
-        31ZLAuPKx7jFx4qAmjVZBqJVERCpVvBqfuhXPxyUEGHDRbPOkbYGFMQeq86GIx+72sXjAH468qMtf
-        jBfrxaPhLR2+P4oWh2SPCDXqEllx0uJ1w+mN1VIAJ/vUyeMLfMPb0yx/LokEykABS2dXs4NiqqgGV
-        xVVucTZw4SpN1vWOn9AQINIn/P22dd03UMR7HsiFJbDouxWDin6c3kWrqii5Dyu3ioDIJK8+1E01O
-        5hdmE3ew==;
-Received: from noodles by the.earth.li with local (Exim 4.92)
-        (envelope-from <noodles@earth.li>)
-        id 1jj6Bt-0005rD-RW; Wed, 10 Jun 2020 20:15:13 +0100
-Date:   Wed, 10 Jun 2020 20:15:13 +0100
-From:   Jonathan McDowell <noodles@earth.li>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] net: dsa: qca8k: Improve SGMII interface handling
-Message-ID: <2150f4c70c754aed179e46e166f3c305254cf85a.1591816172.git.noodles@earth.li>
-References: <cover.1591816172.git.noodles@earth.li>
+        Wed, 10 Jun 2020 15:18:33 -0400
+Received: by mail-oi1-f196.google.com with SMTP id i74so3168219oib.0;
+        Wed, 10 Jun 2020 12:18:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ErXcEjIZKZYMaE59Cy6bDtnAUpYGTLxXbrJ7gEcXNDc=;
+        b=T1efMlPg5p9fArLib6fjKcbVH3eyprpN6Xs0haKDKGRWhjNtZ6zaYk+swHrHAtyOAC
+         3RbWuD+2DDIdwaTp23MXQgjTXTSwNEYmgCMcf0K7imSTIqYaVFIlB2JZJSklfy12ro3i
+         FdPXkriod3sdFauQXebTDoTRMsaN/hbCCmx9fjYRN3RjgSAq4CpggiMBr3smhM2LCJs8
+         0wZR/Mc74nhEk9OMBSeDQN1mIq1RaKLkIegxyyRC1MZ1LfPc62r2kBr88liYjyLIfNLs
+         bH7tTn8t94Jk2sUuicxGSazi5NfireKeaY6XEw4KtiDAYAcQ73SyaG33csJt47RCb0Jo
+         sdbQ==
+X-Gm-Message-State: AOAM532A+830pgbpsGiZPXeFAr4JQg6w6QUcBLcbHqi+QnPlEuNhkCJ/
+        LtD9M+JUOgfFqgg1iOSzH7u3zovmmyllgB3Iza9UjA==
+X-Google-Smtp-Source: ABdhPJymxTtbYTmYawt/pTShhavObY6hVr557ohX3IrthN4BEWlvV2X3v47f8s9bka+iLbtA8D3ab99N2grmmxoL/7s=
+X-Received: by 2002:aca:1a19:: with SMTP id a25mr3745370oia.54.1591816711902;
+ Wed, 10 Jun 2020 12:18:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1591816172.git.noodles@earth.li>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1591736054-568-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1591736054-568-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200610110810.GD5005@sirena.org.uk> <CAMuHMdWCHeSB9mjpdSX_-qxwo33kMb1_1R93CjBtVBPFPKkEOg@mail.gmail.com>
+ <20200610164928.GJ5005@sirena.org.uk>
+In-Reply-To: <20200610164928.GJ5005@sirena.org.uk>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 10 Jun 2020 21:18:19 +0200
+Message-ID: <CAMuHMdUNo0tMxWsnXi4q8NwubPWHqTvzGOA-0hOr7oo2cRvvUg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: spi: renesas,sh-msiof: Add r8a7742 support
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch improves the handling of the SGMII interface on the QCA8K
-devices. Previously the driver did no configuration of the port, even if
-it was selected. We now configure it up in the appropriate
-PHY/MAC/Base-X mode depending on what phylink tells us we are connected
-to and ensure it is enabled.
+Hi Mark,
 
-Tested with a device where the CPU connection is RGMII (i.e. the common
-current use case) + one where the CPU connection is SGMII. I don't have
-any devices where the SGMII interface is brought out to something other
-than the CPU.
+On Wed, Jun 10, 2020 at 6:49 PM Mark Brown <broonie@kernel.org> wrote:
+> On Wed, Jun 10, 2020 at 01:59:24PM +0200, Geert Uytterhoeven wrote:
+> > On Wed, Jun 10, 2020 at 1:08 PM Mark Brown <broonie@kernel.org> wrote:
+> > > To repeat my previous feedback I'd expect a driver update as well.
+>
+> > No driver update is needed.
+>
+> > Documentation/devicetree/bindings/spi/renesas,sh-msiof.yaml says:
+>
+> I'm much more comfortable explicitly listing the new compatible so that
+> even if someone makes a DT that doesn't bother listing the fallbacks
+> things will work.
 
-Signed-off-by: Jonathan McDowell <noodles@earth.li>
----
- drivers/net/dsa/qca8k.c | 28 +++++++++++++++++++++++++++-
- drivers/net/dsa/qca8k.h | 13 +++++++++++++
- 2 files changed, 40 insertions(+), 1 deletion(-)
+Adding all of them would cause even more churn when adding support for
+a new SoC... There are already more than 700 "renesas," compatible
+values documented that are not directly matched by drivers.
+Nowadays we have "make dtbs_check", so if a DTS doesn't conform to the
+binding, it will be flagged.
 
-diff --git a/drivers/net/dsa/qca8k.c b/drivers/net/dsa/qca8k.c
-index dcd9e8fa99b6..33e62598289e 100644
---- a/drivers/net/dsa/qca8k.c
-+++ b/drivers/net/dsa/qca8k.c
-@@ -681,7 +681,7 @@ qca8k_phylink_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
- 			 const struct phylink_link_state *state)
- {
- 	struct qca8k_priv *priv = ds->priv;
--	u32 reg;
-+	u32 reg, val;
- 
- 	switch (port) {
- 	case 0: /* 1st CPU port */
-@@ -740,6 +740,32 @@ qca8k_phylink_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
- 	case PHY_INTERFACE_MODE_1000BASEX:
- 		/* Enable SGMII on the port */
- 		qca8k_write(priv, reg, QCA8K_PORT_PAD_SGMII_EN);
-+
-+		/* Enable/disable SerDes auto-negotiation as necessary */
-+		val = qca8k_read(priv, QCA8K_REG_PWS);
-+		if (phylink_autoneg_inband(mode))
-+			val &= ~QCA8K_PWS_SERDES_AEN_DIS;
-+		else
-+			val |= QCA8K_PWS_SERDES_AEN_DIS;
-+		qca8k_write(priv, QCA8K_REG_PWS, val);
-+
-+		/* Configure the SGMII parameters */
-+		val = qca8k_read(priv, QCA8K_REG_SGMII_CTRL);
-+
-+		val |= QCA8K_SGMII_EN_PLL | QCA8K_SGMII_EN_RX |
-+			QCA8K_SGMII_EN_TX | QCA8K_SGMII_EN_SD;
-+
-+		val &= ~QCA8K_SGMII_MODE_CTRL_MASK;
-+		if (dsa_is_cpu_port(ds, port)) {
-+			/* CPU port, we're talking to the CPU MAC, be a PHY */
-+			val |= QCA8K_SGMII_MODE_CTRL_PHY;
-+		} else if (state->interface == PHY_INTERFACE_MODE_SGMII) {
-+			val |= QCA8K_SGMII_MODE_CTRL_MAC;
-+		} else {
-+			val |= QCA8K_SGMII_MODE_CTRL_BASEX;
-+		}
-+
-+		qca8k_write(priv, QCA8K_REG_SGMII_CTRL, val);
- 		break;
- 	default:
- 		dev_err(ds->dev, "xMII mode %s not supported for port %d\n",
-diff --git a/drivers/net/dsa/qca8k.h b/drivers/net/dsa/qca8k.h
-index 42d6ea24eb14..10ef2bca2cde 100644
---- a/drivers/net/dsa/qca8k.h
-+++ b/drivers/net/dsa/qca8k.h
-@@ -36,6 +36,8 @@
- #define   QCA8K_MAX_DELAY				3
- #define   QCA8K_PORT_PAD_RGMII_RX_DELAY_EN		BIT(24)
- #define   QCA8K_PORT_PAD_SGMII_EN			BIT(7)
-+#define QCA8K_REG_PWS					0x010
-+#define   QCA8K_PWS_SERDES_AEN_DIS			BIT(7)
- #define QCA8K_REG_MODULE_EN				0x030
- #define   QCA8K_MODULE_EN_MIB				BIT(0)
- #define QCA8K_REG_MIB					0x034
-@@ -69,6 +71,7 @@
- #define   QCA8K_PORT_STATUS_LINK_UP			BIT(8)
- #define   QCA8K_PORT_STATUS_LINK_AUTO			BIT(9)
- #define   QCA8K_PORT_STATUS_LINK_PAUSE			BIT(10)
-+#define   QCA8K_PORT_STATUS_FLOW_AUTO			BIT(12)
- #define QCA8K_REG_PORT_HDR_CTRL(_i)			(0x9c + (_i * 4))
- #define   QCA8K_PORT_HDR_CTRL_RX_MASK			GENMASK(3, 2)
- #define   QCA8K_PORT_HDR_CTRL_RX_S			2
-@@ -77,6 +80,16 @@
- #define   QCA8K_PORT_HDR_CTRL_ALL			2
- #define   QCA8K_PORT_HDR_CTRL_MGMT			1
- #define   QCA8K_PORT_HDR_CTRL_NONE			0
-+#define QCA8K_REG_SGMII_CTRL				0x0e0
-+#define   QCA8K_SGMII_EN_PLL				BIT(1)
-+#define   QCA8K_SGMII_EN_RX				BIT(2)
-+#define   QCA8K_SGMII_EN_TX				BIT(3)
-+#define   QCA8K_SGMII_EN_SD				BIT(4)
-+#define   QCA8K_SGMII_CLK125M_DELAY			BIT(7)
-+#define   QCA8K_SGMII_MODE_CTRL_MASK			(BIT(22) | BIT(23))
-+#define   QCA8K_SGMII_MODE_CTRL_BASEX			(0 << 22)
-+#define   QCA8K_SGMII_MODE_CTRL_PHY			(1 << 22)
-+#define   QCA8K_SGMII_MODE_CTRL_MAC			(2 << 22)
- 
- /* EEE control registers */
- #define QCA8K_REG_EEE_CTRL				0x100
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.20.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
