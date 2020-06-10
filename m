@@ -2,159 +2,131 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1AA5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9020FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7FC52078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:33:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="XrCd/2Sx"
+	by mail.kernel.org (Postfix) with ESMTP id 74B01207ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 21:34:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726290AbgFJVdT (ORCPT
+        id S1726307AbgFJVeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 17:33:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44648 "EHLO
+        Wed, 10 Jun 2020 17:34:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726134AbgFJVdS (ORCPT
+        with ESMTP id S1726114AbgFJVeo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 17:33:18 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C718C03E96B
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 14:33:18 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id m2so1451273pjv.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 14:33:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=Lb4h1PwPnUVJ7YIBu19ZrnGGjkU+MTILqgfz1Ny6goM=;
-        b=XrCd/2SxgPYEHxKkXjPyfZ8nKu9BMzOdkhZ01+4EayMZmAk+YXg7qUusM1306LeO4u
-         xlSPdwHaB2iMMaajirbefHn3EBFyo5jhiZja5JW3sM2WQNnGcleE1fMYDZejfhk7co5y
-         wL04Mlu8aYmEmhwVnWXrAgNxK8vCZsgXd3MZE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=Lb4h1PwPnUVJ7YIBu19ZrnGGjkU+MTILqgfz1Ny6goM=;
-        b=K/Sfi1K8cSlBtjxM5EjXszLnzSCA9+UtQpFMsP2X4Np3+H2CTN/vqWv67qAN+Xnypv
-         K84li3N2pIto2wljmyCwslZGsEpQ4JZhXYRUUgG8IXoZ55xza5Fm3l3GURc+64z9iNw/
-         kkwpEzJuNDkeGgLvOWjItt9E2uluvQw7dgEG+HFFQxMjI9Rt5bXFH2sylfuCsGrxnLOW
-         cKouQ9wVH14XDoEk9BDm1vNdJ0nLujKPWRUyCZAMs8ZYyXCSDfvlCV8gcdN1TBedOcQo
-         slNSolsSCuC/dkuEqSqUw7+U7lV1xGFN7Gu1lTveQzg7+ABaePWgLftCSVCGoYffodiL
-         WpfQ==
-X-Gm-Message-State: AOAM530aHKzoBLxvXy0mfEYX6zvff6IdQDNm3ZVO4OfY77iWoDDvJT4q
-        tfT8vwI7wTabVeWhZeW2VPte6sFmuYToHuE4M1tsNtCA1ZCPM12kI2KSoj8vM+/MsN6axK1cJh5
-        l/zSXDU3I1iLQMFB4SVfCFXFceDy6AMMEMmIPk+mXxbKcoi+PpX2aFFO4o5r6Zig+pRpOpfY/Dr
-        norcWG2ZzDs7w=
-X-Google-Smtp-Source: ABdhPJyvUMqY6pHlpYWDX++xWhTNHe9XfICi0dJPh+9ZzLMpSsza6+SV1bwaDl082tbmQf46a2/Jag==
-X-Received: by 2002:a17:902:6b09:: with SMTP id o9mr4683208plk.45.1591824797219;
-        Wed, 10 Jun 2020 14:33:17 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id m7sm677217pgg.69.2020.06.10.14.33.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jun 2020 14:33:16 -0700 (PDT)
-Subject: Re: [PATCH] checkpatch: add check for
- NONNETWORKING_BLOCK_COMMENT_STYLE
-To:     Joe Perches <joe@perches.com>, Andy Whitcroft <apw@canonical.com>
-Cc:     BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Wed, 10 Jun 2020 17:34:44 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C33C5C03E96B
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 14:34:43 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jj8MX-00045z-RH; Wed, 10 Jun 2020 23:34:22 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 403D61013D0; Wed, 10 Jun 2020 23:34:21 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "David P. Reed" <dpreed@deepplum.com>, dpreed@deepplum.com
+Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Allison Randal <allison@lohutok.net>,
+        Enrico Weigelt <info@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Martin Molnar <martin.molnar.programming@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Jann Horn <jannh@google.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
         linux-kernel@vger.kernel.org
-References: <20200610202640.9020-1-scott.branden@broadcom.com>
- <673c2ebaf7a1ca93f3b1192a77ff62167badd896.camel@perches.com>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <021da2ca-a8d3-d0ad-28c3-6a84464353fd@broadcom.com>
-Date:   Wed, 10 Jun 2020 14:33:14 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+Subject: Re: [PATCH] Fix undefined operation VMXOFF during reboot and crash
+In-Reply-To: <20200610181254.2142-1-dpreed@deepplum.com>
+References: <20200610181254.2142-1-dpreed@deepplum.com>
+Date:   Wed, 10 Jun 2020 23:34:21 +0200
+Message-ID: <878sgufvvm.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <673c2ebaf7a1ca93f3b1192a77ff62167badd896.camel@perches.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joe,
+"David P. Reed" <dpreed@deepplum.com> writes:
+> +/*
+> + * Fix any unwanted undefined operation fault due to VMXOFF instruction that
+> + * is needed to ensure that CPU is not in VMX root operation at time of
+> + * a reboot/panic CPU reset. There is no safe and reliable way to know
+> + * if a processor is in VMX root operation, other than to skip the
+> + * VMXOFF. It is safe to just skip any VMXOFF that might generate this
+> + * exception, when VMX operation is enabled in CR4. In the extremely
+> + * rare case that a VMXOFF is erroneously executed while VMX is enabled,
+> + * but VMXON has not been executed yet, the undefined opcode fault
+> + * should not be missed by valid code, though it would be an error.
+> + * To detect this, we could somehow restrict the instruction address
+> + * to the specific use during reboot/panic.
+> + */
+> +static int fixup_emergency_vmxoff(struct pt_regs *regs, int trapnr)
+> +{
+> +	const static u8 insn_vmxoff[3] = { 0x0f, 0x01, 0xc4 };
+> +	u8 ud[3];
+> +
+> +	if (trapnr != X86_TRAP_UD)
+> +		return 0;
+> +	if (!cpu_vmx_enabled())
+> +		return 0;
+> +	if (!this_cpu_read(doing_emergency_vmxoff))
+> +		return 0;
+> +
+> +	/* undefined instruction must be in kernel and be VMXOFF */
+> +	if (regs->ip < TASK_SIZE_MAX)
+> +		return 0;
+> +	if (probe_kernel_address((u8 *)regs->ip, ud))
+> +		return 0;
+> +	if (memcmp(ud, insn_vmxoff, sizeof(insn_vmxoff)))
+> +		return 0;
+> +
+> +	regs->ip += sizeof(insn_vmxoff);
+> +	return 1;
 
-On 2020-06-10 2:16 p.m., Joe Perches wrote:
-> On Wed, 2020-06-10 at 13:26 -0700, Scott Branden wrote:
->> NETWORKING_BLOCK_COMMENT_STYLE is supported by checkpatch but there
->> doesn't seem to be any check for the standard block comment style.
->> Add support for NONNETWORKING_BLOCK_COMMENT_STYLE to check for empty /*
->> on first line of non-networking block comments.
-> I think there are _way_ too many instances of this form
-> in non-networking code to enable this.
->
-> $ git grep -P '^\s*/\*\s*\S.*[^\*][^\\]\s*$' -- '*.[ch]' | \
->    grep -v -P '^(drivers/net/|net/)' | \
->    wc -l
-> 51407
-That is true about many things that checkpatch now checks for that 
-didn't previously.
-But, by adding to checkpatch the coding style clearly outlined in 
-coding-style.rst can be followed:
+We have exception fixups to avoid exactly that kind of horrible
+workarounds all over the place.
 
-The preferred style for long (multi-line) comments is:
+static inline int cpu_vmxoff_safe(void)
+{
+        int err;
+ 
+	asm volatile("2: vmxoff; xor %[err],%[err]\n"
+		     "1:\n\t"
+		     ".section .fixup,\"ax\"\n\t"
+		     "3:  mov %[fault],%[err] ; jmp 1b\n\t"
+		     ".previous\n\t"
+		     _ASM_EXTABLE(2b, 3b)
+		     : [err] "=a" (err)
+		     : [fault] "i" (-EFAULT)
+		     : "memory");
+        return err;
+}
 
-.. code-block:: c
+static inline void __cpu_emergency_vmxoff(void)
+{
+        if (!cpu_vmx_enabled())
+        	return;
+        if (!cpu_vmxoff_safe())
+        	cr4_clear_bits(X86_CR4_VMXE);
+}
 
-     /*
-      * This is the preferred style for multi-line
-      * comments in the Linux kernel source code.
-      * Please use it consistently.
-      *
-      * Description:  A column of asterisks on the left side,
-      * with beginning and ending almost-blank lines.
-      */
+Problem solved.
 
-For files in net/ and drivers/net/ the preferred style for long (multi-line)
-comments is a little different.
+Thanks,
 
-.. code-block:: c
-
-     /* The preferred comment style for files in net/ and drivers/net
-      * looks like this.
-      *
-      * It is nearly the same as the generally preferred comment style,
-      * but there is no initial almost-blank line.
-      */
->
-> (with a few false positives)
->
-> Does anyone really care if non-network code uses
-> this style?
-Yes we do.
-Consistent coding style is great and keeps your brain able to focus on 
-what matters when it is consistent.
->
-> 	/* multiline
-> 	 * comment
-> 	 */
->
->> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> []
->> @@ -3408,6 +3408,16 @@ sub process {
->>   			     "networking block comments don't use an empty /* line, use /* Comment...\n" . $hereprev);
->>   		}
->>   
->> +# Non-Networking with an empty initial /*
->> +		if ($realfile !~ m@^(drivers/net/|net/)@ &&
->> +		    $prevrawline =~ /^\+[ \t]*\/\*[ \t]/ &&
->> +		    $prevrawline !~ /\*\/[ \t]*$/ &&		#no trailing */
->> +		    $rawline =~ /^\+[ \t]*\*/ &&
->> +		    $realline > 2) {
->> +			WARN("NONNETWORKING_BLOCK_COMMENT_STYLE",
->> +			     "non-networking block comments use an empty /* on first line\n" . $hereprev);
->> +		}
->> +
->>   # Block comments use * on subsequent lines
->>   		if ($prevline =~ /$;[ \t]*$/ &&			#ends in comment
->>   		    $prevrawline =~ /^\+.*?\/\*/ &&		#starting /*
-
+        tglx
