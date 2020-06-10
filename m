@@ -2,118 +2,170 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 923A8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3514AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64A3B206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:50:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14321206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:50:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591804218;
-	bh=gjNi9v8mH0UE14YlBjV9C7FAXJQuACnUBQ+1HxXujq8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OtoSY2KLWZGoWmU7/7kkZE8RZmF+dBe8AwJTtyRi/8IEQnHGEY/k1FgY2tX/h3BDd
-	 bmbV6XM1xbIWRNLfmjckYQM6OLEqHtv7ZweKtfkoa0ERip0SE985HXfVGVInrqD34x
-	 7eQBt8fL9IbF6KzO2OWylbjBHKaKaxXfUyFDN7LI=
+	s=default; t=1591804248;
+	bh=6XQ9J3k8Z0orDGJt+9C3/yxDqGT95tDZO3s9+fzfTZY=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=FLdfbHaE2Wef7JoGNPTpSX6bkJJ2y7tiwbn3v8OQHDvKsDUCmEqbA+ztStgUO9JRu
+	 3fPIMLQG5wIyPraSROfoCejcF+a3Rsg++EnAPovNtP2Wd11/ztHTpXHLMv1V98sVYl
+	 2th2S1JctjuvOC+ZrpgtXtPLLXdH+j9sWvQtemOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730436AbgFJPuQ (ORCPT
+        id S1728460AbgFJPuq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 11:50:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47966 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730336AbgFJPuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 11:50:15 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA0A8206C3;
-        Wed, 10 Jun 2020 15:50:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591804215;
-        bh=gjNi9v8mH0UE14YlBjV9C7FAXJQuACnUBQ+1HxXujq8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pxYTFTM6+6hKI5D1epsl48SmXcRjOBEt8sQ+0GCnrbjo8tOx0zkNan2Gb4mVS/sSU
-         2UdnoVKqsVgEVtc4oBDq7DD/NZDEs+OKexSEFRWEu0YRL7DzURB54rbwpLDawaDR7R
-         qNk4xmtA4yXe/MrtTSxASUbeUpQBoDSgYht6S/u0=
-Date:   Wed, 10 Jun 2020 08:50:13 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][man-pages] sync.2: syncfs() now returns errors if
- writeback fails
-Message-ID: <20200610155013.GA1339@sol.localdomain>
-References: <20200610103347.14395-1-jlayton@kernel.org>
+        Wed, 10 Jun 2020 11:50:46 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:37052 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728217AbgFJPup (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 11:50:45 -0400
+Received: by mail-oi1-f194.google.com with SMTP id a3so2505716oid.4;
+        Wed, 10 Jun 2020 08:50:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=y19GN0GAG3z1gPsM787nBUvaywv+HAe0szNPPBNORkc=;
+        b=n6zKwPdEFjvm9k5j0JTd7TzlNDNa8Wgcs6bqwN26bffmd9BSjIENJ5q28vl46ieGL8
+         Fros7mvNXA7vfveIt8PdO9q+uaNHmHPd/9Y5djJs7JNa6VT4PZs2/1NOEpVmxWCJpeN5
+         1T21pbbw6BwLrnVvRzUaP6saP5BZ0GuQAP1kY7SaObQFzoZ0veGPrtbyZModPHMYbvRF
+         mzIp+unB5mtjbAJCbNUgNhykNeyaxCE2FLin+4OX5BUdHnLPbXOnuFhnG832masYVCLp
+         KprnPOhp2WWH7BsWLRA1ezAd6ryCweZdIEUJ/TuRiLRosqzu0V4oGZY78KHd15MXXXtX
+         QUDw==
+X-Gm-Message-State: AOAM531MoYWuMUNm+VnGlmMUN53ZZVBbHT6itewvtDd7rji/Oaeh0GR8
+        Y0HinObYwLiT/OkxfhOyH4LdzLSlHdOErjd/eB24pkfg
+X-Google-Smtp-Source: ABdhPJybcHk7EwREF669+YZ1Dcc1f+JX+fSyyJem9dNgFqreOhYBMmCOYDkGWXcPhfwWYLvlnzEHt2aOmX5xWiRmnE4=
+X-Received: by 2002:aca:ad88:: with SMTP id w130mr3093928oie.103.1591804244479;
+ Wed, 10 Jun 2020 08:50:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200610103347.14395-1-jlayton@kernel.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 10 Jun 2020 17:50:33 +0200
+Message-ID: <CAJZ5v0iEWuYG7-FtYMSk_kJZn-vVgcUimPfud75zSF5MU1Adbw@mail.gmail.com>
+Subject: [GIT PULL] More power management updates for v5.8-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 06:33:47AM -0400, Jeff Layton wrote:
-> A patch has been merged for v5.8 that changes how syncfs() reports
-> errors. Change the sync() manpage accordingly.
-> 
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
->  man2/sync.2 | 24 +++++++++++++++++++++++-
->  1 file changed, 23 insertions(+), 1 deletion(-)
-> 
-> diff --git a/man2/sync.2 b/man2/sync.2
-> index 7198f3311b05..27e04cff5845 100644
-> --- a/man2/sync.2
-> +++ b/man2/sync.2
-> @@ -86,11 +86,26 @@ to indicate the error.
->  is always successful.
->  .PP
->  .BR syncfs ()
-> -can fail for at least the following reason:
-> +can fail for at least the following reasons:
->  .TP
->  .B EBADF
->  .I fd
->  is not a valid file descriptor.
-> +.TP
-> +.B EIO
-> +An error occurred during synchronization.
-> +This error may relate to data written to any file on the filesystem, or on
-> +metadata related to the filesytem itself.
-> +.TP
-> +.B ENOSPC
-> +Disk space was exhausted while synchronizing.
-> +.TP
-> +.BR ENOSPC ", " EDQUOT
-> +Data was written to a files on NFS or another filesystem which does not
-> +allocate space at the time of a
-> +.BR write (2)
-> +system call, and some previous write failed due to insufficient
-> +storage space.
->  .SH VERSIONS
->  .BR syncfs ()
->  first appeared in Linux 2.6.39;
-> @@ -121,6 +136,13 @@ or
->  .BR syncfs ()
->  provide the same guarantees as fsync called on every file in
->  the system or filesystem respectively.
-> +.PP
-> +In mainline kernel versions prior to 5.8,
-> +.\" commit 735e4ae5ba28c886d249ad04d3c8cc097dad6336
-> +.BR syncfs ()
-> +will only fail with EBADF when passed a bad file descriptor. In 5.8
-> +and later kernels, it will also report an error if one or more inodes failed
-> +to be written back since the last syncfs call.
+Hi Linus,
 
-The sentence "In mainline kernel versions prior to 5.8, syncfs() will only fail
-with EBADF when passed a bad file descriptor" is ambiguous.  It could mean that
-EBADF can now mean other things too.
+Please pull from the tag
 
-Maybe write: "In mainline kernel versions prior to 5.8, syncfs() will only fail
-when passed a bad file descriptor (EBADF)."
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ pm-5.8-rc1-2
 
-- Eric
+with top-most commit 50dd154ed7b17a8b3a1983fc32a8e41d4cc4211a
+
+ Merge branches 'pm-cpufreq' and 'pm-acpi'
+
+on top of commit 355ba37d756c38962fe9bb616f5f48eb12a7e11e
+
+ Merge tag 'pm-5.8-rc1' of
+git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
+
+to receive more power management updates for 5.8-rc1.
+
+These are operating performance points (OPP) framework updates mostly,
+including support for interconnect bandwidth in the OPP core, plus a
+few cpufreq changes, including boost support in the CPPC cpufreq
+driver, an ACPI device power management fix and a hibernation code
+cleanup.
+
+Specifics:
+
+ - Add support for interconnect bandwidth to the OPP core (Georgi
+   Djakov, Saravana Kannan, Sibi Sankar, Viresh Kumar).
+
+ - Add support for regulator enable/disable to the OPP core (Kamil
+   Konieczny).
+
+ - Add boost support to the CPPC cpufreq driver (Xiongfeng Wang).
+
+ - Make the tegra186 cpufreq driver set the
+   CPUFREQ_NEED_INITIAL_FREQ_CHECK flag (Mian Yousaf Kaukab).
+
+ - Prevent the ACPI power management from using power resources
+   with devices where the list of power resources for power state
+   D0 (full power) is missing (Rafael Wysocki).
+
+ - Annotate a hibernation-related function with __init (Christophe
+   JAILLET).
+
+Thanks!
+
+
+---------------
+
+Christophe JAILLET (1):
+      PM: hibernate: Add __init annotation to swsusp_header_init()
+
+Georgi Djakov (5):
+      interconnect: Add of_icc_get_by_index() helper function
+      opp: Add support for parsing interconnect bandwidth
+      opp: Add sanity checks in _read_opp_key()
+      opp: Update the bandwidth on OPP frequency changes
+      cpufreq: dt: Add support for interconnect bandwidth scaling
+
+Jordan Crouse (1):
+      interconnect: Remove unused module exit code from core
+
+Kamil Konieczny (1):
+      opp: core: add regulators enable and disable
+
+Mian Yousaf Kaukab (1):
+      cpufreq: tegra186: add CPUFREQ_NEED_INITIAL_FREQ_CHECK flag
+
+Rafael J. Wysocki (1):
+      ACPI: PM: Avoid using power resources if there are none for D0
+
+Saravana Kannan (2):
+      dt-bindings: opp: Introduce opp-peak-kBps and opp-avg-kBps bindings
+      OPP: Add helpers for reading the binding properties
+
+Sibi Sankar (1):
+      opp: Don't parse icc paths unnecessarily
+
+Viresh Kumar (4):
+      interconnect: Disallow interconnect core to be built as a module
+      opp: Expose bandwidth information via debugfs
+      opp: Reorder the code for !target_freq case
+      opp: Remove bandwidth votes when target_freq is zero
+
+Xiongfeng Wang (2):
+      cpufreq: change '.set_boost' to act on one policy
+      cpufreq: CPPC: add SW BOOST support
+
+---------------
+
+ Documentation/devicetree/bindings/opp/opp.txt      |  17 +-
+ .../devicetree/bindings/property-units.txt         |   4 +
+ drivers/acpi/device_pm.c                           |   2 +-
+ drivers/acpi/scan.c                                |  28 ++-
+ drivers/cpufreq/acpi-cpufreq.c                     |  14 +-
+ drivers/cpufreq/cppc_cpufreq.c                     |  39 +++-
+ drivers/cpufreq/cpufreq-dt.c                       |   4 +
+ drivers/cpufreq/cpufreq.c                          |  57 +++---
+ drivers/cpufreq/tegra186-cpufreq.c                 |   3 +-
+ drivers/interconnect/Kconfig                       |   2 +-
+ drivers/interconnect/core.c                        |  97 +++++++---
+ drivers/opp/core.c                                 | 119 ++++++++++--
+ drivers/opp/debugfs.c                              |  42 +++++
+ drivers/opp/of.c                                   | 205 +++++++++++++++++++--
+ drivers/opp/opp.h                                  |  10 +
+ include/linux/cpufreq.h                            |   2 +-
+ include/linux/interconnect.h                       |  12 ++
+ include/linux/pm_opp.h                             |  18 ++
+ kernel/power/swap.c                                |   2 +-
+ 19 files changed, 573 insertions(+), 104 deletions(-)
