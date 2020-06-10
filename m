@@ -2,111 +2,108 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E86F3C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96557C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5EE520734
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:46:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oWrZ6e9T"
+	by mail.kernel.org (Postfix) with ESMTP id 741872076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:48:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726098AbgFJBqe (ORCPT
+        id S1726109AbgFJBsR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 21:46:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58696 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbgFJBqd (ORCPT
+        Tue, 9 Jun 2020 21:48:17 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:49611 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbgFJBsP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 21:46:33 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A62E4C05BD1E;
-        Tue,  9 Jun 2020 18:46:32 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id dp10so330367qvb.10;
-        Tue, 09 Jun 2020 18:46:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=zjEvUKOGeP0/F79VG1tPkbwEfkdJVyvg8ywjx9GcPQU=;
-        b=oWrZ6e9TU/rbxhNWPbfMhXLTZg4xruWGGcVXQ9mktslLgYxx48qz2u8cxBC7tYpZEI
-         LjwR5+JS+p7Ozd4E7Z8TmuyFDeUKg8BmeYxwQ5Xujc3rQdN/bVAoOQMS8yneUlItWdbq
-         RTOmEb+XnvIzVsivjlo9ToRTaJXrUR1s0C70dq0ZD/PxyJR60nsZERnoH5fAsiFRdY/J
-         tDPAvye0ZiFEvAUtVPWey5Uxadlp6FE2/Gahxn7PVIeHFPMzL2SwgEPf+D6LvrhVget/
-         QrcVlKQ948U1HHCDQrCBksA5G6F1NMZ+jghXW4+52PCudnWeiEizDuM+7HAsi+IICcil
-         blTw==
+        Tue, 9 Jun 2020 21:48:15 -0400
+Received: by mail-io1-f72.google.com with SMTP id d20so535730iom.16
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jun 2020 18:48:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zjEvUKOGeP0/F79VG1tPkbwEfkdJVyvg8ywjx9GcPQU=;
-        b=AO+saLyPHjyWWHnWyx1lIgNxX8YTwBDX7K8WgXqecH2Vdfpnvy/FVsPf/dKjRiwRFk
-         uHXA8iXwwhFKmX1xjTlBFo7XP1jRpI1uTUXRyQT/7zKYAFeK1dBxBP6W4CdjGFC7jQnJ
-         hhnuNTFmhWppzB+VQKeYoFVmWIvh8L9JQyUIOk9LiicOvqF7+dD9RzD91iILPIL9ZYnX
-         6sj9ndXTeVrGkFEspLygBbM5AtvNvEsXT0gnKVw1/N+L3+SBja+EA2J2lHn4c6UxeeNh
-         5cbUoZk2Mpm/skkzi+04mia6PgNiESCfH8sQ0DdrMmkugFVM8fWQhnmS2lA8aaQHWVIP
-         e5uA==
-X-Gm-Message-State: AOAM531VkEB5xvntNIb0ljlLfETgSUioiEX9ZE93GbQ4k7n1/AW/trYF
-        hy1gt9kzVtiDyln4MaOF2dKdARA=
-X-Google-Smtp-Source: ABdhPJxQK5SqvejKrGmt9+oKevPj0d2I8q7utJ10aM3gzSAilCgpJsFS1MwbI2P61HEUKMFoX6J21g==
-X-Received: by 2002:ad4:42a6:: with SMTP id e6mr1002783qvr.170.1591753591894;
-        Tue, 09 Jun 2020 18:46:31 -0700 (PDT)
-Received: from moria.home.lan ([2601:19b:c500:a1:7285:c2ff:fed5:c918])
-        by smtp.gmail.com with ESMTPSA id g28sm11233434qts.88.2020.06.09.18.46.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 18:46:31 -0700 (PDT)
-Date:   Tue, 9 Jun 2020 21:46:29 -0400
-From:   Kent Overstreet <kent.overstreet@gmail.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        viro@zeniv.linux.org.uk, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 2/2] fs: generic_file_buffered_read() now uses
- find_get_pages_contig
-Message-ID: <20200610014629.GB4070152@moria.home.lan>
-References: <20200610001036.3904844-1-kent.overstreet@gmail.com>
- <20200610001036.3904844-3-kent.overstreet@gmail.com>
- <20200610013808.GF19604@bombadil.infradead.org>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=tCNv4MDksUTvEJtckn2siy6hhdfAtvNNzotf7ihGV9M=;
+        b=prlC7RMCKksjlIYZwDYHH9UGuLoGqJU2pqJH6jRoUYgrK6ShKxiug1poP5/DH0LSXN
+         mXUGRrOak+s3RTNFcO89+qWMnwwD17G9W45qSVB3jkU4aV582d+qBgVAUjlgtFhyE277
+         5o5a2+mRAWpeILYac2qYavzSQwOizUVZnAlPmy1Hin+Z+jSte8Cp5MNRjE7YokhizH4s
+         O31+9eN5fAQUedRN6dTtef512vR56QdQABQQnLc49UMZyFpsA4DH3jT/Uy9HT8Oah/4U
+         KqyUr4rntkOc7XwMIzZFGN054Vx6CsQTigyuFbftBqorW/8wmbtZnS7ry0FrhAJBMO7K
+         YaZA==
+X-Gm-Message-State: AOAM530Gf8qbD7ijKdN7Dw4j4d7yWFMlFxPC+EmVfsoF5c9I9F1QslVK
+        aiaTGQQ/v+fL0pIakKXPlYe1B0kcuh/l79WN8xOhnXL57R3h
+X-Google-Smtp-Source: ABdhPJzlbbQqB+bRC/Lpi5Ncz3C53bANqqT4UivwwU48hlv7Ea2cNi/oHmCV7GKnB7uL5/fOrvLrCG+ZyxAfqp0k+QhYJ3u3uZQk
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200610013808.GF19604@bombadil.infradead.org>
+X-Received: by 2002:a6b:7516:: with SMTP id l22mr1061993ioh.18.1591753693598;
+ Tue, 09 Jun 2020 18:48:13 -0700 (PDT)
+Date:   Tue, 09 Jun 2020 18:48:13 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007a16f705a7b1096d@google.com>
+Subject: upstream test error: BUG: using smp_processor_id() in preemptible
+ code in ext4_mb_new_blocks
+From:   syzbot <syzbot+0113b9be6667b5b50840@syzkaller.appspotmail.com>
+To:     adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        tytso@mit.edu
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 06:38:08PM -0700, Matthew Wilcox wrote:
-> On Tue, Jun 09, 2020 at 08:10:36PM -0400, Kent Overstreet wrote:
-> > Convert generic_file_buffered_read() to get pages to read from in
-> > batches, and then copy data to userspace from many pages at once - in
-> > particular, we now don't touch any cachelines that might be contended
-> > while we're in the loop to copy data to userspace.
-> > 
-> > This is is a performance improvement on workloads that do buffered reads
-> > with large blocksizes, and a very large performance improvement if that
-> > file is also being accessed concurrently by different threads.
-> 
-> Hey, you're stealing my performance improvements!
+Hello,
 
-:)
+syzbot found the following crash on:
 
-> Granted, I haven't got to doing performance optimisations (certainly
-> not in this function), but this is one of the places where THP in the
-> page cache will have a useful performance improvement.
-> 
-> I'm not opposed to putting this in, but I may back it out as part of
-> the THP work because the THPs will get the same performance improvements
-> that you're seeing here with less code.
+HEAD commit:    5b14671b Merge tag 'fuse-update-5.8' of git://git.kernel.o..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=12a11ec1100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d1ea633f7958e008
+dashboard link: https://syzkaller.appspot.com/bug?extid=0113b9be6667b5b50840
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-I'm an _enthusiastic_ supporter of the THP stuff (as you know), but my feeling
-is that it's going to be a long time before hugepages are everywhere - and I
-think even with the pagevec stuff generic_file_buffered_read() is somewhat
-easier to read and deal with after this series than before it.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+0113b9be6667b5b50840@syzkaller.appspotmail.com
 
-Though I could see the pagevec stuff making hugepage support a pain, so there is
-that. Eh.
+BUG: using smp_processor_id() in preemptible [00000000] code: systemd-rfkill/6740
+caller is ext4_mb_new_blocks+0xa77/0x3b30 fs/ext4/mballoc.c:4711
+CPU: 0 PID: 6740 Comm: systemd-rfkill Not tainted 5.7.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ check_preemption_disabled lib/smp_processor_id.c:47 [inline]
+ debug_smp_processor_id.cold+0x88/0x9b lib/smp_processor_id.c:57
+ ext4_mb_new_blocks+0xa77/0x3b30 fs/ext4/mballoc.c:4711
+ ext4_ext_map_blocks+0x2044/0x3410 fs/ext4/extents.c:4244
+ ext4_map_blocks+0x4cb/0x1640 fs/ext4/inode.c:626
+ ext4_getblk+0xad/0x520 fs/ext4/inode.c:833
+ ext4_bread+0x7c/0x380 fs/ext4/inode.c:883
+ ext4_append+0x153/0x360 fs/ext4/namei.c:67
+ ext4_init_new_dir fs/ext4/namei.c:2757 [inline]
+ ext4_mkdir+0x5e0/0xdf0 fs/ext4/namei.c:2802
+ vfs_mkdir+0x419/0x690 fs/namei.c:3641
+ do_mkdirat+0x21e/0x280 fs/namei.c:3664
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x7f449ff49687
+Code: Bad RIP value.
+RSP: 002b:00007ffdd3b9fe58 EFLAGS: 00000246 ORIG_RAX: 0000000000000053
+RAX: ffffffffffffffda RBX: 00005567752fd985 RCX: 00007f449ff49687
+RDX: 00007ffdd3b9fd20 RSI: 00000000000001ed RDI: 00005567752fd985
+RBP: 00007f449ff49680 R08: 0000000000000100 R09: 0000000000000000
+R10: 00005567752fd980 R11: 0000000000000246 R12: 00000000000001ed
+R13: 00007ffdd3b9ffe0 R14: 0000000000000000 R15: 0000000000000000
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
