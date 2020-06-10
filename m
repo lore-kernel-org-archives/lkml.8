@@ -2,76 +2,108 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 010CAC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD2C5C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C52622070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:57:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 868F32070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 17:59:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ed8Q/VdK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728248AbgFJR5t convert rfc822-to-8bit (ORCPT
+        id S1728302AbgFJR7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 13:57:49 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:48644 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728121AbgFJR5s (ORCPT
+        Wed, 10 Jun 2020 13:59:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39686 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726637AbgFJR7A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 13:57:48 -0400
-Received: from marcel-macbook.fritz.box (p5b3d2638.dip0.t-ipconnect.de [91.61.38.56])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 5939DCECE9;
-        Wed, 10 Jun 2020 20:07:36 +0200 (CEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH v2 1/7] Bluetooth: Add definitions for advertisement
- monitor features
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200603160058.v2.1.I636f906bf8122855dfd2ba636352bbdcb50c35ed@changeid>
-Date:   Wed, 10 Jun 2020 19:57:46 +0200
-Cc:     Bluetooth Kernel Mailing List <linux-bluetooth@vger.kernel.org>,
-        Alain Michaud <alainm@chromium.org>,
-        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
-        Manish Mandlik <mmandlik@chromium.org>,
-        Michael Sun <michaelfsun@google.com>,
-        Yoni Shavit <yshavit@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <2097432F-C4FA-4166-A221-DAE82B4A0C31@holtmann.org>
-References: <20200603160058.v2.1.I636f906bf8122855dfd2ba636352bbdcb50c35ed@changeid>
-To:     Miao-chen Chou <mcchou@chromium.org>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Wed, 10 Jun 2020 13:59:00 -0400
+Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A631C03E96B;
+        Wed, 10 Jun 2020 10:58:59 -0700 (PDT)
+Received: by mail-vk1-xa44.google.com with SMTP id n22so803936vkm.7;
+        Wed, 10 Jun 2020 10:58:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=qPDDsblskj7YQmgnouxNlkCLsEOLE3lWy+i5i5BsSyk=;
+        b=Ed8Q/VdKzx70Hkg1B9bBSd28+aKmZRAjdKlNjSK91zvZF1DNrNUf8d9zKBjBQo8+KX
+         TMbuKQtZ+8hS/oVcUn0gyANMUZSv/JLYNPUzvotSJUSZuH11hedRVl/ay8xYXySV2u+7
+         LfihLzrAujQEp2jBfkXLX7uOwCd6pAm8NgE2JxyAfkvudZyT8Q4a+kA1f6g/KC/8hVmD
+         OphOFAhRDfpleloVPlDxzMkTZixMzPD9YgNCLmq+Lbl4cSUqPXqpedqvGjvH3QwzBbw8
+         Ut5k9R/7LO2YhfY3CBiXNN5ktF/nCqYHJ3vDX6DO4QuANJpx2gxqUfeyi81B431vrd5J
+         OHEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=qPDDsblskj7YQmgnouxNlkCLsEOLE3lWy+i5i5BsSyk=;
+        b=Kyacca+nlPeB2DmGqtTHSQqMlBSipuBZeuIIauxU/hKdYW98gj+dbKgDBsq3YhI+Ew
+         2+JUF9FbDu0ktfHYB4D1hClbGLAJco7Dwug+YsfNkHv3TY2uUurPu4Ql6cEyHa81qlue
+         TjwwkAGC4uvM+lXS8hstEXoXXyEMFToIGuVSDUmbQdK6u7R3QIdqnw96sCOQcJKmyh3F
+         rzmFbiB7Ar7xjtEoxydFXLFUf62TvTRNG9bexqQjmBll+DRCvegrDBUhhoIFfsrqduqa
+         GFq+jKAMS0mTYo0FQqcD4lg4EyueK8SstdxDtpixbITkdiFp7FuURf1pY42/Dq3ua3vs
+         3SuA==
+X-Gm-Message-State: AOAM532ZGJ4HhG7tX2RWxlO2Px8LiV8PT7QVTcq9m+8CO1Zaq3H26dBw
+        LlwE+OMe3y1O5hLvKHUFlvl6YurT8sgLbw6RRZw=
+X-Google-Smtp-Source: ABdhPJw9uDJgVd9SIg6w/P15cfth+r88JW04PZtQl+ymB+hw4QcQ5bSyBNW+x3Ocs/2YUYOxW0gDFgZPBv8Du1d8H8A=
+X-Received: by 2002:a1f:18c7:: with SMTP id 190mr3423466vky.39.1591811938261;
+ Wed, 10 Jun 2020 10:58:58 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAOuPNLj4m_jvs90YpAq5r4gAP9o8Y1Uck3HN+MbsTPb3zP=4eA@mail.gmail.com>
+In-Reply-To: <CAOuPNLj4m_jvs90YpAq5r4gAP9o8Y1Uck3HN+MbsTPb3zP=4eA@mail.gmail.com>
+From:   Pintu Agarwal <pintu.ping@gmail.com>
+Date:   Wed, 10 Jun 2020 23:28:47 +0530
+Message-ID: <CAOuPNLhQFegohvCx3dD-CtDdYrTSfGrJ1M3ps_YLn4j29x5pFw@mail.gmail.com>
+Subject: Re: Generic way for verifying GPIO wakeup capability
+To:     Kernelnewbies <kernelnewbies@kernelnewbies.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, linux-gpio@vger.kernel.org,
+        zonque@gmail.com, sergiosiena@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Miao-chen,
+On Tue, 9 Jun 2020 at 23:06, Pintu Agarwal <pintu.ping@gmail.com> wrote:
+>
+> Hi All,
+>
+> I am looking for ways to wakeup any devices (from sleep) using any
+> arbitrary gpio wakeup method in a generic way (either from user space
+> or kernel space) that should work on any kernel version (starting from
+> 4.14 onwards).
+>
+> What are the options available right now ?
+> I wanted to experiment with all of them and decide which is best for us.
+>
+> Is /sys/class/gpio/ method still valid with the latest kernel ?
+> Or is there any other method to do it from user space ?
+>
+> One option I know is to use enable/disable_irq_wake() API from kernel
+> driver suspend/resume path.
+> Just like this:
+> https://lwn.net/Articles/569027/
+>
+> But this requires an additional kernel driver and device-tree changes
+> for each gpio wakeup, which the end-user needs to implement on their
+> own.
+>
+> Is there any other existing generic mechanism?
+>
 
-> This adds support for Advertisement Monitor API. Here are the commands
-> and events added.
-> - Read Advertisement Monitor Feature command
-> - Add Advertisement Pattern Monitor command
-> - Remove Advertisement Monitor command
-> - Advertisement Monitor Added event
-> - Advertisement Monitor Removed event
-> 
-> Signed-off-by: Miao-chen Chou <mcchou@chromium.org>
-> ---
-> 
-> Changes in v2: None
-> 
-> include/net/bluetooth/mgmt.h | 49 ++++++++++++++++++++++++++++++++++++
-> 1 file changed, 49 insertions(+)
+https://embeddedbits.org/new-linux-kernel-gpio-user-space-interface/
 
-all 7 patches look good to me. I just need them be adjusted for the actual assigned command and event opcodes.
+Is it possible to achieve this using this new interface ?
 
-Regards
-
-Marcel
-
+And I think another option is to use gpio-keys defined in device-tree.
+Will this method work for any wake-capable gpio ?
+How to verify this for any arbitrary gpio ?
