@@ -2,114 +2,142 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87652C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05AF5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A8B7206C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:49:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591804179;
-	bh=Q9LLla2AHZm5fPM4otACCqwxWCS8AXst7Dotyay87T8=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=X4o070jVJ0zCECjYXRBQ3HaJ+6BYvKxt2lgm9MrsCi/6ExbY0+lnr9qkCybKTi5ph
-	 lT57Aj39Z3HPtL3kvVajfz338MmEQ7ssjEAEkTH/nPgdMOPjTH/H7AhvQnOhmMh6I/
-	 UbIrGYJo/E3erzpin7vSf8/MxERkH7PsP9IFDa/k=
+	by mail.kernel.org (Postfix) with ESMTP id DC2C3206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:49:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730369AbgFJPth (ORCPT
+        id S1730377AbgFJPtj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 11:49:37 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35550 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730345AbgFJPtb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 11:49:31 -0400
-Received: by mail-pf1-f194.google.com with SMTP id h185so1278318pfg.2;
-        Wed, 10 Jun 2020 08:49:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=J9spO8sCjIOMs0wQgccVfIprXE/wzCnPTAA23dgMAdc=;
-        b=h98127/o82LX2PUy40wev+U3cj7HdHMYnU8Jv3cGah9MgwOFtgQigPyLhjMQxgfwjQ
-         HILdmy+dMuwrtcvtNidCN/lgmknQnGDL/NUdUALy8r++cKG6mJzKMkSdT7cM0l6Z1id0
-         QPdRlj9Yg2dS31GiVMPRfaHXY2FWVWVlCIUvoMy5FNBaKrWIh/8LYQuoKXpGDShNN00T
-         lEhLAYrIOUbTplmkKywLarwm/qP0cQt8qlii3VFS6G+b/nOCBrIJW6M++qm7twFAdMS2
-         lwIQOn6ijjVUt6TElXVE9AIu2OlUWSEPrChLGkZdlPkXweZ4ils+eqGHVkWy23Ip9mBi
-         4HtA==
-X-Gm-Message-State: AOAM5301rp10LPb2cpiCWEvjK2wL9S0WhXoqKSDp5jfLsTsfRaZ22AWD
-        tX8EVJVdgthfNsGLjpD3zmo=
-X-Google-Smtp-Source: ABdhPJyu1eX5pyEODFKXM1tUOb06KZbLUOW+sULR/svGLkAhoxImKT7+pXfTo+K5VKZEdMa5hV0cwg==
-X-Received: by 2002:a62:aa0a:: with SMTP id e10mr3428008pff.91.1591804170947;
-        Wed, 10 Jun 2020 08:49:30 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id c12sm242070pgm.73.2020.06.10.08.49.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 08:49:26 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 2C139403AB; Wed, 10 Jun 2020 15:49:25 +0000 (UTC)
-From:   "Luis R. Rodriguez" <mcgrof@kernel.org>
-To:     gregkh@linuxfoundation.org, viro@zeniv.linux.org.uk,
-        philipp.reisner@linbit.com, lars.ellenberg@linbit.com,
-        axboe@kernel.dk, bfields@fieldses.org, chuck.lever@oracle.com,
-        roopa@cumulusnetworks.com, nikolay@cumulusnetworks.com,
-        davem@davemloft.net, kuba@kernel.org, dhowells@redhat.com,
-        jarkko.sakkinen@linux.intel.com, jmorris@namei.org,
-        serge@hallyn.com, christian.brauner@ubuntu.com
-Cc:     slyfox@gentoo.org, ast@kernel.org, keescook@chromium.org,
-        josh@joshtriplett.org, ravenexp@gmail.com, chainsaw@gentoo.org,
-        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        bridge@lists.linux-foundation.org, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH 0/5] kmod/umh: a few fixes
-Date:   Wed, 10 Jun 2020 15:49:18 +0000
-Message-Id: <20200610154923.27510-1-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.23.0.rc1
+        Wed, 10 Jun 2020 11:49:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39862 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730351AbgFJPtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 11:49:33 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 3BCFCAD7D;
+        Wed, 10 Jun 2020 15:49:35 +0000 (UTC)
+Message-ID: <1f486fc41030df8c74bf021b02e59f007bf9d14e.camel@suse.de>
+Subject: Re: [PATCH v2 5/9] usb: xhci-pci: Add support for reset controllers
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        gregkh@linuxfoundation.org, wahrenst@gmx.net,
+        p.zabel@pengutronix.de, linux-kernel@vger.kernel.org,
+        Mathias Nyman <mathias.nyman@intel.com>
+Cc:     tim.gover@raspberrypi.org, mathias.nyman@linux.intel.com,
+        linux-pci@vger.kernel.org, linux-usb@vger.kernel.org,
+        andy.shevchenko@gmail.com, lorenzo.pieralisi@arm.com,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org, helgaas@kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Date:   Wed, 10 Jun 2020 17:49:28 +0200
+In-Reply-To: <d452ddb8-cd30-1bfc-7b72-af3412e22ed4@gmail.com>
+References: <20200609175003.19793-1-nsaenzjulienne@suse.de>
+         <20200609175003.19793-6-nsaenzjulienne@suse.de>
+         <d452ddb8-cd30-1bfc-7b72-af3412e22ed4@gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-p+TvsQpoIbGXnKb+ob9S"
+User-Agent: Evolution 3.36.2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luis Chamberlain <mcgrof@kernel.org>
 
-Tiezhu Yang had sent out a patch set with a slew of kmod selftest
-fixes, and one patch which modified kmod to return 254 when a module
-was not found. This opened up pandora's box about why that was being
-used for and low and behold its because when UMH_WAIT_PROC is used
-we call a kernel_wait4() call but have never unwrapped the error code.
-The commit log for that fix details the rationale for the approach
-taken. I'd appreciate some review on that, in particular nfs folks
-as it seems a case was never really hit before.
+--=-p+TvsQpoIbGXnKb+ob9S
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This goes boot tested, selftested with kmod, and 0-day gives its
-build blessings.
+Hi Florian,
 
-Luis Chamberlain (2):
-  umh: fix processed error when UMH_WAIT_PROC is used
-  selftests: simplify kmod failure value
+On Tue, 2020-06-09 at 11:13 -0700, Florian Fainelli wrote:
+>=20
+> On 6/9/2020 10:49 AM, Nicolas Saenz Julienne wrote:
+> > Some atypical users of xhci-pci might need to manually reset their xHCI
+> > controller before starting the HCD setup. Check if a reset controller
+> > device is available to the PCI bus and trigger a reset.
+> >=20
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> >=20
+> > ---
+> >=20
+> > Changes since v1:
+> >  - Use proper reset API
+> >  - Make code simpler
+> >=20
+> >  drivers/usb/host/xhci-pci.c | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >=20
+> > diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+> > index ef513c2fb843..6e96affa4ceb 100644
+> > --- a/drivers/usb/host/xhci-pci.c
+> > +++ b/drivers/usb/host/xhci-pci.c
+> > @@ -12,6 +12,7 @@
+> >  #include <linux/slab.h>
+> >  #include <linux/module.h>
+> >  #include <linux/acpi.h>
+> > +#include <linux/reset.h>
+> > =20
+> >  #include "xhci.h"
+> >  #include "xhci-trace.h"
+> > @@ -339,6 +340,7 @@ static int xhci_pci_probe(struct pci_dev *dev, cons=
+t
+> > struct pci_device_id *id)
+> >  	struct xhci_hcd *xhci;
+> >  	struct usb_hcd *hcd;
+> >  	struct xhci_driver_data *driver_data;
+> > +	struct reset_control *reset;
+> > =20
+> >  	driver_data =3D (struct xhci_driver_data *)id->driver_data;
+> >  	if (driver_data && driver_data->quirks & XHCI_RENESAS_FW_QUIRK) {
+> > @@ -347,6 +349,11 @@ static int xhci_pci_probe(struct pci_dev *dev, con=
+st
+> > struct pci_device_id *id)
+> >  			return retval;
+> >  	}
+> > =20
+> > +	reset =3D devm_reset_control_get_optional_exclusive(&dev->bus->dev, N=
+ULL);
+> > +	if (IS_ERR(reset))
+> > +		return PTR_ERR(reset);
+> > +	reset_control_reset(reset);
+>=20
+> Sorry for not catching this earlier, since this is a generic integration
+> with the reset controller API, should not you also add a
+> reset_control_reset() to hcd_pci_resume() for symmetry?
 
-Tiezhu Yang (3):
-  selftests: kmod: Use variable NAME in kmod_test_0001()
-  kmod: Remove redundant "be an" in the comment
-  test_kmod: Avoid potential double free in trigger_config_run_type()
+Agreed, if the RPi4 supported suspend/resume, which AFAIK doesn't, an extra
+reset would be needed as pcie-brcmstb performs a fundamental reset on resum=
+e
+forcing us to reinitialize vl805.
 
- drivers/block/drbd/drbd_nl.c         | 20 +++++------
- fs/nfsd/nfs4recover.c                |  2 +-
- include/linux/sched/task.h           | 13 ++++++++
- kernel/kmod.c                        |  5 ++-
- kernel/umh.c                         |  4 +--
- lib/test_kmod.c                      |  2 +-
- net/bridge/br_stp_if.c               | 10 ++----
- security/keys/request_key.c          |  2 +-
- tools/testing/selftests/kmod/kmod.sh | 50 +++++++++++++++++++++++-----
- 9 files changed, 71 insertions(+), 37 deletions(-)
+Thanks!
+Nicolas
 
--- 
-2.26.2
+
+--=-p+TvsQpoIbGXnKb+ob9S
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7hAQgACgkQlfZmHno8
+x/6Fzgf8CkpRsxb++ft8vkQZu512oFbwoacT+zoJ74u+pVjwyS77fNOhO2Guu5/b
+LFcIThixpQXCsNbhbJ7ioJ+S/+ZLgITbcd9DpBFqsyWeoPGJUQU+uLpViwauaRTJ
+7spzpPtmApUR5s3zC5zTT2w3DKdHyMSnco9nX1URRO6HMD1iVbm2WOzDOI/MC4w/
+y8j3XjcaaFvusXOYe5J0JzFNvvLr8oqVj7gQSJQOaLbPg9nfvCQT/gjWiz/G9tqS
+000fU5+zSJ1wCMw22lWR6WOppHi4/w8YIswcVeat+d6RwA/oCs1soywj1XvApDBh
+6blr3s73GBC82xV02R8fcfG+AaroUQ==
+=DneD
+-----END PGP SIGNATURE-----
+
+--=-p+TvsQpoIbGXnKb+ob9S--
 
