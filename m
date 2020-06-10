@@ -2,96 +2,59 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22300C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79994C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:04:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE7CC206C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:03:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GCQkCdEi"
+	by mail.kernel.org (Postfix) with ESMTP id 5C733206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 01:04:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726121AbgFJBD3 (ORCPT
+        id S1726143AbgFJBE6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 21:03:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52058 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726016AbgFJBD2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 21:03:28 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F13C2C05BD1E;
-        Tue,  9 Jun 2020 18:03:27 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id t16so274850plo.7;
-        Tue, 09 Jun 2020 18:03:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=NupSQB3mn8qZxA9C+29tXiojSZbrUujAJ11XO4adz54=;
-        b=GCQkCdEiNYyzIfE6eQxrZSwuaO0dIWy7eHGXmXA1SdLiERVW7009HeQkYuzacxuYX4
-         5AQz6RnVqsww2m5rDmqQX9T9eeXAgxtZMO177JzKUaLejW1r+042Apv5nkmDnFdl00y3
-         mjRMTj+Pt3Z945s9Olz5qlPDSI1YODCmX+ehy4RY7y6YKt89EkC/J5LQC+z3T7PEUYbf
-         kmi1bh+Vf8C9kQ6IoWA5zG+jR3NXECdz/FF0lgI1cyd6WhtoRtayxHuk2IKv1wF1EYSG
-         JJd6iUR5y0dIYsuolvTTifVRh1PDnfjxll5W+I/ZR/8LfachXBsIQfyPd8vEBpa6ngHY
-         D1zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NupSQB3mn8qZxA9C+29tXiojSZbrUujAJ11XO4adz54=;
-        b=tvcYMxM/e/wMROx3Z1Bs154lkVTocZEdFeTWgQwl2tvL9Z0lsP5zg258gIbxqyDy0K
-         TbQsbXMThongLVrgWo3SKJ7ktqMh6u3EMVAMBcsUH2FcuFSpUeYsZqDBNw5d+iE4cTm2
-         HOgJ5fRtcGPi53tI3t1Qfntq7s7uLEnoOmZPb1vcw+xbCw0cdtXbYXIb3jDVE1sWgIIV
-         1aguZn7pv1rGupevwx5mV/o7+IIRpTQntt0K2bGJp1vBL3F/ftNDCDmefGnQx8M4kZe8
-         +qMcGt3JZZgL2obePXh99/WdBwP28zFTzi7KLsykPQ+fKyDOqvWdaAl/fqqeqHc7qsaj
-         nWpg==
-X-Gm-Message-State: AOAM531+MPLtx/jrrD52sgak37TLZ5W2+YBJqhhkyen00po4VaHdK0nP
-        iqDpeofDHfGVSftJ+WcRX4E=
-X-Google-Smtp-Source: ABdhPJzogdaBaa0lQCLqzIWam/p34pHlSbpfpn+NytAYwVmTCSSIewQgm2rMHf1tgTEBBf+4zrOwtg==
-X-Received: by 2002:a17:90a:1aa2:: with SMTP id p31mr501764pjp.227.1591751006221;
-        Tue, 09 Jun 2020 18:03:26 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 25sm3571826pjk.50.2020.06.09.18.03.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jun 2020 18:03:25 -0700 (PDT)
-Subject: Re: [PATCH v2 1/7] mips: bmips: select ARCH_HAS_RESET_CONTROLLER
-To:     =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
-        p.zabel@pengutronix.de, robh+dt@kernel.org,
-        tsbogend@alpha.franken.de, jonas.gorski@gmail.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
-References: <20200609134232.4084718-1-noltari@gmail.com>
- <20200609160244.4139366-1-noltari@gmail.com>
- <20200609160244.4139366-2-noltari@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <894c287e-2cde-63ec-d396-7a5fd175da6f@gmail.com>
-Date:   Tue, 9 Jun 2020 18:03:23 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        Tue, 9 Jun 2020 21:04:58 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:59220 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726046AbgFJBE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jun 2020 21:04:56 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1jipAg-0007mt-9B; Wed, 10 Jun 2020 11:04:51 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Wed, 10 Jun 2020 11:04:50 +1000
+Date:   Wed, 10 Jun 2020 11:04:50 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Mikulas Patocka <mpatocka@redhat.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, Mike Snitzer <msnitzer@redhat.com>,
+        Milan Broz <mbroz@redhat.com>, dm-devel@redhat.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: crypto API and GFP_ATOMIC
+Message-ID: <20200610010450.GA6449@gondor.apana.org.au>
+References: <alpine.LRH.2.02.2006091259250.30590@file01.intranet.prod.int.rdu2.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200609160244.4139366-2-noltari@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LRH.2.02.2006091259250.30590@file01.intranet.prod.int.rdu2.redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jun 09, 2020 at 01:11:05PM -0400, Mikulas Patocka wrote:
+>
+> Do you have another idea how to solve this problem?
 
+I think the better approach would be to modify the drivers to not
+allocate any memory.  In general, any memory needed by the driver
+to fulfil a request *should* be allocated within the crypto request
+object.  That's why we have the reqsize field to indicate how much
+memory could be needed per request.
 
-On 6/9/2020 9:02 AM, Álvaro Fernández Rojas wrote:
-> This allows to add reset controllers support.
-> 
-> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Thanks,
 -- 
-Florian
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
