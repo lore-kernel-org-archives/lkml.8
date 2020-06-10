@@ -2,82 +2,93 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E57C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 18:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F1B9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 18:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF9B72072E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 18:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 771D12072E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 18:39:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591814285;
-	bh=h0IuiUWUKsiSNDHyKOYq9b8cM+vZUVCJEUixoQ/k2rg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=JrDzqcLTfd3pTTYcfvaeyh824JmkjfOGpE3wYXn/DJExRvUbDXrQ2b57ZOhQ80rAr
-	 dzg3N+eFW+PR28/wadOrCPjErwEqdOc+JSWmvR/r4C09DgTjGJ9p+Y8oEYeDvDyRIC
-	 SxV/uG5tSTiXh5yxHcWf9jZV0TMv4M4d/Wpj8+K0=
+	s=default; t=1591814379;
+	bh=/nwQv7HXY+4bnbap37SNwzFMFGsDsxZDiqThHNWQbJc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XyBkeIPUtB01sucHWJLm95ZJJSVSXRjGO+dxT0R59o5YkAWe+rhbi0nrFSvLHdQTs
+	 iiC1Ge2zQDexBWT0Aab66WNv1KEL0Y6UTwLgkwiX2KBRVfzgGLo/8UGj4819zMKl3C
+	 hJq4jjs3BxJ3VimZZ4XTXJaUaeGO66iORWMi0VBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729170AbgFJSiD (ORCPT
+        id S1729206AbgFJSjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 14:38:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33126 "EHLO mail.kernel.org"
+        Wed, 10 Jun 2020 14:39:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726287AbgFJSiD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 14:38:03 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
+        id S1726105AbgFJSjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 14:39:37 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A66282070B;
-        Wed, 10 Jun 2020 18:38:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 409F52070B;
+        Wed, 10 Jun 2020 18:39:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591814283;
-        bh=h0IuiUWUKsiSNDHyKOYq9b8cM+vZUVCJEUixoQ/k2rg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=crnAjX31z8TIGe8a8jlhWvGoUJ80oBYc32jpstfZIWEhIXbTU6AoyQeson/GZ45K+
-         AIafZtK1wduXHEiig/NuBi1xoaTT/kzoEw8AVJtaNTWi+H0IuQteYb/npwLWK6iqZt
-         RNfn8h0cmvQAi1wdm2hdirquOrydwpvJPNi54DKM=
-Date:   Wed, 10 Jun 2020 11:38:00 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Christoph Hellwig <hch@lst.de>,
-        Christian Brauner <christian@brauner.io>,
-        Sargun Dhillon <sargun@sargun.me>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] Use __scm_install_fd() more widely
-Message-ID: <20200610113800.5d7846ce@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <202006101001.6738CA0@keescook>
-References: <20200610045214.1175600-1-keescook@chromium.org>
-        <20200610094735.7ewsvrfhhpioq5xe@wittgenstein>
-        <202006101001.6738CA0@keescook>
+        s=default; t=1591814376;
+        bh=/nwQv7HXY+4bnbap37SNwzFMFGsDsxZDiqThHNWQbJc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oy1cCCPKx5iFNIzc7JpcFTYTyFIZlrf+nPIl2u/tnAfvbGT9xRKRd0/MjfMwS3Avi
+         sz6mD+FHTiVTWxjaeCmCpvW+NZa3ogHGcj8kKGtFnQBfNGWGEZAq7CQ+xp6dGVnHdG
+         vd+xbceoBDXbJ/atB43WcmcsUkt+PQ5SeZKGA9uw=
+Date:   Wed, 10 Jun 2020 20:39:31 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Subject: Re: [PATCH 5.7 00/24] 5.7.2-rc1 review
+Message-ID: <20200610183931.GA14871@kroah.com>
+References: <20200609174149.255223112@linuxfoundation.org>
+ <CA+G9fYurJXfpg7QfsxxRPSFhG2cNkU-zA=VM==1b4E8bmjxecg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G9fYurJXfpg7QfsxxRPSFhG2cNkU-zA=VM==1b4E8bmjxecg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 10 Jun 2020 10:03:03 -0700 Kees Cook wrote:
-> If 0-day doesn't kick anything back on this tree, I'll resend the
-> series...
+On Wed, Jun 10, 2020 at 11:47:30AM +0530, Naresh Kamboju wrote:
+> On Tue, 9 Jun 2020 at 23:25, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > This is the start of the stable review cycle for the 5.7.2 release.
+> > There are 24 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Thu, 11 Jun 2020 17:41:38 +0000.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.2-rc1.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.7.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
+> 
+> Results from Linaro’s test farm.
+> No regressions on arm64, arm, x86_64, and i386.
 
-Well, 0-day may find more, but I can already tell you that patch 1 has
-a checkpatch error:
+Thanks for testing all of these and letting me know.
 
-ERROR: "(foo*)" should be "(foo *)"
-#149: FILE: net/core/scm.c:323:
-+		(__force struct cmsghdr __user*)msg->msg_control;
-
-total: 1 errors, 0 warnings, 0 checks, 131 lines checked
-
-And patch 2 makes W=1 builds unhappy:
-
-net/core/scm.c:292: warning: Function parameter or member 'file' not described in '__scm_install_fd'
-net/core/scm.c:292: warning: Function parameter or member 'ufd' not described in '__scm_install_fd'
-net/core/scm.c:292: warning: Function parameter or member 'o_flags' not described in '__scm_install_fd'
-
-:)
+greg k-h
