@@ -4,58 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5CEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5550DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 875EC2074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E17A2074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 11:21:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591788076;
-	bh=Vy1uNGpCyh3WA6USKC361S2rQ3bIgdUucbjMN7/azjo=;
+	s=default; t=1591788081;
+	bh=9fKKwsQG+ae0h8ivgqvpkqBV3pK8Ukj9focnXx4zajc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Up4tYKEt5kxMXfxefQT4EUo6IjnVOqRM4c76ebSMZuQJ404vxE9RgJciYD0ZlCvb4
-	 F+/L5K0O1RmBBqW8ix6CaP71L8wF98fCgEnHBY6/Bk3YyoU+5k03wz5QYL2SKazeGz
-	 jIj4pXQF+z6DwUvLV03z9KucZUtRS7El+a+YKa0A=
+	b=J4fRPn4URCD7V1lXOypN+XBPIvtyYh27BfTe76S8fbFbzBrp55FNESsxF9xfzgDEW
+	 1o8rrjYO64uMzW5DagTfgUQ9N6r5qgIXYj2qzEU5rlhC3f5wbEddn5xddf9cSypmPw
+	 ZpqrJk3c43z2UdHxqO9YABZZLqCTC1+j5MBdaJhk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728452AbgFJLVP (ORCPT
+        id S1728464AbgFJLVU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 07:21:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39226 "EHLO mail.kernel.org"
+        Wed, 10 Jun 2020 07:21:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728381AbgFJLVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 07:21:15 -0400
+        id S1728381AbgFJLVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 07:21:17 -0400
 Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90C21204EA;
-        Wed, 10 Jun 2020 11:21:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BCA02078C;
+        Wed, 10 Jun 2020 11:21:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591788074;
-        bh=Vy1uNGpCyh3WA6USKC361S2rQ3bIgdUucbjMN7/azjo=;
+        s=default; t=1591788077;
+        bh=9fKKwsQG+ae0h8ivgqvpkqBV3pK8Ukj9focnXx4zajc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XB3sMSmPStKwcCZbiYtdbjcc80l0y5WR7y4apK8+o9JokOR6gHgKEQwDzHFPMA85c
-         FoCa4mEEx9ZMZAoRsv+zHWXuDbAvF/9mmVN4hLO1ZrO/iqgDUErh9zdAoFUs3ez8g3
-         nU3W3qhCqAntUiYzsYf4mHoYpPfCt5U6DER3f7lQ=
+        b=bth/F3nXjeNt4SgkC/ZRFpXEHsVWDZed8ygE5hwx80F1Nw1Dyr/CkiNtfJcmvzfg5
+         gqaR8OYTFFoHDZTTVrQgL8hQWKCDC9ZwsZu81O4mDBIOfLp42uNPuxmsI31DEA/fK+
+         cawp48O2k2BCXQ8YOez5JPGYtsYOi+eTe0zUSUaU=
 From:   Will Deacon <will@kernel.org>
 To:     Nick Desaulniers <ndesaulniers@google.com>,
         Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Enrico Weigelt <info@metux.net>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Allison Randal <allison@lohutok.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2] arm64: acpi: fix UBSAN warning
-Date:   Wed, 10 Jun 2020 12:21:08 +0100
-Message-Id: <159178566875.41592.7975510364023488303.b4-ty@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Dave Martin <Dave.Martin@arm.com>,
+        Stephen Boyd <swboyd@google.com>,
+        clang-built-linux@googlegroups.com,
+        Manoj Gupta <manojgupta@google.com>,
+        Luis Lozano <llozano@google.com>
+Subject: Re: [PATCH v2] arm64: vdso32: add CONFIG_THUMB2_COMPAT_VDSO
+Date:   Wed, 10 Jun 2020 12:21:09 +0100
+Message-Id: <159178553820.37708.12308914886514191769.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200608203818.189423-1-ndesaulniers@google.com>
-References: <CAKwvOdnBhHnhUZ9MHgqEQ4nEyzHWUH+DPV-J0KoYyWNEnsDHbg@mail.gmail.com> <20200608203818.189423-1-ndesaulniers@google.com>
+In-Reply-To: <20200608205711.109418-1-ndesaulniers@google.com>
+References: <20200528072031.GA22156@willie-the-truck> <20200608205711.109418-1-ndesaulniers@google.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -63,33 +67,23 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 8 Jun 2020 13:38:17 -0700, Nick Desaulniers wrote:
-> Will reported a UBSAN warning:
+On Mon, 8 Jun 2020 13:57:08 -0700, Nick Desaulniers wrote:
+> Allow the compat vdso (32b) to be compiled as either THUMB2 (default) or
+> ARM.
 > 
-> UBSAN: null-ptr-deref in arch/arm64/kernel/smp.c:596:6
-> member access within null pointer of type 'struct acpi_madt_generic_interrupt'
-> CPU: 0 PID: 0 Comm: swapper Not tainted 5.7.0-rc6-00124-g96bc42ff0a82 #1
-> Call trace:
->  dump_backtrace+0x0/0x384
->  show_stack+0x28/0x38
->  dump_stack+0xec/0x174
->  handle_null_ptr_deref+0x134/0x174
->  __ubsan_handle_type_mismatch_v1+0x84/0xa4
->  acpi_parse_gic_cpu_interface+0x60/0xe8
->  acpi_parse_entries_array+0x288/0x498
->  acpi_table_parse_entries_array+0x178/0x1b4
->  acpi_table_parse_madt+0xa4/0x110
->  acpi_parse_and_init_cpus+0x38/0x100
->  smp_init_cpus+0x74/0x258
->  setup_arch+0x350/0x3ec
->  start_kernel+0x98/0x6f4
+> For THUMB2, the register r7 is reserved for the frame pointer, but
+> code in arch/arm64/include/asm/vdso/compat_gettimeofday.h
+> uses r7. Explicitly set -fomit-frame-pointer, since unwinding through
+> interworked THUMB2 and ARM is unreliable anyways. See also how
+> CONFIG_UNWINDER_FRAME_POINTER cannot be selected for
+> CONFIG_THUMB2_KERNEL for ARCH=arm.
 > 
 > [...]
 
 Applied to arm64 (for-next/core), thanks!
 
-[1/1] arm64: acpi: fix UBSAN warning
-      https://git.kernel.org/arm64/c/a194c33f45f8
+[1/1] arm64: vdso32: add CONFIG_THUMB2_COMPAT_VDSO
+      https://git.kernel.org/arm64/c/625412c210fb
 
 Cheers,
 -- 
