@@ -2,128 +2,157 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4742EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 22:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF829C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 22:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FABE2072E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 22:19:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C58E3206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 22:20:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fERP93oD"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QyyXrmeK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726630AbgFJWTD (ORCPT
+        id S1726724AbgFJWUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 18:19:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51722 "EHLO
+        Wed, 10 Jun 2020 18:20:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726374AbgFJWTD (ORCPT
+        with ESMTP id S1726374AbgFJWUf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 18:19:03 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43920C03E96B
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 15:19:03 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id m2so1499531pjv.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 15:19:03 -0700 (PDT)
+        Wed, 10 Jun 2020 18:20:35 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE4E2C03E96B
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 15:20:34 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id c1so2247903vsc.11
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 15:20:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rhuYJSC1VHruylv18DPHqIr538+R8iT9VQr5TN8ed1A=;
-        b=fERP93oDnXfNKo4nZ8jb23h41NjAcbPRW1H9fmDlyHHO11k2/qxwtJuEcIOUKtuxBo
-         IpUsH2lJo26qrxLSViY7mYtwmmokQle3Ru7g9qTOUR+0wu/wPoizV9F/AD+nWUjbUnMR
-         Qq8Z1ss76MV3A2gRCwHVSoD0qsQq0XEilMQiU=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gbYrwjkRNzZs52wtNe5b9ymrBledc5fgJdW/7CYMczg=;
+        b=QyyXrmeKJSKKc54VOXRhBA48lstvw0q3ctLwmRUmYvuniF6MaKqprw76G6WKeXgKXB
+         r/jbdUg8yJ7iw34oE1OWz0dWyMIlim7iHYcQtD67/ivBRy+I7B838Bxvx4JWOVUAxYN3
+         POzPLtPUSvRylefwwyiJnNCwZ28r+eFHCfQTlfjzukPMl52cDhRE0H8vA3A5R5qZ//vK
+         hyVJruxV9jjEt3XKZbDLdCyH9tLqObhgWfqQJpRCLqqkFBHz8EB0eQ7avKhqHHK0zYzj
+         RESHvTrXTKtZufFfvsuK5nk/vVANKcnKj1isrCHWI7ENKEYpAZgFY60ZfqvyNfgEDVAL
+         29Zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rhuYJSC1VHruylv18DPHqIr538+R8iT9VQr5TN8ed1A=;
-        b=f//TWvHQVNs6goYTTWrOoXw2LY/zxiG3tBk0VIX0rpz7wbWfWpvbAW0TFUJ9aoPr9D
-         5ZqwVn1354CC/rx0a1gLHRnVar4bIBIIOD9uU4+dCgVwIRg3hsSidBoMviLiq6XxychD
-         WGFh96vU2r8dzcsYIOs0ooaqnHL1mbY7PYxvT1MDsUoquNje4IB3m0dd7XehxtHOX+9j
-         D7wUgGzTPkDaqk7gLazdL0/rUE8wdbxLBLOyXcwy89CvIQjiqWF9t5z4dW8JIln1TIRB
-         OplT0Zr7vGJ229HfmD4sWrpAPlj6yilgPKdr+RRmT0lro8s5a4DaQWT8Sfd0q6nBeoZ4
-         fupQ==
-X-Gm-Message-State: AOAM531fqeFY43qg4aRrdUzKvkJLfqEXS9yCBeQMe2hEJ71/rvgznMWO
-        7WyJWq3W5k9QUsfFq4gtcjvdgg==
-X-Google-Smtp-Source: ABdhPJy27msuXD2eMtps/cp9jKmt0EEj2zVmkwWkSJq0jyHWRGT6WVGVWnOfxANQ0mTx0ojlu8O2eA==
-X-Received: by 2002:a17:902:10e:: with SMTP id 14mr4783574plb.12.1591827542296;
-        Wed, 10 Jun 2020 15:19:02 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id f136sm876033pfa.59.2020.06.10.15.19.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 15:19:01 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     hsinyi@chromium.org, joelaf@google.com, peterz@infradead.org,
-        drinkcat@chromium.org, gwendal@chromium.org, qperret@google.com,
-        ctheegal@codeaurora.org, Douglas Anderson <dianders@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] cros_ec_spi: Even though we're RT priority, don't bump cpu freq
-Date:   Wed, 10 Jun 2020 15:18:43 -0700
-Message-Id: <20200610151818.1.I666ecd9c6f3c6405bd75831a21001b8109b6438c@changeid>
-X-Mailer: git-send-email 2.27.0.290.gba653c62da-goog
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gbYrwjkRNzZs52wtNe5b9ymrBledc5fgJdW/7CYMczg=;
+        b=WinfFpmHGGgKnUdunfZ4dekxO0p3KhpTik6GVspBdh8Abawoc8ZmdCPO49D4efjOJ8
+         LMpMfXi6yPEYwaQoXYIgRNvcNlM3HPua94z7LmNk32sNF5AUYGoCpmEa63tS3tm8xbYi
+         /L4pNGhOVproZFxw75zQsJ7mEt9w9JRzvczj8m4SJZtKECoJoh90gzs7F9A2kJdxrkJG
+         OnwDQVVcuMDUR0trId9OIevgkr5SWswcJmTvNKFGXLKDSVF28ySCklR7nQ4VG2Og7OO1
+         JAdvBzxP4zC2/liHk7f1DmdRWlTLEh+/Pf5Wp/JenwkWgD6/UPgW8vGUQfKYXE7Rc0t+
+         cCMw==
+X-Gm-Message-State: AOAM531sBWgesSKKAOMwmlhPP70ZV9otyneWtwQVF6SC6xwV/IM/tonM
+        f6RNAT9Myq2Ocn4pF/mlfcVa47VlZrMr0js0J95Dcw==
+X-Google-Smtp-Source: ABdhPJzOjvq/kbEr1iPy17gDm6Y5SxC/Oi9n4y5NbS27Re14ZbRVe9raYSH+GiU0z+vIPd8N4LFp9am07TBNHW7Kx80=
+X-Received: by 2002:a67:d287:: with SMTP id z7mr4666597vsi.2.1591827633895;
+ Wed, 10 Jun 2020 15:20:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200605213853.14959-1-sean.j.christopherson@intel.com> <20200605213853.14959-9-sean.j.christopherson@intel.com>
+In-Reply-To: <20200605213853.14959-9-sean.j.christopherson@intel.com>
+From:   Ben Gardon <bgardon@google.com>
+Date:   Wed, 10 Jun 2020 15:20:19 -0700
+Message-ID: <CANgfPd-19pam9sujfsk1pdrp8YhVft1+JAmSS=xgUULqXRyUDg@mail.gmail.com>
+Subject: Re: [PATCH 08/21] KVM: x86/mmu: Clean up the gorilla math in mmu_topup_memory_caches()
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Marc Zyngier <maz@kernel.org>, Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Feiner <pfeiner@google.com>,
+        Peter Shier <pshier@google.com>,
+        Junaid Shahid <junaids@google.com>,
+        Christoffer Dall <christoffer.dall@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The cros_ec_spi driver is realtime priority so that it doesn't get
-preempted by other taks while it's talking to the EC but overall it
-really doesn't need lots of compute power.  Unfortunately, by default,
-the kernel assumes that all realtime tasks should cause the cpufreq to
-jump to max and burn through power to get things done as quickly as
-possible.  That's just not the correct behavior for cros_ec_spi.
-
-Switch to manually overriding the default.
-
-This won't help us if our work moves over to the SPI pump thread but
-that's not the common code path.
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-NOTE: This would cause a conflict if the patch
-https://lore.kernel.org/r/20200422112831.870192415@infradead.org lands
-first
-
- drivers/platform/chrome/cros_ec_spi.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/platform/chrome/cros_ec_spi.c b/drivers/platform/chrome/cros_ec_spi.c
-index debea5c4c829..76d59d5e7efd 100644
---- a/drivers/platform/chrome/cros_ec_spi.c
-+++ b/drivers/platform/chrome/cros_ec_spi.c
-@@ -709,8 +709,11 @@ static void cros_ec_spi_high_pri_release(void *worker)
- static int cros_ec_spi_devm_high_pri_alloc(struct device *dev,
- 					   struct cros_ec_spi *ec_spi)
- {
--	struct sched_param sched_priority = {
--		.sched_priority = MAX_RT_PRIO / 2,
-+	struct sched_attr sched_attr = {
-+		.sched_policy	= SCHED_FIFO,
-+		.sched_priority	= MAX_RT_PRIO / 2,
-+		.sched_flags	= SCHED_FLAG_UTIL_CLAMP_MIN,
-+		.sched_util_min	= 0,
- 	};
- 	int err;
- 
-@@ -728,8 +731,7 @@ static int cros_ec_spi_devm_high_pri_alloc(struct device *dev,
- 	if (err)
- 		return err;
- 
--	err = sched_setscheduler_nocheck(ec_spi->high_pri_worker->task,
--					 SCHED_FIFO, &sched_priority);
-+	err = sched_setattr_nocheck(ec_spi->high_pri_worker->task, &sched_attr);
- 	if (err)
- 		dev_err(dev, "Can't set cros_ec high pri priority: %d\n", err);
- 	return err;
--- 
-2.27.0.290.gba653c62da-goog
-
+On Fri, Jun 5, 2020 at 2:39 PM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> Clean up the minimums in mmu_topup_memory_caches() to document the
+> driving mechanisms behind the minimums.  Now that encountering an empty
+> cache is unlikely to trigger BUG_ON(), it is less dangerous to be more
+> precise when defining the minimums.
+>
+> For rmaps, the logic is 1 parent PTE per level, plus a single rmap, and
+> prefetched rmaps.  The extra objects in the current '8 + PREFETCH'
+> minimum came about due to an abundance of paranoia in commit
+> c41ef344de212 ("KVM: MMU: increase per-vcpu rmap cache alloc size"),
+> i.e. it could have increased the minimum to 2 rmaps.  Furthermore, the
+> unexpected extra rmap case was killed off entirely by commits
+> f759e2b4c728c ("KVM: MMU: avoid pte_list_desc running out in
+> kvm_mmu_pte_write") and f5a1e9f89504f ("KVM: MMU: remove call to
+> kvm_mmu_pte_write from walk_addr").
+>
+> For the so called page cache, replace '8' with 2*PT64_ROOT_MAX_LEVEL.
+> The 2x multiplier is needed because the cache is used for both shadow
+> pages and gfn arrays for indirect MMUs.
+>
+> And finally, for page headers, replace '4' with PT64_ROOT_MAX_LEVEL.
+>
+> Note, KVM now supports 5-level paging, i.e. the old minimums that used a
+> baseline derived from 4-level paging were technically wrong.  But, KVM
+> always allocates roots in a separate flow, e.g. it's impossible in the
+> current implementation to actually need 5 new shadow pages in a single
+> flow.  Use PT64_ROOT_MAX_LEVEL unmodified instead of subtracting 1, as
+> the direct usage is likely more intuitive to uninformed readers, and the
+> inflated minimum is unlikely to affect functionality in practice.
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Reviewed-by: Ben Gardon <bgardon@google.com>
+> ---
+>  arch/x86/kvm/mmu/mmu.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index 4b4c3234d623..451e0365e5dd 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -1103,14 +1103,17 @@ static int mmu_topup_memory_caches(struct kvm_vcpu *vcpu)
+>  {
+>         int r;
+>
+> +       /* 1 rmap, 1 parent PTE per level, and the prefetched rmaps. */
+>         r = mmu_topup_memory_cache(&vcpu->arch.mmu_pte_list_desc_cache,
+> -                                  8 + PTE_PREFETCH_NUM);
+> +                                  1 + PT64_ROOT_MAX_LEVEL + PTE_PREFETCH_NUM);
+>         if (r)
+>                 return r;
+> -       r = mmu_topup_memory_cache(&vcpu->arch.mmu_page_cache, 8);
+> +       r = mmu_topup_memory_cache(&vcpu->arch.mmu_page_cache,
+> +                                  2 * PT64_ROOT_MAX_LEVEL);
+>         if (r)
+>                 return r;
+> -       return mmu_topup_memory_cache(&vcpu->arch.mmu_page_header_cache, 4);
+> +       return mmu_topup_memory_cache(&vcpu->arch.mmu_page_header_cache,
+> +                                     PT64_ROOT_MAX_LEVEL);
+>  }
+>
+>  static void mmu_free_memory_caches(struct kvm_vcpu *vcpu)
+> --
+> 2.26.0
+>
