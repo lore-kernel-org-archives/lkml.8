@@ -2,459 +2,199 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB7DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 02:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F893C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 02:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC13720734
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 02:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3657820734
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 02:32:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vgGdrdMz"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="PeOj0aIo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726171AbgFJC1l (ORCPT
+        id S1726051AbgFJCcj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jun 2020 22:27:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36792 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726129AbgFJC1i (ORCPT
+        Tue, 9 Jun 2020 22:32:39 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:56639 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725944AbgFJCcj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jun 2020 22:27:38 -0400
-Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08B42C05BD1E;
-        Tue,  9 Jun 2020 19:27:38 -0700 (PDT)
-Received: by mail-vk1-xa44.google.com with SMTP id i1so200681vkp.8;
-        Tue, 09 Jun 2020 19:27:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=EDTtj2l1wZcZ/QHNK02p6RkxP3ZRaOlmrMOFw0yr+3c=;
-        b=vgGdrdMzw8/DKe/mLscBFmU3Pg+nYunf0kB14koDIkSCrgVhVrxMP1o34Jh2PzHqto
-         Tu++r1MVWRH+z819eLvfYqu/cYHuRGLEF3CtC876m+DzQkoZk1YFW76gysGojz8jWUpz
-         +A6AqUlksFbN+SyIfLyJYuFB9lG0Ilga8N9GkVxdJXXIaEMm6ZGF9yRDcEA1NQjC7S9h
-         O4DkMT/wSuoEW8MdoDyhSCM68n9rEK/jqoF9T3F/TyMNerLvOOiuywTElPBxKF7b9gA9
-         YCwgDneJcYM3BY6BNtkl6AIIYL+9OF831NWGpyDlFOAGtm8FL3RMTTk1eYyQBt68UHv1
-         yl4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=EDTtj2l1wZcZ/QHNK02p6RkxP3ZRaOlmrMOFw0yr+3c=;
-        b=LYZF+SV6ki0cl5hdmmq0YxfNq01BaCvW6yFc7ZxlDvzCv6uGwzZUk8vLNx4ExTef9o
-         BLkFgmLDoYbl+q1Yjt8hQK07NimlHfjcGAuj6HAjPoZjpTmMpRGkFyoPYLZVjUs7wTZV
-         KgQ2YDtnn31Tx7lag1pAG198TqOVOmlHvc55eiOqDKRySTR/p+5tQNdNlqpCdT/w7B9O
-         ltTPUvsKGm0hW8i0XBNzIC01NQlQ33746DXQ9hZeR43q0k8tettPh3b3JZu9V4BqTy/t
-         qcf7PvXkoVwTeniIShi5xDn/wdJotFR/1FUX+yfXB+NpyEGQhprw3fPu1npPVjnVNoJA
-         +S6g==
-X-Gm-Message-State: AOAM532BHR+S2DQhpkfCeYb9yHd3FMsIc9yBn23fd0VqMaP+uVZhdW1F
-        eD/0/x5NdqWz3BueYmDNM9ZD4e6LzGdB41mjmmw=
-X-Google-Smtp-Source: ABdhPJyP6SsF96GKJJEYQW4eIe2HP7qxRKag6LHCYoRsy18tc1RRW5BaX5oa/J23phDjhkpDoZhoYOBNf+13X0MEK54=
-X-Received: by 2002:a1f:bf13:: with SMTP id p19mr745671vkf.69.1591756056515;
- Tue, 09 Jun 2020 19:27:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200609205851.30113-1-wcheng@codeaurora.org> <20200609205851.30113-2-wcheng@codeaurora.org>
-In-Reply-To: <20200609205851.30113-2-wcheng@codeaurora.org>
-From:   Jun Li <lijun.kernel@gmail.com>
-Date:   Wed, 10 Jun 2020 10:27:25 +0800
-Message-ID: <CAKgpwJWp9St4B1xuT5qAns1_NFPjd+2_gozv=0j-g7J42dbCPg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] usb: typec: Add QCOM PMIC typec detection driver
-To:     Wesley Cheng <wcheng@codeaurora.org>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Tue, 9 Jun 2020 22:32:39 -0400
+X-UUID: d5a16b9c53bb47efa0f5066bc3f6e49e-20200610
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=ikAUH+oSTe3mRlWNNzglrPUeUjqFowmt3yvhPLlzaLI=;
+        b=PeOj0aIoCG2au5Qxq6ZrDWPs0n6odYH4nRjAp/IFkItVyQr3thMdUmMfZvlTYPWf4rdvD+z4v5aPQ3zqpVu/jG72XTh3jXz41ktimJUCp6hUbvKqAePFpl/kH9CWkHJ1oi81iqWvKl5P8ITVTMCYJ39agmFsw0PHaM0S0BgLXKQ=;
+X-UUID: d5a16b9c53bb47efa0f5066bc3f6e49e-20200610
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <macpaul.lin@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 455591256; Wed, 10 Jun 2020 10:32:32 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 10 Jun 2020 10:32:31 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 10 Jun 2020 10:32:30 +0800
+From:   Macpaul Lin <macpaul.lin@mediatek.com>
+To:     Felipe Balbi <balbi@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, lkml <linux-kernel@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        Jack Pham <jackp@codeaurora.org>, bryan.odonoghue@linaro.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Bart Van Assche <bvanassche@acm.org>
+CC:     Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
+        Macpaul Lin <macpaul.lin@mediatek.com>,
+        Macpaul Lin <macpaul.lin@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-usb@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        Justin Hsieh <justinhsieh@google.com>,
+        Hakieyin Hsieh <hakieyin@gmail.com>
+Subject: [PATCH] usb/gadget/function: introduce Built-in CDROM support
+Date:   Wed, 10 Jun 2020 10:32:29 +0800
+Message-ID: <1591756349-17865-1-git-send-email-macpaul.lin@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <EJ Hsu <ejh@nvidia.com>, Mauro Carvalho Chehab
+ <mchehab+samsung@kernel.org>, Benjamin Herrenschmidt
+ <benh@kernel.crashing.org>, linux-usb@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org>
+References: <EJ Hsu <ejh@nvidia.com>, Mauro Carvalho Chehab
+ <mchehab+samsung@kernel.org>, Benjamin Herrenschmidt
+ <benh@kernel.crashing.org>, linux-usb@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-Wesley Cheng <wcheng@codeaurora.org> =E4=BA=8E2020=E5=B9=B46=E6=9C=8810=E6=
-=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8A=E5=8D=885:00=E5=86=99=E9=81=93=EF=BC=9A
->
-> The QCOM SPMI typec driver handles the role and orientation detection, an=
-d
-> notifies client drivers using the USB role switch framework.   It registe=
-rs
-> as a typec port, so orientation can be communicated using the typec switc=
-h
-> APIs.  The driver also registers the VBUS output regulator, so client
-> drivers can enable the VBUS source when acting as a source/host.
->
-> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
-> ---
->  drivers/usb/typec/Kconfig           |  11 ++
->  drivers/usb/typec/Makefile          |   1 +
->  drivers/usb/typec/qcom-pmic-typec.c | 278 ++++++++++++++++++++++++++++++=
-++++++
->  3 files changed, 290 insertions(+)
->  create mode 100644 drivers/usb/typec/qcom-pmic-typec.c
->
-> diff --git a/drivers/usb/typec/Kconfig b/drivers/usb/typec/Kconfig
-> index 559dd06..8de2520 100644
-> --- a/drivers/usb/typec/Kconfig
-> +++ b/drivers/usb/typec/Kconfig
-> @@ -73,6 +73,17 @@ config TYPEC_TPS6598X
->           If you choose to build this driver as a dynamically linked modu=
-le, the
->           module will be called tps6598x.ko.
->
-> +config TYPEC_QCOM_PMIC
-> +       tristate "Qualcomm PMIC USB typec driver"
-> +       depends on ARCH_QCOM
-> +       help
-> +         Driver for supporting role switch over the Qualcomm PMIC.  This=
- will
-> +         handle the type C role and orientation detection reported by th=
-e QCOM
-> +         PMIC if the PMIC has the capability to handle type C detection.
-> +
-> +         It will also enable the VBUS output to connected devices when a
-> +         DFP connection is made.
-> +
->  source "drivers/usb/typec/mux/Kconfig"
->
->  source "drivers/usb/typec/altmodes/Kconfig"
-> diff --git a/drivers/usb/typec/Makefile b/drivers/usb/typec/Makefile
-> index 7753a5c3..cceffd9 100644
-> --- a/drivers/usb/typec/Makefile
-> +++ b/drivers/usb/typec/Makefile
-> @@ -6,4 +6,5 @@ obj-$(CONFIG_TYPEC_TCPM)        +=3D tcpm/
->  obj-$(CONFIG_TYPEC_UCSI)       +=3D ucsi/
->  obj-$(CONFIG_TYPEC_HD3SS3220)  +=3D hd3ss3220.o
->  obj-$(CONFIG_TYPEC_TPS6598X)   +=3D tps6598x.o
-> +obj-$(CONFIG_TYPEC_QCOM_PMIC)  +=3D qcom-pmic-typec.o
->  obj-$(CONFIG_TYPEC)            +=3D mux/
-> diff --git a/drivers/usb/typec/qcom-pmic-typec.c b/drivers/usb/typec/qcom=
--pmic-typec.c
-> new file mode 100644
-> index 0000000..ce6319c
-> --- /dev/null
-> +++ b/drivers/usb/typec/qcom-pmic-typec.c
-> @@ -0,0 +1,278 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#include <linux/err.h>
-> +#include <linux/regmap.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/slab.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of_device.h>
-> +#include <linux/usb/role.h>
-> +#include <linux/usb/typec_mux.h>
-> +#include <linux/workqueue.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/regulator/driver.h>
-> +#include <linux/regulator/machine.h>
-> +
-> +#define DCDC_BASE                      0x1100
-> +#define CMD_OTG                                (DCDC_BASE + 0x40)
-> +#define OTG_EN                         BIT(0)
-> +#define OTG_CFG                                (DCDC_BASE + 0x53)
-> +#define OTG_EN_SRC_CFG                 BIT(1)
-> +
-> +#define USB_BASE                       0x1300
-> +#define TYPE_C_CFG_REG                 (USB_BASE + 0x58)
-> +#define BC12_START_ON_CC               BIT(7)
-> +
-> +#define TYPEC_BASE                     0x1500
-> +#define TYPEC_MISC_STATUS              (TYPEC_BASE + 0xb)
-> +#define CC_ATTACHED                    BIT(0)
-> +#define CC_ORIENTATION                 BIT(1)
-> +#define SNK_SRC_MODE                   BIT(6)
-> +#define TYPEC_MODE_CFG                 (TYPEC_BASE + 0x44)
-> +#define TYPEC_DISABLE_CMD              BIT(0)
-> +#define EN_SNK_ONLY                    BIT(1)
-> +#define EN_SRC_ONLY                    BIT(2)
-> +#define EN_TRY_SNK                     BIT(4)
-> +#define TYPEC_VCONN_CONTROL            (TYPEC_BASE + 0x46)
-> +#define VCONN_EN_SRC                   BIT(0)
-> +#define VCONN_EN_VAL                   BIT(1)
-> +#define TYPEC_EXIT_STATE_CFG           (TYPEC_BASE + 0x50)
-> +#define SEL_SRC_UPPER_REF              BIT(2)
-> +#define TYPEC_INTR_EN_CFG_1            (TYPEC_BASE + 0x5e)
-> +#define TYPEC_INTR_EN_CFG_1_MASK       GENMASK(0, 7)
-> +
-> +struct qcom_pmic_typec {
-> +       struct device           *dev;
-> +       struct fwnode_handle    *fwnode;
-> +       struct regmap           *regmap;
-> +       struct work_struct      bh_work;
-> +
-> +       struct typec_capability *cap;
-> +       struct typec_port       *port;
-> +       struct usb_role_switch *role_sw;
-> +
-> +       struct regulator_desc usb_vbus_rdesc;
-> +       struct regulator_dev *usb_vbus_reg;
-> +};
-> +
-> +static int qcom_pmic_typec_vbus_enable(struct qcom_pmic_typec *qcom_usb)
-> +{
-> +       int rc;
-> +
-> +       rc =3D regmap_update_bits(qcom_usb->regmap, CMD_OTG, OTG_EN, OTG_=
-EN);
-> +       if (rc)
-> +               dev_err(qcom_usb->dev, "failed to update OTG_CTL\n");
-> +
-> +       return rc;
-> +}
-> +
-> +static int qcom_pmic_typec_vbus_disable(struct qcom_pmic_typec *qcom_usb=
-)
-> +{
-> +       int rc;
-> +
-> +       rc =3D regmap_update_bits(qcom_usb->regmap, CMD_OTG, OTG_EN, 0);
-> +       if (rc)
-> +               dev_err(qcom_usb->dev, "failed to update OTG_CTL\n");
-> +
-> +       return rc;
-> +}
-> +
-> +void qcom_pmic_typec_bh_work(struct work_struct *w)
-> +{
-> +       struct qcom_pmic_typec *qcom_usb =3D container_of(w,
-> +                                                       struct qcom_pmic_=
-typec,
-> +                                                       bh_work);
-> +       enum typec_orientation orientation;
-> +       enum usb_role role;
-> +       unsigned int stat;
-> +
-> +       regmap_read(qcom_usb->regmap, TYPEC_MISC_STATUS, &stat);
-> +
-> +       if (stat & CC_ATTACHED) {
-> +               orientation =3D ((stat & CC_ORIENTATION) >> 1) ?
-> +                               TYPEC_ORIENTATION_REVERSE :
-> +                               TYPEC_ORIENTATION_NORMAL;
-> +               typec_set_orientation(qcom_usb->port, orientation);
-> +
-> +               role =3D (stat & SNK_SRC_MODE) ? USB_ROLE_HOST : USB_ROLE=
-_DEVICE;
-> +               if (role =3D=3D USB_ROLE_HOST)
-> +                       qcom_pmic_typec_vbus_enable(qcom_usb);
-> +               else
-> +                       qcom_pmic_typec_vbus_disable(qcom_usb);
-> +
-> +               usb_role_switch_set_role(qcom_usb->role_sw, role);
-> +       } else {
-> +               usb_role_switch_set_role(qcom_usb->role_sw, USB_ROLE_NONE=
-);
-> +               qcom_pmic_typec_vbus_disable(qcom_usb);
-> +       }
-> +}
-> +
-> +irqreturn_t qcom_pmic_typec_interrupt(int irq, void *_qcom_usb)
-> +{
-> +       struct qcom_pmic_typec *qcom_usb =3D _qcom_usb;
-> +
-> +       queue_work(system_power_efficient_wq, &qcom_usb->bh_work);
-> +
-> +       return IRQ_HANDLED;
-> +}
-> +
-> +static void qcom_pmic_typec_typec_hw_init(struct qcom_pmic_typec *qcom_u=
-sb)
-> +{
-> +       u8 mode;
-> +
-> +       regmap_update_bits(qcom_usb->regmap, TYPE_C_CFG_REG, BC12_START_O=
-N_CC,
-> +                          0);
-> +       regmap_update_bits(qcom_usb->regmap, TYPEC_INTR_EN_CFG_1,
-> +                          TYPEC_INTR_EN_CFG_1_MASK, 0);
-> +
-> +       if (qcom_usb->cap->type !=3D TYPEC_PORT_DRP)
-> +               mode =3D (qcom_usb->cap->type =3D=3D TYPEC_PORT_SNK) ?
-> +                                       EN_SNK_ONLY : EN_SRC_ONLY;
-> +       else
-> +               mode =3D EN_TRY_SNK;
-> +       regmap_update_bits(qcom_usb->regmap, TYPEC_MODE_CFG,
-> +                          EN_SNK_ONLY | EN_TRY_SNK | EN_SRC_ONLY, mode);
-> +
-> +       regmap_update_bits(qcom_usb->regmap, TYPEC_VCONN_CONTROL,
-> +                          VCONN_EN_SRC | VCONN_EN_VAL, VCONN_EN_SRC);
-> +       regmap_update_bits(qcom_usb->regmap, TYPEC_VCONN_CONTROL,
-> +                          VCONN_EN_SRC | VCONN_EN_VAL, VCONN_EN_SRC);
-> +       regmap_update_bits(qcom_usb->regmap, TYPEC_EXIT_STATE_CFG,
-> +                          SEL_SRC_UPPER_REF, SEL_SRC_UPPER_REF);
-> +       regmap_update_bits(qcom_usb->regmap, OTG_CFG, OTG_EN_SRC_CFG,
-> +                          OTG_EN_SRC_CFG);
-> +}
-> +
-> +static int qcom_pmic_typec_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev =3D &pdev->dev;
-> +       struct qcom_pmic_typec *qcom_usb;
-> +       struct typec_capability *cap;
-> +       const char *buf;
-> +       int ret, irq, role;
-> +
-> +       qcom_usb =3D kzalloc(sizeof(*qcom_usb), GFP_KERNEL);
+SW50cm9kdWNlIEJ1aWx0LUluIENEUk9NIChCSUNSKSBzdXBwb3J0Lg0KVGhpcyBmZWF0dXJlIGRl
+cGVuZHMgb24gVVNCX0NPTkZJR0ZTX01BU1NfU1RPUkFHRSBvcHRpb24uDQoNCjEuIFNvbWUgc2V0
+dGluZ3MgYW5kIG5ldyBmdW5jdGlvbiBpcyBpbnRyb2R1Y2VkIGZvciBCSUNSLg0KMi4gU29tZSB3
+b3JrIGFyb3VuZCBmb3IgYWRhcHRpbmcgQW5kcm9pZCBzZXR0aW5ncyBpcyBpbnRvcmR1Y2VkIGFz
+IHdlbGwuDQoNClNpZ25lZC1vZmYtYnk6IEp1c3RpbiBIc2llaCA8anVzdGluaHNpZWhAZ29vZ2xl
+LmNvbT4NClNpZ25lZC1vZmYtYnk6IEhha2lleWluIEhzaWVoIDxoYWtpZXlpbkBnbWFpbC5jb20+
+DQpTaWduZWQtb2ZmLWJ5OiBNYWNwYXVsIExpbiA8bWFjcGF1bC5saW5AbWVkaWF0ZWsuY29tPg0K
+LS0tDQogZHJpdmVycy91c2IvZ2FkZ2V0L0tjb25maWcgICAgICAgICAgICAgICAgICAgfCAxNiAr
+KysrKysrDQogZHJpdmVycy91c2IvZ2FkZ2V0L2Z1bmN0aW9uL2ZfbWFzc19zdG9yYWdlLmMgfCA0
+OSArKysrKysrKysrKysrKysrKysrLQ0KIGRyaXZlcnMvdXNiL2dhZGdldC9mdW5jdGlvbi9mX21h
+c3Nfc3RvcmFnZS5oIHwgIDUgKy0NCiBkcml2ZXJzL3VzYi9nYWRnZXQvZnVuY3Rpb24vc3RvcmFn
+ZV9jb21tb24uYyB8IDIzICsrKysrKysrKw0KIDQgZmlsZXMgY2hhbmdlZCwgOTAgaW5zZXJ0aW9u
+cygrKSwgMyBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNiL2dhZGdldC9L
+Y29uZmlnIGIvZHJpdmVycy91c2IvZ2FkZ2V0L0tjb25maWcNCmluZGV4IDRkYzRkNDhmZTZhNi4u
+Njg2YmEwMWJlZGI1IDEwMDY0NA0KLS0tIGEvZHJpdmVycy91c2IvZ2FkZ2V0L0tjb25maWcNCisr
+KyBiL2RyaXZlcnMvdXNiL2dhZGdldC9LY29uZmlnDQpAQCAtMTg4LDYgKzE4OCw5IEBAIGNvbmZp
+ZyBVU0JfRl9STkRJUw0KIGNvbmZpZyBVU0JfRl9NQVNTX1NUT1JBR0UNCiAJdHJpc3RhdGUNCiAN
+Citjb25maWcgVVNCX0ZfQklDUg0KKwl0cmlzdGF0ZQ0KKw0KIGNvbmZpZyBVU0JfRl9GUw0KIAl0
+cmlzdGF0ZQ0KIA0KQEAgLTM1Nyw2ICszNjAsMTkgQEAgY29uZmlnIFVTQl9DT05GSUdGU19NQVNT
+X1NUT1JBR0UNCiAJICBkZXZpY2UgKGluIG11Y2ggdGhlIHNhbWUgd2F5IGFzIHRoZSAibG9vcCIg
+ZGV2aWNlIGRyaXZlciksDQogCSAgc3BlY2lmaWVkIGFzIGEgbW9kdWxlIHBhcmFtZXRlciBvciBz
+eXNmcyBvcHRpb24uDQogDQorY29uZmlnIFVTQl9DT05GSUdGU19CSUNSDQorCWJvb2wgIkJ1aWx0
+LUluIENEUk9NIGVtdWxhdGlvbiINCisJZGVwZW5kcyBvbiBVU0JfQ09ORklHRlMNCisJZGVwZW5k
+cyBvbiBCTE9DSw0KKwlkZXBlbmRzIG9uIFVTQl9DT05GSUdGU19NQVNTX1NUT1JBR0UNCisJc2Vs
+ZWN0IFVTQl9GX0JJQ1INCisJaGVscA0KKwkgIFRoZSBCdWlsZC1JbiBDRFJPTSBHYWRnZXQgYWN0
+cyBhcyBhIENEUk9NIGVtdWxhdGlvbiBkaXNrIGRyaXZlLg0KKwkgIEl0IGlzIGJhc2VkIG9uIGtl
+cm5lbCBvcHRpb24gIlVTQl9DT05GSUdGU19NQVNTX1NUT1JBR0UiLg0KKwkgIEFzIGl0cyBzdG9y
+YWdlIHJlcG9zaXRvcnkgaXQgY2FuIHVzZSBhIHJlZ3VsYXIgZmlsZSBvciBhIGJsb2NrDQorCSAg
+ZGV2aWNlIChpbiBtdWNoIHRoZSBzYW1lIHdheSBhcyB0aGUgImxvb3AiIGRldmljZSBkcml2ZXIp
+LA0KKwkgIHNwZWNpZmllZCBhcyBhIG1vZHVsZSBwYXJhbWV0ZXIgb3Igc3lzZnMgb3B0aW9uLg0K
+Kw0KIGNvbmZpZyBVU0JfQ09ORklHRlNfRl9MQl9TUw0KIAlib29sICJMb29wYmFjayBhbmQgc291
+cmNlc2luayBmdW5jdGlvbiAoZm9yIHRlc3RpbmcpIg0KIAlkZXBlbmRzIG9uIFVTQl9DT05GSUdG
+Uw0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNiL2dhZGdldC9mdW5jdGlvbi9mX21hc3Nfc3RvcmFn
+ZS5jIGIvZHJpdmVycy91c2IvZ2FkZ2V0L2Z1bmN0aW9uL2ZfbWFzc19zdG9yYWdlLmMNCmluZGV4
+IDMzYzIyNjRhMGUzNS4uOWRlMWNkNDY1NjM1IDEwMDY0NA0KLS0tIGEvZHJpdmVycy91c2IvZ2Fk
+Z2V0L2Z1bmN0aW9uL2ZfbWFzc19zdG9yYWdlLmMNCisrKyBiL2RyaXZlcnMvdXNiL2dhZGdldC9m
+dW5jdGlvbi9mX21hc3Nfc3RvcmFnZS5jDQpAQCAtMzE1LDYgKzMxNSw5IEBAIHN0cnVjdCBmc2df
+Y29tbW9uIHsNCiAJdm9pZAkJCSpwcml2YXRlX2RhdGE7DQogDQogCWNoYXIgaW5xdWlyeV9zdHJp
+bmdbSU5RVUlSWV9TVFJJTkdfTEVOXTsNCisNCisJLyogRm9yIGJ1aWxkLWluIENEUk9NICovDQor
+CXU4IGJpY3I7DQogfTsNCiANCiBzdHJ1Y3QgZnNnX2RldiB7DQpAQCAtMzY5LDYgKzM3MiwxMCBA
+QCBzdGF0aWMgdm9pZCBzZXRfYnVsa19vdXRfcmVxX2xlbmd0aChzdHJ1Y3QgZnNnX2NvbW1vbiAq
+Y29tbW9uLA0KIAlpZiAocmVtID4gMCkNCiAJCWxlbmd0aCArPSBjb21tb24tPmJ1bGtfb3V0X21h
+eHBhY2tldCAtIHJlbTsNCiAJYmgtPm91dHJlcS0+bGVuZ3RoID0gbGVuZ3RoOw0KKw0KKwkvKiBz
+b21lIFVTQiAyLjAgaGFyZHdhcmUgcmVxdWlyZXMgdGhpcyBzZXR0aW5nICovDQorCWlmIChJU19F
+TkFCTEVEKFVTQl9DT05GSUdGU19CSUNSKSkNCisJCWJoLT5vdXRyZXEtPnNob3J0X25vdF9vayA9
+IDE7DQogfQ0KIA0KIA0KQEAgLTUyNyw3ICs1MzQsMTYgQEAgc3RhdGljIGludCBmc2dfc2V0dXAo
+c3RydWN0IHVzYl9mdW5jdGlvbiAqZiwNCiAJCQkJd19sZW5ndGggIT0gMSkNCiAJCQlyZXR1cm4g
+LUVET007DQogCQlWREJHKGZzZywgImdldCBtYXggTFVOXG4iKTsNCi0JCSoodTggKilyZXEtPmJ1
+ZiA9IF9mc2dfY29tbW9uX2dldF9tYXhfbHVuKGZzZy0+Y29tbW9uKTsNCisJCWlmIChJU19FTkFC
+TEVEKFVTQl9DT05GSUdGU19CSUNSKSAmJiBmc2ctPmNvbW1vbi0+Ymljcikgew0KKwkJCS8qDQor
+CQkJICogV2hlbiBCdWlsdC1JbiBDRFJPTSBpcyBlbmFibGVkLA0KKwkJCSAqIHdlIHNoYXJlIG9u
+bHkgb25lIExVTi4NCisJCQkgKi8NCisJCQkqKHU4ICopcmVxLT5idWYgPSAwOw0KKwkJfSBlbHNl
+IHsNCisJCQkqKHU4ICopcmVxLT5idWYgPSBfZnNnX2NvbW1vbl9nZXRfbWF4X2x1bihmc2ctPmNv
+bW1vbik7DQorCQl9DQorCQlJTkZPKGZzZywgImdldCBtYXggTFVOID0gJWRcbiIsICoodTggKily
+ZXEtPmJ1Zik7DQogDQogCQkvKiBSZXNwb25kIHdpdGggZGF0YS9zdGF0dXMgKi8NCiAJCXJlcS0+
+bGVuZ3RoID0gbWluKCh1MTYpMSwgd19sZW5ndGgpOw0KQEAgLTEzMjksNyArMTM0NSw3IEBAIHN0
+YXRpYyBpbnQgZG9fc3RhcnRfc3RvcChzdHJ1Y3QgZnNnX2NvbW1vbiAqY29tbW9uKQ0KIAl9DQog
+DQogCS8qIEFyZSB3ZSBhbGxvd2VkIHRvIHVubG9hZCB0aGUgbWVkaWE/ICovDQotCWlmIChjdXJs
+dW4tPnByZXZlbnRfbWVkaXVtX3JlbW92YWwpIHsNCisJaWYgKCFjdXJsdW4tPm5vZnVhICYmIGN1
+cmx1bi0+cHJldmVudF9tZWRpdW1fcmVtb3ZhbCkgew0KIAkJTERCRyhjdXJsdW4sICJ1bmxvYWQg
+YXR0ZW1wdCBwcmV2ZW50ZWRcbiIpOw0KIAkJY3VybHVuLT5zZW5zZV9kYXRhID0gU1NfTUVESVVN
+X1JFTU9WQUxfUFJFVkVOVEVEOw0KIAkJcmV0dXJuIC1FSU5WQUw7DQpAQCAtMjY5Miw2ICsyNzA4
+LDcgQEAgaW50IGZzZ19jb21tb25fc2V0X2NkZXYoc3RydWN0IGZzZ19jb21tb24gKmNvbW1vbiwN
+CiAJY29tbW9uLT5lcDAgPSBjZGV2LT5nYWRnZXQtPmVwMDsNCiAJY29tbW9uLT5lcDByZXEgPSBj
+ZGV2LT5yZXE7DQogCWNvbW1vbi0+Y2RldiA9IGNkZXY7DQorCWNvbW1vbi0+YmljciA9IDA7DQog
+DQogCXVzID0gdXNiX2dzdHJpbmdzX2F0dGFjaChjZGV2LCBmc2dfc3RyaW5nc19hcnJheSwNCiAJ
+CQkJIEFSUkFZX1NJWkUoZnNnX3N0cmluZ3MpKTsNCkBAIC0yODk1LDYgKzI5MTIsMzMgQEAgc3Rh
+dGljIHZvaWQgZnNnX2NvbW1vbl9yZWxlYXNlKHN0cnVjdCBmc2dfY29tbW9uICpjb21tb24pDQog
+CQlrZnJlZShjb21tb24pOw0KIH0NCiANCisjaWZkZWYgVVNCX0NPTkZJR0ZTX0JJQ1INCitzc2l6
+ZV90IGZzZ19iaWNyX3Nob3coc3RydWN0IGZzZ19jb21tb24gKmNvbW1vbiwgY2hhciAqYnVmKQ0K
+K3sNCisJcmV0dXJuIHNwcmludGYoYnVmLCAiJWRcbiIsIGNvbW1vbi0+Ymljcik7DQorfQ0KKw0K
+K3NzaXplX3QgZnNnX2JpY3Jfc3RvcmUoc3RydWN0IGZzZ19jb21tb24gKmNvbW1vbiwgY29uc3Qg
+Y2hhciAqYnVmLCBzaXplX3Qgc2l6ZSkNCit7DQorCWludCByZXQ7DQorDQorCXJldCA9IGtzdHJ0
+b3U4KGJ1ZiwgMTAsICZjb21tb24tPmJpY3IpOw0KKwlpZiAocmV0KQ0KKwkJcmV0dXJuIC1FSU5W
+QUw7DQorDQorCS8qIFNldCBMdW5bMF0gaXMgYSBDRFJPTSB3aGVuIGVuYWJsZSBiaWNyLiovDQor
+CWlmICghc3RyY21wKGJ1ZiwgIjEiKSkNCisJCWNvbW1vbi0+bHVuc1swXS0+Y2Ryb20gPSAxOw0K
+KwllbHNlIHsNCisJCWNvbW1vbi0+bHVuc1swXS0+Y2Ryb20gPSAwOw0KKwkJY29tbW9uLT5sdW5z
+WzBdLT5ibGtiaXRzID0gMDsNCisJCWNvbW1vbi0+bHVuc1swXS0+Ymxrc2l6ZSA9IDA7DQorCQlj
+b21tb24tPmx1bnNbMF0tPm51bV9zZWN0b3JzID0gMDsNCisJfQ0KKw0KKwlyZXR1cm4gc2l6ZTsN
+Cit9DQorI2VuZGlmDQogDQogLyotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tKi8NCiANCkBAIC0zNDYzLDYgKzM1
+MDcsNyBAQCB2b2lkIGZzZ19jb25maWdfZnJvbV9wYXJhbXMoc3RydWN0IGZzZ19jb25maWcgKmNm
+ZywNCiAJCWx1bi0+cm8gPSAhIXBhcmFtcy0+cm9baV07DQogCQlsdW4tPmNkcm9tID0gISFwYXJh
+bXMtPmNkcm9tW2ldOw0KIAkJbHVuLT5yZW1vdmFibGUgPSAhIXBhcmFtcy0+cmVtb3ZhYmxlW2ld
+Ow0KKwkJbHVuLT5ub2Z1YSA9ICEhcGFyYW1zLT5ub2Z1YVtpXTsNCiAJCWx1bi0+ZmlsZW5hbWUg
+PQ0KIAkJCXBhcmFtcy0+ZmlsZV9jb3VudCA+IGkgJiYgcGFyYW1zLT5maWxlW2ldWzBdDQogCQkJ
+PyBwYXJhbXMtPmZpbGVbaV0NCmRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9nYWRnZXQvZnVuY3Rp
+b24vZl9tYXNzX3N0b3JhZ2UuaCBiL2RyaXZlcnMvdXNiL2dhZGdldC9mdW5jdGlvbi9mX21hc3Nf
+c3RvcmFnZS5oDQppbmRleCAzYjhjNGNlMmE0MGEuLjcwOTdlMmVhNWNjOSAxMDA2NDQNCi0tLSBh
+L2RyaXZlcnMvdXNiL2dhZGdldC9mdW5jdGlvbi9mX21hc3Nfc3RvcmFnZS5oDQorKysgYi9kcml2
+ZXJzL3VzYi9nYWRnZXQvZnVuY3Rpb24vZl9tYXNzX3N0b3JhZ2UuaA0KQEAgLTE0MCw1ICsxNDAs
+OCBAQCB2b2lkIGZzZ19jb21tb25fc2V0X2lucXVpcnlfc3RyaW5nKHN0cnVjdCBmc2dfY29tbW9u
+ICpjb21tb24sIGNvbnN0IGNoYXIgKnZuLA0KIHZvaWQgZnNnX2NvbmZpZ19mcm9tX3BhcmFtcyhz
+dHJ1Y3QgZnNnX2NvbmZpZyAqY2ZnLA0KIAkJCSAgICBjb25zdCBzdHJ1Y3QgZnNnX21vZHVsZV9w
+YXJhbWV0ZXJzICpwYXJhbXMsDQogCQkJICAgIHVuc2lnbmVkIGludCBmc2dfbnVtX2J1ZmZlcnMp
+Ow0KLQ0KKyNpZmRlZiBDT05GSUdfVVNCX0NPTkZJR0ZTX0JJQ1INCitzc2l6ZV90IGZzZ19iaWNy
+X3Nob3coc3RydWN0IGZzZ19jb21tb24gKmNvbW1vbiwgY2hhciAqYnVmKTsNCitzc2l6ZV90IGZz
+Z19iaWNyX3N0b3JlKHN0cnVjdCBmc2dfY29tbW9uICpjb21tb24sIGNvbnN0IGNoYXIgKmJ1Ziwg
+c2l6ZV90IHNpemUpOw0KKyNlbmRpZg0KICNlbmRpZiAvKiBVU0JfRl9NQVNTX1NUT1JBR0VfSCAq
+Lw0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNiL2dhZGdldC9mdW5jdGlvbi9zdG9yYWdlX2NvbW1v
+bi5jIGIvZHJpdmVycy91c2IvZ2FkZ2V0L2Z1bmN0aW9uL3N0b3JhZ2VfY29tbW9uLmMNCmluZGV4
+IGY3ZTZjNDI1NThlYi4uOGZlOTZlZWRkZjM1IDEwMDY0NA0KLS0tIGEvZHJpdmVycy91c2IvZ2Fk
+Z2V0L2Z1bmN0aW9uL3N0b3JhZ2VfY29tbW9uLmMNCisrKyBiL2RyaXZlcnMvdXNiL2dhZGdldC9m
+dW5jdGlvbi9zdG9yYWdlX2NvbW1vbi5jDQpAQCAtNDQxLDYgKzQ0MSwyOSBAQCBzc2l6ZV90IGZz
+Z19zdG9yZV9maWxlKHN0cnVjdCBmc2dfbHVuICpjdXJsdW4sIHN0cnVjdCByd19zZW1hcGhvcmUg
+KmZpbGVzZW0sDQogCQlyZXR1cm4gLUVCVVNZOwkJCQkvKiAiRG9vciBpcyBsb2NrZWQiICovDQog
+CX0NCiANCisJcHJfbm90aWNlKCIlcyBmaWxlPSVzLCBjb3VudD0lZCwgY3VybHVuLT5jZHJvbT0l
+ZFxuIiwNCisJCQlfX2Z1bmNfXywgYnVmLCAoaW50KWNvdW50LCBjdXJsdW4tPmNkcm9tKTsNCisN
+CisJLyoNCisJICogV09SS0FST1VORCBmb3IgQW5kcm9pZDoNCisJICogICBWT0xEIHdvdWxkIGNs
+ZWFuIHRoZSBmaWxlIHBhdGggYWZ0ZXIgc3dpdGNoaW5nIHRvIGJpY3IuDQorCSAqICAgU28gd2hl
+biB0aGUgbHVuIGlzIGJlaW5nIGEgQ0QtUk9NIGEuay5hLiBCSUNSLg0KKwkgKiAgIERvbid0IGNs
+ZWFuIHRoZSBmaWxlIHBhdGggdG8gZW1wdHkuDQorCSAqLw0KKwlpZiAoY3VybHVuLT5jZHJvbSA9
+PSAxICYmIGNvdW50ID09IDEpDQorCQlyZXR1cm4gY291bnQ7DQorDQorCS8qDQorCSAqIFdPUktB
+Uk9VTkQ6IFNob3VsZCBiZSBjbG9zZWQgdGhlIGZzZyBsdW4gZm9yIHZpcnR1YWwgY2Qtcm9tLA0K
+KwkgKiB3aGVuIHN3aXRjaCB0byBvdGhlciB1c2IgZnVuY3Rpb25zLg0KKwkgKiBVc2UgdGhlIHNw
+ZWNpYWwga2V5d29yZCAib2ZmIiwgYmVjYXVzZSB0aGUgaW5pdCBjYW4NCisJICogbm90IHBhcnNl
+IHRoZSBjaGFyICdcbicgaW4gcmMgZmlsZSBhbmQgd3JpdGUgaW50byB0aGUgc3lzZnMuDQorCSAq
+Lw0KKwlpZiAoY291bnQgPT0gMyAmJg0KKwkJCWJ1ZlswXSA9PSAnbycgJiYgYnVmWzFdID09ICdm
+JyAmJiBidWZbMl0gPT0gJ2YnICYmDQorCQkJZnNnX2x1bl9pc19vcGVuKGN1cmx1bikpDQorCQko
+KGNoYXIgKikgYnVmKVswXSA9IDA7DQorDQogCS8qIFJlbW92ZSBhIHRyYWlsaW5nIG5ld2xpbmUg
+Ki8NCiAJaWYgKGNvdW50ID4gMCAmJiBidWZbY291bnQtMV0gPT0gJ1xuJykNCiAJCSgoY2hhciAq
+KSBidWYpW2NvdW50LTFdID0gMDsJCS8qIFVnaCEgKi8NCi0tIA0KMi4xOC4wDQo=
 
-devm_kzalloc().
-
-> +       if (!qcom_usb)
-> +               return -ENOMEM;
-> +
-> +       qcom_usb->dev =3D dev;
-> +
-> +       qcom_usb->regmap =3D dev_get_regmap(dev->parent, NULL);
-> +       if (!qcom_usb->regmap) {
-> +               dev_err(dev, "Failed to get regmap\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       irq =3D platform_get_irq(pdev, 0);
-> +       if (irq < 0) {
-> +               dev_err(dev, "Failed to get CC irq\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       ret =3D devm_request_irq(qcom_usb->dev, irq, qcom_pmic_typec_inte=
-rrupt,
-> +                              IRQF_SHARED, "qcom-pmic-typec", qcom_usb);
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "Could not request IRQ\n");
-> +               return ret;
-> +       }
-> +
-> +       qcom_usb->fwnode =3D device_get_named_child_node(dev, "connector"=
-);
-> +       if (!qcom_usb->fwnode)
-> +               return -EINVAL;
-> +
-> +       cap =3D kzalloc(sizeof(*cap), GFP_KERNEL);
-
-devm_kzalloc().
-
-> +       if (!cap) {
-> +               ret =3D -ENOMEM;
-> +               goto err_put_node;
-> +       }
-> +
-> +       ret =3D fwnode_property_read_string(qcom_usb->fwnode, "power-role=
-", &buf);
-> +       if (!ret)
-> +               role =3D typec_find_port_power_role(buf);
-
-if (role < 0)
-
-> +       else
-> +               role =3D TYPEC_PORT_SNK;
-> +       cap->type =3D role;
-> +
-> +       ret =3D fwnode_property_read_string(qcom_usb->fwnode, "data-role"=
-, &buf);
-> +       if (!ret)
-> +               role =3D typec_find_port_data_role(buf);
-
-if (role < 0)
-
-> +       else
-> +               role =3D TYPEC_PORT_UFP;
-> +       cap->data =3D role;
-> +
-> +       cap->prefer_role =3D -1;
-
-TYPEC_NO_PREFERRED_ROLE
-
-> +       cap->fwnode =3D qcom_usb->fwnode;
-> +       qcom_usb->port =3D typec_register_port(dev, cap);
-> +       if (IS_ERR(qcom_usb->port)) {
-> +               dev_err(dev, "Failed to register type c port %d\n",
-> +                       IS_ERR(qcom_usb->port));
-> +               ret =3D PTR_ERR(qcom_usb->port);
-
-dev_err(dev, , ret)?
-
-Li Jun
-> +               goto err_put_node;
-> +       }
-> +
-> +       qcom_usb->cap =3D cap;
-> +
-> +       qcom_usb->role_sw =3D fwnode_usb_role_switch_get(qcom_usb->fwnode=
-);
-> +       if (IS_ERR(qcom_usb->role_sw)) {
-> +               if (PTR_ERR(qcom_usb->role_sw) !=3D -EPROBE_DEFER)
-> +                       dev_err(dev, "failed to get role switch\n");
-> +               ret =3D PTR_ERR(qcom_usb->role_sw);
-> +               goto err_typec_port;
-> +       }
-> +
-> +       INIT_WORK(&qcom_usb->bh_work, qcom_pmic_typec_bh_work);
-> +       platform_set_drvdata(pdev, qcom_usb);
-> +       qcom_pmic_typec_typec_hw_init(qcom_usb);
-> +
-> +       queue_work(system_power_efficient_wq, &qcom_usb->bh_work);
-> +
-> +       return 0;
-> +
-> +err_typec_port:
-> +       typec_unregister_port(qcom_usb->port);
-> +err_put_node:
-> +       fwnode_handle_put(qcom_usb->fwnode);
-> +
-> +       return ret;
-> +}
-> +
-> +static int qcom_pmic_typec_remove(struct platform_device *pdev)
-> +{
-> +       struct qcom_pmic_typec *qcom_usb =3D platform_get_drvdata(pdev);
-> +
-> +       cancel_work_sync(&qcom_usb->bh_work);
-> +       usb_role_switch_set_role(qcom_usb->role_sw, USB_ROLE_NONE);
-> +       qcom_pmic_typec_vbus_disable(qcom_usb);
-> +
-> +       typec_unregister_port(qcom_usb->port);
-> +       usb_role_switch_put(qcom_usb->role_sw);
-> +       fwnode_handle_put(qcom_usb->fwnode);
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct of_device_id qcom_pmic_typec_table[] =3D {
-> +       { .compatible =3D "qcom,pm8150b-usb-typec" },
-> +       { },
-> +};
-> +MODULE_DEVICE_TABLE(of, qcom_pmic_typec_table);
-> +
-> +static struct platform_driver qcom_pmic_typec =3D {
-> +       .driver =3D {
-> +               .name =3D "qcom,pmic-typec",
-> +               .of_match_table =3D qcom_pmic_typec_table,
-> +       },
-> +       .probe =3D qcom_pmic_typec_probe,
-> +       .remove =3D qcom_pmic_typec_remove,
-> +};
-> +
-> +module_platform_driver(qcom_pmic_typec);
-> +
-> +MODULE_DESCRIPTION("QCOM PMIC USB type C driver");
-> +MODULE_LICENSE("GPL v2");
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum=
-,
-> a Linux Foundation Collaborative Project
->
