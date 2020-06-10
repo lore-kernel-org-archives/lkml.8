@@ -7,66 +7,66 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 637B1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E21DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39B3920656
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:54:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DB8520656
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 19:54:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K3+ZwfOR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AD52HOho"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730415AbgFJTx7 (ORCPT
+        id S1730429AbgFJTyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 15:53:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57382 "EHLO
+        Wed, 10 Jun 2020 15:54:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730370AbgFJTxv (ORCPT
+        with ESMTP id S1730359AbgFJTxu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 15:53:51 -0400
+        Wed, 10 Jun 2020 15:53:50 -0400
 Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67E85C03E96F
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 12:53:51 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id w18so3702254iom.5
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 12:53:51 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E29BDC03E96B
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 12:53:48 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id m81so3733344ioa.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 12:53:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=TPu28iSnpxiaKV6OmQYQaLs7QlaJe31+At5Kd0wdaDI=;
-        b=K3+ZwfORmOVFRGG1urRqIcC4gUufLJJjuwLcZ7LSR+xCycfbHvEeB6GoJxqPsZwH1H
-         6p0Q+K4GKZtgn+82EMsnrOfYroJoKWl8b94TzFLGm5GmDGnOhg8t0mnC5U8TV+yjqG0l
-         Humzwmlu/BVXvtE1GkdoJlmkoaEIvBgI8pMGOJDTfIxJuBgKd04lms6IXA87MUVhkVhH
-         DP8axBJPM9c75q9HQ+PnrYDmI/+owBVOhw0OM7Bjr4QRTfGk966Qy1kSNxrm3Od/YldA
-         piYET9anDy4k2M/bpN1Dl82TjtyAdxG7DwCEtWNiCYB10HYNa/s3ifQWJFpSUQk/mGe7
-         Qleg==
+        bh=q68mNiRrlOVR9JqLdcYN4kCb7Vw+wREfC4Qx6K31GJ4=;
+        b=AD52HOhobXM+cO5sMUgUDJTJSSUaxpEo6eYeTf9//DvhPmJAYACkJvdED1+5Zd8kIv
+         2RZyWcmn15yvjf8Rbxh0KuI8U+CVGXTQcfwm8BSwJdxkBIcuSVOIx+BhAG1sMoGbaEK3
+         1wXCnCckPmNG8MfUms9aZhn+RwmdQlIPbX0tXPSQ/xZissGci/ZfG8S83dnqyABmMH7v
+         +t2BM4NQzgVGjRws2xNGGa03CmOAI6Z97tIVNJsvgTkVRArg8HBZzrIxxHbV3q7+c23q
+         IndY0xtoPo5d3VTECMGjZt8CoMV/wqFa7bf5LlTD3CbpDB1jpMAyHYRk2VEoSyJTmfop
+         K/Sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=TPu28iSnpxiaKV6OmQYQaLs7QlaJe31+At5Kd0wdaDI=;
-        b=SeHLOwAB5vCrhl2DZ1f3rusd+S+RUc9G4ELcd766F7/q0yZz0199aawt4drqABlgEa
-         pRTe1OxFr3s/f6Za8uQbAABGstMsopzHVnECcL2vGXq6ghGG7TL0D7doaWudTMz3x6vH
-         Un2TS7XI9cwBQw2sPzDSQUnosbNoK26lrcMk5xzZKYMXJAYLB0U7j4xI6d8ogdNDvkSh
-         VjEdiLPsCJHNSUelAFQCE4mv6TP5fUKysqwa8azg2LgdXdfAvqZ7b0XbtbYcxG5FtIAF
-         G+fvwa6xtPGyxplQgIvh0t2hRsHxQFvtWQGKJeanZRs2rSHtgpcU38MvVVQQ3J2epRUV
-         ON0Q==
-X-Gm-Message-State: AOAM531pEzEhV5DuZSQCi944vButMIxcydjuyih1b0RZj8GNzdVJe6WV
-        y6zbKjRfoGkaDjUv61LXvsEqNg==
-X-Google-Smtp-Source: ABdhPJwewTX9Sq82Or47p/sVRzCbeGlI/MpiGttp6BlkKzGBfJsIMA/TR+2gXpGwoOLg29k4xpjzhg==
-X-Received: by 2002:a6b:2cc5:: with SMTP id s188mr4956803ios.77.1591818830843;
-        Wed, 10 Jun 2020 12:53:50 -0700 (PDT)
+        bh=q68mNiRrlOVR9JqLdcYN4kCb7Vw+wREfC4Qx6K31GJ4=;
+        b=PrKtwzwAJ3h0ndl9bshRsKdK2dEvOkOTj9WDQAuE6cTWuW+SEfbEpAZtngCg/rrsdX
+         QF9qXcTw7dBc+lC6nR2CJbXo9LEJgHjYr2WSw3zR6yYbGfNDlIRSurMiJ82eAKcaAAkL
+         ZettYGnHhlsgVQBXO8yF8j6uyAPbgoevlJ6YRHPblLoZi058ZdeVkKSyccO8iHY7tuzV
+         pxbHBpwr78c0EqJsGB7aINAnG1N+EEMfFqV3oOMX+dXt4Rx2bZJNQbW0wzjvHtxnu5Ut
+         dsc6lzEAY27/Oq8sswGg6gTezU7css/g4657x/w0qh2b/e9YVBxCArEAXM+XYufqqkwN
+         vDnA==
+X-Gm-Message-State: AOAM533D9oDGrAaaViy8/CE/m9BWTkcsqjPZlKuydO96hYo0JrQfJyo5
+        pAKGZBReaYsF+ZCBhkrE+DZk5CYwbgk=
+X-Google-Smtp-Source: ABdhPJxUoN/voApOkxQXoLn8F/Ne7Mmk0GumQ4byBeYGmxa3qAmNW8UuJUvj6rOrqndeTXulSXXfZQ==
+X-Received: by 2002:a02:ce56:: with SMTP id y22mr4734157jar.18.1591818828280;
+        Wed, 10 Jun 2020 12:53:48 -0700 (PDT)
 Received: from presto.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.gmail.com with ESMTPSA id r10sm408828ile.36.2020.06.10.12.53.49
+        by smtp.gmail.com with ESMTPSA id r10sm408828ile.36.2020.06.10.12.53.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 12:53:50 -0700 (PDT)
+        Wed, 10 Jun 2020 12:53:47 -0700 (PDT)
 From:   Alex Elder <elder@linaro.org>
 To:     davem@davemloft.net, kuba@kernel.org
 Cc:     evgreen@chromium.org, subashab@codeaurora.org,
         cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net 3/5] net: ipa: program upper nibbles of sequencer type
-Date:   Wed, 10 Jun 2020 14:53:30 -0500
-Message-Id: <20200610195332.2612233-4-elder@linaro.org>
+Subject: [PATCH net 1/5] net: ipa: program metadata mask differently
+Date:   Wed, 10 Jun 2020 14:53:28 -0500
+Message-Id: <20200610195332.2612233-2-elder@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200610195332.2612233-1-elder@linaro.org>
 References: <20200610195332.2612233-1-elder@linaro.org>
@@ -77,51 +77,158 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The upper two nibbles of the sequencer type were not used for
-SDM845, and were assumed to be 0.  But for SC7180 they are used, and
-so they must be programmed by ipa_endpoint_init_seq().  Fix this bug.
+The way the mask value is programmed for QMAP RX endpoints was based
+on some wrong assumptions about the way metadata containing the QMAP
+mux_id value is formatted.  The metadata value supplied by the
+modem is *not* in QMAP format, and in fact contains the mux_id we
+want in its (big endian) low-order byte.  That byte must be written
+by the IPA into offset 1 of the QMAP header it inserts before the
+received packet.
 
-IPA_SEQ_PKT_PROCESS_NO_DEC_NO_UCP_DMAP doesn't have a descriptive
-comment, so add one.
+QMAP TX endpoints *do* use a QMAP header as the metadata sent with
+each packet.  The modem assumes this, and based on that assumes the
+mux_id is in the second byte.  To match those assumptions we must
+program the modem TX (QMAP) endpoint HDR register to indicate the
+metadata will be found at offset 0 in the message header.
+
+The previous configuration managed to work, but it was not working
+correctly.  This patch fixes a bug whose symptom was receipt of
+messages containing the wrong QMAP mux_id.
+
+In fixing this, get rid of ipa_rmnet_mux_id_metadata_mask(), which
+was more or less defined so there was a separate place to explain
+what was happening as we generated the mask value.  Instead, put a
+longer description of how this works above ipa_endpoint_init_hdr(),
+and define the metadata mask to use as a simple constant.
 
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- drivers/net/ipa/ipa_endpoint.c | 6 ++++--
- drivers/net/ipa/ipa_reg.h      | 2 ++
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ drivers/net/ipa/ipa_endpoint.c | 74 ++++++++++++++++++----------------
+ 1 file changed, 40 insertions(+), 34 deletions(-)
 
 diff --git a/drivers/net/ipa/ipa_endpoint.c b/drivers/net/ipa/ipa_endpoint.c
-index 6015fabb4df5..59313ced7036 100644
+index 66649a806dd1..6015fabb4df5 100644
 --- a/drivers/net/ipa/ipa_endpoint.c
 +++ b/drivers/net/ipa/ipa_endpoint.c
-@@ -699,10 +699,12 @@ static void ipa_endpoint_init_seq(struct ipa_endpoint *endpoint)
- 	u32 seq_type = endpoint->seq_type;
- 	u32 val = 0;
+@@ -32,6 +32,9 @@
+ /* The amount of RX buffer space consumed by standard skb overhead */
+ #define IPA_RX_BUFFER_OVERHEAD	(PAGE_SIZE - SKB_MAX_ORDER(NET_SKB_PAD, 0))
  
-+	/* Sequencer type is made up of four nibbles */
- 	val |= u32_encode_bits(seq_type & 0xf, HPS_SEQ_TYPE_FMASK);
- 	val |= u32_encode_bits((seq_type >> 4) & 0xf, DPS_SEQ_TYPE_FMASK);
--	/* HPS_REP_SEQ_TYPE is 0 */
--	/* DPS_REP_SEQ_TYPE is 0 */
-+	/* The second two apply to replicated packets */
-+	val |= u32_encode_bits((seq_type >> 8) & 0xf, HPS_REP_SEQ_TYPE_FMASK);
-+	val |= u32_encode_bits((seq_type >> 12) & 0xf, DPS_REP_SEQ_TYPE_FMASK);
++/* Where to find the QMAP mux_id for a packet within modem-supplied metadata */
++#define IPA_ENDPOINT_QMAP_METADATA_MASK		0x000000ff /* host byte order */
++
+ #define IPA_ENDPOINT_RESET_AGGR_RETRY_MAX	3
+ #define IPA_AGGR_TIME_LIMIT_DEFAULT		1000	/* microseconds */
+ 
+@@ -433,7 +436,25 @@ static void ipa_endpoint_init_cfg(struct ipa_endpoint *endpoint)
+ 	iowrite32(val, endpoint->ipa->reg_virt + offset);
+ }
+ 
+-static void ipa_endpoint_init_hdr(struct ipa_endpoint *endpoint)
++/**
++ * We program QMAP endpoints so each packet received is preceded by a QMAP
++ * header structure.  The QMAP header contains a 1-byte mux_id and 2-byte
++ * packet size field, and we have the IPA hardware populate both for each
++ * received packet.  The header is configured (in the HDR_EXT register)
++ * to use big endian format.
++ *
++ * The packet size is written into the QMAP header's pkt_len field.  That
++ * location is defined here using the HDR_OFST_PKT_SIZE field.
++ *
++ * The mux_id comes from a 4-byte metadata value supplied with each packet
++ * by the modem.  It is *not* a QMAP header, but it does contain the mux_id
++ * value that we want, in its low-order byte.  A bitmask defined in the
++ * endpoint's METADATA_MASK register defines which byte within the modem
++ * metadata contains the mux_id.  And the OFST_METADATA field programmed
++ * here indicates where the extracted byte should be placed within the QMAP
++ * header.
++ */
++void ipa_endpoint_init_hdr(struct ipa_endpoint *endpoint)
+ {
+ 	u32 offset = IPA_REG_ENDP_INIT_HDR_N_OFFSET(endpoint->endpoint_id);
+ 	u32 val = 0;
+@@ -441,25 +462,31 @@ static void ipa_endpoint_init_hdr(struct ipa_endpoint *endpoint)
+ 	if (endpoint->data->qmap) {
+ 		size_t header_size = sizeof(struct rmnet_map_header);
+ 
++		/* We might supply a checksum header after the QMAP header */
+ 		if (endpoint->toward_ipa && endpoint->data->checksum)
+ 			header_size += sizeof(struct rmnet_map_ul_csum_header);
+-
+ 		val |= u32_encode_bits(header_size, HDR_LEN_FMASK);
+-		/* metadata is the 4 byte rmnet_map header itself */
+-		val |= HDR_OFST_METADATA_VALID_FMASK;
+-		val |= u32_encode_bits(0, HDR_OFST_METADATA_FMASK);
+-		/* HDR_ADDITIONAL_CONST_LEN is 0; (IPA->AP only) */
++
++		/* Define how to fill mux_id in a received QMAP header */
+ 		if (!endpoint->toward_ipa) {
+-			u32 size_offset = offsetof(struct rmnet_map_header,
+-						   pkt_len);
++			u32 off;	/* Field offset within header */
+ 
++			/* Where IPA will write the metadata value */
++			off = offsetof(struct rmnet_map_header, mux_id);
++			val |= u32_encode_bits(off, HDR_OFST_METADATA_FMASK);
++
++			/* Where IPA will write the length */
++			off = offsetof(struct rmnet_map_header, pkt_len);
+ 			val |= HDR_OFST_PKT_SIZE_VALID_FMASK;
+-			val |= u32_encode_bits(size_offset,
+-					       HDR_OFST_PKT_SIZE_FMASK);
++			val |= u32_encode_bits(off, HDR_OFST_PKT_SIZE_FMASK);
+ 		}
++		/* For QMAP TX, metadata offset is 0 (modem assumes this) */
++		val |= HDR_OFST_METADATA_VALID_FMASK;
++
++		/* HDR_ADDITIONAL_CONST_LEN is 0; (RX only) */
+ 		/* HDR_A5_MUX is 0 */
+ 		/* HDR_LEN_INC_DEAGG_HDR is 0 */
+-		/* HDR_METADATA_REG_VALID is 0; (AP->IPA only) */
++		/* HDR_METADATA_REG_VALID is 0 (TX only) */
+ 	}
+ 
+ 	iowrite32(val, endpoint->ipa->reg_virt + offset);
+@@ -482,28 +509,6 @@ static void ipa_endpoint_init_hdr_ext(struct ipa_endpoint *endpoint)
+ 	iowrite32(val, endpoint->ipa->reg_virt + offset);
+ }
+ 
+-/**
+- * Generate a metadata mask value that will select only the mux_id
+- * field in an rmnet_map header structure.  The mux_id is at offset
+- * 1 byte from the beginning of the structure, but the metadata
+- * value is treated as a 4-byte unit.  So this mask must be computed
+- * with endianness in mind.  Note that ipa_endpoint_init_hdr_metadata_mask()
+- * will convert this value to the proper byte order.
+- *
+- * Marked __always_inline because this is really computing a
+- * constant value.
+- */
+-static __always_inline __be32 ipa_rmnet_mux_id_metadata_mask(void)
+-{
+-	size_t mux_id_offset = offsetof(struct rmnet_map_header, mux_id);
+-	u32 mux_id_mask = 0;
+-	u8 *bytes;
+-
+-	bytes = (u8 *)&mux_id_mask;
+-	bytes[mux_id_offset] = 0xff;	/* mux_id is 1 byte */
+-
+-	return cpu_to_be32(mux_id_mask);
+-}
+ 
+ static void ipa_endpoint_init_hdr_metadata_mask(struct ipa_endpoint *endpoint)
+ {
+@@ -513,8 +518,9 @@ static void ipa_endpoint_init_hdr_metadata_mask(struct ipa_endpoint *endpoint)
+ 
+ 	offset = IPA_REG_ENDP_INIT_HDR_METADATA_MASK_N_OFFSET(endpoint_id);
+ 
++	/* Note that HDR_ENDIANNESS indicates big endian header fields */
+ 	if (!endpoint->toward_ipa && endpoint->data->qmap)
+-		val = ipa_rmnet_mux_id_metadata_mask();
++		val = cpu_to_be32(IPA_ENDPOINT_QMAP_METADATA_MASK);
  
  	iowrite32(val, endpoint->ipa->reg_virt + offset);
  }
-diff --git a/drivers/net/ipa/ipa_reg.h b/drivers/net/ipa/ipa_reg.h
-index 3b8106aa277a..0a688d8c1d7c 100644
---- a/drivers/net/ipa/ipa_reg.h
-+++ b/drivers/net/ipa/ipa_reg.h
-@@ -455,6 +455,8 @@ enum ipa_mode {
-  *	second packet processing pass + no decipher + microcontroller
-  * @IPA_SEQ_DMA_DEC:		DMA + cipher/decipher
-  * @IPA_SEQ_DMA_COMP_DECOMP:	DMA + compression/decompression
-+ * @IPA_SEQ_PKT_PROCESS_NO_DEC_NO_UCP_DMAP:
-+ *	packet processing + no decipher + no uCP + HPS REP DMA parser
-  * @IPA_SEQ_INVALID:		invalid sequencer type
-  *
-  * The values defined here are broken into 4-bit nibbles that are written
 -- 
 2.25.1
 
