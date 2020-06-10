@@ -2,91 +2,101 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A3DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BFCCC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:02:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCE6C2078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:01:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A2152078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:02:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591801378;
+	bh=PXOXPvrJV7xGGbzYC9/oZT86BtGS3IQuSBt+aeT7chk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=jP2hx6O3I1LQ4LL1d6eWsWUkg1m9tDIdYPXzwdZpiJhirbDxh+OGECqPeFEZYxXOa
+	 jdQTimy5uYLzFVSTilt403XOGjOJKhPxPr+5P4FH+Dy85ym9f+6NxgTt5QeDJC/9Uy
+	 L4fvD0EbOq5AO23nqKx8wGyXpHdZbLwikRfDqKjc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729899AbgFJPB1 (ORCPT
+        id S1729963AbgFJPC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 11:01:27 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:42794 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726417AbgFJPB1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 11:01:27 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 45AC81C0C0A; Wed, 10 Jun 2020 17:01:25 +0200 (CEST)
-Date:   Wed, 10 Jun 2020 17:01:24 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Pavel Machek <pavel@denx.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        fengsheng <fengsheng5@huawei.com>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 15/28] spi: dw: use "smp_mb()" to avoid sending spi
- data error
-Message-ID: <20200610150124.GA19775@amd>
-References: <20200605140252.338635395@linuxfoundation.org>
- <20200605140253.279609547@linuxfoundation.org>
- <20200607200910.GA13138@amd>
- <20200608111619.GB4593@sirena.org.uk>
+        Wed, 10 Jun 2020 11:02:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46882 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726417AbgFJPC4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 11:02:56 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EFAF2072F;
+        Wed, 10 Jun 2020 15:02:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591801375;
+        bh=PXOXPvrJV7xGGbzYC9/oZT86BtGS3IQuSBt+aeT7chk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=miZS9oRoEjrNMU1meThJvdtBXhi0h+mnI4aLe1ZvYLzne2pS5A2ymCsWzRULdvM9S
+         0ypO5Pvib76X09QkaaLDBbZ8rIOJhHK3/OMNBf2gitnzI5QSV7LbgGkbH0NuXtBbdN
+         zyZai7/svsw881Su3czNZ57SY+WVUFfSJTBhNs0c=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jj2Fi-001ofe-4F; Wed, 10 Jun 2020 16:02:54 +0100
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="5vNYLRcllDrimb99"
-Content-Disposition: inline
-In-Reply-To: <20200608111619.GB4593@sirena.org.uk>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 10 Jun 2020 16:02:54 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, tglx@linutronix.de,
+        jason@lakedaemon.net, wanghaibin.wang@huawei.com,
+        wangjingyi11@huawei.com
+Subject: Re: [PATCH] irqchip/gic-v4.1: Use readx_poll_timeout_atomic() to fix
+ sleep in atomic
+In-Reply-To: <4a9822bd-0362-7ffe-6e56-3f05a7816d9e@huawei.com>
+References: <20200605052345.1494-1-yuzenghui@huawei.com>
+ <4a9822bd-0362-7ffe-6e56-3f05a7816d9e@huawei.com>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <2bff9c0af0aa5eeef44b381ee0f8a542@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, tglx@linutronix.de, jason@lakedaemon.net, wanghaibin.wang@huawei.com, wangjingyi11@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Zenghui,
 
---5vNYLRcllDrimb99
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2020-06-10 14:59, Zenghui Yu wrote:
+> Hi Marc,
+> 
+> Sorry to ping you in the merge window, but ...
+> 
+> On 2020/6/5 13:23, Zenghui Yu wrote:
+>> readx_poll_timeout() can sleep if @sleep_us is specified by the 
+>> caller,
+>> and is therefore unsafe to be used inside the atomic context, which is
+>> this case when we use it to poll the GICR_VPENDBASER.Dirty bit in
+>> irq_set_vcpu_affinity() callback.
+> 
+> this seems like an urgent thing to me. Without this patch, CPUs are
+> easily to get stuck on my board with GICv4.1 enabled. So it'd be good 
+> if
+> you can have a look and take this as a fix (if it is correct).
 
-On Mon 2020-06-08 12:16:19, Mark Brown wrote:
-> On Sun, Jun 07, 2020 at 10:09:11PM +0200, Pavel Machek wrote:
->=20
-> > > Because of out-of-order execution about some CPU architecture,
-> > > In this debug stage we find Completing spi interrupt enable ->
-> > > prodrucing TXEI interrupt -> running "interrupt_transfer" function
-> > > will prior to set "dw->rx and dws->rx_end" data, so this patch add
-> > > memory barrier to enable dw->rx and dw->rx_end to be visible and
-> > > solve to send SPI data error.
->=20
-> > So, this is apparently CPU-vs-device issue...
->=20
-> The commit message is a bit unclear but my read had been interrupt
-> handler racing with sending new data rather than an ordering issue with
-> writes to the hardware. =20
+No worries. I've earmarked the patch for -rc1 already, just haven't got
+a chance to build the branch yet (a bit busy on the KVM side).
 
-Aha, patch makes sense, then. Thanks for explanation!
-								Pavel
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+I'll probably update the branch tonight or tomorrow.
 
---5vNYLRcllDrimb99
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Thanks,
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl7g9cQACgkQMOfwapXb+vIkWwCfbC8j4ZPVgsy51QEIqbEOwPKC
-D9EAnieBrQvggr96Nsofzj8jmC/ie/Ig
-=LnUF
------END PGP SIGNATURE-----
-
---5vNYLRcllDrimb99--
+         M.
+-- 
+Jazz is not dead. It just smells funny...
