@@ -2,139 +2,71 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4634C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 22:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31379C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 22:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91E1F206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 22:34:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UevvpOts"
+	by mail.kernel.org (Postfix) with ESMTP id 0BEDC2074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 22:41:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726517AbgFJWem (ORCPT
+        id S1726595AbgFJWlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 18:34:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54114 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726105AbgFJWel (ORCPT
+        Wed, 10 Jun 2020 18:41:22 -0400
+Received: from smtprelay0178.hostedemail.com ([216.40.44.178]:38922 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726105AbgFJWlV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 18:34:41 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1542FC08C5C2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 15:34:40 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id 190so2265943vsr.9
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 15:34:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=C9LYQ8aclMkdwfJP4cdhxWD4N8cMJMuN6znPHlB3Rsc=;
-        b=UevvpOtsXUfdMcqvIgRfPVVQSDyZs6oXq/Xnj/8uJDFNeQBZ7vzloiU32xzvK6mFCu
-         cGGLwNrdnw/Q0on5lLXJlkuu8D4VI6gjZehfPhGO6t/torNaJ6NxHMQ2JuDgO8FwHc4P
-         o8FP7KzD9QWU8u7G49I5aLDbEK8X8zhTnPGPK+25pdCKJLn9W7w1iBlkb84D2LADSGpc
-         tCqhhzfq26VpCG0se8b1WZwp4CCFSusJSn+larn2+KMSi4aCsCQRQ/S3A4qsfTfUDCpT
-         JYfiX91/2CIDQozv8ZBX3SClrislUPBF+zqSWJE7quvH7sEsU2MJoNuxaq5T13FcVb0X
-         ExAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=C9LYQ8aclMkdwfJP4cdhxWD4N8cMJMuN6znPHlB3Rsc=;
-        b=PpWGsTVO55Xz6EBUStRxOjzVEUW9PLlp2xPhkp/VmCMzsC684FiRdyu7sCVzLh3Bkc
-         R932hK8wc/obfjpKh8GxJQAChq0wWEOnwPeUCMC9ADeKI/ACGfbfbZjdxJjvwU80w/dW
-         vnkprny8gT+siwz+fU3V74ne7DrUL2sDD5/BqqcvgeXsUrjaKpgLL99EGe4fhDARyHhq
-         f1BYcyu96b20hRI9sXntw4qgLHJkGgZIl8PtSJy4d/JjRPBGR0EjXkUbJte2Iw4ZR9BF
-         UHqLoh8r+kB2Kmylwr6gO49XQeoUMVlaszMXF9K0dnWT49ZMR/DUtcMwx1vg/fIm3osF
-         x3Qw==
-X-Gm-Message-State: AOAM531jFm4+euGkQ/0Em8etAHr22dEwG0kBuWAH2eK4vDLo4q7inPrr
-        Vg1OZVuzdNI6mzt8SSuvoVnPuvWMuHfATTmEC6s+0w==
-X-Google-Smtp-Source: ABdhPJzdt1t5lYhNZNFDbxTCIee/fOpBW2dvkZTK5r9pH/LqHC+MVWmHSuu/UxjSaFUQydIW/izqWRJz+CsXZPttueA=
-X-Received: by 2002:a67:79ce:: with SMTP id u197mr4725019vsc.17.1591828478904;
- Wed, 10 Jun 2020 15:34:38 -0700 (PDT)
+        Wed, 10 Jun 2020 18:41:21 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 77002182CD48C;
+        Wed, 10 Jun 2020 22:41:20 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: drink21_010d5ba26dce
+X-Filterd-Recvd-Size: 1542
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf20.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 10 Jun 2020 22:41:19 +0000 (UTC)
+Message-ID: <cca874b227301e0bdfb49cb49c9d21f9fd2d0550.camel@perches.com>
+Subject: Re: [PATCH] checkpatch: add check for
+ NONNETWORKING_BLOCK_COMMENT_STYLE
+From:   Joe Perches <joe@perches.com>
+To:     Scott Branden <scott.branden@broadcom.com>,
+        Andy Whitcroft <apw@canonical.com>
+Cc:     BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Date:   Wed, 10 Jun 2020 15:41:18 -0700
+In-Reply-To: <0f037983-6dad-859c-3ded-f7a0c86953df@broadcom.com>
+References: <20200610202640.9020-1-scott.branden@broadcom.com>
+         <673c2ebaf7a1ca93f3b1192a77ff62167badd896.camel@perches.com>
+         <021da2ca-a8d3-d0ad-28c3-6a84464353fd@broadcom.com>
+         <33204a397b2d9316e09ae9829e637894b304ea00.camel@perches.com>
+         <0f037983-6dad-859c-3ded-f7a0c86953df@broadcom.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-References: <20200605213853.14959-1-sean.j.christopherson@intel.com> <20200605213853.14959-8-sean.j.christopherson@intel.com>
-In-Reply-To: <20200605213853.14959-8-sean.j.christopherson@intel.com>
-From:   Ben Gardon <bgardon@google.com>
-Date:   Wed, 10 Jun 2020 15:34:28 -0700
-Message-ID: <CANgfPd9UH01vO1SYJ3vrKq4H_DXcJ3OL_VaeY2TV8_ZH9cR1GQ@mail.gmail.com>
-Subject: Re: [PATCH 07/21] KVM: x86/mmu: Topup memory caches after walking GVA->GPA
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Marc Zyngier <maz@kernel.org>, Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Feiner <pfeiner@google.com>,
-        Peter Shier <pshier@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        Christoffer Dall <christoffer.dall@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 2:39 PM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> Topup memory caches after walking the GVA->GPA translation during a
-> shadow page fault, there is no need to ensure the caches are full when
-> walking the GVA.  As of commit f5a1e9f89504f ("KVM: MMU: remove call
-> to kvm_mmu_pte_write from walk_addr"), the FNAME(walk_addr) flow no
-> longer add rmaps via kvm_mmu_pte_write().
->
-> This avoids allocating memory in the case that the GVA is unmapped in
-> the guest, and also provides a paper trail of why/when the memory caches
-> need to be filled.
->
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Reviewed-by: Ben Gardon <bgardon@google.com>
-> ---
->  arch/x86/kvm/mmu/paging_tmpl.h | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
-> index 38c576495048..3de32122f601 100644
-> --- a/arch/x86/kvm/mmu/paging_tmpl.h
-> +++ b/arch/x86/kvm/mmu/paging_tmpl.h
-> @@ -791,10 +791,6 @@ static int FNAME(page_fault)(struct kvm_vcpu *vcpu, gpa_t addr, u32 error_code,
->
->         pgprintk("%s: addr %lx err %x\n", __func__, addr, error_code);
->
-> -       r = mmu_topup_memory_caches(vcpu);
-> -       if (r)
-> -               return r;
-> -
->         /*
->          * If PFEC.RSVD is set, this is a shadow page fault.
->          * The bit needs to be cleared before walking guest page tables.
-> @@ -822,6 +818,10 @@ static int FNAME(page_fault)(struct kvm_vcpu *vcpu, gpa_t addr, u32 error_code,
->                 return RET_PF_EMULATE;
->         }
->
-> +       r = mmu_topup_memory_caches(vcpu);
-> +       if (r)
-> +               return r;
-> +
->         vcpu->arch.write_fault_to_shadow_pgtable = false;
->
->         is_self_change_mapping = FNAME(is_self_change_mapping)(vcpu,
-> --
-> 2.26.0
->
+On Wed, 2020-06-10 at 15:08 -0700, Scott Branden wrote:
+> Hi Joe,
+
+Hi Scott.
+
+> I do not know the history of the 2 block coding styles but here's a 
+> radical thought:
+> Change the coding-style document to pick a single coding style for ALL 
+> block comment styles and
+> use that going forward in checkpatch instead?
+
+Opinions vary.
+Good luck with that.
+Seriously.
+
