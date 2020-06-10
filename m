@@ -2,151 +2,169 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10028C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C8DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:14:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC928206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:14:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D0E2206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 15:14:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ipyMb0wx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="udMylkJs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730081AbgFJPOR (ORCPT
+        id S1730087AbgFJPOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 11:14:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42418 "EHLO
+        Wed, 10 Jun 2020 11:14:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728095AbgFJPOQ (ORCPT
+        with ESMTP id S1728095AbgFJPOt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 11:14:16 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45AE3C03E96B;
-        Wed, 10 Jun 2020 08:14:16 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id y17so2685554wrn.11;
-        Wed, 10 Jun 2020 08:14:16 -0700 (PDT)
+        Wed, 10 Jun 2020 11:14:49 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E01FC03E96B
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 08:14:49 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id s21so2354091oic.9
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 08:14:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=u6ZBh3xhLtnUwFe/9xqitT47OizAqnS3qUaRaKdrxcw=;
-        b=ipyMb0wxF/MyREsILFzJtU8gHR5aUzsw0s0daHQqbH7uM6WRpP4JA8biPGvx8slP/V
-         I0ugUP+QkSviFaGewLZ7pkZDezLRPWJhkHHM9Tk5c+n71n0DtHxjMvPScHnKH0k6O5mH
-         KmQQT2TZpS4YDkm6EmYgdbeqjUsWK6Uzi00K4yIAovFk+l+h+7mo9fi46jcudyPX8LZO
-         Y9ITq0aKrxNUYNWfa2g1FCNXrmgLA/ea+u8h4C3gvRf6tf2Pb7eAh5Erqfrk7924IGfl
-         u/RIs41wmg7mUAcuVwwAHIUU1/11Cn8/DacYgHMyVhCCQ3BBvlNqPtVbx646WTFjYOrB
-         w7SQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oDtkEAKzZyv3dXNpsPsqMVmJ4Y+cSfCKakpKBa1zwUc=;
+        b=udMylkJsBkLSPX/fhP5jeC4vIZEIk7TjusiPwvDt4TqgrxhpxZ32ukAYcSJ5mMIM9/
+         gboTn/jhWul6F0UPWXzXg7jF4ZdDjjdwpiV7Sl8cLMvCDhOBOxJJGxdfWChSjWjNVmIh
+         vpKi/71gW267IO6ChJVTCWAdeNh3yRhOyFajVZn9Bcl5PFGWoWyEvfkJ6+oZQJGfuo2s
+         RumZM5ygadgjL17Q4SHDCYZLwcQ15xcngMgMDL5NNLosOL7bI+wqMcq161vNf+oWYHen
+         4LIlPYpPZ5BIuUp53K9CHX8rMpO7BHFKXoBYKpJutad2geY1d6L+GMb/Nfu0+SiUBmRr
+         F4Pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=u6ZBh3xhLtnUwFe/9xqitT47OizAqnS3qUaRaKdrxcw=;
-        b=sTn30x5Cm2FCx9b2NJX+S89MCOIXVqVr8kqErxvwvyfMxZ948KrJty8Sga3imCiH8R
-         lF/tb1D5OiO4HK0WPAmp1C22+qh9dQf84tHPAZPWm2X+jut4BG+6rcWr2aRv7FnrydnM
-         6Xut8OCo4oTLfCFffEfajqYbQdmdK+UTwtoUcm0tYpet/3g1FzM4oA1+Y7CZV7sJ8400
-         hRCMGK8npdJO4QQxuHSKrc913ZEPI7jqmXCVnzgJ9syHv8jQft5UHEyYCTgCjAXPNZq7
-         Oo3P/V9+wT93qFB95mlXrr8V9fWuO3CkPE+UdKvTYHoOlbfpp8fSgdU0ZY+UiUqVFdLl
-         fEXA==
-X-Gm-Message-State: AOAM532wiDgr28Ntm/93w9t+7Pjby6f9xHm6WnEuiWlARPXOvXHmXJJE
-        rKvGAwadsc+WJBk1tP9kOSiuR63Z
-X-Google-Smtp-Source: ABdhPJw8Odfle0VCYRg7uO5cn7CQ/GpvarHxi2OiUUCx4yB1jEgciHij0GrTptZw8PPkEqtzM34CxQ==
-X-Received: by 2002:adf:ecc2:: with SMTP id s2mr4721645wro.60.1591802054688;
-        Wed, 10 Jun 2020 08:14:14 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id v19sm26227wml.26.2020.06.10.08.14.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jun 2020 08:14:13 -0700 (PDT)
-Subject: Re: [PATCH 2/2] clk: bcm63xx-gate: add BCM6318 support
-To:     =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>,
-        =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Jonas Gorski <jonas.gorski@gmail.com>,
-        kbuild test robot <lkp@intel.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200609113049.4035426-1-noltari@gmail.com>
- <20200609113049.4035426-3-noltari@gmail.com>
- <1367fcf3-24ed-9106-a329-da5f8e168e17@gmail.com>
- <3E897527-55EB-47DB-99ED-C737725F0F9E@gmail.com>
- <CAAdtpL7dUZ2RqkrqSxiZxDbp4qY-KdtSc7CyuR+rbnRRA2Yvrw@mail.gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <93c429b1-31f4-95c2-1bd9-b3756b396f3a@gmail.com>
-Date:   Wed, 10 Jun 2020 08:14:09 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oDtkEAKzZyv3dXNpsPsqMVmJ4Y+cSfCKakpKBa1zwUc=;
+        b=c6kkTzBD8x9czCvL0YU+YMQw/kxDmrvO7xppto+E6Sclb+BmHKrBG+VQn3ePmGcIii
+         OooDHmGlnekpyYM2ZoeTM+Y8+N0xqV96My3qoFRGt00fHx5rB0Op/3JEzARrYOTqE13e
+         LyPhG1fMM28XCbpKZwY/kPyJPU2FHI+zOqn9yHV6LclqkYgfh2ue6bW8Rfa1N6wLGWe+
+         q4nRLPdZjrcO3GtrckWfJ6a1AqhANnlkqb0HRZagNWm9uct0EKkEqyatvNI2xsoBQSMr
+         tjUxCutimx/Enkbh5jAIkEVGevAUpy+BvhQvJ7AiDH2OEETb1GX7z3Sr9vT7Q3GdJgH1
+         gZiw==
+X-Gm-Message-State: AOAM530uZLdPV29SJm4boVPf9MjBXW10yjxnvRxk4RlHbGaaaICb64T/
+        w0qHvrL7pohRRpQe5ed/5GMsRZtaE/t1Cb6dzge0Lw==
+X-Google-Smtp-Source: ABdhPJz7VsuBtbPfx9RhfASCfcCtNEZDfA1tM4aFTMIKx3YAxZCxiJua2WBQytWigumUFZm42pnwJaUbj0Binjq2P/c=
+X-Received: by 2002:aca:1308:: with SMTP id e8mr2665439oii.119.1591802088505;
+ Wed, 10 Jun 2020 08:14:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAAdtpL7dUZ2RqkrqSxiZxDbp4qY-KdtSc7CyuR+rbnRRA2Yvrw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200610083333.455-1-sumit.semwal@linaro.org> <CAK8P3a0PzmtWc1p-KgHzHhY+=gca0J8YsGD=ALGESWsgijQQ7w@mail.gmail.com>
+In-Reply-To: <CAK8P3a0PzmtWc1p-KgHzHhY+=gca0J8YsGD=ALGESWsgijQQ7w@mail.gmail.com>
+From:   Sumit Semwal <sumit.semwal@linaro.org>
+Date:   Wed, 10 Jun 2020 20:44:37 +0530
+Message-ID: <CAO_48GEqxOOOZupGLAa92HXcnbe6_3ZfLvaJsDnv9_XFTTFe6w@mail.gmail.com>
+Subject: Re: [PATCH] dma-buf: Move dma_buf_release() from fops to dentry_ops
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Chenbo Feng <fengc@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linaro MM SIG <linaro-mm-sig@lists.linaro.org>,
+        Charan Teja Reddy <charante@codeaurora.org>,
+        syzbot+3643a18836bce555bff6@syzkaller.appspotmail.com,
+        "# 3.4.x" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 10 Jun 2020 at 14:57, Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Wed, Jun 10, 2020 at 10:33 AM Sumit Semwal <sumit.semwal@linaro.org> wrote:
+> >
+> > Charan Teja reported a 'use-after-free' in dmabuffs_dname [1], which
+> > happens if the dma_buf_release() is called while the userspace is
+> > accessing the dma_buf pseudo fs's dmabuffs_dname() in another process,
+> > and dma_buf_release() releases the dmabuf object when the last reference
+> > to the struct file goes away.
+> >
+> > I discussed with Arnd Bergmann, and he suggested that rather than tying
+> > the dma_buf_release() to the file_operations' release(), we can tie it to
+> > the dentry_operations' d_release(), which will be called when the last ref
+> > to the dentry is removed.
+> >
+> > The path exercised by __fput() calls f_op->release() first, and then calls
+> > dput, which eventually calls d_op->d_release().
+> >
+> > In the 'normal' case, when no userspace access is happening via dma_buf
+> > pseudo fs, there should be exactly one fd, file, dentry and inode, so
+> > closing the fd will kill of everything right away.
+> >
+> > In the presented case, the dentry's d_release() will be called only when
+> > the dentry's last ref is released.
+> >
+> > Therefore, lets move dma_buf_release() from fops->release() to
+> > d_ops->d_release().
+> >
+> > Many thanks to Arnd for his FS insights :)
+> >
+> > [1]: https://lore.kernel.org/patchwork/patch/1238278/
+> >
+> > Fixes: bb2bb9030425 ("dma-buf: add DMA_BUF_SET_NAME ioctls")
+> > Reported-by: syzbot+3643a18836bce555bff6@syzkaller.appspotmail.com
+> > Cc: <stable@vger.kernel.org> [5.3+]
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Reported-by: Charan Teja Reddy <charante@codeaurora.org>
+> > Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
+>
+> The patch looks correct to me.
+>
+> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+>
+> Obviously this should still be verified against the original report if possible.
+Thanks, Arnd!
+>
+> >  drivers/dma-buf/dma-buf.c | 13 +++++++------
+> >  1 file changed, 7 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+> > index 01ce125f8e8d..92ba4b6ef3e7 100644
+> > --- a/drivers/dma-buf/dma-buf.c
+> > +++ b/drivers/dma-buf/dma-buf.c
+> > @@ -54,8 +54,11 @@ static char *dmabuffs_dname(struct dentry *dentry, char *buffer, int buflen)
+> >                              dentry->d_name.name, ret > 0 ? name : "");
+> >  }
+> >
+> > +static void dma_buf_release(struct dentry *dentry);
+> > +
+> >  static const struct dentry_operations dma_buf_dentry_ops = {
+> >         .d_dname = dmabuffs_dname,
+> > +       .d_release = dma_buf_release,
+> >  };
+>
+> I'd suggest rearranging the file to avoid the forward declaration, even
+> if it makes it a little harder to review the change, the resulting code
+> will remain organized more logically.
+Got it, will update it in v2.
+>
+> >  static struct vfsmount *dma_buf_mnt;
+> > @@ -77,14 +80,14 @@ static struct file_system_type dma_buf_fs_type = {
+> >         .kill_sb = kill_anon_super,
+> >  };
+> >
+> > -static int dma_buf_release(struct inode *inode, struct file *file)
+> > +static void dma_buf_release(struct dentry *dentry)
+> >  {
+> >         struct dma_buf *dmabuf;
+> >
+> > -       if (!is_dma_buf_file(file))
+> > -               return -EINVAL;
+> > +       if (dentry->d_op != &dma_buf_dentry_ops)
+> > +               return;
+>
+> I think the check here is redundant and it's clearer without it.
+Ok, will remove.
+>
+>           Arnd
 
-
-On 6/10/2020 1:29 AM, Philippe Mathieu-Daudé wrote:
-> Hi,
-> 
-> On Wed, Jun 10, 2020 at 8:13 AM Álvaro Fernández Rojas
-> <noltari@gmail.com> wrote:
->>
->> Hi Florian,
->>
->>> El 10 jun 2020, a las 4:27, Florian Fainelli <f.fainelli@gmail.com> escribió:
->>>
->>>
->>>
->>> On 6/9/2020 4:30 AM, Álvaro Fernández Rojas wrote:
->>>> +static const struct clk_bcm63xx_table_entry bcm6318_clocks[] = {
->>>> +    { .name = "adsl_asb", .bit = 0, },
->>>> +    { .name = "usb_asb", .bit = 1, },
->>>> +    { .name = "mips_asb", .bit = 2, },
->>>> +    { .name = "pcie_asb", .bit = 3, },
->>>> +    { .name = "phymips_asb", .bit = 4, },
->>>> +    { .name = "robosw_asb", .bit = 5, },
->>>> +    { .name = "sar_asb", .bit = 6, },
->>>> +    { .name = "sdr_asb", .bit = 7, },
->>>> +    { .name = "swreg_asb", .bit = 8, },
->>>> +    { .name = "periph_asb", .bit = 9, },
->>>> +    { .name = "cpubus160", .bit = 10, },
->>>> +    { .name = "adsl", .bit = 11, },
->>>> +    { .name = "sar124", .bit = 12, },
->>>
->>> Nit: this should be sar125
->>
->> Nice catch, I will fix this in v2.
->>
->>>
->>>> +    { .name = "mips", .bit = 13, .flags = CLK_IS_CRITICAL, },
->>>> +    { .name = "pcie", .bit = 14, },
->>>> +    { .name = "robosw250", .bit = 16, },
->>>> +    { .name = "robosw025", .bit = 17, },
->>>> +    { .name = "sdr", .bit = 19, .flags = CLK_IS_CRITICAL, },
->>>> +    { .name = "usb", .bit = 20, },
->>>
->>> This should probably be "usbd" to indicate this is the USB device clock
->>> (not host)
->>
->> Ok, I will change it. I got confused by the fact that both (usbd and usbh) were present on 6318_map_part.h:
->> #define USBD_CLK_EN         (1 << 20)
->> #define USBH_CLK_EN         (1 << 20)
-> 
-> Is there a datasheet to verify that?
-
-Not a public one, but I can confirm this is correct given the internal
-datasheet.
--- 
-Florian
+Best,
+Sumit.
