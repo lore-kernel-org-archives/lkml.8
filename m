@@ -6,67 +6,85 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31379C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 22:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D11C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 22:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BEDC2074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 22:41:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBA552074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 22:41:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbgFJWlW (ORCPT
+        id S1726656AbgFJWlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 18:41:22 -0400
-Received: from smtprelay0178.hostedemail.com ([216.40.44.178]:38922 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726105AbgFJWlV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 18:41:21 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 77002182CD48C;
-        Wed, 10 Jun 2020 22:41:20 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: drink21_010d5ba26dce
-X-Filterd-Recvd-Size: 1542
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf20.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 10 Jun 2020 22:41:19 +0000 (UTC)
-Message-ID: <cca874b227301e0bdfb49cb49c9d21f9fd2d0550.camel@perches.com>
-Subject: Re: [PATCH] checkpatch: add check for
- NONNETWORKING_BLOCK_COMMENT_STYLE
-From:   Joe Perches <joe@perches.com>
-To:     Scott Branden <scott.branden@broadcom.com>,
-        Andy Whitcroft <apw@canonical.com>
-Cc:     BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Date:   Wed, 10 Jun 2020 15:41:18 -0700
-In-Reply-To: <0f037983-6dad-859c-3ded-f7a0c86953df@broadcom.com>
-References: <20200610202640.9020-1-scott.branden@broadcom.com>
-         <673c2ebaf7a1ca93f3b1192a77ff62167badd896.camel@perches.com>
-         <021da2ca-a8d3-d0ad-28c3-6a84464353fd@broadcom.com>
-         <33204a397b2d9316e09ae9829e637894b304ea00.camel@perches.com>
-         <0f037983-6dad-859c-3ded-f7a0c86953df@broadcom.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.2-0ubuntu1 
+        Wed, 10 Jun 2020 18:41:25 -0400
+Received: from muru.com ([72.249.23.125]:57630 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726105AbgFJWlX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 18:41:23 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id AE4F18081;
+        Wed, 10 Jun 2020 22:42:11 +0000 (UTC)
+Date:   Wed, 10 Jun 2020 15:41:17 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc:     linux-omap@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>,
+        Dave Gerlach <d-gerlach@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/5] drm/omap: Fix suspend resume regression after
+ platform data removal
+Message-ID: <20200610224117.GE43721@atomide.com>
+References: <20200531193941.13179-1-tony@atomide.com>
+ <20200531193941.13179-2-tony@atomide.com>
+ <16ba1808-5c7f-573d-8dd0-c80cac2f476e@ti.com>
+ <20200603140639.GG37466@atomide.com>
+ <47e286dd-f87a-4440-5bde-1f7b53e8b672@ti.com>
+ <20200609151943.GL37466@atomide.com>
+ <9ed70121-2a53-d2b3-051a-88eb83e6c53f@ti.com>
+ <20200609165234.GM37466@atomide.com>
+ <20200609171043.GN37466@atomide.com>
+ <7c4809d0-5262-a739-354a-61e617fe6c6e@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7c4809d0-5262-a739-354a-61e617fe6c6e@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-06-10 at 15:08 -0700, Scott Branden wrote:
-> Hi Joe,
+* Tomi Valkeinen <tomi.valkeinen@ti.com> [200610 11:48]:
+> On 09/06/2020 20:10, Tony Lindgren wrote:
+> 
+> > > On beagle-x15 I see these errors after modprobe:
+> > > 
+> > > DSS: OMAP DSS rev 6.1
+> > > omapdss_dss 58000000.dss: bound 58001000.dispc (ops dispc_component_ops [omapdss])
+> > > omapdss_dss 58000000.dss: bound 58040000.encoder (ops hdmi5_component_ops [omapdss])
+> > > [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
+> > > omapdrm omapdrm.0: [drm] Cannot find any crtc or sizes
+> > > [drm] Initialized omapdrm 1.0.0 20110917 for omapdrm.0 on minor 0
+> > > omapdrm omapdrm.0: [drm] Cannot find any crtc or sizes
+> > > aic_dvdd_fixed: disabling
+> > > ldousb: disabling
+> > > 
+> > > Maybe I'm missing some related module on x15?
+> > 
+> > Still did not figure what I might be missing on x15 :)
+> 
+> The log above shows that nothing is missing, omapdrm has probed fine. But it
+> cannot see anything connected to the hdmi port. Are you booting with correct
+> dtb for your x15 revision? And you have a monitor connected? =)
 
-Hi Scott.
+Oh you're right, I forgot to connect the HDMI cable back to X15 :)
+No wonder it's no longer working for me..
 
-> I do not know the history of the 2 block coding styles but here's a 
-> radical thought:
-> Change the coding-style document to pick a single coding style for ALL 
-> block comment styles and
-> use that going forward in checkpatch instead?
+Regards,
 
-Opinions vary.
-Good luck with that.
-Seriously.
-
+Tony
