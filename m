@@ -2,206 +2,287 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3917EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 04:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1BCBC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 04:44:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6B7020734
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 04:38:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E42C20734
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 04:44:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QxPlUIxU"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="cp/TT+Gy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726072AbgFJEia (ORCPT
+        id S1726068AbgFJEoe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 00:38:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56846 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbgFJEi3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 00:38:29 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 718CFC05BD1E;
-        Tue,  9 Jun 2020 21:38:27 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id d6so361694pjs.3;
-        Tue, 09 Jun 2020 21:38:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=bYegErhvXUhKWYoec/3/c1SV8F3ijk3h3IUkeCGeUVE=;
-        b=QxPlUIxUHr9+eA/5Zu9Fz3/+FxoUWMPM1E5U2ckHJ+6Djxxv+ManRZOS2+ncEmGiul
-         gX+0GXaX0qLgyJaN9zpvTlIiq2UqJiQw3uyNuTCj5sZOO5/3qOj9wLXQih+nxka5Pw+F
-         z3PBMJ5GGY7OaM46XEl834rMuA4nh/4qfX0UEQDUTnbxmTo6xpMJAW6vr9+Ll/T3sJ3S
-         tkJjoV4SzXn5m29UcofvIZbP2Sx8UpG+AVNXLihHEkkQCL8rhI5YzY12HGcmGUN9G7es
-         AykDgjXiKv4C3NU5WrMfbqnmRel1cjlYX9NEd2UVQGjD1PWe777KrsxuWt8UmSJfjhcU
-         QVFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=bYegErhvXUhKWYoec/3/c1SV8F3ijk3h3IUkeCGeUVE=;
-        b=r/ginXKfRBM/TmkrW+DACuAtuMNWz7DC69q5r/i8Uc01Xu6foAMpcdeSWFQKeaYUN/
-         NKgbLTCdODceYsdIcgvhfaivmBLsQ//aA8P+UdKAUl6m6zufbdpgViIg1rDwu4D28XIO
-         qPc1cF/4JIxO6ADeZQDn0xcAK3toxUfTce5CU0kytZ807Wma9FzqScvF9eAFkO3DSd4H
-         6JecqfnhbQ4UhFKPNPtwP4PZ6eyJrVlF9CVsW+vHyjsHxdWQwsrYIvB8AL03ILR9y+DW
-         wwOuVQExxW5VP9uhA3+8ZRtnkWCrP+jc5mDIWuthiBjoFvQtU7fIuZ+FnEmGbWkpnm5G
-         0vuA==
-X-Gm-Message-State: AOAM530CRZq4+ZTlxg0RAIUpN5ad1i1XI98YrA1pR+ZTKjvBjJv9LyDK
-        ZoT4O9FXgboAyMCdTZiP1Os=
-X-Google-Smtp-Source: ABdhPJwobrYmsbIzKhRC/8ezHlCXe/nzhD+kLnuVdC8/nhctqZEqM5gAQ/EtclACpuhNV5aDVIv+WQ==
-X-Received: by 2002:a17:902:b710:: with SMTP id d16mr1482133pls.28.1591763906797;
-        Tue, 09 Jun 2020 21:38:26 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id h17sm9559235pgv.41.2020.06.09.21.38.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 21:38:26 -0700 (PDT)
-Date:   Tue, 9 Jun 2020 21:38:24 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     groeck@chromium.org, Nicolas Boichat <drinkcat@chromium.org>,
-        linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] HID: usbhid: do not sleep when opening device
-Message-ID: <20200610043824.GA171503@dtor-ws>
+        Wed, 10 Jun 2020 00:44:34 -0400
+Received: from mail-db8eur05on2073.outbound.protection.outlook.com ([40.107.20.73]:59617
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725908AbgFJEod (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 00:44:33 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fPWTsHLy87anLw1EhBIUgALzNyob+FcJcf0ybUtqt+ZOkCn1lpW1g59e2K6cyJ2LRm06/77fiE94zd2wNKuAEP0tVQIxs/xVSBm6EeBpCLKJbEkT+qbbabsOFvt/PvtacC0T8kXXZA5g7cwShHbc8tT1o/iUpcsPsIfJVMa7uDSi/i7aXuBletXr6HtBlZeVBBAAY9oiOUQ8Xwb2XGtwxxZJs7h3RFXwA5jBIGew0bnXrbYgwzcirfh6fP24eC5nAO1pq0LKOMzPavAkv4HfdfZL4eo68gUqM0lHqWCwHLEhJsaYAltYaeodkRnSuiH5xyqx6xxB8imIQLpwBwRVRg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6oltITg7nLZNREILYo5nYtOgdOky/5qcF0IGDvgmzmM=;
+ b=T9n0hPo1bFPtUeMUQuzi4sx8+IRjzWR9EW0u5Bn8iVKDHWkCUQx/s7aXK6eFH8ClDgSpmAf2ltaGMqFf3dHIrs8etwLnCDXPMgnJnDmZNKtppttr5ICv0wtHTq8u7uKKOVYNHVYIOTqtqJ/8VCqh8fFlYuOwa3Uzy/Qrn/YUQ1CGoZ/q3U4/EDkhzxBbBUp0EAao7w3xMgx4Khvoi65aVlZK5LBKqjok8hB0eNNkJOHHI4TJyaUyyjlX2Wp+/4BdrOef2pwtUagfbc0UEHCcGIm0QqaKgQq/qyxd/C9Tp0o9d7mtNDrrOlz2RUoBWpiauxVemOSVHF0wjXxBWWbp9A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6oltITg7nLZNREILYo5nYtOgdOky/5qcF0IGDvgmzmM=;
+ b=cp/TT+Gy7vudzYN0jl6MgsjqI4M9/tLtcSlfZtxk0JU74F2fYefnV5yfVhkCQBXv2JaZ6Oy92AYHyPYLxJIp4t0af5uoFaATDB0s+o4VjLYj+x0IQ1Ze6F9QPAheE1IahkQtq76UwBOhXFsQYUufx1h4lZqrVm7GpWpIABS5bw4=
+Received: from DB8PR04MB7162.eurprd04.prod.outlook.com (2603:10a6:10:12c::13)
+ by DB8PR04MB6585.eurprd04.prod.outlook.com (2603:10a6:10:103::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Wed, 10 Jun
+ 2020 04:44:22 +0000
+Received: from DB8PR04MB7162.eurprd04.prod.outlook.com
+ ([fe80::f0c8:301c:ac45:5ba9]) by DB8PR04MB7162.eurprd04.prod.outlook.com
+ ([fe80::f0c8:301c:ac45:5ba9%7]) with mapi id 15.20.3066.023; Wed, 10 Jun 2020
+ 04:44:22 +0000
+From:   Peter Chen <peter.chen@nxp.com>
+To:     Macpaul Lin <macpaul.lin@mediatek.com>
+CC:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
+        Macpaul Lin <macpaul.lin@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        Justin Hsieh <justinhsieh@google.com>,
+        Hakieyin Hsieh <hakieyin@gmail.com>
+Subject: Re: [PATCH] usb/gadget/function: introduce Built-in CDROM support
+Thread-Topic: [PATCH] usb/gadget/function: introduce Built-in CDROM support
+Thread-Index: AQHWPs9uyeBNKYlTkUGbGwgcbN1ORqjRRhwA
+Date:   Wed, 10 Jun 2020 04:44:22 +0000
+Message-ID: <20200610044446.GA8540@b29397-desktop>
+References: <ejh@nvidia.com> <mchehab+samsung@kernel.org>
+ <benh@kernel.crashing.org>
+ <1591756349-17865-1-git-send-email-macpaul.lin@mediatek.com>
+In-Reply-To: <1591756349-17865-1-git-send-email-macpaul.lin@mediatek.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: mediatek.com; dkim=none (message not signed)
+ header.d=none;mediatek.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: b33682ac-0f69-417b-632a-08d80cf8f1e7
+x-ms-traffictypediagnostic: DB8PR04MB6585:
+x-microsoft-antispam-prvs: <DB8PR04MB65851621E67BDB962EF7B40D8B830@DB8PR04MB6585.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3631;
+x-forefront-prvs: 0430FA5CB7
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +6Po5wV/Day/bT2yNtSSwqFdR2Oa9df92QaMxfNF6UQTzF2KqT2L/r//Dk1FYlI8KKjgxXjrdjdc4P040ZOTeGBCq54h9rvTS2FASklYn8HWoCCeWk7iePP7Zf0D9nv/vjXgNo5oH9LSk4mD3xDNHsRJ4NKfOqkdxksSyMgqlTDAtWLlpOrnOh3e6aECthRxLz0QZq2yNQdJqTpv7H/62CeQ519xHluMhz9b5v3W898htpWHgT2Niu7ZZgxsb1K1U3z4Ao6QWs5DnF1buJyinOSbY/bszLZq+4Gz9VNGDCe7wBVo1FNujBexhCpKcUag69M2T3yXY27eQZTFXU5gk0KU6BM3An6sHgDGRJ/n0H+iDENEMMHiAvCTim0HTRNX
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB7162.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(7916004)(136003)(376002)(396003)(39860400002)(366004)(346002)(1076003)(83380400001)(86362001)(33656002)(478600001)(44832011)(8676002)(4326008)(7416002)(33716001)(8936002)(316002)(6506007)(64756008)(186003)(54906003)(9686003)(5660300002)(6512007)(71200400001)(26005)(2906002)(66946007)(66556008)(53546011)(6486002)(66476007)(6916009)(76116006)(91956017)(66446008)(309714004);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: ThUREbbLX+Zy8AN5dZ7hOuOyx4Z5O7Msk1X4kCKPXAPrEYkH3Xdji6wSu/a/SSQwsC+7CtChyhc+OU2vmv6ry2WcV7KNmLvnExea7HajO7Ksu5HyWKFoNwxzBX1fVo9H2nIU0vG5XkI1XpTj/PaY1tGhrNSnrxmBrvEPaPQbWLVxsEm39pa9HXvbZWgve1c3yg72dmtR/b8wmsLz0yqRfoHmOpQSGKXG5iQhkzEZM/snDmxRZtR2aIoJ8GifX6DeawdDuWT0Puc8ZCMWhHEPA5fbUq5JCwH+EnscSTyQ9GxPaiVN2+bi7MLxhUnHD1syeNlNen5me2Vlk/hTlUnByFz5yoSACMOeBSoYYk81T/WOLemNLdTwcOK8n3F+/0tgMA3RJFGfQvstkh09/6WXzbhdC0cdZzp4OCmbNhWRTxGikTGD8IaU5kC0g16OdRYEYlPLDblOB5hHCwbvoMR+G5BhWieyny1wSbU3iCHGq7Gx4WuAKfaK/QIC3aH1RcEP
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <07BA7B64689EFC45860B31D1ACDF78B1@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b33682ac-0f69-417b-632a-08d80cf8f1e7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jun 2020 04:44:22.1506
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: qEWxnmrEEx63WwG+SZII2AVk+7UAGjJWy79YjAW7yY+kiJbPzREP+MMQZlaASG9zdEgiqpVATkb4/ssoLriilA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6585
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-usbhid tries to give the device 50 milliseconds to drain its queues when
-opening the device, but dies it naively by simply sleeping in open handler,
-which slows down device probing (and thus may affect overall boot time).
+On 20-06-10 10:32:29, Macpaul Lin wrote:
+> Introduce Built-In CDROM (BICR) support.
+> This feature depends on USB_CONFIGFS_MASS_STORAGE option.
+>=20
+> 1. Some settings and new function is introduced for BICR.
+> 2. Some work around for adapting Android settings is intorduced as well.
 
-However we do not need to sleep as we can instead mark a point of time in
-the future when we should start processing the events.
+%s/intorduced/introduced
 
-Reported-by: Nicolas Boichat <drinkcat@chromium.org>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
+> --- a/drivers/usb/gadget/function/f_mass_storage.c
+> +++ b/drivers/usb/gadget/function/f_mass_storage.c
+> @@ -315,6 +315,9 @@ struct fsg_common {
+>  	void			*private_data;
+> =20
+>  	char inquiry_string[INQUIRY_STRING_LEN];
+> +
+> +	/* For build-in CDROM */
+> +	u8 bicr;
+>  };
+> =20
+>  struct fsg_dev {
+> @@ -369,6 +372,10 @@ static void set_bulk_out_req_length(struct fsg_commo=
+n *common,
+>  	if (rem > 0)
+>  		length +=3D common->bulk_out_maxpacket - rem;
+>  	bh->outreq->length =3D length;
+> +
+> +	/* some USB 2.0 hardware requires this setting */
+> +	if (IS_ENABLED(USB_CONFIGFS_BICR))
+> +		bh->outreq->short_not_ok =3D 1;
+>  }
 
-v2: switched from using jiffies to ktime_t to make sure we won't have
-issues with jiffies overflowing.
+Why not use fsg_common.bicr instead of MACRO?
 
- drivers/hid/usbhid/hid-core.c | 53 +++++++++++++++++++----------------
- drivers/hid/usbhid/usbhid.h   |  2 ++
- 2 files changed, 31 insertions(+), 24 deletions(-)
+Peter
+> =20
+> =20
+> @@ -527,7 +534,16 @@ static int fsg_setup(struct usb_function *f,
+>  				w_length !=3D 1)
+>  			return -EDOM;
+>  		VDBG(fsg, "get max LUN\n");
+> -		*(u8 *)req->buf =3D _fsg_common_get_max_lun(fsg->common);
+> +		if (IS_ENABLED(USB_CONFIGFS_BICR) && fsg->common->bicr) {
+> +			/*
+> +			 * When Built-In CDROM is enabled,
+> +			 * we share only one LUN.
+> +			 */
+> +			*(u8 *)req->buf =3D 0;
+> +		} else {
+> +			*(u8 *)req->buf =3D _fsg_common_get_max_lun(fsg->common);
+> +		}
+> +		INFO(fsg, "get max LUN =3D %d\n", *(u8 *)req->buf);
+> =20
+>  		/* Respond with data/status */
+>  		req->length =3D min((u16)1, w_length);
+> @@ -1329,7 +1345,7 @@ static int do_start_stop(struct fsg_common *common)
+>  	}
+> =20
+>  	/* Are we allowed to unload the media? */
+> -	if (curlun->prevent_medium_removal) {
+> +	if (!curlun->nofua && curlun->prevent_medium_removal) {
+>  		LDBG(curlun, "unload attempt prevented\n");
+>  		curlun->sense_data =3D SS_MEDIUM_REMOVAL_PREVENTED;
+>  		return -EINVAL;
+> @@ -2692,6 +2708,7 @@ int fsg_common_set_cdev(struct fsg_common *common,
+>  	common->ep0 =3D cdev->gadget->ep0;
+>  	common->ep0req =3D cdev->req;
+>  	common->cdev =3D cdev;
+> +	common->bicr =3D 0;
+> =20
+>  	us =3D usb_gstrings_attach(cdev, fsg_strings_array,
+>  				 ARRAY_SIZE(fsg_strings));
+> @@ -2895,6 +2912,33 @@ static void fsg_common_release(struct fsg_common *=
+common)
+>  		kfree(common);
+>  }
+> =20
+> +#ifdef USB_CONFIGFS_BICR
+> +ssize_t fsg_bicr_show(struct fsg_common *common, char *buf)
+> +{
+> +	return sprintf(buf, "%d\n", common->bicr);
+> +}
+> +
+> +ssize_t fsg_bicr_store(struct fsg_common *common, const char *buf, size_=
+t size)
+> +{
+> +	int ret;
+> +
+> +	ret =3D kstrtou8(buf, 10, &common->bicr);
+> +	if (ret)
+> +		return -EINVAL;
+> +
+> +	/* Set Lun[0] is a CDROM when enable bicr.*/
+> +	if (!strcmp(buf, "1"))
+> +		common->luns[0]->cdrom =3D 1;
+> +	else {
+> +		common->luns[0]->cdrom =3D 0;
+> +		common->luns[0]->blkbits =3D 0;
+> +		common->luns[0]->blksize =3D 0;
+> +		common->luns[0]->num_sectors =3D 0;
+> +	}
+> +
+> +	return size;
+> +}
+> +#endif
+> =20
+>  /*----------------------------------------------------------------------=
+---*/
+> =20
+> @@ -3463,6 +3507,7 @@ void fsg_config_from_params(struct fsg_config *cfg,
+>  		lun->ro =3D !!params->ro[i];
+>  		lun->cdrom =3D !!params->cdrom[i];
+>  		lun->removable =3D !!params->removable[i];
+> +		lun->nofua =3D !!params->nofua[i];
+>  		lun->filename =3D
+>  			params->file_count > i && params->file[i][0]
+>  			? params->file[i]
+> diff --git a/drivers/usb/gadget/function/f_mass_storage.h b/drivers/usb/g=
+adget/function/f_mass_storage.h
+> index 3b8c4ce2a40a..7097e2ea5cc9 100644
+> --- a/drivers/usb/gadget/function/f_mass_storage.h
+> +++ b/drivers/usb/gadget/function/f_mass_storage.h
+> @@ -140,5 +140,8 @@ void fsg_common_set_inquiry_string(struct fsg_common =
+*common, const char *vn,
+>  void fsg_config_from_params(struct fsg_config *cfg,
+>  			    const struct fsg_module_parameters *params,
+>  			    unsigned int fsg_num_buffers);
+> -
+> +#ifdef CONFIG_USB_CONFIGFS_BICR
+> +ssize_t fsg_bicr_show(struct fsg_common *common, char *buf);
+> +ssize_t fsg_bicr_store(struct fsg_common *common, const char *buf, size_=
+t size);
+> +#endif
+>  #endif /* USB_F_MASS_STORAGE_H */
+> diff --git a/drivers/usb/gadget/function/storage_common.c b/drivers/usb/g=
+adget/function/storage_common.c
+> index f7e6c42558eb..8fe96eeddf35 100644
+> --- a/drivers/usb/gadget/function/storage_common.c
+> +++ b/drivers/usb/gadget/function/storage_common.c
+> @@ -441,6 +441,29 @@ ssize_t fsg_store_file(struct fsg_lun *curlun, struc=
+t rw_semaphore *filesem,
+>  		return -EBUSY;				/* "Door is locked" */
+>  	}
+> =20
+> +	pr_notice("%s file=3D%s, count=3D%d, curlun->cdrom=3D%d\n",
+> +			__func__, buf, (int)count, curlun->cdrom);
+> +
+> +	/*
+> +	 * WORKAROUND for Android:
+> +	 *   VOLD would clean the file path after switching to bicr.
+> +	 *   So when the lun is being a CD-ROM a.k.a. BICR.
+> +	 *   Don't clean the file path to empty.
+> +	 */
+> +	if (curlun->cdrom =3D=3D 1 && count =3D=3D 1)
+> +		return count;
+> +
+> +	/*
+> +	 * WORKAROUND: Should be closed the fsg lun for virtual cd-rom,
+> +	 * when switch to other usb functions.
+> +	 * Use the special keyword "off", because the init can
+> +	 * not parse the char '\n' in rc file and write into the sysfs.
+> +	 */
+> +	if (count =3D=3D 3 &&
+> +			buf[0] =3D=3D 'o' && buf[1] =3D=3D 'f' && buf[2] =3D=3D 'f' &&
+> +			fsg_lun_is_open(curlun))
+> +		((char *) buf)[0] =3D 0;
+> +
+>  	/* Remove a trailing newline */
+>  	if (count > 0 && buf[count-1] =3D=3D '\n')
+>  		((char *) buf)[count-1] =3D 0;		/* Ugh! */
+> --=20
+> 2.18.0
 
-diff --git a/drivers/hid/usbhid/hid-core.c b/drivers/hid/usbhid/hid-core.c
-index c7bc9db5b192..72c92aab2b18 100644
---- a/drivers/hid/usbhid/hid-core.c
-+++ b/drivers/hid/usbhid/hid-core.c
-@@ -26,6 +26,7 @@
- #include <linux/wait.h>
- #include <linux/workqueue.h>
- #include <linux/string.h>
-+#include <linux/timekeeping.h>
- 
- #include <linux/usb.h>
- 
-@@ -95,6 +96,18 @@ static int hid_start_in(struct hid_device *hid)
- 				set_bit(HID_NO_BANDWIDTH, &usbhid->iofl);
- 		} else {
- 			clear_bit(HID_NO_BANDWIDTH, &usbhid->iofl);
-+
-+			if (test_bit(HID_RESUME_RUNNING, &usbhid->iofl)) {
-+				/*
-+				 * In case events are generated while nobody was
-+				 * listening, some are released when the device
-+				 * is re-opened. Wait 50 msec for the queue to
-+				 * empty before allowing events to go through
-+				 * hid.
-+				 */
-+				usbhid->input_start_time =
-+					ktime_add_ms(ktime_get_coarse(), 50);
-+			}
- 		}
- 	}
- 	spin_unlock_irqrestore(&usbhid->lock, flags);
-@@ -280,20 +293,23 @@ static void hid_irq_in(struct urb *urb)
- 		if (!test_bit(HID_OPENED, &usbhid->iofl))
- 			break;
- 		usbhid_mark_busy(usbhid);
--		if (!test_bit(HID_RESUME_RUNNING, &usbhid->iofl)) {
--			hid_input_report(urb->context, HID_INPUT_REPORT,
--					 urb->transfer_buffer,
--					 urb->actual_length, 1);
--			/*
--			 * autosuspend refused while keys are pressed
--			 * because most keyboards don't wake up when
--			 * a key is released
--			 */
--			if (hid_check_keys_pressed(hid))
--				set_bit(HID_KEYS_PRESSED, &usbhid->iofl);
--			else
--				clear_bit(HID_KEYS_PRESSED, &usbhid->iofl);
-+		if (test_bit(HID_RESUME_RUNNING, &usbhid->iofl)) {
-+			if (ktime_before(ktime_get_coarse(),
-+					 usbhid->input_start_time))
-+				break;
-+			clear_bit(HID_RESUME_RUNNING, &usbhid->iofl);
- 		}
-+		hid_input_report(urb->context, HID_INPUT_REPORT,
-+				 urb->transfer_buffer, urb->actual_length, 1);
-+		/*
-+		 * autosuspend refused while keys are pressed
-+		 * because most keyboards don't wake up when
-+		 * a key is released
-+		 */
-+		if (hid_check_keys_pressed(hid))
-+			set_bit(HID_KEYS_PRESSED, &usbhid->iofl);
-+		else
-+			clear_bit(HID_KEYS_PRESSED, &usbhid->iofl);
- 		break;
- 	case -EPIPE:		/* stall */
- 		usbhid_mark_busy(usbhid);
-@@ -714,17 +730,6 @@ static int usbhid_open(struct hid_device *hid)
- 	}
- 
- 	usb_autopm_put_interface(usbhid->intf);
--
--	/*
--	 * In case events are generated while nobody was listening,
--	 * some are released when the device is re-opened.
--	 * Wait 50 msec for the queue to empty before allowing events
--	 * to go through hid.
--	 */
--	if (res == 0)
--		msleep(50);
--
--	clear_bit(HID_RESUME_RUNNING, &usbhid->iofl);
- 	return res;
- }
- 
-diff --git a/drivers/hid/usbhid/usbhid.h b/drivers/hid/usbhid/usbhid.h
-index 8620408bd7af..0f0bcf7037f8 100644
---- a/drivers/hid/usbhid/usbhid.h
-+++ b/drivers/hid/usbhid/usbhid.h
-@@ -13,6 +13,7 @@
- 
- #include <linux/types.h>
- #include <linux/slab.h>
-+#include <linux/ktime.h>
- #include <linux/list.h>
- #include <linux/mutex.h>
- #include <linux/timer.h>
-@@ -82,6 +83,7 @@ struct usbhid_device {
- 
- 	spinlock_t lock;						/* fifo spinlock */
- 	unsigned long iofl;                                             /* I/O flags (CTRL_RUNNING, OUT_RUNNING) */
-+	ktime_t input_start_time;					/* When to start handling input */
- 	struct timer_list io_retry;                                     /* Retry timer */
- 	unsigned long stop_retry;                                       /* Time to give up, in jiffies */
- 	unsigned int retry_delay;                                       /* Delay length in ms */
--- 
-2.27.0.278.ge193c7cf3a9-goog
+--=20
 
-
--- 
-Dmitry
+Thanks,
+Peter Chen=
