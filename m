@@ -4,47 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C84B5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D83C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D4752074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:14:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1480206F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 20:14:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gzslWAeU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="c2zxVuJH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730635AbgFJUOC (ORCPT
+        id S1730772AbgFJUOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 16:14:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60526 "EHLO
+        Wed, 10 Jun 2020 16:14:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730591AbgFJUNx (ORCPT
+        with ESMTP id S1730588AbgFJUNx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 10 Jun 2020 16:13:53 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52A60C0085C4;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DAD2C00863F;
         Wed, 10 Jun 2020 13:13:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=idZKdA+QYZwMV+ZxoObzC46KdDw/yL2GIOrIWkTdIjI=; b=gzslWAeUZmmexSew2yt137OmdW
-        SShvLXnxZK86Ft60vuDRgPt0P8y4I//kQLT5EG7MFMSQgA3iucbKNx2juCELExXL6vasD4C+IDXCh
-        3X6q8ZmXRGOfgaTTh/q7ltSxC5RQKBNf48oSlJEViO4tanp/94VI27uxgj3cgI2XQbn6+Bu1TNKv4
-        spLvOhlXgjdXxukuXE5Qyb/PnT6EOYftHFGn4VW5aYrSK0EREMv6eEp+U6s/Su88Ba+RgDBRkWwqr
-        4fgxb+B6dG8U/o0cmnzAmlTwAXDlaPtv4fKPh8GsRo2fFKGeWE/4gdQVFFmVrWHvJicmlL5sqTid3
-        slY27qOQ==;
+        bh=034RyJserNfH7yl0tdVgBoooxMtosP1kfL7i1H9r4Ho=; b=c2zxVuJHjKpbwjap05D0eIWUuf
+        So6yrmIFHNfcd0/YkqoqRdNzrSm5Yzhrv3np0BifU/TqiIIU4SlbWEMLjymXH5QOO34gZES0HKd61
+        E/oxVQOxW3v/zbwSh7/B7LoYArFbIbfQQ/L+NI1wKEMnxMpl2E4ZIlupIXkuM+oINJOwpHE3T3bgr
+        5ZuzTR6yEKtesYzttadRPP1DQIX407Hf5FK0hH8mPtF33TIFf5dJl+fHzybXoT8APTDNCSO7+8YmR
+        uLAK8L+MJLGtnBP45zhZXC0IqOid40u31a2mwsAE8VNvUvdyjFQAmKSyedxNSRO4P4/KZFlLXcZG0
+        lL3pO8zA==;
 Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jj76b-0003Y5-6e; Wed, 10 Jun 2020 20:13:49 +0000
+        id 1jj76a-0003X5-Qw; Wed, 10 Jun 2020 20:13:48 +0000
 From:   Matthew Wilcox <willy@infradead.org>
 To:     linux-fsdevel@vger.kernel.org
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 47/51] mm: Make page_cache_readahead_unbounded take a readahead_control
-Date:   Wed, 10 Jun 2020 13:13:41 -0700
-Message-Id: <20200610201345.13273-48-willy@infradead.org>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>
+Subject: [PATCH v6 38/51] mm: Fix total_mapcount assumption of page size
+Date:   Wed, 10 Jun 2020 13:13:32 -0700
+Message-Id: <20200610201345.13273-39-willy@infradead.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200610201345.13273-1-willy@infradead.org>
 References: <20200610201345.13273-1-willy@infradead.org>
@@ -55,171 +55,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+From: "Kirill A. Shutemov" <kirill@shutemov.name>
 
-Define it in the callers instead of in page_cache_readahead_unbounded().
+File THPs may now be of arbitrary order.
 
+Signed-off-by: Kirill A. Shutemov <kirill@shutemov.name>
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- fs/ext4/verity.c        |  4 ++--
- fs/f2fs/verity.c        |  4 ++--
- include/linux/pagemap.h |  5 ++---
- mm/readahead.c          | 26 ++++++++++++--------------
- 4 files changed, 18 insertions(+), 21 deletions(-)
+ mm/huge_memory.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/fs/ext4/verity.c b/fs/ext4/verity.c
-index dec1244dd062..fe2e541543da 100644
---- a/fs/ext4/verity.c
-+++ b/fs/ext4/verity.c
-@@ -346,6 +346,7 @@ static struct page *ext4_read_merkle_tree_page(struct inode *inode,
- 					       pgoff_t index,
- 					       unsigned long num_ra_pages)
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 80fb38e93837..744863aa0374 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -2490,7 +2490,7 @@ static void __split_huge_page(struct page *page, struct list_head *list,
+ 
+ int total_mapcount(struct page *page)
  {
-+	DEFINE_READAHEAD(rac, NULL, inode->i_mapping, index);
- 	struct page *page;
+-	int i, compound, ret;
++	int i, compound, nr, ret;
  
- 	index += ext4_verity_metadata_pos(inode) >> PAGE_SHIFT;
-@@ -355,8 +356,7 @@ static struct page *ext4_read_merkle_tree_page(struct inode *inode,
- 		if (page)
- 			put_page(page);
- 		else if (num_ra_pages > 1)
--			page_cache_readahead_unbounded(inode->i_mapping, NULL,
--					index, num_ra_pages, 0);
-+			page_cache_readahead_unbounded(&rac, num_ra_pages, 0);
- 		page = read_mapping_page(inode->i_mapping, index, NULL);
- 	}
- 	return page;
-diff --git a/fs/f2fs/verity.c b/fs/f2fs/verity.c
-index 865c9fb774fb..707a94745472 100644
---- a/fs/f2fs/verity.c
-+++ b/fs/f2fs/verity.c
-@@ -226,6 +226,7 @@ static struct page *f2fs_read_merkle_tree_page(struct inode *inode,
- 					       pgoff_t index,
- 					       unsigned long num_ra_pages)
- {
-+	DEFINE_READAHEAD(rac, NULL, inode->i_mapping, index);
- 	struct page *page;
+ 	VM_BUG_ON_PAGE(PageTail(page), page);
  
- 	index += f2fs_verity_metadata_pos(inode) >> PAGE_SHIFT;
-@@ -235,8 +236,7 @@ static struct page *f2fs_read_merkle_tree_page(struct inode *inode,
- 		if (page)
- 			put_page(page);
- 		else if (num_ra_pages > 1)
--			page_cache_readahead_unbounded(inode->i_mapping, NULL,
--					index, num_ra_pages, 0);
-+			page_cache_readahead_unbounded(&rac, num_ra_pages, 0);
- 		page = read_mapping_page(inode->i_mapping, index, NULL);
- 	}
- 	return page;
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index 77c20da5ae99..f36714473b1e 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -715,9 +715,8 @@ void page_cache_sync_readahead(struct address_space *, struct file_ra_state *,
- void page_cache_async_readahead(struct address_space *, struct file_ra_state *,
- 		struct file *, struct page *, pgoff_t index,
- 		unsigned long req_count);
--void page_cache_readahead_unbounded(struct address_space *, struct file *,
--		pgoff_t index, unsigned long nr_to_read,
--		unsigned long lookahead_count);
-+void page_cache_readahead_unbounded(struct readahead_control *,
-+		unsigned long nr_to_read, unsigned long lookahead_count);
+@@ -2498,16 +2498,17 @@ int total_mapcount(struct page *page)
+ 		return atomic_read(&page->_mapcount) + 1;
  
- /*
-  * Like add_to_page_cache_locked, but used to add newly allocated pages:
-diff --git a/mm/readahead.c b/mm/readahead.c
-index 2126a2754e22..62da2d4beed1 100644
---- a/mm/readahead.c
-+++ b/mm/readahead.c
-@@ -159,9 +159,7 @@ static void read_pages(struct readahead_control *rac, struct list_head *pages,
- 
- /**
-  * page_cache_readahead_unbounded - Start unchecked readahead.
-- * @mapping: File address space.
-- * @file: This instance of the open file; used for authentication.
-- * @index: First page index to read.
-+ * @rac: Readahead control.
-  * @nr_to_read: The number of pages to read.
-  * @lookahead_size: Where to start the next readahead.
-  *
-@@ -173,13 +171,13 @@ static void read_pages(struct readahead_control *rac, struct list_head *pages,
-  * Context: File is referenced by caller.  Mutexes may be held by caller.
-  * May sleep, but will not reenter filesystem to reclaim memory.
-  */
--void page_cache_readahead_unbounded(struct address_space *mapping,
--		struct file *file, pgoff_t index, unsigned long nr_to_read,
--		unsigned long lookahead_size)
-+void page_cache_readahead_unbounded(struct readahead_control *rac,
-+		unsigned long nr_to_read, unsigned long lookahead_size)
- {
-+	struct address_space *mapping = rac->mapping;
-+	unsigned long index = readahead_index(rac);
- 	LIST_HEAD(page_pool);
- 	gfp_t gfp_mask = readahead_gfp_mask(mapping);
--	DEFINE_READAHEAD(rac, file, mapping, index);
- 	unsigned long i;
- 
- 	/*
-@@ -200,7 +198,7 @@ void page_cache_readahead_unbounded(struct address_space *mapping,
- 	for (i = 0; i < nr_to_read; i++) {
- 		struct page *page = xa_load(&mapping->i_pages, index + i);
- 
--		BUG_ON(index + i != rac._index + rac._nr_pages);
-+		BUG_ON(index + i != rac->_index + rac->_nr_pages);
- 
- 		if (page && !xa_is_value(page)) {
- 			/*
-@@ -211,7 +209,7 @@ void page_cache_readahead_unbounded(struct address_space *mapping,
- 			 * have a stable reference to this page, and it's
- 			 * not worth getting one just for that.
- 			 */
--			read_pages(&rac, &page_pool, true);
-+			read_pages(rac, &page_pool, true);
- 			continue;
- 		}
- 
-@@ -224,12 +222,12 @@ void page_cache_readahead_unbounded(struct address_space *mapping,
- 		} else if (add_to_page_cache_lru(page, mapping, index + i,
- 					gfp_mask) < 0) {
- 			put_page(page);
--			read_pages(&rac, &page_pool, true);
-+			read_pages(rac, &page_pool, true);
- 			continue;
- 		}
- 		if (i == nr_to_read - lookahead_size)
- 			SetPageReadahead(page);
--		rac._nr_pages++;
-+		rac->_nr_pages++;
- 	}
- 
- 	/*
-@@ -237,7 +235,7 @@ void page_cache_readahead_unbounded(struct address_space *mapping,
- 	 * uptodate then the caller will launch readpage again, and
- 	 * will then handle the error.
- 	 */
--	read_pages(&rac, &page_pool, false);
-+	read_pages(rac, &page_pool, false);
- 	memalloc_nofs_restore(nofs);
- }
- EXPORT_SYMBOL_GPL(page_cache_readahead_unbounded);
-@@ -252,6 +250,7 @@ void __do_page_cache_readahead(struct address_space *mapping,
- 		struct file *file, pgoff_t index, unsigned long nr_to_read,
- 		unsigned long lookahead_size)
- {
-+	DEFINE_READAHEAD(rac, file, mapping, index);
- 	struct inode *inode = mapping->host;
- 	loff_t isize = i_size_read(inode);
- 	pgoff_t end_index;	/* The last page we want to read */
-@@ -266,8 +265,7 @@ void __do_page_cache_readahead(struct address_space *mapping,
- 	if (nr_to_read > end_index - index)
- 		nr_to_read = end_index - index + 1;
- 
--	page_cache_readahead_unbounded(mapping, file, index, nr_to_read,
--			lookahead_size);
-+	page_cache_readahead_unbounded(&rac, nr_to_read, lookahead_size);
+ 	compound = compound_mapcount(page);
++	nr = compound_nr(page);
+ 	if (PageHuge(page))
+ 		return compound;
+ 	ret = compound;
+-	for (i = 0; i < HPAGE_PMD_NR; i++)
++	for (i = 0; i < nr; i++)
+ 		ret += atomic_read(&page[i]._mapcount) + 1;
+ 	/* File pages has compound_mapcount included in _mapcount */
+ 	if (!PageAnon(page))
+-		return ret - compound * HPAGE_PMD_NR;
++		return ret - compound * nr;
+ 	if (PageDoubleMap(page))
+-		ret -= HPAGE_PMD_NR;
++		ret -= nr;
+ 	return ret;
  }
  
- /*
 -- 
 2.26.2
 
