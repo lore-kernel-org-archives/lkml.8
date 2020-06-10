@@ -2,212 +2,203 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8899FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94006C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56CE220734
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:22:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="yW/pR62p"
+	by mail.kernel.org (Postfix) with ESMTP id 74B9E20691
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 12:23:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729056AbgFJMWf (ORCPT
+        id S1729062AbgFJMXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 08:22:35 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:17372 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729037AbgFJMWb (ORCPT
+        Wed, 10 Jun 2020 08:23:39 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:60752 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728571AbgFJMXj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 08:22:31 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05ACH9O9025176;
-        Wed, 10 Jun 2020 14:22:11 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=Ogt7kzdY+2u4HiQMwxF0C/6ggbmSoaxy/EAlQct2Trk=;
- b=yW/pR62pcvAr+WT+FnE5474MdUVzpX+SupEdiB5AXPQ5h/x2D5zkQ4yLnH4v4FqTLx+c
- C3GElqXURNjT4HlKppybYEEXALEVzG2iAructlOvIylJcznOBXc1hYwpHweROBVZO/mm
- I2muRfWfpHSb3RMqzp4IIsbd2mV2pzvxUJaB6QcXlA+xjgIHBuk6vumVsSNUM1x/yqTE
- USdbSY364zHhrXCncqiRpdptsSFO3t7v3il0NiDROYWE8Z7HcMWPQ9kE2WVHP2I3xk2G
- scxCGQM/nQiBKlnsdlDFXKIowuWvrcKMsmyXIOj6ZO/+cp9/veBfqz9UzIAy8arxh90U Yw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 31jppntq1t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 10 Jun 2020 14:22:11 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9F8B810002A;
-        Wed, 10 Jun 2020 14:22:10 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 34BF92B9C66;
-        Wed, 10 Jun 2020 14:22:08 +0200 (CEST)
-Received: from SFHDAG6NODE1.st.com (10.75.127.16) by SFHDAG6NODE2.st.com
- (10.75.127.17) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 10 Jun
- 2020 14:22:07 +0200
-Received: from SFHDAG6NODE1.st.com ([fe80::8d96:4406:44e3:eb27]) by
- SFHDAG6NODE1.st.com ([fe80::8d96:4406:44e3:eb27%20]) with mapi id
- 15.00.1473.003; Wed, 10 Jun 2020 14:22:07 +0200
-From:   Yannick FERTRE <yannick.fertre@st.com>
-To:     Adrian Ratiu <adrian.ratiu@collabora.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "Heiko Stuebner" <heiko@sntech.de>,
-        Philippe CORNU <philippe.cornu@st.com>,
-        "Jernej Skrabec" <jernej.skrabec@siol.net>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        "Jonas Karlman" <jonas@kwiboo.se>,
-        "linux-imx@nxp.com" <linux-imx@nxp.com>,
-        "kernel@collabora.com" <kernel@collabora.com>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Adrian Pop <pop.adrian61@gmail.com>,
-        Arnaud Ferraris <arnaud.ferraris@collabora.com>
-Subject: Re: [PATCH v9 10/11] drm: bridge: dw-mipi-dsi: fix bad register field
- offsets
-Thread-Topic: [PATCH v9 10/11] drm: bridge: dw-mipi-dsi: fix bad register
- field offsets
-Thread-Index: AQHWPoY3sOkL2THKq0y5LpEfOytE3qjRpO2A
-Date:   Wed, 10 Jun 2020 12:22:07 +0000
-Message-ID: <673a3961-d5ef-b7cd-4301-43c1c2786ed1@st.com>
-References: <20200609174959.955926-1-adrian.ratiu@collabora.com>
- <20200609174959.955926-11-adrian.ratiu@collabora.com>
-In-Reply-To: <20200609174959.955926-11-adrian.ratiu@collabora.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.44]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <13E4D089CC2D1740B364E43D624E547D@st.com>
-Content-Transfer-Encoding: base64
+        Wed, 10 Jun 2020 08:23:39 -0400
+Received: from 89-64-83-71.dynamic.chello.pl (89.64.83.71) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
+ id 085cf89194671cbf; Wed, 10 Jun 2020 14:23:35 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Erik Kaneda <erik.kaneda@intel.com>, rafael.j.wysocki@intel.com,
+        Len Brown <lenb@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Ira Weiny <ira.weiny@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-nvdimm@lists.01.org, Bob Moore <robert.moore@intel.com>
+Subject: [RFT][PATCH 3/3] ACPI: OSL: Define ACPI_OS_MAP_MEMORY_FAST_PATH()
+Date:   Wed, 10 Jun 2020 14:22:50 +0200
+Message-ID: <6458983.dlBdKaB8z0@kreacher>
+In-Reply-To: <318372766.6LKUBsbRXE@kreacher>
+References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com> <318372766.6LKUBsbRXE@kreacher>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-10_07:2020-06-10,2020-06-10 signatures=0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQWRyaWFuLA0KDQp0aGFua3MgZm9yIHRoZSBwYWNoOiB0ZXN0ZWQgb24gc3RtMzJtcDEuDQoN
-ClRlc3RlZC1ieTogWWFubmljayBGZXJ0csOpIDx5YW5uaWNrLmZlcnRyZUBzdC5jb20+DQoNCk9u
-IDYvOS8yMCA3OjQ5IFBNLCBBZHJpYW4gUmF0aXUgd3JvdGU6DQo+IEFjY29yZGluZyB0byB0aGUg
-RFNJIEhvc3QgUmVnaXN0ZXJzIHNlY3Rpb25zIGF2YWlsYWJsZSBpbiB0aGUgSU1YLA0KPiBTVE0g
-YW5kIFJLIHJlZiBtYW51YWxzIGZvciAxLjAxLCAxLjMwIGFuZCAxLjMxLCB0aGUgcmVnaXN0ZXIg
-ZmllbGRzDQo+IGFyZSBzbWFsbGVyIG9yIGJpZ2dlciB0aGFuIHdoYXQncyBjb2RlZCBpbiB0aGUg
-ZHJpdmVyLCBsZWFkaW5nIHRvDQo+IHIvdyBpbiByZXNlcnZlZCBzcGFjZXMgd2hpY2ggbWlnaHQg
-Y2F1c2UgdW5kZWZpbmVkIGJlaGF2aW91cnMuDQo+DQo+IFRlc3RlZC1ieTogQWRyaWFuIFBvcCA8
-cG9wLmFkcmlhbjYxQGdtYWlsLmNvbT4NCj4gVGVzdGVkLWJ5OiBBcm5hdWQgRmVycmFyaXMgPGFy
-bmF1ZC5mZXJyYXJpc0Bjb2xsYWJvcmEuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBBZHJpYW4gUmF0
-aXUgPGFkcmlhbi5yYXRpdUBjb2xsYWJvcmEuY29tPg0KPiAtLS0NCj4gTmV3IGluIHY2Lg0KPiAt
-LS0NCj4gICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LW1pcGktZHNpLmMgfCA0
-NiArKysrKysrKystLS0tLS0tLS0tDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDIzIGluc2VydGlvbnMo
-KyksIDIzIGRlbGV0aW9ucygtKQ0KPg0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2Jy
-aWRnZS9zeW5vcHN5cy9kdy1taXBpLWRzaS5jIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zeW5v
-cHN5cy9kdy1taXBpLWRzaS5jDQo+IGluZGV4IDFlNDdkNDBiNWJlY2IuLmQyNzQyMTZjNWE3YzIg
-MTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctbWlwaS1k
-c2kuYw0KPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LW1pcGktZHNp
-LmMNCj4gQEAgLTMxNiw3ICszMTYsNyBAQCBzdHJ1Y3QgZHdfbWlwaV9kc2lfdmFyaWFudCB7DQo+
-ICAgc3RhdGljIGNvbnN0IHN0cnVjdCBkd19taXBpX2RzaV92YXJpYW50IGR3X21pcGlfZHNpX3Yx
-MzBfdjEzMV9sYXlvdXQgPSB7DQo+ICAgCS5jZmdfZHBpX2NvbG9yX2NvZGluZyA9CQlSRUdfRklF
-TEQoRFNJX0RQSV9DT0xPUl9DT0RJTkcsIDAsIDMpLA0KPiAgIAkuY2ZnX2RwaV8xOGxvb3NlbHlf
-ZW4gPQkJUkVHX0ZJRUxEKERTSV9EUElfQ09MT1JfQ09ESU5HLCA4LCA4KSwNCj4gLQkuY2ZnX2Rw
-aV92aWQgPQkJCVJFR19GSUVMRChEU0lfRFBJX1ZDSUQsIDAsIDIpLA0KPiArCS5jZmdfZHBpX3Zp
-ZCA9CQkJUkVHX0ZJRUxEKERTSV9EUElfVkNJRCwgMCwgMSksDQo+ICAgCS5jZmdfZHBpX3ZzeW5j
-X2FjdGl2ZV9sb3cgPQlSRUdfRklFTEQoRFNJX0RQSV9DRkdfUE9MLCAxLCAxKSwNCj4gICAJLmNm
-Z19kcGlfaHN5bmNfYWN0aXZlX2xvdyA9CVJFR19GSUVMRChEU0lfRFBJX0NGR19QT0wsIDIsIDIp
-LA0KPiAgIAkuY2ZnX2NtZF9tb2RlX2Fja19ycXN0X2VuID0JUkVHX0ZJRUxEKERTSV9DTURfTU9E
-RV9DRkcsIDEsIDEpLA0KPiBAQCAtMzI1LDI5ICszMjUsMjkgQEAgc3RhdGljIGNvbnN0IHN0cnVj
-dCBkd19taXBpX2RzaV92YXJpYW50IGR3X21pcGlfZHNpX3YxMzBfdjEzMV9sYXlvdXQgPSB7DQo+
-ICAgCS5jZmdfY21kX21vZGVfZGNzX3N3X3NyX2VuID0JUkVHX0ZJRUxEKERTSV9DTURfTU9ERV9D
-RkcsIDE2LCAxOCksDQo+ICAgCS5jZmdfY21kX21vZGVfZGNzX2x3X2VuID0JUkVHX0ZJRUxEKERT
-SV9DTURfTU9ERV9DRkcsIDE5LCAxOSksDQo+ICAgCS5jZmdfY21kX21vZGVfbWF4X3JkX3BrdF9z
-aXplID0JUkVHX0ZJRUxEKERTSV9DTURfTU9ERV9DRkcsIDI0LCAyNCksDQo+IC0JLmNmZ19jbWRf
-bW9kZV9lbiA9CQlSRUdfRklFTEQoRFNJX01PREVfQ0ZHLCAwLCAzMSksDQo+IC0JLmNmZ19jbWRf
-cGt0X3N0YXR1cyA9CQlSRUdfRklFTEQoRFNJX0NNRF9QS1RfU1RBVFVTLCAwLCAzMSksDQo+IC0J
-LmNmZ192aWRfbW9kZV9lbiA9CQlSRUdfRklFTEQoRFNJX01PREVfQ0ZHLCAwLCAzMSksDQo+ICsJ
-LmNmZ19jbWRfbW9kZV9lbiA9CQlSRUdfRklFTEQoRFNJX01PREVfQ0ZHLCAwLCAwKSwNCj4gKwku
-Y2ZnX2NtZF9wa3Rfc3RhdHVzID0JCVJFR19GSUVMRChEU0lfQ01EX1BLVF9TVEFUVVMsIDAsIDYp
-LA0KPiArCS5jZmdfdmlkX21vZGVfZW4gPQkJUkVHX0ZJRUxEKERTSV9NT0RFX0NGRywgMCwgMCks
-DQo+ICAgCS5jZmdfdmlkX21vZGVfdHlwZSA9CQlSRUdfRklFTEQoRFNJX1ZJRF9NT0RFX0NGRywg
-MCwgMSksDQo+ICAgCS5jZmdfdmlkX21vZGVfbG93X3Bvd2VyID0JUkVHX0ZJRUxEKERTSV9WSURf
-TU9ERV9DRkcsIDgsIDEzKSwNCj4gICAJLmNmZ192aWRfbW9kZV92cGdfZW4gPQkJUkVHX0ZJRUxE
-KERTSV9WSURfTU9ERV9DRkcsIDE2LCAxNiksDQo+ICAgCS5jZmdfdmlkX21vZGVfdnBnX2hvcml6
-ID0JUkVHX0ZJRUxEKERTSV9WSURfTU9ERV9DRkcsIDI0LCAyNCksDQo+IC0JLmNmZ192aWRfcGt0
-X3NpemUgPQkJUkVHX0ZJRUxEKERTSV9WSURfUEtUX1NJWkUsIDAsIDEwKSwNCj4gLQkuY2ZnX3Zp
-ZF9oc2FfdGltZSA9CQlSRUdfRklFTEQoRFNJX1ZJRF9IU0FfVElNRSwgMCwgMzEpLA0KPiAtCS5j
-ZmdfdmlkX2hicF90aW1lID0JCVJFR19GSUVMRChEU0lfVklEX0hCUF9USU1FLCAwLCAzMSksDQo+
-IC0JLmNmZ192aWRfaGxpbmVfdGltZSA9CQlSRUdfRklFTEQoRFNJX1ZJRF9ITElORV9USU1FLCAw
-LCAzMSksDQo+IC0JLmNmZ192aWRfdnNhX3RpbWUgPQkJUkVHX0ZJRUxEKERTSV9WSURfVlNBX0xJ
-TkVTLCAwLCAzMSksDQo+IC0JLmNmZ192aWRfdmJwX3RpbWUgPQkJUkVHX0ZJRUxEKERTSV9WSURf
-VkJQX0xJTkVTLCAwLCAzMSksDQo+IC0JLmNmZ192aWRfdmZwX3RpbWUgPQkJUkVHX0ZJRUxEKERT
-SV9WSURfVkZQX0xJTkVTLCAwLCAzMSksDQo+IC0JLmNmZ192aWRfdmFjdGl2ZV90aW1lID0JCVJF
-R19GSUVMRChEU0lfVklEX1ZBQ1RJVkVfTElORVMsIDAsIDMxKSwNCj4gKwkuY2ZnX3ZpZF9wa3Rf
-c2l6ZSA9CQlSRUdfRklFTEQoRFNJX1ZJRF9QS1RfU0laRSwgMCwgMTMpLA0KPiArCS5jZmdfdmlk
-X2hzYV90aW1lID0JCVJFR19GSUVMRChEU0lfVklEX0hTQV9USU1FLCAwLCAxMSksDQo+ICsJLmNm
-Z192aWRfaGJwX3RpbWUgPQkJUkVHX0ZJRUxEKERTSV9WSURfSEJQX1RJTUUsIDAsIDExKSwNCj4g
-KwkuY2ZnX3ZpZF9obGluZV90aW1lID0JCVJFR19GSUVMRChEU0lfVklEX0hMSU5FX1RJTUUsIDAs
-IDE0KSwNCj4gKwkuY2ZnX3ZpZF92c2FfdGltZSA9CQlSRUdfRklFTEQoRFNJX1ZJRF9WU0FfTElO
-RVMsIDAsIDkpLA0KPiArCS5jZmdfdmlkX3ZicF90aW1lID0JCVJFR19GSUVMRChEU0lfVklEX1ZC
-UF9MSU5FUywgMCwgOSksDQo+ICsJLmNmZ192aWRfdmZwX3RpbWUgPQkJUkVHX0ZJRUxEKERTSV9W
-SURfVkZQX0xJTkVTLCAwLCA5KSwNCj4gKwkuY2ZnX3ZpZF92YWN0aXZlX3RpbWUgPQkJUkVHX0ZJ
-RUxEKERTSV9WSURfVkFDVElWRV9MSU5FUywgMCwgMTMpLA0KPiAgIAkuY2ZnX3BoeV90eHJlcXVl
-c3RjbGtocyA9CVJFR19GSUVMRChEU0lfTFBDTEtfQ1RSTCwgMCwgMCksDQo+IC0JLmNmZ19waHlf
-YnRhX3RpbWUgPQkJUkVHX0ZJRUxEKERTSV9CVEFfVE9fQ05ULCAwLCAzMSksDQo+IC0JLmNmZ19w
-aHlfbWF4X3JkX3RpbWUgPQkJUkVHX0ZJRUxEKERTSV9QSFlfVE1SX0NGRywgMCwgMTUpLA0KPiAr
-CS5jZmdfcGh5X2J0YV90aW1lID0JCVJFR19GSUVMRChEU0lfQlRBX1RPX0NOVCwgMCwgMTUpLA0K
-PiArCS5jZmdfcGh5X21heF9yZF90aW1lID0JCVJFR19GSUVMRChEU0lfUEhZX1RNUl9DRkcsIDAs
-IDE0KSwNCj4gICAJLmNmZ19waHlfbHAyaHNfdGltZSA9CQlSRUdfRklFTEQoRFNJX1BIWV9UTVJf
-Q0ZHLCAxNiwgMjMpLA0KPiAgIAkuY2ZnX3BoeV9oczJscF90aW1lID0JCVJFR19GSUVMRChEU0lf
-UEhZX1RNUl9DRkcsIDI0LCAzMSksDQo+IC0JLmNmZ19waHlfbWF4X3JkX3RpbWVfdjEzMSA9CVJF
-R19GSUVMRChEU0lfUEhZX1RNUl9SRF9DRkcsIDAsIDE1KSwNCj4gLQkuY2ZnX3BoeV9scDJoc190
-aW1lX3YxMzEgPQlSRUdfRklFTEQoRFNJX1BIWV9UTVJfQ0ZHLCAwLCAxNSksDQo+IC0JLmNmZ19w
-aHlfaHMybHBfdGltZV92MTMxID0JUkVHX0ZJRUxEKERTSV9QSFlfVE1SX0NGRywgMTYsIDMxKSwN
-Cj4gKwkuY2ZnX3BoeV9tYXhfcmRfdGltZV92MTMxID0JUkVHX0ZJRUxEKERTSV9QSFlfVE1SX1JE
-X0NGRywgMCwgMTQpLA0KPiArCS5jZmdfcGh5X2xwMmhzX3RpbWVfdjEzMSA9CVJFR19GSUVMRChE
-U0lfUEhZX1RNUl9DRkcsIDAsIDkpLA0KPiArCS5jZmdfcGh5X2hzMmxwX3RpbWVfdjEzMSA9CVJF
-R19GSUVMRChEU0lfUEhZX1RNUl9DRkcsIDE2LCAyNSksDQo+ICAgCS5jZmdfcGh5X2Nsa2xwMmhz
-X3RpbWUgPQlSRUdfRklFTEQoRFNJX1BIWV9UTVJfTFBDTEtfQ0ZHLCAwLCAxNSksDQo+ICAgCS5j
-ZmdfcGh5X2Nsa2hzMmxwX3RpbWUgPQlSRUdfRklFTEQoRFNJX1BIWV9UTVJfTFBDTEtfQ0ZHLCAx
-NiwgMzEpLA0KPiAgIAkuY2ZnX3BoeV90ZXN0Y2xyID0JCVJFR19GSUVMRChEU0lfUEhZX1RTVF9D
-VFJMMCwgMCwgMCksDQo+IEBAIC0zNjEsMTEgKzM2MSwxMSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0
-IGR3X21pcGlfZHNpX3ZhcmlhbnQgZHdfbWlwaV9kc2lfdjEzMF92MTMxX2xheW91dCA9IHsNCj4g
-ICAJLmNmZ19wY2toZGxfY2ZnID0JCVJFR19GSUVMRChEU0lfUENLSERMX0NGRywgMCwgNCksDQo+
-ICAgCS5jZmdfaHN0eF90aW1lb3V0X2NvdW50ZXIgPQlSRUdfRklFTEQoRFNJX1RPX0NOVF9DRkcs
-IDE2LCAzMSksDQo+ICAgCS5jZmdfbHByeF90aW1lb3V0X2NvdW50ZXIgPQlSRUdfRklFTEQoRFNJ
-X1RPX0NOVF9DRkcsIDAsIDE1KSwNCj4gLQkuY2ZnX2ludF9zdGF0MCA9CQlSRUdfRklFTEQoRFNJ
-X0lOVF9TVDAsIDAsIDMxKSwNCj4gLQkuY2ZnX2ludF9zdGF0MSA9CQlSRUdfRklFTEQoRFNJX0lO
-VF9TVDEsIDAsIDMxKSwNCj4gLQkuY2ZnX2ludF9tYXNrMCA9CQlSRUdfRklFTEQoRFNJX0lOVF9N
-U0swLCAwLCAzMSksDQo+IC0JLmNmZ19pbnRfbWFzazEgPQkJUkVHX0ZJRUxEKERTSV9JTlRfTVNL
-MSwgMCwgMzEpLA0KPiAtCS5jZmdfZ2VuX2hkciA9CQkJUkVHX0ZJRUxEKERTSV9HRU5fSERSLCAw
-LCAzMSksDQo+ICsJLmNmZ19pbnRfc3RhdDAgPQkJUkVHX0ZJRUxEKERTSV9JTlRfU1QwLCAwLCAy
-MCksDQo+ICsJLmNmZ19pbnRfc3RhdDEgPQkJUkVHX0ZJRUxEKERTSV9JTlRfU1QxLCAwLCAxMiks
-DQo+ICsJLmNmZ19pbnRfbWFzazAgPQkJUkVHX0ZJRUxEKERTSV9JTlRfTVNLMCwgMCwgMjApLA0K
-PiArCS5jZmdfaW50X21hc2sxID0JCVJFR19GSUVMRChEU0lfSU5UX01TSzEsIDAsIDEyKSwNCj4g
-KwkuY2ZnX2dlbl9oZHIgPQkJCVJFR19GSUVMRChEU0lfR0VOX0hEUiwgMCwgMjMpLA0KPiAgIAku
-Y2ZnX2dlbl9wYXlsb2FkID0JCVJFR19GSUVMRChEU0lfR0VOX1BMRF9EQVRBLCAwLCAzMSksDQo+
-ICAgfTsNCj4gICANCj4gQEAgLTM4Miw3ICszODIsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGR3
-X21pcGlfZHNpX3ZhcmlhbnQgZHdfbWlwaV9kc2lfdjEwMV9sYXlvdXQgPSB7DQo+ICAgCS5jZmdf
-Y21kX21vZGVfZ2VuX2x3X2VuID0JUkVHX0ZJRUxEKERTSV9DTURfTU9ERV9DRkcsIDExLCAxMSks
-DQo+ICAgCS5jZmdfY21kX21vZGVfZGNzX2x3X2VuID0JUkVHX0ZJRUxEKERTSV9DTURfTU9ERV9D
-RkcsIDEyLCAxMiksDQo+ICAgCS5jZmdfY21kX21vZGVfYWNrX3Jxc3RfZW4gPQlSRUdfRklFTEQo
-RFNJX0NNRF9NT0RFX0NGR19WMTAxLCAxMywgMTMpLA0KPiAtCS5jZmdfY21kX3BrdF9zdGF0dXMg
-PQkJUkVHX0ZJRUxEKERTSV9DTURfUEtUX1NUQVRVU19WMTAxLCAwLCAxNCksDQo+ICsJLmNmZ19j
-bWRfcGt0X3N0YXR1cyA9CQlSRUdfRklFTEQoRFNJX0NNRF9QS1RfU1RBVFVTX1YxMDEsIDAsIDYp
-LA0KPiAgIAkuY2ZnX3ZpZF9tb2RlX2VuID0JCVJFR19GSUVMRChEU0lfVklEX01PREVfQ0ZHX1Yx
-MDEsIDAsIDApLA0KPiAgIAkuY2ZnX3ZpZF9tb2RlX3R5cGUgPQkJUkVHX0ZJRUxEKERTSV9WSURf
-TU9ERV9DRkdfVjEwMSwgMSwgMiksDQo+ICAgCS5jZmdfdmlkX21vZGVfbG93X3Bvd2VyID0JUkVH
-X0ZJRUxEKERTSV9WSURfTU9ERV9DRkdfVjEwMSwgMywgOCksDQo=
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+
+Define the ACPI_OS_MAP_MEMORY_FAST_PATH() macro to allow
+acpi_ex_system_memory_space_handler() to avoid memory unmapping
+overhead by deferring the unmap operations to the point when the
+AML interpreter is exited after removing the operation region
+that held the memory mappings which are not used any more.
+
+That macro, when called on a knwon-existing memory mapping,
+causes the reference counter of that mapping in the OS layer to be
+incremented and returns a pointer representing the virtual address
+of the start of the mapped memory area without really mapping it,
+so the first subsequent unmap operation on it will only decrement
+the reference counter.
+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/acpi/osl.c                | 67 +++++++++++++++++++++++--------
+ include/acpi/platform/aclinuxex.h |  4 ++
+ 2 files changed, 55 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
+index 762c5d50b8fe..b75f3a17776f 100644
+--- a/drivers/acpi/osl.c
++++ b/drivers/acpi/osl.c
+@@ -302,21 +302,8 @@ static void acpi_unmap(acpi_physical_address pg_off, void __iomem *vaddr)
+ 		iounmap(vaddr);
+ }
+ 
+-/**
+- * acpi_os_map_iomem - Get a virtual address for a given physical address range.
+- * @phys: Start of the physical address range to map.
+- * @size: Size of the physical address range to map.
+- *
+- * Look up the given physical address range in the list of existing ACPI memory
+- * mappings.  If found, get a reference to it and return a pointer to it (its
+- * virtual address).  If not found, map it, add it to that list and return a
+- * pointer to it.
+- *
+- * During early init (when acpi_permanent_mmap has not been set yet) this
+- * routine simply calls __acpi_map_table() to get the job done.
+- */
+-void __iomem __ref
+-*acpi_os_map_iomem(acpi_physical_address phys, acpi_size size)
++static void __iomem __ref *__acpi_os_map_iomem(acpi_physical_address phys,
++					       acpi_size size, bool fast_path)
+ {
+ 	struct acpi_ioremap *map;
+ 	void __iomem *virt;
+@@ -328,8 +315,12 @@ void __iomem __ref
+ 		return NULL;
+ 	}
+ 
+-	if (!acpi_permanent_mmap)
++	if (!acpi_permanent_mmap) {
++		if (WARN_ON(fast_path))
++			return NULL;
++
+ 		return __acpi_map_table((unsigned long)phys, size);
++	}
+ 
+ 	mutex_lock(&acpi_ioremap_lock);
+ 	/* Check if there's a suitable mapping already. */
+@@ -339,6 +330,11 @@ void __iomem __ref
+ 		goto out;
+ 	}
+ 
++	if (fast_path) {
++		mutex_unlock(&acpi_ioremap_lock);
++		return NULL;
++	}
++
+ 	map = kzalloc(sizeof(*map), GFP_KERNEL);
+ 	if (!map) {
+ 		mutex_unlock(&acpi_ioremap_lock);
+@@ -366,6 +362,25 @@ void __iomem __ref
+ 	mutex_unlock(&acpi_ioremap_lock);
+ 	return map->virt + (phys - map->phys);
+ }
++
++/**
++ * acpi_os_map_iomem - Get a virtual address for a given physical address range.
++ * @phys: Start of the physical address range to map.
++ * @size: Size of the physical address range to map.
++ *
++ * Look up the given physical address range in the list of existing ACPI memory
++ * mappings.  If found, get a reference to it and return a pointer representing
++ * its virtual address.  If not found, map it, add it to that list and return a
++ * pointer representing its virtual address.
++ *
++ * During early init (when acpi_permanent_mmap has not been set yet) call
++ * __acpi_map_table() to obtain the mapping.
++ */
++void __iomem __ref *acpi_os_map_iomem(acpi_physical_address phys,
++				      acpi_size size)
++{
++	return __acpi_os_map_iomem(phys, size, false);
++}
+ EXPORT_SYMBOL_GPL(acpi_os_map_iomem);
+ 
+ void *__ref acpi_os_map_memory(acpi_physical_address phys, acpi_size size)
+@@ -374,6 +389,24 @@ void *__ref acpi_os_map_memory(acpi_physical_address phys, acpi_size size)
+ }
+ EXPORT_SYMBOL_GPL(acpi_os_map_memory);
+ 
++/**
++ * acpi_os_map_memory_fast_path - Fast-path physical-to-virtual address mapping.
++ * @phys: Start of the physical address range to map.
++ * @size: Size of the physical address range to map.
++ *
++ * Look up the given physical address range in the list of existing ACPI memory
++ * mappings.  If found, get a reference to it and return a pointer representing
++ * its virtual address.  If not found, return NULL.
++ *
++ * During early init (when acpi_permanent_mmap has not been set yet) log a
++ * warning and return NULL.
++ */
++void __ref *acpi_os_map_memory_fast_path(acpi_physical_address phys,
++					acpi_size size)
++{
++	return __acpi_os_map_iomem(phys, size, true);
++}
++
+ /* Must be called with mutex_lock(&acpi_ioremap_lock) */
+ static unsigned long acpi_os_drop_map_ref(struct acpi_ioremap *map)
+ {
+@@ -1571,6 +1604,8 @@ acpi_status acpi_release_memory(acpi_handle handle, struct resource *res,
+ 
+ 	return acpi_walk_namespace(ACPI_TYPE_REGION, handle, level,
+ 				   acpi_deactivate_mem_region, NULL, res, NULL);
++
++	acpi_release_unused_memory_mappings();
+ }
+ EXPORT_SYMBOL_GPL(acpi_release_memory);
+ 
+diff --git a/include/acpi/platform/aclinuxex.h b/include/acpi/platform/aclinuxex.h
+index 04f88f2de781..1d8be4ac9ef9 100644
+--- a/include/acpi/platform/aclinuxex.h
++++ b/include/acpi/platform/aclinuxex.h
+@@ -139,6 +139,10 @@ static inline void acpi_os_terminate_debugger(void)
+  * OSL interfaces added by Linux
+  */
+ 
++void *acpi_os_map_memory_fast_path(acpi_physical_address where, acpi_size length);
++
++#define ACPI_OS_MAP_MEMORY_FAST_PATH(a, s)	acpi_os_map_memory_fast_path(a, s)
++
+ #endif				/* __KERNEL__ */
+ 
+ #endif				/* __ACLINUXEX_H__ */
+-- 
+2.26.2
+
+
+
+
