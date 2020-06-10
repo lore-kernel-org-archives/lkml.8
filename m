@@ -2,103 +2,110 @@ Return-Path: <SRS0=CVC0=7X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99522C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C304C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B0902086A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 07:59:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07666206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jun 2020 08:00:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591776034;
+	bh=FAdHFQnLWqU7V/CLKqgnX3eMb4dwLD/XeGpKGuwa0Ps=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=atCFnRKVfYVgLI3HFrJGiUaLHvcAsSoQ3qRsS/QNqiSauljoN3UieN2zu+o+dKf+z
+	 QWMWp0Yb0y5qFGpLX8vmYyYPjCWWnqVIjMHJ/VRZo/mRn2vE3bRoBemTqyLRyQQhkT
+	 hh4+DkyHKhSxgtbPIPuuMZLBQSUyAcbFVN+EZSUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbgFJH7q (ORCPT
+        id S1726718AbgFJIAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 03:59:46 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:20968 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726081AbgFJH7p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 03:59:45 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05A7Xd8u153818;
-        Wed, 10 Jun 2020 03:59:16 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31ja3ac8wq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 10 Jun 2020 03:59:16 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05A7ulrJ018361;
-        Wed, 10 Jun 2020 07:59:14 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma03fra.de.ibm.com with ESMTP id 31jf1grbww-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 10 Jun 2020 07:59:14 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05A7vtsR62849294
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 10 Jun 2020 07:57:55 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F37724C059;
-        Wed, 10 Jun 2020 07:59:11 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 22B8D4C046;
-        Wed, 10 Jun 2020 07:59:11 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.202.121])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 10 Jun 2020 07:59:11 +0000 (GMT)
-Date:   Wed, 10 Jun 2020 10:59:09 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Joerg Roedel <jroedel@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Guan Xuetao <gxt@pku.edu.cn>
-Subject: Re: [PATCH] mm/vmalloc: track which page-table levels were modified
-Message-ID: <20200610075909.GK1149842@linux.ibm.com>
-References: <20200603232311.GA205619@roeck-us.net>
- <20200604083512.GN6857@suse.de>
- <CAHk-=wj2_YdxPaRFqBUUDZvtZKKG5To2KJhciJmDbchW2NFLnw@mail.gmail.com>
- <20200604140617.e340dd507ee68b0a05bd21cb@linux-foundation.org>
- <CAHk-=wjm+RrcTjB7KYCCsOouE2EyzRcwWUE9TVq6OCYYAt9Zyw@mail.gmail.com>
- <20200605081644.GS6857@suse.de>
- <20200605100059.GB7524@linux.ibm.com>
- <20200609121056.GB3871@suse.de>
- <c11fd19b-e5b6-1bc9-6392-04dbab358b67@roeck-us.net>
+        Wed, 10 Jun 2020 04:00:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38142 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726081AbgFJIAc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 04:00:32 -0400
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F4E720734;
+        Wed, 10 Jun 2020 08:00:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591776031;
+        bh=FAdHFQnLWqU7V/CLKqgnX3eMb4dwLD/XeGpKGuwa0Ps=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Mzt43DLjx5j4+eQ0b2AuM54n3o6R+cV89y0VsTHH5oFYD0v2ytzXfsanp5EvOffVE
+         N8EJhnlmfUFAb0QiZecr5m/KO6unAsS2eFxEHX6pHkFoMDip6ZNIy3MqvrmBPweL2x
+         w8vt6zT4dZ6QN5Nv0wRPmVe2fe1V8Ab6DiLV2344=
+Received: by mail-ot1-f54.google.com with SMTP id k15so1005721otp.8;
+        Wed, 10 Jun 2020 01:00:31 -0700 (PDT)
+X-Gm-Message-State: AOAM533O6rXJiZ9TZulRcQz+yiAeNvEqrm7QFA1mHzz+qXA1kzRvKJdE
+        IgMX5a7veueaAt+OiatPHVzvAPx3DLZmwxEqILo=
+X-Google-Smtp-Source: ABdhPJxuQWr84gMacb/a6f9SzUwi1kqC15NFZ4y1j2X2hWUD8YkhBaBpuZ66t8CNgxHKeOSwAFP/ChjObyX+SAwt+2c=
+X-Received: by 2002:a9d:2de4:: with SMTP id g91mr1622120otb.90.1591776030720;
+ Wed, 10 Jun 2020 01:00:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c11fd19b-e5b6-1bc9-6392-04dbab358b67@roeck-us.net>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-10_04:2020-06-10,2020-06-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- suspectscore=0 priorityscore=1501 malwarescore=0 cotscore=-2147483648
- spamscore=0 phishscore=0 clxscore=1015 adultscore=0 mlxlogscore=984
- lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006100053
+References: <20200604022031.164207-1-masahiroy@kernel.org> <20200610075837.GD15939@willie-the-truck>
+In-Reply-To: <20200610075837.GD15939@willie-the-truck>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 10 Jun 2020 10:00:19 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXES7MoxWDQeO=D-88fit4H_Qh9SEQmikcJA39d8czPCBQ@mail.gmail.com>
+Message-ID: <CAMj1kXES7MoxWDQeO=D-88fit4H_Qh9SEQmikcJA39d8czPCBQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] efi/libstub/arm64: link stub lib.a conditionally
+To:     Will Deacon <will@kernel.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 07:15:42AM -0700, Guenter Roeck wrote:
-> On 6/9/20 5:10 AM, Joerg Roedel wrote:
-> > 
-> I have stopped building unicore32 images since v4.19 since there is
-> no available compiler that is still supported by the kernel. I am
-> surprised that support for it has not been removed from the kernel.
+On Wed, 10 Jun 2020 at 09:58, Will Deacon <will@kernel.org> wrote:
+>
+> On Thu, Jun 04, 2020 at 11:20:30AM +0900, Masahiro Yamada wrote:
+> > Since commit 799c43415442 ("kbuild: thin archives make default for
+> > all archs"), core-y is passed to the linker with --whole-archive.
+> > Hence, the whole of stub library is linked to vmlinux.
+> >
+> > Use libs-y so that lib.a is passed after --no-whole-archive for
+> > conditional linking.
+> >
+> > The unused drivers/firmware/efi/libstub/relocate.o will be dropped
+> > for ARCH=arm64.
+> >
+> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> > ---
+> >
+> > This patch touches under arch/arm64/, but
+> > this is more related to efi.
+> > I am sending this to Ard.
+>
+> Ok, I'll ignore this then. Ard -- please yell if you want me to do anything
+> else with it.
+>
 
-Well, I've done the patches [1] and I'll send them after -rc1 is out.
-It'll also give kbuild some time to verify I didn't remove too much :)
+I am going to send a batch of EFI fixes early next week, so I can take
+this as well, or alternatively, you can apply it directly.
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/rppt/linux.git/log/?h=rm-unicore
-
-> Guenter
-
--- 
-Sincerely yours,
-Mike.
+>
+> > diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+> > index 650e1185c190..48a6afa774fc 100644
+> > --- a/arch/arm64/Makefile
+> > +++ b/arch/arm64/Makefile
+> > @@ -145,7 +145,7 @@ export    TEXT_OFFSET
+> >
+> >  core-y               += arch/arm64/
+> >  libs-y               := arch/arm64/lib/ $(libs-y)
+> > -core-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
+> > +libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
+> >
+> >  # Default target when executing plain make
+> >  boot         := arch/arm64/boot
+> > --
+> > 2.25.1
+> >
