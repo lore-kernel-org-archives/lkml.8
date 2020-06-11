@@ -2,137 +2,528 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8001BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5398EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5253C20656
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:48:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=maximintegrated.onmicrosoft.com header.i=@maximintegrated.onmicrosoft.com header.b="Zj/e1O7y"
+	by mail.kernel.org (Postfix) with ESMTP id 3179F20656
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:48:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbgFKJse (ORCPT
+        id S1727023AbgFKJsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 11 Jun 2020 05:48:36 -0400
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:19527 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726684AbgFKJse (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 11 Jun 2020 05:48:34 -0400
-Received: from mail-bn8nam11on2115.outbound.protection.outlook.com ([40.107.236.115]:1760
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726693AbgFKJsd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 05:48:33 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GAplxvPei1VUUXlt359XdxyBolXwmf1Bt7ZBVk3W+fGa5NIwDF+LuCcm72lbh/EBAwSQQp1hMJY4wnb2qg6kob4LgO1tEEfY6I5n8msRRw3W/ch2mlPwMJ6rY3xDqGMzAANBYrYsVX0Bzqx26IFb6r8NaxDKey4ZQ1UNb8h91Vbow9UcY6nneaHRCvx0iA6xGgxTCjtbxj9yHbXjmW9b3ZhHQGLZJl+TKTvJUzPceXYueXIYxJ835J5vZv1tTN2GGPLByklq1TuHjszK2Q15749KUYNZ7oUxb2DYQREdWAo6DnR8CObj9gWNl/tSjkNJHnAlWUiBPEFS3hiJKfSgSg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8pCzmbNOQBVtdHwhX1LDxfWV+hJkeQ+htSCkM4Y64BM=;
- b=KiaSfkT9ZVS+d4XH1gYKt7a4QuKb/1IWwwxll+CXOjqnhNfWBf7CnKWWP9RjL28i0Zd4AOTqor36GGlMVyK6HWqhqwxRCVBz7b8ylngvQm8ceNOIioptde2xwBYC9lUz70lacMDXQhiYmFKDRVlQP2XlOexn1acvPJ4/xIqCjj00SGEHen9wCH8uTiHaTRUKLLfxTRUX7G0PXQ6tACQ5ILPn0ic3NIxT0wl4PmWhI9G25kZBUfbKLE4ZFN47DW5LrUm2C1Jp16G110lfvL2HTmYr77J8cjgXKOGT/3UF36hRhRS79If5C28yXP2o8aQMIeggF9egC491FBU9xGhq6A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=maximintegrated.com; dmarc=pass action=none
- header.from=maximintegrated.com; dkim=pass header.d=maximintegrated.com;
- arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=maximintegrated.onmicrosoft.com;
- s=selector2-maximintegrated-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8pCzmbNOQBVtdHwhX1LDxfWV+hJkeQ+htSCkM4Y64BM=;
- b=Zj/e1O7yCBy/PMLlFkSYSz8rbuuAVyxZdTVoiFR1IOamdAbcN/paRvaTkf/L4nmXRAIH5htcxTzMKsN2WEOQ1mv3/91gUmaMW6iqr5CZN2CNQzEwZqUH9BBaEjYnDIDqbCkvO1zxQzLApsvnBJGPJL0Dzt4KkCGXVuuzt6yqnks=
-Authentication-Results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none
- header.from=maximintegrated.com;
-Received: from MWHPR11MB2047.namprd11.prod.outlook.com (2603:10b6:300:2a::12)
- by MW3PR11MB4668.namprd11.prod.outlook.com (2603:10b6:303:54::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.20; Thu, 11 Jun
- 2020 09:48:30 +0000
-Received: from MWHPR11MB2047.namprd11.prod.outlook.com
- ([fe80::994e:6a48:f660:f363]) by MWHPR11MB2047.namprd11.prod.outlook.com
- ([fe80::994e:6a48:f660:f363%5]) with mapi id 15.20.3088.022; Thu, 11 Jun 2020
- 09:48:30 +0000
-From:   Steve Lee <steves.lee@maximintegrated.com>
-To:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, ckeepax@opensource.cirrus.com,
-        geert@linux-m68k.org, rf@opensource.wolfsonmicro.com,
-        shumingf@realtek.com, srinivas.kandagatla@linaro.org,
-        krzk@kernel.org, dmurphy@ti.com, jack.yu@realtek.com,
-        nuno.sa@analog.com, steves.lee@maximintegrated.com,
-        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
-Cc:     ryan.lee.maxim@gmail.com, ryans.lee@maximintegrated.com,
-        steves.lee.maxim@gmail.com
-Subject: [PATCH 2/2] ASoC: max98390: Update regmap readable reg and volatile
-Date:   Thu, 11 Jun 2020 18:48:00 +0900
-Message-Id: <20200611094800.18422-1-steves.lee@maximintegrated.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: SL2P216CA0052.KORP216.PROD.OUTLOOK.COM
- (2603:1096:100:19::14) To MWHPR11MB2047.namprd11.prod.outlook.com
- (2603:10b6:300:2a::12)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (2001:2d8:210:3256:d447:7247:839:5c8e) by SL2P216CA0052.KORP216.PROD.OUTLOOK.COM (2603:1096:100:19::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.19 via Frontend Transport; Thu, 11 Jun 2020 09:48:25 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [2001:2d8:210:3256:d447:7247:839:5c8e]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: cd1eaf44-416e-4ca6-d6a5-08d80dec98f1
-X-MS-TrafficTypeDiagnostic: MW3PR11MB4668:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MW3PR11MB466848DD62CFD81C8C318E7392800@MW3PR11MB4668.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:296;
-X-Forefront-PRVS: 0431F981D8
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: yRoucuQFpbJYtCMqQB06+dle1yOmTrxt+nNIi4QHT3ohf5X+UfiHm+Ff8LgkByweAABwiRjyHNT87TbOXBpl/S7CQt/+K4nPIira7QUIWd1iCH4ylMgp/kDg5twjXp1Z0qTthWfZZ1W4+VNSbqyVEyhQKSOl2RIeqtpGFEU8yRAfFhZFttp77NRW4zDKQ8BZiOO46aNe9BRwafKM2IAQtPKdXsqCrD2/ZWFSNqDeB+pAkLL5QJqieXMhKE6rQ7JEJfQSNbenIR8ROn3nJDURRm19/IvpF+5DswAl/K/+KxlEjSZ5fVDe4+lAszCf/9GJuOjm3CAkm/LItMT485pBq3wdnItdNRZiDfOTIJybbsBH4oQIS4AU6ibuPNQqdemiTCLeX4oXgrD3LFHq5ZIyHQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB2047.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(346002)(136003)(376002)(366004)(8676002)(2906002)(16526019)(52116002)(15650500001)(478600001)(66476007)(66946007)(1076003)(316002)(186003)(5660300002)(6666004)(6506007)(86362001)(6512007)(83380400001)(66556008)(4326008)(36756003)(69590400007)(2616005)(8936002)(7416002)(6486002)(921003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: VXPEfrjOxajxhAZoNTzwQM53vKqDyLcr2gYEw4TYOb/EcN5/5jfPjBnncMXdADtBltW5AX7ehxJKVPAhi+ELY0NjQsMaacRoyfFrGZu98FDnVHiI+n1JdXDcEzZia+OcVPNw5WGEL1M4ZSMTvdQgipRNGGRIODIVgVKbLV7bndwhErX+4LPdLwncKoqRRW051xrvw56w9HpWnVsOC+8xPitBejbIeKgY4TpAZqjFuTYpyMhEsJ8+n48Y6Slju/uZln6HYTLaiMxbcACX1vjK5g2EBOaspQWL1KjOb68ksQF1ZwEVO3GTfHGPaZfkl5f9cIB4SLsD//nGBtx2YeErvjYj42rGccgMBD7mI/Vl6ZKRcvUN/cIMOrFGqCK3GdvOhi9vhUc4VLLJuPu4kydP2XWeMJaGwOOwvlarjv4NlhHVBw2ChOnBPCKw3HL3WJQCdhJVz9yWl0Rxo2CbXHL5p2O6BsklNsFHrNG12Y26UEiHQnRKBAJ2MteVfLysTSIE1gOVlKVShYRPeFlEooDSVDFKIjt7djr2gDAICqG39hI=
-X-OriginatorOrg: maximintegrated.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cd1eaf44-416e-4ca6-d6a5-08d80dec98f1
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2020 09:48:30.6942
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: fbd909df-ea69-4788-a554-f24b7854ad03
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tqD92yjCf4dsTPewcHcEJml0zkLVn1cBsL3/RO5bRBtEaA9WC5XzCTdaDfZmMLp3h16qYKT71f7sbeWVE6PXv5uvN1XdPuzdHGBQvsSAhYI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR11MB4668
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 11 Jun 2020 15:18:26 +0530
+Received: from c-rbokka-linux.qualcomm.com ([10.206.232.238])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 11 Jun 2020 15:18:05 +0530
+Received: by c-rbokka-linux.qualcomm.com (Postfix, from userid 203305)
+        id E3B302CB3; Thu, 11 Jun 2020 15:18:04 +0530 (IST)
+From:   Ravi Kumar Bokka <rbokka@codeaurora.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        rnayak@codeaurora.org, saiprakash.ranjan@codeaurora.org,
+        dhavalp@codeaurora.org, mturney@codeaurora.org,
+        sparate@codeaurora.org, c_rbokka@codeaurora.org,
+        mkurumel@codeaurora.org, Ravi Kumar Bokka <rbokka@codeaurora.org>
+Subject: [RFC v2 2/3] drivers: nvmem: Add QTI qfprom-efuse support
+Date:   Thu, 11 Jun 2020 15:18:01 +0530
+Message-Id: <1591868882-16553-3-git-send-email-rbokka@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1591868882-16553-1-git-send-email-rbokka@codeaurora.org>
+References: <1591868882-16553-1-git-send-email-rbokka@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
- Update max98390_readable_register and max98390_volatile_reg
+This patch adds support for QTI qfprom-efuse controller. This driver can
+access the raw qfprom regions for fuse blowing.
 
-Signed-off-by: Steve Lee <steves.lee@maximintegrated.com>
+The current existed qfprom driver is only supports for cpufreq, thermal sensors
+drivers by read out calibration data, speed bins..etc which is stored
+by qfprom efuses.
+
+Signed-off-by: Ravi Kumar Bokka <rbokka@codeaurora.org>
 ---
- sound/soc/codecs/max98390.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/nvmem/Kconfig  |   1 +
+ drivers/nvmem/qfprom.c | 405 ++++++++++++++++++++++++++++++++++++++++++++++---
+ 2 files changed, 385 insertions(+), 21 deletions(-)
 
-diff --git a/sound/soc/codecs/max98390.c b/sound/soc/codecs/max98390.c
-index 57d15dbfcda3..b345e626956d 100644
---- a/sound/soc/codecs/max98390.c
-+++ b/sound/soc/codecs/max98390.c
-@@ -700,8 +700,8 @@ static bool max98390_readable_register(struct device *dev, unsigned int reg)
- 	case MAX98390_IRQ_CTRL ... MAX98390_WDOG_CTRL:
- 	case MAX98390_MEAS_ADC_THERM_WARN_THRESH
- 		... MAX98390_BROWNOUT_INFINITE_HOLD:
--	case MAX98390_BROWNOUT_LVL_HOLD ... THERMAL_COILTEMP_RD_BACK_BYTE0:
--	case DSMIG_DEBUZZER_THRESHOLD ... MAX98390_R24FF_REV_ID:
-+	case MAX98390_BROWNOUT_LVL_HOLD ... DSMIG_DEBUZZER_THRESHOLD:
-+	case DSM_VOL_ENA ... MAX98390_R24FF_REV_ID:
- 		return true;
- 	default:
- 		return false;
-@@ -717,7 +717,7 @@ static bool max98390_volatile_reg(struct device *dev, unsigned int reg)
- 	case MAX98390_BROWNOUT_LOWEST_STATUS:
- 	case MAX98390_ENV_TRACK_BOOST_VOUT_READ:
- 	case DSM_STBASS_HPF_B0_BYTE0 ... DSM_DEBUZZER_ATTACK_TIME_BYTE2:
--	case THERMAL_RDC_RD_BACK_BYTE1 ... THERMAL_COILTEMP_RD_BACK_BYTE0:
-+	case THERMAL_RDC_RD_BACK_BYTE1 ... DSMIG_DEBUZZER_THRESHOLD:
- 	case DSM_THERMAL_GAIN ... DSM_WBDRC_GAIN:
- 		return true;
- 	default:
+diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
+index d7b7f6d..623d59e 100644
+--- a/drivers/nvmem/Kconfig
++++ b/drivers/nvmem/Kconfig
+@@ -117,6 +117,7 @@ config QCOM_QFPROM
+ 	help
+ 	  Say y here to enable QFPROM support. The QFPROM provides access
+ 	  functions for QFPROM data to rest of the drivers via nvmem interface.
++	  And this driver provides access QTI qfprom efuse via nvmem interface.
+ 
+ 	  This driver can also be built as a module. If so, the module
+ 	  will be called nvmem_qfprom.
+diff --git a/drivers/nvmem/qfprom.c b/drivers/nvmem/qfprom.c
+index 8a91717..312318c 100644
+--- a/drivers/nvmem/qfprom.c
++++ b/drivers/nvmem/qfprom.c
+@@ -3,17 +3,266 @@
+  * Copyright (C) 2015 Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+  */
+ 
++#include <linux/clk.h>
+ #include <linux/device.h>
++#include <linux/io.h>
++#include <linux/iopoll.h>
++#include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/mod_devicetable.h>
+-#include <linux/io.h>
+ #include <linux/nvmem-provider.h>
++#include <linux/of_device.h>
+ #include <linux/platform_device.h>
++#include <linux/regulator/consumer.h>
++
++#define QFPROM_BLOW_STATUS_BUSY 0x1
++#define QFPROM_BLOW_STATUS_READY 0x0
++
++/* Blow timer clock frequency in Mhz for 10nm LPe technology */
++#define QFPROM_BLOW_TIMER_OFFSET 0x03c
++#define QFPROM_BLOW_TIMER_RESET_VALUE 0x0
++
++/* Amount of time required to hold charge to blow fuse in micro-seconds */
++#define QFPROM_FUSE_BLOW_POLL_PERIOD 100
++#define QFPROM_BLOW_STATUS_OFFSET 0x048
++
++#define QFPROM_ACCEL_OFFSET 0x044
++
++/**
++ * struct qfprom_efuse_platform_data - structure holding qfprom-efuse
++ * platform data
++ *
++ * @name: qfprom-efuse compatible name
++ * @fuse_blow_time_in_us: Should contain the wait time when doing the fuse blow
++ * @accel_value: Should contain qfprom accel value
++ * @accel_reset_value: The reset value of qfprom accel value
++ * @qfprom_blow_timer_value: The timer value of qfprom when doing efuse blow
++ * @qfprom_blow_reset_freq: The frequency required to set when fuse blowing
++ * is done
++ * @qfprom_blow_set_freq: The frequency required to set when we start the
++ * fuse blowing
++ * @qfprom_max_vol: max voltage required to set fuse blow
++ * @qfprom_min_vol: min voltage required to set fuse blow
++ */
++struct qfprom_efuse_platform_data {
++	const char *name;
++	u8 fuse_blow_time_in_us;
++	u32 accel_value;
++	u32 accel_reset_value;
++	u32 qfprom_blow_timer_value;
++	u32 qfprom_blow_reset_freq;
++	u32 qfprom_blow_set_freq;
++	u32 qfprom_max_vol;
++	u32 qfprom_min_vol;
++};
++
++/**
++ * struct qfprom_priv - structure holding qfprom attributes
++ *
++ * @qfpraw: iomapped memory space for qfprom-efuse raw address space
++ * @qfpconf: iomapped memory space for qfprom-efuse configuration address space
++ * @qfpcorrected: iomapped memory space for qfprom corrected address space
++
++ * @dev: qfprom device structure
++ * @secclk: clock supply
++ * @vcc: regulator supply
+ 
++ * @qfprom_efuse_platform_data: qfprom platform data
++ */
+ struct qfprom_priv {
+-	void __iomem *base;
++	void __iomem *qfpraw;
++	void __iomem *qfpconf;
++	void __iomem *qfpcorrected;
++	struct device *dev;
++	struct clk *secclk;
++	struct regulator *vcc;
++	struct qfprom_efuse_platform_data efuse;
+ };
+ 
++/*
++ * restore the gcc_sec_ctrl_clk frequency to default value(19.2 MHz)
++ */
++static int qfprom_reset_clock_settings(const struct qfprom_priv *priv)
++{
++	int ret;
++
++	ret = clk_set_rate(priv->secclk, priv->efuse.qfprom_blow_reset_freq);
++	if (ret) {
++		dev_err(priv->dev, "clk_set_rate() failed to enable secclk\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++/*
++ * set the gcc_sec_ctrl_clk to 4.8 MHz
++ */
++static int qfprom_set_clock_settings(const struct qfprom_priv *priv)
++{
++	int ret;
++
++	ret = clk_set_rate(priv->secclk, priv->efuse.qfprom_blow_set_freq);
++	if (ret) {
++		dev_err(priv->dev, "clk_set_rate() failed to enable secclk\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++/*
++ * set and reset the voltage for 1.8V and OFF(0V) on VDD_QFPROM (LDO11)
++ */
++static int qfprom_set_voltage_settings(const struct qfprom_priv *priv,
++					int min_uV, int max_uV)
++{
++	int ret;
++
++	ret = regulator_set_voltage(priv->vcc, min_uV, max_uV);
++	if (ret) {
++		dev_err(priv->dev, "regulator_set_voltage() failed!\n");
++		return ret;
++	}
++
++	ret = regulator_enable(priv->vcc);
++	if (ret) {
++		dev_err(priv->dev, "failed to enable regulator\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++/*
++ * resets the value of the blow timer, accel register and the clock
++ * and voltage settings
++ */
++static int qfprom_disable_fuse_blowing(const struct qfprom_priv *priv)
++{
++	int ret;
++
++	ret = qfprom_set_voltage_settings(priv, 0, priv->efuse.qfprom_max_vol);
++	if (ret) {
++		dev_err(priv->dev, "qfprom_set_voltage_settings failed\n");
++		return ret;
++	}
++
++	ret = qfprom_reset_clock_settings(priv);
++	if (ret) {
++		dev_err(priv->dev, "qfprom_reset_clock_settings failed\n");
++		return ret;
++	}
++
++	writel(QFPROM_BLOW_TIMER_RESET_VALUE, priv->qfpconf +
++			QFPROM_BLOW_TIMER_OFFSET);
++	writel(priv->efuse.accel_reset_value,
++		priv->qfpconf + QFPROM_ACCEL_OFFSET);
++
++	return 0;
++}
++
++/*
++ * sets the value of the blow timer, accel register and the clock
++ * and voltage settings
++ */
++static int qfprom_enable_fuse_blowing(const struct qfprom_priv *priv)
++{
++	int ret;
++
++	ret = qfprom_set_clock_settings(priv);
++	if (ret) {
++		dev_err(priv->dev, "qpfrom_set_clock_settings()\n");
++		return ret;
++	}
++
++	ret = qfprom_set_voltage_settings(priv, priv->efuse.qfprom_min_vol,
++						priv->efuse.qfprom_max_vol);
++
++	if (ret) {
++		dev_err(priv->dev, "qfprom_set_voltage_settings()\n");
++		return ret;
++	}
++
++	writel(priv->efuse.qfprom_blow_timer_value, priv->qfpconf +
++	       QFPROM_BLOW_TIMER_OFFSET);
++	writel(priv->efuse.accel_value, priv->qfpconf + QFPROM_ACCEL_OFFSET);
++
++	return 0;
++}
++
++/*
++ * API for writing to raw qfprom region - fuse blowing
++ * returns success or failure code as per the conditions
++ */
++static int qfprom_efuse_reg_write(void *context, unsigned int reg, void *_val,
++					size_t bytes)
++{
++	struct qfprom_priv *priv = context;
++	u32 *value = _val;
++	u32 align_check;
++	u32 blow_status = QFPROM_BLOW_STATUS_BUSY;
++	int ret;
++	int i = 0, words = bytes / 4;
++
++	dev_info(priv->dev,
++		 "writing to raw qfprom region : 0x%08x of size: %zd\n",
++		 reg, bytes);
++
++	if (bytes % 4 != 0x00) {
++		dev_err(priv->dev, "Bytes: %zd should be word align\n", bytes);
++		return -EINVAL;
++	}
++
++	align_check = (reg & 0xF);
++	if (value && ((align_check & ~3) == align_check)) {
++		ret = qfprom_enable_fuse_blowing(priv);
++		if (ret) {
++			dev_err(priv->dev, "qfprom_enable_fuse_blowing\n");
++			return ret;
++		}
++
++		ret = readl_relaxed_poll_timeout(priv->qfpconf +
++				QFPROM_BLOW_STATUS_OFFSET, blow_status,
++				(blow_status  != QFPROM_BLOW_STATUS_BUSY),
++				QFPROM_FUSE_BLOW_POLL_PERIOD,
++				priv->efuse.fuse_blow_time_in_us);
++
++		if (ret) {
++			dev_err(priv->dev, "Timeout blow status ready\n");
++			return ret;
++		}
++
++		if (blow_status == QFPROM_BLOW_STATUS_READY) {
++			while (words--)
++				writel(*value++,
++				       priv->qfpraw + reg + (i++ * 4));
++
++			ret = readl_relaxed_poll_timeout(priv->qfpconf +
++				QFPROM_BLOW_STATUS_OFFSET, blow_status,
++				(blow_status  != QFPROM_BLOW_STATUS_BUSY),
++				QFPROM_FUSE_BLOW_POLL_PERIOD,
++				priv->efuse.fuse_blow_time_in_us);
++
++			if (ret) {
++				dev_err(priv->dev, "Timeout blow-status ready\n");
++				return ret;
++			}
++		}
++
++		ret = qfprom_disable_fuse_blowing(priv);
++		if (ret)
++			return ret;
++	} else {
++		dev_err(priv->dev, "Invalid input parameter fuse blow address");
++		return -EINVAL;
++	}
++
++	dev_info(priv->dev, "written successfully raw qfprom region\n");
++
++	return 0;
++}
++
+ static int qfprom_reg_read(void *context,
+ 			unsigned int reg, void *_val, size_t bytes)
+ {
+@@ -22,47 +271,161 @@ static int qfprom_reg_read(void *context,
+ 	int i = 0, words = bytes;
+ 
+ 	while (words--)
+-		*val++ = readb(priv->base + reg + i++);
++		*val++ = readb(priv->qfpraw + reg + i++);
+ 
+ 	return 0;
+ }
+ 
+-static struct nvmem_config econfig = {
+-	.name = "qfprom",
+-	.stride = 1,
+-	.word_size = 1,
+-	.reg_read = qfprom_reg_read,
+-};
++static int qfprom_reg_write(void *context,
++			 unsigned int reg, void *_val, size_t bytes)
++{
++	struct qfprom_priv *priv = context;
++	u8 *val = _val;
++	int i = 0, words = bytes;
++
++	while (words--)
++		writeb(*val++, priv->qfpraw + reg + i++);
++
++	return 0;
++}
+ 
+ static int qfprom_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+-	struct resource *res;
+-	struct nvmem_device *nvmem;
++	struct resource *qfpraw, *qfpconf, *qfpcorrected;
++	struct nvmem_device *nvmem, *nvmem_efuse;
++	struct nvmem_config *econfig, *econfig_efuse;
+ 	struct qfprom_priv *priv;
++	const struct qfprom_efuse_platform_data *drvdata;
++	int ret;
++
++	drvdata = of_device_get_match_data(&pdev->dev);
++	if (!drvdata)
++		return -EINVAL;
+ 
+ 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+ 	if (!priv)
+ 		return -ENOMEM;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	priv->base = devm_ioremap_resource(dev, res);
+-	if (IS_ERR(priv->base))
+-		return PTR_ERR(priv->base);
++	priv->efuse.fuse_blow_time_in_us = drvdata->fuse_blow_time_in_us;
++	priv->efuse.accel_value = drvdata->accel_value;
++	priv->efuse.accel_reset_value = drvdata->accel_reset_value;
++	priv->efuse.qfprom_blow_timer_value = drvdata->qfprom_blow_timer_value;
++	priv->efuse.qfprom_blow_reset_freq = drvdata->qfprom_blow_reset_freq;
++	priv->efuse.qfprom_blow_set_freq = drvdata->qfprom_blow_set_freq;
++	priv->efuse.qfprom_max_vol = drvdata->qfprom_max_vol;
++	priv->efuse.qfprom_min_vol = drvdata->qfprom_min_vol;
++	priv->dev = dev;
++
++	qfpraw = platform_get_resource_byname(pdev, IORESOURCE_MEM, "raw");
++
++	priv->qfpraw = devm_ioremap_resource(dev, qfpraw);
++	if (IS_ERR(priv->qfpraw)) {
++		ret = PTR_ERR(priv->qfpraw);
++		goto err;
++	}
++
++	qfpconf = platform_get_resource_byname(pdev, IORESOURCE_MEM, "conf");
++
++	priv->qfpconf = devm_ioremap_resource(dev, qfpconf);
++	if (IS_ERR(priv->qfpconf)) {
++		ret = PTR_ERR(priv->qfpconf);
++		goto err;
++	}
++
++	qfpcorrected = platform_get_resource_byname(pdev, IORESOURCE_MEM,
++						    "corrected");
++
++	priv->qfpcorrected = devm_ioremap_resource(dev, qfpcorrected);
++	if (IS_ERR(priv->qfpcorrected)) {
++		ret = PTR_ERR(priv->qfpcorrected);
++		goto err;
++	}
++
++	priv->vcc = devm_regulator_get(&pdev->dev, "vcc");
++	if (IS_ERR(priv->vcc)) {
++		ret = PTR_ERR(priv->vcc);
++		if (ret == -ENODEV)
++			ret = -EPROBE_DEFER;
++		goto err;
++	}
+ 
+-	econfig.size = resource_size(res);
+-	econfig.dev = dev;
+-	econfig.priv = priv;
++	priv->secclk = devm_clk_get(dev, "secclk");
++	if (IS_ERR(priv->secclk)) {
++		ret = PTR_ERR(priv->secclk);
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev, "secclk error getting : %d\n", ret);
++		goto err;
++	}
+ 
+-	nvmem = devm_nvmem_register(dev, &econfig);
++	ret = clk_prepare_enable(priv->secclk);
++	if (ret) {
++		dev_err(dev, "clk_prepare_enable() failed\n");
++		goto err;
++	}
+ 
+-	return PTR_ERR_OR_ZERO(nvmem);
++	econfig_efuse = devm_kzalloc(dev, sizeof(*econfig_efuse), GFP_KERNEL);
++	if (!econfig_efuse)
++		return -ENOMEM;
++
++	econfig_efuse->dev = dev;
++	econfig_efuse->name = "qfprom-efuse";
++	econfig_efuse->stride = 1;
++	econfig_efuse->word_size = 1;
++	econfig_efuse->reg_read = qfprom_reg_read;
++	econfig_efuse->reg_write = qfprom_efuse_reg_write;
++	econfig_efuse->size = resource_size(qfpraw);
++	econfig_efuse->priv = priv;
++
++	nvmem_efuse = devm_nvmem_register(dev, econfig_efuse);
++	if (IS_ERR(nvmem_efuse)) {
++		dev_err(&pdev->dev, "failed to register nvmem config\n");
++		return PTR_ERR(nvmem_efuse);
++	}
++
++	econfig = devm_kzalloc(dev, sizeof(*econfig), GFP_KERNEL);
++	if (!econfig)
++		return -ENOMEM;
++
++	econfig->name = "qfprom",
++	econfig->stride = 1,
++	econfig->word_size = 1,
++	econfig->reg_read = qfprom_reg_read,
++	econfig->reg_write = qfprom_reg_write,
++	econfig->size = resource_size(qfpcorrected);
++	econfig->dev = dev;
++	econfig->priv = priv;
++
++	nvmem = devm_nvmem_register(dev, econfig);
++	if (IS_ERR(nvmem)) {
++		dev_err(&pdev->dev, "failed to register nvmem config\n");
++		return PTR_ERR(nvmem);
++	}
++
++err:
++	clk_disable_unprepare(priv->secclk);
++	return ret;
+ }
+ 
++static const struct qfprom_efuse_platform_data sc7180_qfp_efuse_data = {
++	.name = "qfprom",
++	.fuse_blow_time_in_us = 10,
++	.accel_value = 0xD10,
++	.accel_reset_value = 0x800,
++	.qfprom_blow_timer_value = 25,
++	.qfprom_blow_reset_freq = 19200000,
++	.qfprom_blow_set_freq = 4800000,
++	.qfprom_max_vol = 1904000,
++	.qfprom_min_vol = 1800000,
++};
++
+ static const struct of_device_id qfprom_of_match[] = {
+-	{ .compatible = "qcom,qfprom",},
++	{ .compatible = "qcom,qfprom",
++	  .data = &sc7180_qfp_efuse_data
++	},
+ 	{/* sentinel */},
+ };
++
+ MODULE_DEVICE_TABLE(of, qfprom_of_match);
+ 
+ static struct platform_driver qfprom_driver = {
 -- 
-2.17.1
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, hosted by the Linux Foundation.
 
