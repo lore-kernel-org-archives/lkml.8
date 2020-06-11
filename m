@@ -2,91 +2,212 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D050C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A0BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB00A2067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:22:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qQeRu8d9"
+	by mail.kernel.org (Postfix) with ESMTP id B93572067B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:22:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728590AbgFKPWW (ORCPT
+        id S1728601AbgFKPW3 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 11:22:22 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:35018 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728365AbgFKPWV (ORCPT
+        Thu, 11 Jun 2020 11:22:29 -0400
+Received: from seldsegrel01.sonyericsson.com ([37.139.156.29]:1255 "EHLO
+        SELDSEGREL01.sonyericsson.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728365AbgFKPW1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 11:22:21 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05BFGwIx189025;
-        Thu, 11 Jun 2020 15:22:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=F+errMLdvgi4MHt8jCQq09ZX5AvpbDZ+cZ9ta5vO2pQ=;
- b=qQeRu8d9AseQvkn6mmiWlD6UFRviqGajGZpCB4mNg4zU8Yg0+3HgGizUcCZRBNQD4DS8
- p8w8LmzJdXtq6u9UUWQQYHcXXXLHhk8hqI9y6gLjjt8hqxWlT0eGEYhx71kgkHGu6wII
- bzUaU3VJ/Zh88Dkzg0+Nn5YMEyucRur96i524mcIawwORJ176PEbMaSMhH8MT+UtASSt
- WX6ptbjkL6WVwZeKOa4VK/oUtoUJepBkRu7UI7wTNDdi8K0ggQHHm4KlzwwrpnIczYGU
- 9GBJOstKJZoXKJGRhdwAANFY7GseOg93bG+y9h6L28r1oXrVE0GU07nBVApJRaQcR5Cj 8Q== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 31g3sn8cv9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 11 Jun 2020 15:22:15 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05BFIXc3033187;
-        Thu, 11 Jun 2020 15:22:14 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 31gmwvhfn3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Jun 2020 15:22:14 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05BFMDHj017504;
-        Thu, 11 Jun 2020 15:22:13 GMT
-Received: from char.us.oracle.com (/10.152.32.25)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 11 Jun 2020 08:22:13 -0700
-Received: by char.us.oracle.com (Postfix, from userid 1000)
-        id EBBF46A0100; Thu, 11 Jun 2020 11:22:57 -0400 (EDT)
-Date:   Thu, 11 Jun 2020 11:22:57 -0400
-From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        Jason Wang <jasowang@redhat.com>, eperezma@redhat.com
-Subject: Re: [PATCH RFC v8 02/11] vhost: use batched get_vq_desc version
-Message-ID: <20200611152257.GA1798@char.us.oracle.com>
-References: <20200611113404.17810-1-mst@redhat.com>
- <20200611113404.17810-3-mst@redhat.com>
+        Thu, 11 Jun 2020 11:22:27 -0400
+From:   Peter Enderborg <peter.enderborg@sony.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>, <linux-doc@vger.kernel.org>
+CC:     Peter Enderborg <peter.enderborg@sony.com>
+Subject: [PATCH v2] debugfs: Add access restriction option
+Date:   Thu, 11 Jun 2020 17:21:55 +0200
+Message-ID: <20200611152155.2194-1-peter.enderborg@sony.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200611113404.17810-3-mst@redhat.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9649 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0 adultscore=0
- mlxscore=0 mlxlogscore=944 bulkscore=0 malwarescore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006110121
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9649 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
- lowpriorityscore=0 impostorscore=0 cotscore=-2147483648 suspectscore=0
- spamscore=0 bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0
- mlxlogscore=995 clxscore=1011 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006110121
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-SEG-SpamProfiler-Analysis: v=2.3 cv=VdGJw2h9 c=1 sm=1 tr=0 a=Jtaq2Av1iV2Yg7i8w6AGMw==:117 a=IkcTkHD0fZMA:10 a=nTHF0DUjJn0A:10 a=z6gsHLkEAAAA:8 a=tXAC--fUqkprKkcgtVIA:9 a=QEXdDO2ut3YA:10 a=d-OLMTCWyvARjPbQ-enb:22
+X-SEG-SpamProfiler-Score: 0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 07:34:19AM -0400, Michael S. Tsirkin wrote:
-> As testing shows no performance change, switch to that now.
+Since debugfs include sensitive information it need to be treated
+carefully. But it also has many very useful debug functions for userspace.
+With this option we can have same configuration for system with
+need of debugfs and a way to turn it off. This gives a extra protection
+for exposure on systems where user-space services with system
+access are attacked.
 
-What kind of testing? 100GiB? Low latency?
+When enabled it is needed a kernel command line parameter to be activated.
+
+It can be on or off, but also internally on but not seen from user-space.
+This no-fs mode do not register a debugfs as filesystem, but client can
+register their parts in the internal structures. This data can be readed
+with a debugger or saved with a crashkernel. When it is off clients
+get EPERM error when accessing the functions for registering their
+components.
+
+Signed-off-by: Peter Enderborg <peter.enderborg@sony.com>
+---
+ .../admin-guide/kernel-parameters.txt         | 11 +++++
+ fs/debugfs/inode.c                            | 47 +++++++++++++++++++
+ lib/Kconfig.debug                             | 10 ++++
+ 3 files changed, 68 insertions(+)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 4379c6ac3265..b1c1446aa90d 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -827,6 +827,17 @@
+ 			useful to also enable the page_owner functionality.
+ 			on: enable the feature
+ 
++	debugfs=    	[KNL] When CONFIG_DEBUG_FS_RESTRICTED is set, this parameter
++			enable what is exposed to userspace.
++			Format: { on, no_fs, off }
++			on: 	All functions are enabled.
++			no_fs: 	Filesystem is not registered but kernel clients can
++			        access apis and a crashkernel can be used to read
++				it's content. There is noting to mount.
++			off: 	(default) Filesystem is not registered and clients
++			        get a -EPERM as result when trying to register files
++				or directory’s within debugfs.
++
+ 	debugpat	[X86] Enable PAT debugging
+ 
+ 	decnet.addr=	[HW,NET]
+diff --git a/fs/debugfs/inode.c b/fs/debugfs/inode.c
+index b7f2e971ecbc..2bd80a932ae1 100644
+--- a/fs/debugfs/inode.c
++++ b/fs/debugfs/inode.c
+@@ -31,10 +31,17 @@
+ #include "internal.h"
+ 
+ #define DEBUGFS_DEFAULT_MODE	0700
++#ifdef CONFIG_DEBUG_FS_RESTRICTED
++#define DEBUGFS_ALLOW_API 0x2
++#define DEBUGFS_ALLOW_FS 0x1
++#endif
+ 
+ static struct vfsmount *debugfs_mount;
+ static int debugfs_mount_count;
+ static bool debugfs_registered;
++#ifdef CONFIG_DEBUG_FS_RESTRICTED
++static unsigned int debugfs_allow;
++#endif
+ 
+ /*
+  * Don't allow access attributes to be changed whilst the kernel is locked down
+@@ -266,6 +273,10 @@ static struct dentry *debug_mount(struct file_system_type *fs_type,
+ 			int flags, const char *dev_name,
+ 			void *data)
+ {
++#ifdef CONFIG_DEBUG_FS_RESTRICTED
++	if (!(debugfs_allow & DEBUGFS_ALLOW_API))
++		return ERR_PTR(-EPERM);
++#endif
+ 	return mount_single(fs_type, flags, data, debug_fill_super);
+ }
+ 
+@@ -385,6 +396,12 @@ static struct dentry *__debugfs_create_file(const char *name, umode_t mode,
+ 	if (IS_ERR(dentry))
+ 		return dentry;
+ 
++#ifdef CONFIG_DEBUG_FS_RESTRICTED
++	if (!(debugfs_allow & DEBUGFS_ALLOW_API)) {
++		failed_creating(dentry);
++		return ERR_PTR(-EPERM);
++	}
++#endif
+ 	inode = debugfs_get_inode(dentry->d_sb);
+ 	if (unlikely(!inode)) {
+ 		pr_err("out of free dentries, can not create file '%s'\n",
+@@ -541,6 +558,12 @@ struct dentry *debugfs_create_dir(const char *name, struct dentry *parent)
+ 	if (IS_ERR(dentry))
+ 		return dentry;
+ 
++#ifdef CONFIG_DEBUG_FS_RESTRICTED
++	if (!(debugfs_allow & DEBUGFS_ALLOW_API)) {
++		failed_creating(dentry);
++		return ERR_PTR(-EPERM);
++	}
++#endif
+ 	inode = debugfs_get_inode(dentry->d_sb);
+ 	if (unlikely(!inode)) {
+ 		pr_err("out of free dentries, can not create directory '%s'\n",
+@@ -583,6 +606,12 @@ struct dentry *debugfs_create_automount(const char *name,
+ 	if (IS_ERR(dentry))
+ 		return dentry;
+ 
++#ifdef CONFIG_DEBUG_FS_RESTRICTED
++	if (!(debugfs_allow & DEBUGFS_ALLOW_API)) {
++		failed_creating(dentry);
++		return ERR_PTR(-EPERM);
++	}
++#endif
+ 	inode = debugfs_get_inode(dentry->d_sb);
+ 	if (unlikely(!inode)) {
+ 		pr_err("out of free dentries, can not create automount '%s'\n",
+@@ -786,10 +815,28 @@ bool debugfs_initialized(void)
+ }
+ EXPORT_SYMBOL_GPL(debugfs_initialized);
+ 
++static int __init debugfs_kernel(char *str)
++{
++#ifdef CONFIG_DEBUG_FS_RESTRICTED
++	if (str && !strcmp(str, "on"))
++		debugfs_allow = DEBUGFS_ALLOW_API | DEBUGFS_ALLOW_FS;
++	if (str && !strcmp(str, "no-fs"))
++		debugfs_allow |= DEBUGFS_ALLOW_API;
++	if (str && !strcmp(str, "off"))
++		debugfs_allow = 0;
++#endif
++	return 0;
++
++}
++early_param("debugfs", debugfs_kernel);
+ static int __init debugfs_init(void)
+ {
+ 	int retval;
+ 
++#ifdef CONFIG_DEBUG_FS_RESTRICTED
++	if (!(debugfs_allow & DEBUGFS_ALLOW_FS))
++		return -EPERM;
++#endif
+ 	retval = sysfs_create_mount_point(kernel_kobj, "debug");
+ 	if (retval)
+ 		return retval;
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 0217ed126f77..a10b03c20439 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -448,6 +448,16 @@ config DEBUG_FS
+ 
+ 	  If unsure, say N.
+ 
++config DEBUG_FS_RESTRICTED
++	bool "Debug Filesystem restricted"
++	depends on DEBUG_FS
++	help
++	  This is an additional restriction for mounting debugfs. It allows
++	  the kernel to have debugfs compiled, but requires that kernel command
++	  line has a debugfs parameter to register as a filesystem.
++
++	  If unsure, say N.
++
+ source "lib/Kconfig.kgdb"
+ 
+ source "lib/Kconfig.ubsan"
+-- 
+2.17.1
 
