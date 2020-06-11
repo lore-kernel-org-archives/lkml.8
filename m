@@ -2,139 +2,160 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24816C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 06:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B9AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 06:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F17AE2072F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 06:01:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="IXDaj0j/"
+	by mail.kernel.org (Postfix) with ESMTP id C768A2075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 06:06:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgFKGBY (ORCPT
+        id S1726557AbgFKGGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 02:01:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37746 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbgFKGBX (ORCPT
+        Thu, 11 Jun 2020 02:06:55 -0400
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:35261 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726147AbgFKGGz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 02:01:23 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DD31C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 23:01:23 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id x6so4754036wrm.13
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 23:01:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=dnnaL0zcrHZ7GbUpIGBQzwwFoY13H1/kHvqB5tRy/2c=;
-        b=IXDaj0j/nEv/iHebCBAYReXkO8R8Mo+9KtoWgzKFbAZMDAeEy2JyAMhuSUBXfzeh1X
-         /rBonBcefudsu/QFeI5hEepJkUuz579K3GNR/Tg9BAhkfXY+fQOIu/VtVRZ9K4LsXGC5
-         yXPGm9VgA6DO4PAPuWVpR7qe/I/bqLvHWAf4E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=dnnaL0zcrHZ7GbUpIGBQzwwFoY13H1/kHvqB5tRy/2c=;
-        b=Lcg2Mxep9AuQUWb1vbQFT+l6kVbbZonla3gzNmQ0k6PiJr31OPQLyMN/SzbGuHG69G
-         xcrvLRidjChhB8iAquxUVnOGNUIYuTgWP/SDpKYWxdhwnUAx2uP2Vv5md7NkLLzXSofp
-         GUMq6jQVOWmj0hqMIv4TKWlobKbZGmZo/qH05rKvWRlbbV9pK4M7iKiFztnRMLy2gzAG
-         tUeANG/GGv/DxA4IDtSZ49Jx50UBrS6yLUmLixPNGbI7ZuK+roVTDMCp6K5IfezPt2Iz
-         C4nDWS4AxrQn18f/uqFl5StZFE7GaCKzUZlH6kgwEM73Bnw+ptL1P0H81tgcbNzTT+vy
-         C7gA==
-X-Gm-Message-State: AOAM532EISDja8TtktMrIuxF/1219E5fj1iTLNPCu62AcNQMuy1OpGjh
-        nm50lTHWfhWi6uqh3VNQea1ZFZLqhTH7gNzt4mzC6tZrJwzIfrpptvV/3OtXuEpTqCDIFjygpWt
-        YM0J4xgkzT9pJtmgj43xmjeG5PvMVdwNixtU0XdmYv8Us2bcT9ENrqaAbU628dHZZBcyzj7p2Oc
-        haJmqR6giDa9U=
-X-Google-Smtp-Source: ABdhPJwjuCoANT0rp8x0SpyLHDkLH9FBeECjwny6MqSXW7hIPnxV+uo+LogXApi9lsDdS3BYOvQxlw==
-X-Received: by 2002:adf:d0d0:: with SMTP id z16mr7806571wrh.308.1591855280832;
-        Wed, 10 Jun 2020 23:01:20 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id d11sm3211326wrm.64.2020.06.10.23.01.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jun 2020 23:01:20 -0700 (PDT)
-Subject: Re: [PATCH] checkpatch: ignore CamelCase for inttypes.h format
- specifiers
-To:     Joe Perches <joe@perches.com>, Andy Whitcroft <apw@canonical.com>
-Cc:     BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        linux-kernel@vger.kernel.org
-References: <20200610203307.9344-1-scott.branden@broadcom.com>
- <1b2d9ead79a5a035a287b7ecba8655b2c633d5cd.camel@perches.com>
- <a3d5f2c5-40fb-c97d-8365-423213926e89@broadcom.com>
- <6e2e2095f1b6839ec78d41233fa8d908d1bd2bbe.camel@perches.com>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <f524dfb7-ba0b-1a12-9325-457f5e9d7136@broadcom.com>
-Date:   Wed, 10 Jun 2020 23:01:16 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 11 Jun 2020 02:06:55 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01419;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0U.Eg.NV_1591855608;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U.Eg.NV_1591855608)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 11 Jun 2020 14:06:48 +0800
+Subject: Re: [PATCH v11 00/16] per memcg lru lock
+To:     Hugh Dickins <hughd@google.com>
+Cc:     akpm@linux-foundation.org, mgorman@techsingularity.net,
+        tj@kernel.org, khlebnikov@yandex-team.ru,
+        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
+        willy@infradead.org, hannes@cmpxchg.org, lkp@intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, shakeelb@google.com,
+        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com
+References: <1590663658-184131-1-git-send-email-alex.shi@linux.alibaba.com>
+ <alpine.LSU.2.11.2006072100390.2001@eggly.anvils>
+ <31943f08-a8e8-be38-24fb-ab9d25fd96ff@linux.alibaba.com>
+ <alpine.LSU.2.11.2006091904530.2779@eggly.anvils>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <730c595b-f4bf-b16a-562e-de25b9b7eb97@linux.alibaba.com>
+Date:   Thu, 11 Jun 2020 14:06:48 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <6e2e2095f1b6839ec78d41233fa8d908d1bd2bbe.camel@perches.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+In-Reply-To: <alpine.LSU.2.11.2006091904530.2779@eggly.anvils>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joe,
 
-A few questions about changes below.
 
-On 2020-06-10 3:22 p.m., Joe Perches wrote:
-> On Wed, 2020-06-10 at 14:48 -0700, Scott Branden wrote:
->> On 2020-06-10 2:09 p.m., Joe Perches wrote:
->>> On Wed, 2020-06-10 at 13:33 -0700, Scott Branden wrote:
->>>> Ignore CamelCase for inttypes.h for fixed integer types format specifiers.
->>>> (ex. PRIx32 for uint32_t).
->>> Personally, I don't like those.
->> Checkpatch is run against a lot of code outside of the linux kernel but
->> following linux coding style.
-> I know.  I don't have any strong feeling about this either.
->
-> But _this_ checkpatch is specifically for the linux-kernel.
->
-> I just don't want to encourage a bunch of uses of these
-> somewhat useless defines internal to linux-kernel sources.
->
->> There is nothing personal about this, they are the format specifiers in
->> inttypes.h for fixed width types .
-> True.  It's impersonal to me too.
->
->>>> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> []
->>>> @@ -5157,6 +5157,8 @@ sub process {
->>>>    			    $var =~ /[A-Z][a-z]|[a-z][A-Z]/ &&
->>>>    #Ignore Page<foo> variants
->>>>    			    $var !~ /^(?:Clear|Set|TestClear|TestSet|)Page[A-Z]/ &&
->>>> +#Ignore inttypes.h scanf/printf format specifiers for fixed size integer types
->>>> +			    $var !~ /^(?:PRI|SCN)[dxoui](8|16|32|64|PTR|MAX)?$/ &&
-> There are missing format specifiers.
-> If this is done, the test should be against a variable
->
-> Something like:
->
-> our $inttype_format = qr{(?x:
-> 		(?:PRI|SCN)
-> 		[diouxX]
-> 		(?:FAST|LEAST)?
-> 		(?:8|16|32|64|MAX|PTR)
-> };
-I can try adding the "X" and FAST|LEAST.
-But I am not familiar enough with perl or the checkpatch script to 
-understand
-what you mean by test should be against a variable vs what I have done.
-> btw: what about 24, 48, 96, 128 and 256?
-I can't find those values described for inttypes.h format specifiers.
-Where are you looking at those values from?
->
->>>>    #Ignore SI style variants like nS, mV and dB
->>>>    #(ie: max_uV, regulator_min_uA_show, RANGE_mA_VALUE)
->>>>    			    $var !~ /^(?:[a-z0-9_]*|[A-Z0-9_]*)?_?[a-z][A-Z](?:_[a-z0-9_]+|_[A-Z0-9_]+)?$/ &&
+在 2020/6/10 上午11:22, Hugh Dickins 写道:
+> On Mon, 8 Jun 2020, Alex Shi wrote:
+>> 在 2020/6/8 下午12:15, Hugh Dickins 写道:
+>>>>  24 files changed, 487 insertions(+), 312 deletions(-)
+>>> Hi Alex,
+>>>
+>>> I didn't get to try v10 at all, waited until Johannes's preparatory
+>>> memcg swap cleanup was in mmotm; but I have spent a while thrashing
+>>> this v11, and can happily report that it is much better than v9 etc:
+>>> I believe this memcg lru_lock work will soon be ready for v5.9.
+>>>
+>>> I've not yet found any flaw at the swapping end, but fixes are needed
+>>> for isolate_migratepages_block() and mem_cgroup_move_account(): I've
+>>> got a series of 4 fix patches to send you (I guess two to fold into
+>>> existing patches of yours, and two to keep as separate from me).
+>>>
+>>> I haven't yet written the patch descriptions, will return to that
+>>> tomorrow.  I expect you will be preparing a v12 rebased on v5.8-rc1
+>>> or v5.8-rc2, and will be able to include these fixes in that.
+>>
+>> I am very glad to get your help on this feature! 
+>>
+>> and looking forward for your fixes tomorrow. :)
+>>
+>> Thanks a lot!
+>> Alex
+> 
+> Sorry, Alex, the news is not so good today.
+> 
+> You'll have noticed I sent nothing yesterday. That's because I got
+> stuck on my second patch: could not quite convince myself that it
+> was safe.
 
+Hi Hugh,
+
+Thanks a lot for your help and effort! I very appreciate for this.
+
+> 
+> I keep hinting at these patches, and I can't complete their writeups
+> until I'm convinced; but to give you a better idea of what they do:
+> 
+> 1. Fixes isolate_fail and isolate_abort in isolate_migratepages_block().
+
+I guess I know this after mm-compaction-avoid-vm_bug_onpageslab-in-page_mapcount.patch
+was removed.
+
+> 2. Fixes unsafe use of trylock_page() in __isolate_lru_page_prepare().
+> 3. Reverts 07/16 inversion of lock ordering in split_huge_page_to_list().
+> 4. Adds lruvec lock protection in mem_cgroup_move_account().
+
+Sorry for can't follow you for above issues. Anyway, I will send out new patchset
+with the first issue fixed. and then let's discussion base on it.
+
+> 
+> In the second, I was using rcu_read_lock() instead of trylock_page()
+> (like in my own patchset), but could not quite be sure of the case when
+> PageSwapCache gets set at the wrong moment. Gave up for the night, and
+> in the morning abandoned that, instead just shifting the call to
+> __isolate_lru_page_prepare() after the get_page_unless_zero(),
+> where that trylock_page() becomes safe (no danger of stomping on page
+> flags while page is being freed or newly allocated to another owner).
+
+Sorry, I don't know the problem of trylock_page here? Could you like to
+describe it as a race?
+
+> 
+> I thought that a very safe change, but best to do some test runs with
+> it in before finalizing. And was then unpleasantly surprised to hit a
+> VM_BUG_ON_PAGE(lruvec_memcg(lruvec) != page->mem_cgroup) from
+> lock_page_lruvec_irqsave < relock_page_lruvec < pagevec_lru_move_fn <
+> pagevec_move_tail < lru_add_drain_cpu after 6 hours on one machine.
+> Then similar but < rotate_reclaimable_page after 8 hours on another.
+> 
+> Only seen once before: that's what drove me to add patch 4 (with 3 to
+> revert the locking before it): somehow, when adding the lruvec locking
+> there, I just took it for granted that your patchset would have the
+> appropriate locking (or TestClearPageLRU magic) at the other end.
+> 
+> But apparently not. And I'm beginning to think that TestClearPageLRU
+> was just to distract the audience from the lack of proper locking.
+> 
+> I have certainly not concluded that yet, but I'm having to think about
+> an area of the code which I'd imagined you had under control (and I'm
+> puzzled why my testing has found it so very hard to hit). If we're
+> lucky, I'll find that pagevec_move_tail is a special case, and
+> nothing much else needs changing; but I doubt that will be so.
+> 
+> There's one other unexplained and unfixed bug I've seen several times
+> while exercising mem_cgroup_move_account(): refcount_warn_saturate()
+> from where __mem_cgroup_clear_mc() calls mem_cgroup_id_get_many().
+> I'll be glad if that goes away when the lruvec locking is fixed,
+> but don't understand the connection. And it's quite possible that
+> this refcounting bug has nothing to do with your changes: I have
+> not succeeded in reproducing it on 5.7 nor on 5.7-rc7-mm1,
+> but I didn't really try long enough to be sure.
+> 
+> (I should also warn, that I'm surprised by the amount of change
+> 11/16 makes to mm/mlock.c: I've not been exercising mlock at all.)
+
+yes, that is a bit complex. I have tried the mlock cases in selftest with
+your swap&build case. They are all fine with 300 times run.
+
+> 
+> Taking a break for the evening,
+> Hugh
+> 
