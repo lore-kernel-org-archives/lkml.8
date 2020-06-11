@@ -2,132 +2,147 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3573CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10344C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FC4F20792
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:10:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591899041;
-	bh=F5r+9LrUwOHW/0inDk1qiwGqErLuc8dWHLIh1RG7LiU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-	 References:List-ID:From;
-	b=KPtIMjb945l6DiNDSu/e3PJi+8FJBc9Ovru9t3rzgn6Tuv28dwFy5l+6q9ApYshJY
-	 5k+270/UWOyTTrhZAIVmfSqXBKfICtjqPR0bT/4uasSpALPvMNnKhKpgounKl+3A7h
-	 cdGCyCElSdOLf7SNYDFRNals+h/QIejXQb3es0/g=
+	by mail.kernel.org (Postfix) with ESMTP id B73DF206DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:10:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=arctarus.co.uk header.i=@arctarus.co.uk header.b="erUTbztr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728120AbgFKSKj (ORCPT
+        id S1728237AbgFKSKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 14:10:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38610 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726757AbgFKSKW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 14:10:22 -0400
-Received: from localhost.localdomain (c-73-211-240-131.hsd1.il.comcast.net [73.211.240.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C078A20838;
-        Thu, 11 Jun 2020 18:10:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591899021;
-        bh=F5r+9LrUwOHW/0inDk1qiwGqErLuc8dWHLIh1RG7LiU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=pDRM/F/YdUtkQx3ZwbaKxxm1LqpvAy9ct66IyvpeHlBhpO6/KHVy1FaDxG3eyuYHd
-         ZeouaKUljuEtB5AQFxB9BPR31KKumgQvImdVX5wxRUSoBULRLjXdZD2xTGmE53PchO
-         9uTdiPw3HVmkLm6QObelbd2zZfWbAjoEN4oK9F1U=
-From:   zanussi@kernel.org
-To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Daniel Wagner <wagi@monom.org>,
-        Clark Williams <williams@redhat.com>,
-        Pavel Machek <pavel@denx.de>, Tom Zanussi <zanussi@kernel.org>
-Cc:     Kevin Hao <haokexin@gmail.com>, stable-rt@vger.kernel.org
-Subject: [PATCH RT 2/4] mm: slub: Always flush the delayed empty slubs in flush_all()
-Date:   Thu, 11 Jun 2020 13:10:15 -0500
-Message-Id: <7f22ccf72a55f87d771a9dd0ea0c5e227b6b7b5c.1591898986.git.zanussi@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1591898986.git.zanussi@kernel.org>
-References: <cover.1591898986.git.zanussi@kernel.org>
-In-Reply-To: <cover.1591898986.git.zanussi@kernel.org>
-References: <cover.1591898986.git.zanussi@kernel.org>
+        Thu, 11 Jun 2020 14:10:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37724 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728139AbgFKSKs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 14:10:48 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61047C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 11:10:48 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id l26so5797680wme.3
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 11:10:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arctarus.co.uk; s=google;
+        h=subject:from:to:references:cc:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=PxWIg+cu5hCDhII2v9wbQ0ZMb7Qz2pZgUYtSEZ3xfeI=;
+        b=erUTbztrj9ykdylcRa5sGr1YOUmpC8Cr8h4iSoqIrV7z9pcWePah/7I5XNvFhS1a2+
+         cl/P7q6MNkhP0V2Of9YbozKF+d9cH09cSwAo0uZunW2rHzKLC3pJsX2a/Q7H8/lf2foj
+         nuUgA1W3l2XNfpALXppNYs4DFQSHh4jY0P93csFNs512nZ7ZKsgbtnaGT7+fORWAbLeI
+         lmqZHXscDYLnhCHbEtYDHVBzKtnJi5J8X7WRBQmp0SqR6EsJX+g0d5f+fdi8w+whq/oo
+         suQH+kvedXhYkj+VqXPm9Bs+gc9ZEofE9QOTFiybjEkCtSUSIoBQJUQMiP4ZOsYQtdnw
+         KfaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:references:cc:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PxWIg+cu5hCDhII2v9wbQ0ZMb7Qz2pZgUYtSEZ3xfeI=;
+        b=A6l87uiY/2WyA7qiHh4pMNjrgL+LuHuTymorD7uu6tPCw0d4BcO1OlSIHJLTgg+a15
+         HO7UQV5P62Q6SyQDR336llLLODUu0WVOFzttbTrDqeY54U2Uk7+Q9xLQkr+dn8TL6J+j
+         iBxUs0+/EMhTFL/z3QIdQsXvPCE49ho9mXrYxkmLNGOHCizyFl5WpdB5OavAQuyYMj2+
+         Fxkj4M40Qqm9eYDW9qo3IfolNge2NW2m/JtVZsirTdKGfpc8haw6DqQOXb/ygaTIBUiK
+         CGLqIJd7LJPUuzevlIpb4qZLH5lXfEzDxUZmhK9OisocuZXNji20wrHS7pxDc0xU8lq7
+         geew==
+X-Gm-Message-State: AOAM530xxeKC66KklGGBxP3HQq5CXGj7AL0RwIzY3Qv8Sizz6KGcwPAV
+        aG55fU/QcXIOnK5KD9q4rmeope6B0HTlww==
+X-Google-Smtp-Source: ABdhPJwLTQS74BQyiSamYGfvV4TP2Vqpf8tYLkMVwQOS+DgycSghEYWjRyiylQbeYmKCQjizWfdHcQ==
+X-Received: by 2002:a1c:f401:: with SMTP id z1mr8908630wma.44.1591899046738;
+        Thu, 11 Jun 2020 11:10:46 -0700 (PDT)
+Received: from [10.8.16.15] ([194.75.207.226])
+        by smtp.gmail.com with ESMTPSA id o20sm6553286wra.29.2020.06.11.11.10.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Jun 2020 11:10:46 -0700 (PDT)
+Subject: PROBLEM: IPv4 route exception patch breaks BIRD2
+From:   Joseph Marsden <joseph@arctarus.co.uk>
+To:     davem@davemloft.net
+References: <1d797541-3f4a-34fd-669c-0dad6dffd4e0@arctarus.co.uk>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-ID: <8da4a321-a676-0464-f5cf-d467840dbfa7@arctarus.co.uk>
+Date:   Thu, 11 Jun 2020 19:10:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <1d797541-3f4a-34fd-669c-0dad6dffd4e0@arctarus.co.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kevin Hao <haokexin@gmail.com>
+Hi all,
 
-v4.19.127-rt55-rc1 stable review patch.
-If anyone has any objections, please let me know.
+While upgrading my kernel from 5.2 to 5.4.43, I noticed a very sharp
+increase in CPU usage - coming from BIRD, the routing daemon on my system.
+I ran a Netlink capture and saw that BIRD was attempting to insert
+routes twice into the kernel routing table. This was causing routes to
+be re-inserted rapidly, and explained the increase of CPU usage.
 
------------
+I'm running IPv4 and IPv6 full tables - about 789,360 v4 routes and
+78,185 v6 routes. About 10,000 routes fail to be re-inserted and this
+number fluctuated over time as the routing table was updated. The routes
+themselves are sourced from BGP peerings with upstreams on the router.
 
+I tried downgrading BIRD itself several times before realising that it
+must be a kernel issue, so I performed a bisect, and found this patch to
+be the issue:
 
-[ Upstream commit 23a2c31b19e99beaf5107071b0f32a596202cdae ]
+[PATCH net-next v7 04/11] ipv4: Dump route exceptions if requested
+https://lore.kernel.org/netdev/8d3b68cd37fb5fddc470904cdd6793fcf480c6c1.1561131177.git.sbrivio@redhat.com/
 
-After commit f0b231101c94 ("mm/SLUB: delay giving back empty slubs to
-IRQ enabled regions"), when the free_slab() is invoked with the IRQ
-disabled, the empty slubs are moved to a per-CPU list and will be
-freed after IRQ enabled later. But in the current codes, there is
-a check to see if there really has the cpu slub on a specific cpu
-before flushing the delayed empty slubs, this may cause a reference
-of already released kmem_cache in a scenario like below:
-	cpu 0				cpu 1
-  kmem_cache_destroy()
-    flush_all()
-                         --->IPI       flush_cpu_slab()
-                                         flush_slab()
-                                           deactivate_slab()
-                                             discard_slab()
-                                               free_slab()
-                                             c->page = NULL;
-      for_each_online_cpu(cpu)
-        if (!has_cpu_slab(1, s))
-          continue
-        this skip to flush the delayed
-        empty slub released by cpu1
-    kmem_cache_free(kmem_cache, s)
+When I added some debug logging to BIRD, I could see that before the
+patch BIRD was not receiving any FIB exception routes, but after the
+patch, it was receiving many.
+I suspect this is unrelated to the bigger issue here - even if I patch
+BIRD to reject these routes, the problem still occurs and BIRD keeps
+trying to re-insert routes into the kernel routing table twice.
 
-                                       kmalloc()
-                                         __slab_alloc()
-                                            free_delayed()
-                                            __free_slab()
-                                            reference to released kmem_cache
+- Joseph
 
-Fixes: f0b231101c94 ("mm/SLUB: delay giving back empty slubs to IRQ enabled regions")
-Signed-off-by: Kevin Hao <haokexin@gmail.com>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: stable-rt@vger.kernel.org
-Signed-off-by: Tom Zanussi <zanussi@kernel.org>
----
- mm/slub.c | 3 ---
- 1 file changed, 3 deletions(-)
+Extra information:
+Kernel version: Linux version 5.4.43 (nixbld@localhost) (gcc version
+9.2.0 (GCC)) #1-NixOS SMP Wed May 27 15:46:53 UTC 2020
+Most recent kernel version which did not have the bug: 5.2.0
+BIRD version I tested this on: 2.0.7 (also tested on 2.0.2 and other
+older versions)
 
-diff --git a/mm/slub.c b/mm/slub.c
-index d243c6ef7fc9..a9473bbb1338 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -2341,9 +2341,6 @@ static void flush_all(struct kmem_cache *s)
- 	for_each_online_cpu(cpu) {
- 		struct slub_free_list *f;
- 
--		if (!has_cpu_slab(cpu, s))
--			continue;
--
- 		f = &per_cpu(slub_free_list, cpu);
- 		raw_spin_lock_irq(&f->lock);
- 		list_splice_init(&f->list, &tofree);
--- 
-2.17.1
+ver_linux output:
+Linux bdr1 5.4.43 #1-NixOS SMP Wed May 27 15:46:53 UTC 2020 x86_64 GNU/Linux
+
+Util-linux          	2.33.2
+Mount               	2.33.2
+Module-init-tools   	26
+E2fsprogs           	1.45.5
+Linux C Library     	2.30
+Dynamic linker (ldd)	2.30
+Procps              	3.3.16
+Net-tools           	1.60
+Kbd                 	2.0.4
+Console-tools       	2.0.4
+Sh-utils            	8.31
+Udev                	243
+Modules Loaded      	agpgart ata_generic ata_piix atkbd autofs4
+bochs_drm bridge br_netfilter button cdrom crc16 crc32c_generic
+crc_ccitt dm_mod drm drm_kms_helper drm_vram_helper dummy ehci_hcd evdev
+ext4 failover fb_sys_fops floppy gre hid hid_generic i2c_core i2c_piix4
+i8042 input_leds intel_agp intel_gtt ip6_gre ip6table_filter
+ip6table_nat ip6table_raw ip6_tables ip6_tunnel iptable_filter
+iptable_nat iptable_raw ip_tables ipv6 jbd2 joydev led_class libata
+libcrc32c libps2 llc loop mac_hid macvlan mbcache mousedev net_failover
+nf_conntrack nf_conntrack_netlink nf_defrag_ipv4 nf_defrag_ipv6
+nf_log_common nf_log_ipv4 nf_log_ipv6 nf_nat nfnetlink overlay pata_acpi
+psmouse qemu_fw_cfg rng_core rtc_cmos sch_fq_codel scsi_mod serio
+serio_raw sr_mod stp syscopyarea sysfillrect sysimgblt tap ttm tun
+tunnel6 uhci_hcd usb_common usbcore usbhid veth virtio virtio_balloon
+virtio_blk virtio_console virtio_net virtio_pci virtio_ring virtio_rng
+xfrm_algo xfrm_user x_tables xt_addrtype xt_conntrack xt_LOG
+xt_MASQUERADE xt_multiport xt_nat xt_pkttype xt_tcpudp
 
