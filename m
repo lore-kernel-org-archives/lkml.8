@@ -2,142 +2,75 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E650BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 03:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BECAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 03:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B174A2064C
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 03:21:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NpWp9oXK"
+	by mail.kernel.org (Postfix) with ESMTP id 3B3B72064C
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 03:28:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbgFKDVH (ORCPT
+        id S1726375AbgFKD2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 23:21:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41550 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbgFKDVG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 23:21:06 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40DFAC08C5C1;
-        Wed, 10 Jun 2020 20:21:05 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id n141so4360825qke.2;
-        Wed, 10 Jun 2020 20:21:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KO+XPaOLwidNUxOVCzyGJ8t6s2FUjrDroQTVA4h6i4Y=;
-        b=NpWp9oXKXV5x8F+uZlafDV3Wew/8hBai+ILzlyv70VCNvLaBYSh+5kyc0b2yJTTMMP
-         DtqETKDRrL+CCqHRlkbQW+WQ5Td3QaoKHnwulJQ/K5zk/A6lGtm9UvAjGn6QAna4+Qge
-         r+ZiNHYp8cFufxsZRZrIvn8waAfNEVlUUZeALxiCyBKkeGHND92iMpMcJm2dyI5Y+4rW
-         R7XLVci3O/NXTvmGEvLzK81aRMPrOFKel3Pt5MwliVdNyoIWNFODwbiVjmNNw6f3qNbq
-         HedCFSkNN/SsQK+Tkln+YATQKj50SkaEI4yEXvYsCgEZH9jlEqFrMyyjCxTRd0RdqoAN
-         t6Rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KO+XPaOLwidNUxOVCzyGJ8t6s2FUjrDroQTVA4h6i4Y=;
-        b=PFrYhmqcdE/MRZZcSD/LaMNZxJyk93FaC1ajWWJaWhx1ZnnQtPx4x+k2o2tYF7702i
-         tefoWeum+AUQ1saEGSREv52svj91xDKD2YDLnXlew0ZFZbXYOpUk9l3FWc2zck41/8rK
-         IaHKd/jYeP1zsRSKIytCOcGdbxeFiraVYb3Syvt4cjryrQ9n9rEAGCou+zrMudsjZWFM
-         m303+1apI3HSuANlsriUGAoGax1V3P8lHv06g5wUby6yjHVgyQkFytOOdeFiOPE6OnTa
-         MZSh2rgsmidPIUjZGXa+JtaL42/w3Jp9YCQ2h3VYoFTZfwUWj/80BrsOsDA+us5ItNQz
-         YsLw==
-X-Gm-Message-State: AOAM532H5Vqr3O8JtiC44csKAHUR7P5kIi9xVGvgy2UhrkV8iWccFiNT
-        gqJgUXqlzShy1ZE9rhcYJw==
-X-Google-Smtp-Source: ABdhPJwdoCPYrtPMNnQ4h9C6hrM9RAEUVtIaY9eMJIgimLWzZN2mU2PqkJXJ5WTp8ps22h6tJrABgw==
-X-Received: by 2002:ae9:ebd2:: with SMTP id b201mr6266309qkg.409.1591845664321;
-        Wed, 10 Jun 2020 20:21:04 -0700 (PDT)
-Received: from localhost.localdomain ([142.119.96.191])
-        by smtp.googlemail.com with ESMTPSA id r195sm1350279qka.12.2020.06.10.20.21.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 20:21:03 -0700 (PDT)
-From:   Keyur Patel <iamkeyur96@gmail.com>
-To:     "Theodore Ts'o" <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Keyur Patel <iamkeyur96@gmail.com>
-Subject: [PATCH] ext4: fix spelling mistakes in extents.c
-Date:   Wed, 10 Jun 2020 23:19:46 -0400
-Message-Id: <20200611031947.165079-1-iamkeyur96@gmail.com>
-X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 10 Jun 2020 23:28:50 -0400
+Received: from mga18.intel.com ([134.134.136.126]:28223 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726290AbgFKD2u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 23:28:50 -0400
+IronPort-SDR: yUiP/E+kCWGaPqHB8vxDgdGF8JXwjmTuTwSpLFnPcR0F8HrcY/eVdpPH4NRWqPzpN+OX4CHl7J
+ P3QKIjqnSE4Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2020 20:28:49 -0700
+IronPort-SDR: LalyfZGMnEkL6uRGWaE29LKoLCyRxmdx6MmY4lyUAxdKxrOhYGrv49NWuo5DTUQflDPIHtUcBl
+ w3s7aA5vVCXg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,498,1583222400"; 
+   d="scan'208";a="260587328"
+Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.141])
+  by fmsmga008.fm.intel.com with ESMTP; 10 Jun 2020 20:28:47 -0700
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     broonie@kernel.org, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     trix@redhat.com, yilun.xu@intel.com, hao.wu@intel.com,
+        matthew.gerlach@linux.intel.com, russell.h.weight@intel.com
+Subject: [PATCH 0/6] Add more configuration and regmap support for spi-altera
+Date:   Thu, 11 Jun 2020 11:25:05 +0800
+Message-Id: <1591845911-10197-1-git-send-email-yilun.xu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix spelling issues over the comments in the code.
+This patchset adds platform_data for spi-altera, to enable more IP
+configurations, and creating specific spi client devices. It also adds
+regmap support, to enable the indirect access to this IP.
 
-requsted ==> requested
-deterimined ==> determined
-insde ==> inside
-neet ==> need
-somthing ==> something
+We have a PCIE based FPGA platform which integrates this IP to communicate
+with a BMC chip (Intel MAX10) over SPI. The IP is configured as 32bit data
+width. There is also an indirect access interface in FPGA for host to
+access the registers of this IP. This patchset enables this use case.
 
-Signed-off-by: Keyur Patel <iamkeyur96@gmail.com>
----
- fs/ext4/extents.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Matthew Gerlach (1):
+  spi: altera: fix size mismatch on 64 bit processors
 
-diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
-index 7d088ff1e902..8028e1aae8de 100644
---- a/fs/ext4/extents.c
-+++ b/fs/ext4/extents.c
-@@ -1915,7 +1915,7 @@ static unsigned int ext4_ext_check_overlap(struct ext4_sb_info *sbi,
- 
- /*
-  * ext4_ext_insert_extent:
-- * tries to merge requsted extent into the existing extent or
-+ * tries to merge requested extent into the existing extent or
-  * inserts requested extent as new one into the tree,
-  * creating new leaf in the no-space case.
-  */
-@@ -3125,7 +3125,7 @@ static int ext4_ext_zeroout(struct inode *inode, struct ext4_extent *ex)
-  *
-  *
-  * Splits extent [a, b] into two extents [a, @split) and [@split, b], states
-- * of which are deterimined by split_flag.
-+ * of which are determined by split_flag.
-  *
-  * There are two cases:
-  *  a> the extent are splitted into two extent.
-@@ -3650,7 +3650,7 @@ static int ext4_split_convert_extents(handle_t *handle,
- 		eof_block = map->m_lblk + map->m_len;
- 	/*
- 	 * It is safe to convert extent to initialized via explicit
--	 * zeroout only if extent is fully insde i_size or new_size.
-+	 * zeroout only if extent is fully inside i_size or new_size.
- 	 */
- 	depth = ext_depth(inode);
- 	ex = path[depth].p_ext;
-@@ -4495,7 +4495,7 @@ static long ext4_zero_range(struct file *file, loff_t offset,
- 	}
- 
- 	/*
--	 * Round up offset. This is not fallocate, we neet to zero out
-+	 * Round up offset. This is not fallocate, we need to zero out
- 	 * blocks, so convert interior block aligned part of the range to
- 	 * unwritten and possibly manually zero out unaligned parts of the
- 	 * range.
-@@ -5579,7 +5579,7 @@ ext4_swap_extents(handle_t *handle, struct inode *inode1,
- 		}
- 		ex1 = path1[path1->p_depth].p_ext;
- 		ex2 = path2[path2->p_depth].p_ext;
--		/* Do we have somthing to swap ? */
-+		/* Do we have something to swap ? */
- 		if (unlikely(!ex2 || !ex1))
- 			goto finish;
- 
+Xu Yilun (5):
+  spi: altera: add 32bit data width transfer support.
+  spi: altera: add SPI core parameters support via platform data.
+  spi: altera: add platform data for slave information.
+  spi: altera: use regmap instead of direct mmio register access
+  spi: altera: move driver name string to header file
+
+ drivers/spi/Kconfig        |   1 +
+ drivers/spi/spi-altera.c   | 161 +++++++++++++++++++++++++++++++++++++--------
+ include/linux/spi/altera.h |  37 +++++++++++
+ 3 files changed, 171 insertions(+), 28 deletions(-)
+ create mode 100644 include/linux/spi/altera.h
+
 -- 
-2.26.2
+2.7.4
 
