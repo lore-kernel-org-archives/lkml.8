@@ -2,101 +2,90 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E4FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 16:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D67C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 16:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 637C82082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 16:36:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E6C220829
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 16:43:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qowMjbdu"
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="ObrWu3gm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbgFKQgW (ORCPT
+        id S1726553AbgFKQnu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 12:36:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51366 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725824AbgFKQgV (ORCPT
+        Thu, 11 Jun 2020 12:43:50 -0400
+Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:49224 "EHLO
+        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726441AbgFKQnu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 12:36:21 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39FE1C08C5C1;
-        Thu, 11 Jun 2020 09:36:20 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id s21so5949591oic.9;
-        Thu, 11 Jun 2020 09:36:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3OIkJTnbC9/J/at4KtnWFQYW8cUJ1h1xUBzB/M6Jqjg=;
-        b=qowMjbduJb4fdYh/wOL3xk4gMnMJjMX/YMpMHNHLFbFfEBc0eW0LYimV6yY4ebxQ/B
-         7417HbNq5P/5arcKzbqEMfZoUAZnfuUUIho4+KJsTdmCPjp39qI5eWdD5aro5NEBc1KQ
-         4GaPt+M6L+J3VaebksAMg48XwOcUY/4DS8Gtmu5Iv8u24fST8r8Usy0b/RuPSdcFBUdc
-         zKCLADF1WndtRAQKGoRBUIG1s3Tl0/fZ+FMjeyr03k5gwoZNOkPYxhVl+Ov2srRl9wTG
-         LSuhhPwymLv+OTK9g8hfQzvqG+AFWJPx8DeFhqbIzY6y1lVTpZaCbVaHwhNY+p/DjDpK
-         raeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3OIkJTnbC9/J/at4KtnWFQYW8cUJ1h1xUBzB/M6Jqjg=;
-        b=f73UlNCe3vmTO0otyvb5WlwlJ3bRLppja24EQyxz6AyBguFUYvILsz1DwAIuQivU9v
-         H3WjG3ApZExZSVaODu/B0KXgRZIVsLhTqMb64+zWHo/0L9VDjY1yDjlPJmrQLQunQe+z
-         DgPuvf/CJWMGjY8ezkgwDVvpDOfIhXpFik0x8UmSUxwC2HdXl5DcMa51GOZzzOA/31Ah
-         lQ7MkT12QX+sX5dgjUIMu/8zVxaYP7RVvgLwY+33bw5AP2q+NMGREUBltEiXtzw3Ipyu
-         SH/2aqVpCHeDzOf9gYgw9+UptuQT+JpYCKf+3nSlg7tFA5hXw7eAlB8i/OIFMiETo6Sa
-         NPRQ==
-X-Gm-Message-State: AOAM531fu3n8iGqHuFD6umVIPNif9LbIYynegmXxFLjrVkZPmSUzlgOo
-        sVgtcx0RNEuM//K1Bpr1JQSd+kJZqSViesZwKoI=
-X-Google-Smtp-Source: ABdhPJwKf3Q0KMeaqx7WPXFay3dw0Vt/+Vge468W3fGcNFpeE0A006cQEQmQTsa9Q8Zf6sYJqaTlH3Ykf2UmQxxcuos=
-X-Received: by 2002:aca:ec97:: with SMTP id k145mr6749390oih.92.1591893379701;
- Thu, 11 Jun 2020 09:36:19 -0700 (PDT)
+        Thu, 11 Jun 2020 12:43:50 -0400
+Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
+        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 4E53C2E161D;
+        Thu, 11 Jun 2020 19:43:47 +0300 (MSK)
+Received: from sas1-9998cec34266.qloud-c.yandex.net (sas1-9998cec34266.qloud-c.yandex.net [2a02:6b8:c14:3a0e:0:640:9998:cec3])
+        by mxbackcorp2j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id QP4aRPdUbY-hj6a89VL;
+        Thu, 11 Jun 2020 19:43:47 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1591893827; bh=EFVYIbdee4/gqamUqSCCUMt5aNXpP7EfA75Cnk/jXt8=;
+        h=In-Reply-To:Message-Id:References:Date:Subject:To:From:Cc;
+        b=ObrWu3gmSAPBmg9wBfovya2GcJvQiZwJE7OkyF5HKzRndJiRi5D+PZmAZxYmOihM9
+         62IA64q8lZJ38EqskO5z7He2L7PUzy7Sx3ub6iQ3ImLwv9sA55m+zWDNCXoQginssR
+         24KZmEeOehzR0LE1FCjoygofxOoGdGAexEc6rOBc=
+Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from 37.9.121.110-vpn.dhcp.yndx.net (37.9.121.110-vpn.dhcp.yndx.net [37.9.121.110])
+        by sas1-9998cec34266.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id Q6CayAinZw-hjWaeBXS;
+        Thu, 11 Jun 2020 19:43:45 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+From:   Dmitry Yakunin <zeil@yandex-team.ru>
+To:     osalvador@suse.de
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        mhocko@kernel.org, mike.kravetz@oracle.com,
+        n-horiguchi@ah.jp.nec.com, max7255@yandex-team.ru
+Subject: Re: [RFC PATCH v2 00/16] Hwpoison rework {hard,soft}-offline
+Date:   Thu, 11 Jun 2020 19:43:19 +0300
+Message-Id: <20200611164319.16860-1-zeil@yandex-team.ru>
+In-Reply-To: <20191017142123.24245-1-osalvador@suse.de>
+References: <20191017142123.24245-1-osalvador@suse.de>
 MIME-Version: 1.0
-References: <20200611155830.8941-1-trix@redhat.com>
-In-Reply-To: <20200611155830.8941-1-trix@redhat.com>
-From:   Stephen Smalley <stephen.smalley.work@gmail.com>
-Date:   Thu, 11 Jun 2020 12:36:08 -0400
-Message-ID: <CAEjxPJ4nz=1-eeQtU+V5r_ULvpT9Thh6TB4G=2gu2fivyo6KaA@mail.gmail.com>
-Subject: Re: [PATCH] selinux: fix another double free
-To:     trix@redhat.com
-Cc:     Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Ondrej Mosnacek <omosnace@redhat.com>, weiyongjun1@huawei.com,
-        SElinux list <selinux@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 11:58 AM <trix@redhat.com> wrote:
->
-> From: Tom Rix <trix@redhat.com>
->
-> Clang static analysis reports this double free error
->
-> security/selinux/ss/conditional.c:139:2: warning: Attempt to free released memory [unix.Malloc]
->         kfree(node->expr.nodes);
->         ^~~~~~~~~~~~~~~~~~~~~~~
->
-> When cond_read_node fails, it calls cond_node_destroy which frees the
-> node but does not poison the entry in the node list.  So when it
-> returns to its caller cond_read_list, cond_read_list deletes the
-> partial list.  The latest entry in the list will be deleted twice.
->
-> So instead of freeing the node in cond_read_node, let list freeing in
-> code_read_list handle the freeing the problem node along with all of the the
-> earlier nodes.
->
-> Signed-off-by: Tom Rix <trix@redhat.com>
+Hello!
 
-Looks like this was introduced by
-60abd3181db29ea81742106cc0ac2e27fd05b418 ("selinux: convert cond_list
-to array").
+We are faced with similar problems with hwpoisoned pages
+on one of our production clusters after kernel update to stable 4.19.
+Application that does a lot of memory allocations sometimes caught SIGBUS signal
+with message in dmesg about hardware memory corruption fault.
+In kernel and mce logs we saw messages about soft offlining pages with
+correctable errors. Those events always had happened before application
+was killed. This is not the behavior we expect. We want our application to
+continue working on a smaller set of available pages in the system.
 
-Acked-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+This issue is difficult to reproduce, but we suppose that the reason for such
+behavior is that compaction does not check for page poisonness while processing
+free pages, so as a result valid userspace data gets migrated to bad pages.
+We wrote the simple test:
+  - soft offline first 4 pages in every 64 continuous pages in ZONE_NORMAL
+    through writing pfn to /sys/devices/system/memory/soft_offline_page
+  - force compaction by echo 1 >> /proc/sys/vm/compact_memory
+Without this patch series after these steps bash became unusable
+and every attempt to run any command leads to SIGBUS with message about
+hardware memory corruption fault. And after applying this series to our kernel
+tree we cannot reproduce such SIGBUSes by our test. On upstream kernel 5.7
+this behavior is still reproducible.
+
+So, we want to know, why this patchset wasn't merged to the upstream?
+Is there any problems in such rework for {soft,hard}-offline handling?
+BTW, this patchset should be updated with upstream changes in mm.
+
+Thanks for you replies.
+
+--
+Dmitry Yakunin
