@@ -4,163 +4,152 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 209F2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A54AAC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE31920747
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:27:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D94120747
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:28:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726375AbgFKC15 (ORCPT
+        id S1726418AbgFKC2y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 22:27:57 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:58980 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726279AbgFKC15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 22:27:57 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 7ABD42F40A3152786A0A;
-        Thu, 11 Jun 2020 10:27:54 +0800 (CST)
-Received: from [127.0.0.1] (10.173.221.213) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Thu, 11 Jun 2020
- 10:27:45 +0800
-Subject: Re: [RFC PATCH v4 08/10] i40e/vf_migration: VF live migration -
- pass-through VF first
-To:     Yan Zhao <yan.y.zhao@intel.com>
-CC:     <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <alex.williamson@redhat.com>, <cohuck@redhat.com>,
-        <zhenyuw@linux.intel.com>, <zhi.a.wang@intel.com>,
-        <kevin.tian@intel.com>, <shaopeng.he@intel.com>,
-        <yi.l.liu@intel.com>, <xin.zeng@intel.com>, <hang.yuan@intel.com>,
-        "Wang Haibin" <wanghaibin.wang@huawei.com>
-References: <20200518024202.13996-1-yan.y.zhao@intel.com>
- <20200518025316.14491-1-yan.y.zhao@intel.com>
- <e45d5bb6-6f15-dd4d-6de2-478b36f88069@huawei.com>
- <20200611002319.GC13961@joy-OptiPlex-7040>
-From:   Xiang Zheng <zhengxiang9@huawei.com>
-Message-ID: <fe5c0a64-003c-1db6-8256-f0dc00333f1d@huawei.com>
-Date:   Thu, 11 Jun 2020 10:27:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Wed, 10 Jun 2020 22:28:54 -0400
+Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:58165 "EHLO
+        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726279AbgFKC2y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 22:28:54 -0400
+Received: from dread.disaster.area (pa49-180-124-177.pa.nsw.optusnet.com.au [49.180.124.177])
+        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id 53C71760B7A;
+        Thu, 11 Jun 2020 12:28:49 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jjCxU-0002QN-7L; Thu, 11 Jun 2020 12:28:48 +1000
+Date:   Thu, 11 Jun 2020 12:28:48 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Yu Kuai <yukuai3@huawei.com>
+Cc:     darrick.wong@oracle.com, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yi.zhang@huawei.com
+Subject: Re: [RFC PATCH] fix use after free in xlog_wait()
+Message-ID: <20200611022848.GQ2040@dread.disaster.area>
+References: <20200611013952.2589997-1-yukuai3@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200611002319.GC13961@joy-OptiPlex-7040>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.221.213]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200611013952.2589997-1-yukuai3@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
+        a=k3aV/LVJup6ZGWgigO6cSA==:117 a=k3aV/LVJup6ZGWgigO6cSA==:17
+        a=kj9zAlcOel0A:10 a=nTHF0DUjJn0A:10 a=i0EeH86SAAAA:8 a=7-415B0cAAAA:8
+        a=lJGGXNzYajzh12HJQzkA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2020/6/11 8:23, Yan Zhao wrote:
-> On Wed, Jun 10, 2020 at 04:59:43PM +0800, Xiang Zheng wrote:
->> Hi Yan,
->>
->> few nits below...
->>
->> On 2020/5/18 10:53, Yan Zhao wrote:
->>> This driver intercepts all device operations as long as it's probed
->>> successfully by vfio-pci driver.
->>>
->>> It will process regions and irqs of its interest and then forward
->>> operations to default handlers exported from vfio pci if it wishes to.
->>>
->>> In this patch, this driver does nothing but pass through VFs to guest
->>> by calling to exported handlers from driver vfio-pci.
->>>
->>> Cc: Shaopeng He <shaopeng.he@intel.com>
->>>
->>> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
->>> ---
->>>  drivers/net/ethernet/intel/Kconfig            |  10 ++
->>>  drivers/net/ethernet/intel/i40e/Makefile      |   2 +
->>>  .../ethernet/intel/i40e/i40e_vf_migration.c   | 165 ++++++++++++++++++
->>>  .../ethernet/intel/i40e/i40e_vf_migration.h   |  59 +++++++
->>>  4 files changed, 236 insertions(+)
->>>  create mode 100644 drivers/net/ethernet/intel/i40e/i40e_vf_migration.c
->>>  create mode 100644 drivers/net/ethernet/intel/i40e/i40e_vf_migration.h
->>>
->>> diff --git a/drivers/net/ethernet/intel/Kconfig b/drivers/net/ethernet/intel/Kconfig
->>> index ad34e4335df2..31780d9a59f1 100644
->>> --- a/drivers/net/ethernet/intel/Kconfig
->>> +++ b/drivers/net/ethernet/intel/Kconfig
->>> @@ -264,6 +264,16 @@ config I40E_DCB
->>>  
->>>  	  If unsure, say N.
->>>  
-
-[...]
-
->>> diff --git a/drivers/net/ethernet/intel/i40e/i40e_vf_migration.h b/drivers/net/ethernet/intel/i40e/i40e_vf_migration.h
->>> new file mode 100644
->>> index 000000000000..696d40601ec3
->>> --- /dev/null
->>> +++ b/drivers/net/ethernet/intel/i40e/i40e_vf_migration.h
->>> @@ -0,0 +1,59 @@
->>> +/* SPDX-License-Identifier: GPL-2.0 */
->>> +/* Copyright(c) 2013 - 2019 Intel Corporation. */
->>> +
->>> +#ifndef I40E_MIG_H
->>> +#define I40E_MIG_H
->>> +
->>> +#include <linux/pci.h>
->>> +#include <linux/vfio.h>
->>> +#include <linux/mdev.h>
->>> +
->>> +#include "i40e.h"
->>> +#include "i40e_txrx.h"
->>> +
->>> +/* helper macros copied from vfio-pci */
->>> +#define VFIO_PCI_OFFSET_SHIFT   40
->>> +#define VFIO_PCI_OFFSET_TO_INDEX(off)   ((off) >> VFIO_PCI_OFFSET_SHIFT)
->>> +#define VFIO_PCI_INDEX_TO_OFFSET(index)	((u64)(index) << VFIO_PCI_OFFSET_SHIFT)
->>> +#define VFIO_PCI_OFFSET_MASK    (((u64)(1) << VFIO_PCI_OFFSET_SHIFT) - 1)
->>> +
->>> +/* Single Root I/O Virtualization */
->>> +struct pci_sriov {
->>> +	int		pos;		/* Capability position */
->>> +	int		nres;		/* Number of resources */
->>> +	u32		cap;		/* SR-IOV Capabilities */
->>> +	u16		ctrl;		/* SR-IOV Control */
->>> +	u16		total_VFs;	/* Total VFs associated with the PF */
->>> +	u16		initial_VFs;	/* Initial VFs associated with the PF */
->>> +	u16		num_VFs;	/* Number of VFs available */
->>> +	u16		offset;		/* First VF Routing ID offset */
->>> +	u16		stride;		/* Following VF stride */
->>> +	u16		vf_device;	/* VF device ID */
->>> +	u32		pgsz;		/* Page size for BAR alignment */
->>> +	u8		link;		/* Function Dependency Link */
->>> +	u8		max_VF_buses;	/* Max buses consumed by VFs */
->>> +	u16		driver_max_VFs;	/* Max num VFs driver supports */
->>> +	struct pci_dev	*dev;		/* Lowest numbered PF */
->>> +	struct pci_dev	*self;		/* This PF */
->>> +	u32		cfg_size;	/* VF config space size */
->>> +	u32		class;		/* VF device */
->>> +	u8		hdr_type;	/* VF header type */
->>> +	u16		subsystem_vendor; /* VF subsystem vendor */
->>> +	u16		subsystem_device; /* VF subsystem device */                                                                                   
->>> +	resource_size_t	barsz[PCI_SRIOV_NUM_BARS];	/* VF BAR size */
->>> +	bool		drivers_autoprobe; /* Auto probing of VFs by driver */
->>> +};
->>> +
->>
->> Can "struct pci_sriov" be extracted for common use? This should not be exclusive
->> for "i40e_vf migration support".
->>
-> the definition of this structure is actually in driver/pci/pci.h.
-> maybe removing the copy here and use below include is better?
-> #include "../../../../pci/pci.h"
+On Thu, Jun 11, 2020 at 09:39:52AM +0800, Yu Kuai wrote:
+> I recently got UAF by running generic/019 in qemu:
 > 
+> ==================================================================
+>   BUG: KASAN: use-after-free in __lock_acquire+0x4508/0x68c0
+>   Read of size 8 at addr ffff88811327f080 by task fio/11147
+....
+>    remove_wait_queue+0x1d/0x180
+>    xfs_log_commit_cil+0x1d9e/0x2a50
+>    __xfs_trans_commit+0x292/0xec0
 
-How about moving the definition from driver/pci/pci.h into include/linux/pci.h? So
-we can just include "linux/pci.h" and removing the copy here.
+Ok, so this is waking up from a the CIL context overrunning the hard
+size limit....
 
+>    Freed by task 6826:
+>    save_stack+0x1b/0x40
+>    __kasan_slab_free+0x12c/0x170
+>    kfree+0xd6/0x300
+>    kvfree+0x42/0x50
+>    xlog_cil_committed+0xa9c/0xf30
+>    xlog_cil_push_work+0xa8c/0x1250
+>    process_one_work+0xa3e/0x17a0
+>    worker_thread+0x8e2/0x1050
+>    kthread+0x355/0x470
+>    ret_from_fork+0x22/0x30
+
+Hmmmm. The CIL push work freed the context which means somethign
+went wrong somewhere - we must be in CIL commit error path here...
+
+/me checks generic/019
+
+Oh, it's a repeated shutdown test. Right, so we're getting a
+shutdown in the middle of a CIL push when the CIL is hard throttling
+callers and the CIL context gets freed before the throttled tasks
+can be woken.
+
+Gotcha. Yup, that's a real issue, thanks for reporting it!
+
+> I think the reason is that when 'ctx' is freed in xlog_cil_committed(),
+> a previous call to xlog_wait(&ctx->xc_ctx->push_wait, ...) hasn't finished
+> yet. Thus when remove_wait_queue() is called, UAF will be triggered
+> since 'ctx' was freed:
+> 
+> thread1		    thread2             thread3
+> 
+> __xfs_trans_commit
+>  xfs_log_commit_cil
+>   xlog_wait
+>    schedule
+>                     xlog_cil_push_work
+> 		     wake_up_all
+> 		                        xlog_cil_committed
+> 					 kmem_free
+>    remove_wait_queue
+>     spin_lock_irqsave --> UAF
+
+Actually, it's a lot simpler:
+
+thread1			thread2
+
+__xfs_trans_commit
+ xfs_log_commit_cil
+  xlog_wait
+   schedule
+			xlog_cil_push_work
+			wake_up_all
+			<shutdown aborts commit>
+			xlog_cil_committed
+			kmem_free
+
+   remove_wait_queue
+    spin_lock_irqsave --> UAF
+
+> Instead, make sure waitqueue_active(&ctx->push_wait) return false before
+> freeing 'ctx'.
+> 
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> ---
+>  fs/xfs/xfs_log_cil.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
+> index b43f0e8f43f2..59b21485b0fc 100644
+> --- a/fs/xfs/xfs_log_cil.c
+> +++ b/fs/xfs/xfs_log_cil.c
+> @@ -607,7 +607,7 @@ xlog_cil_committed(
+>  
+>  	if (!list_empty(&ctx->busy_extents))
+>  		xlog_discard_busy_extents(mp, ctx);
+> -	else
+> +	else if (!waitqueue_active(&ctx->push_wait))
+>  		kmem_free(ctx);
+
+That will just leak the memory instead, which is no better.
+
+Let me go write a patch to fix this.
+
+Cheers,
+
+Dave.
 -- 
-Thanks,
-Xiang
-
+Dave Chinner
+david@fromorbit.com
