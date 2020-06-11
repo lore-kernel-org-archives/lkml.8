@@ -2,164 +2,155 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B7CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA0DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4098F20792
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5E31206DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:41:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="UMkzd58t"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="hh6nt0II"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728599AbgFKPjy (ORCPT
+        id S1728636AbgFKPl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 11:39:54 -0400
-Received: from mout.gmx.net ([212.227.17.20]:59183 "EHLO mout.gmx.net"
+        Thu, 11 Jun 2020 11:41:27 -0400
+Received: from mga11.intel.com ([192.55.52.93]:61111 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728104AbgFKPjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 11:39:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1591889982;
-        bh=duYddU7rZ/sCtC2hxJLn7gufkhi9vJTrZjvVF5a0TQ4=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:References:Date:In-Reply-To;
-        b=UMkzd58thGfJBde5a2CIRPH4Ee9AEmSr32w+3bLLP9w9mzhfQN4yk8WWYbsIv3Eut
-         Z15JNaxojAmDuKx0E7RGYhKB8yTEIpV4191o3jKuMBKJ7GqTP9Syef5bIsTmlDhzB9
-         alj5Z5x9CeFff7u0fHtGeEFnVSkxNqvhOtTzMG4k=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from strobe-jhalfs ([178.6.148.191]) by mail.gmx.com (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1M72sJ-1jqpY91nl1-008deo; Thu, 11
- Jun 2020 17:39:42 +0200
-From:   Stephen Berman <stephen.berman@gmx.net>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: power-off delay/hang due to commit 6d25be57 (mainline)
-References: <87bln7ves7.fsf@gmx.net>
-        <20200506215713.qoo4enq32ckcjmz7@linutronix.de>
-        <87v9l65d2y.fsf@gmx.net>
-        <20200513220428.4nksinis2qs5dtmh@linutronix.de>
-        <87mu6aurfn.fsf@gmx.net>
-        <20200522164012.ynyvrjompv42jtmx@linutronix.de>
-        <87y2owwo2o.fsf@rub.de>
-        <20200609202339.cgy57twm2zdtjhje@linutronix.de>
-        <87tuzjcovq.fsf@gmx.net>
-        <20200610102514.4vdzu5u7d6vnpicn@linutronix.de>
-        <87imfyh6yx.fsf@gmx.net>
-Date:   Thu, 11 Jun 2020 17:39:40 +0200
-In-Reply-To: <87imfyh6yx.fsf@gmx.net> (Stephen Berman's message of "Thu, 11
-        Jun 2020 00:49:26 +0200")
-Message-ID: <87wo4dligz.fsf@gmx.net>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
+        id S1728422AbgFKPl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 11:41:26 -0400
+IronPort-SDR: IuFDu1E4r5VHd0r/kHj3NMQjPTCERNCEOnIxkffVdAiPzxsbZ4yh91plQUzzd40kVKrEMifHQm
+ cn/cPr0msLjQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 08:41:26 -0700
+IronPort-SDR: fueJ0QLG3RqFywjH4ExWaslAga+/8NrUelGnTHZNcON3zheYo9sESIzoz+tap8KLz5LQP6+uN6
+ NLjmy4oq1QOg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,499,1583222400"; 
+   d="scan'208";a="473739682"
+Received: from orsmsx101.amr.corp.intel.com ([10.22.225.128])
+  by fmsmga006.fm.intel.com with ESMTP; 11 Jun 2020 08:41:26 -0700
+Received: from ORSEDG001.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX101.amr.corp.intel.com (10.22.225.128) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 11 Jun 2020 08:41:25 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.49) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Thu, 11 Jun 2020 08:41:25 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BiIZTwBICbU3CWh+96FlBZeMDErKFdAujxivR2W/MHdtAKqe0BxmUcIFbx9qmG1gsLmoqHdN/eSFmq3QXnmcLegUYWUbsyqu/sSs5O4Zv+JBrS+f3rgtqiDs6lE61leLh4bY6U7fzCEb31REKe1UobSz8ZSP3gHtkJQjV234jQEjMJBLedftbjzTlBYuIkz/ZB1XoyjPuEBC1LL3uh1390Sxxllok6z5vSuv4qMd4h4BXXcnkxVrYqiNC0Z9y9hrMjGb52D7XDknyiCnL7WxzMti368JssfiqcRaNPi/pEjRrebZamSVV9xRgFY1PNSm3MTMndXyPsXG+RLXOUUqgQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=q2ZCakJjUE8tzN1eSbco+zNVDptr6m9rGEFV6/HZHWM=;
+ b=LMD94TtySXjfBc50PzPHnxoa5aO1yYUmGZZmjNF6/hTrFYgwL3eIpVftPybOFWs9HtDhmiNnj7PLICvbGFQEzkl5Y1NroBWhlvEX6rT46LHaDG/dGrUL4Jv46B7EDXYCI3NlOMTrCJ1vq3hsIBLmPNO+oJsKoWpQJPM9hQPpxy/K0kuH2E4jJRh5FZtXrywnN1pwJk+LMSRjgbozhm0DcetB8iSJ/Z3bltr5WiZaht2ITa27xWUaPUn2pcBDWspP75Ssmpa1+s/7zG6+M4J1VLN8pQRu+7mJ5zcZ+mnxmO3PSjq++WLUCQCTTid/eq2CizL162C76Rl7fGRxI1YPXg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=q2ZCakJjUE8tzN1eSbco+zNVDptr6m9rGEFV6/HZHWM=;
+ b=hh6nt0IIizH/j/9URc872VzT5FHRGZdaFS/E5E3ImsyI2C619X7EBosn0PDp2jyI1SfMYqqs8brOL5gWHIIdtZt3i4hp77cpZORJFUzh2TjNEgT6pWltxug7i+34S0D0LTIuoD13rZ9hpdIDCcsi761twz/URPs0buHFnqIYNlo=
+Received: from BN6PR1101MB2145.namprd11.prod.outlook.com
+ (2603:10b6:405:51::10) by BN6PR11MB4067.namprd11.prod.outlook.com
+ (2603:10b6:405:7e::35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.22; Thu, 11 Jun
+ 2020 15:41:23 +0000
+Received: from BN6PR1101MB2145.namprd11.prod.outlook.com
+ ([fe80::c908:e244:e85:3362]) by BN6PR1101MB2145.namprd11.prod.outlook.com
+ ([fe80::c908:e244:e85:3362%9]) with mapi id 15.20.3066.023; Thu, 11 Jun 2020
+ 15:41:23 +0000
+From:   "Bowers, AndrewX" <andrewx.bowers@intel.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>
+Subject: RE: [Intel-wired-lan] [PATCH] i40e: silence an UBSAN false positive
+Thread-Topic: [Intel-wired-lan] [PATCH] i40e: silence an UBSAN false positive
+Thread-Index: AQHWPdtY9EVDXYNXok6jepffJZYYnKjTkZxA
+Date:   Thu, 11 Jun 2020 15:41:23 +0000
+Message-ID: <BN6PR1101MB21456AF399BB25055FC8A83F8C800@BN6PR1101MB2145.namprd11.prod.outlook.com>
+References: <20200606200116.1398-1-cai@lca.pw>
+In-Reply-To: <20200606200116.1398-1-cai@lca.pw>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+authentication-results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [71.59.183.208]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cd49c9b9-bfe6-41fc-beef-08d80e1de529
+x-ms-traffictypediagnostic: BN6PR11MB4067:
+x-microsoft-antispam-prvs: <BN6PR11MB406716AB33DA31ABDFDE93958C800@BN6PR11MB4067.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-forefront-prvs: 0431F981D8
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: bdw7pdTmrH131Fad+VDuPiWB59Iqw1PNhMMoLc2pjRS0bUZ/MRT4BwkzWSE22DX5KF7iCJoZWGIEWMgvz1vOPHqmj2sDgDT+EOPBhkuOfegy/3GJST5nt5P3/SKIWCWi7KixGxC7eIyxW6Ly+yPUivqsD/Hd7G0nNDUd6t7aFrHe0DEK56MaY0Pfw9AC8Z+oyJ8ksC1aWsCVmpJrv/4DWZWiFZ6FwTpcj1xbLGYeuyAFbdPl4ZoVVdp7HXcMIcSMfkmEw1DPSW7PP1mnWcz4nIfB8vWyLxgNwamaQrXlfdsxevrB7iAxh8YrVx+d69M9uVXCsJ0qBx/DGdWdNNMIcg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR1101MB2145.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(396003)(39860400002)(376002)(346002)(136003)(8936002)(316002)(71200400001)(8676002)(4326008)(2906002)(5660300002)(55016002)(109986005)(54906003)(9686003)(478600001)(26005)(83380400001)(86362001)(52536014)(186003)(7696005)(6506007)(53546011)(33656002)(66476007)(66556008)(66946007)(76116006)(64756008)(66446008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: I00bZPMFdgUyUI/k3CsKFqmDIyW1WnS02+SEoWFlU9Kjt6c480ckVBmSwg+99caHprMsEgRrHNZRMBbGmU3UGogG0CR8fvktDxQaTsbb2z7aZW++b2GY2OI1gNnh0vplQsBhcSu/Y0pGO7/EMm1Ag+5cU/2NX3muhYX+N7WB7xSUI1lOnP9CDY1efJ1KrV14Au04nox9CtEeM5YyUpztPDZtJ12HK+U4+9Cowd1vn4cj7MnIs5AIhMZOa/Hoa4mHciJIIfqX7Llz9QJLyUgLA4v31NZpBAd7o8CUzIMiCysniij4UBJpMphGVxVmAPqjcPQj8NUjCg4CaKzpGbEfS84xeFgfAAXu+AidG+5F64ws25vQdD3NWrMIZ6Rsk1khdJ/rfYsXYXtuaWpAtwZmzut+9eHN1DeoCaZi5Lr1WtP0zE5kdZL2NmEbp4n6uoJxS+22jYuEGoYCsWOKOng8ttV1losMWs/5A5HA6G9tQFA=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Provags-ID: V03:K1:YaG4ZGm00kCZCNwUK5e+OOIW7mUztVomXm6KpW7zOVhozRyidMB
- xQpFnWxqDIYCem3Iwc/EzAIkSc8hSrAnkTmRi57IdTleKwpnKE//nisOmWgBnzv2QNxdcyt
- 9rdFM/sD+ICZJMNQ62h2moOIrgBP3iWMsjAJXPQ+MmAYcNQfUolP6BmRlDbyLnHldM0zytB
- Vs61qGUfJ+pStfNdHKzMA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:yQZagXvcqfY=:4UQXG2Uf6qP/u34yuqp1B9
- 8L7VgTk92n+k26DcDWABliOzxy4+dnA3k+mkhsc37sO9BNaTdF0D9Pu7jPYwgrAOFasN+jzDs
- 3za94iwHPFX8HiehGInojBSfgjx7gzTwtWcDvHupl4H716uTQ+TfiZbyetQwFpSvHcze32omo
- Q0BEX3TQvIOlwqatJI8SRQepvNl6iwGEW38an4Vsbkrq2Sl9j0lxA37rlnJOKymfxMj+Yvuvf
- 7zZMxIbMfPKaVWsx//G2lfjvWCB6I4RtAmNOIlh9F6tuTbVXL/AD8zJ451iiaxywnnzD8qN1w
- IJn5KLn6Gnf2UewKtbMG8Tbr09fozH2GwnTAIgNvbwISBZzcn06LhB+HX5Guqm2lIVtvuVbQ8
- QiaVe9k7kAamBZew4xrXnbpWRv43ugGegsZAwU24LwGExUdx1FuHBKpAMxPDuTn51jNPC6567
- URvvPOOL1zbBMX5PcOBDG6bcWvf5Tt/RkyPF5/DVAkArgXQGWV/Nb2FrKy4YMbOHG/zUKLKkO
- VcYpWdjW8pXZCziI1idws0lhiOktxsbYC/P4ZcHnuW/ZDOA/s+6JEqQJWT4kExJOCSBvMjECw
- 0at6TAjIkF8695FYW1pUf2TiUmuAfCd2bIXTzTRE0M1bZH44CVvYLeFBPA5TuIQL48vAJ1tgr
- b1x4xjw2XXhllKiaVFQafBzU6I4DqYJ2QR+lmRTKS2doKrnpSq8079sKdSqrgMyj8puO0dVWF
- SjdJyzDbo9IHsOtsGysJ7qyDiWAg2i+7J4feN3enXlNOpD9ITE7eZlLvOJgC8HDfblYc6CiPO
- g+WexSnyCK6saYxbiF7PLhQT6Kj3qiD4hPc4HrmspM82b7OIQ8w8+Jo6rqXVQpqTyRgrOVqUK
- Z6LYRpVMVs1ypJvzV5CLJPFYPUW+o7u6IytaYlzwmNjhdADQjKaBjdxH1esk4K1a86Q/OZk0O
- vxJdjnK8G06As0cLV/KoYCw38IJHfgd8WunoN4FiJEQ4XaVSXDZUJ8Gb5xuWgZEyRI2YURsKr
- VCQM5AlEg7HPo95YPJgZlmbc8oQNx457dmv26j/XZImlEpFKcxxhWAMfuau8Q0QDhagcQRwXW
- 1IcsgzzPW6n4X+4X3tW/RZ4pkj7LdfE1SmxMehsA7iF9dvsAxwFM8NTKfYX4jO2qtNbtG5cIc
- 9E1KiLtCk6NWRFoDne+L0jBeA+lAtZ7PAO/R/0gajX469t4oJWZKfs8TalufOqiIuVf/psLmN
- sFs71bB/0rmHG3g3m
+X-MS-Exchange-CrossTenant-Network-Message-Id: cd49c9b9-bfe6-41fc-beef-08d80e1de529
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2020 15:41:23.2564
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: C7WINfWrESVPEx7QCSHD8qhjQABNp1MU17NM5smSaBjUHt6e6sOuihkGUD9VYETv6N5dCAkLh+kqAEXiepz0qvdG+aBdCcm9uICoXzZDDlI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR11MB4067
+X-OriginatorOrg: intel.com
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 11 Jun 2020 00:49:26 +0200 Stephen Berman <stephen.berman@gmx.net> wrote:
+> -----Original Message-----
+> From: Intel-wired-lan <intel-wired-lan-bounces@osuosl.org> On Behalf Of
+> Qian Cai
+> Sent: Saturday, June 6, 2020 1:01 PM
+> To: Kirsher, Jeffrey T <jeffrey.t.kirsher@intel.com>
+> Cc: netdev@vger.kernel.org; linux-kernel@vger.kernel.org; Qian Cai
+> <cai@lca.pw>; intel-wired-lan@lists.osuosl.org; davem@davemloft.net
+> Subject: [Intel-wired-lan] [PATCH] i40e: silence an UBSAN false positive
+>=20
+> virtchnl_rss_lut.lut is used for the RSS lookup table, but in
+> i40e_vc_config_rss_lut(), it is indexed by subscript results in a false p=
+ositive.
+>=20
+>  UBSAN: array-index-out-of-bounds in
+> drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c:2983:15
+>  index 1 is out of range for type 'u8 [1]'
+>  CPU: 34 PID: 871 Comm: kworker/34:2 Not tainted 5.7.0-next-20200605+ #5
+> Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40
+> 03/09/2018
+>  Workqueue: i40e i40e_service_task [i40e]  Call Trace:
+>   dump_stack+0xa7/0xea
+>   ubsan_epilogue+0x9/0x45
+>   __ubsan_handle_out_of_bounds+0x6f/0x80
+>   i40e_vc_process_vf_msg+0x457c/0x4660 [i40e]
+>   i40e_service_task+0x96c/0x1ab0 [i40e]
+>   process_one_work+0x57d/0xbd0
+>   worker_thread+0x63/0x5b0
+>   kthread+0x20c/0x230
+>   ret_from_fork+0x22/0x30
+>=20
+> Fixes: d510497b8397 ("i40e: add input validation for virtchnl handlers")
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>  drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 
-> On Wed, 10 Jun 2020 12:25:14 +0200 Sebastian Andrzej Siewior
-> <bigeasy@linutronix.de> wrote:
-> [...]
->>> By the other patch do you mean the following?  (This email was also put
->>> into my spam by GMX and AFAICT has not yet shown up on the vger list.)
->>
->> Yes. But now that I played a little with it, I made dis:
-> [...]
->> So you should have output like:
->> |[   14.131696] Flushing events_freezable_power_
->> the flush that hangs
->>
->> |[   17.203246] Flushing events_freezable_power_ over, 0
->> It has been noticed (0 at the end)
->>
->> |[   17.203849] Showing busy workqueues and worker pools:
->> |[   17.204400] workqueue events_freezable_power_: flags=0x84
->> |[   17.205009]   pwq 12: cpus=6 node=0 flags=0x0 nice=0 active=1/256 refcnt=2
->> |[   17.205774]     in-flight: 2147:disk_events_workfn
->> |[   17.206268] workqueue kblockd: flags=0x18
->> |[   17.206682]   pwq 13: cpus=6 node=0 flags=0x0 nice=-20 active=1/256 refcnt=2
->> |[   17.207428]     pending: blk_mq_requeue_work
->> |[ 17.207958] pool 12: cpus=6 node=0 flags=0x0 nice=0 hung=2s workers=3 idle:
->> | 535 42
->>
->> A dump of all pending worqueue items.
->>
->> |[   20.275239] Flushing events_freezable_power_ over, 0
->> |[   20.275812] Showing busy workqueues and worker pools:
->> |[   20.276385] workqueue events_freezable_power_: flags=0x84
->> |[   20.276972]   pwq 12: cpus=6 node=0 flags=0x0 nice=0 active=1/256 refcnt=2
->> |[   20.277712]     in-flight: 2147:disk_events_workfn
->> |[   20.278245] workqueue kblockd: flags=0x18
->> |[   20.278685]   pwq 13: cpus=6 node=0 flags=0x0 nice=-20 active=1/256 refcnt=2
->> |[   20.279471]     pending: blk_mq_requeue_work
->> |[ 20.279989] pool 12: cpus=6 node=0 flags=0x0 nice=0 hung=5s workers=3 idle:
->> | 535 42
->>
->> Another atempt. As you see `blk_mq_requeue_work' is references in both
->> outputs but it makes progress (it is scheduled multiple times). The item
->> `disk_events_workfn' stucks.
->
-> I rebuilt kernel 5.6.4 with that patch, but before calling `shutdown -h
-> now' I guess I should have set printk_delay, because this time there was
-> a lot of output and it went by too fast.  I'll try to delay it the next
-> time.
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
 
-I've done that now.  I've sent you screenshots offlist.  Here's a brief
-summary: The initial shutdown log output is essentially the same as the
-transcription I posted upthread, except that it is interspersed with
-messages from your patch like "Flush hid_reset+0x0/0x80".  Then comes:
 
-ACPI: Preparing to enter system sleep state S5
-Flushing kacpid
-Flushing kacpid_notify
-Flushing kacpid_notify over, 0
-Showing busy workqueues and worker pools:
-workqueue events: flags=0x0
-  pwq 4: cpus=2 node=0 flags=0x0 nice=0 active=1/256 refcnt=2
-     pending: drm_fb_helper_diry_work
-workqueue kacpid_notify: flags=0x0
-  pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=1/1 refcnt=4185
-     in-flight: 1578:acpi_os_execute_deferred
-     delayed: acpi_os_execute_deferred, acpi_os_execute_deferred, ...
-
-The "acpi_os_execute_deferred" messages were repeated many times in the
-above line, then every 20-30 seconds again for several minutes.  Then
-suddenly a call trace appeared which was similar but not identical to
-the one I posted upthread, and each line of the trace was followed by
-the line ", acpi_os_execute_deferred".  This went by quite quickly even
-with the printk_delay I added, and I was unable to photograph the start
-of it and couldn't get all of the subsequent output, but the screenshots
-show some of it.  After several minutes of this output I again did a
-hard reboot.
-
-Steve Berman
