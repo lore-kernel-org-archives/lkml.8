@@ -2,133 +2,67 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=FORGED_MUA_MOZILLA,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 994B4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD61C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 761862074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:21:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1C84206A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:28:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbgFKBV2 (ORCPT
+        id S1726336AbgFKB2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 21:21:28 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43162 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726265AbgFKBV1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 21:21:27 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05B17CjE093234;
-        Wed, 10 Jun 2020 21:21:20 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31k5hxqv59-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 10 Jun 2020 21:21:20 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05B1L7Tt030186;
-        Thu, 11 Jun 2020 01:21:18 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 31g2s80s47-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 11 Jun 2020 01:21:18 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05B1LF9a64029050
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Jun 2020 01:21:15 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D4C31A4051;
-        Thu, 11 Jun 2020 01:21:15 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CE7ECA4040;
-        Thu, 11 Jun 2020 01:21:14 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.93.125])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 11 Jun 2020 01:21:14 +0000 (GMT)
-Subject: Re: [PATCH] ext4: mballoc: Disable preemption before getting per-CPU
- pointer
-To:     YueHaibing <yuehaibing@huawei.com>, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tytso@mit.edu,
-        adilger.kernel@dilger.ca
-References: <20200610134919.73688-1-yuehaibing@huawei.com>
-From:   Ritesh Harjani <riteshh@linux.ibm.com>
-Date:   Thu, 11 Jun 2020 06:51:14 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 10 Jun 2020 21:28:39 -0400
+Received: from mga02.intel.com ([134.134.136.20]:15014 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726265AbgFKB2i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 21:28:38 -0400
+IronPort-SDR: EQPNe0vNgmOeu+IVk0MQgstMGO2IlRLUWgUm3mbrvPmy+oCzFbdzT6l9rFuvVF+hGaFf/Tqfja
+ QgiHS7YHaOeA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2020 18:28:38 -0700
+IronPort-SDR: TDwZrLfXKyCPyLkRMz+erSgA3fgoVSeC0VxAIc+HU7rjn60eWjqAMO9lF9+BapzJ7p9RTyr8x5
+ 07RBzg00SO+A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,498,1583222400"; 
+   d="scan'208";a="259471853"
+Received: from unknown (HELO localhost) ([10.239.159.128])
+  by fmsmga007.fm.intel.com with ESMTP; 10 Jun 2020 18:28:36 -0700
+Date:   Thu, 11 Jun 2020 09:29:13 +0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
+        jmattson@google.com, yu.c.zhang@linux.intel.com
+Subject: Re: [PATCH v12 00/10] Introduce support for guest CET feature
+Message-ID: <20200611012913.GA15497@local-michael-cet-test>
+References: <20200506082110.25441-1-weijiang.yang@intel.com>
+ <20200610165635.GB18790@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200610134919.73688-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Message-Id: <20200611012114.CE7ECA4040@d06av23.portsmouth.uk.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-10_13:2020-06-10,2020-06-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 spamscore=0
- mlxscore=0 mlxlogscore=944 suspectscore=0 bulkscore=0 impostorscore=0
- cotscore=-2147483648 phishscore=0 malwarescore=0 lowpriorityscore=0
- adultscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006110005
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200610165635.GB18790@linux.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-Fix for this is already submitted @
-
-https://patchwork.ozlabs.org/project/linux-ext4/patch/534f275016296996f54ecf65168bb3392b6f653d.1591699601.git.riteshh@linux.ibm.com/
-
--ritesh
-
-On 6/10/20 7:19 PM, YueHaibing wrote:
-> BUG: using smp_processor_id() in preemptible [00000000] code: kworker/u16:3/2181
-> caller is ext4_mb_new_blocks+0x388/0xed0
-> CPU: 2 PID: 2181 Comm: kworker/u16:3 Not tainted 5.7.0+ #182
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-> Workqueue: writeback wb_workfn (flush-8:0)
-> Call Trace:
->   dump_stack+0xb9/0xfc
->   debug_smp_processor_id+0xc8/0xd0
->   ext4_mb_new_blocks+0x388/0xed0
->   ext4_ext_map_blocks+0xa92/0xff0
->   ext4_map_blocks+0x34e/0x580
->   ext4_writepages+0xa28/0x11b0
->   do_writepages+0x46/0xe0
->   __writeback_single_inode+0x5f/0x6b0
->   writeback_sb_inodes+0x290/0x620
->   __writeback_inodes_wb+0x62/0xb0
->   wb_writeback+0x36c/0x520
->   wb_workfn+0x319/0x680
->   process_one_work+0x271/0x640
->   worker_thread+0x3a/0x3a0
->   kthread+0x14e/0x170
->   ret_from_fork+0x27/0x40
+On Wed, Jun 10, 2020 at 09:56:36AM -0700, Sean Christopherson wrote:
+> On Wed, May 06, 2020 at 04:20:59PM +0800, Yang Weijiang wrote:
+> > Several parts in KVM have been updated to provide VM CET support, including:
+> > CPUID/XSAVES config, MSR pass-through, user space MSR access interface, 
+> > vmentry/vmexit config, nested VM etc. These patches have dependency on CET
+> > kernel patches for xsaves support and CET definitions, e.g., MSR and related
+> > feature flags.
 > 
-> Disable preemption before accessing discard_pa_seq.
-> 
-> Fixes: 07b5b8e1ac40 ("ext4: mballoc: introduce pcpu seqcnt for freeing PA to improve ENOSPC handling")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->   fs/ext4/mballoc.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-> index a9083113a8c0..30b3bfb1e06a 100644
-> --- a/fs/ext4/mballoc.c
-> +++ b/fs/ext4/mballoc.c
-> @@ -4708,7 +4708,8 @@ ext4_fsblk_t ext4_mb_new_blocks(handle_t *handle,
->   	}
->   
->   	ac->ac_op = EXT4_MB_HISTORY_PREALLOC;
-> -	seq = *this_cpu_ptr(&discard_pa_seq);
-> +	seq = *get_cpu_ptr(&discard_pa_seq);
-> +	put_cpu_ptr(&discard_pa_seq);
->   	if (!ext4_mb_use_preallocated(ac)) {
->   		ac->ac_op = EXT4_MB_HISTORY_ALLOC;
->   		ext4_mb_normalize_request(ac, ar);
-> 
+> Other than the MSR and cpufeatures flags definitions, is there any direct
+> dependency on kernel CET support?  I.e. if/when XSAVES support is merged,
+> is there anything beyond the architectural definitions that are required to
+> merge KVM CET virtualization?
+No, KVM CET patches only depend on kernel CET related definitions and XSAVES 
+support now. But to make guest CET work, we need CET patches for QEMU. 
