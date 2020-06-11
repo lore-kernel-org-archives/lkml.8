@@ -2,103 +2,97 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D93DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED66CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 552B620747
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:37:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oMjDEe9O"
+	by mail.kernel.org (Postfix) with ESMTP id CAEF720747
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:40:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbgFKMhZ (ORCPT
+        id S1726251AbgFKMkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 08:37:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42638 "EHLO
+        Thu, 11 Jun 2020 08:40:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727113AbgFKMhZ (ORCPT
+        with ESMTP id S1726095AbgFKMkM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 08:37:25 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4B28C08C5C1;
-        Thu, 11 Jun 2020 05:37:24 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id c17so6674729lji.11;
-        Thu, 11 Jun 2020 05:37:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=n7pw6B9iRk8cxXinJlBDcvCUW06xNfgnr8zarLwpvFs=;
-        b=oMjDEe9O0rdA8BxLxhemg2EvkT6vuf/OGAx/tIwuF8v/zx8eCKhShBirRkcxjUf0H7
-         kABjw35/v8vLd3h8bmEhNgUBwJtlFk4jIwYKUcJ9E2h5WjFmYUcf9XJo0tXZknooTVKz
-         AoPjuHRnX/JH8pgbfmy94gSfbE7d5duPf8iyXtRYbVjUoqzgaOmsSNElA0yivdxPAZ52
-         ibLMXIWWhsFFnkmq3OCUaFq9SiLqKwKw7WRKvFKzkuQ31L8ds+4iDNZupjxv9CvbBUF7
-         RjZE3qqhV+wa8CEltnKr3Q7qOcyfMi8Cjwwxvb8680x6PH3bGr7iw4bnCUAWoPLHABcr
-         SHIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=n7pw6B9iRk8cxXinJlBDcvCUW06xNfgnr8zarLwpvFs=;
-        b=L6dTK4Ugxv4lYajGyWW6Y1v8guofxDW3kSTXejzCKNIKrQ4KpHfn/7yF98RqfDAQCS
-         GXIoNOl7di/TeQPNfIQ74Hm09tEUJxei5TKVaj0DS3rt9cIuQgrMh2AnNFE0tdF2L8OU
-         NiLhYw6ff3DcaIbNV4FIlqpRCDFZZz0zeumSJS3rdXUEaTVdpKHbTJe1Q0YwGF3KhR1e
-         Fg5nM49RCSMzOlkxowdYi5an7GshzShDfiBKyYY/uMI7IzN58FR9/zUfz/vweKiUKlPt
-         RDpaPKVydanm0waUC1y+Ju/zsV9Lg40bKBjIkDYTSPu2hobIRFrk6ut3lzeAmjxvPMlf
-         pRgw==
-X-Gm-Message-State: AOAM5301XB6mAOps7aMghWH5QJD9yUlqTgv4V9LmWJiWgku7Y+x/Fm8X
-        IPuaJSEKy5v0QDjs0A2moICTAmzVtwQ/yYwbzr/TsEUGo5k=
-X-Google-Smtp-Source: ABdhPJxDM8KrtXX8IGgPK2/k1ttJubEAwj648kPXYtV3zoabWptLMjeIUPyvvokZNJ5ypTgF1FndSTYyXvj6lsSwAaA=
-X-Received: by 2002:a2e:9b04:: with SMTP id u4mr4593898lji.364.1591879043027;
- Thu, 11 Jun 2020 05:37:23 -0700 (PDT)
+        Thu, 11 Jun 2020 08:40:12 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7DC0C08C5C1;
+        Thu, 11 Jun 2020 05:40:11 -0700 (PDT)
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 6A791869; Thu, 11 Jun 2020 14:40:09 +0200 (CEST)
+Date:   Thu, 11 Jun 2020 14:40:08 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v3 51/75] x86/sev-es: Handle MMIO events
+Message-ID: <20200611124008.GC11924@8bytes.org>
+References: <20200428151725.31091-1-joro@8bytes.org>
+ <20200428151725.31091-52-joro@8bytes.org>
+ <20200520063202.GB17090@linux.intel.com>
 MIME-Version: 1.0
-References: <20200609201241.81518-1-grandmaster@al2klimov.de>
- <4235548.LvFx2qVVIh@harkonnen> <cd260d03-27a4-7794-f58f-21e8e0be9755@al2klimov.de>
- <202006102009.CB14D7F@keescook> <8ee16c38-e28b-b4e6-ed30-55a59e216b49@al2klimov.de>
- <CANiq72n50OVRtFAQkAmqjaj=dJTP9VqYYHN7++8O_t4cbfaJgw@mail.gmail.com> <3a6354fd-90ec-914f-b5df-0c4c219bd26e@al2klimov.de>
-In-Reply-To: <3a6354fd-90ec-914f-b5df-0c4c219bd26e@al2klimov.de>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Thu, 11 Jun 2020 14:37:11 +0200
-Message-ID: <CANiq72=-B4SJvo5kgyUbmBJho9625Pp6SWjki-TRhMfpmj0wUg@mail.gmail.com>
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: Documentation/translations/it_IT
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        David Sterba <dsterba@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        Jacob Huisman <jacobhuisman@kernelthusiast.com>,
-        =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Rob Herring <robh@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520063202.GB17090@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 1:02 PM Alexander A. Klimov
-<grandmaster@al2klimov.de> wrote:
->
-> Who if not Linus shall review one huge patch spreading across lots of
-> subsystems?
+On Tue, May 19, 2020 at 11:32:02PM -0700, Sean Christopherson wrote:
+> '0' is a valid physical address.  It happens to be reserved in the kernel
+> thanks to L1TF, but using '0' as an error code is ugly.  Not to mention
+> none of the callers actually check the result.
 
-Even if a patch is tree-wide, ideally it is first ack'd/reviewed by
-each subsystem maintainer. The overall idea is that changes are
-reviewed by several people. Thus sending patches directly to Linus,
-Andrew Morton, Greg K-H, etc. without previous discussion is a last
-resort.
+Right, I changed the function to better handle error cases and added
+checks to the call-sites. It looks like below now:
 
-Cheers,
-Miguel
+static bool vc_slow_virt_to_phys(struct ghcb *ghcb, struct es_em_ctxt *ctxt,
+                                 unsigned long vaddr, phys_addr_t *paddr)
+{
+        unsigned long va = (unsigned long)vaddr;
+        unsigned int level;
+        phys_addr_t pa;
+        pgd_t *pgd;
+        pte_t *pte;
+
+        pgd = pgd_offset(current->active_mm, va);
+        pte = lookup_address_in_pgd(pgd, va, &level);
+        if (!pte) {
+                ctxt->fi.vector     = X86_TRAP_PF;
+                ctxt->fi.cr2        = vaddr;
+                ctxt->fi.error_code = 0;
+
+                if (user_mode(ctxt->regs))
+                        ctxt->fi.error_code |= X86_PF_USER;
+
+                return false;
+        }
+
+        pa = (phys_addr_t)pte_pfn(*pte) << PAGE_SHIFT;
+        pa |= va & ~page_level_mask(level);
+
+        *paddr = pa;
+
+        return true;
+}
+
