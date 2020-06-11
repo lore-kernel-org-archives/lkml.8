@@ -2,134 +2,276 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B01C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D93BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32C76207ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:06:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591873593;
-	bh=4mhfapy/79ZfJKzRflA9qBb4PnfhnWxkg0eFKlrLCSw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=QByaDphAmnXjw4IRLlkUoYRokdvHmkEYwEHhIGS9F7OEvQ36tksmQe1Fn4+Co4Yef
-	 8KOY/DQrNYOFtxdLMP+oTAhLgAaJD0w6uRpIadERLjfzah+f4OerpzVwV2sS1bFN3N
-	 OWQKF61eYoSN76ycrVQ6P3Go5L8L7Ddhuk7ywMLY=
+	by mail.kernel.org (Postfix) with ESMTP id 71A1C20760
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:06:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="Z+sW2TmS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbgFKLGb (ORCPT
+        id S1727988AbgFKLGj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 07:06:31 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:23431 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727045AbgFKLGX (ORCPT
+        Thu, 11 Jun 2020 07:06:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56366 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727946AbgFKLGf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 07:06:23 -0400
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id 05BB5qnx030522;
-        Thu, 11 Jun 2020 20:05:53 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 05BB5qnx030522
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1591873553;
-        bh=Z6mErzgADy1W4xnRSK8XzwQH8dT4V+lF4n/qwopigKg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=UHaD0XZbq0U4zrKKFEpMRtKpW6vlSd7zscIjTDbYzt/e8smseAR+8RkNiKfI9jaJk
-         HJwGgp4CaE5gK4CjvGUBnbpG0aE7EP78T6tgC89AFwC9YNOyeD0Bz6LxncXq4eMKHB
-         0fbovKNXRoUcdee61vH50vAV6uFBT5WZgYSW9KoyGJULZCxxiZ8EiYIdswEyYiyk25
-         s73mQfIU2zN6+iSDc7IY/h+5WMIHbMfoIM8rrgTDs5wyBLj7F5lmkWmWzSdCmvTO/0
-         qLWmYLldzal7BlZjLp37NYZ3371L94jIrhQ8d2VPxNcOXwoau1oxoke4uo4gRHrvDD
-         C1W0QzPVx5P0Q==
-X-Nifty-SrcIP: [209.85.222.54]
-Received: by mail-ua1-f54.google.com with SMTP id 59so1956266uam.7;
-        Thu, 11 Jun 2020 04:05:53 -0700 (PDT)
-X-Gm-Message-State: AOAM53374xT3zkfaQ9hag9LvQ/QPIfG/Gug9oDHUi7W1WIaJfCbWPvax
-        iULJwBefokHj21ab0VDU7WoMkDHP+kKaHLGZ2LI=
-X-Google-Smtp-Source: ABdhPJzW2sMhVjXctonLV5znGoBTj46fBxKHnxcsDXobKRWVzaKE52M6VoTyQ1K8nTeDjHFlLA/esj2bFGctkAdAjL4=
-X-Received: by 2002:ab0:156d:: with SMTP id p42mr5998538uae.121.1591873551924;
- Thu, 11 Jun 2020 04:05:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200609100643.1245061-1-arnd@arndb.de>
-In-Reply-To: <20200609100643.1245061-1-arnd@arndb.de>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Thu, 11 Jun 2020 20:05:15 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQo-cmpwBDC0t1+tAKL+j0eYPQc3ZZjcKcqdZA06eSRPg@mail.gmail.com>
-Message-ID: <CAK7LNAQo-cmpwBDC0t1+tAKL+j0eYPQc3ZZjcKcqdZA06eSRPg@mail.gmail.com>
-Subject: Re: [PATCH] Input: joystick - work around "adi" module name confict
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
+        Thu, 11 Jun 2020 07:06:35 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26795C08C5C3
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 04:06:35 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id o5so5810609iow.8
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 04:06:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sargun.me; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2R+wiFfzvQNb0IhDifqVeL6cc3fjUJMhYBce6rC6DCk=;
+        b=Z+sW2TmSn6OM09sIzUe+GQMvwrm3rd/qAFbZjYr2L+algtLl9Jmw9KCJ03Kqh3WBmH
+         TUdyrRddl5XGBkntRXl1Rqrp3Xl8aYytjB4MgxAI8tcXsASWj5iaReXFPsMcxI6pG+l3
+         Q+69LhfrlGgdVOJf0uh2V+rCbQOn19wm6MmiI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2R+wiFfzvQNb0IhDifqVeL6cc3fjUJMhYBce6rC6DCk=;
+        b=uXLil1vFzaCfKUooTzxfDWFyKIpr6YesKb1UXGElqiOHuej/F8wnATKvVjlcft24C8
+         L7Fxm7dCi0BiQwPjwSfu9CdqDvR/PQXImwI5PlUXvFv4/2GBtNws9VM3IHX3G64p2qmm
+         s+MHOT8NeLyeVQgUFRNxq0dDhxXzrAs0e4ORooDiWJb44HKJyNiwAc4mM8WF+zNrMcc0
+         QlkUyGvxrTure4900VzkPL/EJL+Jib2elfe0ZWqjSCpTuOmQfZjCwxauCDvGkw20BrX0
+         phiGoOCzYx3/ySO5SjqzJc8ugT4+T7nnUlCbJBDRsm4FleXZiSZJEo3VuOhWfo0NEN9e
+         asZA==
+X-Gm-Message-State: AOAM531lonWIvU8n1gwL1BDa4Op9lyJLV+Ld97f2rDYJX3NR0QFlZ/n0
+        KROJ8crWSI4jE4pJHOZB57KBIw==
+X-Google-Smtp-Source: ABdhPJxAe2FFIVPIGtUH7XUlqRwmMIqQvWfQmGlMX7FGj+oJX7+J03taHo0cG57juW6PAL7xtwxx0g==
+X-Received: by 2002:a6b:1487:: with SMTP id 129mr7966323iou.197.1591873594035;
+        Thu, 11 Jun 2020 04:06:34 -0700 (PDT)
+Received: from ircssh-2.c.rugged-nimbus-611.internal (80.60.198.104.bc.googleusercontent.com. [104.198.60.80])
+        by smtp.gmail.com with ESMTPSA id p10sm1369817ilm.32.2020.06.11.04.06.33
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 11 Jun 2020 04:06:33 -0700 (PDT)
+Date:   Thu, 11 Jun 2020 11:06:31 +0000
+From:   Sargun Dhillon <sargun@sargun.me>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        containers@lists.linux-foundation.org,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Robert Sesek <rsesek@google.com>,
+        Chris Palmer <palmer@google.com>, Jann Horn <jannh@google.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-input@vger.kernel.org, Markus Koch <markus@notsyncing.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Daniel Wagner <daniel.wagner@bmw-carit.de>,
+        linux-kernel@vger.kernel.org, Matt Denton <mpdenton@google.com>,
+        John Fastabend <john.r.fastabend@intel.com>,
+        linux-fsdevel@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, cgroups@vger.kernel.org,
+        stable@vger.kernel.org, "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v3 1/4] fs, net: Standardize on file_receive helper to
+ move fds across processes
+Message-ID: <20200611110630.GB30103@ircssh-2.c.rugged-nimbus-611.internal>
+References: <20200604125226.eztfrpvvuji7cbb2@wittgenstein>
+ <20200605075435.GA3345@ircssh-2.c.rugged-nimbus-611.internal>
+ <202006091235.930519F5B@keescook>
+ <20200609200346.3fthqgfyw3bxat6l@wittgenstein>
+ <202006091346.66B79E07@keescook>
+ <037A305F-B3F8-4CFA-B9F8-CD4C9EF9090B@ubuntu.com>
+ <202006092227.D2D0E1F8F@keescook>
+ <20200610081237.GA23425@ircssh-2.c.rugged-nimbus-611.internal>
+ <202006101953.899EFB53@keescook>
+ <20200611100114.awdjswsd7fdm2uzr@wittgenstein>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200611100114.awdjswsd7fdm2uzr@wittgenstein>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 9, 2020 at 7:07 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> Making module name conflicts a fatal error breaks sparc64
-> allmodconfig:
->
-> Error log:
-> error: the following would cause module name conflict:
->   drivers/char/adi.ko
->   drivers/input/joystick/adi.ko
->
-> Renaming one of the modules would solve the problem, but then cause other
-> problems because neither of them is automatically loaded and changing
-> the name is likely to break any setup that relies on manually loading
-> it by name.
->
-> As there is probably no sparc64 system with this kind of ancient joystick
-> attached, work around it by adding a Kconfig dependency that forbids
-> them from both being modules.  It is still possible to build the joystick
-> driver if the sparc64 adi driver is built-in.
->
-> Reported-by: Guenter Roeck <linux@roeck-us.net>
-> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Cc: linux-input@vger.kernel.org
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> This should get merged through the kbuild tree together
-> with the patch that turns the warning into an error, if the
-> joystick maintainers are ok with the hack.
+On Thu, Jun 11, 2020 at 12:01:14PM +0200, Christian Brauner wrote:
+> On Wed, Jun 10, 2020 at 07:59:55PM -0700, Kees Cook wrote:
+> > On Wed, Jun 10, 2020 at 08:12:38AM +0000, Sargun Dhillon wrote:
+> > > As an aside, all of this junk should be dropped:
+> > > +	ret = get_user(size, &uaddfd->size);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	ret = copy_struct_from_user(&addfd, sizeof(addfd), uaddfd, size);
+> > > +	if (ret)
+> > > +		return ret;
+> > > 
+> > > and the size member of the seccomp_notif_addfd struct. I brought this up 
+> > > off-list with Tycho that ioctls have the size of the struct embedded in them. We 
+> > > should just use that. The ioctl definition is based on this[2]:
+> > > #define _IOC(dir,type,nr,size) \
+> > > 	(((dir)  << _IOC_DIRSHIFT) | \
+> > > 	 ((type) << _IOC_TYPESHIFT) | \
+> > > 	 ((nr)   << _IOC_NRSHIFT) | \
+> > > 	 ((size) << _IOC_SIZESHIFT))
+> > > 
+> > > 
+> > > We should just use copy_from_user for now. In the future, we can either 
+> > > introduce new ioctl names for new structs, or extract the size dynamically from 
+> > > the ioctl (and mask it out on the switch statement in seccomp_notify_ioctl.
+> > 
+> > Yeah, that seems reasonable. Here's the diff for that part:
+> 
+> Why does it matter that the ioctl() has the size of the struct embedded
+> within? Afaik, the kernel itself doesn't do anything with that size. It
+> merely checks that the size is not pathological and it does so at
+> compile time.
+> 
+> #ifdef __CHECKER__
+> #define _IOC_TYPECHECK(t) (sizeof(t))
+> #else
+> /* provoke compile error for invalid uses of size argument */
+> extern unsigned int __invalid_size_argument_for_IOC;
+> #define _IOC_TYPECHECK(t) \
+> 	((sizeof(t) == sizeof(t[1]) && \
+> 	  sizeof(t) < (1 << _IOC_SIZEBITS)) ? \
+> 	  sizeof(t) : __invalid_size_argument_for_IOC)
+> #endif
+> 
+> The size itself is not verified at runtime. copy_struct_from_user()
+> still makes sense at least if we're going to allow expanding the struct
+> in the future.
+Right, but if we simply change our headers and extend the struct, it will break 
+all existing programs compiled against those headers. In order to avoid that, if 
+we intend on extending this struct by appending to it, we need to have a 
+backwards compatibility mechanism. Just having copy_struct_from_user isn't 
+enough. The data structure either must be fixed size, or we need a way to handle 
+multiple ioctl numbers derived from headers with different sized struct arguments
 
-Note:
-Dmitry picked up this patch.
-(commit 751ad34fbad74c3ed4a9ede24764b4253d4faa84)
+The two approaches I see are:
+1. use more indirection. This has previous art in drm[1]. That's look
+something like this:
+
+struct seccomp_notif_addfd_ptr {
+	__u64 size;
+	__u64 addr;
+}
+
+... And then it'd be up to us to dereference the addr and copy struct from user.
+
+2. Expose one ioctl to the user, many internally
+
+e.g., public api:
+
+struct seccomp_notif {
+	__u64 id;
+	__u64 pid;
+	struct seccomp_data;
+	__u64 fancy_new_field;
+}
+
+#define SECCOMP_IOCTL_NOTIF_RECV	SECCOMP_IOWR(0, struct seccomp_notif)
+
+internally:
+struct seccomp_notif_v1 {
+	__u64 id;
+	__u64 pid;
+	struct seccomp_data;
+}
+
+struct seccomp_notif_v2 {
+	__u64 id;
+	__u64 pid;
+	struct seccomp_data;
+	__u64 fancy_new_field;
+}
+
+and we can switch like this:
+	switch (cmd) {
+	/* for example. We actually have to do this for any struct we intend to 
+	 * extend to get proper backwards compatibility
+	 */
+	case SECCOMP_IOWR(0, struct seccomp_notif_v1)
+		return seccomp_notify_recv(filter, buf, sizeof(struct seccomp_notif_v1));
+	case SECCOMP_IOWR(0, struct seccomp_notif_v2)
+		return seccomp_notify_recv(filter, buf, sizeof(struct seccomp_notif_v3));
+...
+	case SECCOMP_IOCTL_NOTIF_SEND:
+		return seccomp_notify_send(filter, buf);
+	case SECCOMP_IOCTL_NOTIF_ID_VALID:
+		return seccomp_notify_id_valid(filter, buf);
+	default:
+		return -EINVAL;
+	}
+
+This has the downside that programs compiled against more modern kernel headers 
+will break on older kernels.
+
+3. We can take the approach you suggested.
+
+#define UNSIZED(cmd)	(cmd & ~(_IOC_SIZEMASK << _IOC_SIZESHIFT)
+static long seccomp_notify_ioctl(struct file *file, unsigned int cmd,
+				 unsigned long arg)
+{
+	struct seccomp_filter *filter = file->private_data;
+	void __user *buf = (void __user *)arg;
+	int size = _IOC_SIZE(cmd);
+	cmd = UNSIZED(cmd);
+
+	switch (cmd) {
+	/* for example. We actually have to do this for any struct we intend to 
+	 * extend to get proper backwards compatibility
+	 */
+	case UNSIZED(SECCOMP_IOCTL_NOTIF_RECV):
+		return seccomp_notify_recv(filter, buf, size);
+...
+	case SECCOMP_IOCTL_NOTIF_SEND:
+		return seccomp_notify_send(filter, buf);
+	case SECCOMP_IOCTL_NOTIF_ID_VALID:
+		return seccomp_notify_id_valid(filter, buf);
+	default:
+		return -EINVAL;
+	}
+}
+
+> 
+> Leaving that aside, the proposed direction here seems to mean that any
+> change to the struct itself will immediately mean a new ioctl() but
+> afaict, that also means a new struct. Since when you simply extend the
+> struct for the sake of the new ioctl you also change the size for the
+> ioctl.
+> 
+> Sure, you can simply treat the struct coming through the old ioctl as
+> being "capped" by e.g. hiding the size as suggested but then the gain
+> by having two separate ioctls is 0 compared to simply versioning the
+> struct with an explicit size member since the size encoded in the ioctl
+> and the actual size of the struct don't line up anymore which is the
+> only plus I can see for relying on _IOC_SIZE(). All this manages to do
+> then is to make it more annoying for userspace since they now need to
+> maintain multiple ioctls(). And if you have - however unlikely - say
+> three different ioctls all to be used with a different struct size of
+> the same struct I now need to know which ioctl() goes with which size of
+> the struct (I guess you could append the size to the ioctl name?
+> *shudder*). If you have the size in the struct itself you don't need to
+> care about any of that.
+> Maybe I'm not making sense or I misunderstand what's going on though.
+> 
+> Christian
+> 
+I don't understand why userspace has to have any knowledge of this. As soon as 
+we add the code above, and we use copy_struct_from_user based on _that_ size,
+userspace will get free upgrades. If they are compiling against an older header
+than the kernel, size will return a smaller number, and thus we will zero
+out our trailing bits, and if their number is bigger, we just check their
+bits are appropriately zeroed.
+
+This approach would be forwards-and-backwards compatible.
+
+There's a little bit of prior art here as well [2]. The approach is that
+we effectively do the thing we had earlier with passing a size with
+copy_struct_from_user, but instead of the size being embedded in the struct,
+it's embedded in the ioctl command itself.
 
 
-
-
-
-> ---
->  drivers/input/joystick/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/input/joystick/Kconfig b/drivers/input/joystick/Kconfig
-> index 940b744639c7..6f73f02059b5 100644
-> --- a/drivers/input/joystick/Kconfig
-> +++ b/drivers/input/joystick/Kconfig
-> @@ -45,6 +45,7 @@ config JOYSTICK_A3D
->  config JOYSTICK_ADI
->         tristate "Logitech ADI digital joysticks and gamepads"
->         select GAMEPORT
-> +       depends on ADI!=m # avoid module name conflict
->         help
->           Say Y here if you have a Logitech controller using the ADI
->           protocol over the PC gameport.
-> --
-> 2.26.2
->
-
-
--- 
-Best Regards
-Masahiro Yamada
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/uapi/drm/radeon_drm.h?h=v5.7#n831
+[2]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/firewire/core-cdev.c?id=v5.7#n1621
