@@ -2,180 +2,157 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8177C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DE1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFC7920760
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 533D220691
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:10:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591880982;
-	bh=M1kdDMOYUBHTr6O3MA/xIGGV+1dYvD+EhW8wMA54zlg=;
+	s=default; t=1591881030;
+	bh=mt1yd1HMHR8e6heYpGfk6olw+JLSzhG92Nxo3RS0Zcc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BxWMtHoWNtEdcFxuKWq+Af+JrbShZU0BHyFj+c04a/Y5PC5uGWQPVd5qQnucECz8D
-	 gE1aCRR1ZxArKt4sYlFEHn9VJkrG+SRAEViQFXxTB26B2J2n7E750feb04o65WfxyV
-	 j2/UT0HFbnBL9gvWJNv6gCuHqO1lVu06Tu8zQZ7E=
+	b=QaZMOL49XbS5QQ+h5cKMUs77VODRJ9OqJHnTh+35eGSefosSlyFIPpKNF60/RcTFk
+	 U/DXIMHK25zDkf0mO7ZxiVWv+OOhJkxQWiii9HFJbS5W0hCk67JA9YipWoZeEv9jwL
+	 TV40KPVixzTcwTIO4Xyz9GOMbRcvR5wT1imqbGb0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbgFKNJl (ORCPT
+        id S1728047AbgFKNK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 09:09:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35818 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726081AbgFKNJk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 09:09:40 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D535C20691;
-        Thu, 11 Jun 2020 13:09:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591880980;
-        bh=M1kdDMOYUBHTr6O3MA/xIGGV+1dYvD+EhW8wMA54zlg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Q4LinmqC3MtDW7Gl2S8TYVYMZr/ilDMTPSDM46H6BOHlsH6b1YDrZKCyVtYB4Gu9L
-         8fp2wTdphxTpU6y3gP42gmSTaORtF1yhreHya3K8us4ayam5UqJ7StrXiGecekZYav
-         ubQ18RaqPtjLE1fpBT6d5l0/+Zb96NmJVIKWulH0=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 19679410F5; Thu, 11 Jun 2020 10:09:38 -0300 (-03)
-Date:   Thu, 11 Jun 2020 10:09:38 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Paul Clarke <pc@us.ibm.com>, Kajol Jain <kjain@linux.ibm.com>,
-        linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] perf expr: Add d_ratio operation
-Message-ID: <20200611130938.GB18482@kernel.org>
-References: <20200610235823.52557-1-irogers@google.com>
- <20200611083846.GA1786122@krava>
+        Thu, 11 Jun 2020 09:10:28 -0400
+Received: from mail-ej1-f65.google.com ([209.85.218.65]:37633 "EHLO
+        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726081AbgFKNKR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 09:10:17 -0400
+Received: by mail-ej1-f65.google.com with SMTP id mb16so6411506ejb.4;
+        Thu, 11 Jun 2020 06:10:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2uHr75ZbW2v6iann1fkN4a19dY4vLMDgf8vBnvP/Hjs=;
+        b=MeAj0FMeRghV0mk8uoe01F8hoC2AJ4zno3MNyAx3MPZPeg/G+ahFm/Pcy/uXFhm7Gh
+         rZM2SviX3bThp0cvAulUBbkBP/DLUWbqIJIDbtd9a3bhlGcHVII9XDdCIslNDZqLjMNs
+         Zdl/XgIOnM9aJIV2+NtfJplk5ZAHdcmnzsb7eMWcmzKL+iIHF0FeveghLFqaAd+LpwoH
+         9DULSOg0OySBfXa1F1ttel8KZh9rAmMo+JkmOvzhMpZjK7V/D0PWbjpITKdXPU6MnZe5
+         Nhsgym4wXPRUbcb5ok8csi+/dvSrPAGEWZ+b7QNDwPAVew+J6Kvnq2hovd2PwkmniXwu
+         SezA==
+X-Gm-Message-State: AOAM5317qqqqlzehEqOz6+XK0KQ6LNBEUIFSlJUjPzKu+HGhr0bEW7II
+        PxtYza04C3LNf8QQkInvj/xry9eP
+X-Google-Smtp-Source: ABdhPJzTA+GZ2UfzZ1VoCR76XSuhDqoC70X4qdvo4Xp7fa1L/UqWYYUMH4+68K19sH+pvoGerqe+mQ==
+X-Received: by 2002:a17:906:ce30:: with SMTP id sd16mr8621248ejb.374.1591881014308;
+        Thu, 11 Jun 2020 06:10:14 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.184])
+        by smtp.googlemail.com with ESMTPSA id b24sm1512117edw.70.2020.06.11.06.10.12
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 11 Jun 2020 06:10:13 -0700 (PDT)
+Date:   Thu, 11 Jun 2020 15:10:11 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peng Ma <peng.ma@nxp.com>, Fabio Estevam <festevam@gmail.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH 2/2] dmaengine: fsl-edma: Fix NULL pointer exception in
+ fsl_edma_tx_handler
+Message-ID: <20200611131011.GA26264@kozik-lap>
+References: <1591877861-28156-1-git-send-email-krzk@kernel.org>
+ <1591877861-28156-2-git-send-email-krzk@kernel.org>
+ <VE1PR04MB66382172816FB95036776F6489800@VE1PR04MB6638.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200611083846.GA1786122@krava>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <VE1PR04MB66382172816FB95036776F6489800@VE1PR04MB6638.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Jun 11, 2020 at 10:38:46AM +0200, Jiri Olsa escreveu:
-> On Wed, Jun 10, 2020 at 04:58:22PM -0700, Ian Rogers wrote:
-> > d_ratio avoids division by 0 yielding infinity, such as when a counter
-> > doesn't get scheduled. An example usage is:
+On Thu, Jun 11, 2020 at 01:04:43PM +0000, Robin Gong wrote:
+> On 2020/06/11 20:18 Krzysztof Kozlowski <krzk@kernel.org> wrote:
 > > 
-> > {
-> >     "BriefDescription": "DCache L1 misses",
-> >     "MetricExpr": "d_ratio(MEM_LOAD_RETIRED.L1_MISS, MEM_LOAD_RETIRED.L1_HIT + MEM_LOAD_RETIRED.L1_MISS + MEM_LOAD_RETIRED.FB_HIT)",
-> >     "MetricGroup": "DCache;DCache_L1",
-> >     "MetricName": "DCache_L1_Miss",
-> >     "ScaleUnit": "100%",
-> > }
+> > NULL pointer exception happens occasionally on serial output initiated by login
+> > timeout.  This was reproduced only if kernel was built with significant
+> > debugging options and EDMA driver is used with serial console.
 > > 
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> 
-> Acked-by: Jiri Olsa <jolsa@redhat.com>
-
-Thanks, applied both,
-
-- Arnaldo
- 
-> thanks,
-> jirka
-> 
+> >     col-vf50 login: root
+> >     Password:
+> >     Login timed out after 60 seconds.
+> >     Unable to handle kernel NULL pointer dereference at virtual address
+> > 00000044
+> >     Internal error: Oops: 5 [#1] ARM
+> >     CPU: 0 PID: 157 Comm: login Not tainted 5.7.0-next-20200610-dirty #4
+> >     Hardware name: Freescale Vybrid VF5xx/VF6xx (Device Tree)
+> >       (fsl_edma_tx_handler) from [<8016eb10>]
+> > (__handle_irq_event_percpu+0x64/0x304)
+> >       (__handle_irq_event_percpu) from [<8016eddc>]
+> > (handle_irq_event_percpu+0x2c/0x7c)
+> >       (handle_irq_event_percpu) from [<8016ee64>]
+> > (handle_irq_event+0x38/0x5c)
+> >       (handle_irq_event) from [<801729e4>]
+> > (handle_fasteoi_irq+0xa4/0x160)
+> >       (handle_fasteoi_irq) from [<8016ddcc>]
+> > (generic_handle_irq+0x34/0x44)
+> >       (generic_handle_irq) from [<8016e40c>]
+> > (__handle_domain_irq+0x54/0xa8)
+> >       (__handle_domain_irq) from [<80508bc8>] (gic_handle_irq+0x4c/0x80)
+> >       (gic_handle_irq) from [<80100af0>] (__irq_svc+0x70/0x98)
+> >     Exception stack(0x8459fe80 to 0x8459fec8)
+> >     fe80: 72286b00 e3359f64 00000001 0000412d a0070013 85c98840
+> > 85c98840 a0070013
+> >     fea0: 8054e0d4 00000000 00000002 00000000 00000002 8459fed0
+> > 8081fbe8 8081fbec
+> >     fec0: 60070013 ffffffff
+> >       (__irq_svc) from [<8081fbec>]
+> > (_raw_spin_unlock_irqrestore+0x30/0x58)
+> >       (_raw_spin_unlock_irqrestore) from [<8056cb48>]
+> > (uart_flush_buffer+0x88/0xf8)
+> >       (uart_flush_buffer) from [<80554e60>] (tty_ldisc_hangup+0x38/0x1ac)
+> >       (tty_ldisc_hangup) from [<8054c7f4>] (__tty_hangup+0x158/0x2bc)
+> >       (__tty_hangup) from [<80557b90>]
+> > (disassociate_ctty.part.1+0x30/0x23c)
+> >       (disassociate_ctty.part.1) from [<8011fc18>] (do_exit+0x580/0xba0)
+> >       (do_exit) from [<801214f8>] (do_group_exit+0x3c/0xb4)
+> >       (do_group_exit) from [<80121580>] (__wake_up_parent+0x0/0x14)
+> > 
+> > Issue looks like race condition between interrupt handler fsl_edma_tx_handler()
+> > (called as result of fsl_edma_xfer_desc()) and terminating the transfer with
+> > fsl_edma_terminate_all().
+> > 
+> > The fsl_edma_tx_handler() handles interrupt for a transfer with already freed
+> > edesc and idle==true.
+> > 
+> > Fixes: d6be34fbd39b ("dma: Add Freescale eDMA engine driver support")
+> > Cc: <stable@vger.kernel.org>
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > > ---
-> >  tools/perf/tests/expr.c |  2 ++
-> >  tools/perf/util/expr.l  |  1 +
-> >  tools/perf/util/expr.y  | 14 ++++++++++++--
-> >  3 files changed, 15 insertions(+), 2 deletions(-)
+> >  drivers/dma/fsl-edma.c | 7 +++++++
+> >  1 file changed, 7 insertions(+)
 > > 
-> > diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
-> > index 1cb02ca2b15f..c4877b36ab58 100644
-> > --- a/tools/perf/tests/expr.c
-> > +++ b/tools/perf/tests/expr.c
-> > @@ -39,6 +39,8 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
-> >  	ret |= test(&ctx, "1+1 if 3*4 else 0", 2);
-> >  	ret |= test(&ctx, "1.1 + 2.1", 3.2);
-> >  	ret |= test(&ctx, ".1 + 2.", 2.1);
-> > +	ret |= test(&ctx, "d_ratio(1, 2)", 0.5);
-> > +	ret |= test(&ctx, "d_ratio(2.5, 0)", 0);
-> >  
-> >  	if (ret)
-> >  		return ret;
-> > diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
-> > index f397bf8b1a48..298d86660a96 100644
-> > --- a/tools/perf/util/expr.l
-> > +++ b/tools/perf/util/expr.l
-> > @@ -100,6 +100,7 @@ symbol		({spec}|{sym})+
-> >  		}
-> >  	}
-> >  
-> > +d_ratio		{ return D_RATIO; }
-> >  max		{ return MAX; }
-> >  min		{ return MIN; }
-> >  if		{ return IF; }
-> > diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-> > index bf3e898e3055..fe145344bb39 100644
-> > --- a/tools/perf/util/expr.y
-> > +++ b/tools/perf/util/expr.y
-> > @@ -10,6 +10,14 @@
-> >  #include "smt.h"
-> >  #include <string.h>
-> >  
-> > +static double d_ratio(double val0, double val1)
-> > +{
-> > +	if (val1 == 0) {
-> > +		return 0;
-> > +	}
-> > +	return  val0 / val1;
-> > +}
+> > diff --git a/drivers/dma/fsl-edma.c b/drivers/dma/fsl-edma.c index
+> > eff7ebd8cf35..90bb72af306c 100644
+> > --- a/drivers/dma/fsl-edma.c
+> > +++ b/drivers/dma/fsl-edma.c
+> > @@ -45,6 +45,13 @@ static irqreturn_t fsl_edma_tx_handler(int irq, void
+> > *dev_id)
+> >  			fsl_chan = &fsl_edma->chans[ch];
+> > 
+> >  			spin_lock(&fsl_chan->vchan.lock);
 > > +
-> >  %}
-> >  
-> >  %define api.pure full
-> > @@ -28,7 +36,7 @@
-> >  %token <num> NUMBER
-> >  %token <str> ID
-> >  %destructor { free ($$); } <str>
-> > -%token MIN MAX IF ELSE SMT_ON
-> > +%token MIN MAX IF ELSE SMT_ON D_RATIO
-> >  %left MIN MAX IF
-> >  %left '|'
-> >  %left '^'
-> > @@ -64,7 +72,8 @@ other: ID
-> >  }
-> >  |
-> >  MIN | MAX | IF | ELSE | SMT_ON | NUMBER | '|' | '^' | '&' | '-' | '+' | '*' | '/' | '%' | '(' | ')' | ','
-> > -
-> > +|
-> > +D_RATIO
-> >  
-> >  all_expr: if_expr			{ *final_val = $1; }
-> >  	;
-> > @@ -105,6 +114,7 @@ expr:	  NUMBER
-> >  	| MIN '(' expr ',' expr ')' { $$ = $3 < $5 ? $3 : $5; }
-> >  	| MAX '(' expr ',' expr ')' { $$ = $3 > $5 ? $3 : $5; }
-> >  	| SMT_ON		 { $$ = smt_on() > 0; }
-> > +	| D_RATIO '(' expr ',' expr ')' { $$ = d_ratio($3,$5); }
-> >  	;
-> >  
-> >  %%
-> > -- 
-> > 2.27.0.278.ge193c7cf3a9-goog
-> > 
-> 
+> > +			if (!fsl_chan->edesc) {
+> Would you like fix the same potential issue in mcf_edma_tx_handler()
+> of mcf-edma.c? 
 
--- 
+Sure. I'll make another commit as it should be backported to different
+kernel.
 
-- Arnaldo
+Best regards,
+Krzysztof
+
