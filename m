@@ -2,85 +2,176 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1EB6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4099C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95C2D20760
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:20:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591874439;
-	bh=0+sxtBect72jPqO+rq641H6d/+ec4oVrijKYw9rAwo0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ex4KgWTQuWCehIfZndSO9vXtt4+d2N9Q9rdZ1dSk/x2lb5jRZVAg0CItb2PBF/ZD7
-	 dvHajX1FfnoasM66oDPm1qrnz009nUYjO8OVEv82cqtGgbANPbaOOgboHN490MoLOz
-	 CbAz3wf+sbbx3ZLX7Z1nfwzf+hOOppqWUXOxwW1A=
+	by mail.kernel.org (Postfix) with ESMTP id B470620760
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:20:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="Il3HXSPN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728017AbgFKLUi (ORCPT
+        id S1727990AbgFKLUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 07:20:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45256 "EHLO mail.kernel.org"
+        Thu, 11 Jun 2020 07:20:42 -0400
+Received: from mx1.tq-group.com ([62.157.118.193]:49594 "EHLO mx1.tq-group.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727942AbgFKLUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 07:20:35 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BF622078D;
-        Thu, 11 Jun 2020 11:20:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591874433;
-        bh=0+sxtBect72jPqO+rq641H6d/+ec4oVrijKYw9rAwo0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dCcT0jSPypweAOdofLdfgp2pOpmONzVnSW9dyk2kGe1bYIp7OWl4/97f6iD4a2Cql
-         B1T5zVmzFd7/toMVNoMgVCll0xC4ubCB/z8JdeTauCsDa9YSbfaV6OI1qtuWtqM51N
-         GgP57QNq8vl3kaebrObZaGsXGqN8Un/7ssRmkiWY=
-Date:   Thu, 11 Jun 2020 13:20:27 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Vikash Bansal <bvikas@vmware.com>
-Cc:     stable@vger.kernel.org, srivatsab@vmware.com,
-        srivatsa@csail.mit.edu, amakhalov@vmware.com, srinidhir@vmware.com,
-        anishs@vmware.com, vsirnapalli@vmware.com, akaher@vmware.com,
-        clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
-        anand.jain@oracle.com, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4.19.y 0/2] btrfs: Fix for CVE-2019-18885
-Message-ID: <20200611112027.GJ3802953@kroah.com>
-References: <20200609065018.26378-1-bvikas@vmware.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200609065018.26378-1-bvikas@vmware.com>
+        id S1727931AbgFKLUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 07:20:37 -0400
+IronPort-SDR: TRlUY6Sbw6GBO2PUyaGsRLL3BOYH+iccJ/vi5DyPw98yEi1khuYV639z6MOp84Sr21bmx45RjB
+ gp6VmhXap1miX9P7tf2DvnMcqxNirTE/I+UZmCWGLnv9bXRE70ZHn2HB8A15QhywkPkFCsyjW8
+ aufMr285bDtat7ldY3kXFMJWCG9t7p3beR3EtCmZMiqcN/pEnEaED3qt44tckgMwCbdiWnbc59
+ T75Feji9NfFv1Mdl9KW3dCXn4d8YM6BsYjEu+s7ZSzJXpmOPzsdb3GQJKsc05Vy3jk1QaZrX76
+ omQ=
+X-IronPort-AV: E=Sophos;i="5.73,499,1583190000"; 
+   d="scan'208";a="12649134"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 11 Jun 2020 13:20:32 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Thu, 11 Jun 2020 13:20:32 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Thu, 11 Jun 2020 13:20:32 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1591874432; x=1623410432;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=ucvXkYYt7tPx+/jxBJ3kWXHMAb4QHM7JJ1bBSklbroU=;
+  b=Il3HXSPNoqV4h0Bj6C4G2Lm30B0tUYye7yhBpn5+WhKmA5CPxJna4CkA
+   lgYqgnNadti+7d+Dumorl3GKD5+WZQVuyNWIxmLDXZRtWAXpWyvYbbHpj
+   ZvJjRrzhej4SkCS7sf54+uobL0ZrenXPbr/Nlgj4k01WohruK4hOs0ywd
+   7Yss3U7CqeeSq/J99M5jTol0b0S4BemWlntfqJwrhkC38YFPj0wyxGw1T
+   5tjpW2y3J91AlU7erYhbD0zMJHoamZFbp9S4w4ya0CesrvFEs4m9XkNvL
+   2i0msZN2GnqlUBfUNEjueQfm68NvYdh3pwQxiMKkMS1iUr2DBC6cT5zLN
+   g==;
+IronPort-SDR: id5UekctAs1cKGw03oHNfmPm++wv/9AyR2WgCFVEMSiQV/BSVf09oUtHs3gFYtLoZJqmDQqnPu
+ HILsQ4+zt9AcZ/1XgHoDER8CPGZIgpWX3wF/t3oBtt5UQT8IKqKijeQwpKqi11T8xnKBkxdxdC
+ ymkHY4KOIqUmQST00l72Csp9ld9tWfYmMq03jNT5s/3bW7S16KNle6dnUce2DT7dSF1g2PfPon
+ 5BX4ui8Yeau6S0RU5NH2ChJ8500RtM2XdxAraSWZQgAkDGVcREmJ0GApYZaPGgK5e9W9XDwKJ/
+ Ybc=
+X-IronPort-AV: E=Sophos;i="5.73,499,1583190000"; 
+   d="scan'208";a="12649133"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 11 Jun 2020 13:20:32 +0200
+Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id B3679280065;
+        Thu, 11 Jun 2020 13:20:33 +0200 (CEST)
+Message-ID: <cfcec3df57e6dd5ef353ef3a5b4b9793c28eb401.camel@ew.tq-group.com>
+Subject: Re: (EXT) Re: Consistent block device references for root= cmdline
+From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Jens Axboe <axboe@kernel.dk>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Thu, 11 Jun 2020 13:20:30 +0200
+In-Reply-To: <CAPDyKFq+RiwbDj+58+W5GTcT7=ZOpZFmc02+FxjRGYwbBgA8oQ@mail.gmail.com>
+References: <fb0340aaf273be84e915214a3d8bae4ac85d7c0b.camel@ew.tq-group.com>
+         <CAPDyKFq+RiwbDj+58+W5GTcT7=ZOpZFmc02+FxjRGYwbBgA8oQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 12:20:16PM +0530, Vikash Bansal wrote:
-> CVE Description:
-> NVD Site Link: https://nvd.nist.gov/vuln/detail?vulnId=CVE-2019-18885
+On Wed, 2020-06-10 at 16:52 +0200, Ulf Hansson wrote:
+> On Wed, 10 Jun 2020 at 15:15, Matthias Schiffer
+> <matthias.schiffer@ew.tq-group.com> wrote:
+> > 
+> > Hello all,
+> > 
+> > there have been numerous attempts to make the numbering of mmcblk
+> > devices consistent, mostly by using aliases from the DTS ([1], [2],
+> > [3]), but all have been (rightfully) rejected. Unless I have
+> > overlooked
+> > a more recent development, no attempts for a different solution
+> > were
+> > made.
 > 
-> It was discovered that the btrfs file system in the Linux kernel did not
-> properly validate metadata, leading to a NULL pointer dereference. An
-> attacker could use this to specially craft a file system image that, when
-> mounted, could cause a denial of service (system crash).
+> According to aliases attempts, I think those have failed, mainly
+> because of two reasons.
 > 
-> [PATCH v4.19.y 1/2]:
-> Backporting of upsream commit 09ba3bc9dd15:
-> btrfs: merge btrfs_find_device and find_device
+> 1. Arguments stating that LABELs/UUIDs are variable alternatives.
+> This
+> isn't the case, which I think was also concluded from the several
+> earlier discussions.
+> 2. Patches that tried adding support for mmc aliases, were not
+> correctly coded. More precisely, what needs to be addressed is that
+> the mmc core also preserves the same ids to be set for the host class
+> as the block device, mmc[n] must correspond to mmcblk[n].
 > 
-> [PATCH v4.19.y 2/2]:
-> Backporting of upstream commit 62fdaa52a3d0:
-> btrfs: Detect unbalanced tree with empty leaf before crashing
+> > 
+> > As far as I can tell, the core of the issue seems to be the
+> > following:
+> > 
+> > The existing solutions like LABELs and UUIDs are viable
+> > alternatives in
+> > many cases, but in particular on embedded systems, this is not
+> > quite
+> > sufficient: In addition to the problem that more knowledge about
+> > the
+> > system to boot is required in the bootloader, this approach fails
+> > completely when the same firmware image exists on multiple devices,
+> > for
+> > example on an eMMC and an SD card - not an entirely uncommon
+> > situation
+> > during the development of embedded systems.
+> > 
+> > With udev, I can refer to a specific partition using a path like
+> > /dev/disk/by-path/platform-2194000.usdhc-part2. In [4] it was
+> > proposed
+> > to add a way to refer to a device path/phandle from the kernel
+> > command
+> > line. Has there been any progress on this proposal?
 > 
-> On NVD site link of "commit 09ba3bc9dd150457c506e4661380a6183af651c1" 
-> was given as the fix for this CVE. But the issue was still reproducible.
-> So had to apply patch "Commit 62fdaa52a3d00a875da771719b6dc537ca79fce1"
-> to fix the issue.
+> Lots of time during the years I have been approached, both publicly
+> and offlist, about whether it would be possible to add support for
+> "consistent" mmcblk devices. To me, I am fine with the aliases
+> approach, as long as it gets implemented correctly.
 
-Looks good, now queued up,t hanks.
 
-greg k-h
+It seems the principal technical problem is the one described here:
+
+https://www.spinics.net/lists/linux-mmc/msg26602.html
+
+I don't see any way to solve this completely, as there seem to be two
+fundamentally conflicting requirements:
+
+1) If a mounted SD card is replaced, it must be assigned a new
+/dev/mmcblkN
+2) /dev/mmcblkN should always match the configured alias IDs
+
+What is the reason we need 1) - is it possible to have multiple eMMCs
+or SD cards on a single bus, with detection at runtime? Otherwise I'd
+expect this to be handled like other drives with removable media (CD,
+floppy), with static device assignment.
+
+If we can't give up on 1) for some reason, we'll have to accept that we
+can't guarantee 2) unconditionally. As far as I can tell, the patches
+provided by Sascha and others did that in a reasonable way: The aliases
+would work in most cases - in particular for the first assignment on
+boot, which is required to find the correct rootfs.
+
+> 
+> > 
+> > Kind regards,
+> > Matthias
+> > 
+> > 
+> > [1] https://patchwork.kernel.org/patch/8685711/
+> > [2] https://lore.kernel.org/patchwork/cover/674381/
+> > [3] https://www.spinics.net/lists/linux-mmc/msg26586.html
+> > [4] https://www.spinics.net/lists/linux-mmc/msg26708.html
+> > 
+> 
+> Kind regards
+> Uffe
+
