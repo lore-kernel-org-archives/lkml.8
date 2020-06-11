@@ -2,201 +2,155 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URG_BIZ,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75476C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B55C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5180E20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:54:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591919666;
-	bh=ecHjhTk2OUDvinD2Ye94HRxBLH7cQT2pTk9FPh29ju4=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=TpNvj+UOwS/HlRMKPQlPIna4jmtHEaIZW210to7mED0Ds2MRdVSpUWs1M0KlaD8fH
-	 SsV/WLufReZYx1YiY+/EfPv2F/a0AJNwiwoizeSEx4lmsQO4g2KJYCjNtWRD2GkCL3
-	 Z3tj8/9MnbsX8BSR/PHKa/JNcUgydACnjpHCMt9k=
+	by mail.kernel.org (Postfix) with ESMTP id F01BE2078C
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:55:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HyPFX0Db"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726401AbgFKXyY (ORCPT
+        id S1726364AbgFKXzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 19:54:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42836 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726294AbgFKXyY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 19:54:24 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 629B920731;
-        Thu, 11 Jun 2020 23:54:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591919663;
-        bh=ecHjhTk2OUDvinD2Ye94HRxBLH7cQT2pTk9FPh29ju4=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=uUNnZlrRjwuidzGZvAARld7TF+Uyr4CLw2y+VzrRDaOlkjqCwyrvj1a+1+2yCTAto
-         HbI6tNA2g7dN5I0zLlEUh1GEumTpTKoco9bezWk57RD46/aDpd8hu4zM0XY5fMD8ET
-         hA5p27UIFjiWvGO8ARvGBi3UDNsQ33X5WYSqSjCE=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 4B02C35228C7; Thu, 11 Jun 2020 16:54:23 -0700 (PDT)
-Date:   Thu, 11 Jun 2020 16:54:23 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     linux-kernel@vger.kernel.org, rcu@vger.kernel.org
-Cc:     tglx@linutronix.de, luto@kernel.org, x86@kernel.org,
-        frederic@kernel.org, rostedt@goodmis.org, joel@joelfernandes.org,
-        mathieu.desnoyers@efficios.com, will@kernel.org,
-        peterz@infradead.org
-Subject: Re: [PATCH RFC] x86/entry: Ask RCU if it needs rcu_irq_{enter,exit}()
-Message-ID: <20200611235423.GA32454@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200611235305.GA32342@paulmck-ThinkPad-P72>
+        Thu, 11 Jun 2020 19:55:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34354 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726284AbgFKXzk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 19:55:40 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8360CC08C5C1;
+        Thu, 11 Jun 2020 16:55:39 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id g28so7458694qkl.0;
+        Thu, 11 Jun 2020 16:55:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=F5v636w1U2r9faKtpDeWzBpWJiuE/GmNaYKlismlA8U=;
+        b=HyPFX0Dbl/lvpUQZOju2xEIns4jas8JFofOmGF46iajecbOcOMCerAYq/cbCcrvLNw
+         K4pktP2zZl5zFZSJjFEWXEp8owkTrkL/Fz0zgce2JkQ8bWJPDhu5h9uhmRP9VSMStnL3
+         QHzB7pNv3q9ppH7YH66NKNUHiROeAjCeR6BzyK5KGPOwaqgk4BMqqD6n5w2cpsqPLz20
+         vENNadkxflli0r1TtyWD89BmvN56PhouGxLPYFfpZG1dgTDFgiw5SuQqpB+UacB7RzYI
+         PWgIY3c/9I7eUUnXZRVj8ZxD4+2cq0xHNsAZ3LX2Ir+jGFZ/Zn0b/AQyzvkUVBp154cw
+         +PaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=F5v636w1U2r9faKtpDeWzBpWJiuE/GmNaYKlismlA8U=;
+        b=s67JQxetp4+QdKLGj3/Xeh84nIz/eXE3b7vqzdb00Rhm/LptfFCMRFgL3ivgNc9vUj
+         AuTbf7H2WJM4j/KBIVcBWjLxF0TTCc10IBtvZZgV+Racv5o2UMbfvCc7r1/RlQgJ9Sa2
+         WKHY91amoBziTV88mVrQJtD6r/LNpqEXAXGNbIEO5KNvpnPyfcMSnHfli1duTd5FdlHf
+         hq1WeF4IaSt1HJwBpA2C3PL+p/u2T9Or/uzm6MpO+ZZe+SYbekSppe84meZ1gMsf+sWi
+         iG4qK/CxQryEsH44SGgdzK7XR0DkJBZ5otI1quQYFcUGqfH7sk4dTJVrMe5eJSI6IsXA
+         kuEw==
+X-Gm-Message-State: AOAM53246v0pWTNQJaT80ABUaPOiM0XSSn8/INm7+M2RJ/guw0v6GwJO
+        gVc2AOAWFwJYf4MOhOOHUvQ=
+X-Google-Smtp-Source: ABdhPJxCOrnRf8nwSUdwmtMf/rNeZwmr77UMJdROHZPgjMCqlypfCoJaxxWEnO5jkLoK/YqVG3jC2g==
+X-Received: by 2002:a37:a7c5:: with SMTP id q188mr492287qke.384.1591919738575;
+        Thu, 11 Jun 2020 16:55:38 -0700 (PDT)
+Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
+        by smtp.gmail.com with ESMTPSA id q32sm3859272qtf.36.2020.06.11.16.55.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Jun 2020 16:55:37 -0700 (PDT)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 339CB27C0054;
+        Thu, 11 Jun 2020 19:55:36 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Thu, 11 Jun 2020 19:55:36 -0400
+X-ME-Sender: <xms:b8TiXjdZZ4Whi3jp7-wUgmKt6dvRH52VirY_52Zwz9JKIqOWK7s9Hw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudeitddgvdelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhn
+    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrth
+    htvghrnhepveeijedthfeijeefudehhedvveegudegteehgffgtddvuedtveegtedvvdef
+    gedtnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphephedvrdduheehrdduud
+    durdejudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhm
+    pegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtd
+    eigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehf
+    ihigmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:b8TiXpOC0t-CX5R13OqK3l6eVl1IwaDANwjDfZGQec9tu6tDhjg-4A>
+    <xmx:b8TiXsgC1j4rj4iHTxZEzCW2qOaYtl3QOCheHGKf3x3969WhFE1lGg>
+    <xmx:b8TiXk9L4kwY0kTu-Ug1YaqZqTU8qZPOOpeqNkmMynhlOogtvHqFig>
+    <xmx:eMTiXjBMfBoZmvXPo3IDNoIf4Skm7XgWifSDGFzNUyoeBpLZxKbGleum4go>
+Received: from localhost (unknown [52.155.111.71])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 4AB2D3060FE7;
+        Thu, 11 Jun 2020 19:55:27 -0400 (EDT)
+Date:   Fri, 12 Jun 2020 07:55:26 +0800
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+a9fb1457d720a55d6dc5@syzkaller.appspotmail.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>, allison@lohutok.net,
+        areber@redhat.com, aubrey.li@linux.intel.com,
+        Andrei Vagin <avagin@gmail.com>,
+        Bruce Fields <bfields@fieldses.org>,
+        Christian Brauner <christian@brauner.io>, cyphar@cyphar.com,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>, guro@fb.com,
+        Jeff Layton <jlayton@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Kees Cook <keescook@chromium.org>, linmiaohe@huawei.com,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michal Hocko <mhocko@suse.com>, Ingo Molnar <mingo@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, sargun@sargun.me,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: possible deadlock in send_sigio
+Message-ID: <20200611235526.GC94665@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+References: <000000000000760d0705a270ad0c@google.com>
+ <69818a6c-7025-8950-da4b-7fdc065d90d6@redhat.com>
+ <CACT4Y+brpePBoR7EUwPiSvGAgo6bhvpKvLTiCaCfRSadzn6yRw@mail.gmail.com>
+ <88c172af-46df-116e-6f22-b77f98803dcb@redhat.com>
+ <20200611142214.GI2531@hirez.programming.kicks-ass.net>
+ <b405aca6-a3b2-cf11-a482-2b4af1e548bd@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200611235305.GA32342@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <b405aca6-a3b2-cf11-a482-2b4af1e548bd@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 04:53:05PM -0700, Paul E. McKenney wrote:
-> RCU needs to detect when one if its interrupt handlers interrupted an idle
-> state, where an idle state is either the idle loop itself or nohz_full
-> userspace execution.  When a CPU has been interrupted from one of these
-> idle states, RCU can report a quiescent state, helping the current grace
-> period to come to an end.
+Hi Peter and Waiman,
+
+On Thu, Jun 11, 2020 at 12:09:59PM -0400, Waiman Long wrote:
+> On 6/11/20 10:22 AM, Peter Zijlstra wrote:
+> > On Thu, Jun 11, 2020 at 09:51:29AM -0400, Waiman Long wrote:
+> > 
+> > > There was an old lockdep patch that I think may address the issue, but was
+> > > not merged at the time. I will need to dig it out and see if it can be
+> > > adapted to work in the current kernel. It may take some time.
+> > Boqun was working on that; I can't remember what happened, but ISTR it
+> > was shaping up nice.
+> > 
+> Yes, I am talking about Boqun's patch. However, I think he had moved to
+> another company and so may not be able to actively work on that again.
 > 
-> However, there are optimized kernel-entry paths where handlers that
-> would normally be executed in interrupt context are instead executed
-> directly from the base process context, but with interrupts disabled.
-> When such a directly-executed handler is followed by softirq processing
-> (which re-enables interrupts), it is possible that one of RCU's interrupt
-> handlers will interrupt this softirq processing.  This situation can cause
-> RCU to incorrectly assume that the CPU has passed through a quiescent
-> state, when in fact the CPU is instead in the midst of softirq processing,
-> and might well be within an RCU read-side critical section.  In that case,
-> reporting a quiescent state can result in too-short RCU grace periods,
-> leading to arbitrary memory corruption and a sharp degradation in the
-> actuarial statistics of your kernel.
+
+I think you are talking about the rescursive read deadlock detection
+patchset:
+
+	https://lore.kernel.org/lkml/20180411135110.9217-1-boqun.feng@gmail.com/
+
+Let me have a good and send a new version based on today's master of tip
+tree.
+
+Regards,
+Boqun
+
+> Cheers,
+> Longman
 > 
-> The fix is for the optimized kernel-entry paths to replace the current
-> call to __rcu_is_watching() with a call to a new rcu_needs_irq_enter()
-> function, which returns true iff RCU needs explicit calls to
-> rcu_irq_enter() and rcu_irq_exit() surrounding the optimized invocation
-> of the handler.  These explicit calls are never required in Tiny RCU,
-> and in Tree RCU are required only if the CPU might have interrupted
-> nohz_full userspace execution or the idle loop.  There is the usual
-> precision/overhead tradeoff, with the current implementation majoring
-> in low common-case overhead.
-> 
-> While in the area, the commit also returns rcu_is_cpu_rrupt_from_idle()
-> to its original semantics.
-> 
-> This has been subjected only to very light rcutorture testing, so use
-> appropriate caution.  The placement of the new rcu_needs_irq_enter()
-> is not ideal, but the more natural include/linux/hardirq.h location has
-> #include issues.
-
-And if you want more details on how I got to this patch, please see below.
-
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
-Thomas supplied a patch and suggested that there be an RCU-supplied
-rcu_needs_irq_enter() function that says whether the full
-rcu_irq_enter()/rcu_irq_exit() dance is required.  The function needing
-the dance is rcu_is_cpu_rrupt_from_idle().
-
-Assumptions:
-
-o	It would be simpler for idtentry_enter_cond_rcu() to check a
-	new rcu_needs_irq_enter() function than to do a fragile check
-	of "!__rcu_is_watching() || is_idle_task(current)".  Note also
-	that this check does not account for expedited grace periods
-	interacting with softirq handlers having interrupted nohz_full
-	userspace execution.
-
-	This assumption seems likely to hold.
-
-o	If CONFIG_CONTEXT_TRACKING=y, assume that rcu_user_enter()
-	and rcu_user_exit() might be invoked on any CPU.  Query in to
-	Frederic on whether this can be more selective.
-
-Functions of interest:
-
-o	rcu_is_cpu_rrupt_from_idle().  See below.
-
-o	__rcu_is_watching().  The only call to this will likely
-	be eliminated.  If so, it can be removed.
-
-o	idtentry_enter_cond_rcu().  Replace __rcu_is_watching()
-	check with a check of rcu_needs_irq_enter().
-
-o	idtentry_exit_cond_rcu().  No change.
-
-o	rcu_irq_enter_check_tick().  Turn on tick for nohz_full
-	CPUs when required.
-
-o	rcu_irq_exit_check_preempt().  Straight lockdep validation.
-
-Use cases for rcu_is_cpu_rrupt_from_idle():
-
-o	rcu_sched_clock_irq(): If not interrupted from idle, need to
-	ask the scheduler for help for ->urgent_qs request.
-
-o	rcu_pending(): If a nohz_full CPU is interrupted from idle,
-	don't raise_softirq() it.  Instead, let the grace-period
-	kthread detect the quiescent state.
-
-o	rcu_exp_handler() for PREEMPT_NONE kernels:  Directly report
-	a quiescent state if interrupted from idle.
-
-o	rcu_flavor_sched_clock_irq for PREEMPT kernels:  Report a
-	voluntary context switch if interrupted from idle.  Here "idle"
-	includes still in the kernel but on the way to/from nohz_full
-	userspace execution.
-
-o	rcu_flavor_sched_clock_irq for PREEMPT_NONE kernels:  Report a
-	quiescent state if interrupted from idle.
-	
-In all of the above cases for NO_HZ_FULL kernels, "idle" includes still
-in the kernel but on the way to/from nohz_full userspace execution.
-
-Information available to rcu_needs_irq_enter():
-
-o	IS_ENABLED(CONFIG_CONTEXT_TRACKING), which indicates that
-	nohz_full userspace execution is possible, and that some
-	CPUs might be invoking rcu_idle_enter() and rcu_idle_exit().
-
-	There is also tick_nohz_full_cpu(), but it is not clear that if
-	this returns false that the corresponding CPU is guaranteed not
-	to be invoking rcu_idle_enter() and rcu_idle_exit().
-
-o	is_idle_task(current), which returns true if the current task
-	is an idle task.  Such tasks always need to execute
-	rcu_irq_enter() and rcu_irq_exit().  Or, if instrumentation
-	is prohibited, rcu_nmi_enter() and rcu_nmi_exit().
-
-o	rdp->dynticks_nesting:	If non-zero, we are in process context,
-	and don't need rcu_irq_enter() or rcu_irq_exit() regardless
-	of other state.  But this requires that rcu_needs_irq_enter()
-	be defined within Tree RCU, so it is not necessarily a win.
-
-->	The simple approach is for rcu_needs_irq_enter() to return:
-
-	!IS_ENABLED(CONFIG_TINY_RCU) &&
-	(IS_ENABLED(CONFIG_CONTEXT_TRACKING) || is_idle_task(current))
-
-	Except that Frederic points out context_tracking_enabled_cpu():
-
-	!IS_ENABLED(CONFIG_TINY_RCU) &&
-	(context_tracking_enabled_cpu(smp_processor_id()) || is_idle_task(current))
-
-o	As a result, rcu_needs_irq_enter() might need to be defined
-	outside of RCU to allow inlining and to avoid #include hell.
-	One candidate location is include/linux/hardirq.h, the same
-	place that rcu_irq_enter_check_tick() is defined.
