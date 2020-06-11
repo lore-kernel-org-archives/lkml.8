@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0A4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 06:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC9FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 06:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FC5E2075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 06:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 818CB2075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 06:17:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbgFKGRM (ORCPT
+        id S1726847AbgFKGR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 02:17:12 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:39554 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726379AbgFKGRJ (ORCPT
+        Thu, 11 Jun 2020 02:17:56 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:33299 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726671AbgFKGRQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 02:17:09 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07425;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0U.EtHon_1591856223;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U.EtHon_1591856223)
+        Thu, 11 Jun 2020 02:17:16 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0U.EnDAM_1591856228;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U.EnDAM_1591856228)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 11 Jun 2020 14:17:03 +0800
+          Thu, 11 Jun 2020 14:17:08 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
         tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
@@ -33,9 +33,11 @@ To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         cgroups@vger.kernel.org, shakeelb@google.com,
         iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com
-Subject: [PATCH v12 01/16] mm/vmscan: remove unnecessary lruvec adding
-Date:   Thu, 11 Jun 2020 14:16:34 +0800
-Message-Id: <1591856209-166869-2-git-send-email-alex.shi@linux.alibaba.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>
+Subject: [PATCH v12 08/16] mm/memcg: add debug checking in lock_page_memcg
+Date:   Thu, 11 Jun 2020 14:16:41 +0800
+Message-Id: <1591856209-166869-9-git-send-email-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1591856209-166869-1-git-send-email-alex.shi@linux.alibaba.com>
 References: <1591856209-166869-1-git-send-email-alex.shi@linux.alibaba.com>
@@ -44,93 +46,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We don't have to add a freeable page into lru and then remove from it.
-This change saves a couple of actions and makes the moving more clear.
+Add a debug checking in lock_page_memcg, then we could get alarm
+if anything wrong here.
 
-The SetPageLRU needs to be kept here for list intergrity.
-Otherwise:
- #0 mave_pages_to_lru              #1 release_pages
-                                   if (put_page_testzero())
- if !put_page_testzero
-                                     !PageLRU //skip lru_lock
-                                       list_add(&page->lru,)
-   list_add(&page->lru,) //corrupt
-
-[akpm@linux-foundation.org: coding style fixes]
+Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Hugh Dickins <hughd@google.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: cgroups@vger.kernel.org
 Cc: linux-mm@kvack.org
 Cc: linux-kernel@vger.kernel.org
 ---
- mm/vmscan.c | 32 +++++++++++++++++++++-----------
- 1 file changed, 21 insertions(+), 11 deletions(-)
+ mm/memcontrol.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index b6d84326bdf2..81228334f7d6 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -1855,26 +1855,29 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
- 	while (!list_empty(list)) {
- 		page = lru_to_page(list);
- 		VM_BUG_ON_PAGE(PageLRU(page), page);
-+		list_del(&page->lru);
- 		if (unlikely(!page_evictable(page))) {
--			list_del(&page->lru);
- 			spin_unlock_irq(&pgdat->lru_lock);
- 			putback_lru_page(page);
- 			spin_lock_irq(&pgdat->lru_lock);
- 			continue;
- 		}
--		lruvec = mem_cgroup_page_lruvec(page, pgdat);
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 0b38b6ad547d..78c16ac1473d 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -1983,6 +1983,12 @@ struct mem_cgroup *lock_page_memcg(struct page *page)
+ 	if (unlikely(!memcg))
+ 		return NULL;
  
-+		/*
-+		 * The SetPageLRU needs to be kept here for list intergrity.
-+		 * Otherwise:
-+		 *   #0 mave_pages_to_lru             #1 release_pages
-+		 *				      if (put_page_testzero())
-+		 *   if !put_page_testzero
-+		 *				        !PageLRU //skip lru_lock
-+		 *                                        list_add(&page->lru,)
-+		 *     list_add(&page->lru,) //corrupt
-+		 */
- 		SetPageLRU(page);
--		lru = page_lru(page);
--
--		nr_pages = hpage_nr_pages(page);
--		update_lru_size(lruvec, lru, page_zonenum(page), nr_pages);
--		list_move(&page->lru, &lruvec->lists[lru]);
- 
--		if (put_page_testzero(page)) {
-+		if (unlikely(put_page_testzero(page))) {
- 			__ClearPageLRU(page);
- 			__ClearPageActive(page);
--			del_page_from_lru_list(page, lruvec, lru);
- 
- 			if (unlikely(PageCompound(page))) {
- 				spin_unlock_irq(&pgdat->lru_lock);
-@@ -1882,9 +1885,16 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
- 				spin_lock_irq(&pgdat->lru_lock);
- 			} else
- 				list_add(&page->lru, &pages_to_free);
--		} else {
--			nr_moved += nr_pages;
-+			continue;
- 		}
++#ifdef CONFIG_PROVE_LOCKING
++	local_irq_save(flags);
++	might_lock(&memcg->move_lock);
++	local_irq_restore(flags);
++#endif
 +
-+		lruvec = mem_cgroup_page_lruvec(page, pgdat);
-+		lru = page_lru(page);
-+		nr_pages = hpage_nr_pages(page);
-+
-+		update_lru_size(lruvec, lru, page_zonenum(page), nr_pages);
-+		list_add(&page->lru, &lruvec->lists[lru]);
-+		nr_moved += nr_pages;
- 	}
+ 	if (atomic_read(&memcg->moving_account) <= 0)
+ 		return memcg;
  
- 	/*
 -- 
 1.8.3.1
 
