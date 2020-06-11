@@ -2,171 +2,315 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55AE7C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAFD6C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 322F12078C
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:20:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A418020835
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:21:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RXgoilEj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726387AbgFKXUx (ORCPT
+        id S1726408AbgFKXV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 19:20:53 -0400
-Received: from mga18.intel.com ([134.134.136.126]:57714 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726284AbgFKXUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 19:20:52 -0400
-IronPort-SDR: 4TuFqZyGUEfZDtEKac1V2eKelE8A+T4L71/kYn74cUyA7p6B9Jn/ycxf0xmFy1x4yKohxzDwDR
- oc6NRe4dnX6A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 16:20:51 -0700
-IronPort-SDR: XhXMCmaBfuRgwtEFEXtJMZygbD7vqtJ8pGircQSzqdqyXnILtwUaucQYN/2ij0J2tfgHHt0zS8
- TZF78l9QkkIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,501,1583222400"; 
-   d="scan'208";a="260815830"
-Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.16])
-  by fmsmga008.fm.intel.com with ESMTP; 11 Jun 2020 16:20:48 -0700
-Date:   Thu, 11 Jun 2020 19:10:48 -0400
-From:   Yan Zhao <yan.y.zhao@intel.com>
-To:     Xiang Zheng <zhengxiang9@huawei.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        alex.williamson@redhat.com, cohuck@redhat.com,
-        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        kevin.tian@intel.com, shaopeng.he@intel.com, yi.l.liu@intel.com,
-        xin.zeng@intel.com, hang.yuan@intel.com,
-        Wang Haibin <wanghaibin.wang@huawei.com>
-Subject: Re: [RFC PATCH v4 08/10] i40e/vf_migration: VF live migration -
- pass-through VF first
-Message-ID: <20200611231048.GE13961@joy-OptiPlex-7040>
-Reply-To: Yan Zhao <yan.y.zhao@intel.com>
-References: <20200518024202.13996-1-yan.y.zhao@intel.com>
- <20200518025316.14491-1-yan.y.zhao@intel.com>
- <e45d5bb6-6f15-dd4d-6de2-478b36f88069@huawei.com>
- <20200611002319.GC13961@joy-OptiPlex-7040>
- <fe5c0a64-003c-1db6-8256-f0dc00333f1d@huawei.com>
+        Thu, 11 Jun 2020 19:21:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57430 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbgFKXV5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 19:21:57 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D638DC08C5C4
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 16:21:56 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id k1so2834224pls.2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 16:21:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=Mx1BJS+F5RobWjcFE5t60E3qsaoq0yype8aHumba4AY=;
+        b=RXgoilEj3158/D81CyzqcOUTZGSWHs9fozqqHDzPcxAklVjRdy3hZHjcRNjda1AfcN
+         MWh8NjVKFFD6uqQ06STzWf+p07V+jMqx60Slct7LfhtNx8i3FESb0eHAl0Rzjg1hft3B
+         ++DDeyiqrKN7JopuxQxvASgSkFdlE740/jr9E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=Mx1BJS+F5RobWjcFE5t60E3qsaoq0yype8aHumba4AY=;
+        b=jkRpxtbyHYW5h+6dRKh4REAHh0tXJjtSrl5AgyiV73ZlHxXcYKBVB6pSGmN5Jo+Qd0
+         k6vKJ8dUlZT+mg+xj/BMThun3PZV+aeN6pQNm33RFS/azo2XxpsCnO7RF9Y84Sud6Nju
+         vnlxwdliXchzyo73n2nOu0CZLus7jR8QrzcXH4Sq72QQWHVmAjon3pQdeJ9Ws4NUaW0G
+         xufKOmck3O+WuJOTyhBYqgwxH3tmKHW4sfVaT2HprdtNLIlIL/jeVHOaEU7MlExPZPsn
+         KviD3mBJtKHmn4gB6HluzGATNdDSKcogAVWoipljvEzmYF64sHHyqAufT110bB9O39WB
+         Ujaw==
+X-Gm-Message-State: AOAM532ZTR9poOCDc/ZOiUfvkQRltAuJNd8JdKxBub4zbXyevR90pyna
+        RZx++nceMoX5741ca0tyBLqNQw==
+X-Google-Smtp-Source: ABdhPJwdz2sTBkJb9s0f/hzOItcMgoPC81y0CH/eE7gR25jQYxuS18l1pPBiz49y8/WC7LrnNm8i4Q==
+X-Received: by 2002:a17:90a:70c6:: with SMTP id a6mr9302299pjm.16.1591917716068;
+        Thu, 11 Jun 2020 16:21:56 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id b7sm4036787pfo.202.2020.06.11.16.21.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2020 16:21:55 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fe5c0a64-003c-1db6-8256-f0dc00333f1d@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1591885683-29514-3-git-send-email-sanm@codeaurora.org>
+References: <1591885683-29514-1-git-send-email-sanm@codeaurora.org> <1591885683-29514-3-git-send-email-sanm@codeaurora.org>
+Subject: Re: [PATCH 2/2] usb: dwc3: Host wake up support from system suspend
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        linux-clk@vger.kernel.org, Taniya Das <tdas@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Date:   Thu, 11 Jun 2020 16:21:54 -0700
+Message-ID: <159191771455.242598.12826819292508436205@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 10:27:34AM +0800, Xiang Zheng wrote:
-> 
-> 
-> On 2020/6/11 8:23, Yan Zhao wrote:
-> > On Wed, Jun 10, 2020 at 04:59:43PM +0800, Xiang Zheng wrote:
-> >> Hi Yan,
-> >>
-> >> few nits below...
-> >>
-> >> On 2020/5/18 10:53, Yan Zhao wrote:
-> >>> This driver intercepts all device operations as long as it's probed
-> >>> successfully by vfio-pci driver.
-> >>>
-> >>> It will process regions and irqs of its interest and then forward
-> >>> operations to default handlers exported from vfio pci if it wishes to.
-> >>>
-> >>> In this patch, this driver does nothing but pass through VFs to guest
-> >>> by calling to exported handlers from driver vfio-pci.
-> >>>
-> >>> Cc: Shaopeng He <shaopeng.he@intel.com>
-> >>>
-> >>> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
-> >>> ---
-> >>>  drivers/net/ethernet/intel/Kconfig            |  10 ++
-> >>>  drivers/net/ethernet/intel/i40e/Makefile      |   2 +
-> >>>  .../ethernet/intel/i40e/i40e_vf_migration.c   | 165 ++++++++++++++++++
-> >>>  .../ethernet/intel/i40e/i40e_vf_migration.h   |  59 +++++++
-> >>>  4 files changed, 236 insertions(+)
-> >>>  create mode 100644 drivers/net/ethernet/intel/i40e/i40e_vf_migration.c
-> >>>  create mode 100644 drivers/net/ethernet/intel/i40e/i40e_vf_migration.h
-> >>>
-> >>> diff --git a/drivers/net/ethernet/intel/Kconfig b/drivers/net/ethernet/intel/Kconfig
-> >>> index ad34e4335df2..31780d9a59f1 100644
-> >>> --- a/drivers/net/ethernet/intel/Kconfig
-> >>> +++ b/drivers/net/ethernet/intel/Kconfig
-> >>> @@ -264,6 +264,16 @@ config I40E_DCB
-> >>>  
-> >>>  	  If unsure, say N.
-> >>>  
-> 
-> [...]
-> 
-> >>> diff --git a/drivers/net/ethernet/intel/i40e/i40e_vf_migration.h b/drivers/net/ethernet/intel/i40e/i40e_vf_migration.h
-> >>> new file mode 100644
-> >>> index 000000000000..696d40601ec3
-> >>> --- /dev/null
-> >>> +++ b/drivers/net/ethernet/intel/i40e/i40e_vf_migration.h
-> >>> @@ -0,0 +1,59 @@
-> >>> +/* SPDX-License-Identifier: GPL-2.0 */
-> >>> +/* Copyright(c) 2013 - 2019 Intel Corporation. */
-> >>> +
-> >>> +#ifndef I40E_MIG_H
-> >>> +#define I40E_MIG_H
-> >>> +
-> >>> +#include <linux/pci.h>
-> >>> +#include <linux/vfio.h>
-> >>> +#include <linux/mdev.h>
-> >>> +
-> >>> +#include "i40e.h"
-> >>> +#include "i40e_txrx.h"
-> >>> +
-> >>> +/* helper macros copied from vfio-pci */
-> >>> +#define VFIO_PCI_OFFSET_SHIFT   40
-> >>> +#define VFIO_PCI_OFFSET_TO_INDEX(off)   ((off) >> VFIO_PCI_OFFSET_SHIFT)
-> >>> +#define VFIO_PCI_INDEX_TO_OFFSET(index)	((u64)(index) << VFIO_PCI_OFFSET_SHIFT)
-> >>> +#define VFIO_PCI_OFFSET_MASK    (((u64)(1) << VFIO_PCI_OFFSET_SHIFT) - 1)
-> >>> +
-> >>> +/* Single Root I/O Virtualization */
-> >>> +struct pci_sriov {
-> >>> +	int		pos;		/* Capability position */
-> >>> +	int		nres;		/* Number of resources */
-> >>> +	u32		cap;		/* SR-IOV Capabilities */
-> >>> +	u16		ctrl;		/* SR-IOV Control */
-> >>> +	u16		total_VFs;	/* Total VFs associated with the PF */
-> >>> +	u16		initial_VFs;	/* Initial VFs associated with the PF */
-> >>> +	u16		num_VFs;	/* Number of VFs available */
-> >>> +	u16		offset;		/* First VF Routing ID offset */
-> >>> +	u16		stride;		/* Following VF stride */
-> >>> +	u16		vf_device;	/* VF device ID */
-> >>> +	u32		pgsz;		/* Page size for BAR alignment */
-> >>> +	u8		link;		/* Function Dependency Link */
-> >>> +	u8		max_VF_buses;	/* Max buses consumed by VFs */
-> >>> +	u16		driver_max_VFs;	/* Max num VFs driver supports */
-> >>> +	struct pci_dev	*dev;		/* Lowest numbered PF */
-> >>> +	struct pci_dev	*self;		/* This PF */
-> >>> +	u32		cfg_size;	/* VF config space size */
-> >>> +	u32		class;		/* VF device */
-> >>> +	u8		hdr_type;	/* VF header type */
-> >>> +	u16		subsystem_vendor; /* VF subsystem vendor */
-> >>> +	u16		subsystem_device; /* VF subsystem device */                                                                                   
-> >>> +	resource_size_t	barsz[PCI_SRIOV_NUM_BARS];	/* VF BAR size */
-> >>> +	bool		drivers_autoprobe; /* Auto probing of VFs by driver */
-> >>> +};
-> >>> +
-> >>
-> >> Can "struct pci_sriov" be extracted for common use? This should not be exclusive
-> >> for "i40e_vf migration support".
-> >>
-> > the definition of this structure is actually in driver/pci/pci.h.
-> > maybe removing the copy here and use below include is better?
-> > #include "../../../../pci/pci.h"
-> > 
-> 
-> How about moving the definition from driver/pci/pci.h into include/linux/pci.h? So
-> we can just include "linux/pci.h" and removing the copy here.
->
-I prefer to leaving it in drivers/pci/pci.h for now.
+Quoting Sandeep Maheswaram (2020-06-11 07:28:03)
+> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+> index 25c686a7..8370350 100644
+> --- a/drivers/usb/dwc3/core.c
+> +++ b/drivers/usb/dwc3/core.c
+> @@ -31,15 +31,19 @@
+>  #include <linux/usb/gadget.h>
+>  #include <linux/usb/of.h>
+>  #include <linux/usb/otg.h>
+> +#include <linux/usb/hcd.h>
+> =20
+>  #include "core.h"
+>  #include "gadget.h"
+>  #include "io.h"
+> =20
+>  #include "debug.h"
+> +#include "../host/xhci.h"
+> =20
+>  #define DWC3_DEFAULT_AUTOSUSPEND_DELAY 5000 /* ms */
+> =20
+> +bool need_phy_for_wakeup;
 
-Thanks
-Yan
+static? But why isn't it part of 'struct dwc3'? There could be multiple
+dwc3 instances that may or may not be wakeup capable.
+
+> +
+>  /**
+>   * dwc3_get_dr_mode - Validates and sets dr_mode
+>   * @dwc: pointer to our context structure
+> @@ -1627,10 +1631,36 @@ static int dwc3_core_init_for_resume(struct dwc3 =
+*dwc)
+>         return ret;
+>  }
+> =20
+> +static void dwc3_set_phy_speed_flags(struct dwc3 *dwc)
+> +{
+> +
+> +       int i, num_ports;
+> +       u32 reg;
+> +       struct usb_hcd  *hcd =3D platform_get_drvdata(dwc->xhci);
+> +       struct xhci_hcd *xhci_hcd =3D hcd_to_xhci(hcd);
+> +
+> +       dwc->hs_phy_flags &=3D ~(PHY_MODE_USB_HOST_HS | PHY_MODE_USB_HOST=
+_LS);
+> +
+> +       reg =3D readl(&xhci_hcd->cap_regs->hcs_params1);
+> +
+> +       num_ports =3D HCS_MAX_PORTS(reg);
+> +       for (i =3D 0; i < num_ports; i++) {
+> +               reg =3D readl(&xhci_hcd->op_regs->port_status_base + i*0x=
+10);
+
+Please format this as 'port_status_base + i * 0x10'
+
+> +               if (reg & PORT_PE) {
+> +                       if (DEV_HIGHSPEED(reg) || DEV_FULLSPEED(reg))
+> +                               dwc->hs_phy_flags |=3D PHY_MODE_USB_HOST_=
+HS;
+> +                       else if (DEV_LOWSPEED(reg))
+> +                               dwc->hs_phy_flags |=3D PHY_MODE_USB_HOST_=
+LS;
+> +               }
+> +       }
+> +       phy_set_mode(dwc->usb2_generic_phy, dwc->hs_phy_flags);
+> +}
+> +
+>  static int dwc3_suspend_common(struct dwc3 *dwc, pm_message_t msg)
+>  {
+>         unsigned long   flags;
+>         u32 reg;
+> +       struct usb_hcd  *hcd =3D platform_get_drvdata(dwc->xhci);
+> =20
+>         switch (dwc->current_dr_role) {
+>         case DWC3_GCTL_PRTCAP_DEVICE:
+> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+> index 013f42a..ff02d41 100644
+> --- a/drivers/usb/dwc3/core.h
+> +++ b/drivers/usb/dwc3/core.h
+> @@ -1094,6 +1094,7 @@ struct dwc3 {
+>         struct phy              *usb3_generic_phy;
+> =20
+>         bool                    phys_ready;
+> +       int                     hs_phy_flags;
+
+Does it need to be signed? Why not unsigned int or unsigned long?
+
+> =20
+>         struct ulpi             *ulpi;
+>         bool                    ulpi_ready;
+> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+> index 1dfd024..ec183646 100644
+> --- a/drivers/usb/dwc3/dwc3-qcom.c
+> +++ b/drivers/usb/dwc3/dwc3-qcom.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/usb/of.h>
+>  #include <linux/reset.h>
+>  #include <linux/iopoll.h>
+> +#include <linux/usb/hcd.h>
+> =20
+>  #include "core.h"
+> =20
+> @@ -192,21 +193,34 @@ static int dwc3_qcom_register_extcon(struct dwc3_qc=
+om *qcom)
+> =20
+>  static void dwc3_qcom_disable_interrupts(struct dwc3_qcom *qcom)
+>  {
+> +       struct dwc3 *dwc =3D platform_get_drvdata(qcom->dwc3);
+> +
+>         if (qcom->hs_phy_irq) {
+>                 disable_irq_wake(qcom->hs_phy_irq);
+>                 disable_irq_nosync(qcom->hs_phy_irq);
+>         }
+> +       if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_LS) {
+> +               if (qcom->dp_hs_phy_irq) {
+> +                       disable_irq_wake(qcom->dp_hs_phy_irq);
+> +                       disable_irq_nosync(qcom->dp_hs_phy_irq);
+> +               }
+> +       } else if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_HS) {
+> +               if (qcom->dm_hs_phy_irq) {
+> +                       disable_irq_wake(qcom->dm_hs_phy_irq);
+> +                       disable_irq_nosync(qcom->dm_hs_phy_irq);
+> +               }
+> +       } else {
+> =20
+> -       if (qcom->dp_hs_phy_irq) {
+> -               disable_irq_wake(qcom->dp_hs_phy_irq);
+> -               disable_irq_nosync(qcom->dp_hs_phy_irq);
+> -       }
+> +               if (qcom->dp_hs_phy_irq) {
+> +                       disable_irq_wake(qcom->dp_hs_phy_irq);
+> +                       disable_irq_nosync(qcom->dp_hs_phy_irq);
+> +               }
+> =20
+> -       if (qcom->dm_hs_phy_irq) {
+> -               disable_irq_wake(qcom->dm_hs_phy_irq);
+> -               disable_irq_nosync(qcom->dm_hs_phy_irq);
+> +               if (qcom->dm_hs_phy_irq) {
+> +                       disable_irq_wake(qcom->dm_hs_phy_irq);
+> +                       disable_irq_nosync(qcom->dm_hs_phy_irq);
+> +               }
+>         }
+> -
+>         if (qcom->ss_phy_irq) {
+>                 disable_irq_wake(qcom->ss_phy_irq);
+>                 disable_irq_nosync(qcom->ss_phy_irq);
+> @@ -215,21 +229,34 @@ static void dwc3_qcom_disable_interrupts(struct dwc=
+3_qcom *qcom)
+> =20
+>  static void dwc3_qcom_enable_interrupts(struct dwc3_qcom *qcom)
+>  {
+> +       struct dwc3 *dwc =3D platform_get_drvdata(qcom->dwc3);
+> +
+>         if (qcom->hs_phy_irq) {
+>                 enable_irq(qcom->hs_phy_irq);
+>                 enable_irq_wake(qcom->hs_phy_irq);
+>         }
+> +       if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_LS) {
+> +               if (qcom->dp_hs_phy_irq) {
+> +                       enable_irq(qcom->dp_hs_phy_irq);
+> +                       enable_irq_wake(qcom->dp_hs_phy_irq);
+> +               }
+> +       } else if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_HS) {
+> +               if (qcom->dm_hs_phy_irq) {
+> +                       enable_irq(qcom->dm_hs_phy_irq);
+> +                       enable_irq_wake(qcom->dm_hs_phy_irq);
+> +               }
+> +       } else {
+> =20
+> -       if (qcom->dp_hs_phy_irq) {
+> -               enable_irq(qcom->dp_hs_phy_irq);
+> -               enable_irq_wake(qcom->dp_hs_phy_irq);
+> -       }
+> +               if (qcom->dp_hs_phy_irq) {
+> +                       enable_irq(qcom->dp_hs_phy_irq);
+> +                       enable_irq_wake(qcom->dp_hs_phy_irq);
+> +               }
+> =20
+> -       if (qcom->dm_hs_phy_irq) {
+> -               enable_irq(qcom->dm_hs_phy_irq);
+> -               enable_irq_wake(qcom->dm_hs_phy_irq);
+> +               if (qcom->dm_hs_phy_irq) {
+> +                       enable_irq(qcom->dm_hs_phy_irq);
+> +                       enable_irq_wake(qcom->dm_hs_phy_irq);
+> +               }
+>         }
+> -
+>         if (qcom->ss_phy_irq) {
+>                 enable_irq(qcom->ss_phy_irq);
+>                 enable_irq_wake(qcom->ss_phy_irq);
+
+Is it possible to move this code to use the wakeirq library? I believe
+only one irq can be the "wakeup" irq in that case but maybe that is
+possible if we know what mode that phy is in? Or does the superspeed and
+some sort of high speed irq need to be enabled for wakeup in case a usb2
+or usb3 device wants to wakeup?
+
+> @@ -240,6 +267,11 @@ static int dwc3_qcom_suspend(struct dwc3_qcom *qcom)
+>  {
+>         u32 val;
+>         int i;
+> +       struct dwc3 *dwc =3D platform_get_drvdata(qcom->dwc3);
+> +       struct usb_hcd  *hcd =3D platform_get_drvdata(dwc->xhci);
+
+Weird spacing here   ---^
+
+> +
+> +       if (usb_wakeup_enabled_descendants(hcd->self.root_hub))
+> +               device_init_wakeup(qcom->dev, 1);
+> =20
+>         if (qcom->is_suspended)
+>                 return 0;
+> @@ -262,6 +294,8 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
+>         int ret;
+>         int i;
+> =20
+> +       device_init_wakeup(qcom->dev, 0);
+
+Usually device_init_wakeup() is called once during probe and then the
+wakeup enable state for a device is controlled from userspace.  Calling
+this here will be semi-disastrous in the sense that we're going to be
+creating and destroying a wakeup sysfs object each time we suspend. I
+see that dwc3 core code has this pattern of calling device_init_wakeup()
+from the suspend/resume path too, which looks wrong.
+
+Shouldn't we be forwarding the wakeup request from the root hub to the
+controller? I'm not super clear on how USB PM is supposed to work but
+this doesn't look right.
