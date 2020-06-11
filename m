@@ -2,195 +2,92 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4FE2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3721C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEFFB206DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:34:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="iQ0nRG85"
+	by mail.kernel.org (Postfix) with ESMTP id DA909206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:36:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728540AbgFKPey (ORCPT
+        id S1728620AbgFKPgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 11:34:54 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:62533 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728380AbgFKPew (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 11:34:52 -0400
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200611153450epoutp02a5edff8ea96e7e641ce9a664ebe7a79a~Xhz0_oh4d2592525925epoutp02U
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 15:34:50 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200611153450epoutp02a5edff8ea96e7e641ce9a664ebe7a79a~Xhz0_oh4d2592525925epoutp02U
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1591889690;
-        bh=VTu+Wl7o0f6zMSeWa7X78SNfhzjGVixbL6VZNPfGdmg=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=iQ0nRG854K8lJRfoqScKhTME2vv4fHTh1qByV8tGB3wCWE86UKbxHld/zCAAWTO4v
-         Zw6ZFe+xYh1cnteZJWBYSDC/70VhB8qfLs84YnQaDMSOFVk9wAHK3CNji/vaMNlgtZ
-         hUDZW+J0uWiJeoPldDAYdiYmqsv9GDlrrepMvKjA=
-Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-        20200611153449epcas5p439a028547161adf40aa18bbae9cde178~Xhz0X6OTY1533615336epcas5p4U;
-        Thu, 11 Jun 2020 15:34:49 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        1C.59.09703.91F42EE5; Fri, 12 Jun 2020 00:34:49 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200611153449epcas5p32bb9c35be3553b953663e2bf3b87d1ff~Xhzzzd3az0869408694epcas5p3J;
-        Thu, 11 Jun 2020 15:34:49 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200611153449epsmtrp16d518940d9912579f6c572f6d5311f4d~XhzzygOJo2872128721epsmtrp1Q;
-        Thu, 11 Jun 2020 15:34:49 +0000 (GMT)
-X-AuditID: b6c32a4a-4cbff700000025e7-58-5ee24f192c3e
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        61.40.08303.81F42EE5; Fri, 12 Jun 2020 00:34:48 +0900 (KST)
-Received: from alimakhtar02 (unknown [107.108.234.165]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200611153444epsmtip1bd6066f07ba6943205cef3e50aa6b2f1~XhzveSxLR2645626456epsmtip1D;
-        Thu, 11 Jun 2020 15:34:44 +0000 (GMT)
-From:   "Alim Akhtar" <alim.akhtar@samsung.com>
-To:     "'Stanley Chu'" <stanley.chu@mediatek.com>,
-        <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
-        <avri.altman@wdc.com>, <jejb@linux.ibm.com>,
-        <asutoshd@codeaurora.org>
-Cc:     <beanhuo@micron.com>, <cang@codeaurora.org>,
-        <matthias.bgg@gmail.com>, <bvanassche@acm.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
-        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
-        <andy.teng@mediatek.com>, <chaotian.jing@mediatek.com>,
-        <cc.chou@mediatek.com>
-In-Reply-To: <20200610053645.19975-3-stanley.chu@mediatek.com>
-Subject: RE: [PATCH v1 2/2] scsi: ufs: Cleanup device vendor and quirk
- definition
-Date:   Thu, 11 Jun 2020 21:04:42 +0530
-Message-ID: <001d01d64005$d7564e20$8602ea60$@samsung.com>
+        Thu, 11 Jun 2020 11:36:07 -0400
+Received: from mga14.intel.com ([192.55.52.115]:57442 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728414AbgFKPgG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 11:36:06 -0400
+IronPort-SDR: kRaucVPWJf5Yhbrs8q+ld/yUa0tEMR+stgW6FHL2yotklPIrYwlwxwXjVbR89v0M2LgyYfk1E0
+ NrpH04E9RsAQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 08:36:06 -0700
+IronPort-SDR: dYUJwDTJHD9iP5wZvrIQO72rSowvuZXykZd4QOOytru91ojrVYKu2OqZys7+erBiefwxfBOBCz
+ 3TOrzMzfZ2Dw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,499,1583222400"; 
+   d="scan'208";a="314844159"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by FMSMGA003.fm.intel.com with ESMTP; 11 Jun 2020 08:36:04 -0700
+Date:   Thu, 11 Jun 2020 08:35:57 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Vivek Goyal <vgoyal@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] KVM: async_pf: Cleanup kvm_setup_async_pf()
+Message-ID: <20200611153557.GE29918@linux.intel.com>
+References: <20200610175532.779793-1-vkuznets@redhat.com>
+ <20200610181453.GC18790@linux.intel.com>
+ <87sgf29f77.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQJVHgnpAIsYLnnv5TRNaRnRfw5FngLAwJM8ARCEfBKnt0OJQA==
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrEKsWRmVeSWpSXmKPExsWy7bCmuq6k/6M4gxNHtSxOz7vKbLG37QS7
-        xcufV9ksDj7sZLGY9uEns8Wn9ctYLf6f/81uce3WfDaLVW92sFksurGNyaL1/ytmi02Pr7Fa
-        XN41h83icvNFRovu60DZ5cf/MVk0tRhbbP30m9Vi6dabjA7CHpeveHtc7utl8tg56y67x4RF
-        Bxg9Ni+p92g5uZ/F4/v6DjaPj09vsXh83iTn0X6gmymAK4rLJiU1J7MstUjfLoEr4/Pc92wF
-        U0UqFk1/ytTA2C3YxcjJISFgItE28R5LFyMXh5DAbkaJjzdgnE+MEu82H2SGcD4zStzdPpkF
-        puXUw31QiV2MEj2dX6GcN4wSk08dYwapYhPQldixuI0NxBYR2MYoceSdL0gRs8AfJokdzRPA
-        RnEK2ElMe7yBEcQWFgiW6Lj3DqyBRUBV4vybRawgNq+ApcS0T8+YIWxBiZMzn4D1MgvIS2x/
-        O4cZ4iQFiZ9Pl7FCLHOS2DHnJitEjbjE0Z89YNdJCEznlJiz8wjUDy4Sr2duZ4OwhSVeHd/C
-        DmFLSbzsbwOyOYDsbImeXcYQ4RqJpfOOQbXaSxy4MocFpIRZQFNi/S59iFV8Er2/nzBBdPJK
-        dLQJQVSrSjS/uwrVKS0xsbubFcL2kFjU3cE2gVFxFpLHZiF5bBaSB2YhLFvAyLKKUTK1oDg3
-        PbXYtMAoL7Vcrzgxt7g0L10vOT93EyM4WWp57WB8+OCD3iFGJg7GQ4wSHMxKIryC4g/jhHhT
-        EiurUovy44tKc1KLDzFKc7AoifMq/TgTJySQnliSmp2aWpBaBJNl4uCUamAK96iWZ/jWeuDN
-        k0SThsOy83a+fnVgy9IDvOuEKuMMt038+/bOzg2xt2fuvKaiXH7lQw3bRrNL153CelXUZF/9
-        Onie95y+8/9dL55tf2Phf2V12LrdjrWTeFeUr91QIyvx95OzgLTsta96vPvnK0tsZzfnZYgI
-        4H1cuFhN2WiZvSKTZVDiC8sPe960tj7X/y3Qa3j9r/mxjak8rKaNCXNjdsR8itv/RtzWxObi
-        3kLZY1lzIh8xyHVY7LtjX7w2x0pWYv6niVvzok42J/4rda/873mQ4eHW+CefQjfkrjB9OGv2
-        Wnv/6b5H5xTffH8qUGL3Tvbruq9qZfQybJa7zDIsVf3K9vzfzq1B5QtOCOwoVmIpzkg01GIu
-        Kk4EACkY70YFBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGIsWRmVeSWpSXmKPExsWy7bCSnK6E/6M4g6lHrC1Oz7vKbLG37QS7
-        xcufV9ksDj7sZLGY9uEns8Wn9ctYLf6f/81uce3WfDaLVW92sFksurGNyaL1/ytmi02Pr7Fa
-        XN41h83icvNFRovu60DZ5cf/MVk0tRhbbP30m9Vi6dabjA7CHpeveHtc7utl8tg56y67x4RF
-        Bxg9Ni+p92g5uZ/F4/v6DjaPj09vsXh83iTn0X6gmymAK4rLJiU1J7MstUjfLoEr4/Pc92wF
-        U0UqFk1/ytTA2C3YxcjJISFgInHq4T7mLkYuDiGBHYwSbesWsEEkpCWub5zADmELS6z895wd
-        ougVo8TnKbvAEmwCuhI7FrexgSREBPYwSnxfdh+silmgi1ni68E/bBAtBxkl9m+exwTSwilg
-        JzHt8QZGEFtYIFDiSv8OsFEsAqoS598sYgWxeQUsJaZ9esYMYQtKnJz5hKWLkQNoqp5E20aw
-        VmYBeYntb+cwQ5ynIPHz6TKwVhEBJ4kdc26yQtSISxz92cM8gVF4FpJJsxAmzUIyaRaSjgWM
-        LKsYJVMLinPTc4sNC4zyUsv1ihNzi0vz0vWS83M3MYKjXktrB+OeVR/0DjEycTAeYpTgYFYS
-        4RUUfxgnxJuSWFmVWpQfX1Sak1p8iFGag0VJnPfrrIVxQgLpiSWp2ampBalFMFkmDk6pBqal
-        hrU7HrceEqlMD70uqZ/8sWeOxeWtK1PbJj15K6OReOfCn8/TmrfMcXHgmuwara1060CPvU1j
-        40HOuaJ3zJSrVy9Y/Pgmw+HvdukpCsxbXko+uvj8xN96jorUF0HXp+ndcPxyyqVCIjyR5WR3
-        ofgBP5km7s0T1d+VtH87fvJEpOirA58uHQ71DrqX+/az059TLLMZixNMdLK/szR80P1wk/W3
-        04rts3rfK6VNffUg3H7N9lPHeT40rvfgbrntZdm523zJ2hsqv3kObW3jrS/7MC3gSmdH4Eyv
-        w/deT7t5okX5n5L0f/WnWprr/2kZZzQ2bBQteWD3w72Iu86MceeFrl2GZ8unPThg9FtMx+eU
-        EktxRqKhFnNRcSIAW0SAJWkDAAA=
-X-CMS-MailID: 20200611153449epcas5p32bb9c35be3553b953663e2bf3b87d1ff
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200610053659epcas5p391a3c736dd5f59ec45cfeb3715cbe1a1
-References: <20200610053645.19975-1-stanley.chu@mediatek.com>
-        <CGME20200610053659epcas5p391a3c736dd5f59ec45cfeb3715cbe1a1@epcas5p3.samsung.com>
-        <20200610053645.19975-3-stanley.chu@mediatek.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87sgf29f77.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stanley
+On Thu, Jun 11, 2020 at 10:31:08AM +0200, Vitaly Kuznetsov wrote:
+> Sean Christopherson <sean.j.christopherson@intel.com> writes:
+> 
+> >
+> > I'd also be in favor of changing the return type to a boolean.  I think
+> > you alluded to it earlier, the current semantics are quite confusing as they
+> > invert the normal "return 0 on success".
+> 
+> Yes, will do a follow-up.
+> 
+> KVM/x86 code has an intertwined mix of:
+> - normal 'int' functions ('0 on success')
+> - bool functions ('true'/'1' on success)
+> - 'int' exit handlers ('1'/'0' on success depending if exit to userspace
+>   was required)
+> - ...
+> 
+> I think we can try to standardize this to:
+> - 'int' when error is propagated outside of KVM (userspace, other kernel
+>   subsystem,...)
+> - 'bool' when the function is internal to KVM and the result is binary
+>  ('is_exit_required()', 'was_pf_injected()', 'will_have_another_beer()',
+>  ...)
+> - 'enum' for the rest.
+> And, if there's a good reason for making an exception, require a
+> comment. (leaving aside everything returning a pointer, of course as
+> these are self-explanatory -- unless it's 'void *' :-))
 
-> -----Original Message-----
-> From: Stanley Chu <stanley.chu@mediatek.com>
-> Sent: 10 June 2020 11:07
-> To: linux-scsi@vger.kernel.org; martin.petersen@oracle.com;
-> avri.altman@wdc.com; alim.akhtar@samsung.com; jejb@linux.ibm.com;
-> asutoshd@codeaurora.org
-> Cc: beanhuo@micron.com; cang@codeaurora.org; matthias.bgg@gmail.com;
-> bvanassche@acm.org; linux-mediatek@lists.infradead.org; linux-arm-
-> kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
-> kuohong.wang@mediatek.com; peter.wang@mediatek.com; chun-
-> hung.wu@mediatek.com; andy.teng@mediatek.com;
-> chaotian.jing@mediatek.com; cc.chou@mediatek.com; Stanley Chu
-> <stanley.chu@mediatek.com>
-> Subject: [PATCH v1 2/2] scsi: ufs: Cleanup device vendor and quirk
-definition
-> 
-> Cleanup below items,
-> - Arrange vendor name in alphabetical order
-> - Squash device quirks as compact as possible in device quirk table
->   to enhance performance of the lookup.
-> 
-> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-> ---
->  drivers/scsi/ufs/ufs_quirks.h | 2 +-
->  drivers/scsi/ufs/ufshcd.c     | 6 ++----
->  2 files changed, 3 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/scsi/ufs/ufs_quirks.h b/drivers/scsi/ufs/ufs_quirks.h
-index
-> e80d5f26a442..2a0041493e30 100644
-> --- a/drivers/scsi/ufs/ufs_quirks.h
-> +++ b/drivers/scsi/ufs/ufs_quirks.h
-> @@ -13,9 +13,9 @@
->  #define UFS_ANY_MODEL  "ANY_MODEL"
-> 
->  #define UFS_VENDOR_MICRON      0x12C
-> -#define UFS_VENDOR_TOSHIBA     0x198
->  #define UFS_VENDOR_SAMSUNG     0x1CE
->  #define UFS_VENDOR_SKHYNIX     0x1AD
-> +#define UFS_VENDOR_TOSHIBA     0x198
->  #define UFS_VENDOR_WDC         0x145
-> 
->  /**
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c index
-> dea4fddf9332..7c93cb446f51 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -219,10 +219,8 @@ static struct ufs_dev_fix ufs_fixups[] = {
->  	UFS_FIX(UFS_VENDOR_MICRON, UFS_ANY_MODEL,
->  		UFS_DEVICE_QUIRK_DELAY_BEFORE_LPM),
->  	UFS_FIX(UFS_VENDOR_SAMSUNG, UFS_ANY_MODEL,
-> -		UFS_DEVICE_QUIRK_DELAY_BEFORE_LPM),
-> -	UFS_FIX(UFS_VENDOR_SAMSUNG, UFS_ANY_MODEL,
-> -		UFS_DEVICE_QUIRK_RECOVERY_FROM_DL_NAC_ERRORS),
-> -	UFS_FIX(UFS_VENDOR_SAMSUNG, UFS_ANY_MODEL,
-> +		UFS_DEVICE_QUIRK_DELAY_BEFORE_LPM |
-> +		UFS_DEVICE_QUIRK_RECOVERY_FROM_DL_NAC_ERRORS |
->  		UFS_DEVICE_QUIRK_HOST_PA_TACTIVATE),
->  	UFS_FIX(UFS_VENDOR_TOSHIBA, UFS_ANY_MODEL,
->  		UFS_DEVICE_QUIRK_DELAY_BEFORE_LPM),
-> --
-While at this, may be arrange the table in alphabetical order.
+Agreed for 'bool' case, but 'int' versus 'enum' is less straightforward as
+there are a huge number of functions that _may_ propagate an error outside
+of KVM, including all of the exit handlers.  As Paolo point out[*], it'd
+be quite easy to end up with a mixture of enum/#define and 0/1 code, which
+would be an even bigger mess than what we have today.  There are
+undoubtedly cases that could be converted to an enum, but they're probably
+few and far between as it requires total encapsulation, e.g. the emulator.
 
-> 2.18.0
-
+[*] https://lkml.kernel.org/r/3d827e8b-a04e-0a93-4bb4-e0e9d59036da@redhat.com
