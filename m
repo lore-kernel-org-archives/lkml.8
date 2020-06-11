@@ -2,179 +2,108 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A5AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C8C3C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57640206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:53:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 594EC206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:54:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XtvA4Ph3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbgFKBxA (ORCPT
+        id S1726502AbgFKByE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 21:53:00 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:43560 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726279AbgFKBw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 21:52:59 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id CC0A5CA572453FA273DE;
-        Thu, 11 Jun 2020 09:52:54 +0800 (CST)
-Received: from [127.0.0.1] (10.166.215.101) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Thu, 11 Jun 2020
- 09:52:49 +0800
-Subject: Re: [Question]: about 'cpuinfo_cur_freq' shown in sysfs when the CPU
- is in idle state
-To:     Ionela Voinescu <ionela.voinescu@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-CC:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Hanjun Guo" <guohanjun@huawei.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-References: <f1773fdc-f6ef-ec28-0c0a-4a09e66ab63b@huawei.com>
- <20200603075200.hbyofgcyiwocl565@vireshk-i7>
- <CAJZ5v0iR3H+PFnJiroNmZcj-a4bCkvT6xB-nd2ntMvakWFOvAg@mail.gmail.com>
- <39d37e1b-7959-9a8f-6876-f2ed4c1dbc37@huawei.com>
- <20200604044140.xlv7h62jfowo3rxe@vireshk-i7>
- <CAJZ5v0jj5OS4oB7MYBqKeYejy_3Vz_2oy0hn-Xm=D7XAszM_vg@mail.gmail.com>
- <20200604125822.GB12397@bogus> <20200610094057.GA28144@arm.com>
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Message-ID: <9d715cb0-0a94-0008-5653-e8d9ad1c5332@huawei.com>
-Date:   Thu, 11 Jun 2020 09:52:48 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 10 Jun 2020 21:54:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56426 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbgFKByE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 21:54:04 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4E10C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 18:54:03 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id d6so1697803pjs.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 18:54:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7FIHdEi8UE53+gw/wkyvavC5pix798rp5qt0URRecvU=;
+        b=XtvA4Ph3g3MspYhX7MexC/1pPRVk8clbXmFgZwPX+0uFXwvuCcMAkL3nYEuJBoOnuJ
+         tZmkRbXGrnZRApp9+PDNUzEZPdvrhqhgOfv6hBlfHM1W2PnxmDhEmspyc0hRZHz167Wg
+         QO0Zsa+OSzvbCLDiAAW1FEy5j6torlfwDO6+0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7FIHdEi8UE53+gw/wkyvavC5pix798rp5qt0URRecvU=;
+        b=YIe02hvv/v+vy5x5sg2U0JlzAfclAALGLclYTxSL12bWiBtjQpc5etisDQ0+hCrRFX
+         HUBtKwzGBbqUk0CcV4wEl2TiQdlxBCm7YtW4P07PRvV5TUD4ckX/mcBboomhfQDyCXad
+         h5vuQUFi3CyQrlI4Z3dOh4S8meEqNk97eITQx9BNr+KFeET5Fkr/0GKpwb3C55qY/y4U
+         gbARePvmIglT28YMJTtWcaeZuoWXDfMdllx6JaZpkQRIcTsNBlg7AJabMbCWatRKasT8
+         VfNEOd8W1MIkIhPgH8HAa4ndtGmGL6SL95AHRlrF0TJ5GXRu+FqGNrbgJRrp8fbKX066
+         kYuQ==
+X-Gm-Message-State: AOAM533gKxh3xHbxD2NeGkRyU603xm2ZSub7u1nvXOlQW8ADTv7+ObqP
+        iw7C1ypEP9LUr60OQp929VxslA==
+X-Google-Smtp-Source: ABdhPJwm1qpCZt/RJk/duXvKTfZz6w74AwJtNSO3tuhVfXLQAx19+C/jnR6GatyZcF1ohWTIaI2+SQ==
+X-Received: by 2002:a17:90a:ae04:: with SMTP id t4mr5472625pjq.131.1591840443230;
+        Wed, 10 Jun 2020 18:54:03 -0700 (PDT)
+Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
+        by smtp.gmail.com with ESMTPSA id b191sm998661pga.13.2020.06.10.18.54.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2020 18:54:02 -0700 (PDT)
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+To:     marcel@holtman.org, linux-bluetooth@vger.kernel.org
+Cc:     alainm@chromium.org, chromeos-bluetooth-upstreaming@chromium.org,
+        mka@chromium.org, dianders@chromium.org, linux-pm@vger.kernel.org,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] Bluetooth: btmrvl_sdio: Refactor remote wakeup support
+Date:   Wed, 10 Jun 2020 18:53:52 -0700
+Message-Id: <20200611015355.186666-1-abhishekpandit@chromium.org>
+X-Mailer: git-send-email 2.27.0.278.ge193c7cf3a9-goog
 MIME-Version: 1.0
-In-Reply-To: <20200610094057.GA28144@arm.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.215.101]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ionela,
 
-Thanks for your reply !
+Hi linux-bluetooth,
 
-On 2020/6/10 17:40, Ionela Voinescu wrote:
-> Hi guys,
-> 
-> Sorry for showing up late to the party, I was on holiday last week.
-> 
-> On Thursday 04 Jun 2020 at 13:58:22 (+0100), Sudeep Holla wrote:
->> On Thu, Jun 04, 2020 at 12:42:06PM +0200, Rafael J. Wysocki wrote:
->>> On Thu, Jun 4, 2020 at 6:41 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->>>>
->>>> On 04-06-20, 09:32, Xiongfeng Wang wrote:
->>>>> On 2020/6/3 21:39, Rafael J. Wysocki wrote:
->>>>>> The frequency value obtained by kicking the CPU out of idle
->>>>>> artificially is bogus, though.  You may as well return a random number
->>>>>> instead.
->>>>>
->>>>> Yes, it may return a randowm number as well.
->>>>>
->>>>>>
->>>>>> The frequency of a CPU in an idle state is in fact unknown in the case
->>>>>> at hand, so returning 0 looks like the cleanest option to me.
->>>>>
->>>>> I am not sure about how the user will use 'cpuinfo_cur_freq' in sysfs. If I
->>>>> return 0 when the CPU is idle, when I run a light load on the CPU, I will get a
->>>>> zero value for 'cpuinfo_cur_freq' when the CPU is idle. When the CPU is not
->>>>> idle, I will get a non-zero value. The user may feel odd about
->>>>> 'cpuinfo_cur_frreq' switching between a zero value and a non-zero value. They
->>>>> may hope it can return the frequency when the CPU execute instructions, namely
->>>>> in C0 state. I am not so sure about the user will look at 'cpuinfo_cur_freq'.
->>>>
->>>> This is what I was worried about as well. The interface to sysfs needs
->>>> to be robust. Returning frequency on some readings and 0 on others
->>>> doesn't look right to me as well. This will break scripts (I am not
->>>> sure if some scripts are there to look for these values) with the
->>>> randomness of values returned by it.
->>>
->>> The only thing the scripts need to do is to skip zeros (or anything
->>> less than the minimum hw frequency for that matter) coming from that
->>> attribute.
->>>
->>>> On reading values locally from the CPU, I thought about the case where
->>>> userspace can prevent a CPU going into idle just by reading its
->>>> frequency from sysfs (and so waste power), but the same can be done by
->>>> userspace to run arbitrary load on the CPUs.
->>>>
->>>> Can we do some sort of caching of the last frequency the CPU was
->>>> running at before going into idle ? Then we can just check if cpu is
->>>> idle and so return cached value.
->>>
->>> That is an option, but it looks like in this case the cpuinfo_cur_freq
->>> attribute should not be present at all, as per the documentation.
->>>
->>
->> +1 for dropping the attribute.
->>
-> 
-> I've been experimenting with some code quite recently that uses the
-> scheduler frequency scale factor to compute this hardware current rate
-> for CPPC.
-> 
-> On the scheduler tick, the scale factor is computed in
-> arch_scale_freq_tick() to give an indication on delivered performance,
-> using AMUs on arm64 [1] and APERF/MPERF on x86 [2]. Basically, this scale
-> factor has the cached value of the average delivered performance between
-> the last two scheduler ticks, on a capacity scale: 0-1024. All that would
-> be needed is to convert from the scheduler frequency scale to the CPPC
-> expected performance scale.
-> 
-> The gist of the code would be:
-> 
-> delivered_perf = topology_get_freq_scale(cpu);
-> delivered_perf *= fb_ctrs.reference_perf;
-> delivered_perf = div64_u64(delivered_perf << SCHED_CAPACITY_SHIFT,
-> 			   per_cpu(arch_max_freq_scale, cpu));
-> 
-> While this solution is not perfect, it would provide the best view of
-> the hardware "current" rate without the cost of waking up the CPU when
-> idle, scheduling additional work on the CPU, doing checks on whether
-> the CPU is idle and/or providing other caching mechanisms.
+This patch series is refactoring the btmrvl driver to add better support
+for controlling remote wakeup during suspend. Previously, the hci device
+was getting created as /sys/devices/virtual/bluetooth/hci0 and there
+wasn't a way to control wakeup for the device from userspace. This
+series of changes adds the proper parent for the hci device, allows irq
+configuration via power/wakeup and properly disables scanning during
+suspend if wakeup isn't enabled.
 
-I think it's a good idea. It's just that the value is a average frequency in the
-last two scheduler ticks, not an instantaneous frequency. What
-'cppc_cpufreq_get_rate()' get is also not an  instantaneous frequency. It's a
-average frequency in 2us. I check the interval between two frequency updates on
-my machine. It's about 10ms. So the frequency will change at least one time in
-two scheduler ticks if HZ is 1000.
+This was tested on a Veyron Mighty Chromebook running the 4.19 kernel
+with these patches. It passes both automated and manual suspend+resume
+tests that make sure wakeup is working properly.
 
-I am not sure how people will use 'cpuinfo_cur_freq'. They may not expect a very
-accurate frequency. How about we return this value when CPU is idle? Or just
-return 0 in idle is better ?
+Thanks
+Abhishek
 
-> 
-> Do you think such an implementation could make cpuinfo_cur_freq worth
-> keeping?
-> 
-> I'm happy to push the patches for this and discuss the details there.
 
-Thanks. I'm happy to see the patches and give some help.
 
-Thanks,
-Xiongfeng
+Abhishek Pandit-Subedi (3):
+  Bluetooth: btmrvl_sdio: Set parent dev to hdev
+  Bluetooth: btmrvl_sdio: Implement prevent_wake
+  Bluetooth: btmrvl_sdio: Refactor irq wakeup
 
-> 
-> Thanks,
-> Ionela.
-> 
-> 
-> [1] https://lkml.org/lkml/2020/3/5/183
-> [2] https://lkml.org/lkml/2020/1/22/1039
-> 
->> -- 
->> Regards,
->> Sudeep
-> 
-> .
-> 
+ drivers/bluetooth/btmrvl_main.c | 11 +++++++++++
+ drivers/bluetooth/btmrvl_sdio.c | 13 ++++++++++---
+ 2 files changed, 21 insertions(+), 3 deletions(-)
+
+-- 
+2.27.0.278.ge193c7cf3a9-goog
 
