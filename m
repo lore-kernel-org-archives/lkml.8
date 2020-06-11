@@ -2,112 +2,80 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 015F7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7743C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA62520848
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:51:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FF34206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:52:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=yahoo.ca header.i=@yahoo.ca header.b="lLRUsp3J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728104AbgFKOvN (ORCPT
+        id S1728365AbgFKOwC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 10:51:13 -0400
-Received: from nautica.notk.org ([91.121.71.147]:38836 "EHLO nautica.notk.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726109AbgFKOvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 10:51:13 -0400
-Received: by nautica.notk.org (Postfix, from userid 1001)
-        id 38925C009; Thu, 11 Jun 2020 16:51:10 +0200 (CEST)
-Date:   Thu, 11 Jun 2020 16:50:55 +0200
-From:   Dominique Martinet <asmadeus@codewreck.org>
-To:     Wang Hai <wanghai38@huawei.com>
-Cc:     ericvh@gmail.com, lucho@ionkov.net, davem@davemloft.net,
-        v9fs-developer@lists.sourceforge.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] 9p/trans_fd: Fix concurrency del of req_list in
- p9_fd_cancelled/p9_read_work
-Message-ID: <20200611145055.GA28945@nautica>
-References: <20200611014855.60550-1-wanghai38@huawei.com>
+        Thu, 11 Jun 2020 10:52:02 -0400
+Received: from sonic307-34.consmr.mail.gq1.yahoo.com ([98.137.64.58]:42880
+        "EHLO sonic307-34.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726109AbgFKOwC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 10:52:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.ca; s=s2048; t=1591887119; bh=Y49V++UNOPzuYl35+NoNzvTt4SNqxDJdg4ytABKfLJY=; h=Date:From:Subject:To:Cc:References:In-Reply-To:From:Subject; b=lLRUsp3JNW5VdCt6g6Ggd0OM7Cn8QSAglRSU0NwvMZ+5rDqEa6qLy5e6FoSHILZjwM7O4lafiUP849zqqu0SSJVPNHcmU5lqKge62xtI67UjxDMiH3OWKqryetXzqAucHNE/WQTW5sat29a45ZOuUE+cN7x1ijGM9w82OqeqgPlfXleTUoUktZ4ETSx03Akmno2zef7OV26rtoLQUuZxnQRdqEej2UXjp6QvfHaIoa24T84xo28NiAsFNX2MbHAwGozcQvKgLZC4Px0ywGSxBFHE9csaHvnRK9fTc6raDQWyTQuMDZub1N8n2qaNF2vHJ7ToxaRrb3nIXPRVTZiAlQ==
+X-YMail-OSG: N_6BpMEVRDvd.miR6A7lED5GPdAEx7ojsA--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic307.consmr.mail.gq1.yahoo.com with HTTP; Thu, 11 Jun 2020 14:51:59 +0000
+Received: by smtp424.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID b1fcbf8aa3997862c2f8ed0063d81657;
+          Thu, 11 Jun 2020 14:49:57 +0000 (UTC)
+Date:   Thu, 11 Jun 2020 10:49:53 -0400
+From:   "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
+Subject: Re: [patch for-5.8] dma-pool: decouple DMA_REMAP from
+ DMA_COHERENT_POOL
+To:     Christoph Hellwig <hch@lst.de>,
+        David Rientjes <rientjes@google.com>
+Cc:     alsa-devel@alsa-project.org, bp@alien8.de, hch@infradead.org,
+        hpa@zytor.com, linux-kernel@vger.kernel.org, mingo@redhat.com,
+        Pavel Machek <pavel@ucw.cz>, perex@perex.cz,
+        tglx@linutronix.de, tiwai@suse.com, x86@kernel.org
+References: <alpine.DEB.2.22.394.2006110025250.13899@chino.kir.corp.google.com>
+In-Reply-To: <alpine.DEB.2.22.394.2006110025250.13899@chino.kir.corp.google.com>
 MIME-Version: 1.0
+Message-Id: <1591886384.28dd734zt4.none@localhost>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200611014855.60550-1-wanghai38@huawei.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: WebService/1.1.16072 hermes_yahoo Apache-HttpAsyncClient/4.1.4 (Java/11.0.6)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wang Hai wrote on Thu, Jun 11, 2020:
-> p9_read_work and p9_fd_cancelled may be called concurrently.
+Excerpts from David Rientjes's message of June 11, 2020 3:25 am:
+> DMA_REMAP is an unnecessary requirement for AMD SEV, which requires=20
+> DMA_COHERENT_POOL, so avoid selecting it when it is otherwise unnecessary=
+. =20
+>=20
+> The only other requirement for DMA coherent pools is DMA_DIRECT_REMAP, so=
+=20
+> ensure that properly selects the config option when needed.
+>=20
+> Fixes: 82fef0ad811f ("x86/mm: unencrypted non-blocking DMA allocations us=
+e=20
+> coherent pools")
+> Suggested-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: David Rientjes <rientjes@google.com>
+> ---
+>  kernel/dma/Kconfig | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+>=20
 
-Good catch. I'm sure this fixes some of the old syzbot bugs...
-I'll check other transports handle this properly as well.
+Works for me with SME on or off with af7b480103, and with SME off in=20
+abfbb29297. There is some regression with amdgpu and SME between those=20
+two points, I need to check that out too. I haven't tested either before=20
+or after with SEV (which I'm not even sure my system supports).=20
+Regardless, this is a definite improvement.
 
-> Before list_del(&m->rreq->req_list) in p9_read_work is called,
-> the req->req_list may have been deleted in p9_fd_cancelled.
-> We can fix it by setting req->status to REQ_STATUS_FLSHD after
-> list_del(&req->req_list) in p9_fd_cancelled.
+Tested-by: Alex Xu (Hello71) <alex_y_xu@yahoo.ca>
 
-hm if you do that read_work will fail with EIO and all further 9p
-messages will not be read?
-p9_read_work probably should handle REQ_STATUS_FLSHD in a special case
-that just throws the message away without error as well.
-
-> Before list_del(&req->req_list) in p9_fd_cancelled is called,
-> the req->req_list may have been deleted in p9_read_work.
-> We should return when req->status = REQ_STATUS_RCVD which means
-> we just received a response for oldreq, so we need do nothing
-> in p9_fd_cancelled.
-
-I'll need some time to convince myself the refcounting is correct in
-this case.
-Pre-ref counting this definitely was wrong, but now it might just work
-by chance.... I'll double-check.
-
-> Fixes: 60ff779c4abb ("9p: client: remove unused code and any reference
-> to "cancelled" function")
-
-I don't understand how this commit is related?
-At least make it afd8d65411 ("9P: Add cancelled() to the transport
-functions.") which adds the op, not something that removed a previous
-version of cancelled even earlier.
-
-> diff --git a/net/9p/trans_fd.c b/net/9p/trans_fd.c
-> index f868cf6fba79..a563699629cb 100644
-> --- a/net/9p/trans_fd.c
-> +++ b/net/9p/trans_fd.c
-> @@ -718,11 +718,18 @@ static int p9_fd_cancelled(struct p9_client *client, struct p9_req_t *req)
->  {
->  	p9_debug(P9_DEBUG_TRANS, "client %p req %p\n", client, req);
->  
-> -	/* we haven't received a response for oldreq,
-> -	 * remove it from the list.
-> +	/* If req->status == REQ_STATUS_RCVD, it means we just received a
-> +	 * response for oldreq, we need do nothing here. Else, remove it from
-> +	 * the list.
-
-(nitpick) this feels a bit hard to read, and does not give any
-information: you're just paraphrasing the C code.
-
-I would suggest moving the comment after the spinlock and say what we
-really do ; something as simple as "ignore cancelled request if message
-has been received before lock" is enough.
-
->  	 */
->  	spin_lock(&client->lock);
-> +	if (req->status == REQ_STATUS_RCVD) {
-> +		spin_unlock(&client->lock);
-> +		return 0;
-> +	}
-> +
->  	list_del(&req->req_list);
-> +	req->status = REQ_STATUS_FLSHD;
->  	spin_unlock(&client->lock);
->  	p9_req_put(req);
->  
--- 
-Dominique
+Thanks,
+Alex.
