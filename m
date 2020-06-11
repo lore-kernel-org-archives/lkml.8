@@ -2,44 +2,45 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 809C8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 19:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C6BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 19:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BF9C206A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 19:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 928E12073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 19:18:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728370AbgFKTSC (ORCPT
+        id S1728381AbgFKTSE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 15:18:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48060 "EHLO
+        Thu, 11 Jun 2020 15:18:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48088 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726733AbgFKTR7 (ORCPT
+        with ESMTP id S1728300AbgFKTSB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 15:17:59 -0400
+        Thu, 11 Jun 2020 15:18:01 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4920FC08C5CB
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 12:17:59 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEC22C08C5C3
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 12:18:00 -0700 (PDT)
 Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <afa@pengutronix.de>)
-        id 1jjSi3-0002M3-It; Thu, 11 Jun 2020 21:17:55 +0200
+        id 1jjSi5-0002Md-0z; Thu, 11 Jun 2020 21:17:57 +0200
 Received: from afa by dude.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <afa@pengutronix.de>)
-        id 1jjSi3-0001Dr-9W; Thu, 11 Jun 2020 21:17:55 +0200
+        id 1jjSi4-0001LM-OM; Thu, 11 Jun 2020 21:17:56 +0200
 From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
 To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
         Guenter Roeck <linux@roeck-us.net>
 Cc:     linux-watchdog@vger.kernel.org, kernel@pengutronix.de,
         Ahmad Fatoum <a.fatoum@pengutronix.de>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v1 6/8] watchdog: f71808e_wdt: consolidate variant handling into single array
-Date:   Thu, 11 Jun 2020 21:17:47 +0200
-Message-Id: <20200611191750.28096-7-a.fatoum@pengutronix.de>
+Subject: [PATCH v1 8/8] watchdog: f71808e_wdt: rename variant-independent identifiers appropriately
+Date:   Thu, 11 Jun 2020 21:17:49 +0200
+Message-Id: <20200611191750.28096-9-a.fatoum@pengutronix.de>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200611191750.28096-1-a.fatoum@pengutronix.de>
 References: <20200611191750.28096-1-a.fatoum@pengutronix.de>
@@ -54,384 +55,315 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Driver has two big switches: one to map hardware ID to an enum constant
-one more to map the enum constant to the variant's pin configuration
-routine.
+Code for the common parts of the driver, either uses watchdog_ as
+prefix for the watchdog API or f71808e_ for everything else.
 
-Drop the enum and give every variant an array entry identifying it.
-This arguably simplifies the code by making it a little more compact.
+The driver now supports 9 more variants besides the f71808e,
+so let's rename the common parts to start with fintek_ instead.
+
+This makes code browsing easier, because it's readily apparent whether a
+function is variant-specific or not. Also the watchdog_ namespace isn't
+used anymore for the driver-internal functions.
 
 Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
 ---
- drivers/watchdog/f71808e_wdt.c | 263 +++++++++++++++------------------
- 1 file changed, 121 insertions(+), 142 deletions(-)
+ drivers/watchdog/f71808e_wdt.c | 98 +++++++++++++++++-----------------
+ 1 file changed, 49 insertions(+), 49 deletions(-)
 
 diff --git a/drivers/watchdog/f71808e_wdt.c b/drivers/watchdog/f71808e_wdt.c
-index 9f7823819ed1..9299ad4d4a52 100644
+index 7c42cbf9912e..c866d05e8788 100644
 --- a/drivers/watchdog/f71808e_wdt.c
 +++ b/drivers/watchdog/f71808e_wdt.c
-@@ -110,22 +110,6 @@ module_param(start_withtimeout, uint, 0);
- MODULE_PARM_DESC(start_withtimeout, "Start watchdog timer on module load with"
- 	" given initial timeout. Zero (default) disables this feature.");
- 
--enum chips { f71808fg, f71858fg, f71862fg, f71868, f71869, f71882fg, f71889fg,
--	     f81803, f81865, f81866};
--
--static const char *f71808e_names[] = {
--	"f71808fg",
--	"f71858fg",
--	"f71862fg",
--	"f71868",
--	"f71869",
--	"f71882fg",
--	"f71889fg",
--	"f81803",
--	"f81865",
--	"f81866",
--};
--
- /* Super-I/O Function prototypes */
- static inline int superio_inb(int base, int reg);
- static inline int superio_inw(int base, int reg);
-@@ -136,9 +120,17 @@ static inline int superio_enter(int base);
+@@ -114,18 +114,18 @@ static inline int superio_enter(int base);
  static inline void superio_select(int base, int ld);
  static inline void superio_exit(int base);
  
-+struct watchdog_data;
-+
-+struct f71808e_variant {
-+	u16 id;
-+	const char *wdt_name; /* NULL if chip lacks watchdog timer */
-+	void (*pinconf)(struct watchdog_data *wd);
-+};
-+
- struct watchdog_data {
- 	unsigned short	sioaddr;
--	enum chips	type;
-+	const struct f71808e_variant *variant;
- 	unsigned long	opened;
- 	struct mutex	lock;
- 	char		expect_close;
-@@ -156,6 +148,12 @@ static struct watchdog_data watchdog = {
- 	.lock = __MUTEX_INITIALIZER(watchdog.lock),
+-struct watchdog_data;
++struct fintek_wdog_data;
+ 
+-struct f71808e_variant {
++struct fintek_variant {
+ 	u16 id;
+ 	const char *wdt_name; /* NULL if chip lacks watchdog timer */
+-	void (*pinconf)(struct watchdog_data *wd);
++	void (*pinconf)(struct fintek_wdog_data *wd);
  };
  
-+static inline bool has_f81865_wdo_conf(struct watchdog_data *wd)
-+{
-+	return wd->variant->id == SIO_F81865_ID
-+		|| wd->variant->id == SIO_F81866_ID;
-+}
-+
- /* Super I/O functions */
- static inline int superio_inb(int base, int reg)
+-struct watchdog_data {
++struct fintek_wdog_data {
+ 	struct watchdog_device wdd;
+ 	unsigned short	sioaddr;
+-	const struct f71808e_variant *variant;
++	const struct fintek_variant *variant;
+ 	struct watchdog_info ident;
+ 
+ 	u8		timer_val;	/* content for the wd_time register */
+@@ -134,7 +134,7 @@ struct watchdog_data {
+ 	char		pulse_mode;	/* enable pulse output mode? */
+ };
+ 
+-static inline bool has_f81865_wdo_conf(struct watchdog_data *wd)
++static inline bool has_f81865_wdo_conf(struct fintek_wdog_data *wd)
  {
-@@ -247,7 +245,7 @@ static int watchdog_set_pulse_width(unsigned int pw)
- 	int err = 0;
+ 	return wd->variant->id == SIO_F81865_ID
+ 		|| wd->variant->id == SIO_F81866_ID;
+@@ -202,9 +202,9 @@ static inline void superio_exit(int base)
+ 	release_region(base, 2);
+ }
+ 
+-static int watchdog_set_timeout(struct watchdog_device *wdd, unsigned int new_timeout)
++static int fintek_wdog_set_timeout(struct watchdog_device *wdd, unsigned int new_timeout)
+ {
+-	struct watchdog_data *wd = watchdog_get_drvdata(wdd);
++	struct fintek_wdog_data *wd = watchdog_get_drvdata(wdd);
+ 
+ 	wdd->timeout = new_timeout;
+ 	if (new_timeout > 0xff) {
+@@ -218,7 +218,7 @@ static int watchdog_set_timeout(struct watchdog_device *wdd, unsigned int new_ti
+ 	return 0;
+ }
+ 
+-static int watchdog_set_pulse_width(struct watchdog_data *wd, unsigned int pw)
++static int fintek_wdog_set_pulse_width(struct fintek_wdog_data *wd, unsigned int pw)
+ {
  	unsigned int t1 = 25, t2 = 125, t3 = 5000;
  
--	if (watchdog.type == f71868) {
-+	if (watchdog.variant->id == SIO_F71868_ID) {
- 		t1 = 30;
- 		t2 = 150;
- 		t3 = 6000;
-@@ -309,7 +307,6 @@ static int watchdog_keepalive(void)
- static int watchdog_start(void)
+@@ -246,9 +246,9 @@ static int watchdog_set_pulse_width(struct watchdog_data *wd, unsigned int pw)
+ 	return 0;
+ }
+ 
+-static int watchdog_keepalive(struct watchdog_device *wdd)
++static int fintek_wdog_keepalive(struct watchdog_device *wdd)
  {
+-	struct watchdog_data *wd = watchdog_get_drvdata(wdd);
++	struct fintek_wdog_data *wd = watchdog_get_drvdata(wdd);
  	int err;
--	u8 tmp;
+ 
+ 	err = superio_enter(wd->sioaddr);
+@@ -274,13 +274,13 @@ static int watchdog_keepalive(struct watchdog_device *wdd)
+ 	return 0;
+ }
+ 
+-static int watchdog_start(struct watchdog_device *wdd)
++static int fintek_wdog_start(struct watchdog_device *wdd)
+ {
+-	struct watchdog_data *wd = watchdog_get_drvdata(wdd);
++	struct fintek_wdog_data *wd = watchdog_get_drvdata(wdd);
+ 	int err;
  
  	/* Make sure we don't die as soon as the watchdog is enabled below */
- 	err = watchdog_keepalive();
-@@ -323,81 +320,12 @@ static int watchdog_start(void)
- 	superio_select(watchdog.sioaddr, SIO_F71808FG_LD_WDT);
- 
- 	/* Watchdog pin configuration */
--	switch (watchdog.type) {
--	case f71808fg:
--		/* Set pin 21 to GPIO23/WDTRST#, then to WDTRST# */
--		superio_clear_bit(watchdog.sioaddr, SIO_REG_MFUNCT2, 3);
--		superio_clear_bit(watchdog.sioaddr, SIO_REG_MFUNCT3, 3);
--		break;
--
--	case f71862fg:
--		if (f71862fg_pin == 63) {
--			/* SPI must be disabled first to use this pin! */
--			superio_clear_bit(watchdog.sioaddr, SIO_REG_ROM_ADDR_SEL, 6);
--			superio_set_bit(watchdog.sioaddr, SIO_REG_MFUNCT3, 4);
--		} else if (f71862fg_pin == 56) {
--			superio_set_bit(watchdog.sioaddr, SIO_REG_MFUNCT1, 1);
--		}
--		break;
--
--	case f71868:
--	case f71869:
--		/* GPIO14 --> WDTRST# */
--		superio_clear_bit(watchdog.sioaddr, SIO_REG_MFUNCT1, 4);
--		break;
--
--	case f71882fg:
--		/* Set pin 56 to WDTRST# */
--		superio_set_bit(watchdog.sioaddr, SIO_REG_MFUNCT1, 1);
--		break;
--
--	case f71889fg:
--		/* set pin 40 to WDTRST# */
--		superio_outb(watchdog.sioaddr, SIO_REG_MFUNCT3,
--			superio_inb(watchdog.sioaddr, SIO_REG_MFUNCT3) & 0xcf);
--		break;
--
--	case f81803:
--		/* Enable TSI Level register bank */
--		superio_clear_bit(watchdog.sioaddr, SIO_REG_CLOCK_SEL, 3);
--		/* Set pin 27 to WDTRST# */
--		superio_outb(watchdog.sioaddr, SIO_REG_TSI_LEVEL_SEL, 0x5f &
--			superio_inb(watchdog.sioaddr, SIO_REG_TSI_LEVEL_SEL));
--		break;
--
--	case f81865:
--		/* Set pin 70 to WDTRST# */
--		superio_clear_bit(watchdog.sioaddr, SIO_REG_MFUNCT3, 5);
--		break;
--
--	case f81866:
--		/*
--		 * GPIO1 Control Register when 27h BIT3:2 = 01 & BIT0 = 0.
--		 * The PIN 70(GPIO15/WDTRST) is controlled by 2Ch:
--		 *     BIT5: 0 -> WDTRST#
--		 *           1 -> GPIO15
--		 */
--		tmp = superio_inb(watchdog.sioaddr, SIO_F81866_REG_PORT_SEL);
--		tmp &= ~(BIT(3) | BIT(0));
--		tmp |= BIT(2);
--		superio_outb(watchdog.sioaddr, SIO_F81866_REG_PORT_SEL, tmp);
--
--		superio_clear_bit(watchdog.sioaddr, SIO_F81866_REG_GPIO1, 5);
--		break;
--
--	default:
--		/*
--		 * 'default' label to shut up the compiler and catch
--		 * programmer errors
--		 */
--		err = -ENODEV;
--		goto exit_superio;
--	}
-+	watchdog.variant->pinconf(&watchdog);
- 
- 	superio_select(watchdog.sioaddr, SIO_F71808FG_LD_WDT);
- 	superio_set_bit(watchdog.sioaddr, SIO_REG_ENABLE, 0);
- 
--	if (watchdog.type == f81865 || watchdog.type == f81866)
-+	if (has_f81865_wdo_conf(&watchdog))
- 		superio_set_bit(watchdog.sioaddr, F81865_REG_WDO_CONF,
- 				F81865_FLAG_WDOUT_EN);
- 	else
-@@ -425,7 +353,6 @@ static int watchdog_start(void)
- 				F71808FG_FLAG_WD_PULSE);
- 	}
- 
--exit_superio:
- 	superio_exit(watchdog.sioaddr);
- exit_unlock:
- 	mutex_unlock(&watchdog.lock);
-@@ -679,7 +606,7 @@ static int __init watchdog_init(int sioaddr)
- 
- 	snprintf(watchdog.ident.identity,
- 		sizeof(watchdog.ident.identity), "%s watchdog",
--		f71808e_names[watchdog.type]);
-+		watchdog.variant->wdt_name);
- 
- 	err = superio_enter(sioaddr);
+-	err = watchdog_keepalive(wdd);
++	err = fintek_wdog_keepalive(wdd);
  	if (err)
-@@ -772,73 +699,123 @@ static int __init watchdog_init(int sioaddr)
+ 		return err;
+ 
+@@ -328,9 +328,9 @@ static int watchdog_start(struct watchdog_device *wdd)
  	return err;
  }
  
--static int __init f71808e_find(int sioaddr)
-+static void f71808fg_pinconf(struct watchdog_data *wd)
-+{
-+	/* Set pin 21 to GPIO23/WDTRST#, then to WDTRST# */
-+	superio_clear_bit(wd->sioaddr, SIO_REG_MFUNCT2, 3);
-+	superio_clear_bit(wd->sioaddr, SIO_REG_MFUNCT3, 3);
-+}
-+static void f71862fg_pinconf(struct watchdog_data *wd)
-+{
-+	if (f71862fg_pin == 63) {
-+		/* SPI must be disabled first to use this pin! */
-+		superio_clear_bit(wd->sioaddr, SIO_REG_ROM_ADDR_SEL, 6);
-+		superio_set_bit(wd->sioaddr, SIO_REG_MFUNCT3, 4);
-+	} else if (f71862fg_pin == 56) {
-+		superio_set_bit(wd->sioaddr, SIO_REG_MFUNCT1, 1);
-+	}
-+}
-+static void f71868_pinconf(struct watchdog_data *wd)
-+{
-+	/* GPIO14 --> WDTRST# */
-+	superio_clear_bit(wd->sioaddr, SIO_REG_MFUNCT1, 4);
-+}
-+static void f71882fg_pinconf(struct watchdog_data *wd)
-+{
-+	/* Set pin 56 to WDTRST# */
-+	superio_set_bit(wd->sioaddr, SIO_REG_MFUNCT1, 1);
-+}
-+static void f71889fg_pinconf(struct watchdog_data *wd)
-+{
-+	/* set pin 40 to WDTRST# */
-+	superio_outb(wd->sioaddr, SIO_REG_MFUNCT3,
-+		     superio_inb(wd->sioaddr, SIO_REG_MFUNCT3) & 0xcf);
-+}
-+static void f81803_pinconf(struct watchdog_data *wd)
-+{
-+	/* Enable TSI Level register bank */
-+	superio_clear_bit(wd->sioaddr, SIO_REG_CLOCK_SEL, 3);
-+	/* Set pin 27 to WDTRST# */
-+	superio_outb(wd->sioaddr, SIO_REG_TSI_LEVEL_SEL, 0x5f &
-+		     superio_inb(wd->sioaddr, SIO_REG_TSI_LEVEL_SEL));
-+}
-+static void f81865_pinconf(struct watchdog_data *wd)
-+{
-+	/* Set pin 70 to WDTRST# */
-+	superio_clear_bit(wd->sioaddr, SIO_REG_MFUNCT3, 5);
-+}
-+static void f81866_pinconf(struct watchdog_data *wd)
-+{
-+	/*
-+	 * GPIO1 Control Register when 27h BIT3:2 = 01 & BIT0 = 0.
-+	 * The PIN 70(GPIO15/WDTRST) is controlled by 2Ch:
-+	 *     BIT5: 0 -> WDTRST#
-+	 *           1 -> GPIO15
-+	 */
-+	u8 tmp = superio_inb(wd->sioaddr, SIO_F81866_REG_PORT_SEL);
-+	tmp &= ~(BIT(3) | BIT(0));
-+	tmp |= BIT(2);
-+	superio_outb(wd->sioaddr, SIO_F81866_REG_PORT_SEL, tmp);
-+
-+	superio_clear_bit(wd->sioaddr, SIO_F81866_REG_GPIO1, 5);
-+}
-+
-+struct f71808e_variant f71808e_variants[] = {
-+	{ SIO_F71808_ID,  "f71808fg", f71808fg_pinconf },
-+	{ SIO_F71862_ID,  "f71862fg", f71862fg_pinconf },
-+	{ SIO_F71868_ID,  "f71868",   f71868_pinconf },
-+	{ SIO_F71869_ID,  "f71869",   f71868_pinconf },
-+	{ SIO_F71869A_ID, "f71869",   f71868_pinconf },
-+	{ SIO_F71882_ID,  "f71882fg", f71882fg_pinconf },
-+	{ SIO_F71889_ID,  "f71889fg", f71889fg_pinconf },
-+	{ SIO_F81803_ID,  "f81803",   f81803_pinconf },
-+	{ SIO_F81865_ID,  "f81865",   f81865_pinconf },
-+	{ SIO_F81866_ID,  "f81866",   f81866_pinconf },
-+	/* Confirmed (by datasheet) not to have a watchdog. */
-+	{ SIO_F71858_ID,  NULL,       NULL },
-+	{ /* sentinel */ }
-+};
-+
-+static struct f71808e_variant __init *f71808e_find(int sioaddr)
+-static int watchdog_stop(struct watchdog_device *wdd)
++static int fintek_wdog_stop(struct watchdog_device *wdd)
  {
-+	struct f71808e_variant *variant;
+-	struct watchdog_data *wd = watchdog_get_drvdata(wdd);
++	struct fintek_wdog_data *wd = watchdog_get_drvdata(wdd);
+ 	int err;
+ 
+ 	err = superio_enter(wd->sioaddr);
+@@ -346,21 +346,21 @@ static int watchdog_stop(struct watchdog_device *wdd)
+ 	return 0;
+ }
+ 
+-static const struct watchdog_ops f71808e_wdog_ops = {
++static const struct watchdog_ops fintek_wdog_ops = {
+ 	.owner = THIS_MODULE,
+-	.start = watchdog_start,
+-	.stop = watchdog_stop,
+-	.ping = watchdog_keepalive,
+-	.set_timeout = watchdog_set_timeout,
++	.start = fintek_wdog_start,
++	.stop = fintek_wdog_stop,
++	.ping = fintek_wdog_keepalive,
++	.set_timeout = fintek_wdog_set_timeout,
+ };
+ 
+-static bool watchdog_is_running(struct watchdog_data *wd, u8 wdt_conf)
++static bool fintek_wdog_is_running(struct fintek_wdog_data *wd, u8 wdt_conf)
+ {
+ 	return (superio_inb(wd->sioaddr, SIO_REG_ENABLE) & BIT(0))
+ 		&& (wdt_conf & BIT(F71808FG_FLAG_WD_EN));
+ }
+ 
+-static int __init watchdog_init(struct watchdog_data *wd)
++static int __init fintek_wdog_init(struct fintek_wdog_data *wd)
+ {
+ 	struct watchdog_device *wdd = &wd->wdd;
+ 	int wdt_conf, err = 0;
+@@ -390,17 +390,17 @@ static int __init watchdog_init(struct watchdog_data *wd)
+ 	superio_outb(wd->sioaddr, F71808FG_REG_WDT_CONF,
+ 		     wdt_conf | BIT(F71808FG_FLAG_WDTMOUT_STS));
+ 
+-	if (watchdog_is_running(wd, wdt_conf))
++	if (fintek_wdog_is_running(wd, wdt_conf))
+ 		set_bit(WDOG_HW_RUNNING, &wdd->status);
+ 
+ 	superio_exit(wd->sioaddr);
+ 
+-	err = watchdog_set_pulse_width(wd, pulse_width);
++	err = fintek_wdog_set_pulse_width(wd, pulse_width);
+ 	if (err)
+ 		return err;
+ 
+ 	wdd->info		= &wd->ident;
+-	wdd->ops		= &f71808e_wdog_ops;
++	wdd->ops		= &fintek_wdog_ops;
+ 	wdd->min_timeout	= 1;
+ 	wdd->max_timeout	= max_timeout;
+ 	wdd->timeout		= timeout;
+@@ -418,18 +418,18 @@ static int __init watchdog_init(struct watchdog_data *wd)
+ 	 * WATCHDOG_HANDLE_BOOT_ENABLED can result in keepalive being directly
+ 	 * called without a set_timeout before, so it needs to be done here once
+ 	 */
+-	watchdog_set_timeout(wdd, wdd->timeout);
++	fintek_wdog_set_timeout(wdd, wdd->timeout);
+ 
+ 	return watchdog_register_device(wdd);
+ }
+ 
+-static void f71808fg_pinconf(struct watchdog_data *wd)
++static void f71808fg_pinconf(struct fintek_wdog_data *wd)
+ {
+ 	/* Set pin 21 to GPIO23/WDTRST#, then to WDTRST# */
+ 	superio_clear_bit(wd->sioaddr, SIO_REG_MFUNCT2, 3);
+ 	superio_clear_bit(wd->sioaddr, SIO_REG_MFUNCT3, 3);
+ }
+-static void f71862fg_pinconf(struct watchdog_data *wd)
++static void f71862fg_pinconf(struct fintek_wdog_data *wd)
+ {
+ 	if (f71862fg_pin == 63) {
+ 		/* SPI must be disabled first to use this pin! */
+@@ -439,23 +439,23 @@ static void f71862fg_pinconf(struct watchdog_data *wd)
+ 		superio_set_bit(wd->sioaddr, SIO_REG_MFUNCT1, 1);
+ 	}
+ }
+-static void f71868_pinconf(struct watchdog_data *wd)
++static void f71868_pinconf(struct fintek_wdog_data *wd)
+ {
+ 	/* GPIO14 --> WDTRST# */
+ 	superio_clear_bit(wd->sioaddr, SIO_REG_MFUNCT1, 4);
+ }
+-static void f71882fg_pinconf(struct watchdog_data *wd)
++static void f71882fg_pinconf(struct fintek_wdog_data *wd)
+ {
+ 	/* Set pin 56 to WDTRST# */
+ 	superio_set_bit(wd->sioaddr, SIO_REG_MFUNCT1, 1);
+ }
+-static void f71889fg_pinconf(struct watchdog_data *wd)
++static void f71889fg_pinconf(struct fintek_wdog_data *wd)
+ {
+ 	/* set pin 40 to WDTRST# */
+ 	superio_outb(wd->sioaddr, SIO_REG_MFUNCT3,
+ 		     superio_inb(wd->sioaddr, SIO_REG_MFUNCT3) & 0xcf);
+ }
+-static void f81803_pinconf(struct watchdog_data *wd)
++static void f81803_pinconf(struct fintek_wdog_data *wd)
+ {
+ 	/* Enable TSI Level register bank */
+ 	superio_clear_bit(wd->sioaddr, SIO_REG_CLOCK_SEL, 3);
+@@ -463,12 +463,12 @@ static void f81803_pinconf(struct watchdog_data *wd)
+ 	superio_outb(wd->sioaddr, SIO_REG_TSI_LEVEL_SEL, 0x5f &
+ 		     superio_inb(wd->sioaddr, SIO_REG_TSI_LEVEL_SEL));
+ }
+-static void f81865_pinconf(struct watchdog_data *wd)
++static void f81865_pinconf(struct fintek_wdog_data *wd)
+ {
+ 	/* Set pin 70 to WDTRST# */
+ 	superio_clear_bit(wd->sioaddr, SIO_REG_MFUNCT3, 5);
+ }
+-static void f81866_pinconf(struct watchdog_data *wd)
++static void f81866_pinconf(struct fintek_wdog_data *wd)
+ {
+ 	/*
+ 	 * GPIO1 Control Register when 27h BIT3:2 = 01 & BIT0 = 0.
+@@ -484,7 +484,7 @@ static void f81866_pinconf(struct watchdog_data *wd)
+ 	superio_clear_bit(wd->sioaddr, SIO_F81866_REG_GPIO1, 5);
+ }
+ 
+-struct f71808e_variant f71808e_variants[] = {
++struct fintek_variant fintek_variants[] = {
+ 	{ SIO_F71808_ID,  "f71808fg", f71808fg_pinconf },
+ 	{ SIO_F71862_ID,  "f71862fg", f71862fg_pinconf },
+ 	{ SIO_F71868_ID,  "f71868",   f71868_pinconf },
+@@ -500,9 +500,9 @@ struct f71808e_variant f71808e_variants[] = {
+ 	{ /* sentinel */ }
+ };
+ 
+-static struct f71808e_variant __init *f71808e_find(int sioaddr)
++static struct fintek_variant __init *fintek_wdog_find(int sioaddr)
+ {
+-	struct f71808e_variant *variant;
++	struct fintek_variant *variant;
  	u16 devid;
  	int err = superio_enter(sioaddr);
  	if (err)
--		return err;
-+		return ERR_PTR(err);
- 
- 	devid = superio_inw(sioaddr, SIO_REG_MANID);
- 	if (devid != SIO_FINTEK_ID) {
- 		pr_debug("Not a Fintek device\n");
--		err = -ENODEV;
--		goto exit;
-+		superio_exit(sioaddr);
-+		return ERR_PTR(-ENODEV);
+@@ -516,7 +516,7 @@ static struct f71808e_variant __init *f71808e_find(int sioaddr)
  	}
  
  	devid = force_id ? force_id : superio_inw(sioaddr, SIO_REG_DEVID);
--	switch (devid) {
--	case SIO_F71808_ID:
--		watchdog.type = f71808fg;
--		break;
--	case SIO_F71862_ID:
--		watchdog.type = f71862fg;
--		break;
--	case SIO_F71868_ID:
--		watchdog.type = f71868;
--		break;
--	case SIO_F71869_ID:
--	case SIO_F71869A_ID:
--		watchdog.type = f71869;
--		break;
--	case SIO_F71882_ID:
--		watchdog.type = f71882fg;
--		break;
--	case SIO_F71889_ID:
--		watchdog.type = f71889fg;
--		break;
--	case SIO_F71858_ID:
--		/* Confirmed (by datasheet) not to have a watchdog. */
--		err = -ENODEV;
--		goto exit;
--	case SIO_F81803_ID:
--		watchdog.type = f81803;
--		break;
--	case SIO_F81865_ID:
--		watchdog.type = f81865;
--		break;
--	case SIO_F81866_ID:
--		watchdog.type = f81866;
--		break;
--	default:
--		pr_info("Unrecognized Fintek device: %04x\n",
--			(unsigned int)devid);
--		err = -ENODEV;
--		goto exit;
-+	for (variant = f71808e_variants; variant->id; variant++) {
-+		if (variant->id == devid)
-+			break;
-+	}
-+
-+	if (!variant->wdt_name) {
-+		if (!variant->id)
-+			pr_info("Unrecognized Fintek device: %04x\n", devid);
-+		superio_exit(sioaddr);
-+		return ERR_PTR(-ENODEV);
+-	for (variant = f71808e_variants; variant->id; variant++) {
++	for (variant = fintek_variants; variant->id; variant++) {
+ 		if (variant->id == devid)
+ 			break;
  	}
- 
- 	pr_info("Found %s watchdog chip, revision %d\n",
--		f71808e_names[watchdog.type],
--		(int)superio_inb(sioaddr, SIO_REG_DEVREV));
--exit:
-+		variant->wdt_name,
-+		superio_inb(sioaddr, SIO_REG_DEVREV));
-+
- 	superio_exit(sioaddr);
--	return err;
-+	return variant;
+@@ -536,13 +536,13 @@ static struct f71808e_variant __init *f71808e_find(int sioaddr)
+ 	return variant;
  }
  
- static int __init f71808e_init(void)
+-static struct watchdog_data watchdog;
++static struct fintek_wdog_data watchdog;
+ 
+-static int __init f71808e_init(void)
++static int __init fintek_wdog_probe(void)
  {
+-	struct watchdog_data *wd = &watchdog;
++	struct fintek_wdog_data *wd = &watchdog;
  	static const unsigned short addrs[] = { 0x2e, 0x4e };
--	int err = -ENODEV;
-+	struct f71808e_variant *variant;
+-	struct f71808e_variant *variant;
++	struct fintek_variant *variant;
  	int i;
  
  	if (f71862fg_pin != 63 && f71862fg_pin != 56) {
-@@ -847,12 +824,14 @@ static int __init f71808e_init(void)
+@@ -551,7 +551,7 @@ static int __init f71808e_init(void)
  	}
  
  	for (i = 0; i < ARRAY_SIZE(addrs); i++) {
--		err = f71808e_find(addrs[i]);
--		if (err == 0)
-+		variant = f71808e_find(addrs[i]);
-+		if (!IS_ERR(variant))
+-		variant = f71808e_find(addrs[i]);
++		variant = fintek_wdog_find(addrs[i]);
+ 		if (!IS_ERR(variant))
  			break;
  	}
- 	if (i == ARRAY_SIZE(addrs))
--		return err;
-+		return PTR_ERR(variant);
-+
-+	watchdog.variant = variant;
+@@ -561,17 +561,17 @@ static int __init f71808e_init(void)
+ 	wd->variant = variant;
+ 	wd->sioaddr = addrs[i];
  
- 	return watchdog_init(addrs[i]);
+-	return watchdog_init(wd);
++	return fintek_wdog_init(wd);
  }
+ 
+-static void __exit f71808e_exit(void)
++static void __exit fintek_wdog_exit(void)
+ {
+ 	watchdog_unregister_device(&watchdog.wdd);
+ }
+ 
+-MODULE_DESCRIPTION("F71808E Watchdog Driver");
++MODULE_DESCRIPTION("Fintek F71808E Watchdog Driver");
+ MODULE_AUTHOR("Giel van Schijndel <me@mortis.eu>");
+ MODULE_LICENSE("GPL");
+ 
+-module_init(f71808e_init);
+-module_exit(f71808e_exit);
++module_init(fintek_wdog_probe);
++module_exit(fintek_wdog_exit);
 -- 
 2.27.0
 
