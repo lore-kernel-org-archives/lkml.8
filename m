@@ -2,184 +2,108 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C08AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CB1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:03:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71EAB20656
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:03:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADAF920656
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:03:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="shpts0uR"
+	dkim=pass (2048-bit key) header.d=fooishbar-org.20150623.gappssmtp.com header.i=@fooishbar-org.20150623.gappssmtp.com header.b="rBu3ZBBs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbgFKJDq (ORCPT
+        id S1727011AbgFKJDu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 05:03:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37430 "EHLO
+        Thu, 11 Jun 2020 05:03:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726833AbgFKJDq (ORCPT
+        with ESMTP id S1726833AbgFKJDt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 05:03:46 -0400
-Received: from pandora.armlinux.org.uk (unknown [IPv6:2001:4d48:ad52:32c8:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B8B4C03E96F
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 02:03:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=KwDb/sopd5jsmmkWcfSHgFPCKOuRbiGST7C13mfN9cs=; b=shpts0uRr9dtUYuwTg489FmeO
-        VMnZw3UoMltWUBvE+BpbrPtg2VGNrfOlJPi+aaB8IcywCN2Uy4SaB17+yoJ16P4ZwIywbGKV3LKG8
-        gUVLd9DyPLgY+EXsnOMA2l8tKkQnqqLoXfH6JTjM5lnEWkMgxssujncEbnVWAjuEdRXXkvktxS9Kb
-        4QVSLXuMFlSQ8GG4NwWgehEgxA1oqTlKG6FppOfEZDW7ed002OZU0uNcRH902mP/YXfuOhj+NlAq9
-        CyhXPJI8Obgnv6oPRjMhfqq9TfOYJUNNp2b0ZsdCfXXHjfqXfclfj/77rlHaqE1cTNvpK9ceg3DLL
-        /WUShol2g==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:44110)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jjIzg-0008CK-Dj; Thu, 11 Jun 2020 09:55:28 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jjIzb-00052L-GW; Thu, 11 Jun 2020 09:55:23 +0100
-Date:   Thu, 11 Jun 2020 09:55:23 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Jonathan McDowell <noodles@earth.li>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] net: dsa: qca8k: Switch to PHYLINK instead of PHYLIB
-Message-ID: <20200611085523.GV1551@shell.armlinux.org.uk>
-References: <cover.1591816172.git.noodles@earth.li>
- <78519bc421a1cb7000a68d05e43c4208b26f37e5.1591816172.git.noodles@earth.li>
+        Thu, 11 Jun 2020 05:03:49 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9780CC03E96F
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 02:03:48 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id y20so4262381wmi.2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 02:03:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fooishbar-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=611EZXoXvMC0wgvkSoDqQkuDX4b96jfM5TQTQEW07+g=;
+        b=rBu3ZBBsiU7BegTaLT92EmVcTqTQ1ln4TngPt+QtaRUJwZJvFNvlbvL3HcjTBtXw9H
+         G1BFGLxRjII2qe+n6Wb4wAjp/MIbndhkzRvvFKrM4W8lQT+ibssLtH8TT46cMB5P5uU3
+         5NUykMXB6wJxIim5uZLsueE9Lb1sMJwsx7fkaWRSDcEwhKWAYhiGyzIwnkpl/z6oq0Or
+         4x+BtmbF9c7Gs6DTj+RsOX7oSNj6Q0tkv5onPLhaBIsEtG4yxV9T70vq8ePrXAlDNpD8
+         5sB2zFwst0zY2C9XYIlAcPCJ2JUIt9V9Hjz4+vjSenZxVun25fMG+8FtkYQcjlFwLPq+
+         dTPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=611EZXoXvMC0wgvkSoDqQkuDX4b96jfM5TQTQEW07+g=;
+        b=soFDCb27HOdr5CZKII2fLQKlDKgb8dzn8XB17Ikt8pNTc6EaBjQoZBlMiSviNYLeRd
+         /O45rvB//etr9JvhVUnL964JRQJWxMokDUKHNyqCZpoOw36bloAnJT4GG4aBZRc0r0ge
+         mBUITB0HsB0hdfnmQHirKz5ASq+QhNJZ49xYB0GE2TaP3F4d8z1Yx4q/mQCmTQN9YSZ9
+         9YZO8qC5fjhacseTBh3YO34qIrgf6n57h/8gn8K8Jkw7ZZAXDs+7vUZW90r4yEuSS26q
+         6LElk6z3YVTWY1d0wKjORBbd3PqEST8vtidTT6425XZ2VWBQR+bhPoP2PzrkMHe/8r4t
+         iSxQ==
+X-Gm-Message-State: AOAM533bJMqcD8qj/u4df84aanM/Esx8RYHvBDwnhMT0VTy4OerCICVu
+        RW9plFmxadJWix0PnVGBujUV5qssv+nmIgoEDARBlw==
+X-Google-Smtp-Source: ABdhPJxPKKxxiM1BfEdkh9RUDLtOEwohJAfgWmxAu+vR7pTgkQ6fdURfjYcm3A4r4/Ejum+DBwaGettYUqKJ7IOPnc8=
+X-Received: by 2002:a1c:6a01:: with SMTP id f1mr6984797wmc.52.1591866227178;
+ Thu, 11 Jun 2020 02:03:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <78519bc421a1cb7000a68d05e43c4208b26f37e5.1591816172.git.noodles@earth.li>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200604081224.863494-1-daniel.vetter@ffwll.ch>
+ <20200604081224.863494-4-daniel.vetter@ffwll.ch> <159186243606.1506.4437341616828968890@build.alporthouse.com>
+ <CAPM=9ty6r1LuXAH_rf98GH0R9yN3x8xzKPjZG3QyvokpQBR-Hg@mail.gmail.com>
+In-Reply-To: <CAPM=9ty6r1LuXAH_rf98GH0R9yN3x8xzKPjZG3QyvokpQBR-Hg@mail.gmail.com>
+From:   Daniel Stone <daniel@fooishbar.org>
+Date:   Thu, 11 Jun 2020 10:01:46 +0100
+Message-ID: <CAPj87rM0S2OPssf+WA+pjanT-0Om3yuUM1zUJCv4qTx5VYE=Fw@mail.gmail.com>
+Subject: Re: [Intel-gfx] [PATCH 03/18] dma-fence: basic lockdep annotations
+To:     Dave Airlie <airlied@gmail.com>
+Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
+        linux-rdma@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        Thomas Hellstrom <thomas.hellstrom@intel.com>,
+        amd-gfx mailing list <amd-gfx@lists.freedesktop.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Mika Kuoppala <mika.kuoppala@intel.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 08:14:03PM +0100, Jonathan McDowell wrote:
-> Update the driver to use the new PHYLINK callbacks, removing the
-> legacy adjust_link callback.
+Hi,
 
-Looks good, there's a couple of issues / questions
+On Thu, 11 Jun 2020 at 09:44, Dave Airlie <airlied@gmail.com> wrote:
+> On Thu, 11 Jun 2020 at 18:01, Chris Wilson <chris@chris-wilson.co.uk> wrote:
+> > Introducing a global lockmap that cannot capture the rules correctly,
+>
+> Can you document the rules all drivers should be following then,
+> because from here it looks to get refactored every version of i915,
+> and it would be nice if we could all aim for the same set of things
+> roughly. We've already had enough problems with amdgpu vs i915 vs
+> everyone else with fences, if this stops that in the future then I'd
+> rather we have that than just some unwritten rules per driver and
+> untestable.
 
->  static void
-> +qca8k_phylink_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
-> +			 const struct phylink_link_state *state)
->  {
->  	struct qca8k_priv *priv = ds->priv;
->  	u32 reg;
->  
-> +	switch (port) {
-...
-> +	case 6: /* 2nd CPU port / external PHY */
-> +		if (state->interface != PHY_INTERFACE_MODE_RGMII &&
-> +		    state->interface != PHY_INTERFACE_MODE_RGMII_ID &&
-> +		    state->interface != PHY_INTERFACE_MODE_SGMII &&
-> +		    state->interface != PHY_INTERFACE_MODE_1000BASEX)
-> +			return;
-> +
-> +		reg = QCA8K_REG_PORT6_PAD_CTRL;
-> +		break;
-...
-> +	}
-> +
-> +	if (port != 6 && phylink_autoneg_inband(mode)) {
-> +		dev_err(ds->dev, "%s: in-band negotiation unsupported\n",
-> +			__func__);
-> +		return;
-> +	}
-> +
-> +	switch (state->interface) {
-...
-> +	case PHY_INTERFACE_MODE_SGMII:
-> +	case PHY_INTERFACE_MODE_1000BASEX:
-> +		/* Enable SGMII on the port */
-> +		qca8k_write(priv, reg, QCA8K_PORT_PAD_SGMII_EN);
-> +		break;
+As someone who has sunk a bunch of work into explicit-fencing
+awareness in my compositor so I can never be blocked, I'd be
+disappointed if the infrastructure was ultimately pointless because
+the documented fencing rules were \_o_/ or thereabouts. Lockdep
+definitely isn't my area of expertise so I can't comment on the patch
+per se, but having something to ensure we don't hit deadlocks sure
+seems a lot better than nothing.
 
-Is inband mode configurable?  What if the link partner does/doesn't
-send the configuration word?  How is the link state communicated to
-the MAC?
-
-> +static int
-> +qca8k_phylink_mac_link_state(struct dsa_switch *ds, int port,
-> +			     struct phylink_link_state *state)
-> +{
-> +	struct qca8k_priv *priv = ds->priv;
-> +	u32 reg;
->  
-> +	reg = qca8k_read(priv, QCA8K_REG_PORT_STATUS(port));
-> +
-> +	state->link = !!(reg & QCA8K_PORT_STATUS_LINK_UP);
-> +	state->an_complete = state->link;
-> +	state->an_enabled = !!(reg & QCA8K_PORT_STATUS_LINK_AUTO);
-> +	state->duplex = (reg & QCA8K_PORT_STATUS_DUPLEX) ? DUPLEX_FULL :
-> +							   DUPLEX_HALF;
-> +
-> +	switch (reg & QCA8K_PORT_STATUS_SPEED) {
-> +	case QCA8K_PORT_STATUS_SPEED_10:
-> +		state->speed = SPEED_10;
-> +		break;
-> +	case QCA8K_PORT_STATUS_SPEED_100:
-> +		state->speed = SPEED_100;
-> +		break;
-> +	case QCA8K_PORT_STATUS_SPEED_1000:
-> +		state->speed = SPEED_1000;
-> +		break;
-> +	default:
-> +		state->speed = SPEED_UNKNOWN;
-
-Maybe also force the link down in this case, since the state is invalid?
-
-Do you have access to the link partner's configuration word?  If you do,
-you should use that to fill in state->lp_advertising.
-
-> +		break;
-> +	}
-> +
-> +	state->pause = MLO_PAUSE_NONE;
-> +	if (reg & QCA8K_PORT_STATUS_RXFLOW)
-> +		state->pause |= MLO_PAUSE_RX;
-> +	if (reg & QCA8K_PORT_STATUS_TXFLOW)
-> +		state->pause |= MLO_PAUSE_TX;
-> +
-> +	return 1;
-> +}
-> +
-> +static void
-> +qca8k_phylink_mac_link_down(struct dsa_switch *ds, int port, unsigned int mode,
-> +			    phy_interface_t interface)
-> +{
-> +	struct qca8k_priv *priv = ds->priv;
->  
->  	qca8k_port_set_status(priv, port, 0);
-
-If operating in in-band mode, forcing the link down unconditionally
-will prevent the link coming up if the SGMII/1000base-X block
-automatically updates the MAC, and if this takes precedence.
-
-When using in-band mode, you need to call dsa_port_phylink_mac_change()
-to keep phylink updated with the link status.
-
-Alternatively, phylink supports polling mode, but due to the layered
-way DSA is written, DSA drivers don't have access to that as that is
-in the DSA upper levels in net/dsa/slave.c (dsa_slave_phy_setup(),
-it would be dp->pl_config.pcs_poll).
-
-Apart from those points, I think it looks fine, thanks.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 503kbps up
+Cheers,
+Daniel
