@@ -2,119 +2,81 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C17DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:51:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C1BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BE062072F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:51:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F9DE20760
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:52:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bHhNRa8J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbgFKHvI convert rfc822-to-8bit (ORCPT
+        id S1726802AbgFKHwh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 03:51:08 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:22395 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726666AbgFKHvI (ORCPT
+        Thu, 11 Jun 2020 03:52:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54738 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbgFKHwh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 03:51:08 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id uk-mta-9-srxEkIQVNHCvyywSxzAvSQ-1;
- Thu, 11 Jun 2020 08:51:03 +0100
-X-MC-Unique: srxEkIQVNHCvyywSxzAvSQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 11 Jun 2020 08:51:03 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 11 Jun 2020 08:51:03 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Kees Cook' <keescook@chromium.org>
-CC:     'Sargun Dhillon' <sargun@sargun.me>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        "containers@lists.linux-foundation.org" 
-        <containers@lists.linux-foundation.org>,
-        Giuseppe Scrivano <gscrivan@redhat.com>,
-        Robert Sesek <rsesek@google.com>,
-        Chris Palmer <palmer@google.com>, Jann Horn <jannh@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Matt Denton <mpdenton@google.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Tejun Heo <tj@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: RE: [PATCH v3 1/4] fs, net: Standardize on file_receive helper to
- move fds across processes
-Thread-Topic: [PATCH v3 1/4] fs, net: Standardize on file_receive helper to
- move fds across processes
-Thread-Index: AQHWPv7tCi14oegu0U6J73sUpcDiU6jRh/3wgAEizQCAAFtkYA==
-Date:   Thu, 11 Jun 2020 07:51:02 +0000
-Message-ID: <5cb49301f8d8432eacdd0e9d914c14a3@AcuMS.aculab.com>
-References: <202006031845.F587F85A@keescook>
- <20200604125226.eztfrpvvuji7cbb2@wittgenstein>
- <20200605075435.GA3345@ircssh-2.c.rugged-nimbus-611.internal>
- <202006091235.930519F5B@keescook>
- <20200609200346.3fthqgfyw3bxat6l@wittgenstein>
- <202006091346.66B79E07@keescook>
- <037A305F-B3F8-4CFA-B9F8-CD4C9EF9090B@ubuntu.com>
- <202006092227.D2D0E1F8F@keescook>
- <20200610081237.GA23425@ircssh-2.c.rugged-nimbus-611.internal>
- <40d76a9a4525414a8c9809cd29a7ba8e@AcuMS.aculab.com>
- <202006102001.E9779DFA5B@keescook>
-In-Reply-To: <202006102001.E9779DFA5B@keescook>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 11 Jun 2020 03:52:37 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AF18C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 00:52:37 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id m21so3227112eds.13
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 00:52:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=infCVxRBFq8wcPbhY9NtQOYTjb0b7Xr0kvySKO6/Bf8=;
+        b=bHhNRa8JV/1DPjXZSUYmndVbsxCvamN9ht7/kqUeQI0A+5jGWD8l3LqfKkKxlEwZqd
+         ojD/p761Q/GqIu6EnaldNC3MExdBcc5E7/WcQIJP/ds7TnfPJYpVXxhTeFPQA8q9Qdfc
+         CHI4Flr+Mah6/SJkT3mcqdoqHTneUkr9vmuy6vYu9m4+6Bep2m3a98bbmA29wu7uzjVo
+         xNCKDSwktlUs+8YEuKmgFrXo2UEKCcvs9sD3LRvHs9ALPSqcd3dMoYnWgTeocsTI611A
+         4eE5VqPcS4Dt6o867TGHKaeqVlaPhLoNOz/QY7uS+TGLbH0zG4t8bt086zzaVW4bft/S
+         JqHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=infCVxRBFq8wcPbhY9NtQOYTjb0b7Xr0kvySKO6/Bf8=;
+        b=t0KUV3bcmigeW0nKuESxr1rth2q+sG7zqYrvS7eFzlmdD0uZ8xzlcWTyJfRDhIcR9P
+         yVBRCeu05XwgPP+cOGkNXrvJpujIBVgHDN48UMCooNYJrcjnhcvsYeyDmwpxzO5zm0Mb
+         10eZZ9VzePkfgQgF8bQd3ec5gDvFeQkbo2dL7z7SgagREOqyYtvPyJ353iJd3MB2AiTb
+         Z/cRdZ/PNWr7lQpY3Tn40M9dPdyonCL1e/+/96HFdimHI46MX/2/E7kmUgXzBxi7sb9J
+         fDcOfvsTFZdNGkNHR2m65CBS1qInLhJgI6S4JtYV4ApoXoQl0alVDSh2YjNEJeijNmh8
+         0emA==
+X-Gm-Message-State: AOAM532jTuiC3ldVqYOt9cdZuqcz2OrWgTYzwRhP6HXny0jD47mTkgmJ
+        L6PSP2J1Gfq/o00dBey7eYMmU6wZ3Dq/whyyS4g=
+X-Google-Smtp-Source: ABdhPJwnX0YDM2BHMYIRO8m7ItOvNpONSCGfBYPDq6B5P14y7Ybu1YyQaJs1FffHxDvXRGAmSf18qGgGM4zkfI9T/aQ=
+X-Received: by 2002:a05:6402:c06:: with SMTP id co6mr5700483edb.298.1591861953758;
+ Thu, 11 Jun 2020 00:52:33 -0700 (PDT)
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <CAPM=9tySU_oXYv+FF5D3GkkyngdxWfkb_6KDK6nA0uBx6EB=qw@mail.gmail.com>
+In-Reply-To: <CAPM=9tySU_oXYv+FF5D3GkkyngdxWfkb_6KDK6nA0uBx6EB=qw@mail.gmail.com>
+From:   Dave Airlie <airlied@gmail.com>
+Date:   Thu, 11 Jun 2020 17:52:22 +1000
+Message-ID: <CAPM=9tx_F=dePpDWsmNP4qSCO9mTN37RMYWojdhy7pWswu3WHg@mail.gmail.com>
+Subject: Re: [git pull] drm i915 fixes for rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook
-> Sent: 11 June 2020 04:03
-...
-> > IIRC other kernels (eg NetBSD) do the copies for ioctl() requests
-> > in the ioctl syscall wrapper.
-> > The IOW/IOR/IOWR flags have to be right.
-> 
-> Yeah, this seems like it'd make a lot more sense (and would have easily
-> caught the IOR/IOW issue pointed out later in the thread). I wonder how
-> insane it would be to try to fix that globally in the kernel...
+On Thu, 11 Jun 2020 at 13:56, Dave Airlie <airlied@gmail.com> wrote:
+>
+> Hi Linus,
 
-Seems like a good idea to me.
-(Even though I'll need to fix our 'out of tree' modules.)
+Hey actually skip this one in favour of the later one, one of the ast
+fixes needs to get into stable as well.
 
-Unlike [sg]etsockopt() at least the buffer is bounded to 1k.
-
-But you'd really need to add new kernel_ioctl() entry points
-before deprecating the existing ones a release or two later.
-
-With a bit of luck there aren't any drivers ported from SYSV that
-just treat the ioctl command as a 32bit transparent value and
-the argument as an integer.
-
-I actually suspect that BSD added IOW (etc) in the 16bit to 32bit port.
-The kernel copies being moved to the syscall stub at the same time.
-Since Linux has only ever been 32bit and uses IOW is it actually odd
-that Linus didn't do the copies in the stub.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+Dave.
