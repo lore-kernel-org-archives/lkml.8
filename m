@@ -2,149 +2,207 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF6EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:00:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC8CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54BFD204EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:00:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="IMcY6+nd"
+	by mail.kernel.org (Postfix) with ESMTP id C14512072F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:01:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591862509;
+	bh=WrdLLQIOoxEMsuU9Lk5Dy1SToKye9eSD7H3ebXQ4auQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=e//66DgtEleECljD0FyctQ8Rbcin6VrCMC7Dc7e0BNxJzzosn1UKx3753NW7wXQbE
+	 eVbmcTOb/V6HTbdhSsTPO87GfydqWHHUjpMJromFiQPiNYFkTv+D2lq0+i83ZKyeZq
+	 GervABqno8QvwdwXmA+LIP5X0f0IDOZykr5EER8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbgFKIAV (ORCPT
+        id S1726853AbgFKIBs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 04:00:21 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:50183 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726841AbgFKIAU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 04:00:20 -0400
-X-UUID: 3425f3c71903411db3d9adf6ff997c7d-20200611
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=ymFyA3aRkGFQ0hwS3c5JqbCS9zGTSs9AXR5E+TUVjRw=;
-        b=IMcY6+ndne/pmzJYoDIvoKGGLZDsmRyLtkaBoT9f9k3kS042rQr2UNfVVjFsMNaU0TIrg1vDpeIFOhntx/+VzslwpHRyXvmBu/Aw5OmqYguvwR5+02g/yR/n8LERFqQ/VcTlDVb05mwkpoo8Ar5MVDjfgePkYsYuOZW1mxMvjLM=;
-X-UUID: 3425f3c71903411db3d9adf6ff997c7d-20200611
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <eastl.lee@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 462532237; Thu, 11 Jun 2020 16:00:13 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 11 Jun 2020 16:00:10 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 11 Jun 2020 16:00:10 +0800
-Message-ID: <1591862411.23595.5.camel@mtkswgap22>
-Subject: Re: [PATCH v4 1/4] dt-bindings: dmaengine: Add MediaTek
- Command-Queue DMA controller bindings
-From:   EastL <EastL.Lee@mediatek.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Sean Wang <sean.wang@mediatek.com>, <vkoul@kernel.org>,
-        <mark.rutland@arm.com>, <matthias.bgg@gmail.com>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>
-Date:   Thu, 11 Jun 2020 16:00:11 +0800
-In-Reply-To: <20200529192443.GA2785767@bogus>
-References: <1590659832-31476-1-git-send-email-EastL.Lee@mediatek.com>
-         <1590659832-31476-2-git-send-email-EastL.Lee@mediatek.com>
-         <20200529192443.GA2785767@bogus>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Thu, 11 Jun 2020 04:01:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47298 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726648AbgFKIBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 04:01:47 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65AB1204EA;
+        Thu, 11 Jun 2020 08:01:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591862506;
+        bh=WrdLLQIOoxEMsuU9Lk5Dy1SToKye9eSD7H3ebXQ4auQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=BFNWtrgHmTyg+AGGrVuwbubxxA7aMIB6dBhEn5erW2tJ90Re7LmkgQh1PRU8S1tBy
+         1Vf5aq5qLm3ViH955oFX5SqDRf+22SYRhv8o6a+CLJPlv/tGf0NcfQ1zvZ772LwNWR
+         fmY3NiXUQ/U6YmjVuKyNJoqR2RwkIVDLBKcX1YPI=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jjI9g-0021ZL-Tz; Thu, 11 Jun 2020 09:01:45 +0100
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: E454FB0951BC790B45883925983748159758D5FE3D941C0A086BA0DD8420AA522000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 11 Jun 2020 09:01:44 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Feiner <pfeiner@google.com>,
+        Peter Shier <pshier@google.com>,
+        Junaid Shahid <junaids@google.com>,
+        Ben Gardon <bgardon@google.com>,
+        Christoffer Dall <christoffer.dall@arm.com>
+Subject: Re: [PATCH 18/21] KVM: arm64: Use common KVM implementation of MMU
+ memory caches
+In-Reply-To: <20200605213853.14959-19-sean.j.christopherson@intel.com>
+References: <20200605213853.14959-1-sean.j.christopherson@intel.com>
+ <20200605213853.14959-19-sean.j.christopherson@intel.com>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <3555daf3b38c890e1e74f05d6f49f9be@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: sean.j.christopherson@intel.com, paulus@ozlabs.org, borntraeger@de.ibm.com, frankja@linux.ibm.com, pbonzini@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, david@redhat.com, cohuck@redhat.com, imbrenda@linux.ibm.com, vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org, kvm@vger.kernel.org, kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org, pfeiner@google.com, pshier@google.com, junaids@google.com, bgardon@google.com, christoffer.dall@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTA1LTI5IGF0IDEzOjI0IC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
-T24gVGh1LCBNYXkgMjgsIDIwMjAgYXQgMDU6NTc6MDlQTSArMDgwMCwgRWFzdEwgd3JvdGU6DQo+
-ID4gRG9jdW1lbnQgdGhlIGRldmljZXRyZWUgYmluZGluZ3MgZm9yIE1lZGlhVGVrIENvbW1hbmQt
-UXVldWUgRE1BIGNvbnRyb2xsZXINCj4gPiB3aGljaCBjb3VsZCBiZSBmb3VuZCBvbiBNVDY3Nzkg
-U29DIG9yIG90aGVyIHNpbWlsYXIgTWVkaWF0ZWsgU29Dcy4NCj4gPiANCj4gPiBTaWduZWQtb2Zm
-LWJ5OiBFYXN0TCA8RWFzdEwuTGVlQG1lZGlhdGVrLmNvbT4NCj4gDQo+IE5lZWQgYSBmdWxsIG5h
-bWUNCg0KT0sNCj4gLg0KPiANCj4gPiAtLS0NCj4gPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZG1hL210ay1jcWRtYS55YW1sICAgICAgICAgfCAxMDAgKysrKysrKysrKysrKysrKysrKysrDQo+
-ID4gIDEgZmlsZSBjaGFuZ2VkLCAxMDAgaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUgbW9kZSAx
-MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS9tdGstY3FkbWEueWFt
-bA0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZG1hL210ay1jcWRtYS55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2RtYS9tdGstY3FkbWEueWFtbA0KPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXgg
-MDAwMDAwMC4uMDQ1YWEwYw0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZG1hL210ay1jcWRtYS55YW1sDQo+ID4gQEAgLTAsMCAr
-MSwxMDAgQEANCj4gPiArIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KPiANCj4g
-RHVhbCBsaWNlbnNlIG5ldyBiaW5kaW5nczoNCj4gDQo+IChHUEwtMi4wLW9ubHkgT1IgQlNELTIt
-Q2xhdXNlKQ0KDQpPSw0KPiANCj4gPiArJVlBTUwgMS4yDQo+ID4gKy0tLQ0KPiA+ICskaWQ6IGh0
-dHA6Ly9kZXZpY2V0cmVlLm9yZy9zY2hlbWFzL2RtYS9tdGstY3FkbWEueWFtbCMNCj4gPiArJHNj
-aGVtYTogaHR0cDovL2RldmljZXRyZWUub3JnL21ldGEtc2NoZW1hcy9jb3JlLnlhbWwjDQo+ID4g
-Kw0KPiA+ICt0aXRsZTogTWVkaWFUZWsgQ29tbWFuZC1RdWV1ZSBETUEgY29udHJvbGxlciBEZXZp
-Y2UgVHJlZSBCaW5kaW5nDQo+ID4gKw0KPiA+ICttYWludGFpbmVyczoNCj4gPiArICAtIEVhc3RM
-IDxFYXN0TC5MZWVAbWVkaWF0ZWsuY29tPg0KPiA+ICsNCj4gPiArZGVzY3JpcHRpb246DQo+ID4g
-KyAgTWVkaWFUZWsgQ29tbWFuZC1RdWV1ZSBETUEgY29udHJvbGxlciAoQ1FETUEpIG9uIE1lZGlh
-dGVrIFNvQw0KPiA+ICsgIGlzIGRlZGljYXRlZCB0byBtZW1vcnktdG8tbWVtb3J5IHRyYW5zZmVy
-IHRocm91Z2ggcXVldWUgYmFzZWQNCj4gPiArICBkZXNjcmlwdG9yIG1hbmFnZW1lbnQuDQo+ID4g
-Kw0KPiANCj4gTmVlZCBhICRyZWYgdG8gZG1hLWNvbnRyb2xsZXIueWFtbA0KDQpPSw0KPiANCj4g
-PiArcHJvcGVydGllczoNCj4gPiArICAiI2RtYS1jZWxscyI6DQo+ID4gKyAgICBtaW5pbXVtOiAx
-DQo+ID4gKyAgICAjIFNob3VsZCBiZSBlbm91Z2gNCj4gPiArICAgIG1heGltdW06IDI1NQ0KPiA+
-ICsgICAgZGVzY3JpcHRpb246DQo+ID4gKyAgICAgIFVzZWQgdG8gcHJvdmlkZSBETUEgY29udHJv
-bGxlciBzcGVjaWZpYyBpbmZvcm1hdGlvbi4NCj4gPiArDQo+ID4gKyAgY29tcGF0aWJsZToNCj4g
-PiArICAgIGNvbnN0OiBtZWRpYXRlayxjcWRtYQ0KPiANCj4gTmVlZHMgU29DIHNwZWNpZmljIGNv
-bXBhdGlibGUgc3RyaW5nKHMpLg0KT0sNCj4gDQo+ID4gKw0KPiA+ICsgIHJlZzoNCj4gPiArICAg
-IG1pbkl0ZW1zOiAxDQo+ID4gKyAgICBtYXhJdGVtczogMjU1DQo+IA0KPiBZb3UgY2FuIGhhdmUg
-MjU1IHJlZ2lzdGVyIHJlZ2lvbnM/DQpObywgSSdsbCBmaXggbWF4SXRlbXMgdG8gNQ0KPiANCj4g
-WW91IG5lZWQgdG8gZGVmaW5lIHdoYXQgZWFjaCByZWdpb24gaXMgaWYgbW9yZSB0aGFuIDEuDQo+
-IA0KPiA+ICsNCj4gPiArICBpbnRlcnJ1cHRzOg0KPiA+ICsgICAgbWluSXRlbXM6IDENCj4gPiAr
-ICAgIG1heEl0ZW1zOiAyNTUNCj4gDQo+IDI1NSBpbnRlcnJ1cHRzPw0KDQp0aGUgc2FtZSwgNSBp
-bnRlcnJpcHRzLg0KPiANCj4gPiArDQo+ID4gKyAgY2xvY2tzOg0KPiA+ICsgICAgbWF4SXRlbXM6
-IDENCj4gPiArDQo+ID4gKyAgY2xvY2stbmFtZXM6DQo+ID4gKyAgICBjb25zdDogY3FkbWENCj4g
-PiArDQo+ID4gKyAgZG1hLWNoYW5uZWwtbWFzazoNCj4gPiArICAgIGRlc2NyaXB0aW9uOg0KPiA+
-ICsgICAgICBCaXRtYXNrIG9mIGF2YWlsYWJsZSBETUEgY2hhbm5lbHMgaW4gYXNjZW5kaW5nIG9y
-ZGVyIHRoYXQgYXJlDQo+ID4gKyAgICAgIG5vdCByZXNlcnZlZCBieSBmaXJtd2FyZSBhbmQgYXJl
-IGF2YWlsYWJsZSB0byB0aGUNCj4gPiArICAgICAga2VybmVsLiBpLmUuIGZpcnN0IGNoYW5uZWwg
-Y29ycmVzcG9uZHMgdG8gTFNCLg0KPiA+ICsgICAgICBUaGUgZmlyc3QgaXRlbSBpbiB0aGUgYXJy
-YXkgaXMgZm9yIGNoYW5uZWxzIDAtMzEsIHRoZSBzZWNvbmQgaXMgZm9yDQo+ID4gKyAgICAgIGNo
-YW5uZWxzIDMyLTYzLCBldGMuDQo+ID4gKyAgICBhbGxPZjoNCj4gPiArICAgICAgLSAkcmVmOiAv
-c2NoZW1hcy90eXBlcy55YW1sIy9kZWZpbml0aW9ucy91aW50MzItYXJyYXkNCj4gPiArICAgIGl0
-ZW1zOg0KPiA+ICsgICAgICBtaW5JdGVtczogMQ0KPiA+ICsgICAgICAjIFNob3VsZCBiZSBlbm91
-Z2gNCj4gPiArICAgICAgbWF4SXRlbXM6IDI1NQ0KPiANCj4gVGhpcyBhbHJlYWR5IGhhcyBhIGRl
-ZmluaXRpb24gaW4gZG1hLWNvbW1vbi55YW1sLiBEb24ndCBjb3B5LW4tcGFzdGUgDQo+IGl0LiBK
-dXN0IGFkZCBhbnkgY29uc3RyYWludHMgeW91IGhhdmUuIExpa2Ugd2hhdCBpcyB0aGUgbWF4IG51
-bWJlciBvZiANCj4gY2hhbm5lbHM/DQoNCk9LLCB0aGUgbWF4IGNoYW5uZWwgbnVtYmVyIGlzIDUs
-IEknbGwgZml4IGl0IG9uIG5leHQgdmVyc2lvbi4NCj4gDQo+ID4gKw0KPiA+ICsgIGRtYS1jaGFu
-bmVsczoNCj4gPiArICAgICRyZWY6IC9zY2hlbWFzL3R5cGVzLnlhbWwjZGVmaW5pdGlvbnMvdWlu
-dDMyDQo+ID4gKyAgICBkZXNjcmlwdGlvbjoNCj4gPiArICAgICAgTnVtYmVyIG9mIERNQSBjaGFu
-bmVscyBzdXBwb3J0ZWQgYnkgdGhlIGNvbnRyb2xsZXIuDQo+ID4gKw0KPiA+ICsgIGRtYS1yZXF1
-ZXN0czoNCj4gPiArICAgICRyZWY6IC9zY2hlbWFzL3R5cGVzLnlhbWwjZGVmaW5pdGlvbnMvdWlu
-dDMyDQo+ID4gKyAgICBkZXNjcmlwdGlvbjoNCj4gPiArICAgICAgTnVtYmVyIG9mIERNQSByZXF1
-ZXN0IHNpZ25hbHMgc3VwcG9ydGVkIGJ5IHRoZSBjb250cm9sbGVyLg0KPiANCj4gU2FtZSBjb21t
-ZW50IG9uIHRoZXNlIDIuDQoNCk9LDQo+IA0KPiA+ICsNCj4gPiArcmVxdWlyZWQ6DQo+ID4gKyAg
-LSAiI2RtYS1jZWxscyINCj4gPiArICAtIGNvbXBhdGlibGUNCj4gPiArICAtIHJlZw0KPiA+ICsg
-IC0gaW50ZXJydXB0cw0KPiA+ICsgIC0gY2xvY2tzDQo+ID4gKyAgLSBjbG9jay1uYW1lcw0KPiA+
-ICsgIC0gZG1hLWNoYW5uZWwtbWFzaw0KPiA+ICsgIC0gZG1hLWNoYW5uZWxzDQo+ID4gKyAgLSBk
-bWEtcmVxdWVzdHMNCj4gPiArDQo+ID4gK2FkZGl0aW9uYWxQcm9wZXJ0aWVzOiBmYWxzZQ0KPiA+
-ICsNCj4gPiArZXhhbXBsZXM6DQo+ID4gKyAgLSB8DQo+ID4gKyAgICAjaW5jbHVkZSA8ZHQtYmlu
-ZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvaXJxLmg+DQo+ID4gKyAgICAjaW5jbHVkZSA8ZHQt
-YmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvYXJtLWdpYy5oPg0KPiA+ICsgICAgI2luY2x1
-ZGUgPGR0LWJpbmRpbmdzL2Nsb2NrL210Njc3OS1jbGsuaD4NCj4gPiArICAgIGNxZG1hOiBkbWEt
-Y29udHJvbGxlckAxMDIxMjAwMCB7DQo+ID4gKyAgICAgICAgY29tcGF0aWJsZSA9ICJtZWRpYXRl
-ayxjcWRtYSI7DQo+ID4gKyAgICAgICAgcmVnID0gPDAgMHgxMDIxMjAwMCAwIDB4ODA+LA0KPiA+
-ICsgICAgICAgICAgICA8MCAweDEwMjEyMDgwIDAgMHg4MD4sDQo+ID4gKyAgICAgICAgICAgIDww
-IDB4MTAyMTIxMDAgMCAweDgwPjsNCj4gDQo+IEV4YW1wbGVzIGRlZmF1bHQgdG8gMSBjZWxsIGVh
-Y2ggZm9yIGFkZHJlc3MgYW5kIHNpemUuDQpPSw0KPiANCj4gPiArICAgICAgICBpbnRlcnJ1cHRz
-ID0gPEdJQ19TUEkgMTM5IElSUV9UWVBFX0xFVkVMX0xPVz4sDQo+ID4gKyAgICAgICAgICAgIDxH
-SUNfU1BJIDE0MCBJUlFfVFlQRV9MRVZFTF9MT1c+LA0KPiA+ICsgICAgICAgICAgICA8R0lDX1NQ
-SSAxNDEgSVJRX1RZUEVfTEVWRUxfTE9XPjsNCj4gPiArICAgICAgICBjbG9ja3MgPSA8JmluZnJh
-Y2ZnX2FvIENMS19JTkZSQV9DUV9ETUE+Ow0KPiA+ICsgICAgICAgIGNsb2NrLW5hbWVzID0gImNx
-ZG1hIjsNCj4gPiArICAgICAgICBkbWEtY2hhbm5lbC1tYXNrID0gPDYzPjsNCj4gPiArICAgICAg
-ICBkbWEtY2hhbm5lbHMgPSA8Mz47DQo+ID4gKyAgICAgICAgZG1hLXJlcXVlc3RzID0gPDMyPjsN
-Cj4gPiArICAgICAgICAjZG1hLWNlbGxzID0gPDE+Ow0KPiA+ICsgICAgfTsNCj4gPiArDQo+ID4g
-Ky4uLg0KPiA+IC0tIA0KPiA+IDEuOS4xDQoNCg==
+On 2020-06-05 22:38, Sean Christopherson wrote:
+> Move to the common MMU memory cache implementation now that the common
+> code and arm64's existing code are semantically compatible.
+> 
+> No functional change intended.
+> 
+> Suggested-by: Christoffer Dall <christoffer.dall@arm.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/arm64/include/asm/kvm_host.h  | 12 -------
+>  arch/arm64/include/asm/kvm_types.h |  2 ++
+>  arch/arm64/kvm/mmu.c               | 51 ++++++------------------------
+>  3 files changed, 12 insertions(+), 53 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/kvm_host.h
+> b/arch/arm64/include/asm/kvm_host.h
+> index 2385dede96e0..d221b6b129fd 100644
+> --- a/arch/arm64/include/asm/kvm_host.h
+> +++ b/arch/arm64/include/asm/kvm_host.h
+> @@ -97,18 +97,6 @@ struct kvm_arch {
+>  	bool return_nisv_io_abort_to_user;
+>  };
+> 
+> -#define KVM_NR_MEM_OBJS     40
+> -
+> -/*
+> - * We don't want allocation failures within the mmu code, so we 
+> preallocate
+> - * enough memory for a single page fault in a cache.
+> - */
+> -struct kvm_mmu_memory_cache {
+> -	int nobjs;
+> -	gfp_t gfp_zero;
+> -	void *objects[KVM_NR_MEM_OBJS];
+> -};
+> -
+>  struct kvm_vcpu_fault_info {
+>  	u32 esr_el2;		/* Hyp Syndrom Register */
+>  	u64 far_el2;		/* Hyp Fault Address Register */
+> diff --git a/arch/arm64/include/asm/kvm_types.h
+> b/arch/arm64/include/asm/kvm_types.h
+> index d0987007d581..9a126b9e2d7c 100644
+> --- a/arch/arm64/include/asm/kvm_types.h
+> +++ b/arch/arm64/include/asm/kvm_types.h
+> @@ -2,5 +2,7 @@
+>  #ifndef _ASM_ARM64_KVM_TYPES_H
+>  #define _ASM_ARM64_KVM_TYPES_H
+> 
+> +#define KVM_ARCH_NR_OBJS_PER_MEMORY_CACHE 40
+> +
+>  #endif /* _ASM_ARM64_KVM_TYPES_H */
+> 
+> diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
+> index 688213ef34f0..976405e2fbb2 100644
+> --- a/arch/arm64/kvm/mmu.c
+> +++ b/arch/arm64/kvm/mmu.c
+> @@ -124,37 +124,6 @@ static void stage2_dissolve_pud(struct kvm *kvm,
+> phys_addr_t addr, pud_t *pudp)
+>  	put_page(virt_to_page(pudp));
+>  }
+> 
+> -static int mmu_topup_memory_cache(struct kvm_mmu_memory_cache *cache, 
+> int min)
+> -{
+> -	void *page;
+> -
+> -	if (cache->nobjs >= min)
+> -		return 0;
+> -	while (cache->nobjs < ARRAY_SIZE(cache->objects)) {
+> -		page = (void *)__get_free_page(GFP_KERNEL_ACCOUNT |
+> -					       cache->gfp_zero);
+> -		if (!page)
+> -			return -ENOMEM;
+> -		cache->objects[cache->nobjs++] = page;
+> -	}
+> -	return 0;
+> -}
+> -
+> -static void mmu_free_memory_cache(struct kvm_mmu_memory_cache *mc)
+> -{
+> -	while (mc->nobjs)
+> -		free_page((unsigned long)mc->objects[--mc->nobjs]);
+> -}
+> -
+> -static void *mmu_memory_cache_alloc(struct kvm_mmu_memory_cache *mc)
+> -{
+> -	void *p;
+> -
+> -	BUG_ON(!mc || !mc->nobjs);
+> -	p = mc->objects[--mc->nobjs];
+> -	return p;
+> -}
+> -
+>  static void clear_stage2_pgd_entry(struct kvm *kvm, pgd_t *pgd,
+> phys_addr_t addr)
+>  {
+>  	pud_t *pud_table __maybe_unused = stage2_pud_offset(kvm, pgd, 0UL);
+> @@ -1024,7 +993,7 @@ static pud_t *stage2_get_pud(struct kvm *kvm,
+> struct kvm_mmu_memory_cache *cache
+>  	if (stage2_pgd_none(kvm, *pgd)) {
+>  		if (!cache)
+>  			return NULL;
+> -		pud = mmu_memory_cache_alloc(cache);
+> +		pud = kvm_mmu_memory_cache_alloc(cache);
+>  		stage2_pgd_populate(kvm, pgd, pud);
+>  		get_page(virt_to_page(pgd));
+>  	}
 
+Quick note: this patch (as it is) breaks on arm64 due to Mike Rapoport's
+P4D rework. I've fixed it locally in order to test the series.
+
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
