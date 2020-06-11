@@ -2,102 +2,102 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10453C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23856C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5BE62083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:11:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 028AB20842
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:11:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591884696;
+	bh=zh1lFs+8r4VDNriEOLadueTPZsr+K0w3KsIGgXTzDyI=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=izq/ZuMIhY/qZBeM0d8B/xqwxy/ChSNZ/jbrFOmjkZAg5JpjSRf9fpt2PXJERW4zS
+	 6eBQHPJU/ExlwiO+ONFNQYm299OjxpFa5BOkEnY0yYJgf4iWlJrhKzvzbSAELWSd+S
+	 ION5tditUgfXCtyray6SPw2W6N+ZixuTJQ5UD/b0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728033AbgFKOLP (ORCPT
+        id S1728076AbgFKOLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 10:11:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:53094 "EHLO foss.arm.com"
+        Thu, 11 Jun 2020 10:11:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726444AbgFKOLM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 10:11:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E45301F1;
-        Thu, 11 Jun 2020 07:11:11 -0700 (PDT)
-Received: from gaia (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A4C0F3F6CF;
-        Thu, 11 Jun 2020 07:11:08 -0700 (PDT)
-Date:   Thu, 11 Jun 2020 15:11:02 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Wooyeon Kim <wooy88.kim@samsung.com>
-Cc:     'Dave Martin' <Dave.Martin@arm.com>,
-        'Mark Rutland' <mark.rutland@arm.com>,
-        'Bhupesh Sharma' <bhsharma@redhat.com>,
-        'Julien Grall' <julien.grall@arm.com>,
-        'Vincenzo Frascino' <vincenzo.frascino@arm.com>,
-        'Will Deacon' <will@kernel.org>, yhwan.joo@samsung.com,
-        'Anisse Astier' <aastier@freebox.fr>,
-        'Marc Zyngier' <maz@kernel.org>,
-        'Allison Randal' <allison@lohutok.net>,
-        'Sanghoon Lee' <shoon114.lee@samsung.com>,
-        jihun.kim@samsung.com, 'Kees Cook' <keescook@chromium.org>,
-        'Suzuki K Poulose' <suzuki.poulose@arm.com>,
-        'Wooki Min' <wooki.min@samsung.com>,
-        'Kristina Martsenko' <kristina.martsenko@arm.com>,
-        'Jeongtae Park' <jtp.park@samsung.com>,
-        'Thomas Gleixner' <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        'Steve Capper' <steve.capper@arm.com>,
-        'Greg Kroah-Hartman' <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, 'James Morse' <james.morse@arm.com>,
-        'Sudeep Holla' <sudeep.holla@arm.com>, dh.han@samsung.com
-Subject: Re: [PATCH] arm64: fpsimd: Added API to manage fpsimd state inside
- kernel
-Message-ID: <20200611141101.GA31408@gaia>
-References: <CGME20200605073214epcas2p1576f3f90dbcefaad6180f2559ca5980d@epcas2p1.samsung.com>
- <20200605073052.23044-1-wooy88.kim@samsung.com>
- <20200605103705.GD85498@C02TD0UTHF1T.local>
- <20200608103340.GA31466@arm.com>
- <001401d63fd4$95646690$c02d33b0$@samsung.com>
+        id S1726905AbgFKOLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 10:11:32 -0400
+Received: from [192.168.68.112] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net [75.58.59.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EA002083E;
+        Thu, 11 Jun 2020 14:11:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591884691;
+        bh=zh1lFs+8r4VDNriEOLadueTPZsr+K0w3KsIGgXTzDyI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=bPAGjp5cf9bE8U4Ygi+28VpSCI5xVC3F2lsZWm57e4cZnkGBZ5J526sRiSUk0onPh
+         46d5JaKTOPS8n2MFjufRykDUD+XH8Vjb6/EJ2t1H1onyETccRXukXg7uMwG1Fs7cUR
+         Ik/cDD+t1Vi5pKaPTFTCz0GN5d9ID75kiKF/w4bc=
+Subject: Re: [RFC PATCH] PCI: Remove End-End TLP as PASID dependency
+To:     Zhangfei Gao <zhangfei.gao@linaro.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, kenneth-lee-2012@foxmail.com,
+        Wangzhou <wangzhou1@hisilicon.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1591762694-9131-1-git-send-email-zhangfei.gao@linaro.org>
+ <20200610074633.GA6844@myrica>
+ <f59c5a39-b13e-8232-57cb-089a8d62a2a7@linaro.org>
+From:   Sinan Kaya <okaya@kernel.org>
+Autocrypt: addr=okaya@kernel.org; keydata=
+ mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
+ uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
+ 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
+ 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
+ V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
+ AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
+ ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
+ AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
+ 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
+ Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
+ ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
+ qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
+ AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
+ eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
+ 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
+ 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
+ gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
+ CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
+ gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
+ e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
+ 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
+ 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
+ L+s0nPaNMKwv/Xhhm6Y=
+Message-ID: <a849234d-453a-8faa-93dd-12ea1b0165ab@kernel.org>
+Date:   Thu, 11 Jun 2020 10:11:30 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <001401d63fd4$95646690$c02d33b0$@samsung.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <f59c5a39-b13e-8232-57cb-089a8d62a2a7@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 06:42:12PM +0900, Wooyeon Kim wrote:
-> I am in charge of camera driver development in Samsung S.LSI division.
-> 
-> In order to guarantee real time processing such as Camera 3A algorithm in
-> current or ongoing projects, prebuilt binary is loaded and used in kernel
-> space, rather than user space.
+On 6/10/2020 4:00 AM, Zhangfei Gao wrote:
+>> Why not set the eetlp_prefix_path bit from a PCI quirk?  Unlike the stall
+>> problem from the other thread, this one looks like a simple design
+>> mistake
+>> that can be fixed easily in future iterations of the platform: just set
+>> the "End-End TLP Prefix Supported" bit in the Device Capability 2
+>> Register
+>> of all bridges.
+> Yes, we can still set eetlp_prefix_path bit from a PCI quirk.
 
-Thanks for the additional details.
+I agree. Vendor specific quirk should be the way to go here if it is not
+compliant with the spec.
 
-If you do such intensive processing in an IRQ context you'd probably
-introduce additional IRQ latency. Wouldn't offloading such work to a
-real-time (user) thread help? In a non-preempt-rt kernel, I don't think
-you can get much in terms of (soft) guarantees for IRQ latency anyway.
-
-> Because the binary is built with other standard library which could use
-> FPSIMD register, kernel API should keep the original FPSIMD state for other
-> user tasks.
-
-Can you not recompile those libraries not to use FP?
-
-As Mark said, for a kernel API we require at least an in-kernel,
-upstreamed, user of that functionality.
-
-> In the case of the kernel_neon_begin / kernel_neon_end that you mentioned,
-> there is a limitation that cannot be used in hardirq context.
-> Also, if another kernel task switching occurs while kernel API is being
-> used, fpsimd register corruption may occur.
-
-kernel_neon_begin/end disable preemption, so you can't have a task
-switch (you can have interrupts though but we don't allow FPSIMD in IRQ
-context).
-
--- 
-Catalin
