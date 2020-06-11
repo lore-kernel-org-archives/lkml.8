@@ -2,121 +2,162 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A9FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 21:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED725C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 21:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1906720720
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 21:14:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9B39207ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 21:17:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="pBN66u9Z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tP05nD18"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbgFKVOo (ORCPT
+        id S1726349AbgFKVRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 17:14:44 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:47740 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726180AbgFKVOn (ORCPT
+        Thu, 11 Jun 2020 17:17:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38212 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726186AbgFKVRL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 17:14:43 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id C4970806AC
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 09:14:39 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1591910079;
-        bh=gnWZOIGjj8uxjcxUa9qLsZsnfaNKGQItVqVlx322Hlw=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=pBN66u9ZEJJr0Kes6F7JMsCQdMA5uU0dLv8pSJmbakizxssJzSYuBomcct8CSdCnt
-         2CVuUL5QFx/q0lsdsM/9p7e287POfLVvolrPyvPjzoj/q+rtNoenqS7/4P32y1XgDK
-         LP4MRa387qeIZiqkdUew6iO4qpUoa3SzMkv+BcU7lQIOel9iLHoqQwguG5vILjzjfC
-         NXasZBtc272cXBKF02y2JdtVhA4ffXc6bfWpHYfVlioUYCrel+HGW/Ld/bKm+5ENws
-         OIms4SD+B7PiOhpEBmZ52m3jSaJ+4U6m2sEn8HA0vmtXn4JidbG1Noga0NcMdXOUZ3
-         Q5dwfXPGPfzgA==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5ee29ec00001>; Fri, 12 Jun 2020 09:14:40 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 12 Jun 2020 09:14:39 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1497.006; Fri, 12 Jun 2020 09:14:39 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "paulus@samba.org" <paulus@samba.org>,
-        "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>
-CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] powerpc: Remove inaccessible CMDLINE default
-Thread-Topic: [PATCH v2] powerpc: Remove inaccessible CMDLINE default
-Thread-Index: AQHWP6I/tXmW8ZPpE0iYl1XQldsjyajSHuIAgAEDTwA=
-Date:   Thu, 11 Jun 2020 21:14:38 +0000
-Message-ID: <ab4db077-ae04-ada3-5bb0-79bfb0c94137@alliedtelesis.co.nz>
-References: <20200611034140.9133-1-chris.packham@alliedtelesis.co.nz>
- <34bb20ad-8522-6071-7a36-9f615204561f@csgroup.eu>
-In-Reply-To: <34bb20ad-8522-6071-7a36-9f615204561f@csgroup.eu>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.32.1.11]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <CF0974C74629824FB29421077D9A1B0F@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Thu, 11 Jun 2020 17:17:11 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43A0FC08C5C1;
+        Thu, 11 Jun 2020 14:17:11 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id q8so8017815iow.7;
+        Thu, 11 Jun 2020 14:17:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FLt18Y6W5gGwuw6RcLD1KD4cexUWiAcYxlXCoMhY/Zk=;
+        b=tP05nD18zyaPnjbVlSYPcWkm5O+mR5kSp+Bea8c0B39sT1mHxTIWV/AbGudu3IWuwj
+         rA7CYX35ckaGfR3Fq+P2SHJ8tG1CSzGoiwj/W1rceGoumqMrwGrSA9nK498/cEZeR5j7
+         YcRWV7ySvYHPI/YKRyZ1aIcVDRDfX2L7cNax4ynlrFvKuykNAAiG/+6+JBsrvaMAKyDc
+         tkzquw62Z67g0/IuY5fyBvSy2tflDQXnCmbdW0d9AWvR44z9E6r5gBLIr1d0VVxpojJo
+         BHykrz3Ooe6M5dNES1lPjZRBOrN7e7nBQzL7S+NtPdKAUCXuONCdVdDM6ZUUMz3u4klb
+         XjZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FLt18Y6W5gGwuw6RcLD1KD4cexUWiAcYxlXCoMhY/Zk=;
+        b=J3RoNFvTAY5rN9hyGCb9J8WgYgKZnn3J0ToNSjG8ZUVCIYeY3onOsKUWbK33PQybhz
+         rHCyYUN4ox57nQ3pcI60AeYwwI0RLmfdHzTqqUaExSnJa788ejypBV0TSV6+PKdl13XH
+         wUDPRXD2NUDBUa5xjY5xze35GeMPeLT+kPkLWdaDHBGdOGvXITAqtuWPXTHWn7I5MQ0c
+         /teIYjL1VECOlNSWmkxRhUfu1LmvKvsVc+xaB2A72s3Yq0ovjsPMfG++6wXF4IgbiTk+
+         VTst1jlSNcYDxJ8+Us6F6FMUe0D1qZ8CGDbqtzVqtZtQw/0DE5xQxhbUjw9PWj+2EOuh
+         QduQ==
+X-Gm-Message-State: AOAM532B3ufWDMt0LT12AUqMnKk0U6nsI+53WMcGU04IDHVbDSdYqn37
+        XG3LiDKoehc4A9vB6Pg4hzg=
+X-Google-Smtp-Source: ABdhPJykLH7xMIrgm/4Hl6xB7+2dr3D8cF3Z326nWJplAsfWiRQQc5uMdx6aA8SYE8/hbgBv9SxK+w==
+X-Received: by 2002:a6b:5f06:: with SMTP id t6mr10095418iob.88.1591910230430;
+        Thu, 11 Jun 2020 14:17:10 -0700 (PDT)
+Received: from urieldev.c.googlers.com.com (243.199.238.35.bc.googleusercontent.com. [35.238.199.243])
+        by smtp.gmail.com with ESMTPSA id n7sm2031738ile.76.2020.06.11.14.17.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2020 14:17:09 -0700 (PDT)
+From:   Uriel Guajardo <urielguajardojr@gmail.com>
+To:     brendanhiggins@google.com
+Cc:     Uriel Guajardo <urielguajardo@google.com>,
+        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] kunit: show error if kunit results are not present
+Date:   Thu, 11 Jun 2020 21:05:45 +0000
+Message-Id: <20200611210545.173886-1-urielguajardojr@gmail.com>
+X-Mailer: git-send-email 2.27.0.278.ge193c7cf3a9-goog
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiAxMS8wNi8yMCA1OjQ2IHBtLCBDaHJpc3RvcGhlIExlcm95IHdyb3RlOg0KPg0KPg0KPiBM
-ZSAxMS8wNi8yMDIwIMOgIDA1OjQxLCBDaHJpcyBQYWNraGFtIGEgw6ljcml0wqA6DQo+PiBTaW5j
-ZSBjb21taXQgY2JlNDZiZDRmNTEwICgicG93ZXJwYzogcmVtb3ZlIENPTkZJR19DTURMSU5FICNp
-ZmRlZiBtZXNzIikNCj4+IENPTkZJR19DTURMSU5FIGhhcyBhbHdheXMgaGFkIGEgdmFsdWUgcmVn
-YXJkbGVzcyBvZiBDT05GSUdfQ01ETElORV9CT09MLg0KPj4NCj4+IEZvciBleGFtcGxlOg0KPj4N
-Cj4+IMKgICQgbWFrZSBBUkNIPXBvd2VycGMgZGVmY29uZmlnDQo+PiDCoCAkIGNhdCAuY29uZmln
-DQo+PiDCoCAjIENPTkZJR19DTURMSU5FX0JPT0wgaXMgbm90IHNldA0KPj4gwqAgQ09ORklHX0NN
-RExJTkU9IiINCj4+DQo+PiBXaGVuIGVuYWJsaW5nIENPTkZJR19DTURMSU5FX0JPT0wgdGhpcyB2
-YWx1ZSBpcyBrZXB0IG1ha2luZyB0aGUgJ2RlZmF1bHQNCj4+ICIuLi4iIGlmIENPTkZJR19DTURM
-SU5FX0JPT0wnIGluZWZmZWN0aXZlLg0KPj4NCj4+IMKgICQgLi9zY3JpcHRzL2NvbmZpZyAtLWVu
-YWJsZSBDT05GSUdfQ01ETElORV9CT09MDQo+PiDCoCAkIGNhdCAuY29uZmlnDQo+PiDCoCBDT05G
-SUdfQ01ETElORV9CT09MPXkNCj4+IMKgIENPTkZJR19DTURMSU5FPSIiDQo+Pg0KPj4gUmVtb3Zl
-IENPTkZJR19DTURMSU5FX0JPT0wgYW5kIHRoZSBpbmFjY2Vzc2libGUgZGVmYXVsdC4NCj4NCj4g
-WW91IGFsc28gaGF2ZSB0byByZW1vdmUgYWxsIENPTkZJR19DTURMSU5FX0JPT0wgZnJvbSB0aGUg
-ZGVmY29uZmlncw0KDQpPSy4gSSdsbCBkbyBzbyBhcyBhIGZvbGxvdy11cCBwYXRjaCBhbmQgc2Vu
-ZCBhIHYzLg0KDQo+DQo+IENocmlzdG9waGUNCj4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBDaHJp
-cyBQYWNraGFtIDxjaHJpcy5wYWNraGFtQGFsbGllZHRlbGVzaXMuY28ubno+DQo+PiBSZXZpZXdl
-ZC1ieTogQ2hyaXN0b3BoZSBMZXJveSA8Y2hyaXN0b3BoZS5sZXJveUBjLXMuZnI+DQo+PiAtLS0N
-Cj4+IEl0IHRvb2sgbWUgYSB3aGlsZSB0byBnZXQgcm91bmQgdG8gc2VuZGluZyBhIHYyLCBmb3Ig
-YSByZWZyZXNoZXIgdjEgDQo+PiBjYW4gYmUgZm91bmQgaGVyZToNCj4+DQo+PiBodHRwOi8vcGF0
-Y2h3b3JrLm96bGFicy5vcmcvcHJvamVjdC9saW51eHBwYy1kZXYvcGF0Y2gvMjAxOTA4MDIwNTAy
-MzIuMjI5NzgtMS1jaHJpcy5wYWNraGFtQGFsbGllZHRlbGVzaXMuY28ubnovIA0KPj4NCj4+DQo+
-PiBDaGFuZ2VzIGluIHYyOg0KPj4gLSBSZWJhc2Ugb24gdG9wIG9mIExpbnVzJ3MgdHJlZQ0KPj4g
-LSBGaXggc29tZSB0eXBvcyBpbiBjb21taXQgbWVzc2FnZQ0KPj4gLSBBZGQgcmV2aWV3IGZyb20g
-Q2hyaXN0b3BoZQ0KPj4gLSBSZW1vdmUgQ09ORklHX0NNRExJTkVfQk9PTA0KPj4NCj4+IMKgIGFy
-Y2gvcG93ZXJwYy9LY29uZmlnIHwgNiArLS0tLS0NCj4+IMKgIDEgZmlsZSBjaGFuZ2VkLCAxIGlu
-c2VydGlvbigrKSwgNSBkZWxldGlvbnMoLSkNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dl
-cnBjL0tjb25maWcgYi9hcmNoL3Bvd2VycGMvS2NvbmZpZw0KPj4gaW5kZXggOWZhMjNlYjMyMGZm
-Li41MWFiYzU5YzMzMzQgMTAwNjQ0DQo+PiAtLS0gYS9hcmNoL3Bvd2VycGMvS2NvbmZpZw0KPj4g
-KysrIGIvYXJjaC9wb3dlcnBjL0tjb25maWcNCj4+IEBAIC04NTksMTIgKzg1OSw4IEBAIGNvbmZp
-ZyBQUENfREVOT1JNQUxJU0FUSU9ODQo+PiDCoMKgwqDCoMKgwqDCoCBBZGQgc3VwcG9ydCBmb3Ig
-aGFuZGxpbmcgZGVub3JtYWxpc2F0aW9uIG9mIHNpbmdsZSBwcmVjaXNpb24NCj4+IMKgwqDCoMKg
-wqDCoMKgIHZhbHVlcy7CoCBVc2VmdWwgZm9yIGJhcmUgbWV0YWwgb25seS7CoCBJZiB1bnN1cmUg
-c2F5IFkgaGVyZS4NCj4+IMKgIC1jb25maWcgQ01ETElORV9CT09MDQo+PiAtwqDCoMKgIGJvb2wg
-IkRlZmF1bHQgYm9vdGxvYWRlciBrZXJuZWwgYXJndW1lbnRzIg0KPj4gLQ0KPj4gwqAgY29uZmln
-IENNRExJTkUNCj4+IC3CoMKgwqAgc3RyaW5nICJJbml0aWFsIGtlcm5lbCBjb21tYW5kIHN0cmlu
-ZyIgaWYgQ01ETElORV9CT09MDQo+PiAtwqDCoMKgIGRlZmF1bHQgImNvbnNvbGU9dHR5UzAsOTYw
-MCBjb25zb2xlPXR0eTAgcm9vdD0vZGV2L3NkYTIiIGlmIA0KPj4gQ01ETElORV9CT09MDQo+PiAr
-wqDCoMKgIHN0cmluZyAiSW5pdGlhbCBrZXJuZWwgY29tbWFuZCBzdHJpbmciDQo+PiDCoMKgwqDC
-oMKgIGRlZmF1bHQgIiINCj4+IMKgwqDCoMKgwqAgaGVscA0KPj4gwqDCoMKgwqDCoMKgwqAgT24g
-c29tZSBwbGF0Zm9ybXMsIHRoZXJlIGlzIGN1cnJlbnRseSBubyB3YXkgZm9yIHRoZSBib290IA0K
-Pj4gbG9hZGVyIHRvDQo+Pg==
+From: Uriel Guajardo <urielguajardo@google.com>
+
+Currently, if the kernel is configured incorrectly or if it crashes before any
+kunit tests are run, kunit finishes without error, reporting
+that 0 test cases were run.
+
+To fix this, an error is shown when the tap header is not found, which
+indicates that kunit was not able to run at all.
+
+Signed-off-by: Uriel Guajardo <urielguajardo@google.com>
+---
+ tools/testing/kunit/kunit_parser.py               |   8 ++++----
+ tools/testing/kunit/kunit_tool_test.py            |  11 +++++++++++
+ .../kunit/test_data/test_insufficient_memory.log  | Bin 0 -> 856 bytes
+ 3 files changed, 15 insertions(+), 4 deletions(-)
+ create mode 100644 tools/testing/kunit/test_data/test_insufficient_memory.log
+
+diff --git a/tools/testing/kunit/kunit_parser.py b/tools/testing/kunit/kunit_parser.py
+index 64aac9dcd431..f13e0c0d6663 100644
+--- a/tools/testing/kunit/kunit_parser.py
++++ b/tools/testing/kunit/kunit_parser.py
+@@ -265,11 +265,9 @@ def bubble_up_suite_errors(test_suite_list: List[TestSuite]) -> TestStatus:
+ 	return bubble_up_errors(lambda x: x.status, test_suite_list)
+ 
+ def parse_test_result(lines: List[str]) -> TestResult:
+-	if not lines:
+-		return TestResult(TestStatus.NO_TESTS, [], lines)
+ 	consume_non_diagnositic(lines)
+-	if not parse_tap_header(lines):
+-		return None
++	if not lines or not parse_tap_header(lines):
++		return TestResult(TestStatus.NO_TESTS, [], lines)
+ 	test_suites = []
+ 	test_suite = parse_test_suite(lines)
+ 	while test_suite:
+@@ -282,6 +280,8 @@ def parse_run_tests(kernel_output) -> TestResult:
+ 	failed_tests = 0
+ 	crashed_tests = 0
+ 	test_result = parse_test_result(list(isolate_kunit_output(kernel_output)))
++	if test_result.status == TestStatus.NO_TESTS:
++		print_with_timestamp(red('[ERROR] ') + 'no kunit output detected')
+ 	for test_suite in test_result.suites:
+ 		if test_suite.status == TestStatus.SUCCESS:
+ 			print_suite_divider(green('[PASSED] ') + test_suite.name)
+diff --git a/tools/testing/kunit/kunit_tool_test.py b/tools/testing/kunit/kunit_tool_test.py
+index 984588d6ba95..4a7ef2eef831 100755
+--- a/tools/testing/kunit/kunit_tool_test.py
++++ b/tools/testing/kunit/kunit_tool_test.py
+@@ -170,6 +170,17 @@ class KUnitParserTest(unittest.TestCase):
+ 			result.status)
+ 		file.close()
+ 
++	def test_no_kunit_output(self):
++		crash_log = get_absolute_path(
++			'test_data/test_insufficient_memory.log')
++		file = open(crash_log)
++		print_mock = mock.patch('builtins.print').start()
++		result = kunit_parser.parse_run_tests(
++			kunit_parser.isolate_kunit_output(file.readlines()))
++		print_mock.assert_any_call(StrContains("no kunit output detected"))
++		print_mock.stop()
++		file.close()
++
+ 	def test_crashed_test(self):
+ 		crashed_log = get_absolute_path(
+ 			'test_data/test_is_test_passed-crash.log')
+diff --git a/tools/testing/kunit/test_data/test_insufficient_memory.log b/tools/testing/kunit/test_data/test_insufficient_memory.log
+new file mode 100644
+index 0000000000000000000000000000000000000000..6c9e4da7b6d763a03c0c83302b2faa6dc21a6ea6
+GIT binary patch
+literal 856
+zcmbu6Piw<448`yH6xx0L3mw^@hf#VOv}5$J+fZ#KHj8CrJK6H>=Z2=CgO$<hA}n~n
+z_av{ZCy=#qP-&xMfG4=6vR)i)5n%+={(WUX@f3QQc$@8JeI=@sWh+JEQ*#MXVFVXF
+z3Ic%)LLrv~p$(Btnp72VZT95Dcs$;|{9!uqlCTqzsVj`yGB}JvL1F#T<`SpJ4?L6&
+zvLJa#bUk?B5jWafHpCGc^cwdSg)SXJ+Sp0$Q$V&%X;`!D6P@>grwf=!Y9>J$&;ioE
+z(YWH`vCdK5Yv8@UZFe8*_w@>lK?j;o`2XCkM`zDc9)5TBu*ma#3i~#uEu#ge+Mv@N
+z!H}`OJ&aI@v}o*ZK;I-rL20Tal*zuYY-cSL^z~bR2OA<uaygqX^7-Rzeh;N?h?hs>
+F><3Em&*A_8
+
+literal 0
+HcmV?d00001
+
+-- 
+2.27.0.278.ge193c7cf3a9-goog
+
