@@ -2,69 +2,185 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5768C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D27C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3FB920691
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:11:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8E2D20691
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:11:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O8m6jMDw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728454AbgFKPLV (ORCPT
+        id S1728469AbgFKPLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 11:11:21 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38604 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728327AbgFKPLV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 11:11:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 4494FAD33;
-        Thu, 11 Jun 2020 15:11:23 +0000 (UTC)
-Date:   Thu, 11 Jun 2020 16:11:16 +0100
-From:   Mel Gorman <mgorman@suse.de>
-To:     Jaewon Kim <jaewon31.kim@samsung.com>
-Cc:     Mel Gorman <mgorman@techsingularity.net>,
-        Baoquan He <bhe@redhat.com>, minchan@kernel.org,
-        hannes@cmpxchg.org, akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, jaewon31.kim@gmail.com,
-        ytk.lee@samsung.com, cmlaika.kim@samsung.com
-Subject: Re: [PATCH] page_alloc: consider highatomic reserve in wmartermark
- fast
-Message-ID: <20200611151116.GE3129@suse.de>
-References: <CGME20200609095139epcas1p17f9c213de6daf25fe848921bc70481c0@epcas1p1.samsung.com>
- <20200609095128.8112-1-jaewon31.kim@samsung.com>
- <20200609142747.GA3346@MiWiFi-R3L-srv>
- <20200609151330.GL3127@techsingularity.net>
- <5EE18C38.3090601@samsung.com>
+        Thu, 11 Jun 2020 11:11:34 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24662 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728456AbgFKPLc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 11:11:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591888290;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=dCrUsFjr5nTo7YMbuo6naT5rMcveBqItH9g4ZRhLhDU=;
+        b=O8m6jMDw27VvzgMnrCywY+48NrqsF0zDdaPR5phGelg39ulmvkYHm5LxlDF125l4momsoQ
+        dekWIL7Pvwg1ncFeSnugt594vlkspkXSs6YYI0Nfmw01J26F/70n0px1xnlUu9KbnqESnl
+        icEzVCWGvGgrTsI2OdhJR1vAp9tPJ5A=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-134-hZKXzjXEOfSX68ojmbc1Yw-1; Thu, 11 Jun 2020 11:11:26 -0400
+X-MC-Unique: hZKXzjXEOfSX68ojmbc1Yw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 83D3580572E;
+        Thu, 11 Jun 2020 15:11:25 +0000 (UTC)
+Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4B54610013D7;
+        Thu, 11 Jun 2020 15:11:24 +0000 (UTC)
+Date:   Thu, 11 Jun 2020 11:11:22 -0400
+From:   Brian Foster <bfoster@redhat.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Yu Kuai <yukuai3@huawei.com>, darrick.wong@oracle.com,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yi.zhang@huawei.com
+Subject: Re: [PATCH] xfs: fix use-after-free on CIL context on shutdown
+Message-ID: <20200611151122.GA57603@bfoster>
+References: <20200611013952.2589997-1-yukuai3@huawei.com>
+ <20200611022848.GQ2040@dread.disaster.area>
+ <20200611024503.GR2040@dread.disaster.area>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5EE18C38.3090601@samsung.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200611024503.GR2040@dread.disaster.area>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 10:43:20AM +0900, Jaewon Kim wrote:
-> > That's fine, I simply wanted to illustrate where I thought the check
-> > should go to minimise the impact to the majority of allocations.
-> Hello Mel.
-> Can I understand that you also agrees on checking highatomic reserved?
+On Thu, Jun 11, 2020 at 12:45:03PM +1000, Dave Chinner wrote:
+> 
+> From: Dave Chinner <dchinner@redhat.com>
+> 
+> xlog_wait() on the CIL context can reference a freed context if the
+> waiter doesn't get scheduled before the CIL context is freed. This
+> can happen when a task is on the hard throttle and the CIL push
+> aborts due to a shutdown. This was detected by generic/019:
+> 
+> thread 1			thread 2
+> 
+> __xfs_trans_commit
+>  xfs_log_commit_cil
+>   <CIL size over hard throttle limit>
+>   xlog_wait
+>    schedule
+> 				xlog_cil_push_work
+> 				wake_up_all
+> 				<shutdown aborts commit>
+> 				xlog_cil_committed
+> 				kmem_free
+> 
+>    remove_wait_queue
+>     spin_lock_irqsave --> UAF
+> 
+> Fix it by moving the wait queue to the CIL rather than keeping it in
+> in the CIL context that gets freed on push completion. Because the
+> wait queue is now independent of the CIL context and we might have
+> multiple contexts in flight at once, only wake the waiters on the
+> push throttle when the context we are pushing is over the hard
+> throttle size threshold.
+> 
+> Fixes: 0e7ab7efe7745 ("xfs: Throttle commits on delayed background CIL push")
+> Reported-by: Yu Kuai <yukuai3@huawei.com>
+> Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> ---
+
+Looks reasonable:
+
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+
+>  fs/xfs/xfs_log_cil.c  | 10 +++++-----
+>  fs/xfs/xfs_log_priv.h |  2 +-
+>  2 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
+> index b43f0e8f43f2e..9ed90368ab311 100644
+> --- a/fs/xfs/xfs_log_cil.c
+> +++ b/fs/xfs/xfs_log_cil.c
+> @@ -671,7 +671,8 @@ xlog_cil_push_work(
+>  	/*
+>  	 * Wake up any background push waiters now this context is being pushed.
+>  	 */
+> -	wake_up_all(&ctx->push_wait);
+> +	if (ctx->space_used >= XLOG_CIL_BLOCKING_SPACE_LIMIT(log))
+> +		wake_up_all(&cil->xc_push_wait);
+>  
+>  	/*
+>  	 * Check if we've anything to push. If there is nothing, then we don't
+> @@ -743,13 +744,12 @@ xlog_cil_push_work(
+>  
+>  	/*
+>  	 * initialise the new context and attach it to the CIL. Then attach
+> -	 * the current context to the CIL committing lsit so it can be found
+> +	 * the current context to the CIL committing list so it can be found
+>  	 * during log forces to extract the commit lsn of the sequence that
+>  	 * needs to be forced.
+>  	 */
+>  	INIT_LIST_HEAD(&new_ctx->committing);
+>  	INIT_LIST_HEAD(&new_ctx->busy_extents);
+> -	init_waitqueue_head(&new_ctx->push_wait);
+>  	new_ctx->sequence = ctx->sequence + 1;
+>  	new_ctx->cil = cil;
+>  	cil->xc_ctx = new_ctx;
+> @@ -937,7 +937,7 @@ xlog_cil_push_background(
+>  	if (cil->xc_ctx->space_used >= XLOG_CIL_BLOCKING_SPACE_LIMIT(log)) {
+>  		trace_xfs_log_cil_wait(log, cil->xc_ctx->ticket);
+>  		ASSERT(cil->xc_ctx->space_used < log->l_logsize);
+> -		xlog_wait(&cil->xc_ctx->push_wait, &cil->xc_push_lock);
+> +		xlog_wait(&cil->xc_push_wait, &cil->xc_push_lock);
+>  		return;
+>  	}
+>  
+> @@ -1216,12 +1216,12 @@ xlog_cil_init(
+>  	INIT_LIST_HEAD(&cil->xc_committing);
+>  	spin_lock_init(&cil->xc_cil_lock);
+>  	spin_lock_init(&cil->xc_push_lock);
+> +	init_waitqueue_head(&cil->xc_push_wait);
+>  	init_rwsem(&cil->xc_ctx_lock);
+>  	init_waitqueue_head(&cil->xc_commit_wait);
+>  
+>  	INIT_LIST_HEAD(&ctx->committing);
+>  	INIT_LIST_HEAD(&ctx->busy_extents);
+> -	init_waitqueue_head(&ctx->push_wait);
+>  	ctx->sequence = 1;
+>  	ctx->cil = cil;
+>  	cil->xc_ctx = ctx;
+> diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
+> index ec22c7a3867f1..75a62870b63af 100644
+> --- a/fs/xfs/xfs_log_priv.h
+> +++ b/fs/xfs/xfs_log_priv.h
+> @@ -240,7 +240,6 @@ struct xfs_cil_ctx {
+>  	struct xfs_log_vec	*lv_chain;	/* logvecs being pushed */
+>  	struct list_head	iclog_entry;
+>  	struct list_head	committing;	/* ctx committing list */
+> -	wait_queue_head_t	push_wait;	/* background push throttle */
+>  	struct work_struct	discard_endio_work;
+>  };
+>  
+> @@ -274,6 +273,7 @@ struct xfs_cil {
+>  	wait_queue_head_t	xc_commit_wait;
+>  	xfs_lsn_t		xc_current_sequence;
+>  	struct work_struct	xc_push_work;
+> +	wait_queue_head_t	xc_push_wait;	/* background push throttle */
+>  } ____cacheline_aligned_in_smp;
+>  
+>  /*
 > 
 
-Yes, I think it should be ok.
-
-> Additionally I've wondered why the number of  highatomic free pages is not
-> accurately counted like cma free. Is there any concern on counting it?
-
-At the time, the cost of tracking it with 100% accuracy was not worth
-it due to a reliance on the pageblock types to protect the regions from
-other allocation types.
-
--- 
-Mel Gorman
-SUSE Labs
