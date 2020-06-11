@@ -2,114 +2,149 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B26C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CA7C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 329B620829
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:20:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AF47207ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:22:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="t6lWNyQM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aHf9Jp2v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbgFKSUd (ORCPT
+        id S1726906AbgFKSWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 14:20:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39218 "EHLO
+        Thu, 11 Jun 2020 14:22:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726757AbgFKSUd (ORCPT
+        with ESMTP id S1726321AbgFKSWf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 14:20:33 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41D0FC03E96F;
-        Thu, 11 Jun 2020 11:20:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=UbcUAIkCTY1gDrnsL4VkJ1RkOA6N4Sm7pv2NznSHhOI=; b=t6lWNyQMHlGsflggtFHw96ugnq
-        jogP3C9fdI//O5qicfXeP5RJS1zZymhpTOL7/VNnj+EtbNAGm3hk+zOuzXDw+GHLttZ2tRusCtQKN
-        zK7H/vl/d/PGMFiMMd/7SqwmDrjnD76P52lPTDH6R0Wb++484Vytj74YYEKgm66seJ0SsYCB8TRHg
-        8xt6EPhR+kYGun8OLhLdae7Lk7HAXrnzH7bX9AmU5iuPwhvWdbyFzvybtXoSCMxAWzweuwpuSsUvt
-        0WGCahvAMJx5LLN3eahufbheqtIMTD0jG3Amhr1CXGkYE4xk1l5A1el626ynF5WO7PBuY8msFDRg1
-        JtjdbcCQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jjRoT-0007dC-CF; Thu, 11 Jun 2020 18:20:29 +0000
-Date:   Thu, 11 Jun 2020 11:20:29 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 20/51] block: Add bio_for_each_thp_segment_all
-Message-ID: <20200611182029.GC8681@bombadil.infradead.org>
-References: <20200610201345.13273-1-willy@infradead.org>
- <20200610201345.13273-21-willy@infradead.org>
+        Thu, 11 Jun 2020 14:22:35 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BD99C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 11:22:35 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id q24so2712487pjd.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 11:22:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/jrot9jiACQp7hlN4Y0oUkRnraQD0PhZgjleZb5KOTo=;
+        b=aHf9Jp2vfXTkGatdBWzbMDHy8FhElvKkFuYFE25BSuaXxzgSoLmFV95BN4WDehHUk4
+         5m8N8AioXPZgZ4yXaEyHbzsYARgX7ACT2qOoQhxjE22Y3gugq9OqJ/oiqu8nGdwUIjLp
+         ygHW9s3IPOIp68PvgF3ktrwcVpl0yo6J4KFF79Zxv1w93drrxWbFH7aDsXTKmAWTDl2I
+         sMijFuKfbnMoe7SMqG8wYkKerIUQBOXIwG3bwTs39dNo3wmEmD80xiGRKQjTzFjKFGGE
+         X4JUCM9VZOEP7OWpyxGHTcSlMg8sxy2ZJKYjRaiybkQC6v7TngKrKdcMj1MvTG+D274m
+         Ftug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/jrot9jiACQp7hlN4Y0oUkRnraQD0PhZgjleZb5KOTo=;
+        b=PFEJLf+XF//YC7VvH+bF5h2bNYnu1ey2WuyNIv56YdVCiSxvZX80jiUdSKSYAsuRKK
+         2BYYxPGOLkgMIlLy826gqihikZS/Z+AmxYdfmJNrFM0aJ63U6XNZCAGKYqK/y6g+BgqO
+         gIEypOM2EwoikBhV7PilyAuOQ+nJaa1rQf0UsDdsr+VjlqZX3FU6QMmi3k8HKBnUZ6Vn
+         eJxTwovokO9Te9rg48yqzjJpzVHDKfRZpydvE9cZCztc/xDdn9cEwOaYNAb8NPNQXyUw
+         LrGA2klvgPvzVRiNt7moKRY134k+y0uMpL923qFVrD4Y8SLBux1YUOIjrGb4KsgXsHTm
+         4PTw==
+X-Gm-Message-State: AOAM532Ld5NCRtTtSBdfVpsBhAE8anMC5Ku70TDS+thXXRA5qiG39WYp
+        9C7MRaIdYD653sSH2ReBaNCY
+X-Google-Smtp-Source: ABdhPJweg/YmGBjZaH0+SEhkuyw3OfsGOu38/MkdBIo9BJyK7LZrm09LuM3FkeHJmP4mfy4PnjxO1g==
+X-Received: by 2002:a17:90a:e50b:: with SMTP id t11mr9488829pjy.109.1591899754317;
+        Thu, 11 Jun 2020 11:22:34 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:c:23ea:6d6a:61cf:2fc0:2486])
+        by smtp.gmail.com with ESMTPSA id r24sm3166759pgm.25.2020.06.11.11.22.29
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 11 Jun 2020 11:22:33 -0700 (PDT)
+Date:   Thu, 11 Jun 2020 23:52:27 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Jonathan Marek <jonathan@marek.ca>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 0/6] arm64: dts: qcom: smmu/USB nodes and HDK855/HDK865
+ dts
+Message-ID: <20200611182227.GA4811@Mani-XPS-13-9360>
+References: <20200524023815.21789-1-jonathan@marek.ca>
+ <20200604135221.GH16719@Mani-XPS-13-9360>
+ <20200611180503.GA22890@Mani-XPS-13-9360>
+ <cf3ccc5f-cdc5-71f5-60e0-7ae44952c667@marek.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200610201345.13273-21-willy@infradead.org>
+In-Reply-To: <cf3ccc5f-cdc5-71f5-60e0-7ae44952c667@marek.ca>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 01:13:14PM -0700, Matthew Wilcox wrote:
-> +static inline void bvec_thp_advance(const struct bio_vec *bvec,
-> +				struct bvec_iter_all *iter_all)
-> +{
-> +	struct bio_vec *bv = &iter_all->bv;
-> +	unsigned int page_size = thp_size(bvec->bv_page);
-> +
-> +	if (iter_all->done) {
-> +		bv->bv_page += thp_nr_pages(bv->bv_page);
-> +		bv->bv_offset = 0;
-> +	} else {
-> +		BUG_ON(bvec->bv_offset >= page_size);
-> +		bv->bv_page = bvec->bv_page;
-> +		bv->bv_offset = bvec->bv_offset & (page_size - 1);
-> +	}
-> +	bv->bv_len = min(page_size - bv->bv_offset,
-> +			 bvec->bv_len - iter_all->done);
-> +	iter_all->done += bv->bv_len;
-> +
-> +	if (iter_all->done == bvec->bv_len) {
-> +		iter_all->idx++;
-> +		iter_all->done = 0;
-> +	}
-> +}
+On Thu, Jun 11, 2020 at 02:14:43PM -0400, Jonathan Marek wrote:
+> On 6/11/20 2:05 PM, Manivannan Sadhasivam wrote:
+> > On Thu, Jun 04, 2020 at 07:22:21PM +0530, Manivannan Sadhasivam wrote:
+> > > Hi,
+> > > 
+> > > On Sat, May 23, 2020 at 10:38:06PM -0400, Jonathan Marek wrote:
+> > > > Add dts nodes for apps_smmu and USB for both sm8150 and sm8250.
+> > > > 
+> > > 
+> > > I've tested this series on an SM8250 based board and able to get Type C (USB0)
+> > > working. There are also couple of Type A ports (USB1) on that board behind a
+> > > USB hub. It is probing fine but I don't see any activity while connecting a
+> > > USB device. Will continue to debug and once I get them working, I'll add my
+> > > Tested-by tag.
+> > > 
+> > 
+> > So it turned out that I forgot to enable one regulator which kept the USB hub
+> > powered down. After enabling that, both Type A ports are working. Hence,
+> > 
+> > Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > 
+> > Thanks,
+> > Mani
+> > 
+> 
+> Thanks for testing it. Your Tested-by only applies to the relevant patches
+> (patches 2 and 4 in this version) right? And can I also add your Tested-by
+> tag to my other series (https://patchwork.kernel.org/cover/11567095/) which
+> this depends on?
+> 
 
-If, for example, we have an order-2 page followed by two order-0 pages
-(thanks, generic/127!) in the bvec, we'll end up skipping the third
-page because we calculate the size based on bvec->bv_page instead of
-bv->bv_page.
+Sure. You can add it for all SM8250 USB patches.
 
-+++ b/include/linux/bvec.h
-@@ -166,15 +166,19 @@ static inline void bvec_thp_advance(const struct bio_vec *bvec,
-                                struct bvec_iter_all *iter_all)
- {
-        struct bio_vec *bv = &iter_all->bv;
--       unsigned int page_size = thp_size(bvec->bv_page);
-+       unsigned int page_size;
- 
-        if (iter_all->done) {
-                bv->bv_page += thp_nr_pages(bv->bv_page);
-+               page_size = thp_size(bv->bv_page);
-                bv->bv_offset = 0;
-        } else {
--               BUG_ON(bvec->bv_offset >= page_size);
--               bv->bv_page = bvec->bv_page;
--               bv->bv_offset = bvec->bv_offset & (page_size - 1);
-+               bv->bv_page = thp_head(bvec->bv_page +
-+                               (bvec->bv_offset >> PAGE_SHIFT));
-+               page_size = thp_size(bv->bv_page);
-+               bv->bv_offset = bvec->bv_offset -
-+                               (bv->bv_page - bvec->bv_page) * PAGE_SIZE;
-+               BUG_ON(bv->bv_offset >= page_size);
-        }
-        bv->bv_len = min(page_size - bv->bv_offset,
-                         bvec->bv_len - iter_all->done);
+Thanks,
+Mani
 
-The previous code also wasn't handling the case fixed in 6bedf00e55e5
-where a split bio might end up splitting a bvec.  That BUG_ON can probably
-come out after a few months of testing.
+> > > Thanks,
+> > > Mani
+> > > 
+> > > > Also add initial dts files for HDK855 and HDK865, based on mtp dts, with a
+> > > > few changes. Notably, the HDK865 dts has regulator config changed a bit based
+> > > > on downstream (I think sm8250-mtp.dts is wrong and copied too much from sm8150).
+> > > > 
+> > > > Jonathan Marek (6):
+> > > >    arm64: dts: qcom: sm8150: add apps_smmu node
+> > > >    arm64: dts: qcom: sm8250: add apps_smmu node
+> > > >    arm64: dts: qcom: sm8150: Add secondary USB and PHY nodes
+> > > >    arm64: dts: qcom: sm8250: Add USB and PHY device nodes
+> > > >    arm64: dts: qcom: add sm8150 hdk dts
+> > > >    arm64: dts: qcom: add sm8250 hdk dts
+> > > > 
+> > > >   arch/arm64/boot/dts/qcom/Makefile       |   2 +
+> > > >   arch/arm64/boot/dts/qcom/sm8150-hdk.dts | 461 ++++++++++++++++++++++++
+> > > >   arch/arm64/boot/dts/qcom/sm8150.dtsi    | 180 +++++++++
+> > > >   arch/arm64/boot/dts/qcom/sm8250-hdk.dts | 454 +++++++++++++++++++++++
+> > > >   arch/arm64/boot/dts/qcom/sm8250.dtsi    | 287 +++++++++++++++
+> > > >   5 files changed, 1384 insertions(+)
+> > > >   create mode 100644 arch/arm64/boot/dts/qcom/sm8150-hdk.dts
+> > > >   create mode 100644 arch/arm64/boot/dts/qcom/sm8250-hdk.dts
+> > > > 
+> > > > -- 
+> > > > 2.26.1
+> > > > 
