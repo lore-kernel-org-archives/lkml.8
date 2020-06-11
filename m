@@ -2,205 +2,131 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA50C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 19:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 944B4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 19:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 250B820792
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 19:46:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 744B8207ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 19:47:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=g001.emailsrvr.com header.i=@g001.emailsrvr.com header.b="RJNTuzXC"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="fG2f7RD3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgFKTqx (ORCPT
+        id S1727812AbgFKTr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 15:46:53 -0400
-Received: from smtp87.ord1d.emailsrvr.com ([184.106.54.87]:42208 "EHLO
-        smtp87.ord1d.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725824AbgFKTqx (ORCPT
+        Thu, 11 Jun 2020 15:47:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52644 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727053AbgFKTr1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 15:46:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=g001.emailsrvr.com;
-        s=20190322-9u7zjiwi; t=1591904812;
-        bh=fkPaV7M6/VR8E4HluhwiC1X0SoV9G641oTubBTo3jzU=;
-        h=From:To:Subject:Date:From;
-        b=RJNTuzXCF+cnUHbP1SvA9HoTvKMcA70I0uHF7A1KlnLcsyEEgVCn4h37Ag7vM9rON
-         TwCmVeDiGHSJiswMYHDl+92UtBIC4JVYjK30idxr7ZvXLh8+Lbelk9/O0soPbeOfpu
-         qN6SyzE3lCsSH1ce6WMpjDm6uCzcuM7iub3G1g70=
-X-Auth-ID: dpreed@deepplum.com
-Received: by smtp19.relay.ord1d.emailsrvr.com (Authenticated sender: dpreed-AT-deepplum.com) with ESMTPSA id D5B81603CB;
-        Thu, 11 Jun 2020 15:46:50 -0400 (EDT)
-X-Sender-Id: dpreed@deepplum.com
-Received: from gyre.localnet ([UNAVAILABLE]. [209.6.10.161])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384)
-        by 0.0.0.0:465 (trex/5.7.12);
-        Thu, 11 Jun 2020 15:46:51 -0400
-From:   "David P. Reed" <dpreed@deepplum.com>
-Cc:     "\ 'Sean Christopherson" <sean.j.christopherson@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Allison Randal <allison@lohutok.net>,
-        Enrico Weigelt <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Martin Molnar <martin.molnar.programming@gmail.com>,
+        Thu, 11 Jun 2020 15:47:27 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2B37C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 12:47:27 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id r2so7749395ioo.4
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 12:47:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=JrOL277zrafU33/T667ymrrO3F/cxCPQRMCQNDYvGqU=;
+        b=fG2f7RD3K1uLCT3H1yUOpg/2k4gTC2W3mclS+KruzZt5IZ8lrz2QNyiktefCjJCZer
+         IAl+Lq34Z/HHUGdBerEenMW/ivdayxYDc9Yauqpr2rEAP3jlg5x4pxiusA7qqYSRVdj8
+         YzXHF8ccWhwatXkvfTMln8+D89ENDSsoaVSPIZE9e7BDvr4SYpG7nTFdYSszyWRkg8VG
+         jxzN0nrZv4uKypUeYaYIeDMIY0tjpfM3EmPVgVe3hQaLvD36yqWAD6rc7xn0INXS4j7D
+         1SxxCVAlL1MZf+8V6pRRaplT2JuItr8L/9pPWSJZkNdOAY84Wq5z8fJVAbEZUsipC/0+
+         HBVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=JrOL277zrafU33/T667ymrrO3F/cxCPQRMCQNDYvGqU=;
+        b=MAfiSzFJyPuUZK3MJ0Hv3BPwIt40u9Tfam/fAUg2WiBwUkdtwCQmKgItTzdcbuXJHj
+         g4V7+0v25C6h+ipPJIaQ7J/nETi8TjzX1kJGASy1dvEYOi+WnPqIt+vupJ7NlXnyG3tw
+         LRtkvAvnFooKQxm72ia6L8TBPqlNA36hDZ5la3VRby/Nnbf6bC4iIveRbSTktZcD9QGf
+         mBjinmq5Xg13X3By54a0P5qYzljJm6UPq5NgAWWtqJNFnDyCtYEU9fd8huffRIgXXgUi
+         XKMnBTSt1VmpT8Bpzap4fZsOfbdQRKn6vhqvN4HWNzuG65vaGaJFm4Xr3v/AW8G5p0/G
+         W7Ew==
+X-Gm-Message-State: AOAM531pxEBKC/KCDOCkAqkB/wcSwZWXRvHaRK4r1xJ0EMoQY381eCMa
+        Ru/CZOXfBYwfzyKjly++V3Q4wg==
+X-Google-Smtp-Source: ABdhPJyguEAJSNVqVHBd5o79x1osBKISIm+KzMiBu7vz9h0p37SZp/IFjJg8utwvzTplNWH74B8djA==
+X-Received: by 2002:a02:ce8a:: with SMTP id y10mr4861586jaq.136.1591904846868;
+        Thu, 11 Jun 2020 12:47:26 -0700 (PDT)
+Received: from ?IPv6:2603:9001:e08:d902:1d3d:b900:272a:b9ed? ([2603:9001:e08:d902:1d3d:b900:272a:b9ed])
+        by smtp.gmail.com with ESMTPSA id 13sm1983056ilg.24.2020.06.11.12.47.25
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Jun 2020 12:47:26 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH] lib/vdso: use CLOCK_REALTIME_COARSE for time()
+From:   Mark Salyzyn <salyzyn@android.com>
+In-Reply-To: <878sgt1jo2.fsf@nanos.tec.linutronix.de>
+Date:   Thu, 11 Jun 2020 12:47:24 -0700
+Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
+        Chiawei Wang <chiaweiwang@google.com>, stable@vger.kernel.org,
         Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Jann Horn <jannh@google.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "LKML \ '" <linux-kernel@vger.kernel.org>,
-        "David P. Reed" <dpreed@deepplum.com>
-Subject: [PATCH v2] Fix undefined operation VMXOFF during reboot and crash
-Date:   Thu, 11 Jun 2020 15:45:54 -0400
-Message-Id: <20200611194553.2246-1-dpreed@deepplum.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <CALCETrWw3WKLx1k94NfH1jJm-XLid_G-zy8jz_Afdf3KkWjquw@mail.gmail.com>
-References: <CALCETrWw3WKLx1k94NfH1jJm-XLid_G-zy8jz_Afdf3KkWjquw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Classification-ID: f4ed8bcc-a2ff-4c63-91e4-853d2878d60b-1-1
-To:     unlisted-recipients:; (no To-header on input)
+        Vincenzo Frascino <vincenzo.frascino@arm.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <7147FC30-F9B4-4261-B2C1-08688A4E0D2B@android.com>
+References: <20200611155804.65204-1-salyzyn@android.com>
+ <878sgt1jo2.fsf@nanos.tec.linutronix.de>
+To:     Thomas Gleixner <tglx@linutronix.de>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a panic/reboot occurs when CR4 has VMX enabled, a VMXOFF is
-done on all CPUS, to allow the INIT IPI to function, since
-INIT is suppressed when CPUs are in VMX root operation.
-Problem is that  VMXOFF will causes undefined operation fault when CPU not
-in VMX operation, that is, VMXON has not been executed yet, or VMXOFF
-has been execute but VMX still enabled. Patch makes the reboot
-work more reliably by masking the exception on VMXOFF in the
-crash/panic/reboot path, which uses cpu_emergency_vmxoff().
-Can happen with KVM due to a race, but that race is rare today.
-Problem discovered doing out-of-tree x-visor development that uses VMX
-in a novel way for kernel performance analysis.
-The logic in reboot.c is also corrected, since the point of forcing
-the processor out of VMX root operation is to allow the INIT signal
-to be unmasked. See Intel SDM section on differences between VMX Root
-operation and normal operation. Thus every CPU must be forced out of
-VMX operation. Since the CPU may hang rather if INIT fails than restart,
-a manual hardware "reset" is the only way out of this state in a
-lights-out datacenter (well, if there is a BMC, it can issue a
-hardware RESET to the chip).
-Style errors in original file fixed, at request of Randy Dunlap:
-eliminate '/**' in non-kernel-doc comments.
+On Jun 11, 2020, at 12:34 PM, Thomas Gleixner <tglx@linutronix.de> =
+wrote:
+>=20
+> Mark Salyzyn <salyzyn@android.com> writes:
+>> From: Chiawei Wang <chiaweiwang@google.com>
+>>=20
+>> CLOCK_REALTIME in vdso data won't be updated if
+>> __arch_use_vsyscall() returns false.
+>=20
+> Errm!
+>=20
+> # git grep __arch_use_vsyscall
+> #
+>=20
+> Aside of that update_vsyscall() updates CLOCK_REALTIME data
+> unconditionally. No idea what this patch is solving.
+>=20
+>> Cc: stable@vger.kernel.org # 5.4+
+>=20
+> This # 5.4+ is pointless. You really want to add a fixes tag which pin
+> points the commit which introduced the wreckage.
+>=20
+> But thats moot as this is not fixing anything not even in 5.4.
+>=20
+> I assume this was developed against some Frankenkernel which has a =
+messy
+> backport or a snapshot of some development version of that vdso stuff.
 
-Fixes: 208067 <https://bugzilla.kernel.org/show_bug.cgi?id=208067>
-Reported-by: David P. Reed <dpreed@deepplum.com>
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Suggested-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: David P. Reed <dpreed@deepplum.com>
----
- arch/x86/include/asm/virtext.h | 40 ++++++++++++++++++++++++----------
- arch/x86/kernel/reboot.c       | 13 +++--------
- 2 files changed, 32 insertions(+), 21 deletions(-)
+Yes, problem code was removed with =
+52338415cf4d4064ae6b8dd972dadbda841da4fa not applied.
 
-diff --git a/arch/x86/include/asm/virtext.h b/arch/x86/include/asm/virtext.h
-index 9aad0e0876fb..ed22c1983da8 100644
---- a/arch/x86/include/asm/virtext.h
-+++ b/arch/x86/include/asm/virtext.h
-@@ -30,15 +30,15 @@ static inline int cpu_has_vmx(void)
- }
- 
- 
--/** Disable VMX on the current CPU
-+/* Disable VMX on the current CPU
-  *
-- * vmxoff causes a undefined-opcode exception if vmxon was not run
-- * on the CPU previously. Only call this function if you know VMX
-- * is enabled.
-+ * vmxoff causes an undefined-opcode exception if vmxon was not run
-+ * on the CPU previously. Only call this function directly if you know VMX
-+ * is enabled *and* CPU is in VMX root operation.
-  */
- static inline void cpu_vmxoff(void)
- {
--	asm volatile ("vmxoff");
-+	asm volatile ("vmxoff" ::: "cc", "memory"); /* clears all flags on success */
- 	cr4_clear_bits(X86_CR4_VMXE);
- }
- 
-@@ -47,17 +47,35 @@ static inline int cpu_vmx_enabled(void)
- 	return __read_cr4() & X86_CR4_VMXE;
- }
- 
--/** Disable VMX if it is enabled on the current CPU
-- *
-- * You shouldn't call this if cpu_has_vmx() returns 0.
-+/*
-+ * Safely disable VMX root operation if active
-+ * Note that if CPU is not in VMX root operation this
-+ * VMXOFF will fault an undefined operation fault,
-+ * so use the exception masking facility to handle that RARE
-+ * case.
-+ * You shouldn't call this directly if cpu_has_vmx() returns 0
-+ */
-+static inline void cpu_vmxoff_safe(void)
-+{
-+       asm volatile("1:vmxoff\n\t" /* clears all flags on success */
-+		    "2:\n\t"
-+                    _ASM_EXTABLE(1b, 2b)
-+                    ::: "cc",  "memory");
-+       cr4_clear_bits(X86_CR4_VMXE);
-+}
-+
-+/*
-+ * Force disable VMX if it is enabled on the current CPU,
-+ * when it is unknown whether CPU is in VMX operation.
-  */
- static inline void __cpu_emergency_vmxoff(void)
- {
--	if (cpu_vmx_enabled())
--		cpu_vmxoff();
-+	if (!cpu_vmx_enabled())
-+		return;
-+	cpu_vmxoff_safe();
- }
- 
--/** Disable VMX if it is supported and enabled on the current CPU
-+/* Force disable VMX if it is supported on current CPU
-  */
- static inline void cpu_emergency_vmxoff(void)
- {
-diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
-index e040ba6be27b..b0e6b106a67e 100644
---- a/arch/x86/kernel/reboot.c
-+++ b/arch/x86/kernel/reboot.c
-@@ -540,21 +540,14 @@ static void emergency_vmx_disable_all(void)
- 	 *
- 	 * For safety, we will avoid running the nmi_shootdown_cpus()
- 	 * stuff unnecessarily, but we don't have a way to check
--	 * if other CPUs have VMX enabled. So we will call it only if the
--	 * CPU we are running on has VMX enabled.
--	 *
--	 * We will miss cases where VMX is not enabled on all CPUs. This
--	 * shouldn't do much harm because KVM always enable VMX on all
--	 * CPUs anyway. But we can miss it on the small window where KVM
--	 * is still enabling VMX.
-+	 * if other CPUs have VMX enabled.
- 	 */
--	if (cpu_has_vmx() && cpu_vmx_enabled()) {
-+	if (cpu_has_vmx()) {
- 		/* Disable VMX on this CPU. */
--		cpu_vmxoff();
-+		cpu_emergency_vmxoff();
- 
- 		/* Halt and disable VMX on the other CPUs */
- 		nmi_shootdown_cpus(vmxoff_nmi);
--
- 	}
- }
- 
--- 
-2.26.2
+4.19 back port without time namespaces, chip vendor using =
+__arch_use_vsyscall to solve a chip errata.
+
+>=20
+> Not that I want to know, but please make sure that something you send =
+my
+> way makes sense on sane kernels.
+>=20
+> Oh well.
+>=20
+> Thanks,
+>=20
+>        tglx
+
+Sorry for your troubles.
+
+Sincerely =E2=80=94 Mark Salyzyn
 
