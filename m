@@ -2,102 +2,128 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23856C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E42C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:11:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 028AB20842
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:11:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591884696;
-	bh=zh1lFs+8r4VDNriEOLadueTPZsr+K0w3KsIGgXTzDyI=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=izq/ZuMIhY/qZBeM0d8B/xqwxy/ChSNZ/jbrFOmjkZAg5JpjSRf9fpt2PXJERW4zS
-	 6eBQHPJU/ExlwiO+ONFNQYm299OjxpFa5BOkEnY0yYJgf4iWlJrhKzvzbSAELWSd+S
-	 ION5tditUgfXCtyray6SPw2W6N+ZixuTJQ5UD/b0=
+	by mail.kernel.org (Postfix) with ESMTP id 685642083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:11:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728076AbgFKOLe (ORCPT
+        id S1728129AbgFKOLn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 10:11:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60874 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726905AbgFKOLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 10:11:32 -0400
-Received: from [192.168.68.112] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net [75.58.59.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EA002083E;
-        Thu, 11 Jun 2020 14:11:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591884691;
-        bh=zh1lFs+8r4VDNriEOLadueTPZsr+K0w3KsIGgXTzDyI=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=bPAGjp5cf9bE8U4Ygi+28VpSCI5xVC3F2lsZWm57e4cZnkGBZ5J526sRiSUk0onPh
-         46d5JaKTOPS8n2MFjufRykDUD+XH8Vjb6/EJ2t1H1onyETccRXukXg7uMwG1Fs7cUR
-         Ik/cDD+t1Vi5pKaPTFTCz0GN5d9ID75kiKF/w4bc=
-Subject: Re: [RFC PATCH] PCI: Remove End-End TLP as PASID dependency
-To:     Zhangfei Gao <zhangfei.gao@linaro.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, kenneth-lee-2012@foxmail.com,
-        Wangzhou <wangzhou1@hisilicon.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1591762694-9131-1-git-send-email-zhangfei.gao@linaro.org>
- <20200610074633.GA6844@myrica>
- <f59c5a39-b13e-8232-57cb-089a8d62a2a7@linaro.org>
-From:   Sinan Kaya <okaya@kernel.org>
-Autocrypt: addr=okaya@kernel.org; keydata=
- mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
- uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
- 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
- 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
- V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
- AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
- ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
- AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
- 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
- Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
- ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
- qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
- AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
- eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
- 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
- 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
- gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
- CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
- gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
- e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
- 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
- 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
- L+s0nPaNMKwv/Xhhm6Y=
-Message-ID: <a849234d-453a-8faa-93dd-12ea1b0165ab@kernel.org>
-Date:   Thu, 11 Jun 2020 10:11:30 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Thu, 11 Jun 2020 10:11:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57212 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726905AbgFKOLh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 10:11:37 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B064BC08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 07:11:36 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: alyssa)
+        with ESMTPSA id 3800A2A4ACF
+Date:   Thu, 11 Jun 2020 10:11:27 -0400
+From:   Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
+To:     Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        Steven Price <steven.price@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH 1/2] panfrost: Make sure GPU is powered on when reading
+ GPU_LATEST_FLUSH_ID
+Message-ID: <20200611141127.GA1834@kevin>
+References: <20200611085900.49740-1-tomeu.vizoso@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <f59c5a39-b13e-8232-57cb-089a8d62a2a7@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="OgqxwSJOaUobr8KG"
+Content-Disposition: inline
+In-Reply-To: <20200611085900.49740-1-tomeu.vizoso@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/10/2020 4:00 AM, Zhangfei Gao wrote:
->> Why not set the eetlp_prefix_path bit from a PCI quirk?  Unlike the stall
->> problem from the other thread, this one looks like a simple design
->> mistake
->> that can be fixed easily in future iterations of the platform: just set
->> the "End-End TLP Prefix Supported" bit in the Device Capability 2
->> Register
->> of all bridges.
-> Yes, we can still set eetlp_prefix_path bit from a PCI quirk.
 
-I agree. Vendor specific quirk should be the way to go here if it is not
-compliant with the spec.
+--OgqxwSJOaUobr8KG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Both patches are Reviewed-by: Alyssa Rosenzweig
+<alyssa.rosenzweig@collabora.com>
+
+On Thu, Jun 11, 2020 at 10:58:43AM +0200, Tomeu Vizoso wrote:
+> Bifrost devices do support the flush reduction feature, so on first job
+> submit we were trying to read the register while still powered off.
+>=20
+> If the GPU is powered off, the feature doesn't bring any benefit, so
+> don't try to read.
+>=20
+> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+> ---
+>  drivers/gpu/drm/panfrost/panfrost_gpu.c | 14 ++++++++++++--
+>  1 file changed, 12 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_gpu.c b/drivers/gpu/drm/pa=
+nfrost/panfrost_gpu.c
+> index f2c1ddc41a9b..e0f190e43813 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_gpu.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_gpu.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/io.h>
+>  #include <linux/iopoll.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> =20
+>  #include "panfrost_device.h"
+>  #include "panfrost_features.h"
+> @@ -368,7 +369,16 @@ void panfrost_gpu_fini(struct panfrost_device *pfdev)
+> =20
+>  u32 panfrost_gpu_get_latest_flush_id(struct panfrost_device *pfdev)
+>  {
+> -	if (panfrost_has_hw_feature(pfdev, HW_FEATURE_FLUSH_REDUCTION))
+> -		return gpu_read(pfdev, GPU_LATEST_FLUSH_ID);
+> +	u32 flush_id;
+> +
+> +	if (panfrost_has_hw_feature(pfdev, HW_FEATURE_FLUSH_REDUCTION)) {
+> +		/* Flush reduction only makes sense when the GPU is kept powered on be=
+tween jobs */
+> +		if (pm_runtime_get_if_in_use(pfdev->dev)) {
+> +			flush_id =3D gpu_read(pfdev, GPU_LATEST_FLUSH_ID);
+> +			pm_runtime_put(pfdev->dev);
+> +			return flush_id;
+> +		}
+> +	}
+> +
+>  	return 0;
+>  }
+> --=20
+> 2.21.0
+>=20
+
+--OgqxwSJOaUobr8KG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEQ17gm7CvANAdqvY4/v5QWgr1WA0FAl7iO4YACgkQ/v5QWgr1
+WA0tPBAArzmVDiuBFirXaT97r1Ge78bboVEyZU99PhlWzzQsuA9Cxn5THkpl1Od+
+BYGXVCycozrZNwEvHnTzI6NruL1ZgLK9NrIT/afZSK4dzg6lLiZplyi7dCul/YAU
+J/UWU5/g4ae8aPWMXz2v1wiwcpA0N2PS/5WQxKwm6f45B7aBudchG7Ofdhpg8LrW
+EFP7ScKMWYmnGYzfwUZ2uXawnHpBrNoXS1ZQ21EfA22V4LOJvmH7zzh2o/ldhq5P
+3FHu8MdNyiNgrSyU07Fe+zJ3jt5MkGI4EiR36r90vvBlv3C75ov7wtPcPgyEsURI
+b51D5+osyt1Q9GmHYrpxFo73H/qPYqxCnZW1cVSrd74h2VKdv/QzSeALg2VHfQNW
+W9d1U3SjD+BKzwgCvNCEppken3nG5nsHPc39CXwoetZ5hOrzy0iQMCJ2rzjxLC3d
+TCIzOU6MbHvUVNYqeBqe+bkftoN98Gf9+JUnKyZJSbolkbaUF0vZyI3xoP5ga+wm
+PMyx89WjZauM0VQP6rUbkDmzhzQihvWYId276r37CTYrKY/jLo52b5RChWDUnIJb
+dfMZ6BF7fDoUPszOSEeaqkYmf8HtyLYl95h7FMLD56ewdMDUAKSujXyXq9D3+wYc
+1JSQEGBHIPhMw783zOmGWp+nVozQ/O2+9R28NJLYbDdQClQ4Gcc=
+=K7V+
+-----END PGP SIGNATURE-----
+
+--OgqxwSJOaUobr8KG--
