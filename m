@@ -2,163 +2,114 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4FB5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA502C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCFEE206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:45:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B034206DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:46:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728639AbgFKPpu (ORCPT
+        id S1728728AbgFKPqN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 11:45:50 -0400
-Received: from foss.arm.com ([217.140.110.172]:54190 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728422AbgFKPpu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 11:45:50 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0B6E71F1;
-        Thu, 11 Jun 2020 08:45:49 -0700 (PDT)
-Received: from [10.57.43.165] (unknown [10.57.43.165])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B299B3F6CF;
-        Thu, 11 Jun 2020 08:45:45 -0700 (PDT)
-Subject: Re: [PATCH 2/2] arm-nommu: Add use_reserved_mem() to check if device
- support reserved memory
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     kstewart@linuxfoundation.org, devicetree@vger.kernel.org,
-        alexandre.torgue@st.com, info@metux.net, linux@armlinux.org.uk,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, mcoquelin.stm32@gmail.com,
-        tglx@linutronix.de, dillon.minfei@gmail.com,
-        linux-stm32@st-md-mailman.stormreply.com, allison@lohutok.net
-References: <1591605038-8682-1-git-send-email-dillon.minfei@gmail.com>
- <1591605038-8682-3-git-send-email-dillon.minfei@gmail.com>
- <90df5646-e0c4-fcac-d934-4cc922230dd2@arm.com>
- <20200610072444.GA6293@infradead.org>
- <9c3a7b4e-0190-e9bb-91fe-6d5692559888@arm.com>
-From:   Vladimir Murzin <vladimir.murzin@arm.com>
-Message-ID: <27881ee0-dc40-e8c6-34f6-712f9acc3fbc@arm.com>
-Date:   Thu, 11 Jun 2020 16:45:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 11 Jun 2020 11:46:13 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:37433 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728641AbgFKPqK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 11:46:10 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 0E8222000A;
+        Thu, 11 Jun 2020 15:46:06 +0000 (UTC)
+Date:   Thu, 11 Jun 2020 17:46:05 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6?= Rojas <noltari@gmail.com>,
+        tsbogend@alpha.franken.de, bcm-kernel-feedback-list@broadcom.com,
+        richard@nod.at, vigneshr@ti.com,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        linus.walleij@linaro.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org
+Subject: Re: [PATCH v2] mtd: parsers: bcm63xx: simplify CFE detection
+Message-ID: <20200611174605.11fb6e84@xps13>
+In-Reply-To: <715b0947-f4dd-0c04-5c52-5da06c04d665@gmail.com>
+References: <20200608094053.3381512-1-noltari@gmail.com>
+        <20200608160649.3717152-1-noltari@gmail.com>
+        <20200611095540.250184d2@xps13>
+        <779D37C7-58CB-49AF-8739-C34295B86FC4@gmail.com>
+        <715b0947-f4dd-0c04-5c52-5da06c04d665@gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <9c3a7b4e-0190-e9bb-91fe-6d5692559888@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/10/20 9:19 AM, Vladimir Murzin wrote:
-> On 6/10/20 8:24 AM, Christoph Hellwig wrote:
->> Ok, I finally found the original patch from Vladimir.  Comments below:
->>
->>> +++ b/kernel/dma/direct.c
->>> @@ -456,14 +456,14 @@ int dma_direct_mmap(struct device *dev, struct vm_area_struct *vma,
->>>  #else /* CONFIG_MMU */
->>>  bool dma_direct_can_mmap(struct device *dev)
->>>  {
->>> -	return false;
->>> +	return true;
->>>  }
->>>  
->>>  int dma_direct_mmap(struct device *dev, struct vm_area_struct *vma,
->>>  		void *cpu_addr, dma_addr_t dma_addr, size_t size,
->>>  		unsigned long attrs)
->>>  {
->>> -	return -ENXIO;
->>> +	return vm_iomap_memory(vma, vma->vm_start, (vma->vm_end - vma->vm_start));;
->>
->> I think we should try to reuse the mmu dma_direct_mmap implementation,
->> which does about the same.  This version has been compile tested on
->> arm-nommu only, let me know what you think: (btw, a nommu_defconfig of
->> some kind for arm would be nice..)
-> 
-> Catch-all nommu_defconfig is not easy for ARM, AFAIK folk carry few hacks
-> for randconfig...
-> 
-> Meanwhile, known working NOMMU configs
-> 
-> $ git grep "# CONFIG_MMU is not set" arch/arm/configs/
-> arch/arm/configs/efm32_defconfig:# CONFIG_MMU is not set
-> arch/arm/configs/lpc18xx_defconfig:# CONFIG_MMU is not set
-> arch/arm/configs/mps2_defconfig:# CONFIG_MMU is not set
-> arch/arm/configs/stm32_defconfig:# CONFIG_MMU is not set
-> arch/arm/configs/vf610m4_defconfig:# CONFIG_MMU is not set
-> 
->>
->> diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
->> index d006668c0027d2..e0dae570a51530 100644
->> --- a/kernel/dma/Kconfig
->> +++ b/kernel/dma/Kconfig
->> @@ -71,6 +71,7 @@ config SWIOTLB
->>  # in the pagetables
->>  #
->>  config DMA_NONCOHERENT_MMAP
->> +	default y if !MMU
->>  	bool
-> 
-> Nit: def_bool !MMU
-> 
->>  
->>  config DMA_REMAP
->> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
->> index 0a4881e59aa7d6..9ec6a5c3fc578c 100644
->> --- a/kernel/dma/direct.c
->> +++ b/kernel/dma/direct.c
->> @@ -459,7 +459,6 @@ int dma_direct_get_sgtable(struct device *dev, struct sg_table *sgt,
->>  	return ret;
->>  }
->>  
->> -#ifdef CONFIG_MMU
->>  bool dma_direct_can_mmap(struct device *dev)
->>  {
->>  	return dev_is_dma_coherent(dev) ||
->> @@ -485,19 +484,6 @@ int dma_direct_mmap(struct device *dev, struct vm_area_struct *vma,
->>  	return remap_pfn_range(vma, vma->vm_start, pfn + vma->vm_pgoff,
->>  			user_count << PAGE_SHIFT, vma->vm_page_prot);
->>  }
->> -#else /* CONFIG_MMU */
->> -bool dma_direct_can_mmap(struct device *dev)
->> -{
->> -	return false;
->> -}
->> -
->> -int dma_direct_mmap(struct device *dev, struct vm_area_struct *vma,
->> -		void *cpu_addr, dma_addr_t dma_addr, size_t size,
->> -		unsigned long attrs)
->> -{
->> -	return -ENXIO;
->> -}
->> -#endif /* CONFIG_MMU */
->>  
->>  int dma_direct_supported(struct device *dev, u64 mask)
->>  {
->>
-> 
-> LGTM. FWIW:
-> 
-> Reviewed-by: Vladimir Murzin <vladimir.murzin@arm.com>
-> 
-> 
 
-@dillon, can you give it a try?
+Florian Fainelli <f.fainelli@gmail.com> wrote on Thu, 11 Jun 2020
+08:42:42 -0700:
 
-I think Christoph would appreciate your Tested-by and that might speed up
-getting fix mainline.
-
-
-Cheers
-Vladimir
-
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> On 6/11/2020 8:16 AM, Álvaro Fernández Rojas wrote:
+> > Hi Miquel,
+> >   
+> >> El 11 jun 2020, a las 9:55, Miquel Raynal <miquel.raynal@bootlin.com> escribió:
+> >>
+> >> Hi Álvaro,
+> >>
+> >> Álvaro Fernández Rojas <noltari@gmail.com> wrote on Mon,  8 Jun 2020
+> >> 18:06:49 +0200:
+> >>  
+> >>> Instead of trying to parse CFE version string, which is customized by some
+> >>> vendors, let's just check that "CFE1" was passed on argument 3.
+> >>>
+> >>> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+> >>> Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
+> >>> ---
+> >>> v2: use CFE_EPTSEAL definition and avoid using an additional funtion.
+> >>>
+> >>> drivers/mtd/parsers/bcm63xxpart.c | 29 ++++-------------------------
+> >>> 1 file changed, 4 insertions(+), 25 deletions(-)
+> >>>
+> >>> diff --git a/drivers/mtd/parsers/bcm63xxpart.c b/drivers/mtd/parsers/bcm63xxpart.c
+> >>> index 78f90c6c18fd..493a75b2f266 100644
+> >>> --- a/drivers/mtd/parsers/bcm63xxpart.c
+> >>> +++ b/drivers/mtd/parsers/bcm63xxpart.c
+> >>> @@ -22,6 +22,9 @@
+> >>> #include <linux/mtd/partitions.h>
+> >>> #include <linux/of.h>
+> >>>
+> >>> +#include <asm/bootinfo.h>
+> >>> +#include <asm/fw/cfe/cfe_api.h>  
+> >>
+> >> Are you sure both includes are needed?  
+> > 
+> > asm/bootinfo.h is needed for fw_arg3 and asm/fw/cfe/cfe_api.h is needed for CFE_EPTSEAL.
+> >   
+> >>
+> >> I don't think it is a good habit to include asm/ headers, are you sure
+> >> there is not another header doing it just fine?  
+> > 
+> > Both are needed unless you want to add another definition of CFE_EPTSEAL value.
+> > There are currently two CFE magic definitions, the one in asm/fw/cfe/cfe_api.h and another one in bcm47xxpart.c:
+> > https://github.com/torvalds/linux/blob/master/arch/mips/include/asm/fw/cfe/cfe_api.h#L28
+> > https://github.com/torvalds/linux/blob/master/drivers/mtd/parsers/bcm47xxpart.c#L33  
 > 
+> The caveat with that approach is that this reduces the compilation
+> surface to MIPS and BMIPS_GENERIC and BCM63XX only, which is a bit
+> small. If we could move the CFE definitions to a shared header, and
+> consolidate the value used by bcm47xxpart.c as well, that would allow us
+> to build the bcm63xxpart.c file with COMPILE_TEST on other
+> architectures. This does not really have functional value, but for
+> maintainers like Miquel, it allows them to quickly test their entire
+> drivers/mtd/ directory.
 
+Absolutely!
