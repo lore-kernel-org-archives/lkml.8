@@ -2,164 +2,158 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4CDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 218BAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D51B206DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:35:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC85120842
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:39:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="1oMdu4F+"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QKdoB7s1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726401AbgFKXfm (ORCPT
+        id S1726328AbgFKXjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 19:35:42 -0400
-Received: from mail-eopbgr770055.outbound.protection.outlook.com ([40.107.77.55]:37440
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726254AbgFKXfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 19:35:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QCj4ycS2eNtDoyLqhGUc6kbAgn1yyQAXwd1tKQ0jHsxhB7IgjctW/ppJYgIeDrVc8UKfS5VIE4sYH75ulVZJYSiLW+hvW9UHElEPyue271NEufsUnVgqsDhQSBqrUgCejMhrfT5f9Cn5FkL0k37uyfczJDQeSFs01Acs2Fil8HpG5OdH0K3v3C7KtW0e9qDTBqsP5vOhKXQtv/uoFDdReW2023u9/vqgRtyNc/LIk/TDHjdTvpYWLjuiedQQcYw6jM4hBVOTe7iiB64r/IwGwprFDPBTxykzOHf5lpUL+drIhOQs/+C/vCy3cImQKUyJsRUD8z+pN9Qqt4dcqVD0Hg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5xr6Xx2Tzlwq18f72B6suSX3Y6Np/pqJzGT7hI8LGYI=;
- b=j53W+DgaXzo9iC7seWlU4YRSWx3I3VMfEvdoky4wTU0K7mZaS3TZadb6nf8FPgWmKRqqzTJmHJlncI0D39qhCwLgwbr9JBalOqZZEpARtV8dAOwf02ADqBZrfNXmfG3+GiLf5CMndCn70je91dj5pUeXy6ud4PLWKJxLZAdKu2J9Q+vNX3NNblUx4aHKFCiqlAC7wXnbGtTTPNc/HEV+2mScM1rbNGDQPtm89GTl8qjhfY3sWaD2L6VXPY1i6YXWIIwtNTWfvsOYZk+s+7wxVEG2dVe9DapShwWV3IZbR83JR2Cqk6BUGRq0Yg5IFSdaVmhnu33o52kcsDgRxYoNjA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Thu, 11 Jun 2020 19:39:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60058 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726254AbgFKXjL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 19:39:11 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDA3BC08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 16:39:09 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id w20so3225628pga.6
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 16:39:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5xr6Xx2Tzlwq18f72B6suSX3Y6Np/pqJzGT7hI8LGYI=;
- b=1oMdu4F+eJwl5JGFP32PSdS9dgSdYvAw92u/tYi1Meye1eookLSzlUCezJKPmXLb9z3QigkXKpgvk9swWN0hvAA2prPdl/j13gW0vihtWXDU49MahixXwLO30eh7vPnlbKy26FOK7Mr+nExFrDLGkHBzadbnQpUUKlHBdGOljY8=
-Authentication-Results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=amd.com;
-Received: from SN1PR12MB2414.namprd12.prod.outlook.com (2603:10b6:802:2e::31)
- by SN6PR12MB2639.namprd12.prod.outlook.com (2603:10b6:805:75::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.23; Thu, 11 Jun
- 2020 23:35:37 +0000
-Received: from SN1PR12MB2414.namprd12.prod.outlook.com
- ([fe80::18d:97b:661f:9314]) by SN1PR12MB2414.namprd12.prod.outlook.com
- ([fe80::18d:97b:661f:9314%7]) with mapi id 15.20.3088.021; Thu, 11 Jun 2020
- 23:35:37 +0000
-Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
- annotations
-To:     Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28Intel=29?= 
-        <thomas_os@shipmail.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rdma@vger.kernel.org,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        Thomas Hellstrom <thomas.hellstrom@intel.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        linux-media@vger.kernel.org,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Mika Kuoppala <mika.kuoppala@intel.com>
-References: <20200604081224.863494-1-daniel.vetter@ffwll.ch>
- <20200604081224.863494-5-daniel.vetter@ffwll.ch>
- <b11c2140-1b9c-9013-d9bb-9eb2c1906710@shipmail.org>
- <20200611083430.GD20149@phenom.ffwll.local> <20200611141515.GW6578@ziepe.ca>
-From:   Felix Kuehling <felix.kuehling@amd.com>
-Message-ID: <4702e170-fd02-88fa-3da4-ea64252fff9a@amd.com>
-Date:   Thu, 11 Jun 2020 19:35:35 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <20200611141515.GW6578@ziepe.ca>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-ClientProxiedBy: YTBPR01CA0029.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:14::42) To SN1PR12MB2414.namprd12.prod.outlook.com
- (2603:10b6:802:2e::31)
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PAjCKI6MqDjh7P5uPdXryvnaGEeCq7TVMpet7FGoy7Q=;
+        b=QKdoB7s1+c8y2Lyhx08PCcM6Gcaw6bPOWK/e9Jiepq4rBTgxC5nMaP7TcdbWuSRXuW
+         te0kUNV9bMonftlvXz3t3rcfAXpW0K1z+7V7ixOeYKrJdkiME0OkIofwFHG4VGcRhUiC
+         hAynZbVWESietV+w+To5TffLKBTwo+s77moHX0cptXFVq61e0C/q3qj2uTlOUbspDSOX
+         kWQpix3Z3HjZKTlRar8x7dMUKWPtgGX0DZuUPxs7pkyUy+BVTUIaWIaPdiOR+6p63k4E
+         FIz4zqLQcleeox8S0uPSSA+Hr9tQrKxdQO43VmwOdULjZnO1N+JuSwvSz7Oe1FpY6e2X
+         S7Rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PAjCKI6MqDjh7P5uPdXryvnaGEeCq7TVMpet7FGoy7Q=;
+        b=KD6F9P7Z+Rza9NGNRNlzLWXDhUI0eTuA3QAGzvHIs3XsmyQIt4pnep1e5H0aaqc5R/
+         pNPVoWTPp5kp+VK7R8gccmPj9J5hUZhE673+Cyemiy6AO9HcfKR8iLc0S1ksxfRUMhm/
+         csuD/Cb5d4zGoMaEmo2sqEtGWNVjNi8Z5QtIDR7477rjOA9CtVFTghDV35kBjsoOE4cd
+         AMOi6cv2AHT5211IJkjxK9uZtT3ItX+yRENRMYng+C5+9I+G/80Y5gKKL16c8VxrT15l
+         ZpSccvFnBFuN4/ro83sn7LyzIh5142md7cPqQpWpnfldgn0HlhDUSnwBI9gpxmz19UK5
+         0LuQ==
+X-Gm-Message-State: AOAM531SjmLsf5TwvnYycu5cw3UDsiKd9MIG6kjJj6+ezwUvo1Pc6nUm
+        HLtkCqvhNiUlh6esTbghtgqLQYYUi+My9lmEte3e2Q==
+X-Google-Smtp-Source: ABdhPJy6hNjsNqidbhfXdErSRf/X1ikfRmzNDY2AL6v9WPM6/vkCqSK+yLSSmr4DMu1dRhtrOiu1xpk8HZ+zvaIctZI=
+X-Received: by 2002:a63:a119:: with SMTP id b25mr8467715pgf.10.1591918748974;
+ Thu, 11 Jun 2020 16:39:08 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.2.100] (142.116.63.128) by YTBPR01CA0029.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:14::42) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.21 via Frontend Transport; Thu, 11 Jun 2020 23:35:36 +0000
-X-Originating-IP: [142.116.63.128]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: ca613209-cae9-4beb-763c-08d80e602514
-X-MS-TrafficTypeDiagnostic: SN6PR12MB2639:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN6PR12MB2639E32D582F0E0D4E44B1E692800@SN6PR12MB2639.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
-X-Forefront-PRVS: 0431F981D8
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Xhct3Q5PmgQdbZA3Wwr9sogT+nC+dDoZtuF1u3u4HIj89U+4iw4cVNY27v7o5Q5/ywyDJgMBLGT5TZCauityIo46zksiCnyHMfjcf5D9DiAZn4/wKP/EjihWQ2dSl9gu3RKxDpWzLSvD3zkVIICf/4tcB6xUtRJXvF+AY4hi+EXwk8rKQRYgsMb5qbjLJiSeouRJ6XAXw0qmFom5ESC8nZ9QmHWsZOmOx6iXMrgBmWw+b257E9nx61ipsJwkBr7vaDn94QxpYLhTfjHE865zIi8BU7AGMLjdBBVSvON/XLpiUsxYI7VjD8cYG4YuJyRak/tAl6DSEfUm14xX2sxRdxspmHpsaY2gJ/KXXQgtXlbKB6XTw0rfFY2qHuNFJ43Pozb2Y7pINwVNLtebtQOvYA/wrXIApR9jw+KG2HnzfFcC99g9P4rtT3pV5nKFF2nU
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2414.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(376002)(346002)(136003)(366004)(66556008)(26005)(44832011)(186003)(16576012)(110136005)(478600001)(8676002)(966005)(66946007)(66476007)(83380400001)(2906002)(16526019)(52116002)(7416002)(956004)(31696002)(36756003)(31686004)(6486002)(2616005)(86362001)(5660300002)(8936002)(316002)(921003)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: lMVnk/iA/no3q+kLsUZGrVml75gTPfF4B+EPZD+9nMXS9I4q/X0SR1BFYoq2BTMgOh9S9eSY2c/gBIifXvKGaIJEHQyiNATyW80UrcTfF5LbtbeFpieyRYVHExjUJCPsffdRwJ3Xx9AWQDDhsowRCHcpHxUMKhjStfResRhsZ2WiwqwhIHWLEbhkoTvyPyYDVd2fuZlqU3EEBoBUA+eEmf7IlnaYkUjvjN9N+f6jabdc5aaCiq8cM0P5I6rPjYghUQvqFy7eayQhDrNXrfgPbLC/TnxGxXzwp5ZstTXpw0/cLWCEnBhrxRPtnnocGVbV/gekM+Bg1N1gg82foZqNYELOvpmlFOSyldwehtDD3mDaEaaJft9hA24PT81LAoC+7jkSWOB3QKKrsteiGEwmp6ggPgTr7ztztmSZpyRWm0kM0pWD/2uqKBKcXEodk8cqZ6OMGoE4X0Ugh5iW6QmiDrOeUFs3wJJq1IBsYlbljcTOpwi2qrLlyzY8U82I5EKQ
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ca613209-cae9-4beb-763c-08d80e602514
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2020 23:35:37.6581
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: r9I0+zgkWdPhK56zX6YsItahFnR5mXeKGy5ASpENti8IRJtYCU4K7jcgtIuLDzFaArmNtGv3QWTS6RLkBYIL8g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2639
+References: <CAKwvOdnddAjiXDKA8fp3n2NN+R=Syp2N5DHbp1j=VRzM1dNnRw@mail.gmail.com>
+ <20200611220339.3971675-1-nivedita@alum.mit.edu>
+In-Reply-To: <20200611220339.3971675-1-nivedita@alum.mit.edu>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 11 Jun 2020 16:38:57 -0700
+Message-ID: <CAKwvOdksFqf11-sdLrvNe4wrRvyAB2mVfwKU4KkNsapSnN_tRw@mail.gmail.com>
+Subject: Re: [PATCH v2] Makefile: Improve compressed debug info support detection
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Fangrui Song <maskray@google.com>,
+        Rong Chen <rong.a.chen@intel.com>,
+        kernel test robot <lkp@intel.com>, kbuild-all@lists.01.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-06-11 um 10:15 a.m. schrieb Jason Gunthorpe:
-> On Thu, Jun 11, 2020 at 10:34:30AM +0200, Daniel Vetter wrote:
->>> I still have my doubts about allowing fence waiting from within shrinkers.
->>> IMO ideally they should use a trywait approach, in order to allow memory
->>> allocation during command submission for drivers that
->>> publish fences before command submission. (Since early reservation object
->>> release requires that).
->> Yeah it is a bit annoying, e.g. for drm/scheduler I think we'll end up
->> with a mempool to make sure it can handle it's allocations.
->>
->>> But since drivers are already waiting from within shrinkers and I take your
->>> word for HMM requiring this,
->> Yeah the big trouble is HMM and mmu notifiers. That's the really awkward
->> one, the shrinker one is a lot less established.
-> I really question if HW that needs something like DMA fence should
-> even be using mmu notifiers - the best use is HW that can fence the
-> DMA directly without having to get involved with some command stream
-> processing.
+On Thu, Jun 11, 2020 at 3:03 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
 >
-> Or at the very least it should not be a generic DMA fence but a
-> narrowed completion tied only into the same GPU driver's command
-> completion processing which should be able to progress without
-> blocking.
+> Commit
+>   10e68b02c861 ("Makefile: support compressed debug info")
+> added support for compressed debug sections.
 >
-> The intent of notifiers was never to endlessly block while vast
-> amounts of SW does work.
+> Support is detected by checking
+> - does the compiler support -gz=zlib
+> - does the assembler support --compressed-debug-sections=zlib
+> - does the linker support --compressed-debug-sections=zlib
 >
-> Going around and switching everything in a GPU to GFP_ATOMIC seems
-> like bad idea.
+> However, the gcc driver's support for this option is somewhat
+> convoluted. The driver's builtin specs are set based on the version of
+> binutils that it was configured with. It reports an error if the
+> configure-time linker/assembler (i.e., not necessarily the actual
+> assembler that will be run) do not support the option, but only if the
+> assembler (or linker) is actually invoked when -gz=zlib is passed.
 >
->> I've pinged a bunch of armsoc gpu driver people and ask them how much this
->> hurts, so that we have a clear answer. On x86 I don't think we have much
->> of a choice on this, with userptr in amd and i915 and hmm work in nouveau
->> (but nouveau I think doesn't use dma_fence in there). 
+> The cc-option check in scripts/Kconfig.include does not invoke the
+> assembler, so the gcc driver reports success even if it does not support
+> the option being passed to the assembler.
+>
+> Because the as-option check passes the option directly to the assembler
+> via -Wa,--compressed-debug-sections=zlib, the gcc driver does not see
+> this option and will never report an error.
 
-Soon nouveau will get company. We're working on a recoverable page fault
-implementation for HMM in amdgpu where we'll need to update page tables
-using the GPUs SDMA engine and wait for corresponding fences in MMU
-notifiers.
+Thanks for expanding on the failure.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Regards,
-  Felix
-
-
-> Right, nor will RDMA ODP. 
 >
-> Jason
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+> Combined with an installed version of binutils that is more recent than
+> the one the compiler was built with, it is possible for all three tests
+> to succeed, yet an actual compilation with -gz=zlib to fail.
+>
+> Moreover, it is unnecessary to explicitly pass
+> --compressed-debug-sections=zlib to the assembler via -Wa, since the
+> driver will do that automatically when it supports -gz=zlib.
+>
+> Convert the as-option to just -gz=zlib, simplifying it as well as
+> performing a better test of the gcc driver's capabilities.
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> ---
+>  Makefile          | 2 +-
+>  lib/Kconfig.debug | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/Makefile b/Makefile
+> index 839f9fee22cb..cb29e56f227a 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -842,7 +842,7 @@ endif
+>
+>  ifdef CONFIG_DEBUG_INFO_COMPRESSED
+>  DEBUG_CFLAGS   += -gz=zlib
+> -KBUILD_AFLAGS  += -Wa,--compress-debug-sections=zlib
+> +KBUILD_AFLAGS  += -gz=zlib
+>  KBUILD_LDFLAGS += --compress-debug-sections=zlib
+>  endif
+>
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index cb98741601bd..94ce36be470c 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -229,7 +229,7 @@ config DEBUG_INFO_COMPRESSED
+>         bool "Compressed debugging information"
+>         depends on DEBUG_INFO
+>         depends on $(cc-option,-gz=zlib)
+> -       depends on $(as-option,-Wa$(comma)--compress-debug-sections=zlib)
+> +       depends on $(as-option,-gz=zlib)
+>         depends on $(ld-option,--compress-debug-sections=zlib)
+>         help
+>           Compress the debug information using zlib.  Requires GCC 5.0+ or Clang
+> --
+> 2.26.2
+>
+
+
+-- 
+Thanks,
+~Nick Desaulniers
