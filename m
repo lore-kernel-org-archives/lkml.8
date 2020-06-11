@@ -2,137 +2,187 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9037C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 19:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F33C9C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 19:56:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9347E2073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 19:55:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D72D7207ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 19:56:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726159AbgFKTzN (ORCPT
+        id S1726583AbgFKT4B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 15:55:13 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:16308 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725799AbgFKTzN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 15:55:13 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05BJcst2100761;
-        Thu, 11 Jun 2020 15:55:03 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31kgs4b27y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 11 Jun 2020 15:55:02 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05BJgKBK112430;
-        Thu, 11 Jun 2020 15:55:02 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31kgs4b274-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 11 Jun 2020 15:55:02 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05BJpIQO025893;
-        Thu, 11 Jun 2020 19:55:01 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma03dal.us.ibm.com with ESMTP id 31hw1cat5a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 11 Jun 2020 19:55:01 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05BJt0u914812116
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Jun 2020 19:55:00 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A3995112064;
-        Thu, 11 Jun 2020 19:55:00 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 086EF112062;
-        Thu, 11 Jun 2020 19:55:00 +0000 (GMT)
-Received: from DESKTOP-AV6EVPG.localdomain (unknown [9.65.209.180])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 11 Jun 2020 19:54:59 +0000 (GMT)
-From:   Maurizio Drocco <maurizio.drocco@ibm.com>
-To:     linux-integrity@vger.kernel.org
-Cc:     jejb@linux.ibm.com, Maurizio Drocco <maurizio.drocco@ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-security-module@vger.kernel.org (open list:SECURITY SUBSYSTEM),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] extend IMA boot_aggregate with kernel measurements
-Date:   Thu, 11 Jun 2020 15:54:22 -0400
-Message-Id: <20200611195422.2117-1-maurizio.drocco@ibm.com>
-X-Mailer: git-send-email 2.17.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-11_20:2020-06-11,2020-06-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
- mlxscore=0 suspectscore=1 lowpriorityscore=0 cotscore=-2147483648
- bulkscore=0 priorityscore=1501 malwarescore=0 adultscore=0 phishscore=0
- clxscore=1011 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006110151
+        Thu, 11 Jun 2020 15:56:01 -0400
+Received: from mga04.intel.com ([192.55.52.120]:9278 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725799AbgFKT4B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 15:56:01 -0400
+IronPort-SDR: nfWxtoU1uuDui8f9jQlA1dJla63QsnCpt3nI+b64xUrZt7b+xElQH3I9ZDTOEVOnCtwIypF5jq
+ IKVbdsIY04zQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 12:56:00 -0700
+IronPort-SDR: 6OGy0HphltOtwPAWMjEvQt1BpdA3Tm2x+SezYJPxYF3MxopRRS+nbZ9Tna88oZmNzyxbVnZasO
+ tLzlLb8Tm40A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,500,1583222400"; 
+   d="scan'208";a="259693290"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by fmsmga007.fm.intel.com with ESMTP; 11 Jun 2020 12:55:59 -0700
+Date:   Thu, 11 Jun 2020 13:02:24 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>, jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v2 3/3] iommu/vt-d: Sanity check uapi argsz filled by
+ users
+Message-ID: <20200611130224.642ddde4@jacob-builder>
+In-Reply-To: <20200611110816.4cea7204@x1.home>
+References: <1591848735-12447-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1591848735-12447-4-git-send-email-jacob.jun.pan@linux.intel.com>
+        <20200611110816.4cea7204@x1.home>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IMA is not considering TPM registers 8-9 when calculating the boot
-aggregate. When registers 8-9 are used to store measurements of the
-kernel and its command line (e.g., grub2 bootloader with tpm module
-enabled), IMA should include them in the boot aggregate.
+On Thu, 11 Jun 2020 11:08:16 -0600
+Alex Williamson <alex.williamson@redhat.com> wrote:
 
-Signed-off-by: Maurizio Drocco <maurizio.drocco@ibm.com>
----
- security/integrity/ima/ima.h        |  2 +-
- security/integrity/ima/ima_crypto.c | 11 ++++++++++-
- 2 files changed, 11 insertions(+), 2 deletions(-)
+> On Wed, 10 Jun 2020 21:12:15 -0700
+> Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
+> 
+> > IOMMU UAPI data has an argsz field which is filled by user. As the
+> > data structures expands, argsz may change. As the UAPI data are
+> > shared among different architectures, extensions of UAPI data could
+> > be a result of one architecture which has no impact on another.
+> > Therefore, these argsz santity checks are performed in the model
+> > specific IOMMU drivers. This patch adds sanity checks in the VT-d
+> > to ensure argsz passed by userspace matches feature flags and other
+> > contents.
+> > 
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > ---
+> >  drivers/iommu/intel-iommu.c | 16 ++++++++++++++++
+> >  drivers/iommu/intel-svm.c   | 12 ++++++++++++
+> >  2 files changed, 28 insertions(+)
+> > 
+> > diff --git a/drivers/iommu/intel-iommu.c
+> > b/drivers/iommu/intel-iommu.c index 27ebf4b9faef..c98b5109684b
+> > 100644 --- a/drivers/iommu/intel-iommu.c
+> > +++ b/drivers/iommu/intel-iommu.c
+> > @@ -5365,6 +5365,7 @@ intel_iommu_sva_invalidate(struct
+> > iommu_domain *domain, struct device *dev, struct device_domain_info
+> > *info; struct intel_iommu *iommu;
+> >  	unsigned long flags;
+> > +	unsigned long minsz;
+> >  	int cache_type;
+> >  	u8 bus, devfn;
+> >  	u16 did, sid;
+> > @@ -5385,6 +5386,21 @@ intel_iommu_sva_invalidate(struct
+> > iommu_domain *domain, struct device *dev, if (!(dmar_domain->flags
+> > & DOMAIN_FLAG_NESTING_MODE)) return -EINVAL;
+> >  
+> > +	minsz = offsetofend(struct iommu_cache_invalidate_info,
+> > padding);  
+> 
+> Would it still be better to look for the end of the last field that's
+> actually used to avoid the code churn and oversights if/when the
+> padding field does get used and renamed?
+> 
+My thought was that if the padding gets partially re-purposed, the
+remaining padding would still be valid for minsz check. The extension
+rule ensures that there is no size change other the variable size union
+at the end. So use padding would avoid the churn, or i am totally wrong?
 
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index df93ac258e01..9d94080bdad8 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -30,7 +30,7 @@
- 
- enum ima_show_type { IMA_SHOW_BINARY, IMA_SHOW_BINARY_NO_FIELD_LEN,
- 		     IMA_SHOW_BINARY_OLD_STRING_FMT, IMA_SHOW_ASCII };
--enum tpm_pcrs { TPM_PCR0 = 0, TPM_PCR8 = 8 };
-+enum tpm_pcrs { TPM_PCR0 = 0, TPM_PCR8 = 8, TPM_PCR10 = 10 };
- 
- /* digest size for IMA, fits SHA1 or MD5 */
- #define IMA_DIGEST_SIZE		SHA1_DIGEST_SIZE
-diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
-index 220b14920c37..6f0137bdaf61 100644
---- a/security/integrity/ima/ima_crypto.c
-+++ b/security/integrity/ima/ima_crypto.c
-@@ -809,7 +809,7 @@ static void ima_pcrread(u32 idx, struct tpm_digest *d)
- static int ima_calc_boot_aggregate_tfm(char *digest, u16 alg_id,
- 				       struct crypto_shash *tfm)
- {
--	struct tpm_digest d = { .alg_id = alg_id, .digest = {0} };
-+	struct tpm_digest d = { .alg_id = alg_id, .digest = {0} }, d0 = d;
- 	int rc;
- 	u32 i;
- 	SHASH_DESC_ON_STACK(shash, tfm);
-@@ -830,6 +830,15 @@ static int ima_calc_boot_aggregate_tfm(char *digest, u16 alg_id,
- 		rc = crypto_shash_update(shash, d.digest,
- 					 crypto_shash_digestsize(tfm));
- 	}
-+	/* extend cumulative sha1 over tpm registers 8-9 */
-+	for (i = TPM_PCR8; i < TPM_PCR10; i++) {
-+		ima_pcrread(i, &d);
-+		/* if not zero, accumulate with current aggregate */
-+		if (memcmp(d.digest, d0.digest,
-+					crypto_shash_digestsize(tfm) != 0))
-+			rc = crypto_shash_update(shash, d.digest,
-+					crypto_shash_digestsize(tfm));
-+	}
- 	if (!rc)
- 		crypto_shash_final(shash, digest);
- 	return rc;
--- 
-2.17.1
+> Per my comment on patch 1/, this also seems like where the device
+> specific IOMMU driver should also have the responsibility of receiving
+> a __user pointer to do the copy_from_user() here.  vfio can't know
+> which flags require which fields to make a UAPI with acceptable
+> compatibility guarantees otherwise.
+> 
+Right, VFIO cannot do compatibility guarantees, it is just seem to be
+that VFIO has enough information to copy_from_user sanely & safely and
+handle over to IOMMU. Please help define the roles/responsibilities in
+my other email. Then I will follow the guideline.
 
+> > +	if (inv_info->argsz < minsz)
+> > +		return -EINVAL;
+> > +
+> > +	/* Sanity check user filled invalidation dat sizes */
+> > +	if (inv_info->granularity == IOMMU_INV_GRANU_ADDR &&
+> > +		inv_info->argsz != offsetofend(struct
+> > iommu_cache_invalidate_info,
+> > +					addr_info))
+> > +		return -EINVAL;
+> > +
+> > +	if (inv_info->granularity == IOMMU_INV_GRANU_PASID &&
+> > +		inv_info->argsz != offsetofend(struct
+> > iommu_cache_invalidate_info,
+> > +					pasid_info))
+> > +		return -EINVAL;
+> > +
+> >  	spin_lock_irqsave(&device_domain_lock, flags);
+> >  	spin_lock(&iommu->lock);
+> >  	info = get_domain_info(dev);
+> > diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
+> > index 35b43fe819ed..64dc2c66dfff 100644
+> > --- a/drivers/iommu/intel-svm.c
+> > +++ b/drivers/iommu/intel-svm.c
+> > @@ -235,15 +235,27 @@ int intel_svm_bind_gpasid(struct iommu_domain
+> > *domain, struct device *dev, struct dmar_domain *dmar_domain;
+> >  	struct intel_svm_dev *sdev;
+> >  	struct intel_svm *svm;
+> > +	unsigned long minsz;
+> >  	int ret = 0;
+> >  
+> >  	if (WARN_ON(!iommu) || !data)
+> >  		return -EINVAL;
+> >  
+> > +	/*
+> > +	 * We mandate that no size change in IOMMU UAPI data
+> > before the
+> > +	 * variable size union at the end.
+> > +	 */
+> > +	minsz = offsetofend(struct iommu_gpasid_bind_data,
+> > padding);  
+> 
+> Same.  Thanks,
+> 
+> Alex
+> 
+> > +	if (data->argsz < minsz)
+> > +		return -EINVAL;
+> > +
+> >  	if (data->version != IOMMU_GPASID_BIND_VERSION_1 ||
+> >  	    data->format != IOMMU_PASID_FORMAT_INTEL_VTD)
+> >  		return -EINVAL;
+> >  
+> > +	if (data->argsz != offsetofend(struct
+> > iommu_gpasid_bind_data, vtd))
+> > +		return -EINVAL;
+> > +
+> >  	if (!dev_is_pci(dev))
+> >  		return -ENOTSUPP;
+> >    
+> 
+
+[Jacob Pan]
