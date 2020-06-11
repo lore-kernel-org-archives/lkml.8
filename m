@@ -2,159 +2,253 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 458CEC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 052F6C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D1602074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:44:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lTJMXLMK"
+	by mail.kernel.org (Postfix) with ESMTP id C742C2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:45:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591861552;
+	bh=HHcsutLMdEQy0hYT0qxq+tPnvS7NpBsbzyRAcI6BozI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=yRWRrqzFZezXqdETZ5SBW7g4CPjQLGzyDpWaIPEGId3EMdvV0Jk6KUlMAOJ+TrNTS
+	 mA8f4OyjGyiGpfjgIRcLfTispzNTNg36O7aDT+/gfZH5OAHXm6740HUE7yW9V9Ig+Q
+	 dbVA9GMr/BDbtsGZFxZKZVJcni49tDTJDbjMxjNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726868AbgFKHoO (ORCPT
+        id S1726820AbgFKHpv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 03:44:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53452 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbgFKHoN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 03:44:13 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40CA1C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 00:44:11 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id e2so2254549qvw.7
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 00:44:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SHKJLDk73oGNQU2dm2DBoF4CrJFguiOo1VrnpaTinr4=;
-        b=lTJMXLMKCkck6EnKyoUhMdEyJ/oYzqkutwDUO7rQUN+P1dbVyJxP35Hh8w1K1oYUKt
-         ptnVjKhWSCp0fkzvHooqBvz9Y6/J9ZCACQIgTBC/QRjvbFV9xnCV5uZLipSp38uQQ0OQ
-         ki2s0yBFQjj34mAB5inEZIIkjDyW23TozjlfzZn7hunEV8jda1rZdUYGIhCcIIHNSyX6
-         HCyBc5Tuw+AZTlQuv8vT27ERZs9eAHNxVfCP57LBXu2KlxoaX/rVJusfzUIiDUqn9o44
-         45lj4UC1tD75OiYmwO/399lTi6M5na7HFjBZnwj0nsA27QNJvSx3m5OZlNixcBoq40zk
-         Thow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SHKJLDk73oGNQU2dm2DBoF4CrJFguiOo1VrnpaTinr4=;
-        b=ApxkJHsgEq4jAqVZIkitzy8/i4Fxblbi14nhMntLkJ47UaVVToMztTukp++lZN87ov
-         lR4PEDg9fBexeLQLe0bH//3AwY7pEye9aUL1JiQnYTpSo7LqraeTfth4MjS1hQlk8rz1
-         Ohv7O7Yza+hyffb8l/WyBlX45Dp69qyZfo1tusPGjPJ34PZTYrDaAyvym/fVImyQEuUW
-         cqBi1LuodyMpORALSxHf9/fZ/Rl/b9KEnPbZAM8YgBFyCGd4rjCF7Yr7DMjDYPrR2sUm
-         Msqwiu123B+ugm44L3AKHFIVyzoExwSzamG5TBINpYrgt9SUi+OfysTNiSj6dOxF3QL7
-         Bj9A==
-X-Gm-Message-State: AOAM532zpcTetloea6CayNfkDgAKiN5TpWwTqiLQ5Y5FbkSeCjkyR871
-        VR6Cl2P39KApjdKgwwEFrbKU6oHIpkizECoVysgmkg==
-X-Google-Smtp-Source: ABdhPJz1KB7fhGyJS65Caw+Sj2mM22hnvjB7Ze94vA8b+z284SPnzDHDOKmEomSn4F7Y9iOJiQtcZGzLVDCDmWb9jQ0=
-X-Received: by 2002:ad4:4868:: with SMTP id u8mr6894946qvy.34.1591861450092;
- Thu, 11 Jun 2020 00:44:10 -0700 (PDT)
+        Thu, 11 Jun 2020 03:45:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39498 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726574AbgFKHpv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 03:45:51 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64AF92074B;
+        Thu, 11 Jun 2020 07:45:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591861549;
+        bh=HHcsutLMdEQy0hYT0qxq+tPnvS7NpBsbzyRAcI6BozI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=OWUUbmbEtPOu+tT21rSQZRsoxtRhlS6Sn8lxsyAgyqAcj66tcOYQ1wYxIhESMiTg4
+         mGhr/gaZi8Km1WclUs28JykMbTbXpx3XJWAvQVwOiSYfrvHKcdaflxMvmXk5ZYA3qq
+         59lakZrgmEBjrfw6ETIrm6QJktWitop/DUDEonsY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, jslaby@suse.cz,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Linux 4.4.227
+Date:   Thu, 11 Jun 2020 09:45:41 +0200
+Message-Id: <1591861541165242@kroah.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <000000000000760d0705a270ad0c@google.com> <69818a6c-7025-8950-da4b-7fdc065d90d6@redhat.com>
-In-Reply-To: <69818a6c-7025-8950-da4b-7fdc065d90d6@redhat.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 11 Jun 2020 09:43:58 +0200
-Message-ID: <CACT4Y+brpePBoR7EUwPiSvGAgo6bhvpKvLTiCaCfRSadzn6yRw@mail.gmail.com>
-Subject: Re: possible deadlock in send_sigio
-To:     Waiman Long <longman@redhat.com>
-Cc:     syzbot <syzbot+a9fb1457d720a55d6dc5@syzkaller.appspotmail.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>, allison@lohutok.net,
-        areber@redhat.com, aubrey.li@linux.intel.com,
-        Andrei Vagin <avagin@gmail.com>,
-        Bruce Fields <bfields@fieldses.org>,
-        Christian Brauner <christian@brauner.io>, cyphar@cyphar.com,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>, guro@fb.com,
-        Jeff Layton <jlayton@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Kees Cook <keescook@chromium.org>, linmiaohe@huawei.com,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@suse.com>, Ingo Molnar <mingo@kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, sargun@sargun.me,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 4:33 AM Waiman Long <longman@redhat.com> wrote:
->
-> On 4/4/20 1:55 AM, syzbot wrote:
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    bef7b2a7 Merge tag 'devicetree-for-5.7' of git://git.kerne..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=15f39c5de00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=91b674b8f0368e69
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=a9fb1457d720a55d6dc5
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1454c3b7e00000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12a22ac7e00000
-> >
-> > The bug was bisected to:
-> >
-> > commit 7bc3e6e55acf065500a24621f3b313e7e5998acf
-> > Author: Eric W. Biederman <ebiederm@xmission.com>
-> > Date:   Thu Feb 20 00:22:26 2020 +0000
-> >
-> >      proc: Use a list of inodes to flush from proc
-> >
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=165c4acde00000
-> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=155c4acde00000
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=115c4acde00000
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+a9fb1457d720a55d6dc5@syzkaller.appspotmail.com
-> > Fixes: 7bc3e6e55acf ("proc: Use a list of inodes to flush from proc")
-> >
-> > ========================================================
-> > WARNING: possible irq lock inversion dependency detected
-> > 5.6.0-syzkaller #0 Not tainted
-> > --------------------------------------------------------
-> > ksoftirqd/0/9 just changed the state of lock:
-> > ffffffff898090d8 (tasklist_lock){.+.?}-{2:2}, at: send_sigio+0xa9/0x340 fs/fcntl.c:800
-> > but this lock took another, SOFTIRQ-unsafe lock in the past:
-> >   (&pid->wait_pidfd){+.+.}-{2:2}
-> >
-> >
-> > and interrupts could create inverse lock ordering between them.
-> >
-> >
-> > other info that might help us debug this:
-> >   Possible interrupt unsafe locking scenario:
-> >
-> >         CPU0                    CPU1
-> >         ----                    ----
-> >    lock(&pid->wait_pidfd);
-> >                                 local_irq_disable();
-> >                                 lock(tasklist_lock);
-> >                                 lock(&pid->wait_pidfd);
-> >    <Interrupt>
-> >      lock(tasklist_lock);
-> >
-> >   *** DEADLOCK ***
->
-> That is a false positive. The qrwlock has the special property that it
-> becomes unfair (for read lock) at interrupt context. So unless it is
-> taking a write lock in the interrupt context, it won't go into deadlock.
-> The current lockdep code does not capture the full semantics of qrwlock
-> leading to this false positive.
+I'm announcing the release of the 4.4.227 kernel.
 
-Hi Longman
+All users of the 4.4 kernel series must upgrade.
 
-Thanks for looking into this.
-Now the question is: how should we change lockdep annotations to fix this bug?
+The updated 4.4.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.4.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
+
+thanks,
+
+greg k-h
+
+------------
+
+ Documentation/ABI/testing/sysfs-devices-system-cpu              |    1 
+ Documentation/hw-vuln/special-register-buffer-data-sampling.rst |  149 ++++++++++
+ Documentation/kernel-parameters.txt                             |   20 +
+ Makefile                                                        |    2 
+ arch/arc/kernel/setup.c                                         |    5 
+ arch/s390/kernel/mcount.S                                       |    1 
+ arch/x86/include/asm/acpi.h                                     |    2 
+ arch/x86/include/asm/cpu_device_id.h                            |   27 +
+ arch/x86/include/asm/cpufeatures.h                              |    2 
+ arch/x86/include/asm/msr-index.h                                |    4 
+ arch/x86/include/asm/processor.h                                |    2 
+ arch/x86/kernel/amd_nb.c                                        |    2 
+ arch/x86/kernel/asm-offsets_32.c                                |    2 
+ arch/x86/kernel/cpu/amd.c                                       |   26 -
+ arch/x86/kernel/cpu/bugs.c                                      |  106 +++++++
+ arch/x86/kernel/cpu/centaur.c                                   |    4 
+ arch/x86/kernel/cpu/common.c                                    |   62 +++-
+ arch/x86/kernel/cpu/cpu.h                                       |    1 
+ arch/x86/kernel/cpu/cyrix.c                                     |    2 
+ arch/x86/kernel/cpu/intel.c                                     |   20 -
+ arch/x86/kernel/cpu/match.c                                     |    7 
+ arch/x86/kernel/cpu/microcode/intel.c                           |    4 
+ arch/x86/kernel/cpu/mtrr/generic.c                              |    2 
+ arch/x86/kernel/cpu/mtrr/main.c                                 |    4 
+ arch/x86/kernel/cpu/perf_event_intel.c                          |    2 
+ arch/x86/kernel/cpu/perf_event_intel_lbr.c                      |    2 
+ arch/x86/kernel/cpu/perf_event_p6.c                             |    2 
+ arch/x86/kernel/cpu/proc.c                                      |    4 
+ arch/x86/kernel/head_32.S                                       |    4 
+ arch/x86/kernel/mpparse.c                                       |    2 
+ arch/x86/mm/mmio-mod.c                                          |    4 
+ drivers/base/cpu.c                                              |    8 
+ drivers/char/hw_random/via-rng.c                                |    2 
+ drivers/cpufreq/acpi-cpufreq.c                                  |    2 
+ drivers/cpufreq/longhaul.c                                      |    6 
+ drivers/cpufreq/p4-clockmod.c                                   |    2 
+ drivers/cpufreq/powernow-k7.c                                   |    2 
+ drivers/cpufreq/speedstep-centrino.c                            |    4 
+ drivers/cpufreq/speedstep-lib.c                                 |    6 
+ drivers/crypto/padlock-aes.c                                    |    2 
+ drivers/edac/amd64_edac.c                                       |    2 
+ drivers/edac/mce_amd.c                                          |    2 
+ drivers/hwmon/coretemp.c                                        |    6 
+ drivers/hwmon/hwmon-vid.c                                       |    2 
+ drivers/hwmon/k10temp.c                                         |    2 
+ drivers/hwmon/k8temp.c                                          |    2 
+ drivers/iio/light/vcnl4000.c                                    |    6 
+ drivers/infiniband/hw/mlx4/mr.c                                 |    7 
+ drivers/net/can/slcan.c                                         |    3 
+ drivers/net/ethernet/apple/bmac.c                               |    2 
+ drivers/net/ethernet/freescale/ucc_geth.c                       |   13 
+ drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c             |   13 
+ drivers/net/ppp/pppoe.c                                         |    3 
+ drivers/net/slip/slip.c                                         |    3 
+ drivers/nfc/st21nfca/dep.c                                      |    4 
+ drivers/platform/x86/acer-wmi.c                                 |    9 
+ drivers/scsi/scsi_devinfo.c                                     |   23 -
+ drivers/scsi/ufs/ufshcd.c                                       |    1 
+ drivers/spi/spi-dw.c                                            |    3 
+ drivers/staging/rtl8712/wifi.h                                  |    9 
+ drivers/tty/vt/keyboard.c                                       |   26 +
+ drivers/usb/gadget/function/f_uac2.c                            |    4 
+ drivers/usb/serial/option.c                                     |    4 
+ drivers/usb/serial/qcserial.c                                   |    1 
+ drivers/usb/serial/usb_wwan.c                                   |    4 
+ drivers/video/fbdev/geode/video_gx.c                            |    2 
+ include/linux/mod_devicetable.h                                 |    6 
+ include/uapi/linux/mmc/ioctl.h                                  |    1 
+ kernel/events/uprobes.c                                         |   14 
+ net/ipv4/devinet.c                                              |    1 
+ net/ipv6/esp6.c                                                 |    4 
+ net/l2tp/l2tp_core.c                                            |    2 
+ net/l2tp/l2tp_ip.c                                              |   28 +
+ net/l2tp/l2tp_ip6.c                                             |   28 +
+ net/vmw_vsock/af_vsock.c                                        |    2 
+ sound/pci/hda/patch_realtek.c                                   |    3 
+ 76 files changed, 600 insertions(+), 156 deletions(-)
+
+Ben Hutchings (1):
+      slcan: Fix double-free on slcan_open() error path
+
+Bin Liu (1):
+      USB: serial: usb_wwan: do not resubmit rx urb on fatal errors
+
+Can Guo (1):
+      scsi: ufs: Release clock if DMA map fails
+
+Christophe Jaillet (1):
+      IB/mlx4: Fix an error handling path in 'mlx4_ib_rereg_user_mr()'
+
+Chuhong Yuan (1):
+      NFC: st21nfca: add missed kfree_skb() in an error path
+
+Daniele Palmas (1):
+      USB: serial: option: add Telit LE910C1-EUX compositions
+
+Dmitry Torokhov (1):
+      vt: keyboard: avoid signed integer overflow in k_ascii
+
+Eric Dumazet (2):
+      l2tp: add sk_family checks to l2tp_validate_socket
+      l2tp: do not use inet_hash()/inet_unhash()
+
+Eugeniu Rosca (1):
+      usb: gadget: f_uac2: fix error handling in afunc_bind (again)
+
+Eugeniy Paltsev (1):
+      ARC: Fix ICCM & DCCM runtime size checks
+
+Greg Kroah-Hartman (1):
+      Linux 4.4.227
+
+Guillaume Nault (1):
+      pppoe: only process PADT targeted at local interfaces
+
+Hannes Reinecke (1):
+      scsi: scsi_devinfo: fixup string compare
+
+Jeremy Kerr (1):
+      net: bmac: Fix read of MAC address from ROM
+
+Jia Zhang (1):
+      x86/cpu: Rename cpu_data.x86_mask to cpu_data.x86_stepping
+
+Jonathan McDowell (1):
+      net: ethernet: stmmac: Enable interface clocks on probe for IPQ806x
+
+Josh Poimboeuf (1):
+      x86/speculation: Add Ivy Bridge to affected list
+
+Jérôme Pouiller (1):
+      mmc: fix compilation of user API
+
+Lee, Chun-Yi (1):
+      platform/x86: acer-wmi: setup accelerometer when ACPI device was found
+
+Mark Gross (4):
+      x86/cpu: Add a steppings field to struct x86_cpu_id
+      x86/cpu: Add 'table' argument to cpu_matches()
+      x86/speculation: Add Special Register Buffer Data Sampling (SRBDS) mitigation
+      x86/speculation: Add SRBDS vulnerability and mitigation documentation
+
+Mathieu Othacehe (1):
+      iio: vcnl4000: Fix i2c swapped word reading.
+
+Matt Jolly (1):
+      USB: serial: qcserial: add DW5816e QDL support
+
+Nathan Chancellor (1):
+      x86/mmiotrace: Use cpumask_available() for cpumask_var_t variables
+
+Oleg Nesterov (1):
+      uprobes: ensure that uprobe->offset and ->ref_ctr_offset are properly aligned
+
+Pascal Terjan (1):
+      staging: rtl8712: Fix IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK
+
+Stefano Garzarella (1):
+      vsock: fix timeout in vsock_accept()
+
+Takashi Iwai (1):
+      ALSA: hda - No loopback on ALC299 codec
+
+Valentin Longchamp (1):
+      net/ethernet/freescale: rework quiesce/activate for ucc_geth
+
+Vasily Gorbik (1):
+      s390/ftrace: save traced function caller
+
+Xinwei Kong (1):
+      spi: dw: use "smp_mb()" to avoid sending spi data error
+
+Yang Yingliang (1):
+      devinet: fix memleak in inetdev_init()
+
+Zhen Lei (1):
+      esp6: fix memleak on error path in esp6_input
+
+yangerkun (1):
+      slip: not call free_netdev before rtnl_unlock in slip_open
+
