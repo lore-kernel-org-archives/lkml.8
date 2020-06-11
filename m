@@ -7,31 +7,31 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE38C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 19:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D02C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 19:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A23A3206A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 19:18:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46956206A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 19:18:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728447AbgFKTS0 (ORCPT
+        id S1728461AbgFKTS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 15:18:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48070 "EHLO
+        Thu, 11 Jun 2020 15:18:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726769AbgFKTSA (ORCPT
+        with ESMTP id S1726727AbgFKTR7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 15:18:00 -0400
+        Thu, 11 Jun 2020 15:17:59 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04876C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 12:18:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62195C08C5D1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 12:17:59 -0700 (PDT)
 Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <afa@pengutronix.de>)
-        id 1jjSi2-0002KK-G7; Thu, 11 Jun 2020 21:17:54 +0200
+        id 1jjSi1-0002J6-Oi; Thu, 11 Jun 2020 21:17:53 +0200
 Received: from afa by dude.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <afa@pengutronix.de>)
-        id 1jjSi2-00010A-6F; Thu, 11 Jun 2020 21:17:54 +0200
+        id 1jjSi1-0000yP-6Y; Thu, 11 Jun 2020 21:17:53 +0200
 From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
 To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
         Guenter Roeck <linux@roeck-us.net>,
@@ -39,9 +39,9 @@ To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
 Cc:     linux-watchdog@vger.kernel.org, kernel@pengutronix.de,
         Ahmad Fatoum <a.fatoum@pengutronix.de>, stable@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v1 4/8] watchdog: f71808e_wdt: clear watchdog timeout occurred flag
-Date:   Thu, 11 Jun 2020 21:17:45 +0200
-Message-Id: <20200611191750.28096-5-a.fatoum@pengutronix.de>
+Subject: [PATCH v1 2/8] watchdog: f71808e_wdt: indicate WDIOF_CARDRESET support in watchdog_info.options
+Date:   Thu, 11 Jun 2020 21:17:43 +0200
+Message-Id: <20200611191750.28096-3-a.fatoum@pengutronix.de>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200611191750.28096-1-a.fatoum@pengutronix.de>
 References: <20200611191750.28096-1-a.fatoum@pengutronix.de>
@@ -56,44 +56,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The flag indicating a watchdog timeout having occurred normally persists
-till Power-On Reset of the Fintek Super I/O chip. The user can clear it
-by writing a `1' to the bit.
-
-The driver doesn't offer a restart method, so regular system reboot
-might not reset the Super I/O and if the watchdog isn't enabled, we
-won't touch the register containing the bit on the next boot.
-In this case all subsequent regular reboots will be wrongly flagged
-by the driver as being caused by the watchdog.
-
-Fix this by having the flag cleared after read. This is also done by
-other drivers like those for the i6300esb and mpc8xxx_wdt.
+The driver supports populating bootstatus with WDIOF_CARDRESET, but so
+far userspace couldn't portably determine whether absence of this flag
+meant no watchdog reset or no driver support. Or-in the bit to fix this.
 
 Fixes: b97cb21a4634 ("watchdog: f71808e_wdt: Fix WDTMOUT_STS register read")
 Cc: stable@vger.kernel.org
 Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
 ---
- drivers/watchdog/f71808e_wdt.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/watchdog/f71808e_wdt.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/watchdog/f71808e_wdt.c b/drivers/watchdog/f71808e_wdt.c
-index 8e5584c54423..26bf366aebc2 100644
+index a3c44d75d80e..c8ce80c13403 100644
 --- a/drivers/watchdog/f71808e_wdt.c
 +++ b/drivers/watchdog/f71808e_wdt.c
-@@ -706,6 +706,13 @@ static int __init watchdog_init(int sioaddr)
- 	wdt_conf = superio_inb(sioaddr, F71808FG_REG_WDT_CONF);
- 	watchdog.caused_reboot = wdt_conf & BIT(F71808FG_FLAG_WDTMOUT_STS);
+@@ -692,7 +692,8 @@ static int __init watchdog_init(int sioaddr)
+ 	watchdog.sioaddr = sioaddr;
+ 	watchdog.ident.options = WDIOC_SETTIMEOUT
+ 				| WDIOF_MAGICCLOSE
+-				| WDIOF_KEEPALIVEPING;
++				| WDIOF_KEEPALIVEPING
++				| WDIOF_CARDRESET;
  
-+	/*
-+	 * We don't want WDTMOUT_STS to stick around till regular reboot.
-+	 * Write 1 to the bit to clear it to zero.
-+	 */
-+	superio_outb(sioaddr, F71808FG_REG_WDT_CONF,
-+		     wdt_conf | BIT(F71808FG_FLAG_WDTMOUT_STS));
-+
- 	superio_exit(sioaddr);
- 
- 	err = watchdog_set_timeout(timeout);
+ 	snprintf(watchdog.ident.identity,
+ 		sizeof(watchdog.ident.identity), "%s watchdog",
 -- 
 2.27.0
 
