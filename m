@@ -2,114 +2,111 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E3AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 765D8C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:21:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1ACB02072F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EF0B2078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:21:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c4PrpNyd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbgFKCVd (ORCPT
+        id S1726482AbgFKCV4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 22:21:33 -0400
-Received: from mga11.intel.com ([192.55.52.93]:54271 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726163AbgFKCVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 22:21:33 -0400
-IronPort-SDR: WjpSEb5mJSCFMt7WcSmNAmGZ7GKpI9RKKNCXvImrgwc9k5ZDnL3Eb7lCM49GZxFOAhpRdZJi2c
- O5DZm94IxqDg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2020 19:21:33 -0700
-IronPort-SDR: crHdxxHrEsrSH17RRKCC8W6WOJ1FhQ0Lzw7W/xbrTzgcSHk2h/TNE66eFmKFisD6/Q9o1nubH8
- hiiYrLp2H2hA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,498,1583222400"; 
-   d="scan'208";a="473644260"
-Received: from sshen-mobl1.ccr.corp.intel.com (HELO [10.255.28.22]) ([10.255.28.22])
-  by fmsmga005.fm.intel.com with ESMTP; 10 Jun 2020 19:21:12 -0700
-Subject: Re: [kmemleak] b751c52bb5: BUG:kernel_hang_in_boot_stage
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        kernel test robot <rong.a.chen@intel.com>
-Cc:     Nicolas Boichat <drinkcat@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-References: <20200610075156.GE12456@shao2-debian>
- <20200610105640.GB26099@gaia>
-From:   Li Zhijian <zhijianx.li@intel.com>
-Message-ID: <8795ed06-d67f-7bfe-506b-4f1d79e0170e@intel.com>
-Date:   Thu, 11 Jun 2020 10:20:22 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Wed, 10 Jun 2020 22:21:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60718 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726163AbgFKCVz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 22:21:55 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33FF3C08C5C2
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 19:21:55 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id e4so5033616ljn.4
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 19:21:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/qdV7kTEUj8MO2b1jDlzL2L6E3oB0hXT8qJRrm2qFQc=;
+        b=c4PrpNydhvWfQH0v9XSMys+WCbroecCmby1mCjkKRiyuzxYR9A5GEddYQlO9jlVl/9
+         PYELc1qFlanvSppAc2NDWPTFm73nOZ31dHzsD4r/hUfzhq6gDP1V+T1HNNWZ0VDboniz
+         UzzQjXCduN4jtMNG5Uopb/MknTZZBJVzkwaSw4tZ2sMIZ7Fwl+/BkSNzHp2gLh4WzLsp
+         utTQfkyV/0vVFWCeF4wjWR7qILW2RrzbqMNVrugPeucUAFSE72UgwX5yEapBqt6k0V23
+         upNkRjq0V/feFjXxZkuVo6Xhrw4u6Vohkf/vucM36axE7rJ6fDlHVUnatnd4Y7hqeKvX
+         6WAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/qdV7kTEUj8MO2b1jDlzL2L6E3oB0hXT8qJRrm2qFQc=;
+        b=eC1OjvbnR4q0GaazdwicHjm76WUEGNuWFgpd7V3+Va9FGwhsaEhwjOghsZCdmf4rlc
+         xFXxp/TSX4pDSJz10DwDHShWX8OJ3Ffi943NPsLk0kTMFhon3Qn/4/4X+6DrIAKQ6Sa4
+         RGzbYixcsWbuDWzIaJyoJdIP2fDmZeaAHKPvReZshJ3h7faL+ZSVjTM5jbbn9kcY2Vi3
+         iNHfwhd4LDa6TurSmRxCdhFNiOnUKvZfsLL6NgLDROnwprPg35UIvE6z+zIbIrRnYDHQ
+         PdgiUFr+f1uJ35sIBF9ITlGR17MNX1nOyY2VJ3CaFn2FX+EPQuomrJp731R3LFR4PLXS
+         RA5w==
+X-Gm-Message-State: AOAM533DK5olSo42dp+++nUOMfUJvbwfsGDGPLC4ZE0hNuXwV1A20/oK
+        u2yXKl+64xWcggeS8y68NXWrqkYiMvIVBjVIVe0ffg==
+X-Google-Smtp-Source: ABdhPJyJ6thR5cdQysfqBhuFXOJjtSaKK4QLT87l9YsZ6BXGAe7BkWYvSbzgNy3CzWa/2SpSjyJwk/1kLXvtppfKx4w=
+X-Received: by 2002:a05:651c:38b:: with SMTP id e11mr2003236ljp.415.1591842113338;
+ Wed, 10 Jun 2020 19:21:53 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200610105640.GB26099@gaia>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20200302193630.68771-1-minchan@kernel.org> <20200302193630.68771-8-minchan@kernel.org>
+In-Reply-To: <20200302193630.68771-8-minchan@kernel.org>
+From:   Jann Horn <jannh@google.com>
+Date:   Thu, 11 Jun 2020 04:21:27 +0200
+Message-ID: <CAG48ez1WfUN2eZyiQL0thsO3cYW6TgC-NzEj=gP2KfkJ7BdK=Q@mail.gmail.com>
+Subject: Re: [PATCH v7 7/7] mm/madvise: allow KSM hints for remote API
+To:     Oleksandr Natalenko <oleksandr@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        sj38.park@gmail.com, Minchan Kim <minchan@kernel.org>,
+        SeongJae Park <sjpark@amazon.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 6/10/20 6:56 PM, Catalin Marinas wrote:
-> On Wed, Jun 10, 2020 at 03:51:56PM +0800, kernel test robot wrote:
->> FYI, we noticed the following commit (built with gcc-7):
->>
->> commit: b751c52bb587ae66f773b15204ef7a147467f4c7 ("kmemleak: increase DEBUG_KMEMLEAK_EARLY_LOG_SIZE default to 16K")
->> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
->>
->> in testcase: boot
->>
->> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 8G
-> [...]
->> BUG: kernel hang in boot stage
->>
->> To reproduce:
->>
->>          # build kernel
->> 	cd linux
->> 	cp config-5.3.0-11789-gb751c52bb587a .config
->> 	make HOSTCC=gcc-7 CC=gcc-7 ARCH=i386 olddefconfig prepare modules_prepare bzImage
-> I've never tried kmemleak on i386.
+On Mon, Mar 2, 2020 at 8:36 PM Minchan Kim <minchan@kernel.org> wrote:
+> From: Oleksandr Natalenko <oleksandr@redhat.com>
 >
-> Anyway, I'm not sure what caused the hang (or whether it's a hang at
-> all) but I suspect prior to the above commit, kmemleak probably just
-> disabled itself (early log  buffer exceeded).
-
-> So the bug may have been
-> there already,
-I think so
-
-> only that kmemleak started working and tripped over it
-> when the log buffer increased.
+> It all began with the fact that KSM works only on memory that is marked
+> by madvise(). And the only way to get around that is to either:
+[...]
+> To overcome this restriction, lets employ a new remote madvise API. This
+> can be used by some small userspace helper daemon that will do auto-KSM
+> job for us.
 >
-> Is there a chance that the kernel got much slower with kmemleak enabled
-> and the test scripts timed out?
+> I think of two major consumers of remote KSM hints:
+[...]
+>   * heavy applications, that can be run in multiple instances, not
+>     limited to opensource ones like Firefox, but also those that cannot be
+>     modified since they are binary-only and, maybe, statically linked.
 
-> Does this problem still exist with the latest mainline?
-Yes, that's true.
-
-Thanks
-Zhijian (0Day CI team)
->
-> Thanks.
->
-
+Just as a note, since you're mentioning Firefox as a usecase: Memory
+deduplication between browser renderers creates new side channels and
+is a questionable idea from a security standpoint. Memory
+deduplication is (mostly) fine if either all involved processes are
+trusted or no involved processes contain secrets, but browsers usually
+run tons of untrusted code while at the same time containing lots of
+valuable secrets.
