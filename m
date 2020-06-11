@@ -2,91 +2,216 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F601C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F235C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7462820792
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:16:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="hIXDzAZn"
+	by mail.kernel.org (Postfix) with ESMTP id 40AF0206A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:18:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591888721;
+	bh=leNzroWM6X5csAU2B+LU3yJk8Krd5o+WSEXtpzMjR9k=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Kr9F/xBEMiCKR+X+2Xo9m6O3aUF9VWB0iM9XNS3R/ZBR9eVYh/MWr2Ef5bwZ3+GPW
+	 6KVzCgeUfieBqNKuPxXtzNJI8S9wkVVCBv+f1/XwXyPx9PC8Og8l8Ec2gLJ5iItUnm
+	 d9E8l2wdPmu+A30I545LntIFleyYDGKgzx5zDbJQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728533AbgFKPQd (ORCPT
+        id S1728485AbgFKPSk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 11:16:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39080 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728462AbgFKPQd (ORCPT
+        Thu, 11 Jun 2020 11:18:40 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:37719 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728455AbgFKPSj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 11:16:33 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9754C08C5C2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 08:16:32 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id a127so2788678pfa.12
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 08:16:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5Wzj/6YJUHkYVTM6L7OjwBpDRpF+0Bo6tec4TfXLqcw=;
-        b=hIXDzAZnr9+g6rNc5rgs19E0NWXMj94q0FcoRTIFO07Bu3APgCTC2Udk222dEj8Veb
-         xdlrNLbqHHGAOTqVf9fsKCyeuYSwUZngTGRosPxF4febY+lmkPCtFWUdlGNqd+pk3Kb9
-         YIYTp4c5DyalNb7Q4KzQ01rzqR+rpFWXhSKcyange+wCzyVs7YPgtr4jQTk3HrLXDLea
-         rAHCa/21pG0JMRaQRKxAlzvhvVrrh3DMNS9OP1qs/EqjMu33Zekele5WpFL3TorGvc9r
-         3Hom9bGQxaTUythX/J9Zp4zWe3ESVKJp8Ja+6EMmcS3YNO3RDjp4Z3oPFDoIcccZ40Dq
-         +XuQ==
+        Thu, 11 Jun 2020 11:18:39 -0400
+Received: by mail-io1-f67.google.com with SMTP id r2so6714818ioo.4;
+        Thu, 11 Jun 2020 08:18:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=5Wzj/6YJUHkYVTM6L7OjwBpDRpF+0Bo6tec4TfXLqcw=;
-        b=bLkXfGLBE1BZ9VzrPOE5wmySXXldDhtO3xnoz8EDoKS3HrV9HcfNyzMWkFnNp2RcN1
-         Gm+qWFeakS0Z0nO7eGBjJdMD/uMdX6ksluOPvrafJnpDsAPn2C62EoteE0QyJ/X09/cy
-         z9iQlDbE7GDnYEsadK2BkBnFVdFSIXs9sTN2CpcEj+ZbNmYsKnb8rLhsax/W6WaAyQ5r
-         vwUkz6xK6f4TCuONfWitnBJ6eP5Gom3CKSD1uAngkeSqDW1zOiDK+fysho6ruwOOFYp/
-         pjkSh0rvkUgrszWwRi4GjNXfGu+zahQNm7dJIvJ7Z1bOFuAcrnjBKyjIl62JoZ6lcFuq
-         Qx5A==
-X-Gm-Message-State: AOAM530EQfY1Tlko7nRVTsww8tS14fKdjEV42jnGzasFMNCMCN2PLoDd
-        YbAmF9ezJMeOSOOP0jSYBItvRDYWKQMxjA==
-X-Google-Smtp-Source: ABdhPJyxbwLNFGeh47w7TpUaWru6e0CkefHtWL0j+9FKnzj8KhAuJi3W+16DMcpUr84qEr2q3biO2g==
-X-Received: by 2002:a63:6b86:: with SMTP id g128mr7219789pgc.445.1591888591908;
-        Thu, 11 Jun 2020 08:16:31 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id j2sm3097654pjf.4.2020.06.11.08.16.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Jun 2020 08:16:31 -0700 (PDT)
-Subject: Re: [PATCH] umem: remove redundant initialization of variable ret
-To:     Colin King <colin.king@canonical.com>, linux-block@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200611143527.925712-1-colin.king@canonical.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <cec98bd3-9d88-60e9-21b3-b85d16348685@kernel.dk>
-Date:   Thu, 11 Jun 2020 09:16:28 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        bh=qewf9D0YCS3J7N1tva5v2BWLcm4vmSaFS/uNfMsMQOA=;
+        b=bojqiPx8fRYVI3oWEjkt2yGvM+7kPfxfB2STpytXlYupemo+LuEYoMMVn3WE4S2Lwz
+         z+S7mpmR+id0AJzkzj3CYkhZ6SUtVce5q5S2uUnajFGJCN1ow2FxK0/fjPK1Amz9Q7i/
+         4ihoWlNMl0/pDm7dwow+YwDQ3ydO4nnzkMEBAQzg1KDUhloPVp04e8vA7sXoJRxqXflG
+         UB2YmNdQQ1qHJM/9dwm1e6YwxJqNQ5mZnikehH9LPull04ednQK1cks5GLMCOOlPMixO
+         l1BtnREL2ifRK0fkYfJe14qlshRxFRtAZgXoH565jteCqgbqlrVqX1bx3DIdCxyjLfFv
+         pWuQ==
+X-Gm-Message-State: AOAM530lJ++j+uAZL1Jtpxqwa7E3X80AuCUC02JcrQW5U57IOIjvY4u6
+        YPw3cxMsffM2O7ZWltWVo36ZYUg=
+X-Google-Smtp-Source: ABdhPJyXSOEN50P1Ie0dxxhGQGFYjfCC/pbXW+7eha3EnGyI7HKavpUGqp8H/wYn/GK7u+yOFoyeZA==
+X-Received: by 2002:a5d:8e19:: with SMTP id e25mr9187308iod.36.1591888717457;
+        Thu, 11 Jun 2020 08:18:37 -0700 (PDT)
+Received: from xps15.herring.priv ([64.188.179.251])
+        by smtp.googlemail.com with ESMTPSA id b22sm1611332ios.21.2020.06.11.08.18.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2020 08:18:37 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org
+Subject: [PATCH] dt-bindings: phy: qcom: Fix missing 'ranges' and example addresses
+Date:   Thu, 11 Jun 2020 09:18:35 -0600
+Message-Id: <20200611151835.1100883-1-robh@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200611143527.925712-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/11/20 8:35 AM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The variable ret is being initialized with a value that is never read
-> and it is being updated later with a new value.  The initialization is
-> redundant and can be removed.
+The QCom QMP PHY bindings have child nodes with translatable (MMIO)
+addresses, so a 'ranges' property is required in the parent node.
+Additionally, the examples default to 1 address and size cell, so let's
+fix that, too.
 
-Applied, thanks.
+Fixes: ccf51c1cedfd ("dt-bindings: phy: qcom,qmp: Convert QMP PHY bindings to yaml")
+Cc: Andy Gross <agross@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: Manu Gautam <mgautam@codeaurora.org>
+Cc: linux-arm-msm@vger.kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+I'll take this via the DT tree for rc1.
 
+ .../devicetree/bindings/phy/qcom,qmp-phy.yaml | 20 ++++++----
+ .../bindings/phy/qcom,qmp-usb3-dp-phy.yaml    | 38 ++++++++++---------
+ 2 files changed, 33 insertions(+), 25 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
+index 973b2d196f46..f80f8896d527 100644
+--- a/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
++++ b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
+@@ -44,6 +44,8 @@ properties:
+   "#size-cells":
+     enum: [ 1, 2 ]
+ 
++  ranges: true
++
+   clocks:
+     minItems: 1
+     maxItems: 4
+@@ -87,6 +89,7 @@ required:
+   - "#clock-cells"
+   - "#address-cells"
+   - "#size-cells"
++  - ranges
+   - clocks
+   - clock-names
+   - resets
+@@ -281,10 +284,11 @@ examples:
+     #include <dt-bindings/clock/qcom,gcc-sdm845.h>
+     usb_2_qmpphy: phy-wrapper@88eb000 {
+         compatible = "qcom,sdm845-qmp-usb3-uni-phy";
+-        reg = <0 0x088eb000 0 0x18c>;
++        reg = <0x088eb000 0x18c>;
+         #clock-cells = <1>;
+-        #address-cells = <2>;
+-        #size-cells = <2>;
++        #address-cells = <1>;
++        #size-cells = <1>;
++        ranges = <0x0 0x088eb000 0x2000>;
+ 
+         clocks = <&gcc GCC_USB3_SEC_PHY_AUX_CLK >,
+                  <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
+@@ -299,11 +303,11 @@ examples:
+         vdda-phy-supply = <&vdda_usb2_ss_1p2>;
+         vdda-pll-supply = <&vdda_usb2_ss_core>;
+ 
+-        usb_2_ssphy: phy@88eb200 {
+-                reg = <0 0x088eb200 0 0x128>,
+-                      <0 0x088eb400 0 0x1fc>,
+-                      <0 0x088eb800 0 0x218>,
+-                      <0 0x088eb600 0 0x70>;
++        usb_2_ssphy: phy@200 {
++                reg = <0x200 0x128>,
++                      <0x400 0x1fc>,
++                      <0x800 0x218>,
++                      <0x600 0x70>;
+                 #clock-cells = <0>;
+                 #phy-cells = <0>;
+                 clocks = <&gcc GCC_USB3_SEC_PHY_PIPE_CLK>;
+diff --git a/Documentation/devicetree/bindings/phy/qcom,qmp-usb3-dp-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qmp-usb3-dp-phy.yaml
+index b770e637df1d..6e2487501457 100644
+--- a/Documentation/devicetree/bindings/phy/qcom,qmp-usb3-dp-phy.yaml
++++ b/Documentation/devicetree/bindings/phy/qcom,qmp-usb3-dp-phy.yaml
+@@ -34,6 +34,8 @@ properties:
+   "#size-cells":
+     enum: [ 1, 2 ]
+ 
++  ranges: true
++
+   clocks:
+     items:
+       - description: Phy aux clock.
+@@ -86,6 +88,7 @@ required:
+   - "#clock-cells"
+   - "#address-cells"
+   - "#size-cells"
++  - ranges
+   - clocks
+   - clock-names
+   - resets
+@@ -100,12 +103,13 @@ examples:
+     #include <dt-bindings/clock/qcom,gcc-sdm845.h>
+     usb_1_qmpphy: phy-wrapper@88e9000 {
+         compatible = "qcom,sdm845-qmp-usb3-phy";
+-        reg = <0 0x088e9000 0 0x18c>,
+-              <0 0x088e8000 0 0x10>;
++        reg = <0x088e9000 0x18c>,
++              <0x088e8000 0x10>;
+         reg-names = "reg-base", "dp_com";
+         #clock-cells = <1>;
+-        #address-cells = <2>;
+-        #size-cells = <2>;
++        #address-cells = <1>;
++        #size-cells = <1>;
++        ranges = <0x0 0x088e9000 0x1000>;
+ 
+         clocks = <&gcc GCC_USB3_PRIM_PHY_AUX_CLK>,
+                  <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
+@@ -120,17 +124,17 @@ examples:
+         vdda-phy-supply = <&vdda_usb2_ss_1p2>;
+         vdda-pll-supply = <&vdda_usb2_ss_core>;
+ 
+-        usb_1_ssphy: phy@88e9200 {
+-                reg = <0 0x088e9200 0 0x128>,
+-                      <0 0x088e9400 0 0x200>,
+-                      <0 0x088e9c00 0 0x218>,
+-                      <0 0x088e9600 0 0x128>,
+-                      <0 0x088e9800 0 0x200>,
+-                      <0 0x088e9a00 0 0x100>;
+-                #clock-cells = <0>;
+-                #phy-cells = <0>;
+-                clocks = <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>;
+-                clock-names = "pipe0";
+-                clock-output-names = "usb3_phy_pipe_clk_src";
+-            };
++        phy@200 {
++            reg = <0x200 0x128>,
++                  <0x400 0x200>,
++                  <0xc00 0x218>,
++                  <0x600 0x128>,
++                  <0x800 0x200>,
++                  <0xa00 0x100>;
++            #clock-cells = <0>;
++            #phy-cells = <0>;
++            clocks = <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>;
++            clock-names = "pipe0";
++            clock-output-names = "usb3_phy_pipe_clk_src";
+         };
++    };
 -- 
-Jens Axboe
+2.25.1
 
