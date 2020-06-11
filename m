@@ -2,80 +2,72 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00089C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 00:36:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2F1C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 00:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC69D206F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 00:36:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80F37206F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 00:37:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727045AbgFKAgt (ORCPT
+        id S1727064AbgFKAhq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 20:36:49 -0400
-Received: from mxhk.zte.com.cn ([63.217.80.70]:10240 "EHLO mxhk.zte.com.cn"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726957AbgFKAgs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 20:36:48 -0400
-Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
-        by Forcepoint Email with ESMTPS id 3D71CE9261C3F7779FC7;
-        Thu, 11 Jun 2020 08:36:46 +0800 (CST)
-Received: from notes_smtp.zte.com.cn (notessmtp.zte.com.cn [10.30.1.239])
-        by mse-fl2.zte.com.cn with ESMTP id 05B0aic2092194;
-        Thu, 11 Jun 2020 08:36:44 +0800 (GMT-8)
-        (envelope-from wang.yi59@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2020061108371067-3897433 ;
-          Thu, 11 Jun 2020 08:37:10 +0800 
-From:   Yi Wang <wang.yi59@zte.com.cn>
-To:     davem@davemloft.net
-Cc:     kuba@kernel.org, mst@redhat.com, hkallweit1@gmail.com,
-        snelson@pensando.io, andriy.shevchenko@linux.intel.com,
-        xiyou.wangcong@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
-        wang.yi59@zte.com.cn, wang.liang82@zte.com.cn,
-        Liao Pingfang <liao.pingfang@zte.com.cn>
-Subject: [PATCH v2] net: atm: Remove the error message according to the atomic context
-Date:   Thu, 11 Jun 2020 08:38:50 +0800
-Message-Id: <1591835930-25941-1-git-send-email-wang.yi59@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2020-06-11 08:37:10,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2020-06-11 08:36:48,
-        Serialize complete at 2020-06-11 08:36:48
-X-MAIL: mse-fl2.zte.com.cn 05B0aic2092194
+        Wed, 10 Jun 2020 20:37:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44798 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726977AbgFKAhq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 20:37:46 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98B64C08C5C1;
+        Wed, 10 Jun 2020 17:37:45 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
+        id 1jjBDi-006jDe-TJ; Thu, 11 Jun 2020 00:37:27 +0000
+Date:   Thu, 11 Jun 2020 01:37:26 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>,
+        kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
+        Colin Walters <walters@verbum.org>,
+        syzbot <syzbot+d6ec23007e951dadf3de@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        overlayfs <linux-unionfs@vger.kernel.org>
+Subject: Re: [PATCH v2] ovl: provide real_file() and overlayfs
+ get_unmapped_area()
+Message-ID: <20200611003726.GY23230@ZenIV.linux.org.uk>
+References: <4ebd0429-f715-d523-4c09-43fa2c3bc338@oracle.com>
+ <202005281652.QNakLkW3%lkp@intel.com>
+ <365d83b8-3af7-2113-3a20-2aed51d9de91@oracle.com>
+ <CAJfpegtz=tzndsF=_1tYHewGwEgvqEOA_4zj8HCAqyFdKe6mag@mail.gmail.com>
+ <ffc00a9e-5c2f-0c3e-aa1e-9836b98f7b54@oracle.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ffc00a9e-5c2f-0c3e-aa1e-9836b98f7b54@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liao Pingfang <liao.pingfang@zte.com.cn>
+On Wed, Jun 10, 2020 at 05:13:52PM -0700, Mike Kravetz wrote:
 
-Looking into the context (atomic!) and the error message should be dropped.
+> To address this issue,
+> - Add a new file operation f_real while will return the underlying file.
+>   Only overlayfs provides a function for this operation.
+> - Add a new routine real_file() which can be used by core code get an
+>   underlying file.
+> - Update is_file_hugepages to get the real file.
 
-Signed-off-by: Liao Pingfang <liao.pingfang@zte.com.cn>
----
-Changes in v2: drop the error message instead of changing it.
+Egads...  So to find out whether it's a hugetlb you would
+	* check if a method is NULL
+	* if not, call it
+	* ... and check if the method table of the result is hugetlbfs one?
 
- net/atm/lec.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/net/atm/lec.c b/net/atm/lec.c
-index ca37f5a..997ce13 100644
---- a/net/atm/lec.c
-+++ b/net/atm/lec.c
-@@ -1537,7 +1537,6 @@ static struct lec_arp_table *make_entry(struct lec_priv *priv,
- 
- 	to_return = kzalloc(sizeof(struct lec_arp_table), GFP_ATOMIC);
- 	if (!to_return) {
--		pr_info("LEC: Arp entry kmalloc failed\n");
- 		return NULL;
- 	}
- 	ether_addr_copy(to_return->mac_addr, mac_addr);
--- 
-2.9.5
-
+Here's a radical suggestion: FMODE_HUGEPAGES.  Just have it set by
+->open() and let is_file_hugepages() check it.  In ->f_mode.  And
+make the bloody hugetlbfs_file_operations static, while we are at it.
