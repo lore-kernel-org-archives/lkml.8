@@ -2,88 +2,117 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E8E2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E8C0C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C321206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E51F206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:41:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bSVfWQej"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mLJu4gXz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbgFKChg (ORCPT
+        id S1726434AbgFKClF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 22:37:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34862 "EHLO
+        Wed, 10 Jun 2020 22:41:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726306AbgFKChf (ORCPT
+        with ESMTP id S1726279AbgFKClF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 22:37:35 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76162C08C5C1;
-        Wed, 10 Jun 2020 19:37:35 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id 202so2642782lfe.5;
-        Wed, 10 Jun 2020 19:37:35 -0700 (PDT)
+        Wed, 10 Jun 2020 22:41:05 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11BF8C08C5C1;
+        Wed, 10 Jun 2020 19:41:05 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id w9so3557998qtv.3;
+        Wed, 10 Jun 2020 19:41:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=H+PEFHyUXjNCEtnDDerXaMNGUi3G6eX8i5SlzQw9UMI=;
-        b=bSVfWQejXCjrLOj8aD59mpI6QkWd3hIqBjXK49cAsH8WRyy92kxtm0atwhhm+5W6kr
-         xGTReb9eBIElpXamEsVqLi2KDehDVKX2Rb8nuTm3sEemMn44vBuUbFIemxzorJIqDUOs
-         V2d0FBjlDVnLKMzP89OEqIicF6R7Oh/fZnavHYshnTs/IQWbbpCdwr55byyCb4cBk+o9
-         Vni3sI4Sm3Jbz8w+2rawif+8ZD8bqM5XgCX/d0g8f5hOyuedx5jpSx00zG8VgCRda37j
-         30fIHmcDNBjYxtRITEDLWSbw3/QPHuNlnMJFpkns5dPPQZjH7CA9ysuV7BCRCh78uxXy
-         E+NA==
+        h=from:to:subject:date:message-id;
+        bh=wTiC49GnZ5ZEBNWsG/S2XbISpIYn0F/SWZwBLcW/d2A=;
+        b=mLJu4gXzzMsz/IBbFLkr4QLmm3M3YXOfBvk576ubygCcnlm8I9VMZUgkm2nTfQ9ZSD
+         ONnGYD4+rO7gGeX7gzYNjf9AJlKUREeRHxupmKvL6xy8G2MJo5+MSg2AJJvHm7PBeNzz
+         IeQeL7DREZbwLWShJNRz7GZPUGTpCxrGwKej+sZXZXbZzUOIMtY6mPW47SP4TqXFc+4C
+         L6YgVDRl4nKgQw+VztXXtmdyrCv/RRaLDrzANJNs4rx5/Pj2skxlQfTUAX+QTCXmC2IT
+         YOf1XhQG2bPB6GmnYDQ6WwVJ/hLFCD2lVJykV0mYtGmjUNfZY24OwGBVQ2l1DwmoeUr5
+         bdCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H+PEFHyUXjNCEtnDDerXaMNGUi3G6eX8i5SlzQw9UMI=;
-        b=W4yFp0+milZF6H4n5Q26GM/6am69SiJGy86/Bt+nMD3iUlxZuycZFXgWDdGIkjSasr
-         YXcI49Fx4gDQVly8sqwD+fPjWURjchSiKbcfAEaqKjsOACHL0prU6yV70bc6VEu+CHfp
-         HycGvxVkmTuxakZeI1QPqZQeHtLgvXT1qmb1tCFy/UPiy3iNzPKegcv1IaOEk36aGiMQ
-         0XvOnR+LGLgKmlymBq9pHtlOUCFFgXN2u9YPGbNrAoYGYQv3uy2r/g+epfJv0c9l5xOM
-         NBD5lxxV/SEBKcYA4SVsGKPYOHdnzH1u0zspzziMU+pArGkUbgrwc5v+wDF2UCwbMj7L
-         H5zQ==
-X-Gm-Message-State: AOAM5306neTsJ2HHFvkfHFgXG9jM14Y54o9Wk/htNdq8bgm7q0WHrn7e
-        fg92MRNHrd2yp2xuHThx6giFE8avGJhRAU9ER00=
-X-Google-Smtp-Source: ABdhPJxWdTRGBWzD5BGjFzlGFy2xizTaM088b6o597jGy9OQ0toSHngXQPy6TPuvxL9N1Bpb6s2zEczlkz+VL65NfU0=
-X-Received: by 2002:a19:8453:: with SMTP id g80mr3137317lfd.167.1591843053787;
- Wed, 10 Jun 2020 19:37:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200610065846.3626-1-zhenzhong.duan@gmail.com>
- <20200610065846.3626-2-zhenzhong.duan@gmail.com> <20200610171912.GB1474@agluck-desk2.amr.corp.intel.com>
-In-Reply-To: <20200610171912.GB1474@agluck-desk2.amr.corp.intel.com>
-From:   Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Date:   Thu, 11 Jun 2020 10:37:22 +0800
-Message-ID: <CAFH1YnP_nreyKmHOa24d1XkrFECQg3yFjAJ04FJqWub__SjVxg@mail.gmail.com>
-Subject: Re: [PATCH] EDAC/mc: call edac_inc_ue_error() before panic
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-edac@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        mchehab@kernel.org, james.morse@arm.com, rrichter@marvell.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=wTiC49GnZ5ZEBNWsG/S2XbISpIYn0F/SWZwBLcW/d2A=;
+        b=Z1xtnRsdWiiBf7OnZQAuOtZEZK1qWFtGoqDm4x63aXQwvEKd26Ns8ODyu4qOLJth5E
+         Shm8Wx2as5F5pWTugdRsd63u8dVJJ9msmQLFbR2mYkFIq23avKG/iY1LYU22y/phgDXb
+         wzhD32MvmYUkRJXddhnqN8bgUSK18fY3mRVjggNAn175JFlMMM7Ep5FT124+rayc89hv
+         a/NGI3Rq2pNvVRmFndk3rzfbe7ZGNK83OycSj0mJEvWCyGmd2d+dIEkFa/+JQNkc8rml
+         o0mQOg3n9Qto83FkrLuwitKQHkRGxMDAUIiIoXqcS0qzGv88gZF2UNhb0fWxiT8uPYWa
+         lcuQ==
+X-Gm-Message-State: AOAM530IkyxBMbJSkMhG6VKnd7918D8N8bY8Jitoa5mMnoM/cxdNnu4p
+        b+ylcyWliFrXaa/mWZ+2C3StGxsMjw5YtQ==
+X-Google-Smtp-Source: ABdhPJwkRdDdS5KBsTGSggDXQTHMfO9ECWm+ZUkwd4fu9vppbYNA0a5kdhFJ44GPc6tARd98iiOkiw==
+X-Received: by 2002:ac8:6bc6:: with SMTP id b6mr6537003qtt.101.1591843264037;
+        Wed, 10 Jun 2020 19:41:04 -0700 (PDT)
+Received: from linux.home ([2604:2000:1344:41d:61ac:316c:1207:3fa6])
+        by smtp.googlemail.com with ESMTPSA id z194sm1265023qkb.73.2020.06.10.19.41.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2020 19:41:03 -0700 (PDT)
+From:   Gaurav Singh <gaurav1086@gmail.com>
+To:     gaurav1086@gmail.com, Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Alex Dewar <alex.dewar@gmx.co.uk>,
+        linux-um@lists.infradead.org (open list:USER-MODE LINUX (UML)),
+        linux-kernel@vger.kernel.org (open list),
+        netdev@vger.kernel.org (open list:BPF (Safe dynamic programs and tools)),
+        bpf@vger.kernel.org (open list:BPF (Safe dynamic programs and tools))
+Subject: [PATCH] Fix null pointer dereference in vector_user_bpf
+Date:   Wed, 10 Jun 2020 22:40:36 -0400
+Message-Id: <20200611024053.10429-1-gaurav1086@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 1:19 AM Luck, Tony <tony.luck@intel.com> wrote:
->
-> On Wed, Jun 10, 2020 at 02:58:46PM +0800, Zhenzhong Duan wrote:
-> > By calling edac_inc_ue_error() before panic, we get a correct UE error
-> > count for core dump analysis.
->
-> Looks accurate, and I'll add the patch to be applied. But I wonder
-> how big a problem it is. Isn't most of the information deriveable
-> from the panic message?
+The bpf_prog is being checked for !NULL after uml_kmalloc but
+later its used directly for example:
+bpf_prog->filter = bpf and is also later returned upon success.
+Fix this, do a NULL check and return right away.
 
-Thanks for review.
-Yes, it's totally not a problem.  I'm a little too strict here.
+Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
+---
+ arch/um/drivers/vector_user.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-Zhenzhong
+diff --git a/arch/um/drivers/vector_user.c b/arch/um/drivers/vector_user.c
+index aa28e9eecb7b..71d043ae306f 100644
+--- a/arch/um/drivers/vector_user.c
++++ b/arch/um/drivers/vector_user.c
+@@ -730,10 +730,12 @@ void *uml_vector_user_bpf(char *filename)
+ 		return false;
+ 	}
+ 	bpf_prog = uml_kmalloc(sizeof(struct sock_fprog), UM_GFP_KERNEL);
+-	if (bpf_prog != NULL) {
+-		bpf_prog->len = statbuf.st_size / sizeof(struct sock_filter);
+-		bpf_prog->filter = NULL;
++	if (bpf_prog == NULL) {
++		printk(KERN_ERR "Failed to allocate bpf prog buffer");
++		return NULL;
+ 	}
++	bpf_prog->len = statbuf.st_size / sizeof(struct sock_filter);
++	bpf_prog->filter = NULL;
+ 	ffd = os_open_file(filename, of_read(OPENFLAGS()), 0);
+ 	if (ffd < 0) {
+ 		printk(KERN_ERR "Error %d opening bpf file", -errno);
+-- 
+2.17.1
+
