@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 675E3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C432C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48E772063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:15:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E758A2063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:15:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbgFKLPD (ORCPT
+        id S1727981AbgFKLPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 07:15:03 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59908 "EHLO mx2.suse.de"
+        Thu, 11 Jun 2020 07:15:38 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60058 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726708AbgFKLPD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 07:15:03 -0400
+        id S1726708AbgFKLPh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 07:15:37 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id A4284AAC6;
-        Thu, 11 Jun 2020 11:15:04 +0000 (UTC)
-Message-ID: <7cf4a213862145abd8e0368b669aab39112ffaeb.camel@suse.de>
-Subject: Re: [PATCH v4 21/27] clk: bcm: rpi: Discover the firmware clocks
+        by mx2.suse.de (Postfix) with ESMTP id 43D20AC20;
+        Thu, 11 Jun 2020 11:15:39 +0000 (UTC)
+Message-ID: <768f70443c84a33a6685df79c630192e9e72f893.camel@suse.de>
+Subject: Re: [PATCH v4 23/27] Revert "clk: bcm2835: remove pllb"
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     Maxime Ripard <maxime@cerno.tech>
 Cc:     linux-rpi-kernel@lists.infradead.org,
@@ -35,12 +35,12 @@ Cc:     linux-rpi-kernel@lists.infradead.org,
         Phil Elwell <phil@raspberrypi.com>,
         Mike Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
-Date:   Thu, 11 Jun 2020 13:14:58 +0200
-In-Reply-To: <40ab5a9718000636a513d374e7579e2d2b57f961.1591860665.git-series.maxime@cerno.tech>
+Date:   Thu, 11 Jun 2020 13:15:33 +0200
+In-Reply-To: <2795d7ad33c9eba631fb356df7ff075ee5e8a0b8.1591860665.git-series.maxime@cerno.tech>
 References: <cover.58c6e44891ff5bf61052b5804f7da9b5ba074840.1591860665.git-series.maxime@cerno.tech>
-         <40ab5a9718000636a513d374e7579e2d2b57f961.1591860665.git-series.maxime@cerno.tech>
+         <2795d7ad33c9eba631fb356df7ff075ee5e8a0b8.1591860665.git-series.maxime@cerno.tech>
 Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-/HZv/CDJ5nGFBA3EUvfy"
+        protocol="application/pgp-signature"; boundary="=-hbYUkMWex4Zkya5EfVIi"
 User-Agent: Evolution 3.36.2 
 MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
@@ -49,44 +49,16 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---=-/HZv/CDJ5nGFBA3EUvfy
+--=-hbYUkMWex4Zkya5EfVIi
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Thu, 2020-06-11 at 09:32 +0200, Maxime Ripard wrote:
-> The RaspberryPi4 firmware actually exposes more clocks than are currently
-> handled by the driver and we will need to change some of them directly
-> based on the pixel rate for the display related clocks, or the load for t=
-he
-> GPU.
+> This reverts commit 2256d89333bd17b8b56b42734a7e1046d52f7fc3. Since we
+> will be expanding the firmware clock driver, we'll need to remove the
+> quirks to deal with the PLLB. However, we still want to expose the clock
+> tree properly, so having that clock in the MMIO driver will allow that.
 >=20
-> Since the firmware implements DVFS, this rate change can have a number of
-> side-effects, including adjusting the various PLL voltages or the PLL
-> parents. The firmware also implements thermal throttling, so even some
-> thermal pressure can change those parameters behind Linux back.
->=20
-> DVFS is currently implemented on the arm, core, h264, v3d, isp and hevc
-> clocks, so updating any of them using the MMIO driver (and thus behind th=
-e
-> firmware's back) can lead to troubles, the arm clock obviously being the
-> most problematic.
->=20
-> In order to make Linux play as nice as possible with those constraints, i=
-t
-> makes sense to rely on the firmware clocks as much as possible. However,
-> the firmware doesn't seem to provide some equivalents to their MMIO
-> counterparts, so we can't really replace that driver entirely.
->=20
-> Fortunately, the firmware has an interface to discover the clocks it
-> exposes.
->=20
-> Let's use it to discover, register the clocks in the clocks framework and
-> then expose them through the device tree for consumers to use them.
->=20
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: linux-clk@vger.kernel.org
-> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
 > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 > ---
 
@@ -96,22 +68,22 @@ Regards,
 Nicolas
 
 
---=-/HZv/CDJ5nGFBA3EUvfy
+--=-hbYUkMWex4Zkya5EfVIi
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: This is a digitally signed message part
 Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7iEjIACgkQlfZmHno8
-x/5O/wgAojiCQn8IWPe5AD2kCeaAi3GY+ivhNVp+ylf43QI1C0rv3ie+dyzYTHFe
-YBp1ll774sFXWcHYoz2GIfWn1r1xKtsaLmsgQSW6iCOzTr6/jhhmHUZqZSgMcW2Y
-sozYVnzsEbdAGpbsZ37CFPMbvXdYi91GW9vet+w/lkEvPcP6UOTCW13sFfdsrOVi
-xUQxHElDMq4cNjMMqBmA57EjCyltxfUYD4eLZ+5dlw93GSH0IsXfFTBRupFApN/Y
-K4vNFlWJur4B0WzWekZMYGXbePmxV02RTBv+53KLBr1/pDRDTaF/ndPbk9iuq7U+
-anDlvK61kOm4M+bXQpdWVlw3dKnKbA==
-=zn5D
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7iElUACgkQlfZmHno8
+x/7qEQgAjZnjjXvRdAi/lc/o42kdtkguD5/CJSpvXou0kiL3FOFcffpKKOAkOzWq
+Z/yk+9EJ4/qHLuarbUHVa+JYFHb9y/iXBVJyGwgDUAgGRz9sJYzujHNYQ9AS9ODF
+0abA1KUTWSvXTb4uWsEavq5fqR5g2QjUctjPta3WcdsCmkQ9Hg4AAleRM5GF6+St
+wJbCRx/teGUuMKq0LZ/nQBypV6QyAgb3gSxNqitenCT/BXBgt3N0nNgF4+UoFvM/
+GQ0vUYB7zyET9sYNYQ/d1C3upKOLyV8veg1bfpHdYKc3uqYp+hiq1xHmjIXP/eLJ
+vwQKYuRVj3vsEZ1SQOIkc7CoXKrF4Q==
+=p+Ci
 -----END PGP SIGNATURE-----
 
---=-/HZv/CDJ5nGFBA3EUvfy--
+--=-hbYUkMWex4Zkya5EfVIi--
 
