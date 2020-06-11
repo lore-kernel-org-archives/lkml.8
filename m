@@ -2,219 +2,108 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2F4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB5DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B81AD20842
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:23:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3EEE2078C
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:24:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Im7VtVIh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="Dgncx6iP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726456AbgFKXXO (ORCPT
+        id S1726403AbgFKXYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 19:23:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57622 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbgFKXXM (ORCPT
+        Thu, 11 Jun 2020 19:24:43 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:32822 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbgFKXYm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 19:23:12 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC26EC08C5C3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 16:23:12 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id n2so2920002pld.13
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 16:23:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=dF5S2dn2pVgES3YrOEuT/txRTXS0NkdBy5TQaEH6DIU=;
-        b=Im7VtVIhpDqHDj91TB7IHzCdVnA7cfAKvscZOGBTPVCyTJytRbl+ab1O58LQFqAHOi
-         U4CzwwHUZnlrb8MvXGRZ430PTCx5cAFj98PV4U2LQtuIFjbr8XzRxz5SIGSuj3FBGQDo
-         ASsFRokK8d6OyeBDvWzybCftl71yZ/TTfnUO0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=dF5S2dn2pVgES3YrOEuT/txRTXS0NkdBy5TQaEH6DIU=;
-        b=Ux+b0ukaGIiUHg4vMP1LNjBPaRZp3CRQIYQaRw2dpfSsRpaB36V9MsKy+l3b/ZeVhG
-         oAADH73sOvbiMzqAEkYlzSN5jZ45GpzFuaf5xFZYDVS/FQqWPfz24ueiO2yzC4lGULIT
-         p1YswTg9fbJtJriw5hPcE5saPjPZ82bRAsEgrEZ9rCzUuz/XCSuh1UCbGy8c1LNhnB/0
-         OwbUP6dLFFYLVyICdtq7WBmnzfFsYsUlmhBi+hileuzYoFZPIqMRmKbgChjCkQ2zvrHj
-         F03+mfmK602Xz355qUL53WGcpeFy75KMR4s3ycxtXUgvxVsQAtRPF4l+OBgSxgR7qUXf
-         KzGw==
-X-Gm-Message-State: AOAM531splo3RadKSao1VoychWikvdFCPYGQ5yhrhLDKKt9ak+gG1FWO
-        wS0FhbfUn5XcoSGRCmmfRHwoRg==
-X-Google-Smtp-Source: ABdhPJwTmpa2kzC8wDU5aCXCVkPVDsBffhaUPbr0t/XzzYQF4UVcbOpP5W8PS0r8XWx0KOQrRuCd8A==
-X-Received: by 2002:a17:902:c214:: with SMTP id 20mr9177825pll.193.1591917792301;
-        Thu, 11 Jun 2020 16:23:12 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d189sm4120162pfc.51.2020.06.11.16.23.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 16:23:11 -0700 (PDT)
-Date:   Thu, 11 Jun 2020 16:23:10 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Sargun Dhillon <sargun@sargun.me>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        containers@lists.linux-foundation.org,
-        Giuseppe Scrivano <gscrivan@redhat.com>,
-        Robert Sesek <rsesek@google.com>,
-        Chris Palmer <palmer@google.com>, Jann Horn <jannh@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Wagner <daniel.wagner@bmw-carit.de>,
-        linux-kernel@vger.kernel.org, Matt Denton <mpdenton@google.com>,
-        John Fastabend <john.r.fastabend@intel.com>,
-        linux-fsdevel@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, cgroups@vger.kernel.org,
-        stable@vger.kernel.org, "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v3 1/4] fs, net: Standardize on file_receive helper to
- move fds across processes
-Message-ID: <202006111622.01F596D@keescook>
-References: <20200605075435.GA3345@ircssh-2.c.rugged-nimbus-611.internal>
- <202006091235.930519F5B@keescook>
- <20200609200346.3fthqgfyw3bxat6l@wittgenstein>
- <202006091346.66B79E07@keescook>
- <037A305F-B3F8-4CFA-B9F8-CD4C9EF9090B@ubuntu.com>
- <202006092227.D2D0E1F8F@keescook>
- <20200610081237.GA23425@ircssh-2.c.rugged-nimbus-611.internal>
- <202006101953.899EFB53@keescook>
- <20200611091942.jni2glnpmxisnant@wittgenstein>
- <20200611103922.GA30103@ircssh-2.c.rugged-nimbus-611.internal>
+        Thu, 11 Jun 2020 19:24:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
+        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ydIwmO/MULXPi8rtCPZ4Y4iv1RxHiR6w0Bg9uL3/YFM=; b=Dgncx6iPntPq8HtqqejEi5/6VL
+        c9GevrXRwO+Gny+oYsMDG38XmZ7bRTG60VEiUx7rvV9NN2AcJLKoOkGlOaN17uY4bOHv0oozYWMca
+        r11OeRcaQiojGqYHSWnWcRAAa0NC2nIu70NpFnJFCO05piUq03PtcvcaOHA5bWP3Y3euZTNt3GqcU
+        z7Wxr3jJxz+q7XTrbMDoHFX2GiFQWlkIMmwLoAYiK/hQ/IQVwxKkAbNPjiy+wx9SENQmt4OrlSs1K
+        jHYXDvwF8fUm0GuS8URSrMn05lhJi5iuw+iEZeCM59WnM1PyDSVuKn3ECVc+Z9X9BDUAWG/EDlVSb
+        tiwc8gxw==;
+Received: from s01060023bee90a7d.cg.shawcable.net ([24.64.145.4] helo=[192.168.0.10])
+        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1jjWYh-0001zn-4i; Thu, 11 Jun 2020 17:24:32 -0600
+To:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20200514172253.6445-1-logang@deltatee.com>
+ <20200514172253.6445-9-logang@deltatee.com>
+ <BYAPR04MB496581334E89E2E3086C268286800@BYAPR04MB4965.namprd04.prod.outlook.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <078ffd88-d2f9-bfa1-5a81-97abe0b66653@deltatee.com>
+Date:   Thu, 11 Jun 2020 17:24:30 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200611103922.GA30103@ircssh-2.c.rugged-nimbus-611.internal>
+In-Reply-To: <BYAPR04MB496581334E89E2E3086C268286800@BYAPR04MB4965.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 24.64.145.4
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, maxg@mellanox.com, axboe@fb.com, kbusch@kernel.org, sagi@grimberg.me, hch@lst.de, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, Chaitanya.Kulkarni@wdc.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH v13 8/9] nvmet-passthru: Add enable/disable helpers
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 10:39:23AM +0000, Sargun Dhillon wrote:
-> On Thu, Jun 11, 2020 at 11:19:42AM +0200, Christian Brauner wrote:
-> > On Wed, Jun 10, 2020 at 07:59:55PM -0700, Kees Cook wrote:
-> > > On Wed, Jun 10, 2020 at 08:12:38AM +0000, Sargun Dhillon wrote:
-> > > > As an aside, all of this junk should be dropped:
-> > > > +	ret = get_user(size, &uaddfd->size);
-> > > > +	if (ret)
-> > > > +		return ret;
-> > > > +
-> > > > +	ret = copy_struct_from_user(&addfd, sizeof(addfd), uaddfd, size);
-> > > > +	if (ret)
-> > > > +		return ret;
-> > > > 
-> > > > and the size member of the seccomp_notif_addfd struct. I brought this up 
-> > > > off-list with Tycho that ioctls have the size of the struct embedded in them. We 
-> > > > should just use that. The ioctl definition is based on this[2]:
-> > > > #define _IOC(dir,type,nr,size) \
-> > > > 	(((dir)  << _IOC_DIRSHIFT) | \
-> > > > 	 ((type) << _IOC_TYPESHIFT) | \
-> > > > 	 ((nr)   << _IOC_NRSHIFT) | \
-> > > > 	 ((size) << _IOC_SIZESHIFT))
-> > > > 
-> > > > 
-> > > > We should just use copy_from_user for now. In the future, we can either 
-> > > > introduce new ioctl names for new structs, or extract the size dynamically from 
-> > > > the ioctl (and mask it out on the switch statement in seccomp_notify_ioctl.
-> > > 
-> > > Yeah, that seems reasonable. Here's the diff for that part:
-> > > 
-> > > diff --git a/include/uapi/linux/seccomp.h b/include/uapi/linux/seccomp.h
-> > > index 7b6028b399d8..98bf19b4e086 100644
-> > > --- a/include/uapi/linux/seccomp.h
-> > > +++ b/include/uapi/linux/seccomp.h
-> > > @@ -118,7 +118,6 @@ struct seccomp_notif_resp {
-> > >  
-> > >  /**
-> > >   * struct seccomp_notif_addfd
-> > > - * @size: The size of the seccomp_notif_addfd datastructure
-> > >   * @id: The ID of the seccomp notification
-> > >   * @flags: SECCOMP_ADDFD_FLAG_*
-> > >   * @srcfd: The local fd number
-> > > @@ -126,7 +125,6 @@ struct seccomp_notif_resp {
-> > >   * @newfd_flags: The O_* flags the remote FD should have applied
-> > >   */
-> > >  struct seccomp_notif_addfd {
-> > > -	__u64 size;
-> > >  	__u64 id;
-> > >  	__u32 flags;
-> > >  	__u32 srcfd;
-> > > diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-> > > index 3c913f3b8451..00cbdad6c480 100644
-> > > --- a/kernel/seccomp.c
-> > > +++ b/kernel/seccomp.c
-> > > @@ -1297,14 +1297,9 @@ static long seccomp_notify_addfd(struct seccomp_filter *filter,
-> > >  	struct seccomp_notif_addfd addfd;
-> > >  	struct seccomp_knotif *knotif;
-> > >  	struct seccomp_kaddfd kaddfd;
-> > > -	u64 size;
-> > >  	int ret;
-> > >  
-> > > -	ret = get_user(size, &uaddfd->size);
-> > > -	if (ret)
-> > > -		return ret;
-> > > -
-> > > -	ret = copy_struct_from_user(&addfd, sizeof(addfd), uaddfd, size);
-> > > +	ret = copy_from_user(&addfd, uaddfd, sizeof(addfd));
-> > >  	if (ret)
-> > >  		return ret;
-> > >  
-> > > 
-> > > > 
-> > > > ----
-> > > > +#define SECCOMP_IOCTL_NOTIF_ADDFD	SECCOMP_IOR(3,	\
-> > > > +						struct seccomp_notif_addfd)
-> > > > 
-> > > > Lastly, what I believe to be a small mistake, it should be SECCOMP_IOW, based on 
-> > > > the documentation in ioctl.h -- "_IOW means userland is writing and kernel is 
-> > > > reading."
-> > > 
-> > > Oooooh. Yeah; good catch. Uhm, that means SECCOMP_IOCTL_NOTIF_ID_VALID
-> > > is wrong too, yes? Tycho, Christian, how disruptive would this be to
-> > > fix? (Perhaps support both and deprecate the IOR version at some point
-> > > in the future?)
-> > 
-> > We have custom defines in our source code, i.e.
-> > #define SECCOMP_IOCTL_NOTIF_ID_VALID  SECCOMP_IOR(2, __u64)
-> > so ideally we'd have a SECCOMP_IOCTL_NOTIF_ID_VALID_V2
-> > 
-> > Does that sound ok?
-> > 
-> > Christian
-> Why not change the public API in seccomp.h to:
-> #define SECCOMP_IOCTL_NOTIF_ID_VALID	SECCOMP_IOW(2, __u64)
-> 
-> And then in seccomp.c:
-> #define SECCOMP_IOCTL_NOTIF_ID_VALID_OLD	SECCOMP_IOR(2, __u64)
-> static long seccomp_notify_ioctl(struct file *file, unsigned int cmd,
-> 				 unsigned long arg)
-> {
-> 	struct seccomp_filter *filter = file->private_data;
-> 	void __user *buf = (void __user *)arg;
-> 
-> 	switch (cmd) {
-> 	case SECCOMP_IOCTL_NOTIF_RECV:
-> 		return seccomp_notify_recv(filter, buf);
-> 	case SECCOMP_IOCTL_NOTIF_SEND:
-> 		return seccomp_notify_send(filter, buf);
-> 	case SECCOMP_IOCTL_NOTIF_ID_VALID_OLD:
-> 		pr_warn_once("Detected usage of legacy (incorrect) version of seccomp notifier notif_id_valid ioctl\n");
-> 	case SECCOMP_IOCTL_NOTIF_ID_VALID:
-> 		return seccomp_notify_id_valid(filter, buf);
-> 	default:
-> 		return -EINVAL;
-> 	}
-> }
-> ---- 
-> 
-> So, both will work fine, and whenevery anyone recompiles, or picks up new 
-> headers, they will start calling the "right" one without a code change, and
-> we wont break any userspace.
 
-Yeah, that's what I'd prefer here.
 
--- 
-Kees Cook
+On 2020-06-11 5:13 p.m., Chaitanya Kulkarni wrote:
+> On 5/14/20 10:23 AM, Logan Gunthorpe wrote:
+>> +	if (subsys->ver < NVME_VS(1, 2, 1)) {
+>> +		pr_warn("nvme controller version is too old: %d.%d.%d, advertising 1.2.1\n",
+> Is it more than 80 char ? can it be ?
+>                   pr_warn("nvme controller version is too old: ");
+>                   pr_warn("%d.%d.%d, advertising 1.2.1\n",
+
+Splitting printks is a bad idea because they won't necessarily end up in
+dmesg right next to each other -- other prints can be interleaved.
+Moreover, it breaks any tools that are dealing with kernel logs as
+single records (ie through /dev/kmsg). Continuations (or printks without
+a trailing "\n") would require using pr_cont() and generally that's
+discouraged.
+
+>> +			(int)NVME_MAJOR(subsys->ver),
+>> +			(int)NVME_MINOR(subsys->ver),
+>> +			(int)NVME_TERTIARY(subsys->ver));
+>> +		subsys->ver = NVME_VS(1, 2, 1);
+>> +	}
+> 
+> NVMe blktests are running on QEMU based controller. This will generate 
+> warning every-time.
+
+Yup.
+
+> Also, I didn't understand int type cast, I wonder under what condition 
+> all these macros will return -ve values since ver of type u64 ?
+
+Yes, I'm not sure what I was thinking when I put in the cast. Probably
+better just to prints "%llu". I'll fix this for the next revision.
+
+Thanks,
+
+Logan
