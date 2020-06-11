@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF09C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD67C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:21:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04CE220814
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:20:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CAF420812
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:21:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591860056;
-	bh=QUItFTP1129sdpXdze9uQDckRjaQglBwa1pwTp0jdQ4=;
+	s=default; t=1591860061;
+	bh=wryQOEqCvB3LT1mDnP5wE6WUUMvLji/WCUYOA1o1gXQ=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=no8oih5sLbFKWSyOvcQQahMWB7UwOsHsYqjGUeHosr11yoNEnGU9CvvMSIkdogGVo
-	 EDktjAdyVt/SGYJeKDgk3sMY9MISh7HrSjeCULC7xh7wtqauBVwgw47OV8uMG2XjR/
-	 vKnxJlOGpTkh0uU7JnIqVtT9uxN++R3cKemYs0Ks=
+	b=KY4UlXsv+BtS0Oyzth3IJHMKdsoANOCp7/4giU4XD74/9q1qOjkcxB5g9Uf6gakT3
+	 NIEKOwdoY4xgZUg5VQqf8s+u1Uk1HNI8XoueSOhH6cvmLil19lM4ga77ASQB7oywy7
+	 4RuMJPvQlVor63a+6eSNXpuRumj+ivhMhXLX+JOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbgFKHUr (ORCPT
+        id S1726790AbgFKHU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 03:20:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51172 "EHLO mail.kernel.org"
+        Thu, 11 Jun 2020 03:20:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726715AbgFKHUp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 03:20:45 -0400
+        id S1726763AbgFKHUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 03:20:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4A992075F;
-        Thu, 11 Jun 2020 07:20:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5AA12074B;
+        Thu, 11 Jun 2020 07:20:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591860044;
-        bh=QUItFTP1129sdpXdze9uQDckRjaQglBwa1pwTp0jdQ4=;
+        s=default; t=1591860052;
+        bh=wryQOEqCvB3LT1mDnP5wE6WUUMvLji/WCUYOA1o1gXQ=;
         h=From:To:Cc:Subject:Date:From;
-        b=tuUs3bBTVYfLvZieh7lW9vqHjTC6HSzh2+884UIrZQF2dGmPU0pGqGPISIxRk07ak
-         7sO6J+JvmtNl1ou3TpeH80EOYNzTRKnnkteeRqHD8cpfwwdQ3jZMGoz2dz0WdkSigj
-         cvqTMaXG7wuqO7Q14YPyplmt1epO7IWrMdk4vyKk=
+        b=bnSDGjECZmkSGIy8rrnZh7jtKj+ldW1m4kaPkaeWBdo/Vho0ofYfIv0oKJBrWHUTH
+         hvlJejjLWPUDeFfhy9jwgTyrjRMX8RCmlnCGA0pxwwVuXdcPiIvLzGOZi+yyhSczgm
+         rCERBZM8K3Zw+zMJsXkp4uGpO9Ic6vjgGE9oeHlY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
         torvalds@linux-foundation.org, stable@vger.kernel.org
 Cc:     lwn@lwn.net, jslaby@suse.cz,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Linux 5.6.18
-Date:   Thu, 11 Jun 2020 09:20:25 +0200
-Message-Id: <159186002576160@kroah.com>
+Subject: Linux 5.4.46
+Date:   Thu, 11 Jun 2020 09:20:36 +0200
+Message-Id: <159186003613253@kroah.com>
 X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -55,12 +55,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'm announcing the release of the 5.6.18 kernel.
+I'm announcing the release of the 5.4.46 kernel.
 
-All users of the 5.6 kernel series must upgrade.
+All users of the 5.4 kernel series must upgrade.
 
-The updated 5.6.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-5.6.y
+The updated 5.4.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-5.4.y
 and can be browsed at the normal kernel.org git web browser:
 	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
 
@@ -79,7 +79,7 @@ greg k-h
  arch/x86/include/asm/cpufeatures.h                                          |    2 
  arch/x86/include/asm/msr-index.h                                            |    4 
  arch/x86/kernel/cpu/bugs.c                                                  |  106 +++++++
- arch/x86/kernel/cpu/common.c                                                |   56 +++
+ arch/x86/kernel/cpu/common.c                                                |   63 +++-
  arch/x86/kernel/cpu/cpu.h                                                   |    1 
  arch/x86/kernel/cpu/match.c                                                 |    7 
  drivers/base/cpu.c                                                          |    8 
@@ -87,8 +87,6 @@ greg k-h
  drivers/iio/chemical/pms7003.c                                              |   17 -
  drivers/iio/chemical/sps30.c                                                |    9 
  drivers/iio/light/vcnl4000.c                                                |    6 
- drivers/net/dsa/ocelot/felix.c                                              |    8 
- drivers/net/ethernet/mellanox/mlx5/core/en_tc.c                             |    6 
  drivers/net/ethernet/mellanox/mlx5/core/fs_core.c                           |    6 
  drivers/net/ethernet/mellanox/mlx5/core/main.c                              |   18 +
  drivers/net/ethernet/netronome/nfp/flower/offload.c                         |    3 
@@ -98,12 +96,11 @@ greg k-h
  drivers/nvmem/qfprom.c                                                      |   14 
  drivers/staging/rtl8712/wifi.h                                              |    9 
  drivers/tty/hvc/hvc_console.c                                               |   23 -
- drivers/tty/serial/8250/Kconfig                                             |    1 
  drivers/tty/vt/keyboard.c                                                   |   26 +
  drivers/usb/class/cdc-acm.c                                                 |    2 
  drivers/usb/musb/musb_core.c                                                |    7 
  drivers/usb/musb/musb_debugfs.c                                             |   10 
- drivers/usb/serial/ch341.c                                                  |   68 ++++
+ drivers/usb/serial/ch341.c                                                  |   53 +++
  drivers/usb/serial/option.c                                                 |    4 
  drivers/usb/serial/qcserial.c                                               |    1 
  drivers/usb/serial/usb_wwan.c                                               |    4 
@@ -114,13 +111,8 @@ greg k-h
  net/l2tp/l2tp_core.c                                                        |    3 
  net/l2tp/l2tp_ip.c                                                          |   29 +
  net/l2tp/l2tp_ip6.c                                                         |   30 +-
- net/mptcp/protocol.c                                                        |   20 +
- net/sched/sch_fq_pie.c                                                      |    4 
- net/sctp/ulpevent.c                                                         |    3 
  net/vmw_vsock/af_vsock.c                                                    |    2 
- net/vmw_vsock/virtio_transport_common.c                                     |    8 
- tools/testing/selftests/tc-testing/tc-tests/qdiscs/fq_pie.json              |   21 +
- 50 files changed, 693 insertions(+), 146 deletions(-)
+ 42 files changed, 626 insertions(+), 134 deletions(-)
 
 Bin Liu (2):
       USB: serial: usb_wwan: do not resubmit rx urb on fatal errors
@@ -132,9 +124,6 @@ Chuhong Yuan (1):
 Daniele Palmas (2):
       net: usb: qmi_wwan: add Telit LE910C1-EUX composition
       USB: serial: option: add Telit LE910C1-EUX compositions
-
-Davide Caratti (1):
-      net/sched: fix infinite loop in sch_fq_pie
 
 Dinghao Liu (1):
       usb: musb: Fix runtime PM imbalance on error
@@ -155,22 +144,13 @@ Fugang Duan (1):
 
 Greg Kroah-Hartman (2):
       Revert "net/mlx5: Annotate mutex destroy for root ns"
-      Linux 5.6.18
+      Linux 5.4.46
 
 Heinrich Kuhn (1):
       nfp: flower: fix used time of merge flow statistics
 
-Jia He (1):
-      virtio_vsock: Fix race condition in virtio_transport_recv_pkt
-
 Jiri Slaby (1):
       tty: hvc_console, fix crashes on parallel open/close
-
-Johan Hovold (1):
-      USB: serial: ch341: fix lockup of devices with limited prescaler
-
-Jonas Falkevik (1):
-      sctp: check assoc before SCTP_ADDR_{MADE_PRIM, ADDED} event
 
 Jonathan Cameron (2):
       iio:chemical:sps30: Fix timestamp alignment
@@ -178,9 +158,6 @@ Jonathan Cameron (2):
 
 Josh Poimboeuf (1):
       x86/speculation: Add Ivy Bridge to affected list
-
-Josh Triplett (1):
-      serial: 8250: Enable 16550A variants by default on non-x86
 
 Mark Bloch (1):
       net/mlx5: Fix crash upon suspend/resume
@@ -206,12 +183,6 @@ Oleg Nesterov (1):
 Oliver Neukum (1):
       CDC-ACM: heed quirk also in error handling
 
-Pablo Neira Ayuso (1):
-      net/mlx5e: replace EINVAL in mlx5e_flower_parse_meta()
-
-Paolo Abeni (1):
-      mptcp: fix unblocking connect()
-
 Pascal Terjan (1):
       staging: rtl8712: Fix IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK
 
@@ -221,8 +192,8 @@ Srinivas Kandagatla (1):
 Stefano Garzarella (1):
       vsock: fix timeout in vsock_accept()
 
-Vladimir Oltean (1):
-      net: dsa: felix: send VLANs on CPU port as egress-tagged
+Tony W Wang-oc (1):
+      x86/speculation/spectre_v2: Exclude Zhaoxin CPUs from SPECTRE_V2
 
 Willem de Bruijn (1):
       net: check untrusted gso_size at kernel entry
