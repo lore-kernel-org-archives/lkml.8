@@ -2,100 +2,109 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B43C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D428C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BEAD2078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BEC2207ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:21:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591881679;
-	bh=I5ENpceYxIWNF/3WX7IIhHeshmGtz9rRT5nBSTNeWec=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BSzJ2hSSKLmyXqVkgewlVP+7cQjtaLog6YmMbOxfvpI9nxrvSZo5WQ/6/5Ot7yU2W
-	 O0usMLkul9KpHiBai7htG0WVytt0/s7ADEk3zR8MrLGSlDSGzfsB/hLlskiQ5fv5x9
-	 zLYImNZvsHGyP5uO2if7vSQrtLjzCxdw6XT9YEto=
+	s=default; t=1591881707;
+	bh=OBPMc7itq41nVZ9VUj3BHPffpSQ5D0xsnUCrEtNQCTw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=dGY9gW3kUnX0abEsNR/ynaaMEb27mMF6eItXeAmd9qLk3+gJoSPj4qox3ud5Wj17D
+	 Zu6I/gOZ4HWJWkqYiJ5tmD8saaQ/sp1+1qJwmtE/IttQFWQkEJWmxAfqXGCExSOyqd
+	 oEg8FNwxOkf/WuDIKDGcIOxvIANdORNyrqIrbV4k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728127AbgFKNVS (ORCPT
+        id S1728170AbgFKNVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 09:21:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39610 "EHLO mail.kernel.org"
+        Thu, 11 Jun 2020 09:21:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726249AbgFKNVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 09:21:17 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726249AbgFKNVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 09:21:44 -0400
+Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A69620747;
-        Thu, 11 Jun 2020 13:21:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D7D520747;
+        Thu, 11 Jun 2020 13:21:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591881677;
-        bh=I5ENpceYxIWNF/3WX7IIhHeshmGtz9rRT5nBSTNeWec=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Xx0gTELZP6mEKcRPnP4fyvM/iuxpVI1IBpgikLaX7CxIrqYt8sQ7frkk0f4bCtYMs
-         m6s3o72B3/Se4uq6LbatOlRZHKZPkdq1SadpQSyuMrWTD2slqNjFNfl2C6LunVhqJD
-         zk7A+boMeItv9ELSmDSfqAV7UYcTcbczQzAS59PI=
-Date:   Thu, 11 Jun 2020 14:21:14 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Tzung-Bi Shih <tzungbi@google.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Yicheng Li <yichengli@chromium.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 2/2] regulator: Add driver for cros-ec-regulator
-Message-ID: <20200611132114.GF4671@sirena.org.uk>
-References: <20200611082542.219516-1-pihsun@chromium.org>
- <20200611082542.219516-3-pihsun@chromium.org>
- <e0a04440-bb15-921d-16e3-1b7ebd76b652@collabora.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="i3lJ51RuaGWuFYNw"
-Content-Disposition: inline
-In-Reply-To: <e0a04440-bb15-921d-16e3-1b7ebd76b652@collabora.com>
-X-Cookie: I like your SNOOPY POSTER!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        s=default; t=1591881703;
+        bh=OBPMc7itq41nVZ9VUj3BHPffpSQ5D0xsnUCrEtNQCTw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=nmoxLQICdTtxNJbc0hF3pdIDAq7WDR9cEkjY3uxws4uxjHSQHA87xquSpjp4kDRz7
+         APad7eBsR6z6gt2Qqks9gvePLoU6LFlzBwoUr9GBYce2FKNBPaBxTrJ9cCKN1dbCec
+         UIY39La3e9X9N6dUhzlbpr17oLRpq5ueKaNtumVg=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Angelo Dureghello <angelo@sysam.it>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Robin Gong <yibin.gong@nxp.com>, Peng Ma <peng.ma@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>, stable@vger.kernel.org
+Subject: [PATCH] dmaengine: mcf-edma: Fix NULL pointer exception in mcf_edma_tx_handler
+Date:   Thu, 11 Jun 2020 15:21:05 +0200
+Message-Id: <1591881665-25592-1-git-send-email-krzk@kernel.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1591877861-28156-2-git-send-email-krzk@kernel.org>
+References: <1591877861-28156-2-git-send-email-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Toradex Colibri VF50 (Vybrid VF5xx) with fsl-edma driver NULL pointer
+exception happens occasionally on serial output initiated by login
+timeout.
 
---i3lJ51RuaGWuFYNw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This was reproduced only if kernel was built with significant debugging
+options and EDMA driver is used with serial console.
 
-On Thu, Jun 11, 2020 at 01:44:42PM +0200, Enric Balletbo i Serra wrote:
-> On 11/6/20 10:25, Pi-Hsun Shih wrote:
-> > Add driver for cros-ec-regulator, representing a voltage regulator that
-> > is connected and controlled by ChromeOS EC, and is controlled by kernel
-> > with EC host commands.
+Issue looks like a race condition between interrupt handler
+fsl_edma_tx_handler() (called as a result of fsl_edma_xfer_desc()) and
+terminating the transfer with fsl_edma_terminate_all().
 
-Please delete unneeded context from mails when replying.  Doing this
-makes it much easier to find your reply in the message, helping ensure
-it won't be missed by people scrolling through the irrelevant quoted
-material.
+The fsl_edma_tx_handler() handles interrupt for a transfer with already
+freed edesc and idle==true.
 
---i3lJ51RuaGWuFYNw
-Content-Type: application/pgp-signature; name="signature.asc"
+The mcf-edma driver shares design and lot of code with fsl-edma.  It
+looks like being affected by same problem.  Fix this pattern the same
+way as fix for fsl-edma driver.
 
------BEGIN PGP SIGNATURE-----
+Fixes: e7a3ff92eaf1 ("dmaengine: fsl-edma: add ColdFire mcf5441x edma support")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7iL8kACgkQJNaLcl1U
-h9C3MAf8DIvLY3fzotpeSPZ8iHWNIScgd5XL7q7SclE+gNlygeQzSlVQIXO2SQwr
-fFHO3DOmnAvYhY0CL1/qBrmaINol6yY0hkon+jxD3O2+JzNR1gq5WlEJPpwsxN38
-ornsBdSy7drV4lAMU24RKrqf6fXsKEeyHAZ0buOMaeerK0vJmMIAKgd3P3BB4J3r
-FkiQ/B71GGEsMGmtK1t9oaa3ZGP2kNH2UA5SrcxYN8jxMUtd3m4CX3fvbRs8HDbV
-i44H0u1fvuDlhI0j5qDBn0zAPuaeIwiD+VBUhxBIWXjmlkLp35kACjYbOu7nU1KT
-ugNiEk6lWeyEa8d/WvXM0jj9NDQC3Q==
-=FNEx
------END PGP SIGNATURE-----
+---
 
---i3lJ51RuaGWuFYNw--
+Not tested on HW.
+---
+ drivers/dma/mcf-edma.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/dma/mcf-edma.c b/drivers/dma/mcf-edma.c
+index e15bd15a9ef6..e12b754e6398 100644
+--- a/drivers/dma/mcf-edma.c
++++ b/drivers/dma/mcf-edma.c
+@@ -35,6 +35,13 @@ static irqreturn_t mcf_edma_tx_handler(int irq, void *dev_id)
+ 			mcf_chan = &mcf_edma->chans[ch];
+ 
+ 			spin_lock(&mcf_chan->vchan.lock);
++
++			if (!mcf_chan->edesc) {
++				/* terminate_all called before */
++				spin_unlock(&mcf_chan->vchan.lock);
++				continue;
++			}
++
+ 			if (!mcf_chan->edesc->iscyclic) {
+ 				list_del(&mcf_chan->edesc->vdesc.node);
+ 				vchan_cookie_complete(&mcf_chan->edesc->vdesc);
+-- 
+2.7.4
+
