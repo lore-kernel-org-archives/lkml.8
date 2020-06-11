@@ -2,78 +2,100 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C09FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7611BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 455702081A
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:04:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4621E20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:04:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591873441;
-	bh=mU4heyURLmbtomghT4H3Nqm49/LX2wthsm0zFZtXfYA=;
+	s=default; t=1591873452;
+	bh=v2AdTRzjbbgd7womXSACVoFWkqyyTxBb929qt9XbrRs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=O3yyAplbjBT/ThUP7wY+8JcdJ2hrfN+n6xOBjDuDvrc3Il/32JA70GQwLYRptDVa6
-	 f5xJu7E26NoBOZjnMi+Nusfjk4mIeXMfblmuBxk/ysn071YsxkXBlimuZZJIvJZNWy
-	 YI+5E6VbB6fkQhRVr70lWDbCZs4aYMhv3Auz3G9c=
+	b=Aa/wuvb56lAX0ncmSgvGxL5C6UxSk+6l3bbHfYS39jZnXeWarnEGRJWGUN8kdquti
+	 FAkOsoYwEFmy1+Puj4c+2b8INEubRx62EWbxVoAcW+2e5gCII9A+0e5/6F5j6OOrVU
+	 Wgk/u0PwXP+DMqb1iTfWnZ1IGTc7eUt74rgT/524=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbgFKLD7 (ORCPT
+        id S1727945AbgFKLEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 07:03:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41304 "EHLO mail.kernel.org"
+        Thu, 11 Jun 2020 07:04:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727119AbgFKLD5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 07:03:57 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1727897AbgFKLEL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 07:04:11 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFC55207C3;
-        Thu, 11 Jun 2020 11:03:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3141207C3;
+        Thu, 11 Jun 2020 11:04:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591873436;
-        bh=mU4heyURLmbtomghT4H3Nqm49/LX2wthsm0zFZtXfYA=;
+        s=default; t=1591873450;
+        bh=v2AdTRzjbbgd7womXSACVoFWkqyyTxBb929qt9XbrRs=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=d2qqUn7qRLb2nD/eqaJAff6iErpSyrt1meK+mYgcKFjD8bDff4z8Jd+ckFKricYpz
-         jvbNgV8mfQ6Qw/ioB2Gva04W2e4qFS/tyenhQ4fsUpo/Ttd1/jlurbhhQP3x43bpLy
-         rXVaYfYyVaHhh4q+zXhY+rAXl6M0M73Gty4MQSwY=
-Date:   Thu, 11 Jun 2020 13:03:50 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     Su Kang Yin <cantona@cantona.net>, linux-crypto@vger.kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] crypto: talitos - fix ECB and CBC algs ivsize
-Message-ID: <20200611110350.GA3954279@kroah.com>
-References: <cantona@cantona.net>
- <20200611100745.6513-1-cantona@cantona.net>
- <718354b4-d284-8e47-4085-f45101f9ca36@csgroup.eu>
+        b=Rf8xtPQ5r3OfPpuLjL5Ki7VUsTw35zVTwMh9wIpFDiGcadbIolsGvOFiv9KndPywK
+         Y1uOy69somR5DjeG0H2iHRtZI6vejCgd0o2+jmWITNv3eOS/88KIXO+7GLE9hdm0Us
+         MD3Z/iLxcIMAlhqcqV6MW8C5rMr6gJK6jPukUQu0=
+Date:   Thu, 11 Jun 2020 12:04:08 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Xu Yilun <yilun.xu@intel.com>
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        trix@redhat.com, hao.wu@intel.com, matthew.gerlach@linux.intel.com,
+        russell.h.weight@intel.com
+Subject: Re: [PATCH 6/6] spi: altera: fix size mismatch on 64 bit processors
+Message-ID: <20200611110407.GE4671@sirena.org.uk>
+References: <1591845911-10197-1-git-send-email-yilun.xu@intel.com>
+ <1591845911-10197-7-git-send-email-yilun.xu@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ffoCPvUAPMgSXi6H"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <718354b4-d284-8e47-4085-f45101f9ca36@csgroup.eu>
+In-Reply-To: <1591845911-10197-7-git-send-email-yilun.xu@intel.com>
+X-Cookie: I like your SNOOPY POSTER!!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 12:50:24PM +0200, Christophe Leroy wrote:
-> Hi,
-> 
-> Le 11/06/2020 à 12:07, Su Kang Yin a écrit :
-> > Patch for 4.9 upstream:
-> > 
-> > commit e1de42fdfc6a ("crypto: talitos - fix ECB algs ivsize")
-> > wrongly modified CBC algs ivsize instead of ECB aggs ivsize.
-> 
-> To make it clear and avoid this problem to happen again, please generate
-> your patch with option -U8
 
-No need, this patch should be fine as-is.
+--ffoCPvUAPMgSXi6H
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-thanks,
+On Thu, Jun 11, 2020 at 11:25:11AM +0800, Xu Yilun wrote:
+> From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+>=20
+> The spi-altera driver was originally written with a 32
+> bit processor, where sizeof(unsigned long) is 4.  On a
+> 64 bit processor sizeof(unsigned long) is 8.  Change the structure
+> member to u32 to match the actual size of the control
+> register.
+>=20
+> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> ---
 
-greg k-h
+You've not provided a Signed-off-by for this, I can't do anything with
+it.  For details on what Signed-off-by means and why it's important
+please see Documentation/process/submitting-patches.rst.
+
+--ffoCPvUAPMgSXi6H
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7iD6cACgkQJNaLcl1U
+h9DmFQf+MF+WXsXCFsAfGFGJ1jFKWqFKkoRuV75/8RMHj4RvGzpz+qi9amx3/XB4
+rwaDRe2KGuRagCKXty2M3m6Pmxz40YaVa/u1TXSTpNcInSqNJfLdicBH2c0ekJwM
+eeMtXlBR8+/2D+i0nmf0mZedynI9VhlTS7ro8bHiDEoTKDXS2TiqQmx+AzR0siIQ
+4BAXoYyFbgH66MJHUBg9+coggkvUNVl+BtoluzGuYVGkbr5ekFyjG57PFPwQ6CkI
+UI2IU48U2hZkB2RZtECWFDApxHwrYcfcnXBediZbJ6ZXIf+bR7EZMmCA84V1bI5U
+rQWoudzQthh5XCbSRsqytve8fTZVhw==
+=mDOl
+-----END PGP SIGNATURE-----
+
+--ffoCPvUAPMgSXi6H--
