@@ -2,254 +2,74 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE3CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BDDC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64A39206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:55:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13E36206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:57:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591883858;
+	bh=AfDuKbF9OtpsediGNO+3NynP+WMOL5HhOuy8v9ZFhPg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ElWzcm6KcAlknwF7bMEXhaH33mfxs9UoqlUMDeWs0LPVc15iuiEcSMlpQ8/ejTPjR
+	 OpYM4lIP81w00lv2urmafqpxk8FW5HemWSQoEouvHtuca/o7bbqbsso1EjZeRvPxPb
+	 wf6PJ8dIp3hevpTHFX0DFpPokVMoQdq2TxDI6GqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbgFKNzO (ORCPT
+        id S1727093AbgFKN5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 09:55:14 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33668 "EHLO mx2.suse.de"
+        Thu, 11 Jun 2020 09:57:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726109AbgFKNzN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 09:55:13 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 64D29AE53;
-        Thu, 11 Jun 2020 13:55:14 +0000 (UTC)
-Date:   Thu, 11 Jun 2020 15:55:09 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Paul McKenney <paulmck@kernel.org>
-Subject: Re: redundant check in make_data_reusable(): was [PATCH v2 2/3]
- printk: add lockless buffer
-Message-ID: <20200611135509.GE6581@linux-b0ei>
-References: <20200501094010.17694-1-john.ogness@linutronix.de>
- <20200501094010.17694-3-john.ogness@linutronix.de>
- <20200609093103.GB23752@linux-b0ei>
- <87lfkwuwg1.fsf@vostro.fn.ogness.net>
- <20200610093835.GB4311@linux-b0ei>
- <87o8prp6bi.fsf@vostro.fn.ogness.net>
+        id S1726157AbgFKN5g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 09:57:36 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 306B7206C3;
+        Thu, 11 Jun 2020 13:57:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591883854;
+        bh=AfDuKbF9OtpsediGNO+3NynP+WMOL5HhOuy8v9ZFhPg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vhHLcpTFHd5cdFwhK1QvbC2PJlU8vaMJ4jssfpO82j97kOmBjBzZXIrUNvMvYVbqM
+         dN+AKheH9BbEQcFRN9rdXB3E0cg044n2CYS/iX7XfRVMLAJeQvK6AC4tIZHMDDo658
+         pTChFlwMIZuZhdpEyUNYhd6nzJR3310o2lY98sDU=
+Date:   Thu, 11 Jun 2020 15:57:27 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Su Kang Yin <cantona@cantona.net>
+Cc:     linux-crypto@vger.kernel.org, christophe.leroy@c-s.fr,
+        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2] crypto: talitos - fix ECB and CBC algs ivsize
+Message-ID: <20200611135727.GA1060798@kroah.com>
+References: <cantona@cantona.net>
+ <20200611115048.21677-1-cantona@cantona.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87o8prp6bi.fsf@vostro.fn.ogness.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200611115048.21677-1-cantona@cantona.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2020-06-10 12:24:01, John Ogness wrote:
-> On 2020-06-10, Petr Mladek <pmladek@suse.com> wrote:
-> >> >> --- /dev/null
-> >> >> +++ b/kernel/printk/printk_ringbuffer.c
-> >> >> +/*
-> >> >> + * Given a data ring (text or dict), put the associated descriptor of each
-> >> >> + * data block from @lpos_begin until @lpos_end into the reusable state.
-> >> >> + *
-> >>>> + * If there is any problem making the associated descriptor reusable, either
-> >>>> + * the descriptor has not yet been committed or another writer task has
-> >>>> + * already pushed the tail lpos past the problematic data block. Regardless,
-> >>>> + * on error the caller can re-load the tail lpos to determine the situation.
-> >>>> + */
-> >>>> +static bool data_make_reusable(struct printk_ringbuffer *rb,
-> >>>> +			       struct prb_data_ring *data_ring,
-> >>>> +			       unsigned long lpos_begin,
-> >>>> +			       unsigned long lpos_end,
-> >>>> +			       unsigned long *lpos_out)
-> >>>> +{
-> >>>> +	struct prb_desc_ring *desc_ring = &rb->desc_ring;
-> >>>> +	struct prb_data_blk_lpos *blk_lpos;
-> >>>> +	struct prb_data_block *blk;
-> >>>> +	unsigned long tail_lpos;
-> >>>> +	enum desc_state d_state;
-> >>>> +	struct prb_desc desc;
-> >>>> +	unsigned long id;
-> >>>> +
-> >>>> +	/*
-> >>>> +	 * Using the provided @data_ring, point @blk_lpos to the correct
-> >>>> +	 * blk_lpos within the local copy of the descriptor.
-> >>>> +	 */
-> >>>> +	if (data_ring == &rb->text_data_ring)
-> >>>> +		blk_lpos = &desc.text_blk_lpos;
-> >>>> +	else
-> >>>> +		blk_lpos = &desc.dict_blk_lpos;
-> >>>> +
-> >>>> +	/* Loop until @lpos_begin has advanced to or beyond @lpos_end. */
-> >>>> +	while ((lpos_end - lpos_begin) - 1 < DATA_SIZE(data_ring)) {
-> >>>> +		blk = to_block(data_ring, lpos_begin);
-> >>>> +		id = READ_ONCE(blk->id); /* LMM(data_make_reusable:A) */
-> >>>> +
-> >>>> +		/*
-> >>>> +		 * Guarantee the block ID is loaded before checking the tail
-> >>>> +		 * lpos. The loaded block ID can only be considered valid if
-> >>>> +		 * the tail lpos has not overtaken @lpos_begin. This pairs
-> >>>> +		 * with data_alloc:A.
-> >>>> +		 *
-> >>>> +		 * Memory barrier involvement:
-> >>>> +		 *
-> >>>> +		 * If data_make_reusable:A reads from data_alloc:B, then
-> >>>> +		 * data_make_reusable:C reads from data_push_tail:D.
-> >>>> +		 *
-> >>>> +		 * Relies on:
-> >>>> +		 *
-> >>>> +		 * MB from data_push_tail:D to data_alloc:B
-> >>>> +		 *    matching
-> >>>> +		 * RMB from data_make_reusable:A to data_make_reusable:C
-> >>>> +		 *
-> >>>> +		 * Note: data_push_tail:D and data_alloc:B can be different
-> >>>> +		 *       CPUs. However, the data_alloc:B CPU (which performs
-> >>>> +		 *       the full memory barrier) must have previously seen
-> >>>> +		 *       data_push_tail:D.
-> >>>> +		 */
-> >>>> +		smp_rmb(); /* LMM(data_make_reusable:B) */
-> >>>> +
-> >>>> +		tail_lpos = atomic_long_read(&data_ring->tail_lpos
-> >>>> +					); /* LMM(data_make_reusable:C) */
-> >>>> +
-> >>>> +		/*
-> >>>> +		 * If @lpos_begin has fallen behind the tail lpos, the read
-> >>>> +		 * block ID cannot be trusted. Fast forward @lpos_begin to the
-> >>>> +		 * tail lpos and try again.
-> >>>> +		 */
-> >>>> +		if (lpos_begin - tail_lpos >= DATA_SIZE(data_ring)) {
-> >>>> +			lpos_begin = tail_lpos;
-> >>>> +			continue;
-> >>>> +		}
-> >>>
-> >>> I am sorry if we have had this discussion already in past.
-> >> 
-> >> We have [0]. (Search for "Ouch.")
-> >
-> > I see. Thanks a lot for the pointer.
-> >
-> >>> Well, it would just prove that it really needs a comment why this
-> >>> check is necessary.
-> >> 
-> >> The comment says why it is necessary. The previous read of the block ID
-> >> cannot be trusted if the the tail has been pushed beyond it.
-> >
-> > Not really. The comment describes what the check does. But it does not
-> > explain why it is needed. The reason might be described be something like:
-> >
-> > 		* Make sure that the id read from tail_lpos is really
-> > 		* pointing to this lpos. The block might have been
-> > 		* reused in the meantime. Make sure to do not make
-> > 		* the new owner reusable.
+On Thu, Jun 11, 2020 at 07:50:47PM +0800, Su Kang Yin wrote:
+> commit e1de42fdfc6a ("crypto: talitos - fix ECB algs ivsize")
+> wrongly modified CBC algs ivsize instead of ECB aggs ivsize.
 > 
-> That is _not_ what this check is doing. I recommend looking closely at
-> the example you posted. This is not about whether or not a descriptor is
-> pointing to this lpos. In your example you showed that ID, state, and
-> lpos values could all look good, but it is for the _new_ record and we
-> should _not_ invalidate that one.
-
-OK, let's make sure that we are talking about the same example.
-I was talking about this one from
-https://lore.kernel.org/lkml/87ftecy343.fsf@linutronix.de/
-
-% [*] Another problem would be when data_make_reusable() see the new
-%     data already in the committed state. It would make fresh new
-%     data reusable.
-%
-%     I mean the following:
-%
-% CPU0				CPU1
-%
-% data_alloc()
-%   begin_lpos = dr->head_lpos
-%   data_push_tail()
-%     lpos = dr->tail_lpos
-%				prb_reserve()
-%				  # reserve the location of current
-%				  # dr->tail_lpos
-%				prb_commit()
-%
-%     id = blk->id
-%     # read id for the freshly written data on CPU1
-%     # and happily make them reusable
-%     data_make_reusable()
-
-Sigh, sigh, sigh, there is a hugely misleading comment in the example:
-
-%				  # reserve the location of current
-%				  # dr->tail_lpos
-
-It is true that it reserves part of this location. But it will use
-data_ring->head_lpos for the related desc->text_blk_lpos.begin !!!
-
-See below:
-
-> We can detect the scenario you pointed out by verifying the tail has not
-> moved beyond the data block that the ID was read from. The comment for
-> this check says:
+> This restore the CBC algs original ivsize of removes ECB's ones.
 > 
->     If @lpos_begin has fallen behind the tail lpos,
->     the read block ID cannot be trusted.
-> 
-> This is exactly the why. It is only about whether we can trust that a
-> non-garbage block ID was read. Or do you want me to add:
-> 
->     ... because data read that is behind the tail lpos must be
->     considered garbage.
-> 
-> > But wait! This situation should get caught by the two existing descriptor
-> > checks:
-> >
-> >>		case desc_committed:
-> >>			/*
-> >>			 * This data block is invalid if the descriptor
-> >>			 * does not point back to it.
-> >>			 */
-> >>			if (blk_lpos->begin != lpos_begin)
-> >>				return false;
-> >>			desc_make_reusable(desc_ring, id);
-> >>			break;
-> >>		case desc_reusable:
-> >>			/*
-> >>			 * This data block is invalid if the descriptor
-> >>			 * does not point back to it.
-> >>			 */
-> >>			if (blk_lpos->begin != lpos_begin)
-> >>				return false;
-> >>			break;
-> 
-> No. Your example showed that it is not caught here.
+> Fixes: e1de42fdfc6a ("crypto: talitos - fix ECB algs ivsize")
+> Signed-off-by: Su Kang Yin <cantona@cantona.net>
+> ---
+> Patch for 4.9 upstream.
 
-I am afraid that my example was wrong:
+Also seems to be an issue for the 4.14 and 4.19 backport, so I'll queue
+it up there too, thanks!
 
-If blk->id comes from the new descriptor written by CPU1 then
-blk_lpos->begin is based on the old data_ring->head_lpos.
-Then it is different from lpos_begin.
-
-
-Let's put it another way. The state of the descriptor defines validity
-of the data. Descriptor in committed state _must not_ point to invalid
-data block!!!
-
-If a descriptor in committed state point to lpos that was in invalid range
-before reading the descriptor then we have a huge hole in the design.
-
-This is why I believe that the check of the descriptor must be enough.
-
-
-Best Regards,
-Petr
-
-PS: I am sorry if I create too much confusion. It is easy to
-get lost :-(
+greg k-h
