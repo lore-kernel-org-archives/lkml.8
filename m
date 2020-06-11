@@ -2,136 +2,105 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB58C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD0FFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA33C20829
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:37:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 799A420792
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:38:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="y2+il+aT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d9kaS29q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728100AbgFKSg7 (ORCPT
+        id S1727963AbgFKSiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 14:36:59 -0400
-Received: from mail-dm6nam11on2048.outbound.protection.outlook.com ([40.107.223.48]:6263
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726369AbgFKSg6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 14:36:58 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aujn15rrBLpe/fEiyU7Qij+0GsJiDOXYabpDjEZPjgeZNBew/Z5j5wDvTh6MqsrS70rR6mcJg61JrM59LtwtwzkW8hXbFsJ367Z9oaT4kp/LUbEQzmrHZ7RfPaHS1ssUM1CihM4HUHDP/JZ9fHgoYiH+nekm47aPGdHMSCXGnbiTFyM3Xi4BZNQWN8x0XMLaYl1HyZXiQDK66CEjuntVrEunT/i0UG/53XnVQuBE20fwSUUiTJin1YyJLNuEtl70cO9sulCBtdq/PUtXbV2Ba73Me2zTLpD44AMKXMj/HMlmlPqoYdGWxEC7cYZKpV/GtA+xiEjYyvCz92doy3jG5w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1JSDRSh+ieV9wW3nZ0cXz4vhrGDq+MA/1K5AMbTo98A=;
- b=YE6NZPnq3Jtu+vaFVIG3hfOBpJWXBaaDOu7ORXxcNAc3rYZOikzBSL93ydMhGb0Nfe2z/2gBNL9EyR17uyU+Ts1h6yMUlgdy8U8xbAA2a0zbs4emVm+r+GXnMG90U3OnlOS5Mxy/OvU+pGUKrjS/4lgQfn0A4D66q9R8G5ZTai8cyqAO/aEKQnMBSpBUVIthOr3UCiQ16DQ2gcDG30HnRDA/kqyzTKg2N1AlBKKJq4zqXb1CweuCBHhATmJkyRVEM8AM/uDyClX/ny7wgTcuE+exjyyBAAuPjTJ09r0PmQf17qnNQbyCKG/9RIWZUW84lfkO1M/QeKrtfoJlAotTpw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Thu, 11 Jun 2020 14:38:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726369AbgFKSiy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 14:38:54 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C7B0C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 11:38:54 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id d12so269476qvn.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 11:38:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1JSDRSh+ieV9wW3nZ0cXz4vhrGDq+MA/1K5AMbTo98A=;
- b=y2+il+aTNMjY88kAkxpVMCs48PwV7rV9CiRPW5/gHDJnIBjqbeXCYfKRqn9cvIvNI1bqjyFlywWNQKSsYH7lMNQtp7hvAReW6Uvffd9kHFRb1logh3tCaKIuT84m//gy6lDWkReNQKBGKqfADRTdhVamWOMOd0pLyFl7sTxdCC4=
-Authentication-Results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=amd.com;
-Received: from BN8PR12MB3108.namprd12.prod.outlook.com (2603:10b6:408:40::20)
- by BN8PR12MB2882.namprd12.prod.outlook.com (2603:10b6:408:96::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.22; Thu, 11 Jun
- 2020 18:36:55 +0000
-Received: from BN8PR12MB3108.namprd12.prod.outlook.com
- ([fe80::2c67:480d:4505:5314]) by BN8PR12MB3108.namprd12.prod.outlook.com
- ([fe80::2c67:480d:4505:5314%3]) with mapi id 15.20.3088.021; Thu, 11 Jun 2020
- 18:36:55 +0000
-Date:   Thu, 11 Jun 2020 13:36:47 -0500
-From:   Yazen Ghannam <yazen.ghannam@amd.com>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     Zhenzhong Duan <zhenzhong.duan@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "hpa@zytor.com" <hpa@zytor.com>
-Subject: Re: [PATCH] x86/mce: fix a wrong assignment of i_mce.status
-Message-ID: <20200611183647.GA255402@yaz-nikka.amd.com>
-References: <20200611023238.3830-1-zhenzhong.duan@gmail.com>
- <20200611165500.GA3503@agluck-desk2.amr.corp.intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200611165500.GA3503@agluck-desk2.amr.corp.intel.com>
-X-ClientProxiedBy: DM6PR06CA0064.namprd06.prod.outlook.com
- (2603:10b6:5:54::41) To BN8PR12MB3108.namprd12.prod.outlook.com
- (2603:10b6:408:40::20)
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zcAd0OCwL+LW19ejS0uHvwjKngjOVPuSl1ychbjKfWA=;
+        b=d9kaS29qTa6CMR7K6/UAq62vdgIm7KjJ1p8JDmI82D+4nk6IlJ3WOcLkwEsrRhuPgQ
+         F00P+tc/G3oqDH9WBY/RGphjMiIJbVWWLA7S7vJACm7U7P9HGYMgEGHUBtnO8bJ0KFsj
+         fMOgenLNy2rToXZIKX+1cHxMZR/+f/xwraGLWrAelXvROW1ijFNFtOsIE3wQ/bVky3XN
+         1Snm5L28bF/ovmTJZ5wzdnr7gdtFicFh5CJ1XPkiMjSVQckpYvZTW0ri+X8++pWahx2m
+         OVd1njIPsPUKGSRto5ImDJ5pA03+ctiHcGYf9CzeCHQYphk1e0Utqe1+wUkQd6kZIIma
+         FIcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zcAd0OCwL+LW19ejS0uHvwjKngjOVPuSl1ychbjKfWA=;
+        b=VK0m+ziNVTDycaVtPL0bNaOlDO0CIusr9PM2GLsCuEnXZEYgNHr0VhMR1dSdp6Bn3/
+         /ZFRYGOHgWJkebqiq3gSrG1kY18UoS2V5oKAzG6VUEGTHS10jaokkvGjqZdzsWbGdY4t
+         IcmwXV13PHpsf6jN+qm1FUjlA7Mzhw4ubxJj8pCj31pnfddwitcSZtsK+x+oMBBvgcZw
+         o87Ufgoz89Q9q3rFiB789GVGED11AGr0c2ofFLv/Pme9h1yI3nzRkMeR6Pkj+EEN17Yn
+         WIbYBz5pDtqWUF4z3azn4M6M9OTxAPqN4BPWBs9UmBKnY4TYwprqRJNwZxNrLznVExSA
+         L8zw==
+X-Gm-Message-State: AOAM530Swa6IXkC6UOHQ/n7Q0f77HdXSsb3rkKHsfwuVBdCLcDxQZfZm
+        zoVo4yia9abRiQ4icLncCQ==
+X-Google-Smtp-Source: ABdhPJwErSdg1RuK+kLXh29/tjcF893DQNxl0XGREP2qGDPkanfxZUH1IBri+KvbvGhv9o3JjbV6lA==
+X-Received: by 2002:ad4:4f23:: with SMTP id fc3mr9366299qvb.25.1591900733445;
+        Thu, 11 Jun 2020 11:38:53 -0700 (PDT)
+Received: from localhost.localdomain ([142.118.26.59])
+        by smtp.googlemail.com with ESMTPSA id s70sm2772593qke.80.2020.06.11.11.38.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2020 11:38:53 -0700 (PDT)
+From:   Keyur Patel <iamkeyur96@gmail.com>
+To:     Santosh Shilimkar <ssantosh@kernel.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Keyur Patel <iamkeyur96@gmail.com>
+Subject: [PATCH] memory: emif: Avoid double error messaging when IRQ absent
+Date:   Thu, 11 Jun 2020 14:38:37 -0400
+Message-Id: <20200611183837.170408-1-iamkeyur96@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from yaz-nikka.amd.com (165.204.77.1) by DM6PR06CA0064.namprd06.prod.outlook.com (2603:10b6:5:54::41) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.20 via Frontend Transport; Thu, 11 Jun 2020 18:36:53 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 8ac5bc48-1f84-47a1-80db-08d80e366a4c
-X-MS-TrafficTypeDiagnostic: BN8PR12MB2882:
-X-Microsoft-Antispam-PRVS: <BN8PR12MB2882A225863B3D0F467A23ABF8800@BN8PR12MB2882.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3968;
-X-Forefront-PRVS: 0431F981D8
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: aVZslhVwg+DBhOcSPY1G6OqsFQlo37+eeeb1hhsJaT0cqwfFbjumqEKOoDIZZtPjFMwBNl86nYq9X5pJmHaoFulU23x5EbQmGo5SAdgNpWRLi9/dnrgkVoOOdoOe60VpTAl5UTDAOs2MU8AI6BRWHVaBtDsXgrxSDUI9qiKrnmESm0f59boKwS5lBFvHVsqCzoX3sCpi85dYvd2PWlmG5ua0NADiaYTco65TaJj4mSsVAa5y4EcC1SPIxzDndujlP6lA1rFBtbLufrEwqB7vyP74E8Qw1AkVN3pSX58KIbH9k07DW1XfsJLdkqQ1GEnVFY2PVVfJHPIVeTfKmO/VTQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3108.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(376002)(346002)(366004)(396003)(136003)(316002)(55016002)(44832011)(478600001)(16526019)(8676002)(186003)(8936002)(7696005)(52116002)(54906003)(83380400001)(956004)(4326008)(26005)(6916009)(66556008)(66476007)(33656002)(6666004)(5660300002)(66946007)(1076003)(86362001)(2906002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: B137UyRDkMydVNUAS71QX1x1OgOYvesWJsXhcSpwVUFEtQJ9oEon5dnaAgluCEieRHvRxdLm/BLL6DAamnOK0OU+x07GpabtT3WBZBoiHi/1a+R+pPYHzcwlHrtnkjMv11bB5A1gu21f7NHYiIX7xEXP2Fm9umRd4G4007wAutPVmTrSta5zZL6jdYFKzjEEC2kvlKQ9Mr3gd/tLHKA3IJPzZJoAnnaLmGybhaJ53U4CK2hyWFkptZ4KoBivrS5jQigncloTejKbtftuU29biW+xdQCsNFkhrzSIpnm/iWBxJPXt9vXpTpv/eQvMpSFl4EN9kbztIpVkg/rgVag+07qZD5pOkFaJllFSasoi/yRAp0vLYQwWTEky7JqnpBGRsA11tqF4pUEUUsaMqMb30QcH8TcpH+wrF5Eg0nk4d69kBNw8KHOIak2+mzUU6mRoUIsP581FY0qHtpaWMOEXRSO7NP3B+S1jNKdS1PYcom0=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8ac5bc48-1f84-47a1-80db-08d80e366a4c
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2020 18:36:54.9055
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /yiGzpjaY5mNhRYrrEc1GlinSXcaidugoqlbcZNnJk8KPqzD5Ni4akLs0uSvX3+4Y82nmABzoeQWzXp7OgV3NA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB2882
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 12:55:00PM -0400, Luck, Tony wrote:
-> +Yazen
-> 
-> On Thu, Jun 11, 2020 at 10:32:38AM +0800, Zhenzhong Duan wrote:
-> > The original code is a nop as i_mce.status is or'ed with part of itself,
-> > fix it.
-> > 
-> > Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
-> > ---
-> >  arch/x86/kernel/cpu/mce/inject.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/x86/kernel/cpu/mce/inject.c b/arch/x86/kernel/cpu/mce/inject.c
-> > index 3413b41..dc28a61 100644
-> > --- a/arch/x86/kernel/cpu/mce/inject.c
-> > +++ b/arch/x86/kernel/cpu/mce/inject.c
-> > @@ -511,7 +511,7 @@ static void do_inject(void)
-> >  	 */
-> >  	if (inj_type == DFR_INT_INJ) {
-> >  		i_mce.status |= MCI_STATUS_DEFERRED;
-> > -		i_mce.status |= (i_mce.status & ~MCI_STATUS_UC);
-> > +		i_mce.status &= ~MCI_STATUS_UC;
-> 
-> Boris: "git blame" says you wrote this code. Patch looks right (in
-> that it makes the code do what the comment just above says it is trying
-> to do):
-> 
->          * - MCx_STATUS[UC] cleared: deferred errors are _not_ UC
-> 
-> But this is AMD specific, so I'll defer judgement
->
+Since the commit 7723f4c ("driver core: platform: Add an error message
+to platform_get_irq*()") platform_get_irq() started issuing an error message.
+Thus, there is no need to have the same in the driver.
 
-Acked-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Signed-off-by: Keyur Patel <iamkeyur96@gmail.com>
+---
+ drivers/memory/emif.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-Thanks,
-Yazen
+diff --git a/drivers/memory/emif.c b/drivers/memory/emif.c
+index 9d9127bf2a59..3ac9f355ddb8 100644
+--- a/drivers/memory/emif.c
++++ b/drivers/memory/emif.c
+@@ -1563,11 +1563,8 @@ static int __init_or_module emif_probe(struct platform_device *pdev)
+ 		goto error;
+ 
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(emif->dev, "%s: error getting IRQ resource - %d\n",
+-			__func__, irq);
++	if (irq < 0)
+ 		goto error;
+-	}
+ 
+ 	emif_onetime_settings(emif);
+ 	emif_debugfs_init(emif);
+-- 
+2.26.2
+
