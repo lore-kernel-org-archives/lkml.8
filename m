@@ -2,157 +2,123 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77CC0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 21:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A2E3C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 21:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5724A2073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 21:35:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F15DE2073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 21:45:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="un0XfoiD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="quXCzrFv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbgFKVf0 (ORCPT
+        id S1726289AbgFKVoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 17:35:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41022 "EHLO
+        Thu, 11 Jun 2020 17:44:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726326AbgFKVf0 (ORCPT
+        with ESMTP id S1725869AbgFKVoQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 17:35:26 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04CDFC08C5C2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 14:35:25 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id bh7so2822821plb.11
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 14:35:25 -0700 (PDT)
+        Thu, 11 Jun 2020 17:44:16 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DDFAC03E96F
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 14:44:16 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id g7so3470904qvx.11
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 14:44:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=jYhsRw+x2h3yVSINWDasBRC/3u0YL3yghV7G1msGuR4=;
-        b=un0XfoiDgSk4wtPUKLmHvaXQpKehMEh5W496xGe1kRdp16yYLb3iMN7OlsJQdbDUqG
-         wvtgiZ3CkfBI2Vx31Zi767jvOgp1CfhiyIHSkyzomGkhjEw14+maecf1VuFOe2bFm4kt
-         jVhp6C8bel81wvlwStrRpPAFRcCCSHe6873WhL3LS9tMLxIMvyxD3U4y/HdSLA04YfVX
-         iu4n2GmjrFdLXrx92itNoryNJvqgI/yngY+LvKPx/OgeUdcVv8bflL7cV+C3C/5GeGJL
-         6otbzy0mqN1+/KgXJcJoU8g05XCafp3YXYtME3fE7fDNnb2cq2m57H6AlnnX3yKHJEKf
-         a5og==
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=vlGLqbRt1ysLw4LRieBzZ3hIExddgO1NFVFXED2H08I=;
+        b=quXCzrFvs5Tj9kDSX86/yFxKZzQIPXpFVPaU1SFKyn27t1iZEUL5XoOqQUTDxSxZxF
+         bIxYXxLAhw2mabxbIgeQW6sdeMovCY6PsfIgd6AJpIk6FNaL+GGo5dFidkXrAV0Spj7Z
+         gu0iKu+MzhSIEK4Ob/BCoJD0AhILmyoKBn7K7lqNLk9TQLsaCdtKbIw4jYfT9WngLnNK
+         +5ctoC+aIdao/kBiJa4xerA00rvDTKx4zSyPPSdu5mF84+gYrZ7BA30swFvQGu4zfQzw
+         F71j3B7qoPUc8T48lRHSUisGdKOliNpLQv/R9g6uebruBrXSWXdn+sIGjzgqQT0UzD2d
+         DB/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=jYhsRw+x2h3yVSINWDasBRC/3u0YL3yghV7G1msGuR4=;
-        b=UihoxChas9mXE59J4wYu1IhjbfSPVjgO3Kvmf5FIaHRJtqHV65JusfaIYYcHY0GBwg
-         tZselBqd8ytos09NoNgcuotsw/6QnTwZsgJ+RpDhf4Ko7N3UGAmSHPcOGuqbLlR0nQm4
-         OjlV6h3CccvneuKeOMOICVZTZThGSPi4EPf6zsgMvgwzfPUrO//dUd5eyv29rhzJCpxD
-         LRMB+ska07aqaBsY4Q63+Ebe2dcjGPHxlvJPSpr4s8pGMoVDoIZEjstU/u+xYw7b+PJQ
-         mSAMWIFiZ/zXxPVa/wGbMqib0h1jHTzkIiLd/WjOiUHvOSKE1MRGv0kG2Igta+BKOc5p
-         44Vw==
-X-Gm-Message-State: AOAM532S8AK0EYHFFLj2lMsHnqisteBNHTnf7WRPmhbWnoSwBhNERrgi
-        04q3d1AAxpqT2oa/RRJbXyBMPusiolrBcQ==
-X-Google-Smtp-Source: ABdhPJy5zd/3yYQcwfqRlrE+wFjsgiDmvvDuslpeFCJBBqEgSdOVIihwI6XBdxBumxneVZwEWT0KLQ==
-X-Received: by 2002:a17:90a:1117:: with SMTP id d23mr9982887pja.136.1591911324223;
-        Thu, 11 Jun 2020 14:35:24 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id nl8sm3786740pjb.13.2020.06.11.14.35.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Jun 2020 14:35:23 -0700 (PDT)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     io-uring <io-uring@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Subject: [GIT PULL] io_uring fixes for 5.8-rc1
-Message-ID: <75aa6bc8-488a-07dd-feea-545500e51966@kernel.dk>
-Date:   Thu, 11 Jun 2020 15:35:22 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=vlGLqbRt1ysLw4LRieBzZ3hIExddgO1NFVFXED2H08I=;
+        b=a/EG4FCHJcTaG7/N4FRyPP6s8XVjcZr/LB0dvNbEANB+7+BqpE9e92eNQ0XrXt+68d
+         CA3tW9mZYXzDXLcW2i1ONpfRGrgRfoqHoxE5KAICVGfoQs67vFE/SkSJPFzfzHRTzDEW
+         dYc/i9Eb1XYqfWPQ/sarwPhvB0NkBx67GWey5mNLSw76gpesO1UB/7S+sUQ5Gfpko3/q
+         mX3p497CwXZnfH7xr6JE/UqB8uT4XaabRzzMUl90o//KBIbme4yxpsVZgr3ZI5rfOoXw
+         4AMeUEQ5shYTIO+AtmwLjun7HgUauaEYG4GIf2UKnYR/X5Qq/0sQacnzXi+x3pDPqDSa
+         s0uA==
+X-Gm-Message-State: AOAM533VQQZuE7i6ZPFkV2OgTiXdhDMnwOTFmAGBqqs9BMfY7Abg4TVO
+        g7tnKkmArXIQJkjqtftoqGM=
+X-Google-Smtp-Source: ABdhPJztCVw1122mqj+u/qbb3QBrsB29sitSBNZwrTD1S7Cf2dwqWv1C83ZXBcIJYTGoDQVy1eE0kw==
+X-Received: by 2002:aed:2253:: with SMTP id o19mr55340qtc.236.1591911855402;
+        Thu, 11 Jun 2020 14:44:15 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id s201sm3142424qka.8.2020.06.11.14.44.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2020 14:44:14 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Thu, 11 Jun 2020 17:44:13 -0400
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Fangrui Song <maskray@google.com>,
+        Rong Chen <rong.a.chen@intel.com>,
+        kernel test robot <lkp@intel.com>, kbuild-all@lists.01.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Makefile: Improve compressed debug info support detection
+Message-ID: <20200611214413.GA3924125@rani.riverdale.lan>
+References: <20200610063715.v2qrqvwtegdxdwzl@google.com>
+ <20200610191106.2662548-1-nivedita@alum.mit.edu>
+ <CAKwvOdnF9xhrs+FP4QXo6uXxgHMfHO8NvPYs1=KDE2ZyhCw2QQ@mail.gmail.com>
+ <20200610233046.GA2941409@rani.riverdale.lan>
+ <20200610233954.GB2941409@rani.riverdale.lan>
+ <CAKwvOd=UyEPOx5M0w+uwiYwE5fY-A5vDmuvPnWs_pK4zW4RH-w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <CAKwvOd=UyEPOx5M0w+uwiYwE5fY-A5vDmuvPnWs_pK4zW4RH-w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Thu, Jun 11, 2020 at 01:44:53PM -0700, Nick Desaulniers wrote:
+> On Wed, Jun 10, 2020 at 4:39 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> >
+> > On Wed, Jun 10, 2020 at 07:30:46PM -0400, Arvind Sankar wrote:
+> > > On Wed, Jun 10, 2020 at 02:27:55PM -0700, Nick Desaulniers wrote:
+> > >
+> > > No, as-option does invoke the assembler. The problem here is that with
+> > > -Wa, the option is only seen by the assembler, not the gcc driver. So it
+> > > will succeed because the assembler supports it, but it will not test
+> > > whether the gcc driver also supports it.
+> > >
+> >
+> > I think in theory another way to fix it is to just use -Wa even for
+> > CFLAGS, assuming the compiler itself doesn't have to do anything with
+> > the option and it's purely an assembler thing. Then you'd just do the as
+> > and ld tests.
+> 
+> I don't think the CFLAGS are used for .S source files though.  We may
+> drive assembler via the compiler, but AFLAGS are used in place of
+> CFLAGS IIRC.  (eh, maybe not for ARCH=arc, ARCH=sh, ARCH=csky,
+> ARCH=mips)
+> 
+> -- 
+> Thanks,
+> ~Nick Desaulniers
 
-A few late stragglers in here. In particular:
+I meant just replace
+	KBUILD_CFLAGS += -gz=zlib
+with
+	KBUILD_CFLAGS += -Wa,--compress-debug-sections=zlib
+leaving KBUILD_AFLAGS the same as before
+	KBUILD_AFLAGS += -Wa,--compress-debug-sections=zlib
 
-- Validate full range for provided buffers (Bijan)
-
-- Fix bad use of kfree() in buffer registration failure (Denis)
-
-- Don't allow close of ring itself, it's not fully safe. Making it fully
-  safe would require making the system call more expensive, which isn't
-  worth it.
-
-- Buffer selection fix
-
-- Regression fix for O_NONBLOCK retry
-
-- Make IORING_OP_ACCEPT honor O_NONBLOCK (Jiufei)
-
-- Restrict opcode handling for SQ/IOPOLL (Pavel)
-
-- io-wq work handling cleanups and improvements (Pavel, Xiaoguang)
-
-- IOPOLL race fix (Xiaoguang)
-
-Please pull!
-
-The following changes since commit 1ee08de1e234d95b5b4f866878b72fceb5372904:
-
-  Merge tag 'for-5.8/io_uring-2020-06-01' of git://git.kernel.dk/linux-block (2020-06-02 15:42:50 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.dk/linux-block.git tags/io_uring-5.8-2020-06-11
-
-for you to fetch changes up to 65a6543da386838f935d2f03f452c5c0acff2a68:
-
-  io_uring: fix io_kiocb.flags modification race in IOPOLL mode (2020-06-11 09:45:21 -0600)
-
-----------------------------------------------------------------
-io_uring-5.8-2020-06-11
-
-----------------------------------------------------------------
-Bijan Mottahedeh (1):
-      io_uring: validate the full range of provided buffers for access
-
-Denis Efremov (1):
-      io_uring: use kvfree() in io_sqe_buffer_register()
-
-Jens Axboe (3):
-      io_uring: disallow close of ring itself
-      io_uring: re-set iov base/len for buffer select retry
-      io_uring: allow O_NONBLOCK async retry
-
-Jiufei Xue (1):
-      io_uring: check file O_NONBLOCK state for accept
-
-Pavel Begunkov (8):
-      io_uring: fix {SQ,IO}POLL with unsupported opcodes
-      io_uring: do build_open_how() only once
-      io_uring: deduplicate io_openat{,2}_prep()
-      io_uring: move send/recv IOPOLL check into prep
-      io_uring: don't derive close state from ->func
-      io_uring: remove custom ->func handlers
-      io_uring: don't arm a timeout through work.func
-      io_wq: add per-wq work handler instead of per work
-
-Xiaoguang Wang (3):
-      io_uring: avoid whole io_wq_work copy for requests completed inline
-      io_uring: avoid unnecessary io_wq_work copy for fast poll feature
-      io_uring: fix io_kiocb.flags modification race in IOPOLL mode
-
- fs/io-wq.c    |  10 +-
- fs/io-wq.h    |   8 +-
- fs/io_uring.c | 424 ++++++++++++++++++++++++++--------------------------------
- 3 files changed, 201 insertions(+), 241 deletions(-)
-
--- 
-Jens Axboe
-
+This would avoid depending on the subtleties in the gcc driver's support
+for this option. But -gz=zlib is passed to cc1 as well as the assembler,
+so I'm not sure if there would be some loss from not passing it to the
+compiler.
