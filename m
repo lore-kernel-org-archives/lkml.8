@@ -2,193 +2,91 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6EEC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F601C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C0E92082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:16:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7462820792
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:16:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="boniqFtw"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="hIXDzAZn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728523AbgFKPQL (ORCPT
+        id S1728533AbgFKPQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 11:16:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39012 "EHLO
+        Thu, 11 Jun 2020 11:16:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728455AbgFKPQJ (ORCPT
+        with ESMTP id S1728462AbgFKPQd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 11:16:09 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EEA6C08C5C1;
-        Thu, 11 Jun 2020 08:16:09 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id t18so6567628wru.6;
-        Thu, 11 Jun 2020 08:16:09 -0700 (PDT)
+        Thu, 11 Jun 2020 11:16:33 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9754C08C5C2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 08:16:32 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id a127so2788678pfa.12
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 08:16:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=ekZS4aH+9SdzL+TCB6y0YZ7lKqUewvODAqRgveIbzBQ=;
-        b=boniqFtwc6F5pPI2Ls4+Ba7k45IGWop1Bff1qXYj94NW5TCfQBIOcWtiS+/AR2EVJG
-         7F4g67hCPrnfisVbm7XAtyEdyYCdD2qWd6u6CU3bQdl54QMFLwta81YoFrh0tI4QQdYN
-         FHjtpTFxDnbjJgs+4rpqSlE7L3Bg4IENUJ2yd4pTMWCFlwjwVOfABk+hwOVHfnXTHdfI
-         0iPw9nxcEiBXTChqMqbCgzyVOvfcrskmrApZyc6v7VXj5Ue8Vr16/C8e7RsHxBvh8xK9
-         qDCFDJm159eyRs4whTdZpBtuaDUUXTQrNpa5zFxgqY7A4kejR/IMc4wvQkIA5IIzNvWb
-         0C0A==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5Wzj/6YJUHkYVTM6L7OjwBpDRpF+0Bo6tec4TfXLqcw=;
+        b=hIXDzAZnr9+g6rNc5rgs19E0NWXMj94q0FcoRTIFO07Bu3APgCTC2Udk222dEj8Veb
+         xdlrNLbqHHGAOTqVf9fsKCyeuYSwUZngTGRosPxF4febY+lmkPCtFWUdlGNqd+pk3Kb9
+         YIYTp4c5DyalNb7Q4KzQ01rzqR+rpFWXhSKcyange+wCzyVs7YPgtr4jQTk3HrLXDLea
+         rAHCa/21pG0JMRaQRKxAlzvhvVrrh3DMNS9OP1qs/EqjMu33Zekele5WpFL3TorGvc9r
+         3Hom9bGQxaTUythX/J9Zp4zWe3ESVKJp8Ja+6EMmcS3YNO3RDjp4Z3oPFDoIcccZ40Dq
+         +XuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=ekZS4aH+9SdzL+TCB6y0YZ7lKqUewvODAqRgveIbzBQ=;
-        b=OCi2xPIgKzA2OdkHRn9KqZGJuMP2xSKi2s/KJmQ3EPhUzH4oMo8b/CK8pb0Lots4If
-         ECHne1GAeo44/IZTX+Ru8UgcSgt6/oL3zvi7igGnv//O6LgIaxeEaFi4/UK/pk+iPgjZ
-         mxP6Tf82IeTTX+FagEprEbnan5iCdnLg49HyUOqtDka2xk5rkbIC6dIZmCjOquFqzAeE
-         i89ouVgqN60eX8KyEez8VJkYXPm3e/GCBloD5s2K/fBTN+XiYEvL/Vod41PVgHtl72+V
-         djcZm5mZjQg1tSnxP2cgW3v+mSy519HSXFI9HWFMbPo1H9Ghs147O9cssl+FFQcqQ19O
-         QZRQ==
-X-Gm-Message-State: AOAM532OTAPJB1YLH0L8jF4Ej4RC/YGbLYYwmoJzUwPK4yCPgSH7tHaQ
-        OhGGh4JX2pDACwOgnCDpImCz/ohLpiw=
-X-Google-Smtp-Source: ABdhPJwA+DiZuy6xl8wG41wqWju0oynDNJh6M3rEm018zeY+edIUL8WNZYWusLz93cuBSfoRG/fQhg==
-X-Received: by 2002:a05:6000:1ce:: with SMTP id t14mr10050620wrx.300.1591888567919;
-        Thu, 11 Jun 2020 08:16:07 -0700 (PDT)
-Received: from macbook-pro-alvaro.lan (28.red-83-49-61.dynamicip.rima-tde.net. [83.49.61.28])
-        by smtp.gmail.com with ESMTPSA id z6sm5408008wrh.79.2020.06.11.08.16.06
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Jun 2020 08:16:07 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH v2] mtd: parsers: bcm63xx: simplify CFE detection
-From:   =?utf-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
-In-Reply-To: <20200611095540.250184d2@xps13>
-Date:   Thu, 11 Jun 2020 17:16:04 +0200
-Cc:     tsbogend@alpha.franken.de, Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com, richard@nod.at,
-        vigneshr@ti.com, Jonas Gorski <jonas.gorski@gmail.com>,
-        linus.walleij@linaro.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <779D37C7-58CB-49AF-8739-C34295B86FC4@gmail.com>
-References: <20200608094053.3381512-1-noltari@gmail.com>
- <20200608160649.3717152-1-noltari@gmail.com> <20200611095540.250184d2@xps13>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5Wzj/6YJUHkYVTM6L7OjwBpDRpF+0Bo6tec4TfXLqcw=;
+        b=bLkXfGLBE1BZ9VzrPOE5wmySXXldDhtO3xnoz8EDoKS3HrV9HcfNyzMWkFnNp2RcN1
+         Gm+qWFeakS0Z0nO7eGBjJdMD/uMdX6ksluOPvrafJnpDsAPn2C62EoteE0QyJ/X09/cy
+         z9iQlDbE7GDnYEsadK2BkBnFVdFSIXs9sTN2CpcEj+ZbNmYsKnb8rLhsax/W6WaAyQ5r
+         vwUkz6xK6f4TCuONfWitnBJ6eP5Gom3CKSD1uAngkeSqDW1zOiDK+fysho6ruwOOFYp/
+         pjkSh0rvkUgrszWwRi4GjNXfGu+zahQNm7dJIvJ7Z1bOFuAcrnjBKyjIl62JoZ6lcFuq
+         Qx5A==
+X-Gm-Message-State: AOAM530EQfY1Tlko7nRVTsww8tS14fKdjEV42jnGzasFMNCMCN2PLoDd
+        YbAmF9ezJMeOSOOP0jSYBItvRDYWKQMxjA==
+X-Google-Smtp-Source: ABdhPJyxbwLNFGeh47w7TpUaWru6e0CkefHtWL0j+9FKnzj8KhAuJi3W+16DMcpUr84qEr2q3biO2g==
+X-Received: by 2002:a63:6b86:: with SMTP id g128mr7219789pgc.445.1591888591908;
+        Thu, 11 Jun 2020 08:16:31 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id j2sm3097654pjf.4.2020.06.11.08.16.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Jun 2020 08:16:31 -0700 (PDT)
+Subject: Re: [PATCH] umem: remove redundant initialization of variable ret
+To:     Colin King <colin.king@canonical.com>, linux-block@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200611143527.925712-1-colin.king@canonical.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <cec98bd3-9d88-60e9-21b3-b85d16348685@kernel.dk>
+Date:   Thu, 11 Jun 2020 09:16:28 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200611143527.925712-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Miquel,
+On 6/11/20 8:35 AM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The variable ret is being initialized with a value that is never read
+> and it is being updated later with a new value.  The initialization is
+> redundant and can be removed.
 
-> El 11 jun 2020, a las 9:55, Miquel Raynal <miquel.raynal@bootlin.com> =
-escribi=C3=B3:
->=20
-> Hi =C3=81lvaro,
->=20
-> =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com> wrote on Mon,  8 =
-Jun 2020
-> 18:06:49 +0200:
->=20
->> Instead of trying to parse CFE version string, which is customized by =
-some
->> vendors, let's just check that "CFE1" was passed on argument 3.
->>=20
->> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
->> Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
->> ---
->> v2: use CFE_EPTSEAL definition and avoid using an additional funtion.
->>=20
->> drivers/mtd/parsers/bcm63xxpart.c | 29 ++++-------------------------
->> 1 file changed, 4 insertions(+), 25 deletions(-)
->>=20
->> diff --git a/drivers/mtd/parsers/bcm63xxpart.c =
-b/drivers/mtd/parsers/bcm63xxpart.c
->> index 78f90c6c18fd..493a75b2f266 100644
->> --- a/drivers/mtd/parsers/bcm63xxpart.c
->> +++ b/drivers/mtd/parsers/bcm63xxpart.c
->> @@ -22,6 +22,9 @@
->> #include <linux/mtd/partitions.h>
->> #include <linux/of.h>
->>=20
->> +#include <asm/bootinfo.h>
->> +#include <asm/fw/cfe/cfe_api.h>
->=20
-> Are you sure both includes are needed?
+Applied, thanks.
 
-asm/bootinfo.h is needed for fw_arg3 and asm/fw/cfe/cfe_api.h is needed =
-for CFE_EPTSEAL.
-
->=20
-> I don't think it is a good habit to include asm/ headers, are you sure
-> there is not another header doing it just fine?
-
-Both are needed unless you want to add another definition of CFE_EPTSEAL =
-value.
-There are currently two CFE magic definitions, the one in =
-asm/fw/cfe/cfe_api.h and another one in bcm47xxpart.c:
-=
-https://github.com/torvalds/linux/blob/master/arch/mips/include/asm/fw/cfe=
-/cfe_api.h#L28
-=
-https://github.com/torvalds/linux/blob/master/drivers/mtd/parsers/bcm47xxp=
-art.c#L33
-
->=20
->> +
->> #define BCM963XX_CFE_BLOCK_SIZE		SZ_64K	/* always at =
-least 64KiB */
->>=20
->> #define BCM963XX_CFE_MAGIC_OFFSET	0x4e0
->> @@ -32,30 +35,6 @@
->> #define STR_NULL_TERMINATE(x) \
->> 	do { char *_str =3D (x); _str[sizeof(x) - 1] =3D 0; } while (0)
->>=20
->> -static int bcm63xx_detect_cfe(struct mtd_info *master)
->> -{
->> -	char buf[9];
->> -	int ret;
->> -	size_t retlen;
->> -
->> -	ret =3D mtd_read(master, BCM963XX_CFE_VERSION_OFFSET, 5, =
-&retlen,
->> -		       (void *)buf);
->> -	buf[retlen] =3D 0;
->> -
->> -	if (ret)
->> -		return ret;
->> -
->> -	if (strncmp("cfe-v", buf, 5) =3D=3D 0)
->> -		return 0;
->> -
->> -	/* very old CFE's do not have the cfe-v string, so check for =
-magic */
->> -	ret =3D mtd_read(master, BCM963XX_CFE_MAGIC_OFFSET, 8, &retlen,
->> -		       (void *)buf);
->> -	buf[retlen] =3D 0;
->> -
->> -	return strncmp("CFE1CFE1", buf, 8);
->> -}
->> -
->> static int bcm63xx_read_nvram(struct mtd_info *master,
->> 	struct bcm963xx_nvram *nvram)
->> {
->> @@ -138,7 +117,7 @@ static int bcm63xx_parse_cfe_partitions(struct =
-mtd_info *master,
->> 	struct bcm963xx_nvram *nvram =3D NULL;
->> 	int ret;
->>=20
->> -	if (bcm63xx_detect_cfe(master))
->> +	if (fw_arg3 !=3D CFE_EPTSEAL)
->> 		return -EINVAL;
->>=20
->> 	nvram =3D vzalloc(sizeof(*nvram));
-
-Best regards,
-=C3=81lvaro.
+-- 
+Jens Axboe
 
