@@ -2,234 +2,205 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66461C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 19:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F650C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 19:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FC9220829
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 19:49:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79E8D2083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 19:49:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GBXXgrM7"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=g001.emailsrvr.com header.i=@g001.emailsrvr.com header.b="CA6VP4+1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728246AbgFKTso (ORCPT
+        id S1726976AbgFKTtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 15:48:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52840 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbgFKTsk (ORCPT
+        Thu, 11 Jun 2020 15:49:18 -0400
+Received: from smtp105.iad3a.emailsrvr.com ([173.203.187.105]:35472 "EHLO
+        smtp105.iad3a.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725799AbgFKTtR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 15:48:40 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7233C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 12:48:39 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id y5so7690890iob.12
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 12:48:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=0JFIYUeiF3f9Q06oYwTOYTjAxGcUzRAhuHFXBJE1Izs=;
-        b=GBXXgrM7BIxq5fEPiAAvDhVqsPzhe5VS8GoGfW1LXOwFycEPaleat0NqeQNJy3GN6l
-         dtz1LTkc2oL0ILGOQkjxZ1VOE84qV3BgrLX+PXyhG328eWtGWjh9BsJVv/a+W3qTl/lf
-         /iskJo7XwzME+e71Df46I999FI/UYnAF8fus1XNvqGwinAiutkviMnwkH9io4lTvM2P2
-         7cshsBT6nCUlxELJfqOKZ4HaOImfx5RcQiFKKtXl+tJAPz64yyxODYUu0I65kARcKcVS
-         DuT1xvHyorG/AFx7PmXsNGLF8NWzwArLo2HduIHs8+v/gRsaLAcIN0gzZJPD+SllXiLn
-         rhaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=0JFIYUeiF3f9Q06oYwTOYTjAxGcUzRAhuHFXBJE1Izs=;
-        b=OcdyH88rfNvhzzhq6EMGC6qX9v/ZxMBvarAsMjoj4Urm9IrF3c/BFJYoAxyzaWXNFb
-         EMVjz7Wf+TnVBUQudf+JOD4qcYnEOVJwSCsq7dOAt3YAs8ixgQp7KdaQpG3Fk9pehtPG
-         V1nAzYiFKzeyDppmYNAHZ1aPQmldtsudMzA074qNHRZzrBmzHvluRbjDvBtSRqjHiQ/w
-         F2Wor844dKP8LmhY2IFJzzZQ+PuhYxYLIjUCtBM6B4cui3NATfMrHGPk404DwdmOv/zS
-         Vz9aEARAL+oKT2yCQW1O5gmUe0TVIpWENHRoZxmEdYM4ojMnDImWqCDu/XxTpG2dwwCc
-         2IWw==
-X-Gm-Message-State: AOAM532V9YW5070eX0NiSQlvnHD4y7iFqIoey5IsRZsSXQzPeAlkewX6
-        DizmpaOE9kard7GPMXYOMkEV/w==
-X-Google-Smtp-Source: ABdhPJzmtm/KDRd9aDf2H8DXYjNjaL2B6uJuiSLZuWtNtC7md2mAa8McZMCzENVDHoPNIIjKe8jB6g==
-X-Received: by 2002:a02:3406:: with SMTP id x6mr4788564jae.24.1591904919088;
-        Thu, 11 Jun 2020 12:48:39 -0700 (PDT)
-Received: from presto.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.gmail.com with ESMTPSA id d13sm1981397ilo.40.2020.06.11.12.48.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 12:48:38 -0700 (PDT)
-From:   Alex Elder <elder@linaro.org>
-To:     davem@davemloft.net, kuba@kernel.org
-Cc:     evgreen@chromium.org, subashab@codeaurora.org,
-        cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net v2 1/4] net: ipa: program metadata mask differently
-Date:   Thu, 11 Jun 2020 14:48:30 -0500
-Message-Id: <20200611194833.2640177-2-elder@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200611194833.2640177-1-elder@linaro.org>
-References: <20200611194833.2640177-1-elder@linaro.org>
+        Thu, 11 Jun 2020 15:49:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=g001.emailsrvr.com;
+        s=20190322-9u7zjiwi; t=1591904956;
+        bh=fkPaV7M6/VR8E4HluhwiC1X0SoV9G641oTubBTo3jzU=;
+        h=From:To:Subject:Date:From;
+        b=CA6VP4+1rNgC1DMVE8/a1Krf1AlFnvywLsZb0kSDS9OIe5ozKJA+brGG9fXhc9evU
+         i1dN+AEzjHrZXoaRU+Ji3AZGSxTBPjaV93Yy8Ib5Mhzu2lGlyPWb8pQgTrzuW5M8BG
+         nATi/4xUnqwkgg5jBaxvMuotIKB4wp4XcflNwUJM=
+X-Auth-ID: dpreed@deepplum.com
+Received: by smtp22.relay.iad3a.emailsrvr.com (Authenticated sender: dpreed-AT-deepplum.com) with ESMTPSA id F1ACA695A;
+        Thu, 11 Jun 2020 15:49:15 -0400 (EDT)
+X-Sender-Id: dpreed@deepplum.com
+Received: from gyre.localnet ([UNAVAILABLE]. [209.6.10.161])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384)
+        by 0.0.0.0:465 (trex/5.7.12);
+        Thu, 11 Jun 2020 15:49:16 -0400
+From:   "David P. Reed" <dpreed@deepplum.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Allison Randal <allison@lohutok.net>,
+        Enrico Weigelt <info@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Martin Molnar <martin.molnar.programming@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Jann Horn <jannh@google.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "David P. Reed" <dpreed@deepplum.com>
+Subject: [PATCH v2] Fix undefined operation VMXOFF during reboot and crash
+Date:   Thu, 11 Jun 2020 15:48:18 -0400
+Message-Id: <20200611194817.2303-1-dpreed@deepplum.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <CALCETrWw3WKLx1k94NfH1jJm-XLid_G-zy8jz_Afdf3KkWjquw@mail.gmail.com>
+References: <CALCETrWw3WKLx1k94NfH1jJm-XLid_G-zy8jz_Afdf3KkWjquw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Classification-ID: 8ff9bdbe-3b20-4ef8-b2ed-e2a3ae184698-1-1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The way the mask value is programmed for QMAP RX endpoints was based
-on some wrong assumptions about the way metadata containing the QMAP
-mux_id value is formatted.  The metadata value supplied by the
-modem is *not* in QMAP format, and in fact contains the mux_id we
-want in its (big endian) low-order byte.  That byte must be written
-by the IPA into offset 1 of the QMAP header it inserts before the
-received packet.
+If a panic/reboot occurs when CR4 has VMX enabled, a VMXOFF is
+done on all CPUS, to allow the INIT IPI to function, since
+INIT is suppressed when CPUs are in VMX root operation.
+Problem is that  VMXOFF will causes undefined operation fault when CPU not
+in VMX operation, that is, VMXON has not been executed yet, or VMXOFF
+has been execute but VMX still enabled. Patch makes the reboot
+work more reliably by masking the exception on VMXOFF in the
+crash/panic/reboot path, which uses cpu_emergency_vmxoff().
+Can happen with KVM due to a race, but that race is rare today.
+Problem discovered doing out-of-tree x-visor development that uses VMX
+in a novel way for kernel performance analysis.
+The logic in reboot.c is also corrected, since the point of forcing
+the processor out of VMX root operation is to allow the INIT signal
+to be unmasked. See Intel SDM section on differences between VMX Root
+operation and normal operation. Thus every CPU must be forced out of
+VMX operation. Since the CPU may hang rather if INIT fails than restart,
+a manual hardware "reset" is the only way out of this state in a
+lights-out datacenter (well, if there is a BMC, it can issue a
+hardware RESET to the chip).
+Style errors in original file fixed, at request of Randy Dunlap:
+eliminate '/**' in non-kernel-doc comments.
 
-QMAP TX endpoints *do* use a QMAP header as the metadata sent with
-each packet.  The modem assumes this, and based on that assumes the
-mux_id is in the second byte.  To match those assumptions we must
-program the modem TX (QMAP) endpoint HDR register to indicate the
-metadata will be found at offset 0 in the message header.
-
-The previous configuration managed to work, but it was not working
-correctly.  This patch fixes a bug whose symptom was receipt of
-messages containing the wrong QMAP mux_id.
-
-In fixing this, get rid of ipa_rmnet_mux_id_metadata_mask(), which
-was more or less defined so there was a separate place to explain
-what was happening as we generated the mask value.  Instead, put a
-longer description of how this works above ipa_endpoint_init_hdr(),
-and define the metadata mask to use as a simple constant.
-
-Signed-off-by: Alex Elder <elder@linaro.org>
+Fixes: 208067 <https://bugzilla.kernel.org/show_bug.cgi?id=208067>
+Reported-by: David P. Reed <dpreed@deepplum.com>
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Suggested-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: David P. Reed <dpreed@deepplum.com>
 ---
-v2:  Added back the static specifier to ipa_endpoint_init_hdr(),
-     as suggested by the kernel test robot <lkp@intel.com>.
+ arch/x86/include/asm/virtext.h | 40 ++++++++++++++++++++++++----------
+ arch/x86/kernel/reboot.c       | 13 +++--------
+ 2 files changed, 32 insertions(+), 21 deletions(-)
 
- drivers/net/ipa/ipa_endpoint.c | 72 ++++++++++++++++++----------------
- 1 file changed, 39 insertions(+), 33 deletions(-)
-
-diff --git a/drivers/net/ipa/ipa_endpoint.c b/drivers/net/ipa/ipa_endpoint.c
-index 66649a806dd1..2825dca23ec4 100644
---- a/drivers/net/ipa/ipa_endpoint.c
-+++ b/drivers/net/ipa/ipa_endpoint.c
-@@ -32,6 +32,9 @@
- /* The amount of RX buffer space consumed by standard skb overhead */
- #define IPA_RX_BUFFER_OVERHEAD	(PAGE_SIZE - SKB_MAX_ORDER(NET_SKB_PAD, 0))
- 
-+/* Where to find the QMAP mux_id for a packet within modem-supplied metadata */
-+#define IPA_ENDPOINT_QMAP_METADATA_MASK		0x000000ff /* host byte order */
-+
- #define IPA_ENDPOINT_RESET_AGGR_RETRY_MAX	3
- #define IPA_AGGR_TIME_LIMIT_DEFAULT		1000	/* microseconds */
- 
-@@ -433,6 +436,24 @@ static void ipa_endpoint_init_cfg(struct ipa_endpoint *endpoint)
- 	iowrite32(val, endpoint->ipa->reg_virt + offset);
+diff --git a/arch/x86/include/asm/virtext.h b/arch/x86/include/asm/virtext.h
+index 9aad0e0876fb..ed22c1983da8 100644
+--- a/arch/x86/include/asm/virtext.h
++++ b/arch/x86/include/asm/virtext.h
+@@ -30,15 +30,15 @@ static inline int cpu_has_vmx(void)
  }
  
-+/**
-+ * We program QMAP endpoints so each packet received is preceded by a QMAP
-+ * header structure.  The QMAP header contains a 1-byte mux_id and 2-byte
-+ * packet size field, and we have the IPA hardware populate both for each
-+ * received packet.  The header is configured (in the HDR_EXT register)
-+ * to use big endian format.
-+ *
-+ * The packet size is written into the QMAP header's pkt_len field.  That
-+ * location is defined here using the HDR_OFST_PKT_SIZE field.
-+ *
-+ * The mux_id comes from a 4-byte metadata value supplied with each packet
-+ * by the modem.  It is *not* a QMAP header, but it does contain the mux_id
-+ * value that we want, in its low-order byte.  A bitmask defined in the
-+ * endpoint's METADATA_MASK register defines which byte within the modem
-+ * metadata contains the mux_id.  And the OFST_METADATA field programmed
-+ * here indicates where the extracted byte should be placed within the QMAP
-+ * header.
-+ */
- static void ipa_endpoint_init_hdr(struct ipa_endpoint *endpoint)
+ 
+-/** Disable VMX on the current CPU
++/* Disable VMX on the current CPU
+  *
+- * vmxoff causes a undefined-opcode exception if vmxon was not run
+- * on the CPU previously. Only call this function if you know VMX
+- * is enabled.
++ * vmxoff causes an undefined-opcode exception if vmxon was not run
++ * on the CPU previously. Only call this function directly if you know VMX
++ * is enabled *and* CPU is in VMX root operation.
+  */
+ static inline void cpu_vmxoff(void)
  {
- 	u32 offset = IPA_REG_ENDP_INIT_HDR_N_OFFSET(endpoint->endpoint_id);
-@@ -441,25 +462,31 @@ static void ipa_endpoint_init_hdr(struct ipa_endpoint *endpoint)
- 	if (endpoint->data->qmap) {
- 		size_t header_size = sizeof(struct rmnet_map_header);
- 
-+		/* We might supply a checksum header after the QMAP header */
- 		if (endpoint->toward_ipa && endpoint->data->checksum)
- 			header_size += sizeof(struct rmnet_map_ul_csum_header);
--
- 		val |= u32_encode_bits(header_size, HDR_LEN_FMASK);
--		/* metadata is the 4 byte rmnet_map header itself */
--		val |= HDR_OFST_METADATA_VALID_FMASK;
--		val |= u32_encode_bits(0, HDR_OFST_METADATA_FMASK);
--		/* HDR_ADDITIONAL_CONST_LEN is 0; (IPA->AP only) */
-+
-+		/* Define how to fill mux_id in a received QMAP header */
- 		if (!endpoint->toward_ipa) {
--			u32 size_offset = offsetof(struct rmnet_map_header,
--						   pkt_len);
-+			u32 off;	/* Field offset within header */
- 
-+			/* Where IPA will write the metadata value */
-+			off = offsetof(struct rmnet_map_header, mux_id);
-+			val |= u32_encode_bits(off, HDR_OFST_METADATA_FMASK);
-+
-+			/* Where IPA will write the length */
-+			off = offsetof(struct rmnet_map_header, pkt_len);
- 			val |= HDR_OFST_PKT_SIZE_VALID_FMASK;
--			val |= u32_encode_bits(size_offset,
--					       HDR_OFST_PKT_SIZE_FMASK);
-+			val |= u32_encode_bits(off, HDR_OFST_PKT_SIZE_FMASK);
- 		}
-+		/* For QMAP TX, metadata offset is 0 (modem assumes this) */
-+		val |= HDR_OFST_METADATA_VALID_FMASK;
-+
-+		/* HDR_ADDITIONAL_CONST_LEN is 0; (RX only) */
- 		/* HDR_A5_MUX is 0 */
- 		/* HDR_LEN_INC_DEAGG_HDR is 0 */
--		/* HDR_METADATA_REG_VALID is 0; (AP->IPA only) */
-+		/* HDR_METADATA_REG_VALID is 0 (TX only) */
- 	}
- 
- 	iowrite32(val, endpoint->ipa->reg_virt + offset);
-@@ -482,28 +509,6 @@ static void ipa_endpoint_init_hdr_ext(struct ipa_endpoint *endpoint)
- 	iowrite32(val, endpoint->ipa->reg_virt + offset);
+-	asm volatile ("vmxoff");
++	asm volatile ("vmxoff" ::: "cc", "memory"); /* clears all flags on success */
+ 	cr4_clear_bits(X86_CR4_VMXE);
  }
  
--/**
-- * Generate a metadata mask value that will select only the mux_id
-- * field in an rmnet_map header structure.  The mux_id is at offset
-- * 1 byte from the beginning of the structure, but the metadata
-- * value is treated as a 4-byte unit.  So this mask must be computed
-- * with endianness in mind.  Note that ipa_endpoint_init_hdr_metadata_mask()
-- * will convert this value to the proper byte order.
+@@ -47,17 +47,35 @@ static inline int cpu_vmx_enabled(void)
+ 	return __read_cr4() & X86_CR4_VMXE;
+ }
+ 
+-/** Disable VMX if it is enabled on the current CPU
 - *
-- * Marked __always_inline because this is really computing a
-- * constant value.
-- */
--static __always_inline __be32 ipa_rmnet_mux_id_metadata_mask(void)
--{
--	size_t mux_id_offset = offsetof(struct rmnet_map_header, mux_id);
--	u32 mux_id_mask = 0;
--	u8 *bytes;
--
--	bytes = (u8 *)&mux_id_mask;
--	bytes[mux_id_offset] = 0xff;	/* mux_id is 1 byte */
--
--	return cpu_to_be32(mux_id_mask);
--}
- 
- static void ipa_endpoint_init_hdr_metadata_mask(struct ipa_endpoint *endpoint)
+- * You shouldn't call this if cpu_has_vmx() returns 0.
++/*
++ * Safely disable VMX root operation if active
++ * Note that if CPU is not in VMX root operation this
++ * VMXOFF will fault an undefined operation fault,
++ * so use the exception masking facility to handle that RARE
++ * case.
++ * You shouldn't call this directly if cpu_has_vmx() returns 0
++ */
++static inline void cpu_vmxoff_safe(void)
++{
++       asm volatile("1:vmxoff\n\t" /* clears all flags on success */
++		    "2:\n\t"
++                    _ASM_EXTABLE(1b, 2b)
++                    ::: "cc",  "memory");
++       cr4_clear_bits(X86_CR4_VMXE);
++}
++
++/*
++ * Force disable VMX if it is enabled on the current CPU,
++ * when it is unknown whether CPU is in VMX operation.
+  */
+ static inline void __cpu_emergency_vmxoff(void)
  {
-@@ -513,8 +518,9 @@ static void ipa_endpoint_init_hdr_metadata_mask(struct ipa_endpoint *endpoint)
- 
- 	offset = IPA_REG_ENDP_INIT_HDR_METADATA_MASK_N_OFFSET(endpoint_id);
- 
-+	/* Note that HDR_ENDIANNESS indicates big endian header fields */
- 	if (!endpoint->toward_ipa && endpoint->data->qmap)
--		val = ipa_rmnet_mux_id_metadata_mask();
-+		val = cpu_to_be32(IPA_ENDPOINT_QMAP_METADATA_MASK);
- 
- 	iowrite32(val, endpoint->ipa->reg_virt + offset);
+-	if (cpu_vmx_enabled())
+-		cpu_vmxoff();
++	if (!cpu_vmx_enabled())
++		return;
++	cpu_vmxoff_safe();
  }
+ 
+-/** Disable VMX if it is supported and enabled on the current CPU
++/* Force disable VMX if it is supported on current CPU
+  */
+ static inline void cpu_emergency_vmxoff(void)
+ {
+diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+index e040ba6be27b..b0e6b106a67e 100644
+--- a/arch/x86/kernel/reboot.c
++++ b/arch/x86/kernel/reboot.c
+@@ -540,21 +540,14 @@ static void emergency_vmx_disable_all(void)
+ 	 *
+ 	 * For safety, we will avoid running the nmi_shootdown_cpus()
+ 	 * stuff unnecessarily, but we don't have a way to check
+-	 * if other CPUs have VMX enabled. So we will call it only if the
+-	 * CPU we are running on has VMX enabled.
+-	 *
+-	 * We will miss cases where VMX is not enabled on all CPUs. This
+-	 * shouldn't do much harm because KVM always enable VMX on all
+-	 * CPUs anyway. But we can miss it on the small window where KVM
+-	 * is still enabling VMX.
++	 * if other CPUs have VMX enabled.
+ 	 */
+-	if (cpu_has_vmx() && cpu_vmx_enabled()) {
++	if (cpu_has_vmx()) {
+ 		/* Disable VMX on this CPU. */
+-		cpu_vmxoff();
++		cpu_emergency_vmxoff();
+ 
+ 		/* Halt and disable VMX on the other CPUs */
+ 		nmi_shootdown_cpus(vmxoff_nmi);
+-
+ 	}
+ }
+ 
 -- 
-2.25.1
+2.26.2
 
