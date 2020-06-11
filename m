@@ -2,110 +2,177 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C55CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A518C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11439204EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:35:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591868131;
-	bh=SFu6ijIwLu9L/2DkNn7ff4c2xan6U+236bF9FN93/sE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AELPnagTHh+FR80WCWYbHwDkfzFTbVE9QKaAlkg1NUASqDA0eqx1QZ0/xnEMf7FqZ
-	 vPTUNqzqIwswsHGgxyGkIDMDUgVq9SkwR3z2TMKfJwYENshGbkPzUHTF3KfsFQDHXs
-	 5kDpSTKV4m+hLSA1hW2kNxSCL7nSf0kKur4pwxW0=
+	by mail.kernel.org (Postfix) with ESMTP id DA37E204EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:35:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CiYkZgks"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbgFKJf3 (ORCPT
+        id S1726959AbgFKJfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 05:35:29 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41199 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726560AbgFKJf2 (ORCPT
+        Thu, 11 Jun 2020 05:35:39 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48956 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726907AbgFKJfj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 05:35:28 -0400
-Received: by mail-wr1-f66.google.com with SMTP id j10so5401760wrw.8;
-        Thu, 11 Jun 2020 02:35:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fCziW7D9RQqCEqfz7/IGRWHPMeEiWE2daJvcDBf0ZPA=;
-        b=sd4niBTvsJr+OjxfwYzZy/zmX5UHFSvgUubOcCTS9TucQ/Gl569kvXpMmLFDdjXkZm
-         ub/McMAoMmNiFgY/8WtTY4l6GyPeBY5RenXfQThl5pH2cmEk4F5oiNK+jMEeL/RLEwwT
-         0r6TXOTuij1gWvAKu2MUnUi/hu05bJemhjh2k2mjqkeLMyIsQI8lTh4YHAp2jvzCJt69
-         1v1fv7mzoDJTylwvc8FJRPfv5D1wz6mluXTlKglTzCzssFn6Rw/kmYwa2HmK+Z0AySM9
-         MH/sZ/7Vgb+cMOaorTtKPJDjfYnPDg4jdinRvItoFrl7t9N1RGOj6R0VmTEAo/UgYMY2
-         riLg==
-X-Gm-Message-State: AOAM531em3EIDz6qvd4lL7aThNi++5PafH3yP0a3G3bkbpTbY1kkL1k7
-        eTDpDfnfGVcVJM7RPLLCj9M=
-X-Google-Smtp-Source: ABdhPJwH0mDt5sHqy/XukKQyC767OzXT3IpOZMbx+o8zAQCUAY/T6Fsnyv8bfwIUq0D76RR8+m6TOg==
-X-Received: by 2002:a5d:484b:: with SMTP id n11mr8689943wrs.356.1591868126445;
-        Thu, 11 Jun 2020 02:35:26 -0700 (PDT)
-Received: from localhost (ip-37-188-174-201.eurotel.cz. [37.188.174.201])
-        by smtp.gmail.com with ESMTPSA id y19sm3165036wmi.6.2020.06.11.02.35.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 02:35:25 -0700 (PDT)
-Date:   Thu, 11 Jun 2020 11:35:23 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Joonsoo Kim <js1304@gmail.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Hugh Dickins <hughd@google.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH 16/19] mm: memcontrol: charge swapin pages on
- instantiation
-Message-ID: <20200611093523.GB20450@dhcp22.suse.cz>
-References: <20200508183105.225460-1-hannes@cmpxchg.org>
- <20200508183105.225460-17-hannes@cmpxchg.org>
+        Thu, 11 Jun 2020 05:35:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591868137;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=skekyVLdwFwBTm754pc77fwSJmldMeXVb8k3yiao8Zo=;
+        b=CiYkZgksT71QAo9GQc/TM2XXvtrXM5TycKVm3BzS9JHAF2ZibGak5Fr0oL6MAyf1e1HDMM
+        CheY6/Cqqu13PESHqjQIiJrAl3gnT/qroz5sBQHdKdK0gUCkPpeI+e5N2O5ryRgkuk9Oam
+        c8oGE03bL2w2c+7fQl+N7mEVJzXdbGI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-46-79N41bhHNyOSrHDxFwNDUg-1; Thu, 11 Jun 2020 05:35:35 -0400
+X-MC-Unique: 79N41bhHNyOSrHDxFwNDUg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 17C5E1883605;
+        Thu, 11 Jun 2020 09:35:34 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-114-160.ams2.redhat.com [10.36.114.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B303110013C1;
+        Thu, 11 Jun 2020 09:35:25 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        teawater <teawaterz@linux.alibaba.com>
+Subject: [PATCH v1] virtio-mem: add memory via add_memory_driver_managed()
+Date:   Thu, 11 Jun 2020 11:35:18 +0200
+Message-Id: <20200611093518.5737-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508183105.225460-17-hannes@cmpxchg.org>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 08-05-20 14:31:03, Johannes Weiner wrote:
-[...]
-> diff --git a/mm/memory.c b/mm/memory.c
-> index 832ee914cbcf..93900b121b6e 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -3125,9 +3125,20 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
->  			page = alloc_page_vma(GFP_HIGHUSER_MOVABLE, vma,
->  							vmf->address);
->  			if (page) {
-> +				int err;
-> +
->  				__SetPageLocked(page);
->  				__SetPageSwapBacked(page);
->  				set_page_private(page, entry.val);
-> +
-> +				/* Tell memcg to use swap ownership records */
-> +				SetPageSwapCache(page);
-> +				err = mem_cgroup_charge(page, vma->vm_mm,
-> +							GFP_KERNEL, false);
-> +				ClearPageSwapCache(page);
-> +				if (err)
-> +					goto out_page;
+Virtio-mem managed memory is always detected and added by the virtio-mem
+driver, never using something like the firmware-provided memory map.
+This is the case after an ordinary system reboot, and has to be guaranteed
+after kexec. Especially, virtio-mem added memory resources can contain
+inaccessible parts ("unblocked memory blocks"), blindly forwarding them
+to a kexec kernel is dangerous, as unplugged memory will get accessed
+(esp. written).
 
-err would be a return value from try_charge and that can be -ENOMEM. Now
-we almost never return ENOMEM for GFP_KERNEL single page charge. Except
-for async OOM handling (oom_disabled v1). So this needs translation to
-VM_FAULT_OOM.
+Let's use the new way of adding special driver-managed memory introduced
+in commit 75ac4c58bc0d ("mm/memory_hotplug: introduce
+add_memory_driver_managed()").
 
-I am not an expert on the swap code so I might have missed some subtle
-issues but the rest of the patch seems reasonable to me.
+This will result in no entries in /sys/firmware/memmap ("raw firmware-
+provided memory map"), the memory resource will be flagged
+IORESOURCE_MEM_DRIVER_MANAGED (esp., kexec_file_load() will not place
+kexec images on this memory), and it is exposed as "System RAM
+(virtio_mem)" in /proc/iomem, so esp. kexec-tools can properly handle it.
+
+Example /proc/iomem before this change:
+  [...]
+  140000000-333ffffff : virtio0
+    140000000-147ffffff : System RAM
+  334000000-533ffffff : virtio1
+    338000000-33fffffff : System RAM
+    340000000-347ffffff : System RAM
+    348000000-34fffffff : System RAM
+  [...]
+
+Example /proc/iomem after this change:
+  [...]
+  140000000-333ffffff : virtio0
+    140000000-147ffffff : System RAM (virtio_mem)
+  334000000-533ffffff : virtio1
+    338000000-33fffffff : System RAM (virtio_mem)
+    340000000-347ffffff : System RAM (virtio_mem)
+    348000000-34fffffff : System RAM (virtio_mem)
+  [...]
+
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Cc: teawater <teawaterz@linux.alibaba.com>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+
+Based on latest Linus' tree (and not a tag) because
+- virtio-mem has just been merged via the vhost tree
+- add_memory_driver_managed() has been merged a week ago via the -mm tree
+
+I'd like to have this patch in 5.8, with the initial merge of virtio-mem
+if possible (so the user space representation of virtio-mem added memory
+resources won't change anymore).
+
+---
+ drivers/virtio/virtio_mem.c | 25 ++++++++++++++++++++++---
+ 1 file changed, 22 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
+index 50c689f250450..d2eab3558a9e1 100644
+--- a/drivers/virtio/virtio_mem.c
++++ b/drivers/virtio/virtio_mem.c
+@@ -101,6 +101,11 @@ struct virtio_mem {
+ 
+ 	/* The parent resource for all memory added via this device. */
+ 	struct resource *parent_resource;
++	/*
++	 * Copy of "System RAM (virtio_mem)" to be used for
++	 * add_memory_driver_managed().
++	 */
++	const char *resource_name;
+ 
+ 	/* Summary of all memory block states. */
+ 	unsigned long nb_mb_state[VIRTIO_MEM_MB_STATE_COUNT];
+@@ -414,8 +419,20 @@ static int virtio_mem_mb_add(struct virtio_mem *vm, unsigned long mb_id)
+ 	if (nid == NUMA_NO_NODE)
+ 		nid = memory_add_physaddr_to_nid(addr);
+ 
++	/*
++	 * When force-unloading the driver and we still have memory added to
++	 * Linux, the resource name has to stay.
++	 */
++	if (!vm->resource_name) {
++		vm->resource_name = kstrdup_const("System RAM (virtio_mem)",
++						  GFP_KERNEL);
++		if (!vm->resource_name)
++			return -ENOMEM;
++	}
++
+ 	dev_dbg(&vm->vdev->dev, "adding memory block: %lu\n", mb_id);
+-	return add_memory(nid, addr, memory_block_size_bytes());
++	return add_memory_driver_managed(nid, addr, memory_block_size_bytes(),
++					 vm->resource_name);
+ }
+ 
+ /*
+@@ -1890,10 +1907,12 @@ static void virtio_mem_remove(struct virtio_device *vdev)
+ 	    vm->nb_mb_state[VIRTIO_MEM_MB_STATE_OFFLINE_PARTIAL] ||
+ 	    vm->nb_mb_state[VIRTIO_MEM_MB_STATE_ONLINE] ||
+ 	    vm->nb_mb_state[VIRTIO_MEM_MB_STATE_ONLINE_PARTIAL] ||
+-	    vm->nb_mb_state[VIRTIO_MEM_MB_STATE_ONLINE_MOVABLE])
++	    vm->nb_mb_state[VIRTIO_MEM_MB_STATE_ONLINE_MOVABLE]) {
+ 		dev_warn(&vdev->dev, "device still has system memory added\n");
+-	else
++	} else {
+ 		virtio_mem_delete_resource(vm);
++		kfree_const(vm->resource_name);
++	}
+ 
+ 	/* remove all tracking data - no locking needed */
+ 	vfree(vm->mb_state);
 -- 
-Michal Hocko
-SUSE Labs
+2.26.2
+
