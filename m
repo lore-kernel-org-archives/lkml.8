@@ -2,147 +2,166 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5EA0C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:58:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1638CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB10E2072F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:58:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9CCD2072F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:59:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591862350;
+	bh=OosHKHNgy/JfsuiXlWm6kqNlEzxuPgPk1Y8ZZaJeWD0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=O0zvSxH6hV5QaXn+alhMZ008hSORnLzU6gP/sPHtEDC4DaKxaxn6iyNU7fl+tKFxw
+	 5iWCVDmBxCJFoJUjc1b/ENtIAUXGjKgjWuAWzH5u3BQPzivlUe/szHMhzf/Rz0RI8F
+	 4RSWrojrNvIsXvlt3a55m+F2nr1DlTU9ycpOU3XE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbgFKH6o (ORCPT
+        id S1727019AbgFKH7I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 03:58:44 -0400
-Received: from outpost17.zedat.fu-berlin.de ([130.133.4.110]:57653 "EHLO
-        outpost17.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726950AbgFKH6l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 03:58:41 -0400
-Received: from relay1.zedat.fu-berlin.de ([130.133.4.67])
-          by outpost.zedat.fu-berlin.de (Exim 4.93)
-          with esmtps (TLS1.2)
-          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1jjI6b-000sre-KZ; Thu, 11 Jun 2020 09:58:33 +0200
-Received: from z6.physik.fu-berlin.de ([160.45.32.137] helo=z6)
-          by relay1.zedat.fu-berlin.de (Exim 4.93)
-          with esmtps (TLS1.2)
-          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1jjI6b-00291v-Hw; Thu, 11 Jun 2020 09:58:33 +0200
-Received: from glaubitz by z6 with local (Exim 4.94)
-        (envelope-from <glaubitz@physik.fu-berlin.de>)
-        id 1jjI6R-00COLi-8p; Thu, 11 Jun 2020 09:58:23 +0200
-From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To:     linux-sh@vger.kernel.org
-Cc:     Rich Felker <dalias@libc.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>,
-        NIIBE Yutaka <gniibe@fsij.org>, linux-kernel@vger.kernel.org,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Subject: [PATCH] sh: Implement __get_user_u64() required for 64-bit get_user()
-Date:   Thu, 11 Jun 2020 09:58:11 +0200
-Message-Id: <20200611075811.2949870-2-glaubitz@physik.fu-berlin.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200611075811.2949870-1-glaubitz@physik.fu-berlin.de>
-References: <20200611075811.2949870-1-glaubitz@physik.fu-berlin.de>
+        Thu, 11 Jun 2020 03:59:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45596 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726716AbgFKH7H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 03:59:07 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A277B204EA;
+        Thu, 11 Jun 2020 07:59:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591862346;
+        bh=OosHKHNgy/JfsuiXlWm6kqNlEzxuPgPk1Y8ZZaJeWD0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=xdnE9ijSYCm2ieKcA6MjTtuO04MHTQe1Et0EXVKYQCTKFPlQEVb9Yfj8kMl8AR13w
+         Qa+QrSTirgnpvN11t74TOELy0TkE+PQGhIX4EOiSYHH4YRZ7TbRRaDjLYoA1zHsodf
+         +Qk2xXT4keuJXovgH5hLfKz2s8TnNRSdO4NRUwV4=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jjI77-0021Wl-9L; Thu, 11 Jun 2020 08:59:05 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: 160.45.32.137
-X-ZEDAT-Hint: RV
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 11 Jun 2020 08:59:05 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Feiner <pfeiner@google.com>,
+        Peter Shier <pshier@google.com>,
+        Junaid Shahid <junaids@google.com>,
+        Ben Gardon <bgardon@google.com>,
+        Christoffer Dall <christoffer.dall@arm.com>
+Subject: Re: [PATCH 17/21] KVM: arm64: Use common code's approach for
+ __GFP_ZERO with memory caches
+In-Reply-To: <20200605213853.14959-18-sean.j.christopherson@intel.com>
+References: <20200605213853.14959-1-sean.j.christopherson@intel.com>
+ <20200605213853.14959-18-sean.j.christopherson@intel.com>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <6cc08074c289cbea7b9c1deeaf18c63f@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: sean.j.christopherson@intel.com, paulus@ozlabs.org, borntraeger@de.ibm.com, frankja@linux.ibm.com, pbonzini@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, david@redhat.com, cohuck@redhat.com, imbrenda@linux.ibm.com, vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org, kvm@vger.kernel.org, kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org, pfeiner@google.com, pshier@google.com, junaids@google.com, bgardon@google.com, christoffer.dall@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Trying to build the kernel with CONFIG_INFINIBAND_USER_ACCESS enabled fails
+Hi Sean,
 
-     ERROR: "__get_user_unknown" [drivers/infiniband/core/ib_uverbs.ko] undefined!
+On 2020-06-05 22:38, Sean Christopherson wrote:
+> Add a "gfp_zero" member to arm64's 'struct kvm_mmu_memory_cache' to 
+> make
+> the struct and its usage compatible with the common 'struct
+> kvm_mmu_memory_cache' in linux/kvm_host.h.  This will minimize code
+> churn when arm64 moves to the common implementation in a future patch, 
+> at
+> the cost of temporarily having somewhat silly code.
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/arm64/include/asm/kvm_host.h | 1 +
+>  arch/arm64/kvm/arm.c              | 2 ++
+>  arch/arm64/kvm/mmu.c              | 5 +++--
+>  3 files changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/kvm_host.h
+> b/arch/arm64/include/asm/kvm_host.h
+> index abbdf9703e20..2385dede96e0 100644
+> --- a/arch/arm64/include/asm/kvm_host.h
+> +++ b/arch/arm64/include/asm/kvm_host.h
+> @@ -105,6 +105,7 @@ struct kvm_arch {
+>   */
+>  struct kvm_mmu_memory_cache {
+>  	int nobjs;
+> +	gfp_t gfp_zero;
+>  	void *objects[KVM_NR_MEM_OBJS];
+>  };
+> 
+> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+> index 45276ed50dd6..4c98c6b4d850 100644
+> --- a/arch/arm64/kvm/arm.c
+> +++ b/arch/arm64/kvm/arm.c
+> @@ -270,6 +270,8 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
+>  	vcpu->arch.target = -1;
+>  	bitmap_zero(vcpu->arch.features, KVM_VCPU_MAX_FEATURES);
+> 
+> +	vcpu->arch.mmu_page_cache.gfp_zero = __GFP_ZERO;
+> +
+>  	/* Set up the timer */
+>  	kvm_timer_vcpu_init(vcpu);
+> 
+> diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
+> index 9398b66f8a87..688213ef34f0 100644
+> --- a/arch/arm64/kvm/mmu.c
+> +++ b/arch/arm64/kvm/mmu.c
+> @@ -131,7 +131,8 @@ static int mmu_topup_memory_cache(struct
+> kvm_mmu_memory_cache *cache, int min)
+>  	if (cache->nobjs >= min)
+>  		return 0;
+>  	while (cache->nobjs < ARRAY_SIZE(cache->objects)) {
+> -		page = (void *)__get_free_page(GFP_PGTABLE_USER);
+> +		page = (void *)__get_free_page(GFP_KERNEL_ACCOUNT |
 
-with on SH since the kernel misses a 64-bit implementation of get_user().
+This is definitely a change in the way we account for guest
+page tables allocation, although I find it bizarre that not
+all architectures account for it the same way.
 
-Implement the missing 64-bit get_user() as __get_user_u64(), matching the
-already existing __put_user_u64() which implements the 64-bit put_user().
+It seems logical to me that nested page tables would be accounted
+against userspace, but I'm willing to be educated on the matter.
 
-Signed-off-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
----
- arch/sh/include/asm/uaccess_32.h | 53 ++++++++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+Another possibility is that depending on the context, some allocations
+should be accounted on either the kernel or userspace (NV on arm64
+could definitely do something like that). If that was the case,
+maybe moving most of the GFP_* flags into the per-cache flags,
+and have the renaming that Ben suggested earlier.
 
-diff --git a/arch/sh/include/asm/uaccess_32.h b/arch/sh/include/asm/uaccess_32.h
-index 624cf55acc27..5d7ddc092afd 100644
---- a/arch/sh/include/asm/uaccess_32.h
-+++ b/arch/sh/include/asm/uaccess_32.h
-@@ -26,6 +26,9 @@ do {								\
- 	case 4:							\
- 		__get_user_asm(x, ptr, retval, "l");		\
- 		break;						\
-+	case 8:							\
-+		__get_user_u64(x, ptr, retval);			\
-+		break;						\
- 	default:						\
- 		__get_user_unknown();				\
- 		break;						\
-@@ -66,6 +69,56 @@ do {							\
- 
- extern void __get_user_unknown(void);
- 
-+#if defined(CONFIG_CPU_LITTLE_ENDIAN)
-+#define __get_user_u64(x, addr, err) \
-+({ \
-+__asm__ __volatile__( \
-+	"1:\n\t" \
-+	"mov.l	%2,%R1\n\t" \
-+	"mov.l	%T2,%S1\n\t" \
-+	"2:\n" \
-+	".section	.fixup,\"ax\"\n" \
-+	"3:\n\t" \
-+	"mov  #0,%R1\n\t"   \
-+	"mov  #0,%S1\n\t"   \
-+	"mov.l	4f, %0\n\t" \
-+	"jmp	@%0\n\t" \
-+	" mov	%3, %0\n\t" \
-+	".balign	4\n" \
-+	"4:	.long	2b\n\t" \
-+	".previous\n" \
-+	".section	__ex_table,\"a\"\n\t" \
-+	".long	1b, 3b\n\t" \
-+	".long	1b + 2, 3b\n\t" \
-+	".previous" \
-+	:"=&r" (err), "=&r" (x) \
-+	:"m" (__m(addr)), "i" (-EFAULT), "0" (err)); })
-+#else
-+#define __get_user_u64(x, addr, err) \
-+({ \
-+__asm__ __volatile__( \
-+	"1:\n\t" \
-+	"mov.l	%2,%S1\n\t" \
-+	"mov.l	%T2,%R1\n\t" \
-+	"2:\n" \
-+	".section	.fixup,\"ax\"\n" \
-+	"3:\n\t" \
-+	"mov  #0,%S1\n\t"   \
-+	"mov  #0,%R1\n\t"   \
-+	"mov.l	4f, %0\n\t" \
-+	"jmp	@%0\n\t" \
-+	" mov	%3, %0\n\t" \
-+	".balign	4\n" \
-+	"4:	.long	2b\n\t" \
-+	".previous\n" \
-+	".section	__ex_table,\"a\"\n\t" \
-+	".long	1b, 3b\n\t" \
-+	".long	1b + 2, 3b\n\t" \
-+	".previous" \
-+	:"=&r" (err), "=&r" (x) \
-+	:"m" (__m(addr)), "i" (-EFAULT), "0" (err)); })
-+#endif
-+
- #define __put_user_size(x,ptr,size,retval)		\
- do {							\
- 	retval = 0;					\
+Thanks,
+
+         M.
 -- 
-2.27.0
-
+Jazz is not dead. It just smells funny...
