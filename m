@@ -2,173 +2,131 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB476C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A670C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A592A2065C
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:32:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31986206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:35:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZTqlfkb9"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JwFAosiR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728318AbgFKOcp (ORCPT
+        id S1728306AbgFKOfD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 10:32:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60506 "EHLO
+        Thu, 11 Jun 2020 10:35:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728253AbgFKOco (ORCPT
+        with ESMTP id S1728118AbgFKOfD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 10:32:44 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5688AC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 07:32:44 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id r9so5177895wmh.2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 07:32:44 -0700 (PDT)
+        Thu, 11 Jun 2020 10:35:03 -0400
+Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D12EAC08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 07:35:01 -0700 (PDT)
+Received: by mail-vk1-xa43.google.com with SMTP id p187so1512556vkf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 07:35:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Pi9l9jRV1ZGjNyEOBE//QxW0cXJlApW1liZwwSNeTyk=;
-        b=ZTqlfkb93KT/yNN/1Mzmjr77ZcsvDex++EjP1mbAOtttopJRmAB5U+KmgyldiGepdp
-         U+jIWf7dzkiWB6U/RqJB4L1Zz8V36BcFM6O6Gc1vyzY+tIe1jyswltjGZunr8aR1WboW
-         TBLBXnCxhzdWmJAN5CQhoBQF3kWxnE5mQqy6oXZly+SDtAX7DHdhLY+qNgTX7ZGDjBn3
-         eCEG14eZxYbA3NJfl0I0JSVGKZHgcNHHC83Y9roqn6ZzEelYlQT3YXdIk0QEubCJj5MM
-         TKMBVIo8ev6d9S9pFYGZIj6OxAqaw4+9PuF+5qmBiajJX3ojpQxnj943adrNUofm+Ri6
-         wXAA==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eYtkvOUUq+F5r82ywOVrxc+PmLG4PLG1lF6L9X8WFAQ=;
+        b=JwFAosiRGgcrMccXp1IcrdjBYmsOftrJJLrKaDYIaNTLD9IBnNdJ/9+Ge95yVw1pJa
+         eF10R5r9IN/uc14Ot157EujMysw2LUwRvzGGFjvQj442e3rJwy2e5HV86KQ59kiP6wuB
+         K6NfRIJ5BQPDixgmT9dpTvt1o6OnC0PEQk1t8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Pi9l9jRV1ZGjNyEOBE//QxW0cXJlApW1liZwwSNeTyk=;
-        b=mCF3bJpxlAoqSnX9vvZP9wROvzgEpB0Ya0qpAQvVZ5w4NdjkEQR1Q/hJ6AxM9/12cl
-         IDEBlQ3teWVbZz/F140LdkdJ/1A99286C1rt71x3fo7UoBVIrEBi3MNUaEcceA92hyTl
-         eozY6rnzasaLU/vFrPTd0EoEmiE1VkTkk4XNTcpRyXVIPoH6WlmdFCDstyf/dH43cUQX
-         otMdMh9WPFpkqBMoomzsm6Hf7LAqb8CzG408unpV0jPcx7qW8GZW36AE4/Y9isbE5gpx
-         eUA49QW5FFX0wC5vgvy5fRCsPO5SY4Hf//8rIivAfCfiQNUs2yLx+BmYelFwMHN4Y4ok
-         FVuQ==
-X-Gm-Message-State: AOAM531SLKYmTkLtP6xWpntwdtd+6Se9gs11v8CcepB5Ry5TjvdeaE8i
-        Pb8L9u7UDbAtb17+KG9VKZt3C8obdPk=
-X-Google-Smtp-Source: ABdhPJwkD/nii6gyKXo+P/17pv8qNbDSXx3d/bnB2jiZ7qUjhYSGDepjtS+BNmDtxxHjX5R1n/lGOg==
-X-Received: by 2002:a7b:c951:: with SMTP id i17mr8139999wml.44.1591885962877;
-        Thu, 11 Jun 2020 07:32:42 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id y37sm5884173wrd.55.2020.06.11.07.32.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 07:32:42 -0700 (PDT)
-Date:   Thu, 11 Jun 2020 15:32:40 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        sumit.garg@linaro.org, pmladek@suse.com,
-        sergey.senozhatsky@gmail.com, will@kernel.org,
-        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        patches@linaro.org
-Subject: Re: [RFC PATCH 0/4] kgdb: Honour the kprobe blacklist when setting
- breakpoints
-Message-ID: <20200611143240.u77kxdbhepaazx3j@holly.lan>
-References: <20200605132130.1411255-1-daniel.thompson@linaro.org>
- <20200605142953.GP2750@hirez.programming.kicks-ass.net>
- <20200611214209.bd8fcd290d745ae50d898e69@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eYtkvOUUq+F5r82ywOVrxc+PmLG4PLG1lF6L9X8WFAQ=;
+        b=e1pvzZE/tBzt1DGhH7i/zmZCqCRNbDb3/PZEI5Zc7T5eEy9Utrki5yWXZIo3I9p7UQ
+         /MI1Sk9U+l2I6X+g46sFqXayvoEhxGN1TBCALvaJCnKtJ5+r+O3E24Y0C/GDJ9iHd+sD
+         hCYPQl3JI3X7to4FjSDmLzUlzVJaLU3teVupT6niJ66t+dtn4QB/bZyjepVmULt64Ob0
+         JN7fpVRmjia5tp8fkWgtDoULxNdLEO3luN6xRP7YnAvXjlgOASBOQ3OJuXfvS6QPT0di
+         xu7cq9Uym7crr1uKOPjJcmYKrJlK2jpKjTGrGNuumjmRJnDmuqLmvHy3vrAgCYs3dydb
+         oFTA==
+X-Gm-Message-State: AOAM530PayD/KbIQTzqGsnPBmcwbVUZOhIupliM0Q+uvqnybDTpeRzG6
+        qkJFh2NIgHSG4/MxXkDp/9IqKHFqkAc=
+X-Google-Smtp-Source: ABdhPJyR5Tbqt6MRdlIaXrUjxtYeXqVnusdrlmuvYI0q+4YdgrWDOuZ4LA3ddHvWgwsEBxcdPd13gQ==
+X-Received: by 2002:a1f:205:: with SMTP id 5mr6427117vkc.32.1591886100712;
+        Thu, 11 Jun 2020 07:35:00 -0700 (PDT)
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com. [209.85.217.52])
+        by smtp.gmail.com with ESMTPSA id t2sm462265vka.28.2020.06.11.07.34.59
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Jun 2020 07:34:59 -0700 (PDT)
+Received: by mail-vs1-f52.google.com with SMTP id d21so3483841vsh.12
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 07:34:59 -0700 (PDT)
+X-Received: by 2002:a05:6102:20c8:: with SMTP id i8mr7101389vsr.106.1591886098468;
+ Thu, 11 Jun 2020 07:34:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200611214209.bd8fcd290d745ae50d898e69@kernel.org>
+References: <20200608104832.1.Ibe95d8f3daef01e5c57d4c8c398f04d6a839492c@changeid>
+ <20200608104832.4.Ia4376fd88cdc6e8f8b43c65548458305f82f1d61@changeid> <159186950406.242598.11120838219466948342@swboyd.mtv.corp.google.com>
+In-Reply-To: <159186950406.242598.11120838219466948342@swboyd.mtv.corp.google.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 11 Jun 2020 07:34:47 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=Xt8AdnemnKLgxwkC-W=LWC06OU9x20RszXPLfAvUm9Og@mail.gmail.com>
+Message-ID: <CAD=FV=Xt8AdnemnKLgxwkC-W=LWC06OU9x20RszXPLfAvUm9Og@mail.gmail.com>
+Subject: Re: [PATCH 4/4] drm/bridge: ti-sn65dsi86: Check the regmap return
+ value when setting a GPIO
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sandeep Panda <spanda@codeaurora.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 09:42:09PM +0900, Masami Hiramatsu wrote:
-> On Fri, 5 Jun 2020 16:29:53 +0200
-> Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > On Fri, Jun 05, 2020 at 02:21:26PM +0100, Daniel Thompson wrote:
-> > > kgdb has traditionally adopted a no safety rails approach to breakpoint
-> > > placement. If the debugger is commanded to place a breakpoint at an
-> > > address then it will do so even if that breakpoint results in kgdb
-> > > becoming inoperable.
-> > > 
-> > > A stop-the-world debugger with memory peek/poke does intrinsically
-> > > provide its operator with the means to hose their system in all manner
-> > > of exciting ways (not least because stopping-the-world is already a DoS
-> > > attack ;-) ) but the current no safety rail approach is not easy to
-> > > defend, especially given kprobes provides us with plenty of machinery to
-> > > mark parts of the kernel where breakpointing is discouraged.
-> > > 
-> > > This patchset introduces some safety rails by using the existing
-> > > kprobes infrastructure. It does not cover all locations where
-> > > breakpoints can cause trouble but it will definitely block off several
-> > > avenues, including the architecture specific parts that are handled by
-> > > arch_within_kprobe_blacklist().
-> > > 
-> > > This patch is an RFC because:
-> > > 
-> > > 1. My workstation is still chugging through the compile testing.
-> > > 
-> > > 2. Patch 4 needs more runtime testing.
-> > > 
-> > > 3. The code to extract the kprobe blacklist code (patch 4 again) needs
-> > >    more review especially for its impact on arch specific code.
-> > > 
-> > > To be clear I do plan to do the detailed review of the kprobe blacklist
-> > > stuff but would like to check the direction of travel first since the
-> > > change is already surprisingly big and maybe there's a better way to
-> > > organise things.
-> > 
-> > Thanks for doing these patches, esp 1-3 look very good to me.
-> > 
-> > I've taken the liberty to bounce the entire set to Masami-San, who is
-> > the kprobes maintainer for comments as well.
-> 
-> Thanks Peter to Cc me.
-> 
-> Reusing kprobe blacklist is good to me as far as it doesn't expand it
-> only for kgdb. For example, if a function which can cause a recursive
-> trap issue only when the kgdb puts a breakpoint, it should be covered
-> by kgdb blacklist, or we should make a "noinstr-list" including
-> both :)
+Hi,
 
-Recursion is what focuses the mind but I don't think we'd need
-recursion for there to be problems.
+On Thu, Jun 11, 2020 at 2:58 AM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting Douglas Anderson (2020-06-08 10:48:35)
+> > The ti_sn_bridge_gpio_set() got the return value of
+> > regmap_update_bits() but didn't check it.  The function can't return
+> > an error value, but we should at least print a warning if it didn't
+> > work.
+> >
+> > This fixes a compiler warning about setting "ret" but not using it.
+> >
+> > Fixes: 27ed2b3f22ed ("drm/bridge: ti-sn65dsi86: Export bridge GPIOs to Linux")
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > ---
+> >
+> >  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> > index 1080e4f9df96..526add27dc03 100644
+> > --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> > +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> > @@ -999,6 +999,9 @@ static void ti_sn_bridge_gpio_set(struct gpio_chip *chip, unsigned int offset,
+> >         ret = regmap_update_bits(pdata->regmap, SN_GPIO_IO_REG,
+> >                                  BIT(SN_GPIO_OUTPUT_SHIFT + offset),
+> >                                  val << (SN_GPIO_OUTPUT_SHIFT + offset));
+> > +       if (ret)
+> > +               dev_warn(pdata->dev,
+> > +                        "Failed to set bridge GPIO %d: %d\n", offset, ret);
+>
+> GPIO %u because it's unsigned?
 
-For example taking a kprobe trap whilst executing the kgdb trap handler
-(or vice versa) is already likely to be fragile and is almost certainly
-untested on most or all architectures. Further if I understood Peter's
-original nudge correctly then, in addition, x86 plans to explicitly
-prohibit this anyway.
+Sure.  I'll plan to spin tomorrow in case anyone else has any
+feedback.  If any maintainer would prefer me not to spin and would
+rather fix this when applying, please shout and I won't send out a v2.
 
-On other words I think there will only be one blacklist.
-
-
-> Thus, Nack for PATCH 4/4, that seems a bit selfish change. If kgdb wants
-> to use the "kprobes blacklist", we should make CONFIG_KGDB depending on
-> CONFIG_KPROBES.
-
-Some of the architectures currently have kgdb support but do not have
-kprobes...
-
-
-> Or, (as I pointed) we should make independent "noinstr-list"
-> and use it from both.
-
-This sounds like this wouldn't really be a functional change over
-what I have proposed. More like augmenting it with a massive symbol
-rename (and maybe a little bit of extra code movement in the headers
-to give us linux/noinstr.h).
-
-Taking my cues from things like set_fs() I originally decided to keep
-away from such a big rename ;-) .
-
-Personally I'm open to a rename. I could write PATCH 4/4 assuming a
-rename will come (e.g. different naming for new files and Kconfig
-options) and follow that with an automatically generated
-rename patch (or patches).
-
-
-Daniel.
-
+-Doug
