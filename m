@@ -2,104 +2,136 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7460C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46548C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF71420823
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:27:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="j2Zm8WTa"
+	by mail.kernel.org (Postfix) with ESMTP id 29CF82072F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:27:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbgFKO1b (ORCPT
+        id S1728277AbgFKO1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 10:27:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59688 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726657AbgFKO1b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 10:27:31 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C52F9C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 07:27:30 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id j198so7090477wmj.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 07:27:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=6oNSKO/bfHkroY5E6w01GRrWanZd3YtLMnWhvnjnTpA=;
-        b=j2Zm8WTakmUV2T5y/+dMnLN/v4wOdjhGJvK5fkIK2O+ryCylfrjDzedqOoet78T75o
-         Ldpf9ZChG1Qa8baFLKfR/dMZfYDYfM/dHdjOp3Yx66MPkJNvGhfScPuLyNt4jF9UKrN9
-         lHtbYaVmspsKGB1HNStwdkVEgJW9qsM01+RiQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6oNSKO/bfHkroY5E6w01GRrWanZd3YtLMnWhvnjnTpA=;
-        b=BpNfddAJZpMGUoUWjSATMkmQADaemx7YO7d8LYwg+SlBPFWthrLitAjc+sQ3Poxc4a
-         tSIB9/JBVsFl9iCMnwBnx7/aoAq80L66QR4AksCPXMUPDQx0QPnnJMmTkXWMb3u9pux/
-         JLOgj+sEmJJtuYSfGZhe9Y4s8jurYRXgYIgASvPzK1bNJShPx3jpIEK1EKlLbcCFUJwb
-         Ax6LTM0BsDWgbf6jhMw+dlaVnjdwvbq1dOqhsbZexlfxTLQ27XAItAraGY7cXtmNDuMV
-         tpISDV1Qf1b3jPsSRRKE4+NOliwF6eQRlkkcudW5IFe5SMNgkeuNw7aWpv+29pe2uN9k
-         WTRg==
-X-Gm-Message-State: AOAM530/y6cpTvgcT0fynoIvMo9SHLkvVCUAtOCB4SUE6UfaDixjoaad
-        zuVFv+GJp5fn/hQ/mIYD9DGPlg==
-X-Google-Smtp-Source: ABdhPJwcHlML3GVU5KUrSHCPpOa1Dg4OCgzoWnC1F47mU912hVUwl1saC95zTHAPsWEKo1Yl3nrQ2g==
-X-Received: by 2002:a7b:c40e:: with SMTP id k14mr8960381wmi.59.1591885649589;
-        Thu, 11 Jun 2020 07:27:29 -0700 (PDT)
-Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
-        by smtp.gmail.com with ESMTPSA id g3sm5808646wrb.46.2020.06.11.07.27.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 07:27:29 -0700 (PDT)
-Date:   Thu, 11 Jun 2020 14:27:27 +0000
-From:   Tomasz Figa <tfiga@chromium.org>
-To:     Xia Jiang <xia.jiang@mediatek.com>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Thu, 11 Jun 2020 10:27:35 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49196 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726657AbgFKO1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 10:27:33 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 810DFAB76;
+        Thu, 11 Jun 2020 14:27:33 +0000 (UTC)
+Subject: Re: [PATCH v2 2/5] ARM: mstar: Add machine for MStar/Sigmastar
+ infinity/mercury family ARMv7 SoCs
+To:     Daniel Palmer <daniel@0x0f.com>
+Cc:     Krzysztof Adamski <k@japko.eu>, tim.bird@sony.com,
+        devicetree@vger.kernel.org, Daniel Palmer <daniel@thingy.jp>,
         Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        srv_heupstream@mediatek.com, senozhatsky@chromium.org,
-        mojahsu@chromium.org, drinkcat@chromium.org,
-        maoguang.meng@mediatek.com, sj.huang@mediatek.com
-Subject: Re: [PATCH RESEND v9 09/18] media: platform: Delete zeroing the
- reserved fields
-Message-ID: <20200611142727.GC158633@chromium.org>
-References: <20200604090553.10861-1-xia.jiang@mediatek.com>
- <20200604090553.10861-11-xia.jiang@mediatek.com>
+        Russell King <linux@armlinux.org.uk>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Mike Rapoport <rppt@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Doug Anderson <armlinux@m.disordat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Gregory Fong <gregory.0xf0@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Christian Lamparter <chunkeey@gmail.com>,
+        Nathan Huckleberry <nhuck15@gmail.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org
+References: <20191014061617.10296-2-daniel@0x0f.com>
+ <20200610090421.3428945-3-daniel@0x0f.com>
+ <976e789e-edd7-c44d-ea99-840ecb883ff8@suse.de>
+ <CAFr9PXkvmZv3_EakxvRR+X522xN-a8epvF0ns10JeYCLn2uUKw@mail.gmail.com>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <1e8262e0-9b30-0788-446a-5d88c1bb49ea@suse.de>
+Date:   Thu, 11 Jun 2020 16:27:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604090553.10861-11-xia.jiang@mediatek.com>
+In-Reply-To: <CAFr9PXkvmZv3_EakxvRR+X522xN-a8epvF0ns10JeYCLn2uUKw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Xia,
+Hi Daniel,
 
-On Thu, Jun 04, 2020 at 05:05:44PM +0800, Xia Jiang wrote:
-> Delete zeroing the reserved fields because that the core already
-> does it.
+Am 11.06.20 um 15:01 schrieb Daniel Palmer:
+> On Thu, 11 Jun 2020 at 21:49, Andreas Färber <afaerber@suse.de> wrote:
+>>> peripherals and system memory in a single tiny QFN package that
+>>> can be hand soldered allowing almost anyone to embed Linux
+>>
+>> "soldered, allowing"?
 > 
-> Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
-> ---
-> v9: new patch
-> ---
->  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c | 5 -----
->  1 file changed, 5 deletions(-)
+> The original reads ok to me. Maybe I can just split that into two sentences?
+> Like ".. QFN package that can be hand soldered. This allows almost anyone..".
+
+As non-native speaker I merely wondered whether a comma should better be 
+inserted to separate the two parts of the sentence. Splitting it in two 
+or leaving as is should be fine, too - I assume you're a native speaker. 
+Most people will rather read the bindings document than old git history, 
+so you might want to consider adding such a description below its title.
+
+>>> --- a/MAINTAINERS
+>>> +++ b/MAINTAINERS
+>>> @@ -2114,6 +2114,7 @@ ARM/MStar/Sigmastar ARMv7 SoC support
+>>>    M:  Daniel Palmer <daniel@thingy.jp>
+>>>    L:  linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+>>>    S:  Maintained
+>>> +F:   arch/arm/mach-mstar/
+>>>    F:  Documentation/devicetree/bindings/arm/mstar.yaml
+>>>
+>>>    ARM/NEC MOBILEPRO 900/c MACHINE SUPPORT
+>> [snip]
+>>
+>> The sort order has recently been changed to case-sensitive, i.e., you
+>> should append arch after Documentation.
 > 
+> Interesting. Checkpatch didn't complain about that although it
+> complained about the
+> original ordering I had.
 
-Reviewed-by: Tomasz Figa <tfiga@chromium.org>
+I only noticed because someone refactored my Realtek section, causing a 
+merge conflict.
 
-Best regards,
-Tomasz
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=3b50142d8528e1efc1c07f69c540f926c58ab3ad
+
+Which reminds me, in 1/5 you should probably add a W: line (after S: 
+according to above sort commit) pointing to your 
+http://linux-chenxing.org/ website.
+
+And for the community following your project, you may want to set up a 
+linux-chenxing mailing list on vger.kernel.org or on infradead.org and 
+add it as L:, to allow for error reports and patches to not just go to 
+you and crowded LAKML.
+
+Cheers,
+Andreas
+
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
