@@ -2,122 +2,101 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E484C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D75C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 315E420747
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:01:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC5F820656
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:01:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aKoVo3UV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbgFKJBf (ORCPT
+        id S1726984AbgFKJBl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 05:01:35 -0400
-Received: from mga03.intel.com ([134.134.136.65]:4803 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726790AbgFKJBf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 05:01:35 -0400
-IronPort-SDR: KvLf+9Ogvw8N0u0grp2RQ022H0ic5Sr4PBQLlChemjuIl8dBz0SOtnAgcmXptgmV4eHygKLvrx
- EWTACex7fAwQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 02:01:35 -0700
-IronPort-SDR: 6ITRvQo4TaYdZoPDTI+zEjEv2DNIWe0IS8NPuGBRjpyrRvei3KLh76xmrcJ4dHShHvxTX7Ueog
- prduhYEpr2fQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,499,1583222400"; 
-   d="scan'208";a="260442809"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 11 Jun 2020 02:01:34 -0700
-Received: from [10.214.154.243] (vramuthx-mobl1.gar.corp.intel.com [10.214.154.243])
-        by linux.intel.com (Postfix) with ESMTP id 5024B580458;
-        Thu, 11 Jun 2020 02:01:31 -0700 (PDT)
-Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: Re: [PATCH v2 2/2] usb: phy: Add USB3 PHY support for Intel LGM SoC
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     linux-kernel@vger.kernel.org, balbi@kernel.org,
-        p.zabel@pengutronix.de, gregkh@linuxfoundation.org,
-        robh@kernel.org, devicetree@vger.kernel.org,
-        linux-usb@vger.kernel.org, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, yin1.li@intel.com
-References: <20200611021246.3250-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200611021246.3250-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200611081254.GR2428291@smile.fi.intel.com>
- <21b5db0e-c45a-2255-0389-04b204685d63@linux.intel.com>
- <20200611085710.GV2428291@smile.fi.intel.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <086e01da-a834-4745-022a-8d59c52f98d6@linux.intel.com>
-Date:   Thu, 11 Jun 2020 17:01:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Thu, 11 Jun 2020 05:01:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37108 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726928AbgFKJBi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 05:01:38 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B18BC03E96F;
+        Thu, 11 Jun 2020 02:01:37 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id q19so5657856eja.7;
+        Thu, 11 Jun 2020 02:01:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=f70qcp+8H8N+7vfQUf6lwsKTErk85DZiUNo0OM0KDKo=;
+        b=aKoVo3UVoRws3o5Y4Mxmlc5CpVRvnFOlr2j/nBlJVjQeEXtfxHzwrPhsJli6AvjnVV
+         D2ajORkKdG+Q6wYK5z170YS1tb3dUjrKgipBAFPNvZMBU8RZ5Sp2tdFwTv1FlKsMe7OW
+         XbdzdYBZJrRVLNOdydDj6PmG+jxHckRkGqscUUiKcxJO7OYqKZzlLyiEP/dAFB3tAFS6
+         Y+Gu8GaZ3SIkqci3/IlZqySJX+UgzwRGmIJr1shkLm7rqC41dE51gByJBdbcObQa+Vku
+         dmaUOxmJcrqwG/QvlIIMw/bCSFeSKIa+sHc4WDRDNWj9dURnpwiTLhEfpCeub4+GmGUh
+         79lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=f70qcp+8H8N+7vfQUf6lwsKTErk85DZiUNo0OM0KDKo=;
+        b=lk1TzqMc/ZFgytuOlnyNJfgRRKHZWh5p1kXZopZXfTPqQbiLH/kNKaqPQwHg6ru4rW
+         xRneWioCozNvLwh9klfZwciJ/8PegFVcz5bl9f3D47ZjCKn2GYQtV3EhB2odD5r8eXHC
+         vIB2HATSbn1ig95+yqoz1Cx7xWU1NVESwW84zcnotq/3glU1pHCvd+f5l4VqmONBnWTP
+         5NvOAMxPbCfCg2FaLXMshsb4LMl1tprbYwqc4I21pm5bbN/eOSNIfhHlMkYtocYRzPU4
+         wjkla0B8x6ikf4Kd8JTohasz2VPpcBVPJXMcs5xnd7ppxZnNS/2RTAHprnODfThjMldH
+         iAkA==
+X-Gm-Message-State: AOAM532zGgKSDcmdZn6GvLAx7cpMFq0lmPGh2LJPEOXfzmSi+xPptzBV
+        oGsFetqYfiKo062slpdIUuSXV/1Itu4GYniiqJ4=
+X-Google-Smtp-Source: ABdhPJw0MVbn7mgfpkFtBg6RwYYq81Ac7XcqQYluRO6zP0wiUdzhOOBjlb6fIfKeADfYPAUQdunBXdk4whM5VcBN87o=
+X-Received: by 2002:a17:906:2e50:: with SMTP id r16mr7250012eji.305.1591866096170;
+ Thu, 11 Jun 2020 02:01:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200611085710.GV2428291@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.1591816172.git.noodles@earth.li> <78519bc421a1cb7000a68d05e43c4208b26f37e5.1591816172.git.noodles@earth.li>
+ <20200611085523.GV1551@shell.armlinux.org.uk>
+In-Reply-To: <20200611085523.GV1551@shell.armlinux.org.uk>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Thu, 11 Jun 2020 12:01:25 +0300
+Message-ID: <CA+h21hqyAKucPENVANwuNo-UuCY0W3z8QF1FZ-nhd0uQ8tyC+w@mail.gmail.com>
+Subject: Re: [PATCH 1/2] net: dsa: qca8k: Switch to PHYLINK instead of PHYLIB
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Jonathan McDowell <noodles@earth.li>, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+Hi Russell,
 
-  Thank you very much for prompt review comments...
+On Thu, 11 Jun 2020 at 11:57, Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+>
 
-On 11/6/2020 4:57 pm, Andy Shevchenko wrote:
-> On Thu, Jun 11, 2020 at 04:36:29PM +0800, Ramuthevar, Vadivel MuruganX wrote:
->> On 11/6/2020 4:12 pm, Andy Shevchenko wrote:
->>> On Thu, Jun 11, 2020 at 10:12:46AM +0800, Ramuthevar,Vadivel MuruganX wrote:
->>>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> 
-> ...
-> 
->>>> +	ret = readl_poll_timeout(ctrl1, val, val & SRAM_INIT_DONE,
->>>> +				 10, 10 * 1000);
->> exceeds more than 80 characters, so checkpatch throws warnings, to avoid
->> that move to next line.
-> 
->>> On one line easier to read.
-> 
-> It's 82 characters. It's fine.
-Noted.
-> 
->>>> +	if (ret) {
->>>> +		dev_err(ta->phy.dev, "SRAM init failed, 0x%x\n", val);
->>>> +		return ret;
->>>> +	}
-> 
-> ...
-> 
->>>> +	int ret = 0;
->>>
->>> Assignment is redundant.
->> so you mean , should be declared as
->> int ret;
->> right?
-> 
-> Right.
-okay, Thanks!
-> 
-> ...
-> 
->>>> +		dev_info(ta->phy.dev, "connected%s\n",
->>>> +			 flipped ? " flipped" : "");
->>>
->>> One line.
->> exceeds more than 80 characters, so checkpatch throw warnings, to avoid that
->> moved to next line.
-> 
-> It's fine to have on one line.
-> 
-> And by the way, try new checkpatch.
-Sure , will try and fix it.
+>
+> Alternatively, phylink supports polling mode, but due to the layered
+> way DSA is written, DSA drivers don't have access to that as that is
+> in the DSA upper levels in net/dsa/slave.c (dsa_slave_phy_setup(),
+> it would be dp->pl_config.pcs_poll).
+>
 
-Regards
-Vadivel
-> 
-> 
+They do, see https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/tree/drivers/net/dsa/ocelot/felix.c#n606
+
+>
+> --
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 503kbps up
+
+Thanks,
+-Vladimir
