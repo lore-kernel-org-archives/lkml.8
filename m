@@ -2,77 +2,62 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26928C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDDDC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03D922074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 255612072F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:36:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591860992;
+	bh=CT+nRSifJ5/9M5ZQn6QlYcpQ4iRZi29gzGIoAgD+MZM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=byj3ddMmPOleo2kryCRM+te9RD1fJiqanouKzQ9mNQtlqOfcSmUOdmkrBPwtuz5tI
+	 Gqq6uQqlYP0vSysBUQpHntzlhWXiI8Fx5wWpODgumb28mLuL8FCeLu5GSjsX3Cz47+
+	 4FWfIKdgKw+amp9emcHT8xCKuNlpr69x4S/yimb0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbgFKHgY (ORCPT
+        id S1726947AbgFKHga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 03:36:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52264 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726375AbgFKHgX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 03:36:23 -0400
-Received: from mail.kapsi.fi (mail.kapsi.fi [IPv6:2001:67c:1be8::25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4103FC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 00:36:23 -0700 (PDT)
-Received: from kapsi.fi ([2001:67c:1be8::11] helo=lakka.kapsi.fi)
-        by mail.kapsi.fi with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <jpa@lakka.kapsi.fi>)
-        id 1jjHku-0004TY-5Y; Thu, 11 Jun 2020 10:36:08 +0300
-Received: from jpa by lakka.kapsi.fi with local (Exim 4.92)
-        (envelope-from <jpa@lakka.kapsi.fi>)
-        id 1jjHku-0000c4-2E; Thu, 11 Jun 2020 10:36:08 +0300
-Date:   Thu, 11 Jun 2020 10:36:08 +0300
-From:   Petteri Aimonen <jpa@git.mail.kapsi.fi>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Borislav Petkov <bp@alien8.de>, Shuah Khan <shuah@kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86-ml <x86@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arch/x86: reset MXCSR to default in kernel_fpu_begin()
-Message-ID: <20200611073607.GH17423@lakka.kapsi.fi>
-References: <20200602101119.GA11634@zn.tnic>
- <20200602102951.GE17423@lakka.kapsi.fi>
- <20200602105649.GB11634@zn.tnic>
- <CALCETrURrz=L5f-HHF3kZtUqV0dw5hAEGqSxWTsOjoZvOKaccw@mail.gmail.com>
+        Thu, 11 Jun 2020 03:36:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34678 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726375AbgFKHg3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 03:36:29 -0400
+Received: from localhost.localdomain (unknown [171.61.66.58])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92E482072F;
+        Thu, 11 Jun 2020 07:36:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591860989;
+        bh=CT+nRSifJ5/9M5ZQn6QlYcpQ4iRZi29gzGIoAgD+MZM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=S+lwhGFMHF8QODVcZLdDK/U+v7Ga920A6/87j+vPNfJuwRiXv9Fs3zDVKdoMAva8S
+         XKJjzVp1SoW9HzslsDxFUiFZJpv+nq0XZmySUXxYagmvyWiMQuFJnC1UBPTvTHAOrb
+         dkSw4xEnTonrpYLTgXgxvhDbH30fQqSwpzU0Fbpo=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
+        Rob Clark <robdclark@gmail.com>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Emil Velikov <emil.l.velikov@gmail.com>
+Subject: [PATCH v2 0/3] Add LT9611 DSI to HDMI bridge
+Date:   Thu, 11 Jun 2020 13:06:08 +0530
+Message-Id: <20200611073611.1446562-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrURrz=L5f-HHF3kZtUqV0dw5hAEGqSxWTsOjoZvOKaccw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Rspam-Score: 1.2 (+)
-X-Rspam-Report: Action: no action
- Symbol: RCVD_TLS_LAST(0.00)
- Symbol: ARC_NA(0.00)
- Symbol: FROM_HAS_DN(0.00)
- Symbol: TO_MATCH_ENVRCPT_ALL(0.00)
- Symbol: MIME_GOOD(-0.10)
- Symbol: DMARC_NA(0.00)
- Symbol: AUTH_NA(1.00)
- Symbol: NEURAL_SPAM(0.00)
- Symbol: TO_DN_ALL(0.00)
- Symbol: RCPT_COUNT_SEVEN(0.00)
- Symbol: R_SPF_NA(0.00)
- Symbol: FORGED_SENDER(0.30)
- Symbol: R_DKIM_NA(0.00)
- Symbol: MIME_TRACE(0.00)
- Symbol: ASN(0.00)
- Symbol: FROM_NEQ_ENVFROM(0.00)
- Symbol: RCVD_COUNT_TWO(0.00)
- Message-ID: 20200611073607.GH17423@lakka.kapsi.fi
-X-Rspam-Bar: +
-X-SA-Exim-Connect-IP: 2001:67c:1be8::11
-X-SA-Exim-Mail-From: jpa@lakka.kapsi.fi
-X-SA-Exim-Scanned: No (on mail.kapsi.fi); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -80,24 +65,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi,
 
-> How about putting the file you frob in
-> /sys/kernel/debug/selftest_helpers/something_or_other.  The idea would
-> be that /sys/kernel/debug/selftest_helpers would be a general place
-> for kernel helpers needed to make selftests work.
+This series adds driver and bindings for Lontium LT9611 bridge chip which
+takes MIPI DSI as input and HDMI as output.
 
-Seems like this is the consensus for now.
+This chip can be found in 96boards RB3 platform [1] commonly called DB845c.
 
-Any opinions on whether the module should remove "selftest_helpers"
-directory on unloading, or not?
+[1]: https://www.96boards.org/product/rb3-platform/
 
-1) Removing would break if other test modules will use the same dir.
-2) Not removing will leave the directory dangling.
-3) Remove only if empty is one option, though I'm unsure how to
-   cleanly check if debugfs directory is empty.
-4) E.g. /sys/kernel/debug/x86/ is created centrally and a symbol is
-   exported for its dentry. But I'm not sure if it really makes sense
-   to add another exported symbol just for selftest_helpers.
+Changes in v2:
+ - Add acks by Rob
+ - Fix comments reported by Emil and rename the file to lontium-lt9611.c
+ - Fix comments reported by Laurent on binding and driver
+ - Add HDMI audio support
 
---
-Petteri
+Vinod Koul (3):
+  dt-bindings: vendor-prefixes: Add Lontium vendor prefix
+  dt-bindings: display: bridge: Add documentation for LT9611
+  drm/bridge: Introduce LT9611 DSI to HDMI bridge
+
+ .../display/bridge/lontium,lt9611.yaml        |  176 +++
+ .../devicetree/bindings/vendor-prefixes.yaml  |    2 +
+ drivers/gpu/drm/bridge/Kconfig                |   13 +
+ drivers/gpu/drm/bridge/Makefile               |    1 +
+ drivers/gpu/drm/bridge/lontium-lt9611.c       | 1219 +++++++++++++++++
+ 5 files changed, 1411 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml
+ create mode 100644 drivers/gpu/drm/bridge/lontium-lt9611.c
+
+-- 
+2.26.2
 
