@@ -2,153 +2,127 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D5BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 191ADC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 001DF2078C
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:34:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="hcfU9eb/"
+	by mail.kernel.org (Postfix) with ESMTP id E66852078C
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:34:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726353AbgFKXeI (ORCPT
+        id S1726380AbgFKXeP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 19:34:08 -0400
-Received: from mga01.intel.com ([192.55.52.88]:55894 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726270AbgFKXeI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 19:34:08 -0400
-IronPort-SDR: qnpe94N+7mK8VV7j370bD7vZbeygNDMpEnDPe4QB8650a5zrhLfFMz0oGbViBx+wvM6LGNMfQu
- 0elCMKD7HC2A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 16:34:07 -0700
-IronPort-SDR: Ji/rKTrBrccpXvsEjBxjtp5MUqT4A4sEBWq9e9YdhONVI64t7Gk3uODYQ3az3j5WYf9wOM/+Ub
- iiFffPA0juAw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,501,1583222400"; 
-   d="scan'208";a="260817850"
-Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
-  by fmsmga008.fm.intel.com with ESMTP; 11 Jun 2020 16:34:07 -0700
-Received: from FMSMSX110.amr.corp.intel.com (10.18.116.10) by
- FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 11 Jun 2020 16:34:04 -0700
-Received: from FMSEDG002.ED.cps.intel.com (10.1.192.134) by
- fmsmsx110.amr.corp.intel.com (10.18.116.10) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 11 Jun 2020 16:34:04 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.168)
- by edgegateway.intel.com (192.55.55.69) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Thu, 11 Jun 2020 16:34:03 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=F66iqtkue4gIUO6GyiM6bDjvb4utiXqvMiVDLeUv4jTzB/6AJZ749QbWQjFl7r02YQ7QruGcRkZY/Uk2qQ6LvwXBBOfieRjQXMCPckmV46CbkV8IHjZDUyqAdpJzQRHrvSnvIMhS3BHbbEeWJg1O6e5qn0UCLNTDZ7aPgcmjwFTS/A0ZZ8ODjTyKvoHlVZ8hqQLEc7aJpxw8I9oat9EZDZREb+olMTMjx4p5okTtARxuZTZ458lhEHUjVIGhe0e6bPJQKjnzEJR1XbI1yaS63GKLskxTPsqLxzh0tEaIU3Wun22FD5JoowJUrMtP3ZyMacp1j9v1KMbEcYIfdaDaoQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xM76Mw0CxzrDW25RKYqzZrYeEdccGvqlla+7wrWoDR0=;
- b=gtgZSnoOafQDvvOhKhBo72Kh30tWxT+Kgh53FY9VmGpK1KfSwIp3D0wOYjkyESmTNR/GRUuXfjWQuiaE4f6S5LUfbxjq8PgQVBv6qBQeNBNxwAjPCACovrK4qG36x5u5cgbdcHF4WCvla4EdPfOqfumgvyezwFnJxtAb5maep+cAzGg0rQz2oVCXpE2P6jVCYzJkRzFNK32sSFz2jpnVc4v8ZF2sa2clghftPtUGcw5H4wz1z4fD+oqMKp6x2Yhy3icOXEyHm0ExypU+ZkmVsmgm2QvoIh1czd88oqY4uObgNz6Lg2BZpTuNeuzbd3j7PnwYN0GZL6od/9MJ9SqRyg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xM76Mw0CxzrDW25RKYqzZrYeEdccGvqlla+7wrWoDR0=;
- b=hcfU9eb/PX17Eozd5DdzQ1zOIAwia4d0x6XuWG4Fnb/5SAxuJW9b56tfR9ct8Akuv8SnnfPSPRTyhl9PN9+TBbrp7n/2CTjk7j6lWtIQ1HNK8hZlRcJzgBknaWIj7CFxhK0B2RiphMJvU/gziICUNSgS5U9e70YMar661Iaxv84=
-Received: from DM6PR11MB4316.namprd11.prod.outlook.com (2603:10b6:5:205::16)
- by DM5PR11MB0044.namprd11.prod.outlook.com (2603:10b6:4:64::38) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Thu, 11 Jun
- 2020 23:33:59 +0000
-Received: from DM6PR11MB4316.namprd11.prod.outlook.com
- ([fe80::b4fa:727e:34a9:b1a4]) by DM6PR11MB4316.namprd11.prod.outlook.com
- ([fe80::b4fa:727e:34a9:b1a4%5]) with mapi id 15.20.3066.023; Thu, 11 Jun 2020
- 23:33:59 +0000
-From:   "Lu, Brent" <brent.lu@intel.com>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-CC:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "authored:2/16=12%,added_lines:21/248=8%,removed_lines:5/84=6%,),Liam
-        Girdwood DRIVERS )" <lgirdwood@gmail.com>,
-        "commit_signer:6/16=38%,authored:6/16=38%,added_lines:123/248=50% 
-        ,removed_lines:36/84=43%,Kai Vehmanen DRIVERS )" 
-        <kai.vehmanen@linux.intel.com>,
-        "Daniel Baluta DRIVERS )" <daniel.baluta@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
-        Zhu Yingjiang <yingjiang.zhu@linux.intel.com>,
-        Keyon Jie <yang.jie@linux.intel.com>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        "sound-open-firmware@alsa-project.orgDRIVERS" 
-        <sound-open-firmware@alsa-project.orgDRIVERS>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] ASoC: SOF: Intel: hda: unsolicited RIRB response
-Thread-Topic: [PATCH] ASoC: SOF: Intel: hda: unsolicited RIRB response
-Thread-Index: AQHWP/c4ukUWDBOd20aRgUpUZ24R5KjTeMYAgAAAtZCAADqtAIAAA8KAgAAiBYCAAAY9AIAAMAQg
-Date:   Thu, 11 Jun 2020 23:33:59 +0000
-Message-ID: <DM6PR11MB43168DD90582B665DF0F7D6397800@DM6PR11MB4316.namprd11.prod.outlook.com>
-References: <1591883073-17190-1-git-send-email-brent.lu@intel.com>
- <b7e0b822a9deea506acaa40e0e31cc9f488bb446.camel@linux.intel.com>
- <DM6PR11MB4316108BCF449D52E49C7E4297800@DM6PR11MB4316.namprd11.prod.outlook.com>
- <s5h5zbxeb5t.wl-tiwai@suse.de>
- <ccccab4d074878cd8fc3b3c4313025e54f78b65a.camel@linux.intel.com>
- <s5hzh99cqc0.wl-tiwai@suse.de>
- <b7e98ae0-ea42-bced-1c0f-caa73e798908@linux.intel.com>
-In-Reply-To: <b7e98ae0-ea42-bced-1c0f-caa73e798908@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: linux.intel.com; dkim=none (message not signed)
- header.d=none;linux.intel.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [36.230.210.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2b10dc9e-7c41-46da-0269-08d80e5fea8e
-x-ms-traffictypediagnostic: DM5PR11MB0044:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR11MB004497E9917A7935CF47009F97800@DM5PR11MB0044.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3276;
-x-forefront-prvs: 0431F981D8
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Pg7btYGaY+KbrVNVAfWcZM4+4A4XTJ4IT9UsanA0FJIoF9nuNNivpDgixXd0CCS/TYemzW/vwizWRj1QDSDLzG4uemaHQG/dh2Z+wsLWT06njNdsX8TCKyI83Bd77WtsKVP4GMdtksdgs1l5tss6A3T0lQs5hjs0kiq8eWHOgiY64J69wAeR8VtQ1lutl1pm4wJbYsRTE75RpPznJcPC1984vwv135M6N7Mp/s7j0r3pSjenseLf07QtMFzc5PTiYGRS176VPw4CwOD1J+ZAVpJyLQUz21r3ewH3K1uLNcg3d8nIjK/yBgIDV+3HX8VdASwavGPmqyWwdX4RiumBOQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB4316.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(376002)(346002)(136003)(396003)(366004)(8936002)(110136005)(54906003)(26005)(66556008)(55016002)(9686003)(66476007)(2906002)(4744005)(64756008)(316002)(6506007)(52536014)(66946007)(76116006)(7416002)(86362001)(7696005)(5660300002)(186003)(33656002)(8676002)(4326008)(66446008)(478600001)(71200400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: fI8++PfEGtRKpr4RQpndL8fStRNBQPX5EPGcU6Bw5jNWbZZDIHWcxWp99htDRBdJmB3M9EnJeT8zgY8O8MoFlPtLcgIuQTWu9I1QKoFdTt7npigF+pzIxDzFPOOHu66tPhfGkOBZSYFtGD4Qer0TaDFlqLdT85/mp46NF9lXKHTnbxvVwaYBNL5fo59vzf164Rq9fK5RoyIH3bY8UoB1bxm5EZcXmIMJLTuwdSDRm+WiJBCWIY9OLooB+eYToQXK0d6WchTLrhJF+lrmCtBaLIYRdBdUJUSvrhPUxBxGkU4d6kZtxBdJo/O6yq3hjuX6Ziz6VLgIN+cc3NK6WC/yzSgGDCQe5OeKljAZG/BjyLYCY09x+oI2CvL56toQ6iFwFsRry+YEyj0lOHIt7czGqEI7j2u3gXIOiL9n2gRpN89TkHZw8/e/tTohW01aZEquT67itD1SgaCITHA/ESjgtiilyRKJvVHzSm6L8KxPd91+Fhfl0aikqahY8CsaRWKC
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 11 Jun 2020 19:34:15 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:40594 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726294AbgFKXeN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 19:34:13 -0400
+Received: by mail-io1-f72.google.com with SMTP id h65so4873250ioa.7
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 16:34:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=mf7ecZDnG5EwhGuhp6dMUSWS+/1lZQb0HVhn3jGu8DU=;
+        b=toMvnkNU6wHctLXsbqZGfqfNOI7Hpg53TZoEHxEcr0DwxojYtV+Mf+DbDvdmUHGsXv
+         oAJefNEvjhESwQkoEp4V/7aly96BzsjRC83MtW2ORe0P88t61Sl2hfbWa5lteH6HoGb2
+         mMKe9iTNqLSyF5v+QriHlWK8xIngxwAfU8RSzvR+l96EHVvBhpvDSj1xxxKvWkuDGan7
+         AZZPRKPZhCnpwDzMXnHSeB3GBIOW/OIhUNmxvw3zgOPuiAwblufkaMaM5WkwFzz3HGIR
+         A89LuBkMW/GNf+akcUCmDIWPwdq7Vk7MKaUImJESKRjgCAdluafa0TS3GDXCp3AGZXoB
+         826g==
+X-Gm-Message-State: AOAM530gB0DZPrYYqHjPJwgHAfvqhPf/0DUXL7Z5/FgmoI+Y01L4Q1vk
+        41iNHSrnJWTwRD0J+ZFS8i5/H51ErpnqbRLBx6zWIsVj5u9C
+X-Google-Smtp-Source: ABdhPJxEff4JjwuKFQ5B1ZilXiWMWhcCYLbkzq/jFPOpJRuKSxsM4E9WUNhbe7FP9rd2Cm2cE48r3M758G085AErgw4Zo5KczAjH
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2b10dc9e-7c41-46da-0269-08d80e5fea8e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2020 23:33:59.2102
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gpqkXw/T/iT0I1sEETr7T6xzWbVpYOVRlULsmnGtL3rxBn2ghqiAsBlhmgqA1YplYUgAoRUGh1RLhX0z/kgolA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB0044
-X-OriginatorOrg: intel.com
+X-Received: by 2002:a05:6602:2e87:: with SMTP id m7mr10999855iow.203.1591918452656;
+ Thu, 11 Jun 2020 16:34:12 -0700 (PDT)
+Date:   Thu, 11 Jun 2020 16:34:12 -0700
+In-Reply-To: <000000000000204d2105995c23eb@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e1ccfd05a7d765e7@google.com>
+Subject: Re: KASAN: vmalloc-out-of-bounds Write in sys_imageblit
+From:   syzbot <syzbot+26dc38a00dc05118a4e6@syzkaller.appspotmail.com>
+To:     b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiANCj4gSUlSQyB3ZSBhZGRlZCB0aGlzIGxvb3AgYmVmb3JlIG1lcmdpbmcgYWxsIGludGVycnVw
-dCBoYW5kbGluZyBpbiBvbmUgdGhyZWFkLA0KPiBzb21laG93IHRoZSBNU0kgbW9kZSBuZXZlciB3
-b3JrZWQgcmVsaWFibHkgd2l0aG91dCB0aGlzIGNoYW5nZSwgc28NCj4gbWF5YmUgd2UgZG9uJ3Qg
-bmVlZCB0aGlzIGxvb3AgYW55IGxvbmdlci4NCj4gDQo+IEknZCByZWFsbHkgcHJlZmVyIGl0IGlm
-IHdlIGRpZG4ndCB0aWUgdGhlIFJJUkIgaGFuZGluZyBjaGFuZ2UgdG8gdGhpcyBsb29wIGNoYW5n
-ZSwNCj4gcmVtb3ZpbmcgdGhlIGxvb3Agc2hvdWxkIG9ubHkgYmUgZG9uZSB3aXRoICphIGxvdCBv
-ZiB0ZXN0aW5nKi4NCg0KVGhlIHJlYXNvbiBJIHJlbW92ZWQgdGhlIGxvb3AgYmVjYXVzZSBJIHRo
-b3VnaHQgaXQncyBmb3IgdGhlIHVuc29saWNpdGVkIHJlc3BvbnNlLA0KYXBwYXJlbnRseSBpdCdz
-IG5vdC4gSSdkIGxpa2UgdG8gcG9ydCB0aGUgY29tbWl0IDZkMDExZDUwNTdmZg0KDQogICAgQUxT
-QTogaGRhOiBDbGVhciBSSVJCIHN0YXR1cyBiZWZvcmUgcmVhZGluZyBXUA0KDQp0byBTT0YgZHJp
-dmVyIGFuZCB1cGxvYWQgYSB2ZXJzaW9uIDIuIFRoYW5rcy4NCg0KUmVnYXJkcywNCkJyZW50DQo=
+syzbot has found a reproducer for the following crash on:
+
+HEAD commit:    435faf5c Merge tag 'riscv-for-linus-5.8-mw0' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1519d83e100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3dbb617b9c2a5bdf
+dashboard link: https://syzkaller.appspot.com/bug?extid=26dc38a00dc05118a4e6
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17fbd189100000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+26dc38a00dc05118a4e6@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: vmalloc-out-of-bounds in fast_imageblit drivers/video/fbdev/core/sysimgblt.c:229 [inline]
+BUG: KASAN: vmalloc-out-of-bounds in sys_imageblit+0x1181/0x1240 drivers/video/fbdev/core/sysimgblt.c:275
+Write of size 4 at addr ffffc90009c1b040 by task syz-executor.0/9196
+
+CPU: 2 PID: 9196 Comm: syz-executor.0 Not tainted 5.7.0-syzkaller #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0x5/0x413 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ fast_imageblit drivers/video/fbdev/core/sysimgblt.c:229 [inline]
+ sys_imageblit+0x1181/0x1240 drivers/video/fbdev/core/sysimgblt.c:275
+ drm_fb_helper_sys_imageblit+0x1c/0x180 drivers/gpu/drm/drm_fb_helper.c:747
+ bit_putcs_unaligned drivers/video/fbdev/core/bitblit.c:139 [inline]
+ bit_putcs+0x8d0/0xd60 drivers/video/fbdev/core/bitblit.c:188
+ fbcon_putcs+0x345/0x3f0 drivers/video/fbdev/core/fbcon.c:1362
+ do_update_region+0x398/0x630 drivers/tty/vt/vt.c:683
+ invert_screen+0x2a7/0x600 drivers/tty/vt/vt.c:800
+ highlight drivers/tty/vt/selection.c:57 [inline]
+ clear_selection drivers/tty/vt/selection.c:84 [inline]
+ clear_selection+0x55/0x70 drivers/tty/vt/selection.c:80
+ vc_do_resize+0xff3/0x1370 drivers/tty/vt/vt.c:1230
+ fbcon_do_set_font+0x4a0/0x950 drivers/video/fbdev/core/fbcon.c:2608
+ fbcon_set_font+0x732/0x870 drivers/video/fbdev/core/fbcon.c:2705
+ con_font_set drivers/tty/vt/vt.c:4571 [inline]
+ con_font_op+0xd65/0x1160 drivers/tty/vt/vt.c:4636
+ vt_ioctl+0x1740/0x2640 drivers/tty/vt/vt_ioctl.c:980
+ tty_ioctl+0xedc/0x1440 drivers/tty/tty_io.c:2656
+ vfs_ioctl fs/ioctl.c:47 [inline]
+ ksys_ioctl+0x11a/0x180 fs/ioctl.c:771
+ __do_sys_ioctl fs/ioctl.c:780 [inline]
+ __se_sys_ioctl fs/ioctl.c:778 [inline]
+ __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:778
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x45c879
+Code: 1d b2 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 eb b1 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fb46427fc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 000000000074bf00 RCX: 000000000045c879
+RDX: 0000000020000080 RSI: 0000000000004b72 RDI: 0000000000000003
+RBP: 00000000006fae40 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fb4642806d4
+R13: 000000000000037a R14: 00000000006ecfc0 R15: 00000000004ace26
+
+
+Memory state around the buggy address:
+ ffffc90009c1af00: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+ ffffc90009c1af80: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+>ffffc90009c1b000: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+                                           ^
+ ffffc90009c1b080: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+ ffffc90009c1b100: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+==================================================================
+
