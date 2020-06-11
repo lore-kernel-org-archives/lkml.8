@@ -2,96 +2,118 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 961C9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFCBC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70EC220691
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:38:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E17420829
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:41:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591897304;
+	bh=iz9QsGoSr098XOHWPxiA9eVbf8DtfdYDY9GCFCnNGZk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=mF+Bb7Zu4hxni8vINdo9KyUpnkqoocDEDa5LOjBqjkgjpjqxRxGvrV7zu5I1aSnCg
+	 N6HKW90TJLdjz3yJvOTku70qBTStSyNHxWE9Qc34iWj4rvv+Og6B16LumMTLI1FXl3
+	 TkMm6ZCe5tnKJzwLCLchwAN8h7clNW5v0qTwRfYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbgFKRiv (ORCPT
+        id S1727010AbgFKRlm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 13:38:51 -0400
-Received: from mga18.intel.com ([134.134.136.126]:26022 "EHLO mga18.intel.com"
+        Thu, 11 Jun 2020 13:41:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726109AbgFKRiu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 13:38:50 -0400
-IronPort-SDR: 3ZMK9pZhqO18Qaheu3/vQuDhayNGWrmmzn9A2/NNrvi5etOv/KzhPguJsE+XxwrdKezzomYRIs
- SLZYOBKhphhg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 10:38:49 -0700
-IronPort-SDR: zIXZk1x7swvBXnIsc/AiNUfO/vkCBXoLCKBqY2ZiI1nI4gO/aKwjk7q+8TG3rKNcSjvUQvNDdy
- MFzRBY+uHppg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,500,1583222400"; 
-   d="scan'208";a="296669214"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga004.fm.intel.com with ESMTP; 11 Jun 2020 10:38:48 -0700
-Date:   Thu, 11 Jun 2020 10:38:48 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Borislav Petkov <bp@alien8.de>, x86@kernel.org, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v3 47/75] x86/sev-es: Add Runtime #VC Exception Handler
-Message-ID: <20200611173848.GK29918@linux.intel.com>
-References: <20200428151725.31091-1-joro@8bytes.org>
- <20200428151725.31091-48-joro@8bytes.org>
- <20200523075924.GB27431@zn.tnic>
- <20200611114831.GA11924@8bytes.org>
+        id S1726109AbgFKRlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 13:41:42 -0400
+Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2776207ED;
+        Thu, 11 Jun 2020 17:41:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591897302;
+        bh=iz9QsGoSr098XOHWPxiA9eVbf8DtfdYDY9GCFCnNGZk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=MHg8BpthG7w9da0+oc9YVpTh5RRyTCfJZQSkIb54QE25CICX8PqSRWv3wl8J7nflH
+         4Ecyg6KpoPeiZJ6LZPpwignVqlqyeAki4VK392kedJNhJ5hFHw6LXzzBUTu2gIw6Xj
+         qwf3oKzb33tp9qd8op+CkOLz9eKb6VLzTP4V0kLI=
+Date:   Thu, 11 Jun 2020 12:41:40 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Zhangfei Gao <zhangfei.gao@linaro.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        jean-philippe <jean-philippe@linaro.org>,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sinan Kaya <okaya@kernel.org>
+Subject: Re: [RFC PATCH] PCI: Remove End-End TLP as PASID dependency
+Message-ID: <20200611174140.GA1597601@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200611114831.GA11924@8bytes.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1591762694-9131-1-git-send-email-zhangfei.gao@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 01:48:31PM +0200, Joerg Roedel wrote:
-> On Sat, May 23, 2020 at 09:59:24AM +0200, Borislav Petkov wrote:
-> > On Tue, Apr 28, 2020 at 05:16:57PM +0200, Joerg Roedel wrote:
-> > > +	/*
-> > > +	 * Mark the per-cpu GHCBs as in-use to detect nested #VC exceptions.
-> > > +	 * There is no need for it to be atomic, because nothing is written to
-> > > +	 * the GHCB between the read and the write of ghcb_active. So it is safe
-> > > +	 * to use it when a nested #VC exception happens before the write.
-> > > +	 */
-> > 
-> > Looks liks that is that text... support for nested #VC exceptions.
-> > I'm sure this has come up already but why do we even want to support
-> > nested #VCs? IOW, can we do without them first or are they absolutely
-> > necessary?
-> > 
-> > I'm guessing VC exceptions inside the VC handler but what are the
-> > sensible use cases?
-> 
-> The most important use-case is #VC->NMI->#VC. When an NMI hits while the
-> #VC handler uses the GHCB and the NMI handler causes another #VC, then
-> the contents of the GHCB needs to be backed up, so that it doesn't
-> destroy the GHCB contents of the first #VC handling path.
+[+cc Sinan]
 
-Isn't it possible for the #VC handler to hit a #PF, e.g. on copy_from_user()
-in insn_fetch_from_user()?  If that happens, what prevents the #PF handler
-from hitting a #VC?  AIUI, do_vmm_communication() panics if the backup GHCB
-is already in use, e.g. #VC->#PF->#VC->NMI->#VC would be fatal.
+On Wed, Jun 10, 2020 at 12:18:14PM +0800, Zhangfei Gao wrote:
+> Some platform devices appear as PCI and have PCI cfg space,
+> but are actually on the AMBA bus.
+> They can support PASID via smmu stall feature, but does not
+> support tlp since they are not real pci devices.
+> So remove tlp as a PASID dependency.
+
+When you iterate on this, pay attention to things like:
+
+  - Wrap paragraphs to 75 columns or so, so they fill the whole line
+    but don't overflow when "git show" adds 4 spaces.
+
+  - Leave a blank line between paragraphs.
+
+  - Capitalize consistently: "SMMU", "PCI", "TLP".
+
+  - Provide references to relevant spec sections, e.g., for the SMMU
+    stall feature.
+
+> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+> ---
+>  drivers/pci/ats.c | 3 ---
+>  1 file changed, 3 deletions(-)
+> 
+> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+> index 390e92f..8e31278 100644
+> --- a/drivers/pci/ats.c
+> +++ b/drivers/pci/ats.c
+> @@ -344,9 +344,6 @@ int pci_enable_pasid(struct pci_dev *pdev, int features)
+>  	if (WARN_ON(pdev->pasid_enabled))
+>  		return -EBUSY;
+>  
+> -	if (!pdev->eetlp_prefix_path)
+> -		return -EINVAL;
+
+No.  This would mean we might enable PASID on actual PCIe devices when
+it is not safe to do so, as Jean-Philippe pointed out.
+
+You cannot break actual PCIe devices just to make your non-PCIe device
+work.
+
+These devices do not support PASID as defined in the PCIe spec.  They
+might support something *like* PASID, and you might be able to make
+parts of the PCI core work with them, but you're going to have to deal
+with the parts that don't follow the PCIe spec on your own.  That
+might be quirks, it might be some sort of AMBA adaptation shim, I
+don't know.  But it's not the responsibility of the PCI core to adapt
+to them.
+
+>  	if (!pasid)
+>  		return -EINVAL;
+>  
+> -- 
+> 2.7.4
+> 
