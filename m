@@ -2,95 +2,116 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F5EC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 06:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA70EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 06:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5C8920812
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 06:26:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ZVnRlnTB"
+	by mail.kernel.org (Postfix) with ESMTP id 92E68207C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 06:26:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591856815;
+	bh=0/pvtFISGXWR/yF7DaOfCvGCGI4UYkIET66t0WEuF/o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KKDMq2wAnzKm/TrWoAoThlqzaserWm8GoAdKdEV+JlVSts5VJIYdVsNWEkljDloIw
+	 lY9Eb0ZHUb6K9wQwCJddRXKXVfpOwDoS2+HwywJpa343OyWq9XTfx5M8nuTuMnQAUF
+	 Ed/XOSBfmnS41KFYUsiQh/MrZJhv9SZCjZSLE2KY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgFKG0Z (ORCPT
+        id S1726663AbgFKG0x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 02:26:25 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:42456 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726511AbgFKG0Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 02:26:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1591856783; x=1623392783;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=EstdcR37+LnyPrOyd37lZ2Ta0GwcaeERl0JiLvZ6O7M=;
-  b=ZVnRlnTBf2/O556/synTXOJLuiorBgRusGKZqPx3EPXxbZ7NXTbZHCr2
-   9HqGUbwuCPg3X6NnlOBrOGABJ2ybVAxngFiMFTYDkST59o+/VcMfzYJEM
-   0pvVtbUCALuemwwIGmrJj3p7e62GEuf56KfXs3HsKCxxU5CfdOM62g4Mu
-   g=;
-IronPort-SDR: XLx8ng6MGGHkG+S5hvapkdDTN+TIfLBNoEWbr31pag5ufE8D3Ve/CBzUBWAicTc3+lA86QLovr
- 3jZysafr+UMg==
-X-IronPort-AV: E=Sophos;i="5.73,498,1583193600"; 
-   d="scan'208";a="35690955"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-87a10be6.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 11 Jun 2020 06:26:22 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2c-87a10be6.us-west-2.amazon.com (Postfix) with ESMTPS id 53E76A2348;
-        Thu, 11 Jun 2020 06:26:21 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 11 Jun 2020 06:26:20 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.97) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 11 Jun 2020 06:26:16 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>, <apw@canonical.com>, <joe@perches.com>
-CC:     SeongJae Park <sjpark@amazon.de>, <colin.king@canonical.com>,
-        <sj38.park@gmail.com>, <jslaby@suse.cz>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 2/2] scripts/deprecated_terms: Recommend denylist/allowlist instead of blacklist/whitelist
-Date:   Thu, 11 Jun 2020 08:25:50 +0200
-Message-ID: <20200611062550.20113-3-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200611062550.20113-1-sjpark@amazon.com>
-References: <20200611062550.20113-1-sjpark@amazon.com>
+        Thu, 11 Jun 2020 02:26:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42210 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726511AbgFKG0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 02:26:52 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1254B207C3;
+        Thu, 11 Jun 2020 06:26:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591856811;
+        bh=0/pvtFISGXWR/yF7DaOfCvGCGI4UYkIET66t0WEuF/o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Wb4+Ay7mYfdyuww63fbICOkyEHGLxu6pD7ZnQR+qXTOgZcklh41O1JYlThBAGUXxR
+         ArCTn8BFU6hNzvNt/tPAIrEHNGpoINlhldC5PNWcZPEGpJkDpdy8YADOWHnVKcn+cD
+         THG3ryrd/Mkj/slsbY3ILY8y+FCD0e6X0H69+tW4=
+Date:   Thu, 11 Jun 2020 08:26:48 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-acpi@vger.kernel.org,
+        netdev@vger.kernel.org, Jason Baron <jbaron@akamai.com>
+Subject: Re: [PATCH v3 6/7] venus: Make debug infrastructure more flexible
+Message-ID: <20200611062648.GA2529349@kroah.com>
+References: <20200609104604.1594-1-stanimir.varbanov@linaro.org>
+ <20200609104604.1594-7-stanimir.varbanov@linaro.org>
+ <20200609111414.GC780233@kroah.com>
+ <dc85bf9e-e3a6-15a1-afaa-0add3e878573@linaro.org>
+ <20200610133717.GB1906670@kroah.com>
+ <31e1aa72b41f9ff19094476033511442bb6ccda0.camel@perches.com>
+ <2fab7f999a6b5e5354b23d06aea31c5018b9ce18.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.97]
-X-ClientProxiedBy: EX13D06UWA001.ant.amazon.com (10.43.160.220) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2fab7f999a6b5e5354b23d06aea31c5018b9ce18.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+On Wed, Jun 10, 2020 at 01:23:56PM -0700, Joe Perches wrote:
+> On Wed, 2020-06-10 at 12:49 -0700, Joe Perches wrote:
+> > On Wed, 2020-06-10 at 15:37 +0200, Greg Kroah-Hartman wrote:
+> > > Please work with the infrastructure we have, we have spent a lot of time
+> > > and effort to make it uniform to make it easier for users and
+> > > developers.
+> > 
+> > Not quite.
+> > 
+> > This lack of debug grouping by type has been a
+> > _long_ standing issue with drivers.
+> > 
+> > > Don't regress and try to make driver-specific ways of doing
+> > > things, that way lies madness...
+> > 
+> > It's not driver specific, it allows driver developers to
+> > better isolate various debug states instead of keeping
+> > lists of specific debug messages and enabling them
+> > individually.
+> 
+> For instance, look at the homebrew content in
+> drivers/gpu/drm/drm_print.c that does _not_ use
+> dynamic_debug.
+> 
+> MODULE_PARM_DESC(debug, "Enable debug output, where each bit enables a debug category.\n"
+> "\t\tBit 0 (0x01)  will enable CORE messages (drm core code)\n"
+> "\t\tBit 1 (0x02)  will enable DRIVER messages (drm controller code)\n"
+> "\t\tBit 2 (0x04)  will enable KMS messages (modesetting code)\n"
+> "\t\tBit 3 (0x08)  will enable PRIME messages (prime code)\n"
+> "\t\tBit 4 (0x10)  will enable ATOMIC messages (atomic code)\n"
+> "\t\tBit 5 (0x20)  will enable VBL messages (vblank code)\n"
+> "\t\tBit 7 (0x80)  will enable LEASE messages (leasing code)\n"
+> "\t\tBit 8 (0x100) will enable DP messages (displayport code)");
+> module_param_named(debug, __drm_debug, int, 0600);
+> 
+> void drm_dev_dbg(const struct device *dev, enum drm_debug_category category,
+> 		 const char *format, ...)
+> {
+> 	struct va_format vaf;
+> 	va_list args;
+> 
+> 	if (!drm_debug_enabled(category))
+> 		return;
+> 
+> 
 
-This commit recommends the patches to replace 'blacklist' and
-'whitelist' with the 'denylist' and 'allowlist', because the new
-suggestions are incontrovertible, doesn't make people hurt, and more
-self-explanatory.
+Ok, and will this proposal be able to handle stuff like this?  If not,
+then it is yet another way for driver authors to think that they need to
+come up with something unique to themselves. :(
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- scripts/deprecated_terms.txt | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/scripts/deprecated_terms.txt b/scripts/deprecated_terms.txt
-index 6faa06451c3d..4512ef5d5ffa 100644
---- a/scripts/deprecated_terms.txt
-+++ b/scripts/deprecated_terms.txt
-@@ -3,3 +3,5 @@
- # The format of each line is:
- # deprecated||suggested
- #
-+blacklist||denylist
-+whitelist||allowlist
--- 
-2.17.1
-
+greg k-h
