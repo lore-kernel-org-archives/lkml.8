@@ -2,121 +2,167 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AFD6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62FE4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:27:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D4B92074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:26:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tpdQc/yd"
+	by mail.kernel.org (Postfix) with ESMTP id 4298F2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:27:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbgFKHZ7 (ORCPT
+        id S1726703AbgFKH1S convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 03:25:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50666 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726375AbgFKHZ7 (ORCPT
+        Thu, 11 Jun 2020 03:27:18 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:51245 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726375AbgFKH1S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 03:25:59 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EE9CC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 00:25:59 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id e9so2169087pgo.9
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 00:25:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
-        bh=vewiDiSb1cN3kydqT+BXtXjpJ6GL0Th4yHgmJZ519bc=;
-        b=tpdQc/ydcGLOP2OMknw/h0JOLqRFK+EpzRW18q9vdrzjQnf+z2k+sNMwNT5QjbF5/F
-         bvOdfkwWF49Lj49PKrC4aiMXWG6O8C9Y4kjrn1G+9GNV6NLlfGX0kMeMqBCya1skey1V
-         phEL7SWRJCBra7Pfvnm0BPdM4tGgIYI0dtp00g+YQVhEZaXurhzfe6yGbyTMdMUmYAhc
-         eIJx8TDKo8KShNL6aX4r/6xTBX+mWjF0FYfUIgxh0WMWrpsfo/V2PtQE1gdpNRBf+DMV
-         7BUbvRal9LSMwakMrDkdA1BiHZG5J+2B8DAjJ3yr79RyorWZXFR5h3morG2JQ1XcKZs+
-         G6NA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=vewiDiSb1cN3kydqT+BXtXjpJ6GL0Th4yHgmJZ519bc=;
-        b=a20YuJDtWGryxkwMpVxy+un5wuhQbK6opuFQdtX4rH5dGnwiiP8h7stB5CK1jV7UH/
-         bjN8V0QwUa4ElUBYKEQ8LhCrM8FDDJpvGEbvji3if+iNvwESHDo01VF2VrSDtVgIlsxJ
-         BcdQD5/grj8EyqC2ipLAeTK/w63npgveqhacvsTf1DG14EQIe8tpsGQ8QcuuxmWxCdvo
-         vyb9MufbwokQJ7FCB3MXSS+z9hAGdGBd+tR+2jimEL1+SU1rR6sWuMP32GMmyBTKv+a8
-         S4SijrQA8pUfZssoNWHQLZ5rFEVrw617smy+PjGlTv1cojSPgKK13HhONP2byoOoSLLf
-         8o/Q==
-X-Gm-Message-State: AOAM532VoOKLPAinewhNFf7v92dzVH4xqVyDue/NIgSKqLTURkRSpylM
-        eTdTdlwZmR/l5IfeFRDqN4Pf9w==
-X-Google-Smtp-Source: ABdhPJz5oiGalV0Wv/ay+vh7ryKRoZ7rmBDmwQrlg8qLzu3l21DNVxpaXrRO9H45unGZuaGGCgjDdQ==
-X-Received: by 2002:a05:6a00:7c8:: with SMTP id n8mr5897765pfu.116.1591860358499;
-        Thu, 11 Jun 2020 00:25:58 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id q65sm2181477pfc.155.2020.06.11.00.25.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 00:25:57 -0700 (PDT)
-Date:   Thu, 11 Jun 2020 00:25:57 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Christoph Hellwig <hch@lst.de>
-cc:     "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>,
-        alsa-devel@alsa-project.org, bp@alien8.de, hch@infradead.org,
-        hpa@zytor.com, linux-kernel@vger.kernel.org, mingo@redhat.com,
-        Pavel Machek <pavel@ucw.cz>, perex@perex.cz,
-        tglx@linutronix.de, tiwai@suse.com, x86@kernel.org
-Subject: [patch for-5.8] dma-pool: decouple DMA_REMAP from
- DMA_COHERENT_POOL
-Message-ID: <alpine.DEB.2.22.394.2006110025250.13899@chino.kir.corp.google.com>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Thu, 11 Jun 2020 03:27:18 -0400
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id C516324000C;
+        Thu, 11 Jun 2020 07:27:08 +0000 (UTC)
+Date:   Thu, 11 Jun 2020 09:27:07 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Kamal Dasu <kdasu.kdev@gmail.com>
+Cc:     Brian Norris <computersforpeace@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-mtd@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH  2/2] mtd: rawnand: brcmnand: Ecc error handling on EDU
+ transfers
+Message-ID: <20200611092707.75da8c6a@xps13>
+In-Reply-To: <20200611054454.2547-2-kdasu.kdev@gmail.com>
+References: <20200611054454.2547-1-kdasu.kdev@gmail.com>
+        <20200611054454.2547-2-kdasu.kdev@gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DMA_REMAP is an unnecessary requirement for AMD SEV, which requires 
-DMA_COHERENT_POOL, so avoid selecting it when it is otherwise unnecessary.  
+Hi Kamal,
 
-The only other requirement for DMA coherent pools is DMA_DIRECT_REMAP, so 
-ensure that properly selects the config option when needed.
+Kamal Dasu <kdasu.kdev@gmail.com> wrote on Thu, 11 Jun 2020 01:44:54
+-0400:
 
-Fixes: 82fef0ad811f ("x86/mm: unencrypted non-blocking DMA allocations use 
-coherent pools")
-Suggested-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: David Rientjes <rientjes@google.com>
----
- kernel/dma/Kconfig | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+> Implemented ECC correctable and uncorrectable error handling for EDU
 
-diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
---- a/kernel/dma/Kconfig
-+++ b/kernel/dma/Kconfig
-@@ -73,18 +73,18 @@ config SWIOTLB
- config DMA_NONCOHERENT_MMAP
- 	bool
- 
-+config DMA_COHERENT_POOL
-+	bool
-+
- config DMA_REMAP
-+	bool
- 	depends on MMU
- 	select GENERIC_ALLOCATOR
- 	select DMA_NONCOHERENT_MMAP
--	bool
--
--config DMA_COHERENT_POOL
--	bool
--	select DMA_REMAP
- 
- config DMA_DIRECT_REMAP
- 	bool
-+	select DMA_REMAP
- 	select DMA_COHERENT_POOL
- 
- config DMA_CMA
+Implement?
+
+> reads. If ECC correctable bitflips are encountered  on EDU transfer,
+
+extra space                                         ^
+
+> read page again using pio, This is needed due to a controller lmitation
+
+s/pio/PIO/
+
+> where read and corrected data is not transferred to the DMA buffer on ECC
+> errors. This holds true for ECC correctable errors beyond set threshold.
+
+error.
+
+Not sure what the last sentence means?
+
+> 
+> Fixes: a5d53ad26a8b ("mtd: rawnand: brcmnand: Add support for flash-edu for dma transfers")
+> Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+> ---
+
+Minor nits below :)
+
+>  drivers/mtd/nand/raw/brcmnand/brcmnand.c | 26 ++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+> 
+> diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> index 0c1d6e543586..d7daa83c8a58 100644
+> --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> @@ -1855,6 +1855,22 @@ static int brcmnand_edu_trans(struct brcmnand_host *host, u64 addr, u32 *buf,
+>  	edu_writel(ctrl, EDU_STOP, 0); /* force stop */
+>  	edu_readl(ctrl, EDU_STOP);
+>  
+> +	if (ret == 0 && edu_cmd == EDU_CMD_READ) {
+
+!ret
+
+> +		u64 err_addr = 0;
+> +
+> +		/*
+> +		 * check for ecc errors here, subpage ecc erros are
+> +		 * retained in ecc error addr register
+
+s/ecc/ECC/
+s/erros/errors/
+s/addr/address/
+
+> +		 */
+> +		err_addr = brcmnand_get_uncorrecc_addr(ctrl);
+> +		if (!err_addr) {
+> +			err_addr = brcmnand_get_correcc_addr(ctrl);
+> +			if (err_addr)
+> +				ret = -EUCLEAN;
+> +		} else
+> +			ret = -EBADMSG;
+
+I don't like very much to see these values being used within NAND
+controller drivers but I see it's already the cause, so I guess I can
+live with that.
+
+> +	}
+> +
+>  	return ret;
+>  }
+>  
+> @@ -2058,6 +2074,7 @@ static int brcmnand_read(struct mtd_info *mtd, struct nand_chip *chip,
+>  	u64 err_addr = 0;
+>  	int err;
+>  	bool retry = true;
+> +	bool edu_read = false;
+>  
+>  	dev_dbg(ctrl->dev, "read %llx -> %p\n", (unsigned long long)addr, buf);
+>  
+> @@ -2075,6 +2092,10 @@ static int brcmnand_read(struct mtd_info *mtd, struct nand_chip *chip,
+>  			else
+>  				return -EIO;
+>  		}
+> +
+> +		if (has_edu(ctrl))
+> +			edu_read = true;
+
+You don't need this extra value, you already have the cmd parameter
+which tells you if it is a read or a write. You might even want to
+create a if block so set dir and edu_cmd and eventually a local
+edu_read if you think it still makes sense.
+
+> +
+>  	} else {
+>  		if (oob)
+>  			memset(oob, 0x99, mtd->oobsize);
+> @@ -2122,6 +2143,11 @@ static int brcmnand_read(struct mtd_info *mtd, struct nand_chip *chip,
+>  	if (mtd_is_bitflip(err)) {
+>  		unsigned int corrected = brcmnand_count_corrected(ctrl);
+>  
+> +		/* in case of edu correctable error we read again using pio */
+
+s/edu/EDU/ ?
+s/pio/PIO/
+
+> +		if (edu_read)
+> +			err = brcmnand_read_by_pio(mtd, chip, addr, trans, buf,
+> +						   oob, &err_addr);
+> +
+>  		dev_dbg(ctrl->dev, "corrected error at 0x%llx\n",
+>  			(unsigned long long)err_addr);
+>  		mtd->ecc_stats.corrected += corrected;
+
+Thanks,
+Miquèl
