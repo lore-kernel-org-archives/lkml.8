@@ -2,727 +2,331 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A364C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 21:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 121AFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 21:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65F7520720
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 21:55:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D769C2073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 21:56:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="iKLNBfFM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e8Frfs00"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726290AbgFKVzI (ORCPT
+        id S1726349AbgFKVz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 17:55:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44064 "EHLO
+        Thu, 11 Jun 2020 17:55:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbgFKVzH (ORCPT
+        with ESMTP id S1726270AbgFKVzz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 17:55:07 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16A6DC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 14:55:07 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id f18so7214454qkh.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 14:55:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=massaru-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=11l0BSRXYiyZGO8tvJobVQyTDs0yaIwg/i4wHcGhh1c=;
-        b=iKLNBfFMV1nVf3xGvFGUy8XmsjHYuBkGHiQ+JMFWP066pGftsl9hVB2p7WcM/nWoUE
-         JokpdzW4jBMPhV6Vpvo8lEa/k4ORQ9B5m+VAcF3PDesDxr7kAaC6zV4PZ2qe3N/0JLC3
-         dSI//ce1xRaFxsdiDuOdctHNzZlp5lH7llXEzEc/ITo1XTCAkklO22gdOxZ9YBTP/NY4
-         01TKV0Iy7NiiopqlxJd+K7WINIeru6oJ23T4gnXtluVE2Tc5Ahp3DbjEwGjICOxDR73+
-         fE2stTIARpXYyIBm/yldGRGtDX1jh1Q5lSV3j6SVgjw8BB9oAHyh/0qt0XZ+HDxgIxS8
-         5U9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=11l0BSRXYiyZGO8tvJobVQyTDs0yaIwg/i4wHcGhh1c=;
-        b=K14Q718R7kxAMCekct3ao3feWHMzQ0B8rDfCrPurog0QRm8qfw7neIjfNxR4dnuO7U
-         F8mhTZ/81O38w4ayEDDVN52HXSx3vVep4OYBj9PPUudhKoXz//ZjYbyQ4sHnTwtMsxIN
-         qVTcM96OwCebGUuLjV5NLox67buxoGbT5PKstmw6t/52LFXS+CBYm1JtZpZecCggoYae
-         r4KnXIdmNYKv63HVFP+cQLAPof71DXIpZS+uHpAsbZ54qg5zjDEgjhyhgS4nJcQ0JKfM
-         EPXD6ZF1pnejrNQ9Ue8ojVBSHtQhLUxJopjQudqahmtMXgTu4U4g7m5UNEWOlTGIq5d1
-         q4Cg==
-X-Gm-Message-State: AOAM532yqPAXNmXiR483JdO54EUfw+XEolBtCe3L/7OMTTZWFK6xgdn+
-        4MKLz9J+83d/sXNxixqAyT+Xsg==
-X-Google-Smtp-Source: ABdhPJzNzNLBCbtaYid3BIIv5QwcrUbl7e/FcqFF90pWCnSMf+AhelWxteYbAKx+uzcr48lWsGQb3w==
-X-Received: by 2002:ae9:ef50:: with SMTP id d77mr37150qkg.455.1591912505593;
-        Thu, 11 Jun 2020 14:55:05 -0700 (PDT)
-Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
-        by smtp.gmail.com with ESMTPSA id l8sm3364099qtb.57.2020.06.11.14.55.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 14:55:05 -0700 (PDT)
-From:   Vitor Massaru Iha <vitor@massaru.org>
-To:     kunit-dev@googlegroups.com, skhan@linuxfoundation.org
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        brendanhiggins@google.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        keescook@chromium.org, linux@rasmusvillemoes.dk
-Subject: [PATCH] lib: kunit_test_overflow: add KUnit test of check_*_overflow functions
-Date:   Thu, 11 Jun 2020 18:55:01 -0300
-Message-Id: <20200611215501.213058-1-vitor@massaru.org>
-X-Mailer: git-send-email 2.26.2
+        Thu, 11 Jun 2020 17:55:55 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F4138C03E96F
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 14:55:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=+D9mFCAnJgtDS6+KSuSp9KevNloc9SQBHaGYlbUhzxw=; b=e8Frfs00IgsoISCL466iUeylVG
+        LE8eTack0LgJO8TxkyecTWPER3qIBmjii3hRdEx+90pn4cLu4WK84K9a9IMfpTce1QdJaRmmZxIjl
+        gWKjNOU0EBlpkJXoLps1+vOqhjMNGlhTJb/fhXplxUocDfesnHevRuoArCO5KZXhO49JGakluIadL
+        YoNeZbP09nIOBrNBCKinveqVpR8fMNcLH+vDVmFI7vTm9G42Q/kHXCDcFYonSXOgn36kP1mnIJjem
+        PoPlTyMdHVeVX8/SZr9+kWup0SKdH/N3eBGRGWHWyxE82X8mXb7EEgy19TjgezR3T/0LuDhjAb3N6
+        Cy6N0xVQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jjVAi-0001nI-WD; Thu, 11 Jun 2020 21:55:41 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 755FB984C19; Thu, 11 Jun 2020 23:55:38 +0200 (CEST)
+Date:   Thu, 11 Jun 2020 23:55:38 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Marco Elver <elver@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexander Potapenko <glider@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [PATCH -tip v3 1/2] kcov: Make runtime functions
+ noinstr-compatible
+Message-ID: <20200611215538.GE4496@worktop.programming.kicks-ass.net>
+References: <20200605082839.226418-1-elver@google.com>
+ <CACT4Y+ZqdZD0YsPHf8UFJT94yq5KGgbDOXSiJYS0+pjgYDsx+A@mail.gmail.com>
+ <20200605120352.GJ3976@hirez.programming.kicks-ass.net>
+ <CAAeHK+zErjaB64bTRqjH3qHyo9QstDSHWiMxqvmNYwfPDWSuXQ@mail.gmail.com>
+ <CACT4Y+Zwm47qs8yco0nNoD_hFzHccoGyPznLHkBjAeg9REZ3gA@mail.gmail.com>
+ <CANpmjNPNa2f=kAF6c199oYVJ0iSyirQRGxeOBLxa9PmakSXRbA@mail.gmail.com>
+ <CACT4Y+Z+FFHFGSgEJGkd+zCBgUOck_odOf9_=5YQLNJQVMGNdw@mail.gmail.com>
+ <20200608110108.GB2497@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200608110108.GB2497@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds the convertion of the runtime tests of check_*_overflow fuctions,
-from `lib/test_overflow.c`to KUnit tests.
+On Mon, Jun 08, 2020 at 01:01:08PM +0200, Peter Zijlstra wrote:
+> On Mon, Jun 08, 2020 at 09:57:39AM +0200, Dmitry Vyukov wrote:
+> 
+> > As a crazy idea: is it possible to employ objtool (linker script?) to
+> > rewrite all coverage calls to nops in the noinstr section? Or relocate
+> > to nop function?
+> > What we are trying to do is very static, it _should_ have been done
+> > during build. We don't have means in existing _compilers_ to do this,
+> > but maybe we could do it elsewhere during build?...
+> 
+> Let me try and figure out how to make objtool actually rewrite code.
 
-The log similar to the one seen in dmesg running test_overflow can be
-seen in `test.log`.
+The below is quite horrific but seems to sorta work.
 
-Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+
+It turns this:
+
+  12:   e8 00 00 00 00          callq  17 <lockdep_hardirqs_on+0x17>
+                        13: R_X86_64_PLT32      __sanitizer_cov_trace_pc-0x4
+
+Into this:
+
+  12:   90                      nop
+  13:   90                      nop
+                        13: R_X86_64_NONE       __sanitizer_cov_trace_pc-0x4
+  14:   90                      nop
+  15:   90                      nop
+  16:   90                      nop
+
+
+I'll have to dig around a little more to see if I can't get rid of the
+relocation entirely. Also, I need to steal better arch_nop_insn() from
+the kernel :-)
+
 ---
- lib/Kconfig.debug         |  17 ++
- lib/Makefile              |   1 +
- lib/kunit_overflow_test.c | 590 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 608 insertions(+)
- create mode 100644 lib/kunit_overflow_test.c
+ tools/objtool/arch.h            |  2 ++
+ tools/objtool/arch/x86/decode.c | 24 ++++++++++++++++++++++
+ tools/objtool/check.c           | 15 +++++++++++++-
+ tools/objtool/elf.c             | 45 ++++++++++++++++++++++++++++++++++++++++-
+ tools/objtool/elf.h             | 11 ++++++++--
+ 5 files changed, 93 insertions(+), 4 deletions(-)
 
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 1f4ab7a2bdee..72fcfe1f24a4 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -2075,6 +2075,23 @@ config SYSCTL_KUNIT_TEST
- 
- 	  If unsure, say N.
- 
-+config OVERFLOW_KUNIT_TEST
-+	tristate "KUnit test for overflow" if !KUNIT_ALL_TESTS
-+	depends on KUNIT
-+	default KUNIT_ALL_TESTS
-+	help
-+	  This builds the overflow KUnit tests.
+diff --git a/tools/objtool/arch.h b/tools/objtool/arch.h
+index eda15a5a285e..3c5967748abb 100644
+--- a/tools/objtool/arch.h
++++ b/tools/objtool/arch.h
+@@ -84,4 +84,6 @@ unsigned long arch_jump_destination(struct instruction *insn);
+
+ unsigned long arch_dest_rela_offset(int addend);
+
++const char *arch_nop_insn(int len);
 +
-+	  KUnit tests run during boot and output the results to the debug log
-+	  in TAP format (http://testanything.org/). Only useful for kernel devs
-+	  running KUnit test harness and are not for inclusion into a production
-+	  build.
+ #endif /* _ARCH_H */
+diff --git a/tools/objtool/arch/x86/decode.c b/tools/objtool/arch/x86/decode.c
+index 4b504fc90bbb..b615c32e21db 100644
+--- a/tools/objtool/arch/x86/decode.c
++++ b/tools/objtool/arch/x86/decode.c
+@@ -565,3 +565,27 @@ void arch_initial_func_cfi_state(struct cfi_init_state *state)
+ 	state->regs[16].base = CFI_CFA;
+ 	state->regs[16].offset = -8;
+ }
 +
-+	  For more information on KUnit and unit tests in general please refer
-+	  to the KUnit documentation in Documentation/dev-tools/kunit/.
-+
-+	  If unsure, say N.
-+
- config LIST_KUNIT_TEST
- 	tristate "KUnit Test for Kernel Linked-list structures" if !KUNIT_ALL_TESTS
- 	depends on KUNIT
-diff --git a/lib/Makefile b/lib/Makefile
-index 685aee60de1d..a3290adc0019 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -309,3 +309,4 @@ obj-$(CONFIG_OBJAGG) += objagg.o
- 
- # KUnit tests
- obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
-+obj-$(CONFIG_OVERFLOW_KUNIT_TEST) += kunit_overflow_test.o
-diff --git a/lib/kunit_overflow_test.c b/lib/kunit_overflow_test.c
-new file mode 100644
-index 000000000000..c3eb8f0d3d50
---- /dev/null
-+++ b/lib/kunit_overflow_test.c
-@@ -0,0 +1,590 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  This code is the conversion of the overflow test in runtime to KUnit tests.
-+ */
-+
-+/*
-+ * Test cases for arithmetic overflow checks.
-+ */
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <kunit/test.h>
-+#include <linux/device.h>
-+#include <linux/init.h>
-+#include <linux/mm.h>
-+#include <linux/overflow.h>
-+#include <linux/vmalloc.h>
-+
-+#define DEFINE_TEST_ARRAY(t)			\
-+	static const struct test_ ## t {	\
-+		t a, b;				\
-+		t sum, diff, prod;		\
-+		bool s_of, d_of, p_of;		\
-+	} t ## _tests[]
-+
-+DEFINE_TEST_ARRAY(u8) = {
-+	{0, 0, 0, 0, 0, false, false, false},
-+	{1, 1, 2, 0, 1, false, false, false},
-+	{0, 1, 1, U8_MAX, 0, false, true, false},
-+	{1, 0, 1, 1, 0, false, false, false},
-+	{0, U8_MAX, U8_MAX, 1, 0, false, true, false},
-+	{U8_MAX, 0, U8_MAX, U8_MAX, 0, false, false, false},
-+	{1, U8_MAX, 0, 2, U8_MAX, true, true, false},
-+	{U8_MAX, 1, 0, U8_MAX-1, U8_MAX, true, false, false},
-+	{U8_MAX, U8_MAX, U8_MAX-1, 0, 1, true, false, true},
-+
-+	{U8_MAX, U8_MAX-1, U8_MAX-2, 1, 2, true, false, true},
-+	{U8_MAX-1, U8_MAX, U8_MAX-2, U8_MAX, 2, true, true, true},
-+
-+	{1U << 3, 1U << 3, 1U << 4, 0, 1U << 6, false, false, false},
-+	{1U << 4, 1U << 4, 1U << 5, 0, 0, false, false, true},
-+	{1U << 4, 1U << 3, 3*(1U << 3), 1U << 3, 1U << 7, false, false, false},
-+	{1U << 7, 1U << 7, 0, 0, 0, true, false, true},
-+
-+	{48, 32, 80, 16, 0, false, false, true},
-+	{128, 128, 0, 0, 0, true, false, true},
-+	{123, 234, 101, 145, 110, true, true, true},
-+};
-+
-+DEFINE_TEST_ARRAY(u16) = {
-+	{0, 0, 0, 0, 0, false, false, false},
-+	{1, 1, 2, 0, 1, false, false, false},
-+	{0, 1, 1, U16_MAX, 0, false, true, false},
-+	{1, 0, 1, 1, 0, false, false, false},
-+	{0, U16_MAX, U16_MAX, 1, 0, false, true, false},
-+	{U16_MAX, 0, U16_MAX, U16_MAX, 0, false, false, false},
-+	{1, U16_MAX, 0, 2, U16_MAX, true, true, false},
-+	{U16_MAX, 1, 0, U16_MAX-1, U16_MAX, true, false, false},
-+	{U16_MAX, U16_MAX, U16_MAX-1, 0, 1, true, false, true},
-+
-+	{U16_MAX, U16_MAX-1, U16_MAX-2, 1, 2, true, false, true},
-+	{U16_MAX-1, U16_MAX, U16_MAX-2, U16_MAX, 2, true, true, true},
-+
-+	{1U << 7, 1U << 7, 1U << 8, 0, 1U << 14, false, false, false},
-+	{1U << 8, 1U << 8, 1U << 9, 0, 0, false, false, true},
-+	{1U << 8, 1U << 7, 3*(1U << 7), 1U << 7, 1U << 15, false, false, false},
-+	{1U << 15, 1U << 15, 0, 0, 0, true, false, true},
-+
-+	{123, 234, 357, 65425, 28782, false, true, false},
-+	{1234, 2345, 3579, 64425, 10146, false, true, true},
-+};
-+
-+DEFINE_TEST_ARRAY(u32) = {
-+	{0, 0, 0, 0, 0, false, false, false},
-+	{1, 1, 2, 0, 1, false, false, false},
-+	{0, 1, 1, U32_MAX, 0, false, true, false},
-+	{1, 0, 1, 1, 0, false, false, false},
-+	{0, U32_MAX, U32_MAX, 1, 0, false, true, false},
-+	{U32_MAX, 0, U32_MAX, U32_MAX, 0, false, false, false},
-+	{1, U32_MAX, 0, 2, U32_MAX, true, true, false},
-+	{U32_MAX, 1, 0, U32_MAX-1, U32_MAX, true, false, false},
-+	{U32_MAX, U32_MAX, U32_MAX-1, 0, 1, true, false, true},
-+
-+	{U32_MAX, U32_MAX-1, U32_MAX-2, 1, 2, true, false, true},
-+	{U32_MAX-1, U32_MAX, U32_MAX-2, U32_MAX, 2, true, true, true},
-+
-+	{1U << 15, 1U << 15, 1U << 16, 0, 1U << 30, false, false, false},
-+	{1U << 16, 1U << 16, 1U << 17, 0, 0, false, false, true},
-+	{1U << 16, 1U << 15, 3*(1U << 15), 1U << 15, 1U << 31, false, false, false},
-+	{1U << 31, 1U << 31, 0, 0, 0, true, false, true},
-+
-+	{-2U, 1U, -1U, -3U, -2U, false, false, false},
-+	{-4U, 5U, 1U, -9U, -20U, true, false, true},
-+};
-+
-+DEFINE_TEST_ARRAY(u64) = {
-+	{0, 0, 0, 0, 0, false, false, false},
-+	{1, 1, 2, 0, 1, false, false, false},
-+	{0, 1, 1, U64_MAX, 0, false, true, false},
-+	{1, 0, 1, 1, 0, false, false, false},
-+	{0, U64_MAX, U64_MAX, 1, 0, false, true, false},
-+	{U64_MAX, 0, U64_MAX, U64_MAX, 0, false, false, false},
-+	{1, U64_MAX, 0, 2, U64_MAX, true, true, false},
-+	{U64_MAX, 1, 0, U64_MAX-1, U64_MAX, true, false, false},
-+	{U64_MAX, U64_MAX, U64_MAX-1, 0, 1, true, false, true},
-+
-+	{U64_MAX, U64_MAX-1, U64_MAX-2, 1, 2, true, false, true},
-+	{U64_MAX-1, U64_MAX, U64_MAX-2, U64_MAX, 2, true, true, true},
-+
-+	{1ULL << 31, 1ULL << 31, 1ULL << 32, 0, 1ULL << 62, false, false, false},
-+	{1ULL << 32, 1ULL << 32, 1ULL << 33, 0, 0, false, false, true},
-+	{1ULL << 32, 1ULL << 31, 3*(1ULL << 31), 1ULL << 31, 1ULL << 63, false, false, false},
-+	{1ULL << 63, 1ULL << 63, 0, 0, 0, true, false, true},
-+	{1000000000ULL /* 10^9 */, 10000000000ULL /* 10^10 */,
-+	 11000000000ULL, 18446744064709551616ULL, 10000000000000000000ULL,
-+	 false, true, false},
-+	{-15ULL, 10ULL, -5ULL, -25ULL, -150ULL, false, false, true},
-+};
-+
-+DEFINE_TEST_ARRAY(s8) = {
-+	{0, 0, 0, 0, 0, false, false, false},
-+
-+	{0, S8_MAX, S8_MAX, -S8_MAX, 0, false, false, false},
-+	{S8_MAX, 0, S8_MAX, S8_MAX, 0, false, false, false},
-+	{0, S8_MIN, S8_MIN, S8_MIN, 0, false, true, false},
-+	{S8_MIN, 0, S8_MIN, S8_MIN, 0, false, false, false},
-+
-+	{-1, S8_MIN, S8_MAX, S8_MAX, S8_MIN, true, false, true},
-+	{S8_MIN, -1, S8_MAX, -S8_MAX, S8_MIN, true, false, true},
-+	{-1, S8_MAX, S8_MAX-1, S8_MIN, -S8_MAX, false, false, false},
-+	{S8_MAX, -1, S8_MAX-1, S8_MIN, -S8_MAX, false, true, false},
-+	{-1, -S8_MAX, S8_MIN, S8_MAX-1, S8_MAX, false, false, false},
-+	{-S8_MAX, -1, S8_MIN, S8_MIN+2, S8_MAX, false, false, false},
-+
-+	{1, S8_MIN, -S8_MAX, -S8_MAX, S8_MIN, false, true, false},
-+	{S8_MIN, 1, -S8_MAX, S8_MAX, S8_MIN, false, true, false},
-+	{1, S8_MAX, S8_MIN, S8_MIN+2, S8_MAX, true, false, false},
-+	{S8_MAX, 1, S8_MIN, S8_MAX-1, S8_MAX, true, false, false},
-+
-+	{S8_MIN, S8_MIN, 0, 0, 0, true, false, true},
-+	{S8_MAX, S8_MAX, -2, 0, 1, true, false, true},
-+
-+	{-4, -32, -36, 28, -128, false, false, true},
-+	{-4, 32, 28, -36, -128, false, false, false},
-+};
-+
-+DEFINE_TEST_ARRAY(s16) = {
-+	{0, 0, 0, 0, 0, false, false, false},
-+
-+	{0, S16_MAX, S16_MAX, -S16_MAX, 0, false, false, false},
-+	{S16_MAX, 0, S16_MAX, S16_MAX, 0, false, false, false},
-+	{0, S16_MIN, S16_MIN, S16_MIN, 0, false, true, false},
-+	{S16_MIN, 0, S16_MIN, S16_MIN, 0, false, false, false},
-+
-+	{-1, S16_MIN, S16_MAX, S16_MAX, S16_MIN, true, false, true},
-+	{S16_MIN, -1, S16_MAX, -S16_MAX, S16_MIN, true, false, true},
-+	{-1, S16_MAX, S16_MAX-1, S16_MIN, -S16_MAX, false, false, false},
-+	{S16_MAX, -1, S16_MAX-1, S16_MIN, -S16_MAX, false, true, false},
-+	{-1, -S16_MAX, S16_MIN, S16_MAX-1, S16_MAX, false, false, false},
-+	{-S16_MAX, -1, S16_MIN, S16_MIN+2, S16_MAX, false, false, false},
-+
-+	{1, S16_MIN, -S16_MAX, -S16_MAX, S16_MIN, false, true, false},
-+	{S16_MIN, 1, -S16_MAX, S16_MAX, S16_MIN, false, true, false},
-+	{1, S16_MAX, S16_MIN, S16_MIN+2, S16_MAX, true, false, false},
-+	{S16_MAX, 1, S16_MIN, S16_MAX-1, S16_MAX, true, false, false},
-+
-+	{S16_MIN, S16_MIN, 0, 0, 0, true, false, true},
-+	{S16_MAX, S16_MAX, -2, 0, 1, true, false, true},
-+};
-+
-+DEFINE_TEST_ARRAY(s32) = {
-+	{0, 0, 0, 0, 0, false, false, false},
-+
-+	{0, S32_MAX, S32_MAX, -S32_MAX, 0, false, false, false},
-+	{S32_MAX, 0, S32_MAX, S32_MAX, 0, false, false, false},
-+	{0, S32_MIN, S32_MIN, S32_MIN, 0, false, true, false},
-+	{S32_MIN, 0, S32_MIN, S32_MIN, 0, false, false, false},
-+
-+	{-1, S32_MIN, S32_MAX, S32_MAX, S32_MIN, true, false, true},
-+	{S32_MIN, -1, S32_MAX, -S32_MAX, S32_MIN, true, false, true},
-+	{-1, S32_MAX, S32_MAX-1, S32_MIN, -S32_MAX, false, false, false},
-+	{S32_MAX, -1, S32_MAX-1, S32_MIN, -S32_MAX, false, true, false},
-+	{-1, -S32_MAX, S32_MIN, S32_MAX-1, S32_MAX, false, false, false},
-+	{-S32_MAX, -1, S32_MIN, S32_MIN+2, S32_MAX, false, false, false},
-+
-+	{1, S32_MIN, -S32_MAX, -S32_MAX, S32_MIN, false, true, false},
-+	{S32_MIN, 1, -S32_MAX, S32_MAX, S32_MIN, false, true, false},
-+	{1, S32_MAX, S32_MIN, S32_MIN+2, S32_MAX, true, false, false},
-+	{S32_MAX, 1, S32_MIN, S32_MAX-1, S32_MAX, true, false, false},
-+
-+	{S32_MIN, S32_MIN, 0, 0, 0, true, false, true},
-+	{S32_MAX, S32_MAX, -2, 0, 1, true, false, true},
-+};
-+
-+DEFINE_TEST_ARRAY(s64) = {
-+	{0, 0, 0, 0, 0, false, false, false},
-+
-+	{0, S64_MAX, S64_MAX, -S64_MAX, 0, false, false, false},
-+	{S64_MAX, 0, S64_MAX, S64_MAX, 0, false, false, false},
-+	{0, S64_MIN, S64_MIN, S64_MIN, 0, false, true, false},
-+	{S64_MIN, 0, S64_MIN, S64_MIN, 0, false, false, false},
-+
-+	{-1, S64_MIN, S64_MAX, S64_MAX, S64_MIN, true, false, true},
-+	{S64_MIN, -1, S64_MAX, -S64_MAX, S64_MIN, true, false, true},
-+	{-1, S64_MAX, S64_MAX-1, S64_MIN, -S64_MAX, false, false, false},
-+	{S64_MAX, -1, S64_MAX-1, S64_MIN, -S64_MAX, false, true, false},
-+	{-1, -S64_MAX, S64_MIN, S64_MAX-1, S64_MAX, false, false, false},
-+	{-S64_MAX, -1, S64_MIN, S64_MIN+2, S64_MAX, false, false, false},
-+
-+	{1, S64_MIN, -S64_MAX, -S64_MAX, S64_MIN, false, true, false},
-+	{S64_MIN, 1, -S64_MAX, S64_MAX, S64_MIN, false, true, false},
-+	{1, S64_MAX, S64_MIN, S64_MIN+2, S64_MAX, true, false, false},
-+	{S64_MAX, 1, S64_MIN, S64_MAX-1, S64_MAX, true, false, false},
-+
-+	{S64_MIN, S64_MIN, 0, 0, 0, true, false, true},
-+	{S64_MAX, S64_MAX, -2, 0, 1, true, false, true},
-+
-+	{-1, -1, -2, 0, 1, false, false, false},
-+	{-1, -128, -129, 127, 128, false, false, false},
-+	{-128, -1, -129, -127, 128, false, false, false},
-+	{0, -S64_MAX, -S64_MAX, S64_MAX, 0, false, false, false},
-+};
-+
-+#define check_one_op(test, t, fmt, op, sym, a, b, r, of) do {		\
-+	t _r;								\
-+	bool _of;							\
-+									\
-+	_of = check_ ## op ## _overflow(a, b, &_r);			\
-+	if (_of != of) {						\
-+		KUNIT_FAIL(test, "Expected "fmt" "sym" "fmt		\
-+			" to%s overflow (type %s)\n",			\
-+			a, b, of ? "" : " not", #t);			\
-+	}								\
-+	if (_r != r) {							\
-+		KUNIT_FAIL(test, "Expected "fmt" "sym" "fmt" == "	\
-+			fmt", got "fmt" (type %s)\n",			\
-+			a, b, r, _r, #t);				\
-+	}								\
-+} while (0)
-+
-+#define DEFINE_TEST_FUNC(test, t, fmt)						\
-+static void do_test_ ## t(struct kunit *test, const struct test_ ## t *p)	\
-+{										\
-+	check_one_op(test, t, fmt, add, "+", p->a, p->b, p->sum, p->s_of);	\
-+	check_one_op(test, t, fmt, add, "+", p->b, p->a, p->sum, p->s_of);	\
-+	check_one_op(test, t, fmt, sub, "-", p->a, p->b, p->diff, p->d_of);	\
-+	check_one_op(test, t, fmt, mul, "*", p->a, p->b, p->prod, p->p_of);	\
-+	check_one_op(test, t, fmt, mul, "*", p->b, p->a, p->prod, p->p_of);	\
-+}										\
-+										\
-+static void  test_ ## t ## _overflow(struct kunit *test)			\
-+{										\
-+	unsigned i;								\
-+										\
-+	kunit_warn(test, "%-3s: %zu arithmetic tests\n", #t,			\
-+		ARRAY_SIZE(t ## _tests));					\
-+	for (i = 0; i < ARRAY_SIZE(t ## _tests); ++i)				\
-+		do_test_ ## t(test, &t ## _tests[i]);				\
-+}
-+
-+DEFINE_TEST_FUNC(test, u8, "%d");
-+DEFINE_TEST_FUNC(test, s8, "%d");
-+DEFINE_TEST_FUNC(test, u16, "%d");
-+DEFINE_TEST_FUNC(test, s16, "%d");
-+DEFINE_TEST_FUNC(test, u32, "%u");
-+DEFINE_TEST_FUNC(test, s32, "%d");
-+#if BITS_PER_LONG == 64
-+DEFINE_TEST_FUNC(test, u64, "%llu");
-+DEFINE_TEST_FUNC(test, s64, "%lld");
-+#endif
-+
-+static void  overflow_calculation_test(struct kunit *test)
++const char *arch_nop_insn(int len)
 +{
++	static const char insn[16] = {
++		0x90,
++		0x90,
++		0x90,
++		0x90,
++		0x90,
++		0x90,
++		0x90,
++		0x90,
++		0x90,
++		0x90,
++		0x90,
++		0x90,
++		0x90,
++		0x90,
++		0x90,
++		0x90,
++	};
 +
-+	test_u8_overflow(test);
-+	test_s8_overflow(test);
-+	test_s8_overflow(test);
-+	test_u16_overflow(test);
-+	test_s16_overflow(test);
-+	test_u32_overflow(test);
-+	test_s32_overflow(test);
-+#if BITS_PER_LONG == 64
-+	test_u64_overflow(test);
-+	test_s64_overflow(test);
-+#endif
++	return insn;
 +}
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 5fbb90a80d23..487b4dc3d122 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -765,6 +765,17 @@ static int add_call_destinations(struct objtool_file *file)
+ 		} else
+ 			insn->call_dest = rela->sym;
+
++		if (insn->sec->noinstr &&
++		    !strncmp(insn->call_dest->name, "__sanitizer_cov_", 16)) {
++			if (rela)
++				elf_write_rela(file->elf, rela);
 +
-+static void overflow_shift_test(struct kunit *test)
++			elf_write_insn(file->elf, insn->sec,
++				       insn->offset, insn->len,
++				       arch_nop_insn(insn->len));
++			insn->type = INSN_NOP;
++		}
++
+ 		/*
+ 		 * Whatever stack impact regular CALLs have, should be undone
+ 		 * by the RETURN of the called function.
+@@ -2802,11 +2813,13 @@ int check(const char *_objname, bool orc)
+ 		if (ret < 0)
+ 			goto out;
+
++	}
++
++	if (file.elf->changed) {
+ 		ret = elf_write(file.elf);
+ 		if (ret < 0)
+ 			goto out;
+ 	}
+-
+ out:
+ 	if (ret < 0) {
+ 		/*
+diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
+index 84225679f96d..705582729374 100644
+--- a/tools/objtool/elf.c
++++ b/tools/objtool/elf.c
+@@ -525,6 +525,7 @@ static int read_relas(struct elf *elf)
+ 				return -1;
+ 			}
+
++			rela->idx = i;
+ 			rela->type = GELF_R_TYPE(rela->rela.r_info);
+ 			rela->addend = rela->rela.r_addend;
+ 			rela->offset = rela->rela.r_offset;
+@@ -713,6 +714,8 @@ struct section *elf_create_section(struct elf *elf, const char *name,
+ 	elf_hash_add(elf->section_hash, &sec->hash, sec->idx);
+ 	elf_hash_add(elf->section_name_hash, &sec->name_hash, str_hash(sec->name));
+
++	elf->changed = true;
++
+ 	return sec;
+ }
+
+@@ -779,7 +782,43 @@ int elf_rebuild_rela_section(struct section *sec)
+ 	return 0;
+ }
+
+-int elf_write(const struct elf *elf)
++int elf_write_insn(struct elf *elf, struct section *sec,
++		   unsigned long offset, unsigned int len,
++		   const char *insn)
 +{
-+/* Args are: value, shift, type, expected result, overflow expected */
-+#define TEST_ONE_SHIFT(a, s, t, expect, of) ({					\
-+	int __failed = 0;							\
-+	typeof(a) __a = (a);							\
-+	typeof(s) __s = (s);							\
-+	t __e = (expect);							\
-+	t __d;									\
-+	bool __of = check_shl_overflow(__a, __s, &__d);				\
-+	if (__of != of) {							\
-+		KUNIT_FAIL(test, "Expected (%s)(%s << %s) to%s overflow\n",	\
-+			#t, #a, #s, of ? "" : " not");				\
-+		__failed = 1;							\
-+	} else if (!__of && __d != __e) {					\
-+		KUNIT_FAIL(test, "Expected (%s)(%s << %s) == %s\n",		\
-+			#t, #a, #s, #expect);					\
-+		if ((t)-1 < 0)							\
-+			KUNIT_FAIL(test, "got %lld\n", (s64)__d);		\
-+		else								\
-+			KUNIT_FAIL(test, "got %llu\n", (u64)__d);		\
-+		__failed = 1;							\
-+	}									\
-+	if (!__failed)								\
-+		kunit_info(test, "ok: (%s)(%s << %s) == %s\n", #t, #a, #s,	\
-+			of ? "overflow" : #expect);				\
-+	__failed;								\
-+})
++	Elf_Data *data = sec->data;
 +
-+	/* Sane shifts. */
-+	TEST_ONE_SHIFT(1, 0, u8, 1 << 0, false);
-+	TEST_ONE_SHIFT(1, 4, u8, 1 << 4, false);
-+	TEST_ONE_SHIFT(1, 7, u8, 1 << 7, false);
-+	TEST_ONE_SHIFT(0xF, 4, u8, 0xF << 4, false);
-+	TEST_ONE_SHIFT(1, 0, u16, 1 << 0, false);
-+	TEST_ONE_SHIFT(1, 10, u16, 1 << 10, false);
-+	TEST_ONE_SHIFT(1, 15, u16, 1 << 15, false);
-+	TEST_ONE_SHIFT(0xFF, 8, u16, 0xFF << 8, false);
-+	TEST_ONE_SHIFT(1, 0, int, 1 << 0, false);
-+	TEST_ONE_SHIFT(1, 16, int, 1 << 16, false);
-+	TEST_ONE_SHIFT(1, 30, int, 1 << 30, false);
-+	TEST_ONE_SHIFT(1, 0, s32, 1 << 0, false);
-+	TEST_ONE_SHIFT(1, 16, s32, 1 << 16, false);
-+	TEST_ONE_SHIFT(1, 30, s32, 1 << 30, false);
-+	TEST_ONE_SHIFT(1, 0, unsigned int, 1U << 0, false);
-+	TEST_ONE_SHIFT(1, 20, unsigned int, 1U << 20, false);
-+	TEST_ONE_SHIFT(1, 31, unsigned int, 1U << 31, false);
-+	TEST_ONE_SHIFT(0xFFFFU, 16, unsigned int, 0xFFFFU << 16, false);
-+	TEST_ONE_SHIFT(1, 0, u32, 1U << 0, false);
-+	TEST_ONE_SHIFT(1, 20, u32, 1U << 20, false);
-+	TEST_ONE_SHIFT(1, 31, u32, 1U << 31, false);
-+	TEST_ONE_SHIFT(0xFFFFU, 16, u32, 0xFFFFU << 16, false);
-+	TEST_ONE_SHIFT(1, 0, u64, 1ULL << 0, false);
-+	TEST_ONE_SHIFT(1, 40, u64, 1ULL << 40, false);
-+	TEST_ONE_SHIFT(1, 63, u64, 1ULL << 63, false);
-+	TEST_ONE_SHIFT(0xFFFFFFFFULL, 32, u64,
-+			      0xFFFFFFFFULL << 32, false);
++	if (data->d_type != ELF_T_BYTE || data->d_off) {
++		printf("ponies\n");
++		return -1;
++	}
 +
-+	/* Sane shift: start and end with 0, without a too-wide shift. */
-+	TEST_ONE_SHIFT(0, 7, u8, 0, false);
-+	TEST_ONE_SHIFT(0, 15, u16, 0, false);
-+	TEST_ONE_SHIFT(0, 31, unsigned int, 0, false);
-+	TEST_ONE_SHIFT(0, 31, u32, 0, false);
-+	TEST_ONE_SHIFT(0, 63, u64, 0, false);
++	memcpy(sec->data->d_buf + offset, insn, len);
 +
-+	/* Sane shift: start and end with 0, without reaching signed bit. */
-+	TEST_ONE_SHIFT(0, 6, s8, 0, false);
-+	TEST_ONE_SHIFT(0, 14, s16, 0, false);
-+	TEST_ONE_SHIFT(0, 30, int, 0, false);
-+	TEST_ONE_SHIFT(0, 30, s32, 0, false);
-+	TEST_ONE_SHIFT(0, 62, s64, 0, false);
++	elf_flagdata(data, ELF_C_SET, ELF_F_DIRTY);
 +
-+	/* Overflow: shifted the bit off the end. */
-+	TEST_ONE_SHIFT(1, 8, u8, 0, true);
-+	TEST_ONE_SHIFT(1, 16, u16, 0, true);
-+	TEST_ONE_SHIFT(1, 32, unsigned int, 0, true);
-+	TEST_ONE_SHIFT(1, 32, u32, 0, true);
-+	TEST_ONE_SHIFT(1, 64, u64, 0, true);
++	sec->changed = true;
++	elf->changed = true;
 +
-+	/* Overflow: shifted into the signed bit. */
-+	TEST_ONE_SHIFT(1, 7, s8, 0, true);
-+	TEST_ONE_SHIFT(1, 15, s16, 0, true);
-+	TEST_ONE_SHIFT(1, 31, int, 0, true);
-+	TEST_ONE_SHIFT(1, 31, s32, 0, true);
-+	TEST_ONE_SHIFT(1, 63, s64, 0, true);
-+
-+	/* Overflow: high bit falls off unsigned types. */
-+	/* 10010110 */
-+	TEST_ONE_SHIFT(150, 1, u8, 0, true);
-+	/* 1000100010010110 */
-+	TEST_ONE_SHIFT(34966, 1, u16, 0, true);
-+	/* 10000100000010001000100010010110 */
-+	TEST_ONE_SHIFT(2215151766U, 1, u32, 0, true);
-+	TEST_ONE_SHIFT(2215151766U, 1, unsigned int, 0, true);
-+	/* 1000001000010000010000000100000010000100000010001000100010010110 */
-+	TEST_ONE_SHIFT(9372061470395238550ULL, 1, u64, 0, true);
-+
-+	/* Overflow: bit shifted into signed bit on signed types. */
-+	/* 01001011 */
-+	TEST_ONE_SHIFT(75, 1, s8, 0, true);
-+	/* 0100010001001011 */
-+	TEST_ONE_SHIFT(17483, 1, s16, 0, true);
-+	/* 01000010000001000100010001001011 */
-+	TEST_ONE_SHIFT(1107575883, 1, s32, 0, true);
-+	TEST_ONE_SHIFT(1107575883, 1, int, 0, true);
-+	/* 0100000100001000001000000010000001000010000001000100010001001011 */
-+	TEST_ONE_SHIFT(4686030735197619275LL, 1, s64, 0, true);
-+
-+	/* Overflow: bit shifted past signed bit on signed types. */
-+	/* 01001011 */
-+	TEST_ONE_SHIFT(75, 2, s8, 0, true);
-+	/* 0100010001001011 */
-+	TEST_ONE_SHIFT(17483, 2, s16, 0, true);
-+	/* 01000010000001000100010001001011 */
-+	TEST_ONE_SHIFT(1107575883, 2, s32, 0, true);
-+	TEST_ONE_SHIFT(1107575883, 2, int, 0, true);
-+	/* 0100000100001000001000000010000001000010000001000100010001001011 */
-+	TEST_ONE_SHIFT(4686030735197619275LL, 2, s64, 0, true);
-+
-+	/* Overflow: values larger than destination type. */
-+	TEST_ONE_SHIFT(0x100, 0, u8, 0, true);
-+	TEST_ONE_SHIFT(0xFF, 0, s8, 0, true);
-+	TEST_ONE_SHIFT(0x10000U, 0, u16, 0, true);
-+	TEST_ONE_SHIFT(0xFFFFU, 0, s16, 0, true);
-+	TEST_ONE_SHIFT(0x100000000ULL, 0, u32, 0, true);
-+	TEST_ONE_SHIFT(0x100000000ULL, 0, unsigned int, 0, true);
-+	TEST_ONE_SHIFT(0xFFFFFFFFUL, 0, s32, 0, true);
-+	TEST_ONE_SHIFT(0xFFFFFFFFUL, 0, int, 0, true);
-+	TEST_ONE_SHIFT(0xFFFFFFFFFFFFFFFFULL, 0, s64, 0, true);
-+
-+	/* Nonsense: negative initial value. */
-+	TEST_ONE_SHIFT(-1, 0, s8, 0, true);
-+	TEST_ONE_SHIFT(-1, 0, u8, 0, true);
-+	TEST_ONE_SHIFT(-5, 0, s16, 0, true);
-+	TEST_ONE_SHIFT(-5, 0, u16, 0, true);
-+	TEST_ONE_SHIFT(-10, 0, int, 0, true);
-+	TEST_ONE_SHIFT(-10, 0, unsigned int, 0, true);
-+	TEST_ONE_SHIFT(-100, 0, s32, 0, true);
-+	TEST_ONE_SHIFT(-100, 0, u32, 0, true);
-+	TEST_ONE_SHIFT(-10000, 0, s64, 0, true);
-+	TEST_ONE_SHIFT(-10000, 0, u64, 0, true);
-+
-+	/* Nonsense: negative shift values. */
-+	TEST_ONE_SHIFT(0, -5, s8, 0, true);
-+	TEST_ONE_SHIFT(0, -5, u8, 0, true);
-+	TEST_ONE_SHIFT(0, -10, s16, 0, true);
-+	TEST_ONE_SHIFT(0, -10, u16, 0, true);
-+	TEST_ONE_SHIFT(0, -15, int, 0, true);
-+	TEST_ONE_SHIFT(0, -15, unsigned int, 0, true);
-+	TEST_ONE_SHIFT(0, -20, s32, 0, true);
-+	TEST_ONE_SHIFT(0, -20, u32, 0, true);
-+	TEST_ONE_SHIFT(0, -30, s64, 0, true);
-+	TEST_ONE_SHIFT(0, -30, u64, 0, true);
-+
-+	/* Overflow: shifted at or beyond entire type's bit width. */
-+	TEST_ONE_SHIFT(0, 8, u8, 0, true);
-+	TEST_ONE_SHIFT(0, 9, u8, 0, true);
-+	TEST_ONE_SHIFT(0, 8, s8, 0, true);
-+	TEST_ONE_SHIFT(0, 9, s8, 0, true);
-+	TEST_ONE_SHIFT(0, 16, u16, 0, true);
-+	TEST_ONE_SHIFT(0, 17, u16, 0, true);
-+	TEST_ONE_SHIFT(0, 16, s16, 0, true);
-+	TEST_ONE_SHIFT(0, 17, s16, 0, true);
-+	TEST_ONE_SHIFT(0, 32, u32, 0, true);
-+	TEST_ONE_SHIFT(0, 33, u32, 0, true);
-+	TEST_ONE_SHIFT(0, 32, int, 0, true);
-+	TEST_ONE_SHIFT(0, 33, int, 0, true);
-+	TEST_ONE_SHIFT(0, 32, s32, 0, true);
-+	TEST_ONE_SHIFT(0, 33, s32, 0, true);
-+	TEST_ONE_SHIFT(0, 64, u64, 0, true);
-+	TEST_ONE_SHIFT(0, 65, u64, 0, true);
-+	TEST_ONE_SHIFT(0, 64, s64, 0, true);
-+	TEST_ONE_SHIFT(0, 65, s64, 0, true);
-+
-+	/*
-+	 * Corner case: for unsigned types, we fail when we've shifted
-+	 * through the entire width of bits. For signed types, we might
-+	 * want to match this behavior, but that would mean noticing if
-+	 * we shift through all but the signed bit, and this is not
-+	 * currently detected (but we'll notice an overflow into the
-+	 * signed bit). So, for now, we will test this condition but
-+	 * mark it as not expected to overflow.
-+	 */
-+	TEST_ONE_SHIFT(0, 7, s8, 0, false);
-+	TEST_ONE_SHIFT(0, 15, s16, 0, false);
-+	TEST_ONE_SHIFT(0, 31, int, 0, false);
-+	TEST_ONE_SHIFT(0, 31, s32, 0, false);
-+	TEST_ONE_SHIFT(0, 63, s64, 0, false);
++	return 0;
 +}
 +
-+/*
-+ * Deal with the various forms of allocator arguments. See comments above
-+ * the DEFINE_TEST_ALLOC() instances for mapping of the "bits".
-+ */
-+#define alloc_GFP		 (GFP_KERNEL | __GFP_NOWARN)
-+#define alloc010(alloc, arg, sz) alloc(sz, alloc_GFP)
-+#define alloc011(alloc, arg, sz) alloc(sz, alloc_GFP, NUMA_NO_NODE)
-+#define alloc000(alloc, arg, sz) alloc(sz)
-+#define alloc001(alloc, arg, sz) alloc(sz, NUMA_NO_NODE)
-+#define alloc110(alloc, arg, sz) alloc(arg, sz, alloc_GFP)
-+#define free0(free, arg, ptr)	 free(ptr)
-+#define free1(free, arg, ptr)	 free(arg, ptr)
-+
-+/* Wrap around to 16K */
-+#define TEST_SIZE		(5 * 4096)
-+
-+#define DEFINE_TEST_ALLOC(test, func, free_func, want_arg, want_gfp, want_node)	\
-+static void test_ ## func (struct kunit *test, void *arg)			\
-+{										\
-+	volatile size_t a = TEST_SIZE;						\
-+	volatile size_t b = (SIZE_MAX / TEST_SIZE) + 1;				\
-+	void *ptr;								\
-+										\
-+	/* Tiny allocation test. */						\
-+	ptr = alloc ## want_arg ## want_gfp ## want_node (func, arg, 1);	\
-+	KUNIT_EXPECT_NOT_ERR_OR_NULL(test, ptr);				\
-+	if (!ptr) {								\
-+		kunit_err(test, #func " failed regular allocation?!\n");	\
-+	}									\
-+	free ## want_arg (free_func, arg, ptr);					\
-+										\
-+	/* Wrapped allocation test. */						\
-+	ptr = alloc ## want_arg ## want_gfp ## want_node (func, arg, a * b);	\
-+	KUNIT_EXPECT_NOT_ERR_OR_NULL(test, ptr);				\
-+	if (!ptr) {								\
-+		kunit_err(test, #func " unexpectedly failed bad wrapping?!\n");	\
-+	}									\
-+	free ## want_arg (free_func, arg, ptr);					\
-+										\
-+	/* Saturated allocation test. */					\
-+	ptr = alloc ## want_arg ## want_gfp ## want_node (func, arg,		\
-+						   array_size(a, b));		\
-+	KUNIT_ASSERT_TRUE(test, IS_ERR_OR_NULL(ptr));				\
-+	if (ptr) {								\
-+		kunit_err(test, #func " missed saturation!\n");			\
-+		free ## want_arg (free_func, arg, ptr);				\
-+	}									\
-+	kunit_info(test, #func " detected saturation\n");			\
-+}
-+
-+/*
-+ * Allocator uses a trailing node argument -------------------+  (e.g. kmalloc_node())
-+ * Allocator uses the gfp_t argument ----------------------+  |  (e.g. kmalloc())
-+ * Allocator uses a special leading argument -----------+  |  |  (e.g. devm_kmalloc())
-+ *							|  |  |
-+ */
-+DEFINE_TEST_ALLOC(test, kmalloc,	kfree,		0, 1, 0);
-+DEFINE_TEST_ALLOC(test, kmalloc_node,	kfree,		0, 1, 1);
-+DEFINE_TEST_ALLOC(test, kzalloc,	kfree,		0, 1, 0);
-+DEFINE_TEST_ALLOC(test, kzalloc_node,	kfree,		0, 1, 1);
-+DEFINE_TEST_ALLOC(test, vmalloc,	vfree,		0, 0, 0);
-+DEFINE_TEST_ALLOC(test, vmalloc_node,	vfree,		0, 0, 1);
-+DEFINE_TEST_ALLOC(test, vzalloc,	vfree,		0, 0, 0);
-+DEFINE_TEST_ALLOC(test, vzalloc_node,	vfree,		0, 0, 1);
-+DEFINE_TEST_ALLOC(test, kvmalloc,	kvfree,		0, 1, 0);
-+DEFINE_TEST_ALLOC(test, kvmalloc_node,	kvfree,		0, 1, 1);
-+DEFINE_TEST_ALLOC(test, kvzalloc,	kvfree,		0, 1, 0);
-+DEFINE_TEST_ALLOC(test, kvzalloc_node,	kvfree,		0, 1, 1);
-+DEFINE_TEST_ALLOC(test, devm_kmalloc,	devm_kfree,	1, 1, 0);
-+DEFINE_TEST_ALLOC(test, devm_kzalloc,	devm_kfree,	1, 1, 0);
-+
-+static void overflow_allocation_test(struct kunit *test)
++int elf_write_rela(struct elf *elf, struct rela *rela)
 +{
-+	const char device_name[] = "overflow-test";
-+	struct device *dev;
++	struct section *sec = rela->sec;
 +
-+	/* Create dummy device for devm_kmalloc()-family tests. */
-+	dev = root_device_register(device_name);
-+	if (IS_ERR(dev))
-+		kunit_warn(test, "Cannot register test device\n");
++	rela->rela.r_info = 0;
++	rela->rela.r_addend = 0;
 +
-+	test_kmalloc(test, NULL);
-+	test_kmalloc_node(test, NULL);
-+	test_kzalloc(test, NULL);
-+	test_kzalloc_node(test, NULL);
-+	test_kvmalloc(test, NULL);
-+	test_kvmalloc_node(test, NULL);
-+	test_kvzalloc(test, NULL);
-+	test_kvzalloc_node(test, NULL);
-+	test_vmalloc(test, NULL);
-+	test_vmalloc_node(test, NULL);
-+	test_vzalloc(test, NULL);
-+	test_vzalloc_node(test, NULL);
-+	test_devm_kmalloc(test, dev);
-+	test_devm_kzalloc(test, dev);
++	gelf_update_rela(sec->data, rela->idx, &rela->rela);
 +
-+	device_unregister(dev);
++	sec->changed = true;
++	elf->changed = true;
++
++	return 0;
 +}
 +
-+static struct kunit_case overflow_test_cases[] = {
-+	KUNIT_CASE(overflow_calculation_test),
-+	KUNIT_CASE(overflow_shift_test),
-+	KUNIT_CASE(overflow_allocation_test),
-+	{}
-+};
++int elf_write(struct elf *elf)
+ {
+ 	struct section *sec;
+ 	Elf_Scn *s;
+@@ -796,6 +835,8 @@ int elf_write(const struct elf *elf)
+ 				WARN_ELF("gelf_update_shdr");
+ 				return -1;
+ 			}
 +
-+static struct kunit_suite overflow_test_suite = {
-+	.name = "overflow",
-+	.test_cases = overflow_test_cases,
-+};
++			sec->changed = false;
+ 		}
+ 	}
+
+@@ -808,6 +849,8 @@ int elf_write(const struct elf *elf)
+ 		return -1;
+ 	}
+
++	elf->changed = false;
 +
-+kunit_test_suites(&overflow_test_suite);
+ 	return 0;
+ }
+
+diff --git a/tools/objtool/elf.h b/tools/objtool/elf.h
+index f4fe1d6ea392..4a3fe4f455c5 100644
+--- a/tools/objtool/elf.h
++++ b/tools/objtool/elf.h
+@@ -64,9 +64,10 @@ struct rela {
+ 	GElf_Rela rela;
+ 	struct section *sec;
+ 	struct symbol *sym;
+-	unsigned int type;
+ 	unsigned long offset;
++	unsigned int type;
+ 	int addend;
++	int idx;
+ 	bool jump_table_start;
+ };
+
+@@ -76,6 +77,7 @@ struct elf {
+ 	Elf *elf;
+ 	GElf_Ehdr ehdr;
+ 	int fd;
++	bool changed;
+ 	char *name;
+ 	struct list_head sections;
+ 	DECLARE_HASHTABLE(symbol_hash, ELF_HASH_BITS);
+@@ -118,7 +120,7 @@ struct elf *elf_open_read(const char *name, int flags);
+ struct section *elf_create_section(struct elf *elf, const char *name, size_t entsize, int nr);
+ struct section *elf_create_rela_section(struct elf *elf, struct section *base);
+ void elf_add_rela(struct elf *elf, struct rela *rela);
+-int elf_write(const struct elf *elf);
++int elf_write(struct elf *elf);
+ void elf_close(struct elf *elf);
+
+ struct section *find_section_by_name(const struct elf *elf, const char *name);
+@@ -132,6 +134,11 @@ struct rela *find_rela_by_dest_range(const struct elf *elf, struct section *sec,
+ struct symbol *find_func_containing(struct section *sec, unsigned long offset);
+ int elf_rebuild_rela_section(struct section *sec);
+
++int elf_write_rela(struct elf *elf, struct rela *rela);
++int elf_write_insn(struct elf *elf, struct section *sec,
++		   unsigned long offset, unsigned int len,
++		   const char *insn);
 +
-+MODULE_LICENSE("GPL v2");
--- 
-2.26.2
+ #define for_each_sec(file, sec)						\
+ 	list_for_each_entry(sec, &file->elf->sections, list)
+
 
