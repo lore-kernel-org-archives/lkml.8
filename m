@@ -2,125 +2,125 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A25DCC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E25C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AC72206A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:12:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FBC5206A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:13:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="pwZuTqdp"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="v8+6EYja"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbgFKCMq (ORCPT
+        id S1726407AbgFKCN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 22:12:46 -0400
-Received: from ozlabs.org ([203.11.71.1]:48477 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726163AbgFKCMp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 22:12:45 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49j6nj0ljRz9sR4;
-        Thu, 11 Jun 2020 12:12:41 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591841563;
-        bh=Ti4/i5bL9OOnPE6/+uEiwQ0QeYNMX1+rL2JOXR8WTxU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=pwZuTqdpWj6LuyzyCFFnEFZbH9VtgsUdeybskJXRshdqoFYoUNVoIqGmK0hJCG7tf
-         jGTuEaXMHBz4sz/qW+nhdH1woHmi7UGEiANGF79cIUml6OW8osTsLSsymHdCBdkvuH
-         M4rAurZoaY31tdGKXW8qDCaUpthM7uuT+nIfv4P2sa5+44jRuXgZMpzqTtG/fS+a/2
-         +kXR0fkp7YsMHGjSHVAymnYCgQMJktI1x2krkrx3gGqNdWQr22ljWpzQaJkH3No0dC
-         aGYPJ24V9JHlcPkFfz4Ar2m9WGuvM7GFnFmfF8xN0OFwZFzPlCYTNSniAKG5iC/JgH
-         cqUOGh6ghRXNg==
-Date:   Thu, 11 Jun 2020 12:12:40 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Simon Arlott <simon@octiron.net>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-Subject: Re: linux-next: manual merge of the scsi-mkp tree with Linus' tree
-Message-ID: <20200611121106.68108136@canb.auug.org.au>
-In-Reply-To: <20200610121707.1f4c4355@canb.auug.org.au>
-References: <20200610121707.1f4c4355@canb.auug.org.au>
+        Wed, 10 Jun 2020 22:13:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59418 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726163AbgFKCN2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 22:13:28 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE938C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 19:13:27 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id x1so4789845ejd.8
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 19:13:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wSclIs7n5vpOSvxh2OrnHeX+5b5kOfOtKGtkOgLl0/Y=;
+        b=v8+6EYjaTY6Fw2wnUUu6UJNua3V+Lp53KEHLNac2TEyYj9A2BadRkPLnSl/9YGGSyY
+         T+OtnVMqO3xg/6L/4Nz08Mjb8nZo6NBSLdJSDqdfsJfSBLSCJh8KebIiyYCwV/s5cM9p
+         N4Xs60MSyKAQ/KYjoC7hCG5yphEFesouJle1fShaDIcorlZn0iBB3bbrrytdHDbAELFC
+         UYcuflCA6Bvrd9rGKshvhPFITNVjLQFiijsQMxQ7HyFPN9KDpI8QFlufe6imer80UQPr
+         4owye83ciH2aTw1fRvOmHgKrDhXFOgRLnp8gb82hFc5C85ZqJeNOSAiMFX+2AEbsAjdn
+         lRKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wSclIs7n5vpOSvxh2OrnHeX+5b5kOfOtKGtkOgLl0/Y=;
+        b=WHt5aucTT0/ChXwBJ9j5jdo+mWTxXHI64u+k79mvLg4rldAphk+PwolFhERt4VPh2X
+         IcYs/SyyYeWMDQjhlQSypV94zxEx9TQ77VHQKjkF0S/iZ4whFDKU7903nOB9/YKDPFv6
+         /91iXtsCPQDYI2fC9CweuCkq4M5ZKE/WJxPrQNUl0LaCyl3fTjp/ZgwxVp3bqBV4FuTo
+         wMytk2jQKoQuKQiNuQF0H2p7rhb9kUOsYbAhzLN8sq29a51G8UgsYzJuk5h+qEzHTpjz
+         Ydph8vkofHZLgcumBa/Ot4gSkeQZGrLcCjq/1vjC8w99Xqir6HpsFb1xZXTUvGzswYpb
+         B/1g==
+X-Gm-Message-State: AOAM533Cl0Zvkl0prUA4p9Bav6nDOe8YaMxBTmGIySzmgLpC8FhJkShm
+        UPG3LqbdvjXiCTH5aCPTZ9RYuDhPJDYRzRZv5Rq/
+X-Google-Smtp-Source: ABdhPJyoOh4d1o3ex77cQD0moZLEf9Ht3wehb6wOgCo5liChTu7jBmv/acKYI4ooL1J0tjr7yhg8ntLwvLjO71Zudho=
+X-Received: by 2002:a17:906:19d3:: with SMTP id h19mr6064005ejd.106.1591841606286;
+ Wed, 10 Jun 2020 19:13:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/KJ2VNu8x4nF9QujVQR8wAkr";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200610215713.5319-1-trix@redhat.com> <20200610215713.5319-2-trix@redhat.com>
+In-Reply-To: <20200610215713.5319-2-trix@redhat.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Wed, 10 Jun 2020 22:13:15 -0400
+Message-ID: <CAHC9VhTd0HSv6Yk8NxJeC=U7wPb0AtRturAGYLfxg8B13h0FOA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] selinux: fix double free
+To:     trix@redhat.com
+Cc:     Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Ondrej Mosnacek <omosnace@redhat.com>, jeffv@google.com,
+        rgb@redhat.com, selinux@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/KJ2VNu8x4nF9QujVQR8wAkr
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-On Wed, 10 Jun 2020 12:17:07 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
+On Wed, Jun 10, 2020 at 5:57 PM <trix@redhat.com> wrote:
+> From: Tom Rix <trix@redhat.com>
 >
-> Today's linux-next merge of the scsi-mkp tree got a conflict in:
->=20
->   drivers/scsi/sr.c
->=20
-> between commit:
->=20
->   a711d91cd97e ("block: add a cdrom_device_info pointer to struct gendisk=
-")
->=20
-> from Linus' tree and commit:
->=20
->   6555781b3fde ("scsi: sr: Fix sr_probe() missing deallocate of device mi=
-nor")
->=20
-> from the scsi-mkp tree.
->=20
+> Clang's static analysis tool reports these double free memory errors.
+>
+> security/selinux/ss/services.c:2987:4: warning: Attempt to free released memory [unix.Malloc]
+>                         kfree(bnames[i]);
+>                         ^~~~~~~~~~~~~~~~
+> security/selinux/ss/services.c:2990:2: warning: Attempt to free released memory [unix.Malloc]
+>         kfree(bvalues);
+>         ^~~~~~~~~~~~~~
+>
+> So improve the security_get_bools error handling by freeing these variables
+> and setting their return pointers to NULL and the return len to 0
+>
+> Signed-off-by: Tom Rix <trix@redhat.com>
+> ---
+>  security/selinux/ss/services.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-> diff --cc drivers/scsi/sr.c
-> index 4dcd735ea49e,b9cff27e2c81..000000000000
-> --- a/drivers/scsi/sr.c
-> +++ b/drivers/scsi/sr.c
-> @@@ -790,9 -790,10 +790,9 @@@ static int sr_probe(struct device *dev
->   	set_capacity(disk, cd->capacity);
->   	disk->private_data =3D &cd->driver;
->   	disk->queue =3D sdev->request_queue;
->  -	cd->cdi.disk =3D disk;
->  =20
->  -	if (register_cdrom(&cd->cdi))
->  +	if (register_cdrom(disk, &cd->cdi))
-> - 		goto fail_put;
-> + 		goto fail_minor;
->  =20
->   	/*
->   	 * Initialize block layer runtime PM stuffs before the
+Thanks Tom for the patch and Stephen for the review.
 
-This is now a conflict between the scsi tree and Linus' tree.
+I've marked this for stable and merged it into selinux/stable-5.8.
+Considering we are just a few days away from the close of the merge
+window and -rc1, I'll probably hold off until next to send this up to
+Linus.
 
---=20
-Cheers,
-Stephen Rothwell
+> diff --git a/security/selinux/ss/services.c b/security/selinux/ss/services.c
+> index 313919bd42f8..ef0afd878bfc 100644
+> --- a/security/selinux/ss/services.c
+> +++ b/security/selinux/ss/services.c
+> @@ -2888,8 +2888,12 @@ int security_get_bools(struct selinux_state *state,
+>         if (*names) {
+>                 for (i = 0; i < *len; i++)
+>                         kfree((*names)[i]);
+> +               kfree(*names);
+>         }
+>         kfree(*values);
+> +       *len = 0;
+> +       *names = NULL;
+> +       *values = NULL;
+>         goto out;
+>  }
+>
+> --
+> 2.18.1
 
---Sig_/KJ2VNu8x4nF9QujVQR8wAkr
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7hkxgACgkQAVBC80lX
-0Gzz+wf8CiKOoljcEObryAOzL+9DOEauAFNU+4JrJFRPfL3zUlUeeeqyIlh3nb4+
-kLZ7t2D6l1G3A2DbF2cYA52YR77gdP7bD8Ncl8VJpIkUzkLr0VpAO3MlSCLR6piJ
-+u42PjeZpdMSgNsPnpeXE54H11MFWNtwIAGNKEisSRWU/TT4uhoyuJTqOSXSokdB
-AlMUYLY70RTFrZhWDXwRpix6iqVvU/PDbGSDAx1fmAATHHPyIJpLXONUvBGDDGX0
-jRJJXWPxwA/yvqHfPxgav2vGljY0BTty82F/P3Bzy1j5+QuO549hILzq8RaXutmy
-pzj3cF6sXnFHXKvEMbjhzLpF+iC02w==
-=okmX
------END PGP SIGNATURE-----
-
---Sig_/KJ2VNu8x4nF9QujVQR8wAkr--
+-- 
+paul moore
+www.paul-moore.com
