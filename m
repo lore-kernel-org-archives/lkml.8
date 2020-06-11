@@ -2,302 +2,292 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E37A4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66631C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC03120747
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:54:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Izv3C2Jb"
+	by mail.kernel.org (Postfix) with ESMTP id 4499A20656
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:54:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbgFKIyZ (ORCPT
+        id S1727006AbgFKIyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 04:54:25 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:63709 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726824AbgFKIyY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 04:54:24 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200611085418epoutp02c8b31eea83bbee125fc76be9c493826d~XcWHb5Lc-2386323863epoutp02g
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 08:54:18 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200611085418epoutp02c8b31eea83bbee125fc76be9c493826d~XcWHb5Lc-2386323863epoutp02g
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1591865658;
-        bh=wJGlg6gQGPrYUGotlUQWGrmu/bYVjcK+Ho5qXzqCDgI=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=Izv3C2JbOs3EzQone3MvTTRMOrAjml5JuMyLro2zcNbEj27IYOd/A/xfDycYLk9D7
-         zCt3IqcXTdhw0xU99xXbVYBYBkDkQHoK25q3Iw4xVV9zZBkP4qDiIS2a6R2WfX6d6c
-         2bMD8jwJitE8cw20M0UKo94EVNsNyR6t8JKEguUo=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20200611085417epcas1p46fe756e9b61a09faca91f8f867bb7cbc~XcWG1gsYB2371223712epcas1p4R;
-        Thu, 11 Jun 2020 08:54:17 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.160]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 49jHj42QjwzMqYkb; Thu, 11 Jun
-        2020 08:54:16 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        37.75.28578.731F1EE5; Thu, 11 Jun 2020 17:54:15 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200611085414epcas1p11001e9c0488ca816221e2cbb58ab2371~XcWELarRz0530605306epcas1p1k;
-        Thu, 11 Jun 2020 08:54:14 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200611085414epsmtrp2d8d2587b6ce80b125a4c0b17eaaf07ba~XcWDp_9zb0818408184epsmtrp2f;
-        Thu, 11 Jun 2020 08:54:14 +0000 (GMT)
-X-AuditID: b6c32a39-8dfff70000006fa2-6f-5ee1f13738a5
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        52.8B.08303.631F1EE5; Thu, 11 Jun 2020 17:54:14 +0900 (KST)
-Received: from [10.253.104.82] (unknown [10.253.104.82]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200611085413epsmtip259198e1c1e4e6ec2c97fe7a4eb508a44~XcWCaIzMi0848708487epsmtip2X;
-        Thu, 11 Jun 2020 08:54:12 +0000 (GMT)
-Subject: Re: [PATCH] page_alloc: consider highatomic reserve in wmartermark
- fast
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     mgorman@techsingularity.net, mgorman@suse.de, hannes@cmpxchg.org,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, jaewon31.kim@gmail.com,
-        ytk.lee@samsung.com, cmlaika.kim@samsung.com
-From:   Jaewon Kim <jaewon31.kim@samsung.com>
-Message-ID: <5EE1F134.4090001@samsung.com>
-Date:   Thu, 11 Jun 2020 17:54:12 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
-        Thunderbird/38.7.2
+        Thu, 11 Jun 2020 04:54:49 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:56430 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726824AbgFKIyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 04:54:49 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 65612551640846479A75;
+        Thu, 11 Jun 2020 16:54:47 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.487.0; Thu, 11 Jun
+ 2020 16:54:45 +0800
+Subject: Re: [f2fs-dev] [PATCH v2] f2fs: add F2FS_IOC_SEC_TRIM_FILE ioctl
+To:     Daeho Jeong <daeho43@gmail.com>, <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>, <kernel-team@android.com>
+CC:     Daeho Jeong <daehojeong@google.com>
+References: <20200611031652.200401-1-daeho43@gmail.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <2eeaf889-da2c-0dac-c60b-fc5e68f2d402@huawei.com>
+Date:   Thu, 11 Jun 2020 16:54:32 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20200610012112.GA239587@google.com>
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrJJsWRmVeSWpSXmKPExsWy7bCmrq75x4dxBq9f8lvMWb+GzWLlvHNs
-        Fqs3+Vp0b57JaHF51xw2i3tr/rNaTH73jNFix9J9TBbLvr5nt3i8ntuBy+Pwm/fMHjtn3WX3
-        2LSqk81j06dJ7B4nZvxm8ejbsorRY/Ppao+tv+w8Pm+SC+CMyrHJSE1MSS1SSM1Lzk/JzEu3
-        VfIOjneONzUzMNQ1tLQwV1LIS8xNtVVy8QnQdcvMAbpSSaEsMacUKBSQWFyspG9nU5RfWpKq
-        kJFfXGKrlFqQklNgaFCgV5yYW1yal66XnJ9rZWhgYGQKVJmQk/H75022gt6EikddW9gaGL8G
-        dDFyckgImEi0NhxkBrGFBHYwSrR99e1i5AKyPzFKfJvwkQnC+cwosWrBZ3aYjuNPb7NAdOxi
-        lPi9KxOi6C2jxKP+yWBFwgJBEmtuTgcbKyKgIvHn6T9GkCJmgduMEv8vTgZLsAloS7xfMIkV
-        xOYV0JJYMbURqJmDg0VAVWLuUlWQsKhAhMSOuR8ZIUoEJU7OfAK2mFPAUOL9vvdgu5gF5CWa
-        t85mBpkvIbCWQ2LG7xdMIHMkBFwkjl0QhzhaWOLV8S1QD0hJfH63lw3CrpfYs/8vM4TdAHTb
-        RwEI21hifstCZpAxzAKaEut36UOEFSV2/p7LCLGWT+Ld1x5WiE28Eh1tQhAlahItz76yQtgy
-        En//PYOyPSS2Nf+GBvR2RontbwInMCrMQvLYLCTPzEJYvICReRWjWGpBcW56arFhgSly9G5i
-        BKdZLcsdjNPfftA7xMjEwXiIUYKDWUmEV1D8YZwQb0piZVVqUX58UWlOavEhRlNg6E5klhJN
-        zgcm+rySeENTI2NjYwsTM3MzU2MlcV4n6wtxQgLpiSWp2ampBalFMH1MHJxSDUzMOjO/u0n7
-        Xmb6q2Um7iPz8N0C4Tk8tUnHj3l9nfN0wYqP016pe2V8CipuLWkQuK0uGKVyWO5vBVfTRxHr
-        S7M2nJjfLCpveJLtYtPWsOK9FmFi64P/LtrktiF7NsckeTmDu9lyMqFB8w6e+untwljzY3NT
-        tsw5k8VBvnYfnwT9fqN92fvapkNlh78Z/uiXe2wfb9WU/DU0W/Hvof7UBZOXHetV8arfdPhF
-        ytYVkZwzdUx3pkwKn/39A3spo5r5D2/GEkETs83nPR+WP330fOFvVqO1huJTQ9LYY08rTDXg
-        VNzSa9vs4H7EPHiyVW/TpYR85onOq8oTL/2sZWZJVe7J1+8QZV/m96hv44O7CkosxRmJhlrM
-        RcWJAMKnw8w8BAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrDLMWRmVeSWpSXmKPExsWy7bCSvK7Zx4dxBo8X81vMWb+GzWLlvHNs
-        Fqs3+Vp0b57JaHF51xw2i3tr/rNaTH73jNFix9J9TBbLvr5nt3i8ntuBy+Pwm/fMHjtn3WX3
-        2LSqk81j06dJ7B4nZvxm8ejbsorRY/Ppao+tv+w8Pm+SC+CM4rJJSc3JLEst0rdL4Mr4/fMm
-        W0FvQsWjri1sDYxfA7oYOTkkBEwkjj+9zdLFyMUhJLCDUWLf9yVMEAkZiTfnnwIlOIBsYYnD
-        h4shal4zSmw7/YwRpEZYIEhizc3pzCC2iICKxJ+n/xghirYzSkz9/wPMYRa4zSgx4+0VsKls
-        AtoS7xdMYgWxeQW0JFZMbWQH2cAioCoxd6kqSFhUIEJi9bprzBAlghInZz5hAbE5BQwl3u97
-        D1bOLKAusX6eEEiYWUBeonnrbOYJjIKzkHTMQqiahaRqASPzKkbJ1ILi3PTcYsMCo7zUcr3i
-        xNzi0rx0veT83E2M4AjS0trBuGfVB71DjEwcjIcYJTiYlUR4BcUfxgnxpiRWVqUW5ccXleak
-        Fh9ilOZgURLn/TprYZyQQHpiSWp2ampBahFMlomDU6qBSe7WuytfNr38ULFayPr+z8+JnR+/
-        CynUh3uEbpd7+ePyMh5vJVXRaIc5c617dXPrNC0a2Jnur/RWvpctER4hP+/qleznCrv27Fsl
-        EDPTUG/a/xD9+vW9s+ZqpjYtrn9zKKXTKI1BwvTa2s+GeunH5h/xCv+oJVDKaKO9VibYaK+f
-        S882vu43hilH3vg3/s1ylGuYde90z71jxSwB5Wn3XA5Ze32Lm/NdxnCBqXrKKkYzsctbxYsO
-        XU3f6rBV85HS31n73lvYcUZ2fN+b55Sx//axhsJ1oZ0rPK5LGlvbsF71aqx+Fui8w2WBzuvA
-        oz8DdVN3tvafnfunSk723iXpJbHOrOeO885YMG3hqwdXlFiKMxINtZiLihMBWk0VNg8DAAA=
-X-CMS-MailID: 20200611085414epcas1p11001e9c0488ca816221e2cbb58ab2371
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
+In-Reply-To: <20200611031652.200401-1-daeho43@gmail.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200609095139epcas1p17f9c213de6daf25fe848921bc70481c0
-References: <CGME20200609095139epcas1p17f9c213de6daf25fe848921bc70481c0@epcas1p1.samsung.com>
-        <20200609095128.8112-1-jaewon31.kim@samsung.com>
-        <20200610012112.GA239587@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020/6/11 11:16, Daeho Jeong wrote:
+> From: Daeho Jeong <daehojeong@google.com>
+> 
+> Added a new ioctl to send discard commands or/and zero out
+> to whole data area of a regular file for security reason.
+> 
+> Signed-off-by: Daeho Jeong <daehojeong@google.com>
+> ---
+>  fs/f2fs/f2fs.h |   8 +++
+>  fs/f2fs/file.c | 143 +++++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 151 insertions(+)
+> 
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index c812fb8e2d9c..ca139fac5a73 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -434,6 +434,7 @@ static inline bool __has_cursum_space(struct f2fs_journal *journal,
+>  					_IOR(F2FS_IOCTL_MAGIC, 18, __u64)
+>  #define F2FS_IOC_RESERVE_COMPRESS_BLOCKS				\
+>  					_IOR(F2FS_IOCTL_MAGIC, 19, __u64)
+> +#define F2FS_IOC_SEC_TRIM_FILE		_IOW(F2FS_IOCTL_MAGIC, 20, __u32)
+>  
+>  #define F2FS_IOC_GET_VOLUME_NAME	FS_IOC_GETFSLABEL
+>  #define F2FS_IOC_SET_VOLUME_NAME	FS_IOC_SETFSLABEL
+> @@ -453,6 +454,13 @@ static inline bool __has_cursum_space(struct f2fs_journal *journal,
+>  #define F2FS_GOING_DOWN_METAFLUSH	0x3	/* going down with meta flush */
+>  #define F2FS_GOING_DOWN_NEED_FSCK	0x4	/* going down to trigger fsck */
+>  
+> +/*
+> + * Flags used by F2FS_IOC_SEC_TRIM_FILE
+> + */
+> +#define F2FS_TRIM_FILE_DISCARD		0x1	/* send discard command */
+> +#define F2FS_TRIM_FILE_ZEROOUT		0x2	/* zero out */
+> +#define F2FS_TRIM_FILE_MASK		0x3
+> +
+>  #if defined(__KERNEL__) && defined(CONFIG_COMPAT)
+>  /*
+>   * ioctl commands in 32 bit emulation
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index dfa1ac2d751a..ba9b7ec5d6bf 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -3749,6 +3749,146 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
+>  	return ret;
+>  }
+>  
+> +static int f2fs_secure_erase(struct block_device *bdev, block_t block,
+> +					block_t len, u32 flags)
+> +{
+> +	struct request_queue *q = bdev_get_queue(bdev);
+> +	sector_t sector = SECTOR_FROM_BLOCK(block);
+> +	sector_t nr_sects = SECTOR_FROM_BLOCK(len);
+> +	int ret = 0;
+> +
+> +	if (!q)
+> +		return -ENXIO;
+> +
+> +	if (flags & F2FS_TRIM_FILE_DISCARD)
+> +		ret = blkdev_issue_discard(bdev, sector, nr_sects, GFP_NOFS,
+> +						blk_queue_secure_erase(q) ?
+> +						BLKDEV_DISCARD_SECURE : 0);
+> +
+> +	if (!ret && (flags & F2FS_TRIM_FILE_ZEROOUT))
+> +		ret = blkdev_issue_zeroout(bdev, sector, nr_sects, GFP_NOFS, 0);
+> +
+> +	return ret;
+> +}
+> +
+> +static int f2fs_sec_trim_file(struct file *filp, unsigned long arg)
+> +{
+> +	struct inode *inode = file_inode(filp);
+> +	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+> +	struct address_space *mapping = inode->i_mapping;
+> +	struct block_device *prev_bdev = NULL;
+> +	pgoff_t index, pg_start = 0, pg_end;
+> +	block_t prev_block = 0, len = 0;
+> +	u32 flags;
+> +	int ret = 0;
+> +
+> +	if (!(filp->f_mode & FMODE_WRITE))
+> +		return -EBADF;
+> +
+> +	if (get_user(flags, (u32 __user *)arg))
+> +		return -EFAULT;
+> +	if (flags == 0 || (flags & ~F2FS_TRIM_FILE_MASK))
+> +		return -EINVAL;
+> +
+> +	if ((flags & F2FS_TRIM_FILE_DISCARD) && !f2fs_hw_support_discard(sbi))
+> +		return -EOPNOTSUPP;
+> +
+> +	file_start_write(filp);
+
+Now, I'm a little confused about when we need to call __mnt_want_write_file(),
+you know, vfs_write() still will call this function when updating time.
+- __generic_file_write_iter
+ - file_update_time
+  - __mnt_want_write_file
+
+And previously, f2fs ioctl uses mnt_{want,drop}_write_file() whenever there is
+any updates on fs/file, if Eric is correct, we need to clean up most of ioctl
+interface as well.
+
+> +	inode_lock(inode);
+> +
+> +	if (!S_ISREG(inode->i_mode) || f2fs_is_atomic_file(inode) ||
+> +			f2fs_compressed_file(inode)) {
+> +		ret = -EINVAL;
+> +		goto err;
+> +	}
+> +
+> +	if (!inode->i_size)
+> +		goto err;
+> +	pg_end = DIV_ROUND_UP(inode->i_size, PAGE_SIZE);
+> +
+> +	ret = f2fs_convert_inline_inode(inode);
+> +	if (ret)
+> +		goto err;
+> +
+> +	down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+> +	down_write(&F2FS_I(inode)->i_mmap_sem);
+> +
+> +	ret = filemap_write_and_wait(mapping);
+> +	if (ret)
+> +		goto out;
+> +
+> +	truncate_inode_pages(mapping, 0);
+> +
+> +	for (index = pg_start; index < pg_end;) {
+> +		struct dnode_of_data dn;
+> +		unsigned int end_offset;
+> +
+> +		set_new_dnode(&dn, inode, NULL, NULL, 0);
+> +		ret = f2fs_get_dnode_of_data(&dn, index, LOOKUP_NODE);
+> +		if (ret)
+
+if (ret == -ENOENT) {
+	index = f2fs_get_next_page_offset(&dn, index);
+	continue;
+}
+
+> +			goto out;
+> +
+> +		end_offset = ADDRS_PER_PAGE(dn.node_page, inode);
+> +		if (pg_end < end_offset + index)
+> +			end_offset = pg_end - index;
+> +
+> +		for (; dn.ofs_in_node < end_offset;
+> +				dn.ofs_in_node++, index++) {
+> +			struct block_device *cur_bdev;
+> +			block_t blkaddr = f2fs_data_blkaddr(&dn);
+> +
+> +			if (__is_valid_data_blkaddr(blkaddr)) {
+> +				if (!f2fs_is_valid_blkaddr(F2FS_I_SB(inode),
+> +					blkaddr, DATA_GENERIC_ENHANCE)) {
+> +					ret = -EFSCORRUPTED;
+> +					goto out;
 
 
-On 2020년 06월 10일 10:21, Minchan Kim wrote:
-> Hi Jaewon,
->
-> On Tue, Jun 09, 2020 at 06:51:28PM +0900, Jaewon Kim wrote:
->> zone_watermark_fast was introduced by commit 48ee5f3696f6 ("mm,
->> page_alloc: shortcut watermark checks for order-0 pages"). The commit
->> simply checks if free pages is bigger than watermark without additional
->> calculation such like reducing watermark.
->>
->> It considered free cma pages but it did not consider highatomic
->> reserved. This may incur exhaustion of free pages except high order
->> atomic free pages.
->>
->> Assume that reserved_highatomic pageblock is bigger than watermark min,
->> and there are only few free pages except high order atomic free. Because
->> zone_watermark_fast passes the allocation without considering high order
->> atomic free, normal reclaimable allocation like GFP_HIGHUSER will
->> consume all the free pages. Then finally order-0 atomic allocation may
->> fail on allocation.
->>
->> This means watermark min is not protected against non-atomic allocation.
->> The order-0 atomic allocation with ALLOC_HARDER unwantedly can be
->> failed. Additionally the __GFP_MEMALLOC allocation with
->> ALLOC_NO_WATERMARKS also can be failed.
->>
->> To avoid the problem, zone_watermark_fast should consider highatomic
->> reserve. If the actual size of high atomic free is counted accurately
->> like cma free, we may use it. On this patch just use
->> nr_reserved_highatomic.
->>
->> This is trace log which shows GFP_HIGHUSER consumes free pages right
->> before ALLOC_NO_WATERMARKS.
->>
->>   <...>-22275 [006] ....   889.213383: mm_page_alloc: page=00000000d2be5665 pfn=970744 order=0 migratetype=0 nr_free=3650 gfp_flags=GFP_HIGHUSER|__GFP_ZERO
->>   <...>-22275 [006] ....   889.213385: mm_page_alloc: page=000000004b2335c2 pfn=970745 order=0 migratetype=0 nr_free=3650 gfp_flags=GFP_HIGHUSER|__GFP_ZERO
->>   <...>-22275 [006] ....   889.213387: mm_page_alloc: page=00000000017272e1 pfn=970278 order=0 migratetype=0 nr_free=3650 gfp_flags=GFP_HIGHUSER|__GFP_ZERO
->>   <...>-22275 [006] ....   889.213389: mm_page_alloc: page=00000000c4be79fb pfn=970279 order=0 migratetype=0 nr_free=3650 gfp_flags=GFP_HIGHUSER|__GFP_ZERO
->>   <...>-22275 [006] ....   889.213391: mm_page_alloc: page=00000000f8a51d4f pfn=970260 order=0 migratetype=0 nr_free=3650 gfp_flags=GFP_HIGHUSER|__GFP_ZERO
->>   <...>-22275 [006] ....   889.213393: mm_page_alloc: page=000000006ba8f5ac pfn=970261 order=0 migratetype=0 nr_free=3650 gfp_flags=GFP_HIGHUSER|__GFP_ZERO
->>   <...>-22275 [006] ....   889.213395: mm_page_alloc: page=00000000819f1cd3 pfn=970196 order=0 migratetype=0 nr_free=3650 gfp_flags=GFP_HIGHUSER|__GFP_ZERO
->>   <...>-22275 [006] ....   889.213396: mm_page_alloc: page=00000000f6b72a64 pfn=970197 order=0 migratetype=0 nr_free=3650 gfp_flags=GFP_HIGHUSER|__GFP_ZERO
->> kswapd0-1207  [005] ...1   889.213398: mm_page_alloc: page= (null) pfn=0 order=0 migratetype=1 nr_free=3650 gfp_flags=GFP_NOWAIT|__GFP_HIGHMEM|__GFP_NOWARN|__GFP_MOVABLE
->>
->> This is an example of ALLOC_HARDER allocation failure.
->>
->> <4>[ 6207.637280]  [3:  Binder:9343_3:22875] Binder:9343_3: page allocation failure: order:0, mode:0x480020(GFP_ATOMIC), nodemask=(null)
->> <4>[ 6207.637311]  [3:  Binder:9343_3:22875] Call trace:
->> <4>[ 6207.637346]  [3:  Binder:9343_3:22875] [<ffffff8008f40f8c>] dump_stack+0xb8/0xf0
->> <4>[ 6207.637356]  [3:  Binder:9343_3:22875] [<ffffff8008223320>] warn_alloc+0xd8/0x12c
->> <4>[ 6207.637365]  [3:  Binder:9343_3:22875] [<ffffff80082245e4>] __alloc_pages_nodemask+0x120c/0x1250
->> <4>[ 6207.637374]  [3:  Binder:9343_3:22875] [<ffffff800827f6e8>] new_slab+0x128/0x604
->> <4>[ 6207.637381]  [3:  Binder:9343_3:22875] [<ffffff800827b0cc>] ___slab_alloc+0x508/0x670
->> <4>[ 6207.637387]  [3:  Binder:9343_3:22875] [<ffffff800827ba00>] __kmalloc+0x2f8/0x310
->> <4>[ 6207.637396]  [3:  Binder:9343_3:22875] [<ffffff80084ac3e0>] context_struct_to_string+0x104/0x1cc
->> <4>[ 6207.637404]  [3:  Binder:9343_3:22875] [<ffffff80084ad8fc>] security_sid_to_context_core+0x74/0x144
->> <4>[ 6207.637412]  [3:  Binder:9343_3:22875] [<ffffff80084ad880>] security_sid_to_context+0x10/0x18
->> <4>[ 6207.637421]  [3:  Binder:9343_3:22875] [<ffffff800849bd80>] selinux_secid_to_secctx+0x20/0x28
->> <4>[ 6207.637430]  [3:  Binder:9343_3:22875] [<ffffff800849109c>] security_secid_to_secctx+0x3c/0x70
->> <4>[ 6207.637442]  [3:  Binder:9343_3:22875] [<ffffff8008bfe118>] binder_transaction+0xe68/0x454c
->> <4>[ 6207.637569]  [3:  Binder:9343_3:22875] Mem-Info:
->> <4>[ 6207.637595]  [3:  Binder:9343_3:22875] active_anon:102061 inactive_anon:81551 isolated_anon:0
->> <4>[ 6207.637595]  [3:  Binder:9343_3:22875]  active_file:59102 inactive_file:68924 isolated_file:64
->> <4>[ 6207.637595]  [3:  Binder:9343_3:22875]  unevictable:611 dirty:63 writeback:0 unstable:0
->> <4>[ 6207.637595]  [3:  Binder:9343_3:22875]  slab_reclaimable:13324 slab_unreclaimable:44354
->> <4>[ 6207.637595]  [3:  Binder:9343_3:22875]  mapped:83015 shmem:4858 pagetables:26316 bounce:0
->> <4>[ 6207.637595]  [3:  Binder:9343_3:22875]  free:2727 free_pcp:1035 free_cma:178
->> <4>[ 6207.637616]  [3:  Binder:9343_3:22875] Node 0 active_anon:408244kB inactive_anon:326204kB active_file:236408kB inactive_file:275696kB unevictable:2444kB isolated(anon):0kB isolated(file):256kB mapped:332060kB dirty:252kB writeback:0kB shmem:19432kB writeback_tmp:0kB unstable:0kB all_unreclaimable? no
->> <4>[ 6207.637627]  [3:  Binder:9343_3:22875] Normal free:10908kB min:6192kB low:44388kB high:47060kB active_anon:409160kB inactive_anon:325924kB active_file:235820kB inactive_file:276628kB unevictable:2444kB writepending:252kB present:3076096kB managed:2673676kB mlocked:2444kB kernel_stack:62512kB pagetables:105264kB bounce:0kB free_pcp:4140kB local_pcp:40kB free_cma:712kB
->> <4>[ 6207.637632]  [3:  Binder:9343_3:22875] lowmem_reserve[]: 0 0
->> <4>[ 6207.637637]  [3:  Binder:9343_3:22875] Normal: 505*4kB (H) 357*8kB (H) 201*16kB (H) 65*32kB (H) 1*64kB (H) 0*128kB 0*256kB 0*512kB 0*1024kB 0*2048kB 0*4096kB = 10236kB
->> <4>[ 6207.637655]  [3:  Binder:9343_3:22875] 138826 total pagecache pages
->> <4>[ 6207.637663]  [3:  Binder:9343_3:22875] 5460 pages in swap cache
->> <4>[ 6207.637668]  [3:  Binder:9343_3:22875] Swap cache stats: add 8273090, delete 8267506, find 1004381/4060142
->>
->> This is an example of ALLOC_NO_WATERMARKS allocation failure.
->>
->> <6>[  156.701551]  [4:        kswapd0: 1209] kswapd0 cpuset=/ mems_allowed=0
->> <4>[  156.701563]  [4:        kswapd0: 1209] CPU: 4 PID: 1209 Comm: kswapd0 Tainted: G        W       4.14.113-18113966 #1
->> <4>[  156.701572]  [4:        kswapd0: 1209] Call trace:
->> <4>[  156.701605]  [4:        kswapd0: 1209] [<0000000000000000>] dump_stack+0x68/0x90
->> <4>[  156.701612]  [4:        kswapd0: 1209] [<0000000000000000>] warn_alloc+0x104/0x198
->> <4>[  156.701617]  [4:        kswapd0: 1209] [<0000000000000000>] __alloc_pages_nodemask+0xdc0/0xdf0
->> <4>[  156.701623]  [4:        kswapd0: 1209] [<0000000000000000>] zs_malloc+0x148/0x3d0
->> <4>[  156.701630]  [4:        kswapd0: 1209] [<0000000000000000>] zram_bvec_rw+0x250/0x568
->> <4>[  156.701634]  [4:        kswapd0: 1209] [<0000000000000000>] zram_rw_page+0x8c/0xe0
->> <4>[  156.701640]  [4:        kswapd0: 1209] [<0000000000000000>] bdev_write_page+0x70/0xbc
->> <4>[  156.701645]  [4:        kswapd0: 1209] [<0000000000000000>] __swap_writepage+0x58/0x37c
->> <4>[  156.701649]  [4:        kswapd0: 1209] [<0000000000000000>] swap_writepage+0x40/0x4c
->> <4>[  156.701654]  [4:        kswapd0: 1209] [<0000000000000000>] shrink_page_list+0xc3c/0xf54
->> <4>[  156.701659]  [4:        kswapd0: 1209] [<0000000000000000>] shrink_inactive_list+0x2b0/0x61c
->> <4>[  156.701664]  [4:        kswapd0: 1209] [<0000000000000000>] shrink_node_memcg+0x23c/0x618
->> <4>[  156.701668]  [4:        kswapd0: 1209] [<0000000000000000>] shrink_node+0x1c8/0x304
->> <4>[  156.701673]  [4:        kswapd0: 1209] [<0000000000000000>] kswapd+0x680/0x7c4
->> <4>[  156.701679]  [4:        kswapd0: 1209] [<0000000000000000>] kthread+0x110/0x120
->> <4>[  156.701684]  [4:        kswapd0: 1209] [<0000000000000000>] ret_from_fork+0x10/0x18
->> <4>[  156.701689]  [4:        kswapd0: 1209] Mem-Info:
->> <4>[  156.701712]  [4:        kswapd0: 1209] active_anon:88690 inactive_anon:88630 isolated_anon:0
->> <4>[  156.701712]  [4:        kswapd0: 1209]  active_file:99173 inactive_file:169305 isolated_file:32
->> <4>[  156.701712]  [4:        kswapd0: 1209]  unevictable:48292 dirty:538 writeback:38 unstable:0
->> <4>[  156.701712]  [4:        kswapd0: 1209]  slab_reclaimable:15131 slab_unreclaimable:47762
->> <4>[  156.701712]  [4:        kswapd0: 1209]  mapped:274654 shmem:2824 pagetables:25088 bounce:0
->> <4>[  156.701712]  [4:        kswapd0: 1209]  free:2489 free_pcp:444 free_cma:3
->> <4>[  156.701728]  [4:        kswapd0: 1209] Node 0 active_anon:354760kB inactive_anon:354520kB active_file:396692kB inactive_file:677220kB unevictable:193168kB isolated(anon):0kB isolated(file):128kB mapped:1098616kB dirty:2152kB writeback:152kB shmem:11296kB writeback_tmp:0kB unstable:0kB all_unreclaimable? no
->> <4>[  156.701738]  [4:        kswapd0: 1209] Normal free:9956kB min:7428kB low:93440kB high:97032kB active_anon:355176kB inactive_anon:354580kB active_file:396196kB inactive_file:677284kB unevictable:193168kB writepending:2304kB present:4081664kB managed:3593324kB mlocked:193168kB kernel_stack:55008kB pagetables:100352kB bounce:0kB free_pcp:1776kB local_pcp:656kB free_cma:12kB
->> <4>[  156.701741]  [4:        kswapd0: 1209] lowmem_reserve[]: 0 0
->> <4>[  156.701747]  [4:        kswapd0: 1209] Normal: 196*4kB (H) 141*8kB (H) 109*16kB (H) 63*32kB (H) 20*64kB (H) 8*128kB (H) 2*256kB (H) 1*512kB (H) 0*1024kB 0*2048kB 0*4096kB = 9000kB
->>
->> Signed-off-by: Jaewon Kim <jaewon31.kim@samsung.com>
->> Reported-by: Yong-Taek Lee <ytk.lee@samsung.com>
->> ---
->>  mm/page_alloc.c | 13 +++++++++++--
->>  1 file changed, 11 insertions(+), 2 deletions(-)
->>
->> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
->> index 13cc653122b7..00869378d387 100644
->> --- a/mm/page_alloc.c
->> +++ b/mm/page_alloc.c
->> @@ -3553,6 +3553,11 @@ static inline bool zone_watermark_fast(struct zone *z, unsigned int order,
->>  {
->>  	long free_pages = zone_page_state(z, NR_FREE_PAGES);
->>  	long cma_pages = 0;
->> +	long highatomic = 0;
->> +	const bool alloc_harder = (alloc_flags & (ALLOC_HARDER|ALLOC_OOM));
->> +
->> +	if (likely(!alloc_harder))
->> +		highatomic = z->nr_reserved_highatomic;
->>  
->>  #ifdef CONFIG_CMA
->>  	/* If allocation can't use CMA areas don't use free CMA pages */
->> @@ -3567,8 +3572,12 @@ static inline bool zone_watermark_fast(struct zone *z, unsigned int order,
->>  	 * the caller is !atomic then it'll uselessly search the free
->>  	 * list. That corner case is then slower but it is harmless.
->>  	 */
->> -	if (!order && (free_pages - cma_pages) > mark + z->lowmem_reserve[classzone_idx])
->> -		return true;
->> +	if (!order) {
->> +		long fast_free = free_pages - cma_pages - highatomic;
->
-> With your change, it seems we share most code for getting free_pages 
-> between zone_watermark_fast and __zone_watermark_ok. Only difference
-> between them is min calculation. If so, can we share most code between
-> them via introducing like __zone_watermark_free static inline function?
-> So, we didn't miss one place in future if we change something.
->
-Hello thank you for your comment.
+if we goto out label here, we will miss to call f2fs_put_dnode()?
 
-I tried to share some code.
-Because __zone_watermark_ok gets free pages as argument,
-I just could make a function calculating unusable free.
+> +				}
+> +			} else
 
-static inline long __zone_watermark_unusable_free(struct zone *z,
-                                                    unsigned int alloc_flags)
+How about this?
 
-on zone_watermark_fast
-free_pages -= __zone_watermark_unusable_free(z, alloc_flags);
+if (!__is_valid_data_blkaddr())
+	continue;
 
-on __zone_watermark_ok
-free_pages -= __zone_watermark_unusable_free(z, alloc_flags);
+if (!f2fs_is_valid_blkaddr(F2FS_I_SB(inode), blkaddr, DATA_GENERIC_ENHANCE)) {
+	ret = -EFSCORRUPTED;
+	goto out;
+}
 
-Let me get your comment prior to v2 change.
+> +				continue;
+> +
+> +			cur_bdev = f2fs_target_device(sbi, blkaddr, NULL);
+> +			if (f2fs_is_multi_device(sbi)) {
+> +				int i = f2fs_target_device_index(sbi, blkaddr);
+> +
+> +				blkaddr -= FDEV(i).start_blk;
+> +			}
+> +
+> +			if (len) {
+> +				if (prev_bdev == cur_bdev &&
+> +					blkaddr == prev_block + len) {
+> +					len++;
+> +				} else {
+> +					ret = f2fs_secure_erase(prev_bdev,
+> +							prev_block, len, flags);
+> +					if (ret)
+> +						goto out;
 
-Thank you
-Jaewon Kim
->> +
->> +		if (fast_free > mark + z->lowmem_reserve[classzone_idx])
->> +			return true;
->> +	}
->>  
->>  	return __zone_watermark_ok(z, order, mark, classzone_idx, alloc_flags,
->>  					free_pages);
->> -- 
->> 2.17.1
->>
->
+Ditto,
 
+Thanks,
+
+> +
+> +					len = 0;
+> +				}
+> +			}
+> +
+> +			if (!len) {
+> +				prev_bdev = cur_bdev;
+> +				prev_block = blkaddr;
+> +				len = 1;
+> +			}
+> +		}
+> +
+> +		f2fs_put_dnode(&dn);
+> +	}
+> +
+> +	if (len)
+> +		ret = f2fs_secure_erase(prev_bdev, prev_block, len, flags);
+> +out:
+> +	up_write(&F2FS_I(inode)->i_mmap_sem);
+> +	up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+> +err:
+> +	inode_unlock(inode);
+> +	file_end_write(filp);
+> +
+> +	return ret;
+> +}
+> +
+>  long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+>  {
+>  	if (unlikely(f2fs_cp_error(F2FS_I_SB(file_inode(filp)))))
+> @@ -3835,6 +3975,8 @@ long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+>  		return f2fs_release_compress_blocks(filp, arg);
+>  	case F2FS_IOC_RESERVE_COMPRESS_BLOCKS:
+>  		return f2fs_reserve_compress_blocks(filp, arg);
+> +	case F2FS_IOC_SEC_TRIM_FILE:
+> +		return f2fs_sec_trim_file(filp, arg);
+>  	default:
+>  		return -ENOTTY;
+>  	}
+> @@ -4004,6 +4146,7 @@ long f2fs_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+>  	case F2FS_IOC_GET_COMPRESS_BLOCKS:
+>  	case F2FS_IOC_RELEASE_COMPRESS_BLOCKS:
+>  	case F2FS_IOC_RESERVE_COMPRESS_BLOCKS:
+> +	case F2FS_IOC_SEC_TRIM_FILE:
+>  		break;
+>  	default:
+>  		return -ENOIOCTLCMD;
+> 
