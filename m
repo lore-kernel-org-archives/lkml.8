@@ -2,71 +2,67 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9BEAC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B36DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFCD62072F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:47:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B52F2078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:50:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591840205;
+	bh=61AniKfE8KMG+kYxyj90PwPywoR7NTOaXhcdQ1CDJnk=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=lULaYjEFGONWnTYKOoHWFiLFBBpHTdWYXjmX506qqhb+mSR5cAM2CR3TSVNIX6IZY
+	 Vu/xtUbFCSal7LgHUZJZbg9+UZAejSfxLuMEOTxZ/6NMcWn7/OQ9VCJZMpzizWNNJK
+	 AY/TTEuLldNRuOWyAFk8Hed3yGUW3CuvTeedPSQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbgFKBrr (ORCPT
+        id S1726381AbgFKBuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 21:47:47 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:41262 "EHLO inva021.nxp.com"
+        Wed, 10 Jun 2020 21:50:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726279AbgFKBrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 21:47:47 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 476192016C6;
-        Thu, 11 Jun 2020 03:47:45 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0B6EA20031A;
-        Thu, 11 Jun 2020 03:47:40 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 41ACF4028F;
-        Thu, 11 Jun 2020 09:47:33 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, aisheng.dong@nxp.com,
-        horia.geanta@nxp.com, peng.fan@nxp.com, fugang.duan@nxp.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] arm64: dts: imx8mp: Add fallback compatible to ocotp node
-Date:   Thu, 11 Jun 2020 09:36:53 +0800
-Message-Id: <1591839413-32102-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1726268AbgFKBuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 21:50:03 -0400
+Subject: Re: [git pull] vfs misc
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591840203;
+        bh=61AniKfE8KMG+kYxyj90PwPywoR7NTOaXhcdQ1CDJnk=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=oizPGVipZKATXlYjK6sdReX5kh/eAH71fGp+K2KIQAEQuKs//Zzl3u/oT88IkHdG1
+         Bt+J5tqGdadvo/7cmwy/4qRUbspWf4qsutuvOjTGDf3ckWZ6de+/5sEQjz4xxdoVWu
+         zty6hkL3E28rCqlgj9hAk4dTd6gqlDkZ2/JG3hPU=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200610203019.GW23230@ZenIV.linux.org.uk>
+References: <20200610203019.GW23230@ZenIV.linux.org.uk>
+X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200610203019.GW23230@ZenIV.linux.org.uk>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git work.misc
+X-PR-Tracked-Commit-Id: cc23402c1c2de8b1815212f3924cdbc3cda02b94
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 4dbb29fe9dae033a375f231da9cc27aaa09d2580
+Message-Id: <159184020348.24802.17167615231251700138.pr-tracker-bot@kernel.org>
+Date:   Thu, 11 Jun 2020 01:50:03 +0000
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add "fsl,imx8mm-ocotp" as fallback compatible of i.MX8MP ocotp
-to support SoC serial_number read.
+The pull request you sent on Wed, 10 Jun 2020 21:30:19 +0100:
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8mp.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git work.misc
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-index c248e7f..3e01c072 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-@@ -341,7 +341,7 @@
- 			};
- 
- 			ocotp: efuse@30350000 {
--				compatible = "fsl,imx8mp-ocotp", "syscon";
-+				compatible = "fsl,imx8mp-ocotp", "fsl,imx8mm-ocotp", "syscon";
- 				reg = <0x30350000 0x10000>;
- 				clocks = <&clk IMX8MP_CLK_OCOTP_ROOT>;
- 				/* For nvmem subnodes */
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/4dbb29fe9dae033a375f231da9cc27aaa09d2580
+
+Thank you!
+
 -- 
-2.7.4
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
