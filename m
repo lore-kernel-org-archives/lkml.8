@@ -2,130 +2,102 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33BFFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3918C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BCEA206A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:34:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A504E2072F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:36:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="DH1tWi6y"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Zof5Ro+z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgFKBe3 (ORCPT
+        id S1726419AbgFKBgn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 21:34:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53434 "EHLO
+        Wed, 10 Jun 2020 21:36:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbgFKBe2 (ORCPT
+        with ESMTP id S1726163AbgFKBgm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 21:34:28 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A46F0C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 18:34:28 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id i16so3453313qtr.7
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 18:34:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=55Gy25i6MWT9R2Sy3CAwrMigrI5YAB45T9Iy8NhgGeg=;
-        b=DH1tWi6y94mWYgFSHkuj2ZwvjarHqQyX0ydceO/EdpVgvPsqky3ujppY3dggDEwWfo
-         bGxGOi4eCh99xuyFnaIpkxwysp5f4A14KIF7iBT2S0pWsc4kud/SAhObdl52dn+I/XrV
-         JO7U+JMDW7TVrnxNMK9TUjQOSjLozsRpg4A9k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=55Gy25i6MWT9R2Sy3CAwrMigrI5YAB45T9Iy8NhgGeg=;
-        b=FFwl/TqAOd2cuFiR5OICbnjZQjf3re0yfnCcacmC1lJK8mOb6j+etpVyR1fXt4gieo
-         69zJVmkcvGeMsHB5zjADAhABjogcEX6TNvaIf12Rk5YhRgtAJKYHlxpHF7eAp5Lg0+AT
-         QxELDDZznjMskDwTt/OxhyS4ELhLmZzdzA0nLdSAqRzH4SgeDqOVQk1YjKSL6DCnPrzA
-         1JgtEGyhA6SOUvCElYqCrecIP+UO/eC84ilS0kFkqzzsTezW2J5EUInP4FM/d5VeNTad
-         h6P16X/H3wXzJmsqaWAkAQaqNJILs+BRqXqr1bHUPi3HvRm+XhiiiHWQFKfTiGR9eZkk
-         JWvQ==
-X-Gm-Message-State: AOAM531ebxC/jYdTEGuRxuswIOIIGhpfpSUq2H75umLMLd5EWo4GYbKp
-        hLK4e/SIEjCstLwIzkEjTz9Iawbc4WA=
-X-Google-Smtp-Source: ABdhPJzR53fwQYF4rMdlZKKO43GIOTfeOYOuxLqI7tMkeVzyZ4FumvZ0dS6IU1FmSiqBS4/t7dtZyg==
-X-Received: by 2002:aed:3f25:: with SMTP id p34mr6133961qtf.92.1591839267917;
-        Wed, 10 Jun 2020 18:34:27 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id l8sm1363568qtb.57.2020.06.10.18.34.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 18:34:27 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 21:34:26 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     "Paul E . McKenney" <paulmck@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>
-Subject: Re: [PATCH 06/10] rcu: Make nocb_cb kthread parkable
-Message-ID: <20200611013426.GB12037@google.com>
-References: <20200513164714.22557-1-frederic@kernel.org>
- <20200513164714.22557-7-frederic@kernel.org>
+        Wed, 10 Jun 2020 21:36:42 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CF0EC08C5C1;
+        Wed, 10 Jun 2020 18:36:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=OhtuvvlzzHFfDg+PC4aa+VAtbxaJoSFkoyziN0s35WQ=; b=Zof5Ro+zSJ0JDzuH+aN8Xz1rcs
+        /jYX6M5fhwAoI2LAWxewVrWIUvdGS2YPZDwwSXAOqx2aotpCL8ERbAkRZEIMBkZBRMY5EM8eLHrVz
+        FCPHFLUlooImb9VfHjsGDsoQ2C5PkmkmHsjvUO9rfWIm+6fZFR9y24k8GJYJAVuKogGJ8AHKn3itn
+        RQKWsYF8z/7AbzuarxYTQ6lKRSvi/Yg/qp7gO7lnhNG1V/y5/u7ZBwYfw2KmltZcJThWsyXcp49dO
+        5ruOY5jiLmf53/pjvyv+38HS3LQX/FoFCot4ryAgrnG75aSWq5qnfmqvYqkM8ijSWo/QgmISB5SyD
+        epRrrSFA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jjC8e-0000EW-DB; Thu, 11 Jun 2020 01:36:16 +0000
+Date:   Wed, 10 Jun 2020 18:36:16 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
+        Colin Walters <walters@verbum.org>,
+        syzbot <syzbot+d6ec23007e951dadf3de@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        overlayfs <linux-unionfs@vger.kernel.org>
+Subject: Re: [PATCH v2] ovl: provide real_file() and overlayfs
+ get_unmapped_area()
+Message-ID: <20200611013616.GM19604@bombadil.infradead.org>
+References: <4ebd0429-f715-d523-4c09-43fa2c3bc338@oracle.com>
+ <202005281652.QNakLkW3%lkp@intel.com>
+ <365d83b8-3af7-2113-3a20-2aed51d9de91@oracle.com>
+ <CAJfpegtz=tzndsF=_1tYHewGwEgvqEOA_4zj8HCAqyFdKe6mag@mail.gmail.com>
+ <ffc00a9e-5c2f-0c3e-aa1e-9836b98f7b54@oracle.com>
+ <20200611003726.GY23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200513164714.22557-7-frederic@kernel.org>
+In-Reply-To: <20200611003726.GY23230@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 06:47:10PM +0200, Frederic Weisbecker wrote:
-> This will be necessary to correctly implement rdp de-offloading. We
-> don't want rcu_do_batch() in nocb_cb kthread to race with local
-> rcu_do_batch().
+On Thu, Jun 11, 2020 at 01:37:26AM +0100, Al Viro wrote:
+> On Wed, Jun 10, 2020 at 05:13:52PM -0700, Mike Kravetz wrote:
 > 
-> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-> Cc: Paul E. McKenney <paulmck@kernel.org>
-> Cc: Josh Triplett <josh@joshtriplett.org>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Cc: Lai Jiangshan <jiangshanlai@gmail.com>
-> Cc: Joel Fernandes <joel@joelfernandes.org>
-
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-
-thanks,
-
- - Joel
-
-
-> ---
->  kernel/rcu/tree_plugin.h | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+> > To address this issue,
+> > - Add a new file operation f_real while will return the underlying file.
+> >   Only overlayfs provides a function for this operation.
+> > - Add a new routine real_file() which can be used by core code get an
+> >   underlying file.
+> > - Update is_file_hugepages to get the real file.
 > 
-> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> index 1dd3fdd675a1..43ecc047af26 100644
-> --- a/kernel/rcu/tree_plugin.h
-> +++ b/kernel/rcu/tree_plugin.h
-> @@ -2104,7 +2104,9 @@ static void nocb_cb_wait(struct rcu_data *rdp)
->  	if (needwake_gp)
->  		rcu_gp_kthread_wake();
->  	swait_event_interruptible_exclusive(rdp->nocb_cb_wq,
-> -				 !READ_ONCE(rdp->nocb_cb_sleep));
-> +				    !READ_ONCE(rdp->nocb_cb_sleep) ||
-> +				    kthread_should_park());
-> +
->  	if (!smp_load_acquire(&rdp->nocb_cb_sleep)) { /* VVV */
->  		/* ^^^ Ensure CB invocation follows _sleep test. */
->  		return;
-> @@ -2125,6 +2127,8 @@ static int rcu_nocb_cb_kthread(void *arg)
->  	// if there are no more ready callbacks, waits for them.
->  	for (;;) {
->  		nocb_cb_wait(rdp);
-> +		if (kthread_should_park())
-> +			kthread_parkme();
->  		cond_resched_tasks_rcu_qs();
->  	}
->  	return 0;
-> -- 
-> 2.25.0
+> Egads...  So to find out whether it's a hugetlb you would
+> 	* check if a method is NULL
+> 	* if not, call it
+> 	* ... and check if the method table of the result is hugetlbfs one?
 > 
+> Here's a radical suggestion: FMODE_HUGEPAGES.  Just have it set by
+> ->open() and let is_file_hugepages() check it.  In ->f_mode.  And
+> make the bloody hugetlbfs_file_operations static, while we are at it.
+
+ITYM FMODE_OVL_UPPER.  To quote Mike:
+
+>         while (file->f_op == &ovl_file_operations)
+>                 file = file->private_data;
+>         return file;
+
+which would be transformed into:
+
+	while (file->f_mode & FMODE_OVL_UPPER)
+		file = file->private_data;
+	return file;
+
+Or are you proposing that overlayfs copy FMODE_HUGEPAGES from the
+underlying fs to the overlaying fs?
