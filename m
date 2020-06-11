@@ -2,122 +2,97 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9640AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C222C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63874206DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:34:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591896859;
-	bh=lRxzRoRx1R56qcKxTnghzBRhR4dShjejgWX5UzFaEn4=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=bF9orD7rh+kzPBM9iDWWFGyhfbdx8NEZUrKvE3hjNm4HVvIP7ksUdtXjQRvy8GOHJ
-	 Jrltp57o1tLS1f9JFtGsIWkIW56OD3mlYRoTZ1lhaDKVZCtrjynUouhVBhFRLbNRMM
-	 G3xE+XvUAkUmMn4/d2P64pj7u9u3LJe/FBKx55Fs=
+	by mail.kernel.org (Postfix) with ESMTP id 5F12320691
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:36:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PjCLvAgU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbgFKReR (ORCPT
+        id S1726886AbgFKRgd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 13:34:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56924 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726134AbgFKReR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 13:34:17 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD0AB206DC;
-        Thu, 11 Jun 2020 17:34:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591896856;
-        bh=lRxzRoRx1R56qcKxTnghzBRhR4dShjejgWX5UzFaEn4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=0C3UzX+gJ9FwLRBsHwAl75kNB74VEqgUz3rv37qAoV4Y5XVSxIilem/0fIxR2pb1m
-         0lfAh3WQRuEXyYnqrFEv9aUaDbnS1euTWJiUMWJs8Z4OSoBi183iTfopa83zwcHp0F
-         4wvUV9fR5OS+7TgEhi1k8NFxqwih52D2qFkWLbE0=
-Date:   Thu, 11 Jun 2020 18:34:12 +0100
-From:   Will Deacon <will@kernel.org>
-To:     torvalds@linux-foundation.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        catalin.marinas@arm.com, kernel-team@android.com
-Subject: [GIT PULL] arm64 merge window fixes for -rc1
-Message-ID: <20200611173412.GA9575@willie-the-truck>
+        Thu, 11 Jun 2020 13:36:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60644 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726813AbgFKRgd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 13:36:33 -0400
+Received: from mail-oi1-x229.google.com (mail-oi1-x229.google.com [IPv6:2607:f8b0:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54DC7C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 10:36:33 -0700 (PDT)
+Received: by mail-oi1-x229.google.com with SMTP id t25so6138064oij.7
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 10:36:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jrCOk7vsq1IE7uGd57AzoLSP1ALvkvtrfTao0LV5h+4=;
+        b=PjCLvAgUk17O5rGvaRSULcAXIKgAeNPYfQj4+nc/jEDzvDt79xSOJ9y90gnyDsej57
+         d6kv8CTeKJDW3tgsSbIhUH7B684pz0QDJS1PAC3ELlVYxup3lQZTLhIejtwsgQQWCbBm
+         whcIjLz3Q4YA0rJbpmM7ez8cXb5PsSzB5hLw90jsFbfweSA0DgsHHTj0a3UpXNkTiXsK
+         FHCNP6NH+PXkniJe6PD0IrUkKYLC/AfJYgTbByfESpbB7Eh6RWa3w2B8JexkbcgtqPsr
+         BKFM8ErfoR7rUDwZJTpr2FypGZPTKX734j7VFNPPb3SuZIWCuP8HJJ3I2VIKp5nax4vd
+         X7rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jrCOk7vsq1IE7uGd57AzoLSP1ALvkvtrfTao0LV5h+4=;
+        b=iCdh8H4EygKv4uMj0+2XC+Mn54VaUAEoTW/1Iq2sMoXjEYN883AAY1BEIQpBp5DB45
+         Ipwyl7fMJmk9VQz4CCjoSxrOgBrOB+Hg6RmC7m1VukNiNyMxXwzL7gPkS6A2pcBh4ruO
+         caofR8N7PY/Bj+zV42zwEqMmtlxzUbkwu+kMdwZZxHfqVz+c+PQLSXYilEKjDpgaHl4M
+         PJRY9Oo5ra22m9qJZtLoyyKt8sc2iygKYNGsVXzAJvposS4I2Rb8spYDOn/lPoo1geDJ
+         x2aDSRV5xH8KOR2MtLev4FC+3HjvKjvPdwrD46lu/YLi2jqeb+YlA/OysdOrcDwgiRsN
+         wfrw==
+X-Gm-Message-State: AOAM533ljgW6NC1cCIlkHtBH8ECxChMFStEZdMA4KXNqNJgQ6TvMHEqN
+        Tiw8L190cHi3YnXWcTS/KaxpIcUr2d0UjXb1rLC8qw==
+X-Google-Smtp-Source: ABdhPJzBOdT+Dsmoz25Sk2BkH7lQgOo+1veTThTfIOcpemZoPqBRr3Bokq20sHjcYAD8NriytacdHguqDLTVuu4eLUw=
+X-Received: by 2002:aca:2108:: with SMTP id 8mr7354040oiz.10.1591896992417;
+ Thu, 11 Jun 2020 10:36:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1591880115-12721-1-git-send-email-mkrishn@codeaurora.org>
+In-Reply-To: <1591880115-12721-1-git-send-email-mkrishn@codeaurora.org>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Thu, 11 Jun 2020 10:36:21 -0700
+Message-ID: <CALAqxLWnXD4XzGU=7mkLCyAkN1ONB=NRne9y8PxPWGZg4hgX8Q@mail.gmail.com>
+Subject: Re: [v1] drm/msm/dpu: request for display color blocks based on hw
+ catalog entry
+To:     Krishna Manikandan <mkrishn@codeaurora.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno@lists.freedesktop.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Kalyan Thota <kalyan_t@codeaurora.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>, hoegsberg@chromium.org,
+        nganji@codeaurora.org, Matthias Kaehlcke <mka@chromium.org>,
+        Doug Anderson <dianders@chromium.org>, abhinavk@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Thu, Jun 11, 2020 at 5:55 AM Krishna Manikandan
+<mkrishn@codeaurora.org> wrote:
+>
+> From: Kalyan Thota <kalyan_t@codeaurora.org>
+>
+> Request for color processing blocks only if they are
+> available in the display hw catalog and they are
+> sufficient in number for the selection.
+>
+> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
 
-Please pull these arm64 fixes that came in during the merge window. They'll
-probably be more to come, but it doesn't seem like it's worth me sitting
-on these in the meantime.
+Tested-by: John Stultz <john.stultz@linaro.org>
 
-Summary in the tag.
-
-Cheers,
-
-Will
-
---->8
-
-The following changes since commit 082af5ec5080b028f7d0846a6c27cbb87f288205:
-
-  Merge branch 'for-next/scs' into for-next/core (2020-05-28 18:03:40 +0100)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-upstream
-
-for you to fetch changes up to dd4bc60765873445893037ae73a5f75398a8cd19:
-
-  arm64: warn on incorrect placement of the kernel by the bootloader (2020-06-11 14:13:13 +0100)
-
-----------------------------------------------------------------
-arm64 merge window fixes for -rc1
-
-- Fix SCS debug check to report max stack usage in bytes as advertised
-- Fix typo: CONFIG_FTRACE_WITH_REGS => CONFIG_DYNAMIC_FTRACE_WITH_REGS
-- Fix incorrect mask in HiSilicon L3C perf PMU driver
-- Fix compat vDSO compilation under some toolchain configurations
-- Fix false UBSAN warning from ACPI IORT parsing code
-- Fix booting under bootloaders that ignore TEXT_OFFSET
-- Annotate debug initcall function with '__init'
-
-----------------------------------------------------------------
-Ard Biesheuvel (1):
-      arm64: warn on incorrect placement of the kernel by the bootloader
-
-Christophe JAILLET (1):
-      arm64: debug: mark a function as __init to save some memory
-
-Joe Perches (1):
-      arm64: ftrace: Change CONFIG_FTRACE_WITH_REGS to CONFIG_DYNAMIC_FTRACE_WITH_REGS
-
-Nick Desaulniers (2):
-      arm64: vdso32: add CONFIG_THUMB2_COMPAT_VDSO
-      arm64: acpi: fix UBSAN warning
-
-Shaokun Zhang (1):
-      drivers/perf: hisi: Fix wrong value for all counters enable
-
-Will Deacon (1):
-      scs: Report SCS usage in bytes rather than number of entries
-
- arch/arm64/Kconfig                           | 11 ++++++++++-
- arch/arm64/include/asm/acpi.h                |  5 +++--
- arch/arm64/kernel/debug-monitors.c           |  2 +-
- arch/arm64/kernel/ftrace.c                   |  3 ++-
- arch/arm64/kernel/setup.c                    |  4 ++++
- arch/arm64/kernel/vdso32/Makefile            |  8 ++++++++
- drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c |  2 +-
- kernel/scs.c                                 |  2 +-
- 8 files changed, 30 insertions(+), 7 deletions(-)
+Thanks so much for the quick fix!
+-john
