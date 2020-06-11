@@ -2,70 +2,72 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E92C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2CFFC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D03AE2065C
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:30:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB7622072F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:32:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728388AbgFKOaR (ORCPT
+        id S1728283AbgFKOch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 10:30:17 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:52728 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728323AbgFKOaR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 10:30:17 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jjODf-0000ff-14; Thu, 11 Jun 2020 14:30:15 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] pktcdvd: remove redundant initialization of variable ret
-Date:   Thu, 11 Jun 2020 15:30:14 +0100
-Message-Id: <20200611143014.925317-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.27.0.rc0
+        Thu, 11 Jun 2020 10:32:37 -0400
+Received: from muru.com ([72.249.23.125]:57682 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728253AbgFKOcg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 10:32:36 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 4FD368102;
+        Thu, 11 Jun 2020 14:33:26 +0000 (UTC)
+Date:   Thu, 11 Jun 2020 07:32:32 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-omap@vger.kernel.org,
+        "Andrew F . Davis" <afd@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/5] drm/omap: Fix suspend resume regression after
+ platform data removal
+Message-ID: <20200611143232.GT37466@atomide.com>
+References: <20200531193941.13179-1-tony@atomide.com>
+ <20200531193941.13179-2-tony@atomide.com>
+ <16ba1808-5c7f-573d-8dd0-c80cac2f476e@ti.com>
+ <20200603140639.GG37466@atomide.com>
+ <47e286dd-f87a-4440-5bde-1f7b53e8b672@ti.com>
+ <20200609151943.GL37466@atomide.com>
+ <9ed70121-2a53-d2b3-051a-88eb83e6c53f@ti.com>
+ <d03dd04f-6f2c-25ba-fe1f-d5fc0dfb5c68@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d03dd04f-6f2c-25ba-fe1f-d5fc0dfb5c68@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+* Grygorii Strashko <grygorii.strashko@ti.com> [200611 13:59]:
+> I think, suspend might be fixed if all devices, which are now child of ti-sysc, will do
+> pm_runtime_force_xxx() calls at noirq suspend stage by adding:
+> 
+> 	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+> 				      pm_runtime_force_resume)
+> 
+> Am I missing smth?
 
-The variable ret is being initialized with a value that is never read
-and it is being updated later with a new value.  The initialization is
-redundant and can be removed.
+Sounds good to me, makes it behave like a standard Linux
+driver now :)
 
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/block/pktcdvd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Regards,
 
-diff --git a/drivers/block/pktcdvd.c b/drivers/block/pktcdvd.c
-index 0b944ac96d6b..27a33adc41e4 100644
---- a/drivers/block/pktcdvd.c
-+++ b/drivers/block/pktcdvd.c
-@@ -1613,7 +1613,7 @@ static noinline_for_stack int pkt_get_last_written(struct pktcdvd_device *pd,
- 	disc_information di;
- 	track_information ti;
- 	__u32 last_track;
--	int ret = -1;
-+	int ret;
- 
- 	ret = pkt_get_disc_info(pd, &di);
- 	if (ret)
--- 
-2.27.0.rc0
-
+Tony
