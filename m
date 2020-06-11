@@ -2,98 +2,121 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12003C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02CDDC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3730206DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:21:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4E15206DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:25:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gidkRD7S"
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="CMzvm+im"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgFKRV6 (ORCPT
+        id S1726786AbgFKRZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 13:21:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58390 "EHLO
+        Thu, 11 Jun 2020 13:25:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbgFKRV5 (ORCPT
+        with ESMTP id S1726288AbgFKRZr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 13:21:57 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56715C03E96F
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 10:21:56 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id g3so6139689ilq.10
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 10:21:56 -0700 (PDT)
+        Thu, 11 Jun 2020 13:25:47 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32FBCC08C5C2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 10:25:47 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id e1so7014404wrt.5
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 10:25:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QVX9ekaPnYdKFQialmA9pWxtm/sfM+PeP6v8bCSO494=;
-        b=gidkRD7SppUfSRmxawkbWK+atX4gklk6gNZn1cuQDWtfeHQZQKD4tNdZxUPmT0Vvcc
-         bHX+nkBEw3pyV4jsZ1tTKKTSkQqpkVLbXnXhQbqBR9TWACUPuoWYKlhaAaJJd71W103p
-         F13NHG1IOn99hBN5/iVfSPvoMRHW8DmtPtQTwUEvriTtOMxNxyvTZja0FLezXXP8Gfhm
-         2npeJE+YpCmWgBR/cibv55+vBJHwvQNbLohd2V/103ncFjmibpTA1FQch4TyrpKN7R9Z
-         CjnnYXFZvV+H6wdL8YRtfAfsnTDMfMWu5bg9qNoH2N3ZZYJ25UiwegK/Pnd+NWidA495
-         EZHg==
+        d=cloudflare.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GmHmPvjIL/uoQZEqL49hjtjHKbcvKuEnA1LiIhhiiv4=;
+        b=CMzvm+imQ9cB23Eiy1rEwYePeux7mfPlyD6M/FEjx5Hh6kdKtBGC6QkIrZj0C6FwWi
+         OffW2wZLvIpgYLzJFod41sU26hINgE+Otu9+lSQ8mdn+YYNLSd8m6rYUn7Zy0wqDRIlR
+         YrS2tofgEqd1VY32pehLP0/GCkbMu/RdT3GHU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QVX9ekaPnYdKFQialmA9pWxtm/sfM+PeP6v8bCSO494=;
-        b=V4IVtxhfGNBT29ELPVRFU9tpsNkfU1/rTaN7DRuqlbpiuZua3TSFAi6QRIsyXIsced
-         ytZBADz5fhsz3lVBQgLMYdrds7H7JEU4pu1pHpHH8QZoRkWCWjSatU15n3YB/j88IRux
-         jRJbvVxiCPF16e0UIZn4AyC5mfWiuwud8xCJPAy6ga/Rlg7eZjcXo5mqwy8A7hZP44EZ
-         Mvg59eo5ZQjfu0rb+Zr6nME82Vfl2q9ZM5aTeX7wev/tdEGUmJnM0lr5igEtMyPVxUU0
-         +M/V/TM4tXPnOKhxezPHLaIHWSg3CNUB7Hvwe8EeH8Ur1OWRWOTIy+MsDBHBW5gHe6u3
-         qNWw==
-X-Gm-Message-State: AOAM5319xI7CrbLQzyvqP1ABPOjL7rI+Oyw8PDgEEXYjTEh548KOqz0M
-        KzKu0vltD6ZMzvSfkzzr5MDeiZRVGqSk9YcjCbY=
-X-Google-Smtp-Source: ABdhPJwMwiPz2AvbaN0QcSizQNaTy9hvAaHkh2ILfrU+TA1r5OXgR+xwRubIIsb1R9nYHi8emoS+8EIYAGrwvMNtAHw=
-X-Received: by 2002:a92:5ed3:: with SMTP id f80mr2410327ilg.33.1591896115642;
- Thu, 11 Jun 2020 10:21:55 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GmHmPvjIL/uoQZEqL49hjtjHKbcvKuEnA1LiIhhiiv4=;
+        b=OqW3xvNMlQ5fbtQSAjgUi2b7Au8ZizXDiAQ8uMVLjCy318AawtToNR9qn0SdMHDL0J
+         6fI53jKmdrbuaBumEXi2mBblODYmjdFBPnEcpfQEmhHLj9GQVhXobBWg1/eQxfgPZmFt
+         jZ8z5ELPfeJCyQ5oOXajsesXG7q9aeSwE32J8PbPvrZHQ03aPk/zpElTrQl4BGLprV5I
+         2LEwHoL6nqLv/GW0mkNpkbUJ9KteD+EhR7krijRlST+u0O0z8zFPrlMhcp33menkjn7B
+         TY2xNqRlqmoXyjEySkOfnH47dGUTSIDx6DUdESlJcPZvdODE+1y+VzIscBSWbH5oviy9
+         J7RQ==
+X-Gm-Message-State: AOAM531Dy9U/U0exm2afbHaAK4h3WvKi4jNuhieTDZGWO8MWXekyKz8C
+        AVX8hfvXwTC/74k0t/2kmVEwGA==
+X-Google-Smtp-Source: ABdhPJzfvbquWMv3SW72gKgtUedJACAfw0cuil7ok4HdoKUCgxg9YSjE0tpPciptHEDo7nJ9xggemw==
+X-Received: by 2002:adf:d852:: with SMTP id k18mr10714394wrl.177.1591896345683;
+        Thu, 11 Jun 2020 10:25:45 -0700 (PDT)
+Received: from antares.lan (4.1.2.f.7.2.f.a.4.b.9.9.a.8.4.a.f.f.6.2.a.5.a.7.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:7a5a:26ff:a48a:99b4:af27:f214])
+        by smtp.gmail.com with ESMTPSA id v7sm5971907wro.76.2020.06.11.10.25.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2020 10:25:45 -0700 (PDT)
+From:   Lorenz Bauer <lmb@cloudflare.com>
+To:     John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Lorenz Bauer <lmb@cloudflare.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>
+Cc:     kernel-team@cloudflare.com, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH bpf] bpf: sockmap: don't attach programs to UDP sockets
+Date:   Thu, 11 Jun 2020 18:25:20 +0100
+Message-Id: <20200611172520.327602-1-lmb@cloudflare.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <CABb+yY1q3fTJkF0zOBJ6y8u-707-tVax9Vn_TR=vgq35=7j83Q@mail.gmail.com>
- <20200611165612.GA1225679@bogus>
-In-Reply-To: <20200611165612.GA1225679@bogus>
-From:   Jassi Brar <jassisinghbrar@gmail.com>
-Date:   Thu, 11 Jun 2020 12:21:44 -0500
-Message-ID: <CABb+yY1B0X-V90oJR_H2_VwbV9T=kLJpF+qnjbmLCwUtteswOw@mail.gmail.com>
-Subject: Re: [GIT PULL] Mailbox changes for v5.8
-To:     Rob Herring <robh@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 11:56 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, Jun 10, 2020 at 11:10:56PM -0500, Jassi Brar wrote:
-....
-> >
-> > Sivaprakash Murugesan (3):
-> >       dt-bindings: mailbox: Add YAML schemas for QCOM APCS global block
-> >       mailbox: qcom: Add clock driver name in apcs mailbox driver data
-> >       mailbox: qcom: Add ipq6018 apcs compatible
->
-> You've dropped the binding change that breaks 'make dt_binding_check'
-> from this PR, but do you intend to drop it from linux-next because it's
-> still in today's next?
->
-Yes. I had dropped the offending commit at the last moment.
+The stream parser infrastructure isn't set up to deal with UDP
+sockets, so we mustn't try to attach programs to them.
 
-> And really the above commit should not be applied until the binding
-> change is, but fine.
->
-I made an exception here because I wanted to make as little change to
-my PR as necessary. And it wouldn't cause any regression - the new
-compat string has already been acked by you.
+I remember making this change at some point, but I must have lost
+it while rebasing or something similar.
 
-thanks.
+Fixes: 7b98cd42b049 ("bpf: sockmap: Add UDP support")
+Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+---
+ net/core/sock_map.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/net/core/sock_map.c b/net/core/sock_map.c
+index 00a26cf2cfe9..35cea36f3892 100644
+--- a/net/core/sock_map.c
++++ b/net/core/sock_map.c
+@@ -424,10 +424,7 @@ static int sock_map_get_next_key(struct bpf_map *map, void *key, void *next)
+ 	return 0;
+ }
+ 
+-static bool sock_map_redirect_allowed(const struct sock *sk)
+-{
+-	return sk->sk_state != TCP_LISTEN;
+-}
++static bool sock_map_redirect_allowed(const struct sock *sk);
+ 
+ static int sock_map_update_common(struct bpf_map *map, u32 idx,
+ 				  struct sock *sk, u64 flags)
+@@ -508,6 +505,11 @@ static bool sk_is_udp(const struct sock *sk)
+ 	       sk->sk_protocol == IPPROTO_UDP;
+ }
+ 
++static bool sock_map_redirect_allowed(const struct sock *sk)
++{
++	return sk_is_tcp(sk) && sk->sk_state != TCP_LISTEN;
++}
++
+ static bool sock_map_sk_is_suitable(const struct sock *sk)
+ {
+ 	return sk_is_tcp(sk) || sk_is_udp(sk);
+-- 
+2.25.1
+
