@@ -2,476 +2,136 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E710BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 21:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91ABEC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 21:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B822220760
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 21:47:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BFD920760
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 21:48:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NA/805aO"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="e1CLXy0E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726306AbgFKVrl (ORCPT
+        id S1726331AbgFKVsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 17:47:41 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:40920 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725869AbgFKVrl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 17:47:41 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05BLlX1j098984;
-        Thu, 11 Jun 2020 16:47:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1591912053;
-        bh=xWkbFspePOgO2cN2UNtU/d6ex5Le4r1ixUvKpAKTdX4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=NA/805aOa/sQ2PsAjvXbzqOC4YMdOo6TJceFFj5p/Rh7/w3Nqzuk5Pk7Zbs6jj4Qs
-         6ZmnYGfxUp9hHohZCKxFh6agdQ2fcahoodPpxfus3W270XEI8Vaw/slMB8ngXgefKo
-         j8d6dt+Htkgv+u4uDwc3Hm/r/u/fJL9512kfa+Q0=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05BLlXBe065616
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 11 Jun 2020 16:47:33 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 11
- Jun 2020 16:47:33 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 11 Jun 2020 16:47:33 -0500
-Received: from [10.250.48.148] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05BLlWCj126434;
-        Thu, 11 Jun 2020 16:47:32 -0500
-Subject: Re: [PATCH v7 4/5] remoteproc: ingenic: Added remoteproc driver
-To:     Paul Cercueil <paul@crapouillou.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>
-CC:     <od@zcrc.me>, <linux-remoteproc@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-References: <20200515104340.10473-1-paul@crapouillou.net>
- <20200515104340.10473-4-paul@crapouillou.net>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <8cdcf5ef-1268-89f6-b229-ac711a80b790@ti.com>
-Date:   Thu, 11 Jun 2020 16:47:32 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 11 Jun 2020 17:48:33 -0400
+Received: from mail-co1nam11on2076.outbound.protection.outlook.com ([40.107.220.76]:56640
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725869AbgFKVsd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 17:48:33 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=c+YqsmGquX//lh1RwyiCIc/sZE/pRZDCAZlbI274GHu2Rqdmbom/8pz6hGgdEPtUPcxe+uy+YaWRWMr6Wq9XzQV/WggqKLh2sbxwQt5oWevv/6q6JlEkcPyov2EtsRd7ErfYA4YJBw9JE81HrIvalS4IiVW5mWaxVIoOTg7/yIWU7EQbA/p99A1bM4/aEhfOEPgRMOsoibscAQoW6PPHTySxGeNdq3flv/vyuHw5/YvDRFxwaxzMMEHz8V/Sp/Udi81JOHyFqkr+fmVPZi0Lv0vSyyS2vSDn2G63OUesKV1H3ma6AYgPxD/op9j+gMqcsOQI3+qTksueDlCUuFXNBA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ecAbjq9VTF3XrTXFvyqZkDKHIpSFuh8jbFK91mDPgN8=;
+ b=mJNDGEDkobyLrwnJslc+rGI+RdeGXgnfSzbKndbXFFqZdeDuRA0DAOeL0Yk1YXO/ThLIpdZvKA/r9OECxh+yWjgITBAOGEhaW2s8c/y9ZTwT34UiYZcOTyGQ3WZURpG+fMPAtQOAK481wAxgvlv5+Qc5TM3B8GPTkrfy1kIpHSP1ebmdCMc7Ue6X0QQvQH63PcIM2XIC7NT6gGs7scnQwXklAUtHv3wCcE6pfF9hfv8Gn0Fedov86xO5/X+ZFVia379kVrBseeN6VxZ87mZ1yBKY99e3zm26XNkWIChp4pQ2PNgPaxFBcI0vaoQVLUZrDaaz1SFs5aWnhE2l7lxwdA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ecAbjq9VTF3XrTXFvyqZkDKHIpSFuh8jbFK91mDPgN8=;
+ b=e1CLXy0EKIYbt/fSd7SRPHRD+E4RHgJCCGnlLjYkXlzRmSL54u+S+errOzGABbrAxax5OVMpR9Iozez552MCj80uR9RtdASidrTpE6uxs+h+dGxA3R0Uvr6aErwtkRr2+9CR10ChLA+axv3Suf2avmoQGk4QY/Mtu5Nu68CHIQQ=
+Authentication-Results: tencent.com; dkim=none (message not signed)
+ header.d=none;tencent.com; dmarc=none action=none header.from=amd.com;
+Received: from SN1PR12MB2560.namprd12.prod.outlook.com (2603:10b6:802:26::19)
+ by SA0PR12MB4589.namprd12.prod.outlook.com (2603:10b6:806:92::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18; Thu, 11 Jun
+ 2020 21:48:30 +0000
+Received: from SN1PR12MB2560.namprd12.prod.outlook.com
+ ([fe80::2102:cc6b:b2db:4c2]) by SN1PR12MB2560.namprd12.prod.outlook.com
+ ([fe80::2102:cc6b:b2db:4c2%3]) with mapi id 15.20.3088.021; Thu, 11 Jun 2020
+ 21:48:30 +0000
+Subject: [PATCH 0/3] INVPCID support for the AMD guests
+From:   Babu Moger <babu.moger@amd.com>
+To:     wanpengli@tencent.com, joro@8bytes.org, x86@kernel.org,
+        sean.j.christopherson@intel.com, mingo@redhat.com, bp@alien8.de,
+        hpa@zytor.com, pbonzini@redhat.com, vkuznets@redhat.com,
+        tglx@linutronix.de, jmattson@google.com
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Date:   Thu, 11 Jun 2020 16:48:29 -0500
+Message-ID: <159191202523.31436.11959784252237488867.stgit@bmoger-ubuntu>
+User-Agent: StGit/0.17.1-dirty
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SN4PR0501CA0155.namprd05.prod.outlook.com
+ (2603:10b6:803:2c::33) To SN1PR12MB2560.namprd12.prod.outlook.com
+ (2603:10b6:802:26::19)
 MIME-Version: 1.0
-In-Reply-To: <20200515104340.10473-4-paul@crapouillou.net>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [127.0.1.1] (165.204.77.1) by SN4PR0501CA0155.namprd05.prod.outlook.com (2603:10b6:803:2c::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.10 via Frontend Transport; Thu, 11 Jun 2020 21:48:29 +0000
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 03a1b932-43d1-4a91-fdb0-08d80e512e2a
+X-MS-TrafficTypeDiagnostic: SA0PR12MB4589:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SA0PR12MB4589B91CA6B930498E11B24E95800@SA0PR12MB4589.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 0431F981D8
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 78s97p+L/nbBx3+grFSKbdN/7nR356rKiVVkxDvxbKoEAJCCK5DjXM8t7pbfFc8kgWHQ9i1kOUs5d7DTpHwcoN5zE8bLsP2p3Fd3Q8j39Z9ElhRxXxJc5Sp32QIHxlN+UKJKQGdMvkT2FqJAvajuB/EQNrPx+m1E1eIzWQQZUdIX29lYg8MWT8x5MW19DW1QKBXRklb6Lzx3GV3HvFulW/s+cu0gaum+7axbB0zrTRJnw9kA8+YQrP7md4LljLTryypm0seoJUMImI8V6zYFqhieBRWUXvZzqJMCEqPbliRYCckeQMJztgyQj2k2Vyf4bvZ9z6fzop55KO+qal3XxhfK+FbDTGpEpxgeAb4TsuProg0pVxVzs89ocbaB9aK67GJrDEbzmODONvTVU7JcqiZ0KxATh60ot140DWgisIw5k8JuTkaYHRR7SB4lY2FbFKa8pbUHHrmu+gHxFiUITw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(7916004)(4636009)(366004)(396003)(39860400002)(346002)(376002)(136003)(52116002)(33716001)(6486002)(16576012)(8936002)(2906002)(8676002)(16526019)(9686003)(7416002)(186003)(4326008)(316002)(478600001)(966005)(103116003)(44832011)(956004)(5660300002)(83380400001)(26005)(66476007)(66556008)(66946007)(86362001)(921003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: CuU87wuiFbNr33VeQaNw0DrVlk+Aka0srMYMaIkTREuuWXiPAh6BuBPWbu2APfHLPOQiaiCVcjAPUBVZYT1AT+00plmZx2hPW17ecDzl8fxQ6lOIpe01fJu30T/JH5gJWYqufEGt8lTY047Nk9vGPnZ97xOAJOmJuPFB3Yufb2KgLkhZv+6SSTKmNQl6yEwcB721x/4ErK9WZEckNGBWV/ixV+A1iSMT9l3UZN6EPawh7aoQE4FK3Fwgbr9XRVDKxYCANPvylwU+c73zNYODWXb3EUAhljjP0n0oe+a3F17jUavTWd/ZU7VuyEMM6aYbVQOCaJ5VIra+Pjv7/7kLBanHcVtWdyOf6sE8DhbG+SDNB1r8J5e1zfum0BlMt/qqkkuy8Nvt9gQOGR7dGWZO3cI0mnUQ7PD5hHKO14NutlC6oCEiojkMbhV6YSPVou88GPpIxmCq8UVJRP5Vr5Q9Gm6Y708vI+IKaqtT39Hyosg=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 03a1b932-43d1-4a91-fdb0-08d80e512e2a
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2020 21:48:30.3883
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: i8E+UbEyHxwKw6uB3BKb/U909P3YRgemcXmuuaoA/fSdsDz91kunk//LTTkCo/L3
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4589
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+The following series adds the support for PCID/INVPCID on AMD guests.
 
-On 5/15/20 5:43 AM, Paul Cercueil wrote:
-> This driver is used to boot, communicate with and load firmwares to the
-> MIPS co-processor found in the VPU hardware of the JZ47xx SoCs from
-> Ingenic.
+For the guests with nested page table (NPT) support, the INVPCID
+feature works as running it natively. KVM does not need to do any
+special handling in this case.
 
-I have a few comments w.r.t pm_runtime usage in this driver.
+KVM interceptions are required in the following cases.
+1. If the guest tries to disable the feature when the underlying
+   hardware supports it. In this case hypervisor needs to report #UD.
 
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> ---
-> 
-> Notes:
->      v2: Remove exception for always-mapped memories
->      v3: - Use clk_bulk API
->      	- Move device-managed code to its own patch [3/4]
->      	- Move devicetree table right above ingenic_rproc_driver
->      	- Removed #ifdef CONFIG_OF around devicetree table
->      	- Removed .owner = THIS_MODULE in ingenic_rproc_driver
->      	- Removed useless platform_set_drvdata()
->      v4: - Add fix reported by Julia
->      	- Change Kconfig symbol to INGENIC_VPU_RPROC
->      	- Add documentation to struct vpu
->      	- disable_irq_nosync() -> disable_irq()
->      v5: No change
->      v6: Instead of prepare/unprepare callbacks, use PM runtime callbacks
->      v7: - Remove use of of_match_ptr()
->      	- Move Kconfig symbol so that it's in alphabetical order
->      	- Add missing doc for private structure field aux_base
->      	- Don't check for (len <= 0) in da_to_va()
->      	- Add missing \n in dev_info/dev_err messages
-> 
->   drivers/remoteproc/Kconfig         |   9 +
->   drivers/remoteproc/Makefile        |   1 +
->   drivers/remoteproc/ingenic_rproc.c | 280 +++++++++++++++++++++++++++++
->   3 files changed, 290 insertions(+)
->   create mode 100644 drivers/remoteproc/ingenic_rproc.c
-> 
-> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-> index fbaed079b299..c4d1731295eb 100644
-> --- a/drivers/remoteproc/Kconfig
-> +++ b/drivers/remoteproc/Kconfig
-> @@ -23,6 +23,15 @@ config IMX_REMOTEPROC
->   
->   	  It's safe to say N here.
->   
-> +config INGENIC_VPU_RPROC
-> +	tristate "Ingenic JZ47xx VPU remoteproc support"
-> +	depends on MIPS || COMPILE_TEST
-> +	help
-> +	  Say y or m here to support the VPU in the JZ47xx SoCs from Ingenic.
-> +
-> +	  This can be either built-in or a loadable module.
-> +	  If unsure say N.
-> +
->   config MTK_SCP
->   	tristate "Mediatek SCP support"
->   	depends on ARCH_MEDIATEK
-> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
-> index 0effd3825035..e8b886e511f0 100644
-> --- a/drivers/remoteproc/Makefile
-> +++ b/drivers/remoteproc/Makefile
-> @@ -10,6 +10,7 @@ remoteproc-y				+= remoteproc_sysfs.o
->   remoteproc-y				+= remoteproc_virtio.o
->   remoteproc-y				+= remoteproc_elf_loader.o
->   obj-$(CONFIG_IMX_REMOTEPROC)		+= imx_rproc.o
-> +obj-$(CONFIG_INGENIC_VPU_RPROC)		+= ingenic_rproc.o
->   obj-$(CONFIG_MTK_SCP)			+= mtk_scp.o mtk_scp_ipi.o
->   obj-$(CONFIG_OMAP_REMOTEPROC)		+= omap_remoteproc.o
->   obj-$(CONFIG_WKUP_M3_RPROC)		+= wkup_m3_rproc.o
-> diff --git a/drivers/remoteproc/ingenic_rproc.c b/drivers/remoteproc/ingenic_rproc.c
-> new file mode 100644
-> index 000000000000..189020d77b25
-> --- /dev/null
-> +++ b/drivers/remoteproc/ingenic_rproc.c
-> @@ -0,0 +1,280 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Ingenic JZ47xx remoteproc driver
-> + * Copyright 2019, Paul Cercueil <paul@crapouillou.net>
-> + */
-> +
-> +#include <linux/bitops.h>
-> +#include <linux/clk.h>
-> +#include <linux/err.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/remoteproc.h>
-> +
-> +#include "remoteproc_internal.h"
-> +
-> +#define REG_AUX_CTRL		0x0
-> +#define REG_AUX_MSG_ACK		0x10
-> +#define REG_AUX_MSG		0x14
-> +#define REG_CORE_MSG_ACK	0x18
-> +#define REG_CORE_MSG		0x1C
-> +
-> +#define AUX_CTRL_SLEEP		BIT(31)
-> +#define AUX_CTRL_MSG_IRQ_EN	BIT(3)
-> +#define AUX_CTRL_NMI_RESETS	BIT(2)
-> +#define AUX_CTRL_NMI		BIT(1)
-> +#define AUX_CTRL_SW_RESET	BIT(0)
-> +
-> +struct vpu_mem_map {
-> +	const char *name;
-> +	unsigned int da;
-> +};
-> +
-> +struct vpu_mem_info {
-> +	const struct vpu_mem_map *map;
-> +	unsigned long len;
-> +	void __iomem *base;
-> +};
-> +
-> +static const struct vpu_mem_map vpu_mem_map[] = {
-> +	{ "tcsm0", 0x132b0000 },
-> +	{ "tcsm1", 0xf4000000 },
-> +	{ "sram",  0x132f0000 },
-> +};
-> +
-> +/**
-> + * struct vpu - Ingenic VPU remoteproc private structure
-> + * @irq: interrupt number
-> + * @clks: pointers to the VPU and AUX clocks
-> + * @aux_base: raw pointer to the AUX interface registers
-> + * @mem_info: array of struct vpu_mem_info, which contain the mapping info of
-> + *            each of the external memories
-> + * @dev: private pointer to the device
-> + */
-> +struct vpu {
-> +	int irq;
-> +	struct clk_bulk_data clks[2];
-> +	void __iomem *aux_base;
-> +	struct vpu_mem_info mem_info[ARRAY_SIZE(vpu_mem_map)];
-> +	struct device *dev;
-> +};
-> +
-> +static int ingenic_rproc_start(struct rproc *rproc)
-> +{
-> +	struct vpu *vpu = rproc->priv;
-> +	u32 ctrl;
-> +
-> +	enable_irq(vpu->irq);
-> +
-> +	/* Reset the AUX and enable message IRQ */
-> +	ctrl = AUX_CTRL_NMI_RESETS | AUX_CTRL_NMI | AUX_CTRL_MSG_IRQ_EN;
-> +	writel(ctrl, vpu->aux_base + REG_AUX_CTRL);
-> +
-> +	return 0;
-> +}
-> +
-> +static int ingenic_rproc_stop(struct rproc *rproc)
-> +{
-> +	struct vpu *vpu = rproc->priv;
-> +
-> +	disable_irq(vpu->irq);
-> +
-> +	/* Keep AUX in reset mode */
-> +	writel(AUX_CTRL_SW_RESET, vpu->aux_base + REG_AUX_CTRL);
-> +
-> +	return 0;
-> +}
-> +
-> +static void ingenic_rproc_kick(struct rproc *rproc, int vqid)
-> +{
-> +	struct vpu *vpu = rproc->priv;
-> +
-> +	writel(vqid, vpu->aux_base + REG_CORE_MSG);
-> +}
-> +
-> +static void *ingenic_rproc_da_to_va(struct rproc *rproc, u64 da, size_t len)
-> +{
-> +	struct vpu *vpu = rproc->priv;
-> +	void __iomem *va = NULL;
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(vpu_mem_map); i++) {
-> +		const struct vpu_mem_info *info = &vpu->mem_info[i];
-> +		const struct vpu_mem_map *map = info->map;
-> +
-> +		if (da >= map->da && (da + len) < (map->da + info->len)) {
-> +			va = info->base + (da - map->da);
-> +			break;
-> +		}
-> +	}
-> +
-> +	return (__force void *)va;
-> +}
-> +
-> +static struct rproc_ops ingenic_rproc_ops = {
-> +	.start = ingenic_rproc_start,
-> +	.stop = ingenic_rproc_stop,
-> +	.kick = ingenic_rproc_kick,
-> +	.da_to_va = ingenic_rproc_da_to_va,
-> +};
-> +
-> +static irqreturn_t vpu_interrupt(int irq, void *data)
-> +{
-> +	struct rproc *rproc = data;
-> +	struct vpu *vpu = rproc->priv;
-> +	u32 vring;
-> +
-> +	vring = readl(vpu->aux_base + REG_AUX_MSG);
-> +
-> +	/* Ack the interrupt */
-> +	writel(0, vpu->aux_base + REG_AUX_MSG_ACK);
-> +
-> +	return rproc_vq_interrupt(rproc, vring);
-> +}
-> +
-> +static void ingenic_rproc_disable_clks(void *data)
-> +{
-> +	struct vpu *vpu = data;
-> +
-> +	pm_runtime_resume(vpu->dev);
-> +	pm_runtime_disable(vpu->dev);
-> +
-> +	clk_bulk_disable_unprepare(ARRAY_SIZE(vpu->clks), vpu->clks);
-> +}
-> +
-> +static int ingenic_rproc_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct resource *mem;
-> +	struct rproc *rproc;
-> +	struct vpu *vpu;
-> +	unsigned int i;
-> +	int ret;
-> +
-> +	rproc = devm_rproc_alloc(dev, "ingenic-vpu",
-> +				 &ingenic_rproc_ops, NULL, sizeof(*vpu));
-> +	if (!rproc)
-> +		return -ENOMEM;
-> +
-> +	vpu = rproc->priv;
-> +	vpu->dev = &pdev->dev;
-> +	platform_set_drvdata(pdev, vpu);
-> +
-> +	mem = platform_get_resource_byname(pdev, IORESOURCE_MEM, "aux");
-> +	vpu->aux_base = devm_ioremap_resource(dev, mem);
-> +	if (IS_ERR(vpu->aux_base)) {
-> +		dev_err(dev, "Failed to ioremap\n");
-> +		return PTR_ERR(vpu->aux_base);
-> +	}
-> +
-> +	for (i = 0; i < ARRAY_SIZE(vpu_mem_map); i++) {
-> +		mem = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> +						   vpu_mem_map[i].name);
-> +
-> +		vpu->mem_info[i].base = devm_ioremap_resource(dev, mem);
-> +		if (IS_ERR(vpu->mem_info[i].base)) {
-> +			ret = PTR_ERR(vpu->mem_info[i].base);
-> +			dev_err(dev, "Failed to ioremap\n");
-> +			return ret;
-> +		}
-> +
-> +		vpu->mem_info[i].len = resource_size(mem);
-> +		vpu->mem_info[i].map = &vpu_mem_map[i];
-> +	}
-> +
-> +	vpu->clks[0].id = "vpu";
-> +	vpu->clks[1].id = "aux";
-> +
-> +	ret = devm_clk_bulk_get(dev, ARRAY_SIZE(vpu->clks), vpu->clks);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to get clocks\n");
-> +		return ret;
-> +	}
-> +
-> +	vpu->irq = platform_get_irq(pdev, 0);
-> +	if (vpu->irq < 0)
-> +		return vpu->irq;
-> +
-> +	ret = devm_request_irq(dev, vpu->irq, vpu_interrupt, 0, "VPU", rproc);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to request IRQ\n");
-> +		return ret;
-> +	}
-> +
-> +	disable_irq(vpu->irq);
-> +
-> +	/* The clocks must be enabled for the firmware to be loaded in TCSM */
-> +	ret = clk_bulk_prepare_enable(ARRAY_SIZE(vpu->clks), vpu->clks);
-> +	if (ret) {
-> +		dev_err(dev, "Unable to start clocks\n");
-> +		return ret;
-> +	}
+2. When the guest is running with shadow page table enabled, in
+   this case the hypervisor needs to handle the tlbflush based on the
+   type of invpcid instruction type.
 
-You are enabling the clocks directly here and also trying to manage them 
-through pm_runtime callbacks again.
+AMD documentation for INVPCID feature is available at "AMD64
+Architecture Programmer’s Manual Volume 2: System Programming,
+Pub. 24593 Rev. 3.34(or later)"
 
-> +
-> +	pm_runtime_irq_safe(dev);
+The documentation can be obtained at the links below:
+Link: https://www.amd.com/system/files/TechDocs/24593.pdf
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
+---
 
-Nothing wrong with this, but this does take an additional reference 
-count on the parent device (a bus device for you??), and also implies 
-that your clk driver code can all run in atomic context so unless you 
-have a strong reason, it is safe to drop this.
+babu Moger (3):
+      KVM: X86: Move handling of INVPCID types to x86
+      KVM:SVM: Add extended intercept support
+      KVM:SVM: Enable INVPCID feature on AMD
 
-> +	pm_runtime_set_active(dev);
 
-The get_sync below would have been sufficient if you had either limited 
-the clk API above to just clk_prepare, or you could have moved the whole 
-clk API above into your runtime resume callback.
+ arch/x86/include/asm/svm.h      |    7 +++
+ arch/x86/include/uapi/asm/svm.h |    2 +
+ arch/x86/kvm/svm/nested.c       |    6 ++-
+ arch/x86/kvm/svm/svm.c          |   43 +++++++++++++++++++
+ arch/x86/kvm/svm/svm.h          |   18 ++++++++
+ arch/x86/kvm/trace.h            |   12 ++++-
+ arch/x86/kvm/vmx/vmx.c          |   78 ----------------------------------
+ arch/x86/kvm/x86.c              |   89 +++++++++++++++++++++++++++++++++++++++
+ arch/x86/kvm/x86.h              |    2 +
+ 9 files changed, 174 insertions(+), 83 deletions(-)
 
-> +	pm_runtime_enable(dev);
-> +	pm_runtime_get_sync(dev);
-
-If the intention was to increment the usage count with the above 
-sequence, pm_runtime_get_noresume() is better. But dropping all of the 
-above and just using get_sync would have been sufficient.
-
-> +	pm_runtime_use_autosuspend(dev);
-
-I don't see any setting of the autosuspend delay (default value is 0). 
-So, you might have as well just not used this at all, and just used 
-pm_runtime_put() below.
-
-> +
-> +	ret = devm_add_action_or_reset(dev, ingenic_rproc_disable_clks, vpu);
-> +	if (ret) {
-> +		dev_err(dev, "Unable to register action\n");
-> +		goto out_pm_put;
-> +	}
-> +
-> +	ret = devm_rproc_add(dev, rproc);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to register remote processor\n");
-> +		goto out_pm_put;
-> +	}
-
-You are using auto-boot, so the firmware loading is an asynchronous 
-event and most probably you would run through below sequence first, and 
-end up disabling the clocks with an incorrect rpm status.
-
-> +
-> +out_pm_put:
-> +	pm_runtime_put_autosuspend(dev);
-
-And finally, with the remoteproc core rpm patch, this would all have 
-been unnecessary.
-
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct of_device_id ingenic_rproc_of_matches[] = {
-> +	{ .compatible = "ingenic,jz4770-vpu-rproc", },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, ingenic_rproc_of_matches);
-> +
-> +static int __maybe_unused ingenic_rproc_suspend(struct device *dev)
-> +{
-> +	struct vpu *vpu = dev_get_drvdata(dev);
-> +
-> +	clk_bulk_disable(ARRAY_SIZE(vpu->clks), vpu->clks);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused ingenic_rproc_resume(struct device *dev)
-> +{
-> +	struct vpu *vpu = dev_get_drvdata(dev);
-> +
-> +	return clk_bulk_enable(ARRAY_SIZE(vpu->clks), vpu->clks);
-> +}
-> +
-> +static const struct dev_pm_ops __maybe_unused ingenic_rproc_pm = {
-> +	SET_RUNTIME_PM_OPS(ingenic_rproc_suspend, ingenic_rproc_resume, NULL)
-> +};
-> +
-> +static struct platform_driver ingenic_rproc_driver = {
-> +	.probe = ingenic_rproc_probe,
-> +	.driver = {
-> +		.name = "ingenic-vpu",
-> +#ifdef CONFIG_PM
-
-Not sure why you would want to maintain this conditional, because 
-runtime_pm is a core dependency now for your driver to work properly.
-
-regards
-Suman
-
-> +		.pm = &ingenic_rproc_pm,
-> +#endif
-> +		.of_match_table = ingenic_rproc_of_matches,
-> +	},
-> +};
-> +module_platform_driver(ingenic_rproc_driver);
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
-> +MODULE_DESCRIPTION("Ingenic JZ47xx Remote Processor control driver");
-> 
-
+--
