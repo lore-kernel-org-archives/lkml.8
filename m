@@ -2,214 +2,618 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7565C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 20:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE0F7C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 20:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAF422073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 20:04:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 927F820829
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 20:07:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="WAFphRNH";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="ABhO7WVd"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Y+0YOmYn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726588AbgFKUEg (ORCPT
+        id S1726671AbgFKUHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 16:04:36 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:11704 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726109AbgFKUEf (ORCPT
+        Thu, 11 Jun 2020 16:07:43 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:14437 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726523AbgFKUHm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 16:04:35 -0400
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 05BK2OVT015786;
-        Thu, 11 Jun 2020 13:04:20 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=qEuCe+RY1CgEKGZcnwjXujcVZQ2UsDU4E13oxeYM4k0=;
- b=WAFphRNH3wgtuiYWcxFbhjpUdDz200/fBNieCxkCDChfd/7RN6y6SQ0MXWzNST+jrYiX
- FTj/c07pdEasQ80n1SpNgEORVt2ia/1xONd+elic8IMqlFbOIWLBW1nrx2X/1g7UEJe/
- rff75kzPFjmsMnGObjkmX5GekPKxfbXGDns= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by m0001303.ppops.net with ESMTP id 31k8wxd1nx-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 11 Jun 2020 13:04:20 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.198) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 11 Jun 2020 13:04:19 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SmKyb2b7aJw00gqB1g0B2Gx6yjh5L0uJuZd0ciBb2rCgNWUE7Y5cJ3NIIAcqVzrn+C20Qh3PlMC5RZMLEW2E2P/4BdVmVeRY0iV3zrd5XYDPBMHqHB8XBXvATTQga1/O3iNX0qvdS06Fm34OO+uW5LcnJ7SR8BQ3iXnufDDThr2MQOu25uITrfNIxvMexGCHKre3H39QXXbj1qrAyLY7G9/PJM+aUsL2WS27YPPGdYlkdavii+a6AASb2EPSa8H8coQ2hdoZXlzRL+8l/9kPO8fNKCekc50+Sspio9Ue3zt8azE2P5vc9pwTpRpO1AieQZCv4G3+D16TFbWokoTfTg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qEuCe+RY1CgEKGZcnwjXujcVZQ2UsDU4E13oxeYM4k0=;
- b=X0POl92r6ubyImE6X4QULCTDjL/AdajIuRlneHKldqySqn3Scd9epSXpVxWkL91KmTzTZnpFscjA35XOkrOwBUtpocKZncDc7eRoeBxJALx5XSBA9dpO32wIiExnHfeTJNZ95xA+F8OjiWXzDCrZWerM6UyG9EUKjf9a5M2RJ2dkEGm2Z3dSQDtUE+Ibi4zX7DeVFPGdDdIYvU6Vp4TaRJZDJOrf0kcThWInxPz2FqOBOT8Wx+Yh82I3mXLo5NkHsFzeqkBGWICDyIj/85X8SHxUQvkvfwwtv3Qu2i+7QgPaY9GYdok8+oRusRDZPgb5g22NmFCKcNsjW8cCPUKBww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qEuCe+RY1CgEKGZcnwjXujcVZQ2UsDU4E13oxeYM4k0=;
- b=ABhO7WVdgbmOZqzF+0mR1K4/usG6RyCRaeHYrgcjSE6hjPbqpsXDxG+rLH+i5iqYlVp4cabdJJzwQHRBuHsqtwdCc9iTFlBgHHZKcx03LfKuZTcFN8wF/SJSyUimBVdJbECG0YwbY7dVQ6rniPstN9fVcOpreKKtKAZSqZNd894=
-Authentication-Results: suse.cz; dkim=none (message not signed)
- header.d=none;suse.cz; dmarc=none action=none header.from=fb.com;
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
- by BYAPR15MB3125.namprd15.prod.outlook.com (2603:10b6:a03:fc::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Thu, 11 Jun
- 2020 20:04:18 +0000
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::48e3:c159:703d:a2f1]) by BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::48e3:c159:703d:a2f1%5]) with mapi id 15.20.3066.023; Thu, 11 Jun 2020
- 20:04:17 +0000
-Date:   Thu, 11 Jun 2020 13:04:14 -0700
-From:   Roman Gushchin <guro@fb.com>
-To:     Vlastimil Babka <vbabka@suse.cz>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-team@android.com>,
-        <vinmenon@codeaurora.org>, Kees Cook <keescook@chromium.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Jann Horn <jannh@google.com>,
-        Vijayanand Jitta <vjitta@codeaurora.org>
-Subject: Re: [PATCH 9/9] mm, slab/slub: move and improve cache_from_obj()
-Message-ID: <20200611200414.GA711074@carbon.DHCP.thefacebook.com>
-References: <20200610163135.17364-1-vbabka@suse.cz>
- <20200610163135.17364-10-vbabka@suse.cz>
- <20200610224611.GD702969@carbon.DHCP.thefacebook.com>
- <8ed46959-dcbd-041b-5c1c-172d5dce1eb0@suse.cz>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8ed46959-dcbd-041b-5c1c-172d5dce1eb0@suse.cz>
-X-ClientProxiedBy: BY5PR03CA0006.namprd03.prod.outlook.com
- (2603:10b6:a03:1e0::16) To BYAPR15MB4136.namprd15.prod.outlook.com
- (2603:10b6:a03:96::24)
+        Thu, 11 Jun 2020 16:07:42 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591906061; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=RnW39WUfXJ3/mZjpHm5OXjuK3I3Ia28SM2SBEnj9RXE=;
+ b=Y+0YOmYnzXKSSoeRg4x//dOEdTnDk3B4MTllXmyicCCtlxQjva/z7bFVgE2PhSU9OauW6UX8
+ vQaJbEup3SSo5vFmNlZjc4c7v/pxAK1b6BrtDGVv2EvRAxMq7Q61UHhCwAOOFX5Glbe8VrWM
+ ADv8/taJbwIB/S4cGbIa4wiFZ20=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n09.prod.us-west-2.postgun.com with SMTP id
+ 5ee28f0cfe1db4db893648ae (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 11 Jun 2020 20:07:40
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id ABC83C43395; Thu, 11 Jun 2020 20:07:40 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: tanmay)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B6EF0C433CA;
+        Thu, 11 Jun 2020 20:07:38 +0000 (UTC)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from carbon.DHCP.thefacebook.com (2620:10d:c090:400::5:5bc9) by BY5PR03CA0006.namprd03.prod.outlook.com (2603:10b6:a03:1e0::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18 via Frontend Transport; Thu, 11 Jun 2020 20:04:17 +0000
-X-Originating-IP: [2620:10d:c090:400::5:5bc9]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 50597888-d0d2-488a-b8f4-08d80e429f51
-X-MS-TrafficTypeDiagnostic: BYAPR15MB3125:
-X-Microsoft-Antispam-PRVS: <BYAPR15MB3125F49A7045C9BA8A5A9105BE800@BYAPR15MB3125.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:4303;
-X-Forefront-PRVS: 0431F981D8
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: FYxU/szQXV95/uFVxEZWkxsaACM3HpOGGzqmxhMyriahtrGYY+B/MermFr8hSFf0s3AxZkktlnCil15m1D9KjAvq6tuF/lG7LaEaHW0nRWt+jkf2An16PYKkZ2vm+SL5ey/K4wuJwR7aXcReYIJv4ggusK9Qi6T9/2CaH1mG75XCkz55Ubxu3PCqjuw4OeECbz0kHBP+cjETV+xl/73NCXHKPe4OpDonWOjVNoC5iJR+pqZfJ7Z84mzWf3yxu+ShYOLh88FzugteRj9UoZz/2yYlArAxh1akHYcPHUKES2I7B+MkdITte0avEUcW0qk1kr/Tbaah3k7ofjVu81XhJQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(366004)(39860400002)(376002)(396003)(346002)(186003)(7416002)(66946007)(66476007)(7696005)(66556008)(16526019)(52116002)(53546011)(2906002)(4326008)(6666004)(1076003)(5660300002)(54906003)(316002)(55016002)(8676002)(86362001)(6506007)(6916009)(9686003)(8936002)(478600001)(33656002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: KiFvuoR309llq4tUjeC27Rk9dklmVm/+mdnEbsldkY8l5Z6/8mON7etSTxatJDPCu7BIDevaikwcJqEvt0ZV59YabOjqyv3HxkkZQArRbxdmQIZzXjfb/8aVb7WBUkbFFHV8B5RulCofpQXoYVB63/rlHahE4iYsJeUgEREgR3mq88FD+w/b6jBC2C2rrqJKJs7e93y0km2yjeOCfplJ0d3B3xza+lxCjqJqTygdsXXLEHgO1/SD4sJAka/jKOpAj1qMKmrk5KspAumsT/oe/d4IaPCxFrC9U4AB05KB/xoUHvgbp78ik3O03UbXPw7rG+33wT9CIFuzO+qzK1/yzS830C564iGKlZdAT9nc0ZvPMd62ZFwW+KVQCqEh7UjyYqhcngMaViqKIvrUgsVQYi2uF+aVz6ycNCQFPd/GP/1yJ4WxzpN4QOrgD34t9V2UZb+SvRfU0LfX6mnUJMkzAK4pzqHnD/qsEwvXrSaKLQ6xuAZB/qRoUc9iIgppy487gG1L+z2tWIdFivx0rTY8xA==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 50597888-d0d2-488a-b8f4-08d80e429f51
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2020 20:04:17.8547
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8e1FuivMkAPpPTXgjE1zPpEJKY4lUB2FgWSrabuUWvNO+FfwoZEIN4HexHw/57N9
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3125
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-11_20:2020-06-11,2020-06-11 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 adultscore=0
- cotscore=-2147483648 suspectscore=5 priorityscore=1501 clxscore=1015
- phishscore=0 mlxlogscore=890 lowpriorityscore=0 malwarescore=0 bulkscore=0
- spamscore=0 mlxscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006110156
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 11 Jun 2020 13:07:38 -0700
+From:   tanmay@codeaurora.org
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        sam@ravnborg.org, linux-kernel@vger.kernel.org,
+        abhinavk@codeaurora.org, seanpaul@chromium.org,
+        Vara Reddy <varar@codeaurora.org>,
+        freedreno@lists.freedesktop.org, linux-clk@vger.kernel.org,
+        chandanu@codeaurora.org
+Subject: Re: [PATCH v6 4/5] drm/msm/dp: add support for DP PLL driver
+In-Reply-To: <159175481823.242598.9387748150892951863@swboyd.mtv.corp.google.com>
+References: <20200609034623.10844-1-tanmay@codeaurora.org>
+ <159175481823.242598.9387748150892951863@swboyd.mtv.corp.google.com>
+Message-ID: <f7a7e8332491a3943106affbd435a1cf@codeaurora.org>
+X-Sender: tanmay@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 11:56:53AM +0200, Vlastimil Babka wrote:
-> On 6/11/20 12:46 AM, Roman Gushchin wrote:
-> > On Wed, Jun 10, 2020 at 06:31:35PM +0200, Vlastimil Babka wrote:
-> >> @@ -3672,6 +3672,14 @@ void *__kmalloc_track_caller(size_t size, gfp_t flags, unsigned long caller)
-> >>  }
-> >>  EXPORT_SYMBOL(__kmalloc_track_caller);
-> >>  
-> >> +static inline struct kmem_cache *cache_from_obj(struct kmem_cache *s, void *x)
-> >> +{
-> >> +	if (memcg_kmem_enabled())
-> >> +		return virt_to_cache(x);
-> >> +	else
-> >> +		return s;
-> >> +}
-> > 
-> > Hm, it looks like all the SLAB version doesn't perform any sanity checks anymore.
-> > Is it intended?
+On 2020-06-09 19:06, Stephen Boyd wrote:
+> Quoting Tanmay Shah (2020-06-08 20:46:23)
+>> diff --git a/drivers/gpu/drm/msm/dp/dp_catalog.c 
+>> b/drivers/gpu/drm/msm/dp/dp_catalog.c
+>> index d02f4eb..2b982f0 100644
+>> --- a/drivers/gpu/drm/msm/dp/dp_catalog.c
+>> +++ b/drivers/gpu/drm/msm/dp/dp_catalog.c
+>> @@ -5,6 +5,7 @@
+>> 
+>>  #define pr_fmt(fmt)    "[drm-dp] %s: " fmt, __func__
+>> 
+>> +#include <linux/rational.h>
+>>  #include <linux/delay.h>
+>>  #include <linux/iopoll.h>
+>>  #include <drm/drm_dp_helper.h>
+>> @@ -134,59 +135,61 @@ static inline void dp_write_ahb(struct 
+>> dp_catalog_private *catalog,
+>>         writel(data, catalog->io->dp_controller.base + offset);
+>>  }
+>> 
+>> -static inline u32 dp_read_cc(struct dp_catalog_private *catalog, u32 
+>> offset)
+>> -{
+>> -       return readl_relaxed(catalog->io->dp_cc_io.base + offset);
+>> -}
+>> -
 > 
-> Yes, it was the same before commit b9ce5ef49f00. The commit could have been more
-> precise - kmemcg needs virt_to_cache(), but not the sanity check. The SLUB
-> version also shouldn't really be doing the sanity check if only
-> memcg_kmem_enabled() is true (and not the debugging/hardening), but the code
-> then looks ugly and I hope this will just fix itself with your kmemcg slab rework.
+> Why was this added in the first place? Remove it from the place it came
+> in please.
+> 
+Sure. I will remove it as part of DP base driver patch.
+>>  static inline void dp_write_phy(struct dp_catalog_private *catalog,
+>>                                u32 offset, u32 data)
+>>  {
+>> +       offset += DP_PHY_REG_OFFSET;
+>>         /*
+>>          * To make sure phy reg writes happens before any other 
+>> operation,
+> [...]
+>> @@ -568,17 +574,37 @@ void dp_catalog_ctrl_config_msa(struct 
+>> dp_catalog *dp_catalog,
+>>                                         bool fixed_nvid)
+>>  {
+>>         u32 pixel_m, pixel_n;
+>> -       u32 mvid, nvid;
+>> +       u32 mvid, nvid, div, pixel_div = 0, dispcc_input_rate;
+>>         u32 const nvid_fixed = DP_LINK_CONSTANT_N_VALUE;
+>>         u32 const link_rate_hbr2 = 540000;
+>>         u32 const link_rate_hbr3 = 810000;
+>> +       unsigned long den, num;
+>> 
+>>         struct dp_catalog_private *catalog = container_of(dp_catalog,
+>>                                 struct dp_catalog_private, 
+>> dp_catalog);
+>> 
+>> -       pixel_m = dp_read_cc(catalog, MMSS_DP_PIXEL_M);
+>> -       pixel_n = dp_read_cc(catalog, MMSS_DP_PIXEL_N);
+>> -       DRM_DEBUG_DP("pixel_m=0x%x, pixel_n=0x%x\n", pixel_m, 
+>> pixel_n);
+>> +       div = dp_read_phy(catalog, REG_DP_PHY_VCO_DIV);
+> 
+> Why do we need to read the phy? The pixel_div seems to match what the
+> clk driver is doing so presumably we can make this follow the link rate
+> being used vs. having to read the phy.
+> 
 
-Got it.
+>> +       div &= 0x03;
+>> +
+>> +       if (div == 0)
+>> +               pixel_div = 6;
+>> +       else if (div == 1)
+>> +               pixel_div = 2;
+>> +       else if (div == 2)
+>> +               pixel_div = 4;
+>> +       else
+>> +               DRM_ERROR("Invalid pixel mux divider\n");
+>> +
+>> +       dispcc_input_rate = (rate * 10) / pixel_div;
+>> +
+>> +       rational_best_approximation(dispcc_input_rate, 
+>> stream_rate_khz,
+>> +                       (unsigned long)(1 << 16) - 1,
+>> +                       (unsigned long)(1 << 16) - 1, &den, &num);
+>> +
+>> +       den = ~(den - num);
+>> +       den = den & 0xFFFF;
+>> +       pixel_m = num;
+>> +       pixel_n = den;
+>> 
+>>         mvid = (pixel_m & 0xFFFF) * 5;
+>>         nvid = (0xFFFF & (~pixel_n)) + (pixel_m & 0xFFFF);
+>> diff --git a/drivers/gpu/drm/msm/dp/dp_pll_10nm.c 
+>> b/drivers/gpu/drm/msm/dp/dp_pll_10nm.c
+>> new file mode 100644
+>> index 0000000..998d659
+>> --- /dev/null
+>> +++ b/drivers/gpu/drm/msm/dp/dp_pll_10nm.c
+>> @@ -0,0 +1,903 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * Copyright (c) 2016-2020, The Linux Foundation. All rights 
+>> reserved.
+>> + */
+>> +
+>> +/*
+>> + * Display Port PLL driver block diagram for branch clocks
+>> + *
+>> + *              +------------------------------+
+>> + *              |         DP_VCO_CLK           |
+>> + *              |                              |
+>> + *              |    +-------------------+     |
+>> + *              |    |   (DP PLL/VCO)    |     |
+>> + *              |    +---------+---------+     |
+>> + *              |              v               |
+>> + *              |   +----------+-----------+   |
+>> + *              |   | hsclk_divsel_clk_src |   |
+>> + *              |   +----------+-----------+   |
+>> + *              +------------------------------+
+>> + *                              |
+>> + *          +---------<---------v------------>----------+
+>> + *          |                                           |
+>> + * +--------v---------+                                 |
+>> + * |    dp_phy_pll    |                                 |
+>> + * |     link_clk     |                                 |
+>> + * +--------+---------+                                 |
+>> + *          |                                           |
+>> + *          |                                           |
+>> + *          v                                           v
+>> + * Input to DISPCC block                                |
+>> + * for link clk, crypto clk                             |
+>> + * and interface clock                                  |
+>> + *                                                      |
+>> + *                                                      |
+>> + *      +--------<------------+-----------------+---<---+
+>> + *      |                     |                 |
+>> + * +----v---------+  +--------v-----+  +--------v------+
+>> + * | vco_divided  |  | vco_divided  |  | vco_divided   |
+>> + * |    _clk_src  |  |    _clk_src  |  |    _clk_src   |
+>> + * |              |  |              |  |               |
+>> + * |divsel_six    |  |  divsel_two  |  |  divsel_four  |
+>> + * +-------+------+  +-----+--------+  +--------+------+
+>> + *         |                 |                  |
+>> + *         v---->----------v-------------<------v
+>> + *                         |
+>> + *              +----------+---------+
+>> + *              |   dp_phy_pll_vco   |
+>> + *              |       div_clk      |
+>> + *              +---------+----------+
+>> + *                        |
+>> + *                        v
+>> + *              Input to DISPCC block
+>> + *              for DP pixel clock
+>> + *
+>> + */
+>> +
+>> +#include <linux/clk.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/err.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/iopoll.h>
+> 
+> Should be a clk-provider.h include here given that this is providing
+> clks.
+> 
+Yes. currently it is included in dp_parser.h but I will include here as 
+well.
+>> +
+>> +#include "dp_hpd.h"
+>> +#include "dp_pll.h"
+>> +#include "dp_pll_private.h"
+>> +
+>> +#define NUM_PROVIDED_CLKS              2
+>> +
+>> +#define DP_LINK_CLK_SRC                        0
+>> +#define DP_PIXEL_CLK_SRC               1
+>> +
+>> +static struct dp_pll_db *dp_pdb;
+>> +
+>> +static const struct clk_ops dp_10nm_vco_clk_ops = {
+>> +       .recalc_rate = dp_vco_recalc_rate_10nm,
+>> +       .set_rate = dp_vco_set_rate_10nm,
+>> +       .round_rate = dp_vco_round_rate_10nm,
+>> +       .prepare = dp_vco_prepare_10nm,
+>> +       .unprepare = dp_vco_unprepare_10nm,
+>> +};
+>> +
+>> +struct dp_pll_10nm_pclksel {
+>> +       struct clk_hw hw;
+>> +
+>> +       /* divider params */
+>> +       u8 shift;
+>> +       u8 width;
+>> +       u8 flags; /* same flags as used by clk_divider struct */
+>> +
+>> +       struct dp_pll_db *pll;
+>> +};
+>> +
+>> +#define to_pll_10nm_pclksel(_hw) \
+>> +       container_of(_hw, struct dp_pll_10nm_pclksel, hw)
+>> +
+>> +static const struct clk_parent_data disp_cc_parent_data_0[] = {
+>> +       { .fw_name = "bi_tcxo" },
+>> +       { .fw_name = "dp_phy_pll_link_clk", .name = 
+>> "dp_phy_pll_link_clk" },
+>> +       { .fw_name = "dp_phy_pll_vco_div_clk",
+>> +                               .name = "dp_phy_pll_vco_div_clk"},
+>> +       { .fw_name = "core_bi_pll_test_se", .name = 
+>> "core_bi_pll_test_se" },
+>> +};
+>> +
+>> +static struct dp_pll_vco_clk dp_vco_clk = {
+>> +       .min_rate = DP_VCO_HSCLK_RATE_1620MHZDIV1000,
+>> +       .max_rate = DP_VCO_HSCLK_RATE_8100MHZDIV1000,
+>> +};
+>> +
+>> +static int dp_pll_mux_set_parent_10nm(struct clk_hw *hw, u8 val)
+>> +{
+>> +       struct dp_pll_10nm_pclksel *pclksel = to_pll_10nm_pclksel(hw);
+>> +       struct dp_pll_db *dp_res = pclksel->pll;
+>> +       struct dp_io_pll *pll_io = &dp_res->base->pll_io;
+>> +       u32 auxclk_div;
+>> +
+>> +       auxclk_div = PLL_REG_R(pll_io->phy_base, REG_DP_PHY_VCO_DIV);
+>> +       auxclk_div &= ~0x03;
+>> +
+>> +       if (val == 0)
+>> +               auxclk_div |= 1;
+>> +       else if (val == 1)
+>> +               auxclk_div |= 2;
+>> +       else if (val == 2)
+>> +               auxclk_div |= 0;
+>> +
+>> +       PLL_REG_W(pll_io->phy_base,
+>> +                       REG_DP_PHY_VCO_DIV, auxclk_div);
+>> +       DRM_DEBUG_DP("%s: mux=%d auxclk_div=%x\n", __func__, val, 
+>> auxclk_div);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static u8 dp_pll_mux_get_parent_10nm(struct clk_hw *hw)
+>> +{
+>> +       u32 auxclk_div = 0;
+>> +       struct dp_pll_10nm_pclksel *pclksel = to_pll_10nm_pclksel(hw);
+>> +       struct dp_pll_db *dp_res = pclksel->pll;
+>> +       struct dp_io_pll *pll_io = &dp_res->base->pll_io;
+>> +       u8 val = 0;
+>> +
+>> +       auxclk_div = PLL_REG_R(pll_io->phy_base, REG_DP_PHY_VCO_DIV);
+>> +       auxclk_div &= 0x03;
+>> +
+>> +       if (auxclk_div == 1) /* Default divider */
+>> +               val = 0;
+>> +       else if (auxclk_div == 2)
+>> +               val = 1;
+>> +       else if (auxclk_div == 0)
+>> +               val = 2;
+>> +
+>> +       DRM_DEBUG_DP("%s: auxclk_div=%d, val=%d\n", __func__, 
+>> auxclk_div, val);
+>> +
+>> +       return val;
+>> +}
+>> +
+>> +static int dp_pll_clk_mux_determine_rate(struct clk_hw *hw,
+>> +                                    struct clk_rate_request *req)
+>> +{
+>> +       unsigned long rate = 0;
+>> +       int ret = 0;
+>> +
+>> +       rate = clk_get_rate(hw->clk);
+>> +
+>> +       if (rate <= 0) {
+>> +               DRM_ERROR("Rate is not set properly\n");
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       req->rate = rate;
+>> +
+>> +       DRM_DEBUG_DP("%s: rate=%ld\n", __func__, req->rate);
+>> +       /* Set the new parent of mux if there is a new valid parent */
+>> +       if (hw->clk && req->best_parent_hw->clk) {
+>> +               ret = clk_set_parent(hw->clk, 
+>> req->best_parent_hw->clk);
+> 
+> Why do we need to call clk consumer APIs from the clk provider ops? 
+> This
+> is pretty confusing what's going on here.
+> 
+Sure. Use of clk_set_parent is redundant here and I will remove it.
+>> +               if (ret) {
+>> +                       DRM_ERROR("%s: clk_set_parent failed: 
+>> ret=%d\n",
+>> +                                       __func__, ret);
+>> +                       return ret;
+>> +               }
+>> +       }
+>> +       return 0;
+>> +}
+>> +
+>> +static unsigned long dp_pll_mux_recalc_rate(struct clk_hw *hw,
+>> +                                       unsigned long parent_rate)
+>> +{
+>> +       struct clk_hw *div_clk_hw = NULL, *vco_clk_hw = NULL;
+>> +       struct dp_pll_vco_clk *vco;
+>> +
+>> +       div_clk_hw = clk_hw_get_parent(hw);
+>> +       if (!div_clk_hw)
+>> +               return 0;
+>> +
+>> +       vco_clk_hw = clk_hw_get_parent(div_clk_hw);
+>> +       if (!vco_clk_hw)
+>> +               return 0;
+>> +
+>> +       vco = to_dp_vco_hw(vco_clk_hw);
+>> +       if (!vco)
+>> +               return 0;
+>> +
+>> +       if (vco->rate == DP_VCO_HSCLK_RATE_8100MHZDIV1000)
+>> +               return (vco->rate / 6);
+>> +       else if (vco->rate == DP_VCO_HSCLK_RATE_5400MHZDIV1000)
+>> +               return (vco->rate / 4);
+>> +       else
+>> +               return (vco->rate / 2);
+>> +}
+>> +
+>> +static int dp_pll_10nm_get_provider(struct msm_dp_pll *pll,
+>> +                                    struct clk **link_clk_provider,
+>> +                                    struct clk **pixel_clk_provider)
+>> +{
+>> +       struct clk_hw_onecell_data *hw_data = pll->hw_data;
+>> +
+>> +       if (link_clk_provider)
+>> +               *link_clk_provider = 
+>> hw_data->hws[DP_LINK_CLK_SRC]->clk;
+>> +       if (pixel_clk_provider)
+>> +               *pixel_clk_provider = 
+>> hw_data->hws[DP_PIXEL_CLK_SRC]->clk;
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static const struct clk_ops dp_10nm_pclksel_clk_ops = {
+>> +       .get_parent = dp_pll_mux_get_parent_10nm,
+>> +       .set_parent = dp_pll_mux_set_parent_10nm,
+>> +       .recalc_rate = dp_pll_mux_recalc_rate,
+>> +       .determine_rate = dp_pll_clk_mux_determine_rate,
+>> +};
+>> +
+>> +static struct clk_hw *dp_pll_10nm_pixel_clk_sel(struct dp_pll_db 
+>> *pll_10nm)
+>> +{
+>> +       struct device *dev = &pll_10nm->pdev->dev;
+>> +       struct dp_pll_10nm_pclksel *pll_pclksel;
+>> +       struct clk_init_data pclksel_init = {
+>> +               .parent_data = disp_cc_parent_data_0,
+>> +               .num_parents = 3,
+>> +               .name = "dp_phy_pll_vco_div_clk",
+> 
+> So the dp_phy_pll_vco_div_clk has a potential parent that is
+> dp_phy_pll_vco_div_clk. Huh?
+> 
+Thats right. I will remove dp_phy_pll_vco_div_clk from parent list 
+disp_cc_parent_data_0.
 
+>> +               .ops = &dp_10nm_pclksel_clk_ops,
+>> +       };
+>> +       int ret;
+>> +
+>> +       pll_pclksel = devm_kzalloc(dev, sizeof(*pll_pclksel), 
+>> GFP_KERNEL);
+>> +       if (!pll_pclksel)
+>> +               return ERR_PTR(-ENOMEM);
+>> +
+>> +       pll_pclksel->pll = pll_10nm;
+>> +       pll_pclksel->shift = 0;
+>> +       pll_pclksel->width = 4;
+>> +       pll_pclksel->flags = CLK_DIVIDER_ONE_BASED;
 > 
-> > Also, Is it ever possible that s != virt_to_cache(x) if there are no bugs?
+> Is this flag used?
 > 
-> Well, only in the kmemcg case it should be possible.
+No it is redundant. I will remove.
+>> +       pll_pclksel->hw.init = &pclksel_init;
+>> +
+>> +       ret = clk_hw_register(dev, &pll_pclksel->hw);
+>> +       if (ret)
+>> +               return ERR_PTR(ret);
+>> +
+>> +       return &pll_pclksel->hw;
+>> +}
+>> +
+>> +static int dp_pll_10nm_register(struct dp_pll_db *pll_10nm)
+>> +{
+>> +       struct clk_hw_onecell_data *hw_data;
+>> +       int ret;
+>> +       struct clk_hw *hw;
+>> +
+>> +       struct msm_dp_pll *pll = pll_10nm->base;
+>> +       struct device *dev = &pll_10nm->pdev->dev;
+>> +       struct clk_hw **hws = pll_10nm->hws;
+>> +       int num = 0;
+>> +       struct clk_init_data vco_init = {
+>> +               .parent_data = &(const struct clk_parent_data){
+>> +                               .fw_name = "bi_tcxo",
+>> +               },
+>> +               .num_parents = 1,
+>> +               .name = "dp_vco_clk",
+>> +               .ops = &dp_10nm_vco_clk_ops,
+>> +       };
 > 
-> > kmem_cache_free_bulk() in slab.c does contain the following:
-> > 	if (!orig_s) /* called via kfree_bulk */
-> > 		s = virt_to_cache(objp);
-> > 	else
-> > 		s = cache_from_obj(orig_s, objp);
-> > which looks a bit strange with the version above.
+> I thought the plan was to not have a vco clk? Just expose the two clks
+> for the link and the vco divider. Furthermore, drop the divider
+> "parents" and implement a single clk that programs the right divider
+> value for the various link rates chosen.
 > 
-> Looks fine to me. If we are called with non-NULL s, and kmemcg is not enabled,
-> we can just trust s. If we are called with NULL s (via kfree_bulk()) we need to
-> get cache from the object, even if kmemcg is not enabled, so we do
-> virt_to_cache() unconditionally.
-> Once your series is fully accepted, we can remove SLAB's cache_from_obj() and
-> the whole 'else' part in the hunk above. Or am I missing something?
-
-Right. I guess there will be even more cleanups possible, let's see where we'll end up.
-It looks like nothing prevents it from being queued for 5.9 after 5.8-rc1 will be out,
-right?
-
+As mentioned in above diagram, there is an additional divider in the PLL 
+after the VCO (vco_divided_clk_src).
+The input rate to the dispcc branch is (vco_rate * 10)/ 
+vco_dividied_clk_src.
+In order to know the MNDs at the dispcc, we need to know the input rate.
+This register read is to figure out which divider value is currently 
+being set in the PLL.
+This input rate is not the same as the link rate. When we move the 
+PHY/PLL to a separate driver,
+we would have take care of finding a different way to get this input 
+rate.
+>> +
+>> +       DRM_DEBUG_DP("DP->id = %d", pll_10nm->id);
+>> +
+>> +       hw_data = devm_kzalloc(dev, sizeof(*hw_data) +
+>> +                              NUM_PROVIDED_CLKS * sizeof(struct 
+>> clk_hw *),
+>> +                              GFP_KERNEL);
+>> +       if (!hw_data)
+>> +               return -ENOMEM;
+>> +
+>> +       dp_vco_clk.hw.init = &vco_init;
+>> +       ret = clk_hw_register(dev, &dp_vco_clk.hw);
+>> +       if (ret)
+>> +               return ret;
+>> +       hws[num++] = &dp_vco_clk.hw;
+>> +
+>> +       hw = clk_hw_register_fixed_factor(dev, "dp_phy_pll_link_clk",
+>> +                               "dp_vco_clk", CLK_SET_RATE_PARENT, 1, 
+>> 10);
+>> +
+>> +       if (IS_ERR(hw))
+>> +               return PTR_ERR(hw);
+>> +       hws[num++] = hw;
+>> +       hw_data->hws[DP_LINK_CLK_SRC] = hw;
+>> +
+>> +       hw = clk_hw_register_fixed_factor(dev, 
+>> "dp_vco_divsel_two_clk_src",
+>> +                                       "dp_vco_clk",  0, 1, 2);
+>> +       if (IS_ERR(hw))
+>> +               return PTR_ERR(hw);
+>> +       hws[num++] = hw;
+>> +
+>> +       hw = clk_hw_register_fixed_factor(dev, 
+>> "dp_vco_divsel_four_clk_src",
+>> +                                        "dp_vco_clk", 0, 1, 4);
+>> +       if (IS_ERR(hw))
+>> +               return PTR_ERR(hw);
+>> +       hws[num++] = hw;
+>> +
+>> +       hw = clk_hw_register_fixed_factor(dev, 
+>> "dp_vco_divsel_six_clk_src",
+>> +                                        "dp_vco_clk", 0, 1, 6);
+>> +       if (IS_ERR(hw))
+>> +               return PTR_ERR(hw);
+>> +       hws[num++] = hw;
+>> +
+>> +       hw = dp_pll_10nm_pixel_clk_sel(pll_10nm);
+>> +       if (IS_ERR(hw))
+>> +               return PTR_ERR(hw);
+>> +
+>> +       hws[num++] = hw;
+>> +       hw_data->hws[DP_PIXEL_CLK_SRC] = hw;
+>> +
+>> +       pll_10nm->num_hws = num;
+>> +
+>> +       hw_data->num = NUM_PROVIDED_CLKS;
+>> +       pll->hw_data = hw_data;
+>> +
+>> +       ret = of_clk_add_hw_provider(dev->of_node, 
+>> of_clk_hw_onecell_get,
+>> +                                    pll->hw_data);
+>> +       if (ret) {
+>> +               DRM_DEV_ERROR(dev, "failed to register clk provider: 
+>> %d\n",
+>> +                               ret);
+>> +               return ret;
+>> +       }
+>> +
+>> +       return ret;
+>> +}
+>> +
+>> +int msm_dp_pll_10nm_init(struct msm_dp_pll *pll, int id)
+>> +{
+>> +       struct dp_pll_db *dp_10nm_pll;
+>> +       struct platform_device *pdev = pll->pdev;
+>> +       int ret;
+>> +
+>> +       dp_10nm_pll = devm_kzalloc(&pdev->dev,
+>> +                                       sizeof(*dp_10nm_pll), 
+>> GFP_KERNEL);
+>> +       if (!dp_10nm_pll)
+>> +               return -ENOMEM;
+>> +
+>> +       DRM_DEBUG_DP("DP PLL%d", id);
+>> +
+>> +       dp_10nm_pll->base = pll;
+>> +       dp_10nm_pll->pdev = pll->pdev;
+>> +       dp_10nm_pll->id = id;
+>> +       dp_pdb = dp_10nm_pll;
+>> +       pll->priv = (void *)dp_10nm_pll;
+>> +       dp_vco_clk.priv = pll;
+>> +
+>> +       ret = of_property_read_u32(pdev->dev.of_node, "cell-index",
+>> +                               &dp_10nm_pll->index);
+>> +       if (ret) {
+>> +               DRM_ERROR("Unable to get the cell-index ret=%d\n", 
+>> ret);
+>> +               dp_10nm_pll->index = 0;
+>> +       }
 > 
+> Is the cell-index used for anything?
 > 
-> >> @@ -3175,6 +3179,23 @@ void ___cache_free(struct kmem_cache *cache, void *x, unsigned long addr)
-> >>  }
-> >>  #endif
-> >>  
-> >> +static inline struct kmem_cache *cache_from_obj(struct kmem_cache *s, void *x)
-> >> +{
-> >> +	struct kmem_cache *cachep;
-> >> +
-> >> +	if (!IS_ENABLED(CONFIG_SLAB_FREELIST_HARDENED) &&
-> >> +	    !memcg_kmem_enabled() &&
-> >> +	    !kmem_cache_debug_flags(s, SLAB_CONSISTENCY_CHECKS))
-> >> +		return s;
-> >> +
-> >> +	cachep = virt_to_cache(x);
-> >> +	if (WARN(cachep && !slab_equal_or_root(cachep, s),
-> >> +		  "%s: Wrong slab cache. %s but object is from %s\n",
-> >> +		  __func__, s->name, cachep->name))
-> >> +		print_tracking(cachep, x);
-> >> +	return cachep;
-> >> +}
-> > 
-> > Maybe we can define a trivial SLAB version of kmem_cache_debug_flags()
-> > and keep a single version of cache_from_obj()?
-> 
-> I think the result would be more obfuscated than just making it plain that SLAB
-> doesn't have those SLUB features. And I still hope SLAB's version will go away
-> completely. If your series is accepted first, then this patch based in that will
-> not introduce slab.c cache_from_obj() at all.
-
-Ok, makes sense to me.
-
-Thank you!
+No it is redundant and will be removed in next patch.
+>> +
+>> +       ret = dp_pll_10nm_register(dp_10nm_pll);
+>> +       if (ret) {
+>> +               DRM_DEV_ERROR(&pdev->dev, "failed to register PLL: 
+>> %d\n", ret);
+>> +               return ret;
+>> +       }
+>> +
+>> +       pll->get_provider = dp_pll_10nm_get_provider;
+>> +
+>> +       return ret;
+>> +}
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
