@@ -2,67 +2,169 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C662DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5174CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98B7D206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:50:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24E9E2072F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:52:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591840233;
-	bh=fuKqeMOezbx/AsSm7BSk2JV9+eDVzJDpiXbVf7edQSA=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Fs2XFBP2PZLRwkIsIxpkgOh1Ru1Q5GrPbU51nBIAp3KmYNskrZpWiXJbcNgxNAV/S
-	 VmKAyohpSEITA30K/3F3YKMboj0S34aSFIWCyJcTbWSZ1/6DrfV7rE4rHS2MPcgtm2
-	 6dmWmHapwuagFhzPAfUG6WQ4HantRpCpokGwUsao=
+	s=default; t=1591840325;
+	bh=qbhSXLGqy7qKk7V8hkialrDuSQLkU9NtfJIsVojnTwc=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Gbj98wFn2J0Ikwq6eALGpZ9iehSU3n8NPy2ueZuhKoJMQ6uaXFUd7pN2tea6tEmEo
+	 qs5W9jliMQnZYuEm97JnqDKsSN2d9XWw4oKk+W1OuqLZ7PQxmtjFDN1WStEwjwst5i
+	 +02VMpQoo8Bkt4CCdsYolEoRofD7JmCQxDm2FY1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbgFKBuc (ORCPT
+        id S1726542AbgFKBwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 21:50:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53582 "EHLO mail.kernel.org"
+        Wed, 10 Jun 2020 21:52:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726312AbgFKBuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 21:50:25 -0400
-Subject: Re: [git pull] sysctl fixes
+        id S1726290AbgFKBwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 21:52:03 -0400
+Received: from sol.hsd1.ca.comcast.net (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81D01206FA;
+        Thu, 11 Jun 2020 01:52:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591840224;
-        bh=fuKqeMOezbx/AsSm7BSk2JV9+eDVzJDpiXbVf7edQSA=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=QRQPxwXJ8buGLabio6vv001Qulxd2RVorobLcwA2adKr1ssZ0tbeDllmKTCSlABGO
-         zIihrg7iSkwVsutupCVmkwN+OLS21HPUfsgd2c5s17vR+lvFaO79ew0ZGlVZK2pBLu
-         o8VEXR1W9f60arsESOZgSOrS8tWgY2rHhbjoFsJw=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200610202602.GU23230@ZenIV.linux.org.uk>
-References: <20200610202602.GU23230@ZenIV.linux.org.uk>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200610202602.GU23230@ZenIV.linux.org.uk>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git work.sysctl
-X-PR-Tracked-Commit-Id: ef9d965bc8b6fce5bcc0ae76a4a5b3ed91ee81eb
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 1c3837266214c1e6fbbb96ff36bee13e923057d8
-Message-Id: <159184022493.24802.15989622140997865864.pr-tracker-bot@kernel.org>
-Date:   Thu, 11 Jun 2020 01:50:24 +0000
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org
+        s=default; t=1591840322;
+        bh=qbhSXLGqy7qKk7V8hkialrDuSQLkU9NtfJIsVojnTwc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=sbx8Li1Wuw7e/oAQaOUigHdRbD0pm5fYb454vG+P5N0XSoQipsxiiOk93Wl0gc55X
+         wepuAwrWpSrGWRUp6z4kAzlTIZ3JSPd3n+UtZNymCtqvfrmK3kw6oAsVU5/LyE0aWJ
+         9egxyTQ73g82Vn28GLHRvIkvqgHGveY5LupSF2Jo=
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-fsdevel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     Daeho Jeong <daeho43@gmail.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] vfs: don't unnecessarily clone write access for writable fds
+Date:   Wed, 10 Jun 2020 18:49:45 -0700
+Message-Id: <20200611014945.237210-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 10 Jun 2020 21:26:03 +0100:
+From: Eric Biggers <ebiggers@google.com>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git work.sysctl
+There's no need for mnt_want_write_file() to clone a write reference to
+the mount when the file is already open for writing, provided that
+mnt_drop_write_file() is changed to conditionally drop the reference.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/1c3837266214c1e6fbbb96ff36bee13e923057d8
+We seem to have ended up in the current situation because
+mnt_want_write_file() used to be paired with mnt_drop_write(), due to
+mnt_drop_write_file() not having been added yet.  So originally
+mnt_want_write_file() did have to always take a reference.
 
-Thank you!
+But later mnt_drop_write_file() was added, and all callers of
+mnt_want_write_file() were paired with it.  This makes the compatibility
+between mnt_want_write_file() and mnt_drop_write() no longer necessary.
 
+Therefore, make __mnt_want_write_file() and __mnt_drop_write_file() be
+no-ops on files already open for writing.  This removes the only caller
+of mnt_clone_write(), so remove that too.
+
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+ fs/namespace.c        | 43 ++++++++++---------------------------------
+ include/linux/mount.h |  1 -
+ 2 files changed, 10 insertions(+), 34 deletions(-)
+
+diff --git a/fs/namespace.c b/fs/namespace.c
+index 7cd64240916573..7e78c7ae4ab34d 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -359,51 +359,27 @@ int mnt_want_write(struct vfsmount *m)
+ }
+ EXPORT_SYMBOL_GPL(mnt_want_write);
+ 
+-/**
+- * mnt_clone_write - get write access to a mount
+- * @mnt: the mount on which to take a write
+- *
+- * This is effectively like mnt_want_write, except
+- * it must only be used to take an extra write reference
+- * on a mountpoint that we already know has a write reference
+- * on it. This allows some optimisation.
+- *
+- * After finished, mnt_drop_write must be called as usual to
+- * drop the reference.
+- */
+-int mnt_clone_write(struct vfsmount *mnt)
+-{
+-	/* superblock may be r/o */
+-	if (__mnt_is_readonly(mnt))
+-		return -EROFS;
+-	preempt_disable();
+-	mnt_inc_writers(real_mount(mnt));
+-	preempt_enable();
+-	return 0;
+-}
+-EXPORT_SYMBOL_GPL(mnt_clone_write);
+-
+ /**
+  * __mnt_want_write_file - get write access to a file's mount
+  * @file: the file who's mount on which to take a write
+  *
+- * This is like __mnt_want_write, but it takes a file and can
+- * do some optimisations if the file is open for write already
++ * This is like __mnt_want_write, but it does nothing if the file is already
++ * open for writing.  This must be paired with __mnt_drop_write_file.
+  */
+ int __mnt_want_write_file(struct file *file)
+ {
+-	if (!(file->f_mode & FMODE_WRITER))
+-		return __mnt_want_write(file->f_path.mnt);
+-	else
+-		return mnt_clone_write(file->f_path.mnt);
++	if (file->f_mode & FMODE_WRITER)
++		return 0;
++	return __mnt_want_write(file->f_path.mnt);
+ }
+ 
+ /**
+  * mnt_want_write_file - get write access to a file's mount
+  * @file: the file who's mount on which to take a write
+  *
+- * This is like mnt_want_write, but it takes a file and can
+- * do some optimisations if the file is open for write already
++ * This is like mnt_want_write, but it skips getting write access to the mount
++ * if the file is already open for writing.  The freeze protection is still
++ * done.  This must be paired with mnt_drop_write_file.
+  */
+ int mnt_want_write_file(struct file *file)
+ {
+@@ -449,7 +425,8 @@ EXPORT_SYMBOL_GPL(mnt_drop_write);
+ 
+ void __mnt_drop_write_file(struct file *file)
+ {
+-	__mnt_drop_write(file->f_path.mnt);
++	if (!(file->f_mode & FMODE_WRITER))
++		__mnt_drop_write(file->f_path.mnt);
+ }
+ 
+ void mnt_drop_write_file(struct file *file)
+diff --git a/include/linux/mount.h b/include/linux/mount.h
+index de657bd211fa64..29d216f927c28c 100644
+--- a/include/linux/mount.h
++++ b/include/linux/mount.h
+@@ -78,7 +78,6 @@ struct path;
+ 
+ extern int mnt_want_write(struct vfsmount *mnt);
+ extern int mnt_want_write_file(struct file *file);
+-extern int mnt_clone_write(struct vfsmount *mnt);
+ extern void mnt_drop_write(struct vfsmount *mnt);
+ extern void mnt_drop_write_file(struct file *file);
+ extern void mntput(struct vfsmount *mnt);
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.26.2
+
