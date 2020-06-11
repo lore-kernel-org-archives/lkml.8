@@ -2,133 +2,271 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ABA4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD9DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E57A20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:44:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591868671;
-	bh=6dGlga2y8rs+Zft++wIUw+5mJiFU392Srhnvy/j+baA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wyhCGWmFYSw+/U+0nOiA9kORMEZQhUNxjXQ4v0L8GQhsUoBlQCPa49rPV8ZMNdT5b
-	 XzTqC92f+k1IMF536iS4pOvE6YD/Q9Rgw88JU0b2R4ei1sZZSPQciv1ExWyqe1+lKo
-	 ewhglfaIoGWy0XjdMtfF5IVi0OgMdOQdaIGGt6Bk=
+	by mail.kernel.org (Postfix) with ESMTP id 21EEF20656
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:46:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dubeyko-com.20150623.gappssmtp.com header.i=@dubeyko-com.20150623.gappssmtp.com header.b="SnaXe7M2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbgFKJo3 (ORCPT
+        id S1726928AbgFKJqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 05:44:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45678 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726684AbgFKJo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 05:44:29 -0400
-Received: from localhost (unknown [171.61.66.58])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4211A207C3;
-        Thu, 11 Jun 2020 09:44:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591868669;
-        bh=6dGlga2y8rs+Zft++wIUw+5mJiFU392Srhnvy/j+baA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iS63csgenQ2UIlmq3F8RtVppTk3Q3dC2Q98LgAd8E6EZj3G/iH8wqNBoU+tqhHIiV
-         jrSaLwL0tEOws48ZCq3hfqsgVItkmxQSRynqncIHFRuC2acWnsD9hNEbpsEhs4HoPM
-         bNm5tMTuV2Pz2+w3egb3tnrCDCa6kS5x5O3crTs0=
-Date:   Thu, 11 Jun 2020 15:14:23 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Jaroslav Kysela <perex@perex.cz>
-Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
-        alsa-devel@alsa-project.org, broonie@kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        tiwai@suse.com, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] ALSA: compress: Fix gapless playback state machine
-Message-ID: <20200611094423.GB1393454@vkoul-mobl>
-References: <20200610100729.362-1-srinivas.kandagatla@linaro.org>
- <817d009e-fa09-e897-cfc3-997bf1dd5e30@perex.cz>
- <20200610105820.GA1393454@vkoul-mobl>
- <20200611084659.GO71940@ediswmail.ad.cirrus.com>
- <6a984302-ff01-e326-d338-e50e1f532cd9@perex.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6a984302-ff01-e326-d338-e50e1f532cd9@perex.cz>
+        Thu, 11 Jun 2020 05:46:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44068 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726684AbgFKJqy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 05:46:54 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC0D2C08C5C2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 02:46:53 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id y11so6137069ljm.9
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 02:46:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dubeyko-com.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Hyn73QR/6JPg70xzThBwZTJ8kEal7aXhN6v8vQp+LBs=;
+        b=SnaXe7M2GrvZ7BhjO5iTKuC9beIxoL1uwdhEMBexyrWtBlq+NHQbiGjzAOem2F8Mm6
+         yvhbT1UlOyFVJkR5bFu5fA3AIEMEA+eI8koqz5JhTaOV9O4JgNotEDNpHnIdkawjt2aC
+         Qn7V9AMk9yi1X3iN7v5VEDSlxSfoRC82qU79OAH43vzVefcmbPLcQr9MlGz4kzh3BlUn
+         5ZpcS+tuvJlUhen+fbjEdW1rGQOlaQoEV03xVxI96JA+enzPTzZgaP/+L/IN4MqA/ohJ
+         XxA6rJo0rhN405188ZzaCVri5+XmMTVuOdIgO24zG3+SnHkateVFk1iHrWKmUWETmMmx
+         5wjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Hyn73QR/6JPg70xzThBwZTJ8kEal7aXhN6v8vQp+LBs=;
+        b=OqRM2+nL5IHI2kAD152lKx2gk9wDZm69KylFxpRY13HHAnGC9hfXrK/DGguX/rYPOp
+         iOPxjUtEIIKSeZUlqLElWd/f6rBGYlZMaZVfGdtyQ8Cz/mNsRqx41NRcmPbtoAkle/0k
+         Q31RbSAUVYmKQv/P9qmu1/UXV9RXUCcxohAxBRIq1Rfn16WT4GXeT87U9WTIfQOtJQJu
+         PWFI+mG3Fz1HkqL6Ip0MOU+NEiZImfVLFVx2DIM6CvtCYHxHSX5Masz2PPeVW4GPrBgz
+         mBhVF7VKukENzjYGZPHsEvRQwiKxLHUEGwL76z0T+356CWFp1U5esNWZwNvfJvB2xAyM
+         KYvw==
+X-Gm-Message-State: AOAM532SMW7hGWThjEa6fj4L+fcAODBoxZyWsTMThrZY4h0zL8jMDXD9
+        R4Dqoicny+xRcliCvIzszIBL/Q==
+X-Google-Smtp-Source: ABdhPJy4qA5byZmf6kKokdvl/Nn0Wj6C8tYzp5BfUd/SPiQSvepKS6ymsupW0Tybo+j8ng7HLH76Rg==
+X-Received: by 2002:a2e:8e85:: with SMTP id z5mr3735544ljk.330.1591868811665;
+        Thu, 11 Jun 2020 02:46:51 -0700 (PDT)
+Received: from vdubeyko-laptop ([89.207.88.249])
+        by smtp.gmail.com with ESMTPSA id w20sm589499ljo.68.2020.06.11.02.46.50
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 11 Jun 2020 02:46:50 -0700 (PDT)
+Message-ID: <078a2cc7ac7a28dca31d277d81387f29b48898d5.camel@dubeyko.com>
+Subject: Re: [PATCH] hfs: fix null-ptr-deref in hfs_find_init()
+From:   Viacheslav Dubeyko <slava@dubeyko.com>
+To:     Yang Yingliang <yangyingliang@huawei.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 11 Jun 2020 12:46:49 +0300
+In-Reply-To: <0fa6b82a-61ef-fd9c-53a9-c61862c8c188@huawei.com>
+References: <1591326067-29972-1-git-send-email-yangyingliang@huawei.com>
+         <A092DD0C-FEB3-4C27-BD60-576401D5ACD2@dubeyko.com>
+         <0fa6b82a-61ef-fd9c-53a9-c61862c8c188@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11-06-20, 11:09, Jaroslav Kysela wrote:
-> Dne 11. 06. 20 v 10:46 Charles Keepax napsal(a):
-> > On Wed, Jun 10, 2020 at 04:28:20PM +0530, Vinod Koul wrote:
-> > > On 10-06-20, 12:40, Jaroslav Kysela wrote:
-> > > > Dne 10. 06. 20 v 12:07 Srinivas Kandagatla napsal(a):
-> > > > > For gapless playback call to snd_compr_drain_notify() after
-> > > > > partial drain should put the state to SNDRV_PCM_STATE_RUNNING
-> > > > > rather than SNDRV_PCM_STATE_SETUP as the driver is ready to
-> > > > > process the buffers for new track.
-> > > > > 
-> > > > > With existing code, if we are playing 3 tracks in gapless, after
-> > > > > partial drain finished on previous track 1 the state is set to
-> > > > > SNDRV_PCM_STATE_SETUP which is then moved to SNDRV_PCM_STATE_PREPARED
-> > > > > after data write. With this state calls to snd_compr_next_track() and
-> > > > > few other calls will fail as they expect the state to be in
-> > > > > SNDRV_PCM_STATE_RUNNING.
-> > > > > 
-> > > > > Here is the sequence of events and state transitions:
-> > > > > 
-> > > > > 1. set_params (Track 1), state =  SNDRV_PCM_STATE_SETUP
-> > > > > 2. set_metadata (Track 1), no state change, state = SNDRV_PCM_STATE_SETUP
-> > > > > 3. fill and trigger start (Track 1), state = SNDRV_PCM_STATE_RUNNING
-> > > > > 4. set_next_track (Track 2), state = SNDRV_PCM_STATE_RUNNING
-> > > > > 5. partial_drain (Track 1), state = SNDRV_PCM_STATE_SETUP
-> > > > > 6  snd_compr_drain_notify (Track 1), state = SNDRV_PCM_STATE_SETUP
-> > > > > 7. fill data (Track 2), state = SNDRV_PCM_STATE_PREPARED
-> > > > > 8. set_metadata (Track 3), no state change, state = SNDRV_PCM_STATE_PREPARED
-> > > > > 9. set_next_track (Track 3), !! FAILURE as state != SNDRV_PCM_STATE_RUNNING
-> > > > 
-> > > > 
-> > > > The snd_compr_drain_notify() is called only from snd_compr_stop(). Something
-> > > > is missing in this sequence?
+Hi Yang,
+
+On Wed, 2020-06-10 at 20:54 +0800, Yang Yingliang wrote:
+> Hi,
+> On 2020/6/9 16:06, Viacheslav Dubeyko wrote:
+> > Hi Yang,
+> > 
+> > > On Jun 5, 2020, at 6:01 AM, Yang Yingliang <
+> > > yangyingliang@huawei.com> wrote:
 > > > 
-> > > It is supposed to be invoked by driver when partial drain is complete..
-> > > both intel and sprd driver are calling this. snd_compr_stop is stop
-> > > while draining case so legit
+> > > There is a null-ptr-deref in hfs_find_init():
+> > > 
+> > > [  107.092729] hfs: continuing without an alternate MDB
+> > > [  107.097632] general protection fault, probably for non-
+> > > canonical address 0xdffffc0000000008: 0000 [#1] SMP KASAN PTI
+> > > [  107.104679] KASAN: null-ptr-deref in range
+> > > [0x0000000000000040-0x0000000000000047]
+> > > [  107.109100] CPU: 0 PID: 379 Comm: hfs_inject Not tainted
+> > > 5.7.0-rc7-00001-g24627f5f2973 #897
+> > > [  107.114142] Hardware name: QEMU Standard PC (i440FX + PIIX,
+> > > 1996), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org
+> > > 04/01/2014
+> > > [  107.121095] RIP: 0010:hfs_find_init+0x72/0x170
+> > > [  107.123609] Code: c1 ea 03 80 3c 02 00 0f 85 e6 00 00 00 4c 8d
+> > > 65 40 48 c7 43 18 00 00 00 00 48 b8 00 00 00 00 00 fc ff df 4c 89
+> > > e2 48 c1 ea 03 <0f> b6 04 02 84 c0 74 08 3c 03 0f 8e a5 00 00 00
+> > > 8b 45 40 be c0 0c
+> > > [  107.134660] RSP: 0018:ffff88810291f3f8 EFLAGS: 00010202
+> > > [  107.137897] RAX: dffffc0000000000 RBX: ffff88810291f468 RCX:
+> > > 1ffff110175cdf05
+> > > [  107.141874] RDX: 0000000000000008 RSI: ffff88810291f468 RDI:
+> > > ffff88810291f480
+> > > [  107.145844] RBP: 0000000000000000 R08: 0000000000000000 R09:
+> > > ffffed1020381013
+> > > [  107.149431] R10: ffff88810291f500 R11: ffffed1020381012 R12:
+> > > 0000000000000040
+> > > [  107.152315] R13: 0000000000000000 R14: ffff888101c0814a R15:
+> > > ffff88810291f468
+> > > [  107.155464] FS:  00000000009ea880(0000)
+> > > GS:ffff88810c600000(0000) knlGS:0000000000000000
+> > > [  107.159795] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > [  107.162987] CR2: 00005605a19dd284 CR3: 0000000103a0c006 CR4:
+> > > 0000000000020ef0
+> > > [  107.166665] Call Trace:
+> > > [  107.167969]  ? find_held_lock+0x33/0x1c0
+> > > [  107.169972]  hfs_ext_read_extent+0x16b/0xb00
+> > > [  107.172092]  ? create_page_buffers+0x14e/0x1b0
+> > > [  107.174303]  ? hfs_free_extents+0x280/0x280
+> > > [  107.176437]  ? lock_downgrade+0x730/0x730
+> > > [  107.178272]  hfs_get_block+0x496/0x8a0
+> > > [  107.179972]  block_read_full_page+0x241/0x8d0
+> > > [  107.181971]  ? hfs_extend_file+0xae0/0xae0
+> > > [  107.183814]  ? end_buffer_async_read_io+0x10/0x10
+> > > [  107.185954]  ? add_to_page_cache_lru+0x13f/0x1f0
+> > > [  107.188006]  ? add_to_page_cache_locked+0x10/0x10
+> > > [  107.190175]  do_read_cache_page+0xc6a/0x1180
+> > > [  107.192096]  ? generic_file_read_iter+0x4c0/0x4c0
+> > > [  107.194234]  ? hfs_btree_open+0x408/0x1000
+> > > [  107.196068]  ? lock_downgrade+0x730/0x730
+> > > [  107.197926]  ? wake_bit_function+0x180/0x180
+> > > [  107.199845]  ? lockdep_init_map_waits+0x267/0x7c0
+> > > [  107.201895]  hfs_btree_open+0x455/0x1000
+> > > [  107.203479]  hfs_mdb_get+0x122c/0x1ae8
+> > > [  107.205065]  ? hfs_mdb_put+0x350/0x350
+> > > [  107.206590]  ? queue_work_node+0x260/0x260
+> > > [  107.208309]  ? rcu_read_lock_sched_held+0xa1/0xd0
+> > > [  107.210227]  ? lockdep_init_map_waits+0x267/0x7c0
+> > > [  107.212144]  ? lockdep_init_map_waits+0x267/0x7c0
+> > > [  107.213979]  hfs_fill_super+0x9ba/0x1280
+> > > [  107.215444]  ? bdev_name.isra.9+0xf1/0x2b0
+> > > [  107.217028]  ? hfs_remount+0x190/0x190
+> > > [  107.218428]  ? pointer+0x5da/0x710
+> > > [  107.219745]  ? file_dentry_name+0xf0/0xf0
+> > > [  107.221262]  ? mount_bdev+0xd1/0x330
+> > > [  107.222592]  ? vsnprintf+0x7bd/0x1250
+> > > [  107.224007]  ? pointer+0x710/0x710
+> > > [  107.225332]  ? down_write+0xe5/0x160
+> > > [  107.226698]  ? hfs_remount+0x190/0x190
+> > > [  107.228120]  ? snprintf+0x91/0xc0
+> > > [  107.229388]  ? vsprintf+0x10/0x10
+> > > [  107.230628]  ? sget+0x3af/0x4a0
+> > > [  107.231848]  ? hfs_remount+0x190/0x190
+> > > [  107.233300]  mount_bdev+0x26e/0x330
+> > > [  107.234611]  ? hfs_statfs+0x540/0x540
+> > > [  107.236015]  legacy_get_tree+0x101/0x1f0
+> > > [  107.237431]  ? security_capable+0x58/0x90
+> > > [  107.238832]  vfs_get_tree+0x89/0x2d0
+> > > [  107.240082]  ? ns_capable_common+0x5c/0xd0
+> > > [  107.241521]  do_mount+0xd8a/0x1720
+> > > [  107.242727]  ? lock_downgrade+0x730/0x730
+> > > [  107.244116]  ? copy_mount_string+0x20/0x20
+> > > [  107.245557]  ? _copy_from_user+0xbe/0x100
+> > > [  107.246967]  ? memdup_user+0x47/0x70
+> > > [  107.248212]  __x64_sys_mount+0x162/0x1b0
+> > > [  107.249537]  do_syscall_64+0xa5/0x4f0
+> > > [  107.250742]  entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> > > [  107.252369] RIP: 0033:0x44e8ea
+> > > [  107.253360] Code: 48 c7 c1 c0 ff ff ff f7 d8 64 89 01 48 83 c8
+> > > ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 49 89 ca b8 a5
+> > > 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 c0 ff ff ff
+> > > f7 d8 64 89 01 48
+> > > [  107.259240] RSP: 002b:00007ffd910e4c28 EFLAGS: 00000207
+> > > ORIG_RAX: 00000000000000a5
+> > > [  107.261668] RAX: ffffffffffffffda RBX: 0000000000400400 RCX:
+> > > 000000000044e8ea
+> > > [  107.263920] RDX: 000000000049321e RSI: 0000000000493222 RDI:
+> > > 00007ffd910e4d00
+> > > [  107.266177] RBP: 00007ffd910e5d10 R08: 0000000000000000 R09:
+> > > 000000000000000a
+> > > [  107.268451] R10: 0000000000000001 R11: 0000000000000207 R12:
+> > > 0000000000401c40
+> > > [  107.270721] R13: 0000000000000000 R14: 00000000006ba018 R15:
+> > > 0000000000000000
+> > > [  107.273025] Modules linked in:
+> > > [  107.274029] Dumping ftrace buffer:
+> > > [  107.275121]    (ftrace buffer empty)
+> > > [  107.276370] ---[ end trace c5e0b9d684f3570e ]---
+> > > 
+> > > We need check tree in hfs_find_init().
+> > > 
+> > > 
+https://lore.kernel.org/linux-fsdevel/20180419024358.GA5215@bombadil.infradead.org/
+> > > https://marc.info/?l=linux-fsdevel&m=152406881024567&w=2
+> > > References: CVE-2018-12928
+> > > Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+> > > ---
+> > > fs/hfs/bfind.c | 2 ++
+> > > 1 file changed, 2 insertions(+)
+> > > 
+> > > diff --git a/fs/hfs/bfind.c b/fs/hfs/bfind.c
+> > > index 4af318f..aafa6bd 100644
+> > > --- a/fs/hfs/bfind.c
+> > > +++ b/fs/hfs/bfind.c
+> > > @@ -16,6 +16,8 @@ int hfs_find_init(struct hfs_btree *tree,
+> > > struct hfs_find_data *fd)
+> > > {
+> > > 	void *ptr;
+> > > 
+> > > +	if (!tree)
+> > > +		return -EINVAL;
+> > 
+> > Looks good. But we have the same issue in HFS+ driver. Could you
+> > prepare the patch for HFS+ too?
+> 
+> OK, I will send a patch for HFS+.
+> > 
+> > By the way, what is the reason for extents tree pointer to be NULL?
+> > Do we have the empty file in this use-case?
+> 
+> The reproducer is came from 
+> https://marc.info/?l=linux-fsdevel&m=152406881024567&w=2 .
+> 
+> And it's triggered by mounting a crafted hfs file which has a lot of 
+> zero data at the end.
+> 
+
+I like the fix, but the issue has more complex nature, as far as I can
+see. The hfs_ext_read_extent() is trying to access the HFS_SB(inode-
+>i_sb)->ext_tree [1]. However, hfs_fill_super() calls the hfs_mdb_get()
+that is trying to create Extents Tree. It means that hfs_btree_open()
+is trying to access HFS_SB(inode->i_sb)->ext_tree before the real
+initialization. Because, namely hfs_btree_open() returns the created
+tree object [2]. Did I miss something here? Frankly speaking, I am
+slightly confused how it worked before. Maybe, some patch broke the
+initial logic?
+
+[1] https://elixir.bootlin.com/linux/latest/source/fs/hfs/extent.c#L200
+[2] https://elixir.bootlin.com/linux/latest/source/fs/hfs/mdb.c#L193
+
+Thanks,
+Viacheslav Dubeyko.
+
+> 
+> Thanks,
+> 
+> Yang
+> 
+> > 
+> > Thanks,
+> > Viacheslav Dubeyko.
+> > 
+> > > 	fd->tree = tree;
+> > > 	fd->bnode = NULL;
+> > > 	ptr = kmalloc(tree->max_key_len * 2 + 4, GFP_KERNEL);
+> > > -- 
+> > > 1.8.3
 > > > 
 > > 
-> > Not sure I follow this statement, could you elaborate a bit?
-> > snd_compr_stop putting the state to RUNNING seems fundamentally
-> > broken to me, the whole point of snd_compr_stop is to take the
-> > state out of RUNNING.
+> > .
 > 
-> Yes. I agree. It seems that the acknowledge for the partial drain should be
-> handled differently.
+> 
 
-Yeah sorry I overlooked that case and was thinking of it being invoked
-from driver!
-
-Yes this would make the snd_compr_stop() behave incorrectly.. so this
-cant be done as proposed.
-
-But we still need to set the draining stream state properly and I am
-thinking below now:
-
-diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
-index 509290f2efa8..9aba851732d7 100644
---- a/sound/core/compress_offload.c
-+++ b/sound/core/compress_offload.c
-@@ -929,7 +929,9 @@ static int snd_compr_partial_drain(struct snd_compr_stream *stream)
-        }
- 
-        stream->next_track = false;
--       return snd_compress_wait_for_drain(stream);
-+       retval = snd_compress_wait_for_drain(stream);
-+       stream->runtime->state = SNDRV_PCM_STATE_RUNNING;
-+       return retval;
- }
- 
--- 
-~Vinod
