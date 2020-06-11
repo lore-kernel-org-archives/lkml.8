@@ -2,133 +2,177 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF56C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57303C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0301206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FA2B206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:08:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L4ucfsHB"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a18lQYN5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgFKRGs (ORCPT
+        id S1726694AbgFKRIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 13:06:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56076 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726666AbgFKRGs (ORCPT
+        Thu, 11 Jun 2020 13:08:30 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:25649 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726527AbgFKRI3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 13:06:48 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7211CC08C5C1;
-        Thu, 11 Jun 2020 10:06:47 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id t18so6950487wru.6;
-        Thu, 11 Jun 2020 10:06:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=bYgWi0CbWr9efRoOcUkQ73nl3LMm75dhUsrAfK12w9c=;
-        b=L4ucfsHByk+H8noH4FkTy0DyUzdKksJJZ14rVZuYiN4HFJEoSxIP5E+zpiQG5kFdJd
-         Zu7asOJHLHmY2g1UhmwFqhuk6m6KDfifvQ9Rz4piCsFWAm0L5LtXDvG6xOh1FZ+2fVcq
-         /Hlv7ID0RB2itcIOTkCw2Yux7a8Nsdlfe28tg7ClSNep1B/SlNmlL+eikKYl1VsdywLw
-         qtz8khSiUF0eM/rGl77W0a/06ESSYk9aocIW6vaiUrnMZ6rxbm1cfBV9NuV5KGj+m9FU
-         4gUR5MWQLTTL4h+K260EGllw5MlpQoWXxQjrtonMwTZ5Vg5pXGgQUbs+m+LJlU/3U5kt
-         QcQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=bYgWi0CbWr9efRoOcUkQ73nl3LMm75dhUsrAfK12w9c=;
-        b=GwRJMx8jW+KkOGHSKmJCVYg9tgo2CMK6vllLcmy7QSP7URND/S2N59+yQBi2Jiu+Db
-         10vxyhf0wjtw7tpDmOLJq2wKE2v8eS2wGPc7PGaaeJBK5EEKtPUGHid+JHvckzONwguJ
-         7YpHRN4GWNd/HzTTXuAhIP/MUo9ZVYZ9BDi26kwFRBr6opVobcJ0YJEHyPDj98DGPQvL
-         i9KTH0BcNNLGc6tJ5JSwoWPF9G0ltUABa5eusW3xM/AZYRjr0xCw1ES4jnpQoBiCb1S7
-         GF1/kPz34hidnDUZTGGepBEAKaQ3XtOI6QVu8JCs2lWW3B10krXDmPQ2cB+twtIWgDEp
-         P2lA==
-X-Gm-Message-State: AOAM532JvJhSud86NEVvOYkW07EbYXCulRMIHy3gJgbPjFRbeJ34iXW8
-        +D39l4VYdX75CTla5LYwVGY=
-X-Google-Smtp-Source: ABdhPJy1a2J0AjcDmA7VUeN6Mlwj09mw76s/Xu2UJ9v3l2MXyfQvCZjqdZlWsEA17q03XTAetCA7pQ==
-X-Received: by 2002:a5d:6144:: with SMTP id y4mr10846341wrt.185.1591895206092;
-        Thu, 11 Jun 2020 10:06:46 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id f11sm5897611wrj.2.2020.06.11.10.06.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Jun 2020 10:06:45 -0700 (PDT)
-Subject: Re: [PATCH v4 2/3] clk: bcm: Add BCM2711 DVP driver
-To:     Maxime Ripard <maxime@cerno.tech>,
-        Stefan Wahren <stefan.wahren@i2se.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mike Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org, Phil Elwell <phil@raspberrypi.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-clk@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-References: <cover.4c4625a8e076f3163b800b3d8986b282ee98d908.1591867332.git-series.maxime@cerno.tech>
- <bb60d97fc76b61c2eabef5a02ebd664c0f57ede0.1591867332.git-series.maxime@cerno.tech>
- <e9e83c60-ef4c-8806-bcdb-a09702bf7559@i2se.com>
- <20200611165233.dmwxuz5lhxxbh7fb@gilmour.lan>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <c05ef3b1-ee1a-e4f4-c6de-a23cbe6d8670@gmail.com>
-Date:   Thu, 11 Jun 2020 10:06:39 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        Thu, 11 Jun 2020 13:08:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591895307;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bWnBZHCzZtimvuxaZaPnyP5RcPnmsmA1z03ttfGTAFA=;
+        b=a18lQYN5t9oUtYRwI37bxpGGWuAhpmpbVi+MsExXl1oKJW5BOHv023b74IFVsZefh6N0Xb
+        nzGNTGilTxNrb/3QquVVupV44RR3eNSRx7c4rhznb5lNd2ZTKRREY+tHrZ94TbrJTQ58fU
+        hxs6QfAbl/4jFUuLnwjCPgp0bVG0afs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-302-_iTT8PLmNeGVtV0p0Dz3_A-1; Thu, 11 Jun 2020 13:08:23 -0400
+X-MC-Unique: _iTT8PLmNeGVtV0p0Dz3_A-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 25A49107ACCD;
+        Thu, 11 Jun 2020 17:08:21 +0000 (UTC)
+Received: from x1.home (ovpn-112-195.phx2.redhat.com [10.3.112.195])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4A4D310013D0;
+        Thu, 11 Jun 2020 17:08:17 +0000 (UTC)
+Date:   Thu, 11 Jun 2020 11:08:16 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH v2 3/3] iommu/vt-d: Sanity check uapi argsz filled by
+ users
+Message-ID: <20200611110816.4cea7204@x1.home>
+In-Reply-To: <1591848735-12447-4-git-send-email-jacob.jun.pan@linux.intel.com>
+References: <1591848735-12447-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1591848735-12447-4-git-send-email-jacob.jun.pan@linux.intel.com>
+Organization: Red Hat
 MIME-Version: 1.0
-In-Reply-To: <20200611165233.dmwxuz5lhxxbh7fb@gilmour.lan>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 10 Jun 2020 21:12:15 -0700
+Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
 
-
-On 6/11/2020 9:52 AM, Maxime Ripard wrote:
-> Hi Stefan,
+> IOMMU UAPI data has an argsz field which is filled by user. As the data
+> structures expands, argsz may change. As the UAPI data are shared among
+> different architectures, extensions of UAPI data could be a result of
+> one architecture which has no impact on another. Therefore, these argsz
+> santity checks are performed in the model specific IOMMU drivers. This
+> patch adds sanity checks in the VT-d to ensure argsz passed by userspace
+> matches feature flags and other contents.
 > 
-> On Thu, Jun 11, 2020 at 05:50:30PM +0200, Stefan Wahren wrote:
->>> diff --git a/drivers/clk/bcm/clk-bcm2711-dvp.c b/drivers/clk/bcm/clk-bcm2711-dvp.c
->>> new file mode 100644
->>> index 000000000000..84dbc886e303
->>> --- /dev/null
->>> +++ b/drivers/clk/bcm/clk-bcm2711-dvp.c
->>> @@ -0,0 +1,120 @@
->>> +// SPDX-License-Identifier: GPL-2.0-or-later
->>> +// Copyright 2020 Cerno
->>> +
->>> +#include <linux/clk-provider.h>
->>> +#include <linux/module.h>
->>> +#include <linux/platform_device.h>
->>> +#include <linux/reset-controller.h>
->>> +#include <linux/reset/reset-simple.h>
->>> +
->>> +#define DVP_HT_RPI_SW_INIT	0x04
->>> +#define DVP_HT_RPI_MISC_CONFIG	0x08
->>
->> sorry for not noticing this before. Are these defines specific to the
->> Raspberry Pi, because of RPI?
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>  drivers/iommu/intel-iommu.c | 16 ++++++++++++++++
+>  drivers/iommu/intel-svm.c   | 12 ++++++++++++
+>  2 files changed, 28 insertions(+)
 > 
-> I'm not entirely sure to be honest. It's the names that the register
-> have, but it's not clear to me if it's something specific to the RPi
-> itself, or it just means something else entirely.
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index 27ebf4b9faef..c98b5109684b 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -5365,6 +5365,7 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
+>  	struct device_domain_info *info;
+>  	struct intel_iommu *iommu;
+>  	unsigned long flags;
+> +	unsigned long minsz;
+>  	int cache_type;
+>  	u8 bus, devfn;
+>  	u16 did, sid;
+> @@ -5385,6 +5386,21 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
+>  	if (!(dmar_domain->flags & DOMAIN_FLAG_NESTING_MODE))
+>  		return -EINVAL;
+>  
+> +	minsz = offsetofend(struct iommu_cache_invalidate_info, padding);
 
-My understanding is that this is a wrapper that was done specifically
-for the Raspberry Pi usage of that IP block, which is why it has PI in
-the name, so this looks good correct, and this does match the internal
-register database name.
--- 
-Florian
+Would it still be better to look for the end of the last field that's
+actually used to avoid the code churn and oversights if/when the padding
+field does get used and renamed?
+
+Per my comment on patch 1/, this also seems like where the device
+specific IOMMU driver should also have the responsibility of receiving
+a __user pointer to do the copy_from_user() here.  vfio can't know
+which flags require which fields to make a UAPI with acceptable
+compatibility guarantees otherwise.
+
+> +	if (inv_info->argsz < minsz)
+> +		return -EINVAL;
+> +
+> +	/* Sanity check user filled invalidation dat sizes */
+> +	if (inv_info->granularity == IOMMU_INV_GRANU_ADDR &&
+> +		inv_info->argsz != offsetofend(struct iommu_cache_invalidate_info,
+> +					addr_info))
+> +		return -EINVAL;
+> +
+> +	if (inv_info->granularity == IOMMU_INV_GRANU_PASID &&
+> +		inv_info->argsz != offsetofend(struct iommu_cache_invalidate_info,
+> +					pasid_info))
+> +		return -EINVAL;
+> +
+>  	spin_lock_irqsave(&device_domain_lock, flags);
+>  	spin_lock(&iommu->lock);
+>  	info = get_domain_info(dev);
+> diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
+> index 35b43fe819ed..64dc2c66dfff 100644
+> --- a/drivers/iommu/intel-svm.c
+> +++ b/drivers/iommu/intel-svm.c
+> @@ -235,15 +235,27 @@ int intel_svm_bind_gpasid(struct iommu_domain *domain, struct device *dev,
+>  	struct dmar_domain *dmar_domain;
+>  	struct intel_svm_dev *sdev;
+>  	struct intel_svm *svm;
+> +	unsigned long minsz;
+>  	int ret = 0;
+>  
+>  	if (WARN_ON(!iommu) || !data)
+>  		return -EINVAL;
+>  
+> +	/*
+> +	 * We mandate that no size change in IOMMU UAPI data before the
+> +	 * variable size union at the end.
+> +	 */
+> +	minsz = offsetofend(struct iommu_gpasid_bind_data, padding);
+
+Same.  Thanks,
+
+Alex
+
+> +	if (data->argsz < minsz)
+> +		return -EINVAL;
+> +
+>  	if (data->version != IOMMU_GPASID_BIND_VERSION_1 ||
+>  	    data->format != IOMMU_PASID_FORMAT_INTEL_VTD)
+>  		return -EINVAL;
+>  
+> +	if (data->argsz != offsetofend(struct iommu_gpasid_bind_data, vtd))
+> +		return -EINVAL;
+> +
+>  	if (!dev_is_pci(dev))
+>  		return -ENOTSUPP;
+>  
+
