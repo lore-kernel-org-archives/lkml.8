@@ -2,207 +2,162 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA9BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 10:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DBCCC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 10:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE77320656
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 10:01:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36B0520656
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 10:01:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sgeBjL7A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgFKKB3 (ORCPT
+        id S1727118AbgFKKBu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 06:01:29 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:44357 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726946AbgFKKB0 (ORCPT
+        Thu, 11 Jun 2020 06:01:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46372 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726946AbgFKKBt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 06:01:26 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jjK1N-0002l0-B4; Thu, 11 Jun 2020 10:01:17 +0000
-Date:   Thu, 11 Jun 2020 12:01:14 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Sargun Dhillon <sargun@sargun.me>,
-        containers@lists.linux-foundation.org,
-        Giuseppe Scrivano <gscrivan@redhat.com>,
-        Robert Sesek <rsesek@google.com>,
-        Chris Palmer <palmer@google.com>, Jann Horn <jannh@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Wagner <daniel.wagner@bmw-carit.de>,
-        linux-kernel@vger.kernel.org, Matt Denton <mpdenton@google.com>,
-        John Fastabend <john.r.fastabend@intel.com>,
-        linux-fsdevel@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, cgroups@vger.kernel.org,
-        stable@vger.kernel.org, "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v3 1/4] fs, net: Standardize on file_receive helper to
- move fds across processes
-Message-ID: <20200611100114.awdjswsd7fdm2uzr@wittgenstein>
-References: <202006031845.F587F85A@keescook>
- <20200604125226.eztfrpvvuji7cbb2@wittgenstein>
- <20200605075435.GA3345@ircssh-2.c.rugged-nimbus-611.internal>
- <202006091235.930519F5B@keescook>
- <20200609200346.3fthqgfyw3bxat6l@wittgenstein>
- <202006091346.66B79E07@keescook>
- <037A305F-B3F8-4CFA-B9F8-CD4C9EF9090B@ubuntu.com>
- <202006092227.D2D0E1F8F@keescook>
- <20200610081237.GA23425@ircssh-2.c.rugged-nimbus-611.internal>
- <202006101953.899EFB53@keescook>
+        Thu, 11 Jun 2020 06:01:49 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C11EBC08C5C1;
+        Thu, 11 Jun 2020 03:01:48 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id v24so2145889plo.6;
+        Thu, 11 Jun 2020 03:01:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :content-transfer-encoding:user-agent;
+        bh=hDcJLQph3XEDbqRIioZiQfkn61SbO41SN1rr45lJWyU=;
+        b=sgeBjL7AljP1Pm5YNHqOcaY5kTJdalizz4L7U25FzemzsMt5QR8hQ5bkYmVqEYLA04
+         GLBNSCNKLKVpHpqzcWe8utWPVwopNTKj8Fs6mhRndKR5t2XUtiilw9+nXxhEiUaPGcH7
+         G0UnoyDSHyYx/FonVIS0TZ7kWvL5IVyh/oFV1q3eh5rvIPzFTih03lKOLdszSHOuZgaO
+         B5pt2ECbqKJ6PtcbEDwRTo9hgY/YnLOCuwVImNUA4x2Z007jmAwejXWfqxRGKV2Hl1wb
+         UygYK/0gNrcnr812aBxsaBsbzbhsPPSFL6Aj+5oR1wDKDTUOx/S84T1tC1JjAw+/RihC
+         M37Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:content-transfer-encoding:user-agent;
+        bh=hDcJLQph3XEDbqRIioZiQfkn61SbO41SN1rr45lJWyU=;
+        b=tYajahjJvrI0FI+8pYA6SyJJ8RRwTwQEvadtU7TrY2fIeBlrwk/amSYiso/t7rRirC
+         0db5IuFXvIUF+criMTZyXiOWze3T1cvafgAxChmFNDrKos+OoRCd7SaHTMXQ7OXy/Zol
+         geGNHNinDbZyODmKo+YXvMt55XuQNSC/CsxI2z1AY0NybTvvoj1QawViA6LTgVxDjakW
+         HrUQpkrFTdrXftjw8QzqqkViubE9tlHfIsImJCkets9scXu8//WP9EgiPl/54NVVQ4qw
+         5rUVmnRP2AKXaRrKhltRCEYYxZ/VO/bd8J+BHuW7sZUKTUKwHEZU3+OqY+R2HLV9qw+7
+         M29g==
+X-Gm-Message-State: AOAM530Zr1SaM5nX59wdsWTScaNcfN2/cA/8j4M5rWOE0oEvO8rczqY0
+        1vWh55tw7RsYogTgXPFwsyg=
+X-Google-Smtp-Source: ABdhPJxU0SQz8NIee5cCWrgG7up+DPKvI6JOVpwxmjVrNc51nGci49w4SkPeXgbboq5Qr9Rb9mVpgA==
+X-Received: by 2002:a17:90a:7c4e:: with SMTP id e14mr7705366pjl.52.1591869708163;
+        Thu, 11 Jun 2020 03:01:48 -0700 (PDT)
+Received: from VM_111_229_centos ([203.205.141.39])
+        by smtp.gmail.com with ESMTPSA id q68sm2438721pjc.30.2020.06.11.03.01.41
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Jun 2020 03:01:47 -0700 (PDT)
+Date:   Thu, 11 Jun 2020 18:01:35 +0800
+From:   YangYuxi <yx.atom1@gmail.com>
+To:     wensong@linux-vs.org, horms@verge.net.au, ja@ssi.bg,
+        pablo@netfilter.org, kadlec@netfilter.org, fw@strlen.de,
+        davem@davemloft.net, kuba@kernel.org
+Cc:     netdev@vger.kernel.org, lvs-devel@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        linux-kernel@vger.kernel.org, yx.atom1@gmail.com
+Subject: [PATCH] ipvs: avoid drop first packet to reuse conntrack
+Message-ID: <20200611100135.GA19243@VM_111_229_centos>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <202006101953.899EFB53@keescook>
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 07:59:55PM -0700, Kees Cook wrote:
-> On Wed, Jun 10, 2020 at 08:12:38AM +0000, Sargun Dhillon wrote:
-> > As an aside, all of this junk should be dropped:
-> > +	ret = get_user(size, &uaddfd->size);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret = copy_struct_from_user(&addfd, sizeof(addfd), uaddfd, size);
-> > +	if (ret)
-> > +		return ret;
-> > 
-> > and the size member of the seccomp_notif_addfd struct. I brought this up 
-> > off-list with Tycho that ioctls have the size of the struct embedded in them. We 
-> > should just use that. The ioctl definition is based on this[2]:
-> > #define _IOC(dir,type,nr,size) \
-> > 	(((dir)  << _IOC_DIRSHIFT) | \
-> > 	 ((type) << _IOC_TYPESHIFT) | \
-> > 	 ((nr)   << _IOC_NRSHIFT) | \
-> > 	 ((size) << _IOC_SIZESHIFT))
-> > 
-> > 
-> > We should just use copy_from_user for now. In the future, we can either 
-> > introduce new ioctl names for new structs, or extract the size dynamically from 
-> > the ioctl (and mask it out on the switch statement in seccomp_notify_ioctl.
-> 
-> Yeah, that seems reasonable. Here's the diff for that part:
+Since 'commit f719e3754ee2 ("ipvs: drop first packet to
+redirect conntrack")', when a new TCP connection meet
+the conditions that need reschedule, the first syn packet
+is dropped, this cause one second latency for the new
+connection, more discussion about this problem can easy
+search from google, such as:
 
-Why does it matter that the ioctl() has the size of the struct embedded
-within? Afaik, the kernel itself doesn't do anything with that size. It
-merely checks that the size is not pathological and it does so at
-compile time.
+1)One second connection delay in masque
+https://marc.info/?t=151683118100004&r=1&w=2
 
-#ifdef __CHECKER__
-#define _IOC_TYPECHECK(t) (sizeof(t))
-#else
-/* provoke compile error for invalid uses of size argument */
-extern unsigned int __invalid_size_argument_for_IOC;
-#define _IOC_TYPECHECK(t) \
-	((sizeof(t) == sizeof(t[1]) && \
-	  sizeof(t) < (1 << _IOC_SIZEBITS)) ? \
-	  sizeof(t) : __invalid_size_argument_for_IOC)
-#endif
+2)IPVS low throughput #70747
+https://github.com/kubernetes/kubernetes/issues/70747
 
-The size itself is not verified at runtime. copy_struct_from_user()
-still makes sense at least if we're going to allow expanding the struct
-in the future.
+3)Apache Bench can fill up ipvs service proxy in seconds #544
+https://github.com/cloudnativelabs/kube-router/issues/544
 
-Leaving that aside, the proposed direction here seems to mean that any
-change to the struct itself will immediately mean a new ioctl() but
-afaict, that also means a new struct. Since when you simply extend the
-struct for the sake of the new ioctl you also change the size for the
-ioctl.
+4)Additional 1s latency in `host -> service IP -> pod`
+https://github.com/kubernetes/kubernetes/issues/90854
 
-Sure, you can simply treat the struct coming through the old ioctl as
-being "capped" by e.g. hiding the size as suggested but then the gain
-by having two separate ioctls is 0 compared to simply versioning the
-struct with an explicit size member since the size encoded in the ioctl
-and the actual size of the struct don't line up anymore which is the
-only plus I can see for relying on _IOC_SIZE(). All this manages to do
-then is to make it more annoying for userspace since they now need to
-maintain multiple ioctls(). And if you have - however unlikely - say
-three different ioctls all to be used with a different struct size of
-the same struct I now need to know which ioctl() goes with which size of
-the struct (I guess you could append the size to the ioctl name?
-*shudder*). If you have the size in the struct itself you don't need to
-care about any of that.
-Maybe I'm not making sense or I misunderstand what's going on though.
+The root cause is when the old session is expired, the
+conntrack related to the session is dropped by
+ip_vs_conn_drop_conntrack. The code is as follows:
+```
+static void ip_vs_conn_expire(struct timer_list *t)
+{
+...
 
-Christian
+                if ((cp->flags & IP_VS_CONN_F_NFCT) &&
+                    !(cp->flags & IP_VS_CONN_F_ONE_PACKET)) {
+                        /* Do not access conntracks during subsys cleanup
+                         * because nf_conntrack_find_get can not be used after
+                         * conntrack cleanup for the net.
+                         */
+                        smp_rmb();
+                        if (ipvs->enable)
+                                ip_vs_conn_drop_conntrack(cp);
+                }
+...
+}
+```
+As the code show, only if the condition  (cp->flags & IP_VS_CONN_F_NFCT)
+is true, ip_vs_conn_drop_conntrack will be called.
+So we solve this bug by following steps:
+1) erase the IP_VS_CONN_F_NFCT flag (it is safely because no packets will
+   use the old session)
+2) call ip_vs_conn_expire_now to release the old session, then the related
+   conntrack will not be dropped
+3) then ipvs unnecessary to drop the first syn packet,
+   it just continue to pass the syn packet to the next process,
+   create a new ipvs session, and the new session will related to
+   the old conntrack(which is reopened by conntrack as a new one),
+   the next whole things is just as normal as that the old session
+   isn't used to exist.
 
-> 
-> diff --git a/include/uapi/linux/seccomp.h b/include/uapi/linux/seccomp.h
-> index 7b6028b399d8..98bf19b4e086 100644
-> --- a/include/uapi/linux/seccomp.h
-> +++ b/include/uapi/linux/seccomp.h
-> @@ -118,7 +118,6 @@ struct seccomp_notif_resp {
->  
->  /**
->   * struct seccomp_notif_addfd
-> - * @size: The size of the seccomp_notif_addfd datastructure
->   * @id: The ID of the seccomp notification
->   * @flags: SECCOMP_ADDFD_FLAG_*
->   * @srcfd: The local fd number
-> @@ -126,7 +125,6 @@ struct seccomp_notif_resp {
->   * @newfd_flags: The O_* flags the remote FD should have applied
->   */
->  struct seccomp_notif_addfd {
-> -	__u64 size;
->  	__u64 id;
->  	__u32 flags;
->  	__u32 srcfd;
-> diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-> index 3c913f3b8451..00cbdad6c480 100644
-> --- a/kernel/seccomp.c
-> +++ b/kernel/seccomp.c
-> @@ -1297,14 +1297,9 @@ static long seccomp_notify_addfd(struct seccomp_filter *filter,
->  	struct seccomp_notif_addfd addfd;
->  	struct seccomp_knotif *knotif;
->  	struct seccomp_kaddfd kaddfd;
-> -	u64 size;
->  	int ret;
->  
-> -	ret = get_user(size, &uaddfd->size);
-> -	if (ret)
-> -		return ret;
-> -
-> -	ret = copy_struct_from_user(&addfd, sizeof(addfd), uaddfd, size);
-> +	ret = copy_from_user(&addfd, uaddfd, sizeof(addfd));
->  	if (ret)
->  		return ret;
->  
-> 
-> > 
-> > ----
-> > +#define SECCOMP_IOCTL_NOTIF_ADDFD	SECCOMP_IOR(3,	\
-> > +						struct seccomp_notif_addfd)
-> > 
-> > Lastly, what I believe to be a small mistake, it should be SECCOMP_IOW, based on 
-> > the documentation in ioctl.h -- "_IOW means userland is writing and kernel is 
-> > reading."
-> 
-> Oooooh. Yeah; good catch. Uhm, that means SECCOMP_IOCTL_NOTIF_ID_VALID
-> is wrong too, yes? Tycho, Christian, how disruptive would this be to
-> fix? (Perhaps support both and deprecate the IOR version at some point
-> in the future?)
-> 
-> Diff for just addfd's change:
-> 
-> diff --git a/include/uapi/linux/seccomp.h b/include/uapi/linux/seccomp.h
-> index 7b6028b399d8..98bf19b4e086 100644
-> --- a/include/uapi/linux/seccomp.h
-> +++ b/include/uapi/linux/seccomp.h
-> @@ -146,7 +144,7 @@ struct seccomp_notif_addfd {
->  						struct seccomp_notif_resp)
->  #define SECCOMP_IOCTL_NOTIF_ID_VALID	SECCOMP_IOR(2, __u64)
->  /* On success, the return value is the remote process's added fd number */
-> -#define SECCOMP_IOCTL_NOTIF_ADDFD	SECCOMP_IOR(3,	\
-> +#define SECCOMP_IOCTL_NOTIF_ADDFD	SECCOMP_IOW(3,	\
->  						struct seccomp_notif_addfd)
->  
->  #endif /* _UAPI_LINUX_SECCOMP_H */
-> 
-> -- 
-> Kees Cook
+This patch has been verified on our thousands of kubernets node servers on Tencent Inc.
+Signed-off-by: YangYuxi <yx.atom1@gmail.com>
+---
+ net/netfilter/ipvs/ip_vs_core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
+index aa6a603a2425..2f750145172f 100644
+--- a/net/netfilter/ipvs/ip_vs_core.c
++++ b/net/netfilter/ipvs/ip_vs_core.c
+@@ -2086,11 +2086,11 @@ static int ip_vs_in_icmp_v6(struct netns_ipvs *ipvs, struct sk_buff *skb,
+ 		}
+ 
+ 		if (resched) {
++			if (uses_ct)
++				cp->flags &= ~IP_VS_CONN_F_NFCT;
+ 			if (!atomic_read(&cp->n_control))
+ 				ip_vs_conn_expire_now(cp);
+ 			__ip_vs_conn_put(cp);
+-			if (uses_ct)
+-				return NF_DROP;
+ 			cp = NULL;
+ 		}
+ 	}
+-- 
+1.8.3.1
+
