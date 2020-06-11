@@ -2,67 +2,68 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D75C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 21:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C90C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 21:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 092F52074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 21:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6680D2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 21:23:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WpZItS0v"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MDNccs3/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726441AbgFKVW1 (ORCPT
+        id S1726511AbgFKVXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 17:22:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39036 "EHLO
+        Thu, 11 Jun 2020 17:23:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726153AbgFKVW1 (ORCPT
+        with ESMTP id S1726153AbgFKVXI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 17:22:27 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BA7AC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 14:22:27 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id q24so2902206pjd.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 14:22:27 -0700 (PDT)
+        Thu, 11 Jun 2020 17:23:08 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BB90C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 14:23:08 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id s10so3088293pgm.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 14:23:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=X2WL77hiAzb90wuEqJ5UyE+b+qKfSpj9bKKe0Q8kvd8=;
-        b=WpZItS0vXXqlMWB8ryeAOCq74Job8TOExQ5dkpfjAlF5u8sbOTyw2RHRoXgj3vyL+i
-         ziuhIJipaNvWBKFxaaU8ULv79UnqNkk/hdSdgsbzPIDMvIs/zDKiJf3UhrPyFS0udtlz
-         of4eOmyBCC6SJ4Oj1sptd4RGCP1Oywa7H2udyXh32hyAZi+bTXs5g6cASTp3Xoj4z4rJ
-         6ojnEev9FzwemoFNm2MURW5PMNbkGpQ1YvpsplPbEv4R9uZfdFqtwtZrFF2F5PErLIEF
-         CoMoj19FHpYgr0FQUaJjlOuhpXD0yLQtEkO+3UbYYiDMTra0chfwArtoWSXeW5NfjdAA
-         rWUA==
+        bh=MiTYCuQl+ZdzBFJn18UFrqqp+8lTnOBH02+yJi7n6H8=;
+        b=MDNccs3/jgCvJ+k03M7K8vLs8G1VreIDmA7Gsol0dqoBc3OOF7Q5cRc1VLsXpSQG67
+         ZnBL3dK5ZyJ08Mg2fEXJtl8qp9v4WYh3KTQKoZxusHXJx4uLi+jjYJbD7hxyeHHdDL7s
+         yDrqMY92jY7xn46lP4OAojkqxvE5GDpKIXgsaNHCC6EDpSpbj5FqXaBuiysXzqKurM/G
+         JG9CdSeiq5ZtsJa+orugo5bGmYMmmROTHbum3tgcs+Ex14TRGHxaYWjWJs9LfwWZGAsq
+         Uc4l2MiQxm0uVq/2bl3rACY7kiP42MXtztYj8yfAcVWnOQc1k7lcJhiTzkfA2y9+rx+1
+         wy8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=X2WL77hiAzb90wuEqJ5UyE+b+qKfSpj9bKKe0Q8kvd8=;
-        b=IdV4TJcJhI85UoOqx8KEf/sGGxNjrjDW7aZ4SRVqvgu4R3zYwCkLsKwGmNpCAhh5xN
-         hKk4QDcjJubObJiuWox1gfVmLsx4GIetU3O1Nd963w5XAevp8rDLt9K2KvB5uylUnaCN
-         xXMf1cc18HAaedOFSDfP3aF96gwyeXhHcXo9NairaDQNWaQuDixkn+CiEAFWQFDSofnj
-         1ZsM/2vCVIhXOu2ZyvFzogji/bbFVAsWEOEgF4ZwWzdqRB0NdhrczWLeAjBbMNGw4/fD
-         Xgf+2NenUfdnNauC3VNRmS9HJ7K5JDhi+PR8kcGiVf0EskEv3U4aFbx6wB/Gwx9V6Pct
-         Is/g==
-X-Gm-Message-State: AOAM533lJnAH3Yhz7LrjglxyI2cjuFzsNYBeb1B/PPc5KZFMdIE7Sm6p
-        9bmZQyzjux2Jt1TYGuvKS+WaPV3otWVWeJFto7Y92w==
-X-Google-Smtp-Source: ABdhPJzc9BjwWRB35loqLZC1e1TrbrLfLfcMj8L5zj+R49P0QegJX42IfCg2XZ7QwBCv9yz22w/xfIypD77Q5i2FdA0=
-X-Received: by 2002:a17:90a:3321:: with SMTP id m30mr9849633pjb.20.1591910546427;
- Thu, 11 Jun 2020 14:22:26 -0700 (PDT)
+        bh=MiTYCuQl+ZdzBFJn18UFrqqp+8lTnOBH02+yJi7n6H8=;
+        b=qHG4B0sOlwLEbx+u+JCCtIZgkXvXOJmeOubZqJCzRDXA3EVBcKlpeicbSRwL+xPuCg
+         iFc/IAixmeUq6ZstDFL5T1oUlZseFYiZmQnFt8CS9z3X7vuIRrEq3et+t78EPVUXg/cb
+         UqeJg6Ex0vi4UDYxPnboJ4biSxPjAXQKAe8xekFQ8AUEaWdrr8aK8l8GLDRNRMA4xlMx
+         EakAAkTZj3/HEP6RObHAa1QXqzoYacrcNRRtIMMsSbOxaYjMgtLq0neW7qhxcryTkil4
+         TFwc1sOiCYiHVM0BSCZqvfPJhz18BEMBO2n4RAitnB+uTy8AcTsyiO/v6cBjt31vC1Gs
+         S8Bw==
+X-Gm-Message-State: AOAM533JHHXfHHRDh+ZmPICM9iASeUYllfC+0tAlgw4+gTAj3yo72gfL
+        oVldGnTS8PPXKdODXN97QiSkNBwz6wQvfV978+vCXA==
+X-Google-Smtp-Source: ABdhPJwtEHBVGRfqIzEXIXx/tubQ7/m124fwiIaNsvfPEkxZiUvoNj87umNfW6vDyZJ604qm5w8Mr07LKHxXQl328PU=
+X-Received: by 2002:a65:45c2:: with SMTP id m2mr7977244pgr.201.1591910587677;
+ Thu, 11 Jun 2020 14:23:07 -0700 (PDT)
 MIME-Version: 1.0
 References: <20200611210545.173886-1-urielguajardojr@gmail.com>
 In-Reply-To: <20200611210545.173886-1-urielguajardojr@gmail.com>
 From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Thu, 11 Jun 2020 14:22:15 -0700
-Message-ID: <CAFd5g465Srr04ToYC76P3QGH6eYbQMeCN5jBLiNLo=A_soMNYA@mail.gmail.com>
+Date:   Thu, 11 Jun 2020 14:22:56 -0700
+Message-ID: <CAFd5g44qv_GvF09jCS1KxhRRzi9qc9rJ_1n8Bnumd2LaoW2z7g@mail.gmail.com>
 Subject: Re: [PATCH] kunit: show error if kunit results are not present
-To:     Uriel Guajardo <urielguajardojr@gmail.com>
+To:     Uriel Guajardo <urielguajardojr@gmail.com>,
+        Will Chen <chenwi@google.com>
 Cc:     Uriel Guajardo <urielguajardo@google.com>,
         "open list:KERNEL SELFTEST FRAMEWORK" 
         <linux-kselftest@vger.kernel.org>,
@@ -73,6 +74,8 @@ Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+
++Will Chen
 
 On Thu, Jun 11, 2020 at 2:17 PM Uriel Guajardo
 <urielguajardojr@gmail.com> wrote:
@@ -87,5 +90,78 @@ On Thu, Jun 11, 2020 at 2:17 PM Uriel Guajardo
 > indicates that kunit was not able to run at all.
 >
 > Signed-off-by: Uriel Guajardo <urielguajardo@google.com>
-
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+> ---
+>  tools/testing/kunit/kunit_parser.py               |   8 ++++----
+>  tools/testing/kunit/kunit_tool_test.py            |  11 +++++++++++
+>  .../kunit/test_data/test_insufficient_memory.log  | Bin 0 -> 856 bytes
+>  3 files changed, 15 insertions(+), 4 deletions(-)
+>  create mode 100644 tools/testing/kunit/test_data/test_insufficient_memory.log
+>
+> diff --git a/tools/testing/kunit/kunit_parser.py b/tools/testing/kunit/kunit_parser.py
+> index 64aac9dcd431..f13e0c0d6663 100644
+> --- a/tools/testing/kunit/kunit_parser.py
+> +++ b/tools/testing/kunit/kunit_parser.py
+> @@ -265,11 +265,9 @@ def bubble_up_suite_errors(test_suite_list: List[TestSuite]) -> TestStatus:
+>         return bubble_up_errors(lambda x: x.status, test_suite_list)
+>
+>  def parse_test_result(lines: List[str]) -> TestResult:
+> -       if not lines:
+> -               return TestResult(TestStatus.NO_TESTS, [], lines)
+>         consume_non_diagnositic(lines)
+> -       if not parse_tap_header(lines):
+> -               return None
+> +       if not lines or not parse_tap_header(lines):
+> +               return TestResult(TestStatus.NO_TESTS, [], lines)
+>         test_suites = []
+>         test_suite = parse_test_suite(lines)
+>         while test_suite:
+> @@ -282,6 +280,8 @@ def parse_run_tests(kernel_output) -> TestResult:
+>         failed_tests = 0
+>         crashed_tests = 0
+>         test_result = parse_test_result(list(isolate_kunit_output(kernel_output)))
+> +       if test_result.status == TestStatus.NO_TESTS:
+> +               print_with_timestamp(red('[ERROR] ') + 'no kunit output detected')
+>         for test_suite in test_result.suites:
+>                 if test_suite.status == TestStatus.SUCCESS:
+>                         print_suite_divider(green('[PASSED] ') + test_suite.name)
+> diff --git a/tools/testing/kunit/kunit_tool_test.py b/tools/testing/kunit/kunit_tool_test.py
+> index 984588d6ba95..4a7ef2eef831 100755
+> --- a/tools/testing/kunit/kunit_tool_test.py
+> +++ b/tools/testing/kunit/kunit_tool_test.py
+> @@ -170,6 +170,17 @@ class KUnitParserTest(unittest.TestCase):
+>                         result.status)
+>                 file.close()
+>
+> +       def test_no_kunit_output(self):
+> +               crash_log = get_absolute_path(
+> +                       'test_data/test_insufficient_memory.log')
+> +               file = open(crash_log)
+> +               print_mock = mock.patch('builtins.print').start()
+> +               result = kunit_parser.parse_run_tests(
+> +                       kunit_parser.isolate_kunit_output(file.readlines()))
+> +               print_mock.assert_any_call(StrContains("no kunit output detected"))
+> +               print_mock.stop()
+> +               file.close()
+> +
+>         def test_crashed_test(self):
+>                 crashed_log = get_absolute_path(
+>                         'test_data/test_is_test_passed-crash.log')
+> diff --git a/tools/testing/kunit/test_data/test_insufficient_memory.log b/tools/testing/kunit/test_data/test_insufficient_memory.log
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..6c9e4da7b6d763a03c0c83302b2faa6dc21a6ea6
+> GIT binary patch
+> literal 856
+> zcmbu6Piw<448`yH6xx0L3mw^@hf#VOv}5$J+fZ#KHj8CrJK6H>=Z2=CgO$<hA}n~n
+> z_av{ZCy=#qP-&xMfG4=6vR)i)5n%+={(WUX@f3QQc$@8JeI=@sWh+JEQ*#MXVFVXF
+> z3Ic%)LLrv~p$(Btnp72VZT95Dcs$;|{9!uqlCTqzsVj`yGB}JvL1F#T<`SpJ4?L6&
+> zvLJa#bUk?B5jWafHpCGc^cwdSg)SXJ+Sp0$Q$V&%X;`!D6P@>grwf=!Y9>J$&;ioE
+> z(YWH`vCdK5Yv8@UZFe8*_w@>lK?j;o`2XCkM`zDc9)5TBu*ma#3i~#uEu#ge+Mv@N
+> z!H}`OJ&aI@v}o*ZK;I-rL20Tal*zuYY-cSL^z~bR2OA<uaygqX^7-Rzeh;N?h?hs>
+> F><3Em&*A_8
+>
+> literal 0
+> HcmV?d00001
+>
+> --
+> 2.27.0.278.ge193c7cf3a9-goog
+>
