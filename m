@@ -2,211 +2,152 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 651B8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB1E4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D437207ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:46:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2C23207ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:47:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earth.li header.i=@earth.li header.b="ANXsmusz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbgFKRqm (ORCPT
+        id S1728107AbgFKRrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 13:46:42 -0400
-Received: from mga14.intel.com ([192.55.52.115]:9096 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725869AbgFKRqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 13:46:42 -0400
-IronPort-SDR: Oh+DKdxx09gBC2imopTiJBVrL5QzFtvz8LXnj5QnEVUCr4IFxUNFURU3RAJUxUthSK45ZTuE4x
- Gfyc2UF0Y/1Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 10:46:38 -0700
-IronPort-SDR: cyanNNT/0iff1+VTxru1WwpyKtWPGb5Onx9CyIC2p2imR40fSRRdzMLTEeTZL/W/O5d/Kmtiuy
- sTKxvu22t9hQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,500,1583222400"; 
-   d="scan'208";a="271656436"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga003.jf.intel.com with ESMTP; 11 Jun 2020 10:46:38 -0700
-Date:   Thu, 11 Jun 2020 10:46:36 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Prarit Bhargava <prarit@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: [PATCH v2] x86/split_lock: Sanitize userspace and guest error
- output
-Message-ID: <20200611174636.GL29918@linux.intel.com>
-References: <20200608122114.13043-1-prarit@redhat.com>
- <20200608171552.GB8223@linux.intel.com>
- <b83ff48b-f590-f0f5-de64-d153ef376124@redhat.com>
+        Thu, 11 Jun 2020 13:47:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34076 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725824AbgFKRrU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 13:47:20 -0400
+Received: from the.earth.li (the.earth.li [IPv6:2a00:1098:86:4d:c0ff:ee:15:900d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3307C03E96F;
+        Thu, 11 Jun 2020 10:47:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
+         s=the; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject
+        :Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=LYQ+N8x0aH8bz40x26RW7A4B2ALqLvrlMXrsdbkjenw=; b=ANXsmusz27gS1YColuHDf8V1Wd
+        UL5B1uIB3xQ2AJ0LHCIxuJM62SxcKcAbej8Fi5PEUaPfzHm2MiJ+rsdBMkbTCD5TxC4T52LuNb9VA
+        DAfiZbKDaxU1GFvOyqgY/YDgFwuKGGhC+gjJ0YWLJVQYRczWQZgH9eIa+0pyXDvU8tobWDPiXVAiW
+        MDUhbCDT88Eid+1ZkoK22Xmb0SgcXMxsObUMPmPkevl5bh3d4ZdRDjTJ6BAU/KSCtwGUp6rCDJyvN
+        sc+xDp79WYLSFCgzBHn+T9kKzE6tOYaaplKvQ0z0yOV9H+coc4+1FIAzSIwJdnNcmQdQRUPb+rloy
+        8BxMoZEw==;
+Received: from noodles by the.earth.li with local (Exim 4.92)
+        (envelope-from <noodles@earth.li>)
+        id 1jjRIG-0003Xp-Ro; Thu, 11 Jun 2020 18:47:12 +0100
+Date:   Thu, 11 Jun 2020 18:47:12 +0100
+From:   Jonathan McDowell <noodles@earth.li>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] net: dsa: qca8k: Improve SGMII interface handling
+Message-ID: <20200611174712.GW311@earth.li>
+References: <cover.1591816172.git.noodles@earth.li>
+ <2150f4c70c754aed179e46e166f3c305254cf85a.1591816172.git.noodles@earth.li>
+ <9d7d09d5-393f-d5bd-5c57-78c914bdc850@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b83ff48b-f590-f0f5-de64-d153ef376124@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <9d7d09d5-393f-d5bd-5c57-78c914bdc850@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 01:37:19PM -0400, Prarit Bhargava wrote:
-> 
-> 
-> On 6/8/20 1:15 PM, Sean Christopherson wrote:
-> > On Mon, Jun 08, 2020 at 08:21:14AM -0400, Prarit Bhargava wrote:
-> >> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-> >> index 166d7c355896..e02ec81fe1eb 100644
-> >> --- a/arch/x86/kernel/cpu/intel.c
-> >> +++ b/arch/x86/kernel/cpu/intel.c
-> >> @@ -1074,10 +1074,17 @@ static void split_lock_init(void)
-> >>  	split_lock_verify_msr(sld_state != sld_off);
-> >>  }
-> >>  
-> >> -static void split_lock_warn(unsigned long ip)
-> >> +static bool split_lock_warn(unsigned long ip, int fatal_no_warn)
-> >>  {
-> >> -	pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
-> >> -			    current->comm, current->pid, ip);
-> >> +	if (fatal_no_warn)
-> >> +		return false;
+On Wed, Jun 10, 2020 at 08:31:11PM -0700, Florian Fainelli wrote:
+> On 6/10/2020 12:15 PM, Jonathan McDowell wrote:
+> > This patch improves the handling of the SGMII interface on the QCA8K
+> > devices. Previously the driver did no configuration of the port, even if
+> > it was selected. We now configure it up in the appropriate
+> > PHY/MAC/Base-X mode depending on what phylink tells us we are connected
+> > to and ensure it is enabled.
 > > 
-> > This misses the point Xiaoyao was making.  If EFLAGS.AC=1 then the #AC is a
-> > legacy alignment check fault and should not be treated as a split-lock #AC.
-> > The basic premise of the patch makes sense, but the end result is confusing
-> > because incorporating "fatal" and the EFLAGS.AC state into split_lock_warn()
-> > bastardizes both the "split_lock" and "warn" aspects of the function.
+> > Tested with a device where the CPU connection is RGMII (i.e. the common
+> > current use case) + one where the CPU connection is SGMII. I don't have
+> > any devices where the SGMII interface is brought out to something other
+> > than the CPU.
 > > 
-> > E.g. something like this yields the same net effect, it's just organized
-> > differently.  If so desired, the "bogus" message could be dropped via
-> > Xiaoyao's prep patch[*] so that this change would only affect the sld_fatal
-> > messages.
+> > Signed-off-by: Jonathan McDowell <noodles@earth.li>
+> > ---
+> >  drivers/net/dsa/qca8k.c | 28 +++++++++++++++++++++++++++-
+> >  drivers/net/dsa/qca8k.h | 13 +++++++++++++
+> >  2 files changed, 40 insertions(+), 1 deletion(-)
 > > 
-> > [*] https://lkml.kernel.org/r/20200509110542.8159-3-xiaoyao.li@intel.com
-> > 
-> > 
-> 
-> Sean, I will just take your patch to make things easy.  I will add you as a
-> Signed-off-by.
-> 
-> /me is testing the patch right now
-
-Sure, here's an official SOB if it happens to work.
-
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-
-> > diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-> > index 23fd5f319908..1aad0b8e394c 100644
-> > --- a/arch/x86/kernel/cpu/intel.c
-> > +++ b/arch/x86/kernel/cpu/intel.c
-> > @@ -1071,11 +1071,14 @@ static void split_lock_init(void)
-> >         split_lock_verify_msr(sld_state != sld_off);
-> >  }
-> > 
-> > -static void split_lock_warn(unsigned long ip)
-> > +static bool handle_split_lock(unsigned long ip)
+> > diff --git a/drivers/net/dsa/qca8k.c b/drivers/net/dsa/qca8k.c
+> > index dcd9e8fa99b6..33e62598289e 100644
+> > --- a/drivers/net/dsa/qca8k.c
+> > +++ b/drivers/net/dsa/qca8k.c
+> > @@ -681,7 +681,7 @@ qca8k_phylink_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
+> >  			 const struct phylink_link_state *state)
 > >  {
-> >         pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
-> >                             current->comm, current->pid, ip);
-> > 
-> > +       if (sld_state != sld_warn)
-> > +               return false;
+> >  	struct qca8k_priv *priv = ds->priv;
+> > -	u32 reg;
+> > +	u32 reg, val;
+> >  
+> >  	switch (port) {
+> >  	case 0: /* 1st CPU port */
+> > @@ -740,6 +740,32 @@ qca8k_phylink_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
+> >  	case PHY_INTERFACE_MODE_1000BASEX:
+> >  		/* Enable SGMII on the port */
+> >  		qca8k_write(priv, reg, QCA8K_PORT_PAD_SGMII_EN);
 > > +
-> >         /*
-> >          * Disable the split lock detection for this task so it can make
-> >          * progress and set TIF_SLD so the detection is re-enabled via
-> > @@ -1083,18 +1086,13 @@ static void split_lock_warn(unsigned long ip)
-> >          */
-> >         sld_update_msr(false);
-> >         set_tsk_thread_flag(current, TIF_SLD);
-> > +       return true;
-> >  }
-> > 
-> >  bool handle_guest_split_lock(unsigned long ip)
-> >  {
-> > -       if (sld_state == sld_warn) {
-> > -               split_lock_warn(ip);
-> > +       if (handle_split_lock(ip))
-> >                 return true;
-> > -       }
-> > -
-> > -       pr_warn_once("#AC: %s/%d %s split_lock trap at address: 0x%lx\n",
-> > -                    current->comm, current->pid,
-> > -                    sld_state == sld_fatal ? "fatal" : "bogus", ip);
-> > 
-> >         current->thread.error_code = 0;
-> >         current->thread.trap_nr = X86_TRAP_AC;
-> > @@ -1105,10 +1103,10 @@ EXPORT_SYMBOL_GPL(handle_guest_split_lock);
-> > 
-> >  bool handle_user_split_lock(struct pt_regs *regs, long error_code)
-> >  {
-> > -       if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
-> > +       if (regs->flags & X86_EFLAGS_AC)
-> >                 return false;
-> > -       split_lock_warn(regs->ip);
-> > -       return true;
+> > +		/* Enable/disable SerDes auto-negotiation as necessary */
+> > +		val = qca8k_read(priv, QCA8K_REG_PWS);
+> > +		if (phylink_autoneg_inband(mode))
+> > +			val &= ~QCA8K_PWS_SERDES_AEN_DIS;
+> > +		else
+> > +			val |= QCA8K_PWS_SERDES_AEN_DIS;
+> > +		qca8k_write(priv, QCA8K_REG_PWS, val);
 > > +
-> > +       return handle_split_lock(regs->ip);
-> >  }
-> > 
-> >  /*
-> > 
-> > 
-> >> +
-> >> +	pr_warn_ratelimited("#AC: %s/%d %ssplit_lock trap at address: 0x%lx\n",
-> >> +			    current->comm, current->pid,
-> >> +			    sld_state == sld_fatal ? "fatal " : "", ip);
-> >> +
-> >> +	if (sld_state == sld_fatal)
-> >> +		return false;
-> >>  
-> >>  	/*
-> >>  	 * Disable the split lock detection for this task so it can make
-> >> @@ -1086,18 +1093,13 @@ static void split_lock_warn(unsigned long ip)
-> >>  	 */
-> >>  	sld_update_msr(false);
-> >>  	set_tsk_thread_flag(current, TIF_SLD);
-> >> +	return true;
-> >>  }
-> >>  
-> >>  bool handle_guest_split_lock(unsigned long ip)
-> >>  {
-> >> -	if (sld_state == sld_warn) {
-> >> -		split_lock_warn(ip);
-> >> +	if (split_lock_warn(ip, 0))
-> >>  		return true;
-> >> -	}
-> >> -
-> >> -	pr_warn_once("#AC: %s/%d %s split_lock trap at address: 0x%lx\n",
-> >> -		     current->comm, current->pid,
-> >> -		     sld_state == sld_fatal ? "fatal" : "bogus", ip);
-> >>  
-> >>  	current->thread.error_code = 0;
-> >>  	current->thread.trap_nr = X86_TRAP_AC;
-> >> @@ -1108,10 +1110,7 @@ EXPORT_SYMBOL_GPL(handle_guest_split_lock);
-> >>  
-> >>  bool handle_user_split_lock(struct pt_regs *regs, long error_code)
-> >>  {
-> >> -	if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
-> >> -		return false;
-> >> -	split_lock_warn(regs->ip);
-> >> -	return true;
-> >> +	return split_lock_warn(regs->ip, regs->flags & X86_EFLAGS_AC);
-> >>  }
-> >>  
-> >>  /*
-> >> -- 
-> >> 2.21.3
-> >>
-> > 
+> > +		/* Configure the SGMII parameters */
+> > +		val = qca8k_read(priv, QCA8K_REG_SGMII_CTRL);
+> > +
+> > +		val |= QCA8K_SGMII_EN_PLL | QCA8K_SGMII_EN_RX |
+> > +			QCA8K_SGMII_EN_TX | QCA8K_SGMII_EN_SD;
+> > +
+> > +		val &= ~QCA8K_SGMII_MODE_CTRL_MASK;
+> > +		if (dsa_is_cpu_port(ds, port)) {
+> > +			/* CPU port, we're talking to the CPU MAC, be a PHY */
+> > +			val |= QCA8K_SGMII_MODE_CTRL_PHY;
 > 
+> Since port 6 can be interfaced to an external PHY, do not you have to
+> differentiate here whether this port is connected to an actual PHY,
+> versus connected to a MAC? You should be able to use mode == MLO_AN_PHY
+> to differentiate that case from the others.
+
+I don't think MLO_AN_PHY is sufficient? If it's a fixed link we'll have
+MLO_AN_FIXED and that could be talking to a PHY?
+
+The logic I've gone for is assuming that a port hooked up to the CPU
+should look like a PHY, and otherwise we're hooked up to a PHY so we're
+acting as a MAC. That means we don't cope with the situation that we're
+hooked up to something that isn't the CPU but wants us to look like a
+PHY, but I don't think we have any current way to describe that.
+
+> > +		} else if (state->interface == PHY_INTERFACE_MODE_SGMII) {
+> > +			val |= QCA8K_SGMII_MODE_CTRL_MAC;
+> > +		} else {
+> > +			val |= QCA8K_SGMII_MODE_CTRL_BASEX;
+> 
+> Better make this explicit and check for PHY_INTERFACE_MODE_1000BASEX,
+> even if those are the only two possible values covered by this part of
+> the case statement.
+
+Sure. I'll move the mask inside the if block too in that case, so we
+don't change the setting if we get fed something invalid.
+
+J.
+
+-- 
+Beware of programmers carrying screwdrivers.
