@@ -2,107 +2,179 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C95C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADAE2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:55:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59859206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:46:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86083206A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:55:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HaJM9Pni"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YbaZTSS9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbgFKCqJ (ORCPT
+        id S1726407AbgFKCzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 22:46:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36172 "EHLO
+        Wed, 10 Jun 2020 22:55:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbgFKCqI (ORCPT
+        with ESMTP id S1726326AbgFKCzB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 22:46:08 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2178C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 19:46:07 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id s18so4702832ioe.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 19:46:07 -0700 (PDT)
+        Wed, 10 Jun 2020 22:55:01 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4699AC08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 19:55:01 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id ga6so1651789pjb.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 19:55:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TSwJBC/C70DEZoNyejL2OpF4sigG1AZYU4LYk1z1c98=;
-        b=HaJM9Pnicj9K5t9hjHcLMjrmSXZx+f60pqIst9ZZ7NETX/VkKX+lCnABIjKvubjUBh
-         RtIYsrIGk/FPaNDwfTwSWs68E+KSoErzQOUVqW0VSi5tD7KWX60JKyYAlS9jwwDPAFt+
-         RGJ2VNagqRm/ZbkdTIB6tDi0crdI5qG3Dnqyku1tlSrquhGStkL/qUf8atvGn935oq0j
-         crkn5/0M2ECHGjdn3JbSQlKUARmVH06OtCHdPPzlu5+3wCWqwkcy+2f7Lz+ScPLvgzro
-         en78CqevdvD7s1cMMuwVskUB9N6vmaTxNY7WI/K8zZwb3iRq7ERjFB6PK9TQYI0smzTb
-         PZaA==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=j30R0UZzrDd+0W4T3mjyr9hSWvrdW6CBf5sEGoGyfXI=;
+        b=YbaZTSS93EP7PjECnua8oQ5ab7vBqk+ABuJX3e/qK8iuRB9AZboQWcjN9nOMr3LEbO
+         Ic3FExHwmXhD8IBQDuvf7PFai5iqbX30bSunhs2TMSctm3jwu2Uzv76XGLvxka7YiNwP
+         bq+7hOvVNy4n3/9jtpUQgXYOsSMEVQBHAJrUYqakK406cocI/KCCzcSLB4+ueA0JzKqs
+         Buiehe3CYrBtuZdIAg4nRXYalSDn4FcRin/SU3b538yPpBy/RMKVFtRfxjP1BOW3HND4
+         /VPgwJwonI+rVPBxtz/j8jsZ6O4mcvc2fzPJnUW6EshfwLCtM9V+VFfrn06vgaptR/YO
+         6ORQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TSwJBC/C70DEZoNyejL2OpF4sigG1AZYU4LYk1z1c98=;
-        b=hRFpo++M82sBUBmmjvgGGMsK7umcg+eQEVNGuBHj2CouFKEPD0dQGjSIg4sL/Hu1dN
-         LCeV/l9YqzG94H3GD3cltzRjiVoQdRo1DNxatjqo9FzEqgzOcNPgPesOoogs5ckS9y+O
-         PD0ofNSS1TNFmaNZR/rnK/zKMGRMRdVXiXBae0HvWZNly8cZkon5h/0xfQtAcZYa6oKb
-         AxEbEUU2Upg1Wknfa+LzkdoIglJF/sWC60c4oM3TpJNPueLEDqxNu3y9mkPBifN7cs1m
-         LsJ5tZ0IV3G6p7OKzlgrKWEIS94Rp3IODfvbnopaCypaLKUrWoaI/yA5+MtwVYDqkhRM
-         EL1g==
-X-Gm-Message-State: AOAM532p6FpRaPtXdF52hJ1cSTf3WDequzGiZkdWlEGzzGp3ag+bbFYd
-        EP5JPq6bBGqkgVjn6csNlFOmI5PKd3GB5QQGPfo=
-X-Google-Smtp-Source: ABdhPJwuvQRH49+8qam8fSfIwe6/k8jde63sbEvj1L03wYyIFilyVejglcq1r9XLL+dhvNe+0uXq6DtRjvsISkxNUXU=
-X-Received: by 2002:a02:998b:: with SMTP id a11mr1194145jal.117.1591843566867;
- Wed, 10 Jun 2020 19:46:06 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=j30R0UZzrDd+0W4T3mjyr9hSWvrdW6CBf5sEGoGyfXI=;
+        b=Fq9HRJ2xA2gqoYeZZBjiCjSzmr0bQkHM42mlL9hErjbZ8rWPiI7xLUE6724CteLYxO
+         ybHfLo9UEC5lyYB0m+30zKVZc8SOUU8jo2TrhlvEqJc7tQEAjcFUDV/Ubkv40amiC/G0
+         fMCsXsgCncB/b5wMqLwk94kXEkq+zge8d2OL7ESNLdemBFKmv6iVOEFwQSEnrme/v/JC
+         0AcOB8PbX/R/4m2amandTu39P725F4k97ImgIvcG2T7bBHSZFiqU6RDvhikVr9Mln935
+         Tyrl1zLVzIMeAUaHXYs/tCES7El6q2w4lu55ldHCrLIqevEeCzC5P+eWc2e03jFNGtJw
+         lfQg==
+X-Gm-Message-State: AOAM533HAiYj67XakWXY1C179gn1QE9DZvTc/rgJN+z6yxVrLECdhkUh
+        gMlLoJorvGO4BFevirtk3GNWZg==
+X-Google-Smtp-Source: ABdhPJy13QPXB7ndCJTCJUZMyAvmhnKxmSP60f1ha+1dPVVCf9spfvGWBTpxKJ0hiwq4FFMTSLSh6Q==
+X-Received: by 2002:a17:90a:c717:: with SMTP id o23mr5951320pjt.195.1591844100426;
+        Wed, 10 Jun 2020 19:55:00 -0700 (PDT)
+Received: from [10.80.1.206] ([45.135.186.73])
+        by smtp.gmail.com with ESMTPSA id 6sm1259143pfi.170.2020.06.10.19.54.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Jun 2020 19:54:59 -0700 (PDT)
+Subject: Re: [PATCH 0/2] Introduce PCI_FIXUP_IOMMU
+To:     Bjorn Helgaas <helgaas@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        jean-philippe <jean-philippe@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Thanu Rangarajan <Thanu.Rangarajan@arm.com>,
+        Souvik Chakravarty <Souvik.Chakravarty@arm.com>
+References: <20200609164926.GA1452092@bjorn-Precision-5520>
+From:   Zhangfei Gao <zhangfei.gao@linaro.org>
+Message-ID: <1d8a7ec4-b578-a97a-7835-453806f4e3ef@linaro.org>
+Date:   Thu, 11 Jun 2020 10:54:45 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200607193023.52344-1-jassisinghbrar@gmail.com>
- <20200610082315.GB2689@bogus> <CABb+yY1T03YLwiFvBykxsAHQ9Kpu=r1nRTuaP3Emf5dP=Upm0g@mail.gmail.com>
- <20200610155629.GA7357@bogus>
-In-Reply-To: <20200610155629.GA7357@bogus>
-From:   Jassi Brar <jassisinghbrar@gmail.com>
-Date:   Wed, 10 Jun 2020 21:45:55 -0500
-Message-ID: <CABb+yY0pQYD7DTf=MNpVPB7F2PESiWyTYj=ftRHDPkKMOobRVQ@mail.gmail.com>
-Subject: Re: [PATCH] firmware: arm_scmi: fix timeout value for send_message
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200609164926.GA1452092@bjorn-Precision-5520>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 10:56 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
 
-[I admit you can write bigger posts than me, so I am not going to
-write a passionate response to each of your paragraphs.
-Let's keep it to the point.]
 
-> > > >       if (xfer->hdr.poll_completion) {
-> > > > -             ktime_t stop = ktime_add_ns(ktime_get(), SCMI_MAX_POLL_TO_NS);
-> > > > +             ktime_t stop = ktime_add_ns(ktime_get(), 500 * 1000 * NSEC_PER_USEC);
-> > > >
-> > >
-> > > This is unacceptable delay for schedutil fast_switch. So no for this one.
-> > >
-> > Increasing timeout does not increase latency.
+On 2020/6/10 上午12:49, Bjorn Helgaas wrote:
+> On Tue, Jun 09, 2020 at 11:15:06AM +0200, Arnd Bergmann wrote:
+>> On Tue, Jun 9, 2020 at 6:02 AM Zhangfei Gao <zhangfei.gao@linaro.org> wrote:
+>>> On 2020/6/9 上午12:41, Bjorn Helgaas wrote:
+>>>> On Mon, Jun 08, 2020 at 10:54:15AM +0800, Zhangfei Gao wrote:
+>>>>> On 2020/6/6 上午7:19, Bjorn Helgaas wrote:
+>>>>>>> +++ b/drivers/iommu/iommu.c
+>>>>>>> @@ -2418,6 +2418,10 @@ int iommu_fwspec_init(struct device *dev, struct
+>>>>>>> fwnode_handle *iommu_fwnode,
+>>>>>>>            fwspec->iommu_fwnode = iommu_fwnode;
+>>>>>>>            fwspec->ops = ops;
+>>>>>>>            dev_iommu_fwspec_set(dev, fwspec);
+>>>>>>> +
+>>>>>>> +       if (dev_is_pci(dev))
+>>>>>>> +               pci_fixup_device(pci_fixup_final, to_pci_dev(dev));
+>>>>>>> +
+>>>>>>>
+>>>>>>> Then pci_fixup_final will be called twice, the first in pci_bus_add_device.
+>>>>>>> Here in iommu_fwspec_init is the second time, specifically for iommu_fwspec.
+>>>>>>> Will send this when 5.8-rc1 is open.
+>>>>>> Wait, this whole fixup approach seems wrong to me.  No matter how you
+>>>>>> do the fixup, it's still a fixup, which means it requires ongoing
+>>>>>> maintenance.  Surely we don't want to have to add the Vendor/Device ID
+>>>>>> for every new AMBA device that comes along, do we?
+>>>>>>
+>>>>> Here the fake pci device has standard PCI cfg space, but physical
+>>>>> implementation is base on AMBA
+>>>>> They can provide pasid feature.
+>>>>> However,
+>>>>> 1, does not support tlp since they are not real pci devices.
+>>>>> 2. does not support pri, instead support stall (provided by smmu)
+>>>>> And stall is not a pci feature, so it is not described in struct pci_dev,
+>>>>> but in struct iommu_fwspec.
+>>>>> So we use this fixup to tell pci system that the devices can support stall,
+>>>>> and hereby support pasid.
+>>>> This did not answer my question.  Are you proposing that we update a
+>>>> quirk every time a new AMBA device is released?  I don't think that
+>>>> would be a good model.
+>>> Yes, you are right, but we do not have any better idea yet.
+>>> Currently we have three fake pci devices, which support stall and pasid.
+>>> We have to let pci system know the device can support pasid, because of
+>>> stall feature, though not support pri.
+>>> Do you have any other ideas?
+>> It sounds like the best way would be to allocate a PCI capability for it, so
+>> detection can be done through config space, at least in future devices,
+>> or possibly after a firmware update if the config space in your system
+>> is controlled by firmware somewhere.  Once there is a proper mechanism
+>> to do this, using fixups to detect the early devices that don't use that
+>> should be uncontroversial. I have no idea what the process or timeline
+>> is to add new capabilities into the PCIe specification, or if this one
+>> would be acceptable to the PCI SIG at all.
+> That sounds like a possibility.  The spec already defines a
+> Vendor-Specific Extended Capability (PCIe r5.0, sec 7.9.5) that might
+> be a candidate.
+Will investigate this, thanks Bjorn
 >
-> Agreed, but worst case you may be stuck here for 500ms which is not
-> acceptable.
->
-Not acceptable to who, you or the kernel? :)    Now that you said you
-are fixing the scmi's fast_switch implementation.
+>> If detection cannot be done through PCI config space, the next best
+>> alternative is to pass auxiliary data through firmware. On DT based
+>> machines, you can list non-hotpluggable PCIe devices and add custom
+>> properties that could be read during device enumeration. I assume
+>> ACPI has something similar, but I have not done that.
+Yes, thanks Arnd
+> ACPI has _DSM (ACPI v6.3, sec 9.1.1), which might be a candidate.  I
+> like this better than a PCI capability because the property you need
+> to expose is not a PCI property.
+_DSM may not workable, since it is working in runtime.
+We need stall information in init stage, neither too early (after 
+allocation of iommu_fwspec)
+nor too late (before arm_smmu_add_device ).
 
-Even though I don't think 500ms would ruin our lives, but ok, I will
-make it 30ms - same as you did in the 'else' block. And drop the other
-change.
+By the way,
+It would be a long time if we need modify either pcie spec or acpi spec.
+Can we use pci_fixup_device in iommu_fwspec_init first, it is relatively 
+simple
+and meet the requirement of platform device using pasid, and they are 
+already in product.
 
-Thanks.
+Thanks
+
