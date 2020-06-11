@@ -2,126 +2,94 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0020C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 03:42:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A50CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 03:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F2CF2072F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 03:42:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="G+51MYtW"
+	by mail.kernel.org (Postfix) with ESMTP id F2ADC2072F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 03:42:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbgFKDmK (ORCPT
+        id S1726534AbgFKDmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 23:42:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44742 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726326AbgFKDmI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 23:42:08 -0400
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [IPv6:2001:df5:b000:5::4])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8F2BC08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 20:42:07 -0700 (PDT)
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id E14CA8066C;
-        Thu, 11 Jun 2020 15:42:00 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1591846920;
-        bh=pwafHa80MS48ZYS1w+T8ti3oHQ+XDqAf4v1bbkbcS9Y=;
-        h=From:To:Cc:Subject:Date;
-        b=G+51MYtWispe9zo+EqobmmCcvJ9ZPm1CPezyWwqE3SuKGa19vni9XeMcKLRyb9t+4
-         VpBcq6/X7+vbocXrDPcIUh33jDpNbDL8DkvzTry4w8NYC9M5WnIJVdQaJ+ZbjkTAjy
-         0lLEEzwCfzkjzNf02NVCsyklzv3P8fOlhGAXvNGA2EA9ABPLfw09ZjIkmsn5FrWYub
-         IE1uXDKAJLq3jqCVn9Lb1FXvU9ZSScRPf4O3+Ph+2Pn9QW2s3FmhOkAwfHFJHbRlJk
-         5kX5htHlDBFq5HFPnotezxauGrpkwJ5XMRAGQuA6FnBqUDQzmgoMAc9gK0rIZFPkV7
-         pgI48YJrKslIw==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5ee1a7fe0000>; Thu, 11 Jun 2020 15:41:50 +1200
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
-        by smtp (Postfix) with ESMTP id 95E2B13EDE4;
-        Thu, 11 Jun 2020 15:41:49 +1200 (NZST)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id D1D52280083; Thu, 11 Jun 2020 15:41:49 +1200 (NZST)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
-        christophe.leroy@c-s.fr
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v2] powerpc: Remove inaccessible CMDLINE default
-Date:   Thu, 11 Jun 2020 15:41:40 +1200
-Message-Id: <20200611034140.9133-1-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.27.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+        Wed, 10 Jun 2020 23:42:35 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:40208 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726473AbgFKDme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 23:42:34 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx_2kkqOFenbRAAA--.1932S2;
+        Thu, 11 Jun 2020 11:42:28 +0800 (CST)
+From:   Qing Zhang <zhangqing@loongson.cn>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH 1/2] spi: tools: Make default_tx/rx and input_tx static
+Date:   Thu, 11 Jun 2020 11:42:26 +0800
+Message-Id: <1591846947-14252-1-git-send-email-zhangqing@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9Dx_2kkqOFenbRAAA--.1932S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7tr48tw4UArW7GFW5Jry3twb_yoW8JF47pF
+        45Ar40kan7KF1Yyay7X3ZxGw15CF97X3y5Cw1DK3yFyFsYk3Z7Xa95Kry8tFWUGFZ2qFn8
+        Zr1I9r43Xa10vw7anT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9l14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
+        1j6rxdM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAK
+        zVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx
+        8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIF
+        xwCY02Avz4vE14v_Gr4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4I
+        xYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
+        GVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
+        0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0
+        rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r
+        4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUj_-PDUUUU
+X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit cbe46bd4f510 ("powerpc: remove CONFIG_CMDLINE #ifdef mess")
-CONFIG_CMDLINE has always had a value regardless of CONFIG_CMDLINE_BOOL.
+Fix the following sparse warning:
 
-For example:
+./spidev_test.c:50:9: warning: symbol 'default_tx' was not declared. Should it be static?
+./spidev_test.c:59:9: warning: symbol 'default_rx' was not declared. Should it be static?
+./spidev_test.c:60:6: warning: symbol 'input_tx' was not declared. Should it be static?
 
- $ make ARCH=3Dpowerpc defconfig
- $ cat .config
- # CONFIG_CMDLINE_BOOL is not set
- CONFIG_CMDLINE=3D""
-
-When enabling CONFIG_CMDLINE_BOOL this value is kept making the 'default
-"..." if CONFIG_CMDLINE_BOOL' ineffective.
-
- $ ./scripts/config --enable CONFIG_CMDLINE_BOOL
- $ cat .config
- CONFIG_CMDLINE_BOOL=3Dy
- CONFIG_CMDLINE=3D""
-
-Remove CONFIG_CMDLINE_BOOL and the inaccessible default.
-
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
 ---
-It took me a while to get round to sending a v2, for a refresher v1 can b=
-e found here:
+ tools/spi/spidev_test.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-http://patchwork.ozlabs.org/project/linuxppc-dev/patch/20190802050232.229=
-78-1-chris.packham@alliedtelesis.co.nz/
-
-Changes in v2:
-- Rebase on top of Linus's tree
-- Fix some typos in commit message
-- Add review from Christophe
-- Remove CONFIG_CMDLINE_BOOL
-
- arch/powerpc/Kconfig | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
-
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 9fa23eb320ff..51abc59c3334 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -859,12 +859,8 @@ config PPC_DENORMALISATION
- 	  Add support for handling denormalisation of single precision
- 	  values.  Useful for bare metal only.  If unsure say Y here.
-=20
--config CMDLINE_BOOL
--	bool "Default bootloader kernel arguments"
--
- config CMDLINE
--	string "Initial kernel command string" if CMDLINE_BOOL
--	default "console=3DttyS0,9600 console=3Dtty0 root=3D/dev/sda2" if CMDLI=
-NE_BOOL
-+	string "Initial kernel command string"
- 	default ""
- 	help
- 	  On some platforms, there is currently no way for the boot loader to
---=20
-2.27.0
+diff --git a/tools/spi/spidev_test.c b/tools/spi/spidev_test.c
+index 56ea053f..83844f8 100644
+--- a/tools/spi/spidev_test.c
++++ b/tools/spi/spidev_test.c
+@@ -47,7 +47,7 @@ static int transfer_size;
+ static int iterations;
+ static int interval = 5; /* interval in seconds for showing transfer rate */
+ 
+-uint8_t default_tx[] = {
++static uint8_t default_tx[] = {
+ 	0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+ 	0x40, 0x00, 0x00, 0x00, 0x00, 0x95,
+ 	0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+@@ -56,8 +56,8 @@ uint8_t default_tx[] = {
+ 	0xF0, 0x0D,
+ };
+ 
+-uint8_t default_rx[ARRAY_SIZE(default_tx)] = {0, };
+-char *input_tx;
++static uint8_t default_rx[ARRAY_SIZE(default_tx)] = {0, };
++static char *input_tx;
+ 
+ static void hex_dump(const void *src, size_t length, size_t line_size,
+ 		     char *prefix)
+-- 
+2.1.0
 
