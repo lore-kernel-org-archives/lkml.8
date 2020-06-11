@@ -2,190 +2,220 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4F0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD3DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AA6A20760
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:08:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kIE33h7L"
+	by mail.kernel.org (Postfix) with ESMTP id D838020760
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:09:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbgFKMI0 (ORCPT
+        id S1728036AbgFKMJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 08:08:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38126 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727780AbgFKMIY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 08:08:24 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E338C08C5C2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 05:08:24 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id j198so6824365wmj.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 05:08:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=l9/1IkVcWGgYEUiuZWnQIOE6uUjuPXFr0zUWFBzg324=;
-        b=kIE33h7Lf2r+tx6hQ/ix/6+/19I3lB8Ldey0jlumYHalyyXnEmqjH3Ykw4mPIPgrcv
-         4dkNF36frta7vt0Et8JEAJhO/OWx50XwV4omuBKChHuTgqeA1dZ4TD8tQT9UZmcYYDBD
-         iVtWJnbCi9wgpwY0FWz7KnMUpzhRVlUGS2xbU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=l9/1IkVcWGgYEUiuZWnQIOE6uUjuPXFr0zUWFBzg324=;
-        b=tzGoeJ0AQzSbQ+6Mgpo1pevvFY9uR6Yxl8niCvAf/dsblhZpE5Tcw2f2Et/0xaCjXX
-         bkKX9dS2+XHdUYvRd19wuf2b37YaJ66o0hfD+XNuV0/U4fR6PXH4tROUP6rVgubL1hRP
-         E5A9nI6bipM0ur50AjjuvGP666h9FE7p8VuZTc5Wc5Bsf4jwydrGH0gYYLnK52ifJlTO
-         efEviXKkgU3v4TWvkDe/+5rVF616HdSVIfNuiTLGgX1KBqHpjY3qfPAMOhUmMXrPpAAV
-         +OoSLPck8F9CavJCv7m7dcETXMxTsNsMq7v+aGv9rVlR4Sq2Wv7pLXEvMPOS4uR6dKeH
-         n7cw==
-X-Gm-Message-State: AOAM531o6RwGLnuJFfnXu+g9m1FiZOSOF2+ZVHUYOvH3zwltF0ATURN4
-        P1F3C1C89J67FOEYyaSO9Dv/RA==
-X-Google-Smtp-Source: ABdhPJw/4tFHFEvAplryswUi9eYGwKBoFlfEALinuD5TCcI+/+xf1W81Wni9oObHj3ji4UEsPf8kKQ==
-X-Received: by 2002:a1c:7416:: with SMTP id p22mr7953394wmc.95.1591877303012;
-        Thu, 11 Jun 2020 05:08:23 -0700 (PDT)
-Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
-        by smtp.gmail.com with ESMTPSA id 5sm6618926wrr.5.2020.06.11.05.08.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 05:08:22 -0700 (PDT)
-Date:   Thu, 11 Jun 2020 12:08:20 +0000
-From:   Tomasz Figa <tfiga@chromium.org>
-To:     Xia Jiang <xia.jiang@mediatek.com>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        srv_heupstream@mediatek.com, senozhatsky@chromium.org,
-        mojahsu@chromium.org, drinkcat@chromium.org,
-        maoguang.meng@mediatek.com, sj.huang@mediatek.com
-Subject: Re: [PATCH RESEND v9 05/18] media: platform: Improve power on and
- power off flow
-Message-ID: <20200611120820.GC135826@chromium.org>
-References: <20200604090553.10861-1-xia.jiang@mediatek.com>
- <20200604090553.10861-7-xia.jiang@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604090553.10861-7-xia.jiang@mediatek.com>
+        Thu, 11 Jun 2020 08:09:11 -0400
+Received: from mga17.intel.com ([192.55.52.151]:41824 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727849AbgFKMJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 08:09:10 -0400
+IronPort-SDR: Qzh73Zpvtv4Q+8OeusGrmhzSWPyzLaF8qoEk+crYkCIic8dYaup/zGynwFoibennyF5QTcifRo
+ AIiQDSj/nzIA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 05:09:09 -0700
+IronPort-SDR: slupFsEoGCu3+aZxDJFA/0zL5b17ZqrOsg0F2camZjWpwi38u1nWMEY+JyM7+b0EFAF+80FeiR
+ uSzRmt7F1iIw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,499,1583222400"; 
+   d="scan'208";a="419082464"
+Received: from jacob-builder.jf.intel.com ([10.7.199.155])
+  by orsmga004.jf.intel.com with ESMTP; 11 Jun 2020 05:09:09 -0700
+From:   Liu Yi L <yi.l.liu@intel.com>
+To:     alex.williamson@redhat.com, eric.auger@redhat.com,
+        baolu.lu@linux.intel.com, joro@8bytes.org
+Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
+        ashok.raj@intel.com, yi.l.liu@intel.com, jun.j.tian@intel.com,
+        yi.y.sun@intel.com, jean-philippe@linaro.org, peterx@redhat.com,
+        hao.wu@intel.com, iommu@lists.linux-foundation.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 00/15] vfio: expose virtual Shared Virtual Addressing to VMs
+Date:   Thu, 11 Jun 2020 05:15:19 -0700
+Message-Id: <1591877734-66527-1-git-send-email-yi.l.liu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Xia,
+Shared Virtual Addressing (SVA), a.k.a, Shared Virtual Memory (SVM) on
+Intel platforms allows address space sharing between device DMA and
+applications. SVA can reduce programming complexity and enhance security.
 
-On Thu, Jun 04, 2020 at 05:05:40PM +0800, Xia Jiang wrote:
-> Call pm_runtime_get_sync() before starting a frame and then
-> pm_runtime_put() after completing it. This can save power for the time
-> between processing two frames.
-> 
-> Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
-> ---
-> v9: use pm_runtime_put() to replace pm_runtime_put_sync()
-> ---
->  .../media/platform/mtk-jpeg/mtk_jpeg_core.c   | 27 +++++--------------
->  1 file changed, 6 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> index 12609ca46fd9..fb624385969e 100644
-> --- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> +++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> @@ -710,23 +710,6 @@ static struct vb2_v4l2_buffer *mtk_jpeg_buf_remove(struct mtk_jpeg_ctx *ctx,
->  		return v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
->  }
->  
-> -static int mtk_jpeg_start_streaming(struct vb2_queue *q, unsigned int count)
-> -{
-> -	struct mtk_jpeg_ctx *ctx = vb2_get_drv_priv(q);
-> -	struct vb2_v4l2_buffer *vb;
-> -	int ret = 0;
-> -
-> -	ret = pm_runtime_get_sync(ctx->jpeg->dev);
-> -	if (ret < 0)
-> -		goto err;
-> -
-> -	return 0;
-> -err:
-> -	while ((vb = mtk_jpeg_buf_remove(ctx, q->type)))
-> -		v4l2_m2m_buf_done(vb, VB2_BUF_STATE_QUEUED);
-> -	return ret;
-> -}
-> -
->  static void mtk_jpeg_stop_streaming(struct vb2_queue *q)
->  {
->  	struct mtk_jpeg_ctx *ctx = vb2_get_drv_priv(q);
-> @@ -751,8 +734,6 @@ static void mtk_jpeg_stop_streaming(struct vb2_queue *q)
->  
->  	while ((vb = mtk_jpeg_buf_remove(ctx, q->type)))
->  		v4l2_m2m_buf_done(vb, VB2_BUF_STATE_ERROR);
-> -
-> -	pm_runtime_put_sync(ctx->jpeg->dev);
->  }
->  
->  static const struct vb2_ops mtk_jpeg_qops = {
-> @@ -761,7 +742,6 @@ static const struct vb2_ops mtk_jpeg_qops = {
->  	.buf_queue          = mtk_jpeg_buf_queue,
->  	.wait_prepare       = vb2_ops_wait_prepare,
->  	.wait_finish        = vb2_ops_wait_finish,
-> -	.start_streaming    = mtk_jpeg_start_streaming,
->  	.stop_streaming     = mtk_jpeg_stop_streaming,
->  };
->  
-> @@ -812,7 +792,7 @@ static void mtk_jpeg_device_run(void *priv)
->  	struct mtk_jpeg_src_buf *jpeg_src_buf;
->  	struct mtk_jpeg_bs bs;
->  	struct mtk_jpeg_fb fb;
-> -	int i;
-> +	int i, ret;
->  
->  	src_buf = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
->  	dst_buf = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
-> @@ -832,6 +812,10 @@ static void mtk_jpeg_device_run(void *priv)
->  		return;
->  	}
->  
-> +	ret = pm_runtime_get_sync(jpeg->dev);
-> +	if (ret < 0)
-> +		goto dec_end;
-> +
->  	mtk_jpeg_set_dec_src(ctx, &src_buf->vb2_buf, &bs);
->  	if (mtk_jpeg_set_dec_dst(ctx, &jpeg_src_buf->dec_param, &dst_buf->vb2_buf, &fb))
->  		goto dec_end;
-> @@ -957,6 +941,7 @@ static irqreturn_t mtk_jpeg_dec_irq(int irq, void *priv)
->  	v4l2_m2m_buf_done(src_buf, buf_state);
->  	v4l2_m2m_buf_done(dst_buf, buf_state);
->  	v4l2_m2m_job_finish(jpeg->m2m_dev, ctx->fh.m2m_ctx);
-> +	pm_runtime_put(ctx->jpeg->dev);
+This VFIO series is intended to expose SVA usage to VMs. i.e. Sharing
+guest application address space with passthru devices. This is called
+vSVA in this series. The whole vSVA enabling requires QEMU/VFIO/IOMMU
+changes. For IOMMU and QEMU changes, they are in separate series (listed
+in the "Related series").
 
-This patch itself is correct and feel free to add my
+The high-level architecture for SVA virtualization is as below, the key
+design of vSVA support is to utilize the dual-stage IOMMU translation (
+also known as IOMMU nesting translation) capability in host IOMMU.
 
-Reviewed-by: Tomasz Figa <tfiga@chromium.org>
 
-However, it looks like there might be one more problem with this driver.
-What happens if the hardware locks up? The driver doesn't seem to take
-any measures to detect that and recover the system.
+    .-------------.  .---------------------------.
+    |   vIOMMU    |  | Guest process CR3, FL only|
+    |             |  '---------------------------'
+    .----------------/
+    | PASID Entry |--- PASID cache flush -
+    '-------------'                       |
+    |             |                       V
+    |             |                CR3 in GPA
+    '-------------'
+Guest
+------| Shadow |--------------------------|--------
+      v        v                          v
+Host
+    .-------------.  .----------------------.
+    |   pIOMMU    |  | Bind FL for GVA-GPA  |
+    |             |  '----------------------'
+    .----------------/  |
+    | PASID Entry |     V (Nested xlate)
+    '----------------\.------------------------------.
+    |             |   |SL for GPA-HPA, default domain|
+    |             |   '------------------------------'
+    '-------------'
+Where:
+ - FL = First level/stage one page tables
+ - SL = Second level/stage two page tables
 
-If you take a look at other drivers, e.g. the MTK FD driver, there is a
-delayed work scheduled before starting the hardware and canceled in the
-interrupt handler. If the delayed work is executed, it resets the
-hardware and reports the failure to V4L2, so that the execution can
-continue from next frames.
+Patch Overview:
+ 1. a refactor to vfio_iommu_type1 ioctl (patch 0001)
+ 2. reports IOMMU nesting info to userspace ( patch 0002, 0003 and 0015)
+ 3. vfio support for PASID allocation and free for VMs (patch 0004, 0005, 0006)
+ 4. vfio support for binding guest page table to host (patch 0007, 0008, 0009, 0010)
+ 5. vfio support for IOMMU cache invalidation from VMs (patch 0011)
+ 6. vfio support for vSVA usage on IOMMU-backed mdevs (patch 0012)
+ 7. expose PASID capability to VM (patch 0013)
+ 8. add doc for VFIO dual stage control (patch 0014)
 
-This should be fixed in a separate patch, could be outside of this
-series.
+The complete vSVA kernel upstream patches are divided into three phases:
+    1. Common APIs and PCI device direct assignment
+    2. IOMMU-backed Mediated Device assignment
+    3. Page Request Services (PRS) support
 
-Best regards,
-Tomasz
+This patchset is aiming for the phase 1 and phase 2, and based on Jacob's
+below series.
+[PATCH v13 0/8] Nested Shared Virtual Address (SVA) VT-d support - merged
+https://lkml.org/lkml/2020/5/13/1582
+
+[PATCH v2 0/3] IOMMU user API enhancement - wip
+https://lkml.org/lkml/2020/6/11/5
+
+[PATCH 00/10] IOASID extensions for guest SVA - wip
+https://lkml.org/lkml/2020/3/25/874
+
+The latest IOASID code added below new interface for itertate all PASIDs of an
+ioasid_set. The implementation is not sent out yet as Jacob needs some cleanup,
+it can be found in branch vsva-linux-5.7-rc4-v2.
+ int ioasid_set_for_each_ioasid(int sid, void (*fn)(ioasid_t id, void *data), void *data);
+
+Complete set for current vSVA can be found in below branch.
+This branch also includes some extra modifications to IOASID core code and
+vt-d iommu driver cleanup patches.
+https://github.com/luxis1999/linux-vsva.git:vsva-linux-5.7-rc4-v2
+
+The corresponding QEMU patch series is included in below branch:
+https://github.com/luxis1999/qemu.git:vsva_5.7_rc4_qemu_rfcv6
+
+
+Regards,
+Yi Liu
+
+Changelog:
+	- Patch v1 -> Patch v2:
+	  a) Refactor vfio_iommu_type1_ioctl() per suggestion from Christoph
+	     Hellwig.
+	  b) Re-sequence the patch series for better bisect support.
+	  c) Report IOMMU nesting cap info in detail instead of a format in
+	     v1.
+	  d) Enforce one group per nesting type container for vfio iommu type1
+	     driver.
+	  e) Build the vfio_mm related code from vfio.c to be a separate
+	     vfio_pasid.ko.
+	  f) Add PASID ownership check in IOMMU driver.
+	  g) Adopted to latest IOMMU UAPI design. Removed IOMMU UAPI version
+	     check. Added iommu_gpasid_unbind_data for unbind requests from
+	     userspace.
+	  h) Define a single ioctl:VFIO_IOMMU_NESTING_OP for bind/unbind_gtbl
+	     and cahce_invld.
+	  i) Document dual stage control in vfio.rst.
+	  Patch v1: https://lore.kernel.org/linux-iommu/1584880325-10561-1-git-send-email-yi.l.liu@intel.com/
+
+	- RFC v3 -> Patch v1:
+	  a) Address comments to the PASID request(alloc/free) path
+	  b) Report PASID alloc/free availabitiy to user-space
+	  c) Add a vfio_iommu_type1 parameter to support pasid quota tuning
+	  d) Adjusted to latest ioasid code implementation. e.g. remove the
+	     code for tracking the allocated PASIDs as latest ioasid code
+	     will track it, VFIO could use ioasid_free_set() to free all
+	     PASIDs.
+	  RFC v3: https://lore.kernel.org/linux-iommu/1580299912-86084-1-git-send-email-yi.l.liu@intel.com/
+
+	- RFC v2 -> v3:
+	  a) Refine the whole patchset to fit the roughly parts in this series
+	  b) Adds complete vfio PASID management framework. e.g. pasid alloc,
+	  free, reclaim in VM crash/down and per-VM PASID quota to prevent
+	  PASID abuse.
+	  c) Adds IOMMU uAPI version check and page table format check to ensure
+	  version compatibility and hardware compatibility.
+	  d) Adds vSVA vfio support for IOMMU-backed mdevs.
+	  RFC v2: https://lore.kernel.org/linux-iommu/1571919983-3231-1-git-send-email-yi.l.liu@intel.com/
+
+	- RFC v1 -> v2:
+	  Dropped vfio: VFIO_IOMMU_ATTACH/DETACH_PASID_TABLE.
+	  RFC v1: https://lore.kernel.org/linux-iommu/1562324772-3084-1-git-send-email-yi.l.liu@intel.com/
+
+
+Eric Auger (1):
+  vfio: Document dual stage control
+
+Liu Yi L (13):
+  vfio/type1: Refactor vfio_iommu_type1_ioctl()
+  iommu: Report domain nesting info
+  vfio/type1: Report iommu nesting info to userspace
+  vfio: Add PASID allocation/free support
+  iommu/vt-d: Support setting ioasid set to domain
+  vfio/type1: Add VFIO_IOMMU_PASID_REQUEST (alloc/free)
+  iommu/uapi: Add iommu_gpasid_unbind_data
+  iommu/vt-d: Check ownership for PASIDs from user-space
+  vfio/type1: Support binding guest page tables to PASID
+  vfio/type1: Allow invalidating first-level/stage IOMMU cache
+  vfio/type1: Add vSVA support for IOMMU-backed mdevs
+  vfio/pci: Expose PCIe PASID capability to guest
+  iommu/vt-d: Support reporting nesting capability info
+
+Yi Sun (1):
+  iommu: Pass domain and unbind_data to sva_unbind_gpasid()
+
+ Documentation/driver-api/vfio.rst  |  64 ++++
+ drivers/iommu/intel-iommu.c        | 107 ++++++-
+ drivers/iommu/intel-svm.c          |  20 +-
+ drivers/iommu/iommu.c              |   4 +-
+ drivers/vfio/Kconfig               |   6 +
+ drivers/vfio/Makefile              |   1 +
+ drivers/vfio/pci/vfio_pci_config.c |   2 +-
+ drivers/vfio/vfio_iommu_type1.c    | 614 ++++++++++++++++++++++++++++++++-----
+ drivers/vfio/vfio_pasid.c          | 191 ++++++++++++
+ include/linux/intel-iommu.h        |  23 +-
+ include/linux/iommu.h              |  10 +-
+ include/linux/vfio.h               |  54 ++++
+ include/uapi/linux/iommu.h         |  47 +++
+ include/uapi/linux/vfio.h          |  78 +++++
+ 14 files changed, 1134 insertions(+), 87 deletions(-)
+ create mode 100644 drivers/vfio/vfio_pasid.c
+
+-- 
+2.7.4
+
