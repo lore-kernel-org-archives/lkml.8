@@ -2,183 +2,152 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3884FC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C06EBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 152DC20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:19:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IHlYe6N1"
+	by mail.kernel.org (Postfix) with ESMTP id A19AF20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:19:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbgFKJTq (ORCPT
+        id S1727123AbgFKJTz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 05:19:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39870 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727039AbgFKJT1 (ORCPT
+        Thu, 11 Jun 2020 05:19:55 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:43309 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727039AbgFKJTw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 05:19:27 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80225C08C5C4
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 02:19:27 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id l63so51714pge.12
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 02:19:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=KudpLSpXqj1Z9k8pwvBBduHUKZ612Cfs4Dza1EdkkLU=;
-        b=IHlYe6N142CwZ9UozoEiR7e3+AcKrMOaZqPxZprdr/TNQ4z/j7lVHQf6UsUg1DjVIJ
-         aEBAetfGfOeeJLOyizsa21Q591SPshCTtky6hHTnl+T6tQabRZ7FxrTy9UD8ElAkdQNd
-         Un+VWr/t1SKkkNW0XCZXhC1NI8cMVGa6RdRI8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=KudpLSpXqj1Z9k8pwvBBduHUKZ612Cfs4Dza1EdkkLU=;
-        b=S3/A6+C87DU0QLgwxv2PNLalCpksfWFRIRu48REqBm/F+BIWQZXdRJzAC8M+W4tPhq
-         zS1Ix+qP37hF07voa+VJ0lisFLTCkNW8ybVPIGcGxBJWRZpQtqV1980F3RhNyR8ns31E
-         CP50GP8QYfvg1GROyVFdCyD+6OaBty5aN816PCPAwhU/pgaUVgsY8v0dUyFycdKskTUd
-         /qETOCDqZQq2IFhZsiKMQlmH92efT+PvWtxqzpnRdjl6ieLB6NGtxm0CbdocPrWgAVo1
-         yX2Dbn5UbLDwIPj7+MOTeZL5smOTUFR/7juWSnuJvuZitk5oAG5+XnC0Wj36jznxivIM
-         pT/A==
-X-Gm-Message-State: AOAM531ugnMhyfKyy4qmf4RxC35sCor08JczyziovGX43nhkS0xf3kIT
-        ROvIDuNxpu8KqjoizL/kFlQ+/Q==
-X-Google-Smtp-Source: ABdhPJzlsQ2ElXykmsDK44gv2wdEYeVibfslwxUkSrqUj0M+wND+s+D4qsnVEvEkfFWQjbgvxxR0Yg==
-X-Received: by 2002:a05:6a00:2ae:: with SMTP id q14mr6473844pfs.255.1591867167060;
-        Thu, 11 Jun 2020 02:19:27 -0700 (PDT)
-Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id 1sm2367852pfx.210.2020.06.11.02.19.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 02:19:26 -0700 (PDT)
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Chandan Uddaraju <chandanu@codeaurora.org>,
-        Vara Reddy <varar@codeaurora.org>,
-        Tanmay Shah <tanmay@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>
-Subject: [PATCH/RFC 6/8] phy: qcom-qmp: Add support for sc7180 DP phy
-Date:   Thu, 11 Jun 2020 02:19:17 -0700
-Message-Id: <20200611091919.108018-7-swboyd@chromium.org>
-X-Mailer: git-send-email 2.27.0.278.ge193c7cf3a9-goog
-In-Reply-To: <20200611091919.108018-1-swboyd@chromium.org>
-References: <20200611091919.108018-1-swboyd@chromium.org>
+        Thu, 11 Jun 2020 05:19:52 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jjJN9-0007JQ-NC; Thu, 11 Jun 2020 09:19:43 +0000
+Date:   Thu, 11 Jun 2020 11:19:42 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Sargun Dhillon <sargun@sargun.me>,
+        containers@lists.linux-foundation.org,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Robert Sesek <rsesek@google.com>,
+        Chris Palmer <palmer@google.com>, Jann Horn <jannh@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Wagner <daniel.wagner@bmw-carit.de>,
+        linux-kernel@vger.kernel.org, Matt Denton <mpdenton@google.com>,
+        John Fastabend <john.r.fastabend@intel.com>,
+        linux-fsdevel@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, cgroups@vger.kernel.org,
+        stable@vger.kernel.org, "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v3 1/4] fs, net: Standardize on file_receive helper to
+ move fds across processes
+Message-ID: <20200611091942.jni2glnpmxisnant@wittgenstein>
+References: <202006031845.F587F85A@keescook>
+ <20200604125226.eztfrpvvuji7cbb2@wittgenstein>
+ <20200605075435.GA3345@ircssh-2.c.rugged-nimbus-611.internal>
+ <202006091235.930519F5B@keescook>
+ <20200609200346.3fthqgfyw3bxat6l@wittgenstein>
+ <202006091346.66B79E07@keescook>
+ <037A305F-B3F8-4CFA-B9F8-CD4C9EF9090B@ubuntu.com>
+ <202006092227.D2D0E1F8F@keescook>
+ <20200610081237.GA23425@ircssh-2.c.rugged-nimbus-611.internal>
+ <202006101953.899EFB53@keescook>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <202006101953.899EFB53@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the necessary compatible strings and phy data for the sc7180 USB3+DP
-combo phy.
+On Wed, Jun 10, 2020 at 07:59:55PM -0700, Kees Cook wrote:
+> On Wed, Jun 10, 2020 at 08:12:38AM +0000, Sargun Dhillon wrote:
+> > As an aside, all of this junk should be dropped:
+> > +	ret = get_user(size, &uaddfd->size);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret = copy_struct_from_user(&addfd, sizeof(addfd), uaddfd, size);
+> > +	if (ret)
+> > +		return ret;
+> > 
+> > and the size member of the seccomp_notif_addfd struct. I brought this up 
+> > off-list with Tycho that ioctls have the size of the struct embedded in them. We 
+> > should just use that. The ioctl definition is based on this[2]:
+> > #define _IOC(dir,type,nr,size) \
+> > 	(((dir)  << _IOC_DIRSHIFT) | \
+> > 	 ((type) << _IOC_TYPESHIFT) | \
+> > 	 ((nr)   << _IOC_NRSHIFT) | \
+> > 	 ((size) << _IOC_SIZESHIFT))
+> > 
+> > 
+> > We should just use copy_from_user for now. In the future, we can either 
+> > introduce new ioctl names for new structs, or extract the size dynamically from 
+> > the ioctl (and mask it out on the switch statement in seccomp_notify_ioctl.
+> 
+> Yeah, that seems reasonable. Here's the diff for that part:
+> 
+> diff --git a/include/uapi/linux/seccomp.h b/include/uapi/linux/seccomp.h
+> index 7b6028b399d8..98bf19b4e086 100644
+> --- a/include/uapi/linux/seccomp.h
+> +++ b/include/uapi/linux/seccomp.h
+> @@ -118,7 +118,6 @@ struct seccomp_notif_resp {
+>  
+>  /**
+>   * struct seccomp_notif_addfd
+> - * @size: The size of the seccomp_notif_addfd datastructure
+>   * @id: The ID of the seccomp notification
+>   * @flags: SECCOMP_ADDFD_FLAG_*
+>   * @srcfd: The local fd number
+> @@ -126,7 +125,6 @@ struct seccomp_notif_resp {
+>   * @newfd_flags: The O_* flags the remote FD should have applied
+>   */
+>  struct seccomp_notif_addfd {
+> -	__u64 size;
+>  	__u64 id;
+>  	__u32 flags;
+>  	__u32 srcfd;
+> diff --git a/kernel/seccomp.c b/kernel/seccomp.c
+> index 3c913f3b8451..00cbdad6c480 100644
+> --- a/kernel/seccomp.c
+> +++ b/kernel/seccomp.c
+> @@ -1297,14 +1297,9 @@ static long seccomp_notify_addfd(struct seccomp_filter *filter,
+>  	struct seccomp_notif_addfd addfd;
+>  	struct seccomp_knotif *knotif;
+>  	struct seccomp_kaddfd kaddfd;
+> -	u64 size;
+>  	int ret;
+>  
+> -	ret = get_user(size, &uaddfd->size);
+> -	if (ret)
+> -		return ret;
+> -
+> -	ret = copy_struct_from_user(&addfd, sizeof(addfd), uaddfd, size);
+> +	ret = copy_from_user(&addfd, uaddfd, sizeof(addfd));
+>  	if (ret)
+>  		return ret;
+>  
+> 
+> > 
+> > ----
+> > +#define SECCOMP_IOCTL_NOTIF_ADDFD	SECCOMP_IOR(3,	\
+> > +						struct seccomp_notif_addfd)
+> > 
+> > Lastly, what I believe to be a small mistake, it should be SECCOMP_IOW, based on 
+> > the documentation in ioctl.h -- "_IOW means userland is writing and kernel is 
+> > reading."
+> 
+> Oooooh. Yeah; good catch. Uhm, that means SECCOMP_IOCTL_NOTIF_ID_VALID
+> is wrong too, yes? Tycho, Christian, how disruptive would this be to
+> fix? (Perhaps support both and deprecate the IOR version at some point
+> in the future?)
 
-Link: https://lore.kernel.org/r/20200609034623.10844-1-tanmay@codeaurora.org
-Cc: Jeykumar Sankaran <jsanka@codeaurora.org>
-Cc: Chandan Uddaraju <chandanu@codeaurora.org>
-Cc: Vara Reddy <varar@codeaurora.org>
-Cc: Tanmay Shah <tanmay@codeaurora.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Manu Gautam <mgautam@codeaurora.org>
-Cc: Sandeep Maheswaram <sanm@codeaurora.org>
-Cc: Douglas Anderson <dianders@chromium.org>
-Cc: Sean Paul <seanpaul@chromium.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
- drivers/phy/qualcomm/phy-qcom-qmp.c | 47 +++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+We have custom defines in our source code, i.e.
+#define SECCOMP_IOCTL_NOTIF_ID_VALID  SECCOMP_IOR(2, __u64)
+so ideally we'd have a SECCOMP_IOCTL_NOTIF_ID_VALID_V2
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-index 290233becd58..f6841716d21a 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-@@ -961,6 +961,24 @@ static const struct qmp_phy_init_tbl qmp_v3_dp_serdes_tbl_hbr3[] = {
- 	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CP_CTRL_MODE0, 0x06),
- };
- 
-+static const struct qmp_phy_init_tbl qmp_v3_dp_tx_tbl[] = {
-+	QMP_PHY_INIT_CFG(QSERDES_V3_TX_TRANSCEIVER_BIAS_EN, 0x1a),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_TX_VMODE_CTRL1, 0x40),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_TX_PRE_STALL_LDO_BOOST_EN, 0x30),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_TX_INTERFACE_SELECT, 0x3d),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_TX_CLKBUF_ENABLE, 0x0f),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_TX_RESET_TSYNC_EN, 0x03),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_TX_TRAN_DRVR_EMP_EN, 0x03),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_TX_PARRATE_REC_DETECT_IDLE_EN, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_TX_TX_INTERFACE_MODE, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_TX_TX_BAND, 0x4),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_TX_TX_POL_INV, 0x0a),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_TX_TX_DRV_LVL, 0x38),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_TX_TX_EMP_POST1_LVL, 0x20),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_TX_RES_CODE_LANE_OFFSET_TX, 0x06),
-+	QMP_PHY_INIT_CFG(QSERDES_V3_TX_RES_CODE_LANE_OFFSET_RX, 0x07),
-+};
-+
- static const struct qmp_phy_init_tbl qmp_v3_usb3_rx_tbl[] = {
- 	QMP_PHY_INIT_CFG(QSERDES_V3_RX_UCDR_FASTLOCK_FO_GAIN, 0x0b),
- 	QMP_PHY_INIT_CFG(QSERDES_V3_RX_RX_EQU_ADAPTOR_CNTRL2, 0x0f),
-@@ -1842,6 +1860,28 @@ static const struct qmp_phy_cfg sc7180_usb3phy_cfg = {
- 	.is_dual_lane_phy	= true,
- };
- 
-+static const struct qmp_phy_cfg sc7180_dpphy_cfg = {
-+	.type			= PHY_TYPE_DP,
-+	.nlanes			= 1,
-+
-+	.tx_tbl			= qmp_v3_dp_tx_tbl,
-+	.tx_tbl_num		= ARRAY_SIZE(qmp_v3_dp_tx_tbl),
-+	.clk_list		= qmp_v3_phy_clk_l,
-+	.num_clks		= ARRAY_SIZE(qmp_v3_phy_clk_l),
-+	.reset_list		= sc7180_usb3phy_reset_l,
-+	.num_resets		= ARRAY_SIZE(sc7180_usb3phy_reset_l),
-+	.vreg_list		= qmp_phy_vreg_l,
-+	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
-+
-+	.has_phy_dp_com_ctrl	= true,
-+	.is_dual_lane_phy	= true,
-+};
-+
-+static const struct qmp_phy_combo_cfg sc7180_usb3dpphy_cfg = {
-+	.usb_cfg		= &sc7180_usb3phy_cfg,
-+	.dp_cfg			= &sc7180_dpphy_cfg,
-+};
-+
- static const struct qmp_phy_cfg qmp_v3_usb3_uniphy_cfg = {
- 	.type			= PHY_TYPE_USB3,
- 	.nlanes			= 1,
-@@ -3247,6 +3287,9 @@ static const struct of_device_id qcom_qmp_phy_of_match_table[] = {
- 	}, {
- 		.compatible = "qcom,sc7180-qmp-usb3-phy",
- 		.data = &sc7180_usb3phy_cfg,
-+	}, {
-+		.compatible = "qcom,sc7180-qmp-usb3-dp-phy",
-+		/* It's a combo phy */
- 	}, {
- 		.compatible = "qcom,sdm845-qhp-pcie-phy",
- 		.data = &sdm845_qhp_pciephy_cfg,
-@@ -3274,6 +3317,10 @@ static const struct of_device_id qcom_qmp_phy_of_match_table[] = {
- MODULE_DEVICE_TABLE(of, qcom_qmp_phy_of_match_table);
- 
- static const struct of_device_id qcom_qmp_combo_phy_of_match_table[] = {
-+	{
-+		.compatible = "qcom,sc7180-qmp-usb3-dp-phy",
-+		.data = &sc7180_usb3dpphy_cfg,
-+	},
- 	{ }
- };
- 
--- 
-Sent by a computer, using git, on the internet
+Does that sound ok?
 
+Christian
