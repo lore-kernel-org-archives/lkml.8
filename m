@@ -2,196 +2,243 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A566C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05968C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 19:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43031206DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:56:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="drTt8L3u"
+	by mail.kernel.org (Postfix) with ESMTP id DBF48206DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 19:01:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728198AbgFKS4Z (ORCPT
+        id S1728203AbgFKTBu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 14:56:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44734 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726369AbgFKS4Z (ORCPT
+        Thu, 11 Jun 2020 15:01:50 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:34487 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726369AbgFKTBt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 14:56:25 -0400
-Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D33FDC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 11:56:24 -0700 (PDT)
-Received: by mail-lj1-x229.google.com with SMTP id n23so8176789ljh.7
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 11:56:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=pbJ2yJSlJPfH0eaPQTsGU37TGe6D2h9IyPzy0Bjwcbs=;
-        b=drTt8L3uK9MbBJx+lpown2Lsuc4q9U/gFSoAcGT2yvyiUpA9gupwfc07+e1owEk/Va
-         XYn3kjDFIxOoXejncFq/eNuI0WrP2cy3TJG57/vwbt+FRmoHBLCPnxSXSt10VE2speJq
-         cVPEyxIiUf6UqjV5RWeXI7tGTY3UHOVV3xmDRq8UjfnFe+nDwTkaW/ZziRtFyrqzF9Ut
-         ay8X7CDnpeTfd0NJR1z0yxXzfrkF/6RyQxAkuPler2e05oX48njyRtZ9YnNH3VZL9QA6
-         LtaKvnE41FjE90vjd1oPodqoC90qsRH7WQpu6s5o1YYBJf19qgYAQK7jID9C0dpWKF5A
-         vl9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=pbJ2yJSlJPfH0eaPQTsGU37TGe6D2h9IyPzy0Bjwcbs=;
-        b=FK5eZGBZolqVbTc2LbjOp053bxmgaFgyh3iOSlaz98Q8boJrVrjVs/a5xVivDBnRsY
-         8xBuob/cow2sb5G36xL7qM0FtO6n2WE0X1y69jkQ41BUGBJQdnFbyfRtPIEsg1Vd8KFZ
-         nFEiHg9Ad6JReqVYcPjGmpgMeJKI03SfKkuSEloleA+/mQi47MP6Plv0TkwVblaBxkZf
-         wtOV4WIxRW5zLenD78pZsybwrBOcZpa0nlAIlEIO05drXYVjNuVQeZVAcv7uDnFFrzq2
-         vN34wZGJBtR9g14e0zUEQsuVURChser2FvUVNiULiifoUZvQE8I+NR7laTz5agFV7jhy
-         s+2A==
-X-Gm-Message-State: AOAM531x6kY5XkDY6+Ocg7F257IiDvrn9f15r/T7midavoD0u8hHFC1J
-        AgAJ9C9MCtNSoiJEzSo1SH8p39gHDxWJhqxxXar8GrxMEqfHJA==
-X-Google-Smtp-Source: ABdhPJxZ2a6jXpTWZZ2tB1JNdZ9YgeS1kI0BxA6O7KgWH7f3DClIS7y/3If042DGm3QeBU+azWdFK1w7MfW+i/d/1s4=
-X-Received: by 2002:a2e:9116:: with SMTP id m22mr4953677ljg.431.1591901781957;
- Thu, 11 Jun 2020 11:56:21 -0700 (PDT)
+        Thu, 11 Jun 2020 15:01:49 -0400
+Received: from [192.168.1.167] ([37.4.249.202]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MzQPe-1ix71t2Ltw-00vQQp; Thu, 11 Jun 2020 21:01:29 +0200
+Subject: Re: [PATCH v4 2/3] clk: bcm: Add BCM2711 DVP driver
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Maxime Ripard <maxime@cerno.tech>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mike Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org, Phil Elwell <phil@raspberrypi.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-clk@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+References: <cover.4c4625a8e076f3163b800b3d8986b282ee98d908.1591867332.git-series.maxime@cerno.tech>
+ <bb60d97fc76b61c2eabef5a02ebd664c0f57ede0.1591867332.git-series.maxime@cerno.tech>
+ <e9e83c60-ef4c-8806-bcdb-a09702bf7559@i2se.com>
+ <20200611165233.dmwxuz5lhxxbh7fb@gilmour.lan>
+ <c05ef3b1-ee1a-e4f4-c6de-a23cbe6d8670@gmail.com>
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+Autocrypt: addr=stefan.wahren@i2se.com; keydata=
+ LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tClZlcnNpb246IEdudVBHIHYy
+ CgptUUlOQkZ0NmdCTUJFQUN1Yi9wQmV2SHhidkplZnlaRzMySklObW4yYnNFUFgyNVY2ZmVq
+ bXlZd21DR0tqRnRMCi9Eb1VNRVZIRHhDSjQ3Qk1YbzM0NGZIVjFDM0FudWRnTjFCZWhMb0J0
+ TEh4bW5lQ3pnSDNLY1B0V1c3cHRqNEcKdEp2OUNRRFp5MjdTS29FUHh5YUk4Q0YweWdSeEpj
+ NzJNOUk5d21zUFo1YlVIc0x1WVdNcVE3SmNSbVBzNkQ4ZwpCa2srOC95bmdFeU5FeHd4SnBS
+ MXlsajVianhXREh5WVF2dUo1THpaS3VPOUxCM2xYVnNjNGJxWEVqYzZWRnVaCkZDQ2svc3lp
+ by9ZaHNlOE4rUXN4N01RYWd6NHdLVWtRUWJmWGcxVnFrVG5BaXZYczQyVm5Ja211NWd6SXcv
+ MHQKUkp2NTBGUmhIaHhweUtBSThCOG5oTjhRdng3TVZrUGM1dkRmZDN1R1lXNDdKUGhWUUJj
+ VXdKd05rLzQ5RjllQQp2ZzJtdE1QRm5GT1JrV1VSdlArRzZGSmZtNitDdk92N1lmUDF1ZXdB
+ aTRsbitKTzFnK2dqVklXbC9XSnB5MG5UCmlwZGZlSDlkSGtnU2lmUXVuWWN1Y2lzTXlvUmJG
+ OTU1dENna0VZOUVNRWRZMXQ4aUdEaUNnWDZzNTBMSGJpM2sKNDUzdWFjcHhmUVhTYUF3UGtz
+ bDhNa0NPc3YyZUVyNElOQ0hZUUR5WmljbEJ1dUNnOEVOYlI2QUdWdFpTUGNRYgplbnpTektS
+ Wm9POUNhcUlEK2ZhdkxpQi9kaHptSEErOWJnSWhtWGZ2WFJMRFp6ZThwbzFkeXQzRTFzaFhp
+ ZGRaClBBOE51SlZ6RUl0MmxtSTZWOHBaRHBuMjIxcmZLaml2UlFpYW9zNTRUZ1pqak1ZSTdu
+ bko3ZTZ4endBUkFRQUIKdENCVGRHVm1ZVzRnVjJGb2NtVnVJRHgzWVdoeVpXNXpkRUJuYlhn
+ dWJtVjBQb2tDTndRVEFRZ0FJUVVDWElkYwo0Z0liQXdVTENRZ0hBZ1lWQ0FrS0N3SUVGZ0lE
+ QVFJZUFRSVhnQUFLQ1JDVWdld1BFWkR5MjFPVEQvOUdpWkxkCnRSWWNteVJKZ2x0aVFRekFp
+ UWRjSUQ3OGxHb1dwL3grci92Y1U2YjZqdVl1ZVR3Z1Iwclc3djdsMklSQnlEN24KSEp4YSt0
+ SVNvUVpCZ2hvbE1JZmI5TXRoR09KTENZNzdrL1FoQWhuMzJOR1prZWp3OXR6a3MvNDBtclpT
+ VVQ4NApaeWJzUVhyTE0vSFI2VElJL0RlUEIwbktEM0ppcHBzMlVIUUQ5cUQySWpFd1NRUGxI
+ akNPckVaaDQ1UFo3bTkrClo5M0x6aVRlc1dabFlRdUxpSndzNHJLcHRIVzFkL3dSZWxzaG1t
+ NlFxY0wybDRDL2U0MGVEQjlncTRkU1poOVgKUEVZbGxpeU5RaDdhMkxTZHVtRTFyK2NTd0lq
+ RS91ZHRSdmRPOWFLb0psT2JVSzVkTmpTUEg3d0tUYndkWGRZRApHUHdEaFhkNThOQXdyK1BY
+ QmxQajB0STFMQ3ErTEJ4ZUt6aFdYK0dWcTlEb2pWanlVREV4Rk5Ga1h1b0M3ZzhtClY5VDB0
+ ZUJpdVpSbm91WEt3VjJGcHRaT0hIN0JVRVd0a0t0aGgxZXRmT1dwaWdCemtVN2JQc2ZJWVQr
+ cnk5dGIKMW9KK3Y0MVBOYXFaRW1QVXBKeHZmek5UN3Ayd01lRDdaajlmMHJ1YlJQdExBSjJR
+ R2pyRkhzdVh3QU9xcHl6ZQoxOEVidHNZazBOMHp1SEVoY2orUEJJQmZoMFlJWWQ1MW9mNkdJ
+ aU95UjlxMFhYdHBsVUo3VDIvSDF1UXFrWGxwCitnVzRWa2lmc2NJckl1eWZueFpXMTJlSXZq
+ NnlicVdMN2FZS0dZbVQ2aUxDUGJIWXlZY2F5bDRFa0ZjckNGN0UKZTBXVC9zY1ZNaE8vNVgv
+ SGFOQTVIQngvcjUycGdMY3Y0aTlNeExRbVUzUmxabUZ1SUZkaGFISmxiaUE4YzNSbApabUZ1
+ TG5kaGFISmxia0JwTW5ObExtTnZiVDZKQWpnRUV3RUNBQ0lGQWx0NmdCTUNHd01HQ3drSUJ3
+ TUNCaFVJCkFna0tDd1FXQWdNQkFoNEJBaGVBQUFvSkVKU0I3QThSa1BMYmpic1AvamdqYVNz
+ NUh0bGtBSXZXUytGcm15N2MKaG5jT0F4TFRWL0Q2UkV3SU95R0poRkt3d29pck55UTJnOXZV
+ YTNZQ1lDZjFmSjh3RWhhS09COWQwTHBNUm5MNApkRVQ4ZDgyMzhFL3BLK0hxTktpSXNKaHM2
+ SnNLOFpnalZRR3JtbWZua0dyWisxdjBIQnV4ZGljZ0duUC9XdHVBClVsOGw2Mi9BTGJheXlq
+ KzYxQ2xyc0V0UklhcU82N0xJWXdQaVBEUkkrWGlNek5pR3pIRi8xUTZHUjAyUkg2YTMKRjg5
+ ejhhUHhjSGkxWnZDdDJ5a3o2VUVjaHpQMHI1Z3FGSisvTC9VcHU4ME1YaVk0djVlSWFCNTJn
+ VlBnaXlNQQpsTDJkRHMxbUladm5yUkxSWTJ0YjNtQVlOa1Y1QjVJRFQzcGtXeTZrS281T0Nn
+ SytZZFlPUjhGTloyb04ydDhPCnJLK1ZudGFLN01NU0tIbG1ZL3NPd3RSbEVoMU9CbXJjQ3dH
+ d21wLzA1R2tSNDZmL0lzaFJWZUZPUmF3K0dBcXQKUDIrQ0ZhMkNOQS9JSG5aTm95aWtsRHpQ
+ UUhVVUdzck5wcERyaFg5Sm1oQm1nMXYyeXdIMU5YdTFpRGZQMUJBdwpLZ29rdDVmNVVhUkY5
+ c0FBNTN2V0V2YlVVTjllZXNGR0x6UFdkSkdRNWhwZC9WSDVJUXk5U0JyaC93SWNla3E1Cm4w
+ a042cGJUSHhHRTUyU2kvTVZJa05UdURaM2FwbjJqbERaNHBPdHBCWEkydlAzYlBPK05pcUJa
+ anNVM3R4TGkKV2R2MkZqeXp6NlhMUndlV1JZVkw1SGE2TER0eG9yMnZ1NlVQMDdwOXh6MXhS
+ WmFPRFczb1lsSEZ6WXBhNFc1ZwpMSGIybEVrSXVVZlNjaWNHYmpqQXRDbFRkR1ZtWVc0Z1Yy
+ Rm9jbVZ1SUR4emRHVm1ZVzR1ZDJGb2NtVnVRR2x1CkxYUmxZMmd1WTI5dFBva0NOd1FUQVFn
+ QUlRVUNYSWRlaHdJYkF3VUxDUWdIQWdZVkNBa0tDd0lFRmdJREFRSWUKQVFJWGdBQUtDUkNV
+ Z2V3UEVaRHkyeUhURC85VUY3UWxEa0d4elE3QWFDSTZOOTVpUWY4LzFvU1VhRE51Mlk2SQpL
+ K0R6UXBiMVRiVE9yM1ZKd3dZOGEzT1d6NU5MU09MTVdlVnh0K29zTW1sUUlHdWJEM09EWko4
+ aXpQbEcvSnJOCnQ1elNkbU41SUE1ZjNlc1dXUVZLdmdoWkFnVERxZHB2K1pIVzJFbXhuQUox
+ dUxGWFhlUWQzVVpjQzVyMy9nL3YKU2FNbzl4ZWszSjVtTnVEbTcxbEVXc0FzL0JBY0ZjK3lu
+ TGh4d0JXQld3c3Z3UjhiSHRKNURPTVd2YUt1RHNrcApJR0ZVZS9LYjJCK2pyYXZRM1RuNnMv
+ SHFKTTBjZXhTSHo1cGUrMHNHdlArdDlKNzIzNEJGUXdlRkV4cmlleThVCkl4T3I0WEFiYWFi
+ U3J5WW5VL3pWSDlVMWkyQUlRWk1XSkFldkN2VmdRL1UrTmVSaFh1ZGU5WVVtRE1EbzJzQjIK
+ VkFGRUFxaUYyUVVIUEEybThhN0VPM3lmTDRyTWswaUh6TElLdmg2L3JIOFFDWThpM1h4VE5M
+ OWlDTHpCV3UvTgpPbkNBYlMremx2TFphaVNNaDVFZnV4VHR2NFBsVmRFamY2MlArWkhJRDE2
+ Z1VEd0VtYXpMQU1yeDY2NmpINWt1ClVDVFZ5bWJMMFR2Qis2TDZBUmw4QU55TTRBRG1rV2tw
+ eU0yMmtDdUlTWUFFZlFSM3VXWFo5WWd4YVBNcWJWK3cKQnJoSmc0SGFONkM2eFRxR3YzcjRC
+ MmFxYjc3L0NWb1JKMVo5Y3BIQ3dpT3pJYUFtdnl6UFU2TXhDRFhaOEZnWQpsVDR2MjNHNWlt
+ SlAyemdYNXMrRjZBQ1VKOVVRUEQwdVRmK0o5RGEycitza2gvc1dPbloreWNvSE5CUXZvY1pF
+ Ck5BSFFmN2tDRFFSYmVvQVRBUkFBMkhkMGZzRFZLNzJSTFNESGJ5ME9oZ0RjRGxWQk0yTSto
+ WVlwTzNmWDFyKysKc2hpcVBLQ0hWQXNRNWJ4ZTdIbUppbUhhNEtLWXMya3YvbWx0L0NhdUNK
+ Ly9wbWN5Y0JNN0d2d25Lem11WHp1QQpHbVZUWkM2V1I1TGtha0ZydEhPelZtc0VHcE52NVJj
+ OWw2SFlGcExrYlNrVmk1U1BRWkp5K0VNZ01DRmdqclpmClZGNnlvdHdFMWFmN0hOdE1oTlBh
+ TEROMW9VS0Y1aitSeVJnNWl3SnVDRGtuSGp3QlFWNHBndzIvNXZTOEE3WlEKdjJNYlcvVExF
+ eXBLWGlmNzhJaGdBelh0RTJYck0xbi9vNlpINzFvUkZGS096NDJsRmR6ZHJTWDBZc3FYZ0hD
+ WAo1Z0l0TGZxemoxcHNNYTlvMWVpTlRFbTFkVlFyVHFueXMwbDE4b2FsUk5zd1lsUW1uWUJ3
+ cHdDa2FUSExNSHdLCmZHQmJvNWRMUEVzaHRWb3dJNm5zZ3FMVHlRSG1xSFlxVVpZSXBpZ21t
+ QzNTd0JXWTFWNmZmVUVta3FwQUFDRW4KTDQvZ1Vnbjd5US81ZDBzZXFuQXEycFNCSE1VVW9D
+ Y1R6RVFVV1ZraUR2M1JrN2hURm1oVHNNcTc4eHYyWFJzWApNUjZ5UWhTVFBGWkNZRFVFeEVs
+ RXNTbzlGV0hXcjZ6SHlZY2M4cURMRnZHOUZQaG1RdVQyczlCbHg2Z0kzMjNHCm5FcTFsd1dQ
+ SlZ6UDRqUWtKS0lBWHdGcHYrVzhDV0xxekRXT3ZkbHJEYVRhVk1zY0ZUZUg1VzZVcHJsNjVq
+ cUYKUUdNcGNSR0NzOEdDVVcxM0gwSXlPdFF0d1dYQTRueStTTDgxcHZpQW1hU1hVOGxhS2FS
+ dTkxVk9WYUY5ZjRzQQpFUUVBQVlrQ0h3UVlBUUlBQ1FVQ1czcUFFd0liREFBS0NSQ1VnZXdQ
+ RVpEeTIrb1hELzljSEhSa0JaT2ZrbVNxCjE0U3Z4MDYyUHRVMEtWNDcwVFNucC9qV29ZSm5L
+ SXczRzBtWElSZ3J0SDJkUHdwSWdWanNZeVJTVk1LbVNwdDUKWnJEZjlOdFRiTldnazhWb0xl
+ WnpZRW8rSjNvUHFGclRNczNhWVl2N2U0K0pLNjk1WW5tUSttT0Q5bmlhOTE1dApyNUFaajk1
+ VWZTVGx5VW15aWMxZDhvdnNmMWZQN1hDVVZSRmNSamZOZkRGMW9ML3BEZ01QNUdaMk93YVRl
+ am15CkN1SGpNOElSMUNpYXZCcFlEbUJuVFlrN1B0aHk2YXRXdllsMGZ5L0NxYWpUS3N4Nytw
+ OXh6aXU4WmZWWCtpS0IKQ2MrSGUrRURFZEdJRGh2TlovSVFIZk9CMlBVWFdHUytzOUZOVHhy
+ L0E2bkxHWG5BOVk2dzkzaVBkWUl3eFM3SwpYTG9LSmVlMTBEamx6c1lzUmZsRk9XMFpPaVNp
+ aElDWGlRVjF1cU02dHpGRzlndFJjaXVzNVVBdGhXYU8xT3dVClNDUW1mQ09tNGZ2TUlKSUE5
+ cnh0b1M2T3FSUWNpRjNjcm1vMHJKQ3ROMmF3WmZnaThYRWlmN2Q2aGp2MEVLTTkKWFpvaUFa
+ WVpEKy9pTG01VGFLV042b0dJdGkwVmpKdjhaWk9aT2ZDYjZ2cUZJa0pXK2FPdTRvclRMRk16
+ MjhhbwpVM1F5V3BOQzhGRm1kWXNWdWE4czZnTjFOSWE2eTNxYS9aQjhiQS9pa3k1OUFFejRp
+ RElScmdVek1FZzhBazdUCmZtMUtpWWVpVHRCRENvMjVCdlhqYnFzeXhrUUQxbmtSbTZGQVZ6
+ RXVPUEllOEp1cVcyeEQ5aXhHWXZqVTVoa1IKZ0pwM2dQNWIrY25HM0xQcXF1UTJFNmdvS1VN
+ TEFia0NEUVJiZmw5REFSQUFzRExjYStMbFAydm5mdEVHaHBjQQpCR1ZOUUVGbkdQckNhdVU2
+ SGhOODA1V3RQVHRtc1JPdUp6cWdVVDBtcHFXSWZacTZzTXd5dkhLOVRzL0tIM0paClVWYlJD
+ M3oyaDNLZmhIL0RhZjk1cGQ2bVBjL2g5dkYvT3kzK2VUV2hnR25QNmNBNWtsUitmTzFXaEc4
+ VnJpWHYKck5lUkcyMHN6emplSG9jblNJY1Q1WHVaUjB1REhPaUd4T2l6MXNNUkZUR3h6R095
+ MTlSOXJ2dTYzdGlJM2Q3dgpnYzc1T0NBZGtlQi9TZUNFbGFSdzBUZjdMWmJQampzRjI2M0JZ
+ bk1mNGtrTkVLdnFXY1UyaWNNcCtxZXpqeW5CCnB2ZXVlMHJDVFFCWUFRbG9GQ1ZUR0hyV1dB
+ NkQ0VzVPMkFmSWRJYzF1MUpDWnAyZjVMV1ZvVUZUVklyUW5RUVUKU0hDaWZyOU1aeExUdFBK
+ ZFU1Mm9TUHczZGs0aExQOGlKSUx1dnYvYXZhakNzUVlIRXR3WXNiZUZaeGl1TGdscApBN1lj
+ Sk5ObXBnQ3BNRDR3VWh2bEN0QUtOQlFXeXIyOTc2OThFUVRuNDZlQmVVNkttMkNpaFhrZ3dD
+ eWY4ZXlLCkxFM3NYZXdhcTVrZ1pXdk5xNml1NXFZSVJCOXl3K2NYYzYwZE9aRE9scTkzWDVT
+ QVJZemFvZXBrSHo0cmtMa1AKUG8rdENIeUhRUHNHblBYYzlXVDgwREM5Tm5KR2R2VWx5NXJk
+ TUk0eHBaeWdlb2tqd293VlFsUFV1Y1M2TXluNwpmOHc4Y2dmQjdDMklBSWNEeDJwUC9IendY
+ dmtDT1FOQTdtVjFsTTA4bitnVmtUcnpweGlwNURicTRDSW9ZeDJNCkpaVDhiR1JINlhqY1VE
+ S2EwOVFoeVpzQUVRRUFBWWtFUkFRWUFRZ0FEd1VDVzM1ZlF3SWJBZ1VKQThKbkFBSXAKQ1JD
+ VWdld1BFWkR5MjhGZElBUVpBUWdBQmdVQ1czNWZRd0FLQ1JCVnhETFBjVk1NamNkc0QvMFJo
+ QXN1UVlPeQpyMTNCbDNOaFhrWUFaR3AyWkZER3VrZTdPU2tWOG9qT09UZFR5ei9jT1JHQ2J5
+ ZEQrRGd2cUZ5VmRuT1hLZ08wCmxKbUd3ckdlTGRnZ0F2aDBpaHJwNU8wWVVKOWJCU1htR01t
+ UVRZSC9BbUxUR2FkYnVqQ1dqNWZGVWtDeXd4aW0KSHV5MFBiMjRwelR2UzUwR1k1WStxSDBG
+ SE5haWdka2tpV04zcnVnN0haRXUvQ3lsUFpqT1h6K0QxUVBNckV4dwo3ZC9NS2FiVis5YU5i
+ UVlabGRJajk4UXd2VUYxS1N6YThqbFVJdnBoUnEyN0FUOGZER1lHUGZERU1nMmNCT2FlCkty
+ N29uUXM0YjdhV082aWZEbHhRVHB6c3pvK0FuODA3Tk1TdFZFRmYrczNBaFZEM2U3bmY4SkJh
+ dmJWckFlMGsKb20yNm96elBubnh6K2xxVlZ0dzZVazRYTUl6dGl4L0h3SFl3dUNuY1VYWndL
+ MEkzeUFKd2pZd29vck9DaEozUwpFVWJKUVB0R3NneFJERXhWQkZlNk5MUC82MnhQOU82dGFj
+ d09kYjBNbVAxYjM5cFJBVEM3YmdkMWxkVUxpNzVaCmxKckowL1NpVkVyb3FOWXk3OXRmbWdB
+ WjJVeFptczlTckV5Nm85UVNmc24xYVh2K01QTDlKYUNHbWtQNnpiTFEKTm5kajBKY2FRbmtD
+ MHZneWRPMUJtNk11OTZQOXVmbEtaY0FTNndtTE01SWRIT3lqTDg4d0h3anVjakFPQnRjdwpw
+ MG9HVG5WT25Sc05ZU084VzhZWi9LZGJ1Nzg1ZGF6TXFKMmlOakFEdUJiZG02TjRqNUVkTW5r
+ TG4wQklmUEpwCmRnbTR2bDJVcExqd1JHci9NM3dtbTVwdnMrNnVCN2hrL0ZKaUQvNGxsRU5Q
+ NGVNMWg3U200aitWcTZOMSt6VEIKSVhKQWViSXFhc0RwNXlaUzdYcnk0STM2bjg1WEVZZkcw
+ MWx0QXlob05WMkRPOFNJUlFwdWkydHErOVJQM1JLMQpKREJ4eEVKWTJFTzVKWjhNeGFQSFEw
+ RFQwNWxSRmpLMkFsaGRFSXRqTGpwSjNmVW05c3FMeE1XeHpQNlV6M2lpCjJ1YTR1bnJ0Nk9D
+ VHFRd2lqRi8zYlRXaXd2VkFBSG5NRlVpb1hzaEhhb2hWRGNWZm5lSU1mVjBiUUNYWWkzTnAK
+ WTB2MFp3Y2lGSCtnU0M3cUQ2WE51aHBWR1NMNElpbGlGeS9TemNhSkV6QUhlTERTaFpQMkNX
+ ZG5DNHZnbDM3dApocHg4aDU1WWhKbjZIU3VVelBnaGFLdFZCMmsrajdaZXlaK1NGeHA3SXVi
+ SEN3TEhsUWhUNzVSd1EzaUF4S242CjBxajUxY1lUbnF4ZFpYVzZmSDNQa3VNellVNUdwcVIv
+ MU9sNWMvd2ZJNmc2QW04eUtXLzBFVUx0K0tuNExGc1MKbTdZM201SDV2MTJVNkpCWXZWK3Ix
+ M2paaW9zNEVFREU5M0Q1c05IMk1JeVJ6Q0RxMXpkZHQ0WHV5S0ZqUEtXMQo5aWJaRGZGVjdL
+ dUNzdnVMMjNzQmMxc0NNb3ArRTFtVC9ReE9JQTZvRFQxTVFzdHdPVnVReURDdi9PdktTZ2Z6
+ CjhGWEdMNkFQY2xqQ3FqOEFKaHhReXN4ZG9pUVA4bS92dStialdHR3Z4dzVzMWxncGlSRFRS
+ VVBnY0pKTmFHWTIKVklEclpRaTROU2lOUTBOSWkrZGp1NGZOTW1DcFFxZzh0YkMzY0FhNnl3
+ bTZvUUIxU0JobURYMmUxMWdSbGx1SQpPblRHUEUwSFRvM2w3MmxoYmc9PQo9cVpNVgotLS0t
+ LUVORCBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCg==
+Message-ID: <72cfe4f2-86bd-c07d-fe68-ac7474edbb7d@i2se.com>
+Date:   Thu, 11 Jun 2020 21:01:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 12 Jun 2020 00:26:10 +0530
-Message-ID: <CA+G9fYvF3cyrY+-iw_SZtpN-i2qA2BruHg4M=QYECU2-dNdsMw@mail.gmail.com>
-Subject: Perf: WARNING: arch/x86/entry/common.c:624 idtentry_exit_cond_rcu+0x92/0xc0
-To:     open list <linux-kernel@vger.kernel.org>, x86@kernel.org
-Cc:     cj.chengjian@huawei.com,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michel Lespinasse <walken@google.com>,
-        lkft-triage@lists.linaro.org,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <c05ef3b1-ee1a-e4f4-c6de-a23cbe6d8670@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:6B3GUv00LA5mtKWhIONP+8LQfV5rQEwYL5uRuFMukfMRsQLsrtk
+ Qs2FH+l13Z4uHc19zllRFRpI/SdUlFV0/kOCbC2cd3cEi5LJ9BtxM9xTf0H0PG3gFrkUTNt
+ s0qXOq/vRBS6VIQzwaE/wSi2nP9xLuTPo0QUK0qVt+PMxymXEIWDU37ryaZYOL7MNfIDyhO
+ zH/dY13FQqncnBh+CO+vQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:BXuCy5uIBUU=:dgFG3gcFYCJpqvrLr/gWi3
+ ysIeAOs8tm6x5mNZrnZK7B3ZmI3XB+pT70Td2niwnt/TRezVQR/ZuqNmL07do7m6L/Gg4z2wY
+ NDbNlUnlwa4Vdr9KctTHlaiv6e6mE4lWXmyMyd4y2yuQPgT2diGNi4AsTaJPwzM2svFGrTh7Y
+ aEv7liuCsOcMrd5a57592o9tYBKyXhyq5ACYvFC8uY6oO6wl6iEMJEIqmyNwq6fK8pMZmIxm7
+ bcyHm8zC87C+P9vV3gTeUrWXvpq65R06adpfKE5r2BaIh8mpm73oAEle7L8HCde29AtbgkZm6
+ c8yJ70I4Ud2SLTiq3AFUHW08RECTqz7lI94bQEcjmxcZCTbDgls0BpVoWBYbKehztSrdLMkEX
+ eLOWnSSfOlewwy7QIAj2jAd4EJ1761IOXirFPn21T3hjQK6UV5uZzdohpUGFGpzqx1QrnwFeF
+ cwThzt9AHg2x/xmYTS9UZ0E/jWsH44AzKnDBHTndaaxkfCxN2P5UoVDHa1nzZ+TPPYwt2rPmq
+ EdHcg8QaI0BHPi+z569rSUF+xyfYmfau//Q46WuYLeseYkz+ot3eJtDqIbha8sjXvaMhvn12Q
+ 2/M7fXmOVelvyhJZUufMsjOxOMjXW2tY7jQhge8oJfXSAxI8hSL6TYforbOWwSNnUWCM7eOEn
+ mTQVjtGFk8CjaLviXTf2fM8WlAWvVU5aG/2SIjG7bKFwqADKUFlzSj7upNJHtZadueX0ohjp1
+ j3mjAvK1gob7A9Avme4VhMEQrjoHW7myVWfgB0bsO5OFsAiKWWR/nYMncH/LgTCUubyq37Vko
+ tL9d+WJRfLUI3V/BY09vVRWlAqYlfkCCkJqu6qc2i9aKFJSwWwcOv5Do/rmimLuVHamomAG
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While running perf test and selftest x86 single_step_syscall_32 on
-i386 kernel linux
-next 5.7.0-next-20200610 kernel warning noticed.
+Am 11.06.20 um 19:06 schrieb Florian Fainelli:
+>
+> On 6/11/2020 9:52 AM, Maxime Ripard wrote:
+>> Hi Stefan,
+>>
+>> On Thu, Jun 11, 2020 at 05:50:30PM +0200, Stefan Wahren wrote:
+>>>> diff --git a/drivers/clk/bcm/clk-bcm2711-dvp.c b/drivers/clk/bcm/clk-bcm2711-dvp.c
+>>>> new file mode 100644
+>>>> index 000000000000..84dbc886e303
+>>>> --- /dev/null
+>>>> +++ b/drivers/clk/bcm/clk-bcm2711-dvp.c
+>>>> @@ -0,0 +1,120 @@
+>>>> +// SPDX-License-Identifier: GPL-2.0-or-later
+>>>> +// Copyright 2020 Cerno
+>>>> +
+>>>> +#include <linux/clk-provider.h>
+>>>> +#include <linux/module.h>
+>>>> +#include <linux/platform_device.h>
+>>>> +#include <linux/reset-controller.h>
+>>>> +#include <linux/reset/reset-simple.h>
+>>>> +
+>>>> +#define DVP_HT_RPI_SW_INIT	0x04
+>>>> +#define DVP_HT_RPI_MISC_CONFIG	0x08
+>>> sorry for not noticing this before. Are these defines specific to the
+>>> Raspberry Pi, because of RPI?
+>> I'm not entirely sure to be honest. It's the names that the register
+>> have, but it's not clear to me if it's something specific to the RPi
+>> itself, or it just means something else entirely.
+> My understanding is that this is a wrapper that was done specifically
+> for the Raspberry Pi usage of that IP block, which is why it has PI in
+> the name, so this looks good correct, and this does match the internal
+> register database name.
 
-steps to reproduce:
---------------------------
-perf test
-and
-cd /opt/kselftests/default-in-kernel/x86
-./single_step_syscall_32
+Okay, i'm fine with that and the whole series.
 
-perf warning log:
-----------------------
-[   57.260865] ------------[ cut here ]------------
-[   57.266576] IRQs not disabled as expected
-[   57.270583] WARNING: CPU: 1 PID: 500 at
-/usr/src/kernel/arch/x86/entry/common.c:624
-idtentry_exit_cond_rcu+0x92/0xc0
-[   57.281092] Modules linked in: x86_pkg_temp_thermal fuse
-[   57.286406] CPU: 1 PID: 500 Comm: perf Not tainted 5.7.0-next-20200610 #1
-[   57.293190] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-2.2 05/23/2018
-[   57.300577] EIP: idtentry_exit_cond_rcu+0x92/0xc0
-[   57.305280] Code: 8b 89 d8 05 00 00 85 c9 74 ae 80 3d b1 64 2c d4
-00 75 a5 68 94 2d fb d3 89 55 f8 89 45 fc c6 05 b1 64 2c d4 01 e8 8e
-f5 2b ff <0f> 0b 58 8b 55 f8 8b 45 fc eb 83 8d 76 00 e8 5b fd ff ff c9
-c3 89
-[   57.324017] EAX: 0000001d EBX: 0d00022a ECX: 00000027 EDX: f5b9e14c
-[   57.330274] ESI: f2a2ffb4 EDI: ffff0ff4 EBP: f2a2ff8c ESP: f2a2ff80
-[   57.336531] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010096
-[   57.343345] CR0: 80050033 CR2: 08700a58 CR3: 14ad7000 CR4: 003406d0
-[   57.349608] DR0: 080dfb80 DR1: 080dfc00 DR2: 08700a58 DR3: 00000000
-[   57.355866] DR6: fffe0ff0 DR7: 0d00062a
-[   57.359697] Call Trace:
-[   57.362143]  exc_debug+0x84/0x1b0
-[   57.365487]  ? exc_int3+0x1d0/0x1d0
-[   57.368981]  handle_exception+0x145/0x145
-[   57.372991] EIP: 0x80dfbcd
-[   57.375694] Code: Bad RIP value.
-[   57.378918] EAX: 00000000 EBX: 00000005 ECX: 00002400 EDX: 00000000
-[   57.385175] ESI: 00000003 EDI: 00000004 EBP: bfd59798 ESP: bfd59770
-[   57.391431] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000246
-[   57.398215] irq event stamp: 1896
-[   57.401556] hardirqs last  enabled at (1895): [<d3c316b9>]
-idtentry_exit_user+0x39/0x60
-[   57.409556] hardirqs last disabled at (1896): [<d2f6e742>]
-vprintk_emit+0x42/0x290
-[   57.417120] softirqs last  enabled at (0): [<d2eee73a>]
-copy_process+0x3ea/0x17d0
-[   57.424590] softirqs last disabled at (0): [<00000000>] 0x0
-[   57.430155] ---[ end trace 421998f6ba46136b ]---
-10.2: PMU event [   57.434872] ------------[ cut here ]------------
-[   57.440858] IRQs not disabled as expected
-[   57.444870] WARNING: CPU: 1 PID: 500 at
-/usr/src/kernel/arch/x86/entry/common.c:240
-__prepare_exit_to_usermode+0x164/0x1b0
-[   57.455900] Modules linked in: x86_pkg_temp_thermal fuse
-[   57.461207] CPU: 1 PID: 500 Comm: perf Tainted: G        W
-5.7.0-next-20200610 #1
-[   57.469379] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-2.2 05/23/2018
-[   57.476770] EIP: __prepare_exit_to_usermode+0x164/0x1b0
-[   57.481988] Code: d8 05 00 00 85 db 0f 84 08 ff ff ff 80 3d b2 64
-2c d4 00 0f 85 fb fe ff ff 68 94 2d fb d3 c6 05 b2 64 2c d4 01 e8 8c
-ec 0e 00 <0f> 0b 59 e9 e2 fe ff ff 8d 74 26 00 68 3c 2d fb d3 e8 76 ec
-0e 00
-[   57.500732] EAX: 0000001d EBX: 00000001 ECX: 00000027 EDX: f5b9e14c
-[   57.506991] ESI: f1e9a400 EDI: f2a2ffb4 EBP: f2a2ff74 ESP: f2a2ff64
-[   57.513275] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010086
-[   57.520060] CR0: 80050033 CR2: 08700a58 CR3: 14ad7000 CR4: 003406d0
-[   57.526346] DR0: 080dfb80 DR1: 080dfc00 DR2: 08700a58 DR3: 00000000
-[   57.532608] DR6: fffe0ff0 DR7: 0d00062a
-[   57.536439] Call Trace:
-[   57.538885]  prepare_exit_to_usermode+0x8/0x30
-[   57.543356]  idtentry_exit_cond_rcu+0xa5/0xc0
-[   57.547714]  ? idtentry_exit_user+0x39/0x60
-[   57.551892]  exc_debug+0x84/0x1b0
-[   57.555212]  ? exc_int3+0x1d0/0x1d0
-[   57.558704]  handle_exception+0x145/0x145
-[   57.562715] EIP: 0x80dfc00
-[   57.565417] Code: Bad RIP value.
-[   57.568644] EAX: 0000001d EBX: 00000005 ECX: bfd5920c EDX: bfd5918c
-[   57.574899] ESI: 00000003 EDI: 00000004 EBP: bfd59798 ESP: bfd5917c
-[   57.581158] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00010246
-[   57.587948] irq event stamp: 1942
-[   57.591340] hardirqs last  enabled at (1941): [<d3c316b9>]
-idtentry_exit_user+0x39/0x60
-[   57.599345] hardirqs last disabled at (1942): [<d2f6e742>]
-vprintk_emit+0x42/0x290
-[   57.606906] softirqs last  enabled at (1934): [<d2eb1b68>]
-fpu__clear+0x78/0xd0
-[   57.614210] softirqs last disabled at (1932): [<d2eb1b11>]
-fpu__clear+0x21/0xd0
-[   57.621509] ---[ end trace 421998f6ba46136c ]---
+Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
 
-map aliases                    :
-
-Full test log link,
-----------------------
-perf test full output log:
-https://qa-reports.linaro.org/lkft/linux-next-oe/build/next-20200610/testrun/2808447/suite/linux-log-parser/test/check-kernel-warning-1486409/log
-
-kselftest full output log,
-https://qa-reports.linaro.org/lkft/linux-next-oe/build/next-20200610/testrun/2808443/suite/linux-log-parser/test/check-kernel-exception-1486406/log
-
-
-metadata:
---------------
-  git branch: master
-  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-  git commit: 976c320052ff22a7f9b8be0d56aefacb3a40f466
-  git describe: next-20200610
-  kernel-config:
-http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-core2-32/lkft/linux-next/786/config
-
--- 
-Linaro LKFT
-https://lkft.linaro.org
