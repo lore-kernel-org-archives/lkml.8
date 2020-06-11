@@ -2,139 +2,164 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F4EBC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2235C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39FC120656
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80F2220656
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:59:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="yPCiYKdw"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PImN5EiS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbgFKI7C (ORCPT
+        id S1726899AbgFKI7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 04:59:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36694 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726833AbgFKI67 (ORCPT
+        Thu, 11 Jun 2020 04:59:23 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:52006 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726981AbgFKI7W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 04:58:59 -0400
-X-Greylist: delayed 196 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 11 Jun 2020 01:58:59 PDT
-Received: from pandora.armlinux.org.uk (unknown [IPv6:2001:4d48:ad52:32c8:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 094F9C03E96F;
-        Thu, 11 Jun 2020 01:58:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=g4cB48q84iF2x+YTctvj2vQzPcRRIUPbdwGd8ytPMJs=; b=yPCiYKdwo02fKO/iPRLDsIklK
-        vBXP/ZlL6LtWewhRVdjSfq+XXQb0XGO1gloD1ntYOGL9NeGC/tIZFALMOg+g0XY55XlPadWVFj6Br
-        9IifcYd2NCANKhBvjffoapNhI7Ksm9QJKWqeAa1Mbiv73vJk1ySr2R0nvPqrirGUDLMkvr99xPD0+
-        GoktE8KjB1nCDvVSWCj80Pr6MmeL29Uae1zsraDjW77jWQ2rAUHDG095XlGqlAoJdkDqhVFQUWj/2
-        DxcSFZjuDsYRHWc73aPvTdPCHBehcH3VMv+rfMU2gKNIASHeTYFTcxJqoUTf6107r08wr/VOggEQD
-        RE0dJ7a0A==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:52172)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jjJ2x-0008Cw-Fv; Thu, 11 Jun 2020 09:58:51 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jjJ2w-00052V-Rb; Thu, 11 Jun 2020 09:58:50 +0100
-Date:   Thu, 11 Jun 2020 09:58:50 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Jonathan McDowell <noodles@earth.li>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] net: dsa: qca8k: Improve SGMII interface handling
-Message-ID: <20200611085850.GW1551@shell.armlinux.org.uk>
-References: <cover.1591816172.git.noodles@earth.li>
- <2150f4c70c754aed179e46e166f3c305254cf85a.1591816172.git.noodles@earth.li>
+        Thu, 11 Jun 2020 04:59:22 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05B8xEnp035483;
+        Thu, 11 Jun 2020 03:59:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591865954;
+        bh=ju8hW0Nntm6A5rQpyFzj3Zxbk+KibA3tjgt8DFUshd4=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=PImN5EiSFTZOvESIUfpol30U/CYqfsys/aHI6yzjQ8UAehvHR7r28eRdUJ7cgtY5F
+         a7no8HU0cjyqCB7E8lUoLBfELJZb7Ao2oIVOLFu89b039R60CWeg8KFhR2qfNZsJSV
+         JLqiA5vhospRqrOJc0P1r1qp0PN8Fa+OPflNscY4=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05B8xEkq085761
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 11 Jun 2020 03:59:14 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 11
+ Jun 2020 03:59:14 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 11 Jun 2020 03:59:14 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05B8xCH1118378;
+        Thu, 11 Jun 2020 03:59:13 -0500
+Subject: Re: [PATCH v2 2/3] bindings: sound: Add documentation for TI j721e
+ EVM (CPB and IVI)
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     <devicetree@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <broonie@kernel.org>, <lgirdwood@gmail.com>,
+        <linux-kernel@vger.kernel.org>
+References: <20200512131633.32668-1-peter.ujfalusi@ti.com>
+ <20200512131633.32668-3-peter.ujfalusi@ti.com>
+ <20200519222132.GA488519@bogus> <65631db2-5cb2-003a-0526-65d26372616b@ti.com>
+X-Pep-Version: 2.0
+Message-ID: <c91d150c-ddcc-214b-0e7d-ee2318be5269@ti.com>
+Date:   Thu, 11 Jun 2020 11:59:59 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2150f4c70c754aed179e46e166f3c305254cf85a.1591816172.git.noodles@earth.li>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <65631db2-5cb2-003a-0526-65d26372616b@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 08:15:13PM +0100, Jonathan McDowell wrote:
-> This patch improves the handling of the SGMII interface on the QCA8K
-> devices. Previously the driver did no configuration of the port, even if
-> it was selected. We now configure it up in the appropriate
-> PHY/MAC/Base-X mode depending on what phylink tells us we are connected
-> to and ensure it is enabled.
-> 
-> Tested with a device where the CPU connection is RGMII (i.e. the common
-> current use case) + one where the CPU connection is SGMII. I don't have
-> any devices where the SGMII interface is brought out to something other
-> than the CPU.
-> 
-> Signed-off-by: Jonathan McDowell <noodles@earth.li>
-> ---
->  drivers/net/dsa/qca8k.c | 28 +++++++++++++++++++++++++++-
->  drivers/net/dsa/qca8k.h | 13 +++++++++++++
->  2 files changed, 40 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/dsa/qca8k.c b/drivers/net/dsa/qca8k.c
-> index dcd9e8fa99b6..33e62598289e 100644
-> --- a/drivers/net/dsa/qca8k.c
-> +++ b/drivers/net/dsa/qca8k.c
-> @@ -681,7 +681,7 @@ qca8k_phylink_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
->  			 const struct phylink_link_state *state)
->  {
->  	struct qca8k_priv *priv = ds->priv;
-> -	u32 reg;
-> +	u32 reg, val;
->  
->  	switch (port) {
->  	case 0: /* 1st CPU port */
-> @@ -740,6 +740,32 @@ qca8k_phylink_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
->  	case PHY_INTERFACE_MODE_1000BASEX:
->  		/* Enable SGMII on the port */
->  		qca8k_write(priv, reg, QCA8K_PORT_PAD_SGMII_EN);
-> +
-> +		/* Enable/disable SerDes auto-negotiation as necessary */
-> +		val = qca8k_read(priv, QCA8K_REG_PWS);
-> +		if (phylink_autoneg_inband(mode))
-> +			val &= ~QCA8K_PWS_SERDES_AEN_DIS;
-> +		else
-> +			val |= QCA8K_PWS_SERDES_AEN_DIS;
-> +		qca8k_write(priv, QCA8K_REG_PWS, val);
-> +
-> +		/* Configure the SGMII parameters */
-> +		val = qca8k_read(priv, QCA8K_REG_SGMII_CTRL);
-> +
-> +		val |= QCA8K_SGMII_EN_PLL | QCA8K_SGMII_EN_RX |
-> +			QCA8K_SGMII_EN_TX | QCA8K_SGMII_EN_SD;
-> +
-> +		val &= ~QCA8K_SGMII_MODE_CTRL_MASK;
-> +		if (dsa_is_cpu_port(ds, port)) {
-> +			/* CPU port, we're talking to the CPU MAC, be a PHY */
-> +			val |= QCA8K_SGMII_MODE_CTRL_PHY;
-> +		} else if (state->interface == PHY_INTERFACE_MODE_SGMII) {
-> +			val |= QCA8K_SGMII_MODE_CTRL_MAC;
-> +		} else {
-> +			val |= QCA8K_SGMII_MODE_CTRL_BASEX;
-> +		}
-> +
-> +		qca8k_write(priv, QCA8K_REG_SGMII_CTRL, val);
+Hi Rob,
 
-Ah, here it is!  Hmm, I suppose as the two patches will be applied
-together, it's fine to split it like this.
+On 20/05/2020 14.50, Peter Ujfalusi wrote:
+>>> +  clocks:
+>>> +    items:
+>>> +      - description: PLL4 clock
+>>> +      - description: PLL15 clock
+>>> +      - description: McASP10 auxclk clock
+>>> +      - description: PLL4_HSDIV0 parent for McASP10 auxclk (for 48KH=
+z)
+>>> +      - description: PLL15_HSDIV0 parent for McASP10 auxclk (for 44.=
+1KHz)
+>>> +      - description: AUDIO_REFCLK2 clock
+>>> +      - description: PLL4_HSDIV2 parent for AUDIO_REFCLK2 clock (for=
+ 48KHz)
+>>> +      - description: PLL15_HSDIV2 parent for AUDIO_REFCLK2 clock (fo=
+r 44.1KHz)
+>>
+>> What h/w are these connected to?
+>=20
+> These clocks are internal to the SoC with the exception of AUDIO_REFCLK=
+2
+> which is routed to SoC pin.
+>=20
+>> You have no control interface here, so how do you have clocks?
+>=20
+> I need to control these clocks, the sound card is the user of these clo=
+cks.
+>=20
+>> Defining parent clocks seems wrong, too. This seems to just be a=20
+>> collection of clocks a driver happens to need. Really, you should be=20
+>> able query possible parents and select one with the right frequency=20
+>> multiple.
+>=20
+> The issue in hand is that I need to dynamically switch between certain
+> parents of the cpb-mcasp (for McASP) and audio-refclk2 (for the codec)
+> based on sampling rate of the stream.
+>=20
+> The McASP auxclk parent can be selected from 7 source and I must use th=
+e
+> two dedicated ones.
+> The REFCLK2 parent can be selected from 30 source.
+>=20
+> It is also a limitation of the system that I can not query directly the=
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 503kbps up
+> PLL4/PLL15 frequencies, I can only get the frequency on the HSDIVs, but=
+
+> I can not get the divider on them.
+> In order to handle the constraints on clocking I need to know the sourc=
+e
+> rate so the dividers can be taken into account. The codec is picky when=
+
+> it comes to clocking and there is a need to switch between
+> 256/512/768xFS based SCKI in order to be able to support sampling rates=
+=2E
+>=20
+> At the moment I have fixed clocks in place for the pll4/15 with the
+> rates they are configured so the dts can switch to a real clock which I=
+
+> can use in the future.
+> As things are it is unlikely that I will ever going to have access to
+> them, but I wanted to avoid in the bindings:
+> ti,j721e-pll4-rate =3D <1179648000>;
+> ti,j721e-pll15-rate =3D <1083801600>;
+>=20
+>>> +
+>>> +  clock-names:
+>>> +    items:
+>>> +      - const: pll4
+>>> +      - const: pll15
+>>> +      - const: cpb-mcasp
+>>> +      - const: cpb-mcasp-48000
+>>> +      - const: cpb-mcasp-44100
+>>> +      - const: audio-refclk2
+>>> +      - const: audio-refclk2-48000
+>>> +      - const: audio-refclk2-44100
+
+It should be better to document the refclk2 (and refclk0 for IVI) clocks
+based on it's use, not source:
+cpb-codec-scki (sourced from audio_refclk2)
+cpb-codec-scki-48000/44100
+
+For the IVI binding it is just s/cpb/ivi in the clock-names.
+
+- P=C3=A9ter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
