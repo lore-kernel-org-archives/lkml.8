@@ -2,216 +2,192 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F235C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0866C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:18:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40AF0206A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:18:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591888721;
-	bh=leNzroWM6X5csAU2B+LU3yJk8Krd5o+WSEXtpzMjR9k=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Kr9F/xBEMiCKR+X+2Xo9m6O3aUF9VWB0iM9XNS3R/ZBR9eVYh/MWr2Ef5bwZ3+GPW
-	 6KVzCgeUfieBqNKuPxXtzNJI8S9wkVVCBv+f1/XwXyPx9PC8Og8l8Ec2gLJ5iItUnm
-	 d9E8l2wdPmu+A30I545LntIFleyYDGKgzx5zDbJQ=
+	by mail.kernel.org (Postfix) with ESMTP id 8FDE4206A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:18:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="E2qXLywZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728485AbgFKPSk (ORCPT
+        id S1728540AbgFKPS5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 11:18:40 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37719 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728455AbgFKPSj (ORCPT
+        Thu, 11 Jun 2020 11:18:57 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:12725 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728496AbgFKPSz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 11:18:39 -0400
-Received: by mail-io1-f67.google.com with SMTP id r2so6714818ioo.4;
-        Thu, 11 Jun 2020 08:18:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qewf9D0YCS3J7N1tva5v2BWLcm4vmSaFS/uNfMsMQOA=;
-        b=bojqiPx8fRYVI3oWEjkt2yGvM+7kPfxfB2STpytXlYupemo+LuEYoMMVn3WE4S2Lwz
-         z+S7mpmR+id0AJzkzj3CYkhZ6SUtVce5q5S2uUnajFGJCN1ow2FxK0/fjPK1Amz9Q7i/
-         4ihoWlNMl0/pDm7dwow+YwDQ3ydO4nnzkMEBAQzg1KDUhloPVp04e8vA7sXoJRxqXflG
-         UB2YmNdQQ1qHJM/9dwm1e6YwxJqNQ5mZnikehH9LPull04ednQK1cks5GLMCOOlPMixO
-         l1BtnREL2ifRK0fkYfJe14qlshRxFRtAZgXoH565jteCqgbqlrVqX1bx3DIdCxyjLfFv
-         pWuQ==
-X-Gm-Message-State: AOAM530lJ++j+uAZL1Jtpxqwa7E3X80AuCUC02JcrQW5U57IOIjvY4u6
-        YPw3cxMsffM2O7ZWltWVo36ZYUg=
-X-Google-Smtp-Source: ABdhPJyXSOEN50P1Ie0dxxhGQGFYjfCC/pbXW+7eha3EnGyI7HKavpUGqp8H/wYn/GK7u+yOFoyeZA==
-X-Received: by 2002:a5d:8e19:: with SMTP id e25mr9187308iod.36.1591888717457;
-        Thu, 11 Jun 2020 08:18:37 -0700 (PDT)
-Received: from xps15.herring.priv ([64.188.179.251])
-        by smtp.googlemail.com with ESMTPSA id b22sm1611332ios.21.2020.06.11.08.18.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 08:18:37 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org
-Subject: [PATCH] dt-bindings: phy: qcom: Fix missing 'ranges' and example addresses
-Date:   Thu, 11 Jun 2020 09:18:35 -0600
-Message-Id: <20200611151835.1100883-1-robh@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        Thu, 11 Jun 2020 11:18:55 -0400
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200611151852epoutp03a0d22cfc537d98bc178a141f23903a60~Xhl4eU-mt2151021510epoutp03m
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 15:18:52 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200611151852epoutp03a0d22cfc537d98bc178a141f23903a60~Xhl4eU-mt2151021510epoutp03m
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1591888732;
+        bh=h0Jr8xoU2TPvELPqg4DkGPi4elgZ88JtRpm3jI4sPwQ=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=E2qXLywZVzIV2fW1SRVFtB8sfs2v4wTUs+C83cFxe4fQV8bMZOIjCHUKh5h+ZPt3S
+         JESIWUg9U8ylqBnIVXGEy9vuGVUXYCEFg6Hokbepzg6Ny2SbxkI4oY61u0hooc5HH/
+         aU1v9ViSpaq+AvezROTfzehwaVuSG0jwDmdN6YIc=
+Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+        20200611151850epcas5p24e66287669171ac559a61cc700b19d56~Xhl3bd9oW2174021740epcas5p2G;
+        Thu, 11 Jun 2020 15:18:50 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        9F.67.09467.A5B42EE5; Fri, 12 Jun 2020 00:18:50 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200611151850epcas5p2a784c542779d9bc1bdcfca28ea8a6c2a~Xhl2nsFSe1713117131epcas5p2d;
+        Thu, 11 Jun 2020 15:18:50 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200611151850epsmtrp1fec96d9694da2e652f1efbe1d90ef856~Xhl2mz7qk1872718727epsmtrp1v;
+        Thu, 11 Jun 2020 15:18:50 +0000 (GMT)
+X-AuditID: b6c32a49-a3fff700000024fb-94-5ee24b5a1ab7
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D2.DF.08303.95B42EE5; Fri, 12 Jun 2020 00:18:50 +0900 (KST)
+Received: from alimakhtar02 (unknown [107.108.234.165]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200611151846epsmtip14b4bb6edb355961b9377b5a92da29cb5~Xhlzf0dnn1495414954epsmtip1S;
+        Thu, 11 Jun 2020 15:18:46 +0000 (GMT)
+From:   "Alim Akhtar" <alim.akhtar@samsung.com>
+To:     "'Kishon Vijay Abraham I'" <kishon@ti.com>,
+        "'Martin K. Petersen'" <martin.petersen@oracle.com>,
+        <robh@kernel.org>
+Cc:     <krzk@kernel.org>, <linux-samsung-soc@vger.kernel.org>,
+        <avri.altman@wdc.com>, <stanley.chu@mediatek.com>,
+        <linux-scsi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <cang@codeaurora.org>,
+        <devicetree@vger.kernel.org>, <kwmad.kim@samsung.com>,
+        <linux-kernel@vger.kernel.org>, "'Vinod Koul'" <vkoul@kernel.org>
+In-Reply-To: <89b96bd0-a9a3-cdd8-dc67-1f9f49eef264@ti.com>
+Subject: RE: [PATCH v10 00/10] exynos-ufs: Add support for UFS HCI
+Date:   Thu, 11 Jun 2020 20:48:44 +0530
+Message-ID: <001c01d64003$9bca1500$d35e3f00$@samsung.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQNA14zZ9KpC6NxovY65uGX80LQ4kgIpylB3AdlmWUMBx1WEmQIl7Fhypb7UH7A=
+Content-Language: en-in
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMKsWRmVeSWpSXmKPExsWy7bCmpm6U96M4gxNrTC1e/rzKZvFp/TJW
+        i/lHzrFaXHjaw2Zx/vwGdoubW46yWGx6fI3V4vKuOWwWM87vY7Lovr6DzWL58X9MFv/37GC3
+        WLr1JqPFzjsnmB34PC739TJ5bFrVyeaxeUm9R8vJ/SweH5/eYvHo27KK0eP4je1MHp83yXm0
+        H+hmCuCM4rJJSc3JLEst0rdL4Mq4fESxoFmoYta6+4wNjD/5uhg5OSQETCQOXTjM3MXIxSEk
+        sJtR4vafM2wQzidGiQsz5jFCOJ8ZJd7+e88I07J+5TMmiMQuRolZd3ayQDhvGCU2T9/OBlLF
+        JqArsWNxG5gtIlAhcXP2b3aQImaBc0wS8z5sYwdJcApYSbzt3gdWJCzgJPF6xR6gsRwcLAKq
+        Em+/p4OEeQUsJa4/eskGYQtKnJz5hAXEZhbQlli28DUzxEUKEj+fLmOF2OUnMWvpdnaIGnGJ
+        oz97wJ6TEHjBIXFozXGoBheJI3PfMkHYwhKvjm9hh7ClJF72t7GD3CAhkC3Rs8sYIlwjsXTe
+        MRYI217iwJU5LCAlzAKaEut36UOs4pPo/f2ECaKTV6KjTQiiWlWi+d1VqE5piYnd3awQJR4S
+        fU2iExgVZyH5axaSv2YhuX8Wwq4FjCyrGCVTC4pz01OLTQsM81LL9YoTc4tL89L1kvNzNzGC
+        052W5w7Guw8+6B1iZOJgPMQowcGsJMIrKP4wTog3JbGyKrUoP76oNCe1+BCjNAeLkjiv0o8z
+        cUIC6YklqdmpqQWpRTBZJg5OqQam9RdPcrwQVpacJqfjY3+z0yDBdPLreQqHnF7mfGHs1U7e
+        8PnVPsb5ZUwlry0tnDz0zrzesnrt9C0Xt3vlhc2LMfnv7BRtarIvtU9r/0WHB2ohs6oT1W/m
+        uBr++/jpsmfqZZ4tZTE73shps/W91pgyY/2c9uYmD8UNt4V68pXkvoi4da86dccum3XXdVv2
+        M8fvf9wYt2ErT/377FMTZ/VelbUsKpwRElsz8cyUN25TK07/EbzbI/Rtj4bsroS9vj1r5k+r
+        6vE/84bzv2n1naPpYa5Bcena+w9Miv30T4K5imVtUNfCKx+7GVj3aPheOWL67+1BORG5RIYC
+        jqol36y/SOfeW1W+dulJ+w9tTAzxSizFGYmGWsxFxYkAai2nseYDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrBIsWRmVeSWpSXmKPExsWy7bCSnG6U96M4g3mPGC1e/rzKZvFp/TJW
+        i/lHzrFaXHjaw2Zx/vwGdoubW46yWGx6fI3V4vKuOWwWM87vY7Lovr6DzWL58X9MFv/37GC3
+        WLr1JqPFzjsnmB34PC739TJ5bFrVyeaxeUm9R8vJ/SweH5/eYvHo27KK0eP4je1MHp83yXm0
+        H+hmCuCM4rJJSc3JLEst0rdL4MrYf2wJU8F2wYpJu6azNDCu5eti5OSQEDCRWL/yGVMXIxeH
+        kMAORomHt18xQSSkJa5vnMAOYQtLrPz3HMwWEnjFKHGq1Q/EZhPQldixuI0NxBYRqJLoX3Kf
+        GWQQs8ANJonrvWtYIBqWMklMXxEBYnMKWEm87d4H1iAs4CTxesUeoGUcHCwCqhJvv6eDhHkF
+        LCWuP3rJBmELSpyc+QRsDLOAtkTvw1ZGGHvZwtfMELcpSPx8uowV4gY/iVlLt7ND1IhLHP3Z
+        wzyBUXgWklGzkIyahWTULCQtCxhZVjFKphYU56bnFhsWGOWllusVJ+YWl+al6yXn525iBEeu
+        ltYOxj2rPugdYmTiYDzEKMHBrCTCKyj+ME6INyWxsiq1KD++qDQntfgQozQHi5I479dZC+OE
+        BNITS1KzU1MLUotgskwcnFINTJc+KU462sAYnbh/l/GtsrBfe67H14ddkV9SNmX3jpM+y4+1
+        P50/WXf6tBkSSz9duBu54SPHv2dRou1cNg97AzUf6qr7bb48+6/j/OwLM5awHc9ln64wWTxs
+        Qv5HqxtvgpsfVIcq3nIpLM2+Iqdk8sHuQB9/Xl9IpKfxubMNnWGZ99csa/I6ECzr4vY58oPw
+        qf9X4uZHxsrtt1CyvCTH8Opwgs3nl3ui3/N9cIx+7tLm/2aN1yav299n9/76Uf1TZbKr/eSr
+        JYJX3L7HFlauPNIUYv/yyCqGF23ZHcdURE86+VxmqjluvTVymYWp/QHlB9bRy3/yRovkHljw
+        vHYqi1JjG+cntpolSUe3b5zfVq/EUpyRaKjFXFScCABlCtMASwMAAA==
+X-CMS-MailID: 20200611151850epcas5p2a784c542779d9bc1bdcfca28ea8a6c2a
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200528013223epcas5p2be85fa8803326b49a905fb7225992cad
+References: <CGME20200528013223epcas5p2be85fa8803326b49a905fb7225992cad@epcas5p2.samsung.com>
+        <20200528011658.71590-1-alim.akhtar@samsung.com>
+        <159114947915.26776.12485309894552696104.b4-ty@oracle.com>
+        <013a01d63d3e$ecf404d0$c6dc0e70$@samsung.com>
+        <89b96bd0-a9a3-cdd8-dc67-1f9f49eef264@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The QCom QMP PHY bindings have child nodes with translatable (MMIO)
-addresses, so a 'ranges' property is required in the parent node.
-Additionally, the examples default to 1 address and size cell, so let's
-fix that, too.
+Hi Kishon
 
-Fixes: ccf51c1cedfd ("dt-bindings: phy: qcom,qmp: Convert QMP PHY bindings to yaml")
-Cc: Andy Gross <agross@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: Manu Gautam <mgautam@codeaurora.org>
-Cc: linux-arm-msm@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-I'll take this via the DT tree for rc1.
+> -----Original Message-----
+> From: Kishon Vijay Abraham I <kishon=40ti.com>
+> Sent: 08 June 2020 08:23
+> To: Alim Akhtar <alim.akhtar=40samsung.com>; 'Martin K. Petersen'
+> <martin.petersen=40oracle.com>; robh=40kernel.org
+> Cc: krzk=40kernel.org; linux-samsung-soc=40vger.kernel.org;
+> avri.altman=40wdc.com; stanley.chu=40mediatek.com; linux-scsi=40vger.kern=
+el.org;
+> linux-arm-kernel=40lists.infradead.org; cang=40codeaurora.org;
+> devicetree=40vger.kernel.org; kwmad.kim=40samsung.com; linux-
+> kernel=40vger.kernel.org; 'Vinod Koul' <vkoul=40kernel.org>
+> Subject: Re: =5BPATCH v10 00/10=5D exynos-ufs: Add support for UFS HCI
+>=20
+> Hi Alim,
+>=20
+> On 6/8/2020 8:15 AM, Alim Akhtar wrote:
+> >
+> >
+> >> -----Original Message-----
+> >> From: Martin K. Petersen <martin.petersen=40oracle.com>
+> >> Sent: 03 June 2020 08:02
+> >> To: robh=40kernel.org; Alim Akhtar <alim.akhtar=40samsung.com>
+> >> Cc: Martin K . Petersen <martin.petersen=40oracle.com>;
+> >> krzk=40kernel.org;
+> > linux-
+> >> samsung-soc=40vger.kernel.org; avri.altman=40wdc.com;
+> >> stanley.chu=40mediatek.com; linux-scsi=40vger.kernel.org; linux-arm-
+> >> kernel=40lists.infradead.org; cang=40codeaurora.org;
+> > devicetree=40vger.kernel.org;
+> >> kwmad.kim=40samsung.com; linux-kernel=40vger.kernel.org
+> >> Subject: Re: =5BPATCH v10 00/10=5D exynos-ufs: Add support for UFS HCI
+> >>
+> >> On Thu, 28 May 2020 06:46:48 +0530, Alim Akhtar wrote:
+> >>
+> >>> This patch-set introduces UFS (Universal Flash Storage) host
+> >>> controller support for Samsung family SoC. Mostly, it consists of
+> >>> UFS PHY and host specific driver.
+> >>> =5B...=5D
+> >>
+> >> Applied =5B1,2,3,4,5,9=5D to 5.9/scsi-queue. The series won't show up =
+in
+> >> my
+> > public
+> >> tree until shortly after -rc1 is released.
+> >>
+> > Thanks Martin,
+> > Hi Rob and Kishon/Vinod
+> > Can you please pickup dt-bindings and PHY driver respectively?
+>=20
+> You might have CC'ed me only for the PHY patch. I don't have the dt-bindi=
+ngs in
+> my inbox. Care to re-send what's missing again? This will be merged after=
+ -rc1 is
+> tagged.
+>=20
+Sure, will re-send this series.=20
 
- .../devicetree/bindings/phy/qcom,qmp-phy.yaml | 20 ++++++----
- .../bindings/phy/qcom,qmp-usb3-dp-phy.yaml    | 38 ++++++++++---------
- 2 files changed, 33 insertions(+), 25 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
-index 973b2d196f46..f80f8896d527 100644
---- a/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
-+++ b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
-@@ -44,6 +44,8 @@ properties:
-   "#size-cells":
-     enum: [ 1, 2 ]
- 
-+  ranges: true
-+
-   clocks:
-     minItems: 1
-     maxItems: 4
-@@ -87,6 +89,7 @@ required:
-   - "#clock-cells"
-   - "#address-cells"
-   - "#size-cells"
-+  - ranges
-   - clocks
-   - clock-names
-   - resets
-@@ -281,10 +284,11 @@ examples:
-     #include <dt-bindings/clock/qcom,gcc-sdm845.h>
-     usb_2_qmpphy: phy-wrapper@88eb000 {
-         compatible = "qcom,sdm845-qmp-usb3-uni-phy";
--        reg = <0 0x088eb000 0 0x18c>;
-+        reg = <0x088eb000 0x18c>;
-         #clock-cells = <1>;
--        #address-cells = <2>;
--        #size-cells = <2>;
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        ranges = <0x0 0x088eb000 0x2000>;
- 
-         clocks = <&gcc GCC_USB3_SEC_PHY_AUX_CLK >,
-                  <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
-@@ -299,11 +303,11 @@ examples:
-         vdda-phy-supply = <&vdda_usb2_ss_1p2>;
-         vdda-pll-supply = <&vdda_usb2_ss_core>;
- 
--        usb_2_ssphy: phy@88eb200 {
--                reg = <0 0x088eb200 0 0x128>,
--                      <0 0x088eb400 0 0x1fc>,
--                      <0 0x088eb800 0 0x218>,
--                      <0 0x088eb600 0 0x70>;
-+        usb_2_ssphy: phy@200 {
-+                reg = <0x200 0x128>,
-+                      <0x400 0x1fc>,
-+                      <0x800 0x218>,
-+                      <0x600 0x70>;
-                 #clock-cells = <0>;
-                 #phy-cells = <0>;
-                 clocks = <&gcc GCC_USB3_SEC_PHY_PIPE_CLK>;
-diff --git a/Documentation/devicetree/bindings/phy/qcom,qmp-usb3-dp-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qmp-usb3-dp-phy.yaml
-index b770e637df1d..6e2487501457 100644
---- a/Documentation/devicetree/bindings/phy/qcom,qmp-usb3-dp-phy.yaml
-+++ b/Documentation/devicetree/bindings/phy/qcom,qmp-usb3-dp-phy.yaml
-@@ -34,6 +34,8 @@ properties:
-   "#size-cells":
-     enum: [ 1, 2 ]
- 
-+  ranges: true
-+
-   clocks:
-     items:
-       - description: Phy aux clock.
-@@ -86,6 +88,7 @@ required:
-   - "#clock-cells"
-   - "#address-cells"
-   - "#size-cells"
-+  - ranges
-   - clocks
-   - clock-names
-   - resets
-@@ -100,12 +103,13 @@ examples:
-     #include <dt-bindings/clock/qcom,gcc-sdm845.h>
-     usb_1_qmpphy: phy-wrapper@88e9000 {
-         compatible = "qcom,sdm845-qmp-usb3-phy";
--        reg = <0 0x088e9000 0 0x18c>,
--              <0 0x088e8000 0 0x10>;
-+        reg = <0x088e9000 0x18c>,
-+              <0x088e8000 0x10>;
-         reg-names = "reg-base", "dp_com";
-         #clock-cells = <1>;
--        #address-cells = <2>;
--        #size-cells = <2>;
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        ranges = <0x0 0x088e9000 0x1000>;
- 
-         clocks = <&gcc GCC_USB3_PRIM_PHY_AUX_CLK>,
-                  <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
-@@ -120,17 +124,17 @@ examples:
-         vdda-phy-supply = <&vdda_usb2_ss_1p2>;
-         vdda-pll-supply = <&vdda_usb2_ss_core>;
- 
--        usb_1_ssphy: phy@88e9200 {
--                reg = <0 0x088e9200 0 0x128>,
--                      <0 0x088e9400 0 0x200>,
--                      <0 0x088e9c00 0 0x218>,
--                      <0 0x088e9600 0 0x128>,
--                      <0 0x088e9800 0 0x200>,
--                      <0 0x088e9a00 0 0x100>;
--                #clock-cells = <0>;
--                #phy-cells = <0>;
--                clocks = <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>;
--                clock-names = "pipe0";
--                clock-output-names = "usb3_phy_pipe_clk_src";
--            };
-+        phy@200 {
-+            reg = <0x200 0x128>,
-+                  <0x400 0x200>,
-+                  <0xc00 0x218>,
-+                  <0x600 0x128>,
-+                  <0x800 0x200>,
-+                  <0xa00 0x100>;
-+            #clock-cells = <0>;
-+            #phy-cells = <0>;
-+            clocks = <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>;
-+            clock-names = "pipe0";
-+            clock-output-names = "usb3_phy_pipe_clk_src";
-         };
-+    };
--- 
-2.25.1
+> Thanks
+> Kishon
+>=20
+> >
+> >> Thanks=21
+> >>
+> >> --
+> >> Martin K. Petersen	Oracle Linux Engineering
+> >
 
