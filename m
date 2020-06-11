@@ -2,52 +2,52 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4753AC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A12C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 203E120691
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:05:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64B4720691
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:05:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kTm4GKAR"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tfWYWWZi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728050AbgFKNFr (ORCPT
+        id S1728104AbgFKNFz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 09:05:47 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:58120 "EHLO
+        Thu, 11 Jun 2020 09:05:55 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:58146 "EHLO
         lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbgFKNFq (ORCPT
+        with ESMTP id S1727001AbgFKNFx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 09:05:46 -0400
+        Thu, 11 Jun 2020 09:05:53 -0400
 Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05BD5UiW107435;
-        Thu, 11 Jun 2020 08:05:30 -0500
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05BD5eGI107485;
+        Thu, 11 Jun 2020 08:05:40 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1591880730;
-        bh=eZaXefos8k87hXiBiwwHXrlf1ORnBoagl4rNRyZ30dY=;
-        h=From:To:CC:Subject:Date;
-        b=kTm4GKAR/YATXxYsoZdvDSQfRpGi51p+0pb9kMzoVju57Ypy6LO+8+7SMa1YT8S/g
-         5p6zRinXa6xOED79PQafnSiNy3miUXt715YsMeCScAZLWa5SoNKUFWfEIg1RJzbkG2
-         5xi7vfQvbon6ARqbtO57HEy73UY6DRIKXyegKJdc=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05BD5UiP121161
+        s=ti-com-17Q1; t=1591880740;
+        bh=9k1SMuX0GI5XyU4KZUr/tv34iy8rbbu1GawXFLBPH2k=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=tfWYWWZi0JmFu9qaz3nnDhmYXqoglPVCai+06SFoDDXfbJZakzO+TsMqkNubvEIL9
+         +cq89JBtEGqN5/5bcLC0GCdYwCh+mZA8IDGjAk+2YPwqw/3nvht74xkj8iU9dcocKL
+         Gg83HxY5Bb+WbNSnvQXS5sYDiQL3xjUsNtmJpWwU=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05BD5eTv121460
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 11 Jun 2020 08:05:30 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 11 Jun 2020 08:05:40 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 11
- Jun 2020 08:05:30 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ Jun 2020 08:05:39 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 11 Jun 2020 08:05:30 -0500
+ Frontend Transport; Thu, 11 Jun 2020 08:05:39 -0500
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05BD5PZ1082585;
-        Thu, 11 Jun 2020 08:05:26 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05BD5PZ3082585;
+        Thu, 11 Jun 2020 08:05:35 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Jonathan Corbet <corbet@lwn.net>,
@@ -60,10 +60,12 @@ To:     Bjorn Helgaas <bhelgaas@google.com>,
 CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-ntb@googlegroups.com>
-Subject: [PATCH v2 00/14] Implement NTB Controller using multiple PCI EP
-Date:   Thu, 11 Jun 2020 18:35:11 +0530
-Message-ID: <20200611130525.22746-1-kishon@ti.com>
+Subject: [PATCH v2 02/14] PCI: endpoint: Make *_get_first_free_bar() take into account 64 bit BAR
+Date:   Thu, 11 Jun 2020 18:35:13 +0530
+Message-ID: <20200611130525.22746-3-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200611130525.22746-1-kishon@ti.com>
+References: <20200611130525.22746-1-kishon@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
@@ -72,89 +74,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series is about implementing SW defined NTB using
-multiple endpoint instances. This series has been tested using
-2 endpoint instances in J7 connected to two DRA7 boards. However there
-is nothing platform specific for the NTB functionality.
+pci_epc_get_first_free_bar() uses only "reserved_bar" member in
+epc_features to get the first unreserved BAR. However if the
+reserved BAR is also a 64-bit BAR, then the next BAR shouldn't be
+returned (since 64-bit BAR uses two BARs).
 
-This was presented in Linux Plumbers Conference. The presentation
-can be found @ [1]
+Make pci_epc_get_first_free_bar() take into account 64 bit BAR while
+returning the first free unreserved BAR.
 
-RFC patch series can be found @ [2]
-v1 patch series can be found @ [3]
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ drivers/pci/endpoint/pci-epc-core.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-This series has been validated after applying [4]
-
-Changes from v1:
-1) As per Rob's comment, removed support for creating NTB function
-   device from DT
-2) Add support to create NTB EPF device using configfs (added support in
-   configfs to associate primary and secondary EPC with EPF.
-
-Changes from RFC:
-1) Converted the DT binding patches to YAML schema and merged the
-   DT binding patches together
-2) NTB documentation is converted to .rst
-3) One HOST can now interrupt the other HOST using MSI-X interrupts
-4) Added support for teardown of memory window and doorbell
-   configuration
-5) Add support to provide support 64-bit memory window size from
-   DT
-
-[1] -> https://www.linuxplumbersconf.org/event/4/contributions/395/attachments/284/481/Implementing_NTB_Controller_Using_PCIe_Endpoint_-_final.pdf
-[2] -> http://lore.kernel.org/r/20190926112933.8922-1-kishon@ti.com
-[3] -> http://lore.kernel.org/r/20200514145927.17555-1-kishon@ti.com
-[4] -> http://lore.kernel.org/r/20200522033631.32574-1-kishon@ti.com
-
-Kishon Vijay Abraham I (14):
-  Documentation: PCI: Add specification for the *PCI NTB* function
-    device
-  PCI: endpoint: Make *_get_first_free_bar() take into account 64 bit
-    BAR
-  PCI: endpoint: Add helper API to get the 'next' unreserved BAR
-  PCI: endpoint: Make *_free_bar() to return error codes on failure
-  PCI: endpoint: Remove unused pci_epf_match_device()
-  PCI: endpoint: Add support to associate secondary EPC with EPF
-  PCI: endpoint: Add support in configfs to associate two EPCs with EPF
-  PCI: endpoint: Add pci_epc_ops to map MSI irq
-  PCI: cadence: Implement ->msi_map_irq() ops
-  PCI: endpoint: Add EP function driver to provide NTB functionality
-  PCI: Add TI J721E device to pci ids
-  NTB: Add support for EPF PCI-Express Non-Transparent Bridge
-  NTB: tool: Enable the NTB/PCIe link on the local or remote side of
-    bridge
-  Documentation: PCI: Add userguide for PCI endpoint NTB function
-
- Documentation/PCI/endpoint/index.rst          |    2 +
- .../PCI/endpoint/pci-endpoint-cfs.rst         |   10 +
- .../PCI/endpoint/pci-ntb-function.rst         |  344 +++
- Documentation/PCI/endpoint/pci-ntb-howto.rst  |  141 ++
- drivers/misc/pci_endpoint_test.c              |    1 -
- drivers/ntb/hw/Kconfig                        |    1 +
- drivers/ntb/hw/Makefile                       |    1 +
- drivers/ntb/hw/epf/Kconfig                    |    6 +
- drivers/ntb/hw/epf/Makefile                   |    1 +
- drivers/ntb/hw/epf/ntb_hw_epf.c               |  750 ++++++
- drivers/ntb/test/ntb_tool.c                   |    1 +
- .../pci/controller/cadence/pcie-cadence-ep.c  |   50 +
- drivers/pci/endpoint/functions/Kconfig        |   12 +
- drivers/pci/endpoint/functions/Makefile       |    1 +
- drivers/pci/endpoint/functions/pci-epf-ntb.c  | 2151 +++++++++++++++++
- drivers/pci/endpoint/functions/pci-epf-test.c |   13 +-
- drivers/pci/endpoint/pci-ep-cfs.c             |  154 +-
- drivers/pci/endpoint/pci-epc-core.c           |  131 +-
- drivers/pci/endpoint/pci-epf-core.c           |   73 +-
- include/linux/pci-epc.h                       |   38 +-
- include/linux/pci-epf.h                       |   23 +-
- include/linux/pci_ids.h                       |    1 +
- 22 files changed, 3838 insertions(+), 67 deletions(-)
- create mode 100644 Documentation/PCI/endpoint/pci-ntb-function.rst
- create mode 100644 Documentation/PCI/endpoint/pci-ntb-howto.rst
- create mode 100644 drivers/ntb/hw/epf/Kconfig
- create mode 100644 drivers/ntb/hw/epf/Makefile
- create mode 100644 drivers/ntb/hw/epf/ntb_hw_epf.c
- create mode 100644 drivers/pci/endpoint/functions/pci-epf-ntb.c
-
+diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+index 82ba0dc7f2f5..b9f4d3fe2f6f 100644
+--- a/drivers/pci/endpoint/pci-epc-core.c
++++ b/drivers/pci/endpoint/pci-epc-core.c
+@@ -93,12 +93,20 @@ EXPORT_SYMBOL_GPL(pci_epc_get);
+ unsigned int pci_epc_get_first_free_bar(const struct pci_epc_features
+ 					*epc_features)
+ {
+-	int free_bar;
++	unsigned long free_bar;
+ 
+ 	if (!epc_features)
+ 		return 0;
+ 
+-	free_bar = ffz(epc_features->reserved_bar);
++	/* Find if the reserved BAR is also a 64-bit BAR */
++	free_bar = epc_features->reserved_bar & epc_features->bar_fixed_64bit;
++
++	/* Set the adjacent bit if the reserved BAR is also a 64-bit BAR */
++	free_bar <<= 1;
++	free_bar |= epc_features->reserved_bar;
++
++	/* Now find the free BAR */
++	free_bar = ffz(free_bar);
+ 	if (free_bar > 5)
+ 		return 0;
+ 
 -- 
 2.17.1
 
