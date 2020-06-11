@@ -2,130 +2,133 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB5AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C25C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09ACF20853
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:13:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591884827;
-	bh=0kiUXeRTZ66L3vUIP0L9Xwoi5v+ZUuZDVVJDelcBnp0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Hmpd3F+f71Hoz5sdaLKlhuTUStitJeQZMfHcpeDAm/GFnQH47Q14XWhPY98ErZwAl
-	 pAS1/VTugyFtHDaFCif6POgxblO7mHCXUNCUX73Gh9RGZ6NfdmOqZYLPY+xk6hHp3J
-	 nNaIVpfGFEoxpkobW9jGq8g4kMpJUJjim8Kt9tOE=
+	by mail.kernel.org (Postfix) with ESMTP id 8F8B720801
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:15:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="PR0gi9LB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbgFKONp (ORCPT
+        id S1728086AbgFKOPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 10:13:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34108 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727053AbgFKONo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 10:13:44 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECB812083E;
-        Thu, 11 Jun 2020 14:13:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591884823;
-        bh=0kiUXeRTZ66L3vUIP0L9Xwoi5v+ZUuZDVVJDelcBnp0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dVaGBquUHsmhWX/kn/9h9/JaM05ooLcC2/xQJKi+feAgsBmhaRhYQkpz/UsCny/SI
-         xUSVWtgbUqQa5Kv6njM5l0LjIpcq1gLFDKjxEj/LAdGx0y0ZO0+sDnzZjTY89YRYO2
-         h3F8Nm778TKQSUW78UgkXsQravd7KrXAqunDowv8=
-Date:   Thu, 11 Jun 2020 16:13:37 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Chen Wandun <chenwandun@huawei.com>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yonghong Song <yhs@fb.com>, Song Liu <songliubraving@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Cheng Jian <cj.chengjian@huawei.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Ian Rogers <irogers@google.com>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH] perf tools: Fix potential memory leak in perf events
- parser
-Message-ID: <20200611141337.GB1134057@kroah.com>
-References: <ea548157-5cb0-ffa7-9bd5-ff3f9c66b1de@web.de>
+        Thu, 11 Jun 2020 10:15:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57768 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726956AbgFKOPS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 10:15:18 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9ECF8C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 07:15:18 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id w1so5675871qkw.5
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 07:15:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=KdY4CqOeXBwEiWOcFlqbqG5is4zfH8IsaBHV/GBHIHQ=;
+        b=PR0gi9LBQQMt96kk5vRqeFR+V5WYHc55goGq7/IDrxkd9Rh9/YG4b34BFLq0d+yZak
+         BzFk4zfLtE+kjSjyF7+exbUyisWbPZy/yiLvO6PtXdNGgJHOY8zf+OZ+iAubr5+Tx4Lg
+         D4HeiosK8RaYH70wLLBoyGznPMMuJUn0V+ocWO9N930QQt7fPPBvGVsW8vOLNjXPWLRJ
+         HkUS7exwuBnCFIc1OZ028wKpj25WTPUot6ReBMtdHn/iN8mcZwnlTrlzELhcNeGkhWGY
+         TFje4r50V7bjdc94j0MAgMsh5GCFD+me2eO4hQx0IUtZreCgJFCWBiuSwLKGsBDoHK5K
+         Bujw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=KdY4CqOeXBwEiWOcFlqbqG5is4zfH8IsaBHV/GBHIHQ=;
+        b=hH6dAnMxRCYnLZXfExZ8yAEX9DKRd27S8Uh5VDekIHbFjcQhOtC7fSrncGKAVl3AhS
+         WYtiueOACgTaUSEXNvxEXMxO+gbW3zYF/auKMqhbmH8/ag2cu+eX1vZJDzGAoOdD/Y4x
+         SPaU/hIWyV/WFeIMsGPGubzJyfSjOagd76Ze7aSDtqWcnwIYHCO8+gVUrEwC4mxEFEpI
+         yv/KTGM+NeIi3YDcxGji8YLHq6K3KMnGZvU/vAC7olDK1LVqg2/3Bio8UhmQFc297Phn
+         iupLZZekVCy/7YVgsEEyMXGVabN+4pJvZbGjC8Z8FfZSRv+p637AdBEbuFyXQCnHBaq1
+         s6yQ==
+X-Gm-Message-State: AOAM533Hg8KGqXg2+vO8uD3/Dt2e9hAUPW0At9/mb+ngyY5hblKKZt6s
+        mHohk2Cdk2KXMfY2EuvfFjIgIA==
+X-Google-Smtp-Source: ABdhPJwayNj1HFNzuKaP5QQLXWWEv6Z+gHXsBE1qPL3LYHDQquNuTclWXHUZlWr93wqBBawpSND6wg==
+X-Received: by 2002:ae9:efc2:: with SMTP id d185mr8655279qkg.177.1591884917518;
+        Thu, 11 Jun 2020 07:15:17 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id d16sm2634050qte.49.2020.06.11.07.15.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2020 07:15:16 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.93)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jjNz9-005wvW-Ge; Thu, 11 Jun 2020 11:15:15 -0300
+Date:   Thu, 11 Jun 2020 11:15:15 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Thomas =?utf-8?B?SGVsbHN0csO2bSAoSW50ZWwp?= 
+        <thomas_os@shipmail.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rdma@vger.kernel.org,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        Thomas Hellstrom <thomas.hellstrom@intel.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        linux-media@vger.kernel.org,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        Mika Kuoppala <mika.kuoppala@intel.com>
+Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
+ annotations
+Message-ID: <20200611141515.GW6578@ziepe.ca>
+References: <20200604081224.863494-1-daniel.vetter@ffwll.ch>
+ <20200604081224.863494-5-daniel.vetter@ffwll.ch>
+ <b11c2140-1b9c-9013-d9bb-9eb2c1906710@shipmail.org>
+ <20200611083430.GD20149@phenom.ffwll.local>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ea548157-5cb0-ffa7-9bd5-ff3f9c66b1de@web.de>
+In-Reply-To: <20200611083430.GD20149@phenom.ffwll.local>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 03:17:17PM +0200, Markus Elfring wrote:
-> > Fix potential memory leak in function parse_events_term__sym_hw()
-> > and parse_events_term__clone().
+On Thu, Jun 11, 2020 at 10:34:30AM +0200, Daniel Vetter wrote:
+> > I still have my doubts about allowing fence waiting from within shrinkers.
+> > IMO ideally they should use a trywait approach, in order to allow memory
+> > allocation during command submission for drivers that
+> > publish fences before command submission. (Since early reservation object
+> > release requires that).
 > 
-> Would you like to add the tag “Fixes” to the commit message?
+> Yeah it is a bit annoying, e.g. for drm/scheduler I think we'll end up
+> with a mempool to make sure it can handle it's allocations.
 > 
+> > But since drivers are already waiting from within shrinkers and I take your
+> > word for HMM requiring this,
 > 
-> …
-> > +++ b/tools/perf/util/parse-events.c
-> …
-> > @@ -2957,9 +2958,20 @@  int parse_events_term__sym_hw(struct parse_events_term **term,
-> >  	sym = &event_symbols_hw[idx];
-> >
-> >  	str = strdup(sym->symbol);
-> > -	if (!str)
-> > +	if (!str) {
-> > +		if (!config)
-> > +			free(temp.config);
-> >  		return -ENOMEM;
-> > -	return new_term(term, &temp, str, 0);
-> > +	}
-> > +
-> > +	ret = new_term(term, &temp, str, 0);
-> > +	if (ret < 0) {
-> > +		free(str);
-> > +		if (!config)
-> > +			free(temp.config);
-> > +	}
-> > +
-> > +	return ret;
-> >  }
-> …
-> 
-> How do you think about to add jump targets for a bit of
-> common exception handling code in these function implementations?
+> Yeah the big trouble is HMM and mmu notifiers. That's the really awkward
+> one, the shrinker one is a lot less established.
 
+I really question if HW that needs something like DMA fence should
+even be using mmu notifiers - the best use is HW that can fence the
+DMA directly without having to get involved with some command stream
+processing.
 
-Hi,
+Or at the very least it should not be a generic DMA fence but a
+narrowed completion tied only into the same GPU driver's command
+completion processing which should be able to progress without
+blocking.
 
-This is the semi-friendly patch-bot of Greg Kroah-Hartman.
+The intent of notifiers was never to endlessly block while vast
+amounts of SW does work.
 
-Markus, you seem to have sent a nonsensical or otherwise pointless
-review comment to a patch submission on a Linux kernel developer mailing
-list.  I strongly suggest that you not do this anymore.  Please do not
-bother developers who are actively working to produce patches and
-features with comments that, in the end, are a waste of time.
+Going around and switching everything in a GPU to GFP_ATOMIC seems
+like bad idea.
 
-Patch submitter, please ignore Markus's suggestion; you do not need to
-follow it at all.  The person/bot/AI that sent it is being ignored by
-almost all Linux kernel maintainers for having a persistent pattern of
-behavior of producing distracting and pointless commentary, and
-inability to adapt to feedback.  Please feel free to also ignore emails
-from them.
+> I've pinged a bunch of armsoc gpu driver people and ask them how much this
+> hurts, so that we have a clear answer. On x86 I don't think we have much
+> of a choice on this, with userptr in amd and i915 and hmm work in nouveau
+> (but nouveau I think doesn't use dma_fence in there). 
 
-thanks,
+Right, nor will RDMA ODP. 
 
-greg k-h's patch email bot
+Jason
