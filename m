@@ -2,116 +2,111 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 479DDC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E03C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2016E20656
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:58:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="C1fB/+eh"
+	by mail.kernel.org (Postfix) with ESMTP id 54D6120656
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:58:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbgFKJ60 (ORCPT
+        id S1727038AbgFKJ6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 05:58:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45848 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726802AbgFKJ6Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 05:58:25 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E873C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 02:58:26 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id y18so2145720plr.4
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 02:58:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=2Od4RPoy3QKGp+dnzd4aF9qRJSfueENgUATI+IJ7EOQ=;
-        b=C1fB/+ehBCIfy+Cw7OARJj7r0ZtWVP26Xm1aqT/BGrMFUp4kXcVKMOdyHEDXydfWUs
-         etKTuVNkUtH4m59MYngZWgW96he1xiDs02Q0nn6BK3Ba9ODztvpnH/aHtf9X1KjxFuiP
-         3tj9XvByF/IGfO6sCMMjVIF0MI1PyBaLC2L04=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=2Od4RPoy3QKGp+dnzd4aF9qRJSfueENgUATI+IJ7EOQ=;
-        b=uBXDOQyVncmlKM7+yphwsF7Si+4j45BRkbhWIZzZmmTvk9uxQU2qXAf/SX4N0r4qNB
-         PMn+hzkJRWYA7McrEW7xtOsLxHp9yCAzuTrcaJnOxx67yXZcQQuqjVIvrjAeUTKX8WbL
-         K0y0EetKw9uSEs9rOzk9anhTsVSsQP6y4wycBXOtZcySEtpigKbcW3uLPeKbLB1rb8KU
-         579IZRxYD2xVO16bIvLp3lqutXNqDNp/lOb3Een3t99+V8GLmrtAs2AfrQx3M3P1PrRD
-         QB4G6dyP9GeaC/lc+7MrsrxH/N/ZctQvLodXWsay+moWglnvKs+eMg+wb0GJCZIbhaJY
-         /UHw==
-X-Gm-Message-State: AOAM532721cpRsqckRN081w3cuA6llIAqKP7uZalXbE8WNd0bzEWzJQF
-        IQK7j4yyT+gENatbNVtDOnh0sw==
-X-Google-Smtp-Source: ABdhPJzw0lDTAqGGWpNRk2DktUonsIF2tysXh92/1xtLg01onVMOBI4W4nLWCtLW7mmD3S4whQ9BMg==
-X-Received: by 2002:a17:90a:34cc:: with SMTP id m12mr7338528pjf.123.1591869505598;
-        Thu, 11 Jun 2020 02:58:25 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id iq19sm2188545pjb.48.2020.06.11.02.58.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 02:58:24 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Thu, 11 Jun 2020 05:58:33 -0400
+Received: from smtp.asem.it ([151.1.184.197]:61269 "EHLO smtp.asem.it"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726802AbgFKJ6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 05:58:32 -0400
+Received: from webmail.asem.it
+        by asem.it (smtp.asem.it)
+        (SecurityGateway 6.5.2)
+        with ESMTP id SG000311368.MSG 
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 11:58:26 +0200S
+Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 11
+ Jun 2020 11:58:24 +0200
+Received: from flavio-x.asem.intra (172.16.17.208) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Thu, 11 Jun 2020 11:58:24 +0200
+From:   Flavio Suligoi <f.suligoi@asem.it>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Guo Ren <guoren@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <linux-csky@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Flavio Suligoi <f.suligoi@asem.it>
+Subject: [PATCH] doc: devicetree: bindings: fix spelling mistake
+Date:   Thu, 11 Jun 2020 11:58:04 +0200
+Message-ID: <20200611095804.22026-1-f.suligoi@asem.it>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200608104832.4.Ia4376fd88cdc6e8f8b43c65548458305f82f1d61@changeid>
-References: <20200608104832.1.Ibe95d8f3daef01e5c57d4c8c398f04d6a839492c@changeid> <20200608104832.4.Ia4376fd88cdc6e8f8b43c65548458305f82f1d61@changeid>
-Subject: Re: [PATCH 4/4] drm/bridge: ti-sn65dsi86: Check the regmap return value when setting a GPIO
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     robdclark@chromium.org, bjorn.andersson@linaro.org,
-        spanda@codeaurora.org, Douglas Anderson <dianders@chromium.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-To:     Douglas Anderson <dianders@chromium.org>, a.hajda@samsung.com,
-        narmstrong@baylibre.com, sam@ravnborg.org
-Date:   Thu, 11 Jun 2020 02:58:24 -0700
-Message-ID: <159186950406.242598.11120838219466948342@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain
+X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
+X-SGSPF-Result: none (smtp.asem.it)
+X-SGOP-RefID: str=0001.0A090203.5EE20041.003A,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Douglas Anderson (2020-06-08 10:48:35)
-> The ti_sn_bridge_gpio_set() got the return value of
-> regmap_update_bits() but didn't check it.  The function can't return
-> an error value, but we should at least print a warning if it didn't
-> work.
->=20
-> This fixes a compiler warning about setting "ret" but not using it.
->=20
-> Fixes: 27ed2b3f22ed ("drm/bridge: ti-sn65dsi86: Export bridge GPIOs to Li=
-nux")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
->=20
->  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 3 +++
->  1 file changed, 3 insertions(+)
->=20
-> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/brid=
-ge/ti-sn65dsi86.c
-> index 1080e4f9df96..526add27dc03 100644
-> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> @@ -999,6 +999,9 @@ static void ti_sn_bridge_gpio_set(struct gpio_chip *c=
-hip, unsigned int offset,
->         ret =3D regmap_update_bits(pdata->regmap, SN_GPIO_IO_REG,
->                                  BIT(SN_GPIO_OUTPUT_SHIFT + offset),
->                                  val << (SN_GPIO_OUTPUT_SHIFT + offset));
-> +       if (ret)
-> +               dev_warn(pdata->dev,
-> +                        "Failed to set bridge GPIO %d: %d\n", offset, re=
-t);
+Fix typo: "triger" --> "trigger"
 
-GPIO %u because it's unsigned?
+Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+---
+ Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt | 2 +-
+ .../devicetree/bindings/interrupt-controller/csky,mpintc.txt    | 2 +-
+ Documentation/devicetree/bindings/timer/csky,mptimer.txt        | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt b/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
+index ba455589f869..e1c49b660d3a 100644
+--- a/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
+@@ -12,7 +12,7 @@ Required properties for the top level node:
+    Only the GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
+ - #interrupt-cells : Specifies the number of cells needed to encode an
+    interrupt. Should be 2. The first cell defines the interrupt number,
+-   the second encodes the triger flags encoded as described in
++   the second encodes the trigger flags encoded as described in
+    Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+ - compatible:
+   - "mediatek,mt7621-gpio" for Mediatek controllers
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
+index e13405355166..e6bbcae4d07f 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
+@@ -10,7 +10,7 @@ Interrupt number definition:
+  16-31  : private  irq, and we use 16 as the co-processor timer.
+  31-1024: common irq for soc ip.
+ 
+-Interrupt triger mode: (Defined in dt-bindings/interrupt-controller/irq.h)
++Interrupt trigger mode: (Defined in dt-bindings/interrupt-controller/irq.h)
+  IRQ_TYPE_LEVEL_HIGH (default)
+  IRQ_TYPE_LEVEL_LOW
+  IRQ_TYPE_EDGE_RISING
+diff --git a/Documentation/devicetree/bindings/timer/csky,mptimer.txt b/Documentation/devicetree/bindings/timer/csky,mptimer.txt
+index 15cfec08fbb8..f5c7e99cf52b 100644
+--- a/Documentation/devicetree/bindings/timer/csky,mptimer.txt
++++ b/Documentation/devicetree/bindings/timer/csky,mptimer.txt
+@@ -8,7 +8,7 @@ regs is accessed by cpu co-processor 4 registers with mtcr/mfcr.
+  - PTIM_CTLR "cr<0, 14>" Control reg to start reset timer.
+  - PTIM_TSR  "cr<1, 14>" Interrupt cleanup status reg.
+  - PTIM_CCVR "cr<3, 14>" Current counter value reg.
+- - PTIM_LVR  "cr<6, 14>" Window value reg to triger next event.
++ - PTIM_LVR  "cr<6, 14>" Window value reg to trigger next event.
+ 
+ ==============================
+ timer node bindings definition
+-- 
+2.17.1
+
