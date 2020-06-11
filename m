@@ -2,120 +2,131 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4CFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 16:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A60EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 16:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CFDD20792
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 16:26:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50ED0207ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 16:27:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591892845;
+	bh=7Vh2eMKAqsqarBEFvSteTBIrjnkfpF7p21JR7SHTWnU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=R3pCd7qEkQRqhNW7wUT/EIzVlAw6Nz8Rx14aiNjRHIz/xyDpqo+s20HHej5M/dEKG
+	 qHKAyxYfFeQTQT1WnLzWe/AvoAgSkvtKeY+95qfRzjbub3DRa4l1mj9NrW+BNpl42/
+	 qojzj3A8opqrJvOdFM0xiwRoRlk+HRn5yDXsMKek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbgFKQ0c (ORCPT
+        id S1726516AbgFKQ1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 12:26:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49866 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbgFKQ0b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 12:26:31 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8A89C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 09:26:31 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1jjQ24-0003I6-Fv; Thu, 11 Jun 2020 18:26:24 +0200
-Received: from [IPv6:2a03:f580:87bc:d400:b44d:6713:e0e9:e23c] (unknown [IPv6:2a03:f580:87bc:d400:b44d:6713:e0e9:e23c])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
-        (Authenticated sender: mkl@blackshift.org)
-        by smtp.blackshift.org (Postfix) with ESMTPSA id 97DA2513E61;
-        Thu, 11 Jun 2020 16:26:22 +0000 (UTC)
-Subject: Re: [PATCH 0/6] Add Microchip MCP25XXFD CAN driver
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        wg@grandegger.com
-Cc:     kernel@martin.sperl.org, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200610074442.10808-1-manivannan.sadhasivam@linaro.org>
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
- mQINBFFVq30BEACtnSvtXHoeHJxG6nRULcvlkW6RuNwHKmrqoksispp43X8+nwqIFYgb8UaX
- zu8T6kZP2wEIpM9RjEL3jdBjZNCsjSS6x1qzpc2+2ivjdiJsqeaagIgvy2JWy7vUa4/PyGfx
- QyUeXOxdj59DvLwAx8I6hOgeHx2X/ntKAMUxwawYfPZpP3gwTNKc27dJWSomOLgp+gbmOmgc
- 6U5KwhAxPTEb3CsT5RicsC+uQQFumdl5I6XS+pbeXZndXwnj5t84M+HEj7RN6bUfV2WZO/AB
- Xt5+qFkC/AVUcj/dcHvZwQJlGeZxoi4veCoOT2MYqfR0ax1MmN+LVRvKm29oSyD4Ts/97cbs
- XsZDRxnEG3z/7Winiv0ZanclA7v7CQwrzsbpCv+oj+zokGuKasofzKdpywkjAfSE1zTyF+8K
- nxBAmzwEqeQ3iKqBc3AcCseqSPX53mPqmwvNVS2GqBpnOfY7Mxr1AEmxdEcRYbhG6Xdn+ACq
- Dq0Db3A++3PhMSaOu125uIAIwMXRJIzCXYSqXo8NIeo9tobk0C/9w3fUfMTrBDtSviLHqlp8
- eQEP8+TDSmRP/CwmFHv36jd+XGmBHzW5I7qw0OORRwNFYBeEuiOIgxAfjjbLGHh9SRwEqXAL
- kw+WVTwh0MN1k7I9/CDVlGvc3yIKS0sA+wudYiselXzgLuP5cQARAQABtCZNYXJjIEtsZWlu
- ZS1CdWRkZSA8bWtsQHBlbmd1dHJvbml4LmRlPokCVAQTAQoAPgIbAwIeAQIXgAULCQgHAwUV
- CgkICwUWAgMBABYhBMFAC6CzmJ5vvH1bXCte4hHFiupUBQJcUsSbBQkM366zAAoJECte4hHF
- iupUgkAP/2RdxKPZ3GMqag33jKwKAbn/fRqAFWqUH9TCsRH3h6+/uEPnZdzhkL4a9p/6OeJn
- Z6NXqgsyRAOTZsSFcwlfxLNHVxBWm8pMwrBecdt4lzrjSt/3ws2GqxPsmza1Gs61lEdYvLST
- Ix2vPbB4FAfE0kizKAjRZzlwOyuHOr2ilujDsKTpFtd8lV1nBNNn6HBIBR5ShvJnwyUdzuby
- tOsSt7qJEvF1x3y49bHCy3uy+MmYuoEyG6zo9udUzhVsKe3hHYC2kfB16ZOBjFC3lH2U5An+
- yQYIIPZrSWXUeKjeMaKGvbg6W9Oi4XEtrwpzUGhbewxCZZCIrzAH2hz0dUhacxB201Y/faY6
- BdTS75SPs+zjTYo8yE9Y9eG7x/lB60nQjJiZVNvZ88QDfVuLl/heuIq+fyNajBbqbtBT5CWf
- mOP4Dh4xjm3Vwlz8imWW/drEVJZJrPYqv0HdPbY8jVMpqoe5jDloyVn3prfLdXSbKPexlJaW
- 5tnPd4lj8rqOFShRnLFCibpeHWIumqrIqIkiRA9kFW3XMgtU6JkIrQzhJb6Tc6mZg2wuYW0d
- Wo2qvdziMgPkMFiWJpsxM9xPk9BBVwR+uojNq5LzdCsXQ2seG0dhaOTaaIDWVS8U/V8Nqjrl
- 6bGG2quo5YzJuXKjtKjZ4R6k762pHJ3tnzI/jnlc1sXz
-Message-ID: <fbbca009-3c53-6aa9-94ed-7e9e337c31a4@pengutronix.de>
-Date:   Thu, 11 Jun 2020 18:26:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Thu, 11 Jun 2020 12:27:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35354 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725782AbgFKQ1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 12:27:23 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BA5D20792;
+        Thu, 11 Jun 2020 16:27:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591892842;
+        bh=7Vh2eMKAqsqarBEFvSteTBIrjnkfpF7p21JR7SHTWnU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=loimR59ESifvGt9gJ/k3lNBbw2wz/KxaR8VRsFjmkzEE2gwVAEKMbUxbZxwC0zh8G
+         IHOznBOCpQyR83dvEhg/xor9v5dDFIEziXXV9DM7mHWM//FUw1Y351w+jlomXLLxYm
+         1IB2eJK6fZTtEHbyFEQ79PmS6+uggD2KfvnuDJnA=
+Date:   Thu, 11 Jun 2020 09:27:21 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Daeho Jeong <daeho43@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com,
+        Daeho Jeong <daehojeong@google.com>
+Subject: Re: [f2fs-dev] [PATCH v2] f2fs: add F2FS_IOC_SEC_TRIM_FILE ioctl
+Message-ID: <20200611162721.GB1152@sol.localdomain>
+References: <20200611031652.200401-1-daeho43@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200610074442.10808-1-manivannan.sadhasivam@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200611031652.200401-1-daeho43@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/10/20 9:44 AM, Manivannan Sadhasivam wrote:
-> Hello,
-> 
-> This series adds CAN network driver support for Microchip MCP25XXFD CAN
-> Controller with MCP2517FD as the target controller version. This series is
-> mostly inspired (or taken) from the previous iterations posted by Martin Sperl.
-> I've trimmed down the parts which are not necessary for the initial version
-> to ease review. Still the series is relatively huge but I hope to get some
-> reviews (post -rcX ofc!).
-> 
-> Link to the origial series posted by Martin:
-> https://www.spinics.net/lists/devicetree/msg284462.html
-> 
-> I've not changed the functionality much but done some considerable amount of
-> cleanups and also preserved the authorship of Martin for all the patches he has
-> posted earlier. This series has been tested on 96Boards RB3 platform by myself
-> and Martin has tested the previous version on Rpi3 with external MCP2517FD
-> controller.
+On Thu, Jun 11, 2020 at 12:16:52PM +0900, Daeho Jeong wrote:
+> +	for (index = pg_start; index < pg_end;) {
+> +		struct dnode_of_data dn;
+> +		unsigned int end_offset;
+> +
+> +		set_new_dnode(&dn, inode, NULL, NULL, 0);
+> +		ret = f2fs_get_dnode_of_data(&dn, index, LOOKUP_NODE);
+> +		if (ret)
+> +			goto out;
+> +
+> +		end_offset = ADDRS_PER_PAGE(dn.node_page, inode);
+> +		if (pg_end < end_offset + index)
+> +			end_offset = pg_end - index;
+> +
+> +		for (; dn.ofs_in_node < end_offset;
+> +				dn.ofs_in_node++, index++) {
+> +			struct block_device *cur_bdev;
+> +			block_t blkaddr = f2fs_data_blkaddr(&dn);
+> +
+> +			if (__is_valid_data_blkaddr(blkaddr)) {
+> +				if (!f2fs_is_valid_blkaddr(F2FS_I_SB(inode),
+> +					blkaddr, DATA_GENERIC_ENHANCE)) {
+> +					ret = -EFSCORRUPTED;
+> +					goto out;
+> +				}
+> +			} else
+> +				continue;
+> +
+> +			cur_bdev = f2fs_target_device(sbi, blkaddr, NULL);
+> +			if (f2fs_is_multi_device(sbi)) {
+> +				int i = f2fs_target_device_index(sbi, blkaddr);
+> +
+> +				blkaddr -= FDEV(i).start_blk;
+> +			}
+> +
+> +			if (len) {
+> +				if (prev_bdev == cur_bdev &&
+> +					blkaddr == prev_block + len) {
+> +					len++;
+> +				} else {
+> +					ret = f2fs_secure_erase(prev_bdev,
+> +							prev_block, len, flags);
+> +					if (ret)
+> +						goto out;
+> +
+> +					len = 0;
+> +				}
+> +			}
+> +
+> +			if (!len) {
+> +				prev_bdev = cur_bdev;
+> +				prev_block = blkaddr;
+> +				len = 1;
+> +			}
+> +		}
+> +
+> +		f2fs_put_dnode(&dn);
+> +	}
 
-I initially started looking at Martin's driver and it was not using several
-modern CAN driver infrastructures. I then posted some cleanup patches but Martin
-was not working on the driver any more. Then I decided to rewrite the driver,
-that is the one I'm hoping to mainline soon.
+This loop processes the entire file, which may be very large.  So it could take
+a very long time to execute.
 
-Can you give it a try?
+It should at least use the following to make the task killable and preemptible:
 
-https://github.com/marckleinebudde/linux/commits/v5.6-rpi/mcp25xxfd-20200607-41
+		if (fatal_signal_pending(current)) {
+			err = -EINTR;
+			goto out;
+		}
+		cond_resched();
 
-Marc
+Also, perhaps this ioctl should be made incremental, i.e. take in an
+(offset, length) like pwrite()?
 
--- 
-Pengutronix e.K.                 | Marc Kleine-Budde           |
-Embedded Linux                   | https://www.pengutronix.de  |
-Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
+- Eric
