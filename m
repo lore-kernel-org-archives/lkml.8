@@ -2,138 +2,135 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7284FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2ED9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:05:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4710E206DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:03:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591895018;
-	bh=gOzCa3MEA0RowkjMGp7ju28nrUWXIIrMLCNMbc2RwyA=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=HMYVhMn7+27BU+2so2DkUe30v6rnDcECrSl3svWr4jy04pa8gy5E/QpWjNf4dO3er
-	 QCTTbC5TF4+qdXb3vUSJwfwkn9up4zHniHzdRyuCT6StrC76HLWzqssMGZB4dafkUf
-	 Zz3IHNVnBerB+HOyLxIrssyo/dujhjVQXAU2jIoM=
+	by mail.kernel.org (Postfix) with ESMTP id A49DB206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:05:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbgFKRDh (ORCPT
+        id S1726692AbgFKRFm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 13:03:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34080 "EHLO mail.kernel.org"
+        Thu, 11 Jun 2020 13:05:42 -0400
+Received: from mga03.intel.com ([134.134.136.65]:49295 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726628AbgFKRDg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 13:03:36 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 221332053B;
-        Thu, 11 Jun 2020 17:03:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591895016;
-        bh=gOzCa3MEA0RowkjMGp7ju28nrUWXIIrMLCNMbc2RwyA=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=enVlRkGL5BPjR6Xk9cNNn1EyMBkJbRuYKv4I8tc8vOQC2vK+18Z3lJn9R4965s+fj
-         +KFyeWVuHQmf+nlMOJf4RE7fYyLd2RQfTbj/pU5lnrbPCNgBz+dHNnOMhbGqf3JDKB
-         xsrKjq/cCzTL1HoWGceWtHkmfOnuKBDj+97Asv+c=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id D435B35228C7; Thu, 11 Jun 2020 10:03:35 -0700 (PDT)
-Date:   Thu, 11 Jun 2020 10:03:35 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Frederic Weisbecker <frederic@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>
-Subject: Re: [PATCH 08/10] rcu: Allow to deactivate nocb on a CPU
-Message-ID: <20200611170335.GC4455@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200513164714.22557-1-frederic@kernel.org>
- <20200513164714.22557-9-frederic@kernel.org>
- <20200526212017.GE76276@google.com>
- <20200526224908.GC16672@google.com>
- <20200604131029.GA27571@lenoir>
- <20200611013203.GA12037@google.com>
+        id S1726379AbgFKRFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 13:05:41 -0400
+IronPort-SDR: r0sxlDSWbPBJ+WiLIhW5hDkPCaN2KlgVsdO7eLLevTMI9uE3KMX3vpJvUPgQJPYftq8s5DVaYq
+ +IXNQnLaMbkw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 10:05:40 -0700
+IronPort-SDR: o2R+Vop2uU6YcqM1klJnMq5DpylifiYzUdln/hN/JzjguHnEe+yiMbNHDK0pnhq9GCNMjnMpJW
+ Z9ku2WW2XNfQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,500,1583222400"; 
+   d="scan'208";a="275396665"
+Received: from kheichel-mobl2.amr.corp.intel.com (HELO [10.255.4.246]) ([10.255.4.246])
+  by orsmga006.jf.intel.com with ESMTP; 11 Jun 2020 10:05:38 -0700
+Subject: Re: [PATCH v2] x86/mm: use max memory block size on bare metal
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Sistare <steven.sistare@oracle.com>
+References: <20200609225451.3542648-1-daniel.m.jordan@oracle.com>
+ <dc869b25-db3c-8c68-3278-8688c5288632@intel.com>
+ <20200611165910.6dwd3c7z5brimjbm@ca-dmjordan1.us.oracle.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <adcd3359-a90b-ab62-60e1-102277533e11@intel.com>
+Date:   Thu, 11 Jun 2020 10:05:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200611013203.GA12037@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200611165910.6dwd3c7z5brimjbm@ca-dmjordan1.us.oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 09:32:03PM -0400, Joel Fernandes wrote:
-> On Thu, Jun 04, 2020 at 03:10:30PM +0200, Frederic Weisbecker wrote:
-> > On Tue, May 26, 2020 at 06:49:08PM -0400, Joel Fernandes wrote:
-> > > On Tue, May 26, 2020 at 05:20:17PM -0400, Joel Fernandes wrote:
-> > >  
-> > > > > The switch happens on the target with IRQs disabled and rdp->nocb_lock
-> > > > > held to avoid races between local callbacks handling and kthread
-> > > > > offloaded callbacks handling.
-> > > > > nocb_cb kthread is first parked to avoid any future race with
-> > > > > concurrent rcu_do_batch() executions. Then the cblist is set to offloaded
-> > > > > so that the nocb_gp kthread ignores this rdp.
-> > > > 
-> > > > nit: you mean cblist is set to non-offloaded mode right?
-> > > > 
-> > > > Also, could you clarify better the rcu_barrier bits in the changelog. I know
-> > > > there's some issue if the cblist has both offloaded and non-offloaded
-> > > > callbacks, but it would be good to clarify this here better IMHO.
-> > > 
-> > > And for archival purposes: rcu_barrier needs excluding here because it is
-> > > possible that for a brief period of time, the callback kthread has been
-> > > parked to do the mode-switch, and it could be executing a bunch of callbacks
-> > > when it was asked to park.
-> > > 
-> > > Meanwhile, more interrupts happen and more callbacks are queued which are now
-> > > executing in softirq. This ruins the ordering of callbacks that rcu_barrier
-> > > needs.
-> > 
-> > I think in that case the callbacks would still be executed in order. We wait
-> > for the kthread to park before switching to softirq callback execution.
-> 
-> Ah ok, you are parking the CB kthread after the no-cb CB's are already
-> invoked (that's when parkme() is called -- i.e. after rcu_do_batch() in the
-> CB kthread runs).
-> 
-> Yeah, I don't see the purpose of acquiring rcu_barrier mutex either now. Once
-> you park, all CBs should have been invoked by the nocb CB thread right?
-> kthread_park() waits for the thread to be parked before proceeding. And you
-> don't de-offload before it is parked.
+On 6/11/20 9:59 AM, Daniel Jordan wrote:
+> On Thu, Jun 11, 2020 at 07:16:02AM -0700, Dave Hansen wrote:
+>> On 6/9/20 3:54 PM, Daniel Jordan wrote:
+>>> +	/*
+>>> +	 * Use max block size to minimize overhead on bare metal, where
+>>> +	 * alignment for memory hotplug isn't a concern.
+>>> +	 */
+>>> +	if (hypervisor_is_type(X86_HYPER_NATIVE)) {
+>>> +		bz = MAX_BLOCK_SIZE;
+>>> +		goto done;
+>>> +	}
+>> What ends up being the worst case scenario?  Booting a really small
+>> bare-metal x86 system, say with 64MB or 128MB of RAM?  What's the
+>> overhead there?
+> Might not be following you, so bear with me, but we only get to this check on a
+> system with a physical address end of at least MEM_SIZE_FOR_LARGE_BLOCK (64G),
+> and this would still (ever so slightly...) reduce overhead of memory block init
+> at boot in that case.
 
-We absolutely must execute callbacks out of order in order to avoid
-OOM due to RCU callback floods.  This is because if we don't execute
-callbacks out of order, there will be a time when we are not executing
-callbacks at all.  If execution gets preempted at this point, it is
-quite possibly game over due to OOM.
+Ahh, I see now.  That is just above the hunk you added, but just wasn't
+in the diff context or mentioned in the changelog.
 
-							Thanx, Paul
+One other nit for this.  We *do* have actual hardware hotplug, and I'm
+pretty sure the alignment guarantees for hardware hotplug are pretty
+weak.  For instance, the alignment guarantees for persistent memory are
+still only 64MB even on modern platforms.
 
-> > Initially it was to avoid callback ordering issues but I don't recall
-> > exactly which. Maybe it wasn't actually needed. But anyway I'll keep it
-> > for the next version where, for a brief period of time, nocb kthread will
-> > be able to compete with callback execution in softirq.
-> 
-> Which nocb kthread is competing? Do you mean GP or CB?
-> 
-> Either way, could you clarify how does softirqs compete? Until the thread is
-> parked, you wouldn't de-offload. And once you de-offload, only then the
-> softirq would be executing callbacks. So at any point of time, it is
-> either the CB kthread executing CBs or the softirq executing CBs, not both.
-> Or did I miss something?
-> 
-> thanks,
-> 
->  - Joel
-> 
-> 
-> > I'll clarify that in the changelog.
-> > 
-> > Thanks.
+Let's say we're on bare metal and we see an SRAT table that has some
+areas that show that hotplug might happen there.  Is this patch still
+ideal there?
