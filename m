@@ -2,111 +2,102 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF98C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 10:37:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2E4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 10:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBDDC206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 10:37:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mah74+Tm"
+	by mail.kernel.org (Postfix) with ESMTP id 130EB206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 10:38:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727045AbgFKKh4 (ORCPT
+        id S1727074AbgFKKiN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 06:37:56 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49490 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726817AbgFKKhz (ORCPT
+        Thu, 11 Jun 2020 06:38:13 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:36734 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbgFKKiN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 06:37:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591871874;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=pVpU95O+J56tcCcKm/rQbMqFedeKvQz8SMkjM9+3a7I=;
-        b=Mah74+TmCgi6+D6HrO50/4lMw1FzZryCQEYUEpxj5sRov2YfkpXf/wN0zQMTkNCqHFKu9j
-        oN8CnmmqeEE+ImrGK/1BsGmHoF6mD5XtHq4oPRNuFoXoStnAF+jfcI9EOFNNgDFWUwY257
-        bzUdihzpLn8Y4DkY90Nrg1MuWQJSYNA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-486-V2bqYhnhNjSBKC62ZxAhxw-1; Thu, 11 Jun 2020 06:37:49 -0400
-X-MC-Unique: V2bqYhnhNjSBKC62ZxAhxw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0AD211800D41;
-        Thu, 11 Jun 2020 10:37:47 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-13-51.pek2.redhat.com [10.72.13.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BA2CC5D9EF;
-        Thu, 11 Jun 2020 10:37:40 +0000 (UTC)
-Date:   Thu, 11 Jun 2020 18:37:37 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     =?utf-8?Q?=C5=81ukasz?= Stelmach <l.stelmach@samsung.com>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Enrico Weigelt <info@metux.net>,
-        Kees Cook <keescook@chromium.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Ben Dooks <ben-linux@fluff.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        kexec@lists.infradead.org
-Subject: Re: [PATCH 0/5] kexec_file_load() for arm
-Message-ID: <20200611103737.GA5079@dhcp-128-65.nay.redhat.com>
-References: <CGME20200601142806eucas1p2680c5625411e7a695d8469760a926520@eucas1p2.samsung.com>
- <20200601142754.26139-1-l.stelmach@samsung.com>
+        Thu, 11 Jun 2020 06:38:13 -0400
+Received: by mail-il1-f200.google.com with SMTP id p11so3710301iln.3
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 03:38:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to
+         :content-transfer-encoding;
+        bh=AQLdjmCgHzp8A+RqPHJ2O1m5rhOO5LKPDxCGVnLpc48=;
+        b=lGalRqDp4QBI1PtiJYvuw3KyLxkdTZgnf+xN2IeXx6GQR+yniEUXca9IYFKGFn3DS1
+         zwnZbkDOK9e8rXEro6qLgnc1hn9lvjWWRpV2m8TwQrXlcKCsLN1LOOMonLveCtMiWjN/
+         lRyG8TaG5boD1gJb6jq2eclcrEJSY35p3/9SDjfmE+NQDXXu7IVVMFZWLbOe03GbV0ik
+         WY8809rFW3Zu7SHHYT9NwhJ70Z1q4OXyjUee2+JaHeKSWb9uqgeHUjZHhmVLFgy2vNSh
+         FaM9DqahqZfxobLHYG5fpr0UBh5x5JxHhIxV3hpaJ10dpN6Ciw634Gf2T0n/nG9X1prx
+         cPvw==
+X-Gm-Message-State: AOAM5329n9fRZHXouwwa2nqGVgDQ1YKQ+DCI82okG9OxVMrQPaMB6rhU
+        wK2sZSa7JLCDVNrZkE/l83JBdDuQXiXmPWf4Onm0yvZm+EFm
+X-Google-Smtp-Source: ABdhPJzOX8Wqwb4v5qluuG/gQ31aI+V+FGtq49kV5ysnC6Kb9d8nStOlljEIzcFTkg06TYY27SIEYZE0oQYcLWfe2SCfm+o32nLl
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200601142754.26139-1-l.stelmach@samsung.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Received: by 2002:a92:b69b:: with SMTP id m27mr7346407ill.271.1591871892122;
+ Thu, 11 Jun 2020 03:38:12 -0700 (PDT)
+Date:   Thu, 11 Jun 2020 03:38:12 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a8723f05a7cc8e14@google.com>
+Subject: upstream test error: BUG: using smp_processor_id() in preemptible
+ code in corrupted
+From:   syzbot <syzbot+97028e7ff04ca4e3d85f@syzkaller.appspotmail.com>
+To:     adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        tytso@mit.edu
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc kexec list in case people may missed the pieces.
-On 06/01/20 at 04:27pm, Łukasz Stelmach wrote:
-> The following series of patches provides implementation of the
-> kexec_file_load() system call form the arm architecture. zImage and uImage
-> (legacy format) files are supported. Like on arm64, there is no
-> possibility of loading a new DTB and the currently loaded is reused.
-> 
-> Łukasz Stelmach (5):
->   arm: decompressor: set malloc pool size for the decompressor
->   arm: add image header definitions
->   arm: decompressor: define a new zImage tag
->   arm: Add kexec_image_info
->   arm: kexec_file: load zImage or uImage, initrd and dtb
-> 
->  arch/arm/Kconfig                       |  15 ++
->  arch/arm/boot/compressed/Makefile      |   2 +
->  arch/arm/boot/compressed/head.S        |   9 +-
->  arch/arm/boot/compressed/vmlinux.lds.S |  22 +--
->  arch/arm/include/asm/image.h           |  87 ++++++++++
->  arch/arm/include/asm/kexec.h           |  14 ++
->  arch/arm/kernel/Makefile               |   5 +-
->  arch/arm/kernel/kexec_uimage.c         |  80 ++++++++++
->  arch/arm/kernel/kexec_zimage.c         | 199 +++++++++++++++++++++++
->  arch/arm/kernel/machine_kexec.c        |  39 ++++-
->  arch/arm/kernel/machine_kexec_file.c   | 209 +++++++++++++++++++++++++
->  11 files changed, 662 insertions(+), 19 deletions(-)
->  create mode 100644 arch/arm/include/asm/image.h
->  create mode 100644 arch/arm/kernel/kexec_uimage.c
->  create mode 100644 arch/arm/kernel/kexec_zimage.c
->  create mode 100644 arch/arm/kernel/machine_kexec_file.c
-> 
-> -- 
-> 2.26.2
-> 
+Hello,
 
+syzbot found the following crash on:
+
+HEAD commit:    84fc461d Merge tag 'for-linus-5.8-rc1' of git://git.kernel..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=17e35a36100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=28f5490cd437fcf
+dashboard link: https://syzkaller.appspot.com/bug?extid=97028e7ff04ca4e3d85f
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+97028e7ff04ca4e3d85f@syzkaller.appspotmail.com
+
+[[0;32m  OK  [0m] Reached target Login Prompts.
+[[0;32m  OK  [0m] Reached target Multi-User System.
+[[0;32m  OK  [0m] Reached target Graphical Interface.
+         Starting Update UTMP about System Runlevel Changes...
+         Starting Load/Save RF Kill Switch Status...
+[[0;32m  OK  [0m] Started Updat[   68.080829][ T6736] BUG: using smp_processor_id() in preemptible [00000000] code: systemd-rfkill/6736
+e UTMP about Sys[   68.090431][ T6736] caller is ext4_mb_new_blocks+0xa77/0x3b30 fs/ext4/mballoc.c:4711
+tem Runlevel Cha[   68.098400][ T6736] CPU: 0 PID: 6736 Comm: systemd-rfkill Not tainted 5.7.0-syzkaller #0
+nges.
+[[0;32m  OK  [0m] Started Load/Save RF Kill Switch Status.
+
+Debian GNU/Linux 9 syzkaller ttyS0
+
+Warning: Permanently added '10.128.0.243' (ECDSA) to the list of known hosts.
+2020/06/10 20:51:27 fuzzer started
+2020/06/10 20:51:27 connecting to host at 10.128.0.26:39073
+2020/06/10 20:51:27 checking machine...
+2020/06/10 20:51:27 checking revisions...
+2020/06/10 20:51:27 testing simple program...
+2020/06/10 20:51:29 building call list...
+executing program
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
