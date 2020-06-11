@@ -2,91 +2,101 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C872FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA4EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A339C20760
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:03:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591884186;
-	bh=KwaNQt8CHB0EhbuxLaFyv3pyqaPwUgg4tG0QM0szqSs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ekczKLzcchofYo74CpoL6W+v1opuRM+5iuOmVUnrOlpQGmQuR84TyEKtN1XKnC63b
-	 afDdCME/Q09H+YdyBCEuV/zPuRQUc1Up3LvwEEvCVJtVWVE0Nxhtujs3TM4hveC7mz
-	 O02BkmTiHHgOX3BjSFxOKTwilyhd51xhfVEQWw3s=
+	by mail.kernel.org (Postfix) with ESMTP id 07335206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:04:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qrnu4O8l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbgFKODF (ORCPT
+        id S1727850AbgFKOEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 10:03:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58368 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726808AbgFKODE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 10:03:04 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F250206C3;
-        Thu, 11 Jun 2020 14:03:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591884184;
-        bh=KwaNQt8CHB0EhbuxLaFyv3pyqaPwUgg4tG0QM0szqSs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=b0OCEbE4kM0G44R+IPkLOHrhllos+I/kAIXU2VVFnidEhAuAeVDc8opKGAmJOCJrR
-         W9HF128ZST0k9gj0ESz+vvc3vDFTMkjak1f9kycjmaPbqNjtqsF+YGjrw6o25UmMuW
-         fdG3HPBPTNr23ERnNY1wpUqRr/RxJriluUs32lNQ=
-Date:   Thu, 11 Jun 2020 15:03:01 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Xu Yilun <yilun.xu@intel.com>
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        trix@redhat.com, hao.wu@intel.com, matthew.gerlach@linux.intel.com,
-        russell.h.weight@intel.com
-Subject: Re: [PATCH 5/6] spi: altera: move driver name string to header file
-Message-ID: <20200611140301.GH4671@sirena.org.uk>
-References: <1591845911-10197-1-git-send-email-yilun.xu@intel.com>
- <1591845911-10197-6-git-send-email-yilun.xu@intel.com>
+        Thu, 11 Jun 2020 10:04:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56098 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbgFKOEY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 10:04:24 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C80F8C03E96F
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 07:04:23 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id gl26so6554635ejb.11
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 07:04:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3tAQkTDxR6OkbsLR77e3L5/n0JEewLIpdbP+HGlmOso=;
+        b=Qrnu4O8lrdL0KYy5wqcY0H/DSv7fGsDcQgHQ357ugoTAE+I9omd+S4+aQ8AFF7ntku
+         J15ns1pEF7tp2kagz/i4l2eCEZFdIoLWtWWNin0+ElkkFh9sfTH3r+ziLdUzohpngh8S
+         KWYnVhp/RE0twDGY+hPM+VQ/3ds2aYU3SwbA/HytFCmYG6CwWCLwZpib6qmFHgsVcaeD
+         2xIMLuJAmFCrDaJgXaGHw1S4slPHo7XUor3C8wGyXz0Q33EOwJUA/DLcUG4FihwaE+3Y
+         fwzUj4yoY79fsieLc3GhHPPJ1abPEwVPm+Zj5qAKEbKiKiuXk8LnRoTZHP0WPZgMMsGq
+         HIlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3tAQkTDxR6OkbsLR77e3L5/n0JEewLIpdbP+HGlmOso=;
+        b=U1QDENKbfx7NQvu/Qq3JPv0EZSKL1lPJELRKPgX4MHouJg8tK5F6pIGFY62g8LcPr/
+         zgZ68nlN1jN7I170iwC63QvFT9SvG/tS92GR47W86BpyGLT5SOSkVkdiV6VrExbHpmVq
+         eTBDnQUY+RMfF3KEjsLnY42hZHosGiP1MQWmd5DMh2XSboId9oSJvklBJ0Q7iVbuiihd
+         az9pNUDFVG8yMPAf5mcU8f2yGUqaHlFHMYZFTN921/zzD9b9KszkR0IrcPaqpZEHIHCf
+         IBqu4Hf9Ewygy2Y2AN9Ds80SfkAQpC9DORLytml1fuEwzJQEOx5TpMXtYvn9+DGvoow5
+         +g7w==
+X-Gm-Message-State: AOAM532M8LE1+9bp6LnN2pXuHUnUzEdMwwICZvlDs4rrxcCHRc8mIZCF
+        d+unuX6i4ieiwv5VQAYFlnM=
+X-Google-Smtp-Source: ABdhPJxXyGK1xtU5Dkh20lntkoPDiXZokmp0W8yf+dpF3rch+rOVEuV+n+sqF79m89oSORQFZ7iS2Q==
+X-Received: by 2002:a17:906:4406:: with SMTP id x6mr8402478ejo.160.1591884262536;
+        Thu, 11 Jun 2020 07:04:22 -0700 (PDT)
+Received: from archlap.tendawifi.com ([185.32.231.210])
+        by smtp.gmail.com with ESMTPSA id s13sm1936787ejv.29.2020.06.11.07.04.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2020 07:04:19 -0700 (PDT)
+From:   Ilias Stamatis <stamatis.iliass@gmail.com>
+To:     tglx@linutronix.de, pmladek@suse.com, peterz@infradead.org
+Cc:     linux-kernel@vger.kernel.org,
+        Ilias Stamatis <stamatis.iliass@gmail.com>
+Subject: [PATCH] kthread: remove incorrect comment in kthread_create_on_cpu()
+Date:   Thu, 11 Jun 2020 16:59:21 +0300
+Message-Id: <20200611135920.240551-1-stamatis.iliass@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="k+G3HLlWI7eRTl+h"
-Content-Disposition: inline
-In-Reply-To: <1591845911-10197-6-git-send-email-yilun.xu@intel.com>
-X-Cookie: I like your SNOOPY POSTER!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Originally kthread_create_on_cpu() parked and woke up the new thread.
+However, since commit a65d40961dc7 ("kthread/smpboot: do not park in
+kthread_create_on_cpu()") this is no longer the case. This patch removes
+the comment that has been left behind and is now incorrect / stale.
 
---k+G3HLlWI7eRTl+h
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Ilias Stamatis <stamatis.iliass@gmail.com>
+---
+ kernel/kthread.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-On Thu, Jun 11, 2020 at 11:25:10AM +0800, Xu Yilun wrote:
-> This allows other driver to reuse the name string for spi-altera
-> platform device creation.
+diff --git a/kernel/kthread.c b/kernel/kthread.c
+index bfbfa481be3a..38fa07ae59f6 100644
+--- a/kernel/kthread.c
++++ b/kernel/kthread.c
+@@ -455,7 +455,6 @@ EXPORT_SYMBOL(kthread_bind);
+  *	     to "name.*%u". Code fills in cpu number.
+  *
+  * Description: This helper function creates and names a kernel thread
+- * The thread will be woken and put into park mode.
+  */
+ struct task_struct *kthread_create_on_cpu(int (*threadfn)(void *data),
+ 					  void *data, unsigned int cpu,
+-- 
+2.27.0
 
-This is a very unusual thing to do, normally we just have the users use
-the strong directly.  It feels like if we are going to change this idiom
-we should do so globally but that seems like far more trouble thanit's
-worth.
-
---k+G3HLlWI7eRTl+h
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7iOZUACgkQJNaLcl1U
-h9Da1gf+IVsNj1j6qCAsG0ClLwzynb1gwlrM9hM9V225dz0WnVCf+YvdK2cCN2ef
-rCAyr1EvGLyKcg+gVV4laDFfkdJFecYWKiyPGCReduMlF2mtJh0G/SlWjxSl2pN0
-v5pGgl8vDGT+tTpQcX9uRDLK+YV4RValFuMznvD0TiwifIr7UqLp69Ih4sxtbWeU
-vr7mW9Tr6ILMOXo5Stee0Ept06ejaJX4QsoFVUb3cBV+m00V/wnJUX2Yq2M1ejNF
-XsHy1J5N6aPng0+XkKZGIXViQ5ySxHFPtQPrt4X14Vi6eoLYX60ovHd7nAD8SK2e
-97mUFhJU/WztGB/CN9q1vczboJsoFQ==
-=Sc8J
------END PGP SIGNATURE-----
-
---k+G3HLlWI7eRTl+h--
