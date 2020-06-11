@@ -2,110 +2,111 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0958BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 837DAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEBBA2078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:42:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CE352078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:42:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s+lJoAWo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="fsSJ58/e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbgFKMmV (ORCPT
+        id S1726699AbgFKMmc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 08:42:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43396 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726386AbgFKMmO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 08:42:14 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57353C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 05:42:12 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id d128so4905212wmc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 05:42:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=lNnQU7nlgCvrEQswoURWL2iF3lzneMUM2jWkpbiMSAc=;
-        b=s+lJoAWoRoGJECYvMbW8eS/y8a2BEeRfBiogjqYTcMstMMl7ZBj476aHb5zduSoo24
-         DhxTUxmMo+hA8OCL6ST7FXGEwcN948WQv+kRteqTdRgvasABBsCX9HF7QQqDrMATptLd
-         d8ilNO/Nry4j3FAsUc63vIcwPGEi3DBOrQRczcS6WzdYa4vJEE6e1tGKRMYMtl1n92U4
-         LcZ2WVSXPPVOKlH6VMVJ3G8fqL/x45GHuWv/BomoGUWkx85bCl5KZLi5X7jwd5B4VFK7
-         bMuqc2z/GRX283M/5TNBML1rQSYQydNS8wDaOExtL6+0LgD6Pv0QxgVWhuERRDfltuJj
-         2j7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=lNnQU7nlgCvrEQswoURWL2iF3lzneMUM2jWkpbiMSAc=;
-        b=TnzRwDH0iD6UDM8ccyT7sApp6GQlGeRbfhHosHrfRrkGr84aGCWk/iPVCt52YfrcWG
-         QiS3WANwFuzi7aVyKnZ6n8GQn1Q+N2IyZ9pJXcXzBvOmWmYaQvkU4zVyS3n5YKl2TntA
-         3EQ3TZPnMzt7hHlQEcxwcOQ50OW++2sjdBiwfHwtembusWyIXuNeTR2BqdPDkR4135x8
-         uMIo2XagOgIT6C5HWA8LBJH2lYbauBOw7Q4hKhtCnQQ2NzdsbNkSKY94J2S2tp9iMQvp
-         D3DP8lzQo50nu7w+T38MknaO9tj75B/KwksmYjMsVwSogy2t2gGgVfJ21AABxgis6e/o
-         xLug==
-X-Gm-Message-State: AOAM530/icFLFmfakiqrM+L2i2/6Cv1bUtzDg2HOQQKNS2CvuTH8ibjx
-        Gm8avC3aD9go91IvcNWUpZ8WYg==
-X-Google-Smtp-Source: ABdhPJz7eRsLXz/F+4yfNMex4BXcCn7ORtYkMIb8eBgCBk6GnfDF2bQvZjqBX4S5IMwWJr37i6aSMg==
-X-Received: by 2002:a1c:b386:: with SMTP id c128mr8469524wmf.133.1591879331058;
-        Thu, 11 Jun 2020 05:42:11 -0700 (PDT)
-Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id q13sm4810355wrn.84.2020.06.11.05.42.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 05:42:10 -0700 (PDT)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     broonie@kernel.org
-Cc:     vkoul@kernel.org, perex@perex.cz, tiwai@suse.com,
-        alsa-devel@alsa-project.org, lgirdwood@gmail.com,
+        Thu, 11 Jun 2020 08:42:32 -0400
+Received: from mx1.tq-group.com ([62.157.118.193]:55549 "EHLO mx1.tq-group.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726444AbgFKMm3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 08:42:29 -0400
+IronPort-SDR: 6QnX83bhfwIv1Z4tDtveh3u1j+WPRJSeVorbP4ncaFK7bSs2xiFNRcwRO3k9bf4cQL7Ddc9+Mg
+ 5NEVUUJhPX1VK/OqH1BJEcC7rxmIlb58UtfsMbTkGAUH4V1uIv1c5bhU6mcrriZVvVtTMbbuLS
+ iuP6W8EmamhTz8ZTRrkvtOuCkVQ6EyewwObkjjnS40PWNs/WiwPY5KDIbElAA6tZZxkBe+btlz
+ uLeI5k8uidrcJ7kUBvTIUI8AeTHjLDutNZ8DryAf1tJYGaMBJUj1UE6ZAioLOMIXh7xc/WYeEW
+ bFQ=
+X-IronPort-AV: E=Sophos;i="5.73,499,1583190000"; 
+   d="scan'208";a="12649663"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 11 Jun 2020 14:42:26 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Thu, 11 Jun 2020 14:42:26 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Thu, 11 Jun 2020 14:42:26 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1591879346; x=1623415346;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references;
+  bh=NNs0T11lkBWKAhTjjHyrxpI0XkkykM9XmH661Mwcs88=;
+  b=fsSJ58/e22UxJjae6B/e+653HRdwf+MJkgD6XeYgUvzenlr8yd1Iwnvl
+   SWMmzngtJXiHU0VM+f6pxi2wqPosDIbr06519xGBGZIglgfBqSiLGYAFW
+   PU4LvttKDlGjNdM5Z2Eid3EoirLCXCQZfRZgwsTQRuo88BQINQhnpqz2D
+   s5p1zcFJ297u/RM5xIsggGF9O4d7hJELbqZ6/5JPgXWvP7YnHL0bf1KGD
+   HeIbrrPC0xmseUNi+02d4mnpZhQRuuslD82QIBswOD5aAcyL1Zc/hIQyd
+   aecqV4YEoRYpnDD37SCQlQ+Uc/wi37oOm+GpVgUZlWSQFkvC09XXM7M2S
+   Q==;
+IronPort-SDR: F1rP2yFbODOsrNpGQkIWoLiPAoNvfFGTscZcMgcDODq9xCNSgQ3dC4mItNoE3q44WXCBL3AeAC
+ YipbP3XCn4HVo1eZ7ca/LCkFUX1z+Aa4z/TU8TF/buEBAedJh6fpd+KmIPU/RBHaPvXZjX/dzE
+ bFoMEDYqmyMCeKOfva698cC5jNWeynZ6jNeiu7YaLaL5lvozQrxDRnidzaH7L4w5BprslgParq
+ OQvAF1c0hWu8dZJWoe/p9Tq44+fT+HeyCn/X9s6cHLY9x8yYXkcS+IZ4kh/Qw4OJecmD9xmRa8
+ Jys=
+X-IronPort-AV: E=Sophos;i="5.73,499,1583190000"; 
+   d="scan'208";a="12649662"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 11 Jun 2020 14:42:26 +0200
+Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id B77A4280065;
+        Thu, 11 Jun 2020 14:42:27 +0200 (CEST)
+From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 7/8] ASoC: q6asm-dai: check available buffer size before sending
-Date:   Thu, 11 Jun 2020 13:41:58 +0100
-Message-Id: <20200611124159.20742-8-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200611124159.20742-1-srinivas.kandagatla@linaro.org>
-References: <20200611124159.20742-1-srinivas.kandagatla@linaro.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Subject: [PATCH v2 1/4] dt-bindings: display: simple: add CDTech S070PWS19HP-FC21 and S070SWV29HG-DC44
+Date:   Thu, 11 Jun 2020 14:42:06 +0200
+Message-Id: <20200611124209.25028-1-matthias.schiffer@ew.tq-group.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200610120131.3069-1-matthias.schiffer@ew.tq-group.com>
+References: <20200610120131.3069-1-matthias.schiffer@ew.tq-group.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add simple check before sending data buffer to dsp which will
-ensure that we are not sending any buffers which are not already available.
+Add the CDTech Electronics displays S070PWS19HP-FC21 (7.0" WSVGA) and
+S070SWV29HG-DC44 (7.0" WVGA) to the panel-simple compatible list.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
 ---
- sound/soc/qcom/qdsp6/q6asm-dai.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/qcom/qdsp6/q6asm-dai.c b/sound/soc/qcom/qdsp6/q6asm-dai.c
-index 892411f81613..7aba3c07810b 100644
---- a/sound/soc/qcom/qdsp6/q6asm-dai.c
-+++ b/sound/soc/qcom/qdsp6/q6asm-dai.c
-@@ -534,13 +534,12 @@ static void compress_event_handler(uint32_t opcode, uint32_t token,
- 		prtd->copied_total += bytes_written;
- 		snd_compr_fragment_elapsed(substream);
- 
--		if (prtd->state != Q6ASM_STREAM_RUNNING) {
-+		avail = prtd->bytes_received - prtd->bytes_sent;
-+		if (prtd->state != Q6ASM_STREAM_RUNNING || avail <= 0) {
- 			spin_unlock_irqrestore(&prtd->lock, flags);
- 			break;
- 		}
- 
--		avail = prtd->bytes_received - prtd->bytes_sent;
--
- 		if (avail >= prtd->pcm_count) {
- 			q6asm_write_async(prtd->audio_client, prtd->stream_id,
- 					   prtd->pcm_count, 0, 0, 0);
+v2: no changes
+
+ .../devicetree/bindings/display/panel/panel-simple.yaml       | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+index 31e3efc73e00..2ddb520edc6d 100644
+--- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
++++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+@@ -81,6 +81,10 @@ properties:
+       - boe,nv140fhmn49
+         # CDTech(H.K.) Electronics Limited 4.3" 480x272 color TFT-LCD panel
+       - cdtech,s043wq26h-ct7
++        # CDTech(H.K.) Electronics Limited 7" WSVGA (1024x600) TFT LCD Panel
++      - cdtech,s070pws19hp-fc21
++        # CDTech(H.K.) Electronics Limited 7" WVGA (800x480) TFT LCD Panel
++      - cdtech,s070swv29hg-dc44
+         # CDTech(H.K.) Electronics Limited 7" 800x480 color TFT-LCD panel
+       - cdtech,s070wv95-ct16
+         # Chunghwa Picture Tubes Ltd. 7" WXGA TFT LCD panel
 -- 
-2.21.0
+2.17.1
 
