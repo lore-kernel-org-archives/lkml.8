@@ -2,146 +2,102 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD84C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26928C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:36:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39B502072F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:35:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mm-sol.com header.i=@mm-sol.com header.b="dZj3xWSX"
+	by mail.kernel.org (Postfix) with ESMTP id 03D922074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:36:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbgFKHfL (ORCPT
+        id S1726876AbgFKHgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 03:35:11 -0400
-Received: from ns.mm-sol.com ([37.157.136.199]:56288 "EHLO extserv.mm-sol.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726706AbgFKHfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 03:35:11 -0400
-Received: from [192.168.1.5] (212-5-158-114.ip.btc-net.bg [212.5.158.114])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by extserv.mm-sol.com (Postfix) with ESMTPSA id 6254ECFF7;
-        Thu, 11 Jun 2020 10:35:02 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
-        t=1591860906; bh=aiqBHTY8ZPxp5JouTm8Ngv3wTrmfhGm7s2gTLjEFSx8=;
-        h=Subject:To:Cc:From:Date:From;
-        b=dZj3xWSXccc198xS9g5MVVlz1PdQpRk3Q7znQWDLD2LBPDmW05qC9AtYlHZvUy86h
-         wxBz2JQ2yaxKs2+S0Pou3mc+qas1Me/UpFjqOCH0HD6AXGjlsMjk6o0dPTV5jY2d18
-         xRuJb3y0aWlEEhnZymkqSAcML5ieHYIN2rL+GevLdzPk05FnY2rQj2ieLZPbdb2IXd
-         jrWyL226HQsBGlOM61lWIN4n+zjbGnnX0cNoZpQaox1oeSq8fGQHbXY8045XKJV9f5
-         uMMvI64zw/DWmUgWnDz0GGGsmYUO9l2xg+BvAuou5ehuKFE5y5rMowe6eSOSGqqweZ
-         WA0iZ/DXGDHKA==
-Subject: Re: [PATCH v6 11/12] PCI: qcom: Add Force GEN1 support
-To:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Sham Muthayyan <smuthayy@codeaurora.org>,
-        Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200610160655.27799-1-ansuelsmth@gmail.com>
- <20200610160655.27799-12-ansuelsmth@gmail.com>
-From:   Stanimir Varbanov <svarbanov@mm-sol.com>
-Message-ID: <a2e85e3e-0b4e-5a9b-4b35-b37de6d64bd8@mm-sol.com>
-Date:   Thu, 11 Jun 2020 10:34:59 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 11 Jun 2020 03:36:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52264 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726375AbgFKHgX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 03:36:23 -0400
+Received: from mail.kapsi.fi (mail.kapsi.fi [IPv6:2001:67c:1be8::25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4103FC08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 00:36:23 -0700 (PDT)
+Received: from kapsi.fi ([2001:67c:1be8::11] helo=lakka.kapsi.fi)
+        by mail.kapsi.fi with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <jpa@lakka.kapsi.fi>)
+        id 1jjHku-0004TY-5Y; Thu, 11 Jun 2020 10:36:08 +0300
+Received: from jpa by lakka.kapsi.fi with local (Exim 4.92)
+        (envelope-from <jpa@lakka.kapsi.fi>)
+        id 1jjHku-0000c4-2E; Thu, 11 Jun 2020 10:36:08 +0300
+Date:   Thu, 11 Jun 2020 10:36:08 +0300
+From:   Petteri Aimonen <jpa@git.mail.kapsi.fi>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Borislav Petkov <bp@alien8.de>, Shuah Khan <shuah@kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86-ml <x86@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arch/x86: reset MXCSR to default in kernel_fpu_begin()
+Message-ID: <20200611073607.GH17423@lakka.kapsi.fi>
+References: <20200602101119.GA11634@zn.tnic>
+ <20200602102951.GE17423@lakka.kapsi.fi>
+ <20200602105649.GB11634@zn.tnic>
+ <CALCETrURrz=L5f-HHF3kZtUqV0dw5hAEGqSxWTsOjoZvOKaccw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200610160655.27799-12-ansuelsmth@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrURrz=L5f-HHF3kZtUqV0dw5hAEGqSxWTsOjoZvOKaccw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Rspam-Score: 1.2 (+)
+X-Rspam-Report: Action: no action
+ Symbol: RCVD_TLS_LAST(0.00)
+ Symbol: ARC_NA(0.00)
+ Symbol: FROM_HAS_DN(0.00)
+ Symbol: TO_MATCH_ENVRCPT_ALL(0.00)
+ Symbol: MIME_GOOD(-0.10)
+ Symbol: DMARC_NA(0.00)
+ Symbol: AUTH_NA(1.00)
+ Symbol: NEURAL_SPAM(0.00)
+ Symbol: TO_DN_ALL(0.00)
+ Symbol: RCPT_COUNT_SEVEN(0.00)
+ Symbol: R_SPF_NA(0.00)
+ Symbol: FORGED_SENDER(0.30)
+ Symbol: R_DKIM_NA(0.00)
+ Symbol: MIME_TRACE(0.00)
+ Symbol: ASN(0.00)
+ Symbol: FROM_NEQ_ENVFROM(0.00)
+ Symbol: RCVD_COUNT_TWO(0.00)
+ Message-ID: 20200611073607.GH17423@lakka.kapsi.fi
+X-Rspam-Bar: +
+X-SA-Exim-Connect-IP: 2001:67c:1be8::11
+X-SA-Exim-Mail-From: jpa@lakka.kapsi.fi
+X-SA-Exim-Scanned: No (on mail.kapsi.fi); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ansuel,
+Hi,
 
-Sorry that I didn't make this comment earlier.
+> How about putting the file you frob in
+> /sys/kernel/debug/selftest_helpers/something_or_other.  The idea would
+> be that /sys/kernel/debug/selftest_helpers would be a general place
+> for kernel helpers needed to make selftests work.
 
-The subject and description are misleading. The patch itself is not
-forcing anything (the DT is filling the gen to 1), so please fix that.
+Seems like this is the consensus for now.
 
-On 6/10/20 7:06 PM, Ansuel Smith wrote:
-> From: Sham Muthayyan <smuthayy@codeaurora.org>
-> 
-> Add Force GEN1 support needed in some ipq8064 board that needs to limit
-> some PCIe line to gen1 for some hardware limitation. This is set by the
-> max-link-speed binding and needed by some soc based on ipq8064. (for
-> example Netgear R7800 router)
-> 
-> Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 259b627bf890..c40921589122 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -27,6 +27,7 @@
->  #include <linux/slab.h>
->  #include <linux/types.h>
->  
-> +#include "../../pci.h"
->  #include "pcie-designware.h"
->  
->  #define PCIE20_PARF_SYS_CTRL			0x00
-> @@ -99,6 +100,8 @@
->  #define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
->  #define SLV_ADDR_SPACE_SZ			0x10000000
->  
-> +#define PCIE20_LNK_CONTROL2_LINK_STATUS2	0xa0
-> +
->  #define DEVICE_TYPE_RC				0x4
->  
->  #define QCOM_PCIE_2_1_0_MAX_SUPPLY	3
-> @@ -195,6 +198,7 @@ struct qcom_pcie {
->  	struct phy *phy;
->  	struct gpio_desc *reset;
->  	const struct qcom_pcie_ops *ops;
-> +	int gen;
->  };
->  
->  #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
-> @@ -395,6 +399,11 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
->  	/* wait for clock acquisition */
->  	usleep_range(1000, 1500);
->  
-> +	if (pcie->gen == 1) {
-> +		val = readl(pci->dbi_base + PCIE20_LNK_CONTROL2_LINK_STATUS2);
-> +		val |= PCI_EXP_LNKSTA_CLS_2_5GB;
-> +		writel(val, pci->dbi_base + PCIE20_LNK_CONTROL2_LINK_STATUS2);
-> +	}
->  
->  	/* Set the Max TLP size to 2K, instead of using default of 4K */
->  	writel(CFG_REMOTE_RD_REQ_BRIDGE_SIZE_2K,
-> @@ -1397,6 +1406,10 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->  		goto err_pm_runtime_put;
->  	}
->  
-> +	pcie->gen = of_pci_get_max_link_speed(pdev->dev.of_node);
-> +	if (pcie->gen < 0)
-> +		pcie->gen = 2;
-> +
->  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "parf");
->  	pcie->parf = devm_ioremap_resource(dev, res);
->  	if (IS_ERR(pcie->parf)) {
-> 
+Any opinions on whether the module should remove "selftest_helpers"
+directory on unloading, or not?
 
--- 
-regards,
-Stan
+1) Removing would break if other test modules will use the same dir.
+2) Not removing will leave the directory dangling.
+3) Remove only if empty is one option, though I'm unsure how to
+   cleanly check if debugfs directory is empty.
+4) E.g. /sys/kernel/debug/x86/ is created centrally and a symbol is
+   exported for its dentry. But I'm not sure if it really makes sense
+   to add another exported symbol just for selftest_helpers.
+
+--
+Petteri
+
