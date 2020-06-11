@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC8EC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61322C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDEE520760
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4016420823
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:39:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="X/AOES0M";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IZQwgbYE"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Bs2//w22";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Kjo/KdLs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728238AbgFKNix (ORCPT
+        id S1728251AbgFKNi4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 09:38:53 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:35321 "EHLO
+        Thu, 11 Jun 2020 09:38:56 -0400
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:50365 "EHLO
         new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728193AbgFKNio (ORCPT
+        by vger.kernel.org with ESMTP id S1728191AbgFKNio (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 11 Jun 2020 09:38:44 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id D62A35801DD;
+        by mailnew.nyi.internal (Postfix) with ESMTP id B1CC95801C2;
         Thu, 11 Jun 2020 09:38:43 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
   by compute4.internal (MEProxy); Thu, 11 Jun 2020 09:38:43 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=gICVuJ6JxKf6T
-        QPbCxr0GHMfBnZdU1/nxb1POOuoQgE=; b=X/AOES0MbnLou+TuWpjBo8gabvUj/
-        bLtiuyEAus5zAF0VuVlLXe82tQqP0h6PjLSV7k6zh8g0b9XCih7t4Oqv4UnM6OOJ
-        OCdmOVBtTbie9u/E8ssDcBxS+EsdAu4ynYLF/szb9KPwmexvQNv63/ocB0DyBGyW
-        3oC+qy3uyypgPJjZ48PJfuL0GB5AudiyT4SW6Jc3sYqLa3Zr5se+QTKpi1DtrVvk
-        WnhnUxdydhRKvivg6ax1bobXLaGQr6MQEuLORl9C13jcIFL3RQo0YIjajw9CTLwa
-        lIhuYW9X1oAxv3b2ccYA18M7Gjv7SkgdB010W+Y9CpHJzwGV+SFNKECxw==
+        :mime-version:content-transfer-encoding; s=fm3; bh=pjTOsRB0c8xAq
+        8lcg3XpEfDceSMrV4Koh55SgsCuCck=; b=Bs2//w22o70zPqzeud1e57ojlxetl
+        m/GhpvtwE3wuCa7ELBCMO8BqiG0nayFwYKC93IfhnajNGuf1LZFmk2ojehSLVTWH
+        eExR94WIqMb8ve6I+564C4G33hWFQf5WVDeKXbf6d4kbyHyhajrtcif1P+ZX6PeN
+        z1Axs+yAeXXp35o3u1tGcrrfRUXaGlVPbkIqlywqDxcX498LQhhBAIZ90rClMbdI
+        6KUygQouDCCGUY4dPJdAxIXumeHwTydceRdiUq6F7YrvFMV42ZoZ/FtlBK+RtAhV
+        v4QggF2J8UuD5Fk0QT29XGX/zAiFYyoxsbMmGn5EwySn+4G1nVeAuu2WQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=gICVuJ6JxKf6TQPbCxr0GHMfBnZdU1/nxb1POOuoQgE=; b=IZQwgbYE
-        lJzAL5F1kbyC3drkqxzv1e47AkQIqCnhFjwxBLWmNIK11+WO6ZFhUBhD58aQPDQM
-        VygDHAr1NP6Yqr1Lft3k/cfwtAcaZ4PtPKQ9pwwXkEWxji4B0JWMwFpYI3LOEkGB
-        Y6dQi0u7QfQFDNp4gFMKvOLTR+v2+IkCII7SyrQ21HHwrXE07vO7HC1dznyoURrG
-        fJtG/J5JeCiwKtXA/ySHOL4Z1FsWFyDrjWocWzzPPeF34eNsOFPuEfYarur2Va8b
-        /knECGuS5ZeclsGATV5NXksnLKeoFBQbrEXpZS9QPU1uu+NFfbDdMAP7TX1Lh0dG
-        V3rzJjbenTStWA==
-X-ME-Sender: <xms:4zPiXmskKEeP4nHHtYF6DSoyKMhOdHSoZVBgQjmajmtptwhpV4CCOw>
+        fm3; bh=pjTOsRB0c8xAq8lcg3XpEfDceSMrV4Koh55SgsCuCck=; b=Kjo/KdLs
+        0xk/ZRDgm2n/VzDw3AMm4YtvXhygHtoNWUMl1U9flT3HuEB+VjAAEPhI38+9sLV8
+        iyqaTCLOPw8hr7z24ME9tMHgX2100H5y9dKdfetEeBFBujkw5Uyh2+p38zFUcqNj
+        EXZwnun18pndIV7DFGuoEvPCttW2NE1kDFnG/BGtVn+7QfPiLiZBhr+znBO7HHbD
+        PZ64R/7BwmOU81l3ZynYT2I6OIQmaA7L20/MB/0huslhVxRbF8KC2i4aoxTZIdkU
+        KpqTGfyUsXZFd6vrLGW2BnSjqkGNmxLHxOhY+JQeh5ssiU4ndyiO2olhRaks7DDN
+        ET/GQkmph3+J7A==
+X-ME-Sender: <xms:4zPiXtwCM2MrvScSbHWdtmpDdi73Ixa_gbJQi-ChxMXsiKBx0bnB_g>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudehledggeduucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
@@ -58,13 +58,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudehledggeduucetufdoteggod
     htvghrnhepvdekleevfeffkeejhfffueelteelfeduieefheduudfggffhhfffheevveeh
     hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepfeenuc
     frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:4zPiXre_aQFikMkOfnu5xnsPDUXqecjcxYVCW-TE6fXE7g--bwNhtg>
-    <xmx:4zPiXhxjWQKZOzfmNvnPrES6v-F2QU79gNfDWwAi20E8hVGUWguOjA>
-    <xmx:4zPiXhPHzTn9qjsw8aQ_JAEEkHlQUKzOMxj6-i5VmKHOfI57Ma2iuA>
-    <xmx:4zPiXrOlrqDmv2qmsq-EFYZIcT8wWQOd6pQLcJRvPoK5EfP5QsNgMA>
+X-ME-Proxy: <xmx:4zPiXtT7D8Qf9V-BF9jqW_Mv5MY_iJoRaMu1gOT8I5oYxLQ7xWXrcQ>
+    <xmx:4zPiXnUJ380kT5P5YnwFgjUmduLMmoCUJtETae_2NilrADcZi6a0Jg>
+    <xmx:4zPiXviQNX09VUQapM5R_tW90sNCO8ygs6Nony9SYsvSA33zdEsmBQ>
+    <xmx:4zPiXhAjgHY0MNVcslcIUvPVwmBAh5kLGbH9-F1wmZxV9dMg351Emw>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A02A5328023E;
-        Thu, 11 Jun 2020 09:37:10 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 79D8432801BD;
+        Thu, 11 Jun 2020 09:37:07 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -76,9 +76,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v4 7/9] drm/vc4: crtc: Move the txp_armed function to the TXP
-Date:   Thu, 11 Jun 2020 15:36:52 +0200
-Message-Id: <12b383e7b8462e281b00c0a21b2b50f13691bead.1591882579.git-series.maxime@cerno.tech>
+Subject: [PATCH v4 5/9] drm/vc4: crtc: Only access the PixelValve registers if we have to
+Date:   Thu, 11 Jun 2020 15:36:50 +0200
+Message-Id: <b55e31869304c748920c261eba87b3275dbeb297.1591882579.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.c33f5fd8b1b2703081f25398eb879937c9f7ce0b.1591882579.git-series.maxime@cerno.tech>
 References: <cover.c33f5fd8b1b2703081f25398eb879937c9f7ce0b.1591882579.git-series.maxime@cerno.tech>
@@ -89,73 +89,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The TXP driver is the only place where we need to set the txp_armed flag,
-so let's move the function in the TXP driver.
+The CRTC hooks are called both for the TXP and the pixelvalve, yet some
+will read / write the registers as if the device was a pixelvalve, which
+won't really work.
+
+Let's make sure we only access those registers if we are running on a
+PixelValve.
 
 Reviewed-by: Eric Anholt <eric@anholt.net>
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_crtc.c |  7 -------
- drivers/gpu/drm/vc4/vc4_drv.h  |  1 -
- drivers/gpu/drm/vc4/vc4_txp.c  |  9 ++++++++-
- 3 files changed, 8 insertions(+), 9 deletions(-)
+ drivers/gpu/drm/vc4/vc4_crtc.c | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
-index e30a5036d2e6..82ebdf8da108 100644
+index 6f1a1062db8f..49c9954d3e00 100644
 --- a/drivers/gpu/drm/vc4/vc4_crtc.c
 +++ b/drivers/gpu/drm/vc4/vc4_crtc.c
-@@ -390,13 +390,6 @@ static void vc4_crtc_atomic_disable(struct drm_crtc *crtc,
- 	}
- }
- 
--void vc4_crtc_txp_armed(struct drm_crtc_state *state)
--{
--	struct vc4_crtc_state *vc4_state = to_vc4_crtc_state(state);
--
--	vc4_state->txp_armed = true;
--}
--
- static void vc4_crtc_atomic_enable(struct drm_crtc *crtc,
- 				   struct drm_crtc_state *old_state)
+@@ -357,6 +357,7 @@ static void require_hvs_enabled(struct drm_device *dev)
+ static void vc4_crtc_atomic_disable(struct drm_crtc *crtc,
+ 				    struct drm_crtc_state *old_state)
  {
-diff --git a/drivers/gpu/drm/vc4/vc4_drv.h b/drivers/gpu/drm/vc4/vc4_drv.h
-index 1c49c27a564f..fa19160c801f 100644
---- a/drivers/gpu/drm/vc4/vc4_drv.h
-+++ b/drivers/gpu/drm/vc4/vc4_drv.h
-@@ -808,7 +808,6 @@ void vc4_crtc_destroy_state(struct drm_crtc *crtc,
- 			    struct drm_crtc_state *state);
- void vc4_crtc_reset(struct drm_crtc *crtc);
- void vc4_crtc_handle_vblank(struct vc4_crtc *crtc);
--void vc4_crtc_txp_armed(struct drm_crtc_state *state);
- void vc4_crtc_get_margins(struct drm_crtc_state *state,
- 			  unsigned int *right, unsigned int *left,
- 			  unsigned int *top, unsigned int *bottom);
-diff --git a/drivers/gpu/drm/vc4/vc4_txp.c b/drivers/gpu/drm/vc4/vc4_txp.c
-index bf720206727f..d9a8ab87ad25 100644
---- a/drivers/gpu/drm/vc4/vc4_txp.c
-+++ b/drivers/gpu/drm/vc4/vc4_txp.c
-@@ -222,6 +222,13 @@ static const u32 txp_fmts[] = {
- 	TXP_FORMAT_BGRA8888,
- };
++	struct vc4_crtc_state *vc4_state = to_vc4_crtc_state(crtc->state);
+ 	struct drm_device *dev = crtc->dev;
+ 	struct vc4_crtc *vc4_crtc = to_vc4_crtc(crtc);
+ 	int ret;
+@@ -366,10 +367,12 @@ static void vc4_crtc_atomic_disable(struct drm_crtc *crtc,
+ 	/* Disable vblank irq handling before crtc is disabled. */
+ 	drm_crtc_vblank_off(crtc);
  
-+static void vc4_txp_armed(struct drm_crtc_state *state)
-+{
-+	struct vc4_crtc_state *vc4_state = to_vc4_crtc_state(state);
-+
-+	vc4_state->txp_armed = true;
-+}
-+
- static int vc4_txp_connector_atomic_check(struct drm_connector *conn,
- 					  struct drm_atomic_state *state)
+-	CRTC_WRITE(PV_V_CONTROL,
+-		   CRTC_READ(PV_V_CONTROL) & ~PV_VCONTROL_VIDEN);
+-	ret = wait_for(!(CRTC_READ(PV_V_CONTROL) & PV_VCONTROL_VIDEN), 1);
+-	WARN_ONCE(ret, "Timeout waiting for !PV_VCONTROL_VIDEN\n");
++	if (!vc4_state->feed_txp) {
++		CRTC_WRITE(PV_V_CONTROL,
++			   CRTC_READ(PV_V_CONTROL) & ~PV_VCONTROL_VIDEN);
++		ret = wait_for(!(CRTC_READ(PV_V_CONTROL) & PV_VCONTROL_VIDEN), 1);
++		WARN_ONCE(ret, "Timeout waiting for !PV_VCONTROL_VIDEN\n");
++	}
+ 
+ 	vc4_hvs_atomic_disable(crtc, old_state);
+ 
+@@ -503,6 +506,10 @@ static int vc4_crtc_atomic_check(struct drm_crtc *crtc,
+ static int vc4_enable_vblank(struct drm_crtc *crtc)
  {
-@@ -256,7 +263,7 @@ static int vc4_txp_connector_atomic_check(struct drm_connector *conn,
- 	if (fb->pitches[0] & GENMASK(3, 0))
- 		return -EINVAL;
+ 	struct vc4_crtc *vc4_crtc = to_vc4_crtc(crtc);
++	struct vc4_crtc_state *vc4_state = to_vc4_crtc_state(crtc->state);
++
++	if (vc4_state->feed_txp)
++		return 0;
  
--	vc4_crtc_txp_armed(crtc_state);
-+	vc4_txp_armed(crtc_state);
+ 	CRTC_WRITE(PV_INTEN, PV_INT_VFP_START);
  
- 	return 0;
+@@ -512,6 +519,10 @@ static int vc4_enable_vblank(struct drm_crtc *crtc)
+ static void vc4_disable_vblank(struct drm_crtc *crtc)
+ {
+ 	struct vc4_crtc *vc4_crtc = to_vc4_crtc(crtc);
++	struct vc4_crtc_state *vc4_state = to_vc4_crtc_state(crtc->state);
++
++	if (vc4_state->feed_txp)
++		return;
+ 
+ 	CRTC_WRITE(PV_INTEN, 0);
  }
 -- 
 git-series 0.9.1
