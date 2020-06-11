@@ -2,101 +2,93 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D27C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 20:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22020C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 20:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46AEE2073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 20:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F21E3207ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 20:47:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jRr9sC/F"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V2A2cXlq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbgFKUpG (ORCPT
+        id S1726331AbgFKUr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 16:45:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33260 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbgFKUpG (ORCPT
+        Thu, 11 Jun 2020 16:47:56 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43305 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726180AbgFKUrz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 16:45:06 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED068C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 13:45:05 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id i12so2684256pju.3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 13:45:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lgcyUinwCHycLb3PS81x+KxCtAyFp6vCMYT/i4Rn6Jc=;
-        b=jRr9sC/FDkOl0dzyf+kzIJ8byovnOp/JzipaTBCEV3P8CDgg6SaKYLRuzGnuEPbtKG
-         rZl2thSbfJhDAoIl+DgNof2SWzHDCwMtVBdqqFGuXbWwAcdNkNNCa/DYzBywCd1fJkjX
-         RlZI+keBh73n7/Z4yl57rA9/YQJ/foH1KF+Q0iJfwL6YXiyOwo5rqd6sIJeWVn955kle
-         qTK3j8QhDgWMs+TSJEUIhUBrLvzrDeEXww0FlDRzb6KTN99H3lAxcyROZpBnK8tpX28p
-         vJXW3U3nPlVBu2wdCKm+6WGL6rJnNAiQm27GvCeFmEwdyYMRirtVSxG1SFyn4Jg54fZx
-         GERg==
+        Thu, 11 Jun 2020 16:47:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591908474;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=LDTCFQAg2Fy178k9PdK2q98C18g0Yus4dT84f3qnpm0=;
+        b=V2A2cXlqCWBWQI45w8ygk2CRSgmGRtAtmArbNkXLKKmOkGxtIALvqxrUd+M7UfY5cMnGyJ
+        II9qbbryuwTs/c7H3NQJAJYCI4vDji70ffnhY8c3WgUitJfkuzFr3RnUAMQVZw46H2bkYo
+        Wx5S3LoGEvt1hiYb5wRKwEfxin+fhI0=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-48-iHNf9gFKN5OXeKDflZvs3A-1; Thu, 11 Jun 2020 16:47:53 -0400
+X-MC-Unique: iHNf9gFKN5OXeKDflZvs3A-1
+Received: by mail-qv1-f71.google.com with SMTP id v1so5292871qvx.8
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 13:47:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lgcyUinwCHycLb3PS81x+KxCtAyFp6vCMYT/i4Rn6Jc=;
-        b=EKX6gSWYcS1D36//n71ksWL6ustAINEenQcAla1eFYlCUdMsh14qFjimU/xPiKUh/4
-         cSgRoZWVhb9qnAR0INp6FLKy9hIw1RcXC6l8cjIoWnqrFwm1WLTZgCbptybhQMepHuqv
-         r73up6NaDSeuNwoeMSqjTWFCT4fzda1nIiPF4WqnNsIxk8iMhhY8dBBfBiX7qAOmVyON
-         EPQaXBwkwqA7oKQyfn/j2Wnx21Jc5kIZC11jAg/HEKN+cc805Oo4DEOOwz2z7+wmzeVf
-         5z32Vos0bKWl7SbcHr7EYl5ACCJlJt37p/QECEgEKJH+qzb4V4teDIyX5+WEkHx0aXYj
-         EKmw==
-X-Gm-Message-State: AOAM5315dOdTQx20anzpCWbP812oXbole3Uzu/55rXMiN1fcCrSfgQRX
-        Ml/Kpv96sa+oo913GbrUxIx/460BWQenNQi0SfidrQ==
-X-Google-Smtp-Source: ABdhPJz1cnfTCJS5sVdnVW8aR2nrwlnYlXlPlyxsFMnegG0svGilLMgAO3WWmEcfzclE73W87I35jMaNhXv7xSn76pc=
-X-Received: by 2002:a17:902:fe8b:: with SMTP id x11mr8526903plm.179.1591908304657;
- Thu, 11 Jun 2020 13:45:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200610063715.v2qrqvwtegdxdwzl@google.com> <20200610191106.2662548-1-nivedita@alum.mit.edu>
- <CAKwvOdnF9xhrs+FP4QXo6uXxgHMfHO8NvPYs1=KDE2ZyhCw2QQ@mail.gmail.com>
- <20200610233046.GA2941409@rani.riverdale.lan> <20200610233954.GB2941409@rani.riverdale.lan>
-In-Reply-To: <20200610233954.GB2941409@rani.riverdale.lan>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 11 Jun 2020 13:44:53 -0700
-Message-ID: <CAKwvOd=UyEPOx5M0w+uwiYwE5fY-A5vDmuvPnWs_pK4zW4RH-w@mail.gmail.com>
-Subject: Re: [PATCH] Makefile: Improve compressed debug info support detection
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Fangrui Song <maskray@google.com>,
-        Rong Chen <rong.a.chen@intel.com>,
-        kernel test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=LDTCFQAg2Fy178k9PdK2q98C18g0Yus4dT84f3qnpm0=;
+        b=E2m4EIaTHKSgaMTCpudHFa3lkphb30SCe0kuHUMYZzNYE4gsN2x8HjK8SoGjaA7Nh1
+         XUxKVe6RO232X5W+LEAuFJ/BjKAAgrLYLSK10QCvnhqzy/PxAP5eA99EWVK1dtuTjY/0
+         ZB2NeXRTc+6jI6fMpMPsaxkHM6HdtfHryxTudxEAhqvfsI+13nwMEwGwmJ/tSxno4H/y
+         nv2GM1QBH7KZC4CXily66L2+CYixLgyHxcN0b0IZ/GSAwDvVH2ph/JiUspOwtJ/kmWRs
+         8ccwARaFmMXZUUQEI5lM4j0QZzAX1OaJmpUSFcPKVz1YLIcbYGWkJfvGGTLPlqpMdM8n
+         3tOA==
+X-Gm-Message-State: AOAM531BR5KC0jTCqonhKekuXQcs1XINNeCxr3fly9DnrVrCyQUap0gG
+        O/qhHT+djFU+WaGQ2Q0GsNWFZ+yOLZXzTd0p9U74i7d15OriLpumxuLz4TrhiuPj2oxlzZCrKj6
+        gL+bodyPJLkMLLIk9nhKUy9mR
+X-Received: by 2002:ac8:ece:: with SMTP id w14mr8596416qti.298.1591908472823;
+        Thu, 11 Jun 2020 13:47:52 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx2uFSUZb9MHs2sdD0gN7lYSZvGA513ik+MotlOpCk8DfEfIkHf7hZ+UrBhCPdycJEt2UMuBA==
+X-Received: by 2002:ac8:ece:: with SMTP id w14mr8596394qti.298.1591908472634;
+        Thu, 11 Jun 2020 13:47:52 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id z4sm3302663qtu.33.2020.06.11.13.47.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2020 13:47:51 -0700 (PDT)
+From:   trix@redhat.com
+To:     paul@paul-moore.com, stephen.smalley.work@gmail.com,
+        eparis@parisplace.org, omosnace@redhat.com, weiyongjun1@huawei.com
+Cc:     selinux@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tom Rix <trix@redhat.com>
+Subject: [PATCH v2 0/1] selinux: fix another double free
+Date:   Thu, 11 Jun 2020 13:47:45 -0700
+Message-Id: <20200611204746.6370-1-trix@redhat.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 4:39 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> On Wed, Jun 10, 2020 at 07:30:46PM -0400, Arvind Sankar wrote:
-> > On Wed, Jun 10, 2020 at 02:27:55PM -0700, Nick Desaulniers wrote:
-> >
-> > No, as-option does invoke the assembler. The problem here is that with
-> > -Wa, the option is only seen by the assembler, not the gcc driver. So it
-> > will succeed because the assembler supports it, but it will not test
-> > whether the gcc driver also supports it.
-> >
->
-> I think in theory another way to fix it is to just use -Wa even for
-> CFLAGS, assuming the compiler itself doesn't have to do anything with
-> the option and it's purely an assembler thing. Then you'd just do the as
-> and ld tests.
+From: Tom Rix <trix@redhat.com>
 
-I don't think the CFLAGS are used for .S source files though.  We may
-drive assembler via the compiler, but AFLAGS are used in place of
-CFLAGS IIRC.  (eh, maybe not for ARCH=arc, ARCH=sh, ARCH=csky,
-ARCH=mips)
+repo: linux-next
+tag: next-20200611
+
+Change from v1
+Convert goto's to returns
+Remove extra 'the' in the commit log
+Add note on commit this is fixing in the commit log
+
+
+Tom Rix (1):
+  selinux: fix another double free
+
+ security/selinux/ss/conditional.c | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
 -- 
-Thanks,
-~Nick Desaulniers
+2.18.1
+
