@@ -2,167 +2,76 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BD6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19489C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9448E20656
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:36:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0472207C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:37:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbgFKIgj (ORCPT
+        id S1726825AbgFKIh3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 04:36:39 -0400
-Received: from mga01.intel.com ([192.55.52.88]:28034 "EHLO mga01.intel.com"
+        Thu, 11 Jun 2020 04:37:29 -0400
+Received: from smtp.asem.it ([151.1.184.197]:53118 "EHLO smtp.asem.it"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726560AbgFKIgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 04:36:38 -0400
-IronPort-SDR: lOKWR2sA++bVoHADnte08VIQl50LoRhATXUliGYK/7alKvJiJBymhptU+9JYr6qtZWpDCQqzS+
- OGtdAtUPJROQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 01:36:38 -0700
-IronPort-SDR: HRmqmbzRLw8/f2rQQukq4hhYhkyAW6AAnCu6i+38YfyYkbtaL1vbq0s5e6LxjNOenQqT8pLdBk
- nPRcJVHMlrUA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,499,1583222400"; 
-   d="scan'208";a="271520565"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 11 Jun 2020 01:36:38 -0700
-Received: from [10.214.154.243] (vramuthx-mobl1.gar.corp.intel.com [10.214.154.243])
-        by linux.intel.com (Postfix) with ESMTP id 9056E580458;
-        Thu, 11 Jun 2020 01:36:33 -0700 (PDT)
-Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: Re: [PATCH v2 2/2] usb: phy: Add USB3 PHY support for Intel LGM SoC
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     linux-kernel@vger.kernel.org, balbi@kernel.org,
-        p.zabel@pengutronix.de, gregkh@linuxfoundation.org,
-        robh@kernel.org, devicetree@vger.kernel.org,
-        linux-usb@vger.kernel.org, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, yin1.li@intel.com
-References: <20200611021246.3250-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200611021246.3250-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200611081254.GR2428291@smile.fi.intel.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <21b5db0e-c45a-2255-0389-04b204685d63@linux.intel.com>
-Date:   Thu, 11 Jun 2020 16:36:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        id S1726560AbgFKIh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 04:37:29 -0400
+Received: from webmail.asem.it
+        by asem.it (smtp.asem.it)
+        (SecurityGateway 6.5.2)
+        with ESMTP id SG000311037.MSG 
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 10:37:24 +0200S
+Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 11
+ Jun 2020 10:37:23 +0200
+Received: from flavio-x.asem.intra (172.16.17.208) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Thu, 11 Jun 2020 10:37:23 +0200
+From:   Flavio Suligoi <f.suligoi@asem.it>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Flavio Suligoi <f.suligoi@asem.it>
+Subject: [PATCH 1/1] leds: fix spelling mistake
+Date:   Thu, 11 Jun 2020 10:37:17 +0200
+Message-ID: <20200611083717.18308-1-f.suligoi@asem.it>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20200611081254.GR2428291@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
+X-SGSPF-Result: none (smtp.asem.it)
+X-SGOP-RefID: str=0001.0A09020E.5EE1ED43.0054,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+Fix typo: "Tigger" --> "Trigger"
 
-Thank you so much for the review comments...
+Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+Reviewed-by: Alexander Dahl <ada@thorsis.com>
+---
+ drivers/leds/led-triggers.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 11/6/2020 4:12 pm, Andy Shevchenko wrote:
-> On Thu, Jun 11, 2020 at 10:12:46AM +0800, Ramuthevar,Vadivel MuruganX wrote:
->> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>
->> Add support for USB PHY on Intel LGM SoC.
-> 
-> ...
-> 
->> +static int get_flipped(struct tca_apb *ta, bool *flipped)
->> +{
->> +	union extcon_property_value property;
->> +	int ret;
->> +
->> +	ret = extcon_get_property(ta->phy.edev, EXTCON_USB_HOST,
->> +				  EXTCON_PROP_USB_TYPEC_POLARITY, &property);
->> +	if (ret) {
->> +		dev_err(ta->phy.dev, "no polarity property from extcon\n");
-> 
->> +		return false;
-> 
-> return ret;
-Noted.
-> 
->> +	}
->> +
->> +	*flipped = property.intval;
->> +
-> 
->> +	return *flipped;
-> 
-> return 0;
-Noted.
-> 
->> +}
-> 
-> ...I suppose it should be as above.
-> 
-> ...
-> 
->> +	ret = readl_poll_timeout(ctrl1, val, val & SRAM_INIT_DONE,
->> +				 10, 10 * 1000);
-exceeds more than 80 characters, so checkpatch throws warnings, to avoid 
-that move to next line.
-> 
-> On one line easier to read.
-> 
->> +	if (ret) {
->> +		dev_err(ta->phy.dev, "SRAM init failed, 0x%x\n", val);
->> +		return ret;
->> +	}
-> 
-> ...
-> 
->> +static int phy_set_vbus(struct usb_phy *phy, int on)
->> +{
->> +	struct tca_apb *ta = container_of(phy, struct tca_apb, phy);
-> 
->> +	int ret = 0;
-> 
-> Assignment is redundant.
-so you mean , should be declared as
-int ret;
-right?
+diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
+index 79e30d2cb7a5..0836bf7631ea 100644
+--- a/drivers/leds/led-triggers.c
++++ b/drivers/leds/led-triggers.c
+@@ -358,7 +358,7 @@ int devm_led_trigger_register(struct device *dev,
+ }
+ EXPORT_SYMBOL_GPL(devm_led_trigger_register);
+ 
+-/* Simple LED Tigger Interface */
++/* Simple LED Trigger Interface */
+ 
+ void led_trigger_event(struct led_trigger *trig,
+ 			enum led_brightness brightness)
+-- 
+2.17.1
 
-> 
->> +
->> +	if (on) {
->> +		ret = regulator_enable(ta->vbus);
->> +		if (ret)
->> +			dev_err(ta->phy.dev, "regulator not enabled\n");
->> +	} else {
->> +		ret = regulator_disable(ta->vbus);
->> +		if (ret)
->> +			dev_err(ta->phy.dev, "regulator not disabled\n");
->> +	}
->> +
->> +	return ret;
->> +}
-> 
-> ...
-> 
->> +	ret = get_flipped(ta, &flipped);
->> +	if (!ret)
->> +		dev_err(ta->phy.dev, "no polarity property from extcon\n");
-> 
-> This should be fixed accordingly.
-Noted.
-> 
-> ...
-> 
->> +		dev_info(ta->phy.dev, "connected%s\n",
->> +			 flipped ? " flipped" : "");
-> 
-> One line.
-exceeds more than 80 characters, so checkpatch throw warnings, to avoid 
-that moved to next line.
-
-Regards
-Vadivel
-> 
