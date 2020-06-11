@@ -2,214 +2,159 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C324C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 735A5C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5FF7207C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:34:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4815E2072F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:34:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="E74LG/P+"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="aV8Jxp03"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgFKIeh (ORCPT
+        id S1726919AbgFKIei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 04:34:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32932 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726776AbgFKIef (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 04:34:35 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DBF8C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 01:34:34 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id q11so5220678wrp.3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 01:34:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=QepdUMREFHwlEXMSFJDNAoF8iHTQk6RVQGlxwgtSrqY=;
-        b=E74LG/P+ZUE+YX56Cn6Zjyn3Qy68LzAK09BYAfg4YVk4oZ+KoKLm9RShaZSnfhXsyb
-         lY/VAxAlqoD8wTaWeNQg/oJboc+vBicFQYrjFpdGQgCMIStdwNU8BV2ZJqMlutdLuJxA
-         smQ33DorgG243Y/dKZ/bnO59viWQm2qRYJC1o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to;
-        bh=QepdUMREFHwlEXMSFJDNAoF8iHTQk6RVQGlxwgtSrqY=;
-        b=B5fBCigcQPDuZ/Gxpr1uw3eZqaBN4zGWS7GOXkCVuG+WRwslseJ45xHVOMjKLfhD9c
-         38FNoVSvcAHvXwgv8CSvOXb8fAIRgQzeoO/0R/Go6FR7gioHOJ8eDyCPJXvjFEsgbNBA
-         Qi+KWvoESva3y00IYomtKmwkIJ5R/kUBAKwjLDSXewXPGcAjdAisb/UCz71AL3+2crdD
-         rA274D8VGIrKDE9Z/QEllbHtzlZ3GKyx/yeXpXnUkkuc9i5npWS4WjNj+bTqg5BeTwcW
-         LHjh6AEBcdX/OVP8mEBHblWYq9JB60gcao5AvRA683lsT3oUbwqRw59a8HUG+vgPvFmq
-         IsoA==
-X-Gm-Message-State: AOAM530C6oBuItAbHaKzCJqW7REsZHGHIfMksBx6grgJCq6uG9PwEdcx
-        bAdxtB1DHhW2gfUZ5ANgZ+2QWg==
-X-Google-Smtp-Source: ABdhPJyPA+yFpnitoMF+MT8lLFomHpWx5gnHcG6eF5i3QAznWQkNqQBZVRnRMVL64cHRAoNHAdiHsw==
-X-Received: by 2002:a5d:42cd:: with SMTP id t13mr8054435wrr.355.1591864473075;
-        Thu, 11 Jun 2020 01:34:33 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id b14sm2955283wmj.47.2020.06.11.01.34.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 01:34:32 -0700 (PDT)
-Date:   Thu, 11 Jun 2020 10:34:30 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Thomas =?iso-8859-1?Q?Hellstr=F6m_=28Intel=29?= 
-        <thomas_os@shipmail.org>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rdma@vger.kernel.org,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        Thomas Hellstrom <thomas.hellstrom@intel.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        linux-media@vger.kernel.org,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Mika Kuoppala <mika.kuoppala@intel.com>
-Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
- annotations
-Message-ID: <20200611083430.GD20149@phenom.ffwll.local>
-Mail-Followup-To: Thomas =?iso-8859-1?Q?Hellstr=F6m_=28Intel=29?= <thomas_os@shipmail.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rdma@vger.kernel.org,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, amd-gfx@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org,
-        Thomas Hellstrom <thomas.hellstrom@intel.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        linux-media@vger.kernel.org,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Mika Kuoppala <mika.kuoppala@intel.com>
-References: <20200604081224.863494-1-daniel.vetter@ffwll.ch>
- <20200604081224.863494-5-daniel.vetter@ffwll.ch>
- <b11c2140-1b9c-9013-d9bb-9eb2c1906710@shipmail.org>
+        Thu, 11 Jun 2020 04:34:38 -0400
+Received: from mail-vi1eur05on2046.outbound.protection.outlook.com ([40.107.21.46]:55745
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726651AbgFKIeg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 04:34:36 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=R55udsL6zlDXwduLw6Y9H9bBaqAURlYPyLeKiu45FcD5iT3h/3y1psi9hpheNEvBJQ01bn/q4ql8JGfxRyFHCmGCPrXTwLbt5wxAIC1XsXzoMLd9Ui7lFOOOQsLD5EOGg9UEeYFrQSXyqGE7JzigH04XCmMf64m+70Iv0qAbBaL8SCkph1j6ipkNtzZ56Fu1VkttvePvjNjx12OvOx8XSZBuIBFQ0efriDpwXWoAfP20+bN8fthnpRkz5DOdST5SBwpVSHUNkVY/e7NmiPVEjZt4xPZ6W/8RE1LCYwp0yiobP0wJGBMW+A2/REN3aTBZcBbYxWEghV4yhg9HSQwGDQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ETx5Dd8sTz943zVqBZvQ9vUea9KnbB86qk4neVQp18o=;
+ b=DTTlphKI+WFjbzqunOFumACQtuXay+XFMMCPgM5+F2ZdWYzOXk8TgnK8pg/K1s5MRSU0skSsjbdRWIRtBl0hFWoYLXN5rFTxG603O6T+YCDgIGLrPDkHHnRsVJocqCG2UAquh5JYkpBqNLgtCfJ1D6GIGxOwQhqN6QxTLJoX82bxuhWalOpO4kexGtn/xjn68Rw2APeE8t29NqNBgxqbEmto1Au/Wl33DktQN5QjVV5G2b6iClwhjuWlN8AzUFdOgWZkRRjWM1/QIANwQmyxJg6bmL+YEWjA0rQ7u2URsvfmfsNvFUDzd4K74ru2D3eaIaJEOtK/ikiGnibCPHGbww==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ETx5Dd8sTz943zVqBZvQ9vUea9KnbB86qk4neVQp18o=;
+ b=aV8Jxp03Gj3Gd1ySzGTfh5fshfFodjWzeMxnYdZN+i5K8ot2p5jwgYfQ/DmvmREu/EaW8e+xq3SKA7pLCDxCdZcbkCD/X7/PCTubNj33eXaYjHfQgXyTDdil1GaM3u63rhJrKPNwGLc2ANehYYNHnmmfApvo4t+0EcrVtt6UxAo=
+Authentication-Results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
+Received: from VI1PR0401MB2287.eurprd04.prod.outlook.com
+ (2603:10a6:800:2e::19) by VI1PR0401MB2575.eurprd04.prod.outlook.com
+ (2603:10a6:800:51::8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.20; Thu, 11 Jun
+ 2020 08:34:31 +0000
+Received: from VI1PR0401MB2287.eurprd04.prod.outlook.com
+ ([fe80::9d5c:685e:4b51:fa60]) by VI1PR0401MB2287.eurprd04.prod.outlook.com
+ ([fe80::9d5c:685e:4b51:fa60%3]) with mapi id 15.20.3066.023; Thu, 11 Jun 2020
+ 08:34:31 +0000
+Subject: Re: [PATCH V4 0/9] Support i.MX8 SoCs pinctrl drivers built as module
+To:     Anson Huang <Anson.Huang@nxp.com>, aisheng.dong@nxp.com,
+        festevam@gmail.com, shawnguo@kernel.org, stefan@agner.ch,
+        kernel@pengutronix.de, linus.walleij@linaro.org,
+        s.hauer@pengutronix.de, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Linux-imx@nxp.com
+References: <1591775865-26872-1-git-send-email-Anson.Huang@nxp.com>
+From:   Daniel Baluta <daniel.baluta@nxp.com>
+Message-ID: <2dfc7a60-1e96-190b-7385-89a843312d80@nxp.com>
+Date:   Thu, 11 Jun 2020 11:34:27 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+In-Reply-To: <1591775865-26872-1-git-send-email-Anson.Huang@nxp.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-ClientProxiedBy: AM0PR10CA0046.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:20b:150::26) To VI1PR0401MB2287.eurprd04.prod.outlook.com
+ (2603:10a6:800:2e::19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b11c2140-1b9c-9013-d9bb-9eb2c1906710@shipmail.org>
-X-Operating-System: Linux phenom 5.6.0-1-amd64 
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2a02:2f08:560d:e500:fcf6:7c4d:8076:b570] (2a02:2f08:560d:e500:fcf6:7c4d:8076:b570) by AM0PR10CA0046.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:150::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.21 via Frontend Transport; Thu, 11 Jun 2020 08:34:29 +0000
+X-Originating-IP: [2a02:2f08:560d:e500:fcf6:7c4d:8076:b570]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 73adfcf3-4b92-4a00-d2cb-08d80de242ab
+X-MS-TrafficTypeDiagnostic: VI1PR0401MB2575:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR0401MB25752EE570A5BD96BE36FA57F9800@VI1PR0401MB2575.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 0431F981D8
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: QAlozSzh38Wo5H9Yf29wpqpcWGLuYIGUNvm375u+1WKN0oBnttb5FYa0i2lF+hTme0rDiFx91nkI2SfJ0ELHI64cTNu5sOvOPiDu1W3X4fXlOLqAlz4c9IlCc4iRzCfaEpB7e28w1zS73IEmJkJ/VWLcj2R/XQk6SKktYOE3dNecoy5MaOTsK232SjgRjTwmqFSUWAJg0aJKqOpzroMaD5ogSxjeBwVnpO0AqNPqhHt2m6FlXwNO4lASJnvQR82MMyD0tVDjhEsmuTY/ainzg0wy3TFZnUKNXKZ2UpaA3VZe7YVfINnxi3/dOTZpjrAAH7McW5apW7zTdWcb1MSUP73fm9Yuy8JbbDR75YDuCNCOGgn34e3gg5EZnfLV2vpwSeaZhcdxBwiEf5zwZUDDcg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0401MB2287.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(6029001)(4636009)(366004)(39860400002)(346002)(376002)(136003)(396003)(4326008)(16526019)(66556008)(6486002)(316002)(478600001)(186003)(66946007)(66476007)(44832011)(8936002)(31686004)(83380400001)(2906002)(31696002)(86362001)(2616005)(5660300002)(36756003)(8676002)(52116002)(53546011)(921003)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: Z8IIyIi+ZcEElHByDKH6i3Gp6JxWuY7+36yzvOiA+9v56UD2jIcd4RDqi3DeTx1k5gbpqpvoeq4gMjA757xRnERnkPbVdxELooumcS6c+qlbWsT4MBLM7uI+VMSOVxn3dlwSsZw8WMeLtijvQwYClc6902j0Tdznclfed4TrS8UVnAy5pPX2ejyiqwZu2Fte17L/LMppe9uQ2m6LfDdqa6bUl8R61zKDSpMXXQBr8UD2YZnQk49XzAhp7pqsUxIliwHysMK9jmSQKqdD4/x7RY4icouCjazyH/p3b1hqfEJQhB6NVq12KOLQNOcq28knXbcfk6PONVirfBI1btpkWqz/m+lNGkKm+LRhRA+1NzJXaVUkGmA76RaG3EdoZ13GqLKWDgiNJzhHYS21Kan0j14rQ4vvvkxXqOzL0Fr6FdGkPhDARfuhmmO1NuawJUEpWJ4E3+suJFtRJhW3UjDIM9zTuPX25paMm1HxSUMaV8dn+dPne02KPlCDLghfdMPGIQikxkD2mWSP/AEuJgu65921cb25To8Vg8Yj/J7A8wtFQEnFELuzszTi+cLrlxj/
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 73adfcf3-4b92-4a00-d2cb-08d80de242ab
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2020 08:34:30.8050
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: N4uPxu6FJufNKrJlE2cB7xPmBcIiChiwx3Jg7gACR6gOi9d90UqOklF4j7XqB7OnmDSAdpnbBcIXRkEF34Xleg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2575
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 09:30:12AM +0200, Thomas Hellström (Intel) wrote:
-> 
-> On 6/4/20 10:12 AM, Daniel Vetter wrote:
-> > Two in one go:
-> > - it is allowed to call dma_fence_wait() while holding a
-> >    dma_resv_lock(). This is fundamental to how eviction works with ttm,
-> >    so required.
-> > 
-> > - it is allowed to call dma_fence_wait() from memory reclaim contexts,
-> >    specifically from shrinker callbacks (which i915 does), and from mmu
-> >    notifier callbacks (which amdgpu does, and which i915 sometimes also
-> >    does, and probably always should, but that's kinda a debate). Also
-> >    for stuff like HMM we really need to be able to do this, or things
-> >    get real dicey.
-> > 
-> > Consequence is that any critical path necessary to get to a
-> > dma_fence_signal for a fence must never a) call dma_resv_lock nor b)
-> > allocate memory with GFP_KERNEL. Also by implication of
-> > dma_resv_lock(), no userspace faulting allowed. That's some supremely
-> > obnoxious limitations, which is why we need to sprinkle the right
-> > annotations to all relevant paths.
-> > 
-> > The one big locking context we're leaving out here is mmu notifiers,
-> > added in
-> > 
-> > commit 23b68395c7c78a764e8963fc15a7cfd318bf187f
-> > Author: Daniel Vetter <daniel.vetter@ffwll.ch>
-> > Date:   Mon Aug 26 22:14:21 2019 +0200
-> > 
-> >      mm/mmu_notifiers: add a lockdep map for invalidate_range_start/end
-> > 
-> > that one covers a lot of other callsites, and it's also allowed to
-> > wait on dma-fences from mmu notifiers. But there's no ready-made
-> > functions exposed to prime this, so I've left it out for now.
-> > 
-> > v2: Also track against mmu notifier context.
-> > 
-> > v3: kerneldoc to spec the cross-driver contract. Note that currently
-> > i915 throws in a hard-coded 10s timeout on foreign fences (not sure
-> > why that was done, but it's there), which is why that rule is worded
-> > with SHOULD instead of MUST.
-> > 
-> > Also some of the mmu_notifier/shrinker rules might surprise SoC
-> > drivers, I haven't fully audited them all. Which is infeasible anyway,
-> > we'll need to run them with lockdep and dma-fence annotations and see
-> > what goes boom.
-> > 
-> > v4: A spelling fix from Mika
-> > 
-> > Cc: Mika Kuoppala <mika.kuoppala@intel.com>
-> > Cc: Thomas Hellstrom <thomas.hellstrom@intel.com>
-> > Cc: linux-media@vger.kernel.org
-> > Cc: linaro-mm-sig@lists.linaro.org
-> > Cc: linux-rdma@vger.kernel.org
-> > Cc: amd-gfx@lists.freedesktop.org
-> > Cc: intel-gfx@lists.freedesktop.org
-> > Cc: Chris Wilson <chris@chris-wilson.co.uk>
-> > Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> > Cc: Christian König <christian.koenig@amd.com>
-> > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> > ---
-> >   Documentation/driver-api/dma-buf.rst |  6 ++++
-> >   drivers/dma-buf/dma-fence.c          | 41 ++++++++++++++++++++++++++++
-> >   drivers/dma-buf/dma-resv.c           |  4 +++
-> >   include/linux/dma-fence.h            |  1 +
-> >   4 files changed, 52 insertions(+)
-> 
-> I still have my doubts about allowing fence waiting from within shrinkers.
-> IMO ideally they should use a trywait approach, in order to allow memory
-> allocation during command submission for drivers that
-> publish fences before command submission. (Since early reservation object
-> release requires that).
+Hi Anson,
 
-Yeah it is a bit annoying, e.g. for drm/scheduler I think we'll end up
-with a mempool to make sure it can handle it's allocations.
+Patch series mostly looks good to me. I have a comment about adding
 
-> But since drivers are already waiting from within shrinkers and I take your
-> word for HMM requiring this,
-
-Yeah the big trouble is HMM and mmu notifiers. That's the really awkward
-one, the shrinker one is a lot less established.
-
-I do wonder whether the mmu notifier constraint should only be set when
-mmu notifiers are enabled, since on a bunch of arm-soc gpu drivers that
-stuff just doesn't matter. But I expect that sooner or later these arm
-gpus will show up in bigger arm cores, where you might want to have kvm
-and maybe device virtualization and stuff, and then you need mmu
-notifiers.
-
-Plus having a very clear and consistent cross-driver api contract is imo
-better than leaving this up to drivers and then having incompatible
-assumptions.
-
-I've pinged a bunch of armsoc gpu driver people and ask them how much this
-hurts, so that we have a clear answer. On x86 I don't think we have much
-of a choice on this, with userptr in amd and i915 and hmm work in nouveau
-(but nouveau I think doesn't use dma_fence in there). I think it'll take
-us a while to really bottom out on this specific question here.
--Daniel
+the MODULE_LICENSE. This is a pretty important change.
 
 
-> 
-> Reviewed-by: Thomas Hellström <thomas.hellstrom@intel.com>
-> 
-> 
+Can you please add this change in a separate patch with a proper explanation
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+of why it is needed.
+
+
+Most likely it is because it was forgotten in the previous patches.
+
+
+thanks,
+
+daniel.
+
+On 10.06.2020 10:57, Anson Huang wrote:
+> There are more and mroe requirements that SoC specific modules should be built
+> as module in order to support generic kernel image, such as Android GKI concept.
+>
+> This patch series supports i.MX8 SoCs pinctrl drivers to be built as module,
+> including i.MX8MQ/MM/MN/MP/QXP/QM/DXL SoCs, and it also supports building
+> i.MX common pinctrl driver and i.MX SCU common pinctrl driver as module.
+>
+> Compared to V3, the changes are as below:
+> 	- change the config dependency back to original;
+> 	- use function callbacks for SCU related functions, and all drivers
+> 	  using SCU pinctrl driver need to initialize the function callbacks,
+> 	  pinctrl-imx.c will check the SCU function callback and call it when
+> 	  it is valid, then no build issue when PINCTRL_IMX is built in and
+> 	  PINCTRL_IMX_SCU is built as module.
+>
+> Anson Huang (9):
+>    pinctrl: imx: Support building SCU pinctrl driver as module
+>    pinctrl: imx: Support building i.MX pinctrl driver as module
+>    pinctrl: imx8mm: Support building as module
+>    pinctrl: imx8mn: Support building as module
+>    pinctrl: imx8mq: Support building as module
+>    pinctrl: imx8mp: Support building as module
+>    pinctrl: imx8qxp: Support building as module
+>    pinctrl: imx8qm: Support building as module
+>    pinctrl: imx8dxl: Support building as module
+>
+>   drivers/pinctrl/freescale/Kconfig           | 19 +++++-----
+>   drivers/pinctrl/freescale/pinctrl-imx.c     | 22 ++++++-----
+>   drivers/pinctrl/freescale/pinctrl-imx.h     | 57 ++++++++++++-----------------
+>   drivers/pinctrl/freescale/pinctrl-imx8dxl.c | 12 +++---
+>   drivers/pinctrl/freescale/pinctrl-imx8mm.c  | 10 ++---
+>   drivers/pinctrl/freescale/pinctrl-imx8mn.c  | 10 ++---
+>   drivers/pinctrl/freescale/pinctrl-imx8mp.c  | 10 ++---
+>   drivers/pinctrl/freescale/pinctrl-imx8mq.c  |  9 ++---
+>   drivers/pinctrl/freescale/pinctrl-imx8qm.c  | 12 +++---
+>   drivers/pinctrl/freescale/pinctrl-imx8qxp.c | 12 +++---
+>   drivers/pinctrl/freescale/pinctrl-scu.c     |  6 +++
+>   11 files changed, 86 insertions(+), 93 deletions(-)
+>
