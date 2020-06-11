@@ -2,167 +2,210 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 021EBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84867C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D33782072F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:41:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E4B42072F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:44:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CdoDIF+K"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AzLoTv6l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbgFKLlW (ORCPT
+        id S1727780AbgFKLoc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 07:41:22 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47473 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726684AbgFKLlV (ORCPT
+        Thu, 11 Jun 2020 07:44:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34004 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726697AbgFKLob (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 07:41:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591875679;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=N+hOhqTQBMwp4AmRlzbOHmDQ8McxlMKMKGqAqlXUfCE=;
-        b=CdoDIF+KrNGLpI3MM+KrTsH4w1jjysPL1hgIWrKYkGgqYg0rpc1AfrGoClBWNlU/vza56w
-        WgX0J7vgrUeneyOa3oPrYMdY73p1ftRX0ytn/uVwemitHjywqpci6ERPXGeVESL7f8tXi/
-        dFBQcG8pIRrFkeJvV3T9cNF0Cl9RAM4=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-415-5jpjiH5ONKu3TbMDdC771g-1; Thu, 11 Jun 2020 07:41:18 -0400
-X-MC-Unique: 5jpjiH5ONKu3TbMDdC771g-1
-Received: by mail-wm1-f70.google.com with SMTP id h6so1019969wmb.7
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 04:41:17 -0700 (PDT)
+        Thu, 11 Jun 2020 07:44:31 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FEF5C08C5C2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 04:44:31 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id b201so2584339pfb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 04:44:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NeR4sKutcrUPwtCckv6Tmqw2IkRMLX24dUiE+CNNtLg=;
+        b=AzLoTv6lnntU3TjLLEgR6fmbijpMmaW1TiVxBsvjGtDygCtFgSsOhUr/x580awC9CJ
+         OWtjuYN91NakIQ0xzJBT44oS7XlppiYpQRPzAIXpeYUcqXzSpm9t2pxKcFM8ltkRm4Qy
+         TviFdnkCDQhhB6Ksg6B+/zb6ZBTNWHgNi1TUJ7AYJQgRbi7MVRHjTB1c0e53WO2aIhus
+         E28nJ9MuYhrO7fmnxZzxlp4KUMsOHAZ7mv4R33BjeWS8OFVUVsDdgxd+0QROsIrmHkxg
+         8lSPIeygynVgxIQizbR19HoEhoM9eN3KtFFM1P8Din25DLW9W/lBzQHWmvhhVFPkIyX6
+         7qjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=N+hOhqTQBMwp4AmRlzbOHmDQ8McxlMKMKGqAqlXUfCE=;
-        b=lZ3Cr6iQSx5rSt1jn8izFmCeM/IDLNq3OXyDahU6GMGk7X9nzmiru1EKeOi2mp/PPG
-         HY7DeVZl6hMyfI8XWXztIqOU8AR8WckQ0DxpqhunAJPKy642EoKODDp9t9Kbk4smxjr4
-         2jLbFB9qKxemA6xirf0UAIOuN3+A4HaZqWDf2zILaV3O+O/DpsLLBEL9AaN5lBuOCZs/
-         NF1+HOZ0yWcmpTeNBIfet13/Hav59VUdj1XK+8YVlQpfq545KeN7ap+SMkDK4Beon7XV
-         21UzzTip0JoFWdpsMRidgu4CE+Wxaa0IDA9krUR9ZWzfRp7V7f5fL+wFHYWU8hkvzBjA
-         VvzQ==
-X-Gm-Message-State: AOAM531PaiZ3fHpljkg5v44PaDf6/NMrJ7RjegmDaRUM1820jQ9ynLkA
-        qGq2Qw/tHJi6l8DGE42Q5UM+Vy3CADltfQub8vJ4b0LBhvyRwkXzazBwsB2JR7414avqqaWaBDQ
-        AnTAwEBgVkd6FRy1P0Ck++7b4
-X-Received: by 2002:a7b:c40e:: with SMTP id k14mr8259481wmi.59.1591875676951;
-        Thu, 11 Jun 2020 04:41:16 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwkpzm1AHXvvYbOTpCzrh8Us+16Cfza99czVInZxHNWwmzLaKoW7HIE1UmlxalWp27taecVCA==
-X-Received: by 2002:a7b:c40e:: with SMTP id k14mr8259469wmi.59.1591875676754;
-        Thu, 11 Jun 2020 04:41:16 -0700 (PDT)
-Received: from redhat.com (bzq-79-181-55-232.red.bezeqint.net. [79.181.55.232])
-        by smtp.gmail.com with ESMTPSA id g3sm5069764wrb.46.2020.06.11.04.41.15
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NeR4sKutcrUPwtCckv6Tmqw2IkRMLX24dUiE+CNNtLg=;
+        b=aMgaPbbOjUO890Vs9gFrWexywTSo+Q0kTSvXl1S9ijpXulu1akSyhiFfaNHW8ZfgG2
+         lLeET24eCHsVPpScUUKSufysW3cY1vYij9+jTXA8kfM7k9I1zSRz7IUWefyDTIdZ+UZ4
+         duoBGPL/jmIZP6Zm5pYAkbnUr7DfX4rsaZeGsErzbySSavY2dCqSJsuskhzOKN/FOag6
+         s3jIDw4fJfqhG8axDFbII3287ox+FcfxXJb1x/4JqNQiC9KPDaWWFvp/z58/D91KuZq4
+         vOXjjsMk95nRhGGR23OscYfnYv6fNxDN+GZxjotshrwO6AzV/I79JS5idJWZgMUdjgpO
+         zqxg==
+X-Gm-Message-State: AOAM531UiAWqPI9PRESXFeScAHebxSxrQ/FBph9erFJ6r+u7VJ3WhvBo
+        lplveb99GTZ5vK0N5caaXg71bg==
+X-Google-Smtp-Source: ABdhPJxIOHN+w6MtKWfgrA7bxJRjB7VlTmwl68jAu2JbO5beoiWKr7sP/K2kitarxzXNPDtpNL9xKg==
+X-Received: by 2002:a63:4754:: with SMTP id w20mr452063pgk.255.1591875870670;
+        Thu, 11 Jun 2020 04:44:30 -0700 (PDT)
+Received: from nagraj.local ([49.206.21.239])
+        by smtp.gmail.com with ESMTPSA id z144sm3088543pfc.195.2020.06.11.04.44.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 04:41:16 -0700 (PDT)
-Date:   Thu, 11 Jun 2020 07:41:13 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Jason Wang <jasowang@redhat.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        teawater <teawaterz@linux.alibaba.com>
-Subject: Re: [PATCH v1] virtio-mem: add memory via add_memory_driver_managed()
-Message-ID: <20200611073943-mutt-send-email-mst@kernel.org>
-References: <20200611071744-mutt-send-email-mst@kernel.org>
- <613382D2-5F4D-4A32-AC8E-E1D03240036F@redhat.com>
+        Thu, 11 Jun 2020 04:44:29 -0700 (PDT)
+From:   Sumit Semwal <sumit.semwal@linaro.org>
+To:     linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc:     Chenbo Feng <fengc@google.com>, linux-kernel@vger.kernel.org,
+        linaro-mm-sig@lists.linaro.org,
+        Charan Teja Reddy <charante@codeaurora.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        syzbot+3643a18836bce555bff6@syzkaller.appspotmail.com,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v2] dma-buf: Move dma_buf_release() from fops to dentry_ops
+Date:   Thu, 11 Jun 2020 17:14:18 +0530
+Message-Id: <20200611114418.19852-1-sumit.semwal@linaro.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <613382D2-5F4D-4A32-AC8E-E1D03240036F@redhat.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 01:33:04PM +0200, David Hildenbrand wrote:
-> 
-> 
->     Am 11.06.2020 um 13:18 schrieb Michael S. Tsirkin <mst@redhat.com>:
-> 
-> 
->     On Thu, Jun 11, 2020 at 01:00:24PM +0200, David Hildenbrand wrote:
-> 
->                 I'd like to have this patch in 5.8, with the initial merge of
->                 virtio-mem
-> 
->                 if possible (so the user space representation of virtio-mem
->                 added memory
-> 
->                 resources won't change anymore).
-> 
->            
-> 
->             So my plan is to rebase on top of -rc1 and merge this for rc2 then.
-> 
->             I don't like rebase on top of tip as the results are sometimes kind
->             of
-> 
->             random.
-> 
->        
-> 
->         Right, I just wanted to get this out early so we can discuss how to
->         proceed.
-> 
->        
-> 
->             And let's add a Fixes: tag as well, this way people will remember
->             to
-> 
->             pick this.
-> 
->             Makes sense?
-> 
->        
-> 
->         Yes, it's somehow a fix (for kexec). So
-> 
->        
-> 
->         Fixes: 5f1f79bbc9e26 ("virtio-mem: Paravirtualized memory hotplug")
-> 
->        
-> 
->         I can respin after -rc1 with the commit id fixed as noted by Pankaj.
-> 
->         Just let me know what you prefer.
-> 
->        
-> 
->         Thanks!
-> 
->    
->     Some once this commit is in Linus' tree, please ping me.
-> 
-> 
-> It already is as mentioned, only the id was wrong.
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=
-> 7b7b27214bba1966772f9213cd2d8e5d67f8487f
+Charan Teja reported a 'use-after-free' in dmabuffs_dname [1], which
+happens if the dma_buf_release() is called while the userspace is
+accessing the dma_buf pseudo fs's dmabuffs_dname() in another process,
+and dma_buf_release() releases the dmabuf object when the last reference
+to the struct file goes away.
 
-OK I pushed this into next based on tip. Let's see what happens.
+I discussed with Arnd Bergmann, and he suggested that rather than tying
+the dma_buf_release() to the file_operations' release(), we can tie it to
+the dentry_operations' d_release(), which will be called when the last ref
+to the dentry is removed.
 
+The path exercised by __fput() calls f_op->release() first, and then calls
+dput, which eventually calls d_op->d_release().
 
-> 
->    
-> 
->         --
-> 
->         Thanks,
-> 
->        
-> 
->         David / dhildenb
-> 
->    
-> 
+In the 'normal' case, when no userspace access is happening via dma_buf
+pseudo fs, there should be exactly one fd, file, dentry and inode, so
+closing the fd will kill of everything right away.
+
+In the presented case, the dentry's d_release() will be called only when
+the dentry's last ref is released.
+
+Therefore, lets move dma_buf_release() from fops->release() to
+d_ops->d_release()
+
+Many thanks to Arnd for his FS insights :)
+
+[1]: https://lore.kernel.org/patchwork/patch/1238278/
+
+Fixes: bb2bb9030425 ("dma-buf: add DMA_BUF_SET_NAME ioctls")
+Reported-by: syzbot+3643a18836bce555bff6@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org> [5.3+]
+Cc: Arnd Bergmann <arnd@arndb.de>
+Reported-by: Charan Teja Reddy <charante@codeaurora.org>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
+
+---
+v2: per Arnd: Moved dma_buf_release() above to avoid forward declaration;
+     removed dentry_ops check.
+---
+ drivers/dma-buf/dma-buf.c | 54 ++++++++++++++++++---------------------
+ 1 file changed, 25 insertions(+), 29 deletions(-)
+
+diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+index 01ce125f8e8d..412629601ad3 100644
+--- a/drivers/dma-buf/dma-buf.c
++++ b/drivers/dma-buf/dma-buf.c
+@@ -54,37 +54,11 @@ static char *dmabuffs_dname(struct dentry *dentry, char *buffer, int buflen)
+ 			     dentry->d_name.name, ret > 0 ? name : "");
+ }
+ 
+-static const struct dentry_operations dma_buf_dentry_ops = {
+-	.d_dname = dmabuffs_dname,
+-};
+-
+-static struct vfsmount *dma_buf_mnt;
+-
+-static int dma_buf_fs_init_context(struct fs_context *fc)
+-{
+-	struct pseudo_fs_context *ctx;
+-
+-	ctx = init_pseudo(fc, DMA_BUF_MAGIC);
+-	if (!ctx)
+-		return -ENOMEM;
+-	ctx->dops = &dma_buf_dentry_ops;
+-	return 0;
+-}
+-
+-static struct file_system_type dma_buf_fs_type = {
+-	.name = "dmabuf",
+-	.init_fs_context = dma_buf_fs_init_context,
+-	.kill_sb = kill_anon_super,
+-};
+-
+-static int dma_buf_release(struct inode *inode, struct file *file)
++static void dma_buf_release(struct dentry *dentry)
+ {
+ 	struct dma_buf *dmabuf;
+ 
+-	if (!is_dma_buf_file(file))
+-		return -EINVAL;
+-
+-	dmabuf = file->private_data;
++	dmabuf = dentry->d_fsdata;
+ 
+ 	BUG_ON(dmabuf->vmapping_counter);
+ 
+@@ -110,9 +84,32 @@ static int dma_buf_release(struct inode *inode, struct file *file)
+ 	module_put(dmabuf->owner);
+ 	kfree(dmabuf->name);
+ 	kfree(dmabuf);
++}
++
++static const struct dentry_operations dma_buf_dentry_ops = {
++	.d_dname = dmabuffs_dname,
++	.d_release = dma_buf_release,
++};
++
++static struct vfsmount *dma_buf_mnt;
++
++static int dma_buf_fs_init_context(struct fs_context *fc)
++{
++	struct pseudo_fs_context *ctx;
++
++	ctx = init_pseudo(fc, DMA_BUF_MAGIC);
++	if (!ctx)
++		return -ENOMEM;
++	ctx->dops = &dma_buf_dentry_ops;
+ 	return 0;
+ }
+ 
++static struct file_system_type dma_buf_fs_type = {
++	.name = "dmabuf",
++	.init_fs_context = dma_buf_fs_init_context,
++	.kill_sb = kill_anon_super,
++};
++
+ static int dma_buf_mmap_internal(struct file *file, struct vm_area_struct *vma)
+ {
+ 	struct dma_buf *dmabuf;
+@@ -412,7 +409,6 @@ static void dma_buf_show_fdinfo(struct seq_file *m, struct file *file)
+ }
+ 
+ static const struct file_operations dma_buf_fops = {
+-	.release	= dma_buf_release,
+ 	.mmap		= dma_buf_mmap_internal,
+ 	.llseek		= dma_buf_llseek,
+ 	.poll		= dma_buf_poll,
+-- 
+2.27.0
 
