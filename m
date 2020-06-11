@@ -2,175 +2,366 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30FADC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B48A8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F23F8206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:46:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B3AA206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:47:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="1TqYOV1Q";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="1TqYOV1Q"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Szh0q3VF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728757AbgFKPqt (ORCPT
+        id S1728667AbgFKPrx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 11:46:49 -0400
-Received: from mail-eopbgr70082.outbound.protection.outlook.com ([40.107.7.82]:55588
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728676AbgFKPqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 11:46:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=n9NLrrgf91ToaU0F+dBv9Qyup0qbWVqOw5XVK54hKSM=;
- b=1TqYOV1QwCng1o9w5GG5qzwRW1qJ58ib3SOyvT/v10cuD3XR6h2vDXCcpOqPwZ88gnJp1fTL9CsNZbCFYvu+r8Ye+hJC1rutnvwwkuOtKPaPfPcCyPupG1eNd/Ai552WpyAVLOxsxC7rHBz2VxGpBwAPWoibbe+4v3ZU34z0Fxg=
-Received: from DB3PR06CA0018.eurprd06.prod.outlook.com (2603:10a6:8:1::31) by
- AM5PR0802MB2545.eurprd08.prod.outlook.com (2603:10a6:203:a2::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Thu, 11 Jun
- 2020 15:46:43 +0000
-Received: from DB5EUR03FT032.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:8:1:cafe::53) by DB3PR06CA0018.outlook.office365.com
- (2603:10a6:8:1::31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18 via Frontend
- Transport; Thu, 11 Jun 2020 15:46:43 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
- action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- DB5EUR03FT032.mail.protection.outlook.com (10.152.20.162) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3088.18 via Frontend Transport; Thu, 11 Jun 2020 15:46:43 +0000
-Received: ("Tessian outbound d3ae83885012:v59"); Thu, 11 Jun 2020 15:46:43 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: e78fca2ff21d95c1
-X-CR-MTA-TID: 64aa7808
-Received: from cd96d1aac321.2
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id D99C5F1A-941A-4255-83F6-4595569C8AC0.1;
-        Thu, 11 Jun 2020 15:46:37 +0000
-Received: from EUR01-HE1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id cd96d1aac321.2
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Thu, 11 Jun 2020 15:46:37 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MjPaRNUxXlsdoaiImzJpDL4ct+TOVPi+/cS/PJ1nD4r/GhjfBOGKajg8TzvE2gebNSmL9JiXP8Cv2frgO0CjGzm9VD0pRjHdZHiIBBR7MAJXR9LKaRbgC+PduO1urTcF0kWRO5GzDa6fw6s2ThRNChTg0RvMq9ALkNOtJ+AysRRn4pUz6c8HAsoksSSmy701cUvrUWH+9Onv07Jzr3cfddmxmaceRcv2XS9KicbLUcoWLcLELJQelM/czbKO0NRVYHsbD+NabThUPgJ7PBXaHA+KkuQBB8FOrrncx8yUsKl8eyGRHqkmsEbInT3wSSM2JaxJE35QJdHv1fD+jseZxA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=n9NLrrgf91ToaU0F+dBv9Qyup0qbWVqOw5XVK54hKSM=;
- b=e381b8eGwWx9N7BTuERWJ/ylpJs+J/dxOpGaV1M482ySueJgHTimZQthtXtOGN/JwtGsvg1cG8SZMkxbXy2P1B0wyOMdE2C/7wUzPhE4h7rtYYbTpLDas1aH459OKqKNKaUuQqZ/3hSjwfR4oveYzGEOuLCHJWo5FiWD/LUhsj5KVQmUmncTFLkda23zTgejHt1WXOpylbJfJ1wZSHwpzV4SNBCcfHqOPMqtw+hV2T/jZg9xgMsx7iB/S3ZzM4v8hRMU/yj+9SNFjxTVxJT9TVMdBBQLB3dZ9Iue2iI5n8dz11c70icYQ9ShmNees4GO6vHJnuip90fKPR9umgOwUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=n9NLrrgf91ToaU0F+dBv9Qyup0qbWVqOw5XVK54hKSM=;
- b=1TqYOV1QwCng1o9w5GG5qzwRW1qJ58ib3SOyvT/v10cuD3XR6h2vDXCcpOqPwZ88gnJp1fTL9CsNZbCFYvu+r8Ye+hJC1rutnvwwkuOtKPaPfPcCyPupG1eNd/Ai552WpyAVLOxsxC7rHBz2VxGpBwAPWoibbe+4v3ZU34z0Fxg=
-Received: from DB6PR0801MB1861.eurprd08.prod.outlook.com (2603:10a6:4:73::21)
- by DB6PR0801MB1670.eurprd08.prod.outlook.com (2603:10a6:4:37::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.23; Thu, 11 Jun
- 2020 15:46:35 +0000
-Received: from DB6PR0801MB1861.eurprd08.prod.outlook.com
- ([fe80::a1b3:fa5:e0d2:b57a]) by DB6PR0801MB1861.eurprd08.prod.outlook.com
- ([fe80::a1b3:fa5:e0d2:b57a%9]) with mapi id 15.20.3066.023; Thu, 11 Jun 2020
- 15:46:35 +0000
-From:   Achin Gupta <Achin.Gupta@arm.com>
-To:     Will Deacon <will@kernel.org>
-CC:     Rob Herring <robh@kernel.org>, Sudeep Holla <Sudeep.Holla@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marc Zyngier <maz@kernel.org>, nd <nd@arm.com>
-Subject: Re: [RFC PATCH 1/3] dt-bindings: Add ARM PSA FF binding for
- non-secure VM partitions
-Thread-Topic: [RFC PATCH 1/3] dt-bindings: Add ARM PSA FF binding for
- non-secure VM partitions
-Thread-Index: AQHWN/n43KKtdAeK40mk/wmuvCbNoqjQ7LSAgACZF4CAAhk1gA==
-Date:   Thu, 11 Jun 2020 15:46:35 +0000
-Message-ID: <5B3F18A4-5DA4-411E-9E26-7D25DEE3D414@arm.com>
-References: <20200601094512.50509-1-sudeep.holla@arm.com>
- <20200601094512.50509-2-sudeep.holla@arm.com>
- <20200609223551.GA1620273@bogus> <20200610074346.GB15939@willie-the-truck>
-In-Reply-To: <20200610074346.GB15939@willie-the-truck>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3445.104.14)
-Authentication-Results-Original: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=arm.com;
-x-originating-ip: [84.68.67.25]
-x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 985c8eb0-d86f-4237-cf6c-08d80e1ea3c6
-x-ms-traffictypediagnostic: DB6PR0801MB1670:|AM5PR0802MB2545:
-x-ms-exchange-transport-forked: True
-X-Microsoft-Antispam-PRVS: <AM5PR0802MB2545E9CB434D29E508C6D1FAFF800@AM5PR0802MB2545.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-nodisclaimer: true
-x-ms-oob-tlc-oobclassifiers: OLM:8273;OLM:8273;
-x-forefront-prvs: 0431F981D8
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: DS6GgnPlgoIr68ht8ImbqHFqIHzeMzkYIlSc+1u4CMEh8qpXdb/QTTeHkTq13VCz4r1P2VvRHCuoXasBvK5nLs0ePGPRP3dk83cAZN4QqTABzkzFmRakNMoTQALuByJ9LhBWHE9UpqMTLr9LCXeozCs82bkTfS6N0AQ0JSSgqV5VIAtQS+1kJKG6AHk9SfDxYPOSjwiz+Ydv3Ih7AqDSkAZGs0XlL7odv6DEg09BdnTmUKM87OBAahRRTHtBOXZ3aRlxMdOpUv5ilvmw442ptrxu84Oim/uw2u9DzJMaeOGPTKmB2kQdnNu8PWW0R5R1DBmtIAyPaOkN1hvaDcG+xg==
-X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0801MB1861.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(136003)(39860400002)(346002)(376002)(4326008)(478600001)(53546011)(6916009)(6486002)(86362001)(33656002)(6506007)(54906003)(6512007)(76116006)(64756008)(8676002)(26005)(186003)(71200400001)(5660300002)(8936002)(66446008)(36756003)(2906002)(316002)(66946007)(2616005)(66476007)(66556008)(91956017);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: KCCNU3e5SD3pvHV01gvQ7V2T8CU9m8BtLGZDsHOEJQmBjUUgFYN9QH/kdihS/od6tmsxe+5BzUcCu4eVPuHYDmXDJP+XkTDkuPNcVLkoh68TCzmIBTGU+ZFwGHbEKzHGF+tS8rs0fc8tonv160lJP7OloFA7mDHrEreoopb8okAl2zqQ0777M/SknH1fMWCrCtqMm7dUHHR5F7Fr+NFBBtg3SfHLT22+wyoDXv9Iz9bTppa1Ig4LuyyNXkMehKXAzQSnGz+OQh46sm3KeWkeErFgI1nMSui5RTPtqbRsxhjMMnSYBlHiH7MKPMCwR7GKASrRUO/BCputthWF3m4Y3Zhl864mewCyuZWfFby+df/re7gNvGyLZcgUgX5qMpwj7FT0BM4ZlZ4L7DTce/w+aZD1+edbRuNV1mZTbjVbsiwaS2ju8XHVMp109x7bHbPde9ZMGjYRrraMUxu8e+KvsZdUJS+Qj+obAesokkxwfis=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DCD78BCFC6211649B3AA9B29B2B0CCBA@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 11 Jun 2020 11:47:53 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:20166 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728104AbgFKPrw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 11:47:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591890470;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=FAy7EX/f3nMJPgUfcEXOOrhWk+dzE7IzYVqH/zhVl6M=;
+        b=Szh0q3VFZ43JOwBgTviYoHXbYG1oNlKPyc/unW7jwj8C71AECqaHgZvNWeMvRV/Mmp99n9
+        /hf3U7Zzna40L+kuTvyB7+bY5WghBfb/YuvJd1rM2P5sr6tkvcITb8FB+S0vCMhXp+oqUc
+        LkTUDJ0J2icrT21EjVo2KApB//fapKE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-13-mESMLCO7P0a-03G2a9yMDA-1; Thu, 11 Jun 2020 11:47:48 -0400
+X-MC-Unique: mESMLCO7P0a-03G2a9yMDA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5117A18FF660;
+        Thu, 11 Jun 2020 15:47:46 +0000 (UTC)
+Received: from w520.home (ovpn-112-195.phx2.redhat.com [10.3.112.195])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5B7C9100238C;
+        Thu, 11 Jun 2020 15:47:42 +0000 (UTC)
+Date:   Thu, 11 Jun 2020 09:47:41 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH v2 1/3] docs: IOMMU user API
+Message-ID: <20200611094741.6d118fa8@w520.home>
+In-Reply-To: <1591848735-12447-2-git-send-email-jacob.jun.pan@linux.intel.com>
+References: <1591848735-12447-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1591848735-12447-2-git-send-email-jacob.jun.pan@linux.intel.com>
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0801MB1670
-Original-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=arm.com;
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT032.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(346002)(136003)(39860400002)(396003)(376002)(46966005)(5660300002)(450100002)(33656002)(6506007)(6486002)(53546011)(186003)(26005)(36756003)(4326008)(86362001)(2906002)(356005)(82310400002)(81166007)(478600001)(6512007)(2616005)(8676002)(47076004)(8936002)(82740400003)(6862004)(70206006)(54906003)(336012)(316002)(70586007);DIR:OUT;SFP:1101;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: e23569a0-6e6d-4592-7e6d-08d80e1e9f6d
-X-Forefront-PRVS: 0431F981D8
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: XLWREhWCxQvGWllo1QJuatozw4KMd789V87CQXcMBjcph+48Okm6Go/+GbxfkzQruiJOaXhkZnFMauMbdPVrVGBF7UlOW1/aLlZWGuHOVI+LaGjQJxG2znRS61Ytty58sCLh6fFLx+daBsAoCmzL10RzJipo+xyeXzEEoKBvkY/hHaxESBVi8pmLAxRn6LBt0sc/7Nr75UoaLr3UGozWbz+82xp4Y9HatbofOLG0xhYtW0eaYPpzokud7nULXgYIJuulvKMqd8uE0VojsMo4uk3gkZpCQyQmto+I20MfFy+8tDuCx/9HSAsmGH+3zL5gmC0JrYFgBxbwVegai0gPATUqYg6StCulRFy0jt4ztZaaUqfze++1GsPTOnsOb3OjjH89Glu9DIKYEDFz1hRpzg==
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2020 15:46:43.2353
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 985c8eb0-d86f-4237-cf6c-08d80e1ea3c6
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0802MB2545
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgV2lsbCwNCg0KPiBPbiAxMCBKdW4gMjAyMCwgYXQgMDg6NDMsIFdpbGwgRGVhY29uIDx3aWxs
-QGtlcm5lbC5vcmc+IHdyb3RlOg0KPiANCj4gT24gVHVlLCBKdW4gMDksIDIwMjAgYXQgMDQ6MzU6
-NTFQTSAtMDYwMCwgUm9iIEhlcnJpbmcgd3JvdGU6DQo+PiBPbiBNb24sIEp1biAwMSwgMjAyMCBh
-dCAxMDo0NToxMEFNICswMTAwLCBTdWRlZXAgSG9sbGEgd3JvdGU6DQo+Pj4gQWRkIGRldmljZXRy
-ZWUgYmluZGluZ3MgZm9yIGEgQXJtIFBTQSBGRi1BIGNvbXBsaWFudCBub24tc2VjdXJlIHBhcnRp
-dGlvbg0KPj4+IGF0IHZpcnR1YWwgaW50ZXJmYWNlKFZNcykuDQo+Pj4gDQo+Pj4gU2lnbmVkLW9m
-Zi1ieTogU3VkZWVwIEhvbGxhIDxzdWRlZXAuaG9sbGFAYXJtLmNvbT4NCj4+PiAtLS0NCj4+PiAu
-Li4vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vYXJtLHBzYS1mZmEudHh0ICAgfCA0NyArKysrKysr
-KysrKysrKysrKysrDQo+Pj4gMSBmaWxlIGNoYW5nZWQsIDQ3IGluc2VydGlvbnMoKykNCj4+PiBj
-cmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9h
-cm0scHNhLWZmYS50eHQNCj4+IA0KPj4gSSdtIGhvcGluZyB0aGlzIGdvZXMgYXdheSBpZiB0aGUg
-ZmlybXdhcmUgaXMgZGlzY292ZXJhYmxlLCBidXQgaWYgbm90IERUIA0KPj4gYmluZGluZ3MgYXJl
-IERUIHNjaGVtYSBub3cuDQo+IA0KPiBXZSdsbCBuZWVkIHRoZSBiaW5kaW5nIGZvciB0aGUga3Zt
-IGhvc3Qgc2lkZSwgYmVjYXVzZSB0aGVyZSBhcmUgcGxlbnR5DQo+IG9mIHBhcnRpdGlvbiBwcm9w
-ZXJ0aWVzIHRoYXQgYXJlIG5vdCBkaXNjb3ZlcmFibGUgKGUuZy4gbnVtYmVyIG9mIHZDUFVzKS4N
-Cg0KSnVzdCB0cnlpbmcgdG8gdW5kZXJzdGFuZCB0aGUgcmVxLiBhIGJpdCBiZXR0ZXLigKYNCg0K
-VGhlIEZGLUEgZHJpdmVyIGluIHRoZSBob3N0IGNhbiB1c2UgRkZBX1BBUlRJVElPTl9JTkZPX0dF
-VCB0byBkZXRlcm1pbmUgdGhlIGNvdW50IG9mIHBhcnRpdGlvbnMgYW5kIHRoZWlyIHZDUFVzLg0K
-DQpJcyB0aGlzIGFib3V0IGEgZ3Vlc3QgYmVpbmcgYWJsZSB0byBmaW5kIG91dCBob3cgbWFueSB2
-Q1BVcyBpdCBoYXM/IA0KDQpDaGVlcnMsDQpBY2hpbg0KDQo+IA0KPiBJJ2xsIGhhdmUgYSBnbyBh
-IHlhbWxpZnlpbmcgd2hhdCBJIGhhdmUuLi4NCj4gDQo+IFdpbGwNCj4gDQoNCg==
+On Wed, 10 Jun 2020 21:12:13 -0700
+Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
+
+> IOMMU UAPI is newly introduced to support communications between guest
+> virtual IOMMU and host IOMMU. There has been lots of discussions on how
+> it should work with VFIO UAPI and userspace in general.
+> 
+> This document is indended to clarify the UAPI design and usage. The
+> mechenics of how future extensions should be achieved are also covered
+> in this documentation.
+> 
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>  Documentation/userspace-api/iommu.rst | 210 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 210 insertions(+)
+>  create mode 100644 Documentation/userspace-api/iommu.rst
+> 
+> diff --git a/Documentation/userspace-api/iommu.rst b/Documentation/userspace-api/iommu.rst
+> new file mode 100644
+> index 000000000000..e95dc5a04a41
+> --- /dev/null
+> +++ b/Documentation/userspace-api/iommu.rst
+> @@ -0,0 +1,210 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +.. iommu:
+> +
+> +=====================================
+> +IOMMU Userspace API
+> +=====================================
+> +
+> +IOMMU UAPI is used for virtualization cases where communications are
+> +needed between physical and virtual IOMMU drivers. For native
+> +usage, IOMMU is a system device which does not need to communicate
+> +with user space directly.
+> +
+> +The primary use cases are guest Shared Virtual Address (SVA) and
+> +guest IO virtual address (IOVA), wherein virtual IOMMU (vIOMMU) is
+> +required to communicate with the physical IOMMU in the host.
+> +
+> +.. contents:: :local:
+> +
+> +Functionalities
+> +====================================================
+> +Communications of user and kernel involve both directions. The
+> +supported user-kernel APIs are as follows:
+> +
+> +1. Alloc/Free PASID
+> +2. Bind/unbind guest PASID (e.g. Intel VT-d)
+> +3. Bind/unbind guest PASID table (e.g. ARM sMMU)
+> +4. Invalidate IOMMU caches
+> +5. Service page request
+> +
+> +Requirements
+> +====================================================
+> +The IOMMU UAPIs are generic and extensible to meet the following
+> +requirements:
+> +
+> +1. Emulated and para-virtualised vIOMMUs
+> +2. Multiple vendors (Intel VT-d, ARM sMMU, etc.)
+> +3. Extensions to the UAPI shall not break existing user space
+> +
+> +Interfaces
+> +====================================================
+> +Although the data structures defined in IOMMU UAPI are self-contained,
+> +there is no user API functions introduced. Instead, IOMMU UAPI is
+> +designed to work with existing user driver frameworks such as VFIO.
+> +
+> +Extension Rules & Precautions
+> +-----------------------------
+> +When IOMMU UAPI gets extended, the data structures can *only* be
+> +modified in two ways:
+> +
+> +1. Adding new fields by re-purposing the padding[] field. No size change.
+> +2. Adding new union members at the end. May increase in size.
+> +
+> +No new fields can be added *after* the variable size union in that it
+> +will break backward compatibility when offset moves. In both cases, a
+> +new flag must be accompanied with a new field such that the IOMMU
+> +driver can process the data based on the new flag. Version field is
+> +only reserved for the unlikely event of UAPI upgrade at its entirety.
+> +
+> +It's *always* the caller's responsibility to indicate the size of the
+> +structure passed by setting argsz appropriately.
+> +
+> +When IOMMU UAPI extension results in size increase, user such as VFIO
+> +has to handle the following scenarios:
+> +
+> +1. User and kernel has exact size match
+> +2. An older user with older kernel header (smaller UAPI size) running on a
+> +   newer kernel (larger UAPI size)
+> +3. A newer user with newer kernel header (larger UAPI size) running
+> +   on a older kernel.
+> +4. A malicious/misbehaving user pass illegal/invalid size but within
+> +   range. The data may contain garbage.
+> +
+> +
+> +Feature Checking
+> +----------------
+> +While launching a guest with vIOMMU, it is important to ensure that host
+> +can support the UAPI data structures to be used for vIOMMU-pIOMMU
+> +communications. Without the upfront compatibility checking, future
+> +faults are difficult to report even in normal conditions. For example,
+> +TLB invalidations should always succeed from vIOMMU's
+> +perspective. There is no architectural way to report back to the vIOMMU
+> +if the UAPI data is incompatible. For this reason the following IOMMU
+> +UAPIs cannot fail:
+> +
+> +1. Free PASID
+> +2. Unbind guest PASID
+> +3. Unbind guest PASID table (SMMU)
+> +4. Cache invalidate
+> +5. Page response
+> +
+> +User applications such as QEMU is expected to import kernel UAPI
+> +headers. Only backward compatibility is supported. For example, an
+> +older QEMU (with older kernel header) can run on newer kernel. Newer
+> +QEMU (with new kernel header) may fail on older kernel.
+
+"Build your user application against newer kernels and it may break on
+older kernels" is not a great selling point of this UAPI.  Clearly new
+features may not be available on older kernels and an application that
+depends on a newer feature may be restricted to newer kernels.
+
+> +
+> +IOMMU vendor driver should report the below features to IOMMU UAPI
+> +consumers (e.g. via VFIO).
+> +
+> +1. IOMMU_NESTING_FEAT_SYSWIDE_PASID
+> +2. IOMMU_NESTING_FEAT_BIND_PGTBL
+> +3. IOMMU_NESTING_FEAT_BIND_PASID_TABLE
+> +4. IOMMU_NESTING_FEAT_CACHE_INVLD
+> +5. IOMMU_NESTING_FEAT_PAGE_REQUEST
+> +
+> +Take VFIO as example, upon request from VFIO user space (e.g. QEMU),
+> +VFIO kernel code shall query IOMMU vendor driver for the support of
+> +the above features. Query result can then be reported back to the
+> +user-space caller. Details can be found in
+> +Documentation/driver-api/vfio.rst.
+> +
+> +
+> +Data Passing Example with VFIO
+> +------------------------------
+> +As the ubiquitous userspace driver framework, VFIO is already IOMMU
+> +aware and share many key concepts such as device model, group, and
+> +protection domain. Other user driver frameworks can also be extended
+> +to support IOMMU UAPI but it is outside the scope of this document.
+> +
+> +In this tight-knit VFIO-IOMMU interface, the ultimate consumer of the
+> +IOMMU UAPI data is the host IOMMU driver. VFIO facilitates user-kernel
+> +transport, capability checking, security, and life cycle management of
+> +process address space ID (PASID).
+> +
+> +Unlike normal user data passed via VFIO UAPI IOTCL, IOMMU driver is the
+> +ultimate consumer of its UAPI data. At VFIO layer, the IOMMU UAPI data
+> +is wrapped in a VFIO UAPI data for sanity checking. It follows the
+> +pattern below:
+> +
+> +::
+> +
+> +   struct {
+> +	__u32 argsz;
+> +	__u32 flags;
+> +	__u8  data[];
+> +  }
+> +
+> +Here data[] contains the IOMMU UAPI data structures.
+> +
+> +In order to determine the size and feature set of the user data, argsz
+> +and flags are also embedded in the IOMMU UAPI data structures.
+> +A "__u32 argsz" field is *always* at the beginning of each structure.
+> +
+> +For example:
+> +::
+> +
+> +   struct iommu_gpasid_bind_data {
+> +	__u32 argsz;
+> +	__u32 version;
+> +	#define IOMMU_PASID_FORMAT_INTEL_VTD	1
+> +	__u32 format;
+> +	#define IOMMU_SVA_GPASID_VAL	(1 << 0)
+> +	__u64 flags;
+> +	__u64 gpgd;
+> +	__u64 hpasid;
+> +	__u64 gpasid;
+> +	__u32 addr_width;
+> +	__u8  padding[12];
+> +	/* Vendor specific data */
+> +	union {
+> +		struct iommu_gpasid_bind_data_vtd vtd;
+> +	};
+> +  };
+> +
+> +Use bind guest PASID as an example, VFIO code shall process IOMMU UAPI
+> +request as follows:
+> +
+> +::
+> +
+> + 1        /* Minsz must include IOMMU UAPI "argsz" of __u32 */
+> + 2        minsz = offsetofend(struct vfio_iommu_type1_bind, flags) +
+> +                              sizeof(u32);
+
+In the example structure above:
+
+> +   struct {
+> +	__u32 argsz;
+> +	__u32 flags;
+> +	__u8  data[];
+> +  }
+
+This presumes that vfio does not use flags to identify a different
+layout, for example a field before data or defining a flag that
+provides no data.  IOW, the IOMMU guarantees argsz at the beginning of
+all structures, but let's not limit how vfio chooses to bundle that
+structure.  minsz should be based on flags, which we'll evaluate to
+determine how much more to copy.
+
+> + 3        copy_from_user(&vfio_bind, (void __user *)arg, minsz);
+> + 4
+> + 5        /* Check VFIO argsz */
+> + 6        if (vfio_bind.argsz < minsz)
+> + 7                return -EINVAL;
+> + 8
+> + 9        /* VFIO flags must be included in minsz */
+> + 10        switch (vfio_bind.flags) {
+> + 11        case VFIO_IOMMU_BIND_GUEST_PGTBL:
+> + 12                /*
+> + 13                 * Get the current IOMMU bind GPASID data size,
+> + 14                 * which accounted for the largest union member.
+> + 15                 */
+> + 16                data_size = sizeof(struct iommu_gpasid_bind_data);
+> + 17                iommu_argsz = vfio_bind.argsz - minsz;
+
+Note that by including the IOMMU UAPI argsz within minsz, this is
+incorrect.
+
+> + 18                if (iommu_argsz > data_size) {
+> + 19                        /* User data > current kernel */
+> + 20                        return -E2BIG;
+> + 21                }
+
+Now I see why you're making the claim that QEMU compiled against an new
+kernel may not work on an older kernel.  We can do better.  The current
+sizeof the data structure should be the maximum we'll copy from the
+user, and we can update the user provided IOMMU UAPI argsz as we pass it
+down from the user to avoid exposing ourselves to an arbitrarily large
+user buffer.  The IOMMU UAPI interfaces should then also use argsz and
+flags to determine whether the data is present for a specified flag.
+That should allow a user application compiled against a newer kernel
+header, but only using features found on older kernels to continue to
+work on older kernels, which seems like a basic requirement to me.
+
+> + 22                copy_from_user(&iommu_bind, (void __user *)
+> + 23                               vfio_bind.data, iommu_argsz);
+> + 24               /*
+> + 25                * Deal with trailing bytes that is bigger than user
+> + 26                * provided UAPI size but smaller than the current
+> + 27                * kernel data size. Zero fill the trailing bytes.
+> + 28                */
+> + 29                memset(iommu_bind + iommu_argsz, 0, data_size -
+> + 30                       iommu_argsz;
+
+The IOMMU UAPI interface having access to argsz should make this
+unnecessary.  Performing this memset() seems like it suggests to the
+next layer that it can rely on all fields being present and valid,
+which defeats the purpose of argsz.
+
+> + 31
+> + 32                iommu_sva_bind_gpasid(domain, dev, iommu_bind_data);
+> + 33                break;
+> +
+> +
+> +Case #1 & 2 are supported per backward compatibility rule.
+> +
+> +Case #3 will fail with -E2BIG at line #20. Case
+
+This is not acceptable IMO.
+
+> +Case #4 may result in other error processed by IOMMU vendor driver. However,
+> +the damage shall not exceed the scope of the offending user.
+
+This is a concern in this double wrapped interface, the IOMMU UAPI
+layer may expect the vfio layer to validate the data.  Zeroing the
+remainder of the data structure is evidence towards that.  The IOMMU
+UAPI layer needs to consider all of this untrusted, so why would we not
+reflect that by passing a __user pointer through to the IOMMU UAPI such
+that it can copy the data from the user itself rather than being
+mislead that the contents have been somehow verified?  Thanks,
+
+Alex
+
