@@ -4,91 +4,139 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 639BEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C59F1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4443220829
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:02:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4CB620829
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:02:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OGGnElLT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CPZnbZJ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728230AbgFKSCH (ORCPT
+        id S1728266AbgFKSCP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 14:02:07 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25564 "EHLO
+        Thu, 11 Jun 2020 14:02:15 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21972 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726820AbgFKSCG (ORCPT
+        with ESMTP id S1726251AbgFKSCH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 14:02:06 -0400
+        Thu, 11 Jun 2020 14:02:07 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591898526;
+        s=mimecast20190719; t=1591898525;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=TaFY/pzHC7fb3rV1r0JXiWmdM/VEPKtAIoA1+kwyi30=;
-        b=OGGnElLTKoWlkh8Odk+bsPk0P3gbGdq9oRM7CASTEUD4RCY/uLyvUPHnThY6NN9tZnZLj2
-        XPc0nLnkt8wI/er8uD5JEcrIHG1594tYJj+HwzGxfYXIH/CjywWEbHOLjZf0aVJVzXLu2s
-        rtojLPNT7PczlpxMdHgy6LFL549Abls=
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=PDcY/aNN0AijO6KeFZRrqAa1c2dHhA8tsB/uBtT8Fjk=;
+        b=CPZnbZJ1UhvPoBVorW8ZkBeoQ7TyZC9g5Lr6upuhb5R7vDKjP3T9voyOk+yiYmay9/5d3f
+        Ed9mS2OP7k/tvQ8gouaBrxWgdbVgste+u7NONbtdQAnDqYx/8QXOEfLPn26nxj8snpFJSI
+        f4MJKYxVIUSxnbXrSjsz2xtOGCmSElM=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-465-nQF5lnqxMvidAmlmphna0Q-1; Thu, 11 Jun 2020 14:02:01 -0400
-X-MC-Unique: nQF5lnqxMvidAmlmphna0Q-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+ us-mta-155-V63-PS4kPWWBKyLEDIScKQ-1; Thu, 11 Jun 2020 14:01:51 -0400
+X-MC-Unique: V63-PS4kPWWBKyLEDIScKQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 18933107ACF2;
-        Thu, 11 Jun 2020 18:02:00 +0000 (UTC)
-Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9CE977F4DB;
-        Thu, 11 Jun 2020 18:01:59 +0000 (UTC)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Maxim Levitsky <mlevitsk@redhat.com>
-Subject: [PATCH] KVM: x86: do not pass poisoned hva to __kvm_set_memory_region
-Date:   Thu, 11 Jun 2020 14:01:59 -0400
-Message-Id: <20200611180159.26085-1-pbonzini@redhat.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B46B0BFC6;
+        Thu, 11 Jun 2020 18:01:48 +0000 (UTC)
+Received: from carbon (unknown [10.40.208.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id ECCD05D9DC;
+        Thu, 11 Jun 2020 18:01:43 +0000 (UTC)
+Date:   Thu, 11 Jun 2020 20:01:40 +0200
+From:   Jesper Dangaard Brouer <jbrouer@redhat.com>
+To:     Gaurav Singh <gaurav1086@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        KP Singh <kpsingh@chromium.org>,
+        netdev@vger.kernel.org (open list:XDP (eXpress Data Path)),
+        bpf@vger.kernel.org (open list:XDP (eXpress Data Path)),
+        linux-kernel@vger.kernel.org (open list)
+Subject: Re: [PATCH] xdp_rxq_info_user: Replace malloc/memset w/calloc
+Message-ID: <20200611200140.259423b4@carbon>
+In-Reply-To: <20200611150221.15665-1-gaurav1086@gmail.com>
+References: <20200611150221.15665-1-gaurav1086@gmail.com>
+Organization: Red Hat Inc.
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__kvm_set_memory_region does not use the hva at all, so trying to
-catch use-after-delete is pointless and, worse, it fails access_ok
-now that we apply it to all memslots including private kernel ones.
-This fixes an AVIC regression.
+On Thu, 11 Jun 2020 11:02:21 -0400
+Gaurav Singh <gaurav1086@gmail.com> wrote:
 
-Fixes: 09d952c971a5 ("KVM: check userspace_addr for all memslots", 2020-06-01)
-Reported-by: Maxim Levitsky <mlevitsk@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/x86.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+> Replace malloc/memset with calloc
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 290784ba63e4..00c88c2f34e4 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -9951,13 +9951,8 @@ int __x86_set_memory_region(struct kvm *kvm, int id, gpa_t gpa, u32 size)
- 		if (!slot || !slot->npages)
- 			return 0;
- 
--		/*
--		 * Stuff a non-canonical value to catch use-after-delete.  This
--		 * ends up being 0 on 32-bit KVM, but there's no better
--		 * alternative.
--		 */
--		hva = (unsigned long)(0xdeadull << 48);
- 		old_npages = slot->npages;
-+		hva = 0;
- 	}
- 
- 	for (i = 0; i < KVM_ADDRESS_SPACE_NUM; i++) {
+Please also mention/describe  that this also solves the bug you found.
+
+As this fix a potential bug, it will be appropriate to add a "Fixes:"
+line, just before "Signed-off-by" (meaning no newline between the two).
+
+Fixes: 0fca931a6f21 ("samples/bpf: program demonstrating access to xdp_rxq_info")
+> Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
+> ---
+>  samples/bpf/xdp_rxq_info_user.c | 13 +++----------
+>  1 file changed, 3 insertions(+), 10 deletions(-)
+> 
+> diff --git a/samples/bpf/xdp_rxq_info_user.c b/samples/bpf/xdp_rxq_info_user.c
+> index 4fe47502ebed..caa4e7ffcfc7 100644
+> --- a/samples/bpf/xdp_rxq_info_user.c
+> +++ b/samples/bpf/xdp_rxq_info_user.c
+> @@ -198,11 +198,8 @@ static struct datarec *alloc_record_per_cpu(void)
+>  {
+>  	unsigned int nr_cpus = bpf_num_possible_cpus();
+>  	struct datarec *array;
+> -	size_t size;
+>  
+> -	size = sizeof(struct datarec) * nr_cpus;
+> -	array = malloc(size);
+> -	memset(array, 0, size);
+> +	array = calloc(nr_cpus, sizeof(struct datarec));
+>  	if (!array) {
+>  		fprintf(stderr, "Mem alloc error (nr_cpus:%u)\n", nr_cpus);
+>  		exit(EXIT_FAIL_MEM);
+> @@ -214,11 +211,8 @@ static struct record *alloc_record_per_rxq(void)
+>  {
+>  	unsigned int nr_rxqs = bpf_map__def(rx_queue_index_map)->max_entries;
+>  	struct record *array;
+> -	size_t size;
+>  
+> -	size = sizeof(struct record) * nr_rxqs;
+> -	array = malloc(size);
+> -	memset(array, 0, size);
+> +	array = calloc(nr_rxqs, sizeof(struct record));
+>  	if (!array) {
+>  		fprintf(stderr, "Mem alloc error (nr_rxqs:%u)\n", nr_rxqs);
+>  		exit(EXIT_FAIL_MEM);
+> @@ -232,8 +226,7 @@ static struct stats_record *alloc_stats_record(void)
+>  	struct stats_record *rec;
+>  	int i;
+>  
+> -	rec = malloc(sizeof(*rec));
+> -	memset(rec, 0, sizeof(*rec));
+> +	rec = calloc(1, sizeof(struct stats_record));
+>  	if (!rec) {
+>  		fprintf(stderr, "Mem alloc error\n");
+>  		exit(EXIT_FAIL_MEM);
+
+
+
 -- 
-2.26.2
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
 
