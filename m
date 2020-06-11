@@ -2,618 +2,87 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE0F7C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 20:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A994EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 20:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 927F820829
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 20:07:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Y+0YOmYn"
+	by mail.kernel.org (Postfix) with ESMTP id 8630520829
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 20:08:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591906093;
+	bh=3jpJtP3t9hFdqcShtE4lp5CSs9AaxqocOw7hGV3sFEQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZS+JYpDEXizCkKon1wJ2YtlvBP2maemW+RLpHmQyychS8Ogeqzq8b8Wn/LHv5D6F7
+	 4iCx7SKqKHGFw5N7VtYUs1HeJ/XcFnmSRS8PNp4MNAvrpFiDNPXRp6aPkVzoJ8jnWI
+	 ZdNCVwbzerbYPeX3H3JxPV4pEjzLQ7YTHBIiiZhg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbgFKUHn (ORCPT
+        id S1726727AbgFKUIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 16:07:43 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:14437 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726523AbgFKUHm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 16:07:42 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591906061; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=RnW39WUfXJ3/mZjpHm5OXjuK3I3Ia28SM2SBEnj9RXE=;
- b=Y+0YOmYnzXKSSoeRg4x//dOEdTnDk3B4MTllXmyicCCtlxQjva/z7bFVgE2PhSU9OauW6UX8
- vQaJbEup3SSo5vFmNlZjc4c7v/pxAK1b6BrtDGVv2EvRAxMq7Q61UHhCwAOOFX5Glbe8VrWM
- ADv8/taJbwIB/S4cGbIa4wiFZ20=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n09.prod.us-west-2.postgun.com with SMTP id
- 5ee28f0cfe1db4db893648ae (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 11 Jun 2020 20:07:40
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id ABC83C43395; Thu, 11 Jun 2020 20:07:40 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Thu, 11 Jun 2020 16:08:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32944 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726119AbgFKUIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 16:08:11 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: tanmay)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B6EF0C433CA;
-        Thu, 11 Jun 2020 20:07:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5872D206C3;
+        Thu, 11 Jun 2020 20:08:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591906091;
+        bh=3jpJtP3t9hFdqcShtE4lp5CSs9AaxqocOw7hGV3sFEQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dclekmqdeFuzWGTcwkZPttowYQpJhfd1aymjlvyX70zNx+lZtgl/fCH2oI2jJOQUK
+         T98bQvSDzgCCkmTUhC8IXvDebugK8p/KG9gSKlJaP0AMKG00IF7IhWWyLASQw0x296
+         jnlU0kncHpaeHJIcf5VLF3/FaUSkocgPL+ZwqM+8=
+Date:   Thu, 11 Jun 2020 23:08:07 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andy Whitcroft <apw@canonical.com>,
+        Matteo Croce <mcroce@redhat.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] checkpatch.pl: perform commit ID check from external to
+ git folder
+Message-ID: <20200611200807.GC1933365@unreal>
+References: <20200611125957.1993741-1-leon@kernel.org>
+ <fcd6d2c34c082ee3dd21a1c3bfd558306e566261.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 11 Jun 2020 13:07:38 -0700
-From:   tanmay@codeaurora.org
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        sam@ravnborg.org, linux-kernel@vger.kernel.org,
-        abhinavk@codeaurora.org, seanpaul@chromium.org,
-        Vara Reddy <varar@codeaurora.org>,
-        freedreno@lists.freedesktop.org, linux-clk@vger.kernel.org,
-        chandanu@codeaurora.org
-Subject: Re: [PATCH v6 4/5] drm/msm/dp: add support for DP PLL driver
-In-Reply-To: <159175481823.242598.9387748150892951863@swboyd.mtv.corp.google.com>
-References: <20200609034623.10844-1-tanmay@codeaurora.org>
- <159175481823.242598.9387748150892951863@swboyd.mtv.corp.google.com>
-Message-ID: <f7a7e8332491a3943106affbd435a1cf@codeaurora.org>
-X-Sender: tanmay@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fcd6d2c34c082ee3dd21a1c3bfd558306e566261.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-09 19:06, Stephen Boyd wrote:
-> Quoting Tanmay Shah (2020-06-08 20:46:23)
->> diff --git a/drivers/gpu/drm/msm/dp/dp_catalog.c 
->> b/drivers/gpu/drm/msm/dp/dp_catalog.c
->> index d02f4eb..2b982f0 100644
->> --- a/drivers/gpu/drm/msm/dp/dp_catalog.c
->> +++ b/drivers/gpu/drm/msm/dp/dp_catalog.c
->> @@ -5,6 +5,7 @@
->> 
->>  #define pr_fmt(fmt)    "[drm-dp] %s: " fmt, __func__
->> 
->> +#include <linux/rational.h>
->>  #include <linux/delay.h>
->>  #include <linux/iopoll.h>
->>  #include <drm/drm_dp_helper.h>
->> @@ -134,59 +135,61 @@ static inline void dp_write_ahb(struct 
->> dp_catalog_private *catalog,
->>         writel(data, catalog->io->dp_controller.base + offset);
->>  }
->> 
->> -static inline u32 dp_read_cc(struct dp_catalog_private *catalog, u32 
->> offset)
->> -{
->> -       return readl_relaxed(catalog->io->dp_cc_io.base + offset);
->> -}
->> -
-> 
-> Why was this added in the first place? Remove it from the place it came
-> in please.
-> 
-Sure. I will remove it as part of DP base driver patch.
->>  static inline void dp_write_phy(struct dp_catalog_private *catalog,
->>                                u32 offset, u32 data)
->>  {
->> +       offset += DP_PHY_REG_OFFSET;
->>         /*
->>          * To make sure phy reg writes happens before any other 
->> operation,
-> [...]
->> @@ -568,17 +574,37 @@ void dp_catalog_ctrl_config_msa(struct 
->> dp_catalog *dp_catalog,
->>                                         bool fixed_nvid)
->>  {
->>         u32 pixel_m, pixel_n;
->> -       u32 mvid, nvid;
->> +       u32 mvid, nvid, div, pixel_div = 0, dispcc_input_rate;
->>         u32 const nvid_fixed = DP_LINK_CONSTANT_N_VALUE;
->>         u32 const link_rate_hbr2 = 540000;
->>         u32 const link_rate_hbr3 = 810000;
->> +       unsigned long den, num;
->> 
->>         struct dp_catalog_private *catalog = container_of(dp_catalog,
->>                                 struct dp_catalog_private, 
->> dp_catalog);
->> 
->> -       pixel_m = dp_read_cc(catalog, MMSS_DP_PIXEL_M);
->> -       pixel_n = dp_read_cc(catalog, MMSS_DP_PIXEL_N);
->> -       DRM_DEBUG_DP("pixel_m=0x%x, pixel_n=0x%x\n", pixel_m, 
->> pixel_n);
->> +       div = dp_read_phy(catalog, REG_DP_PHY_VCO_DIV);
-> 
-> Why do we need to read the phy? The pixel_div seems to match what the
-> clk driver is doing so presumably we can make this follow the link rate
-> being used vs. having to read the phy.
-> 
+On Thu, Jun 11, 2020 at 11:22:41AM -0700, Joe Perches wrote:
+> On Thu, 2020-06-11 at 15:59 +0300, Leon Romanovsky wrote:
+> > From: Leon Romanovsky <leonro@mellanox.com>
+> >
+> > The execution of scripts/checkpatch.pl in folder outside of git produces
+> > complains about invalid commit ID, despite having valid one.
+>
+> There is already a slightly different test for this in -next
+> It also uses a environment test for GIT_DIR.
 
->> +       div &= 0x03;
->> +
->> +       if (div == 0)
->> +               pixel_div = 6;
->> +       else if (div == 1)
->> +               pixel_div = 2;
->> +       else if (div == 2)
->> +               pixel_div = 4;
->> +       else
->> +               DRM_ERROR("Invalid pixel mux divider\n");
->> +
->> +       dispcc_input_rate = (rate * 10) / pixel_div;
->> +
->> +       rational_best_approximation(dispcc_input_rate, 
->> stream_rate_khz,
->> +                       (unsigned long)(1 << 16) - 1,
->> +                       (unsigned long)(1 << 16) - 1, &den, &num);
->> +
->> +       den = ~(den - num);
->> +       den = den & 0xFFFF;
->> +       pixel_m = num;
->> +       pixel_n = den;
->> 
->>         mvid = (pixel_m & 0xFFFF) * 5;
->>         nvid = (0xFFFF & (~pixel_n)) + (pixel_m & 0xFFFF);
->> diff --git a/drivers/gpu/drm/msm/dp/dp_pll_10nm.c 
->> b/drivers/gpu/drm/msm/dp/dp_pll_10nm.c
->> new file mode 100644
->> index 0000000..998d659
->> --- /dev/null
->> +++ b/drivers/gpu/drm/msm/dp/dp_pll_10nm.c
->> @@ -0,0 +1,903 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * Copyright (c) 2016-2020, The Linux Foundation. All rights 
->> reserved.
->> + */
->> +
->> +/*
->> + * Display Port PLL driver block diagram for branch clocks
->> + *
->> + *              +------------------------------+
->> + *              |         DP_VCO_CLK           |
->> + *              |                              |
->> + *              |    +-------------------+     |
->> + *              |    |   (DP PLL/VCO)    |     |
->> + *              |    +---------+---------+     |
->> + *              |              v               |
->> + *              |   +----------+-----------+   |
->> + *              |   | hsclk_divsel_clk_src |   |
->> + *              |   +----------+-----------+   |
->> + *              +------------------------------+
->> + *                              |
->> + *          +---------<---------v------------>----------+
->> + *          |                                           |
->> + * +--------v---------+                                 |
->> + * |    dp_phy_pll    |                                 |
->> + * |     link_clk     |                                 |
->> + * +--------+---------+                                 |
->> + *          |                                           |
->> + *          |                                           |
->> + *          v                                           v
->> + * Input to DISPCC block                                |
->> + * for link clk, crypto clk                             |
->> + * and interface clock                                  |
->> + *                                                      |
->> + *                                                      |
->> + *      +--------<------------+-----------------+---<---+
->> + *      |                     |                 |
->> + * +----v---------+  +--------v-----+  +--------v------+
->> + * | vco_divided  |  | vco_divided  |  | vco_divided   |
->> + * |    _clk_src  |  |    _clk_src  |  |    _clk_src   |
->> + * |              |  |              |  |               |
->> + * |divsel_six    |  |  divsel_two  |  |  divsel_four  |
->> + * +-------+------+  +-----+--------+  +--------+------+
->> + *         |                 |                  |
->> + *         v---->----------v-------------<------v
->> + *                         |
->> + *              +----------+---------+
->> + *              |   dp_phy_pll_vco   |
->> + *              |       div_clk      |
->> + *              +---------+----------+
->> + *                        |
->> + *                        v
->> + *              Input to DISPCC block
->> + *              for DP pixel clock
->> + *
->> + */
->> +
->> +#include <linux/clk.h>
->> +#include <linux/delay.h>
->> +#include <linux/err.h>
->> +#include <linux/kernel.h>
->> +#include <linux/regmap.h>
->> +#include <linux/iopoll.h>
-> 
-> Should be a clk-provider.h include here given that this is providing
-> clks.
-> 
-Yes. currently it is included in dp_parser.h but I will include here as 
-well.
->> +
->> +#include "dp_hpd.h"
->> +#include "dp_pll.h"
->> +#include "dp_pll_private.h"
->> +
->> +#define NUM_PROVIDED_CLKS              2
->> +
->> +#define DP_LINK_CLK_SRC                        0
->> +#define DP_PIXEL_CLK_SRC               1
->> +
->> +static struct dp_pll_db *dp_pdb;
->> +
->> +static const struct clk_ops dp_10nm_vco_clk_ops = {
->> +       .recalc_rate = dp_vco_recalc_rate_10nm,
->> +       .set_rate = dp_vco_set_rate_10nm,
->> +       .round_rate = dp_vco_round_rate_10nm,
->> +       .prepare = dp_vco_prepare_10nm,
->> +       .unprepare = dp_vco_unprepare_10nm,
->> +};
->> +
->> +struct dp_pll_10nm_pclksel {
->> +       struct clk_hw hw;
->> +
->> +       /* divider params */
->> +       u8 shift;
->> +       u8 width;
->> +       u8 flags; /* same flags as used by clk_divider struct */
->> +
->> +       struct dp_pll_db *pll;
->> +};
->> +
->> +#define to_pll_10nm_pclksel(_hw) \
->> +       container_of(_hw, struct dp_pll_10nm_pclksel, hw)
->> +
->> +static const struct clk_parent_data disp_cc_parent_data_0[] = {
->> +       { .fw_name = "bi_tcxo" },
->> +       { .fw_name = "dp_phy_pll_link_clk", .name = 
->> "dp_phy_pll_link_clk" },
->> +       { .fw_name = "dp_phy_pll_vco_div_clk",
->> +                               .name = "dp_phy_pll_vco_div_clk"},
->> +       { .fw_name = "core_bi_pll_test_se", .name = 
->> "core_bi_pll_test_se" },
->> +};
->> +
->> +static struct dp_pll_vco_clk dp_vco_clk = {
->> +       .min_rate = DP_VCO_HSCLK_RATE_1620MHZDIV1000,
->> +       .max_rate = DP_VCO_HSCLK_RATE_8100MHZDIV1000,
->> +};
->> +
->> +static int dp_pll_mux_set_parent_10nm(struct clk_hw *hw, u8 val)
->> +{
->> +       struct dp_pll_10nm_pclksel *pclksel = to_pll_10nm_pclksel(hw);
->> +       struct dp_pll_db *dp_res = pclksel->pll;
->> +       struct dp_io_pll *pll_io = &dp_res->base->pll_io;
->> +       u32 auxclk_div;
->> +
->> +       auxclk_div = PLL_REG_R(pll_io->phy_base, REG_DP_PHY_VCO_DIV);
->> +       auxclk_div &= ~0x03;
->> +
->> +       if (val == 0)
->> +               auxclk_div |= 1;
->> +       else if (val == 1)
->> +               auxclk_div |= 2;
->> +       else if (val == 2)
->> +               auxclk_div |= 0;
->> +
->> +       PLL_REG_W(pll_io->phy_base,
->> +                       REG_DP_PHY_VCO_DIV, auxclk_div);
->> +       DRM_DEBUG_DP("%s: mux=%d auxclk_div=%x\n", __func__, val, 
->> auxclk_div);
->> +
->> +       return 0;
->> +}
->> +
->> +static u8 dp_pll_mux_get_parent_10nm(struct clk_hw *hw)
->> +{
->> +       u32 auxclk_div = 0;
->> +       struct dp_pll_10nm_pclksel *pclksel = to_pll_10nm_pclksel(hw);
->> +       struct dp_pll_db *dp_res = pclksel->pll;
->> +       struct dp_io_pll *pll_io = &dp_res->base->pll_io;
->> +       u8 val = 0;
->> +
->> +       auxclk_div = PLL_REG_R(pll_io->phy_base, REG_DP_PHY_VCO_DIV);
->> +       auxclk_div &= 0x03;
->> +
->> +       if (auxclk_div == 1) /* Default divider */
->> +               val = 0;
->> +       else if (auxclk_div == 2)
->> +               val = 1;
->> +       else if (auxclk_div == 0)
->> +               val = 2;
->> +
->> +       DRM_DEBUG_DP("%s: auxclk_div=%d, val=%d\n", __func__, 
->> auxclk_div, val);
->> +
->> +       return val;
->> +}
->> +
->> +static int dp_pll_clk_mux_determine_rate(struct clk_hw *hw,
->> +                                    struct clk_rate_request *req)
->> +{
->> +       unsigned long rate = 0;
->> +       int ret = 0;
->> +
->> +       rate = clk_get_rate(hw->clk);
->> +
->> +       if (rate <= 0) {
->> +               DRM_ERROR("Rate is not set properly\n");
->> +               return -EINVAL;
->> +       }
->> +
->> +       req->rate = rate;
->> +
->> +       DRM_DEBUG_DP("%s: rate=%ld\n", __func__, req->rate);
->> +       /* Set the new parent of mux if there is a new valid parent */
->> +       if (hw->clk && req->best_parent_hw->clk) {
->> +               ret = clk_set_parent(hw->clk, 
->> req->best_parent_hw->clk);
-> 
-> Why do we need to call clk consumer APIs from the clk provider ops? 
-> This
-> is pretty confusing what's going on here.
-> 
-Sure. Use of clk_set_parent is redundant here and I will remove it.
->> +               if (ret) {
->> +                       DRM_ERROR("%s: clk_set_parent failed: 
->> ret=%d\n",
->> +                                       __func__, ret);
->> +                       return ret;
->> +               }
->> +       }
->> +       return 0;
->> +}
->> +
->> +static unsigned long dp_pll_mux_recalc_rate(struct clk_hw *hw,
->> +                                       unsigned long parent_rate)
->> +{
->> +       struct clk_hw *div_clk_hw = NULL, *vco_clk_hw = NULL;
->> +       struct dp_pll_vco_clk *vco;
->> +
->> +       div_clk_hw = clk_hw_get_parent(hw);
->> +       if (!div_clk_hw)
->> +               return 0;
->> +
->> +       vco_clk_hw = clk_hw_get_parent(div_clk_hw);
->> +       if (!vco_clk_hw)
->> +               return 0;
->> +
->> +       vco = to_dp_vco_hw(vco_clk_hw);
->> +       if (!vco)
->> +               return 0;
->> +
->> +       if (vco->rate == DP_VCO_HSCLK_RATE_8100MHZDIV1000)
->> +               return (vco->rate / 6);
->> +       else if (vco->rate == DP_VCO_HSCLK_RATE_5400MHZDIV1000)
->> +               return (vco->rate / 4);
->> +       else
->> +               return (vco->rate / 2);
->> +}
->> +
->> +static int dp_pll_10nm_get_provider(struct msm_dp_pll *pll,
->> +                                    struct clk **link_clk_provider,
->> +                                    struct clk **pixel_clk_provider)
->> +{
->> +       struct clk_hw_onecell_data *hw_data = pll->hw_data;
->> +
->> +       if (link_clk_provider)
->> +               *link_clk_provider = 
->> hw_data->hws[DP_LINK_CLK_SRC]->clk;
->> +       if (pixel_clk_provider)
->> +               *pixel_clk_provider = 
->> hw_data->hws[DP_PIXEL_CLK_SRC]->clk;
->> +
->> +       return 0;
->> +}
->> +
->> +static const struct clk_ops dp_10nm_pclksel_clk_ops = {
->> +       .get_parent = dp_pll_mux_get_parent_10nm,
->> +       .set_parent = dp_pll_mux_set_parent_10nm,
->> +       .recalc_rate = dp_pll_mux_recalc_rate,
->> +       .determine_rate = dp_pll_clk_mux_determine_rate,
->> +};
->> +
->> +static struct clk_hw *dp_pll_10nm_pixel_clk_sel(struct dp_pll_db 
->> *pll_10nm)
->> +{
->> +       struct device *dev = &pll_10nm->pdev->dev;
->> +       struct dp_pll_10nm_pclksel *pll_pclksel;
->> +       struct clk_init_data pclksel_init = {
->> +               .parent_data = disp_cc_parent_data_0,
->> +               .num_parents = 3,
->> +               .name = "dp_phy_pll_vco_div_clk",
-> 
-> So the dp_phy_pll_vco_div_clk has a potential parent that is
-> dp_phy_pll_vco_div_clk. Huh?
-> 
-Thats right. I will remove dp_phy_pll_vco_div_clk from parent list 
-disp_cc_parent_data_0.
+If you are referring to this commit
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/scripts/checkpatch.pl?h=next-20200611&id=5bff933936a76a839e3c7f47f193cbf0d9904543
 
->> +               .ops = &dp_10nm_pclksel_clk_ops,
->> +       };
->> +       int ret;
->> +
->> +       pll_pclksel = devm_kzalloc(dev, sizeof(*pll_pclksel), 
->> GFP_KERNEL);
->> +       if (!pll_pclksel)
->> +               return ERR_PTR(-ENOMEM);
->> +
->> +       pll_pclksel->pll = pll_10nm;
->> +       pll_pclksel->shift = 0;
->> +       pll_pclksel->width = 4;
->> +       pll_pclksel->flags = CLK_DIVIDER_ONE_BASED;
-> 
-> Is this flag used?
-> 
-No it is redundant. I will remove.
->> +       pll_pclksel->hw.init = &pclksel_init;
->> +
->> +       ret = clk_hw_register(dev, &pll_pclksel->hw);
->> +       if (ret)
->> +               return ERR_PTR(ret);
->> +
->> +       return &pll_pclksel->hw;
->> +}
->> +
->> +static int dp_pll_10nm_register(struct dp_pll_db *pll_10nm)
->> +{
->> +       struct clk_hw_onecell_data *hw_data;
->> +       int ret;
->> +       struct clk_hw *hw;
->> +
->> +       struct msm_dp_pll *pll = pll_10nm->base;
->> +       struct device *dev = &pll_10nm->pdev->dev;
->> +       struct clk_hw **hws = pll_10nm->hws;
->> +       int num = 0;
->> +       struct clk_init_data vco_init = {
->> +               .parent_data = &(const struct clk_parent_data){
->> +                               .fw_name = "bi_tcxo",
->> +               },
->> +               .num_parents = 1,
->> +               .name = "dp_vco_clk",
->> +               .ops = &dp_10nm_vco_clk_ops,
->> +       };
-> 
-> I thought the plan was to not have a vco clk? Just expose the two clks
-> for the link and the vco divider. Furthermore, drop the divider
-> "parents" and implement a single clk that programs the right divider
-> value for the various link rates chosen.
-> 
-As mentioned in above diagram, there is an additional divider in the PLL 
-after the VCO (vco_divided_clk_src).
-The input rate to the dispcc branch is (vco_rate * 10)/ 
-vco_dividied_clk_src.
-In order to know the MNDs at the dispcc, we need to know the input rate.
-This register read is to figure out which divider value is currently 
-being set in the PLL.
-This input rate is not the same as the link rate. When we move the 
-PHY/PLL to a separate driver,
-we would have take care of finding a different way to get this input 
-rate.
->> +
->> +       DRM_DEBUG_DP("DP->id = %d", pll_10nm->id);
->> +
->> +       hw_data = devm_kzalloc(dev, sizeof(*hw_data) +
->> +                              NUM_PROVIDED_CLKS * sizeof(struct 
->> clk_hw *),
->> +                              GFP_KERNEL);
->> +       if (!hw_data)
->> +               return -ENOMEM;
->> +
->> +       dp_vco_clk.hw.init = &vco_init;
->> +       ret = clk_hw_register(dev, &dp_vco_clk.hw);
->> +       if (ret)
->> +               return ret;
->> +       hws[num++] = &dp_vco_clk.hw;
->> +
->> +       hw = clk_hw_register_fixed_factor(dev, "dp_phy_pll_link_clk",
->> +                               "dp_vco_clk", CLK_SET_RATE_PARENT, 1, 
->> 10);
->> +
->> +       if (IS_ERR(hw))
->> +               return PTR_ERR(hw);
->> +       hws[num++] = hw;
->> +       hw_data->hws[DP_LINK_CLK_SRC] = hw;
->> +
->> +       hw = clk_hw_register_fixed_factor(dev, 
->> "dp_vco_divsel_two_clk_src",
->> +                                       "dp_vco_clk",  0, 1, 2);
->> +       if (IS_ERR(hw))
->> +               return PTR_ERR(hw);
->> +       hws[num++] = hw;
->> +
->> +       hw = clk_hw_register_fixed_factor(dev, 
->> "dp_vco_divsel_four_clk_src",
->> +                                        "dp_vco_clk", 0, 1, 4);
->> +       if (IS_ERR(hw))
->> +               return PTR_ERR(hw);
->> +       hws[num++] = hw;
->> +
->> +       hw = clk_hw_register_fixed_factor(dev, 
->> "dp_vco_divsel_six_clk_src",
->> +                                        "dp_vco_clk", 0, 1, 6);
->> +       if (IS_ERR(hw))
->> +               return PTR_ERR(hw);
->> +       hws[num++] = hw;
->> +
->> +       hw = dp_pll_10nm_pixel_clk_sel(pll_10nm);
->> +       if (IS_ERR(hw))
->> +               return PTR_ERR(hw);
->> +
->> +       hws[num++] = hw;
->> +       hw_data->hws[DP_PIXEL_CLK_SRC] = hw;
->> +
->> +       pll_10nm->num_hws = num;
->> +
->> +       hw_data->num = NUM_PROVIDED_CLKS;
->> +       pll->hw_data = hw_data;
->> +
->> +       ret = of_clk_add_hw_provider(dev->of_node, 
->> of_clk_hw_onecell_get,
->> +                                    pll->hw_data);
->> +       if (ret) {
->> +               DRM_DEV_ERROR(dev, "failed to register clk provider: 
->> %d\n",
->> +                               ret);
->> +               return ret;
->> +       }
->> +
->> +       return ret;
->> +}
->> +
->> +int msm_dp_pll_10nm_init(struct msm_dp_pll *pll, int id)
->> +{
->> +       struct dp_pll_db *dp_10nm_pll;
->> +       struct platform_device *pdev = pll->pdev;
->> +       int ret;
->> +
->> +       dp_10nm_pll = devm_kzalloc(&pdev->dev,
->> +                                       sizeof(*dp_10nm_pll), 
->> GFP_KERNEL);
->> +       if (!dp_10nm_pll)
->> +               return -ENOMEM;
->> +
->> +       DRM_DEBUG_DP("DP PLL%d", id);
->> +
->> +       dp_10nm_pll->base = pll;
->> +       dp_10nm_pll->pdev = pll->pdev;
->> +       dp_10nm_pll->id = id;
->> +       dp_pdb = dp_10nm_pll;
->> +       pll->priv = (void *)dp_10nm_pll;
->> +       dp_vco_clk.priv = pll;
->> +
->> +       ret = of_property_read_u32(pdev->dev.of_node, "cell-index",
->> +                               &dp_10nm_pll->index);
->> +       if (ret) {
->> +               DRM_ERROR("Unable to get the cell-index ret=%d\n", 
->> ret);
->> +               dp_10nm_pll->index = 0;
->> +       }
-> 
-> Is the cell-index used for anything?
-> 
-No it is redundant and will be removed in next patch.
->> +
->> +       ret = dp_pll_10nm_register(dp_10nm_pll);
->> +       if (ret) {
->> +               DRM_DEV_ERROR(&pdev->dev, "failed to register PLL: 
->> %d\n", ret);
->> +               return ret;
->> +       }
->> +
->> +       pll->get_provider = dp_pll_10nm_get_provider;
->> +
->> +       return ret;
->> +}
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+It didn't work for me, because I'm not setting GIT_DIR environment and
+use "--root" switch from checkpatch.pl.
+
+>
+> Try that one.
+
+It doesn't make too much sense to have two options to configure git
+directory, one is GIT_DIR and another --root.
+
+Thanks
+
+>
+>
