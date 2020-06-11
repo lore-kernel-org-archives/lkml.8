@@ -2,146 +2,96 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F8EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDAD9C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3B8B20820
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:40:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="BDK5Iqdg"
+	by mail.kernel.org (Postfix) with ESMTP id B818B20820
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:41:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591864900;
+	bh=QsS/tOLm0lwVFkLv1bvdt7t2u82usdSBFhe+D9o/m6U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YCSI0hDstDYMejVYm5onGhWsvRYdFER97EMlagBlW0Db2JeIzHwWrCWSv8QQ4E3VY
+	 tX0nz37UnM0TgrcxlnVVE5Vp1WsGcqkSNcPDQ4HdEozsEsAo3sj4dQHonsJ0fnooDQ
+	 9pxJ+j85OQBGrT7Ml8Mb1RKKzFRZYgaaI3AOIDco=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbgFKIkn (ORCPT
+        id S1726861AbgFKIli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 04:40:43 -0400
-Received: from mout.web.de ([217.72.192.78]:58227 "EHLO mout.web.de"
+        Thu, 11 Jun 2020 04:41:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726861AbgFKIkm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 04:40:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1591864819;
-        bh=zpUnNHx3y8WGBaVPPdHssJwROMHnN/kqwDTEvacxkS4=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=BDK5Iqdg1pY5TY88M4QE8pTgmnfUDHd5VRMUFfYfGQyZvu4qyI5FzIZD4Akwr+x6X
-         L5HSnkJCUzAUofmoNYOpehoBfoMtwpn+0JTKJL8bq+z/R8A+JzXra9zu199rWFsG1t
-         I8C90xHmOYb9cTBq67kYEoFz52C77Iz7UnTYwBZQ=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.49.66.14]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LkyIj-1jAmko19QT-00ap8V; Thu, 11
- Jun 2020 10:40:19 +0200
-Subject: Re: [PATCH v2] exfat: add missing brelse() calls on error paths
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        linux-fsdevel@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        Tetsuhiro Kohada <kohada.t2@gmail.com>,
-        Wei Yongjun <weiyongjun1@huawei.com>
-References: <20200610172213.GA90634@mwanda>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <420560fd-51bf-2d17-7a49-ac56653ec779@web.de>
-Date:   Thu, 11 Jun 2020 10:40:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        id S1726684AbgFKIli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 04:41:38 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1BA8207C3;
+        Thu, 11 Jun 2020 08:41:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591864898;
+        bh=QsS/tOLm0lwVFkLv1bvdt7t2u82usdSBFhe+D9o/m6U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bGxrGjOWwMM0evGPt5Ai7y8Msl/Mu9rWs4Jh+j+NCI+6ybG4fyAaQG95heLlaEva3
+         18bYty9pvqxD+hm6te8k4z6gksi6PrmTG4hZWVEF1PU7wVevrLjQuqzz9Dv5e4v7Yd
+         RktG4MAt4nWzQJi9xmao8Qt2Svg+PlTXwDUaGDd4=
+Date:   Thu, 11 Jun 2020 09:41:36 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Vaibhav Agarwal <vaibhav.sr@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alex Elder <elder@kernel.org>, Johan Hovold <johan@kernel.org>,
+        Mark Greer <mgreer@animalcreek.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/6] Enable Greybus Audio codec driver
+Message-ID: <20200611084135.GB4671@sirena.org.uk>
+References: <cover.1591802243.git.vaibhav.sr@gmail.com>
+ <20200610173711.GK5005@sirena.org.uk>
+ <20200610180118.GZ3720@piout.net>
 MIME-Version: 1.0
-In-Reply-To: <20200610172213.GA90634@mwanda>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:mIWPchu3X/9IVg9sCJv01i56NsfoxFRahJhCNtrpmdMJYr39Wzs
- 00BTrxHHIZ1PJV7KO0dezQdpUgwdmt9dvRKDHVUmw7uVygUzWQtzSCvgmc2wGIfJ9yqEl1J
- Yct8qpKYNAqkz/xyQQu1zULeVBUmuSuZln/P3s6C5r+Fmt96LL6AJzchp3RoPVoLjvL4KFo
- 8UWynw4PQUKt+5d7f8Veg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:3ojKIIZhqF8=:SfZZKhLWR8QBExDqCOLSsk
- Ivtto0puV6BaId2NG3J8EL+VsGhHK7ScLourO0oVD3zLTKM2+CYNwc4ualpdXzP5lzeRpYek1
- H33dGdqXRPrL3s/xzQj0FasywshcashkffhxNn/xZRcoh7ZgYFmJxJHZo6AONkmRSPWUu5BYJ
- 1L9U5P8TVyDhbntdU2Sq89obxFTzZKFN0EEwnHez0PRZRg+d+dUggzPoQby5ghTVsSnUfksGe
- tMdX4QVJhlpuod3E4MyQxtxDzpfDdHlMSWPtZPPW1WP79En9voJG68xy9mH2psjFEB7zzSIbA
- VVksyTj1ycUu4l+NvIJrAq1b1/Xcqy8i3E5goGzkJo1F3gBSJwRHeIPOy6ldaGivavMROTLY3
- nQ3SGsal4NnTQp6vZi5bXvdq5d6wCDJ2/494d55BNyJT+H4xE/zcIBUfwclLZz8Nc/R6HcILM
- +jzpKWx2EzSEKzA2FcWbOlCnhlZX21r8fkCfLYGHGpgSsjpdzKOGCKX5+jBXGZqmTsPPOvIt1
- LMoTiwVt8EWTlO2dRCuJvupczFB3paBsugnVOt/NppHGWpWx4KyAU+9UhxYllpmeBSL+ZP2RX
- wXfG58kR7Wh+WcbOMx0+58CMvlLiDkDFHvOYTUwYE2KY/eHesL8P8Q6MdKrPpqmgfyzapFsXM
- dWOoAfaowcekc099shHvycz0NgEVIyYSvpgPCmOXv8PHxhu/TzA4ZvgXV4aI5ad2iPZzkdx7O
- Qb7FrvYf1jUmO7xy5SjgM3ayaW9HCVsdPSC5zkNR7kUo5KxY3sgUGbgfn7K5EgZeWU3avisbj
- 25Ca02YnieAKuKDVFLusext44YW7p0MLnjMUPGfbIk4ws0SlacPR4U/TQ5FzJn5Gx3rXgNIMc
- ZQ0L0uE0yvv46L7y/yQVs/xd0G4cxrINOS586mx5n4nTvtx9syeLDwDhh+piagUfWiWOHJEF6
- sV+qpBgYHX4ewjUH07jx9omXwbwt2SzUW6cJUEcLR/ZcKx7JunVaaY6bBbDYfOXEQrxhdTbT3
- DHQfwtWhjOmIkRYxNDYHmbr9S7CiysCXQqiAqZs4JRs/xLrFceBfYATWwoVUAw40+P6WGmXjb
- xd7dunzHSYIGmcuAkupUgbYdXPXXWjGzke9bFh7WNbrju23JoqZ0t3puMenAC1NLPi8k4ztbF
- O3V/cEJLqexQBhdxT9UGIiJDr+s6sPmbmuqHvjKCxLC4mqBWjL26LlhLR8IFzL3O7kU5HcpMe
- f+HM6Uxi3VjHOAOgU
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Yylu36WmvOXNoKYn"
+Content-Disposition: inline
+In-Reply-To: <20200610180118.GZ3720@piout.net>
+X-Cookie: I like your SNOOPY POSTER!!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=E2=80=A6
-> +++ b/fs/exfat/namei.c
-> @@ -1077,10 +1077,14 @@ static int exfat_rename_file(struct inode *inode=
-, struct exfat_chain *p_dir,
->
->  		epold =3D exfat_get_dentry(sb, p_dir, oldentry + 1, &old_bh,
->  			&sector_old);
-> +		if (!epold)
-> +			return -EIO;
-=E2=80=A6
 
-Will there be a need to reconsider the indentation for function call param=
-eters
-in such source files?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/coding-style.rst?id=3Db29482fde649c72441d5478a4ea2c52c=
-56d97a5e#n93
+--Yylu36WmvOXNoKYn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Regards,
-Markus
+On Wed, Jun 10, 2020 at 08:01:18PM +0200, Alexandre Belloni wrote:
+
+> My point was that if we were to keep that driver, the goal would be to
+> have it out of staging instead of simply making it compile.
+
+Yes, definitely - that should be the goal for anything in staging.
+
+--Yylu36WmvOXNoKYn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7h7j8ACgkQJNaLcl1U
+h9B1NQf/eAOKPLkgcd+pMevL+wJlH7JsRYzk65f9i97F+wSsVXn1QDXkKiiOR1bD
+rkFO3C0++31H/brsYSkLpsxhMtika0T1WqwxskXs5xER584Xt9SEfONh6yX7Uzyq
+Recbx5h8Hwq16z0jC2SAemnXl2pbz5LMQYGIPP9jj6gRY4KImCCSqPbl763oYHKE
+jvUH4vyHODWSzAmSYqGv3lIkRE/oZbcNKatDxgPzFrcXFilmuZt/hRt+PPQ5vtiK
+r/9vWSGxW/UO6K39svmHjEMOQXtGC8S70/GT1ODLxesgEqRX3NCHZAuWR3TOFfM4
+nHoamPxEb2LydXYOKZmETMIlngmTcw==
+=nIE1
+-----END PGP SIGNATURE-----
+
+--Yylu36WmvOXNoKYn--
