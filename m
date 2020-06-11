@@ -2,193 +2,480 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C0DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B20C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8CF52063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A625C2063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:12:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="i7mTdp8X"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KLbdk8iR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbgFKLLN (ORCPT
+        id S1727945AbgFKLMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 07:11:13 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:30673 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727874AbgFKLLL (ORCPT
+        Thu, 11 Jun 2020 07:12:02 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:37156 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727845AbgFKLMB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 07:11:11 -0400
-Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200611111107epoutp016f73354f0536285ecb2ba36866f74142~XeNlJwX1L0193401934epoutp019
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 11:11:07 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200611111107epoutp016f73354f0536285ecb2ba36866f74142~XeNlJwX1L0193401934epoutp019
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1591873867;
-        bh=m5J+ghZMJqGOXBmy3eWSpEpm7qa5DnNLLLRwQ72pHow=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=i7mTdp8Xns87CfUNeM83Z8EvUm5EgoaBTkT9Ud0y0YcrlLFau0FRP6AqqNN9oRdQK
-         OANkSFxh3G5dMYq+2Ct/0cBDM0CvcIIGRpnjIpzTFzEUTuWVzcuC5osX5GySwpyFCW
-         x66UWBzRyrdVym/n46IE/xiHAf3OybfD379c4GGA=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas2p4.samsung.com (KnoxPortal) with ESMTP id
-        20200611111107epcas2p4bb292c4c64c2ecc2819859a3055a7032~XeNkvu3B11259312593epcas2p4s;
-        Thu, 11 Jun 2020 11:11:07 +0000 (GMT)
-Received: from epsmges2p4.samsung.com (unknown [182.195.40.188]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 49jLkx5FfKzMqYlx; Thu, 11 Jun
-        2020 11:11:05 +0000 (GMT)
-Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
-        epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        67.7F.27013.74112EE5; Thu, 11 Jun 2020 20:11:03 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200611111103epcas2p3b454a6086d4eab9c03a6eb58635d2357~XeNgtmFIh0129101291epcas2p3L;
-        Thu, 11 Jun 2020 11:11:03 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200611111103epsmtrp15da611433d670aa1d1c5fcb42fb26550~XeNgs5vPW2149021490epsmtrp1I;
-        Thu, 11 Jun 2020 11:11:03 +0000 (GMT)
-X-AuditID: b6c32a48-d35ff70000006985-38-5ee21147b134
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        50.B4.08382.74112EE5; Thu, 11 Jun 2020 20:11:03 +0900 (KST)
-Received: from Dabang.dsn.sec.samsung.com (unknown [12.36.155.59]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200611111102epsmtip10637ec99eba10fe6a80a9890ad26a72b~XeNgiaJRZ1633816338epsmtip1u;
-        Thu, 11 Jun 2020 11:11:02 +0000 (GMT)
-From:   Hyesoo Yu <hyesoo.yu@samsung.com>
-Cc:     Hyesoo Yu <hyesoo.yu@samsung.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dma-buf: support to walk the list of dmabuf for debug
-Date:   Thu, 11 Jun 2020 20:28:41 +0900
-Message-Id: <20200611112842.23636-1-hyesoo.yu@samsung.com>
-X-Mailer: git-send-email 2.27.0
+        Thu, 11 Jun 2020 07:12:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591873919;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ln6QALRhxv7uPBeSI/LQxIC2Skc7oRoqql/+AUub+X8=;
+        b=KLbdk8iRVn+210eVct4BAf6BlyJqzDYsasmc6KQgNMMURheG0njZmMu4mYDet/yeSirfyz
+        bxjcQaTLBYmv2eO0IFaf/iKiN3ipb6xFub3Mu1cskgRpKM6Mg4kR1eh16f+qZKw+xpWrMZ
+        cf8Xsg1GiJFzJ1R+rDCJsom+lFfaOrI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-406-bmfQ44nXPWWKgSHAOfrtLw-1; Thu, 11 Jun 2020 07:11:55 -0400
+X-MC-Unique: bmfQ44nXPWWKgSHAOfrtLw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B4E2A107ACCA;
+        Thu, 11 Jun 2020 11:11:53 +0000 (UTC)
+Received: from host1.jankratochvil.net (ovpn-112-104.ams2.redhat.com [10.36.112.104])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8127E60BF3;
+        Thu, 11 Jun 2020 11:11:48 +0000 (UTC)
+Date:   Thu, 11 Jun 2020 13:11:45 +0200
+From:   Jan Kratochvil <jan.kratochvil@redhat.com>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH? v2] powerpc: Hard wire PT_SOFTE value to 1 in gpr_get()
+ too
+Message-ID: <20200611111145.GA1564154@host1.jankratochvil.net>
+References: <20190917121256.GA8659@redhat.com>
+ <20190917143753.GA12300@redhat.com>
+ <20200610150224.GA6793@redhat.com>
+ <321e6865-1762-c459-56c4-0cc89c7c2a7e@linux.ibm.com>
+ <20200611105830.GB12500@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrJKsWRmVeSWpSXmKPExsWy7bCmma674KM4gyXd6hZXvr5ns/jbeYHV
-        4suVh0wWl3fNYbPo2bCV1eLU3c/sDmwed67tYfO4332cyeP2v8fMHn1bVjF6fN4kF8AalWOT
-        kZqYklqkkJqXnJ+SmZduq+QdHO8cb2pmYKhraGlhrqSQl5ibaqvk4hOg65aZA3SBkkJZYk4p
-        UCggsbhYSd/Opii/tCRVISO/uMRWKbUgJafA0LBArzgxt7g0L10vOT/XytDAwMgUqDIhJ2PD
-        lJ2MBS8EK+bMzWpgfMTXxcjJISFgIjHt5R5mEFtIYAejxMld7l2MXED2J0aJu18WskM43xgl
-        Fn5+wQLTsfh4LzNEYi+jxKlfu6GqvjNKHGn8wAhSxSagLnFiyzIwW0SARWLl9+8sIEXMAucZ
-        Jd5dnQWU4OAQFnCTWNVqBlLDIqAqMXfKSrANvAJWEr8+7WSD2CYvMXH2XUaIuKDEyZlPwGqY
-        geLNW2eDXSEhcIxdov3fNEaIBheJuwfesULYwhKvjm9hh7ClJF72t0HZ5RJnWx6xQjS3MEpc
-        nHYVapuxxKxn7WDHMQtoSqzfpQ9iSggoSxy5BbWXT6Lj8F92iDCvREebEESjssT+ZfOgASQp
-        8WhtOytEiYdE46NoSOjGSny9MZN1AqP8LCTPzELyzCyEtQsYmVcxiqUWFOempxYbFZggR+km
-        RnAa1PLYwTj77Qe9Q4xMHIyHGCU4mJVEeAXFH8YJ8aYkVlalFuXHF5XmpBYfYjQFBu9EZinR
-        5HxgIs4riTc0NTIzM7A0tTA1M7JQEud9Z3UhTkggPbEkNTs1tSC1CKaPiYNTqoFJZNOkuTnH
-        1qW2pf5rl2M6rbnO/szt3++dl2dGsonMZT43q+vctFsX7r69cXPBjnWuuSJbfCRmhMf0fN/K
-        9EpJUMWFv0Dn4yctHZbWaKPC7TZJPTOylyj3szHMy3edPWv+iefzPsz4v//C75D6IIO4c3Mf
-        u9yulIrSKDszbQdXrmHokkbdtr5pgYKN1SreOxbcTKw18KlYfNbz+e8VV1btY9RtE4u7lGf5
-        42T8iie+t68WRlv5/N3Xn5g/L3hes+L7zg+fF87/80r4H3P29mt/Tj9UkDLoSc35ZKt//qIe
-        9/kbdVv9rVXWMtt7bfbf8UxR455D22qFy3rtW0qyfmz7mJuy23hfya3rRgUJZrZ3lViKMxIN
-        tZiLihMBSl5KAQwEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBLMWRmVeSWpSXmKPExsWy7bCSnK674KM4g/YdLBZXvr5ns/jbeYHV
-        4suVh0wWl3fNYbPo2bCV1eLU3c/sDmwed67tYfO4332cyeP2v8fMHn1bVjF6fN4kF8AaxWWT
-        kpqTWZZapG+XwJWxYcpOxoIXghVz5mY1MD7i62Lk5JAQMJFYfLyXuYuRi0NIYDejxNfVIA5I
-        QlJi1ueTTBC2sMT9liOsEEVfGSXePp3ODpJgE1CXOLFlGSOILSLAIrHy+3cWEJtZ4DKjxPFr
-        pV2MHBzCAm4Sq1rNQMIsAqoSc6esBCvhFbCS+PVpJxvEfHmJibPvMkLEBSVOznwCNUZeonnr
-        bOYJjHyzkKRmIUktYGRaxSiZWlCcm55bbFhgmJdarlecmFtcmpeul5yfu4kRHJhamjsYt6/6
-        oHeIkYmD8RCjBAezkgivoPjDOCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8NwoXxgkJpCeWpGan
-        phakFsFkmTg4pRqYPJUuhFp/N7+1bS7P9b6PTquPXIhZYzkl/9xplZuO+frHPsimFf444v9k
-        X8qSFt8f7YyTCjazGV0T5QmNEzU/cvm/sOGXzTt1HHtYHnsVr+Hct0LsSe5ixwvXUmIjfD0W
-        TXV9ckIvVPo/d4i79hqFzVOf1yx4GJHc0yuk+Vd9gU7x+xfrF2j5XSx403Nu8WnBtfqNMjPM
-        Q3Qamf//ezcrwifz++7FKWUBihdFxJZJiTIGZ1m/WNv7eu2FX/E/rnBG2X+OYL3NVeI1eyv3
-        KxE/mV135aw8Gx9qb/7G8TCk0HCe7XsZp8csiR2RtV1axlJTH19ekvIt2XqZxYmKsBsfOMyS
-        5D78yJzs0F47jWmhEktxRqKhFnNRcSIA8Kcrt7sCAAA=
-X-CMS-MailID: 20200611111103epcas2p3b454a6086d4eab9c03a6eb58635d2357
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200611111103epcas2p3b454a6086d4eab9c03a6eb58635d2357
-References: <CGME20200611111103epcas2p3b454a6086d4eab9c03a6eb58635d2357@epcas2p3.samsung.com>
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: multipart/mixed; boundary="EVF5PPMfhYS0aIcm"
+Content-Disposition: inline
+In-Reply-To: <20200611105830.GB12500@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let's support debugging function to show exporter
-detail information. The exporter don't need to manage
-the lists for debugging because all dmabuf list are
-managed on dmabuf framework.
 
-That supports to walk the dmabuf list and show the
-detailed information for exporter by passed function
-implemented from exporter.
+--EVF5PPMfhYS0aIcm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-That helps to show exporter detail information.
-For example, ION may show the buffer flag, heap name,
-or the name of process to request allocation.
+On Thu, 11 Jun 2020 12:58:31 +0200, Oleg Nesterov wrote:
+> On 06/11, Madhavan Srinivasan wrote:
+> > On 6/10/20 8:37 PM, Oleg Nesterov wrote:
+> > > > This is not consistent and this breaks
+> > > > http://sourceware.org/systemtap/wiki/utrace/tests/user-regs-peekpoke
+> 
+> this is 404.
 
-Change-Id: I670f04dda4a0870081e1b0fd96b9185b48b9dd15
-Signed-off-by: Hyesoo Yu <hyesoo.yu@samsung.com>
----
- drivers/dma-buf/dma-buf.c | 30 ++++++++++++++++++++++++++++++
- include/linux/dma-buf.h   |  2 ++
- 2 files changed, 32 insertions(+)
+Attaching the testcase, the CVS web interface no longer works on
+sourceware.org.
 
-diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-index 01ce125f8e8d..002bd3ac636e 100644
---- a/drivers/dma-buf/dma-buf.c
-+++ b/drivers/dma-buf/dma-buf.c
-@@ -1254,6 +1254,36 @@ void dma_buf_vunmap(struct dma_buf *dmabuf, void *vaddr)
- }
- EXPORT_SYMBOL_GPL(dma_buf_vunmap);
- 
-+int dma_buf_exp_show(struct seq_file *s,
-+		     int (*it)(struct seq_file *s, struct dma_buf *dmabuf))
-+{
-+	int ret;
-+	struct dma_buf *buf_obj;
-+
-+	ret = mutex_lock_interruptible(&db_list.lock);
-+	if (ret)
-+		return ret;
-+
-+	list_for_each_entry(buf_obj, &db_list.head, list_node) {
-+		ret = mutex_lock_interruptible(&buf_obj->lock);
-+		if (ret) {
-+			seq_puts(s,
-+				 "\tERROR locking buffer object: skipping\n");
-+			continue;
-+		}
-+
-+		ret = it(s, buf_obj);
-+		mutex_unlock(&buf_obj->lock);
-+		if (ret)
-+			break;
-+	}
-+	mutex_unlock(&db_list.lock);
-+
-+	return 0;
-+
-+}
-+EXPORT_SYMBOL_GPL(dma_buf_exp_show);
-+
- #ifdef CONFIG_DEBUG_FS
- static int dma_buf_debug_show(struct seq_file *s, void *unused)
- {
-diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
-index ab0c156abee6..b5c0a10b4eb3 100644
---- a/include/linux/dma-buf.h
-+++ b/include/linux/dma-buf.h
-@@ -502,4 +502,6 @@ int dma_buf_mmap(struct dma_buf *, struct vm_area_struct *,
- 		 unsigned long);
- void *dma_buf_vmap(struct dma_buf *);
- void dma_buf_vunmap(struct dma_buf *, void *vaddr);
-+int dma_buf_exp_show(struct seq_file *s,
-+		     int (*it)(struct seq_file *s, struct dma_buf *dmabuf));
- #endif /* __DMA_BUF_H__ */
--- 
-2.27.0
+
+Jan
+
+--EVF5PPMfhYS0aIcm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename="user-regs-peekpoke.c"
+
+/* Test case for PTRACE_SETREGS modifying the requested ragisters.
+   x86* counterpart of the s390* testcase `user-area-access.c'.
+
+   This software is provided 'as-is', without any express or implied
+   warranty.  In no event will the authors be held liable for any damages
+   arising from the use of this software.
+
+   Permission is granted to anyone to use this software for any purpose,
+   including commercial applications, and to alter it and redistribute it
+   freely.  */
+
+/* FIXME: EFLAGS should be tested restricted on the appropriate bits.  */
+
+#define _GNU_SOURCE 1
+
+#if defined __powerpc__ || defined __sparc__
+# define user_regs_struct pt_regs
+#endif
+
+#ifdef __ia64__
+#define ia64_fpreg ia64_fpreg_DISABLE
+#define pt_all_user_regs pt_all_user_regs_DISABLE
+#endif	/* __ia64__ */
+#include <sys/ptrace.h>
+#ifdef __ia64__
+#undef ia64_fpreg
+#undef pt_all_user_regs
+#endif	/* __ia64__ */
+#include <linux/ptrace.h>
+#include <sys/types.h>
+#include <sys/user.h>
+#if defined __i386__ || defined __x86_64__
+#include <sys/debugreg.h>
+#endif
+#include <asm/unistd.h>
+
+#include <assert.h>
+#include <errno.h>
+#include <error.h>
+#include <unistd.h>
+#include <signal.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <sys/wait.h>
+#include <sys/time.h>
+#include <string.h>
+#include <stddef.h>
+
+/* ia64 has PTRACE_SETREGS but it has no USER_REGS_STRUCT.  */
+#if !defined PTRACE_SETREGS || defined __ia64__
+
+int
+main (void)
+{
+  return 77;
+}
+
+#else	/* PTRACE_SETREGS */
+
+/* The minimal alignment we use for the random access ranges.  */
+#define REGALIGN (sizeof (long))
+
+static pid_t child;
+
+static void
+cleanup (void)
+{
+  if (child > 0)
+    kill (child, SIGKILL);
+  child = 0;
+}
+
+static void
+handler_fail (int signo)
+{
+  cleanup ();
+  signal (SIGABRT, SIG_DFL);
+  abort ();
+}
+
+int
+main (void)
+{
+  long l;
+  int status, i;
+  pid_t pid;
+  union
+    {
+      struct user_regs_struct user;
+      unsigned char byte[sizeof (struct user_regs_struct)];
+    } u, u2;
+  int start;
+
+  setbuf (stdout, NULL);
+  atexit (cleanup);
+  signal (SIGABRT, handler_fail);
+  signal (SIGALRM, handler_fail);
+  signal (SIGINT, handler_fail);
+  i = alarm (10);
+  assert (i == 0);
+
+  child = fork ();
+  switch (child)
+    {
+    case -1:
+      assert_perror (errno);
+      assert (0);
+
+    case 0:
+      l = ptrace (PTRACE_TRACEME, 0, NULL, NULL);
+      assert (l == 0);
+
+      // Prevent rt_sigprocmask() call called by glibc after raise().
+      syscall (__NR_tkill, getpid (), SIGSTOP);
+      assert (0);
+
+    default:
+      break;
+    }
+
+  pid = waitpid (child, &status, 0);
+  assert (pid == child);
+  assert (WIFSTOPPED (status));
+  assert (WSTOPSIG (status) == SIGSTOP);
+
+  /* Fetch U2 from the inferior.  */
+  errno = 0;
+# ifdef __sparc__
+  l = ptrace (PTRACE_GETREGS, child, &u2.user, NULL);
+# else
+  l = ptrace (PTRACE_GETREGS, child, NULL, &u2.user);
+# endif
+  assert_perror (errno);
+  assert (l == 0);
+
+  /* Initialize U with a pattern.  */
+  for (i = 0; i < sizeof u.byte; i++)
+    u.byte[i] = i;
+#ifdef __x86_64__
+  /* non-EFLAGS modifications fail with EIO,  EFLAGS gets back different.  */
+  u.user.eflags = u2.user.eflags;
+  u.user.cs = u2.user.cs;
+  u.user.ds = u2.user.ds;
+  u.user.es = u2.user.es;
+  u.user.fs = u2.user.fs;
+  u.user.gs = u2.user.gs;
+  u.user.ss = u2.user.ss;
+  u.user.fs_base = u2.user.fs_base;
+  u.user.gs_base = u2.user.gs_base;
+  /* RHEL-4 refuses to set too high (and invalid) PC values.  */
+  u.user.rip = (unsigned long) handler_fail;
+  /* 2.6.25 always truncates and sign-extends orig_rax.  */
+  u.user.orig_rax = (int) u.user.orig_rax;
+#endif	/* __x86_64__ */
+#ifdef __i386__
+  /* These values get back different.  */
+  u.user.xds = u2.user.xds;
+  u.user.xes = u2.user.xes;
+  u.user.xfs = u2.user.xfs;
+  u.user.xgs = u2.user.xgs;
+  u.user.xcs = u2.user.xcs;
+  u.user.eflags = u2.user.eflags;
+  u.user.xss = u2.user.xss;
+  /* RHEL-4 refuses to set too high (and invalid) PC values.  */
+  u.user.eip = (unsigned long) handler_fail;
+#endif	/* __i386__ */
+#ifdef __powerpc__
+  /* These fields are constrained.  */
+  u.user.msr = u2.user.msr;
+# ifdef __powerpc64__
+  u.user.softe = u2.user.softe;
+# else
+  u.user.mq = u2.user.mq;
+# endif	/* __powerpc64__ */
+  u.user.trap = u2.user.trap;
+  u.user.dar = u2.user.dar;
+  u.user.dsisr = u2.user.dsisr;
+  u.user.result = u2.user.result;
+#endif	/* __powerpc__ */
+
+  /* Poke U.  */
+# ifdef __sparc__
+  l = ptrace (PTRACE_SETREGS, child, &u.user, NULL);
+# else
+  l = ptrace (PTRACE_SETREGS, child, NULL, &u.user);
+# endif
+  assert (l == 0);
+
+  /* Peek into U2.  */
+# ifdef __sparc__
+  l = ptrace (PTRACE_GETREGS, child, &u2.user, NULL);
+# else
+  l = ptrace (PTRACE_GETREGS, child, NULL, &u2.user);
+# endif
+  assert (l == 0);
+
+  /* Verify it matches.  */
+  if (memcmp (&u.user, &u2.user, sizeof u.byte) != 0)
+    {
+      for (start = 0; start + REGALIGN <= sizeof u.byte; start += REGALIGN)
+	if (*(unsigned long *) (u.byte + start)
+	    != *(unsigned long *) (u2.byte + start))
+	  printf ("\
+mismatch at offset %#x: SETREGS wrote %lx GETREGS read %lx\n",
+		  start, *(unsigned long *) (u.byte + start),
+		  *(unsigned long *) (u2.byte + start));
+      return 1;
+    }
+
+  /* Reverse the pattern.  */
+  for (i = 0; i < sizeof u.byte; i++)
+    u.byte[i] ^= -1;
+#ifdef __x86_64__
+  /* non-EFLAGS modifications fail with EIO,  EFLAGS gets back different.  */
+  u.user.eflags = u2.user.eflags;
+  u.user.cs = u2.user.cs;
+  u.user.ds = u2.user.ds;
+  u.user.es = u2.user.es;
+  u.user.fs = u2.user.fs;
+  u.user.gs = u2.user.gs;
+  u.user.ss = u2.user.ss;
+  u.user.fs_base = u2.user.fs_base;
+  u.user.gs_base = u2.user.gs_base;
+  /* RHEL-4 refuses to set too high (and invalid) PC values.  */
+  u.user.rip = (unsigned long) handler_fail;
+  /* 2.6.25 always truncates and sign-extends orig_rax.  */
+  u.user.orig_rax = (int) u.user.orig_rax;
+#endif	/* __x86_64__ */
+#ifdef __i386__
+  /* These values get back different.  */
+  u.user.xds = u2.user.xds;
+  u.user.xes = u2.user.xes;
+  u.user.xfs = u2.user.xfs;
+  u.user.xgs = u2.user.xgs;
+  u.user.xcs = u2.user.xcs;
+  u.user.eflags = u2.user.eflags;
+  u.user.xss = u2.user.xss;
+  /* RHEL-4 refuses to set too high (and invalid) PC values.  */
+  u.user.eip = (unsigned long) handler_fail;
+#endif	/* __i386__ */
+#ifdef __powerpc__
+  /* These fields are constrained.  */
+  u.user.msr = u2.user.msr;
+# ifdef __powerpc64__
+  u.user.softe = u2.user.softe;
+# else
+  u.user.mq = u2.user.mq;
+# endif	/* __powerpc64__ */
+  u.user.trap = u2.user.trap;
+  u.user.dar = u2.user.dar;
+  u.user.dsisr = u2.user.dsisr;
+  u.user.result = u2.user.result;
+#endif	/* __powerpc__ */
+
+  /* Poke U.  */
+# ifdef __sparc__
+  l = ptrace (PTRACE_SETREGS, child, &u.user, NULL);
+# else
+  l = ptrace (PTRACE_SETREGS, child, NULL, &u.user);
+# endif
+  assert (l == 0);
+
+  /* Peek into U2.  */
+# ifdef __sparc__
+  l = ptrace (PTRACE_GETREGS, child, &u2.user, NULL);
+# else
+  l = ptrace (PTRACE_GETREGS, child, NULL, &u2.user);
+# endif
+  assert (l == 0);
+
+  /* Verify it matches.  */
+  if (memcmp (&u.user, &u2.user, sizeof u.byte) != 0)
+    {
+      for (start = 0; start + REGALIGN <= sizeof u.byte; start += REGALIGN)
+	if (*(unsigned long *) (u.byte + start)
+	    != *(unsigned long *) (u2.byte + start))
+	  printf ("\
+mismatch at offset %#x: SETREGS wrote %lx GETREGS read %lx\n",
+		  start, *(unsigned long *) (u.byte + start),
+		  *(unsigned long *) (u2.byte + start));
+      return 1;
+    }
+
+  /* Now try poking arbitrary ranges and verifying it reads back right.
+     We expect the U area is already a random enough pattern.  */
+  for (start = 0; start + REGALIGN <= sizeof u.byte; start += REGALIGN)
+    {
+      for (i = start; i < start + REGALIGN; i++)
+	u.byte[i]++;
+#ifdef __x86_64__
+      /* non-EFLAGS modifications fail with EIO,  EFLAGS gets back different.  */
+      u.user.eflags = u2.user.eflags;
+      u.user.cs = u2.user.cs;
+      u.user.ds = u2.user.ds;
+      u.user.es = u2.user.es;
+      u.user.fs = u2.user.fs;
+      u.user.gs = u2.user.gs;
+      u.user.ss = u2.user.ss;
+      u.user.fs_base = u2.user.fs_base;
+      u.user.gs_base = u2.user.gs_base;
+      /* RHEL-4 refuses to set too high (and invalid) PC values.  */
+      u.user.rip = (unsigned long) handler_fail;
+      /* 2.6.25 always truncates and sign-extends orig_rax.  */
+      u.user.orig_rax = (int) u.user.orig_rax;
+#endif	/* __x86_64__ */
+#ifdef __i386__
+      /* These values get back different.  */
+      u.user.xds = u2.user.xds;
+      u.user.xes = u2.user.xes;
+      u.user.xfs = u2.user.xfs;
+      u.user.xgs = u2.user.xgs;
+      u.user.xcs = u2.user.xcs;
+      u.user.eflags = u2.user.eflags;
+      u.user.xss = u2.user.xss;
+      /* RHEL-4 refuses to set too high (and invalid) PC values.  */
+      u.user.eip = (unsigned long) handler_fail;
+#endif	/* __i386__ */
+#ifdef __powerpc__
+      /* These fields are constrained.  */
+      u.user.msr = u2.user.msr;
+# ifdef __powerpc64__
+      u.user.softe = u2.user.softe;
+# else
+      u.user.mq = u2.user.mq;
+# endif	/* __powerpc64__ */
+      u.user.trap = u2.user.trap;
+      u.user.dar = u2.user.dar;
+      u.user.dsisr = u2.user.dsisr;
+      u.user.result = u2.user.result;
+      if (start > offsetof (struct pt_regs, ccr))
+	break;
+#endif	/* __powerpc__ */
+
+      /* Poke U.  */
+      l = ptrace (PTRACE_POKEUSER, child, (void *) (unsigned long) start,
+		  (void *) *(unsigned long *) (u.byte + start));
+      if (l != 0)
+	error (1, errno, "PTRACE_POKEUSER at %x", start);
+
+      /* Peek into U2.  */
+# ifdef __sparc__
+      l = ptrace (PTRACE_GETREGS, child, &u2.user, NULL);
+# else
+      l = ptrace (PTRACE_GETREGS, child, NULL, &u2.user);
+# endif
+      assert (l == 0);
+
+      /* Verify it matches.  */
+      if (memcmp (&u.user, &u2.user, sizeof u.byte) != 0)
+	{
+	  printf ("mismatch at offset %#x: poked %lx but GETREGS read %lx\n",
+		  start, *(unsigned long *) (u.byte + start),
+		  *(unsigned long *) (u2.byte + start));
+	  return 1;
+	}
+    }
+
+
+  /* Now try peeking arbitrary ranges and verifying it is the same.
+     We expect the U area is already a random enough pattern.  */
+  for (start = 0; start + REGALIGN <= sizeof u.byte; start += REGALIGN)
+    {
+      /* Peek for the U comparation.  */
+      errno = 0;
+      l = ptrace (PTRACE_PEEKUSER, child, (void *) (unsigned long) start,
+		  NULL);
+      assert_perror (errno);
+
+      /* Verify it matches.  */
+      if (*(unsigned long *) (u.byte + start) != l)
+	{
+	  printf ("mismatch at offset %#x: poked %lx but peeked %lx\n",
+		  start, *(unsigned long *) (u.byte + start), l);
+	  return 1;
+	}
+    }
+
+
+  return 0;
+}
+
+#endif	/* PTRACE_SETREGS */
+
+--EVF5PPMfhYS0aIcm--
 
