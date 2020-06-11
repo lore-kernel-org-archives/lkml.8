@@ -2,221 +2,125 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8AAFC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 19:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B7A9C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 19:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCC58206A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 19:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 186FE2073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 19:19:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sUWBelGw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="Y1cJBAK8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728471AbgFKTTF (ORCPT
+        id S1727000AbgFKTTj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 15:19:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48254 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726812AbgFKTTD (ORCPT
+        Thu, 11 Jun 2020 15:19:39 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:57866 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbgFKTTi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 15:19:03 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E498C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 12:19:03 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id i1so6513673ils.11
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 12:19:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HM3AqGJPElOxspsL/TgvLbkiRo8IGOBuT4DTNJYHMg8=;
-        b=sUWBelGwQdBKxP7Q7+e4/aI/TBJ5MwVvNzCRTCmliTWWuRG0lAgYpIWjIYrYZ5WhWe
-         9y7sCsLXeD1KvkJHDUHLqwr7FnDGQ0eSN15TuQ1zT16B1rSpL8sMznuGOFuzys0cyWHD
-         kMhj4/4akmpox7YkPhF32LDhdY4lrR9NJgic9zaGaYU4lwgvg+O7mfLQPVMjTMbuUrdI
-         btLwJBEi8qlMjloeHPtLCzv7ZDJ5oxmZxkoM5SZsH17wHoosSYXw0WRw09GM3cyp9bLZ
-         8BIT6ODT0tBTmGWkODYamKpjb4WHFg0dERi5VTO2eHQV0td/Xj3p33tKqi5xlqKVIcfU
-         6lYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HM3AqGJPElOxspsL/TgvLbkiRo8IGOBuT4DTNJYHMg8=;
-        b=qRhqvZRD7XNdCjvsj4swh9t/28NjbCYHCsF70C/dOVdDhQh1xZakGEUqYcdJnMyeEw
-         vUgGz3m8zimHaBbgDM3zmHR4vqukTjakWr7jLhiiNTw0As1ocvfIc1ggeB6bq1aTsVOV
-         sLdHaB1W7LfWh8OlWEIo7D9ff5Y3ad0pO/4T/aTvQBd3UxAUJGeofMXJVSgUlX99W/Y1
-         SfFSxuH6Ui0JulTUuPXmK1d6DheUjBem6P87uOJtOsrvE41D2XrDHieI664grOT59fk3
-         /1v/h3JjAhZVrHcTMjz8cnBI9Pwlzw+x3DvTAVy0B///tRgETVPeBw8isRCT7Rxa9SwG
-         Ln4w==
-X-Gm-Message-State: AOAM530lWBJJB1NSDgHOHvDqh+s9uvZLy19TcCxPbeDufaI1lksTUkXs
-        Wg1sNvaEYxZoVF4qGX14JTzcEhDhdnY=
-X-Google-Smtp-Source: ABdhPJyNPRrWvZNCyCyGu+KKHk2+mgEP/Y6Gc3xVljOvTqeQpLBInz1ETD28vaNjTn9xL0Wk4H40QA==
-X-Received: by 2002:a92:79d1:: with SMTP id u200mr8900913ilc.67.1591903141896;
-        Thu, 11 Jun 2020 12:19:01 -0700 (PDT)
-Received: from [172.22.22.26] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.googlemail.com with ESMTPSA id e8sm2060103ill.25.2020.06.11.12.18.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Jun 2020 12:19:00 -0700 (PDT)
-Subject: Re: [PATCH net 1/5] net: ipa: program metadata mask differently
-To:     kernel test robot <lkp@intel.com>, davem@davemloft.net,
-        kuba@kernel.org
-Cc:     kbuild-all@lists.01.org, evgreen@chromium.org,
-        subashab@codeaurora.org, cpratapa@codeaurora.org,
-        bjorn.andersson@linaro.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200610195332.2612233-2-elder@linaro.org>
- <202006110832.hKzHUsMH%lkp@intel.com>
-From:   Alex Elder <elder@linaro.org>
-Message-ID: <c864cbed-39ff-3877-03a9-b51630fc2682@linaro.org>
-Date:   Thu, 11 Jun 2020 14:18:59 -0500
+        Thu, 11 Jun 2020 15:19:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
+        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Iul3mhrear09phmCu8JOZ2yhnz8/T9YMeSEnL8Miao0=; b=Y1cJBAK8vNbryfPIus+U/Dma8B
+        i9banNR5DsvyXjk4Tsu/Pdq2z1YMAZRkMwetYqGGCELrWYoUbzaurNF4w2d6qpznr/8sbiZjCZNUv
+        S28/T6ox5aly2VhOIDJuARkPfJZMx6RxbyjwuFGLQwV/wAOFDo8rWC+JPzfnwT3wD4ZvQKQXia7fb
+        jZn2LBT+g9zg28zvTzs5/kF+WNn6DazAyCLruKhMp14UK2xCMPFPzL02MbywHPyWkSblTtH4ffFSW
+        w4PHDUQG+ZZO1TbwkzKyS+2kpivcHW2f2U7kXrM65CQhtJKG2gKUWF3K5GtqXY9Puab32WEnRZkUK
+        o4AsM/dw==;
+Received: from s01060023bee90a7d.cg.shawcable.net ([24.64.145.4] helo=[192.168.0.10])
+        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1jjSjV-0004uU-IV; Thu, 11 Jun 2020 13:19:26 -0600
+To:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20200514172253.6445-1-logang@deltatee.com>
+ <BYAPR04MB4965CEDB8E3AE4B7F4C527AF86800@BYAPR04MB4965.namprd04.prod.outlook.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <973eb071-45ad-26f1-17d0-325d637a9750@deltatee.com>
+Date:   Thu, 11 Jun 2020 13:19:21 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <202006110832.hKzHUsMH%lkp@intel.com>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <BYAPR04MB4965CEDB8E3AE4B7F4C527AF86800@BYAPR04MB4965.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 24.64.145.4
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, maxg@mellanox.com, axboe@fb.com, kbusch@kernel.org, sagi@grimberg.me, hch@lst.de, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, Chaitanya.Kulkarni@wdc.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH v13 0/9] nvmet: add target passthru commands support
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/10/20 7:19 PM, kernel test robot wrote:
-> Hi Alex,
-> 
-> I love your patch! Perhaps something to improve:
 
-Thanks kernel test robot!
 
-Somehow the "static" specifier got dropped in my patch.
-
-I will fix this when I post version 2, shortly.
-
-					-Alex
-
-> [auto build test WARNING on net/master]
+On 2020-06-11 1:16 p.m., Chaitanya Kulkarni wrote:
+> On 5/14/20 10:23 AM, Logan Gunthorpe wrote:
+>> This is v13 of the passthru patchset which is mostly a resend of v12
+>> with Sagi's reviewed-by tags collected.
+>>
+>> Below, I'll reiterrate some points I made previously that haven't been
+>> responded to:
+>>
+>> I don't think cloning the ctrl_id or the subsysnqn is a good idea.
+>> I sent an email trying to explain why here[1] but there was no response.
+>> In short, I think cloning the ctrl_id will break multipathing over
+>> fabrics and copying the subsysnqn only has the effect of breaking
+>> loopback; the user can always copy the underlying subsysnqn if it
+>> makes sense for their overall system.
+>>
+>> I maintain overriding the CMIC bit in the ctrl id is necessary to
+>> allow multipath over fabrics even if the underlying device did
+>> not support multipath.
+>>
+>> I also think the black list for admin commands is appropriate, and I
+>> added it based on Sagi's feedback[2]. There are plenty of commands that
+>> may be dangerous like firmware update and format NVM commands, and NS
+>> attach commands won't work out of the box because we don't copy the
+>> ctrl_id. It seems like there's more commands to be careful of than ones
+>> that are that are obviously acceptable. So, I think the prudent course
+>> is blacklisting by default until someone has a usecase and can show
+>> the command is safe seems and makes sense. For our present use cases,
+>> the identify, log page and vendor specific commands are all that we
+>> care about.
+>>
+>> A git branch is available here and is based on v5.7-rc5:
+>>
+>> https://github.com/sbates130272/linux-p2pmem  nvmet_passthru_v13
+>>
+>> [1]https://lore.kernel.org/linux-block/247eca47-c3bc-6452-fb19-f7aa27b05a60@deltatee.com/
+>> [2]https://lore.kernel.org/linux-block/e4430207-7def-8776-0289-0d58689dc0cd@grimberg.me/
+>>
+>> --
+>>
+>> v13 Changes:
+>>    1. Rebased onto v5.7-rc5
+>>    2. Collected Sagi's Reviewed-by tags
 > 
-> url:    https://github.com/0day-ci/linux/commits/Alex-Elder/net-ipa-endpoint-configuration-fixes/20200611-035600
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/davem/net.git 89dc68533b190117e1a2fb4298d88b96b3580abf
-> config: arm64-allyesconfig (attached as .config)
-> compiler: aarch64-linux-gcc (GCC) 9.3.0
-> reproduce (this is a W=1 build):
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=arm64 
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> All warnings (new ones prefixed by >>, old ones prefixed by <<):
-> 
-> <<                  from drivers/net/ipa/ipa_endpoint.c:8:
->>> drivers/net/ipa/ipa_endpoint.c:457:6: warning: no previous prototype for 'ipa_endpoint_init_hdr' [-Wmissing-prototypes]
-> 457 | void ipa_endpoint_init_hdr(struct ipa_endpoint *endpoint)
-> |      ^~~~~~~~~~~~~~~~~~~~~
-> In file included from include/linux/bits.h:23,
-> from include/linux/bitops.h:5,
-> from include/linux/kernel.h:12,
-> from include/linux/list.h:9,
-> from include/linux/rculist.h:10,
-> from include/linux/pid.h:5,
-> from include/linux/sched.h:14,
-> from include/linux/ratelimit.h:6,
-> from include/linux/dev_printk.h:16,
-> from include/linux/device.h:15,
-> from drivers/net/ipa/ipa_endpoint.c:8:
-> drivers/net/ipa/ipa_endpoint.c: In function 'ipa_endpoint_config':
-> include/linux/bits.h:26:28: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
-> 26 |   __builtin_constant_p((l) > (h)), (l) > (h), 0)))
-> |                            ^
-> include/linux/build_bug.h:16:62: notkke: in definition of macro 'BUILD_BUG_ON_ZERO'
-> 16 | #define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
-> |                                                              ^
-> include/linux/bits.h:39:3: note: in expansion of macro 'GENMASK_INPUT_CHECK'
-> 39 |  (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
-> |   ^~~~~~~~~~~~~~~~~~~
-> drivers/net/ipa/ipa_endpoint.c:1546:12: note: in expansion of macro 'GENMASK'
-> 1546 |  tx_mask = GENMASK(max - 1, 0);
-> |            ^~~~~~~
-> include/linux/bits.h:26:40: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
-> 26 |   __builtin_constant_p((l) > (h)), (l) > (h), 0)))
-> |                                        ^
-> include/linux/build_bug.h:16:62: note: in definition of macro 'BUILD_BUG_ON_ZERO'
-> 16 | #define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
-> |                                                              ^
-> include/linux/bits.h:39:3: note: in expansion of macro 'GENMASK_INPUT_CHECK'
-> 39 |  (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
-> |   ^~~~~~~~~~~~~~~~~~~
-> drivers/net/ipa/ipa_endpoint.c:1546:12: note: in expansion of macro 'GENMASK'
-> 1546 |  tx_mask = GENMASK(max - 1, 0);
-> |            ^~~~~~~
-> 
-> vim +/ipa_endpoint_init_hdr +457 drivers/net/ipa/ipa_endpoint.c
-> 
->    438	
->    439	/**
->    440	 * We program QMAP endpoints so each packet received is preceded by a QMAP
->    441	 * header structure.  The QMAP header contains a 1-byte mux_id and 2-byte
->    442	 * packet size field, and we have the IPA hardware populate both for each
->    443	 * received packet.  The header is configured (in the HDR_EXT register)
->    444	 * to use big endian format.
->    445	 *
->    446	 * The packet size is written into the QMAP header's pkt_len field.  That
->    447	 * location is defined here using the HDR_OFST_PKT_SIZE field.
->    448	 *
->    449	 * The mux_id comes from a 4-byte metadata value supplied with each packet
->    450	 * by the modem.  It is *not* a QMAP header, but it does contain the mux_id
->    451	 * value that we want, in its low-order byte.  A bitmask defined in the
->    452	 * endpoint's METADATA_MASK register defines which byte within the modem
->    453	 * metadata contains the mux_id.  And the OFST_METADATA field programmed
->    454	 * here indicates where the extracted byte should be placed within the QMAP
->    455	 * header.
->    456	 */
->  > 457	void ipa_endpoint_init_hdr(struct ipa_endpoint *endpoint)
->    458	{
->    459		u32 offset = IPA_REG_ENDP_INIT_HDR_N_OFFSET(endpoint->endpoint_id);
->    460		u32 val = 0;
->    461	
->    462		if (endpoint->data->qmap) {
->    463			size_t header_size = sizeof(struct rmnet_map_header);
->    464	
->    465			/* We might supply a checksum header after the QMAP header */
->    466			if (endpoint->toward_ipa && endpoint->data->checksum)
->    467				header_size += sizeof(struct rmnet_map_ul_csum_header);
->    468			val |= u32_encode_bits(header_size, HDR_LEN_FMASK);
->    469	
->    470			/* Define how to fill mux_id in a received QMAP header */
->    471			if (!endpoint->toward_ipa) {
->    472				u32 off;	/* Field offset within header */
->    473	
->    474				/* Where IPA will write the metadata value */
->    475				off = offsetof(struct rmnet_map_header, mux_id);
->    476				val |= u32_encode_bits(off, HDR_OFST_METADATA_FMASK);
->    477	
->    478				/* Where IPA will write the length */
->    479				off = offsetof(struct rmnet_map_header, pkt_len);
->    480				val |= HDR_OFST_PKT_SIZE_VALID_FMASK;
->    481				val |= u32_encode_bits(off, HDR_OFST_PKT_SIZE_FMASK);
->    482			}
->    483			/* For QMAP TX, metadata offset is 0 (modem assumes this) */
->    484			val |= HDR_OFST_METADATA_VALID_FMASK;
->    485	
->    486			/* HDR_ADDITIONAL_CONST_LEN is 0; (RX only) */
->    487			/* HDR_A5_MUX is 0 */
->    488			/* HDR_LEN_INC_DEAGG_HDR is 0 */
->    489			/* HDR_METADATA_REG_VALID is 0 (TX only) */
->    490		}
->    491	
->    492		iowrite32(val, endpoint->ipa->reg_virt + offset);
->    493	}
->    494	
-> 
-> ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> Are you planning to send V14 based on nvme-5.9 branch ?
 > 
 
+I don't have any plans to yet, but I certainly can. I usually wait until
+after the merge window to resend. I can certainly look at rebasing onto
+nvme-5.9 for next time.
+
+Logan
