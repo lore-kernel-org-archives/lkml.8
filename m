@@ -4,63 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38346C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F81EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11BC220853
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B36F20853
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:45:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591919127;
-	bh=aqGD3yzjEkWHikfIInuK6ESkMK1leqzMdpUYRUNUfRs=;
+	s=default; t=1591919131;
+	bh=rh++QD3no6/c2Rn8xTt0Lqp/lXa3+BKDFfk10RqPw6I=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=yiOjIKUE0L/eGpZqU34mXeYCHWm/dKSI2xn+aGmXrLoTbMzjgoB6ih6mZHXGsNhUU
-	 MJwRICmRI/hUQDUhcFIdJQ33ghelFRbcR3+dGhaEf2OhYzk5o/YeMvGmF0FXkFdRyD
-	 HDFcNRqxC+wWMycCvK2yMhk6L9Q4iXZHh0ie+oOQ=
+	b=bWc6pBjDqZUKpVTbUi5EOpXs36nLBK9PDr75j0GpTIAFgbdrHkwpQE8LVgFhP5JHJ
+	 Q2CIy88DxdzPCpOPf4WG+duIIrjh7O2tTuAhfelQIkCbw/oZFDK5fK1KjATC/7gtqG
+	 lA54GWDflt+E00RptkBkk0L7HZcIR2WpHmg8eGOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbgFKXp0 (ORCPT
+        id S1726542AbgFKXpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 19:45:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60462 "EHLO mail.kernel.org"
+        Thu, 11 Jun 2020 19:45:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726362AbgFKXpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 19:45:23 -0400
-Subject: Re: [GIT pull] timers/urgent for v5.8
+        id S1726513AbgFKXpZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 19:45:25 -0400
+Subject: Re: [GIT PULL] io_uring fixes for 5.8-rc1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591919123;
-        bh=aqGD3yzjEkWHikfIInuK6ESkMK1leqzMdpUYRUNUfRs=;
+        s=default; t=1591919124;
+        bh=rh++QD3no6/c2Rn8xTt0Lqp/lXa3+BKDFfk10RqPw6I=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=S9e0C/MjTwSOXkvKmvaspPRE5LPW/yT1/xKyqFqNYlLCFIP99QlMu2uCkQyBHoQ2k
-         Nm1TdFJJ/NpMx7qg7RioeGBb0JNhpfVujQYmCoHdXnofv9RS7ibj74kgSehPguhT2s
-         d4JTDpRKlh3+b9t701WirtkDI+XAqHFcaxZzcHjM=
+        b=M1s1FOMRfM0SqKtqBnNAmq9hB+0f/D7YbTLG7SzksfQGaXg3vCy61ArvKF2CmAEce
+         jfyEj70rSVis7bOTAxoIYb5yGWZc7UIGlimxIhhiHknKmuNWvvAtSMZK/JnKbdokdK
+         b1/tpYrgNGoym0FCBwumH98TOkvVcU2nnfkpwKTc=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <159190118210.28418.16838792857524354792.tglx@nanos.tec.linutronix.de>
-References: <159190118210.28418.16838792857524354792.tglx@nanos.tec.linutronix.de>
+In-Reply-To: <75aa6bc8-488a-07dd-feea-545500e51966@kernel.dk>
+References: <75aa6bc8-488a-07dd-feea-545500e51966@kernel.dk>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <159190118210.28418.16838792857524354792.tglx@nanos.tec.linutronix.de>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
- timers-urgent-2020-06-11
-X-PR-Tracked-Commit-Id: b91c8c42ffdd5c983923edb38b3c3e112bfe6263
+X-PR-Tracked-Message-Id: <75aa6bc8-488a-07dd-feea-545500e51966@kernel.dk>
+X-PR-Tracked-Remote: git://git.kernel.dk/linux-block.git
+ tags/io_uring-5.8-2020-06-11
+X-PR-Tracked-Commit-Id: 65a6543da386838f935d2f03f452c5c0acff2a68
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 92ac971219a29336e466921156b16f8fa88d91aa
-Message-Id: <159191912339.19194.1005607187534682995.pr-tracker-bot@kernel.org>
-Date:   Thu, 11 Jun 2020 23:45:23 +0000
-To:     Thomas Gleixner <tglx@linutronix.de>
+X-PR-Merge-Commit-Id: b961f8dc8976c091180839f4483d67b7c2ca2578
+Message-Id: <159191912451.19194.10586193761310545264.pr-tracker-bot@kernel.org>
+Date:   Thu, 11 Jun 2020 23:45:24 +0000
+To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, x86@kernel.org
+        io-uring <io-uring@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 11 Jun 2020 18:46:22 -0000:
+The pull request you sent on Thu, 11 Jun 2020 15:35:22 -0600:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-urgent-2020-06-11
+> git://git.kernel.dk/linux-block.git tags/io_uring-5.8-2020-06-11
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/92ac971219a29336e466921156b16f8fa88d91aa
+https://git.kernel.org/torvalds/c/b961f8dc8976c091180839f4483d67b7c2ca2578
 
 Thank you!
 
