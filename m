@@ -2,80 +2,157 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 418A4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C695C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F76A2072F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:29:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E94FE2075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:29:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="FseEPp8F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728373AbgFKO3A (ORCPT
+        id S1728378AbgFKO34 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 10:29:00 -0400
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:25946 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726657AbgFKO25 (ORCPT
+        Thu, 11 Jun 2020 10:29:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60070 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728229AbgFKO3z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 10:28:57 -0400
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 11 Jun 2020 19:58:44 +0530
-Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 11 Jun 2020 19:58:17 +0530
-Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
-        id 27C6E2AC6; Thu, 11 Jun 2020 19:58:16 +0530 (IST)
-From:   Sandeep Maheswaram <sanm@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        linux-clk@vger.kernel.org, Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH 1/2] clk: qcom: gcc: Add genpd active wakeup flag for sc7180
-Date:   Thu, 11 Jun 2020 19:58:02 +0530
-Message-Id: <1591885683-29514-2-git-send-email-sanm@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591885683-29514-1-git-send-email-sanm@codeaurora.org>
-References: <1591885683-29514-1-git-send-email-sanm@codeaurora.org>
+        Thu, 11 Jun 2020 10:29:55 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7CA6C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 07:29:55 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id p15so2703077qvr.9
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 07:29:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=iS2yXa8gKHNwS2UChvutG5V1O7eVsWQuqeZ34MVLXc0=;
+        b=FseEPp8Fso/6As15zVP3Ym7NPs9kvuOvCIptWPzePslhXjFzBDqQXKhNnYWATD+15R
+         Al/WYp+hbHsKFK4X2ojiK+EHs7yhQmmL+EDMNyPnOR89aEMfOJc5yjRH0aJYrgc62Vs4
+         Doe6mzmOoH4EXTAuqTBF2FSP/hDXXwvjF9/30kmpRxNG9NB7+P9LM/fisKeD5/yoOQW2
+         PEChRlkS/fkvSbixN4O37472Uu4NlrAggCY6VhNzkkPK4SDvGr55LxYD+4T/EdoOhWVl
+         4gdKknLaMPLAltUrhRVsboI89uK5/pkjAghK31JbmOaIh7KRRHIu3+t+3Jd7dolDArof
+         vWaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=iS2yXa8gKHNwS2UChvutG5V1O7eVsWQuqeZ34MVLXc0=;
+        b=DhytL+JMJA7tUa7bFhIu+BQF1Jw3vSFHQ8RV7KiyKeaSTFyoFFtSpLO6DRljQbifGf
+         sdyBzZJM3a8sLojmtYnOFNCpXHjrBQfrWaXrK3R/iusQOPWhWFOO0PUyhvezowzZpVyT
+         8e8LCVcy1q9PsOgCsTbn5HW7gb87eJrOfXXUYGdz9NibWTL8qrkiDpI0x4cR3YqhTudw
+         THjlcamzQmVQ+2nGCW6SPQvhHURv0Oj6Qz7AH+DB5pIbiuO0ro5w3IZVtpmaHo/cHIWZ
+         G3/F4fL1FachFkdD68WsUVyeOcRUOAaHKns5EvH7DI9JOJF7foLV8g/6rjKhHBzx1JsS
+         sepg==
+X-Gm-Message-State: AOAM532VfyQpz98T3fR3C+IIXtRRok0yUhxiR8i7eYq2+lWp4FYlT6tX
+        ypy4fd1T5EsNcrNmTtiKBMS4zQ==
+X-Google-Smtp-Source: ABdhPJyglizbugl/WH3rPRKasgzr+R/H6TfhyQSpLDpaYV29o2R1YgDECnGExOwsuREk0P31Na2jyw==
+X-Received: by 2002:a05:6214:13e6:: with SMTP id ch6mr8093893qvb.29.1591885794923;
+        Thu, 11 Jun 2020 07:29:54 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id 195sm2287728qkg.74.2020.06.11.07.29.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2020 07:29:54 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.93)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jjODJ-005xNV-Ml; Thu, 11 Jun 2020 11:29:53 -0300
+Date:   Thu, 11 Jun 2020 11:29:53 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org,
+        Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas_os@shipmail.org>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-rdma@vger.kernel.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: Re: [PATCH] mm: Track mmu notifiers in fs_reclaim_acquire/release
+Message-ID: <20200611142953.GA1419658@ziepe.ca>
+References: <20200604081224.863494-2-daniel.vetter@ffwll.ch>
+ <20200610194101.1668038-1-daniel.vetter@ffwll.ch>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200610194101.1668038-1-daniel.vetter@ffwll.ch>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taniya Das <tdas@codeaurora.org>
+On Wed, Jun 10, 2020 at 09:41:01PM +0200, Daniel Vetter wrote:
+> fs_reclaim_acquire/release nicely catch recursion issues when
+> allocating GFP_KERNEL memory against shrinkers (which gpu drivers tend
+> to use to keep the excessive caches in check). For mmu notifier
+> recursions we do have lockdep annotations since 23b68395c7c7
+> ("mm/mmu_notifiers: add a lockdep map for invalidate_range_start/end").
+> 
+> But these only fire if a path actually results in some pte
+> invalidation - for most small allocations that's very rarely the case.
+> The other trouble is that pte invalidation can happen any time when
+> __GFP_RECLAIM is set. Which means only really GFP_ATOMIC is a safe
+> choice, GFP_NOIO isn't good enough to avoid potential mmu notifier
+> recursion.
+> 
+> I was pondering whether we should just do the general annotation, but
+> there's always the risk for false positives. Plus I'm assuming that
+> the core fs and io code is a lot better reviewed and tested than
+> random mmu notifier code in drivers. Hence why I decide to only
+> annotate for that specific case.
+> 
+> Furthermore even if we'd create a lockdep map for direct reclaim, we'd
+> still need to explicit pull in the mmu notifier map - there's a lot
+> more places that do pte invalidation than just direct reclaim, these
+> two contexts arent the same.
+> 
+> Note that the mmu notifiers needing their own independent lockdep map
+> is also the reason we can't hold them from fs_reclaim_acquire to
+> fs_reclaim_release - it would nest with the acquistion in the pte
+> invalidation code, causing a lockdep splat. And we can't remove the
+> annotations from pte invalidation and all the other places since
+> they're called from many other places than page reclaim. Hence we can
+> only do the equivalent of might_lock, but on the raw lockdep map.
+> 
+> With this we can also remove the lockdep priming added in 66204f1d2d1b
+> ("mm/mmu_notifiers: prime lockdep") since the new annotations are
+> strictly more powerful.
+> 
+> v2: Review from Thomas Hellstrom:
+> - unbotch the fs_reclaim context check, I accidentally inverted it,
+>   but it didn't blow up because I inverted it immediately
+> - fix compiling for !CONFIG_MMU_NOTIFIER
+> 
+> Cc: Thomas Hellström (Intel) <thomas_os@shipmail.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Jason Gunthorpe <jgg@mellanox.com>
+> Cc: linux-mm@kvack.org
+> Cc: linux-rdma@vger.kernel.org
+> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+> Cc: Christian König <christian.koenig@amd.com>
+> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+> ---
+> This is part of a gpu lockdep annotation series simply because it
+> really helps to catch issues where gpu subsystem locks and primitives
+> can deadlock with themselves through allocations and mmu notifiers.
+> But aside from that motivation it should be completely free-standing,
+> and can land through -mm/-rdma/-hmm or any other tree really whenever.
+> -Daniel
 
-The USB client requires the usb30_prim gdsc to be kept active for
-certain use cases, thus add the GENPD_FLAG_ACTIVE_WAKEUP flag.
+I'm still not totally clear on how all the GFP flags map to
+different behaviors, but this seems plausible to me
 
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
----
- drivers/clk/qcom/gcc-sc7180.c | 1 +
- 1 file changed, 1 insertion(+)
+At this point it should go through Andrew's tree, thanks
 
-diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc7180.c
-index ca4383e..2b3dd4e 100644
---- a/drivers/clk/qcom/gcc-sc7180.c
-+++ b/drivers/clk/qcom/gcc-sc7180.c
-@@ -2263,6 +2263,7 @@ static struct gdsc usb30_prim_gdsc = {
- 	.gdscr = 0x0f004,
- 	.pd = {
- 		.name = "usb30_prim_gdsc",
-+		.flags = GENPD_FLAG_ACTIVE_WAKEUP,
- 	},
- 	.pwrsts = PWRSTS_OFF_ON,
- };
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Acked-by: Jason Gunthorpe <jgg@mellanox.com> # For mmu_notifiers
 
+Jason
