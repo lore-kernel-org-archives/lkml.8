@@ -2,79 +2,82 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A29DAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 00:03:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF818C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 00:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 802BA20747
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 00:03:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B865B20747
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 00:04:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="XrTM444n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgFKADO (ORCPT
+        id S1726980AbgFKAEH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 20:03:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39532 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726781AbgFKADN (ORCPT
+        Wed, 10 Jun 2020 20:04:07 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:52018 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726781AbgFKAEG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 20:03:13 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1271C08C5C1;
-        Wed, 10 Jun 2020 17:03:13 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 955CC11F5F667;
-        Wed, 10 Jun 2020 17:03:12 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 17:03:09 -0700 (PDT)
-Message-Id: <20200610.170309.928494814671626769.davem@davemloft.net>
-To:     heiko@sntech.de
-Cc:     kuba@kernel.org, robh+dt@kernel.org, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        christoph.muellner@theobroma-systems.com,
-        heiko.stuebner@theobroma-systems.com
-Subject: Re: [PATCH v2 2/2] net: phy: mscc: handle the clkout control on
- some phy variants
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200609133140.1421109-2-heiko@sntech.de>
-References: <20200609133140.1421109-1-heiko@sntech.de>
-        <20200609133140.1421109-2-heiko@sntech.de>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 10 Jun 2020 17:03:13 -0700 (PDT)
+        Wed, 10 Jun 2020 20:04:06 -0400
+Received: from localhost.localdomain (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 48C3620B4778;
+        Wed, 10 Jun 2020 17:04:05 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 48C3620B4778
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1591833845;
+        bh=Jg1D9fyRRgF71SKb0UGGuUXLQN77lsoxtU1UUIl2BWQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=XrTM444nDjhTHOBImXLhSueVbU2Wzy4Ggy0tUSa/Jo4xjTjBuw0H3D1bFzMevPYbU
+         OrcfT6jIOtz1sIQuPPiRIvAZOGdsi22R19zyQrl5PIjqzyxVOswrslcVD607ykDXWt
+         Hrrsyo/cjwNW2cjMPHGKazsHroclASjfTipPXb3A=
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+To:     zohar@linux.ibm.com, sgrubb@redhat.com, paul@paul-moore.com
+Cc:     rgb@redhat.com, linux-integrity@vger.kernel.org,
+        linux-audit@redhat.com, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] integrity: Add errno field in audit message
+Date:   Wed, 10 Jun 2020 17:03:59 -0700
+Message-Id: <20200611000400.3771-1-nramas@linux.microsoft.com>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiko Stuebner <heiko@sntech.de>
-Date: Tue,  9 Jun 2020 15:31:40 +0200
+Error code is not included in the audit messages logged by
+the integrity subsystem. Add a new field namely "errno" in
+the audit message and set the value to the error code passed
+to integrity_audit_msg() in the "result" parameter.
 
-> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> 
-> At least VSC8530/8531/8540/8541 contain a clock output that can emit
-> a predefined rate of 25, 50 or 125MHz.
-> 
-> This may then feed back into the network interface as source clock.
-> So follow the example the at803x already set and introduce a
-> vsc8531,clk-out-frequency property to set that output.
-> 
-> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> ---
-> Hi Andrew,
-> 
-> I didn't change the property yet, do you have a suggestion on
-> how to name it though? Going by the other examples in the
-> ethernet-phy.yamls, something like enet-phy-clock-out-frequency ?
+Sample audit message:
 
-Andrew, please help Heiko out with the naming here so we can move
-forward on this patch series.
+[    6.284329] audit: type=1804 audit(1591756723.627:2): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=kernel op=add_boot_aggregate cause=alloc_entry errno=-12 comm="swapper/0" name="boot_aggregate" res=0
 
-Thank you.
+Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Suggested-by: Steve Grubb <sgrubb@redhat.com>
+---
+ security/integrity/integrity_audit.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/security/integrity/integrity_audit.c b/security/integrity/integrity_audit.c
+index 5109173839cc..8cbf415bb977 100644
+--- a/security/integrity/integrity_audit.c
++++ b/security/integrity/integrity_audit.c
+@@ -42,7 +42,8 @@ void integrity_audit_msg(int audit_msgno, struct inode *inode,
+ 			 from_kuid(&init_user_ns, audit_get_loginuid(current)),
+ 			 audit_get_sessionid(current));
+ 	audit_log_task_context(ab);
+-	audit_log_format(ab, " op=%s cause=%s comm=", op, cause);
++	audit_log_format(ab, " op=%s cause=%s errno=%d comm=",
++			 op, cause, result);
+ 	audit_log_untrustedstring(ab, get_task_comm(name, current));
+ 	if (fname) {
+ 		audit_log_format(ab, " name=");
+-- 
+2.27.0
+
