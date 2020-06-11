@@ -2,110 +2,126 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC02C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F04C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B3F8206A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:05:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA371206A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:06:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rAdfqTa6"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jvxxdLqp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726322AbgFKCF1 (ORCPT
+        id S1726379AbgFKCGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 22:05:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58188 "EHLO
+        Wed, 10 Jun 2020 22:06:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbgFKCF1 (ORCPT
+        with ESMTP id S1726163AbgFKCGs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 22:05:27 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4B6DC08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 19:05:25 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id x22so2623135lfd.4
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 19:05:25 -0700 (PDT)
+        Wed, 10 Jun 2020 22:06:48 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6345AC08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 19:06:48 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id d10so1841918pgn.4
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 19:06:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=hnHKIzS41GEo89Iuw03X5GmSxi7D1lwQQJW4EUMasuw=;
-        b=rAdfqTa6+gIX/5dokn44QP7FxNEPlLZQBT4iSMRctA6FapNrfwSqgJ2c6joLmBDKe2
-         KOemYJhFqy3xzk0yT3ONnQvy2RBMtcQF33RRSgw20SZRfjuFnq1PjQiSR/THpgyIA7CQ
-         ZWWDaJ/dbk687ltRarmYsbZOyFfndJhnY6qNV2QuJJXYdoj/W6LdMOoEFWoaiZCXSBHi
-         /YQWmFMdfEDninsH5hnglKA5NXGpU4E1wp+NFtTp9FXrvEX3kAjrewhz4QKHaLVQf9CN
-         3uaVYK+SqNhS7yTuct7vtMt/wlWvWzxyi0+9+2nMuhYK0wdXrBbvM+Bp/FY2Lkh9QJ0t
-         30Sg==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4Y4ynudYVEOF2bwcSaKUAcBc0jJC1pTFViDYeCyBDLg=;
+        b=jvxxdLqpo+0mRShkaVWeuKTjdbq2SY5zHyPUmlP9mEguLJSjmHKBHGLHY/cTzOCXlH
+         eB3qRpNpvIRDJNO6JSxhOVYAWeI1bubmvS8iGittDjXx1zJkHd9kKOYlFpBODIyQu0vG
+         bsc7fBBrlfcKF/fevWNzdttAJeifoXfQhjkps=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=hnHKIzS41GEo89Iuw03X5GmSxi7D1lwQQJW4EUMasuw=;
-        b=fkZRHnFlrlucAnMZzXBKbNXuLr3VoHm9BIZ2WVBkJJQ2qdAzLjO2QYB44l3boMH/AN
-         Biq4lebmC8/qE3a/gDHxAS4jBPKEMg1S6+rWnn+bgPe1AJ85xNiMfYQI1PZRxJN7wbFW
-         jHP+0f0vM9TrO9bxSsZK6ISm6ZvYMsm0y+7/4xkqRN0+Hh+/Tz/U7nnKRdGoQwJfIoHN
-         Q7siRi5klbM/+0eI6nHui3UK9DDbf/6coLvzjriQcmFh7ch0mSJ012nwRLxDiTbOPOmk
-         u3ZDR0qAsXS6JUd9mW/Vl3P/RB+TYWqh7zE5qyXOfW7IsytF1wZtiVrAQMqVrQjRwnx3
-         +WVg==
-X-Gm-Message-State: AOAM530F6ad1TXfyfxZ4IQO6YuJk4BIMmKIUcC2aAnoDbvR4wrbHe1KR
-        mr7atz5yG03g32HW4/yIyStelmMMlgrjxELIYjXqkYtdRcQ=
-X-Google-Smtp-Source: ABdhPJzdqqERhweDWlto+RkiPjeDngTuAhrvRQ5bexxWheNvxTjVEXuD7WA3Dq8HdYyFsrbPRvJ3RVfEywt0VIlzgVc=
-X-Received: by 2002:a19:6554:: with SMTP id c20mr3051122lfj.140.1591841123919;
- Wed, 10 Jun 2020 19:05:23 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4Y4ynudYVEOF2bwcSaKUAcBc0jJC1pTFViDYeCyBDLg=;
+        b=hkSESyMcbjmHrNxxqD6myiM1HjouP1SloKcTD7FfFom3lzDD8I8KqQ/VaHb3Ln8XFs
+         3IXftrvStEnRuOlbhMvwnGRMErw/RMijhJqxrgquUQ47fGx2kSIhMZ6zkay0yEYynCGQ
+         rfVNJFVyeZxfcv+L8PnTMl4fdTJMg1aJOCAhuBSkQgFbpsHhDFZJXGgdWUnN6ZCKHUkh
+         +ToJBOtjmvMbsbevEZ8WeaAaoONGFDIXCS1/Z37pGO44HKfpwLbvMm8iEehu+jHh8EEB
+         xLkngtw5NovEu8Qn0xA7L3lzXGV0Iiw7kEMZi7Ugs1TxU4Q/5ewJDaK240qumwctx0oy
+         QObA==
+X-Gm-Message-State: AOAM530LcU5n3SSnN801puC70YNfNsi8x3ZTr4GUbi8REtWXtLrEZU7S
+        OZGD2hJJLo2174I7hhPvmcMm2w==
+X-Google-Smtp-Source: ABdhPJxLvo0RCihK079Elloiqp25pBxh1dZDJDeBEoYZ+9fEvWiGN7wubOfZ1xMsnxVkw0tD3DWWMQ==
+X-Received: by 2002:a62:1c46:: with SMTP id c67mr5101876pfc.170.1591841207862;
+        Wed, 10 Jun 2020 19:06:47 -0700 (PDT)
+Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
+        by smtp.gmail.com with ESMTPSA id u14sm1291983pfk.211.2020.06.10.19.06.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2020 19:06:47 -0700 (PDT)
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+To:     heiko@sntech.de, linux-rockchip@lists.infradead.org
+Cc:     linux-bluetooth@vger.kernel.org,
+        chromeos-bluetooth-upstreaming@chromium.org, mka@chromium.org,
+        dianders@chromium.org,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] ARM: dts: rockchip: Add marvell BT irq config
+Date:   Wed, 10 Jun 2020 19:06:42 -0700
+Message-Id: <20200610190622.1.I66864be898aa835ccb66b6cd5220d0b082338a81@changeid>
+X-Mailer: git-send-email 2.27.0.278.ge193c7cf3a9-goog
 MIME-Version: 1.0
-References: <20200609060137.143501-1-daeho43@gmail.com> <20200609165107.GA228564@gmail.com>
- <CACOAw_xEZ+au9yhFerq9amkRO62Dzxj7h71gEc=i16ReYu5xrg@mail.gmail.com>
- <20200610031532.GA6286@sol.localdomain> <CACOAw_wErOPC=Kf3UU8nFGhWRy84ZnCeJbsyPhSCcXv51B_XxQ@mail.gmail.com>
- <CACOAw_zka6d06RxFOUTwEV7B6o8A2-_6FvqWh_A1nJ0+7FU9yQ@mail.gmail.com>
- <CACOAw_yc4hxdyxyO+Lb4MArHek1tP4wxCq0tezWOocgqvK+tqg@mail.gmail.com>
- <20200611000037.GC1339@sol.localdomain> <CACOAw_xqHnL0MthPykSrKJ8OXez-XigCFgC-vwm_keEZh_g8zw@mail.gmail.com>
- <20200611015651.GD1339@sol.localdomain>
-In-Reply-To: <20200611015651.GD1339@sol.localdomain>
-From:   Daeho Jeong <daeho43@gmail.com>
-Date:   Thu, 11 Jun 2020 11:05:12 +0900
-Message-ID: <CACOAw_x3yC8ELYj7qSC7PM2RwpYRwQu7mT1vJhoFUQX4uzx2=w@mail.gmail.com>
-Subject: Re: [f2fs-dev] [PATCH] f2fs: add F2FS_IOC_SEC_TRIM_FILE ioctl
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com,
-        Daeho Jeong <daehojeong@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ok, I got it. Thanks for quick response~ :)
+Veyron Jaq and Mighty both use the Marvel 8897 WiFi+BT chip. Add wakeup
+and pinctrl block to devicetree so the btmrvl driver can correctly
+configure the wakeup interrupt.
 
-2020=EB=85=84 6=EC=9B=94 11=EC=9D=BC (=EB=AA=A9) =EC=98=A4=EC=A0=84 10:56, =
-Eric Biggers <ebiggers@kernel.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> On Thu, Jun 11, 2020 at 09:23:23AM +0900, Daeho Jeong wrote:
-> > Yes, I saw the implementation in vfs_write().
-> > But if we use mnt_want_write_file() here, it'll call mnt_clone_write()
-> > internally if the file is already open in write mode.
-> > Don't you think the below thing is needed? We can increase the counter
-> > each of them, open and ioctl, like other filesystems such as ext4.
-> >
-> > int mnt_clone_write(struct vfsmount *mnt)
-> > {
-> >         /* superblock may be r/o */
-> >         if (__mnt_is_readonly(mnt))
-> >                 return -EROFS;
-> >         preempt_disable();
-> >         mnt_inc_writers(real_mount(mnt));
-> >         preempt_enable();
-> >         return 0;
-> > }
->
-> No, this seems to be left over from when mnt_want_write_file() was paired=
- with
-> mnt_drop_write() instead of mnt_drop_write_file().  I sent a patch to rem=
-ove it:
-> https://lkml.kernel.org/r/20200611014945.237210-1-ebiggers@kernel.org
->
-> - Eric
+Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Reviewed-by: Reviewed-by: Douglas Anderson <dianders@chromium.org>
+---
+The Veyron Mighty Chromebook (rk3288 based board) is missing the wake
+configuration for Bluetooth. Without this change, the wake irq was not
+configurable and wake on Bluetooth was broken.
+
+I verified this change with additional changes in the Bluetooth driver
+(the series is at https://patchwork.kernel.org/cover/11599101/). The
+driver changes are not necessary for this dts change and shouldn't block
+it.
+
+
+ arch/arm/boot/dts/rk3288-veyron-jaq.dts | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/arch/arm/boot/dts/rk3288-veyron-jaq.dts b/arch/arm/boot/dts/rk3288-veyron-jaq.dts
+index 171ba6185b6d39..976c0c17a71199 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-jaq.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-jaq.dts
+@@ -51,6 +51,21 @@ &sdmmc {
+ 			&sdmmc_bus4>;
+ };
+ 
++&sdio0 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	btmrvl: btmrvl@2 {
++		compatible = "marvell,sd8897-bt";
++		reg = <2>;
++		interrupt-parent = <&gpio4>;
++		interrupts = <RK_PD7 IRQ_TYPE_LEVEL_LOW>;
++		marvell,wakeup-pin = /bits/ 16 <13>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&bt_host_wake_l>;
++	};
++};
++
+ &vcc_5v {
+ 	enable-active-high;
+ 	gpio = <&gpio7 RK_PC5 GPIO_ACTIVE_HIGH>;
+-- 
+2.27.0.278.ge193c7cf3a9-goog
+
