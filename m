@@ -2,126 +2,116 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F04C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E205AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA371206A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:06:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jvxxdLqp"
+	by mail.kernel.org (Postfix) with ESMTP id C404C206A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:07:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbgFKCGt (ORCPT
+        id S1726445AbgFKCHd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 22:06:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58396 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbgFKCGs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 22:06:48 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6345AC08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 19:06:48 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id d10so1841918pgn.4
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 19:06:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4Y4ynudYVEOF2bwcSaKUAcBc0jJC1pTFViDYeCyBDLg=;
-        b=jvxxdLqpo+0mRShkaVWeuKTjdbq2SY5zHyPUmlP9mEguLJSjmHKBHGLHY/cTzOCXlH
-         eB3qRpNpvIRDJNO6JSxhOVYAWeI1bubmvS8iGittDjXx1zJkHd9kKOYlFpBODIyQu0vG
-         bsc7fBBrlfcKF/fevWNzdttAJeifoXfQhjkps=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4Y4ynudYVEOF2bwcSaKUAcBc0jJC1pTFViDYeCyBDLg=;
-        b=hkSESyMcbjmHrNxxqD6myiM1HjouP1SloKcTD7FfFom3lzDD8I8KqQ/VaHb3Ln8XFs
-         3IXftrvStEnRuOlbhMvwnGRMErw/RMijhJqxrgquUQ47fGx2kSIhMZ6zkay0yEYynCGQ
-         rfVNJFVyeZxfcv+L8PnTMl4fdTJMg1aJOCAhuBSkQgFbpsHhDFZJXGgdWUnN6ZCKHUkh
-         +ToJBOtjmvMbsbevEZ8WeaAaoONGFDIXCS1/Z37pGO44HKfpwLbvMm8iEehu+jHh8EEB
-         xLkngtw5NovEu8Qn0xA7L3lzXGV0Iiw7kEMZi7Ugs1TxU4Q/5ewJDaK240qumwctx0oy
-         QObA==
-X-Gm-Message-State: AOAM530LcU5n3SSnN801puC70YNfNsi8x3ZTr4GUbi8REtWXtLrEZU7S
-        OZGD2hJJLo2174I7hhPvmcMm2w==
-X-Google-Smtp-Source: ABdhPJxLvo0RCihK079Elloiqp25pBxh1dZDJDeBEoYZ+9fEvWiGN7wubOfZ1xMsnxVkw0tD3DWWMQ==
-X-Received: by 2002:a62:1c46:: with SMTP id c67mr5101876pfc.170.1591841207862;
-        Wed, 10 Jun 2020 19:06:47 -0700 (PDT)
-Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
-        by smtp.gmail.com with ESMTPSA id u14sm1291983pfk.211.2020.06.10.19.06.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 19:06:47 -0700 (PDT)
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-To:     heiko@sntech.de, linux-rockchip@lists.infradead.org
-Cc:     linux-bluetooth@vger.kernel.org,
-        chromeos-bluetooth-upstreaming@chromium.org, mka@chromium.org,
-        dianders@chromium.org,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] ARM: dts: rockchip: Add marvell BT irq config
-Date:   Wed, 10 Jun 2020 19:06:42 -0700
-Message-Id: <20200610190622.1.I66864be898aa835ccb66b6cd5220d0b082338a81@changeid>
-X-Mailer: git-send-email 2.27.0.278.ge193c7cf3a9-goog
+        Wed, 10 Jun 2020 22:07:33 -0400
+Received: from mga02.intel.com ([134.134.136.20]:18297 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726265AbgFKCHc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 22:07:32 -0400
+IronPort-SDR: MM2iTVu7nZ5lej1oVUpCCr8KyskROO1SZFCSwxBudqgb72LN7CHCLu9g5+7d/8JUI9NzvppZeK
+ 4rAJ8rBr/g6w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2020 19:07:32 -0700
+IronPort-SDR: /Ge1PVEpVrBbA2100P3pQNHJyfAEGcrkEFRiCLJorfdprEtApfcMvqffyphjlsELMvbEEkWC1y
+ HMDXYRYgadTA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,498,1583222400"; 
+   d="scan'208";a="275176620"
+Received: from shao2-debian.sh.intel.com (HELO localhost) ([10.239.13.3])
+  by orsmga006.jf.intel.com with ESMTP; 10 Jun 2020 19:07:26 -0700
+Date:   Thu, 11 Jun 2020 10:06:57 +0800
+From:   kernel test robot <rong.a.chen@intel.com>
+To:     Ian Kent <raven@themaw.net>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, Tejun Heo <tj@kernel.org>,
+        Rick Lindsley <ricklind@linux.vnet.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        David Howells <dhowells@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        lkp@lists.01.org
+Subject: Re: [kernfs] ea7c5fc39a: stress-ng.stream.ops_per_sec 11827.2%
+ improvement
+Message-ID: <20200611020657.GI12456@shao2-debian>
+References: <159038562460.276051.5267555021380171295.stgit@mickey.themaw.net>
+ <20200606155216.GU12456@shao2-debian>
+ <20200606181802.GA15638@kroah.com>
+ <5df6bec6f1b332c993474782c08fe8db30bffddc.camel@themaw.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <5df6bec6f1b332c993474782c08fe8db30bffddc.camel@themaw.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Veyron Jaq and Mighty both use the Marvel 8897 WiFi+BT chip. Add wakeup
-and pinctrl block to devicetree so the btmrvl driver can correctly
-configure the wakeup interrupt.
+On Sun, Jun 07, 2020 at 09:13:08AM +0800, Ian Kent wrote:
+> On Sat, 2020-06-06 at 20:18 +0200, Greg Kroah-Hartman wrote:
+> > On Sat, Jun 06, 2020 at 11:52:16PM +0800, kernel test robot wrote:
+> > > Greeting,
+> > > 
+> > > FYI, we noticed a 11827.2% improvement of stress-
+> > > ng.stream.ops_per_sec due to commit:
+> > > 
+> > > 
+> > > commit: ea7c5fc39ab005b501e0c7666c29db36321e4f74 ("[PATCH 1/4]
+> > > kernfs: switch kernfs to use an rwsem")
+> > > url: 
+> > > https://github.com/0day-ci/linux/commits/Ian-Kent/kernfs-proposed-locking-and-concurrency-improvement/20200525-134849
+> > > 
+> > 
+> > Seriously?  That's a huge performance increase, and one that feels
+> > really odd.  Why would a stress-ng test be touching sysfs?
+> 
+> That is unusually high even if there's a lot of sysfs or kernfs
+> activity and that patch shouldn't improve VFS path walk contention
+> very much even if it is present.
+> 
+> Maybe I've missed something, and the information provided doesn't
+> seem to be quite enough to even make a start on it.
+> 
+> That's going to need some analysis which, for my part, will need to
+> wait probably until around rc1 time frame to allow me to get through
+> the push down stack (reactive, postponed due to other priorities) of
+> jobs I have in order to get back to the fifo queue (longer term tasks,
+> of which this is one) list of jobs I need to do as well, ;)
+> 
+> Please, kernel test robot, more information about this test and what
+> it's doing.
+> 
 
-Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Reviewed-by: Reviewed-by: Douglas Anderson <dianders@chromium.org>
----
-The Veyron Mighty Chromebook (rk3288 based board) is missing the wake
-configuration for Bluetooth. Without this change, the wake irq was not
-configurable and wake on Bluetooth was broken.
+Hi Ian,
 
-I verified this change with additional changes in the Bluetooth driver
-(the series is at https://patchwork.kernel.org/cover/11599101/). The
-driver changes are not necessary for this dts change and shouldn't block
-it.
+We increased the timeout of stress-ng from 1s to 32s, and there's only
+3% improvement of stress-ng.stream.ops_per_sec:
 
+fefcfc968723caf9  ea7c5fc39ab005b501e0c7666c  testcase/testparams/testbox
+----------------  --------------------------  ---------------------------
+         %stddev      change         %stddev
+             \          |                \  
+     10686               3%      11037        stress-ng/cpu-cache-performance-1HDD-100%-32s-ucode=0x500002c/lkp-csl-2sp5
+     10686               3%      11037        GEO-MEAN stress-ng.stream.ops_per_sec
 
- arch/arm/boot/dts/rk3288-veyron-jaq.dts | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+It seems the result of stress-ng is inaccurate if test time too
+short, we'll increase the test time to avoid unreasonable results,
+sorry for the inconvenience.
 
-diff --git a/arch/arm/boot/dts/rk3288-veyron-jaq.dts b/arch/arm/boot/dts/rk3288-veyron-jaq.dts
-index 171ba6185b6d39..976c0c17a71199 100644
---- a/arch/arm/boot/dts/rk3288-veyron-jaq.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-jaq.dts
-@@ -51,6 +51,21 @@ &sdmmc {
- 			&sdmmc_bus4>;
- };
- 
-+&sdio0 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	btmrvl: btmrvl@2 {
-+		compatible = "marvell,sd8897-bt";
-+		reg = <2>;
-+		interrupt-parent = <&gpio4>;
-+		interrupts = <RK_PD7 IRQ_TYPE_LEVEL_LOW>;
-+		marvell,wakeup-pin = /bits/ 16 <13>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&bt_host_wake_l>;
-+	};
-+};
-+
- &vcc_5v {
- 	enable-active-high;
- 	gpio = <&gpio7 RK_PC5 GPIO_ACTIVE_HIGH>;
--- 
-2.27.0.278.ge193c7cf3a9-goog
-
+Best Regards,
+Rong Chen
