@@ -2,239 +2,124 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E024EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 499A3C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EAC5207C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:04:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earth.li header.i=@earth.li header.b="MJLDHgLH"
+	by mail.kernel.org (Postfix) with ESMTP id 18C64207ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:06:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591873577;
+	bh=5xztsiOiY57NOrldvHQaSbPHBI/nqb2sD9DT5pU4IM0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dUo2N4rOz+dpD5OfKMQJupRHtxrU0NiXy+xkGS9vkFTPROLdRrllWNFeQYeJBegKo
+	 RXFLgjyukXpILgSUyb5Lac5WylZnpBuSVj0yI8tdkq0uMAlDZzZrUqWBW2zGR1vosA
+	 YuXzXoo3acWjfQoadquK1zfzfAqfcmTlErOMfPm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbgFKLEs (ORCPT
+        id S1727845AbgFKLGP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 07:04:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56086 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727844AbgFKLEr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 07:04:47 -0400
-Received: from the.earth.li (the.earth.li [IPv6:2a00:1098:86:4d:c0ff:ee:15:900d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 797BBC08C5C1;
-        Thu, 11 Jun 2020 04:04:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
-         s=the; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject
-        :Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=CvFbGnYz+lQYgHeXrLshL7auugXlwdA1VE+LJ9ysFF8=; b=MJLDHgLH+pptuIbbqk2Easu/Jy
-        uj1sbNqVWlBmqWIuzK+STMcsTHlTU/PyX7bnjedWM3uMy5ElZVxTWNORpEsJsxye1h+pVIi1KZOU0
-        A7tg/LDeDYEsiPbz178HNugLNUeP86rDklgAdledlwdVMMm7lsL0BB1YEy+h9ebnLGyRA/f3FDxqF
-        wHVtmB9N8gPqVDrKKgT7Esc3BCpvmY9rhDX9EvNv9p6KovOCzv4Q1BtShIcowaOsZT73gkoJNvpnQ
-        GoUXUILWVGF+ni8zUmrcHyVqubeoc9s1vgkWgSfxrDAO/zZiZVffWLATRKBEmli2wH1DwXw6N8IpX
-        rCjx/BuA==;
-Received: from noodles by the.earth.li with local (Exim 4.92)
-        (envelope-from <noodles@earth.li>)
-        id 1jjL0h-00006R-9p; Thu, 11 Jun 2020 12:04:39 +0100
-Date:   Thu, 11 Jun 2020 12:04:39 +0100
-From:   Jonathan McDowell <noodles@earth.li>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] net: dsa: qca8k: Switch to PHYLINK instead of PHYLIB
-Message-ID: <20200611110439.GV311@earth.li>
-References: <cover.1591816172.git.noodles@earth.li>
- <78519bc421a1cb7000a68d05e43c4208b26f37e5.1591816172.git.noodles@earth.li>
- <CA+h21hr-5TCeYAiPueKce1Jo+s76mzDUaTpaM6JtjQj-mJPO6w@mail.gmail.com>
+        Thu, 11 Jun 2020 07:06:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41998 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727045AbgFKLGB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 07:06:01 -0400
+Received: from localhost (unknown [171.61.66.58])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 806C220760;
+        Thu, 11 Jun 2020 11:05:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591873560;
+        bh=5xztsiOiY57NOrldvHQaSbPHBI/nqb2sD9DT5pU4IM0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sWexdplgNcNA9c4C27/MCEKAPWZINpDcVLeeaYvTIVgXDrBgjurvVJdMDiH/K5ygC
+         IvzTB6fA/KG/DMLc0BjkcTKlqTpulq+tcD3IssoXMrdXXX/c5Fb2TBAtABMKDMv/Ws
+         qi4WZhhY4jCGHoYO82PMV2FX91TP3uncmzNzVdwg=
+Date:   Thu, 11 Jun 2020 16:35:56 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org,
+        tiwai@suse.com, linux-kernel@vger.kernel.org, broonie@kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [RFC PATCH] ALSA: compress: Fix gapless playback state machine
+Message-ID: <20200611110556.GD1393454@vkoul-mobl>
+References: <20200610100729.362-1-srinivas.kandagatla@linaro.org>
+ <817d009e-fa09-e897-cfc3-997bf1dd5e30@perex.cz>
+ <20200610105820.GA1393454@vkoul-mobl>
+ <20200611084659.GO71940@ediswmail.ad.cirrus.com>
+ <6a984302-ff01-e326-d338-e50e1f532cd9@perex.cz>
+ <20200611094423.GB1393454@vkoul-mobl>
+ <20200611104234.GQ71940@ediswmail.ad.cirrus.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+h21hr-5TCeYAiPueKce1Jo+s76mzDUaTpaM6JtjQj-mJPO6w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200611104234.GQ71940@ediswmail.ad.cirrus.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 11:58:43AM +0300, Vladimir Oltean wrote:
-> Hi Jonathan,
+On 11-06-20, 10:42, Charles Keepax wrote:
+> On Thu, Jun 11, 2020 at 03:14:23PM +0530, Vinod Koul wrote:
+> > On 11-06-20, 11:09, Jaroslav Kysela wrote:
+> > > Dne 11. 06. 20 v 10:46 Charles Keepax napsal(a):
+> > > > On Wed, Jun 10, 2020 at 04:28:20PM +0530, Vinod Koul wrote:
+> > > > > On 10-06-20, 12:40, Jaroslav Kysela wrote:
+> > > > > > Dne 10. 06. 20 v 12:07 Srinivas Kandagatla napsal(a):
+> > > > > > > Here is the sequence of events and state transitions:
+> > > > > > > 
+> > > > > > > 1. set_params (Track 1), state =  SNDRV_PCM_STATE_SETUP
+> > > > > > > 2. set_metadata (Track 1), no state change, state = SNDRV_PCM_STATE_SETUP
+> > > > > > > 3. fill and trigger start (Track 1), state = SNDRV_PCM_STATE_RUNNING
+> > > > > > > 4. set_next_track (Track 2), state = SNDRV_PCM_STATE_RUNNING
+> > > > > > > 5. partial_drain (Track 1), state = SNDRV_PCM_STATE_SETUP
+> > > > > > > 6  snd_compr_drain_notify (Track 1), state = SNDRV_PCM_STATE_SETUP
+> > > > > > > 7. fill data (Track 2), state = SNDRV_PCM_STATE_PREPARED
+> > > > > > > 8. set_metadata (Track 3), no state change, state = SNDRV_PCM_STATE_PREPARED
+> > > > > > > 9. set_next_track (Track 3), !! FAILURE as state != SNDRV_PCM_STATE_RUNNING
+> > Yeah sorry I overlooked that case and was thinking of it being invoked
+> > from driver!
+> > 
+> > Yes this would make the snd_compr_stop() behave incorrectly.. so this
+> > cant be done as proposed.
+> > 
+> > But we still need to set the draining stream state properly and I am
+> > thinking below now:
+> > 
+> > diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
+> > index 509290f2efa8..9aba851732d7 100644
+> > --- a/sound/core/compress_offload.c
+> > +++ b/sound/core/compress_offload.c
+> > @@ -929,7 +929,9 @@ static int snd_compr_partial_drain(struct snd_compr_stream *stream)
+> >         }
+> >  
+> >         stream->next_track = false;
+> > -       return snd_compress_wait_for_drain(stream);
+> > +       retval = snd_compress_wait_for_drain(stream);
+> > +       stream->runtime->state = SNDRV_PCM_STATE_RUNNING;
+> > +       return retval;
 > 
-> On Wed, 10 Jun 2020 at 23:19, Jonathan McDowell <noodles@earth.li> wrote:
-> >
-> > Update the driver to use the new PHYLINK callbacks, removing the
-> > legacy adjust_link callback.
-> >
-> > Signed-off-by: Jonathan McDowell <noodles@earth.li>
-...
-> >  static void
-> > -qca8k_adjust_link(struct dsa_switch *ds, int port, struct phy_device *phy)
-> > +qca8k_phylink_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
-> > +                        const struct phylink_link_state *state)
-> >  {
-> >         struct qca8k_priv *priv = ds->priv;
-> >         u32 reg;
-> >
-> > -       /* Force fixed-link setting for CPU port, skip others. */
-> > -       if (!phy_is_pseudo_fixed_link(phy))
-> > +       switch (port) {
-> > +       case 0: /* 1st CPU port */
-> > +               if (state->interface != PHY_INTERFACE_MODE_RGMII &&
-> > +                   state->interface != PHY_INTERFACE_MODE_RGMII_ID &&
-> > +                   state->interface != PHY_INTERFACE_MODE_SGMII)
-> > +                       return;
-> > +
-> > +               reg = QCA8K_REG_PORT0_PAD_CTRL;
-> > +               break;
-> > +       case 1:
-> > +       case 2:
-> > +       case 3:
-> > +       case 4:
-> > +       case 5:
-> > +               /* Internal PHY, nothing to do */
-> > +               return;
-> > +       case 6: /* 2nd CPU port / external PHY */
-> > +               if (state->interface != PHY_INTERFACE_MODE_RGMII &&
-> > +                   state->interface != PHY_INTERFACE_MODE_RGMII_ID &&
-> > +                   state->interface != PHY_INTERFACE_MODE_SGMII &&
-> > +                   state->interface != PHY_INTERFACE_MODE_1000BASEX)
-> > +                       return;
-> > +
-> > +               reg = QCA8K_REG_PORT6_PAD_CTRL;
-> > +               break;
-> > +       default:
-> > +               dev_err(ds->dev, "%s: unsupported port: %i\n", __func__, port);
-> > +               return;
-> > +       }
-> > +
-> > +       if (port != 6 && phylink_autoneg_inband(mode)) {
-> > +               dev_err(ds->dev, "%s: in-band negotiation unsupported\n",
-> > +                       __func__);
-> > +               return;
-> > +       }
-> > +
-> > +       switch (state->interface) {
-> > +       case PHY_INTERFACE_MODE_RGMII:
-> > +               /* RGMII mode means no delay so don't enable the delay */
-> > +               qca8k_write(priv, reg, QCA8K_PORT_PAD_RGMII_EN);
-> > +               break;
-> > +       case PHY_INTERFACE_MODE_RGMII_ID:
-> > +               /* RGMII_ID needs internal delay. This is enabled through
-> > +                * PORT5_PAD_CTRL for all ports, rather than individual port
-> > +                * registers
-> > +                */
-> > +               qca8k_write(priv, reg,
-> > +                           QCA8K_PORT_PAD_RGMII_EN |
-> > +                           QCA8K_PORT_PAD_RGMII_TX_DELAY(QCA8K_MAX_DELAY) |
-> > +                           QCA8K_PORT_PAD_RGMII_RX_DELAY(QCA8K_MAX_DELAY));
-> 
-> 3 points here:
-> - Should you prevalidate the device tree bindings that in case rgmii*
-> mode are used, same delay settings are applied to all ports?
-> - Can any RGMII port be connected to a PHY? If it can, won't the PHY
-> enable delays too for RGMII_ID? Will the link work in that case?
-> - Should you treat RGMII_TX_DELAY and RGMII_RX_DELAY independently for
-> the case where there may be PCB traces?
+> This is looking better, I think you probably need to make the
+> switch to RUNNING conditional on snd_compress_wait_for_drain
+> succeeding, as the state should remain in DRAINING if we are
+> interrupted or some such.
 
-The intent with this patch was to pull out the conversion to PHYLINK to
-be stand-alone, with no functional changes, as request by Andrew. I
-think there's room for some future clean-up here around the RGMII
-options, but my main purpose in this patch set is to improve the SGMII
-portion which my hardware uses that doesn't work with mainline.
+Hmmm, only interrupt would be terminate, so yes we should not do running
+conditionally here..
 
-> > +static void
-> > +qca8k_phylink_validate(struct dsa_switch *ds, int port,
-> > +                      unsigned long *supported,
-> > +                      struct phylink_link_state *state)
-> > +{
-> > +       __ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
-> > +
-> > +       switch (port) {
-> > +       case 0: /* 1st CPU port */
-> > +               if (state->interface != PHY_INTERFACE_MODE_NA &&
-> > +                   state->interface != PHY_INTERFACE_MODE_RGMII &&
-> > +                   state->interface != PHY_INTERFACE_MODE_RGMII_ID &&
-> > +                   state->interface != PHY_INTERFACE_MODE_SGMII)
-> > +                       goto unsupported;
-> >                 break;
-> > -       case 100:
-> > -               reg = QCA8K_PORT_STATUS_SPEED_100;
-> > +       case 1:
-> > +       case 2:
-> > +       case 3:
-> > +       case 4:
-> > +       case 5:
-> > +               /* Internal PHY */
-> > +               if (state->interface != PHY_INTERFACE_MODE_NA &&
-> > +                   state->interface != PHY_INTERFACE_MODE_GMII)
-> > +                       goto unsupported;
-> >                 break;
-> > -       case 1000:
-> > -               reg = QCA8K_PORT_STATUS_SPEED_1000;
-> > +       case 6: /* 2nd CPU port / external PHY */
-> > +               if (state->interface != PHY_INTERFACE_MODE_NA &&
-> > +                   state->interface != PHY_INTERFACE_MODE_RGMII &&
-> > +                   state->interface != PHY_INTERFACE_MODE_RGMII_ID &&
-> > +                   state->interface != PHY_INTERFACE_MODE_SGMII &&
-> > +                   state->interface != PHY_INTERFACE_MODE_1000BASEX)
-> > +                       goto unsupported;
-> >                 break;
-> >         default:
-> > -               dev_dbg(priv->dev, "port%d link speed %dMbps not supported.\n",
-> > -                       port, phy->speed);
-> > +               dev_err(ds->dev, "%s: unsupported port: %i\n", __func__, port);
-> 
-> phylink has a better validation error message than this, I'd say this
-> is unnecessary.
+> I also have a slight concern that since
+> snd_compress_wait_for_drain, releases the lock the set_next_track
+> could come in before the state is moved to RUNNING, but I guess
+> from user-spaces perspective that is the same as it coming in
+> whilst the state is still DRAINING, so should be handled fine?
 
-Ok.
-
-> > +static void
-> > +qca8k_phylink_mac_link_up(struct dsa_switch *ds, int port, unsigned int mode,
-> > +                         phy_interface_t interface, struct phy_device *phydev,
-> > +                         int speed, int duplex, bool tx_pause, bool rx_pause)
-> > +{
-> > +       struct qca8k_priv *priv = ds->priv;
-> > +       u32 reg;
-> > +
-> > +       if (phylink_autoneg_inband(mode)) {
-> > +               reg = QCA8K_PORT_STATUS_LINK_AUTO;
-> > +       } else {
-> > +               switch (speed) {
-> > +               case SPEED_10:
-> > +                       reg = QCA8K_PORT_STATUS_SPEED_10;
-> > +                       break;
-> > +               case SPEED_100:
-> > +                       reg = QCA8K_PORT_STATUS_SPEED_100;
-> > +                       break;
-> > +               case SPEED_1000:
-> > +                       reg = QCA8K_PORT_STATUS_SPEED_1000;
-> > +                       break;
-> > +               default:
-> > +                       reg = QCA8K_PORT_STATUS_LINK_AUTO;
-> > +                       break;
-> > +               }
-> > +
-> > +               if (duplex == DUPLEX_FULL)
-> > +                       reg |= QCA8K_PORT_STATUS_DUPLEX;
-> > +
-> > +               if (rx_pause | dsa_is_cpu_port(ds, port))
-> 
-> I think it is odd to do bitwise OR on booleans.
-
-I agree; will fix in the next spin.
-
-J.
+yeah userspace is blocked on this call, till signalling for partial
+drain is done. So it should work. But next_track 'should' be signalled
+before this, but yes we need to recheck this logic here and ensure no
+gaps are left in gapless :-)
 
 -- 
-I get the feeling that I've been cheated.
+~Vinod
