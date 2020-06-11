@@ -2,214 +2,128 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F9DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA97C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E934D206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:31:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B1EE206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:34:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o9hdq+lD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727963AbgFKSbY (ORCPT
+        id S1727845AbgFKSec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 14:31:24 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:30427 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726386AbgFKSbX (ORCPT
+        Thu, 11 Jun 2020 14:34:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41364 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726386AbgFKSea (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 14:31:23 -0400
-Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 11 Jun 2020 11:31:22 -0700
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 11 Jun 2020 11:31:21 -0700
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 1176E1603; Thu, 11 Jun 2020 11:31:21 -0700 (PDT)
-Date:   Thu, 11 Jun 2020 11:31:21 -0700
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     linux-pwm@vger.kernel.org,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        David Collins <collinsd@codeaurora.org>,
-        linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v16 00/11] Convert PWM period and duty cycle to u64
-Message-ID: <20200611183120.GB9335@codeaurora.org>
-References: <cover.1591136989.git.gurus@codeaurora.org>
- <20200611165505.GA9335@codeaurora.org>
- <20200611182430.GA2293927@ulmo>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200611182430.GA2293927@ulmo>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Thu, 11 Jun 2020 14:34:30 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 790CAC08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 11:34:29 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id e192so7501657ybf.17
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 11:34:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=COXpdfYzdd6T2PLhteaDM1tUQElcqbQJ6tIcGD3EDRg=;
+        b=o9hdq+lDTGdQ7pL6eS2ne+STn2zEfYAr6Sd9feD0gHCYpOzUsbmVOKpoiBtQP4hRhP
+         0vd+WlglqyfcLJ9dwxfzJSViO0X4kGcUGdetOJVW7F8FeiZ3juWzPuV4sYw8rkN4ZUFy
+         ylPg5u3vQGVe4MIfSCCWw6tJHtuBZQwPWcIIZrmAC2kmzRmTpimzaiVMSBkDHqWhdaOb
+         ltCNz/98+IdgtXrP5J6B/vhq33ooa+nN/IByEuPkV65mBCzcpLEHo9u945AUVWVPhjSJ
+         vXHubQ1UlbdcVVpDy6aFT+gAJEiM3RnQ/3xkqa7FelQYD7aZpbTIWafK9jGSDpUUzR1q
+         HAHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=COXpdfYzdd6T2PLhteaDM1tUQElcqbQJ6tIcGD3EDRg=;
+        b=NbisULiaOD08I4CflxApm2xjp/ezUXpeNvd1H/7FcB+cjYCSOnPc+vJtnWo1lsnNzw
+         DonXsrMkix7kDKIUMnUCA9bQ/nkIZX2hvKz/G/FmyoJtas+xOpG6gB77EKpPY6fgLcaQ
+         93nRCTpG9gTAgGmTqcKi8gq4IrGpaZxj3PB1s8nLJE+aRg1+tvW6fWAYroON3YAGbUms
+         hho5qEn+mdNtWw6RozGb8AZXcV2SqB+1k2DHFCdS1bVNX2Azz0F/ggo5xMtvwDvaQ5N9
+         WpmiKvOfA23kCgkurLBCgEgT5isej9ucokg3fRWZNKDvc2O6OwfSjZqPs2KbZIbHGo5r
+         6ZKw==
+X-Gm-Message-State: AOAM533U6W6wII4ArxIYWpHUeTE7G1PS3zA2RtaqTxkS8fMrlShDLbhv
+        xUessvGIDpgrb0A357U0LAPw/lGC4Q==
+X-Google-Smtp-Source: ABdhPJycnzJzYBE1uCXDWobHSfMgy7yeM2Oc8KQ/6LbE+KEXMBUsHdFKo8h/UNp7B8daeNUFZH40Nkv7kQ==
+X-Received: by 2002:a25:3103:: with SMTP id x3mr17950241ybx.36.1591900468187;
+ Thu, 11 Jun 2020 11:34:28 -0700 (PDT)
+Date:   Thu, 11 Jun 2020 18:32:35 +0000
+Message-Id: <20200611183235.37508-1-nhuck@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.278.ge193c7cf3a9-goog
+Subject: [PATCH] riscv/atomic: Fix sign extension for RV64I
+From:   Nathan Huckleberry <nhuck@google.com>
+To:     paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu
+Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Huckleberry <nhuck@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 08:24:30PM +0200, Thierry Reding wrote:
-> On Thu, Jun 11, 2020 at 09:55:05AM -0700, Guru Das Srinagesh wrote:
-> > On Tue, Jun 02, 2020 at 03:31:04PM -0700, Guru Das Srinagesh wrote:
-> > > Because period and duty cycle are defined in the PWM framework structs as ints
-> > > with units of nanoseconds, the maximum time duration that can be set is limited
-> > > to ~2.147 seconds. Consequently, applications desiring to set greater time
-> > > periods via the PWM framework are not be able to do so - like, for instance,
-> > > causing an LED to blink at an interval of 5 seconds.
-> > > 
-> > > Redefining the period and duty cycle struct members in the core PWM framework
-> > > structs as u64 values will enable larger time durations to be set and solve
-> > > this problem. Such a change to the framework mandates that drivers using these
-> > > struct members (and corresponding helper functions) also be modified correctly
-> > > in order to prevent compilation errors.
-> > > 
-> > > This patch series introduces the changes to all the drivers first, followed by
-> > > the framework change at the very end so that when the latter is applied, all
-> > > the drivers are in good shape and there are no compilation errors.
-> > > 
-> > > Changes from v15:
-> > >   -  Rebased to tip of for-next.
-> > > 
-> > > Changes from v14:
-> > >   - Collected Uwe's Acked-by for the pwm core patch.
-> > >   - Addressed comments in pwm-clps711x.c.
-> > > 
-> > > Changes from v13:
-> > >   - Pruned cc-list and added same (reduced) set of reviewers to all patches.
-> > >   - Added Lee Jones' Acked-by to the pwm_bl.c patch.
-> > >   - Added Jani Nikula's Acked-by to intel-panel.c patch.
-> > >   - Added Stephen Boyd's Acked-by to pwm-clk.c patch.
-> > >   - Addressed Geert's review comments in clps711x.c patch.
-> > > 
-> > > Changes from v12:
-> > >   - Rebased to tip of for-next
-> > >   - Collected Acked-by for sun4i
-> > >   - Reworked patch for intel-panel.c due to rebase, dropped Jani's Acked-by as
-> > >     a result
-> > > 
-> > > Changes from v11:
-> > >   - Rebased to tip of for-next.
-> > >   - Collected "Acked-by:" for v7 (unchanged) of pwm: sifive: [4]
-> > >   - Squished stm32-lp.c change with final patch in series
-> > >   - sun4i: Used nsecs_to_jiffies()
-> > >   - imx27: Added overflow handling logic
-> > >   - clps711x: Corrected the if condition for skipping the division
-> > >   - clk: pwm: Reverted to v8 version, added check to prevent division-by-zero
-> > > 
-> > > Changes from v10:
-> > >   - Carefully added back all the "Reviewed-by: " and "Acked-by: " tags received
-> > >     so far that had gotten missed in v9. No other changes.
-> > > 
-> > > Changes from v9:
-> > >   - Gathered the received "Reviewed-by: " tag
-> > >   - Added back the clk-pwm.c patch because kbuild test robot complained [3]
-> > >     and addressed received review comments.
-> > >   - clps711x: Addressed review comments.
-> > > 
-> > > Changes from v8:
-> > >   - Gathered all received "Acked-by: " and "Reviewed-by: " tags
-> > >   - Dropped patch to clk-pwm.c for reasons mentiond in [2]
-> > >   - Expanded audience of unreviewed patches
-> > > 
-> > > Changes from v7:
-> > >   - Changed commit messages of all patches to be brief and to the point.
-> > >   - Added explanation of change in cover letter.
-> > >   - Dropped change to pwm-sti.c as upon review it was unnecessary as struct
-> > >     pwm_capture is not being modified in the PWM core.
-> > > 
-> > > Changes from v6:
-> > >   - Split out the driver changes out into separate patches, one patch per file
-> > >     for ease of reviewing.
-> > > 
-> > > Changes from v5:
-> > >   - Dropped the conversion of struct pwm_capture to u64 for reasons mentioned
-> > >     in https://www.spinics.net/lists/linux-pwm/msg11541.html
-> > > 
-> > > Changes from v4:
-> > >   - Split the patch into two: one for changes to the drivers, and the actual
-> > >     switch to u64 for ease of reverting should the need arise.
-> > >   - Re-examined the patch and made the following corrections:
-> > >       * intel_panel.c:
-> > > 	DIV64_U64_ROUND_UP -> DIV_ROUND_UP_ULL (as only the numerator would be
-> > > 	64-bit in this case).
-> > >       * pwm-sti.c:
-> > > 	do_div -> div_u64 (do_div is optimized only for x86 architectures, and
-> > > 	div_u64's comment block suggests to use this as much as possible).
-> > > 
-> > > Changes from v3:
-> > >   - Rebased to current tip of for-next.
-> > > 
-> > > Changes from v2:
-> > >   - Fixed %u -> %llu in a dev_dbg in pwm-stm32-lp.c, thanks to kbuild test robot
-> > >   - Added a couple of fixes to pwm-imx-tpm.c and pwm-sifive.c
-> > > 
-> > > Changes from v1:
-> > >   - Fixed compilation errors seen when compiling for different archs.
-> > > 
-> > > v1:
-> > >   - Reworked the change pushed upstream earlier [1] so as to not add an
-> > >     extension to an obsolete API. With this change, pwm_ops->apply() can be
-> > >     used to set pwm_state parameters as usual.
-> > > 
-> > > [1] https://lore.kernel.org/lkml/20190916140048.GB7488@ulmo/
-> > > [2] https://lore.kernel.org/lkml/20200312190859.GA19605@xxxxxxxxxxxxxx/
-> > > [3] https://www.spinics.net/lists/linux-pwm/msg11906.html
-> > > [4] https://www.spinics.net/lists/linux-pwm/msg11986.html
-> > > 
-> > > Guru Das Srinagesh (11):
-> > >   drm/i915: Use 64-bit division macro
-> > >   hwmon: pwm-fan: Use 64-bit division macro
-> > >   ir-rx51: Use 64-bit division macro
-> > >   pwm: clps711x: Use 64-bit division macro
-> > >   pwm: pwm-imx-tpm: Use 64-bit division macro
-> > >   pwm: imx27: Use 64-bit division macro and function
-> > >   pwm: sifive: Use 64-bit division macro
-> > >   pwm: sun4i: Use nsecs_to_jiffies to avoid a division
-> > >   backlight: pwm_bl: Use 64-bit division function
-> > >   clk: pwm: Use 64-bit division function
-> > >   pwm: core: Convert period and duty cycle to u64
-> > > 
-> > >  drivers/clk/clk-pwm.c                      |  7 ++++-
-> > >  drivers/gpu/drm/i915/display/intel_panel.c |  2 +-
-> > >  drivers/hwmon/pwm-fan.c                    |  2 +-
-> > >  drivers/media/rc/ir-rx51.c                 |  3 +-
-> > >  drivers/pwm/core.c                         | 14 ++++-----
-> > >  drivers/pwm/pwm-clps711x.c                 |  2 +-
-> > >  drivers/pwm/pwm-imx-tpm.c                  |  2 +-
-> > >  drivers/pwm/pwm-imx27.c                    | 48 ++++++++++++++++++++++++++----
-> > >  drivers/pwm/pwm-sifive.c                   |  2 +-
-> > >  drivers/pwm/pwm-stm32-lp.c                 |  2 +-
-> > >  drivers/pwm/pwm-sun4i.c                    |  2 +-
-> > >  drivers/pwm/sysfs.c                        |  8 ++---
-> > >  drivers/video/backlight/pwm_bl.c           |  3 +-
-> > >  include/linux/pwm.h                        | 12 ++++----
-> > >  14 files changed, 77 insertions(+), 32 deletions(-)
-> > > 
-> > > -- 
-> > 
-> > Hello Thierry, Uwe, Lee,
-> > 
-> > Gentle reminder for this patch series :) Earlier discussions on next
-> > steps were as per [1] and [2].
-> 
-> Hi Guru,
-> 
-> I ended up deciding against queueing this for v5.8-rc1 because I want
-> this to soak for a bit in linux-next. I'll apply them early next week
-> after v5.8-rc1 is out.
+The argument passed to cmpxchg is not guaranteed to be sign
+extended, but lr.w sign extends on RV64I. This makes cmpxchg
+fail on clang built kernels when __old is negative.
 
-Thank you for the update, Thierry.
+To fix this, we just cast __old to long which sign extends on
+RV64I. With this fix, clang built RISC-V kernels now boot.
 
-Thank you.
+Link: https://github.com/ClangBuiltLinux/linux/issues/867
+Cc: clang-built-linux@googlegroups.com
+Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+---
+ arch/riscv/include/asm/cmpxchg.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Guru Das.
+diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/cmpxchg.h
+index d969bab4a26b..262e5bbb2776 100644
+--- a/arch/riscv/include/asm/cmpxchg.h
++++ b/arch/riscv/include/asm/cmpxchg.h
+@@ -179,7 +179,7 @@
+ 			"	bnez %1, 0b\n"				\
+ 			"1:\n"						\
+ 			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
+-			: "rJ" (__old), "rJ" (__new)			\
++			: "rJ" ((long)__old), "rJ" (__new)		\
+ 			: "memory");					\
+ 		break;							\
+ 	case 8:								\
+@@ -224,7 +224,7 @@
+ 			RISCV_ACQUIRE_BARRIER				\
+ 			"1:\n"						\
+ 			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
+-			: "rJ" (__old), "rJ" (__new)			\
++			: "rJ" ((long)__old), "rJ" (__new)		\
+ 			: "memory");					\
+ 		break;							\
+ 	case 8:								\
+@@ -270,7 +270,7 @@
+ 			"	bnez %1, 0b\n"				\
+ 			"1:\n"						\
+ 			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
+-			: "rJ" (__old), "rJ" (__new)			\
++			: "rJ" ((long)__old), "rJ" (__new)		\
+ 			: "memory");					\
+ 		break;							\
+ 	case 8:								\
+@@ -316,7 +316,7 @@
+ 			"	fence rw, rw\n"				\
+ 			"1:\n"						\
+ 			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
+-			: "rJ" (__old), "rJ" (__new)			\
++			: "rJ" ((long)__old), "rJ" (__new)		\
+ 			: "memory");					\
+ 		break;							\
+ 	case 8:								\
+-- 
+2.27.0.278.ge193c7cf3a9-goog
+
