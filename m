@@ -2,135 +2,142 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2ED9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C374BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A49DB206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:05:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FDE420838
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:06:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NqEJ5GA/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbgFKRFm (ORCPT
+        id S1726710AbgFKRGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 13:05:42 -0400
-Received: from mga03.intel.com ([134.134.136.65]:49295 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726379AbgFKRFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 13:05:41 -0400
-IronPort-SDR: r0sxlDSWbPBJ+WiLIhW5hDkPCaN2KlgVsdO7eLLevTMI9uE3KMX3vpJvUPgQJPYftq8s5DVaYq
- +IXNQnLaMbkw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 10:05:40 -0700
-IronPort-SDR: o2R+Vop2uU6YcqM1klJnMq5DpylifiYzUdln/hN/JzjguHnEe+yiMbNHDK0pnhq9GCNMjnMpJW
- Z9ku2WW2XNfQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,500,1583222400"; 
-   d="scan'208";a="275396665"
-Received: from kheichel-mobl2.amr.corp.intel.com (HELO [10.255.4.246]) ([10.255.4.246])
-  by orsmga006.jf.intel.com with ESMTP; 11 Jun 2020 10:05:38 -0700
-Subject: Re: [PATCH v2] x86/mm: use max memory block size on bare metal
-To:     Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Sistare <steven.sistare@oracle.com>
-References: <20200609225451.3542648-1-daniel.m.jordan@oracle.com>
- <dc869b25-db3c-8c68-3278-8688c5288632@intel.com>
- <20200611165910.6dwd3c7z5brimjbm@ca-dmjordan1.us.oracle.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
- z5cecg==
-Message-ID: <adcd3359-a90b-ab62-60e1-102277533e11@intel.com>
-Date:   Thu, 11 Jun 2020 10:05:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 11 Jun 2020 13:06:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56020 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbgFKRGb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 13:06:31 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FCCBC08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 10:06:30 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id b5so1833528pgm.8
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 10:06:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pI2G9x8XySR9DruVGRJidO1nAqjYW7jZcLJ0jduQuLM=;
+        b=NqEJ5GA/ehM6UXoHjGGuPNm3B3rfMC1cOHvni2EJcnW9zfClcUy4MFwL3d6X4Umn1G
+         gf95qNdFanqgDq/iJc7qrRLil0x0D2wngwpf5nyMmOSpv1Miw+RLTpCnQCyf6U6A9UgB
+         BIjwZ5q8ylSnAuU3U7wqC1G+YIOYg5ZQMEwwIqa27NlLx4wfBto6cqvEmfhOoIkAQg2D
+         OcPRn7du2QLzn0LYY7+6DIXok09q0JSmnm0eTyfsKq7lCxHphLZiuK/LRFrgjljjDgV4
+         ztCU39IhEGgwqTb3durCnfrOGlFCcAyCoaR7e4UepPjSEK/zT+pqQFMs2xMPU5fiE7jk
+         MPbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pI2G9x8XySR9DruVGRJidO1nAqjYW7jZcLJ0jduQuLM=;
+        b=kx+kJzfb+D454nt7MhuM5Pg/JcADHmNvWWVqkJpAghlhuj7RKrA0CY/TgG2+j81n4h
+         9q3nwh1y7obXu7y0HQITuZM2Yllx7v6tfb9Nf60ANlJ10oi6+KFib2uiGfXkyTr9Z+xK
+         8671+GOGe6c8yzEsBBW4bJv/rbJadh3WSTOkTh25Atz1h3ilbtBDeErNsjQvo20u2N4y
+         EM1uhKNm7TVymvWN4EY96rvvAkRAbk4aqtf12KLnJ4g82zkZ7hi54XfcsyqWlasHxWKc
+         dMxscaMUKXA0smJNyidc36/C/lmexxYxV1Jy1ZndStXskc4fLu14vsE78n+MCaszS6RW
+         x9Mw==
+X-Gm-Message-State: AOAM5326gIdSXS2OypfRfDiDUun3IsJI2IOt34WDB1To5o8MH/l1jLuk
+        15Y1GXlBZcFWlOLML6wLDd+wyr94psp1agWuDzvlTQ==
+X-Google-Smtp-Source: ABdhPJwIaddzPZfkreOWkm5D3KkSKXIx2FEPb4DMs82rwvXYSe+SfQFOSBO/0V8ZUaC6ymLwx/6gIHy0Sny57CDe07w=
+X-Received: by 2002:a62:7e95:: with SMTP id z143mr8049365pfc.108.1591895189671;
+ Thu, 11 Jun 2020 10:06:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200611165910.6dwd3c7z5brimjbm@ca-dmjordan1.us.oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <CAMj1kXErFuvOoG=DB6sz5HBvDuHDiKwWD8uOyLuxaX-u8-+dbA@mail.gmail.com>
+ <20200601231805.207441-1-ndesaulniers@google.com> <BYAPR11MB3096A0EA2D03BCB76C91F80AF0830@BYAPR11MB3096.namprd11.prod.outlook.com>
+ <CAKwvOdnh6Zh+P9SM_qFiy-9u7Y21fn=byTJtG4fTTRJqqU9bcQ@mail.gmail.com>
+ <9f4322a5-eea6-fb65-449c-90f3d85f753e@FreeBSD.org> <BYAPR11MB3096904AD67CC83A67A38215F0800@BYAPR11MB3096.namprd11.prod.outlook.com>
+In-Reply-To: <BYAPR11MB3096904AD67CC83A67A38215F0800@BYAPR11MB3096.namprd11.prod.outlook.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 11 Jun 2020 10:06:19 -0700
+Message-ID: <CAKwvOdndPdAWVSJ530mgT5onG4zsHExqO79=QvvLvpz51D8LsQ@mail.gmail.com>
+Subject: Re: [Devel] Re: [PATCH] ACPICA: fix UBSAN warning using __builtin_offsetof
+To:     "Kaneda, Erik" <erik.kaneda@intel.com>
+Cc:     Jung-uk Kim <jkim@freebsd.org>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "dvyukov@google.com" <dvyukov@google.com>,
+        "glider@google.com" <glider@google.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "pcc@google.com" <pcc@google.com>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "will@kernel.org" <will@kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "devel@acpica.org" <devel@acpica.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/11/20 9:59 AM, Daniel Jordan wrote:
-> On Thu, Jun 11, 2020 at 07:16:02AM -0700, Dave Hansen wrote:
->> On 6/9/20 3:54 PM, Daniel Jordan wrote:
->>> +	/*
->>> +	 * Use max block size to minimize overhead on bare metal, where
->>> +	 * alignment for memory hotplug isn't a concern.
->>> +	 */
->>> +	if (hypervisor_is_type(X86_HYPER_NATIVE)) {
->>> +		bz = MAX_BLOCK_SIZE;
->>> +		goto done;
->>> +	}
->> What ends up being the worst case scenario?  Booting a really small
->> bare-metal x86 system, say with 64MB or 128MB of RAM?  What's the
->> overhead there?
-> Might not be following you, so bear with me, but we only get to this check on a
-> system with a physical address end of at least MEM_SIZE_FOR_LARGE_BLOCK (64G),
-> and this would still (ever so slightly...) reduce overhead of memory block init
-> at boot in that case.
+On Thu, Jun 11, 2020 at 9:45 AM Kaneda, Erik <erik.kaneda@intel.com> wrote:
+>
+> > From: Jung-uk Kim <jkim@FreeBSD.org>
+> >
+> > Actually, I think we should let platform-specific acfoo.h decide what to
+> > do here, i.e.,
+>
+> That's a better solution. For Linux, it would look something like this:
+>
+> --- a/include/acpi/actypes.h
+> +++ b/include/acpi/actypes.h
+> @@ -508,10 +508,15 @@ typedef u64 acpi_integer;
+>
+>  #define ACPI_TO_POINTER(i)              ACPI_CAST_PTR (void, (acpi_size) (i))
+>  #define ACPI_TO_INTEGER(p)              ACPI_PTR_DIFF (p, (void *) 0)
+> -#define ACPI_OFFSET(d, f)               ACPI_PTR_DIFF (&(((d *) 0)->f), (void *) 0)
+>  #define ACPI_PHYSADDR_TO_PTR(i)         ACPI_TO_POINTER(i)
+>  #define ACPI_PTR_TO_PHYSADDR(i)         ACPI_TO_INTEGER(i)
+>
+> +/* Platforms may want to define their own ACPI_OFFSET */
+> +
+> +#ifndef ACPI_OFFSET
+> +#define ACPI_OFFSET(d, f)               ACPI_PTR_DIFF (&(((d *) 0)->f), (void *) 0)
+> +#endif
+> +
+>  /* Optimizations for 4-character (32-bit) acpi_name manipulation */
+>
+>  #ifndef ACPI_MISALIGNMENT_NOT_SUPPORTED
+> diff --git a/include/acpi/platform/aclinux.h b/include/acpi/platform/aclinux.h
+> index 987e2af7c335..5d1ca6015fce 100644
+> --- a/include/acpi/platform/aclinux.h
+> +++ b/include/acpi/platform/aclinux.h
+> @@ -71,6 +71,11 @@
+>  #undef ACPI_DEBUG_DEFAULT
+>  #define ACPI_DEBUG_DEFAULT          (ACPI_LV_INFO | ACPI_LV_REPAIR)
+>
+> +/* Use gcc's builtin offset instead of the default */
+> +
+> +#undef ACPI_OFFSET
+> +#define ACPI_OFFSET(a,b)            __builtin_offsetof(a,b)
+> +
+>  #ifndef CONFIG_ACPI
+>
 
-Ahh, I see now.  That is just above the hunk you added, but just wasn't
-in the diff context or mentioned in the changelog.
+Looks good at first glance.  Wouldn't actypes.h need to include
+platform/acenv.h first though?  Otherwise you put some header
+inclusion order dependency on folks who include actypes.h to first
+include acenv.h otherwise we're not getting the definition in terms of
+__builtin_offsetof.
 
-One other nit for this.  We *do* have actual hardware hotplug, and I'm
-pretty sure the alignment guarantees for hardware hotplug are pretty
-weak.  For instance, the alignment guarantees for persistent memory are
-still only 64MB even on modern platforms.
-
-Let's say we're on bare metal and we see an SRAT table that has some
-areas that show that hotplug might happen there.  Is this patch still
-ideal there?
+-- 
+Thanks,
+~Nick Desaulniers
