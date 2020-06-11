@@ -2,207 +2,171 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F51AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 10:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57859C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 10:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E519520747
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 10:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3421820760
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 10:09:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cYEQB49j"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Dfg8Bh6V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbgFKKIJ (ORCPT
+        id S1727081AbgFKKJc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 06:08:09 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39321 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726802AbgFKKIF (ORCPT
+        Thu, 11 Jun 2020 06:09:32 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:31768 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726965AbgFKKJc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 06:08:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591870083;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=hti1yQlaKXXa4b8vH7t/CX8EVQPiSGu8ey4rYtxv/ZU=;
-        b=cYEQB49jkTSsgEo/hHpLKrJeIg2ba0KWYxVNqpZ09l9sGR7hfKBNm1qDPuofVMQwPnBPMs
-        YFqzIhmpqr+I/b1Q4M+qtSDrBQh5B+JR7u9Sdn12ldRe2So5rzh86wew73AsWhi0bAWEBL
-        M3qlCb8Njufmli54vDDNnGVdGGuzCQQ=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-72-jdwmW1qOPs-8vTHF986FmQ-1; Thu, 11 Jun 2020 06:07:59 -0400
-X-MC-Unique: jdwmW1qOPs-8vTHF986FmQ-1
-Received: by mail-wr1-f71.google.com with SMTP id o1so2355222wrm.17
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 03:07:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hti1yQlaKXXa4b8vH7t/CX8EVQPiSGu8ey4rYtxv/ZU=;
-        b=fGJ34ecZbdsK8Ebw4/LMb6Poy91REU9xed5DVo6qsS1D0PHe8ZAaZ9wdQaTzV9/ZoF
-         PyTWGPtrNEeX9gXPKlbeybn9gA2GHlDMtw/Ruf5SBWFAbIw7ltwkW4EnurMX2wryRX3o
-         otNejGefUqw51e9UiyWMta/wkeXNV2EiJorz+QLr+oqCVaFi/EFp2HlV17uHbUAfPqaP
-         g3U6S/CJtmuTGIlvYczwBzMkMImfRB2WINZhy6bOVZnxN8FTIfwp0+d6Tr9uylGI0JFe
-         9FQWaZpkUnPhxw8DX6iJ0MiuckgsGaF+bvul4iu38MHx3CuIPnhOgyFM8zAfRQDY1TsS
-         kgBQ==
-X-Gm-Message-State: AOAM5320odu/v3kmBgc0viUBeWPinEH0PFf+lWM9ouWSaqlRBbl5Mqfb
-        aROA4NEeELxOTRj0LNeV1AR6SKTK8Giqe8sIuI01dZWW75PBPTKIp8I2zYatKO5yMfStNR/1EIe
-        2YPYzU438l9HmPqO94jkE8xvZ
-X-Received: by 2002:a5d:5449:: with SMTP id w9mr8887306wrv.106.1591870078453;
-        Thu, 11 Jun 2020 03:07:58 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw7fUMwNnhBKL0yD4hzPZy5EKspCjidE0BlArAAtqV0VBMDwrTb+hVc8kTwnh7wCpCs88IQZw==
-X-Received: by 2002:a5d:5449:: with SMTP id w9mr8887273wrv.106.1591870078148;
-        Thu, 11 Jun 2020 03:07:58 -0700 (PDT)
-Received: from redhat.com (bzq-79-181-55-232.red.bezeqint.net. [79.181.55.232])
-        by smtp.gmail.com with ESMTPSA id u4sm3363234wmb.48.2020.06.11.03.07.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 03:07:57 -0700 (PDT)
-Date:   Thu, 11 Jun 2020 06:07:54 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Jason Wang <jasowang@redhat.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        teawater <teawaterz@linux.alibaba.com>
-Subject: Re: [PATCH v1] virtio-mem: add memory via add_memory_driver_managed()
-Message-ID: <20200611060249-mutt-send-email-mst@kernel.org>
-References: <20200611093518.5737-1-david@redhat.com>
+        Thu, 11 Jun 2020 06:09:32 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05BA7Lfr003767;
+        Thu, 11 Jun 2020 12:09:17 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=io4QkYyPev1lFAk4WWD+YOdtfCEKcWGZV313SSMWam4=;
+ b=Dfg8Bh6Vhx2dsVrLDsX09I4ViM0xyUXa6FCuXkjKTvZoDN/cXP4rVkspuAXlAku12pEI
+ Nh8Zm+GNw16WVrhgo3hHmia75qDQ3oCHAMM01HT4+S+6AKbfYYu+rzKvB3oPbGIN/qRC
+ FqipJob9rxIm5nv3I3lYnHW7rMETvn8k2EAHLiF3yS3w6WcWuEbs00aCMD5zSPUW3NcM
+ B/huIlftPJ/ugddyWl+fFCILqYt/S8IFVenn+bdwJzp6UsuyiTBHvH9uvV5Gd9g+Q560
+ HehTAN2G8PXEM0hDDL26wzGEhB55ow48vko78kVKIZ7JOTLE1gEItLxlibEALYs85x6T 9w== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 31jppnyg1r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 11 Jun 2020 12:09:17 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3B2C810002A;
+        Thu, 11 Jun 2020 12:09:16 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id F075B20F366;
+        Thu, 11 Jun 2020 12:09:15 +0200 (CEST)
+Received: from [10.211.9.250] (10.75.127.45) by SFHDAG5NODE3.st.com
+ (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 11 Jun
+ 2020 12:09:14 +0200
+Subject: Re: [PATCH v2] iio: adc: stm32-adc: fix runtime autosuspend delay
+ when slow polling
+To:     Jonathan Cameron <jic23@kernel.org>, <rjw@rjwysocki.net>,
+        <ulf.hansson@linaro.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <benjamin.gaignard@st.com>, <alexandre.torgue@st.com>,
+        <olivier.moysan@st.com>, <linux-iio@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <1588163348-31640-1-git-send-email-fabrice.gasnier@st.com>
+ <20200503124811.0abf7655@archlinux>
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+Message-ID: <b6e7d22c-2ea9-19f8-6065-519860575077@st.com>
+Date:   Thu, 11 Jun 2020 12:09:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200611093518.5737-1-david@redhat.com>
+In-Reply-To: <20200503124811.0abf7655@archlinux>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-11_10:2020-06-10,2020-06-11 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-virtio-mem: add memory via add_memory_driver_managed()
+On 5/3/20 1:48 PM, Jonathan Cameron wrote:
+> On Wed, 29 Apr 2020 14:29:08 +0200
+> Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
+> 
+>> When the ADC is runtime suspended and starting a conversion, the stm32-adc
+>> driver calls pm_runtime_get_sync() that gets cascaded to the parent
+>> (e.g. runtime resume of stm32-adc-core driver). This also kicks the
+>> autosuspend delay (e.g. 2s) of the parent.
+>> Once the ADC is active, calling pm_runtime_get_sync() again (upon a new
+>> capture) won't kick the autosuspend delay for the parent (stm32-adc-core
+>> driver) as already active.
+>>
+>> Currently, this makes the stm32-adc-core driver go in suspend state
+>> every 2s when doing slow polling. As an example, doing a capture, e.g.
+>> cat in_voltageY_raw at a 0.2s rate, the auto suspend delay for the parent
+>> isn't refreshed. Once it expires, the parent immediately falls into
+>> runtime suspended state, in between two captures, as soon as the child
+>> driver falls into runtime suspend state:
+>> - e.g. after 2s, + child calls pm_runtime_put_autosuspend() + 100ms
+>>   autosuspend delay of the child.
+>> - stm32-adc-core switches off regulators, clocks and so on.
+>> - They get switched on back again 100ms later in this example (at 2.2s).
+>>
+>> So, use runtime_idle() callback in stm32-adc-core driver to call
+>> pm_runtime_mark_last_busy() for the parent driver (stm32-adc-core),
+>> to avoid this.
+>>
+>> Fixes: 9bdbb1139ca1 ("iio: adc: stm32-adc: add power management support")
+>>
+>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> 
+> Whilst this seems 'sensible' to me, I really don't have a good enough grasp
+> of runtime pm to be sure. 
+> 
+> I see something similar looking in the greybus driver, but not sure on the
+> reason it is there.
+> 
+> Hence, ideally looking for an ack from Rafael on this one!
 
+Hi,
 
-On Thu, Jun 11, 2020 at 11:35:18AM +0200, David Hildenbrand wrote:
-> Virtio-mem managed memory is always detected and added by the virtio-mem
-> driver, never using something like the firmware-provided memory map.
-> This is the case after an ordinary system reboot, and has to be guaranteed
-> after kexec. Especially, virtio-mem added memory resources can contain
-> inaccessible parts ("unblocked memory blocks"), blindly forwarding them
-> to a kexec kernel is dangerous, as unplugged memory will get accessed
-> (esp. written).
-> 
-> Let's use the new way of adding special driver-managed memory introduced
-> in commit 75ac4c58bc0d ("mm/memory_hotplug: introduce
-> add_memory_driver_managed()").
-> 
-> This will result in no entries in /sys/firmware/memmap ("raw firmware-
-> provided memory map"), the memory resource will be flagged
-> IORESOURCE_MEM_DRIVER_MANAGED (esp., kexec_file_load() will not place
-> kexec images on this memory), and it is exposed as "System RAM
-> (virtio_mem)" in /proc/iomem, so esp. kexec-tools can properly handle it.
-> 
-> Example /proc/iomem before this change:
->   [...]
->   140000000-333ffffff : virtio0
->     140000000-147ffffff : System RAM
->   334000000-533ffffff : virtio1
->     338000000-33fffffff : System RAM
->     340000000-347ffffff : System RAM
->     348000000-34fffffff : System RAM
->   [...]
-> 
-> Example /proc/iomem after this change:
->   [...]
->   140000000-333ffffff : virtio0
->     140000000-147ffffff : System RAM (virtio_mem)
->   334000000-533ffffff : virtio1
->     338000000-33fffffff : System RAM (virtio_mem)
->     340000000-347ffffff : System RAM (virtio_mem)
->     348000000-34fffffff : System RAM (virtio_mem)
->   [...]
-> 
-> Cc: "Michael S. Tsirkin" <mst@redhat.com>
-> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-> Cc: teawater <teawaterz@linux.alibaba.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
-> 
-> Based on latest Linus' tree (and not a tag) because
-> - virtio-mem has just been merged via the vhost tree
-> - add_memory_driver_managed() has been merged a week ago via the -mm tree
-> 
-> I'd like to have this patch in 5.8, with the initial merge of virtio-mem
-> if possible (so the user space representation of virtio-mem added memory
-> resources won't change anymore).
+Gentle reminder, I'm not sure how to progress on this patch.
 
-So my plan is to rebase on top of -rc1 and merge this for rc2 then.
-I don't like rebase on top of tip as the results are sometimes kind of
-random.
-And let's add a Fixes: tag as well, this way people will remember to
-pick this.
-Makes sense?
+Rafael, or maybe Ulf, could take a look at it ?
 
+Thanks in advance,
+Best Regards,
+Fabrice
 
-> ---
->  drivers/virtio/virtio_mem.c | 25 ++++++++++++++++++++++---
->  1 file changed, 22 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
-> index 50c689f250450..d2eab3558a9e1 100644
-> --- a/drivers/virtio/virtio_mem.c
-> +++ b/drivers/virtio/virtio_mem.c
-> @@ -101,6 +101,11 @@ struct virtio_mem {
->  
->  	/* The parent resource for all memory added via this device. */
->  	struct resource *parent_resource;
-> +	/*
-> +	 * Copy of "System RAM (virtio_mem)" to be used for
-> +	 * add_memory_driver_managed().
-> +	 */
-> +	const char *resource_name;
->  
->  	/* Summary of all memory block states. */
->  	unsigned long nb_mb_state[VIRTIO_MEM_MB_STATE_COUNT];
-> @@ -414,8 +419,20 @@ static int virtio_mem_mb_add(struct virtio_mem *vm, unsigned long mb_id)
->  	if (nid == NUMA_NO_NODE)
->  		nid = memory_add_physaddr_to_nid(addr);
->  
-> +	/*
-> +	 * When force-unloading the driver and we still have memory added to
-> +	 * Linux, the resource name has to stay.
-> +	 */
-> +	if (!vm->resource_name) {
-> +		vm->resource_name = kstrdup_const("System RAM (virtio_mem)",
-> +						  GFP_KERNEL);
-> +		if (!vm->resource_name)
-> +			return -ENOMEM;
-> +	}
-> +
->  	dev_dbg(&vm->vdev->dev, "adding memory block: %lu\n", mb_id);
-> -	return add_memory(nid, addr, memory_block_size_bytes());
-> +	return add_memory_driver_managed(nid, addr, memory_block_size_bytes(),
-> +					 vm->resource_name);
->  }
->  
->  /*
-> @@ -1890,10 +1907,12 @@ static void virtio_mem_remove(struct virtio_device *vdev)
->  	    vm->nb_mb_state[VIRTIO_MEM_MB_STATE_OFFLINE_PARTIAL] ||
->  	    vm->nb_mb_state[VIRTIO_MEM_MB_STATE_ONLINE] ||
->  	    vm->nb_mb_state[VIRTIO_MEM_MB_STATE_ONLINE_PARTIAL] ||
-> -	    vm->nb_mb_state[VIRTIO_MEM_MB_STATE_ONLINE_MOVABLE])
-> +	    vm->nb_mb_state[VIRTIO_MEM_MB_STATE_ONLINE_MOVABLE]) {
->  		dev_warn(&vdev->dev, "device still has system memory added\n");
-> -	else
-> +	} else {
->  		virtio_mem_delete_resource(vm);
-> +		kfree_const(vm->resource_name);
-> +	}
->  
->  	/* remove all tracking data - no locking needed */
->  	vfree(vm->mb_state);
-> -- 
-> 2.26.2
-
+> Thanks,
+> 
+> Jonathan
+> 
+>> ---
+>> Changes in v2:
+>> - Use runtime_idle callback in stm32-adc-core driver, instead of refreshing
+>>   last_busy from the child (for the parent) at many place. Initial patch v1
+>>   looked like "somewhat adhoc solution" as commented by Jonathan.
+>> ---
+>>  drivers/iio/adc/stm32-adc-core.c | 9 ++++++++-
+>>  1 file changed, 8 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
+>> index 2df88d2..ebe5dbc 100644
+>> --- a/drivers/iio/adc/stm32-adc-core.c
+>> +++ b/drivers/iio/adc/stm32-adc-core.c
+>> @@ -803,6 +803,13 @@ static int stm32_adc_core_runtime_resume(struct device *dev)
+>>  {
+>>  	return stm32_adc_core_hw_start(dev);
+>>  }
+>> +
+>> +static int stm32_adc_core_runtime_idle(struct device *dev)
+>> +{
+>> +	pm_runtime_mark_last_busy(dev);
+>> +
+>> +	return 0;
+>> +}
+>>  #endif
+>>  
+>>  static const struct dev_pm_ops stm32_adc_core_pm_ops = {
+>> @@ -810,7 +817,7 @@ static const struct dev_pm_ops stm32_adc_core_pm_ops = {
+>>  				pm_runtime_force_resume)
+>>  	SET_RUNTIME_PM_OPS(stm32_adc_core_runtime_suspend,
+>>  			   stm32_adc_core_runtime_resume,
+>> -			   NULL)
+>> +			   stm32_adc_core_runtime_idle)
+>>  };
+>>  
+>>  static const struct stm32_adc_priv_cfg stm32f4_adc_priv_cfg = {
+> 
