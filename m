@@ -2,149 +2,113 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C54DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C944DC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:50:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FD3320656
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:49:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="gML4mUpC"
+	by mail.kernel.org (Postfix) with ESMTP id A867320656
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:50:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591865412;
+	bh=VKzLJW4U7pHPqhl4ThnXEzswPS1Ofcy1J2jS7Gaiglg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rJgK7qnqXf2XeWsxzQv35bDYe91cBb4BZZkq6eJc8aOKSnV00kb8XWiCDfwLA5WAO
+	 t3Ezra/00/324fTONE9HtpFSRrm4P2hyNGwnuujTmW/pheHBi2N84jRzJkZRcNFewp
+	 IdpE26KCaUKS97RIxRnENuOPuZ4DWcHb9Eewnim8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbgFKItp (ORCPT
+        id S1726998AbgFKIuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 04:49:45 -0400
-Received: from mail-eopbgr10064.outbound.protection.outlook.com ([40.107.1.64]:60898
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726708AbgFKIto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 04:49:44 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=N/neNhnLnKbjE4d56YbMirKJV2OrA/k+rhkdTS8wu+l3104R6QP/SzeI8SCAIev+VRV7Pnh0W7tcfawvybgr+gCm3ZvaVLcEL0//0faSYfaGiOqMWwRd282NVM66zeOSD7H6p2meZw42DPYIct4w2YtzOMIBLNn9Bu9tN2IjNmeUXqVr7fq0B5XTnK3BlTjP0D3iaLduEnH+Ykn3/Qg5cptFA98aBnMVZX6qENAxlDMvEhDTIc11yN8P4j4IbcX00Hi6l/rGhbbS+5s2hbx0/kKm0TDYGgIQItAyGBdWiPrifAlDKbqVUAEbvLciYNLWknrRySZce+/48OnfvSDmrg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oL2l2poXSqNiwnoelraimj8dfu7GheNoARyA725HHWg=;
- b=erSyKrpgQq+z70JOplNOQEXhG615q1U+6uU8s5foQhorvN1NThJ0Ea6RFscQWAnFnhtBKj1jc3NY7tRosPJXF31RBhtaE/6JGgScdY94y7MwTZj3bOJAjUsyfcqDoW+dedNPEivlopEE9xVCWt/iYs0LhqEFCk3uzgwwnVZkZkOf0fN0lluHagQUllFsr4xUGi3Vm5LLjF4fSKO1kP/QI9nCDKYEH/D7J2LDeS6mKXlwYlWfHvYPp8+0OP+OEjJCaATk6v3Hx9Gk7HbpSW7qnflQN7feiyyeT1N8JGdXX3Y00XhVMa3sRBzkMbUEf8QaIHPSPm/S3eQ+eIyFeMEO6Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oL2l2poXSqNiwnoelraimj8dfu7GheNoARyA725HHWg=;
- b=gML4mUpCQNbBNaKwg1TC6sy3fJl1XSBGAO2qof5KIZnoacHfMp/xLXuDKiVm/3RWU3UqDi+7XBbRJ8GJI+g5X2AemPDau89C7WO2YUi5WnWr8gArSgEj7fV4xm+H1RkPjl2g+mtjzKAWICyinm8aPOAZ4Z3Cihz6DvLbPrVCJ94=
-Authentication-Results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-Received: from VI1PR0401MB2287.eurprd04.prod.outlook.com
- (2603:10a6:800:2e::19) by VI1PR0401MB2413.eurprd04.prod.outlook.com
- (2603:10a6:800:2a::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18; Thu, 11 Jun
- 2020 08:49:39 +0000
-Received: from VI1PR0401MB2287.eurprd04.prod.outlook.com
- ([fe80::9d5c:685e:4b51:fa60]) by VI1PR0401MB2287.eurprd04.prod.outlook.com
- ([fe80::9d5c:685e:4b51:fa60%3]) with mapi id 15.20.3066.023; Thu, 11 Jun 2020
- 08:49:39 +0000
-Subject: Re: [PATCH V4 0/9] Support i.MX8 SoCs pinctrl drivers built as module
-To:     Anson Huang <anson.huang@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Cc:     dl-linux-imx <linux-imx@nxp.com>
-References: <1591775865-26872-1-git-send-email-Anson.Huang@nxp.com>
- <2dfc7a60-1e96-190b-7385-89a843312d80@nxp.com>
- <DB3PR0402MB3916AF541FC5692D00625EECF5800@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-From:   Daniel Baluta <daniel.baluta@nxp.com>
-Message-ID: <0eeb2beb-e4f1-bf53-843e-c78bc84809f3@nxp.com>
-Date:   Thu, 11 Jun 2020 11:49:36 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <DB3PR0402MB3916AF541FC5692D00625EECF5800@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: AM0PR04CA0018.eurprd04.prod.outlook.com
- (2603:10a6:208:122::31) To VI1PR0401MB2287.eurprd04.prod.outlook.com
- (2603:10a6:800:2e::19)
+        Thu, 11 Jun 2020 04:50:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41562 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726828AbgFKIuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 04:50:08 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C5CE20656;
+        Thu, 11 Jun 2020 08:50:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591865408;
+        bh=VKzLJW4U7pHPqhl4ThnXEzswPS1Ofcy1J2jS7Gaiglg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=c3YzXxCm23G9kUwkGqyiTj1l9M2SniIiN7gj4O8ZEpO3URiUGoFBadDVk7F77FcED
+         BZhei7SJOUSHbvHKUGROkcAZA3vPfCZCOzmPj8KwnnowF24kTbX9YIqBpWKbVtql7Q
+         WZpMZ3SoAxhHPHTlCDGiCTUSQAQVwrn++PkGOh5I=
+Date:   Thu, 11 Jun 2020 09:50:04 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: spi: renesas,sh-msiof: Add r8a7742
+ support
+Message-ID: <20200611085004.GC4671@sirena.org.uk>
+References: <1591736054-568-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1591736054-568-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200610110810.GD5005@sirena.org.uk>
+ <CAMuHMdWCHeSB9mjpdSX_-qxwo33kMb1_1R93CjBtVBPFPKkEOg@mail.gmail.com>
+ <20200610164928.GJ5005@sirena.org.uk>
+ <CAMuHMdUNo0tMxWsnXi4q8NwubPWHqTvzGOA-0hOr7oo2cRvvUg@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2a02:2f08:560d:e500:fcf6:7c4d:8076:b570] (2a02:2f08:560d:e500:fcf6:7c4d:8076:b570) by AM0PR04CA0018.eurprd04.prod.outlook.com (2603:10a6:208:122::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18 via Frontend Transport; Thu, 11 Jun 2020 08:49:38 +0000
-X-Originating-IP: [2a02:2f08:560d:e500:fcf6:7c4d:8076:b570]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: dd89a9c6-7505-4bad-f268-08d80de46063
-X-MS-TrafficTypeDiagnostic: VI1PR0401MB2413:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR0401MB2413AD56A342C262EE7432D3F9800@VI1PR0401MB2413.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 0431F981D8
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: cNXQ1JUn3xGUTNpXV14HWH8RgB12IJf+BGamFLZq9fxnzbh/jTqjJfml2F4GdQqXv39ZJZeLpeG0r7YEB5eLq2mokTHklbXo6giSJIGL/ksOcmzFkPMWyEBCYn6JOVAirGIY3ie0Fk+CK5jP9fPwvz3KJ+ujdFinLgkE9SXAPwhYhWE4GTp10swsVXlOkXevyw+XKq5qs03AjeMI9MBaJlcUaFSL/WyD2xplKeUZFD389q2cahnAN+z3B7UGOkq5nG7pQXC/bKnEXfAGypZt4EkeQDFWShiOFbbcWhCUi679mq06KeO4Xg7DCtPisV47XL+tOUs5bPGUyWHcakaX/roh8Rzs+mFKFpqPQy8ANazX4zCD1syL3mTgu/IpxT72C48gxsHhnBOuVZQgwxE20g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0401MB2287.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(6029001)(4636009)(396003)(366004)(136003)(39860400002)(376002)(346002)(8936002)(5660300002)(478600001)(86362001)(316002)(52116002)(110136005)(53546011)(186003)(31696002)(44832011)(4326008)(83380400001)(16526019)(8676002)(2616005)(36756003)(2906002)(66476007)(66946007)(31686004)(66556008)(6486002)(921003)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: S9EIXz2Jlwo+wSZzIYWQiohfxMbBuYr164uqkQFoONzVQ3vw17vLIvaLAXadtlcd74WaotY+zvSNRI0s5+pw35GXZVS0mN36rCxEi7PmDE29qAUx1IunlK0iFnCdbFfIvmuwhTyhCk9TdChb4+TiNAe8esXBpJJoMc4hbxhp4nf+F7cmPhv9FRqFCAYncatTgwxU/M90X/TEY2IlBUWRwfCeqYSJ9gww8KXW1M4Ss7nJgll8cNLJk4TyC/gfoRW0z3tUuNfbFH7Gw6/Ulrb9/NsE8+cp5FgxI4c/VS3n4fsSlWUvS6ZuqhCMkb9khL9DCtvUt33w4RbefMTVrhCP1EWXCWhrHCqJQoem3zjuMNdn21k3F0yiFtt7IxjbQY+E9ilxWFKxPhzydAns2kszYo0x5wxBzI3+aipXyJrZ2aDYVqrU4HTDLpx2k08II2fJ4queT1FKDL/SHYpbkvoAyABeNgYljSgMvkT/aj5h5Mk6RbC8p2Oi7A+xXMqPo9sWVAxgb6ZNvXN+nkuGyNYVlWR0InPTMIVk7bsaZWVcKl8mGFuqYZl7Zfh7tKN6mvU0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dd89a9c6-7505-4bad-f268-08d80de46063
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2020 08:49:39.5312
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: eJzwjjZg9L9k3CTV6MyYKK3ioYLP3au77iAn0lPBc+Kk8TFs/UGXzWE45snVHviVXmrzRsz9lad9FtakCwATvA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2413
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="QRj9sO5tAVLaXnSD"
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUNo0tMxWsnXi4q8NwubPWHqTvzGOA-0hOr7oo2cRvvUg@mail.gmail.com>
+X-Cookie: I like your SNOOPY POSTER!!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 11.06.2020 11:44, Anson Huang wrote:
-> Hi, Daniel
->
->> Subject: Re: [PATCH V4 0/9] Support i.MX8 SoCs pinctrl drivers built as module
->>
->> Hi Anson,
->>
->> Patch series mostly looks good to me. I have a comment about adding
->>
->> the MODULE_LICENSE. This is a pretty important change.
->>
->>
->> Can you please add this change in a separate patch with a proper explanation
->>
->> of why it is needed.
->>
->>
->> Most likely it is because it was forgotten in the previous patches.
-> Yes, it is obviously missed in the previous patches, as previously these pinctrl drivers
-> do NOT support module build at all.
->
-> And MODULE_LICENSE is a MUST when drivers supporting module build, build will report failure
-> if module license missed, so I think it is also part of the module build support patch,
-> do you mean it is better to add a separate patch to add the MODULE_LICENSE to all pinctrl drivers missing it?
-> Maybe we can get more opinion from maintainer, I am NOT very sure whether it is better to separate
-> the module license as a single patch....
+--QRj9sO5tAVLaXnSD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Wed, Jun 10, 2020 at 09:18:19PM +0200, Geert Uytterhoeven wrote:
+> On Wed, Jun 10, 2020 at 6:49 PM Mark Brown <broonie@kernel.org> wrote:
 
-Hi Anson,
+> > I'm much more comfortable explicitly listing the new compatible so that
+> > even if someone makes a DT that doesn't bother listing the fallbacks
+> > things will work.
 
-This is my feeling. That the first patch in the series should add the 
-MODULE_LICENSE to all
+> Adding all of them would cause even more churn when adding support for
+> a new SoC... There are already more than 700 "renesas," compatible
+> values documented that are not directly matched by drivers.
 
-of files.
+I'm not sure it's a particular concern, especially since you'll be
+sending this stuff in the same series as a bindings update and an extra
+patch in a series makes very little difference.
 
-This keeps things simple, explains our intention with next patches.
+> Nowadays we have "make dtbs_check", so if a DTS doesn't conform to the
+> binding, it will be flagged.
 
-Daniel.
+For things that are upstream.
 
+--QRj9sO5tAVLaXnSD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7h8DwACgkQJNaLcl1U
+h9AbHwf+Oh0ZTAsfPJi03Ayhsz+OMqw4Uebch9FIKNb8mGnpo5yZuUA/oMtGTghT
+1fT2jkgx+0iNVdRsPz6M1OEuF/ls+JyYrcLOmQyu5Jmb/xhrr62ANmMWQV6oZsD6
+9ANB0yKJUixSwYgu6OWeFgmdYmzT4K29839XsSK/rs4Y3ZcRfrF2F5skGbbHzVCE
+jtqvXG8+GhJHNXpEtyqOd6+sq19g6wJ/Fh13vas59bKQYKaJnn9pS0mjzEughzJ+
+2OQTvE2gAaw4zXf/dKGag1Om1NH6NhS6k8MIxoP/kNa+yyuw2AMSsMt8NC7EsDyy
+yXvvE+bPbnlTWD+L8Quyr0M51PRvZA==
+=au0+
+-----END PGP SIGNATURE-----
+
+--QRj9sO5tAVLaXnSD--
