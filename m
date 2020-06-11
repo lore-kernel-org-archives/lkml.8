@@ -2,78 +2,76 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F405C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 22:26:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E51C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 22:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74FB320801
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 22:26:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51B222074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 22:29:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OzpB2OD9"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C9efrmYg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726306AbgFKW0T (ORCPT
+        id S1726321AbgFKW3A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 18:26:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48852 "EHLO
+        Thu, 11 Jun 2020 18:29:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726254AbgFKW0S (ORCPT
+        with ESMTP id S1726159AbgFKW3A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 18:26:18 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89813C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 15:26:18 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id c194so6937907oig.5
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 15:26:18 -0700 (PDT)
+        Thu, 11 Jun 2020 18:29:00 -0400
+Received: from mail-ot1-x335.google.com (mail-ot1-x335.google.com [IPv6:2607:f8b0:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E72FFC08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 15:28:58 -0700 (PDT)
+Received: by mail-ot1-x335.google.com with SMTP id 69so5865922otv.2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 15:28:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=GzFRhux1wSgI812RbpDpAhu3GXlBa7Bd4rcSyefPhVA=;
-        b=OzpB2OD9k6LHz7ctmh2NEbz3y65CGLWLCVnma5Ps+TheGsbwt1vtfty1l3R3pGnYi5
-         9kuK0m7QLaiGniJz2VRtt96/6QrJfTA4qQDIRq75mHWD7qH3gXO4fDgzfxRAKoaUa08+
-         g8jWn+o/OFWX7N7K1X9s2lzB6POD5vvemgqI7vA6/6BlOEUxvWa/knoa9Oy/1qf9IhmA
-         5SOlMrILU6p5Wwb9ABnnoDRYXG+L3ijF/V8ltXVNzXsW2KL8DuzZOo4feCoTLLzZRh4j
-         pYvE9MrzQirUE0i9K12igcNi4L53ZGAPfU2j01WCpFNaecw5hXl7S4TXNSLNaoLRaalx
-         6NPA==
+        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
+        bh=yQuXdwOztfCCh1OM0Y/znnoWVtA42w245nppjLu++SM=;
+        b=C9efrmYgO5lfHiPabO9leNQkZRsdhlwEQGAWMA52SmmHSpafgnK+/l847DiwWOyBpj
+         BAeGvslbj7wElzHda4DwvXS0ku8R79Ov2+bHCOh/Wc5QGdmv0su6wFBq2OfvGk2eaTGq
+         u9MFt68ahkxY0WjRh3nuhhBOlrOW1MnYy8G6VghffVY4IdRBNay/7mj7FCjMHKTJv2ht
+         GYwLGmvsv2JG78AtNqL4aAn4TX+q6VYmWxN1EECEZxgW8vMb3YpE6BvTsBs1SmWoAXbN
+         k7edAcL63vK2Ld9noBiS6oSmq4WzbzSYWD0olZCdndrD21tLhFkspBj4YJEgjnw+feF7
+         tXHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=GzFRhux1wSgI812RbpDpAhu3GXlBa7Bd4rcSyefPhVA=;
-        b=Aoci4KO9eY2x85UO3MVbv2Vx0SOXS2m+sezFF5p9EvicjfV9n+v3yMvya4X0maPGmo
-         hZp0kHLgd23F04Xh4s9MZm8GXuAPTDTUAMKJHKELwIYoBtNEkIu8+TmPQzOOsoPPr4f0
-         0Bi4Km9ojRmJVOyBIIINt+NWJKXS8tjOmBp3CgrkSln84hEiZRTRNRO3TR8UDyN9CL/9
-         RfH/LbjQmng+zpEtDvCFImtICO59ZPBtKXzwwVurwlbqrzmnMByM9/95G9WHLrDwCxeU
-         /YpbmeuuaQbAP6LxeTzIfA9j21gv/L4bJgLA8jUcS4fjsM6siGqj/330GVOMZW85iYx4
-         4j2A==
-X-Gm-Message-State: AOAM533lVjy/n1S27kwIp01QDxhzJkylWOXmGRBtLL0j6x6jum3j3I41
-        1RWkc+uqdnlxSwgdTYxZnKdznw==
-X-Google-Smtp-Source: ABdhPJzOGXq9awTs6f6SrHd8AbBVBmRp+c0JvL2f3Ys+E1G7lVWVJ4FnYj92vCFLqGFElzt7dToGlw==
-X-Received: by 2002:aca:ea43:: with SMTP id i64mr146837oih.51.1591914377498;
-        Thu, 11 Jun 2020 15:26:17 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
+         :mime-version;
+        bh=yQuXdwOztfCCh1OM0Y/znnoWVtA42w245nppjLu++SM=;
+        b=XLcmGzQx3CL/42mhtV77HVGyoYNr0KoxHD2UgqzltaTtmn9HYJbL5J/HgX0zbo5U+S
+         0zbhzdZGNJoBS9cskD/kLmsCVEHd03MyM0trOparA9Wu1lqjWVuOJe1xpMNk5eR2pqVG
+         oTJDbANlBTijETPCgJVfQJnDKNOR5wXQtElpgIrNmL/qvrld6/K5Asptzwv1I3GM99YA
+         kKnFdeMqmSxjLOGs66XDjhUIf7yS04yIfkaBsqFUUgONK8NFsS5YPQvOwYKB8YxnkB6Q
+         3Ry5gz6rAZ1IcinYj1K5AnwclbtNZGlfrDfjoe+3vy6nvcJDrZijvl0dlyeRgrmPApL/
+         bFXQ==
+X-Gm-Message-State: AOAM530Nqk1LcFKWP57nZCOREoankKDaGr2h2IhLZfonVlyqmtkNEibe
+        nk56XAGfGoaojr6nHkMRfU3hiA==
+X-Google-Smtp-Source: ABdhPJwC0cSrxAVd/oScf78OXudE/J7qH0OBFpxhpmCCenQEqZL2QUwwdccMsG0/Q/aHQLe+aN7Mmg==
+X-Received: by 2002:a9d:1c9b:: with SMTP id l27mr9063837ota.22.1591914537191;
+        Thu, 11 Jun 2020 15:28:57 -0700 (PDT)
 Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id p13sm951911otp.58.2020.06.11.15.26.15
+        by smtp.gmail.com with ESMTPSA id 126sm974999oii.39.2020.06.11.15.28.54
         (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
-        Thu, 11 Jun 2020 15:26:16 -0700 (PDT)
-Date:   Thu, 11 Jun 2020 15:26:14 -0700 (PDT)
+        Thu, 11 Jun 2020 15:28:56 -0700 (PDT)
+Date:   Thu, 11 Jun 2020 15:28:54 -0700 (PDT)
 From:   Hugh Dickins <hughd@google.com>
 X-X-Sender: hugh@eggly.anvils
 To:     Alex Shi <alex.shi@linux.alibaba.com>
 cc:     akpm@linux-foundation.org, mgorman@techsingularity.net,
-        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
+        tj@kernel.org, khlebnikov@yandex-team.ru,
         daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
         willy@infradead.org, hannes@cmpxchg.org, lkp@intel.com,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         cgroups@vger.kernel.org, shakeelb@google.com,
         iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com
-Subject: Re: [PATCH v12 00/16] per memcg lru lock
-In-Reply-To: <1591856209-166869-1-git-send-email-alex.shi@linux.alibaba.com>
-Message-ID: <alpine.LSU.2.11.2006111510220.10801@eggly.anvils>
-References: <1591856209-166869-1-git-send-email-alex.shi@linux.alibaba.com>
+Subject: [PATCH alexv12 1/2] mm/compaction: fix isolate_migratepages_block()
+ fails
+Message-ID: <alpine.LSU.2.11.2006111526290.10801@eggly.anvils>
 User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
 Content-Type: TEXT/PLAIN; charset=US-ASCII
@@ -82,115 +80,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 11 Jun 2020, Alex Shi wrote:
+Fix lots of crashes under compaction load: isolate_migratepages_block()
+must clean up appropriately when rejecting a page, setting PageLRU again
+if it had been cleared; and a put_page() after get_page_unless_zero()
+cannot safely be done while holding locked_lruvec - it may turn out to
+be the final put_page(), which will take an lruvec lock when PageLRU.
 
-> This is a new version which bases on v5.8,
+Signed-off-by: Hugh Dickins <hughd@google.com>
+---
+These fixes should be folded into 10/16 and 12/16,
+I have not tried to figure out what belongs in which.
 
-No, not even v5.8-rc1 has come out yet.  v12 applied cleanly on
-2dca74a40e1e7ff45079d85fc507769383039b9d but I didn't check the build.
+ mm/compaction.c |   24 +++++++++++++++++++-----
+ 1 file changed, 19 insertions(+), 5 deletions(-)
 
-> only change mm/compaction.c
-> since mm-compaction-avoid-vm_bug_onpageslab-in-page_mapcount.patch 
-> removed.
-> 
-> Johannes Weiner has suggested:
-> "So here is a crazy idea that may be worth exploring:
-> 
-> Right now, pgdat->lru_lock protects both PageLRU *and* the lruvec's
-> linked list.
-> 
-> Can we make PageLRU atomic and use it to stabilize the lru_lock
-> instead, and then use the lru_lock only serialize list operations?
-> ..."
-
-It was well worth exploring, and may help in a few cases;
-Johannes's memcg swap simplifications have helped a lot more;
-but crashes under rotate_reclaimable_page() show that this series
-still does not give enough protection from mem_cgroup_move_account().
-
-I'll send a couple of fixes to compaction bugs in reply to this:
-with those in, compaction appears to be solid.
-
-Hugh
-
-> 
-> With new memcg charge path and this solution, we could isolate
-> LRU pages to exclusive visit them in compaction, page migration, reclaim,
-> memcg move_accunt, huge page split etc scenarios while keeping pages' 
-> memcg stable. Then possible to change per node lru locking to per memcg
-> lru locking. As to pagevec_lru_move_fn funcs, it would be safe to let
-> pages remain on lru list, lru lock could guard them for list integrity.
-> 
-> The patchset includes 3 parts:
-> 1, some code cleanup and minimum optimization as a preparation.
-> 2, use TestCleanPageLRU as page isolation's precondition
-> 3, replace per node lru_lock with per memcg per node lru_lock
-> 
-> The 3rd part moves per node lru_lock into lruvec, thus bring a lru_lock for
-> each of memcg per node. So on a large machine, each of memcg don't
-> have to suffer from per node pgdat->lru_lock competition. They could go
-> fast with their self lru_lock
-> 
-> Following Daniel Jordan's suggestion, I have run 208 'dd' with on 104
-> containers on a 2s * 26cores * HT box with a modefied case:
-> https://git.kernel.org/pub/scm/linux/kernel/git/wfg/vm-scalability.git/tree/case-lru-file-readtwice
-> 
-> With this patchset, the readtwice performance increased about 80%
-> in concurrent containers.
-> 
-> Thanks Hugh Dickins and Konstantin Khlebnikov, they both brought this
-> idea 8 years ago, and others who give comments as well: Daniel Jordan, 
-> Mel Gorman, Shakeel Butt, Matthew Wilcox etc.
-> 
-> Thanks for Testing support from Intel 0day and Rong Chen, Fengguang Wu,
-> and Yun Wang. Hugh Dickins also shared his kbuild-swap case. Thanks!
-> 
-> 
-> Alex Shi (14):
->   mm/vmscan: remove unnecessary lruvec adding
->   mm/page_idle: no unlikely double check for idle page counting
->   mm/compaction: correct the comments of compact_defer_shift
->   mm/compaction: rename compact_deferred as compact_should_defer
->   mm/thp: move lru_add_page_tail func to huge_memory.c
->   mm/thp: clean up lru_add_page_tail
->   mm/thp: narrow lru locking
->   mm/memcg: add debug checking in lock_page_memcg
->   mm/lru: introduce TestClearPageLRU
->   mm/compaction: do page isolation first in compaction
->   mm/mlock: reorder isolation sequence during munlock
->   mm/lru: replace pgdat lru_lock with lruvec lock
->   mm/lru: introduce the relock_page_lruvec function
->   mm/pgdat: remove pgdat lru_lock
-> 
-> Hugh Dickins (2):
->   mm/vmscan: use relock for move_pages_to_lru
->   mm/lru: revise the comments of lru_lock
-> 
->  Documentation/admin-guide/cgroup-v1/memcg_test.rst |  15 +-
->  Documentation/admin-guide/cgroup-v1/memory.rst     |   8 +-
->  Documentation/trace/events-kmem.rst                |   2 +-
->  Documentation/vm/unevictable-lru.rst               |  22 +--
->  include/linux/compaction.h                         |   4 +-
->  include/linux/memcontrol.h                         |  92 +++++++++++
->  include/linux/mm_types.h                           |   2 +-
->  include/linux/mmzone.h                             |   6 +-
->  include/linux/page-flags.h                         |   1 +
->  include/linux/swap.h                               |   4 +-
->  include/trace/events/compaction.h                  |   2 +-
->  mm/compaction.c                                    |  96 +++++++-----
->  mm/filemap.c                                       |   4 +-
->  mm/huge_memory.c                                   |  51 +++++--
->  mm/memcontrol.c                                    |  87 ++++++++++-
->  mm/mlock.c                                         |  93 ++++++------
->  mm/mmzone.c                                        |   1 +
->  mm/page_alloc.c                                    |   1 -
->  mm/page_idle.c                                     |   8 -
->  mm/rmap.c                                          |   2 +-
->  mm/swap.c                                          | 112 ++++----------
->  mm/swap_state.c                                    |   6 +-
->  mm/vmscan.c                                        | 168 +++++++++++----------
->  mm/workingset.c                                    |   4 +-
->  24 files changed, 481 insertions(+), 310 deletions(-)
-> 
-> -- 
-> 1.8.3.1
+--- alexv12/mm/compaction.c	2020-06-11 13:24:52.037154793 -0700
++++ hughd/mm/compaction.c	2020-06-11 13:48:10.437046025 -0700
+@@ -879,6 +879,7 @@ isolate_migratepages_block(struct compac
+ 		if (!valid_page && IS_ALIGNED(low_pfn, pageblock_nr_pages)) {
+ 			if (!cc->ignore_skip_hint && get_pageblock_skip(page)) {
+ 				low_pfn = end_pfn;
++				page = NULL;
+ 				goto isolate_abort;
+ 			}
+ 			valid_page = page;
+@@ -971,10 +972,8 @@ isolate_migratepages_block(struct compac
+ 			goto isolate_fail;
+ 
+ 		/* Try isolate the page */
+-		if (!TestClearPageLRU(page)) {
+-			put_page(page);
+-			goto isolate_fail;
+-		}
++		if (!TestClearPageLRU(page))
++			goto isolate_fail_put;
+ 
+ 		rcu_read_lock();
+ 		lruvec = mem_cgroup_page_lruvec(page, pgdat);
+@@ -1005,7 +1004,8 @@ isolate_migratepages_block(struct compac
+ 			 */
+ 			if (unlikely(PageCompound(page) && !cc->alloc_contig)) {
+ 				low_pfn += compound_nr(page) - 1;
+-				goto isolate_fail;
++				SetPageLRU(page);
++				goto isolate_fail_put;
+ 			}
+ 		} else
+ 			rcu_read_unlock();
+@@ -1038,6 +1038,15 @@ isolate_success:
+ 		}
+ 
+ 		continue;
++
++isolate_fail_put:
++		/* Avoid potential deadlock in freeing page under lru_lock */
++		if (locked_lruvec) {
++			unlock_page_lruvec_irqrestore(locked_lruvec, flags);
++			locked_lruvec = NULL;
++		}
++		put_page(page);
++
+ isolate_fail:
+ 		if (!skip_on_failure)
+ 			continue;
+@@ -1074,10 +1083,15 @@ isolate_fail:
+ 	 */
+ 	if (unlikely(low_pfn > end_pfn))
+ 		low_pfn = end_pfn;
++	page = NULL;
+ 
+ isolate_abort:
+ 	if (locked_lruvec)
+ 		unlock_page_lruvec_irqrestore(locked_lruvec, flags);
++	if (page) {
++		SetPageLRU(page);
++		put_page(page);
++	}
+ 
+ 	/*
+ 	 * Updated the cached scanner pfn once the pageblock has been scanned
