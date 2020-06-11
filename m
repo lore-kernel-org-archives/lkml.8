@@ -2,95 +2,133 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12255C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 043DFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:55:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D239D20656
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:52:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="RaBBlggY"
+	by mail.kernel.org (Postfix) with ESMTP id D58D7207C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:55:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591869353;
+	bh=+WFFEnJdhn44WKcXH9ef2WLCK5OupD6/OMB1xTrq4Sc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oDoUFSDQ7M8+P3QirazvuBPG/AC1sUeZagHL8puCf6d40Q7BR8MmfWGGJEIqX7WUi
+	 fMwdDLlPzHA5TxvmVTGMl4kPuz92RuOc+PVmX+2/V5paAfihHsr4/Lvv5h6h6XM/Zj
+	 JPIfpC0T4weqg8dUja6badPDzBANWfnJz8JBQbuY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgFKJw5 (ORCPT
+        id S1727036AbgFKJzv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 05:52:57 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:39491 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726560AbgFKJw4 (ORCPT
+        Thu, 11 Jun 2020 05:55:51 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:33737 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726783AbgFKJzT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 05:52:56 -0400
-X-UUID: d125a9e89e874c09a2af91ffd9c34a03-20200611
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=CJcfxCu5zDRpr2vZfB1Tc+UVD9m/FFKMEZgs43bapM4=;
-        b=RaBBlggYi7uLe+U5eUAnTHjBINaRfqjWZLew/mB/kJXw6o7PQHLXsYxAbaicIOMyIy4jfjnSQgvkWeOdJ9eUXDKigTo/w+RSRnydNdRQD6tvfdax+QdbOmHBavbc/gLk5+rIkiBDJQbTdsEj0frBFSqNU+rifp9wNZqZcz88U/8=;
-X-UUID: d125a9e89e874c09a2af91ffd9c34a03-20200611
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 366576131; Thu, 11 Jun 2020 17:52:54 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 11 Jun 2020 17:52:50 +0800
-Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 11 Jun 2020 17:52:51 +0800
-Message-ID: <1591869173.25636.39.camel@mtkswgap22>
-Subject: RE: [PATCH v4] scsi: ufs: Fix imprecise load calculation in devfreq
- window
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     Avri Altman <Avri.Altman@wdc.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
-        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
-        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
-        "andy.teng@mediatek.com" <andy.teng@mediatek.com>,
-        "chaotian.jing@mediatek.com" <chaotian.jing@mediatek.com>,
-        "cc.chou@mediatek.com" <cc.chou@mediatek.com>
-Date:   Thu, 11 Jun 2020 17:52:53 +0800
-In-Reply-To: <SN6PR04MB46405CE4B375BA3134D64A99FC800@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <20200611052109.22700-1-stanley.chu@mediatek.com>
-         <SN6PR04MB46405CE4B375BA3134D64A99FC800@SN6PR04MB4640.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Thu, 11 Jun 2020 05:55:19 -0400
+Received: by mail-wm1-f67.google.com with SMTP id j198so6574348wmj.0;
+        Thu, 11 Jun 2020 02:55:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OGc4Jynhv8J9+LXwEVD2pmhTRYA7A0SBRA8Y9bWfwBM=;
+        b=ZP3WT+PqgLjTcOB43l6GxF4o9GVmkvGG8l8sH87x0bHL7XqW1KaHyZDmXKTjJKOzkt
+         RMgvMWpExF98C4c5Y8zco5vLKDG7hWRa43rDJfaSezsHoqaU+WlrqodiEafdyOR6DLBQ
+         sVAhvx5jJLoHj705kpT+10r+i2FjIpJr8PQg+MUeEUNoTiXzrXv0eurO1JGi1H1SIPOZ
+         S/KzhrJBCblA+SH0Gx9hzDttKjs8TI+oOrIpJt1f1hPWRjpYSRFdWMjxC2GYJ1vt1jOJ
+         t2JOGG6A6SmkoGwePy6IL/YHQJu+TjWJQs041ML6lujAcOHokviij9GvmZXEDyLTidDh
+         gLrA==
+X-Gm-Message-State: AOAM530ngMhb6vfGTQmJl/t9EPNN5CQTYVgAf7hkzc9JAKRH3GtCAfhI
+        VHBihFejIgcUSJAK6Xm9qRg=
+X-Google-Smtp-Source: ABdhPJxdFlFuIOqczVMYLEkBB/5DcRTZD3uW4Gi3wzWe6yykRWLuYTOprRKGwBQhCme4nouL4V90Cw==
+X-Received: by 2002:a7b:c18a:: with SMTP id y10mr7719246wmi.73.1591869316876;
+        Thu, 11 Jun 2020 02:55:16 -0700 (PDT)
+Received: from localhost (ip-37-188-174-201.eurotel.cz. [37.188.174.201])
+        by smtp.gmail.com with ESMTPSA id 67sm4301281wrk.49.2020.06.11.02.55.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2020 02:55:15 -0700 (PDT)
+Date:   Thu, 11 Jun 2020 11:55:14 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Chris Down <chris@chrisdown.name>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Yafang Shao <laoar.shao@gmail.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        "Linux F2FS DEV, Mailing List" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>, Cgroups <cgroups@vger.kernel.org>
+Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
+Message-ID: <20200611095514.GD20450@dhcp22.suse.cz>
+References: <20200521095515.GK6462@dhcp22.suse.cz>
+ <20200521163450.GV6462@dhcp22.suse.cz>
+ <CA+G9fYuDWGZx50UpD+WcsDeHX9vi3hpksvBAWbMgRZadb0Pkww@mail.gmail.com>
+ <CA+G9fYs2jg-j_5fdb0OW0G-JzDjN7b8d9qnX7uuk9p4c7mVSig@mail.gmail.com>
+ <20200528150310.GG27484@dhcp22.suse.cz>
+ <CA+G9fYvDXiZ9E9EfU6h0gsJ+xaXY77mRu9Jg+J7C=X4gJ3qvLg@mail.gmail.com>
+ <20200528164121.GA839178@chrisdown.name>
+ <CALOAHbAHGOsAUUM7qn=9L1u8kAf6Gztqt=SyHSmZ9XuYZWcKmg@mail.gmail.com>
+ <20200529015644.GA84588@chrisdown.name>
+ <20200529094910.GH4406@dhcp22.suse.cz>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 7CBC375DE8EB4263FB517B24417907279B35FCD9CE7FF744E8B9862B97D052252000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200529094910.GH4406@dhcp22.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQXZyaSwNCg0KVGhhbmtzIGZvciB0aGUgcmV2aWV3Lg0KDQpPbiBUaHUsIDIwMjAtMDYtMTEg
-YXQgMDg6MDMgKzAwMDAsIEF2cmkgQWx0bWFuIHdyb3RlOg0KPiA+IA0KPiA+IEZpeGVzOiBhM2Nk
-NWVjNTVmNmMgKCJzY3NpOiB1ZnM6IGFkZCBsb2FkIGJhc2VkIHNjYWxpbmcgb2YgVUZTIGdlYXIi
-KQ0KPiA+IFNpZ25lZC1vZmYtYnk6IFN0YW5sZXkgQ2h1IDxzdGFubGV5LmNodUBtZWRpYXRlay5j
-b20+DQo+IFJldmlld2VkLWJ5OiBBdnJpIEFsdG1hbiA8YXZyaS5hbHRtYW5Ad2RjLmNvbT4NCj4g
-DQo+IEp1c3QgYSBzbWFsbCBuaXQuDQo+IA0KPiA+IC0gICAgICAgc3RhdC0+dG90YWxfdGltZSA9
-IGppZmZpZXNfdG9fdXNlY3MoKGxvbmcpamlmZmllcyAtDQo+ID4gLSAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAobG9uZylzY2FsaW5nLT53aW5kb3dfc3RhcnRfdCk7DQo+ID4gKyAgICAg
-ICBzdGF0LT50b3RhbF90aW1lID0ga3RpbWVfdG9fdXMoY3Vycl90KSAtIHNjYWxpbmctPndpbmRv
-d19zdGFydF90Ow0KPiBrdGltZV9zdWIgPw0KDQpzY2FsaW5nLT53aW5kb3dfc3RhcnRfdCBpcyBh
-bHJlYWR5IGluICJ1cyIgdGh1cyBrdGltZV9zdWIoKSBpcyBub3QNCnN1aXRhYmxlIGhlcmUuDQoN
-CkFub3RoZXIgd2F5IGlzIGNoYW5naW5nIHNjYWxpbmctPndpbmRvd19zdGFydF90IGFzIHR5cGUg
-Imt0aW1lX3QiLiBUaGlzDQppcyB3b3J0aCB0byBkbyBiZWNhdXNlIG9mIGEgbGl0dGxlIHBlcmZv
-cm1hbmNlIGdhaW4uDQoNCkkgd2lsbCBjaGFuZ2UgaXQgaW4gbmV4dCB2ZXJzaW9uLg0KDQpUaGFu
-a3MsDQpTdGFubGV5IENodQ0KDQo=
+On Fri 29-05-20 11:49:20, Michal Hocko wrote:
+> On Fri 29-05-20 02:56:44, Chris Down wrote:
+> > Yafang Shao writes:
+> > > Look at this patch[1] carefully you will find that it introduces the
+> > > same issue that I tried to fix in another patch [2]. Even more sad is
+> > > these two patches are in the same patchset. Although this issue isn't
+> > > related with the issue found by Naresh, we have to ask ourselves why
+> > > we always make the same mistake ?
+> > > One possible answer is that we always forget the lifecyle of
+> > > memory.emin before we read it. memory.emin doesn't have the same
+> > > lifecycle with the memcg, while it really has the same lifecyle with
+> > > the reclaimer. IOW, once a reclaimer begins the protetion value should
+> > > be set to 0, and after we traversal the memcg tree we calculate a
+> > > protection value for this reclaimer, finnaly it disapears after the
+> > > reclaimer stops. That is why I highly suggest to add an new protection
+> > > member in scan_control before.
+> > 
+> > I agree with you that the e{min,low} lifecycle is confusing for everyone --
+> > the only thing I've not seen confirmation of is any confirmed correlation
+> > with the i386 oom killer issue. If you've validated that, I'd like to see
+> > the data :-)
+> 
+> Agreed. Even if e{low,min} might still have some rough edges I am
+> completely puzzled how we could end up oom if none of the protection
+> path triggers which the additional debugging should confirm. Maybe my
+> debugging patch is incomplete or used incorrectly (maybe it would be
+> esier to use printk rather than trace_printk?).
 
+It would be really great if we could move forward. While the fix (which
+has been dropped from mmotm) is not super urgent I would really like to
+understand how it could hit the observed behavior. Can we double check
+that the debugging patch really doesn't trigger (e.g.
+s@trace_printk@printk in the first step)? I have checked it again but
+do not see any potential code path which would be affected by the patch
+yet not trigger any output. But another pair of eyes would be really
+great.
+-- 
+Michal Hocko
+SUSE Labs
