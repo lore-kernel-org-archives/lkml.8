@@ -2,207 +2,119 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A291C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8657C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 190A92074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:24:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4C8F20656
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:25:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K6e3B4gy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726677AbgFKHYf convert rfc822-to-8bit (ORCPT
+        id S1726691AbgFKHZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 03:24:35 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:40382 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726375AbgFKHYd (ORCPT
+        Thu, 11 Jun 2020 03:25:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50568 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726375AbgFKHZV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 03:24:33 -0400
-Received: from mail-pl1-f198.google.com ([209.85.214.198])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jjHZe-0006XP-U0
-        for linux-kernel@vger.kernel.org; Thu, 11 Jun 2020 07:24:31 +0000
-Received: by mail-pl1-f198.google.com with SMTP id s7so3231176plp.13
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 00:24:30 -0700 (PDT)
+        Thu, 11 Jun 2020 03:25:21 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31E42C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 00:25:20 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id 64so2287890pfv.11
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 00:25:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=n9OzD1T7RKQ1aMbwbI45XX0M6uYmCBSjbYUlc3imDBI=;
+        b=K6e3B4gy/SQ4URKi7p6s1iSIvQRB94WZk0eq8McqI7HWn7NDOpK3wwlmAM4JLaUqme
+         Gsx2gCe+hyUCpCLSiH1JLbkm3UMkC/iiImY0dQs8Z0CTZ9ZGHShqwzCJD06QauEqtJVJ
+         PLsli0/t0OdQLDATdRfaOoDn1nziNpVC7x+feh9RLxWWQ560NBDiITTIqrjnn9CoyiOu
+         nFqrWk9FMTnIIN2x4CTL5cP3IT1QOEkvPRKO/5BCzvNpTLpDburw5d00w4vRgJn5/0ww
+         RlO8PNAo7llokm6F385cDN5x7H8z8VBxY/vU9CwVErHwttDmP+BZYoWdj1XJPKoxRfPV
+         Idxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=SoZ5V9zbRLgaegUDNwwyEPCdc+OC+RVdcppcKFcouRM=;
-        b=H4VanI6UQCuiLIrat9y6k9o8s7VQn8qUWBJXSI+p+zXRka7bqraJYpQcMUVxaL49uL
-         KlLcR5AgLF+nhSKaHERz7KpScUT0yQLUt93IcGd2PMMJuL7sTemQ9ajPQMHzbX/1esZ3
-         uIvX0tDBD4uw8QcTz1I0Zzlsvk7kwmAV5/PQpdlPagX3TKofTQBbP51zz5Sbd0Z4rfjJ
-         ghDmgeFfWpkw1CQ/hWTMvUJjW6WZcyV7nMvVPTUj4a4spUYnEMw2LI3yxcIrAdYL7SNe
-         JyaKF6nJWkTsmkWiXzRPmXDJQeSw43ini715OwMUcVhg1ao1OGWwUGM5pyxRNxjR/XvL
-         82Zg==
-X-Gm-Message-State: AOAM533ytrbWuuxTluh5z4McRBpif63qLnsMjewvpOVqTHqW0Qu9VTHs
-        77EB4B8fikHTX7vO+ROZ2u/58oVM6R9bwC79hxMpeWCJ4TyyuUlArISf4QCSMgSZpEQTjFsbV69
-        SqiUMjLTaGWAQasLp67ftelTPU82CLfRE02bH/6xJNA==
-X-Received: by 2002:a17:90a:266f:: with SMTP id l102mr7241916pje.190.1591860269337;
-        Thu, 11 Jun 2020 00:24:29 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyi8wDANIhDLxT/nZLs6HcB4H24a5vgsYTvue3cQSog96kQYqFqggwWBL2fS2o5Mbi3Kwf7vg==
-X-Received: by 2002:a17:90a:266f:: with SMTP id l102mr7241899pje.190.1591860268989;
-        Thu, 11 Jun 2020 00:24:28 -0700 (PDT)
-Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
-        by smtp.gmail.com with ESMTPSA id e124sm2052968pfh.140.2020.06.11.00.24.27
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Jun 2020 00:24:28 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH] platform/x86: intel-hid: Use hp-wireless for rfkill on HP
- platforms
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <0affa00e-8a52-9e29-56d4-39dff952d736@canonical.com>
-Date:   Thu, 11 Jun 2020 15:24:26 +0800
-Cc:     Mario.Limonciello@dell.com, dvhart@infradead.org,
-        andy@infradead.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <A98FC3F7-2295-4B49-95DD-1D861BC56B9A@canonical.com>
-References: <20200610153747.27040-1-kai.heng.feng@canonical.com>
- <4d0714fe5e2548b6b638ea447ad19490@AUSX13MPC105.AMER.DELL.COM>
- <0affa00e-8a52-9e29-56d4-39dff952d736@canonical.com>
-To:     Alex Hung <alex.hung@canonical.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=n9OzD1T7RKQ1aMbwbI45XX0M6uYmCBSjbYUlc3imDBI=;
+        b=KojnupxUmTBqn7YMc4QIugAFP06FbQI7Q7vX/l/2tbhXtS8mmWxiBt+KB8wTlSF1SZ
+         eOAFS30l7StaeKMLrNTCjFMmcu7PkBrtDeJ83f/Jld5JbzUb+J69RzUw/TrFyP9IEZrf
+         53q/nxwGHD7sWpM25uXaDf4zp3Nk3lxzPbvF5Ev3qzSXYwGBkF68XZIjia9Eph1dKpIt
+         6lKYIetrSzj8bcobo/OrLWtUjyECHG8Zu6/jSli7cSuylzIixaqUKM8dpFrDx+RSi3ym
+         EqcH0HBFI0vZK0ORHW4YdVllTHeTWfyfsWV4d3tBa/HNt0KkQ29eQjdgOhJmi3FWOqIE
+         CIiQ==
+X-Gm-Message-State: AOAM530Kyi59d07iqqNxd+eKpiA7WSdiAJzCJhCmtKZAv58nlRDs85Ih
+        cS3rMHwY8WMdNjTV3hEAYTDHvVirXw07KIkPHPykTcBYwFzwHw==
+X-Google-Smtp-Source: ABdhPJzWzcP1d4fY/oPY8kL82YYOLPike7ZE9iJ/x8hwP8GpyvnLKh6Dd4hU5oTg37lEHdzF258Xj9hqygv3FX88JRo=
+X-Received: by 2002:a62:1792:: with SMTP id 140mr6217129pfx.36.1591860319487;
+ Thu, 11 Jun 2020 00:25:19 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200602223728.32722-1-richard.weiyang@gmail.com>
+ <CAMuHMdUfnmm4bXVRvFOmG5DFYR+LtcZ1UviDszr9bByiN=DO+Q@mail.gmail.com>
+ <20200604122805.d2ndjmkmti6wl3nz@master> <CAMuHMdXnLUS8F4nWJBqDjoKhBmF2_ihfwe4jTGxuZ1e_WKRNPQ@mail.gmail.com>
+ <20200605230610.bizp2j23ivyma5rn@master> <20200605171629.d931068c1a4d720d8faa2704@linux-foundation.org>
+ <20200608223112.ftncszh7hfnmqj3m@master> <20200609091649.GX2428291@smile.fi.intel.com>
+ <20200609230241.gdqebrspmucnru5k@master> <CAHp75VdVUNqUsfr19jKHjba8CPTQhbSK+WfTKwZFtCfK0JtRCw@mail.gmail.com>
+ <20200610220613.ets3envsukjstvlu@master>
+In-Reply-To: <20200610220613.ets3envsukjstvlu@master>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 11 Jun 2020 10:25:07 +0300
+Message-ID: <CAHp75VcaDX8exWvTimzjwyLKjcKtaZyxugzWmnNMErvTZHDLQQ@mail.gmail.com>
+Subject: Re: [Patch v2] lib: test get_count_order/long in test_bitops.c
+To:     Wei Yang <richard.weiyang@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jun 11, 2020 at 1:06 AM Wei Yang <richard.weiyang@gmail.com> wrote:
+> On Wed, Jun 10, 2020 at 01:17:28PM +0300, Andy Shevchenko wrote:
+> >On Wed, Jun 10, 2020 at 2:06 AM Wei Yang <richard.weiyang@gmail.com> wrote:
+> >> On Tue, Jun 09, 2020 at 12:16:49PM +0300, Andy Shevchenko wrote:
+> >> >On Mon, Jun 08, 2020 at 10:31:12PM +0000, Wei Yang wrote:
+> >> >> On Fri, Jun 05, 2020 at 05:16:29PM -0700, Andrew Morton wrote:
+> >> >
+> >> >...
+> >> >
+> >> >> The test on 64bit machine pass. Since I don't have a 32bit machine by hand,
+> >> >
+> >> >Out of curiosity what that machine is?
+> >> >
+> >>
+> >> It is a Intel Xeon Gold CPU.
+> >
+> >I suppose it's x86 (and not ia64).
+> >In this case you can always build an i386 configuration and test on a
+> >32-bit "machine".
+> >
+>
+> Yes, you are right. While last time I tried to run a 32bit guest, it took me a
+> lot of time to setup. If my understanding is correct, to run on a 32bit
+> machine, we not only need the kernel but a whole 32bit system. This means I
+> need to re-install a 32bit system. And I found many distro doesn't support
+> 32bit system any more.
+>
+> Do you have a better way to setup the environment?
 
+Yes, BuildRoot is your friend. I have a branch [1] to make it suitable
+to create bootable images for x86 machines. There is a quick
+instructions what it does provide.
 
-> On Jun 11, 2020, at 01:41, Alex Hung <alex.hung@canonical.com> wrote:
-> 
-> On 2020-06-10 9:49 a.m., Mario.Limonciello@dell.com wrote:
->>> -----Original Message-----
->>> From: platform-driver-x86-owner@vger.kernel.org <platform-driver-x86-
->>> owner@vger.kernel.org> On Behalf Of Kai-Heng Feng
->>> Sent: Wednesday, June 10, 2020 10:38 AM
->>> To: alex.hung@canonical.com
->>> Cc: Kai-Heng Feng; Darren Hart; Andy Shevchenko; open list:INTEL HID EVENT
->>> DRIVER; open list
->>> Subject: [PATCH] platform/x86: intel-hid: Use hp-wireless for rfkill on HP
->>> platforms
->>> 
->>> 
->>> [EXTERNAL EMAIL]
->>> 
->>> Wireless hotkey on HP platforms can trigger two events, if both
->>> hp-wireless and intel-hid are supported. Two events at the same time
->>> renders wireless hotkey useless.
->>> 
->>> HP confirmed that hp-wireless (HPQ6001) should always be the canonical
->>> source of wireless hotkey event, so skip registering rfkill hotkey if
->>> HPQ6001 is present.
->>> 
->>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->>> ---
->>> drivers/platform/x86/intel-hid.c | 31 ++++++++++++++++++++++++++++++-
->>> 1 file changed, 30 insertions(+), 1 deletion(-)
->>> 
->>> diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-
->>> hid.c
->>> index 9ee79b74311c..31091c8faf70 100644
->>> --- a/drivers/platform/x86/intel-hid.c
->>> +++ b/drivers/platform/x86/intel-hid.c
->>> @@ -25,6 +25,8 @@ static const struct acpi_device_id intel_hid_ids[] = {
->>> };
->>> MODULE_DEVICE_TABLE(acpi, intel_hid_ids);
->>> 
->>> +static bool hp_wireless_present;
->>> +
->>> /* In theory, these are HID usages. */
->>> static const struct key_entry intel_hid_keymap[] = {
->>> 	/* 1: LSuper (Page 0x07, usage 0xE3) -- unclear what to do */
->>> @@ -49,6 +51,29 @@ static const struct key_entry intel_hid_keymap[] = {
->>> 	{ KE_END },
->>> };
->>> 
->>> +static const struct key_entry intel_hid_no_rfkill_keymap[] = {
->>> +	/* 1: LSuper (Page 0x07, usage 0xE3) -- unclear what to do */
->>> +	/* 2: Toggle SW_ROTATE_LOCK -- easy to implement if seen in wild */
->>> +	{ KE_KEY, 3, { KEY_NUMLOCK } },
->>> +	{ KE_KEY, 4, { KEY_HOME } },
->>> +	{ KE_KEY, 5, { KEY_END } },
->>> +	{ KE_KEY, 6, { KEY_PAGEUP } },
->>> +	{ KE_KEY, 7, { KEY_PAGEDOWN } },
->>> +	/* 8: rfkill -- use hp-wireless instead */
->>> +	{ KE_KEY, 9, { KEY_POWER } },
->>> +	{ KE_KEY, 11, { KEY_SLEEP } },
->>> +	/* 13 has two different meanings in the spec -- ignore it. */
->>> +	{ KE_KEY, 14, { KEY_STOPCD } },
->>> +	{ KE_KEY, 15, { KEY_PLAYPAUSE } },
->>> +	{ KE_KEY, 16, { KEY_MUTE } },
->>> +	{ KE_KEY, 17, { KEY_VOLUMEUP } },
->>> +	{ KE_KEY, 18, { KEY_VOLUMEDOWN } },
->>> +	{ KE_KEY, 19, { KEY_BRIGHTNESSUP } },
->>> +	{ KE_KEY, 20, { KEY_BRIGHTNESSDOWN } },
->>> +	/* 27: wake -- needs special handling */
->>> +	{ KE_END },
->>> +};
->>> +
->>> /* 5 button array notification value. */
->>> static const struct key_entry intel_array_keymap[] = {
->>> 	{ KE_KEY,    0xC2, { KEY_LEFTMETA } },                /* Press */
->>> @@ -317,7 +342,8 @@ static int intel_hid_input_setup(struct platform_device
->>> *device)
->>> 	if (!priv->input_dev)
->>> 		return -ENOMEM;
->>> 
->>> -	ret = sparse_keymap_setup(priv->input_dev, intel_hid_keymap, NULL);
->>> +	ret = sparse_keymap_setup(priv->input_dev, hp_wireless_present ?
->>> +			intel_hid_no_rfkill_keymap : intel_hid_keymap, NULL);
->>> 	if (ret)
->>> 		return ret;
->>> 
->>> @@ -575,6 +601,9 @@ check_acpi_dev(acpi_handle handle, u32 lvl, void
->>> *context, void **rv)
->>> 			dev_info(&dev->dev,
->>> 				 "intel-hid: created platform device\n");
->>> 
->>> +	if (!strcmp(acpi_device_hid(dev), "HPQ6001"))
->>> +		hp_wireless_present = true;
-> 
-> (Resend with format removed)
-> 
-> This can impact all HP systems that do not have this problem.
+[1]: https://github.com/andy-shev/buildroot/tree/intel/board/intel/common
 
-HP is certain that HPQ6001 should always be used over INT33D5.
-
-If this patch breaks other platform, then we should fix HPQ6001 instead.
-
-> How about
-> a DMI quirk that is limited to this particular system?
-
-We should avoid using DMI quirk for this one, as this is to follow the HP's spec.
-
-Kai-Heng
-
-> 
-> 
->> 
->> Just having the ACPI device present doesn't actually mean that the user
->> has a kernel compiled with hp-wireless or that it has finished initializing.
->> 
->> I would think this needs a better handshake in case hp-wireless was unloaded
->> or not present so the event could still come through intel-hid in this
->> circumstance.
->> 
->>> +
->>> 	return AE_OK;
->>> }
->>> 
->>> --
->>> 2.17.1
->> 
-> 
-> 
-> -- 
-> Cheers,
-> Alex Hung
-
+-- 
+With Best Regards,
+Andy Shevchenko
