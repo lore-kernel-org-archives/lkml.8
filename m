@@ -2,128 +2,208 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1899AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99446C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7D4520720
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:06:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7035E2073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:09:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="WAloTPwM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbgFKXGi (ORCPT
+        id S1726362AbgFKXJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 19:06:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55090 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgFKXGi (ORCPT
+        Thu, 11 Jun 2020 19:09:17 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:60766 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbgFKXJQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 19:06:38 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28E4EC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 16:06:38 -0700 (PDT)
-Received: from localhost ([127.0.0.1] helo=vostro)
-        by Galois.linutronix.de with esmtps (TLS1.2:RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1jjWHH-0008Ah-R0; Fri, 12 Jun 2020 01:06:32 +0200
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Paul McKenney <paulmck@kernel.org>
-Subject: Re: Barrier before pushing desc_ring tail: was [PATCH v2 2/3] printk: add lockless buffer
-References: <20200501094010.17694-1-john.ogness@linutronix.de>
-        <20200501094010.17694-3-john.ogness@linutronix.de>
-        <20200609113751.GD23752@linux-b0ei>
-        <87d068utbg.fsf@vostro.fn.ogness.net>
-        <20200611120107.GD6581@linux-b0ei>
-Date:   Fri, 12 Jun 2020 01:06:28 +0200
-In-Reply-To: <20200611120107.GD6581@linux-b0ei> (Petr Mladek's message of
-        "Thu, 11 Jun 2020 14:01:08 +0200")
-Message-ID: <87bllpyzgr.fsf@vostro.fn.ogness.net>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 11 Jun 2020 19:09:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
+        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=+vs0C/x8fZ6Qvq4Ip5YKMPuZ++Vs0ocLislt6BL3la8=; b=WAloTPwMgU2upwFJKMUdRAUGZ8
+        4p1/0GV9JlIs2ivHjKaAKUlHd3xcqGuZhAVchW59vWBfETKC6HIF7+pgmeIrTiXP8lYNq1Vjz8fmY
+        tQ8f2Erm6ZDTed3rqvSYLjaeyb1U2wgygecbpCHiYCowQ8llVtUooB2fnApunbI40K3ctDtnmEzrt
+        MF//xWp7RU0y0CEFC2Fv4zMYz7N/yNgYmLtFP0XoexQFch9pIM0kJefh0pYMdxZ3j+k0npaJezeHh
+        L4Axj9xRiHwpm9og8P9U5VxBozbzMaB03rm1J+ctRwBU+H0PvGwdlGkdAycgYgU4Ux/llWHlEztWx
+        +cmKHI7A==;
+Received: from s01060023bee90a7d.cg.shawcable.net ([24.64.145.4] helo=[192.168.0.10])
+        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1jjWJn-0001i8-KE; Thu, 11 Jun 2020 17:09:08 -0600
+To:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20200514172253.6445-1-logang@deltatee.com>
+ <20200514172253.6445-3-logang@deltatee.com>
+ <BYAPR04MB49658F968DC104E99B5C923286800@BYAPR04MB4965.namprd04.prod.outlook.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <09f1de95-533e-6707-9c86-665f32eb53d7@deltatee.com>
+Date:   Thu, 11 Jun 2020 17:09:03 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <BYAPR04MB49658F968DC104E99B5C923286800@BYAPR04MB4965.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 24.64.145.4
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, maxg@mellanox.com, axboe@fb.com, kbusch@kernel.org, sagi@grimberg.me, hch@lst.de, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, Chaitanya.Kulkarni@wdc.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH v13 2/9] nvme: Create helper function to obtain command
+ effects
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-11, Petr Mladek <pmladek@suse.com> wrote:
-> All this relies on the fact the the full barrier is called in
-> data_push_tail() and data_push_tail() is called right above.
-> But there are two situations where the barrier is not called.
-> It is when:
->
->   1. desc.text_blk_lpos.next already is behind data_ring->tail_lpos.
->
->      This is safe.
 
-Yes, and I have since expanded the comment above the data_push_tail()
-while loop to mention that:
 
-	/*
-	 * Loop until the tail lpos is at or beyond @lpos. This condition
-	 * may already be satisfied, resulting in no full memory barrier
-	 * from data_push_tail:C being performed. However, since this CPU
-	 * sees the new tail lpos, any descriptor states that transitioned to
-	 * the reusable state must already be visible.
-	 */
+On 2020-06-11 4:56 p.m., Chaitanya Kulkarni wrote:
+> On 5/14/20 10:23 AM, Logan Gunthorpe wrote:
+>> Separate the code to obtain command effects from the code
+>> to start a passthru request and open code nvme_known_admin_effects()
+>> in the new helper.
+>>
+>> The new helper function will be necessary for nvmet passthru
+>> code to determine if we need to change out of interrupt context
+>> to handle the effects.
+>>
+>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+>> Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+>> ---
+>>   drivers/nvme/host/core.c | 39 ++++++++++++++++++++++-----------------
+>>   1 file changed, 22 insertions(+), 17 deletions(-)
+>>
+>> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+>> index d22859543e4b..5062a83c3634 100644
+>> --- a/drivers/nvme/host/core.c
+>> +++ b/drivers/nvme/host/core.c
+>> @@ -1317,22 +1317,8 @@ static int nvme_submit_io(struct nvme_ns *ns, struct nvme_user_io __user *uio)
+>>   			metadata, meta_len, lower_32_bits(io.slba), NULL, 0);
+>>   }
+>>   
+>> -static u32 nvme_known_admin_effects(u8 opcode)
+>> -{
+>> -	switch (opcode) {
+>> -	case nvme_admin_format_nvm:
+>> -		return NVME_CMD_EFFECTS_CSUPP | NVME_CMD_EFFECTS_LBCC |
+>> -					NVME_CMD_EFFECTS_CSE_MASK;
+>> -	case nvme_admin_sanitize_nvm:
+>> -		return NVME_CMD_EFFECTS_CSE_MASK;
+>> -	default:
+>> -		break;
+>> -	}
+>> -	return 0;
+>> -}
+>> -
+>> -static u32 nvme_passthru_start(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+>> -								u8 opcode)
+>> +static u32 nvme_command_effects(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+>> +				u8 opcode)
+>>   {
+>>   	u32 effects = 0;
+>>   
+>> @@ -1348,7 +1334,26 @@ static u32 nvme_passthru_start(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+>>   
+>>   	if (ctrl->effects)
+>>   		effects = le32_to_cpu(ctrl->effects->acs[opcode]);
+>> -	effects |= nvme_known_admin_effects(opcode);
+>> +
+>> +	switch (opcode) {
+>> +	case nvme_admin_format_nvm:
+>> +		effects |= NVME_CMD_EFFECTS_CSUPP | NVME_CMD_EFFECTS_LBCC |
+>> +			NVME_CMD_EFFECTS_CSE_MASK;
+>> +		break;
+>> +	case nvme_admin_sanitize_nvm:
+>> +		effects |= NVME_CMD_EFFECTS_CSE_MASK;
+>> +		break;
+>> +	default:
+>> +		break;
+>> +	}
+>> +
+>> +	return effects;
+>> +}
+>> +
+>> +static u32 nvme_passthru_start(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+>> +			       u8 opcode)
+>> +{
+>> +	u32 effects = nvme_command_effects(ctrl, ns, opcode);
+>>   
+>>   	/*
+>>   	 * For simplicity, IO to all namespaces is quiesced even if the command
+>>
+> 
+> Seems like you have changed the existing function body from
+> returning from switch to returning at the end of the function along with
+> the name that is why diff is large, which also adds an extra variable 
+> named "effect".
+> 
+> How about following ? which keeps the diff small and removes the extra 
+> variable and keeps the existing code as it.
 
->   2. desc.text_blk_lpos == INVALID_LPOS.
->
->      It seems that this is not synchronized and other CPUs might see
->      the old state.
+That doesn't really get what's needed for the new helper. We need a new
+helper that gets the effects as nvme_passthru_start() sees them
+(including ctrl->effects->acs[opcode]). Changing the name of
+nvme_known_admin_effects() is not equivalent.
 
-Great catch! This could trigger the WARN_ON at desc_reserve:F and lead
-to prb_reserve() unnecessarily failing.
+This patch would be possible to do without open coding
+nvme_known_admin_effects() in the new helper, but doing so helps to
+clean things up a bit as nvme_known_admin_effects() isn't used anywhere
+else.
 
-> The question is what to do with the empty data case. I see three
-> possibilities:
->
->   1. Ignore the case with empty block because it (probably) does not
->      cause real problems.
+Logan
 
-It could cause dropped messages.
 
->   2. Call the full barrier in data_push_tail() even when the data
->      block is empty.
-
-This is the common case, since most records will not have dictionary
-data.
-
->   3. Call the full barrier also in desc_push_tail() as I suggested.
->
-> My opinion:
->
-> I prefer 3rd solution.
-
-Agreed. For my next version I am folding all smp_mb() and smp_wmb()
-calls into their neighboring cmpxchg_relaxed(). This would apply here as
-well, changing desc_push_tail:B to a full cmpxchg().
-
-We still need the full memory barrier at data_push_tail:C. Readers rely
-on it to be able to verify if their copied data is still valid:
-
-CPU0 (writer0)        CPU1 (writer1)       CPU2 (reader)
-                                           desc_read->committed
-desc_make_reusable
-smp_mb
-data_push_tail
-                      read new data tail
-                      data_push_head
-                      smp_mb
-                      write new data
-                                           read garbage new data
-                                           desc_read->reusable
-
-John Ogness
+> 
+> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+> index 78fc38b8356f..f47013fdc5ee 100644
+> --- a/drivers/nvme/host/core.c
+> +++ b/drivers/nvme/host/core.c
+> @@ -1326,7 +1326,8 @@ static int nvme_submit_io(struct nvme_ns *ns, 
+> struct nvme_user_io __user *uio)
+>                          metadata, meta_len, lower_32_bits(io.slba), 
+> NULL, 0);
+>   }
+> 
+> -static u32 nvme_known_admin_effects(u8 opcode)
+> +static u32 nvme_command_effects(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+> +                               u8 opcode)
+>   {
+>          switch (opcode) {
+>          case nvme_admin_format_nvm:
+> @@ -1343,7 +1344,7 @@ static u32 nvme_known_admin_effects(u8 opcode)
+>   static u32 nvme_passthru_start(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+>                                                                  u8 opcode)
+>   {
+> -       u32 effects = 0;
+> +       u32 effects = nvme_command_effects(ctrl, ns, opcode);
+> 
+>          if (ns) {
+>                  if (ctrl->effects)
+> @@ -1357,7 +1358,6 @@ static u32 nvme_passthru_start(struct nvme_ctrl 
+> *ctrl, struct nvme_ns *ns,
+> 
+>          if (ctrl->effects)
+>                  effects = le32_to_cpu(ctrl->effects->acs[opcode]);
+> -       effects |= nvme_known_admin_effects(opcode);
+> 
+>          /*
+>           * For simplicity, IO to all namespaces is quiesced even if the 
+> command
+> 
