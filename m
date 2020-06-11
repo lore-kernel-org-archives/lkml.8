@@ -2,91 +2,101 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C20C433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C03C433E1
 	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 04:05:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED5302072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 04:05:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C9E82075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 04:05:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726387AbgFKEFv (ORCPT
+        id S1726502AbgFKEFz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 00:05:51 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:33304 "EHLO fornost.hmeau.com"
+        Thu, 11 Jun 2020 00:05:55 -0400
+Received: from mga01.intel.com ([192.55.52.88]:2717 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726290AbgFKEFu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 00:05:50 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1jjETI-00033l-Ig; Thu, 11 Jun 2020 14:05:45 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 11 Jun 2020 14:05:44 +1000
-Date:   Thu, 11 Jun 2020 14:05:44 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Subject: [GIT PULL] Crypto Fixes for 5.8
-Message-ID: <20200611040544.GA27603@gondor.apana.org.au>
-References: <20190916084901.GA20338@gondor.apana.org.au>
- <20190923050515.GA6980@gondor.apana.org.au>
- <20191202062017.ge4rz72ki3vczhgb@gondor.apana.org.au>
- <20191214084749.jt5ekav5o5pd2dcp@gondor.apana.org.au>
- <20200115150812.mo2eycc53lbsgvue@gondor.apana.org.au>
- <20200213033231.xjwt6uf54nu26qm5@gondor.apana.org.au>
- <20200408061513.GA23636@gondor.apana.org.au>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200408061513.GA23636@gondor.apana.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1726290AbgFKEFw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 00:05:52 -0400
+IronPort-SDR: LW0Mk8ExYtJ/LEHqabOxIu04OkZxpaOw0FgiDAarAyLH4gLdWHmxa7KbbRBw2r5ibsegxr7pgz
+ dJqRFSbj7XaA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2020 21:05:51 -0700
+IronPort-SDR: vr+aPOHu6s4WY55r7400BgZlEx1FRXctwY56AsQDpDfJWmeiCSW4sLR8SOOcYmd6W2Rcm6RJNK
+ HVan2TwW087w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,498,1583222400"; 
+   d="scan'208";a="306804388"
+Received: from jacob-builder.jf.intel.com ([10.7.199.155])
+  by orsmga008.jf.intel.com with ESMTP; 10 Jun 2020 21:05:51 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>
+Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v2 0/3] IOMMU user API enhancement
+Date:   Wed, 10 Jun 2020 21:12:12 -0700
+Message-Id: <1591848735-12447-1-git-send-email-jacob.jun.pan@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus:
+IOMMU user API header was introduced to support nested DMA translation and
+related fault handling. The current UAPI data structures consist of three
+areas that cover the interactions between host kernel and guest:
+ - fault handling
+ - cache invalidation
+ - bind guest page tables, i.e. guest PASID
 
-This push contains a number of fixes to the omap and nitrox drivers.
+Future extensions are likely to support more architectures and vIOMMU features.
 
-The following changes since commit 58ca0060ec4e51208d2eee12198fc55fd9e4feb3:
+In the previous discussion, using user-filled data size and feature flags is
+made a preferred approach over a unified version number.
+https://lkml.org/lkml/2020/1/29/45
 
-  crypto: hisilicon - fix driver compatibility issue with different versions of devices (2020-05-28 17:27:52 +1000)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus 
-
-for you to fetch changes up to 320bdbd816156f9ca07e5fed7bfb449f2908dda7:
-
-  crypto: cavium/nitrox - Fix 'nitrox_get_first_device()' when ndevlist is fully iterated (2020-06-04 22:06:26 +1000)
-
-----------------------------------------------------------------
-Christophe JAILLET (1):
-      crypto: cavium/nitrox - Fix 'nitrox_get_first_device()' when ndevlist is fully iterated
-
-Tero Kristo (7):
-      crypto: omap-aes - avoid spamming console with self tests
-      crypto: omap-sham - force kernel driver usage for sha algos
-      crypto: omap-crypto - fix userspace copied buffer access
-      crypto: omap-sham - huge buffer access fixes
-      crypto: omap-sham - fix very small data size handling
-      crypto: omap-aes - prevent unregistering algorithms twice
-      crypto: omap-sham - add proper load balancing support for multicore
-
- drivers/crypto/cavium/nitrox/nitrox_main.c |   4 ++--
- drivers/crypto/omap-aes-gcm.c              |   1 -
- drivers/crypto/omap-aes.c                  |   8 ++++++--
- drivers/crypto/omap-crypto.c               |  10 ++++++++--
- drivers/crypto/omap-sham.c                 | 101 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-------------------------------------------
- 5 files changed, 74 insertions(+), 50 deletions(-)
+In addition to introduce argsz field to data structures, this patchset is also
+trying to document the UAPI design, usage, and extension rules. VT-d driver
+changes to utilize the new argsz field is included, VFIO usage is to follow.
 
 Thanks,
+
+Jacob
+
+
+Changeog:
+
+v2:
+	- Removed unified API version and helper
+	- Introduced argsz for each UAPI data
+	- Introduced UAPI doc
+
+
+Jacob Pan (3):
+  docs: IOMMU user API
+  iommu/uapi: Add argsz for user filled data
+  iommu/vt-d: Sanity check uapi argsz filled by users
+
+ Documentation/userspace-api/iommu.rst | 210 ++++++++++++++++++++++++++++++++++
+ drivers/iommu/intel-iommu.c           |  16 +++
+ drivers/iommu/intel-svm.c             |  12 ++
+ include/uapi/linux/iommu.h            |   6 +
+ 4 files changed, 244 insertions(+)
+ create mode 100644 Documentation/userspace-api/iommu.rst
+
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.7.4
+
