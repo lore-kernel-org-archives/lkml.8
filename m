@@ -2,165 +2,92 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C44A0C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7949AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98DF020656
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:39:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Sg5+h4vt"
+	by mail.kernel.org (Postfix) with ESMTP id 5674C20656
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:40:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbgFKIjY (ORCPT
+        id S1726977AbgFKIkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 04:39:24 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53643 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726560AbgFKIjV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 04:39:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591864760;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=XB/QLkfNPpEWUD3t+7iKbigF61vALbbUqs1AQI2PfJE=;
-        b=Sg5+h4vtbCRd7htfE7AS9SoMenibdYe0TcDgkMjuOsGcZhs+ivE7jhIWT7yfZWt8jWKFIo
-        HiOXxMt+D9E+tO+ERUi3jJKIg0GYi2DaACJrfNP6uKpqzLbXQKiGPttA48VPuKW3EI0Oi4
-        aES2MaJcQOB4F1ZzuL7yD0CyfJKPjRM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-414-IZeWgbxBMVeBkR_zotK_0Q-1; Thu, 11 Jun 2020 04:39:04 -0400
-X-MC-Unique: IZeWgbxBMVeBkR_zotK_0Q-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0239218FE861;
-        Thu, 11 Jun 2020 08:39:03 +0000 (UTC)
-Received: from krava (unknown [10.40.194.223])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 0D0EA5D9D3;
-        Thu, 11 Jun 2020 08:38:59 +0000 (UTC)
-Date:   Thu, 11 Jun 2020 10:38:58 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Paul Clarke <pc@us.ibm.com>, Kajol Jain <kjain@linux.ibm.com>,
-        linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] perf expr: Add < and > operators
-Message-ID: <20200611083858.GB1786122@krava>
-References: <20200610235823.52557-1-irogers@google.com>
- <20200610235823.52557-2-irogers@google.com>
+        Thu, 11 Jun 2020 04:40:21 -0400
+Received: from foss.arm.com ([217.140.110.172]:48278 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726956AbgFKIkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 04:40:20 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 143F21FB;
+        Thu, 11 Jun 2020 01:40:20 -0700 (PDT)
+Received: from bogus (unknown [10.37.12.97])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5BA483F73D;
+        Thu, 11 Jun 2020 01:40:17 -0700 (PDT)
+Date:   Thu, 11 Jun 2020 09:40:14 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Jassi Brar <jassisinghbrar@gmail.com>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH] firmware: arm_scmi: fix timeout value for send_message
+Message-ID: <20200611084014.GB7357@bogus>
+References: <20200607193023.52344-1-jassisinghbrar@gmail.com>
+ <20200610082315.GB2689@bogus>
+ <CABb+yY1T03YLwiFvBykxsAHQ9Kpu=r1nRTuaP3Emf5dP=Upm0g@mail.gmail.com>
+ <20200610155629.GA7357@bogus>
+ <CABb+yY0pQYD7DTf=MNpVPB7F2PESiWyTYj=ftRHDPkKMOobRVQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200610235823.52557-2-irogers@google.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <CABb+yY0pQYD7DTf=MNpVPB7F2PESiWyTYj=ftRHDPkKMOobRVQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 04:58:23PM -0700, Ian Rogers wrote:
-> These are broadly useful but required to handle TMA metrics. For
-> example encoding Ports_Utilization from:
-> https://download.01.org/perfmon/TMA_Metrics.csv
-> requires '<'.
-> 
-> {
->   "BriefDescription": "This metric estimates fraction of cycles the CPU performance was potentially limited due to Core computation issues (non divider-related).  Two distinct categories can be attributed into this metric: (1) heavy data-dependency among contiguous instructions would manifest in this metric - such cases are often referred to as low Instruction Level Parallelism (ILP). (2) Contention on some hardware execution unit other than Divider. For example; when there are too many multiply operations.",
->   "MetricExpr": "( ( cpu@EXE_ACTIVITY.EXE_BOUND_0_PORTS@ + cpu@EXE_ACTIVITY.1_PORTS_UTIL@ + ( cpu@EXE_ACTIVITY.2_PORTS_UTIL@ * ( ( ( cpu@UOPS_RETIRED.RETIRE_SLOTS@ ) / ( cpu@CPU_CLK_UNHALTED.THREAD@ ) ) / ( ( 4.000000 ) + 1.000000 ) ) ) ) / ( cpu@CPU_CLK_UNHALTED.THREAD@ ) if ( cpu@ARITH.DIVIDER_ACTIVE\\,cmask\\=1@ < cpu@EXE_ACTIVITY.EXE_BOUND_0_PORTS@ ) else ( ( cpu@EXE_ACTIVITY.EXE_BOUND_0_PORTS@ + cpu@EXE_ACTIVITY.1_PORTS_UTIL@ + ( cpu@EXE_ACTIVITY.2_PORTS_UTIL@ * ( ( ( cpu@UOPS_RETIRED.RETIRE_SLOTS@ ) / ( cpu@CPU_CLK_UNHALTED.THREAD@ ) ) / ( ( 4.000000 ) + 1.000000 ) ) ) ) - cpu@EXE_ACTIVITY.EXE_BOUND_0_PORTS@ ) / ( cpu@CPU_CLK_UNHALTED.THREAD@ ) )",
->   "MetricGroup": "Topdown_Group_Ports_Utilization",
->   "MetricName": "Topdown_Metric_Ports_Utilization"
-> },
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
+On Wed, Jun 10, 2020 at 09:45:55PM -0500, Jassi Brar wrote:
+> On Wed, Jun 10, 2020 at 10:56 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
+>
+> [I admit you can write bigger posts than me, so I am not going to
+> write a passionate response to each of your paragraphs.
+> Let's keep it to the point.]
+>
+> > > > >       if (xfer->hdr.poll_completion) {
+> > > > > -             ktime_t stop = ktime_add_ns(ktime_get(), SCMI_MAX_POLL_TO_NS);
+> > > > > +             ktime_t stop = ktime_add_ns(ktime_get(), 500 * 1000 * NSEC_PER_USEC);
+> > > > >
+> > > >
+> > > > This is unacceptable delay for schedutil fast_switch. So no for this one.
+> > > >
+> > > Increasing timeout does not increase latency.
+> >
+> > Agreed, but worst case you may be stuck here for 500ms which is not
+> > acceptable.
+> >
+> Not acceptable to who, you or the kernel? :)    Now that you said you
+> are fixing the scmi's fast_switch implementation.
+>
 
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+Sorry, I meant to disable it for single channel implementation. I am not
+saying we want that on Juno/MHU.
 
-thanks,
-jirka
+> Even though I don't think 500ms would ruin our lives, but ok, I will
+> make it 30ms - same as you did in the 'else' block. And drop the other
+> change.
 
-> ---
->  tools/perf/tests/expr.c | 6 ++++++
->  tools/perf/util/expr.l  | 2 ++
->  tools/perf/util/expr.y  | 5 ++++-
->  3 files changed, 12 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
-> index c4877b36ab58..b7e5ef3007fc 100644
-> --- a/tools/perf/tests/expr.c
-> +++ b/tools/perf/tests/expr.c
-> @@ -41,6 +41,12 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
->  	ret |= test(&ctx, ".1 + 2.", 2.1);
->  	ret |= test(&ctx, "d_ratio(1, 2)", 0.5);
->  	ret |= test(&ctx, "d_ratio(2.5, 0)", 0);
-> +	ret |= test(&ctx, "1.1 < 2.2", 1);
-> +	ret |= test(&ctx, "2.2 > 1.1", 1);
-> +	ret |= test(&ctx, "1.1 < 1.1", 0);
-> +	ret |= test(&ctx, "2.2 > 2.2", 0);
-> +	ret |= test(&ctx, "2.2 < 1.1", 0);
-> +	ret |= test(&ctx, "1.1 > 2.2", 0);
->  
->  	if (ret)
->  		return ret;
-> diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
-> index 298d86660a96..13e5e3c75f56 100644
-> --- a/tools/perf/util/expr.l
-> +++ b/tools/perf/util/expr.l
-> @@ -111,6 +111,8 @@ else		{ return ELSE; }
->  "|"		{ return '|'; }
->  "^"		{ return '^'; }
->  "&"		{ return '&'; }
-> +"<"		{ return '<'; }
-> +">"		{ return '>'; }
->  "-"		{ return '-'; }
->  "+"		{ return '+'; }
->  "*"		{ return '*'; }
-> diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-> index fe145344bb39..5fcb98800f9c 100644
-> --- a/tools/perf/util/expr.y
-> +++ b/tools/perf/util/expr.y
-> @@ -41,6 +41,7 @@ static double d_ratio(double val0, double val1)
->  %left '|'
->  %left '^'
->  %left '&'
-> +%left '<' '>'
->  %left '-' '+'
->  %left '*' '/' '%'
->  %left NEG NOT
-> @@ -73,7 +74,7 @@ other: ID
->  |
->  MIN | MAX | IF | ELSE | SMT_ON | NUMBER | '|' | '^' | '&' | '-' | '+' | '*' | '/' | '%' | '(' | ')' | ','
->  |
-> -D_RATIO
-> +'<' | '>' | D_RATIO
->  
->  all_expr: if_expr			{ *final_val = $1; }
->  	;
-> @@ -94,6 +95,8 @@ expr:	  NUMBER
->  	| expr '|' expr		{ $$ = (long)$1 | (long)$3; }
->  	| expr '&' expr		{ $$ = (long)$1 & (long)$3; }
->  	| expr '^' expr		{ $$ = (long)$1 ^ (long)$3; }
-> +	| expr '<' expr		{ $$ = $1 < $3; }
-> +	| expr '>' expr		{ $$ = $1 > $3; }
->  	| expr '+' expr		{ $$ = $1 + $3; }
->  	| expr '-' expr		{ $$ = $1 - $3; }
->  	| expr '*' expr		{ $$ = $1 * $3; }
-> -- 
-> 2.27.0.278.ge193c7cf3a9-goog
-> 
+I am fine if cpufreq maintainers allow that in the fast switch path that
+happens in the fast path.
 
+--
+Regards,
+Sudeep
