@@ -2,188 +2,232 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A18CC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 06:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF52C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 06:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B4CE2075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 06:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 725FC2075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 06:14:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=topicbv.onmicrosoft.com header.i=@topicbv.onmicrosoft.com header.b="br9Lpdtj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="rQsKb7l0";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="OLXinpX5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbgFKGJe (ORCPT
+        id S1726526AbgFKGO2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 02:09:34 -0400
-Received: from mail-eopbgr80089.outbound.protection.outlook.com ([40.107.8.89]:50917
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726147AbgFKGJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 02:09:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=topicbv.onmicrosoft.com; s=selector2-topicbv-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=c3JSoFjk2otbJKj0WzG27ouIzkKMfvJU0LZD3t/Tgvo=;
- b=br9LpdtjVAMDtJAA4GtH6aZMu7fl+0p6HLdETCwR7WLxV7Qf31PCUb/rgAint3LzxwB4oiwtu953iy4P6/XfG+86fP4++QrsxAKE+t5BVu6xsG8HFo6ubjNKCKzQBXeBbkYWLzmXFJsz9KSWltSiK3LucI3YgZeSf8Qs437OP68=
-Received: from AM5PR0701CA0072.eurprd07.prod.outlook.com (2603:10a6:203:2::34)
- by VI1PR0401MB2367.eurprd04.prod.outlook.com (2603:10a6:800:24::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.20; Thu, 11 Jun
- 2020 06:09:27 +0000
-Received: from VE1EUR01FT056.eop-EUR01.prod.protection.outlook.com
- (2603:10a6:203:2:cafe::b8) by AM5PR0701CA0072.outlook.office365.com
- (2603:10a6:203:2::34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.10 via Frontend
- Transport; Thu, 11 Jun 2020 06:09:27 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 40.68.112.65)
- smtp.mailfrom=topicproducts.com; kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=topic.nl;
-Received-SPF: Pass (protection.outlook.com: domain of topicproducts.com
- designates 40.68.112.65 as permitted sender) receiver=protection.outlook.com;
- client-ip=40.68.112.65; helo=westeu12-emailsignatures-cloud.codetwo.com;
-Received: from westeu12-emailsignatures-cloud.codetwo.com (40.68.112.65) by
- VE1EUR01FT056.mail.protection.outlook.com (10.152.3.115) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3088.18 via Frontend Transport; Thu, 11 Jun 2020 06:09:26 +0000
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (104.47.17.107) by westeu12-emailsignatures-cloud.codetwo.com with CodeTwo SMTP Server (TLS12) via SMTP; Thu, 11 Jun 2020 06:09:25 +0000
+        Thu, 11 Jun 2020 02:14:28 -0400
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:22169 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbgFKGO1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 02:14:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1591856066; x=1623392066;
+  h=from:to:cc:subject:date:message-id:
+   content-transfer-encoding:mime-version;
+  bh=eOn5ER/b/ejbUDFEIssbX+livatM3KA5ETXmf3Txwkc=;
+  b=rQsKb7l0+YyjN6Rs+XTCW9PNI9rQEFVtErfFiLmMgmOWLoxJPwuIGj6x
+   wf0ZsKqPozNUums6Ymfg1hqJ9TkdRunB6VWCAk1tiucd0EDpiWNJ2bDZe
+   zTR6izWHA3wehuTvrCl10c9S6DqkVQXwUksxZkNke553TmqT9RYPbdXG9
+   haeQCA2TGIwg+iCdEwazNENuXNn87mtzEMOxoMEiBjiQFJUR1yeHLO/c2
+   6Q2v4FVl7PQJ9/bq8OskOpR4+tYozQaFwlt23C/DcsTkJEnZdxcr5riOo
+   vzDzPjikMF4/FND7ArT7ZHGlcS9XXWiWGkeWzvYw64DR8Ko8jIdFMTqrE
+   A==;
+IronPort-SDR: NSrhS4yt45KDxkc60u0ji4W+z3x9bqrlMvtF+vkO5BDFa1fX3iKd2bgjTeqa1Ce5yEVzjkr3gY
+ bRd+oOsK1hnqhhUYTpHcLrtbjFSR+NOU0951JjkG6Q3+3uwf+PwgKZh4idHnZ1VyFRIpTxRyDd
+ ezPeLd4IouwH64s/dpADyx6mbfzl0xHukUe9ZsHYxOe5eRQWhmrDDowyxEJnFH+44xe0ciiKUy
+ LukKU9r9WN8ei+OBlMGhS4AhgQtarH3ruZI3xdsBv0M4q8/RlsEmu0GahCGv6xpQMwp3FN/Taf
+ 568=
+X-IronPort-AV: E=Sophos;i="5.73,498,1583164800"; 
+   d="scan'208";a="141117299"
+Received: from mail-mw2nam10lp2109.outbound.protection.outlook.com (HELO NAM10-MW2-obe.outbound.protection.outlook.com) ([104.47.55.109])
+  by ob1.hgst.iphmx.com with ESMTP; 11 Jun 2020 14:14:25 +0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WShm78tnpQyWFeAI6d6Asi4y5dy7U01xmdYPJXVZwC9im3XcCUPRMD6HuYQLgp1UbHHvBpnbAEHciJKaOGdHAUtUu2+YHCv9TOFrTMKrmzJQi1DK/5EYZj7n5u5Gk13zs+W9l3lQNo7x/acp7hRsW1AqwBAzdRX6479Ym+OMGnch/lPf60LIIzas8AJx9uD1S/TlXp+rbNb8XD81LZnAkKGZqhJM/NBaYMIg7CbV8Obbg6sNkMizt6VZFVPOBdSJVRXoTW1xJ1nD/esJdluA80FFnyYNx6bkezpCza2yoRGMS3yy46wm1V8MMxH/SX5by5t5geFqjbzSZs1zCeW1iQ==
+ b=D58hPZL7w+cgWTorKm++hKr7B1gx6RyAFxoVgAZHjkedodsEw0w6cR36eNS39iBLwxWVXraIUfEG2XqBtsjgS+N1CxK1UM4bMKi8a2ZkqByaESzzbCNEG3VuUlB3SjAD7qxWDibv9OVmQ9VzHPu4917XeTMLMaBf6c7Y2H2e14ns0OnFFLjIvizJHzaS7LlpgaaxeilG6rwXvHVSVRVkptVG7cDaFsloc/ZW1JTppdHYBpAUrJtUfMmh3V27eHs14UrrYBEFXWayXTPPN6XZ64IxtS/LXcNDaxHaJ/LSrken67MNvA9LS3ODFqRrncq5ggcY4CNWHEttE5eVPLZwsw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9818eqo0Z8kYdkulCdzMkvq5BK9Pwqh89PqG+XOfn1w=;
- b=UiTq6uLpzMKlSWSpxIzN9MqWNIBY9fV8vRmWGhFYFHSV/Ui2EpOP6d/za8XWmE4Q1Zp+MK385OgFZDvUSeNu3MLVTQKgqQLUcbvrd99IOv1KAJ4FjIHu53HZsfsc3VvwHBM9RqYi9hdRCJMvR6yGmSb6Ukrtw5AaBJqTxRk9wvORABA6rqkMcf2ev2+Ie87VL6ExRryowCQq71LyvyAmXBqra+NMEbN55oa9hK45x5FjXdYlXL7aDAfq6Mv1gT6jgu7/aMLDuq1b1ZSTv8OQOhS4QHjWGW9yO+qVRB/B8h0TJp4bq5JcB9u0jbTb4yPlAHxWl40WIGqqW67/LW8jLw==
+ bh=9DgspORC0G2Ec2gHfY9r/7RcFUEKV22JPuYoq+paU5k=;
+ b=GUGTLzc3QuAN4a0X3MaDxpGwXqNv8DUQ/2ZdfVLpwaM/3acC4aZWeRvCwFZsafo0+NjpVPbd9HkBUsajg/FsXOEuKpI34KzwEBw4t7RAeos14mz1byxLWsO5VhmLyBgEd1L1cfHGFxcFQaCm2MvSBdQNEh++N/cYgHeI1zU4IkbeNeFlf8/ZqwypMujjUUxXi6bDAcWmN25S/r/Wicfqljem3vAyp9jf72nlbdw9VSg8HzI760AFPGRqIkQbckhkvjUvPL9R9ix2H0VVRFqsZFk5ug7l4NCSZc7HytWau1RkyuUrWXc5bIJD1wfEsNRFfN+D+pyWuBEF/5QadYC+2w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=topicproducts.com; dmarc=pass action=none header.from=topic.nl;
- dkim=pass header.d=topic.nl; arc=none
-Authentication-Results-Original: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=topic.nl;
-Received: from DB8PR04MB6523.eurprd04.prod.outlook.com (2603:10a6:10:10f::26)
- by DB8PR04MB7003.eurprd04.prod.outlook.com (2603:10a6:10:11d::24) with
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9DgspORC0G2Ec2gHfY9r/7RcFUEKV22JPuYoq+paU5k=;
+ b=OLXinpX5sw3Dn7wYMmGSpbgF8htx5MX1gJjLmEblX/p+SWCZ842NTUn1JW4REDK1eVkAWe23mg38ZdPkcP4VA05ePdLMpG9EMH6EYALSEAfO7S6rFIPe79XVe+v1pJ6+Y9J0QhLUOVuU48cVF4IdifGUzdGqsvRtxc3BxVlqJ5g=
+Authentication-Results: dabbelt.com; dkim=none (message not signed)
+ header.d=none;dabbelt.com; dmarc=none action=none header.from=wdc.com;
+Received: from DM6PR04MB6201.namprd04.prod.outlook.com (2603:10b6:5:127::32)
+ by DM6PR04MB6332.namprd04.prod.outlook.com (2603:10b6:5:1e7::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.19; Thu, 11 Jun
- 2020 06:09:23 +0000
-Received: from DB8PR04MB6523.eurprd04.prod.outlook.com
- ([fe80::6cf6:7323:7395:eec9]) by DB8PR04MB6523.eurprd04.prod.outlook.com
- ([fe80::6cf6:7323:7395:eec9%7]) with mapi id 15.20.3088.018; Thu, 11 Jun 2020
- 06:09:23 +0000
-Subject: Re: [PATCH v2] usb: dwc3: Add support for VBUS power control
-To:     Rob Herring <robh@kernel.org>
-CC:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        balbi@kernel.org
-References: <20200603120915.14001-1-mike.looijmans@topic.nl>
- <20200610202255.GA3646369@bogus>
- <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.949ef384-8293-46b8-903f-40a477c056ae.5c7af9b2-8c7e-406c-b29a-f20ab6b96179@emailsignatures365.codetwo.com>
- <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.0d2bd5fa-15cc-4b27-b94e-83614f9e5b38.3b5128fd-1d26-4e6d-9ccd-7154c30bef49@emailsignatures365.codetwo.com>
-From:   Mike Looijmans <mike.looijmans@topic.nl>
-Organization: Topic
-Message-ID: <be0f6d7b-aa2e-39de-f5ee-83592c9bed7f@topic.nl>
-Date:   Thu, 11 Jun 2020 08:09:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <20200610202255.GA3646369@bogus>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-ClientProxiedBy: AM0PR01CA0085.eurprd01.prod.exchangelabs.com
- (2603:10a6:208:10e::26) To DB8PR04MB6523.eurprd04.prod.outlook.com
- (2603:10a6:10:10f::26)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.19; Thu, 11 Jun
+ 2020 06:14:23 +0000
+Received: from DM6PR04MB6201.namprd04.prod.outlook.com
+ ([fe80::f8b3:c124:482b:52e0]) by DM6PR04MB6201.namprd04.prod.outlook.com
+ ([fe80::f8b3:c124:482b:52e0%5]) with mapi id 15.20.3066.023; Thu, 11 Jun 2020
+ 06:14:23 +0000
+From:   Anup Patel <anup.patel@wdc.com>
+To:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Anup Patel <anup@brainfault.org>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Anup Patel <anup.patel@wdc.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>
+Subject: [PATCH v8 0/6] New RISC-V Local Interrupt Controller Driver
+Date:   Thu, 11 Jun 2020 11:43:44 +0530
+Message-Id: <20200611061350.434293-1-anup.patel@wdc.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: MA1PR01CA0077.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00::17)
+ To DM6PR04MB6201.namprd04.prod.outlook.com (2603:10b6:5:127::32)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.130] (83.128.90.119) by AM0PR01CA0085.eurprd01.prod.exchangelabs.com (2603:10a6:208:10e::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18 via Frontend Transport; Thu, 11 Jun 2020 06:09:23 +0000
-X-Originating-IP: [83.128.90.119]
+Received: from wdc.com (122.182.246.89) by MA1PR01CA0077.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18 via Frontend Transport; Thu, 11 Jun 2020 06:14:17 +0000
+X-Mailer: git-send-email 2.25.1
+X-Originating-IP: [122.182.246.89]
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ff8224c2-d0cd-4e79-7d7e-08d80dcdff02
-X-MS-TrafficTypeDiagnostic: DB8PR04MB7003:|VI1PR0401MB2367:
-X-Microsoft-Antispam-PRVS: <VI1PR0401MB23678D607ABE7D298A40C40996800@VI1PR0401MB2367.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;OLM:7691;
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 33111e46-7eac-43a5-2323-08d80dceaf23
+X-MS-TrafficTypeDiagnostic: DM6PR04MB6332:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR04MB6332693D624A7B4F5ADF205E8D800@DM6PR04MB6332.namprd04.prod.outlook.com>
+WDCIPOUTBOUND: EOP-TRUE
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
 X-Forefront-PRVS: 0431F981D8
 X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: RGvt414lbT7ipYX5czfjFvYsZKyvSYiXSqoW3cat4BLah0gBI7qg+8A7VfoI0VZDxJOpXolA8TTMTK5NPeuizy+AmvtZyG5JB0WRVN5hZL+VvRKw//iDRrXoiFLL6cspNpbziwT6zy2jFOnztGnHiB3qESddvqHrKHMK8m/QfpCT+8BzuV01rvD10Xn8dwxmUHVNiEQ1HTcqL3xh3DEfC209BqRFLhDieKItuCYOo/A3cMna9VuSNdXJvJIPc5/WgCL0yceRATmNnN30Ph5BTZ9yd5WThN5QGLWOBaQToCBXeCbI2RhbH0M6NjZDtuHo7PKv8SVyhT61gjk6UMpUA45AWdu4zyx0h5FY519tqIMGFCce+HoTSiDvwSeJsTrY
-X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB6523.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39840400004)(136003)(376002)(366004)(396003)(346002)(44832011)(31686004)(186003)(16526019)(36756003)(5660300002)(66476007)(26005)(66556008)(66946007)(31696002)(83380400001)(8936002)(16576012)(8676002)(52116002)(36916002)(508600001)(6916009)(42882007)(4326008)(316002)(53546011)(2616005)(83170400001)(6486002)(956004)(2906002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: B9HnIUfladDQVDLKMd82D+OR92vqFdt6VEodN4LFlGuPAOHHgolOuwLU7NeTg6JGp5/rsu6BNTl7AFlt+2S3SsBOd7idUnhdWQJSnixVjaCuzaSj9jv+sP5D3+BEcvApDP8x6zXbTu8sT/WDsM8l+ZVbrD7WE2DZ66lGKGH9urXFEB0EDzhkiCPx/brtVARUlVZ2Z6Ij/JddA6PIeYeyaoiAgV92GwmTfO14Ta+6HlutT/pmQBUwGBGGkJi0slgg6chNwsmrybywPpTekd9cn7Ahk0hWTZbYcuZxH9VPdb5aVo7J+UVn1poQNfWUheblpH88igvTR3dEIIbJDsI5PSMkZ6Zb9AQ1Intgg+zVwRE7tBu3Z2/3vOWH9JZru1kK5S6/hQzW/v3IktL0glaozZN2v/J3rGBzxWzpzj0jc1KrWZ5E9DEUG+EuPPNdSIwnekrQhP/HP5P+dm1wliLbc0F/HW7U/qjF0CA+e5qwRVY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB7003
-X-CodeTwo-MessageID: f92714fe-3caf-40a5-9c1f-4cdedffa7473.20200611060925@westeu12-emailsignatures-cloud.codetwo.com
-X-CodeTwoProcessed: true
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: VE1EUR01FT056.eop-EUR01.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:40.68.112.65;CTRY:NL;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:westeu12-emailsignatures-cloud.codetwo.com;PTR:westeu12-emailsignatures-cloud.codetwo.com;CAT:NONE;SFTY:;SFS:(39840400004)(376002)(136003)(396003)(346002)(46966005)(83380400001)(82310400002)(83170400001)(31686004)(5660300002)(7596003)(356005)(36756003)(8676002)(7636003)(6486002)(8936002)(15974865002)(44832011)(4326008)(336012)(16576012)(186003)(36916002)(31696002)(2906002)(508600001)(316002)(70206006)(47076004)(70586007)(26005)(16526019)(53546011)(6916009)(42882007)(2616005)(956004)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 8d488746-ecd6-4961-81cd-08d80dcdfcc8
-X-Forefront-PRVS: 0431F981D8
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: AKyUV3lFLonOKgKV6IJiT/G2FnKZZkg4SmvPfEfkznGaSdMP6uZ/d0c9jfa0OpkGdcVccVQrgFqQZjxp+xaBhDbAEhUjuRWyv2wxMVNd+ITg1xpM71qyoHtgzrWNiHzPaepFWvhxVz2iXmF4jbdlE1lgsff9OoQhreYNN/3WLTv1CcxdKhy8TDQQc43Mm2PO3KvKXIf+0QT1pU8HoVElcSdHRNLZRq/uzKthR1+h18BYaXhrWayvRq1zT39/nf0F/8HBwUwVK6ERrIjIg7uvhFrfuMHien1j25oej2pkLSSU6+bdxvUGuKOCArCiFf8wcUugQqnwNRPVczMpRNWnVGvZ1Cm3UCwB5m+xmF6BJ5/X0b9hDhPgE+Y23jSI10VKxP0oGjJFMYD4jTM88b9YPkUCWutiSrLJZc5Qa0BjJWwfgpIFYf+EHB37kEYUuZh1BkfCiA0rsXCYYEyIFsKF1rN2CVi/8x30u8xzRism0PROwXy9iN/zsIvaRILf3HoS
-X-OriginatorOrg: topic.nl
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2020 06:09:26.8818
+X-Microsoft-Antispam-Message-Info: G2d1z6+moVvjv21YcQHTtM+x5CydaqWnoPKauTdRp77axU+7e3EycclBwCh2DU0X6ZXDDq/g3Tfy7oEUxQdXbxGT0RdzZ9bH4utRj8tDH8ZwXrNUJKGCO7hJ9ND8SVHTLh0P4aNSSoILsPccedlr6z/9VW5bfBHuefIWueyDf9M+CKDoBQleqnc5DfxH3uI1wfoNYHIYj8hL72Ds8oV8dOL7NcVBVzUQnHqbFmpFxJhl4O9ConZVg0+VzXdLo2Gy3GKOK2e41/QFHNrsRwU9wHt8KXenOjG47MyGs9rxmwm7zPr3ia1PYL0WjJ/GwjNF6W17xk08tZAfkz1WQBPPxgorgonPA7lALPrDB/xfZnBj2YVUIKVbUKIcd7qkaqweUAgFs6GQW8nkmcFiJMVmSw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR04MB6201.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(376002)(366004)(346002)(396003)(36756003)(16526019)(4326008)(186003)(44832011)(2616005)(55016002)(8936002)(1076003)(5660300002)(956004)(7696005)(110136005)(7416002)(83380400001)(478600001)(52116002)(8886007)(966005)(86362001)(316002)(6666004)(54906003)(66556008)(2906002)(8676002)(26005)(66476007)(66946007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: ulLCRJ/3D7NAsZ4YPQ4Gam8dJlVQzpaUF4Lw5sEouOklmJkxWYdjA9ldlxp22PIX6tW5bJTqYN8+V53FnvnXZMe0CdQtXWJWAPplhs7lT1nOTIVUxvk9t3g5TXBwZcSgYi0zA2UKwVxVPvtLJmWDZoiQA3+8PUgdpgu8l5JVq4IE3op9q2auhmiHg9ucMZ3/1ADjn9jE4YP/czBD9JZr7r5BwZArlrNfSoYWkdS/3SPI3/5F2fB+BmrggIYGVakirzmPWfgKrqDtaaeSJeWho4G2m6/9RlNx5OX/HM4118aicdEoz6hvCHPxyZ2x3h57QaEZPvzFtq9JBYWszHsY/EMF42wNr9/wlvp2/cxWb/Zy9A7+9wtkjIhDH2C8swsa0LjyLm0cwV+D4NOsTc15gMO6XTFdI5DztYN5Uck0bAIYg1ZH1wwul8ovHwD2Vg09IF8rM4or+4YCWBUuIynsHnOyM7I7hCNRWsd0EryO9P2xWjJIx3+FIdY6IN1vE4iY
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 33111e46-7eac-43a5-2323-08d80dceaf23
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2020 06:14:22.8912
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ff8224c2-d0cd-4e79-7d7e-08d80dcdff02
-X-MS-Exchange-CrossTenant-Id: 449607a5-3517-482d-8d16-41dd868cbda3
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=449607a5-3517-482d-8d16-41dd868cbda3;Ip=[40.68.112.65];Helo=[westeu12-emailsignatures-cloud.codetwo.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2367
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vBr9enE+Ts4wG/PDknkGNAcD/X9Tc2g5DNv75aLE+udO/7xVhZQ0b/q+zUzMz1gBIxzzVamZ8C1ouGKYHzjG4A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR04MB6332
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patchset provides a new RISC-V Local Interrupt Controller Driver
+for managing per-CPU local interrupts. The overall approach is inspired
+from the way per-CPU local interrupts are handled by Linux ARM64 and
+ARM GICv3 driver.
 
-Met vriendelijke groet / kind regards,=0A=
-=0A=
-Mike Looijmans=0A=
-System Expert=0A=
-=0A=
-=0A=
-TOPIC Embedded Products B.V.=0A=
-Materiaalweg 4, 5681 RJ Best=0A=
-The Netherlands=0A=
-=0A=
-T: +31 (0) 499 33 69 69=0A=
-E: mike.looijmans@topicproducts.com=0A=
-W: www.topicproducts.com=0A=
-=0A=
-Please consider the environment before printing this e-mail=0A=
-On 10-06-2020 22:22, Rob Herring wrote:
-> On Wed, Jun 03, 2020 at 02:09:15PM +0200, Mike Looijmans wrote:
->> Support VBUS power control using regulator framework. Enables the regula=
-tor
->> while the port is in host mode.
->>
->> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
->> ---
->> v2: Add missing devm_regulator_get call which got lost during rebase
->>
->>   .../devicetree/bindings/usb/dwc3.txt          |  1 +
->>   drivers/usb/dwc3/core.c                       | 34 ++++++++++++++-----
->>   drivers/usb/dwc3/core.h                       |  4 +++
->>   drivers/usb/dwc3/drd.c                        |  6 ++--
->>   4 files changed, 33 insertions(+), 12 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentat=
-ion/devicetree/bindings/usb/dwc3.txt
->> index 9946ff9ba735..56bc3f238e2d 100644
->> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
->> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
->> @@ -37,6 +37,7 @@ Optional properties:
->>    - phys: from the *Generic PHY* bindings
->>    - phy-names: from the *Generic PHY* bindings; supported names are "us=
-b2-phy"
->>   	or "usb3-phy".
->> + - vbus-supply: Regulator handle that provides the VBUS power.
-> Does the DWC3 block require Vbus to power itself? Doubtful. This
-> belongs in a usb-connector node. If the DWC3 driver wants to get the
-> Vbus supply, it can fetch it from that node.
->
-> Rob
+It is a major re-write over perviously submitted version.
+(Refer, https://www.spinics.net/lists/devicetree/msg241230.html)
 
-Ah, now I understand. There's a vbus-supply in the connector in newer=20
-kernel versions than the one I have to test with. It'll have to wait=20
-until I've been able to upgrade the kernel version for this board.
+Few advantages of this new driver over previous one are:
+1. All local interrupts are registered as per-CPU interrupts
+2. The RISC-V timer driver can register timer interrupt handler
+   using kernel irq subsystem without relying on arch/riscv to
+   explicitly call it's interrupt handler
+3. The KVM RISC-V can use this driver to implement interrupt
+   handler for per-HART guest external interrupt defined by
+   the RISC-V H-Extension
+4. In future, we can develop drivers for devices with per-HART
+   interrupts without changing arch code or this driver (example,
+   CLINT timer driver for RISC-V M-mode kernel)
 
+With this patchset, output of "cat /proc/interrupts" looks as follows:
+           CPU0       CPU1       CPU2       CPU3       
+  2:        379          0          0          0  SiFive PLIC  10  ttyS0
+  3:        591          0          0          0  SiFive PLIC   8  virtio0
+  5:       5079      10821       8435      12984  RISC-V INTC   5  riscv-timer
+IPI0:      2045       2537        891        870  Rescheduling interrupts
+IPI1:         9        269         91        168  Function call interrupts
+IPI2:         0          0          0          0  CPU stop interrupts
 
---=20
-Mike Looijmans
+The patchset is based upon Linux-5.7 and can be found at riscv_intc_v7
+branch of: https://github.com/avpatel/linux.git
+
+This series is tested on:
+ 1. QEMU RV64 virt machine using Linux RISC-V S-mode
+ 2. QEMU RV32 virt machine using Linux RISC-V S-mode
+ 3. QEMU RV64 virt machine using Linux RISC-V M-mode (i.e. NoMMU)
+
+Changes since v7:
+ - Rebased on Linux-5.7 release
+ - Minor typo-fix in pr_warn() of PATCH3
+
+Changes since v6:
+ - Rebased patches on Linux-5.7 and tested with runtime CPU hotplug
+ - Minor changes in PATCH3 as suggested by Marc Z
+ - Don't programm PLIC threshold for CPU_OFF in PATCH3
+ - Simplified finding IRQ domain in riscv_timer_init_dt() of PATCH4
+
+Changes since v5:
+ - Rebased to Linux-5.7-rc7 with PLIC improvement patches
+ - Removed riscv_of_parent_hartid() from PATCH3
+ - Addressed other minor comments from Palmer and Marc Z
+
+Changes since v4:
+ - Rebased to Linux-5.7-rc6 and multi-PLIC improvement patches
+ - Added separate patch to force select RISCV_INTC for CONFIG_RISCV
+ - Fixed the driver for Linux RISC-V NoMMU
+
+Changes since v3:
+ - Rebased to Linux-5.6-rc5 and Atish's PLIC patches
+ - Added separate patch to rename and move plic_find_hart_id()
+   to arch directory
+ - Use riscv_of_parent_hartid() in riscv_intc_init() instead of
+   atomic counter
+
+Changes since v2:
+ - Dropped PATCH2 since it was merged long-time back
+ - Rebased series from Linux-4.19-rc2 to Linux-5.6-rc2
+
+Changes since v1:
+ - Removed changes related to puggable IPI triggering
+ - Separate patch for self-contained IPI handling routine
+ - Removed patch for GENERIC_IRQ kconfig options
+ - Added patch to remove do_IRQ() function
+ - Rebased upon Atish's SMP patches
+
+Anup Patel (6):
+  RISC-V: self-contained IPI handling routine
+  RISC-V: Rename and move plic_find_hart_id() to arch directory
+  irqchip: RISC-V per-HART local interrupt controller driver
+  clocksource/drivers/timer-riscv: Use per-CPU timer interrupt
+  RISC-V: Remove do_IRQ() function
+  RISC-V: Force select RISCV_INTC for CONFIG_RISCV
+
+ arch/riscv/Kconfig                 |   2 +
+ arch/riscv/include/asm/irq.h       |   5 --
+ arch/riscv/include/asm/processor.h |   1 +
+ arch/riscv/include/asm/smp.h       |   3 +
+ arch/riscv/kernel/cpu.c            |  16 ++++
+ arch/riscv/kernel/entry.S          |   4 +-
+ arch/riscv/kernel/irq.c            |  33 +------
+ arch/riscv/kernel/smp.c            |  11 ++-
+ arch/riscv/kernel/traps.c          |   2 -
+ drivers/clocksource/timer-riscv.c  |  43 ++++++++-
+ drivers/irqchip/Kconfig            |  13 +++
+ drivers/irqchip/Makefile           |   1 +
+ drivers/irqchip/irq-riscv-intc.c   | 138 +++++++++++++++++++++++++++++
+ drivers/irqchip/irq-sifive-plic.c  |  44 ++++-----
+ include/linux/cpuhotplug.h         |   1 +
+ 15 files changed, 252 insertions(+), 65 deletions(-)
+ create mode 100644 drivers/irqchip/irq-riscv-intc.c
+
+-- 
+2.25.1
 
