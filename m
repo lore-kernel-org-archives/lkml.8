@@ -2,166 +2,95 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C90C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 21:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F63C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 21:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6680D2074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 21:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DCED20760
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 21:23:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MDNccs3/"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="J/SaCcgP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbgFKVXJ (ORCPT
+        id S1726536AbgFKVXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 17:23:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39146 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726153AbgFKVXI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 17:23:08 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BB90C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 14:23:08 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id s10so3088293pgm.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 14:23:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MiTYCuQl+ZdzBFJn18UFrqqp+8lTnOBH02+yJi7n6H8=;
-        b=MDNccs3/jgCvJ+k03M7K8vLs8G1VreIDmA7Gsol0dqoBc3OOF7Q5cRc1VLsXpSQG67
-         ZnBL3dK5ZyJ08Mg2fEXJtl8qp9v4WYh3KTQKoZxusHXJx4uLi+jjYJbD7hxyeHHdDL7s
-         yDrqMY92jY7xn46lP4OAojkqxvE5GDpKIXgsaNHCC6EDpSpbj5FqXaBuiysXzqKurM/G
-         JG9CdSeiq5ZtsJa+orugo5bGmYMmmROTHbum3tgcs+Ex14TRGHxaYWjWJs9LfwWZGAsq
-         Uc4l2MiQxm0uVq/2bl3rACY7kiP42MXtztYj8yfAcVWnOQc1k7lcJhiTzkfA2y9+rx+1
-         wy8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MiTYCuQl+ZdzBFJn18UFrqqp+8lTnOBH02+yJi7n6H8=;
-        b=qHG4B0sOlwLEbx+u+JCCtIZgkXvXOJmeOubZqJCzRDXA3EVBcKlpeicbSRwL+xPuCg
-         iFc/IAixmeUq6ZstDFL5T1oUlZseFYiZmQnFt8CS9z3X7vuIRrEq3et+t78EPVUXg/cb
-         UqeJg6Ex0vi4UDYxPnboJ4biSxPjAXQKAe8xekFQ8AUEaWdrr8aK8l8GLDRNRMA4xlMx
-         EakAAkTZj3/HEP6RObHAa1QXqzoYacrcNRRtIMMsSbOxaYjMgtLq0neW7qhxcryTkil4
-         TFwc1sOiCYiHVM0BSCZqvfPJhz18BEMBO2n4RAitnB+uTy8AcTsyiO/v6cBjt31vC1Gs
-         S8Bw==
-X-Gm-Message-State: AOAM533JHHXfHHRDh+ZmPICM9iASeUYllfC+0tAlgw4+gTAj3yo72gfL
-        oVldGnTS8PPXKdODXN97QiSkNBwz6wQvfV978+vCXA==
-X-Google-Smtp-Source: ABdhPJwtEHBVGRfqIzEXIXx/tubQ7/m124fwiIaNsvfPEkxZiUvoNj87umNfW6vDyZJ604qm5w8Mr07LKHxXQl328PU=
-X-Received: by 2002:a65:45c2:: with SMTP id m2mr7977244pgr.201.1591910587677;
- Thu, 11 Jun 2020 14:23:07 -0700 (PDT)
+        Thu, 11 Jun 2020 17:23:24 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:54769 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726153AbgFKVXX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 17:23:23 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49jcKN5CMWz9sRk;
+        Fri, 12 Jun 2020 07:23:20 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591910601;
+        bh=aWf0uANpk6UOZioggviF2j1oIxUaXFjd9CLqFfhekYY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=J/SaCcgPE1bPn1J1iyLmOFeQWm5Y11GVdy7BmnAzsitv4yAxxTVGYbif66EcUl36P
+         rLYp+XaysrG9uKmdol+NaO32yweC8BkSzo/4bqGQNK90WcwN7eg2CzIR56V/1cNjLl
+         QQiHUk3Nyp57WwWRDBdx1oIgWkeu/sbxvwm5UBgOBSkC6UmU7oJTElBRg15O12FQIU
+         XMbNNG5OU5moy0ea+LTgC0EQuqsDYQjKFeYlSzIeTytqNWeR557hbLNnrUSxAM3tHD
+         0SpCyP3Pl5r+fuTY0SUYZxcIGTcFdGDw2EirZQbBXMdh36xDHG6SJ/BCjOCIVr6P5c
+         pTmw04MgHyvZw==
+Date:   Fri, 12 Jun 2020 07:23:19 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Subject: linux-next: Fixes tag needs some work in the pinctrl tree
+Message-ID: <20200612072319.3529b091@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20200611210545.173886-1-urielguajardojr@gmail.com>
-In-Reply-To: <20200611210545.173886-1-urielguajardojr@gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Thu, 11 Jun 2020 14:22:56 -0700
-Message-ID: <CAFd5g44qv_GvF09jCS1KxhRRzi9qc9rJ_1n8Bnumd2LaoW2z7g@mail.gmail.com>
-Subject: Re: [PATCH] kunit: show error if kunit results are not present
-To:     Uriel Guajardo <urielguajardojr@gmail.com>,
-        Will Chen <chenwi@google.com>
-Cc:     Uriel Guajardo <urielguajardo@google.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/F93MZ/ORpm1bdjUKueshNUL";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Will Chen
+--Sig_/F93MZ/ORpm1bdjUKueshNUL
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 11, 2020 at 2:17 PM Uriel Guajardo
-<urielguajardojr@gmail.com> wrote:
->
-> From: Uriel Guajardo <urielguajardo@google.com>
->
-> Currently, if the kernel is configured incorrectly or if it crashes before any
-> kunit tests are run, kunit finishes without error, reporting
-> that 0 test cases were run.
->
-> To fix this, an error is shown when the tap header is not found, which
-> indicates that kunit was not able to run at all.
->
-> Signed-off-by: Uriel Guajardo <urielguajardo@google.com>
-> ---
->  tools/testing/kunit/kunit_parser.py               |   8 ++++----
->  tools/testing/kunit/kunit_tool_test.py            |  11 +++++++++++
->  .../kunit/test_data/test_insufficient_memory.log  | Bin 0 -> 856 bytes
->  3 files changed, 15 insertions(+), 4 deletions(-)
->  create mode 100644 tools/testing/kunit/test_data/test_insufficient_memory.log
->
-> diff --git a/tools/testing/kunit/kunit_parser.py b/tools/testing/kunit/kunit_parser.py
-> index 64aac9dcd431..f13e0c0d6663 100644
-> --- a/tools/testing/kunit/kunit_parser.py
-> +++ b/tools/testing/kunit/kunit_parser.py
-> @@ -265,11 +265,9 @@ def bubble_up_suite_errors(test_suite_list: List[TestSuite]) -> TestStatus:
->         return bubble_up_errors(lambda x: x.status, test_suite_list)
->
->  def parse_test_result(lines: List[str]) -> TestResult:
-> -       if not lines:
-> -               return TestResult(TestStatus.NO_TESTS, [], lines)
->         consume_non_diagnositic(lines)
-> -       if not parse_tap_header(lines):
-> -               return None
-> +       if not lines or not parse_tap_header(lines):
-> +               return TestResult(TestStatus.NO_TESTS, [], lines)
->         test_suites = []
->         test_suite = parse_test_suite(lines)
->         while test_suite:
-> @@ -282,6 +280,8 @@ def parse_run_tests(kernel_output) -> TestResult:
->         failed_tests = 0
->         crashed_tests = 0
->         test_result = parse_test_result(list(isolate_kunit_output(kernel_output)))
-> +       if test_result.status == TestStatus.NO_TESTS:
-> +               print_with_timestamp(red('[ERROR] ') + 'no kunit output detected')
->         for test_suite in test_result.suites:
->                 if test_suite.status == TestStatus.SUCCESS:
->                         print_suite_divider(green('[PASSED] ') + test_suite.name)
-> diff --git a/tools/testing/kunit/kunit_tool_test.py b/tools/testing/kunit/kunit_tool_test.py
-> index 984588d6ba95..4a7ef2eef831 100755
-> --- a/tools/testing/kunit/kunit_tool_test.py
-> +++ b/tools/testing/kunit/kunit_tool_test.py
-> @@ -170,6 +170,17 @@ class KUnitParserTest(unittest.TestCase):
->                         result.status)
->                 file.close()
->
-> +       def test_no_kunit_output(self):
-> +               crash_log = get_absolute_path(
-> +                       'test_data/test_insufficient_memory.log')
-> +               file = open(crash_log)
-> +               print_mock = mock.patch('builtins.print').start()
-> +               result = kunit_parser.parse_run_tests(
-> +                       kunit_parser.isolate_kunit_output(file.readlines()))
-> +               print_mock.assert_any_call(StrContains("no kunit output detected"))
-> +               print_mock.stop()
-> +               file.close()
-> +
->         def test_crashed_test(self):
->                 crashed_log = get_absolute_path(
->                         'test_data/test_is_test_passed-crash.log')
-> diff --git a/tools/testing/kunit/test_data/test_insufficient_memory.log b/tools/testing/kunit/test_data/test_insufficient_memory.log
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..6c9e4da7b6d763a03c0c83302b2faa6dc21a6ea6
-> GIT binary patch
-> literal 856
-> zcmbu6Piw<448`yH6xx0L3mw^@hf#VOv}5$J+fZ#KHj8CrJK6H>=Z2=CgO$<hA}n~n
-> z_av{ZCy=#qP-&xMfG4=6vR)i)5n%+={(WUX@f3QQc$@8JeI=@sWh+JEQ*#MXVFVXF
-> z3Ic%)LLrv~p$(Btnp72VZT95Dcs$;|{9!uqlCTqzsVj`yGB}JvL1F#T<`SpJ4?L6&
-> zvLJa#bUk?B5jWafHpCGc^cwdSg)SXJ+Sp0$Q$V&%X;`!D6P@>grwf=!Y9>J$&;ioE
-> z(YWH`vCdK5Yv8@UZFe8*_w@>lK?j;o`2XCkM`zDc9)5TBu*ma#3i~#uEu#ge+Mv@N
-> z!H}`OJ&aI@v}o*ZK;I-rL20Tal*zuYY-cSL^z~bR2OA<uaygqX^7-Rzeh;N?h?hs>
-> F><3Em&*A_8
->
-> literal 0
-> HcmV?d00001
->
-> --
-> 2.27.0.278.ge193c7cf3a9-goog
->
+Hi all,
+
+In commit
+
+  02e1254d7740 ("pinctrl: qcom: ipq6018 Add missing pins in qpic pin group")
+
+Fixes tag
+
+  Fixes: ef1ea54 (pinctrl: qcom: Add ipq6018 pinctrl driver)
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/F93MZ/ORpm1bdjUKueshNUL
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7ioMcACgkQAVBC80lX
+0GyiYwf8CKhzYFXy4Tsz45wJ0yGBdoY4ETJlth6IzZolaH4kw9le5FTVdyZHXWAA
+a8yru7u4GlylxUlBHq4lSqJAF5RxSvcBmKu9QYcrCF4atcSba4k9cQF3Bycnuz5x
+VgaBJt5iZG/M9u9wrnjTnEaqtOPnnLkRYqCTCkicNXsSqoHAXPzFL2btWrIukXY5
+Ch+Vcq9AKW39E1BS2aE2rdFauKqyOQaXHmxXY+4ZV3t39BYU9dfflVb3wktxTFDq
+70+dcmDARch67ScPz1GHfqpg7xRtGvNQAME2GgZr1Yi/Cu6AjQXeTgRklNYp2dlw
+Qa1vpZ8QPfHCMW9XOHQF4iV/hfDpag==
+=kZTK
+-----END PGP SIGNATURE-----
+
+--Sig_/F93MZ/ORpm1bdjUKueshNUL--
