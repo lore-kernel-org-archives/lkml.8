@@ -2,134 +2,124 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B092C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1347EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DD382073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:05:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD19C20720
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:05:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Yj++qweG";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="ato6cxzY"
+	dkim=pass (2048-bit key) header.d=yahoo.ca header.i=@yahoo.ca header.b="ksY/536V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbgFKXFL (ORCPT
+        id S1726375AbgFKXFa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 19:05:11 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:1953 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726254AbgFKXFL (ORCPT
+        Thu, 11 Jun 2020 19:05:30 -0400
+Received: from sonic315-55.consmr.mail.gq1.yahoo.com ([98.137.65.31]:41897
+        "EHLO sonic315-55.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726254AbgFKXF3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 19:05:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1591916710; x=1623452710;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=5NSSS5OYKD75a2jmgPuQhfeyILwuzT7FG6sNb8gUh/Y=;
-  b=Yj++qweGxjhI1oX9SMwthM/QRw3iDEycgzoShpgeqxP1uKH/0KEiZE21
-   xxVW+2sIITxmuOTpFfpDHr39GmUfn5MleEF/Q7TtNUuvu/oavAlyBO9Ba
-   KZddZJCVFjDeKo13//xU634xGZ/W6HxLz1egz/c3HwUqYDInMB0XYn3pc
-   YwrI7W0hK7VEm6xXe6hgOdCm25KaM07JRNw16vFCN8lF41AHTnGsYZ19h
-   riZDIJp65mQQpRDocLKv8f/v+kjK3I5qIB0RqOw/uKqXYCFlfqDBrHIj6
-   rFD2OScjTmbz7EmZ8Ve5+2WQfynJ5BoKyUy/6Zgokn0r5pu0vs78PYj4n
-   A==;
-IronPort-SDR: Ocg6cNyOsYz0soUx6AXVncDrLOaaf/71oPRehPBqIZUT8H2GZBz9etPkluNb8nwKyLu/oHzT1i
- hEPVVofZtmt5Q42cJPh9w8RAYBfkZh0X1Bduioll3qCkFsLxfmfOZFn8cKzSD5sI/bg75pxDDM
- NcM//OPMJRAYinCgdNkpXyTpFTWyZFFj70cEXaayw8jnIsYtkWzhsfRc2tn644ymPWDfsVaWVs
- cdWMllK6vld5FCcmUuAfaAyXfdF1TAqymOt7NwYHw6LUBJFG99b9YIFhLFtJSlzFg5L11BfUi4
- sH0=
-X-IronPort-AV: E=Sophos;i="5.73,501,1583164800"; 
-   d="scan'208";a="139773911"
-Received: from mail-bn7nam10lp2102.outbound.protection.outlook.com (HELO NAM10-BN7-obe.outbound.protection.outlook.com) ([104.47.70.102])
-  by ob1.hgst.iphmx.com with ESMTP; 12 Jun 2020 07:05:08 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FC3gdm3fVT1aXfzCm0ET5hTK7clSQiaampH13SLeRjiw8/AdsBZoSln+xWi1O0PPFLow7X8aoKd8PLmEBuiNseVApnFq0spiAUwauXpoJv2DjbsEMr4Y9HN8lc0z7QzzllEgZ+IkyVhd8Uc9Lmv8IREJ8LJAUs3LDiJBo8liZidSPi5UD3B6+VLI0gg1Wbnum2tdZ02p9AdRR0L+Pj0f5Fiurm1/t0biYx7qCE/AnQyqo2qNda/0qTjV6RBxSYxjJZSW2UCabCsO+lRB0V3965jxwe/oYY1msyFzFVCiJlGw5xbFkjEpApSW9BHQXJoggYlp63qJSHL14Kzjc2f1KQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=//fcDfVpKjFIFo4e6cljqzryDmbUe4fMgA9b012+wMw=;
- b=foQtM12mfE71N62Jjivv90S1I7qY+fAkf9j8z73qknq0E0qahtcG305u+Lja6eEJQHXdWY4GDGUrAim06lsARoQjCne2IfaXmWbRE90646kO2qIEp1Z06O73Z5HSykQkFT67llwEbM4eOxdfGCWqL6whpxRpOxuYtg5IsDK5hEgslE1i+RmO4q/n+vm7I6YvzeIdySSsfefyrL8ar3z+Z9+d71gROy098ocag0Fl0l2VN+eiGxtJMt0nAsFEhofWIxOyR/lbLdmzQyHe9mzvnPMyQD6ztPSwAtpETdY89g8bs/fgZo4cuUEmBV8Kzyk50fuhalizg9wUYJuh5cotbA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=//fcDfVpKjFIFo4e6cljqzryDmbUe4fMgA9b012+wMw=;
- b=ato6cxzYty1X25ZFV5OLHA6PCZufPCkVznUPJZ6hpR+SNF845Kj2X/o6Wk6ZLpNk7vljVgiOMlBxdD6UlZrdRiyiSa3/wP2vl41taOgcS67rXfOSpP7Q71U+4It0eZl8ew7zIZtzmewqb6qXNNw85NTXopekFuw5/PdrGD9q/TA=
-Received: from BYAPR04MB4965.namprd04.prod.outlook.com (2603:10b6:a03:4d::25)
- by BYAPR04MB3960.namprd04.prod.outlook.com (2603:10b6:a02:ac::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.22; Thu, 11 Jun
- 2020 23:05:07 +0000
-Received: from BYAPR04MB4965.namprd04.prod.outlook.com
- ([fe80::4d72:27c:c075:c5e6]) by BYAPR04MB4965.namprd04.prod.outlook.com
- ([fe80::4d72:27c:c075:c5e6%7]) with mapi id 15.20.3066.023; Thu, 11 Jun 2020
- 23:05:06 +0000
-From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
-CC:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>
-Subject: Re: [PATCH v13 8/9] nvmet-passthru: Add enable/disable helpers
-Thread-Topic: [PATCH v13 8/9] nvmet-passthru: Add enable/disable helpers
-Thread-Index: AQHWKhRr7Wm2MqUdeUmSLdzKIjdSIQ==
-Date:   Thu, 11 Jun 2020 23:05:06 +0000
-Message-ID: <BYAPR04MB4965E830CF6FDEE90FBC950B86800@BYAPR04MB4965.namprd04.prod.outlook.com>
-References: <20200514172253.6445-1-logang@deltatee.com>
- <20200514172253.6445-9-logang@deltatee.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: deltatee.com; dkim=none (message not signed)
- header.d=none;deltatee.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [199.255.45.62]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: b52d9fb2-ef97-44fb-b691-08d80e5be205
-x-ms-traffictypediagnostic: BYAPR04MB3960:
-x-microsoft-antispam-prvs: <BYAPR04MB396025BF6292680E0FD5927986800@BYAPR04MB3960.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:2331;
-x-forefront-prvs: 0431F981D8
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: NBnpLdEzeR1zr05l7anpYdlgcsLWMsucjsu7fcpX7u1QdjTXWtX7aWfq9VOP9ApNc5mXYWHTb/5XqLB9F+xkJBDu9m/xPvc63QohNL844GMwfz+83P6w/V1iQ0gfh20/CpecBmSiQy9+Db3ybQHl9w3etizF+3Yl12/ViAA9EWVtgGWCdwZk+vNyvDYcGBhokf11GTha9yduPZQgV+3X8BUlR2aheYMgE22yowamjQjFsIsstiw7kml5P1qBN7vLyk39DjKmBS7GUlcW4e75STGl5uzzuK5js8TcZ3x6L6MhycDGMQd6gtUCM5lIXaRX2qQveAujIj+jAtPZJpDfdw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR04MB4965.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(376002)(346002)(366004)(396003)(110136005)(54906003)(316002)(52536014)(8936002)(71200400001)(8676002)(478600001)(66946007)(66476007)(9686003)(64756008)(66556008)(66446008)(83380400001)(186003)(53546011)(86362001)(76116006)(6506007)(26005)(7696005)(2906002)(4744005)(55016002)(4326008)(33656002)(5660300002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: cEZlve9qTqDB/NvAjgWp9vbrHXqL/2o+2CyF66kn4L5VSvK9YsQlyOE1I1SnppsTbgd6rOMai6xJ6kGZcW8p13s+o62h6A+04x/3VL/0yLODPQhZMkdLs7j8jELYemxzV8IEVSHVEP+eG7fKXiGruFs54If5gkKev4LwL19yIo+04sHM81U/o0bQfvzOoRuWGlfEpH2bLOkOxWx7+q5IkeUFBg2mrSGa69R88xLJQMSVaD1ZgWI8VsqAf/mD12xzAmUNy0r07v3rcS+/KwUIZOt41rwrqlv6M5kErh2zQ7tJFxMSBgJFNA3vzd1uMsbxlniEN4UfZyCUeJEPqkLSoR7p8ujdplCigOztfDXutH5qIGpGZErqB1qWuzbiUMoj7waMN6elsEfw+mfgfUYtfNO8Rwqwxv/I/7Vnha7gEH4FPD6Bl8sGyt8xmFbE4TKZZTCq/x28d6H/LU4Pa/mn5y4B98ShA0w59ma8gOUAxlc=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 11 Jun 2020 19:05:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.ca; s=s2048; t=1591916728; bh=4YUy2dnKX+aLfXhIKF01g98COCeJaRGO0uIb0VS79Kk=; h=Date:From:Subject:To:Cc:References:From:Subject; b=ksY/536Vx4+k7UgUuK7sU+hVBThfiszI09Iuz1pRDsEDzIekIw49uYjp7ORgIcNYz0f6DNDzfy6/4yfZrOHqInTp/7Z/HcyjmMMLgeZWuD8TRAwOaMMkENqEBRHmRUuLAghQQjihayEfj8L20m6zZMfg23tNVn0w4aye3VB6XxwcQwPiMIHahzYpkJItzHEI+CmtRNoS45OeF8pkyYlQXTj5rda13IOwNMLzMGJ8ZXmNJM+2AQJKKYg2covwyMtdvSqzYCtGIcWITwCXA8hKPZtr12KvBVm1CK0E2O6h8qR/7PTGpw4okY+ctPIvnNIDw3ffcEEgwvbMVoGH5mEvNw==
+X-YMail-OSG: VeI5KAIVM1l8FZBKKOcgI77XPMQpX1yRxgEuJkG2HwGiwftSWlMzUhg.wI9RpCO
+ 0m9mb_xDfGj9T2zqhX.uH.ouvYYHvpDFZhv1pWFL5y1aS4v9hb1LGwKsLcCxtdjVmrndIAxlrgTz
+ 8LO3W4t7Y60g_t0QstSujZEh68oL_wRlHCSB5Td_M.HVxGsUQjqWM2qr_3.AkhSA0yutg5qcke8K
+ Tv4I9pYJd9awi6FeCBU8.AW0hdjLa6mwHM8hm8SCtmWxN5P9kgX8HCxAaSA2wWYE5BgfOiUDY0eN
+ 8SdF4xfPgafkYHgez7VCD9nxGHLJtR8PsxeXciMIqqC1F9E63fd4UIcXYfSp5mCCnXf1pW2oA0VZ
+ eHnF2Lf5MUvy0KsxA7VkbSJfJnhx72DN4PMW15_Pqypq2CTc5FOh7t_XE2x5gmqPfv8aAgem9Z6S
+ G754j7JvVIvxR16NyP1NJHKbTMsWHNX0qPQnbyQSB5vpRmVwkBOq_AHkSPmPavoJRKp4qbzy6bBO
+ Bgl5ef0LdH1w0IGoNwlRH.UR8MrIAnwak32wCqG5lf.SwS9m.j1yNpS4_5D0o_3_e09XXbmbVT87
+ JydTvntH.WypWlGKDwbEeflUZOlJnJ07XyPmONgYYP36533AICJBEt96Va3.mhtjhlFw3.29ZciX
+ DUnx7ZrUMS58v2ROWoMShz.kIsuifGl.62rbZy_X8r4vO.Uxo5XJwzW4msMSwsvTqaOqT_X2DSbr
+ LLj_UnAnYi2D4y9bOLYthO6rgknJsjH5NNK_yfRdTmQy.0mTEM7K9s8uzcE9CTS8fKfsDaVPyVxh
+ xVmmJFX.A8jqmra2IrNsfF8nyaPIwxTRtGkfxuk34ZNH.5c0amNlvLcBd8.CT2wpn_WASLVEIrIT
+ lDlihOCfti987bgw5CyoUnMPwNm0_HyhWtZkakVcpPqyn4HsvO_sGZRdcb0.0tEu_C025pvdxswN
+ rmgxGP8nc8FxFl_ewO1mGzIfh.LwtPgP6qxJHGwfAB.8sgV6oyaOcpklbPCK0mtb2TNuawY.gM1Y
+ 4EIewDISpLaEHGybdY02ejlYI9grt4UFGP66cBLM98U9eaSs476RtjcbgJDnZF0_b5o12Ivh3yDE
+ .RRrOjKXttZUE3n3qAJp9VaVUkrJ1tU13bF05OPpKcgEydjxVzV7vX1CE71IihUl_3XGlg_spYT1
+ ddNGRuEIqFA0z2RSjAXwv25g7eOX4gy.2PVQRZ6tqkn.PDou7IfhlVk8_1frFp5r3OUVYDW2Om7X
+ b38HOjsBTSMFQLSdrTiz56K7c1Ygr8lUnUMCqgmgaJUxAZUUchMUduSb9Ii8mcXGP569B9NwAMAc
+ y3hNB5BRs5SQzb2xm6fsFam.vFlKXVBiNz6MHR.jitsw1wi_Lt0BaPaD8ibirje_yAw4-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic315.consmr.mail.gq1.yahoo.com with HTTP; Thu, 11 Jun 2020 23:05:28 +0000
+Received: by smtp422.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 385a77de6a3948fc2d5a9f83b3566fac;
+          Thu, 11 Jun 2020 23:05:25 +0000 (UTC)
+Date:   Thu, 11 Jun 2020 19:05:21 -0400
+From:   "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
+Subject: AMD IOMMU + SME + amdgpu regression
+To:     Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
+        David Rientjes <rientjes@google.com>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Daniel Drake <drake@endlessm.com>, jonathan.derrick@intel.com,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Joerg Roedel <jroedel@suse.de>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b52d9fb2-ef97-44fb-b691-08d80e5be205
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2020 23:05:06.8913
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: GbQe6INocOnzBf1KJMTCkcTw4ueQ20gT2veaV0kxbEJpDmnuKM7Ca1AJcUm+APYP1LnW4vqJIeh1qADUZY9JkySkk7smDxD1o+bP9ARDWQM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB3960
+Message-Id: <1591915710.rakbpzst8h.none@localhost>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+References: <1591915710.rakbpzst8h.none.ref@localhost>
+X-Mailer: WebService/1.1.16072 hermes_yahoo Apache-HttpAsyncClient/4.1.4 (Java/11.0.6)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/14/20 10:23 AM, Logan Gunthorpe wrote:=0A=
-> +	if (subsys->nr_namespaces) {=0A=
-> +		pr_info("cannot enable both passthru and regular namespaces for a sing=
-le subsystem");=0A=
-=0A=
-Let's try and keep the error message witin 80 char per line or split the=0A=
-message into two pr_info() calls,how about this ?=0A=
-=0A=
-=0A=
-pr_info("cannot enable passthru & regular namespaces\n")=0A=
-=0A=
+Hi,
+
+amdgpu + IOMMU + SME is now working for me on 5.7, yay! But, it is=20
+broken on torvalds master, boo. On boot, depending on which exact commit=20
+I test, it either hangs immediately (with built-in driver, before=20
+starting initramfs), displays some errors then hangs, or spams the=20
+screen with many amdgpu errors.
+
+I bisected the black screen hang to:
+
+commit dce8d6964ebdb333383bacf5e7ab8c27df151218
+Author: Joerg Roedel <jroedel@suse.de>
+Date:   Wed Apr 29 15:36:53 2020 +0200
+
+    iommu/amd: Convert to probe/release_device() call-backs
+
+    Convert the AMD IOMMU Driver to use the probe_device() and
+    release_device() call-backs of iommu_ops, so that the iommu core code
+    does the group and sysfs setup.
+
+    Signed-off-by: Joerg Roedel <jroedel@suse.de>
+    Link: https://lore.kernel.org/r/20200429133712.31431-16-joro@8bytes.org
+    Signed-off-by: Joerg Roedel <jroedel@suse.de>
+
+Testing torvalds master (623f6dc593) with the containing merge=20
+(98bdc74b36) plus the DMA mapping merge (4e94d08734) reverted allows=20
+amdgpu + IOMMU + SME to once again work.
+
+I think that nobody is really working on amdgpu + SME, but it would be a=20
+shame if it was supported and then incidentally broken by a small=20
+change.
+
+I am using an ASRock B450 Pro4 with Ryzen 1600 and ASUS RX 480. I don't=20
+understand this code at all, but let me know what I can do to=20
+troubleshoot.
+
+Thanks,
+Alex.
