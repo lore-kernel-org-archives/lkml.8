@@ -2,129 +2,163 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1BADC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86969C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B85B7206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:48:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C8E32081A
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:51:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="I87kwz69";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PuzL4vF6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b/isTvza"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbgFKNsa (ORCPT
+        id S1726795AbgFKNv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 09:48:30 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:36867 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726109AbgFKNs3 (ORCPT
+        Thu, 11 Jun 2020 09:51:57 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35863 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726109AbgFKNv4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 09:48:29 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 8062E5801A2;
-        Thu, 11 Jun 2020 09:38:35 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Thu, 11 Jun 2020 09:38:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm3; bh=jQjsWeIlhqPm1oZNMXNmNsjlPz
-        ih/RDA2oOywNwUB50=; b=I87kwz69l9LvgHZdmVA+cDiJ9T9yrQX9kGu1qjvJiX
-        LlG8iA49WMbkddT4lbo6z2ptt32ZhNcSKpTJns/HIsFWLSDt6OV03QLudgv/G5mC
-        nnaz/AUdBPkmzPaMAfrgg/AmPurXxhdteD2LqasHZv6h99gyQfdLjvR7Zs82WWjV
-        OSVsG4ViowKy5pqm3DygekU/rlm2qjQEYZUUV0PSsVT0oQ85NZC/v3JfmtvhKuu6
-        he6Afya9/QAZ9LXD5gEVE4eiZ6ApAc+8KdcfDGU6p3sBmOazQ3lCVlmCcn3peLXO
-        YTK9NBchDnjmah2lSh2Q0UXwwoZi1C8l0hIkZN8ZCf9g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=jQjsWeIlhqPm1oZNM
-        XNmNsjlPzih/RDA2oOywNwUB50=; b=PuzL4vF6Dju4Xctz5wQb0mqpZKmzZEQan
-        aLEyfReB4xgLdcjXl6pP/FW87U+gCqhQ8E2BLRft+UFfFhkmtbl3PuzxzQLrg8uV
-        xApbyVVjR9Ji/dA4qe2dSWFoRMOY2gBAo5yymv3vo7U/EZKHTdVdOEw1Cq81Seck
-        lvt4eJUe4L/cefvhiNZNIV2ZJGAIyR24fUkwhRUZdIaTZi7VDJDmj+SOartaueZl
-        f0O+mvl8Ls0lliHdtj9VKxKBp7MC9bu3iP4j1uakXzln5ZLpxMvHJnmwY0gRsRVk
-        ywSkO/9RG2YfApuUQN8rrRu+kCzi/Ny7WP2dAA05ZJwI1gcSs1aLg==
-X-ME-Sender: <xms:2jPiXktuOVskVoY5KmhamXjS_PrrZeCxGJUmr4HNEvzFgssPTz10NQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudehledggeduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcu
-    tfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrthhtvg
-    hrnhepjeffheduvddvvdelhfegleelfffgieejvdehgfeijedtieeuteejteefueekjeeg
-    necukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:2jPiXhd0pW_81VlCfqAD34FL9WOAf2j2VtEfJJR0uvOzet2_sVr2EQ>
-    <xmx:2jPiXvxvUx66V9nBHhR0qIKP5or9l_sPJdDy_xBbloRRMQK4lpZjFw>
-    <xmx:2jPiXnOCVumnEv76bVK98Bn4bEmaxVEnH5LPFD_PzVhpWt8oNrGH6A>
-    <xmx:2zPiXhMywNAl4iF7Rt_C0NB88zfGr4tmimA_b5hR7qfebbJM5SQiZA>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 71E1F3066656;
-        Thu, 11 Jun 2020 09:36:59 -0400 (EDT)
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v4 0/9] drm/vc4: Turn the TXP into a CRTC
-Date:   Thu, 11 Jun 2020 15:36:45 +0200
-Message-Id: <cover.c33f5fd8b1b2703081f25398eb879937c9f7ce0b.1591882579.git-series.maxime@cerno.tech>
-X-Mailer: git-send-email 2.26.2
+        Thu, 11 Jun 2020 09:51:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591883514;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9+HdOR4975sbAEuB1RaL0b8J+blDp+Ho3Hrxc6qjF2Y=;
+        b=b/isTvzaMeqRxb9uVuwaU7H4mm7l4UaJ12iB8V0ZILtcDbvGHzjn7FnSU1GHdYV/uwIdFX
+        bU8NiFegFA/u/jgtssR0OwDKPvsgyt2+lvGycga1Jg98+w355XZJfZxmHSpVuK9YrjbMDj
+        Q43IpWXU/WKNvkjnfYSEgWNxJ3esijw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-149-WrLPbTxGNc6pRAjkTVHJUQ-1; Thu, 11 Jun 2020 09:51:41 -0400
+X-MC-Unique: WrLPbTxGNc6pRAjkTVHJUQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 64B73107ACCA;
+        Thu, 11 Jun 2020 13:51:36 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-115-149.rdu2.redhat.com [10.10.115.149])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B82E410013C1;
+        Thu, 11 Jun 2020 13:51:29 +0000 (UTC)
+Subject: Re: possible deadlock in send_sigio
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     syzbot <syzbot+a9fb1457d720a55d6dc5@syzkaller.appspotmail.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>, allison@lohutok.net,
+        areber@redhat.com, aubrey.li@linux.intel.com,
+        Andrei Vagin <avagin@gmail.com>,
+        Bruce Fields <bfields@fieldses.org>,
+        Christian Brauner <christian@brauner.io>, cyphar@cyphar.com,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>, guro@fb.com,
+        Jeff Layton <jlayton@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Kees Cook <keescook@chromium.org>, linmiaohe@huawei.com,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michal Hocko <mhocko@suse.com>, Ingo Molnar <mingo@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>, sargun@sargun.me,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Al Viro <viro@zeniv.linux.org.uk>
+References: <000000000000760d0705a270ad0c@google.com>
+ <69818a6c-7025-8950-da4b-7fdc065d90d6@redhat.com>
+ <CACT4Y+brpePBoR7EUwPiSvGAgo6bhvpKvLTiCaCfRSadzn6yRw@mail.gmail.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <88c172af-46df-116e-6f22-b77f98803dcb@redhat.com>
+Date:   Thu, 11 Jun 2020 09:51:29 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACT4Y+brpePBoR7EUwPiSvGAgo6bhvpKvLTiCaCfRSadzn6yRw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 6/11/20 3:43 AM, Dmitry Vyukov wrote:
+> On Thu, Jun 11, 2020 at 4:33 AM Waiman Long <longman@redhat.com> wrote:
+>> On 4/4/20 1:55 AM, syzbot wrote:
+>>> Hello,
+>>>
+>>> syzbot found the following crash on:
+>>>
+>>> HEAD commit:    bef7b2a7 Merge tag 'devicetree-for-5.7' of git://git.kerne..
+>>> git tree:       upstream
+>>> console output: https://syzkaller.appspot.com/x/log.txt?x=15f39c5de00000
+>>> kernel config:  https://syzkaller.appspot.com/x/.config?x=91b674b8f0368e69
+>>> dashboard link: https://syzkaller.appspot.com/bug?extid=a9fb1457d720a55d6dc5
+>>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1454c3b7e00000
+>>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12a22ac7e00000
+>>>
+>>> The bug was bisected to:
+>>>
+>>> commit 7bc3e6e55acf065500a24621f3b313e7e5998acf
+>>> Author: Eric W. Biederman <ebiederm@xmission.com>
+>>> Date:   Thu Feb 20 00:22:26 2020 +0000
+>>>
+>>>       proc: Use a list of inodes to flush from proc
+>>>
+>>> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=165c4acde00000
+>>> final crash:    https://syzkaller.appspot.com/x/report.txt?x=155c4acde00000
+>>> console output: https://syzkaller.appspot.com/x/log.txt?x=115c4acde00000
+>>>
+>>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+>>> Reported-by: syzbot+a9fb1457d720a55d6dc5@syzkaller.appspotmail.com
+>>> Fixes: 7bc3e6e55acf ("proc: Use a list of inodes to flush from proc")
+>>>
+>>> ========================================================
+>>> WARNING: possible irq lock inversion dependency detected
+>>> 5.6.0-syzkaller #0 Not tainted
+>>> --------------------------------------------------------
+>>> ksoftirqd/0/9 just changed the state of lock:
+>>> ffffffff898090d8 (tasklist_lock){.+.?}-{2:2}, at: send_sigio+0xa9/0x340 fs/fcntl.c:800
+>>> but this lock took another, SOFTIRQ-unsafe lock in the past:
+>>>    (&pid->wait_pidfd){+.+.}-{2:2}
+>>>
+>>>
+>>> and interrupts could create inverse lock ordering between them.
+>>>
+>>>
+>>> other info that might help us debug this:
+>>>    Possible interrupt unsafe locking scenario:
+>>>
+>>>          CPU0                    CPU1
+>>>          ----                    ----
+>>>     lock(&pid->wait_pidfd);
+>>>                                  local_irq_disable();
+>>>                                  lock(tasklist_lock);
+>>>                                  lock(&pid->wait_pidfd);
+>>>     <Interrupt>
+>>>       lock(tasklist_lock);
+>>>
+>>>    *** DEADLOCK ***
+>> That is a false positive. The qrwlock has the special property that it
+>> becomes unfair (for read lock) at interrupt context. So unless it is
+>> taking a write lock in the interrupt context, it won't go into deadlock.
+>> The current lockdep code does not capture the full semantics of qrwlock
+>> leading to this false positive.
+> Hi Longman
+>
+> Thanks for looking into this.
+> Now the question is: how should we change lockdep annotations to fix this bug?
 
-This is another part of the rpi4 HDMI series that got promoted to a
-series of its own to try to reduce the main one.
+There was an old lockdep patch that I think may address the issue, but 
+was not merged at the time. I will need to dig it out and see if it can 
+be adapted to work in the current kernel. It may take some time.
 
-This rework is needed since the bcm2711 used in the rpi4 has a more
-complex routing in the HVS that doesn't allow to use a fairly simple
-mapping like what was used before.
+Cheers,
+Longman
 
-Since that mapping affects both the pixelvalves and the TXP, turning the
-TXP into a CRTC just like pixelvalves are allows to deal with the
-mapping in the CRTC states, which turns out to be pretty convenient.
-
-Let me know what you think,
-Maxime
-
-Changes from v3:
-  - Stripped the patches out of the main HDMI series
-  - Change the bind order of the HVS to avoid a compatible check
-  - Added Eric's tags
-  - Rebased on top of drm-misc-next
-
-Maxime Ripard (9):
-  drm/vc4: Reorder the bind order of the devices
-  drm/vc4: crtc: Move HVS setup code to the HVS driver
-  drm/vc4: crtc: Make state functions public
-  drm/vc4: crtc: Split CRTC data in two
-  drm/vc4: crtc: Only access the PixelValve registers if we have to
-  drm/vc4: crtc: Move the CRTC initialisation to a separate function
-  drm/vc4: crtc: Move the txp_armed function to the TXP
-  drm/vc4: txp: Turn the TXP into a CRTC of its own
-  drm/vc4: crtc: Remove the feed_txp tests
-
- drivers/gpu/drm/vc4/vc4_crtc.c | 427 ++++++----------------------------
- drivers/gpu/drm/vc4/vc4_drv.c  |   2 +-
- drivers/gpu/drm/vc4/vc4_drv.h  |  38 ++-
- drivers/gpu/drm/vc4/vc4_hvs.c  | 291 +++++++++++++++++++++++-
- drivers/gpu/drm/vc4/vc4_txp.c  | 109 ++++++++-
- 5 files changed, 522 insertions(+), 345 deletions(-)
-
-base-commit: ebd11f706c9d9756edad5b5f3f3310d77d77f60c
--- 
-git-series 0.9.1
