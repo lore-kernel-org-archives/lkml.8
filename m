@@ -2,95 +2,77 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B139FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D232C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A5B2204EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:58:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E537B204EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:58:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgFKH6e (ORCPT
+        id S1726980AbgFKH6l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 03:58:34 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5818 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726841AbgFKH6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 03:58:33 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id B5FCD816C6078CF54E4E;
-        Thu, 11 Jun 2020 15:58:27 +0800 (CST)
-Received: from huawei.com (10.175.113.133) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Thu, 11 Jun 2020
- 15:58:21 +0800
-From:   Wang Hai <wanghai38@huawei.com>
-To:     <davem@davemloft.net>, <kuznet@ms2.inr.ac.ru>,
-        <yoshfuji@linux-ipv6.org>, <kuba@kernel.org>,
-        <liuhangbin@gmail.com>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <wanghai38@huawei.com>
-Subject: [PATCH] mld: fix memory leak in ipv6_mc_destroy_dev()
-Date:   Thu, 11 Jun 2020 15:57:50 +0800
-Message-ID: <20200611075750.18545-1-wanghai38@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 11 Jun 2020 03:58:41 -0400
+Received: from outpost5.zedat.fu-berlin.de ([130.133.4.89]:36077 "EHLO
+        outpost5.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726841AbgFKH6j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 03:58:39 -0400
+Received: from relay1.zedat.fu-berlin.de ([130.133.4.67])
+          by outpost.zedat.fu-berlin.de (Exim 4.93)
+          with esmtps (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1jjI6a-000srZ-Jy; Thu, 11 Jun 2020 09:58:32 +0200
+Received: from z6.physik.fu-berlin.de ([160.45.32.137] helo=z6)
+          by relay1.zedat.fu-berlin.de (Exim 4.93)
+          with esmtps (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1jjI6a-00291r-Hm; Thu, 11 Jun 2020 09:58:32 +0200
+Received: from glaubitz by z6 with local (Exim 4.94)
+        (envelope-from <glaubitz@physik.fu-berlin.de>)
+        id 1jjI6R-00COLg-3t; Thu, 11 Jun 2020 09:58:23 +0200
+From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To:     linux-sh@vger.kernel.org
+Cc:     Rich Felker <dalias@libc.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>,
+        NIIBE Yutaka <gniibe@fsij.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] sh: Implement __get_user_u64() required for 64-bit get_user()
+Date:   Thu, 11 Jun 2020 09:58:10 +0200
+Message-Id: <20200611075811.2949870-1-glaubitz@physik.fu-berlin.de>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.113.133]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: 160.45.32.137
+X-ZEDAT-Hint: R
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit a84d01647989 ("mld: fix memory leak in mld_del_delrec()") fixed
-the memory leak of MLD, but missing the ipv6_mc_destroy_dev() path, in
-which mca_sources are leaked after ma_put().
+Hi!
 
-Using ip6_mc_clear_src() to take care of the missing free.
+This is version 3 of my patch to implement __get_user_u64() for SH.
 
-BUG: memory leak
-unreferenced object 0xffff8881113d3180 (size 64):
-  comm "syz-executor071", pid 389, jiffies 4294887985 (age 17.943s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 ff 02 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<000000002cbc483c>] kmalloc include/linux/slab.h:555 [inline]
-    [<000000002cbc483c>] kzalloc include/linux/slab.h:669 [inline]
-    [<000000002cbc483c>] ip6_mc_add1_src net/ipv6/mcast.c:2237 [inline]
-    [<000000002cbc483c>] ip6_mc_add_src+0x7f5/0xbb0 net/ipv6/mcast.c:2357
-    [<0000000058b8b1ff>] ip6_mc_source+0xe0c/0x1530 net/ipv6/mcast.c:449
-    [<000000000bfc4fb5>] do_ipv6_setsockopt.isra.12+0x1b2c/0x3b30 net/ipv6/ipv6_sockglue.c:754
-    [<00000000e4e7a722>] ipv6_setsockopt+0xda/0x150 net/ipv6/ipv6_sockglue.c:950
-    [<0000000029260d9a>] rawv6_setsockopt+0x45/0x100 net/ipv6/raw.c:1081
-    [<000000005c1b46f9>] __sys_setsockopt+0x131/0x210 net/socket.c:2132
-    [<000000008491f7db>] __do_sys_setsockopt net/socket.c:2148 [inline]
-    [<000000008491f7db>] __se_sys_setsockopt net/socket.c:2145 [inline]
-    [<000000008491f7db>] __x64_sys_setsockopt+0xba/0x150 net/socket.c:2145
-    [<00000000c7bc11c5>] do_syscall_64+0xa1/0x530 arch/x86/entry/common.c:295
-    [<000000005fb7a3f3>] entry_SYSCALL_64_after_hwframe+0x49/0xb3
+I have asked both Yutaka Niibe and Yoshinori Sato to look over my changes and they
+both agreed that an entry in __ex_tables for the second access was missing, so I
+add the missing ".long 1b+2, 3b\n\t".
 
-Fixes: 1666d49e1d41 ("mld: do not remove mld souce list info when set link down")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
----
- net/ipv6/mcast.c | 1 +
- 1 file changed, 1 insertion(+)
+The changes should be correct now and will hopefully get a positive review by
+the SH maintainers.
 
-diff --git a/net/ipv6/mcast.c b/net/ipv6/mcast.c
-index 7e12d2114158..8cd2782a31e4 100644
---- a/net/ipv6/mcast.c
-+++ b/net/ipv6/mcast.c
-@@ -2615,6 +2615,7 @@ void ipv6_mc_destroy_dev(struct inet6_dev *idev)
- 		idev->mc_list = i->next;
- 
- 		write_unlock_bh(&idev->lock);
-+		ip6_mc_clear_src(i);
- 		ma_put(i);
- 		write_lock_bh(&idev->lock);
- 	}
--- 
-2.17.1
+Thanks,
+Adrian
+
+--
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer - glaubitz@debian.org
+`. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+
 
