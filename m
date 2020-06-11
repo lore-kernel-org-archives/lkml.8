@@ -2,230 +2,219 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A26DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:22:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2F4C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D001120835
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:22:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591917765;
-	bh=gCJ5zqC/HJ85uZUZkc1Pp30uL4zAwCk0QHm5dlfJCxQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=KheQXkarhFAXbvk+lVsNRa+Du3TsCyyCADb04ISqZQW92AFUA8kri+MwkgpfXXJA/
-	 sWMOspTJbkTVqqpDLVFMpmtJJikOzuMEGSrf0o68GykUJwYH+7AmqnybY2/PCmP2ne
-	 +YzUNkwUOyqciN+pg3vN9Dcauc0OwcElZlR5Es9M=
+	by mail.kernel.org (Postfix) with ESMTP id B81AD20842
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:23:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Im7VtVIh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbgFKXWo (ORCPT
+        id S1726456AbgFKXXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 19:22:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56328 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726270AbgFKXWo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 19:22:44 -0400
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1DD320842
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 23:22:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591917763;
-        bh=gCJ5zqC/HJ85uZUZkc1Pp30uL4zAwCk0QHm5dlfJCxQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=duE0lHeBUBaxcv06IPvKMJ8xFFdI+oD+spB9ul0CbL5RuNwio4yW2AtAB/ZKjXsS+
-         mQ5PyjSFj/lB/RovzUDb9YTWSevheRmAfjcvvaSXgYJdL1lIXU1YCbeBQzKTuRgPkQ
-         2c+YxORIB1li5jlGlHUFObcTqu/vJhu3W1pIlrEY=
-Received: by mail-wm1-f44.google.com with SMTP id y20so6625545wmi.2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 16:22:42 -0700 (PDT)
-X-Gm-Message-State: AOAM5338MVVSvh2yQjqjsaddQd9fL4MkphXt/AAJUwPJ1jrnzCmo0Puu
-        klqIQ+4YPjUio3GXBmPKV2UTGDrT+CuQZiL0oGLHzQ==
-X-Google-Smtp-Source: ABdhPJxURP1nrp3/OilZVFaQiKiyETgVyPosYam3mqppbEU3sz3tDgAMb8c8PgLGfV1JlEGV5kp5GFoXr6ffzhW3lr8=
-X-Received: by 2002:a1c:2d54:: with SMTP id t81mr10962586wmt.154.1591917761460;
- Thu, 11 Jun 2020 16:22:41 -0700 (PDT)
+        Thu, 11 Jun 2020 19:23:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57622 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726380AbgFKXXM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 19:23:12 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC26EC08C5C3
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 16:23:12 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id n2so2920002pld.13
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 16:23:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=dF5S2dn2pVgES3YrOEuT/txRTXS0NkdBy5TQaEH6DIU=;
+        b=Im7VtVIhpDqHDj91TB7IHzCdVnA7cfAKvscZOGBTPVCyTJytRbl+ab1O58LQFqAHOi
+         U4CzwwHUZnlrb8MvXGRZ430PTCx5cAFj98PV4U2LQtuIFjbr8XzRxz5SIGSuj3FBGQDo
+         ASsFRokK8d6OyeBDvWzybCftl71yZ/TTfnUO0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=dF5S2dn2pVgES3YrOEuT/txRTXS0NkdBy5TQaEH6DIU=;
+        b=Ux+b0ukaGIiUHg4vMP1LNjBPaRZp3CRQIYQaRw2dpfSsRpaB36V9MsKy+l3b/ZeVhG
+         oAADH73sOvbiMzqAEkYlzSN5jZ45GpzFuaf5xFZYDVS/FQqWPfz24ueiO2yzC4lGULIT
+         p1YswTg9fbJtJriw5hPcE5saPjPZ82bRAsEgrEZ9rCzUuz/XCSuh1UCbGy8c1LNhnB/0
+         OwbUP6dLFFYLVyICdtq7WBmnzfFsYsUlmhBi+hileuzYoFZPIqMRmKbgChjCkQ2zvrHj
+         F03+mfmK602Xz355qUL53WGcpeFy75KMR4s3ycxtXUgvxVsQAtRPF4l+OBgSxgR7qUXf
+         KzGw==
+X-Gm-Message-State: AOAM531splo3RadKSao1VoychWikvdFCPYGQ5yhrhLDKKt9ak+gG1FWO
+        wS0FhbfUn5XcoSGRCmmfRHwoRg==
+X-Google-Smtp-Source: ABdhPJwTmpa2kzC8wDU5aCXCVkPVDsBffhaUPbr0t/XzzYQF4UVcbOpP5W8PS0r8XWx0KOQrRuCd8A==
+X-Received: by 2002:a17:902:c214:: with SMTP id 20mr9177825pll.193.1591917792301;
+        Thu, 11 Jun 2020 16:23:12 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id d189sm4120162pfc.51.2020.06.11.16.23.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2020 16:23:11 -0700 (PDT)
+Date:   Thu, 11 Jun 2020 16:23:10 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Sargun Dhillon <sargun@sargun.me>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        containers@lists.linux-foundation.org,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Robert Sesek <rsesek@google.com>,
+        Chris Palmer <palmer@google.com>, Jann Horn <jannh@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Wagner <daniel.wagner@bmw-carit.de>,
+        linux-kernel@vger.kernel.org, Matt Denton <mpdenton@google.com>,
+        John Fastabend <john.r.fastabend@intel.com>,
+        linux-fsdevel@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, cgroups@vger.kernel.org,
+        stable@vger.kernel.org, "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v3 1/4] fs, net: Standardize on file_receive helper to
+ move fds across processes
+Message-ID: <202006111622.01F596D@keescook>
+References: <20200605075435.GA3345@ircssh-2.c.rugged-nimbus-611.internal>
+ <202006091235.930519F5B@keescook>
+ <20200609200346.3fthqgfyw3bxat6l@wittgenstein>
+ <202006091346.66B79E07@keescook>
+ <037A305F-B3F8-4CFA-B9F8-CD4C9EF9090B@ubuntu.com>
+ <202006092227.D2D0E1F8F@keescook>
+ <20200610081237.GA23425@ircssh-2.c.rugged-nimbus-611.internal>
+ <202006101953.899EFB53@keescook>
+ <20200611091942.jni2glnpmxisnant@wittgenstein>
+ <20200611103922.GA30103@ircssh-2.c.rugged-nimbus-611.internal>
 MIME-Version: 1.0
-References: <CA+G9fYvF3cyrY+-iw_SZtpN-i2qA2BruHg4M=QYECU2-dNdsMw@mail.gmail.com>
- <CALCETrXqhwJzhsAoM72tskso5aDELgfGLnHdGYHiAFmgCPforQ@mail.gmail.com> <20200611192518.GA2483@worktop.programming.kicks-ass.net>
-In-Reply-To: <20200611192518.GA2483@worktop.programming.kicks-ass.net>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 11 Jun 2020 16:22:29 -0700
-X-Gmail-Original-Message-ID: <CALCETrXq2sVuT39+oB2CskQBP3nNk4ogx+cwv-Jc3vE-uZazYg@mail.gmail.com>
-Message-ID: <CALCETrXq2sVuT39+oB2CskQBP3nNk4ogx+cwv-Jc3vE-uZazYg@mail.gmail.com>
-Subject: Re: Perf: WARNING: arch/x86/entry/common.c:624 idtentry_exit_cond_rcu+0x92/0xc0
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        X86 ML <x86@kernel.org>, cj.chengjian@huawei.com,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michel Lespinasse <walken@google.com>,
-        lkft-triage@lists.linaro.org,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200611103922.GA30103@ircssh-2.c.rugged-nimbus-611.internal>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 12:25 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Thu, Jun 11, 2020 at 12:10:50PM -0700, Andy Lutomirski wrote:
-> > On Thu, Jun 11, 2020 at 11:56 AM Naresh Kamboju
-> > <naresh.kamboju@linaro.org> wrote:
-> > >
-> > > While running perf test and selftest x86 single_step_syscall_32 on
-> > > i386 kernel linux
-> > > next 5.7.0-next-20200610 kernel warning noticed.
-> > >
-> > > steps to reproduce:
-> > > --------------------------
-> > > perf test
-> > > and
-> > > cd /opt/kselftests/default-in-kernel/x86
-> > > ./single_step_syscall_32
-> > >
-> > > perf warning log:
-> > > ----------------------
-> > > [   57.260865] ------------[ cut here ]------------
-> > > [   57.266576] IRQs not disabled as expected
-> > > [   57.270583] WARNING: CPU: 1 PID: 500 at
-> > > /usr/src/kernel/arch/x86/entry/common.c:624
-> > > idtentry_exit_cond_rcu+0x92/0xc0
-> > > [   57.281092] Modules linked in: x86_pkg_temp_thermal fuse
-> > > [   57.286406] CPU: 1 PID: 500 Comm: perf Not tainted 5.7.0-next-20200610 #1
-> > > [   57.293190] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-> > > 2.2 05/23/2018
-> > > [   57.300577] EIP: idtentry_exit_cond_rcu+0x92/0xc0
-> > > [   57.305280] Code: 8b 89 d8 05 00 00 85 c9 74 ae 80 3d b1 64 2c d4
-> > > 00 75 a5 68 94 2d fb d3 89 55 f8 89 45 fc c6 05 b1 64 2c d4 01 e8 8e
-> > > f5 2b ff <0f> 0b 58 8b 55 f8 8b 45 fc eb 83 8d 76 00 e8 5b fd ff ff c9
-> > > c3 89
-> > > [   57.324017] EAX: 0000001d EBX: 0d00022a ECX: 00000027 EDX: f5b9e14c
-> > > [   57.330274] ESI: f2a2ffb4 EDI: ffff0ff4 EBP: f2a2ff8c ESP: f2a2ff80
-> > > [   57.336531] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010096
-> > > [   57.343345] CR0: 80050033 CR2: 08700a58 CR3: 14ad7000 CR4: 003406d0
-> > > [   57.349608] DR0: 080dfb80 DR1: 080dfc00 DR2: 08700a58 DR3: 00000000
-> > > [   57.355866] DR6: fffe0ff0 DR7: 0d00062a
-> > > [   57.359697] Call Trace:
-> > > [   57.362143]  exc_debug+0x84/0x1b0
-> > > [   57.365487]  ? exc_int3+0x1d0/0x1d0
-> > > [   57.368981]  handle_exception+0x145/0x145
-> > > [   57.372991] EIP: 0x80dfbcd
-> > > [   57.375694] Code: Bad RIP value.
-> > > [   57.378918] EAX: 00000000 EBX: 00000005 ECX: 00002400 EDX: 00000000
-> > > [   57.385175] ESI: 00000003 EDI: 00000004 EBP: bfd59798 ESP: bfd59770
-> > > [   57.391431] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000246
-> > > [   57.398215] irq event stamp: 1896
-> >
-> > A regrettable property of the current entry code structure is that we
-> > lose any real indication of the vector.  Presumably this is #DB, hence
-> > exc_debug.  I don't know what perf has to do with it.
-> >
-> > I'll bang on this after lunch if no one beats me to it.
->
-> Puzzling, CR3 seems to suggest this is !user_mode(), but either way #DB
-> has either idtentry_enter_user() or nmi_enter().
->
+On Thu, Jun 11, 2020 at 10:39:23AM +0000, Sargun Dhillon wrote:
+> On Thu, Jun 11, 2020 at 11:19:42AM +0200, Christian Brauner wrote:
+> > On Wed, Jun 10, 2020 at 07:59:55PM -0700, Kees Cook wrote:
+> > > On Wed, Jun 10, 2020 at 08:12:38AM +0000, Sargun Dhillon wrote:
+> > > > As an aside, all of this junk should be dropped:
+> > > > +	ret = get_user(size, &uaddfd->size);
+> > > > +	if (ret)
+> > > > +		return ret;
+> > > > +
+> > > > +	ret = copy_struct_from_user(&addfd, sizeof(addfd), uaddfd, size);
+> > > > +	if (ret)
+> > > > +		return ret;
+> > > > 
+> > > > and the size member of the seccomp_notif_addfd struct. I brought this up 
+> > > > off-list with Tycho that ioctls have the size of the struct embedded in them. We 
+> > > > should just use that. The ioctl definition is based on this[2]:
+> > > > #define _IOC(dir,type,nr,size) \
+> > > > 	(((dir)  << _IOC_DIRSHIFT) | \
+> > > > 	 ((type) << _IOC_TYPESHIFT) | \
+> > > > 	 ((nr)   << _IOC_NRSHIFT) | \
+> > > > 	 ((size) << _IOC_SIZESHIFT))
+> > > > 
+> > > > 
+> > > > We should just use copy_from_user for now. In the future, we can either 
+> > > > introduce new ioctl names for new structs, or extract the size dynamically from 
+> > > > the ioctl (and mask it out on the switch statement in seccomp_notify_ioctl.
+> > > 
+> > > Yeah, that seems reasonable. Here's the diff for that part:
+> > > 
+> > > diff --git a/include/uapi/linux/seccomp.h b/include/uapi/linux/seccomp.h
+> > > index 7b6028b399d8..98bf19b4e086 100644
+> > > --- a/include/uapi/linux/seccomp.h
+> > > +++ b/include/uapi/linux/seccomp.h
+> > > @@ -118,7 +118,6 @@ struct seccomp_notif_resp {
+> > >  
+> > >  /**
+> > >   * struct seccomp_notif_addfd
+> > > - * @size: The size of the seccomp_notif_addfd datastructure
+> > >   * @id: The ID of the seccomp notification
+> > >   * @flags: SECCOMP_ADDFD_FLAG_*
+> > >   * @srcfd: The local fd number
+> > > @@ -126,7 +125,6 @@ struct seccomp_notif_resp {
+> > >   * @newfd_flags: The O_* flags the remote FD should have applied
+> > >   */
+> > >  struct seccomp_notif_addfd {
+> > > -	__u64 size;
+> > >  	__u64 id;
+> > >  	__u32 flags;
+> > >  	__u32 srcfd;
+> > > diff --git a/kernel/seccomp.c b/kernel/seccomp.c
+> > > index 3c913f3b8451..00cbdad6c480 100644
+> > > --- a/kernel/seccomp.c
+> > > +++ b/kernel/seccomp.c
+> > > @@ -1297,14 +1297,9 @@ static long seccomp_notify_addfd(struct seccomp_filter *filter,
+> > >  	struct seccomp_notif_addfd addfd;
+> > >  	struct seccomp_knotif *knotif;
+> > >  	struct seccomp_kaddfd kaddfd;
+> > > -	u64 size;
+> > >  	int ret;
+> > >  
+> > > -	ret = get_user(size, &uaddfd->size);
+> > > -	if (ret)
+> > > -		return ret;
+> > > -
+> > > -	ret = copy_struct_from_user(&addfd, sizeof(addfd), uaddfd, size);
+> > > +	ret = copy_from_user(&addfd, uaddfd, sizeof(addfd));
+> > >  	if (ret)
+> > >  		return ret;
+> > >  
+> > > 
+> > > > 
+> > > > ----
+> > > > +#define SECCOMP_IOCTL_NOTIF_ADDFD	SECCOMP_IOR(3,	\
+> > > > +						struct seccomp_notif_addfd)
+> > > > 
+> > > > Lastly, what I believe to be a small mistake, it should be SECCOMP_IOW, based on 
+> > > > the documentation in ioctl.h -- "_IOW means userland is writing and kernel is 
+> > > > reading."
+> > > 
+> > > Oooooh. Yeah; good catch. Uhm, that means SECCOMP_IOCTL_NOTIF_ID_VALID
+> > > is wrong too, yes? Tycho, Christian, how disruptive would this be to
+> > > fix? (Perhaps support both and deprecate the IOR version at some point
+> > > in the future?)
+> > 
+> > We have custom defines in our source code, i.e.
+> > #define SECCOMP_IOCTL_NOTIF_ID_VALID  SECCOMP_IOR(2, __u64)
+> > so ideally we'd have a SECCOMP_IOCTL_NOTIF_ID_VALID_V2
+> > 
+> > Does that sound ok?
+> > 
+> > Christian
+> Why not change the public API in seccomp.h to:
+> #define SECCOMP_IOCTL_NOTIF_ID_VALID	SECCOMP_IOW(2, __u64)
+> 
+> And then in seccomp.c:
+> #define SECCOMP_IOCTL_NOTIF_ID_VALID_OLD	SECCOMP_IOR(2, __u64)
+> static long seccomp_notify_ioctl(struct file *file, unsigned int cmd,
+> 				 unsigned long arg)
+> {
+> 	struct seccomp_filter *filter = file->private_data;
+> 	void __user *buf = (void __user *)arg;
+> 
+> 	switch (cmd) {
+> 	case SECCOMP_IOCTL_NOTIF_RECV:
+> 		return seccomp_notify_recv(filter, buf);
+> 	case SECCOMP_IOCTL_NOTIF_SEND:
+> 		return seccomp_notify_send(filter, buf);
+> 	case SECCOMP_IOCTL_NOTIF_ID_VALID_OLD:
+> 		pr_warn_once("Detected usage of legacy (incorrect) version of seccomp notifier notif_id_valid ioctl\n");
+> 	case SECCOMP_IOCTL_NOTIF_ID_VALID:
+> 		return seccomp_notify_id_valid(filter, buf);
+> 	default:
+> 		return -EINVAL;
+> 	}
+> }
+> ---- 
+> 
+> So, both will work fine, and whenevery anyone recompiles, or picks up new 
+> headers, they will start calling the "right" one without a code change, and
+> we wont break any userspace.
 
-I just got this splat on 32-bit while running my perf abuser here:
+Yeah, that's what I'd prefer here.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/luto/misc-tests.git/tree/perf_lots_of_nmi.c
-
-[   21.874114] traps: PANIC: double fault, error_code: 0x0
-[   21.874127] double fault: 0000 [#1] SMP PTI
-[   21.874127] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.7.0+ #117
-[   21.874128] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-BIOS ?-20190727_073836-buildvm-ppc64le-16.ppc.fedoraproject.org-3.fc31
-04/01/2014
-[   21.874128] EIP: asm_exc_invalid_op+0x6/0x10
-[   21.874129] Code: a1 07 00 00 0f 01 ca fc 6a 00 68 f0 4c d7 cf e9
-91 07 00 00 0f 01 ca fc 6a 00 68 90 4f d7 cf e9 81 07 00 00 0f 01 ca
-fc 6a 00 <68> 30 4d d7 cf e9 71 07 00 00 0f 01 ca fc 6a 00 68 60 55 d7
-cf e9
-[   21.874129] EAX: 00000000 EBX: cff9902c ECX: 000000e0 EDX: 00000000
-[   21.874129] ESI: cff9be9c EDI: cfd74d30 EBP: cff99014 ESP: cff99000
-[   21.874130] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00210046
-[   21.874130] CR0: 80050033 CR2: cff98ffc CR3: 10108000 CR4: 00340ef0
-[   21.874130] Call Trace:
-[   21.874131] Modules linked in:
-[   21.889116] ---[ end trace aa191c9e5c534faf ]---
-[   21.889116] EIP: asm_exc_invalid_op+0x6/0x10
-[   21.889117] Code: a1 07 00 00 0f 01 ca fc 6a 00 68 f0 4c d7 cf e9
-91 07 00 00 0f 01 ca fc 6a 00 68 90 4f d7 cf e9 81 07 00 00 0f 01 ca
-fc 6a 00 <68> 30 4d d7 cf e9 71 07 00 00 0f 01 ca fc 6a 00 68 60 55 d7
-cf e9
-[   21.889117] EAX: 00000000 EBX: cff9902c ECX: 000000e0 EDX: 00000000
-[   21.889117] ESI: cff9be9c EDI: cfd74d30 EBP: cff99014 ESP: cff99000
-[   21.889127] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00210046
-[   21.889128] CR0: 80050033 CR2: cff98ffc CR3: 10108000 CR4: 00340ef0
-[   21.889128] Kernel panic - not syncing: Fatal exception in interrupt
-[   21.889338] Kernel Offset: 0xe600000 from 0xc1000000 (relocation
-range: 0xc0000000-0xf7dfdfff)
-
-All code
-========
-   0:    a1 07 00 00 0f           mov    0xf000007,%eax
-   5:    01 ca                    add    %ecx,%edx
-   7:    fc                       cld
-   8:    6a 00                    push   $0x0
-   a:    68 f0 4c d7 cf           push   $0xcfd74cf0
-   f:    e9 91 07 00 00           jmp    0x7a5
-  14:    0f 01 ca                 clac
-  17:    fc                       cld
-  18:    6a 00                    push   $0x0
-  1a:    68 90 4f d7 cf           push   $0xcfd74f90
-  1f:    e9 81 07 00 00           jmp    0x7a5
-  24:    0f 01 ca                 clac
-  27:    fc                       cld
-  28:    6a 00                    push   $0x0
-  2a:*    68 30 4d d7 cf           push   $0xcfd74d30        <--
-trapping instruction
-  2f:    e9 71 07 00 00           jmp    0x7a5
-  34:    0f 01 ca                 clac
-  37:    fc                       cld
-  38:    6a 00                    push   $0x0
-  3a:    68 60 55 d7 cf           push   $0xcfd75560
-
-This is on my private branch, which has some extra changes, but I
-don't think they're relevant.  I think we broke NMI :(  I did a nopti
-run and got a different explosion:
-
-[   14.618581] BUG: unable to handle page fault for address: 0021004a
-[   14.620149] #PF: supervisor write access in kernel mode
-[   14.621134] #PF: error_code(0x0002) - not-present page
-[   14.622028] *pdpt = 0000000035b2f001 *pde = 0000000000000000
-[   14.623047] Oops: 0002 [#1] SMP NOPTI
-[   14.623684] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.7.0+ #117
-[   14.624733] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-BIOS ?-20190727_073836-buildvm-ppc64le-16.ppc.fedoraproject.org-3.fc31
-04/01/2014
-[   14.627013] EIP: run_timer_softirq+0x14a/0x470
-[   14.627793] Code: 3b 63 00 8b 45 b8 8b 00 89 45 bc 8b 45 bc 85 c0
-74 5c 8b 45 b8 8b 18 89 5f 04 3e 8d 74 26 00 8b 03 8b 53 04 89 02 85
-c0 74 03 <89> 50 04 c7 43 04 00 00 00 00 8b 53 0c c7 03 22 01 00 00 f6
-43 12
-[   14.630874] EAX: 00210046 EBX: f60f3ee4 ECX: fffba48e EDX: f602bf88
-[   14.631913] ESI: f602bf88 EDI: f65c8080 EBP: f602bfbc ESP: f602bf68
-[   14.632970] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00210002
-[   14.634248] CR0: 80050033 CR2: 0021004a CR3: 3583b120 CR4: 00340ef0
-[   14.635300] Call Trace:
-[   14.635710]  <SOFTIRQ>
-[   14.636232]  __do_softirq+0xac/0x25b
-[   14.636885]  ? __entry_text_end+0x8/0x8
-[   14.637786]  call_on_stack+0x40/0x50
-[   14.638397]  </SOFTIRQ>
-[   14.638813]  ? irq_exit_rcu+0x95/0xa0
-[   14.639513]  ? sysvec_apic_timer_interrupt+0x27/0x40
-[   14.640424]  ? handle_exception+0x15d/0x15d
-[   14.641272]  ? __cpuidle_text_start+0x8/0x8
-[   14.642167]  ? default_idle+0x23/0x160
-
-I have to run, so I'll keep digging later.
+-- 
+Kees Cook
