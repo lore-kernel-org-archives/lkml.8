@@ -2,115 +2,85 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3583BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1EB6C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13C3E2063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:19:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CvBQeXuF"
+	by mail.kernel.org (Postfix) with ESMTP id 95C2D20760
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:20:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591874439;
+	bh=0+sxtBect72jPqO+rq641H6d/+ec4oVrijKYw9rAwo0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ex4KgWTQuWCehIfZndSO9vXtt4+d2N9Q9rdZ1dSk/x2lb5jRZVAg0CItb2PBF/ZD7
+	 dvHajX1FfnoasM66oDPm1qrnz009nUYjO8OVEv82cqtGgbANPbaOOgboHN490MoLOz
+	 CbAz3wf+sbbx3ZLX7Z1nfwzf+hOOppqWUXOxwW1A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728043AbgFKLTD (ORCPT
+        id S1728017AbgFKLUi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 07:19:03 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44020 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728015AbgFKLSx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 07:18:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591874332;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=aHs/k82DRtmbgpcekLlfLtqDNjfmaiN8XJYIsbpXYsw=;
-        b=CvBQeXuFhPjyEKg+S+0DkKEKZx+hfjycYpJDGQgs3Xq6W3ZwY1YT4vxO9hN2ptXLnDS7lr
-        /WhLjNHM4gW0mEj8+uHcFQ1r13/RdKi2DYN1Ipld9jn3nUpB9BKFBZuWEh6iHxt9r5lVrm
-        w0wjRJeyqOP4J2JAd0VHgsWF9BXhCMw=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-270-OTVUYN_DOwGH9NzwqypHSg-1; Thu, 11 Jun 2020 07:18:50 -0400
-X-MC-Unique: OTVUYN_DOwGH9NzwqypHSg-1
-Received: by mail-wr1-f72.google.com with SMTP id j16so2409361wre.22
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 04:18:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=aHs/k82DRtmbgpcekLlfLtqDNjfmaiN8XJYIsbpXYsw=;
-        b=TSCkMxv3jQdNwR3zmRABknVr262yUs4v1ZBiyKJE3f/1xs47xuhsUBm/ZC8O5o9NXh
-         XhfybNtv3jT2M1T4u8XWVreCHQ06IOBKjYacUxM/fkhQrEAsfMWpaYtZHlPG0cPdO8jn
-         Y7AHBm5xcMGN2kIH8iDBP2rKPjdBbkgh2ytS47IaZYsJj1d93tiGgWjCFSW1ZEHl7kDk
-         tA0ylE102iphgcbmm6bdfp4U0v30nL2SL8ypGT4XnfZj0P+joooJSl/P1T/B60Q/qIJh
-         qEro2v5tFTiJMPd7EY/IkuuSF3SulaiPJT9Mr9D+4UUW+56R8HIR9E51dXxpp0ttkXfj
-         1S1w==
-X-Gm-Message-State: AOAM533zWjY1Ira0LwO5bGJGHJ+edj6CtSQ8sZ0jnukx+wMHhNGZBjZu
-        DAcNNTJhWmG7g87kTyz1+jKexNkwdNtv9pYCTqfC6bzBhe+etjr78xe+0B9LTBPjxFfBoDfsN0y
-        9/KJKhZgTePjEbxnYiZhhuR2l
-X-Received: by 2002:a5d:4008:: with SMTP id n8mr8881544wrp.82.1591874329748;
-        Thu, 11 Jun 2020 04:18:49 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyhY9t8eWTFTFU22DEN3RpHOgBvqdz12LnsClmOERlrFjUovn0BcztQcQ+mkBp5lkPjBXyAsg==
-X-Received: by 2002:a5d:4008:: with SMTP id n8mr8881507wrp.82.1591874329286;
-        Thu, 11 Jun 2020 04:18:49 -0700 (PDT)
-Received: from redhat.com (bzq-79-181-55-232.red.bezeqint.net. [79.181.55.232])
-        by smtp.gmail.com with ESMTPSA id z25sm3678047wmf.10.2020.06.11.04.18.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 04:18:48 -0700 (PDT)
-Date:   Thu, 11 Jun 2020 07:18:45 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Jason Wang <jasowang@redhat.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        teawater <teawaterz@linux.alibaba.com>
-Subject: Re: [PATCH v1] virtio-mem: add memory via add_memory_driver_managed()
-Message-ID: <20200611071744-mutt-send-email-mst@kernel.org>
-References: <20200611093518.5737-1-david@redhat.com>
- <20200611060249-mutt-send-email-mst@kernel.org>
- <13ad9edf-31a1-35ee-a0b0-6390c3a0b4d9@redhat.com>
+        Thu, 11 Jun 2020 07:20:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45256 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727942AbgFKLUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 07:20:35 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BF622078D;
+        Thu, 11 Jun 2020 11:20:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591874433;
+        bh=0+sxtBect72jPqO+rq641H6d/+ec4oVrijKYw9rAwo0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dCcT0jSPypweAOdofLdfgp2pOpmONzVnSW9dyk2kGe1bYIp7OWl4/97f6iD4a2Cql
+         B1T5zVmzFd7/toMVNoMgVCll0xC4ubCB/z8JdeTauCsDa9YSbfaV6OI1qtuWtqM51N
+         GgP57QNq8vl3kaebrObZaGsXGqN8Un/7ssRmkiWY=
+Date:   Thu, 11 Jun 2020 13:20:27 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Vikash Bansal <bvikas@vmware.com>
+Cc:     stable@vger.kernel.org, srivatsab@vmware.com,
+        srivatsa@csail.mit.edu, amakhalov@vmware.com, srinidhir@vmware.com,
+        anishs@vmware.com, vsirnapalli@vmware.com, akaher@vmware.com,
+        clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
+        anand.jain@oracle.com, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4.19.y 0/2] btrfs: Fix for CVE-2019-18885
+Message-ID: <20200611112027.GJ3802953@kroah.com>
+References: <20200609065018.26378-1-bvikas@vmware.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <13ad9edf-31a1-35ee-a0b0-6390c3a0b4d9@redhat.com>
+In-Reply-To: <20200609065018.26378-1-bvikas@vmware.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 01:00:24PM +0200, David Hildenbrand wrote:
-> >> I'd like to have this patch in 5.8, with the initial merge of virtio-mem
-> >> if possible (so the user space representation of virtio-mem added memory
-> >> resources won't change anymore).
-> > 
-> > So my plan is to rebase on top of -rc1 and merge this for rc2 then.
-> > I don't like rebase on top of tip as the results are sometimes kind of
-> > random.
+On Tue, Jun 09, 2020 at 12:20:16PM +0530, Vikash Bansal wrote:
+> CVE Description:
+> NVD Site Link: https://nvd.nist.gov/vuln/detail?vulnId=CVE-2019-18885
 > 
-> Right, I just wanted to get this out early so we can discuss how to proceed.
+> It was discovered that the btrfs file system in the Linux kernel did not
+> properly validate metadata, leading to a NULL pointer dereference. An
+> attacker could use this to specially craft a file system image that, when
+> mounted, could cause a denial of service (system crash).
 > 
-> > And let's add a Fixes: tag as well, this way people will remember to
-> > pick this.
-> > Makes sense?
+> [PATCH v4.19.y 1/2]:
+> Backporting of upsream commit 09ba3bc9dd15:
+> btrfs: merge btrfs_find_device and find_device
 > 
-> Yes, it's somehow a fix (for kexec). So
+> [PATCH v4.19.y 2/2]:
+> Backporting of upstream commit 62fdaa52a3d0:
+> btrfs: Detect unbalanced tree with empty leaf before crashing
 > 
-> Fixes: 5f1f79bbc9e26 ("virtio-mem: Paravirtualized memory hotplug")
-> 
-> I can respin after -rc1 with the commit id fixed as noted by Pankaj.
-> Just let me know what you prefer.
-> 
-> Thanks!
+> On NVD site link of "commit 09ba3bc9dd150457c506e4661380a6183af651c1" 
+> was given as the fix for this CVE. But the issue was still reproducible.
+> So had to apply patch "Commit 62fdaa52a3d00a875da771719b6dc537ca79fce1"
+> to fix the issue.
 
-Some once this commit is in Linus' tree, please ping me.
+Looks good, now queued up,t hanks.
 
-> -- 
-> Thanks,
-> 
-> David / dhildenb
-
+greg k-h
