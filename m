@@ -2,101 +2,111 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D75C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B3CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:03:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC5F820656
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:01:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE22920656
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:03:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aKoVo3UV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OC6ATCSQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbgFKJBl (ORCPT
+        id S1726956AbgFKJDC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 05:01:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37108 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726928AbgFKJBi (ORCPT
+        Thu, 11 Jun 2020 05:03:02 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:32298 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726783AbgFKJDB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 05:01:38 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B18BC03E96F;
-        Thu, 11 Jun 2020 02:01:37 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id q19so5657856eja.7;
-        Thu, 11 Jun 2020 02:01:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=f70qcp+8H8N+7vfQUf6lwsKTErk85DZiUNo0OM0KDKo=;
-        b=aKoVo3UVoRws3o5Y4Mxmlc5CpVRvnFOlr2j/nBlJVjQeEXtfxHzwrPhsJli6AvjnVV
-         D2ajORkKdG+Q6wYK5z170YS1tb3dUjrKgipBAFPNvZMBU8RZ5Sp2tdFwTv1FlKsMe7OW
-         XbdzdYBZJrRVLNOdydDj6PmG+jxHckRkGqscUUiKcxJO7OYqKZzlLyiEP/dAFB3tAFS6
-         Y+Gu8GaZ3SIkqci3/IlZqySJX+UgzwRGmIJr1shkLm7rqC41dE51gByJBdbcObQa+Vku
-         dmaUOxmJcrqwG/QvlIIMw/bCSFeSKIa+sHc4WDRDNWj9dURnpwiTLhEfpCeub4+GmGUh
-         79lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=f70qcp+8H8N+7vfQUf6lwsKTErk85DZiUNo0OM0KDKo=;
-        b=lk1TzqMc/ZFgytuOlnyNJfgRRKHZWh5p1kXZopZXfTPqQbiLH/kNKaqPQwHg6ru4rW
-         xRneWioCozNvLwh9klfZwciJ/8PegFVcz5bl9f3D47ZjCKn2GYQtV3EhB2odD5r8eXHC
-         vIB2HATSbn1ig95+yqoz1Cx7xWU1NVESwW84zcnotq/3glU1pHCvd+f5l4VqmONBnWTP
-         5NvOAMxPbCfCg2FaLXMshsb4LMl1tprbYwqc4I21pm5bbN/eOSNIfhHlMkYtocYRzPU4
-         wjkla0B8x6ikf4Kd8JTohasz2VPpcBVPJXMcs5xnd7ppxZnNS/2RTAHprnODfThjMldH
-         iAkA==
-X-Gm-Message-State: AOAM532zGgKSDcmdZn6GvLAx7cpMFq0lmPGh2LJPEOXfzmSi+xPptzBV
-        oGsFetqYfiKo062slpdIUuSXV/1Itu4GYniiqJ4=
-X-Google-Smtp-Source: ABdhPJw0MVbn7mgfpkFtBg6RwYYq81Ac7XcqQYluRO6zP0wiUdzhOOBjlb6fIfKeADfYPAUQdunBXdk4whM5VcBN87o=
-X-Received: by 2002:a17:906:2e50:: with SMTP id r16mr7250012eji.305.1591866096170;
- Thu, 11 Jun 2020 02:01:36 -0700 (PDT)
+        Thu, 11 Jun 2020 05:03:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591866180;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=97xtZHAc1XXOLbnqcFjzV4Je09Xvv3dI4KKq8ENrPn0=;
+        b=OC6ATCSQs+8O4z0H+QKqgCkLpmvg+lA9hEfjA9Pv6MHyKuoo1yGANN58l+mdgKtAeetDPh
+        5WJtzJGjoXrEDdEYvA+IDti5SS+bPsGLBtCZXDsNFDTEkAkXy6/eI5AfU3S15QpoE5gGBI
+        opdTaed4Hz/AFMZEd7cD49c1pYzS5AU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-402-mpQCfyvTM92C65Z1BunWsA-1; Thu, 11 Jun 2020 05:02:55 -0400
+X-MC-Unique: mpQCfyvTM92C65Z1BunWsA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7D1D8193F561;
+        Thu, 11 Jun 2020 09:02:53 +0000 (UTC)
+Received: from krava (unknown [10.40.194.223])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 89FCE78914;
+        Thu, 11 Jun 2020 09:02:50 +0000 (UTC)
+Date:   Thu, 11 Jun 2020 11:02:49 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH 00/10] perf parse-events: enable more flex/bison warnings
+Message-ID: <20200611090249.GC1786122@krava>
+References: <20200610215100.256599-1-irogers@google.com>
 MIME-Version: 1.0
-References: <cover.1591816172.git.noodles@earth.li> <78519bc421a1cb7000a68d05e43c4208b26f37e5.1591816172.git.noodles@earth.li>
- <20200611085523.GV1551@shell.armlinux.org.uk>
-In-Reply-To: <20200611085523.GV1551@shell.armlinux.org.uk>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Thu, 11 Jun 2020 12:01:25 +0300
-Message-ID: <CA+h21hqyAKucPENVANwuNo-UuCY0W3z8QF1FZ-nhd0uQ8tyC+w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] net: dsa: qca8k: Switch to PHYLINK instead of PHYLIB
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Jonathan McDowell <noodles@earth.li>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200610215100.256599-1-irogers@google.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Russell,
+On Wed, Jun 10, 2020 at 02:50:50PM -0700, Ian Rogers wrote:
+> All C compiler warnings are disabled are disabled by -w. This change
+> removes the -w from flex and bison targets. To avoid implicit
+> declarations header files are declared as targets and included.
+> 
+> Tested with GCC 9.3.0 and clang 9.0.1.
+> 
+> Previously posted as a single change:
+> https://lore.kernel.org/lkml/20200609234344.3795-2-irogers@google.com/
+> 
+> Ian Rogers (10):
+>   perf parse-events: Use automatic variable for flex input
+>   perf parse-events: Use automatic variable for yacc input
+>   perf pmu: Add bison debug build flag
+>   perf pmu: Add flex debug build flag
+>   perf parse-events: Declare flex header file output
+>   perf parse-events: Declare bison header file output
+>   perf parse-events: Disable a subset of flex warnings
+>   perf expr: Avoid implicit lex function declaration
+>   perf parse-events: Avoid implicit lex function declaration
+>   perf parse-events: Disable a subset of bison warnings
 
-On Thu, 11 Jun 2020 at 11:57, Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
->
+looks great, I wonder what the -w replacement will do in
+Arnaldo's distro test, but it'd be nice to get rid it
 
->
-> Alternatively, phylink supports polling mode, but due to the layered
-> way DSA is written, DSA drivers don't have access to that as that is
-> in the DSA upper levels in net/dsa/slave.c (dsa_slave_phy_setup(),
-> it would be dp->pl_config.pcs_poll).
->
+Acked-by: Jiri Olsa <jolsa@redhat.com>
 
-They do, see https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/tree/drivers/net/dsa/ocelot/felix.c#n606
+thanks,
+jirka
 
->
-> --
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 503kbps up
+> 
+>  tools/perf/util/Build          | 50 +++++++++++++++++++++-------------
+>  tools/perf/util/expr.y         |  2 ++
+>  tools/perf/util/parse-events.y |  1 +
+>  3 files changed, 34 insertions(+), 19 deletions(-)
+> 
+> -- 
+> 2.27.0.278.ge193c7cf3a9-goog
+> 
 
-Thanks,
--Vladimir
