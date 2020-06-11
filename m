@@ -2,110 +2,131 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C92ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA266C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:42:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A67A8207C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3EF0207C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:42:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="Fpc9HtUm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VdEQrWYs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726782AbgFKMmi (ORCPT
+        id S1726513AbgFKMmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 08:42:38 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:55549 "EHLO mx1.tq-group.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726254AbgFKMmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 08:42:32 -0400
-IronPort-SDR: TIOjdQpI7EX4mYTl6bOiqmqLxd3sKOM0UkEt3jLqwCq+X7XoAYx3fKaNKm/53Iiav8CiekTdOV
- hiPVKR5mRP5eAjrkmyJlvvry6fJvUyUxPj3njpWrsFT2GXmXvZmp16QzIGWcrj7yINK3hl5zMH
- FHRuzZWDCYh6tWHHzi675Q88Uo9qO0poCdJKuw0wojGC40wC/60T2fOpt1jjEistKaPSvmRi7u
- dlc5FaWiSSmUy2wsqLAWpKTtk4dTGMdCSS7bCxttoCWz2mwG/Z3FYiYb89YFnel/NUi/eMB1Qy
- 3DQ=
-X-IronPort-AV: E=Sophos;i="5.73,499,1583190000"; 
-   d="scan'208";a="12649665"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 11 Jun 2020 14:42:26 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Thu, 11 Jun 2020 14:42:26 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Thu, 11 Jun 2020 14:42:26 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1591879346; x=1623415346;
-  h=from:to:cc:subject:date:message-id;
-  bh=+2RXMPGnWi9PFwcXzBsGtjQvnkutWbl2BGcACrG6Fe0=;
-  b=Fpc9HtUmTObOSv3/RvejS9Kmv2/r64NFCl5PKuHLk1En9S3oJj8dViaA
-   WETZe6BmOltfSn7HZrgmCtaDRgUnySBqAiEhpuQU9nPMvHhCexhyCrymB
-   gYzSYbdPWnr+qB3FCwDOYx6HK5EfAV0DZ7bGNX6bx39oMRlRJz4SUQLFC
-   zVpbZlMyaSDeipQo9wZZp1vWf5PpR9UUr0raqo1uLf2affJoOEH4OZwxF
-   u9r5WoZ/YYCP1t/sb9h7sud9YvN7R+wkdjmODK7ojl0TM01zq9mAo5EEi
-   BdKS+YNH45s9HAj15Sfr1c0HL0vEPO27yg4+Xziz3HkB31EetdkZEKiUO
-   g==;
-IronPort-SDR: v1GgtVD97D+jfWVsgX8naYKvRTrX6R5wwmOUH2+2K3tuckV6ElLCS5eP5zZm7SOA2+uTE65u7l
- pgDJBlirfZSLovZrIL/ESyFOm6g6FYwdYq3EddT8+kvmHcBD0IwvwGQk5uQ8ss/uRix7Y/kHWg
- YmhdcpbBEADBk56vy8WQ8kmJpVunmmdXZD94QQA/YYnrqirVAldBsoeAx7amEVzhQrIQnLop+M
- 8I57WNCyldH6J2oy3LSgLGOKhlJzQs2hLsSrmFpkRZXWIumxoeF7sghYt2RYDLmu0jvXn5pVq5
- UjU=
-X-IronPort-AV: E=Sophos;i="5.73,499,1583190000"; 
-   d="scan'208";a="12649664"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 11 Jun 2020 14:42:26 +0200
-Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id EC913280075;
-        Thu, 11 Jun 2020 14:42:27 +0200 (CEST)
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        Thu, 11 Jun 2020 08:42:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43374 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726332AbgFKMmI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 08:42:08 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE7B1C08C5C2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 05:42:07 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id y17so5985502wrn.11
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 05:42:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=XmFQ91h0GZrG5WahISB8fgmLlciVJglL2OXgg5eRNY4=;
+        b=VdEQrWYs2Uqc2Ff7VpJtv1mSFf9m6Ugbt1BOFmKKvAN6xEchlHWIOcLuP+mjyslQb9
+         foXUJjSZurXBRLrt8jabAIuejWX/fdwZKdtRrawNaGIz4SvUmGyJzHVpHIJh+16Cmdm3
+         66pfsdmIG6BgIKMocfQC0niEPRpxZ5W8xB6qJ9Ae2b/O+XP6SgDFEbSyd9PJQWSD7zTm
+         9aw9Vyc24x6+eDhFTcPLXyyjRBir5cq3qS5ec5nvz6/1uy6LxBZLYaso4NQ8C+SxYjqA
+         7IAUuJyZg9o8SAPF8PodoqQqvnAX512t3lrkTVYYN7qHKjDpBu1gXNH1eIP4l1jOvylo
+         L+Sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=XmFQ91h0GZrG5WahISB8fgmLlciVJglL2OXgg5eRNY4=;
+        b=X6a4DTEDR0skItI4uWjzhjqaszz9/gvF08GP2oBrpaw6/yWyKI//A3YNKLiaztHx4F
+         eLczkBtmEXM+k5jS9jCcb61SjBbli/1hWzckHKGDv3NJwMzs/wq2wtyLBbSSn57ZlrBR
+         GUNBjaDr9+GMzdmkXq/tqCoXoIwOJtY6EW0SBmAjjGCEIgV+eaR902GSTMBGvt+5x18v
+         brhkar2CDcTjsiG5DMAW2F0N8IJQW5QYhiXvf7Bja9odOnrqcpBv13gwMPvWE8MSzIFx
+         6pcteUOnHXEc/LVx7Bx542j+Riy8EXDvZOvf2N9sXLx0W1yyA5S28N/eUd242dtfx23d
+         du1w==
+X-Gm-Message-State: AOAM5307TDVxv5NiLDVdd5CTTXIHIyn/NxzDcEUFVN1TqXiFSK2+JCW2
+        OJG42v+4nA61K0//Y2jXzvMmcg==
+X-Google-Smtp-Source: ABdhPJxbLRxb3pVa6kGKVQjFbdxlVetJsMnut5Ck76cBOeP9CLWnh9yMeXxDXOKDLBn/O5OnCR4ROA==
+X-Received: by 2002:a05:6000:10cf:: with SMTP id b15mr9137648wrx.214.1591879326516;
+        Thu, 11 Jun 2020 05:42:06 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id q13sm4810355wrn.84.2020.06.11.05.42.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2020 05:42:05 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     broonie@kernel.org
+Cc:     vkoul@kernel.org, perex@perex.cz, tiwai@suse.com,
+        alsa-devel@alsa-project.org, lgirdwood@gmail.com,
         linux-kernel@vger.kernel.org,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Subject: [PATCH v2 2/4] dt-bindings: display: simple: add Tianma TM070JVHG33
-Date:   Thu, 11 Jun 2020 14:42:07 +0200
-Message-Id: <20200611124209.25028-2-matthias.schiffer@ew.tq-group.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200611124209.25028-1-matthias.schiffer@ew.tq-group.com>
-References: <20200611124209.25028-1-matthias.schiffer@ew.tq-group.com>
-In-Reply-To: <20200610120131.3069-1-matthias.schiffer@ew.tq-group.com>
-References: <20200610120131.3069-1-matthias.schiffer@ew.tq-group.com>
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH 3/8] ASoC: q6asm: rename misleading session id variable
+Date:   Thu, 11 Jun 2020 13:41:54 +0100
+Message-Id: <20200611124159.20742-4-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20200611124159.20742-1-srinivas.kandagatla@linaro.org>
+References: <20200611124159.20742-1-srinivas.kandagatla@linaro.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the Tianma Micro-electronics TM070JVHG33 7.0" WXGA display to the
-panel-simple compatible list.
+Each q6asm session can have multiple streams, mixing usage of these
+names in variable are bit misleading to reader, so rename them accordingly.
 
-Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
+ sound/soc/qcom/qdsp6/q6asm.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-v2: no changes
-
- .../devicetree/bindings/display/panel/panel-simple.yaml         | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-index 2ddb520edc6d..6deeeed59e59 100644
---- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-@@ -251,6 +251,8 @@ properties:
-       - starry,kr122ea0sra
-         # Tianma Micro-electronics TM070JDHG30 7.0" WXGA TFT LCD panel
-       - tianma,tm070jdhg30
-+        # Tianma Micro-electronics TM070JVHG33 7.0" WXGA TFT LCD panel
-+      - tianma,tm070jvhg33
-         # Tianma Micro-electronics TM070RVHG71 7.0" WXGA TFT LCD panel
-       - tianma,tm070rvhg71
-         # Toshiba 8.9" WXGA (1280x768) TFT LCD panel
+diff --git a/sound/soc/qcom/qdsp6/q6asm.c b/sound/soc/qcom/qdsp6/q6asm.c
+index e0983970cba9..51da3717a6a6 100644
+--- a/sound/soc/qcom/qdsp6/q6asm.c
++++ b/sound/soc/qcom/qdsp6/q6asm.c
+@@ -828,21 +828,21 @@ EXPORT_SYMBOL_GPL(q6asm_get_session_id);
+  * @dev: Pointer to asm child device.
+  * @cb: event callback.
+  * @priv: private data associated with this client.
+- * @stream_id: stream id
++ * @session_id: session id
+  * @perf_mode: performace mode for this client
+  *
+  * Return: Will be an error pointer on error or a valid audio client
+  * on success.
+  */
+ struct audio_client *q6asm_audio_client_alloc(struct device *dev, q6asm_cb cb,
+-					      void *priv, int stream_id,
++					      void *priv, int session_id,
+ 					      int perf_mode)
+ {
+ 	struct q6asm *a = dev_get_drvdata(dev->parent);
+ 	struct audio_client *ac;
+ 	unsigned long flags;
+ 
+-	ac = q6asm_get_audio_client(a, stream_id + 1);
++	ac = q6asm_get_audio_client(a, session_id + 1);
+ 	if (ac) {
+ 		dev_err(dev, "Audio Client already active\n");
+ 		return ac;
+@@ -853,9 +853,9 @@ struct audio_client *q6asm_audio_client_alloc(struct device *dev, q6asm_cb cb,
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	spin_lock_irqsave(&a->slock, flags);
+-	a->session[stream_id + 1] = ac;
++	a->session[session_id + 1] = ac;
+ 	spin_unlock_irqrestore(&a->slock, flags);
+-	ac->session = stream_id + 1;
++	ac->session = session_id + 1;
+ 	ac->cb = cb;
+ 	ac->dev = dev;
+ 	ac->q6asm = a;
 -- 
-2.17.1
+2.21.0
 
