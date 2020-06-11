@@ -2,106 +2,105 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0764C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 05:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41CC3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 05:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAF622074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 05:40:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17ED72074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 05:45:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ep/0TGcR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RPc879Fn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbgFKFko (ORCPT
+        id S1726499AbgFKFpF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 01:40:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34562 "EHLO
+        Thu, 11 Jun 2020 01:45:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726316AbgFKFkn (ORCPT
+        with ESMTP id S1726147AbgFKFpE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 01:40:43 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD8F2C08C5C1;
-        Wed, 10 Jun 2020 22:40:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=nBcFQJGzJiEbDICiDXoaT+SkntQ3fuvNt0VNHFjSgyk=; b=Ep/0TGcRRFvDTNncjorrzAlS1t
-        uBwCTucTGScB5pbbDZx9vslfW9Z0mIzzLY/SsE/G5vx1ZSk99lqNHEtaxjoMOpWaiv8DN8n++AERG
-        fdLwww2/st6O6m4Tm0LALmQU/R8ug+VYSRV8nyhBiR1kzFNoVI+1Csc0tRlNXeNy/E7hV08CBjf+C
-        rexEqTsiuZitiFCW9wTUQ4bLVl3FrFIX17F5oly+MpJk2iM23f+3TIeWs3mjLR2yQfTBuDBNYZq/J
-        bwRHxWR4lAqEz4fiUOCWDPWMhOUKc4nbQNbCQ2QURpZKfQYbLb5hP9IloOIkU/brrMfTCxwYbl5kQ
-        lOAbNbag==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jjFwb-0007iI-9y; Thu, 11 Jun 2020 05:40:05 +0000
-Date:   Wed, 10 Jun 2020 22:40:05 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
-        axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        ming.lei@redhat.com, nstange@suse.de, akpm@linux-foundation.org,
-        mhocko@suse.com, yukuai3@huawei.com, martin.petersen@oracle.com,
-        jejb@linux.ibm.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
-Subject: Re: [PATCH v6 6/6] blktrace: fix debugfs use after free
-Message-ID: <20200611054005.GA25742@infradead.org>
-References: <20200608170127.20419-1-mcgrof@kernel.org>
- <20200608170127.20419-7-mcgrof@kernel.org>
- <20200609150602.GA7111@infradead.org>
- <20200609172922.GP11244@42.do-not-panic.com>
- <20200609173218.GA7968@infradead.org>
- <20200609175359.GR11244@42.do-not-panic.com>
- <20200610064234.GB24975@infradead.org>
- <20200610210917.GH11244@42.do-not-panic.com>
- <20200610215213.GH13911@42.do-not-panic.com>
- <20200610233116.GI13911@42.do-not-panic.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200610233116.GI13911@42.do-not-panic.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Thu, 11 Jun 2020 01:45:04 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41201C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 22:45:04 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id y17so4737216wrn.11
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 22:45:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=CMSRdAMjqQ0hUIKg7+9PjXGS1txRLKEo1w8Yv1LWP4U=;
+        b=RPc879FnDmXOmAiuG2ZiC2YAn/tFY+I56Ips0B76qiI4DawSzuLFJVbQq0JOYlQDvD
+         QLujLY1XQ4R7Jo2IeeSNhcAYgf3KHPenlEC/nFdJIa9AoFcCBxo6ovQH8zm+bPeHfxFx
+         Ia36NQzuV5x9wyHdewsXeQX2C1iAjxvRH5d+dcUdrkTKU5Wa2CLaXobq1J4sAnYghdwv
+         cN1Knh+GBr2tfe99M45qIk5ozZq8B1Daw1dCXcbesgd3/OscMuvVXSbwvDpkVlMVWCIF
+         nwS/J6EaUvJevLnehE9CPm8svB3JeptLEDquIukgcmT5DmpfSsppK5sv3tCRRfqxrYa0
+         vg+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=CMSRdAMjqQ0hUIKg7+9PjXGS1txRLKEo1w8Yv1LWP4U=;
+        b=W+XmNXWtWuW8rr7uROmDGlQztndGgBMHqQzKAx7MiBw0U7gC76rr+6RLPTiSi1BSF/
+         /PAocoj2khv4MRYdz8pNe0wpBT4znjTezLXhfHz0fnocG6lvvleWBTesQ1Towb/82sMf
+         0culi3KaTCa30KTIAAYnEerotQAkBdLjjeQeyhcP/9VVANXXru7DSYq9q+8nsTmszk1t
+         ICs6ofrEGJkN+pK74u8SYYqc82qY6r8qtLkmh8mvWGhD0yH3bVN+qjfmRb9yEBoqjh2n
+         Kh3Zxwvr0xdJG0ihHcFavXdvG5tBl1GJxfVbYogoL73YiCllJIAxXdx87nZW4D3w6vo6
+         zQSw==
+X-Gm-Message-State: AOAM531Jn9eFjjwLZvoCp5ZmY6MSEWg/e7sXyplR//WwSqMcWTk6mzsi
+        nyQj+5UFQbvQDOQalS1DSjg=
+X-Google-Smtp-Source: ABdhPJwiu6b2yxpfn7MNIZSUJW6IzfpHRnguKDTAPMNAkrUoYbMuKaWHiMGXorXYC42Gftp6XKv2Mw==
+X-Received: by 2002:a5d:6a4b:: with SMTP id t11mr7404152wrw.404.1591854301729;
+        Wed, 10 Jun 2020 22:45:01 -0700 (PDT)
+Received: from mail.broadcom.com ([192.19.231.250])
+        by smtp.gmail.com with ESMTPSA id j16sm3492724wre.21.2020.06.10.22.44.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2020 22:45:01 -0700 (PDT)
+From:   Kamal Dasu <kdasu.kdev@gmail.com>
+To:     Brian Norris <computersforpeace@gmail.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     linux-mtd@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org
+Subject: [PATCH  1/2] mtd: rawnand: brcmnand: Don't default to edu transfer
+Date:   Thu, 11 Jun 2020 01:44:53 -0400
+Message-Id: <20200611054454.2547-1-kdasu.kdev@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 11:31:16PM +0000, Luis Chamberlain wrote:
-> On Wed, Jun 10, 2020 at 09:52:13PM +0000, Luis Chamberlain wrote:
-> > diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-> > index 7ff2ea5cd05e..5cea04c05e09 100644
-> > --- a/kernel/trace/blktrace.c
-> > +++ b/kernel/trace/blktrace.c
-> > @@ -524,10 +524,16 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
-> >  	if (!bt->msg_data)
-> >  		goto err;
-> >  
-> > -	ret = -ENOENT;
-> > -
-> > -	dir = debugfs_lookup(buts->name, blk_debugfs_root);
-> > -	if (!dir)
-> > +	/*
-> > +	 * When tracing whole make_request drivers (multiqueue) block devices,
-> > +	 * reuse the existing debugfs directory created by the block layer on
-> > +	 * init. For request-based block devices, all partitions block devices,
-> > +	 * and scsi-generic block devices we create a temporary new debugfs
-> > +	 * directory that will be removed once the trace ends.
-> > +	 */
-> > +	if (queue_is_mq(q))
-> 
-> And this should be instead:
-> 
-> if (queue_is_mq(q) && bdev && bdev == bdev->bd_contains)
+When flash-dma is absent do not default to using flash-edu.
+Make sure flash-edu is enabled before setting EDU transfer
+function.
 
-Yes.  But I think keeping the queue_is_mq out and always creating the
-debugfs dir is an improvement as we'll sooner or later grow more debugfs
-files and than the whole set of problmes reappears.  But I'd be fine
-with doing the above in the first patch that is tiny and backportable,
-and then have another patch that always creates the debugfs directory.
+Fixes: a5d53ad26a8b ("mtd: rawnand: brcmnand: Add support for flash-edu for dma transfers")
+Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+---
+ drivers/mtd/nand/raw/brcmnand/brcmnand.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+index 8f9ffb46a09f..0c1d6e543586 100644
+--- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
++++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+@@ -2953,8 +2953,9 @@ int brcmnand_probe(struct platform_device *pdev, struct brcmnand_soc *soc)
+ 		if (ret < 0)
+ 			goto err;
+ 
+-		/* set edu transfer function to call */
+-		ctrl->dma_trans = brcmnand_edu_trans;
++		if (has_edu(ctrl))
++			/* set edu transfer function to call */
++			ctrl->dma_trans = brcmnand_edu_trans;
+ 	}
+ 
+ 	/* Disable automatic device ID config, direct addressing */
+-- 
+2.17.1
+
