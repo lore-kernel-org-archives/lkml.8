@@ -2,111 +2,165 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 765D8C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 209F2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EF0B2078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:21:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c4PrpNyd"
+	by mail.kernel.org (Postfix) with ESMTP id EE31920747
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:27:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgFKCV4 (ORCPT
+        id S1726375AbgFKC15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 22:21:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60718 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbgFKCVz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 22:21:55 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33FF3C08C5C2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 19:21:55 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id e4so5033616ljn.4
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 19:21:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/qdV7kTEUj8MO2b1jDlzL2L6E3oB0hXT8qJRrm2qFQc=;
-        b=c4PrpNydhvWfQH0v9XSMys+WCbroecCmby1mCjkKRiyuzxYR9A5GEddYQlO9jlVl/9
-         PYELc1qFlanvSppAc2NDWPTFm73nOZ31dHzsD4r/hUfzhq6gDP1V+T1HNNWZ0VDboniz
-         UzzQjXCduN4jtMNG5Uopb/MknTZZBJVzkwaSw4tZ2sMIZ7Fwl+/BkSNzHp2gLh4WzLsp
-         utTQfkyV/0vVFWCeF4wjWR7qILW2RrzbqMNVrugPeucUAFSE72UgwX5yEapBqt6k0V23
-         upNkRjq0V/feFjXxZkuVo6Xhrw4u6Vohkf/vucM36axE7rJ6fDlHVUnatnd4Y7hqeKvX
-         6WAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/qdV7kTEUj8MO2b1jDlzL2L6E3oB0hXT8qJRrm2qFQc=;
-        b=eC1OjvbnR4q0GaazdwicHjm76WUEGNuWFgpd7V3+Va9FGwhsaEhwjOghsZCdmf4rlc
-         xFXxp/TSX4pDSJz10DwDHShWX8OJ3Ffi943NPsLk0kTMFhon3Qn/4/4X+6DrIAKQ6Sa4
-         RGzbYixcsWbuDWzIaJyoJdIP2fDmZeaAHKPvReZshJ3h7faL+ZSVjTM5jbbn9kcY2Vi3
-         iNHfwhd4LDa6TurSmRxCdhFNiOnUKvZfsLL6NgLDROnwprPg35UIvE6z+zIbIrRnYDHQ
-         PdgiUFr+f1uJ35sIBF9ITlGR17MNX1nOyY2VJ3CaFn2FX+EPQuomrJp731R3LFR4PLXS
-         RA5w==
-X-Gm-Message-State: AOAM533DK5olSo42dp+++nUOMfUJvbwfsGDGPLC4ZE0hNuXwV1A20/oK
-        u2yXKl+64xWcggeS8y68NXWrqkYiMvIVBjVIVe0ffg==
-X-Google-Smtp-Source: ABdhPJyJ6thR5cdQysfqBhuFXOJjtSaKK4QLT87l9YsZ6BXGAe7BkWYvSbzgNy3CzWa/2SpSjyJwk/1kLXvtppfKx4w=
-X-Received: by 2002:a05:651c:38b:: with SMTP id e11mr2003236ljp.415.1591842113338;
- Wed, 10 Jun 2020 19:21:53 -0700 (PDT)
+        Wed, 10 Jun 2020 22:27:57 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:58980 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726279AbgFKC15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 22:27:57 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 7ABD42F40A3152786A0A;
+        Thu, 11 Jun 2020 10:27:54 +0800 (CST)
+Received: from [127.0.0.1] (10.173.221.213) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Thu, 11 Jun 2020
+ 10:27:45 +0800
+Subject: Re: [RFC PATCH v4 08/10] i40e/vf_migration: VF live migration -
+ pass-through VF first
+To:     Yan Zhao <yan.y.zhao@intel.com>
+CC:     <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <alex.williamson@redhat.com>, <cohuck@redhat.com>,
+        <zhenyuw@linux.intel.com>, <zhi.a.wang@intel.com>,
+        <kevin.tian@intel.com>, <shaopeng.he@intel.com>,
+        <yi.l.liu@intel.com>, <xin.zeng@intel.com>, <hang.yuan@intel.com>,
+        "Wang Haibin" <wanghaibin.wang@huawei.com>
+References: <20200518024202.13996-1-yan.y.zhao@intel.com>
+ <20200518025316.14491-1-yan.y.zhao@intel.com>
+ <e45d5bb6-6f15-dd4d-6de2-478b36f88069@huawei.com>
+ <20200611002319.GC13961@joy-OptiPlex-7040>
+From:   Xiang Zheng <zhengxiang9@huawei.com>
+Message-ID: <fe5c0a64-003c-1db6-8256-f0dc00333f1d@huawei.com>
+Date:   Thu, 11 Jun 2020 10:27:34 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-References: <20200302193630.68771-1-minchan@kernel.org> <20200302193630.68771-8-minchan@kernel.org>
-In-Reply-To: <20200302193630.68771-8-minchan@kernel.org>
-From:   Jann Horn <jannh@google.com>
-Date:   Thu, 11 Jun 2020 04:21:27 +0200
-Message-ID: <CAG48ez1WfUN2eZyiQL0thsO3cYW6TgC-NzEj=gP2KfkJ7BdK=Q@mail.gmail.com>
-Subject: Re: [PATCH v7 7/7] mm/madvise: allow KSM hints for remote API
-To:     Oleksandr Natalenko <oleksandr@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        sj38.park@gmail.com, Minchan Kim <minchan@kernel.org>,
-        SeongJae Park <sjpark@amazon.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200611002319.GC13961@joy-OptiPlex-7040>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.221.213]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 2, 2020 at 8:36 PM Minchan Kim <minchan@kernel.org> wrote:
-> From: Oleksandr Natalenko <oleksandr@redhat.com>
->
-> It all began with the fact that KSM works only on memory that is marked
-> by madvise(). And the only way to get around that is to either:
-[...]
-> To overcome this restriction, lets employ a new remote madvise API. This
-> can be used by some small userspace helper daemon that will do auto-KSM
-> job for us.
->
-> I think of two major consumers of remote KSM hints:
-[...]
->   * heavy applications, that can be run in multiple instances, not
->     limited to opensource ones like Firefox, but also those that cannot be
->     modified since they are binary-only and, maybe, statically linked.
 
-Just as a note, since you're mentioning Firefox as a usecase: Memory
-deduplication between browser renderers creates new side channels and
-is a questionable idea from a security standpoint. Memory
-deduplication is (mostly) fine if either all involved processes are
-trusted or no involved processes contain secrets, but browsers usually
-run tons of untrusted code while at the same time containing lots of
-valuable secrets.
+
+On 2020/6/11 8:23, Yan Zhao wrote:
+> On Wed, Jun 10, 2020 at 04:59:43PM +0800, Xiang Zheng wrote:
+>> Hi Yan,
+>>
+>> few nits below...
+>>
+>> On 2020/5/18 10:53, Yan Zhao wrote:
+>>> This driver intercepts all device operations as long as it's probed
+>>> successfully by vfio-pci driver.
+>>>
+>>> It will process regions and irqs of its interest and then forward
+>>> operations to default handlers exported from vfio pci if it wishes to.
+>>>
+>>> In this patch, this driver does nothing but pass through VFs to guest
+>>> by calling to exported handlers from driver vfio-pci.
+>>>
+>>> Cc: Shaopeng He <shaopeng.he@intel.com>
+>>>
+>>> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+>>> ---
+>>>  drivers/net/ethernet/intel/Kconfig            |  10 ++
+>>>  drivers/net/ethernet/intel/i40e/Makefile      |   2 +
+>>>  .../ethernet/intel/i40e/i40e_vf_migration.c   | 165 ++++++++++++++++++
+>>>  .../ethernet/intel/i40e/i40e_vf_migration.h   |  59 +++++++
+>>>  4 files changed, 236 insertions(+)
+>>>  create mode 100644 drivers/net/ethernet/intel/i40e/i40e_vf_migration.c
+>>>  create mode 100644 drivers/net/ethernet/intel/i40e/i40e_vf_migration.h
+>>>
+>>> diff --git a/drivers/net/ethernet/intel/Kconfig b/drivers/net/ethernet/intel/Kconfig
+>>> index ad34e4335df2..31780d9a59f1 100644
+>>> --- a/drivers/net/ethernet/intel/Kconfig
+>>> +++ b/drivers/net/ethernet/intel/Kconfig
+>>> @@ -264,6 +264,16 @@ config I40E_DCB
+>>>  
+>>>  	  If unsure, say N.
+>>>  
+
+[...]
+
+>>> diff --git a/drivers/net/ethernet/intel/i40e/i40e_vf_migration.h b/drivers/net/ethernet/intel/i40e/i40e_vf_migration.h
+>>> new file mode 100644
+>>> index 000000000000..696d40601ec3
+>>> --- /dev/null
+>>> +++ b/drivers/net/ethernet/intel/i40e/i40e_vf_migration.h
+>>> @@ -0,0 +1,59 @@
+>>> +/* SPDX-License-Identifier: GPL-2.0 */
+>>> +/* Copyright(c) 2013 - 2019 Intel Corporation. */
+>>> +
+>>> +#ifndef I40E_MIG_H
+>>> +#define I40E_MIG_H
+>>> +
+>>> +#include <linux/pci.h>
+>>> +#include <linux/vfio.h>
+>>> +#include <linux/mdev.h>
+>>> +
+>>> +#include "i40e.h"
+>>> +#include "i40e_txrx.h"
+>>> +
+>>> +/* helper macros copied from vfio-pci */
+>>> +#define VFIO_PCI_OFFSET_SHIFT   40
+>>> +#define VFIO_PCI_OFFSET_TO_INDEX(off)   ((off) >> VFIO_PCI_OFFSET_SHIFT)
+>>> +#define VFIO_PCI_INDEX_TO_OFFSET(index)	((u64)(index) << VFIO_PCI_OFFSET_SHIFT)
+>>> +#define VFIO_PCI_OFFSET_MASK    (((u64)(1) << VFIO_PCI_OFFSET_SHIFT) - 1)
+>>> +
+>>> +/* Single Root I/O Virtualization */
+>>> +struct pci_sriov {
+>>> +	int		pos;		/* Capability position */
+>>> +	int		nres;		/* Number of resources */
+>>> +	u32		cap;		/* SR-IOV Capabilities */
+>>> +	u16		ctrl;		/* SR-IOV Control */
+>>> +	u16		total_VFs;	/* Total VFs associated with the PF */
+>>> +	u16		initial_VFs;	/* Initial VFs associated with the PF */
+>>> +	u16		num_VFs;	/* Number of VFs available */
+>>> +	u16		offset;		/* First VF Routing ID offset */
+>>> +	u16		stride;		/* Following VF stride */
+>>> +	u16		vf_device;	/* VF device ID */
+>>> +	u32		pgsz;		/* Page size for BAR alignment */
+>>> +	u8		link;		/* Function Dependency Link */
+>>> +	u8		max_VF_buses;	/* Max buses consumed by VFs */
+>>> +	u16		driver_max_VFs;	/* Max num VFs driver supports */
+>>> +	struct pci_dev	*dev;		/* Lowest numbered PF */
+>>> +	struct pci_dev	*self;		/* This PF */
+>>> +	u32		cfg_size;	/* VF config space size */
+>>> +	u32		class;		/* VF device */
+>>> +	u8		hdr_type;	/* VF header type */
+>>> +	u16		subsystem_vendor; /* VF subsystem vendor */
+>>> +	u16		subsystem_device; /* VF subsystem device */                                                                                   
+>>> +	resource_size_t	barsz[PCI_SRIOV_NUM_BARS];	/* VF BAR size */
+>>> +	bool		drivers_autoprobe; /* Auto probing of VFs by driver */
+>>> +};
+>>> +
+>>
+>> Can "struct pci_sriov" be extracted for common use? This should not be exclusive
+>> for "i40e_vf migration support".
+>>
+> the definition of this structure is actually in driver/pci/pci.h.
+> maybe removing the copy here and use below include is better?
+> #include "../../../../pci/pci.h"
+> 
+
+How about moving the definition from driver/pci/pci.h into include/linux/pci.h? So
+we can just include "linux/pci.h" and removing the copy here.
+
+-- 
+Thanks,
+Xiang
+
