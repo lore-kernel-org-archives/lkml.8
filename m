@@ -2,88 +2,78 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C8EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF345C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC762078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:23:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591874611;
-	bh=yiSKRpPE0yOcjH3qcZl0yl+bP6wtHGpz5GoZ0ATi6Q0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=K4B0jd2bVHBkWhd5qmALFKFNrjEWJQaoZjCeT2CesOTrKruPK/yCNUcHL+BSK4JVx
-	 KJBa7q9PRvhAf9GyC3R9pG53i4mnD89sT0lNggnAYiaWEBLUXSvVAb+0ZZ91vXEcCV
-	 xwtOsiJU/K7nNCX3+YOfb0dvsQJo24IihXMZpVXg=
+	by mail.kernel.org (Postfix) with ESMTP id 9DF912078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:24:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YT27lwEQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbgFKLXZ (ORCPT
+        id S1728004AbgFKLYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 07:23:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47980 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728032AbgFKLXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 07:23:19 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E43B2078D;
-        Thu, 11 Jun 2020 11:23:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591874598;
-        bh=yiSKRpPE0yOcjH3qcZl0yl+bP6wtHGpz5GoZ0ATi6Q0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YDnHAsjrr+xzEZPsAyVakm0PBtlUURtCNF1YKUQn/DFT6p2oaVucuMJl8bG2tt5p9
-         rmNhLHDKHpjOHsAVhHpqhB8qhh4VaAfrHJb3UIqdnr8HCWbkE7NmI8GTdqyfR1fhKy
-         SLYBbfW0xX4SCz2Vy+8YLZwQxmTz8JQOmJiSIAv0=
-Date:   Thu, 11 Jun 2020 13:23:12 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     Su Kang Yin <cantona@cantona.net>, linux-crypto@vger.kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
+        Thu, 11 Jun 2020 07:24:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59068 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727944AbgFKLYS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 07:24:18 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BF7BC08C5C1;
+        Thu, 11 Jun 2020 04:24:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Qq2Iy8vRsv+5GToEZEr3De3lvTsl+HAJS9n4B3sidmk=; b=YT27lwEQYmP2PbQRi+lLN3ESJi
+        RoOTtTN1kUg2a1QmB8+i8HoBLb65E6/4/dpn4kPxV5PaAERVszQZaBLaxk1J368KSUaM8fvQKXAvH
+        KQhcfbmOvrQBwsFS7FDf1IYGUrF+q0Wa9FYF/lTC50SwWNSlnCUIZO+xgJUyH9ff3t2V13bIV3NK+
+        b9LL2NnGp9AfxDF6YZFCJ1Y4QAUu3h5/mWRsy1c9aqD35gjNb0KtjkDf4dWlvzCpZjOZMDWDqx4w5
+        I/wYx0SXB7wofhAsWAFlN2JV1BaQHL5iqzA9r0cOsRh0Izug1NMO55T3gQhwj53Iw3P8iAcc4ZUZD
+        hV+JMHLg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jjLJd-0000YC-2X; Thu, 11 Jun 2020 11:24:13 +0000
+Date:   Thu, 11 Jun 2020 04:24:12 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] crypto: talitos - fix ECB and CBC algs ivsize
-Message-ID: <20200611112312.GB342390@kroah.com>
-References: <cantona@cantona.net>
- <20200611100745.6513-1-cantona@cantona.net>
- <718354b4-d284-8e47-4085-f45101f9ca36@csgroup.eu>
- <20200611110350.GA3954279@kroah.com>
- <24a06073-1765-985e-029b-80a78ad02b89@csgroup.eu>
+Subject: Re: [RFC v6 00/51] Large pages in the page cache
+Message-ID: <20200611112412.GA8681@bombadil.infradead.org>
+References: <20200610201345.13273-1-willy@infradead.org>
+ <20200611065954.GA21475@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <24a06073-1765-985e-029b-80a78ad02b89@csgroup.eu>
+In-Reply-To: <20200611065954.GA21475@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 01:09:38PM +0200, Christophe Leroy wrote:
-> 
-> 
-> Le 11/06/2020 à 13:03, Greg KH a écrit :
-> > On Thu, Jun 11, 2020 at 12:50:24PM +0200, Christophe Leroy wrote:
-> > > Hi,
-> > > 
-> > > Le 11/06/2020 à 12:07, Su Kang Yin a écrit :
-> > > > Patch for 4.9 upstream:
-> > > > 
-> > > > commit e1de42fdfc6a ("crypto: talitos - fix ECB algs ivsize")
-> > > > wrongly modified CBC algs ivsize instead of ECB aggs ivsize.
-> > > 
-> > > To make it clear and avoid this problem to happen again, please generate
-> > > your patch with option -U8
+On Wed, Jun 10, 2020 at 11:59:54PM -0700, Christoph Hellwig wrote:
+> On Wed, Jun 10, 2020 at 01:12:54PM -0700, Matthew Wilcox wrote:
+> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 > > 
-> > No need, this patch should be fine as-is.
-> > 
+> > Another fortnight, another dump of my current large pages work.
+> > I've squished a lot of bugs this time.  xfstests is much happier now,
+> > running for 1631 seconds and getting as far as generic/086.  This patchset
+> > is getting a little big, so I'm going to try to get some bits of it
+> > upstream soon (the bits that make sense regardless of whether the rest
+> > of this is merged).
 > 
-> Still, this patch includes more than the original patch as far as I can see
-> (scroll down and see other comments in that answer)
+> At this size a git tree to pull would also be nice..
 
-Ah, good catch, I'll go drop this now, thanks!
+That was literally the next paragraph ...
 
-greg k-h
+It's now based on linus' master (6f630784cc0d), and you can get it from
+http://git.infradead.org/users/willy/linux-dax.git/shortlog/refs/heads/xarray-pa
++gecache
+if you'd rather see it there (this branch is force-pushed frequently)
+
+Or are you saying you'd rather see the git URL than the link to gitweb?
