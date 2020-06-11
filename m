@@ -2,130 +2,145 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFACBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 10:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6105C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 10:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 933A42072F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 10:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A29CF2072F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 10:52:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LpJtM6yd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbgFKKue (ORCPT
+        id S1727119AbgFKKw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 06:50:34 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:19780 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726407AbgFKKu3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 06:50:29 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49jLH41Wmtz9v4xj;
-        Thu, 11 Jun 2020 12:50:24 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 0-ipBjlmkgFm; Thu, 11 Jun 2020 12:50:24 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49jLH40gs9z9v4xh;
-        Thu, 11 Jun 2020 12:50:24 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B871F8B850;
-        Thu, 11 Jun 2020 12:50:25 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id hafyDPaiggKu; Thu, 11 Jun 2020 12:50:25 +0200 (CEST)
-Received: from [10.25.210.22] (po15451.idsi0.si.c-s.fr [10.25.210.22])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2E3468B75B;
-        Thu, 11 Jun 2020 12:50:25 +0200 (CEST)
-Subject: Re: [PATCH] crypto: talitos - fix ECB and CBC algs ivsize
-To:     Su Kang Yin <cantona@cantona.net>, gregkh@linuxfoundation.org,
-        linux-crypto@vger.kernel.org
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org
-References: <cantona@cantona.net> <20200611100745.6513-1-cantona@cantona.net>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <718354b4-d284-8e47-4085-f45101f9ca36@csgroup.eu>
-Date:   Thu, 11 Jun 2020 12:50:24 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 11 Jun 2020 06:52:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54170 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727115AbgFKKwX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 06:52:23 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CDB9C08C5C5
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 03:52:22 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id t18so5659940wru.6
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 03:52:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=RcwomoC+Ma2mWugiGJC6MsfrL5L8dR3rfJt4NSp2F1A=;
+        b=LpJtM6ydrDbbhtItKZv2qWLETVFuKYqehoy0/u7rITHuUcoPswXsgTwlrq1L/Xz5sS
+         cX38+CtF/0s982isrNgOw1gU+VnYdGwhYGN3SvWXcy2GKCejOXvH7DtPdc2FYgLzghXg
+         pwB553g48U+lMNMQmz7Gpr67q6gyVB5f2x/I0qRsaLNrYhE4QqD6W6gdUnbKBMNMKwTM
+         ImxtNRhaUo5A+b+XlGD/ha3fYdNI+Bj2f/s+tBf473k+HvbErQw52mPJM+FHYtuaQbIZ
+         byERlh/+fSQLZJX6jL3mRVhB//6kfiCk1hn1KxCDpg2brcXrAunaX/y1caMhA+q3DanH
+         fgvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=RcwomoC+Ma2mWugiGJC6MsfrL5L8dR3rfJt4NSp2F1A=;
+        b=t7YUD8c4cD4pjPecEmxZHy0u1T6GMI8mHuW+5xowiLxXO+bXzHU6q1VCqmjRvd+qKZ
+         jz8ag09bzhBuNrNNYJFZkuiGlI/Cr+C5a7vF7K2csTK+J1GpdQSSHWZXBiDZBWyvnlVz
+         fsHNKckEG7I5wc2IC98LvQyWKy5hm6SHNaUFCxo41CYNjnxiyOmy4LwwphA5yM6cQc1l
+         DpdpZS8tUbamljC942x0l6klPPu0Qh5BX3BJV+FysfSO0zLeB6zBOhKpm9nvWmiWdsMj
+         vhKWMGBnZSI0Mzb7zzArXKbvmN1zHiL1QL/pRX6cgSMfEiCkGOrOw8hGNNzxNxmELgf8
+         ql6Q==
+X-Gm-Message-State: AOAM533fq38DZUFo2pr4ziZcQqjbqiUjmZIHNZh14d8GaJgRO8dfL4/q
+        if4Al7WCC+cmiRY5ykCYxc6Nrg==
+X-Google-Smtp-Source: ABdhPJxRDOlxqgu72sbIjFJnoqPirslj0v0jSqfMN3rVOPmEkZMzmS6dsNJsp6VRHW5n4kPM4nvvZg==
+X-Received: by 2002:a5d:6150:: with SMTP id y16mr9531737wrt.219.1591872740691;
+        Thu, 11 Jun 2020 03:52:20 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id z8sm4361959wru.33.2020.06.11.03.52.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2020 03:52:19 -0700 (PDT)
+Date:   Thu, 11 Jun 2020 11:52:17 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-acpi@vger.kernel.org,
+        netdev@vger.kernel.org, Jason Baron <jbaron@akamai.com>
+Subject: Re: [PATCH v3 6/7] venus: Make debug infrastructure more flexible
+Message-ID: <20200611105217.73xwkd2yczqotkyo@holly.lan>
+References: <20200609104604.1594-1-stanimir.varbanov@linaro.org>
+ <20200609104604.1594-7-stanimir.varbanov@linaro.org>
+ <20200609111414.GC780233@kroah.com>
+ <dc85bf9e-e3a6-15a1-afaa-0add3e878573@linaro.org>
+ <20200610133717.GB1906670@kroah.com>
+ <31e1aa72b41f9ff19094476033511442bb6ccda0.camel@perches.com>
+ <2fab7f999a6b5e5354b23d06aea31c5018b9ce18.camel@perches.com>
+ <20200611062648.GA2529349@kroah.com>
+ <bc92ee5948c3e71b8f1de1930336bbe162d00b34.camel@perches.com>
 MIME-Version: 1.0
-In-Reply-To: <20200611100745.6513-1-cantona@cantona.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bc92ee5948c3e71b8f1de1930336bbe162d00b34.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-Le 11/06/2020 à 12:07, Su Kang Yin a écrit :
-> Patch for 4.9 upstream:
+On Wed, Jun 10, 2020 at 11:42:43PM -0700, Joe Perches wrote:
+> On Thu, 2020-06-11 at 08:26 +0200, Greg Kroah-Hartman wrote:
+> > On Wed, Jun 10, 2020 at 01:23:56PM -0700, Joe Perches wrote:
+> > > On Wed, 2020-06-10 at 12:49 -0700, Joe Perches wrote:
+> > > > On Wed, 2020-06-10 at 15:37 +0200, Greg Kroah-Hartman wrote:
+> > > > > Please work with the infrastructure we have, we have spent a lot of time
+> > > > > and effort to make it uniform to make it easier for users and
+> > > > > developers.
+> > > > 
+> > > > Not quite.
+> > > > 
+> > > > This lack of debug grouping by type has been a
+> > > > _long_ standing issue with drivers.
+> > > > 
+> > > > > Don't regress and try to make driver-specific ways of doing
+> > > > > things, that way lies madness...
+> > > > 
+> > > > It's not driver specific, it allows driver developers to
+> > > > better isolate various debug states instead of keeping
+> > > > lists of specific debug messages and enabling them
+> > > > individually.
+> > > 
+> > > For instance, look at the homebrew content in
+> > > drivers/gpu/drm/drm_print.c that does _not_ use
+> > > dynamic_debug.
+> > > 
+> > > MODULE_PARM_DESC(debug, "Enable debug output, where each bit enables a debug category.\n"
+> > > "\t\tBit 0 (0x01)  will enable CORE messages (drm core code)\n"
+> > > "\t\tBit 1 (0x02)  will enable DRIVER messages (drm controller code)\n"
+> > > "\t\tBit 2 (0x04)  will enable KMS messages (modesetting code)\n"
+> > > "\t\tBit 3 (0x08)  will enable PRIME messages (prime code)\n"
+> > > "\t\tBit 4 (0x10)  will enable ATOMIC messages (atomic code)\n"
+> > > "\t\tBit 5 (0x20)  will enable VBL messages (vblank code)\n"
+> > > "\t\tBit 7 (0x80)  will enable LEASE messages (leasing code)\n"
+> > > "\t\tBit 8 (0x100) will enable DP messages (displayport code)");
+> > > module_param_named(debug, __drm_debug, int, 0600);
+> > > 
+> > > void drm_dev_dbg(const struct device *dev, enum drm_debug_category category,
+> > > 		 const char *format, ...)
+> > > {
+> > > 	struct va_format vaf;
+> > > 	va_list args;
+> > > 
+> > > 	if (!drm_debug_enabled(category))
+> > > 		return;
+> > 
+> > Ok, and will this proposal be able to handle stuff like this?
 > 
-> commit e1de42fdfc6a ("crypto: talitos - fix ECB algs ivsize")
-> wrongly modified CBC algs ivsize instead of ECB aggs ivsize.
+> Yes, that's the entire point.
 
-To make it clear and avoid this problem to happen again, please generate 
-your patch with option -U8
+Currently I think there not enough "levels" to map something like
+drm.debug to the new dyn dbg feature. I don't think it is intrinsic
+but I couldn't find the bit of the code where the 5-bit level in struct
+_ddebug is converted from a mask to a bit number and vice-versa.
 
-> 
-> This restore the CBC algs original ivsize of removes ECB's ones.
-> 
-> Signed-off-by: Su Kang Yin <cantona@cantona.net>
 
-I think it should include a Fixes: tag.
-
-> ---
->   drivers/crypto/talitos.c | 4 +---
->   1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/crypto/talitos.c b/drivers/crypto/talitos.c
-> index 8b383d3d21c2..05a35ab5595b 100644
-> --- a/drivers/crypto/talitos.c
-> +++ b/drivers/crypto/talitos.c
-> @@ -2636,7 +2636,6 @@ static struct talitos_alg_template driver_algs[] = {
->   			.cra_ablkcipher = {
->   				.min_keysize = AES_MIN_KEY_SIZE,
->   				.max_keysize = AES_MAX_KEY_SIZE,
-> -				.ivsize = AES_BLOCK_SIZE,
->   			}
->   		},
->   		.desc_hdr_template = DESC_HDR_TYPE_COMMON_NONSNOOP_NO_AFEU |
-> @@ -2670,6 +2669,7 @@ static struct talitos_alg_template driver_algs[] = {
->   			.cra_ablkcipher = {
->   				.min_keysize = AES_MIN_KEY_SIZE,
->   				.max_keysize = AES_MAX_KEY_SIZE,
-> +				.ivsize = AES_BLOCK_SIZE,
->   				.setkey = ablkcipher_aes_setkey,
->   			}
->   		},
-> @@ -2687,7 +2687,6 @@ static struct talitos_alg_template driver_algs[] = {
->   			.cra_ablkcipher = {
->   				.min_keysize = DES_KEY_SIZE,
->   				.max_keysize = DES_KEY_SIZE,
-> -				.ivsize = DES_BLOCK_SIZE,
-
-This change has no link with e1de42fdfc6a
-
->   			}
->   		},
->   		.desc_hdr_template = DESC_HDR_TYPE_COMMON_NONSNOOP_NO_AFEU |
-> @@ -2720,7 +2719,6 @@ static struct talitos_alg_template driver_algs[] = {
->   			.cra_ablkcipher = {
->   				.min_keysize = DES3_EDE_KEY_SIZE,
->   				.max_keysize = DES3_EDE_KEY_SIZE,
-> -				.ivsize = DES3_EDE_BLOCK_SIZE,
-
-This change has no link with e1de42fdfc6a
-
->   			}
->   		},
->   		.desc_hdr_template = DESC_HDR_TYPE_COMMON_NONSNOOP_NO_AFEU |
-> 
-
-Christophe
+Daniel.
