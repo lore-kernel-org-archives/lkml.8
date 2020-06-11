@@ -5,143 +5,142 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED82FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E948C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:15:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB2EA20691
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:14:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36B2020792
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:15:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V6b+DZoh"
+	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="aIOyG6+x";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="otW+a/3M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728480AbgFKPOl (ORCPT
+        id S1728492AbgFKPPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 11:14:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38770 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728344AbgFKPOk (ORCPT
+        Thu, 11 Jun 2020 11:15:00 -0400
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:51079 "EHLO
+        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728425AbgFKPPA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 11:14:40 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 691D5C08C5C1;
-        Thu, 11 Jun 2020 08:14:40 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id q19so6835876eja.7;
-        Thu, 11 Jun 2020 08:14:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RhhbWkTa6xWV0deLfaJXoyvtvAs5iTNkvkhb8jfaq6Y=;
-        b=V6b+DZohDm/hDfiEq33KTHTOYZKmKHXtH9CXlUKI9J3Rmnfq8hF9vsaZiV3GZbZkGN
-         vQo1l0toScYIZhA50AZUN6pllNtCM51xVgBnmrqUjL46cPreHZNGj36MFoo9RLQxERso
-         unyu1r2ieWrdTIfvdYZO6czJqKoHdr6E74rsBCHi08GzN+oE/ZMpMAHObv3HAhKkKhpP
-         NHWyLSLgjxp6TJOJz4yiymx/S/ioV6GL8rV3K5magWDu9N3zM981N56CRWruTNB3DRcv
-         bbTEZoirL61WiBzk51psQ6/RkDol54ZOnrpJvw5c3ollGbbxs027E5BLALrMLQjZaFBZ
-         3ozA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RhhbWkTa6xWV0deLfaJXoyvtvAs5iTNkvkhb8jfaq6Y=;
-        b=SXvaqilEjD18MN2jqvhoZrgn9mwSVPf0mf5Dkf775fZpfdzSEbGGjbmtoZc5K0XVw1
-         HwekTI5llYWrAG9IG4eOz4VpSqfMV3gzotRRf4T7//pIvv8hiluYNNvNcHyqFOc1mTxD
-         Osj1tcBgIvAE3WaM6EhLs2XYn/C5NnW1mKAbhqj0OnSnkn0o4f9/Rnh7vFFa22hQAew5
-         NGxxA5m8qJFIw8X5BCutHigJS0tEI0H/r5wta8rK6L+AWUn18PNyrRDSxqKMZH05z0lQ
-         hPr6kXhyeEyyIGkC98fCYvuVIWVTH7Rs9GJQyDqEapQFZ/QKs6LjlOvNcAqQi795CIAp
-         HFlg==
-X-Gm-Message-State: AOAM532pMCeaSLs6woZTLTmxRDrKUd7Ig+S0HEeC29tT9U0PdojON5aa
-        HXr7kAO72MXH63OXTYNrGpyE7n/LwX9AUDhaQzI=
-X-Google-Smtp-Source: ABdhPJytx7mXiKtufAO92EdC9cVGt6I9RCacutPRVjzVuRfL1EdBtKdRZC45eZpis81SCNqGUNS/sYXxiSkjls/4Ke8=
-X-Received: by 2002:a17:906:aac8:: with SMTP id kt8mr9063624ejb.460.1591888477088;
- Thu, 11 Jun 2020 08:14:37 -0700 (PDT)
+        Thu, 11 Jun 2020 11:15:00 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id DA2D35BE;
+        Thu, 11 Jun 2020 11:14:58 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Thu, 11 Jun 2020 11:14:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=from
+        :to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-type; s=fm3; bh=mbP/c7Zh+UG74gGWVl4xZP+lch
+        svxpJUzk1CyV5rpiQ=; b=aIOyG6+xRhaXc+6OLxLr0zFCxu4sHFoVRL44HrfOdZ
+        oQel5q1HJ46JviW+2qpaLqE4mXAd3Vq4FUSxc0Vdo120xjUabDi/85UeTbuR2Ox8
+        UX2CqHiT5mFhRY4fnw0ZhwGFjWmc/d7GH/JP/ICuQ9rlxi3mx2Xi37heE8x1UNKb
+        c8js0e+Yu1mLZ8QmRlH42T6/4AnitbOpiJ4vXnNgZRbTXVUwUAUOZ+kU6/2LXTck
+        yriMzz+vmY9EmLpxrXExa9nWi8xp/LEgdplRRgXoGuvH2HKKUMOmwsRCtRz9xVfm
+        /3kzQ/tPT/2cfzWZBW97cYb/5o0BNrrXOJZy9f+P9K9A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=mbP/c7
+        Zh+UG74gGWVl4xZP+lchsvxpJUzk1CyV5rpiQ=; b=otW+a/3M7nDknV3NODCwU3
+        1TE/MSk1Yhg6PXG9/aDRX3mpIqmlFOJWIptxLI7OuJMbcpOKhsBUcOgzDyhasgDI
+        v4s3Mz9XuEs+ZUEAhCGyUUeHoqrB3jBSsyT1bYBL2VMpMMex5NLaJqhxBAFrzMSA
+        URInPJEQqeovjJbzI32v42znIGEqpMS+c8XSSpgq1/2b+wK+D/K8ztKTQAcE3vLZ
+        SLIYkK0HOedMYsphWO7teZvGPBTqGu9a58jhqam9g1rWMG7T21ygRwzZ9FbIwP7P
+        Ea0APpmVKCMKwg8VHc6VsYjM3OLTwwQtRpI9rJV75cWHKj4Fyxi0maWgMCT1QsUA
+        ==
+X-ME-Sender: <xms:ckriXkPXy4pV0pCSKYlDnKtCdcAfdXNQ6DnIrLJ5C8iEeyl87xoQrw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudehledgieduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffokfgjfhggtgesghdtmh
+    erredtjeenucfhrhhomhepfdgkihcujggrnhdfuceoiihirdihrghnsehsvghnthdrtgho
+    mheqnecuggftrfgrthhtvghrnhepjeeujeetjeffgeelvdfhveekiedvgeffhfegfeektd
+    eigedvveejfedvhedutddunecukfhppeejhedrieejrdelrddutdefnecuvehluhhsthgv
+    rhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepiihirdihrghnsehsvghnth
+    drtghomh
+X-ME-Proxy: <xmx:ckriXq_16g94uu606hp94eN4VZUUG_KpxLZ7QMeZDHL9KEPBw0C35Q>
+    <xmx:ckriXrQteha7jvpTcnlO0bKHv0WYF_3zEMC7O0eQ2ENbIyxF9HuQ1Q>
+    <xmx:ckriXsuZ6NX_DfKtCsvf5X-dnEjFK6kyzYAr_afdD_mAjTgOrkhupw>
+    <xmx:ckriXoHzLnX8xmrhnQS42iWdz4SZzcapPNr4NNFbSf9-0_u8VON7qA>
+Received: from [10.2.166.236] (c-75-67-9-103.hsd1.ma.comcast.net [75.67.9.103])
+        by mail.messagingengine.com (Postfix) with ESMTPA id EFFFB3060FE7;
+        Thu, 11 Jun 2020 11:14:57 -0400 (EDT)
+From:   "Zi Yan" <zi.yan@sent.com>
+To:     "Matthew Wilcox" <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 05/51] mm: Simplify PageDoubleMap with PF_SECOND policy
+Date:   Thu, 11 Jun 2020 11:14:45 -0400
+X-Mailer: MailMate (1.13.1r5690)
+Message-ID: <A8271172-074D-43E2-928B-EE267544EA82@sent.com>
+In-Reply-To: <20200610201345.13273-6-willy@infradead.org>
+References: <20200610201345.13273-1-willy@infradead.org>
+ <20200610201345.13273-6-willy@infradead.org>
 MIME-Version: 1.0
-References: <1591880115-12721-1-git-send-email-mkrishn@codeaurora.org>
-In-Reply-To: <1591880115-12721-1-git-send-email-mkrishn@codeaurora.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Thu, 11 Jun 2020 08:15:03 -0700
-Message-ID: <CAF6AEGtczybJU=_MUnGK3uzfnbgh-PDgAZmp7Fod=9Fc0T=fjg@mail.gmail.com>
-Subject: Re: [v1] drm/msm/dpu: request for display color blocks based on hw
- catalog entry
-To:     Krishna Manikandan <mkrishn@codeaurora.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Kalyan Thota <kalyan_t@codeaurora.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        nganji@codeaurora.org, Matthias Kaehlcke <mka@chromium.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed;
+ boundary="=_MailMate_44D74A30-D1A2-4272-80E2-5EF81B020730_=";
+ micalg=pgp-sha512; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 5:55 AM Krishna Manikandan
-<mkrishn@codeaurora.org> wrote:
->
-> From: Kalyan Thota <kalyan_t@codeaurora.org>
->
-> Request for color processing blocks only if they are
-> available in the display hw catalog and they are
-> sufficient in number for the selection.
->
+This is an OpenPGP/MIME signed message (RFC 3156 and 4880).
 
-I believe this should have:
+--=_MailMate_44D74A30-D1A2-4272-80E2-5EF81B020730_=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: e47616df008b ("drm/msm/dpu: add support for color processing
-blocks in dpu driver")
+On 10 Jun 2020, at 16:12, Matthew Wilcox wrote:
 
-> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+>
+> Introduce the new page policy of PF_SECOND which lets us use the
+> normal pageflags generation machinery to create the various DoubleMap
+> manipulation functions.
+>
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 > ---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
+>  include/linux/page-flags.h | 40 ++++++++++----------------------------=
+
+>  1 file changed, 10 insertions(+), 30 deletions(-)
 >
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> index 63976dc..9f8de77 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> @@ -521,7 +521,7 @@ static struct msm_display_topology dpu_encoder_get_topology(
->                         struct dpu_kms *dpu_kms,
->                         struct drm_display_mode *mode)
->  {
-> -       struct msm_display_topology topology;
-> +       struct msm_display_topology topology = {0};
->         int i, intf_count = 0;
->
->         for (i = 0; i < MAX_PHYS_ENCODERS_PER_VIRTUAL; i++)
-> @@ -537,7 +537,8 @@ static struct msm_display_topology dpu_encoder_get_topology(
->          * 1 LM, 1 INTF
->          * 2 LM, 1 INTF (stream merge to support high resolution interfaces)
->          *
-> -        * Adding color blocks only to primary interface
-> +        * Adding color blocks only to primary interface if available in
-> +        * sufficient number
->          */
->         if (intf_count == 2)
->                 topology.num_lm = 2;
-> @@ -546,8 +547,11 @@ static struct msm_display_topology dpu_encoder_get_topology(
->         else
->                 topology.num_lm = (mode->hdisplay > MAX_HDISPLAY_SPLIT) ? 2 : 1;
->
-> -       if (dpu_enc->disp_info.intf_type == DRM_MODE_ENCODER_DSI)
-> -               topology.num_dspp = topology.num_lm;
-> +       if (dpu_enc->disp_info.intf_type == DRM_MODE_ENCODER_DSI) {
-> +               if (dpu_kms->catalog->dspp &&
-> +                       (dpu_kms->catalog->dspp_count >= topology.num_lm))
-> +                       topology.num_dspp = topology.num_lm;
-> +       }
->
->         topology.num_enc = 0;
->         topology.num_intf = intf_count;
-> --
-> 1.9.1
->
+> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+> index de6e0696f55c..979460df4768 100644
+> --- a/include/linux/page-flags.h
+> +++ b/include/linux/page-flags.h
+> @@ -232,6 +232,9 @@ static inline void page_init_poison(struct page *pa=
+ge, size_t size)
+>   *
+>   * PF_NO_COMPOUND:
+>   *     the page flag is not relevant for compound pages.
+> + *
+> + * PF_SECOND:
+> + *     the page flag is stored in the first tail page.
+>   */
+
+Would PF_FIRST_TAIL or PF_SECOND_IN_COMPOUND be more informative?
+
+=E2=80=94
+Best Regards,
+Yan Zi
+
+--=_MailMate_44D74A30-D1A2-4272-80E2-5EF81B020730_=
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename=signature.asc
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iQFEBAEBCgAuFiEEOXBxLIohamfZUwd5QYsvEZxOpswFAl7iSmUQHHppLnlhbkBz
+ZW50LmNvbQAKCRBBiy8RnE6mzBAhB/9RPEgOo5xCLbS1n7upmOU40BpKZaxVUeBX
++VGnxbPtM9Pi78CkZew1B0gDa4TGam+kx2HfVhkL038T7U+OhXHZgTZlL95JR0sJ
+jco0EPXsRJAcWVt/h8KH70OQhNyL7go5Wj+Glb4mM2ceUvfUN6ldDbL4uLqpoigi
+RKqMiwaqqPQ5fjh9LRNQJ0HW7BCUtsUp3TvgYSYoTPN57W8ojcAqnCfanRgvtD4J
+33KYQWAidnv7L3ZtLi7ZIHbKgCV9+aAlFscQ8UcNwHtcwPA8yJEx8+a1E7iw/F8F
+pzU9hhi5z/5WkeOdbowIr+036mLPNUeulu643uUxVJp3XyN15WlH
+=ZXg8
+-----END PGP SIGNATURE-----
+
+--=_MailMate_44D74A30-D1A2-4272-80E2-5EF81B020730_=--
