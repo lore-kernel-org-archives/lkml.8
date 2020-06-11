@@ -2,131 +2,102 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2FCC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D858C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F6C7207C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:31:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="r8pRnAtH"
+	by mail.kernel.org (Postfix) with ESMTP id 418722072F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:32:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbgFKIbk (ORCPT
+        id S1726831AbgFKIcz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 04:31:40 -0400
-Received: from mail-eopbgr140077.outbound.protection.outlook.com ([40.107.14.77]:13537
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726729AbgFKIbk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 04:31:40 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=f8gGdeDe+mysEPNYwOoKfKCbledEEk7eufptKusq8L/oV6Y+AdlovJko926yByrQeyCXO9DpA+dTxFx+kDOsT2S19XLIvsCVKFJr8u0nbwhdwJQVSEt3tC3HZzsNFlsmWyxts6wnuOjWRyY7HCy5L6HTsABm7Bdx6HcSWUsWr9uXvmfiY/1IhAfhOknYjcLeyp9M0iwI2d3H7Hh3P3ofq+9Wvgbqyk+R1kdFFGsajoiqB+BnWOdmfBuNkgLQUE1Poj9EvgLYjvJOz+joQDn7lb1TOmtbfhnJdNe8XeVfbTQUiQ+Px5RgF8jSqxsz2JmlrvR6g5gEx4r5NUNDwbuQDw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MalPGz/D0wKGW3isLFT1cvddlY2qg3PoLkYYWvWzQRk=;
- b=QoG1ZkJuhGZsXzBkJPybrFU4gW5thkI1rGQgjOH9mXLTbCojShriVjaLuR6D4mgwREKZMdlZCcs5sf2jjBoc8KOoxxeXeGzavEedQF01k9hv24AGJNMHk8PRGHPSjm10tGvd0TQWCkKt0OfJk12aRh2Kdslajz52iV+vH59+7zNjahOop1tc9+N0bitxmQ3l8RPrI6d1GmkBxJNJqIXazw86Vkq47pslm2KzBwOoeVN7pWWtWa3lzwgXR6uQSpZPiUVSwpnZftJQyu+UHX2mD0rFfUGVS59bxZCGC3K6ysSpQrq3323/tpnL2aD95C1SRvChWnad06gyrfBZHFV35g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MalPGz/D0wKGW3isLFT1cvddlY2qg3PoLkYYWvWzQRk=;
- b=r8pRnAtHdcyfPo9f8tZgZm838p9BdvPqj6l8uTT3zRDfx9tQogFiikZp69vHqEHihSQL4qYTGlMjO9kmqWapFbWp5kkD2ln64jZbeIyWGpEI8NO7h7ZqneEzQg6D/69FFiJymNzNV4vcWbBEKUgz5e938+Le3xoqF3V4wFueF6U=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
- by DB3PR0402MB3675.eurprd04.prod.outlook.com (2603:10a6:8:b::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.20; Thu, 11 Jun
- 2020 08:31:35 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::1dab:b68c:e028:acb3]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::1dab:b68c:e028:acb3%6]) with mapi id 15.20.3088.018; Thu, 11 Jun 2020
- 08:31:34 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Aisheng Dong <aisheng.dong@nxp.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V3 0/9] Support i.MX8 SoCs pinctrl drivers built as module
-Thread-Topic: [PATCH V3 0/9] Support i.MX8 SoCs pinctrl drivers built as
- module
-Thread-Index: AQHWPmrEZsqXlE5PG069+wE7LuhWwqjRftOAgAABKNCAAZeosA==
-Date:   Thu, 11 Jun 2020 08:31:34 +0000
-Message-ID: <DB3PR0402MB39164A67925E322A7B9B1F31F5800@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1591712485-20609-1-git-send-email-Anson.Huang@nxp.com>
- <DB7PR04MB49721DEE875099E086E2486E80830@DB7PR04MB4972.eurprd04.prod.outlook.com>
- <DB3PR0402MB39167A62D9D981C2F82B7ABDF5830@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-In-Reply-To: <DB3PR0402MB39167A62D9D981C2F82B7ABDF5830@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [183.192.13.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 670ce306-ca4a-47d9-3c9b-08d80de1d9ed
-x-ms-traffictypediagnostic: DB3PR0402MB3675:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB36756A4BBE5795262F540B7AF5800@DB3PR0402MB3675.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0431F981D8
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: pjXrF8qLg5azZhPgICqRof3W571cjMeOKLDzJkBcGZxl89pwyaMJ3lJguUJyDRMwrwD0j2T5sYUwq6vibecxJnBMYRjtdCmcPC0CvedpPVWsgKj3sGGdusmTHyyhraKQYOYS0N3FGxbLebns+VC1I6h5k20E1+MZu1zJtFhLIhyowBveXAG/LGQI60ObspYs5N2ap4OJHDz8viPkDHILgeM7quCuZpzTXcrqMiXX/RX5aF0zK8xsDZ3POpusmWIZAjEX2slIuj0hRHsevIt5KjoSDJrP18JTub0E9fCriQ1NQHOgai2u/5gB2bmTauHK213gPjA4cKx70jFUv3bRuAGF/Msd4dKVzylEaJat72FrpW67xyU4POGv2L1B5e9u
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(6029001)(4636009)(366004)(376002)(346002)(39860400002)(136003)(396003)(83380400001)(5660300002)(52536014)(9686003)(8676002)(55016002)(8936002)(66556008)(66476007)(44832011)(186003)(64756008)(2906002)(110136005)(66446008)(316002)(76116006)(26005)(66946007)(86362001)(478600001)(33656002)(4326008)(7696005)(6506007)(71200400001)(921003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: x4Y1DL7ye1qMAe3wOQLzY3k1lbR0IxNXpXOWkkP22IPd0W/F3TJehocRZhNolryK7Sy8W+ozxOOBzqbGSK0iE59EkKUFGr3S5X5JJrWLuiFMY1u9Zsx1WquAIpdp46B2b+C8lWEiZ9QJDPVpuLG+PUXfTe3bTuXH2/DHdGKh3bB5fDqJsF/7kPGIplXwpkhH3Z8bfPwYlkPWwR2XR5thI1N8t7Dat/o5SbvjTmQGZ4x4WMWJAbgrdzRWqLGC8c2Wv0dZ7Rbh+v70kzWSfIkPhxv800jW/1Lh+hBZBo8iwY9Hr0I94NEhzJ4lctUGQAEQczZ9yEMHSaSwbb3X77CFWmWqiQd96ImliDTGz9pjcu23NU4EcfBaRZnngBQNORkHatSN3JrxOVs43WVFthGyV7xccXTHhmNKBWAqs47wNHQmo6JOASTiJAUL+D+xTR+RCNhtRwznECoJGH7Sih9QNNIoZwVLhPJt7zmLyjKIle9Ni3/vXDUXfJc6JRRY0Ley
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 11 Jun 2020 04:32:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37586 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726713AbgFKIcz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 04:32:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id CD91FAAD0;
+        Thu, 11 Jun 2020 08:32:56 +0000 (UTC)
+Subject: Re: [PATCH v4 0/2] Recommend denylist/allowlist instead of
+ blacklist/whitelist
+To:     SeongJae Park <sjpark@amazon.com>
+Cc:     Joe Perches <joe@perches.com>, akpm@linux-foundation.org,
+        apw@canonical.com, SeongJae Park <sjpark@amazon.de>,
+        colin.king@canonical.com, sj38.park@gmail.com,
+        linux-kernel@vger.kernel.org, kristen.c.accardi@intel.com,
+        mishi@linux.com, skhan@linuxfoundation.org,
+        gregkh@linuxfoundation.org
+References: <20200611083035.23008-1-sjpark@amazon.com>
+From:   Jiri Slaby <jslaby@suse.cz>
+Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <7688658f-1388-1c8a-11cf-54352c64e630@suse.cz>
+Date:   Thu, 11 Jun 2020 10:32:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 670ce306-ca4a-47d9-3c9b-08d80de1d9ed
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2020 08:31:34.6512
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: cR/MQUat7Yuz2h/sY7yQMyn7mtPiC6JrnzfcjyKtCnenVlQkEL8NtdR7x9JsTh/wRb+wBUvhnArZSmMlCQw9sw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3675
+In-Reply-To: <20200611083035.23008-1-sjpark@amazon.com>
+Content-Type: text/plain; charset=iso-8859-2
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IFN1YmplY3Q6IFJFOiBbUEFUQ0ggVjMgMC85XSBTdXBwb3J0IGkuTVg4IFNvQ3MgcGluY3Ry
-bCBkcml2ZXJzIGJ1aWx0IGFzIG1vZHVsZQ0KPiANCj4gDQo+IA0KPiANCj4gPiBTdWJqZWN0OiBS
-RTogW1BBVENIIFYzIDAvOV0gU3VwcG9ydCBpLk1YOCBTb0NzIHBpbmN0cmwgZHJpdmVycyBidWls
-dA0KPiA+IGFzIG1vZHVsZQ0KPiA+DQo+ID4gPiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVh
-bmdAbnhwLmNvbT4NCj4gPiA+IFNlbnQ6IFR1ZXNkYXksIEp1bmUgOSwgMjAyMCAxMDoyMSBQTQ0K
-PiA+ID4NCj4gPiA+IFRoZXJlIGFyZSBtb3JlIGFuZCBtcm9lIHJlcXVpcmVtZW50cyB0aGF0IFNv
-QyBzcGVjaWZpYyBtb2R1bGVzDQo+ID4gPiBzaG91bGQgYmUgYnVpbHQgYXMgbW9kdWxlIGluIG9y
-ZGVyIHRvIHN1cHBvcnQgZ2VuZXJpYyBrZXJuZWwgaW1hZ2UsDQo+ID4gPiBzdWNoIGFzIEFuZHJv
-aWQgR0tJIGNvbmNlcHQuDQo+ID4gPg0KPiA+ID4gVGhpcyBwYXRjaCBzZXJpZXMgc3VwcG9ydHMg
-aS5NWDggU29DcyBwaW5jdHJsIGRyaXZlcnMgdG8gYmUgYnVpbHQgYXMNCj4gPiA+IG1vZHVsZSwg
-aW5jbHVkaW5nIGkuTVg4TVEvTU0vTU4vTVAvUVhQL1FNL0RYTCBTb0NzLCBhbmQgaXQgYWxzbw0K
-PiA+ID4gc3VwcG9ydHMgYnVpbGRpbmcgaS5NWCBjb21tb24gcGluY3RybCBkcml2ZXIgYW5kIGku
-TVggU0NVIGNvbW1vbg0KPiA+ID4gcGluY3RybCBkcml2ZXIgYXMgbW9kdWxlLg0KPiA+ID4NCj4g
-Pg0KPiA+IFRoaXMgcGF0Y2ggc2VyaWVzIGFsc28gY2hhbmdlZCB0aGUgZHJpdmVyIGluaXRjYWxs
-IGxldmVsIGZyb20NCj4gPiBhcmNoX2luaXRjYWxsIHRvIG1vZHVsZV9pbml0Lg0KPiA+IE1heWJl
-IHlvdSBjb3VsZCBwcm92aWRlIHNvbWUgdGVzdCBpbmZvcm1hdGlvbiB0byBoZWxwIHRoZSByZXZp
-ZXdlciB0bw0KPiA+IGJldHRlciB1bmRlcnN0YW5kIHRoZSBjaGFuZ2UgaW1wYWN0Lg0KPiANCj4g
-VGhlcmUgYXJlIHN0aWxsIHNvbWUgbW9yZSBjaGFuZ2VzIGluIFY0IEkganVzdCBzZW50IG91dCwg
-d2hpY2ggaXMgdG8gY292ZXINCj4gdmFyaW91cyBjb25maWcgY29tYmluYXRpb24sIHdpbGwgYWRk
-IHRlc3QgaW5mbyBpbiBuZXh0IHZlcnNpb24uDQoNCkkgd2lsbCBrZWVwIHRoZSBhcmNoX2luaXRj
-YWxsKCkgdGhlcmUgaW4gbmV4dCB2ZXJzaW9uIHBhdGNoIHNlcmllcywgaXQgY2FuIG1ha2Ugc3Vy
-ZSB0aGUNCmNoYW5nZSBkb2VzIE5PVCBpbXBhY3QgYnVpbHQtaW4gY29uZmlnLiBGb3IgbW9kdWxl
-IGJ1aWxkLCB0aGUgYXJjaF9pbml0Y2FsbCgpIHdpbGwNCmJlIHNhbWUgYXMgbW9kdWxlX2luaXQo
-KSwgdXNlciBuZWVkcyB0byBpbnNtb2QgdGhlIC5rbyB3aXRoIGNvcnJlY3Qgc2VxdWVuY2UuDQoN
-CkFuc29uDQo=
+On 11. 06. 20, 10:30, SeongJae Park wrote:
+> For example, as it seems at least you and I agree on the f-word to hug
+> replacement, we could add ``fuck||hug`` in the `deprecated_terms.txt` file to
+> avoid future spread of the f-words.
+
+You will likely get my ACK on that, if that helps.
+
+thanks,
+-- 
+js
+suse labs
