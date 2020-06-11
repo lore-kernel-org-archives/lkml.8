@@ -2,152 +2,270 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E03BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 06:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9BEDC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 06:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E214F2072F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 06:43:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F6302075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 06:50:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="AdNAo+Cu";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="gfx9nI63"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="EZdk7eFI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbgFKGna (ORCPT
+        id S1726576AbgFKGuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 02:43:30 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:34228 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbgFKGn3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 02:43:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1591857825; x=1623393825;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=1uMbxC17ptv9jb+cKwTpxj9uV4PB1CB8VQM/xqiI0zY=;
-  b=AdNAo+Cuusum1xsY9YNk6aqERXCm7jggqSBYojkV59RFTsEMG4DwIKM5
-   gRTFR/2JatEAWeq6h14Ks2DytijgdiKCrC2ff4/A21t9nrlfUmQrB2mJg
-   X/gj5nIKsWoB0yTkuSu/VMI495xUhVvpLloX1eBlJ9EL3tYpMy1foqjn9
-   am+JvHTiT22Tvx9tL1MWplH4tlzziMlkaZfBTyWSzkH1XqmdvcOwWjrtJ
-   0fhiPYzmR5TXKuqtU5zC/ZDZGGtXn6u55cNdhzAyx7PjgvNDZOkeINr04
-   B0OjC//CDCCX/AAwYslfDYD22earFZgNRvvJmcsJsO+JZFZMI5J9s7zDH
-   w==;
-IronPort-SDR: DqSMCSvzxo6LqjkeRedUsRncswcgOMVAJvVsKoNGBdy6Vzqpjzxa8AqlyyP9im8LC2DFMNGy3O
- PqnkY8EX20faUM5poKcWWfyf8ufkVTs2BPFgnRk8u6WqFUnA97SJKP+TQ1CbVty32uhdivI8t/
- e8TtybLTEGK/zu/CYE7SVgyVKzHVhJQrZLN1MQLLsN5DCNRpRgR4VSDHFeA2x3BvBusuAYqs0u
- 9xU1PEr/GEtjxohhF2RpaGb9QAtIipfDAL7tCOnk90EAixTSsjFjpyc+SMknEWmabqcgCY15ky
- OsU=
-X-IronPort-AV: E=Sophos;i="5.73,498,1583164800"; 
-   d="scan'208";a="242628913"
-Received: from mail-bn8nam12lp2172.outbound.protection.outlook.com (HELO NAM12-BN8-obe.outbound.protection.outlook.com) ([104.47.55.172])
-  by ob1.hgst.iphmx.com with ESMTP; 11 Jun 2020 14:43:41 +0800
+        Thu, 11 Jun 2020 02:50:04 -0400
+Received: from mail-eopbgr1410122.outbound.protection.outlook.com ([40.107.141.122]:32847
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726511AbgFKGuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 02:50:03 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Pscq4Izbm1Xap5f/wxAq0M1PQfxSTYru+J67jgMOil/j9S1YpDYFFkW4FzuLHigHUItljfaZGCe8KA2ezT5FxcFmL0vu/icCfpRo7/hUnvuX4Y4I1QSOe4vFavSTj5oP5PO0rn1Ki5hkWsUvM7yMQNezRD3dQ623B91xbYsdoivmMr6tIX9bUHgWBZ3P9xxROy7zqbJzB+l3/+D5X1vXTRvLKfdKbjT2UwLj2mD2V44Ff4nK0vPCAzMEFof7Gc1lovE5kTtRLgGsu2FguR8O4Bv2ZshT0PFb/VMZNpsmNbLk1d+/vtXc5SS5CPRD+It6W7GMpuz6soQIGN4qHfKMnw==
+ b=eYUS0y7otZxOwR/qngP8e9kxK7bW7O7jk2l9jLk6xQLPYHnC5j7sDo6+E6wkc1eVmaM3+C6Pug91xBNPjzLz5N+Vo7uQyGhWSGFsnzFy72FJqjKszkflrfyMKpzOTD+vHW7qpCJu8DPamIMcPTSnG0tPLkW1l79sGYt6zanIha0l5VxSAEUn8l+Dr0Ffnj63cvIskkVgh+h6dfDU1IY7d79yyoZFRt7eemMX0/1imJQcUfGfr5ESZ4cHcaUq4nkIGLUBcgGw7TplmOgyttMy/NF0131zblFyJEDBH07zQREcJA561C9YkMnFGbjYwLcdZ+q71sxjPvRQz4+hTX8SfA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1uMbxC17ptv9jb+cKwTpxj9uV4PB1CB8VQM/xqiI0zY=;
- b=G+EQ1z/cqL7J5sW/hS9p0MfPOjXI3XEZ1N2Wb0rvfY7ztCraRDWqiFl4wFtJLoZQk+jZk7o5Dg5w2FbLYFsUpE6sruARbcXQDGYClCDIHx4vAQ4t2+bvsd8nw9v4IF2wn6Ls9ZWsVvBHTCrOA409I3cZlUld+U1Rk4mw4G4BJ4GuyeduBjyNTbPA203xe03XR/JNOR60wNtNMXkvMoVaGV1wbgn+tucjfRygqQH6w3Xpx0L4xTlVNcUz/Utn0CvXQhUkNSFuLxB31aGdzCezJPoP75FSqclVufokQIpUO6Q5xdd2uQ29CQn4TgIfwtbJtHgCER7YLmXTA4yXWDOvkA==
+ bh=oofSYXvNcHlIXpR61mBWTRujWAzYNO3PjvpLsayw7Yc=;
+ b=ejkNkUiDsS6PzXprcXiilpRcxyt009o669MoeNDfo0loBvmquvz/4z7mWfnwqb25awSpOZgHfL9cdHcfiKjIPqqswcdpE841dYL2QLZsqh4S1dKmLcXWrLCqDZXpS3YCCphhsgbcbRc52PgvN7UmcVjaUzYlbdZ5zeekhRsa3YXxT7mllEr2Z2MlhoqO3N1xNFtUS5Hv5OFOeZZ7pnmtBFT21sjMnhC2TfRDw3LxDBmvileboPOpMscB7g0kfFszG6GeU/rvIPrSnFRwFhtaS7Lw5zpcAoWuOXmT6/wjh6tw7JaSjiOAsnqNwKy2cyu6vH9q0xaKt9bnqP4orb+Nng==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1uMbxC17ptv9jb+cKwTpxj9uV4PB1CB8VQM/xqiI0zY=;
- b=gfx9nI63NLhmbUUzx2yeJRN8B9+M5RIYxTjWqG6rwYe2QCFjHaz5rcgDxRponVKZq7du/IvummNwNKQIMdAp5AmCL2Pv3zGUfhtfUfgZHw+eYlLAdPVWw5qm3WK5Lpzjya1LreDiR9ugWcF4tOj9AcfeBBv5/2OnRNXXapihIuc=
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
- by SN6PR04MB3840.namprd04.prod.outlook.com (2603:10b6:805:4a::28) with
+ bh=oofSYXvNcHlIXpR61mBWTRujWAzYNO3PjvpLsayw7Yc=;
+ b=EZdk7eFI9iyZ3z/HN2tWeDkYp3HnKPj556DJgn6FQUBDpZpsXcXMwAJl/FD3u8d8F2FhNP65z/7sYF13mMZuLaL6Zrv6grR8kufFfdlIJZSekwVF7x/WTnzVPi8aBC+8yht9n2vfGa9BjUn3cM6og0iizCDDSsdJn/QXIkxrYEw=
+Received: from OSAPR01MB2385.jpnprd01.prod.outlook.com (2603:1096:603:37::20)
+ by OSAPR01MB1521.jpnprd01.prod.outlook.com (2603:1096:603:2d::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18; Thu, 11 Jun
- 2020 06:43:25 +0000
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::9cbe:995f:c25f:d288]) by SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::9cbe:995f:c25f:d288%6]) with mapi id 15.20.3088.018; Thu, 11 Jun 2020
- 06:43:24 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Bart Van Assche <bvanassche@acm.org>,
-        "daejun7.park@samsung.com" <daejun7.park@samsung.com>,
-        ALIM AKHTAR <alim.akhtar@samsung.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>
-Subject: RE: [RFC PATCH 5/5] scsi: ufs: Prepare HPB read for cached sub-region
-Thread-Topic: [RFC PATCH 5/5] scsi: ufs: Prepare HPB read for cached
- sub-region
-Thread-Index: AQHWOt/akL86ZTv+6kyNzf9RcBp44qjSq+8AgABUWqA=
-Date:   Thu, 11 Jun 2020 06:43:24 +0000
-Message-ID: <SN6PR04MB464097890CE39B34BACC9BE7FC800@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <963815509.21591323002276.JavaMail.epsvc@epcpadp1>
- <231786897.01591322101492.JavaMail.epsvc@epcpadp1>
- <336371513.41591320902369.JavaMail.epsvc@epcpadp1>
- <963815509.21591320301642.JavaMail.epsvc@epcpadp1>
- <231786897.01591320001492.JavaMail.epsvc@epcpadp1>
- <CGME20200605011604epcms2p8bec8ef6682583d7248dc7d9dc1bfc882@epcms2p2>
- <336371513.41591323603173.JavaMail.epsvc@epcpadp1>
- <bdc420e4-3f2e-cf52-eb42-f85e747b2fb1@acm.org>
-In-Reply-To: <bdc420e4-3f2e-cf52-eb42-f85e747b2fb1@acm.org>
-Accept-Language: en-US
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.21; Thu, 11 Jun
+ 2020 06:49:57 +0000
+Received: from OSAPR01MB2385.jpnprd01.prod.outlook.com
+ ([fe80::c44c:5473:6b95:d9fd]) by OSAPR01MB2385.jpnprd01.prod.outlook.com
+ ([fe80::c44c:5473:6b95:d9fd%6]) with mapi id 15.20.3066.023; Thu, 11 Jun 2020
+ 06:49:57 +0000
+From:   Chris Paterson <Chris.Paterson2@renesas.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "patches@kernelci.org" <patches@kernelci.org>,
+        "ben.hutchings@codethink.co.uk" <ben.hutchings@codethink.co.uk>,
+        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH 4.19 00/25] 4.19.128-rc2 review
+Thread-Topic: [PATCH 4.19 00/25] 4.19.128-rc2 review
+Thread-Index: AQHWPpLRzFc0OFNakUaLHC3wTpIwXajS+p2w
+Date:   Thu, 11 Jun 2020 06:49:57 +0000
+Message-ID: <OSAPR01MB2385C75DB74ABBA85FC0ED8BB7800@OSAPR01MB2385.jpnprd01.prod.outlook.com>
+References: <20200609185946.866927360@linuxfoundation.org>
+In-Reply-To: <20200609185946.866927360@linuxfoundation.org>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: acm.org; dkim=none (message not signed)
- header.d=none;acm.org; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [212.25.79.133]
+authentication-results: linuxfoundation.org; dkim=none (message not signed)
+ header.d=none;linuxfoundation.org; dmarc=none action=none
+ header.from=renesas.com;
+x-originating-ip: [193.141.220.21]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 790e4a1d-5c6d-4356-5578-08d80dd2bdb5
-x-ms-traffictypediagnostic: SN6PR04MB3840:
-x-microsoft-antispam-prvs: <SN6PR04MB384016B0C5E04DD565E47870FC800@SN6PR04MB3840.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
+x-ms-office365-filtering-correlation-id: bd7c73e8-f0b9-4b96-2791-08d80dd3a7c7
+x-ms-traffictypediagnostic: OSAPR01MB1521:
+x-microsoft-antispam-prvs: <OSAPR01MB1521F4EE52561288BB18D38AB7800@OSAPR01MB1521.jpnprd01.prod.outlook.com>
 x-ms-oob-tlc-oobclassifiers: OLM:8273;
 x-forefront-prvs: 0431F981D8
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 8VHYxgTdjIyZtXTMO9G6BgRNt/U6Nyhi0P+Hfq7YvLGQcPRe4CYcUX++FoS3mMryHXfipfNYReW/qBx9ozNOL0hRblZ45VvyhZns+g9e084T44g6KbxpV5ZiqfLRvdZGUYONktWC0m8etszbPRwrPxYTTKfjp3uZyAYOn6q0bKSYPLxzPWFY1YjmMcaE+XfUDr/65tjho7jQ/mDluWHL4lyKOqL1C3FmAkX8khoehciWVNq+/aXf3YOeXJJ6Qy8KTQdcJ+uMkLxvWQsfrfaItNYXTN9SEK++52sUs6oA3HFhxt4X4ZsOHtrGIbyB9TchAIBjAhNQDAzoOfb7wtjmkIdJcstn7RL/bz9kspRrsyXeNlYwSAflB0DuaSahRoI0
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(346002)(396003)(366004)(39860400002)(8936002)(55016002)(66446008)(64756008)(66946007)(66556008)(66476007)(7416002)(478600001)(4744005)(76116006)(110136005)(71200400001)(316002)(2906002)(33656002)(26005)(4326008)(54906003)(6506007)(186003)(86362001)(8676002)(5660300002)(7696005)(9686003)(52536014)(83380400001)(921003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 2ZoG+SRRh/9DRNFqppKXtYzjntpjO6uQ3rAssyRLUkzPYUR4Lx4/hnQCjDJECrvPYpl1B+PGIh6fvr3Cxgedh5p4Z49sfExzalPcc6PSgY9ML+bxyOq0RtIMIqxhr9o6zd3eCyr3dQTs+i4qBjIHkyZH3zLsv6nhTUOkc7bZ96Vysy+9LCmGFoR6MQaeO7xuLCqDFKuGH2tbyJrvDyWSKNTheTld1ho3MzDDlMgAvyZLx+FseUVT5vSCWq4gvJSw8B9VhcWzglbzhhkUl7F7/X8feLdUPOH4acz3JQJwFChSgxJSDbTDZS7rrQhvVFV6eXHlpKYpULgapXUkWiJ36HOnlWDNc2PN/fU7SYVq6BMrkzrM65hRhMMb4FCf/3IPdAHUMZr3QQcLqWfHPCN6V+hC3x40XMvrX8nHpQfAmOZANTkciiAKCTSWeavBB1ALUER5ArEEzIwzTDgD8bEQuXhwC6g8nxozUwNTMtEubrY=
+x-microsoft-antispam-message-info: HyAdtJ/LgQ1DLwjHgu4JQ8npUaxGcSJ5Nka5cVyxHyM0ZtSU9i+n+rWHkd/FrkzQhuMCLPAyueqaEgr6mYWtBv8b2Mxxyjy/M4CV+bJjmv6GcWtokrybhy/1SIQCvMvjPBAMAwCYfgTgYxtW7GdGnhCdSWRyvs6czdVQz2aJkVGZkro5gxYUhBdR7R4ruBOpJT2xIAG4mBu0X3u0UCs0MU6G2MoQ2VWx33EqeXehmQdJuSQEjYDGTmeAhQPkkqoaMkxmcfBqFW4ijT/FNgV8ki83lC2BoCWkEIrHnS47WLd6147GVkNtxtkfKP+/kIIm8ybwRcqffSRLaykggnYPrRQVX32h0HEFmwbAApK8g9lABxDQPrJUpXrPlt7G2Pm7B1mDvWcc6slMEh2YjglamA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSAPR01MB2385.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(376002)(346002)(136003)(396003)(186003)(26005)(8676002)(7416002)(4326008)(6506007)(7696005)(478600001)(966005)(2906002)(64756008)(5660300002)(52536014)(76116006)(316002)(83380400001)(110136005)(8936002)(71200400001)(55016002)(54906003)(66556008)(86362001)(66446008)(33656002)(66946007)(9686003)(66476007);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: zjhHjA04r6X93X8R++DNPJqCuy4onLAZTcCFJ9vv5maJs44TyQvvoGHMnFVu4a+OuFVna3dYVbp7kGlLWhof7zJbghOdlqE4xJhKPlTnK2P8T8e9yMbu6fEq3kl+mgyLyrLDF1xJVoaX91z7dFlSU97LG6Pknx3q5hOtKxRKkwF7kOGPR3PsJb8Zf3N3sqwpj/ugkyBzJ4vfoZO/LAEhkaEDw05V4fEK+FYGmaXZ/u7KAlK7DjxgYW4cEKt3tpCdEATxOKFMNQ8QZsi/d2GdTHbtfv/ZgvN2zSccLS/UIPtkFHvTuF1ZG2dZrYm7A9autWKdaDNaZlQ9vIEXVayVgs1uOI5QFMOn4GsQNw5ZsNUO3zmSZPbHQdnus4Ibb7Z2FNOx+eR5smVnbILe8cvjzAnWEI2V6Ht/HKE5LIhB4pINbmtFynUC32TayBLmgTxMEEw/9DCsH/2SH+T+DXJZoUAeE3OmbzmJyBEKS2aiCELEg+ZfHC36lR/kPNRGAgsK
 x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 790e4a1d-5c6d-4356-5578-08d80dd2bdb5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2020 06:43:24.8916
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bd7c73e8-f0b9-4b96-2791-08d80dd3a7c7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2020 06:49:57.5733
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: rjkDjCmtNwezaHB2a82oPkCzziFh/u+ZSQpgTONxeExDDYdor9UNcZ/UusUZAKfkwLK/NENubmcrssQMGCiV4Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB3840
+X-MS-Exchange-CrossTenant-userprincipalname: WUJfbTjuXYjaH3vK7Y9xaxaOpD7iBEU+rrIH2W2MRnXK/nt7HoaeYo5sy5sPue4W0t3eOsWRuQB+JZnVkg7f0zjqmrXTiqThXqvCUmN80Ss=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSAPR01MB1521
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gPiArc3RhdGljIGlubGluZSBib29sIHVmc2hwYl9pc19zdXBwb3J0X2NodW5rKGludCB0
-cmFuc2Zlcl9sZW4pDQo+ID4gK3sNCj4gPiArICAgICByZXR1cm4gdHJhbnNmZXJfbGVuIDw9IEhQ
-Ql9NVUxUSV9DSFVOS19ISUdIOw0KPiA+ICt9DQo+IA0KPiBUaGUgbmFtZXMgdXNlZCBpbiB0aGUg
-YWJvdmUgZnVuY3Rpb24gYXJlIG15c3RlcmlvdXMuIFdoYXQgaXMgYSBzdXBwb3J0DQo+IGNodW5r
-PyBXaGF0IGRvZXMgIm11bHRpIGNodW5rIGhpZ2giIG1lYW4/IFBsZWFzZSBhZGQgYSBjb21tZW50
-Lg0KSFBCMS4wIGxpbWl0cyB0cmFuc2Zlcl9sZW4gdG8gYmUgYXQgbW9zdCAxLg0KSFBCMi4wLCB3
-aGljaCBpcyBpbiBpdHMgZmluYWwgZHJhZnQsIGFsbG93cyB0cmFuc2Zlcl9sZW4gdG8gYmUgYXQg
-bW9zdCAxMjgsDQpCdXQgaW50cm9kdWNlIHNvbWUgbmV3IGJlaGF2aW9yIGRlcGVuZHMgb24gdHJh
-bnNmZXJfbGVuLg0KVGhpcyBpcyBqdXN0IHByZXBhcmluZyBmb3IgdGhhdC4NCg0KVGhhbmtzLA0K
-QXZyaQ0K
+Hello Greg,
+
+> From: stable-owner@vger.kernel.org <stable-owner@vger.kernel.org> On
+> Behalf Of Greg Kroah-Hartman
+> Sent: 09 June 2020 20:19
+>=20
+> This is the start of the stable review cycle for the 4.19.128 release.
+> There are 25 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+
+No build/boot issues seen for CIP configs Linux 4.19.128-rc2 (f6c346f2d42d)=
+.
+
+Build/test pipeline/logs: https://gitlab.com/cip-project/cip-testing/linux-=
+stable-rc-ci/-/pipelines/154549879
+GitLab CI pipeline: https://gitlab.com/cip-project/cip-testing/linux-cip-pi=
+pelines/-/blob/master/trees/linux-4.19.y.yml
+Relevant LAVA jobs: https://lava.ciplatform.org/scheduler/alljobs?length=3D=
+25&search=3Df6c346#table
+
+Kind regards, Chris
+
+>=20
+> Responses should be made by Thu, 11 Jun 2020 18:59:34 +0000.
+> Anything received after that time might be too late.
+>=20
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-
+> review/patch-4.19.128-rc2.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-
+> rc.git linux-4.19.y
+> and the diffstat can be found below.
+>=20
+> thanks,
+>=20
+> greg k-h
+>=20
+> -------------
+> Pseudo-Shortlog of commits:
+>=20
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>     Linux 4.19.128-rc2
+>=20
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>     Revert "net/mlx5: Annotate mutex destroy for root ns"
+>=20
+> Oleg Nesterov <oleg@redhat.com>
+>     uprobes: ensure that uprobe->offset and ->ref_ctr_offset are properly
+> aligned
+>=20
+> Josh Poimboeuf <jpoimboe@redhat.com>
+>     x86/speculation: Add Ivy Bridge to affected list
+>=20
+> Mark Gross <mgross@linux.intel.com>
+>     x86/speculation: Add SRBDS vulnerability and mitigation documentation
+>=20
+> Mark Gross <mgross@linux.intel.com>
+>     x86/speculation: Add Special Register Buffer Data Sampling (SRBDS)
+> mitigation
+>=20
+> Mark Gross <mgross@linux.intel.com>
+>     x86/cpu: Add 'table' argument to cpu_matches()
+>=20
+> Mark Gross <mgross@linux.intel.com>
+>     x86/cpu: Add a steppings field to struct x86_cpu_id
+>=20
+> Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>     nvmem: qfprom: remove incorrect write support
+>=20
+> Oliver Neukum <oneukum@suse.com>
+>     CDC-ACM: heed quirk also in error handling
+>=20
+> Pascal Terjan <pterjan@google.com>
+>     staging: rtl8712: Fix IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK
+>=20
+> Jiri Slaby <jslaby@suse.cz>
+>     tty: hvc_console, fix crashes on parallel open/close
+>=20
+> Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>     vt: keyboard: avoid signed integer overflow in k_ascii
+>=20
+> Dinghao Liu <dinghao.liu@zju.edu.cn>
+>     usb: musb: Fix runtime PM imbalance on error
+>=20
+> Bin Liu <b-liu@ti.com>
+>     usb: musb: start session in resume for host port
+>=20
+> Mathieu Othacehe <m.othacehe@gmail.com>
+>     iio: vcnl4000: Fix i2c swapped word reading.
+>=20
+> Daniele Palmas <dnlplm@gmail.com>
+>     USB: serial: option: add Telit LE910C1-EUX compositions
+>=20
+> Bin Liu <b-liu@ti.com>
+>     USB: serial: usb_wwan: do not resubmit rx urb on fatal errors
+>=20
+> Matt Jolly <Kangie@footclan.ninja>
+>     USB: serial: qcserial: add DW5816e QDL support
+>=20
+> Willem de Bruijn <willemb@google.com>
+>     net: check untrusted gso_size at kernel entry
+>=20
+> Stefano Garzarella <sgarzare@redhat.com>
+>     vsock: fix timeout in vsock_accept()
+>=20
+> Chuhong Yuan <hslester96@gmail.com>
+>     NFC: st21nfca: add missed kfree_skb() in an error path
+>=20
+> Daniele Palmas <dnlplm@gmail.com>
+>     net: usb: qmi_wwan: add Telit LE910C1-EUX composition
+>=20
+> Eric Dumazet <edumazet@google.com>
+>     l2tp: do not use inet_hash()/inet_unhash()
+>=20
+> Eric Dumazet <edumazet@google.com>
+>     l2tp: add sk_family checks to l2tp_validate_socket
+>=20
+> Yang Yingliang <yangyingliang@huawei.com>
+>     devinet: fix memleak in inetdev_init()
+>=20
+>=20
+> -------------
+>=20
+> Diffstat:
+>=20
+>  Documentation/ABI/testing/sysfs-devices-system-cpu |   1 +
+>  Documentation/admin-guide/hw-vuln/index.rst        |   1 +
+>  .../special-register-buffer-data-sampling.rst      | 149
+> +++++++++++++++++++++
+>  Documentation/admin-guide/kernel-parameters.txt    |  20 +++
+>  Makefile                                           |   4 +-
+>  arch/x86/include/asm/cpu_device_id.h               |  27 ++++
+>  arch/x86/include/asm/cpufeatures.h                 |   2 +
+>  arch/x86/include/asm/msr-index.h                   |   4 +
+>  arch/x86/kernel/cpu/bugs.c                         | 106 +++++++++++++++
+>  arch/x86/kernel/cpu/common.c                       |  54 ++++++--
+>  arch/x86/kernel/cpu/cpu.h                          |   1 +
+>  arch/x86/kernel/cpu/match.c                        |   7 +-
+>  drivers/base/cpu.c                                 |   8 ++
+>  drivers/iio/light/vcnl4000.c                       |   6 +-
+>  drivers/net/ethernet/mellanox/mlx5/core/fs_core.c  |   6 -
+>  drivers/net/usb/qmi_wwan.c                         |   1 +
+>  drivers/nfc/st21nfca/dep.c                         |   4 +-
+>  drivers/nvmem/qfprom.c                             |  14 --
+>  drivers/staging/rtl8712/wifi.h                     |   9 +-
+>  drivers/tty/hvc/hvc_console.c                      |  23 ++--
+>  drivers/tty/vt/keyboard.c                          |  26 ++--
+>  drivers/usb/class/cdc-acm.c                        |   2 +-
+>  drivers/usb/musb/musb_core.c                       |   7 +
+>  drivers/usb/musb/musb_debugfs.c                    |  10 +-
+>  drivers/usb/serial/option.c                        |   4 +
+>  drivers/usb/serial/qcserial.c                      |   1 +
+>  drivers/usb/serial/usb_wwan.c                      |   4 +
+>  include/linux/mod_devicetable.h                    |   6 +
+>  include/linux/virtio_net.h                         |  14 +-
+>  kernel/events/uprobes.c                            |  14 +-
+>  net/ipv4/devinet.c                                 |   1 +
+>  net/l2tp/l2tp_core.c                               |   3 +
+>  net/l2tp/l2tp_ip.c                                 |  29 +++-
+>  net/l2tp/l2tp_ip6.c                                |  30 +++--
+>  net/vmw_vsock/af_vsock.c                           |   2 +-
+>  35 files changed, 501 insertions(+), 99 deletions(-)
+>=20
+
