@@ -5,66 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FDB0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CDDC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:33:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B3E620812
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:33:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 056A220825
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:33:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="GLnC/t38";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="j5voINpT"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="glUzwtsq";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="sMOaQkUS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbgFKHco (ORCPT
+        id S1726917AbgFKHdo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 03:32:44 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:53455 "EHLO
+        Thu, 11 Jun 2020 03:33:44 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:39791 "EHLO
         new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726851AbgFKHcg (ORCPT
+        by vger.kernel.org with ESMTP id S1726926AbgFKHco (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 03:32:36 -0400
+        Thu, 11 Jun 2020 03:32:44 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 6C29D5800D2;
-        Thu, 11 Jun 2020 03:32:35 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Thu, 11 Jun 2020 03:32:35 -0400
+        by mailnew.nyi.internal (Postfix) with ESMTP id 560C55800D2;
+        Thu, 11 Jun 2020 03:32:43 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Thu, 11 Jun 2020 03:32:43 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=ljMPbD97vSXaP
-        jP9T17Nb6L7wYve8wWAPEW/IGQNxV8=; b=GLnC/t38TxJUS49V08BZm617FXLvd
-        dkQridmN9BOhZYuhVS5SmevwqLunBVjwFLExD6b/8jV+hp+cJR/9Zb44BQp2HIM3
-        576lyjVHePxYIqBcuo7yH8RlLV99Ew5i74sKSPTJQ2PcgrCjpyNEkDnk1WkyaRS/
-        vrC0YHh4/KtzXCll0idyx1PZAo3dyflICAvH4iZdI1X2DHLGKmZE1vWkkGqoN/Ny
-        hNQykh+g9lWtu5xPANvdwYzyLMQ9u1h0VCYdwNQrcVLBujsFbAK2T3pEsF59rTVF
-        F4COzxYAp5Nbo9E2vWHoHwcqofkRJdmCkbpIjBhxYxPowIIj05SwTzs+A==
+        :mime-version:content-transfer-encoding; s=fm3; bh=ioUni5+xf+ohB
+        ENTsnzRg/nT2V64ToN0UrnOmP6/qK8=; b=glUzwtsq1FbJWHLRpLdGt3c5HC01x
+        ATEWoaLLhpng1u1WZaKZjasyNsjC8DThLuuxeO1qBZPueqD0ge+XwqaGx/smdEvh
+        sldFx+E3Vxi4cJkv5W4KYaAVA0sSqwkfiP9ESZpYiHYaRlET6S2n8StdX3O7AnaW
+        xQfiGMOk6FRzT3iI0g88IpAXf1YY/63NAs1VbE/ucHJiYD5pHHBC+kBQtJqHe4K7
+        NLf8FBcMgN9jrenVvUYPXW992xNTO/+OxtRkQvvpnzZ9pfvVjHzqYkZfcbGUCBC7
+        ofIlPyLSVO2PY0hBTh4oMxucJy+HQzXX9NJi77bQuAyqZ/0rSIwzG8k3g==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=ljMPbD97vSXaPjP9T17Nb6L7wYve8wWAPEW/IGQNxV8=; b=j5voINpT
-        +OoPck3kKjFCXBE4+Le2Em0o0WRV/Nju9lFHssi8GF262qBzn0kj5hw+hR4FUptq
-        92jXCAzlzl/oQCWqKzIL1Ar3PrwgrLyAALw1FLUNeKbXhtSSfj6zcZDHesmfznwk
-        3Uu9D66MIntmlkZG5ItLtASVZ6R/p3yRzMNXnE7FtMSSwzMmqG99793z7qgn0xp6
-        OPjTQkwXwQwOkcv5dSCdi05w+s1qb0UUvUfGwruR4NUcBBc7gvtoS5AcAU0CjKoA
-        7bmK45C5ZQZX5PONH5t5hOvi/6u7edNhaHBHHaNToe0bHhKEV9gnUGs0x5YEl2Dg
-        qMvVOwGklrZStA==
-X-ME-Sender: <xms:E97hXhWvkNgpIyCrux6e8kCo3dSenaaDsy6nvjR_7n1EW80uo1-T9A>
+        fm3; bh=ioUni5+xf+ohBENTsnzRg/nT2V64ToN0UrnOmP6/qK8=; b=sMOaQkUS
+        ZLeQmErvPmETPTVJZvnJsXhV4zcDmTE7B/4GnlZiI4ur4QgrI7HiJUqiNwehKRV1
+        udc6oJFO1ZOYkcgoXdIY/C+yzDn9KpDSYv6O+436Wf+VDETx9tYcslP8CpF/rzCk
+        abVaM6PZi4VCUOPWz7RSk0eGniT2AoMzowotrLVA+57C/FfVvfPcUnSOPW0qEFtr
+        Ms0eqre0i4p70kUSI6FO5ACZ/sHBnOZWduUZyH4sTy8T+RjnuRWbL840+EDEgJjH
+        JHizgkk3cey3ypTmRhxyKdSz6b7yEn2EdX8xhFlmvRdbjQahCGpSXiHAh0yVXgRx
+        Q4jr2b4T7ZakjQ==
+X-ME-Sender: <xms:G97hXueTKmRRpzgR_V6luPI04rZlQrT0QzlRXHjQs7uxyiVdjIlhDg>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudehjedguddvvdcutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
     necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
     enucfjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihi
     mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
     htthgvrhhnpedvkeelveefffekjefhffeuleetleefudeifeehuddugffghffhffehveev
-    heehvdenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpeehne
-    curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:E97hXhmGORj9s2tRu2cUQ573udUDrfRB8VvLyJJm_tKroH4DH9tPbQ>
-    <xmx:E97hXtbmZENYu4HnwFr2T4eku-3dwwx5mxKKTLhJWvtTAXG_yvqyRA>
-    <xmx:E97hXkX5hf8KWRYIo19O6BmXsNArqku69bhrmbScb4QBNEzJR7IJHQ>
-    <xmx:E97hXt4wE_cjQtdxVLqdn9PnT4YqtKPAlyP_C0FbhIk611VsBR2Pow>
+    heehvdenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpeduvd
+    enucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:G97hXoOf7NkwBZAeeuzSSzV3bJMg16J-g11eu6p2KevpIdJExL6aJw>
+    <xmx:G97hXvj0M_9B1oqo1FzYhr2PRDxnJqTdxdB4JxolpDn4Jy33GalJwg>
+    <xmx:G97hXr-JuYBwP9q_GilcaKivM2RR1onTp0waeWhzw-gqPBnDzoBrfA>
+    <xmx:G97hXoALKmzZWMkJs7lcogV2DRRnzRKeT5UODtr0ycP8y6_G35wA6A>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 08EA530618B7;
-        Thu, 11 Jun 2020 03:32:34 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id E5EEB3280066;
+        Thu, 11 Jun 2020 03:32:42 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 Cc:     linux-rpi-kernel@lists.infradead.org,
@@ -76,9 +76,9 @@ Cc:     linux-rpi-kernel@lists.infradead.org,
         Mike Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
         Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v4 09/27] clk: bcm: rpi: Remove pllb_arm_lookup global pointer
-Date:   Thu, 11 Jun 2020 09:31:58 +0200
-Message-Id: <44bab8c36454ab5c242955a0c2ec833e9de498a9.1591860665.git-series.maxime@cerno.tech>
+Subject: [PATCH v4 14/27] clk: bcm: rpi: Add clock id to data
+Date:   Thu, 11 Jun 2020 09:32:03 +0200
+Message-Id: <8aef7c6e7a945ceb401b0327ada0813f97bb8432.1591860665.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.58c6e44891ff5bf61052b5804f7da9b5ba074840.1591860665.git-series.maxime@cerno.tech>
 References: <cover.58c6e44891ff5bf61052b5804f7da9b5ba074840.1591860665.git-series.maxime@cerno.tech>
@@ -89,11 +89,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pllb_arm_lookup pointer in the struct raspberrypi_clk is not used for
-anything but to store the returned pointer to clkdev_hw_create, and is not
-used anywhere else in the driver.
-
-Let's remove that global pointer from the structure.
+The driver has really only supported one clock so far and has hardcoded the
+ID used in communications with the firmware in all the functions
+implementing the clock framework hooks. Let's store that in the clock data
+structure so that we can support more clocks later on.
 
 Cc: Michael Turquette <mturquette@baylibre.com>
 Cc: linux-clk@vger.kernel.org
@@ -101,41 +100,79 @@ Acked-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 Reviewed-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/clk/bcm/clk-raspberrypi.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/clk/bcm/clk-raspberrypi.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/clk/bcm/clk-raspberrypi.c b/drivers/clk/bcm/clk-raspberrypi.c
-index d62605861028..5a06c4991c7f 100644
+index 00735704eabc..97ac04604b0a 100644
 --- a/drivers/clk/bcm/clk-raspberrypi.c
 +++ b/drivers/clk/bcm/clk-raspberrypi.c
-@@ -40,7 +40,6 @@ struct raspberrypi_clk {
- 	unsigned long max_rate;
+@@ -39,6 +39,9 @@ struct raspberrypi_clk {
  
- 	struct clk_hw pllb;
--	struct clk_lookup *pllb_arm_lookup;
+ struct raspberrypi_clk_data {
+ 	struct clk_hw hw;
++
++	unsigned int id;
++
+ 	struct raspberrypi_clk *rpi;
  };
  
- /*
-@@ -238,6 +237,7 @@ static struct clk_fixed_factor raspberrypi_clk_pllb_arm = {
+@@ -91,7 +94,7 @@ static int raspberrypi_fw_pll_is_on(struct clk_hw *hw)
  
- static int raspberrypi_register_pllb_arm(struct raspberrypi_clk *rpi)
- {
-+	struct clk_lookup *pllb_arm_lookup;
- 	int ret;
+ 	ret = raspberrypi_clock_property(rpi->firmware,
+ 					 RPI_FIRMWARE_GET_CLOCK_STATE,
+-					 RPI_FIRMWARE_ARM_CLK_ID, &val);
++					 data->id, &val);
+ 	if (ret)
+ 		return 0;
  
- 	ret = devm_clk_hw_register(rpi->dev, &raspberrypi_clk_pllb_arm.hw);
-@@ -246,9 +246,9 @@ static int raspberrypi_register_pllb_arm(struct raspberrypi_clk *rpi)
+@@ -110,8 +113,7 @@ static unsigned long raspberrypi_fw_pll_get_rate(struct clk_hw *hw,
+ 
+ 	ret = raspberrypi_clock_property(rpi->firmware,
+ 					 RPI_FIRMWARE_GET_CLOCK_RATE,
+-					 RPI_FIRMWARE_ARM_CLK_ID,
+-					 &val);
++					 data->id, &val);
+ 	if (ret)
  		return ret;
- 	}
  
--	rpi->pllb_arm_lookup = clkdev_hw_create(&raspberrypi_clk_pllb_arm.hw,
--						NULL, "cpu0");
--	if (!rpi->pllb_arm_lookup) {
-+	pllb_arm_lookup = clkdev_hw_create(&raspberrypi_clk_pllb_arm.hw,
-+					   NULL, "cpu0");
-+	if (!pllb_arm_lookup) {
- 		dev_err(rpi->dev, "Failed to initialize pllb_arm_lookup\n");
+@@ -129,8 +131,7 @@ static int raspberrypi_fw_pll_set_rate(struct clk_hw *hw, unsigned long rate,
+ 
+ 	ret = raspberrypi_clock_property(rpi->firmware,
+ 					 RPI_FIRMWARE_SET_CLOCK_RATE,
+-					 RPI_FIRMWARE_ARM_CLK_ID,
+-					 &new_rate);
++					 data->id, &new_rate);
+ 	if (ret)
+ 		dev_err_ratelimited(rpi->dev, "Failed to change %s frequency: %d",
+ 				    clk_hw_get_name(hw), ret);
+@@ -183,6 +184,7 @@ static int raspberrypi_register_pllb(struct raspberrypi_clk *rpi)
+ 	if (!data)
  		return -ENOMEM;
- 	}
+ 	data->rpi = rpi;
++	data->id = RPI_FIRMWARE_ARM_CLK_ID;
+ 
+ 	/* All of the PLLs derive from the external oscillator. */
+ 	init.parent_names = (const char *[]){ "osc" };
+@@ -194,8 +196,7 @@ static int raspberrypi_register_pllb(struct raspberrypi_clk *rpi)
+ 	/* Get min & max rates set by the firmware */
+ 	ret = raspberrypi_clock_property(rpi->firmware,
+ 					 RPI_FIRMWARE_GET_MIN_CLOCK_RATE,
+-					 RPI_FIRMWARE_ARM_CLK_ID,
+-					 &min_rate);
++					 data->id, &min_rate);
+ 	if (ret) {
+ 		dev_err(rpi->dev, "Failed to get %s min freq: %d\n",
+ 			init.name, ret);
+@@ -204,8 +205,7 @@ static int raspberrypi_register_pllb(struct raspberrypi_clk *rpi)
+ 
+ 	ret = raspberrypi_clock_property(rpi->firmware,
+ 					 RPI_FIRMWARE_GET_MAX_CLOCK_RATE,
+-					 RPI_FIRMWARE_ARM_CLK_ID,
+-					 &max_rate);
++					 data->id, &max_rate);
+ 	if (ret) {
+ 		dev_err(rpi->dev, "Failed to get %s max freq: %d\n",
+ 			init.name, ret);
 -- 
 git-series 0.9.1
