@@ -2,222 +2,122 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E04ABC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:30:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9640AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA70F206DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:30:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KDDUSGA/"
+	by mail.kernel.org (Postfix) with ESMTP id 63874206DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:34:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591896859;
+	bh=lRxzRoRx1R56qcKxTnghzBRhR4dShjejgWX5UzFaEn4=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=bF9orD7rh+kzPBM9iDWWFGyhfbdx8NEZUrKvE3hjNm4HVvIP7ksUdtXjQRvy8GOHJ
+	 Jrltp57o1tLS1f9JFtGsIWkIW56OD3mlYRoTZ1lhaDKVZCtrjynUouhVBhFRLbNRMM
+	 G3xE+XvUAkUmMn4/d2P64pj7u9u3LJe/FBKx55Fs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgFKRaF (ORCPT
+        id S1726786AbgFKReR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 13:30:05 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39647 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726456AbgFKRaE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 13:30:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591896603;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=eux7UxTDktZA2jsByrv8X5hu6Q0kOBUT/emFsf3ejGc=;
-        b=KDDUSGA/qB2hEywDjgw7b9Lz8oUjoYcuMh5taiGoZIG9BEwFo3mqgIdRDg0O5qCBgchMOz
-        gAAljUjHQeXjC+AtTNpbGlZXoCOUrcowAs4MzugJaevMhNctyzRuA5o8gFHMlm7+M8HXNp
-        bMBDr7euimUS14oBvbsy9fu7ZKDX/3Y=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-467-ug5-0cBVOBiTYHBRlkPd9w-1; Thu, 11 Jun 2020 13:29:59 -0400
-X-MC-Unique: ug5-0cBVOBiTYHBRlkPd9w-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 11 Jun 2020 13:34:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56924 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726134AbgFKReR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 13:34:17 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5C7A2EC1AB;
-        Thu, 11 Jun 2020 17:29:56 +0000 (UTC)
-Received: from prarit.bos.redhat.com (prarit-guest.7a2m.lab.eng.bos.redhat.com [10.16.222.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F0F327E587;
-        Thu, 11 Jun 2020 17:29:54 +0000 (UTC)
-Subject: Re: [PATCH v2] x86/split_lock: Sanitize userspace and guest error
- output
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-References: <20200608122114.13043-1-prarit@redhat.com>
- <20200608171552.GB8223@linux.intel.com>
-From:   Prarit Bhargava <prarit@redhat.com>
-Message-ID: <45a6f7d2-3505-92d3-29a5-c7db86f1ea51@redhat.com>
-Date:   Thu, 11 Jun 2020 13:29:54 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        by mail.kernel.org (Postfix) with ESMTPSA id CD0AB206DC;
+        Thu, 11 Jun 2020 17:34:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591896856;
+        bh=lRxzRoRx1R56qcKxTnghzBRhR4dShjejgWX5UzFaEn4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=0C3UzX+gJ9FwLRBsHwAl75kNB74VEqgUz3rv37qAoV4Y5XVSxIilem/0fIxR2pb1m
+         0lfAh3WQRuEXyYnqrFEv9aUaDbnS1euTWJiUMWJs8Z4OSoBi183iTfopa83zwcHp0F
+         4wvUV9fR5OS+7TgEhi1k8NFxqwih52D2qFkWLbE0=
+Date:   Thu, 11 Jun 2020 18:34:12 +0100
+From:   Will Deacon <will@kernel.org>
+To:     torvalds@linux-foundation.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        catalin.marinas@arm.com, kernel-team@android.com
+Subject: [GIT PULL] arm64 merge window fixes for -rc1
+Message-ID: <20200611173412.GA9575@willie-the-truck>
 MIME-Version: 1.0
-In-Reply-To: <20200608171552.GB8223@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
 
+Please pull these arm64 fixes that came in during the merge window. They'll
+probably be more to come, but it doesn't seem like it's worth me sitting
+on these in the meantime.
 
-On 6/8/20 1:15 PM, Sean Christopherson wrote:
-> On Mon, Jun 08, 2020 at 08:21:14AM -0400, Prarit Bhargava wrote:
->> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
->> index 166d7c355896..e02ec81fe1eb 100644
->> --- a/arch/x86/kernel/cpu/intel.c
->> +++ b/arch/x86/kernel/cpu/intel.c
->> @@ -1074,10 +1074,17 @@ static void split_lock_init(void)
->>  	split_lock_verify_msr(sld_state != sld_off);
->>  }
->>  
->> -static void split_lock_warn(unsigned long ip)
->> +static bool split_lock_warn(unsigned long ip, int fatal_no_warn)
->>  {
->> -	pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
->> -			    current->comm, current->pid, ip);
->> +	if (fatal_no_warn)
->> +		return false;
-> 
-> This misses the point Xiaoyao was making.  If EFLAGS.AC=1 then the #AC is a
-> legacy alignment check fault and should not be treated as a split-lock #AC.
-> The basic premise of the patch makes sense, but the end result is confusing
-> because incorporating "fatal" and the EFLAGS.AC state into split_lock_warn()
-> bastardizes both the "split_lock" and "warn" aspects of the function.
-> 
-> E.g. something like this yields the same net effect, it's just organized
-> differently.  If so desired, the "bogus" message could be dropped via
-> Xiaoyao's prep patch[*] so that this change would only affect the sld_fatal
-> messages.
-> 
-> [*] https://lkml.kernel.org/r/20200509110542.8159-3-xiaoyao.li@intel.com
-> 
+Summary in the tag.
 
+Cheers,
 
-Sean, I'll just go with your patch below.  It's good enough.  I'll add a
-Signed-off-by from you as well.
+Will
 
-P.
+--->8
 
-> 
-> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-> index 23fd5f319908..1aad0b8e394c 100644
-> --- a/arch/x86/kernel/cpu/intel.c
-> +++ b/arch/x86/kernel/cpu/intel.c
-> @@ -1071,11 +1071,14 @@ static void split_lock_init(void)
->         split_lock_verify_msr(sld_state != sld_off);
->  }
-> 
-> -static void split_lock_warn(unsigned long ip)
-> +static bool handle_split_lock(unsigned long ip)
->  {
->         pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
->                             current->comm, current->pid, ip);
-> 
-> +       if (sld_state != sld_warn)
-> +               return false;
-> +
->         /*
->          * Disable the split lock detection for this task so it can make
->          * progress and set TIF_SLD so the detection is re-enabled via
-> @@ -1083,18 +1086,13 @@ static void split_lock_warn(unsigned long ip)
->          */
->         sld_update_msr(false);
->         set_tsk_thread_flag(current, TIF_SLD);
-> +       return true;
->  }
-> 
->  bool handle_guest_split_lock(unsigned long ip)
->  {
-> -       if (sld_state == sld_warn) {
-> -               split_lock_warn(ip);
-> +       if (handle_split_lock(ip))
->                 return true;
-> -       }
-> -
-> -       pr_warn_once("#AC: %s/%d %s split_lock trap at address: 0x%lx\n",
-> -                    current->comm, current->pid,
-> -                    sld_state == sld_fatal ? "fatal" : "bogus", ip);
-> 
->         current->thread.error_code = 0;
->         current->thread.trap_nr = X86_TRAP_AC;
-> @@ -1105,10 +1103,10 @@ EXPORT_SYMBOL_GPL(handle_guest_split_lock);
-> 
->  bool handle_user_split_lock(struct pt_regs *regs, long error_code)
->  {
-> -       if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
-> +       if (regs->flags & X86_EFLAGS_AC)
->                 return false;
-> -       split_lock_warn(regs->ip);
-> -       return true;
-> +
-> +       return handle_split_lock(regs->ip);
->  }
-> 
->  /*
-> 
-> 
->> +
->> +	pr_warn_ratelimited("#AC: %s/%d %ssplit_lock trap at address: 0x%lx\n",
->> +			    current->comm, current->pid,
->> +			    sld_state == sld_fatal ? "fatal " : "", ip);
->> +
->> +	if (sld_state == sld_fatal)
->> +		return false;
->>  
->>  	/*
->>  	 * Disable the split lock detection for this task so it can make
->> @@ -1086,18 +1093,13 @@ static void split_lock_warn(unsigned long ip)
->>  	 */
->>  	sld_update_msr(false);
->>  	set_tsk_thread_flag(current, TIF_SLD);
->> +	return true;
->>  }
->>  
->>  bool handle_guest_split_lock(unsigned long ip)
->>  {
->> -	if (sld_state == sld_warn) {
->> -		split_lock_warn(ip);
->> +	if (split_lock_warn(ip, 0))
->>  		return true;
->> -	}
->> -
->> -	pr_warn_once("#AC: %s/%d %s split_lock trap at address: 0x%lx\n",
->> -		     current->comm, current->pid,
->> -		     sld_state == sld_fatal ? "fatal" : "bogus", ip);
->>  
->>  	current->thread.error_code = 0;
->>  	current->thread.trap_nr = X86_TRAP_AC;
->> @@ -1108,10 +1110,7 @@ EXPORT_SYMBOL_GPL(handle_guest_split_lock);
->>  
->>  bool handle_user_split_lock(struct pt_regs *regs, long error_code)
->>  {
->> -	if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
->> -		return false;
->> -	split_lock_warn(regs->ip);
->> -	return true;
->> +	return split_lock_warn(regs->ip, regs->flags & X86_EFLAGS_AC);
->>  }
->>  
->>  /*
->> -- 
->> 2.21.3
->>
-> 
+The following changes since commit 082af5ec5080b028f7d0846a6c27cbb87f288205:
 
+  Merge branch 'for-next/scs' into for-next/core (2020-05-28 18:03:40 +0100)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-upstream
+
+for you to fetch changes up to dd4bc60765873445893037ae73a5f75398a8cd19:
+
+  arm64: warn on incorrect placement of the kernel by the bootloader (2020-06-11 14:13:13 +0100)
+
+----------------------------------------------------------------
+arm64 merge window fixes for -rc1
+
+- Fix SCS debug check to report max stack usage in bytes as advertised
+- Fix typo: CONFIG_FTRACE_WITH_REGS => CONFIG_DYNAMIC_FTRACE_WITH_REGS
+- Fix incorrect mask in HiSilicon L3C perf PMU driver
+- Fix compat vDSO compilation under some toolchain configurations
+- Fix false UBSAN warning from ACPI IORT parsing code
+- Fix booting under bootloaders that ignore TEXT_OFFSET
+- Annotate debug initcall function with '__init'
+
+----------------------------------------------------------------
+Ard Biesheuvel (1):
+      arm64: warn on incorrect placement of the kernel by the bootloader
+
+Christophe JAILLET (1):
+      arm64: debug: mark a function as __init to save some memory
+
+Joe Perches (1):
+      arm64: ftrace: Change CONFIG_FTRACE_WITH_REGS to CONFIG_DYNAMIC_FTRACE_WITH_REGS
+
+Nick Desaulniers (2):
+      arm64: vdso32: add CONFIG_THUMB2_COMPAT_VDSO
+      arm64: acpi: fix UBSAN warning
+
+Shaokun Zhang (1):
+      drivers/perf: hisi: Fix wrong value for all counters enable
+
+Will Deacon (1):
+      scs: Report SCS usage in bytes rather than number of entries
+
+ arch/arm64/Kconfig                           | 11 ++++++++++-
+ arch/arm64/include/asm/acpi.h                |  5 +++--
+ arch/arm64/kernel/debug-monitors.c           |  2 +-
+ arch/arm64/kernel/ftrace.c                   |  3 ++-
+ arch/arm64/kernel/setup.c                    |  4 ++++
+ arch/arm64/kernel/vdso32/Makefile            |  8 ++++++++
+ drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c |  2 +-
+ kernel/scs.c                                 |  2 +-
+ 8 files changed, 30 insertions(+), 7 deletions(-)
