@@ -2,152 +2,182 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23521C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45EEFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0A162068E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:50:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28323206DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:51:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oxsWQEUn"
+	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="M5HSITPB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726519AbgFKSuE (ORCPT
+        id S1727037AbgFKSu7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 14:50:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43770 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbgFKSuD (ORCPT
+        Thu, 11 Jun 2020 14:50:59 -0400
+Received: from zimbra2.kalray.eu ([92.103.151.219]:51870 "EHLO
+        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726531AbgFKSu5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 14:50:03 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66A89C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 11:50:03 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id x11so2653442plv.9
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 11:50:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0HOxmX84CtOBZELFo2yLdhQ76D4cXxjqf83woFragKk=;
-        b=oxsWQEUnqGUCXsQYu4Q4x7fbNFwOw7SuMdOl2l++cT3hILmvMY43Cvlvc01lQcNDq6
-         EgiVfO3Em6SfYWGww+r6raQdqBbm9Aqqap+8XWBkuPoYyG7bP85i6gV0TCm3FndV+bnU
-         fz9L/NdwwXaCqNvr1QJGjDquY1L6DPen4q3Gy8ppp5emfJsw3oxr/kGuw92STRey/iLN
-         1o6WGWm4rspjzYqfxh0VyYljMtSYn0iIresX7/RdLCt5KB/JRotFSmB9xzK3gC4GvbMf
-         7T+Ao/6ynTLcC1eq+v+TK+5wuCcAtn+gBl6P8br8V+fXY8dIL9NMY1P3avrVq9o5JVCA
-         KgvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0HOxmX84CtOBZELFo2yLdhQ76D4cXxjqf83woFragKk=;
-        b=EC016hVi1w7W3Mxj0zgjsStTqfEuZc5Z0aqYH/seAv3/nTofyx1G8NsfGSRHwT/r3t
-         /pdg0K99e+soLQWrlcOhMo3yiFcp9noWQg3jLxU1wtFyd8G6tf40kOvrzQrJwqu3iLDY
-         E7yeIF9DGqHQCTxgFIPj7HRiESjHlQAv6mIQIln1Vc3BhpnWUjWaVLjwQZIhJkHQJ8B4
-         aQoTEqs8ticOOgu8ty+sLgVteBimrgsL2LlNV5MrgLO97v1SlAN5Sj2/qeDEWfxcJOEK
-         r38Fc4JyDpDm7785bZZs/I11EqMXiCFeFDmWoeDayeqtkfS2IedPXeAa7C7oWUaYqgyv
-         wPDg==
-X-Gm-Message-State: AOAM5335/jMQ7qzaPIWaOYKza+Fv/t/91R9jogfuzV+XPJ/cbQ/HZvkK
-        7i9Bm91jhX/26mosFBKzzAi8OzKr8rbLeXyHdnSHTw==
-X-Google-Smtp-Source: ABdhPJyJtc1w81gMIYy1ZYthLEsyyhDaPcYkmrzbwsIH3A4ulWVJtPADJXXEIc8Z3352j9KkW6UDv9s9TSKEAizZ1/s=
-X-Received: by 2002:a17:90a:1e:: with SMTP id 30mr8711851pja.25.1591901402456;
- Thu, 11 Jun 2020 11:50:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200611183235.37508-1-nhuck@google.com>
-In-Reply-To: <20200611183235.37508-1-nhuck@google.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 11 Jun 2020 11:49:51 -0700
-Message-ID: <CAKwvOdnnP3cHZMjgV355r=OO7MDLmSoOoU_ch8+ByRaJEkF=rg@mail.gmail.com>
-Subject: Re: [PATCH] riscv/atomic: Fix sign extension for RV64I
-To:     Nathan Huckleberry <nhuck@google.com>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-riscv@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 11 Jun 2020 14:50:57 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id DF09327E0839;
+        Thu, 11 Jun 2020 20:50:55 +0200 (CEST)
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id n-Caf7a-VzZg; Thu, 11 Jun 2020 20:50:55 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 730AC27E082F;
+        Thu, 11 Jun 2020 20:50:55 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu 730AC27E082F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
+        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1591901455;
+        bh=eIVTjMZkPCllcNhF64IckkXf+qBbunAsTJvT/KJioIg=;
+        h=From:To:Date:Message-Id;
+        b=M5HSITPBqIhn/T5rqBWlfHaglhbVKAmeQdsWLNLqukR5DftE5t43HFhLG0A1gJZRN
+         AKFBk3OvkDk0fYrVyCDxp/Nga+1uY49DgXx2vCRXMFJP+EzCz2LWNPpy+i+LXPPjad
+         hIY54L4ezvdN4uTH+b/Knl+9AA/oYgzx44/Se51A=
+X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id dTLu1IoVhv5Z; Thu, 11 Jun 2020 20:50:55 +0200 (CEST)
+Received: from triton.lin.mbt.kalray.eu (unknown [192.168.37.25])
+        by zimbra2.kalray.eu (Postfix) with ESMTPSA id 5CC5527E06CB;
+        Thu, 11 Jun 2020 20:50:55 +0200 (CEST)
+From:   Clement Leger <cleger@kalray.eu>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>
+Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Clement Leger <cleger@kalray.eu>
+Subject: [PATCH] rpmsg: fix driver_override memory leak
+Date:   Thu, 11 Jun 2020 20:50:12 +0200
+Message-Id: <20200611185012.23815-1-cleger@kalray.eu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 11:34 AM 'Nathan Huckleberry' via Clang Built
-Linux <clang-built-linux@googlegroups.com> wrote:
->
-> The argument passed to cmpxchg is not guaranteed to be sign
-> extended, but lr.w sign extends on RV64I.
+rpmsg_core allows to override driver using driver_override sysfs
+attribute. When used, the sysfs store function will duplicate the user
+provided string using kstrndup. However, when the rpdev is released,
+the driver_override attribute is not freed. In order to have a
+consistent allocation and release, use kstrdup in
+rpmsg_chrdev_register_device and move it in rpmsg_core.c to avoid
+header dependencies. Moreover, add a rpmsg_release_device function to
+be called in device release. Drivers using rpmsg have been modified to
+use this function and ensure there will be no more memory leak when
+releasing rpmsg devices.
+This was found with kmemleak while using remoteproc and virtio.
 
-I had a hard time finding documentation on this sign extension. Is
-lr.w just the atomic version of lw?
+Signed-off-by: Clement Leger <cleger@kalray.eu>
+---
+ drivers/rpmsg/qcom_glink_native.c |  1 +
+ drivers/rpmsg/qcom_smd.c          |  1 +
+ drivers/rpmsg/rpmsg_core.c        | 22 ++++++++++++++++++++++
+ drivers/rpmsg/rpmsg_internal.h    | 15 ++-------------
+ drivers/rpmsg/virtio_rpmsg_bus.c  |  1 +
+ 5 files changed, 27 insertions(+), 13 deletions(-)
 
-https://content.riscv.org/wp-content/uploads/2019/06/riscv-spec.pdf
-pdf page 54, printed page 38 says:
-   The LW instruction loads a 32-bit value from memory and sign-extends
-    this to 64 bits before storing it in register rd for RV64I.
-
-> This makes cmpxchg
-> fail on clang built kernels when __old is negative.
->
-> To fix this, we just cast __old to long which sign extends on
-> RV64I. With this fix, clang built RISC-V kernels now boot.
-
-Oh, indeed, nice!  Thanks for digging into this issue, and sending the patch.
-Tested-by: Nick Desaulniers <ndesaulniers@google.com> # QEMU boot, clang build
-
->
-> Link: https://github.com/ClangBuiltLinux/linux/issues/867
-> Cc: clang-built-linux@googlegroups.com
-> Signed-off-by: Nathan Huckleberry <nhuck@google.com>
-> ---
->  arch/riscv/include/asm/cmpxchg.h | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/cmpxchg.h
-> index d969bab4a26b..262e5bbb2776 100644
-> --- a/arch/riscv/include/asm/cmpxchg.h
-> +++ b/arch/riscv/include/asm/cmpxchg.h
-> @@ -179,7 +179,7 @@
->                         "       bnez %1, 0b\n"                          \
->                         "1:\n"                                          \
->                         : "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)    \
-> -                       : "rJ" (__old), "rJ" (__new)                    \
-> +                       : "rJ" ((long)__old), "rJ" (__new)              \
->                         : "memory");                                    \
->                 break;                                                  \
->         case 8:                                                         \
-> @@ -224,7 +224,7 @@
->                         RISCV_ACQUIRE_BARRIER                           \
->                         "1:\n"                                          \
->                         : "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)    \
-> -                       : "rJ" (__old), "rJ" (__new)                    \
-> +                       : "rJ" ((long)__old), "rJ" (__new)              \
->                         : "memory");                                    \
->                 break;                                                  \
->         case 8:                                                         \
-> @@ -270,7 +270,7 @@
->                         "       bnez %1, 0b\n"                          \
->                         "1:\n"                                          \
->                         : "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)    \
-> -                       : "rJ" (__old), "rJ" (__new)                    \
-> +                       : "rJ" ((long)__old), "rJ" (__new)              \
->                         : "memory");                                    \
->                 break;                                                  \
->         case 8:                                                         \
-> @@ -316,7 +316,7 @@
->                         "       fence rw, rw\n"                         \
->                         "1:\n"                                          \
->                         : "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)    \
-> -                       : "rJ" (__old), "rJ" (__new)                    \
-> +                       : "rJ" ((long)__old), "rJ" (__new)              \
->                         : "memory");                                    \
->                 break;                                                  \
->         case 8:                                                         \
-> --
+diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
+index 1995f5b3ea67..076997afc638 100644
+--- a/drivers/rpmsg/qcom_glink_native.c
++++ b/drivers/rpmsg/qcom_glink_native.c
+@@ -1373,6 +1373,7 @@ static void qcom_glink_rpdev_release(struct device *dev)
+ 	struct glink_channel *channel = to_glink_channel(rpdev->ept);
+ 
+ 	channel->rpdev = NULL;
++	rpmsg_release_device(rpdev);
+ 	kfree(rpdev);
+ }
+ 
+diff --git a/drivers/rpmsg/qcom_smd.c b/drivers/rpmsg/qcom_smd.c
+index 4abbeea782fa..f01174d0d4d9 100644
+--- a/drivers/rpmsg/qcom_smd.c
++++ b/drivers/rpmsg/qcom_smd.c
+@@ -1047,6 +1047,7 @@ static void qcom_smd_release_device(struct device *dev)
+ 	struct rpmsg_device *rpdev = to_rpmsg_device(dev);
+ 	struct qcom_smd_device *qsdev = to_smd_device(rpdev);
+ 
++	rpmsg_release_device(rpdev);
+ 	kfree(qsdev);
+ }
+ 
+diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
+index a6361cad608b..31de89c81b27 100644
+--- a/drivers/rpmsg/rpmsg_core.c
++++ b/drivers/rpmsg/rpmsg_core.c
+@@ -554,6 +554,28 @@ int rpmsg_unregister_device(struct device *parent,
+ }
+ EXPORT_SYMBOL(rpmsg_unregister_device);
+ 
++void rpmsg_release_device(struct rpmsg_device *rpdev)
++{
++	kfree(rpdev->driver_override);
++}
++EXPORT_SYMBOL(rpmsg_release_device);
++
++/**
++ * rpmsg_chrdev_register_device() - register chrdev device based on rpdev
++ * @rpdev:	prepared rpdev to be used for creating endpoints
++ *
++ * This function wraps rpmsg_register_device() preparing the rpdev for use as
++ * basis for the rpmsg chrdev.
++ */
++int rpmsg_chrdev_register_device(struct rpmsg_device *rpdev)
++{
++	strcpy(rpdev->id.name, "rpmsg_chrdev");
++	rpdev->driver_override = kstrdup("rpmsg_chrdev", GFP_KERNEL);
++
++	return rpmsg_register_device(rpdev);
++}
++EXPORT_SYMBOL(rpmsg_chrdev_register_device);
++
+ /**
+  * __register_rpmsg_driver() - register an rpmsg driver with the rpmsg bus
+  * @rpdrv: pointer to a struct rpmsg_driver
+diff --git a/drivers/rpmsg/rpmsg_internal.h b/drivers/rpmsg/rpmsg_internal.h
+index 3fc83cd50e98..043b28f912fd 100644
+--- a/drivers/rpmsg/rpmsg_internal.h
++++ b/drivers/rpmsg/rpmsg_internal.h
+@@ -75,19 +75,8 @@ int rpmsg_unregister_device(struct device *parent,
+ struct device *rpmsg_find_device(struct device *parent,
+ 				 struct rpmsg_channel_info *chinfo);
+ 
+-/**
+- * rpmsg_chrdev_register_device() - register chrdev device based on rpdev
+- * @rpdev:	prepared rpdev to be used for creating endpoints
+- *
+- * This function wraps rpmsg_register_device() preparing the rpdev for use as
+- * basis for the rpmsg chrdev.
+- */
+-static inline int rpmsg_chrdev_register_device(struct rpmsg_device *rpdev)
+-{
+-	strcpy(rpdev->id.name, "rpmsg_chrdev");
+-	rpdev->driver_override = "rpmsg_chrdev";
++int rpmsg_chrdev_register_device(struct rpmsg_device *rpdev);
+ 
+-	return rpmsg_register_device(rpdev);
+-}
++void rpmsg_release_device(struct rpmsg_device *rpdev);
+ 
+ #endif
+diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c b/drivers/rpmsg/virtio_rpmsg_bus.c
+index 07d4f3374098..af4ea6170f89 100644
+--- a/drivers/rpmsg/virtio_rpmsg_bus.c
++++ b/drivers/rpmsg/virtio_rpmsg_bus.c
+@@ -381,6 +381,7 @@ static void virtio_rpmsg_release_device(struct device *dev)
+ 	struct rpmsg_device *rpdev = to_rpmsg_device(dev);
+ 	struct virtio_rpmsg_channel *vch = to_virtio_rpmsg_channel(rpdev);
+ 
++	rpmsg_release_device(rpdev);
+ 	kfree(vch);
+ }
+ 
 -- 
-Thanks,
-~Nick Desaulniers
+2.17.1
+
