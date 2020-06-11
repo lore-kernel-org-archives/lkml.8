@@ -2,113 +2,117 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B79DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC27C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15B9C204EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:25:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZywH0M/s"
+	by mail.kernel.org (Postfix) with ESMTP id 462A2204EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:25:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbgFKIZG (ORCPT
+        id S1726744AbgFKIZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 04:25:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59716 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726594AbgFKIZG (ORCPT
+        Thu, 11 Jun 2020 04:25:33 -0400
+Received: from bmailout2.hostsharing.net ([83.223.78.240]:47021 "EHLO
+        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726594AbgFKIZd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 04:25:06 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A612C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 01:25:06 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id e16so3993924qtg.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 01:25:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Sj0fSOOfXqojEYfHFUH1jyum0dXnQV1jKSCFe7PzV5s=;
-        b=ZywH0M/sfn0GAFf7wYJFuemJ5wAQhoAySsb+zAa7+s2hTbw7MnKoBYX2GWXgLCa8EK
-         LSVz2EqYw57+xMYfsnPxyfqGxVlV/Of0VWanwJxYJnW8itvCE4NNoz6bdbC1dIqw/iPS
-         GplFw8j4+XCtAi/ay9WSUqHrWXX8tnnWp7FWYGTbgCS5DAA6myFp655kbqtA3v1nJ+MQ
-         DrDAAsv5+/DwSJvkh+ICqai/G7phvWAAmKN1WoEi+NJ6UHwGBYMMDpzp7UD8GuU1G9aX
-         +HY4DNaFkhK1376ZaQKKg1KHZzf+ABLXbAhZ06xlf4RKR7UGK34xHtC2yS96uCr9C+Bz
-         DVDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Sj0fSOOfXqojEYfHFUH1jyum0dXnQV1jKSCFe7PzV5s=;
-        b=RxvU3BN562zaZZ+HjTwJbOQf1dzhOhqyHQGRdBmPgaiB0cP0MB820MmV6RvFCnXRMb
-         WaVbRyEH6BZ14953/uiE/wtBCd734hyg0AF8NIgr/TeETnOn+8LYGgEHgYI2zXyGofyn
-         BXOXHUtbTNXN9h4PYxzMKzgGBUoSSXd85ZqJtB1icMNyb6Xcogj3MUZvCH7xgacMceVp
-         BshXYy1e+J8X6gAnAcGdpLAgbgQs7NVFr4SNij0QZX3KsSlRNxmy9hH8cIXiUNs64PN+
-         HJsD9i+6lIcqSrRrJz+GJD+MKThS6cF46xL8IYcUxBehtxhxg4qIxc01t0JkZGgTFtsX
-         0pHQ==
-X-Gm-Message-State: AOAM531watBaCDVUyNdAzAdq2N+ShyXJ3M300VoH+eaXwOx5Y0yJEExm
-        Py/qon49P0soSvp9QZWgz3RWap9yD3aO06NCJHg=
-X-Google-Smtp-Source: ABdhPJz7099wVwccHJuiZWXXXzIzlbCNK+rEKPsKtwHwEYpGObsJWeFzknWsyuVoxwM4Tev8OFtKce131EOjx5Org6M=
-X-Received: by 2002:ac8:468a:: with SMTP id g10mr7265929qto.6.1591863904847;
- Thu, 11 Jun 2020 01:25:04 -0700 (PDT)
+        Thu, 11 Jun 2020 04:25:33 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout2.hostsharing.net (Postfix) with ESMTPS id C7D9D2802B9F3;
+        Thu, 11 Jun 2020 10:25:30 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 9C3834CF4AF; Thu, 11 Jun 2020 10:25:30 +0200 (CEST)
+Date:   Thu, 11 Jun 2020 10:25:30 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH] serial: core: drop unnecessary gpio include
+Message-ID: <20200611082530.rnx7rkbi6novjdar@wunner.de>
+References: <20200610155121.14014-1-johan@kernel.org>
 MIME-Version: 1.0
-References: <20200610083502.GF12456@shao2-debian> <20200610095054.GF2531@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200610095054.GF2531@hirez.programming.kicks-ass.net>
-From:   Chen Yu <yu.chen.surf@gmail.com>
-Date:   Thu, 11 Jun 2020 16:24:53 +0800
-Message-ID: <CADjb_WSLpKrkt-Oq_3krGBp8ZLjVZ4caUAd0d0s1_6s1tOHdHQ@mail.gmail.com>
-Subject: Re: [smp] b2a02fc43a: suspend-stress.fail
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        Zhang Rui <rui.zhang@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200610155121.14014-1-johan@kernel.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
-On Wed, Jun 10, 2020 at 5:52 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Wed, Jun 10, 2020 at 04:35:02PM +0800, kernel test robot wrote:
-> > Greeting,
-> >
-> > FYI, we noticed the following commit (built with gcc-9):
-> >
-> > commit: b2a02fc43a1f40ef4eb2fb2b06357382608d4d84 ("smp: Optimize send_call_function_single_ipi()")
-> > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-> >
-> > in testcase: suspend-stress
-> > with following parameters:
-> >
-> >       mode: freeze
-> >       iterations: 10
-> >
-> >
-> >
-> > on test machine: 2 threads Broxton with 4G memory
-> >
-> > caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
-> >
-> >
-> > If you fix the issue, kindly add following tag
-> > Reported-by: kernel test robot <rong.a.chen@intel.com>
-> >
-> >
-> > the result of this commit:
-> >
-> > test started
->
-> No dmesg output? No splat?
-This issue was only found on one of the test machines from lkp team.
- I've borrowed that machine and will try to narrow down and give feedback later.
+[cc += Heiko]
 
-thanks,
-Chenyu
+On Wed, Jun 10, 2020 at 05:51:21PM +0200, Johan Hovold wrote:
+> Drop the recently added gpio include from the serial-core header in
+> favour of a forward declaration and instead include the gpio header only
+> where needed.
+
+Hm, but why?  Are there adverse effects if this is included by
+<linux/serial_core.h>?
+
+Thanks,
+
+Lukas
+
+> 
+> Signed-off-by: Johan Hovold <johan@kernel.org>
+> ---
+>  drivers/tty/serial/8250/8250_port.c | 1 +
+>  drivers/tty/serial/serial_core.c    | 1 +
+>  include/linux/serial_core.h         | 2 +-
+>  3 files changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+> index 1632f7d25acc..d64ca77d9cfa 100644
+> --- a/drivers/tty/serial/8250/8250_port.c
+> +++ b/drivers/tty/serial/8250/8250_port.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/ioport.h>
+>  #include <linux/init.h>
+>  #include <linux/console.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/sysrq.h>
+>  #include <linux/delay.h>
+>  #include <linux/platform_device.h>
+> diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+> index 3706f31b0c37..cba19f7d9ea3 100644
+> --- a/drivers/tty/serial/serial_core.c
+> +++ b/drivers/tty/serial/serial_core.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/sched/signal.h>
+>  #include <linux/init.h>
+>  #include <linux/console.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/of.h>
+>  #include <linux/proc_fs.h>
+>  #include <linux/seq_file.h>
+> diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
+> index 791f4844efeb..01fc4d9c9c54 100644
+> --- a/include/linux/serial_core.h
+> +++ b/include/linux/serial_core.h
+> @@ -10,7 +10,6 @@
+>  #include <linux/bitops.h>
+>  #include <linux/compiler.h>
+>  #include <linux/console.h>
+> -#include <linux/gpio/consumer.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/circ_buf.h>
+>  #include <linux/spinlock.h>
+> @@ -30,6 +29,7 @@
+>  struct uart_port;
+>  struct serial_struct;
+>  struct device;
+> +struct gpio_desc;
+>  
+>  /*
+>   * This structure describes all the operations that can be done on the
+> -- 
+> 2.26.2
+> 
