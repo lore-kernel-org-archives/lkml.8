@@ -2,110 +2,106 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5416DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3309C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C4EC206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:29:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591889359;
-	bh=ufEXvIwUNU84phxn4fdLQDTEOa+3mCwvua/d+FRq8+Y=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=Ukb3kRgCqhY7zHVAfaIfA+JT+rW3pjuiaXxWFQSVjbINllGo/YbiAb0tj5k5q7F5x
-	 piwDaAJFoKhH1joqlL434Obic/dQxFH2v/V2+UU04WI02ZTMmC43fycQURnw55krf5
-	 nJ4J1SReEb8DugF4hm2OMfwQkgwKyau+7NXT2L1U=
+	by mail.kernel.org (Postfix) with ESMTP id BC1B3206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:29:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CDIFH1d1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728630AbgFKP3Q (ORCPT
+        id S1728640AbgFKP34 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 11:29:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59556 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728379AbgFKP3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 11:29:15 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB050207ED;
-        Thu, 11 Jun 2020 15:29:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591889355;
-        bh=ufEXvIwUNU84phxn4fdLQDTEOa+3mCwvua/d+FRq8+Y=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=q/+0Vbm0pDdriPQZBDhwQWB6K/UOS5VzAe+POFRuiPPG45yMVxJpd1Q+ZGLat5ht2
-         sxmoZNF+yagyxbDBzTAQh3HyKkHVZEyBEqPsXtW6D/LbV2jrwNi4c3/DXA11VDw9C3
-         ne+HfOiMw0W+7OHrv3vMvGDR14BPjTwcMfCU9fg8=
-Date:   Thu, 11 Jun 2020 16:29:13 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Vladimir Oltean <vladimir.oltean@nxp.com>,
-        linux-spi@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org
-In-Reply-To: <1591803717-11218-1-git-send-email-krzk@kernel.org>
-References: <1591803717-11218-1-git-send-email-krzk@kernel.org>
-Subject: Re: [PATCH] spi: spi-fsl-dspi: Free DMA memory with matching function
-Message-Id: <159188934188.47269.15444268053636073339.b4-ty@kernel.org>
+        Thu, 11 Jun 2020 11:29:56 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:37232 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728411AbgFKP34 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 11:29:56 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05BFTq9C127234;
+        Thu, 11 Jun 2020 10:29:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591889393;
+        bh=qbKG8m+p3y9aGhFMGec53de0IEuLu9JBOzjzkscBIgo=;
+        h=From:To:CC:Subject:Date;
+        b=CDIFH1d1ZxcujnWczcDM9Szp48icU5w2M18JCaYdOO1GLt4Knv8PrZNFQeNQ/gvaI
+         XCz53HW6dgB9E5mmYCjia/1GT95RUVIvwF1w+AxcrND7FdVIfKhEIQHiR3YyV7X2WX
+         d0NbhGmeqrqrE2+Sd7//90m9WJXK04Fj44AQCzcI=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05BFTqUX083015
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 11 Jun 2020 10:29:52 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 11
+ Jun 2020 10:29:52 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 11 Jun 2020 10:29:52 -0500
+Received: from lelv0597.itg.ti.com (lelv0597.itg.ti.com [10.181.64.32])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05BFTqpC021031;
+        Thu, 11 Jun 2020 10:29:52 -0500
+Received: from localhost ([10.250.48.148])
+        by lelv0597.itg.ti.com (8.14.7/8.14.7) with ESMTP id 05BFTq3k085854;
+        Thu, 11 Jun 2020 10:29:52 -0500
+From:   Suman Anna <s-anna@ti.com>
+To:     Tony Lindgren <tony@atomide.com>
+CC:     Jason Kridner <jdk@ti.com>, Caleb Robey <c-robey@ti.com>,
+        Drew Fustini <drew@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Suman Anna <s-anna@ti.com>
+Subject: [PATCH 0/2] Enable IPU and DSP rprocs on AM5729 BeagleBone AI
+Date:   Thu, 11 Jun 2020 10:29:43 -0500
+Message-ID: <20200611152945.27656-1-s-anna@ti.com>
+X-Mailer: git-send-email 2.26.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 10 Jun 2020 17:41:57 +0200, Krzysztof Kozlowski wrote:
-> Driver allocates DMA memory with dma_alloc_coherent() but frees it with
-> dma_unmap_single().
-> 
-> This causes DMA warning during system shutdown (with DMA debugging) on
-> Toradex Colibri VF50 module:
-> 
->     WARNING: CPU: 0 PID: 1 at ../kernel/dma/debug.c:1036 check_unmap+0x3fc/0xb04
->     DMA-API: fsl-edma 40098000.dma-controller: device driver frees DMA memory with wrong function
->       [device address=0x0000000087040000] [size=8 bytes] [mapped as coherent] [unmapped as single]
->     Hardware name: Freescale Vybrid VF5xx/VF6xx (Device Tree)
->       (unwind_backtrace) from [<8010bb34>] (show_stack+0x10/0x14)
->       (show_stack) from [<8011ced8>] (__warn+0xf0/0x108)
->       (__warn) from [<8011cf64>] (warn_slowpath_fmt+0x74/0xb8)
->       (warn_slowpath_fmt) from [<8017d170>] (check_unmap+0x3fc/0xb04)
->       (check_unmap) from [<8017d900>] (debug_dma_unmap_page+0x88/0x90)
->       (debug_dma_unmap_page) from [<80601d68>] (dspi_release_dma+0x88/0x110)
->       (dspi_release_dma) from [<80601e4c>] (dspi_shutdown+0x5c/0x80)
->       (dspi_shutdown) from [<805845f8>] (device_shutdown+0x17c/0x220)
->       (device_shutdown) from [<80143ef8>] (kernel_restart+0xc/0x50)
->       (kernel_restart) from [<801441cc>] (__do_sys_reboot+0x18c/0x210)
->       (__do_sys_reboot) from [<80100060>] (ret_fast_syscall+0x0/0x28)
->     DMA-API: Mapped at:
->      dma_alloc_attrs+0xa4/0x130
->      dspi_probe+0x568/0x7b4
->      platform_drv_probe+0x6c/0xa4
->      really_probe+0x208/0x348
->      driver_probe_device+0x5c/0xb4
+Hi Tony, Jason, Caleb,
 
-Applied to
+The IPU and DSP remote processors are finally booting as of latest master
+on almost all the TI DRA7xx/AM57xx boards except for AM5729 BeagleBone AI
+board. We have most of the common dts pieces available due to the usage
+of common dra74-ipu-dsp.common.dtsi and dra7-ipu-dsp-common.dtsi files.
+The series leverages these to enable both the IPUs (IPU1 and IPU2) and
+DSPs (DSP1 and DSP2) on AM5729 BeagleBone AI board.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+Patch 1 is enough to enable the support, and patch 2 is a cleanup.
+Patches are based on latest master.
 
-Thanks!
+I don't have access to an BeagleBone AI board, so appreciate some testing
+from any of you. If you are using the TI SDK firmware images, you would
+need the following additional patch [1] to have the rpmsg devices published
+successfully (otherwise you will see a malformed rpmsg ns message trace).
+This patch is getting replaced with an alternate logic, and I am waiting
+for that to be finalized before I update our BIOS-side logic/firmwares.
 
-[1/1] spi: spi-fsl-dspi: Free DMA memory with matching function
-      commit: 03fe7aaf0c3d40ef7feff2bdc7180c146989586a
+regards
+Suman
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+[1] https://patchwork.kernel.org/patch/11096599/
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Suman Anna (2):
+  ARM: dts: am5729-beaglebone-ai: Enable IPU & DSP rprocs
+  ARM: dts: am5729-beaglebone-ai: Disable ununsed mailboxes
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+ arch/arm/boot/dts/am5729-beagleboneai.dts | 73 +++++++----------------
+ 1 file changed, 21 insertions(+), 52 deletions(-)
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+-- 
+2.26.0
 
-Thanks,
-Mark
