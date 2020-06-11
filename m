@@ -2,107 +2,85 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD1BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1309EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED1512072F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6F862072F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:48:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728080AbgFKLqe (ORCPT
+        id S1727795AbgFKLsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 07:46:34 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:38410 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727848AbgFKLp7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 07:45:59 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 125F91A0715;
-        Thu, 11 Jun 2020 13:45:57 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8671E1A0717;
-        Thu, 11 Jun 2020 13:45:52 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 061E7402FF;
-        Thu, 11 Jun 2020 19:45:46 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
-        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
-        s.hauer@pengutronix.de, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V5 3/9] pinctrl: imx8mm: Support building as module
-Date:   Thu, 11 Jun 2020 19:34:49 +0800
-Message-Id: <1591875295-19427-4-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591875295-19427-1-git-send-email-Anson.Huang@nxp.com>
-References: <1591875295-19427-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 11 Jun 2020 07:48:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34646 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726790AbgFKLsg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 07:48:36 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1134DC08C5C1;
+        Thu, 11 Jun 2020 04:48:36 -0700 (PDT)
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id DAE2B869; Thu, 11 Jun 2020 13:48:33 +0200 (CEST)
+Date:   Thu, 11 Jun 2020 13:48:31 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v3 47/75] x86/sev-es: Add Runtime #VC Exception Handler
+Message-ID: <20200611114831.GA11924@8bytes.org>
+References: <20200428151725.31091-1-joro@8bytes.org>
+ <20200428151725.31091-48-joro@8bytes.org>
+ <20200523075924.GB27431@zn.tnic>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200523075924.GB27431@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change configuration to "tristate", add module device table,
-author, description and license to support building i.MX8MM
-pinctrl driver as module.
+On Sat, May 23, 2020 at 09:59:24AM +0200, Borislav Petkov wrote:
+> On Tue, Apr 28, 2020 at 05:16:57PM +0200, Joerg Roedel wrote:
+> > +	/*
+> > +	 * Mark the per-cpu GHCBs as in-use to detect nested #VC exceptions.
+> > +	 * There is no need for it to be atomic, because nothing is written to
+> > +	 * the GHCB between the read and the write of ghcb_active. So it is safe
+> > +	 * to use it when a nested #VC exception happens before the write.
+> > +	 */
+> 
+> Looks liks that is that text... support for nested #VC exceptions.
+> I'm sure this has come up already but why do we even want to support
+> nested #VCs? IOW, can we do without them first or are they absolutely
+> necessary?
+> 
+> I'm guessing VC exceptions inside the VC handler but what are the
+> sensible use cases?
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V4:
-	- remove unnecessary change of replacing arch_initcall() with module_platform_driver();
-	- add module author and description;
-	- add more details to commit message.
----
- drivers/pinctrl/freescale/Kconfig          | 2 +-
- drivers/pinctrl/freescale/pinctrl-imx8mm.c | 6 ++++++
- 2 files changed, 7 insertions(+), 1 deletion(-)
+The most important use-case is #VC->NMI->#VC. When an NMI hits while the
+#VC handler uses the GHCB and the NMI handler causes another #VC, then
+the contents of the GHCB needs to be backed up, so that it doesn't
+destroy the GHCB contents of the first #VC handling path.
 
-diff --git a/drivers/pinctrl/freescale/Kconfig b/drivers/pinctrl/freescale/Kconfig
-index e281c3f..556adc3 100644
---- a/drivers/pinctrl/freescale/Kconfig
-+++ b/drivers/pinctrl/freescale/Kconfig
-@@ -125,7 +125,7 @@ config PINCTRL_IMX7ULP
- 	  Say Y here to enable the imx7ulp pinctrl driver
- 
- config PINCTRL_IMX8MM
--	bool "IMX8MM pinctrl driver"
-+	tristate "IMX8MM pinctrl driver"
- 	depends on ARCH_MXC
- 	select PINCTRL_IMX
- 	help
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx8mm.c b/drivers/pinctrl/freescale/pinctrl-imx8mm.c
-index 6d1038a..31c5d88 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx8mm.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx8mm.c
-@@ -5,6 +5,7 @@
- 
- #include <linux/err.h>
- #include <linux/init.h>
-+#include <linux/module.h>
- #include <linux/of_device.h>
- #include <linux/pinctrl/pinctrl.h>
- #include <linux/platform_device.h>
-@@ -326,6 +327,7 @@ static const struct of_device_id imx8mm_pinctrl_of_match[] = {
- 	{ .compatible = "fsl,imx8mm-iomuxc", .data = &imx8mm_pinctrl_info, },
- 	{ /* sentinel */ }
- };
-+MODULE_DEVICE_TABLE(of, imx8mm_pinctrl_of_match);
- 
- static int imx8mm_pinctrl_probe(struct platform_device *pdev)
- {
-@@ -346,3 +348,7 @@ static int __init imx8mm_pinctrl_init(void)
- 	return platform_driver_register(&imx8mm_pinctrl_driver);
- }
- arch_initcall(imx8mm_pinctrl_init);
-+
-+MODULE_AUTHOR("Bai Ping <ping.bai@nxp.com>");
-+MODULE_DESCRIPTION("NXP i.MX8MM pinctrl driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.7.4
 
+Regards,
+
+	Joerg
