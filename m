@@ -2,159 +2,136 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0E9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 03:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C719C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 03:41:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FBA52072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 03:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72C332072F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 03:41:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BJg2vKRX"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="E/vzca1L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgFKDbP (ORCPT
+        id S1726407AbgFKDlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 23:31:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43094 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbgFKDbP (ORCPT
+        Wed, 10 Jun 2020 23:41:11 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:58371 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726326AbgFKDlL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 23:31:15 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2624BC08C5C1;
-        Wed, 10 Jun 2020 20:31:15 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id m1so1942131pgk.1;
-        Wed, 10 Jun 2020 20:31:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ifqf2Un5jE0l1zQWqbZs5hLwhdORiEodHIoMd3lL3Rc=;
-        b=BJg2vKRXRBP4qd7PsJWhRANUxbJR80RTC4Yt6Y8Q6qdg2u3BCJUTu5JpXtBBQIoXQG
-         y0H4622bWrBJU4T0zHyEn3tnqGedf58VGlIeJ83oIWr+DPW/jLM25XlsNn5MPioWkLj4
-         id97tpB3/tbhDPZkNDDi88bevqOkvuR/Zsf33Q1bGBnWVEecJe46OcykldH+s1V08CuM
-         BlLvDt9uhOzLpDaxAQlczJxeLjLQ3JWwSD3xspbbqOIkna7y1yu+BQrUHrkw1eer4BQm
-         KvdnFO5fShnj35p40YBeqsOwTqdyE5IUW9H8h7LHEb4oiZIlkDVOdZazHh/1Esm8EpWY
-         unyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ifqf2Un5jE0l1zQWqbZs5hLwhdORiEodHIoMd3lL3Rc=;
-        b=PxtwUNr7v/Ak57keNjpilUOWeaa+UdWSXi/mcrH9IhEow23F8AQ9m10pfjpcYGsnfH
-         QNHG5WmdYP5Xbth1uVGsPafHYuW0wq7CjLBN1/1Yu+5bfdL50ZIJfqzRHCjUikBxLVEi
-         XgqBSZbRfCqKsq30mvExoR+TlR+GCIGeS9ci7XjulQoED68cD1Bog2BvtjvzvnesvTZG
-         +eiZ+ksKnOVcleHmNWRr7mli1QVlYiuFS3oeke4hMPRr63Q4uiCIGl9zZH87jYkoSznl
-         SK/JzOxvOZ/KZ5EODW6fbpd3Okp3Zn/8F2h08OlHRTTHZ3zEN86gngnpUNi2E2pFA4dd
-         HCmA==
-X-Gm-Message-State: AOAM530xmLfOGI0uidFeiYuOdVqOrATA2y71Ih/vZpImF+0F/AqCV9Vg
-        YBtD+Rlvn0SLA91P8xTtk/pdTZmJ
-X-Google-Smtp-Source: ABdhPJwXy+eJ3GCr9pnFxPxMuhxo+cDmsg3cYqt0silefEXhio+jrQ4+zPl5AyAHsviBwLXKqJZRFQ==
-X-Received: by 2002:a62:3645:: with SMTP id d66mr5621823pfa.275.1591846274091;
-        Wed, 10 Jun 2020 20:31:14 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id x77sm1338008pfc.4.2020.06.10.20.31.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jun 2020 20:31:13 -0700 (PDT)
-Subject: Re: [PATCH 2/2] net: dsa: qca8k: Improve SGMII interface handling
-To:     Jonathan McDowell <noodles@earth.li>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1591816172.git.noodles@earth.li>
- <2150f4c70c754aed179e46e166f3c305254cf85a.1591816172.git.noodles@earth.li>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <9d7d09d5-393f-d5bd-5c57-78c914bdc850@gmail.com>
-Date:   Wed, 10 Jun 2020 20:31:11 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        Wed, 10 Jun 2020 23:41:11 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200611034108epoutp03a4ac53df42a125dfce497d96d60b0e9f~XYErmDU-w1486314863epoutp03k
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 03:41:08 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200611034108epoutp03a4ac53df42a125dfce497d96d60b0e9f~XYErmDU-w1486314863epoutp03k
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1591846868;
+        bh=V6x0CC0dSJI52/fvB4p8HDQIDD1KqNhQ5jAgQ9dlyxM=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=E/vzca1LIBKpurSxR3IN96FIQGjzyt9KVRKYHhUIpEFQPPaHnapuWqvN0M/6wC5ZM
+         uTu30/7191FiSorIdzvyh22f2fbnERnAuPbyopKCZCg2Cl5QYg0lOaHODjjXI9M9S3
+         qCXg3dv7H0KLXQ7KbeNwvuioQ23MWgkGb0AJFjN8=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20200611034107epcas1p34327c2a7182298862d3f5cff9de4489b~XYErKExDL3020130201epcas1p3W;
+        Thu, 11 Jun 2020 03:41:07 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.162]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 49j8lk4QpqzMqYkV; Thu, 11 Jun
+        2020 03:41:06 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        00.3E.29173.2D7A1EE5; Thu, 11 Jun 2020 12:41:06 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200611034106epcas1p195947d55fda88a49228be1ec06401cba~XYEpqcDER2338923389epcas1p1o;
+        Thu, 11 Jun 2020 03:41:06 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200611034105epsmtrp1b6e2ec7bde217b9e3f78a3271024192c~XYEpl0L721381213812epsmtrp1H;
+        Thu, 11 Jun 2020 03:41:05 +0000 (GMT)
+X-AuditID: b6c32a37-9cdff700000071f5-2a-5ee1a7d244a4
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        F1.EF.08303.1D7A1EE5; Thu, 11 Jun 2020 12:41:05 +0900 (KST)
+Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200611034105epsmtip27d4824bd0bc082146fa3cc8842c94b8e~XYEpaEU4K0594905949epsmtip2q;
+        Thu, 11 Jun 2020 03:41:05 +0000 (GMT)
+From:   "Namjae Jeon" <namjae.jeon@samsung.com>
+To:     "'Dan Carpenter'" <dan.carpenter@oracle.com>
+Cc:     <linux-fsdevel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        "'Sungjong Seo'" <sj1557.seo@samsung.com>,
+        =?iso-8859-1?Q?'Pali_Roh=E1r'?= <pali@kernel.org>,
+        "'Markus Elfring'" <Markus.Elfring@web.de>,
+        "'Tetsuhiro Kohada'" <kohada.t2@gmail.com>,
+        "'Wei Yongjun'" <weiyongjun1@huawei.com>
+In-Reply-To: <20200610172213.GA90634@mwanda>
+Subject: RE: [PATCH v2] exfat: add missing brelse() calls on error paths
+Date:   Thu, 11 Jun 2020 12:41:05 +0900
+Message-ID: <00a801d63fa2$230d14c0$69273e40$@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <2150f4c70c754aed179e46e166f3c305254cf85a.1591816172.git.noodles@earth.li>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQIRrAfa6wiWBnxmC0CvH5lIv9XJ0gH3LYStqEwybXA=
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLJsWRmVeSWpSXmKPExsWy7bCmvu6l5Q/jDN7cUbR4/W86i8XWW9IW
+        P+beZrHYs/cki8XlXXPYLP7Pes5qsWDPaTaLLf+OsFoc/rKLzYHTY+esu+weLUfesnpsWtXJ
+        5vHx6S0Wj74tqxg9Pm+S87j9bBtLAHtUjk1GamJKapFCal5yfkpmXrqtkndwvHO8qZmBoa6h
+        pYW5kkJeYm6qrZKLT4CuW2YO0GVKCmWJOaVAoYDE4mIlfTubovzSklSFjPziElul1IKUnAJD
+        gwK94sTc4tK8dL3k/FwrQwMDI1OgyoScjFWn1jIXXGGqePTmPlMD4zymLkZODgkBE4mTR56z
+        djFycQgJ7GCUaJhwAMr5xCjxp3k7I4TzmVHi25l+RpiWFVtPsEAkdjFKHD+3mB3Cecko8Xn7
+        RRaQKjYBXYl/f/azgdgiAgYS906+AOtgFjjHJPH/5GlWkASngI7E1WV7wWxhAQ+Jf1c2MoPY
+        LAKqEkuWLQGL8wpYSiw4fJQNwhaUODnzCdgCZgE9iRtTp7BB2PIS29/OYYY4T0Hi59NlQL0c
+        QIutJGYtroEoEZGY3dnGDHKDhMAODokTu59CveMisWn9DDYIW1ji1fEt7BC2lMTL/jZ2kDkS
+        AtUSH/dDje9glHjx3RbCNpa4uX4DK4StKLHz91xGiF18Eu++9rBCtPJKdLQJQZSoSvRdOgwN
+        d2mJrvYP7BMYlWYheWwWksdmIXlsFpIPFjCyrGIUSy0ozk1PLTYsMEaO7k2M4HSrZb6Dcdrb
+        D3qHGJk4GA8xSnAwK4nwCoo/jBPiTUmsrEotyo8vKs1JLT7EaAoM64nMUqLJ+cCEn1cSb2hq
+        ZGxsbGFiZm5maqwkzutrdSFOSCA9sSQ1OzW1ILUIpo+Jg1OqgelSz4FPUi77//Zcyp2/4i+L
+        aW71Zp4H0lIJz1tYOe3ZIvSfXmPtmCojI13h/F3mWOWutB1m6pXXTjy9Ir6L6W5N4UHH/5u4
+        Fd8wp6nFTndy2fWT2Ufm2Mrapd8z7SpXd93x4L37+OqdLcu2+drvuLZOyPrCkuXPb+RtKpRZ
+        sVJzroTcY78OhR/3NDVfy4U3P3ldK7fp51/B/ZyfD/5b5H11lsoJlyS1L/Zv/A2Ot3zoOKb1
+        PMbl+v7MQ7Xe67LnPG7Lvrlbp3fv2pqw9R0Za0UXr5ysdyTkpP9pr2+yFssTPihwKQVP0Tld
+        27bidCHLbEdujd8fUid0SOXtn/Ow8rb/h/YbbObXPFa/+N6uMXW9EktxRqKhFnNRcSIATWuw
+        s0AEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCIsWRmVeSWpSXmKPExsWy7bCSvO7F5Q/jDNY2m1u8/jedxWLrLWmL
+        H3Nvs1js2XuSxeLyrjlsFv9nPWe1WLDnNJvFln9HWC0Of9nF5sDpsXPWXXaPliNvWT02repk
+        8/j49BaLR9+WVYwenzfJedx+to0lgD2KyyYlNSezLLVI3y6BK2PVqbXMBVeYKh69uc/UwDiP
+        qYuRk0NCwERixdYTLF2MXBxCAjsYJRbdvgCVkJY4duIMcxcjB5AtLHH4cDFEzXNGiVl3z4PV
+        sAnoSvz7s58NxBYRMJC4d/IF2CBmgStMEvu2zmcDaRYSqJVYc1gUpIZTQEfi6rK9rCC2sICH
+        xL8rG5lBbBYBVYkly5aAxXkFLCUWHD7KBmELSpyc+YQFxGYGmn//UAcrhC0vsf3tHGaIOxUk
+        fj5dxgqySkTASmLW4hqIEhGJ2Z1tzBMYhWchmTQLyaRZSCbNQtKygJFlFaNkakFxbnpusWGB
+        UV5quV5xYm5xaV66XnJ+7iZGcMRpae1g3LPqg94hRiYOxkOMEhzMSiK8guIP44R4UxIrq1KL
+        8uOLSnNSiw8xSnOwKInzfp21ME5IID2xJDU7NbUgtQgmy8TBKdXA1LtzXvXkK5f9mKuvMk7g
+        qqnN3BW/3WLb5CmNqt1fb0eu1/u97P3WMhUuD8M67SPzxZ9On17zz3/z/glc1wWVxQ4e5s24
+        /nVeDsuKhGNL1rpNcKxpCXSu7Fh+bQtPTLBWSaSPn7vCBQejKUaN09/ofCmZ+m9a/qFVi8O2
+        x03+rpOuri7aZqmodKPxwE+W2pNnOu4vebVwqRiviCFTv7IQj9rE/86WjuaCEv2WNauLV3zY
+        MjXZ/LDpm6XaT9nOlVdHLHTYGm0nps1w/+fkVzvPuLrenfTu+oOU1Qqsm5Kefl1nKDhDaqW4
+        5aLf3LpnrR2zWrj4TRmW9r7jeOfiICq6Z1L7mwPepzWvXFVrbtS6psRSnJFoqMVcVJwIAFwI
+        fD4nAwAA
+X-CMS-MailID: 20200611034106epcas1p195947d55fda88a49228be1ec06401cba
+X-Msg-Generator: CA
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200610172239epcas1p1facf5f0026208683a593eeb7271c8cce
+References: <CGME20200610172239epcas1p1facf5f0026208683a593eeb7271c8cce@epcas1p1.samsung.com>
+        <20200610172213.GA90634@mwanda>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 6/10/2020 12:15 PM, Jonathan McDowell wrote:
-> This patch improves the handling of the SGMII interface on the QCA8K
-> devices. Previously the driver did no configuration of the port, even if
-> it was selected. We now configure it up in the appropriate
-> PHY/MAC/Base-X mode depending on what phylink tells us we are connected
-> to and ensure it is enabled.
+> If the second exfat_get_dentry() call fails then we need to release "old_bh" before returning.  There
+> is a similar bug in exfat_move_file().
 > 
-> Tested with a device where the CPU connection is RGMII (i.e. the common
-> current use case) + one where the CPU connection is SGMII. I don't have
-> any devices where the SGMII interface is brought out to something other
-> than the CPU.
-> 
-> Signed-off-by: Jonathan McDowell <noodles@earth.li>
-> ---
->  drivers/net/dsa/qca8k.c | 28 +++++++++++++++++++++++++++-
->  drivers/net/dsa/qca8k.h | 13 +++++++++++++
->  2 files changed, 40 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/dsa/qca8k.c b/drivers/net/dsa/qca8k.c
-> index dcd9e8fa99b6..33e62598289e 100644
-> --- a/drivers/net/dsa/qca8k.c
-> +++ b/drivers/net/dsa/qca8k.c
-> @@ -681,7 +681,7 @@ qca8k_phylink_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
->  			 const struct phylink_link_state *state)
->  {
->  	struct qca8k_priv *priv = ds->priv;
-> -	u32 reg;
-> +	u32 reg, val;
->  
->  	switch (port) {
->  	case 0: /* 1st CPU port */
-> @@ -740,6 +740,32 @@ qca8k_phylink_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
->  	case PHY_INTERFACE_MODE_1000BASEX:
->  		/* Enable SGMII on the port */
->  		qca8k_write(priv, reg, QCA8K_PORT_PAD_SGMII_EN);
-> +
-> +		/* Enable/disable SerDes auto-negotiation as necessary */
-> +		val = qca8k_read(priv, QCA8K_REG_PWS);
-> +		if (phylink_autoneg_inband(mode))
-> +			val &= ~QCA8K_PWS_SERDES_AEN_DIS;
-> +		else
-> +			val |= QCA8K_PWS_SERDES_AEN_DIS;
-> +		qca8k_write(priv, QCA8K_REG_PWS, val);
-> +
-> +		/* Configure the SGMII parameters */
-> +		val = qca8k_read(priv, QCA8K_REG_SGMII_CTRL);
-> +
-> +		val |= QCA8K_SGMII_EN_PLL | QCA8K_SGMII_EN_RX |
-> +			QCA8K_SGMII_EN_TX | QCA8K_SGMII_EN_SD;
-> +
-> +		val &= ~QCA8K_SGMII_MODE_CTRL_MASK;
-> +		if (dsa_is_cpu_port(ds, port)) {
-> +			/* CPU port, we're talking to the CPU MAC, be a PHY */
-> +			val |= QCA8K_SGMII_MODE_CTRL_PHY;
+> Fixes: 5f2aa075070c ("exfat: add inode operations")
+> Reported-by: Markus Elfring <Markus.Elfring@web.de>
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Applied. Thanks!
 
-Since port 6 can be interfaced to an external PHY, do not you have to
-differentiate here whether this port is connected to an actual PHY,
-versus connected to a MAC? You should be able to use mode == MLO_AN_PHY
-to differentiate that case from the others.
-
-> +		} else if (state->interface == PHY_INTERFACE_MODE_SGMII) {
-> +			val |= QCA8K_SGMII_MODE_CTRL_MAC;
-> +		} else {
-> +			val |= QCA8K_SGMII_MODE_CTRL_BASEX;
-
-Better make this explicit and check for PHY_INTERFACE_MODE_1000BASEX,
-even if those are the only two possible values covered by this part of
-the case statement.
--- 
-Florian
