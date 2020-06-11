@@ -2,106 +2,106 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC67CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 16:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5EEC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 16:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A0C82078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 16:10:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1814C206DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 16:10:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NRXJi5vE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H468QQ7s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbgFKQKT (ORCPT
+        id S1726599AbgFKQK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 12:10:19 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32764 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726279AbgFKQKS (ORCPT
+        Thu, 11 Jun 2020 12:10:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47408 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726279AbgFKQK1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 12:10:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591891817;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=sAc8K5GdtWCdfeiweUngiX2JdslVVBJ6iUtA5e6N5iA=;
-        b=NRXJi5vEBLkFARze69W1aPbmWNEugncDJkNkU22TBtE5y6F8PJVZd+lUcZVs5VIG6+WBj+
-        BrLB7332V62+Fwve6z2F8ygQnZZb7Xbt+/UToXawU/QdlsrRc2co48nmY0XkrJUkgfRKm3
-        +wof2dh2NZnZIzdPOk5LGUmKTA/3SGU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-122-HVzvVuaIPNaCw67pkCMHGA-1; Thu, 11 Jun 2020 12:10:12 -0400
-X-MC-Unique: HVzvVuaIPNaCw67pkCMHGA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A6776107ACCA;
-        Thu, 11 Jun 2020 16:10:08 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-115-149.rdu2.redhat.com [10.10.115.149])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2C2655C1B0;
-        Thu, 11 Jun 2020 16:10:00 +0000 (UTC)
-Subject: Re: possible deadlock in send_sigio
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+a9fb1457d720a55d6dc5@syzkaller.appspotmail.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>, allison@lohutok.net,
-        areber@redhat.com, aubrey.li@linux.intel.com,
-        Andrei Vagin <avagin@gmail.com>,
-        Bruce Fields <bfields@fieldses.org>,
-        Christian Brauner <christian@brauner.io>, cyphar@cyphar.com,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>, guro@fb.com,
-        Jeff Layton <jlayton@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Kees Cook <keescook@chromium.org>, linmiaohe@huawei.com,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@suse.com>, Ingo Molnar <mingo@kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, sargun@sargun.me,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Boqun Feng <boqun.feng@gmail.com>
-References: <000000000000760d0705a270ad0c@google.com>
- <69818a6c-7025-8950-da4b-7fdc065d90d6@redhat.com>
- <CACT4Y+brpePBoR7EUwPiSvGAgo6bhvpKvLTiCaCfRSadzn6yRw@mail.gmail.com>
- <88c172af-46df-116e-6f22-b77f98803dcb@redhat.com>
- <20200611142214.GI2531@hirez.programming.kicks-ass.net>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <b405aca6-a3b2-cf11-a482-2b4af1e548bd@redhat.com>
-Date:   Thu, 11 Jun 2020 12:09:59 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 11 Jun 2020 12:10:27 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 130C8C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 09:10:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=NljwgDz18R8jKy16NjwvgAJ7W2sWNxXP/LIBeOA0yzM=; b=H468QQ7sN4+Xa71yQQqMg5dAib
+        /Gan8mK8wHSOAYH3rmxH7Z7SaK96DdoipFHCKR8CVSMOezqhyzUq4nTzG2M9Sa2WyW72tg00rMOVJ
+        BYfTJFztl6FjnaFGiT8UsFxwz8ihsYC7m62RkXrziBE75zUz9iGqLRBKPwBwUmpnYjFYTWeOsp1UL
+        qXJV5j3/M5n+Oe4uPcTgrO3Cw3fJJQT+he67fgMdCjZOkPHmYzRjq3uoL5dnxKDXR2PCN2vWOjfoC
+        Kwf8LwKJsrmWU62uapzuqqRcL1LIsu++cWPvUuqMkDWUvVh34S5fUeh0NQVy1BcfHpmZgZOsWCOHh
+        eCo5lh/Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jjPmb-0001Zm-8x; Thu, 11 Jun 2020 16:10:25 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AC374303DA8;
+        Thu, 11 Jun 2020 18:10:22 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9140E20E06054; Thu, 11 Jun 2020 18:10:22 +0200 (CEST)
+Date:   Thu, 11 Jun 2020 18:10:22 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Chen Yu <yu.chen.surf@gmail.com>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        Zhang Rui <rui.zhang@intel.com>
+Subject: Re: [smp] b2a02fc43a: suspend-stress.fail
+Message-ID: <20200611161022.GL2531@hirez.programming.kicks-ass.net>
+References: <20200610083502.GF12456@shao2-debian>
+ <20200610095054.GF2531@hirez.programming.kicks-ass.net>
+ <CADjb_WSLpKrkt-Oq_3krGBp8ZLjVZ4caUAd0d0s1_6s1tOHdHQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200611142214.GI2531@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CADjb_WSLpKrkt-Oq_3krGBp8ZLjVZ4caUAd0d0s1_6s1tOHdHQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/11/20 10:22 AM, Peter Zijlstra wrote:
-> On Thu, Jun 11, 2020 at 09:51:29AM -0400, Waiman Long wrote:
->
->> There was an old lockdep patch that I think may address the issue, but was
->> not merged at the time. I will need to dig it out and see if it can be
->> adapted to work in the current kernel. It may take some time.
-> Boqun was working on that; I can't remember what happened, but ISTR it
-> was shaping up nice.
->
-Yes, I am talking about Boqun's patch. However, I think he had moved to 
-another company and so may not be able to actively work on that again.
+On Thu, Jun 11, 2020 at 04:24:53PM +0800, Chen Yu wrote:
+> Hi Peter,
+> On Wed, Jun 10, 2020 at 5:52 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > On Wed, Jun 10, 2020 at 04:35:02PM +0800, kernel test robot wrote:
+> > > Greeting,
+> > >
+> > > FYI, we noticed the following commit (built with gcc-9):
+> > >
+> > > commit: b2a02fc43a1f40ef4eb2fb2b06357382608d4d84 ("smp: Optimize send_call_function_single_ipi()")
+> > > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> > >
+> > > in testcase: suspend-stress
+> > > with following parameters:
+> > >
+> > >       mode: freeze
+> > >       iterations: 10
+> > >
+> > >
+> > >
+> > > on test machine: 2 threads Broxton with 4G memory
+> > >
+> > > caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
+> > >
+> > >
+> > > If you fix the issue, kindly add following tag
+> > > Reported-by: kernel test robot <rong.a.chen@intel.com>
+> > >
+> > >
+> > > the result of this commit:
+> > >
+> > > test started
+> >
+> > No dmesg output? No splat?
+> This issue was only found on one of the test machines from lkp team.
+>  I've borrowed that machine and will try to narrow down and give feedback later.
 
-Cheers,
-Longman
-
+Thanks! One thing to maybe try is hotplug tests. Suspend does hotplugs,
+and it might be easier to debug hotplug than it is to debug suspend.
