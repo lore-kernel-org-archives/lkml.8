@@ -2,292 +2,138 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66631C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70155C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4499A20656
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4126220656
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:55:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="mcNU+NTl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbgFKIyt (ORCPT
+        id S1726976AbgFKIzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 04:54:49 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:56430 "EHLO huawei.com"
+        Thu, 11 Jun 2020 04:55:25 -0400
+Received: from mail-am6eur05on2058.outbound.protection.outlook.com ([40.107.22.58]:29641
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726824AbgFKIyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 04:54:49 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 65612551640846479A75;
-        Thu, 11 Jun 2020 16:54:47 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.487.0; Thu, 11 Jun
- 2020 16:54:45 +0800
-Subject: Re: [f2fs-dev] [PATCH v2] f2fs: add F2FS_IOC_SEC_TRIM_FILE ioctl
-To:     Daeho Jeong <daeho43@gmail.com>, <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>, <kernel-team@android.com>
-CC:     Daeho Jeong <daehojeong@google.com>
-References: <20200611031652.200401-1-daeho43@gmail.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <2eeaf889-da2c-0dac-c60b-fc5e68f2d402@huawei.com>
-Date:   Thu, 11 Jun 2020 16:54:32 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20200611031652.200401-1-daeho43@gmail.com>
-Content-Type: text/plain; charset="windows-1252"
+        id S1726802AbgFKIzY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 04:55:24 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=N/OHrnsmpoaHtD+fD1pdeRlNMc2MHkYYgHt/8wjPDqTq7lLDyaNjJE9XUXetSNShXn6oK2Cb4IUWW0DdqAOnIqfAV954QRav6gEGkZKtIHcCzwvnAtCweIv0iI3VRf/iuB9whuCnz/MTSCw9pq2iRPupt5gzdu7JddpRM4Y8vHzHxQt5VZ+SCBtxWMY7VqRfZVhyOcLweHT2IJ4NUG601GNPxZPdWyJweGWU00UZeLXsSwCSiF+62oOZPj1tOhVZYYiNCp9PmBYeUhFeoZcQOFrgEM2QewiTYIBr36tBN7yciTCC+3zsblGOTXKMYDV95mBoNuzl8Rcs+6uRSiTdog==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aOLDR6+8YucV1jyxwREMv1Pf2R4Jth9+nYjWECpqYp0=;
+ b=Yq/s2eefsXuae/J1fd6aTsKXUQN0TdbC7mfjJgRL0tr8+01CTJaLjShNvj2Sic2sw8Qo7Ncrb7gfAaOhEc+77tUUhT2GySmMvj9X7eb1Sv22Ul14Cb0fYtzLBxQ0dJH5U6WyrtNJyjyudCe/PGLSUVOUIT3ZwTYPQJL4bmayD+2p925Uu6rxCScNtlsbkpBOSXA5Hoh1i3wF/WIk4qsmT+Tm9pDm+lYJ/AFFBL2UnWlQ64QAjmaZn+lqxVeDgkxPXiYD68Umuvqhy99COQ1URZcydZtEEStntjH1muuLWQsjTVCWgWwWHo8MOvG82z0GsdEE7MyVU3A5N1vvh4DA/Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aOLDR6+8YucV1jyxwREMv1Pf2R4Jth9+nYjWECpqYp0=;
+ b=mcNU+NTlfmfAyulj98kPuQykSoNuwYr0ykwXoUT7PlYTAnuV5b+aGQ0goZ3YqbZPkoE37vwphAokpUXDqcbEMcZ7QFjtmQFrRfq18sce0iG5zEfKXFgr7izbF1j9KXEh92Ajw3u/k1hrEQ3OQQV5nRPyyhHpN8DH+9RaLtJdm6E=
+Authentication-Results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
+Received: from VI1PR0401MB2287.eurprd04.prod.outlook.com
+ (2603:10a6:800:2e::19) by VI1PR0401MB2413.eurprd04.prod.outlook.com
+ (2603:10a6:800:2a::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18; Thu, 11 Jun
+ 2020 08:55:19 +0000
+Received: from VI1PR0401MB2287.eurprd04.prod.outlook.com
+ ([fe80::9d5c:685e:4b51:fa60]) by VI1PR0401MB2287.eurprd04.prod.outlook.com
+ ([fe80::9d5c:685e:4b51:fa60%3]) with mapi id 15.20.3066.023; Thu, 11 Jun 2020
+ 08:55:19 +0000
+Subject: Re: [PATCH V4 4/9] pinctrl: imx8mn: Support building as module
+To:     Anson Huang <anson.huang@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Cc:     dl-linux-imx <linux-imx@nxp.com>
+References: <1591775865-26872-1-git-send-email-Anson.Huang@nxp.com>
+ <1591775865-26872-5-git-send-email-Anson.Huang@nxp.com>
+ <33292cab-c49d-0878-dd8c-1166258e089b@nxp.com>
+ <DB3PR0402MB391645F95B19B2438736B546F5800@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From:   Daniel Baluta <daniel.baluta@nxp.com>
+Message-ID: <d23114e1-1a81-45cc-e8da-6fed53f455ab@nxp.com>
+Date:   Thu, 11 Jun 2020 11:55:16 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+In-Reply-To: <DB3PR0402MB391645F95B19B2438736B546F5800@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+X-ClientProxiedBy: AM0PR10CA0066.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:208:15::19) To VI1PR0401MB2287.eurprd04.prod.outlook.com
+ (2603:10a6:800:2e::19)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2a02:2f08:560d:e500:fcf6:7c4d:8076:b570] (2a02:2f08:560d:e500:fcf6:7c4d:8076:b570) by AM0PR10CA0066.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:15::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18 via Frontend Transport; Thu, 11 Jun 2020 08:55:17 +0000
+X-Originating-IP: [2a02:2f08:560d:e500:fcf6:7c4d:8076:b570]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: fff8481b-0618-41ca-ba98-08d80de52acf
+X-MS-TrafficTypeDiagnostic: VI1PR0401MB2413:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR0401MB24134DFED1A6F17DA933DDC3F9800@VI1PR0401MB2413.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 0431F981D8
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: iy2akpeYGcbdvT5YVKl+4o6yR42XR8vEzbdxW130lXg9M6u0Zm+JLWZLvhzxjuqYi5hNLf2DSTyHmApMnTMAoSoVvPLo9Xo9yg78PJAnr1YTwDlP1dGZ9C+dKroHxpbcmrLzCnP0T7F2d6WuaP+znFjt6chSUbn8blpRsDNOoE/Ll+gUs54GpAtEnJ6F+92aQGeRFPYrQCuLkr/woE25TuO5Fjm1WWD//QliWNXcJOBRjP+GUlyZcuAv7JnoysHyqHVOIz8vuwcVwKcPG2cKv+SSIfGGSfhPkAf0ZXmJeaV9zhXeujQt+PX0PvdWD3TPsK5rDbTetIg/N/pAzYW9QyvJSPuEG81vuShUI096sCjThdcPFhxPRZc9Rac0OfACiz2j/6oQcCJ/8wdsMkZExSzkpBN2lG1UEhYWXcfrG/c=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0401MB2287.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(346002)(376002)(136003)(366004)(396003)(36756003)(2616005)(2906002)(83380400001)(8676002)(16526019)(66556008)(6486002)(66476007)(66946007)(31686004)(316002)(8936002)(5660300002)(478600001)(86362001)(44832011)(4326008)(53546011)(52116002)(110136005)(186003)(31696002)(921003)(32563001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: fz3Jl0HwAs93cw+scyx0XZJcfH8SNWOflFIAYqWrlOozaW/rkNVEXA/OfDBuo8UzxlIAfYcsCQ5zpqaCVzoREBLpD7My7mX20bXUB80jiX7/OKiWiiby0XSxxCGeQm0KIEsiaiDm9+FZ3xDKtdTlFTsnG1K4QBqKgKuf6v3nIwSU88N4O5NNvTOsKOtF0SuibzkSfKiuySWb2mILPAvHa/EGzQ6iLf+speWCyppvHG32LkjjjdPpp/5+SyFSnzxBXtB0vf6XMFMurCA0VDzloVwifIAo+q+W8iv3Ilyly/7Np8ZLdyKas3fQHvu8X1R6x8fz1JsmwUxWhtko8lVBCztzBn+Rsg9HixKVPI2x1srcp7LgYAHGHTlOiIxN4rWdWdn0ugk+ozewjm39ejZjgJOCLa9NtW4gq40UNnGPyuf6PQWyoVFsKt2wkHdHg7PFgLbDw5KdYUZ2QhPhm/jsETyevcYofB/ZHQsgQRm7/MqikzZxvCOxKKDCLVXn5M5jhX9TftAP8M6nINAoCG5SFUcshToXHU5DchwOQuFqwL2gG+a7/IhbEnR8BvyqGNfy
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fff8481b-0618-41ca-ba98-08d80de52acf
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2020 08:55:19.1363
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: H5h4yL4VAo/PG7zmxGMO8rflxFcDhzBBE6lYEqL8qJNESahukXIM2WoDoNauyRbS0ZokvBXahvcX4CEHT7SkNw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2413
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/6/11 11:16, Daeho Jeong wrote:
-> From: Daeho Jeong <daehojeong@google.com>
-> 
-> Added a new ioctl to send discard commands or/and zero out
-> to whole data area of a regular file for security reason.
-> 
-> Signed-off-by: Daeho Jeong <daehojeong@google.com>
-> ---
->  fs/f2fs/f2fs.h |   8 +++
->  fs/f2fs/file.c | 143 +++++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 151 insertions(+)
-> 
-> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> index c812fb8e2d9c..ca139fac5a73 100644
-> --- a/fs/f2fs/f2fs.h
-> +++ b/fs/f2fs/f2fs.h
-> @@ -434,6 +434,7 @@ static inline bool __has_cursum_space(struct f2fs_journal *journal,
->  					_IOR(F2FS_IOCTL_MAGIC, 18, __u64)
->  #define F2FS_IOC_RESERVE_COMPRESS_BLOCKS				\
->  					_IOR(F2FS_IOCTL_MAGIC, 19, __u64)
-> +#define F2FS_IOC_SEC_TRIM_FILE		_IOW(F2FS_IOCTL_MAGIC, 20, __u32)
->  
->  #define F2FS_IOC_GET_VOLUME_NAME	FS_IOC_GETFSLABEL
->  #define F2FS_IOC_SET_VOLUME_NAME	FS_IOC_SETFSLABEL
-> @@ -453,6 +454,13 @@ static inline bool __has_cursum_space(struct f2fs_journal *journal,
->  #define F2FS_GOING_DOWN_METAFLUSH	0x3	/* going down with meta flush */
->  #define F2FS_GOING_DOWN_NEED_FSCK	0x4	/* going down to trigger fsck */
->  
-> +/*
-> + * Flags used by F2FS_IOC_SEC_TRIM_FILE
-> + */
-> +#define F2FS_TRIM_FILE_DISCARD		0x1	/* send discard command */
-> +#define F2FS_TRIM_FILE_ZEROOUT		0x2	/* zero out */
-> +#define F2FS_TRIM_FILE_MASK		0x3
-> +
->  #if defined(__KERNEL__) && defined(CONFIG_COMPAT)
->  /*
->   * ioctl commands in 32 bit emulation
-> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> index dfa1ac2d751a..ba9b7ec5d6bf 100644
-> --- a/fs/f2fs/file.c
-> +++ b/fs/f2fs/file.c
-> @@ -3749,6 +3749,146 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
->  	return ret;
->  }
->  
-> +static int f2fs_secure_erase(struct block_device *bdev, block_t block,
-> +					block_t len, u32 flags)
-> +{
-> +	struct request_queue *q = bdev_get_queue(bdev);
-> +	sector_t sector = SECTOR_FROM_BLOCK(block);
-> +	sector_t nr_sects = SECTOR_FROM_BLOCK(len);
-> +	int ret = 0;
-> +
-> +	if (!q)
-> +		return -ENXIO;
-> +
-> +	if (flags & F2FS_TRIM_FILE_DISCARD)
-> +		ret = blkdev_issue_discard(bdev, sector, nr_sects, GFP_NOFS,
-> +						blk_queue_secure_erase(q) ?
-> +						BLKDEV_DISCARD_SECURE : 0);
-> +
-> +	if (!ret && (flags & F2FS_TRIM_FILE_ZEROOUT))
-> +		ret = blkdev_issue_zeroout(bdev, sector, nr_sects, GFP_NOFS, 0);
-> +
-> +	return ret;
-> +}
-> +
-> +static int f2fs_sec_trim_file(struct file *filp, unsigned long arg)
-> +{
-> +	struct inode *inode = file_inode(filp);
-> +	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
-> +	struct address_space *mapping = inode->i_mapping;
-> +	struct block_device *prev_bdev = NULL;
-> +	pgoff_t index, pg_start = 0, pg_end;
-> +	block_t prev_block = 0, len = 0;
-> +	u32 flags;
-> +	int ret = 0;
-> +
-> +	if (!(filp->f_mode & FMODE_WRITE))
-> +		return -EBADF;
-> +
-> +	if (get_user(flags, (u32 __user *)arg))
-> +		return -EFAULT;
-> +	if (flags == 0 || (flags & ~F2FS_TRIM_FILE_MASK))
-> +		return -EINVAL;
-> +
-> +	if ((flags & F2FS_TRIM_FILE_DISCARD) && !f2fs_hw_support_discard(sbi))
-> +		return -EOPNOTSUPP;
-> +
-> +	file_start_write(filp);
 
-Now, I'm a little confused about when we need to call __mnt_want_write_file(),
-you know, vfs_write() still will call this function when updating time.
-- __generic_file_write_iter
- - file_update_time
-  - __mnt_want_write_file
+On 11.06.2020 11:48, Anson Huang wrote:
+> Hi, Daniel
+>
+>> Subject: Re: [PATCH V4 4/9] pinctrl: imx8mn: Support building as module
+>>
+>> Maybe this is obvious but I would really like to see an explanation
+>>
+>> of why we are switching from arch_initcall to platform_init.
+>>
+>> Commit message act as documentation  for the reviewers.
+> Yes, I noticed this, and it looks like unnecessary change, and I just replied in
+> mail that I will change it back to arch_initcall() in order to make sure nothing
+> changed for built-in config. Below is what I replied in cover-letter mail:
+>
+> " I will keep the arch_initcall() there in next version patch series, it can make sure
+> the change does NOT impact built-in config. For module build, the arch_initcall()
+> will be same as module_init(), user needs to insmod the .ko with correct sequence."
 
-And previously, f2fs ioctl uses mnt_{want,drop}_write_file() whenever there is
-any updates on fs/file, if Eric is correct, we need to clean up most of ioctl
-interface as well.
+Ok, that's great. Lets try to keep in mind that the commit message should
 
-> +	inode_lock(inode);
-> +
-> +	if (!S_ISREG(inode->i_mode) || f2fs_is_atomic_file(inode) ||
-> +			f2fs_compressed_file(inode)) {
-> +		ret = -EINVAL;
-> +		goto err;
-> +	}
-> +
-> +	if (!inode->i_size)
-> +		goto err;
-> +	pg_end = DIV_ROUND_UP(inode->i_size, PAGE_SIZE);
-> +
-> +	ret = f2fs_convert_inline_inode(inode);
-> +	if (ret)
-> +		goto err;
-> +
-> +	down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
-> +	down_write(&F2FS_I(inode)->i_mmap_sem);
-> +
-> +	ret = filemap_write_and_wait(mapping);
-> +	if (ret)
-> +		goto out;
-> +
-> +	truncate_inode_pages(mapping, 0);
-> +
-> +	for (index = pg_start; index < pg_end;) {
-> +		struct dnode_of_data dn;
-> +		unsigned int end_offset;
-> +
-> +		set_new_dnode(&dn, inode, NULL, NULL, 0);
-> +		ret = f2fs_get_dnode_of_data(&dn, index, LOOKUP_NODE);
-> +		if (ret)
-
-if (ret == -ENOENT) {
-	index = f2fs_get_next_page_offset(&dn, index);
-	continue;
-}
-
-> +			goto out;
-> +
-> +		end_offset = ADDRS_PER_PAGE(dn.node_page, inode);
-> +		if (pg_end < end_offset + index)
-> +			end_offset = pg_end - index;
-> +
-> +		for (; dn.ofs_in_node < end_offset;
-> +				dn.ofs_in_node++, index++) {
-> +			struct block_device *cur_bdev;
-> +			block_t blkaddr = f2fs_data_blkaddr(&dn);
-> +
-> +			if (__is_valid_data_blkaddr(blkaddr)) {
-> +				if (!f2fs_is_valid_blkaddr(F2FS_I_SB(inode),
-> +					blkaddr, DATA_GENERIC_ENHANCE)) {
-> +					ret = -EFSCORRUPTED;
-> +					goto out;
+answer to a simple question: "Why the change is needed" :).
 
 
-if we goto out label here, we will miss to call f2fs_put_dnode()?
+Then, the details about the change should be added.
 
-> +				}
-> +			} else
 
-How about this?
 
-if (!__is_valid_data_blkaddr())
-	continue;
-
-if (!f2fs_is_valid_blkaddr(F2FS_I_SB(inode), blkaddr, DATA_GENERIC_ENHANCE)) {
-	ret = -EFSCORRUPTED;
-	goto out;
-}
-
-> +				continue;
-> +
-> +			cur_bdev = f2fs_target_device(sbi, blkaddr, NULL);
-> +			if (f2fs_is_multi_device(sbi)) {
-> +				int i = f2fs_target_device_index(sbi, blkaddr);
-> +
-> +				blkaddr -= FDEV(i).start_blk;
-> +			}
-> +
-> +			if (len) {
-> +				if (prev_bdev == cur_bdev &&
-> +					blkaddr == prev_block + len) {
-> +					len++;
-> +				} else {
-> +					ret = f2fs_secure_erase(prev_bdev,
-> +							prev_block, len, flags);
-> +					if (ret)
-> +						goto out;
-
-Ditto,
-
-Thanks,
-
-> +
-> +					len = 0;
-> +				}
-> +			}
-> +
-> +			if (!len) {
-> +				prev_bdev = cur_bdev;
-> +				prev_block = blkaddr;
-> +				len = 1;
-> +			}
-> +		}
-> +
-> +		f2fs_put_dnode(&dn);
-> +	}
-> +
-> +	if (len)
-> +		ret = f2fs_secure_erase(prev_bdev, prev_block, len, flags);
-> +out:
-> +	up_write(&F2FS_I(inode)->i_mmap_sem);
-> +	up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
-> +err:
-> +	inode_unlock(inode);
-> +	file_end_write(filp);
-> +
-> +	return ret;
-> +}
-> +
->  long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
->  {
->  	if (unlikely(f2fs_cp_error(F2FS_I_SB(file_inode(filp)))))
-> @@ -3835,6 +3975,8 @@ long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
->  		return f2fs_release_compress_blocks(filp, arg);
->  	case F2FS_IOC_RESERVE_COMPRESS_BLOCKS:
->  		return f2fs_reserve_compress_blocks(filp, arg);
-> +	case F2FS_IOC_SEC_TRIM_FILE:
-> +		return f2fs_sec_trim_file(filp, arg);
->  	default:
->  		return -ENOTTY;
->  	}
-> @@ -4004,6 +4146,7 @@ long f2fs_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
->  	case F2FS_IOC_GET_COMPRESS_BLOCKS:
->  	case F2FS_IOC_RELEASE_COMPRESS_BLOCKS:
->  	case F2FS_IOC_RESERVE_COMPRESS_BLOCKS:
-> +	case F2FS_IOC_SEC_TRIM_FILE:
->  		break;
->  	default:
->  		return -ENOIOCTLCMD;
-> 
