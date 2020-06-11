@@ -2,139 +2,164 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E8FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 22:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AAE5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 22:30:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25AFD20835
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 22:30:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62AB72073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 22:30:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W26cncJy"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="hc1YtbB1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726416AbgFKWat (ORCPT
+        id S1726561AbgFKWax (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 18:30:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49542 "EHLO
+        Thu, 11 Jun 2020 18:30:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726159AbgFKWat (ORCPT
+        with ESMTP id S1726471AbgFKWaw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 18:30:49 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A657C03E96F
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 15:30:49 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id t6so5843932otk.9
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 15:30:49 -0700 (PDT)
+        Thu, 11 Jun 2020 18:30:52 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8746BC03E96F
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 15:30:51 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id s28so3002783edw.11
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 15:30:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
-        bh=+EahI0YlQUT1/wBvgRJFQZcHP3obsCOagtKe7ySyhrM=;
-        b=W26cncJyLH/i2zSIOMrO837pRs3uf2BxQU7IzrLdCgttozbazIeNDlQgCyQFiYpUyY
-         Ms4olROFTxfvmQAdemlh52vDy0Ftr89GQMQrDXOir38oNwY8+8gPiDMnQChh/qPvfhj1
-         iUsIdILczYmCpO1xqBDBaFflxA4qJYGotgpCt1+gBdruUxe14ckzTnM3+9z+NR3Qkckp
-         8bXFzj6IhT3p8E6ZtAmnlH8HwiB/X34paleeTrwi7sO8xUPY1QHO1EqXGNShfQxJUmTK
-         oNomeUpR4hUAyI5seihocIFNBhP5T0Ojn22FOBFdo6AgdYqo+CShth6zOvtf4oEc8vZn
-         S8fw==
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rg7eO693EDtdOfjCTCuFIoB+iVYboUKp8O8k4ul7UBk=;
+        b=hc1YtbB1KCw8ErzxRUKtDHJZkwhczsMAsWwoN5vJwBBYc7bHeCQ83qNspaTSZF+T6K
+         RBPy0jm3a+mM5el7SdieBOcWdOie78kUClRY/FQzU8wT8uC5za/SJw1ZBLEkgJN6lEiI
+         q4GXLpIWJH6aUxPFm5fRY5r8c49KeclPBy2ZsR5waFVXeYVrfwAS+Y8A6xoq5DF2/yFW
+         F1f0Xo/myHiB5IyFjPhWumgq0yAOWmwUeLxJbdYtWQEqdEnuCZt2QYsTkig7HVEDfU8L
+         jFkHwMGrVWwN768UNV8b/Uqi9Ki51wjScgV07Q+BUl5w0yh0EAtdMs5FMSvCZXKnfrgT
+         0oaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=+EahI0YlQUT1/wBvgRJFQZcHP3obsCOagtKe7ySyhrM=;
-        b=KrHD7GYep+OPisuPFnaPrCxlg52xrVjA/GSK0XJ4V/fanH0TCTKWNrvu6dHRmRX/2B
-         6VEaXrZj9PqSoiuZu9KvL8pZAeXkzZPGDh9XEzWGt4DapYrMtwuccV5ShsBkGpkDOP2J
-         66u7q0Jl1+UhOv85H07WDP8t3tKrhAKc6Ohy4d8MDI5k7Zh8yCq0qdZb9O9M7eDUBWPR
-         Xs2k/ux14wZUYEE2yYKsFrdpErRniJUFZ/skXt8n6bIVUj71QEyF3MxbYHvJR4KBGfIS
-         eL2MYnPdXZ8TKncYLCR26S+g9GGWI9O2gASwac5QFYkxvZUorzoPGEbw9JKcooDZ5qDi
-         6zaw==
-X-Gm-Message-State: AOAM531/vWuiOZ9dylbE6zeDYqT1tDkgrIEgLIXNZ7i10qpYk1UNREkL
-        xnKIXbgTtlBleLcb30nmDa1UWg==
-X-Google-Smtp-Source: ABdhPJzEon9DZKGa7Vpn9RDUNP7chh++P+QM4RhU5y/VWUIMVZUMKcU4pCYumWLy9ZXhRooe4mHeuA==
-X-Received: by 2002:a05:6830:1dba:: with SMTP id z26mr8682022oti.180.1591914648150;
-        Thu, 11 Jun 2020 15:30:48 -0700 (PDT)
-Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id r15sm978948oot.5.2020.06.11.15.30.45
-        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
-        Thu, 11 Jun 2020 15:30:47 -0700 (PDT)
-Date:   Thu, 11 Jun 2020 15:30:45 -0700 (PDT)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-cc:     akpm@linux-foundation.org, mgorman@techsingularity.net,
-        tj@kernel.org, khlebnikov@yandex-team.ru,
-        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
-        willy@infradead.org, hannes@cmpxchg.org, lkp@intel.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org, shakeelb@google.com,
-        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com
-Subject: [PATCH alexv12 2/2] mm/compaction: fix call to
- __isolate_lru_page_prepare()
-Message-ID: <alpine.LSU.2.11.2006111529010.10801@eggly.anvils>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rg7eO693EDtdOfjCTCuFIoB+iVYboUKp8O8k4ul7UBk=;
+        b=kh+6R548yJO3+96ddaS+byOVkuiywSVNiP/FTJWjx3lUWJ8treF+4Fq89D8QM1ZOX+
+         x5XXGMLgmlcCQfA/9WWERqWWy8TYbqwo6jEIVyhzTu5/EVTwoAQqBAJhETpJFDwQzK4J
+         aw0mD3M5TftVE92NMNh5WS3XfVT9H62L79TUCt6gSV93z9YPsJmnpsqHhOxKR64vMVq3
+         JPZ+UDy2ioqgit9oR88BRTazHqzOLvcwlo+5RM0D2osshZJ0Q3kN4mhyxxFU/rMXwK4A
+         iGr2AM/cq5GJ8AZDKJcYmfc2NCjBTo+xBjTyvIsukcP8chl7oR6W8yOYEXquTPClDMy4
+         C+3Q==
+X-Gm-Message-State: AOAM530urjEhT3+6fEXw6CAm+Uur7gJAfI6ZMctYm6i1lNKRd5onsvw2
+        eUA3d7NTLf8tWQvNxd+Km0Dl8cRAYmkR+MAdacNx
+X-Google-Smtp-Source: ABdhPJyCkmuynUHpAQSMVkFfOa8Evij6OjD2dTCpDkfJJM/r6QoJZbdIB5kQQC6n8Dm1C5MuZCtDi7b8m4WZynUGCZY=
+X-Received: by 2002:aa7:de08:: with SMTP id h8mr8704796edv.164.1591914650074;
+ Thu, 11 Jun 2020 15:30:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+References: <20200611204746.6370-1-trix@redhat.com> <20200611204746.6370-2-trix@redhat.com>
+In-Reply-To: <20200611204746.6370-2-trix@redhat.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Thu, 11 Jun 2020 18:30:38 -0400
+Message-ID: <CAHC9VhSyo9GZKVZ04w3d3bLV9-_61W0KznATZPmqZBYXT2J=xw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] selinux: fix another double free
+To:     trix@redhat.com
+Cc:     Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Ondrej Mosnacek <omosnace@redhat.com>, weiyongjun1@huawei.com,
+        selinux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-isolate_migratepages_block() is calling __isolate_lru_page_prepare()
-at a point when it has not yet acquired a reference to the page, and
-may not yet hold the right lruvec lock: it has no hold on the page.
+On Thu, Jun 11, 2020 at 4:48 PM <trix@redhat.com> wrote:
+> From: Tom Rix <trix@redhat.com>
+>
+> Clang static analysis reports this double free error
+>
+> security/selinux/ss/conditional.c:139:2: warning: Attempt to free released memory [unix.Malloc]
+>         kfree(node->expr.nodes);
+>         ^~~~~~~~~~~~~~~~~~~~~~~
+>
+> When cond_read_node fails, it calls cond_node_destroy which frees the
+> node but does not poison the entry in the node list.  So when it
+> returns to its caller cond_read_list, cond_read_list deletes the
+> partial list.  The latest entry in the list will be deleted twice.
+>
+> So instead of freeing the node in cond_read_node, let list freeing in
+> code_read_list handle the freeing the problem node along with all of the
+> earlier nodes.
+>
+> Because cond_read_node no longer does any error handling, the goto's
+> the error case are redundant.  Instead just return the error code.
+>
+> Fixes a problem was introduced by commit
+>
+>   selinux: convert cond_list to array
+>
+> Signed-off-by: Tom Rix <trix@redhat.com>
+> ---
+>  security/selinux/ss/conditional.c | 11 +++--------
+>  1 file changed, 3 insertions(+), 8 deletions(-)
 
-trylock_page() is not safe to use at this time: its setting PG_locked
-can race with the page being freed or allocated ("Bad page"), and can
-also erase flags being set by one of those "sole owners" of a freshly
-allocated page who use non-atomic __SetPageFlag().
+Hi Tom,
 
-Though I have tried rcu_read_lock() instead of trylock_page() there
-(like in page_evictable()), 054f1d1faaed ("mm/swap_state.c: simplify
-total_swapcache_pages() with get_swap_device()") stopped the freeing of
-swapper_spaces by RCU; and races against setting PageSwapCache, and the
-dereference of mapping->a_ops, and the lack of any page reference: all
-make that a more dubious approach.
+Thanks for the patch!  A few more notes, in no particular order:
 
-Just move the call to __isolate_lru_page_prepare() after the call to
-get_page_unless_zero(), when using trylock_page() has become safe
-(safe given __isolate's  check for PageLRU - unsafe without that).
+* There is no need to send a cover letter for just a single patch.
+Typically cover letters are reserved for large patchsets that require
+some additional explanation and/or instructions beyond the individual
+commit descriptions.
 
-Signed-off-by: Hugh Dickins <hughd@google.com>
----
-I had envisaged this as a separate patch; but once it came down
-to just moving the call inside isolate_migratepages_block(), it's
-probably best folded into 10/16 or 12/16 (needs isolate_fail_put).
+* Thank you for including a changelog with your patch updates, but it
+would be helpful if you included them in the patch by using a "---"
+delimiter in the commit description after your signoff but before the
+diffstat.  Here is a recent example:
+-> https://lore.kernel.org/selinux/20200611135303.19538-3-cgzones@googlemail.com
 
-I shall probably want to come along later, to clean up or eliminate
-__isolate_lru_page_prepare(): which I found before to have almost
-nothing in common between its use by isolate_migratepages_block()
-and its use by isolate_lru_pages(). We can then do its safer checks
-before the get_page_unless_zero(). But trying that cleanup right
-now would just get in the way of this series.
+* When referencing a patch which you are "fixing", the proper syntax
+is 'Fixes: <12char_commitID> ("<subject_line")'.  Look at commit
+46619b44e431 in Linus' tree to see an example.
 
- mm/compaction.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+If you have any questions, let us know.
 
---- alexv12/mm/compaction.c	2020-06-11 13:48:10.437046025 -0700
-+++ hughd/mm/compaction.c	2020-06-11 13:49:05.570579095 -0700
-@@ -960,9 +960,6 @@ isolate_migratepages_block(struct compac
- 		if (!(cc->gfp_mask & __GFP_FS) && page_mapping(page))
- 			goto isolate_fail;
- 
--		if (__isolate_lru_page_prepare(page, isolate_mode) != 0)
--			goto isolate_fail;
--
- 		/*
- 		 * Be careful not to clear PageLRU until after we're
- 		 * sure the page is not being freed elsewhere -- the
-@@ -971,6 +968,9 @@ isolate_migratepages_block(struct compac
- 		if (unlikely(!get_page_unless_zero(page)))
- 			goto isolate_fail;
- 
-+		if (__isolate_lru_page_prepare(page, isolate_mode) != 0)
-+			goto isolate_fail_put;
-+
- 		/* Try isolate the page */
- 		if (!TestClearPageLRU(page))
- 			goto isolate_fail_put;
+> diff --git a/security/selinux/ss/conditional.c b/security/selinux/ss/conditional.c
+> index da94a1b4bfda..d0d6668709f0 100644
+> --- a/security/selinux/ss/conditional.c
+> +++ b/security/selinux/ss/conditional.c
+> @@ -392,26 +392,21 @@ static int cond_read_node(struct policydb *p, struct cond_node *node, void *fp)
+>
+>                 rc = next_entry(buf, fp, sizeof(u32) * 2);
+>                 if (rc)
+> -                       goto err;
+> +                       return rc;
+>
+>                 expr->expr_type = le32_to_cpu(buf[0]);
+>                 expr->bool = le32_to_cpu(buf[1]);
+>
+>                 if (!expr_node_isvalid(p, expr)) {
+>                         rc = -EINVAL;
+> -                       goto err;
+> +                       return rc;
+>                 }
+>         }
+>
+>         rc = cond_read_av_list(p, fp, &node->true_list, NULL);
+>         if (rc)
+> -               goto err;
+> +               return rc;
+>         rc = cond_read_av_list(p, fp, &node->false_list, &node->true_list);
+> -       if (rc)
+> -               goto err;
+> -       return 0;
+> -err:
+> -       cond_node_destroy(node);
+>         return rc;
+>  }
+>
+> --
+> 2.18.1
+
+--
+paul moore
+www.paul-moore.com
