@@ -2,76 +2,104 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD856C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 10:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E57D6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 10:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7706207C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 10:54:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591872871;
-	bh=80uubE3dNVN39nZNbsDqyk0sI6supmeMUDV8kVu2jYg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=y39EuGiEvE3hgEx2h+qObuC1kC4TF9x62AhRoglZOjcDrxzL/57qSGBAgucUYk7ks
-	 Vcft56/1Y68Eg2x2ayXvqxuTCCmdiX+zdXIIW7jGz3EHlT77SsEA3NVCe1HZBMEfRi
-	 JRsvLQljTuMNab5sXElfT/s3y3NwAkV/WwcTYB5k=
+	by mail.kernel.org (Postfix) with ESMTP id CD089207C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 10:55:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727852AbgFKKya (ORCPT
+        id S1727858AbgFKKzA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 06:54:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38524 "EHLO mail.kernel.org"
+        Thu, 11 Jun 2020 06:55:00 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48934 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726407AbgFKKya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 06:54:30 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 507682072F;
-        Thu, 11 Jun 2020 10:54:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591872869;
-        bh=80uubE3dNVN39nZNbsDqyk0sI6supmeMUDV8kVu2jYg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=S56k98nXcJaD2+CE+2qM17zrmLz3+qoUNu3luUjLD4GcrVAfUVlM8W6tkFSpmtRtH
-         FBM6sTIX3X/GUQLEh0/VCPOOKztl8AsE41tTBWmR2DoQPxSFFRWVzeieK96JK8k3y+
-         iFV/iMMx7hv6e660ViYLi5cP2ORzFUW7o6ByycqQ=
-Date:   Thu, 11 Jun 2020 12:54:23 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Su Kang Yin <cantona@cantona.net>
-Cc:     linux-crypto@vger.kernel.org, christophe.leroy@c-s.fr,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] crypto: talitos - fix ECB and CBC algs ivsize
-Message-ID: <20200611105423.GB3802953@kroah.com>
-References: <cantona@cantona.net>
- <20200611100745.6513-1-cantona@cantona.net>
+        id S1726407AbgFKKzA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 06:55:00 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 33160AAC6;
+        Thu, 11 Jun 2020 10:55:01 +0000 (UTC)
+Subject: Re: slub freelist issue / BUG: unable to handle page fault for
+ address: 000000003ffe0018
+To:     "Kaneda, Erik" <erik.kaneda@intel.com>,
+        Vegard Nossum <vegard.nossum@oracle.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Moore, Robert" <robert.moore@intel.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        Christoph Lameter <cl@linux.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Marco Elver <elver@google.com>,
+        Waiman Long <longman@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+References: <4dc93ff8-f86e-f4c9-ebeb-6d3153a78d03@oracle.com>
+ <7839183d-1c0b-da02-73a2-bf5e1e8b02b9@suse.cz>
+ <94296941-1073-913c-2adb-bf2e41be9f0f@oracle.com>
+ <202006041054.874AA564@keescook>
+ <cb0cdaaa-7825-0b87-0384-db22329305bb@suse.cz>
+ <34455dce-6675-1fc2-8d61-45bf56f3f554@suse.cz>
+ <6b2b149e-c2bc-f87a-ea2c-3046c5e39bf9@oracle.com>
+ <faea2c18-edbe-f8b4-b171-6be866624856@oracle.com>
+ <CAJZ5v0jqmUmf7mv3wjniVM-YqPqhDSjxunU0E4VYCsUQqvrF_Q@mail.gmail.com>
+ <ce333dcb-2b2c-3e1f-2a7e-02a7819b1db4@suse.cz>
+ <894e8cee-33df-1f63-fb12-72dceb024ea7@oracle.com>
+ <BYAPR11MB3096B20EECE8E5BCB12E3D09F0800@BYAPR11MB3096.namprd11.prod.outlook.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <a36fdd61-285d-5994-a7f8-496544c9c65d@suse.cz>
+Date:   Thu, 11 Jun 2020 12:54:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200611100745.6513-1-cantona@cantona.net>
+In-Reply-To: <BYAPR11MB3096B20EECE8E5BCB12E3D09F0800@BYAPR11MB3096.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 06:07:45PM +0800, Su Kang Yin wrote:
-> Patch for 4.9 upstream:
+On 6/11/20 3:40 AM, Kaneda, Erik wrote:
+> We'll take this patch for ACPICA and it will be in the next release.
 > 
-> commit e1de42fdfc6a ("crypto: talitos - fix ECB algs ivsize")
-> wrongly modified CBC algs ivsize instead of ECB aggs ivsize.
-> 
-> This restore the CBC algs original ivsize of removes ECB's ones.
-> 
-> Signed-off-by: Su Kang Yin <cantona@cantona.net>
-> ---
->  drivers/crypto/talitos.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+> Rafael, do you want to take this as a part of the next rc? Or should we wait for the next merge window?
 
-Nice catch, sorry about that, patch now queued up.
+IMHO this should rather be fixed in 5.8 with CC stable, not next merge window.
 
-greg k-h
+> Thanks,
+> Erik
+>> 
+>> diff --git a/drivers/acpi/acpica/nsaccess.c b/drivers/acpi/acpica/nsaccess.c
+>> index 2566e2d4c7803..b76bbab917941 100644
+>> --- a/drivers/acpi/acpica/nsaccess.c
+>> +++ b/drivers/acpi/acpica/nsaccess.c
+>> @@ -98,14 +98,12 @@ acpi_status acpi_ns_root_initialize(void)
+>>                   * predefined names are at the root level. It is much easier to
+>>                   * just create and link the new node(s) here.
+>>                   */
+>> -               new_node =
+>> -                   ACPI_ALLOCATE_ZEROED(sizeof(struct
+>> acpi_namespace_node));
+>> +               new_node = acpi_ns_create_node(*ACPI_CAST_PTR (u32,
+>> init_val->name));
+>>                  if (!new_node) {
+>>                          status = AE_NO_MEMORY;
+>>                          goto unlock_and_exit;
+>>                  }
+>> 
+>> -               ACPI_COPY_NAMESEG(new_node->name.ascii, init_val->name);
+>>                  new_node->descriptor_type = ACPI_DESC_TYPE_NAMED;
+>>                  new_node->type = init_val->type;
+>> 
+>> 
+>> Vegard
+> 
+
