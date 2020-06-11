@@ -2,48 +2,49 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB22C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA10C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:13:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E7EC206DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8904B20829
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:13:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lHWWfZO7"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NiV5xepk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbgFKSNv (ORCPT
+        id S1727097AbgFKSN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 14:13:51 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:28339 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725824AbgFKSNv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 14:13:51 -0400
+        Thu, 11 Jun 2020 14:13:56 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:18952 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725824AbgFKSNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 14:13:53 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591899230; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=ARvpbt1PAqKaTDTiz8q5xriN6+LTIAWuDHcex9Yx34M=; b=lHWWfZO7MHKBDjCXoAVSpDJPiQICu3baF4IKFHwcxnQKyH7sAs6RYZGTaiJHN0n1ljR2f+uM
- 05rVL8s2ccVzBE/QvQUYTOEqpY3GtLi73j1O76CJvEA8r5ApA8wnjUb8xzco14GXYSf0KJ3q
- LhsBLC21who2NWTfns4dOIlLhVI=
-X-Mailgun-Sending-Ip: 104.130.122.27
+ s=smtp; t=1591899232; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=25uisJ5LBVEr8MdaZLkIMYhClh1rhFD8ZG7rSLGaXaw=; b=NiV5xepkmo5mNGAnofDgVnSOXssSHPWAPGHgj01I7kwD7xw/KEn7gjN765C8zuH5/XjITfUk
+ BnUevdr3xHfd9YOSb3p0dZd3W675Yc84dAItZ3YkPfHKRFbSnEqIK4HPki4U5qwFKjmvlYXa
+ ITYH9XjeMp8kL3g0L0dM1BJ/Pd8=
+X-Mailgun-Sending-Ip: 69.72.43.7
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n09.prod.us-west-2.postgun.com with SMTP id
- 5ee2745e117610c7ff93e9f2 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 11 Jun 2020 18:13:50
+ smtp-out-n13.prod.us-west-2.postgun.com with SMTP id
+ 5ee274605866879c76a8a0a5 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 11 Jun 2020 18:13:52
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DB692C433CB; Thu, 11 Jun 2020 18:13:49 +0000 (UTC)
+        id 0C2F1C433C8; Thu, 11 Jun 2020 18:13:52 +0000 (UTC)
 Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: hemantk)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3A3CFC433C8;
-        Thu, 11 Jun 2020 18:13:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3A3CFC433C8
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2158EC43391;
+        Thu, 11 Jun 2020 18:13:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2158EC43391
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=hemantk@codeaurora.org
 From:   Hemant Kumar <hemantk@codeaurora.org>
@@ -51,41 +52,41 @@ To:     manivannan.sadhasivam@linaro.org
 Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         jhugo@codeaurora.org, bbhatt@codeaurora.org,
         Hemant Kumar <hemantk@codeaurora.org>
-Subject: [PATCH v3 0/4] user space client interface driver
-Date:   Thu, 11 Jun 2020 11:13:40 -0700
-Message-Id: <1591899224-3403-1-git-send-email-hemantk@codeaurora.org>
+Subject: [PATCH v3 2/4] bus: mhi: core: Move MHI_MAX_MTU to external header file
+Date:   Thu, 11 Jun 2020 11:13:42 -0700
+Message-Id: <1591899224-3403-3-git-send-email-hemantk@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1591899224-3403-1-git-send-email-hemantk@codeaurora.org>
+References: <1591899224-3403-1-git-send-email-hemantk@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-V3: Added documentation for MHI UCI driver.
+Currently this macro is defined in internal MHI header as
+a TRE length mask. Moving it to external header allows MHI
+client drivers to set this upper bound for the transmit
+buffer size.
 
-V2: Added mutex lock to prevent multiple readers to access same
-mhi buffer which can result into use after free.
+Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
+---
+ include/linux/mhi.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Hemant Kumar (4):
-  bus: mhi: core: Add helper API to return number of free TREs
-  bus: mhi: core: Move MHI_MAX_MTU to external header file
-  docs: Add documentation for user space client interface
-  bus: mhi: clients: Add user space client interface driver
-
- Documentation/mhi/index.rst      |   1 +
- Documentation/mhi/uci.rst        |  19 ++
- drivers/bus/mhi/Kconfig          |   2 +
- drivers/bus/mhi/Makefile         |   1 +
- drivers/bus/mhi/clients/Kconfig  |  16 +
- drivers/bus/mhi/clients/Makefile |   3 +
- drivers/bus/mhi/clients/uci.c    | 652 +++++++++++++++++++++++++++++++++++++++
- drivers/bus/mhi/core/main.c      |  12 +
- include/linux/mhi.h              |  12 +
- 9 files changed, 718 insertions(+)
- create mode 100644 Documentation/mhi/uci.rst
- create mode 100644 drivers/bus/mhi/clients/Kconfig
- create mode 100644 drivers/bus/mhi/clients/Makefile
- create mode 100644 drivers/bus/mhi/clients/uci.c
-
+diff --git a/include/linux/mhi.h b/include/linux/mhi.h
+index a39b77d..ce43f74 100644
+--- a/include/linux/mhi.h
++++ b/include/linux/mhi.h
+@@ -16,6 +16,9 @@
+ #include <linux/wait.h>
+ #include <linux/workqueue.h>
+ 
++/* MHI client drivers to set this upper bound for tx buffer */
++#define MHI_MAX_MTU 0xffff
++
+ #define MHI_VOTE_BUS BIT(0) /* do not disable the mhi bus */
+ #define MHI_VOTE_DEVICE BIT(1) /* prevent mhi device from entering lpm */
+ 
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
