@@ -2,96 +2,145 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6428C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 748AFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 928122081A
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:02:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E2F9207C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:03:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591873381;
+	bh=vm/oU7bN6e1mSo3bB9GgSYG6VFq0cqVPDddNL9y/TLc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ztycs4IBuG2E6KxQoblhamkAU3Ske4Bbr/0evFzGcCVENT9cnqImlUaWQ34uwmMuq
+	 aeK13Z4DNy5auS1dE7bmMYvcnfbXxW95eqNJ20APyz+nlr90hjcvmicB3Ztmh/H0UG
+	 2WWNViVrzlRWXMzgGhGRa3rF8vG1kvo+KyERXuLQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbgFKLCp (ORCPT
+        id S1727904AbgFKLC5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 07:02:45 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:45904 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727877AbgFKLCc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 07:02:32 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jjKyU-0007kK-ER; Thu, 11 Jun 2020 11:02:22 +0000
-Date:   Thu, 11 Jun 2020 13:02:21 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Andrei Vagin <avagin@gmail.com>, Dmitry Safonov <dima@arista.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org
-Subject: vdso_join_timens() question
-Message-ID: <20200611110221.pgd3r5qkjrjmfqa2@wittgenstein>
+        Thu, 11 Jun 2020 07:02:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40928 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727788AbgFKLCf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 07:02:35 -0400
+Received: from localhost (unknown [171.61.66.58])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C80B20801;
+        Thu, 11 Jun 2020 11:02:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591873354;
+        bh=vm/oU7bN6e1mSo3bB9GgSYG6VFq0cqVPDddNL9y/TLc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jxFLObgRMQFE3cRyFSckY441H7v2i5CwkHsLLUJ1R9dNLQiObPEdjaUySJXTWrhdP
+         UqUfySIWuafVWSCIIti4KaICTJzUUFGvKANkcNFUbT2oNZ/Mt9720d5DEdhOS7KndU
+         CT700RunbH3BHUhzd7w3+aCJnnd2XsWcMGg7NyE0=
+Date:   Thu, 11 Jun 2020 16:32:28 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Jaroslav Kysela <perex@perex.cz>
+Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
+        alsa-devel@alsa-project.org, broonie@kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        tiwai@suse.com, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] ALSA: compress: Fix gapless playback state machine
+Message-ID: <20200611110228.GC1393454@vkoul-mobl>
+References: <20200610100729.362-1-srinivas.kandagatla@linaro.org>
+ <817d009e-fa09-e897-cfc3-997bf1dd5e30@perex.cz>
+ <20200610105820.GA1393454@vkoul-mobl>
+ <20200611084659.GO71940@ediswmail.ad.cirrus.com>
+ <6a984302-ff01-e326-d338-e50e1f532cd9@perex.cz>
+ <20200611094423.GB1393454@vkoul-mobl>
+ <8bba7e36-af15-33ac-bfc7-d436030f08b7@perex.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <8bba7e36-af15-33ac-bfc7-d436030f08b7@perex.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey,
+On 11-06-20, 12:40, Jaroslav Kysela wrote:
+> Dne 11. 06. 20 v 11:44 Vinod Koul napsal(a):
+> > On 11-06-20, 11:09, Jaroslav Kysela wrote:
+> > > Dne 11. 06. 20 v 10:46 Charles Keepax napsal(a):
+> > > > On Wed, Jun 10, 2020 at 04:28:20PM +0530, Vinod Koul wrote:
+> > > > > On 10-06-20, 12:40, Jaroslav Kysela wrote:
+> > > > > > Dne 10. 06. 20 v 12:07 Srinivas Kandagatla napsal(a):
+> > > > > > > For gapless playback call to snd_compr_drain_notify() after
+> > > > > > > partial drain should put the state to SNDRV_PCM_STATE_RUNNING
+> > > > > > > rather than SNDRV_PCM_STATE_SETUP as the driver is ready to
+> > > > > > > process the buffers for new track.
+> > > > > > > 
+> > > > > > > With existing code, if we are playing 3 tracks in gapless, after
+> > > > > > > partial drain finished on previous track 1 the state is set to
+> > > > > > > SNDRV_PCM_STATE_SETUP which is then moved to SNDRV_PCM_STATE_PREPARED
+> > > > > > > after data write. With this state calls to snd_compr_next_track() and
+> > > > > > > few other calls will fail as they expect the state to be in
+> > > > > > > SNDRV_PCM_STATE_RUNNING.
+> > > > > > > 
+> > > > > > > Here is the sequence of events and state transitions:
+> > > > > > > 
+> > > > > > > 1. set_params (Track 1), state =  SNDRV_PCM_STATE_SETUP
+> > > > > > > 2. set_metadata (Track 1), no state change, state = SNDRV_PCM_STATE_SETUP
+> > > > > > > 3. fill and trigger start (Track 1), state = SNDRV_PCM_STATE_RUNNING
+> > > > > > > 4. set_next_track (Track 2), state = SNDRV_PCM_STATE_RUNNING
+> > > > > > > 5. partial_drain (Track 1), state = SNDRV_PCM_STATE_SETUP
+> > > > > > > 6  snd_compr_drain_notify (Track 1), state = SNDRV_PCM_STATE_SETUP
+> > > > > > > 7. fill data (Track 2), state = SNDRV_PCM_STATE_PREPARED
+> > > > > > > 8. set_metadata (Track 3), no state change, state = SNDRV_PCM_STATE_PREPARED
+> > > > > > > 9. set_next_track (Track 3), !! FAILURE as state != SNDRV_PCM_STATE_RUNNING
+> > > > > > 
+> > > > > > 
+> > > > > > The snd_compr_drain_notify() is called only from snd_compr_stop(). Something
+> > > > > > is missing in this sequence?
+> > > > > 
+> > > > > It is supposed to be invoked by driver when partial drain is complete..
+> > > > > both intel and sprd driver are calling this. snd_compr_stop is stop
+> > > > > while draining case so legit
+> > > > > 
+> > > > 
+> > > > Not sure I follow this statement, could you elaborate a bit?
+> > > > snd_compr_stop putting the state to RUNNING seems fundamentally
+> > > > broken to me, the whole point of snd_compr_stop is to take the
+> > > > state out of RUNNING.
+> > > 
+> > > Yes. I agree. It seems that the acknowledge for the partial drain should be
+> > > handled differently.
+> > 
+> > Yeah sorry I overlooked that case and was thinking of it being invoked
+> > from driver!
+> > 
+> > Yes this would make the snd_compr_stop() behave incorrectly.. so this
+> > cant be done as proposed.
+> > 
+> > But we still need to set the draining stream state properly and I am
+> > thinking below now:
+> > 
+> > diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
+> > index 509290f2efa8..9aba851732d7 100644
+> > --- a/sound/core/compress_offload.c
+> > +++ b/sound/core/compress_offload.c
+> > @@ -929,7 +929,9 @@ static int snd_compr_partial_drain(struct snd_compr_stream *stream)
+> >          }
+> >          stream->next_track = false;
+> > -       return snd_compress_wait_for_drain(stream);
+> > +       retval = snd_compress_wait_for_drain(stream);
+> > +       stream->runtime->state = SNDRV_PCM_STATE_RUNNING;
+> > +       return retval;
+> >   }
+> 
+> I see a race possibility when the last track is too small and the driver
+> signals the end-of-track twice. In this case the partial drain should not
+> end with the running state. It would be probably better to separate partial
+> / last track acknowledgements.
 
-I'm about to finish a patch to add CLONE_NEWTIME support to setns().
-Since setns() now allows to attach to a multiple namespaces at the same
-time I've also reworked it to be atomic (already upstream). Either all
-namespaces are switched or no namespace is switched. All namespaces
-basically now have a commit mode after which installation should ideally
-not fail anymore. That could work for CLONE_NEWTIME too, I think. The
-only blocker to this is vdso_join_timens() which can fail due to
-mmap_write_lock_killable().
+I completely agree that we should have separate acknowledgements here,
+and going to rethink all state transitions for gapless here..
 
-Is it possible to change this to mmap_write_lock()? So sm like:
-
-diff --git a/arch/x86/entry/vdso/vma.c b/arch/x86/entry/vdso/vma.c
-index ea7c1f0b79df..5c5b4cc61fce 100644
---- a/arch/x86/entry/vdso/vma.c
-+++ b/arch/x86/entry/vdso/vma.c
-@@ -144,8 +144,7 @@ int vdso_join_timens(struct task_struct *task, struct time_namespace *ns)
-        struct mm_struct *mm = task->mm;
-        struct vm_area_struct *vma;
-
--       if (mmap_write_lock_killable(mm))
--               return -EINTR;
-+       mmap_write_lock(mm);
-
-        for (vma = mm->mmap; vma; vma = vma->vm_next) {
-                unsigned long size = vma->vm_end - vma->vm_start;
-
-vdso_join_timens() is called in two places. Once during fork() and once
-during timens_install(). I would only need the mmap_write_lock() change
-for the latter. So alternatively we could have:
-
-__vdso_join_timens_unlocked()
-
-and then have/expose:
-
-vdso_join_timens_fork()
-{
-        if (mmap_write_lock_killable(mm))
-                return -EINTR;
-	__vdso_join_timens_unlocked()
-	mmap_write_unlock(mm);
-}
-
-and 
-
-vdso_join_timens_install()
-{
-        mmap_write_lock(mm);
-	__vdso_join_timens_unlocked()
-	mmap_write_unlock(mm);
-}
-
-Thanks!
-Christian
+Thanks for the help
+-- 
+~Vinod
