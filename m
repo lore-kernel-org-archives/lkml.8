@@ -2,107 +2,168 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 494BAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 03:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55595C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 03:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C42B206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 03:10:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2464E206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 03:12:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NlcYwDO7"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oEKLqBth"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726441AbgFKDKZ (ORCPT
+        id S1726387AbgFKDMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 23:10:25 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27210 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726316AbgFKDKY (ORCPT
+        Wed, 10 Jun 2020 23:12:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40264 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726312AbgFKDMk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 23:10:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591845023;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=j7nAz4g7AJWZ/u0Oz9E2EcJapBTF/UxDuv9a+vP4pMQ=;
-        b=NlcYwDO7/Vq8y3X+ljU7HyjuIK11JAWZJkMItPJ8fw6RX9jYrtAMW2Jt4L+vl6uVtiaFUb
-        GlvN+8ljYf0/la0knMw1TYZ7t7i+LdPq60R2gvYqquUI+G6u2Vq9F5UGZSUNujEjAdlXWz
-        uR0YRFN22NlIOZvcByTNQKtS9as5Ns8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-9-28PUtISXOqKJhlRrBZDLPw-1; Wed, 10 Jun 2020 23:10:19 -0400
-X-MC-Unique: 28PUtISXOqKJhlRrBZDLPw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 51AE21883600;
-        Thu, 11 Jun 2020 03:10:18 +0000 (UTC)
-Received: from [10.72.12.125] (ovpn-12-125.pek2.redhat.com [10.72.12.125])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7A3EB60BF3;
-        Thu, 11 Jun 2020 03:10:09 +0000 (UTC)
-Subject: Re: [PATCH] s390: protvirt: virtio: Refuse device without IOMMU
-To:     Pierre Morel <pmorel@linux.ibm.com>, linux-kernel@vger.kernel.org
-Cc:     pasic@linux.ibm.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
-        mst@redhat.com, cohuck@redhat.com, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-References: <1591794711-5915-1-git-send-email-pmorel@linux.ibm.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <467d5b58-b70c-1c45-4130-76b6e18c05af@redhat.com>
-Date:   Thu, 11 Jun 2020 11:10:07 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 10 Jun 2020 23:12:40 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B8B3C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 20:12:39 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id h95so1775109pje.4
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 20:12:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=E/BV7QCKbs58GW28of5JsI/VaBszSvteviKF6A2dE0w=;
+        b=oEKLqBth/WTLkHxALaI4JdTFChNPI2SunsTjFLTUKmZ0zFV+wh1VcAJZ8I/SLPxNue
+         1MGreEQAXcWYXKjYVrO48BFfZ8dlEHzTSJHAegPOKP4HFGisAVpGydxhlCwBQm6dPVdH
+         1nrOckOjDwP34JbMjBWbZmmI7tHrA5iv5Kx0Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=E/BV7QCKbs58GW28of5JsI/VaBszSvteviKF6A2dE0w=;
+        b=LfzvmIZ8zY0pAu61WKzhi/OL7EDEArlOBKA/2K9bClsWPJmeONNhcMTL0CVpTQx9yv
+         ut7pmAgIdbXfIOAEQaU2F+js8KysPScsIIm0JYO7ybTrqR/ZcLMshxalF3LyTo+YCvTk
+         NDTBVN5aU/0XujlOyEcPTAe3YzbhFdSE/07AmX7GA0V2V9Ma7J/xCOUAU/V1BXXb1Dwj
+         VM1nB5RdSKp6oUweieRUcyQ5kscIsoQhbvq20FjkJ+gE3trLSn1hM+lHwQl4sRPxNQIl
+         zu8rWlwg9w5p9JRACg2B2m0otS6/ImsY+uPCBXPeCwJ7/DHkrhpkH56cbkypvGEKiS4S
+         VVWQ==
+X-Gm-Message-State: AOAM530i7UBpmjdixswj/MXLTePRnZWZlzqD0SOeTG0Sigo13BDY2nHc
+        WUZLKVXlnBC+w34bUZVF89w1Ew==
+X-Google-Smtp-Source: ABdhPJyQ6PZEg7hRQ5CFYpuwfmPSmaUGl5e/8ZFwr5nUlnezbtTiQNs2FBCn6F3/uod1YNH+Wl4seQ==
+X-Received: by 2002:a17:90b:307:: with SMTP id ay7mr6091054pjb.48.1591845158693;
+        Wed, 10 Jun 2020 20:12:38 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id h5sm1336786pfb.120.2020.06.10.20.12.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2020 20:12:37 -0700 (PDT)
+Date:   Wed, 10 Jun 2020 20:12:36 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     Federico Vaga <federico.vaga@vaga.pv.it>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        David Sterba <dsterba@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Jacob Huisman <jacobhuisman@kernelthusiast.com>,
+        Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
+        Rob Herring <robh@kernel.org>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones:
+ Documentation/translations/it_IT
+Message-ID: <202006102009.CB14D7F@keescook>
+References: <20200609201241.81518-1-grandmaster@al2klimov.de>
+ <4235548.LvFx2qVVIh@harkonnen>
+ <cd260d03-27a4-7794-f58f-21e8e0be9755@al2klimov.de>
 MIME-Version: 1.0
-In-Reply-To: <1591794711-5915-1-git-send-email-pmorel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <cd260d03-27a4-7794-f58f-21e8e0be9755@al2klimov.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 10, 2020 at 08:11:39PM +0200, Alexander A. Klimov wrote:
+> Am 10.06.20 um 10:57 schrieb Federico Vaga:
+> > On Tuesday, June 9, 2020 10:12:41 PM CEST Alexander A. Klimov wrote:
+> > > Rationale:
+> > > Reduces attack surface on kernel devs opening the links for MITM
+> > > as HTTPS traffic is much harder to manipulate.
+> > > 
+> > > Deterministic algorithm:
+> > > For each file:
+> > >    For each line:
+> > >      If doesn't contain `\bxmlns\b`:
+> > >        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> > >          If both the HTTP and HTTPS versions
+> > >          return 200 OK and serve the same content:
+> > >            Replace HTTP with HTTPS.
 
-On 2020/6/10 下午9:11, Pierre Morel wrote:
-> Protected Virtualisation protects the memory of the guest and
-> do not allow a the host to access all of its memory.
->
-> Let's refuse a VIRTIO device which does not use IOMMU
-> protected access.
->
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> ---
->   drivers/s390/virtio/virtio_ccw.c | 5 +++++
->   1 file changed, 5 insertions(+)
->
-> diff --git a/drivers/s390/virtio/virtio_ccw.c b/drivers/s390/virtio/virtio_ccw.c
-> index 5730572b52cd..06ffbc96587a 100644
-> --- a/drivers/s390/virtio/virtio_ccw.c
-> +++ b/drivers/s390/virtio/virtio_ccw.c
-> @@ -986,6 +986,11 @@ static void virtio_ccw_set_status(struct virtio_device *vdev, u8 status)
->   	if (!ccw)
->   		return;
->   
-> +	/* Protected Virtualisation guest needs IOMMU */
-> +	if (is_prot_virt_guest() &&
-> +	    !__virtio_test_bit(vdev, VIRTIO_F_IOMMU_PLATFORM))
-> +			status &= ~VIRTIO_CONFIG_S_FEATURES_OK;
-> +
->   	/* Write the status to the host. */
->   	vcdev->dma_area->status = status;
->   	ccw->cmd_code = CCW_CMD_WRITE_STATUS;
+Is this script somewhere we can read it? (It's easier usually to review
+the code for bulk changes than the bulk changes themselves.)
 
+> > > 
+> > > Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> > > ---
+> > >   .../translations/it_IT/admin-guide/README.rst      |  2 +-
+> > >   .../translations/it_IT/doc-guide/parse-headers.rst |  2 +-
+> > >   .../translations/it_IT/doc-guide/sphinx.rst        | 10 +++++-----
+> > >   .../translations/it_IT/process/2.Process.rst       | 12 ++++++------
+> > >   .../translations/it_IT/process/3.Early-stage.rst   |  2 +-
+> > >   .../translations/it_IT/process/4.Coding.rst        |  4 ++--
+> > >   .../it_IT/process/7.AdvancedTopics.rst             |  8 ++++----
+> > >   .../translations/it_IT/process/8.Conclusion.rst    | 14 +++++++-------
+> > >   .../translations/it_IT/process/adding-syscalls.rst |  4 ++--
+> > >   .../translations/it_IT/process/changes.rst         |  6 +++---
+> > >   .../translations/it_IT/process/clang-format.rst    |  2 +-
+> > >   .../translations/it_IT/process/coding-style.rst    |  2 +-
+> > >   Documentation/translations/it_IT/process/howto.rst |  2 +-
+> > >   .../it_IT/process/maintainer-pgp-guide.rst         |  2 +-
+> > >   .../it_IT/process/submitting-patches.rst           |  4 ++--
+> > >   .../it_IT/process/volatile-considered-harmful.rst  |  4 ++--
+> > >   16 files changed, 40 insertions(+), 40 deletions(-)
+> > > 
+> > 
+> > 
+> > > diff --git a/Documentation/translations/it_IT/doc-guide/sphinx.rst
+> > > b/Documentation/translations/it_IT/doc-guide/sphinx.rst index
+> > > f1ad4504b734..0aaeb0297661 100644
+> > > --- a/Documentation/translations/it_IT/doc-guide/sphinx.rst
+> > > +++ b/Documentation/translations/it_IT/doc-guide/sphinx.rst
+> > > @@ -14,7 +14,7 @@ Per generare la documentazione in HTML o PDF, usate
+> > > comandi ``make htmldocs`` o ``make pdfdocs``. La documentazione così
+> > > generata sarà disponibile nella cartella ``Documentation/output``.
+> > > 
+> > > -.. _Sphinx: http://www.sphinx-doc.org/
+> > > +.. _Sphinx: https://www.sphinx-doc.org/
+> > >   .. _reStructuredText: http://docutils.sourceforge.net/rst.html
+> > 
+> > It is not part of the deterministic algorithm but you may consider this as
+> > well
 
-I wonder whether we need move it to virtio core instead of ccw.
+Why did it not match?
 
-I think the other memory protection technologies may suffer from this as 
-well.
+> > 
+> > -.. _reStructuredText: http://docutils.sourceforge.net/rst.html
+> > +.. _reStructuredText: https://docutils.sourceforge.io/rst.html
+> > 
+> I'll think about analyzing such almost-matches, extending the algo and
+> supplying a second round of patches once all [1] of this round arrive in
+> torvalds/master.
+> 
+> [1]:
+> 
+> ➜  linux git:(feature/https-links-3) ✗ git diff --shortstat
+>  1963 files changed, 2882 insertions(+), 2882 deletions(-)
+> ➜  linux git:(feature/https-links-3) ✗
 
-Thanks
+Is there a reason to do this one language at a time instead of just
+doing everything in one go?
 
+-- 
+Kees Cook
