@@ -2,207 +2,142 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC8CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3143AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:02:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C14512072F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:01:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591862509;
-	bh=WrdLLQIOoxEMsuU9Lk5Dy1SToKye9eSD7H3ebXQ4auQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=e//66DgtEleECljD0FyctQ8Rbcin6VrCMC7Dc7e0BNxJzzosn1UKx3753NW7wXQbE
-	 eVbmcTOb/V6HTbdhSsTPO87GfydqWHHUjpMJromFiQPiNYFkTv+D2lq0+i83ZKyeZq
-	 GervABqno8QvwdwXmA+LIP5X0f0IDOZykr5EER8g=
+	by mail.kernel.org (Postfix) with ESMTP id F3107204EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:02:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="kK29WhgF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgFKIBs (ORCPT
+        id S1726958AbgFKICf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 04:01:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47298 "EHLO mail.kernel.org"
+        Thu, 11 Jun 2020 04:02:35 -0400
+Received: from mout.web.de ([212.227.17.11]:47523 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726648AbgFKIBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 04:01:47 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65AB1204EA;
-        Thu, 11 Jun 2020 08:01:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591862506;
-        bh=WrdLLQIOoxEMsuU9Lk5Dy1SToKye9eSD7H3ebXQ4auQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BFNWtrgHmTyg+AGGrVuwbubxxA7aMIB6dBhEn5erW2tJ90Re7LmkgQh1PRU8S1tBy
-         1Vf5aq5qLm3ViH955oFX5SqDRf+22SYRhv8o6a+CLJPlv/tGf0NcfQ1zvZ772LwNWR
-         fmY3NiXUQ/U6YmjVuKyNJoqR2RwkIVDLBKcX1YPI=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jjI9g-0021ZL-Tz; Thu, 11 Jun 2020 09:01:45 +0100
+        id S1726757AbgFKICe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 04:02:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1591862464;
+        bh=+y1PmpNFdbQw+ppUZ7tcxHX8SdjdXK80MSRo8PVIBgE=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=kK29WhgFU1xX85Gpc429cWP9XvRaarQ5X3ZTvD9tnokFw0GmqmNRcCAkfjmRM5iEJ
+         A/mA17dN5mjZs5fCvO6D35BNeoMCrsGMETOxMGRrqwZIWYtyetbhnK/+cRJ7VctZU7
+         HRrpSx3nFLBXrYArS9MlLQhPUOLl4+YOsh/40usE=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([78.49.66.14]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MWAwH-1jP8qP0j7J-00XOTy; Thu, 11
+ Jun 2020 10:01:04 +0200
+Subject: Re: [PATCH v2] exfat: add missing brelse() calls on error paths
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        linux-fsdevel@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        Tetsuhiro Kohada <kohada.t2@gmail.com>,
+        Wei Yongjun <weiyongjun1@huawei.com>
+References: <20200610172213.GA90634@mwanda>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <6e64100a-b623-a4d2-c5d0-cc9235669cdf@web.de>
+Date:   Thu, 11 Jun 2020 10:00:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 11 Jun 2020 09:01:44 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Feiner <pfeiner@google.com>,
-        Peter Shier <pshier@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        Ben Gardon <bgardon@google.com>,
-        Christoffer Dall <christoffer.dall@arm.com>
-Subject: Re: [PATCH 18/21] KVM: arm64: Use common KVM implementation of MMU
- memory caches
-In-Reply-To: <20200605213853.14959-19-sean.j.christopherson@intel.com>
-References: <20200605213853.14959-1-sean.j.christopherson@intel.com>
- <20200605213853.14959-19-sean.j.christopherson@intel.com>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <3555daf3b38c890e1e74f05d6f49f9be@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: sean.j.christopherson@intel.com, paulus@ozlabs.org, borntraeger@de.ibm.com, frankja@linux.ibm.com, pbonzini@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, david@redhat.com, cohuck@redhat.com, imbrenda@linux.ibm.com, vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org, kvm@vger.kernel.org, kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org, pfeiner@google.com, pshier@google.com, junaids@google.com, bgardon@google.com, christoffer.dall@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+In-Reply-To: <20200610172213.GA90634@mwanda>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Br+WZCnyOu5MQovsERuy+CrDXcu2aPq4x6am0ZY6q1wVxOBphvf
+ xvzsJwDf4pBPKrXLUhf7lcZvVm02iiUCIVmkjxGtj2PxxAxqnNoD76jK3O22SE5I/gMevdH
+ l9RJ/Cpp7fEmXIIFc2Rzbs2EVc4AVyGiw9m7MYz6oGSmOB8FxW2KaYU241NrkoYpx9LNJdG
+ sT4x0Gg6rbCJ6UsdaLx0Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:sLSyAfGt6VY=:vAC2rbclw+OinxlXAknKiW
+ KyXPaJqfvEc87/pHAodb5v+TiAMFJaeHME4ZgNNLrIlWcDbAim/SRFFmGsK7fRUtvyYnkn5Du
+ AV2qGQqXwNPcnXr4G5Hxeaa/FHD2e/XHfhx7mbMBUneu4KYtPSwhtBGS+2NnLvOfg4yY00A7h
+ HgbfcAT4nbD8rfGnYiNV2WhHgZny/5ebMRhJN85jzGCFPECCfrGNV10lLvmw9a0Zl/EIQtwRu
+ VBqzmPZ/WsGMvhPVzzartIaiFwaghovtyGDxMzaXlRn2kRGPFVdlsqngkp2RFueFUeMZIoPuo
+ wlfhDBtL18f1JLjkMN7ZJvG/GImLhKnvFrR48d63+VIkhigJZ1TnwznbUn7FtgzW+dcA2EA2E
+ 66LhadGrJtf6xzsIih4sEvxWbquXqbOq4C5xGKK+N7NRvBXBSqoVkP6FV2vdlCfdsvermWaI8
+ 7RAQvx6wMxH0L53wUGdbsw3Fb7qZz3uulFrlvLhsdT4p0eIOOwtcFfhcS+gZEtAMgDzAyCSXm
+ 9ENfyPvjkTcvMpJPR91VpTc48RtxZr3x6DcnUov0I3F8Q9Se4DzICCUOzGDfmkZuF1JzmtKKZ
+ Rou3qF7DY42aSb43lttRUy7MWTh0uR7BrAErbvDtIdCPuTneIwUdYU5Ed+wm3rfQybZG48ksm
+ 2ggOzUXMyL27/G+nFGw/wirTHChe32/mz1XcKGVjPqwr6IM0IPJfGis8dfK4HNRaBeXu4IQX1
+ 0xd2p163QsoPeaGvAu2Du19hsLBu16ImavNm8IMhHy+B62eW6d8hz3T5xGWgv9Fj61p7SsM8h
+ guGX39oSuBg5p1Ik0bZD2A/YIA+sMn2RoCp9Zw2KjiH+0TmOlWdAFw/wnex6+SEMH0ssvrjuX
+ q1MbZo1PQt7g17UdDZXdRZ/ACz53t4C7i64ihXT8KRwYyUpD8/+9fDOnsX7aUBpn8dgzYq9KO
+ +xhOoJmqE9/jTIQQ1yc3pUPvFbzod5ZxwlxDvWZnuQ0pT0eu3IeKufApCJiZyJt29YRiFQU9D
+ LZdtxepHGE9taV0Tdr5520mpFxouTYwrs3y042+znxtlS7zx8vqCzdiPtjMN7SUutITudkmKp
+ rRUDKPPj+KCBgb5XCdVEgHya9ry7jdF/E/wcMcuX6kQPnma4J/ekOQBCLffysQLRTYYQMFA65
+ ipOcK+nbmxnHSlflFPa+XCST0Ea9ctTiKXm0AKo1Rsn8g/oyDnXgCPenovyjNXu+x4n0jIBjT
+ s1Q7ctvYWC7o+FT1d
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-05 22:38, Sean Christopherson wrote:
-> Move to the common MMU memory cache implementation now that the common
-> code and arm64's existing code are semantically compatible.
-> 
-> No functional change intended.
-> 
-> Suggested-by: Christoffer Dall <christoffer.dall@arm.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/arm64/include/asm/kvm_host.h  | 12 -------
->  arch/arm64/include/asm/kvm_types.h |  2 ++
->  arch/arm64/kvm/mmu.c               | 51 ++++++------------------------
->  3 files changed, 12 insertions(+), 53 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/kvm_host.h
-> b/arch/arm64/include/asm/kvm_host.h
-> index 2385dede96e0..d221b6b129fd 100644
-> --- a/arch/arm64/include/asm/kvm_host.h
-> +++ b/arch/arm64/include/asm/kvm_host.h
-> @@ -97,18 +97,6 @@ struct kvm_arch {
->  	bool return_nisv_io_abort_to_user;
->  };
-> 
-> -#define KVM_NR_MEM_OBJS     40
-> -
-> -/*
-> - * We don't want allocation failures within the mmu code, so we 
-> preallocate
-> - * enough memory for a single page fault in a cache.
-> - */
-> -struct kvm_mmu_memory_cache {
-> -	int nobjs;
-> -	gfp_t gfp_zero;
-> -	void *objects[KVM_NR_MEM_OBJS];
-> -};
-> -
->  struct kvm_vcpu_fault_info {
->  	u32 esr_el2;		/* Hyp Syndrom Register */
->  	u64 far_el2;		/* Hyp Fault Address Register */
-> diff --git a/arch/arm64/include/asm/kvm_types.h
-> b/arch/arm64/include/asm/kvm_types.h
-> index d0987007d581..9a126b9e2d7c 100644
-> --- a/arch/arm64/include/asm/kvm_types.h
-> +++ b/arch/arm64/include/asm/kvm_types.h
-> @@ -2,5 +2,7 @@
->  #ifndef _ASM_ARM64_KVM_TYPES_H
->  #define _ASM_ARM64_KVM_TYPES_H
-> 
-> +#define KVM_ARCH_NR_OBJS_PER_MEMORY_CACHE 40
-> +
->  #endif /* _ASM_ARM64_KVM_TYPES_H */
-> 
-> diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
-> index 688213ef34f0..976405e2fbb2 100644
-> --- a/arch/arm64/kvm/mmu.c
-> +++ b/arch/arm64/kvm/mmu.c
-> @@ -124,37 +124,6 @@ static void stage2_dissolve_pud(struct kvm *kvm,
-> phys_addr_t addr, pud_t *pudp)
->  	put_page(virt_to_page(pudp));
->  }
-> 
-> -static int mmu_topup_memory_cache(struct kvm_mmu_memory_cache *cache, 
-> int min)
-> -{
-> -	void *page;
-> -
-> -	if (cache->nobjs >= min)
-> -		return 0;
-> -	while (cache->nobjs < ARRAY_SIZE(cache->objects)) {
-> -		page = (void *)__get_free_page(GFP_KERNEL_ACCOUNT |
-> -					       cache->gfp_zero);
-> -		if (!page)
-> -			return -ENOMEM;
-> -		cache->objects[cache->nobjs++] = page;
-> -	}
-> -	return 0;
-> -}
-> -
-> -static void mmu_free_memory_cache(struct kvm_mmu_memory_cache *mc)
-> -{
-> -	while (mc->nobjs)
-> -		free_page((unsigned long)mc->objects[--mc->nobjs]);
-> -}
-> -
-> -static void *mmu_memory_cache_alloc(struct kvm_mmu_memory_cache *mc)
-> -{
-> -	void *p;
-> -
-> -	BUG_ON(!mc || !mc->nobjs);
-> -	p = mc->objects[--mc->nobjs];
-> -	return p;
-> -}
-> -
->  static void clear_stage2_pgd_entry(struct kvm *kvm, pgd_t *pgd,
-> phys_addr_t addr)
->  {
->  	pud_t *pud_table __maybe_unused = stage2_pud_offset(kvm, pgd, 0UL);
-> @@ -1024,7 +993,7 @@ static pud_t *stage2_get_pud(struct kvm *kvm,
-> struct kvm_mmu_memory_cache *cache
->  	if (stage2_pgd_none(kvm, *pgd)) {
->  		if (!cache)
->  			return NULL;
-> -		pud = mmu_memory_cache_alloc(cache);
-> +		pud = kvm_mmu_memory_cache_alloc(cache);
->  		stage2_pgd_populate(kvm, pgd, pud);
->  		get_page(virt_to_page(pgd));
->  	}
+=E2=80=A6
+> +++ b/fs/exfat/namei.c
+> @@ -1077,10 +1077,14 @@ static int exfat_rename_file(struct inode *inode=
+, struct exfat_chain *p_dir,
+>
+>  		epold =3D exfat_get_dentry(sb, p_dir, oldentry + 1, &old_bh,
+>  			&sector_old);
+> +		if (!epold)
+> +			return -EIO;
+=E2=80=A6
 
-Quick note: this patch (as it is) breaks on arm64 due to Mike Rapoport's
-P4D rework. I've fixed it locally in order to test the series.
+Can it become helpful to annotate such null pointer checks for branch pred=
+iction?
+Would you like to indicate a likelihood in any way?
 
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Regards,
+Markus
