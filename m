@@ -2,121 +2,97 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88390C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE55C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61D0F20747
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:32:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84A2520747
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:32:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BDjWJwDV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LyqW8zS8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726419AbgFKCcb (ORCPT
+        id S1726488AbgFKCcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 22:32:31 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:45282 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbgFKCca (ORCPT
+        Wed, 10 Jun 2020 22:32:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34148 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbgFKCcx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 22:32:30 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05B2Qq9q109046;
-        Thu, 11 Jun 2020 02:32:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=qc8BycOlCegbte15aqZApUOZGLL/Tup1u+/vFyN0fDo=;
- b=BDjWJwDVluFs0GG2Ro66mcEX1oEcwzzGp0TV7tQggvcbV0BhIjQSOgB4qFwwgqawa/Gh
- i2tH/o4lHFJGGulWqGG5MTB6pAzOjwQ4qs+rxmetxVgJIG/9dOJ0Dw+tY+XDBXY6xiIi
- 7rMjEWJBrzdHzSteYr1h/P0OdLld1AvdNewA7jc4PHXQvjo6XlbwHTrAGtui4LLUQM1y
- L6rAPuS3zUX/Myt9/XoLbdRh0Vx6wuowNoYFHVDSifX+aMLgwjRjUJMSCQ1H1QW7yp1j
- ofTe1I9ZH8wxnEdHitvyKgsvQHw2t/A4jx8mu+Y3RhLEBZT1Y3g6JgsF8gLqeqGx8B/8 eQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 31jepny8u7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 11 Jun 2020 02:32:07 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05B2McGn133486;
-        Thu, 11 Jun 2020 02:32:06 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 31gn2ara1s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Jun 2020 02:32:06 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05B2Vxb9010697;
-        Thu, 11 Jun 2020 02:31:59 GMT
-Received: from [192.168.2.112] (/50.38.35.18)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 10 Jun 2020 19:31:59 -0700
-Subject: Re: [PATCH v2] ovl: provide real_file() and overlayfs
- get_unmapped_area()
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     Miklos Szeredi <miklos@szeredi.hu>,
-        kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        Colin Walters <walters@verbum.org>,
-        syzbot <syzbot+d6ec23007e951dadf3de@syzkaller.appspotmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        overlayfs <linux-unionfs@vger.kernel.org>
-References: <4ebd0429-f715-d523-4c09-43fa2c3bc338@oracle.com>
- <202005281652.QNakLkW3%lkp@intel.com>
- <365d83b8-3af7-2113-3a20-2aed51d9de91@oracle.com>
- <CAJfpegtz=tzndsF=_1tYHewGwEgvqEOA_4zj8HCAqyFdKe6mag@mail.gmail.com>
- <ffc00a9e-5c2f-0c3e-aa1e-9836b98f7b54@oracle.com>
- <20200611003726.GY23230@ZenIV.linux.org.uk>
- <20200611013616.GM19604@bombadil.infradead.org>
- <20200611021710.GA23230@ZenIV.linux.org.uk>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <1bfea970-00f5-502c-3ced-4ebe7fd3eef1@oracle.com>
-Date:   Wed, 10 Jun 2020 19:31:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200611021710.GA23230@ZenIV.linux.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9648 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0 mlxscore=0
- phishscore=0 adultscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006110017
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9648 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=0
- priorityscore=1501 bulkscore=0 clxscore=1015 phishscore=0 impostorscore=0
- malwarescore=0 mlxscore=0 cotscore=-2147483648 adultscore=0 spamscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006110017
+        Wed, 10 Jun 2020 22:32:53 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10219C08C5C1;
+        Wed, 10 Jun 2020 19:32:53 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id u5so1875102pgn.5;
+        Wed, 10 Jun 2020 19:32:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=gtC7gk42q9Gil9motcJotL/bdjuqtagoSxa8dX9Y100=;
+        b=LyqW8zS8nhwfM8aORPjfvi+AWEMrdNS58HxcHf6F4LYpoGHBnbe//AR6fwPML51FWE
+         5O7L2V/1D3I4y5iiAHs9u7HrG03yWS9mgvGh80caSyly4ZILyfQEze/SfCdfCVw954+p
+         Zmmky/UNDGO/LqveYJLFQjBVbfy4F7VSFfvmAe8iD6tdJGImW801wxG1UQcCFDq/EpQZ
+         I0/ULYkYXNZWI+GQYFhsNKidjnVmEWjC6hddwcgxueneX9H/8ruFHBtH4yEiacdThxso
+         lG1Vh5F5VtqBzJa7UsWNZSvCdekc+ZK5KcvJsLvACWUtooXNIgdzlyHln6Sa8k4lEMf4
+         MYuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=gtC7gk42q9Gil9motcJotL/bdjuqtagoSxa8dX9Y100=;
+        b=qvwIH5fI/Q3w3bBv4orrP3EipFPMo9QYA3+c/zSEhXiihiD+PZWtvE7AGuJYO/yClN
+         T99NpvfpF2Mkhxx28gVaSjWyOGsTzL/siEYM17EPRJ5ze3h9KAw/fUiLxq+vAhQpMzeL
+         yz0sNf038obF+qPGq1h/yDfTnKhi9uEnsucy0YIae7ldxEbXh02XINjIknFQ+mSEPuNI
+         Q7UJF/TKb1pA034DlenfAD7HaFjUVEunIEwtj79wkisGoHPCPShTv2Nua6TEL4xEYTH/
+         47a5qlfGsB9ZNBgu4FTEjXLp2kVF2JHHlXuEEyVS/DERwhX2ZcAmQZUnlJBv3Rkkvhj4
+         /FpQ==
+X-Gm-Message-State: AOAM532mQGFF5PozCKvrxvGCaMrjOAdOhoGtFZMdZ5GfqmygIJXfJzes
+        Z5jAxLw8nlF4MuZUfZlyS7B8OqS8
+X-Google-Smtp-Source: ABdhPJzzFHv0FdmPEv2nuvMFQEWlARORsmk3q5TjZrqF7Y9dv1HR92EFhCcBtUOmeVGfxr4bUITMzw==
+X-Received: by 2002:a65:5688:: with SMTP id v8mr182533pgs.48.1591842772059;
+        Wed, 10 Jun 2020 19:32:52 -0700 (PDT)
+Received: from ZB-PF114XEA.360buyad.local ([103.90.76.242])
+        by smtp.gmail.com with ESMTPSA id o18sm1301393pfu.138.2020.06.10.19.32.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2020 19:32:51 -0700 (PDT)
+From:   Zhenzhong Duan <zhenzhong.duan@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org
+Cc:     x86@kernel.org, tony.luck@intel.com, bp@alien8.de,
+        tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Subject: [PATCH] x86/mce: fix a wrong assignment of i_mce.status
+Date:   Thu, 11 Jun 2020 10:32:38 +0800
+Message-Id: <20200611023238.3830-1-zhenzhong.duan@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/10/20 7:17 PM, Al Viro wrote:
-> On Wed, Jun 10, 2020 at 06:36:16PM -0700, Matthew Wilcox wrote:
-> 
->> 	while (file->f_mode & FMODE_OVL_UPPER)
->> 		file = file->private_data;
->> 	return file;
->>
->> Or are you proposing that overlayfs copy FMODE_HUGEPAGES from the
->> underlying fs to the overlaying fs?
-> 
-> The latter - that way nobody outside of overlayfs needs to know what
-> its ->private_data points to, for one thing.  And it's cheaper that
-> way, obviously.
-> 
+The original code is a nop as i_mce.status is or'ed with part of itself,
+fix it.
 
-Thanks Al and Matthew!
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+---
+ arch/x86/kernel/cpu/mce/inject.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I knew adding a file op for this was overkill and was looking for other
-suggestions.
+diff --git a/arch/x86/kernel/cpu/mce/inject.c b/arch/x86/kernel/cpu/mce/inject.c
+index 3413b41..dc28a61 100644
+--- a/arch/x86/kernel/cpu/mce/inject.c
++++ b/arch/x86/kernel/cpu/mce/inject.c
+@@ -511,7 +511,7 @@ static void do_inject(void)
+ 	 */
+ 	if (inj_type == DFR_INT_INJ) {
+ 		i_mce.status |= MCI_STATUS_DEFERRED;
+-		i_mce.status |= (i_mce.status & ~MCI_STATUS_UC);
++		i_mce.status &= ~MCI_STATUS_UC;
+ 	}
+ 
+ 	/*
 -- 
-Mike Kravetz
+1.8.3.1
+
