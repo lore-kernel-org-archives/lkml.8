@@ -2,105 +2,128 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E4CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00131C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1825220747
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:47:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAEE320801
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:49:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726471AbgFKMrN (ORCPT
+        id S1728047AbgFKMtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 08:47:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:51880 "EHLO foss.arm.com"
+        Thu, 11 Jun 2020 08:49:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49308 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726095AbgFKMrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 08:47:13 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B16721FB;
-        Thu, 11 Jun 2020 05:47:12 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [10.57.13.172])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 168F73F66F;
-        Thu, 11 Jun 2020 05:47:06 -0700 (PDT)
-Date:   Thu, 11 Jun 2020 13:47:04 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     ??? <wooy88.kim@samsung.com>
-Cc:     'Dave Martin' <Dave.Martin@arm.com>,
-        'Catalin Marinas' <catalin.marinas@arm.com>,
-        'Bhupesh Sharma' <bhsharma@redhat.com>,
-        'Julien Grall' <julien.grall@arm.com>,
-        'Vincenzo Frascino' <vincenzo.frascino@arm.com>,
-        'Will Deacon' <will@kernel.org>, yhwan.joo@samsung.com,
-        'Anisse Astier' <aastier@freebox.fr>,
-        'Marc Zyngier' <maz@kernel.org>,
-        'Allison Randal' <allison@lohutok.net>,
-        'Sanghoon Lee' <shoon114.lee@samsung.com>,
-        jihun.kim@samsung.com, 'Kees Cook' <keescook@chromium.org>,
-        'Suzuki K Poulose' <suzuki.poulose@arm.com>,
-        'Wooki Min' <wooki.min@samsung.com>,
-        'Kristina Martsenko' <kristina.martsenko@arm.com>,
-        'Jeongtae Park' <jtp.park@samsung.com>,
-        'Thomas Gleixner' <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        'Steve Capper' <steve.capper@arm.com>,
-        'Greg Kroah-Hartman' <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, 'James Morse' <james.morse@arm.com>,
-        'Sudeep Holla' <sudeep.holla@arm.com>, dh.han@samsung.com
-Subject: Re: [PATCH] arm64: fpsimd: Added API to manage fpsimd state inside
- kernel
-Message-ID: <20200611124704.GC53118@C02TD0UTHF1T.local>
-References: <CGME20200605073214epcas2p1576f3f90dbcefaad6180f2559ca5980d@epcas2p1.samsung.com>
- <20200605073052.23044-1-wooy88.kim@samsung.com>
- <20200605103705.GD85498@C02TD0UTHF1T.local>
- <20200608103340.GA31466@arm.com>
- <000001d63fd1$23430d80$69c92880$@samsung.com>
+        id S1727922AbgFKMtQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 08:49:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id E4BD1ACAE;
+        Thu, 11 Jun 2020 12:49:12 +0000 (UTC)
+Subject: Re: [PATCH v2 2/5] ARM: mstar: Add machine for MStar/Sigmastar
+ infinity/mercury family ARMv7 SoCs
+To:     Daniel Palmer <daniel@0x0f.com>
+Cc:     k@japko.eu, tim.bird@sony.com, devicetree@vger.kernel.org,
+        Daniel Palmer <daniel@thingy.jp>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Mike Rapoport <rppt@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Doug Anderson <armlinux@m.disordat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Gregory Fong <gregory.0xf0@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Christian Lamparter <chunkeey@gmail.com>,
+        Nathan Huckleberry <nhuck15@gmail.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20191014061617.10296-2-daniel@0x0f.com>
+ <20200610090421.3428945-3-daniel@0x0f.com>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <976e789e-edd7-c44d-ea99-840ecb883ff8@suse.de>
+Date:   Thu, 11 Jun 2020 14:49:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000001d63fd1$23430d80$69c92880$@samsung.com>
+In-Reply-To: <20200610090421.3428945-3-daniel@0x0f.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 06:17:32PM +0900, ??? wrote:
-> > On Fri, Jun 05, 2020 at 11:37:05AM +0100, Mark Rutland wrote:
-> > > Please introduce the problem you are trying to solve in more detail.
-> > > We already have kernel_neon_{begin,end}() for kernel-mode NEON; why is
-> > > that not sufficient for your needs? Please answer this before
-> > > considering other details.
-> > >
-> > > What do you want to use this for?
+Am 10.06.20 um 11:04 schrieb Daniel Palmer:
+> Initial support for the MStar/Sigmastar infinity/mercury series of ARMv7
+> based IP camera and dashcam SoCs.
 > 
-> > Ack, this looks supicious.  Can you explain why your usecase _requires_
-> > FPSIMD in hardirq context?
-> > 
-> > For now, these functions are strictly for EFI use only and should never be
-> > used by modules.
+> These chips are interesting in that they contain a Cortex A7,
+
+"Cortex-A7"
+
+> peripherals and system memory in a single tiny QFN package that
+> can be hand soldered allowing almost anyone to embed Linux
+
+"soldered, allowing"?
+
+> in their projects.
 > 
-> I am in charge of camera driver development in Samsung S.LSI division.
+> Signed-off-by: Daniel Palmer <daniel@0x0f.com>
+> ---
+>   MAINTAINERS                   |  1 +
+>   arch/arm/Kconfig              |  2 +
+>   arch/arm/Makefile             |  1 +
+>   arch/arm/mach-mstar/Kconfig   | 26 +++++++++++++
+>   arch/arm/mach-mstar/Makefile  |  1 +
+>   arch/arm/mach-mstar/mstarv7.c | 72 +++++++++++++++++++++++++++++++++++
+>   6 files changed, 103 insertions(+)
+>   create mode 100644 arch/arm/mach-mstar/Kconfig
+>   create mode 100644 arch/arm/mach-mstar/Makefile
+>   create mode 100644 arch/arm/mach-mstar/mstarv7.c
 > 
-> In order to guarantee real time processing
-> such as Camera 3A algorithm in current or ongoing projects,
-> prebuilt binary is loaded and used in kernel space, rather than user space.
-> Because the binary is built with other standard library which could use
-> FPSIMD register,
-> kernel API should keep the original FPSIMD state for other user tasks.
-> It is mostly used for internal kernel operation including hardirq context.
-> (ex> hardIRQ context, kernel API called by user, kernel task)
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 1ca77f97b8ee..754521938303 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2114,6 +2114,7 @@ ARM/MStar/Sigmastar ARMv7 SoC support
+>   M:	Daniel Palmer <daniel@thingy.jp>
+>   L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+>   S:	Maintained
+> +F:	arch/arm/mach-mstar/
+>   F:	Documentation/devicetree/bindings/arm/mstar.yaml
+>   
+>   ARM/NEC MOBILEPRO 900/c MACHINE SUPPORT
+[snip]
 
-That sounds incredibly dodgy to me, both from a correctness perspective
-and a licensing perspective. Upstream doesn't support out-of-tree
-modules, nor does upstream support binary blobs within the kernel, so
-the above cannot justify this change to the kernel.
+The sort order has recently been changed to case-sensitive, i.e., you 
+should append arch after Documentation.
 
-If you wish to do such processing within the kernel, I think you'll need
-to post a more complete in-tree solution for inclusion in mainline.
-However, I suspect that it will be difficult to justify NEON in hardirq
-context given preempt rt and friends.
+Regards,
+Andreas
 
-Thanks,
-Mark.
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
