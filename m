@@ -2,185 +2,97 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D27C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1400C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8E2D20691
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:11:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBDA020691
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:13:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O8m6jMDw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UtaPwmTz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728469AbgFKPLe (ORCPT
+        id S1728471AbgFKPNS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 11:11:34 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24662 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728456AbgFKPLc (ORCPT
+        Thu, 11 Jun 2020 11:13:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38558 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728364AbgFKPNR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 11:11:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591888290;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=dCrUsFjr5nTo7YMbuo6naT5rMcveBqItH9g4ZRhLhDU=;
-        b=O8m6jMDw27VvzgMnrCywY+48NrqsF0zDdaPR5phGelg39ulmvkYHm5LxlDF125l4momsoQ
-        dekWIL7Pvwg1ncFeSnugt594vlkspkXSs6YYI0Nfmw01J26F/70n0px1xnlUu9KbnqESnl
-        icEzVCWGvGgrTsI2OdhJR1vAp9tPJ5A=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-134-hZKXzjXEOfSX68ojmbc1Yw-1; Thu, 11 Jun 2020 11:11:26 -0400
-X-MC-Unique: hZKXzjXEOfSX68ojmbc1Yw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 83D3580572E;
-        Thu, 11 Jun 2020 15:11:25 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4B54610013D7;
-        Thu, 11 Jun 2020 15:11:24 +0000 (UTC)
-Date:   Thu, 11 Jun 2020 11:11:22 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Yu Kuai <yukuai3@huawei.com>, darrick.wong@oracle.com,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yi.zhang@huawei.com
-Subject: Re: [PATCH] xfs: fix use-after-free on CIL context on shutdown
-Message-ID: <20200611151122.GA57603@bfoster>
-References: <20200611013952.2589997-1-yukuai3@huawei.com>
- <20200611022848.GQ2040@dread.disaster.area>
- <20200611024503.GR2040@dread.disaster.area>
+        Thu, 11 Jun 2020 11:13:17 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D41DDC08C5C1;
+        Thu, 11 Jun 2020 08:13:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=w3fBHCM88Jt6cDakKyk4xboQWGAsFcwZYcNUwD/n+nU=; b=UtaPwmTzyZIQm0eT7m6SNXoJB4
+        VEIPQTkfTTpUfAvEF37o1G0jHd+Y95AGyX9dzVYfoFBWjXPQqXXilnzEKOcByAGTvQgHp9w8nTqO7
+        QwU9tb6KWeI0n0NbVqy/Hr16C2/p28CsawrQGVa+KMM+AXybJtvEB9SXqJYZhiyS1WGqT3nPV4lyo
+        RDAnri9zQcK1XjCgw6xAnoDbnQWYZQt22FfD98tO6SIoYY6HnWAzOd4zHxUzduoq6ChG6oJO8MfhA
+        213c7hJBlrrRX/bXaMqCavMXmm6oVJttLCkFhfB5KeGtlWzbPuwfjdaiV1ZXwcX2PI+n/c44fsTcx
+        6dkEYKAg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jjOt3-0001iB-3j; Thu, 11 Jun 2020 15:13:01 +0000
+Date:   Thu, 11 Jun 2020 08:13:01 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-ntb@googlegroups.com
+Subject: Re: [PATCH v2 01/14] Documentation: PCI: Add specification for the
+ *PCI NTB* function device
+Message-ID: <20200611151301.GB8681@bombadil.infradead.org>
+References: <20200611130525.22746-1-kishon@ti.com>
+ <20200611130525.22746-2-kishon@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200611024503.GR2040@dread.disaster.area>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200611130525.22746-2-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 12:45:03PM +1000, Dave Chinner wrote:
-> 
-> From: Dave Chinner <dchinner@redhat.com>
-> 
-> xlog_wait() on the CIL context can reference a freed context if the
-> waiter doesn't get scheduled before the CIL context is freed. This
-> can happen when a task is on the hard throttle and the CIL push
-> aborts due to a shutdown. This was detected by generic/019:
-> 
-> thread 1			thread 2
-> 
-> __xfs_trans_commit
->  xfs_log_commit_cil
->   <CIL size over hard throttle limit>
->   xlog_wait
->    schedule
-> 				xlog_cil_push_work
-> 				wake_up_all
-> 				<shutdown aborts commit>
-> 				xlog_cil_committed
-> 				kmem_free
-> 
->    remove_wait_queue
->     spin_lock_irqsave --> UAF
-> 
-> Fix it by moving the wait queue to the CIL rather than keeping it in
-> in the CIL context that gets freed on push completion. Because the
-> wait queue is now independent of the CIL context and we might have
-> multiple contexts in flight at once, only wake the waiters on the
-> push throttle when the context we are pushing is over the hard
-> throttle size threshold.
-> 
-> Fixes: 0e7ab7efe7745 ("xfs: Throttle commits on delayed background CIL push")
-> Reported-by: Yu Kuai <yukuai3@huawei.com>
-> Signed-off-by: Dave Chinner <dchinner@redhat.com>
-> ---
+On Thu, Jun 11, 2020 at 06:35:12PM +0530, Kishon Vijay Abraham I wrote:
+> +++ b/Documentation/PCI/endpoint/pci-ntb-function.rst
+> @@ -0,0 +1,344 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +=================
+> +PCI NTB Function
+> +=================
+> +
+> +:Author: Kishon Vijay Abraham I <kishon@ti.com>
+> +
+> +PCI NTB Function allows two different systems (or hosts) to communicate
+> +with each other by configurig the endpoint instances in such a way that
+> +transactions from one system is routed to the other system.
 
-Looks reasonable:
+At no point in this document do you expand "NTB" into Non-Transparent
+Bridge.  The above paragraph probably also needs to say something like "By
+making each host appear as a device to the other host".  Although maybe
+that's not entirely accurate?  It's been a few years since I last played
+with NTBs.
 
-Reviewed-by: Brian Foster <bfoster@redhat.com>
+So how about the following opening paragraph:
 
->  fs/xfs/xfs_log_cil.c  | 10 +++++-----
->  fs/xfs/xfs_log_priv.h |  2 +-
->  2 files changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
-> index b43f0e8f43f2e..9ed90368ab311 100644
-> --- a/fs/xfs/xfs_log_cil.c
-> +++ b/fs/xfs/xfs_log_cil.c
-> @@ -671,7 +671,8 @@ xlog_cil_push_work(
->  	/*
->  	 * Wake up any background push waiters now this context is being pushed.
->  	 */
-> -	wake_up_all(&ctx->push_wait);
-> +	if (ctx->space_used >= XLOG_CIL_BLOCKING_SPACE_LIMIT(log))
-> +		wake_up_all(&cil->xc_push_wait);
->  
->  	/*
->  	 * Check if we've anything to push. If there is nothing, then we don't
-> @@ -743,13 +744,12 @@ xlog_cil_push_work(
->  
->  	/*
->  	 * initialise the new context and attach it to the CIL. Then attach
-> -	 * the current context to the CIL committing lsit so it can be found
-> +	 * the current context to the CIL committing list so it can be found
->  	 * during log forces to extract the commit lsn of the sequence that
->  	 * needs to be forced.
->  	 */
->  	INIT_LIST_HEAD(&new_ctx->committing);
->  	INIT_LIST_HEAD(&new_ctx->busy_extents);
-> -	init_waitqueue_head(&new_ctx->push_wait);
->  	new_ctx->sequence = ctx->sequence + 1;
->  	new_ctx->cil = cil;
->  	cil->xc_ctx = new_ctx;
-> @@ -937,7 +937,7 @@ xlog_cil_push_background(
->  	if (cil->xc_ctx->space_used >= XLOG_CIL_BLOCKING_SPACE_LIMIT(log)) {
->  		trace_xfs_log_cil_wait(log, cil->xc_ctx->ticket);
->  		ASSERT(cil->xc_ctx->space_used < log->l_logsize);
-> -		xlog_wait(&cil->xc_ctx->push_wait, &cil->xc_push_lock);
-> +		xlog_wait(&cil->xc_push_wait, &cil->xc_push_lock);
->  		return;
->  	}
->  
-> @@ -1216,12 +1216,12 @@ xlog_cil_init(
->  	INIT_LIST_HEAD(&cil->xc_committing);
->  	spin_lock_init(&cil->xc_cil_lock);
->  	spin_lock_init(&cil->xc_push_lock);
-> +	init_waitqueue_head(&cil->xc_push_wait);
->  	init_rwsem(&cil->xc_ctx_lock);
->  	init_waitqueue_head(&cil->xc_commit_wait);
->  
->  	INIT_LIST_HEAD(&ctx->committing);
->  	INIT_LIST_HEAD(&ctx->busy_extents);
-> -	init_waitqueue_head(&ctx->push_wait);
->  	ctx->sequence = 1;
->  	ctx->cil = cil;
->  	cil->xc_ctx = ctx;
-> diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
-> index ec22c7a3867f1..75a62870b63af 100644
-> --- a/fs/xfs/xfs_log_priv.h
-> +++ b/fs/xfs/xfs_log_priv.h
-> @@ -240,7 +240,6 @@ struct xfs_cil_ctx {
->  	struct xfs_log_vec	*lv_chain;	/* logvecs being pushed */
->  	struct list_head	iclog_entry;
->  	struct list_head	committing;	/* ctx committing list */
-> -	wait_queue_head_t	push_wait;	/* background push throttle */
->  	struct work_struct	discard_endio_work;
->  };
->  
-> @@ -274,6 +273,7 @@ struct xfs_cil {
->  	wait_queue_head_t	xc_commit_wait;
->  	xfs_lsn_t		xc_current_sequence;
->  	struct work_struct	xc_push_work;
-> +	wait_queue_head_t	xc_push_wait;	/* background push throttle */
->  } ____cacheline_aligned_in_smp;
->  
->  /*
-> 
+PCI Non Transparent Bridges (NTB) allow two host systems to communicate
+with each other by exposing each host as a device to the other host.
+NTBs typically support the ability to generate interrupts on the remote
+machine, expose memory ranges as BARs and perform DMA.  They also support
+scratchpads which are areas of memory within the NTB that are accessible
+from both machines.
 
+... feel free to fix that up if my memory is out of date or corrupted.
