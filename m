@@ -2,144 +2,266 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B2CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0BDC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD66B2063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:00:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FIcUeh4c"
+	by mail.kernel.org (Postfix) with ESMTP id C9B992063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:02:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591873323;
+	bh=gu1h/IUOYhI/7TOM9U7hb+/LUXvwcm40pAKhwgfcYJY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=F6YWmANeOQPALWoOp7d7Q7bjztIZONjsI3j5EciBDcfgPRVsti6fF+bY0HLCwTyHs
+	 ZSq4xSRzgKxCPeZpRWAB3yOiz3RK2d3vmqVK/ZeoG6qBNupwfFB1FIQzU2lAsSVSaG
+	 vLd7OeRbXxkzh3FH767S4QW8g5pV9+JdTufYzo+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727825AbgFKLAm (ORCPT
+        id S1727860AbgFKLCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 07:00:42 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37306 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727045AbgFKLAf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 07:00:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591873232;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=qCSzsxzakrA6PJeHXxV8tNlYk7clz+olbOoQ62gsCHs=;
-        b=FIcUeh4cc2Jt0Bp8IvZu9mZ4RKH/EDaXH7sNwMEWTLDbAOI6xpYU0Rqlf3v6BHwh8C4S09
-        zfC5muLPnHJm2incExOis3ygYuFb+k/RxqUS/ycYNRe6pVDttvSkaidRsJJW8LR3d4AYKt
-        Kdprv4nuQ/3qQC+fc2DcObcULsMhHJo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-287-9KynNReSPbWQJMZt8lqqnQ-1; Thu, 11 Jun 2020 07:00:30 -0400
-X-MC-Unique: 9KynNReSPbWQJMZt8lqqnQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 11 Jun 2020 07:02:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40624 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727031AbgFKLBy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 07:01:54 -0400
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7F2A6107ACF2;
-        Thu, 11 Jun 2020 11:00:29 +0000 (UTC)
-Received: from [10.36.114.160] (ovpn-114-160.ams2.redhat.com [10.36.114.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CB0548929F;
-        Thu, 11 Jun 2020 11:00:24 +0000 (UTC)
-Subject: Re: [PATCH v1] virtio-mem: add memory via add_memory_driver_managed()
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Jason Wang <jasowang@redhat.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        teawater <teawaterz@linux.alibaba.com>
-References: <20200611093518.5737-1-david@redhat.com>
- <20200611060249-mutt-send-email-mst@kernel.org>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <13ad9edf-31a1-35ee-a0b0-6390c3a0b4d9@redhat.com>
-Date:   Thu, 11 Jun 2020 13:00:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 067ED2081A;
+        Thu, 11 Jun 2020 11:01:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591873313;
+        bh=gu1h/IUOYhI/7TOM9U7hb+/LUXvwcm40pAKhwgfcYJY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cqIboAqW4hHg8bgqsiAn5Q1joqHSy2u96T8WmDCoKNmUki3qY/n2Gi/NBM/JZe9ud
+         6suEbxCYhZvyHE+wTVEtc3xrPld+ha04U7LDPUafJVU0+drjHfXo7CCbpo5IljafZq
+         x65ETJPafXg64M4NzyodZhY36M1okkxf8OolFlkQ=
+Received: by mail-ej1-f50.google.com with SMTP id gl26so5974104ejb.11;
+        Thu, 11 Jun 2020 04:01:52 -0700 (PDT)
+X-Gm-Message-State: AOAM530niEKC7kHppQF1g3Yje0Od3+8G/rPD8/UD9kQGWWHMsnXN63rH
+        u03kfm18TlhLap6/Tl56yWNyMteeaBEwVDjUFA==
+X-Google-Smtp-Source: ABdhPJw+wR6kRsb831SwdiEVc8DVKidgK603StbRz0iL76ismZz8YnpXgHH7FyP/vdg5X3AletAez5O8TnpELbZ50VE=
+X-Received: by 2002:a17:907:369:: with SMTP id rs9mr7631774ejb.187.1591873311470;
+ Thu, 11 Jun 2020 04:01:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200611060249-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+References: <1591698261-22639-1-git-send-email-neal.liu@mediatek.com>
+ <1591698261-22639-3-git-send-email-neal.liu@mediatek.com> <CAAOTY__g3Fnwsoqx=x_tgdMii5K_L9TmF_9048XbAOSJwb-Cxg@mail.gmail.com>
+ <1591867563.27949.9.camel@mtkswgap22>
+In-Reply-To: <1591867563.27949.9.camel@mtkswgap22>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Thu, 11 Jun 2020 19:01:39 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_8gOjr9nBUVA6oNu0v+D0Rc0AbhJ41wBCvDpMme+kuHmA@mail.gmail.com>
+Message-ID: <CAAOTY_8gOjr9nBUVA6oNu0v+D0Rc0AbhJ41wBCvDpMme+kuHmA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] soc: mediatek: devapc: add devapc-mt6873 driver
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> I'd like to have this patch in 5.8, with the initial merge of virtio-mem
->> if possible (so the user space representation of virtio-mem added memory
->> resources won't change anymore).
-> 
-> So my plan is to rebase on top of -rc1 and merge this for rc2 then.
-> I don't like rebase on top of tip as the results are sometimes kind of
-> random.
+Hi, Neal:
 
-Right, I just wanted to get this out early so we can discuss how to proceed.
+Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B46=E6=9C=8811=E6=97=
+=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=885:26=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On Wed, 2020-06-10 at 00:01 +0800, Chun-Kuang Hu wrote:
+> Hi Chun-Kuang,
+>
+> [snip]
+>
+> > > +
+> > > +/*
+> > > + * mtk_devapc_pd_get - get devapc pd_types of register address.
+> > > + *
+> > > + * Returns the value of reg addr
+> > > + */
+> > > +static void __iomem *mtk_devapc_pd_get(int slave_type,
+> > > +                                      enum DEVAPC_PD_REG_TYPE pd_reg=
+_type,
+> > > +                                      u32 index)
+> > > +{
+> > > +       struct mtk_devapc_vio_info *vio_info =3D mtk_devapc_ctx->soc-=
+>vio_info;
+> > > +       u32 slave_type_num =3D mtk_devapc_ctx->soc->slave_type_num;
+> > > +       const u32 *devapc_pds =3D mtk_devapc_ctx->soc->devapc_pds;
+> > > +       void __iomem *reg;
+> > > +
+> > > +       if (!devapc_pds)
+> > > +               return NULL;
+> > > +
+> > > +       if ((slave_type < slave_type_num &&
+> > > +            index < vio_info->vio_mask_sta_num[slave_type]) &&
+> > > +           pd_reg_type < PD_REG_TYPE_NUM) {
+> > > +               reg =3D mtk_devapc_ctx->devapc_pd_base[slave_type] +
+> > > +                       devapc_pds[pd_reg_type];
+> > > +
+> > > +               if (pd_reg_type =3D=3D VIO_MASK || pd_reg_type =3D=3D=
+ VIO_STA)
+> > > +                       reg +=3D 0x4 * index;
+> > > +
+> > > +       } else {
+> > > +               pr_err(PFX "%s:0x%x or %s:0x%x or %s:0x%x is out of b=
+oundary\n",
+> > > +                      "slave_type", slave_type,
+> >
+> > Move "slave_type" into format string.
+>
+> Why is this necessary? Is there any benefit for moving this?
 
-> And let's add a Fixes: tag as well, this way people will remember to
-> pick this.
-> Makes sense?
+Smaller code size, simple, intuition.
 
-Yes, it's somehow a fix (for kexec). So
+> Since the line length is almost over 80 chars.
 
-Fixes: 5f1f79bbc9e26 ("virtio-mem: Paravirtualized memory hotplug")
+Single string could be over 80 chars.
 
-I can respin after -rc1 with the commit id fixed as noted by Pankaj.
-Just let me know what you prefer.
+>
+> >
+> > > +                      "pd_reg_type", pd_reg_type,
+> > > +                      "index", index);
+> > > +               return NULL;
+> > > +       }
+> > > +
+> > > +       return reg;
+> > > +}
+> > > +
+> >
+>
+> [snip]
+>
+> >
+> > > +
+> > > +/*
+> > > + * devapc_violation_irq - the devapc Interrupt Service Routine (ISR)=
+ will dump
+> > > + *                       violation information including which maste=
+r violates
+> > > + *                       access slave.
+> > > + */
+> > > +static irqreturn_t devapc_violation_irq(int irq_number, void *dev_id=
+)
+> > > +{
+> > > +       u32 slave_type_num =3D mtk_devapc_ctx->soc->slave_type_num;
+> > > +       const struct mtk_device_info **device_info;
+> > > +       struct mtk_devapc_vio_info *vio_info;
+> > > +       int slave_type, vio_idx, index;
+> > > +       const char *vio_master;
+> > > +       unsigned long flags;
+> > > +       bool normal;
+> > > +       u8 perm;
+> > > +
+> > > +       spin_lock_irqsave(&devapc_lock, flags);
+> > > +
+> > > +       device_info =3D mtk_devapc_ctx->soc->device_info;
+> > > +       vio_info =3D mtk_devapc_ctx->soc->vio_info;
+> > > +       normal =3D false;
+> > > +       vio_idx =3D -1;
+> > > +       index =3D -1;
+> > > +
+> > > +       /* There are multiple DEVAPC_PD */
+> > > +       for (slave_type =3D 0; slave_type < slave_type_num; slave_typ=
+e++) {
+> > > +               if (!check_type2_vio_status(slave_type, &vio_idx, &in=
+dex))
+> > > +                       if (!mtk_devapc_dump_vio_dbg(slave_type, &vio=
+_idx,
+> > > +                                                    &index))
+> > > +                               continue;
+> > > +
+> > > +               /* Ensure that violation info are written before
+> > > +                * further operations
+> > > +                */
+> > > +               smp_mb();
+> > > +               normal =3D true;
+> > > +
+> > > +               mask_module_irq(slave_type, vio_idx, true);
+> > > +
+> > > +               if (clear_vio_status(slave_type, vio_idx))
+> > > +                       pr_warn(PFX "%s, %s:0x%x, %s:0x%x\n",
+> > > +                               "clear vio status failed",
+> > > +                               "slave_type", slave_type,
+> > > +                               "vio_index", vio_idx);
+> > > +
+> > > +               perm =3D get_permission(slave_type, index, vio_info->=
+domain_id);
+> > > +
+> > > +               vio_master =3D mtk_devapc_ctx->soc->master_get
+> > > +                       (vio_info->master_id,
+> > > +                        vio_info->vio_addr,
+> > > +                        slave_type,
+> > > +                        vio_info->shift_sta_bit,
+> > > +                        vio_info->domain_id);
+> >
+> > Call mt6873_bus_id_to_master() directly. For first patch, make things
+> > as simple as possible.
+>
+> In devapc_violation_irq() function, we use common flow to handle each
+> devapc violation on different platforms. The master_get() has different
+> implementation on different platforms, that why it called indirectly.
+>
+> Once we have new platform, we only have to update devapc-mtxxxx.c
+> instead of common handler flow.
 
-Thanks!
+You just upstream one SoC now, so I have no information of 2nd SoC.
+Without the 2nd SoC, how do we know what is common and what is SoC special?
+So the first patch should not consider the things which does not exist yet.
 
--- 
-Thanks,
+Regards,
+Chun-Kuang.
 
-David / dhildenb
-
+>
+> >
+> > > +
+> > > +               if (!vio_master) {
+> > > +                       pr_warn(PFX "master_get failed\n");
+> > > +                       vio_master =3D "UNKNOWN_MASTER";
+> > > +               }
+> > > +
+> > > +               pr_info(PFX "%s - %s:0x%x, %s:0x%x, %s:0x%x, %s:0x%x\=
+n",
+> > > +                       "Violation", "slave_type", slave_type,
+> > > +                       "sys_index",
+> > > +                       device_info[slave_type][index].sys_index,
+> > > +                       "ctrl_index",
+> > > +                       device_info[slave_type][index].ctrl_index,
+> > > +                       "vio_index",
+> > > +                       device_info[slave_type][index].vio_index);
+> > > +
+> > > +               pr_info(PFX "%s %s %s %s\n",
+> > > +                       "Violation - master:", vio_master,
+> > > +                       "access violation slave:",
+> > > +                       device_info[slave_type][index].device);
+> > > +
+> > > +               devapc_vio_reason(perm);
+> > > +
+> > > +               devapc_extra_handler(slave_type, vio_master, vio_idx,
+> > > +                                    vio_info->vio_addr);
+> > > +
+> > > +               mask_module_irq(slave_type, vio_idx, false);
+> > > +       }
+> > > +
+> > > +       if (normal) {
+> > > +               spin_unlock_irqrestore(&devapc_lock, flags);
+> > > +               return IRQ_HANDLED;
+> > > +       }
+> > > +
+> > > +       spin_unlock_irqrestore(&devapc_lock, flags);
+> > > +       return IRQ_HANDLED;
+> > > +}
+> > > +
+>
+> [snip]
+>
+>
