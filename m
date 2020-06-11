@@ -2,276 +2,149 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D93BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4618C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:07:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71A1C20760
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:06:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="Z+sW2TmS"
+	by mail.kernel.org (Postfix) with ESMTP id C677D20760
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:07:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727988AbgFKLGj (ORCPT
+        id S1727992AbgFKLHG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 07:06:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56366 "EHLO
+        Thu, 11 Jun 2020 07:07:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727946AbgFKLGf (ORCPT
+        with ESMTP id S1727031AbgFKLHF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 07:06:35 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26795C08C5C3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 04:06:35 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id o5so5810609iow.8
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 04:06:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sargun.me; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2R+wiFfzvQNb0IhDifqVeL6cc3fjUJMhYBce6rC6DCk=;
-        b=Z+sW2TmSn6OM09sIzUe+GQMvwrm3rd/qAFbZjYr2L+algtLl9Jmw9KCJ03Kqh3WBmH
-         TUdyrRddl5XGBkntRXl1Rqrp3Xl8aYytjB4MgxAI8tcXsASWj5iaReXFPsMcxI6pG+l3
-         Q+69LhfrlGgdVOJf0uh2V+rCbQOn19wm6MmiI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2R+wiFfzvQNb0IhDifqVeL6cc3fjUJMhYBce6rC6DCk=;
-        b=uXLil1vFzaCfKUooTzxfDWFyKIpr6YesKb1UXGElqiOHuej/F8wnATKvVjlcft24C8
-         L7Fxm7dCi0BiQwPjwSfu9CdqDvR/PQXImwI5PlUXvFv4/2GBtNws9VM3IHX3G64p2qmm
-         s+MHOT8NeLyeVQgUFRNxq0dDhxXzrAs0e4ORooDiWJb44HKJyNiwAc4mM8WF+zNrMcc0
-         QlkUyGvxrTure4900VzkPL/EJL+Jib2elfe0ZWqjSCpTuOmQfZjCwxauCDvGkw20BrX0
-         phiGoOCzYx3/ySO5SjqzJc8ugT4+T7nnUlCbJBDRsm4FleXZiSZJEo3VuOhWfo0NEN9e
-         asZA==
-X-Gm-Message-State: AOAM531lonWIvU8n1gwL1BDa4Op9lyJLV+Ld97f2rDYJX3NR0QFlZ/n0
-        KROJ8crWSI4jE4pJHOZB57KBIw==
-X-Google-Smtp-Source: ABdhPJxAe2FFIVPIGtUH7XUlqRwmMIqQvWfQmGlMX7FGj+oJX7+J03taHo0cG57juW6PAL7xtwxx0g==
-X-Received: by 2002:a6b:1487:: with SMTP id 129mr7966323iou.197.1591873594035;
-        Thu, 11 Jun 2020 04:06:34 -0700 (PDT)
-Received: from ircssh-2.c.rugged-nimbus-611.internal (80.60.198.104.bc.googleusercontent.com. [104.198.60.80])
-        by smtp.gmail.com with ESMTPSA id p10sm1369817ilm.32.2020.06.11.04.06.33
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 11 Jun 2020 04:06:33 -0700 (PDT)
-Date:   Thu, 11 Jun 2020 11:06:31 +0000
-From:   Sargun Dhillon <sargun@sargun.me>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        containers@lists.linux-foundation.org,
-        Giuseppe Scrivano <gscrivan@redhat.com>,
-        Robert Sesek <rsesek@google.com>,
-        Chris Palmer <palmer@google.com>, Jann Horn <jannh@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Wagner <daniel.wagner@bmw-carit.de>,
-        linux-kernel@vger.kernel.org, Matt Denton <mpdenton@google.com>,
-        John Fastabend <john.r.fastabend@intel.com>,
-        linux-fsdevel@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, cgroups@vger.kernel.org,
-        stable@vger.kernel.org, "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v3 1/4] fs, net: Standardize on file_receive helper to
- move fds across processes
-Message-ID: <20200611110630.GB30103@ircssh-2.c.rugged-nimbus-611.internal>
-References: <20200604125226.eztfrpvvuji7cbb2@wittgenstein>
- <20200605075435.GA3345@ircssh-2.c.rugged-nimbus-611.internal>
- <202006091235.930519F5B@keescook>
- <20200609200346.3fthqgfyw3bxat6l@wittgenstein>
- <202006091346.66B79E07@keescook>
- <037A305F-B3F8-4CFA-B9F8-CD4C9EF9090B@ubuntu.com>
- <202006092227.D2D0E1F8F@keescook>
- <20200610081237.GA23425@ircssh-2.c.rugged-nimbus-611.internal>
- <202006101953.899EFB53@keescook>
- <20200611100114.awdjswsd7fdm2uzr@wittgenstein>
+        Thu, 11 Jun 2020 07:07:05 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64734C08C5C1;
+        Thu, 11 Jun 2020 04:07:05 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 870492A424F
+Subject: Re: [PATCH v4] platform: x86: Add ACPI driver for ChromeOS
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mario.Limonciello@dell.com
+Cc:     rjw@rjwysocki.net, rafael@kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, lenb@kernel.org, kernel@collabora.com,
+        groeck@chromium.org, bleung@chromium.org, dtor@chromium.org,
+        gwendal@chromium.org, vbendeb@chromium.org, andy@infradead.org,
+        ayman.bagabas@gmail.com, benjamin.tissoires@redhat.com,
+        blaz@mxxn.io, dvhart@infradead.org, gregkh@linuxfoundation.org,
+        hdegoede@redhat.com, jeremy@system76.com, 2pi@mok.nu,
+        mchehab+samsung@kernel.org, rajatja@google.com,
+        srinivas.pandruvada@linux.intel.com,
+        platform-driver-x86@vger.kernel.org
+References: <20200413134611.478441-1-enric.balletbo@collabora.com>
+ <CAJZ5v0gWZ27_DwWQadsJOUxLo4a0rAMe45d4AWXS2gHJZfgfKg@mail.gmail.com>
+ <a2953d50-da22-279a-f1e4-faa796d815b1@collabora.com>
+ <10490419.gsntqH5CaE@kreacher>
+ <4e7f8bf3-b72b-d418-ec95-e1f8c3d61261@collabora.com>
+ <59771d3689da41a5bbc67541aa6f4777@AUSX13MPC105.AMER.DELL.COM>
+ <20200610214033.GB248110@dtor-ws>
+ <adf9daaf08f1464684e48ec203194fe9@AUSX13MPC105.AMER.DELL.COM>
+ <20200610224305.GC248110@dtor-ws>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <1e32b7db-5457-e0cf-5e5e-36f21d5a91eb@collabora.com>
+Date:   Thu, 11 Jun 2020 13:06:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200611100114.awdjswsd7fdm2uzr@wittgenstein>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200610224305.GC248110@dtor-ws>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 12:01:14PM +0200, Christian Brauner wrote:
-> On Wed, Jun 10, 2020 at 07:59:55PM -0700, Kees Cook wrote:
-> > On Wed, Jun 10, 2020 at 08:12:38AM +0000, Sargun Dhillon wrote:
-> > > As an aside, all of this junk should be dropped:
-> > > +	ret = get_user(size, &uaddfd->size);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	ret = copy_struct_from_user(&addfd, sizeof(addfd), uaddfd, size);
-> > > +	if (ret)
-> > > +		return ret;
-> > > 
-> > > and the size member of the seccomp_notif_addfd struct. I brought this up 
-> > > off-list with Tycho that ioctls have the size of the struct embedded in them. We 
-> > > should just use that. The ioctl definition is based on this[2]:
-> > > #define _IOC(dir,type,nr,size) \
-> > > 	(((dir)  << _IOC_DIRSHIFT) | \
-> > > 	 ((type) << _IOC_TYPESHIFT) | \
-> > > 	 ((nr)   << _IOC_NRSHIFT) | \
-> > > 	 ((size) << _IOC_SIZESHIFT))
-> > > 
-> > > 
-> > > We should just use copy_from_user for now. In the future, we can either 
-> > > introduce new ioctl names for new structs, or extract the size dynamically from 
-> > > the ioctl (and mask it out on the switch statement in seccomp_notify_ioctl.
-> > 
-> > Yeah, that seems reasonable. Here's the diff for that part:
+Hi,
+
+On 11/6/20 0:43, Dmitry Torokhov wrote:
+> On Wed, Jun 10, 2020 at 09:52:12PM +0000, Mario.Limonciello@dell.com wrote:
+>>> -----Original Message-----
+>>> From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>>> Sent: Wednesday, June 10, 2020 4:41 PM
+>>> To: Limonciello, Mario
+>>> Cc: enric.balletbo@collabora.com; rjw@rjwysocki.net; rafael@kernel.org;
+>>> linux-kernel@vger.kernel.org; linux-acpi@vger.kernel.org; lenb@kernel.org;
+>>> kernel@collabora.com; groeck@chromium.org; bleung@chromium.org;
+>>> dtor@chromium.org; gwendal@chromium.org; vbendeb@chromium.org;
+>>> andy@infradead.org; ayman.bagabas@gmail.com; benjamin.tissoires@redhat.com;
+>>> blaz@mxxn.io; dvhart@infradead.org; gregkh@linuxfoundation.org;
+>>> hdegoede@redhat.com; jeremy@system76.com; 2pi@mok.nu;
+>>> mchehab+samsung@kernel.org; rajatja@google.com;
+>>> srinivas.pandruvada@linux.intel.com; platform-driver-x86@vger.kernel.org
+>>> Subject: Re: [PATCH v4] platform: x86: Add ACPI driver for ChromeOS
+>>>
+>>>
+>>> [EXTERNAL EMAIL]
+>>>
+>>> On Wed, Jun 10, 2020 at 09:28:36PM +0000, Mario.Limonciello@dell.com wrote:
+>>>>>
+>>>>> To give you some references, if I'm not wrong, this prefix is used in
+>>> all
+>>>>> or
+>>>>> almost all Intel Chromebook devices (auron, cyan, eve, fizz, hatch,
+>>>>> octopus,
+>>>>> poppy, strago ...) The ACPI source for this device can be found here
+>>> [1],
+>>>>> and,
+>>>>> if not all, almost all Intel based Chromebooks are shipped with the
+>>>>> firmware
+>>>>> that supports this.
+>>>>
+>>>> You can potentially carry a small patch in your downstream kernel for the
+>>>> legacy stuff until it reaches EOL.  At least for the new stuff you could
+>>>> enact a process that properly reserves unique numbers and changes the
+>>> driver
+>>>> when the interface provided by the ACPI device has changed.
+>>>
+>>> If we use this prefix for hatch EOL is ~7 years from now.
+>>>
+>>
+>> Isn't the whole point of the ACPI registry and choosing an ID?  You know internally
+>> if you need to change the interface that a new ID is needed and a new driver will
+>> be needed that comprehends that ID change.  So if you can't guarantee that 0001 is
+>> the same driver interface in every firmware implementation google used then that is
+>> where this falls apart.
+>>
+
+As far as I know GGL0001 has the same driver interface in every firmware
+implementation Google used. But I'll ask to make sure.
+
+>> I know there is a long support lifecycle but you're talking about rebasing
+>> to new LTS kernels a handful of times between now and then.  If the interface really
+>> is stable the patch should be small and it shouldn't be a large amount of technical
+>> debt to carry downstream until EOL.
 > 
-> Why does it matter that the ioctl() has the size of the struct embedded
-> within? Afaik, the kernel itself doesn't do anything with that size. It
-> merely checks that the size is not pathological and it does so at
-> compile time.
+> I think we are talking about different things actually. Let's forget
+> about Chrome OS and downstream kernels. We have devices that have
+> already been shipped and in hands of users. Some of them are old, some
+> of them are new. We can't not enforce that firmware for these devices
+> will be either released or updated. Therefore, if we want expose this
+> device in mainline kernel, we need to have it handle "GGL0001" HID in
+> addition to whatever proper HID we may select for it.
 > 
-> #ifdef __CHECKER__
-> #define _IOC_TYPECHECK(t) (sizeof(t))
-> #else
-> /* provoke compile error for invalid uses of size argument */
-> extern unsigned int __invalid_size_argument_for_IOC;
-> #define _IOC_TYPECHECK(t) \
-> 	((sizeof(t) == sizeof(t[1]) && \
-> 	  sizeof(t) < (1 << _IOC_SIZEBITS)) ? \
-> 	  sizeof(t) : __invalid_size_argument_for_IOC)
-> #endif
+
+FWIW, after investigate a bit more, although GGL is not in the ACPI ID list it
+is in the PNP ID list [1]. So as far as I understand GGL0001 is valid ID. I know
+that PNP ID is the legacy identifier but since this was here for long time and
+will be here also for long time, I am wondering if we can take that as an
+argument to have GGL0001 as a valid device to be exposed in the kernel.
+
+Thanks,
+ Enric
+
+[1] https://uefi.org/pnp_id_list
+
+
+> We internally can fix it (HID) for next generation of devices.
 > 
-> The size itself is not verified at runtime. copy_struct_from_user()
-> still makes sense at least if we're going to allow expanding the struct
-> in the future.
-Right, but if we simply change our headers and extend the struct, it will break 
-all existing programs compiled against those headers. In order to avoid that, if 
-we intend on extending this struct by appending to it, we need to have a 
-backwards compatibility mechanism. Just having copy_struct_from_user isn't 
-enough. The data structure either must be fixed size, or we need a way to handle 
-multiple ioctl numbers derived from headers with different sized struct arguments
-
-The two approaches I see are:
-1. use more indirection. This has previous art in drm[1]. That's look
-something like this:
-
-struct seccomp_notif_addfd_ptr {
-	__u64 size;
-	__u64 addr;
-}
-
-... And then it'd be up to us to dereference the addr and copy struct from user.
-
-2. Expose one ioctl to the user, many internally
-
-e.g., public api:
-
-struct seccomp_notif {
-	__u64 id;
-	__u64 pid;
-	struct seccomp_data;
-	__u64 fancy_new_field;
-}
-
-#define SECCOMP_IOCTL_NOTIF_RECV	SECCOMP_IOWR(0, struct seccomp_notif)
-
-internally:
-struct seccomp_notif_v1 {
-	__u64 id;
-	__u64 pid;
-	struct seccomp_data;
-}
-
-struct seccomp_notif_v2 {
-	__u64 id;
-	__u64 pid;
-	struct seccomp_data;
-	__u64 fancy_new_field;
-}
-
-and we can switch like this:
-	switch (cmd) {
-	/* for example. We actually have to do this for any struct we intend to 
-	 * extend to get proper backwards compatibility
-	 */
-	case SECCOMP_IOWR(0, struct seccomp_notif_v1)
-		return seccomp_notify_recv(filter, buf, sizeof(struct seccomp_notif_v1));
-	case SECCOMP_IOWR(0, struct seccomp_notif_v2)
-		return seccomp_notify_recv(filter, buf, sizeof(struct seccomp_notif_v3));
-...
-	case SECCOMP_IOCTL_NOTIF_SEND:
-		return seccomp_notify_send(filter, buf);
-	case SECCOMP_IOCTL_NOTIF_ID_VALID:
-		return seccomp_notify_id_valid(filter, buf);
-	default:
-		return -EINVAL;
-	}
-
-This has the downside that programs compiled against more modern kernel headers 
-will break on older kernels.
-
-3. We can take the approach you suggested.
-
-#define UNSIZED(cmd)	(cmd & ~(_IOC_SIZEMASK << _IOC_SIZESHIFT)
-static long seccomp_notify_ioctl(struct file *file, unsigned int cmd,
-				 unsigned long arg)
-{
-	struct seccomp_filter *filter = file->private_data;
-	void __user *buf = (void __user *)arg;
-	int size = _IOC_SIZE(cmd);
-	cmd = UNSIZED(cmd);
-
-	switch (cmd) {
-	/* for example. We actually have to do this for any struct we intend to 
-	 * extend to get proper backwards compatibility
-	 */
-	case UNSIZED(SECCOMP_IOCTL_NOTIF_RECV):
-		return seccomp_notify_recv(filter, buf, size);
-...
-	case SECCOMP_IOCTL_NOTIF_SEND:
-		return seccomp_notify_send(filter, buf);
-	case SECCOMP_IOCTL_NOTIF_ID_VALID:
-		return seccomp_notify_id_valid(filter, buf);
-	default:
-		return -EINVAL;
-	}
-}
-
+> Thanks.
 > 
-> Leaving that aside, the proposed direction here seems to mean that any
-> change to the struct itself will immediately mean a new ioctl() but
-> afaict, that also means a new struct. Since when you simply extend the
-> struct for the sake of the new ioctl you also change the size for the
-> ioctl.
-> 
-> Sure, you can simply treat the struct coming through the old ioctl as
-> being "capped" by e.g. hiding the size as suggested but then the gain
-> by having two separate ioctls is 0 compared to simply versioning the
-> struct with an explicit size member since the size encoded in the ioctl
-> and the actual size of the struct don't line up anymore which is the
-> only plus I can see for relying on _IOC_SIZE(). All this manages to do
-> then is to make it more annoying for userspace since they now need to
-> maintain multiple ioctls(). And if you have - however unlikely - say
-> three different ioctls all to be used with a different struct size of
-> the same struct I now need to know which ioctl() goes with which size of
-> the struct (I guess you could append the size to the ioctl name?
-> *shudder*). If you have the size in the struct itself you don't need to
-> care about any of that.
-> Maybe I'm not making sense or I misunderstand what's going on though.
-> 
-> Christian
-> 
-I don't understand why userspace has to have any knowledge of this. As soon as 
-we add the code above, and we use copy_struct_from_user based on _that_ size,
-userspace will get free upgrades. If they are compiling against an older header
-than the kernel, size will return a smaller number, and thus we will zero
-out our trailing bits, and if their number is bigger, we just check their
-bits are appropriately zeroed.
-
-This approach would be forwards-and-backwards compatible.
-
-There's a little bit of prior art here as well [2]. The approach is that
-we effectively do the thing we had earlier with passing a size with
-copy_struct_from_user, but instead of the size being embedded in the struct,
-it's embedded in the ioctl command itself.
-
-
-[1]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/uapi/drm/radeon_drm.h?h=v5.7#n831
-[2]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/firewire/core-cdev.c?id=v5.7#n1621
