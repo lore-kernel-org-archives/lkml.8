@@ -2,141 +2,95 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 142C3C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9339EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1D6920760
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:58:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61931207ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:00:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591880405;
+	bh=SiWEIuDwccQFA0WHZIHqDuo/VrtYMBlSulJ0fd6R69o=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=PuUqca4aU3pTUrqjsnPgeMDg+X1czRmCNYit+t+7Ffl6QrrH6uRBWVnotLc0I5fAk
+	 GFH6DSXH/IHDKOGkc6/96zQsYCz0kcKJoTeLKWwzKdtzLxFsFHJzrKTViUbn7Frns1
+	 GaF8ZMuXcK5ZI/Bn4AIbaoIlYn35ldM6B+Z6phD4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728055AbgFKM6z (ORCPT
+        id S1726868AbgFKNAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 08:58:55 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54212 "EHLO mx2.suse.de"
+        Thu, 11 Jun 2020 09:00:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726391AbgFKM6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 08:58:55 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id C0874AF32;
-        Thu, 11 Jun 2020 12:58:55 +0000 (UTC)
-Subject: Re: [PATCH v2 2/5] ARM: mstar: Add machine for MStar/Sigmastar
- infinity/mercury family ARMv7 SoCs
-To:     Daniel Palmer <daniel@0x0f.com>
-Cc:     k@japko.eu, tim.bird@sony.com, devicetree@vger.kernel.org,
-        Daniel Palmer <daniel@thingy.jp>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Mike Rapoport <rppt@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Doug Anderson <armlinux@m.disordat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Gregory Fong <gregory.0xf0@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Christian Lamparter <chunkeey@gmail.com>,
-        Nathan Huckleberry <nhuck15@gmail.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191014061617.10296-2-daniel@0x0f.com>
- <20200610090421.3428945-3-daniel@0x0f.com>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <f66978d8-22c5-1883-c6bf-52c0c19d6603@suse.de>
-Date:   Thu, 11 Jun 2020 14:58:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726391AbgFKNAD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 09:00:03 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A23EB20760;
+        Thu, 11 Jun 2020 13:00:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591880403;
+        bh=SiWEIuDwccQFA0WHZIHqDuo/VrtYMBlSulJ0fd6R69o=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ZX7C/Xcm6IPa0jhffV29qW0gcKeRM1AxZVSXLxu5TZ32khfnyVmKhoYqKOzvL1hMy
+         IcPp37xJX2DYxqQwpHXL5rFlSg18HbpoqJeZMIMQUgMT6yg0fzLy+RDKZY1WB5D5MM
+         AM2XW2RzIJkbxcCwCTXj74xfwnBbi+SB91e7F5r8=
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Andy Whitcroft <apw@canonical.com>,
+        Joe Perches <joe@perches.com>, Matteo Croce <mcroce@redhat.com>
+Cc:     Leon Romanovsky <leonro@mellanox.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] checkpatch.pl: perform commit ID check from external to git folder
+Date:   Thu, 11 Jun 2020 15:59:57 +0300
+Message-Id: <20200611125957.1993741-1-leon@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200610090421.3428945-3-daniel@0x0f.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 10.06.20 um 11:04 schrieb Daniel Palmer:
-> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-> index 59fde2d598d8..e7f4ca060c0f 100644
-> --- a/arch/arm/Makefile
-> +++ b/arch/arm/Makefile
-> @@ -197,6 +197,7 @@ machine-$(CONFIG_ARCH_MXC)		+= imx
->   machine-$(CONFIG_ARCH_MEDIATEK)		+= mediatek
->   machine-$(CONFIG_ARCH_MILBEAUT)		+= milbeaut
->   machine-$(CONFIG_ARCH_MXS)		+= mxs
-> +machine-$(CONFIG_ARCH_MSTARV7)		+= mstar
->   machine-$(CONFIG_ARCH_NOMADIK)		+= nomadik
->   machine-$(CONFIG_ARCH_NPCM)		+= npcm
->   machine-$(CONFIG_ARCH_NSPIRE)		+= nspire
-> diff --git a/arch/arm/mach-mstar/Kconfig b/arch/arm/mach-mstar/Kconfig
-> new file mode 100644
-> index 000000000000..6235d0a7860a
-> --- /dev/null
-> +++ b/arch/arm/mach-mstar/Kconfig
-> @@ -0,0 +1,26 @@
-> +menuconfig ARCH_MSTARV7
+From: Leon Romanovsky <leonro@mellanox.com>
 
-You call the dir mach-mstar, but name the Kconfig ARCH_MSTARV7. I had 
-previously been asked to just use the vendor name, so this should 
-probably be just ARCH_MSTAR. Outside arch/arm/ you can then use ARM && 
-ARCH_MSTAR condition to make things 32-bit only, allowing to reuse 
-ARCH_MSTAR for arm64 or whatever.
+The execution of scripts/checkpatch.pl in folder outside of git produces
+complains about invalid commit ID, despite having valid one.
 
-> +	bool "MStar/Sigmastar ARMv7 SoC Support"
-> +	depends on ARCH_MULTI_V7
-> +	select ARM_GIC
-> +	select ARM_HEAVY_MB
-> +	help
-> +	  Support for newer MStar/Sigmastar SoC families that are
-> +	  based on ARMv7 cores like the Cortex A7 and share the same
-> +	  basic hardware like the infinity and mercury series.
-> +
-> +if ARCH_MSTARV7
-> +
-> +config MACH_INFINITY
-> +	bool "MStar/Sigmastar infinity SoC support"
-> +	default ARCH_MSTARV7
-> +	help
-> +	  Support for MStar/Sigmastar infinity IP camera SoCs.
-> +
-> +config MACH_MERCURY
-> +	bool "MStar/Sigmastar mercury SoC support"
-> +	default ARCH_MSTARV7
-> +	help
-> +	  Support for MStar/Sigmastar mercury dash camera SoCs.
-> +	  Note that older Mercury2 SoCs are ARM9 based and not supported.
+➜  /tmp /home/leonro/src/kernel/scripts/checkpatch.pl \
+	--root=/home/leonro/src/kernel \
+	--color=always \
+	--summary-file /tmp/0001-RDMA-core-Annotate-CMA-unlock-helper-routine.patch
 
-Is this comment really helpful? This menu item would only seem to come 
-up after having selected multi_v7, which kind of rules out ARM9.
+WARNING: Unknown commit id 'e83f195aa45c', maybe rebased or not pulled?
+Fixes: e83f195aa45c ("RDMA/cm: Pull duplicated code into cm_queue_work_unlock()")
 
-Consider adding mercury in a second step?
+/tmp/0001-RDMA-core-Annotate-CMA-unlock-helper-routine.patch total: 0 errors, 1 warnings, 7 lines checked
 
-> +
-> +endif
+Fixes: a8dd86bf7462 ("checkpatch.pl: warn on invalid commit id")
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+---
+ scripts/checkpatch.pl | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Regards,
-Andreas
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index eac40f0abd56..286bc78dc6fc 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -966,7 +966,7 @@ sub seed_camelcase_includes {
+ sub git_commit_info {
+ 	my ($commit, $id, $desc) = @_;
 
--- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+-	return ($id, $desc) if ((which("git") eq "") || !(-e ".git"));
++	return ($id, $desc) if ((which("git") eq "") || !(-e "$root/.git"));
+
+ 	my $output = `${git_command} log --no-color --format='%H %s' -1 $commit 2>&1`;
+ 	$output =~ s/^\s*//gm;
+--
+2.26.2
+
