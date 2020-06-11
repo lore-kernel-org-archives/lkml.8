@@ -8,56 +8,57 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41CC3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 05:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF1CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 05:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17ED72074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 05:45:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C82C02075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 05:45:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RPc879Fn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sWnloVRp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726499AbgFKFpF (ORCPT
+        id S1726534AbgFKFpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 01:45:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35222 "EHLO
+        Thu, 11 Jun 2020 01:45:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbgFKFpE (ORCPT
+        with ESMTP id S1726147AbgFKFpI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 01:45:04 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41201C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 22:45:04 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id y17so4737216wrn.11
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 22:45:04 -0700 (PDT)
+        Thu, 11 Jun 2020 01:45:08 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA5FEC08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 22:45:07 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id j198so6121676wmj.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 22:45:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=CMSRdAMjqQ0hUIKg7+9PjXGS1txRLKEo1w8Yv1LWP4U=;
-        b=RPc879FnDmXOmAiuG2ZiC2YAn/tFY+I56Ips0B76qiI4DawSzuLFJVbQq0JOYlQDvD
-         QLujLY1XQ4R7Jo2IeeSNhcAYgf3KHPenlEC/nFdJIa9AoFcCBxo6ovQH8zm+bPeHfxFx
-         Ia36NQzuV5x9wyHdewsXeQX2C1iAjxvRH5d+dcUdrkTKU5Wa2CLaXobq1J4sAnYghdwv
-         cN1Knh+GBr2tfe99M45qIk5ozZq8B1Daw1dCXcbesgd3/OscMuvVXSbwvDpkVlMVWCIF
-         nwS/J6EaUvJevLnehE9CPm8svB3JeptLEDquIukgcmT5DmpfSsppK5sv3tCRRfqxrYa0
-         vg+A==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=GM23ntmkLh0x0xXXUygYPBCzInm4vRrzUCKgyJBobDo=;
+        b=sWnloVRpaRtwFyMx2PlMc7a0HO+ZIZPx3+KezHYtUT52Q+GxdjgnaWYUMmNJUW1vnZ
+         mL1wNmIMZNqgjx3LmiLJ9gxU57rd4P7iNagScmoIKDQukYLXvHRZPzukqGpFyjHjCtji
+         siXghYbLloNdrGjYl43pzeYxkp/3xX+MnvinPCtY3unSPyMfeabDHwumR8dCLa9JdxTu
+         LgAa49PFT8YJTpHDEYXT2GPYzT+UgsOt3IwU9eRlIMnGpH5iW7UwjjnVp7K6Oh7gza4H
+         PWXas0L4mxC9KiDqvXKLrLfVam69YUhCUZD46GRE7KqgNTOrA3+r4VPsl4GefKbQLbgO
+         uYUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=CMSRdAMjqQ0hUIKg7+9PjXGS1txRLKEo1w8Yv1LWP4U=;
-        b=W+XmNXWtWuW8rr7uROmDGlQztndGgBMHqQzKAx7MiBw0U7gC76rr+6RLPTiSi1BSF/
-         /PAocoj2khv4MRYdz8pNe0wpBT4znjTezLXhfHz0fnocG6lvvleWBTesQ1Towb/82sMf
-         0culi3KaTCa30KTIAAYnEerotQAkBdLjjeQeyhcP/9VVANXXru7DSYq9q+8nsTmszk1t
-         ICs6ofrEGJkN+pK74u8SYYqc82qY6r8qtLkmh8mvWGhD0yH3bVN+qjfmRb9yEBoqjh2n
-         Kh3Zxwvr0xdJG0ihHcFavXdvG5tBl1GJxfVbYogoL73YiCllJIAxXdx87nZW4D3w6vo6
-         zQSw==
-X-Gm-Message-State: AOAM531Jn9eFjjwLZvoCp5ZmY6MSEWg/e7sXyplR//WwSqMcWTk6mzsi
-        nyQj+5UFQbvQDOQalS1DSjg=
-X-Google-Smtp-Source: ABdhPJwiu6b2yxpfn7MNIZSUJW6IzfpHRnguKDTAPMNAkrUoYbMuKaWHiMGXorXYC42Gftp6XKv2Mw==
-X-Received: by 2002:a5d:6a4b:: with SMTP id t11mr7404152wrw.404.1591854301729;
-        Wed, 10 Jun 2020 22:45:01 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=GM23ntmkLh0x0xXXUygYPBCzInm4vRrzUCKgyJBobDo=;
+        b=cXqqkA50hewwiV7rhmM1UVaRvmczIt6Ak4zKrHd+yM513L2Z/ppSRjA9Vy7U51d19k
+         jc8IoId9/Zfatn1ub+iQkPfDT+u98djC2dOL9+JAtlRlmJjMEcZ1QzjrtOXV2hnFDSZL
+         5ewtSYDmUATNmPWb4KIzXiPW6HKgazIBAMo29s1CcOjWFaZ2CkoxfKgbm36Svbq5cYLp
+         MI4/K4YHpO7N4gCN3tMsxmkMDiVvSDTRntnx1oHrxe78S0w0NMP2b5HeGQBHfZymG8Fk
+         QbY8iBsKaVLpE7X3lbhNDhddoOEIVh6BB8UC40FuX2+EIR7K0YDvwH2VTWNV61KsnXqr
+         29Dg==
+X-Gm-Message-State: AOAM530d6DnuJ+GWAGRZRjdcyzZacIrLx96zyrH6GffYobCdZBAC+DE5
+        D62Lnf1pPwzomoKYOhcFFYTaPB+7
+X-Google-Smtp-Source: ABdhPJw+yB26mkquyy1l1FAMcm4KoBgZN/P2q/14vQK7wDgd7NHbQczEHRUXWyCCLzDpNTTIr1OHoQ==
+X-Received: by 2002:a1c:4302:: with SMTP id q2mr6380413wma.54.1591854306435;
+        Wed, 10 Jun 2020 22:45:06 -0700 (PDT)
 Received: from mail.broadcom.com ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id j16sm3492724wre.21.2020.06.10.22.44.59
+        by smtp.gmail.com with ESMTPSA id j16sm3492724wre.21.2020.06.10.22.45.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 22:45:01 -0700 (PDT)
+        Wed, 10 Jun 2020 22:45:06 -0700 (PDT)
 From:   Kamal Dasu <kdasu.kdev@gmail.com>
 To:     Brian Norris <computersforpeace@gmail.com>,
         Kamal Dasu <kdasu.kdev@gmail.com>,
@@ -66,41 +67,87 @@ To:     Brian Norris <computersforpeace@gmail.com>,
         Vignesh Raghavendra <vigneshr@ti.com>
 Cc:     linux-mtd@lists.infradead.org,
         bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org
-Subject: [PATCH  1/2] mtd: rawnand: brcmnand: Don't default to edu transfer
-Date:   Thu, 11 Jun 2020 01:44:53 -0400
-Message-Id: <20200611054454.2547-1-kdasu.kdev@gmail.com>
+Subject: [PATCH  2/2] mtd: rawnand: brcmnand: Ecc error handling on EDU transfers
+Date:   Thu, 11 Jun 2020 01:44:54 -0400
+Message-Id: <20200611054454.2547-2-kdasu.kdev@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200611054454.2547-1-kdasu.kdev@gmail.com>
+References: <20200611054454.2547-1-kdasu.kdev@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When flash-dma is absent do not default to using flash-edu.
-Make sure flash-edu is enabled before setting EDU transfer
-function.
+Implemented ECC correctable and uncorrectable error handling for EDU
+reads. If ECC correctable bitflips are encountered  on EDU transfer,
+read page again using pio, This is needed due to a controller lmitation
+where read and corrected data is not transferred to the DMA buffer on ECC
+errors. This holds true for ECC correctable errors beyond set threshold.
 
 Fixes: a5d53ad26a8b ("mtd: rawnand: brcmnand: Add support for flash-edu for dma transfers")
 Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
 ---
- drivers/mtd/nand/raw/brcmnand/brcmnand.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/mtd/nand/raw/brcmnand/brcmnand.c | 26 ++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
 diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-index 8f9ffb46a09f..0c1d6e543586 100644
+index 0c1d6e543586..d7daa83c8a58 100644
 --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
 +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-@@ -2953,8 +2953,9 @@ int brcmnand_probe(struct platform_device *pdev, struct brcmnand_soc *soc)
- 		if (ret < 0)
- 			goto err;
+@@ -1855,6 +1855,22 @@ static int brcmnand_edu_trans(struct brcmnand_host *host, u64 addr, u32 *buf,
+ 	edu_writel(ctrl, EDU_STOP, 0); /* force stop */
+ 	edu_readl(ctrl, EDU_STOP);
  
--		/* set edu transfer function to call */
--		ctrl->dma_trans = brcmnand_edu_trans;
++	if (ret == 0 && edu_cmd == EDU_CMD_READ) {
++		u64 err_addr = 0;
++
++		/*
++		 * check for ecc errors here, subpage ecc erros are
++		 * retained in ecc error addr register
++		 */
++		err_addr = brcmnand_get_uncorrecc_addr(ctrl);
++		if (!err_addr) {
++			err_addr = brcmnand_get_correcc_addr(ctrl);
++			if (err_addr)
++				ret = -EUCLEAN;
++		} else
++			ret = -EBADMSG;
++	}
++
+ 	return ret;
+ }
+ 
+@@ -2058,6 +2074,7 @@ static int brcmnand_read(struct mtd_info *mtd, struct nand_chip *chip,
+ 	u64 err_addr = 0;
+ 	int err;
+ 	bool retry = true;
++	bool edu_read = false;
+ 
+ 	dev_dbg(ctrl->dev, "read %llx -> %p\n", (unsigned long long)addr, buf);
+ 
+@@ -2075,6 +2092,10 @@ static int brcmnand_read(struct mtd_info *mtd, struct nand_chip *chip,
+ 			else
+ 				return -EIO;
+ 		}
++
 +		if (has_edu(ctrl))
-+			/* set edu transfer function to call */
-+			ctrl->dma_trans = brcmnand_edu_trans;
- 	}
++			edu_read = true;
++
+ 	} else {
+ 		if (oob)
+ 			memset(oob, 0x99, mtd->oobsize);
+@@ -2122,6 +2143,11 @@ static int brcmnand_read(struct mtd_info *mtd, struct nand_chip *chip,
+ 	if (mtd_is_bitflip(err)) {
+ 		unsigned int corrected = brcmnand_count_corrected(ctrl);
  
- 	/* Disable automatic device ID config, direct addressing */
++		/* in case of edu correctable error we read again using pio */
++		if (edu_read)
++			err = brcmnand_read_by_pio(mtd, chip, addr, trans, buf,
++						   oob, &err_addr);
++
+ 		dev_dbg(ctrl->dev, "corrected error at 0x%llx\n",
+ 			(unsigned long long)err_addr);
+ 		mtd->ecc_stats.corrected += corrected;
 -- 
 2.17.1
 
