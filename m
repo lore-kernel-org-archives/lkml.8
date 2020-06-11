@@ -2,187 +2,193 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F33C9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 19:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 631F4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 20:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D72D7207ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 19:56:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C68E2073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 20:01:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591905667;
+	bh=vBJOsLq+MF7YPPfH33AW+SH207qD3c7ZoyMCXan7N6k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=yk9SvXAgWY262HIm6DoS0FlHrD2MfdnANxdFN0MF/23Lw15dtwnc/6j74Z2EFWZAz
+	 +dKZT06lnsC2TOVqQxUkoKTU8Oqoo1IDNBc5sMKiS7YFir4EN0pbgrvLVvLyfU7zNN
+	 aCAlyC841s2921TuUpeRqKXO2FWEVd1vvbvMrkmY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbgFKT4B (ORCPT
+        id S1726542AbgFKUBC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 15:56:01 -0400
-Received: from mga04.intel.com ([192.55.52.120]:9278 "EHLO mga04.intel.com"
+        Thu, 11 Jun 2020 16:01:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725799AbgFKT4B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 15:56:01 -0400
-IronPort-SDR: nfWxtoU1uuDui8f9jQlA1dJla63QsnCpt3nI+b64xUrZt7b+xElQH3I9ZDTOEVOnCtwIypF5jq
- IKVbdsIY04zQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 12:56:00 -0700
-IronPort-SDR: 6OGy0HphltOtwPAWMjEvQt1BpdA3Tm2x+SezYJPxYF3MxopRRS+nbZ9Tna88oZmNzyxbVnZasO
- tLzlLb8Tm40A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,500,1583222400"; 
-   d="scan'208";a="259693290"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by fmsmga007.fm.intel.com with ESMTP; 11 Jun 2020 12:55:59 -0700
-Date:   Thu, 11 Jun 2020 13:02:24 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Lu Baolu" <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        "Christoph Hellwig" <hch@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>, jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v2 3/3] iommu/vt-d: Sanity check uapi argsz filled by
- users
-Message-ID: <20200611130224.642ddde4@jacob-builder>
-In-Reply-To: <20200611110816.4cea7204@x1.home>
-References: <1591848735-12447-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1591848735-12447-4-git-send-email-jacob.jun.pan@linux.intel.com>
-        <20200611110816.4cea7204@x1.home>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        id S1725799AbgFKUBC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 16:01:02 -0400
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C7CA20829;
+        Thu, 11 Jun 2020 20:01:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591905661;
+        bh=vBJOsLq+MF7YPPfH33AW+SH207qD3c7ZoyMCXan7N6k=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=RM0NQc90imUodIznICVV11Hdp8caVl144mfdAhxnSYeCxeb423vGRjqoFBU2IpJ+N
+         vhPrFAWLl4kqhBTmPR/AcABKtdGSTSz/VRdCbx0qiGlylBZVHXsmnrbiqx0xys5CrK
+         XE5PqvEhv4dmAe3qTKsJp/1OZbgd/Ujgwgou9vFk=
+Received: by mail-oi1-f171.google.com with SMTP id p70so6530416oic.12;
+        Thu, 11 Jun 2020 13:01:01 -0700 (PDT)
+X-Gm-Message-State: AOAM531awlNa5CB0cxHO4S/eLpeL9ipA1saGl+x7sDm4lsNWOmfFRnBm
+        W6o1vjYEWugG+SzxbFi4BgPpD/l228sw0PZD4g==
+X-Google-Smtp-Source: ABdhPJza8D9UuymcUjm1xsz4J1CZxHk31faK5p3gBrGnmfebOkby+BbsncjLGk+4Sc/aNEYZBK3Yoelmkxgd7CcMJC4=
+X-Received: by 2002:aca:d943:: with SMTP id q64mr7812611oig.147.1591905660418;
+ Thu, 11 Jun 2020 13:01:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200422222242.241699-1-pmalani@chromium.org> <20200511192800.GA28762@bogus>
+ <20200511204635.GC136540@google.com> <20200512134154.GC2085641@kuha.fi.intel.com>
+ <CAL_JsqJ2pbh5BbjGd9eEiD6-sV94=omk6o+mLXjCYiVnUOtO=g@mail.gmail.com>
+ <CACeCKadiiokPdPB2Q5WBQFrPuxjpm3TiDgaaerncVR_Z7Z0nvg@mail.gmail.com>
+ <CAL_Jsq+MM3-ugLvSGc_wc6RvHVyxyDUD0DkvwQaQJMYCCFpfHg@mail.gmail.com>
+ <20200609235740.GA154315@google.com> <20200610153356.GC3213128@kuha.fi.intel.com>
+ <CAL_JsqKsObFhC+J6gK2EDXdpBLO6t+rswXDipnjt4uMr2Qx2zg@mail.gmail.com> <CACeCKadq6tuqzR_6DuiZeL+=aOMb05EWd4o0sNyGOcZJ=dYx8g@mail.gmail.com>
+In-Reply-To: <CACeCKadq6tuqzR_6DuiZeL+=aOMb05EWd4o0sNyGOcZJ=dYx8g@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 11 Jun 2020 14:00:47 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJQb5P26JC-KqkeHoWxAb63N+_XRK==b-WWJ+pYpdHO8Q@mail.gmail.com>
+Message-ID: <CAL_JsqJQb5P26JC-KqkeHoWxAb63N+_XRK==b-WWJ+pYpdHO8Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
+To:     Prashant Malani <pmalani@chromium.org>
+Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tim Wawrzynczak <twawrzynczak@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Rajmohan Mani <rajmohan.mani@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 11 Jun 2020 11:08:16 -0600
-Alex Williamson <alex.williamson@redhat.com> wrote:
+On Wed, Jun 10, 2020 at 11:49 AM Prashant Malani <pmalani@chromium.org> wrote:
+>
+> Hi Rob,
+>
+> On Wed, Jun 10, 2020 at 9:53 AM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Wed, Jun 10, 2020 at 9:34 AM Heikki Krogerus
+> > <heikki.krogerus@linux.intel.com> wrote:
+> > >
+> > > On Tue, Jun 09, 2020 at 04:57:40PM -0700, Prashant Malani wrote:
+> > > > Hi Rob,
+> > > >
+> > > > Thanks again for the comments and feedback. Kindly see responses inline:
+> > > >
+> > > > (Trimming unrelated text from thread):
+> > > >
+> > > >
+> > > >             ports {
+> > > >                 #address-cells = <1>;
+> > > >                 #size-cells = <0>;
+> > > >
+> > > >                 port@0 {
+> > > >                     reg = <0>;
+> > > >                     usb_con_hs: endpoint {
+> > > >                         remote-endpoint = <&foo_usb_hs_controller>;
+> > > >                     };
+> > > >                 };
+> > > >
+> > > >                 port@1 {
+> > > >                     reg = <1>;
+> > > >                     usb_con0_ss: endpoint@0 {
+> > > >                         remote-endpoint = <&mode_mux_in>;
+> > > >                     };
+> > > >                 };
+> > > >
+> > > >                 port@2 {
+> > > >                     reg = <2>;
+> > > >                     usb_con_sbu: endpoint {
+> > > >                         remote-endpoint = <&foo_dp_aux>;
+> > > >                     };
+> > > >                 };
+> > > >             };
+> > >
+> > > The pins that can be reassigned can in practice go anywhere. We can't
+> > > group them in any way. What do we do for example when the two sideband
+> > > pins go to different locations?
+> >
+> > The sideband pins from the connector go to multiple places or the
+> > sideband signal from a controller go to multiple connectors? Either
+> > way, that's solved with multiple endpoints. In the former case, port@2
+> > would have multiple endpoints with all the possible connections. The
+> > general model of the graph is each port is a separate data channel and
+> > multiple endpoints are either a mux or fanout depending on the data
+> > direction.
+> >
+> > > It looks like the OF graph for the USB Type-C connectors expects the
+> > > pins to be grouped like that, which is too bad, because unfortunately
+> > > it will not work. It would require that we have a separate port for
+> > > every pin that can be reassigned on the connector, and let's not even
+> > > consider that.
+> >
+> > I guess you are referring to the 4 SS signal pairs and that they could
+> > be 2 USB links, 1 USB link and 1-2 Alt mode links, or 4 Alt mode
+> > links. I think the grouping of SS signals is fine as I'd expect
+> > there's a single entity deciding the routing. That would be 'mux' node
+> > I think, but 'mux' is the wrong abstraction here. I guess we could
+> > have 4 muxes (1 for each signal), but I'd hope we don't need that
+> > level of detail in DT. I think we're in agreement on that.
+>
+> I think the updated example handles this grouping (port@1 going to a
+> "SS mux") although as you said it should probably be a group of muxes,
+> but I think the example illustrates the point. Is that assessment
+> correct?
 
-> On Wed, 10 Jun 2020 21:12:15 -0700
-> Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
-> 
-> > IOMMU UAPI data has an argsz field which is filled by user. As the
-> > data structures expands, argsz may change. As the UAPI data are
-> > shared among different architectures, extensions of UAPI data could
-> > be a result of one architecture which has no impact on another.
-> > Therefore, these argsz santity checks are performed in the model
-> > specific IOMMU drivers. This patch adds sanity checks in the VT-d
-> > to ensure argsz passed by userspace matches feature flags and other
-> > contents.
-> > 
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > ---
-> >  drivers/iommu/intel-iommu.c | 16 ++++++++++++++++
-> >  drivers/iommu/intel-svm.c   | 12 ++++++++++++
-> >  2 files changed, 28 insertions(+)
-> > 
-> > diff --git a/drivers/iommu/intel-iommu.c
-> > b/drivers/iommu/intel-iommu.c index 27ebf4b9faef..c98b5109684b
-> > 100644 --- a/drivers/iommu/intel-iommu.c
-> > +++ b/drivers/iommu/intel-iommu.c
-> > @@ -5365,6 +5365,7 @@ intel_iommu_sva_invalidate(struct
-> > iommu_domain *domain, struct device *dev, struct device_domain_info
-> > *info; struct intel_iommu *iommu;
-> >  	unsigned long flags;
-> > +	unsigned long minsz;
-> >  	int cache_type;
-> >  	u8 bus, devfn;
-> >  	u16 did, sid;
-> > @@ -5385,6 +5386,21 @@ intel_iommu_sva_invalidate(struct
-> > iommu_domain *domain, struct device *dev, if (!(dmar_domain->flags
-> > & DOMAIN_FLAG_NESTING_MODE)) return -EINVAL;
-> >  
-> > +	minsz = offsetofend(struct iommu_cache_invalidate_info,
-> > padding);  
-> 
-> Would it still be better to look for the end of the last field that's
-> actually used to avoid the code churn and oversights if/when the
-> padding field does get used and renamed?
-> 
-My thought was that if the padding gets partially re-purposed, the
-remaining padding would still be valid for minsz check. The extension
-rule ensures that there is no size change other the variable size union
-at the end. So use padding would avoid the churn, or i am totally wrong?
+Yes, but let's stop calling it a mux. It's a "USB Type C signal routing blob".
 
-> Per my comment on patch 1/, this also seems like where the device
-> specific IOMMU driver should also have the responsibility of receiving
-> a __user pointer to do the copy_from_user() here.  vfio can't know
-> which flags require which fields to make a UAPI with acceptable
-> compatibility guarantees otherwise.
-> 
-Right, VFIO cannot do compatibility guarantees, it is just seem to be
-that VFIO has enough information to copy_from_user sanely & safely and
-handle over to IOMMU. Please help define the roles/responsibilities in
-my other email. Then I will follow the guideline.
+> > > We need higher level description of the connections for the USB Type-C
+> > > connectors. For example, a connector can be connected to this (or
+> > > these) DisplayPort(s), this USB 2.0 port, this USB 3.x port, this USB4
+> > > port, etc. And this is the mux that handles the pins on this
+> > > connector, and these are the retimers, etc. etc.
+> > >
+> > > We also need a way to identify those connections, and relying on
+> > > something like fixed port node addresses, so indexes in practice,
+> > > feels really risky to me. A conflict may seem unlikely now, but we
+> > > seen those so many times in the past other things like GPIOs, IRQs,
+> > > etc. We really need to define string identifiers for these
+> > > connections.
+> >
+> > I assume for IRQs you are referring to cases where we have a variable
+> > number such as 'interrupts = <1 2 3>;' where 'interrupts = <1 3>'
+> > doesn't work because we can't describe interrupt 2 is not present? The
+> > graph binding doesn't suffer from that issue since we can easily omit
+> > port or endpoint nodes.
+> >
+> > Also, the numbering is specific to a compatible string. If we need
+> > different numbering, then we can do a new compatible.
+> >
+> > Rob
+>
+> Would this block the addition of the "*-switch" properties? IIUC the
+> two are related but not dependent on each other.
+>
+> The *-switch properties are phandles which the Type C connector class
+> framework expects (and uses to get handles to those switches).
+> These would point to the "mux" or "group of mux" abstractions as noted earlier.
 
-> > +	if (inv_info->argsz < minsz)
-> > +		return -EINVAL;
-> > +
-> > +	/* Sanity check user filled invalidation dat sizes */
-> > +	if (inv_info->granularity == IOMMU_INV_GRANU_ADDR &&
-> > +		inv_info->argsz != offsetofend(struct
-> > iommu_cache_invalidate_info,
-> > +					addr_info))
-> > +		return -EINVAL;
-> > +
-> > +	if (inv_info->granularity == IOMMU_INV_GRANU_PASID &&
-> > +		inv_info->argsz != offsetofend(struct
-> > iommu_cache_invalidate_info,
-> > +					pasid_info))
-> > +		return -EINVAL;
-> > +
-> >  	spin_lock_irqsave(&device_domain_lock, flags);
-> >  	spin_lock(&iommu->lock);
-> >  	info = get_domain_info(dev);
-> > diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-> > index 35b43fe819ed..64dc2c66dfff 100644
-> > --- a/drivers/iommu/intel-svm.c
-> > +++ b/drivers/iommu/intel-svm.c
-> > @@ -235,15 +235,27 @@ int intel_svm_bind_gpasid(struct iommu_domain
-> > *domain, struct device *dev, struct dmar_domain *dmar_domain;
-> >  	struct intel_svm_dev *sdev;
-> >  	struct intel_svm *svm;
-> > +	unsigned long minsz;
-> >  	int ret = 0;
-> >  
-> >  	if (WARN_ON(!iommu) || !data)
-> >  		return -EINVAL;
-> >  
-> > +	/*
-> > +	 * We mandate that no size change in IOMMU UAPI data
-> > before the
-> > +	 * variable size union at the end.
-> > +	 */
-> > +	minsz = offsetofend(struct iommu_gpasid_bind_data,
-> > padding);  
-> 
-> Same.  Thanks,
-> 
-> Alex
-> 
-> > +	if (data->argsz < minsz)
-> > +		return -EINVAL;
-> > +
-> >  	if (data->version != IOMMU_GPASID_BIND_VERSION_1 ||
-> >  	    data->format != IOMMU_PASID_FORMAT_INTEL_VTD)
-> >  		return -EINVAL;
-> >  
-> > +	if (data->argsz != offsetofend(struct
-> > iommu_gpasid_bind_data, vtd))
-> > +		return -EINVAL;
-> > +
-> >  	if (!dev_is_pci(dev))
-> >  		return -ENOTSUPP;
-> >    
-> 
+You don't need them though. Walk the graph. You get the connector
+port@1 remote endpoint and then get its parent.
 
-[Jacob Pan]
+> I'd suggest we work on updating the Type C connector class to a model
+> that can describe connections for both DT (using OF graph) and ACPI,
+> if something
+> like that exists, but let it not block the addition of these switches
+> to usb-connector.yaml; they will be needed by the Type C connector
+> class framework
+> regardless of the form the connection description takes.
