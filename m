@@ -2,136 +2,126 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C719C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 03:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0020C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 03:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72C332072F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 03:41:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F2CF2072F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 03:42:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="E/vzca1L"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="G+51MYtW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbgFKDlL (ORCPT
+        id S1726462AbgFKDmK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 23:41:11 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:58371 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726326AbgFKDlL (ORCPT
+        Wed, 10 Jun 2020 23:42:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44742 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726326AbgFKDmI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 23:41:11 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200611034108epoutp03a4ac53df42a125dfce497d96d60b0e9f~XYErmDU-w1486314863epoutp03k
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 03:41:08 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200611034108epoutp03a4ac53df42a125dfce497d96d60b0e9f~XYErmDU-w1486314863epoutp03k
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1591846868;
-        bh=V6x0CC0dSJI52/fvB4p8HDQIDD1KqNhQ5jAgQ9dlyxM=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=E/vzca1LIBKpurSxR3IN96FIQGjzyt9KVRKYHhUIpEFQPPaHnapuWqvN0M/6wC5ZM
-         uTu30/7191FiSorIdzvyh22f2fbnERnAuPbyopKCZCg2Cl5QYg0lOaHODjjXI9M9S3
-         qCXg3dv7H0KLXQ7KbeNwvuioQ23MWgkGb0AJFjN8=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20200611034107epcas1p34327c2a7182298862d3f5cff9de4489b~XYErKExDL3020130201epcas1p3W;
-        Thu, 11 Jun 2020 03:41:07 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.162]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 49j8lk4QpqzMqYkV; Thu, 11 Jun
-        2020 03:41:06 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        00.3E.29173.2D7A1EE5; Thu, 11 Jun 2020 12:41:06 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200611034106epcas1p195947d55fda88a49228be1ec06401cba~XYEpqcDER2338923389epcas1p1o;
-        Thu, 11 Jun 2020 03:41:06 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200611034105epsmtrp1b6e2ec7bde217b9e3f78a3271024192c~XYEpl0L721381213812epsmtrp1H;
-        Thu, 11 Jun 2020 03:41:05 +0000 (GMT)
-X-AuditID: b6c32a37-9cdff700000071f5-2a-5ee1a7d244a4
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        F1.EF.08303.1D7A1EE5; Thu, 11 Jun 2020 12:41:05 +0900 (KST)
-Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200611034105epsmtip27d4824bd0bc082146fa3cc8842c94b8e~XYEpaEU4K0594905949epsmtip2q;
-        Thu, 11 Jun 2020 03:41:05 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     "'Dan Carpenter'" <dan.carpenter@oracle.com>
-Cc:     <linux-fsdevel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        "'Sungjong Seo'" <sj1557.seo@samsung.com>,
-        =?iso-8859-1?Q?'Pali_Roh=E1r'?= <pali@kernel.org>,
-        "'Markus Elfring'" <Markus.Elfring@web.de>,
-        "'Tetsuhiro Kohada'" <kohada.t2@gmail.com>,
-        "'Wei Yongjun'" <weiyongjun1@huawei.com>
-In-Reply-To: <20200610172213.GA90634@mwanda>
-Subject: RE: [PATCH v2] exfat: add missing brelse() calls on error paths
-Date:   Thu, 11 Jun 2020 12:41:05 +0900
-Message-ID: <00a801d63fa2$230d14c0$69273e40$@samsung.com>
+        Wed, 10 Jun 2020 23:42:08 -0400
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [IPv6:2001:df5:b000:5::4])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8F2BC08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 20:42:07 -0700 (PDT)
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id E14CA8066C;
+        Thu, 11 Jun 2020 15:42:00 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1591846920;
+        bh=pwafHa80MS48ZYS1w+T8ti3oHQ+XDqAf4v1bbkbcS9Y=;
+        h=From:To:Cc:Subject:Date;
+        b=G+51MYtWispe9zo+EqobmmCcvJ9ZPm1CPezyWwqE3SuKGa19vni9XeMcKLRyb9t+4
+         VpBcq6/X7+vbocXrDPcIUh33jDpNbDL8DkvzTry4w8NYC9M5WnIJVdQaJ+ZbjkTAjy
+         0lLEEzwCfzkjzNf02NVCsyklzv3P8fOlhGAXvNGA2EA9ABPLfw09ZjIkmsn5FrWYub
+         IE1uXDKAJLq3jqCVn9Lb1FXvU9ZSScRPf4O3+Ph+2Pn9QW2s3FmhOkAwfHFJHbRlJk
+         5kX5htHlDBFq5HFPnotezxauGrpkwJ5XMRAGQuA6FnBqUDQzmgoMAc9gK0rIZFPkV7
+         pgI48YJrKslIw==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5ee1a7fe0000>; Thu, 11 Jun 2020 15:41:50 +1200
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
+        by smtp (Postfix) with ESMTP id 95E2B13EDE4;
+        Thu, 11 Jun 2020 15:41:49 +1200 (NZST)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id D1D52280083; Thu, 11 Jun 2020 15:41:49 +1200 (NZST)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
+        christophe.leroy@c-s.fr
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v2] powerpc: Remove inaccessible CMDLINE default
+Date:   Thu, 11 Jun 2020 15:41:40 +1200
+Message-Id: <20200611034140.9133-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQIRrAfa6wiWBnxmC0CvH5lIv9XJ0gH3LYStqEwybXA=
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLJsWRmVeSWpSXmKPExsWy7bCmvu6l5Q/jDN7cUbR4/W86i8XWW9IW
-        P+beZrHYs/cki8XlXXPYLP7Pes5qsWDPaTaLLf+OsFoc/rKLzYHTY+esu+weLUfesnpsWtXJ
-        5vHx6S0Wj74tqxg9Pm+S87j9bBtLAHtUjk1GamJKapFCal5yfkpmXrqtkndwvHO8qZmBoa6h
-        pYW5kkJeYm6qrZKLT4CuW2YO0GVKCmWJOaVAoYDE4mIlfTubovzSklSFjPziElul1IKUnAJD
-        gwK94sTc4tK8dL3k/FwrQwMDI1OgyoScjFWn1jIXXGGqePTmPlMD4zymLkZODgkBE4mTR56z
-        djFycQgJ7GCUaJhwAMr5xCjxp3k7I4TzmVHi25l+RpiWFVtPsEAkdjFKHD+3mB3Cecko8Xn7
-        RRaQKjYBXYl/f/azgdgiAgYS906+AOtgFjjHJPH/5GlWkASngI7E1WV7wWxhAQ+Jf1c2MoPY
-        LAKqEkuWLQGL8wpYSiw4fJQNwhaUODnzCdgCZgE9iRtTp7BB2PIS29/OYYY4T0Hi59NlQL0c
-        QIutJGYtroEoEZGY3dnGDHKDhMAODokTu59CveMisWn9DDYIW1ji1fEt7BC2lMTL/jZ2kDkS
-        AtUSH/dDje9glHjx3RbCNpa4uX4DK4StKLHz91xGiF18Eu++9rBCtPJKdLQJQZSoSvRdOgwN
-        d2mJrvYP7BMYlWYheWwWksdmIXlsFpIPFjCyrGIUSy0ozk1PLTYsMEaO7k2M4HSrZb6Dcdrb
-        D3qHGJk4GA8xSnAwK4nwCoo/jBPiTUmsrEotyo8vKs1JLT7EaAoM64nMUqLJ+cCEn1cSb2hq
-        ZGxsbGFiZm5maqwkzutrdSFOSCA9sSQ1OzW1ILUIpo+Jg1OqgelSz4FPUi77//Zcyp2/4i+L
-        aW71Zp4H0lIJz1tYOe3ZIvSfXmPtmCojI13h/F3mWOWutB1m6pXXTjy9Ir6L6W5N4UHH/5u4
-        Fd8wp6nFTndy2fWT2Ufm2Mrapd8z7SpXd93x4L37+OqdLcu2+drvuLZOyPrCkuXPb+RtKpRZ
-        sVJzroTcY78OhR/3NDVfy4U3P3ldK7fp51/B/ZyfD/5b5H11lsoJlyS1L/Zv/A2Ot3zoOKb1
-        PMbl+v7MQ7Xe67LnPG7Lvrlbp3fv2pqw9R0Za0UXr5ysdyTkpP9pr2+yFssTPihwKQVP0Tld
-        27bidCHLbEdujd8fUid0SOXtn/Ow8rb/h/YbbObXPFa/+N6uMXW9EktxRqKhFnNRcSIATWuw
-        s0AEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCIsWRmVeSWpSXmKPExsWy7bCSvO7F5Q/jDNY2m1u8/jedxWLrLWmL
-        H3Nvs1js2XuSxeLyrjlsFv9nPWe1WLDnNJvFln9HWC0Of9nF5sDpsXPWXXaPliNvWT02repk
-        8/j49BaLR9+WVYwenzfJedx+to0lgD2KyyYlNSezLLVI3y6BK2PVqbXMBVeYKh69uc/UwDiP
-        qYuRk0NCwERixdYTLF2MXBxCAjsYJRbdvgCVkJY4duIMcxcjB5AtLHH4cDFEzXNGiVl3z4PV
-        sAnoSvz7s58NxBYRMJC4d/IF2CBmgStMEvu2zmcDaRYSqJVYc1gUpIZTQEfi6rK9rCC2sICH
-        xL8rG5lBbBYBVYkly5aAxXkFLCUWHD7KBmELSpyc+YQFxGYGmn//UAcrhC0vsf3tHGaIOxUk
-        fj5dxgqySkTASmLW4hqIEhGJ2Z1tzBMYhWchmTQLyaRZSCbNQtKygJFlFaNkakFxbnpusWGB
-        UV5quV5xYm5xaV66XnJ+7iZGcMRpae1g3LPqg94hRiYOxkOMEhzMSiK8guIP44R4UxIrq1KL
-        8uOLSnNSiw8xSnOwKInzfp21ME5IID2xJDU7NbUgtQgmy8TBKdXA1LtzXvXkK5f9mKuvMk7g
-        qqnN3BW/3WLb5CmNqt1fb0eu1/u97P3WMhUuD8M67SPzxZ9On17zz3/z/glc1wWVxQ4e5s24
-        /nVeDsuKhGNL1rpNcKxpCXSu7Fh+bQtPTLBWSaSPn7vCBQejKUaN09/ofCmZ+m9a/qFVi8O2
-        x03+rpOuri7aZqmodKPxwE+W2pNnOu4vebVwqRiviCFTv7IQj9rE/86WjuaCEv2WNauLV3zY
-        MjXZ/LDpm6XaT9nOlVdHLHTYGm0nps1w/+fkVzvPuLrenfTu+oOU1Qqsm5Kefl1nKDhDaqW4
-        5aLf3LpnrR2zWrj4TRmW9r7jeOfiICq6Z1L7mwPepzWvXFVrbtS6psRSnJFoqMVcVJwIAFwI
-        fD4nAwAA
-X-CMS-MailID: 20200611034106epcas1p195947d55fda88a49228be1ec06401cba
-X-Msg-Generator: CA
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200610172239epcas1p1facf5f0026208683a593eeb7271c8cce
-References: <CGME20200610172239epcas1p1facf5f0026208683a593eeb7271c8cce@epcas1p1.samsung.com>
-        <20200610172213.GA90634@mwanda>
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> If the second exfat_get_dentry() call fails then we need to release "old_bh" before returning.  There
-> is a similar bug in exfat_move_file().
-> 
-> Fixes: 5f2aa075070c ("exfat: add inode operations")
-> Reported-by: Markus Elfring <Markus.Elfring@web.de>
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Applied. Thanks!
+Since commit cbe46bd4f510 ("powerpc: remove CONFIG_CMDLINE #ifdef mess")
+CONFIG_CMDLINE has always had a value regardless of CONFIG_CMDLINE_BOOL.
+
+For example:
+
+ $ make ARCH=3Dpowerpc defconfig
+ $ cat .config
+ # CONFIG_CMDLINE_BOOL is not set
+ CONFIG_CMDLINE=3D""
+
+When enabling CONFIG_CMDLINE_BOOL this value is kept making the 'default
+"..." if CONFIG_CMDLINE_BOOL' ineffective.
+
+ $ ./scripts/config --enable CONFIG_CMDLINE_BOOL
+ $ cat .config
+ CONFIG_CMDLINE_BOOL=3Dy
+ CONFIG_CMDLINE=3D""
+
+Remove CONFIG_CMDLINE_BOOL and the inaccessible default.
+
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+It took me a while to get round to sending a v2, for a refresher v1 can b=
+e found here:
+
+http://patchwork.ozlabs.org/project/linuxppc-dev/patch/20190802050232.229=
+78-1-chris.packham@alliedtelesis.co.nz/
+
+Changes in v2:
+- Rebase on top of Linus's tree
+- Fix some typos in commit message
+- Add review from Christophe
+- Remove CONFIG_CMDLINE_BOOL
+
+ arch/powerpc/Kconfig | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 9fa23eb320ff..51abc59c3334 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -859,12 +859,8 @@ config PPC_DENORMALISATION
+ 	  Add support for handling denormalisation of single precision
+ 	  values.  Useful for bare metal only.  If unsure say Y here.
+=20
+-config CMDLINE_BOOL
+-	bool "Default bootloader kernel arguments"
+-
+ config CMDLINE
+-	string "Initial kernel command string" if CMDLINE_BOOL
+-	default "console=3DttyS0,9600 console=3Dtty0 root=3D/dev/sda2" if CMDLI=
+NE_BOOL
++	string "Initial kernel command string"
+ 	default ""
+ 	help
+ 	  On some platforms, there is currently no way for the boot loader to
+--=20
+2.27.0
 
