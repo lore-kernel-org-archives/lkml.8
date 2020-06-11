@@ -2,146 +2,289 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A87C6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D66C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 16:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C2EF206A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93B43206A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 16:00:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Q3p0TgL6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728769AbgFKP74 (ORCPT
+        id S1728774AbgFKQAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 11:59:56 -0400
-Received: from mga12.intel.com ([192.55.52.136]:55844 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728626AbgFKP7z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 11:59:55 -0400
-IronPort-SDR: bY+V2ayMw4QpqINsoRDdT77eDGmYNPuAhXUy7OYV36KlfrAHn3CQwzULzUgfeCc2TBvuBJWnkN
- vyb215Ef2quw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 08:59:55 -0700
-IronPort-SDR: vlQ6xqosUXqm2IK2atrupqAhPka9ERniiyAolofQ9QLnlgU84Ttdpz9HijVivDLr/IVeArXiV+
- xSQxjn+bUQsg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,499,1583222400"; 
-   d="scan'208";a="306964950"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga008.jf.intel.com with ESMTP; 11 Jun 2020 08:59:54 -0700
-Date:   Thu, 11 Jun 2020 08:59:54 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Ben Gardon <bgardon@google.com>
-Cc:     Marc Zyngier <maz@kernel.org>, Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Feiner <pfeiner@google.com>,
-        Peter Shier <pshier@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        Christoffer Dall <christoffer.dall@arm.com>
-Subject: Re: [PATCH 16/21] KVM: arm64: Drop @max param from
- mmu_topup_memory_cache()
-Message-ID: <20200611155954.GH29918@linux.intel.com>
-References: <20200605213853.14959-1-sean.j.christopherson@intel.com>
- <20200605213853.14959-17-sean.j.christopherson@intel.com>
- <CANgfPd-x=Af6Wdn9Wz=9r5CiHDCbxEgQhS2swALUMQd00oQ3jg@mail.gmail.com>
+        Thu, 11 Jun 2020 12:00:20 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:18738 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728525AbgFKQAS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 12:00:18 -0400
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200611160015epoutp03d8ff1fc94c3430c2a2cc4de6c3de59b4~XiKBT2eor1513115131epoutp03R
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 16:00:15 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200611160015epoutp03d8ff1fc94c3430c2a2cc4de6c3de59b4~XiKBT2eor1513115131epoutp03R
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1591891215;
+        bh=lecpeXImpb7oYqdTcuwiJXcwT0dC2y4CVUjku+eEK2o=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=Q3p0TgL6mZ+qoz4DqGitOxsjRt73QmN+AeJwwthj7VJS8mTYF/GSpivzWCowcxulO
+         VuOhwzJvh1fBCwDMDuzv3wtYQgv9Q35pkPi/Y2lDPwHPCjg/9PrzbsP6dlJYl5ig6+
+         muE8zX8DeRtiJ0JkoYegg0cvTOyGTso+m7IGu/5M=
+Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+        20200611160014epcas5p2cf01d6925ec5a1c4491c2f5383e3fdce~XiKAghsTR1795317953epcas5p2B;
+        Thu, 11 Jun 2020 16:00:14 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        C0.CA.09703.E0552EE5; Fri, 12 Jun 2020 01:00:14 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200611160013epcas5p241dfad1ab048179f76324609210b49ba~XiJ-5GbkG2347623476epcas5p2J;
+        Thu, 11 Jun 2020 16:00:13 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200611160013epsmtrp1e1195a5568cc94834aeadd4bc6c66fea~XiJ-4SUhE0974309743epsmtrp1Z;
+        Thu, 11 Jun 2020 16:00:13 +0000 (GMT)
+X-AuditID: b6c32a4a-4cbff700000025e7-18-5ee2550ef572
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        CE.D0.08303.D0552EE5; Fri, 12 Jun 2020 01:00:13 +0900 (KST)
+Received: from alimakhtar02 (unknown [107.108.234.165]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200611160010epsmtip11aab600accbbb5d0f1b4b09c08572726~XiJ870pby0165601656epsmtip16;
+        Thu, 11 Jun 2020 16:00:10 +0000 (GMT)
+From:   "Alim Akhtar" <alim.akhtar@samsung.com>
+To:     "'Winkler, Tomas'" <tomas.winkler@intel.com>,
+        "'Bean Huo'" <huobean@gmail.com>, <avri.altman@wdc.com>,
+        <asutoshd@codeaurora.org>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <stanley.chu@mediatek.com>,
+        <beanhuo@micron.com>, <bvanassche@acm.org>, <cang@codeaurora.org>,
+        <ebiggers@kernel.org>
+Cc:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+In-Reply-To: <bd961d352864412381ca551512ea759e@intel.com>
+Subject: RE: [PATCH v3 2/2] scsi: ufs: remove wrapper function
+ ufshcd_setup_clocks()
+Date:   Thu, 11 Jun 2020 21:30:08 +0530
+Message-ID: <002301d64009$644364f0$2cca2ed0$@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANgfPd-x=Af6Wdn9Wz=9r5CiHDCbxEgQhS2swALUMQd00oQ3jg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQIGk+PiZ8drLgZOsw/xGQ6ddVivTgFx7cslAKce2n0BM0uD76hYhuuA
+Content-Language: en-in
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrKKsWRmVeSWpSXmKPExsWy7bCmui5f6KM4g5/bFC32tp1gt3j58yqb
+        xcGHnSwW0z78ZLb4tH4Zq8XaPX+YLeacbWCyWHRjG5PF5V1z2Cy6r+9gs1h+/B+TxdKtNxkt
+        PvTUOfB6XL7i7XG5r5fJY+esu+wei/e8ZPLYtKqTzWPCogOMHi0n97N4fF/fwebx8ektFo/P
+        m+Q82g90MwVwR3HZpKTmZJalFunbJXBlTPvSwlwwTb9iy2L+BsYpal2MnBwSAiYSKyd+Yuti
+        5OIQEtjNKNFzaDsrSEJI4BOjxIafGRD2Z0aJyTt9YRqmtfdCNexilJiwdDEbRNEbRonXa2xA
+        bDYBXYkdi9vAikQEtjFJXP9/A2wqs4CDxMkHO5hAbE4BS4mLC5rA4sICYRKLnz5gB7FZBFQl
+        DrYdZASxeYFq3rbvYIewBSVOznzCAjFHXmL72znMEBcpSPx8ugxsjoiAm8TVLfehasQljv7s
+        YQY5QkLgBYdE48e97BANLhLXt95jgbCFJV4d3wIVl5J42d8GZHMA2dkSPbuMIcI1EkvnHYMq
+        t5c4cGUOC0gJs4CmxPpd+hCr+CR6fz9hgujklehoE4KoVpVofncVqlNaYmJ3NytEiYfE8ofK
+        ExgVZyH5axaSv2YhuX8Wwq4FjCyrGCVTC4pz01OLTQuM8lLL9YoTc4tL89L1kvNzNzGCU56W
+        1w7Ghw8+6B1iZOJgPMQowcGsJMIrKP4wTog3JbGyKrUoP76oNCe1+BCjNAeLkjiv0o8zcUIC
+        6YklqdmpqQWpRTBZJg5OqQamXOf4Jft4RJZwVchbCHRYvj1ddMGySflxQviM6rnrV5xJuPRF
+        RaA5OLpQw3r13X1TpuVc1qsSE3BzXKVcMUFcJ3OWifH3cMZNwYdTrzRutVepb0lb+bHy7/Wb
+        vEyiMV1Kql75jYZ9HzIKm/YX+t9cdu+XltY/0c873Exy3m7Wu/N3+ooFTcetnNr32Jj7TWIP
+        iGbf4P06a9a3dweP6G/ikwiKNbbQvHaGf8bU4hwJuTd7lztYbFNKlGo48dRo/fHZIfbe29mt
+        HZQnpQu3qDzc9ks/4ssqfgtm57yXTAmHLblvL3p/slBY99Du/7euVsuWHOt75iZpX/jKJI71
+        /aoC8Qe17eoeiSdK/u9lZVNiKc5INNRiLipOBADccktB6AMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFIsWRmVeSWpSXmKPExsWy7bCSnC5v6KM4g9tbTSz2tp1gt3j58yqb
+        xcGHnSwW0z78ZLb4tH4Zq8XaPX+YLeacbWCyWHRjG5PF5V1z2Cy6r+9gs1h+/B+TxdKtNxkt
+        PvTUOfB6XL7i7XG5r5fJY+esu+wei/e8ZPLYtKqTzWPCogOMHi0n97N4fF/fwebx8ektFo/P
+        m+Q82g90MwVwR3HZpKTmZJalFunbJXBlTPvSwlwwTb9iy2L+BsYpal2MnBwSAiYS09p72boY
+        uTiEBHYwSiw+NZcdIiEtcX3jBChbWGLlv+fsEEWvGCVan31kBEmwCehK7FjcxgZiiwgcYpLY
+        tyOni5GDg1nASWLPzSSI+geMEu8/tYDVcwpYSlxc0MQKYgsLhEjsabnJAmKzCKhKHGw7CFbD
+        C1Tztn0HO4QtKHFy5hMWiJl6Em0bwUqYBeQltr+dwwxxm4LEz6fLWCFOcJO4uuU+C0SNuMTR
+        nz3MExiFZyGZNAth0iwkk2Yh6VjAyLKKUTK1oDg3PbfYsMAoL7Vcrzgxt7g0L10vOT93EyM4
+        erW0djDuWfVB7xAjEwfjIUYJDmYlEV5B8YdxQrwpiZVVqUX58UWlOanFhxilOViUxHm/zloY
+        JySQnliSmp2aWpBaBJNl4uCUamDS8zqTq/a4cxanXvoOOZauNzJ9iuGWpVeq7rlr36p4G+qw
+        5P3NbcazEy+qrQwzm+AwxSq70zWJ95CUXo27n9WrN3VMvS+X8/LGbKx4Pcs1hvvQih9Tfp8v
+        OnlF4L6QUJpm3SU+PctNe/33bj5xnnPPU/WrGjPTvc4qxy3859CYEte6LfDZ0ju7ZwYIlW/R
+        tfpqsz1NwfZEyvcS48935/IatS7qbdx75qqumMXJib6WT3eueiaw1qugd9kK6wusTzXP9vdY
+        3f/2l/3wvN+5l7J3Skq94WqbqiO+aVX5L43qV0nPD/pc+/7Y5vpbSZbKf+pLelyeVpyyryxZ
+        UrqgSejHASf3PTZr9ntHqfU+07JXYinOSDTUYi4qTgQA/1CyTU0DAAA=
+X-CMS-MailID: 20200611160013epcas5p241dfad1ab048179f76324609210b49ba
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200606232833epcas5p4252a12cb9eba59ca867c48c16b1e950c
+References: <20200605200520.20831-1-huobean@gmail.com>
+        <20200605200520.20831-3-huobean@gmail.com>
+        <CGME20200606232833epcas5p4252a12cb9eba59ca867c48c16b1e950c@epcas5p4.samsung.com>
+        <bd961d352864412381ca551512ea759e@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 03:00:47PM -0700, Ben Gardon wrote:
-> On Fri, Jun 5, 2020 at 2:39 PM Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
+Hi Bean,
+
+> -----Original Message-----
+> From: Winkler, Tomas <tomas.winkler@intel.com>
+> Sent: 07 June 2020 04:58
+> To: Bean Huo <huobean@gmail.com>; alim.akhtar@samsung.com;
+> avri.altman@wdc.com; asutoshd@codeaurora.org; jejb@linux.ibm.com;
+> martin.petersen@oracle.com; stanley.chu@mediatek.com;
+> beanhuo@micron.com; bvanassche@acm.org; cang@codeaurora.org;
+> ebiggers@kernel.org
+> Cc: linux-scsi@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: RE: [PATCH v3 2/2] scsi: ufs: remove wrapper function
+> ufshcd_setup_clocks()
+> 
+> 
 > >
-> > Replace the @max param in mmu_topup_memory_cache() and instead use
-> > ARRAY_SIZE() to terminate the loop to fill the cache.  This removes a
-> > BUG_ON() and sets the stage for moving arm64 to the common memory cache
-> > implementation.
+> > From: Bean Huo <beanhuo@micron.com>
 > >
-> > No functional change intended.
+> > The static function ufshcd_setup_clocks() is just a wrapper around
+> > __ufshcd_setup_clocks(), remove it. Rename original function wrapped
+> > __ufshcd_setup_clocks() to new ufshcd_setup_clocks().
+> 
+> Not sure about this change, we have only one call with skip_ref_clock set
+to
+> true, the original code actually make sense from readability stand point.
+> 
+I do agree with Tomas, it easy to read and understand the original code.
+Thanks
+
 > >
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > Signed-off-by: Bean Huo <beanhuo@micron.com>
 > > ---
-> >  arch/arm64/kvm/mmu.c | 12 ++++--------
-> >  1 file changed, 4 insertions(+), 8 deletions(-)
+> >  drivers/scsi/ufs/ufshcd.c | 32 ++++++++++++--------------------
+> >  1 file changed, 12 insertions(+), 20 deletions(-)
 > >
-> > diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
-> > index a1f6bc70c4e4..9398b66f8a87 100644
-> > --- a/arch/arm64/kvm/mmu.c
-> > +++ b/arch/arm64/kvm/mmu.c
-> > @@ -124,15 +124,13 @@ static void stage2_dissolve_pud(struct kvm *kvm, phys_addr_t addr, pud_t *pudp)
-> >         put_page(virt_to_page(pudp));
+> > diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> > index ec4f55211648..531d0b7878db 100644
+> > --- a/drivers/scsi/ufs/ufshcd.c
+> > +++ b/drivers/scsi/ufs/ufshcd.c
+> > @@ -215,9 +215,7 @@ static int ufshcd_eh_host_reset_handler(struct
+> > scsi_cmnd *cmd);  static int ufshcd_clear_tm_cmd(struct ufs_hba *hba,
+> > int tag);  static void ufshcd_hba_exit(struct ufs_hba *hba);  static
+> > int ufshcd_probe_hba(struct ufs_hba *hba, bool async); -static int
+> > __ufshcd_setup_clocks(struct ufs_hba *hba, bool on,
+> > -				 bool skip_ref_clk);
+> > -static int ufshcd_setup_clocks(struct ufs_hba *hba, bool on);
+> > +static int ufshcd_setup_clocks(struct ufs_hba *hba, bool on, bool
+> > +skip_ref_clk);
+> >  static int ufshcd_uic_hibern8_enter(struct ufs_hba *hba);  static
+> > inline void ufshcd_add_delay_before_dme_cmd(struct ufs_hba *hba);
+> > static int ufshcd_host_reset_and_restore(struct ufs_hba *hba); @@
+> > -1497,7 +1495,7 @@ static void ufshcd_ungate_work(struct work_struct
+> *work)
+> >  	}
+> >
+> >  	spin_unlock_irqrestore(hba->host->host_lock, flags);
+> > -	ufshcd_setup_clocks(hba, true);
+> > +	ufshcd_setup_clocks(hba, true, false);
+> >
+> >  	ufshcd_enable_irq(hba);
+> >
+> > @@ -1655,10 +1653,10 @@ static void ufshcd_gate_work(struct
+> > work_struct
+> > *work)
+> >  	ufshcd_disable_irq(hba);
+> >
+> >  	if (!ufshcd_is_link_active(hba))
+> > -		ufshcd_setup_clocks(hba, false);
+> > +		ufshcd_setup_clocks(hba, false, false);
+> >  	else
+> >  		/* If link is active, device ref_clk can't be switched off
+*/
+> > -		__ufshcd_setup_clocks(hba, false, true);
+> > +		ufshcd_setup_clocks(hba, false, true);
+> >
+> >  	/*
+> >  	 * In case you are here to cancel this work the gating state @@ -
+> > 7683,8 +7681,7 @@ static int ufshcd_init_hba_vreg(struct ufs_hba *hba)
+> >  	return 0;
 > >  }
 > >
-> > -static int mmu_topup_memory_cache(struct kvm_mmu_memory_cache *cache,
-> > -                                 int min, int max)
-> > +static int mmu_topup_memory_cache(struct kvm_mmu_memory_cache *cache, int min)
+> > -static int __ufshcd_setup_clocks(struct ufs_hba *hba, bool on,
+> > -					bool skip_ref_clk)
+> > +static int ufshcd_setup_clocks(struct ufs_hba *hba, bool on, bool
+> > +skip_ref_clk)
 > >  {
-> >         void *page;
+> >  	int ret = 0;
+> >  	struct ufs_clk_info *clki;
+> > @@ -7747,11 +7744,6 @@ static int __ufshcd_setup_clocks(struct ufs_hba
+> > *hba, bool on,
+> >  	return ret;
+> >  }
 > >
-> > -       BUG_ON(max > KVM_NR_MEM_OBJS);
-> KVM_NR_MEM_OBJS should be undefined as of patch 14 in this series. I'd
-> recommend changing this to use the new constant you defined in that
-> patch.
-
-My intent was to leave KVM_NR_MEM_OBJS defined by arm64 and MIPS until they
-move to the common implementation, e.g. this should be defined in
-arch/arm64/include/asm/kvm_host.h until patch 18.  I'll get cross-compiling
-setup so I can properly test bisection before sending v2.
-
-> >         if (cache->nobjs >= min)
-> >                 return 0;
-> > -       while (cache->nobjs < max) {
-> > +       while (cache->nobjs < ARRAY_SIZE(cache->objects)) {
-> >                 page = (void *)__get_free_page(GFP_PGTABLE_USER);
-> >                 if (!page)
-> >                         return -ENOMEM;
-> > @@ -1356,8 +1354,7 @@ int kvm_phys_addr_ioremap(struct kvm *kvm, phys_addr_t guest_ipa,
-> >                         pte = kvm_s2pte_mkwrite(pte);
+> > -static int ufshcd_setup_clocks(struct ufs_hba *hba, bool on) -{
+> > -	return  __ufshcd_setup_clocks(hba, on, false);
+> > -}
+> > -
+> >  static int ufshcd_init_clocks(struct ufs_hba *hba)  {
+> >  	int ret = 0;
+> > @@ -7858,7 +7850,7 @@ static int ufshcd_hba_init(struct ufs_hba *hba)
+> >  	if (err)
+> >  		goto out_disable_hba_vreg;
 > >
-> >                 ret = mmu_topup_memory_cache(&cache,
-> > -                                            kvm_mmu_cache_min_pages(kvm),
-> > -                                            KVM_NR_MEM_OBJS);
-> See above, KVM_NR_MEM_OBJS is undefined as of patch 14.
-> > +                                            kvm_mmu_cache_min_pages(kvm));
-> >                 if (ret)
-> >                         goto out;
-> >                 spin_lock(&kvm->mmu_lock);
-> > @@ -1737,8 +1734,7 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
-> >         up_read(&current->mm->mmap_sem);
+> > -	err = ufshcd_setup_clocks(hba, true);
+> > +	err = ufshcd_setup_clocks(hba, true, false);
+> >  	if (err)
+> >  		goto out_disable_hba_vreg;
 > >
-> >         /* We need minimum second+third level pages */
-> > -       ret = mmu_topup_memory_cache(memcache, kvm_mmu_cache_min_pages(kvm),
-> > -                                    KVM_NR_MEM_OBJS);
-> See above, KVM_NR_MEM_OBJS is undefined as of patch 14.
-> > +       ret = mmu_topup_memory_cache(memcache, kvm_mmu_cache_min_pages(kvm));
-> >         if (ret)
-> >                 return ret;
+> > @@ -7880,7 +7872,7 @@ static int ufshcd_hba_init(struct ufs_hba *hba)
+> >  out_disable_vreg:
+> >  	ufshcd_setup_vreg(hba, false);
+> >  out_disable_clks:
+> > -	ufshcd_setup_clocks(hba, false);
+> > +	ufshcd_setup_clocks(hba, false, false);
+> >  out_disable_hba_vreg:
+> >  	ufshcd_setup_hba_vreg(hba, false);
+> >  out:
+> > @@ -7896,7 +7888,7 @@ static void ufshcd_hba_exit(struct ufs_hba *hba)
+> >  		if (ufshcd_is_clkscaling_supported(hba))
+> >  			if (hba->devfreq)
+> >  				ufshcd_suspend_clkscaling(hba);
+> > -		ufshcd_setup_clocks(hba, false);
+> > +		ufshcd_setup_clocks(hba, false, false);
+> >  		ufshcd_setup_hba_vreg(hba, false);
+> >  		hba->is_powered = false;
+> >  		ufs_put_device_desc(hba);
+> > @@ -8259,10 +8251,10 @@ static int ufshcd_suspend(struct ufs_hba *hba,
+> > enum ufs_pm_op pm_op)
+> >  	ufshcd_disable_irq(hba);
 > >
+> >  	if (!ufshcd_is_link_active(hba))
+> > -		ufshcd_setup_clocks(hba, false);
+> > +		ufshcd_setup_clocks(hba, false, false);
+> >  	else
+> >  		/* If link is active, device ref_clk can't be switched off
+*/
+> > -		__ufshcd_setup_clocks(hba, false, true);
+> > +		ufshcd_setup_clocks(hba, false, true);
+> >
+> >  	hba->clk_gating.state = CLKS_OFF;
+> >  	trace_ufshcd_clk_gating(dev_name(hba->dev), hba-
+> > >clk_gating.state); @@ -8321,7 +8313,7 @@ static int
+> > >ufshcd_resume(struct
+> > ufs_hba *hba, enum ufs_pm_op pm_op)
+> >
+> >  	ufshcd_hba_vreg_set_hpm(hba);
+> >  	/* Make sure clocks are enabled before accessing controller */
+> > -	ret = ufshcd_setup_clocks(hba, true);
+> > +	ret = ufshcd_setup_clocks(hba, true, false);
+> >  	if (ret)
+> >  		goto out;
+> >
+> > @@ -8404,7 +8396,7 @@ static int ufshcd_resume(struct ufs_hba *hba,
+> > enum ufs_pm_op pm_op)
+> >  	ufshcd_disable_irq(hba);
+> >  	if (hba->clk_scaling.is_allowed)
+> >  		ufshcd_suspend_clkscaling(hba);
+> > -	ufshcd_setup_clocks(hba, false);
+> > +	ufshcd_setup_clocks(hba, false, false);
+> >  out:
+> >  	hba->pm_op_in_progress = 0;
+> >  	if (ret)
 > > --
-> > 2.26.0
-> >
+> > 2.17.1
+
+
