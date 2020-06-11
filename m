@@ -2,147 +2,221 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB93C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C10C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26BFF20842
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:47:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B735620842
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:49:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="FkEOcxMS"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EsU01laK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbgFKXrF (ORCPT
+        id S1726336AbgFKXtl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 19:47:05 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:33110 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726285AbgFKXrE (ORCPT
+        Thu, 11 Jun 2020 19:49:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33430 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726284AbgFKXtk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 19:47:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
-        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=gV9QoHt8EYvoGCRmgXIoNP2+LNt+D1Ofl05Ii0wSJgE=; b=FkEOcxMSQTZ7+vgRXN3priANPV
-        P8kEefsc8sUN3ssFd8os7kKyVrXhuQFyr2tdlCspviSAdVUqUDmJ45OyszmwhlUs9s+L7h5CpU8Ly
-        jm8B4zi/dnj5S6e8SiDmOoMSupAMqvhKKEs4Gwx2zYCIi8spOjFtNRHY3OYNp6SZdJzg+HW1GhFXF
-        DgazrnVGdBmTP35H9W1MDEVqOvRjmJcqnnJzvOnyjBNXAea1MdjOi4WBB6IU8W+B+UQIbUXn1AtyF
-        /lsOhUfrkpBEH8gM6HfS+NUJh2EKQ4ZGHnb43wj8yuDabFtMeF+2wIYrNrCQb0NBwufoy39Uv6PL9
-        Q6UI9qIA==;
-Received: from s01060023bee90a7d.cg.shawcable.net ([24.64.145.4] helo=[192.168.0.10])
-        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1jjWuO-0002NJ-Ai; Thu, 11 Jun 2020 17:46:57 -0600
-To:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Thu, 11 Jun 2020 19:49:40 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2167C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 16:49:39 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id m7so2962235plt.5
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 16:49:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=bIgDlQTcxFw2KokzUZZm6ZkdF0vG1JUVRJ5FqN6wv7w=;
+        b=EsU01laKYlXeUwOzqhDZANOi8lScnIXVlCztg5QhuFJsyVQo713bCIGsIewq5t48hK
+         TXYXa29VAKYNO2/fMiuiFoiAuuyam8P394K3s2j/jS1UkQhxzRjnSyM61NwpSFXT6C2r
+         dURzq4gRo8VVxydHIaMV2rFLmPerA444DM6uw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bIgDlQTcxFw2KokzUZZm6ZkdF0vG1JUVRJ5FqN6wv7w=;
+        b=rKZEpKcf7Er02ZrYFYrlGhw0ckz8ZZRv6BaCdjzwA2JD0y55rCQjbSaTc7ehVTFUF4
+         wXcGEvlsqeRuLOvjOx2RdCHX6WomX41T0A1OViWKJKLlvLd+SVNjKqn7a13GvGUlsI/w
+         xk7ouid1aH/sXDQ+OT9r0oXFAtpx+09NuPtIg0mXvuPECUyPxMJLD16i5jXcRnRslueB
+         B9f5vZpmObk1inCw4kSyvkb5CjqRrRdlbyABBF8sEtJN0su+YoldNXYvadZV50dRk0Zq
+         DZ68yzkQ/+1CNMkmod0yfBdj5gRo/KYcURZJTT/meRUbWGn9+MpOneR+DkrYnJtYxrSX
+         3jdQ==
+X-Gm-Message-State: AOAM531kWTMO5wUnQAExXYSQuYntUN/NxZpF2496dmAnyXgUrcsf2AnN
+        JBKc8ZUxkML0gErXqzBv3JcyOw==
+X-Google-Smtp-Source: ABdhPJzKAntT+tqihIhi6knyDIQA+kIZiwM6SoOqVvMIgkg6dNBDxl2KwSVM7Qy1cAVFqCn/cRDWuA==
+X-Received: by 2002:a17:90b:e05:: with SMTP id ge5mr10405229pjb.49.1591919379416;
+        Thu, 11 Jun 2020 16:49:39 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id k126sm4448492pfd.129.2020.06.11.16.49.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2020 16:49:38 -0700 (PDT)
+Date:   Thu, 11 Jun 2020 16:49:37 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     'Sargun Dhillon' <sargun@sargun.me>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        "containers@lists.linux-foundation.org" 
+        <containers@lists.linux-foundation.org>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Robert Sesek <rsesek@google.com>,
+        Chris Palmer <palmer@google.com>, Jann Horn <jannh@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Wagner <daniel.wagner@bmw-carit.de>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20200514172253.6445-1-logang@deltatee.com>
- <20200514172253.6445-8-logang@deltatee.com>
- <BYAPR04MB4965379CE8694F52D684993386800@BYAPR04MB4965.namprd04.prod.outlook.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <cbe637ec-e80c-def1-2453-70059715e19c@deltatee.com>
-Date:   Thu, 11 Jun 2020 17:46:54 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Matt Denton <mpdenton@google.com>,
+        John Fastabend <john.r.fastabend@intel.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Tejun Heo <tj@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v3 1/4] fs, net: Standardize on file_receive helper to
+ move fds across processes
+Message-ID: <202006111634.8237E6A5C6@keescook>
+References: <202006091235.930519F5B@keescook>
+ <20200609200346.3fthqgfyw3bxat6l@wittgenstein>
+ <202006091346.66B79E07@keescook>
+ <037A305F-B3F8-4CFA-B9F8-CD4C9EF9090B@ubuntu.com>
+ <202006092227.D2D0E1F8F@keescook>
+ <20200610081237.GA23425@ircssh-2.c.rugged-nimbus-611.internal>
+ <202006101953.899EFB53@keescook>
+ <20200611100114.awdjswsd7fdm2uzr@wittgenstein>
+ <20200611110630.GB30103@ircssh-2.c.rugged-nimbus-611.internal>
+ <067f494d55c14753a31657f958cb0a6e@AcuMS.aculab.com>
 MIME-Version: 1.0
-In-Reply-To: <BYAPR04MB4965379CE8694F52D684993386800@BYAPR04MB4965.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 24.64.145.4
-X-SA-Exim-Rcpt-To: sbates@raithlin.com, maxg@mellanox.com, axboe@fb.com, kbusch@kernel.org, sagi@grimberg.me, hch@lst.de, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, Chaitanya.Kulkarni@wdc.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v13 7/9] nvmet-passthru: Add passthru code to process
- commands
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <067f494d55c14753a31657f958cb0a6e@AcuMS.aculab.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2020-06-11 5:45 p.m., Chaitanya Kulkarni wrote:
-> On 5/14/20 10:23 AM, Logan Gunthorpe wrote:
->> +
->> +static void nvmet_passthru_execute_cmd(struct nvmet_req *req)
->> +{
->> +	struct nvme_ctrl *ctrl = nvmet_req_passthru_ctrl(req);
->> +	struct nvme_ns *ns = NULL;
->> +	struct request *rq = NULL;
->> +	struct request_queue *q;
->> +	u32 effects;
->> +	u16 status;
->> +	int ret;
->> +
->> +	if (likely(req->sq->qid != 0)) {
->> +		u32 nsid = le32_to_cpu(req->cmd->common.nsid);
->> +
->> +		ns = nvme_find_get_ns(ctrl, nsid);
->> +		if (unlikely(!ns)) {
->> +			pr_err("failed to get passthru ns nsid:%u\n", nsid);
->> +			status = NVME_SC_INVALID_NS | NVME_SC_DNR;
->> +			goto fail_out;
->> +		}
->> +	}
->> +
->> +	if (ns)
->> +		q = ns->queue;
->> +	else
->> +		q = ctrl->admin_q;
+On Thu, Jun 11, 2020 at 02:56:22PM +0000, David Laight wrote:
+> From: Sargun Dhillon
+> > Sent: 11 June 2020 12:07
+> > Subject: Re: [PATCH v3 1/4] fs, net: Standardize on file_receive helper to move fds across processes
+> > 
+> > On Thu, Jun 11, 2020 at 12:01:14PM +0200, Christian Brauner wrote:
+> > > On Wed, Jun 10, 2020 at 07:59:55PM -0700, Kees Cook wrote:
+> > > > On Wed, Jun 10, 2020 at 08:12:38AM +0000, Sargun Dhillon wrote:
+> > > > > As an aside, all of this junk should be dropped:
+> > > > > +	ret = get_user(size, &uaddfd->size);
+> > > > > +	if (ret)
+> > > > > +		return ret;
+> > > > > +
+> > > > > +	ret = copy_struct_from_user(&addfd, sizeof(addfd), uaddfd, size);
+> > > > > +	if (ret)
+> > > > > +		return ret;
+> > > > >
+> > > > > and the size member of the seccomp_notif_addfd struct. I brought this up
+> > > > > off-list with Tycho that ioctls have the size of the struct embedded in them. We
+> > > > > should just use that. The ioctl definition is based on this[2]:
+> > > > > #define _IOC(dir,type,nr,size) \
+> > > > > 	(((dir)  << _IOC_DIRSHIFT) | \
+> > > > > 	 ((type) << _IOC_TYPESHIFT) | \
+> > > > > 	 ((nr)   << _IOC_NRSHIFT) | \
+> > > > > 	 ((size) << _IOC_SIZESHIFT))
+> > > > >
+> > > > >
+> > > > > We should just use copy_from_user for now. In the future, we can either
+> > > > > introduce new ioctl names for new structs, or extract the size dynamically from
+> > > > > the ioctl (and mask it out on the switch statement in seccomp_notify_ioctl.
+> > > >
+> > > > Yeah, that seems reasonable. Here's the diff for that part:
+> > >
+> > > Why does it matter that the ioctl() has the size of the struct embedded
+> > > within? Afaik, the kernel itself doesn't do anything with that size. It
+> > > merely checks that the size is not pathological and it does so at
+> > > compile time.
+> > >
+> > > #ifdef __CHECKER__
+> > > #define _IOC_TYPECHECK(t) (sizeof(t))
+> > > #else
+> > > /* provoke compile error for invalid uses of size argument */
+> > > extern unsigned int __invalid_size_argument_for_IOC;
+> > > #define _IOC_TYPECHECK(t) \
+> > > 	((sizeof(t) == sizeof(t[1]) && \
+> > > 	  sizeof(t) < (1 << _IOC_SIZEBITS)) ? \
+> > > 	  sizeof(t) : __invalid_size_argument_for_IOC)
+> > > #endif
+> > >
+> > > The size itself is not verified at runtime. copy_struct_from_user()
+> > > still makes sense at least if we're going to allow expanding the struct
+> > > in the future.
+> > Right, but if we simply change our headers and extend the struct, it will break
+> > all existing programs compiled against those headers. In order to avoid that, if
+> > we intend on extending this struct by appending to it, we need to have a
+> > backwards compatibility mechanism. Just having copy_struct_from_user isn't
+> > enough. The data structure either must be fixed size, or we need a way to handle
+> > multiple ioctl numbers derived from headers with different sized struct arguments
+> > 
+> > The two approaches I see are:
+> > 1. use more indirection. This has previous art in drm[1]. That's look
+> > something like this:
+> > 
+> > struct seccomp_notif_addfd_ptr {
+> > 	__u64 size;
+> > 	__u64 addr;
+> > }
+> > 
+> > ... And then it'd be up to us to dereference the addr and copy struct from user.
 > 
-> Is it possible to avoid explicit if.. else in fast path given that the
-> condition exists and we can take an advantage of that, how about
-> following ?
+> Do not go down that route. It isn't worth the pain.
 > 
-> diff --git a/drivers/nvme/target/passthru.c b/drivers/nvme/target/passthru.c
-> index 9e71fdfbdbb3..4f8e022d254c 100644
-> --- a/drivers/nvme/target/passthru.c
-> +++ b/drivers/nvme/target/passthru.c
-> @@ -84,9 +84,9 @@ static int nvmet_passthru_map_sg(struct nvmet_req 
-> *req, struct request *rq)
->   static void nvmet_passthru_execute_cmd(struct nvmet_req *req)
->   {
->          struct nvme_ctrl *ctrl = nvmet_req_passthru_ctrl(req);
-> +       struct request_queue *q = ctrl->admin_q;
->          struct nvme_ns *ns = NULL;
->          struct request *rq = NULL;
-> -       struct request_queue *q;
->          u32 effects;
->          u16 status;
->          int ret;
-> @@ -100,12 +100,8 @@ static void nvmet_passthru_execute_cmd(struct 
-> nvmet_req *req)
->                          status = NVME_SC_INVALID_NS | NVME_SC_DNR;
->                          goto fail_out;
->                  }
-> -       }
-> -
-> -       if (ns)
->                  q = ns->queue;
-> -       else
-> -               q = ctrl->admin_q;
-> +       }
+> You should also assume that userspace might have a compile-time check
+> on the buffer length (I've written one - not hard) and that the kernel
+> might (in the future - or on a BSD kernel) be doing the user copies
+> for you.
 > 
->          rq = nvme_alloc_request(q, req->cmd, BLK_MQ_REQ_NOWAIT, 
-> NVME_QID_ANY);
->          if (IS_ERR(rq)) {
-> 
+> Also, if you change the structure you almost certainly need to
+> change the name of the ioctl cmd as well as its value.
+> Otherwise a recompiled program will pass the new cmd value (and
+> hopefully the right sized buffer) but it won't have initialised
+> the buffer properly.
+> This is likely to lead to unexpected behaviour.
 
+Hmmm.
 
-This makes sense. Will fix for the next revision.
+So, while initially I thought Sargun's observation about ioctl's fixed
+struct size was right, I think I've been swayed to Christian's view
+(which is supported by the long tail of struct size pain we've seen in
+other APIs).
 
-Thanks,
+Doing a separate ioctl for each structure version seems like the "old
+solution" now that we've got EA syscalls. So, I'd like to keep the size
+and copy_struct_from_user().
 
-Logan
+Which leaves us with the question of how to deal with the ioctl
+numbering. As we've seen, there is no actual enforcement of direction
+nor size, so to that end, while we could provide the hints about both, I
+guess we just don't need to. To that end, perhaps _IO() is best:
+
+#define SECCOMP_IOCTL_NOTIF_ADDFD       SECCOMP_IO(3)
+
+Alternatively, we could use a size of either 0, 8(u64), or -1, and then
+use IORW() so we _also_ won't paint ourselves into a corner if we ever
+want to write something back to userspace in the structure:
+
+#define SECCOMP_IOCTL_EA(nr) _IOC(_IOC_READ|_IOC_WRITE,SECCOMP_IOC_MAGIC,(nr),0)
+#define SECCOMP_IOCTL_NOTIF_ADDFD       SECCOMP_IOCTL_EA(3)
+
+or
+
+#define SECCOMP_IOCTL_EA(nr) _IOC(_IOC_READ|_IOC_WRITE,SECCOMP_IOC_MAGIC,(nr),8)
+#define SECCOMP_IOCTL_NOTIF_ADDFD       SECCOMP_IOCTL_EA(3)
+
+or
+
+#define SECCOMP_IOCTL_EA(nr) _IOC(_IOC_READ|_IOC_WRITE,SECCOMP_IOC_MAGIC,(nr),_IOC_SIZEMASK)
+#define SECCOMP_IOCTL_NOTIF_ADDFD       SECCOMP_IOCTL_EA(3)
+
+I think I prefer the last one.
+
+-- 
+Kees Cook
