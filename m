@@ -2,97 +2,190 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB53C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 10:26:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0113DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 10:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4588420760
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 10:26:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF6E32078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 10:32:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pI/ZXc1e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbgFKK0F (ORCPT
+        id S1726907AbgFKKcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 06:26:05 -0400
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:23911 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727063AbgFKK0A (ORCPT
+        Thu, 11 Jun 2020 06:32:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51114 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726581AbgFKKcq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 06:26:00 -0400
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 11 Jun 2020 15:55:52 +0530
-Received: from dikshita-linux.qualcomm.com ([10.204.65.237])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 11 Jun 2020 15:55:30 +0530
-Received: by dikshita-linux.qualcomm.com (Postfix, from userid 347544)
-        id E72273BDB; Thu, 11 Jun 2020 15:55:28 +0530 (IST)
-From:   Dikshita Agarwal <dikshita@codeaurora.org>
-To:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
-        ezequiel@collabora.com, boris.brezillon@collabora.com,
-        ribalda@kernel.org, paul.kocialkowski@bootlin.com,
-        posciak@chromium.org, linux-media@vger.kernel.org,
-        stanimir.varbanov@linaro.org, linux-kernel@vger.kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, vgarodia@codeaurora.org,
-        majja@codeaurora.org, Dikshita Agarwal <dikshita@codeaurora.org>
-Subject: [RFC PATCH 1/1] media: v4l2-ctrls: add control for ltr
-Date:   Thu, 11 Jun 2020 15:55:21 +0530
-Message-Id: <1591871121-25420-2-git-send-email-dikshita@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1591871121-25420-1-git-send-email-dikshita@codeaurora.org>
-References: <1591871121-25420-1-git-send-email-dikshita@codeaurora.org>
+        Thu, 11 Jun 2020 06:32:46 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E747AC08C5C1;
+        Thu, 11 Jun 2020 03:32:45 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id h5so5605402wrc.7;
+        Thu, 11 Jun 2020 03:32:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=S1DHOFo6gIegKvTMa5vbni7NQMyet4sax/6N+ioAZRQ=;
+        b=pI/ZXc1eS0mK6/HSIeSOkMR5Ulb1J0U1FAAMsjazR2pRoXOesvMKckUWV5e5ad67Mn
+         iY0jcieN+vghiUkZWeEsKFFU6o/pg9xedcTeMfDMIpEtQYFzhT2frUj5u58c6BhzdC4/
+         IRdoSj9rKrKpRR2cE4tIYJuV5ts33u/tzYhKmU71+6mvT3qDtfkZbo1+jpd5Fr/6rjkI
+         Q1YwaINlhCR8qGEUfsFG4X1NFTkXCcrOk+9RcjEHo3duAar+dHbma+0DkNRpdwUHn9M8
+         9dvlUk1Tbtaq5LPkmzZmxKE9EmPO5hdOKFZUC+3nKkdzRR+85NX0zsyZ0orvDNZ8ZFa8
+         cHOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=S1DHOFo6gIegKvTMa5vbni7NQMyet4sax/6N+ioAZRQ=;
+        b=FgD7mws96W6FsANpTYDfxrh0y0fnsFHqss5lVzsuoZHJJ3DF4fpz9L173L92PdyvvF
+         SztkdJea9/kw6QUm3FTHi4VJEwLPAz268Ij5OvLj24dZRNLS9SfMfOS2RFPfp9u9eloB
+         sLNLmGgLKcIHDucHPpKHL23F7i5OeCbmNbUOh6G78FbJSIs4aRudsBfQ21xSuKIeBw6I
+         Z53Rdj2JyYoMwQg5r7DbNQHmN/P6fEwwQFd75rJvQUitws6LWZeBYiPK4DUBtoVXrOWd
+         dBqkwHSBkTNbRAPKrUyV13Nl1gI+gZKXJkgp9GoBNhCg+qgK/xupSx8wPOw9L0ChBv2S
+         FIVw==
+X-Gm-Message-State: AOAM530DCYqa3ySkiO4jJ0g7u8MvKeZ2w2aS+CHsID2JlQn/HhVNFol0
+        0/rd6+lNdlHTv7EgF87A8N1raCibINDFTJR4kYPMeHykfDc4Nw==
+X-Google-Smtp-Source: ABdhPJxjK3svYNT9cJJ+Ew1PeDQwIvwXhWHUG/rQXV+svRZUBu1+K3XXVBzHIKJWELOu9xonGk0kl0vLaU+gucmQ9bU=
+X-Received: by 2002:adf:fd81:: with SMTP id d1mr9042165wrr.96.1591871564244;
+ Thu, 11 Jun 2020 03:32:44 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200611093518.5737-1-david@redhat.com>
+In-Reply-To: <20200611093518.5737-1-david@redhat.com>
+From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Date:   Thu, 11 Jun 2020 12:32:33 +0200
+Message-ID: <CAM9Jb+jk=mHHQtLJ78=xZrebo6X6euGK_-aEjgQb-qtKjke-FA@mail.gmail.com>
+Subject: Re: [PATCH v1] virtio-mem: add memory via add_memory_driver_managed()
+To:     David Hildenbrand <david@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        teawater <teawaterz@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add v4l2 controls for ltr
+> Virtio-mem managed memory is always detected and added by the virtio-mem
+> driver, never using something like the firmware-provided memory map.
+> This is the case after an ordinary system reboot, and has to be guaranteed
+> after kexec. Especially, virtio-mem added memory resources can contain
+> inaccessible parts ("unblocked memory blocks"), blindly forwarding them
+> to a kexec kernel is dangerous, as unplugged memory will get accessed
+> (esp. written).
+>
+> Let's use the new way of adding special driver-managed memory introduced
+> in commit 75ac4c58bc0d ("mm/memory_hotplug: introduce
+> add_memory_driver_managed()").
 
-Signed-off-by: Dikshita Agarwal <dikshita@codeaurora.org>
----
- drivers/media/v4l2-core/v4l2-ctrls.c | 6 ++++++
- include/uapi/linux/v4l2-controls.h   | 4 ++++
- 2 files changed, 10 insertions(+)
+Is this commit id correct?
+>
+> This will result in no entries in /sys/firmware/memmap ("raw firmware-
+> provided memory map"), the memory resource will be flagged
+> IORESOURCE_MEM_DRIVER_MANAGED (esp., kexec_file_load() will not place
+> kexec images on this memory), and it is exposed as "System RAM
+> (virtio_mem)" in /proc/iomem, so esp. kexec-tools can properly handle it.
+>
+> Example /proc/iomem before this change:
+>   [...]
+>   140000000-333ffffff : virtio0
+>     140000000-147ffffff : System RAM
+>   334000000-533ffffff : virtio1
+>     338000000-33fffffff : System RAM
+>     340000000-347ffffff : System RAM
+>     348000000-34fffffff : System RAM
+>   [...]
+>
+> Example /proc/iomem after this change:
+>   [...]
+>   140000000-333ffffff : virtio0
+>     140000000-147ffffff : System RAM (virtio_mem)
+>   334000000-533ffffff : virtio1
+>     338000000-33fffffff : System RAM (virtio_mem)
+>     340000000-347ffffff : System RAM (virtio_mem)
+>     348000000-34fffffff : System RAM (virtio_mem)
+>   [...]
+>
+> Cc: "Michael S. Tsirkin" <mst@redhat.com>
+> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+> Cc: teawater <teawaterz@linux.alibaba.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>
+> Based on latest Linus' tree (and not a tag) because
+> - virtio-mem has just been merged via the vhost tree
+> - add_memory_driver_managed() has been merged a week ago via the -mm tree
+>
+> I'd like to have this patch in 5.8, with the initial merge of virtio-mem
+> if possible (so the user space representation of virtio-mem added memory
+> resources won't change anymore).
+>
+> ---
+>  drivers/virtio/virtio_mem.c | 25 ++++++++++++++++++++++---
+>  1 file changed, 22 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
+> index 50c689f250450..d2eab3558a9e1 100644
+> --- a/drivers/virtio/virtio_mem.c
+> +++ b/drivers/virtio/virtio_mem.c
+> @@ -101,6 +101,11 @@ struct virtio_mem {
+>
+>         /* The parent resource for all memory added via this device. */
+>         struct resource *parent_resource;
+> +       /*
+> +        * Copy of "System RAM (virtio_mem)" to be used for
+> +        * add_memory_driver_managed().
+> +        */
+> +       const char *resource_name;
+>
+>         /* Summary of all memory block states. */
+>         unsigned long nb_mb_state[VIRTIO_MEM_MB_STATE_COUNT];
+> @@ -414,8 +419,20 @@ static int virtio_mem_mb_add(struct virtio_mem *vm, unsigned long mb_id)
+>         if (nid == NUMA_NO_NODE)
+>                 nid = memory_add_physaddr_to_nid(addr);
+>
+> +       /*
+> +        * When force-unloading the driver and we still have memory added to
+> +        * Linux, the resource name has to stay.
+> +        */
+> +       if (!vm->resource_name) {
+> +               vm->resource_name = kstrdup_const("System RAM (virtio_mem)",
+> +                                                 GFP_KERNEL);
+> +               if (!vm->resource_name)
+> +                       return -ENOMEM;
+> +       }
+> +
+>         dev_dbg(&vm->vdev->dev, "adding memory block: %lu\n", mb_id);
+> -       return add_memory(nid, addr, memory_block_size_bytes());
+> +       return add_memory_driver_managed(nid, addr, memory_block_size_bytes(),
+> +                                        vm->resource_name);
+>  }
+>
+>  /*
+> @@ -1890,10 +1907,12 @@ static void virtio_mem_remove(struct virtio_device *vdev)
+>             vm->nb_mb_state[VIRTIO_MEM_MB_STATE_OFFLINE_PARTIAL] ||
+>             vm->nb_mb_state[VIRTIO_MEM_MB_STATE_ONLINE] ||
+>             vm->nb_mb_state[VIRTIO_MEM_MB_STATE_ONLINE_PARTIAL] ||
+> -           vm->nb_mb_state[VIRTIO_MEM_MB_STATE_ONLINE_MOVABLE])
+> +           vm->nb_mb_state[VIRTIO_MEM_MB_STATE_ONLINE_MOVABLE]) {
+>                 dev_warn(&vdev->dev, "device still has system memory added\n");
+> -       else
+> +       } else {
+>                 virtio_mem_delete_resource(vm);
+> +               kfree_const(vm->resource_name);
+> +       }
+>
+>         /* remove all tracking data - no locking needed */
+>         vfree(vm->mb_state);
 
-diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-index 93d33d1..205863e 100644
---- a/drivers/media/v4l2-core/v4l2-ctrls.c
-+++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-@@ -977,6 +977,9 @@ const char *v4l2_ctrl_get_name(u32 id)
- 	case V4L2_CID_MPEG_VIDEO_HEVC_SLICE_PARAMS:		return "HEVC Slice Parameters";
- 	case V4L2_CID_MPEG_VIDEO_HEVC_DECODE_MODE:		return "HEVC Decode Mode";
- 	case V4L2_CID_MPEG_VIDEO_HEVC_START_CODE:		return "HEVC Start Code";
-+	case V4L2_CID_MPEG_VIDEO_LTRCOUNT: 			return "LTR Count";
-+	case V4L2_CID_MPEG_VIDEO_MARKLTRFRAME: 			return "Mark LTR";
-+	case V4L2_CID_MPEG_VIDEO_USELTRFRAME:			return "Use LTR";
- 
- 	/* CAMERA controls */
- 	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
-@@ -1208,6 +1211,9 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
- 		break;
- 	case V4L2_CID_MPEG_VIDEO_MV_H_SEARCH_RANGE:
- 	case V4L2_CID_MPEG_VIDEO_MV_V_SEARCH_RANGE:
-+	case V4L2_CID_MPEG_VIDEO_LTRCOUNT:
-+	case V4L2_CID_MPEG_VIDEO_MARKLTRFRAME:
-+	case V4L2_CID_MPEG_VIDEO_USELTRFRAME:
- 		*type = V4L2_CTRL_TYPE_INTEGER;
- 		break;
- 	case V4L2_CID_MPEG_VIDEO_FORCE_KEY_FRAME:
-diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-index 1a58d7c..88d24e1 100644
---- a/include/uapi/linux/v4l2-controls.h
-+++ b/include/uapi/linux/v4l2-controls.h
-@@ -737,6 +737,10 @@ enum v4l2_cid_mpeg_video_hevc_size_of_length_field {
- #define V4L2_CID_MPEG_VIDEO_HEVC_HIER_CODING_L6_BR	(V4L2_CID_MPEG_BASE + 642)
- #define V4L2_CID_MPEG_VIDEO_REF_NUMBER_FOR_PFRAMES	(V4L2_CID_MPEG_BASE + 643)
- #define V4L2_CID_MPEG_VIDEO_PREPEND_SPSPPS_TO_IDR	(V4L2_CID_MPEG_BASE + 644)
-+#define V4L2_CID_MPEG_VIDEO_LTRCOUNT			(V4L2_CID_MPEG_BASE + 645)
-+#define V4L2_CID_MPEG_VIDEO_MARKLTRFRAME		(V4L2_CID_MPEG_BASE + 646)
-+#define V4L2_CID_MPEG_VIDEO_USELTRFRAME		(V4L2_CID_MPEG_BASE + 647)
-+
- 
- /*  MPEG-class control IDs specific to the CX2341x driver as defined by V4L2 */
- #define V4L2_CID_MPEG_CX2341X_BASE				(V4L2_CTRL_CLASS_MPEG | 0x1000)
--- 
-1.9.1
-
+Looks good to me.
+Reviewed-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
