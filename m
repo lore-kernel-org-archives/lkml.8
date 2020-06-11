@@ -2,35 +2,34 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99EF1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A07C7C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7808C20823
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:09:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78CC720760
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:09:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728193AbgFKMJ1 (ORCPT
+        id S1728140AbgFKMJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 08:09:27 -0400
-Received: from mga17.intel.com ([192.55.52.151]:41826 "EHLO mga17.intel.com"
+        Thu, 11 Jun 2020 08:09:17 -0400
+Received: from mga17.intel.com ([192.55.52.151]:41824 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728166AbgFKMJW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 08:09:22 -0400
-IronPort-SDR: ZiAnBGiBTIDdQ/hXYqndB2IPpuRVoZ+uQnTAlrjVjzu6bZAj4B2U0LESN65mjVbDjJMb02ZtMX
- I5ker6xGrD0A==
+        id S1727918AbgFKMJL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 08:09:11 -0400
+IronPort-SDR: HEz4hZzLj9qJg06HYIbdF3gxLv3194l3vB5yoR750xJR6Nuy5QkiPa9IsDR9ViL8zHJVZJU60v
+ qgbaek5zLHsA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 05:09:10 -0700
-IronPort-SDR: tS2P2dymG6XztasY2b9XIWr7eXMwbRwXCnUyWm/5pGTsahVGGAjGH5b/A929jlefvUVl8L1tuE
- VSriR8zKkitA==
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 05:09:09 -0700
+IronPort-SDR: 5cIVrk4qVhZY9UMB6zFu6O9R1R2+oLGGKf67PZW/Yj3+a1SvbxkEgJD6QuMK8ednUJ9ep5AEZA
+ LQV6ih69Xk6A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,499,1583222400"; 
-   d="scan'208";a="419082490"
+   d="scan'208";a="419082467"
 Received: from jacob-builder.jf.intel.com ([10.7.199.155])
   by orsmga004.jf.intel.com with ESMTP; 11 Jun 2020 05:09:09 -0700
 From:   Liu Yi L <yi.l.liu@intel.com>
@@ -41,9 +40,9 @@ Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
         yi.y.sun@intel.com, jean-philippe@linaro.org, peterx@redhat.com,
         hao.wu@intel.com, iommu@lists.linux-foundation.org,
         kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 08/15] iommu: Pass domain and unbind_data to sva_unbind_gpasid()
-Date:   Thu, 11 Jun 2020 05:15:27 -0700
-Message-Id: <1591877734-66527-9-git-send-email-yi.l.liu@intel.com>
+Subject: [PATCH v2 01/15] vfio/type1: Refactor vfio_iommu_type1_ioctl()
+Date:   Thu, 11 Jun 2020 05:15:20 -0700
+Message-Id: <1591877734-66527-2-git-send-email-yi.l.liu@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1591877734-66527-1-git-send-email-yi.l.liu@intel.com>
 References: <1591877734-66527-1-git-send-email-yi.l.liu@intel.com>
@@ -52,17 +51,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yi Sun <yi.y.sun@intel.com>
-
-Current interface is good enough for SVA virtualization on an assigned
-physical PCI device, but when it comes to mediated devices, a physical
-device may attached with multiple aux-domains. So this interface needs
-to pass in domain info. Then the iommu driver is able to know which
-domain will be used for the 2nd stage translation of the nesting mode.
-
-This patch passes @domain per the above reason. This interface is supposed
-to serve the unbind request from user-space, should pass in unbind_data as
-well.
+This patch refactors the vfio_iommu_type1_ioctl() to use switch instead of
+if-else, and each cmd got a helper function.
 
 Cc: Kevin Tian <kevin.tian@intel.com>
 CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
@@ -71,114 +61,239 @@ Cc: Eric Auger <eric.auger@redhat.com>
 Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
 Cc: Joerg Roedel <joro@8bytes.org>
 Cc: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Yi Sun <yi.y.sun@intel.com>
+Suggested-by: Christoph Hellwig <hch@infradead.org>
 Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
 ---
- drivers/iommu/intel-svm.c   | 14 ++++++++++++--
- drivers/iommu/iommu.c       |  4 ++--
- include/linux/intel-iommu.h |  3 ++-
- include/linux/iommu.h       |  8 +++++---
- 4 files changed, 21 insertions(+), 8 deletions(-)
+ drivers/vfio/vfio_iommu_type1.c | 183 +++++++++++++++++++++++-----------------
+ 1 file changed, 105 insertions(+), 78 deletions(-)
 
-diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-index 6272da6..bf55e2f 100644
---- a/drivers/iommu/intel-svm.c
-+++ b/drivers/iommu/intel-svm.c
-@@ -445,16 +445,26 @@ int intel_svm_bind_gpasid(struct iommu_domain *domain, struct device *dev,
+diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+index cc1d647..402aad3 100644
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -2106,6 +2106,23 @@ static int vfio_domains_have_iommu_cache(struct vfio_iommu *iommu)
  	return ret;
  }
  
--int intel_svm_unbind_gpasid(struct device *dev, int pasid)
-+int intel_svm_unbind_gpasid(struct iommu_domain *domain,
-+			    struct device *dev,
-+			    struct iommu_gpasid_unbind_data *data)
- {
- 	struct intel_iommu *iommu = intel_svm_device_to_iommu(dev);
- 	struct intel_svm_dev *sdev;
- 	struct intel_svm *svm;
- 	int ret = -EINVAL;
-+	unsigned long minsz;
-+	int pasid;
++static int vfio_iommu_type1_check_extension(struct vfio_iommu *iommu,
++					    unsigned long arg)
++{
++	switch (arg) {
++	case VFIO_TYPE1_IOMMU:
++	case VFIO_TYPE1v2_IOMMU:
++	case VFIO_TYPE1_NESTING_IOMMU:
++		return 1;
++	case VFIO_DMA_CC_IOMMU:
++		if (!iommu)
++			return 0;
++		return vfio_domains_have_iommu_cache(iommu);
++	default:
++		return 0;
++	}
++}
 +
-+	if (WARN_ON(!iommu) || !data)
+ static int vfio_iommu_iova_add_cap(struct vfio_info_cap *caps,
+ 		 struct vfio_iommu_type1_info_cap_iova_range *cap_iovas,
+ 		 size_t size)
+@@ -2173,110 +2190,120 @@ static int vfio_iommu_iova_build_caps(struct vfio_iommu *iommu,
+ 	return ret;
+ }
+ 
+-static long vfio_iommu_type1_ioctl(void *iommu_data,
+-				   unsigned int cmd, unsigned long arg)
++static int vfio_iommu_type1_get_info(struct vfio_iommu *iommu,
++				     unsigned long arg)
+ {
+-	struct vfio_iommu *iommu = iommu_data;
++	struct vfio_iommu_type1_info info;
+ 	unsigned long minsz;
++	struct vfio_info_cap caps = { .buf = NULL, .size = 0 };
++	unsigned long capsz;
++	int ret;
+ 
+-	if (cmd == VFIO_CHECK_EXTENSION) {
+-		switch (arg) {
+-		case VFIO_TYPE1_IOMMU:
+-		case VFIO_TYPE1v2_IOMMU:
+-		case VFIO_TYPE1_NESTING_IOMMU:
+-			return 1;
+-		case VFIO_DMA_CC_IOMMU:
+-			if (!iommu)
+-				return 0;
+-			return vfio_domains_have_iommu_cache(iommu);
+-		default:
+-			return 0;
+-		}
+-	} else if (cmd == VFIO_IOMMU_GET_INFO) {
+-		struct vfio_iommu_type1_info info;
+-		struct vfio_info_cap caps = { .buf = NULL, .size = 0 };
+-		unsigned long capsz;
+-		int ret;
+-
+-		minsz = offsetofend(struct vfio_iommu_type1_info, iova_pgsizes);
++	minsz = offsetofend(struct vfio_iommu_type1_info, iova_pgsizes);
+ 
+-		/* For backward compatibility, cannot require this */
+-		capsz = offsetofend(struct vfio_iommu_type1_info, cap_offset);
++	/* For backward compatibility, cannot require this */
++	capsz = offsetofend(struct vfio_iommu_type1_info, cap_offset);
+ 
+-		if (copy_from_user(&info, (void __user *)arg, minsz))
+-			return -EFAULT;
++	if (copy_from_user(&info, (void __user *)arg, minsz))
++		return -EFAULT;
+ 
+-		if (info.argsz < minsz)
+-			return -EINVAL;
++	if (info.argsz < minsz)
 +		return -EINVAL;
  
--	if (WARN_ON(!iommu))
-+	minsz = offsetofend(struct iommu_gpasid_unbind_data, pasid);
-+	if (data->argsz < minsz || data->flags)
- 		return -EINVAL;
+-		if (info.argsz >= capsz) {
+-			minsz = capsz;
+-			info.cap_offset = 0; /* output, no-recopy necessary */
+-		}
++	if (info.argsz >= capsz) {
++		minsz = capsz;
++		info.cap_offset = 0; /* output, no-recopy necessary */
++	}
  
-+	pasid = data->pasid;
+-		info.flags = VFIO_IOMMU_INFO_PGSIZES;
++	info.flags = VFIO_IOMMU_INFO_PGSIZES;
+ 
+-		info.iova_pgsizes = vfio_pgsize_bitmap(iommu);
++	info.iova_pgsizes = vfio_pgsize_bitmap(iommu);
+ 
+-		ret = vfio_iommu_iova_build_caps(iommu, &caps);
+-		if (ret)
+-			return ret;
++	ret = vfio_iommu_iova_build_caps(iommu, &caps);
++	if (ret)
++		return ret;
+ 
+-		if (caps.size) {
+-			info.flags |= VFIO_IOMMU_INFO_CAPS;
++	if (caps.size) {
++		info.flags |= VFIO_IOMMU_INFO_CAPS;
+ 
+-			if (info.argsz < sizeof(info) + caps.size) {
+-				info.argsz = sizeof(info) + caps.size;
+-			} else {
+-				vfio_info_cap_shift(&caps, sizeof(info));
+-				if (copy_to_user((void __user *)arg +
+-						sizeof(info), caps.buf,
+-						caps.size)) {
+-					kfree(caps.buf);
+-					return -EFAULT;
+-				}
+-				info.cap_offset = sizeof(info);
++		if (info.argsz < sizeof(info) + caps.size) {
++			info.argsz = sizeof(info) + caps.size;
++		} else {
++			vfio_info_cap_shift(&caps, sizeof(info));
++			if (copy_to_user((void __user *)arg +
++					sizeof(info), caps.buf,
++					caps.size)) {
++				kfree(caps.buf);
++				return -EFAULT;
+ 			}
+-
+-			kfree(caps.buf);
++			info.cap_offset = sizeof(info);
+ 		}
+ 
+-		return copy_to_user((void __user *)arg, &info, minsz) ?
+-			-EFAULT : 0;
++		kfree(caps.buf);
++	}
+ 
+-	} else if (cmd == VFIO_IOMMU_MAP_DMA) {
+-		struct vfio_iommu_type1_dma_map map;
+-		uint32_t mask = VFIO_DMA_MAP_FLAG_READ |
+-				VFIO_DMA_MAP_FLAG_WRITE;
++	return copy_to_user((void __user *)arg, &info, minsz) ?
++		-EFAULT : 0;
+ 
+-		minsz = offsetofend(struct vfio_iommu_type1_dma_map, size);
++}
+ 
+-		if (copy_from_user(&map, (void __user *)arg, minsz))
+-			return -EFAULT;
++static int vfio_iommu_type1_map_dma(struct vfio_iommu *iommu,
++				    unsigned long arg)
++{
++	struct vfio_iommu_type1_dma_map map;
++	unsigned long minsz;
++	uint32_t mask = VFIO_DMA_MAP_FLAG_READ |
++			VFIO_DMA_MAP_FLAG_WRITE;
+ 
+-		if (map.argsz < minsz || map.flags & ~mask)
+-			return -EINVAL;
++	minsz = offsetofend(struct vfio_iommu_type1_dma_map, size);
+ 
+-		return vfio_dma_do_map(iommu, &map);
++	if (copy_from_user(&map, (void __user *)arg, minsz))
++		return -EFAULT;
+ 
+-	} else if (cmd == VFIO_IOMMU_UNMAP_DMA) {
+-		struct vfio_iommu_type1_dma_unmap unmap;
+-		long ret;
++	if (map.argsz < minsz || map.flags & ~mask)
++		return -EINVAL;
+ 
+-		minsz = offsetofend(struct vfio_iommu_type1_dma_unmap, size);
++	return vfio_dma_do_map(iommu, &map);
++}
+ 
+-		if (copy_from_user(&unmap, (void __user *)arg, minsz))
+-			return -EFAULT;
++static int vfio_iommu_type1_unmap_dma(struct vfio_iommu *iommu,
++				    unsigned long arg)
++{
++	struct vfio_iommu_type1_dma_unmap unmap;
++	unsigned long minsz;
++	long ret;
+ 
+-		if (unmap.argsz < minsz || unmap.flags)
+-			return -EINVAL;
++	minsz = offsetofend(struct vfio_iommu_type1_dma_unmap, size);
+ 
+-		ret = vfio_dma_do_unmap(iommu, &unmap);
+-		if (ret)
+-			return ret;
++	if (copy_from_user(&unmap, (void __user *)arg, minsz))
++		return -EFAULT;
 +
- 	mutex_lock(&pasid_mutex);
- 	svm = ioasid_find(INVALID_IOASID_SET, pasid, NULL);
- 	if (!svm) {
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 374b34f..57aac03 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -1955,12 +1955,12 @@ int iommu_sva_bind_gpasid(struct iommu_domain *domain,
- EXPORT_SYMBOL_GPL(iommu_sva_bind_gpasid);
++	if (unmap.argsz < minsz || unmap.flags)
++		return -EINVAL;
++
++	ret = vfio_dma_do_unmap(iommu, &unmap);
++	if (ret)
++		return ret;
++
++	return copy_to_user((void __user *)arg, &unmap, minsz) ?
++		-EFAULT : 0;
++
++}
++
++static long vfio_iommu_type1_ioctl(void *iommu_data,
++				   unsigned int cmd, unsigned long arg)
++{
++	struct vfio_iommu *iommu = iommu_data;
  
- int iommu_sva_unbind_gpasid(struct iommu_domain *domain, struct device *dev,
--			     ioasid_t pasid)
-+			    struct iommu_gpasid_unbind_data *data)
- {
- 	if (unlikely(!domain->ops->sva_unbind_gpasid))
- 		return -ENODEV;
+-		return copy_to_user((void __user *)arg, &unmap, minsz) ?
+-			-EFAULT : 0;
++	switch (cmd) {
++	case VFIO_CHECK_EXTENSION:
++		return vfio_iommu_type1_check_extension(iommu, arg);
++	case VFIO_IOMMU_GET_INFO:
++		return vfio_iommu_type1_get_info(iommu, arg);
++	case VFIO_IOMMU_MAP_DMA:
++		return vfio_iommu_type1_map_dma(iommu, arg);
++	case VFIO_IOMMU_UNMAP_DMA:
++		return vfio_iommu_type1_unmap_dma(iommu, arg);
+ 	}
  
--	return domain->ops->sva_unbind_gpasid(dev, pasid);
-+	return domain->ops->sva_unbind_gpasid(domain, dev, data);
- }
- EXPORT_SYMBOL_GPL(iommu_sva_unbind_gpasid);
- 
-diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-index 29d1c6f..0b238c3 100644
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -737,7 +737,8 @@ extern int intel_svm_finish_prq(struct intel_iommu *iommu);
- 
- int intel_svm_bind_gpasid(struct iommu_domain *domain, struct device *dev,
- 			  struct iommu_gpasid_bind_data *data);
--int intel_svm_unbind_gpasid(struct device *dev, int pasid);
-+int intel_svm_unbind_gpasid(struct iommu_domain *domain, struct device *dev,
-+			    struct iommu_gpasid_unbind_data *data);
- struct iommu_sva *intel_svm_bind(struct device *dev, struct mm_struct *mm,
- 				 void *drvdata);
- void intel_svm_unbind(struct iommu_sva *handle);
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index 57c46ae..a19f063 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -325,7 +325,8 @@ struct iommu_ops {
- 	int (*sva_bind_gpasid)(struct iommu_domain *domain,
- 			struct device *dev, struct iommu_gpasid_bind_data *data);
- 
--	int (*sva_unbind_gpasid)(struct device *dev, int pasid);
-+	int (*sva_unbind_gpasid)(struct iommu_domain *domain,
-+		struct device *dev, struct iommu_gpasid_unbind_data *data);
- 
- 	int (*def_domain_type)(struct device *dev);
- 
-@@ -459,7 +460,7 @@ extern int iommu_cache_invalidate(struct iommu_domain *domain,
- extern int iommu_sva_bind_gpasid(struct iommu_domain *domain,
- 		struct device *dev, struct iommu_gpasid_bind_data *data);
- extern int iommu_sva_unbind_gpasid(struct iommu_domain *domain,
--				struct device *dev, ioasid_t pasid);
-+		struct device *dev, struct iommu_gpasid_unbind_data *data);
- extern struct iommu_domain *iommu_get_domain_for_dev(struct device *dev);
- extern struct iommu_domain *iommu_get_dma_domain(struct device *dev);
- extern int iommu_map(struct iommu_domain *domain, unsigned long iova,
-@@ -1084,7 +1085,8 @@ static inline int iommu_sva_bind_gpasid(struct iommu_domain *domain,
- }
- 
- static inline int iommu_sva_unbind_gpasid(struct iommu_domain *domain,
--					   struct device *dev, int pasid)
-+					  struct device *dev,
-+					  struct iommu_gpasid_unbind_data *data)
- {
- 	return -ENODEV;
- }
+ 	return -ENOTTY;
 -- 
 2.7.4
 
