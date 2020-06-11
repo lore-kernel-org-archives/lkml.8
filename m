@@ -2,118 +2,244 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EFC0C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 715FFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 522E520792
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:19:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lOcRhH30"
+	by mail.kernel.org (Postfix) with ESMTP id 41F9720792
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:19:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591888772;
+	bh=MqTNLa7KvEu+rLXW1cSiiWEYaMtKTvNw/mdVMbOIOWY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=xyEz/B99weNcTTGtP59jVsVrn8OdGf7o4VikN5fHHb+shHSH1YV0PxGmsfXkMn6Ns
+	 jIQRaSK8o3w7Dn3kI2OXcg7IeKUaooRp6AB5ibj9gttRdmpYWOmXLgzOBSBSEFsq4x
+	 zsfYAYx5bNLmd1MTi0D4Vkf4ZyPj7SwS2e9khXrg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728511AbgFKPTZ (ORCPT
+        id S1728560AbgFKPTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 11:19:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39518 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728484AbgFKPTY (ORCPT
+        Thu, 11 Jun 2020 11:19:30 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:42611 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728484AbgFKPT0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 11:19:24 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F8A7C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 08:19:24 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id p5so5773831ile.6
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 08:19:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1rqRniaTsYfE1typF6ugiU1ENkgUw21RTQiS6OA21zs=;
-        b=lOcRhH308zGRYFzFWmmb6TOqkdNuqKJvRMJ431kDJUm7qRp0Nez4Bw33YJcr0ga+HZ
-         Jwio0ovnSmDre48IBWO2c3Kev+NTZXRyKEH38lBRcz1zxNptVAD1WckLjHqTWFujDLIt
-         ZbQH70Tb2cHCouT/hjjrB2LduSa70dfVTp4bS8VTStMooDF71Yofpe1NkG/4QYCzi2WV
-         JatuZD7fYWFpNkxLyxO7xb99Qiulot2jh30CwHn1li5RJji6ui9r1dhx6rq0SH93hZPA
-         6D6CUR8pa3AcydhcQK7z5J3PKH9qQQ3TLIV+RYSk6ShzfD2s3gzIin2pkXodGmaUsHcr
-         Dapw==
+        Thu, 11 Jun 2020 11:19:26 -0400
+Received: by mail-il1-f196.google.com with SMTP id j19so1611700ilk.9;
+        Thu, 11 Jun 2020 08:19:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1rqRniaTsYfE1typF6ugiU1ENkgUw21RTQiS6OA21zs=;
-        b=DuHm/1o5RgJhpds8ctpwlMtqJFrGYxcyvgsKbTFeM7MemirR6GMWY6RpwJfvcfREYC
-         HmJLqM9nOJAg9ej6DVqSt1lGCwLBHnOhdNe1cuthadcsauYUHgz4f5ZTnNKe/brNH6zE
-         E3rEuXoo2c5k5+HZkXkP/7Dk04yKZee08VhUEVSNgatQBXnqXI2r+ft0XJbtf2m3XxTG
-         rtOK4Wxa4NAy/hEC1+YX2C/xI3Mo3a/6uVvbFMpJiIdlcJbG5FNhqQX1jx6r26l7oYV1
-         kdzLbKJ2LzutSQktmY6Lf3q7dmc/AZ77NQzf0FC+TEC3yiNLNc1Uxz80d3fA7RPko3Af
-         gQgg==
-X-Gm-Message-State: AOAM532WnDrM5Hf7toKOrWX946pqFLXzzMa8VIR0h5veLTiPmLkiAUbD
-        Hm4uafWeA/t4SJ+BKKwEZecASRL0lQnno3yS8dg=
-X-Google-Smtp-Source: ABdhPJzxPGRhXjT0I+vY4SOwb4jOqI2irsf9TnegwJsDXW6Wni9r4nNaEClfyd1Nmkjmg3gvsNxbwr5jqWF2z17aQ6E=
-X-Received: by 2002:a05:6e02:ef2:: with SMTP id j18mr8604138ilk.69.1591888763752;
- Thu, 11 Jun 2020 08:19:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200607193023.52344-1-jassisinghbrar@gmail.com>
- <20200610082315.GB2689@bogus> <CABb+yY1T03YLwiFvBykxsAHQ9Kpu=r1nRTuaP3Emf5dP=Upm0g@mail.gmail.com>
- <20200610155629.GA7357@bogus> <CABb+yY0pQYD7DTf=MNpVPB7F2PESiWyTYj=ftRHDPkKMOobRVQ@mail.gmail.com>
- <20200611084014.GB7357@bogus>
-In-Reply-To: <20200611084014.GB7357@bogus>
-From:   Jassi Brar <jassisinghbrar@gmail.com>
-Date:   Thu, 11 Jun 2020 10:19:12 -0500
-Message-ID: <CABb+yY1K7fxEsujxwVMjJfLqVtg-p+5btteGtpUwEtUSsoWPtQ@mail.gmail.com>
-Subject: Re: [PATCH] firmware: arm_scmi: fix timeout value for send_message
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Bzom5I0Qsx/lQuO9r3157DQxFx5Ipkb4zVlo1+AHki0=;
+        b=NNeDxr0AecAkZ4HRa1nydSUAeXZNp9nkI/lhJMYPBp0FXYGc5aItTdWp67nEiRzSdE
+         aLt0OFni0Lb068GbLSiN8CLBfae5JzsQgRmFPtJgY1qFjAKtxb/lClagJbtj12KImuTM
+         t80SQt5HPYRmajZE2WKzERzgARVmQo8dSpFtDm7P0pjsqDVbV5JXUGBEsa01cq+lgmRY
+         01VOHxfincKZNe9LtFpFZQ8PfzpkWaYA6Lhw83JhyPomofFwizdjSi0f+FNmDW30R6+N
+         GINPQIF9VnH8UufPBrumgrbLw9zGqrKbajupnuLRrXQ/vTO/MVTw6RdoZipeRj/LPd+s
+         1UkQ==
+X-Gm-Message-State: AOAM530YY+W/hzVth3mew2/XvdJ+WhjpKgh5X9NSUN3yleImE5iYPGRS
+        ARviH/AT8Uv3Zd5gmVfgJ/Q0SEM=
+X-Google-Smtp-Source: ABdhPJzBBFxrtcbhqbQcEvm2dr7A3emRqSD+5s6FURtJq4Jy7T00ZrsFE/lLZJrZDfQS7fz2X4MsgA==
+X-Received: by 2002:a05:6e02:e51:: with SMTP id l17mr8951200ilk.39.1591888764995;
+        Thu, 11 Jun 2020 08:19:24 -0700 (PDT)
+Received: from xps15.herring.priv ([64.188.179.251])
+        by smtp.googlemail.com with ESMTPSA id c20sm1587533iot.33.2020.06.11.08.19.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2020 08:19:24 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        "David S. Miller" <davem@davemloft.net>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-rockchip@lists.infradead.org, linux-media@vger.kernel.org,
+        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
+        alsa-devel@alsa-project.org
+Subject: [PATCH] dt-bindings: Fix more incorrect 'reg' property sizes in examples
+Date:   Thu, 11 Jun 2020 09:19:23 -0600
+Message-Id: <20200611151923.1102796-1-robh@kernel.org>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 3:40 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
+The examples template is a 'simple-bus' with a size of 1 cell for
+had between 2 and 4 cells which really only errors on I2C or SPI type
+devices with a single cell.
 
-> >
-> > > > > >       if (xfer->hdr.poll_completion) {
-> > > > > > -             ktime_t stop = ktime_add_ns(ktime_get(), SCMI_MAX_POLL_TO_NS);
-> > > > > > +             ktime_t stop = ktime_add_ns(ktime_get(), 500 * 1000 * NSEC_PER_USEC);
-> > > > > >
-> > > > >
-> > > > > This is unacceptable delay for schedutil fast_switch. So no for this one.
-> > > > >
-> > > > Increasing timeout does not increase latency.
-> > >
-> > > Agreed, but worst case you may be stuck here for 500ms which is not
-> > > acceptable.
-> > >
-> > Not acceptable to who, you or the kernel? :)    Now that you said you
-> > are fixing the scmi's fast_switch implementation.
-> >
-> Sorry, I meant to disable it for single channel implementation.
->
-The single-channel platform may have only cpufreq as the user, or only
-users that respond quickly ~3us. So maybe we leave the decision, to
-enable fast_switch, totally to the platform. But of course, this
-discussion is for another thread.
+The easiest fix in most cases is to change the 'reg' property to 1 cell
+for address and size.
 
+Cc: "Heiko Stübner" <heiko@sntech.de>
+Cc: Ezequiel Garcia <ezequiel@collabora.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Richard Weinberger <richard@nod.at>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: linux-rockchip@lists.infradead.org
+Cc: linux-media@vger.kernel.org
+Cc: linux-mtd@lists.infradead.org
+Cc: netdev@vger.kernel.org
+Cc: alsa-devel@alsa-project.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/bus/baikal,bt1-apb.yaml     | 4 ++--
+ Documentation/devicetree/bindings/bus/baikal,bt1-axi.yaml     | 4 ++--
+ .../devicetree/bindings/display/rockchip/rockchip-vop.yaml    | 4 ++--
+ Documentation/devicetree/bindings/media/rockchip,vdec.yaml    | 2 +-
+ Documentation/devicetree/bindings/media/rockchip-vpu.yaml     | 2 +-
+ .../devicetree/bindings/mtd/arasan,nand-controller.yaml       | 2 +-
+ Documentation/devicetree/bindings/net/ti,k3-am654-cpts.yaml   | 2 +-
+ .../devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml       | 2 +-
+ Documentation/devicetree/bindings/sound/fsl,easrc.yaml        | 2 +-
+ 9 files changed, 12 insertions(+), 12 deletions(-)
 
-> > Even though I don't think 500ms would ruin our lives, but ok, I will
-> > make it 30ms - same as you did in the 'else' block. And drop the other
-> > change.
->
-> I am fine if cpufreq maintainers allow that in the fast switch path that
-> happens in the fast path.
->
-Thanks, let me respin the patch and include some cpufreq folks.
+diff --git a/Documentation/devicetree/bindings/bus/baikal,bt1-apb.yaml b/Documentation/devicetree/bindings/bus/baikal,bt1-apb.yaml
+index d6a3b71ea835..68b0131a31d0 100644
+--- a/Documentation/devicetree/bindings/bus/baikal,bt1-apb.yaml
++++ b/Documentation/devicetree/bindings/bus/baikal,bt1-apb.yaml
+@@ -71,8 +71,8 @@ examples:
+ 
+     bus@1f059000 {
+       compatible = "baikal,bt1-apb", "simple-bus";
+-      reg = <0 0x1f059000 0 0x1000>,
+-            <0 0x1d000000 0 0x2040000>;
++      reg = <0x1f059000 0x1000>,
++            <0x1d000000 0x2040000>;
+       reg-names = "ehb", "nodev";
+       #address-cells = <1>;
+       #size-cells = <1>;
+diff --git a/Documentation/devicetree/bindings/bus/baikal,bt1-axi.yaml b/Documentation/devicetree/bindings/bus/baikal,bt1-axi.yaml
+index 203bc0e5346b..29e1aaea132b 100644
+--- a/Documentation/devicetree/bindings/bus/baikal,bt1-axi.yaml
++++ b/Documentation/devicetree/bindings/bus/baikal,bt1-axi.yaml
+@@ -85,8 +85,8 @@ examples:
+ 
+     bus@1f05a000 {
+       compatible = "baikal,bt1-axi", "simple-bus";
+-      reg = <0 0x1f05a000 0 0x1000>,
+-            <0 0x1f04d110 0 0x8>;
++      reg = <0x1f05a000 0x1000>,
++            <0x1f04d110 0x8>;
+       reg-names = "qos", "ehb";
+       #address-cells = <1>;
+       #size-cells = <1>;
+diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml
+index 1695e3e4bcec..ed8148e26e24 100644
+--- a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml
++++ b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml
+@@ -106,8 +106,8 @@ examples:
+     #include <dt-bindings/power/rk3288-power.h>
+     vopb: vopb@ff930000 {
+       compatible = "rockchip,rk3288-vop";
+-      reg = <0x0 0xff930000 0x0 0x19c>,
+-            <0x0 0xff931000 0x0 0x1000>;
++      reg = <0xff930000 0x19c>,
++            <0xff931000 0x1000>;
+       interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+       clocks = <&cru ACLK_VOP0>,
+                <&cru DCLK_VOP0>,
+diff --git a/Documentation/devicetree/bindings/media/rockchip,vdec.yaml b/Documentation/devicetree/bindings/media/rockchip,vdec.yaml
+index 0c68cdad9a31..8d35c327018b 100644
+--- a/Documentation/devicetree/bindings/media/rockchip,vdec.yaml
++++ b/Documentation/devicetree/bindings/media/rockchip,vdec.yaml
+@@ -61,7 +61,7 @@ examples:
+ 
+     vdec: video-codec@ff660000 {
+         compatible = "rockchip,rk3399-vdec";
+-        reg = <0x0 0xff660000 0x0 0x400>;
++        reg = <0xff660000 0x400>;
+         interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH 0>;
+         clocks = <&cru ACLK_VDU>, <&cru HCLK_VDU>,
+                  <&cru SCLK_VDU_CA>, <&cru SCLK_VDU_CORE>;
+diff --git a/Documentation/devicetree/bindings/media/rockchip-vpu.yaml b/Documentation/devicetree/bindings/media/rockchip-vpu.yaml
+index 27df18ad6a81..2b629456d75f 100644
+--- a/Documentation/devicetree/bindings/media/rockchip-vpu.yaml
++++ b/Documentation/devicetree/bindings/media/rockchip-vpu.yaml
+@@ -66,7 +66,7 @@ examples:
+ 
+         vpu: video-codec@ff9a0000 {
+                 compatible = "rockchip,rk3288-vpu";
+-                reg = <0x0 0xff9a0000 0x0 0x800>;
++                reg = <0xff9a0000 0x800>;
+                 interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
+                              <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+                 interrupt-names = "vepu", "vdpu";
+diff --git a/Documentation/devicetree/bindings/mtd/arasan,nand-controller.yaml b/Documentation/devicetree/bindings/mtd/arasan,nand-controller.yaml
+index db8f115a13ec..cb9794edff24 100644
+--- a/Documentation/devicetree/bindings/mtd/arasan,nand-controller.yaml
++++ b/Documentation/devicetree/bindings/mtd/arasan,nand-controller.yaml
+@@ -53,7 +53,7 @@ examples:
+   - |
+     nfc: nand-controller@ff100000 {
+         compatible = "xlnx,zynqmp-nand-controller", "arasan,nfc-v3p10";
+-        reg = <0x0 0xff100000 0x0 0x1000>;
++        reg = <0xff100000 0x1000>;
+         clock-names = "controller", "bus";
+         clocks = <&clk200>, <&clk100>;
+         interrupt-parent = <&gic>;
+diff --git a/Documentation/devicetree/bindings/net/ti,k3-am654-cpts.yaml b/Documentation/devicetree/bindings/net/ti,k3-am654-cpts.yaml
+index af608f2ecfdf..9b7117920d90 100644
+--- a/Documentation/devicetree/bindings/net/ti,k3-am654-cpts.yaml
++++ b/Documentation/devicetree/bindings/net/ti,k3-am654-cpts.yaml
+@@ -121,7 +121,7 @@ examples:
+ 
+     cpts@310d0000 {
+          compatible = "ti,am65-cpts";
+-         reg = <0x0 0x310d0000 0x0 0x400>;
++         reg = <0x310d0000 0x400>;
+          reg-names = "cpts";
+          clocks = <&main_cpts_mux>;
+          clock-names = "cpts";
+diff --git a/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml b/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml
+index 574f890fab1d..4949a2851532 100644
+--- a/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml
++++ b/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml
+@@ -65,7 +65,7 @@ examples:
+     #include <dt-bindings/clock/qcom,gcc-sm8150.h>
+     phy@88e2000 {
+         compatible = "qcom,sm8150-usb-hs-phy";
+-        reg = <0 0x088e2000 0 0x400>;
++        reg = <0x088e2000 0x400>;
+         #phy-cells = <0>;
+ 
+         clocks = <&rpmhcc RPMH_CXO_CLK>;
+diff --git a/Documentation/devicetree/bindings/sound/fsl,easrc.yaml b/Documentation/devicetree/bindings/sound/fsl,easrc.yaml
+index 9dd57a974b28..32d547af9ce7 100644
+--- a/Documentation/devicetree/bindings/sound/fsl,easrc.yaml
++++ b/Documentation/devicetree/bindings/sound/fsl,easrc.yaml
+@@ -80,7 +80,7 @@ examples:
+ 
+     easrc: easrc@300c0000 {
+            compatible = "fsl,imx8mn-easrc";
+-           reg = <0x0 0x300c0000 0x0 0x10000>;
++           reg = <0x300c0000 0x10000>;
+            interrupts = <0x0 122 0x4>;
+            clocks = <&clk IMX8MN_CLK_ASRC_ROOT>;
+            clock-names = "mem";
+-- 
+2.25.1
 
-Cheers!
