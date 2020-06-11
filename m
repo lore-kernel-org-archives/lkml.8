@@ -2,197 +2,139 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9CBC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 22:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E8FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 22:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AEA82073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 22:30:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25AFD20835
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 22:30:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="wo0SNn6R"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W26cncJy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726552AbgFKW36 (ORCPT
+        id S1726416AbgFKWat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 18:29:58 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:59709 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726475AbgFKW3s (ORCPT
+        Thu, 11 Jun 2020 18:30:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49542 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726159AbgFKWat (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 18:29:48 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591914588; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=x2sbopYwhAhqWzhkL2gJb7C/8Z4Cdne+lnb2l3UB1Og=; b=wo0SNn6RgiCUqLij4x+isYpheO1ylXNC0cX5tsF4lEdBSySAB75XOq9mquMJ2Ce3W84YaXbR
- Zn/fAZKV5jNRpjzJYD9jdnux9pr6yAkmS6KwL12lcsw3D+qBU9fyR7Sd5bjeOWaKLm8430/c
- 8M+7h4DSFIETBTu1snmXSums/B4=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
- 5ee2b0538fe116ddd99a6690 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 11 Jun 2020 22:29:39
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8FF06C4339C; Thu, 11 Jun 2020 22:29:37 +0000 (UTC)
-Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0863BC43391;
-        Thu, 11 Jun 2020 22:29:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0863BC43391
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     freedreno@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        Akhil P Oommen <akhilpo@codeaurora.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>, Eric Anholt <eric@anholt.net>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 6/6] drm/msm/a6xx: Add support for per-instance pagetables
-Date:   Thu, 11 Jun 2020 16:29:21 -0600
-Message-Id: <20200611222921.464-7-jcrouse@codeaurora.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200611222921.464-1-jcrouse@codeaurora.org>
-References: <20200611222921.464-1-jcrouse@codeaurora.org>
+        Thu, 11 Jun 2020 18:30:49 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A657C03E96F
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 15:30:49 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id t6so5843932otk.9
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 15:30:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
+        bh=+EahI0YlQUT1/wBvgRJFQZcHP3obsCOagtKe7ySyhrM=;
+        b=W26cncJyLH/i2zSIOMrO837pRs3uf2BxQU7IzrLdCgttozbazIeNDlQgCyQFiYpUyY
+         Ms4olROFTxfvmQAdemlh52vDy0Ftr89GQMQrDXOir38oNwY8+8gPiDMnQChh/qPvfhj1
+         iUsIdILczYmCpO1xqBDBaFflxA4qJYGotgpCt1+gBdruUxe14ckzTnM3+9z+NR3Qkckp
+         8bXFzj6IhT3p8E6ZtAmnlH8HwiB/X34paleeTrwi7sO8xUPY1QHO1EqXGNShfQxJUmTK
+         oNomeUpR4hUAyI5seihocIFNBhP5T0Ojn22FOBFdo6AgdYqo+CShth6zOvtf4oEc8vZn
+         S8fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
+         :mime-version;
+        bh=+EahI0YlQUT1/wBvgRJFQZcHP3obsCOagtKe7ySyhrM=;
+        b=KrHD7GYep+OPisuPFnaPrCxlg52xrVjA/GSK0XJ4V/fanH0TCTKWNrvu6dHRmRX/2B
+         6VEaXrZj9PqSoiuZu9KvL8pZAeXkzZPGDh9XEzWGt4DapYrMtwuccV5ShsBkGpkDOP2J
+         66u7q0Jl1+UhOv85H07WDP8t3tKrhAKc6Ohy4d8MDI5k7Zh8yCq0qdZb9O9M7eDUBWPR
+         Xs2k/ux14wZUYEE2yYKsFrdpErRniJUFZ/skXt8n6bIVUj71QEyF3MxbYHvJR4KBGfIS
+         eL2MYnPdXZ8TKncYLCR26S+g9GGWI9O2gASwac5QFYkxvZUorzoPGEbw9JKcooDZ5qDi
+         6zaw==
+X-Gm-Message-State: AOAM531/vWuiOZ9dylbE6zeDYqT1tDkgrIEgLIXNZ7i10qpYk1UNREkL
+        xnKIXbgTtlBleLcb30nmDa1UWg==
+X-Google-Smtp-Source: ABdhPJzEon9DZKGa7Vpn9RDUNP7chh++P+QM4RhU5y/VWUIMVZUMKcU4pCYumWLy9ZXhRooe4mHeuA==
+X-Received: by 2002:a05:6830:1dba:: with SMTP id z26mr8682022oti.180.1591914648150;
+        Thu, 11 Jun 2020 15:30:48 -0700 (PDT)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id r15sm978948oot.5.2020.06.11.15.30.45
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Thu, 11 Jun 2020 15:30:47 -0700 (PDT)
+Date:   Thu, 11 Jun 2020 15:30:45 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+cc:     akpm@linux-foundation.org, mgorman@techsingularity.net,
+        tj@kernel.org, khlebnikov@yandex-team.ru,
+        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
+        willy@infradead.org, hannes@cmpxchg.org, lkp@intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, shakeelb@google.com,
+        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com
+Subject: [PATCH alexv12 2/2] mm/compaction: fix call to
+ __isolate_lru_page_prepare()
+Message-ID: <alpine.LSU.2.11.2006111529010.10801@eggly.anvils>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for using per-instance pagetables if all the dependencies are
-available.
+isolate_migratepages_block() is calling __isolate_lru_page_prepare()
+at a point when it has not yet acquired a reference to the page, and
+may not yet hold the right lruvec lock: it has no hold on the page.
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+trylock_page() is not safe to use at this time: its setting PG_locked
+can race with the page being freed or allocated ("Bad page"), and can
+also erase flags being set by one of those "sole owners" of a freshly
+allocated page who use non-atomic __SetPageFlag().
+
+Though I have tried rcu_read_lock() instead of trylock_page() there
+(like in page_evictable()), 054f1d1faaed ("mm/swap_state.c: simplify
+total_swapcache_pages() with get_swap_device()") stopped the freeing of
+swapper_spaces by RCU; and races against setting PageSwapCache, and the
+dereference of mapping->a_ops, and the lack of any page reference: all
+make that a more dubious approach.
+
+Just move the call to __isolate_lru_page_prepare() after the call to
+get_page_unless_zero(), when using trylock_page() has become safe
+(safe given __isolate's  check for PageLRU - unsafe without that).
+
+Signed-off-by: Hugh Dickins <hughd@google.com>
 ---
+I had envisaged this as a separate patch; but once it came down
+to just moving the call inside isolate_migratepages_block(), it's
+probably best folded into 10/16 or 12/16 (needs isolate_fail_put).
 
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 69 ++++++++++++++++++++++++++-
- drivers/gpu/drm/msm/msm_ringbuffer.h  |  1 +
- 2 files changed, 69 insertions(+), 1 deletion(-)
+I shall probably want to come along later, to clean up or eliminate
+__isolate_lru_page_prepare(): which I found before to have almost
+nothing in common between its use by isolate_migratepages_block()
+and its use by isolate_lru_pages(). We can then do its safer checks
+before the get_page_unless_zero(). But trying that cleanup right
+now would just get in the way of this series.
 
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-index a1589e040c57..5e82b85d4d55 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-@@ -79,6 +79,58 @@ static void get_stats_counter(struct msm_ringbuffer *ring, u32 counter,
- 	OUT_RING(ring, upper_32_bits(iova));
- }
- 
-+static void a6xx_set_pagetable(struct msm_gpu *gpu, struct msm_ringbuffer *ring,
-+		struct msm_file_private *ctx)
-+{
-+	phys_addr_t ttbr;
-+	u32 asid;
-+
-+	if (msm_iommu_pagetable_params(ctx->aspace->mmu, &ttbr, &asid))
-+		return;
-+
-+	OUT_PKT7(ring, CP_SET_PROTECTED_MODE, 1);
-+	OUT_RING(ring, 0);
-+
-+	/* Turn on APIV mode to access critical regions */
-+	OUT_PKT4(ring, REG_A6XX_CP_MISC_CNTL, 1);
-+	OUT_RING(ring, 1);
-+
-+	/* Make sure the ME is synchronized before staring the update */
-+	OUT_PKT7(ring, CP_WAIT_FOR_ME, 0);
-+
-+	/* Execute the table update */
-+	OUT_PKT7(ring, CP_SMMU_TABLE_UPDATE, 4);
-+	OUT_RING(ring, lower_32_bits(ttbr));
-+	OUT_RING(ring, (((u64) asid) << 48) | upper_32_bits(ttbr));
-+	/* CONTEXTIDR is currently unused */
-+	OUT_RING(ring, 0);
-+	/* CONTEXTBANK is currently unused */
-+	OUT_RING(ring, 0);
-+
-+	/*
-+	 * Write the new TTBR0 to the memstore. This is good for debugging.
-+	 */
-+	OUT_PKT7(ring, CP_MEM_WRITE, 4);
-+	OUT_RING(ring, lower_32_bits(rbmemptr(ring, ttbr0)));
-+	OUT_RING(ring, upper_32_bits(rbmemptr(ring, ttbr0)));
-+	OUT_RING(ring, lower_32_bits(ttbr));
-+	OUT_RING(ring, (((u64) asid) << 48) | upper_32_bits(ttbr));
-+
-+	/* Invalidate the draw state so we start off fresh */
-+	OUT_PKT7(ring, CP_SET_DRAW_STATE, 3);
-+	OUT_RING(ring, 0x40000);
-+	OUT_RING(ring, 1);
-+	OUT_RING(ring, 0);
-+
-+	/* Turn off APRIV */
-+	OUT_PKT4(ring, REG_A6XX_CP_MISC_CNTL, 1);
-+	OUT_RING(ring, 0);
-+
-+	/* Turn off protected mode */
-+	OUT_PKT7(ring, CP_SET_PROTECTED_MODE, 1);
-+	OUT_RING(ring, 1);
-+}
-+
- static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
- 	struct msm_file_private *ctx)
- {
-@@ -89,6 +141,8 @@ static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
- 	struct msm_ringbuffer *ring = submit->ring;
- 	unsigned int i;
- 
-+	a6xx_set_pagetable(gpu, ring, ctx);
-+
- 	get_stats_counter(ring, REG_A6XX_RBBM_PERFCTR_CP_0_LO,
- 		rbmemptr_stats(ring, index, cpcycles_start));
- 
-@@ -872,6 +926,18 @@ static unsigned long a6xx_gpu_busy(struct msm_gpu *gpu)
- 	return (unsigned long)busy_time;
- }
- 
-+struct msm_gem_address_space *a6xx_address_space_instance(struct msm_gpu *gpu)
-+{
-+	struct msm_mmu *mmu;
-+
-+	mmu = msm_iommu_pagetable_create(gpu->aspace->mmu);
-+	if (IS_ERR(mmu))
-+		return msm_gem_address_space_get(gpu->aspace);
-+
-+	return msm_gem_address_space_create(mmu,
-+		"gpu", 0x100000000ULL, 0x1ffffffffULL);
-+}
-+
- static const struct adreno_gpu_funcs funcs = {
- 	.base = {
- 		.get_param = adreno_get_param,
-@@ -893,8 +959,9 @@ static const struct adreno_gpu_funcs funcs = {
- #if defined(CONFIG_DRM_MSM_GPU_STATE)
- 		.gpu_state_get = a6xx_gpu_state_get,
- 		.gpu_state_put = a6xx_gpu_state_put,
--		.create_address_space = adreno_iommu_create_address_space,
- #endif
-+		.create_address_space = adreno_iommu_create_address_space,
-+		.address_space_instance = a6xx_address_space_instance,
- 	},
- 	.get_timestamp = a6xx_get_timestamp,
- };
-diff --git a/drivers/gpu/drm/msm/msm_ringbuffer.h b/drivers/gpu/drm/msm/msm_ringbuffer.h
-index 7764373d0ed2..0987d6bf848c 100644
---- a/drivers/gpu/drm/msm/msm_ringbuffer.h
-+++ b/drivers/gpu/drm/msm/msm_ringbuffer.h
-@@ -31,6 +31,7 @@ struct msm_rbmemptrs {
- 	volatile uint32_t fence;
- 
- 	volatile struct msm_gpu_submit_stats stats[MSM_GPU_SUBMIT_STATS_COUNT];
-+	volatile u64 ttbr0;
- };
- 
- struct msm_ringbuffer {
--- 
-2.17.1
+ mm/compaction.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
+--- alexv12/mm/compaction.c	2020-06-11 13:48:10.437046025 -0700
++++ hughd/mm/compaction.c	2020-06-11 13:49:05.570579095 -0700
+@@ -960,9 +960,6 @@ isolate_migratepages_block(struct compac
+ 		if (!(cc->gfp_mask & __GFP_FS) && page_mapping(page))
+ 			goto isolate_fail;
+ 
+-		if (__isolate_lru_page_prepare(page, isolate_mode) != 0)
+-			goto isolate_fail;
+-
+ 		/*
+ 		 * Be careful not to clear PageLRU until after we're
+ 		 * sure the page is not being freed elsewhere -- the
+@@ -971,6 +968,9 @@ isolate_migratepages_block(struct compac
+ 		if (unlikely(!get_page_unless_zero(page)))
+ 			goto isolate_fail;
+ 
++		if (__isolate_lru_page_prepare(page, isolate_mode) != 0)
++			goto isolate_fail_put;
++
+ 		/* Try isolate the page */
+ 		if (!TestClearPageLRU(page))
+ 			goto isolate_fail_put;
