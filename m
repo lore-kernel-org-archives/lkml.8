@@ -2,159 +2,166 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55809C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A089DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FD042075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:30:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EF082074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:32:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="GCUBzBxx"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="k+zCE/7I";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eWrU3Wxl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726685AbgFKHaV (ORCPT
+        id S1726748AbgFKHcX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 03:30:21 -0400
-Received: from ste-pvt-msa2.bahnhof.se ([213.80.101.71]:60515 "EHLO
-        ste-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726375AbgFKHaV (ORCPT
+        Thu, 11 Jun 2020 03:32:23 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:39587 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726679AbgFKHcW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 03:30:21 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTP id C52C53F6E8;
-        Thu, 11 Jun 2020 09:30:17 +0200 (CEST)
-Authentication-Results: ste-pvt-msa2.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=GCUBzBxx;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Authentication-Results: ste-ftg-msa2.bahnhof.se (amavisd-new);
-        dkim=pass (1024-bit key) header.d=shipmail.org
-Received: from ste-pvt-msa2.bahnhof.se ([127.0.0.1])
-        by localhost (ste-ftg-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id iIlSPVxu0sRf; Thu, 11 Jun 2020 09:30:16 +0200 (CEST)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id E40C23F683;
-        Thu, 11 Jun 2020 09:30:13 +0200 (CEST)
-Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 06F8F360305;
-        Thu, 11 Jun 2020 09:30:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1591860613; bh=ax4JYSj31lLugLn4GS/xTNhVWBMkQDLT2ea6JW6fq/U=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=GCUBzBxxf98lTFNSP0Dlp/n/+/bdS+fx4so3iAJYi8G/MjONQRAmflLqkOikME4iD
-         MUs9rU3r/y6OHX+h/VnT1g38n1UpRlf1rQRrL0SPnh1UXImH0gRwWGozv2yL3tsxRs
-         9r8MaAUOa6C2A8mHoNnl+0FXmTrNB6FX2Qv1kCb4=
-Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
- annotations
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        DRI Development <dri-devel@lists.freedesktop.org>
-Cc:     linux-rdma@vger.kernel.org,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        Thomas Hellstrom <thomas.hellstrom@intel.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        linux-media@vger.kernel.org,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Mika Kuoppala <mika.kuoppala@intel.com>
-References: <20200604081224.863494-1-daniel.vetter@ffwll.ch>
- <20200604081224.863494-5-daniel.vetter@ffwll.ch>
-From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28Intel=29?= 
-        <thomas_os@shipmail.org>
-Message-ID: <b11c2140-1b9c-9013-d9bb-9eb2c1906710@shipmail.org>
-Date:   Thu, 11 Jun 2020 09:30:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 11 Jun 2020 03:32:22 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 7C3D35800D1;
+        Thu, 11 Jun 2020 03:32:21 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Thu, 11 Jun 2020 03:32:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm3; bh=zmFIcZ3GkZ4CCs+528F5WWfO04
+        q/aDJFP1TROWwgfjU=; b=k+zCE/7IG5loKNTVcux+qAQUSwMIOVhvo9wLr3Zg1H
+        CnxIqQNfO2blrbLQRo3kDIRpObLJTaURH2WCJcEqBTZAcjSWV6f93xFwbWXA+dfh
+        WaS1xT/72f2x73D7DScUmRMQR4lQnl0hAazhPQ/9bZ1lQkRpPBVeC9SaPzf7xAeF
+        CDL30a4OruOW1BAYEfBdL9+8LYwt5mi8BMNmhhLaxHmESu/6W0a13LpZ5Zsw98dZ
+        FFuhfPSPDPb3ErwpbsU30dM8bWLlYqoXYFsGXUcO2as0K5/f3YDSDP+xX4r2GuOi
+        HJsaMSrYbjGnrHUoa0P6168/RRgcZ9aJake5yhW01/SQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=zmFIcZ3GkZ4CCs+52
+        8F5WWfO04q/aDJFP1TROWwgfjU=; b=eWrU3WxlZMMOT/OhskKznyQ8w4VsoEVFC
+        Qy8CR1FS7PHT6WV0TFyPrUde0Iij9jJdjdC7g8ZoAUs0K/b7HX5jLb34eQcyn7rJ
+        F6GsM3zqBE9S672zHOyi9JiwwzZfLAPnJbTA/J6a7G2ZGS33Jmf/ugOjLTBiOHEh
+        mlBOAanAfLQQbI3xU92AIswiPL+Luhro9t/p+KukdgsbEdAGNOulQ3KVaYPTFwkm
+        tNgTtEsH0n/tMz9vMDlkDlycPWYLIFQ6zceef8Ic5+EiDTp5DtsRJ0BwPm5Bkzux
+        +1dJ01zDiOWXgcgzAQ/LRdScKfT7QPfF04jLrCxNzKS4Oa6fVlUfg==
+X-ME-Sender: <xms:BN7hXsgd7Z1tkQuk7TG4AiaZo8kThlTJ1wIKOT6qnzPGvkVhkpBjrQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudehjedguddvvdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
+    gvrhhnpeejffehuddvvddvlefhgeelleffgfeijedvhefgieejtdeiueetjeetfeeukeej
+    geenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:BN7hXlB6DXPOmgD16xaD2uNgal0oCnlNbvEOib_oQoWc3g8FOrlbYA>
+    <xmx:BN7hXkFMwTHAnmS_X1v-I8lFQqkgqQfzobh58DQY8OgT12e1d6BfdQ>
+    <xmx:BN7hXtRJn8gVipj-Z4LX2CcSZCv0E0C1uZVnWuhE8dFeLszEald-aw>
+    <xmx:Bd7hXv7TTrc5pUvwpUHkvB835KFl2DgGW65jdNXR-pIGREeat_aA6Q>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 5BC0F3280064;
+        Thu, 11 Jun 2020 03:32:20 -0400 (EDT)
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        Maxime Ripard <maxime@cerno.tech>, devicetree@vger.kernel.org,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH v4 00/27] clk: bcm: rpi: Add support for BCM2711 firmware clocks
+Date:   Thu, 11 Jun 2020 09:31:49 +0200
+Message-Id: <cover.58c6e44891ff5bf61052b5804f7da9b5ba074840.1591860665.git-series.maxime@cerno.tech>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200604081224.863494-5-daniel.vetter@ffwll.ch>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-On 6/4/20 10:12 AM, Daniel Vetter wrote:
-> Two in one go:
-> - it is allowed to call dma_fence_wait() while holding a
->    dma_resv_lock(). This is fundamental to how eviction works with ttm,
->    so required.
->
-> - it is allowed to call dma_fence_wait() from memory reclaim contexts,
->    specifically from shrinker callbacks (which i915 does), and from mmu
->    notifier callbacks (which amdgpu does, and which i915 sometimes also
->    does, and probably always should, but that's kinda a debate). Also
->    for stuff like HMM we really need to be able to do this, or things
->    get real dicey.
->
-> Consequence is that any critical path necessary to get to a
-> dma_fence_signal for a fence must never a) call dma_resv_lock nor b)
-> allocate memory with GFP_KERNEL. Also by implication of
-> dma_resv_lock(), no userspace faulting allowed. That's some supremely
-> obnoxious limitations, which is why we need to sprinkle the right
-> annotations to all relevant paths.
->
-> The one big locking context we're leaving out here is mmu notifiers,
-> added in
->
-> commit 23b68395c7c78a764e8963fc15a7cfd318bf187f
-> Author: Daniel Vetter <daniel.vetter@ffwll.ch>
-> Date:   Mon Aug 26 22:14:21 2019 +0200
->
->      mm/mmu_notifiers: add a lockdep map for invalidate_range_start/end
->
-> that one covers a lot of other callsites, and it's also allowed to
-> wait on dma-fences from mmu notifiers. But there's no ready-made
-> functions exposed to prime this, so I've left it out for now.
->
-> v2: Also track against mmu notifier context.
->
-> v3: kerneldoc to spec the cross-driver contract. Note that currently
-> i915 throws in a hard-coded 10s timeout on foreign fences (not sure
-> why that was done, but it's there), which is why that rule is worded
-> with SHOULD instead of MUST.
->
-> Also some of the mmu_notifier/shrinker rules might surprise SoC
-> drivers, I haven't fully audited them all. Which is infeasible anyway,
-> we'll need to run them with lockdep and dma-fence annotations and see
-> what goes boom.
->
-> v4: A spelling fix from Mika
->
-> Cc: Mika Kuoppala <mika.kuoppala@intel.com>
-> Cc: Thomas Hellstrom <thomas.hellstrom@intel.com>
-> Cc: linux-media@vger.kernel.org
-> Cc: linaro-mm-sig@lists.linaro.org
-> Cc: linux-rdma@vger.kernel.org
-> Cc: amd-gfx@lists.freedesktop.org
-> Cc: intel-gfx@lists.freedesktop.org
-> Cc: Chris Wilson <chris@chris-wilson.co.uk>
-> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> Cc: Christian König <christian.koenig@amd.com>
-> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> ---
->   Documentation/driver-api/dma-buf.rst |  6 ++++
->   drivers/dma-buf/dma-fence.c          | 41 ++++++++++++++++++++++++++++
->   drivers/dma-buf/dma-resv.c           |  4 +++
->   include/linux/dma-fence.h            |  1 +
->   4 files changed, 52 insertions(+)
+Since the whole DRM/HDMI support began to grow fairly big, I've chosen
+to split away the two discussions between the firmware clocks and the
+HDMI support.
 
-I still have my doubts about allowing fence waiting from within 
-shrinkers. IMO ideally they should use a trywait approach, in order to 
-allow memory allocation during command submission for drivers that
-publish fences before command submission. (Since early reservation 
-object release requires that).
+Let me know what you think,
+Maxime
 
-But since drivers are already waiting from within shrinkers and I take 
-your word for HMM requiring this,
+Cc: bcm-kernel-feedback-list@broadcom.com
+Cc: devicetree@vger.kernel.org
+Cc: Kamal Dasu <kdasu.kdev@gmail.com>
+Cc: linux-clk@vger.kernel.org
+Cc: Michael Turquette <mturquette@baylibre.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Stephen Boyd <sboyd@kernel.org>
 
-Reviewed-by: Thomas Hellström <thomas.hellstrom@intel.com>
+Changes from v3:
+  - Moved the firmware structure to the driver, and changed for u32
+  - Prevented cache issues with MMIO driver
+  - Removed message when discovering min and max rates
+  - Added the gathered tags
 
+Changes from v2:
+  - Rebased on top of next-20200526
+  - Split away from the HDMI series
+  - Fixed an of_node leakage in the firmware driver
+  - Fixed an of_node leakage in the firmware clocks driver
+  - Added the min/max rate retrieval to all the firmware clocks
+  - Added proper name for the firmware clocks
+  - Removed the PLLB setup from the firmware clocks and moved it back to
+    the MMIO driver
 
+Florian Fainelli (1):
+  dt-bindings: arm: bcm: Convert BCM2835 firmware binding to YAML
+
+Maxime Ripard (26):
+  dt-bindings: clock: Add a binding for the RPi Firmware clocks
+  firmware: rpi: Only create clocks device if we don't have a node for it
+  clk: bcm: rpi: Allow the driver to be probed by DT
+  clk: bcm: rpi: Statically init clk_init_data
+  clk: bcm: rpi: Use clk_hw_register for pllb_arm
+  clk: bcm: rpi: Remove global pllb_arm clock pointer
+  clk: bcm: rpi: Make sure pllb_arm is removed
+  clk: bcm: rpi: Remove pllb_arm_lookup global pointer
+  clk: bcm: rpi: Switch to clk_hw_register_clkdev
+  clk: bcm: rpi: Make sure the clkdev lookup is removed
+  clk: bcm: rpi: Use CCF boundaries instead of rolling our own
+  clk: bcm: rpi: Create a data structure for the clocks
+  clk: bcm: rpi: Add clock id to data
+  clk: bcm: rpi: Pass the clocks data to the firmware function
+  clk: bcm: rpi: Rename is_prepared function
+  clk: bcm: rpi: Split pllb clock hooks
+  clk: bcm: rpi: Make the PLLB registration function return a clk_hw
+  clk: bcm: rpi: Add DT provider for the clocks
+  clk: bcm: rpi: Add an enum for the firmware clocks
+  clk: bcm: rpi: Discover the firmware clocks
+  clk: bcm: rpi: Give firmware clocks a name
+  Revert "clk: bcm2835: remove pllb"
+  ARM: dts: bcm2711: Add firmware clocks node
+  clk: bcm2835: Allow custom CCF flags for the PLLs
+  clk: bcm2835: Don't cache the PLLB rate
+  clk: bcm: rpi: Remove the quirks for the CPU clock
+
+ Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt  |  14 +---
+ Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml |  59 ++++++++++++++-
+ arch/arm/boot/dts/bcm2711-rpi-4-b.dts                                       |   5 +-
+ drivers/clk/bcm/clk-bcm2835.c                                               |  34 ++++++--
+ drivers/clk/bcm/clk-raspberrypi.c                                           | 311 +++++++++++++++++++++++++++++++++++++++++++-----------------------------
+ drivers/firmware/raspberrypi.c                                              |  14 +++-
+ 6 files changed, 294 insertions(+), 143 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+
+base-commit: 192e08e14e37b78e83cc2f5b9eb5a15a7d71c4e2
+-- 
+git-series 0.9.1
