@@ -2,163 +2,75 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86969C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 139ECC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C8E32081A
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:51:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b/isTvza"
+	by mail.kernel.org (Postfix) with ESMTP id E9B7920835
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:52:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbgFKNv5 (ORCPT
+        id S1727053AbgFKNwM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 09:51:57 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35863 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726109AbgFKNv4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 09:51:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591883514;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9+HdOR4975sbAEuB1RaL0b8J+blDp+Ho3Hrxc6qjF2Y=;
-        b=b/isTvzaMeqRxb9uVuwaU7H4mm7l4UaJ12iB8V0ZILtcDbvGHzjn7FnSU1GHdYV/uwIdFX
-        bU8NiFegFA/u/jgtssR0OwDKPvsgyt2+lvGycga1Jg98+w355XZJfZxmHSpVuK9YrjbMDj
-        Q43IpWXU/WKNvkjnfYSEgWNxJ3esijw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-149-WrLPbTxGNc6pRAjkTVHJUQ-1; Thu, 11 Jun 2020 09:51:41 -0400
-X-MC-Unique: WrLPbTxGNc6pRAjkTVHJUQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 11 Jun 2020 09:52:12 -0400
+Received: from ms.lwn.net ([45.79.88.28]:38582 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726109AbgFKNwL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 09:52:11 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 64B73107ACCA;
-        Thu, 11 Jun 2020 13:51:36 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-115-149.rdu2.redhat.com [10.10.115.149])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B82E410013C1;
-        Thu, 11 Jun 2020 13:51:29 +0000 (UTC)
-Subject: Re: possible deadlock in send_sigio
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     syzbot <syzbot+a9fb1457d720a55d6dc5@syzkaller.appspotmail.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>, allison@lohutok.net,
-        areber@redhat.com, aubrey.li@linux.intel.com,
-        Andrei Vagin <avagin@gmail.com>,
-        Bruce Fields <bfields@fieldses.org>,
-        Christian Brauner <christian@brauner.io>, cyphar@cyphar.com,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>, guro@fb.com,
-        Jeff Layton <jlayton@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Kees Cook <keescook@chromium.org>, linmiaohe@huawei.com,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@suse.com>, Ingo Molnar <mingo@kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, sargun@sargun.me,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Al Viro <viro@zeniv.linux.org.uk>
-References: <000000000000760d0705a270ad0c@google.com>
- <69818a6c-7025-8950-da4b-7fdc065d90d6@redhat.com>
- <CACT4Y+brpePBoR7EUwPiSvGAgo6bhvpKvLTiCaCfRSadzn6yRw@mail.gmail.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <88c172af-46df-116e-6f22-b77f98803dcb@redhat.com>
-Date:   Thu, 11 Jun 2020 09:51:29 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        by ms.lwn.net (Postfix) with ESMTPSA id 7819C6D6;
+        Thu, 11 Jun 2020 13:52:10 +0000 (UTC)
+Date:   Thu, 11 Jun 2020 07:52:09 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        David Sterba <dsterba@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Jacob Huisman <jacobhuisman@kernelthusiast.com>,
+        Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>,
+        Rob Herring <robh@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones:
+ Documentation/translations/it_IT
+Message-ID: <20200611075209.1ec03712@lwn.net>
+In-Reply-To: <3a6354fd-90ec-914f-b5df-0c4c219bd26e@al2klimov.de>
+References: <20200609201241.81518-1-grandmaster@al2klimov.de>
+        <4235548.LvFx2qVVIh@harkonnen>
+        <cd260d03-27a4-7794-f58f-21e8e0be9755@al2klimov.de>
+        <202006102009.CB14D7F@keescook>
+        <8ee16c38-e28b-b4e6-ed30-55a59e216b49@al2klimov.de>
+        <CANiq72n50OVRtFAQkAmqjaj=dJTP9VqYYHN7++8O_t4cbfaJgw@mail.gmail.com>
+        <3a6354fd-90ec-914f-b5df-0c4c219bd26e@al2klimov.de>
+Organization: LWN.net
 MIME-Version: 1.0
-In-Reply-To: <CACT4Y+brpePBoR7EUwPiSvGAgo6bhvpKvLTiCaCfRSadzn6yRw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/11/20 3:43 AM, Dmitry Vyukov wrote:
-> On Thu, Jun 11, 2020 at 4:33 AM Waiman Long <longman@redhat.com> wrote:
->> On 4/4/20 1:55 AM, syzbot wrote:
->>> Hello,
->>>
->>> syzbot found the following crash on:
->>>
->>> HEAD commit:    bef7b2a7 Merge tag 'devicetree-for-5.7' of git://git.kerne..
->>> git tree:       upstream
->>> console output: https://syzkaller.appspot.com/x/log.txt?x=15f39c5de00000
->>> kernel config:  https://syzkaller.appspot.com/x/.config?x=91b674b8f0368e69
->>> dashboard link: https://syzkaller.appspot.com/bug?extid=a9fb1457d720a55d6dc5
->>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1454c3b7e00000
->>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12a22ac7e00000
->>>
->>> The bug was bisected to:
->>>
->>> commit 7bc3e6e55acf065500a24621f3b313e7e5998acf
->>> Author: Eric W. Biederman <ebiederm@xmission.com>
->>> Date:   Thu Feb 20 00:22:26 2020 +0000
->>>
->>>       proc: Use a list of inodes to flush from proc
->>>
->>> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=165c4acde00000
->>> final crash:    https://syzkaller.appspot.com/x/report.txt?x=155c4acde00000
->>> console output: https://syzkaller.appspot.com/x/log.txt?x=115c4acde00000
->>>
->>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
->>> Reported-by: syzbot+a9fb1457d720a55d6dc5@syzkaller.appspotmail.com
->>> Fixes: 7bc3e6e55acf ("proc: Use a list of inodes to flush from proc")
->>>
->>> ========================================================
->>> WARNING: possible irq lock inversion dependency detected
->>> 5.6.0-syzkaller #0 Not tainted
->>> --------------------------------------------------------
->>> ksoftirqd/0/9 just changed the state of lock:
->>> ffffffff898090d8 (tasklist_lock){.+.?}-{2:2}, at: send_sigio+0xa9/0x340 fs/fcntl.c:800
->>> but this lock took another, SOFTIRQ-unsafe lock in the past:
->>>    (&pid->wait_pidfd){+.+.}-{2:2}
->>>
->>>
->>> and interrupts could create inverse lock ordering between them.
->>>
->>>
->>> other info that might help us debug this:
->>>    Possible interrupt unsafe locking scenario:
->>>
->>>          CPU0                    CPU1
->>>          ----                    ----
->>>     lock(&pid->wait_pidfd);
->>>                                  local_irq_disable();
->>>                                  lock(tasklist_lock);
->>>                                  lock(&pid->wait_pidfd);
->>>     <Interrupt>
->>>       lock(tasklist_lock);
->>>
->>>    *** DEADLOCK ***
->> That is a false positive. The qrwlock has the special property that it
->> becomes unfair (for read lock) at interrupt context. So unless it is
->> taking a write lock in the interrupt context, it won't go into deadlock.
->> The current lockdep code does not capture the full semantics of qrwlock
->> leading to this false positive.
-> Hi Longman
->
-> Thanks for looking into this.
-> Now the question is: how should we change lockdep annotations to fix this bug?
+On Thu, 11 Jun 2020 13:02:08 +0200
+"Alexander A. Klimov" <grandmaster@al2klimov.de> wrote:
 
-There was an old lockdep patch that I think may address the issue, but 
-was not merged at the time. I will need to dig it out and see if it can 
-be adapted to work in the current kernel. It may take some time.
+> Who if not Linus shall review one huge patch spreading across lots of 
+> subsystems?
 
-Cheers,
-Longman
+In practice almost nobody, which is why I've said several times that you
+shouldn't do that.  There is no flag-day situation forcing this work to be
+done in a single big patch.
 
+jon
