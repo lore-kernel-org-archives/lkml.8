@@ -2,97 +2,88 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C043C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF1D9C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 720DA20760
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:18:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591874310;
-	bh=u/ZlCVT4Qx9a6DnjKeW8PwPc4At2OeLBS8LztOanwJA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EGGq1mdPWDXbU9gm5wUypTy5YvdKItgQjEqYzuzvg5VuDsVfUoq9sdcc4amn5Y2gT
-	 w4R8gGYKy51SYFtzu9rYxsVqvHZZP2QrRXAhrbiDZfFd7RAthJ2GsW19jRVNbZ9D0f
-	 ybnDhOEUfXAXX4H9X+e9jQnQdOHZRsQm0yW4AX9A=
+	by mail.kernel.org (Postfix) with ESMTP id 8603E2063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:18:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbgFKLS3 (ORCPT
+        id S1728031AbgFKLSz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 07:18:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44356 "EHLO mail.kernel.org"
+        Thu, 11 Jun 2020 07:18:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60844 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727973AbgFKLS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 07:18:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 879852063A;
-        Thu, 11 Jun 2020 11:18:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591874307;
-        bh=u/ZlCVT4Qx9a6DnjKeW8PwPc4At2OeLBS8LztOanwJA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2D9UqhsOgj0plexSgeDKm4ci+JHy67vyEkz1ySN/W6tx09wPGf11LU2vEyxYh0A2x
-         wew1hii/5rPGYa2FtNkkNAp5ja1CC/tY9/LfZWuVFwq6GdPPurxw7czLbb00YB+H5i
-         Pg9W1PhzbuuKDQf7K2S/4tAF7fQWTpI4PmkN1pLk=
-Date:   Thu, 11 Jun 2020 13:18:20 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Schrempf Frieder <frieder.schrempf@kontron.de>
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
-Subject: Re: [PATCH v2] serial: imx: Fix handling of TC irq in combination
- with DMA
-Message-ID: <20200611111820.GI3802953@kroah.com>
-References: <20200609072259.8259-1-frieder.schrempf@kontron.de>
+        id S1728014AbgFKLSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 07:18:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 62155AD12;
+        Thu, 11 Jun 2020 11:18:55 +0000 (UTC)
+Message-ID: <333956e7b6b186f751baf7f1b69be3c2cf4d077f.camel@suse.de>
+Subject: Re: [PATCH v4 27/27] clk: bcm: rpi: Remove the quirks for the CPU
+ clock
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
+Date:   Thu, 11 Jun 2020 13:18:50 +0200
+In-Reply-To: <a636a413f26014901ff1acb8df046049a79c4c6d.1591860665.git-series.maxime@cerno.tech>
+References: <cover.58c6e44891ff5bf61052b5804f7da9b5ba074840.1591860665.git-series.maxime@cerno.tech>
+         <a636a413f26014901ff1acb8df046049a79c4c6d.1591860665.git-series.maxime@cerno.tech>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-U285mDlmyFSu1bffEK5R"
+User-Agent: Evolution 3.36.2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200609072259.8259-1-frieder.schrempf@kontron.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 07:23:40AM +0000, Schrempf Frieder wrote:
-> From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> 
-> commit 1866541492641c02874bf51f9d8712b5510f2c64 upstream
-> 
-> When using RS485 half duplex the Transmitter Complete irq is needed to
-> determine the moment when the transmitter can be disabled. When using
-> DMA this irq must only be enabled when DMA has completed to transfer all
-> data. Otherwise the CPU might busily trigger this irq which is not
-> properly handled and so the also pending irq for the DMA transfer cannot
-> trigger.
-> 
-> Cc: <stable@vger.kernel.org> # v4.14.x
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> [Backport to v4.14]
-> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-> ---
-> When using RS485 with DMA enabled simply transmitting some data on our
-> i.MX6ULL based boards often freezes the system completely. The higher
-> the baudrate, the easier it is to reproduce the issue. To test this I
-> simply used:
-> 
-> stty -F /dev/ttymxc1 speed 115200
-> while true; do echo TEST > /dev/ttymxc1; done
-> 
-> Without the patch this leads to an almost immediate system freeze,
-> with the patch applied, everything keeps working as expected. 
-> ---
->  drivers/tty/serial/imx.c | 22 ++++++++++++++++++----
->  1 file changed, 18 insertions(+), 4 deletions(-)
 
-Now queued up, thanks.
+--=-U285mDlmyFSu1bffEK5R
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-greg k-h
+On Thu, 2020-06-11 at 09:32 +0200, Maxime Ripard wrote:
+> The CPU clock has had so far a bunch of quirks to expose the clock tree
+> properly, but since we reverted to exposing them through the MMIO driver,
+> we can remove that code from the firmware driver.
+>=20
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> ---
+
+Acked-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+
+Regards,
+Nicolas
+
+
+--=-U285mDlmyFSu1bffEK5R
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7iExoACgkQlfZmHno8
+x/7NEwgAmtZn8c3AHDT++MR4B7LhujoGQ8LYybQXxK3GT42QsGrQC1gJTHb37q1h
+GFFMOJA+WL4dEvVOWujZe88cnZkIgoneF3a/y+6x9ZBDYRb15rljvJXxWDDEpDNq
+I4pzHw2RldYDTbe+bM8qy4c5LN+uPrtvujT9ZWXKBDjE2ixTwrVqWNBMMtiNacYu
+xEGJrr4Bwi11Gng1qmRD+MwNrwhIfQDMAqvhV865eqfWnri3+xws2Xa1wfcNYUaf
+oyX8gzx/LV8LbpdXLQpddhiPxKzDXWqXTHcnpZXyPPXAgRDUDLGy0I/Irxqnw5tk
+zOPDY89bcrKowlAUqAM5uDFIBI9btQ==
+=Cn2+
+-----END PGP SIGNATURE-----
+
+--=-U285mDlmyFSu1bffEK5R--
+
