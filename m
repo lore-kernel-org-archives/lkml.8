@@ -2,170 +2,178 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BD8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E3ECC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E48C2072F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:41:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 148132074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:42:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591861360;
+	bh=gKJMd5utUWukaitgLZGRza7ui70C0kpqMr9sxdjD8/c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=2h71ZNdWo6UXxPXZeq5yqhR59EbFkP2/bJTWwVJnTqYeWBJoJUdzuCTy71HYroYcq
+	 yEpy4PsLQqfBFzJ21E0ZGEYaflHgzOC+p1c2XA5DPvnoauiwVQinkLUU55VtePhsVD
+	 DhGwIyfac1dCJWT7+6JPr/3aHHIffiykp1dCOHI0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbgFKHlp convert rfc822-to-8bit (ORCPT
+        id S1726831AbgFKHmi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 03:41:45 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:40684 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726670AbgFKHlp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 03:41:45 -0400
-Received: from mail-pj1-f71.google.com ([209.85.216.71])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jjHqI-0007l7-Fn
-        for linux-kernel@vger.kernel.org; Thu, 11 Jun 2020 07:41:42 +0000
-Received: by mail-pj1-f71.google.com with SMTP id cq18so3645513pjb.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 00:41:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=6D0vKGSY/N7oIxUPHQyoMhvqF95dT5zEOAoFd29m+A0=;
-        b=rbP7QY1ls0KbMcxmbnL+rAD+wLoN28svsuJe5sR3IYVnySdEucDxMR7vCmCJJtZagy
-         ylqqa22dOv3oPVBn2Cdiz4/UdpUVCkNX5aaHgqCmvPyybVrWf046MK6/k/thjCiWZa3Q
-         UxXlUfsimkyQ5+ACk8F5LPWdoOHRQ733LNRtFboY++SQaLhZE8w8jh/bef/jj35pSJTW
-         4/HnXymcTE5MLUcgcYR1+HFIPsE9xWTFzU5nti5aOQy9KNgLAkcadOF3zF25QROg8mYo
-         HfjeY1tawBPQu1AsoZKdfVl8x49Uf0xinBdiRTGqqF1Cfwfb0faPLLqghVA9wDgHwHQn
-         KNNw==
-X-Gm-Message-State: AOAM5308AMDfXx6skHU/tslEEPTr8pevkcm1ASgxdo1u0BiGbtHIewJN
-        IVp8YrXUoa09dlKYyOcJAkf+eMDvV4RkmEpBVBqzZiHyc1NpGlFMhLVxSkApn5EBI7EXPpVjyTw
-        +UWTMIx2xcpKHCDUaQ9lwdKN7gsBfdtYcnUjNTk6N0w==
-X-Received: by 2002:a65:67d0:: with SMTP id b16mr5607987pgs.91.1591861301083;
-        Thu, 11 Jun 2020 00:41:41 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxfecsDSsRnjakGhEFhDzibSywqp2cwGjA93pZwZxkEHx2CQMcEXcMiVyjFjt6Mb1TP60VRRA==
-X-Received: by 2002:a65:67d0:: with SMTP id b16mr5607966pgs.91.1591861300687;
-        Thu, 11 Jun 2020 00:41:40 -0700 (PDT)
-Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
-        by smtp.gmail.com with ESMTPSA id gp4sm1777950pjb.26.2020.06.11.00.41.38
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Jun 2020 00:41:40 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH 1/2] xhci: Suspend ports to U3 directly from U1 or U2
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <9d7842de-9813-becd-80a0-a422e59c1e94@linux.intel.com>
-Date:   Thu, 11 Jun 2020 15:41:37 +0800
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <91BDD35C-6144-4761-AA4F-1F4D1A9E36F1@canonical.com>
-References: <20200610064231.9454-1-kai.heng.feng@canonical.com>
- <20200610143220.GC11727@rowland.harvard.edu>
- <591D2A1F-9645-4B0B-896C-99544F06DFAA@canonical.com>
- <9d7842de-9813-becd-80a0-a422e59c1e94@linux.intel.com>
-To:     Mathias Nyman <mathias.nyman@linux.intel.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Thu, 11 Jun 2020 03:42:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38892 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726770AbgFKHmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 03:42:38 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 293AD2072F;
+        Thu, 11 Jun 2020 07:42:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591861357;
+        bh=gKJMd5utUWukaitgLZGRza7ui70C0kpqMr9sxdjD8/c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=KFqoZB/lJU4/f4epVDrDHxmP+O9tSVmWZ9vwm72Y2fn4eZGAMXQWihXl2JAI4FS72
+         UqbCTonXJ0Ycg0aPDpTrq2bK/znskSWa72A+cKKnHvHHm+0q+A2Ze1gBPrDX5T95DW
+         zyqKCImV0KfIgaDkJAgPptVndfnb+CFq3aZUfJQ8=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jjHr9-0021J7-Lk; Thu, 11 Jun 2020 08:42:35 +0100
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 11 Jun 2020 08:42:35 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Feiner <pfeiner@google.com>,
+        Peter Shier <pshier@google.com>,
+        Junaid Shahid <junaids@google.com>,
+        Ben Gardon <bgardon@google.com>,
+        Christoffer Dall <christoffer.dall@arm.com>
+Subject: Re: [PATCH 14/21] KVM: Move x86's version of struct
+ kvm_mmu_memory_cache to common code
+In-Reply-To: <20200605213853.14959-15-sean.j.christopherson@intel.com>
+References: <20200605213853.14959-1-sean.j.christopherson@intel.com>
+ <20200605213853.14959-15-sean.j.christopherson@intel.com>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <f57fc7237ffba4f22042b42efb18d2e4@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: sean.j.christopherson@intel.com, paulus@ozlabs.org, borntraeger@de.ibm.com, frankja@linux.ibm.com, pbonzini@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, david@redhat.com, cohuck@redhat.com, imbrenda@linux.ibm.com, vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org, kvm@vger.kernel.org, kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org, pfeiner@google.com, pshier@google.com, junaids@google.com, bgardon@google.com, christoffer.dall@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Sean,
 
+On 2020-06-05 22:38, Sean Christopherson wrote:
+> Move x86's 'struct kvm_mmu_memory_cache' to common code in anticipation
+> of moving the entire x86 implementation code to common KVM and reusing
+> it for arm64 and MIPS.  Add a new architecture specific asm/kvm_types.h
+> to control the existence and parameters of the struct.  The new header
+> is needed to avoid a chicken-and-egg problem with asm/kvm_host.h as all
+> architectures define instances of the struct in their vCPU structs.
+> 
+> Suggested-by: Christoffer Dall <christoffer.dall@arm.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/arm64/include/asm/kvm_types.h   |  6 ++++++
+>  arch/mips/include/asm/kvm_types.h    |  5 +++++
+>  arch/powerpc/include/asm/kvm_types.h |  5 +++++
+>  arch/s390/include/asm/kvm_types.h    |  5 +++++
+>  arch/x86/include/asm/kvm_host.h      | 13 -------------
+>  arch/x86/include/asm/kvm_types.h     |  7 +++++++
+>  include/linux/kvm_types.h            | 19 +++++++++++++++++++
+>  7 files changed, 47 insertions(+), 13 deletions(-)
+>  create mode 100644 arch/arm64/include/asm/kvm_types.h
+>  create mode 100644 arch/mips/include/asm/kvm_types.h
+>  create mode 100644 arch/powerpc/include/asm/kvm_types.h
+>  create mode 100644 arch/s390/include/asm/kvm_types.h
+>  create mode 100644 arch/x86/include/asm/kvm_types.h
+> 
+> diff --git a/arch/arm64/include/asm/kvm_types.h
+> b/arch/arm64/include/asm/kvm_types.h
+> new file mode 100644
+> index 000000000000..d0987007d581
+> --- /dev/null
+> +++ b/arch/arm64/include/asm/kvm_types.h
+> @@ -0,0 +1,6 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _ASM_ARM64_KVM_TYPES_H
+> +#define _ASM_ARM64_KVM_TYPES_H
+> +
+> +#endif /* _ASM_ARM64_KVM_TYPES_H */
+> +
+> diff --git a/arch/mips/include/asm/kvm_types.h
+> b/arch/mips/include/asm/kvm_types.h
+> new file mode 100644
+> index 000000000000..5efeb32a5926
+> --- /dev/null
+> +++ b/arch/mips/include/asm/kvm_types.h
+> @@ -0,0 +1,5 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _ASM_MIPS_KVM_TYPES_H
+> +#define _ASM_MIPS_KVM_TYPES_H
+> +
+> +#endif /* _ASM_MIPS_KVM_TYPES_H */
+> diff --git a/arch/powerpc/include/asm/kvm_types.h
+> b/arch/powerpc/include/asm/kvm_types.h
+> new file mode 100644
+> index 000000000000..f627eceaa314
+> --- /dev/null
+> +++ b/arch/powerpc/include/asm/kvm_types.h
+> @@ -0,0 +1,5 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _ASM_POWERPC_KVM_TYPES_H
+> +#define _ASM_POWERPC_KVM_TYPES_H
+> +
+> +#endif /* _ASM_POWERPC_KVM_TYPES_H */
+> diff --git a/arch/s390/include/asm/kvm_types.h
+> b/arch/s390/include/asm/kvm_types.h
+> new file mode 100644
+> index 000000000000..b66a81f8a354
+> --- /dev/null
+> +++ b/arch/s390/include/asm/kvm_types.h
+> @@ -0,0 +1,5 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _ASM_S390_KVM_TYPES_H
+> +#define _ASM_S390_KVM_TYPES_H
+> +
+> +#endif /* _ASM_S390_KVM_TYPES_H */
 
-> On Jun 10, 2020, at 23:58, Mathias Nyman <mathias.nyman@linux.intel.com> wrote:
-> 
-> On 10.6.2020 18.43, Kai-Heng Feng wrote:
->> 
->> 
->>> On Jun 10, 2020, at 22:32, Alan Stern <stern@rowland.harvard.edu> wrote:
->>> 
->>> On Wed, Jun 10, 2020 at 02:42:30PM +0800, Kai-Heng Feng wrote:
->>>> xHCI spec "4.15.1 Port Suspend" states that port can be put to U3 as long
->>>> as Enabled bit is set and from U0, U1 or U2 state.
->>>> 
->>>> Currently only USB_PORT_FEAT_LINK_STATE puts port to U3 directly, let's
->>>> do the same for USB_PORT_FEAT_SUSPEND and bus suspend case.
->>>> 
->>>> This is particularly useful for USB2 devices, which may take a very long
->>>> time to switch USB2 LPM on and off.
->>> 
->>> Have these two patches been tested with a variety of USB-2.0 and USB-2.1 
->>> devices?
->> 
->> I tested some laptops around and they work fine.
->> Only internally connected USB devices like USB Bluetooth and USB Camera have USB2 LPM enabled, so this patch won't affect external connected devices.
->> 
-> 
-> Took a fresh look at the USB2 side and it's not as clear as the USB3 case, where
-> we know the hub must support transition to U3 from any other state. [1]
-> 
-> Supporting link state transition to U3 (USB2 L2) from any other U state for USB2 seems
-> to be xHCI specific feature. xHC hardware will make sure it goes via the U0 state.
-> 
-> I have no clue about other hosts (or hubs), USB2 LPM ECN just shows that link
-> state transitions to L1 or L2 should always goes via L0.
-> It's possible this has to be done in software by disabling USB2 LPM before suspending the device.
+Instead of carrying an empty include file for at least two of the 
+architectures
+(s390 and Power), how about having it in asm-generic, and updating
+arch/$ARCH/include/asm/Kbuild to point to the generic one?
 
-Is there any host or hub other than xHCI support USB2 LPM? Seem like only xHCI implements it.
+Thanks,
 
-> 
-> So I guess the original suggestion to wait for link state to reach U0 before
-> is a better solution. Sorry about my hasty suggestion.
-> 
-> Kai-Heng, does it help if you fist manually set the link to U0 before disabling
-> USB2 LPM (set PLS to 0 before clearing the HLE bit). Does it transition to U0
-> any faster, or get rid of the extra port event with PLC:U0?
-
-diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-index 03b64b73eb99..0b8db13e79e4 100644
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -4385,7 +4385,7 @@ static int xhci_set_usb2_hardware_lpm(struct usb_hcd *hcd,
-        struct xhci_hcd *xhci = hcd_to_xhci(hcd);
-        struct xhci_port **ports;
-        __le32 __iomem  *pm_addr, *hlpm_addr;
--       u32             pm_val, hlpm_val, field;
-+       u32             portsc, pm_val, hlpm_val, field;
-        unsigned int    port_num;
-        unsigned long   flags;
-        int             hird, exit_latency;
-@@ -4463,6 +4463,15 @@ static int xhci_set_usb2_hardware_lpm(struct usb_hcd *hcd,
-                /* flush write */
-                readl(pm_addr);
-        } else {
-+               portsc = readl(ports[port_num]->addr);
-+               if ((portsc & PORT_PE) && ((portsc & PORT_PLS_MASK) == XDEV_U1 ||
-+                                       (portsc & PORT_PLS_MASK) == XDEV_U2)) {
-+                       xhci_set_link_state(xhci, ports[port_num], XDEV_U0);
-+                       spin_unlock_irqrestore(&xhci->lock, flags);
-+                       dev_info(&udev->dev, "DEBUG: SLEEP\n");
-+                       msleep(100);
-+                       spin_lock_irqsave(&xhci->lock, flags);
-+               }
-                pm_val &= ~(PORT_HLE | PORT_RWE | PORT_HIRD_MASK | PORT_L1DS_MASK);
-                writel(pm_val, pm_addr);
-                /* flush write */
-
-If there's a long enough delay for U0 before clearing HLE, then the PLC can be avoided.
-It's not any faster though.
-
-Kai-Heng
-
-> 
-> -Mathias
-> 
-> 
-> [1]
->    USB3.1 spec (10.16.2.10) Set Port feature:   
->   "If the value is 3, then host software wants to selectively suspend the
->    device connected to this port. The hub shall transition the link to U3
->    from any of the other U states using allowed link state transitions.
->    If the port is not already in the U0 state, then it shall transition the
->    port to the U0 state and then initiate the transition to U3.
-
+         M.
+-- 
+Jazz is not dead. It just smells funny...
