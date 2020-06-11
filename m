@@ -2,102 +2,100 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB58C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E477C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92A2A207C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:03:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D9CD20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 11:03:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dHDdmhkP"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ZM5+wOAa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbgFKLDO (ORCPT
+        id S1727924AbgFKLD2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 07:03:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55828 "EHLO
+        Thu, 11 Jun 2020 07:03:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726905AbgFKLDH (ORCPT
+        with ESMTP id S1726905AbgFKLDZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 07:03:07 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94566C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 04:03:06 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id l10so5676451wrr.10
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 04:03:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=0dfYykT4uCGlBJJlDVhKYQoGL9ipg8GyMSn2BLjnWO0=;
-        b=dHDdmhkPp2Yk1Ynn0oOjWdvRSeg927sxcM/1GWaMiEK/rpMqqrnSnawoFUa2RH/ped
-         c28YVS3tKiAs+cVIu1gWMxFCY9J+HIJ+M/hDi7VLzcVnRHK5w3hTMJwgWh4x+isJBubx
-         yUFPym80oxSs1ilf8ooAvP4Cw8TX6eZJr3LKa+LAqNXA7KP/6V8nee1oBZiOk97HdOrc
-         nZs0RXC0v5a43xo8Jj/kkVCWSZ30dE3gOz4SdbtfB2D2kbDWsS6G9Tp8+CUiWNTBJukm
-         rty2OQt08EflrG4LnXn1W2TqFw2pN4ScRhKkvwO+U2WuUYuI6DyUQW3vE2SKq8om9U5C
-         PgMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0dfYykT4uCGlBJJlDVhKYQoGL9ipg8GyMSn2BLjnWO0=;
-        b=prGYbe98TXsvIsBKfmlYpq+bgiUCraw4/X4O3ptAldarfhYLaqFmPX5dzBUQUCV4yC
-         3xKca1h+npnEnZxltUsZ5sKAeTxKnbIpI3DN8YEMiF38cIX/kLMsI0SzCQZOM8CKSFA2
-         FawfnpFm5A0khlNsxbmPOcmGJZqcZR2JSaPuueIH4PyD/SIqqvCKe/YLGkdQ9Ooe1gnd
-         lfDmE2JobbUeUKrA2B9isFpyw0Bd+Bh04NmXArhwu7a46qECW/hbvTvveRzma8vAtrY0
-         JgAKWaOl71QURBaibbHhZOzMqSsrefM/73thgWIiX9I7SGG+Aw6PmYndYdDjJhnsYiyV
-         35Wg==
-X-Gm-Message-State: AOAM531svS1PNW4xgpoRP+D3SlaSYIV8Xhc63YyENqpwx6kBk8Bfd0ba
-        Asw6h9Ycz4lFYAoATye/fv3NuA==
-X-Google-Smtp-Source: ABdhPJyYUPQUlaF05prp+rc77goBfdUqvAZpodZ0lxArUY8PBj/CCYqZh1fOjbXS6DuFscs3QIZQ3Q==
-X-Received: by 2002:a5d:6cc1:: with SMTP id c1mr9281886wrc.144.1591873384987;
-        Thu, 11 Jun 2020 04:03:04 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id o8sm3787787wmb.20.2020.06.11.04.03.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 04:03:04 -0700 (PDT)
-Date:   Thu, 11 Jun 2020 12:03:01 +0100
-From:   Quentin Perret <qperret@google.com>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        hsinyi@chromium.org, joelaf@google.com, peterz@infradead.org,
-        drinkcat@chromium.org, gwendal@chromium.org,
-        ctheegal@codeaurora.org, Guenter Roeck <groeck@chromium.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cros_ec_spi: Even though we're RT priority, don't bump
- cpu freq
-Message-ID: <20200611110301.GA132747@google.com>
-References: <20200610151818.1.I666ecd9c6f3c6405bd75831a21001b8109b6438c@changeid>
+        Thu, 11 Jun 2020 07:03:25 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B1B8C08C5C1;
+        Thu, 11 Jun 2020 04:03:25 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49jLYx4cPVz9sRW;
+        Thu, 11 Jun 2020 21:03:17 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591873398;
+        bh=8qjOfnvHTMjblwCmDB2+E3TJx8c6/1xpyUMWU1DKrZo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ZM5+wOAaiJRt5fEN0e2EO1aHm/NRAE2wM3AehVr3SP6k/7M5wNPUer3lxzxnP7Otr
+         shrinsWk0sNi4oZogRxA6hCAAliBsmVH9rA/yHg4rakLdYuLB/1wwG+cEub2Y1/Et/
+         76GlxLXO3Oa+YayMhm9NFT50WmulMs4NS1ZXDGUbhCXJ6S8j0OUSoatCdFS7xxXi0t
+         ExYZYLFcxZqT8WysQTuirC+ua2LniwzykGTrwSjSpxKyjqq/kjIufiagn454YQBrrn
+         9iqCHBt7OUd/kfUjYnIevB4wF26dASJ85LR5wDx2B84aI2UI0zkL2SNPlU53V+K4K/
+         YOwEHHbAxjHtQ==
+Date:   Thu, 11 Jun 2020 21:03:04 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Will Deacon <will@kernel.org>
+Subject: Re: linux-next: manual merge of the tip tree with Linus' tree
+Message-ID: <20200611210304.7a29c1ef@canb.auug.org.au>
+In-Reply-To: <878sgtdgs3.fsf@nanos.tec.linutronix.de>
+References: <20200611105254.1b14f070@canb.auug.org.au>
+        <878sgtdgs3.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200610151818.1.I666ecd9c6f3c6405bd75831a21001b8109b6438c@changeid>
+Content-Type: multipart/signed; boundary="Sig_/3HjU5rZ+OBoWDY5afAYsM/3";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Doug,
+--Sig_/3HjU5rZ+OBoWDY5afAYsM/3
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Wednesday 10 Jun 2020 at 15:18:43 (-0700), Douglas Anderson wrote:
-> The cros_ec_spi driver is realtime priority so that it doesn't get
-> preempted by other taks while it's talking to the EC but overall it
-> really doesn't need lots of compute power.  Unfortunately, by default,
-> the kernel assumes that all realtime tasks should cause the cpufreq to
-> jump to max and burn through power to get things done as quickly as
-> possible.  That's just not the correct behavior for cros_ec_spi.
+Hi Thomas,
 
-Is this specific to this driver, or something you would want applied
-more globally to all RT tasks in ChromeOS (which is what we'd like to
-have in Android for instance)?
+On Thu, 11 Jun 2020 12:43:24 +0200 Thomas Gleixner <tglx@linutronix.de> wro=
+te:
+>
+> Sorry for that inconveniance. I'm about to get rid of the conflicts on
+> the tip side.
 
-IOW, how do you feel about 20200511154053.7822-1-qais.yousef@arm.com ?
+Thanks.  I do realise that it can take a little while between when
+Linus adds something to his tree and previous versions get purged.  It
+doesn't happen to much, thankfully.
 
-Otherwise, the patch looks good to me.
+--=20
+Cheers,
+Stephen Rothwell
 
-Thanks,
-Quentin
+--Sig_/3HjU5rZ+OBoWDY5afAYsM/3
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7iD2gACgkQAVBC80lX
+0GxIlwf/VwVbJVOL43+jeDi171/8sDqI7/1c49c6FoNcSZznKgMDSrjpnUL7eR3y
+qjegnAisa4U4dN/0xuX6ieR2ZGIHgZDBtbhcYFYF8nn+aZrJo9yOFh2jas+HaY9r
+qx5HaLsuAYQ49CrFO7gmw0TKcfUOVED3Bpa4SftG1jaeYHUEN0PG5sDKBVs8afzO
+1+i41Xwp0sgweX5YeEQ0fgXMVf760PheUHjog5VCMKCBuJJV40FQFKWFWNvlrEZK
+1zMjZTWsznKM35INm7FkVf4UNp0WxACI3+d2wMf7/ETiCoF1DlaUpKkRbaKzgiP4
+K3KMur+lw0UA00i7F8I2kUX+yHWU9A==
+=CwSZ
+-----END PGP SIGNATURE-----
+
+--Sig_/3HjU5rZ+OBoWDY5afAYsM/3--
