@@ -2,111 +2,130 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 248D1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 20:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55559C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 20:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05DF9206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 20:14:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WAt6fPfO"
+	by mail.kernel.org (Postfix) with ESMTP id 39E5C206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 20:14:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726357AbgFKUOI (ORCPT
+        id S1726386AbgFKUOn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 16:14:08 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:34895 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726134AbgFKUOI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 16:14:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591906446;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=k91nHI462ecs2iqED4Y49B5PiymmTp4GsBIiqZXp2N0=;
-        b=WAt6fPfOkdbbyhvIBqEOgup7Jq+Jr3+UhNVHbbzyLeopyDf0LXUOUFN84+vZwxddIg91be
-        SYz4WzNvhnqUCmkwIp3mOgSOLCH6dIy9Sg5P0ippXewiY5lWyqxWbW82lO8pUBRBXyBxDv
-        hr4rUDKWWptTeAQOnZc+ojbjqJvznvI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-379-UDkR_OMKOcCG1zv_MLGpvA-1; Thu, 11 Jun 2020 16:14:05 -0400
-X-MC-Unique: UDkR_OMKOcCG1zv_MLGpvA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 25C9A1B18BC6;
-        Thu, 11 Jun 2020 20:14:04 +0000 (UTC)
-Received: from starship (unknown [10.35.206.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 143881944D;
-        Thu, 11 Jun 2020 20:14:02 +0000 (UTC)
-Message-ID: <bccfe20ca818020ea982bc383f1fabe51a127268.camel@redhat.com>
-Subject: Re: [PATCH] KVM: x86: do not pass poisoned hva to
- __kvm_set_memory_region
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Date:   Thu, 11 Jun 2020 23:14:01 +0300
-In-Reply-To: <20200611180159.26085-1-pbonzini@redhat.com>
-References: <20200611180159.26085-1-pbonzini@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        Thu, 11 Jun 2020 16:14:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37980 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726321AbgFKUOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 16:14:43 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id EA442ABCE;
+        Thu, 11 Jun 2020 20:14:43 +0000 (UTC)
+Date:   Thu, 11 Jun 2020 22:14:39 +0200
+Message-ID: <s5hzh99cqc0.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Cc:     "Lu, Brent" <brent.lu@intel.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        Pierre-Louis Bossart DRIVERS 
+        <pierre-louis.bossart@linux.intel.com>,
+        "authored:2/16=12%,added_lines:21/248=8%,removed_lines:5/84=6%,),Liam "
+         "Girdwood DRIVERS )" <lgirdwood@gmail.com>,
+        "commit_signer:6/16=38%,authored:6/16=38%,added_lines:123/248=50% 
+        ,removed_lines:36/84=43%,Kai " "Vehmanen DRIVERS )" 
+        <kai.vehmanen@linux.intel.com>,
+        "Daniel Baluta DRIVERS )" <daniel.baluta@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
+        Zhu Yingjiang <yingjiang.zhu@linux.intel.com>,
+        Keyon Jie <yang.jie@linux.intel.com>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        "sound-open-firmware@alsa-project.orgDRIVERS" 
+        <sound-open-firmware@alsa-project.orgDRIVERS>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ASoC: SOF: Intel: hda: unsolicited RIRB response
+In-Reply-To: <ccccab4d074878cd8fc3b3c4313025e54f78b65a.camel@linux.intel.com>
+References: <1591883073-17190-1-git-send-email-brent.lu@intel.com>
+        <b7e0b822a9deea506acaa40e0e31cc9f488bb446.camel@linux.intel.com>
+        <DM6PR11MB4316108BCF449D52E49C7E4297800@DM6PR11MB4316.namprd11.prod.outlook.com>
+        <s5h5zbxeb5t.wl-tiwai@suse.de>
+        <ccccab4d074878cd8fc3b3c4313025e54f78b65a.camel@linux.intel.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-06-11 at 14:01 -0400, Paolo Bonzini wrote:
-> __kvm_set_memory_region does not use the hva at all, so trying to
-> catch use-after-delete is pointless and, worse, it fails access_ok
-> now that we apply it to all memslots including private kernel ones.
-> This fixes an AVIC regression.
+On Thu, 11 Jun 2020 20:12:53 +0200,
+Ranjani Sridharan wrote:
 > 
-> Fixes: 09d952c971a5 ("KVM: check userspace_addr for all memslots", 2020-06-01)
-> Reported-by: Maxim Levitsky <mlevitsk@redhat.com>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->  arch/x86/kvm/x86.c | 7 +------
->  1 file changed, 1 insertion(+), 6 deletions(-)
+> On Thu, 2020-06-11 at 19:59 +0200, Takashi Iwai wrote:
+> > On Thu, 11 Jun 2020 19:09:08 +0200,
+> > Lu, Brent wrote:
+> > > 
+> > > > Hi Brent,
+> > > > 
+> > > > Thanks for the patch. Is this fix for a specific issue you're
+> > > > seeing?
+> > > > If so, could you please give us some details about it?
+> > > > 
+> > > > Thanks,
+> > > > Ranjani
+> > > 
+> > > Hi Ranjani,
+> > > 
+> > > It's reported to happen on GLK Chromebook 'Fleex' that sometimes it
+> > > cannot output the audio stream to external display. The kernel is
+> > > Chrome v4.14 branch. Following is the reproduce step provided by
+> > > ODM but I could reproduce it simply running aplay or
+> > > cras_test_client
+> > > so I think it's not about the cable plug/unplug handling.
+> > > 
+> > > What steps will reproduce the problem?
+> > > 1.      Play YouTube video on Chromebook and connect it to external
+> > > monitor with Type C to DP dongle
+> > > 2.      Press monitor power button to turn off the monitor
+> > > 3.      Press monitor power button again to turn on the monitor
+> > > 4.      Continue to play YouTube video and check audio playback
+> > > 5.      No sound comes out from built-in speaker of external
+> > > monitor when turn on external monitor
+> > > 
+> > > I added debug messages to print the RIRBWP register and realize
+> > > that
+> > > response could come between the read of RIRBWP in the
+> > > snd_hdac_bus_update_rirb() function and the interrupt clear in the
+> > > hda_dsp_stream_interrupt() function. The response is not handled
+> > > but
+> > > the interrupt is already cleared. It will cause timeout unless more
+> > > responses coming to RIRB.
+> > 
+> > Now I noticed that the legacy driver already addressed it recently
+> > via
+> > commit 6d011d5057ff
+> >     ALSA: hda: Clear RIRB status before reading WP
+> > 
+> > We should have checked SOF at the same time, too...
 > 
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 290784ba63e4..00c88c2f34e4 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -9951,13 +9951,8 @@ int __x86_set_memory_region(struct kvm *kvm, int id, gpa_t gpa, u32 size)
->  		if (!slot || !slot->npages)
->  			return 0;
->  
-> -		/*
-> -		 * Stuff a non-canonical value to catch use-after-delete.  This
-> -		 * ends up being 0 on 32-bit KVM, but there's no better
-> -		 * alternative.
-> -		 */
-> -		hva = (unsigned long)(0xdeadull << 48);
->  		old_npages = slot->npages;
-> +		hva = 0;
->  	}
->  
->  	for (i = 0; i < KVM_ADDRESS_SPACE_NUM; i++) {
+> Thanks, Takashi. But the legacy driver but doesnt remove the loop. The
+> loop added in the SOF driver was based on the legacy driver and
+> specifically to handle missed stream interrupts. Is there any harm in
+> keeping the loop?
+
+A loop there might be safer to keep, indeed.  That's basically for a
+difference kind of race, and it can still happen theoretically.
+
+Though, SOF is with the threaded interrupt, and it's interesting how
+the behavior differs.  I can imagine that, if a thread irq is running
+while a new IRQ is re-triggered, the hard irq handler won't queue it
+again.  But I might be wrong here, need some checks.
 
 
-Under assumption that we can assume that access_ok(0,0) is safe to assume
-to be always true:
-Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
-
-I also tested exactly this solution when triaging this bug and it works,
-but I wasn't sure that this is the correct solution.
-
-Best regards,
-	Maxim Levitsky
-
-
-
+Takashi
