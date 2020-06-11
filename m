@@ -2,190 +2,159 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E150C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4753AC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BA672078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:04:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 203E120691
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:05:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="X5wssMiE"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kTm4GKAR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727966AbgFKNEs (ORCPT
+        id S1728050AbgFKNFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 09:04:48 -0400
-Received: from mail-eopbgr60076.outbound.protection.outlook.com ([40.107.6.76]:9444
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726364AbgFKNEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 09:04:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hTWfezro1Z8EMZj/8MTKPkc67ijaAzCB8KE+/2juIW8TsWrSILyMXYV40Q36ytsHK7e8AvEcAVNLwCZ6Iq2OHbjHbA+Jdz0e+MyVqkk+xs961sXP18KN1DyU7p8xZdeIbmInT8vSSqB6qxF/KoRKpnSfUmiT3PHvxtQ+9n73D5LvRY610+TIkC3I5UINO7UUNY1LNwA4InyTfQnZPGLtjMnr6L5WsR4VxaKNCOzX+cLBYN02RV/HUpODG5NtWO+z5O9dTaaVibHAEfFw82Ie/iQF2MCODE2RxY//pFYxiJpcCZuOARazd3utNZIc/CBgz0ZlRyLcT6m3R4oBh+OURg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zVMrhleJs+C3/h9NRE/9AXt0O0CUuv17G5xxLWKZhD8=;
- b=dgRRXpHQxMdxFukjnlMi9PTobix2BicVq3Ggsb5ZxCaJk/fdAwLxDNfJo4FRdgCJ8V73tLbtaFLXxaTztsqtFsxZquJwjnaOa81pnUVCPWK2KgZUFGvPVqOkTTGbMtryFarGwwUyoUPojhdUYTpvc8FahRkA/L0+d17nj0P96vesjJi4hf3DRTF1Q/JT+XTds7i0WSny+d5u7Bzx352OJrEOJ8bbC7fnlgyU/rw467w0B3YNWC7L3HmX0T5oomR7CZYt+r4NbhbwcjFjAM76OedhjbMoDQ+HeYaFebcNC8XjMz72sQ3Aj4LQT1k0RLNneW/DTXWb6Xponf1S6TAH1w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zVMrhleJs+C3/h9NRE/9AXt0O0CUuv17G5xxLWKZhD8=;
- b=X5wssMiEoYxp0vTGEdk431Nh6ZjiCAYlkytMajLrxgGECtSELCtIdyqT0C7pN/yuZe5mX+LSvHit0wlFbKFGqAJqRNgjxsE8MoFOZdgSv9RyTfNgho90sph+Qm5HJD4fkEsmIWxmLB1upTj1vLEvSY5+JohFYFTeHKVPeCDzBbk=
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
- by VE1PR04MB6688.eurprd04.prod.outlook.com (2603:10a6:803:127::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.20; Thu, 11 Jun
- 2020 13:04:44 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3066.023; Thu, 11 Jun 2020
- 13:04:43 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peng Ma <peng.ma@nxp.com>, Fabio Estevam <festevam@gmail.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH 2/2] dmaengine: fsl-edma: Fix NULL pointer exception in
- fsl_edma_tx_handler
-Thread-Topic: [PATCH 2/2] dmaengine: fsl-edma: Fix NULL pointer exception in
- fsl_edma_tx_handler
-Thread-Index: AQHWP+pVSg8DVLJSBk+m5kI3CuPTMqjTYMkQ
-Date:   Thu, 11 Jun 2020 13:04:43 +0000
-Message-ID: <VE1PR04MB66382172816FB95036776F6489800@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <1591877861-28156-1-git-send-email-krzk@kernel.org>
- <1591877861-28156-2-git-send-email-krzk@kernel.org>
-In-Reply-To: <1591877861-28156-2-git-send-email-krzk@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [183.192.235.111]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 566b654a-6142-4583-6cd0-08d80e08029d
-x-ms-traffictypediagnostic: VE1PR04MB6688:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB6688C3F75DAB628762B873D089800@VE1PR04MB6688.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0431F981D8
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: uOie5vgxlqitnss35EP1S0Q7bGWkVlgfg4B0JQPtS3M4M2/Ri1JEd9zOBbXRNnEWdScAfI8gwwbtmimzqVCPV1IPKy8GeiC9A0iZ4aI7RTScgmfrK9aScnVbKacEvmKX1w17JjNs3+pmmGJP3JOWHJiNtKz31cRsqHvFFH8PLHXf2Z2smMynV9cvfZOou6v+RqCoQxYcWcI3bfcJNvC63oPGFuXXIe2ny54ESF0dQjCgeo1dx08doC3ZMfEqZVojb7jWc49HJ8MQ7jYgzzWEl8UbKbyA2jY0g/Rckdnmx1dVzVVJK74/zPd2qZ5E2COfwn5NA3jOKl4MOoMOn3wIOg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(396003)(346002)(366004)(39860400002)(186003)(4326008)(66946007)(66476007)(76116006)(66446008)(66556008)(9686003)(86362001)(55016002)(2906002)(64756008)(52536014)(7696005)(5660300002)(53546011)(110136005)(316002)(71200400001)(33656002)(6506007)(478600001)(26005)(8676002)(83380400001)(8936002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: XEjULlDpb+V5lNES0Ph/XaiVWVciLCR93Fv+W3qXFihNAr/FSE7fDrCk5LU03i1TY9CSNxG/RK5eEN2hdcFeiv08EXJ3I6jexQCGNallPLyQu5yUeRQXwtlpIKNNvwLYT3fOq+CzXLCiase/mbvklq5ZiwDXm5sJSKmJEFPiY3FFpm0m3eMp5L3vGho9dSM0RmZ4/YprAR0ucK6om6r/GGooHnZl24xO8xqxpI/Mb79K+UJ4W1PspikoD2uv8KmZsKmrnzfyzQPIDSb0bW1bRUnbrmz1KbQZVR2wnWPJO0wgVNBl5ZK4MntsRUcZMmGNP7aicvMVxn+PtpPElJMkOfPNYdccqKR9lVQcIECew2ZdosQTqjFJUK28Qza/gtlg/ExHI2x47uUwB6XmZxwVirMStYPq+JZluV5mMn593P989XCmDXadSTGhvPWWLBeWl2h/Zz6ukHASrWq61ot0Vli6rAmK3NGysrS98QR/a77JrtozK6Bk1mvcZA928gNw
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 11 Jun 2020 09:05:47 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:58120 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726081AbgFKNFq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 09:05:46 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05BD5UiW107435;
+        Thu, 11 Jun 2020 08:05:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591880730;
+        bh=eZaXefos8k87hXiBiwwHXrlf1ORnBoagl4rNRyZ30dY=;
+        h=From:To:CC:Subject:Date;
+        b=kTm4GKAR/YATXxYsoZdvDSQfRpGi51p+0pb9kMzoVju57Ypy6LO+8+7SMa1YT8S/g
+         5p6zRinXa6xOED79PQafnSiNy3miUXt715YsMeCScAZLWa5SoNKUFWfEIg1RJzbkG2
+         5xi7vfQvbon6ARqbtO57HEy73UY6DRIKXyegKJdc=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05BD5UiP121161
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 11 Jun 2020 08:05:30 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 11
+ Jun 2020 08:05:30 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 11 Jun 2020 08:05:30 -0500
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05BD5PZ1082585;
+        Thu, 11 Jun 2020 08:05:26 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Tom Joseph <tjoseph@cadence.com>, Rob Herring <robh@kernel.org>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-ntb@googlegroups.com>
+Subject: [PATCH v2 00/14] Implement NTB Controller using multiple PCI EP
+Date:   Thu, 11 Jun 2020 18:35:11 +0530
+Message-ID: <20200611130525.22746-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 566b654a-6142-4583-6cd0-08d80e08029d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2020 13:04:43.8104
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9S1+OHwc4kLs94uIPqPmOj8pQiraKC9Ts6AExU11unCTw/Qk5g+FF3tt3d6BiSxB5gqALbYl0lwqYiGunEfM/Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6688
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/06/11 20:18 Krzysztof Kozlowski <krzk@kernel.org> wrote:
->=20
-> NULL pointer exception happens occasionally on serial output initiated by=
- login
-> timeout.  This was reproduced only if kernel was built with significant
-> debugging options and EDMA driver is used with serial console.
->=20
->     col-vf50 login: root
->     Password:
->     Login timed out after 60 seconds.
->     Unable to handle kernel NULL pointer dereference at virtual address
-> 00000044
->     Internal error: Oops: 5 [#1] ARM
->     CPU: 0 PID: 157 Comm: login Not tainted 5.7.0-next-20200610-dirty #4
->     Hardware name: Freescale Vybrid VF5xx/VF6xx (Device Tree)
->       (fsl_edma_tx_handler) from [<8016eb10>]
-> (__handle_irq_event_percpu+0x64/0x304)
->       (__handle_irq_event_percpu) from [<8016eddc>]
-> (handle_irq_event_percpu+0x2c/0x7c)
->       (handle_irq_event_percpu) from [<8016ee64>]
-> (handle_irq_event+0x38/0x5c)
->       (handle_irq_event) from [<801729e4>]
-> (handle_fasteoi_irq+0xa4/0x160)
->       (handle_fasteoi_irq) from [<8016ddcc>]
-> (generic_handle_irq+0x34/0x44)
->       (generic_handle_irq) from [<8016e40c>]
-> (__handle_domain_irq+0x54/0xa8)
->       (__handle_domain_irq) from [<80508bc8>] (gic_handle_irq+0x4c/0x80)
->       (gic_handle_irq) from [<80100af0>] (__irq_svc+0x70/0x98)
->     Exception stack(0x8459fe80 to 0x8459fec8)
->     fe80: 72286b00 e3359f64 00000001 0000412d a0070013 85c98840
-> 85c98840 a0070013
->     fea0: 8054e0d4 00000000 00000002 00000000 00000002 8459fed0
-> 8081fbe8 8081fbec
->     fec0: 60070013 ffffffff
->       (__irq_svc) from [<8081fbec>]
-> (_raw_spin_unlock_irqrestore+0x30/0x58)
->       (_raw_spin_unlock_irqrestore) from [<8056cb48>]
-> (uart_flush_buffer+0x88/0xf8)
->       (uart_flush_buffer) from [<80554e60>] (tty_ldisc_hangup+0x38/0x1ac)
->       (tty_ldisc_hangup) from [<8054c7f4>] (__tty_hangup+0x158/0x2bc)
->       (__tty_hangup) from [<80557b90>]
-> (disassociate_ctty.part.1+0x30/0x23c)
->       (disassociate_ctty.part.1) from [<8011fc18>] (do_exit+0x580/0xba0)
->       (do_exit) from [<801214f8>] (do_group_exit+0x3c/0xb4)
->       (do_group_exit) from [<80121580>] (__wake_up_parent+0x0/0x14)
->=20
-> Issue looks like race condition between interrupt handler fsl_edma_tx_han=
-dler()
-> (called as result of fsl_edma_xfer_desc()) and terminating the transfer w=
-ith
-> fsl_edma_terminate_all().
->=20
-> The fsl_edma_tx_handler() handles interrupt for a transfer with already f=
-reed
-> edesc and idle=3D=3Dtrue.
->=20
-> Fixes: d6be34fbd39b ("dma: Add Freescale eDMA engine driver support")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  drivers/dma/fsl-edma.c | 7 +++++++
->  1 file changed, 7 insertions(+)
->=20
-> diff --git a/drivers/dma/fsl-edma.c b/drivers/dma/fsl-edma.c index
-> eff7ebd8cf35..90bb72af306c 100644
-> --- a/drivers/dma/fsl-edma.c
-> +++ b/drivers/dma/fsl-edma.c
-> @@ -45,6 +45,13 @@ static irqreturn_t fsl_edma_tx_handler(int irq, void
-> *dev_id)
->  			fsl_chan =3D &fsl_edma->chans[ch];
->=20
->  			spin_lock(&fsl_chan->vchan.lock);
-> +
-> +			if (!fsl_chan->edesc) {
-Would you like fix the same potential issue in mcf_edma_tx_handler()
-of mcf-edma.c?=20
-> +				/* terminate_all called before */
-> +				spin_unlock(&fsl_chan->vchan.lock);
-> +				continue;
-> +			}
-> +
->  			if (!fsl_chan->edesc->iscyclic) {
->  				list_del(&fsl_chan->edesc->vdesc.node);
->  				vchan_cookie_complete(&fsl_chan->edesc->vdesc);
-> --
-> 2.7.4
+This series is about implementing SW defined NTB using
+multiple endpoint instances. This series has been tested using
+2 endpoint instances in J7 connected to two DRA7 boards. However there
+is nothing platform specific for the NTB functionality.
+
+This was presented in Linux Plumbers Conference. The presentation
+can be found @ [1]
+
+RFC patch series can be found @ [2]
+v1 patch series can be found @ [3]
+
+This series has been validated after applying [4]
+
+Changes from v1:
+1) As per Rob's comment, removed support for creating NTB function
+   device from DT
+2) Add support to create NTB EPF device using configfs (added support in
+   configfs to associate primary and secondary EPC with EPF.
+
+Changes from RFC:
+1) Converted the DT binding patches to YAML schema and merged the
+   DT binding patches together
+2) NTB documentation is converted to .rst
+3) One HOST can now interrupt the other HOST using MSI-X interrupts
+4) Added support for teardown of memory window and doorbell
+   configuration
+5) Add support to provide support 64-bit memory window size from
+   DT
+
+[1] -> https://www.linuxplumbersconf.org/event/4/contributions/395/attachments/284/481/Implementing_NTB_Controller_Using_PCIe_Endpoint_-_final.pdf
+[2] -> http://lore.kernel.org/r/20190926112933.8922-1-kishon@ti.com
+[3] -> http://lore.kernel.org/r/20200514145927.17555-1-kishon@ti.com
+[4] -> http://lore.kernel.org/r/20200522033631.32574-1-kishon@ti.com
+
+Kishon Vijay Abraham I (14):
+  Documentation: PCI: Add specification for the *PCI NTB* function
+    device
+  PCI: endpoint: Make *_get_first_free_bar() take into account 64 bit
+    BAR
+  PCI: endpoint: Add helper API to get the 'next' unreserved BAR
+  PCI: endpoint: Make *_free_bar() to return error codes on failure
+  PCI: endpoint: Remove unused pci_epf_match_device()
+  PCI: endpoint: Add support to associate secondary EPC with EPF
+  PCI: endpoint: Add support in configfs to associate two EPCs with EPF
+  PCI: endpoint: Add pci_epc_ops to map MSI irq
+  PCI: cadence: Implement ->msi_map_irq() ops
+  PCI: endpoint: Add EP function driver to provide NTB functionality
+  PCI: Add TI J721E device to pci ids
+  NTB: Add support for EPF PCI-Express Non-Transparent Bridge
+  NTB: tool: Enable the NTB/PCIe link on the local or remote side of
+    bridge
+  Documentation: PCI: Add userguide for PCI endpoint NTB function
+
+ Documentation/PCI/endpoint/index.rst          |    2 +
+ .../PCI/endpoint/pci-endpoint-cfs.rst         |   10 +
+ .../PCI/endpoint/pci-ntb-function.rst         |  344 +++
+ Documentation/PCI/endpoint/pci-ntb-howto.rst  |  141 ++
+ drivers/misc/pci_endpoint_test.c              |    1 -
+ drivers/ntb/hw/Kconfig                        |    1 +
+ drivers/ntb/hw/Makefile                       |    1 +
+ drivers/ntb/hw/epf/Kconfig                    |    6 +
+ drivers/ntb/hw/epf/Makefile                   |    1 +
+ drivers/ntb/hw/epf/ntb_hw_epf.c               |  750 ++++++
+ drivers/ntb/test/ntb_tool.c                   |    1 +
+ .../pci/controller/cadence/pcie-cadence-ep.c  |   50 +
+ drivers/pci/endpoint/functions/Kconfig        |   12 +
+ drivers/pci/endpoint/functions/Makefile       |    1 +
+ drivers/pci/endpoint/functions/pci-epf-ntb.c  | 2151 +++++++++++++++++
+ drivers/pci/endpoint/functions/pci-epf-test.c |   13 +-
+ drivers/pci/endpoint/pci-ep-cfs.c             |  154 +-
+ drivers/pci/endpoint/pci-epc-core.c           |  131 +-
+ drivers/pci/endpoint/pci-epf-core.c           |   73 +-
+ include/linux/pci-epc.h                       |   38 +-
+ include/linux/pci-epf.h                       |   23 +-
+ include/linux/pci_ids.h                       |    1 +
+ 22 files changed, 3838 insertions(+), 67 deletions(-)
+ create mode 100644 Documentation/PCI/endpoint/pci-ntb-function.rst
+ create mode 100644 Documentation/PCI/endpoint/pci-ntb-howto.rst
+ create mode 100644 drivers/ntb/hw/epf/Kconfig
+ create mode 100644 drivers/ntb/hw/epf/Makefile
+ create mode 100644 drivers/ntb/hw/epf/ntb_hw_epf.c
+ create mode 100644 drivers/pci/endpoint/functions/pci-epf-ntb.c
+
+-- 
+2.17.1
 
