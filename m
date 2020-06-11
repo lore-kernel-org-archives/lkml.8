@@ -2,107 +2,149 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A377C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89813C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAB6C2074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:12:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m5t8Bz4M"
+	by mail.kernel.org (Postfix) with ESMTP id 6E53E2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:12:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726727AbgFKIMZ (ORCPT
+        id S1726813AbgFKIM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 04:12:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57784 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726626AbgFKIMY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 04:12:24 -0400
-Received: from mail-io1-xd2a.google.com (mail-io1-xd2a.google.com [IPv6:2607:f8b0:4864:20::d2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E337C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 01:12:24 -0700 (PDT)
-Received: by mail-io1-xd2a.google.com with SMTP id w18so5335025iom.5
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 01:12:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fDfa4+jXZ9ulsLY5WKCYieKo7asoV0jE5raIUBCwu3E=;
-        b=m5t8Bz4MRofIIRs+WrQSDZwHw0H8/wYC4xq3slGdkV36tKpMJRV8d4jBMWxYlu0xam
-         Ew9Q/3I8xsNpANdA98LfZi8rRQT1T21dZHmNMrbMBq7w/1Jd6hRdkxZoFrREF58OZJWN
-         mY6aaa+mGIOOAUaYvPu6RLE0blvu0gyvwBFcSMc4K1fAMgflbpTgSech0O7FrJTOwaLh
-         InL3AZDhHRqH4a9xfaQbOffx4L+rG6/U7BHt24X7JyhfcJhCzlEj/QV1ei016lhUvhHb
-         yC5DqTaAhmr1r+TKRVwsJErZDYG4FLItUX1dY9+vLcv3Bm/qsbB/N+Zul0tgE/yqQ/AI
-         wI1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fDfa4+jXZ9ulsLY5WKCYieKo7asoV0jE5raIUBCwu3E=;
-        b=A7PjgfdvVu16jgkC6Bwr90g0xBfoB6myb8Rg2fsskgcSsNe/hpGlY2HOIhR5Y4lNNq
-         ZyvwP7Gef04KJ3gconXaukX+m8IKzoJWvCJOCMco7NeGUQJVH3ytV9VI+HBD8HwCbyB9
-         y4cLvKWRgAHw/fZafJGHiz2f6r3EYUaVV+38o/jYs/Sw8xu/ZexmNFjSKP4a7A8Gcs/b
-         UtCaIRlOX1jL8uXMNHPr0fpz654mg3rqMj83EqnuHAhqeh7SodwndS8hus+qiohcuUpQ
-         jzhh6zpHN8w4HeauFHtyBex52dD8VjxmRBZblU4ejgZ7jNvm5quOx2q2hcwluwwzkH2A
-         8K9w==
-X-Gm-Message-State: AOAM533BepQGL6ifoYVu8mjytwuXHf4QKM4XyFC+VDxe96EQhkQ/PywT
-        V/bwj9XkzFweXs1gCL1yjel/TIhPqVgr1o0X5FE=
-X-Google-Smtp-Source: ABdhPJzAm3bBTmpi7aZrgpXDcEocIqrcqoYVsUlHQV9H2bX+oYHTvbEmauteQggXeMYqpnl5AOcXAfJyXfILIAFIuDQ=
-X-Received: by 2002:a05:6602:15c8:: with SMTP id f8mr7249309iow.183.1591863143330;
- Thu, 11 Jun 2020 01:12:23 -0700 (PDT)
+        Thu, 11 Jun 2020 04:12:57 -0400
+Received: from mga06.intel.com ([134.134.136.31]:37101 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726626AbgFKIM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 04:12:56 -0400
+IronPort-SDR: EzcRdxcBb3j0v8WYfR/dZrEcwkFUjz/RZ2B2/PQ+7B7LyY/GgZH37/ngRSVdozuUTruPrQWbGk
+ 0E2fKPKv8Ovw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 01:12:55 -0700
+IronPort-SDR: WU+un76Q4SR2mxZ2hVUP87EHbCpgbHM1YQB+V4UZ7GoQ4Vh+DrugYRjRXu5t7nLe/bA4nQyNHE
+ fvEzdvppBlXA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,499,1583222400"; 
+   d="scan'208";a="447838730"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga005.jf.intel.com with ESMTP; 11 Jun 2020 01:12:52 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1jjIKU-00CJMC-OH; Thu, 11 Jun 2020 11:12:54 +0300
+Date:   Thu, 11 Jun 2020 11:12:54 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, balbi@kernel.org,
+        p.zabel@pengutronix.de, gregkh@linuxfoundation.org,
+        robh@kernel.org, devicetree@vger.kernel.org,
+        linux-usb@vger.kernel.org, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, yin1.li@intel.com
+Subject: Re: [PATCH v2 2/2] usb: phy: Add USB3 PHY support for Intel LGM SoC
+Message-ID: <20200611081254.GR2428291@smile.fi.intel.com>
+References: <20200611021246.3250-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200611021246.3250-3-vadivel.muruganx.ramuthevar@linux.intel.com>
 MIME-Version: 1.0
-References: <CAOkhzLUrNYk6JKTbTQuFkfuGKxGvW9XVq6+p9igsBgX1-e9Cxg@mail.gmail.com>
- <CAKb7Uvg0W_1qUjf3G4JrCb2oJgkwz4G5T6PwkyeL-rZEp4UnTw@mail.gmail.com>
- <CAOkhzLV+suVNAoyiaHKOkbwP-KKgTLEa7S8kp8+GSTLm_-wWFw@mail.gmail.com>
- <CAKb7UvgWMsLSHCayzdY7UYMVTjN3OHbH2WhKd-BP46K=r4Ra8A@mail.gmail.com>
- <CAOkhzLXZVNdpgwV=iiO0TEvLp3Hx28Zk8iYzwy5BvJ1pWi4QxQ@mail.gmail.com>
- <CAKb7UviB22HxSJ6j4ts=fU=J24Hh69NCBw4uHC5vsi902Pp6bA@mail.gmail.com> <CAOkhzLUQXAB1-=2VasSeJC9-LDgsd0Sk-pJY2LBbHaLqpcBeLg@mail.gmail.com>
-In-Reply-To: <CAOkhzLUQXAB1-=2VasSeJC9-LDgsd0Sk-pJY2LBbHaLqpcBeLg@mail.gmail.com>
-From:   Zeno Davatz <zdavatz@gmail.com>
-Date:   Thu, 11 Jun 2020 10:12:12 +0200
-Message-ID: <CAOkhzLUrm6bS1ejmBdCOmU4G7O=t0XU_0PqYPx4AssGm5z1uCw@mail.gmail.com>
-Subject: Kernel 5.7.0, nouveau 1.0.15-r1, sudo lshw -C display, *-display UNCLAIMED
-To:     nouveau <nouveau@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     Ilia Mirkin <imirkin@alum.mit.edu>, Ben Skeggs <bskeggs@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200611021246.3250-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+On Thu, Jun 11, 2020 at 10:12:46AM +0800, Ramuthevar,Vadivel MuruganX wrote:
+> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> 
+> Add support for USB PHY on Intel LGM SoC.
 
-With Kernel 5.7.0, nouveau drivers 1.0.15-r1
+...
 
-sudo `lshw -C display`
+> +static int get_flipped(struct tca_apb *ta, bool *flipped)
+> +{
+> +	union extcon_property_value property;
+> +	int ret;
+> +
+> +	ret = extcon_get_property(ta->phy.edev, EXTCON_USB_HOST,
+> +				  EXTCON_PROP_USB_TYPEC_POLARITY, &property);
+> +	if (ret) {
+> +		dev_err(ta->phy.dev, "no polarity property from extcon\n");
 
-will show me:
+> +		return false;
 
- *-display UNCLAIMED
+return ret;
 
-Also `xrandr -q` will not work:
+> +	}
+> +
+> +	*flipped = property.intval;
+> +
 
-xrandr: Failed to get size of gamma for output default
-Screen 0: minimum 1680 x 1050, current 1680 x 1050, maximum 1680 x 1050
-default connected primary 1680x1050+0+0 0mm x 0mm
-   1680x1050      0.00*
+> +	return *flipped;
 
-So I can not start up my second monitor with this command:
+return 0;
 
-xrandr --output DVI-D-1 --auto --output DP-1 --auto --left-of DVI-D-1
+> +}
 
-This used to work with Kernel 5.5.
+...I suppose it should be as above.
 
-It was "completely broken" in 5.6 and with 5.7 my first display is
-back, but not my second.
+...
 
-I am on Gentoo Linux. Please CC for replies.
+> +	ret = readl_poll_timeout(ctrl1, val, val & SRAM_INIT_DONE,
+> +				 10, 10 * 1000);
 
-Best
-Zeno
+On one line easier to read.
+
+> +	if (ret) {
+> +		dev_err(ta->phy.dev, "SRAM init failed, 0x%x\n", val);
+> +		return ret;
+> +	}
+
+...
+
+> +static int phy_set_vbus(struct usb_phy *phy, int on)
+> +{
+> +	struct tca_apb *ta = container_of(phy, struct tca_apb, phy);
+
+> +	int ret = 0;
+
+Assignment is redundant.
+
+> +
+> +	if (on) {
+> +		ret = regulator_enable(ta->vbus);
+> +		if (ret)
+> +			dev_err(ta->phy.dev, "regulator not enabled\n");
+> +	} else {
+> +		ret = regulator_disable(ta->vbus);
+> +		if (ret)
+> +			dev_err(ta->phy.dev, "regulator not disabled\n");
+> +	}
+> +
+> +	return ret;
+> +}
+
+...
+
+> +	ret = get_flipped(ta, &flipped);
+> +	if (!ret)
+> +		dev_err(ta->phy.dev, "no polarity property from extcon\n");
+
+This should be fixed accordingly.
+
+...
+
+> +		dev_info(ta->phy.dev, "connected%s\n",
+> +			 flipped ? " flipped" : "");
+
+One line.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
