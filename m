@@ -2,232 +2,133 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.7 required=3.0 tests=FORGED_MUA_MOZILLA,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4908C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 994B4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89A1E20760
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:16:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 761862074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:21:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726341AbgFKBQN (ORCPT
+        id S1726352AbgFKBV2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 21:16:13 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34766 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbgFKBQM (ORCPT
+        Wed, 10 Jun 2020 21:21:28 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43162 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726265AbgFKBV1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 21:16:12 -0400
-Received: by mail-pf1-f194.google.com with SMTP id z63so986765pfb.1;
-        Wed, 10 Jun 2020 18:16:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=U2xz+clo+p+xAEQa4WAp3fVeKWpdUak8TBQN4ETuhCY=;
-        b=JvKKW0jgcD3daBzwyrLY/wguTKjrSQobrDruVHk7dhAdx1K6pt2za5eoZiAoRyEYyD
-         /Z4l/EJZ0golsfuboVIj6x19KWmu2+wQgaExBWpMnGYb8gAgxxL1qOzrAIcvTMq65D/O
-         90ddGbGdw0+TTyPt/cakGzqMb158Zk9wUpBymWBlX06tcJz5fCsEuEf/ASxRDu61hMh1
-         9/adhh8ova8oc2P2FSNlgSHE5WcHNRtrov6yWaoO3s7PjfPdV9tSWVfmYdni1+sMrhm1
-         5wcQmA8/W5NdhvCz9MgjRsrz4yahm4mmwba1UAZK5qTI56Rstk0Mc+5VxhCMwWhEpM8d
-         juMw==
-X-Gm-Message-State: AOAM531Tl6qvxxtBzej61HxHYYookQ2VTb0ymjh/vn5y1K7FYVNrRvpe
-        bTJCFNA0zpFGEm0nDlqstbo=
-X-Google-Smtp-Source: ABdhPJzqWF2yPbWDLcmy623eeuT+u53nUcxLXq0Ne+zwiWQ3J8arJyeA8fFeq+u2jw1IvmQ5+UcL7w==
-X-Received: by 2002:a63:9347:: with SMTP id w7mr4684819pgm.409.1591838171507;
-        Wed, 10 Jun 2020 18:16:11 -0700 (PDT)
-Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
-        by smtp.gmail.com with ESMTPSA id v129sm1117979pfv.18.2020.06.10.18.16.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jun 2020 18:16:10 -0700 (PDT)
-Subject: Re: [RFC PATCH 4/5] scsi: ufs: L2P map management for HPB read
-To:     daejun7.park@samsung.com, ALIM AKHTAR <alim.akhtar@samsung.com>,
-        "avri.altman@wdc.com" <avri.altman@wdc.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>
-Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>
-References: <231786897.01591322101492.JavaMail.epsvc@epcpadp1>
- <336371513.41591320902369.JavaMail.epsvc@epcpadp1>
- <963815509.21591320301642.JavaMail.epsvc@epcpadp1>
- <231786897.01591320001492.JavaMail.epsvc@epcpadp1>
- <CGME20200605011604epcms2p8bec8ef6682583d7248dc7d9dc1bfc882@epcms2p2>
- <963815509.21591323002276.JavaMail.epsvc@epcpadp1>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <0389f9cf-fea8-9990-7699-0e4322728e4a@acm.org>
-Date:   Wed, 10 Jun 2020 18:16:08 -0700
+        Wed, 10 Jun 2020 21:21:27 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05B17CjE093234;
+        Wed, 10 Jun 2020 21:21:20 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31k5hxqv59-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 10 Jun 2020 21:21:20 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05B1L7Tt030186;
+        Thu, 11 Jun 2020 01:21:18 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 31g2s80s47-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 11 Jun 2020 01:21:18 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05B1LF9a64029050
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 11 Jun 2020 01:21:15 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D4C31A4051;
+        Thu, 11 Jun 2020 01:21:15 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CE7ECA4040;
+        Thu, 11 Jun 2020 01:21:14 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.93.125])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 11 Jun 2020 01:21:14 +0000 (GMT)
+Subject: Re: [PATCH] ext4: mballoc: Disable preemption before getting per-CPU
+ pointer
+To:     YueHaibing <yuehaibing@huawei.com>, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tytso@mit.edu,
+        adilger.kernel@dilger.ca
+References: <20200610134919.73688-1-yuehaibing@huawei.com>
+From:   Ritesh Harjani <riteshh@linux.ibm.com>
+Date:   Thu, 11 Jun 2020 06:51:14 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <963815509.21591323002276.JavaMail.epsvc@epcpadp1>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200610134919.73688-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+Message-Id: <20200611012114.CE7ECA4040@d06av23.portsmouth.uk.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-10_13:2020-06-10,2020-06-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 spamscore=0
+ mlxscore=0 mlxlogscore=944 suspectscore=0 bulkscore=0 impostorscore=0
+ cotscore=-2147483648 phishscore=0 malwarescore=0 lowpriorityscore=0
+ adultscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006110005
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-04 18:56, Daejun Park wrote:
-> +static struct ufshpb_req *ufshpb_get_map_req(struct ufshpb_lu *hpb,
-> +					     struct ufshpb_subregion *srgn)
-> +{
-> +	struct ufshpb_req *map_req;
-> +	struct request *req;
-> +	struct bio *bio;
-> +
-> +	map_req = kmem_cache_alloc(hpb->map_req_cache, GFP_KERNEL);
-> +	if (!map_req)
-> +		return NULL;
-> +
-> +	req = blk_get_request(hpb->sdev_ufs_lu->request_queue,
-> +			      REQ_OP_SCSI_IN, BLK_MQ_REQ_PREEMPT);
-> +	if (IS_ERR(req))
-> +		goto free_map_req;
-> +
-> +	bio = bio_alloc(GFP_KERNEL, hpb->pages_per_srgn);
-> +	if (!bio) {
-> +		blk_put_request(req);
-> +		goto free_map_req;
-> +	}
-> +
-> +	map_req->hpb = hpb;
-> +	map_req->req = req;
-> +	map_req->bio = bio;
-> +
-> +	map_req->rgn_idx = srgn->rgn_idx;
-> +	map_req->srgn_idx = srgn->srgn_idx;
-> +	map_req->mctx = srgn->mctx;
-> +	map_req->lun = hpb->lun;
-> +
-> +	return map_req;
-> +free_map_req:
-> +	kmem_cache_free(hpb->map_req_cache, map_req);
-> +	return NULL;
-> +}
+Hello,
 
-Will blk_get_request() fail if all tags have been allocated? Can that
-cause a deadlock or infinite loop?
+Fix for this is already submitted @
 
-> +static inline void ufshpb_set_read_buf_cmd(unsigned char *cdb, int rgn_idx,
-> +					   int srgn_idx, int srgn_mem_size)
-> +{
-> +	cdb[0] = UFSHPB_READ_BUFFER;
-> +	cdb[1] = UFSHPB_READ_BUFFER_ID;
-> +
-> +	put_unaligned_be32(srgn_mem_size, &cdb[5]);
-> +	/* cdb[5] = 0x00; */
-> +	put_unaligned_be16(rgn_idx, &cdb[2]);
-> +	put_unaligned_be16(srgn_idx, &cdb[4]);
-> +
-> +	cdb[9] = 0x00;
-> +}
+https://patchwork.ozlabs.org/project/linux-ext4/patch/534f275016296996f54ecf65168bb3392b6f653d.1591699601.git.riteshh@linux.ibm.com/
 
-So the put_unaligned_be32(srgn_mem_size, &cdb[5]) comes first because
-the put_unaligned_be16(srgn_idx, &cdb[4]) overwrites byte cdb[5]? That
-is really ugly. Please use put_unaligned_be24() instead if that is what
-you meant and keep the put_*() calls in increasing cdb offset order.
+-ritesh
 
-> +static int ufshpb_map_req_add_bio_page(struct ufshpb_lu *hpb,
-> +				       struct request_queue *q, struct bio *bio,
-> +				       struct ufshpb_map_ctx *mctx)
-> +{
-> +	int i, ret = 0;
-> +
-> +	for (i = 0; i < hpb->pages_per_srgn; i++) {
-> +		ret = bio_add_pc_page(q, bio, mctx->m_page[i], PAGE_SIZE, 0);
-> +		if (ret != PAGE_SIZE) {
-> +			dev_notice(&hpb->hpb_lu_dev,
-> +				   "bio_add_pc_page fail %d\n", ret);
-> +			return -ENOMEM;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-
-Why bio_add_pc_page() instead of bio_add_page()?
-
-> +static int ufshpb_execute_map_req(struct ufshpb_lu *hpb,
-> +				  struct ufshpb_req *map_req)
-> +{
-> +	struct request_queue *q;
-> +	struct request *req;
-> +	struct scsi_request *rq;
-> +	int ret = 0;
-> +
-> +	q = hpb->sdev_ufs_lu->request_queue;
-> +	ret = ufshpb_map_req_add_bio_page(hpb, q, map_req->bio,
-> +					  map_req->mctx);
-> +	if (ret) {
-> +		dev_notice(&hpb->hpb_lu_dev,
-> +			   "map_req_add_bio_page fail %d - %d\n",
-> +			   map_req->rgn_idx, map_req->srgn_idx);
-> +		return ret;
-> +	}
-> +
-> +	req = map_req->req;
-> +
-> +	blk_rq_append_bio(req, &map_req->bio);
-> +	req->rq_flags |= RQF_QUIET;
-> +	req->timeout = MAP_REQ_TIMEOUT;
-> +	req->end_io_data = (void *)map_req;
-> +
-> +	rq = scsi_req(req);
-> +	ufshpb_set_read_buf_cmd(rq->cmd, map_req->rgn_idx,
-> +				map_req->srgn_idx, hpb->srgn_mem_size);
-> +	rq->cmd_len = HPB_READ_BUFFER_CMD_LENGTH;
-> +
-> +	blk_execute_rq_nowait(q, NULL, req, 1, ufshpb_map_req_compl_fn);
-> +
-> +	atomic_inc(&hpb->stats.map_req_cnt);
-> +	return 0;
-> +}
-
-Why RQF_QUIET?
-
-Why a custom timeout instead of the SCSI LUN timeout?
-
-Can this function be made asynchronous such that it does not have to be
-executed on the context of a workqueue?
-
-Thanks,
-
-Bart.
+On 6/10/20 7:19 PM, YueHaibing wrote:
+> BUG: using smp_processor_id() in preemptible [00000000] code: kworker/u16:3/2181
+> caller is ext4_mb_new_blocks+0x388/0xed0
+> CPU: 2 PID: 2181 Comm: kworker/u16:3 Not tainted 5.7.0+ #182
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+> Workqueue: writeback wb_workfn (flush-8:0)
+> Call Trace:
+>   dump_stack+0xb9/0xfc
+>   debug_smp_processor_id+0xc8/0xd0
+>   ext4_mb_new_blocks+0x388/0xed0
+>   ext4_ext_map_blocks+0xa92/0xff0
+>   ext4_map_blocks+0x34e/0x580
+>   ext4_writepages+0xa28/0x11b0
+>   do_writepages+0x46/0xe0
+>   __writeback_single_inode+0x5f/0x6b0
+>   writeback_sb_inodes+0x290/0x620
+>   __writeback_inodes_wb+0x62/0xb0
+>   wb_writeback+0x36c/0x520
+>   wb_workfn+0x319/0x680
+>   process_one_work+0x271/0x640
+>   worker_thread+0x3a/0x3a0
+>   kthread+0x14e/0x170
+>   ret_from_fork+0x27/0x40
+> 
+> Disable preemption before accessing discard_pa_seq.
+> 
+> Fixes: 07b5b8e1ac40 ("ext4: mballoc: introduce pcpu seqcnt for freeing PA to improve ENOSPC handling")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>   fs/ext4/mballoc.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+> index a9083113a8c0..30b3bfb1e06a 100644
+> --- a/fs/ext4/mballoc.c
+> +++ b/fs/ext4/mballoc.c
+> @@ -4708,7 +4708,8 @@ ext4_fsblk_t ext4_mb_new_blocks(handle_t *handle,
+>   	}
+>   
+>   	ac->ac_op = EXT4_MB_HISTORY_PREALLOC;
+> -	seq = *this_cpu_ptr(&discard_pa_seq);
+> +	seq = *get_cpu_ptr(&discard_pa_seq);
+> +	put_cpu_ptr(&discard_pa_seq);
+>   	if (!ext4_mb_use_preallocated(ac)) {
+>   		ac->ac_op = EXT4_MB_HISTORY_ALLOC;
+>   		ext4_mb_normalize_request(ac, ar);
+> 
