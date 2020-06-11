@@ -2,171 +2,145 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57859C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 10:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62415C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 10:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3421820760
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 10:09:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E49120747
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 10:10:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Dfg8Bh6V"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gcFsKcwM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727081AbgFKKJc (ORCPT
+        id S1727109AbgFKKKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 06:09:32 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:31768 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726965AbgFKKJc (ORCPT
+        Thu, 11 Jun 2020 06:10:33 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:59636 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726959AbgFKKKc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 06:09:32 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05BA7Lfr003767;
-        Thu, 11 Jun 2020 12:09:17 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=io4QkYyPev1lFAk4WWD+YOdtfCEKcWGZV313SSMWam4=;
- b=Dfg8Bh6Vhx2dsVrLDsX09I4ViM0xyUXa6FCuXkjKTvZoDN/cXP4rVkspuAXlAku12pEI
- Nh8Zm+GNw16WVrhgo3hHmia75qDQ3oCHAMM01HT4+S+6AKbfYYu+rzKvB3oPbGIN/qRC
- FqipJob9rxIm5nv3I3lYnHW7rMETvn8k2EAHLiF3yS3w6WcWuEbs00aCMD5zSPUW3NcM
- B/huIlftPJ/ugddyWl+fFCILqYt/S8IFVenn+bdwJzp6UsuyiTBHvH9uvV5Gd9g+Q560
- HehTAN2G8PXEM0hDDL26wzGEhB55ow48vko78kVKIZ7JOTLE1gEItLxlibEALYs85x6T 9w== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 31jppnyg1r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 11 Jun 2020 12:09:17 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3B2C810002A;
-        Thu, 11 Jun 2020 12:09:16 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id F075B20F366;
-        Thu, 11 Jun 2020 12:09:15 +0200 (CEST)
-Received: from [10.211.9.250] (10.75.127.45) by SFHDAG5NODE3.st.com
- (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 11 Jun
- 2020 12:09:14 +0200
-Subject: Re: [PATCH v2] iio: adc: stm32-adc: fix runtime autosuspend delay
- when slow polling
-To:     Jonathan Cameron <jic23@kernel.org>, <rjw@rjwysocki.net>,
-        <ulf.hansson@linaro.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <benjamin.gaignard@st.com>, <alexandre.torgue@st.com>,
-        <olivier.moysan@st.com>, <linux-iio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <1588163348-31640-1-git-send-email-fabrice.gasnier@st.com>
- <20200503124811.0abf7655@archlinux>
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-Message-ID: <b6e7d22c-2ea9-19f8-6065-519860575077@st.com>
-Date:   Thu, 11 Jun 2020 12:09:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200503124811.0abf7655@archlinux>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-11_10:2020-06-10,2020-06-11 signatures=0
+        Thu, 11 Jun 2020 06:10:32 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05BA6rAh013287;
+        Thu, 11 Jun 2020 10:10:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
+ bh=IwBCM+hJeskaz3TsvUhPt5M+TeyH9rZ0QcVjuHy3CzI=;
+ b=gcFsKcwModl8fFbU4ceDOW1iHkSpdpYA3SG5gmlxt6QGHnE7EKgNkdgxZUcWzFRX0XfR
+ omRzdoRflJUgx2LObI4jNWIjLStXJyQHnikOx3yEzcLcMJwUDao8Xw2mNHEPHfoIwl+e
+ r+KgN4tedJ9Oyf43MU4g5UhVLhOs2wikEktqZbRz74N5x8RQNUQCxZs07wByEEvOI6Hq
+ X5Yx9kh5B6cP/KGfb03j47B27FbQep1eWSdriuwh7gCQAh20T/BHhN5esSiBOecF6mVP
+ g4PwuF9z9Pk84yNDMfxKR5enQcjiOzV+3LkgG77G8JSP3L6ezSsiv5i0wWI3Ogjz/zLn Ng== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 31jepp0vbw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 11 Jun 2020 10:10:25 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05BA7lCL056640;
+        Thu, 11 Jun 2020 10:10:24 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 31gn319jv5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 11 Jun 2020 10:10:24 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05BAANGK016532;
+        Thu, 11 Jun 2020 10:10:23 GMT
+Received: from localhost.localdomain (/183.246.144.78)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 11 Jun 2020 03:10:21 -0700
+From:   Bob Liu <bob.liu@oracle.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     tj@kernel.org, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, open-iscsi@googlegroups.com,
+        lduncan@suse.com, michael.christie@oracle.com,
+        Bob Liu <bob.liu@oracle.com>
+Subject: [PATCH 2/2] scsi: register sysfs for scsi/iscsi workqueues
+Date:   Thu, 11 Jun 2020 18:07:17 +0800
+Message-Id: <20200611100717.27506-2-bob.liu@oracle.com>
+X-Mailer: git-send-email 2.9.5
+In-Reply-To: <20200611100717.27506-1-bob.liu@oracle.com>
+References: <20200611100717.27506-1-bob.liu@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9648 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 malwarescore=0
+ bulkscore=0 adultscore=0 mlxlogscore=999 spamscore=0 suspectscore=3
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006110078
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9648 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=3
+ priorityscore=1501 bulkscore=0 clxscore=1015 phishscore=0 impostorscore=0
+ malwarescore=0 mlxscore=0 cotscore=-2147483648 adultscore=0 spamscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006110078
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/3/20 1:48 PM, Jonathan Cameron wrote:
-> On Wed, 29 Apr 2020 14:29:08 +0200
-> Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
-> 
->> When the ADC is runtime suspended and starting a conversion, the stm32-adc
->> driver calls pm_runtime_get_sync() that gets cascaded to the parent
->> (e.g. runtime resume of stm32-adc-core driver). This also kicks the
->> autosuspend delay (e.g. 2s) of the parent.
->> Once the ADC is active, calling pm_runtime_get_sync() again (upon a new
->> capture) won't kick the autosuspend delay for the parent (stm32-adc-core
->> driver) as already active.
->>
->> Currently, this makes the stm32-adc-core driver go in suspend state
->> every 2s when doing slow polling. As an example, doing a capture, e.g.
->> cat in_voltageY_raw at a 0.2s rate, the auto suspend delay for the parent
->> isn't refreshed. Once it expires, the parent immediately falls into
->> runtime suspended state, in between two captures, as soon as the child
->> driver falls into runtime suspend state:
->> - e.g. after 2s, + child calls pm_runtime_put_autosuspend() + 100ms
->>   autosuspend delay of the child.
->> - stm32-adc-core switches off regulators, clocks and so on.
->> - They get switched on back again 100ms later in this example (at 2.2s).
->>
->> So, use runtime_idle() callback in stm32-adc-core driver to call
->> pm_runtime_mark_last_busy() for the parent driver (stm32-adc-core),
->> to avoid this.
->>
->> Fixes: 9bdbb1139ca1 ("iio: adc: stm32-adc: add power management support")
->>
->> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> 
-> Whilst this seems 'sensible' to me, I really don't have a good enough grasp
-> of runtime pm to be sure. 
-> 
-> I see something similar looking in the greybus driver, but not sure on the
-> reason it is there.
-> 
-> Hence, ideally looking for an ack from Rafael on this one!
+This patch enable setting cpu affinity through "cpumask" for below
+scsi/iscsi workqueues, so as to get better isolation.
+- scsi_wq_*
+- scsi_tmf_*
+- iscsi_q_xx
+- iscsi_eh
 
-Hi,
+Signed-off-by: Bob Liu <bob.liu@oracle.com>
+---
+ drivers/scsi/hosts.c                | 4 ++--
+ drivers/scsi/libiscsi.c             | 2 +-
+ drivers/scsi/scsi_transport_iscsi.c | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-Gentle reminder, I'm not sure how to progress on this patch.
+diff --git a/drivers/scsi/hosts.c b/drivers/scsi/hosts.c
+index 1d669e4..4b9f80d 100644
+--- a/drivers/scsi/hosts.c
++++ b/drivers/scsi/hosts.c
+@@ -272,7 +272,7 @@ int scsi_add_host_with_dma(struct Scsi_Host *shost, struct device *dev,
+ 	if (shost->transportt->create_work_queue) {
+ 		snprintf(shost->work_q_name, sizeof(shost->work_q_name),
+ 			 "scsi_wq_%d", shost->host_no);
+-		shost->work_q = create_singlethread_workqueue(
++		shost->work_q = create_singlethread_workqueue_noorder(
+ 					shost->work_q_name);
+ 		if (!shost->work_q) {
+ 			error = -EINVAL;
+@@ -487,7 +487,7 @@ struct Scsi_Host *scsi_host_alloc(struct scsi_host_template *sht, int privsize)
+ 	}
+ 
+ 	shost->tmf_work_q = alloc_workqueue("scsi_tmf_%d",
+-					    WQ_UNBOUND | WQ_MEM_RECLAIM,
++				WQ_UNBOUND | WQ_MEM_RECLAIM | WQ_SYSFS | __WQ_ORDERED_DISABLE,
+ 					   1, shost->host_no);
+ 	if (!shost->tmf_work_q) {
+ 		shost_printk(KERN_WARNING, shost,
+diff --git a/drivers/scsi/libiscsi.c b/drivers/scsi/libiscsi.c
+index 70b99c0..6808cf3 100644
+--- a/drivers/scsi/libiscsi.c
++++ b/drivers/scsi/libiscsi.c
+@@ -2627,7 +2627,7 @@ struct Scsi_Host *iscsi_host_alloc(struct scsi_host_template *sht,
+ 	if (xmit_can_sleep) {
+ 		snprintf(ihost->workq_name, sizeof(ihost->workq_name),
+ 			"iscsi_q_%d", shost->host_no);
+-		ihost->workq = create_singlethread_workqueue(ihost->workq_name);
++		ihost->workq = create_singlethread_workqueue_noorder(ihost->workq_name);
+ 		if (!ihost->workq)
+ 			goto free_host;
+ 	}
+diff --git a/drivers/scsi/scsi_transport_iscsi.c b/drivers/scsi/scsi_transport_iscsi.c
+index dfc726f..d07a0e4 100644
+--- a/drivers/scsi/scsi_transport_iscsi.c
++++ b/drivers/scsi/scsi_transport_iscsi.c
+@@ -4602,7 +4602,7 @@ static __init int iscsi_transport_init(void)
+ 		goto unregister_flashnode_bus;
+ 	}
+ 
+-	iscsi_eh_timer_workq = create_singlethread_workqueue("iscsi_eh");
++	iscsi_eh_timer_workq = create_singlethread_workqueue_noorder("iscsi_eh");
+ 	if (!iscsi_eh_timer_workq) {
+ 		err = -ENOMEM;
+ 		goto release_nls;
+-- 
+2.9.5
 
-Rafael, or maybe Ulf, could take a look at it ?
-
-Thanks in advance,
-Best Regards,
-Fabrice
-
-> 
-> Thanks,
-> 
-> Jonathan
-> 
->> ---
->> Changes in v2:
->> - Use runtime_idle callback in stm32-adc-core driver, instead of refreshing
->>   last_busy from the child (for the parent) at many place. Initial patch v1
->>   looked like "somewhat adhoc solution" as commented by Jonathan.
->> ---
->>  drivers/iio/adc/stm32-adc-core.c | 9 ++++++++-
->>  1 file changed, 8 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
->> index 2df88d2..ebe5dbc 100644
->> --- a/drivers/iio/adc/stm32-adc-core.c
->> +++ b/drivers/iio/adc/stm32-adc-core.c
->> @@ -803,6 +803,13 @@ static int stm32_adc_core_runtime_resume(struct device *dev)
->>  {
->>  	return stm32_adc_core_hw_start(dev);
->>  }
->> +
->> +static int stm32_adc_core_runtime_idle(struct device *dev)
->> +{
->> +	pm_runtime_mark_last_busy(dev);
->> +
->> +	return 0;
->> +}
->>  #endif
->>  
->>  static const struct dev_pm_ops stm32_adc_core_pm_ops = {
->> @@ -810,7 +817,7 @@ static const struct dev_pm_ops stm32_adc_core_pm_ops = {
->>  				pm_runtime_force_resume)
->>  	SET_RUNTIME_PM_OPS(stm32_adc_core_runtime_suspend,
->>  			   stm32_adc_core_runtime_resume,
->> -			   NULL)
->> +			   stm32_adc_core_runtime_idle)
->>  };
->>  
->>  static const struct stm32_adc_priv_cfg stm32f4_adc_priv_cfg = {
-> 
