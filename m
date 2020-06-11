@@ -2,74 +2,174 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BDDC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A412AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13E36206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:57:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591883858;
-	bh=AfDuKbF9OtpsediGNO+3NynP+WMOL5HhOuy8v9ZFhPg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ElWzcm6KcAlknwF7bMEXhaH33mfxs9UoqlUMDeWs0LPVc15iuiEcSMlpQ8/ejTPjR
-	 OpYM4lIP81w00lv2urmafqpxk8FW5HemWSQoEouvHtuca/o7bbqbsso1EjZeRvPxPb
-	 wf6PJ8dIp3hevpTHFX0DFpPokVMoQdq2TxDI6GqE=
+	by mail.kernel.org (Postfix) with ESMTP id 7D97A206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:59:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tcZyQjBo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgFKN5h (ORCPT
+        id S1727839AbgFKN7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 09:57:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56558 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726157AbgFKN5g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 09:57:36 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 306B7206C3;
-        Thu, 11 Jun 2020 13:57:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591883854;
-        bh=AfDuKbF9OtpsediGNO+3NynP+WMOL5HhOuy8v9ZFhPg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vhHLcpTFHd5cdFwhK1QvbC2PJlU8vaMJ4jssfpO82j97kOmBjBzZXIrUNvMvYVbqM
-         dN+AKheH9BbEQcFRN9rdXB3E0cg044n2CYS/iX7XfRVMLAJeQvK6AC4tIZHMDDo658
-         pTChFlwMIZuZhdpEyUNYhd6nzJR3310o2lY98sDU=
-Date:   Thu, 11 Jun 2020 15:57:27 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Su Kang Yin <cantona@cantona.net>
-Cc:     linux-crypto@vger.kernel.org, christophe.leroy@c-s.fr,
-        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2] crypto: talitos - fix ECB and CBC algs ivsize
-Message-ID: <20200611135727.GA1060798@kroah.com>
-References: <cantona@cantona.net>
- <20200611115048.21677-1-cantona@cantona.net>
+        Thu, 11 Jun 2020 09:59:18 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:37596 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbgFKN7R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 09:59:17 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05BDwvWK123801;
+        Thu, 11 Jun 2020 08:58:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591883937;
+        bh=vm6dEZBsilsx43enScI+BD49SWDr4ySN9rl3BtNbgmk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=tcZyQjBo76EqNJpxeti///VQAcFdzyw9PMHY1rnerSEoaSnxotNdpO6RqXAbLRWRo
+         ZQYf0FOrLwXIH71T8fVsJjXz3YEy1Oo1Pa75nEOb/O0BNE5s4Ij5AFgp6ir6+tAN3R
+         zm3kGFoP43Y9vVR7fYrvCs9f50JG7Xuu7ky9tk4o=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05BDwvkJ035414
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 11 Jun 2020 08:58:57 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 11
+ Jun 2020 08:58:57 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 11 Jun 2020 08:58:57 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05BDwrlD054159;
+        Thu, 11 Jun 2020 08:58:53 -0500
+Subject: Re: [PATCH 1/5] drm/omap: Fix suspend resume regression after
+ platform data removal
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Tony Lindgren <tony@atomide.com>
+CC:     <linux-omap@vger.kernel.org>, "Andrew F . Davis" <afd@ti.com>,
+        Dave Gerlach <d-gerlach@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <dri-devel@lists.freedesktop.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+References: <20200531193941.13179-1-tony@atomide.com>
+ <20200531193941.13179-2-tony@atomide.com>
+ <16ba1808-5c7f-573d-8dd0-c80cac2f476e@ti.com>
+ <20200603140639.GG37466@atomide.com>
+ <47e286dd-f87a-4440-5bde-1f7b53e8b672@ti.com>
+ <20200609151943.GL37466@atomide.com>
+ <9ed70121-2a53-d2b3-051a-88eb83e6c53f@ti.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <d03dd04f-6f2c-25ba-fe1f-d5fc0dfb5c68@ti.com>
+Date:   Thu, 11 Jun 2020 17:00:59 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200611115048.21677-1-cantona@cantona.net>
+In-Reply-To: <9ed70121-2a53-d2b3-051a-88eb83e6c53f@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 07:50:47PM +0800, Su Kang Yin wrote:
-> commit e1de42fdfc6a ("crypto: talitos - fix ECB algs ivsize")
-> wrongly modified CBC algs ivsize instead of ECB aggs ivsize.
-> 
-> This restore the CBC algs original ivsize of removes ECB's ones.
-> 
-> Fixes: e1de42fdfc6a ("crypto: talitos - fix ECB algs ivsize")
-> Signed-off-by: Su Kang Yin <cantona@cantona.net>
-> ---
-> Patch for 4.9 upstream.
 
-Also seems to be an issue for the 4.14 and 4.19 backport, so I'll queue
-it up there too, thanks!
 
-greg k-h
+On 09/06/2020 18:26, Tomi Valkeinen wrote:
+> On 09/06/2020 18:19, Tony Lindgren wrote:
+>>> But there's an extra runtime PM reference (dev.power.usage_count) that seems
+>>> to come out of nowhere. So when omap_drm_suspend is finished, there's still
+>>> usage_count of 1, and dispc never suspends fully.
+>>
+>> Hmm no idea about that. My guess is that there might be an issue that was
+>> masked earlier with omap_device calling the child runtime_suspend.
+> 
+> Yes. It's how PM works. It calls pm_runtime_get_noresume() before starting the suspend of a device. So I guess omapdrm's suspend has been broken all the time, but it was "fixed" by omap_device.
+> 
+
+I think I might have an idea what is going wrong.
+
+Before:
++----------------------+
+|omap_device_pm_domain |
++---------------+------+------+
+                 | device      |
+                 +-------------+
+                 | omap_device |
+                 +-------------+
+
+omap_device is embedded in DD device and PM handled by omap_device_pm_domain.
+
+static int _od_suspend_noirq(struct device *dev)
+{
+...
+
+	ret = pm_generic_suspend_noirq(dev);
+[1] ^^ device suspend_noirq call
+
+	if (!ret && !pm_runtime_status_suspended(dev)) {
+		if (pm_generic_runtime_suspend(dev) == 0) {
+[2] ^^ device pm_runtime_suspend force call
+
+			omap_device_idle(pdev);
+[3] ^^ omap_device disable
+			od->flags |= OMAP_DEVICE_SUSPENDED;
+		}
+	}
+
+	return ret;
+}
+
+Now:
++------------+
+|ti sysc dev |
++-+----------+
+   |
+   |
+   |   +-------------+
+   |   | device      |
+   +-->+             |
+       +-------------+
+
+With new approach the omap_device is not embedded in DD Device anymore,
+instead ti-sysc (hwmod replacement) became parent of DD Device.
+
+As result suspend sequence became the following
+(Note. All PM runtime PUT calls became NOP during suspend by design):
+
+device
+|-> suspend() - in case of dss omap_drm_suspend() and Co if defined
+|-> suspend_noirq() - in case of dss *not defined", equal to step [1] above
+..
+
+ti sysc dev (ti-sysc is parent, so called after device)
+|-> sysc_noirq_suspend
+    |-> pm_runtime_force_suspend()
+	|-> sysc_runtime_suspend() - equal to step [3] above
+
+And step [2] is missing as of now!
+
+I think, suspend might be fixed if all devices, which are now child of ti-sysc, will do
+pm_runtime_force_xxx() calls at noirq suspend stage by adding:
+
+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+				      pm_runtime_force_resume)
+
+Am I missing smth?
+
+-- 
+Best regards,
+grygorii
