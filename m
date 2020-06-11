@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 052F6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D4A5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C742C2074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:45:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 623ED2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:46:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591861552;
-	bh=HHcsutLMdEQy0hYT0qxq+tPnvS7NpBsbzyRAcI6BozI=;
+	s=default; t=1591861560;
+	bh=z0rOcX+a1fA1hoFfAMTrdM/gsrKago8APpyd0/JO2jk=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=yRWRrqzFZezXqdETZ5SBW7g4CPjQLGzyDpWaIPEGId3EMdvV0Jk6KUlMAOJ+TrNTS
-	 mA8f4OyjGyiGpfjgIRcLfTispzNTNg36O7aDT+/gfZH5OAHXm6740HUE7yW9V9Ig+Q
-	 dbVA9GMr/BDbtsGZFxZKZVJcni49tDTJDbjMxjNQ=
+	b=s9zIE9jHXflnCgJycQT6uq7Wg7lG1KiLhtUhT8kSoMAVoYxpUi4xgdqkhdOQz979b
+	 SEXcInyuCv6cubgtd6wajg1c7uACE7Pp+ImkfnE8Jflb79qhGmhPUPKKTUgL3vSTDH
+	 gOLna6b5bKU4TL+yK10VYjBWHaUd49HjriRfySjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbgFKHpv (ORCPT
+        id S1726907AbgFKHp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 03:45:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39498 "EHLO mail.kernel.org"
+        Thu, 11 Jun 2020 03:45:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726574AbgFKHpv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 03:45:51 -0400
+        id S1726794AbgFKHp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 03:45:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64AF92074B;
-        Thu, 11 Jun 2020 07:45:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89B06207D5;
+        Thu, 11 Jun 2020 07:45:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591861549;
-        bh=HHcsutLMdEQy0hYT0qxq+tPnvS7NpBsbzyRAcI6BozI=;
+        s=default; t=1591861557;
+        bh=z0rOcX+a1fA1hoFfAMTrdM/gsrKago8APpyd0/JO2jk=;
         h=From:To:Cc:Subject:Date:From;
-        b=OWUUbmbEtPOu+tT21rSQZRsoxtRhlS6Sn8lxsyAgyqAcj66tcOYQ1wYxIhESMiTg4
-         mGhr/gaZi8Km1WclUs28JykMbTbXpx3XJWAvQVwOiSYfrvHKcdaflxMvmXk5ZYA3qq
-         59lakZrgmEBjrfw6ETIrm6QJktWitop/DUDEonsY=
+        b=Ket69PlvASC01WqalBIICt1qOrmzqqlTjiVcaVsBFCYyrNjgM2CHRFyBD2asg0pll
+         22MPQRd8stzUEnDTYA+giud2UbfizCUv4CwiiDkxy9UL36TiWHCliAYkYyN2qsy+t1
+         cPL5OYz2gInJhQon+WF/BJLHh+Hadyjk/9xw2t6s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
         torvalds@linux-foundation.org, stable@vger.kernel.org
 Cc:     lwn@lwn.net, jslaby@suse.cz,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Linux 4.4.227
-Date:   Thu, 11 Jun 2020 09:45:41 +0200
-Message-Id: <1591861541165242@kroah.com>
+Subject: Linux 4.9.227
+Date:   Thu, 11 Jun 2020 09:45:47 +0200
+Message-Id: <15918615479413@kroah.com>
 X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -56,12 +56,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'm announcing the release of the 4.4.227 kernel.
+I'm announcing the release of the 4.9.227 kernel.
 
-All users of the 4.4 kernel series must upgrade.
+All users of the 4.9 kernel series must upgrade.
 
-The updated 4.4.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.4.y
+The updated 4.9.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.9.y
 and can be browsed at the normal kernel.org git web browser:
 	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
 
@@ -72,82 +72,59 @@ greg k-h
 ------------
 
  Documentation/ABI/testing/sysfs-devices-system-cpu              |    1 
+ Documentation/hw-vuln/index.rst                                 |    3 
  Documentation/hw-vuln/special-register-buffer-data-sampling.rst |  149 ++++++++++
  Documentation/kernel-parameters.txt                             |   20 +
  Makefile                                                        |    2 
  arch/arc/kernel/setup.c                                         |    5 
  arch/s390/kernel/mcount.S                                       |    1 
- arch/x86/include/asm/acpi.h                                     |    2 
  arch/x86/include/asm/cpu_device_id.h                            |   27 +
- arch/x86/include/asm/cpufeatures.h                              |    2 
+ arch/x86/include/asm/cpufeatures.h                              |   30 +-
  arch/x86/include/asm/msr-index.h                                |    4 
- arch/x86/include/asm/processor.h                                |    2 
- arch/x86/kernel/amd_nb.c                                        |    2 
- arch/x86/kernel/asm-offsets_32.c                                |    2 
- arch/x86/kernel/cpu/amd.c                                       |   26 -
+ arch/x86/include/asm/pgtable.h                                  |    1 
  arch/x86/kernel/cpu/bugs.c                                      |  106 +++++++
- arch/x86/kernel/cpu/centaur.c                                   |    4 
- arch/x86/kernel/cpu/common.c                                    |   62 +++-
+ arch/x86/kernel/cpu/common.c                                    |   54 ++-
  arch/x86/kernel/cpu/cpu.h                                       |    1 
- arch/x86/kernel/cpu/cyrix.c                                     |    2 
- arch/x86/kernel/cpu/intel.c                                     |   20 -
  arch/x86/kernel/cpu/match.c                                     |    7 
- arch/x86/kernel/cpu/microcode/intel.c                           |    4 
- arch/x86/kernel/cpu/mtrr/generic.c                              |    2 
- arch/x86/kernel/cpu/mtrr/main.c                                 |    4 
- arch/x86/kernel/cpu/perf_event_intel.c                          |    2 
- arch/x86/kernel/cpu/perf_event_intel_lbr.c                      |    2 
- arch/x86/kernel/cpu/perf_event_p6.c                             |    2 
- arch/x86/kernel/cpu/proc.c                                      |    4 
- arch/x86/kernel/head_32.S                                       |    4 
- arch/x86/kernel/mpparse.c                                       |    2 
  arch/x86/mm/mmio-mod.c                                          |    4 
  drivers/base/cpu.c                                              |    8 
- drivers/char/hw_random/via-rng.c                                |    2 
- drivers/cpufreq/acpi-cpufreq.c                                  |    2 
- drivers/cpufreq/longhaul.c                                      |    6 
- drivers/cpufreq/p4-clockmod.c                                   |    2 
- drivers/cpufreq/powernow-k7.c                                   |    2 
- drivers/cpufreq/speedstep-centrino.c                            |    4 
- drivers/cpufreq/speedstep-lib.c                                 |    6 
- drivers/crypto/padlock-aes.c                                    |    2 
- drivers/edac/amd64_edac.c                                       |    2 
- drivers/edac/mce_amd.c                                          |    2 
- drivers/hwmon/coretemp.c                                        |    6 
- drivers/hwmon/hwmon-vid.c                                       |    2 
- drivers/hwmon/k10temp.c                                         |    2 
- drivers/hwmon/k8temp.c                                          |    2 
+ drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c                        |    8 
  drivers/iio/light/vcnl4000.c                                    |    6 
- drivers/infiniband/hw/mlx4/mr.c                                 |    7 
  drivers/net/can/slcan.c                                         |    3 
  drivers/net/ethernet/apple/bmac.c                               |    2 
  drivers/net/ethernet/freescale/ucc_geth.c                       |   13 
+ drivers/net/ethernet/smsc/smsc911x.c                            |    9 
  drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c             |   13 
  drivers/net/ppp/pppoe.c                                         |    3 
  drivers/net/slip/slip.c                                         |    3 
+ drivers/net/usb/qmi_wwan.c                                      |    1 
+ drivers/net/wireless/cisco/airo.c                               |   12 
+ drivers/net/wireless/intersil/p54/p54usb.c                      |    1 
  drivers/nfc/st21nfca/dep.c                                      |    4 
- drivers/platform/x86/acer-wmi.c                                 |    9 
+ drivers/nvmem/qfprom.c                                          |   14 
  drivers/scsi/scsi_devinfo.c                                     |   23 -
  drivers/scsi/ufs/ufshcd.c                                       |    1 
  drivers/spi/spi-dw.c                                            |    3 
  drivers/staging/rtl8712/wifi.h                                  |    9 
+ drivers/tty/hvc/hvc_console.c                                   |   23 -
  drivers/tty/vt/keyboard.c                                       |   26 +
  drivers/usb/gadget/function/f_uac2.c                            |    4 
+ drivers/usb/musb/musb_debugfs.c                                 |   10 
  drivers/usb/serial/option.c                                     |    4 
  drivers/usb/serial/qcserial.c                                   |    1 
  drivers/usb/serial/usb_wwan.c                                   |    4 
- drivers/video/fbdev/geode/video_gx.c                            |    2 
  include/linux/mod_devicetable.h                                 |    6 
  include/uapi/linux/mmc/ioctl.h                                  |    1 
  kernel/events/uprobes.c                                         |   14 
+ kernel/relay.c                                                  |    5 
+ mm/mremap.c                                                     |    2 
  net/ipv4/devinet.c                                              |    1 
  net/ipv6/esp6.c                                                 |    4 
  net/l2tp/l2tp_core.c                                            |    2 
- net/l2tp/l2tp_ip.c                                              |   28 +
- net/l2tp/l2tp_ip6.c                                             |   28 +
+ net/l2tp/l2tp_ip.c                                              |   29 +
+ net/l2tp/l2tp_ip6.c                                             |   30 +-
  net/vmw_vsock/af_vsock.c                                        |    2 
- sound/pci/hda/patch_realtek.c                                   |    3 
- 76 files changed, 600 insertions(+), 156 deletions(-)
+ 53 files changed, 584 insertions(+), 135 deletions(-)
 
 Ben Hutchings (1):
       slcan: Fix double-free on slcan_open() error path
@@ -158,21 +135,29 @@ Bin Liu (1):
 Can Guo (1):
       scsi: ufs: Release clock if DMA map fails
 
-Christophe Jaillet (1):
-      IB/mlx4: Fix an error handling path in 'mlx4_ib_rereg_user_mr()'
-
 Chuhong Yuan (1):
       NFC: st21nfca: add missed kfree_skb() in an error path
 
-Daniele Palmas (1):
+Dan Carpenter (1):
+      airo: Fix read overflows sending packets
+
+Daniel Axtens (1):
+      kernel/relay.c: handle alloc_percpu returning NULL in relay_open
+
+Daniele Palmas (2):
+      net: usb: qmi_wwan: add Telit LE910C1-EUX composition
       USB: serial: option: add Telit LE910C1-EUX compositions
+
+Dinghao Liu (2):
+      net: smsc911x: Fix runtime PM imbalance on error
+      usb: musb: Fix runtime PM imbalance on error
 
 Dmitry Torokhov (1):
       vt: keyboard: avoid signed integer overflow in k_ascii
 
 Eric Dumazet (2):
-      l2tp: add sk_family checks to l2tp_validate_socket
       l2tp: do not use inet_hash()/inet_unhash()
+      l2tp: add sk_family checks to l2tp_validate_socket
 
 Eugeniu Rosca (1):
       usb: gadget: f_uac2: fix error handling in afunc_bind (again)
@@ -180,8 +165,14 @@ Eugeniu Rosca (1):
 Eugeniy Paltsev (1):
       ARC: Fix ICCM & DCCM runtime size checks
 
+Fan Yang (1):
+      mm: Fix mremap not considering huge pmd devmap
+
+Giuseppe Marco Randazzo (1):
+      p54usb: add AirVasT USB stick device-id
+
 Greg Kroah-Hartman (1):
-      Linux 4.4.227
+      Linux 4.9.227
 
 Guillaume Nault (1):
       pppoe: only process PADT targeted at local interfaces
@@ -192,8 +183,8 @@ Hannes Reinecke (1):
 Jeremy Kerr (1):
       net: bmac: Fix read of MAC address from ROM
 
-Jia Zhang (1):
-      x86/cpu: Rename cpu_data.x86_mask to cpu_data.x86_stepping
+Jiri Slaby (1):
+      tty: hvc_console, fix crashes on parallel open/close
 
 Jonathan McDowell (1):
       net: ethernet: stmmac: Enable interface clocks on probe for IPQ806x
@@ -201,11 +192,11 @@ Jonathan McDowell (1):
 Josh Poimboeuf (1):
       x86/speculation: Add Ivy Bridge to affected list
 
+Julian Sax (1):
+      HID: i2c-hid: add Schneider SCL142ALM to descriptor override
+
 Jérôme Pouiller (1):
       mmc: fix compilation of user API
-
-Lee, Chun-Yi (1):
-      platform/x86: acer-wmi: setup accelerometer when ACPI device was found
 
 Mark Gross (4):
       x86/cpu: Add a steppings field to struct x86_cpu_id
@@ -228,11 +219,11 @@ Oleg Nesterov (1):
 Pascal Terjan (1):
       staging: rtl8712: Fix IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK
 
+Srinivas Kandagatla (1):
+      nvmem: qfprom: remove incorrect write support
+
 Stefano Garzarella (1):
       vsock: fix timeout in vsock_accept()
-
-Takashi Iwai (1):
-      ALSA: hda - No loopback on ALC299 codec
 
 Valentin Longchamp (1):
       net/ethernet/freescale: rework quiesce/activate for ucc_geth
