@@ -2,93 +2,104 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D28AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A649DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AC332065C
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:23:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 813A32065C
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:25:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="K+0amQ1C"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="l28f8UvD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728118AbgFKOXd (ORCPT
+        id S1728229AbgFKOZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 10:23:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59060 "EHLO
+        Thu, 11 Jun 2020 10:25:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726414AbgFKOXc (ORCPT
+        with ESMTP id S1726414AbgFKOZu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 10:23:32 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95461C08C5C1;
-        Thu, 11 Jun 2020 07:23:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=uUyLwTtfk+A1DXapst7cJfHMbDppK5rNh2DPOhr1VvQ=; b=K+0amQ1CQGvTiDsNdVz1oIxfjk
-        /J2n5dD/Q2fxGkPRyp+WEPiF3z1G8Kr7O57pSIo64H25EdRJRjnGQc1G/iaFtl24MYcR7+EJdeBeX
-        /AS3ly+Q7/7dmBbdwTf3Tz3EJJXFa5sPQri4e79JTZqljLt3r0ZTm+S4mL4teTHrbgfySdZA08EFL
-        s1Wy7y0O5Z1Hv6X8OFfw4y1PQLZP9XCyjywjQXw6E1Q3mYmsR7n/jgbQSNSmAJZYbViCuzLIqRT28
-        ZtbxoHIz+j6+ZhoFKEFAEK1VxjhI2hk4Xr/3e3OwrNvF3+SdAjf7kXMeVsd28j7ibakDuneMg0l43
-        njDv9LnA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jjO5z-0002DI-G8; Thu, 11 Jun 2020 14:22:19 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 65CAC303DA8;
-        Thu, 11 Jun 2020 16:22:14 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2B2A720C6A1FE; Thu, 11 Jun 2020 16:22:14 +0200 (CEST)
-Date:   Thu, 11 Jun 2020 16:22:14 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+a9fb1457d720a55d6dc5@syzkaller.appspotmail.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>, allison@lohutok.net,
-        areber@redhat.com, aubrey.li@linux.intel.com,
-        Andrei Vagin <avagin@gmail.com>,
-        Bruce Fields <bfields@fieldses.org>,
-        Christian Brauner <christian@brauner.io>, cyphar@cyphar.com,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>, guro@fb.com,
-        Jeff Layton <jlayton@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Kees Cook <keescook@chromium.org>, linmiaohe@huawei.com,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@suse.com>, Ingo Molnar <mingo@kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, sargun@sargun.me,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Boqun Feng <boqun.feng@gmail.com>
-Subject: Re: possible deadlock in send_sigio
-Message-ID: <20200611142214.GI2531@hirez.programming.kicks-ass.net>
-References: <000000000000760d0705a270ad0c@google.com>
- <69818a6c-7025-8950-da4b-7fdc065d90d6@redhat.com>
- <CACT4Y+brpePBoR7EUwPiSvGAgo6bhvpKvLTiCaCfRSadzn6yRw@mail.gmail.com>
- <88c172af-46df-116e-6f22-b77f98803dcb@redhat.com>
+        Thu, 11 Jun 2020 10:25:50 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C1FCC08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 07:25:50 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id r15so5248946wmh.5
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 07:25:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=4Wl9FPjQM/OmioKsKPEd8aDegLYWZmFx0p2ql/A57hk=;
+        b=l28f8UvDUpME1nIHWAzTfBskecEhX50JaBZhgjJEeNEemNi2o5jq6jzfPAXaUlfCc0
+         Tsgd8VVnkXoyX74/1DMaTTXjBT2cVYaVJLtAnFt53WEJI1amkTsQZ6pe40TWM7f+u8tf
+         gAFiVIgbp/zn78MwZ11YBE5DZge2oKlRtDmMU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4Wl9FPjQM/OmioKsKPEd8aDegLYWZmFx0p2ql/A57hk=;
+        b=dTTuQNVIky2jZJa/cjo7VTHQxFFK5ofGHkcY650j+8ZhKmNdp8zwAAK5wZWetJaXVM
+         kecrMEBrKwj5rZAlpJDtYpHp5U3vjqerGCAO9Ptr+zbQ4kSbPB+dDAQVFNtzfkh4viZU
+         CDLTj4sduq2aa/2m3eNEOo6/8HctT/4mmbJJ3YSw2B5aG6qz9db5M5/8Q0j8uX8QzNb+
+         TigMMsNWqoo+S5M99sGCavsvXJP+XXVayL5DMnMhOZBWlETGHWZ3aM38YVQAHck+HTWr
+         k7P6FqQlwb8cWGJs+PhevSR3nPlZsrWswtXGWGXpAHVurCgITWZfqgFegfSqlVsXh4d4
+         X23A==
+X-Gm-Message-State: AOAM531Olh41c8rpJ0084bjysd8R4ywpig4WKSbmYJhymsQZWtqxp/gc
+        tnyV8VFdmsELS+y6NehjLx8wfxkawcRSlA==
+X-Google-Smtp-Source: ABdhPJwq/eOqXtITLK+kyOLCk4mNDfVsqXIZV2F3yV+6GfhTdR4AaBB6cuDCKN+FCMKfYALtIfLtaA==
+X-Received: by 2002:a1c:1d16:: with SMTP id d22mr8733030wmd.174.1591885548499;
+        Thu, 11 Jun 2020 07:25:48 -0700 (PDT)
+Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
+        by smtp.gmail.com with ESMTPSA id b14sm4310840wmj.47.2020.06.11.07.25.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2020 07:25:47 -0700 (PDT)
+Date:   Thu, 11 Jun 2020 14:25:46 +0000
+From:   Tomasz Figa <tfiga@chromium.org>
+To:     Xia Jiang <xia.jiang@mediatek.com>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        srv_heupstream@mediatek.com, senozhatsky@chromium.org,
+        mojahsu@chromium.org, drinkcat@chromium.org,
+        maoguang.meng@mediatek.com, sj.huang@mediatek.com
+Subject: Re: [PATCH RESEND v9 08/18] media: platform: Cancel the last frame
+ handling flow
+Message-ID: <20200611142546.GB158633@chromium.org>
+References: <20200604090553.10861-1-xia.jiang@mediatek.com>
+ <20200604090553.10861-10-xia.jiang@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <88c172af-46df-116e-6f22-b77f98803dcb@redhat.com>
+In-Reply-To: <20200604090553.10861-10-xia.jiang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 09:51:29AM -0400, Waiman Long wrote:
+Hi Xia,
 
-> There was an old lockdep patch that I think may address the issue, but was
-> not merged at the time. I will need to dig it out and see if it can be
-> adapted to work in the current kernel. It may take some time.
+On Thu, Jun 04, 2020 at 05:05:43PM +0800, Xia Jiang wrote:
+> There is no need to queue an empty buffer for signaling a last frame,
+> because all frames are separate from each other in JPEG.
+> 
+> Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
+> ---
+> v9: new patch
+> ---
+>  .../media/platform/mtk-jpeg/mtk_jpeg_core.c   | 21 +------------------
+>  1 file changed, 1 insertion(+), 20 deletions(-)
+> 
 
-Boqun was working on that; I can't remember what happened, but ISTR it
-was shaping up nice.
+Reviewed-by: Tomasz Figa <tfiga@chromium.org>
+
+Best regards,
+Tomasz
