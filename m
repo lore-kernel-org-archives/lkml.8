@@ -2,89 +2,133 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54195C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A75C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:10:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CCF020842
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 248FC2083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:10:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EKbJOhe1"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ohP+4Y0r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727874AbgFKOJf (ORCPT
+        id S1728004AbgFKOKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 10:09:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56898 "EHLO
+        Thu, 11 Jun 2020 10:10:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726444AbgFKOJf (ORCPT
+        with ESMTP id S1726444AbgFKOKA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 10:09:35 -0400
-Received: from mail-ua1-x935.google.com (mail-ua1-x935.google.com [IPv6:2607:f8b0:4864:20::935])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4A99C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 07:09:34 -0700 (PDT)
-Received: by mail-ua1-x935.google.com with SMTP id r9so2146093ual.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 07:09:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qTyfOyKAP1NkHULoUQ9fRplZcl3aA+X4eH3AIaEch8A=;
-        b=EKbJOhe1HXzQJwIuQfIgSQTJ4dBb/OkYsIF0hnEc7gazeGteERQELU0r+OQ0QEDDcC
-         tVuUKM7brG4GlAWR5Ns14RorVLBFKGHY/Z0VVBhhMW7QGrEGjGLXJrLG9XNlAnM9Z8TS
-         7Mwc0G0RLYF+kX/6UWBGc8Xk6htwwZXj90K7QBL2cGXquX1wUBFVN6rIg9W+jvGax0h4
-         hjjOvsNbeDxgTAuH88v8nswoCSfJ9Zl04DYj1m8nyXtPj0N+Net/7Q++wFuEgA+/Ijfz
-         szWCDkcRP7kXWsaFN1xcyQerIvkmZ43Su3N6ThQYO8g+90kz3VXVgTkgCBDQurwR8Fye
-         nQZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qTyfOyKAP1NkHULoUQ9fRplZcl3aA+X4eH3AIaEch8A=;
-        b=rAJySeFMArxXQOHb47gI952u1v2UPF8o9gmKRou6/iBoPOxP2ibbHN3zLYSSHut8nu
-         YWHteqlfwMdIBBWWloo7kcZ4efYpNQU1mtByqEKlGKnS1fJW6nF7g7VlFWZa3bDhlXo0
-         er6SmAd0iv617wA9AjBaatgzxujof1jc3k9P8x8jWy9+QYpSic5euvJBt7ql9mAiLl6P
-         Z2kxD/Om++3mxFkGIE7Jwd3/uS0rKl+ALYHdXagLYyejf12ICumAoCGPsz0gBPLpxwoD
-         OnpcRyO2thjTGZjRbuYcKTNOwkr/+mqHZtxS6rFzPRC2xgi0C8cT+QFQWvV0TYZWlpmG
-         QVzw==
-X-Gm-Message-State: AOAM532otXXS8i/VHgz0fS8KfcaO2ceUijhS7leE1NWeAhuF7hR91EVf
-        poQfg/WARRRBKbaK+YYDET98kATj7C9aKey/I90=
-X-Google-Smtp-Source: ABdhPJw+aJ8ZsrudzdEEF8a/SZQDp7bLWsJkCwvZ+EKqzSQbhngbiqbpp+6BX2JcsBOAaxHWlmngCSZLbyvkyzR+moo=
-X-Received: by 2002:ab0:156d:: with SMTP id p42mr6655940uae.121.1591884573191;
- Thu, 11 Jun 2020 07:09:33 -0700 (PDT)
+        Thu, 11 Jun 2020 10:10:00 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5365C08C5C1;
+        Thu, 11 Jun 2020 07:09:59 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0bef00e16d68ab941b81be.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:ef00:e16d:68ab:941b:81be])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E0E081EC02AC;
+        Thu, 11 Jun 2020 16:09:56 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1591884597;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=JU5IVpy1hwebQASLTWrwgg71St1itM4pRG6bPPA0pxI=;
+        b=ohP+4Y0r6eetmXUM/0YQ7W1ZbY0uQqHyv+KTkfyjr4J9kJtD+2eavOfM92CifFx8dFUY5/
+        +SuICaXRTVHLLvaRxjlFfXwXotYUvswnx8Uylb6o7Szla0KlQDB7cKPYHBjphzDWvJhEFb
+        Padg0/tPzalZtwPoKGEVml4x26mITzc=
+Date:   Thu, 11 Jun 2020 16:09:51 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Anthony Steinhauser <asteinhauser@google.com>
+Cc:     linux-tip-commits@vger.kernel.org,
+        Anthony Steinhauser <asteinhauser@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [tip: x86/urgent] x86/speculation: Avoid force-disabling IBPB
+ based on STIBP and enhanced IBRS.
+Message-ID: <20200611140951.GD30352@zn.tnic>
+References: <159169282952.17951.3529693809120577424.tip-bot2@tip-bot2>
 MIME-Version: 1.0
-References: <20200609104604.1594-1-stanimir.varbanov@linaro.org>
- <20200609104604.1594-7-stanimir.varbanov@linaro.org> <CAJfuBxzxwoyXbDrgQzb=BZJ8ZQ5hHo32Zr1uo6Od=7+q13+GXQ@mail.gmail.com>
- <548d30a8-0a5a-4ada-5564-b61f88863afc@rasmusvillemoes.dk>
-In-Reply-To: <548d30a8-0a5a-4ada-5564-b61f88863afc@rasmusvillemoes.dk>
-From:   jim.cromie@gmail.com
-Date:   Thu, 11 Jun 2020 08:09:06 -0600
-Message-ID: <CAJfuBxz1=GJQAf+kNZPLZAKLXeTUd6JeRXRRtA4zc6BLo5H5Og@mail.gmail.com>
-Subject: Re: WIP generic module->debug_flags and dynamic_debug
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Joe Perches <joe@perches.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jason Baron <jbaron@akamai.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <159169282952.17951.3529693809120577424.tip-bot2@tip-bot2>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > can anyone diagnose my problem ?
->
-> Sorry, I have not the faintest idea of what you're trying to achieve.
-> Can you spell that out?
->
-> Rasmus
+On Tue, Jun 09, 2020 at 08:53:49AM -0000, tip-bot2 for Anthony Steinhauser wrote:
+> @@ -672,23 +665,36 @@ spectre_v2_user_select_mitigation(enum spectre_v2_mitigation_cmd v2_cmd)
+>  		pr_info("mitigation: Enabling %s Indirect Branch Prediction Barrier\n",
+>  			static_key_enabled(&switch_mm_always_ibpb) ?
+>  			"always-on" : "conditional");
+> +
+> +		spectre_v2_user_ibpb = mode;
+>  	}
+>  
+> -	/* If enhanced IBRS is enabled no STIBP required */
+> -	if (spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
+> +	/*
+> +	 * If enhanced IBRS is enabled or SMT impossible, STIBP is not
+> +	 * required.
+> +	 */
+> +	if (!smt_possible || spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
+>  		return;
+>  
+>  	/*
+> -	 * If SMT is not possible or STIBP is not available clear the STIBP
+> -	 * mode.
+> +	 * At this point, an STIBP mode other than "off" has been set.
+> +	 * If STIBP support is not being forced, check if STIBP always-on
+> +	 * is preferred.
+> +	 */
+> +	if (mode != SPECTRE_V2_USER_STRICT &&
+> +	    boot_cpu_has(X86_FEATURE_AMD_STIBP_ALWAYS_ON))
+> +		mode = SPECTRE_V2_USER_STRICT_PREFERRED;
+> +
+> +	/*
+> +	 * If STIBP is not available, clear the STIBP mode.
+>  	 */
+> -	if (!smt_possible || !boot_cpu_has(X86_FEATURE_STIBP))
+> +	if (!boot_cpu_has(X86_FEATURE_STIBP))
+>  		mode = SPECTRE_V2_USER_NONE;
 
-hey, sorry for the lack of context.
-Ive solved my problem, by adding (void*) to my container_of usage.
-WIP code now "works", but still incomplete.
-will reroll and resubmit
+Can we merge this test into the one above? Diff ontop:
+
+---
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index 8d57562b1d2c..05b3163e1b8c 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -673,7 +673,9 @@ spectre_v2_user_select_mitigation(enum spectre_v2_mitigation_cmd v2_cmd)
+ 	 * If enhanced IBRS is enabled or SMT impossible, STIBP is not
+ 	 * required.
+ 	 */
+-	if (!smt_possible || spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
++	if (!boot_cpu_has(X86_FEATURE_STIBP) ||
++	    !smt_possible ||
++	    spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
+ 		return;
+ 
+ 	/*
+@@ -685,12 +687,6 @@ spectre_v2_user_select_mitigation(enum spectre_v2_mitigation_cmd v2_cmd)
+ 	    boot_cpu_has(X86_FEATURE_AMD_STIBP_ALWAYS_ON))
+ 		mode = SPECTRE_V2_USER_STRICT_PREFERRED;
+ 
+-	/*
+-	 * If STIBP is not available, clear the STIBP mode.
+-	 */
+-	if (!boot_cpu_has(X86_FEATURE_STIBP))
+-		mode = SPECTRE_V2_USER_NONE;
+-
+ 	spectre_v2_user_stibp = mode;
+ 
+ set_mode:
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
