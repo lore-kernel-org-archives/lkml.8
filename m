@@ -2,195 +2,146 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD541C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E37C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:17:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B630620760
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:16:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591881417;
-	bh=IFvRF6e6037/tFMhYBHXzmOZJOY8iAbAS3BWQmF1eCY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IeosmFOwXYzBnL8o2ktKY/ionxfUPqomwJ8/ZYaCbV52KpZCZEKO8/Augr4LcOCT4
-	 eZ5cONGJ1YbPYaSUjJi8ysMWfKAdRqZSEnZNg+Xh9qyqN4XdCkKXHFoVuvpFlHQ1g/
-	 OzQxUk2ANXWJJ8eA4HPCHcbmy6ndpfoO1tlbWAs4=
+	by mail.kernel.org (Postfix) with ESMTP id AA8C320691
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:17:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728124AbgFKNQ4 (ORCPT
+        id S1728157AbgFKNRZ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 09:16:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37440 "EHLO mail.kernel.org"
+        Thu, 11 Jun 2020 09:17:25 -0400
+Received: from mga07.intel.com ([134.134.136.100]:49921 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726435AbgFKNQ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 09:16:56 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31E3920691;
-        Thu, 11 Jun 2020 13:16:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591881415;
-        bh=IFvRF6e6037/tFMhYBHXzmOZJOY8iAbAS3BWQmF1eCY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NPdXgcpEdV+iCuO7GTVWVoXB7FU663HrV0EGE3HAdt1X1Hcy9nzqPogJhRhJc5Six
-         /hw4Twn/5neN+ApIO1VDGXIMVgrwX3BN1EzM8v3BHEynJkcLgh5SVV/QCdQfhbPWS4
-         Ugzg71pyjuY0lNyGLpIr0P7C9aBy5SFiBpKgvANs=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C166140AFD; Thu, 11 Jun 2020 10:16:51 -0300 (-03)
-Date:   Thu, 11 Jun 2020 10:16:51 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Chen Wandun <chenwandun@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, cj.chengjian@huawei.com
-Subject: Re: [PATCH next] perf tools: fix potential memleak in perf events
- parser
-Message-ID: <20200611131651.GC18482@kernel.org>
-References: <20200611014234.24304-1-chenwandun@huawei.com>
+        id S1726159AbgFKNRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 09:17:25 -0400
+IronPort-SDR: 9R2trFvioucbU8xyZT5QAoRTxHZGzRSkamKM35CzKFb6cOGg3kCplC27cJqejCK+nmSvRNoGzq
+ Bgy/QYjE+I2A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 06:17:24 -0700
+IronPort-SDR: 0RMRR5n95P1uk3MlcdKOxaQeBrPwufjj7jl7v3NUh8LU0cqZZtPToZs4jvC6LstL2Yf/qvG2VR
+ RN6MiYiRAYqw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,499,1583222400"; 
+   d="scan'208";a="289537525"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by orsmga002.jf.intel.com with ESMTP; 11 Jun 2020 06:17:24 -0700
+Received: from fmsmsx124.amr.corp.intel.com (10.18.125.39) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 11 Jun 2020 06:17:24 -0700
+Received: from fmsmsx107.amr.corp.intel.com ([169.254.6.74]) by
+ fmsmsx124.amr.corp.intel.com ([169.254.8.63]) with mapi id 14.03.0439.000;
+ Thu, 11 Jun 2020 06:17:24 -0700
+From:   "Ruhl, Michael J" <michael.j.ruhl@intel.com>
+To:     "Stankiewicz, Piotr" <piotr.stankiewicz@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+CC:     "Stankiewicz, Piotr" <piotr.stankiewicz@intel.com>,
+        "Dalessandro, Dennis" <dennis.dalessandro@intel.com>,
+        "Marciniszyn, Mike" <mike.marciniszyn@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        "Jason Gunthorpe" <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3 08/15] IB/qib: Use PCI_IRQ_MSI_TYPES where appropriate
+Thread-Topic: [PATCH v3 08/15] IB/qib: Use PCI_IRQ_MSI_TYPES where
+ appropriate
+Thread-Index: AQHWPj8EsjfpQ0WavE+AvROCK2Jb1qjTZ31w
+Date:   Thu, 11 Jun 2020 13:17:22 +0000
+Message-ID: <14063C7AD467DE4B82DEDB5C278E8663010F35E258@fmsmsx107.amr.corp.intel.com>
+References: <20200609091148.32749-1-piotr.stankiewicz@intel.com>
+ <20200609091823.1346-1-piotr.stankiewicz@intel.com>
+In-Reply-To: <20200609091823.1346-1-piotr.stankiewicz@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.1.200.108]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200611014234.24304-1-chenwandun@huawei.com>
-X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Jun 11, 2020 at 09:42:34AM +0800, Chen Wandun escreveu:
-> Fix potential memory leak in function parse_events_term__sym_hw()
-> and parse_events_term__clone().
-> 
-> 1. Free memory when errors occur.
-> 2. Function new_term may return error, so it is need to free memory
->    when the return value is negative.
+>-----Original Message-----
+>From: linux-rdma-owner@vger.kernel.org <linux-rdma-
+>owner@vger.kernel.org> On Behalf Of Piotr Stankiewicz
+>Sent: Tuesday, June 9, 2020 5:18 AM
+>To: Bjorn Helgaas <bhelgaas@google.com>; linux-pci@vger.kernel.org
+>Cc: Stankiewicz, Piotr <piotr.stankiewicz@intel.com>; Dalessandro, Dennis
+><dennis.dalessandro@intel.com>; Marciniszyn, Mike
+><mike.marciniszyn@intel.com>; Doug Ledford <dledford@redhat.com>;
+>Jason Gunthorpe <jgg@ziepe.ca>; Arnd Bergmann <arnd@arndb.de>;
+>Shevchenko, Andriy <andriy.shevchenko@intel.com>; linux-
+>rdma@vger.kernel.org; linux-kernel@vger.kernel.org
+>Subject: [PATCH v3 08/15] IB/qib: Use PCI_IRQ_MSI_TYPES where appropriate
+>
+>Seeing as there is shorthand available to use when asking for any type
+>of interrupt, or any type of message signalled interrupt, leverage it.
+>
+>Signed-off-by: Piotr Stankiewicz <piotr.stankiewicz@intel.com>
+>Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+>---
+> drivers/infiniband/hw/qib/qib_pcie.c | 6 ++++--
+> 1 file changed, 4 insertions(+), 2 deletions(-)
+>
+>diff --git a/drivers/infiniband/hw/qib/qib_pcie.c
+>b/drivers/infiniband/hw/qib/qib_pcie.c
+>index 3dc6ce033319..caff44d2c12c 100644
+>--- a/drivers/infiniband/hw/qib/qib_pcie.c
+>+++ b/drivers/infiniband/hw/qib/qib_pcie.c
+>@@ -213,7 +213,7 @@ int qib_pcie_params(struct qib_devdata *dd, u32
+>minw, u32 *nent)
+> 	u16 linkstat, speed;
+> 	int nvec;
+> 	int maxvec;
+>-	unsigned int flags = PCI_IRQ_MSIX | PCI_IRQ_MSI;
+>+	unsigned int flags;
+>
+> 	if (!pci_is_pcie(dd->pcidev)) {
+> 		qib_dev_err(dd, "Can't find PCI Express capability!\n");
+>@@ -225,7 +225,9 @@ int qib_pcie_params(struct qib_devdata *dd, u32
+>minw, u32 *nent)
+> 	}
+>
+> 	if (dd->flags & QIB_HAS_INTX)
+>-		flags |= PCI_IRQ_LEGACY;
+>+		flags = PCI_IRQ_ALL_TYPES;
+>+	else
+>+		flags = PCI_IRQ_MSI_TYPES;
 
-Try to fix one thing per patch, i.e. first the most obvious one, then
-the other that requires going thru the new_term() logic, i.e. first
-this, which is super easy to review:
+Thinking about lines of code, this patch could probably just be:
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index c4906a6a9f1a..3ada3874a90a 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -2958,8 +2958,10 @@ int parse_events_term__sym_hw(struct parse_events_term **term,
- 	sym = &event_symbols_hw[idx];
- 
- 	str = strdup(sym->symbol);
--	if (!str)
-+	if (!str) {
-+		zfree(&temp.config);
- 		return -ENOMEM;
-+	}
- 	return new_term(term, &temp, str, 0);
- }
- 
-@@ -2984,8 +2986,10 @@ int parse_events_term__clone(struct parse_events_term **new,
- 		return new_term(new, &temp, NULL, term->val.num);
- 
- 	str = strdup(term->val.str);
--	if (!str)
-+	if (!str) {
-+		zfree(&temp.config);
- 		return -ENOMEM;
-+	}
- 	return new_term(new, &temp, str, 0);
- }
- 
+-	unsigned int flags = PCI_IRQ_MSIX | PCI_IRQ_MSI;
++	unsigned int flags = PCI_IRQ_MSI_TYPES;
 
-Then you go to the one that requires the reviewer (now or in the future,
-trying to figure out why something broke) to look at the new_term()
-code, ok?
+Or maybe even:
 
-- Arnaldo
- 
-> Signed-off-by: Chen Wandun <chenwandun@huawei.com>
-> ---
->  tools/perf/util/parse-events.c | 40 +++++++++++++++++++++++++++++-----
->  1 file changed, 34 insertions(+), 6 deletions(-)
-> 
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> index 3decbb203846..3491c18edd71 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -2947,6 +2947,7 @@ int parse_events_term__sym_hw(struct parse_events_term **term,
->  		.type_term = PARSE_EVENTS__TERM_TYPE_USER,
->  		.config    = config,
->  	};
-> +	int ret;
->  
->  	if (!temp.config) {
->  		temp.config = strdup("event");
-> @@ -2957,9 +2958,20 @@ int parse_events_term__sym_hw(struct parse_events_term **term,
->  	sym = &event_symbols_hw[idx];
->  
->  	str = strdup(sym->symbol);
-> -	if (!str)
-> +	if (!str) {
-> +		if (!config)
-> +			free(temp.config);
->  		return -ENOMEM;
-> -	return new_term(term, &temp, str, 0);
-> +	}
-> +
-> +	ret = new_term(term, &temp, str, 0);
-> +	if (ret < 0) {
-> +		free(str);
-> +		if (!config)
-> +			free(temp.config);
-> +	}
-> +
-> +	return ret;
->  }
->  
->  int parse_events_term__clone(struct parse_events_term **new,
-> @@ -2973,19 +2985,35 @@ int parse_events_term__clone(struct parse_events_term **new,
->  		.err_term  = term->err_term,
->  		.err_val   = term->err_val,
->  	};
-> +	int ret;
->  
->  	if (term->config) {
->  		temp.config = strdup(term->config);
->  		if (!temp.config)
->  			return -ENOMEM;
->  	}
-> -	if (term->type_val == PARSE_EVENTS__TERM_TYPE_NUM)
-> -		return new_term(new, &temp, NULL, term->val.num);
-> +	if (term->type_val == PARSE_EVENTS__TERM_TYPE_NUM) {
-> +		ret = new_term(new, &temp, NULL, term->val.num);
-> +		if (ret < 0 && term->config)
-> +			free(temp.config);
-> +		return ret;
-> +	}
->  
->  	str = strdup(term->val.str);
-> -	if (!str)
-> +	if (!str) {
-> +		if (term->config)
-> +			free(temp.config);
->  		return -ENOMEM;
-> -	return new_term(new, &temp, str, 0);
-> +	}
-> +
-> +	ret = new_term(new, &temp, str, 0);
-> +	if (ret < 0) {
-> +		free(str);
-> +		if (term->config)
-> +			free(temp.config);
-> +	}
-> +
-> +	return ret;
->  }
->  
->  void parse_events_term__delete(struct parse_events_term *term)
-> -- 
-> 2.17.1
-> 
+-	unsigned int flags = PCI_IRQ_MSIX | PCI_IRQ_MSI;
++	unsigned int flags = PCI_IRQ_ALL_TYPES;
 
--- 
+- 	if (dd->flags & QIB_HAS_INTX)
+-		flags |= PCI_IRQ_LEGACY;
 
-- Arnaldo
+?
+
+M
+
+> 	maxvec = (nent && *nent) ? *nent : 1;
+> 	nvec = pci_alloc_irq_vectors(dd->pcidev, 1, maxvec, flags);
+> 	if (nvec < 0)
+>--
+>2.17.2
+
