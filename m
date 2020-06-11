@@ -2,112 +2,255 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B69C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 22:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD283C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 22:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F4522075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 22:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D45A2063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 22:10:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="gnAHqeZA"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d71isUZn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726346AbgFKWKF (ORCPT
+        id S1726368AbgFKWKO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 18:10:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46356 "EHLO
+        Thu, 11 Jun 2020 18:10:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726289AbgFKWKE (ORCPT
+        with ESMTP id S1726251AbgFKWKO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 18:10:04 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9A1EC08C5C2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 15:10:02 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id c12so7173876qkk.13
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 15:10:02 -0700 (PDT)
+        Thu, 11 Jun 2020 18:10:14 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA8B4C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 15:10:13 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id 25so6858099oiy.13
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 15:10:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=7vi95NSNGo0FVYj7bBTDUtokoPAu8hd+3gRY+DmZdRs=;
-        b=gnAHqeZAMs724/5TtjuVPFRp2MixtrDQEfiNIVM8YLfFH4B09RRQPO3+5qffHxj2Yb
-         8EJ85CfjzgL6qIkjatNEmxJYgOyuES8RiyssWtUt22FuyfX+33qO+td2YKwlqMzBcMQm
-         kRv0M26ybLYxoyw0sHJshp4HQJYb7d9dGcOVnwmpgBxdybRgoq9Fb8vfZZJAMsTk4l8L
-         XG0K+pjzJPyvkQmqBnXsMBlsSP3RClxF4FPi+biZy7BDC5+aCPTagt1oOEQjee6LC16r
-         1buCfp3sBqpcfxyGtxlcFDexDEfWb3pzIx4zVi6qnXAuB/GFxiRc/QKzjRkCuidn8yqn
-         RFEw==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=hdWx5Cu6bWbxxBQKAjjUN4KQBR6YX2nwSKKCynMw0Zg=;
+        b=d71isUZntaFlqiviJ3bl3w2PUe3el5FT6du/Tp9hRAWOsjOXNO5eqOpwaRP+f7uuVL
+         D70K/rCY+RKeEaRcqugoEG0g23QQBYyMu9EZKv3jTYwa7a6QVrx0qruNl+DuUvKfV6wd
+         /GZk6h4Fp+PyVuct/6ruL6yuXLDrHaoZ3CbEDC/r9DfxCYDsY4vAKi6Ll4Z3aWs8P+oi
+         25oUCNFcAhKPIXG/fuWoKPbyGlLVmcr2KSTWsXZAw0vwe3wy8YoEx3wJo9pWCeuVCc6n
+         EA9xkUUSmBX0aIl9oe3bPTXTpiVongm57gFz0voU21hGewfV0ekIb7x67ArUEf3NBZM6
+         Ssig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=7vi95NSNGo0FVYj7bBTDUtokoPAu8hd+3gRY+DmZdRs=;
-        b=NAYn7TfL0llvAZTRz7GKnFu/G/qNCkpMDJ6oLCdObvLg3ZmOBbh6IA0+3EVHDBh6EX
-         cg4EWu4aE6NqdS10eKrQdxKrPkSnEosWPy5A9ep5AKCXZ/308xLYHCCzNi1HWftjCyfl
-         0FL2GdYAZc35QNmNzp0PJahgf5iKgZFJShC+Vw7sDMCKLxzD822HwmiPRENT6J3e1CyG
-         9I6DnvcG2ShqfqHGD5zoc6cWIX2IqPHkfS4OXG6GgiVwQ7R9Lj45G3y1q+95jULSp0QX
-         rCQw7n55syYRtWLBtJx/Qsp6yp5ymVgK5AMMGqRDsPHZ5myY3CnkteQudd4HaO5dSblb
-         WtiA==
-X-Gm-Message-State: AOAM530wHbNBANiEfsF977quLN0b9KnLJ2p99AV6Dtjg3jTYD2A1NGlv
-        A7jXk1eZzhT205hzrqxETufo9g==
-X-Google-Smtp-Source: ABdhPJybhAxOsyTZf0LQiKs8JrBNtizqFqRuN3cJeLA7ECRaRH1T6Q08A9mzwpItugpUTANFEU8XKg==
-X-Received: by 2002:a37:9f09:: with SMTP id i9mr166786qke.60.1591913401743;
-        Thu, 11 Jun 2020 15:10:01 -0700 (PDT)
-Received: from x1 ([196.52.2.87])
-        by smtp.gmail.com with ESMTPSA id d17sm3168281qke.101.2020.06.11.15.09.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 15:10:01 -0700 (PDT)
-Date:   Fri, 12 Jun 2020 00:09:51 +0200
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH] ARM: dts: am5729: beaglebone-ai: fix rgmii phy-mode
-Message-ID: <20200611220951.GA3355634@x1>
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=hdWx5Cu6bWbxxBQKAjjUN4KQBR6YX2nwSKKCynMw0Zg=;
+        b=BHUsAheraBMc30M+SIxK64FVDpCPIJmDbnuMW4SXdOxqvrAZc490MwLZA8XQT/CROh
+         iqFkX4FS8K3DWvZq/4ZFJpkN+BHGVwq/VJEQFtJEkxQtQvLCFS9vCIbummVevIisfy5A
+         kZv1sOg2bx704IzMzTSahWkvXY1+hVjl0VDoBXFHTwQSubCQg9YDfNz22/ttLZboAkx7
+         Vz7q2Bvm611S7WVQ94E7lVr88kofEu2NOTNe6m3l57LCvg7iMncr6wJBZwlPsrBp+ihi
+         CLrO4avgq23riqFgiE/mmMrtwS7VrwUOzaCY8Lx5ujAkxCeUr0R+56QgVJNI72kEGMKT
+         gWmw==
+X-Gm-Message-State: AOAM531AnVTjT9/lKyqNCKV2dhozaEqvnuSaJGwWFodwk1jSCuAdBSVL
+        5OSidae108gg4YwMYkq6PHQTSA==
+X-Google-Smtp-Source: ABdhPJxUNccJxGdSrNzsPKGgRLmlJN57bhrx5L71Gft8c4I9s7EbV0K/pE//CJEhdJQwKnUDfvI+mw==
+X-Received: by 2002:a05:6808:45:: with SMTP id v5mr108731oic.140.1591913412762;
+        Thu, 11 Jun 2020 15:10:12 -0700 (PDT)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id p5sm960997oof.7.2020.06.11.15.10.10
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Thu, 11 Jun 2020 15:10:11 -0700 (PDT)
+Date:   Thu, 11 Jun 2020 15:09:54 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+cc:     Hugh Dickins <hughd@google.com>, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, tj@kernel.org,
+        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
+        yang.shi@linux.alibaba.com, willy@infradead.org,
+        hannes@cmpxchg.org, lkp@intel.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        shakeelb@google.com, iamjoonsoo.kim@lge.com,
+        richard.weiyang@gmail.com
+Subject: Re: [PATCH v11 00/16] per memcg lru lock
+In-Reply-To: <730c595b-f4bf-b16a-562e-de25b9b7eb97@linux.alibaba.com>
+Message-ID: <alpine.LSU.2.11.2006111409280.10801@eggly.anvils>
+References: <1590663658-184131-1-git-send-email-alex.shi@linux.alibaba.com> <alpine.LSU.2.11.2006072100390.2001@eggly.anvils> <31943f08-a8e8-be38-24fb-ab9d25fd96ff@linux.alibaba.com> <alpine.LSU.2.11.2006091904530.2779@eggly.anvils>
+ <730c595b-f4bf-b16a-562e-de25b9b7eb97@linux.alibaba.com>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: MULTIPART/MIXED; BOUNDARY="0-2125215133-1591913411=:10801"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit cd28d1d6e52e ("net: phy: at803x: Disable phy delay for
-RGMII mode") the networking is broken on the BeagleBone AI which has
-the AR8035 PHY for Gigabit Ethernet [0].  The fix is to switch from
-phy-mode = "rgmii" to phy-mode = "rgmii-rxid".
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Note: Grygorii Strashko made a similar phy-mode fix in 820f8a870f65 for
-other AM5729 boards.
+--0-2125215133-1591913411=:10801
+Content-Type: TEXT/PLAIN; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-[0] https://github.com/beagleboard/beaglebone-ai/blob/master/BeagleBone-AI_sch.pdf
+On Thu, 11 Jun 2020, Alex Shi wrote:
+> =E5=9C=A8 2020/6/10 =E4=B8=8A=E5=8D=8811:22, Hugh Dickins =E5=86=99=E9=81=
+=93:
+> > On Mon, 8 Jun 2020, Alex Shi wrote:
+> >> =E5=9C=A8 2020/6/8 =E4=B8=8B=E5=8D=8812:15, Hugh Dickins =E5=86=99=E9=
+=81=93:
+> >>>>  24 files changed, 487 insertions(+), 312 deletions(-)
+> >>> Hi Alex,
+> >>>
+> >>> I didn't get to try v10 at all, waited until Johannes's preparatory
+> >>> memcg swap cleanup was in mmotm; but I have spent a while thrashing
+> >>> this v11, and can happily report that it is much better than v9 etc:
+> >>> I believe this memcg lru_lock work will soon be ready for v5.9.
+> >>>
+> >>> I've not yet found any flaw at the swapping end, but fixes are needed
+> >>> for isolate_migratepages_block() and mem_cgroup_move_account(): I've
+> >>> got a series of 4 fix patches to send you (I guess two to fold into
+> >>> existing patches of yours, and two to keep as separate from me).
+> >>>
+> >>> I haven't yet written the patch descriptions, will return to that
+> >>> tomorrow.  I expect you will be preparing a v12 rebased on v5.8-rc1
+> >>> or v5.8-rc2, and will be able to include these fixes in that.
+> >>
+> >> I am very glad to get your help on this feature!=20
+> >>
+> >> and looking forward for your fixes tomorrow. :)
+> >>
+> >> Thanks a lot!
+> >> Alex
+> >=20
+> > Sorry, Alex, the news is not so good today.
+> >=20
+> > You'll have noticed I sent nothing yesterday. That's because I got
+> > stuck on my second patch: could not quite convince myself that it
+> > was safe.
+>=20
+> Hi Hugh,
+>=20
+> Thanks a lot for your help and effort! I very appreciate for this.
+>=20
+> >=20
+> > I keep hinting at these patches, and I can't complete their writeups
+> > until I'm convinced; but to give you a better idea of what they do:
+> >=20
+> > 1. Fixes isolate_fail and isolate_abort in isolate_migratepages_block()=
+=2E
+>=20
+> I guess I know this after mm-compaction-avoid-vm_bug_onpageslab-in-page_m=
+apcount.patch
+> was removed.
 
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>
-Fixes: cd28d1d6e52e ("net: phy: at803x: Disable phy delay for RGMII mode")
-Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
-Signed-off-by: Drew Fustini <drew@beagleboard.org>
----
- arch/arm/boot/dts/am5729-beagleboneai.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+No, I already assumed you had backed that out: these are fixes beyond that.
 
-diff --git a/arch/arm/boot/dts/am5729-beagleboneai.dts b/arch/arm/boot/dts/am5729-beagleboneai.dts
-index 9877d7709d41..4c51c6b05e64 100644
---- a/arch/arm/boot/dts/am5729-beagleboneai.dts
-+++ b/arch/arm/boot/dts/am5729-beagleboneai.dts
-@@ -505,7 +505,7 @@ &mac {
- 
- &cpsw_emac0 {
- 	phy-handle = <&phy0>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-rxid";
- };
- 
- &ocp {
--- 
-2.25.1
+>=20
+> > 2. Fixes unsafe use of trylock_page() in __isolate_lru_page_prepare().
+> > 3. Reverts 07/16 inversion of lock ordering in split_huge_page_to_list(=
+).
+> > 4. Adds lruvec lock protection in mem_cgroup_move_account().
+>=20
+> Sorry for can't follow you for above issues.
+
+Indeed, more explanation needed: coming.
+
+> Anyway, I will send out new patchset
+> with the first issue fixed. and then let's discussion base on it.
+
+Sigh. I wish you had waited for me to send you fixes, or waited for an
+identifiable tag like 5.8-rc1.  Andrew has been very hard at work with
+mm patches to Linus, but it looks like there are still "data_race" mods
+to come before -rc1, which may stop your v12 from applying cleanly.
+
+>=20
+> >=20
+> > In the second, I was using rcu_read_lock() instead of trylock_page()
+> > (like in my own patchset), but could not quite be sure of the case when
+> > PageSwapCache gets set at the wrong moment. Gave up for the night, and
+> > in the morning abandoned that, instead just shifting the call to
+> > __isolate_lru_page_prepare() after the get_page_unless_zero(),
+> > where that trylock_page() becomes safe (no danger of stomping on page
+> > flags while page is being freed or newly allocated to another owner).
+>=20
+> Sorry, I don't know the problem of trylock_page here? Could you like to
+> describe it as a race?
+
+Races, yes. Look, I'll send you now patches 1 and 2: at least with those
+in it should be safe for you and others to test compaction (if 5.8-rc1
+turns out well: I think so much has gone in that it might have unrelated
+problems, and often the -rc2 is much more stable).
+
+But no point in sending 3 and 4 at this point, since ...
+
+>=20
+> >=20
+> > I thought that a very safe change, but best to do some test runs with
+> > it in before finalizing. And was then unpleasantly surprised to hit a
+> > VM_BUG_ON_PAGE(lruvec_memcg(lruvec) !=3D page->mem_cgroup) from
+> > lock_page_lruvec_irqsave < relock_page_lruvec < pagevec_lru_move_fn <
+> > pagevec_move_tail < lru_add_drain_cpu after 6 hours on one machine.
+> > Then similar but < rotate_reclaimable_page after 8 hours on another.
+> >=20
+> > Only seen once before: that's what drove me to add patch 4 (with 3 to
+> > revert the locking before it): somehow, when adding the lruvec locking
+> > there, I just took it for granted that your patchset would have the
+> > appropriate locking (or TestClearPageLRU magic) at the other end.
+> >=20
+> > But apparently not. And I'm beginning to think that TestClearPageLRU
+> > was just to distract the audience from the lack of proper locking.
+> >=20
+> > I have certainly not concluded that yet, but I'm having to think about
+> > an area of the code which I'd imagined you had under control (and I'm
+> > puzzled why my testing has found it so very hard to hit). If we're
+> > lucky, I'll find that pagevec_move_tail is a special case, and
+> > nothing much else needs changing; but I doubt that will be so.
+
+=2E.. shows that your locking primitives are not yet good enough
+to handle the case when tasks are moved between memcgs with
+move_charge_at_immigrate set.  "bin/cg m" in the tests I sent,
+but today I'm changing its "seconds=3D60" to "seconds=3D1" in hope
+of speeding up the reproduction.
+
+Ah, good, two machines crashed in 1.5 hours: but I don't need to
+examine the crashes, now that it's obvious there's no protection -
+please, think about rotate_reclaimable_page() (there will be more
+cases, but in practice that seems easiest to hit, so focus on that)
+and how it is not protected from mem_cgroup_move_account().
+
+I'm thinking too. Maybe judicious use of lock_page_memcg() can fix it
+(8 years ago it was unsuitable, but a lot has changed for the better
+since then); otherwise it's back to what I've been doing all along,
+taking the likely lruvec lock, and checking under that lock whether
+we have the right lock (as your lruvec_memcg_debug() does), retrying
+if not. Which may be more efficient than involving lock_page_memcg().
+
+But I guess still worth sending my first two patches, since most of us
+use move_charge_at_immigrate only for... testing move_charge_at_immigrate.
+Whereas compaction bugs can hit any of us at any time.
+
+> >=20
+> > There's one other unexplained and unfixed bug I've seen several times
+> > while exercising mem_cgroup_move_account(): refcount_warn_saturate()
+> > from where __mem_cgroup_clear_mc() calls mem_cgroup_id_get_many().
+> > I'll be glad if that goes away when the lruvec locking is fixed,
+> > but don't understand the connection. And it's quite possible that
+> > this refcounting bug has nothing to do with your changes: I have
+> > not succeeded in reproducing it on 5.7 nor on 5.7-rc7-mm1,
+> > but I didn't really try long enough to be sure.
+
+I got one of those quite quickly too after setting "cg m"'s seconds=3D1.
+I think the best thing I can do while thinking and researching, is
+give 5.7-rc7-mm1 a run on that machine with the speeded up moving,
+to see whether or not that refcount bug reproduces.
+
+> >=20
+> > (I should also warn, that I'm surprised by the amount of change
+> > 11/16 makes to mm/mlock.c: I've not been exercising mlock at all.)
+>=20
+> yes, that is a bit complex. I have tried the mlock cases in selftest with
+> your swap&build case. They are all fine with 300 times run.
+
+Good, thanks.
+
+Hugh
+--0-2125215133-1591913411=:10801--
