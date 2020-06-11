@@ -2,199 +2,125 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE0EAC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:44:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A416C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:47:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0E4720656
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:44:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE24D207C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:47:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sa24oVhm"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="ldyHCqL6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbgFKIok (ORCPT
+        id S1726918AbgFKIru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 04:44:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34476 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726748AbgFKIoj (ORCPT
+        Thu, 11 Jun 2020 04:47:50 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:6686 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726837AbgFKIrt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 04:44:39 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F640C03E96F;
-        Thu, 11 Jun 2020 01:44:38 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id l12so5587440ejn.10;
-        Thu, 11 Jun 2020 01:44:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=dyB5ymhOUYfsgOuYaL4XbtnTAmjSGqLiWLGp+voTc2A=;
-        b=Sa24oVhm/8B5xet7EPJ4/MRwMG9pCgrKFGMqAe3SONnDQUnX4heXuYfBy5Ixt58MP5
-         xjjCuE9m7IUwOAsEmYdy8mbACsq2ex8qXKLfczqSxYCfwJbSI+6PJBqh8vUW9xg74HL4
-         8+ydyRFDyYemLFmoTytWTRwnnavoxsUZB6EtJIvtRkxgAoeIWTVXRWWnjygpyEWRdzYA
-         VRtw3i2qGtGG92v9Ovzc6livvwR7v46V6KBGa9jwd7GEuXFpzXJTg+jT04dsEwCaoR7t
-         n3QN951JwnOBhY4ynwkHV7DILiUf0gpnlpRa0g+KSCpO9fScPk4MODUv6SwFnIJkVAVT
-         eEjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=dyB5ymhOUYfsgOuYaL4XbtnTAmjSGqLiWLGp+voTc2A=;
-        b=GtijtW8VoHKp9EaBJ9+eiSf3x7sryTme24zo8iLNu7FZUK15Rfq32sNJT/uXcXZWXf
-         O8DB/N0Hrx+9cDYC8hEYKa/0G8AhdCAXTQ21qP2lbHVyqNKUVivNzlDa97E7w4QUzuCi
-         rJYCvsYmgQ8OA5OnnmDwwq/Wh56WZA+0AZ6eeQsGotjq13d4CL3e91YxjCqe1iw8GzUs
-         U3+CPC88vujg5gN2IptrGQyMCwdEyjCQnU9hYEZ9HjgHJpndti4p39i4c5fCDi17fAUO
-         4xMl5Bto1FkbaTKEMGcPRg5zsQm7AHg8FKxctIlUBVoZRUR45tHZK1LFhV2nRLIXsvnN
-         VoPg==
-X-Gm-Message-State: AOAM530TsI8xQw+i1KQMxxHELOszOgwxk3bIAvuHSPJe4WJgMhiG3Z8V
-        s4IraL8fqLTmPYDGs59J080GNuaN7LMi4iO0qPo=
-X-Google-Smtp-Source: ABdhPJyyvbmpR5itDPokp01aqVx37qiEbG+AaFyU2VF1ZF4GEMP/3/UQqu5mG6cuNL9hhOQyiLsMvAEgTVF/k/3e5Ck=
-X-Received: by 2002:a17:906:c9d6:: with SMTP id hk22mr7161397ejb.101.1591865077473;
- Thu, 11 Jun 2020 01:44:37 -0700 (PDT)
+        Thu, 11 Jun 2020 04:47:49 -0400
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05B8g8DS006204;
+        Thu, 11 Jun 2020 03:47:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=PODMain02222019;
+ bh=RA8gyM/Boi4nX18h8FqgHUYCugif5lvnF1e0Dqjslrk=;
+ b=ldyHCqL6OVILKhdYVG3ldBwKF9gg3jIeoK9awaghoM4AD+XCCnc0/fk+cTnm+MQTAlkX
+ l1+7tC9Jbq7zRnq6Pqi4t3/xPzOI24QfL4GaXNyXTJlacv62Dq3o5KLgg6mC4LzNZqJN
+ Ywf3Whv6nOF3SP1LUjibfT6yXGSSjHQfh7FqMU34Uu7J4MhfPtyfCwsBst22pe6cXa0l
+ MA4cfrpPKN19NeJk2j6eer2JDwiftGiEYEBMgncLdV6d+43vg1EiMSqqaO5yd7G1//kf
+ NT0Y6mDR1VdNoHIaal3HgME3uyhLq3sUGrfNRFy2AY1RrTD3gcHqwLdrW3iuVTARo1bd Ew== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex01.ad.cirrus.com ([87.246.76.36])
+        by mx0b-001ae601.pphosted.com with ESMTP id 31g7jmynde-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 11 Jun 2020 03:47:00 -0500
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Thu, 11 Jun
+ 2020 09:46:59 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
+ Transport; Thu, 11 Jun 2020 09:46:59 +0100
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 1887B448;
+        Thu, 11 Jun 2020 08:46:59 +0000 (UTC)
+Date:   Thu, 11 Jun 2020 08:46:59 +0000
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     Jaroslav Kysela <perex@perex.cz>, <alsa-devel@alsa-project.org>,
+        <broonie@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        <tiwai@suse.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH] ALSA: compress: Fix gapless playback state machine
+Message-ID: <20200611084659.GO71940@ediswmail.ad.cirrus.com>
+References: <20200610100729.362-1-srinivas.kandagatla@linaro.org>
+ <817d009e-fa09-e897-cfc3-997bf1dd5e30@perex.cz>
+ <20200610105820.GA1393454@vkoul-mobl>
 MIME-Version: 1.0
-References: <20200604081224.863494-1-daniel.vetter@ffwll.ch>
- <20200604081224.863494-4-daniel.vetter@ffwll.ch> <159186243606.1506.4437341616828968890@build.alporthouse.com>
-In-Reply-To: <159186243606.1506.4437341616828968890@build.alporthouse.com>
-From:   Dave Airlie <airlied@gmail.com>
-Date:   Thu, 11 Jun 2020 18:44:26 +1000
-Message-ID: <CAPM=9ty6r1LuXAH_rf98GH0R9yN3x8xzKPjZG3QyvokpQBR-Hg@mail.gmail.com>
-Subject: Re: [PATCH 03/18] dma-fence: basic lockdep annotations
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        linux-rdma@vger.kernel.org,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx mailing list <amd-gfx@lists.freedesktop.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>,
-        Thomas Hellstrom <thomas.hellstrom@intel.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Mika Kuoppala <mika.kuoppala@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200610105820.GA1393454@vkoul-mobl>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ ip4:5.172.152.52 -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
+ phishscore=0 adultscore=0 priorityscore=1501 mlxscore=0 bulkscore=0
+ clxscore=1015 mlxlogscore=953 spamscore=0 impostorscore=0
+ cotscore=-2147483648 lowpriorityscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006110068
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 11 Jun 2020 at 18:01, Chris Wilson <chris@chris-wilson.co.uk> wrote=
-:
->
-> Quoting Daniel Vetter (2020-06-04 09:12:09)
-> > Design is similar to the lockdep annotations for workers, but with
-> > some twists:
-> >
-> > - We use a read-lock for the execution/worker/completion side, so that
-> >   this explicit annotation can be more liberally sprinkled around.
-> >   With read locks lockdep isn't going to complain if the read-side
-> >   isn't nested the same way under all circumstances, so ABBA deadlocks
-> >   are ok. Which they are, since this is an annotation only.
-> >
-> > - We're using non-recursive lockdep read lock mode, since in recursive
-> >   read lock mode lockdep does not catch read side hazards. And we
-> >   _very_ much want read side hazards to be caught. For full details of
-> >   this limitation see
-> >
-> >   commit e91498589746065e3ae95d9a00b068e525eec34f
-> >   Author: Peter Zijlstra <peterz@infradead.org>
-> >   Date:   Wed Aug 23 13:13:11 2017 +0200
-> >
-> >       locking/lockdep/selftests: Add mixed read-write ABBA tests
-> >
-> > - To allow nesting of the read-side explicit annotations we explicitly
-> >   keep track of the nesting. lock_is_held() allows us to do that.
-> >
-> > - The wait-side annotation is a write lock, and entirely done within
-> >   dma_fence_wait() for everyone by default.
-> >
-> > - To be able to freely annotate helper functions I want to make it ok
-> >   to call dma_fence_begin/end_signalling from soft/hardirq context.
-> >   First attempt was using the hardirq locking context for the write
-> >   side in lockdep, but this forces all normal spinlocks nested within
-> >   dma_fence_begin/end_signalling to be spinlocks. That bollocks.
-> >
-> >   The approach now is to simple check in_atomic(), and for these cases
-> >   entirely rely on the might_sleep() check in dma_fence_wait(). That
-> >   will catch any wrong nesting against spinlocks from soft/hardirq
-> >   contexts.
-> >
-> > The idea here is that every code path that's critical for eventually
-> > signalling a dma_fence should be annotated with
-> > dma_fence_begin/end_signalling. The annotation ideally starts right
-> > after a dma_fence is published (added to a dma_resv, exposed as a
-> > sync_file fd, attached to a drm_syncobj fd, or anything else that
-> > makes the dma_fence visible to other kernel threads), up to and
-> > including the dma_fence_wait(). Examples are irq handlers, the
-> > scheduler rt threads, the tail of execbuf (after the corresponding
-> > fences are visible), any workers that end up signalling dma_fences and
-> > really anything else. Not annotated should be code paths that only
-> > complete fences opportunistically as the gpu progresses, like e.g.
-> > shrinker/eviction code.
-> >
-> > The main class of deadlocks this is supposed to catch are:
-> >
-> > Thread A:
-> >
-> >         mutex_lock(A);
-> >         mutex_unlock(A);
-> >
-> >         dma_fence_signal();
-> >
-> > Thread B:
-> >
-> >         mutex_lock(A);
-> >         dma_fence_wait();
-> >         mutex_unlock(A);
-> >
-> > Thread B is blocked on A signalling the fence, but A never gets around
-> > to that because it cannot acquire the lock A.
-> >
-> > Note that dma_fence_wait() is allowed to be nested within
-> > dma_fence_begin/end_signalling sections. To allow this to happen the
-> > read lock needs to be upgraded to a write lock, which means that any
-> > other lock is acquired between the dma_fence_begin_signalling() call an=
-d
-> > the call to dma_fence_wait(), and still held, this will result in an
-> > immediate lockdep complaint. The only other option would be to not
-> > annotate such calls, defeating the point. Therefore these annotations
-> > cannot be sprinkled over the code entirely mindless to avoid false
-> > positives.
-> >
-> > v2: handle soft/hardirq ctx better against write side and dont forget
-> > EXPORT_SYMBOL, drivers can't use this otherwise.
-> >
-> > v3: Kerneldoc.
-> >
-> > v4: Some spelling fixes from Mika
-> >
-> > Cc: Mika Kuoppala <mika.kuoppala@intel.com>
-> > Cc: Thomas Hellstrom <thomas.hellstrom@intel.com>
-> > Cc: linux-media@vger.kernel.org
-> > Cc: linaro-mm-sig@lists.linaro.org
-> > Cc: linux-rdma@vger.kernel.org
-> > Cc: amd-gfx@lists.freedesktop.org
-> > Cc: intel-gfx@lists.freedesktop.org
-> > Cc: Chris Wilson <chris@chris-wilson.co.uk>
-> > Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> > Cc: Christian K=C3=B6nig <christian.koenig@amd.com>
-> > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
->
-> Introducing a global lockmap that cannot capture the rules correctly,
+On Wed, Jun 10, 2020 at 04:28:20PM +0530, Vinod Koul wrote:
+> On 10-06-20, 12:40, Jaroslav Kysela wrote:
+> > Dne 10. 06. 20 v 12:07 Srinivas Kandagatla napsal(a):
+> > > For gapless playback call to snd_compr_drain_notify() after
+> > > partial drain should put the state to SNDRV_PCM_STATE_RUNNING
+> > > rather than SNDRV_PCM_STATE_SETUP as the driver is ready to
+> > > process the buffers for new track.
+> > > 
+> > > With existing code, if we are playing 3 tracks in gapless, after
+> > > partial drain finished on previous track 1 the state is set to
+> > > SNDRV_PCM_STATE_SETUP which is then moved to SNDRV_PCM_STATE_PREPARED
+> > > after data write. With this state calls to snd_compr_next_track() and
+> > > few other calls will fail as they expect the state to be in
+> > > SNDRV_PCM_STATE_RUNNING.
+> > > 
+> > > Here is the sequence of events and state transitions:
+> > > 
+> > > 1. set_params (Track 1), state =  SNDRV_PCM_STATE_SETUP
+> > > 2. set_metadata (Track 1), no state change, state = SNDRV_PCM_STATE_SETUP
+> > > 3. fill and trigger start (Track 1), state = SNDRV_PCM_STATE_RUNNING
+> > > 4. set_next_track (Track 2), state = SNDRV_PCM_STATE_RUNNING
+> > > 5. partial_drain (Track 1), state = SNDRV_PCM_STATE_SETUP
+> > > 6  snd_compr_drain_notify (Track 1), state = SNDRV_PCM_STATE_SETUP
+> > > 7. fill data (Track 2), state = SNDRV_PCM_STATE_PREPARED
+> > > 8. set_metadata (Track 3), no state change, state = SNDRV_PCM_STATE_PREPARED
+> > > 9. set_next_track (Track 3), !! FAILURE as state != SNDRV_PCM_STATE_RUNNING
+> > 
+> > 
+> > The snd_compr_drain_notify() is called only from snd_compr_stop(). Something
+> > is missing in this sequence?
+> 
+> It is supposed to be invoked by driver when partial drain is complete..
+> both intel and sprd driver are calling this. snd_compr_stop is stop
+> while draining case so legit
+> 
 
-Can you document the rules all drivers should be following then,
-because from here it looks to get refactored every version of i915,
-and it would be nice if we could all aim for the same set of things
-roughly. We've already had enough problems with amdgpu vs i915 vs
-everyone else with fences, if this stops that in the future then I'd
-rather we have that than just some unwritten rules per driver and
-untestable.
+Not sure I follow this statement, could you elaborate a bit?
+snd_compr_stop putting the state to RUNNING seems fundamentally
+broken to me, the whole point of snd_compr_stop is to take the
+state out of RUNNING.
 
-Dave.
+Thanks,
+Charles
