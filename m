@@ -2,179 +2,715 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADAE2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3187EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:56:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86083206A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:55:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE58A206A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:56:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YbaZTSS9"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UOEil6WM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbgFKCzC (ORCPT
+        id S1726473AbgFKC4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 22:55:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37536 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726326AbgFKCzB (ORCPT
+        Wed, 10 Jun 2020 22:56:51 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24642 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726326AbgFKC4v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 22:55:01 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4699AC08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 19:55:01 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id ga6so1651789pjb.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 19:55:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=j30R0UZzrDd+0W4T3mjyr9hSWvrdW6CBf5sEGoGyfXI=;
-        b=YbaZTSS93EP7PjECnua8oQ5ab7vBqk+ABuJX3e/qK8iuRB9AZboQWcjN9nOMr3LEbO
-         Ic3FExHwmXhD8IBQDuvf7PFai5iqbX30bSunhs2TMSctm3jwu2Uzv76XGLvxka7YiNwP
-         bq+7hOvVNy4n3/9jtpUQgXYOsSMEVQBHAJrUYqakK406cocI/KCCzcSLB4+ueA0JzKqs
-         Buiehe3CYrBtuZdIAg4nRXYalSDn4FcRin/SU3b538yPpBy/RMKVFtRfxjP1BOW3HND4
-         /VPgwJwonI+rVPBxtz/j8jsZ6O4mcvc2fzPJnUW6EshfwLCtM9V+VFfrn06vgaptR/YO
-         6ORQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=j30R0UZzrDd+0W4T3mjyr9hSWvrdW6CBf5sEGoGyfXI=;
-        b=Fq9HRJ2xA2gqoYeZZBjiCjSzmr0bQkHM42mlL9hErjbZ8rWPiI7xLUE6724CteLYxO
-         ybHfLo9UEC5lyYB0m+30zKVZc8SOUU8jo2TrhlvEqJc7tQEAjcFUDV/Ubkv40amiC/G0
-         fMCsXsgCncB/b5wMqLwk94kXEkq+zge8d2OL7ESNLdemBFKmv6iVOEFwQSEnrme/v/JC
-         0AcOB8PbX/R/4m2amandTu39P725F4k97ImgIvcG2T7bBHSZFiqU6RDvhikVr9Mln935
-         Tyrl1zLVzIMeAUaHXYs/tCES7El6q2w4lu55ldHCrLIqevEeCzC5P+eWc2e03jFNGtJw
-         lfQg==
-X-Gm-Message-State: AOAM533HAiYj67XakWXY1C179gn1QE9DZvTc/rgJN+z6yxVrLECdhkUh
-        gMlLoJorvGO4BFevirtk3GNWZg==
-X-Google-Smtp-Source: ABdhPJy13QPXB7ndCJTCJUZMyAvmhnKxmSP60f1ha+1dPVVCf9spfvGWBTpxKJ0hiwq4FFMTSLSh6Q==
-X-Received: by 2002:a17:90a:c717:: with SMTP id o23mr5951320pjt.195.1591844100426;
-        Wed, 10 Jun 2020 19:55:00 -0700 (PDT)
-Received: from [10.80.1.206] ([45.135.186.73])
-        by smtp.gmail.com with ESMTPSA id 6sm1259143pfi.170.2020.06.10.19.54.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jun 2020 19:54:59 -0700 (PDT)
-Subject: Re: [PATCH 0/2] Introduce PCI_FIXUP_IOMMU
-To:     Bjorn Helgaas <helgaas@kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        jean-philippe <jean-philippe@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Thanu Rangarajan <Thanu.Rangarajan@arm.com>,
-        Souvik Chakravarty <Souvik.Chakravarty@arm.com>
-References: <20200609164926.GA1452092@bjorn-Precision-5520>
-From:   Zhangfei Gao <zhangfei.gao@linaro.org>
-Message-ID: <1d8a7ec4-b578-a97a-7835-453806f4e3ef@linaro.org>
-Date:   Thu, 11 Jun 2020 10:54:45 +0800
+        Wed, 10 Jun 2020 22:56:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591844207;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=YwYrjcTRPL+S+HlAL7cI9G+PDUVaoPh67BhODhMSD0I=;
+        b=UOEil6WMLTopRNLTmrRyK53al904+MDgl8yTei+/mkvFH9HyG+iAkwx7awDWlgk9V8X96G
+        Rd1m2sQGr9YeGqRUWTsK5msPWrwdzLulRLz0oIOIlZs+ltrS9asQRwoOC7A8jxHHy0rD5K
+        4otkq9JXpgNrOWvqnnKFbQzSvWvFD5k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-44-74LVRBF5MDmWT1QMY0ooNg-1; Wed, 10 Jun 2020 22:56:44 -0400
+X-MC-Unique: 74LVRBF5MDmWT1QMY0ooNg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9BB9218FF661;
+        Thu, 11 Jun 2020 02:56:42 +0000 (UTC)
+Received: from [10.72.12.125] (ovpn-12-125.pek2.redhat.com [10.72.12.125])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D4C045D9D3;
+        Thu, 11 Jun 2020 02:56:34 +0000 (UTC)
+Subject: Re: [PATCH V3] vdpa: introduce virtio pci driver
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, rob.miller@broadcom.com,
+        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
+        shahafs@mellanox.com, hanand@xilinx.com, mhabets@solarflare.com,
+        gdawar@xilinx.com, saugatm@xilinx.com, vmireyno@marvell.com,
+        zhangweining@ruijie.com.cn, eli@mellanox.com
+References: <20200610065217.25538-1-jasowang@redhat.com>
+ <20200610025705-mutt-send-email-mst@kernel.org>
+ <b965417d-387d-cd50-399d-3e0797e98f96@redhat.com>
+ <20200610044848-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <fa5a65cb-59c3-e5df-b217-0352c1f003d3@redhat.com>
+Date:   Thu, 11 Jun 2020 10:56:33 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200609164926.GA1452092@bjorn-Precision-5520>
+In-Reply-To: <20200610044848-mutt-send-email-mst@kernel.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+On 2020/6/10 下午4:51, Michael S. Tsirkin wrote:
+> On Wed, Jun 10, 2020 at 04:25:06PM +0800, Jason Wang wrote:
+>>>> +
+>>>> +#define VP_VDPA_FEATURES \
+>>>> +	((1ULL << VIRTIO_F_ANY_LAYOUT)			| \
+>>> This is presumably for transitional devices only.  In fact looking at
+>>> code it seems that only net in legacy mode accepts VIRTIO_F_ANY_LAYOUT.
+>>> Spec violation I guess ... but what should we do? Relax the spec
+>>> or fix drivers?
+>>
+>> I don't get how it violates the spec.
+> Spec says transitional drivers must ack VIRTIO_F_ANY_LAYOUT
 
-On 2020/6/10 上午12:49, Bjorn Helgaas wrote:
-> On Tue, Jun 09, 2020 at 11:15:06AM +0200, Arnd Bergmann wrote:
->> On Tue, Jun 9, 2020 at 6:02 AM Zhangfei Gao <zhangfei.gao@linaro.org> wrote:
->>> On 2020/6/9 上午12:41, Bjorn Helgaas wrote:
->>>> On Mon, Jun 08, 2020 at 10:54:15AM +0800, Zhangfei Gao wrote:
->>>>> On 2020/6/6 上午7:19, Bjorn Helgaas wrote:
->>>>>>> +++ b/drivers/iommu/iommu.c
->>>>>>> @@ -2418,6 +2418,10 @@ int iommu_fwspec_init(struct device *dev, struct
->>>>>>> fwnode_handle *iommu_fwnode,
->>>>>>>            fwspec->iommu_fwnode = iommu_fwnode;
->>>>>>>            fwspec->ops = ops;
->>>>>>>            dev_iommu_fwspec_set(dev, fwspec);
->>>>>>> +
->>>>>>> +       if (dev_is_pci(dev))
->>>>>>> +               pci_fixup_device(pci_fixup_final, to_pci_dev(dev));
->>>>>>> +
->>>>>>>
->>>>>>> Then pci_fixup_final will be called twice, the first in pci_bus_add_device.
->>>>>>> Here in iommu_fwspec_init is the second time, specifically for iommu_fwspec.
->>>>>>> Will send this when 5.8-rc1 is open.
->>>>>> Wait, this whole fixup approach seems wrong to me.  No matter how you
->>>>>> do the fixup, it's still a fixup, which means it requires ongoing
->>>>>> maintenance.  Surely we don't want to have to add the Vendor/Device ID
->>>>>> for every new AMBA device that comes along, do we?
->>>>>>
->>>>> Here the fake pci device has standard PCI cfg space, but physical
->>>>> implementation is base on AMBA
->>>>> They can provide pasid feature.
->>>>> However,
->>>>> 1, does not support tlp since they are not real pci devices.
->>>>> 2. does not support pri, instead support stall (provided by smmu)
->>>>> And stall is not a pci feature, so it is not described in struct pci_dev,
->>>>> but in struct iommu_fwspec.
->>>>> So we use this fixup to tell pci system that the devices can support stall,
->>>>> and hereby support pasid.
->>>> This did not answer my question.  Are you proposing that we update a
->>>> quirk every time a new AMBA device is released?  I don't think that
->>>> would be a good model.
->>> Yes, you are right, but we do not have any better idea yet.
->>> Currently we have three fake pci devices, which support stall and pasid.
->>> We have to let pci system know the device can support pasid, because of
->>> stall feature, though not support pri.
->>> Do you have any other ideas?
->> It sounds like the best way would be to allocate a PCI capability for it, so
->> detection can be done through config space, at least in future devices,
->> or possibly after a firmware update if the config space in your system
->> is controlled by firmware somewhere.  Once there is a proper mechanism
->> to do this, using fixups to detect the early devices that don't use that
->> should be uncontroversial. I have no idea what the process or timeline
->> is to add new capabilities into the PCIe specification, or if this one
->> would be acceptable to the PCI SIG at all.
-> That sounds like a possibility.  The spec already defines a
-> Vendor-Specific Extended Capability (PCIe r5.0, sec 7.9.5) that might
-> be a candidate.
-Will investigate this, thanks Bjorn
+
+I don't see this in the spec, maybe you can point it to me?
+
+
 >
->> If detection cannot be done through PCI config space, the next best
->> alternative is to pass auxiliary data through firmware. On DT based
->> machines, you can list non-hotpluggable PCIe devices and add custom
->> properties that could be read during device enumeration. I assume
->> ACPI has something similar, but I have not done that.
-Yes, thanks Arnd
-> ACPI has _DSM (ACPI v6.3, sec 9.1.1), which might be a candidate.  I
-> like this better than a PCI capability because the property you need
-> to expose is not a PCI property.
-_DSM may not workable, since it is working in runtime.
-We need stall information in init stage, neither too early (after 
-allocation of iommu_fwspec)
-nor too late (before arm_smmu_add_device ).
+> But grep for VIRTIO_F_ANY_LAYOUT and you will see they don't.
+> Only legacy virtio net does.
+>
+> Maybe it should have been
+> transitional drivers when using the lgacy interface, but there
+> you are.
+>
+>>>
+>>>> +	 (1ULL << VIRTIO_F_VERSION_1)			| \
+>>>> +	 (1ULL << VIRTIO_F_ORDER_PLATFORM)		| \
+>>>> +	 (1ULL << VIRTIO_F_IOMMU_PLATFORM))
+>>>> +
+>>>> +struct vp_vring {
+>>>> +	void __iomem *notify;
+>>>> +	char msix_name[256];
+>>>> +	resource_size_t notify_pa;
+>>>> +	struct vdpa_callback cb;
+>>>> +	int irq;
+>>>> +};
+>>>> +
+>>>> +struct vp_vdpa {
+>>>> +	struct vdpa_device vdpa;
+>>>> +	struct pci_dev *pdev;
+>>>> +
+>>>> +	struct virtio_device_id id;
+>>>> +
+>>>> +	struct vp_vring vring[VP_VDPA_MAX_QUEUE];
+>>>> +
+>>>> +	/* The IO mapping for the PCI config space */
+>>>> +	void __iomem * const *base;
+>>>> +	struct virtio_pci_common_cfg __iomem *common;
+>>>> +	void __iomem *device;
+>>>> +	/* Base of vq notifications */
+>>>> +	void __iomem *notify;
+>>>> +
+>>>> +	/* Multiplier for queue_notify_off. */
+>>>> +	u32 notify_off_multiplier;
+>>>> +
+>>>> +	int modern_bars;
+>>>> +	int vectors;
+>>>> +};
+>>>> +
+>>>> +static struct vp_vdpa *vdpa_to_vp(struct vdpa_device *vdpa)
+>>>> +{
+>>>> +	return container_of(vdpa, struct vp_vdpa, vdpa);
+>>>> +}
+>>>> +
+>>>> +/*
+>>>> + * Type-safe wrappers for io accesses.
+>>>> + * Use these to enforce at compile time the following spec requirement:
+>>>> + *
+>>>> + * The driver MUST access each field using the “natural” access
+>>>> + * method, i.e. 32-bit accesses for 32-bit fields, 16-bit accesses
+>>>> + * for 16-bit fields and 8-bit accesses for 8-bit fields.
+>>>> + */
+>>>> +static inline u8 vp_ioread8(u8 __iomem *addr)
+>>>> +{
+>>>> +	return ioread8(addr);
+>>>> +}
+>>>> +static inline u16 vp_ioread16(__le16 __iomem *addr)
+>>>> +{
+>>>> +	return ioread16(addr);
+>>>> +}
+>>>> +
+>>>> +static inline u32 vp_ioread32(__le32 __iomem *addr)
+>>>> +{
+>>>> +	return ioread32(addr);
+>>>> +}
+>>>> +
+>>>> +static inline void vp_iowrite8(u8 value, u8 __iomem *addr)
+>>>> +{
+>>>> +	iowrite8(value, addr);
+>>>> +}
+>>>> +
+>>>> +static inline void vp_iowrite16(u16 value, __le16 __iomem *addr)
+>>>> +{
+>>>> +	iowrite16(value, addr);
+>>>> +}
+>>>> +
+>>>> +static inline void vp_iowrite32(u32 value, __le32 __iomem *addr)
+>>>> +{
+>>>> +	iowrite32(value, addr);
+>>>> +}
+>>>> +
+>>>> +static void vp_iowrite64_twopart(u64 val,
+>>>> +				 __le32 __iomem *lo, __le32 __iomem *hi)
+>>>> +{
+>>>> +	vp_iowrite32((u32)val, lo);
+>>>> +	vp_iowrite32(val >> 32, hi);
+>>>> +}
+>>>> +
+>>>> +static int find_capability(struct pci_dev *dev, u8 cfg_type,
+>>>> +			   u32 ioresource_types, int *bars)
+>>>> +{
+>>>> +	int pos;
+>>>> +
+>>>> +	for (pos = pci_find_capability(dev, PCI_CAP_ID_VNDR);
+>>>> +	     pos > 0;
+>>>> +	     pos = pci_find_next_capability(dev, pos, PCI_CAP_ID_VNDR)) {
+>>>> +		u8 type, bar;
+>>>> +
+>>>> +		pci_read_config_byte(dev, pos + offsetof(struct virtio_pci_cap,
+>>>> +							 cfg_type),
+>>>> +				     &type);
+>>>> +		pci_read_config_byte(dev, pos + offsetof(struct virtio_pci_cap,
+>>>> +							 bar),
+>>>> +				     &bar);
+>>>> +
+>>>> +		/* Ignore structures with reserved BAR values */
+>>>> +		if (bar > 0x5)
+>>>> +			continue;
+>>>> +
+>>>> +		if (type == cfg_type) {
+>>>> +			if (pci_resource_len(dev, bar) &&
+>>>> +			    pci_resource_flags(dev, bar) & ioresource_types) {
+>>>> +				*bars |= (1 << bar);
+>>>> +				return pos;
+>>>> +			}
+>>>> +		}
+>>>> +	}
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static void __iomem *map_capability(struct vp_vdpa *vp_vdpa, int off,
+>>>> +				    resource_size_t *pa)
+>>>> +{
+>>>> +	struct pci_dev *pdev = vp_vdpa->pdev;
+>>>> +	u32 offset;
+>>>> +	u8 bar;
+>>>> +
+>>>> +	pci_read_config_byte(pdev,
+>>>> +			     off + offsetof(struct virtio_pci_cap, bar),
+>>>> +			     &bar);
+>>>> +	pci_read_config_dword(pdev,
+>>>> +			      off + offsetof(struct virtio_pci_cap, offset),
+>>>> +			      &offset);
+>>>> +
+>>>> +	if (pa)
+>>>> +		*pa = pci_resource_start(pdev, bar) + offset;
+>>>> +
+>>>> +	return vp_vdpa->base[bar] + offset;
+>>>> +}
+>>>> +
+>>>> +static u64 vp_vdpa_get_features(struct vdpa_device *vdpa)
+>>>> +{
+>>>> +	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
+>>>> +	u64 features;
+>>>> +
+>>>> +	vp_iowrite32(0, &vp_vdpa->common->device_feature_select);
+>>>> +	features = vp_ioread32(&vp_vdpa->common->device_feature);
+>>>> +	vp_iowrite32(1, &vp_vdpa->common->device_feature_select);
+>>>> +	features |= ((u64)vp_ioread32(&vp_vdpa->common->device_feature) << 32);
+>>>> +	features &= VP_VDPA_FEATURES;
+>>>> +
+>>>> +	return features;
+>>>> +}
+>>>> +
+>>>> +static int vp_vdpa_set_features(struct vdpa_device *vdpa, u64 features)
+>>>> +{
+>>>> +	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
+>>>> +
+>>>> +	vp_iowrite32(0, &vp_vdpa->common->guest_feature_select);
+>>>> +	vp_iowrite32((u32)features, &vp_vdpa->common->guest_feature);
+>>>> +	vp_iowrite32(1, &vp_vdpa->common->guest_feature_select);
+>>>> +	vp_iowrite32(features >> 32, &vp_vdpa->common->guest_feature);
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static u8 vp_vdpa_get_status(struct vdpa_device *vdpa)
+>>>> +{
+>>>> +	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
+>>>> +
+>>>> +	return vp_ioread8(&vp_vdpa->common->device_status);
+>>>> +}
+>>>> +
+>>>> +static void vp_vdpa_free_irq(struct vp_vdpa *vp_vdpa)
+>>>> +{
+>>>> +	struct pci_dev *pdev = vp_vdpa->pdev;
+>>>> +	int i;
+>>>> +
+>>>> +	for (i = 0; i < VP_VDPA_MAX_QUEUE; i++) {
+>>>> +		if (vp_vdpa->vring[i].irq != -1) {
+>>>> +			vp_iowrite16(i, &vp_vdpa->common->queue_select);
+>>>> +			vp_iowrite16(VIRTIO_MSI_NO_VECTOR,
+>>>> +				     &vp_vdpa->common->queue_msix_vector);
+>>>> +			devm_free_irq(&pdev->dev, vp_vdpa->vring[i].irq,
+>>>> +				      &vp_vdpa->vring[i]);
+>>>> +			vp_vdpa->vring[i].irq = -1;
+>>>> +		}
+>>>> +	}
+>>>> +
+>>>> +	if (vp_vdpa->vectors) {
+>>>> +		pci_free_irq_vectors(pdev);
+>>>> +		vp_vdpa->vectors = 0;
+>>>> +	}
+>>>> +}
+>>>> +
+>>>> +static irqreturn_t vp_vdpa_intr_handler(int irq, void *arg)
+>>>> +{
+>>>> +	struct vp_vring *vring = arg;
+>>>> +
+>>>> +	if (vring->cb.callback)
+>>>> +		return vring->cb.callback(vring->cb.private);
+>>>> +
+>>>> +	return IRQ_HANDLED;
+>>>> +}
+>>>> +
+>>>> +static int vp_vdpa_request_irq(struct vp_vdpa *vp_vdpa)
+>>>> +{
+>>>> +	struct pci_dev *pdev = vp_vdpa->pdev;
+>>>> +	int i, ret, irq;
+>>>> +
+>>>> +	ret = pci_alloc_irq_vectors(pdev, VP_VDPA_MAX_QUEUE,
+>>>> +				    VP_VDPA_MAX_QUEUE, PCI_IRQ_MSIX);
+>>>> +	if (ret != VP_VDPA_MAX_QUEUE) {
+>>>> +		dev_err(&pdev->dev, "vp_vdpa: fail to allocate irq vectors\n");
+>>>> +		return ret;
+>>>> +	}
+>>>> +
+>>>> +	vp_vdpa->vectors = VP_VDPA_MAX_QUEUE;
+>>>> +
+>>>> +	for (i = 0; i < VP_VDPA_MAX_QUEUE; i++) {
+>>>> +		snprintf(vp_vdpa->vring[i].msix_name, 256,
+>>>> +			"vp-vdpa[%s]-%d\n", pci_name(pdev), i);
+>>>> +		irq = pci_irq_vector(pdev, i);
+>>>> +		ret = devm_request_irq(&pdev->dev, irq,
+>>>> +				       vp_vdpa_intr_handler,
+>>>> +				       0, vp_vdpa->vring[i].msix_name,
+>>>> +				       &vp_vdpa->vring[i]);
+>>>> +		if (ret) {
+>>>> +			dev_err(&pdev->dev, "vp_vdpa: fail to request irq for vq %d\n",
+>>>> +				i);
+>>>> +			goto err;
+>>>> +		}
+>>>> +		vp_iowrite16(i, &vp_vdpa->common->queue_select);
+>>>> +		vp_iowrite16(i, &vp_vdpa->common->queue_msix_vector);
+>>>> +		vp_vdpa->vring[i].irq = irq;
+>>>> +	}
+>>>> +
+>>>> +	return 0;
+>>>> +err:
+>>>> +	vp_vdpa_free_irq(vp_vdpa);
+>>>> +	return ret;
+>>>> +}
+>>>> +
+>>>> +static void vp_vdpa_set_status(struct vdpa_device *vdpa, u8 status)
+>>>> +{
+>>>> +	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
+>>>> +	u8 s = vp_vdpa_get_status(vdpa);
+>>>> +
+>>>> +	if (status & VIRTIO_CONFIG_S_DRIVER_OK &&
+>>>> +	    !(s & VIRTIO_CONFIG_S_DRIVER_OK)) {
+>>>> +		vp_vdpa_request_irq(vp_vdpa);
+>>>> +	}
+>>>> +
+>>>> +	vp_iowrite8(status, &vp_vdpa->common->device_status);
+>>>> +
+>>>> +	if (!(status & VIRTIO_CONFIG_S_DRIVER_OK) &&
+>>>> +	    (s & VIRTIO_CONFIG_S_DRIVER_OK))
+>>>> +		vp_vdpa_free_irq(vp_vdpa);
+>>>> +}
+>>>> +
+>>>> +static u16 vp_vdpa_get_vq_num_max(struct vdpa_device *vdpa)
+>>>> +{
+>>>> +	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
+>>>> +
+>>>> +	return vp_ioread16(&vp_vdpa->common->queue_size);
+>>>> +}
+>>>> +
+>>>> +static u64 vp_vdpa_get_vq_state(struct vdpa_device *vdpa, u16 qid)
+>>>> +{
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static struct vdpa_notification_area
+>>>> +vp_vdpa_get_vq_notification(struct vdpa_device *vdpa, u16 qid)
+>>>> +{
+>>>> +	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
+>>>> +	struct vdpa_notification_area notify;
+>>>> +
+>>>> +	notify.addr = vp_vdpa->vring[qid].notify_pa;
+>>>> +	notify.size = vp_vdpa->notify_off_multiplier;
+>>>> +
+>>>> +	return notify;
+>>>> +}
+>>>> +
+>>>> +static int vp_vdpa_set_vq_state(struct vdpa_device *vdpa, u16 qid,
+>>>> +				u64 num)
+>>>> +{
+>>>> +	/* Note that this is not supported by virtio specification, so
+>>>> +	 * we return -ENOTSUPP here. This means we can't support live
+>>>> +	 * migration, vhost device start/stop.
+>>>> +	 */
+>>>> +
+>>>> +	return -ENOTSUPP;
+>>>> +}
+>>>> +
+>>>> +static void vp_vdpa_set_vq_cb(struct vdpa_device *vdpa, u16 qid,
+>>>> +			      struct vdpa_callback *cb)
+>>>> +{
+>>>> +	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
+>>>> +
+>>>> +	vp_vdpa->vring[qid].cb = *cb;
+>>>> +}
+>>>> +
+>>>> +static void vp_vdpa_set_vq_ready(struct vdpa_device *vdpa,
+>>>> +				 u16 qid, bool ready)
+>>>> +{
+>>>> +	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
+>>>> +
+>>>> +	vp_iowrite16(qid, &vp_vdpa->common->queue_select);
+>>>> +	vp_iowrite16(ready, &vp_vdpa->common->queue_enable);
+>>>> +}
+>>>> +
+>>>> +static bool vp_vdpa_get_vq_ready(struct vdpa_device *vdpa, u16 qid)
+>>>> +{
+>>>> +	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
+>>>> +
+>>>> +	vp_iowrite16(qid, &vp_vdpa->common->queue_select);
+>>>> +
+>>>> +	return vp_ioread16(&vp_vdpa->common->queue_enable);
+>>>> +}
+>>>> +
+>>>> +static void vp_vdpa_set_vq_num(struct vdpa_device *vdpa, u16 qid,
+>>>> +			       u32 num)
+>>>> +{
+>>>> +	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
+>>>> +
+>>>> +	vp_iowrite16(num, &vp_vdpa->common->queue_size);
+>>>> +}
+>>>> +
+>>>> +static int vp_vdpa_set_vq_address(struct vdpa_device *vdpa, u16 qid,
+>>>> +				  u64 desc_area, u64 driver_area,
+>>>> +				  u64 device_area)
+>>>> +{
+>>>> +	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
+>>>> +	struct virtio_pci_common_cfg __iomem *cfg = vp_vdpa->common;
+>>>> +
+>>>> +	vp_iowrite16(qid, &cfg->queue_select);
+>>>> +	vp_iowrite64_twopart(desc_area,
+>>>> +			     &cfg->queue_desc_lo, &cfg->queue_desc_hi);
+>>>> +	vp_iowrite64_twopart(driver_area,
+>>>> +			     &cfg->queue_avail_lo, &cfg->queue_avail_hi);
+>>>> +	vp_iowrite64_twopart(device_area,
+>>>> +			     &cfg->queue_used_lo, &cfg->queue_used_hi);
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static void vp_vdpa_kick_vq(struct vdpa_device *vdpa, u16 qid)
+>>>> +{
+>>>> +	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
+>>>> +
+>>>> +	vp_iowrite16(qid, vp_vdpa->vring[qid].notify);
+>>>> +}
+>>>> +
+>>>> +static u32 vp_vdpa_get_generation(struct vdpa_device *vdpa)
+>>>> +{
+>>>> +	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
+>>>> +
+>>>> +	return vp_ioread8(&vp_vdpa->common->config_generation);
+>>>> +}
+>>>> +
+>>>> +static u32 vp_vdpa_get_device_id(struct vdpa_device *vdpa)
+>>>> +{
+>>>> +	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
+>>>> +
+>>>> +	return vp_vdpa->id.device;
+>>>> +}
+>>>> +
+>>>> +static u32 vp_vdpa_get_vendor_id(struct vdpa_device *vdpa)
+>>>> +{
+>>>> +	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
+>>>> +
+>>>> +	return vp_vdpa->id.vendor;
+>>>> +}
+>>>> +
+>>>> +static u32 vp_vdpa_get_vq_align(struct vdpa_device *vdpa)
+>>>> +{
+>>>> +	return PAGE_SIZE;
+>>>> +}
+>>>> +
+>>>> +static void vp_vdpa_get_config(struct vdpa_device *vdpa,
+>>>> +			       unsigned int offset,
+>>>> +			       void *buf, unsigned int len)
+>>>> +{
+>>>> +	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
+>>>> +	u8 old, new;
+>>>> +	u8 *p;
+>>>> +	int i;
+>>>> +
+>>>> +	do {
+>>>> +		old = vp_ioread8(&vp_vdpa->common->config_generation);
+>>>> +		p = buf;
+>>>> +		for (i = 0; i < len; i++)
+>>>> +			*p++ = vp_ioread8(vp_vdpa->device + offset + i);
+>>>> +
+>>>> +		new = vp_ioread8(&vp_vdpa->common->config_generation);
+>>>> +	} while (old != new);
+>>>> +}
+>>>> +
+>>>> +static void vp_vdpa_set_config(struct vdpa_device *vdpa,
+>>>> +			       unsigned int offset, const void *buf,
+>>>> +			       unsigned int len)
+>>>> +{
+>>>> +	struct vp_vdpa *vp_vdpa = vdpa_to_vp(vdpa);
+>>>> +	const u8 *p = buf;
+>>>> +	int i;
+>>>> +
+>>>> +	for (i = 0; i < len; i++)
+>>>> +		vp_iowrite8(*p++, vp_vdpa->device + offset + i);
+>>>> +}
+>>>> +
+>>>> +static void vp_vdpa_set_config_cb(struct vdpa_device *vdpa,
+>>>> +				  struct vdpa_callback *cb)
+>>>> +{
+>>>> +	/* We don't support config interrupt */
+>>> Breaks things like balloon or migration notifications with virtio net, doesn't it?
+>>
+>> Right, will fix.
+>>
+>>
+>>>> +}
+>>>> +
+>>>> +static const struct vdpa_config_ops vp_vdpa_ops = {
+>>>> +	.get_features	= vp_vdpa_get_features,
+>>>> +	.set_features	= vp_vdpa_set_features,
+>>>> +	.get_status	= vp_vdpa_get_status,
+>>>> +	.set_status	= vp_vdpa_set_status,
+>>>> +	.get_vq_num_max	= vp_vdpa_get_vq_num_max,
+>>>> +	.get_vq_state	= vp_vdpa_get_vq_state,
+>>>> +	.get_vq_notification = vp_vdpa_get_vq_notification,
+>>>> +	.set_vq_state	= vp_vdpa_set_vq_state,
+>>>> +	.set_vq_cb	= vp_vdpa_set_vq_cb,
+>>>> +	.set_vq_ready	= vp_vdpa_set_vq_ready,
+>>>> +	.get_vq_ready	= vp_vdpa_get_vq_ready,
+>>>> +	.set_vq_num	= vp_vdpa_set_vq_num,
+>>>> +	.set_vq_address	= vp_vdpa_set_vq_address,
+>>>> +	.kick_vq	= vp_vdpa_kick_vq,
+>>>> +	.get_generation	= vp_vdpa_get_generation,
+>>>> +	.get_device_id	= vp_vdpa_get_device_id,
+>>>> +	.get_vendor_id	= vp_vdpa_get_vendor_id,
+>>>> +	.get_vq_align	= vp_vdpa_get_vq_align,
+>>>> +	.get_config	= vp_vdpa_get_config,
+>>>> +	.set_config	= vp_vdpa_set_config,
+>>>> +	.set_config_cb  = vp_vdpa_set_config_cb,
+>>>> +};
+>>>> +
+>>>> +static int vp_vdpa_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>>>> +{
+>>>> +	struct device *dev = &pdev->dev;
+>>>> +	struct vp_vdpa *vp_vdpa;
+>>>> +	int common, notify, device, ret, i;
+>>>> +	struct virtio_device_id virtio_id;
+>>>> +	resource_size_t notify_pa;
+>>>> +	u16 notify_off;
+>>>> +
+>>>> +	/* We only own devices >= 0x1000 and <= 0x107f: leave the rest. */
+>>>> +	if (pdev->device < 0x1000 || pdev->device > 0x107f)
+>>>> +		return -ENODEV;
+>>>> +
+>>>> +	if (pdev->device < 0x1040) {
+>>>> +		/* Transitional devices: use the PCI subsystem device id as
+>>>> +		 * virtio device id, same as legacy driver always did.
+>>>> +		 */
+>>>> +		virtio_id.device = pdev->subsystem_device;
+>>>> +	} else {
+>>>> +		/* Modern devices: simply use PCI device id,
+>>>> +		 * but start from 0x1040.
+>>>> +		 */
+>>>> +		virtio_id.device = pdev->device - 0x1040;
+>>>> +	}
+>>>> +	virtio_id.vendor = pdev->subsystem_vendor;
+>>>> +
+>>>> +	ret = pcim_enable_device(pdev);
+>>>> +	if (ret) {
+>>>> +		dev_err(dev, "vp_vdpa: Fail to enable PCI device\n");
+>>>> +		return ret;
+>>>> +	}
+>>>> +
+>>>> +	vp_vdpa = vdpa_alloc_device(struct vp_vdpa, vdpa,
+>>>> +				    dev, &vp_vdpa_ops);
+>>>> +	if (vp_vdpa == NULL) {
+>>>> +		dev_err(dev, "vp_vdpa: Failed to allocate vDPA structure\n");
+>>>> +		return -ENOMEM;
+>>>> +	}
+>>>> +
+>>>> +	pci_set_master(pdev);
+>>>> +	pci_set_drvdata(pdev, vp_vdpa);
+>>>> +
+>>>> +	vp_vdpa->pdev = pdev;
+>>>> +	vp_vdpa->vdpa.dma_dev = &pdev->dev;
+>>>> +
+>>>> +	common = find_capability(pdev, VIRTIO_PCI_CAP_COMMON_CFG,
+>>>> +				 IORESOURCE_IO | IORESOURCE_MEM,
+>>>> +				 &vp_vdpa->modern_bars);
+>>>> +	if (!common) {
+>>>> +		dev_err(&pdev->dev,
+>>>> +			"vp_vdpa: legacy device is not supported\n");
+>>>> +		ret = -ENODEV;
+>>>> +		goto err;
+>>>> +	}
+>>>> +
+>>>> +	notify = find_capability(pdev, VIRTIO_PCI_CAP_NOTIFY_CFG,
+>>>> +				 IORESOURCE_IO | IORESOURCE_MEM,
+>>>> +				 &vp_vdpa->modern_bars);
+>>>> +	if (!notify) {
+>>>> +		dev_err(&pdev->dev,
+>>>> +			"vp_vdpa: missing notification capabilities\n");
+>>>> +		ret = -EINVAL;
+>>>> +		goto err;
+>>>> +	}
+>>>> +
+>>>> +	device = find_capability(pdev, VIRTIO_PCI_CAP_DEVICE_CFG,
+>>>> +				 IORESOURCE_IO | IORESOURCE_MEM,
+>>>> +				 &vp_vdpa->modern_bars);
+>>>> +	if (!device) {
+>>>> +		dev_err(&pdev->dev,
+>>>> +			"vp_vdpa: missing device capabilities\n");
+>>>> +		ret = -EINVAL;
+>>>> +		goto err;
+>>>> +	}
+>>>> +
+>>>> +	ret = pcim_iomap_regions(pdev, vp_vdpa->modern_bars,
+>>>> +				 VP_VDPA_DRIVER_NAME);
+>>>> +	if (ret)
+>>>> +		goto err;
+>>>> +
+>>>> +	vp_vdpa->base = pcim_iomap_table(pdev);
+>>>> +
+>>>> +	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
+>>>> +	if (ret)
+>>>> +		ret = dma_set_mask_and_coherent(&pdev->dev,
+>>>> +						DMA_BIT_MASK(32));
+>>>> +	if (ret)
+>>>> +		dev_warn(&pdev->dev, "Failed to enable 64-bit or 32-bit DMA.  Trying to continue, but this might not work.\n");
+>>>> +
+>>>> +	vp_vdpa->device = map_capability(vp_vdpa, device, NULL);
+>>>> +	vp_vdpa->notify = map_capability(vp_vdpa, notify, &notify_pa);
+>>>> +	vp_vdpa->common = map_capability(vp_vdpa, common, NULL);
+>>>> +	vp_vdpa->id = virtio_id;
+>>>> +
+>>>> +	ret = vdpa_register_device(&vp_vdpa->vdpa);
+>>>> +	if (ret) {
+>>>> +		dev_err(&pdev->dev, "Failed to register to vdpa bus\n");
+>>>> +		goto err;
+>>>> +	}
+>>>> +
+>>>> +	pci_read_config_dword(pdev, notify + sizeof(struct virtio_pci_cap),
+>>>> +			      &vp_vdpa->notify_off_multiplier);
+>>>> +
+>>>> +	for (i = 0; i < VP_VDPA_MAX_QUEUE; i++) {
+>>>> +		vp_iowrite16(i, &vp_vdpa->common->queue_select);
+>>>> +		notify_off = vp_ioread16(&vp_vdpa->common->queue_notify_off);
+>>>> +		vp_vdpa->vring[i].irq = -1;
+>>>> +		vp_vdpa->vring[i].notify = vp_vdpa->notify +
+>>>> +			notify_off * vp_vdpa->notify_off_multiplier;
+>>>> +		vp_vdpa->vring[i].notify_pa = notify_pa +
+>>>> +			notify_off * vp_vdpa->notify_off_multiplier;
+>>>> +	}
+>>>> +
+>>>> +	return 0;
+>>>> +
+>>>> +err:
+>>>> +	put_device(&vp_vdpa->vdpa.dev);
+>>>> +	return ret;
+>>>> +}
+>>>> +
+>>>> +static void vp_vdpa_remove(struct pci_dev *pdev)
+>>>> +{
+>>>> +	struct vp_vdpa *vp_vdpa = pci_get_drvdata(pdev);
+>>>> +
+>>>> +	vdpa_unregister_device(&vp_vdpa->vdpa);
+>>>> +}
+>>>> +
+>>>> +static struct pci_driver vp_vdpa_driver = {
+>>>> +	.name		= "vp-vdpa",
+>>>> +	.id_table	= NULL, /* only dynamic ids */
+>>>> +	.probe		= vp_vdpa_probe,
+>>>> +	.remove		= vp_vdpa_remove,
+>>>> +};
+>>>> +
+>>>> +module_pci_driver(vp_vdpa_driver);
+>>>> +
+>>>> +MODULE_AUTHOR("Jason Wang <jasowang@redhat.com>");
+>>>> +MODULE_DESCRIPTION("vp-vdpa");
+>>>> +MODULE_LICENSE("GPL");
+>>>> +MODULE_VERSION("1");
+>>> Isn't there something we can do to reduce the amount of code
+>>> duplication? virtio, ifcvf and now this share a ton of code ...
+>>> Let's make a library?
+>>
+>> I do think about this since IFCVF driver is posted.
+>>
+>> It depends on what level we want to share. Do we have to have a common
+>> parent structure for modern pci device? If yes, it probably requires
+>> non-trivial refactoring on the existed modern virtio-pci driver. If we just
+>> want to share some helpers, it would be easy.
+> Share some helpers I'd say.
 
-By the way,
-It would be a long time if we need modify either pcie spec or acpi spec.
-Can we use pci_fixup_device in iommu_fwspec_init first, it is relatively 
-simple
-and meet the requirement of platform device using pasid, and they are 
-already in product.
+
+Ok, I can do that.
+
+
+>
+>> I think we can do those stuffs on top.
+> Well with a 3rd copy in-tree I'm inclined to say no, let's refactor first.
+
+
+Yes.
 
 Thanks
+
+
+>
+>> Thanks
+>>
+>>
+>>>> -- 
+>>>> 2.20.1
 
