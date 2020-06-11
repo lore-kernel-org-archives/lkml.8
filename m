@@ -2,124 +2,128 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1347EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1899AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD19C20720
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:05:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.ca header.i=@yahoo.ca header.b="ksY/536V"
+	by mail.kernel.org (Postfix) with ESMTP id E7D4520720
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:06:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726375AbgFKXFa (ORCPT
+        id S1726381AbgFKXGi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 19:05:30 -0400
-Received: from sonic315-55.consmr.mail.gq1.yahoo.com ([98.137.65.31]:41897
-        "EHLO sonic315-55.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726254AbgFKXF3 (ORCPT
+        Thu, 11 Jun 2020 19:06:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55090 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbgFKXGi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 19:05:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.ca; s=s2048; t=1591916728; bh=4YUy2dnKX+aLfXhIKF01g98COCeJaRGO0uIb0VS79Kk=; h=Date:From:Subject:To:Cc:References:From:Subject; b=ksY/536Vx4+k7UgUuK7sU+hVBThfiszI09Iuz1pRDsEDzIekIw49uYjp7ORgIcNYz0f6DNDzfy6/4yfZrOHqInTp/7Z/HcyjmMMLgeZWuD8TRAwOaMMkENqEBRHmRUuLAghQQjihayEfj8L20m6zZMfg23tNVn0w4aye3VB6XxwcQwPiMIHahzYpkJItzHEI+CmtRNoS45OeF8pkyYlQXTj5rda13IOwNMLzMGJ8ZXmNJM+2AQJKKYg2covwyMtdvSqzYCtGIcWITwCXA8hKPZtr12KvBVm1CK0E2O6h8qR/7PTGpw4okY+ctPIvnNIDw3ffcEEgwvbMVoGH5mEvNw==
-X-YMail-OSG: VeI5KAIVM1l8FZBKKOcgI77XPMQpX1yRxgEuJkG2HwGiwftSWlMzUhg.wI9RpCO
- 0m9mb_xDfGj9T2zqhX.uH.ouvYYHvpDFZhv1pWFL5y1aS4v9hb1LGwKsLcCxtdjVmrndIAxlrgTz
- 8LO3W4t7Y60g_t0QstSujZEh68oL_wRlHCSB5Td_M.HVxGsUQjqWM2qr_3.AkhSA0yutg5qcke8K
- Tv4I9pYJd9awi6FeCBU8.AW0hdjLa6mwHM8hm8SCtmWxN5P9kgX8HCxAaSA2wWYE5BgfOiUDY0eN
- 8SdF4xfPgafkYHgez7VCD9nxGHLJtR8PsxeXciMIqqC1F9E63fd4UIcXYfSp5mCCnXf1pW2oA0VZ
- eHnF2Lf5MUvy0KsxA7VkbSJfJnhx72DN4PMW15_Pqypq2CTc5FOh7t_XE2x5gmqPfv8aAgem9Z6S
- G754j7JvVIvxR16NyP1NJHKbTMsWHNX0qPQnbyQSB5vpRmVwkBOq_AHkSPmPavoJRKp4qbzy6bBO
- Bgl5ef0LdH1w0IGoNwlRH.UR8MrIAnwak32wCqG5lf.SwS9m.j1yNpS4_5D0o_3_e09XXbmbVT87
- JydTvntH.WypWlGKDwbEeflUZOlJnJ07XyPmONgYYP36533AICJBEt96Va3.mhtjhlFw3.29ZciX
- DUnx7ZrUMS58v2ROWoMShz.kIsuifGl.62rbZy_X8r4vO.Uxo5XJwzW4msMSwsvTqaOqT_X2DSbr
- LLj_UnAnYi2D4y9bOLYthO6rgknJsjH5NNK_yfRdTmQy.0mTEM7K9s8uzcE9CTS8fKfsDaVPyVxh
- xVmmJFX.A8jqmra2IrNsfF8nyaPIwxTRtGkfxuk34ZNH.5c0amNlvLcBd8.CT2wpn_WASLVEIrIT
- lDlihOCfti987bgw5CyoUnMPwNm0_HyhWtZkakVcpPqyn4HsvO_sGZRdcb0.0tEu_C025pvdxswN
- rmgxGP8nc8FxFl_ewO1mGzIfh.LwtPgP6qxJHGwfAB.8sgV6oyaOcpklbPCK0mtb2TNuawY.gM1Y
- 4EIewDISpLaEHGybdY02ejlYI9grt4UFGP66cBLM98U9eaSs476RtjcbgJDnZF0_b5o12Ivh3yDE
- .RRrOjKXttZUE3n3qAJp9VaVUkrJ1tU13bF05OPpKcgEydjxVzV7vX1CE71IihUl_3XGlg_spYT1
- ddNGRuEIqFA0z2RSjAXwv25g7eOX4gy.2PVQRZ6tqkn.PDou7IfhlVk8_1frFp5r3OUVYDW2Om7X
- b38HOjsBTSMFQLSdrTiz56K7c1Ygr8lUnUMCqgmgaJUxAZUUchMUduSb9Ii8mcXGP569B9NwAMAc
- y3hNB5BRs5SQzb2xm6fsFam.vFlKXVBiNz6MHR.jitsw1wi_Lt0BaPaD8ibirje_yAw4-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic315.consmr.mail.gq1.yahoo.com with HTTP; Thu, 11 Jun 2020 23:05:28 +0000
-Received: by smtp422.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 385a77de6a3948fc2d5a9f83b3566fac;
-          Thu, 11 Jun 2020 23:05:25 +0000 (UTC)
-Date:   Thu, 11 Jun 2020 19:05:21 -0400
-From:   "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
-Subject: AMD IOMMU + SME + amdgpu regression
-To:     Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
-        David Rientjes <rientjes@google.com>,
-        Christoph Hellwig <hch@lst.de>
-Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Daniel Drake <drake@endlessm.com>, jonathan.derrick@intel.com,
-        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-tegra@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Joerg Roedel <jroedel@suse.de>
+        Thu, 11 Jun 2020 19:06:38 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28E4EC08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 16:06:38 -0700 (PDT)
+Received: from localhost ([127.0.0.1] helo=vostro)
+        by Galois.linutronix.de with esmtps (TLS1.2:RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1jjWHH-0008Ah-R0; Fri, 12 Jun 2020 01:06:32 +0200
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Paul McKenney <paulmck@kernel.org>
+Subject: Re: Barrier before pushing desc_ring tail: was [PATCH v2 2/3] printk: add lockless buffer
+References: <20200501094010.17694-1-john.ogness@linutronix.de>
+        <20200501094010.17694-3-john.ogness@linutronix.de>
+        <20200609113751.GD23752@linux-b0ei>
+        <87d068utbg.fsf@vostro.fn.ogness.net>
+        <20200611120107.GD6581@linux-b0ei>
+Date:   Fri, 12 Jun 2020 01:06:28 +0200
+In-Reply-To: <20200611120107.GD6581@linux-b0ei> (Petr Mladek's message of
+        "Thu, 11 Jun 2020 14:01:08 +0200")
+Message-ID: <87bllpyzgr.fsf@vostro.fn.ogness.net>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Message-Id: <1591915710.rakbpzst8h.none@localhost>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-References: <1591915710.rakbpzst8h.none.ref@localhost>
-X-Mailer: WebService/1.1.16072 hermes_yahoo Apache-HttpAsyncClient/4.1.4 (Java/11.0.6)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 2020-06-11, Petr Mladek <pmladek@suse.com> wrote:
+> All this relies on the fact the the full barrier is called in
+> data_push_tail() and data_push_tail() is called right above.
+> But there are two situations where the barrier is not called.
+> It is when:
+>
+>   1. desc.text_blk_lpos.next already is behind data_ring->tail_lpos.
+>
+>      This is safe.
 
-amdgpu + IOMMU + SME is now working for me on 5.7, yay! But, it is=20
-broken on torvalds master, boo. On boot, depending on which exact commit=20
-I test, it either hangs immediately (with built-in driver, before=20
-starting initramfs), displays some errors then hangs, or spams the=20
-screen with many amdgpu errors.
+Yes, and I have since expanded the comment above the data_push_tail()
+while loop to mention that:
 
-I bisected the black screen hang to:
+	/*
+	 * Loop until the tail lpos is at or beyond @lpos. This condition
+	 * may already be satisfied, resulting in no full memory barrier
+	 * from data_push_tail:C being performed. However, since this CPU
+	 * sees the new tail lpos, any descriptor states that transitioned to
+	 * the reusable state must already be visible.
+	 */
 
-commit dce8d6964ebdb333383bacf5e7ab8c27df151218
-Author: Joerg Roedel <jroedel@suse.de>
-Date:   Wed Apr 29 15:36:53 2020 +0200
+>   2. desc.text_blk_lpos == INVALID_LPOS.
+>
+>      It seems that this is not synchronized and other CPUs might see
+>      the old state.
 
-    iommu/amd: Convert to probe/release_device() call-backs
+Great catch! This could trigger the WARN_ON at desc_reserve:F and lead
+to prb_reserve() unnecessarily failing.
 
-    Convert the AMD IOMMU Driver to use the probe_device() and
-    release_device() call-backs of iommu_ops, so that the iommu core code
-    does the group and sysfs setup.
+> The question is what to do with the empty data case. I see three
+> possibilities:
+>
+>   1. Ignore the case with empty block because it (probably) does not
+>      cause real problems.
 
-    Signed-off-by: Joerg Roedel <jroedel@suse.de>
-    Link: https://lore.kernel.org/r/20200429133712.31431-16-joro@8bytes.org
-    Signed-off-by: Joerg Roedel <jroedel@suse.de>
+It could cause dropped messages.
 
-Testing torvalds master (623f6dc593) with the containing merge=20
-(98bdc74b36) plus the DMA mapping merge (4e94d08734) reverted allows=20
-amdgpu + IOMMU + SME to once again work.
+>   2. Call the full barrier in data_push_tail() even when the data
+>      block is empty.
 
-I think that nobody is really working on amdgpu + SME, but it would be a=20
-shame if it was supported and then incidentally broken by a small=20
-change.
+This is the common case, since most records will not have dictionary
+data.
 
-I am using an ASRock B450 Pro4 with Ryzen 1600 and ASUS RX 480. I don't=20
-understand this code at all, but let me know what I can do to=20
-troubleshoot.
+>   3. Call the full barrier also in desc_push_tail() as I suggested.
+>
+> My opinion:
+>
+> I prefer 3rd solution.
 
-Thanks,
-Alex.
+Agreed. For my next version I am folding all smp_mb() and smp_wmb()
+calls into their neighboring cmpxchg_relaxed(). This would apply here as
+well, changing desc_push_tail:B to a full cmpxchg().
+
+We still need the full memory barrier at data_push_tail:C. Readers rely
+on it to be able to verify if their copied data is still valid:
+
+CPU0 (writer0)        CPU1 (writer1)       CPU2 (reader)
+                                           desc_read->committed
+desc_make_reusable
+smp_mb
+data_push_tail
+                      read new data tail
+                      data_push_head
+                      smp_mb
+                      write new data
+                                           read garbage new data
+                                           desc_read->reusable
+
+John Ogness
