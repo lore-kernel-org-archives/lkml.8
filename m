@@ -2,35 +2,35 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8668CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99EF1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:09:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 624B220760
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:09:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7808C20823
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:09:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728210AbgFKMJ3 (ORCPT
+        id S1728193AbgFKMJ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 08:09:29 -0400
-Received: from mga17.intel.com ([192.55.52.151]:41824 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728062AbgFKMJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 11 Jun 2020 08:09:27 -0400
-IronPort-SDR: CvtuBDCtS3LIcopfZTDYMBaK4c5OqzNN+iItY2CHS8sN/8rS+4xeeXNU9xue9wS7s7bZkfO8NE
- QKXovwXXTgbw==
+Received: from mga17.intel.com ([192.55.52.151]:41826 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728166AbgFKMJW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 08:09:22 -0400
+IronPort-SDR: ZiAnBGiBTIDdQ/hXYqndB2IPpuRVoZ+uQnTAlrjVjzu6bZAj4B2U0LESN65mjVbDjJMb02ZtMX
+ I5ker6xGrD0A==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
   by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 05:09:10 -0700
-IronPort-SDR: IxCs0ILQX/U2s569u6aoQfKRM9B9kqudkejf6YWJ0gnDGg0Tff0PG4iSb5xGKmB/JODgHmoHIP
- JYeN8PeFfxXg==
+IronPort-SDR: tS2P2dymG6XztasY2b9XIWr7eXMwbRwXCnUyWm/5pGTsahVGGAjGH5b/A929jlefvUVl8L1tuE
+ VSriR8zKkitA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,499,1583222400"; 
-   d="scan'208";a="419082475"
+   d="scan'208";a="419082490"
 Received: from jacob-builder.jf.intel.com ([10.7.199.155])
   by orsmga004.jf.intel.com with ESMTP; 11 Jun 2020 05:09:09 -0700
 From:   Liu Yi L <yi.l.liu@intel.com>
@@ -41,9 +41,9 @@ Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
         yi.y.sun@intel.com, jean-philippe@linaro.org, peterx@redhat.com,
         hao.wu@intel.com, iommu@lists.linux-foundation.org,
         kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 04/15] vfio: Add PASID allocation/free support
-Date:   Thu, 11 Jun 2020 05:15:23 -0700
-Message-Id: <1591877734-66527-5-git-send-email-yi.l.liu@intel.com>
+Subject: [PATCH v2 08/15] iommu: Pass domain and unbind_data to sva_unbind_gpasid()
+Date:   Thu, 11 Jun 2020 05:15:27 -0700
+Message-Id: <1591877734-66527-9-git-send-email-yi.l.liu@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1591877734-66527-1-git-send-email-yi.l.liu@intel.com>
 References: <1591877734-66527-1-git-send-email-yi.l.liu@intel.com>
@@ -52,273 +52,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Shared Virtual Addressing (a.k.a Shared Virtual Memory) allows sharing
-multiple process virtual address spaces with the device for simplified
-programming model. PASID is used to tag an virtual address space in DMA
-requests and to identify the related translation structure in IOMMU. When
-a PASID-capable device is assigned to a VM, we want the same capability
-of using PASID to tag guest process virtual address spaces to achieve
-virtual SVA (vSVA).
+From: Yi Sun <yi.y.sun@intel.com>
 
-PASID management for guest is vendor specific. Some vendors (e.g. Intel
-VT-d) requires system-wide managed PASIDs cross all devices, regardless
-of whether a device is used by host or assigned to guest. Other vendors
-(e.g. ARM SMMU) may allow PASIDs managed per-device thus could be fully
-delegated to the guest for assigned devices.
+Current interface is good enough for SVA virtualization on an assigned
+physical PCI device, but when it comes to mediated devices, a physical
+device may attached with multiple aux-domains. So this interface needs
+to pass in domain info. Then the iommu driver is able to know which
+domain will be used for the 2nd stage translation of the nesting mode.
 
-For system-wide managed PASIDs, this patch introduces a vfio module to
-handle explicit PASID alloc/free requests from guest. Allocated PASIDs
-are associated to a process (or, mm_struct) in IOASID core. A vfio_mm
-object is introduced to track mm_struct. Multiple VFIO containers within
-a process share the same vfio_mm object.
-
-A quota mechanism is provided to prevent malicious user from exhausting
-available PASIDs. Currently the quota is a global parameter applied to
-all VFIO devices. In the future per-device quota might be supported too.
+This patch passes @domain per the above reason. This interface is supposed
+to serve the unbind request from user-space, should pass in unbind_data as
+well.
 
 Cc: Kevin Tian <kevin.tian@intel.com>
 CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: Alex Williamson <alex.williamson@redhat.com>
 Cc: Eric Auger <eric.auger@redhat.com>
 Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
 Cc: Joerg Roedel <joro@8bytes.org>
 Cc: Lu Baolu <baolu.lu@linux.intel.com>
-Suggested-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Yi Sun <yi.y.sun@intel.com>
 Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
 ---
-v1 -> v2:
-*) added in v2, split from the pasid alloc/free support of v1
+ drivers/iommu/intel-svm.c   | 14 ++++++++++++--
+ drivers/iommu/iommu.c       |  4 ++--
+ include/linux/intel-iommu.h |  3 ++-
+ include/linux/iommu.h       |  8 +++++---
+ 4 files changed, 21 insertions(+), 8 deletions(-)
 
- drivers/vfio/Kconfig      |   5 ++
- drivers/vfio/Makefile     |   1 +
- drivers/vfio/vfio_pasid.c | 151 ++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/vfio.h      |  28 +++++++++
- 4 files changed, 185 insertions(+)
- create mode 100644 drivers/vfio/vfio_pasid.c
-
-diff --git a/drivers/vfio/Kconfig b/drivers/vfio/Kconfig
-index fd17db9..3d8a108 100644
---- a/drivers/vfio/Kconfig
-+++ b/drivers/vfio/Kconfig
-@@ -19,6 +19,11 @@ config VFIO_VIRQFD
- 	depends on VFIO && EVENTFD
- 	default n
+diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
+index 6272da6..bf55e2f 100644
+--- a/drivers/iommu/intel-svm.c
++++ b/drivers/iommu/intel-svm.c
+@@ -445,16 +445,26 @@ int intel_svm_bind_gpasid(struct iommu_domain *domain, struct device *dev,
+ 	return ret;
+ }
  
-+config VFIO_PASID
-+	tristate
-+	depends on IOASID && VFIO
-+	default n
+-int intel_svm_unbind_gpasid(struct device *dev, int pasid)
++int intel_svm_unbind_gpasid(struct iommu_domain *domain,
++			    struct device *dev,
++			    struct iommu_gpasid_unbind_data *data)
+ {
+ 	struct intel_iommu *iommu = intel_svm_device_to_iommu(dev);
+ 	struct intel_svm_dev *sdev;
+ 	struct intel_svm *svm;
+ 	int ret = -EINVAL;
++	unsigned long minsz;
++	int pasid;
 +
- menuconfig VFIO
- 	tristate "VFIO Non-Privileged userspace driver framework"
- 	depends on IOMMU_API
-diff --git a/drivers/vfio/Makefile b/drivers/vfio/Makefile
-index de67c47..bb836a3 100644
---- a/drivers/vfio/Makefile
-+++ b/drivers/vfio/Makefile
-@@ -3,6 +3,7 @@ vfio_virqfd-y := virqfd.o
++	if (WARN_ON(!iommu) || !data)
++		return -EINVAL;
  
- obj-$(CONFIG_VFIO) += vfio.o
- obj-$(CONFIG_VFIO_VIRQFD) += vfio_virqfd.o
-+obj-$(CONFIG_VFIO_PASID) += vfio_pasid.o
- obj-$(CONFIG_VFIO_IOMMU_TYPE1) += vfio_iommu_type1.o
- obj-$(CONFIG_VFIO_IOMMU_SPAPR_TCE) += vfio_iommu_spapr_tce.o
- obj-$(CONFIG_VFIO_SPAPR_EEH) += vfio_spapr_eeh.o
-diff --git a/drivers/vfio/vfio_pasid.c b/drivers/vfio/vfio_pasid.c
-new file mode 100644
-index 0000000..dd5b6d1
---- /dev/null
-+++ b/drivers/vfio/vfio_pasid.c
-@@ -0,0 +1,151 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2020 Intel Corporation.
-+ *     Author: Liu Yi L <yi.l.liu@intel.com>
-+ *
-+ */
-+
-+#include <linux/vfio.h>
-+#include <linux/eventfd.h>
-+#include <linux/file.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/sched/mm.h>
-+
-+#define DRIVER_VERSION  "0.1"
-+#define DRIVER_AUTHOR   "Liu Yi L <yi.l.liu@intel.com>"
-+#define DRIVER_DESC     "PASID management for VFIO bus drivers"
-+
-+#define VFIO_DEFAULT_PASID_QUOTA	1000
-+static int pasid_quota = VFIO_DEFAULT_PASID_QUOTA;
-+module_param_named(pasid_quota, pasid_quota, uint, 0444);
-+MODULE_PARM_DESC(pasid_quota,
-+		 " Set the quota for max number of PASIDs that an application is allowed to request (default 1000)");
-+
-+struct vfio_mm_token {
-+	unsigned long long val;
-+};
-+
-+struct vfio_mm {
-+	struct kref		kref;
-+	struct vfio_mm_token	token;
-+	int			ioasid_sid;
-+	int			pasid_quota;
-+	struct list_head	next;
-+};
-+
-+static struct vfio_pasid {
-+	struct mutex		vfio_mm_lock;
-+	struct list_head	vfio_mm_list;
-+} vfio_pasid;
-+
-+/* called with vfio.vfio_mm_lock held */
-+static void vfio_mm_release(struct kref *kref)
-+{
-+	struct vfio_mm *vmm = container_of(kref, struct vfio_mm, kref);
-+
-+	list_del(&vmm->next);
-+	mutex_unlock(&vfio_pasid.vfio_mm_lock);
-+	ioasid_free_set(vmm->ioasid_sid, true);
-+	kfree(vmm);
-+}
-+
-+void vfio_mm_put(struct vfio_mm *vmm)
-+{
-+	kref_put_mutex(&vmm->kref, vfio_mm_release, &vfio_pasid.vfio_mm_lock);
-+}
-+
-+static void vfio_mm_get(struct vfio_mm *vmm)
-+{
-+	kref_get(&vmm->kref);
-+}
-+
-+struct vfio_mm *vfio_mm_get_from_task(struct task_struct *task)
-+{
-+	struct mm_struct *mm = get_task_mm(task);
-+	struct vfio_mm *vmm;
-+	unsigned long long val = (unsigned long long) mm;
-+	int ret;
-+
-+	mutex_lock(&vfio_pasid.vfio_mm_lock);
-+	/* Search existing vfio_mm with current mm pointer */
-+	list_for_each_entry(vmm, &vfio_pasid.vfio_mm_list, next) {
-+		if (vmm->token.val == val) {
-+			vfio_mm_get(vmm);
-+			goto out;
-+		}
-+	}
-+
-+	vmm = kzalloc(sizeof(*vmm), GFP_KERNEL);
-+	if (!vmm)
-+		return ERR_PTR(-ENOMEM);
-+
-+	/*
-+	 * IOASID core provides a 'IOASID set' concept to track all
-+	 * PASIDs associated with a token. Here we use mm_struct as
-+	 * the token and create a IOASID set per mm_struct. All the
-+	 * containers of the process share the same IOASID set.
-+	 */
-+	ret = ioasid_alloc_set((struct ioasid_set *) mm, pasid_quota,
-+			       &vmm->ioasid_sid);
-+	if (ret) {
-+		kfree(vmm);
-+		return ERR_PTR(ret);
-+	}
-+
-+	kref_init(&vmm->kref);
-+	vmm->token.val = (unsigned long long) mm;
-+	vmm->pasid_quota = pasid_quota;
-+
-+	list_add(&vmm->next, &vfio_pasid.vfio_mm_list);
-+out:
-+	mutex_unlock(&vfio_pasid.vfio_mm_lock);
-+	mmput(mm);
-+	return vmm;
-+}
-+
-+int vfio_pasid_alloc(struct vfio_mm *vmm, int min, int max)
-+{
-+	ioasid_t pasid;
-+
-+	pasid = ioasid_alloc(vmm->ioasid_sid, min, max, NULL);
-+
-+	return (pasid == INVALID_IOASID) ? -ENOSPC : pasid;
-+}
-+
-+void vfio_pasid_free_range(struct vfio_mm *vmm,
-+			    ioasid_t min, ioasid_t max)
-+{
-+	ioasid_t pasid = min;
-+
-+	if (min > max)
-+		return;
-+
-+	/*
-+	 * IOASID core will notify PASID users (e.g. IOMMU driver) to
-+	 * teardown necessary structures depending on the to-be-freed
-+	 * PASID.
-+	 */
-+	for (; pasid <= max; pasid++)
-+		ioasid_free(pasid);
-+}
-+
-+static int __init vfio_pasid_init(void)
-+{
-+	mutex_init(&vfio_pasid.vfio_mm_lock);
-+	INIT_LIST_HEAD(&vfio_pasid.vfio_mm_list);
-+	return 0;
-+}
-+
-+static void __exit vfio_pasid_exit(void)
-+{
-+	WARN_ON(!list_empty(&vfio_pasid.vfio_mm_list));
-+}
-+
-+module_init(vfio_pasid_init);
-+module_exit(vfio_pasid_exit);
-+
-+MODULE_VERSION(DRIVER_VERSION);
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR(DRIVER_AUTHOR);
-+MODULE_DESCRIPTION(DRIVER_DESC);
-diff --git a/include/linux/vfio.h b/include/linux/vfio.h
-index 5d92ee1..104418a 100644
---- a/include/linux/vfio.h
-+++ b/include/linux/vfio.h
-@@ -95,6 +95,34 @@ extern int vfio_register_iommu_driver(const struct vfio_iommu_driver_ops *ops);
- extern void vfio_unregister_iommu_driver(
- 				const struct vfio_iommu_driver_ops *ops);
+-	if (WARN_ON(!iommu))
++	minsz = offsetofend(struct iommu_gpasid_unbind_data, pasid);
++	if (data->argsz < minsz || data->flags)
+ 		return -EINVAL;
  
-+struct vfio_mm;
-+#if IS_ENABLED(CONFIG_VFIO_PASID)
-+extern struct vfio_mm *vfio_mm_get_from_task(struct task_struct *task);
-+extern void vfio_mm_put(struct vfio_mm *vmm);
-+extern int vfio_pasid_alloc(struct vfio_mm *vmm, int min, int max);
-+extern void vfio_pasid_free_range(struct vfio_mm *vmm,
-+					ioasid_t min, ioasid_t max);
-+#else
-+static inline struct vfio_mm *vfio_mm_get_from_task(struct task_struct *task)
-+{
-+	return NULL;
-+}
++	pasid = data->pasid;
 +
-+static inline void vfio_mm_put(struct vfio_mm *vmm)
-+{
-+}
-+
-+static inline int vfio_pasid_alloc(struct vfio_mm *vmm, int min, int max)
-+{
-+	return -ENOTTY;
-+}
-+
-+static inline void vfio_pasid_free_range(struct vfio_mm *vmm,
-+					  ioasid_t min, ioasid_t max)
-+{
-+}
-+#endif /* CONFIG_VFIO_PASID */
-+
- /*
-  * External user API
-  */
+ 	mutex_lock(&pasid_mutex);
+ 	svm = ioasid_find(INVALID_IOASID_SET, pasid, NULL);
+ 	if (!svm) {
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 374b34f..57aac03 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -1955,12 +1955,12 @@ int iommu_sva_bind_gpasid(struct iommu_domain *domain,
+ EXPORT_SYMBOL_GPL(iommu_sva_bind_gpasid);
+ 
+ int iommu_sva_unbind_gpasid(struct iommu_domain *domain, struct device *dev,
+-			     ioasid_t pasid)
++			    struct iommu_gpasid_unbind_data *data)
+ {
+ 	if (unlikely(!domain->ops->sva_unbind_gpasid))
+ 		return -ENODEV;
+ 
+-	return domain->ops->sva_unbind_gpasid(dev, pasid);
++	return domain->ops->sva_unbind_gpasid(domain, dev, data);
+ }
+ EXPORT_SYMBOL_GPL(iommu_sva_unbind_gpasid);
+ 
+diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+index 29d1c6f..0b238c3 100644
+--- a/include/linux/intel-iommu.h
++++ b/include/linux/intel-iommu.h
+@@ -737,7 +737,8 @@ extern int intel_svm_finish_prq(struct intel_iommu *iommu);
+ 
+ int intel_svm_bind_gpasid(struct iommu_domain *domain, struct device *dev,
+ 			  struct iommu_gpasid_bind_data *data);
+-int intel_svm_unbind_gpasid(struct device *dev, int pasid);
++int intel_svm_unbind_gpasid(struct iommu_domain *domain, struct device *dev,
++			    struct iommu_gpasid_unbind_data *data);
+ struct iommu_sva *intel_svm_bind(struct device *dev, struct mm_struct *mm,
+ 				 void *drvdata);
+ void intel_svm_unbind(struct iommu_sva *handle);
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index 57c46ae..a19f063 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -325,7 +325,8 @@ struct iommu_ops {
+ 	int (*sva_bind_gpasid)(struct iommu_domain *domain,
+ 			struct device *dev, struct iommu_gpasid_bind_data *data);
+ 
+-	int (*sva_unbind_gpasid)(struct device *dev, int pasid);
++	int (*sva_unbind_gpasid)(struct iommu_domain *domain,
++		struct device *dev, struct iommu_gpasid_unbind_data *data);
+ 
+ 	int (*def_domain_type)(struct device *dev);
+ 
+@@ -459,7 +460,7 @@ extern int iommu_cache_invalidate(struct iommu_domain *domain,
+ extern int iommu_sva_bind_gpasid(struct iommu_domain *domain,
+ 		struct device *dev, struct iommu_gpasid_bind_data *data);
+ extern int iommu_sva_unbind_gpasid(struct iommu_domain *domain,
+-				struct device *dev, ioasid_t pasid);
++		struct device *dev, struct iommu_gpasid_unbind_data *data);
+ extern struct iommu_domain *iommu_get_domain_for_dev(struct device *dev);
+ extern struct iommu_domain *iommu_get_dma_domain(struct device *dev);
+ extern int iommu_map(struct iommu_domain *domain, unsigned long iova,
+@@ -1084,7 +1085,8 @@ static inline int iommu_sva_bind_gpasid(struct iommu_domain *domain,
+ }
+ 
+ static inline int iommu_sva_unbind_gpasid(struct iommu_domain *domain,
+-					   struct device *dev, int pasid)
++					  struct device *dev,
++					  struct iommu_gpasid_unbind_data *data)
+ {
+ 	return -ENODEV;
+ }
 -- 
 2.7.4
 
