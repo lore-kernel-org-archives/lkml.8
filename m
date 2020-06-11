@@ -2,106 +2,93 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23449C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84994C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0157B2072F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:28:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 563AC2072F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:28:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hF9rAdqc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e/gtYKTO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbgFKO2W (ORCPT
+        id S1728306AbgFKO2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 10:28:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59818 "EHLO
+        Thu, 11 Jun 2020 10:28:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726657AbgFKO2U (ORCPT
+        with ESMTP id S1726657AbgFKO2i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 10:28:20 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E962C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 07:28:20 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id l11so6410046wru.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 07:28:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+MwiHwTDigrZz/osHSq5jwVMysur4yPnyLBBwzskG3k=;
-        b=hF9rAdqc/Vs5/6fKuks+MMwm5u0HPIk5I3T763FaYv8nJfRnzVmYS6TkZwBkpQEK58
-         OabTcSTw/chyT3nEYjpMZQDEOQc+ToSeZ2/XR3JxMVn51VBleocqPt81rwrJnQrtsfTu
-         fNHm+OBopt1RhC9Zm1Z4ugCbwiZh785kwWvlc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+MwiHwTDigrZz/osHSq5jwVMysur4yPnyLBBwzskG3k=;
-        b=jGA94KxQ+6nFuTG/lUdeexaBVgvxP8NfMGBNhN6kjxGyY9WKg2n2SyP8rYThfnLtFt
-         jvewg9yiDHU1ZbpZ++uBNFF3PtojFxC52iSGb/iCF5HNw9vYnOzs8fD478Y0S/nbdwQk
-         ygv2puqBRZEXnmb6Cny2BCheWDSXvlGiQjwkjgwmBXm1AnaMxEXVBkqd6Cn9EmlEuA6n
-         YC6PW2RTJ0Yz3KtosPlFcsetBFh8imqWI7t+QQrOmxswN0cSodR25JCR1Cw1loKl33tN
-         DVrTKs7dLv2MG30lCJajrd87rgTR8IZWDe2YjJ0fBS0qHL+hf9FyyUBhksc5dbY8WNXX
-         LsaA==
-X-Gm-Message-State: AOAM533AL0q+IDoaMiQ149GvrJsAAvR8WdsQ8TcHA1VSOo8kRZA/wEfB
-        sVxp92EELlaj5Yo6xibDPlv6vQ==
-X-Google-Smtp-Source: ABdhPJzQ9+KT5Krp0KhPaomhJuRwTmw/IshQSBBRqrbY7XioECHFV8tO/RyEuLgOWZRGG4tI3GvR+g==
-X-Received: by 2002:a5d:4d4d:: with SMTP id a13mr10081847wru.252.1591885698879;
-        Thu, 11 Jun 2020 07:28:18 -0700 (PDT)
-Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
-        by smtp.gmail.com with ESMTPSA id w17sm5219529wra.71.2020.06.11.07.28.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 07:28:18 -0700 (PDT)
-Date:   Thu, 11 Jun 2020 14:28:17 +0000
-From:   Tomasz Figa <tfiga@chromium.org>
-To:     Xia Jiang <xia.jiang@mediatek.com>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        srv_heupstream@mediatek.com, senozhatsky@chromium.org,
-        mojahsu@chromium.org, drinkcat@chromium.org,
-        maoguang.meng@mediatek.com, sj.huang@mediatek.com
-Subject: Re: [PATCH RESEND v9 10/18] media: platform: Stylistic changes for
- improving code quality
-Message-ID: <20200611142817.GD158633@chromium.org>
-References: <20200604090553.10861-1-xia.jiang@mediatek.com>
- <20200604090553.10861-12-xia.jiang@mediatek.com>
+        Thu, 11 Jun 2020 10:28:38 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10B5BC08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 07:28:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=veEoCUcIkaZEO/Qd1GN5y9WKpi7LCLgfeW+AZ30hNVY=; b=e/gtYKTOShBi8mkaJqoOURjwWJ
+        XTpY03rSSHDfAFJDIr1YIAjHBh7FFYyKkhMdFQKdE8zoVMy6mEP3IrA0cf6OfR5Ru+wppavDi86ah
+        lSmOo+tu4Lv97x7gYuFsIdFIScJDLhaztevDi6GOHrHHQ6KyEcQVvuQGOj0bMD3behSSZ6nRxhrqV
+        mejQvXqSeOD+dtGGMtAo1m0TyniM8kJ1WyfvScQ3aVx5DBJAKdvSwSxBejcNDiaF3clQS2TRVtI8A
+        HJoXxsNrX0A2Y9qgRLEe/M2rrFMIvUMbwn3+ECuszRtsayE9GtXeaVxxuOWQzBU8h14zMYN/9TqAQ
+        IihkAxJg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jjOBc-0002L0-1b; Thu, 11 Jun 2020 14:28:08 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4D035301A7A;
+        Thu, 11 Jun 2020 16:28:06 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2B9F0220F9FA4; Thu, 11 Jun 2020 16:28:06 +0200 (CEST)
+Date:   Thu, 11 Jun 2020 16:28:06 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>, mingo@redhat.com,
+        juri.lelli@redhat.com, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        linux-kernel@vger.kernel.org, iwtbavbm@gmail.com
+Subject: Re: [PATCH v2] sched/fair: fix nohz next idle balance
+Message-ID: <20200611142806.GJ2531@hirez.programming.kicks-ass.net>
+References: <20200609123748.18636-1-vincent.guittot@linaro.org>
+ <jhjpna53d50.mognet@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200604090553.10861-12-xia.jiang@mediatek.com>
+In-Reply-To: <jhjpna53d50.mognet@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Xia,
-
-On Thu, Jun 04, 2020 at 05:05:45PM +0800, Xia Jiang wrote:
-> Change register offset hex numerals from uppercase to lowercase.
-> Change data type of max/min width/height from integer to unsigned
-> integer.
+On Thu, Jun 11, 2020 at 03:12:11PM +0100, Valentin Schneider wrote:
 > 
-> Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
-> ---
-> v9: move changing data type of max/min width/height to this patch
-> ---
->  .../media/platform/mtk-jpeg/mtk_jpeg_core.h    |  8 ++++----
->  drivers/media/platform/mtk-jpeg/mtk_jpeg_reg.h | 18 +++++++++---------
->  2 files changed, 13 insertions(+), 13 deletions(-)
+> On 09/06/20 13:37, Vincent Guittot wrote:
+> > With commit:
+> >   'b7031a02ec75 ("sched/fair: Add NOHZ_STATS_KICK")'
+> > rebalance_domains of the local cfs_rq happens before others idle cpus have
+> > updated nohz.next_balance and its value is overwritten.
+> >
+> > Move the update of nohz.next_balance for other idles cpus before balancing
+> > and updating the next_balance of local cfs_rq.
+> >
+> > Also, the nohz.next_balance is now updated only if all idle cpus got a
+> > chance to rebalance their domains and the idle balance has not been aborted
+> > because of new activities on the CPU. In case of need_resched, the idle
+> > load balance will be kick the next jiffie in order to address remaining
+> > ilb.
+> >
+> > Reported-by: Peng Liu <iwtbavbm@gmail.com>
+> > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
 > 
+> FWIW:
+> Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+> 
+> Do we want a Fixes: tag for this? I'm thinking
+> b7031a02ec75 ("sched/fair: Add NOHZ_STATS_KICK")
 
-Reviewed-by: Tomasz Figa <tfiga@chromium.org>
-
-Best regards,
-Tomasz
+Done, thanks!
