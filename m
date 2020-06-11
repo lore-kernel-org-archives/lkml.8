@@ -2,121 +2,116 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C242BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E48C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E09620760
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:56:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c3sv5DwI"
+	by mail.kernel.org (Postfix) with ESMTP id BC39620760
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:57:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbgFKM4o (ORCPT
+        id S1726978AbgFKM5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 08:56:44 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:24912 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726346AbgFKM4n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 08:56:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591880202;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Fq4jWTmxvdTOixqCSNHPWC+W1UeHSFDB5a+MOgnJLHI=;
-        b=c3sv5DwIx6rXrS13Y/uDhUSx0cqSokh194UxZ6TjXLIFquxm5/Z+Yy4+hNcvr6rA/wTjCb
-        jYDa945yQ0FmT2g5SEHI+4tBaqwTygdR4awiB3hRssx7o4bnc9YIgX1HgjghfvIPIXmN36
-        hPSFOSMcyJOmYk2rAzblQp7nVsXAe5Y=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-406-kjjaHxJuOUivsKg__do2VA-1; Thu, 11 Jun 2020 08:56:38 -0400
-X-MC-Unique: kjjaHxJuOUivsKg__do2VA-1
-Received: by mail-qt1-f199.google.com with SMTP id l26so4720744qtr.14
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 05:56:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=Fq4jWTmxvdTOixqCSNHPWC+W1UeHSFDB5a+MOgnJLHI=;
-        b=QyIRGOsm57mvQkDI4koNxuPVxeD5eGQ8spzqnFyyvK5KM+WTcbnGoWC4qEG1lhSkdC
-         EC0CnkPteWrBxyIeaUA/cTmxIbJA6a606xtgfKurNGm2UzHmcKBy/3cOQRgGoOzWb/n3
-         7EVRT0vDB1KVRH0BJcTytKyw35qwBe6gk6+Z+bbh5EuVmr1ASJ7cn35pOAofz8EEuaRT
-         YKHrdfoY+iOdYYaqQFqW1zEhmPjOpmv1l5pXhjbNRR4KnbrJlQtMX9HP/7jjommA+PDo
-         ha8pkW7s6Yo5IhVftKQfn+vcw3ET+Kt+qWT6/bMimdT38C7QTVrwa54G+UBQs+IU/zDk
-         YSIQ==
-X-Gm-Message-State: AOAM5335TFE7VBnFSsy0OTUPVS9UE2kZPTEiHE7UR9cYAq2u4kAuUaAN
-        +/ifDi9WiN+Xu4JEo31cJebVZEeFOSuxve76ITqVrV43WdUJ7u4oIdDEoFseGyOJRVHzarcDGAY
-        zQBKhx7wvoy4lZyjuEUeyzYnT
-X-Received: by 2002:a05:6214:b33:: with SMTP id w19mr7223586qvj.7.1591880197758;
-        Thu, 11 Jun 2020 05:56:37 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx+JyKVnjOWvjSt9Z4+PqIeU1E00Ib2Tef8IcgZTQ1YgELkIq0HkZauAQyYv/J2UaWpMgxv7Q==
-X-Received: by 2002:a05:6214:b33:: with SMTP id w19mr7223575qvj.7.1591880197557;
-        Thu, 11 Jun 2020 05:56:37 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id b4sm2229646qtp.63.2020.06.11.05.56.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Jun 2020 05:56:36 -0700 (PDT)
-Subject: Re: [PATCH 0/6] Add more configuration and regmap support for
- spi-altera
-To:     Xu Yilun <yilun.xu@intel.com>, broonie@kernel.org,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     hao.wu@intel.com, matthew.gerlach@linux.intel.com,
-        russell.h.weight@intel.com
-References: <1591845911-10197-1-git-send-email-yilun.xu@intel.com>
-From:   Tom Rix <trix@redhat.com>
-Message-ID: <fb4a6f25-9f93-7618-d64e-20b93b1fcade@redhat.com>
-Date:   Thu, 11 Jun 2020 05:56:34 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 11 Jun 2020 08:57:00 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:42540 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726781AbgFKM5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 08:57:00 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxb94VKuJek_hAAA--.1592S3;
+        Thu, 11 Jun 2020 20:56:53 +0800 (CST)
+From:   Qing Zhang <zhangqing@loongson.cn>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH v2 2/2] spi: tools: Add macro definitions to fix build errors
+Date:   Thu, 11 Jun 2020 20:56:52 +0800
+Message-Id: <1591880212-13479-2-git-send-email-zhangqing@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1591880212-13479-1-git-send-email-zhangqing@loongson.cn>
+References: <1591880212-13479-1-git-send-email-zhangqing@loongson.cn>
 MIME-Version: 1.0
-In-Reply-To: <1591845911-10197-1-git-send-email-yilun.xu@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf9Dxb94VKuJek_hAAA--.1592S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7urW8GrWxtryDKr47tr1DWrg_yoW8CFWkpF
+        nxJF1xtF4UKayUG3Z3Xa1Fkw13ArWqkrn0qryUKr1vyF15Z3W8Aa1qgF4rKryxCry2vasx
+        J347Xr4UK34jyw7anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUBS14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
+        x26xkF7I0E14v26r1Y6r1xM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+        Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM2
+        8EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
+        0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
+        IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
+        Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_Xr1l42xK82
+        IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC2
+        0s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMI
+        IF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF
+        0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87
+        Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU0gAwUUUUU
+X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset looks good to me.
+Add SPI_TX_OCTAL and SPI_RX_OCTAL to fix the following build errors:
 
-Reviewed-by: Tom Rix <trix@redhat.com>
+CC       spidev_test.o
+spidev_test.c: In function ‘transfer’:
+spidev_test.c:131:13: error: ‘SPI_TX_OCTAL’ undeclared (first use in this function)
+  if (mode & SPI_TX_OCTAL)
+             ^
+spidev_test.c:131:13: note: each undeclared identifier is reported only once for each function it appears in
+spidev_test.c:137:13: error: ‘SPI_RX_OCTAL’ undeclared (first use in this function)
+  if (mode & SPI_RX_OCTAL)
+             ^
+spidev_test.c: In function ‘parse_opts’:
+spidev_test.c:290:12: error: ‘SPI_TX_OCTAL’ undeclared (first use in this function)
+    mode |= SPI_TX_OCTAL;
+            ^
+spidev_test.c:308:12: error: ‘SPI_RX_OCTAL’ undeclared (first use in this function)
+    mode |= SPI_RX_OCTAL;
+            ^
+  LD       spidev_test-in.o
+ld: cannot find spidev_test.o: No such file or directory
 
-Thanks,
+Additionally, maybe SPI_CS_WORD and SPI_3WIRE_HIZ will be used in the future,
+so add them too.
 
-Tom
+Fixes: 896fa735084e ("spi: spidev_test: Add support for Octal mode data transfers")
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
+---
 
-On 6/10/20 8:25 PM, Xu Yilun wrote:
-> This patchset adds platform_data for spi-altera, to enable more IP
-> configurations, and creating specific spi client devices. It also adds
-> regmap support, to enable the indirect access to this IP.
->
-> We have a PCIE based FPGA platform which integrates this IP to communicate
-> with a BMC chip (Intel MAX10) over SPI. The IP is configured as 32bit data
-> width. There is also an indirect access interface in FPGA for host to
-> access the registers of this IP. This patchset enables this use case.
->
-> Matthew Gerlach (1):
->   spi: altera: fix size mismatch on 64 bit processors
->
-> Xu Yilun (5):
->   spi: altera: add 32bit data width transfer support.
->   spi: altera: add SPI core parameters support via platform data.
->   spi: altera: add platform data for slave information.
->   spi: altera: use regmap instead of direct mmio register access
->   spi: altera: move driver name string to header file
->
->  drivers/spi/Kconfig        |   1 +
->  drivers/spi/spi-altera.c   | 161 +++++++++++++++++++++++++++++++++++++--------
->  include/linux/spi/altera.h |  37 +++++++++++
->  3 files changed, 171 insertions(+), 28 deletions(-)
->  create mode 100644 include/linux/spi/altera.h
->
+v2:
+  -Modify the patch subject
+  -Update the commit message
+  -Add macro definitions of SPI_CS_WORD and SPI_3WIRE_HIZ
+
+ include/uapi/linux/spi/spidev.h | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/include/uapi/linux/spi/spidev.h b/include/uapi/linux/spi/spidev.h
+index ee0f246..9390615 100644
+--- a/include/uapi/linux/spi/spidev.h
++++ b/include/uapi/linux/spi/spidev.h
+@@ -48,6 +48,10 @@
+ #define SPI_TX_QUAD		0x200
+ #define SPI_RX_DUAL		0x400
+ #define SPI_RX_QUAD		0x800
++#define SPI_CS_WORD             0x1000
++#define SPI_TX_OCTAL            0x2000
++#define SPI_RX_OCTAL            0x4000
++#define SPI_3WIRE_HIZ           0x8000
+ 
+ /*---------------------------------------------------------------------------*/
+ 
+-- 
+2.1.0
 
