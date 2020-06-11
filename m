@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 108C1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E6CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E035220801
+	by mail.kernel.org (Postfix) with ESMTP id 85AEE20760
 	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:38:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="PO5TbbRD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="a8DD08GD"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="bJO88Mhk";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FLUe7bXF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728186AbgFKNin (ORCPT
+        id S1727916AbgFKNik (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 09:38:43 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:56291 "EHLO
+        Thu, 11 Jun 2020 09:38:40 -0400
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:43879 "EHLO
         new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726277AbgFKNik (ORCPT
+        by vger.kernel.org with ESMTP id S1726357AbgFKNik (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 11 Jun 2020 09:38:40 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 941385801C9;
+        by mailnew.nyi.internal (Postfix) with ESMTP id 04B7D5801C2;
         Thu, 11 Jun 2020 09:38:38 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
   by compute4.internal (MEProxy); Thu, 11 Jun 2020 09:38:38 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=FWp+nZAt67kLf
-        FFkXkpwijsYrr9zE6nbCo+sUTODdjc=; b=PO5TbbRDiDd9vquEI2izdzx5XpLdi
-        sGmfhrBskrR+t6/GMejvBheZXdBJELSmYF3cXeKg9LoS2aOLV+2TqIqBGaV/S9cV
-        twxhXRVNbjmfOXJr7s5hfX6bEdxdv4+Rt9ZdbQ4/BBbNaDQ9UHA84an+DLzLUdo9
-        0Q/DIdcX4qS3iGRz3B1jcNJ/xYDIyVWzdoTYLglwTeQ1hA6FgK0+LPVXSt9GWFLb
-        P8ybi6/KAFPEm4yAxOIc9XauNgDBuSXf9R810tyi8ziv3omE+KzP1i1GIrxPbjxV
-        LVaNBDOiRmhlVX6Fi48eZrkK8dbGoaUR5BQx9g6tAt0JUM6xqgYLyrRpw==
+        :mime-version:content-transfer-encoding; s=fm3; bh=/x2R+hnKYf6lA
+        uvOCeP3/oM56Wti4MpAKaZR+DOQ1QM=; b=bJO88MhkwanQKPmtDze1Crnrm3wrq
+        ryJMGPU7Dmqz0ThqokOYWjjbP0K3JNx/afHmFDq2l0yzuZGD0pisW8dGNdh/vbbB
+        F/tyDT2sZBKhUPTfbWCmUSOT+bN4fcfRyGHw2fhzLlOmp1lSIpfLytShKDCN+9hG
+        dbK1ewFG1LOyclGNPb2zPKSX65RWBkySw8TMcnwuRJnJSUNKelZA4B1RjGK5I3Aj
+        cFNYAnkslXbkfaIaST6Bf/omLjLHZADIKYtpFKfQ32OriAyklP7B4Yd+whHoCf5k
+        Q6KOHPIyanaa5jtLD/EWx/lqdRrmBGNNrtFAWbiCIQxxafFLQ2t95ZHlw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=FWp+nZAt67kLfFFkXkpwijsYrr9zE6nbCo+sUTODdjc=; b=a8DD08GD
-        CqCAZVg4+LmSVtSG4wp5iyzz2yZoDHsWGq+WJf8euDifVxIsnLXxO6zh16QCN/BV
-        WuiQTgCsakD1a3NIWn3yY5DxeJ0Odbx3Nszes9boQjgENGBLleKfiUrWXkYTCuF9
-        ogq2k6HqMiRc2b/hWMfqdkiMEEtCcwCSVFrkE1WkicP271Bq+ifcYcFy1gaqimh7
-        UKaG1p2wB610Uag1kx3O+HN1/NbsdpAOGAnpK/QyTbRZ+XoHxojplYgtPYghNvEv
-        lsKClIqxeKcGmrtjk0fvsCFzYEdMU5ANYFGbH0PjFjdjNpvsNcmqB42iRnwxA8Vb
-        hJbQx3DCCpblcg==
-X-ME-Sender: <xms:3jPiXmMLohy4J_QZWJSMpV_5pIw9qjpdnxTo56z-JdRY7Dape0FzdQ>
+        fm3; bh=/x2R+hnKYf6lAuvOCeP3/oM56Wti4MpAKaZR+DOQ1QM=; b=FLUe7bXF
+        DiZLTRNvg3zqhbbGdHqkZC4bYU6N3rF+TxCtd3bGXWuh4jTVQ0oVMXAA7LujOrcR
+        D91wTECueAGAQ/A+TjZNq3FPQCn22/5VXqjCalB1TOGfPGVEyjTXydxgc2T83P86
+        pr3CvJIWypGM6rrXWKIMIRnb4Bm9USOH2Wm3Zj0/KvBRQFP5Fgyf79X4HxPHNJnQ
+        3sxRseSsSMV6ySD3DVuc8rbW9pl2SkfouW0xsZ1M9FAQ8OlKKHFY6MhDFUmw0sqk
+        3GU399uOWGLfWcf3DWltg6x7lExNeD+dqcFWzPWrMU7BGJzwWrOF6ZRSiGDVKOAw
+        1pf2JkG5gwwU3A==
+X-ME-Sender: <xms:3TPiXlBx4BR2bTAAcqqhMoQGEkLc-0ZmWiv0LWsnfmJqpKQHpow6SA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudehledggeduucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
@@ -58,13 +58,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudehledggeduucetufdoteggod
     htvghrnhepvdekleevfeffkeejhfffueelteelfeduieefheduudfggffhhfffheevveeh
     hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
     frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:3jPiXk_nc2gMMchheLODPbny01rG9RAhmdnc64qOvpuXa6tcgm9iCA>
-    <xmx:3jPiXtTOXlEGT-Be4Pve4uhg4V1bQmaAwbUiXR_JmVDbHMsUouLmfg>
-    <xmx:3jPiXmv0g5t9jrLSztAgKfddd5F0HKbR5bO8ilwQ1XXabLoAYQPLHA>
-    <xmx:3jPiXkvjcc-jqcRIeJ2gHXqy2EJeh8TuK8y86mMjG7NE1rAe8pj47g>
+X-ME-Proxy: <xmx:3TPiXjg7FKckM7V44tqhaW-vRU0VTf_LYEbvdaKUE3IWn86UJpvAqQ>
+    <xmx:3TPiXgnf0W9q7zqglqhM33Zuur8TiXPlRUUUNZnLGVipAc8feGrhtg>
+    <xmx:3TPiXvx47dkgbeYjmPZNxddVPnovLf3La7pPkn3D2LI3zAjBBDjYvg>
+    <xmx:3jPiXnQDY1zbC4UTRgdx6CBKqRZTKPsw0f769vweX0zUKRMn9IWayA>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 14BF7306669C;
-        Thu, 11 Jun 2020 09:37:08 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id E3A0C3066696;
+        Thu, 11 Jun 2020 09:37:05 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -76,9 +76,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v4 6/9] drm/vc4: crtc: Move the CRTC initialisation to a separate function
-Date:   Thu, 11 Jun 2020 15:36:51 +0200
-Message-Id: <3a3026c0e7408895d154d8dea454cf6d1c459715.1591882579.git-series.maxime@cerno.tech>
+Subject: [PATCH v4 4/9] drm/vc4: crtc: Split CRTC data in two
+Date:   Thu, 11 Jun 2020 15:36:49 +0200
+Message-Id: <8eb317c91ac208d7f926d76ad421002fa0364c47.1591882579.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.c33f5fd8b1b2703081f25398eb879937c9f7ce0b.1591882579.git-series.maxime@cerno.tech>
 References: <cover.c33f5fd8b1b2703081f25398eb879937c9f7ce0b.1591882579.git-series.maxime@cerno.tech>
@@ -89,156 +89,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The upcoming patches to turn the TXP into a full-blown CRTC will have the
-same CRTC initialisation code, so let's move it into a separate, public,
-function so that we can reuse it later on.
+The vc4_crtc_data structure is currently storing data related to both the
+general CRTC information needed by the rest of the vc4 driver (like HVS
+output and available FIFOs) and some related to the pixelvalve attached to
+that CRTC. Let's split this into two structures so that we can reuse the
+CRTC part into the TXP later on.
 
 Reviewed-by: Eric Anholt <eric@anholt.net>
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_crtc.c | 87 ++++++++++++++++++++---------------
- drivers/gpu/drm/vc4/vc4_drv.h  |  3 +-
- 2 files changed, 53 insertions(+), 37 deletions(-)
+ drivers/gpu/drm/vc4/vc4_crtc.c | 29 ++++++++++++++++++-----------
+ drivers/gpu/drm/vc4/vc4_drv.h  | 19 +++++++++++++++++++
+ 2 files changed, 37 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
-index 49c9954d3e00..e30a5036d2e6 100644
+index 6e71bc13e339..6f1a1062db8f 100644
 --- a/drivers/gpu/drm/vc4/vc4_crtc.c
 +++ b/drivers/gpu/drm/vc4/vc4_crtc.c
-@@ -878,6 +878,48 @@ vc4_crtc_get_cob_allocation(struct vc4_crtc *vc4_crtc)
- 	vc4_crtc->cob_size = top - base + 4;
- }
+@@ -780,8 +780,10 @@ static const struct drm_crtc_helper_funcs vc4_crtc_helper_funcs = {
+ 	.get_scanout_position = vc4_crtc_get_scanout_position,
+ };
  
-+int vc4_crtc_init(struct drm_device *drm, struct vc4_crtc *vc4_crtc,
-+		  const struct drm_crtc_funcs *crtc_funcs,
-+		  const struct drm_crtc_helper_funcs *crtc_helper_funcs)
-+{
-+	struct drm_crtc *crtc = &vc4_crtc->base;
-+	struct drm_plane *primary_plane;
-+	unsigned int i;
-+
-+	/* For now, we create just the primary and the legacy cursor
-+	 * planes.  We should be able to stack more planes on easily,
-+	 * but to do that we would need to compute the bandwidth
-+	 * requirement of the plane configuration, and reject ones
-+	 * that will take too much.
-+	 */
-+	primary_plane = vc4_plane_init(drm, DRM_PLANE_TYPE_PRIMARY);
-+	if (IS_ERR(primary_plane)) {
-+		dev_err(drm->dev, "failed to construct primary plane\n");
-+		return PTR_ERR(primary_plane);
-+	}
-+
-+	drm_crtc_init_with_planes(drm, crtc, primary_plane, NULL,
-+				  crtc_funcs, NULL);
-+	drm_crtc_helper_add(crtc, crtc_helper_funcs);
-+	vc4_crtc->channel = vc4_crtc->data->hvs_channel;
-+	drm_mode_crtc_set_gamma_size(crtc, ARRAY_SIZE(vc4_crtc->lut_r));
-+	drm_crtc_enable_color_mgmt(crtc, 0, false, crtc->gamma_size);
-+
-+	/* We support CTM, but only for one CRTC at a time. It's therefore
-+	 * implemented as private driver state in vc4_kms, not here.
-+	 */
-+	drm_crtc_enable_color_mgmt(crtc, 0, true, crtc->gamma_size);
-+	vc4_crtc_get_cob_allocation(vc4_crtc);
-+
-+	for (i = 0; i < crtc->gamma_size; i++) {
-+		vc4_crtc->lut_r[i] = i;
-+		vc4_crtc->lut_g[i] = i;
-+		vc4_crtc->lut_b[i] = i;
-+	}
-+
-+	return 0;
-+}
-+
- static int vc4_crtc_bind(struct device *dev, struct device *master, void *data)
+-static const struct vc4_crtc_data bcm2835_pv0_data = {
+-	.hvs_channel = 0,
++static const struct vc4_pv_data bcm2835_pv0_data = {
++	.base = {
++		.hvs_channel = 0,
++	},
+ 	.debugfs_name = "crtc0_regs",
+ 	.encoder_types = {
+ 		[PV_CONTROL_CLK_SELECT_DSI] = VC4_ENCODER_TYPE_DSI0,
+@@ -789,8 +791,10 @@ static const struct vc4_crtc_data bcm2835_pv0_data = {
+ 	},
+ };
+ 
+-static const struct vc4_crtc_data bcm2835_pv1_data = {
+-	.hvs_channel = 2,
++static const struct vc4_pv_data bcm2835_pv1_data = {
++	.base = {
++		.hvs_channel = 2,
++	},
+ 	.debugfs_name = "crtc1_regs",
+ 	.encoder_types = {
+ 		[PV_CONTROL_CLK_SELECT_DSI] = VC4_ENCODER_TYPE_DSI1,
+@@ -798,8 +802,10 @@ static const struct vc4_crtc_data bcm2835_pv1_data = {
+ 	},
+ };
+ 
+-static const struct vc4_crtc_data bcm2835_pv2_data = {
+-	.hvs_channel = 1,
++static const struct vc4_pv_data bcm2835_pv2_data = {
++	.base = {
++		.hvs_channel = 1,
++	},
+ 	.debugfs_name = "crtc2_regs",
+ 	.encoder_types = {
+ 		[PV_CONTROL_CLK_SELECT_DPI_SMI_HDMI] = VC4_ENCODER_TYPE_HDMI,
+@@ -818,8 +824,9 @@ static void vc4_set_crtc_possible_masks(struct drm_device *drm,
+ 					struct drm_crtc *crtc)
+ {
+ 	struct vc4_crtc *vc4_crtc = to_vc4_crtc(crtc);
+-	const struct vc4_crtc_data *crtc_data = vc4_crtc->data;
+-	const enum vc4_encoder_type *encoder_types = crtc_data->encoder_types;
++	const struct vc4_crtc_data *crtc_data = vc4_crtc_to_vc4_crtc_data(vc4_crtc);
++	const struct vc4_pv_data *pv_data = vc4_crtc_to_vc4_pv_data(vc4_crtc);
++	const enum vc4_encoder_type *encoder_types = pv_data->encoder_types;
+ 	struct drm_encoder *encoder;
+ 
+ 	drm_for_each_encoder(encoder, drm) {
+@@ -834,7 +841,7 @@ static void vc4_set_crtc_possible_masks(struct drm_device *drm,
+ 		}
+ 
+ 		vc4_encoder = to_vc4_encoder(encoder);
+-		for (i = 0; i < ARRAY_SIZE(crtc_data->encoder_types); i++) {
++		for (i = 0; i < ARRAY_SIZE(pv_data->encoder_types); i++) {
+ 			if (vc4_encoder->type == encoder_types[i]) {
+ 				vc4_encoder->clock_select = i;
+ 				encoder->possible_crtcs |= drm_crtc_mask(crtc);
+@@ -864,7 +871,7 @@ static int vc4_crtc_bind(struct device *dev, struct device *master, void *data)
  {
  	struct platform_device *pdev = to_platform_device(dev);
-@@ -885,8 +927,8 @@ static int vc4_crtc_bind(struct device *dev, struct device *master, void *data)
- 	const struct vc4_pv_data *pv_data;
+ 	struct drm_device *drm = dev_get_drvdata(master);
+-	const struct vc4_crtc_data *pv_data;
++	const struct vc4_pv_data *pv_data;
  	struct vc4_crtc *vc4_crtc;
  	struct drm_crtc *crtc;
--	struct drm_plane *primary_plane, *destroy_plane, *temp;
--	int ret, i;
-+	struct drm_plane *destroy_plane, *temp;
-+	int ret;
+ 	struct drm_plane *primary_plane, *destroy_plane, *temp;
+@@ -878,7 +885,7 @@ static int vc4_crtc_bind(struct device *dev, struct device *master, void *data)
+ 	pv_data = of_device_get_match_data(dev);
+ 	if (!pv_data)
+ 		return -ENODEV;
+-	vc4_crtc->data = pv_data;
++	vc4_crtc->data = &pv_data->base;
+ 	vc4_crtc->pdev = pdev;
  
- 	vc4_crtc = devm_kzalloc(dev, sizeof(*vc4_crtc), GFP_KERNEL);
- 	if (!vc4_crtc)
-@@ -907,32 +949,11 @@ static int vc4_crtc_bind(struct device *dev, struct device *master, void *data)
- 	vc4_crtc->regset.regs = crtc_regs;
- 	vc4_crtc->regset.nregs = ARRAY_SIZE(crtc_regs);
- 
--	/* For now, we create just the primary and the legacy cursor
--	 * planes.  We should be able to stack more planes on easily,
--	 * but to do that we would need to compute the bandwidth
--	 * requirement of the plane configuration, and reject ones
--	 * that will take too much.
--	 */
--	primary_plane = vc4_plane_init(drm, DRM_PLANE_TYPE_PRIMARY);
--	if (IS_ERR(primary_plane)) {
--		dev_err(dev, "failed to construct primary plane\n");
--		ret = PTR_ERR(primary_plane);
--		goto err;
--	}
--
--	drm_crtc_init_with_planes(drm, crtc, primary_plane, NULL,
--				  &vc4_crtc_funcs, NULL);
--	drm_crtc_helper_add(crtc, &vc4_crtc_helper_funcs);
--	vc4_crtc->channel = vc4_crtc->data->hvs_channel;
--	drm_mode_crtc_set_gamma_size(crtc, ARRAY_SIZE(vc4_crtc->lut_r));
--	drm_crtc_enable_color_mgmt(crtc, 0, false, crtc->gamma_size);
--
--	/* We support CTM, but only for one CRTC at a time. It's therefore
--	 * implemented as private driver state in vc4_kms, not here.
--	 */
--	drm_crtc_enable_color_mgmt(crtc, 0, true, crtc->gamma_size);
--
--	vc4_crtc_get_cob_allocation(vc4_crtc);
-+	ret = vc4_crtc_init(drm, vc4_crtc,
-+			    &vc4_crtc_funcs, &vc4_crtc_helper_funcs);
-+	if (ret)
-+		return ret;
-+	vc4_set_crtc_possible_masks(drm, crtc);
- 
- 	CRTC_WRITE(PV_INTEN, 0);
- 	CRTC_WRITE(PV_INTSTAT, PV_INT_VFP_START);
-@@ -941,14 +962,6 @@ static int vc4_crtc_bind(struct device *dev, struct device *master, void *data)
- 	if (ret)
- 		goto err_destroy_planes;
- 
--	vc4_set_crtc_possible_masks(drm, crtc);
--
--	for (i = 0; i < crtc->gamma_size; i++) {
--		vc4_crtc->lut_r[i] = i;
--		vc4_crtc->lut_g[i] = i;
--		vc4_crtc->lut_b[i] = i;
--	}
--
- 	platform_set_drvdata(pdev, vc4_crtc);
- 
- 	vc4_debugfs_add_regset32(drm, pv_data->debugfs_name,
-@@ -962,7 +975,7 @@ static int vc4_crtc_bind(struct device *dev, struct device *master, void *data)
- 		if (destroy_plane->possible_crtcs == drm_crtc_mask(crtc))
- 		    destroy_plane->funcs->destroy(destroy_plane);
- 	}
--err:
-+
- 	return ret;
- }
- 
+ 	vc4_crtc->regs = vc4_ioremap_regs(pdev, 0);
 diff --git a/drivers/gpu/drm/vc4/vc4_drv.h b/drivers/gpu/drm/vc4/vc4_drv.h
-index 6587bc09b2cd..1c49c27a564f 100644
+index c4873ae84231..6587bc09b2cd 100644
 --- a/drivers/gpu/drm/vc4/vc4_drv.h
 +++ b/drivers/gpu/drm/vc4/vc4_drv.h
-@@ -794,6 +794,9 @@ void vc4_bo_remove_from_purgeable_pool(struct vc4_bo *bo);
+@@ -443,9 +443,14 @@ to_vc4_encoder(struct drm_encoder *encoder)
+ struct vc4_crtc_data {
+ 	/* Which channel of the HVS this pixelvalve sources from. */
+ 	int hvs_channel;
++};
++
++struct vc4_pv_data {
++	struct vc4_crtc_data	base;
  
- /* vc4_crtc.c */
- extern struct platform_driver vc4_crtc_driver;
-+int vc4_crtc_init(struct drm_device *drm, struct vc4_crtc *vc4_crtc,
-+		  const struct drm_crtc_funcs *crtc_funcs,
-+		  const struct drm_crtc_helper_funcs *crtc_helper_funcs);
- void vc4_crtc_destroy(struct drm_crtc *crtc);
- int vc4_page_flip(struct drm_crtc *crtc,
- 		  struct drm_framebuffer *fb,
+ 	enum vc4_encoder_type encoder_types[4];
+ 	const char *debugfs_name;
++
+ };
+ 
+ struct vc4_crtc {
+@@ -477,6 +482,20 @@ to_vc4_crtc(struct drm_crtc *crtc)
+ 	return (struct vc4_crtc *)crtc;
+ }
+ 
++static inline const struct vc4_crtc_data *
++vc4_crtc_to_vc4_crtc_data(const struct vc4_crtc *crtc)
++{
++	return crtc->data;
++}
++
++static inline const struct vc4_pv_data *
++vc4_crtc_to_vc4_pv_data(const struct vc4_crtc *crtc)
++{
++	const struct vc4_crtc_data *data = vc4_crtc_to_vc4_crtc_data(crtc);
++
++	return container_of(data, struct vc4_pv_data, base);
++}
++
+ struct vc4_crtc_state {
+ 	struct drm_crtc_state base;
+ 	/* Dlist area for this CRTC configuration. */
 -- 
 git-series 0.9.1
