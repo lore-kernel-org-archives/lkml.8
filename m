@@ -2,181 +2,182 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 668D6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 16:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A13C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 16:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D0D3206DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 16:05:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C51DB2078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 16:08:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591891710;
+	bh=wgcumIwBtdGUUlCfo+fjkkOPxI3q0GeEG39pKqF/7hE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=IUpSGQtNfbPqB6HIWL/OATO2GJMWeIjXNRea3UBvP25aNn59obicbeg/M8zphsV64
+	 V/HdVxXZjDsrqnGOmzISn+/b8WGaQHpTDKE7yYQz32XQcAQhAq5+l0AyYwf3JfmGnR
+	 iSpNbzIJS4PdWZmLA2RBcoOSK4h2Qr4E1izx1f8o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbgFKQFr (ORCPT
+        id S1726537AbgFKQI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 12:05:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46692 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725887AbgFKQFq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 12:05:46 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ED04C08C5C1;
-        Thu, 11 Jun 2020 09:05:46 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 8F9F7FD7DD;
-        Thu, 11 Jun 2020 16:05:39 +0000 (UTC)
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones:
- Documentation/translations/it_IT
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Federico Vaga <federico.vaga@vaga.pv.it>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        David Sterba <dsterba@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        Jacob Huisman <jacobhuisman@kernelthusiast.com>,
-        =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>,
-        Rob Herring <robh@kernel.org>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20200609201241.81518-1-grandmaster@al2klimov.de>
- <4235548.LvFx2qVVIh@harkonnen>
- <cd260d03-27a4-7794-f58f-21e8e0be9755@al2klimov.de>
- <202006102009.CB14D7F@keescook>
- <8ee16c38-e28b-b4e6-ed30-55a59e216b49@al2klimov.de>
-Message-ID: <4196faa9-64d3-481b-9c15-bb4abb237c18@al2klimov.de>
-Date:   Thu, 11 Jun 2020 18:05:37 +0200
+        Thu, 11 Jun 2020 12:08:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53952 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726095AbgFKQI0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 12:08:26 -0400
+Received: from sol.hsd1.ca.comcast.net (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DA74206DC;
+        Thu, 11 Jun 2020 16:08:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591891705;
+        bh=wgcumIwBtdGUUlCfo+fjkkOPxI3q0GeEG39pKqF/7hE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=EBpiNmBmbbmGa3N8uDioNwWto8FdFuzDckWdSaUjkGiuW7NSFP8xVlg5LRWC5H5SG
+         GfdFdvBQbDm2Gm8QJ0ijLi6yJgyqpXvzeSJhGkK7eKkFxNqeliCXAUlcC1V1DaRVvQ
+         ad8XosVP+Db2ThBGGY5fUi24kyzWAxxXRLIAod4w=
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-fsdevel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     Daeho Jeong <daeho43@gmail.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] vfs: don't unnecessarily clone write access for writable fds
+Date:   Thu, 11 Jun 2020 09:05:34 -0700
+Message-Id: <20200611160534.55042-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <8ee16c38-e28b-b4e6-ed30-55a59e216b49@al2klimov.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spamd-Bar: /
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Eric Biggers <ebiggers@google.com>
 
+There's no need for mnt_want_write_file() to increment mnt_writers when
+the file is already open for writing, provided that
+mnt_drop_write_file() is changed to conditionally decrement it.
 
-Am 11.06.20 um 09:01 schrieb Alexander A. Klimov:
-> 
-> 
-> Am 11.06.20 um 05:12 schrieb Kees Cook:
->> On Wed, Jun 10, 2020 at 08:11:39PM +0200, Alexander A. Klimov wrote:
->>> Am 10.06.20 um 10:57 schrieb Federico Vaga:
->>>> On Tuesday, June 9, 2020 10:12:41 PM CEST Alexander A. Klimov wrote:
->>>>> Rationale:
->>>>> Reduces attack surface on kernel devs opening the links for MITM
->>>>> as HTTPS traffic is much harder to manipulate.
->>>>>
->>>>> Deterministic algorithm:
->>>>> For each file:
->>>>>     For each line:
->>>>>       If doesn't contain `\bxmlns\b`:
->>>>>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
->>>>>           If both the HTTP and HTTPS versions
->>>>>           return 200 OK and serve the same content:
->>>>>             Replace HTTP with HTTPS.
->>
->> Is this script somewhere we can read it? (It's easier usually to review
->> the code for bulk changes than the bulk changes themselves.)
-> Is any of you familiar with Golang?
-> 
-> @Maintainers Would any of you actually review like this? If yes, is the 
-> pseudo-code not enough?
-> 
->>
->>>>>
->>>>> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
->>>>> ---
->>>>>    .../translations/it_IT/admin-guide/README.rst      |  2 +-
->>>>>    .../translations/it_IT/doc-guide/parse-headers.rst |  2 +-
->>>>>    .../translations/it_IT/doc-guide/sphinx.rst        | 10 +++++-----
->>>>>    .../translations/it_IT/process/2.Process.rst       | 12 
->>>>> ++++++------
->>>>>    .../translations/it_IT/process/3.Early-stage.rst   |  2 +-
->>>>>    .../translations/it_IT/process/4.Coding.rst        |  4 ++--
->>>>>    .../it_IT/process/7.AdvancedTopics.rst             |  8 ++++----
->>>>>    .../translations/it_IT/process/8.Conclusion.rst    | 14 
->>>>> +++++++-------
->>>>>    .../translations/it_IT/process/adding-syscalls.rst |  4 ++--
->>>>>    .../translations/it_IT/process/changes.rst         |  6 +++---
->>>>>    .../translations/it_IT/process/clang-format.rst    |  2 +-
->>>>>    .../translations/it_IT/process/coding-style.rst    |  2 +-
->>>>>    Documentation/translations/it_IT/process/howto.rst |  2 +-
->>>>>    .../it_IT/process/maintainer-pgp-guide.rst         |  2 +-
->>>>>    .../it_IT/process/submitting-patches.rst           |  4 ++--
->>>>>    .../it_IT/process/volatile-considered-harmful.rst  |  4 ++--
->>>>>    16 files changed, 40 insertions(+), 40 deletions(-)
->>>>>
->>>>
->>>>
->>>>> diff --git a/Documentation/translations/it_IT/doc-guide/sphinx.rst
->>>>> b/Documentation/translations/it_IT/doc-guide/sphinx.rst index
->>>>> f1ad4504b734..0aaeb0297661 100644
->>>>> --- a/Documentation/translations/it_IT/doc-guide/sphinx.rst
->>>>> +++ b/Documentation/translations/it_IT/doc-guide/sphinx.rst
->>>>> @@ -14,7 +14,7 @@ Per generare la documentazione in HTML o PDF, usate
->>>>> comandi ``make htmldocs`` o ``make pdfdocs``. La documentazione così
->>>>> generata sarà disponibile nella cartella ``Documentation/output``.
->>>>>
->>>>> -.. _Sphinx: http://www.sphinx-doc.org/
->>>>> +.. _Sphinx: https://www.sphinx-doc.org/
->>>>>    .. _reStructuredText: http://docutils.sourceforge.net/rst.html
->>>>
->>>> It is not part of the deterministic algorithm but you may consider 
->>>> this as
->>>> well
->>
->> Why did it not match?
-> I didn't log that link-by-link. Maybe because I also didn't follow plain 
-> HTTP redirects while opening HTTPS links. Maybe it even matched, but was 
-> added after I made the changes.
-> 
-> Anyway, I'll maybe cover it in round II.
-> 
->>
->>>>
->>>> -.. _reStructuredText: http://docutils.sourceforge.net/rst.html
->>>> +.. _reStructuredText: https://docutils.sourceforge.io/rst.html
->>>>
->>> I'll think about analyzing such almost-matches, extending the algo and
->>> supplying a second round of patches once all [1] of this round arrive in
->>> torvalds/master.
->>>
->>> [1]:
->>>
->>> ➜  linux git:(feature/https-links-3) ✗ git diff --shortstat
->>>   1963 files changed, 2882 insertions(+), 2882 deletions(-)
->>> ➜  linux git:(feature/https-links-3) ✗
->>
->> Is there a reason to do this one language at a time instead of just
->> doing everything in one go?
-And yes, *at the moment* I'm patching one subsystem at a time. And the 
-discussion around 93431e0607e5 and all of its prototypes shown that it 
-was smarter than supplying thousands of patches at once.
+We seem to have ended up in the current situation because
+mnt_want_write_file() used to be paired with mnt_drop_write(), due to
+mnt_drop_write_file() not having been added yet.  So originally
+mnt_want_write_file() had to always increment mnt_writers.
 
-Now I've (hopefully) made and corrected all possible mistakes in two 
-patches and clearly know how to continue with the next thousands so the 
-maintainers won't have anything to comply about.
+But later mnt_drop_write_file() was added, and all callers of
+mnt_want_write_file() were paired with it.  This makes the compatibility
+between mnt_want_write_file() and mnt_drop_write() no longer necessary.
 
-Once the doc subsystems patches get applied (or even reach 
-torvalds/master) I'll submit maybe ten patches at once. And the more 
-maintainers apply them...
+Therefore, make __mnt_want_write_file() and __mnt_drop_write_file() skip
+incrementing mnt_writers on files already open for writing.  This
+removes the only caller of mnt_clone_write(), so remove that too.
 
-> There are two reasons:
-> 
-> * Jonathan said like theoretically you could give it all at once to 
-> Linus, but practically I'd not do that, please split by subsystem
-> * Linus *didn't even respond* (at least I didn't receive anything) to my 
-> catch-them-all patch at all, not even like please not as .gz attachment 
-> or please split by subsystem >
->>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+
+v2: keep the check for emergency r/o remounts.
+
+ fs/namespace.c        | 53 ++++++++++++++++---------------------------
+ include/linux/mount.h |  1 -
+ 2 files changed, 20 insertions(+), 34 deletions(-)
+
+diff --git a/fs/namespace.c b/fs/namespace.c
+index f30ed401cc6d7a..b2052b2f3d87f6 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -359,51 +359,37 @@ int mnt_want_write(struct vfsmount *m)
+ }
+ EXPORT_SYMBOL_GPL(mnt_want_write);
+ 
+-/**
+- * mnt_clone_write - get write access to a mount
+- * @mnt: the mount on which to take a write
+- *
+- * This is effectively like mnt_want_write, except
+- * it must only be used to take an extra write reference
+- * on a mountpoint that we already know has a write reference
+- * on it. This allows some optimisation.
+- *
+- * After finished, mnt_drop_write must be called as usual to
+- * drop the reference.
+- */
+-int mnt_clone_write(struct vfsmount *mnt)
+-{
+-	/* superblock may be r/o */
+-	if (__mnt_is_readonly(mnt))
+-		return -EROFS;
+-	preempt_disable();
+-	mnt_inc_writers(real_mount(mnt));
+-	preempt_enable();
+-	return 0;
+-}
+-EXPORT_SYMBOL_GPL(mnt_clone_write);
+-
+ /**
+  * __mnt_want_write_file - get write access to a file's mount
+  * @file: the file who's mount on which to take a write
+  *
+- * This is like __mnt_want_write, but it takes a file and can
+- * do some optimisations if the file is open for write already
++ * This is like __mnt_want_write, but if the file is already open for writing it
++ * skips incrementing mnt_writers (since the open file already has a reference)
++ * and instead only does the check for emergency r/o remounts.  This must be
++ * paired with __mnt_drop_write_file.
+  */
+ int __mnt_want_write_file(struct file *file)
+ {
+-	if (!(file->f_mode & FMODE_WRITER))
+-		return __mnt_want_write(file->f_path.mnt);
+-	else
+-		return mnt_clone_write(file->f_path.mnt);
++	if (file->f_mode & FMODE_WRITER) {
++		/*
++		 * Superblock may have become readonly while there are still
++		 * writable fd's, e.g. due to a fs error with errors=remount-ro
++		 */
++		if (__mnt_is_readonly(file->f_path.mnt))
++			return -EROFS;
++		return 0;
++	}
++	return __mnt_want_write(file->f_path.mnt);
+ }
+ 
+ /**
+  * mnt_want_write_file - get write access to a file's mount
+  * @file: the file who's mount on which to take a write
+  *
+- * This is like mnt_want_write, but it takes a file and can
+- * do some optimisations if the file is open for write already
++ * This is like mnt_want_write, but if the file is already open for writing it
++ * skips incrementing mnt_writers (since the open file already has a reference)
++ * and instead only does the freeze protection and the check for emergency r/o
++ * remounts.  This must be paired with mnt_drop_write_file.
+  */
+ int mnt_want_write_file(struct file *file)
+ {
+@@ -449,7 +435,8 @@ EXPORT_SYMBOL_GPL(mnt_drop_write);
+ 
+ void __mnt_drop_write_file(struct file *file)
+ {
+-	__mnt_drop_write(file->f_path.mnt);
++	if (!(file->f_mode & FMODE_WRITER))
++		__mnt_drop_write(file->f_path.mnt);
+ }
+ 
+ void mnt_drop_write_file(struct file *file)
+diff --git a/include/linux/mount.h b/include/linux/mount.h
+index de657bd211fa64..29d216f927c28c 100644
+--- a/include/linux/mount.h
++++ b/include/linux/mount.h
+@@ -78,7 +78,6 @@ struct path;
+ 
+ extern int mnt_want_write(struct vfsmount *mnt);
+ extern int mnt_want_write_file(struct file *file);
+-extern int mnt_clone_write(struct vfsmount *mnt);
+ extern void mnt_drop_write(struct vfsmount *mnt);
+ extern void mnt_drop_write_file(struct file *file);
+ extern void mntput(struct vfsmount *mnt);
+-- 
+2.26.2
+
