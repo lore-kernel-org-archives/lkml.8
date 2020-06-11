@@ -2,132 +2,118 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9EFC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB661C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A47132072F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:31:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8355F2072F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:31:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Na5SwJoj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YaVJRixh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbgFKIbC (ORCPT
+        id S1726790AbgFKIbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 04:31:02 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:44710 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726646AbgFKIbB (ORCPT
+        Thu, 11 Jun 2020 04:31:17 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44694 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726729AbgFKIbQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 04:31:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1591864260; x=1623400260;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=gE4QUdZh10oJ1Y6AXqRaO1/QXy4fn8StEChlLqZbvW8=;
-  b=Na5SwJoj2qJv2MTQa18fq5Ul4NR9cKLXTTSkr0S3mnl3a50XDmdzIrzt
-   6mXIetMBychn4PIkMPVA9kTcDEa5Rp2ixcKx/mkrtanRWbzNemxk77IfF
-   71lYAoEvrksPrJXbMD+2iwUAHEM7iRfmRuaLWWszygiOo6s8548pGCuQR
-   Y=;
-IronPort-SDR: 5I2KL3FnQtXkM7r7E08Z+J3eklasVDpSVVpoq5VlJkXPNG7QtaT3FXLj12hVc5BMgsEJOmWXMA
- 9iXFTVSS0FIg==
-X-IronPort-AV: E=Sophos;i="5.73,499,1583193600"; 
-   d="scan'208";a="35704540"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 11 Jun 2020 08:30:58 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com (Postfix) with ESMTPS id A066CA07D4;
-        Thu, 11 Jun 2020 08:30:56 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 11 Jun 2020 08:30:56 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.48) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 11 Jun 2020 08:30:49 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     Jiri Slaby <jslaby@suse.cz>
-CC:     SeongJae Park <sjpark@amazon.com>, Joe Perches <joe@perches.com>,
-        <akpm@linux-foundation.org>, <apw@canonical.com>,
-        SeongJae Park <sjpark@amazon.de>, <colin.king@canonical.com>,
-        <sj38.park@gmail.com>, <linux-kernel@vger.kernel.org>,
-        <kristen.c.accardi@intel.com>, <mishi@linux.com>,
-        <skhan@linuxfoundation.org>, <gregkh@linuxfoundation.org>
-Subject: Re: Re: [PATCH v4 0/2] Recommend denylist/allowlist instead of blacklist/whitelist
-Date:   Thu, 11 Jun 2020 10:30:35 +0200
-Message-ID: <20200611083035.23008-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <38ac91ab-ced3-8a4f-b825-4503fdcddeb8@suse.cz> (raw)
+        Thu, 11 Jun 2020 04:31:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591864275;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wqYVXT69UvryAYl9lNEvAFDCi4lpCbFocG1/WeDxI7w=;
+        b=YaVJRixhO+iK71lOKNhdpFg91DyK5PaPT5ulEo84e7DM2hqnV/kkrVzMUl2L91JSwP5b3o
+        EPyRM2bN777C768oAnJfG7IkpzRcObEe6MiSb9JVUV4yBq2GgXm6x95qU6fekizy1Qlk2y
+        BwNpJtJqcORr2jbH/syqVsGGu1JRADk=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-282-YqJka_LJPEGIAk1z6EvdWQ-1; Thu, 11 Jun 2020 04:31:12 -0400
+X-MC-Unique: YqJka_LJPEGIAk1z6EvdWQ-1
+Received: by mail-ed1-f69.google.com with SMTP id y5so1432394edt.3
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 01:31:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=wqYVXT69UvryAYl9lNEvAFDCi4lpCbFocG1/WeDxI7w=;
+        b=CuBCKcHb13Pz8WLJehCQXTeRLyW+guU778WDVuI/o1FIKJ6xAMjiAvnAUm7ml6llGQ
+         nokjcnXyTiWUT4WRq0+Yve7kr3Qvu9lXXBRs/uo5/YAcEsauGQs/v1eIPzfXgse17tsf
+         dSngFlq2WNmem8IrYQP3+PbOOAICIT+MNavoXkWcXfXFzY/QBUcfdb7nHgnIjVux90HE
+         vywn6v3IvFf7ReHgeClbXQvF5IKbeI5Hw+vr7OXL8x9IeutQ7e/vHCSD3vz0MRB4xre6
+         varmeJgV1g+ljRPMPryEBTnbZvV3jX+gOvGe5Dz0cuiLAma2N6hkcQQ7LqcYQaAf1tQE
+         q1RQ==
+X-Gm-Message-State: AOAM530ycI4R6ecey9zpcodKJx7LVEPvfq/ptztLuTVcTRuOmup2CwUG
+        wOF9xDvcUD4RVI4SRqA35JKSSxaIdXRkBqd1cFanXeVQif+FEM4+m1b5A6EJqGx+7JkbkcENy7q
+        aApGR8OKHO585lAKh9XzBNjM/
+X-Received: by 2002:a17:906:7f94:: with SMTP id f20mr7554730ejr.394.1591864270806;
+        Thu, 11 Jun 2020 01:31:10 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwKlzTe4j+zEAO903+5izsigh9isK3JSgGRfJjNeyODoD2a9lb20KYC0JPI7N6g+dJC4qcPBw==
+X-Received: by 2002:a17:906:7f94:: with SMTP id f20mr7554717ejr.394.1591864270580;
+        Thu, 11 Jun 2020 01:31:10 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id qp16sm1487705ejb.64.2020.06.11.01.31.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2020 01:31:09 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Vivek Goyal <vgoyal@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] KVM: async_pf: Cleanup kvm_setup_async_pf()
+In-Reply-To: <20200610181453.GC18790@linux.intel.com>
+References: <20200610175532.779793-1-vkuznets@redhat.com> <20200610181453.GC18790@linux.intel.com>
+Date:   Thu, 11 Jun 2020 10:31:08 +0200
+Message-ID: <87sgf29f77.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.43.160.48]
-X-ClientProxiedBy: EX13D21UWA004.ant.amazon.com (10.43.160.252) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 11 Jun 2020 10:16:09 +0200 Jiri Slaby <jslaby@suse.cz> wrote:
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-> On 11. 06. 20, 9:38, SeongJae Park wrote:
-> > On Wed, 10 Jun 2020 23:35:24 -0700 Joe Perches <joe@perches.com> wrote:
-> > 
-> >> On Thu, 2020-06-11 at 08:25 +0200, SeongJae Park wrote:
-> >>> From: SeongJae Park <sjpark@amazon.de>
-> >>>
-> >>> This patchset 1) adds support of deprecated terms in the 'checkpatch.pl'
-> >>> and 2) set the 'blacklist' and 'whitelist' as deprecated with
-> >>> replacement suggestion of 'denylist' and 'allowlist', because the
-> >>> suggestions are incontrovertible, doesn't make people hurt, and more
-> >>> self-explanatory.
-> >>
-> >> While the checkpatch implementation is better,
-> >> I'm still very "meh" about the whole concept.
-> > 
-> > I can understand your concerns about politic things in the second patch.
-> > However, the concept of the 'deprecated terms' in the first patch is not
-> > political but applicable to the general cases.  We already had the commits[1]
-> > for a similar case.  So, could you ack for at least the first patch?
-> > 
-> > [1] https://www.phoronix.com/scan.php?page=news_item&px=Linux-Kernel-Hugs
-> 
-> Fuck you! replaced by hug you! is a completely different story. The
-> former is indeed offending to majority (despite it's quite common to
-> tell someone "fuck you" in my subregion; OTOH hugging, no way -- I'm a
-> straight non-communist). If it turns out that any word (e.g. blacklist)
-> offends _majority_ (or at least a significant part of it) of some
-> minority or culture, then sure, we should send it to /dev/null. But we
-> should by no means listen to extreme individuals.
+>
+> I'd also be in favor of changing the return type to a boolean.  I think
+> you alluded to it earlier, the current semantics are quite confusing as they
+> invert the normal "return 0 on success".
 
-Thank you for the opinion.  But, my point here is, deprecating some terms would
-occur in general as the f-word to hug replacement was, and the first patch is a
-simple technical preparation for such case.  And, therefore, it would not need
-to be blocked due to the second patch.
+Yes, will do a follow-up.
 
-For example, as it seems at least you and I agree on the f-word to hug
-replacement, we could add ``fuck||hug`` in the `deprecated_terms.txt` file to
-avoid future spread of the f-words.
+KVM/x86 code has an intertwined mix of:
+- normal 'int' functions ('0 on success')
+- bool functions ('true'/'1' on success)
+- 'int' exit handlers ('1'/'0' on success depending if exit to userspace
+  was required)
+- ...
 
-Also, I personally don't think the second patch as a political extreme change
-but just a right thing to do.  Nonetheless, I also understand people could
-think in different ways.  Moreover, it is obviously non-technical thing which I
-am really bad at.
+I think we can try to standardize this to:
+- 'int' when error is propagated outside of KVM (userspace, other kernel
+  subsystem,...)
+- 'bool' when the function is internal to KVM and the result is binary
+ ('is_exit_required()', 'was_pf_injected()', 'will_have_another_beer()',
+ ...)
+- 'enum' for the rest.
+And, if there's a good reason for making an exception, require a
+comment. (leaving aside everything returning a pointer, of course as
+these are self-explanatory -- unless it's 'void *' :-))
 
-For the reason, I am CC-ing the code of conduct committees[1].  I would like to
-hear their opinions on this.
+>
+> For this patch:
+>
+> Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+>
 
-[1] https://www.kernel.org/code-of-conduct.html
+Thank you!
 
+-- 
+Vitaly
 
-Thanks,
-SeongJae Park
-
-> 
-> thanks,
-> -- 
-> js
-> suse labs
