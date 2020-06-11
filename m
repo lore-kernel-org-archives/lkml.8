@@ -2,79 +2,75 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F81DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 10:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54352C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 10:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B353206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 10:43:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35CDF206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 10:43:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbgFKKnm (ORCPT
+        id S1727797AbgFKKnq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 06:43:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52792 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727081AbgFKKng (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 06:43:36 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DDA4C08C5C1;
-        Thu, 11 Jun 2020 03:43:36 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jjKg9-0007F7-FG; Thu, 11 Jun 2020 12:43:25 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id E6245100F18; Thu, 11 Jun 2020 12:43:24 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Will Deacon <will@kernel.org>
-Subject: Re: linux-next: manual merge of the tip tree with Linus' tree
-In-Reply-To: <20200611105254.1b14f070@canb.auug.org.au>
-References: <20200611105254.1b14f070@canb.auug.org.au>
-Date:   Thu, 11 Jun 2020 12:43:24 +0200
-Message-ID: <878sgtdgs3.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Thu, 11 Jun 2020 06:43:46 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:48798 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727770AbgFKKnl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 06:43:41 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 258262004CB;
+        Thu, 11 Jun 2020 12:43:38 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9B2C02004B4;
+        Thu, 11 Jun 2020 12:43:33 +0200 (CEST)
+Received: from titan.ap.freescale.net (titan.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id F40BE402BF;
+        Thu, 11 Jun 2020 18:43:27 +0800 (SGT)
+From:   Hui Song <hui.song_1@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Song Hui <hui.song_1@nxp.com>
+Subject: [PATCH] gpio: mpc8xxx: change the gpio interrupt flags.
+Date:   Thu, 11 Jun 2020 18:28:09 +0800
+Message-Id: <20200611102809.27829-1-hui.song_1@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephen Rothwell <sfr@canb.auug.org.au> writes:
-> Today's linux-next merge of the tip tree got conflicts in:
->
->   include/linux/compiler.h
->
-> between commits:
->
->   dee081bf8f82 ("READ_ONCE: Drop pointer qualifiers when reading from scalar types")
->   9e343b467c70 ("READ_ONCE: Enforce atomicity for {READ,WRITE}_ONCE() memory accesses")
->   a5460b5e5fb8 ("READ_ONCE: Simplify implementations of {READ,WRITE}_ONCE()")
->
-> from Linus' tree and commits:
->
->   2ab3a0a02905 ("READ_ONCE: Enforce atomicity for {READ,WRITE}_ONCE() memory accesses")
->   7b364f0949ae ("READ_ONCE: Drop pointer qualifiers when reading from scalar types")
->   bbfa112b46bd ("READ_ONCE: Simplify implementations of {READ,WRITE}_ONCE()")
-> (and maybe others)
->
-> from the tip tree.
+From: Song Hui <hui.song_1@nxp.com>
 
-Sorry for that inconveniance. I'm about to get rid of the conflicts on
-the tip side.
+Delete the interrupt IRQF_NO_THREAD flags in order to gpio interrupts
+can be threaded to allow high-priority processes to preempt.
 
-Thanks,
+Signed-off-by: Song Hui <hui.song_1@nxp.com>
+---
+ drivers/gpio/gpio-mpc8xxx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-        tglx
+diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+index 604dfec..1e86652 100644
+--- a/drivers/gpio/gpio-mpc8xxx.c
++++ b/drivers/gpio/gpio-mpc8xxx.c
+@@ -417,7 +417,7 @@ static int mpc8xxx_probe(struct platform_device *pdev)
+ 
+ 	ret = devm_request_irq(&pdev->dev, mpc8xxx_gc->irqn,
+ 			       mpc8xxx_gpio_irq_cascade,
+-			       IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade",
++			       IRQF_SHARED, "gpio-cascade",
+ 			       mpc8xxx_gc);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "%s: failed to devm_request_irq(%d), ret = %d\n",
+-- 
+2.9.5
+
