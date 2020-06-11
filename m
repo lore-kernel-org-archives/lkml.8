@@ -2,271 +2,295 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 210ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 948E2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06883206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:01:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61A77206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 12:01:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i8eYE6Og"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbgFKMBN (ORCPT
+        id S1728015AbgFKMB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 08:01:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52058 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726697AbgFKMBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 08:01:13 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id CDBC1ACB8;
-        Thu, 11 Jun 2020 12:01:12 +0000 (UTC)
-Date:   Thu, 11 Jun 2020 14:01:08 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Paul McKenney <paulmck@kernel.org>
-Subject: Re: Barrier before pushing desc_ring tail: was [PATCH v2 2/3]
- printk: add lockless buffer
-Message-ID: <20200611120107.GD6581@linux-b0ei>
-References: <20200501094010.17694-1-john.ogness@linutronix.de>
- <20200501094010.17694-3-john.ogness@linutronix.de>
- <20200609113751.GD23752@linux-b0ei>
- <87d068utbg.fsf@vostro.fn.ogness.net>
+        Thu, 11 Jun 2020 08:01:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37008 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726697AbgFKMBZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 08:01:25 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76D0BC08C5C3
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 05:01:24 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id 9so6577915ljc.8
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 05:01:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TOjUBjavuZ4PP3pqeN7MITws22OwPsrlOfoep6Vvoe8=;
+        b=i8eYE6Og5ZMfQeISnzWMdaATxvHpgBHPfSuPJBQgdZujekSLmkbSPf68i/yhzx5e1Q
+         P8HmHduoCZX6jR3pYBzpGssVILELDCqAheIdjBiL4K4hzX9Xi59O5U+bxKDIxzM66h3e
+         e9tFSNospkVlQU3vrkfLoDOhp67tMiU66UCp0pNEssbmgIuJxZwOj6WbSQ/HwdoRV6II
+         eyIDpK4Xix8GCxHKl3gN5PjWpGa65B2r3oDnUkozOZm7C3/ZOnOdTB7hEh8atnwjoCEp
+         d+9NloCNZFKbP/ydu6DdIQt1j8RyU4s0JLkFbEo6jcgLyRZvPmdm5N5e9MFgSIgRCa/c
+         lrWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TOjUBjavuZ4PP3pqeN7MITws22OwPsrlOfoep6Vvoe8=;
+        b=lrUR+mDpkHOsQdxnR8Q0DoVN1F6/jS2zh1yQvcUTvN2JHONrJhXnS/4yNfvr+HoByE
+         EsNVD/VlLfWhaMQBtGjIJ4rbTIcRBVsQ0HGqnm0JnvnnTXV/4W+qn9HJ3HovgIagWUSb
+         45YSRnTE+3Oy9xh6bdWhmaIrWJqVY7daEs5RS7GTj1xp5yhYNb9xfUA01twAFERYYFMN
+         4YhTl+jDTETukGbhT2X9U7zVhEqDJiUIAsK/nvMbV908IRMYebtc61QIxBQgtXxdfxeI
+         jioimFn+2cdhGbSlfd1WkkSSGrUO323+XKdlBQpCCvkS2ypCTm3iZb/6VIyeUXTzUN6y
+         sgbQ==
+X-Gm-Message-State: AOAM530pjl+csOkoHJLYjYYu46S1bfQBoqEOF7Zmgkj2Ab2hNEH4Qqs/
+        OHrdZtvCn8/6w91uPu1laEy1muJIo/AKSNxE2qWBtg==
+X-Google-Smtp-Source: ABdhPJwuDOtvgK0tlLu3an8tpYmbdgfjM5ieGq7jDPC6FWg9a321K1QipVzJrI6h/LBXlfaVLVBpVHBVxZ5BMN1Fs5s=
+X-Received: by 2002:a2e:a37c:: with SMTP id i28mr4494427ljn.111.1591876882689;
+ Thu, 11 Jun 2020 05:01:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87d068utbg.fsf@vostro.fn.ogness.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200528161112.GI2483@worktop.programming.kicks-ass.net>
+ <20200529100806.GA3070@suse.de> <edd80c0d-b7c8-4314-74da-08590170e6f5@arm.com>
+ <87v9k84knx.derkling@matbug.net> <20200603101022.GG3070@suse.de>
+ <CAKfTPtAvMvPk5Ea2kaxXE8GzQ+Nc_PS+EKB1jAa03iJwQORSqA@mail.gmail.com>
+ <20200603165200.v2ypeagziht7kxdw@e107158-lin.cambridge.arm.com>
+ <CAKfTPtC6TvUL83VdWuGfbKm0CkXB85YQ5qkagK9aiDB8Hqrn_Q@mail.gmail.com>
+ <20200608123102.6sdhdhit7lac5cfl@e107158-lin.cambridge.arm.com>
+ <CAKfTPtCKS-2RoaMHhKGigjzc7dhXhx0z3dYNQLD3Q9aRC_tCnw@mail.gmail.com> <20200611102407.vhy3zjexrhorx753@e107158-lin.cambridge.arm.com>
+In-Reply-To: <20200611102407.vhy3zjexrhorx753@e107158-lin.cambridge.arm.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Thu, 11 Jun 2020 14:01:11 +0200
+Message-ID: <CAKfTPtDnWuBOJxJP7ahX4Kzu+8jvPjAcE6XErMtG1SCJMdZZ-w@mail.gmail.com>
+Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
+ boost value
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Mel Gorman <mgorman@suse.de>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-doc@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-fs <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 2020-06-09 17:56:03, John Ogness wrote:
-> On 2020-06-09, Petr Mladek <pmladek@suse.com> wrote:
-> >> --- /dev/null
-> >> +++ b/kernel/printk/printk_ringbuffer.c
-> >> +/*
-> >> + * Advance the desc ring tail. This function advances the tail by one
-> >> + * descriptor, thus invalidating the oldest descriptor. Before advancing
-> >> + * the tail, the tail descriptor is made reusable and all data blocks up to
-> >> + * and including the descriptor's data block are invalidated (i.e. the data
-> >> + * ring tail is pushed past the data block of the descriptor being made
-> >> + * reusable).
-> >> + */
-> >> +static bool desc_push_tail(struct printk_ringbuffer *rb,
-> >> +			   unsigned long tail_id)
-> >> +{
-> >> +	struct prb_desc_ring *desc_ring = &rb->desc_ring;
-> >> +	enum desc_state d_state;
-> >> +	struct prb_desc desc;
-> >> +
-> >> +	d_state = desc_read(desc_ring, tail_id, &desc);
-> >> +
-> >> +	switch (d_state) {
-> >> +	case desc_miss:
-> >> +		/*
-> >> +		 * If the ID is exactly 1 wrap behind the expected, it is
-> >> +		 * in the process of being reserved by another writer and
-> >> +		 * must be considered reserved.
-> >> +		 */
-> >> +		if (DESC_ID(atomic_long_read(&desc.state_var)) ==
-> >> +		    DESC_ID_PREV_WRAP(desc_ring, tail_id)) {
-> >> +			return false;
-> >> +		}
-> >> +
-> >> +		/*
-> >> +		 * The ID has changed. Another writer must have pushed the
-> >> +		 * tail and recycled the descriptor already. Success is
-> >> +		 * returned because the caller is only interested in the
-> >> +		 * specified tail being pushed, which it was.
-> >> +		 */
-> >> +		return true;
-> >> +	case desc_reserved:
-> >> +		return false;
-> >> +	case desc_committed:
-> >> +		desc_make_reusable(desc_ring, tail_id);
-> >> +		break;
-> >> +	case desc_reusable:
-> >> +		break;
-> >> +	}
-> >> +
-> >> +	/*
-> >> +	 * Data blocks must be invalidated before their associated
-> >> +	 * descriptor can be made available for recycling. Invalidating
-> >> +	 * them later is not possible because there is no way to trust
-> >> +	 * data blocks once their associated descriptor is gone.
-> >> +	 */
-> >> +
-> >> +	if (!data_push_tail(rb, &rb->text_data_ring, desc.text_blk_lpos.next))
-> >> +		return false;
-> >> +	if (!data_push_tail(rb, &rb->dict_data_ring, desc.dict_blk_lpos.next))
-> >> +		return false;
-> >> +
-> >> +	/*
-> >> +	 * Check the next descriptor after @tail_id before pushing the tail
-> >> +	 * to it because the tail must always be in a committed or reusable
-> >> +	 * state. The implementation of prb_first_seq() relies on this.
-> >> +	 *
-> >> +	 * A successful read implies that the next descriptor is less than or
-> >> +	 * equal to @head_id so there is no risk of pushing the tail past the
-> >> +	 * head.
-> >> +	 */
-> >> +	d_state = desc_read(desc_ring, DESC_ID(tail_id + 1),
-> >> +			    &desc); /* LMM(desc_push_tail:A) */
-> >> +	if (d_state == desc_committed || d_state == desc_reusable) {
-> >> +		/*
-> >> +		 * Any CPU that loads the new tail ID, must see that the
-> >> +		 * descriptor at @tail_id is in the reusable state. See the
-> >> +		 * read memory barrier part of desc_reserve:D for details.
-> >> +		 */
-> >> +		atomic_long_cmpxchg_relaxed(&desc_ring->tail_id, tail_id,
-> >> +			DESC_ID(tail_id + 1)); /* LMM(desc_push_tail:B) */
+On Thu, 11 Jun 2020 at 12:24, Qais Yousef <qais.yousef@arm.com> wrote:
+>
+> On 06/09/20 19:10, Vincent Guittot wrote:
+> > On Mon, 8 Jun 2020 at 14:31, Qais Yousef <qais.yousef@arm.com> wrote:
+> > >
+> > > On 06/04/20 14:14, Vincent Guittot wrote:
+> > >
+> > > [...]
+> > >
+> > > > I have tried your patch and I don't see any difference compared to
+> > > > previous tests. Let me give you more details of my setup:
+> > > > I create 3 levels of cgroups and usually run the tests in the 4 levels
+> > > > (which includes root). The result above are for the root level
+> > > >
+> > > > But I see a difference at other levels:
+> > > >
+> > > >                            root           level 1       level 2       level 3
+> > > >
+> > > > /w patch uclamp disable     50097         46615         43806         41078
+> > > > tip uclamp enable           48706(-2.78%) 45583(-2.21%) 42851(-2.18%)
+> > > > 40313(-1.86%)
+> > > > /w patch uclamp enable      48882(-2.43%) 45774(-1.80%) 43108(-1.59%)
+> > > > 40667(-1.00%)
+> > > >
+> > > > Whereas tip with uclamp stays around 2% behind tip without uclamp, the
+> > > > diff of uclamp with your patch tends to decrease when we increase the
+> > > > number of level
+> > >
+> > > So I did try to dig more into this, but I think it's either not a good
+> > > reproducer or what we're observing here is uArch level latencies caused by the
+> > > new code that seem to produce a bigger knock on effect than what they really
+> > > are.
+> > >
+> > > First, CONFIG_FAIR_GROUP_SCHED is 'expensive', for some definition of
+> > > expensive..
 > >
-> > I was quite confused by the above comment. Does it mean that we need
-> > a barrier here? Or does it explain why the cmpxchg has its own
-> > LMM marker?
-> 
-> This LMM marker is referenced quite often, but since it is a relaxed
-> cmpxchg(), its significance is not immediately clear. I was hoping to
-> add some hints as to why it is significant. The comment that it is
-> referring to is:
-> 
-> 	/*
-> 	 * Guarantee the tail ID is read before validating the
-> 	 * recycled descriptor state. A read memory barrier is
-> 	 * sufficient for this. This pairs with data_push_tail:C.
-> 	 *
-> 	 * Memory barrier involvement:
-> 	 *
-> 	 * If desc_reserve:C reads from desc_push_tail:B, then
-> 	 * desc_reserve:F reads from desc_make_reusable:A.
-> 	 *
-> 	 * Relies on:
-> 	 *
-> 	 * MB from desc_make_reusable:A to desc_push_tail:B
-> 	 *    matching
-> 	 * RMB from desc_reserve:C to desc_reserve:F
-> 	 *
-> 	 * Note: desc_make_reusable:A, desc_push_tail:B, and
-> 	 *       data_push_tail:C can all be different CPUs. However,
-> 	 *       the desc_push_tail:B CPU must have previously seen
-> 	 *       data_push_tail:D and the data_push_tail:D CPU (which
-> 	 *       performs the full memory barrier) must have
-> 	 *       previously seen desc_make_reusable:A.
-> 	 */
-> 
-> English translation:
-> 
-> In order to push the data tail, a CPU must first see that the associated
-> descriptor is in the reusable state. Since a full memory barrier is
-> performed after that sighting and before doing the data tail push, _any_
-> CPU that sees the pushed data tail will be able to see that the
-> associated descriptor is in the reusable state.
-> 
-> In order to push the descriptor tail, a CPU must first see that the
-> associated data tail has been pushed. Therefore, that CPU would also see
-> that the associated descriptor is in the reusable state.
+> > yes, enabling CONFIG_FAIR_GROUP_SCHED adds an overhead
+> >
+> > >
+> > > *** uclamp disabled/fair group enabled ***
+> > >
+> > >         # Executed 50000 pipe operations between two threads
+> > >
+> > >              Total time: 0.958 [sec]
+> > >
+> > >               19.177100 usecs/op
+> > >                   52145 ops/sec
+> > >
+> > > *** uclamp disabled/fair group disabled ***
+> > >
+> > >         # Executed 50000 pipe operations between two threads
+> > >              Total time: 0.808 [sec]
+> > >
+> > >              16.176200 usecs/op
+> > >                  61819 ops/sec
+> > >
+> > > So there's a 15.6% drop in ops/sec when enabling this option. I think it's good
+> > > to look at the absolutely number of usecs/op, Fair group adds around
+> > > 3 usecs/op.
+> > >
+> > > I dropped FAIR_GROUP_SCHED from my config to eliminate this overhead and focus
+> > > on solely on uclamp overhead.
+> >
+> > Have you checked that both tests run at the root level ?
+>
+> I haven't actively moved tasks to cgroups. As I said that snippet was
+> particularly bad and I didn't see that level of nesting in every call.
+>
+> > Your function-graph log below shows several calls to
+> > update_cfs_group() which means that your trace below has not been made
+> > at root level but most probably at the 3rd level and I wonder if you
+> > used the same setup for running the benchmark above. This could
+> > explain such huge difference because I don't have such difference on
+> > my platform but more around 2%
+>
+> What promoted me to look at this is when you reported that even without uclamp
+> the nested cgroup showed a drop at each level. I was just trying to understand
+> how both affect the hot path in hope to understand the root cause of uclamp
+> overhead.
+>
+> >
+> > For uclamp disable/fair group enable/ function graph enable :  47994ops/sec
+> > For uclamp disable/fair group disable/ function graph enable : 49107ops/sec
+> >
+> > >
+> > > With uclamp enabled but no fair group I get
+> > >
+> > > *** uclamp enabled/fair group disabled ***
+> > >
+> > >         # Executed 50000 pipe operations between two threads
+> > >              Total time: 0.856 [sec]
+> > >
+> > >              17.125740 usecs/op
+> > >                  58391 ops/sec
+> > >
+> > > The drop is 5.5% in ops/sec. Or 1 usecs/op.
+> > >
+> > > I don't know what's the expectation here. 1 us could be a lot, but I don't
+> > > think we expect the new code to take more than few 100s of ns anyway. If you
+> > > add potential caching effects, reaching 1 us wouldn't be that hard.
+> > >
+> > > Note that in my runs I chose performance governor and use `taskset 0x2` to
+> >
+> > You might want to set 2 CPUs in your cpumask instead of 1 in order to
+> > have 1 CPU for each thread
+>
+> I did try that but it didn't seem to change the number. I think the 2 tasks
+> interleave so running in 2 CPUs doesn't change the result. But to ease ftrace
+> capture, it's easier to monitor a single cpu.
+>
+> >
+> > > force running on a big core to make sure the runs are repeatable.
+> >
+> > I also use performance governor but don't pinned tasks because I use smp.
+>
+> Is your arm platform SMP?
 
-Thanks a lot for this detailed description. It helped a lot.
+Yes, all my tests are done on the Arm64 octo core  smp system
 
-Let me try another description from slightly different angle:
+>
+> >
+> > >
+> > > On Juno-r2 I managed to scrap most of the 1 us with the below patch. It seems
+> > > there was weird branching behavior that affects the I$ in my case. It'd be good
+> > > to try it out to see if it makes a difference for you.
+> >
+> > The perf are slightly worse on my setup:
+> > For uclamp enable/fair group disable/ function graph enable : 48413ops/sec
+> > with patch  below : 47804os/sec
+>
+> I am not sure if the new code could just introduce worse cache performance
+> in a platform dependent way. The evidences I have so far point in this
+> direction.
+>
+> >
+> > >
+> > > The I$ effect is my best educated guess. Perf doesn't catch this path and
+> > > I couldn't convince it to look at cache and branch misses between 2 specific
+> > > points.
+> > >
+> > > Other subtle code shuffling did have weird effect on the result too. One worthy
+> > > one is making uclamp_rq_dec() noinline gains back ~400 ns. Making
+> > > uclamp_rq_inc() noinline *too* cancels this gain out :-/
+> > >
+> > >
+> > > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> > > index 0464569f26a7..0835ee20a3c7 100644
+> > > --- a/kernel/sched/core.c
+> > > +++ b/kernel/sched/core.c
+> > > @@ -1071,13 +1071,11 @@ static inline void uclamp_rq_dec_id(struct rq *rq, struct task_struct *p,
+> > >
+> > >  static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
+> > >  {
+> > > -       enum uclamp_id clamp_id;
+> > > -
+> > >         if (unlikely(!p->sched_class->uclamp_enabled))
+> > >                 return;
+> > >
+> > > -       for_each_clamp_id(clamp_id)
+> > > -               uclamp_rq_inc_id(rq, p, clamp_id);
+> > > +       uclamp_rq_inc_id(rq, p, UCLAMP_MIN);
+> > > +       uclamp_rq_inc_id(rq, p, UCLAMP_MAX);
+> > >
+> > >         /* Reset clamp idle holding when there is one RUNNABLE task */
+> > >         if (rq->uclamp_flags & UCLAMP_FLAG_IDLE)
+> > > @@ -1086,13 +1084,11 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
+> > >
+> > >  static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
+> > >  {
+> > > -       enum uclamp_id clamp_id;
+> > > -
+> > >         if (unlikely(!p->sched_class->uclamp_enabled))
+> > >                 return;
+> > >
+> > > -       for_each_clamp_id(clamp_id)
+> > > -               uclamp_rq_dec_id(rq, p, clamp_id);
+> > > +       uclamp_rq_dec_id(rq, p, UCLAMP_MIN);
+> > > +       uclamp_rq_dec_id(rq, p, UCLAMP_MAX);
+> > >  }
+> > >
+> > >  static inline void
+> > >
+> > >
+> > > FWIW I fail to see activate/deactivate_task in perf record. They don't show up
+> > > on the list which means this micro benchmark doesn't stress them as Mel's test
+> > > does.
+> >
+> > Strange because I have been able to trace them.
+>
+> On your arm platform? I can certainly see them on x86.
 
-All this relies on the fact the the full barrier is called in
-data_push_tail() and data_push_tail() is called right above.
-But there are two situations where the barrier is not called.
-It is when:
+yes on my arm platform
 
-  1. desc.text_blk_lpos.next already is behind data_ring->tail_lpos.
+>
+> Thanks
 
-     This is safe.
-
-     It might happen when there was a race in the past. CPU1 reserved
-     a descriptor before CPU2 and CPU2 was able to allocate data block
-     before CPU1.
-
-     As a result, both descriptors and both data blocks were moved
-     into reusable state when the earlier descriptor was reused.
-     It is because it pointed to newer data block and the older data
-     block must have been invalidated together with the newer
-     descriptor.
-
-     Now, the full barrier was called before tail_lpos was moved.
-     Both descriptors must have been in the reusable state already.
-
-
-  2. desc.text_blk_lpos == INVALID_LPOS.
-
-     It seems that this is not synchronized and other CPUs might see
-     the old state.
-
-     It happens for data blocks that do not have any data. So it
-     probably does not cause real problems but ...
-
-
-
-> > I think that we actually need a full barrier here to make sure that
-> > all CPUs see the changes made by data_push_tail() before we
-> > allow to rewrite the descriptor. The changes in data_push_tail() might
-> > be done on different CPUs.
-> 
-> How so? That memory barrier exists to make sure the reusable descriptor
-> state is stored before pushing the data tail. This is important for
-> readers (which start from the data tail) so they can notice if the
-> descriptor has since been invalidated (reusable state).
-> 
-> But where is it important that the data tail change is seen before the
-> descriptor tail change? How are the data tail and descriptor tail
-> significantly related to each other?
-
-I have to admit that I did not think about it deeply enough. It was
-more about feeling and seeing similar pattern.
-
-You have a point. The state value of the descriptor is the central
-point. It is used to synchronize operations with both desc_ring and
-data_ring.
-
-The state is modified only once. So one (full) memory barrier should
-be enough to synchronize all CPUs.
-
-The state has to be modified before the data block could be reused.
-Therefore the full barrier has to be already in the data_ring code.
-
-The question is what to do with the empty data case. I see three
-possibilities:
-
-  1. Ignore the case with empty block because it (probably) does not
-     cause real problems.
-
-  2. Call the full barrier in data_push_tail() even when the data
-     block is empty.
-
-  3. Call the full barrier also in desc_push_tail() as I suggested.
-
-
-My opinion:
-
-I prefer 3rd solution. The barrier would be superfluous in the most
-common situation. But it would create more error-proof code.
-We could always optimize it when it causes problems.
-
-Anyway, I would feel very uneasy about the the 1st solution. And the
-2nd solution is weird. It would be hard to explain.
-
-
-Best Regards,
-Petr
-
-PS: I start feeling more confident about the code. The more barriers
-the less possible races ;-)
+>
+> --
+> Qais Yousef
