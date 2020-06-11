@@ -2,104 +2,138 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A649DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99685C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 813A32065C
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:25:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7290520823
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:27:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="l28f8UvD"
+	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="FwBN+sIO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728229AbgFKOZw (ORCPT
+        id S1728238AbgFKO1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 10:25:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59420 "EHLO
+        Thu, 11 Jun 2020 10:27:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726414AbgFKOZu (ORCPT
+        with ESMTP id S1726657AbgFKO1Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 10:25:50 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C1FCC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 07:25:50 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id r15so5248946wmh.5
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 07:25:50 -0700 (PDT)
+        Thu, 11 Jun 2020 10:27:16 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6C39C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 07:27:15 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id c71so5149943wmd.5
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 07:27:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=4Wl9FPjQM/OmioKsKPEd8aDegLYWZmFx0p2ql/A57hk=;
-        b=l28f8UvDUpME1nIHWAzTfBskecEhX50JaBZhgjJEeNEemNi2o5jq6jzfPAXaUlfCc0
-         Tsgd8VVnkXoyX74/1DMaTTXjBT2cVYaVJLtAnFt53WEJI1amkTsQZ6pe40TWM7f+u8tf
-         gAFiVIgbp/zn78MwZ11YBE5DZge2oKlRtDmMU=
+        d=0x0f.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=9PTMI4AzXbLxjyyfz+xfdpQHe4hbBWsXmsCFiQIKN4U=;
+        b=FwBN+sIO4TrTpP0kISN3kEu0krnuRDrBMvQaELuZn2dafIWWIy3mCsH4FnnW14hbhE
+         mQZvr+O1MMO1HbLLkF3esMZtzen5E4PSL/AFedMg9N7ZvIJHmtFJqWaEOL1D+FWBJpdk
+         ++BzE/BZLtUb84uvG5wlSGRetmJXlxgLzcf6Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4Wl9FPjQM/OmioKsKPEd8aDegLYWZmFx0p2ql/A57hk=;
-        b=dTTuQNVIky2jZJa/cjo7VTHQxFFK5ofGHkcY650j+8ZhKmNdp8zwAAK5wZWetJaXVM
-         kecrMEBrKwj5rZAlpJDtYpHp5U3vjqerGCAO9Ptr+zbQ4kSbPB+dDAQVFNtzfkh4viZU
-         CDLTj4sduq2aa/2m3eNEOo6/8HctT/4mmbJJ3YSw2B5aG6qz9db5M5/8Q0j8uX8QzNb+
-         TigMMsNWqoo+S5M99sGCavsvXJP+XXVayL5DMnMhOZBWlETGHWZ3aM38YVQAHck+HTWr
-         k7P6FqQlwb8cWGJs+PhevSR3nPlZsrWswtXGWGXpAHVurCgITWZfqgFegfSqlVsXh4d4
-         X23A==
-X-Gm-Message-State: AOAM531Olh41c8rpJ0084bjysd8R4ywpig4WKSbmYJhymsQZWtqxp/gc
-        tnyV8VFdmsELS+y6NehjLx8wfxkawcRSlA==
-X-Google-Smtp-Source: ABdhPJwq/eOqXtITLK+kyOLCk4mNDfVsqXIZV2F3yV+6GfhTdR4AaBB6cuDCKN+FCMKfYALtIfLtaA==
-X-Received: by 2002:a1c:1d16:: with SMTP id d22mr8733030wmd.174.1591885548499;
-        Thu, 11 Jun 2020 07:25:48 -0700 (PDT)
-Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
-        by smtp.gmail.com with ESMTPSA id b14sm4310840wmj.47.2020.06.11.07.25.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 07:25:47 -0700 (PDT)
-Date:   Thu, 11 Jun 2020 14:25:46 +0000
-From:   Tomasz Figa <tfiga@chromium.org>
-To:     Xia Jiang <xia.jiang@mediatek.com>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        srv_heupstream@mediatek.com, senozhatsky@chromium.org,
-        mojahsu@chromium.org, drinkcat@chromium.org,
-        maoguang.meng@mediatek.com, sj.huang@mediatek.com
-Subject: Re: [PATCH RESEND v9 08/18] media: platform: Cancel the last frame
- handling flow
-Message-ID: <20200611142546.GB158633@chromium.org>
-References: <20200604090553.10861-1-xia.jiang@mediatek.com>
- <20200604090553.10861-10-xia.jiang@mediatek.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=9PTMI4AzXbLxjyyfz+xfdpQHe4hbBWsXmsCFiQIKN4U=;
+        b=ooRAbju7FFFlakNNNgthb1jffHhuql834gE+izeiVkaKR4w0KYB/jukR7HuFR0xJKN
+         HHSAHiqhOostGTCVZfejd4wTG0i7PtaTH1HupVuriK4UGju/JXAlIjnZ+NttvEO+WtfM
+         Z2kJxyYG7zhEEuUU60aa1TdhB+vITBOa6x+2z9GCOTxo9tkTih18na7fGA4+vNmxwJuQ
+         0ngHWnPgn4eIU9SuSMw5RCVki2V3hba4alsIbN7vzBC2aIpqwzK4ZeOAP3BVmoWZxsZ9
+         eSOoxxgQJ9VGifmOYucDDFGjwPxFYZkY/9htmcXyAjaCUQMp9L1npcwVyB9WFL4MuWez
+         ZkMA==
+X-Gm-Message-State: AOAM532h6+0yBczBjWr8kY+Ds91RpLOPnOrU7Qs8rMZalIx3LRX+6pfh
+        ExLq9ItpJrjnrMUJMI7+icqpDXtIeTsTMHbaySTlMA==
+X-Google-Smtp-Source: ABdhPJxFx37GGZrR7mx+bOeh2G0xHw4CjeDEUlLUymRGmdGvuYyynBKWPZnPWwH+zKli3nFcFwjcLZAVrfDcfzhzaPA=
+X-Received: by 2002:a1c:7206:: with SMTP id n6mr8751619wmc.4.1591885634606;
+ Thu, 11 Jun 2020 07:27:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604090553.10861-10-xia.jiang@mediatek.com>
+References: <20191014061617.10296-2-daniel@0x0f.com> <20200610090421.3428945-5-daniel@0x0f.com>
+ <42aa9e03-3fcc-a602-40db-cfbddef36b34@suse.de>
+In-Reply-To: <42aa9e03-3fcc-a602-40db-cfbddef36b34@suse.de>
+From:   Daniel Palmer <daniel@0x0f.com>
+Date:   Thu, 11 Jun 2020 23:26:59 +0900
+Message-ID: <CAFr9PXkFqhivokPzP3ZyHMKaT52nRuJHE=DKd9V5BnC=pV+JWg@mail.gmail.com>
+Subject: Re: [PATCH v2 4/5] ARM: mstar: Add dts for msc313(e) based BreadBee boards
+To:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+Cc:     Krzysztof Adamski <k@japko.eu>, tim.bird@sony.com,
+        devicetree@vger.kernel.org, Daniel Palmer <daniel@thingy.jp>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Maxime Ripard <mripard@kernel.org>,
+        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Mike Rapoport <rppt@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Doug Anderson <armlinux@m.disordat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Gregory Fong <gregory.0xf0@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Nathan Huckleberry <nhuck15@gmail.com>,
+        Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Xia,
+Hi Andreas,
 
-On Thu, Jun 04, 2020 at 05:05:43PM +0800, Xia Jiang wrote:
-> There is no need to queue an empty buffer for signaling a last frame,
-> because all frames are separate from each other in JPEG.
-> 
-> Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
-> ---
-> v9: new patch
-> ---
->  .../media/platform/mtk-jpeg/mtk_jpeg_core.c   | 21 +------------------
->  1 file changed, 1 insertion(+), 20 deletions(-)
-> 
+On Thu, 11 Jun 2020 at 22:45, Andreas F=C3=A4rber <afaerber@suse.de> wrote:
 
-Reviewed-by: Tomasz Figa <tfiga@chromium.org>
+> > +     compatible =3D "thingyjp,breadbee-crust", "mstar,infinity";
+> > +
+> > +     aliases {
+> > +             serial0 =3D &pm_uart;
+> > +     };
+> > +
+> > +     chosen {
+> > +             stdout-path =3D "serial0:115200n8";
+> > +     };
+> > +};
+> > +
+> > +&pm_uart {
+> > +     status =3D "okay";
+>
+> Might this be a more suited place for temporary clock-frequency? For
+> lack of clk driver it would seem to depend on the board's bootloader
+> pre-configuring it rather than being a default of the SoC.
 
-Best regards,
-Tomasz
+For all of the chips so far their second stage bootloader always turns
+on a PLL and
+reconfigures the pm_uart clock to use a 172MHz tap from that PLL right
+at the start
+of the boot process before u-boot is started. The new u-boot SPL I'm
+working on to replace
+that loader follows that convention.
+Once the clk parts are in it should be possible to pull out the fixed
+frequency and
+replace it with a proper handle to that PLL tap.
+Basically it's not documented anywhere except the assembly but the
+convention for
+these chips is to use the 172MHz clock for the uart pretty soon after
+power on so it
+made sense to have it in one place.
+
+Thanks,
+
+Daniel
