@@ -2,152 +2,110 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1275CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 16:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A9DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 16:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2AFD207ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 16:56:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591894579;
-	bh=TE418sB8Y8et8fQqJeRiuB08BfOdKipjyUXleiQngaI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MHTTXLsDyuFDKqTQRwtXoXvv6MBOjQ+BfrAwEUAd96Vy9xt6IzkQpOGmd2b01wfUA
-	 /8xLaQTt42rytJiZfgTGEil3bSiti7aHvqraXgef/4h4tRYnxyji6PINGlDhgINymp
-	 4Sv/bhhKSVDDwvsoOYDu1jbsktlbbMbG/6DGzxeo=
+	by mail.kernel.org (Postfix) with ESMTP id 09AFA206DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 16:59:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ymBiEkAW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbgFKQ4S (ORCPT
+        id S1726628AbgFKQ7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 12:56:18 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:40922 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbgFKQ4R (ORCPT
+        Thu, 11 Jun 2020 12:59:16 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:34820 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726542AbgFKQ7Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 12:56:17 -0400
-Received: by mail-il1-f193.google.com with SMTP id t8so6079812ilm.7
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 09:56:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=EWbECKAlHMMk14Dear354OHlygSb2J3osFMxc7H4JbQ=;
-        b=q8igub9ORfhtBamS7DvqkGAAWaRyztAYX8L1NE1Q1OzauvAE0UTznFKIuU3X2TvJ9P
-         i2MOIRqfa6HQNoWR26l8SRyZRZ6FFJ5CEO1MupfE0fUqdK+AmMdh/kqDvToSq0YQ5Ykb
-         9H0iadPQWPlQX86LCDMSaJalLlBsahE+VfYrvfFLhVMTb4iyBRtdVTO7EBdCeN4dYNP+
-         xmLi0xj9F+8HptkfX50cay0hKSSqDQVn7p3GJ6sLDVCoYATpr4TU+hWJJ323qEGyOydx
-         0Q2HHV+a+vWL3BBUPx0st5Z+3OHk+lBdQh5qhkbrt+gH1dgj7LJa/xtN21o0lCbHGBfT
-         mJqA==
-X-Gm-Message-State: AOAM532YFLAiik0Pvy0+24rpqorVgbv4dqEA2q6Ixq/UCgjrDkaBYuS+
-        Ucq/yjSboMcGLAogMw3ACSx1AKM=
-X-Google-Smtp-Source: ABdhPJyGgSYN2ZnZzRTdtQTWnbN8lGZ32fmmu0RjOoxO+lL2vx3+ihSjt3DtsRPpuJ2mSdWbVIlv3g==
-X-Received: by 2002:a92:6b05:: with SMTP id g5mr8622812ilc.120.1591894575334;
-        Thu, 11 Jun 2020 09:56:15 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id o12sm1687739iob.6.2020.06.11.09.56.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 09:56:14 -0700 (PDT)
-Received: (nullmailer pid 1230958 invoked by uid 1000);
-        Thu, 11 Jun 2020 16:56:12 -0000
-Date:   Thu, 11 Jun 2020 10:56:12 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jassi Brar <jassisinghbrar@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [GIT PULL] Mailbox changes for v5.8
-Message-ID: <20200611165612.GA1225679@bogus>
-References: <CABb+yY1q3fTJkF0zOBJ6y8u-707-tVax9Vn_TR=vgq35=7j83Q@mail.gmail.com>
+        Thu, 11 Jun 2020 12:59:16 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05BGr7IF092042;
+        Thu, 11 Jun 2020 16:58:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=pATssJ82ubYGIfysCxQP65ExUCwZERILo2N1U80Ii2M=;
+ b=ymBiEkAWF8S8FJFO5+E1nZzVGvGj5tvwF9MQHSMRfCe0zn/6Zd8KfSKZmXzecXKptOjP
+ u027pNP7g2yBCYKO4lgyzKJWMAWLowT6TN4mv1VR0YpxZNaG1WNEUVNiqEFZwsHHpYKG
+ xzcC+gLzGjRfA1qjLSKjMoA4nXEHL7EgVV7Bb0KgrIG7r5/r8Q12jjMF0ydGeWa2kM80
+ c9Kh+t3ngVJF6eN4mUFqXu3dwBdm9hZLmjLYhiLY9yQwkzRp79HVJ/um3pZ4sWTWsfY3
+ kDvUiX7fekE/tO2RlNuK5MVokUGjKbf7x/y+uMJPrfELtWrYagy38ctV0+rVwLEAXQDE 8g== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 31jepp2v65-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 11 Jun 2020 16:58:51 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05BGs9kl046671;
+        Thu, 11 Jun 2020 16:58:50 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 31gmqsdpp8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 11 Jun 2020 16:58:50 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05BGwihH031049;
+        Thu, 11 Jun 2020 16:58:48 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 11 Jun 2020 09:58:44 -0700
+Date:   Thu, 11 Jun 2020 12:59:10 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Sistare <steven.sistare@oracle.com>
+Subject: Re: [PATCH v2] x86/mm: use max memory block size on bare metal
+Message-ID: <20200611165910.6dwd3c7z5brimjbm@ca-dmjordan1.us.oracle.com>
+References: <20200609225451.3542648-1-daniel.m.jordan@oracle.com>
+ <dc869b25-db3c-8c68-3278-8688c5288632@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CABb+yY1q3fTJkF0zOBJ6y8u-707-tVax9Vn_TR=vgq35=7j83Q@mail.gmail.com>
+In-Reply-To: <dc869b25-db3c-8c68-3278-8688c5288632@intel.com>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9649 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 mlxscore=0
+ mlxlogscore=999 adultscore=0 spamscore=0 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006110133
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9649 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=0
+ priorityscore=1501 bulkscore=0 clxscore=1015 phishscore=0 impostorscore=0
+ malwarescore=0 mlxscore=0 cotscore=-2147483648 adultscore=0 spamscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006110133
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 11:10:56PM -0500, Jassi Brar wrote:
-> Hi Linus,
+On Thu, Jun 11, 2020 at 07:16:02AM -0700, Dave Hansen wrote:
+> On 6/9/20 3:54 PM, Daniel Jordan wrote:
+> > +	/*
+> > +	 * Use max block size to minimize overhead on bare metal, where
+> > +	 * alignment for memory hotplug isn't a concern.
+> > +	 */
+> > +	if (hypervisor_is_type(X86_HYPER_NATIVE)) {
+> > +		bz = MAX_BLOCK_SIZE;
+> > +		goto done;
+> > +	}
 > 
-> The following changes since commit ffeb595d84811dde16a28b33d8a7cf26d51d51b3:
-> 
->   Merge tag 'powerpc-5.7-6' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux
-> (2020-05-30 12:28:44 -0700)
-> 
-> are available in the Git repository at:
-> 
->   git://git.linaro.org/landing-teams/working/fujitsu/integration.git
-> tags/mailbox-v5.8
-> 
-> for you to fetch changes up to e9f901dc05c09c4f89183cadcb2d93177f3100cb:
-> 
->   mailbox: qcom: Add ipq6018 apcs compatible (2020-06-10 22:43:57 -0500)
-> 
-> ----------------------------------------------------------------
-> - qcom :
->      new controller driver for IPCC
->      reorg the of_device data
->      add support for ipq6018 platform
-> - spreadtrum:
->      new sprd controller driver
-> - imx:
->      implement suspend/resume PM support
-> - Misc :
->      make pcc driver struct as static
->      fix return value in imx_mu_scu
->      disable clock before bailout in imx probe
->      remove duplicate error mssg in zynqmp probe
->      fix header size in imx.scu
->      check for null instead of is-err in zynqmp
-> 
-> ----------------------------------------------------------------
-> Anson Huang (3):
->       mailbox: imx: Support runtime PM
->       mailbox: imx: Add runtime PM callback to handle MU clocks
->       mailbox: imx: ONLY IPC MU needs IRQF_NO_SUSPEND flag
-> 
-> Baolin Wang (2):
->       dt-bindings: mailbox: Add the Spreadtrum mailbox documentation
->       mailbox: sprd: Add Spreadtrum mailbox driver
-> 
-> Dan Carpenter (1):
->       mailbox: imx: Fix return in imx_mu_scu_xlate()
-> 
-> Dong Aisheng (1):
->       mailbox: imx: Add context save/restore for suspend/resume
-> 
-> Fabio Estevam (1):
->       mailbox: imx: Disable the clock on devm_mbox_controller_register() failure
-> 
-> Jason Yan (1):
->       mailbox: pcc: make pcc_mbox_driver static
-> 
-> Manivannan Sadhasivam (3):
->       dt-bindings: mailbox: Add devicetree binding for Qcom IPCC
->       mailbox: Add support for Qualcomm IPCC
->       MAINTAINERS: Add entry for Qualcomm IPCC driver
-> 
-> Markus Elfring (1):
->       mailbox: ZynqMP IPI: Delete an error message in zynqmp_ipi_probe()
-> 
-> Peng Fan (1):
->       mailbox: imx-mailbox: fix scu msg header size check
-> 
-> Sivaprakash Murugesan (3):
->       dt-bindings: mailbox: Add YAML schemas for QCOM APCS global block
->       mailbox: qcom: Add clock driver name in apcs mailbox driver data
->       mailbox: qcom: Add ipq6018 apcs compatible
+> What ends up being the worst case scenario?  Booting a really small
+> bare-metal x86 system, say with 64MB or 128MB of RAM?  What's the
+> overhead there?
 
-You've dropped the binding change that breaks 'make dt_binding_check' 
-from this PR, but do you intend to drop it from linux-next because it's 
-still in today's next? 
-
-And really the above commit should not be applied until the binding 
-change is, but fine.
-
-Rob
+Might not be following you, so bear with me, but we only get to this check on a
+system with a physical address end of at least MEM_SIZE_FOR_LARGE_BLOCK (64G),
+and this would still (ever so slightly...) reduce overhead of memory block init
+at boot in that case.
