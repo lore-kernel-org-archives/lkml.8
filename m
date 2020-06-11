@@ -2,384 +2,195 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9C6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FDD1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AA3E207ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:39:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50D6F20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:40:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DZPPoDNN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728303AbgFKNjg (ORCPT
+        id S1727989AbgFKNkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 09:39:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49168 "EHLO mx2.suse.de"
+        Thu, 11 Jun 2020 09:40:17 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:24484 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726456AbgFKNjf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 09:39:35 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 0D165AF7C;
-        Thu, 11 Jun 2020 13:39:34 +0000 (UTC)
-Subject: Re: [PATCH v2 3/5] ARM: mstar: Add infinity/mercury series dtsi
-To:     Daniel Palmer <daniel@0x0f.com>
-Cc:     k@japko.eu, tim.bird@sony.com, devicetree@vger.kernel.org,
-        Daniel Palmer <daniel@thingy.jp>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Doug Anderson <armlinux@m.disordat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Gregory Fong <gregory.0xf0@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Will Deacon <will@kernel.org>,
-        Nathan Huckleberry <nhuck15@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191014061617.10296-2-daniel@0x0f.com>
- <20200610090421.3428945-4-daniel@0x0f.com>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <bf26822d-acb0-ae40-df7f-80978bd26cfb@suse.de>
-Date:   Thu, 11 Jun 2020 15:39:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726456AbgFKNkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 09:40:16 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591882815; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Date: Message-ID: Subject: From: Cc: To: Sender;
+ bh=ihrRcjhW9ULLbY+ZlVGkZ/PVZKfJ2usDc73eH+pAOvY=; b=DZPPoDNNM24oNucCH4skxa1zCRaWtfKO+TrFG2xf3TXQlTMHxNdGzxcmN3NezHSjnFFR6Ogy
+ 0OfezCCJC+xjAhUPJXtLgtYd9jrGkvGcYQrNEjGDTlOuAoXnbglJmKKNWcNdDJhX9jHL32uP
+ RiCaLgt3z2DeFpwmQaN7Uk2qQqU=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5ee23432c76a4e7a2a8f8d31 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 11 Jun 2020 13:40:02
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 702DCC43387; Thu, 11 Jun 2020 13:40:01 +0000 (UTC)
+Received: from [192.168.1.102] (unknown [183.83.143.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: charante)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 823FBC433CA;
+        Thu, 11 Jun 2020 13:39:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 823FBC433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=charante@codeaurora.org
+To:     Sumit Semwal <sumit.semwal@linaro.org>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>
+Cc:     Linaro MM SIG <linaro-mm-sig@lists.linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>, vinmenon@codeaurora.org,
+        stable@vger.kernel.org
+From:   Charan Teja Kalla <charante@codeaurora.org>
+Subject: [PATCH] dmabuf: use spinlock to access dmabuf->name
+Message-ID: <316a5cf9-ca71-6506-bf8b-e79ded9055b2@codeaurora.org>
+Date:   Thu, 11 Jun 2020 19:09:55 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200610090421.3428945-4-daniel@0x0f.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+There exists a sleep-while-atomic bug while accessing the dmabuf->name
+under mutex in the dmabuffs_dname(). This is caused from the SELinux
+permissions checks on a process where it tries to validate the inherited
+files from fork() by traversing them through iterate_fd() (which
+traverse files under spin_lock) and call
+match_file(security/selinux/hooks.c) where the permission checks happen.
+This audit information is logged using dump_common_audit_data() where it
+calls d_path() to get the file path name. If the file check happen on
+the dmabuf's fd, then it ends up in ->dmabuffs_dname() and use mutex to
+access dmabuf->name. The flow will be like below:
+flush_unauthorized_files()
+  iterate_fd()
+    spin_lock() --> Start of the atomic section.
+      match_file()
+        file_has_perm()
+          avc_has_perm()
+            avc_audit()
+              slow_avc_audit()
+	        common_lsm_audit()
+		  dump_common_audit_data()
+		    audit_log_d_path()
+		      d_path()
+                        dmabuffs_dname()
+                          mutex_lock()--> Sleep while atomic.
 
-Am 10.06.20 um 11:04 schrieb Daniel Palmer:
-> Adds initial dtsi for the base MStar ARMv7 SoCs, family dtsis for infinity
-> and mercury families, and then some chip level dtsis for chips in those
-> families.
-> 
-> Signed-off-by: Daniel Palmer <daniel@0x0f.com>
-> ---
->   MAINTAINERS                              |  3 +
->   arch/arm/boot/dts/infinity-msc313.dtsi   | 14 +++++
->   arch/arm/boot/dts/infinity.dtsi          | 10 ++++
->   arch/arm/boot/dts/infinity3-msc313e.dtsi | 14 +++++
->   arch/arm/boot/dts/infinity3.dtsi         | 10 ++++
->   arch/arm/boot/dts/mercury5-ssc8336n.dtsi | 14 +++++
->   arch/arm/boot/dts/mercury5.dtsi          | 10 ++++
->   arch/arm/boot/dts/mstar-v7.dtsi          | 71 ++++++++++++++++++++++++
->   8 files changed, 146 insertions(+)
+Call trace captured (on 4.19 kernels) is below:
+___might_sleep+0x204/0x208
+__might_sleep+0x50/0x88
+__mutex_lock_common+0x5c/0x1068
+__mutex_lock_common+0x5c/0x1068
+mutex_lock_nested+0x40/0x50
+dmabuffs_dname+0xa0/0x170
+d_path+0x84/0x290
+audit_log_d_path+0x74/0x130
+common_lsm_audit+0x334/0x6e8
+slow_avc_audit+0xb8/0xf8
+avc_has_perm+0x154/0x218
+file_has_perm+0x70/0x180
+match_file+0x60/0x78
+iterate_fd+0x128/0x168
+selinux_bprm_committing_creds+0x178/0x248
+security_bprm_committing_creds+0x30/0x48
+install_exec_creds+0x1c/0x68
+load_elf_binary+0x3a4/0x14e0
+search_binary_handler+0xb0/0x1e0
 
-Can you split this up into three parts for easier review?
+So, use spinlock to access dmabuf->name to avoid sleep-while-atomic.
 
->   create mode 100644 arch/arm/boot/dts/infinity-msc313.dtsi
->   create mode 100644 arch/arm/boot/dts/infinity.dtsi
->   create mode 100644 arch/arm/boot/dts/infinity3-msc313e.dtsi
->   create mode 100644 arch/arm/boot/dts/infinity3.dtsi
->   create mode 100644 arch/arm/boot/dts/mercury5-ssc8336n.dtsi
->   create mode 100644 arch/arm/boot/dts/mercury5.dtsi
->   create mode 100644 arch/arm/boot/dts/mstar-v7.dtsi
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 754521938303..839ae0250d3d 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2114,6 +2114,9 @@ ARM/MStar/Sigmastar ARMv7 SoC support
->   M:	Daniel Palmer <daniel@thingy.jp>
->   L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
->   S:	Maintained
-> +F:	arch/arm/boot/dts/infinity*.dtsi
-> +F:	arch/arm/boot/dts/mercury*.dtsi
-> +F:	arch/arm/boot/dts/mstar-v7.dtsi
+Cc: <stable@vger.kernel.org> [5.3+]
+Signed-off-by: Charan Teja Reddy <charante@codeaurora.org>
+---
+ drivers/dma-buf/dma-buf.c | 13 +++++++------
+ include/linux/dma-buf.h   |  1 +
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
-Sort order wrt D.
-
->   F:	arch/arm/mach-mstar/
->   F:	Documentation/devicetree/bindings/arm/mstar.yaml
->   
-> diff --git a/arch/arm/boot/dts/infinity-msc313.dtsi b/arch/arm/boot/dts/infinity-msc313.dtsi
-> new file mode 100644
-> index 000000000000..4eb522e6a75d
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/infinity-msc313.dtsi
-> @@ -0,0 +1,14 @@
-> +// SPDX-License-Identifier: GPL-2.0
-
-DTs as hardware description should be dual-licensed as either MIT or 
-BSD-2-Clause, similar to the schema.
-
-Also, elsewhere, for any code that might get reused for OpenOCD (e.g., 
-clk drivers and low-level init like machine - 2/5) or other non-kernel 
-projects potentially incompatible with GPL-2.0-only, it would be useful 
-to use the -or-later version of the GPL for code sharing - if the 
-sources you used permit that.
-
-> +/*
-> + * Copyright (c) 2019 thingy.jp.
-
-2019-2020? Check elsewhere.
-
-> + * Author: Daniel Palmer <daniel@thingy.jp>
-> + */
-> +
-> +#include "infinity.dtsi"
-> +
-> +/ {
-> +	memory {
-> +		device_type = "memory";
-> +		reg = <0x20000000 0x4000000>;
-
-The memory node needs to become memory@20000000 then.
-
-> +	};
-
-I take it, this RAM is integrated? Maybe add some explanation of what 
-this file is
-
-> +};
-> diff --git a/arch/arm/boot/dts/infinity.dtsi b/arch/arm/boot/dts/infinity.dtsi
-> new file mode 100644
-> index 000000000000..25d379028689
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/infinity.dtsi
-> @@ -0,0 +1,10 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019 thingy.jp.
-> + * Author: Daniel Palmer <daniel@thingy.jp>
-> + */
-> +
-> +#include "mstar-v7.dtsi"
-> +
-> +/ {
-> +};
-
-What do you intend to add here? Is it really needed? (same below)
-
-Pre-DT-Schema I used to add a compatible property in the .dtsi, to make 
-sure we have at least the SoC's, in case someone neglects to add one in 
-their board's .dts. With DT schema that's no longer valid (if enum/const 
-is required), but Linux would still work better with than without.
-
-> diff --git a/arch/arm/boot/dts/infinity3-msc313e.dtsi b/arch/arm/boot/dts/infinity3-msc313e.dtsi
-> new file mode 100644
-> index 000000000000..d0c53153faad
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/infinity3-msc313e.dtsi
-> @@ -0,0 +1,14 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019 thingy.jp.
-> + * Author: Daniel Palmer <daniel@thingy.jp>
-> + */
-> +
-> +#include "infinity3.dtsi"
-> +
-> +/ {
-> +	memory {
-
-Ditto, unit address missing.
-
-> +		device_type = "memory";
-> +		reg = <0x20000000 0x4000000>;
-> +	};
-> +};
-> diff --git a/arch/arm/boot/dts/infinity3.dtsi b/arch/arm/boot/dts/infinity3.dtsi
-> new file mode 100644
-> index 000000000000..cf5f18a07835
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/infinity3.dtsi
-> @@ -0,0 +1,10 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019 thingy.jp.
-> + * Author: Daniel Palmer <daniel@thingy.jp>
-> + */
-> +
-> +#include "infinity.dtsi"
-> +
-> +/ {
-> +};
-
-Don't you anticipate incompatibilities between infinity and infinity3, 
-i.e., things you don't want to inherit? Seems a bit optimistic. You can 
-of course overwrite properties, but deleting is more difficult.
-
-> diff --git a/arch/arm/boot/dts/mercury5-ssc8336n.dtsi b/arch/arm/boot/dts/mercury5-ssc8336n.dtsi
-> new file mode 100644
-> index 000000000000..7513f903c838
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/mercury5-ssc8336n.dtsi
-> @@ -0,0 +1,14 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019 thingy.jp.
-> + * Author: Daniel Palmer <daniel@thingy.jp>
-> + */
-> +
-> +#include "mercury5.dtsi"
-> +
-> +/ {
-> +	memory {
-
-Unit address.
-
-> +		device_type = "memory";
-> +		reg = <0x20000000 0x4000000>;
-> +	};
-> +};
-> diff --git a/arch/arm/boot/dts/mercury5.dtsi b/arch/arm/boot/dts/mercury5.dtsi
-> new file mode 100644
-> index 000000000000..25d379028689
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/mercury5.dtsi
-> @@ -0,0 +1,10 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019 thingy.jp.
-> + * Author: Daniel Palmer <daniel@thingy.jp>
-> + */
-> +
-> +#include "mstar-v7.dtsi"
-> +
-> +/ {
-> +};
-> diff --git a/arch/arm/boot/dts/mstar-v7.dtsi b/arch/arm/boot/dts/mstar-v7.dtsi
-> new file mode 100644
-> index 000000000000..0fccc4ca52a4
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/mstar-v7.dtsi
-
-So this is the only file starting with mstar. Have you thought about 
-prefixing infinity/mercury, so that they're grouped together?
-
-> @@ -0,0 +1,71 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019 thingy.jp.
-> + * Author: Daniel Palmer <daniel@thingy.jp>
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +/ {
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;> 
-> +	interrupt-parent = <&gic>;
-> +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		cpu0: cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a7";
-> +			reg = <0x0>;
-> +		};
-> +	};
-> +
-> +	arch_timer {
-> +		compatible = "arm,armv7-timer";
-> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2)
-> +				| IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2)
-> +				| IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2)
-> +				| IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2)
-> +				| IRQ_TYPE_LEVEL_LOW)>;
-> +		clock-frequency = <6000000>;
-> +	};
-> +
-> +	pmu {
-> +		compatible = "arm,cortex-a7-pmu";
-> +		interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
-
-Lacking interrupt-affinity.
-
-"This property should be present when there is more than a single SPI."
-
-To deal with single- vs. dual-core models, you should give the pmu node 
-a label, e.g., arm_pmu used elsewhere, I think. Depending on your 
-preferences you could set it here in common code (less work) or in the 
-SoC-specific .dtsi where you know the number of CPUs for sure (safer to 
-not forget later).
-
-> +	};
-> +
-> +	soc: soc {
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-
-I had been instructed not to use full identity ranges but to exclude RAM 
-ranges for safety reasons.
-
-> +
-> +		gic: interrupt-controller@16001000 {
-> +			compatible = "arm,cortex-a7-gic";
-> +			#interrupt-cells = <3>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			interrupt-controller;
-> +			reg = <0x16001000 0x1000>,
-> +			      <0x16002000 0x1000>;
-
-In addition to Marc's comments, please reorder reg to below compatible 
-for consistency. Suggest to also reorder interrupt-controller before the 
--cells properties, after reg.
-
-> +		};
-> +
-> +		pm_uart: uart@1f221000 {
-> +			compatible = "ns16550a";
-> +			reg = <0x1f221000 0x100>;
-> +			reg-shift = <3>;
-> +			clock-frequency = <172000000>;
-> +			status = "disabled";
-> +		};
-
-If you have any decent manuals for these SoCs, I suggest to check 
-whether there are any internal buses that you may want to model as 
-simple-bus for grouping. In-tree examples include meson and recently 
-merged rtd1195 - it affects the reg addresses and unit addresses via 
-suitable ranges mappings.
-
-> +	};
-> +};
-
-Regards,
-Andreas
-
+diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+index 01ce125..2e0456c 100644
+--- a/drivers/dma-buf/dma-buf.c
++++ b/drivers/dma-buf/dma-buf.c
+@@ -45,10 +45,10 @@ static char *dmabuffs_dname(struct dentry *dentry, char *buffer, int buflen)
+ 	size_t ret = 0;
+ 
+ 	dmabuf = dentry->d_fsdata;
+-	dma_resv_lock(dmabuf->resv, NULL);
++	spin_lock(&dmabuf->name_lock);
+ 	if (dmabuf->name)
+ 		ret = strlcpy(name, dmabuf->name, DMA_BUF_NAME_LEN);
+-	dma_resv_unlock(dmabuf->resv);
++	spin_unlock(&dmabuf->name_lock);
+ 
+ 	return dynamic_dname(dentry, buffer, buflen, "/%s:%s",
+ 			     dentry->d_name.name, ret > 0 ? name : "");
+@@ -335,7 +335,7 @@ static long dma_buf_set_name(struct dma_buf *dmabuf, const char __user *buf)
+ 	if (IS_ERR(name))
+ 		return PTR_ERR(name);
+ 
+-	dma_resv_lock(dmabuf->resv, NULL);
++	spin_lock(&dmabuf->name_lock);
+ 	if (!list_empty(&dmabuf->attachments)) {
+ 		ret = -EBUSY;
+ 		kfree(name);
+@@ -345,7 +345,7 @@ static long dma_buf_set_name(struct dma_buf *dmabuf, const char __user *buf)
+ 	dmabuf->name = name;
+ 
+ out_unlock:
+-	dma_resv_unlock(dmabuf->resv);
++	spin_unlock(&dmabuf->name_lock);
+ 	return ret;
+ }
+ 
+@@ -405,10 +405,10 @@ static void dma_buf_show_fdinfo(struct seq_file *m, struct file *file)
+ 	/* Don't count the temporary reference taken inside procfs seq_show */
+ 	seq_printf(m, "count:\t%ld\n", file_count(dmabuf->file) - 1);
+ 	seq_printf(m, "exp_name:\t%s\n", dmabuf->exp_name);
+-	dma_resv_lock(dmabuf->resv, NULL);
++	spin_lock(&dmabuf->name_lock);
+ 	if (dmabuf->name)
+ 		seq_printf(m, "name:\t%s\n", dmabuf->name);
+-	dma_resv_unlock(dmabuf->resv);
++	spin_unlock(&dmabuf->name_lock);
+ }
+ 
+ static const struct file_operations dma_buf_fops = {
+@@ -546,6 +546,7 @@ struct dma_buf *dma_buf_export(const struct dma_buf_export_info *exp_info)
+ 	dmabuf->size = exp_info->size;
+ 	dmabuf->exp_name = exp_info->exp_name;
+ 	dmabuf->owner = exp_info->owner;
++	spin_lock_init(&dmabuf->name_lock);
+ 	init_waitqueue_head(&dmabuf->poll);
+ 	dmabuf->cb_excl.poll = dmabuf->cb_shared.poll = &dmabuf->poll;
+ 	dmabuf->cb_excl.active = dmabuf->cb_shared.active = 0;
+diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
+index ab0c156..93108fd 100644
+--- a/include/linux/dma-buf.h
++++ b/include/linux/dma-buf.h
+@@ -311,6 +311,7 @@ struct dma_buf {
+ 	void *vmap_ptr;
+ 	const char *exp_name;
+ 	const char *name;
++	spinlock_t name_lock;
+ 	struct module *owner;
+ 	struct list_head list_node;
+ 	void *priv;
 -- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
