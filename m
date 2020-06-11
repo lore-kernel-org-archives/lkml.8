@@ -2,169 +2,179 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5174CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A5AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24E9E2072F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:52:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591840325;
-	bh=qbhSXLGqy7qKk7V8hkialrDuSQLkU9NtfJIsVojnTwc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Gbj98wFn2J0Ikwq6eALGpZ9iehSU3n8NPy2ueZuhKoJMQ6uaXFUd7pN2tea6tEmEo
-	 qs5W9jliMQnZYuEm97JnqDKsSN2d9XWw4oKk+W1OuqLZ7PQxmtjFDN1WStEwjwst5i
-	 +02VMpQoo8Bkt4CCdsYolEoRofD7JmCQxDm2FY1o=
+	by mail.kernel.org (Postfix) with ESMTP id 57640206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:53:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbgFKBwD (ORCPT
+        id S1726418AbgFKBxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 21:52:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54036 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726290AbgFKBwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 21:52:03 -0400
-Received: from sol.hsd1.ca.comcast.net (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81D01206FA;
-        Thu, 11 Jun 2020 01:52:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591840322;
-        bh=qbhSXLGqy7qKk7V8hkialrDuSQLkU9NtfJIsVojnTwc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=sbx8Li1Wuw7e/oAQaOUigHdRbD0pm5fYb454vG+P5N0XSoQipsxiiOk93Wl0gc55X
-         wepuAwrWpSrGWRUp6z4kAzlTIZ3JSPd3n+UtZNymCtqvfrmK3kw6oAsVU5/LyE0aWJ
-         9egxyTQ73g82Vn28GLHRvIkvqgHGveY5LupSF2Jo=
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-fsdevel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     Daeho Jeong <daeho43@gmail.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] vfs: don't unnecessarily clone write access for writable fds
-Date:   Wed, 10 Jun 2020 18:49:45 -0700
-Message-Id: <20200611014945.237210-1-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        Wed, 10 Jun 2020 21:53:00 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:43560 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726279AbgFKBw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 21:52:59 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id CC0A5CA572453FA273DE;
+        Thu, 11 Jun 2020 09:52:54 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.101) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Thu, 11 Jun 2020
+ 09:52:49 +0800
+Subject: Re: [Question]: about 'cpuinfo_cur_freq' shown in sysfs when the CPU
+ is in idle state
+To:     Ionela Voinescu <ionela.voinescu@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+CC:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Hanjun Guo" <guohanjun@huawei.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
+References: <f1773fdc-f6ef-ec28-0c0a-4a09e66ab63b@huawei.com>
+ <20200603075200.hbyofgcyiwocl565@vireshk-i7>
+ <CAJZ5v0iR3H+PFnJiroNmZcj-a4bCkvT6xB-nd2ntMvakWFOvAg@mail.gmail.com>
+ <39d37e1b-7959-9a8f-6876-f2ed4c1dbc37@huawei.com>
+ <20200604044140.xlv7h62jfowo3rxe@vireshk-i7>
+ <CAJZ5v0jj5OS4oB7MYBqKeYejy_3Vz_2oy0hn-Xm=D7XAszM_vg@mail.gmail.com>
+ <20200604125822.GB12397@bogus> <20200610094057.GA28144@arm.com>
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Message-ID: <9d715cb0-0a94-0008-5653-e8d9ad1c5332@huawei.com>
+Date:   Thu, 11 Jun 2020 09:52:48 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200610094057.GA28144@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.166.215.101]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+Hi Ionela,
 
-There's no need for mnt_want_write_file() to clone a write reference to
-the mount when the file is already open for writing, provided that
-mnt_drop_write_file() is changed to conditionally drop the reference.
+Thanks for your reply !
 
-We seem to have ended up in the current situation because
-mnt_want_write_file() used to be paired with mnt_drop_write(), due to
-mnt_drop_write_file() not having been added yet.  So originally
-mnt_want_write_file() did have to always take a reference.
+On 2020/6/10 17:40, Ionela Voinescu wrote:
+> Hi guys,
+> 
+> Sorry for showing up late to the party, I was on holiday last week.
+> 
+> On Thursday 04 Jun 2020 at 13:58:22 (+0100), Sudeep Holla wrote:
+>> On Thu, Jun 04, 2020 at 12:42:06PM +0200, Rafael J. Wysocki wrote:
+>>> On Thu, Jun 4, 2020 at 6:41 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>>>>
+>>>> On 04-06-20, 09:32, Xiongfeng Wang wrote:
+>>>>> On 2020/6/3 21:39, Rafael J. Wysocki wrote:
+>>>>>> The frequency value obtained by kicking the CPU out of idle
+>>>>>> artificially is bogus, though.  You may as well return a random number
+>>>>>> instead.
+>>>>>
+>>>>> Yes, it may return a randowm number as well.
+>>>>>
+>>>>>>
+>>>>>> The frequency of a CPU in an idle state is in fact unknown in the case
+>>>>>> at hand, so returning 0 looks like the cleanest option to me.
+>>>>>
+>>>>> I am not sure about how the user will use 'cpuinfo_cur_freq' in sysfs. If I
+>>>>> return 0 when the CPU is idle, when I run a light load on the CPU, I will get a
+>>>>> zero value for 'cpuinfo_cur_freq' when the CPU is idle. When the CPU is not
+>>>>> idle, I will get a non-zero value. The user may feel odd about
+>>>>> 'cpuinfo_cur_frreq' switching between a zero value and a non-zero value. They
+>>>>> may hope it can return the frequency when the CPU execute instructions, namely
+>>>>> in C0 state. I am not so sure about the user will look at 'cpuinfo_cur_freq'.
+>>>>
+>>>> This is what I was worried about as well. The interface to sysfs needs
+>>>> to be robust. Returning frequency on some readings and 0 on others
+>>>> doesn't look right to me as well. This will break scripts (I am not
+>>>> sure if some scripts are there to look for these values) with the
+>>>> randomness of values returned by it.
+>>>
+>>> The only thing the scripts need to do is to skip zeros (or anything
+>>> less than the minimum hw frequency for that matter) coming from that
+>>> attribute.
+>>>
+>>>> On reading values locally from the CPU, I thought about the case where
+>>>> userspace can prevent a CPU going into idle just by reading its
+>>>> frequency from sysfs (and so waste power), but the same can be done by
+>>>> userspace to run arbitrary load on the CPUs.
+>>>>
+>>>> Can we do some sort of caching of the last frequency the CPU was
+>>>> running at before going into idle ? Then we can just check if cpu is
+>>>> idle and so return cached value.
+>>>
+>>> That is an option, but it looks like in this case the cpuinfo_cur_freq
+>>> attribute should not be present at all, as per the documentation.
+>>>
+>>
+>> +1 for dropping the attribute.
+>>
+> 
+> I've been experimenting with some code quite recently that uses the
+> scheduler frequency scale factor to compute this hardware current rate
+> for CPPC.
+> 
+> On the scheduler tick, the scale factor is computed in
+> arch_scale_freq_tick() to give an indication on delivered performance,
+> using AMUs on arm64 [1] and APERF/MPERF on x86 [2]. Basically, this scale
+> factor has the cached value of the average delivered performance between
+> the last two scheduler ticks, on a capacity scale: 0-1024. All that would
+> be needed is to convert from the scheduler frequency scale to the CPPC
+> expected performance scale.
+> 
+> The gist of the code would be:
+> 
+> delivered_perf = topology_get_freq_scale(cpu);
+> delivered_perf *= fb_ctrs.reference_perf;
+> delivered_perf = div64_u64(delivered_perf << SCHED_CAPACITY_SHIFT,
+> 			   per_cpu(arch_max_freq_scale, cpu));
+> 
+> While this solution is not perfect, it would provide the best view of
+> the hardware "current" rate without the cost of waking up the CPU when
+> idle, scheduling additional work on the CPU, doing checks on whether
+> the CPU is idle and/or providing other caching mechanisms.
 
-But later mnt_drop_write_file() was added, and all callers of
-mnt_want_write_file() were paired with it.  This makes the compatibility
-between mnt_want_write_file() and mnt_drop_write() no longer necessary.
+I think it's a good idea. It's just that the value is a average frequency in the
+last two scheduler ticks, not an instantaneous frequency. What
+'cppc_cpufreq_get_rate()' get is also not an  instantaneous frequency. It's a
+average frequency in 2us. I check the interval between two frequency updates on
+my machine. It's about 10ms. So the frequency will change at least one time in
+two scheduler ticks if HZ is 1000.
 
-Therefore, make __mnt_want_write_file() and __mnt_drop_write_file() be
-no-ops on files already open for writing.  This removes the only caller
-of mnt_clone_write(), so remove that too.
+I am not sure how people will use 'cpuinfo_cur_freq'. They may not expect a very
+accurate frequency. How about we return this value when CPU is idle? Or just
+return 0 in idle is better ?
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
- fs/namespace.c        | 43 ++++++++++---------------------------------
- include/linux/mount.h |  1 -
- 2 files changed, 10 insertions(+), 34 deletions(-)
+> 
+> Do you think such an implementation could make cpuinfo_cur_freq worth
+> keeping?
+> 
+> I'm happy to push the patches for this and discuss the details there.
 
-diff --git a/fs/namespace.c b/fs/namespace.c
-index 7cd64240916573..7e78c7ae4ab34d 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -359,51 +359,27 @@ int mnt_want_write(struct vfsmount *m)
- }
- EXPORT_SYMBOL_GPL(mnt_want_write);
- 
--/**
-- * mnt_clone_write - get write access to a mount
-- * @mnt: the mount on which to take a write
-- *
-- * This is effectively like mnt_want_write, except
-- * it must only be used to take an extra write reference
-- * on a mountpoint that we already know has a write reference
-- * on it. This allows some optimisation.
-- *
-- * After finished, mnt_drop_write must be called as usual to
-- * drop the reference.
-- */
--int mnt_clone_write(struct vfsmount *mnt)
--{
--	/* superblock may be r/o */
--	if (__mnt_is_readonly(mnt))
--		return -EROFS;
--	preempt_disable();
--	mnt_inc_writers(real_mount(mnt));
--	preempt_enable();
--	return 0;
--}
--EXPORT_SYMBOL_GPL(mnt_clone_write);
--
- /**
-  * __mnt_want_write_file - get write access to a file's mount
-  * @file: the file who's mount on which to take a write
-  *
-- * This is like __mnt_want_write, but it takes a file and can
-- * do some optimisations if the file is open for write already
-+ * This is like __mnt_want_write, but it does nothing if the file is already
-+ * open for writing.  This must be paired with __mnt_drop_write_file.
-  */
- int __mnt_want_write_file(struct file *file)
- {
--	if (!(file->f_mode & FMODE_WRITER))
--		return __mnt_want_write(file->f_path.mnt);
--	else
--		return mnt_clone_write(file->f_path.mnt);
-+	if (file->f_mode & FMODE_WRITER)
-+		return 0;
-+	return __mnt_want_write(file->f_path.mnt);
- }
- 
- /**
-  * mnt_want_write_file - get write access to a file's mount
-  * @file: the file who's mount on which to take a write
-  *
-- * This is like mnt_want_write, but it takes a file and can
-- * do some optimisations if the file is open for write already
-+ * This is like mnt_want_write, but it skips getting write access to the mount
-+ * if the file is already open for writing.  The freeze protection is still
-+ * done.  This must be paired with mnt_drop_write_file.
-  */
- int mnt_want_write_file(struct file *file)
- {
-@@ -449,7 +425,8 @@ EXPORT_SYMBOL_GPL(mnt_drop_write);
- 
- void __mnt_drop_write_file(struct file *file)
- {
--	__mnt_drop_write(file->f_path.mnt);
-+	if (!(file->f_mode & FMODE_WRITER))
-+		__mnt_drop_write(file->f_path.mnt);
- }
- 
- void mnt_drop_write_file(struct file *file)
-diff --git a/include/linux/mount.h b/include/linux/mount.h
-index de657bd211fa64..29d216f927c28c 100644
---- a/include/linux/mount.h
-+++ b/include/linux/mount.h
-@@ -78,7 +78,6 @@ struct path;
- 
- extern int mnt_want_write(struct vfsmount *mnt);
- extern int mnt_want_write_file(struct file *file);
--extern int mnt_clone_write(struct vfsmount *mnt);
- extern void mnt_drop_write(struct vfsmount *mnt);
- extern void mnt_drop_write_file(struct file *file);
- extern void mntput(struct vfsmount *mnt);
--- 
-2.26.2
+Thanks. I'm happy to see the patches and give some help.
+
+Thanks,
+Xiongfeng
+
+> 
+> Thanks,
+> Ionela.
+> 
+> 
+> [1] https://lkml.org/lkml/2020/3/5/183
+> [2] https://lkml.org/lkml/2020/1/22/1039
+> 
+>> -- 
+>> Regards,
+>> Sudeep
+> 
+> .
+> 
 
