@@ -2,247 +2,191 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C45EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:26:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BEEEC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78A942084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:26:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=displaylink.com header.i=@displaylink.com header.b="kxCGMiUh"
+	by mail.kernel.org (Postfix) with ESMTP id 008F3206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:27:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728524AbgFKS0S (ORCPT
+        id S1728191AbgFKS1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 14:26:18 -0400
-Received: from eu-smtp-delivery-167.mimecast.com ([207.82.80.167]:36420 "EHLO
-        eu-smtp-delivery-167.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728506AbgFKS0Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 14:26:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=displaylink.com;
-        s=mimecast20151025; t=1591899972;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tM9YA6RBaQtDO4UdxHfWYnwlxbmUk3qrIfG/XVoBfIY=;
-        b=kxCGMiUh+Ywjq8V5YekMAJbuU4cLX3XtWIFb/V1BaNKRlf0SI+hHP2eYxbSEObdteO7shB
-        5oNNe/jQNnnuTotKmf6locXxVNdLzQkxcmmWqntqnQWS/dl+hcm/M5bqJblbOXwWLL3ViP
-        O9oAcKJw0el+fw34F1jG23aPSdonZs8=
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com
- (mail-vi1eur04lp2059.outbound.protection.outlook.com [104.47.14.59]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-256-pBqr8_FtMva3iYCwP43Fng-1; Thu, 11 Jun 2020 19:20:05 +0100
-X-MC-Unique: pBqr8_FtMva3iYCwP43Fng-1
-Received: from AM0PR10MB2627.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:129::21)
- by AM0PR10MB2386.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:d4::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.22; Thu, 11 Jun
- 2020 18:20:04 +0000
-Received: from AM0PR10MB2627.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::bd:9bf7:579b:62b4]) by AM0PR10MB2627.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::bd:9bf7:579b:62b4%7]) with mapi id 15.20.3088.018; Thu, 11 Jun 2020
- 18:20:04 +0000
-Subject: Re: [PATCH v6 1/8] usb: Add MA-USB Host kernel module
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        mausb-host-devel@displaylink.com
-References: <20200425091954.1610-1-vladimir.stankovic@displaylink.com>
- <20200515123502.12099-1-vladimir.stankovic@displaylink.com>
- <20200515123502.12099-2-vladimir.stankovic@displaylink.com>
- <20200515130127.GA1937631@kroah.com>
-From:   Vladimir Stankovic <vladimir.stankovic@displaylink.com>
-Message-ID: <3ee6788a-9944-4a01-6b81-083ca489efda@displaylink.com>
-Date:   Thu, 11 Jun 2020 20:20:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <20200515130127.GA1937631@kroah.com>
-Content-Language: en-US
-X-ClientProxiedBy: LO2P123CA0058.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:1::22) To AM0PR10MB2627.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:208:129::21)
+        Thu, 11 Jun 2020 14:27:52 -0400
+Received: from ja.ssi.bg ([178.16.129.10]:47994 "EHLO ja.ssi.bg"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726673AbgFKS1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 14:27:52 -0400
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+        by ja.ssi.bg (8.15.2/8.15.2) with ESMTP id 05BIRIRE005406;
+        Thu, 11 Jun 2020 21:27:20 +0300
+Date:   Thu, 11 Jun 2020 21:27:18 +0300 (EEST)
+From:   Julian Anastasov <ja@ssi.bg>
+To:     YangYuxi <yx.atom1@gmail.com>
+cc:     wensong@linux-vs.org, horms@verge.net.au, pablo@netfilter.org,
+        kadlec@netfilter.org, fw@strlen.de, davem@davemloft.net,
+        kuba@kernel.org, netdev@vger.kernel.org, lvs-devel@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ipvs: avoid drop first packet to reuse conntrack
+In-Reply-To: <20200611092849.GA13977@VM_111_229_centos>
+Message-ID: <alpine.LFD.2.22.394.2006112034170.3254@ja.home.ssi.bg>
+References: <20200611092849.GA13977@VM_111_229_centos>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.102] (94.189.196.243) by LO2P123CA0058.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:1::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18 via Frontend Transport; Thu, 11 Jun 2020 18:20:03 +0000
-X-Originating-IP: [94.189.196.243]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c492f1c8-d40f-4f19-2c0c-08d80e340fd8
-X-MS-TrafficTypeDiagnostic: AM0PR10MB2386:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR10MB2386DE910ED17C368C90961D91800@AM0PR10MB2386.EURPRD10.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 0431F981D8
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: PNrbKissK5mDEr5QkgCBEanMta4KDkVamsgu0ONVXiZxidfx3PIhPrjmk9uvn2wowob5vJ3uavynVHPKJQwQTpTRtxd9XkMqcQ+64TKGpEvmRWf9dFBoxzyfsuGq7U1+CiChSslwjrMScuz7rPNInb/zlrKpYPHI1fj0im7RcMv9qSZIrcmrMvuFLxX8W9+i1FEBeZnsSi9MiPdDu9alcljzjSz9LHj2MbSMhJSSDYmhVh+sIbY2iMj5ZV83pN61li6XI8uNa1OADz5NohamdRLV1/FNER5ixdI+q86cr/YNlgvVn7wVgXzqR5tBhLlTKeKvap8evvjZ/4WSmjpOnDhVOCcAg/GgIAM0fOEdpXN+Uot23VD4PHTyAkySEcA3
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR10MB2627.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39840400004)(136003)(346002)(376002)(366004)(107886003)(4326008)(2906002)(186003)(16526019)(5660300002)(6486002)(26005)(52116002)(478600001)(31686004)(2616005)(6916009)(66476007)(66556008)(956004)(66946007)(36756003)(44832011)(31696002)(16576012)(86362001)(8936002)(8676002)(316002)(83380400001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: c2CfQKejeOIzY8bSmLmrGQsCQokxaTPkadlymet26+Mw2Bf4IZgroSuQK0dMcvoTsU5kEIGzi48wtTZ9gmxmIm0FY8A2+4IJ2hiNa6pIUEcuO/HJwYB7yDMxzSXM7akHaKFAercxxcIyMQooEBLTI2wqK2Qtr4+91akkZSO2+lfoKVrVJQ28MVcydc4VV5qE24aerJUsZ1QUo33nBM8PecLWuiX4dsuxdfpzLx4LD8VviTAXh+IDQ6ZU/ps5A9qWLmZfZNNfNkmMyR5KeuFZMAAFCE4u7hlRcJU2M5CUYUPX07OhmN8QT9wZeskLnDdRpgCqcQ13fiRU46X0J4mfq5NQSI7sCup0GcAv+QJ0u9abv9HD1dNs7vKybPYL7j69nV2OB17tOfgoSbo4+fAvi3jS/PH3owqBMTjG3Ylejxm38fH4gKp+Sdq6c6udY2JwFntdYNf33gqFpwIR0FI71svg8YhwKNgbaMXuQ67m+Zg=
-X-OriginatorOrg: displaylink.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c492f1c8-d40f-4f19-2c0c-08d80e340fd8
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2020 18:20:04.1517
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a4bda75a-b444-4312-9c90-44a7c4b2c91a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sNAee4qT4z/TXm4mluJUtC91SuJ4dbmeb/ULkM/t8noTVBqViH6DrWG0pjN65z7PQ/ZZm75L04t4LqoAP4neTW8F0BmXxXLMQnmaz9G2v41KHGPDzBF4+PdNz8kGCVJN
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR10MB2386
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: displaylink.com
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary="-1463811672-410261613-1591900041=:3254"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15.5.20. 15:01, Greg KH wrote:
-> On Fri, May 15, 2020 at 02:34:55PM +0200, Vladimir Stankovic wrote:
->> --- /dev/null
->> +++ b/drivers/usb/host/mausb/Kconfig
->> @@ -0,0 +1,15 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +#
->> +# Kernel configuration file for MA-USB Host driver.
->> +#
->> +# Copyright (c) 2019 - 2020 DisplayLink (UK) Ltd.
->> +#
->> +
->> +config USB_HOST_MAUSB
->> +=09tristate "Media Agnostic (MA) USB Host Driver"
->> +=09depends on USB=3Dy
->=20
-> Why =3Dy?  That should not be a requirement for any usb host driver.
-With current driver in-tree location, it's not needed. Will be removed.
->=20
->> +=09help
->> +=09  This is a Media Agnostic (MA) USB Host driver which enables host
->> +=09  communication via MA USB protocol stack.
->> +
->> +=09  If this driver is compiled as a module, it will be named mausb_hos=
-t.
->=20
-> Provide links to the userspace and spec here so that people have a
-> chance to be able to use this driver?
->=20
->=20
->=20
->> diff --git a/drivers/usb/host/mausb/Makefile b/drivers/usb/host/mausb/Ma=
-kefile
->> new file mode 100644
->> index 000000000000..cafccac0edba
->> --- /dev/null
->> +++ b/drivers/usb/host/mausb/Makefile
->> @@ -0,0 +1,10 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +#
->> +# Makefile for DisplayLink MA-USB Host driver.
->> +#
->> +# Copyright (c) 2019 - 2020 DisplayLink (UK) Ltd.
->> +#
->> +
->> +obj-$(CONFIG_USB_HOST_MAUSB) +=3D mausb_host.o
->> +mausb_host-y :=3D mausb_core.o
->> +mausb_host-y +=3D utils.o
->> diff --git a/drivers/usb/host/mausb/mausb_core.c b/drivers/usb/host/maus=
-b/mausb_core.c
->> new file mode 100644
->> index 000000000000..44f76a1b74de
->> --- /dev/null
->> +++ b/drivers/usb/host/mausb/mausb_core.c
->> @@ -0,0 +1,24 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (c) 2019 - 2020 DisplayLink (UK) Ltd.
->> + */
->> +#include <linux/module.h>
->> +
->> +#include "utils.h"
->> +
->> +MODULE_LICENSE("GPL");
->> +MODULE_AUTHOR("DisplayLink (UK) Ltd.");
->> +
->> +static int mausb_host_init(void)
->> +{
->> +=09return mausb_host_dev_register();
->> +}
->> +
->> +static void mausb_host_exit(void)
->> +{
->> +=09dev_info(mausb_host_dev.this_device, "Module unloading started...");
->> +=09mausb_host_dev_deregister();
->> +}
->> +
->> +module_init(mausb_host_init);
->> +module_exit(mausb_host_exit);
->> diff --git a/drivers/usb/host/mausb/utils.c b/drivers/usb/host/mausb/uti=
-ls.c
->> new file mode 100644
->> index 000000000000..1cfa2140311e
->> --- /dev/null
->> +++ b/drivers/usb/host/mausb/utils.c
->> @@ -0,0 +1,47 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (c) 2019 - 2020 DisplayLink (UK) Ltd.
->> + */
->> +#include "utils.h"
->> +
->> +#include <linux/fs.h>
->> +#include <linux/slab.h>
->> +
->> +#define MAUSB_KERNEL_DEV_NAME "mausb_host"
->> +#define MAUSB_READ_DEVICE_TIMEOUT_MS 500
->> +
->> +struct miscdevice mausb_host_dev;
->> +
->> +static int mausb_host_dev_open(struct inode *inode, struct file *filp)
->> +{
->> +=09filp->private_data =3D NULL;
->> +
->> +=09return 0;
->> +}
->> +
->> +static int mausb_host_dev_release(struct inode *inode, struct file *fil=
-p)
->> +{
->> +=09kfree(filp->private_data);
->> +=09filp->private_data =3D NULL;
->> +
->> +=09return 0;
->> +}
->> +
->> +static const struct file_operations mausb_host_dev_fops =3D {
->> +=09.open=09 =3D mausb_host_dev_open,
->> +=09.release =3D mausb_host_dev_release,
->> +};
->> +
->> +int mausb_host_dev_register(void)
->> +{
->> +=09mausb_host_dev.minor =3D MISC_DYNAMIC_MINOR;
->> +=09mausb_host_dev.name =3D MAUSB_KERNEL_DEV_NAME;
->> +=09mausb_host_dev.fops =3D &mausb_host_dev_fops;
->> +=09mausb_host_dev.mode =3D 0;
->=20
-> You only have 1 device in the system at a time?  With a global
-> structure?  And no locking at all?
->=20
-> That feels _very_ wrong, why?
->=20
-> And mode of 0?  You don't want any userspace code to use this device
-> node?
->=20
-> confused,
->=20
-> greg k-h
->=20
-Agree. This will be revised in following patch version.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+---1463811672-410261613-1591900041=:3254
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
 
---=20
-Regards,
-Vladimir.
+	Hello,
 
+On Thu, 11 Jun 2020, YangYuxi wrote:
+
+> Since commit f719e3754ee ("ipvs: drop first packet
+> to redirect conntrack"), when a new TCP connection
+> meet the conditions that need reschedule, the first
+> syn packet is dropped, this cause one second latency
+> for the new connection, more discussion about this
+> problem can easy seach from google, such as:
+> 
+> 1)One second connection delay in masque
+> https://marc.info/?t=151683118100004&r=1&w=2
+> 
+> 2)IPVS low throughput #70747
+> https://github.com/kubernetes/kubernetes/issues/70747
+> 
+> 3)Apache Bench can fill up ipvs service proxy in seconds #544
+> https://github.com/cloudnativelabs/kube-router/issues/544
+> 
+> 4)Additional 1s latency in `host -> service IP -> pod`
+> https://github.com/kubernetes/kubernetes/issues/90854
+
+	Such delays occur only on collision, say some
+client IP creates many connections that lead to
+reusing same client port...
+
+> The root cause is when the old session is expired, the
+> conntrack related to the session is dropped by
+> ip_vs_conn_drop_conntrack. The code is as follows:
+> ```
+> static void ip_vs_conn_expire(struct timer_list *t)
+> {
+> ...
+> 
+>                 if ((cp->flags & IP_VS_CONN_F_NFCT) &&
+>                     !(cp->flags & IP_VS_CONN_F_ONE_PACKET)) {
+>                         /* Do not access conntracks during subsys cleanup
+>                          * because nf_conntrack_find_get can not be used after
+>                          * conntrack cleanup for the net.
+>                          */
+>                         smp_rmb();
+>                         if (ipvs->enable)
+>                                 ip_vs_conn_drop_conntrack(cp);
+>                 }
+> ...
+> }
+> ```
+> As the code show, only if the condition  (cp->flags & IP_VS_CONN_F_NFCT)
+> is true, ip_vs_conn_drop_conntrack will be called.
+> So we solve this bug by following steps:
+
+	Not exactly a bug, we do the delay intentionally.
+
+> 1) erase the IP_VS_CONN_F_NFCT flag (it is safely because no packets will
+>    use the old session)
+> 2) call ip_vs_conn_expire_now to release the old session, then the related
+>    conntrack will not be dropped
+
+	The IPVS connection table allows the newly created
+connection to have priority when next packets lookup for
+connection. That is why we delay only when conntracks are
+used. When they are not used, we can create IPVS connection
+to different real server by creating collision in original
+direction in the IPVS table. When reply packet is received
+it will find its connection.
+
+	IPVS does not create duplicate conntracks. When
+packet is received it will hit existing conntrack or
+new conntrack will be created. This is what happens in
+Netfilter in original direction. Note that active FTP
+can create connection also for packet from real server.
+
+	IPVS simply alters the reply tuple while processing
+this first packet and only when conntrack is not confirmed
+yet, because that is the only possible time to insert the
+both tuples into netfilter hash table:
+
+CIP->VIP(orig),VIP->CIP(reply) becomes CIP->VIP,RIP->CIP
+CIP: Client IP, VIP: Virtual IP, RIP: Real Server IP
+
+	After the new reply tuple is determined, it can not
+be changed after the first packet. That is why we have to
+drop the old conntrack. Then, reply direction will match
+packets from the correct real server.
+
+> 3) then ipvs unnecessary to drop the first syn packet,
+>    it just continue to pass the syn packet to the next process,
+>    create a new ipvs session, and the new session will related to
+>    the old conntrack(which is reopened by conntrack as a new one),
+>    the next whole things is just as normal as that the old session
+>    isn't used to exist.
+
+	If we leave the old conntrack, say with reply
+tuple RIP1->CIP but the IPVS scheduling selects different
+RIP2 for the new IPVS connection which uses the old
+conntrack due to the equal original tuple, we create
+inconsistency.
+
+	We can not be sure if admins use connmarks,
+state matching (-m state), passive FTP (which requires
+conntracks in IPVS), so we can not just go and use
+the old conntrack which points to wrong real server.
+
+	How exactly are relayed the reply packets from
+real servers in your tests? Do you have NF SNAT rules to
+translate the source addresses? Also, it will be good
+to know what is the effect on the passive FTP.
+
+> This patch has been verified on our thousands of kubernets node servers on Tencent Inc.
+> Signed-off-by: YangYuxi <yx.atom1@gmail.com>
+> ---
+>  net/netfilter/ipvs/ip_vs_core.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
+> index aa6a603a2425..2f750145172f 100644
+> --- a/net/netfilter/ipvs/ip_vs_core.c
+> +++ b/net/netfilter/ipvs/ip_vs_core.c
+> @@ -2086,11 +2086,11 @@ static int ip_vs_in_icmp_v6(struct netns_ipvs *ipvs, struct sk_buff *skb,
+>  		}
+>  
+>  		if (resched) {
+> +			if (uses_ct)
+> +				cp->flags &= ~IP_VS_CONN_F_NFCT;
+>  			if (!atomic_read(&cp->n_control))
+>  				ip_vs_conn_expire_now(cp);
+>  			__ip_vs_conn_put(cp);
+> -			if (uses_ct)
+> -				return NF_DROP;
+>  			cp = NULL;
+>  		}
+>  	}
+> -- 
+
+Regards
+
+--
+Julian Anastasov <ja@ssi.bg>
+---1463811672-410261613-1591900041=:3254--
