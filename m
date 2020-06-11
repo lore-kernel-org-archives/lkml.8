@@ -2,118 +2,134 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48700C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0544AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17C4B20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:13:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591881219;
-	bh=LvHxTVUZLcCdTOqD3NyClQZQUnr+LT0UqYRACkbjX0k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x18AY7F37Yr9bSw/gVGFExY4xwe93nKX4WeoPKhEEn6Y+ZzxPUlPrd4O+BjoxttlZ
-	 BSq1Mk29jZi9AdJcYHkyDErwRsbCgbHYleCJ2dGJNem+MtySiAzD+r+T3SIR8dT8nz
-	 fHAF7NBiLOyxqVc8aehGQEesXRLmpj+dlNXFR3Lo=
+	by mail.kernel.org (Postfix) with ESMTP id D21EC20691
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:15:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="re314xT7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728132AbgFKNNh (ORCPT
+        id S1728067AbgFKNO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 09:13:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36724 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726506AbgFKNNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 09:13:37 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50A4820691;
-        Thu, 11 Jun 2020 13:13:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591881216;
-        bh=LvHxTVUZLcCdTOqD3NyClQZQUnr+LT0UqYRACkbjX0k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Hj35WvMgwwVQrDc6gxUkhrsZm/+TztaGf7WC4ZrNpWce2tgRLP/av+VMf2CiWLsfP
-         TZyQf401G9hCjDD/t/FSST4Ksy2/xL0nJ5jk8w2LJKVf8nwkSBJ1qH3TXDxTZAvyAX
-         jnsXZFqXmd/9835jC1ZZ3w0nfC8a+qBTH/u/eB14=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C55E640AFD; Thu, 11 Jun 2020 10:07:58 -0300 (-03)
-Date:   Thu, 11 Jun 2020 10:07:58 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 00/10] perf parse-events: enable more flex/bison warnings
-Message-ID: <20200611130758.GA18482@kernel.org>
-References: <20200610215100.256599-1-irogers@google.com>
- <20200611090249.GC1786122@krava>
+        Thu, 11 Jun 2020 09:14:59 -0400
+Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:50164 "EHLO
+        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726506AbgFKNO6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 09:14:58 -0400
+Received: from pps.filterd (m0170398.ppops.net [127.0.0.1])
+        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05BDDgwh018476;
+        Thu, 11 Jun 2020 09:14:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=aTCE/pasSWUWuGDYqRZBQC/dpb9VxP8Sxs048GpAW9I=;
+ b=re314xT7nTSZAJv8K6JsnsYB2NQxgbmCY/4U+IMoUDRalh1zJ+DhCb54MoDHl5VUbrkc
+ QWE8P/a/+8/uQlfkkzjg2j6zL5RANtqAbvBQem0rB2yUienGSpJfks+kGPBrHCjpukrL
+ +1dUeq3NwePPFILZ6y8daaDfYrNCx1QAcXiTC65mpsp4n6/eLJwRiuYRU+jrxkTJqXu0
+ /U4XFH7OqamkcpYaSlrd+fwq23BuY/hl196/LQPgkJhjNnhHyOfmknLpLux3ood/EB1E
+ l+BCg77lhxJTe6WoyskvILTE93P0jTuov6sb6bFcuH6bD5WU7qPfRLQxjI/IVteHo6xq uA== 
+Received: from mx0b-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+        by mx0b-00154904.pphosted.com with ESMTP id 31kmfqg614-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 11 Jun 2020 09:14:57 -0400
+Received: from pps.filterd (m0090350.ppops.net [127.0.0.1])
+        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05BDBxi6026642;
+        Thu, 11 Jun 2020 09:14:56 -0400
+Received: from ausxippc101.us.dell.com (ausxippc101.us.dell.com [143.166.85.207])
+        by mx0b-00154901.pphosted.com with ESMTP id 31kmmd0qmh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 11 Jun 2020 09:14:56 -0400
+X-LoopCount0: from 10.166.132.134
+X-PREM-Routing: D-Outbound
+X-IronPort-AV: E=Sophos;i="5.60,346,1549951200"; 
+   d="scan'208";a="1396607749"
+From:   <Mario.Limonciello@dell.com>
+To:     <kai.heng.feng@canonical.com>
+CC:     <alex.hung@canonical.com>, <dvhart@infradead.org>,
+        <andy@infradead.org>, <platform-driver-x86@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] platform/x86: intel-hid: Use hp-wireless for rfkill on HP
+ platforms
+Thread-Topic: [PATCH] platform/x86: intel-hid: Use hp-wireless for rfkill on
+ HP platforms
+Thread-Index: AQHWPz3dlpIDtGIT702KohBct4fb0ajR/puQgAFXIQCAABAKUA==
+Date:   Thu, 11 Jun 2020 13:14:54 +0000
+Message-ID: <3b47d04a379a4c709d38f0ca4c17dff4@AUSX13MPC105.AMER.DELL.COM>
+References: <20200610153747.27040-1-kai.heng.feng@canonical.com>
+ <4d0714fe5e2548b6b638ea447ad19490@AUSX13MPC105.AMER.DELL.COM>
+ <82013BD4-B247-4E4E-94AB-1BEF8403E6E6@canonical.com>
+In-Reply-To: <82013BD4-B247-4E4E-94AB-1BEF8403E6E6@canonical.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2020-06-11T13:14:50.9418029Z;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=b02f13e2-2eee-4ada-9e20-aa46b53ae43e;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [143.166.24.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200611090249.GC1786122@krava>
-X-Url:  http://acmel.wordpress.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-11_14:2020-06-11,2020-06-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
+ priorityscore=1501 malwarescore=0 mlxlogscore=779 spamscore=0
+ clxscore=1015 bulkscore=0 mlxscore=0 lowpriorityscore=0 suspectscore=0
+ phishscore=0 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006110103
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 adultscore=0
+ suspectscore=0 mlxlogscore=861 spamscore=0 malwarescore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006110103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Jun 11, 2020 at 11:02:49AM +0200, Jiri Olsa escreveu:
-> On Wed, Jun 10, 2020 at 02:50:50PM -0700, Ian Rogers wrote:
-> > All C compiler warnings are disabled are disabled by -w. This change
-> > removes the -w from flex and bison targets. To avoid implicit
-> > declarations header files are declared as targets and included.
-> > 
-> > Tested with GCC 9.3.0 and clang 9.0.1.
-> > 
-> > Previously posted as a single change:
-> > https://lore.kernel.org/lkml/20200609234344.3795-2-irogers@google.com/
-> > 
-> > Ian Rogers (10):
-> >   perf parse-events: Use automatic variable for flex input
-> >   perf parse-events: Use automatic variable for yacc input
-> >   perf pmu: Add bison debug build flag
-> >   perf pmu: Add flex debug build flag
-> >   perf parse-events: Declare flex header file output
-> >   perf parse-events: Declare bison header file output
-> >   perf parse-events: Disable a subset of flex warnings
-> >   perf expr: Avoid implicit lex function declaration
-> >   perf parse-events: Avoid implicit lex function declaration
-> >   perf parse-events: Disable a subset of bison warnings
-> 
-> looks great, I wonder what the -w replacement will do in
-> Arnaldo's distro test, but it'd be nice to get rid it
-> 
-> Acked-by: Jiri Olsa <jolsa@redhat.com>
+> > Just having the ACPI device present doesn't actually mean that the user
+> > has a kernel compiled with hp-wireless or that it has finished
+> initializing.
+>=20
+> We can use IS_REACHEABLE() to see if it's compiled.
 
-Thanks, applied locally and will submit it to the test build suite.
+Yes that was going to be my first suggestion.
 
-- Arnaldo
- 
-> thanks,
-> jirka
-> 
-> > 
-> >  tools/perf/util/Build          | 50 +++++++++++++++++++++-------------
-> >  tools/perf/util/expr.y         |  2 ++
-> >  tools/perf/util/parse-events.y |  1 +
-> >  3 files changed, 34 insertions(+), 19 deletions(-)
-> > 
-> > -- 
-> > 2.27.0.278.ge193c7cf3a9-goog
-> > 
-> 
+>=20
+> >
+> > I would think this needs a better handshake in case hp-wireless was
+> unloaded
+> > or not present so the event could still come through intel-hid in this
+> > circumstance.
+>=20
+> However, it's hard to determine if the other driver has finished
+> initialization or any form of cross module handshake.
+> Can you please point me to any good example if there's one?
 
--- 
+Take a look at how drivers that use dell-wmi-descriptor work.  They can rel=
+y
+upon looking at -EPROBE_DEFER return code when trying to access the functio=
+nality
+and do a handoff.
 
-- Arnaldo
+>=20
+> >
+> >> +
+> >> 	return AE_OK;
+> >> }
+> >>
+> >> --
+> >> 2.17.1
+
