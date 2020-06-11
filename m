@@ -2,110 +2,82 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E569C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 20:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF915C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 20:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 699E22074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 20:26:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591907168;
-	bh=s47z8lODBzSm0LZKYlLpBvi6N/wT478JfS72hrNSu1k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=oteVAAviHxXisBiEwFq0JZCzOx03J5GcY3rmwaD/z+TAX5Wb0m8eOOrpI5SPsWCjK
-	 H+dJHokO9dD8hGPGiPZJZ3W9kxXXWWkZVSzuJNYiwgYvlBuohm/JvRWiU/34i8ls5A
-	 8VpsbShI6PCAzKppUQacf4XBJiXTYNAMmNIiS/a8=
+	by mail.kernel.org (Postfix) with ESMTP id 90CEC20720
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 20:26:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726321AbgFKU0H (ORCPT
+        id S1726362AbgFKU0d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 16:26:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47008 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725869AbgFKU0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 16:26:06 -0400
-Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 971A220720;
-        Thu, 11 Jun 2020 20:26:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591907165;
-        bh=s47z8lODBzSm0LZKYlLpBvi6N/wT478JfS72hrNSu1k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=00oOcSWlCfib9RUNo8m5N2YbMdb+1mowLfPOPN3aLBNMexXrZu9fXAXAfqzEenB3d
-         O8VVs2P2rjucOThQS6dNZLG4hW/ARdyRXmfqITAk/VBtaRbHRx/DBJYuLmjIIxUhR1
-         OkZGoq4u2Vcac8TQdYBzxMlclx8+Q1Iipuqw2PFU=
-Date:   Thu, 11 Jun 2020 15:26:04 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Re: [PATCH] PCI: Loongson: Use DECLARE_PCI_FIXUP_EARLY for
- bridge_class_quirk()
-Message-ID: <20200611202604.GA1607130@bjorn-Precision-5520>
+        Thu, 11 Jun 2020 16:26:33 -0400
+Received: from esa1.mentor.iphmx.com ([68.232.129.153]:23442 "EHLO
+        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726119AbgFKU0d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 16:26:33 -0400
+IronPort-SDR: eXjIEvI/AV1uMGRiA4t8tELcGfVzixuh0UNB0BNzL0su2p3avlq1iUN1MY4AxrXGlesZnTbiZ4
+ 7j8UGGndfA1S63XTS4KuXZwdCpmQZLgRp0IUmtJw5XdGDYky4rojkMByQqHRjlcH1xzmxs03BG
+ 9Y7/9rBajes+Yrcd6/u+6KhCnaIIST30FTk/jcosZYerKTPS+/WLBHtZMU4kGepUu+z+5Xnp39
+ YAHUYqTGqWqOhi7elahHOrrt5vUu3uJ56j2haHlm/2kME+t+v5BrSLaBGKCbzvjR8h4aD82Tyt
+ QJE=
+X-IronPort-AV: E=Sophos;i="5.73,501,1583222400"; 
+   d="scan'208";a="51845782"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa1.mentor.iphmx.com with ESMTP; 11 Jun 2020 12:26:32 -0800
+IronPort-SDR: keSQDGxnKeVtZ2RRemIwwShIoZzllc7C69jdIbWEiZ8i0XzU+1AY852RjbEhW1CwHo/1P9i8Zr
+ 8QpqHkk8ZU0LMlcb6VWLI5ERiZiCfFmOMk4Y+auX6ZKSbTO/StO7mBK540w9e7/nokjZB30cwg
+ SUI5qsng9LtlcXRMTJp9vuiAknHVJPqxCo0AmOwMJkoSG6LrSBY+5ZsKfx9oNLjQWhr37V23LF
+ BufE2M0CBUmXSGjX2oMBScY8i+TTpwN0UPT9qKetVvIa3ztWLOlqmetXjeIYl7HMbMsLsHu/V9
+ pYw=
+Date:   Thu, 11 Jun 2020 20:26:25 +0000
+From:   Joseph Myers <joseph@codesourcery.com>
+X-X-Sender: jsm28@digraph.polyomino.org.uk
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+CC:     Michael Kerrisk <mtk.manpages@gmail.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Rich Felker <dalias@libc.org>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-api <linux-api@vger.kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>
+Subject: Re: [PATCH glibc 1/3] glibc: Perform rseq registration at C startup
+ and thread creation (v20)
+In-Reply-To: <419546979.1229.1591897672174.JavaMail.zimbra@efficios.com>
+Message-ID: <alpine.DEB.2.21.2006112026090.18393@digraph.polyomino.org.uk>
+References: <20200527185130.5604-1-mathieu.desnoyers@efficios.com> <20200527185130.5604-2-mathieu.desnoyers@efficios.com> <87d06gxsla.fsf@oldenburg2.str.redhat.com> <alpine.DEB.2.21.2006031718070.7179@digraph.polyomino.org.uk>
+ <188671972.53608.1591269056445.JavaMail.zimbra@efficios.com> <alpine.DEB.2.21.2006041745360.8237@digraph.polyomino.org.uk> <419546979.1229.1591897672174.JavaMail.zimbra@efficios.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1591756790-12081-1-git-send-email-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset="US-ASCII"
+X-Originating-IP: [137.202.0.90]
+X-ClientProxiedBy: SVR-IES-MBX-07.mgc.mentorg.com (139.181.222.7) To
+ svr-ies-mbx-02.mgc.mentorg.com (139.181.222.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Subject line:
+On Thu, 11 Jun 2020, Mathieu Desnoyers wrote:
 
-  PCI: loongson: Use DECLARE_PCI_FIXUP_EARLY for bridge_class_quirk()
+> I managed to get a repository up and running for librseq, and have integrated
+> the rseq.2 man page with comments from Michael Kerrisk here:
+> 
+> https://git.kernel.org/pub/scm/libs/librseq/librseq.git/tree/doc/man/rseq.2
+> 
+> Is that a suitable URL ? Can we simply point to it from glibc's manual ?
 
-(Driver names are conventionally lower case.)
+Yes, that seems something reasonable to link to.
 
-Lorenzo will probably silently fix this when applying, so this is
-mostly just a reminder in case you need to revise this or for future
-patches.
-
-On Wed, Jun 10, 2020 at 10:39:50AM +0800, Tiezhu Yang wrote:
-> Use DECLARE_PCI_FIXUP_EARLY instead of DECLARE_PCI_FIXUP_HEADER
-> for bridge_class_quirk() in pci-loongson.c, otherwise the fixup
-> has no effect.
-> 
-> Fixes: 1f58cca5cf2b ("PCI: Add Loongson PCI Controller support")
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
-> 
-> This patch is based on mips-next tree.
-> 
->  drivers/pci/controller/pci-loongson.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-> index 459009c..58b862a 100644
-> --- a/drivers/pci/controller/pci-loongson.c
-> +++ b/drivers/pci/controller/pci-loongson.c
-> @@ -37,11 +37,11 @@ static void bridge_class_quirk(struct pci_dev *dev)
->  {
->  	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
->  }
-> -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
->  			DEV_PCIE_PORT_0, bridge_class_quirk);
-> -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
->  			DEV_PCIE_PORT_1, bridge_class_quirk);
-> -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
->  			DEV_PCIE_PORT_2, bridge_class_quirk);
->  
->  static void system_bus_quirk(struct pci_dev *pdev)
-> -- 
-> 2.1.0
-> 
+-- 
+Joseph S. Myers
+joseph@codesourcery.com
