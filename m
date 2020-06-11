@@ -2,98 +2,284 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A407AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 03:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96343C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 03:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EE36206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 03:15:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62EA6206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 03:17:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UD3fllUh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iKUJ1gjm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbgFKDPY (ORCPT
+        id S1726396AbgFKDRE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 23:15:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40682 "EHLO
+        Wed, 10 Jun 2020 23:17:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbgFKDPY (ORCPT
+        with ESMTP id S1726279AbgFKDRD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 23:15:24 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15580C08C5C1;
-        Wed, 10 Jun 2020 20:15:24 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id s10so1924710pgm.0;
-        Wed, 10 Jun 2020 20:15:24 -0700 (PDT)
+        Wed, 10 Jun 2020 23:17:03 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 803FCC08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 20:17:03 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id y18so1777302plr.4
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 20:17:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ieezdRHhcmgP1Eab+GDG9Fm8oNf2bUgXlbKCTMG/yA8=;
-        b=UD3fllUhYn3n2k1bBAgag3980r5AE0luNBIYgI96Hv0pWE5Xs6Tf4JDXBl/nBs/LGx
-         uEpi9JOXwAzQzG8jlmxoxWSBddRc57ri6XT9w0dpkeQ7RqzeR48Jm9xLKdmTGK8APkdT
-         xncomGVnVpGqDB/HP4GJjDdcblz1cxGpy8fz6LRPc5MiuFH9EJs7bmWqIiY3ODGMmMw3
-         o6ZtxpvcpYQIi1syzFTQJxejHh7t5AnvbRBiCQZFYzDQH7KY0EIlAyFs/NF+wKJJj/4w
-         KxR3q6eV5CZSeBmWUX5hM9Jz5+clOYl2fL64f0gzaCDKrukwDkPT6t3/rS9mCes0IbKS
-         CZgQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ehrgS32gMf6wPQo2vNkaEDhcW2sOAF2ZJzxzXWBGECE=;
+        b=iKUJ1gjmx8FK5WMjR56zqFzj41etGkG2tlvexAS1BxA0N1SRoPGOp5m9wMjUxUVhHM
+         e/6LRxyGoBHD9/Aqdl1tMGsY+F5j+ffRerFV94peqdvE9F75WF7Mrsd/3gbYEUAR/qew
+         FeFx2GO/IA18JN1L6Pok/AItEq+1QNPgEYTBjupNGfUCGOgxo6jNKhorCg+8hRjVHaRc
+         UaHh5tAZY7kV/SiR7FIZyHH8V30nWkNr+Sp8+VjsLcy5OFOPsJSbVrlF8OI2EdIBI+W3
+         ROo7VLAM0ZGJWfd3lRljqSvPwM7WL2Nbm6fELXUq6YkNhVMgv9EYgRzfXPyigP7SSLJq
+         bqzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ieezdRHhcmgP1Eab+GDG9Fm8oNf2bUgXlbKCTMG/yA8=;
-        b=tSG1cOeQIdCa723rMNSn8xmJkoA1h3oDcwI5mua2yOZ2zz4dF4g1Fe8/Dhrgow0d/n
-         oIMSuJDl4C5SVBebPtAKwcc3D8fgxbaM1h328fPlYO8qJjrJnPtofDDN3bi1UJQZRBXf
-         SyXhf+XerwAClDvsvz2TJuNyLhtVtnwkEWL/oPjUIQHubZiW1bLmhIfH2lCFmgoqP8Ez
-         e+akOomw1+fu70MskMMZwJJiKYI5n9NnEmBKB9o7Rw3vOCYLJ3U8EcSKgw00N5x1nu4h
-         p5hzB7frZRFcdKJ8Bp1GQBDEcmffLzYa1byrfNANmLSufeLfN9mYGAzVY0Jr4XjEtTO3
-         7UUg==
-X-Gm-Message-State: AOAM531Bt/VRR0FLDLuG+9VnYOnlD3Novg2GnPAN8UXmYWqjET2alMGD
-        qk1Uqkh6015dcIQzvS2HA2Ay1zIl
-X-Google-Smtp-Source: ABdhPJxQ80OnCFFcFDNJ34AiR5BcgKnrhflKWecBBb6VQ0x9wc8yKiOCFdCbWTIcEnp0SlaffUGdZA==
-X-Received: by 2002:aa7:9a9c:: with SMTP id w28mr5012925pfi.295.1591845323100;
-        Wed, 10 Jun 2020 20:15:23 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id hi19sm997035pjb.49.2020.06.10.20.15.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jun 2020 20:15:22 -0700 (PDT)
-Subject: Re: [PATCH 1/2] net: dsa: qca8k: Switch to PHYLINK instead of PHYLIB
-To:     Jonathan McDowell <noodles@earth.li>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1591816172.git.noodles@earth.li>
- <78519bc421a1cb7000a68d05e43c4208b26f37e5.1591816172.git.noodles@earth.li>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <c5257ff7-0d0c-82a0-47ee-671692991a09@gmail.com>
-Date:   Wed, 10 Jun 2020 20:15:20 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        bh=ehrgS32gMf6wPQo2vNkaEDhcW2sOAF2ZJzxzXWBGECE=;
+        b=kAj4RlUzjY/adMKkCOLGz/XqQyXEcXDSVxaWjLFpptA2trV6qyK7NhsKuZAXsBLkoq
+         MFVnolByAhSaYKdrFpoYTJ/aVx9JV9BDWaK9c362R2+pCUKUpm13TVoZCeMXLKroZ5K6
+         Y7erdn3H1P2Wd+udouqczrz4t0Z6pxUFyX/ciDBPQSkJ/AjoPXEzA9qVfsDvmiyMjoIS
+         5y987LIrseF8c8gsREJ43J1Btri3a1GTs7KsJuzbHqc6XfvL4udKESYxw7xhz2c8XcOA
+         SXnBR9ji516DVyMI0PMHVyywJE84mNygxZR0KiX9eiNKGekVzcZw5i4SBWH/mvlBBZvM
+         01TQ==
+X-Gm-Message-State: AOAM530QujiDkVYkoK9MaXopkbvXDVhKeM0MXOMyNRrdexnMIDNl6Sa5
+        ksXhJHsK2dYlt4IavNgi4eHP25LIYtldnw==
+X-Google-Smtp-Source: ABdhPJyDPKWdUfyRn5pMK+IZe7kCzETVF92zX9uGB5/fKJrv8fYInai60BZyyY8gd52GQcmwjnsDJA==
+X-Received: by 2002:a17:90b:46ca:: with SMTP id jx10mr6247863pjb.3.1591845422545;
+        Wed, 10 Jun 2020 20:17:02 -0700 (PDT)
+Received: from daehojeong1.seo.corp.google.com ([2401:fa00:d:1:b8f4:bbde:37ba:20bd])
+        by smtp.gmail.com with ESMTPSA id ha16sm1030196pjb.40.2020.06.10.20.17.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2020 20:17:01 -0700 (PDT)
+From:   Daeho Jeong <daeho43@gmail.com>
+To:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
+Cc:     Daeho Jeong <daehojeong@google.com>
+Subject: [PATCH v2] f2fs: add F2FS_IOC_SEC_TRIM_FILE ioctl
+Date:   Thu, 11 Jun 2020 12:16:52 +0900
+Message-Id: <20200611031652.200401-1-daeho43@gmail.com>
+X-Mailer: git-send-email 2.27.0.278.ge193c7cf3a9-goog
 MIME-Version: 1.0
-In-Reply-To: <78519bc421a1cb7000a68d05e43c4208b26f37e5.1591816172.git.noodles@earth.li>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Daeho Jeong <daehojeong@google.com>
 
+Added a new ioctl to send discard commands or/and zero out
+to whole data area of a regular file for security reason.
 
-On 6/10/2020 12:14 PM, Jonathan McDowell wrote:
-> Update the driver to use the new PHYLINK callbacks, removing the
-> legacy adjust_link callback.
-> 
-> Signed-off-by: Jonathan McDowell <noodles@earth.li>
+Signed-off-by: Daeho Jeong <daehojeong@google.com>
+---
+ fs/f2fs/f2fs.h |   8 +++
+ fs/f2fs/file.c | 143 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 151 insertions(+)
 
-This looks reasonable to me, Russell would be the person you want to get
-an Acked-by/Reviewed-by tag from.
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index c812fb8e2d9c..ca139fac5a73 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -434,6 +434,7 @@ static inline bool __has_cursum_space(struct f2fs_journal *journal,
+ 					_IOR(F2FS_IOCTL_MAGIC, 18, __u64)
+ #define F2FS_IOC_RESERVE_COMPRESS_BLOCKS				\
+ 					_IOR(F2FS_IOCTL_MAGIC, 19, __u64)
++#define F2FS_IOC_SEC_TRIM_FILE		_IOW(F2FS_IOCTL_MAGIC, 20, __u32)
+ 
+ #define F2FS_IOC_GET_VOLUME_NAME	FS_IOC_GETFSLABEL
+ #define F2FS_IOC_SET_VOLUME_NAME	FS_IOC_SETFSLABEL
+@@ -453,6 +454,13 @@ static inline bool __has_cursum_space(struct f2fs_journal *journal,
+ #define F2FS_GOING_DOWN_METAFLUSH	0x3	/* going down with meta flush */
+ #define F2FS_GOING_DOWN_NEED_FSCK	0x4	/* going down to trigger fsck */
+ 
++/*
++ * Flags used by F2FS_IOC_SEC_TRIM_FILE
++ */
++#define F2FS_TRIM_FILE_DISCARD		0x1	/* send discard command */
++#define F2FS_TRIM_FILE_ZEROOUT		0x2	/* zero out */
++#define F2FS_TRIM_FILE_MASK		0x3
++
+ #if defined(__KERNEL__) && defined(CONFIG_COMPAT)
+ /*
+  * ioctl commands in 32 bit emulation
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index dfa1ac2d751a..ba9b7ec5d6bf 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -3749,6 +3749,146 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
+ 	return ret;
+ }
+ 
++static int f2fs_secure_erase(struct block_device *bdev, block_t block,
++					block_t len, u32 flags)
++{
++	struct request_queue *q = bdev_get_queue(bdev);
++	sector_t sector = SECTOR_FROM_BLOCK(block);
++	sector_t nr_sects = SECTOR_FROM_BLOCK(len);
++	int ret = 0;
++
++	if (!q)
++		return -ENXIO;
++
++	if (flags & F2FS_TRIM_FILE_DISCARD)
++		ret = blkdev_issue_discard(bdev, sector, nr_sects, GFP_NOFS,
++						blk_queue_secure_erase(q) ?
++						BLKDEV_DISCARD_SECURE : 0);
++
++	if (!ret && (flags & F2FS_TRIM_FILE_ZEROOUT))
++		ret = blkdev_issue_zeroout(bdev, sector, nr_sects, GFP_NOFS, 0);
++
++	return ret;
++}
++
++static int f2fs_sec_trim_file(struct file *filp, unsigned long arg)
++{
++	struct inode *inode = file_inode(filp);
++	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
++	struct address_space *mapping = inode->i_mapping;
++	struct block_device *prev_bdev = NULL;
++	pgoff_t index, pg_start = 0, pg_end;
++	block_t prev_block = 0, len = 0;
++	u32 flags;
++	int ret = 0;
++
++	if (!(filp->f_mode & FMODE_WRITE))
++		return -EBADF;
++
++	if (get_user(flags, (u32 __user *)arg))
++		return -EFAULT;
++	if (flags == 0 || (flags & ~F2FS_TRIM_FILE_MASK))
++		return -EINVAL;
++
++	if ((flags & F2FS_TRIM_FILE_DISCARD) && !f2fs_hw_support_discard(sbi))
++		return -EOPNOTSUPP;
++
++	file_start_write(filp);
++	inode_lock(inode);
++
++	if (!S_ISREG(inode->i_mode) || f2fs_is_atomic_file(inode) ||
++			f2fs_compressed_file(inode)) {
++		ret = -EINVAL;
++		goto err;
++	}
++
++	if (!inode->i_size)
++		goto err;
++	pg_end = DIV_ROUND_UP(inode->i_size, PAGE_SIZE);
++
++	ret = f2fs_convert_inline_inode(inode);
++	if (ret)
++		goto err;
++
++	down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
++	down_write(&F2FS_I(inode)->i_mmap_sem);
++
++	ret = filemap_write_and_wait(mapping);
++	if (ret)
++		goto out;
++
++	truncate_inode_pages(mapping, 0);
++
++	for (index = pg_start; index < pg_end;) {
++		struct dnode_of_data dn;
++		unsigned int end_offset;
++
++		set_new_dnode(&dn, inode, NULL, NULL, 0);
++		ret = f2fs_get_dnode_of_data(&dn, index, LOOKUP_NODE);
++		if (ret)
++			goto out;
++
++		end_offset = ADDRS_PER_PAGE(dn.node_page, inode);
++		if (pg_end < end_offset + index)
++			end_offset = pg_end - index;
++
++		for (; dn.ofs_in_node < end_offset;
++				dn.ofs_in_node++, index++) {
++			struct block_device *cur_bdev;
++			block_t blkaddr = f2fs_data_blkaddr(&dn);
++
++			if (__is_valid_data_blkaddr(blkaddr)) {
++				if (!f2fs_is_valid_blkaddr(F2FS_I_SB(inode),
++					blkaddr, DATA_GENERIC_ENHANCE)) {
++					ret = -EFSCORRUPTED;
++					goto out;
++				}
++			} else
++				continue;
++
++			cur_bdev = f2fs_target_device(sbi, blkaddr, NULL);
++			if (f2fs_is_multi_device(sbi)) {
++				int i = f2fs_target_device_index(sbi, blkaddr);
++
++				blkaddr -= FDEV(i).start_blk;
++			}
++
++			if (len) {
++				if (prev_bdev == cur_bdev &&
++					blkaddr == prev_block + len) {
++					len++;
++				} else {
++					ret = f2fs_secure_erase(prev_bdev,
++							prev_block, len, flags);
++					if (ret)
++						goto out;
++
++					len = 0;
++				}
++			}
++
++			if (!len) {
++				prev_bdev = cur_bdev;
++				prev_block = blkaddr;
++				len = 1;
++			}
++		}
++
++		f2fs_put_dnode(&dn);
++	}
++
++	if (len)
++		ret = f2fs_secure_erase(prev_bdev, prev_block, len, flags);
++out:
++	up_write(&F2FS_I(inode)->i_mmap_sem);
++	up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
++err:
++	inode_unlock(inode);
++	file_end_write(filp);
++
++	return ret;
++}
++
+ long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ {
+ 	if (unlikely(f2fs_cp_error(F2FS_I_SB(file_inode(filp)))))
+@@ -3835,6 +3975,8 @@ long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ 		return f2fs_release_compress_blocks(filp, arg);
+ 	case F2FS_IOC_RESERVE_COMPRESS_BLOCKS:
+ 		return f2fs_reserve_compress_blocks(filp, arg);
++	case F2FS_IOC_SEC_TRIM_FILE:
++		return f2fs_sec_trim_file(filp, arg);
+ 	default:
+ 		return -ENOTTY;
+ 	}
+@@ -4004,6 +4146,7 @@ long f2fs_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ 	case F2FS_IOC_GET_COMPRESS_BLOCKS:
+ 	case F2FS_IOC_RELEASE_COMPRESS_BLOCKS:
+ 	case F2FS_IOC_RESERVE_COMPRESS_BLOCKS:
++	case F2FS_IOC_SEC_TRIM_FILE:
+ 		break;
+ 	default:
+ 		return -ENOIOCTLCMD;
 -- 
-Florian
+2.27.0.278.ge193c7cf3a9-goog
+
