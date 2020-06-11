@@ -2,153 +2,307 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1908C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A62C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C370A20760
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:01:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0348120823
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:01:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="BUdJwfEu"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="n5+Ok7nJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbgFKOBT (ORCPT
+        id S1727951AbgFKOBx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 10:01:19 -0400
-Received: from mout.web.de ([212.227.17.12]:52955 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726109AbgFKOBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 10:01:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1591884024;
-        bh=c56enI6I5/M+hosAuiztGDVYwFDAzlVT7WCsV6L+sCM=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=BUdJwfEuIkaQ8DPsgKs9ftqAyxuXKhaAl/lLPssQsAkXsW41iqv1S01P2GbE+mc45
-         y6+u7jtcGqK7AMvaWFqLzVfYll4Mewvp4CRvmxHr85LOPmrRw/RdZw2AyAHYRHyXo3
-         nM/WVcoyssFeavKepyaV97LgRpK9tTs+iP8WDYbw=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.49.66.14]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0M5wzV-1izdmw2dU9-00xwKu; Thu, 11
- Jun 2020 16:00:23 +0200
-To:     Liao Pingfang <liao.pingfang@zte.com.cn>,
-        linux-btrfs@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Wang Liang <wang.liang82@zte.com.cn>,
-        Xue Zhihong <xue.zhihong@zte.com.cn>,
-        Yi Wang <wang.yi59@zte.com.cn>
-Subject: Re: [PATCH v2] btrfs: Remove error messages for failed memory
- allocations
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <0bbb237b-3223-1efa-cf71-583a4e9ef3ae@web.de>
-Date:   Thu, 11 Jun 2020 16:00:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 11 Jun 2020 10:01:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55712 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbgFKOBw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 10:01:52 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB627C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 07:01:51 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id l17so5099015wmj.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 07:01:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BkNnx+PJ4tEldkFE6NmGlbgnjVg2aGw3VhchR9OtaZw=;
+        b=n5+Ok7nJ1Ld/w/7Po5tTgIg8khBvF2s7B4dF3iaf+dDI8f0kQUt9RRFUQ3/rjW4pjE
+         D+g/9FREe+gmve3Mr2TykH97UBYHXWt5bL4O9GWAOueL27DPI2HXycc/Ts3nJXIslckn
+         oraBFf1U8oWqH0DIRzC9ugtDfmz1gHnKmMQkeJEopugoikKPyF85BMOGj/MQJTnhqde3
+         saUGkkSTzvlD5YpPjlJVwZPBoo7ZcqFNzl5nhj8/SOy8KRvTag6vgU6+OPIoR29JORt8
+         s99sJ4V0DjoVCQrxu6oTqwXKIWCHaCo95r23NHAKCfxrO3svZkwOvW6RHh6g4yZLwRLT
+         fQBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BkNnx+PJ4tEldkFE6NmGlbgnjVg2aGw3VhchR9OtaZw=;
+        b=IaEOdGG8zUbAvLSqowIqNzU5/uk107pkWrCpdl18hNzEOSZHEzu/h+uJC8OeSkaKyk
+         +8X9r1j8B/vGNlqoX+rg+C20XgA2n0MqXv3h2GHNnSol7Rg5Ci3VUgAnpRt0R3HZOB2q
+         jF2pjKRhuCLuuWwVV5NQHx0bMRWTl/q5PfFO14s+UpzZcn0IK9ysIb5XH9w2qCA6PSXq
+         av8svHDBsal3QoygVkMgguRsdXyUZr1TR8irNYHhrFrfoj0rxRPwZjQSEcX292vvbxo+
+         2FISL4jVOnJeGsQcYVyZhLxa6B/mQnruwXH0ZPbgkABgCWngBt4u4dDvIrbrfNSixngH
+         cvBA==
+X-Gm-Message-State: AOAM53399TvqTrNIQ5+NcSbtGUWuACAMDjND2+ibGFr+JChkHZ6C42Xr
+        hht2ct6YmSBs3fERdfJdgRIdaA==
+X-Google-Smtp-Source: ABdhPJzJTiQTtzCLL7YjE7Ki6AamPyJbUN9TYcNqL++1AxXSzCWNvaw1iqZfoStaFChZgwa3LhbhNw==
+X-Received: by 2002:a1c:c908:: with SMTP id f8mr8469246wmb.150.1591884110019;
+        Thu, 11 Jun 2020 07:01:50 -0700 (PDT)
+Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
+        by smtp.gmail.com with ESMTPSA id y5sm5360300wrs.63.2020.06.11.07.01.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2020 07:01:49 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Fabien Parent <fparent@baylibre.com>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH] net: ethernet: mtk-star-emac: simplify interrupt handling
+Date:   Thu, 11 Jun 2020 16:01:39 +0200
+Message-Id: <20200611140139.17702-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:whnTkPmpFE3lRbBonsjH0mV+/M3G0rnebuRkCq90vQrDLxUUnLq
- U8HYF1f4e5gSYDAM9e+I8Wi9Cie5TChRsbS/OY3Zl6fc5o584cPjq6O3ulP+zNksXAyctoW
- se14+30ah7FnujW4tLTGLN+WImnLV79ONtGlzMY28FLXQX66pwEozREHxUdJ6mPR34BRvGK
- j5Dhy6eH1BnsXUUVp1xbg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:yQkQ/uRCtpA=:k69DLVUKjpxdNE5Y5j1RSM
- 29nHU6dybm6innEmBO5GB4juxl6xc1wH1CjSJW5BXeMz+UHHEVRMMY2l9g+cKcr5n2cmXVbMf
- rWUJinARcWCj08pRYCC00McSut+q4M7BOWtIzgkhzxIjfSgnpWhgdpTw/q7W+lzommAUVSbKW
- 6bXcDeSO+u8iwGlcMosmFXm2BIISiWDNzc47dcUJAqnkRl6jMR+LsLWrAl1p7fT0bOUE36Lbw
- 9QKDNcKvUoR9QKo5eo6iSmYUv7FEatkhX8y4WBIeoqfEHfMiShnel/xf5g+l9Z5CMeFThx5dw
- inON6bdgLS3Let8/gBPdgJKUt0NXXJ+nv9zEvNuc1mZTftooZn5XoCDUgpCszSYOgxMLaIN7S
- AZU18NngAhk1IzjA4pT5WbFagmAsNHuLz8gOVXwYnDTc8Ome+8/OMU6iBtLVxcTFOhSsdMmwj
- k2HCLzfkiuijaOEVbT0awUR5dkZXYDwDrfsWTFTP4ovb5QeaNwtkdyaf+vxfbLy1yFCA+zzJC
- dvMK0QHCWc3uZuapel3nNxGaECqgGhQB8J7UsmWpA+hFflFK95NfHAeps+ZbVgikd0KG6840b
- bkiKM01HB0pTUjsDX/DPWK5jf9ZyLrHF20Iyd+g/Q5qODCdLCfLXQoJxL5Q/JvDmAYVYF74Qt
- etS+dj117GLft4JOm++7EchH66GGYlzXd4GWIPdKHR7Ijk3t72yaxN00+yDC4AnBYNb0JfALM
- XDZjM+wSeTH52scnFt08rZdCewVlL5CzHrAO+K5kWz6ENdW1vG3yuORVM3Pe6ikYlmoAxB5HT
- 47f2bZ6CLEioxbiPfNJ4Q5LapBrcrdepsXAsHP/BNQ1TuhG9j4v2rjAlxhWtCBjF6/t6fzgqy
- JZgV/vgOn7Bm187eLU6/5nMaoS2CfxM+4Bg65T4N7lzR5HK2n1vHchLi1CUNm8UeCfaYr+B+N
- Jufkdi5DpLOniTiDt1VnvjC3n4un7UeZAph5pwVl0SaKc3kPAPCzTDv+szkP20Dvs9w2VSOtz
- qk/53YE1yS1u4VSj/Mo9i9Ih0F1Im5nIQCf3UFdXfG1IGYCyUH6b8CerCeigugUo/b0kyhgLm
- OFqcv2cC1z+1CGXErSuaIXe64XfOMFzhAeMx0I+ajbT4YNgpcV+Qj+xavbeA+6X0cFVUFHqaI
- zv71RjbNg01IamnL5/Jyg4qcxj+LteDwPlicGaoY3bk0r3s8GDjsy4s8BzfVvB1a1g18WDf0w
- n4H6ggduZof8RMEel
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> As there is a dump_stack() done on memory allocation
-> failures, these messages might as well be deleted instead.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-* I imagine that an other wording variant can become clearer
-  for the change description.
+During development we tried to make the interrupt handling as fine-grained
+as possible with TX and RX interrupts being disabled/enabled independently
+and the counter registers reset from workqueue context.
 
-* I suggest to reconsider the patch subject.
+Unfortunately after thorough testing of current mainline, we noticed the
+driver has become unstable under heavy load. While this is hard to
+reproduce, it's quite consistent in the driver's current form.
 
+This patch proposes to go back to the previous approach of doing all
+processing in napi context with all interrupts masked in order to make the
+driver usable in mainline linux. This doesn't impact the performance on
+pumpkin boards at all and it's in line with what many ethernet drivers do
+in mainline linux anyway.
 
-=E2=80=A6
-> +++ b/fs/btrfs/check-integrity.c
-> @@ -632,7 +632,6 @@  static int btrfsic_process_superblock(struct btrfsi=
-c_state *state,
->
->  	selected_super =3D kzalloc(sizeof(*selected_super), GFP_NOFS);
->  	if (NULL =3D=3D selected_super) {
-> -		pr_info("btrfsic: error, kmalloc failed!\n");
->  		return -ENOMEM;
->  	}
+At the same time we're adding a FIXME comment about the need to improve
+the interrupt handling.
 
+Fixes: 8c7bd5a454ff ("net: ethernet: mtk-star-emac: new driver")
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ drivers/net/ethernet/mediatek/mtk_star_emac.c | 118 +++++-------------
+ 1 file changed, 29 insertions(+), 89 deletions(-)
 
-How do you think about to use the following error handling instead?
+diff --git a/drivers/net/ethernet/mediatek/mtk_star_emac.c b/drivers/net/ethernet/mediatek/mtk_star_emac.c
+index f1ace4fec19f..3e765bdcf9e1 100644
+--- a/drivers/net/ethernet/mediatek/mtk_star_emac.c
++++ b/drivers/net/ethernet/mediatek/mtk_star_emac.c
+@@ -24,7 +24,6 @@
+ #include <linux/regmap.h>
+ #include <linux/skbuff.h>
+ #include <linux/spinlock.h>
+-#include <linux/workqueue.h>
+ 
+ #define MTK_STAR_DRVNAME			"mtk_star_emac"
+ 
+@@ -262,7 +261,6 @@ struct mtk_star_priv {
+ 	spinlock_t lock;
+ 
+ 	struct rtnl_link_stats64 stats;
+-	struct work_struct stats_work;
+ };
+ 
+ static struct device *mtk_star_get_dev(struct mtk_star_priv *priv)
+@@ -432,42 +430,6 @@ static void mtk_star_intr_disable(struct mtk_star_priv *priv)
+ 	regmap_write(priv->regs, MTK_STAR_REG_INT_MASK, ~0);
+ }
+ 
+-static void mtk_star_intr_enable_tx(struct mtk_star_priv *priv)
+-{
+-	regmap_clear_bits(priv->regs, MTK_STAR_REG_INT_MASK,
+-			  MTK_STAR_BIT_INT_STS_TNTC);
+-}
+-
+-static void mtk_star_intr_enable_rx(struct mtk_star_priv *priv)
+-{
+-	regmap_clear_bits(priv->regs, MTK_STAR_REG_INT_MASK,
+-			  MTK_STAR_BIT_INT_STS_FNRC);
+-}
+-
+-static void mtk_star_intr_enable_stats(struct mtk_star_priv *priv)
+-{
+-	regmap_clear_bits(priv->regs, MTK_STAR_REG_INT_MASK,
+-			  MTK_STAR_REG_INT_STS_MIB_CNT_TH);
+-}
+-
+-static void mtk_star_intr_disable_tx(struct mtk_star_priv *priv)
+-{
+-	regmap_set_bits(priv->regs, MTK_STAR_REG_INT_MASK,
+-			MTK_STAR_BIT_INT_STS_TNTC);
+-}
+-
+-static void mtk_star_intr_disable_rx(struct mtk_star_priv *priv)
+-{
+-	regmap_set_bits(priv->regs, MTK_STAR_REG_INT_MASK,
+-			MTK_STAR_BIT_INT_STS_FNRC);
+-}
+-
+-static void mtk_star_intr_disable_stats(struct mtk_star_priv *priv)
+-{
+-	regmap_set_bits(priv->regs, MTK_STAR_REG_INT_MASK,
+-			MTK_STAR_REG_INT_STS_MIB_CNT_TH);
+-}
+-
+ static unsigned int mtk_star_intr_read(struct mtk_star_priv *priv)
+ {
+ 	unsigned int val;
+@@ -663,20 +625,6 @@ static void mtk_star_update_stats(struct mtk_star_priv *priv)
+ 	stats->rx_errors += stats->rx_fifo_errors;
+ }
+ 
+-/* This runs in process context and parallel TX and RX paths executing in
+- * napi context may result in losing some stats data but this should happen
+- * seldom enough to be acceptable.
+- */
+-static void mtk_star_update_stats_work(struct work_struct *work)
+-{
+-	struct mtk_star_priv *priv = container_of(work, struct mtk_star_priv,
+-						 stats_work);
+-
+-	mtk_star_update_stats(priv);
+-	mtk_star_reset_counters(priv);
+-	mtk_star_intr_enable_stats(priv);
+-}
+-
+ static struct sk_buff *mtk_star_alloc_skb(struct net_device *ndev)
+ {
+ 	uintptr_t tail, offset;
+@@ -767,42 +715,25 @@ static void mtk_star_free_tx_skbs(struct mtk_star_priv *priv)
+ 	mtk_star_ring_free_skbs(priv, ring, mtk_star_dma_unmap_tx);
+ }
+ 
+-/* All processing for TX and RX happens in the napi poll callback. */
++/* All processing for TX and RX happens in the napi poll callback.
++ *
++ * FIXME: The interrupt handling should be more fine-grained with each
++ * interrupt enabled/disabled independently when needed. Unfortunatly this
++ * turned out to impact the driver's stability and until we have something
++ * working properly, we're disabling all interrupts during TX & RX processing
++ * or when resetting the counter registers.
++ */
+ static irqreturn_t mtk_star_handle_irq(int irq, void *data)
+ {
+ 	struct mtk_star_priv *priv;
+ 	struct net_device *ndev;
+-	bool need_napi = false;
+-	unsigned int status;
+ 
+ 	ndev = data;
+ 	priv = netdev_priv(ndev);
+ 
+ 	if (netif_running(ndev)) {
+-		status = mtk_star_intr_read(priv);
+-
+-		if (status & MTK_STAR_BIT_INT_STS_TNTC) {
+-			mtk_star_intr_disable_tx(priv);
+-			need_napi = true;
+-		}
+-
+-		if (status & MTK_STAR_BIT_INT_STS_FNRC) {
+-			mtk_star_intr_disable_rx(priv);
+-			need_napi = true;
+-		}
+-
+-		if (need_napi)
+-			napi_schedule(&priv->napi);
+-
+-		/* One of the counters reached 0x8000000 - update stats and
+-		 * reset all counters.
+-		 */
+-		if (unlikely(status & MTK_STAR_REG_INT_STS_MIB_CNT_TH)) {
+-			mtk_star_intr_disable_stats(priv);
+-			schedule_work(&priv->stats_work);
+-		}
+-
+-		mtk_star_intr_ack_all(priv);
++		mtk_star_intr_disable(priv);
++		napi_schedule(&priv->napi);
+ 	}
+ 
+ 	return IRQ_HANDLED;
+@@ -1169,8 +1100,6 @@ static void mtk_star_tx_complete_all(struct mtk_star_priv *priv)
+ 	if (wake && netif_queue_stopped(ndev))
+ 		netif_wake_queue(ndev);
+ 
+-	mtk_star_intr_enable_tx(priv);
+-
+ 	spin_unlock(&priv->lock);
+ }
+ 
+@@ -1332,20 +1261,32 @@ static int mtk_star_process_rx(struct mtk_star_priv *priv, int budget)
+ static int mtk_star_poll(struct napi_struct *napi, int budget)
+ {
+ 	struct mtk_star_priv *priv;
++	unsigned int status;
+ 	int received = 0;
+ 
+ 	priv = container_of(napi, struct mtk_star_priv, napi);
+ 
+-	/* Clean-up all TX descriptors. */
+-	mtk_star_tx_complete_all(priv);
+-	/* Receive up to $budget packets. */
+-	received = mtk_star_process_rx(priv, budget);
++	status = mtk_star_intr_read(priv);
++	mtk_star_intr_ack_all(priv);
+ 
+-	if (received < budget) {
+-		napi_complete_done(napi, received);
+-		mtk_star_intr_enable_rx(priv);
++	if (status & MTK_STAR_BIT_INT_STS_TNTC)
++		/* Clean-up all TX descriptors. */
++		mtk_star_tx_complete_all(priv);
++
++	if (status & MTK_STAR_BIT_INT_STS_FNRC)
++		/* Receive up to $budget packets. */
++		received = mtk_star_process_rx(priv, budget);
++
++	if (unlikely(status & MTK_STAR_REG_INT_STS_MIB_CNT_TH)) {
++		mtk_star_update_stats(priv);
++		mtk_star_reset_counters(priv);
+ 	}
+ 
++	if (received < budget)
++		napi_complete_done(napi, received);
++
++	mtk_star_intr_enable(priv);
++
+ 	return received;
+ }
+ 
+@@ -1532,7 +1473,6 @@ static int mtk_star_probe(struct platform_device *pdev)
+ 	ndev->max_mtu = MTK_STAR_MAX_FRAME_SIZE;
+ 
+ 	spin_lock_init(&priv->lock);
+-	INIT_WORK(&priv->stats_work, mtk_star_update_stats_work);
+ 
+ 	base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(base))
+-- 
+2.26.1
 
-	if (!selected_super)
-		return -ENOMEM;
-
-
-Regards,
-Markus
