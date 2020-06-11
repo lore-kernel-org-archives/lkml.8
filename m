@@ -6,41 +6,41 @@ X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 121AFC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 21:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B7CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 21:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D769C2073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 21:56:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA92D2075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 21:58:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e8Frfs00"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UKvh5qNT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726349AbgFKVz7 (ORCPT
+        id S1726521AbgFKV6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 17:55:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44188 "EHLO
+        Thu, 11 Jun 2020 17:58:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgFKVzz (ORCPT
+        with ESMTP id S1726396AbgFKV6V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 17:55:55 -0400
+        Thu, 11 Jun 2020 17:58:21 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F4138C03E96F
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 14:55:54 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E207FC03E96F
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 14:58:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=+D9mFCAnJgtDS6+KSuSp9KevNloc9SQBHaGYlbUhzxw=; b=e8Frfs00IgsoISCL466iUeylVG
-        LE8eTack0LgJO8TxkyecTWPER3qIBmjii3hRdEx+90pn4cLu4WK84K9a9IMfpTce1QdJaRmmZxIjl
-        gWKjNOU0EBlpkJXoLps1+vOqhjMNGlhTJb/fhXplxUocDfesnHevRuoArCO5KZXhO49JGakluIadL
-        YoNeZbP09nIOBrNBCKinveqVpR8fMNcLH+vDVmFI7vTm9G42Q/kHXCDcFYonSXOgn36kP1mnIJjem
-        PoPlTyMdHVeVX8/SZr9+kWup0SKdH/N3eBGRGWHWyxE82X8mXb7EEgy19TjgezR3T/0LuDhjAb3N6
-        Cy6N0xVQ==;
+        bh=gCgkOxrFSDScVIugp6mPkt7Cs9XB/HFiGbAVt90jm4w=; b=UKvh5qNTR1xYr8sdQdm20u+lYO
+        8lED1J1b8Yek0UshwGLb7ezHyzchug8KUv6KXcApOuNvKvK1MdGMNaoFzUpfP4s5riHi65jqGBu3F
+        sdM9T9fiCFLU20CZZsCAEZ1eEfrOBzswll1rWxLiwXbzV1Y+jlES1uHIwtEdbdIIZGOMCKG33aZOP
+        wVtKmqWqj7wFZ4AM4DPdlHlE6m5iMM4jHMvWIQPDY8cbnWb7lf/3iffq8KyPaepYfhBO563SY109/
+        MjTBJf7ZfduTM1cdEe+6l4MKwNeEbRdglMDwTfgAv14z0HLU7mjYXQ4cFi6Nv8SnEit9TU3fzrgqj
+        K60tyIIg==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jjVAi-0001nI-WD; Thu, 11 Jun 2020 21:55:41 +0000
+        id 1jjVDC-00024w-T7; Thu, 11 Jun 2020 21:58:15 +0000
 Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 755FB984C19; Thu, 11 Jun 2020 23:55:38 +0200 (CEST)
-Date:   Thu, 11 Jun 2020 23:55:38 +0200
+        id E42F0984C19; Thu, 11 Jun 2020 23:58:12 +0200 (CEST)
+Date:   Thu, 11 Jun 2020 23:58:12 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     Dmitry Vyukov <dvyukov@google.com>
 Cc:     Marco Elver <elver@google.com>,
@@ -59,7 +59,7 @@ Cc:     Marco Elver <elver@google.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>
 Subject: Re: [PATCH -tip v3 1/2] kcov: Make runtime functions
  noinstr-compatible
-Message-ID: <20200611215538.GE4496@worktop.programming.kicks-ass.net>
+Message-ID: <20200611215812.GF4496@worktop.programming.kicks-ass.net>
 References: <20200605082839.226418-1-elver@google.com>
  <CACT4Y+ZqdZD0YsPHf8UFJT94yq5KGgbDOXSiJYS0+pjgYDsx+A@mail.gmail.com>
  <20200605120352.GJ3976@hirez.programming.kicks-ass.net>
@@ -68,66 +68,70 @@ References: <20200605082839.226418-1-elver@google.com>
  <CANpmjNPNa2f=kAF6c199oYVJ0iSyirQRGxeOBLxa9PmakSXRbA@mail.gmail.com>
  <CACT4Y+Z+FFHFGSgEJGkd+zCBgUOck_odOf9_=5YQLNJQVMGNdw@mail.gmail.com>
  <20200608110108.GB2497@hirez.programming.kicks-ass.net>
+ <20200611215538.GE4496@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200608110108.GB2497@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200611215538.GE4496@worktop.programming.kicks-ass.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 01:01:08PM +0200, Peter Zijlstra wrote:
-> On Mon, Jun 08, 2020 at 09:57:39AM +0200, Dmitry Vyukov wrote:
+On Thu, Jun 11, 2020 at 11:55:38PM +0200, Peter Zijlstra wrote:
+> On Mon, Jun 08, 2020 at 01:01:08PM +0200, Peter Zijlstra wrote:
+> > On Mon, Jun 08, 2020 at 09:57:39AM +0200, Dmitry Vyukov wrote:
+> > 
+> > > As a crazy idea: is it possible to employ objtool (linker script?) to
+> > > rewrite all coverage calls to nops in the noinstr section? Or relocate
+> > > to nop function?
+> > > What we are trying to do is very static, it _should_ have been done
+> > > during build. We don't have means in existing _compilers_ to do this,
+> > > but maybe we could do it elsewhere during build?...
+> > 
+> > Let me try and figure out how to make objtool actually rewrite code.
 > 
-> > As a crazy idea: is it possible to employ objtool (linker script?) to
-> > rewrite all coverage calls to nops in the noinstr section? Or relocate
-> > to nop function?
-> > What we are trying to do is very static, it _should_ have been done
-> > during build. We don't have means in existing _compilers_ to do this,
-> > but maybe we could do it elsewhere during build?...
+> The below is quite horrific but seems to sorta work.
 > 
-> Let me try and figure out how to make objtool actually rewrite code.
+> 
+> It turns this:
+> 
+>   12:   e8 00 00 00 00          callq  17 <lockdep_hardirqs_on+0x17>
+>                         13: R_X86_64_PLT32      __sanitizer_cov_trace_pc-0x4
+> 
+> Into this:
+> 
+>   12:   90                      nop
+>   13:   90                      nop
+>                         13: R_X86_64_NONE       __sanitizer_cov_trace_pc-0x4
+>   14:   90                      nop
+>   15:   90                      nop
+>   16:   90                      nop
+> 
+> 
+> I'll have to dig around a little more to see if I can't get rid of the
+> relocation entirely. Also, I need to steal better arch_nop_insn() from
+> the kernel :-)
 
-The below is quite horrific but seems to sorta work.
-
-
-It turns this:
-
-  12:   e8 00 00 00 00          callq  17 <lockdep_hardirqs_on+0x17>
-                        13: R_X86_64_PLT32      __sanitizer_cov_trace_pc-0x4
-
-Into this:
-
-  12:   90                      nop
-  13:   90                      nop
-                        13: R_X86_64_NONE       __sanitizer_cov_trace_pc-0x4
-  14:   90                      nop
-  15:   90                      nop
-  16:   90                      nop
-
-
-I'll have to dig around a little more to see if I can't get rid of the
-relocation entirely. Also, I need to steal better arch_nop_insn() from
-the kernel :-)
+Damn, paste buffer confusion, this is the right version.
 
 ---
  tools/objtool/arch.h            |  2 ++
  tools/objtool/arch/x86/decode.c | 24 ++++++++++++++++++++++
- tools/objtool/check.c           | 15 +++++++++++++-
+ tools/objtool/check.c           | 17 +++++++++++++++-
  tools/objtool/elf.c             | 45 ++++++++++++++++++++++++++++++++++++++++-
  tools/objtool/elf.h             | 11 ++++++++--
- 5 files changed, 93 insertions(+), 4 deletions(-)
+ 5 files changed, 95 insertions(+), 4 deletions(-)
 
 diff --git a/tools/objtool/arch.h b/tools/objtool/arch.h
 index eda15a5a285e..3c5967748abb 100644
 --- a/tools/objtool/arch.h
 +++ b/tools/objtool/arch.h
 @@ -84,4 +84,6 @@ unsigned long arch_jump_destination(struct instruction *insn);
-
+ 
  unsigned long arch_dest_rela_offset(int addend);
-
+ 
 +const char *arch_nop_insn(int len);
 +
  #endif /* _ARCH_H */
@@ -164,17 +168,19 @@ index 4b504fc90bbb..b615c32e21db 100644
 +	return insn;
 +}
 diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 5fbb90a80d23..487b4dc3d122 100644
+index 5fbb90a80d23..6f5e9c9465cb 100644
 --- a/tools/objtool/check.c
 +++ b/tools/objtool/check.c
-@@ -765,6 +765,17 @@ static int add_call_destinations(struct objtool_file *file)
+@@ -765,6 +765,19 @@ static int add_call_destinations(struct objtool_file *file)
  		} else
  			insn->call_dest = rela->sym;
-
+ 
 +		if (insn->sec->noinstr &&
 +		    !strncmp(insn->call_dest->name, "__sanitizer_cov_", 16)) {
-+			if (rela)
++			if (rela) {
++				rela->type = R_X86_64_NONE;
 +				elf_write_rela(file->elf, rela);
++			}
 +
 +			elf_write_insn(file->elf, insn->sec,
 +				       insn->offset, insn->len,
@@ -185,10 +191,10 @@ index 5fbb90a80d23..487b4dc3d122 100644
  		/*
  		 * Whatever stack impact regular CALLs have, should be undone
  		 * by the RETURN of the called function.
-@@ -2802,11 +2813,13 @@ int check(const char *_objname, bool orc)
+@@ -2802,11 +2815,13 @@ int check(const char *_objname, bool orc)
  		if (ret < 0)
  			goto out;
-
+ 
 +	}
 +
 +	if (file.elf->changed) {
@@ -201,13 +207,13 @@ index 5fbb90a80d23..487b4dc3d122 100644
  	if (ret < 0) {
  		/*
 diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
-index 84225679f96d..705582729374 100644
+index 84225679f96d..6f8021a5076a 100644
 --- a/tools/objtool/elf.c
 +++ b/tools/objtool/elf.c
 @@ -525,6 +525,7 @@ static int read_relas(struct elf *elf)
  				return -1;
  			}
-
+ 
 +			rela->idx = i;
  			rela->type = GELF_R_TYPE(rela->rela.r_info);
  			rela->addend = rela->rela.r_addend;
@@ -215,16 +221,16 @@ index 84225679f96d..705582729374 100644
 @@ -713,6 +714,8 @@ struct section *elf_create_section(struct elf *elf, const char *name,
  	elf_hash_add(elf->section_hash, &sec->hash, sec->idx);
  	elf_hash_add(elf->section_name_hash, &sec->name_hash, str_hash(sec->name));
-
+ 
 +	elf->changed = true;
 +
  	return sec;
  }
-
+ 
 @@ -779,7 +782,43 @@ int elf_rebuild_rela_section(struct section *sec)
  	return 0;
  }
-
+ 
 -int elf_write(const struct elf *elf)
 +int elf_write_insn(struct elf *elf, struct section *sec,
 +		   unsigned long offset, unsigned int len,
@@ -251,8 +257,8 @@ index 84225679f96d..705582729374 100644
 +{
 +	struct section *sec = rela->sec;
 +
-+	rela->rela.r_info = 0;
-+	rela->rela.r_addend = 0;
++	rela->rela.r_info = GELF_R_INFO(rela->sym->idx, rela->type);
++	rela->rela.r_addend = rela->addend;
 +
 +	gelf_update_rela(sec->data, rela->idx, &rela->rela);
 +
@@ -274,16 +280,16 @@ index 84225679f96d..705582729374 100644
 +			sec->changed = false;
  		}
  	}
-
+ 
 @@ -808,6 +849,8 @@ int elf_write(const struct elf *elf)
  		return -1;
  	}
-
+ 
 +	elf->changed = false;
 +
  	return 0;
  }
-
+ 
 diff --git a/tools/objtool/elf.h b/tools/objtool/elf.h
 index f4fe1d6ea392..4a3fe4f455c5 100644
 --- a/tools/objtool/elf.h
@@ -299,7 +305,7 @@ index f4fe1d6ea392..4a3fe4f455c5 100644
 +	int idx;
  	bool jump_table_start;
  };
-
+ 
 @@ -76,6 +77,7 @@ struct elf {
  	Elf *elf;
  	GElf_Ehdr ehdr;
@@ -315,12 +321,12 @@ index f4fe1d6ea392..4a3fe4f455c5 100644
 -int elf_write(const struct elf *elf);
 +int elf_write(struct elf *elf);
  void elf_close(struct elf *elf);
-
+ 
  struct section *find_section_by_name(const struct elf *elf, const char *name);
 @@ -132,6 +134,11 @@ struct rela *find_rela_by_dest_range(const struct elf *elf, struct section *sec,
  struct symbol *find_func_containing(struct section *sec, unsigned long offset);
  int elf_rebuild_rela_section(struct section *sec);
-
+ 
 +int elf_write_rela(struct elf *elf, struct rela *rela);
 +int elf_write_insn(struct elf *elf, struct section *sec,
 +		   unsigned long offset, unsigned int len,
@@ -328,5 +334,5 @@ index f4fe1d6ea392..4a3fe4f455c5 100644
 +
  #define for_each_sec(file, sec)						\
  	list_for_each_entry(sec, &file->elf->sections, list)
-
+ 
 
