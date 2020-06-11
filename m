@@ -2,101 +2,129 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34655C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC86C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2A6A20829
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:12:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591895550;
-	bh=+n3fYC/9iagTFJHZVyX/Y73W3bVcAjcHk8YWZHr8tLw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=g3b0VlYd9Y2UY2IjalySappkZerWwIZRVhxGjldS4RmO4zY+LqDLCqPj7nDLkAVX5
-	 tRvBnBVvFukIEgMTzGReBXZ3Te18WtvLmhn0RQovbn64CXfziv9i/Bwqf1i7RQ37yH
-	 2xu2zeyriNFyYNxicK8T9dTM3QOj3H5g8zvG2Uj0=
+	by mail.kernel.org (Postfix) with ESMTP id CAE4120792
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:13:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cAYIVxUc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbgFKRM2 (ORCPT
+        id S1726763AbgFKRNF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 13:12:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40474 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726379AbgFKRM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 13:12:28 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EC3C207ED;
-        Thu, 11 Jun 2020 17:12:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591895547;
-        bh=+n3fYC/9iagTFJHZVyX/Y73W3bVcAjcHk8YWZHr8tLw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WIYDmLV4pQ+VScpZK0j6FfcLG6yCMFfeNXbPGe37mo6Gd9wKibO+6WRRvordXe/y4
-         b7RQfeNTNqboZp5k3o+YrkhuZgJW74VUEkPUofs2X+5C1xQFBV7AFodxsqZ+0G3eS+
-         fYY8Ebx5XUE43Tmfz2xVOmZYnDDblbkkGOKYq78g=
-Date:   Thu, 11 Jun 2020 18:12:23 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Achin Gupta <Achin.Gupta@arm.com>
-Cc:     Rob Herring <robh@kernel.org>, Sudeep Holla <Sudeep.Holla@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marc Zyngier <maz@kernel.org>, nd <nd@arm.com>
-Subject: Re: [RFC PATCH 1/3] dt-bindings: Add ARM PSA FF binding for
- non-secure VM partitions
-Message-ID: <20200611171222.GB7725@willie-the-truck>
-References: <20200601094512.50509-1-sudeep.holla@arm.com>
- <20200601094512.50509-2-sudeep.holla@arm.com>
- <20200609223551.GA1620273@bogus>
- <20200610074346.GB15939@willie-the-truck>
- <5B3F18A4-5DA4-411E-9E26-7D25DEE3D414@arm.com>
+        Thu, 11 Jun 2020 13:13:05 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:31093 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726706AbgFKRND (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 13:13:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591895582;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=2lc4GWkEgMW9G8vaWxd2JwQUtHL+Yw8/GWAwvra2v9I=;
+        b=cAYIVxUcG/UtDI/oR8PXHEINIm7+IClhjBsNX8baR/B/FgXY84JMuRNhbdJhZDFx2/B1yR
+        GWqyh10gSX/lPlNCE8MHtwN2/Wg0E5PrpHcH+Y54TRLKT+HDvcLIMPv11ZTRQo/fz2IYwt
+        25EEneWtJN/sqlCqXeQ2nHqnn96fJWo=
+Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
+ [209.85.167.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-365-elP6mpaWNPqVjBSEdWCzmA-1; Thu, 11 Jun 2020 13:13:01 -0400
+X-MC-Unique: elP6mpaWNPqVjBSEdWCzmA-1
+Received: by mail-lf1-f69.google.com with SMTP id a10so1746176lfo.23
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 10:13:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2lc4GWkEgMW9G8vaWxd2JwQUtHL+Yw8/GWAwvra2v9I=;
+        b=T/wTCCNDBTDEXfevADrObQ/+Kp6UNaW6cRkouayNvVM2UQY3/KsOgs6QoBiJXTCNKz
+         ob0NJIK+wnsgmlVhO3kNX+TuKA5efj9dUc3xwQoSXGORP8wsc0wFeq7aUrcTkJYEIfWi
+         EPuo/zFEqgTx66USguF0zya9y+1u+kGzpZFQXaYgw9VYbXsgg3z6Rt9wKrH31dNGZAp4
+         qIfixmESXU/E3paFqnl4HVBLoizd+8TAd6HjBEvYIJBkZX6Sz+YOeEhp/ZchgDmV4Sjh
+         oDc6Vgaxq4zvtYe3Hpy8iU4BPmXIMln5B2/ofpJYiD05ToPHuhjfFo2ETCh+13iCap1y
+         l0+A==
+X-Gm-Message-State: AOAM533+NrD3cCrBV8WVWxqH9RM4f9H2inHnZBvfjYUS+g7ev87dKec0
+        VsqOUNdcPGLa6ezQp30cLHqeCs23awXsW5BsIDyNcNeJw/+6yv1H+z9mgbiBtBxWSIwqN/cigV/
+        4GFDFOJ6F0Yp3g75SiNAixEgnWXTjMiWINhs4Svcn
+X-Received: by 2002:a2e:960b:: with SMTP id v11mr4937663ljh.77.1591895579089;
+        Thu, 11 Jun 2020 10:12:59 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJywE09hDV2mOUCgj2h/z3bNYfRdprO2vQxtXhOlYbylBXyf3+ZwcppUGRcbmVCXizn5mdZaOTYbSLou8xQgFrI=
+X-Received: by 2002:a2e:960b:: with SMTP id v11mr4937654ljh.77.1591895578882;
+ Thu, 11 Jun 2020 10:12:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5B3F18A4-5DA4-411E-9E26-7D25DEE3D414@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200611155830.8941-1-trix@redhat.com>
+In-Reply-To: <20200611155830.8941-1-trix@redhat.com>
+From:   Ondrej Mosnacek <omosnace@redhat.com>
+Date:   Thu, 11 Jun 2020 19:12:47 +0200
+Message-ID: <CAFqZXNvHpWygX16EgFa5fc2oFkRfn-RaPpqbw-JvitpDNaAWUA@mail.gmail.com>
+Subject: Re: [PATCH] selinux: fix another double free
+To:     Tom Rix <trix@redhat.com>
+Cc:     Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Wei Yongjun <weiyongjun1@huawei.com>,
+        SElinux list <selinux@vger.kernel.org>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 03:46:35PM +0000, Achin Gupta wrote:
-> > On 10 Jun 2020, at 08:43, Will Deacon <will@kernel.org> wrote:
-> > On Tue, Jun 09, 2020 at 04:35:51PM -0600, Rob Herring wrote:
-> >> On Mon, Jun 01, 2020 at 10:45:10AM +0100, Sudeep Holla wrote:
-> >>> Add devicetree bindings for a Arm PSA FF-A compliant non-secure partition
-> >>> at virtual interface(VMs).
-> >>> 
-> >>> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> >>> ---
-> >>> .../devicetree/bindings/arm/arm,psa-ffa.txt   | 47 +++++++++++++++++++
-> >>> 1 file changed, 47 insertions(+)
-> >>> create mode 100644 Documentation/devicetree/bindings/arm/arm,psa-ffa.txt
-> >> 
-> >> I'm hoping this goes away if the firmware is discoverable, but if not DT 
-> >> bindings are DT schema now.
-> > 
-> > We'll need the binding for the kvm host side, because there are plenty
-> > of partition properties that are not discoverable (e.g. number of vCPUs).
-> 
-> Just trying to understand the req. a bit better…
-> 
-> The FF-A driver in the host can use FFA_PARTITION_INFO_GET to determine
-> the count of partitions and their vCPUs.
-> 
-> Is this about a guest being able to find out how many vCPUs it has? 
+Hi Tom,
 
-This is about KVM finding out the information it needs in order to spawn
-non-secure partitions. I don't see how it can do that with
-FFA_PARTITION_INFO_GET -- who would respond?
+On Thu, Jun 11, 2020 at 5:58 PM <trix@redhat.com> wrote:
+> From: Tom Rix <trix@redhat.com>
+>
+> Clang static analysis reports this double free error
+>
+> security/selinux/ss/conditional.c:139:2: warning: Attempt to free released memory [unix.Malloc]
+>         kfree(node->expr.nodes);
+>         ^~~~~~~~~~~~~~~~~~~~~~~
+>
+> When cond_read_node fails, it calls cond_node_destroy which frees the
+> node but does not poison the entry in the node list.  So when it
+> returns to its caller cond_read_list, cond_read_list deletes the
+> partial list.  The latest entry in the list will be deleted twice.
+>
+> So instead of freeing the node in cond_read_node, let list freeing in
+> code_read_list handle the freeing the problem node along with all of the the
 
-But you're right that number of vCPUs was a bad example. We also need
-information such as the entry point.
+There is an extra "the" before "freeing".
 
-Will
+> earlier nodes.
+>
+> Signed-off-by: Tom Rix <trix@redhat.com>
+> ---
+>  security/selinux/ss/conditional.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/security/selinux/ss/conditional.c b/security/selinux/ss/conditional.c
+> index da94a1b4bfda..ffb31af22f4f 100644
+> --- a/security/selinux/ss/conditional.c
+> +++ b/security/selinux/ss/conditional.c
+> @@ -411,7 +411,6 @@ static int cond_read_node(struct policydb *p, struct cond_node *node, void *fp)
+>                 goto err;
+>         return 0;
+>  err:
+> -       cond_node_destroy(node);
+>         return rc;
+
+Since there is now just "return rc" in the error path, can you please
+replace all the gotos with plain return statements? And please also
+add a Fixes: tag pointing to the commit that introduced the bug (see
+Stephen's reply).
+
+Thanks,
+
+-- 
+Ondrej Mosnacek
+Software Engineer, Platform Security - SELinux kernel
+Red Hat, Inc.
+
