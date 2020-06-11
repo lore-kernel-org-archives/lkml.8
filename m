@@ -2,114 +2,159 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5479C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55809C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1D402074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FD042075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:30:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TxQNPxCd"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="GCUBzBxx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgFKH1g (ORCPT
+        id S1726685AbgFKHaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 03:27:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50908 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726375AbgFKH1g (ORCPT
+        Thu, 11 Jun 2020 03:30:21 -0400
+Received: from ste-pvt-msa2.bahnhof.se ([213.80.101.71]:60515 "EHLO
+        ste-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726375AbgFKHaV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 03:27:36 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0E4FC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 00:27:35 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id d66so2299920pfd.6
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 00:27:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=F9YRyl1QH8nNLxQb6YLXx+y0EshlCzJxB+jfKLjlAqM=;
-        b=TxQNPxCdxCFIlxp1IRQ0D8Vg8XFC00Bg44uvyzsUqyx/qoeEbJWb3Mnt5q6gUimqT7
-         T25vKLwTHkwlPT/ja4Cfdhlny+1HZBqfBwTnX1lgltBfscYNxT8xBAX2YQAgzwhDEa60
-         GdfWj4jhMDxUKdQMlK62NwFZ0n6OlvWmEkeHonIv3Qq3NZOe2gkw38y8cEhu69qalJjl
-         FGq2+yPg3xe7Wh47U9W/R8HuIlY6E2ELpAezBXHuvX4HVM1Adz+bBpEIBBHizDPmDExV
-         Wi/JAI/TmK9L5DuunYFH56e6fG3wJEPkeC68iUkcKc7s3+m5RCT0RrILg4QdEEysMndO
-         8qpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=F9YRyl1QH8nNLxQb6YLXx+y0EshlCzJxB+jfKLjlAqM=;
-        b=ZANCzuyWTJX/OtRU/EGJ0WezeiEitajYJFY38IwsgOqvKH3GMGRhwWfG/dJs7MfCSW
-         4bJKiPLAkD5JKIXWotZCISxkaiJjK25WbPVt1RR1jV6O06WpPhhNLm/2o/zfQLGqxce8
-         ZIwOTGWnz2hTGpEA2tKL9LEDSW1SiPh1VW+lvQaKojFdXFJDY10oy4g42c+Q9yzPWRwH
-         iANmqHY8ar5SYcJE0qPlUbBalhUQUVSM2GaJJ1HWO/pVFpPiez10jaFvkLZG8dKaHWQV
-         yqK9E9o53TNlvIVWE4kQSf5SxDpxV16HicnLrI1pUUBpk9EURe6wWO0jJfQJitfNkAB4
-         VzSw==
-X-Gm-Message-State: AOAM532bz/hSkB14wwOHOJmX7qdapZEoywosOKVhGzpJP177LLMAM7q6
-        xx2BhhRH3wo5eJ5AUDgOrRo=
-X-Google-Smtp-Source: ABdhPJwhkrcAHfXYK9Qyr3n+8oV1pTLg7pFg4+NYq8gkVla26gxDRMXpFWipLKzcxbjwfYs46M449A==
-X-Received: by 2002:a62:5ec2:: with SMTP id s185mr2426106pfb.0.1591860455453;
-        Thu, 11 Jun 2020 00:27:35 -0700 (PDT)
-Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id 15sm2152353pfw.189.2020.06.11.00.27.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 00:27:34 -0700 (PDT)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Date:   Thu, 11 Jun 2020 16:27:32 +0900
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>
-Subject: Re: [PATCH] printk/kdb: Redirect printk messages into kdb in any
- context
-Message-ID: <20200611072732.GA429@jagdpanzerIV.localdomain>
-References: <1589273314-12060-1-git-send-email-sumit.garg@linaro.org>
- <20200512142533.ta4uejwmq5gchtlx@holly.lan>
- <CAFA6WYOV7oPbYE=9fXueYMacb5wv0r9T6F8tmECt-Eafe-fctw@mail.gmail.com>
- <20200514084230.GO17734@linux-b0ei>
- <CAFA6WYPSsgdAB-wJC0e2YkVkW0XsqQsu5wrn4iB4M-cwvS7z2g@mail.gmail.com>
- <20200515085021.GS17734@linux-b0ei>
- <20200515103308.GD42471@jagdpanzerIV.localdomain>
- <CAFA6WYOBsimP1j8Fwq4OcePEug4MGoaY3wTTTVydHtTphZ-FTw@mail.gmail.com>
- <20200515163638.GI42471@jagdpanzerIV.localdomain>
- <20200610164140.tgzcn5oip2gzgmze@holly.lan>
+        Thu, 11 Jun 2020 03:30:21 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTP id C52C53F6E8;
+        Thu, 11 Jun 2020 09:30:17 +0200 (CEST)
+Authentication-Results: ste-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=GCUBzBxx;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Authentication-Results: ste-ftg-msa2.bahnhof.se (amavisd-new);
+        dkim=pass (1024-bit key) header.d=shipmail.org
+Received: from ste-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (ste-ftg-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id iIlSPVxu0sRf; Thu, 11 Jun 2020 09:30:16 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id E40C23F683;
+        Thu, 11 Jun 2020 09:30:13 +0200 (CEST)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 06F8F360305;
+        Thu, 11 Jun 2020 09:30:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1591860613; bh=ax4JYSj31lLugLn4GS/xTNhVWBMkQDLT2ea6JW6fq/U=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=GCUBzBxxf98lTFNSP0Dlp/n/+/bdS+fx4so3iAJYi8G/MjONQRAmflLqkOikME4iD
+         MUs9rU3r/y6OHX+h/VnT1g38n1UpRlf1rQRrL0SPnh1UXImH0gRwWGozv2yL3tsxRs
+         9r8MaAUOa6C2A8mHoNnl+0FXmTrNB6FX2Qv1kCb4=
+Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
+ annotations
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        DRI Development <dri-devel@lists.freedesktop.org>
+Cc:     linux-rdma@vger.kernel.org,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        Thomas Hellstrom <thomas.hellstrom@intel.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        linux-media@vger.kernel.org,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Mika Kuoppala <mika.kuoppala@intel.com>
+References: <20200604081224.863494-1-daniel.vetter@ffwll.ch>
+ <20200604081224.863494-5-daniel.vetter@ffwll.ch>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28Intel=29?= 
+        <thomas_os@shipmail.org>
+Message-ID: <b11c2140-1b9c-9013-d9bb-9eb2c1906710@shipmail.org>
+Date:   Thu, 11 Jun 2020 09:30:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200610164140.tgzcn5oip2gzgmze@holly.lan>
+In-Reply-To: <20200604081224.863494-5-daniel.vetter@ffwll.ch>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/06/10 17:41), Daniel Thompson wrote:
-> > Thanks for the link. I'm slightly surprised it took so many years
-> > to notice the addition of printk_nmi/printk_safe :)
-> 
-> Rather by coincidence (at least I think its a coincidence) the problem
-> has recently become much more obvious.
-> 
-> 0d00449c7a28 ("x86: Replace ist_enter() with nmi_enter()") just brought
-> this to the surface by treating debug traps as NMIs. This means the CPU
-> that takes a breakpoint, and where almost all of the kdb printk() calls
-> take place, will now unconditionally have printk() interception enabled.
 
-Interesting. Feels like ist_enter() should have been using
-printk_nmi_enter/exit() in the first place.
+On 6/4/20 10:12 AM, Daniel Vetter wrote:
+> Two in one go:
+> - it is allowed to call dma_fence_wait() while holding a
+>    dma_resv_lock(). This is fundamental to how eviction works with ttm,
+>    so required.
+>
+> - it is allowed to call dma_fence_wait() from memory reclaim contexts,
+>    specifically from shrinker callbacks (which i915 does), and from mmu
+>    notifier callbacks (which amdgpu does, and which i915 sometimes also
+>    does, and probably always should, but that's kinda a debate). Also
+>    for stuff like HMM we really need to be able to do this, or things
+>    get real dicey.
+>
+> Consequence is that any critical path necessary to get to a
+> dma_fence_signal for a fence must never a) call dma_resv_lock nor b)
+> allocate memory with GFP_KERNEL. Also by implication of
+> dma_resv_lock(), no userspace faulting allowed. That's some supremely
+> obnoxious limitations, which is why we need to sprinkle the right
+> annotations to all relevant paths.
+>
+> The one big locking context we're leaving out here is mmu notifiers,
+> added in
+>
+> commit 23b68395c7c78a764e8963fc15a7cfd318bf187f
+> Author: Daniel Vetter <daniel.vetter@ffwll.ch>
+> Date:   Mon Aug 26 22:14:21 2019 +0200
+>
+>      mm/mmu_notifiers: add a lockdep map for invalidate_range_start/end
+>
+> that one covers a lot of other callsites, and it's also allowed to
+> wait on dma-fences from mmu notifiers. But there's no ready-made
+> functions exposed to prime this, so I've left it out for now.
+>
+> v2: Also track against mmu notifier context.
+>
+> v3: kerneldoc to spec the cross-driver contract. Note that currently
+> i915 throws in a hard-coded 10s timeout on foreign fences (not sure
+> why that was done, but it's there), which is why that rule is worded
+> with SHOULD instead of MUST.
+>
+> Also some of the mmu_notifier/shrinker rules might surprise SoC
+> drivers, I haven't fully audited them all. Which is infeasible anyway,
+> we'll need to run them with lockdep and dma-fence annotations and see
+> what goes boom.
+>
+> v4: A spelling fix from Mika
+>
+> Cc: Mika Kuoppala <mika.kuoppala@intel.com>
+> Cc: Thomas Hellstrom <thomas.hellstrom@intel.com>
+> Cc: linux-media@vger.kernel.org
+> Cc: linaro-mm-sig@lists.linaro.org
+> Cc: linux-rdma@vger.kernel.org
+> Cc: amd-gfx@lists.freedesktop.org
+> Cc: intel-gfx@lists.freedesktop.org
+> Cc: Chris Wilson <chris@chris-wilson.co.uk>
+> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+> Cc: Christian König <christian.koenig@amd.com>
+> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+> ---
+>   Documentation/driver-api/dma-buf.rst |  6 ++++
+>   drivers/dma-buf/dma-fence.c          | 41 ++++++++++++++++++++++++++++
+>   drivers/dma-buf/dma-resv.c           |  4 +++
+>   include/linux/dma-fence.h            |  1 +
+>   4 files changed, 52 insertions(+)
 
-	-ss
+I still have my doubts about allowing fence waiting from within 
+shrinkers. IMO ideally they should use a trywait approach, in order to 
+allow memory allocation during command submission for drivers that
+publish fences before command submission. (Since early reservation 
+object release requires that).
+
+But since drivers are already waiting from within shrinkers and I take 
+your word for HMM requiring this,
+
+Reviewed-by: Thomas Hellström <thomas.hellstrom@intel.com>
+
+
