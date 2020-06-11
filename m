@@ -2,164 +2,82 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41970C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20395C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26F6B2063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:45:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E80B22064C
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:45:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726416AbgFKCpM (ORCPT
+        id S1726499AbgFKCpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 22:45:12 -0400
-Received: from mail109.syd.optusnet.com.au ([211.29.132.80]:49777 "EHLO
-        mail109.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726279AbgFKCpM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 22:45:12 -0400
-Received: from dread.disaster.area (pa49-180-124-177.pa.nsw.optusnet.com.au [49.180.124.177])
-        by mail109.syd.optusnet.com.au (Postfix) with ESMTPS id 5EC80D79956;
-        Thu, 11 Jun 2020 12:45:07 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jjDDD-0002Sa-48; Thu, 11 Jun 2020 12:45:03 +1000
-Date:   Thu, 11 Jun 2020 12:45:03 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Yu Kuai <yukuai3@huawei.com>
-Cc:     darrick.wong@oracle.com, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yi.zhang@huawei.com
-Subject: [PATCH] xfs: fix use-after-free on CIL context on shutdown
-Message-ID: <20200611024503.GR2040@dread.disaster.area>
-References: <20200611013952.2589997-1-yukuai3@huawei.com>
- <20200611022848.GQ2040@dread.disaster.area>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200611022848.GQ2040@dread.disaster.area>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
-        a=k3aV/LVJup6ZGWgigO6cSA==:117 a=k3aV/LVJup6ZGWgigO6cSA==:17
-        a=kj9zAlcOel0A:10 a=nTHF0DUjJn0A:10 a=20KFwNOVAAAA:8 a=i0EeH86SAAAA:8
-        a=83KKqrmkPyvGHRv_7b8A:9 a=CjuIK1q_8ugA:10 a=pHzHmUro8NiASowvMSCR:22
-        a=n87TN5wuljxrRezIQYnT:22
+        Wed, 10 Jun 2020 22:45:41 -0400
+Received: from smtp21.cstnet.cn ([159.226.251.21]:58110 "EHLO cstnet.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726279AbgFKCpl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 22:45:41 -0400
+Received: from localhost.localdomain (unknown [159.226.5.100])
+        by APP-01 (Coremail) with SMTP id qwCowAB3KszDmuFe33kpAg--.46380S2;
+        Thu, 11 Jun 2020 10:45:24 +0800 (CST)
+From:   Xu Wang <vulab@iscas.ac.cn>
+To:     ioana.ciornei@nxp.com, ruxandra.radulescu@nxp.com,
+        davem@davemloft.net, kuba@kernel.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drivers: dpaa2: Use devm_kcalloc() in setup_dpni()
+Date:   Thu, 11 Jun 2020 02:45:20 +0000
+Message-Id: <20200611024520.630-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: qwCowAB3KszDmuFe33kpAg--.46380S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrtrW7tw1kZr1xXFW5CF45KFg_yoWkJFgEkr
+        47Zr17Ar4qkFySya1rKr4YvFyvkF4xZr48AFsaqFW3G3srArW8Ww4DXw13Ars3ur4xCry3
+        Jr1IyF13ZwnrKjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbwxYjsxI4VWkKwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0
+        cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
+        C2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
+        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCF
+        x2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14
+        v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY
+        67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2
+        IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
+        xVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUgg_TUUUUU
+X-Originating-IP: [159.226.5.100]
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCAQEA102YMkl4wAAsP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+A multiplication for the size determination of a memory allocation
+indicated that an array data structure should be processed.
+Thus use the corresponding function "devm_kcalloc".
 
-From: Dave Chinner <dchinner@redhat.com>
-
-xlog_wait() on the CIL context can reference a freed context if the
-waiter doesn't get scheduled before the CIL context is freed. This
-can happen when a task is on the hard throttle and the CIL push
-aborts due to a shutdown. This was detected by generic/019:
-
-thread 1			thread 2
-
-__xfs_trans_commit
- xfs_log_commit_cil
-  <CIL size over hard throttle limit>
-  xlog_wait
-   schedule
-				xlog_cil_push_work
-				wake_up_all
-				<shutdown aborts commit>
-				xlog_cil_committed
-				kmem_free
-
-   remove_wait_queue
-    spin_lock_irqsave --> UAF
-
-Fix it by moving the wait queue to the CIL rather than keeping it in
-in the CIL context that gets freed on push completion. Because the
-wait queue is now independent of the CIL context and we might have
-multiple contexts in flight at once, only wake the waiters on the
-push throttle when the context we are pushing is over the hard
-throttle size threshold.
-
-Fixes: 0e7ab7efe7745 ("xfs: Throttle commits on delayed background CIL push")
-Reported-by: Yu Kuai <yukuai3@huawei.com>
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
+Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
 ---
- fs/xfs/xfs_log_cil.c  | 10 +++++-----
- fs/xfs/xfs_log_priv.h |  2 +-
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
-index b43f0e8f43f2e..9ed90368ab311 100644
---- a/fs/xfs/xfs_log_cil.c
-+++ b/fs/xfs/xfs_log_cil.c
-@@ -671,7 +671,8 @@ xlog_cil_push_work(
- 	/*
- 	 * Wake up any background push waiters now this context is being pushed.
- 	 */
--	wake_up_all(&ctx->push_wait);
-+	if (ctx->space_used >= XLOG_CIL_BLOCKING_SPACE_LIMIT(log))
-+		wake_up_all(&cil->xc_push_wait);
+diff --git a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+index 8fb48de5d18c..f150cd454fa4 100644
+--- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
++++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+@@ -2907,8 +2907,9 @@ static int setup_dpni(struct fsl_mc_device *ls_dev)
+ 	if (err && err != -EOPNOTSUPP)
+ 		goto close;
  
- 	/*
- 	 * Check if we've anything to push. If there is nothing, then we don't
-@@ -743,13 +744,12 @@ xlog_cil_push_work(
- 
- 	/*
- 	 * initialise the new context and attach it to the CIL. Then attach
--	 * the current context to the CIL committing lsit so it can be found
-+	 * the current context to the CIL committing list so it can be found
- 	 * during log forces to extract the commit lsn of the sequence that
- 	 * needs to be forced.
- 	 */
- 	INIT_LIST_HEAD(&new_ctx->committing);
- 	INIT_LIST_HEAD(&new_ctx->busy_extents);
--	init_waitqueue_head(&new_ctx->push_wait);
- 	new_ctx->sequence = ctx->sequence + 1;
- 	new_ctx->cil = cil;
- 	cil->xc_ctx = new_ctx;
-@@ -937,7 +937,7 @@ xlog_cil_push_background(
- 	if (cil->xc_ctx->space_used >= XLOG_CIL_BLOCKING_SPACE_LIMIT(log)) {
- 		trace_xfs_log_cil_wait(log, cil->xc_ctx->ticket);
- 		ASSERT(cil->xc_ctx->space_used < log->l_logsize);
--		xlog_wait(&cil->xc_ctx->push_wait, &cil->xc_push_lock);
-+		xlog_wait(&cil->xc_push_wait, &cil->xc_push_lock);
- 		return;
- 	}
- 
-@@ -1216,12 +1216,12 @@ xlog_cil_init(
- 	INIT_LIST_HEAD(&cil->xc_committing);
- 	spin_lock_init(&cil->xc_cil_lock);
- 	spin_lock_init(&cil->xc_push_lock);
-+	init_waitqueue_head(&cil->xc_push_wait);
- 	init_rwsem(&cil->xc_ctx_lock);
- 	init_waitqueue_head(&cil->xc_commit_wait);
- 
- 	INIT_LIST_HEAD(&ctx->committing);
- 	INIT_LIST_HEAD(&ctx->busy_extents);
--	init_waitqueue_head(&ctx->push_wait);
- 	ctx->sequence = 1;
- 	ctx->cil = cil;
- 	cil->xc_ctx = ctx;
-diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
-index ec22c7a3867f1..75a62870b63af 100644
---- a/fs/xfs/xfs_log_priv.h
-+++ b/fs/xfs/xfs_log_priv.h
-@@ -240,7 +240,6 @@ struct xfs_cil_ctx {
- 	struct xfs_log_vec	*lv_chain;	/* logvecs being pushed */
- 	struct list_head	iclog_entry;
- 	struct list_head	committing;	/* ctx committing list */
--	wait_queue_head_t	push_wait;	/* background push throttle */
- 	struct work_struct	discard_endio_work;
- };
- 
-@@ -274,6 +273,7 @@ struct xfs_cil {
- 	wait_queue_head_t	xc_commit_wait;
- 	xfs_lsn_t		xc_current_sequence;
- 	struct work_struct	xc_push_work;
-+	wait_queue_head_t	xc_push_wait;	/* background push throttle */
- } ____cacheline_aligned_in_smp;
- 
- /*
+-	priv->cls_rules = devm_kzalloc(dev, sizeof(struct dpaa2_eth_cls_rule) *
+-				       dpaa2_eth_fs_count(priv), GFP_KERNEL);
++	priv->cls_rules = devm_kcalloc(dev, dpaa2_eth_fs_count(priv),
++				       sizeof(struct dpaa2_eth_cls_rule),
++				       GFP_KERNEL);
+ 	if (!priv->cls_rules) {
+ 		err = -ENOMEM;
+ 		goto close;
+-- 
+2.17.1
+
