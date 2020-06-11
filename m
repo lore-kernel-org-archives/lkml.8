@@ -2,92 +2,81 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3721C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC83FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA909206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:36:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D64F4206DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:39:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728620AbgFKPgH (ORCPT
+        id S1728526AbgFKPjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 11:36:07 -0400
-Received: from mga14.intel.com ([192.55.52.115]:57442 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728414AbgFKPgG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 11:36:06 -0400
-IronPort-SDR: kRaucVPWJf5Yhbrs8q+ld/yUa0tEMR+stgW6FHL2yotklPIrYwlwxwXjVbR89v0M2LgyYfk1E0
- NrpH04E9RsAQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 08:36:06 -0700
-IronPort-SDR: dYUJwDTJHD9iP5wZvrIQO72rSowvuZXykZd4QOOytru91ojrVYKu2OqZys7+erBiefwxfBOBCz
- 3TOrzMzfZ2Dw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,499,1583222400"; 
-   d="scan'208";a="314844159"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by FMSMGA003.fm.intel.com with ESMTP; 11 Jun 2020 08:36:04 -0700
-Date:   Thu, 11 Jun 2020 08:35:57 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Vivek Goyal <vgoyal@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] KVM: async_pf: Cleanup kvm_setup_async_pf()
-Message-ID: <20200611153557.GE29918@linux.intel.com>
-References: <20200610175532.779793-1-vkuznets@redhat.com>
- <20200610181453.GC18790@linux.intel.com>
- <87sgf29f77.fsf@vitty.brq.redhat.com>
+        Thu, 11 Jun 2020 11:39:41 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:55501 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728104AbgFKPjk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 11:39:40 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jjPIk-0007Go-OY; Thu, 11 Jun 2020 15:39:34 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] crypto: caam/qi2: remove redundant assignment to ret
+Date:   Thu, 11 Jun 2020 16:39:34 +0100
+Message-Id: <20200611153934.928021-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.27.0.rc0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87sgf29f77.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 10:31:08AM +0200, Vitaly Kuznetsov wrote:
-> Sean Christopherson <sean.j.christopherson@intel.com> writes:
-> 
-> >
-> > I'd also be in favor of changing the return type to a boolean.  I think
-> > you alluded to it earlier, the current semantics are quite confusing as they
-> > invert the normal "return 0 on success".
-> 
-> Yes, will do a follow-up.
-> 
-> KVM/x86 code has an intertwined mix of:
-> - normal 'int' functions ('0 on success')
-> - bool functions ('true'/'1' on success)
-> - 'int' exit handlers ('1'/'0' on success depending if exit to userspace
->   was required)
-> - ...
-> 
-> I think we can try to standardize this to:
-> - 'int' when error is propagated outside of KVM (userspace, other kernel
->   subsystem,...)
-> - 'bool' when the function is internal to KVM and the result is binary
->  ('is_exit_required()', 'was_pf_injected()', 'will_have_another_beer()',
->  ...)
-> - 'enum' for the rest.
-> And, if there's a good reason for making an exception, require a
-> comment. (leaving aside everything returning a pointer, of course as
-> these are self-explanatory -- unless it's 'void *' :-))
+From: Colin Ian King <colin.king@canonical.com>
 
-Agreed for 'bool' case, but 'int' versus 'enum' is less straightforward as
-there are a huge number of functions that _may_ propagate an error outside
-of KVM, including all of the exit handlers.  As Paolo point out[*], it'd
-be quite easy to end up with a mixture of enum/#define and 0/1 code, which
-would be an even bigger mess than what we have today.  There are
-undoubtedly cases that could be converted to an enum, but they're probably
-few and far between as it requires total encapsulation, e.g. the emulator.
+The variable ret is being assigned a value that is never read, the
+error exit path via label 'unmap' returns -ENOMEM anyhow, so assigning
+ret with -ENOMEM is redundamt.
 
-[*] https://lkml.kernel.org/r/3d827e8b-a04e-0a93-4bb4-e0e9d59036da@redhat.com
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/crypto/caam/caamalg_qi2.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/drivers/crypto/caam/caamalg_qi2.c b/drivers/crypto/caam/caamalg_qi2.c
+index 28669cbecf77..ef2c4e095db3 100644
+--- a/drivers/crypto/caam/caamalg_qi2.c
++++ b/drivers/crypto/caam/caamalg_qi2.c
+@@ -4044,7 +4044,6 @@ static int ahash_finup_no_ctx(struct ahash_request *req)
+ 					  DMA_TO_DEVICE);
+ 	if (dma_mapping_error(ctx->dev, edesc->qm_sg_dma)) {
+ 		dev_err(ctx->dev, "unable to map S/G table\n");
+-		ret = -ENOMEM;
+ 		goto unmap;
+ 	}
+ 	edesc->qm_sg_bytes = qm_sg_bytes;
+@@ -4055,7 +4054,6 @@ static int ahash_finup_no_ctx(struct ahash_request *req)
+ 	if (dma_mapping_error(ctx->dev, state->ctx_dma)) {
+ 		dev_err(ctx->dev, "unable to map ctx\n");
+ 		state->ctx_dma = 0;
+-		ret = -ENOMEM;
+ 		goto unmap;
+ 	}
+ 
+-- 
+2.27.0.rc0
+
