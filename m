@@ -2,223 +2,96 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B009C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 961C9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E50320691
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:37:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NifLkEO9"
+	by mail.kernel.org (Postfix) with ESMTP id 70EC220691
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:38:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbgFKRha (ORCPT
+        id S1727000AbgFKRiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 13:37:30 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20565 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726813AbgFKRha (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 13:37:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591897048;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qARvwf693xBRNl1VlWzwavSivQ9sYO1lqX5q74rCOLw=;
-        b=NifLkEO9qjDxRyD4Gl5k9DprKflITZJkndiVqP56eH1EFeejKfM0/8xtjuer7JkpuR/6CJ
-        PBSpcAz5hzDUgQczWEdDGqyZJZJ62XlFscvjhTxAvouGMtHZi6GDL+ZceL2pFAGF32g/Oo
-        tnECK/cjl2IqNBxCdY7b6S/SrT8WFwE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-145-oC86CCcHPn6iGBvzdtU87g-1; Thu, 11 Jun 2020 13:37:24 -0400
-X-MC-Unique: oC86CCcHPn6iGBvzdtU87g-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4FBB81B18BC5;
-        Thu, 11 Jun 2020 17:37:21 +0000 (UTC)
-Received: from prarit.bos.redhat.com (prarit-guest.7a2m.lab.eng.bos.redhat.com [10.16.222.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2D5051A8EA;
-        Thu, 11 Jun 2020 17:37:20 +0000 (UTC)
-Subject: Re: [PATCH v2] x86/split_lock: Sanitize userspace and guest error
- output
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-References: <20200608122114.13043-1-prarit@redhat.com>
- <20200608171552.GB8223@linux.intel.com>
-From:   Prarit Bhargava <prarit@redhat.com>
-Message-ID: <b83ff48b-f590-f0f5-de64-d153ef376124@redhat.com>
-Date:   Thu, 11 Jun 2020 13:37:19 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 11 Jun 2020 13:38:51 -0400
+Received: from mga18.intel.com ([134.134.136.126]:26022 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726109AbgFKRiu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 13:38:50 -0400
+IronPort-SDR: 3ZMK9pZhqO18Qaheu3/vQuDhayNGWrmmzn9A2/NNrvi5etOv/KzhPguJsE+XxwrdKezzomYRIs
+ SLZYOBKhphhg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 10:38:49 -0700
+IronPort-SDR: zIXZk1x7swvBXnIsc/AiNUfO/vkCBXoLCKBqY2ZiI1nI4gO/aKwjk7q+8TG3rKNcSjvUQvNDdy
+ MFzRBY+uHppg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,500,1583222400"; 
+   d="scan'208";a="296669214"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by fmsmga004.fm.intel.com with ESMTP; 11 Jun 2020 10:38:48 -0700
+Date:   Thu, 11 Jun 2020 10:38:48 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Borislav Petkov <bp@alien8.de>, x86@kernel.org, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v3 47/75] x86/sev-es: Add Runtime #VC Exception Handler
+Message-ID: <20200611173848.GK29918@linux.intel.com>
+References: <20200428151725.31091-1-joro@8bytes.org>
+ <20200428151725.31091-48-joro@8bytes.org>
+ <20200523075924.GB27431@zn.tnic>
+ <20200611114831.GA11924@8bytes.org>
 MIME-Version: 1.0
-In-Reply-To: <20200608171552.GB8223@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200611114831.GA11924@8bytes.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jun 11, 2020 at 01:48:31PM +0200, Joerg Roedel wrote:
+> On Sat, May 23, 2020 at 09:59:24AM +0200, Borislav Petkov wrote:
+> > On Tue, Apr 28, 2020 at 05:16:57PM +0200, Joerg Roedel wrote:
+> > > +	/*
+> > > +	 * Mark the per-cpu GHCBs as in-use to detect nested #VC exceptions.
+> > > +	 * There is no need for it to be atomic, because nothing is written to
+> > > +	 * the GHCB between the read and the write of ghcb_active. So it is safe
+> > > +	 * to use it when a nested #VC exception happens before the write.
+> > > +	 */
+> > 
+> > Looks liks that is that text... support for nested #VC exceptions.
+> > I'm sure this has come up already but why do we even want to support
+> > nested #VCs? IOW, can we do without them first or are they absolutely
+> > necessary?
+> > 
+> > I'm guessing VC exceptions inside the VC handler but what are the
+> > sensible use cases?
+> 
+> The most important use-case is #VC->NMI->#VC. When an NMI hits while the
+> #VC handler uses the GHCB and the NMI handler causes another #VC, then
+> the contents of the GHCB needs to be backed up, so that it doesn't
+> destroy the GHCB contents of the first #VC handling path.
 
-
-On 6/8/20 1:15 PM, Sean Christopherson wrote:
-> On Mon, Jun 08, 2020 at 08:21:14AM -0400, Prarit Bhargava wrote:
->> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
->> index 166d7c355896..e02ec81fe1eb 100644
->> --- a/arch/x86/kernel/cpu/intel.c
->> +++ b/arch/x86/kernel/cpu/intel.c
->> @@ -1074,10 +1074,17 @@ static void split_lock_init(void)
->>  	split_lock_verify_msr(sld_state != sld_off);
->>  }
->>  
->> -static void split_lock_warn(unsigned long ip)
->> +static bool split_lock_warn(unsigned long ip, int fatal_no_warn)
->>  {
->> -	pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
->> -			    current->comm, current->pid, ip);
->> +	if (fatal_no_warn)
->> +		return false;
-> 
-> This misses the point Xiaoyao was making.  If EFLAGS.AC=1 then the #AC is a
-> legacy alignment check fault and should not be treated as a split-lock #AC.
-> The basic premise of the patch makes sense, but the end result is confusing
-> because incorporating "fatal" and the EFLAGS.AC state into split_lock_warn()
-> bastardizes both the "split_lock" and "warn" aspects of the function.
-> 
-> E.g. something like this yields the same net effect, it's just organized
-> differently.  If so desired, the "bogus" message could be dropped via
-> Xiaoyao's prep patch[*] so that this change would only affect the sld_fatal
-> messages.
-> 
-> [*] https://lkml.kernel.org/r/20200509110542.8159-3-xiaoyao.li@intel.com
-> 
-> 
-
-Sean, I will just take your patch to make things easy.  I will add you as a
-Signed-off-by.
-
-/me is testing the patch right now
-
-P.
-
-> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-> index 23fd5f319908..1aad0b8e394c 100644
-> --- a/arch/x86/kernel/cpu/intel.c
-> +++ b/arch/x86/kernel/cpu/intel.c
-> @@ -1071,11 +1071,14 @@ static void split_lock_init(void)
->         split_lock_verify_msr(sld_state != sld_off);
->  }
-> 
-> -static void split_lock_warn(unsigned long ip)
-> +static bool handle_split_lock(unsigned long ip)
->  {
->         pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
->                             current->comm, current->pid, ip);
-> 
-> +       if (sld_state != sld_warn)
-> +               return false;
-> +
->         /*
->          * Disable the split lock detection for this task so it can make
->          * progress and set TIF_SLD so the detection is re-enabled via
-> @@ -1083,18 +1086,13 @@ static void split_lock_warn(unsigned long ip)
->          */
->         sld_update_msr(false);
->         set_tsk_thread_flag(current, TIF_SLD);
-> +       return true;
->  }
-> 
->  bool handle_guest_split_lock(unsigned long ip)
->  {
-> -       if (sld_state == sld_warn) {
-> -               split_lock_warn(ip);
-> +       if (handle_split_lock(ip))
->                 return true;
-> -       }
-> -
-> -       pr_warn_once("#AC: %s/%d %s split_lock trap at address: 0x%lx\n",
-> -                    current->comm, current->pid,
-> -                    sld_state == sld_fatal ? "fatal" : "bogus", ip);
-> 
->         current->thread.error_code = 0;
->         current->thread.trap_nr = X86_TRAP_AC;
-> @@ -1105,10 +1103,10 @@ EXPORT_SYMBOL_GPL(handle_guest_split_lock);
-> 
->  bool handle_user_split_lock(struct pt_regs *regs, long error_code)
->  {
-> -       if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
-> +       if (regs->flags & X86_EFLAGS_AC)
->                 return false;
-> -       split_lock_warn(regs->ip);
-> -       return true;
-> +
-> +       return handle_split_lock(regs->ip);
->  }
-> 
->  /*
-> 
-> 
->> +
->> +	pr_warn_ratelimited("#AC: %s/%d %ssplit_lock trap at address: 0x%lx\n",
->> +			    current->comm, current->pid,
->> +			    sld_state == sld_fatal ? "fatal " : "", ip);
->> +
->> +	if (sld_state == sld_fatal)
->> +		return false;
->>  
->>  	/*
->>  	 * Disable the split lock detection for this task so it can make
->> @@ -1086,18 +1093,13 @@ static void split_lock_warn(unsigned long ip)
->>  	 */
->>  	sld_update_msr(false);
->>  	set_tsk_thread_flag(current, TIF_SLD);
->> +	return true;
->>  }
->>  
->>  bool handle_guest_split_lock(unsigned long ip)
->>  {
->> -	if (sld_state == sld_warn) {
->> -		split_lock_warn(ip);
->> +	if (split_lock_warn(ip, 0))
->>  		return true;
->> -	}
->> -
->> -	pr_warn_once("#AC: %s/%d %s split_lock trap at address: 0x%lx\n",
->> -		     current->comm, current->pid,
->> -		     sld_state == sld_fatal ? "fatal" : "bogus", ip);
->>  
->>  	current->thread.error_code = 0;
->>  	current->thread.trap_nr = X86_TRAP_AC;
->> @@ -1108,10 +1110,7 @@ EXPORT_SYMBOL_GPL(handle_guest_split_lock);
->>  
->>  bool handle_user_split_lock(struct pt_regs *regs, long error_code)
->>  {
->> -	if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
->> -		return false;
->> -	split_lock_warn(regs->ip);
->> -	return true;
->> +	return split_lock_warn(regs->ip, regs->flags & X86_EFLAGS_AC);
->>  }
->>  
->>  /*
->> -- 
->> 2.21.3
->>
-> 
-
+Isn't it possible for the #VC handler to hit a #PF, e.g. on copy_from_user()
+in insn_fetch_from_user()?  If that happens, what prevents the #PF handler
+from hitting a #VC?  AIUI, do_vmm_communication() panics if the backup GHCB
+is already in use, e.g. #VC->#PF->#VC->NMI->#VC would be fatal.
