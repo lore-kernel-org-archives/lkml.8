@@ -4,43 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E6BAC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 900E3C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0816820792
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:10:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6987F20792
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:10:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591899027;
-	bh=Dh+733UgTZQWMmPABeVGV0I+axU11oOHDrHJ8cjyMVA=;
+	s=default; t=1591899028;
+	bh=EUPHwUS07JP1xvRUY7ltnNN+mSj0mZfTfT4GGwpSIAc=;
 	h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
 	 References:List-ID:From;
-	b=o7DT8EbeNPhPjPmt6ratXIm1n7N77JQj/NpDT0xPW48EVcI0o+ZHOqyrtH2Ox0CZh
-	 QSPS8LxI/ehSYPmvS0U54E42i336qGlhRTXnEcQtHnveglO9+4Lrzcuc2HB6Icgj1+
-	 SNMi9DqzZAGXa4CEMiPeH8MY5jj7Xia02JZyZ1mQ=
+	b=wwc2O7lfRDw3ggJluvuDgQkp0+e36aA+b6xAYQ18WXar+3iY6xmXqXpnDlzzmVaAV
+	 ZZw9IMT2WthfpEcmGxw9Sv4nUImPJwUNNrHvW8CKCgn3PqILK1vVFzzu/cd1F57xMe
+	 xAFsSm1jSOrBLGuMoJuUm4EUCLc4gMfElTGlvsD4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgFKSKX (ORCPT
+        id S1727990AbgFKSK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 14:10:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38586 "EHLO mail.kernel.org"
+        Thu, 11 Jun 2020 14:10:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725869AbgFKSKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 14:10:21 -0400
+        id S1727914AbgFKSKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 14:10:23 -0400
 Received: from localhost.localdomain (c-73-211-240-131.hsd1.il.comcast.net [73.211.240.131])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1BFE20829;
-        Thu, 11 Jun 2020 18:10:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F143B2084D;
+        Thu, 11 Jun 2020 18:10:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591899020;
-        bh=Dh+733UgTZQWMmPABeVGV0I+axU11oOHDrHJ8cjyMVA=;
+        s=default; t=1591899022;
+        bh=EUPHwUS07JP1xvRUY7ltnNN+mSj0mZfTfT4GGwpSIAc=;
         h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=IqfQop9qaBUDuriz/T37R2jfOFXBexGDpxbbDKFv5OMAztIAKVqtPYblaljVFp+wb
-         suX3ix4KiN0nvImzuDkvcdz+ngp7aT6F4/XDgTg5F3njY8wiOOF4SrLx+/Wb+4eH9p
-         U3ejYWxvVGuGbODFiPg/tpr99lzz4/vRxGoi+Y74=
+        b=SoqdUfzoj82fwCVVzGsCzeCh0eiUWdCQeqSaK00Xq1/DB4FtrQDY+Y8NPzkIrD8db
+         IVuzs6IcoX9zB8OeYsJkCpTNjhCeVJNSNL+4tzJ0c5ctDhfyEE7OY+vrtpaeh72aZ8
+         guGAdq/1daNK/O2cTtS3Sjyctdkipx56s+hLYGHw=
 From:   zanussi@kernel.org
 To:     LKML <linux-kernel@vger.kernel.org>,
         linux-rt-users <linux-rt-users@vger.kernel.org>,
@@ -52,9 +52,9 @@ To:     LKML <linux-kernel@vger.kernel.org>,
         Daniel Wagner <wagi@monom.org>,
         Clark Williams <williams@redhat.com>,
         Pavel Machek <pavel@denx.de>, Tom Zanussi <zanussi@kernel.org>
-Subject: [PATCH RT 1/4] fs/dcache: Include swait.h header
-Date:   Thu, 11 Jun 2020 13:10:14 -0500
-Message-Id: <bf76614887ac1bad027fc517f50a463d4faf5a7a.1591898986.git.zanussi@kernel.org>
+Subject: [PATCH RT 3/4] tasklet: Fix UP case for tasklet CHAINED state
+Date:   Thu, 11 Jun 2020 13:10:16 -0500
+Message-Id: <2262ed0571ef9c2f24752189b55c965ce9c16d2f.1591898986.git.zanussi@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1591898986.git.zanussi@kernel.org>
 References: <cover.1591898986.git.zanussi@kernel.org>
@@ -65,7 +65,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+From: Tom Zanussi <zanussi@kernel.org>
 
 v4.19.127-rt55-rc1 stable review patch.
 If anyone has any objections, please let me know.
@@ -73,33 +73,53 @@ If anyone has any objections, please let me know.
 -----------
 
 
-[ Upstream commit 279f90ddf53cd6bd3c203fbbf488d642ea2603de ]
+commit 62d0a2a30cd0 (tasklet: Address a race resulting in
+double-enqueue) addresses a problem that can result in a tasklet being
+enqueued on two cpus at the same time by combining the RUN flag with a
+new CHAINED flag, and relies on the combination to be present in order
+to zero it out, which can never happen on (!SMP and !PREEMPT_RT_FULL)
+because the RUN flag is SMP/PREEMPT_RT_FULL-only.
 
-Include the swait.h header so it compiles even if not all patches are
-applied.
+So make sure the above commit is only applied for the SMP ||
+PREEMPT_RT_FULL case.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Fixes: 62d0a2a30cd0 ("tasklet: Address a race resulting in double-enqueue")
 Signed-off-by: Tom Zanussi <zanussi@kernel.org>
-
- Conflicts:
-	fs/proc/base.c
+Reported-by: Ramon Fried <rfried.dev@gmail.com>
+Tested-By: Ramon Fried <rfried.dev@gmail.com>
 ---
- fs/proc/base.c | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/softirq.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/fs/proc/base.c b/fs/proc/base.c
-index a45d4d640f01..56b1c4f1e8c0 100644
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -95,6 +95,7 @@
- #include <linux/flex_array.h>
- #include <linux/posix-timers.h>
- #include <trace/events/oom.h>
-+#include <linux/swait.h>
- #include "internal.h"
- #include "fd.h"
+diff --git a/kernel/softirq.c b/kernel/softirq.c
+index 73dae64bfc9c..9bad7a16dc61 100644
+--- a/kernel/softirq.c
++++ b/kernel/softirq.c
+@@ -947,10 +947,12 @@ static void __tasklet_schedule_common(struct tasklet_struct *t,
+ 	 * is locked before adding it to the list.
+ 	 */
+ 	if (test_bit(TASKLET_STATE_SCHED, &t->state)) {
++#if defined(CONFIG_SMP) || defined(CONFIG_PREEMPT_RT_FULL)
+ 		if (test_and_set_bit(TASKLET_STATE_CHAINED, &t->state)) {
+ 			tasklet_unlock(t);
+ 			return;
+ 		}
++#endif
+ 		t->next = NULL;
+ 		*head->tail = t;
+ 		head->tail = &(t->next);
+@@ -1044,7 +1046,11 @@ static void tasklet_action_common(struct softirq_action *a,
+ again:
+ 		t->func(t->data);
  
++#if defined(CONFIG_SMP) || defined(CONFIG_PREEMPT_RT_FULL)
+ 		while (cmpxchg(&t->state, TASKLET_STATEF_RC, 0) != TASKLET_STATEF_RC) {
++#else
++		while (!tasklet_tryunlock(t)) {
++#endif
+ 			/*
+ 			 * If it got disabled meanwhile, bail out:
+ 			 */
 -- 
 2.17.1
 
