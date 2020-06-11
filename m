@@ -2,244 +2,209 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F72C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50CAAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E18C72072F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:37:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 311B32072F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:38:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbgFKBhY (ORCPT
+        id S1726441AbgFKBij (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 21:37:24 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36624 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbgFKBhX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 21:37:23 -0400
-Received: by mail-pg1-f195.google.com with SMTP id t7so1811080pgt.3;
-        Wed, 10 Jun 2020 18:37:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=JvLFQ/Pp9kYuh584xFsBL9APcPBK2H+2UekyjU/1FqE=;
-        b=WcJD95bSa1R7aRxUWz+AwIO5g52jUnW5HDjS3Uy7odYA+boSggBQnkSxLeKnhKrt7Z
-         R3VFM0JgRBhCd9cpcl+90yhcC2bsJ3pqsrQNQwPjBqyAVdYqo710XBOMMxv3FLMl28JE
-         MoUCODTomejVnk26ajQ1BhDV9fLMxmmT4mW4Z/IRBfa/3djlU1ZbszCWEvnpSVZc9da7
-         Vqkci/ZtVZyl/5RUYbMAhwU6zdPrX54v0+waN0mvp17MfxHtGi42Ax00G0VgDdHvC42Z
-         SnHWRq0G7BV2ahzcxl6eB3+SV13Um+chtgPck8xScq5mYgV9NrjSowFeU5zktHGshreL
-         PhcA==
-X-Gm-Message-State: AOAM530Rvku4516IJc1ah7mFnEUq19uaJR1y1D2m8RdPbMyqSXwyAPyC
-        ocVPXXFnF86IDEx9JpKzCgA=
-X-Google-Smtp-Source: ABdhPJzj+fe92903mWOb5clQ1lpl9X+6fAWCf7LUIk8xYHC62+FrSX4ERbSQ/8EVjaxuzEZ7NS258Q==
-X-Received: by 2002:a62:5ac5:: with SMTP id o188mr5242642pfb.37.1591839441335;
-        Wed, 10 Jun 2020 18:37:21 -0700 (PDT)
-Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
-        by smtp.gmail.com with ESMTPSA id cm13sm891721pjb.5.2020.06.10.18.37.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jun 2020 18:37:20 -0700 (PDT)
-Subject: Re: [RFC PATCH 5/5] scsi: ufs: Prepare HPB read for cached sub-region
-To:     daejun7.park@samsung.com, ALIM AKHTAR <alim.akhtar@samsung.com>,
-        "avri.altman@wdc.com" <avri.altman@wdc.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>
-Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>
-References: <963815509.21591323002276.JavaMail.epsvc@epcpadp1>
- <231786897.01591322101492.JavaMail.epsvc@epcpadp1>
- <336371513.41591320902369.JavaMail.epsvc@epcpadp1>
- <963815509.21591320301642.JavaMail.epsvc@epcpadp1>
- <231786897.01591320001492.JavaMail.epsvc@epcpadp1>
- <CGME20200605011604epcms2p8bec8ef6682583d7248dc7d9dc1bfc882@epcms2p2>
- <336371513.41591323603173.JavaMail.epsvc@epcpadp1>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <bdc420e4-3f2e-cf52-eb42-f85e747b2fb1@acm.org>
-Date:   Wed, 10 Jun 2020 18:37:18 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Wed, 10 Jun 2020 21:38:39 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5875 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726163AbgFKBij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 21:38:39 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 1F0512A4472B092BA99A;
+        Thu, 11 Jun 2020 09:38:37 +0800 (CST)
+Received: from huawei.com (10.175.127.227) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Thu, 11 Jun 2020
+ 09:38:26 +0800
+From:   Yu Kuai <yukuai3@huawei.com>
+To:     <darrick.wong@oracle.com>
+CC:     <linux-xfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <yukuai3@huawei.com>, <yi.zhang@huawei.com>
+Subject: [RFC PATCH] fix use after free in xlog_wait()
+Date:   Thu, 11 Jun 2020 09:39:52 +0800
+Message-ID: <20200611013952.2589997-1-yukuai3@huawei.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-In-Reply-To: <336371513.41591323603173.JavaMail.epsvc@epcpadp1>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.127.227]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-04 19:12, Daejun Park wrote:
-> +static inline bool ufshpb_is_read_cmd(struct scsi_cmnd *cmd)
-> +{
-> +	if (cmd->cmnd[0] == READ_10 || cmd->cmnd[0] == READ_16)
-> +		return true;
-> +
-> +	return false;
-> +}
+I recently got UAF by running generic/019 in qemu:
 
-Has it been considered to check req_op(cmd->request) instead of checking
-the SCSI CDB?
+==================================================================
+  BUG: KASAN: use-after-free in __lock_acquire+0x4508/0x68c0
+  Read of size 8 at addr ffff88811327f080 by task fio/11147
 
-> +static inline bool ufshpb_is_write_discard_cmd(struct scsi_cmnd *cmd)
-> +{
-> +	if (cmd->cmnd[0] == WRITE_10 || cmd->cmnd[0] == WRITE_16 ||
-> +	    cmd->cmnd[0] == UNMAP)
-> +		return true;
-> +
-> +	return false;
-> +}
+  CPU: 6 PID: 11147 Comm: fio Tainted: G        W         5.7.0-next-20200602+ #8
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190727_073836-buildvm-ppc64le-16.ppc.fedoraproject.org-3.fc31 04/01/2014
+  Call Trace:
+   dump_stack+0xf6/0x16e
+   ? __lock_acquire+0x4508/0x68c0
+   ? __lock_acquire+0x4508/0x68c0
+   print_address_description.constprop.0+0x1a/0x210
+   ? __lock_acquire+0x4508/0x68c0
+   kasan_report.cold+0x1f/0x37
+   ? lockdep_hardirqs_on_prepare+0x480/0x550
+   ? __lock_acquire+0x4508/0x68c0
+   __lock_acquire+0x4508/0x68c0
+   ? print_usage_bug+0x1f0/0x1f0
+   ? finish_task_switch+0x126/0x5e0
+   ? lockdep_hardirqs_on_prepare+0x550/0x550
+   ? mark_held_locks+0x9e/0xe0
+   ? __schedule+0x801/0x1d90
+   ? _raw_spin_unlock_irq+0x1f/0x30
+   lock_acquire+0x182/0x790
+   ? remove_wait_queue+0x1d/0x180
+   ? __switch_to_asm+0x42/0x70
+   ? lock_release+0x710/0x710
+   ? __schedule+0x85c/0x1d90
+   ? xfs_log_commit_cil+0x1d8e/0x2a50
+   ? __sched_text_start+0x8/0x8
+   _raw_spin_lock_irqsave+0x32/0x50
+   ? remove_wait_queue+0x1d/0x180
+   remove_wait_queue+0x1d/0x180
+   xfs_log_commit_cil+0x1d9e/0x2a50
+   ? xlog_cil_empty+0x90/0x90
+   ? wake_up_q+0x140/0x140
+   ? rcu_read_lock_sched_held+0x9c/0xd0
+   ? rcu_read_lock_bh_held+0xb0/0xb0
+   __xfs_trans_commit+0x292/0xec0
+   ? xfs_trans_unreserve_and_mod_sb+0xab0/0xab0
+   ? rcu_read_lock_bh_held+0xb0/0xb0
+   ? xfs_isilocked+0x87/0x2e0
+   ? xfs_trans_log_inode+0x1ad/0x480
+   xfs_vn_update_time+0x3eb/0x6d0
+   ? xfs_setattr_mode.isra.0+0xa0/0xa0
+   ? current_time+0xa8/0x110
+   ? timestamp_truncate+0x2f0/0x2f0
+   ? xfs_setattr_mode.isra.0+0xa0/0xa0
+   update_time+0x70/0xc0
+   file_update_time+0x2b7/0x490
+   ? update_time+0xc0/0xc0
+   ? __sb_start_write+0x197/0x3e0
+   __xfs_filemap_fault.constprop.0+0x1b7/0x480
+   do_page_mkwrite+0x1ac/0x470
+   do_wp_page+0x9e2/0x1b10
+   ? do_raw_spin_lock+0x121/0x290
+   ? finish_mkwrite_fault+0x4a0/0x4a0
+   ? rwlock_bug.part.0+0x90/0x90
+   ? handle_mm_fault+0xa81/0x3570
+   handle_mm_fault+0x1c65/0x3570
+   ? __pmd_alloc+0x4c0/0x4c0
+   ? vmacache_find+0x55/0x2a0
+   do_user_addr_fault+0x635/0xd42
+   exc_page_fault+0xdd/0x5b0
+   ? asm_common_interrupt+0x8/0x40
+   ? asm_exc_page_fault+0x8/0x30
+   asm_exc_page_fault+0x1e/0x30
+  RIP: 0033:0x7f40e022336a
+  Code: Bad RIP value.
+  RSP: 002b:00007ffedefb0218 EFLAGS: 00010206
+  RAX: 00007f40b7a5a000 RBX: 0000000002562280 RCX: 00000000025633d0
+  RDX: 0000000000000fc0 RSI: 0000000002562420 RDI: 00007f40b7a5a000
+  RBP: 00007f40b8620190 R08: 0000000000000000 R09: 00007f40b7a5aff0
+  R10: 00007ffedeff8000 R11: 00007f40b7a5aff0 R12: 0000000000000001
+  R13: 0000000000001000 R14: 00000000025622a8 R15: 00007f40b8620198
 
-Does the above code depend on how the sd driver translates write and
-discard requests? Do UFS devices support the WRITE SAME SCSI command?
-Has it been considered to check req_op(cmd->request) instead of checking
-the SCSI CDB?
+  Allocated by task 6826:
+   save_stack+0x1b/0x40
+   __kasan_kmalloc.constprop.0+0xc2/0xd0
+   kmem_alloc+0x154/0x450
+   xlog_cil_push_work+0xff/0x1250
+   process_one_work+0xa3e/0x17a0
+   worker_thread+0x8e2/0x1050
+   kthread+0x355/0x470
+   ret_from_fork+0x22/0x30
 
-> +static inline bool ufshpb_is_support_chunk(int transfer_len)
-> +{
-> +	return transfer_len <= HPB_MULTI_CHUNK_HIGH;
-> +}
+   Freed by task 6826:
+   save_stack+0x1b/0x40
+   __kasan_slab_free+0x12c/0x170
+   kfree+0xd6/0x300
+   kvfree+0x42/0x50
+   xlog_cil_committed+0xa9c/0xf30
+   xlog_cil_push_work+0xa8c/0x1250
+   process_one_work+0xa3e/0x17a0
+   worker_thread+0x8e2/0x1050
+   kthread+0x355/0x470
+   ret_from_fork+0x22/0x30
 
-The names used in the above function are mysterious. What is a support
-chunk? What does "multi chunk high" mean? Please add a comment.
+  The buggy address belongs to the object at ffff88811327f000
+   which belongs to the cache kmalloc-256 of size 256
+  The buggy address is located 128 bytes inside of
+   256-byte region [ffff88811327f000, ffff88811327f100)
+  The buggy address belongs to the page:
+  page:ffffea00044c9f00 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 head:ffffea00044c9f00 order:2 compound_mapcount:0 compound_pincount:0
+  flags: 0x200000000010200(slab|head)
+  raw: 0200000000010200 dead000000000100 dead000000000122 ffff88811a40e800
+  raw: 0000000000000000 0000000080200020 00000001ffffffff 0000000000000000
+  page dumped because: kasan: bad access detected
 
-> +static inline u32 ufshpb_get_lpn(struct scsi_cmnd *cmnd)
-> +{
-> +	return blk_rq_pos(cmnd->request) >>
-> +		(ilog2(cmnd->device->sector_size) - 9);
-> +}
->
-> +static inline unsigned int ufshpb_get_len(struct scsi_cmnd *cmnd)
-> +{
-> +	return blk_rq_sectors(cmnd->request) >>
-> +		(ilog2(cmnd->device->sector_size) - 9);
-> +}
+  Memory state around the buggy address:
+   ffff88811327ef80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+   ffff88811327f000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  >ffff88811327f080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                     ^
+   ffff88811327f100: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+   ffff88811327f180: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+  ==================================================================
 
-Do the above two functions perhaps each include a duplicate of
-sectors_to_logical()?
+I think the reason is that when 'ctx' is freed in xlog_cil_committed(),
+a previous call to xlog_wait(&ctx->xc_ctx->push_wait, ...) hasn't finished
+yet. Thus when remove_wait_queue() is called, UAF will be triggered
+since 'ctx' was freed:
 
-> +/* routine : READ10 -> HPB_READ  */
-> +static void ufshpb_prep_fn(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
-> +{
-> +	struct ufshpb_lu *hpb;
-> +	struct ufshpb_region *rgn;
-> +	struct ufshpb_subregion *srgn;
-> +	struct scsi_cmnd *cmd = lrbp->cmd;
-> +	u32 lpn;
-> +	u64 ppn;
-> +	unsigned long flags;
-> +	int transfer_len, rgn_idx, srgn_idx, srgn_offset;
-> +	int err = 0;
-> +
-> +	hpb = ufshpb_get_hpb_data(cmd);
-> +	err = ufshpb_lu_get(hpb);
-> +	if (unlikely(err))
-> +		return;
-> +
-> +	WARN_ON(hpb->lun != cmd->device->lun);
-        ^^^^^^^
-        WARN_ON_ONCE()?
+thread1		    thread2             thread3
 
-> +	if (!ufshpb_is_write_discard_cmd(cmd) &&
-> +	    !ufshpb_is_read_cmd(cmd))
-> +		goto put_hpb;
-> +
-> +	transfer_len = ufshpb_get_len(cmd);
-> +	if (unlikely(!transfer_len))
-> +		goto put_hpb;
-> +
-> +	lpn = ufshpb_get_lpn(cmd);
-> +	ufshpb_get_pos_from_lpn(hpb, lpn, &rgn_idx, &srgn_idx, &srgn_offset);
-> +	rgn = hpb->rgn_tbl + rgn_idx;
-> +	srgn = rgn->srgn_tbl + srgn_idx;
-> +
-> +	/* If commnad type is WRITE and DISCARD, set bitmap as drity */
-              ^^^^^^^               ^^^                        ^^^^^
-              command?              or?                        dirty?
-> +	if (ufshpb_is_write_discard_cmd(cmd)) {
-> +		spin_lock_irqsave(&hpb->hpb_state_lock, flags);
-> +		ufshpb_set_ppn_dirty(hpb, rgn_idx, srgn_idx, srgn_offset,
-> +				 transfer_len);
-> +		spin_unlock_irqrestore(&hpb->hpb_state_lock, flags);
-> +		goto put_hpb;
-> +	}
-> +
-> +	WARN_ON(!ufshpb_is_read_cmd(cmd));
-        ^^^^^^^
-        WARN_ON_ONCE()?
+__xfs_trans_commit
+ xfs_log_commit_cil
+  xlog_wait
+   schedule
+                    xlog_cil_push_work
+		     wake_up_all
+		                        xlog_cil_committed
+					 kmem_free
+   remove_wait_queue
+    spin_lock_irqsave --> UAF
 
-> +	if (!ufshpb_is_support_chunk(transfer_len))
-> +		goto put_hpb;
-> +
-> +	spin_lock_irqsave(&hpb->hpb_state_lock, flags);
-> +	if (ufshpb_test_ppn_dirty(hpb, rgn_idx, srgn_idx, srgn_offset,
-> +				   transfer_len)) {
-> +		atomic_inc(&hpb->stats.miss_cnt);
-> +		spin_unlock_irqrestore(&hpb->hpb_state_lock, flags);
-> +		goto put_hpb;
-> +	}
-> +
-> +	ppn = ufshpb_get_ppn(hpb, srgn->mctx, srgn_offset, &err);
-> +	spin_unlock_irqrestore(&hpb->hpb_state_lock, flags);
-> +	if (unlikely(err)) {
-> +		/*
-> +		 * In this case, the region state is active,
-> +		 * but the ppn table is not allocated.
-> +		 * Make sure that ppn tabie must be allocated on
-                                      ^^^^^
-                                      table?
-> +		 * active state
-> +		 */
-> +		WARN_ON(true);
-> +		dev_err(&hpb->hpb_lu_dev,
-> +			"ufshpb_get_ppn failed. err %d\n", err);
-> +		goto put_hpb;
-> +	}
-> +
-> +	ufshpb_set_hpb_read_to_upiu(hpb, lrbp, lpn, ppn, transfer_len);
-> +
-> +	atomic_inc(&hpb->stats.hit_cnt);
-> +put_hpb:
-> +	ufshpb_lu_put(hpb);
-> +}
+I tried to fix the problem by using autoremove_wake_function() in
+xlog_wait(), however, soft lockup will be triggered this way.
 
-Thanks,
+Instead, make sure waitqueue_active(&ctx->push_wait) return false before
+freeing 'ctx'.
 
-Bart.
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+---
+ fs/xfs/xfs_log_cil.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
+index b43f0e8f43f2..59b21485b0fc 100644
+--- a/fs/xfs/xfs_log_cil.c
++++ b/fs/xfs/xfs_log_cil.c
+@@ -607,7 +607,7 @@ xlog_cil_committed(
+ 
+ 	if (!list_empty(&ctx->busy_extents))
+ 		xlog_discard_busy_extents(mp, ctx);
+-	else
++	else if (!waitqueue_active(&ctx->push_wait))
+ 		kmem_free(ctx);
+ }
+ 
+-- 
+2.25.4
+
