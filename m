@@ -2,109 +2,128 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D197C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 19:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50CC8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 19:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 602F220792
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 19:20:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2230C206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 19:25:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="acPfkpj5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QIDHeZQ/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728159AbgFKTUl (ORCPT
+        id S1726285AbgFKTZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 15:20:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48496 "EHLO
+        Thu, 11 Jun 2020 15:25:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727061AbgFKTUd (ORCPT
+        with ESMTP id S1725869AbgFKTZl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 15:20:33 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE557C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 12:20:33 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id e9so2933807pgo.9
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 12:20:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=lhV8nqMz2laEO7u8yeQgJHEMBabnXS8HLs+yCx8wYRg=;
-        b=acPfkpj5/yf9SgDo/GgAHtc3dF88Ku0aHGKDg+7QAde4yPirke3PsVjTLGiw8CNyf5
-         rG2TeN3/YsFrowdQObRuyE5KZUNGYQVgTkHLC5YVK8hbZFVPU41QPkfdZek2TuIS8jYr
-         ha+G7dTRNoOt34arFuaABOYl6byG3HiaAuYlznexIvZnxhEGlzwcKiZRIkAfeiQ90QJd
-         XVezjcdXyBaGIsvdXilWU970/byi5P9BHFgT2xwISkH5IxvDu8aL50gDfuG5xWuMAcp9
-         ELWXt3Nr8CCIuG0NFyi1OsB8GLXXelexcGBOZV9WWFbayorCcW+7+9CT1EypI2M0tCut
-         Ys+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=lhV8nqMz2laEO7u8yeQgJHEMBabnXS8HLs+yCx8wYRg=;
-        b=kJx7RJ29zcMD1gKWO+zz/6mukb6Afj+r62Sz20RSS7KE5Wx7yR8S07/sdYY1qTSvYl
-         DcIvUhtQxDLlgRgoogye4fWFH/ZhPsbpONM/b4Uq6wz5OlkLwDbHbm349P2JHiA77lLM
-         qKVi97G2RAnVa7uhrPq+NuA90sdLVKP8NuCPnycLxgRs4Gz2rAi1Vx51tR2eStnp0cws
-         8ftEwDPqNf8PLttUyQRIZDmhANHCYArfYOvYa+54lUSorlqdHVvL2OniN8avI0qxJ1xp
-         gz+/34kNCeEqdxqvLcl4aGXKxwgHP0F309iYbkJeVujGETHk9PovrwiidmV4KaPSa/PO
-         5gEg==
-X-Gm-Message-State: AOAM533COevcWhZKoQdIFnIph/VAdzbBzyO2rVDLUJMOEcCiermLojZi
-        smkbDD/q2ewHfHNekKK4E+O9OQ==
-X-Google-Smtp-Source: ABdhPJyh//Vnh2AOGbnU3pCU/jktEq7WXa1uG41bJSj6sWvqbsCFopBl8iIs0tjZMjC2tSJ5wleAQQ==
-X-Received: by 2002:a63:8b42:: with SMTP id j63mr3450720pge.131.1591903233130;
-        Thu, 11 Jun 2020 12:20:33 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id z24sm3714630pfk.29.2020.06.11.12.20.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 12:20:32 -0700 (PDT)
-Date:   Thu, 11 Jun 2020 12:20:32 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Christoph Hellwig <hch@lst.de>
-cc:     Thomas Lendacky <thomas.lendacky@amd.com>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: [patch for-5.8 4/4] dma-direct: add missing set_memory_decrypted()
- for coherent mapping
-In-Reply-To: <alpine.DEB.2.22.394.2006111218200.153880@chino.kir.corp.google.com>
-Message-ID: <alpine.DEB.2.22.394.2006111220010.153880@chino.kir.corp.google.com>
-References: <alpine.DEB.2.22.394.2006111218200.153880@chino.kir.corp.google.com>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Thu, 11 Jun 2020 15:25:41 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41C80C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 12:25:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=koVl8W/ZBRTJJgK/g8lrQxTLHfCfIJ27kfDv+tOpgVE=; b=QIDHeZQ/xKqc7U9s+vRcXVNU5a
+        7fh0qcCT/L7twhTGgMVTgMbuHY0ZM66gT7q9swOjm9KEOdxozG2uKPk1tsUoIin8vU2jTIi/wBDhd
+        lxmFPYE+4vCiU0Prcmjpxfu5hxHkiFItYwJBSJ2U1baBGx58os/s2qy0bCRiDiDxHb/cNUdwXIMr6
+        HfESkbm3A8KrdUouXGXnhmP6aGk9bkxp5LzmcIqdnN/xhxnVZ2dz/s+hep8v0alTV/TLVDsQuJUhI
+        PXgpb6Q0UHti89OD2+dnAvHYMXYm/kavAaySc4F6sZ802Akfd78qyWRoNoC3CPCpR8LAYt3DtWyEf
+        t3qdaKTw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jjSpF-0003sg-FW; Thu, 11 Jun 2020 19:25:21 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 54FA89841E9; Thu, 11 Jun 2020 21:25:18 +0200 (CEST)
+Date:   Thu, 11 Jun 2020 21:25:18 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, cj.chengjian@huawei.com,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michel Lespinasse <walken@google.com>,
+        lkft-triage@lists.linaro.org,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: Re: Perf: WARNING: arch/x86/entry/common.c:624
+ idtentry_exit_cond_rcu+0x92/0xc0
+Message-ID: <20200611192518.GA2483@worktop.programming.kicks-ass.net>
+References: <CA+G9fYvF3cyrY+-iw_SZtpN-i2qA2BruHg4M=QYECU2-dNdsMw@mail.gmail.com>
+ <CALCETrXqhwJzhsAoM72tskso5aDELgfGLnHdGYHiAFmgCPforQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrXqhwJzhsAoM72tskso5aDELgfGLnHdGYHiAFmgCPforQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a coherent mapping is created in dma_direct_alloc_pages(), it needs
-to be decrypted if the device requires unencrypted DMA before returning.
+On Thu, Jun 11, 2020 at 12:10:50PM -0700, Andy Lutomirski wrote:
+> On Thu, Jun 11, 2020 at 11:56 AM Naresh Kamboju
+> <naresh.kamboju@linaro.org> wrote:
+> >
+> > While running perf test and selftest x86 single_step_syscall_32 on
+> > i386 kernel linux
+> > next 5.7.0-next-20200610 kernel warning noticed.
+> >
+> > steps to reproduce:
+> > --------------------------
+> > perf test
+> > and
+> > cd /opt/kselftests/default-in-kernel/x86
+> > ./single_step_syscall_32
+> >
+> > perf warning log:
+> > ----------------------
+> > [   57.260865] ------------[ cut here ]------------
+> > [   57.266576] IRQs not disabled as expected
+> > [   57.270583] WARNING: CPU: 1 PID: 500 at
+> > /usr/src/kernel/arch/x86/entry/common.c:624
+> > idtentry_exit_cond_rcu+0x92/0xc0
+> > [   57.281092] Modules linked in: x86_pkg_temp_thermal fuse
+> > [   57.286406] CPU: 1 PID: 500 Comm: perf Not tainted 5.7.0-next-20200610 #1
+> > [   57.293190] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+> > 2.2 05/23/2018
+> > [   57.300577] EIP: idtentry_exit_cond_rcu+0x92/0xc0
+> > [   57.305280] Code: 8b 89 d8 05 00 00 85 c9 74 ae 80 3d b1 64 2c d4
+> > 00 75 a5 68 94 2d fb d3 89 55 f8 89 45 fc c6 05 b1 64 2c d4 01 e8 8e
+> > f5 2b ff <0f> 0b 58 8b 55 f8 8b 45 fc eb 83 8d 76 00 e8 5b fd ff ff c9
+> > c3 89
+> > [   57.324017] EAX: 0000001d EBX: 0d00022a ECX: 00000027 EDX: f5b9e14c
+> > [   57.330274] ESI: f2a2ffb4 EDI: ffff0ff4 EBP: f2a2ff8c ESP: f2a2ff80
+> > [   57.336531] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010096
+> > [   57.343345] CR0: 80050033 CR2: 08700a58 CR3: 14ad7000 CR4: 003406d0
+> > [   57.349608] DR0: 080dfb80 DR1: 080dfc00 DR2: 08700a58 DR3: 00000000
+> > [   57.355866] DR6: fffe0ff0 DR7: 0d00062a
+> > [   57.359697] Call Trace:
+> > [   57.362143]  exc_debug+0x84/0x1b0
+> > [   57.365487]  ? exc_int3+0x1d0/0x1d0
+> > [   57.368981]  handle_exception+0x145/0x145
+> > [   57.372991] EIP: 0x80dfbcd
+> > [   57.375694] Code: Bad RIP value.
+> > [   57.378918] EAX: 00000000 EBX: 00000005 ECX: 00002400 EDX: 00000000
+> > [   57.385175] ESI: 00000003 EDI: 00000004 EBP: bfd59798 ESP: bfd59770
+> > [   57.391431] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000246
+> > [   57.398215] irq event stamp: 1896
+> 
+> A regrettable property of the current entry code structure is that we
+> lose any real indication of the vector.  Presumably this is #DB, hence
+> exc_debug.  I don't know what perf has to do with it.
+> 
+> I'll bang on this after lunch if no one beats me to it.
 
-Fixes: 3acac065508f ("dma-mapping: merge the generic remapping helpers
-into dma-direct")
-Cc: stable@vger.kernel.org # 5.5+
-Signed-off-by: David Rientjes <rientjes@google.com>
----
- kernel/dma/direct.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Puzzling, CR3 seems to suggest this is !user_mode(), but either way #DB
+has either idtentry_enter_user() or nmi_enter().
 
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -195,6 +195,12 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
- 				__builtin_return_address(0));
- 		if (!ret)
- 			goto out_free_pages;
-+		if (force_dma_unencrypted(dev)) {
-+			err = set_memory_decrypted((unsigned long)ret,
-+						   1 << get_order(size));
-+			if (err)
-+				goto out_free_pages;
-+		}
- 		memset(ret, 0, size);
- 		goto done;
- 	}
