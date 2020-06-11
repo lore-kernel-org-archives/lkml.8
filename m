@@ -2,185 +2,147 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B255EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:09:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C243C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:09:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C6AC2078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:09:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26F76206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:09:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="ZnYaCeqi"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qNg4jL/V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbgFKRJP (ORCPT
+        id S1726739AbgFKRJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 13:09:15 -0400
-Received: from mga04.intel.com ([192.55.52.120]:56917 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726527AbgFKRJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 13:09:14 -0400
-IronPort-SDR: PJ4l98iOXf5znwcbCjyhoitwrB17Rt9h4oDjDjxeG4wL871/9yYwvn3N0m0ney6p/RTBqQqx8S
- aVEv3IB3Xh9A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 10:09:12 -0700
-IronPort-SDR: cYs0/HrAopmT+1KIrDhp1Bq2RB3YAnPLs5cp8LfvDG6kgVPoyFiGmD2at4JHTAcIXKZKvFMc6n
- ca6paDXdW9yg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,500,1583222400"; 
-   d="scan'208";a="260742104"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by fmsmga008.fm.intel.com with ESMTP; 11 Jun 2020 10:09:12 -0700
-Received: from fmsmsx151.amr.corp.intel.com (10.18.125.4) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 11 Jun 2020 10:09:12 -0700
-Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
- FMSMSX151.amr.corp.intel.com (10.18.125.4) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 11 Jun 2020 10:09:11 -0700
-Received: from NAM04-BN3-obe.outbound.protection.outlook.com (104.47.46.53) by
- edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Thu, 11 Jun 2020 10:09:11 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RGKV0Kx3lo/7MWz2tnOweqlMOb6sKdonLkM45XvWkQeTgR/FH3moANivq25QXkoZdZVuS3HCWNEZc8E3yJI9YVdxy0+VdEw6DnfWFV0/Z3GMFBaYbZjI1x6ygCUIBrekp3oDwhJ3q5MtkZsQQnY2mbgGrmPciHkqfUMLJ68vgn5bIMo4jQ/oOfGWP4lSuHaSOXCFLRanZjtvYj2dLOeun/VYjeDnDXjtwj++6Ti5+1dljiyHxP9MsjX4fTIGNtf9bjX2t6HwygfsbyS+QgCknQ2QpU+RyHxPHm8+8ZGqrssJ65x9Qb6r6klItTuGbpOEXiHYSGQUopn/3vyTfTTADQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5mnBUpxwAJIl0Lta3/TwT0gmpqAakW+foaTSLphUolY=;
- b=XLAs4KVrZ6R6hg4T1BZexV0gLOsfCADXVb2ugbTvN28b0WFjm/hi1MjJqZCCGjjChlPU4Ynl6fSozt7bZPeNSAj2EZxEqOe6JkM+98o2agQkEhD8blBYbnMmHz3RuBW4dHcIgpw6tK6la7IdVSi5qWm9qYrDzyjYyVm1Shvzv5+bG+q340JbCLek2c4kbqfGxXuoFgURGJ4yAfWCXq53PpQPkBZG4SSnO6D8b/Du634VZT2JSQGuj3FYkvE8NuKxQtB7BeAGFC27vPmKZWBJiwTe4W7DUke02jxcbVR9Twrh/PqedK1DQ66uWsimy/Zlk2GHfdTL9xTYj0JxkRvFKQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5mnBUpxwAJIl0Lta3/TwT0gmpqAakW+foaTSLphUolY=;
- b=ZnYaCeqiPtzQve4vvrDYJaYQ8wgihpRDgjRUHueJs6k3xST3Wg/eknggMNx4A9LlToSAdjQzhdwG6aifIcDK0AMwkvOxXx8yHj6Mz6jTw/ZfwiItiRpMgLUF5Q7tF01pOWZAVtcQTYXiqkz61IqsW42p9qLSDGw+OqiAwsltl4E=
-Received: from DM6PR11MB4316.namprd11.prod.outlook.com (2603:10b6:5:205::16)
- by DM6PR11MB4708.namprd11.prod.outlook.com (2603:10b6:5:28f::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.19; Thu, 11 Jun
- 2020 17:09:09 +0000
-Received: from DM6PR11MB4316.namprd11.prod.outlook.com
- ([fe80::b4fa:727e:34a9:b1a4]) by DM6PR11MB4316.namprd11.prod.outlook.com
- ([fe80::b4fa:727e:34a9:b1a4%5]) with mapi id 15.20.3066.023; Thu, 11 Jun 2020
- 17:09:08 +0000
-From:   "Lu, Brent" <brent.lu@intel.com>
-To:     Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-CC:     Pierre-Louis Bossart DRIVERS 
-        <pierre-louis.bossart@linux.intel.com>,
-        "authored:2/16=12%,added_lines:21/248=8%,removed_lines:5/84=6%,),Liam
-        Girdwood DRIVERS )" <lgirdwood@gmail.com>,
-        "commit_signer:6/16=38%,authored:6/16=38%,added_lines:123/248=50% 
-        ,removed_lines:36/84=43%,Kai Vehmanen DRIVERS )" 
-        <kai.vehmanen@linux.intel.com>,
-        "Daniel Baluta DRIVERS )" <daniel.baluta@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
-        Zhu Yingjiang <yingjiang.zhu@linux.intel.com>,
-        Keyon Jie <yang.jie@linux.intel.com>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        "sound-open-firmware@alsa-project.orgDRIVERS" 
-        <sound-open-firmware@alsa-project.orgDRIVERS>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] ASoC: SOF: Intel: hda: unsolicited RIRB response
-Thread-Topic: [PATCH] ASoC: SOF: Intel: hda: unsolicited RIRB response
-Thread-Index: AQHWP/c4ukUWDBOd20aRgUpUZ24R5KjTeMYAgAAAtZA=
-Date:   Thu, 11 Jun 2020 17:09:08 +0000
-Message-ID: <DM6PR11MB4316108BCF449D52E49C7E4297800@DM6PR11MB4316.namprd11.prod.outlook.com>
-References: <1591883073-17190-1-git-send-email-brent.lu@intel.com>
- <b7e0b822a9deea506acaa40e0e31cc9f488bb446.camel@linux.intel.com>
-In-Reply-To: <b7e0b822a9deea506acaa40e0e31cc9f488bb446.camel@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: linux.intel.com; dkim=none (message not signed)
- header.d=none;linux.intel.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [36.230.210.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 90277393-a5a1-4461-3748-08d80e2a27a3
-x-ms-traffictypediagnostic: DM6PR11MB4708:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB47086937973A1D81A4D5411E97800@DM6PR11MB4708.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0431F981D8
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: P9ZBdqt4PeY8oGna+bR/tSdjd0eRFywxYK5OSg2HAOYKnDvUcWNdIWoFGUuXOuIyB4/Fp0ajOgiDdS6asHeKvT5/bQd8P0lDp946nHdmAaZ99vN7pdxzWr3z8NNbvD7ZZm6M2E5yp3rOH2sZ4KoEFEvZbg9ViyxFbbQpDpvyvokRtOADaAJVR1ViCPkPuiCzwU2nc32+MTd9cLGfS6pi8mz9kZ2msHjR1c/8PvstZ3gFFztf1A1O+Um2mGCV4oyZ9exjKpgZ0bDDz6KJf+Eia/RxNLHRstUo9ORfi01wChuPGSX2adSVWh0oA1QeTtXVMcJFVxj4+VnWNVUi/NZxkA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB4316.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(396003)(39860400002)(376002)(346002)(366004)(66946007)(2906002)(66476007)(64756008)(71200400001)(66446008)(83380400001)(66556008)(8676002)(52536014)(33656002)(76116006)(478600001)(86362001)(7696005)(110136005)(8936002)(54906003)(7416002)(6506007)(55016002)(316002)(186003)(26005)(4326008)(5660300002)(9686003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: yZ8+MihdDRxdPVPytpTuEEnVHwqWBtV33/+zhb/nYaPJpfYkSPGtVqOjvr2fhJth/Aw8QqGzbxNXFXp88aZakoec2Ouq52TKchN/ZaIuPT2KLmDYq7ABkzyfdlzwDPksMVJUg2e7lMRkzRvfP66QTYjhkQDJzcOWbHqy0ZNkxtaiKDR2//ppdRafBmr6egtKsQmwE7xWgbRWlNewq5yv+q3XeaKbT6dDbFv3+HmH4pU15rtuacg5lhPJUFKVzV0kO1yX39vs/e/dI20L/NVg//km+FZXb2W0rZNe0+DfKrj7rckoZ8oRIXov5YrDKKiBcbmnB7Nrd7Jrh+Suutfm5O7Zn2lhG0iKjDi43NZI0z0nKZbA7Z6nclZOvhr02Bncs1sX395Cx82udKOsTYPbAJjOFNlzNIbsQUp43RFK8AXbeydxcrIJxpvqEUa0GfCheiu0OwsfmdWqbVxsa3U+VeCNXvme+iv66htW1hE8/MlWOZv5CJoc6WDEIJfFu9U3
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 11 Jun 2020 13:09:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56536 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbgFKRJv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 13:09:51 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C3DCC08C5C1;
+        Thu, 11 Jun 2020 10:09:50 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id z63so2009129pfb.1;
+        Thu, 11 Jun 2020 10:09:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=tyHbXeosM2dGn8ctHsVNHECdKzxXjGiOzze56QKF4fM=;
+        b=qNg4jL/ViHHZH09XkCQBWqC5JTg6PQgIK1Z6UnNZErJ7PVvQWXyRK358nn0RhTwslk
+         11uBBTkxv646xxvpuQdkuz6GFk4jTgku/n6lDPPURQplHkJOZUTkGdNLl73NnPvtJ7or
+         GB2PZTcvtnhI6oyHICzvtPn7LV4mHZYZ7IIjANClS2Tqs6dZbr11a76kL+E0MSdXop/s
+         OYFTWuO19zU+dQwYLOi4P01Sj+68P+mnhI4UzsaC1Hj64UlTUfintmt2a8bYYiWtUm/3
+         DHp/QhMmLOnrgIF8ODhDBC4rche77xMTtwYSjo/kFy2pWu6h5CErMmo/AUuHVKAdvLbX
+         vttw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=tyHbXeosM2dGn8ctHsVNHECdKzxXjGiOzze56QKF4fM=;
+        b=IBM67AWlrC276jAs2ZBTz610yNq6Ja++XVCstarI1ns14c0DP4wVID0s8qMw2Ia+vN
+         l0uNF16H/nc1ufRBtxZR58DZNVaPbbmZlDPQiVfoYgPePwwueDbqnnVHA3okbaPnZLOO
+         SPmWF6Z2Vu5VZVbetNeNl1Pv9NqF/nJuMOgp9V812vkEB1SFJXyehlufbO5zoVGJ8dLq
+         ywbQZghaUdBx/drq5XeJ8n1y7yJqxrf3IXKER/8a/176kHME6z2VqzN/RcYI3MMpE4Z3
+         ZViZYNgRRwgYm/Pphb/yKx6a9PQRDhhdqF7nnxW/F8T9ZQYGFPg9pwhces+X0yZZI8UL
+         BDMg==
+X-Gm-Message-State: AOAM5308CjW5Etvc1B3RDAsydI0u84QTdQa5EsxAueGAm5K6YUzcDicB
+        Bl5BYlVxjipETEnKvxoHl6I=
+X-Google-Smtp-Source: ABdhPJyhoBlrc1apK/VfDXDccMgZT+ulv/6Cc2mm4EZHUfi5UyuQ5GrxawPgG6uBpsO/602D1sqvcA==
+X-Received: by 2002:a62:c105:: with SMTP id i5mr8205394pfg.250.1591895389697;
+        Thu, 11 Jun 2020 10:09:49 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id b7sm3570250pfo.202.2020.06.11.10.09.47
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 11 Jun 2020 10:09:47 -0700 (PDT)
+Date:   Thu, 11 Jun 2020 10:09:46 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
+        devicetree@vger.kernel.org, robbh@kernel.org,
+        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yixin.zhu@intel.com
+Subject: Re: [PATCH 1/2] dt-bindings: watchdog: intel: Add YAML Schemas for
+ Watchdog timer
+Message-ID: <20200611170946.GA70281@roeck-us.net>
+References: <cover.1591584255.git.eswara.kota@linux.intel.com>
+ <ac89e289b79fec0a82d1dd060e17eeca024885d5.1591584255.git.eswara.kota@linux.intel.com>
+ <235d301b-3b25-bb00-bd1b-c4392fa23c63@roeck-us.net>
+ <4a336f1d-68da-3356-a73a-95747ba4af4c@linux.intel.com>
+ <83812b78-41e3-299d-36a0-6ce1576e7e78@roeck-us.net>
+ <aabceb6f-265d-fd11-eee1-6bccf2160512@linux.intel.com>
+ <c294ced9-a37b-6a90-511e-187bacdec80c@roeck-us.net>
+ <4feae044-1956-fb70-7786-19c7c48cc391@linux.intel.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 90277393-a5a1-4461-3748-08d80e2a27a3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2020 17:09:08.8029
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PvbKM3xWzr0LVo9p+BSTetQlXSEMRy77ZL8WyMuCBxafznSUKyxLamZSf/zClIJtEE+2SSC/41EI8mExMmGOhg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4708
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4feae044-1956-fb70-7786-19c7c48cc391@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBIaSBCcmVudCwNCj4gDQo+IFRoYW5rcyBmb3IgdGhlIHBhdGNoLiBJcyB0aGlzIGZpeCBmb3Ig
-YSBzcGVjaWZpYyBpc3N1ZSB5b3UncmUgc2VlaW5nPw0KPiBJZiBzbywgY291bGQgeW91IHBsZWFz
-ZSBnaXZlIHVzIHNvbWUgZGV0YWlscyBhYm91dCBpdD8NCj4gDQo+IFRoYW5rcywNCj4gUmFuamFu
-aQ0KDQpIaSBSYW5qYW5pLA0KDQpJdCdzIHJlcG9ydGVkIHRvIGhhcHBlbiBvbiBHTEsgQ2hyb21l
-Ym9vayAnRmxlZXgnIHRoYXQgc29tZXRpbWVzIGl0DQpjYW5ub3Qgb3V0cHV0IHRoZSBhdWRpbyBz
-dHJlYW0gdG8gZXh0ZXJuYWwgZGlzcGxheS4gVGhlIGtlcm5lbCBpcw0KQ2hyb21lIHY0LjE0IGJy
-YW5jaC4gRm9sbG93aW5nIGlzIHRoZSByZXByb2R1Y2Ugc3RlcCBwcm92aWRlZCBieQ0KT0RNIGJ1
-dCBJIGNvdWxkIHJlcHJvZHVjZSBpdCBzaW1wbHkgcnVubmluZyBhcGxheSBvciBjcmFzX3Rlc3Rf
-Y2xpZW50DQpzbyBJIHRoaW5rIGl0J3Mgbm90IGFib3V0IHRoZSBjYWJsZSBwbHVnL3VucGx1ZyBo
-YW5kbGluZy4NCg0KV2hhdCBzdGVwcyB3aWxsIHJlcHJvZHVjZSB0aGUgcHJvYmxlbT8NCjEuICAg
-ICAgUGxheSBZb3VUdWJlIHZpZGVvIG9uIENocm9tZWJvb2sgYW5kIGNvbm5lY3QgaXQgdG8gZXh0
-ZXJuYWwgbW9uaXRvciB3aXRoIFR5cGUgQyB0byBEUCBkb25nbGUNCjIuICAgICAgUHJlc3MgbW9u
-aXRvciBwb3dlciBidXR0b24gdG8gdHVybiBvZmYgdGhlIG1vbml0b3INCjMuICAgICAgUHJlc3Mg
-bW9uaXRvciBwb3dlciBidXR0b24gYWdhaW4gdG8gdHVybiBvbiB0aGUgbW9uaXRvcg0KNC4gICAg
-ICBDb250aW51ZSB0byBwbGF5IFlvdVR1YmUgdmlkZW8gYW5kIGNoZWNrIGF1ZGlvIHBsYXliYWNr
-DQo1LiAgICAgIE5vIHNvdW5kIGNvbWVzIG91dCBmcm9tIGJ1aWx0LWluIHNwZWFrZXIgb2YgZXh0
-ZXJuYWwgbW9uaXRvciB3aGVuIHR1cm4gb24gZXh0ZXJuYWwgbW9uaXRvcg0KDQpJIGFkZGVkIGRl
-YnVnIG1lc3NhZ2VzIHRvIHByaW50IHRoZSBSSVJCV1AgcmVnaXN0ZXIgYW5kIHJlYWxpemUgdGhh
-dA0KcmVzcG9uc2UgY291bGQgY29tZSBiZXR3ZWVuIHRoZSByZWFkIG9mIFJJUkJXUCBpbiB0aGUN
-CnNuZF9oZGFjX2J1c191cGRhdGVfcmlyYigpIGZ1bmN0aW9uIGFuZCB0aGUgaW50ZXJydXB0IGNs
-ZWFyIGluIHRoZQ0KaGRhX2RzcF9zdHJlYW1faW50ZXJydXB0KCkgZnVuY3Rpb24uIFRoZSByZXNw
-b25zZSBpcyBub3QgaGFuZGxlZCBidXQNCnRoZSBpbnRlcnJ1cHQgaXMgYWxyZWFkeSBjbGVhcmVk
-LiBJdCB3aWxsIGNhdXNlIHRpbWVvdXQgdW5sZXNzIG1vcmUNCnJlc3BvbnNlcyBjb21pbmcgdG8g
-UklSQi4NCg0KWyAgIDY5LjE3MzUwN10gc29mLWF1ZGlvLXBjaSAwMDAwOjAwOjBlLjA6IHNuZF9o
-ZGFjX2J1c19nZXRfcmVzcG9uc2U6IGFkZHIgMHgyDQpbICAgNjkuMTczNTY3XSBzb2YtYXVkaW8t
-cGNpIDAwMDA6MDA6MGUuMDogc25kX2hkYWNfYnVzX3VwZGF0ZV9yaXJiOiBjbWRzIDEgcmVzIDAg
-cnAgMjEgd3AgMjENCj0+IGhhbmRsZSB0aGUgcmVzcG9uc2UgaW4gc2xvdCAyMQ0KWyAgIDY5LjE3
-MzU3MF0gc29mLWF1ZGlvLXBjaSAwMDAwOjAwOjBlLjA6IHNuZF9oZGFjX2J1c191cGRhdGVfcmly
-YjogdXBkYXRlZCB3cCAyMg0KPT4gbmV3IHJlc3BvbnNlIGluIHNsb3QgMjIgYnV0IG5vdCBoYW5k
-bGVkDQpbICAgNzAuMTc0MDg5XSBzb2YtYXVkaW8tcGNpIDAwMDA6MDA6MGUuMDogc25kX2hkYWNf
-YnVzX2dldF9yZXNwb25zZTogdGltZW91dCwgd3AgMjINClsgICA3MC4xNzQxMDZdIEhETUkgSERB
-IENvZGVjIGVoZGF1ZGlvMEQyOiBjb2RlY19yZWFkOiBmYWlsIHRvIHJlYWQgY29kZWMNCg0KSSBm
-b3VuZCB0aGVyZSBpcyBhIGNvbW1pdCBhZGRyZXNzaW5nIHRoaXMgaXNzdWUgYW5kIGNoZXJyeS1w
-aWNrIGl0IHRvIHRoZQ0KQ2hyb21lIHY0LjE0IGJ1dCB0aGUgaXNzdWUgaXMgc3RpbGwgdGhlcmUu
-IEkgdGhpbmsgbW9yZSBsb29wIGRvZXMgbm90IGhlbHANCmJlY2F1c2UgZXZlbnR1YWxseSB0aGVy
-ZSB3aWxsIGJlIHJlc3BvbnNlIGNvbWluZyBpbiB0aGUNCnNuZF9oZGFjX2J1c191cGRhdGVfcmly
-YigpIGZ1bmN0aW9uIGFuZCBiZWNvbWUgdW5oYW5kbGVkIHJlc3BvbnNlDQppbiB0aGUgbGFzdCBs
-b29wLg0KDQpjb21taXQgNjI5N2EwZGM0YzE0YTYyYmVhNWE5MTM3Y2VlZjI4MGNiN2E4MDY2NQ0K
-QXV0aG9yOiBSYW5qYW5pIFNyaWRoYXJhbiA8cmFuamFuaS5zcmlkaGFyYW5AbGludXguaW50ZWwu
-Y29tPg0KRGF0ZTogICBXZWQgSnVuIDEyIDEyOjIzOjQwIDIwMTkgLTA1MDANCg0KICAgIEFTb0M6
-IFNPRjogSW50ZWw6IGhkYTogbW9kaWZ5IHN0cmVhbSBpbnRlcnJ1cHQgaGFuZGxlcg0KDQogICAg
-TW9kaWZ5IHRoZSBzdHJlYW0gaW50ZXJydXB0IGhhbmRsZXIgdG8gYWx3YXlzIHdha2UgdXAgdGhl
-DQogICAgSVJRIHRocmVhZCBpZiB0aGUgc3RhdHVzIHJlZ2lzdGVyIGlzIHZhbGlkLiBUaGUgSVJR
-IHRocmVhZA0KICAgIHBlcmZvcm1zIHRoZSBjaGVjayBmb3Igc3RyZWFtIGludGVycnVwdHMgYW5k
-IFJJUkIgaW50ZXJydXB0cw0KICAgIGluIGEgbG9vcCB0byBoYW5kbGUgdGhlIGNhc2Ugb2YgbWlz
-c2VkIGludGVycnVwdHMgd2hlbiBhbg0KICAgIHVuc29saWNpdGVkIHJlc3BvbnNlIGZyb20gdGhl
-IGNvZGVjIGlzIHJlY2VpdmVkIGp1c3QgYmVmb3JlIHRoZQ0KICAgIHN0cmVhbSBpbnRlcnJ1cHQg
-aGFuZGxlciBpcyBjb21wbGV0ZWQuDQoNCg0KUmVnYXJkcywNCkJyZW50DQoNCg==
+On Thu, Jun 11, 2020 at 05:38:14PM +0800, Dilip Kota wrote:
+> 
+> On 6/10/2020 9:05 PM, Guenter Roeck wrote:
+> > On 6/10/20 12:54 AM, Dilip Kota wrote:
+> > > On 6/9/2020 9:46 PM, Guenter Roeck wrote:
+> > > > On 6/9/20 1:57 AM, Dilip Kota wrote:
+> > > > > On 6/8/2020 9:37 PM, Guenter Roeck wrote:
+> > > > > > On 6/7/20 10:49 PM, Dilip Kota wrote:
+> [...]
+> > > > > > > +
+> > > > > > > +description: |
+> > > > > > > +  Intel Lightning Mountain SoC has General Purpose Timer Counter(GPTC) which can
+> > > > > > > +  be configured as Clocksource, real time clock and Watchdog timer.
+> > > > > > > +  Each General Purpose Timer Counter has three timers. And total four General
+> > > > > > > +  Purpose Timer Counters are present on Lightning Mountain SoC which sums up
+> > > > > > > +  to 12 timers.
+> > > > > > > +  Lightning Mountain has four CPUs and each CPU is configured with one GPTC
+> > > > > > > +  timer as watchdog timer. Total four timers are configured as watchdog timers
+> > > > > > > +  on Lightning Mountain SoC.
+> > > > > > > +
+> > > > > > Why not just one ? The watchdog subsystem does not monitor individual CPUs,
+> > > > > > it monitors the system.
+> > > > > Intel Atom based Lightning Mountain SoC, system has four CPUs. On Lightning Mountain SoC ,Watchdog subsystem is combination of GPTC timers and reset controller unit. On Lightning Mountain SoC, each CPU is configured with one GPTC timer, so that if any of the CPU hangs or freezes, the watchdog daemon running on respective CPU cannot reset/ping or pet the watchdog timer. This causes the watchdog timeout. On watchdog timeout, reset controller triggers the reset to respective CPU.
+> > > > > 
+> > > > A system watchdog driver should not duplicate functionality
+> > > > from kernel/watchdog.c, which monitors individual CPUs.
+> > > > If the SoC does nto provide a system watchdog timer (which
+> > > > I think is unlikely), it should stick with that. A watchdog
+> > > > resetting an individual CPU instead of the entire system
+> > > > isn't something I would want to see in the watchdog subsystem.
+> > > My bad here, complete hardware reset happens on watchdog timeout not a single CPU or core.
+> > > Could you please clarify: The complete system means, you mean, "a watchdog susbsystem should monitor all the cores/cpus in the SoC. Not like each core/cpu in SoC having a wdt".
+> > > 
+> > No, the watchdog subsystem does not monitor "all cores".
+> > Again, that is the responsibility of kernel/watchdog.c.
+> I am a bit confused here.
+> I have gone through the kernel/watchdog.c code and i see hrtimers are used
+> and panic is triggered for lockup on CPU/core.
+> It looks similar to the watchdog subsystem which uses wdt and triggers
+> hardware reset on timeout, whereas kernel/watchdog.c using hrtimers and
+> triggers panic on timeout.
+> To my understanding Watchdog timer recovers the hardware from software hangs
+> or freeze states on the CPU / cores.
+> Also, what does system mean in your statement " watchdog subsystem monitors
+> the system"? What all comes under the system other than the cores/cpus.
+> And also i see there is no other watchdog subsystem in Lightning Mountain
+> architecture.
+> 
+
+From my perspective, we are not going to duplicate functionality covered
+by kernel/watchdog.c, which means we are not going to support per cpu core
+watchdog drivers in drivers/watchdog.
+
+If you insist doing it anyway, please disuss with Wim.
+
+Thanks,
+Guenter
