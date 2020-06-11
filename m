@@ -2,125 +2,88 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E25C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB047C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FBC5206A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:13:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="v8+6EYja"
+	by mail.kernel.org (Postfix) with ESMTP id 8F0A0206A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 02:14:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbgFKCN2 (ORCPT
+        id S1726499AbgFKCO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 22:13:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59418 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbgFKCN2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 22:13:28 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE938C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 19:13:27 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id x1so4789845ejd.8
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 19:13:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wSclIs7n5vpOSvxh2OrnHeX+5b5kOfOtKGtkOgLl0/Y=;
-        b=v8+6EYjaTY6Fw2wnUUu6UJNua3V+Lp53KEHLNac2TEyYj9A2BadRkPLnSl/9YGGSyY
-         T+OtnVMqO3xg/6L/4Nz08Mjb8nZo6NBSLdJSDqdfsJfSBLSCJh8KebIiyYCwV/s5cM9p
-         N4Xs60MSyKAQ/KYjoC7hCG5yphEFesouJle1fShaDIcorlZn0iBB3bbrrytdHDbAELFC
-         UYcuflCA6Bvrd9rGKshvhPFITNVjLQFiijsQMxQ7HyFPN9KDpI8QFlufe6imer80UQPr
-         4owye83ciH2aTw1fRvOmHgKrDhXFOgRLnp8gb82hFc5C85ZqJeNOSAiMFX+2AEbsAjdn
-         lRKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wSclIs7n5vpOSvxh2OrnHeX+5b5kOfOtKGtkOgLl0/Y=;
-        b=WHt5aucTT0/ChXwBJ9j5jdo+mWTxXHI64u+k79mvLg4rldAphk+PwolFhERt4VPh2X
-         IcYs/SyyYeWMDQjhlQSypV94zxEx9TQ77VHQKjkF0S/iZ4whFDKU7903nOB9/YKDPFv6
-         /91iXtsCPQDYI2fC9CweuCkq4M5ZKE/WJxPrQNUl0LaCyl3fTjp/ZgwxVp3bqBV4FuTo
-         wMytk2jQKoQuKQiNuQF0H2p7rhb9kUOsYbAhzLN8sq29a51G8UgsYzJuk5h+qEzHTpjz
-         Ydph8vkofHZLgcumBa/Ot4gSkeQZGrLcCjq/1vjC8w99Xqir6HpsFb1xZXTUvGzswYpb
-         B/1g==
-X-Gm-Message-State: AOAM533Cl0Zvkl0prUA4p9Bav6nDOe8YaMxBTmGIySzmgLpC8FhJkShm
-        UPG3LqbdvjXiCTH5aCPTZ9RYuDhPJDYRzRZv5Rq/
-X-Google-Smtp-Source: ABdhPJyoOh4d1o3ex77cQD0moZLEf9Ht3wehb6wOgCo5liChTu7jBmv/acKYI4ooL1J0tjr7yhg8ntLwvLjO71Zudho=
-X-Received: by 2002:a17:906:19d3:: with SMTP id h19mr6064005ejd.106.1591841606286;
- Wed, 10 Jun 2020 19:13:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200610215713.5319-1-trix@redhat.com> <20200610215713.5319-2-trix@redhat.com>
-In-Reply-To: <20200610215713.5319-2-trix@redhat.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 10 Jun 2020 22:13:15 -0400
-Message-ID: <CAHC9VhTd0HSv6Yk8NxJeC=U7wPb0AtRturAGYLfxg8B13h0FOA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] selinux: fix double free
-To:     trix@redhat.com
-Cc:     Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Ondrej Mosnacek <omosnace@redhat.com>, jeffv@google.com,
-        rgb@redhat.com, selinux@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 10 Jun 2020 22:14:27 -0400
+Received: from mga12.intel.com ([192.55.52.136]:28347 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726163AbgFKCO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 22:14:26 -0400
+IronPort-SDR: oLLWgJIt85OGOUj4CExmiavyh1ZIsYGe+jPgr0NeIopBXKag9jKvctVmOieAG70h2FEuDKIEmR
+ /GwxpD/J6OXQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2020 19:14:26 -0700
+IronPort-SDR: NV61z8+oA59guK0bpc44VaaOOX7fOlYzb6LCnwK8mBClybZv9681lL9qxUuydUYF0GV3K5FTbO
+ slZevB4k6q0w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,498,1583222400"; 
+   d="scan'208";a="289393199"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga002.jf.intel.com with ESMTP; 10 Jun 2020 19:14:23 -0700
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, balbi@kernel.org,
+        p.zabel@pengutronix.de
+Cc:     gregkh@linuxfoundation.org, robh@kernel.org,
+        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com,
+        andriy.shevchenko@intel.com,
+        "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v2 0/2] usb : phy: Add USB PHY support on Intel LGM SoC
+Date:   Thu, 11 Jun 2020 10:12:44 +0800
+Message-Id: <20200611021246.3250-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 5:57 PM <trix@redhat.com> wrote:
-> From: Tom Rix <trix@redhat.com>
->
-> Clang's static analysis tool reports these double free memory errors.
->
-> security/selinux/ss/services.c:2987:4: warning: Attempt to free released memory [unix.Malloc]
->                         kfree(bnames[i]);
->                         ^~~~~~~~~~~~~~~~
-> security/selinux/ss/services.c:2990:2: warning: Attempt to free released memory [unix.Malloc]
->         kfree(bvalues);
->         ^~~~~~~~~~~~~~
->
-> So improve the security_get_bools error handling by freeing these variables
-> and setting their return pointers to NULL and the return len to 0
->
-> Signed-off-by: Tom Rix <trix@redhat.com>
-> ---
->  security/selinux/ss/services.c | 4 ++++
->  1 file changed, 4 insertions(+)
+The USB PHY provides the optimized for low power dissipation while active, idle, or on standby.
+Requires minimal external components, a single resistor, for best operation.
+Supports 10/5-Gbps high-speed data transmission rates through 3-m USB 3.x cable 
+---
+v2:
+  - Address Phillip's review comments
+  - replace devm_reset_control_get() by devm_reset_control_get_exclusive()
+  - re-design the assert and deassert fucntion calls as per review comments
+  - address kbuild bot warnings
+  - add the comments 
+v1:
+  - initial version
 
-Thanks Tom for the patch and Stephen for the review.
+---
+dt-bindings: usb: Add USB PHY support for Intel LGM SoC
+v2:
+  - No Change
+v1:
+  - initial version
 
-I've marked this for stable and merged it into selinux/stable-5.8.
-Considering we are just a few days away from the close of the merge
-window and -rc1, I'll probably hold off until next to send this up to
-Linus.
 
-> diff --git a/security/selinux/ss/services.c b/security/selinux/ss/services.c
-> index 313919bd42f8..ef0afd878bfc 100644
-> --- a/security/selinux/ss/services.c
-> +++ b/security/selinux/ss/services.c
-> @@ -2888,8 +2888,12 @@ int security_get_bools(struct selinux_state *state,
->         if (*names) {
->                 for (i = 0; i < *len; i++)
->                         kfree((*names)[i]);
-> +               kfree(*names);
->         }
->         kfree(*values);
-> +       *len = 0;
-> +       *names = NULL;
-> +       *values = NULL;
->         goto out;
->  }
->
-> --
-> 2.18.1
+Ramuthevar Vadivel Murugan (2):
+  dt-bindings: usb: Add USB PHY support for Intel LGM SoC
+  usb: phy: Add USB3 PHY support for Intel LGM SoC
+
+ .../devicetree/bindings/usb/intel,lgm-usb-phy.yaml |  53 ++++
+ drivers/usb/phy/Kconfig                            |  11 +
+ drivers/usb/phy/Makefile                           |   1 +
+ drivers/usb/phy/phy-lgm-usb.c                      | 280 +++++++++++++++++++++
+ 4 files changed, 345 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/intel,lgm-usb-phy.yaml
+ create mode 100644 drivers/usb/phy/phy-lgm-usb.c
 
 -- 
-paul moore
-www.paul-moore.com
+2.11.0
+
