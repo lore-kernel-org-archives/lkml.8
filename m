@@ -2,271 +2,162 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD9DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 934D8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:47:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21EEF20656
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:46:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DCC92078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:47:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dubeyko-com.20150623.gappssmtp.com header.i=@dubeyko-com.20150623.gappssmtp.com header.b="SnaXe7M2"
+	dkim=pass (1024-bit key) header.d=maximintegrated.onmicrosoft.com header.i=@maximintegrated.onmicrosoft.com header.b="NjCyx3ZQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgFKJqy (ORCPT
+        id S1726973AbgFKJru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 05:46:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44068 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726684AbgFKJqy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 05:46:54 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC0D2C08C5C2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 02:46:53 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id y11so6137069ljm.9
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 02:46:53 -0700 (PDT)
+        Thu, 11 Jun 2020 05:47:50 -0400
+Received: from mail-bn8nam11on2126.outbound.protection.outlook.com ([40.107.236.126]:29857
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726684AbgFKJrt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 05:47:49 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XBxcVq6jws/uEiFWI54kzWM9F0aRNX6+fysESWnp24p7KCt+A0a8IiVuchNaKPc8VKZnzdUR2ZuATHLiwjvMwgDd/v6YHYNWWElYXKeWi5yxaX0NjcEXvwiPnPBkh5Jg8BP0g5QQSyz/jsczgl5Dq8rTI59GuctlNU24lyYQExohhkL97VPEeD1+XJQnKK4+nGHIMzu3Gm9NqqwlisuS7S0Plxlpl9rYTE00PryEj8WBg3f79bGnEMO3OfpCXPs1AVKGDaMYm/C0c24N8FhiUM6f99Z9s1n/KzdI3NMFnVzVtIXshcGQ0MUDI7CpjMFZIweYK0DqsYcwT3SWCf2KGg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CNBQxSCCM+D0W9bOSAiuaGE8mBeFV5Szar2f9nGcjb8=;
+ b=gYCM7CC3f6jW7bnxzrDzsX7qq0A+yrkrz6eCzCiyV8M3RNNRLkul4QpmdBs5WjvXHcnlNvob0ZsLczlQl7kOGm0pq9tGjQ0kFRa87TZ+qgt0YIS6VA41z8ksxKvsQGi2SClAjSWnhelMKdi3SB65ZiCsfBNL9RXtVYB2QzOfP6a7PxxHCcNeYfPe00oUcSQ5PIryPS2oXhHT6hoZF2fbUwe/Qg3ew/Emjy11EnBNlJiXNrIYJ2+8DkJyZzn6L4Q7NUZwG/vc+qrtvTXgNhIaqcUaF5uojIA4dt+ob93d5VqsND7dBSs5okKfeHX3FSW0Gpxy0REiciFeIOoZfb9coA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=maximintegrated.com; dmarc=pass action=none
+ header.from=maximintegrated.com; dkim=pass header.d=maximintegrated.com;
+ arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dubeyko-com.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Hyn73QR/6JPg70xzThBwZTJ8kEal7aXhN6v8vQp+LBs=;
-        b=SnaXe7M2GrvZ7BhjO5iTKuC9beIxoL1uwdhEMBexyrWtBlq+NHQbiGjzAOem2F8Mm6
-         yvhbT1UlOyFVJkR5bFu5fA3AIEMEA+eI8koqz5JhTaOV9O4JgNotEDNpHnIdkawjt2aC
-         Qn7V9AMk9yi1X3iN7v5VEDSlxSfoRC82qU79OAH43vzVefcmbPLcQr9MlGz4kzh3BlUn
-         5ZpcS+tuvJlUhen+fbjEdW1rGQOlaQoEV03xVxI96JA+enzPTzZgaP/+L/IN4MqA/ohJ
-         XxA6rJo0rhN405188ZzaCVri5+XmMTVuOdIgO24zG3+SnHkateVFk1iHrWKmUWETmMmx
-         5wjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Hyn73QR/6JPg70xzThBwZTJ8kEal7aXhN6v8vQp+LBs=;
-        b=OqRM2+nL5IHI2kAD152lKx2gk9wDZm69KylFxpRY13HHAnGC9hfXrK/DGguX/rYPOp
-         iOPxjUtEIIKSeZUlqLElWd/f6rBGYlZMaZVfGdtyQ8Cz/mNsRqx41NRcmPbtoAkle/0k
-         Q31RbSAUVYmKQv/P9qmu1/UXV9RXUCcxohAxBRIq1Rfn16WT4GXeT87U9WTIfQOtJQJu
-         PWFI+mG3Fz1HkqL6Ip0MOU+NEiZImfVLFVx2DIM6CvtCYHxHSX5Masz2PPeVW4GPrBgz
-         mBhVF7VKukENzjYGZPHsEvRQwiKxLHUEGwL76z0T+356CWFp1U5esNWZwNvfJvB2xAyM
-         KYvw==
-X-Gm-Message-State: AOAM532SMW7hGWThjEa6fj4L+fcAODBoxZyWsTMThrZY4h0zL8jMDXD9
-        R4Dqoicny+xRcliCvIzszIBL/Q==
-X-Google-Smtp-Source: ABdhPJy4qA5byZmf6kKokdvl/Nn0Wj6C8tYzp5BfUd/SPiQSvepKS6ymsupW0Tybo+j8ng7HLH76Rg==
-X-Received: by 2002:a2e:8e85:: with SMTP id z5mr3735544ljk.330.1591868811665;
-        Thu, 11 Jun 2020 02:46:51 -0700 (PDT)
-Received: from vdubeyko-laptop ([89.207.88.249])
-        by smtp.gmail.com with ESMTPSA id w20sm589499ljo.68.2020.06.11.02.46.50
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 11 Jun 2020 02:46:50 -0700 (PDT)
-Message-ID: <078a2cc7ac7a28dca31d277d81387f29b48898d5.camel@dubeyko.com>
-Subject: Re: [PATCH] hfs: fix null-ptr-deref in hfs_find_init()
-From:   Viacheslav Dubeyko <slava@dubeyko.com>
-To:     Yang Yingliang <yangyingliang@huawei.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 11 Jun 2020 12:46:49 +0300
-In-Reply-To: <0fa6b82a-61ef-fd9c-53a9-c61862c8c188@huawei.com>
-References: <1591326067-29972-1-git-send-email-yangyingliang@huawei.com>
-         <A092DD0C-FEB3-4C27-BD60-576401D5ACD2@dubeyko.com>
-         <0fa6b82a-61ef-fd9c-53a9-c61862c8c188@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+ d=maximintegrated.onmicrosoft.com;
+ s=selector2-maximintegrated-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CNBQxSCCM+D0W9bOSAiuaGE8mBeFV5Szar2f9nGcjb8=;
+ b=NjCyx3ZQOi7TjUxeuAeFe59sb0VzIopPG9u2rP6oOPzoUzZbU1ewixks6SWzlf5O2tCfuLytx/sM7Ll1ecL78nl84RIZGf2eF9Y+GQR2rU9i2wOp7feRbh60DvQz3h5ceqEWlGaH/9J6KQLLUbYCkxqgNLY8JzNroOf2AARb9V0=
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none
+ header.from=maximintegrated.com;
+Received: from MWHPR11MB2047.namprd11.prod.outlook.com (2603:10b6:300:2a::12)
+ by MW3PR11MB4668.namprd11.prod.outlook.com (2603:10b6:303:54::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.20; Thu, 11 Jun
+ 2020 09:47:46 +0000
+Received: from MWHPR11MB2047.namprd11.prod.outlook.com
+ ([fe80::994e:6a48:f660:f363]) by MWHPR11MB2047.namprd11.prod.outlook.com
+ ([fe80::994e:6a48:f660:f363%5]) with mapi id 15.20.3088.022; Thu, 11 Jun 2020
+ 09:47:46 +0000
+From:   Steve Lee <steves.lee@maximintegrated.com>
+To:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, ckeepax@opensource.cirrus.com,
+        geert@linux-m68k.org, rf@opensource.wolfsonmicro.com,
+        shumingf@realtek.com, srinivas.kandagatla@linaro.org,
+        krzk@kernel.org, dmurphy@ti.com, jack.yu@realtek.com,
+        nuno.sa@analog.com, steves.lee@maximintegrated.com,
+        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+Cc:     ryan.lee.maxim@gmail.com, ryans.lee@maximintegrated.com,
+        steves.lee.maxim@gmail.com
+Subject: [PATCH 1/2] ASoC: max98390: Add Amp init common setting func.
+Date:   Thu, 11 Jun 2020 18:47:18 +0900
+Message-Id: <20200611094718.18371-1-steves.lee@maximintegrated.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: SL2PR01CA0022.apcprd01.prod.exchangelabs.com
+ (2603:1096:100:41::34) To MWHPR11MB2047.namprd11.prod.outlook.com
+ (2603:10b6:300:2a::12)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (2001:2d8:210:3256:d447:7247:839:5c8e) by SL2PR01CA0022.apcprd01.prod.exchangelabs.com (2603:1096:100:41::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.20 via Frontend Transport; Thu, 11 Jun 2020 09:47:40 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [2001:2d8:210:3256:d447:7247:839:5c8e]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 2c36463e-27ec-4940-a143-08d80dec7e32
+X-MS-TrafficTypeDiagnostic: MW3PR11MB4668:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MW3PR11MB466873CAED5FA67E39CAE49092800@MW3PR11MB4668.namprd11.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:288;
+X-Forefront-PRVS: 0431F981D8
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: f2Z6rB6bIvOv/L60eyrwhmhkNcRLfIL607x4Ajn2AE12GPExKLMIex6QORTI/G7is3jCj35BY5tW9kXmgA+8cNnp/FwH21VW8sEXmE+SZ6SnmO3z2Q0MwGPonheeuTjDGoPkQD/OOCb5QgQA1pASRj8TzPvQTB6rSwbciDNEpKt1RZJyCnN2SBUd/WSA6qJewLumCC8l8nC73ZumYtyrHMc5k3Y25eQ+vZ7oL2QpU+eQBfU+N689lsWRYVkgykqdGunp7Yo9AbPy+idTUHalTIzHgbcynSGmGLMLhLAR9KnC1GZZVsS/i04cyjHSFErIg+aps1yQJfT/wzfP7Fr7y+tPl9LHf5vMxQXj0O5jmCsvwL0dW2KeofXWa/pdIi2E3P2kgWfPiGFkZEbsVHAHig==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB2047.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(346002)(136003)(376002)(366004)(8676002)(2906002)(16526019)(52116002)(478600001)(66476007)(66946007)(1076003)(316002)(186003)(5660300002)(6666004)(6506007)(86362001)(6512007)(83380400001)(66556008)(4326008)(36756003)(69590400007)(2616005)(8936002)(7416002)(6486002)(921003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: vWnSY73y5s/wYkaVxvw9a/7U0c+lDOsocwQxXljgZJylxEJHsc1/sg3EnUWCtBL+a3V9xvMtEG2zKMETkxxBlXIUIpUxTxa6gt8BTyaCoA7I0xDNcJwTRTGL0qc6CmJYFLSZZY6XpFmbFpaRzLhXYqDmRdHXFo3BkoqFUogP17aO8sBGq4dwB25pGqoBF4CCyyMWmMk6GXwiMYC8Vw3lugeWNiQZ5/+C3qr00Z7MPlhRjCdKlMVDZ2b5dOQedWIlrGx6eFx8prKCgv72xJdG0FkV8g+7APrvCrvza8KvyvSNt8T1vHg+I+QWe0kD1SAeGpukrwc6VROSBwLkO7U1jct9cqf5i7wC0T4AACOqFIvrkXWxpXsyWeArJEayKFfjlX5GXgajs+qmMNyxltqaZ4n9g5uopbYKlHd/iO2frOm/Vht0E6WujUU9/+Nvy9WraGneqMg8H6SIZ6QQj7X0eRdDbvwY2Jiov9cFcivVmsBzXxF4PeEDrMWfaC0A6yrHpNg17+7vQI4jGq1mvy7ZAZHil9/lkckLfB3ORCsx8Cg=
+X-OriginatorOrg: maximintegrated.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2c36463e-27ec-4940-a143-08d80dec7e32
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2020 09:47:46.0152
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fbd909df-ea69-4788-a554-f24b7854ad03
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: kmPdqrAsKo9tKqKSZ1+iu89jzU3lVwG4o5/nUHul4Giss3fPKcT0kUEyhXCdoNlJivEaMOEkq/bL2HeobzbJpp1IsbhHuQOHBou+zxZEfL8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR11MB4668
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yang,
+ Add amp common init function to gather common init setting and finaize.
+  - add max98390_init_regs func
+  - move amp setting to max98390_init_regs func.
+  - removed unneceary setting and finalize common register values.
 
-On Wed, 2020-06-10 at 20:54 +0800, Yang Yingliang wrote:
-> Hi,
-> On 2020/6/9 16:06, Viacheslav Dubeyko wrote:
-> > Hi Yang,
-> > 
-> > > On Jun 5, 2020, at 6:01 AM, Yang Yingliang <
-> > > yangyingliang@huawei.com> wrote:
-> > > 
-> > > There is a null-ptr-deref in hfs_find_init():
-> > > 
-> > > [  107.092729] hfs: continuing without an alternate MDB
-> > > [  107.097632] general protection fault, probably for non-
-> > > canonical address 0xdffffc0000000008: 0000 [#1] SMP KASAN PTI
-> > > [  107.104679] KASAN: null-ptr-deref in range
-> > > [0x0000000000000040-0x0000000000000047]
-> > > [  107.109100] CPU: 0 PID: 379 Comm: hfs_inject Not tainted
-> > > 5.7.0-rc7-00001-g24627f5f2973 #897
-> > > [  107.114142] Hardware name: QEMU Standard PC (i440FX + PIIX,
-> > > 1996), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org
-> > > 04/01/2014
-> > > [  107.121095] RIP: 0010:hfs_find_init+0x72/0x170
-> > > [  107.123609] Code: c1 ea 03 80 3c 02 00 0f 85 e6 00 00 00 4c 8d
-> > > 65 40 48 c7 43 18 00 00 00 00 48 b8 00 00 00 00 00 fc ff df 4c 89
-> > > e2 48 c1 ea 03 <0f> b6 04 02 84 c0 74 08 3c 03 0f 8e a5 00 00 00
-> > > 8b 45 40 be c0 0c
-> > > [  107.134660] RSP: 0018:ffff88810291f3f8 EFLAGS: 00010202
-> > > [  107.137897] RAX: dffffc0000000000 RBX: ffff88810291f468 RCX:
-> > > 1ffff110175cdf05
-> > > [  107.141874] RDX: 0000000000000008 RSI: ffff88810291f468 RDI:
-> > > ffff88810291f480
-> > > [  107.145844] RBP: 0000000000000000 R08: 0000000000000000 R09:
-> > > ffffed1020381013
-> > > [  107.149431] R10: ffff88810291f500 R11: ffffed1020381012 R12:
-> > > 0000000000000040
-> > > [  107.152315] R13: 0000000000000000 R14: ffff888101c0814a R15:
-> > > ffff88810291f468
-> > > [  107.155464] FS:  00000000009ea880(0000)
-> > > GS:ffff88810c600000(0000) knlGS:0000000000000000
-> > > [  107.159795] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > [  107.162987] CR2: 00005605a19dd284 CR3: 0000000103a0c006 CR4:
-> > > 0000000000020ef0
-> > > [  107.166665] Call Trace:
-> > > [  107.167969]  ? find_held_lock+0x33/0x1c0
-> > > [  107.169972]  hfs_ext_read_extent+0x16b/0xb00
-> > > [  107.172092]  ? create_page_buffers+0x14e/0x1b0
-> > > [  107.174303]  ? hfs_free_extents+0x280/0x280
-> > > [  107.176437]  ? lock_downgrade+0x730/0x730
-> > > [  107.178272]  hfs_get_block+0x496/0x8a0
-> > > [  107.179972]  block_read_full_page+0x241/0x8d0
-> > > [  107.181971]  ? hfs_extend_file+0xae0/0xae0
-> > > [  107.183814]  ? end_buffer_async_read_io+0x10/0x10
-> > > [  107.185954]  ? add_to_page_cache_lru+0x13f/0x1f0
-> > > [  107.188006]  ? add_to_page_cache_locked+0x10/0x10
-> > > [  107.190175]  do_read_cache_page+0xc6a/0x1180
-> > > [  107.192096]  ? generic_file_read_iter+0x4c0/0x4c0
-> > > [  107.194234]  ? hfs_btree_open+0x408/0x1000
-> > > [  107.196068]  ? lock_downgrade+0x730/0x730
-> > > [  107.197926]  ? wake_bit_function+0x180/0x180
-> > > [  107.199845]  ? lockdep_init_map_waits+0x267/0x7c0
-> > > [  107.201895]  hfs_btree_open+0x455/0x1000
-> > > [  107.203479]  hfs_mdb_get+0x122c/0x1ae8
-> > > [  107.205065]  ? hfs_mdb_put+0x350/0x350
-> > > [  107.206590]  ? queue_work_node+0x260/0x260
-> > > [  107.208309]  ? rcu_read_lock_sched_held+0xa1/0xd0
-> > > [  107.210227]  ? lockdep_init_map_waits+0x267/0x7c0
-> > > [  107.212144]  ? lockdep_init_map_waits+0x267/0x7c0
-> > > [  107.213979]  hfs_fill_super+0x9ba/0x1280
-> > > [  107.215444]  ? bdev_name.isra.9+0xf1/0x2b0
-> > > [  107.217028]  ? hfs_remount+0x190/0x190
-> > > [  107.218428]  ? pointer+0x5da/0x710
-> > > [  107.219745]  ? file_dentry_name+0xf0/0xf0
-> > > [  107.221262]  ? mount_bdev+0xd1/0x330
-> > > [  107.222592]  ? vsnprintf+0x7bd/0x1250
-> > > [  107.224007]  ? pointer+0x710/0x710
-> > > [  107.225332]  ? down_write+0xe5/0x160
-> > > [  107.226698]  ? hfs_remount+0x190/0x190
-> > > [  107.228120]  ? snprintf+0x91/0xc0
-> > > [  107.229388]  ? vsprintf+0x10/0x10
-> > > [  107.230628]  ? sget+0x3af/0x4a0
-> > > [  107.231848]  ? hfs_remount+0x190/0x190
-> > > [  107.233300]  mount_bdev+0x26e/0x330
-> > > [  107.234611]  ? hfs_statfs+0x540/0x540
-> > > [  107.236015]  legacy_get_tree+0x101/0x1f0
-> > > [  107.237431]  ? security_capable+0x58/0x90
-> > > [  107.238832]  vfs_get_tree+0x89/0x2d0
-> > > [  107.240082]  ? ns_capable_common+0x5c/0xd0
-> > > [  107.241521]  do_mount+0xd8a/0x1720
-> > > [  107.242727]  ? lock_downgrade+0x730/0x730
-> > > [  107.244116]  ? copy_mount_string+0x20/0x20
-> > > [  107.245557]  ? _copy_from_user+0xbe/0x100
-> > > [  107.246967]  ? memdup_user+0x47/0x70
-> > > [  107.248212]  __x64_sys_mount+0x162/0x1b0
-> > > [  107.249537]  do_syscall_64+0xa5/0x4f0
-> > > [  107.250742]  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> > > [  107.252369] RIP: 0033:0x44e8ea
-> > > [  107.253360] Code: 48 c7 c1 c0 ff ff ff f7 d8 64 89 01 48 83 c8
-> > > ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 49 89 ca b8 a5
-> > > 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 c0 ff ff ff
-> > > f7 d8 64 89 01 48
-> > > [  107.259240] RSP: 002b:00007ffd910e4c28 EFLAGS: 00000207
-> > > ORIG_RAX: 00000000000000a5
-> > > [  107.261668] RAX: ffffffffffffffda RBX: 0000000000400400 RCX:
-> > > 000000000044e8ea
-> > > [  107.263920] RDX: 000000000049321e RSI: 0000000000493222 RDI:
-> > > 00007ffd910e4d00
-> > > [  107.266177] RBP: 00007ffd910e5d10 R08: 0000000000000000 R09:
-> > > 000000000000000a
-> > > [  107.268451] R10: 0000000000000001 R11: 0000000000000207 R12:
-> > > 0000000000401c40
-> > > [  107.270721] R13: 0000000000000000 R14: 00000000006ba018 R15:
-> > > 0000000000000000
-> > > [  107.273025] Modules linked in:
-> > > [  107.274029] Dumping ftrace buffer:
-> > > [  107.275121]    (ftrace buffer empty)
-> > > [  107.276370] ---[ end trace c5e0b9d684f3570e ]---
-> > > 
-> > > We need check tree in hfs_find_init().
-> > > 
-> > > 
-https://lore.kernel.org/linux-fsdevel/20180419024358.GA5215@bombadil.infradead.org/
-> > > https://marc.info/?l=linux-fsdevel&m=152406881024567&w=2
-> > > References: CVE-2018-12928
-> > > Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-> > > ---
-> > > fs/hfs/bfind.c | 2 ++
-> > > 1 file changed, 2 insertions(+)
-> > > 
-> > > diff --git a/fs/hfs/bfind.c b/fs/hfs/bfind.c
-> > > index 4af318f..aafa6bd 100644
-> > > --- a/fs/hfs/bfind.c
-> > > +++ b/fs/hfs/bfind.c
-> > > @@ -16,6 +16,8 @@ int hfs_find_init(struct hfs_btree *tree,
-> > > struct hfs_find_data *fd)
-> > > {
-> > > 	void *ptr;
-> > > 
-> > > +	if (!tree)
-> > > +		return -EINVAL;
-> > 
-> > Looks good. But we have the same issue in HFS+ driver. Could you
-> > prepare the patch for HFS+ too?
-> 
-> OK, I will send a patch for HFS+.
-> > 
-> > By the way, what is the reason for extents tree pointer to be NULL?
-> > Do we have the empty file in this use-case?
-> 
-> The reproducer is came from 
-> https://marc.info/?l=linux-fsdevel&m=152406881024567&w=2 .
-> 
-> And it's triggered by mounting a crafted hfs file which has a lot of 
-> zero data at the end.
-> 
+Signed-off-by: Steve Lee <steves.lee@maximintegrated.com>
+---
+ sound/soc/codecs/max98390.c | 26 ++++++++++++++++----------
+ 1 file changed, 16 insertions(+), 10 deletions(-)
 
-I like the fix, but the issue has more complex nature, as far as I can
-see. The hfs_ext_read_extent() is trying to access the HFS_SB(inode-
->i_sb)->ext_tree [1]. However, hfs_fill_super() calls the hfs_mdb_get()
-that is trying to create Extents Tree. It means that hfs_btree_open()
-is trying to access HFS_SB(inode->i_sb)->ext_tree before the real
-initialization. Because, namely hfs_btree_open() returns the created
-tree object [2]. Did I miss something here? Frankly speaking, I am
-slightly confused how it worked before. Maybe, some patch broke the
-initial logic?
-
-[1] https://elixir.bootlin.com/linux/latest/source/fs/hfs/extent.c#L200
-[2] https://elixir.bootlin.com/linux/latest/source/fs/hfs/mdb.c#L193
-
-Thanks,
-Viacheslav Dubeyko.
-
-> 
-> Thanks,
-> 
-> Yang
-> 
-> > 
-> > Thanks,
-> > Viacheslav Dubeyko.
-> > 
-> > > 	fd->tree = tree;
-> > > 	fd->bnode = NULL;
-> > > 	ptr = kmalloc(tree->max_key_len * 2 + 4, GFP_KERNEL);
-> > > -- 
-> > > 1.8.3
-> > > 
-> > 
-> > .
-> 
-> 
+diff --git a/sound/soc/codecs/max98390.c b/sound/soc/codecs/max98390.c
+index 0d63ebfbff2f..57d15dbfcda3 100644
+--- a/sound/soc/codecs/max98390.c
++++ b/sound/soc/codecs/max98390.c
+@@ -842,6 +842,20 @@ static int max98390_dsm_calibrate(struct snd_soc_component *component)
+ 	return 0;
+ }
+ 
++static void max98390_init_regs(struct snd_soc_component *component)
++{
++	struct max98390_priv *max98390 =
++		snd_soc_component_get_drvdata(component);
++
++	regmap_write(max98390->regmap, MAX98390_CLK_MON, 0x6f);
++	regmap_write(max98390->regmap, MAX98390_DAT_MON, 0x00);
++	regmap_write(max98390->regmap, MAX98390_PWR_GATE_CTL, 0x00);
++	regmap_write(max98390->regmap, MAX98390_PCM_RX_EN_A, 0x03);
++	regmap_write(max98390->regmap, MAX98390_ENV_TRACK_VOUT_HEADROOM, 0x0e);
++	regmap_write(max98390->regmap, MAX98390_BOOST_BYPASS1, 0x46);
++	regmap_write(max98390->regmap, MAX98390_FET_SCALING3, 0x03);
++}
++
+ static int max98390_probe(struct snd_soc_component *component)
+ {
+ 	struct max98390_priv *max98390 =
+@@ -853,18 +867,10 @@ static int max98390_probe(struct snd_soc_component *component)
+ 	/* Update dsm bin param */
+ 	max98390_dsm_init(component);
+ 
+-	/* Amp Setting */
+-	regmap_write(max98390->regmap, MAX98390_CLK_MON, 0x6f);
+-	regmap_write(max98390->regmap, MAX98390_PCM_RX_EN_A, 0x03);
+-	regmap_write(max98390->regmap, MAX98390_PWR_GATE_CTL, 0x2d);
+-	regmap_write(max98390->regmap, MAX98390_ENV_TRACK_VOUT_HEADROOM, 0x0e);
+-	regmap_write(max98390->regmap, MAX98390_BOOST_BYPASS1, 0x46);
+-	regmap_write(max98390->regmap, MAX98390_FET_SCALING3, 0x03);
++	/* Amp init setting */
++	max98390_init_regs(component);
+ 
+ 	/* Dsm Setting */
+-	regmap_write(max98390->regmap, DSM_VOL_CTRL, 0x94);
+-	regmap_write(max98390->regmap, DSMIG_EN, 0x19);
+-	regmap_write(max98390->regmap, MAX98390_R203A_AMP_EN, 0x80);
+ 	if (max98390->ref_rdc_value) {
+ 		regmap_write(max98390->regmap, DSM_TPROT_RECIP_RDC_ROOM_BYTE0,
+ 			max98390->ref_rdc_value & 0x000000ff);
+-- 
+2.17.1
 
