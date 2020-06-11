@@ -2,178 +2,110 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E3ECC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A87F9C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 148132074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:42:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591861360;
-	bh=gKJMd5utUWukaitgLZGRza7ui70C0kpqMr9sxdjD8/c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=2h71ZNdWo6UXxPXZeq5yqhR59EbFkP2/bJTWwVJnTqYeWBJoJUdzuCTy71HYroYcq
-	 yEpy4PsLQqfBFzJ21E0ZGEYaflHgzOC+p1c2XA5DPvnoauiwVQinkLUU55VtePhsVD
-	 DhGwIyfac1dCJWT7+6JPr/3aHHIffiykp1dCOHI0=
+	by mail.kernel.org (Postfix) with ESMTP id 899482074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:44:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbgFKHmi (ORCPT
+        id S1726724AbgFKHoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 03:42:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38892 "EHLO mail.kernel.org"
+        Thu, 11 Jun 2020 03:44:08 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:34228 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726770AbgFKHmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 03:42:38 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 293AD2072F;
-        Thu, 11 Jun 2020 07:42:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591861357;
-        bh=gKJMd5utUWukaitgLZGRza7ui70C0kpqMr9sxdjD8/c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=KFqoZB/lJU4/f4epVDrDHxmP+O9tSVmWZ9vwm72Y2fn4eZGAMXQWihXl2JAI4FS72
-         UqbCTonXJ0Ycg0aPDpTrq2bK/znskSWa72A+cKKnHvHHm+0q+A2Ze1gBPrDX5T95DW
-         zyqKCImV0KfIgaDkJAgPptVndfnb+CFq3aZUfJQ8=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jjHr9-0021J7-Lk; Thu, 11 Jun 2020 08:42:35 +0100
+        id S1726574AbgFKHoI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 03:44:08 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1jjHs4-0005aM-JI; Thu, 11 Jun 2020 17:43:33 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 11 Jun 2020 17:43:32 +1000
+Date:   Thu, 11 Jun 2020 17:43:32 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Sagi Grimberg <sagi@lightbitslabs.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [PATCH] iov_iter: Move unnecessary inclusion of crypto/hash.h
+Message-ID: <20200611074332.GA12274@gondor.apana.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 11 Jun 2020 08:42:35 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Feiner <pfeiner@google.com>,
-        Peter Shier <pshier@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        Ben Gardon <bgardon@google.com>,
-        Christoffer Dall <christoffer.dall@arm.com>
-Subject: Re: [PATCH 14/21] KVM: Move x86's version of struct
- kvm_mmu_memory_cache to common code
-In-Reply-To: <20200605213853.14959-15-sean.j.christopherson@intel.com>
-References: <20200605213853.14959-1-sean.j.christopherson@intel.com>
- <20200605213853.14959-15-sean.j.christopherson@intel.com>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <f57fc7237ffba4f22042b42efb18d2e4@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: sean.j.christopherson@intel.com, paulus@ozlabs.org, borntraeger@de.ibm.com, frankja@linux.ibm.com, pbonzini@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, david@redhat.com, cohuck@redhat.com, imbrenda@linux.ibm.com, vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org, kvm@vger.kernel.org, kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org, pfeiner@google.com, pshier@google.com, junaids@google.com, bgardon@google.com, christoffer.dall@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sean,
+The header file linux/uio.h includes crypto/hash.h which pulls in
+most of the Crypto API.  Since linux/uio.h is used throughout the
+kernel this means that every tiny bit of change to the Crypto API
+causes the entire kernel to get rebuilt.
 
-On 2020-06-05 22:38, Sean Christopherson wrote:
-> Move x86's 'struct kvm_mmu_memory_cache' to common code in anticipation
-> of moving the entire x86 implementation code to common KVM and reusing
-> it for arm64 and MIPS.  Add a new architecture specific asm/kvm_types.h
-> to control the existence and parameters of the struct.  The new header
-> is needed to avoid a chicken-and-egg problem with asm/kvm_host.h as all
-> architectures define instances of the struct in their vCPU structs.
-> 
-> Suggested-by: Christoffer Dall <christoffer.dall@arm.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/arm64/include/asm/kvm_types.h   |  6 ++++++
->  arch/mips/include/asm/kvm_types.h    |  5 +++++
->  arch/powerpc/include/asm/kvm_types.h |  5 +++++
->  arch/s390/include/asm/kvm_types.h    |  5 +++++
->  arch/x86/include/asm/kvm_host.h      | 13 -------------
->  arch/x86/include/asm/kvm_types.h     |  7 +++++++
->  include/linux/kvm_types.h            | 19 +++++++++++++++++++
->  7 files changed, 47 insertions(+), 13 deletions(-)
->  create mode 100644 arch/arm64/include/asm/kvm_types.h
->  create mode 100644 arch/mips/include/asm/kvm_types.h
->  create mode 100644 arch/powerpc/include/asm/kvm_types.h
->  create mode 100644 arch/s390/include/asm/kvm_types.h
->  create mode 100644 arch/x86/include/asm/kvm_types.h
-> 
-> diff --git a/arch/arm64/include/asm/kvm_types.h
-> b/arch/arm64/include/asm/kvm_types.h
-> new file mode 100644
-> index 000000000000..d0987007d581
-> --- /dev/null
-> +++ b/arch/arm64/include/asm/kvm_types.h
-> @@ -0,0 +1,6 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _ASM_ARM64_KVM_TYPES_H
-> +#define _ASM_ARM64_KVM_TYPES_H
-> +
-> +#endif /* _ASM_ARM64_KVM_TYPES_H */
-> +
-> diff --git a/arch/mips/include/asm/kvm_types.h
-> b/arch/mips/include/asm/kvm_types.h
-> new file mode 100644
-> index 000000000000..5efeb32a5926
-> --- /dev/null
-> +++ b/arch/mips/include/asm/kvm_types.h
-> @@ -0,0 +1,5 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _ASM_MIPS_KVM_TYPES_H
-> +#define _ASM_MIPS_KVM_TYPES_H
-> +
-> +#endif /* _ASM_MIPS_KVM_TYPES_H */
-> diff --git a/arch/powerpc/include/asm/kvm_types.h
-> b/arch/powerpc/include/asm/kvm_types.h
-> new file mode 100644
-> index 000000000000..f627eceaa314
-> --- /dev/null
-> +++ b/arch/powerpc/include/asm/kvm_types.h
-> @@ -0,0 +1,5 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _ASM_POWERPC_KVM_TYPES_H
-> +#define _ASM_POWERPC_KVM_TYPES_H
-> +
-> +#endif /* _ASM_POWERPC_KVM_TYPES_H */
-> diff --git a/arch/s390/include/asm/kvm_types.h
-> b/arch/s390/include/asm/kvm_types.h
-> new file mode 100644
-> index 000000000000..b66a81f8a354
-> --- /dev/null
-> +++ b/arch/s390/include/asm/kvm_types.h
-> @@ -0,0 +1,5 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _ASM_S390_KVM_TYPES_H
-> +#define _ASM_S390_KVM_TYPES_H
-> +
-> +#endif /* _ASM_S390_KVM_TYPES_H */
+This patch fixes this by moving it into lib/iov_iter.c instead
+where it is actually used.
 
-Instead of carrying an empty include file for at least two of the 
-architectures
-(s390 and Power), how about having it in asm-generic, and updating
-arch/$ARCH/include/asm/Kbuild to point to the generic one?
+This patch also fixes the ifdef to use CRYPTO_HASH instead of just
+CRYPTO which does not guarantee the existence of ahash.
 
-Thanks,
+Finally the prototype of the function has been changed to avoid
+the unnecessary use of a void pointer.
 
-         M.
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+
+diff --git a/include/linux/uio.h b/include/linux/uio.h
+index 9576fd8158d7..67a8ffd31ad8 100644
+--- a/include/linux/uio.h
++++ b/include/linux/uio.h
+@@ -7,9 +7,9 @@
+ 
+ #include <linux/kernel.h>
+ #include <linux/thread_info.h>
+-#include <crypto/hash.h>
+ #include <uapi/linux/uio.h>
+ 
++struct ahash_request;
+ struct page;
+ struct pipe_inode_info;
+ 
+@@ -264,7 +264,7 @@ static inline void iov_iter_reexpand(struct iov_iter *i, size_t count)
+ size_t csum_and_copy_to_iter(const void *addr, size_t bytes, void *csump, struct iov_iter *i);
+ size_t csum_and_copy_from_iter(void *addr, size_t bytes, __wsum *csum, struct iov_iter *i);
+ bool csum_and_copy_from_iter_full(void *addr, size_t bytes, __wsum *csum, struct iov_iter *i);
+-size_t hash_and_copy_to_iter(const void *addr, size_t bytes, void *hashp,
++size_t hash_and_copy_to_iter(const void *addr, size_t bytes, struct ahash_request *hash,
+ 		struct iov_iter *i);
+ 
+ ssize_t import_iovec(int type, const struct iovec __user * uvector,
+diff --git a/lib/iov_iter.c b/lib/iov_iter.c
+index 51595bf3af85..ac537111dcc6 100644
+--- a/lib/iov_iter.c
++++ b/lib/iov_iter.c
+@@ -1,4 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0-only
++#include <crypto/hash.h>
+ #include <linux/export.h>
+ #include <linux/bvec.h>
+ #include <linux/uio.h>
+@@ -1563,11 +1564,10 @@ size_t csum_and_copy_to_iter(const void *addr, size_t bytes, void *csump,
+ }
+ EXPORT_SYMBOL(csum_and_copy_to_iter);
+ 
+-size_t hash_and_copy_to_iter(const void *addr, size_t bytes, void *hashp,
++size_t hash_and_copy_to_iter(const void *addr, size_t bytes, struct ahash_request *hash,
+ 		struct iov_iter *i)
+ {
+-#ifdef CONFIG_CRYPTO
+-	struct ahash_request *hash = hashp;
++#ifdef CONFIG_CRYPTO_HASH
+ 	struct scatterlist sg;
+ 	size_t copied;
+ 
 -- 
-Jazz is not dead. It just smells funny...
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
