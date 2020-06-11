@@ -2,118 +2,211 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E28EBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:44:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 651B8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEB3D207ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:44:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="pmejnNdx"
+	by mail.kernel.org (Postfix) with ESMTP id 4D437207ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:46:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727904AbgFKRov (ORCPT
+        id S1728066AbgFKRqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 13:44:51 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:54274 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726972AbgFKRou (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 13:44:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1591897489; x=1623433489;
-  h=from:to:cc:subject:date:message-id:content-id:
-   content-transfer-encoding:mime-version;
-  bh=hYy65WZWY0Gm1TUqJpFUNLrDmRSr18zMfrjQrVGpTrQ=;
-  b=pmejnNdxuXm161oCsDgi65pp6w3lqgz/Hpl9GqRhIjS3uMe+6rhT6Tot
-   fIcxF4krYNFmfJmZXo3763Pjpjcmtx+16sVkkOoCN8vJld1ZGdY+A8lmx
-   RZWrhjbCyoqJ4BL1xLtitBRKL7hq7JQhN833fuzCRgBuhv2efuXPyBu4p
-   0=;
-IronPort-SDR: qOaW2ePJmsiii5oVjAcRlQ7W29PwfNE8RGXHhEta7Gh7D4RFYgjpFUyHuafo3Vfn3zqYBszQ26
- 0rbq4H78+gxg==
-X-IronPort-AV: E=Sophos;i="5.73,500,1583193600"; 
-   d="scan'208";a="37125348"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-c7c08562.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 11 Jun 2020 17:44:48 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1e-c7c08562.us-east-1.amazon.com (Postfix) with ESMTPS id 4F298240E4F;
-        Thu, 11 Jun 2020 17:44:46 +0000 (UTC)
-Received: from EX13D21UWB003.ant.amazon.com (10.43.161.212) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 11 Jun 2020 17:44:46 +0000
-Received: from EX13D02UWC004.ant.amazon.com (10.43.162.236) by
- EX13D21UWB003.ant.amazon.com (10.43.161.212) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 11 Jun 2020 17:44:46 +0000
-Received: from EX13D02UWC004.ant.amazon.com ([10.43.162.236]) by
- EX13D02UWC004.ant.amazon.com ([10.43.162.236]) with mapi id 15.00.1497.006;
- Thu, 11 Jun 2020 17:44:45 +0000
-From:   "Saidi, Ali" <alisaidi@amazon.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        "Herrenschmidt, Benjamin" <benh@amazon.com>,
-        "maz@kernel.org" <maz@kernel.org>
-CC:     "jason@lakedaemon.net" <jason@lakedaemon.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "Zilberman, Zeev" <zeev@amazon.com>,
-        "Machulsky, Zorik" <zorik@amazon.com>
-Subject: Re: [PATCH] irqchip/gic-v3-its: Don't try to move a disabled irq
-Thread-Topic: [PATCH] irqchip/gic-v3-its: Don't try to move a disabled irq
-Thread-Index: AQHWQBf+D56KE2y9NkWmPnFhz9cMFg==
-Date:   Thu, 11 Jun 2020 17:44:45 +0000
-Message-ID: <24FB929B-CE0F-4B9D-8064-146A0CE0A15D@amazon.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.160.26]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A984A1D31FA44D438F9D433DE2F27473@amazon.com>
-Content-Transfer-Encoding: base64
+        Thu, 11 Jun 2020 13:46:42 -0400
+Received: from mga14.intel.com ([192.55.52.115]:9096 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725869AbgFKRqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 13:46:42 -0400
+IronPort-SDR: Oh+DKdxx09gBC2imopTiJBVrL5QzFtvz8LXnj5QnEVUCr4IFxUNFURU3RAJUxUthSK45ZTuE4x
+ Gfyc2UF0Y/1Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 10:46:38 -0700
+IronPort-SDR: cyanNNT/0iff1+VTxru1WwpyKtWPGb5Onx9CyIC2p2imR40fSRRdzMLTEeTZL/W/O5d/Kmtiuy
+ sTKxvu22t9hQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,500,1583222400"; 
+   d="scan'208";a="271656436"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga003.jf.intel.com with ESMTP; 11 Jun 2020 10:46:38 -0700
+Date:   Thu, 11 Jun 2020 10:46:36 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Prarit Bhargava <prarit@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: Re: [PATCH v2] x86/split_lock: Sanitize userspace and guest error
+ output
+Message-ID: <20200611174636.GL29918@linux.intel.com>
+References: <20200608122114.13043-1-prarit@redhat.com>
+ <20200608171552.GB8223@linux.intel.com>
+ <b83ff48b-f590-f0f5-de64-d153ef376124@redhat.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b83ff48b-f590-f0f5-de64-d153ef376124@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQrvu79PbiA2LzgvMjAsIDg6NDkgQU0sICJUaG9tYXMgR2xlaXhuZXIiIDx0Z2x4QGxpbnV0cm9u
-aXguZGU+IHdyb3RlOg0KICAgIA0KICAgIA0KICAgICJIZXJyZW5zY2htaWR0LCBCZW5qYW1pbiIg
-PGJlbmhAYW1hem9uLmNvbT4gd3JpdGVzOg0KICAgID4gT24gV2VkLCAyMDIwLTA2LTAzIGF0IDE2
-OjE2ICswMTAwLCBNYXJjIFp5bmdpZXIgd3JvdGU6DQogICAgPj4gPiBNeSBvcmlnaW5hbCBwYXRj
-aCBzaG91bGQgY2VydGFpbiBjaGVjayBhY3RpdmF0ZWQgYW5kIG5vdCBkaXNhYmxlZC4NCiAgICA+
-PiA+IFdpdGggdGhhdCBkbyB5b3Ugc3RpbGwgaGF2ZSByZXNlcnZhdGlvbnMgTWFyYz8NCiAgICA+
-Pg0KICAgID4+IEknZCBzdGlsbCBwcmVmZXIgaXQgaWYgd2UgY291bGQgZG8gc29tZXRoaW5nIGlu
-IGNvcmUgY29kZSwgcmF0aGVyDQogICAgPj4gdGhhbiBzcHJlYWRpbmcgdGhlc2UgY2hlY2tzIGlu
-IHRoZSBpbmRpdmlkdWFsIGRyaXZlcnMuIElmIHdlIGNhbid0LA0KICAgID4+IGZhaXIgZW5vdWdo
-LiBCdXQgaXQgZmVlbHMgbGlrZSB0aGUgY29yZSBzZXRfYWZmaW5pdHkgZnVuY3Rpb24gY291bGQN
-CiAgICA+PiBqdXN0IGRvIHRoZSBzYW1lIHRoaW5nIGluIGEgc2luZ2xlIHBsYWNlIChhbHRob3Vn
-aCB0aGUgc3RhcnRlZCB2cw0KICAgID4+IGFjdGl2YXRlZCBpcyB5ZXQgYW5vdGhlciBwaWVjZSBv
-ZiB0aGUgcHV6emxlIEkgZGlkbid0IGNvbnNpZGVyLA0KICAgID4+IGFuZCB0aGUgSVRTIGRvZXNu
-J3QgbmVlZCB0aGUgImNhbl9yZXNlcnZlIiB0aGluZykuDQogICAgPg0KICAgID4gRm9yIHRoZSBz
-YWtlIG9mIGZpeGluZyB0aGUgcHJvYmxlbSBpbiBhIHRpbWVseSBhbmQgYmFja3BvcnRhYmxlIHdh
-eSBJDQogICAgPiB3b3VsZCBzdWdnZXN0IGZpcnN0IG1lcmdpbmcgdGhlIGZpeCwgKnRoZW4qIGZp
-eGluZyB0aGUgY29yZSBjb3JlLg0KICAgIA0KICAgIFRoZSAiZml4IiBpcyBqdXN0IHdyb25nDQog
-ICAgDQogICAgPiAgICAgICBpZiAoY3B1ICE9IGl0c19kZXYtPmV2ZW50X21hcC5jb2xfbWFwW2lk
-XSkgew0KICAgID4gICAgICAgICAgICAgICB0YXJnZXRfY29sID0gJml0c19kZXYtPml0cy0+Y29s
-bGVjdGlvbnNbY3B1XTsNCiAgICA+IC0gICAgICAgICAgICAgaXRzX3NlbmRfbW92aShpdHNfZGV2
-LCB0YXJnZXRfY29sLCBpZCk7DQogICAgPiArDQogICAgPiArICAgICAgICAgICAgIC8qIElmIHRo
-ZSBJUlEgaXMgZGlzYWJsZWQgYSBkaXNjYXJkIHdhcyBzZW50IHNvIGRvbid0IG1vdmUgKi8NCiAg
-ICA+ICsgICAgICAgICAgICAgaWYgKCFpcnFkX2lycV9kaXNhYmxlZChkKSkNCiAgICANCiAgICBU
-aGF0IGNoZWNrIG5lZWRzIHRvIGJlICFpcnFkX2lzX2FjdGl2YXRlZCgpIGJlY2F1c2UgZW5hYmxl
-X2lycSgpIGRvZXMNCiAgICBub3QgdG91Y2ggYW55dGhpbmcgYWZmaW5pdHkgcmVsYXRlZC4NCiAg
-ICANCiAgICA+ICsgICAgICAgICAgICAgICAgICAgICBpdHNfc2VuZF9tb3ZpKGl0c19kZXYsIHRh
-cmdldF9jb2wsIGlkKTsNCiAgICA+ICsNCiAgICA+ICAgICAgICAgICAgICAgaXRzX2Rldi0+ZXZl
-bnRfbWFwLmNvbF9tYXBbaWRdID0gY3B1Ow0KICAgID4gICAgICAgICAgICAgICBpcnFfZGF0YV91
-cGRhdGVfZWZmZWN0aXZlX2FmZmluaXR5KGQsIGNwdW1hc2tfb2YoY3B1KSk7DQogICAgDQogICAg
-QW5kIHRoZW4gdGhlc2UgYXNzb2NpdGF0aW9ucyBhcmUgZGlzY29ubmVjdGVkIGZyb20gcmVhbGl0
-eSBpbiBhbnkgY2FzZS4NCiAgICANCiAgICBTb21ldGhpbmcgbGlrZSB0aGUgY29tcGxldGVseSB1
-bnRlc3RlZCBwYXRjaCBiZWxvdyBzaG91bGQgd29yay4NCg0KSSd2ZSBiZWVuIHVuYWJsZSB0byBy
-ZXByb2R1Y2UgdGhlIHByb2JsZW0gd2l0aCB5b3VyIHBhdGNoIG9uIGFuIEFybSBzeXN0ZW0uDQoN
-ClRoYW5rcywNCg0KQWxpDQoNCg0KDQo=
+On Thu, Jun 11, 2020 at 01:37:19PM -0400, Prarit Bhargava wrote:
+> 
+> 
+> On 6/8/20 1:15 PM, Sean Christopherson wrote:
+> > On Mon, Jun 08, 2020 at 08:21:14AM -0400, Prarit Bhargava wrote:
+> >> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+> >> index 166d7c355896..e02ec81fe1eb 100644
+> >> --- a/arch/x86/kernel/cpu/intel.c
+> >> +++ b/arch/x86/kernel/cpu/intel.c
+> >> @@ -1074,10 +1074,17 @@ static void split_lock_init(void)
+> >>  	split_lock_verify_msr(sld_state != sld_off);
+> >>  }
+> >>  
+> >> -static void split_lock_warn(unsigned long ip)
+> >> +static bool split_lock_warn(unsigned long ip, int fatal_no_warn)
+> >>  {
+> >> -	pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
+> >> -			    current->comm, current->pid, ip);
+> >> +	if (fatal_no_warn)
+> >> +		return false;
+> > 
+> > This misses the point Xiaoyao was making.  If EFLAGS.AC=1 then the #AC is a
+> > legacy alignment check fault and should not be treated as a split-lock #AC.
+> > The basic premise of the patch makes sense, but the end result is confusing
+> > because incorporating "fatal" and the EFLAGS.AC state into split_lock_warn()
+> > bastardizes both the "split_lock" and "warn" aspects of the function.
+> > 
+> > E.g. something like this yields the same net effect, it's just organized
+> > differently.  If so desired, the "bogus" message could be dropped via
+> > Xiaoyao's prep patch[*] so that this change would only affect the sld_fatal
+> > messages.
+> > 
+> > [*] https://lkml.kernel.org/r/20200509110542.8159-3-xiaoyao.li@intel.com
+> > 
+> > 
+> 
+> Sean, I will just take your patch to make things easy.  I will add you as a
+> Signed-off-by.
+> 
+> /me is testing the patch right now
+
+Sure, here's an official SOB if it happens to work.
+
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+
+> > diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+> > index 23fd5f319908..1aad0b8e394c 100644
+> > --- a/arch/x86/kernel/cpu/intel.c
+> > +++ b/arch/x86/kernel/cpu/intel.c
+> > @@ -1071,11 +1071,14 @@ static void split_lock_init(void)
+> >         split_lock_verify_msr(sld_state != sld_off);
+> >  }
+> > 
+> > -static void split_lock_warn(unsigned long ip)
+> > +static bool handle_split_lock(unsigned long ip)
+> >  {
+> >         pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
+> >                             current->comm, current->pid, ip);
+> > 
+> > +       if (sld_state != sld_warn)
+> > +               return false;
+> > +
+> >         /*
+> >          * Disable the split lock detection for this task so it can make
+> >          * progress and set TIF_SLD so the detection is re-enabled via
+> > @@ -1083,18 +1086,13 @@ static void split_lock_warn(unsigned long ip)
+> >          */
+> >         sld_update_msr(false);
+> >         set_tsk_thread_flag(current, TIF_SLD);
+> > +       return true;
+> >  }
+> > 
+> >  bool handle_guest_split_lock(unsigned long ip)
+> >  {
+> > -       if (sld_state == sld_warn) {
+> > -               split_lock_warn(ip);
+> > +       if (handle_split_lock(ip))
+> >                 return true;
+> > -       }
+> > -
+> > -       pr_warn_once("#AC: %s/%d %s split_lock trap at address: 0x%lx\n",
+> > -                    current->comm, current->pid,
+> > -                    sld_state == sld_fatal ? "fatal" : "bogus", ip);
+> > 
+> >         current->thread.error_code = 0;
+> >         current->thread.trap_nr = X86_TRAP_AC;
+> > @@ -1105,10 +1103,10 @@ EXPORT_SYMBOL_GPL(handle_guest_split_lock);
+> > 
+> >  bool handle_user_split_lock(struct pt_regs *regs, long error_code)
+> >  {
+> > -       if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
+> > +       if (regs->flags & X86_EFLAGS_AC)
+> >                 return false;
+> > -       split_lock_warn(regs->ip);
+> > -       return true;
+> > +
+> > +       return handle_split_lock(regs->ip);
+> >  }
+> > 
+> >  /*
+> > 
+> > 
+> >> +
+> >> +	pr_warn_ratelimited("#AC: %s/%d %ssplit_lock trap at address: 0x%lx\n",
+> >> +			    current->comm, current->pid,
+> >> +			    sld_state == sld_fatal ? "fatal " : "", ip);
+> >> +
+> >> +	if (sld_state == sld_fatal)
+> >> +		return false;
+> >>  
+> >>  	/*
+> >>  	 * Disable the split lock detection for this task so it can make
+> >> @@ -1086,18 +1093,13 @@ static void split_lock_warn(unsigned long ip)
+> >>  	 */
+> >>  	sld_update_msr(false);
+> >>  	set_tsk_thread_flag(current, TIF_SLD);
+> >> +	return true;
+> >>  }
+> >>  
+> >>  bool handle_guest_split_lock(unsigned long ip)
+> >>  {
+> >> -	if (sld_state == sld_warn) {
+> >> -		split_lock_warn(ip);
+> >> +	if (split_lock_warn(ip, 0))
+> >>  		return true;
+> >> -	}
+> >> -
+> >> -	pr_warn_once("#AC: %s/%d %s split_lock trap at address: 0x%lx\n",
+> >> -		     current->comm, current->pid,
+> >> -		     sld_state == sld_fatal ? "fatal" : "bogus", ip);
+> >>  
+> >>  	current->thread.error_code = 0;
+> >>  	current->thread.trap_nr = X86_TRAP_AC;
+> >> @@ -1108,10 +1110,7 @@ EXPORT_SYMBOL_GPL(handle_guest_split_lock);
+> >>  
+> >>  bool handle_user_split_lock(struct pt_regs *regs, long error_code)
+> >>  {
+> >> -	if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
+> >> -		return false;
+> >> -	split_lock_warn(regs->ip);
+> >> -	return true;
+> >> +	return split_lock_warn(regs->ip, regs->flags & X86_EFLAGS_AC);
+> >>  }
+> >>  
+> >>  /*
+> >> -- 
+> >> 2.21.3
+> >>
+> > 
+> 
