@@ -2,166 +2,96 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79253C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 04:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AABC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 05:05:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A38C2086A
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 04:58:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="BBr7fQYY"
+	by mail.kernel.org (Postfix) with ESMTP id 0D99B2072F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 05:05:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbgFKE6y (ORCPT
+        id S1726339AbgFKFFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 00:58:54 -0400
-Received: from mail-vi1eur05on2065.outbound.protection.outlook.com ([40.107.21.65]:48096
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725300AbgFKE6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 00:58:53 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ff8ObD5/JLMM4A/Vn1A6oXx3oP7WTsbgk99LRGK0V0lIy2onz2FD+hiIAkeRnhZ4a8UDB4zWT2s3Tj3SJoz1gODOFhp+bLUFkpfUUbDrcsedIhhr90GjqKVpi6WUR2y1u4udgtc02D0fDeT0mgTQWptSyrNfr9TBPExva7dMXG090HIT0DE4fkTPmYV/iTAf0A3Traw+8wGjS0qMJoBlxuK94FNi0BciYtvLLeqGuDFd9zekIfGaUinAyqXAWRlW9nQYFGMzPGQcWTxORFnsk72LaEBXxrQ1IvY/9dYYhw5poXr4lRIgA7K4nnnJSI6kZpUUf6Kvv9VbvP2JLGoiNw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HT66pU2Ld/sBMXoloOT/I5elczXNNTyfPnONQW7MvCU=;
- b=JW5pd7eV5esQUIGXoceq71L2LHxNhTMtnPIyAIg82bqdAIxc8tjX7GpJl+ln7/p+WJKjkc2mpsM00NW5V8hNqaQ+DozVzgvBhjlBJqSXdD7ZZM4aNHrVGPL9L0rsmogzJPratwp/g1ev6/GcFJLaRImI8hZfohS1nvz2gp70z4+BZDilOAKSSKwoYFMpjF9rr2H4+sX3pgqMj0x30i6rC+xVeHHDuc30IxrV77Sglw3K1eYujCy0PQzDZ6xL1bPxrB5SIfq9tFJlcRDvGcJnUNwKJNSQm5X7u2kiMLRRcQT/XprqCZfj35h+rMUPwrQhj6oma7p3QsI65nNVwJPHcQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HT66pU2Ld/sBMXoloOT/I5elczXNNTyfPnONQW7MvCU=;
- b=BBr7fQYYOEvZb0Ib6/2Qa9a+/lrMsRHejxXb/g0chX8txwSYc13geKv+QV+1OHdHgDvVzQ5Z//RC6YSgsLK8EBuAJ5a+beoklo6sSbnTwNejrPdbvU14Yo3OwBJFqnUiZJKv1K0Oo1VlPs+EZtSpeA6lSxIBf5hkj8Ai2XKud/E=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
- by VE1PR04MB6750.eurprd04.prod.outlook.com (2603:10a6:803:123::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.22; Thu, 11 Jun
- 2020 04:58:50 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3066.023; Thu, 11 Jun 2020
- 04:58:50 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     broonie@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        festevam@gmail.com, robin.murphy@arm.com,
-        matthias.schiffer@ew.tq-group.com
-Cc:     kernel@pengutronix.de, linux-imx@nxp.com,
-        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1 RFC 2/2] spi: spi-imx: add fallback feature
-Date:   Thu, 11 Jun 2020 20:58:30 +0800
-Message-Id: <1591880310-1813-3-git-send-email-yibin.gong@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591880310-1813-1-git-send-email-yibin.gong@nxp.com>
-References: <1591880310-1813-1-git-send-email-yibin.gong@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR04CA0171.apcprd04.prod.outlook.com (2603:1096:4::33)
- To VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
+        Thu, 11 Jun 2020 01:05:54 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:33257 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725300AbgFKFFx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 01:05:53 -0400
+Received: from dread.disaster.area (pa49-180-124-177.pa.nsw.optusnet.com.au [49.180.124.177])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 248853A4A35;
+        Thu, 11 Jun 2020 15:05:49 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jjFPQ-0003LT-A8; Thu, 11 Jun 2020 15:05:48 +1000
+Date:   Thu, 11 Jun 2020 15:05:48 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     "yukuai (C)" <yukuai3@huawei.com>
+Cc:     darrick.wong@oracle.com, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yi.zhang@huawei.com
+Subject: Re: [RFC PATCH] fix use after free in xlog_wait()
+Message-ID: <20200611050548.GS2040@dread.disaster.area>
+References: <20200611013952.2589997-1-yukuai3@huawei.com>
+ <20200611022848.GQ2040@dread.disaster.area>
+ <c07ba74e-81a4-2060-db82-8d11c6400be8@huawei.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.66) by SG2PR04CA0171.apcprd04.prod.outlook.com (2603:1096:4::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3066.23 via Frontend Transport; Thu, 11 Jun 2020 04:58:44 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.66]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 2df7363a-d707-4ba2-a954-08d80dc42174
-X-MS-TrafficTypeDiagnostic: VE1PR04MB6750:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VE1PR04MB6750CD626706AE0A9FE72C0589800@VE1PR04MB6750.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:597;
-X-Forefront-PRVS: 0431F981D8
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: TvcbK4Gs9w8PVDQFsGJDZcPdybqOSsQvKPYipUCU4iCIvo1l/Mg0BHgTje68x2G9wGXMOOZr/vzg0taFG6ihW10qYvsaHOmexVsF4tsBebpwQCObChQMeEPzradYNF8CRs4D7ncRHjY2nEX7Xsvm4e17nZhtVtvQsdBvCFpWmuSBR5l+CTRU6omTrrrh8Va8XIXYuKEypudnQ1+NryMGEMLCu3ZK+tj7Ha4C5LDtf4C4POOIB6b7+tewrzv8y+ER5T4Eh/XxUxJvcegAMaER8DQonYnbdRTeMCy8qemZWmYE2vyz+witqpfa2Qjq5587SVXchDfoIFEyP60qNYZxpQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(346002)(39860400002)(366004)(396003)(478600001)(66476007)(8936002)(316002)(2616005)(7416002)(956004)(36756003)(86362001)(6486002)(66946007)(8676002)(2906002)(4326008)(6512007)(66556008)(6506007)(83380400001)(16526019)(186003)(5660300002)(6666004)(26005)(52116002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: BN9hOjFr2QcrxjV3PTxYs/E1ZlDgUJqBglej9retEDd75nYydcDFhzMq0qKuHhvz4I3mW22c8hiVEyTNg2zjFO2PabdghcGWN0i8a69XvyUmHXCHIKvFeUoSxcbB2/lIyVCwQhSoQZ6aldme/HmHMUxdb/Ay9eoBsfWSkl1ZQHRWPBljIa1LcUiSHcZWTIxvAGc5DM2HEbgAPUvp50uCt6UYYT/DNb7CPByZKoH8Gk+mlv1uIFYyTdyy0Vw/ZDsHjtnz+Vs/Ug5GJXaafjN7juwxd1XQFkt/+qkgQpEQsPkvtAo66zye/nPjQHQIvzx8824GvGD+B2tK2REVuVWYqI4MPWt5NVxwX3yzOVHXRQ0Ks+dc6j2VIxhh+6R47IA8V84M7r1R5+MrNrPwl/9q6i24ePsH4TQ1/PxOlTOAQLYvOMjQuoVot+Qf0+RmhNs5+Z+IrAI5WUwPvNsmaf3bsnKbq0rI7la5QNOm567CKl8=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2df7363a-d707-4ba2-a954-08d80dc42174
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2020 04:58:50.1378
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QWh8QYD6S+kCV11XWEW1ywZPkPG5zkxB/w6tCK0CX0DHIY8TnTUtstzXZq/1QHXemGk3VghSjkZg2GtN+bEHrA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6750
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c07ba74e-81a4-2060-db82-8d11c6400be8@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
+        a=k3aV/LVJup6ZGWgigO6cSA==:117 a=k3aV/LVJup6ZGWgigO6cSA==:17
+        a=kj9zAlcOel0A:10 a=nTHF0DUjJn0A:10 a=7-415B0cAAAA:8
+        a=k4-4d9lsxiVGclVBZOAA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add fallback pio feature for dma transfer failed. Since another whole
-pio transfer including setup_transfer will be issued by spi core, no
-need to restore jobs like commit bcd8e7761ec9 ("spi: imx: fallback to PIO
-if dma setup failure").
+On Thu, Jun 11, 2020 at 11:01:38AM +0800, yukuai (C) wrote:
+> On 2020/6/11 10:28, Dave Chinner wrote
+> > Actually, it's a lot simpler:
+> > 
+> > thread1			thread2
+> > 
+> > __xfs_trans_commit
+> >   xfs_log_commit_cil
+> >    xlog_wait
+> >     schedule
+> > 			xlog_cil_push_work
+> > 			wake_up_all
+> > 			<shutdown aborts commit>
+> > 			xlog_cil_committed
+> > 			kmem_free
+> > 
+> >     remove_wait_queue
+> >      spin_lock_irqsave --> UAF
+> > 
+> 
+> It's ture in this case, however, I got another result when I
+> tried to reporduce it, which seems 'ctx' can be freed in a
+> different path:
 
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
----
- drivers/spi/spi-imx.c | 23 +++++------------------
- 1 file changed, 5 insertions(+), 18 deletions(-)
+Yup, it's effectively the same thing because of the nature of the IO
+failures (generated at submit time) and scheduler behaviour of
+workqueues. THis means the IO completion that processes the error is
+is queued to a workqueue on the same CPU. When thread 2 finishes
+running (it hasn't seen an error yet) the completion work will get
+get scheduled ahead of thread1 (cpu bound kernel task vs unbound
+user task).  The completion work then runs the shutdown because it
+saw a log IO error and because it's the commit record bio it runs
+the journal checkpoint completion to abort all the items attached to
+it and free the CIL context. Then thread 1 runs again.
 
-diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
-index b7a85e3..afd31d7 100644
---- a/drivers/spi/spi-imx.c
-+++ b/drivers/spi/spi-imx.c
-@@ -224,7 +224,7 @@ static bool spi_imx_can_dma(struct spi_master *master, struct spi_device *spi,
- {
- 	struct spi_imx_data *spi_imx = spi_master_get_devdata(master);
- 
--	if (!use_dma)
-+	if (!use_dma || master->fallback)
- 		return false;
- 
- 	if (!master->dma_rx)
-@@ -1302,7 +1302,8 @@ static int spi_imx_sdma_init(struct device *dev, struct spi_imx_data *spi_imx,
- 	master->can_dma = spi_imx_can_dma;
- 	master->max_dma_len = MAX_SDMA_BD_BYTES;
- 	spi_imx->bitbang.master->flags = SPI_MASTER_MUST_RX |
--					 SPI_MASTER_MUST_TX;
-+					 SPI_MASTER_MUST_TX |
-+					 SPI_MASTER_FALLBACK;
- 
- 	return 0;
- err:
-@@ -1507,7 +1508,6 @@ static int spi_imx_transfer(struct spi_device *spi,
- 				struct spi_transfer *transfer)
- {
- 	struct spi_imx_data *spi_imx = spi_master_get_devdata(spi->master);
--	int ret;
- 
- 	/* flush rxfifo before transfer */
- 	while (spi_imx->devtype_data->rx_available(spi_imx))
-@@ -1516,21 +1516,8 @@ static int spi_imx_transfer(struct spi_device *spi,
- 	if (spi_imx->slave_mode)
- 		return spi_imx_pio_transfer_slave(spi, transfer);
- 
--	/*
--	 * fallback PIO mode if dma setup error happen, for example sdma
--	 * firmware may not be updated as ERR009165 required.
--	 */
--	if (spi_imx->usedma) {
--		ret = spi_imx_dma_transfer(spi_imx, transfer);
--		if (ret != -EINVAL)
--			return ret;
--
--		spi_imx->devtype_data->disable_dma(spi_imx);
--
--		spi_imx->usedma = false;
--		spi_imx->dynamic_burst = spi_imx->devtype_data->dynamic_burst;
--		dev_dbg(&spi->dev, "Fallback to PIO mode\n");
--	}
-+	if (spi_imx->usedma)
-+		return spi_imx_dma_transfer(spi_imx, transfer);
- 
- 	return spi_imx_pio_transfer(spi, transfer);
- }
+The only difference between the two cases is which IO of the CIL
+commit the request was failed on....
+
+Cheers,
+
+Dave.
 -- 
-2.7.4
-
+Dave Chinner
+david@fromorbit.com
