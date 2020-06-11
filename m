@@ -2,182 +2,106 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A13C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 16:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC67CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 16:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C51DB2078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 16:08:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591891710;
-	bh=wgcumIwBtdGUUlCfo+fjkkOPxI3q0GeEG39pKqF/7hE=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=IUpSGQtNfbPqB6HIWL/OATO2GJMWeIjXNRea3UBvP25aNn59obicbeg/M8zphsV64
-	 V/HdVxXZjDsrqnGOmzISn+/b8WGaQHpTDKE7yYQz32XQcAQhAq5+l0AyYwf3JfmGnR
-	 iSpNbzIJS4PdWZmLA2RBcoOSK4h2Qr4E1izx1f8o=
+	by mail.kernel.org (Postfix) with ESMTP id 9A0C82078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 16:10:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NRXJi5vE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726537AbgFKQI2 (ORCPT
+        id S1726563AbgFKQKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 12:08:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53952 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726095AbgFKQI0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 12:08:26 -0400
-Received: from sol.hsd1.ca.comcast.net (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 11 Jun 2020 12:10:19 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32764 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726279AbgFKQKS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 12:10:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591891817;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=sAc8K5GdtWCdfeiweUngiX2JdslVVBJ6iUtA5e6N5iA=;
+        b=NRXJi5vEBLkFARze69W1aPbmWNEugncDJkNkU22TBtE5y6F8PJVZd+lUcZVs5VIG6+WBj+
+        BrLB7332V62+Fwve6z2F8ygQnZZb7Xbt+/UToXawU/QdlsrRc2co48nmY0XkrJUkgfRKm3
+        +wof2dh2NZnZIzdPOk5LGUmKTA/3SGU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-122-HVzvVuaIPNaCw67pkCMHGA-1; Thu, 11 Jun 2020 12:10:12 -0400
+X-MC-Unique: HVzvVuaIPNaCw67pkCMHGA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DA74206DC;
-        Thu, 11 Jun 2020 16:08:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591891705;
-        bh=wgcumIwBtdGUUlCfo+fjkkOPxI3q0GeEG39pKqF/7hE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=EBpiNmBmbbmGa3N8uDioNwWto8FdFuzDckWdSaUjkGiuW7NSFP8xVlg5LRWC5H5SG
-         GfdFdvBQbDm2Gm8QJ0ijLi6yJgyqpXvzeSJhGkK7eKkFxNqeliCXAUlcC1V1DaRVvQ
-         ad8XosVP+Db2ThBGGY5fUi24kyzWAxxXRLIAod4w=
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-fsdevel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     Daeho Jeong <daeho43@gmail.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] vfs: don't unnecessarily clone write access for writable fds
-Date:   Thu, 11 Jun 2020 09:05:34 -0700
-Message-Id: <20200611160534.55042-1-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A6776107ACCA;
+        Thu, 11 Jun 2020 16:10:08 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-115-149.rdu2.redhat.com [10.10.115.149])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2C2655C1B0;
+        Thu, 11 Jun 2020 16:10:00 +0000 (UTC)
+Subject: Re: possible deadlock in send_sigio
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+a9fb1457d720a55d6dc5@syzkaller.appspotmail.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>, allison@lohutok.net,
+        areber@redhat.com, aubrey.li@linux.intel.com,
+        Andrei Vagin <avagin@gmail.com>,
+        Bruce Fields <bfields@fieldses.org>,
+        Christian Brauner <christian@brauner.io>, cyphar@cyphar.com,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>, guro@fb.com,
+        Jeff Layton <jlayton@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Kees Cook <keescook@chromium.org>, linmiaohe@huawei.com,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michal Hocko <mhocko@suse.com>, Ingo Molnar <mingo@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, sargun@sargun.me,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Boqun Feng <boqun.feng@gmail.com>
+References: <000000000000760d0705a270ad0c@google.com>
+ <69818a6c-7025-8950-da4b-7fdc065d90d6@redhat.com>
+ <CACT4Y+brpePBoR7EUwPiSvGAgo6bhvpKvLTiCaCfRSadzn6yRw@mail.gmail.com>
+ <88c172af-46df-116e-6f22-b77f98803dcb@redhat.com>
+ <20200611142214.GI2531@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <b405aca6-a3b2-cf11-a482-2b4af1e548bd@redhat.com>
+Date:   Thu, 11 Jun 2020 12:09:59 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200611142214.GI2531@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+On 6/11/20 10:22 AM, Peter Zijlstra wrote:
+> On Thu, Jun 11, 2020 at 09:51:29AM -0400, Waiman Long wrote:
+>
+>> There was an old lockdep patch that I think may address the issue, but was
+>> not merged at the time. I will need to dig it out and see if it can be
+>> adapted to work in the current kernel. It may take some time.
+> Boqun was working on that; I can't remember what happened, but ISTR it
+> was shaping up nice.
+>
+Yes, I am talking about Boqun's patch. However, I think he had moved to 
+another company and so may not be able to actively work on that again.
 
-There's no need for mnt_want_write_file() to increment mnt_writers when
-the file is already open for writing, provided that
-mnt_drop_write_file() is changed to conditionally decrement it.
-
-We seem to have ended up in the current situation because
-mnt_want_write_file() used to be paired with mnt_drop_write(), due to
-mnt_drop_write_file() not having been added yet.  So originally
-mnt_want_write_file() had to always increment mnt_writers.
-
-But later mnt_drop_write_file() was added, and all callers of
-mnt_want_write_file() were paired with it.  This makes the compatibility
-between mnt_want_write_file() and mnt_drop_write() no longer necessary.
-
-Therefore, make __mnt_want_write_file() and __mnt_drop_write_file() skip
-incrementing mnt_writers on files already open for writing.  This
-removes the only caller of mnt_clone_write(), so remove that too.
-
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
-
-v2: keep the check for emergency r/o remounts.
-
- fs/namespace.c        | 53 ++++++++++++++++---------------------------
- include/linux/mount.h |  1 -
- 2 files changed, 20 insertions(+), 34 deletions(-)
-
-diff --git a/fs/namespace.c b/fs/namespace.c
-index f30ed401cc6d7a..b2052b2f3d87f6 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -359,51 +359,37 @@ int mnt_want_write(struct vfsmount *m)
- }
- EXPORT_SYMBOL_GPL(mnt_want_write);
- 
--/**
-- * mnt_clone_write - get write access to a mount
-- * @mnt: the mount on which to take a write
-- *
-- * This is effectively like mnt_want_write, except
-- * it must only be used to take an extra write reference
-- * on a mountpoint that we already know has a write reference
-- * on it. This allows some optimisation.
-- *
-- * After finished, mnt_drop_write must be called as usual to
-- * drop the reference.
-- */
--int mnt_clone_write(struct vfsmount *mnt)
--{
--	/* superblock may be r/o */
--	if (__mnt_is_readonly(mnt))
--		return -EROFS;
--	preempt_disable();
--	mnt_inc_writers(real_mount(mnt));
--	preempt_enable();
--	return 0;
--}
--EXPORT_SYMBOL_GPL(mnt_clone_write);
--
- /**
-  * __mnt_want_write_file - get write access to a file's mount
-  * @file: the file who's mount on which to take a write
-  *
-- * This is like __mnt_want_write, but it takes a file and can
-- * do some optimisations if the file is open for write already
-+ * This is like __mnt_want_write, but if the file is already open for writing it
-+ * skips incrementing mnt_writers (since the open file already has a reference)
-+ * and instead only does the check for emergency r/o remounts.  This must be
-+ * paired with __mnt_drop_write_file.
-  */
- int __mnt_want_write_file(struct file *file)
- {
--	if (!(file->f_mode & FMODE_WRITER))
--		return __mnt_want_write(file->f_path.mnt);
--	else
--		return mnt_clone_write(file->f_path.mnt);
-+	if (file->f_mode & FMODE_WRITER) {
-+		/*
-+		 * Superblock may have become readonly while there are still
-+		 * writable fd's, e.g. due to a fs error with errors=remount-ro
-+		 */
-+		if (__mnt_is_readonly(file->f_path.mnt))
-+			return -EROFS;
-+		return 0;
-+	}
-+	return __mnt_want_write(file->f_path.mnt);
- }
- 
- /**
-  * mnt_want_write_file - get write access to a file's mount
-  * @file: the file who's mount on which to take a write
-  *
-- * This is like mnt_want_write, but it takes a file and can
-- * do some optimisations if the file is open for write already
-+ * This is like mnt_want_write, but if the file is already open for writing it
-+ * skips incrementing mnt_writers (since the open file already has a reference)
-+ * and instead only does the freeze protection and the check for emergency r/o
-+ * remounts.  This must be paired with mnt_drop_write_file.
-  */
- int mnt_want_write_file(struct file *file)
- {
-@@ -449,7 +435,8 @@ EXPORT_SYMBOL_GPL(mnt_drop_write);
- 
- void __mnt_drop_write_file(struct file *file)
- {
--	__mnt_drop_write(file->f_path.mnt);
-+	if (!(file->f_mode & FMODE_WRITER))
-+		__mnt_drop_write(file->f_path.mnt);
- }
- 
- void mnt_drop_write_file(struct file *file)
-diff --git a/include/linux/mount.h b/include/linux/mount.h
-index de657bd211fa64..29d216f927c28c 100644
---- a/include/linux/mount.h
-+++ b/include/linux/mount.h
-@@ -78,7 +78,6 @@ struct path;
- 
- extern int mnt_want_write(struct vfsmount *mnt);
- extern int mnt_want_write_file(struct file *file);
--extern int mnt_clone_write(struct vfsmount *mnt);
- extern void mnt_drop_write(struct vfsmount *mnt);
- extern void mnt_drop_write_file(struct file *file);
- extern void mntput(struct vfsmount *mnt);
--- 
-2.26.2
+Cheers,
+Longman
 
