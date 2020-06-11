@@ -6,61 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 468B9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 22:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA711C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 22:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 251CE206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 22:00:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95587206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 22:00:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591912832;
-	bh=gZ46K7plbt+eE/wq0aG7U6KOtRrOLE73xRAiFeDQQtA=;
+	s=default; t=1591912834;
+	bh=ZmK8pfb+oDN1hKGoI5u7d/FI9HDq7ElXSgVCF+NMVfM=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=CC4d9AN0jDDrrhXinij3T00VxWfei2ImWA/2WhgKPSSTaWQgmtFDX6w7pwieD590K
-	 jgjXlq3ipcviR2EZPiDSBOH5TTk9Q3AsLBdxH2WAQn2D62OxTPkfbKIDxY47UYT02a
-	 G2wWHxY91S8KLqgdSjnZTVM08BzOD/6EIy+CXsbA=
+	b=Rl83lQVtnkMEBd1WZOn5mOZQcOZoDu/iWIjf8tGmBjm42tVu7Cb+E1c339wFawvTn
+	 /zbtWfihaK7tGodWEgyC69R9iW/6LqC+ymdbRdfba/sCB/+Ud96Px13/TLcP8rMlLR
+	 3BIVbZeZyeqzF/ktia0ZILURGZZQTB2J0twz+feY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbgFKWA3 (ORCPT
+        id S1726353AbgFKWA1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 18:00:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47956 "EHLO mail.kernel.org"
+        Thu, 11 Jun 2020 18:00:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725869AbgFKWAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 18:00:25 -0400
-Subject: Re: [GIT PULL] RISC-V Patches for the 5.8 Merge Window, Part 2
+        id S1726303AbgFKWAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 18:00:24 -0400
+Subject: Re: [GIT PULL] arm64 merge window fixes for -rc1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591912824;
-        bh=gZ46K7plbt+eE/wq0aG7U6KOtRrOLE73xRAiFeDQQtA=;
+        s=default; t=1591912823;
+        bh=ZmK8pfb+oDN1hKGoI5u7d/FI9HDq7ElXSgVCF+NMVfM=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=lLzXKluwUtogg+QEcBdE+bgWFeCqe9frdD0SIJGVc0J5hYEuIMovdCzdrJR+XMEEa
-         ucqtPnx1o2FcsXzSsh77kugAZhuv66g4JWi4zEPGA1lQ5QQO1q4n+iWoQqBsriZn+5
-         BQ9JVJXc2FygUJJ2+PI09Uwiq23SM/AMYNWhBTQ8=
+        b=JMw/jV8GOn8CIGs6/R52uxBIyzB35huBTj1LOOjHIka8V2ihZsNkjDvQlNd437EjP
+         4boGksdZIZvlelFRGR0kk1TQo0Z+woTiD5+ySpa5IZXL9NMAJa5kHuVPiwlKx8ENMp
+         NPjUjbmxurOFK63W/4au2nrlCONQYdw7pq5HxitA=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <mhng-70ded5ff-c09c-4703-837e-7ab2d9eea85c@palmerdabbelt-glaptop1>
-References: <mhng-70ded5ff-c09c-4703-837e-7ab2d9eea85c@palmerdabbelt-glaptop1>
+In-Reply-To: <20200611173412.GA9575@willie-the-truck>
+References: <20200611173412.GA9575@willie-the-truck>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <mhng-70ded5ff-c09c-4703-837e-7ab2d9eea85c@palmerdabbelt-glaptop1>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git
- tags/riscv-for-linus-5.8-mw1
-X-PR-Tracked-Commit-Id: 01f76386b0ac0b1c1094456c8f43ea6085fc49d2
+X-PR-Tracked-Message-Id: <20200611173412.GA9575@willie-the-truck>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git
+ tags/arm64-upstream
+X-PR-Tracked-Commit-Id: dd4bc60765873445893037ae73a5f75398a8cd19
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: cd16ed33c3c618930ccda7049dcea05ee707a9c0
-Message-Id: <159191282473.15411.16688151928262454215.pr-tracker-bot@kernel.org>
-Date:   Thu, 11 Jun 2020 22:00:24 +0000
-To:     Palmer Dabbelt <palmer@dabbelt.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: 55d728b2b05fb0377a9048af3460c375b54619e2
+Message-Id: <159191282361.15411.4266634913208275603.pr-tracker-bot@kernel.org>
+Date:   Thu, 11 Jun 2020 22:00:23 +0000
+To:     Will Deacon <will@kernel.org>
+Cc:     torvalds@linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        catalin.marinas@arm.com, kernel-team@android.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 11 Jun 2020 10:53:59 -0700 (PDT):
+The pull request you sent on Thu, 11 Jun 2020 18:34:12 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-5.8-mw1
+> git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-upstream
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/cd16ed33c3c618930ccda7049dcea05ee707a9c0
+https://git.kernel.org/torvalds/c/55d728b2b05fb0377a9048af3460c375b54619e2
 
 Thank you!
 
