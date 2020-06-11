@@ -2,142 +2,133 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C374BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF56C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FDE420838
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:06:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0301206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 17:06:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NqEJ5GA/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L4ucfsHB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbgFKRGb (ORCPT
+        id S1726729AbgFKRGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 13:06:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56020 "EHLO
+        Thu, 11 Jun 2020 13:06:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbgFKRGb (ORCPT
+        with ESMTP id S1726666AbgFKRGs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 13:06:31 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FCCBC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 10:06:30 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id b5so1833528pgm.8
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 10:06:30 -0700 (PDT)
+        Thu, 11 Jun 2020 13:06:48 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7211CC08C5C1;
+        Thu, 11 Jun 2020 10:06:47 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id t18so6950487wru.6;
+        Thu, 11 Jun 2020 10:06:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pI2G9x8XySR9DruVGRJidO1nAqjYW7jZcLJ0jduQuLM=;
-        b=NqEJ5GA/ehM6UXoHjGGuPNm3B3rfMC1cOHvni2EJcnW9zfClcUy4MFwL3d6X4Umn1G
-         gf95qNdFanqgDq/iJc7qrRLil0x0D2wngwpf5nyMmOSpv1Miw+RLTpCnQCyf6U6A9UgB
-         BIjwZ5q8ylSnAuU3U7wqC1G+YIOYg5ZQMEwwIqa27NlLx4wfBto6cqvEmfhOoIkAQg2D
-         OcPRn7du2QLzn0LYY7+6DIXok09q0JSmnm0eTyfsKq7lCxHphLZiuK/LRFrgjljjDgV4
-         ztCU39IhEGgwqTb3durCnfrOGlFCcAyCoaR7e4UepPjSEK/zT+pqQFMs2xMPU5fiE7jk
-         MPbg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=bYgWi0CbWr9efRoOcUkQ73nl3LMm75dhUsrAfK12w9c=;
+        b=L4ucfsHByk+H8noH4FkTy0DyUzdKksJJZ14rVZuYiN4HFJEoSxIP5E+zpiQG5kFdJd
+         Zu7asOJHLHmY2g1UhmwFqhuk6m6KDfifvQ9Rz4piCsFWAm0L5LtXDvG6xOh1FZ+2fVcq
+         /Hlv7ID0RB2itcIOTkCw2Yux7a8Nsdlfe28tg7ClSNep1B/SlNmlL+eikKYl1VsdywLw
+         qtz8khSiUF0eM/rGl77W0a/06ESSYk9aocIW6vaiUrnMZ6rxbm1cfBV9NuV5KGj+m9FU
+         4gUR5MWQLTTL4h+K260EGllw5MlpQoWXxQjrtonMwTZ5Vg5pXGgQUbs+m+LJlU/3U5kt
+         QcQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pI2G9x8XySR9DruVGRJidO1nAqjYW7jZcLJ0jduQuLM=;
-        b=kx+kJzfb+D454nt7MhuM5Pg/JcADHmNvWWVqkJpAghlhuj7RKrA0CY/TgG2+j81n4h
-         9q3nwh1y7obXu7y0HQITuZM2Yllx7v6tfb9Nf60ANlJ10oi6+KFib2uiGfXkyTr9Z+xK
-         8671+GOGe6c8yzEsBBW4bJv/rbJadh3WSTOkTh25Atz1h3ilbtBDeErNsjQvo20u2N4y
-         EM1uhKNm7TVymvWN4EY96rvvAkRAbk4aqtf12KLnJ4g82zkZ7hi54XfcsyqWlasHxWKc
-         dMxscaMUKXA0smJNyidc36/C/lmexxYxV1Jy1ZndStXskc4fLu14vsE78n+MCaszS6RW
-         x9Mw==
-X-Gm-Message-State: AOAM5326gIdSXS2OypfRfDiDUun3IsJI2IOt34WDB1To5o8MH/l1jLuk
-        15Y1GXlBZcFWlOLML6wLDd+wyr94psp1agWuDzvlTQ==
-X-Google-Smtp-Source: ABdhPJwIaddzPZfkreOWkm5D3KkSKXIx2FEPb4DMs82rwvXYSe+SfQFOSBO/0V8ZUaC6ymLwx/6gIHy0Sny57CDe07w=
-X-Received: by 2002:a62:7e95:: with SMTP id z143mr8049365pfc.108.1591895189671;
- Thu, 11 Jun 2020 10:06:29 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bYgWi0CbWr9efRoOcUkQ73nl3LMm75dhUsrAfK12w9c=;
+        b=GwRJMx8jW+KkOGHSKmJCVYg9tgo2CMK6vllLcmy7QSP7URND/S2N59+yQBi2Jiu+Db
+         10vxyhf0wjtw7tpDmOLJq2wKE2v8eS2wGPc7PGaaeJBK5EEKtPUGHid+JHvckzONwguJ
+         7YpHRN4GWNd/HzTTXuAhIP/MUo9ZVYZ9BDi26kwFRBr6opVobcJ0YJEHyPDj98DGPQvL
+         i9KTH0BcNNLGc6tJ5JSwoWPF9G0ltUABa5eusW3xM/AZYRjr0xCw1ES4jnpQoBiCb1S7
+         GF1/kPz34hidnDUZTGGepBEAKaQ3XtOI6QVu8JCs2lWW3B10krXDmPQ2cB+twtIWgDEp
+         P2lA==
+X-Gm-Message-State: AOAM532JvJhSud86NEVvOYkW07EbYXCulRMIHy3gJgbPjFRbeJ34iXW8
+        +D39l4VYdX75CTla5LYwVGY=
+X-Google-Smtp-Source: ABdhPJy1a2J0AjcDmA7VUeN6Mlwj09mw76s/Xu2UJ9v3l2MXyfQvCZjqdZlWsEA17q03XTAetCA7pQ==
+X-Received: by 2002:a5d:6144:: with SMTP id y4mr10846341wrt.185.1591895206092;
+        Thu, 11 Jun 2020 10:06:46 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id f11sm5897611wrj.2.2020.06.11.10.06.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Jun 2020 10:06:45 -0700 (PDT)
+Subject: Re: [PATCH v4 2/3] clk: bcm: Add BCM2711 DVP driver
+To:     Maxime Ripard <maxime@cerno.tech>,
+        Stefan Wahren <stefan.wahren@i2se.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mike Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org, Phil Elwell <phil@raspberrypi.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-clk@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+References: <cover.4c4625a8e076f3163b800b3d8986b282ee98d908.1591867332.git-series.maxime@cerno.tech>
+ <bb60d97fc76b61c2eabef5a02ebd664c0f57ede0.1591867332.git-series.maxime@cerno.tech>
+ <e9e83c60-ef4c-8806-bcdb-a09702bf7559@i2se.com>
+ <20200611165233.dmwxuz5lhxxbh7fb@gilmour.lan>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <c05ef3b1-ee1a-e4f4-c6de-a23cbe6d8670@gmail.com>
+Date:   Thu, 11 Jun 2020 10:06:39 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <CAMj1kXErFuvOoG=DB6sz5HBvDuHDiKwWD8uOyLuxaX-u8-+dbA@mail.gmail.com>
- <20200601231805.207441-1-ndesaulniers@google.com> <BYAPR11MB3096A0EA2D03BCB76C91F80AF0830@BYAPR11MB3096.namprd11.prod.outlook.com>
- <CAKwvOdnh6Zh+P9SM_qFiy-9u7Y21fn=byTJtG4fTTRJqqU9bcQ@mail.gmail.com>
- <9f4322a5-eea6-fb65-449c-90f3d85f753e@FreeBSD.org> <BYAPR11MB3096904AD67CC83A67A38215F0800@BYAPR11MB3096.namprd11.prod.outlook.com>
-In-Reply-To: <BYAPR11MB3096904AD67CC83A67A38215F0800@BYAPR11MB3096.namprd11.prod.outlook.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 11 Jun 2020 10:06:19 -0700
-Message-ID: <CAKwvOdndPdAWVSJ530mgT5onG4zsHExqO79=QvvLvpz51D8LsQ@mail.gmail.com>
-Subject: Re: [Devel] Re: [PATCH] ACPICA: fix UBSAN warning using __builtin_offsetof
-To:     "Kaneda, Erik" <erik.kaneda@intel.com>
-Cc:     Jung-uk Kim <jkim@freebsd.org>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "dvyukov@google.com" <dvyukov@google.com>,
-        "glider@google.com" <glider@google.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "pcc@google.com" <pcc@google.com>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "will@kernel.org" <will@kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "devel@acpica.org" <devel@acpica.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200611165233.dmwxuz5lhxxbh7fb@gilmour.lan>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 9:45 AM Kaneda, Erik <erik.kaneda@intel.com> wrote:
->
-> > From: Jung-uk Kim <jkim@FreeBSD.org>
-> >
-> > Actually, I think we should let platform-specific acfoo.h decide what to
-> > do here, i.e.,
->
-> That's a better solution. For Linux, it would look something like this:
->
-> --- a/include/acpi/actypes.h
-> +++ b/include/acpi/actypes.h
-> @@ -508,10 +508,15 @@ typedef u64 acpi_integer;
->
->  #define ACPI_TO_POINTER(i)              ACPI_CAST_PTR (void, (acpi_size) (i))
->  #define ACPI_TO_INTEGER(p)              ACPI_PTR_DIFF (p, (void *) 0)
-> -#define ACPI_OFFSET(d, f)               ACPI_PTR_DIFF (&(((d *) 0)->f), (void *) 0)
->  #define ACPI_PHYSADDR_TO_PTR(i)         ACPI_TO_POINTER(i)
->  #define ACPI_PTR_TO_PHYSADDR(i)         ACPI_TO_INTEGER(i)
->
-> +/* Platforms may want to define their own ACPI_OFFSET */
-> +
-> +#ifndef ACPI_OFFSET
-> +#define ACPI_OFFSET(d, f)               ACPI_PTR_DIFF (&(((d *) 0)->f), (void *) 0)
-> +#endif
-> +
->  /* Optimizations for 4-character (32-bit) acpi_name manipulation */
->
->  #ifndef ACPI_MISALIGNMENT_NOT_SUPPORTED
-> diff --git a/include/acpi/platform/aclinux.h b/include/acpi/platform/aclinux.h
-> index 987e2af7c335..5d1ca6015fce 100644
-> --- a/include/acpi/platform/aclinux.h
-> +++ b/include/acpi/platform/aclinux.h
-> @@ -71,6 +71,11 @@
->  #undef ACPI_DEBUG_DEFAULT
->  #define ACPI_DEBUG_DEFAULT          (ACPI_LV_INFO | ACPI_LV_REPAIR)
->
-> +/* Use gcc's builtin offset instead of the default */
-> +
-> +#undef ACPI_OFFSET
-> +#define ACPI_OFFSET(a,b)            __builtin_offsetof(a,b)
-> +
->  #ifndef CONFIG_ACPI
->
 
-Looks good at first glance.  Wouldn't actypes.h need to include
-platform/acenv.h first though?  Otherwise you put some header
-inclusion order dependency on folks who include actypes.h to first
-include acenv.h otherwise we're not getting the definition in terms of
-__builtin_offsetof.
 
+On 6/11/2020 9:52 AM, Maxime Ripard wrote:
+> Hi Stefan,
+> 
+> On Thu, Jun 11, 2020 at 05:50:30PM +0200, Stefan Wahren wrote:
+>>> diff --git a/drivers/clk/bcm/clk-bcm2711-dvp.c b/drivers/clk/bcm/clk-bcm2711-dvp.c
+>>> new file mode 100644
+>>> index 000000000000..84dbc886e303
+>>> --- /dev/null
+>>> +++ b/drivers/clk/bcm/clk-bcm2711-dvp.c
+>>> @@ -0,0 +1,120 @@
+>>> +// SPDX-License-Identifier: GPL-2.0-or-later
+>>> +// Copyright 2020 Cerno
+>>> +
+>>> +#include <linux/clk-provider.h>
+>>> +#include <linux/module.h>
+>>> +#include <linux/platform_device.h>
+>>> +#include <linux/reset-controller.h>
+>>> +#include <linux/reset/reset-simple.h>
+>>> +
+>>> +#define DVP_HT_RPI_SW_INIT	0x04
+>>> +#define DVP_HT_RPI_MISC_CONFIG	0x08
+>>
+>> sorry for not noticing this before. Are these defines specific to the
+>> Raspberry Pi, because of RPI?
+> 
+> I'm not entirely sure to be honest. It's the names that the register
+> have, but it's not clear to me if it's something specific to the RPi
+> itself, or it just means something else entirely.
+
+My understanding is that this is a wrapper that was done specifically
+for the Raspberry Pi usage of that IP block, which is why it has PI in
+the name, so this looks good correct, and this does match the internal
+register database name.
 -- 
-Thanks,
-~Nick Desaulniers
+Florian
