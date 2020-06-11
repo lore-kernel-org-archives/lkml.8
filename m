@@ -2,155 +2,93 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F00ACC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D28AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:23:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB0C020842
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AC332065C
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 14:23:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="qSLm4oSN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="K+0amQ1C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728004AbgFKOWF (ORCPT
+        id S1728118AbgFKOXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 10:22:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58838 "EHLO
+        Thu, 11 Jun 2020 10:23:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726936AbgFKOWE (ORCPT
+        with ESMTP id S1726414AbgFKOXc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 10:22:04 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 647E5C08C5C3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 07:22:04 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id r16so2707233qvm.6
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 07:22:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=6hofwZ2yoq+7/to2SRh9W0Ap352IbY6yV3Ps2K/UGwM=;
-        b=qSLm4oSN+A21Re/2nMPJMW8aZ5Q7dCftm4PQzoefUzMZWAwSBnjxtVi/Ja8cXFP/yK
-         O9FgyZ9MkiIjtBPMDsH1jp5b/hZkmuIsSl/I7CKvouY+Se7Al2I8IEbf2wjHFiutAixj
-         5k4iw2jjI4DL6lgDsbLm5P46+kelUl1feOz060OleLvqwU40vwCcWmAbOMhSTBRu/Rd2
-         PKqVYxNfQwYMThXlCqd4JJy15JzMVoV6ffDZwaGUvFJwNxP363Va6Hh967fY05zu9c5v
-         EvJNqrZJgBKgX1Zp0u+sSi8zY5Ba0WlKIYzR84KSvuirDcVWJqe0dz0Y3ZZmoWMYFW8Q
-         G4kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=6hofwZ2yoq+7/to2SRh9W0Ap352IbY6yV3Ps2K/UGwM=;
-        b=l2Z1hopUOoL+x2fVbuJsY9byApC7YyOLYJJ/ow/lPe3+JEkI4UCtW+Cz8f/BHb7D7o
-         e6zgXOEW2k5nXwwug4xQxARND9zL+FjJBO3jwWDmFYyMIvsZTk1InokJi91zvg2w4sS6
-         h2skFFiK0GZ0jsV2E1nSko3TZ2oxP+yDmtR6vyVMaGU3SuHzoMLqrmjKfyARRLgxxOo6
-         6HQbsmJeJE8qS9P3Fe5BtfhsQtlFKF/T44eSQJafjSsj0niFPVwl/zBSQqvmafZrB1DA
-         kCh0oVCvA4wLuEVObOcl/Ip0vcoUjZZHektTtfsV9C4O76Xa8DNgrIaQQmfLrExQ72BJ
-         9dCQ==
-X-Gm-Message-State: AOAM531PVwF6Pq50nu3wkqYdEX1mXm+JP+quOTdOwTwPtq856PJW9uet
-        dhvkwdrZR2TyXsVCEw1NFgH+lQ==
-X-Google-Smtp-Source: ABdhPJwGOSpGGhKMmhV826+EGCU6GbpY9XfCjPivDsjrdzlrcdi5DJLEQ8Q7H3z/c1Nk48C3JvSz4A==
-X-Received: by 2002:a0c:f949:: with SMTP id i9mr7996106qvo.75.1591885323292;
-        Thu, 11 Jun 2020 07:22:03 -0700 (PDT)
-Received: from skullcanyon ([192.222.193.21])
-        by smtp.gmail.com with ESMTPSA id w13sm2363770qkb.91.2020.06.11.07.22.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 07:22:02 -0700 (PDT)
-Message-ID: <f07c4aab69d2b333c0e36c50c526c0a85322e708.camel@ndufresne.ca>
-Subject: Re: [RFC PATCH 0/1] Add LTR controls
-From:   Nicolas Dufresne <nicolas@ndufresne.ca>
-To:     Dikshita Agarwal <dikshita@codeaurora.org>, mchehab@kernel.org,
-        hverkuil-cisco@xs4all.nl, ezequiel@collabora.com,
-        boris.brezillon@collabora.com, ribalda@kernel.org,
-        paul.kocialkowski@bootlin.com, posciak@chromium.org,
-        linux-media@vger.kernel.org, stanimir.varbanov@linaro.org,
-        linux-kernel@vger.kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, vgarodia@codeaurora.org,
-        majja@codeaurora.org
-Date:   Thu, 11 Jun 2020 10:22:00 -0400
-In-Reply-To: <1591871121-25420-1-git-send-email-dikshita@codeaurora.org>
-References: <1591871121-25420-1-git-send-email-dikshita@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        Thu, 11 Jun 2020 10:23:32 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95461C08C5C1;
+        Thu, 11 Jun 2020 07:23:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=uUyLwTtfk+A1DXapst7cJfHMbDppK5rNh2DPOhr1VvQ=; b=K+0amQ1CQGvTiDsNdVz1oIxfjk
+        /J2n5dD/Q2fxGkPRyp+WEPiF3z1G8Kr7O57pSIo64H25EdRJRjnGQc1G/iaFtl24MYcR7+EJdeBeX
+        /AS3ly+Q7/7dmBbdwTf3Tz3EJJXFa5sPQri4e79JTZqljLt3r0ZTm+S4mL4teTHrbgfySdZA08EFL
+        s1Wy7y0O5Z1Hv6X8OFfw4y1PQLZP9XCyjywjQXw6E1Q3mYmsR7n/jgbQSNSmAJZYbViCuzLIqRT28
+        ZtbxoHIz+j6+ZhoFKEFAEK1VxjhI2hk4Xr/3e3OwrNvF3+SdAjf7kXMeVsd28j7ibakDuneMg0l43
+        njDv9LnA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jjO5z-0002DI-G8; Thu, 11 Jun 2020 14:22:19 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 65CAC303DA8;
+        Thu, 11 Jun 2020 16:22:14 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2B2A720C6A1FE; Thu, 11 Jun 2020 16:22:14 +0200 (CEST)
+Date:   Thu, 11 Jun 2020 16:22:14 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+a9fb1457d720a55d6dc5@syzkaller.appspotmail.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>, allison@lohutok.net,
+        areber@redhat.com, aubrey.li@linux.intel.com,
+        Andrei Vagin <avagin@gmail.com>,
+        Bruce Fields <bfields@fieldses.org>,
+        Christian Brauner <christian@brauner.io>, cyphar@cyphar.com,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>, guro@fb.com,
+        Jeff Layton <jlayton@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Kees Cook <keescook@chromium.org>, linmiaohe@huawei.com,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michal Hocko <mhocko@suse.com>, Ingo Molnar <mingo@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, sargun@sargun.me,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Boqun Feng <boqun.feng@gmail.com>
+Subject: Re: possible deadlock in send_sigio
+Message-ID: <20200611142214.GI2531@hirez.programming.kicks-ass.net>
+References: <000000000000760d0705a270ad0c@google.com>
+ <69818a6c-7025-8950-da4b-7fdc065d90d6@redhat.com>
+ <CACT4Y+brpePBoR7EUwPiSvGAgo6bhvpKvLTiCaCfRSadzn6yRw@mail.gmail.com>
+ <88c172af-46df-116e-6f22-b77f98803dcb@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <88c172af-46df-116e-6f22-b77f98803dcb@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le jeudi 11 juin 2020 à 15:55 +0530, Dikshita Agarwal a écrit :
-> LTR (Long Term Reference) frames are the frames that are encoded sometime in the past
-> and stored in the DPB buffer list to be used as reference to encode future frames.
-> One usage of LTR encoding is to reduce error propagation for video transmission
-> in packet lossy networks.  For example, encoder may want to specify some key frames as
-> LTR pictures and use them as reference frames for encoding. With extra protection
-> selectively on these LTR frames or synchronization with the receiver of reception of
-> the LTR frames during transmission, decoder can receive reference frames more reliably
-> than other non-reference frames. As a result, transmission error can be effectively
-> restricted within certain frames rather than propagated to future frames.
-> 
-> We are introducing below V4l2 Controls for this feature
-> 1. V4L2_CID_MPEG_VIDEO_LTRCOUNT
->     a. This is used to query or configure the number of LTR frames.
->        This is a static control and is controlled by the client.
->     b. The LTR index varies from 0 to the max LTR-1.
->     c. If LTR Count is more than max supported LTR count (max LTR) by driver, it will be rejected.
->     d. Auto Marking : If LTR count is non zero,
->         1) first LTR count frames would be mark as LTR automatically after
->       	   every IDR frame (inclusive).
->         2) For multilayer encoding: first LTR count base layer reference frames starting after
->            every IDR frame (inclusive) in encoding order would be marked as LTR frames by the encoder.
->         3) Auto marking of LTR due to IDR should consider following conditions:
->             1. The frame is not already set to be marked as LTR.
->             2. The frame is part of the base layer in the hierarchical layer case.
->             3. The number of frames currently marked as LTR is less than the maximum LTR frame index plus 1.
->     e. Encoder needs to handle explicit Mark/Use command when encoder is still doing "auto" marking
+On Thu, Jun 11, 2020 at 09:51:29AM -0400, Waiman Long wrote:
 
-Perhaps we are missing a LONG_TERM_REFERENCE_MODE ? I bet some encoder
-can select by themself long term references and even some encoders may
-not let the user decide.
+> There was an old lockdep patch that I think may address the issue, but was
+> not merged at the time. I will need to dig it out and see if it can be
+> adapted to work in the current kernel. It may take some time.
 
-(not huge han of LTR acronyme, but that could be fine too, assuming you
-add more _).
-
-> 
-> 2. V4L2_CID_MPEG_VIDEO_MARKLTRFRAME :
->     a. This signals to mark the current frame as LTR frame. It is a dynamic control and also provide the LTR index to be used.
->     b. the LTR index provided by this control should never exceed the max LTR-1. Else it will be rejected.
-
-The "current" frame seems a bit loose. Perhaps you wanted to use buffer
-flags ? A bit like what we have to signal TOP/BOTTOM fields in
-alternate interlacing.
-
-> 
-> 3. V4L2_CID_MPEG_VIDEO_USELTRFRAME :
->     a. This specifies the LTR frame(s) to be used for encoding the current frame. This is a dynamic control.
->     b. LTR Use Bitmap : this consists of bits [0, 15]. A total of N LSB bits of this field are valid,
->        where N is the maximum number of LTRs supported. All the other bits are invalid and should be rejected.
->        The LSB corresponds to the LTR index 0. Bit N-1 from the LSB corresponds to the LTR index max LTR-1.
-
-Note, I haven't captured very well the userspace control flow, perhaps
-this could be enhanced through writing some documentation.
-
-As per all other generic encoder controls, we need to make sure it will
-be usable and flexible enough for multiple HW blocks, as it can be
-tedious to extend later otherwise. It is important that along with this
-RFC you provide some comparisons with with other HW / SW APIs in order
-to help justify the design decisions. I also think there should be 
-link made V4L2_CID_MPEG_VIDEO_GOP_* , number of B-Frames etc.
-
-regards,
-Nicolas
-
-> 
-> Dikshita Agarwal (1):
->   media: v4l2-ctrls:  add control for ltr
-> 
->  drivers/media/v4l2-core/v4l2-ctrls.c | 6 ++++++
->  include/uapi/linux/v4l2-controls.h   | 4 ++++
->  2 files changed, 10 insertions(+)
-> 
-
+Boqun was working on that; I can't remember what happened, but ISTR it
+was shaping up nice.
