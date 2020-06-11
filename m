@@ -2,77 +2,114 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C175C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B26C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E9AA206DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 329B620829
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 18:20:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="t6lWNyQM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726848AbgFKSQx (ORCPT
+        id S1727059AbgFKSUd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 14:16:53 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57744 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726386AbgFKSQw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 14:16:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 12C16B158;
-        Thu, 11 Jun 2020 18:16:48 +0000 (UTC)
-Date:   Thu, 11 Jun 2020 20:16:41 +0200
-From:   Joerg Roedel <jroedel@suse.de>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v3 47/75] x86/sev-es: Add Runtime #VC Exception Handler
-Message-ID: <20200611181641.GD12636@suse.de>
-References: <20200428151725.31091-1-joro@8bytes.org>
- <20200428151725.31091-48-joro@8bytes.org>
- <20200523075924.GB27431@zn.tnic>
- <20200611114831.GA11924@8bytes.org>
- <20200611173848.GK29918@linux.intel.com>
+        Thu, 11 Jun 2020 14:20:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39218 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726757AbgFKSUd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 14:20:33 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41D0FC03E96F;
+        Thu, 11 Jun 2020 11:20:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=UbcUAIkCTY1gDrnsL4VkJ1RkOA6N4Sm7pv2NznSHhOI=; b=t6lWNyQMHlGsflggtFHw96ugnq
+        jogP3C9fdI//O5qicfXeP5RJS1zZymhpTOL7/VNnj+EtbNAGm3hk+zOuzXDw+GHLttZ2tRusCtQKN
+        zK7H/vl/d/PGMFiMMd/7SqwmDrjnD76P52lPTDH6R0Wb++484Vytj74YYEKgm66seJ0SsYCB8TRHg
+        8xt6EPhR+kYGun8OLhLdae7Lk7HAXrnzH7bX9AmU5iuPwhvWdbyFzvybtXoSCMxAWzweuwpuSsUvt
+        0WGCahvAMJx5LLN3eahufbheqtIMTD0jG3Amhr1CXGkYE4xk1l5A1el626ynF5WO7PBuY8msFDRg1
+        JtjdbcCQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jjRoT-0007dC-CF; Thu, 11 Jun 2020 18:20:29 +0000
+Date:   Thu, 11 Jun 2020 11:20:29 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 20/51] block: Add bio_for_each_thp_segment_all
+Message-ID: <20200611182029.GC8681@bombadil.infradead.org>
+References: <20200610201345.13273-1-willy@infradead.org>
+ <20200610201345.13273-21-willy@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200611173848.GK29918@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200610201345.13273-21-willy@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 10:38:48AM -0700, Sean Christopherson wrote:
-> Isn't it possible for the #VC handler to hit a #PF, e.g. on copy_from_user()
-> in insn_fetch_from_user()?  If that happens, what prevents the #PF handler
-> from hitting a #VC?  AIUI, do_vmm_communication() panics if the backup GHCB
-> is already in use, e.g. #VC->#PF->#VC->NMI->#VC would be fatal.
+On Wed, Jun 10, 2020 at 01:13:14PM -0700, Matthew Wilcox wrote:
+> +static inline void bvec_thp_advance(const struct bio_vec *bvec,
+> +				struct bvec_iter_all *iter_all)
+> +{
+> +	struct bio_vec *bv = &iter_all->bv;
+> +	unsigned int page_size = thp_size(bvec->bv_page);
+> +
+> +	if (iter_all->done) {
+> +		bv->bv_page += thp_nr_pages(bv->bv_page);
+> +		bv->bv_offset = 0;
+> +	} else {
+> +		BUG_ON(bvec->bv_offset >= page_size);
+> +		bv->bv_page = bvec->bv_page;
+> +		bv->bv_offset = bvec->bv_offset & (page_size - 1);
+> +	}
+> +	bv->bv_len = min(page_size - bv->bv_offset,
+> +			 bvec->bv_len - iter_all->done);
+> +	iter_all->done += bv->bv_len;
+> +
+> +	if (iter_all->done == bvec->bv_len) {
+> +		iter_all->idx++;
+> +		iter_all->done = 0;
+> +	}
+> +}
 
-This would be possible, if the #PF handler is able to trigger a #VC. But
-I am not sure how it could, except when it has to call printk.
+If, for example, we have an order-2 page followed by two order-0 pages
+(thanks, generic/127!) in the bvec, we'll end up skipping the third
+page because we calculate the size based on bvec->bv_page instead of
+bv->bv_page.
 
-If #PF can trigger a #VC, then a fix is to further limit the time the
-GHCB is active, and make sure there are not faults of any kind when it
-actually is active. Then the only vector to care about is NMI. I will
-look into that.
++++ b/include/linux/bvec.h
+@@ -166,15 +166,19 @@ static inline void bvec_thp_advance(const struct bio_vec *bvec,
+                                struct bvec_iter_all *iter_all)
+ {
+        struct bio_vec *bv = &iter_all->bv;
+-       unsigned int page_size = thp_size(bvec->bv_page);
++       unsigned int page_size;
+ 
+        if (iter_all->done) {
+                bv->bv_page += thp_nr_pages(bv->bv_page);
++               page_size = thp_size(bv->bv_page);
+                bv->bv_offset = 0;
+        } else {
+-               BUG_ON(bvec->bv_offset >= page_size);
+-               bv->bv_page = bvec->bv_page;
+-               bv->bv_offset = bvec->bv_offset & (page_size - 1);
++               bv->bv_page = thp_head(bvec->bv_page +
++                               (bvec->bv_offset >> PAGE_SHIFT));
++               page_size = thp_size(bv->bv_page);
++               bv->bv_offset = bvec->bv_offset -
++                               (bv->bv_page - bvec->bv_page) * PAGE_SIZE;
++               BUG_ON(bv->bv_offset >= page_size);
+        }
+        bv->bv_len = min(page_size - bv->bv_offset,
+                         bvec->bv_len - iter_all->done);
 
-Regards,
-
-	Joerg
+The previous code also wasn't handling the case fixed in 6bedf00e55e5
+where a split bio might end up splitting a bvec.  That BUG_ON can probably
+come out after a few months of testing.
