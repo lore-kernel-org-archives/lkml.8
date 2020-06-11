@@ -2,273 +2,173 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 663B8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A7CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C7072078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:23:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA4962078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:26:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="T+rx8kcq";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="EcQO1mx/"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="MympouM7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbgFKJXj (ORCPT
+        id S1726956AbgFKJ0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 05:23:39 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:50881 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726817AbgFKJX0 (ORCPT
+        Thu, 11 Jun 2020 05:26:12 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:62507 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726560AbgFKJ0L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 05:23:26 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 9FF8E58018C;
-        Thu, 11 Jun 2020 05:23:24 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Thu, 11 Jun 2020 05:23:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=QD3GhGiJSRsvy
-        2pCu0WuGqCL6TVaJvBfh2DHBpnRXUk=; b=T+rx8kcqimT22+c3GpAae1Z7jVMQB
-        19i5eYvIqcfwEuPKpNuLEP8rWnzC8kJ+21D2I+UeHjH79vO7Usg2nKjMG+aQlPwz
-        aTUy0o+3Ofpuj/ScKy0dOOnJSBUHL7VXJLkaJP/Qjlb5g8GgerfQbXUDbRQGQ6ul
-        8UoO6xdTe7DALL40TcDwYd+37APwkdiee2BGqawX27ihfwlXdDje/eQF87lQwJjD
-        aj/hX6jC8m61TFwP94pONCqX7zc1xvtTHF93sa3tGFm+nPPgatJXIuo1/hTFUn9W
-        PzRXvuhz93r3AxgZWdoPGBa7zhm6LrrlrqCwBrCBNqbC9KHVs30HtjfRQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=QD3GhGiJSRsvy2pCu0WuGqCL6TVaJvBfh2DHBpnRXUk=; b=EcQO1mx/
-        +1xsva6T2yJUdqrtLRdY0B/SJS50uVpIJrwVgpkMwLPkaF665pEew5vhYacuqyYV
-        x9nN38bXbbQDaqbMGcT695DJdOHhvpZgTRHk/3JpXczVDol1jUBLjU/TKB34MnNU
-        y9L9Kj5vzQWA46QQPLjQCCM7j5AQ8MW3pqXJCqOGRt/BOPdB5eVkDJHJlmcK8GoQ
-        c7qixyuGYPmzZrV0t0P+yHlx5sErGsGWs2naTlsB2Sf2u7Dv95dOw1Kaiw34LYj8
-        xEXMvX+qyCLRKv2ZIj6oJ0CuRmj9UMIlsdp1gHxSc2yyLVkdDV4PxyBymtPvsEqu
-        6o4xn2LgILtxUg==
-X-ME-Sender: <xms:DPjhXvqA9Ry3f_k6ckRERiHI9syb7CKKHaPX17Ftg7Ur8AW9gF136Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudehkedgudeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepvdevjeduiedtuddtteeuiefgiedukeevjeevuddttddvtdefkedvleeufeej
-    leeknecuffhomhgrihhnpehrtgguvghvrdhnrhenucfkphepledtrdekledrieekrdejie
-    enucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrgig
-    ihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:DPjhXpqi1uCyLJcnue49WOldiG0asfoiREw5scIFAvscFtsGGrRHjg>
-    <xmx:DPjhXsPv0foGnYajT1jxSFAfi6seIJxZZ1F4k7FaXGAz1MqlrOiHOA>
-    <xmx:DPjhXi60c88vj0zduY2ToWEyo0klbi4a-cRVg_4VmbA7CrPfNXPvHw>
-    <xmx:DPjhXmiFbFwzZ-Ghnz4mXG2WbZrTCGWbYRpo3VGiiOWfyFsXtPKPJQ>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 390F43280059;
-        Thu, 11 Jun 2020 05:23:24 -0400 (EDT)
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH v4 2/3] clk: bcm: Add BCM2711 DVP driver
-Date:   Thu, 11 Jun 2020 11:23:16 +0200
-Message-Id: <bb60d97fc76b61c2eabef5a02ebd664c0f57ede0.1591867332.git-series.maxime@cerno.tech>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.4c4625a8e076f3163b800b3d8986b282ee98d908.1591867332.git-series.maxime@cerno.tech>
-References: <cover.4c4625a8e076f3163b800b3d8986b282ee98d908.1591867332.git-series.maxime@cerno.tech>
+        Thu, 11 Jun 2020 05:26:11 -0400
+X-UUID: 28397743254d408eb15d093e40b26913-20200611
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=arPIeFMQZ1+NZeZaAa8iqxicI65qOT2Z+fn97VHkHyg=;
+        b=MympouM7ONPsFXos7gNFoAWJWkGuRm/EHTeuym7LbkREm4KgjMW6EHkJ/xlQOLjYc7RTe6IWMZ4IVI5qgit6V987xZTJtiTCWSVLh3NGBemS2JYlb610XWl3NVPtipSGbTBI3ICIGDDAgRsdRWPTaly/++FaNHEq+IgukLnlvSc=;
+X-UUID: 28397743254d408eb15d093e40b26913-20200611
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <neal.liu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1041489277; Thu, 11 Jun 2020 17:26:04 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 11 Jun 2020 17:26:01 +0800
+Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 11 Jun 2020 17:26:01 +0800
+Message-ID: <1591867563.27949.9.camel@mtkswgap22>
+Subject: Re: [PATCH 2/2] soc: mediatek: devapc: add devapc-mt6873 driver
+From:   Neal Liu <neal.liu@mediatek.com>
+To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Date:   Thu, 11 Jun 2020 17:26:03 +0800
+In-Reply-To: <CAAOTY__g3Fnwsoqx=x_tgdMii5K_L9TmF_9048XbAOSJwb-Cxg@mail.gmail.com>
+References: <1591698261-22639-1-git-send-email-neal.liu@mediatek.com>
+         <1591698261-22639-3-git-send-email-neal.liu@mediatek.com>
+         <CAAOTY__g3Fnwsoqx=x_tgdMii5K_L9TmF_9048XbAOSJwb-Cxg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The HDMI block has a block that controls clocks and reset signals to the
-HDMI0 and HDMI1 controllers.
+T24gV2VkLCAyMDIwLTA2LTEwIGF0IDAwOjAxICswODAwLCBDaHVuLUt1YW5nIEh1IHdyb3RlOg0K
+SGkgQ2h1bi1LdWFuZywNCg0KW3NuaXBdDQoNCj4gPiArDQo+ID4gKy8qDQo+ID4gKyAqIG10a19k
+ZXZhcGNfcGRfZ2V0IC0gZ2V0IGRldmFwYyBwZF90eXBlcyBvZiByZWdpc3RlciBhZGRyZXNzLg0K
+PiA+ICsgKg0KPiA+ICsgKiBSZXR1cm5zIHRoZSB2YWx1ZSBvZiByZWcgYWRkcg0KPiA+ICsgKi8N
+Cj4gPiArc3RhdGljIHZvaWQgX19pb21lbSAqbXRrX2RldmFwY19wZF9nZXQoaW50IHNsYXZlX3R5
+cGUsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZW51bSBERVZB
+UENfUERfUkVHX1RZUEUgcGRfcmVnX3R5cGUsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgdTMyIGluZGV4KQ0KPiA+ICt7DQo+ID4gKyAgICAgICBzdHJ1Y3QgbXRr
+X2RldmFwY192aW9faW5mbyAqdmlvX2luZm8gPSBtdGtfZGV2YXBjX2N0eC0+c29jLT52aW9faW5m
+bzsNCj4gPiArICAgICAgIHUzMiBzbGF2ZV90eXBlX251bSA9IG10a19kZXZhcGNfY3R4LT5zb2Mt
+PnNsYXZlX3R5cGVfbnVtOw0KPiA+ICsgICAgICAgY29uc3QgdTMyICpkZXZhcGNfcGRzID0gbXRr
+X2RldmFwY19jdHgtPnNvYy0+ZGV2YXBjX3BkczsNCj4gPiArICAgICAgIHZvaWQgX19pb21lbSAq
+cmVnOw0KPiA+ICsNCj4gPiArICAgICAgIGlmICghZGV2YXBjX3BkcykNCj4gPiArICAgICAgICAg
+ICAgICAgcmV0dXJuIE5VTEw7DQo+ID4gKw0KPiA+ICsgICAgICAgaWYgKChzbGF2ZV90eXBlIDwg
+c2xhdmVfdHlwZV9udW0gJiYNCj4gPiArICAgICAgICAgICAgaW5kZXggPCB2aW9faW5mby0+dmlv
+X21hc2tfc3RhX251bVtzbGF2ZV90eXBlXSkgJiYNCj4gPiArICAgICAgICAgICBwZF9yZWdfdHlw
+ZSA8IFBEX1JFR19UWVBFX05VTSkgew0KPiA+ICsgICAgICAgICAgICAgICByZWcgPSBtdGtfZGV2
+YXBjX2N0eC0+ZGV2YXBjX3BkX2Jhc2Vbc2xhdmVfdHlwZV0gKw0KPiA+ICsgICAgICAgICAgICAg
+ICAgICAgICAgIGRldmFwY19wZHNbcGRfcmVnX3R5cGVdOw0KPiA+ICsNCj4gPiArICAgICAgICAg
+ICAgICAgaWYgKHBkX3JlZ190eXBlID09IFZJT19NQVNLIHx8IHBkX3JlZ190eXBlID09IFZJT19T
+VEEpDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVnICs9IDB4NCAqIGluZGV4Ow0KPiA+
+ICsNCj4gPiArICAgICAgIH0gZWxzZSB7DQo+ID4gKyAgICAgICAgICAgICAgIHByX2VycihQRlgg
+IiVzOjB4JXggb3IgJXM6MHgleCBvciAlczoweCV4IGlzIG91dCBvZiBib3VuZGFyeVxuIiwNCj4g
+PiArICAgICAgICAgICAgICAgICAgICAgICJzbGF2ZV90eXBlIiwgc2xhdmVfdHlwZSwNCj4gDQo+
+IE1vdmUgInNsYXZlX3R5cGUiIGludG8gZm9ybWF0IHN0cmluZy4NCg0KV2h5IGlzIHRoaXMgbmVj
+ZXNzYXJ5PyBJcyB0aGVyZSBhbnkgYmVuZWZpdCBmb3IgbW92aW5nIHRoaXM/DQpTaW5jZSB0aGUg
+bGluZSBsZW5ndGggaXMgYWxtb3N0IG92ZXIgODAgY2hhcnMuDQoNCj4gDQo+ID4gKyAgICAgICAg
+ICAgICAgICAgICAgICAicGRfcmVnX3R5cGUiLCBwZF9yZWdfdHlwZSwNCj4gPiArICAgICAgICAg
+ICAgICAgICAgICAgICJpbmRleCIsIGluZGV4KTsNCj4gPiArICAgICAgICAgICAgICAgcmV0dXJu
+IE5VTEw7DQo+ID4gKyAgICAgICB9DQo+ID4gKw0KPiA+ICsgICAgICAgcmV0dXJuIHJlZzsNCj4g
+PiArfQ0KPiA+ICsNCj4gDQoNCltzbmlwXQ0KDQo+IA0KPiA+ICsNCj4gPiArLyoNCj4gPiArICog
+ZGV2YXBjX3Zpb2xhdGlvbl9pcnEgLSB0aGUgZGV2YXBjIEludGVycnVwdCBTZXJ2aWNlIFJvdXRp
+bmUgKElTUikgd2lsbCBkdW1wDQo+ID4gKyAqICAgICAgICAgICAgICAgICAgICAgICB2aW9sYXRp
+b24gaW5mb3JtYXRpb24gaW5jbHVkaW5nIHdoaWNoIG1hc3RlciB2aW9sYXRlcw0KPiA+ICsgKiAg
+ICAgICAgICAgICAgICAgICAgICAgYWNjZXNzIHNsYXZlLg0KPiA+ICsgKi8NCj4gPiArc3RhdGlj
+IGlycXJldHVybl90IGRldmFwY192aW9sYXRpb25faXJxKGludCBpcnFfbnVtYmVyLCB2b2lkICpk
+ZXZfaWQpDQo+ID4gK3sNCj4gPiArICAgICAgIHUzMiBzbGF2ZV90eXBlX251bSA9IG10a19kZXZh
+cGNfY3R4LT5zb2MtPnNsYXZlX3R5cGVfbnVtOw0KPiA+ICsgICAgICAgY29uc3Qgc3RydWN0IG10
+a19kZXZpY2VfaW5mbyAqKmRldmljZV9pbmZvOw0KPiA+ICsgICAgICAgc3RydWN0IG10a19kZXZh
+cGNfdmlvX2luZm8gKnZpb19pbmZvOw0KPiA+ICsgICAgICAgaW50IHNsYXZlX3R5cGUsIHZpb19p
+ZHgsIGluZGV4Ow0KPiA+ICsgICAgICAgY29uc3QgY2hhciAqdmlvX21hc3RlcjsNCj4gPiArICAg
+ICAgIHVuc2lnbmVkIGxvbmcgZmxhZ3M7DQo+ID4gKyAgICAgICBib29sIG5vcm1hbDsNCj4gPiAr
+ICAgICAgIHU4IHBlcm07DQo+ID4gKw0KPiA+ICsgICAgICAgc3Bpbl9sb2NrX2lycXNhdmUoJmRl
+dmFwY19sb2NrLCBmbGFncyk7DQo+ID4gKw0KPiA+ICsgICAgICAgZGV2aWNlX2luZm8gPSBtdGtf
+ZGV2YXBjX2N0eC0+c29jLT5kZXZpY2VfaW5mbzsNCj4gPiArICAgICAgIHZpb19pbmZvID0gbXRr
+X2RldmFwY19jdHgtPnNvYy0+dmlvX2luZm87DQo+ID4gKyAgICAgICBub3JtYWwgPSBmYWxzZTsN
+Cj4gPiArICAgICAgIHZpb19pZHggPSAtMTsNCj4gPiArICAgICAgIGluZGV4ID0gLTE7DQo+ID4g
+Kw0KPiA+ICsgICAgICAgLyogVGhlcmUgYXJlIG11bHRpcGxlIERFVkFQQ19QRCAqLw0KPiA+ICsg
+ICAgICAgZm9yIChzbGF2ZV90eXBlID0gMDsgc2xhdmVfdHlwZSA8IHNsYXZlX3R5cGVfbnVtOyBz
+bGF2ZV90eXBlKyspIHsNCj4gPiArICAgICAgICAgICAgICAgaWYgKCFjaGVja190eXBlMl92aW9f
+c3RhdHVzKHNsYXZlX3R5cGUsICZ2aW9faWR4LCAmaW5kZXgpKQ0KPiA+ICsgICAgICAgICAgICAg
+ICAgICAgICAgIGlmICghbXRrX2RldmFwY19kdW1wX3Zpb19kYmcoc2xhdmVfdHlwZSwgJnZpb19p
+ZHgsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAmaW5kZXgpKQ0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29udGlu
+dWU7DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICAvKiBFbnN1cmUgdGhhdCB2aW9sYXRpb24g
+aW5mbyBhcmUgd3JpdHRlbiBiZWZvcmUNCj4gPiArICAgICAgICAgICAgICAgICogZnVydGhlciBv
+cGVyYXRpb25zDQo+ID4gKyAgICAgICAgICAgICAgICAqLw0KPiA+ICsgICAgICAgICAgICAgICBz
+bXBfbWIoKTsNCj4gPiArICAgICAgICAgICAgICAgbm9ybWFsID0gdHJ1ZTsNCj4gPiArDQo+ID4g
+KyAgICAgICAgICAgICAgIG1hc2tfbW9kdWxlX2lycShzbGF2ZV90eXBlLCB2aW9faWR4LCB0cnVl
+KTsNCj4gPiArDQo+ID4gKyAgICAgICAgICAgICAgIGlmIChjbGVhcl92aW9fc3RhdHVzKHNsYXZl
+X3R5cGUsIHZpb19pZHgpKQ0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHByX3dhcm4oUEZY
+ICIlcywgJXM6MHgleCwgJXM6MHgleFxuIiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICJjbGVhciB2aW8gc3RhdHVzIGZhaWxlZCIsDQo+ID4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAic2xhdmVfdHlwZSIsIHNsYXZlX3R5cGUsDQo+ID4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAidmlvX2luZGV4IiwgdmlvX2lkeCk7DQo+ID4gKw0KPiA+ICsg
+ICAgICAgICAgICAgICBwZXJtID0gZ2V0X3Blcm1pc3Npb24oc2xhdmVfdHlwZSwgaW5kZXgsIHZp
+b19pbmZvLT5kb21haW5faWQpOw0KPiA+ICsNCj4gPiArICAgICAgICAgICAgICAgdmlvX21hc3Rl
+ciA9IG10a19kZXZhcGNfY3R4LT5zb2MtPm1hc3Rlcl9nZXQNCj4gPiArICAgICAgICAgICAgICAg
+ICAgICAgICAodmlvX2luZm8tPm1hc3Rlcl9pZCwNCj4gPiArICAgICAgICAgICAgICAgICAgICAg
+ICAgdmlvX2luZm8tPnZpb19hZGRyLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICBzbGF2
+ZV90eXBlLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICB2aW9faW5mby0+c2hpZnRfc3Rh
+X2JpdCwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgdmlvX2luZm8tPmRvbWFpbl9pZCk7
+DQo+IA0KPiBDYWxsIG10Njg3M19idXNfaWRfdG9fbWFzdGVyKCkgZGlyZWN0bHkuIEZvciBmaXJz
+dCBwYXRjaCwgbWFrZSB0aGluZ3MNCj4gYXMgc2ltcGxlIGFzIHBvc3NpYmxlLg0KDQpJbiBkZXZh
+cGNfdmlvbGF0aW9uX2lycSgpIGZ1bmN0aW9uLCB3ZSB1c2UgY29tbW9uIGZsb3cgdG8gaGFuZGxl
+IGVhY2gNCmRldmFwYyB2aW9sYXRpb24gb24gZGlmZmVyZW50IHBsYXRmb3Jtcy4gVGhlIG1hc3Rl
+cl9nZXQoKSBoYXMgZGlmZmVyZW50DQppbXBsZW1lbnRhdGlvbiBvbiBkaWZmZXJlbnQgcGxhdGZv
+cm1zLCB0aGF0IHdoeSBpdCBjYWxsZWQgaW5kaXJlY3RseS4NCg0KT25jZSB3ZSBoYXZlIG5ldyBw
+bGF0Zm9ybSwgd2Ugb25seSBoYXZlIHRvIHVwZGF0ZSBkZXZhcGMtbXR4eHh4LmMNCmluc3RlYWQg
+b2YgY29tbW9uIGhhbmRsZXIgZmxvdy4NCg0KPiANCj4gPiArDQo+ID4gKyAgICAgICAgICAgICAg
+IGlmICghdmlvX21hc3Rlcikgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHByX3dhcm4o
+UEZYICJtYXN0ZXJfZ2V0IGZhaWxlZFxuIik7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
+dmlvX21hc3RlciA9ICJVTktOT1dOX01BU1RFUiI7DQo+ID4gKyAgICAgICAgICAgICAgIH0NCj4g
+PiArDQo+ID4gKyAgICAgICAgICAgICAgIHByX2luZm8oUEZYICIlcyAtICVzOjB4JXgsICVzOjB4
+JXgsICVzOjB4JXgsICVzOjB4JXhcbiIsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgIlZp
+b2xhdGlvbiIsICJzbGF2ZV90eXBlIiwgc2xhdmVfdHlwZSwNCj4gPiArICAgICAgICAgICAgICAg
+ICAgICAgICAic3lzX2luZGV4IiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBkZXZpY2Vf
+aW5mb1tzbGF2ZV90eXBlXVtpbmRleF0uc3lzX2luZGV4LA0KPiA+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICJjdHJsX2luZGV4IiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBkZXZpY2Vf
+aW5mb1tzbGF2ZV90eXBlXVtpbmRleF0uY3RybF9pbmRleCwNCj4gPiArICAgICAgICAgICAgICAg
+ICAgICAgICAidmlvX2luZGV4IiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBkZXZpY2Vf
+aW5mb1tzbGF2ZV90eXBlXVtpbmRleF0udmlvX2luZGV4KTsNCj4gPiArDQo+ID4gKyAgICAgICAg
+ICAgICAgIHByX2luZm8oUEZYICIlcyAlcyAlcyAlc1xuIiwNCj4gPiArICAgICAgICAgICAgICAg
+ICAgICAgICAiVmlvbGF0aW9uIC0gbWFzdGVyOiIsIHZpb19tYXN0ZXIsDQo+ID4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgImFjY2VzcyB2aW9sYXRpb24gc2xhdmU6IiwNCj4gPiArICAgICAgICAg
+ICAgICAgICAgICAgICBkZXZpY2VfaW5mb1tzbGF2ZV90eXBlXVtpbmRleF0uZGV2aWNlKTsNCj4g
+PiArDQo+ID4gKyAgICAgICAgICAgICAgIGRldmFwY192aW9fcmVhc29uKHBlcm0pOw0KPiA+ICsN
+Cj4gPiArICAgICAgICAgICAgICAgZGV2YXBjX2V4dHJhX2hhbmRsZXIoc2xhdmVfdHlwZSwgdmlv
+X21hc3RlciwgdmlvX2lkeCwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgdmlvX2luZm8tPnZpb19hZGRyKTsNCj4gPiArDQo+ID4gKyAgICAgICAgICAgICAgIG1hc2tf
+bW9kdWxlX2lycShzbGF2ZV90eXBlLCB2aW9faWR4LCBmYWxzZSk7DQo+ID4gKyAgICAgICB9DQo+
+ID4gKw0KPiA+ICsgICAgICAgaWYgKG5vcm1hbCkgew0KPiA+ICsgICAgICAgICAgICAgICBzcGlu
+X3VubG9ja19pcnFyZXN0b3JlKCZkZXZhcGNfbG9jaywgZmxhZ3MpOw0KPiA+ICsgICAgICAgICAg
+ICAgICByZXR1cm4gSVJRX0hBTkRMRUQ7DQo+ID4gKyAgICAgICB9DQo+ID4gKw0KPiA+ICsgICAg
+ICAgc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmZGV2YXBjX2xvY2ssIGZsYWdzKTsNCj4gPiArICAg
+ICAgIHJldHVybiBJUlFfSEFORExFRDsNCj4gPiArfQ0KPiA+ICsNCg0KW3NuaXBdDQoNCg0K
 
-Let's expose that through a clock driver implementing a clock and reset
-provider.
-
-Cc: Michael Turquette <mturquette@baylibre.com>
-Cc: Stephen Boyd <sboyd@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-clk@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
----
- drivers/clk/bcm/Kconfig           |  11 +++-
- drivers/clk/bcm/Makefile          |   1 +-
- drivers/clk/bcm/clk-bcm2711-dvp.c | 120 +++++++++++++++++++++++++++++++-
- 3 files changed, 132 insertions(+)
- create mode 100644 drivers/clk/bcm/clk-bcm2711-dvp.c
-
-diff --git a/drivers/clk/bcm/Kconfig b/drivers/clk/bcm/Kconfig
-index 8c83977a7dc4..784f12c72365 100644
---- a/drivers/clk/bcm/Kconfig
-+++ b/drivers/clk/bcm/Kconfig
-@@ -1,4 +1,15 @@
- # SPDX-License-Identifier: GPL-2.0-only
-+
-+config CLK_BCM2711_DVP
-+	tristate "Broadcom BCM2711 DVP support"
-+	depends on ARCH_BCM2835 ||COMPILE_TEST
-+	depends on COMMON_CLK
-+	default ARCH_BCM2835
-+	select RESET_SIMPLE
-+	help
-+	  Enable common clock framework support for the Broadcom BCM2711
-+	  DVP Controller.
-+
- config CLK_BCM2835
- 	bool "Broadcom BCM2835 clock support"
- 	depends on ARCH_BCM2835 || ARCH_BRCMSTB || COMPILE_TEST
-diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
-index 0070ddf6cdd2..edb66b44cb27 100644
---- a/drivers/clk/bcm/Makefile
-+++ b/drivers/clk/bcm/Makefile
-@@ -6,6 +6,7 @@ obj-$(CONFIG_CLK_BCM_KONA)	+= clk-kona-setup.o
- obj-$(CONFIG_CLK_BCM_KONA)	+= clk-bcm281xx.o
- obj-$(CONFIG_CLK_BCM_KONA)	+= clk-bcm21664.o
- obj-$(CONFIG_COMMON_CLK_IPROC)	+= clk-iproc-armpll.o clk-iproc-pll.o clk-iproc-asiu.o
-+obj-$(CONFIG_CLK_BCM2711_DVP)	+= clk-bcm2711-dvp.o
- obj-$(CONFIG_CLK_BCM2835)	+= clk-bcm2835.o
- obj-$(CONFIG_CLK_BCM2835)	+= clk-bcm2835-aux.o
- obj-$(CONFIG_CLK_RASPBERRYPI)	+= clk-raspberrypi.o
-diff --git a/drivers/clk/bcm/clk-bcm2711-dvp.c b/drivers/clk/bcm/clk-bcm2711-dvp.c
-new file mode 100644
-index 000000000000..84dbc886e303
---- /dev/null
-+++ b/drivers/clk/bcm/clk-bcm2711-dvp.c
-@@ -0,0 +1,120 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+// Copyright 2020 Cerno
-+
-+#include <linux/clk-provider.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset-controller.h>
-+#include <linux/reset/reset-simple.h>
-+
-+#define DVP_HT_RPI_SW_INIT	0x04
-+#define DVP_HT_RPI_MISC_CONFIG	0x08
-+
-+#define NR_CLOCKS	2
-+#define NR_RESETS	6
-+
-+struct clk_dvp {
-+	struct clk_hw_onecell_data	*data;
-+	struct reset_simple_data	reset;
-+};
-+
-+static const struct clk_parent_data clk_dvp_parent = {
-+	.index	= 0,
-+};
-+
-+static int clk_dvp_probe(struct platform_device *pdev)
-+{
-+	struct clk_hw_onecell_data *data;
-+	struct resource *res;
-+	struct clk_dvp *dvp;
-+	void __iomem *base;
-+	int ret;
-+
-+	dvp = devm_kzalloc(&pdev->dev, sizeof(*dvp), GFP_KERNEL);
-+	if (!dvp)
-+		return -ENOMEM;
-+	platform_set_drvdata(pdev, dvp);
-+
-+	dvp->data = devm_kzalloc(&pdev->dev,
-+				 struct_size(dvp->data, hws, NR_CLOCKS),
-+				 GFP_KERNEL);
-+	if (!dvp->data)
-+		return -ENOMEM;
-+	data = dvp->data;
-+
-+	base = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	dvp->reset.rcdev.owner = THIS_MODULE;
-+	dvp->reset.rcdev.nr_resets = NR_RESETS;
-+	dvp->reset.rcdev.ops = &reset_simple_ops;
-+	dvp->reset.rcdev.of_node = pdev->dev.of_node;
-+	dvp->reset.membase = base + DVP_HT_RPI_SW_INIT;
-+	spin_lock_init(&dvp->reset.lock);
-+
-+	ret = devm_reset_controller_register(&pdev->dev, &dvp->reset.rcdev);
-+	if (ret)
-+		return ret;
-+
-+	data->hws[0] = clk_hw_register_gate_parent_data(&pdev->dev,
-+							"hdmi0-108MHz",
-+							&clk_dvp_parent, 0,
-+							base + DVP_HT_RPI_MISC_CONFIG, 3,
-+							CLK_GATE_SET_TO_DISABLE,
-+							&dvp->reset.lock);
-+	if (IS_ERR(data->hws[0]))
-+		return PTR_ERR(data->hws[0]);
-+
-+	data->hws[1] = clk_hw_register_gate_parent_data(&pdev->dev,
-+							"hdmi1-108MHz",
-+							&clk_dvp_parent, 0,
-+							base + DVP_HT_RPI_MISC_CONFIG, 4,
-+							CLK_GATE_SET_TO_DISABLE,
-+							&dvp->reset.lock);
-+	if (IS_ERR(data->hws[1])) {
-+		ret = PTR_ERR(data->hws[1]);
-+		goto unregister_clk0;
-+	}
-+
-+	data->num = NR_CLOCKS;
-+	ret = of_clk_add_hw_provider(pdev->dev.of_node, of_clk_hw_onecell_get,
-+				     data);
-+	if (ret)
-+		goto unregister_clk1;
-+
-+	return 0;
-+
-+unregister_clk1:
-+	clk_hw_unregister_gate(data->hws[1]);
-+
-+unregister_clk0:
-+	clk_hw_unregister_gate(data->hws[0]);
-+	return ret;
-+};
-+
-+static int clk_dvp_remove(struct platform_device *pdev)
-+{
-+	struct clk_dvp *dvp = platform_get_drvdata(pdev);
-+	struct clk_hw_onecell_data *data = dvp->data;
-+
-+	clk_hw_unregister_gate(data->hws[1]);
-+	clk_hw_unregister_gate(data->hws[0]);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id clk_dvp_dt_ids[] = {
-+	{ .compatible = "brcm,brcm2711-dvp", },
-+	{ /* sentinel */ }
-+};
-+
-+static struct platform_driver clk_dvp_driver = {
-+	.probe	= clk_dvp_probe,
-+	.remove	= clk_dvp_remove,
-+	.driver	= {
-+		.name		= "brcm2711-dvp",
-+		.of_match_table	= clk_dvp_dt_ids,
-+	},
-+};
-+module_platform_driver(clk_dvp_driver);
--- 
-git-series 0.9.1
