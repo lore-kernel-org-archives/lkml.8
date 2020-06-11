@@ -2,125 +2,68 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E490C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55393C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:44:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02DD2206DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:44:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35DA52082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 15:44:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="VHjBHUTI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728683AbgFKPoA (ORCPT
+        id S1728496AbgFKPoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 11:44:00 -0400
-Received: from mga03.intel.com ([134.134.136.65]:40538 "EHLO mga03.intel.com"
+        Thu, 11 Jun 2020 11:44:08 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:58152 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728496AbgFKPn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 11:43:59 -0400
-IronPort-SDR: zVbYBjCm+9L7CvMejLIsQdTToMqnSAR/RHJ4NnfDXDmHKrJaHs392+3+drFf0F4Cv2P1+NSZnB
- los2p04MIFKQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 08:43:59 -0700
-IronPort-SDR: +Ydw/4Fg05XSUVeVdaVnYwXl169Eie8ePVgfFpQAiQZ2NUmXKZaRvV2IeZsKgMR2pcPAaKpDpn
- +n8lSwG3SLOg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,499,1583222400"; 
-   d="scan'208";a="419144435"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga004.jf.intel.com with ESMTP; 11 Jun 2020 08:43:59 -0700
-Date:   Thu, 11 Jun 2020 08:43:59 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Feiner <pfeiner@google.com>,
-        Peter Shier <pshier@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        Ben Gardon <bgardon@google.com>,
-        Christoffer Dall <christoffer.dall@arm.com>
-Subject: Re: [PATCH 17/21] KVM: arm64: Use common code's approach for
- __GFP_ZERO with memory caches
-Message-ID: <20200611154359.GF29918@linux.intel.com>
-References: <20200605213853.14959-1-sean.j.christopherson@intel.com>
- <20200605213853.14959-18-sean.j.christopherson@intel.com>
- <6cc08074c289cbea7b9c1deeaf18c63f@kernel.org>
+        id S1728686AbgFKPoF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 11:44:05 -0400
+Received: from zn.tnic (p200300ec2f0bef00e16d68ab941b81be.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:ef00:e16d:68ab:941b:81be])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C59E21EC0361;
+        Thu, 11 Jun 2020 17:44:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1591890242;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=zRjk4RBi0GnPGLmQJy0T5cJNf2UJsuqZOmkE4U6Bra8=;
+        b=VHjBHUTIxc+sw+NlJyhB6Vf0IOkw3ufXM2VUrGTBfB9q5S4ZDEkEa+xjsfPNe8F7dGQxkl
+        sWdQEGqxCHcq084KbL68NnAsvG8+AC0gy6LC92sM8Ur/06YQ1OYcLnJw1B8JIEGGatn1Jg
+        kXwRQjq8BDmeovBGncC0tgOamddFtuM=
+Date:   Thu, 11 Jun 2020 17:43:56 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Anthony Steinhauser <asteinhauser@google.com>
+Cc:     linux-tip-commits@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [tip: x86/urgent] x86/speculation: Avoid force-disabling IBPB
+ based on STIBP and enhanced IBRS.
+Message-ID: <20200611154356.GE30352@zn.tnic>
+References: <159169282952.17951.3529693809120577424.tip-bot2@tip-bot2>
+ <20200611140951.GD30352@zn.tnic>
+ <CAN_oZf16odNhpY6_LqkVY2wpy90jKM9-vgKo4LE8OJ-QTDCKiw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <6cc08074c289cbea7b9c1deeaf18c63f@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAN_oZf16odNhpY6_LqkVY2wpy90jKM9-vgKo4LE8OJ-QTDCKiw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 08:59:05AM +0100, Marc Zyngier wrote:
-> >diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
-> >index 9398b66f8a87..688213ef34f0 100644
-> >--- a/arch/arm64/kvm/mmu.c
-> >+++ b/arch/arm64/kvm/mmu.c
-> >@@ -131,7 +131,8 @@ static int mmu_topup_memory_cache(struct
-> >kvm_mmu_memory_cache *cache, int min)
-> > 	if (cache->nobjs >= min)
-> > 		return 0;
-> > 	while (cache->nobjs < ARRAY_SIZE(cache->objects)) {
-> >-		page = (void *)__get_free_page(GFP_PGTABLE_USER);
-> >+		page = (void *)__get_free_page(GFP_KERNEL_ACCOUNT |
-> 
-> This is definitely a change in the way we account for guest
-> page tables allocation, although I find it bizarre that not
-> all architectures account for it the same way.
+On Thu, Jun 11, 2020 at 07:35:18AM -0700, Anthony Steinhauser wrote:
+> Yes, I think it's fine.
 
-It's not intended to be a functional change, i.e. the allocations should
-still be accounted:
+Ok thanks, I'll do a proper patch next week when -rc1 is done and those
+have gone in.
 
-  #define GFP_PGTABLE_USER  (GFP_PGTABLE_KERNEL | __GFP_ACCOUNT)
-  |
-  -> #define GFP_PGTABLE_KERNEL        (GFP_KERNEL | __GFP_ZERO)
+-- 
+Regards/Gruss,
+    Boris.
 
-  == GFP_KERNEL | __GFP_ACCOUNT | __GFP_ZERO
-
-versus 
-
-  #define GFP_KERNEL_ACCOUNT (GFP_KERNEL | __GFP_ACCOUNT)
-
-    with __GFP_ZERO explicitly OR'd in
-
-  == GFP_KERNEL | __GFP_ACCOUNT | __GFP_ZERO
-
-I can put the above in the changelog, unless of course it's wrong and I've
-missed something.
-
-> It seems logical to me that nested page tables would be accounted
-> against userspace, but I'm willing to be educated on the matter.
-> 
-> Another possibility is that depending on the context, some allocations
-> should be accounted on either the kernel or userspace (NV on arm64
-> could definitely do something like that). If that was the case,
-> maybe moving most of the GFP_* flags into the per-cache flags,
-> and have the renaming that Ben suggested earlier.
-> 
-> Thanks,
-> 
->         M.
-> -- 
-> Jazz is not dead. It just smells funny...
+https://people.kernel.org/tglx/notes-about-netiquette
