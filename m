@@ -2,163 +2,173 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B680FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A187C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:18:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E28F20760
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:18:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAD4D20760
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:18:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="S/jl+slL"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="aorjJjKx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728171AbgFKNSc (ORCPT
+        id S1728191AbgFKNSm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 09:18:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49066 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726159AbgFKNSb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 09:18:31 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFEF2C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 06:18:30 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id f185so5024518wmf.3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 06:18:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=0x0f.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=3D40KyYMeXLRFbWmcuYLD5ZmMexI/dbs3uEPHhCTA4U=;
-        b=S/jl+slL4mssBKVD02XQnVYrrTOFXjeWo7eAXEftnHakKzcEeJu79b3roxehmDRQLa
-         kzmUXI63zJ99Ff+zyFfuphDwSrKVjOOnFmkLlbzMUHsu7x8mz+FO5iQxXm+/R9kv6fCq
-         iTV1yBhl6egCeeQ33/ivG+d3xVEOcFFrSJqVs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3D40KyYMeXLRFbWmcuYLD5ZmMexI/dbs3uEPHhCTA4U=;
-        b=hoGiSRByEud47ilN7EfWOmfMeA3FK0i/0cJ+uvGmU3Qy5PhYxOT72H5KiUcm1iP4pS
-         +cM5AzajJ2ylMAoMwmf9jhdlqyLmddexGDlayqdy//J6CzRFcBIhXERJkSpP2G08RBZD
-         xTXq1xsFNQ/hbaGb3YFcf4qehuW6FMgr4Ti33wzZv8sM7dtddRLl5ZAwlPsUCUU9Yq7I
-         PIuhBYZiCWrVK0eru4OcZLGlkT7RpP/xwra7u23wGp3yMChw4wDYMBubnzJGY4PKIOMf
-         9fKXXWjH63nCUwOXejA0/ALAJaSMGXUY/m1uJEWggu3X3sqXjGC7cIksSWd/Lm5LclEC
-         DcQQ==
-X-Gm-Message-State: AOAM5306SaXf31B9iOopsbf64sIiPQT4ogNh07rhpn7zFY4nFcJsNomo
-        nOWLXjBUIN0NSqA8TJKmCyao6Q/1D0SHXexvW67eng==
-X-Google-Smtp-Source: ABdhPJyN9QaXL2/nALzV6Wm81/61c10NORZKfBtIvPfa3KPmZdM5dbRmE8hjWi4WODPLxAiHTdkMMTDuDyWSkjv413E=
-X-Received: by 2002:a1c:7206:: with SMTP id n6mr8461880wmc.4.1591881509341;
- Thu, 11 Jun 2020 06:18:29 -0700 (PDT)
+        Thu, 11 Jun 2020 09:18:42 -0400
+Received: from mout.web.de ([212.227.17.11]:56137 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726471AbgFKNSk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 09:18:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1591881447;
+        bh=1x8I6rmlE7srvVzxBfIvVoevQkm/rDuU1cM8Wqa6FQM=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=aorjJjKxCJPafBe+gGjOnOCrCAFL0WACjt5B/NqN/Pk6rqsc9vH8pFTxK5ou655Mi
+         Gj74LngJz1aVAfQJeq+gQOQEjsgV2wLy5sRL1UrJx9lEceg6TSdzKMzCi65uYl3702
+         O21tH1bJqpPBP2UmniqUURW6nryPz23lfo0hKqCU=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([78.49.66.14]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MHmqC-1jfUvY3ZiQ-00F14Z; Thu, 11
+ Jun 2020 15:17:27 +0200
+To:     Chen Wandun <chenwandun@huawei.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Yonghong Song <yhs@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Cheng Jian <cj.chengjian@huawei.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Ian Rogers <irogers@google.com>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH] perf tools: Fix potential memory leak in perf events
+ parser
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <ea548157-5cb0-ffa7-9bd5-ff3f9c66b1de@web.de>
+Date:   Thu, 11 Jun 2020 15:17:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20191014061617.10296-2-daniel@0x0f.com> <20200610090421.3428945-3-daniel@0x0f.com>
- <f66978d8-22c5-1883-c6bf-52c0c19d6603@suse.de>
-In-Reply-To: <f66978d8-22c5-1883-c6bf-52c0c19d6603@suse.de>
-From:   Daniel Palmer <daniel@0x0f.com>
-Date:   Thu, 11 Jun 2020 22:18:13 +0900
-Message-ID: <CAFr9PX=jNE-y++W=PVr=EQTiA4CtTM6xpsy2=pnJGPB_Z-BLqg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] ARM: mstar: Add machine for MStar/Sigmastar
- infinity/mercury family ARMv7 SoCs
-To:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc:     Krzysztof Adamski <k@japko.eu>, tim.bird@sony.com,
-        devicetree@vger.kernel.org, Daniel Palmer <daniel@thingy.jp>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Mike Rapoport <rppt@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Doug Anderson <armlinux@m.disordat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Gregory Fong <gregory.0xf0@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Christian Lamparter <chunkeey@gmail.com>,
-        Nathan Huckleberry <nhuck15@gmail.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:VfXqilX/ctjMS3JSH21x7PnlwcGZ5vUROMoGbWH56Xq7fxxUlyB
+ nRFPmwFKI/feyleg0R3YgVhKIroLUkNYtFmTbQG17MbV26/YxCH3Z0BTu7eK1KlQ7ldraPz
+ BFjciKLhE45DAqjyHdx1E/dQeBgDnBZy4fS49PaekpL/Z0Nbhn4b3gpCmF3tghZVNlmpWXB
+ /0ENK0oeyazEcZcANQdhQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Dy13m/PW6BE=:AxWZO4t9w1RVipMW6rcQAi
+ H+o7qUjxSGjXd4ljPXEVSaQ0G+RNf5z6xJ+n8BT0jwUHmV8EZAipqABur8VmPJJ1/aA8jtFTI
+ URGRrT0NDOv8EcCIGb88F4AWNS+k86OLEiXcUQYDR/HZI1fMN3pIIX6xOqR98AenpA+2yhcPg
+ ICd0NXFQDQq/eveLrXMThVlPYKqUjxJJZB0GN4heUS0J62lFxTpK/F5EceqG9/EGCkLpWPPxS
+ OvIZ7wGXt6phIU9qidLkWwIG7YgxDXcsWTyvLjmWPWK9wQPQsUyWdqfR62KtiI1Yf07ME8S/g
+ 09vIVbwWFkwWhNI+4Yj0hl+H/YnD4UG3PgiUbWfjhkyIggocWNmLnMGH5iMy4x03oRj/dHYCP
+ mrom08fi/BkfLOichrkCTQspngOsUDpMtyciXqcH9qY5cI3ZGhlDm8UTVGodtRTAlq2Eg1Y+6
+ lLBIVFKakUTSNkStj/6N6HFwuXylx2kLI/xZxa4drPgRASG5LwAeU12hZQ4JjPDxFCetMLku3
+ /pGtQGyfAausUmDYqUkGxGMsPzg2KQIEUV77ujiWKE6crZuI4vf9Wdfo1nGigAr62s9Aqt4DU
+ tjpe8WmqNaWcQuKMCbJJFufqFeLAtFlOjRBPxNRRVZjJ6Z3u+0zmXA5FlGXxIu+2ol90Mfpe0
+ dKMS2BzzWliUujaIBphZYHcHgrrCJou/dX6M9sxem/vl67C+SXT9yhCd1uBI9Tv8IOa6i5zXD
+ O1vMNRbO7+Y9cbUFm79Qb5RVF99fM+2Zpc+fvEV8EtS6mWKXKsBIi/RI8OouYAfK+7/FO2JAa
+ RDdU91co8hToW+PBBTgoUoBunbwRDLvsyRtkVthmRavC+fNJxyc9YWK97dkcP6uhOKU7hDXdm
+ qsbIvnZrGJgVYaZJDwx4NQnOc15p2A06+uf3wfd21MimwGBPTJJFh+DARTEtB8JrDuNZfIw/p
+ ju4++SSQRw8sYV+Pa8/5AklRIvMmc15m8htWm5B/5D9A8GzEcIxT8oFy+vl8p5CiCAMCbxF+P
+ 9jqvNzl4nP0Hn8Xev/0GpSlvLhG+DMeeWqL+XrVMCAqKTBz9x2whtze/cX9Og+xFCKUIInddY
+ CPhQweLukftc1Oo9FNKO9pGAs5vamq+gN0oymnoEA1Ig4m/HyM/jQ7/hDUdeYhx7hFxR/falI
+ nbj322psrMqS2RNVnZm0YqtlJiw63vAxYQ6we9P7l54lJEmKbPpuuLGphmlhoS9c0utiAa/T5
+ Qsikbc8LccjMXFOYc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andreas,
+> Fix potential memory leak in function parse_events_term__sym_hw()
+> and parse_events_term__clone().
 
-On Thu, 11 Jun 2020 at 21:58, Andreas F=C3=A4rber <afaerber@suse.de> wrote:
+Would you like to add the tag =E2=80=9CFixes=E2=80=9D to the commit messag=
+e?
 
-> You call the dir mach-mstar, but name the Kconfig ARCH_MSTARV7. I had
-> previously been asked to just use the vendor name, so this should
-> probably be just ARCH_MSTAR. Outside arch/arm/ you can then use ARM &&
-> ARCH_MSTAR condition to make things 32-bit only, allowing to reuse
-> ARCH_MSTAR for arm64 or whatever.
 
-The ARM9 MStar chips before they switched to a common ARMv7 base aren't dir=
-ectly
-compatible so I thought there should be some distinction there. I
-doubt anyone will do it
-but I made the directory mach-mstar so potentially someone could add
-machine support
-for the older stuff to without having more directories.
-
-> > +     bool "MStar/Sigmastar ARMv7 SoC Support"
-> > +     depends on ARCH_MULTI_V7
-> > +     select ARM_GIC
-> > +     select ARM_HEAVY_MB
-> > +     help
-> > +       Support for newer MStar/Sigmastar SoC families that are
-> > +       based on ARMv7 cores like the Cortex A7 and share the same
-> > +       basic hardware like the infinity and mercury series.
-> > +
-> > +if ARCH_MSTARV7
-> > +
-> > +config MACH_INFINITY
-> > +     bool "MStar/Sigmastar infinity SoC support"
-> > +     default ARCH_MSTARV7
-> > +     help
-> > +       Support for MStar/Sigmastar infinity IP camera SoCs.
-> > +
-> > +config MACH_MERCURY
-> > +     bool "MStar/Sigmastar mercury SoC support"
-> > +     default ARCH_MSTARV7
-> > +     help
-> > +       Support for MStar/Sigmastar mercury dash camera SoCs.
-> > +       Note that older Mercury2 SoCs are ARM9 based and not supported.
+=E2=80=A6
+> +++ b/tools/perf/util/parse-events.c
+=E2=80=A6
+> @@ -2957,9 +2958,20 @@  int parse_events_term__sym_hw(struct parse_event=
+s_term **term,
+>  	sym =3D &event_symbols_hw[idx];
 >
-> Is this comment really helpful? This menu item would only seem to come
-> up after having selected multi_v7, which kind of rules out ARM9.
+>  	str =3D strdup(sym->symbol);
+> -	if (!str)
+> +	if (!str) {
+> +		if (!config)
+> +			free(temp.config);
+>  		return -ENOMEM;
+> -	return new_term(term, &temp, str, 0);
+> +	}
+> +
+> +	ret =3D new_term(term, &temp, str, 0);
+> +	if (ret < 0) {
+> +		free(str);
+> +		if (!config)
+> +			free(temp.config);
+> +	}
+> +
+> +	return ret;
+>  }
+=E2=80=A6
 
-The older mercury2 based chips seem to still be available and used in
-drive recorders
-that are on the market right now. The infinity series is all ARMv7 so
-can be supported
-but for the mercury series only the newer ones are ARMv7 so I thought
-it was worth
-mentioning that "mercury SoC support" doesn't mean all of them. I'll
-take it out if you
-think it's unnecessary.
+How do you think about to add jump targets for a bit of
+common exception handling code in these function implementations?
 
-> Consider adding mercury in a second step?
-
-I'll think about that. I wanted to try to get a machine that isn't one
-I'm personally making
-into the series.
-
-Cheers,
-
-Daniel
+Regards,
+Markus
