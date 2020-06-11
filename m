@@ -2,91 +2,88 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E4C1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2519C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32537206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:54:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E42E2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 01:56:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591840615;
+	bh=beGVc6bpHeiEA8//p9B6LnBQfT/NH139uiChyIVI8JM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bZAlH/yVadBoJ6Yd7xrD78XVIVQon2Oh1A3g87uknX6anPHJRv6O8+QU88tuhvhsH
+	 cF3Ns2a43M6QBQ6mUe6/rH7Yftk0LKHn8mqMC0wg5EOuhZyoLmEg1BJsDV9uJAEJOq
+	 LQWBYb1xlOzOcTOnucM6A0LMSTh2DOD8RWkBf/YA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbgFKBya (ORCPT
+        id S1726419AbgFKB4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 21:54:30 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:58088 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726290AbgFKBy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 21:54:29 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 4998A452455622F1EEA3;
-        Thu, 11 Jun 2020 09:49:33 +0800 (CST)
-Received: from huawei.com (10.175.113.133) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Thu, 11 Jun 2020
- 09:49:26 +0800
-From:   Wang Hai <wanghai38@huawei.com>
-To:     <ericvh@gmail.com>, <lucho@ionkov.net>, <asmadeus@codewreck.org>,
-        <davem@davemloft.net>
-CC:     <v9fs-developer@lists.sourceforge.net>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <wanghai38@huawei.com>
-Subject: [PATCH] 9p/trans_fd: Fix concurrency del of req_list in p9_fd_cancelled/p9_read_work
-Date:   Thu, 11 Jun 2020 09:48:55 +0800
-Message-ID: <20200611014855.60550-1-wanghai38@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 10 Jun 2020 21:56:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55866 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726326AbgFKB4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jun 2020 21:56:52 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A1A2206FA;
+        Thu, 11 Jun 2020 01:56:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591840612;
+        bh=beGVc6bpHeiEA8//p9B6LnBQfT/NH139uiChyIVI8JM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ENNLJwPCrxED6GSeVc0lD6UMH8JWHDkxknOIE9Liy/jbqoCAuPZvUb2lHh+7Hi11g
+         lpQyL9iP/WG0xcg97vS2Zl+6LgrB7/hJXnWZ2g8ocl6qMmFfXLuMayp2HXHZk/IAwB
+         oc570nKJrn8AsZfX6H9xyEsZVETqdz6tHAvtUJY4=
+Date:   Wed, 10 Jun 2020 18:56:51 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Daeho Jeong <daeho43@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com,
+        Daeho Jeong <daehojeong@google.com>
+Subject: Re: [f2fs-dev] [PATCH] f2fs: add F2FS_IOC_SEC_TRIM_FILE ioctl
+Message-ID: <20200611015651.GD1339@sol.localdomain>
+References: <20200609060137.143501-1-daeho43@gmail.com>
+ <20200609165107.GA228564@gmail.com>
+ <CACOAw_xEZ+au9yhFerq9amkRO62Dzxj7h71gEc=i16ReYu5xrg@mail.gmail.com>
+ <20200610031532.GA6286@sol.localdomain>
+ <CACOAw_wErOPC=Kf3UU8nFGhWRy84ZnCeJbsyPhSCcXv51B_XxQ@mail.gmail.com>
+ <CACOAw_zka6d06RxFOUTwEV7B6o8A2-_6FvqWh_A1nJ0+7FU9yQ@mail.gmail.com>
+ <CACOAw_yc4hxdyxyO+Lb4MArHek1tP4wxCq0tezWOocgqvK+tqg@mail.gmail.com>
+ <20200611000037.GC1339@sol.localdomain>
+ <CACOAw_xqHnL0MthPykSrKJ8OXez-XigCFgC-vwm_keEZh_g8zw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.113.133]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACOAw_xqHnL0MthPykSrKJ8OXez-XigCFgC-vwm_keEZh_g8zw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-p9_read_work and p9_fd_cancelled may be called concurrently.
-Before list_del(&m->rreq->req_list) in p9_read_work is called,
-the req->req_list may have been deleted in p9_fd_cancelled.
-We can fix it by setting req->status to REQ_STATUS_FLSHD after
-list_del(&req->req_list) in p9_fd_cancelled.
+On Thu, Jun 11, 2020 at 09:23:23AM +0900, Daeho Jeong wrote:
+> Yes, I saw the implementation in vfs_write().
+> But if we use mnt_want_write_file() here, it'll call mnt_clone_write()
+> internally if the file is already open in write mode.
+> Don't you think the below thing is needed? We can increase the counter
+> each of them, open and ioctl, like other filesystems such as ext4.
+> 
+> int mnt_clone_write(struct vfsmount *mnt)
+> {
+>         /* superblock may be r/o */
+>         if (__mnt_is_readonly(mnt))
+>                 return -EROFS;
+>         preempt_disable();
+>         mnt_inc_writers(real_mount(mnt));
+>         preempt_enable();
+>         return 0;
+> }
 
-Before list_del(&req->req_list) in p9_fd_cancelled is called,
-the req->req_list may have been deleted in p9_read_work.
-We should return when req->status = REQ_STATUS_RCVD which means
-we just received a response for oldreq, so we need do nothing
-in p9_fd_cancelled.
+No, this seems to be left over from when mnt_want_write_file() was paired with
+mnt_drop_write() instead of mnt_drop_write_file().  I sent a patch to remove it:
+https://lkml.kernel.org/r/20200611014945.237210-1-ebiggers@kernel.org
 
-Fixes: 60ff779c4abb ("9p: client: remove unused code and any reference to "cancelled" function")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
----
- net/9p/trans_fd.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/net/9p/trans_fd.c b/net/9p/trans_fd.c
-index f868cf6fba79..a563699629cb 100644
---- a/net/9p/trans_fd.c
-+++ b/net/9p/trans_fd.c
-@@ -718,11 +718,18 @@ static int p9_fd_cancelled(struct p9_client *client, struct p9_req_t *req)
- {
- 	p9_debug(P9_DEBUG_TRANS, "client %p req %p\n", client, req);
- 
--	/* we haven't received a response for oldreq,
--	 * remove it from the list.
-+	/* If req->status == REQ_STATUS_RCVD, it means we just received a
-+	 * response for oldreq, we need do nothing here. Else, remove it from
-+	 * the list.
- 	 */
- 	spin_lock(&client->lock);
-+	if (req->status == REQ_STATUS_RCVD) {
-+		spin_unlock(&client->lock);
-+		return 0;
-+	}
-+
- 	list_del(&req->req_list);
-+	req->status = REQ_STATUS_FLSHD;
- 	spin_unlock(&client->lock);
- 	p9_req_put(req);
- 
--- 
-2.17.1
-
+- Eric
