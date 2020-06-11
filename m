@@ -2,130 +2,91 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 911A2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 03:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C20C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 04:05:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BA6E2075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 03:56:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Svm7yczh"
+	by mail.kernel.org (Postfix) with ESMTP id ED5302072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 04:05:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726417AbgFKD4h (ORCPT
+        id S1726387AbgFKEFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jun 2020 23:56:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46936 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbgFKD4g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jun 2020 23:56:36 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 638FCC08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 20:56:36 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id q19so4967250eja.7
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jun 2020 20:56:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=vEkq8ztedt+qfPg8J7ZSmeiXnGr0VHQIJP0F6NBBlcg=;
-        b=Svm7yczh4MLDGZXcAkI3ze0+uHZ8wJC+e9Xq5lwmoHGwNgLp35zut5dCXqOGMb7D+f
-         ars6OeG4HfAEJLRoSeToSy30iVhqHszTHo/gdItawlKTu2yNCqZslZuoSZqCoEosXjo8
-         pQgPZIUPTxv2AkVeBvWMIu/jbAVs0D/yrR7Hl051Zdjb8qCEgrUsAc/6ahy5wsvlp6jl
-         dM+Bcbr99U5DvkMP2ZoxpgLwAqNg6rX4VwLqe+dV0JVJ1pcQ0cuCaJ0vxDSxp8cfRwba
-         ZjMqfjdemif/x1NJ9v/WcPc0l4HhGWOpYacphBU2mXiSBIvDFt8NQI0JklOBrtGiSvJ8
-         OCpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=vEkq8ztedt+qfPg8J7ZSmeiXnGr0VHQIJP0F6NBBlcg=;
-        b=o6PDaj0wAfZZQgGgLZ+AAjeIpSCd8sRP5maro3AI6/ltrIlafQEcSp+sJV75ItkfX8
-         9WMC5FrLyYvKTUdrCMmiGsQ1iLD8V0cxWg8mRqGlral4zqfFTea/S+5eaK6Siqj+pcNn
-         hYjijws6akahSF/s3xRdRGzhvfqDVSUtt6IUP1G3uH/TK3wRYfRIA97rGvD2TZU9mN/1
-         TGR0TC8/+CUC+l4tkHMUBs9PFj6ZttRi4Q/kmKhe2VlVUXIK2ZcBPIwuJDLkpdmSQi8c
-         VTgvpgY2NB9vrttkGoyvRtReL5uoYfb4Y5e5hB1wUp8ISFg6M1ktWBxssVw6XlJ/YbQs
-         09Rg==
-X-Gm-Message-State: AOAM532B75rwLxC+1qbvqnVRRSRYqSsdj35ZFewS7GlXXUig+gxKEvKf
-        lPQVCvdD922Wb4CMFXyHTIgHF9/c4uJSqEciiFQPw/2Q
-X-Google-Smtp-Source: ABdhPJyjCBzpRLbkonfldqyBCvAO5JpRmv9SyXwSlFxVVI0GWmQiISf+9JR368yfch2UFL3aMJaqqO3Pv1WvXI1JT9M=
-X-Received: by 2002:a17:906:1c8c:: with SMTP id g12mr6471204ejh.456.1591847794230;
- Wed, 10 Jun 2020 20:56:34 -0700 (PDT)
-MIME-Version: 1.0
-From:   Dave Airlie <airlied@gmail.com>
-Date:   Thu, 11 Jun 2020 13:56:23 +1000
-Message-ID: <CAPM=9tySU_oXYv+FF5D3GkkyngdxWfkb_6KDK6nA0uBx6EB=qw@mail.gmail.com>
-Subject: [git pull] drm i915 fixes for rc1
+        Thu, 11 Jun 2020 00:05:51 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:33304 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726290AbgFKEFu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 00:05:50 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1jjETI-00033l-Ig; Thu, 11 Jun 2020 14:05:45 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 11 Jun 2020 14:05:44 +1000
+Date:   Thu, 11 Jun 2020 14:05:44 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
 To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Subject: [GIT PULL] Crypto Fixes for 5.8
+Message-ID: <20200611040544.GA27603@gondor.apana.org.au>
+References: <20190916084901.GA20338@gondor.apana.org.au>
+ <20190923050515.GA6980@gondor.apana.org.au>
+ <20191202062017.ge4rz72ki3vczhgb@gondor.apana.org.au>
+ <20191214084749.jt5ekav5o5pd2dcp@gondor.apana.org.au>
+ <20200115150812.mo2eycc53lbsgvue@gondor.apana.org.au>
+ <20200213033231.xjwt6uf54nu26qm5@gondor.apana.org.au>
+ <20200408061513.GA23636@gondor.apana.org.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200408061513.GA23636@gondor.apana.org.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hi Linus:
 
-dhowells reported an oops, and the i915 team tracked it down to a
-missing fix that didn't have correct tags, they've pulled it in along
-with two other fixes.
+This push contains a number of fixes to the omap and nitrox drivers.
 
-I might have some more fixes for rc1, but I might not, taking the day
-off tomorrow, so probably won't be in a hurry to process anything new
-unless something urgent lands.
+The following changes since commit 58ca0060ec4e51208d2eee12198fc55fd9e4feb3:
 
-Thanks,
-Dave.
-
-drm-next-2020-06-11:
-drm i915 fixes for 5.8-rc1
-
-i915:
-- Avoid use after free in cmdparser
-- Avoid NULL dereference when probing all display encoders
-- Fixup to module parameter type
-The following changes since commit 8d286e2ff4400d313955b4203fc640ca6fd9228b:
-
-  Merge tag 'drm-intel-next-fixes-2020-06-04' of
-git://anongit.freedesktop.org/drm/drm-intel into drm-next (2020-06-08
-11:59:57 +1000)
+  crypto: hisilicon - fix driver compatibility issue with different versions of devices (2020-05-28 17:27:52 +1000)
 
 are available in the Git repository at:
 
-  git://anongit.freedesktop.org/drm/drm tags/drm-next-2020-06-11
+  git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus 
 
-for you to fetch changes up to addb1e23bf72c47a3e2eb7cdad6dc8cdffa91384:
+for you to fetch changes up to 320bdbd816156f9ca07e5fed7bfb449f2908dda7:
 
-  Merge tag 'drm-intel-next-fixes-2020-06-10' of
-git://anongit.freedesktop.org/drm/drm-intel into drm-next (2020-06-11
-11:49:04 +1000)
+  crypto: cavium/nitrox - Fix 'nitrox_get_first_device()' when ndevlist is fully iterated (2020-06-04 22:06:26 +1000)
 
 ----------------------------------------------------------------
-drm i915 fixes for 5.8-rc1
+Christophe JAILLET (1):
+      crypto: cavium/nitrox - Fix 'nitrox_get_first_device()' when ndevlist is fully iterated
 
-i915:
-- Avoid use after free in cmdparser
-- Avoid NULL dereference when probing all display encoders
-- Fixup to module parameter type
+Tero Kristo (7):
+      crypto: omap-aes - avoid spamming console with self tests
+      crypto: omap-sham - force kernel driver usage for sha algos
+      crypto: omap-crypto - fix userspace copied buffer access
+      crypto: omap-sham - huge buffer access fixes
+      crypto: omap-sham - fix very small data size handling
+      crypto: omap-aes - prevent unregistering algorithms twice
+      crypto: omap-sham - add proper load balancing support for multicore
 
-----------------------------------------------------------------
-Chris Wilson (2):
-      drm/i915/gem: Mark the buffer pool as active for the cmdparser
-      drm/i915/display: Only query DP state of a DDI encoder
+ drivers/crypto/cavium/nitrox/nitrox_main.c |   4 ++--
+ drivers/crypto/omap-aes-gcm.c              |   1 -
+ drivers/crypto/omap-aes.c                  |   8 ++++++--
+ drivers/crypto/omap-crypto.c               |  10 ++++++++--
+ drivers/crypto/omap-sham.c                 | 101 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-------------------------------------------
+ 5 files changed, 74 insertions(+), 50 deletions(-)
 
-Dave Airlie (1):
-      Merge tag 'drm-intel-next-fixes-2020-06-10' of
-git://anongit.freedesktop.org/drm/drm-intel into drm-next
-
-Jani Nikula (1):
-      drm/i915/params: fix i915.reset module param type
-
- drivers/gpu/drm/i915/display/intel_dp.c        |  3 ++
- drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c | 56 ++++++++++++++++++++++----
- drivers/gpu/drm/i915/i915_params.c             |  2 +-
- 3 files changed, 52 insertions(+), 9 deletions(-)
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
