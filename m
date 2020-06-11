@@ -2,95 +2,95 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C9CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12255C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CF122078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D239D20656
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 09:52:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="RaBBlggY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbgFKJss (ORCPT
+        id S1726946AbgFKJw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 05:48:48 -0400
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:57411 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727025AbgFKJsi (ORCPT
+        Thu, 11 Jun 2020 05:52:57 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:39491 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726560AbgFKJw4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 05:48:38 -0400
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 11 Jun 2020 15:18:26 +0530
-Received: from c-rbokka-linux.qualcomm.com ([10.206.232.238])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 11 Jun 2020 15:18:05 +0530
-Received: by c-rbokka-linux.qualcomm.com (Postfix, from userid 203305)
-        id 0C31F2CBB; Thu, 11 Jun 2020 15:18:04 +0530 (IST)
-From:   Ravi Kumar Bokka <rbokka@codeaurora.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        rnayak@codeaurora.org, saiprakash.ranjan@codeaurora.org,
-        dhavalp@codeaurora.org, mturney@codeaurora.org,
-        sparate@codeaurora.org, c_rbokka@codeaurora.org,
-        mkurumel@codeaurora.org, Ravi Kumar Bokka <rbokka@codeaurora.org>
-Subject: [RFC v2 3/3] arm64: dts: qcom: sc7180: Add qfprom-efuse
-Date:   Thu, 11 Jun 2020 15:18:02 +0530
-Message-Id: <1591868882-16553-4-git-send-email-rbokka@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591868882-16553-1-git-send-email-rbokka@codeaurora.org>
-References: <1591868882-16553-1-git-send-email-rbokka@codeaurora.org>
+        Thu, 11 Jun 2020 05:52:56 -0400
+X-UUID: d125a9e89e874c09a2af91ffd9c34a03-20200611
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=CJcfxCu5zDRpr2vZfB1Tc+UVD9m/FFKMEZgs43bapM4=;
+        b=RaBBlggYi7uLe+U5eUAnTHjBINaRfqjWZLew/mB/kJXw6o7PQHLXsYxAbaicIOMyIy4jfjnSQgvkWeOdJ9eUXDKigTo/w+RSRnydNdRQD6tvfdax+QdbOmHBavbc/gLk5+rIkiBDJQbTdsEj0frBFSqNU+rifp9wNZqZcz88U/8=;
+X-UUID: d125a9e89e874c09a2af91ffd9c34a03-20200611
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 366576131; Thu, 11 Jun 2020 17:52:54 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 11 Jun 2020 17:52:50 +0800
+Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 11 Jun 2020 17:52:51 +0800
+Message-ID: <1591869173.25636.39.camel@mtkswgap22>
+Subject: RE: [PATCH v4] scsi: ufs: Fix imprecise load calculation in devfreq
+ window
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     Avri Altman <Avri.Altman@wdc.com>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
+        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
+        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
+        "andy.teng@mediatek.com" <andy.teng@mediatek.com>,
+        "chaotian.jing@mediatek.com" <chaotian.jing@mediatek.com>,
+        "cc.chou@mediatek.com" <cc.chou@mediatek.com>
+Date:   Thu, 11 Jun 2020 17:52:53 +0800
+In-Reply-To: <SN6PR04MB46405CE4B375BA3134D64A99FC800@SN6PR04MB4640.namprd04.prod.outlook.com>
+References: <20200611052109.22700-1-stanley.chu@mediatek.com>
+         <SN6PR04MB46405CE4B375BA3134D64A99FC800@SN6PR04MB4640.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: 7CBC375DE8EB4263FB517B24417907279B35FCD9CE7FF744E8B9862B97D052252000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds device tree node for qfprom-efuse controller.
-
-Signed-off-by: Ravi Kumar Bokka <rbokka@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180-idp.dts |  4 ++++
- arch/arm64/boot/dts/qcom/sc7180.dtsi    | 10 ++++++++--
- 2 files changed, 12 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-index 4e9149d..2a9224e 100644
---- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-@@ -287,6 +287,10 @@
- 	};
- };
- 
-+&qfprom {
-+	vcc-supply = <&vreg_l11a_1p8>;
-+};
-+
- &qspi {
- 	status = "okay";
- 	pinctrl-names = "default";
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 31b9217..20f3480 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -498,9 +498,15 @@
- 			#power-domain-cells = <1>;
- 		};
- 
--		qfprom@784000 {
-+		qfprom: qfprom@780000 {
- 			compatible = "qcom,qfprom";
--			reg = <0 0x00784000 0 0x8ff>;
-+			reg = <0 0x00780000 0 0x7a0>,
-+			      <0 0x00782000 0 0x100>,
-+			      <0 0x00784000 0 0x8ff>;
-+			reg-names = "raw", "conf", "corrected";
-+			
-+			clocks = <&gcc GCC_SEC_CTRL_CLK_SRC>;
-+			clock-names = "secclk";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 
--- 
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, hosted by the Linux Foundation.
+SGkgQXZyaSwNCg0KVGhhbmtzIGZvciB0aGUgcmV2aWV3Lg0KDQpPbiBUaHUsIDIwMjAtMDYtMTEg
+YXQgMDg6MDMgKzAwMDAsIEF2cmkgQWx0bWFuIHdyb3RlOg0KPiA+IA0KPiA+IEZpeGVzOiBhM2Nk
+NWVjNTVmNmMgKCJzY3NpOiB1ZnM6IGFkZCBsb2FkIGJhc2VkIHNjYWxpbmcgb2YgVUZTIGdlYXIi
+KQ0KPiA+IFNpZ25lZC1vZmYtYnk6IFN0YW5sZXkgQ2h1IDxzdGFubGV5LmNodUBtZWRpYXRlay5j
+b20+DQo+IFJldmlld2VkLWJ5OiBBdnJpIEFsdG1hbiA8YXZyaS5hbHRtYW5Ad2RjLmNvbT4NCj4g
+DQo+IEp1c3QgYSBzbWFsbCBuaXQuDQo+IA0KPiA+IC0gICAgICAgc3RhdC0+dG90YWxfdGltZSA9
+IGppZmZpZXNfdG9fdXNlY3MoKGxvbmcpamlmZmllcyAtDQo+ID4gLSAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAobG9uZylzY2FsaW5nLT53aW5kb3dfc3RhcnRfdCk7DQo+ID4gKyAgICAg
+ICBzdGF0LT50b3RhbF90aW1lID0ga3RpbWVfdG9fdXMoY3Vycl90KSAtIHNjYWxpbmctPndpbmRv
+d19zdGFydF90Ow0KPiBrdGltZV9zdWIgPw0KDQpzY2FsaW5nLT53aW5kb3dfc3RhcnRfdCBpcyBh
+bHJlYWR5IGluICJ1cyIgdGh1cyBrdGltZV9zdWIoKSBpcyBub3QNCnN1aXRhYmxlIGhlcmUuDQoN
+CkFub3RoZXIgd2F5IGlzIGNoYW5naW5nIHNjYWxpbmctPndpbmRvd19zdGFydF90IGFzIHR5cGUg
+Imt0aW1lX3QiLiBUaGlzDQppcyB3b3J0aCB0byBkbyBiZWNhdXNlIG9mIGEgbGl0dGxlIHBlcmZv
+cm1hbmNlIGdhaW4uDQoNCkkgd2lsbCBjaGFuZ2UgaXQgaW4gbmV4dCB2ZXJzaW9uLg0KDQpUaGFu
+a3MsDQpTdGFubGV5IENodQ0KDQo=
 
