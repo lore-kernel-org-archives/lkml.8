@@ -2,57 +2,56 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B76D2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4F4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 980A02072F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:01:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E0CC207D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 07:10:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbgFKHBh (ORCPT
+        id S1726594AbgFKHKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 03:01:37 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:59136 "EHLO smtp.al2klimov.de"
+        Thu, 11 Jun 2020 03:10:24 -0400
+Received: from mga18.intel.com ([134.134.136.126]:31060 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726565AbgFKHBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 03:01:36 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 8EB87FD7E3;
-        Thu, 11 Jun 2020 07:01:29 +0000 (UTC)
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones:
- Documentation/translations/it_IT
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Federico Vaga <federico.vaga@vaga.pv.it>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        David Sterba <dsterba@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        Jacob Huisman <jacobhuisman@kernelthusiast.com>,
-        =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>,
-        Rob Herring <robh@kernel.org>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20200609201241.81518-1-grandmaster@al2klimov.de>
- <4235548.LvFx2qVVIh@harkonnen>
- <cd260d03-27a4-7794-f58f-21e8e0be9755@al2klimov.de>
- <202006102009.CB14D7F@keescook>
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Message-ID: <8ee16c38-e28b-b4e6-ed30-55a59e216b49@al2klimov.de>
-Date:   Thu, 11 Jun 2020 09:01:27 +0200
+        id S1726375AbgFKHKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 03:10:23 -0400
+IronPort-SDR: 0cDxCXLmeeVk30JWnTaEoNwlZ+PtFf9Q/u6Jc79V2YhytLD2DCDUHpP33zQeipTpb//hlLS3GQ
+ PQhgAXfWbwiQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 00:10:22 -0700
+IronPort-SDR: B/nu7lFbnKQMd9Mf6/N/cpqYcToipKynhidO9k45sJghBYwAweT6BX7ZnvU5aKeNhDpeKa2Met
+ C4gG8OqgSISg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,499,1583222400"; 
+   d="scan'208";a="419015731"
+Received: from xingzhen-mobl1.ccr.corp.intel.com (HELO [10.238.6.47]) ([10.238.6.47])
+  by orsmga004.jf.intel.com with ESMTP; 11 Jun 2020 00:10:21 -0700
+Subject: Re: [LKP] [ima] 8eb613c0b8: stress-ng.icache.ops_per_sec -84.2%
+ regression
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        kernel test robot <rong.a.chen@intel.com>
+Cc:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+References: <20200603091150.GH12456@shao2-debian>
+ <099cfe59-1601-a0fc-3849-13eee8754130@linux.intel.com>
+ <1591797185.5140.2.camel@linux.ibm.com>
+From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
+Message-ID: <cb6a244c-5bab-1ccc-4386-e1b1caf48eb3@linux.intel.com>
+Date:   Thu, 11 Jun 2020 15:10:20 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <202006102009.CB14D7F@keescook>
+In-Reply-To: <1591797185.5140.2.camel@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spamd-Bar: /
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,100 +59,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-Am 11.06.20 um 05:12 schrieb Kees Cook:
-> On Wed, Jun 10, 2020 at 08:11:39PM +0200, Alexander A. Klimov wrote:
->> Am 10.06.20 um 10:57 schrieb Federico Vaga:
->>> On Tuesday, June 9, 2020 10:12:41 PM CEST Alexander A. Klimov wrote:
->>>> Rationale:
->>>> Reduces attack surface on kernel devs opening the links for MITM
->>>> as HTTPS traffic is much harder to manipulate.
->>>>
->>>> Deterministic algorithm:
->>>> For each file:
->>>>     For each line:
->>>>       If doesn't contain `\bxmlns\b`:
->>>>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
->>>>           If both the HTTP and HTTPS versions
->>>>           return 200 OK and serve the same content:
->>>>             Replace HTTP with HTTPS.
+On 6/10/2020 9:53 PM, Mimi Zohar wrote:
+> Hi Xing,
 > 
-> Is this script somewhere we can read it? (It's easier usually to review
-> the code for bulk changes than the bulk changes themselves.)
-Is any of you familiar with Golang?
-
-@Maintainers Would any of you actually review like this? If yes, is the 
-pseudo-code not enough?
-
-> 
->>>>
->>>> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
->>>> ---
->>>>    .../translations/it_IT/admin-guide/README.rst      |  2 +-
->>>>    .../translations/it_IT/doc-guide/parse-headers.rst |  2 +-
->>>>    .../translations/it_IT/doc-guide/sphinx.rst        | 10 +++++-----
->>>>    .../translations/it_IT/process/2.Process.rst       | 12 ++++++------
->>>>    .../translations/it_IT/process/3.Early-stage.rst   |  2 +-
->>>>    .../translations/it_IT/process/4.Coding.rst        |  4 ++--
->>>>    .../it_IT/process/7.AdvancedTopics.rst             |  8 ++++----
->>>>    .../translations/it_IT/process/8.Conclusion.rst    | 14 +++++++-------
->>>>    .../translations/it_IT/process/adding-syscalls.rst |  4 ++--
->>>>    .../translations/it_IT/process/changes.rst         |  6 +++---
->>>>    .../translations/it_IT/process/clang-format.rst    |  2 +-
->>>>    .../translations/it_IT/process/coding-style.rst    |  2 +-
->>>>    Documentation/translations/it_IT/process/howto.rst |  2 +-
->>>>    .../it_IT/process/maintainer-pgp-guide.rst         |  2 +-
->>>>    .../it_IT/process/submitting-patches.rst           |  4 ++--
->>>>    .../it_IT/process/volatile-considered-harmful.rst  |  4 ++--
->>>>    16 files changed, 40 insertions(+), 40 deletions(-)
->>>>
->>>
->>>
->>>> diff --git a/Documentation/translations/it_IT/doc-guide/sphinx.rst
->>>> b/Documentation/translations/it_IT/doc-guide/sphinx.rst index
->>>> f1ad4504b734..0aaeb0297661 100644
->>>> --- a/Documentation/translations/it_IT/doc-guide/sphinx.rst
->>>> +++ b/Documentation/translations/it_IT/doc-guide/sphinx.rst
->>>> @@ -14,7 +14,7 @@ Per generare la documentazione in HTML o PDF, usate
->>>> comandi ``make htmldocs`` o ``make pdfdocs``. La documentazione così
->>>> generata sarà disponibile nella cartella ``Documentation/output``.
->>>>
->>>> -.. _Sphinx: http://www.sphinx-doc.org/
->>>> +.. _Sphinx: https://www.sphinx-doc.org/
->>>>    .. _reStructuredText: http://docutils.sourceforge.net/rst.html
->>>
->>> It is not part of the deterministic algorithm but you may consider this as
->>> well
-> 
-> Why did it not match?
-I didn't log that link-by-link. Maybe because I also didn't follow plain 
-HTTP redirects while opening HTTPS links. Maybe it even matched, but was 
-added after I made the changes.
-
-Anyway, I'll maybe cover it in round II.
-
-> 
->>>
->>> -.. _reStructuredText: http://docutils.sourceforge.net/rst.html
->>> +.. _reStructuredText: https://docutils.sourceforge.io/rst.html
->>>
->> I'll think about analyzing such almost-matches, extending the algo and
->> supplying a second round of patches once all [1] of this round arrive in
->> torvalds/master.
+> On Wed, 2020-06-10 at 11:21 +0800, Xing Zhengjun wrote:
+>> Hi Mimi,
 >>
->> [1]:
+>>       Do you have time to take a look at this? we noticed a 3.7%
+>> regression of boot-time.dhcp and a 84.2% regression of
+>> stress-ng.icache.ops_per_sec. Thanks.
 >>
->> ➜  linux git:(feature/https-links-3) ✗ git diff --shortstat
->>   1963 files changed, 2882 insertions(+), 2882 deletions(-)
->> ➜  linux git:(feature/https-links-3) ✗
+>> On 6/3/2020 5:11 PM, kernel test robot wrote:
+>>> Greeting,
+>>>
+>>> FYI, we noticed a 3.7% regression of boot-time.dhcp due to commit:
+>>>
+>>>
+>>> commit: 8eb613c0b8f19627ba1846dcf78bb2c85edbe8dd ("ima: verify mprotect change is consistent with mmap policy")
+>>> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
+>>>
+>>> in testcase: stress-ng
+>>> on test machine: 96 threads Intel(R) Xeon(R) Gold 6252 CPU @ 2.10GHz with 192G memory
+>>> with following parameters:
+>>>
+>>> 	nr_threads: 100%
+>>> 	disk: 1HDD
+>>> 	testtime: 30s
+>>> 	class: cpu-cache
+>>> 	cpufreq_governor: performance
+>>> 	ucode: 0x500002c
 > 
-> Is there a reason to do this one language at a time instead of just
-> doing everything in one go?
-There are two reasons:
-
-* Jonathan said like theoretically you could give it all at once to 
-Linus, but practically I'd not do that, please split by subsystem
-* Linus *didn't even respond* (at least I didn't receive anything) to my 
-catch-them-all patch at all, not even like please not as .gz attachment 
-or please split by subsystem
-
+> Does the following change resolve it?
 > 
+> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+> index c44414a7f82e..78e1dfc8a3f2 100644
+> --- a/security/integrity/ima/ima_main.c
+> +++ b/security/integrity/ima/ima_main.c
+> @@ -426,7 +426,8 @@ int ima_file_mprotect(struct vm_area_struct *vma, unsigned long prot)
+>   	int pcr;
+>   
+>   	/* Is mprotect making an mmap'ed file executable? */
+> -	if (!vma->vm_file || !(prot & PROT_EXEC) || (vma->vm_flags & VM_EXEC))
+> +	if (!(ima_policy_flag & IMA_APPRAISE) || !vma->vm_file ||
+> +	    !(prot & PROT_EXEC) || (vma->vm_flags & VM_EXEC))
+>   		return 0;
+>   
+>   	security_task_getsecid(current, &secid);
+> 
+Thanks. I test the change, it can resolve the regression.
+=========================================================================================
+tbox_group/testcase/rootfs/kconfig/compiler/debug-setup/nr_threads/disk/testtime/class/cpufreq_governor/ucode:
+ 
+lkp-csl-2sp5/stress-ng/debian-x86_64-20191114.cgz/x86_64-rhel-7.6/gcc-9/test/100%/1HDD/30s/cpu-cache/performance/0x500002c
+
+commit:
+   0c4395fb2aa77341269ea619c5419ea48171883f
+   8eb613c0b8f19627ba1846dcf78bb2c85edbe8dd
+   8745d6eb3a493b1d324eeb9edefec5d23c16cba9 (fix for the regression)
+
+0c4395fb2aa77341 8eb613c0b8f19627ba1846dcf78 8745d6eb3a493b1d324eeb9edef
+---------------- --------------------------- ---------------------------
+          %stddev     %change         %stddev     %change         %stddev
+              \          |                \          |                \
+     884.33 ±  4%      +4.6%     924.67           +45.1%       1283 ± 
+3%  stress-ng.cache.ops
+      29.47 ±  4%      +4.6%      30.82           +45.1%      42.76 ± 
+3%  stress-ng.cache.ops_per_sec
+    1245720           -84.3%     195648            -0.8%    1235416 
+   stress-ng.icache.ops
+      41522           -84.3%       6520            -0.8%      41179 
+   stress-ng.icache.ops_per_sec
+
+
+
+-- 
+Zhengjun Xing
