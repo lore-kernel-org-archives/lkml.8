@@ -2,131 +2,118 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A9AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48700C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95ED320691
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:13:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="QL3BSEg9"
+	by mail.kernel.org (Postfix) with ESMTP id 17C4B20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 13:13:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591881219;
+	bh=LvHxTVUZLcCdTOqD3NyClQZQUnr+LT0UqYRACkbjX0k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=x18AY7F37Yr9bSw/gVGFExY4xwe93nKX4WeoPKhEEn6Y+ZzxPUlPrd4O+BjoxttlZ
+	 BSq1Mk29jZi9AdJcYHkyDErwRsbCgbHYleCJ2dGJNem+MtySiAzD+r+T3SIR8dT8nz
+	 fHAF7NBiLOyxqVc8aehGQEesXRLmpj+dlNXFR3Lo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728054AbgFKNNb (ORCPT
+        id S1728132AbgFKNNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 09:13:31 -0400
-Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:50056 "EHLO
-        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726506AbgFKNNa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 09:13:30 -0400
-Received: from pps.filterd (m0170390.ppops.net [127.0.0.1])
-        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05BDBj5g003458;
-        Thu, 11 Jun 2020 09:13:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=SjraF1upkucVPFVWanIYJjyAexNYV6KBeQgRpXWJkw4=;
- b=QL3BSEg904ZWf5S/kz358HPFGQHUqxeoB3/wjLWEZQAZUfBtgBVPT0V+xf5llEyQS5Ii
- AEkktvxM8npZP4EHjn5UAq0CxD+OBUzy7Rrg/oZcIC+KOEzrjFh3DuAImOWHsUBDteTz
- 4sCqRdKVZ5LJAZu+Y1+g76sLUZUw4e72LYiaX4ybX45G3b1XAok/Rmg7rF6jY0Z9Y79c
- ON3QBtNTfPze9D5AYmN50Z0hRm+ZBy91+yq3hUyGaN8zVcQ+hcvO6wREsSoy8tNFh0be
- JCXU2+Lg7vLvprOi9zDxmXtj+GibWzK1LyDUEeNPlIeSup/GCBZxtS1i5zPIOWzPyCCs Wg== 
-Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
-        by mx0a-00154904.pphosted.com with ESMTP id 31jjrgxwnx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 11 Jun 2020 09:13:30 -0400
-Received: from pps.filterd (m0134318.ppops.net [127.0.0.1])
-        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05BD80cR127854;
-        Thu, 11 Jun 2020 09:13:29 -0400
-Received: from ausxippc110.us.dell.com (AUSXIPPC110.us.dell.com [143.166.85.200])
-        by mx0a-00154901.pphosted.com with ESMTP id 31kk1jjbej-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Jun 2020 09:13:29 -0400
-X-LoopCount0: from 10.166.132.132
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
-   d="scan'208";a="952170764"
-From:   <Mario.Limonciello@dell.com>
-To:     <pmenzel@molgen.mpg.de>, <tglx@linutronix.de>, <mingo@redhat.com>,
-        <bp@alien8.de>
-CC:     <x86@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <hdegoede@redhat.com>, <ckellner@redhat.com>,
-        <linux-pm@vger.kernel.org>
-Subject: RE: Intel laptop: Starting with `maxcpus=1` and then bringing other
- CPUs online freezes system
-Thread-Topic: Intel laptop: Starting with `maxcpus=1` and then bringing other
- CPUs online freezes system
-Thread-Index: AQHWP86aCGuiPAIiME6Hf0fCRkjPhajTYeTw
-Date:   Thu, 11 Jun 2020 13:13:27 +0000
-Message-ID: <a0de2be2c9344980bce7190d19204316@AUSX13MPC105.AMER.DELL.COM>
-References: <125e904a-088e-f111-00a4-95c3b18d882f@molgen.mpg.de>
-In-Reply-To: <125e904a-088e-f111-00a4-95c3b18d882f@molgen.mpg.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2020-06-11T13:13:24.6910843Z;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=7cde6931-7b9f-4c04-8544-b4804a33d5bf;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [143.166.24.40]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 11 Jun 2020 09:13:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36724 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726506AbgFKNNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 09:13:37 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50A4820691;
+        Thu, 11 Jun 2020 13:13:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591881216;
+        bh=LvHxTVUZLcCdTOqD3NyClQZQUnr+LT0UqYRACkbjX0k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Hj35WvMgwwVQrDc6gxUkhrsZm/+TztaGf7WC4ZrNpWce2tgRLP/av+VMf2CiWLsfP
+         TZyQf401G9hCjDD/t/FSST4Ksy2/xL0nJ5jk8w2LJKVf8nwkSBJ1qH3TXDxTZAvyAX
+         jnsXZFqXmd/9835jC1ZZ3w0nfC8a+qBTH/u/eB14=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id C55E640AFD; Thu, 11 Jun 2020 10:07:58 -0300 (-03)
+Date:   Thu, 11 Jun 2020 10:07:58 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH 00/10] perf parse-events: enable more flex/bison warnings
+Message-ID: <20200611130758.GA18482@kernel.org>
+References: <20200610215100.256599-1-irogers@google.com>
+ <20200611090249.GC1786122@krava>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-11_14:2020-06-11,2020-06-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- spamscore=0 suspectscore=0 lowpriorityscore=0 malwarescore=0 phishscore=0
- clxscore=1011 cotscore=-2147483648 bulkscore=0 priorityscore=1501
- impostorscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006110102
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 spamscore=0
- mlxlogscore=999 phishscore=0 malwarescore=0 bulkscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006110103
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200611090249.GC1786122@krava>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYXVsIE1lbnplbCA8cG1lbnpl
-bEBtb2xnZW4ubXBnLmRlPg0KPiBTZW50OiBUaHVyc2RheSwgSnVuZSAxMSwgMjAyMCAzOjU5IEFN
-DQo+IFRvOiBUaG9tYXMgR2xlaXhuZXI7IEluZ28gTW9sbmFyOyBCb3Jpc2xhdiBQZXRrb3YNCj4g
-Q2M6IHg4NkBrZXJuZWwub3JnOyBMS01MOyBMaW1vbmNpZWxsbywgTWFyaW87IEhhbnMgZGUgR29l
-ZGU7IENocmlzdGlhbg0KPiBLZWxsbmVyOyBsaW51eC1wbUB2Z2VyLmtlcm5lbC5vcmcNCj4gU3Vi
-amVjdDogSW50ZWwgbGFwdG9wOiBTdGFydGluZyB3aXRoIGBtYXhjcHVzPTFgIGFuZCB0aGVuIGJy
-aW5naW5nIG90aGVyDQo+IENQVXMgb25saW5lIGZyZWV6ZXMgc3lzdGVtDQo+IA0KPiANCj4gW0VY
-VEVSTkFMIEVNQUlMXQ0KPiANCj4gRGVhciBMaW51eCBmb2xrcywNCj4gDQo+IA0KPiBUaGlzIGlz
-IGFuIGludGVyZXN0aW5nIG9uZS4gT24gYSBEZWxsIFByZWNpc2lvbiAzNTQwIHdpdGggYSBkZWRp
-Y2F0ZWQNCj4gQU1EIGdyYXBoaWNzIGNhcmQsIGFuZCB3aXRoIERlYmlhbiBTaWQvdW5zdGFibGUg
-YW5kIExpbnV4IDUuNi4xNCwgdGhlcmUNCj4gYXJlIHNldmVyYWwgc3RyYW5nZSBpc3N1ZXMgKG9u
-ZSBleGFtcGxlIFsxXSkuDQo+IA0KPiBTdGFydGluZyB0aGUgc3lzdGVtLCBhbmQgYWRkaW5nIGBt
-YXhjcHVzPTFgIHRvIHRoZSBMaW51eCBjb21tYW5kIGxpbmUsDQo+IHRoZSBzeXN0ZW0gc3RhcnRz
-Lg0KPiANCj4gVHJ5aW5nIHRvIGJyaW5nIHVwIG1vcmUgQ1BVcywgd29ya3MgZm9yIHRoZSBmaXJz
-dCBvbmUsIGJ1dCBmYWlscyBmb3IgdGhlDQo+IHNlY29uZC4gVGhlIHN5c3RlbSBmcmVlemVzIHRo
-ZW4uIE5vdGhpbmcgaXMgZHVtcGVkIG9uIHRoZSBMaW51eCB2aXJ0dWFsDQo+IHRlcm1pbmFsLg0K
-PiANCj4gSW4gbXkgbGltaXRlZCB0ZXN0cywgdGhpcyBhbHdheXMgaGFwcGVucywgd2hlbiB0aGUg
-c3lzdGVtIHJ1bnMgb24NCj4gYmF0dGVyaWVzLCB0aGF0IG1lYW5zLCB3aXRob3V0IHRoZSBwb3dl
-ciBjb3JkIHBsdWdnZWQgaW4uIEJ1dCBJIHdhcyBhbHNvDQo+IGFibGUgdG8gcmVwcm9kdWNlIGl0
-IHdpdGggdGhlIFVTQiBUeXBlLUMgcG93ZXIgY2FibGUgcGx1Z2dlZCBpbi4gQnV0DQo+IHNvbWV0
-aW1lcyBpdCB3b3JrcyAodG8gYnJpbmcgYWxsIG90aGVyIHNldmVuIENQVXMgb25saW5lKS4NCj4g
-DQo+IFBsZWFzZSBmaW5kIHRoZSBMaW51eCBtZXNzYWdlcyB1cCB0byBicmluZ2luZyBDUFUgMSBv
-bmxpbmUgYXR0YWNoZWQgd2l0aA0KPiBubyBwb3dlciBjb3JkIHBsdWdnZWQgaW4sIGFuZCB0aGUg
-bWVzc2FnZXMgb2YgYSBzdWNjZXNzZnVsIG9wZXJhdGlvbi4NCj4gDQo+IElzIHRoaXMgZXhwZWN0
-ZWQ/IEnigJlkIGFwcHJlY2lhdGVkIHRpcHMsIGlmIGl04oCZcyBwb3NzaWJsZSB0byBkZWJ1ZyB0
-aGlzDQo+IGZ1cnRoZXIuDQo+IA0KPiANCj4gS2luZCByZWdhcmRzLA0KPiANCj4gUGF1bA0KPiAN
-Cj4gDQo+IFsxXTogaHR0cHM6Ly9idWdzLmxhdW5jaHBhZC5uZXQvdWJ1bnR1Lytzb3VyY2UvbGlu
-dXgvK2J1Zy8xODgzMDY1DQoNCkZyb20gc29tZSBvdGhlciBzaW1pbGFyIHJlcG9ydHMgSSd2ZSBo
-ZWFyZCB0aGlzIGNvdWxkIGJlIHJlbGF0ZWQgdG8gdGhlIHVjb2RlDQpsb2FkaW5nIGNhdXNpbmcg
-YSBmcmVlemUuICBJIHdvdWxkIHN1Z2dlc3QgdHJ5aW5nIHRvIGRpc2FibGUgdGhlIEludGVsIHVj
-b2RlDQpsb2FkZXIgd2l0aCB0aGUgaW5pdHJhbWZzIGFzIGEgZGVidWdnaW5nIHRhY3RpYy4NCg==
+Em Thu, Jun 11, 2020 at 11:02:49AM +0200, Jiri Olsa escreveu:
+> On Wed, Jun 10, 2020 at 02:50:50PM -0700, Ian Rogers wrote:
+> > All C compiler warnings are disabled are disabled by -w. This change
+> > removes the -w from flex and bison targets. To avoid implicit
+> > declarations header files are declared as targets and included.
+> > 
+> > Tested with GCC 9.3.0 and clang 9.0.1.
+> > 
+> > Previously posted as a single change:
+> > https://lore.kernel.org/lkml/20200609234344.3795-2-irogers@google.com/
+> > 
+> > Ian Rogers (10):
+> >   perf parse-events: Use automatic variable for flex input
+> >   perf parse-events: Use automatic variable for yacc input
+> >   perf pmu: Add bison debug build flag
+> >   perf pmu: Add flex debug build flag
+> >   perf parse-events: Declare flex header file output
+> >   perf parse-events: Declare bison header file output
+> >   perf parse-events: Disable a subset of flex warnings
+> >   perf expr: Avoid implicit lex function declaration
+> >   perf parse-events: Avoid implicit lex function declaration
+> >   perf parse-events: Disable a subset of bison warnings
+> 
+> looks great, I wonder what the -w replacement will do in
+> Arnaldo's distro test, but it'd be nice to get rid it
+> 
+> Acked-by: Jiri Olsa <jolsa@redhat.com>
+
+Thanks, applied locally and will submit it to the test build suite.
+
+- Arnaldo
+ 
+> thanks,
+> jirka
+> 
+> > 
+> >  tools/perf/util/Build          | 50 +++++++++++++++++++++-------------
+> >  tools/perf/util/expr.y         |  2 ++
+> >  tools/perf/util/parse-events.y |  1 +
+> >  3 files changed, 34 insertions(+), 19 deletions(-)
+> > 
+> > -- 
+> > 2.27.0.278.ge193c7cf3a9-goog
+> > 
+> 
+
+-- 
+
+- Arnaldo
