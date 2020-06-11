@@ -2,135 +2,171 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B5BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B96C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C066320656
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:53:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2D0520656
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 08:54:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DiC/8+X9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgFKIxl (ORCPT
+        id S1726956AbgFKIyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 04:53:41 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:60336 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726905AbgFKIxk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 04:53:40 -0400
-Received: from [10.130.0.99] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxb2oL8eFebdlAAA--.1310S3;
-        Thu, 11 Jun 2020 16:53:33 +0800 (CST)
-Subject: Re: [PATCH 2/2] spi: tools: Fix build errors
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-References: <1591846947-14252-1-git-send-email-zhangqing@loongson.cn>
- <1591846947-14252-2-git-send-email-zhangqing@loongson.cn>
- <CAMuHMdW9RDbBV+MVG52229xhpaWyO_hxXJv_to=SqbDHjxz3VA@mail.gmail.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   zhangqing <zhangqing@loongson.cn>
-Message-ID: <bf4ba67a-1b4e-81c2-d03c-675baef6c8f1@loongson.cn>
-Date:   Thu, 11 Jun 2020 16:53:31 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Thu, 11 Jun 2020 04:54:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35962 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726824AbgFKIyP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 04:54:15 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53EA6C03E96F
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 01:54:15 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id q13so3376803edi.3
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 01:54:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2bw+V3wLHTM7iJAt18YSs25Q73LjKcxMJcBBocazrA4=;
+        b=DiC/8+X93yYnhHRJtAvQfxbw2XSIf5yNO6ElLZQGmw+ASMt3WHFdOgvdSAY2VN1RdC
+         vcjLGNCIAKNZ6aGOO1DpH6Q2SG0Ob6CQVOgobudNqacRfc3AafpN9aKQXNNRDDdDdTsa
+         xE8DimKjdyNx5rixUKIhQqGV/QrHYQvWuRV3DXtxMNnAJTBo+oMxJjgonwCY6gL7/uWv
+         m55DRMA4goNC29LIW03LkavMCFdUKiSO3HCqJDDdy0g7W8Bbg5Btg1qK5vMfZIK85s0U
+         OESWF7AbzrsAwdKk/kfNyFkiL7da1297cO94SiiT0lz3P+LUpkO9s/Uc2rvgY+cTAYDh
+         zx9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2bw+V3wLHTM7iJAt18YSs25Q73LjKcxMJcBBocazrA4=;
+        b=XXS9durXTzZ6b5Nomg0YPBK/gtGaSa2goml6/FIjST0+OWijDHCEfA8OXss69z3Q9c
+         UgEX+d5Nple+UtcBnmy7dQmpxulsJNMjAZkuj4s7NzpJjZgdZKArAFeKRegKCJOEeAl3
+         grN5MX0Jiq/K9YmVu6Oy7S9Ie+iQTOwYlQ+mjNgBxZFhaunmbDQqAmbogDTgIoTNjdH2
+         U6hccx+Y6KRgwOvnS8CHxG26c1n1o2YSYU7hOjjNeXorblhxH25w9K0v+EeNOblM2qF/
+         oNVgV5QKO/XbxhvM9XWlgUdPyOhG2UX4mXNGF8yFXpG75BWkI8NKBnfGjONMd/mR+Yq6
+         pRLQ==
+X-Gm-Message-State: AOAM531mA0RIYGy+h9Cr0X572Ij4NRUpHl0mVennuZfBUluwNcbUJCnm
+        BKsQE8f5GEFjg5OkGAU9vonu8pU1VITXK1OJOxE=
+X-Google-Smtp-Source: ABdhPJxyerA60LPR4dRD2QK1TZ5tc9Pqs9AUoEwTTRAumEOjf8tBER/H4EVa++W9q3TACWCmreAnsI0J5Vi1+4jREpI=
+X-Received: by 2002:a05:6402:1153:: with SMTP id g19mr5890903edw.127.1591865653991;
+ Thu, 11 Jun 2020 01:54:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdW9RDbBV+MVG52229xhpaWyO_hxXJv_to=SqbDHjxz3VA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf9Dxb2oL8eFebdlAAA--.1310S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxCw18ZF4rAw1fuF1fAFyrZwb_yoW5GF17pF
-        n8ZF18tFs0kayUC3Z3Za1rCw13AFyFkryFv395Kr10yr13W3WxJF47Kr9YgFyxuF12va93
-        A3W7W347Kw4jyw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkE14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-        6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
-        IcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
-        v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
-        c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-        0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r4j
-        6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUq38
-        nUUUUU=
-X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
+References: <CAPM=9tyM72CtJbA4Q9wKnft6oQoMLGEt=xCYBcPn9wK9F=+Uwg@mail.gmail.com>
+In-Reply-To: <CAPM=9tyM72CtJbA4Q9wKnft6oQoMLGEt=xCYBcPn9wK9F=+Uwg@mail.gmail.com>
+From:   Dave Airlie <airlied@gmail.com>
+Date:   Thu, 11 Jun 2020 18:54:02 +1000
+Message-ID: <CAPM=9twpkGsm0z7HkU9PWEKiua37zU4yrHKoKYoe30UPXQ8Lzg@mail.gmail.com>
+Subject: Re: [git pull] drm fixes for 5.8-rc1 (updated pull)
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/11/2020 04:02 PM, Geert Uytterhoeven wrote:
-> Hi Qing,
->
-> Thanks for your patch!
->
-> On Thu, Jun 11, 2020 at 5:43 AM Qing Zhang <zhangqing@loongson.cn> wrote:
->> Fix the following build errors:
->>
->> include/linux/spi 2>&1 || true
->> ln -sf /home/zhangqing/spi.git2/tools/spi/../../include/uapi/linux/spi/spidev.h include/linux/spi/spidev.h
->> make -f /home/zhangqing/spi.git2/tools/build/Makefile.build dir=. obj=spidev_test
->> make[1]: Entering directory '/home/zhangqing/spi.git2/tools/spi'
->>    CC       spidev_test.o
->> spidev_test.c: In function ‘transfer’:
->> spidev_test.c:131:13: error: ‘SPI_TX_OCTAL’ undeclared (first use in this function)
->>    if (mode & SPI_TX_OCTAL)
->>               ^
->> spidev_test.c:131:13: note: each undeclared identifier is reported only once for each function it appears in
->> spidev_test.c:137:13: error: ‘SPI_RX_OCTAL’ undeclared (first use in this function)
->>    if (mode & SPI_RX_OCTAL)
->>               ^
->> spidev_test.c: In function ‘parse_opts’:
->> spidev_test.c:290:12: error: ‘SPI_TX_OCTAL’ undeclared (first use in this function)
->>      mode |= SPI_TX_OCTAL;
->>              ^
->> spidev_test.c:308:12: error: ‘SPI_RX_OCTAL’ undeclared (first use in this function)
->>      mode |= SPI_RX_OCTAL;
->>              ^
->>    LD       spidev_test-in.o
->> ld: cannot find spidev_test.o: No such file or directory
->> /home/zhangqing/spi.git2/tools/build/Makefile.build:144: recipe for target 'spidev_test-in.o' failed
->> make[1]: *** [spidev_test-in.o] Error 1
->> make[1]: Leaving directory '/home/zhangqing/spi.git2/tools/spi'
->> Makefile:39: recipe for target 'spidev_test-in.o' failed
->> make: *** [spidev_test-in.o] Error 2
->>
->> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
-> Oops, somehow I forgot I had made a similar change on the target
-> when adding Octal mode support to spidev_test.c.
-> Sorry for that.
->
-> Fixes: 896fa735084e4a91 ("spi: spidev_test: Add support for Octal mode
-> data transfers")
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
->> --- a/include/uapi/linux/spi/spidev.h
->> +++ b/include/uapi/linux/spi/spidev.h
->> @@ -48,6 +48,8 @@
->>   #define SPI_TX_QUAD            0x200
->>   #define SPI_RX_DUAL            0x400
->>   #define SPI_RX_QUAD            0x800
->> +#define        SPI_TX_OCTAL            0x2000
->> +#define        SPI_RX_OCTAL            0x4000
-> Probably we should add SPI_CS_WORD and SPI_3WIRE_HIZ, too?
+(now with a subject you might see).
 
-Hi Geert,
-
-Thanks for your reply and suggestion.
-Maybe SPI_CS_WORD and SPI_3WIRE_HIZ will be used in the future.
-I will do it and then send v2.
-
-Thanks,
-Qing
-
+On Thu, 11 Jun 2020 at 18:38, Dave Airlie <airlied@gmail.com> wrote:
 >
-> Gr{oetje,eeting}s,
+> Hi Linus,
 >
->                          Geert
+> This is the update of the pull I sent earlier today, it's got a couple
+> of more fixes along with the i915 fixes. One sun4i fix and a connector
+> hotplug race The ast fix is for a regression in 5.6, and as mentioned
+> previously one of the i915 ones fixes an oops reported by dhowells.
 >
-
+> definitely taking tomorrow off now :-)
+>
+> Regards,
+> Dave.
+>
+> drm-next-2020-06-11-1:
+> drm fixes for 5.7-rc1
+>
+> core:
+> - fix race in connectors sending hotplug
+>
+> i915:
+> - Avoid use after free in cmdparser
+> - Avoid NULL dereference when probing all display encoders
+> - Fixup to module parameter type
+>
+> sun4i:
+> - clock divider fix
+>
+> ast:
+> - 24/32 bpp mode setting fix
+> The following changes since commit 8d286e2ff4400d313955b4203fc640ca6fd9228b:
+>
+>   Merge tag 'drm-intel-next-fixes-2020-06-04' of
+> git://anongit.freedesktop.org/drm/drm-intel into drm-next (2020-06-08
+> 11:59:57 +1000)
+>
+> are available in the Git repository at:
+>
+>   git://anongit.freedesktop.org/drm/drm tags/drm-next-2020-06-11-1
+>
+> for you to fetch changes up to 66057dd1d1cf2149e0f5fdaee58d6ea69bc98048:
+>
+>   Merge tag 'drm-misc-next-fixes-2020-06-11' of
+> git://anongit.freedesktop.org/drm/drm-misc into drm-next (2020-06-11
+> 17:51:15 +1000)
+>
+> ----------------------------------------------------------------
+> drm fixes for 5.7-rc1
+>
+> core:
+> - fix race in connectors sending hotplug
+>
+> i915:
+> - Avoid use after free in cmdparser
+> - Avoid NULL dereference when probing all display encoders
+> - Fixup to module parameter type
+>
+> sun4i:
+> - clock divider fix
+>
+> ast:
+> - 24/32 bpp mode setting fix
+>
+> ----------------------------------------------------------------
+> Chris Wilson (2):
+>       drm/i915/gem: Mark the buffer pool as active for the cmdparser
+>       drm/i915/display: Only query DP state of a DDI encoder
+>
+> Colin Ian King (1):
+>       drm/ast: fix missing break in switch statement for format->cpp[0] case 4
+>
+> Dave Airlie (2):
+>       Merge tag 'drm-intel-next-fixes-2020-06-10' of
+> git://anongit.freedesktop.org/drm/drm-intel into drm-next
+>       Merge tag 'drm-misc-next-fixes-2020-06-11' of
+> git://anongit.freedesktop.org/drm/drm-misc into drm-next
+>
+> Jani Nikula (1):
+>       drm/i915/params: fix i915.reset module param type
+>
+> Jernej Skrabec (1):
+>       drm/sun4i: hdmi ddc clk: Fix size of m divider
+>
+> Jeykumar Sankaran (1):
+>       drm/connector: notify userspace on hotplug after register complete
+>
+>  drivers/gpu/drm/ast/ast_mode.c                 |  1 +
+>  drivers/gpu/drm/drm_connector.c                |  5 +++
+>  drivers/gpu/drm/drm_sysfs.c                    |  3 --
+>  drivers/gpu/drm/i915/display/intel_dp.c        |  3 ++
+>  drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c | 56 ++++++++++++++++++++++----
+>  drivers/gpu/drm/i915/i915_params.c             |  2 +-
+>  drivers/gpu/drm/sun4i/sun4i_hdmi.h             |  2 +-
+>  drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c     |  2 +-
+>  8 files changed, 60 insertions(+), 14 deletions(-)
