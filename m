@@ -2,255 +2,135 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD283C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 22:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B20CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 22:17:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D45A2063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 22:10:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11FE620656
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 22:17:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d71isUZn"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="VD60zoJm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbgFKWKO (ORCPT
+        id S1726288AbgFKWRj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 18:10:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46386 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbgFKWKO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 18:10:14 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA8B4C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 15:10:13 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id 25so6858099oiy.13
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 15:10:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=hdWx5Cu6bWbxxBQKAjjUN4KQBR6YX2nwSKKCynMw0Zg=;
-        b=d71isUZntaFlqiviJ3bl3w2PUe3el5FT6du/Tp9hRAWOsjOXNO5eqOpwaRP+f7uuVL
-         D70K/rCY+RKeEaRcqugoEG0g23QQBYyMu9EZKv3jTYwa7a6QVrx0qruNl+DuUvKfV6wd
-         /GZk6h4Fp+PyVuct/6ruL6yuXLDrHaoZ3CbEDC/r9DfxCYDsY4vAKi6Ll4Z3aWs8P+oi
-         25oUCNFcAhKPIXG/fuWoKPbyGlLVmcr2KSTWsXZAw0vwe3wy8YoEx3wJo9pWCeuVCc6n
-         EA9xkUUSmBX0aIl9oe3bPTXTpiVongm57gFz0voU21hGewfV0ekIb7x67ArUEf3NBZM6
-         Ssig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=hdWx5Cu6bWbxxBQKAjjUN4KQBR6YX2nwSKKCynMw0Zg=;
-        b=BHUsAheraBMc30M+SIxK64FVDpCPIJmDbnuMW4SXdOxqvrAZc490MwLZA8XQT/CROh
-         iqFkX4FS8K3DWvZq/4ZFJpkN+BHGVwq/VJEQFtJEkxQtQvLCFS9vCIbummVevIisfy5A
-         kZv1sOg2bx704IzMzTSahWkvXY1+hVjl0VDoBXFHTwQSubCQg9YDfNz22/ttLZboAkx7
-         Vz7q2Bvm611S7WVQ94E7lVr88kofEu2NOTNe6m3l57LCvg7iMncr6wJBZwlPsrBp+ihi
-         CLrO4avgq23riqFgiE/mmMrtwS7VrwUOzaCY8Lx5ujAkxCeUr0R+56QgVJNI72kEGMKT
-         gWmw==
-X-Gm-Message-State: AOAM531AnVTjT9/lKyqNCKV2dhozaEqvnuSaJGwWFodwk1jSCuAdBSVL
-        5OSidae108gg4YwMYkq6PHQTSA==
-X-Google-Smtp-Source: ABdhPJxUNccJxGdSrNzsPKGgRLmlJN57bhrx5L71Gft8c4I9s7EbV0K/pE//CJEhdJQwKnUDfvI+mw==
-X-Received: by 2002:a05:6808:45:: with SMTP id v5mr108731oic.140.1591913412762;
-        Thu, 11 Jun 2020 15:10:12 -0700 (PDT)
-Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id p5sm960997oof.7.2020.06.11.15.10.10
-        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
-        Thu, 11 Jun 2020 15:10:11 -0700 (PDT)
-Date:   Thu, 11 Jun 2020 15:09:54 -0700 (PDT)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-cc:     Hugh Dickins <hughd@google.com>, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, tj@kernel.org,
-        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, willy@infradead.org,
-        hannes@cmpxchg.org, lkp@intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        shakeelb@google.com, iamjoonsoo.kim@lge.com,
-        richard.weiyang@gmail.com
-Subject: Re: [PATCH v11 00/16] per memcg lru lock
-In-Reply-To: <730c595b-f4bf-b16a-562e-de25b9b7eb97@linux.alibaba.com>
-Message-ID: <alpine.LSU.2.11.2006111409280.10801@eggly.anvils>
-References: <1590663658-184131-1-git-send-email-alex.shi@linux.alibaba.com> <alpine.LSU.2.11.2006072100390.2001@eggly.anvils> <31943f08-a8e8-be38-24fb-ab9d25fd96ff@linux.alibaba.com> <alpine.LSU.2.11.2006091904530.2779@eggly.anvils>
- <730c595b-f4bf-b16a-562e-de25b9b7eb97@linux.alibaba.com>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        Thu, 11 Jun 2020 18:17:39 -0400
+Received: from mail-eopbgr10068.outbound.protection.outlook.com ([40.107.1.68]:15521
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726251AbgFKWRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 18:17:38 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EDUvJx4RFrLD9a0Hn3w4p5O1TcFii/c8AsIzYgr+BRXGOKfhCMFQYKhL4/Fww6vhRKXKYq7YJUfmKwh1B/zoUrldXxeOMqU9vjKV0pPtHUTz6Rnjk7bs/OmtMCeDFX3rLHIbtd5i4U5mRVYw4teaVJ8nDUe9cc+++ZmE0tC3tx64czcTR6/2YZ88c8i4Yu8XpZIoA3Fgd/ek/1el8u66HKfVSgBJP5MiPVYzQTJ5CkmYTWPYcVmQIEetQhvZwMfABicsypxkx7ACsPiMSvPX/JRZ7Rg38WuOJNVWdZVJlcJQDj+hJyeHYcMRf71ObZ4vVN25Mh1CWJnQuOsMReu4jQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=h/wLyGNP8P7wkKjHYZ+thMLyxzgwUd9YwTOsJhNYAfc=;
+ b=atyuoOKD5zf7tU2o4CFar+JoVmO0ntPpYSZO8scT1nAAzEBVDkpXc0xPGraZ4UsTlJWATmLuVeN1/WXnEBCGU62CZhWUBklXBkAu+7gpQKgq605dQWjvNp0IZEloH2SYU6z6N69Gu4PmVhNVIB1W5MGPYdYNrQmtDcN2WRr9DuwV87mNg/gKgMXxyDkCV/PsTNmWl6Z+j3RcMHk/6bXCB4z3Y1gREj/u/jn6UDoFnX8+annCVZ5EF/EfuqxlWIwiBLt4cNdss4GObNLPS3bXebZvvWyKmf/GOuCZNOYD38cV7EFn9yTAJrMqE3umIY0bbQ4UiQzZjd2M/qOqDSF00w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=h/wLyGNP8P7wkKjHYZ+thMLyxzgwUd9YwTOsJhNYAfc=;
+ b=VD60zoJmM6J6KKDLfH7KcqjMO+hDJ+yOFW1VK2vwEBgVDcYqXIIWTZO/n0ssJYxJxW3fFjGnlmdO5g/UBrVidg6zCtxz1K9OaLOvLfYiTIXeKMN2SvexDkm3rw9ZgnLdz0T0LqvYRaA8tIyB6nDCKl1BiB3vLqKbtd2oRL7D8co=
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (2603:10a6:803:5e::23)
+ by VI1PR05MB6415.eurprd05.prod.outlook.com (2603:10a6:803:fe::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.22; Thu, 11 Jun
+ 2020 22:17:33 +0000
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::2405:4594:97a:13c]) by VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::2405:4594:97a:13c%2]) with mapi id 15.20.3088.021; Thu, 11 Jun 2020
+ 22:17:33 +0000
+From:   Saeed Mahameed <saeedm@mellanox.com>
+To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "paul.gortmaker@windriver.com" <paul.gortmaker@windriver.com>,
+        Mark Bloch <markb@mellanox.com>, Roi Dayan <roid@mellanox.com>
+Subject: Re: [PATCH 4.19 25/25] Revert "net/mlx5: Annotate mutex destroy for
+ root ns"
+Thread-Topic: [PATCH 4.19 25/25] Revert "net/mlx5: Annotate mutex destroy for
+ root ns"
+Thread-Index: AQHWPoakt4ZlaJvazkSLO+TkHJ4eL6jT/yWA
+Date:   Thu, 11 Jun 2020 22:17:33 +0000
+Message-ID: <9233056dbbce44ab5e3a3d401e4e5da119a36780.camel@mellanox.com>
+References: <20200609174048.576094775@linuxfoundation.org>
+         <20200609174051.624603139@linuxfoundation.org>
+In-Reply-To: <20200609174051.624603139@linuxfoundation.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+authentication-results: linuxfoundation.org; dkim=none (message not signed)
+ header.d=none;linuxfoundation.org; dmarc=none action=none
+ header.from=mellanox.com;
+x-originating-ip: [73.15.39.150]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: eae2f9bb-5d53-4469-917d-08d80e553d4e
+x-ms-traffictypediagnostic: VI1PR05MB6415:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR05MB6415274F0B5BBAA65D07B6F7BE800@VI1PR05MB6415.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:873;
+x-forefront-prvs: 0431F981D8
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 2LgKirO2OkXIPhPSq/CG3mtoVbN5sc1mJ6AiR3tYPJ/n/zUpnjftQTQYROksWuDIb2zB+4uCdn6BbP4CcP25GS/JiFi0VN5gq9rkUhrAc5hP32LKJa9y+XGtrY1jB4H/sLYTPF0v3wqE3B+rqOn1kBsEz1bkfxjlbPRj7yuqY9OZWBYe9TTFU/X1chgMkmq+2Ezp6LKBDO1L5yJTygmgIS5ZqApqovXLsj0MbeCF6W5U8v1oOx9U3kWFNPgjjyGYHtAyCdZol1nzNn9mEdoPRa82ve41a6ybTo81oq/OMSX0ZWRGmLX6tg84lF9GwfpcD8J5T8hGQ2ycztYmU+ETq0fA6HTEH5BSgAaa3O4XgAgrcVmYh/WE6l+VweJqmUwlcdd4tJ/uQdG3VRZ8BSvl7Q==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB5102.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(136003)(39860400002)(376002)(396003)(366004)(478600001)(83380400001)(86362001)(91956017)(66946007)(26005)(66556008)(66446008)(64756008)(76116006)(2616005)(186003)(6506007)(36756003)(66476007)(966005)(4326008)(5660300002)(2906002)(6512007)(71200400001)(8676002)(316002)(8936002)(110136005)(107886003)(6486002)(54906003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: Uo61zOYyOa1VUR4WOqjbDSFw0yzlhcYO2YVF5E9JX5PTpj03621z8zn1fezluFcLmOzN3M7/coNubgimBZ+u7Yd48M5AsdWj0XWc2hPWt+tQ7c0DWeuk+ri5VivXJzXD2borYhS6fb7+l0HDUS1VmTLy/Bm39Gxqa9kv3KiCpx8XrmJI4ZJvm3WgPphb5XTpA6HE60kd+C/a1AM1zcL+TjYI4EsESFT+9+eEEiMTXlMnXNRJXDZw5/quRgU5V51y4WSD0x3hjRaVdq5c+WPUfqB+V6Bd5D+CjPzjlucYQ4raiotT/b1HRKsG15+J4e3HvCwEP1QA3Z6i61I3fsT66cipZuC03xEm5PMs/ejWY1eDxH+cNjQGDqqoNozKWUt6N8q0ch1DPy8gJ7u7qLY5l+TBE99B8Rz1iKuR/k0zriABv5zCMfSDi3tJe3GcylarM77ua41FiLboh7W3kQiwU3AAbkKBJ6t3nZL9Ocn5Lg0=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <FE8410C29DF85F49B4087BCB8350FFC6@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: MULTIPART/MIXED; BOUNDARY="0-2125215133-1591913411=:10801"
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: eae2f9bb-5d53-4469-917d-08d80e553d4e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2020 22:17:33.4004
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 3zOAcWe8XSP/1xP6BQPM7NWMuUkHZk2G2BcI6TBtgO7YFmsnpStMMGHjtgorUqG/vX36jkPffnSnyk1VQe/k9A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6415
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---0-2125215133-1591913411=:10801
-Content-Type: TEXT/PLAIN; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-
-On Thu, 11 Jun 2020, Alex Shi wrote:
-> =E5=9C=A8 2020/6/10 =E4=B8=8A=E5=8D=8811:22, Hugh Dickins =E5=86=99=E9=81=
-=93:
-> > On Mon, 8 Jun 2020, Alex Shi wrote:
-> >> =E5=9C=A8 2020/6/8 =E4=B8=8B=E5=8D=8812:15, Hugh Dickins =E5=86=99=E9=
-=81=93:
-> >>>>  24 files changed, 487 insertions(+), 312 deletions(-)
-> >>> Hi Alex,
-> >>>
-> >>> I didn't get to try v10 at all, waited until Johannes's preparatory
-> >>> memcg swap cleanup was in mmotm; but I have spent a while thrashing
-> >>> this v11, and can happily report that it is much better than v9 etc:
-> >>> I believe this memcg lru_lock work will soon be ready for v5.9.
-> >>>
-> >>> I've not yet found any flaw at the swapping end, but fixes are needed
-> >>> for isolate_migratepages_block() and mem_cgroup_move_account(): I've
-> >>> got a series of 4 fix patches to send you (I guess two to fold into
-> >>> existing patches of yours, and two to keep as separate from me).
-> >>>
-> >>> I haven't yet written the patch descriptions, will return to that
-> >>> tomorrow.  I expect you will be preparing a v12 rebased on v5.8-rc1
-> >>> or v5.8-rc2, and will be able to include these fixes in that.
-> >>
-> >> I am very glad to get your help on this feature!=20
-> >>
-> >> and looking forward for your fixes tomorrow. :)
-> >>
-> >> Thanks a lot!
-> >> Alex
-> >=20
-> > Sorry, Alex, the news is not so good today.
-> >=20
-> > You'll have noticed I sent nothing yesterday. That's because I got
-> > stuck on my second patch: could not quite convince myself that it
-> > was safe.
->=20
-> Hi Hugh,
->=20
-> Thanks a lot for your help and effort! I very appreciate for this.
->=20
-> >=20
-> > I keep hinting at these patches, and I can't complete their writeups
-> > until I'm convinced; but to give you a better idea of what they do:
-> >=20
-> > 1. Fixes isolate_fail and isolate_abort in isolate_migratepages_block()=
-=2E
->=20
-> I guess I know this after mm-compaction-avoid-vm_bug_onpageslab-in-page_m=
-apcount.patch
-> was removed.
-
-No, I already assumed you had backed that out: these are fixes beyond that.
-
->=20
-> > 2. Fixes unsafe use of trylock_page() in __isolate_lru_page_prepare().
-> > 3. Reverts 07/16 inversion of lock ordering in split_huge_page_to_list(=
-).
-> > 4. Adds lruvec lock protection in mem_cgroup_move_account().
->=20
-> Sorry for can't follow you for above issues.
-
-Indeed, more explanation needed: coming.
-
-> Anyway, I will send out new patchset
-> with the first issue fixed. and then let's discussion base on it.
-
-Sigh. I wish you had waited for me to send you fixes, or waited for an
-identifiable tag like 5.8-rc1.  Andrew has been very hard at work with
-mm patches to Linus, but it looks like there are still "data_race" mods
-to come before -rc1, which may stop your v12 from applying cleanly.
-
->=20
-> >=20
-> > In the second, I was using rcu_read_lock() instead of trylock_page()
-> > (like in my own patchset), but could not quite be sure of the case when
-> > PageSwapCache gets set at the wrong moment. Gave up for the night, and
-> > in the morning abandoned that, instead just shifting the call to
-> > __isolate_lru_page_prepare() after the get_page_unless_zero(),
-> > where that trylock_page() becomes safe (no danger of stomping on page
-> > flags while page is being freed or newly allocated to another owner).
->=20
-> Sorry, I don't know the problem of trylock_page here? Could you like to
-> describe it as a race?
-
-Races, yes. Look, I'll send you now patches 1 and 2: at least with those
-in it should be safe for you and others to test compaction (if 5.8-rc1
-turns out well: I think so much has gone in that it might have unrelated
-problems, and often the -rc2 is much more stable).
-
-But no point in sending 3 and 4 at this point, since ...
-
->=20
-> >=20
-> > I thought that a very safe change, but best to do some test runs with
-> > it in before finalizing. And was then unpleasantly surprised to hit a
-> > VM_BUG_ON_PAGE(lruvec_memcg(lruvec) !=3D page->mem_cgroup) from
-> > lock_page_lruvec_irqsave < relock_page_lruvec < pagevec_lru_move_fn <
-> > pagevec_move_tail < lru_add_drain_cpu after 6 hours on one machine.
-> > Then similar but < rotate_reclaimable_page after 8 hours on another.
-> >=20
-> > Only seen once before: that's what drove me to add patch 4 (with 3 to
-> > revert the locking before it): somehow, when adding the lruvec locking
-> > there, I just took it for granted that your patchset would have the
-> > appropriate locking (or TestClearPageLRU magic) at the other end.
-> >=20
-> > But apparently not. And I'm beginning to think that TestClearPageLRU
-> > was just to distract the audience from the lack of proper locking.
-> >=20
-> > I have certainly not concluded that yet, but I'm having to think about
-> > an area of the code which I'd imagined you had under control (and I'm
-> > puzzled why my testing has found it so very hard to hit). If we're
-> > lucky, I'll find that pagevec_move_tail is a special case, and
-> > nothing much else needs changing; but I doubt that will be so.
-
-=2E.. shows that your locking primitives are not yet good enough
-to handle the case when tasks are moved between memcgs with
-move_charge_at_immigrate set.  "bin/cg m" in the tests I sent,
-but today I'm changing its "seconds=3D60" to "seconds=3D1" in hope
-of speeding up the reproduction.
-
-Ah, good, two machines crashed in 1.5 hours: but I don't need to
-examine the crashes, now that it's obvious there's no protection -
-please, think about rotate_reclaimable_page() (there will be more
-cases, but in practice that seems easiest to hit, so focus on that)
-and how it is not protected from mem_cgroup_move_account().
-
-I'm thinking too. Maybe judicious use of lock_page_memcg() can fix it
-(8 years ago it was unsuitable, but a lot has changed for the better
-since then); otherwise it's back to what I've been doing all along,
-taking the likely lruvec lock, and checking under that lock whether
-we have the right lock (as your lruvec_memcg_debug() does), retrying
-if not. Which may be more efficient than involving lock_page_memcg().
-
-But I guess still worth sending my first two patches, since most of us
-use move_charge_at_immigrate only for... testing move_charge_at_immigrate.
-Whereas compaction bugs can hit any of us at any time.
-
-> >=20
-> > There's one other unexplained and unfixed bug I've seen several times
-> > while exercising mem_cgroup_move_account(): refcount_warn_saturate()
-> > from where __mem_cgroup_clear_mc() calls mem_cgroup_id_get_many().
-> > I'll be glad if that goes away when the lruvec locking is fixed,
-> > but don't understand the connection. And it's quite possible that
-> > this refcounting bug has nothing to do with your changes: I have
-> > not succeeded in reproducing it on 5.7 nor on 5.7-rc7-mm1,
-> > but I didn't really try long enough to be sure.
-
-I got one of those quite quickly too after setting "cg m"'s seconds=3D1.
-I think the best thing I can do while thinking and researching, is
-give 5.7-rc7-mm1 a run on that machine with the speeded up moving,
-to see whether or not that refcount bug reproduces.
-
-> >=20
-> > (I should also warn, that I'm surprised by the amount of change
-> > 11/16 makes to mm/mlock.c: I've not been exercising mlock at all.)
->=20
-> yes, that is a bit complex. I have tried the mlock cases in selftest with
-> your swap&build case. They are all fine with 300 times run.
-
-Good, thanks.
-
-Hugh
---0-2125215133-1591913411=:10801--
+T24gVHVlLCAyMDIwLTA2LTA5IGF0IDE5OjQ1ICswMjAwLCBHcmVnIEtyb2FoLUhhcnRtYW4gd3Jv
+dGU6DQo+IEZyb206IEdyZWcgS3JvYWgtSGFydG1hbiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5v
+cmc+DQo+IA0KPiBUaGlzIHJldmVydHMgY29tbWl0IDk1ZmRlMmU0Njg2MGMxODNmNmY0N2E5OTM4
+MWEzYjliZmY0ODhiZDUgd2hpY2ggaXMNCj4gY29tbWl0IDljYTQxNTM5OWRhZTEzM2IwMDI3M2E0
+MjgzZWYzMWQwMDNhNjgxOGQgdXBzdHJlYW0uDQo+IA0KPiBJdCB3YXMgYmFja3BvcnRlZCBpbmNv
+cnJlY3RseSwgUGF1bCB3cml0ZXMgYXQ6DQo+IAlodHRwczovL2xvcmUua2VybmVsLm9yZy9yLzIw
+MjAwNjA3MjAzNDI1LkdEMjM2NjJAd2luZHJpdmVyLmNvbQ0KPiANCj4gCUkgaGFwcGVuZWQgdG8g
+bm90aWNlIHRoaXMgY29tbWl0Og0KPiANCj4gCTljYTQxNTM5OWRhZSAtICJuZXQvbWx4NTogQW5u
+b3RhdGUgbXV0ZXggZGVzdHJveSBmb3Igcm9vdCBucyINCj4gDQo+IAkuLi53YXMgYmFja3BvcnRl
+ZCB0byA0LjE5IGFuZCA1LjQgYW5kIHY1LjYgaW4gbGludXgtc3RhYmxlLg0KPiANCj4gCUl0IHBh
+dGNoZXMgZGVsX3N3X3Jvb3RfbnMoKSAtIHdoaWNoIG9ubHkgZXhpc3RzIGFmdGVyIHY1LjctcmM3
+DQo+IGZyb206DQo+IA0KPiAJNmViN2EyNjhhOTliIC0gIm5ldC9tbHg1OiBEb24ndCBtYWludGFp
+biBhIGNhc2Ugb2YgZGVsX3N3X2Z1bmMNCj4gYmVpbmcNCj4gCW51bGwiDQo+IA0KPiAJd2hpY2gg
+Y3JlYXRlcyB0aGUgb25lIGxpbmUgZGVsX3N3X3Jvb3RfbnMgc3R1YiBmdW5jdGlvbiBhcm91bmQN
+Cj4gCWtmcmVlKG5vZGUpIGJ5IGJyZWFraW5nIGl0IG91dCBvZiB0cmVlX3B1dF9ub2RlKCkuDQo+
+IA0KPiAJSW4gdGhlIGFic2Vuc2Ugb2YgZGVsX3N3X3Jvb3RfbnMgLSB0aGUgYmFja3BvcnQgZmlu
+ZHMgYW4NCj4gaWRlbnRpY2FsIG9uZQ0KPiAJbGluZSBrZnJlZSBzdHViIGZjbiAtIG5hbWVkIGRl
+bF9zd19wcmlvIGZyb20gdGhpcyBlYXJsaWVyDQo+IGNvbW1pdDoNCj4gDQo+IAkxMzllZDZjNmM0
+NmEgLSAibmV0L21seDU6IEZpeCBzdGVlcmluZyBtZW1vcnkgbGVhayIgIFtpbiB2NC4xNS0NCj4g
+cmM1XQ0KPiANCj4gCWFuZCB0aGVuIHB1dHMgdGhlIG11dGV4X2Rlc3Ryb3koKSBpbnRvIHRoYXQg
+KHdyb25nKSBmdW5jdGlvbiwNCj4gaW5zdGVhZCBvZg0KPiAJcHV0dGluZyBpdCBpbnRvIHRyZWVf
+cHV0X25vZGUgd2hlcmUgdGhlIHJvb3QgbnMgY2FzZSB1c2VkIHRvIGJlDQo+IGhhbmQNCj4gDQo+
+IFJlcG9ydGVkLWJ5OiBQYXVsIEdvcnRtYWtlciA8cGF1bC5nb3J0bWFrZXJAd2luZHJpdmVyLmNv
+bT4NCj4gQ2M6IFJvaSBEYXlhbiA8cm9pZEBtZWxsYW5veC5jb20+DQo+IENjOiBNYXJrIEJsb2No
+IDxtYXJrYkBtZWxsYW5veC5jb20+DQo+IENjOiBTYWVlZCBNYWhhbWVlZCA8c2FlZWRtQG1lbGxh
+bm94LmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogR3JlZyBLcm9haC1IYXJ0bWFuIDxncmVna2hAbGlu
+dXhmb3VuZGF0aW9uLm9yZz4NCg0KQWNrZWQtYnk6IFNhZWVkIE1haGFtZWVkIDxzYWVlZG1AbWVs
+bGFub3guY29tPg0KDQoNCkkgZG9uJ3Qga25vdyBpZiB0aGlzIHdhcyBkdWUgdG8gc29tZXRoaW5n
+IHdyb25nIGluIG15IGJhY2twb3J0aW5nDQpwcm9jZXNzIG9yIEFVVE9TRUwvd3JvbmcgRml4ZXMg
+dGFnIHJlbGF0ZWQuIEkgd2lsbCBjaGVjayBsYXRlciBhbmQgd2lsbA0KdHJ5IG15IGJlc3QgdG8g
+YXZvaWQgdGhpcyBpbiB0aGUgZnV0dXJlLiANCg0KVGhhbmtzLA0KU2FlZWQuDQo=
