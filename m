@@ -2,158 +2,164 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 218BAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B14A6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC85120842
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:39:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QKdoB7s1"
+	by mail.kernel.org (Postfix) with ESMTP id 947AC20842
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:45:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbgFKXjL (ORCPT
+        id S1726349AbgFKXpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 19:39:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60058 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726254AbgFKXjL (ORCPT
+        Thu, 11 Jun 2020 19:45:09 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:33181 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726284AbgFKXpJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 19:39:11 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDA3BC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 16:39:09 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id w20so3225628pga.6
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 16:39:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PAjCKI6MqDjh7P5uPdXryvnaGEeCq7TVMpet7FGoy7Q=;
-        b=QKdoB7s1+c8y2Lyhx08PCcM6Gcaw6bPOWK/e9Jiepq4rBTgxC5nMaP7TcdbWuSRXuW
-         te0kUNV9bMonftlvXz3t3rcfAXpW0K1z+7V7ixOeYKrJdkiME0OkIofwFHG4VGcRhUiC
-         hAynZbVWESietV+w+To5TffLKBTwo+s77moHX0cptXFVq61e0C/q3qj2uTlOUbspDSOX
-         kWQpix3Z3HjZKTlRar8x7dMUKWPtgGX0DZuUPxs7pkyUy+BVTUIaWIaPdiOR+6p63k4E
-         FIz4zqLQcleeox8S0uPSSA+Hr9tQrKxdQO43VmwOdULjZnO1N+JuSwvSz7Oe1FpY6e2X
-         S7Rg==
+        Thu, 11 Jun 2020 19:45:09 -0400
+Received: by mail-ed1-f67.google.com with SMTP id o26so5169302edq.0;
+        Thu, 11 Jun 2020 16:45:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PAjCKI6MqDjh7P5uPdXryvnaGEeCq7TVMpet7FGoy7Q=;
-        b=KD6F9P7Z+Rza9NGNRNlzLWXDhUI0eTuA3QAGzvHIs3XsmyQIt4pnep1e5H0aaqc5R/
-         pNPVoWTPp5kp+VK7R8gccmPj9J5hUZhE673+Cyemiy6AO9HcfKR8iLc0S1ksxfRUMhm/
-         csuD/Cb5d4zGoMaEmo2sqEtGWNVjNi8Z5QtIDR7477rjOA9CtVFTghDV35kBjsoOE4cd
-         AMOi6cv2AHT5211IJkjxK9uZtT3ItX+yRENRMYng+C5+9I+G/80Y5gKKL16c8VxrT15l
-         ZpSccvFnBFuN4/ro83sn7LyzIh5142md7cPqQpWpnfldgn0HlhDUSnwBI9gpxmz19UK5
-         0LuQ==
-X-Gm-Message-State: AOAM531SjmLsf5TwvnYycu5cw3UDsiKd9MIG6kjJj6+ezwUvo1Pc6nUm
-        HLtkCqvhNiUlh6esTbghtgqLQYYUi+My9lmEte3e2Q==
-X-Google-Smtp-Source: ABdhPJy6hNjsNqidbhfXdErSRf/X1ikfRmzNDY2AL6v9WPM6/vkCqSK+yLSSmr4DMu1dRhtrOiu1xpk8HZ+zvaIctZI=
-X-Received: by 2002:a63:a119:: with SMTP id b25mr8467715pgf.10.1591918748974;
- Thu, 11 Jun 2020 16:39:08 -0700 (PDT)
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=ft307+szVgLZXjW9CxkDEOAOObsFbHb6rd+Kv88V1Kg=;
+        b=FC41bveQYJcTZgwFBgQQKaG5DPwh8miA2f7GiLCpdwd8BigvK/tWjic1fzkT1uaegr
+         8/6Eay/B0jQFCDKTg2iQg4eFZJWpUX1LRVSZNA0gWmATmNxC46vI+7YxdvRF1jVxwldW
+         PKypodPJm9ubcIqMHAmnd6nQH7amcrJAutN3JRM2m5DJHStk1xuRP+KPUw8GBVXNW4Zj
+         EZGQYSfyLfxxVM91gyYy/PtWtnb50ti5vIQ8tVhbRbUrc+rZqsuhcfRlyHwS6Ydu/b4A
+         U2e8WzXQ97QfHzf2veg4uDkwYOjMh2EV+lN8WPsN6gAZ+UV1IeRUvSb+QSeqAmnvjyOe
+         8xLA==
+X-Gm-Message-State: AOAM5312yrKkeFU550TwuoqG/U4Hs6wdI1UEQPWS9vYL59/pASD/nTBO
+        bTNhyxubN/70F9IPzRP2Jpk=
+X-Google-Smtp-Source: ABdhPJy0GHY5zQXyEfR649zBdC7vqtui6dkfTw+LBz753dbYLiVxtXZadi+bu45ey4xDscNWzHWxsg==
+X-Received: by 2002:a50:ee01:: with SMTP id g1mr8947818eds.44.1591919105118;
+        Thu, 11 Jun 2020 16:45:05 -0700 (PDT)
+Received: from [10.9.0.18] ([185.248.161.177])
+        by smtp.gmail.com with ESMTPSA id z15sm2627640ejw.8.2020.06.11.16.45.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Jun 2020 16:45:04 -0700 (PDT)
+Reply-To: alex.popov@linux.com
+Subject: Re: [PATCH 2/5] gcc-plugins/stackleak: Use asm instrumentation to
+ avoid useless register saving
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Emese Revfy <re.emese@gmail.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Sven Schnelle <svens@stackframe.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Collingbourne <pcc@google.com>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        Alexander Monakov <amonakov@ispras.ru>,
+        Mathias Krause <minipli@googlemail.com>,
+        PaX Team <pageexec@freemail.hu>,
+        Brad Spengler <spender@grsecurity.net>,
+        Laura Abbott <labbott@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        kernel-hardening@lists.openwall.com, linux-kbuild@vger.kernel.org,
+        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, gcc@gcc.gnu.org, notify@kernel.org
+References: <20200604134957.505389-1-alex.popov@linux.com>
+ <20200604134957.505389-3-alex.popov@linux.com>
+ <202006091143.AD1A662@keescook>
+ <757cbafb-1e13-8989-e30d-33c557d33cc4@linux.com>
+ <202006101302.AC218FA1@keescook>
+From:   Alexander Popov <alex.popov@linux.com>
+Autocrypt: addr=alex.popov@linux.com; prefer-encrypt=mutual; keydata=
+ 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
+ j3lCqPk=
+Message-ID: <ee1a5921-c151-33a9-bdac-c5d039a94bdc@linux.com>
+Date:   Fri, 12 Jun 2020 02:45:00 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <CAKwvOdnddAjiXDKA8fp3n2NN+R=Syp2N5DHbp1j=VRzM1dNnRw@mail.gmail.com>
- <20200611220339.3971675-1-nivedita@alum.mit.edu>
-In-Reply-To: <20200611220339.3971675-1-nivedita@alum.mit.edu>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 11 Jun 2020 16:38:57 -0700
-Message-ID: <CAKwvOdksFqf11-sdLrvNe4wrRvyAB2mVfwKU4KkNsapSnN_tRw@mail.gmail.com>
-Subject: Re: [PATCH v2] Makefile: Improve compressed debug info support detection
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Fangrui Song <maskray@google.com>,
-        Rong Chen <rong.a.chen@intel.com>,
-        kernel test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <202006101302.AC218FA1@keescook>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 3:03 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> Commit
->   10e68b02c861 ("Makefile: support compressed debug info")
-> added support for compressed debug sections.
->
-> Support is detected by checking
-> - does the compiler support -gz=zlib
-> - does the assembler support --compressed-debug-sections=zlib
-> - does the linker support --compressed-debug-sections=zlib
->
-> However, the gcc driver's support for this option is somewhat
-> convoluted. The driver's builtin specs are set based on the version of
-> binutils that it was configured with. It reports an error if the
-> configure-time linker/assembler (i.e., not necessarily the actual
-> assembler that will be run) do not support the option, but only if the
-> assembler (or linker) is actually invoked when -gz=zlib is passed.
->
-> The cc-option check in scripts/Kconfig.include does not invoke the
-> assembler, so the gcc driver reports success even if it does not support
-> the option being passed to the assembler.
->
-> Because the as-option check passes the option directly to the assembler
-> via -Wa,--compressed-debug-sections=zlib, the gcc driver does not see
-> this option and will never report an error.
+On 10.06.2020 23:03, Kees Cook wrote:
+> On Wed, Jun 10, 2020 at 06:47:14PM +0300, Alexander Popov wrote:
+>> On 09.06.2020 21:46, Kees Cook wrote:
+>> The inline asm statement that is used for instrumentation is arch-specific.
+>> Trying to add
+>>   asm volatile("call stackleak_track_stack")
+>> in gcc plugin on aarch64 makes gcc break spectacularly.
+> 
+> Ah! Thank you, that eluded my eyes. :)
+> 
+>> I pass the target arch name to the plugin and check it explicitly to avoid that.
+>>
+>> Moreover, I'm going to create a gcc enhancement request for supporting
+>> no_caller_saved_registers attribute on aarch64.
+> 
+> For arm64 right now it looks like the plugin will just remain
+> "inefficient" in these cleanup, as before, yes?
 
-Thanks for expanding on the failure.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Yes, for arm64 the instrumentation didn't change in this patch series.
+I checked the disasm and see the similar issue with useless register saving.
 
->
-> Combined with an installed version of binutils that is more recent than
-> the one the compiler was built with, it is possible for all three tests
-> to succeed, yet an actual compilation with -gz=zlib to fail.
->
-> Moreover, it is unnecessary to explicitly pass
-> --compressed-debug-sections=zlib to the assembler via -Wa, since the
-> driver will do that automatically when it supports -gz=zlib.
->
-> Convert the as-option to just -gz=zlib, simplifying it as well as
-> performing a better test of the gcc driver's capabilities.
->
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-> ---
->  Makefile          | 2 +-
->  lib/Kconfig.debug | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/Makefile b/Makefile
-> index 839f9fee22cb..cb29e56f227a 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -842,7 +842,7 @@ endif
->
->  ifdef CONFIG_DEBUG_INFO_COMPRESSED
->  DEBUG_CFLAGS   += -gz=zlib
-> -KBUILD_AFLAGS  += -Wa,--compress-debug-sections=zlib
-> +KBUILD_AFLAGS  += -gz=zlib
->  KBUILD_LDFLAGS += --compress-debug-sections=zlib
->  endif
->
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index cb98741601bd..94ce36be470c 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -229,7 +229,7 @@ config DEBUG_INFO_COMPRESSED
->         bool "Compressed debugging information"
->         depends on DEBUG_INFO
->         depends on $(cc-option,-gz=zlib)
-> -       depends on $(as-option,-Wa$(comma)--compress-debug-sections=zlib)
-> +       depends on $(as-option,-gz=zlib)
->         depends on $(ld-option,--compress-debug-sections=zlib)
->         help
->           Compress the debug information using zlib.  Requires GCC 5.0+ or Clang
-> --
-> 2.26.2
->
+I'm going to add asm instrumentation for arm64 when (I hope) the
+no_caller_saved_registers attribute becomes available for that platform.
 
-
--- 
-Thanks,
-~Nick Desaulniers
+Best regards,
+Alexander
