@@ -2,164 +2,191 @@ Return-Path: <SRS0=NqQd=7Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B14A6C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D5DBC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 947AC20842
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14419204EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Jun 2020 23:45:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="CTAQ7/r2";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="xWnc5/Qy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726349AbgFKXpJ (ORCPT
+        id S1726486AbgFKXpO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 19:45:09 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:33181 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726284AbgFKXpJ (ORCPT
+        Thu, 11 Jun 2020 19:45:14 -0400
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:39820 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbgFKXpN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 19:45:09 -0400
-Received: by mail-ed1-f67.google.com with SMTP id o26so5169302edq.0;
-        Thu, 11 Jun 2020 16:45:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=ft307+szVgLZXjW9CxkDEOAOObsFbHb6rd+Kv88V1Kg=;
-        b=FC41bveQYJcTZgwFBgQQKaG5DPwh8miA2f7GiLCpdwd8BigvK/tWjic1fzkT1uaegr
-         8/6Eay/B0jQFCDKTg2iQg4eFZJWpUX1LRVSZNA0gWmATmNxC46vI+7YxdvRF1jVxwldW
-         PKypodPJm9ubcIqMHAmnd6nQH7amcrJAutN3JRM2m5DJHStk1xuRP+KPUw8GBVXNW4Zj
-         EZGQYSfyLfxxVM91gyYy/PtWtnb50ti5vIQ8tVhbRbUrc+rZqsuhcfRlyHwS6Ydu/b4A
-         U2e8WzXQ97QfHzf2veg4uDkwYOjMh2EV+lN8WPsN6gAZ+UV1IeRUvSb+QSeqAmnvjyOe
-         8xLA==
-X-Gm-Message-State: AOAM5312yrKkeFU550TwuoqG/U4Hs6wdI1UEQPWS9vYL59/pASD/nTBO
-        bTNhyxubN/70F9IPzRP2Jpk=
-X-Google-Smtp-Source: ABdhPJy0GHY5zQXyEfR649zBdC7vqtui6dkfTw+LBz753dbYLiVxtXZadi+bu45ey4xDscNWzHWxsg==
-X-Received: by 2002:a50:ee01:: with SMTP id g1mr8947818eds.44.1591919105118;
-        Thu, 11 Jun 2020 16:45:05 -0700 (PDT)
-Received: from [10.9.0.18] ([185.248.161.177])
-        by smtp.gmail.com with ESMTPSA id z15sm2627640ejw.8.2020.06.11.16.45.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Jun 2020 16:45:04 -0700 (PDT)
-Reply-To: alex.popov@linux.com
-Subject: Re: [PATCH 2/5] gcc-plugins/stackleak: Use asm instrumentation to
- avoid useless register saving
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Emese Revfy <re.emese@gmail.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Sven Schnelle <svens@stackframe.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Collingbourne <pcc@google.com>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Alexander Monakov <amonakov@ispras.ru>,
-        Mathias Krause <minipli@googlemail.com>,
-        PaX Team <pageexec@freemail.hu>,
-        Brad Spengler <spender@grsecurity.net>,
-        Laura Abbott <labbott@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        kernel-hardening@lists.openwall.com, linux-kbuild@vger.kernel.org,
-        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, gcc@gcc.gnu.org, notify@kernel.org
-References: <20200604134957.505389-1-alex.popov@linux.com>
- <20200604134957.505389-3-alex.popov@linux.com>
- <202006091143.AD1A662@keescook>
- <757cbafb-1e13-8989-e30d-33c557d33cc4@linux.com>
- <202006101302.AC218FA1@keescook>
-From:   Alexander Popov <alex.popov@linux.com>
-Autocrypt: addr=alex.popov@linux.com; prefer-encrypt=mutual; keydata=
- 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
- j3lCqPk=
-Message-ID: <ee1a5921-c151-33a9-bdac-c5d039a94bdc@linux.com>
-Date:   Fri, 12 Jun 2020 02:45:00 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <202006101302.AC218FA1@keescook>
-Content-Type: text/plain; charset=utf-8
+        Thu, 11 Jun 2020 19:45:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1591919113; x=1623455113;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=cPTgLV5CC9NTl4nebD3xyo8aaz2Hwve8wWwj8P6Rj2A=;
+  b=CTAQ7/r2baDC9V494rlIePa1FMjzPsByJcd915PkyXYCGdDPV9GbY8KU
+   9foCOUFbc6d8feURRw/Ou3YxrKvwbFey2+x1np1Sd1sSdDu38rniznSv/
+   HfIwL2f9hBbSBcO3LjT5unA4kWIOiATCiT8Wp0VktGkwezIYecApf/wwg
+   05C3mm6agsLsyzJEnS63zNMInnyaTknFA6INu/AMKcapdOsNQrjvMO4cj
+   +tNAA3aFHMxAGhOB//jCuHyVxWzN4lfoHpQeQjfiOKoaVwvjezJqO54Hj
+   y6VXaw5gQ/YiYTZbg8rLeJCXeCayEiWVOfQwQdeJHGyylJlryGJOjd+kK
+   A==;
+IronPort-SDR: 0bNYIaWd2fCdD/22Ewy5GJjA9xefX5xy9Ot/QEpHuOqDGWjyNOADhzpUZLBL/PShcaUjaZq7c2
+ Z8e8gQNiHDLY3R3wlO5CzEVy3VIEObkvFZ3Iz/wEkIY9Xop7fHpC/Usraddm99zTAghvSKf5+F
+ YG8mWVtssSrk4jbEjO/iDPKLbYJJ6eJHVbKHxJ83E09LeJsVqM/4kt+qSjbtTgPOP4B+44SKDd
+ WMIP0crMlkNHvPE79pBZqHR0zjJpZVUkgfvpGHcyO3oeOczXORjacFPCDbYFpM6wu86x8kYhMs
+ Euk=
+X-IronPort-AV: E=Sophos;i="5.73,501,1583164800"; 
+   d="scan'208";a="144102326"
+Received: from mail-dm6nam11lp2170.outbound.protection.outlook.com (HELO NAM11-DM6-obe.outbound.protection.outlook.com) ([104.47.57.170])
+  by ob1.hgst.iphmx.com with ESMTP; 12 Jun 2020 07:45:12 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VVLdKv37OWf2Fev+B93bnOLtihliyKfU0rAE+wLwXPTSeAt2XhDgIpRog/1ECGo0jGMDgc5uXB4dCjr/viFEjKhJtFKFQmfvjlrAkbdldzCeSe21q01VhEjLiphsv73zgKvXQovzGdLQJ6IFYjQt5USFbkszCzTpk/v6wY+QRDvMh+QMuQIapzBTQclcmGyMSZ2QDk8jJ6KZakQcXJBlyUrsewZG+ohVALdBCvxElul3VSruAOkr80lVbN/NYU8HrP4XFlOJ8i8K3pFftA/tFXgBK8dbdBf2sVUhDuhdgUgPftVL73SnnNdDchssjVIlOmZwdBSIWmGAO4s3wTmhSg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QEc40JkD51XLAAOw0tSEu2Dei9rEyk/UV18o8I14lqc=;
+ b=OFlFU5wTKO2Eqp695WnerqOPOWot5RP7xeFZrgwgWm+JTB3EW0BOPL4tp2evK5y3wOfp50jbOIXBBKyKgWvpF2qmkicgi1Jx+3SHCipOoWqgSWi9nRthFvxVG6LT3FJN50YvDJJ0PhudGtD05iXjNbQA9j8URjx/KTfsQ3CnBq7AHPivTu89lrgvo4odAFnw2mRq9Nt7cvuO2z0J7auYA6naWGbsAy1aLuBvqXL+4+quwGr6bGrDOhGHu/SByjRvuE2IGSu9K30x+i2GBJtaX2BGXZ08nQ2zL+/V/vJpp6WzHiO4Z9jz8Jg8ERZOKpsy/VW7C/zqZ7k0rVjHPwQ9lA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QEc40JkD51XLAAOw0tSEu2Dei9rEyk/UV18o8I14lqc=;
+ b=xWnc5/QyCXKU0euFfkKmHXksp340IYf3QwDdRGbNfYkF2C4pBuga+j1C38qIx/ZWCFn+dtifdxFCP+6iywcQlHrPGhUhWB3Y+PdsrEdmpxjgab9KZ6oqLCdVtPLMt0Ow+R9dGY+7VYZ80FnljaoSYmdKKwW4JyqDvj6uYy3KNPg=
+Received: from BYAPR04MB4965.namprd04.prod.outlook.com (2603:10b6:a03:4d::25)
+ by BY5PR04MB7122.namprd04.prod.outlook.com (2603:10b6:a03:222::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.23; Thu, 11 Jun
+ 2020 23:45:10 +0000
+Received: from BYAPR04MB4965.namprd04.prod.outlook.com
+ ([fe80::4d72:27c:c075:c5e6]) by BYAPR04MB4965.namprd04.prod.outlook.com
+ ([fe80::4d72:27c:c075:c5e6%7]) with mapi id 15.20.3066.023; Thu, 11 Jun 2020
+ 23:45:10 +0000
+From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
+CC:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>
+Subject: Re: [PATCH v13 7/9] nvmet-passthru: Add passthru code to process
+ commands
+Thread-Topic: [PATCH v13 7/9] nvmet-passthru: Add passthru code to process
+ commands
+Thread-Index: AQHWKhRpuphoSoz88kOAfqTRprM+0g==
+Date:   Thu, 11 Jun 2020 23:45:10 +0000
+Message-ID: <BYAPR04MB4965379CE8694F52D684993386800@BYAPR04MB4965.namprd04.prod.outlook.com>
+References: <20200514172253.6445-1-logang@deltatee.com>
+ <20200514172253.6445-8-logang@deltatee.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: deltatee.com; dkim=none (message not signed)
+ header.d=none;deltatee.com; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [199.255.45.62]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f4457c2b-e649-44cb-b625-08d80e617adc
+x-ms-traffictypediagnostic: BY5PR04MB7122:
+x-microsoft-antispam-prvs: <BY5PR04MB7122ED35404176B527E391FA86800@BY5PR04MB7122.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 0431F981D8
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: p/oAlTREwX64c7RffJBYif0WBg6ldrIx8n1VBARMkA7at3TOnrKE+tpi1+L8duKeDNsIL+zZtD/JqKKwZP1Dp2xDpoCNVCNIbBuSntQxr4K7Av0PQJgpsJUi+ZP7zPgO2y3H7MqF5Pb+etDC/xZ8UkllN9Rz2QbR5DHn0rBbpbcseDeHGxT5a6YjWu9rBAlOuba3hdhNUlByt7T2l9FADMsAlwotCSwNB/LE1/nootc9Sk4Lf+tUIK5H9JW4aZSoJcHY1YFnN7lzqkHzAwx8iX02O0dtONIkyk+5Tqpo79chhen3DoMqq5y5uAi/dQwb
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR04MB4965.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(376002)(136003)(366004)(39860400002)(66556008)(8676002)(8936002)(76116006)(66946007)(66476007)(64756008)(2906002)(66446008)(33656002)(86362001)(55016002)(83380400001)(186003)(26005)(6506007)(71200400001)(53546011)(9686003)(316002)(4326008)(7696005)(478600001)(54906003)(5660300002)(52536014)(110136005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: nern+YkBdfYGsMDmmvmhOBG26z9YggaoeUUjPVHcRifgTikahnqHXdHtQfJVuhnyQLTAjvpIgJ/S+9QKDSAIePYvlY4Es11KJQjTqs6MLM0+rCt58qhKSjdSruWwpx1KJyu0FFcp5Jba9Rr9gZis0HTEd8j0EnMOiTVMItvA16VuuAA9kfPbUL8JltT7QH+qFJMU20qUOnWXFrj2uYLP2r1oEFcbIoU7hbve6aVXgey24CShLrHle76Vnwe1g1Axtsjciwb8Elyikdl5QdsYE61CUeczUgmPfrz2vZsmmZh/gNtUXa8T41neDaXi5mjODc58AMQ2jQdbynlTO3lrym+nFuh+beLqBM7wyL0xXaoErwTIqKhvZRWUNmSEDIA9zzksZ68GwKN2P63+jJr/xS8lkc35ePOmyZFoGYfDQyObivGHkGm5oPuxe1tmJnh1Wxgl27eZVW/qGx3Qu3qYsL0oiWXQUiuZh6IC6iFmHmo=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f4457c2b-e649-44cb-b625-08d80e617adc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2020 23:45:10.6887
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: eA96pe/ru1glYskqQwM9cMTKfuFJo0tHCkPutklJmlE3JhvaPNwenSO9kv1jvhp/xUfr+sybDlBDKJEo6dV45hTYcjE+/IxgJ75Z/m7wIDY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR04MB7122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10.06.2020 23:03, Kees Cook wrote:
-> On Wed, Jun 10, 2020 at 06:47:14PM +0300, Alexander Popov wrote:
->> On 09.06.2020 21:46, Kees Cook wrote:
->> The inline asm statement that is used for instrumentation is arch-specific.
->> Trying to add
->>   asm volatile("call stackleak_track_stack")
->> in gcc plugin on aarch64 makes gcc break spectacularly.
-> 
-> Ah! Thank you, that eluded my eyes. :)
-> 
->> I pass the target arch name to the plugin and check it explicitly to avoid that.
->>
->> Moreover, I'm going to create a gcc enhancement request for supporting
->> no_caller_saved_registers attribute on aarch64.
-> 
-> For arm64 right now it looks like the plugin will just remain
-> "inefficient" in these cleanup, as before, yes?
-
-Yes, for arm64 the instrumentation didn't change in this patch series.
-I checked the disasm and see the similar issue with useless register saving.
-
-I'm going to add asm instrumentation for arm64 when (I hope) the
-no_caller_saved_registers attribute becomes available for that platform.
-
-Best regards,
-Alexander
+On 5/14/20 10:23 AM, Logan Gunthorpe wrote:=0A=
+> +=0A=
+> +static void nvmet_passthru_execute_cmd(struct nvmet_req *req)=0A=
+> +{=0A=
+> +	struct nvme_ctrl *ctrl =3D nvmet_req_passthru_ctrl(req);=0A=
+> +	struct nvme_ns *ns =3D NULL;=0A=
+> +	struct request *rq =3D NULL;=0A=
+> +	struct request_queue *q;=0A=
+> +	u32 effects;=0A=
+> +	u16 status;=0A=
+> +	int ret;=0A=
+> +=0A=
+> +	if (likely(req->sq->qid !=3D 0)) {=0A=
+> +		u32 nsid =3D le32_to_cpu(req->cmd->common.nsid);=0A=
+> +=0A=
+> +		ns =3D nvme_find_get_ns(ctrl, nsid);=0A=
+> +		if (unlikely(!ns)) {=0A=
+> +			pr_err("failed to get passthru ns nsid:%u\n", nsid);=0A=
+> +			status =3D NVME_SC_INVALID_NS | NVME_SC_DNR;=0A=
+> +			goto fail_out;=0A=
+> +		}=0A=
+> +	}=0A=
+> +=0A=
+> +	if (ns)=0A=
+> +		q =3D ns->queue;=0A=
+> +	else=0A=
+> +		q =3D ctrl->admin_q;=0A=
+=0A=
+Is it possible to avoid explicit if.. else in fast path given that the=0A=
+condition exists and we can take an advantage of that, how about=0A=
+following ?=0A=
+=0A=
+diff --git a/drivers/nvme/target/passthru.c b/drivers/nvme/target/passthru.=
+c=0A=
+index 9e71fdfbdbb3..4f8e022d254c 100644=0A=
+--- a/drivers/nvme/target/passthru.c=0A=
++++ b/drivers/nvme/target/passthru.c=0A=
+@@ -84,9 +84,9 @@ static int nvmet_passthru_map_sg(struct nvmet_req =0A=
+*req, struct request *rq)=0A=
+  static void nvmet_passthru_execute_cmd(struct nvmet_req *req)=0A=
+  {=0A=
+         struct nvme_ctrl *ctrl =3D nvmet_req_passthru_ctrl(req);=0A=
++       struct request_queue *q =3D ctrl->admin_q;=0A=
+         struct nvme_ns *ns =3D NULL;=0A=
+         struct request *rq =3D NULL;=0A=
+-       struct request_queue *q;=0A=
+         u32 effects;=0A=
+         u16 status;=0A=
+         int ret;=0A=
+@@ -100,12 +100,8 @@ static void nvmet_passthru_execute_cmd(struct =0A=
+nvmet_req *req)=0A=
+                         status =3D NVME_SC_INVALID_NS | NVME_SC_DNR;=0A=
+                         goto fail_out;=0A=
+                 }=0A=
+-       }=0A=
+-=0A=
+-       if (ns)=0A=
+                 q =3D ns->queue;=0A=
+-       else=0A=
+-               q =3D ctrl->admin_q;=0A=
++       }=0A=
+=0A=
+         rq =3D nvme_alloc_request(q, req->cmd, BLK_MQ_REQ_NOWAIT, =0A=
+NVME_QID_ANY);=0A=
+         if (IS_ERR(rq)) {=0A=
+=0A=
