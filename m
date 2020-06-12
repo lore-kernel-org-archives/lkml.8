@@ -2,136 +2,131 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBDB5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CF8C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE94D20801
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:49:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EA2D207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:51:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mu3f/M9w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbgFLHtK (ORCPT
+        id S1726475AbgFLHvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 03:49:10 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:50668 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726475AbgFLHsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 03:48:54 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 20D9F1A0B79;
-        Fri, 12 Jun 2020 09:48:51 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 07E061A0B77;
-        Fri, 12 Jun 2020 09:48:46 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B54D1402FF;
-        Fri, 12 Jun 2020 15:48:39 +0800 (SGT)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     lars@metafoo.de, perex@perex.cz, tiwai@suse.com,
-        lgirdwood@gmail.com, broonie@kernel.org, timur@kernel.org,
-        nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com, festevam@gmail.com,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [RFC PATCH v3 3/4] ASoC: fsl_asrc_dma: Reuse the dma channel if available in Back-End
-Date:   Fri, 12 Jun 2020 15:37:50 +0800
-Message-Id: <3a79f0442cb4930c633cf72145cfe95a45b9c78e.1591947428.git.shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1591947428.git.shengjiu.wang@nxp.com>
-References: <cover.1591947428.git.shengjiu.wang@nxp.com>
-In-Reply-To: <cover.1591947428.git.shengjiu.wang@nxp.com>
-References: <cover.1591947428.git.shengjiu.wang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 12 Jun 2020 03:51:17 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50145 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726292AbgFLHvP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 03:51:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591948273;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=grI6nWGxdFYR+2gV7YLo+XnBrhioxqL+q5cJAP/VrB0=;
+        b=Mu3f/M9wI9c14HqlbEernXoFW7BF4k3rF+z8T3FVIV4hUQEeXtboe+flopNUoY8oMg9uUr
+        0j0i1ciEoAWs6fIxLtkZVQkeEnQ+PvU05ZwkoWIsVb3G2+yvx+el+85oPxAcXQmKoFnhch
+        AkmR8bx1mCK8JCpeZ2FRSVMn25Qj+CA=
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+ [209.85.167.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-233-LWlbpJu_MDO1yjPO16AIKA-1; Fri, 12 Jun 2020 03:51:12 -0400
+X-MC-Unique: LWlbpJu_MDO1yjPO16AIKA-1
+Received: by mail-lf1-f71.google.com with SMTP id r10so587592lfc.6
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 00:51:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=grI6nWGxdFYR+2gV7YLo+XnBrhioxqL+q5cJAP/VrB0=;
+        b=MxKFsHMu30vgVCLvqtT6qpF+myBE7zutPqf4l23MAOhPwwlug8zTgFnyifLBa1RALI
+         h+I0f1dgI9fQf8MEDbRPFRwROuyh3ldjJTn5bWhK9WHlGGEqEP3m/XMFECABixjGdjV5
+         A7i7e00RYHNjlEaNIMhQib8maARvotldbYCcop8I/di8/mW04+WyFdUGxeti/AU1txue
+         zmuQRKsJTsGgAnomKb3EO0+eyLlQhRPrhCIyPoyUCdhjuwogjRhBSNG/v5AihYg3dcT/
+         q6bpZJtRSPMJ08pSReYeR/q1kNQlARN75rvI0c79AFR3vN/AxLBK1BqtdWnm9GGdRVgb
+         EsYw==
+X-Gm-Message-State: AOAM533Y0VND9OXk/uRxFBEukvrNxc2wW1JP+av6bHqsQ022AyHfN3aQ
+        j7Jm2MWvXCEjK0KAITXo3dqervqXVkKnBBLOi/ClS6VfDNILlRcCu5UtH9c7Hiv4cdZ3aK39wYs
+        VJd25j/cj2Br+qZKMmZ2WOmwHIYLLq7pVmsAnRHLK
+X-Received: by 2002:a2e:8043:: with SMTP id p3mr5738708ljg.217.1591948270565;
+        Fri, 12 Jun 2020 00:51:10 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx/JTMFBvXt7O/Z7+cVdAL/GN/g5rs1TwU0pWF+CTjhP0DJ/WkTYI5gqq+1wX2k1E3Ja6CWJfdhKIJ8JTvzSiA=
+X-Received: by 2002:a2e:8043:: with SMTP id p3mr5738696ljg.217.1591948270330;
+ Fri, 12 Jun 2020 00:51:10 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200611204746.6370-1-trix@redhat.com> <20200611204746.6370-2-trix@redhat.com>
+In-Reply-To: <20200611204746.6370-2-trix@redhat.com>
+From:   Ondrej Mosnacek <omosnace@redhat.com>
+Date:   Fri, 12 Jun 2020 09:51:00 +0200
+Message-ID: <CAFqZXNtPjzh2OPaLkMfV_b=-=uU7Z0887-sWUjSG2YJ8e1ucfg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] selinux: fix another double free
+To:     Tom Rix <trix@redhat.com>
+Cc:     Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Wei Yongjun <weiyongjun1@huawei.com>,
+        SElinux list <selinux@vger.kernel.org>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The dma channel has been requested by Back-End cpu dai driver already.
-If fsl_asrc_dma requests dma chan with same dma:tx symlink, then
-there will be below warning with SDMA.
+On Thu, Jun 11, 2020 at 10:48 PM <trix@redhat.com> wrote:
+[...]
+> diff --git a/security/selinux/ss/conditional.c b/security/selinux/ss/conditional.c
+> index da94a1b4bfda..d0d6668709f0 100644
+> --- a/security/selinux/ss/conditional.c
+> +++ b/security/selinux/ss/conditional.c
+> @@ -392,26 +392,21 @@ static int cond_read_node(struct policydb *p, struct cond_node *node, void *fp)
+>
+>                 rc = next_entry(buf, fp, sizeof(u32) * 2);
+>                 if (rc)
+> -                       goto err;
+> +                       return rc;
+>
+>                 expr->expr_type = le32_to_cpu(buf[0]);
+>                 expr->bool = le32_to_cpu(buf[1]);
+>
+>                 if (!expr_node_isvalid(p, expr)) {
+>                         rc = -EINVAL;
+> -                       goto err;
+> +                       return rc;
+>                 }
 
-[   48.174236] fsl-esai-dai 2024000.esai: Cannot create DMA dma:tx symlink
+Sorry for more nitpicking... This can be further simplified to just
+"return -EINVAL;" and the braces can be removed.
 
-So if we can reuse the dma channel of Back-End, then the issue can be
-fixed.
+>         }
+>
+>         rc = cond_read_av_list(p, fp, &node->true_list, NULL);
+>         if (rc)
+> -               goto err;
+> +               return rc;
+>         rc = cond_read_av_list(p, fp, &node->false_list, &node->true_list);
+> -       if (rc)
+> -               goto err;
+> -       return 0;
+> -err:
+> -       cond_node_destroy(node);
+>         return rc;
 
-In order to get the dma channel which is already requested in Back-End.
-we use the exported two functions (snd_soc_lookup_component_nolocked
-and soc_component_to_pcm). If we can get the dma channel, then reuse it,
-if can't, then request a new one.
+Also here you can skip the rc assignment:
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- sound/soc/fsl/fsl_asrc_dma.c | 25 ++++++++++++++++++++-----
- 1 file changed, 20 insertions(+), 5 deletions(-)
+return cond_read_av_list(p, fp, &node->false_list, &node->true_list);
 
-diff --git a/sound/soc/fsl/fsl_asrc_dma.c b/sound/soc/fsl/fsl_asrc_dma.c
-index d6a3fc5f87e5..d88e6343e0a2 100644
---- a/sound/soc/fsl/fsl_asrc_dma.c
-+++ b/sound/soc/fsl/fsl_asrc_dma.c
-@@ -135,6 +135,8 @@ static int fsl_asrc_dma_hw_params(struct snd_soc_component *component,
- 	struct snd_dmaengine_dai_dma_data *dma_params_be = NULL;
- 	struct snd_pcm_runtime *runtime = substream->runtime;
- 	struct fsl_asrc_pair *pair = runtime->private_data;
-+	struct dma_chan *tmp_chan = NULL, *be_chan = NULL;
-+	struct snd_soc_component *component_be = NULL;
- 	struct fsl_asrc *asrc = pair->asrc;
- 	struct dma_slave_config config_fe, config_be;
- 	enum asrc_pair_index index = pair->index;
-@@ -142,7 +144,6 @@ static int fsl_asrc_dma_hw_params(struct snd_soc_component *component,
- 	int stream = substream->stream;
- 	struct imx_dma_data *tmp_data;
- 	struct snd_soc_dpcm *dpcm;
--	struct dma_chan *tmp_chan;
- 	struct device *dev_be;
- 	u8 dir = tx ? OUT : IN;
- 	dma_cap_mask_t mask;
-@@ -197,18 +198,30 @@ static int fsl_asrc_dma_hw_params(struct snd_soc_component *component,
- 	dma_cap_set(DMA_SLAVE, mask);
- 	dma_cap_set(DMA_CYCLIC, mask);
- 
-+	/*
-+	 * The Back-End device might have already requested a DMA channel,
-+	 * so try to reuse it first, and then request a new one upon NULL.
-+	 */
-+	component_be = snd_soc_lookup_component_nolocked(dev_be, SND_DMAENGINE_PCM_DRV_NAME);
-+	if (component_be) {
-+		be_chan = soc_component_to_pcm(component_be)->chan[substream->stream];
-+		tmp_chan = be_chan;
-+	}
-+	if (!tmp_chan)
-+		tmp_chan = dma_request_slave_channel(dev_be, tx ? "tx" : "rx");
-+
- 	/*
- 	 * An EDMA DEV_TO_DEV channel is fixed and bound with DMA event of each
- 	 * peripheral, unlike SDMA channel that is allocated dynamically. So no
--	 * need to configure dma_request and dma_request2, but get dma_chan via
--	 * dma_request_slave_channel directly with dma name of Front-End device
-+	 * need to configure dma_request and dma_request2, but get dma_chan of
-+	 * Back-End device directly via dma_request_slave_channel.
- 	 */
- 	if (!asrc->use_edma) {
- 		/* Get DMA request of Back-End */
--		tmp_chan = dma_request_slave_channel(dev_be, tx ? "tx" : "rx");
- 		tmp_data = tmp_chan->private;
- 		pair->dma_data.dma_request = tmp_data->dma_request;
--		dma_release_channel(tmp_chan);
-+		if (!be_chan)
-+			dma_release_channel(tmp_chan);
- 
- 		/* Get DMA request of Front-End */
- 		tmp_chan = asrc->get_dma_channel(pair, dir);
-@@ -221,6 +234,8 @@ static int fsl_asrc_dma_hw_params(struct snd_soc_component *component,
- 		pair->dma_chan[dir] =
- 			dma_request_channel(mask, filter, &pair->dma_data);
- 	} else {
-+		if (!be_chan)
-+			dma_release_channel(tmp_chan);
- 		pair->dma_chan[dir] =
- 			asrc->get_dma_channel(pair, dir);
- 	}
--- 
-2.21.0
+>  }
+>
+> --
+> 2.18.1
+
+--
+Ondrej Mosnacek
+Software Engineer, Platform Security - SELinux kernel
+Red Hat, Inc.
 
