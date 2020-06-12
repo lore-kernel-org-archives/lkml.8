@@ -2,241 +2,114 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F617C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E3CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:18:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AAB2206A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:18:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C598B206A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:18:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="eMnyuUA2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ViukwVvk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbgFLKSc (ORCPT
+        id S1726479AbgFLKSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 06:18:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45400 "EHLO
+        Fri, 12 Jun 2020 06:18:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbgFLKS1 (ORCPT
+        with ESMTP id S1726272AbgFLKSr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 06:18:27 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6F82C03E96F;
-        Fri, 12 Jun 2020 03:18:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=GrDDr2B0HYKCkneUxTaJkyYzXAlMfAXQXQyogxLXHGM=; b=eMnyuUA2M1CVA2c3WOJ3cAZUg
-        bwWu4h/bbnqYd/0OmHn5YQb0iyc+gue3q9mnLcj6A5N03pbb1EepDCiMozFiHeP6cbW4yxe9frl0n
-        Oe7kahz8lrjuaL3tZCSSDzyNI0d67q+MZa+6nI34Wa6N82fOMtlMJXhgzgyGyHnjjjoVIxh8faR40
-        Jp59RWKw6W+t7CWj+o5JtnRFybjFZs66WzDYNXsLIeOzXrFwY3EwZgP3lrv8cfvzgsy7klUpnQfZy
-        sWlGVvRWHgzWSnGVBwHrpKUnRAyzsU3gCTAo7/zErAEVF6EiBomhk6aJJRx4LkaTX+f2YrlIncFQs
-        soLDCVB+Q==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1ed9:1:5054:ff:fe00:4ec]:49460)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jjglR-0002aE-1c; Fri, 12 Jun 2020 11:18:21 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jjglQ-0006B3-5q; Fri, 12 Jun 2020 11:18:20 +0100
-Date:   Fri, 12 Jun 2020 11:18:20 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
-Subject: Re: [PATCH v2] net: mvneta: Fix Serdes configuration for 2.5Gbps
- modes
-Message-ID: <20200612101820.GF1551@shell.armlinux.org.uk>
-References: <20200612083847.29942-1-s.hauer@pengutronix.de>
- <20200612084710.GC1551@shell.armlinux.org.uk>
- <20200612100114.GE1551@shell.armlinux.org.uk>
+        Fri, 12 Jun 2020 06:18:47 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C71EC03E96F
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 03:18:47 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id 10so4090298pfx.8
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 03:18:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=qrqb7rFrPm71zufQQQJM2Qw+hcWl7jQI7PiyTPO3UHw=;
+        b=ViukwVvkgr00MbjToEOcrPK4Woyhmram6FnQaogQzeqmiRUQnsvSwjkQRER59XdQe/
+         sZFvgy0xWtF795/qKsCne3X6r8cGBk3KMvVwtpflZ4+r8zCBUmF4JQqhyMFJl8wruKBN
+         8WZaJq/f+CBFIH4wWLIuBMc5TUZ14cDxear1YqCHwL4vzl4ZYBfExmzNZQ+WpHpbyh3Q
+         knQgqzzBlo7JQICJpkbJyQkGz6kVulHYq8TfVbRcaVKd07gvUqetQddUc0SVo0mfk3kt
+         t7r1hQLAZMVbeKDNOiZyVbmG0ovJnLuxYY4PVA/DamoL5LrvBVE0tijvhdVeNFiDBN/1
+         Q+rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qrqb7rFrPm71zufQQQJM2Qw+hcWl7jQI7PiyTPO3UHw=;
+        b=ZHjVh3JJ1ueifUTld0NghSVHe6qlqDucSlJXb4lPA6wNJLNkM7fCfaD4Do66HhpGdW
+         zXIF9lKM7n5WFvdOVPiRIX/bpoXT9P4I9rQsOQpoUFuLBY1ysIRfIp0RhfeahtbyeOc7
+         QQ9OX3G8YISKyRWensuxtzoDDbLBqUcJ16LZa8fu8elGKmV6wMhDXSQTEssX0/ZXZjwu
+         sThGHyteYa1+mbBumyscQvwrkNh9DGOw8/L6AsUff1ZL8dPfv9EqPcEpMvEOliBH2BaF
+         fkvrHv5Fl3tvUSBxxwlH/c0XUvbpZduD4z0ccqnV6RErVwILZm4iYNNeN9i+BfefAaAw
+         kTMQ==
+X-Gm-Message-State: AOAM533DGKOE/C3BEzfzIL8uO4yWmmm00eVhsLhMz84D3VGAMngv8ccX
+        pHLUUaTMaTZdWlJr+sM/FDE=
+X-Google-Smtp-Source: ABdhPJwVWZa81QyZtpAyosO7H+mBqn21lO1GU02lU/SfiVDeiGLvuMOQXAEavq3IzBRp17NqlqMJAg==
+X-Received: by 2002:a05:6a00:15c7:: with SMTP id o7mr10779006pfu.51.1591957126712;
+        Fri, 12 Jun 2020 03:18:46 -0700 (PDT)
+Received: from localhost ([49.205.222.116])
+        by smtp.gmail.com with ESMTPSA id n2sm6039429pfd.125.2020.06.12.03.18.45
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 12 Jun 2020 03:18:45 -0700 (PDT)
+Date:   Fri, 12 Jun 2020 15:48:44 +0530
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: [RFC 3/3] ARM: provide CONFIG_VMSPLIT_4G_DEV for development
+Message-ID: <333fdfb5080726988b1223a5fbe8ebcc4d6ec3e0.1591885760.git.afzal.mohd.ma@gmail.com>
+References: <cover.1591885760.git.afzal.mohd.ma@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200612100114.GE1551@shell.armlinux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <cover.1591885760.git.afzal.mohd.ma@gmail.com>
+User-Agent: Mutt/1.9.3 (2018-01-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 11:01:15AM +0100, Russell King - ARM Linux admin wrote:
-> On Fri, Jun 12, 2020 at 09:47:10AM +0100, Russell King - ARM Linux admin wrote:
-> > On Fri, Jun 12, 2020 at 10:38:47AM +0200, Sascha Hauer wrote:
-> > > The Marvell MVNETA Ethernet controller supports a 2.5Gbps SGMII mode
-> > > called DRSGMII. Depending on the Port MAC Control Register0 PortType
-> > > setting this seems to be either an overclocked SGMII mode or 2500BaseX.
-> > > 
-> > > This patch adds the necessary Serdes Configuration setting for the
-> > > 2.5Gbps modes. There is no phy interface mode define for overclocked
-> > > SGMII, so only 2500BaseX is handled for now.
-> > > 
-> > > As phy_interface_mode_is_8023z() returns true for both
-> > > PHY_INTERFACE_MODE_1000BASEX and PHY_INTERFACE_MODE_2500BASEX we
-> > > explicitly test for 1000BaseX instead of using
-> > > phy_interface_mode_is_8023z() to differentiate the different
-> > > possibilities.
-> > > 
-> > > Fixes: da58a931f248f ("net: mvneta: Add support for 2500Mbps SGMII")
-> > > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> > 
-> > 2500base-X is used today on Armada 388 and Armada 3720 platforms and
-> > works - it is known to interoperate with Marvell PP2.2 hardware, as
-> > well was various SFPs such as the Huawei MA5671A at 2.5Gbps.  The way
-> > it is handled on these platforms is via the COMPHY, requesting that
-> > the serdes is upclocked from 1.25Gbps to 3.125Gbps.
-> > 
-> > This "DRSGMII" mode is not mentioned in the functional specs for either
-> > the Armada 388 or Armada 3720, the value you poke into the register is
-> > not mentioned either.  As I've already requested, some information on
-> > exactly what this "DRSGMII" is would be very useful, it can't be
-> > "double-rate SGMII" because that would give you 2Gbps instead of 1Gbps.
-> > 
-> > So, I suspect this breaks the platforms that are known to work.
-> > 
-> > We need a proper description of what DRSGMII is before we can consider
-> > taking any patches for it.
-> 
-> Okay, having dug through the Armada XP, 370, 388, 3720 specs, I think
-> this is fine after all - but something that will help for the future
-> would be to document that this register does not exist on the 388 and
-> 3720 devices (which brings up the question whether we should be writing
-> it there.)  The field was moved into the comphy on those devices.
-> 
-> So, it looks like if we have a comphy, we should not be writing this
-> register.
-> 
-> What's more, the write to MVNETA_SERDES_CFG should not be in
-> mvneta_port_power_up(); it's likely that XP and 370 will not work
-> properly with phylink.  It needs to be done in a similar location to
-> mvneta_comphy_init(), so that phylink can switch between 1G and 2.5G
-> speeds.
-> 
-> As you have an Armada XP system, you are best placed to test moving
-> that write.
+Select UACCESS_GUP_KMAP_MEMCPY initially.
 
-Here's my suggestion - it won't apply to mainline or net* trees, but
-gives you the idea I'm proposing:
+Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
+---
+ arch/arm/Kconfig | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
-index 9e25d608d856..17db74d61bc2 100644
---- a/drivers/net/ethernet/marvell/mvneta.c
-+++ b/drivers/net/ethernet/marvell/mvneta.c
-@@ -107,9 +107,11 @@
- #define      MVNETA_TX_IN_PRGRS                  BIT(1)
- #define      MVNETA_TX_FIFO_EMPTY                BIT(8)
- #define MVNETA_RX_MIN_FRAME_SIZE                 0x247c
-+/* Only exists on Armada XP and Armada 370 */
- #define MVNETA_SERDES_CFG			 0x24A0
--#define      MVNETA_SGMII_SERDES_PROTO		 0x0cc7
- #define      MVNETA_QSGMII_SERDES_PROTO		 0x0667
-+#define      MVNETA_SGMII_SERDES_PROTO		 0x0cc7
-+#define      MVNETA_HSGMII_SERDES_PROTO		 0x1107
- #define MVNETA_TYPE_PRIO                         0x24bc
- #define      MVNETA_FORCE_UNI                    BIT(21)
- #define MVNETA_TXQ_CMD_1                         0x24e4
-@@ -3457,9 +3459,6 @@ static int mvneta_comphy_init(struct mvneta_port *pp)
- {
- 	int ret;
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index c77c93c485a08..ae2687679d7c8 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -1326,6 +1326,15 @@ config PAGE_OFFSET
+ 	default 0xB0000000 if VMSPLIT_3G_OPT
+ 	default 0xC0000000
  
--	if (!pp->comphy)
--		return 0;
--
- 	ret = phy_set_mode_ext(pp->comphy, PHY_MODE_ETHERNET,
- 			       pp->phy_interface);
- 	if (ret)
-@@ -3468,11 +3467,47 @@ static int mvneta_comphy_init(struct mvneta_port *pp)
- 	return phy_power_on(pp->comphy);
- }
- 
-+static int mvneta_config_interface(struct mvneta_port *pp,i
-+				   phy_interface_t interface)
-+{
-+	int ret = 0;
++config VMSPLIT_4G_DEV
++	bool "Experimental changes for 4G/4G user/kernel split"
++	depends on ARM_LPAE
++	select UACCESS_GUP_KMAP_MEMCPY
++	help
++	  Experimental changes during 4G/4G user/kernel split development.
++	  Existing vmsplit config option is used, once development is done,
++	  this would be put as a new choice & _DEV suffix removed.
 +
-+	if (pp->comphy) {
-+		if (interface == PHY_INTERFACE_MODE_SGMII ||
-+		    interface == PHY_INTERFACE_MODE_1000BASEX ||
-+		    interface == PHY_INTERFACE_MODE_2500BASEX) {
-+			ret = mvneta_comphy_init(pp);
-+		}
-+	} else {
-+		switch (interface) {
-+		case PHY_INTERFACE_MODE_QSGMII:
-+			mvreg_write(pp, MVNETA_SERDES_CFG,
-+				    MVNETA_QSGMII_SERDES_PROTO);
-+			break;
-+
-+		case PHY_INTERFACE_MODE_SGMII:
-+		case PHY_INTERFACE_MODE_1000BASEX:
-+			mvreg_write(pp, MVNETA_SERDES_CFG,
-+				    MVNETA_SGMII_SERDES_PROTO);
-+			break;
-+
-+		case PHY_INTERFACE_MODE_2500BASEX:
-+			mvreg_write(pp, MVNETA_SERDES_CFG,
-+				    MVNETA_HSGMII_SERDES_PROTO);
-+			break;
-+		}
-+	}
-+
-+	pp->phy_interface = interface;
-+
-+	return ret;
-+}
-+
- static void mvneta_start_dev(struct mvneta_port *pp)
- {
- 	int cpu;
- 
--	WARN_ON(mvneta_comphy_init(pp));
-+	WARN_ON(mvneta_config_interface(pp, pp->phy_interface));
- 
- 	mvgmac_set_max_rx_size(&pp->gmac, pp->pkt_size);
- 	mvneta_txq_max_tx_size_set(pp, pp->pkt_size);
-@@ -3702,14 +3737,9 @@ static int mvneta_pcs_config(struct phylink_config *config,
- 	/* We should never see Asym_Pause set */
- 	WARN_ON(phylink_test(advertising, Asym_Pause));
- 
--	if (pp->comphy && pp->phy_interface != interface &&
--	    (interface == PHY_INTERFACE_MODE_SGMII ||
--	     interface == PHY_INTERFACE_MODE_1000BASEX ||
--	     interface == PHY_INTERFACE_MODE_2500BASEX)) {
--		pp->phy_interface = interface;
--
-+	if (pp->phy_interface != interface) {
- 		WARN_ON(phy_power_off(pp->comphy));
--		WARN_ON(mvneta_comphy_init(pp));
-+		mvneta_config_interface(pp, interface);
- 	}
- 
- 	if (want_1ms_clock) {
-@@ -4794,12 +4824,10 @@ static int mvneta_port_power_up(struct mvneta_port *pp, int phy_mode)
- 	/* MAC Cause register should be cleared */
- 	mvreg_write(pp, MVNETA_UNIT_INTR_CAUSE, 0);
- 
--	if (phy_mode == PHY_INTERFACE_MODE_QSGMII)
--		mvreg_write(pp, MVNETA_SERDES_CFG, MVNETA_QSGMII_SERDES_PROTO);
--	else if (phy_mode == PHY_INTERFACE_MODE_SGMII ||
--		 phy_interface_mode_is_8023z(phy_mode))
--		mvreg_write(pp, MVNETA_SERDES_CFG, MVNETA_SGMII_SERDES_PROTO);
--	else if (!phy_interface_mode_is_rgmii(phy_mode))
-+	if (phy_mode != PHY_INTERFACE_MODE_QSGMII &&
-+	    phy_mode != PHY_INTERFACE_MODE_SGMII &&
-+	    !phy_interface_mode_is_8023z(phy_mode) &&
-+	    !phy_interface_mode_is_rgmii(phy_mode))
- 		return -EINVAL;
- 
- 	return 0;
-
+ config NR_CPUS
+ 	int "Maximum number of CPUs (2-32)"
+ 	range 2 32
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+2.26.2
+
