@@ -2,131 +2,172 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F4FC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD09C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 107DF20792
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:35:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A5B2207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:39:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591958348;
+	bh=Ic5qw5oifdLSTHOeMZf7Yti20T61ZRmCTHxVz++OVmY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=PB9OdLu8VlYYjbywf0ZqGGKe1cDRfC5hy7GhwNf6wH1XQTAX760s2YlQHHvvKjFvD
+	 YE8GP54NG8luS1yEo/eNbWitZ864Xcr7Ekedmw7U7jCjPVYn+FL0Pr8XVKsZRCxuFd
+	 KkfXUMeFexCLiZTH8vXm2srsL8rx+THMcnrP1Gm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbgFLKfA (ORCPT
+        id S1726271AbgFLKjG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 06:35:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47936 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgFLKe7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 06:34:59 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08A7CC03E96F
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 03:34:59 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        Fri, 12 Jun 2020 06:39:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46616 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725911AbgFLKjF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 06:39:05 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F5B420792;
+        Fri, 12 Jun 2020 10:39:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591958344;
+        bh=Ic5qw5oifdLSTHOeMZf7Yti20T61ZRmCTHxVz++OVmY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=iqQTcCa0+IVkdpWesoiLrhyjZMFk6VVnbhjwKh1SfzhXm9EGnMkRZpYqvsJQCG1V0
+         pMz6sgPbHiFBHpmxIks72Ct6ZjFzb6U8kB40mc5e917uIJjeH4VmS6z+Ya0yXAhbGP
+         9mD1RhvKVUF4iyR+SiFAiKDvHYi1MSx+5ED0ikew=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1jjh1P-0007Sj-B7; Fri, 12 Jun 2020 12:34:51 +0200
-Received: from [IPv6:2a03:f580:87bc:d400:b44d:6713:e0e9:e23c] (unknown [IPv6:2a03:f580:87bc:d400:b44d:6713:e0e9:e23c])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
-        (Authenticated sender: mkl@blackshift.org)
-        by smtp.blackshift.org (Postfix) with ESMTPSA id A3F35515090;
-        Fri, 12 Jun 2020 10:34:49 +0000 (UTC)
-Subject: Re: [PATCH] i2c: imx: Fix external abort on early interrupt
-To:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Wolfram Sang <wsa@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org
-References: <1591796802-23504-1-git-send-email-krzk@kernel.org>
- <20200612090517.GA3030@ninjato> <20200612092941.GA25990@pi3>
- <20200612095604.GA17763@ninjato> <20200612102113.GA26056@pi3>
- <20200612103149.2onoflu5qgwaooli@pengutronix.de>
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
- mQINBFFVq30BEACtnSvtXHoeHJxG6nRULcvlkW6RuNwHKmrqoksispp43X8+nwqIFYgb8UaX
- zu8T6kZP2wEIpM9RjEL3jdBjZNCsjSS6x1qzpc2+2ivjdiJsqeaagIgvy2JWy7vUa4/PyGfx
- QyUeXOxdj59DvLwAx8I6hOgeHx2X/ntKAMUxwawYfPZpP3gwTNKc27dJWSomOLgp+gbmOmgc
- 6U5KwhAxPTEb3CsT5RicsC+uQQFumdl5I6XS+pbeXZndXwnj5t84M+HEj7RN6bUfV2WZO/AB
- Xt5+qFkC/AVUcj/dcHvZwQJlGeZxoi4veCoOT2MYqfR0ax1MmN+LVRvKm29oSyD4Ts/97cbs
- XsZDRxnEG3z/7Winiv0ZanclA7v7CQwrzsbpCv+oj+zokGuKasofzKdpywkjAfSE1zTyF+8K
- nxBAmzwEqeQ3iKqBc3AcCseqSPX53mPqmwvNVS2GqBpnOfY7Mxr1AEmxdEcRYbhG6Xdn+ACq
- Dq0Db3A++3PhMSaOu125uIAIwMXRJIzCXYSqXo8NIeo9tobk0C/9w3fUfMTrBDtSviLHqlp8
- eQEP8+TDSmRP/CwmFHv36jd+XGmBHzW5I7qw0OORRwNFYBeEuiOIgxAfjjbLGHh9SRwEqXAL
- kw+WVTwh0MN1k7I9/CDVlGvc3yIKS0sA+wudYiselXzgLuP5cQARAQABtCZNYXJjIEtsZWlu
- ZS1CdWRkZSA8bWtsQHBlbmd1dHJvbml4LmRlPokCVAQTAQoAPgIbAwIeAQIXgAULCQgHAwUV
- CgkICwUWAgMBABYhBMFAC6CzmJ5vvH1bXCte4hHFiupUBQJcUsSbBQkM366zAAoJECte4hHF
- iupUgkAP/2RdxKPZ3GMqag33jKwKAbn/fRqAFWqUH9TCsRH3h6+/uEPnZdzhkL4a9p/6OeJn
- Z6NXqgsyRAOTZsSFcwlfxLNHVxBWm8pMwrBecdt4lzrjSt/3ws2GqxPsmza1Gs61lEdYvLST
- Ix2vPbB4FAfE0kizKAjRZzlwOyuHOr2ilujDsKTpFtd8lV1nBNNn6HBIBR5ShvJnwyUdzuby
- tOsSt7qJEvF1x3y49bHCy3uy+MmYuoEyG6zo9udUzhVsKe3hHYC2kfB16ZOBjFC3lH2U5An+
- yQYIIPZrSWXUeKjeMaKGvbg6W9Oi4XEtrwpzUGhbewxCZZCIrzAH2hz0dUhacxB201Y/faY6
- BdTS75SPs+zjTYo8yE9Y9eG7x/lB60nQjJiZVNvZ88QDfVuLl/heuIq+fyNajBbqbtBT5CWf
- mOP4Dh4xjm3Vwlz8imWW/drEVJZJrPYqv0HdPbY8jVMpqoe5jDloyVn3prfLdXSbKPexlJaW
- 5tnPd4lj8rqOFShRnLFCibpeHWIumqrIqIkiRA9kFW3XMgtU6JkIrQzhJb6Tc6mZg2wuYW0d
- Wo2qvdziMgPkMFiWJpsxM9xPk9BBVwR+uojNq5LzdCsXQ2seG0dhaOTaaIDWVS8U/V8Nqjrl
- 6bGG2quo5YzJuXKjtKjZ4R6k762pHJ3tnzI/jnlc1sXz
-Message-ID: <2bc70a44-8b98-0da5-9408-15d6fa0c20fe@pengutronix.de>
-Date:   Fri, 12 Jun 2020 12:34:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        (envelope-from <maz@kernel.org>)
+        id 1jjh5S-002MhN-Bj; Fri, 12 Jun 2020 11:39:02 +0100
+Date:   Fri, 12 Jun 2020 11:39:00 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Russell King <linux@arm.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Sumit Garg <sumit.garg@linaro.org>, kernel-team@android.com
+Subject: Re: [PATCH 06/11] irqchip/gic-v3: Configure SGIs as standard
+ interrupts
+Message-ID: <20200612113900.09d53bd0@why>
+In-Reply-To: <jhjimgpxu2h.mognet@arm.com>
+References: <20200519161755.209565-1-maz@kernel.org>
+        <20200519161755.209565-7-maz@kernel.org>
+        <jhjimgpxu2h.mognet@arm.com>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200612103149.2onoflu5qgwaooli@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: valentin.schneider@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com, linux@arm.linux.org.uk, tglx@linutronix.de, jason@lakedaemon.net, sumit.garg@linaro.org, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/12/20 12:31 PM, Oleksij Rempel wrote:
-> On Fri, Jun 12, 2020 at 12:21:13PM +0200, Krzysztof Kozlowski wrote:
->> On Fri, Jun 12, 2020 at 11:56:04AM +0200, Wolfram Sang wrote:
->>> On Fri, Jun 12, 2020 at 11:29:41AM +0200, Krzysztof Kozlowski wrote:
->>>> On Fri, Jun 12, 2020 at 11:05:17AM +0200, Wolfram Sang wrote:
->>>>> On Wed, Jun 10, 2020 at 03:46:42PM +0200, Krzysztof Kozlowski wrote:
->>>>>> If interrupt comes early (could be triggered with CONFIG_DEBUG_SHIRQ),
->>>>>
->>>>> That code is disabled since 2011 (6d83f94db95c ("genirq: Disable the
->>>>> SHIRQ_DEBUG call in request_threaded_irq for now"))? So, you had this
->>>>> without fake injection, I assume?
->>>>
->>>> No, I observed it only after enabling DEBUG_SHIRQ (to a kernel with
->>>> some debugging options already).
->>>
->>> Interesting. Maybe probe was deferred and you got the extra irq when
->>> deregistering?
->>
->> Yes, good catch. The abort happens right after deferred probe exit.  It
->> could be then different reason than I thought - the interrupt is freed
->> through devm infrastructure quite late.  At this time, the clock might
->> be indeed disabled (error path of probe()).
+Hi Valentin,
 
-From my point of view, the clocks are disabled as Oleksij pointed out, due to
-RUNTIME_PM at the end of probe():
+On Thu, 21 May 2020 15:04:54 +0100
+Valentin Schneider <valentin.schneider@arm.com> wrote:
 
-> 	pm_runtime_mark_last_busy(&pdev->dev);
-> 	pm_runtime_put_autosuspend(&pdev->dev);
+> On 19/05/20 17:17, Marc Zyngier wrote:
+> > Change the way we deal with GICv3 SGIs by turning them into proper
+> > IRQs, and calling into the arch code to register the interrupt range
+> > instead of a callback.
+> >
+> > Signed-off-by: Marc Zyngier <maz@kernel.org>
+> > ---
+> >  drivers/irqchip/irq-gic-v3.c | 91 +++++++++++++++++++++---------------
+> >  1 file changed, 53 insertions(+), 38 deletions(-)
+> >
+> > diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+> > index 23d7c87da407..d57289057b75 100644
+> > --- a/drivers/irqchip/irq-gic-v3.c
+> > +++ b/drivers/irqchip/irq-gic-v3.c
+> > @@ -1163,10 +1142,36 @@ static void gic_raise_softirq(const struct cpumask *mask, unsigned int irq)
+> >
+> >  static void gic_smp_init(void)
+> >  {
+> > -	set_smp_cross_call(gic_raise_softirq);
+> > +	struct irq_fwspec sgi_fwspec = {
+> > +		.fwnode		= gic_data.fwnode,
+> > +	};
+> > +	int base_sgi;
+> > +
+> >       cpuhp_setup_state_nocalls(CPUHP_AP_IRQ_GIC_STARTING,
+> >                                 "irqchip/arm/gicv3:starting",
+> >                                 gic_starting_cpu, NULL);
+> > +
+> > +	if (is_of_node(gic_data.fwnode)) {
+> > +		/* DT */
+> > +		sgi_fwspec.param_count = 3;
+> > +		sgi_fwspec.param[0] = GIC_IRQ_TYPE_SGI;
+> > +		sgi_fwspec.param[1] = 0;
+> > +		sgi_fwspec.param[2] = IRQ_TYPE_EDGE_RISING;
+> > +	} else {
+> > +		/* ACPI */
+> > +		sgi_fwspec.param_count = 2;
+> > +		sgi_fwspec.param[0] = 0;
+> > +		sgi_fwspec.param[1] = IRQ_TYPE_EDGE_RISING;
+> > +	}
+> > +
+> > +	/* Register all 8 non-secure SGIs */
+> > +	base_sgi = __irq_domain_alloc_irqs(gic_data.domain, -1, 8,
+> > +					   NUMA_NO_NODE, &sgi_fwspec,
+> > +					   false, NULL);  
+> 
+> So IIUC using irq_reserve_ipi() would require us to have a separate IPI
+> domain, so instead here we can use a fwspec + the 'regular' GIC domain.
 
-Marc
+Indeed. Using an IPI domain wouldn't bring much. But the major point
+against the current state of the IPI domain is that it sucks a bit for
+our use case. We want interrupts to be contiguous in the Linux IRQ
+space, and the IPI allocator prevents this.
 
+But maybe I should just bite the bullet and hack that as well.
+
+> One thing I see is that by not going through irq_reserve_ipi(), we don't set
+> data->common->ipi_offset. I think this is all kzalloc'd, and we want an
+> offset of 0 so it all works out, but this feels somewhat fragile.
+
+So far, nothing is using this field on the limited piece of code we
+use. But I agree, not the nicest behaviour.
+
+> > +	if (WARN_ON(base_sgi <= 0))
+> > +		return;
+> > +
+> > +	set_smp_ipi_range(base_sgi, 8);
+> >  }
+> >
+> >  static int gic_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
+> > @@ -1289,6 +1296,13 @@ static int gic_irq_domain_map(struct irq_domain *d, unsigned int irq,
+> >
+> >       switch (__get_intid_range(hw)) {
+> >       case SGI_RANGE:
+> > +		irq_set_percpu_devid(irq);
+> > +		irq_domain_set_info(d, irq, hw, chip, d->host_data,
+> > +				    handle_percpu_devid_fasteoi_ipi,
+> > +				    NULL, NULL);
+> > +		irq_set_status_flags(irq, IRQ_NOAUTOEN);  
+> 
+> FWIW IRQ_NOAUTOEN is already set by irq_set_percpu_devid_flags(), so that's
+> not required. I know we do that for (E)PPIs, I think I already have a small
+> patch stashed somewhere regarding that.
+
+Already merged! ;-)
+
+Thanks,
+
+	M.
 -- 
-Pengutronix e.K.                 | Marc Kleine-Budde           |
-Embedded Linux                   | https://www.pengutronix.de  |
-Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
+Jazz is not dead. It just smells funny...
