@@ -2,154 +2,207 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2BC2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F1C9C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 670D820838
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:59:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="CfJ+XwhU"
+	by mail.kernel.org (Postfix) with ESMTP id 6246920888
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:08:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbgFLO7o (ORCPT
+        id S1726310AbgFLPIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 10:59:44 -0400
-Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:21226 "EHLO
-        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726085AbgFLO7n (ORCPT
+        Fri, 12 Jun 2020 11:08:54 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:58039 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbgFLPIx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 10:59:43 -0400
-Received: from pps.filterd (m0170391.ppops.net [127.0.0.1])
-        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05CEvLT5020933;
-        Fri, 12 Jun 2020 10:59:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=HdF98p29Q7CNEkv51WtLm3X1tX8y+8fRalE+qCj//kQ=;
- b=CfJ+XwhUERFBqXUOKY08IL0IHfabBYdeG5/v26NKkVvvzuF3Znw9meSg0a9YvewUMbN+
- JRWqSl84tV69NTLy19qeIzdpn6GHWrYctWX6ZiardiKDzCWAzFQo8X1q9xJ+GUgWXSnt
- jwifvb8kiZZ81va5IDykxJ5Q+C4OoviBFiwV2gdGbNE/Bfj7cklkQw4d5FDhmmxl5VJk
- NKxAYIeyqcTX458WP1AUZCdtaMxhQbG36smXhl7Sj0GVJzrsO0QOYusGkTKMFi5uhDWc
- d9IgDp5CNG3jDbvGPSa9qpUhqKSD2cnHFuRoJBFeXP44iMhSUq0mxyDvWAC/QMdSwoov Ew== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0a-00154904.pphosted.com with ESMTP id 31jjr6b5tr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 12 Jun 2020 10:59:42 -0400
-Received: from pps.filterd (m0134746.ppops.net [127.0.0.1])
-        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05CEsMK8186782;
-        Fri, 12 Jun 2020 10:59:42 -0400
-Received: from ausxippc106.us.dell.com (AUSXIPPC106.us.dell.com [143.166.85.156])
-        by mx0a-00154901.pphosted.com with ESMTP id 31kxw8a56j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jun 2020 10:59:42 -0400
-X-LoopCount0: from 10.166.132.127
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
-   d="scan'208";a="558293660"
-From:   <Mario.Limonciello@dell.com>
-To:     <pali@kernel.org>
-CC:     <rdunlap@infradead.org>, <y.linux@paritcher.com>,
-        <linux-kernel@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>, <mjg59@srcf.ucam.org>
-Subject: RE: [PATCH v2 3/3] platform/x86: dell-wmi: add new dmi keys to
- bios_to_linux_keycode
-Thread-Topic: [PATCH v2 3/3] platform/x86: dell-wmi: add new dmi keys to
- bios_to_linux_keycode
-Thread-Index: AQHWPelqfgxdvjwP/0a7+jtlxWF6SqjPsKgAgAAH0ACAAPg6kIABPt2A///ajtCAA5VdAP//sP+Q
-Date:   Fri, 12 Jun 2020 14:59:39 +0000
-Message-ID: <a8b5465e4c834f1c98c8499acb0cacb7@AUSX13MPC105.AMER.DELL.COM>
-References: <cover.1591584631.git.y.linux@paritcher.com>
- <cover.1591656154.git.y.linux@paritcher.com>
- <d585d2a0f01a6b9480352530b571dec2d1afd79f.1591656154.git.y.linux@paritcher.com>
- <8053252a-83ad-bcaa-2830-ccfbca1b4152@infradead.org>
- <20200608235508.wthtgilgmifwfgz2@pali>
- <ced5832cfe984c68b27a577cac0f02f1@AUSX13MPC105.AMER.DELL.COM>
- <20200610094449.xltvs2y6kp7driyh@pali>
- <a7b5dd31dd32461aad51e08d38777edf@AUSX13MPC105.AMER.DELL.COM>
- <20200612141410.7sp7brcmgcel3bfc@pali>
-In-Reply-To: <20200612141410.7sp7brcmgcel3bfc@pali>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2020-06-12T14:59:36.0531058Z;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=3521e052-dc24-4cb0-a85a-3375346127c0;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [143.166.24.40]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 12 Jun 2020 11:08:53 -0400
+Received: from uno.localdomain (93-34-118-233.ip49.fastwebnet.it [93.34.118.233])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id E67C8100012;
+        Fri, 12 Jun 2020 15:08:44 +0000 (UTC)
+Date:   Fri, 12 Jun 2020 17:12:09 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        hien.dang.eb@renesas.com, michael.klein@renesas.com,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
+        horms@verge.net.au, uli+renesas@fpond.eu,
+        VenkataRajesh.Kalakodima@in.bosch.com, airlied@linux.ie,
+        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        Harsha.ManjulaMallikarjun@in.bosch.com, ezequiel@collabora.com,
+        seanpaul@chromium.org, linux-renesas-soc@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        michael.dege@renesas.com, gotthard.voellmeke@renesas.com,
+        efriedrich@de.adit-jv.com, mrodin@de.adit-jv.com,
+        ChaitanyaKumar.Borah@in.bosch.com,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [PATCH v5 0/8] drm: rcar-du: Add Color Management Module (CMM)
+Message-ID: <20200612151209.xdaqimvpq7ysvu2q@uno.localdomain>
+References: <20191015104621.62514-1-jacopo+renesas@jmondi.org>
+ <20200527071555.GA23912@lxhi-065.adit-jv.com>
+ <20200605132900.on527xcggg6f6pil@uno.localdomain>
+ <20200605134124.GA28734@lxhi-065.adit-jv.com>
+ <20200605135315.xlph44pl7kvmt23a@uno.localdomain>
+ <20200607024158.GD7339@pendragon.ideasonboard.com>
+ <20200608094432.GA27063@lxhi-065.adit-jv.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-12_11:2020-06-12,2020-06-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
- mlxscore=0 mlxlogscore=999 adultscore=0 suspectscore=0 impostorscore=0
- priorityscore=1501 bulkscore=0 malwarescore=0 lowpriorityscore=0
- clxscore=1015 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006120112
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0 spamscore=0
- mlxscore=0 mlxlogscore=999 malwarescore=0 adultscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006120113
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200608094432.GA27063@lxhi-065.adit-jv.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiA+DQo+ID4gPg0KPiA+ID4gQW5kIHdoYXQgZG9lcyBtZWFuICJubyBmdW5jdGlvbiI/IEkgZG8g
-bm90IGtub3cgd2hhdCBzaG91bGQgSSBpbWFnaW5lDQo+IGlmDQo+ID4gPiBJIHJlY2VpdmUga2V5
-IHByZXNzIG1hcmtlZCBhcyAibm8gZnVuY3Rpb24iLg0KPiA+DQo+ID4gSXQgbWVhbnMgbm8gYWN0
-aW9uIGlzIGV4cGVjdGVkIHRvIG9jY3VyLCBzaG91bGQgYmVoYXZlIGxpa2UgYSBuby1vcC4gIEkN
-Cj4gdGhpbmsNCj4gPiBkaXNjYXJkaW5nIGl0IG1ha2VzIGZpbmUgc2Vuc2UuDQo+IA0KPiBUaGFu
-ayB5b3UhIFRoaXMgd2FzIG1pc3NpbmcgYml0IG9mIGluZm9ybWF0aW9uLg0KPiANCj4gSnVzdCBJ
-J20gY3VyaW91cywgd2h5IGZpcm13YXJlIHNlbmRzICJuby1vcCIgZXZlbnQgd2hpY2ggd2UgY291
-bGQgaWdub3JlPw0KPiA6RA0KPiANCg0KSSBkb24ndCBoYXZlIGRldGFpbHMgb24gdGhpcywgYnV0
-IEkgY2FuIGF0IGxlYXN0IGh5cG90aGVzaXplIGEgc2l0dWF0aW9uIHRoYXQNCnRoZXJlIHdhcyBh
-IG1hbnVmYWN0dXJpbmcgZXJyb3Igd2l0aCB0aGUgd3Jvbmcga2V5Ym9hcmQgYXBwbGllZC4gIExp
-a2UgdGhpbmsgaWYNCnRoZSBzeXN0ZW0gaGFzIGtleWJvYXJkIHdpdGhvdXQgYSBiYWNrbGlnaHQg
-YW5kIHRoZXJlIHdhcyBhIGtleWJvYXJkIHdpdGgNCmEgc2lsa3NjcmVlbmVkIGtleSBmb3IgbW9k
-aWZ5aW5nIGJhY2tsaWdodC4gIEluIHRoaXMgY2FzZSBmaXJtd2FyZSBldmVudHMNCnJlbGF0ZWQg
-dG8ga2V5Ym9hcmQgYmFja2xpZ2h0IHNob3VsZG4ndCBmbG93IHRocm91Z2ggc28gZmlybXdhcmUg
-Y291bGQgaW5zdGVhZA0Kc2VuZCB0aGlzIHR5cGUgb2YgZXZlbnQuDQoNCj4gSSBjYW4gaW1hZ2lu
-ZSB0aGF0IHRob3NlIGV2ZW50cyAvIHNjYW4gY29kZXMgbWF5IGNvbnRhaW4gc29tZQ0KPiBpbmZv
-cm1hdGlvbiB3aGljaCB3ZSBjYW4gdXNlLi4uDQoNCkkgbWVhbiBJIHN1cHBvc2UgeW91IGNhbiBj
-aG9vc2UgdG8gaWdub3JlIG15IGNvbW1lbnRzLCBidXQgSSdtIHRlbGxpbmcgeW91IHRoaXMNCmV2
-ZW50IGRvZXNuJ3QgY29udGFpbiBhbnl0aGluZyB1c2VmdWwuDQoNCj4gDQo+ID4gPg0KPiA+ID4g
-PiA+IEUuZy4gSSByZW1lbWJlciB0aGF0IHByZXNzaW5nIEZuK1Egb3IgRm4rVyBvbiBzb21lIERl
-bGwgTGF0aXR1ZGUNCj4gPiA+ID4gPiBnZW5lcmF0ZXMgY29kZSAyNTUsIHdoaWNoIGNvdWxkIHBy
-b3ZlIG15IHRoZXNpcyBhYm91dCAic3BlY2lhbA0KPiBjb2RlcyINCj4gPiA+ID4gPiAod2hpY2gg
-YXJlIHByb2JhYmx5IG5vdCBmb3VuZCBpbiBlLmcuIFdpbmRvd3Mgb3IgTGludXggbWFwcGluZw0K
-PiB0YWJsZXMpLg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ICB9Ow0KPiA+ID4gPiA+ID4gPg0K
-PiA+ID4gPiA+ID4gPiAgLyoNCj4gPiA+ID4gPiA+ID4gQEAgLTUwMywxMCArNTA0LDcgQEAgc3Rh
-dGljIHZvaWQgaGFuZGxlX2RtaV9lbnRyeShjb25zdCBzdHJ1Y3QNCj4gPiA+ID4gPiBkbWlfaGVh
-ZGVyICpkbSwgdm9pZCAqb3BhcXVlKQ0KPiA+ID4gPiA+ID4gPiAgCQkJCQkmdGFibGUtPmtleW1h
-cFtpXTsNCj4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gIAkJLyogVW5pbml0aWFsaXplZCBl
-bnRyaWVzIGFyZSAwIGFrYSBLRVlfUkVTRVJWRUQuICovDQo+ID4gPiA+ID4gPiA+IC0JCXUxNiBr
-ZXljb2RlID0gKGJpb3NfZW50cnktPmtleWNvZGUgPA0KPiA+ID4gPiA+ID4gPiAtCQkJICAgICAg
-IEFSUkFZX1NJWkUoYmlvc190b19saW51eF9rZXljb2RlKSkgPw0KPiA+ID4gPiA+ID4gPiAtCQkJ
-Ymlvc190b19saW51eF9rZXljb2RlW2Jpb3NfZW50cnktPmtleWNvZGVdIDoNCj4gPiA+ID4gPiA+
-ID4gLQkJCUtFWV9SRVNFUlZFRDsNCj4gPiA+ID4gPiA+ID4gKwkJdTE2IGtleWNvZGUgPSBiaW9z
-X3RvX2xpbnV4X2tleWNvZGVbYmlvc19lbnRyeS0NCj4gPmtleWNvZGVdOw0KPiA+ID4gPiA+ID4g
-Pg0KPiA+ID4gPiA+ID4gPiAgCQkvKg0KPiA+ID4gPiA+ID4gPiAgCQkgKiBMb2cgaWYgd2UgZmlu
-ZCBhbiBlbnRyeSBpbiB0aGUgRE1JIHRhYmxlIHRoYXQgd2UNCj4gZG9uJ3QNCj4gPiA+ID4gPiA+
-ID4NCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiBTb21ldGhpbmcgbGlrZToNCj4gPiA+ID4gPiA+
-DQo+ID4gPiA+ID4gPiAJCXUxNiBrZXljb2RlOw0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IAkJ
-a2V5Y29kZSA9IGJpb3NfZW50cnktPmtleWNvZGUgPT0gMHhmZmZmID8gS0VZX1VOS05PV04gOg0K
-PiA+ID4gPiA+ID4gCQkJKGJpb3NfZW50cnktPmtleWNvZGUgPA0KPiA+ID4gPiA+ID4gCQkJICAg
-ICAgIEFSUkFZX1NJWkUoYmlvc190b19saW51eF9rZXljb2RlKSkgPw0KPiA+ID4gPiA+ID4gCQkJ
-Ymlvc190b19saW51eF9rZXljb2RlW2Jpb3NfZW50cnktPmtleWNvZGVdIDoNCj4gPiA+ID4gPiA+
-IAkJCUtFWV9SRVNFUlZFRDsNCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4N
-Cj4gPiA+ID4gPiA+IEFsc28gcGxlYXNlIGZpeCB0aGlzOg0KPiA+ID4gPiA+ID4gKG5vIFRvLWhl
-YWRlciBvbiBpbnB1dCkgPD4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IEhpbnQ6IHNwZWNpZnlpbmcg
-Z2l0IHNlbmQtZW1haWwgd2l0aCAnLS10bycgYXJndW1lbnQgaW5zdGVhZCBvZiAnLS0NCj4gY2Mn
-DQo+ID4gPiA+ID4gc2hvdWxkIGhlbHAuDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiA+DQo+ID4gPiA+
-ID4gPiAtLQ0KPiA+ID4gPiA+ID4gflJhbmR5DQo+ID4gPiA+ID4gPg0K
+Hi Eugeniu
+
+On Mon, Jun 08, 2020 at 11:44:32AM +0200, Eugeniu Rosca wrote:
+> Hello,
+>
+> Many thanks for your comments and involvement.
+>
+> On Sun, Jun 07, 2020 at 05:41:58AM +0300, Laurent Pinchart wrote:
+> > On Fri, Jun 05, 2020 at 03:53:15PM +0200, Jacopo Mondi wrote:
+> > > On Fri, Jun 05, 2020 at 03:41:24PM +0200, Eugeniu Rosca wrote:
+> > > > On Fri, Jun 05, 2020 at 03:29:00PM +0200, Jacopo Mondi wrote:
+> > > >> On Wed, May 27, 2020 at 09:15:55AM +0200, Eugeniu Rosca wrote:
+> > > >>> Could you kindly share the cross compilation steps for your kmsxx fork?
+> > > >>
+> > > >> I usually build it on the target :)
+> > > >
+> > > > Interesting approach. With ARM getting more and more potent, why not? :)
+> > >
+> > > For 'small' utilities like kmsxx it's doable
+> > >
+> > > >>> Just out of curiosity, have you ever tried to pull the display's HDMI
+> > > >>> cable while reading from CM2_LUT_TBL?
+> > > >>
+> > > >> Ahem, not really :) Did I get you right, you mean disconnecting the
+> > > >> HDMI cable from the board ?
+> > > >
+> > > > Right.
+> > >
+> > > So, no, I have not tried. Do you see any intersting failure with the
+> > > mainline version ?
+> >
+> > Jacopo, would you be able to give this a try ?
+>
+> FWIW, I seem to hit pre-existing issues in vanilla rcar-du,
+> while unplugging HDMI cable during a cyclic suspend-resume:
+>
+> HW: H3 ES2.0 Salvator-X
+> SW: renesas-drivers-2020-06-02-v5.7
+> .config: renesas_defconfig +CONFIG_PM_DEBUG +CONFIG_PM_ADVANCED_DEBUG
+> Use-case:
+>
+>   --------8<---------
+> $ cat s2ram.sh
+> modprobe i2c-dev
+> echo 9 > /proc/sys/kernel/printk
+> i2cset -f -y 7 0x30 0x20 0x0F
+
+According to
+https://elinux.org/R-Car/Boards/Salvator-X#Suspend-to-RAM
+this is not needed anymore
+
+> echo 0 > /sys/module/suspend/parameters/pm_test_delay
+> echo core  > /sys/power/pm_test
+> echo deep > /sys/power/mem_sleep
+> echo 1 > /sys/power/pm_debug_messages
+> echo 0 > /sys/power/pm_print_times
+> echo mem > /sys/power/state
+>
+> $ while true; do sh s2ram.sh ; done
+> $ # unplug HDMI cable several times
+
+I tried unplugging an plugging the cable while the system was
+suspended and after resume but I was not able to reproduce anything.
+
+Could you provide more precise instructions on how to reproduce this ?
+I.e. when to disconnect the cable to trigger the below error.
+
+Thanks
+  j
+
+>
+> [   55.568051] PM: noirq resume of devices complete after 3.862 msecs
+> [   55.583253] PM: early resume of devices complete after 8.496 msecs
+> [   65.757023] [drm:drm_atomic_helper_wait_for_flip_done] *ERROR* [CRTC:74:crtc-1] flip_done timed out
+> [   75.996123] [drm:drm_atomic_helper_wait_for_flip_done] *ERROR* [CRTC:74:crtc-1] flip_done timed out
+> [   86.236112] [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CRTC:74:crtc-1] flip_done timed out
+> [   96.476111] [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CONNECTOR:80:HDMI-A-1] flip_done timed out
+> [  106.716109] [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [PLANE:45:plane-5] flip_done timed out
+> [  116.956111] [drm:drm_atomic_helper_wait_for_flip_done] *ERROR* [CRTC:74:crtc-1] flip_done timed out
+> [  127.196112] [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CRTC:74:crtc-1] flip_done timed out
+> [  137.436116] [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CONNECTOR:80:HDMI-A-1] flip_done timed out
+> [  147.676111] [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [PLANE:45:plane-5] flip_done timed out
+> [  157.916110] [drm:drm_atomic_helper_wait_for_flip_done] *ERROR* [CRTC:74:crtc-1] flip_done timed out
+>   --------8<---------
+>
+> This looks to be unrelated to the CMM lockup I initially reported.
+>
+> JYI, graphics pipelines in production R-Car3 targets are significantly
+> more complex (involving binding/unbinding serializer ICs at runtime
+> during non-trivial shutdown/suspend/resume sequences), as opposed
+> to the relatively straightforward VGA/HDMI outputs present on the
+> reference targets. So, my hope is that Renesas community can take
+> HDMI hot plugging seriously and make it a regular test-case during
+> rcar-du patch review, since this is a precondition for the R-Car3
+> platform and products to succeed as a whole.
+>
+> BTW, if you happen to know an affordable programmable HDMI switcher
+> which can do the hot-plugging job in an automated test environment,
+> please let me know.
+>
+> >
+> > > >>> At least with the out-of-tree CMM implementation [*], this sends the
+> > > >>> R-Car3 reference targets into an unrecoverable freeze, with no lockup
+> > > >>> reported by the kernel (i.e. looks like an serious HW issue).
+> > > >>>
+> > > >>>> CMM functionalities are retained between suspend/resume cycles (tested with
+> > > >>>> suspend-to-idle) without requiring a re-programming of the LUT tables.
+> > > >>>
+> > > >>> Hmm. Is this backed up by any statement in the HW User's manual?
+> > > >>> This comes in contrast with the original Renesas CMM implementation [**]
+> > > >>> which does make use of suspend (where the freeze actually happens).
+> > > >>>
+> > > >>> Can we infer, based on your statement, that we could also get rid of
+> > > >>> the suspend callback in [**]?
+> > > >>
+> > > >> As Geert (thanks) explained what I've tested with is suspend-to-idle,
+> > > >> which retains the state of the LUT tables (and I assume other
+> > > >> not-yet-implemented CMM features, like CLU). I recall the out-of-tree
+> > > >> driver has suspend/resume routines but I never really tested that.
+> > > >
+> > > > I see. JFYI, there is a flaw in the suspend handling in the out-of-tree
+> > > > CMM patch [*], which renders the SoC unresponsive on HDMI hotplug. The
+> > > > fix is currently under review. Hopefully it will make its way to [*]
+> > > > in the nearest future. Just to keep in mind for the moment when CMM
+> > > > s2ram will become a mainline feature.
+> > >
+> > > Thanks, let's keep this in mind. Next week I'll run a few tests again
+> > > with s2ram and will get back to you.
+> >
+> > Note that the CMM driver is controlled by the DU driver. As the DU
+> > driver will reenable the display during resume, it will call
+> > rcar_du_cmm_setup() at resume time, which will reprogram the CMM. There
+> > should thus be no need for manual suspend/resume handling in the CMM as
+> > far as I can tell, but we need to ensure that the CMM is suspended
+> > before and resumed after the DU. I believe this could be implemented
+> > using device links.
+>
+> Does this apply to vanilla rcar-du only (where CMM support differs
+> from [*]) or would also be relevant for rcar.9.6 kernel?
+>
+> >
+> > > >>> [*] https://github.com/renesas-rcar/du_cmm
+> > > >>> [**] https://github.com/renesas-rcar/du_cmm/blob/c393ed49834bdbc/meta-rcar-gen3/recipes-kernel/linux/linux-renesas/0001-drm-rcar-du-Add-DU-CMM-support.patch#L1912
+>
+> --
+> Best regards,
+> Eugeniu Rosca
