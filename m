@@ -2,120 +2,80 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA575C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 20:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 713EBC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 20:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF008206C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 20:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 304C120723
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 20:35:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nrHlq+bw"
+	dkim=pass (2048-bit key) header.d=hb9fxq.ch header.i=@hb9fxq.ch header.b="m6WTNBfx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbgFLUea (ORCPT
+        id S1726363AbgFLUfH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 16:34:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55760 "EHLO
+        Fri, 12 Jun 2020 16:35:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbgFLUe3 (ORCPT
+        with ESMTP id S1726290AbgFLUfG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 16:34:29 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95747C03E96F;
-        Fri, 12 Jun 2020 13:34:29 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id h3so9960486ilh.13;
-        Fri, 12 Jun 2020 13:34:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=i8mTmYznmJPhravJo3PSaU34NH8z9IvbBcuHBmZXOGo=;
-        b=nrHlq+bwoQ/ZjAWfHatx49FQEGaqg7lazcinxpFcX3WjpB54X107qOzpWp/rxY4Msn
-         B3/d11nyVrfydX5/qlIuCTm5EBbd5b8Wj6ZtvEMabQB+geJEwubPZ+JW70wPN2i1DSsZ
-         KDuQ+ofl9ntbeup8C35pmhKvk65+Vpie0I5p+XD3W7AcX8NecFbvxPvzz/rimQIZ0Dz5
-         8HcrhVTWZTZhw9Z+KTlUVfsjFdSfAD1VIgFkQ3vgPKX55PeokHBE2FBbMgzZUJpuUJdt
-         DqaN1g8oXiKYyJ5yYkDp+TyUIv9AmXzBNOWDqZjWwVjt/eZE5nfkZSI/6mR7qnqSZEas
-         NLyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=i8mTmYznmJPhravJo3PSaU34NH8z9IvbBcuHBmZXOGo=;
-        b=qiFBATadYI52MWXSkAJJNzcPRrgMi5im9YvZSoBvf9kT8nqgDr+IRtb2Zka7D/Q2W0
-         qcHj1pChggeg4bA1bIzMB53ZBo5ZBZkCGdk6qs69Koj1SOwZKKyddYYXUuaQtZQkuUeb
-         iuEUsG2axUV3/2qns+abfiO5niDxDPEDTQlRY2JfqGTjTyHSnFRs8Do+a5A2Lh1jt92s
-         dftUHOvK74jsidj9Mr9xanEIPwKUkwf07G8xNKfGGc05THbgyFLrkZHZ1Iavibu7TMZk
-         84x28tw06bKHCNXAG6C4XRPakYPqp9BmQyblTxZDM+DndG7M4zTKffhZs7WoKUKGn50i
-         M+tg==
-X-Gm-Message-State: AOAM531U7exE0h1xybZ+t7DZz2OSWbB7Fh+NF4Hjlzv9vBCIDQQfcN4u
-        WAqRdxKhgoXgLA6PidSWr3K550acimYpLOlMd9CwJ7Kl
-X-Google-Smtp-Source: ABdhPJyu94HXBYyAjaK/MHC2Kx7C+sW3KiadWnWD74+pdT90gNCtnPjG2LNHcNGNwqWZkLiQsluBjg0xAuvxLvPGFtY=
-X-Received: by 2002:a92:c60b:: with SMTP id p11mr15397911ilm.137.1591994067592;
- Fri, 12 Jun 2020 13:34:27 -0700 (PDT)
+        Fri, 12 Jun 2020 16:35:06 -0400
+Received: from sw.superlogical.ch (sw.superlogical.ch [IPv6:2a03:4000:9:189::4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5BBDC03E96F
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 13:35:06 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 66A2FC22FD;
+        Fri, 12 Jun 2020 22:34:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hb9fxq.ch; s=default;
+        t=1591994095;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=wROdf8HBRYGjci+FcVWPhwOc9p6yIiBON7n20xZn4+Y=;
+        b=m6WTNBfxbZa77BWcHve2lgxpX6gH/O36ljv05GMeame+CGhnmyQ7qNjEn6I0zt5maQJxI9
+        Bf+FtO0GTf7I+WknbOS8G65oAl4zfWZahZU61J4RQGXR7b5Yyj1N7ZBOvVGslYzl6ZRT3b
+        3MvrS7J0wZ808pcBzhKMH+VD+HINYbOqslPtLKt4neshNH8ppZ3xesVrza1ogwYXL6TT8d
+        dQGv09gVoZ3zLbkr7JiWNME5GikfbWxH1fbJuTbcwRKedCrfDhcDOjXEEzxkGb3cqT2V2H
+        1ZTgWjU1PyWW/X/TA5F5macxWFiWq6az8A51h1PiVOYDxg9mWBtut5wJ49S24Q==
+From:   Frank Werner-Krippendorf <mail@hb9fxq.ch>
+To:     David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Frank Werner-Krippendorf <mail@hb9fxq.ch>
+Subject: [PATCH] dh key: Missing a blank line after declarations
+Date:   Fri, 12 Jun 2020 22:34:58 +0200
+Message-Id: <20200612203458.13517-1-mail@hb9fxq.ch>
 MIME-Version: 1.0
-References: <20200612092603.GB3183@techsingularity.net> <CAOQ4uxikbJ19npQFWzGm6xnqXm0W8pV3NOWE0ZxS9p_G2A39Aw@mail.gmail.com>
- <20200612131854.GD3183@techsingularity.net> <CAOQ4uxghy5zOT6i=shZfFHsXOgPrd7-4iPkJBDcsHU6bUSFUFg@mail.gmail.com>
-In-Reply-To: <CAOQ4uxghy5zOT6i=shZfFHsXOgPrd7-4iPkJBDcsHU6bUSFUFg@mail.gmail.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Fri, 12 Jun 2020 23:34:16 +0300
-Message-ID: <CAOQ4uxhm+afWpnb4RFw8LkZ+ZJtnFxqR5HB8Uyj-c44CU9SSJg@mail.gmail.com>
-Subject: Re: [PATCH] fs: Do not check if there is a fsnotify watcher on pseudo inodes
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Jan Kara <jack@suse.cz>, Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > So maybe it would be better to list all users of alloc_file_pseudo()
-> > > and say that they all should be opted out of fsnotify, without mentioning
-> > > "internal mount"?
-> > >
-> >
-> > The users are DMA buffers, CXL, aio, anon inodes, hugetlbfs, anonymous
-> > pipes, shmem and sockets although not all of them necessary end up using
-> > a VFS operation that triggers fsnotify.  Either way, I don't think it
-> > makes sense (or even possible) to watch any of those with fanotify so
-> > setting the flag seems reasonable.
-> >
->
-> I also think this seems reasonable, but the more accurate reason IMO
-> is found in the comment for d_alloc_pseudo():
-> "allocate a dentry (for lookup-less filesystems)..."
->
-> > I updated the changelog and maybe this is clearer.
->
-> I still find the use of "internal mount" terminology too vague.
-> "lookup-less filesystems" would have been more accurate,
+This patch fixes a "WARNING: Missing a blank line after declarations" issue found by checkpatch.pl
 
-Only it is not really accurate for shmfs anf hugetlbfs, which are
-not lookup-less, they just hand out un-lookable inodes.
+Signed-off-by: Frank Werner-Krippendorf <mail@hb9fxq.ch>
+---
+ security/keys/dh.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> because as you correctly point out, the user API to set a watch
-> requires that the marked object is looked up in the filesystem.
->
-> There are also some kernel internal users that set watches
-> like audit and nfsd, but I think they are also only interested in
-> inodes that have a path at the time that the mark is setup.
->
+diff --git a/security/keys/dh.c b/security/keys/dh.c
+index c4c629bb1c03..5515f51e62db 100644
+--- a/security/keys/dh.c
++++ b/security/keys/dh.c
+@@ -161,6 +161,7 @@ static int kdf_ctr(struct kdf_sdesc *sdesc, const u8 *src, unsigned int slen,
+ 		if (zlen && h) {
+ 			u8 tmpbuffer[32];
+ 			size_t chunk = min_t(size_t, zlen, sizeof(tmpbuffer));
++
+ 			memset(tmpbuffer, 0, chunk);
+ 
+ 			do {
+-- 
+2.20.1
 
-FWIW I verified that watches can be set on anonymous pipes
-via /proc/XX/fd, so if we are going to apply this patch, I think it
-should be accompanied with a complimentary patch that forbids
-setting up a mark on these sort of inodes. If someone out there
-is doing this, at least they would get a loud message that something
-has changed instead of silently dropping fsnotify events.
-
-So now the question is how do we identify/classify "these sort of
-inodes"? If they are no common well defining characteristics, we
-may need to blacklist pipes sockets and anon inodes explicitly
-with S_NONOTIFY.
-
-Thanks,
-Amir.
