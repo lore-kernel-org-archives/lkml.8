@@ -2,94 +2,68 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0279C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5978C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:25:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEB63206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:24:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JWOkDkyk"
+	by mail.kernel.org (Postfix) with ESMTP id 8DC1920801
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:25:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591989930;
+	bh=9q/une9GhfDWGBwqN44FN6ZXiUpeqgY8P7Aw4ywlCLk=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=dPIW9lwYcYvqJWVL/DTs7R+4YQDMU+sW5C/ihS0k1H08Xg5D54R8ZRGgD95zbLqfR
+	 uLk+E6hculLuCis3CCNMuasG3CsyL6FXR/DGGfbIY+Ob9eYBJYHNR2fuzDWihvE65A
+	 a5RB2EPVeoUf0QN4msL4oe4x0us+deQZftAO3fkQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbgFLTYd (ORCPT
+        id S1726414AbgFLTZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 15:24:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44980 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgFLTYc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 15:24:32 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11CE8C03E96F;
-        Fri, 12 Jun 2020 12:24:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=XNIkzHywKoH/b5FoSCgmMlwYaQtQXQo8Xsv8G4L19+I=; b=JWOkDkykP2kWcImMSx7orhKPGu
-        HQqxsoObXbcgFBrMCclC291CBzUDZx+2r9YIPj5QmzHGlljusdNWhWkt6AC8D25b5ACpf9qxNGPMF
-        f63BTFa3uWqJy4FaDGSz4Xh7rhJ4r9uMrqhzkGE4orGEFDDXzGymYhPSnJtz5/lqSNqF3bEFleH8F
-        iZIIcvEQlPD6tS8dtKPW88CcpSZ5YBV3xOYh88RSIxEzL+FbipCq/pC+XntBHNCTHzsTXGM9zEmWU
-        EZgqeVnfWg6mVgRLnanPIeMXv4T1rolzFIX4uMCeBAwTlkYXQvqQTjLYt+DHwJnFjLV3cRYpXlcq2
-        w2uGuFGA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jjpHu-0007JA-Bk; Fri, 12 Jun 2020 19:24:26 +0000
-Date:   Fri, 12 Jun 2020 12:24:26 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>, Dave Chinner <david@fromorbit.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org
-Subject: Re: [PATCH 1/2] docs: mm/gup: pin_user_pages.rst: add a "case 5"
-Message-ID: <20200612192426.GK8681@bombadil.infradead.org>
-References: <20200529234309.484480-1-jhubbard@nvidia.com>
- <20200529234309.484480-2-jhubbard@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200529234309.484480-2-jhubbard@nvidia.com>
+        Fri, 12 Jun 2020 15:25:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36742 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726393AbgFLTZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 15:25:28 -0400
+Subject: Re: [GIT PULL] xen: branch for v5.8-rc1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591989927;
+        bh=9q/une9GhfDWGBwqN44FN6ZXiUpeqgY8P7Aw4ywlCLk=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=OT/zUEBtmlewIZxiIRqXsIJKlJcbjk1ofiB89Q0qTMR/T9oyWu5Ia200ifvU+E3yb
+         mRvRVeW4IZV0jqIYlYWx+fwMpj/tWgUCYVNyJDm+Vji5nyWRCobywtenz7SFhso86a
+         R3OSF35VvmWMcuud3GNK2Nxt9qm8o0w+0uF+dSoA=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200612053747.13750-1-jgross@suse.com>
+References: <20200612053747.13750-1-jgross@suse.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200612053747.13750-1-jgross@suse.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git
+ for-linus-5.8b-rc1-tag
+X-PR-Tracked-Commit-Id: a952f64d14e5f8461f04cd9d729037db9099ddb0
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: d2d5439df22f3c2a07c5db582d4ef1b2b587ca27
+Message-Id: <159198992784.4050.12743890623621670472.pr-tracker-bot@kernel.org>
+Date:   Fri, 12 Jun 2020 19:25:27 +0000
+To:     Juergen Gross <jgross@suse.com>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        xen-devel@lists.xenproject.org, boris.ostrovsky@oracle.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 04:43:08PM -0700, John Hubbard wrote:
-> +CASE 5: Pinning in order to write to the data within the page
-> +-------------------------------------------------------------
-> +Even though neither DMA nor Direct IO is involved, just a simple case of "pin,
-> +access page's data, unpin" can cause a problem. Case 5 may be considered a
-> +superset of Case 1, plus Case 2, plus anything that invokes that pattern. In
-> +other words, if the code is neither Case 1 nor Case 2, it may still require
-> +FOLL_PIN, for patterns like this:
-> +
-> +Correct (uses FOLL_PIN calls):
-> +    pin_user_pages()
-> +    access the data within the pages
-> +    set_page_dirty_lock()
-> +    unpin_user_pages()
-> +
-> +INCORRECT (uses FOLL_GET calls):
-> +    get_user_pages()
-> +    access the data within the pages
-> +    set_page_dirty_lock()
-> +    put_page()
+The pull request you sent on Fri, 12 Jun 2020 07:37:47 +0200:
 
-Why does this case need to pin?  Why can't it just do ...
+> git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git for-linus-5.8b-rc1-tag
 
-	get_user_pages()
-	lock_page(page);
-	... modify the data ...
-	set_page_dirty(page);
-	unlock_page(page);
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/d2d5439df22f3c2a07c5db582d4ef1b2b587ca27
 
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
