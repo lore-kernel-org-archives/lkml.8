@@ -2,150 +2,121 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E24AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD432C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F73620792
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:43:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BCAC207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:44:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591958664;
+	bh=FEP9zTLe6bNbaJqiTNOqRFX205TcQ8VE0M8ufc+j/74=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1gBVaZSOmTYPVNquso7DgryUrr2T274qjsUeekV7uTOSo3uKLe+AjypzK81GHZayw
+	 zjcWMc0Bxnh/CV50Fuhz57+WFo49ZVd1S2tyk9oqUXecynPWwsRnVDIN08Wn74f3cF
+	 J9UnJUVPCq5cZmSs9O9pRf7thFn/oap7SNfp5BXo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbgFLKnu (ORCPT
+        id S1726376AbgFLKoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 06:43:50 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:39656 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725911AbgFLKns (ORCPT
+        Fri, 12 Jun 2020 06:44:22 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:33119 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726304AbgFLKoU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 06:43:48 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R981e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0U.M.ky._1591958621;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U.M.ky._1591958621)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 12 Jun 2020 18:43:41 +0800
-Subject: Re: [PATCH v11 00/16] per memcg lru lock
-To:     Hugh Dickins <hughd@google.com>
-Cc:     akpm@linux-foundation.org, mgorman@techsingularity.net,
-        tj@kernel.org, khlebnikov@yandex-team.ru,
-        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
-        willy@infradead.org, hannes@cmpxchg.org, lkp@intel.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org, shakeelb@google.com,
-        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com
-References: <1590663658-184131-1-git-send-email-alex.shi@linux.alibaba.com>
- <alpine.LSU.2.11.2006072100390.2001@eggly.anvils>
- <31943f08-a8e8-be38-24fb-ab9d25fd96ff@linux.alibaba.com>
- <alpine.LSU.2.11.2006091904530.2779@eggly.anvils>
- <730c595b-f4bf-b16a-562e-de25b9b7eb97@linux.alibaba.com>
- <alpine.LSU.2.11.2006111409280.10801@eggly.anvils>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <b6b5b74e-d960-8d2c-3f2f-f4a38eb633c3@linux.alibaba.com>
-Date:   Fri, 12 Jun 2020 18:43:39 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Fri, 12 Jun 2020 06:44:20 -0400
+Received: by mail-ed1-f68.google.com with SMTP id o26so6086540edq.0;
+        Fri, 12 Jun 2020 03:44:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=SOdvZcfgq0T/N/xg8rXOaGi/fRghIZcBnPCYUJJXVXo=;
+        b=lN9tGzxr3YmtuWp24Dr9YCyTSryAX4UAb3RgpgyX2dCi6guOdbLwrw78Si0qYrq3YY
+         hW2voO/mCFgE8ObifW2GJQ830jxnHScp3E8qsTNuJf7cbrOMU6smr6hkLkhxfM0wpnBg
+         cQuTA3aRhEIw0MkUjiQ4T3TU2VowdzXaXmOwFoxWtIfokwh30MtSX8PEm5f5kTOhDxb5
+         nudUwRM/07xiunG0oyBP9aUaJP6hPqldUjNSF+knItexBfA1hE8xGaSsIo+NMRzSiCNW
+         XqpsqoKOG/JJJBr/5EwMncc1qxDgXWUv0eyZWL/rpoDjFR8VGY5TQ0N4FMrwmithSxB5
+         8d9w==
+X-Gm-Message-State: AOAM533YPrIMJCRBC0PpeMg4rF19rQpx1Y5IYlfVRlV/M2K66vFzLQWF
+        6+Tdd3s5XJw0q8xH+JKDjCo=
+X-Google-Smtp-Source: ABdhPJyw3kA/fGMFrQUC6hcemwafnWF3BI1uel/lQVb1PPosuNiApnhc+TX5NqRonlyy8zcCJJHFfQ==
+X-Received: by 2002:a05:6402:1285:: with SMTP id w5mr11232244edv.73.1591958657053;
+        Fri, 12 Jun 2020 03:44:17 -0700 (PDT)
+Received: from pi3 ([194.230.155.184])
+        by smtp.googlemail.com with ESMTPSA id oq28sm3429888ejb.12.2020.06.12.03.44.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2020 03:44:16 -0700 (PDT)
+Date:   Fri, 12 Jun 2020 12:44:13 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Marc Kleine-Budde <mkl@pengutronix.de>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Wolfram Sang <wsa@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org
+Subject: Re: [PATCH] i2c: imx: Fix external abort on early interrupt
+Message-ID: <20200612104413.GC26056@pi3>
+References: <1591796802-23504-1-git-send-email-krzk@kernel.org>
+ <20200612090517.GA3030@ninjato>
+ <20200612092941.GA25990@pi3>
+ <20200612095604.GA17763@ninjato>
+ <20200612102113.GA26056@pi3>
+ <20200612103149.2onoflu5qgwaooli@pengutronix.de>
+ <2bc70a44-8b98-0da5-9408-15d6fa0c20fe@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <alpine.LSU.2.11.2006111409280.10801@eggly.anvils>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <2bc70a44-8b98-0da5-9408-15d6fa0c20fe@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-在 2020/6/12 上午6:09, Hugh Dickins 写道:
->> Anyway, I will send out new patchset
->> with the first issue fixed. and then let's discussion base on it.
-> Sigh. I wish you had waited for me to send you fixes, or waited for an
-> identifiable tag like 5.8-rc1.  Andrew has been very hard at work with
-> mm patches to Linus, but it looks like there are still "data_race" mods
-> to come before -rc1, which may stop your v12 from applying cleanly.
-
-Sorry, I didn't aware you would had another sending... My fault.
-And yes, offical 5.8-rc is better base.
-
+On Fri, Jun 12, 2020 at 12:34:47PM +0200, Marc Kleine-Budde wrote:
+> On 6/12/20 12:31 PM, Oleksij Rempel wrote:
+> > On Fri, Jun 12, 2020 at 12:21:13PM +0200, Krzysztof Kozlowski wrote:
+> >> On Fri, Jun 12, 2020 at 11:56:04AM +0200, Wolfram Sang wrote:
+> >>> On Fri, Jun 12, 2020 at 11:29:41AM +0200, Krzysztof Kozlowski wrote:
+> >>>> On Fri, Jun 12, 2020 at 11:05:17AM +0200, Wolfram Sang wrote:
+> >>>>> On Wed, Jun 10, 2020 at 03:46:42PM +0200, Krzysztof Kozlowski wrote:
+> >>>>>> If interrupt comes early (could be triggered with CONFIG_DEBUG_SHIRQ),
+> >>>>>
+> >>>>> That code is disabled since 2011 (6d83f94db95c ("genirq: Disable the
+> >>>>> SHIRQ_DEBUG call in request_threaded_irq for now"))? So, you had this
+> >>>>> without fake injection, I assume?
+> >>>>
+> >>>> No, I observed it only after enabling DEBUG_SHIRQ (to a kernel with
+> >>>> some debugging options already).
+> >>>
+> >>> Interesting. Maybe probe was deferred and you got the extra irq when
+> >>> deregistering?
+> >>
+> >> Yes, good catch. The abort happens right after deferred probe exit.  It
+> >> could be then different reason than I thought - the interrupt is freed
+> >> through devm infrastructure quite late.  At this time, the clock might
+> >> be indeed disabled (error path of probe()).
 > 
->>> In the second, I was using rcu_read_lock() instead of trylock_page()
->>> (like in my own patchset), but could not quite be sure of the case when
->>> PageSwapCache gets set at the wrong moment. Gave up for the night, and
->>> in the morning abandoned that, instead just shifting the call to
->>> __isolate_lru_page_prepare() after the get_page_unless_zero(),
->>> where that trylock_page() becomes safe (no danger of stomping on page
->>> flags while page is being freed or newly allocated to another owner).
->> Sorry, I don't know the problem of trylock_page here? Could you like to
->> describe it as a race?
-> Races, yes. Look, I'll send you now patches 1 and 2: at least with those
-> in it should be safe for you and others to test compaction (if 5.8-rc1
-> turns out well: I think so much has gone in that it might have unrelated
-> problems, and often the -rc2 is much more stable).
+> From my point of view, the clocks are disabled as Oleksij pointed out, due to
+> RUNTIME_PM at the end of probe():
 > 
-> But no point in sending 3 and 4 at this point, since ...
-> 
+> > 	pm_runtime_mark_last_busy(&pdev->dev);
+> > 	pm_runtime_put_autosuspend(&pdev->dev);
 
-I guess some concern may come from next mm bug?
+These lines come from regular successful probe path, not deferred error path.
 
->>> I thought that a very safe change, but best to do some test runs with
->>> it in before finalizing. And was then unpleasantly surprised to hit a
->>> VM_BUG_ON_PAGE(lruvec_memcg(lruvec) != page->mem_cgroup) from
->>> lock_page_lruvec_irqsave < relock_page_lruvec < pagevec_lru_move_fn <
->>> pagevec_move_tail < lru_add_drain_cpu after 6 hours on one machine.
->>> Then similar but < rotate_reclaimable_page after 8 hours on another.
->>>
->>> Only seen once before: that's what drove me to add patch 4 (with 3 to
->>> revert the locking before it): somehow, when adding the lruvec locking
->>> there, I just took it for granted that your patchset would have the
->>> appropriate locking (or TestClearPageLRU magic) at the other end.
->>>
->>> But apparently not. And I'm beginning to think that TestClearPageLRU
->>> was just to distract the audience from the lack of proper locking.
->>>
->>> I have certainly not concluded that yet, but I'm having to think about
->>> an area of the code which I'd imagined you had under control (and I'm
->>> puzzled why my testing has found it so very hard to hit). If we're
->>> lucky, I'll find that pagevec_move_tail is a special case, and
->>> nothing much else needs changing; but I doubt that will be so.
-> ... shows that your locking primitives are not yet good enough
-> to handle the case when tasks are moved between memcgs with
-> move_charge_at_immigrate set.  "bin/cg m" in the tests I sent,
-> but today I'm changing its "seconds=60" to "seconds=1" in hope
-> of speeding up the reproduction.
+The clock is indeed disabled but not because of runtime PM, but:
+clk_disable:
+	clk_disable_unprepare(i2c_imx->clk);
 
-Yes, I am using your great cases with 'm' parameter to do migration testing,
-but unlockly, no error found in my box.
 
-> 
-> Ah, good, two machines crashed in 1.5 hours: but I don't need to
-> examine the crashes, now that it's obvious there's no protection -
-> please, think about rotate_reclaimable_page() (there will be more
-> cases, but in practice that seems easiest to hit, so focus on that)
-> and how it is not protected from mem_cgroup_move_account().
-> > I'm thinking too. Maybe judicious use of lock_page_memcg() can fix it
-> (8 years ago it was unsuitable, but a lot has changed for the better
-> since then); otherwise it's back to what I've been doing all along,
-> taking the likely lruvec lock, and checking under that lock whether
-> we have the right lock (as your lruvec_memcg_debug() does), retrying
-> if not. Which may be more efficient than involving lock_page_memcg().
-> 
-> But I guess still worth sending my first two patches, since most of us
-> use move_charge_at_immigrate only for... testing move_charge_at_immigrate.
-> Whereas compaction bugs can hit any of us at any time.
-> 
->>> There's one other unexplained and unfixed bug I've seen several times
->>> while exercising mem_cgroup_move_account(): refcount_warn_saturate()
->>> from where __mem_cgroup_clear_mc() calls mem_cgroup_id_get_many().
->>> I'll be glad if that goes away when the lruvec locking is fixed,
->>> but don't understand the connection. And it's quite possible that
->>> this refcounting bug has nothing to do with your changes: I have
->>> not succeeded in reproducing it on 5.7 nor on 5.7-rc7-mm1,
->>> but I didn't really try long enough to be sure.
-> I got one of those quite quickly too after setting "cg m"'s seconds=1.
-> I think the best thing I can do while thinking and researching, is
-> give 5.7-rc7-mm1 a run on that machine with the speeded up moving,
-> to see whether or not that refcount bug reproduces.
-> 
+Best regards,
+Krzysztof
 
-Millions thanks for help on this patchset!
-
-Alex
