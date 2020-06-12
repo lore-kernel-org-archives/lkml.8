@@ -2,101 +2,96 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B65C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 05:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE15C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 05:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2D02207ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 05:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 390BE207ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 05:48:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591940914;
+	bh=RpfK8tUvYNBslNLLMgwP6HmyOmyHU1xGqpf9TjHA70M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Nvlw7HWpANtiJiUMwrxGnuIVaOcqLecnyS3ExEjYDygqcBbwztxTcrIyMIWiZt+Ty
+	 vVsMQAwWyDCFjaVeaO87Mv6RNX7yhKIV6j2XM1PAncSPe3YNW5iOitTSE4LKxeiEL2
+	 ADDuqRkatTl1G6icMrGQ1zXuE7gqvV/PB2SvqSyI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726387AbgFLFhu (ORCPT
+        id S1726447AbgFLFq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 01:37:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34928 "EHLO mx2.suse.de"
+        Fri, 12 Jun 2020 01:46:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725763AbgFLFhu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 01:37:50 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 6BA98AF19;
-        Fri, 12 Jun 2020 05:37:52 +0000 (UTC)
-From:   Juergen Gross <jgross@suse.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
-        boris.ostrovsky@oracle.com
-Subject: [GIT PULL] xen: branch for v5.8-rc1
-Date:   Fri, 12 Jun 2020 07:37:47 +0200
-Message-Id: <20200612053747.13750-1-jgross@suse.com>
-X-Mailer: git-send-email 2.26.2
+        id S1726361AbgFLFq5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 01:46:57 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95627207ED;
+        Fri, 12 Jun 2020 05:46:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591940817;
+        bh=RpfK8tUvYNBslNLLMgwP6HmyOmyHU1xGqpf9TjHA70M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DXFjdxFsy7j+xP8HOLEuk7lb+angvR9lEZzSxC16aFbIt7rUXi+sD8gtFVP15HLVq
+         rzoNOWScRZPPcd0YswqMMeEQfJm01Ze1rTrhF8EvyGe/21bBJ371PCCXbwoTwZSDmC
+         k0i44cmbbWGsNeJcJNz/1I1ne1iKgEIgjDCjInLA=
+Date:   Fri, 12 Jun 2020 07:46:53 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux- stable <stable@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        lkft-triage@lists.linaro.org
+Subject: Re: [PATCH 4.19 24/25] uprobes: ensure that uprobe->offset and
+ ->ref_ctr_offset are properly aligned
+Message-ID: <20200612054653.GA2596727@kroah.com>
+References: <20200609174048.576094775@linuxfoundation.org>
+ <20200609174051.488794266@linuxfoundation.org>
+ <CA+G9fYukN5V1z3g6Qwe9K5xnnXEuFafWdqGfDA1Wj2iVstoxfw@mail.gmail.com>
+ <20200609190321.GA1046130@kroah.com>
+ <20200610145305.GA3254@redhat.com>
+ <20200610145855.GA2102398@kroah.com>
+ <20200611165116.GE12500@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200611165116.GE12500@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Thu, Jun 11, 2020 at 06:51:17PM +0200, Oleg Nesterov wrote:
+> On 06/10, Greg Kroah-Hartman wrote:
+> >
+> > > Greg, please let me know if you want me to send the patches for 4.9/4.14/4.19.
+> >
+> > Please do.  I tried to backport it to those trees, and it seems to
+> > build/boot/run, but I would like verification I didn't mess anything up
+> > :)
+> >
+> > Your 4.4 version below matched my version, so I think I'm ok...
+> 
+> Greg, I was going to send the patches, but after I've cloned
+> git/stable/linux-stable-rc.git I see that you have already updated these
+> 
+> 	origin/queue/4.14
+> 	origin/queue/4.19
+> 	origin/queue/4.4
+> 	origin/queue/4.9
+> 
+> branches, and the new patches look good to me.
+> 
+> So I think I can relax? ;)
 
-Please git pull the following tag:
+Yes, please relax, all is fine, thanks for verifying.
 
- git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git for-linus-5.8b-rc1-tag
-
-xen: branch for v5.8-rc1
-
-It contains the following patches:
-
-- several smaller cleanups
-
-- a fix for a Xen guest regression with CPU offlining
-
-- a small fix in the xen pvcalls backend driver
-
-- an update of MAINTAINERS
-
-
-Thanks.
-
-Juergen
-
- MAINTAINERS                                 |  4 +--
- drivers/pci/xen-pcifront.c                  | 27 ++++++--------
- drivers/xen/Kconfig                         |  4 +++
- drivers/xen/cpu_hotplug.c                   |  8 ++---
- drivers/xen/platform-pci.c                  |  2 +-
- drivers/xen/pvcalls-back.c                  |  5 +--
- drivers/xen/xen-pciback/conf_space.c        | 16 ++++-----
- drivers/xen/xen-pciback/conf_space_header.c | 44 ++++++++---------------
- drivers/xen/xen-pciback/conf_space_quirks.c |  6 ++--
- drivers/xen/xen-pciback/pci_stub.c          | 38 +++++++++-----------
- drivers/xen/xen-pciback/pciback.h           |  2 --
- drivers/xen/xen-pciback/pciback_ops.c       | 55 +++++++++--------------------
- drivers/xen/xen-pciback/vpci.c              | 10 +++---
- drivers/xen/xenbus/xenbus_probe.c           | 11 +++---
- 14 files changed, 90 insertions(+), 142 deletions(-)
-
-Bjorn Helgaas (2):
-      xen-pciback: Use dev_printk() when possible
-      xenbus: Use dev_printk() when possible
-
-Boris Ostrovsky (2):
-      xen/cpuhotplug: Fix initial CPU offlining for PV(H) guests
-      xen/pci: Get rid of verbose_request and use dev_dbg() instead
-
-Deep Shah (1):
-      MAINTAINERS: Update PARAVIRT_OPS_INTERFACE and VMWARE_HYPERVISOR_INTERFACE
-
-Juergen Gross (1):
-      xen/pvcalls-back: test for errors when calling backend_connect()
-
-Rikard Falkeborn (1):
-      xen-platform: Constify dev_pm_ops
-
-Roger Pau Monne (2):
-      xen: expand BALLOON_MEMORY_HOTPLUG description
-      xen: enable BALLOON_MEMORY_HOTPLUG by default
-
-YueHaibing (1):
-      xen/pvcalls: Make pvcalls_back_global static
+greg k-h
