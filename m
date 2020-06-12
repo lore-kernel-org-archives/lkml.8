@@ -2,167 +2,115 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B60A1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 18:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 330F8C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 18:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 980FE20723
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 18:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F5CF207ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 18:26:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726219AbgFLSYO (ORCPT
+        id S1726317AbgFLS0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 14:24:14 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:38615 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726085AbgFLSYO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 14:24:14 -0400
-Received: by mail-il1-f199.google.com with SMTP id c8so7024853ilm.5
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 11:24:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=IdyGwOTrPxdodvIu8w1ax19AtuMuHO1Ym/F9HSipt30=;
-        b=kvA7lhZOidlMOJrwgvjE8zJH805Zo2sVIVCN2Vynmkgzfw9raf3C9zmDZUouS95Uiw
-         uE+yokgE7su1+GtEePg1hhYlc7cDAtiTQ36s6EKD8JijQz2TMDYwBJR/p+RdlBQJwdnz
-         BgGQOoIgd6XGJUjgBAzpUfanDJGlh7fOV8uYbpCHBhaqhlU+ZFRR9TZqbgCcgwiM1CSK
-         RtDZHogX8HQY/jaeyoudRIMoEgs7Ej7ZqN3STlwCRUpbQTw5pFSukGRl5PdhP/Q3KAh8
-         NkJxhhmGzXn/7TZzn7Ku8dIh3I7lwoB4WFnDR9/R9j8ZW22PUzmsV+I9sjxOeILPYLgx
-         oF3A==
-X-Gm-Message-State: AOAM531xcmKh/gx/AZtZoWqRRihn44I0YJh4a2Poqb/rylRwla8RoKWP
-        kt1b6beO8mGLZB8VwCZJj05X6nxLqvQ0nWpYDd509ObcKczo
-X-Google-Smtp-Source: ABdhPJwAAS9my4o1VRLp6PK98sOKFFJZWZfIVQi9U62+owNQEL39aMd+aOKnIeke1xLbVEIVeqlDgOfB6r8bqw46HhD1B9zwgvtU
-MIME-Version: 1.0
-X-Received: by 2002:a92:c50f:: with SMTP id r15mr14352497ilg.76.1591986252918;
- Fri, 12 Jun 2020 11:24:12 -0700 (PDT)
-Date:   Fri, 12 Jun 2020 11:24:12 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000017bacf05a7e72f45@google.com>
-Subject: net-next test error: BUG: using smp_processor_id() in preemptible
- code in ext4_mb_new_blocks
-From:   syzbot <syzbot+2ad52db2be557736dd15@syzkaller.appspotmail.com>
-To:     adilger.kernel@dilger.ca, davem@davemloft.net, kuba@kernel.org,
-        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        tytso@mit.edu
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 12 Jun 2020 14:26:11 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:37918 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726269AbgFLS0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 14:26:10 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49k8LS03QszB09ZR;
+        Fri, 12 Jun 2020 20:26:08 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id zK0L2Sz9oYi5; Fri, 12 Jun 2020 20:26:07 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49k8LR67jKzB09ZQ;
+        Fri, 12 Jun 2020 20:26:07 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id CE57B8B78B;
+        Fri, 12 Jun 2020 20:26:07 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id ksxZW3-Cg00s; Fri, 12 Jun 2020 20:26:07 +0200 (CEST)
+Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9490B8B77C;
+        Fri, 12 Jun 2020 20:26:07 +0200 (CEST)
+Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 5369865ACE; Fri, 12 Jun 2020 18:26:07 +0000 (UTC)
+Message-Id: <694a25fdce548c5ee8b060ef6a4b02746b8f25c0.1591986307.git.christophe.leroy@csgroup.eu>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH v2] tty: serial: cpm_uart: Fix behaviour for non existing
+ GPIOs
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-serial@vger.kernel.org
+Date:   Fri, 12 Jun 2020 18:26:07 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+devm_gpiod_get_index() doesn't return NULL but -ENOENT when the
+requested GPIO doesn't exist,  leading to the following messages:
 
-syzbot found the following crash on:
+[    2.742468] gpiod_direction_input: invalid GPIO (errorpointer)
+[    2.748147] can't set direction for gpio #2: -2
+[    2.753081] gpiod_direction_input: invalid GPIO (errorpointer)
+[    2.758724] can't set direction for gpio #3: -2
+[    2.763666] gpiod_direction_output: invalid GPIO (errorpointer)
+[    2.769394] can't set direction for gpio #4: -2
+[    2.774341] gpiod_direction_input: invalid GPIO (errorpointer)
+[    2.779981] can't set direction for gpio #5: -2
+[    2.784545] ff000a20.serial: ttyCPM1 at MMIO 0xfff00a20 (irq = 39, base_baud = 8250000) is a CPM UART
 
-HEAD commit:    af7b4801 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=15fe909e100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b366fd92adf6f8b4
-dashboard link: https://syzkaller.appspot.com/bug?extid=2ad52db2be557736dd15
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Use devm_gpiod_get_index_optional() instead.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+2ad52db2be557736dd15@syzkaller.appspotmail.com
+At the same time, handle the error case and properly exit
+with an error.
 
- process_one_work+0x965/0x16a0 kernel/workqueue.c:2269
- worker_thread+0x96/0xe10 kernel/workqueue.c:2415
- kthread+0x388/0x470 kernel/kthread.c:268
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
-BUG: using smp_processor_id() in preemptible [00000000] code: kworker/u4:1/21
-caller is ext4_mb_new_blocks+0xa77/0x3b30 fs/ext4/mballoc.c:4711
-CPU: 0 PID: 21 Comm: kworker/u4:1 Not tainted 5.7.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: writeback wb_workfn (flush-8:0)
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- check_preemption_disabled lib/smp_processor_id.c:47 [inline]
- debug_smp_processor_id.cold+0x88/0x9b lib/smp_processor_id.c:57
- ext4_mb_new_blocks+0xa77/0x3b30 fs/ext4/mballoc.c:4711
- ext4_ext_map_blocks+0x2044/0x3410 fs/ext4/extents.c:4244
- ext4_map_blocks+0x4cb/0x1640 fs/ext4/inode.c:626
- mpage_map_one_extent fs/ext4/inode.c:2377 [inline]
- mpage_map_and_submit_extent fs/ext4/inode.c:2430 [inline]
- ext4_writepages+0x1ab7/0x3400 fs/ext4/inode.c:2782
- do_writepages+0xfa/0x2a0 mm/page-writeback.c:2354
- __writeback_single_inode+0x12a/0x1410 fs/fs-writeback.c:1452
- writeback_sb_inodes+0x515/0xdd0 fs/fs-writeback.c:1716
- __writeback_inodes_wb+0xc3/0x250 fs/fs-writeback.c:1785
- wb_writeback+0x910/0xd90 fs/fs-writeback.c:1894
- wb_check_old_data_flush fs/fs-writeback.c:1996 [inline]
- wb_do_writeback fs/fs-writeback.c:2049 [inline]
- wb_workfn+0xadf/0x10d0 fs/fs-writeback.c:2078
- process_one_work+0x965/0x16a0 kernel/workqueue.c:2269
- worker_thread+0x96/0xe10 kernel/workqueue.c:2415
- kthread+0x388/0x470 kernel/kthread.c:268
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
-BUG: using smp_processor_id() in preemptible [00000000] code: kworker/u4:1/21
-caller is ext4_mb_new_blocks+0xa77/0x3b30 fs/ext4/mballoc.c:4711
-CPU: 0 PID: 21 Comm: kworker/u4:1 Not tainted 5.7.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: writeback wb_workfn (flush-8:0)
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- check_preemption_disabled lib/smp_processor_id.c:47 [inline]
- debug_smp_processor_id.cold+0x88/0x9b lib/smp_processor_id.c:57
- ext4_mb_new_blocks+0xa77/0x3b30 fs/ext4/mballoc.c:4711
- ext4_ext_map_blocks+0x2044/0x3410 fs/ext4/extents.c:4244
- ext4_map_blocks+0x4cb/0x1640 fs/ext4/inode.c:626
- mpage_map_one_extent fs/ext4/inode.c:2377 [inline]
- mpage_map_and_submit_extent fs/ext4/inode.c:2430 [inline]
- ext4_writepages+0x1ab7/0x3400 fs/ext4/inode.c:2782
- do_writepages+0xfa/0x2a0 mm/page-writeback.c:2354
- __writeback_single_inode+0x12a/0x1410 fs/fs-writeback.c:1452
- writeback_sb_inodes+0x515/0xdd0 fs/fs-writeback.c:1716
- __writeback_inodes_wb+0xc3/0x250 fs/fs-writeback.c:1785
- wb_writeback+0x910/0xd90 fs/fs-writeback.c:1894
- wb_check_old_data_flush fs/fs-writeback.c:1996 [inline]
- wb_do_writeback fs/fs-writeback.c:2049 [inline]
- wb_workfn+0xadf/0x10d0 fs/fs-writeback.c:2078
- process_one_work+0x965/0x16a0 kernel/workqueue.c:2269
- worker_thread+0x96/0xe10 kernel/workqueue.c:2415
- kthread+0x388/0x470 kernel/kthread.c:268
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
-BUG: using smp_processor_id() in preemptible [00000000] code: kworker/u4:1/21
-caller is ext4_mb_new_blocks+0xa77/0x3b30 fs/ext4/mballoc.c:4711
-CPU: 0 PID: 21 Comm: kworker/u4:1 Not tainted 5.7.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: writeback wb_workfn (flush-8:0)
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- check_preemption_disabled lib/smp_processor_id.c:47 [inline]
- debug_smp_processor_id.cold+0x88/0x9b lib/smp_processor_id.c:57
- ext4_mb_new_blocks+0xa77/0x3b30 fs/ext4/mballoc.c:4711
- ext4_ext_map_blocks+0x2044/0x3410 fs/ext4/extents.c:4244
- ext4_map_blocks+0x4cb/0x1640 fs/ext4/inode.c:626
- mpage_map_one_extent fs/ext4/inode.c:2377 [inline]
- mpage_map_and_submit_extent fs/ext4/inode.c:2430 [inline]
- ext4_writepages+0x1ab7/0x3400 fs/ext4/inode.c:2782
- do_writepages+0xfa/0x2a0 mm/page-writeback.c:2354
- __writeback_single_inode+0x12a/0x1410 fs/fs-writeback.c:1452
- writeback_sb_inodes+0x515/0xdd0 fs/fs-writeback.c:1716
- __writeback_inodes_wb+0xc3/0x250 fs/fs-writeback.c:1785
- wb_writeback+0x910/0xd90 fs/fs-writeback.c:1894
- wb_check_old_data_flush fs/fs-writeback.c:1996 [inline]
- wb_do_writeback fs/fs-writeback.c:2049 [inline]
- wb_workfn+0xadf/0x10d0 fs/fs-writeback.c:2078
- process_one_work+0x965/0x16a0 kernel/workqueue.c:2269
- worker_thread+0x96/0xe10 kernel/workqueue.c:2415
- kthread+0x388/0x470 kernel/kthread.c:268
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
-
-
+Fixes: 97cbaf2c829b ("tty: serial: cpm_uart: Convert to use GPIO descriptors")
+Cc: stable@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+v2: Using devm_gpiod_get_index_optional() and exiting if error
+---
+ drivers/tty/serial/cpm_uart/cpm_uart_core.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/drivers/tty/serial/cpm_uart/cpm_uart_core.c b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
+index a04f74d2e854..4df47d02b34b 100644
+--- a/drivers/tty/serial/cpm_uart/cpm_uart_core.c
++++ b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
+@@ -1215,7 +1215,12 @@ static int cpm_uart_init_port(struct device_node *np,
+ 
+ 		pinfo->gpios[i] = NULL;
+ 
+-		gpiod = devm_gpiod_get_index(dev, NULL, i, GPIOD_ASIS);
++		gpiod = devm_gpiod_get_index_optional(dev, NULL, i, GPIOD_ASIS);
++
++		if (IS_ERR(gpiod)) {
++			ret = PTR_ERR(gpiod);
++			goto out_irq;
++		}
+ 
+ 		if (gpiod) {
+ 			if (i == GPIO_RTS || i == GPIO_DTR)
+@@ -1237,6 +1242,8 @@ static int cpm_uart_init_port(struct device_node *np,
+ 
+ 	return cpm_uart_request_port(&pinfo->port);
+ 
++out_irq:
++	irq_dispose_mapping(pinfo->port.irq);
+ out_pram:
+ 	cpm_uart_unmap_pram(pinfo, pram);
+ out_mem:
+-- 
+2.25.0
+
