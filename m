@@ -2,95 +2,101 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A5EFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 06:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA369C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 06:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D5A7207F7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 06:06:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A42D3207F7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 06:07:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GqiItGxE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgFLGGg (ORCPT
+        id S1726515AbgFLGHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 02:06:36 -0400
-Received: from mga17.intel.com ([192.55.52.151]:37896 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726332AbgFLGGf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 02:06:35 -0400
-IronPort-SDR: VqHlzLLVtE8ri6LCL85wIA66Yl9Ea5G1YVi7Mzu/L6YzWLnMEAy7yKVvZtP0SAg9PO0egn3PCS
- OmtoTJQ3Q/gw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 23:06:35 -0700
-IronPort-SDR: t2oR15pPScZH7yIFwN9eLEB+YnIWO4LXheA7PMMH6XUiA6mgEok6PLUVsgBPntobo7EceaVyzQ
- 2mPBceX+rm7g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,502,1583222400"; 
-   d="scan'208";a="289783286"
-Received: from brentlu-desk0.itwn.intel.com ([10.5.253.11])
-  by orsmga002.jf.intel.com with ESMTP; 11 Jun 2020 23:06:30 -0700
-From:   Brent Lu <brent.lu@intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Zhu Yingjiang <yingjiang.zhu@linux.intel.com>,
-        Keyon Jie <yang.jie@linux.intel.com>,
-        Brent Lu <brent.lu@intel.com>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        sound-open-firmware@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] ASoC: SOF: Intel: hda: unsolicited RIRB response
-Date:   Fri, 12 Jun 2020 14:01:09 +0800
-Message-Id: <1591941669-28683-1-git-send-email-brent.lu@intel.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 12 Jun 2020 02:07:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35006 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726332AbgFLGHt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 02:07:49 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8309FC03E96F;
+        Thu, 11 Jun 2020 23:07:48 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id ne5so3225318pjb.5;
+        Thu, 11 Jun 2020 23:07:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=JEvUUzirrseeTgZyQCQj6IhJaMAfwmJ6wJglPFtIGDY=;
+        b=GqiItGxEX8++bQb6zbVj9Cn+NBTVFDaXRPDlso+VvCigIG9NEsk6x9CCNr7BlxmxGo
+         ib8zzELIsm1PI9EKOO2okeTgH6pGQ0E9Nf0vaGgVeCoFWblMFGcmjKyDjTSDL++c/+2M
+         t2iX3GlptrM+anUdCphOGeJ1ePRRqPw7nM2TjFgAeAfgXR1A/AXzI5arGaqvy5+apQ+P
+         nFmijyHaiadtW3KA5BHxwf4wYqvAKg2ndBQzeF825qqyiMjTGSoEpKXLAiIf4e8eknho
+         NyC7E+IPQTC32ul7EziR3Ia2RR/I37tiTujejehjhhpWMaNrtlF1b6tEHcMT1LMkZAOB
+         7kfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=JEvUUzirrseeTgZyQCQj6IhJaMAfwmJ6wJglPFtIGDY=;
+        b=idTwzkBkvo+lCbtFfWSP+XH6KHc0psCxVIUvdJnany5CuhhGAfEmtnu4YqWtb0d2L4
+         e9YHV6RPcfkmINUY38952T/tqyfyYReh1aYACXuhpUh9Iaq+NfDTzIaNOZhTEo8y8xmy
+         6mxjbRDe5021yQm2yuAl7FyDv48nygeu2HjHjFtUSmYGxbBS7PoSO9gCsKlxNmpDoJJ8
+         Y6znUAaMBdxdMOCbBwjvU1lcDl9My0vyaGrPZdAOoko2Y2Ej3jr+M1EXhjCYLBzKS4jC
+         nunUuKaV1j2Zdm1b7cJcRYB5hfg5GL2e+VRO1F2fQL85s/CSoRT5c8L3/LeM83tUb9uG
+         O8Qg==
+X-Gm-Message-State: AOAM531YjYTeGtAy28MMwQ2GfG0qtmRKEZCLUXv+QGk7VI3NrFQtxmmq
+        ShMMZ2V6EeavZQ6cvjRLkjI=
+X-Google-Smtp-Source: ABdhPJwlwIrsbAmyWazk7Coz2Lk2SYiWLiHCF1bdWmovTv77Ds46gqIwP/z7hQRyEiINklZ1KqKWIg==
+X-Received: by 2002:a17:90a:5e0e:: with SMTP id w14mr11458586pjf.128.1591942068165;
+        Thu, 11 Jun 2020 23:07:48 -0700 (PDT)
+Received: from localhost ([43.224.245.180])
+        by smtp.gmail.com with ESMTPSA id g19sm4808563pfo.209.2020.06.11.23.07.46
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Jun 2020 23:07:47 -0700 (PDT)
+From:   Geliang Tang <geliangtang@gmail.com>
+To:     Mat Martineau <mathew.j.martineau@linux.intel.com>,
+        Matthieu Baerts <matthieu.baerts@tessares.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Geliang Tang <geliangtang@gmail.com>, netdev@vger.kernel.org,
+        mptcp@lists.01.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] mptcp: use list_first_entry_or_null
+Date:   Fri, 12 Jun 2020 14:05:34 +0800
+Message-Id: <9958d3f15d2d181eb9d48ffe5bf3251ec900f27a.1591941826.git.geliangtang@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Port commit 6d011d5057ff ("ALSA: hda: Clear RIRB status before reading
-WP") from legacy HDA driver to fix the get response timeout issue.
-Current SOF driver does not suffer from this issue because sync write
-is enabled in hda_init. The issue will come back if the sync write is
-disabled for some reason.
+Use list_first_entry_or_null to simplify the code.
 
-Signed-off-by: Brent Lu <brent.lu@intel.com>
+Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 ---
- sound/soc/sof/intel/hda-stream.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ net/mptcp/protocol.h | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/sound/soc/sof/intel/hda-stream.c b/sound/soc/sof/intel/hda-stream.c
-index 7f65dcc..1bda14c 100644
---- a/sound/soc/sof/intel/hda-stream.c
-+++ b/sound/soc/sof/intel/hda-stream.c
-@@ -653,11 +653,16 @@ irqreturn_t hda_dsp_stream_threaded_handler(int irq, void *context)
- 		if (status & AZX_INT_CTRL_EN) {
- 			rirb_status = snd_hdac_chip_readb(bus, RIRBSTS);
- 			if (rirb_status & RIRB_INT_MASK) {
-+				/*
-+				 * Clearing the interrupt status here ensures
-+				 * that no interrupt gets masked after the RIRB
-+				 * wp is read in snd_hdac_bus_update_rirb.
-+				 */
-+				snd_hdac_chip_writeb(bus, RIRBSTS,
-+						     RIRB_INT_MASK);
- 				active = true;
- 				if (rirb_status & RIRB_INT_RESPONSE)
- 					snd_hdac_bus_update_rirb(bus);
--				snd_hdac_chip_writeb(bus, RIRBSTS,
--						     RIRB_INT_MASK);
- 			}
- 		}
- #endif
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 86d265500cf6..55c65abcad64 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -234,10 +234,7 @@ static inline struct mptcp_data_frag *mptcp_rtx_head(const struct sock *sk)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 
+-	if (list_empty(&msk->rtx_queue))
+-		return NULL;
+-
+-	return list_first_entry(&msk->rtx_queue, struct mptcp_data_frag, list);
++	return list_first_entry_or_null(&msk->rtx_queue, struct mptcp_data_frag, list);
+ }
+ 
+ struct mptcp_subflow_request_sock {
 -- 
-2.7.4
+2.17.1
 
