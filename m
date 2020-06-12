@@ -2,70 +2,73 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F78C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7780DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA69020792
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:15:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46A7E20792
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:17:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="gTF6Iot9"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iC+Alxjy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726441AbgFLEPv (ORCPT
+        id S1726456AbgFLERM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 00:15:51 -0400
+        Fri, 12 Jun 2020 00:17:12 -0400
 Received: from mail27.static.mailgun.info ([104.130.122.27]:22507 "EHLO
         mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726385AbgFLEPu (ORCPT
+        by vger.kernel.org with ESMTP id S1725809AbgFLERL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 00:15:50 -0400
+        Fri, 12 Jun 2020 00:17:11 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591935350; h=Content-Transfer-Encoding: Content-Type:
+ s=smtp; t=1591935431; h=Content-Transfer-Encoding: Content-Type:
  In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=qOBjRzQMndVJEIv6uF7Wx6Dgh2zeX7Iww1fuxfR2S3I=; b=gTF6Iot98ozGAOt+ki+wfJ7NvTYPwLqOIXmE4saoDEBncNoPweAOLcg0r0TuG50aTETKX0qs
- 9MxDdQgQBWflLa59sq2rpM/dWXWQYsCc9hiUXoFamb357ahVkEivIJWI+Y2M7qUKP9ozz8O6
- T7UJtUxkjLdQAU+ShDfHj65i6go=
+ Subject: Sender; bh=kFRGwnIstVkSTHOF2cZTEG/CpZ7Zxsa9FTQ839n+sbc=; b=iC+Alxjy3+E6ppnZHRMBY8QJOyHaw2iQRryZb8YGMaphhBLLMnleZpm6+RSfKClGeWEKagDX
+ EgN1hCvtAOVAkBiTlFtDt/EglExze0YkySEboM/H31WPCHwJ1TSlqzxxrgULDQqyLcI9lZYK
+ XwKHWDpeNcO8UkCQEMQPpPM7bgM=
 X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n08.prod.us-west-2.postgun.com with SMTP id
- 5ee301595866879c7691efbd (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 12 Jun 2020 04:15:21
+ smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
+ 5ee301c7c76a4e7a2a2f8d85 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 12 Jun 2020 04:17:11
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8B986C43395; Fri, 12 Jun 2020 04:15:21 +0000 (UTC)
+        id 3770DC43391; Fri, 12 Jun 2020 04:17:10 +0000 (UTC)
 Received: from [10.110.17.171] (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3145FC433CB;
-        Fri, 12 Jun 2020 04:15:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3145FC433CB
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id AD4BCC433C8;
+        Fri, 12 Jun 2020 04:17:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AD4BCC433C8
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
 Subject: Re: [PATCH 1/3] usb: typec: Add QCOM PMIC typec detection driver
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        heikki.krogerus@linux.intel.com, gregkh@linuxfoundation.org,
-        mark.rutland@arm.com, robh+dt@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
-        jackp@codeaurora.org, bryan.odonoghue@linaro.org
+To:     Jun Li <lijun.kernel@gmail.com>
+Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, lkml <linux-kernel@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        Jack Pham <jackp@codeaurora.org>, bryan.odonoghue@linaro.org
 References: <20200609205851.30113-1-wcheng@codeaurora.org>
  <20200609205851.30113-2-wcheng@codeaurora.org>
- <ccfc3e7c-d1ce-27bd-b24c-df5fbc468449@infradead.org>
+ <CAKgpwJWp9St4B1xuT5qAns1_NFPjd+2_gozv=0j-g7J42dbCPg@mail.gmail.com>
 From:   Wesley Cheng <wcheng@codeaurora.org>
-Message-ID: <47651298-f94c-c487-d346-41abfb8a80a7@codeaurora.org>
-Date:   Thu, 11 Jun 2020 21:15:19 -0700
+Message-ID: <2d4f442e-74b6-f53f-0e1d-1d5dc94abc75@codeaurora.org>
+Date:   Thu, 11 Jun 2020 21:17:07 -0700
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <ccfc3e7c-d1ce-27bd-b24c-df5fbc468449@infradead.org>
+In-Reply-To: <CAKgpwJWp9St4B1xuT5qAns1_NFPjd+2_gozv=0j-g7J42dbCPg@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -76,42 +79,173 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 6/9/2020 2:20 PM, Randy Dunlap wrote:
-> On 6/9/20 1:58 PM, Wesley Cheng wrote:
->> diff --git a/drivers/usb/typec/Kconfig b/drivers/usb/typec/Kconfig
->> index 559dd06..8de2520 100644
->> --- a/drivers/usb/typec/Kconfig
->> +++ b/drivers/usb/typec/Kconfig
->> @@ -73,6 +73,17 @@ config TYPEC_TPS6598X
->>  	  If you choose to build this driver as a dynamically linked module, the
->>  	  module will be called tps6598x.ko.
+On 6/9/2020 7:27 PM, Jun Li wrote:
+>> +static int qcom_pmic_typec_probe(struct platform_device *pdev)
+>> +{
+>> +       struct device *dev = &pdev->dev;
+>> +       struct qcom_pmic_typec *qcom_usb;
+>> +       struct typec_capability *cap;
+>> +       const char *buf;
+>> +       int ret, irq, role;
+>> +
+>> +       qcom_usb = kzalloc(sizeof(*qcom_usb), GFP_KERNEL);
+> 
+> devm_kzalloc().
+> 
+
+Hi Jun,
+
+Thanks for the input.  I have replaced with devm_kzalloc() as you
+recommended.
+
+>> +       if (!qcom_usb)
+>> +               return -ENOMEM;
+>> +
+>> +       qcom_usb->dev = dev;
+>> +
+>> +       qcom_usb->regmap = dev_get_regmap(dev->parent, NULL);
+>> +       if (!qcom_usb->regmap) {
+>> +               dev_err(dev, "Failed to get regmap\n");
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       irq = platform_get_irq(pdev, 0);
+>> +       if (irq < 0) {
+>> +               dev_err(dev, "Failed to get CC irq\n");
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       ret = devm_request_irq(qcom_usb->dev, irq, qcom_pmic_typec_interrupt,
+>> +                              IRQF_SHARED, "qcom-pmic-typec", qcom_usb);
+>> +       if (ret) {
+>> +               dev_err(&pdev->dev, "Could not request IRQ\n");
+>> +               return ret;
+>> +       }
+>> +
+>> +       qcom_usb->fwnode = device_get_named_child_node(dev, "connector");
+>> +       if (!qcom_usb->fwnode)
+>> +               return -EINVAL;
+>> +
+>> +       cap = kzalloc(sizeof(*cap), GFP_KERNEL);
+> 
+> devm_kzalloc().
+> 
+>> +       if (!cap) {
+>> +               ret = -ENOMEM;
+>> +               goto err_put_node;
+>> +       }
+>> +
+>> +       ret = fwnode_property_read_string(qcom_usb->fwnode, "power-role", &buf);
+>> +       if (!ret)
+>> +               role = typec_find_port_power_role(buf);
+> 
+> if (role < 0)
+> 
+
+
+Added a check for role <0, if so, set to SNK as well
+>> +       else
+>> +               role = TYPEC_PORT_SNK;
+>> +       cap->type = role;
+>> +
+>> +       ret = fwnode_property_read_string(qcom_usb->fwnode, "data-role", &buf);
+>> +       if (!ret)
+>> +               role = typec_find_port_data_role(buf);
+> 
+> if (role < 0)
+> 
+
+Added a check for role <0, if so, set to UFP as well
+>> +       else
+>> +               role = TYPEC_PORT_UFP;
+>> +       cap->data = role;
+>> +
+>> +       cap->prefer_role = -1;
+> 
+> TYPEC_NO_PREFERRED_ROLE
+> 
+
+Done.
+>> +       cap->fwnode = qcom_usb->fwnode;
+>> +       qcom_usb->port = typec_register_port(dev, cap);
+>> +       if (IS_ERR(qcom_usb->port)) {
+>> +               dev_err(dev, "Failed to register type c port %d\n",
+>> +                       IS_ERR(qcom_usb->port));
+>> +               ret = PTR_ERR(qcom_usb->port);
+> 
+> dev_err(dev, , ret)?
+> 
+> Li Jun
+
+Agreed.  Thanks!
+
+>> +               goto err_put_node;
+>> +       }
+>> +
+>> +       qcom_usb->cap = cap;
+>> +
+>> +       qcom_usb->role_sw = fwnode_usb_role_switch_get(qcom_usb->fwnode);
+>> +       if (IS_ERR(qcom_usb->role_sw)) {
+>> +               if (PTR_ERR(qcom_usb->role_sw) != -EPROBE_DEFER)
+>> +                       dev_err(dev, "failed to get role switch\n");
+>> +               ret = PTR_ERR(qcom_usb->role_sw);
+>> +               goto err_typec_port;
+>> +       }
+>> +
+>> +       INIT_WORK(&qcom_usb->bh_work, qcom_pmic_typec_bh_work);
+>> +       platform_set_drvdata(pdev, qcom_usb);
+>> +       qcom_pmic_typec_typec_hw_init(qcom_usb);
+>> +
+>> +       queue_work(system_power_efficient_wq, &qcom_usb->bh_work);
+>> +
+>> +       return 0;
+>> +
+>> +err_typec_port:
+>> +       typec_unregister_port(qcom_usb->port);
+>> +err_put_node:
+>> +       fwnode_handle_put(qcom_usb->fwnode);
+>> +
+>> +       return ret;
+>> +}
+>> +
+>> +static int qcom_pmic_typec_remove(struct platform_device *pdev)
+>> +{
+>> +       struct qcom_pmic_typec *qcom_usb = platform_get_drvdata(pdev);
+>> +
+>> +       cancel_work_sync(&qcom_usb->bh_work);
+>> +       usb_role_switch_set_role(qcom_usb->role_sw, USB_ROLE_NONE);
+>> +       qcom_pmic_typec_vbus_disable(qcom_usb);
+>> +
+>> +       typec_unregister_port(qcom_usb->port);
+>> +       usb_role_switch_put(qcom_usb->role_sw);
+>> +       fwnode_handle_put(qcom_usb->fwnode);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static const struct of_device_id qcom_pmic_typec_table[] = {
+>> +       { .compatible = "qcom,pm8150b-usb-typec" },
+>> +       { },
+>> +};
+>> +MODULE_DEVICE_TABLE(of, qcom_pmic_typec_table);
+>> +
+>> +static struct platform_driver qcom_pmic_typec = {
+>> +       .driver = {
+>> +               .name = "qcom,pmic-typec",
+>> +               .of_match_table = qcom_pmic_typec_table,
+>> +       },
+>> +       .probe = qcom_pmic_typec_probe,
+>> +       .remove = qcom_pmic_typec_remove,
+>> +};
+>> +
+>> +module_platform_driver(qcom_pmic_typec);
+>> +
+>> +MODULE_DESCRIPTION("QCOM PMIC USB type C driver");
+>> +MODULE_LICENSE("GPL v2");
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+>> a Linux Foundation Collaborative Project
 >>
-> 
-> Hi,
-> Please spell "Type-C" like all of the other drivers do.
-> 
->> +config TYPEC_QCOM_PMIC
->> +	tristate "Qualcomm PMIC USB typec driver"
->> +	depends on ARCH_QCOM
->> +	help
->> +	  Driver for supporting role switch over the Qualcomm PMIC.  This will
->> +	  handle the type C role and orientation detection reported by the QCOM
->> +	  PMIC if the PMIC has the capability to handle type C detection.
->> +
->> +	  It will also enable the VBUS output to connected devices when a
->> +	  DFP connection is made.
->> +
->>  source "drivers/usb/typec/mux/Kconfig"
->>  
->>  source "drivers/usb/typec/altmodes/Kconfig"
-
-Hi Randy,
-
-Will do.
-
-Thanks
-> 
-> 
 
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
