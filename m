@@ -2,80 +2,95 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07345C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 20:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE24C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 20:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE9682074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 20:20:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDF2F206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 20:20:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TNROsMZL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726341AbgFLUUI (ORCPT
+        id S1726377AbgFLUUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 16:20:08 -0400
-Received: from mga03.intel.com ([134.134.136.65]:42446 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726307AbgFLUUH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 16:20:07 -0400
-IronPort-SDR: xsqYDBkZnFjxwC9MVHmnDdmakSM3d2LtInCHJXl3KepEPCwfn7qsu/rdA4utj5O8fzm8p6jdUm
- pcCypgeRdCUg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2020 13:20:07 -0700
-IronPort-SDR: 4xilpdnf7ON93lxqV3VprOhe8x3XEw605cJ4dtj+hHSFWxNW/BS40ravYxfV1GsezB4R83EeKI
- oPmSn4JOwdXQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,504,1583222400"; 
-   d="scan'208";a="260005081"
-Received: from lkp-server02.sh.intel.com (HELO de5642daf266) ([10.239.97.151])
-  by fmsmga007.fm.intel.com with ESMTP; 12 Jun 2020 13:20:05 -0700
-Received: from kbuild by de5642daf266 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jjq9k-000064-CP; Fri, 12 Jun 2020 20:20:04 +0000
-Date:   Sat, 13 Jun 2020 04:19:03 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Michal Kalderon <michal.kalderon@marvell.com>
-Cc:     kbuild-all@lists.01.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ariel Elior <ariel.elior@marvell.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [RFC PATCH stable] RDMA/qedr: qedr_iw_load_qp() can be static
-Message-ID: <20200612201903.GA57396@0a3611e7790e>
-References: <202006130434.950ZY2zY%lkp@intel.com>
+        Fri, 12 Jun 2020 16:20:49 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22991 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726309AbgFLUUs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 16:20:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591993247;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=e7FPq3nO6B1maCulGzahMUgGvOzcx8PXF95wcQrwkyM=;
+        b=TNROsMZLjjS2ZWsMVMjr98JFcHjykDwWPgildiUUSTQBwmHxP2IscfAii+RBEa3L+DS5UU
+        45DvFoH+fYwPz2fjd75YASvNLsy3AN9+0Okt75jJzTwLRkaOM4xkun3Aqy3VfC5LVOKStd
+        qbwZ4HZyry1hJkHwfPAmO/Ly92xZdpI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-122-93I2KMh6Nt-Efum2afEK1g-1; Fri, 12 Jun 2020 16:20:42 -0400
+X-MC-Unique: 93I2KMh6Nt-Efum2afEK1g-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A3A5C801504;
+        Fri, 12 Jun 2020 20:20:40 +0000 (UTC)
+Received: from carbon (unknown [10.40.208.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1B6595C660;
+        Fri, 12 Jun 2020 20:20:33 +0000 (UTC)
+Date:   Fri, 12 Jun 2020 22:20:31 +0200
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Gaurav Singh <gaurav1086@gmail.com>
+Cc:     brouer@redhat.com, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        KP Singh <kpsingh@chromium.org>,
+        netdev@vger.kernel.org (open list:XDP (eXpress Data Path)),
+        bpf@vger.kernel.org (open list:XDP (eXpress Data Path)),
+        linux-kernel@vger.kernel.org (open list)
+Subject: Re: [PATCH] xdp_rxq_info_user: Fix null pointer dereference.
+ Replace malloc/memset with calloc.
+Message-ID: <20200612222031.515d5338@carbon>
+In-Reply-To: <20200612185328.4671-1-gaurav1086@gmail.com>
+References: <20200611150221.15665-1-gaurav1086@gmail.com>
+        <20200612185328.4671-1-gaurav1086@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202006130434.950ZY2zY%lkp@intel.com>
-X-Patchwork-Hint: ignore
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 12 Jun 2020 14:53:27 -0400
+Gaurav Singh <gaurav1086@gmail.com> wrote:
 
-Fixes: 8a69220b659c ("RDMA/qedr: Fix synchronization methods and memory leaks in qedr")
-Signed-off-by: kernel test robot <lkp@intel.com>
----
- qedr_iw_cm.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Memset on the pointer right after malloc can cause a
+> null pointer deference if it failed to allocate memory.
+> A simple fix is to replace malloc/memset with a calloc()
+> 
+> Fixes: 0fca931a6f21 ("samples/bpf: program demonstrating access to xdp_rxq_info")
+> Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
 
-diff --git a/drivers/infiniband/hw/qedr/qedr_iw_cm.c b/drivers/infiniband/hw/qedr/qedr_iw_cm.c
-index 5e9732990be5c..a98002018f0ce 100644
---- a/drivers/infiniband/hw/qedr/qedr_iw_cm.c
-+++ b/drivers/infiniband/hw/qedr/qedr_iw_cm.c
-@@ -506,7 +506,7 @@ qedr_addr6_resolve(struct qedr_dev *dev,
- 	return rc;
- }
- 
--struct qedr_qp *qedr_iw_load_qp(struct qedr_dev *dev, u32 qpn)
-+static struct qedr_qp *qedr_iw_load_qp(struct qedr_dev *dev, u32 qpn)
- {
- 	struct qedr_qp *qp;
- 
+Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
+
+-- 
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
+
