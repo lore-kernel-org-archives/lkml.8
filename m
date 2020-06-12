@@ -2,95 +2,92 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B487FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9773BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:59:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AEE92081A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:59:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7115B2081A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:59:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591970361;
+	bh=OIe/GJsPvDod9bI6gR/O7C4Glg5HxnNaq1KplU6e9No=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=d8ZuJIPBIfZ8AYxylwzeTbCxvFI/kZjyoHK8TXeJcuv+ZxkhmR3uJLO1mwOrsXUBV
+	 RVfbq0GF59/MFyezXC8MHs2FS+VkBYl3grqKwsgGOMk4y0vtwYEm+oIZUsfxKv5irO
+	 o0bGNTuU6gFxsDcD5ft8SIdmmqKH4EVpM1xxeg3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbgFLN7L (ORCPT
+        id S1726553AbgFLN7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 09:59:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51236 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726109AbgFLN7H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 09:59:07 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3449EC03E96F;
-        Fri, 12 Jun 2020 06:59:06 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: gtucker)
-        with ESMTPSA id 3ED132A23FB
-From:   Guillaume Tucker <guillaume.tucker@collabora.com>
-To:     Russell King <linux@armlinux.org.uk>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Kyungmin Park <kyungmin.park@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com
-Subject: [PATCH] ARM: exynos: clear L310_AUX_CTRL_FULL_LINE_ZERO in default l2c_aux_val
-Date:   Fri, 12 Jun 2020 14:58:37 +0100
-Message-Id: <c6d979c0050502cd1bca8619cb5ff95db239db12.1591969825.git.guillaume.tucker@collabora.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 12 Jun 2020 09:59:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33396 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726109AbgFLN7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 09:59:18 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E6EE20792;
+        Fri, 12 Jun 2020 13:59:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591970358;
+        bh=OIe/GJsPvDod9bI6gR/O7C4Glg5HxnNaq1KplU6e9No=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=Iy0g0W8w80q/rEoIkpX6xnQlE87Hu2csdHN3Hoj0P9+fUKqWVo2yDAryJyBrTqTDa
+         izbRDUSZ5+ctSc4Y2mlOA+CCfpWHQAVkPjGmIUo5H2Ce+e8cCbP56wgDJel0nRqWye
+         V9VO4RCc6x5AvQcMr7LrRdN180eNNLW6h+t0i4Xs=
+Date:   Fri, 12 Jun 2020 14:59:14 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Martin Fuzzey <martin.fuzzey@flowbird.group>
+Cc:     Support Opensource <support.opensource@diasemi.com>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <1591959073-16792-1-git-send-email-martin.fuzzey@flowbird.group>
+References: <1591959073-16792-1-git-send-email-martin.fuzzey@flowbird.group>
+Subject: Re: [PATCH] regulator: da9063: fix LDO9 suspend and warning.
+Message-Id: <159197034771.51045.5035619932153977133.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This "alert" error message can be seen on exynos4412-odroidx2:
+On Fri, 12 Jun 2020 12:50:33 +0200, Martin Fuzzey wrote:
+> Commit 99f75ce66619 ("regulator: da9063: fix suspend") converted
+> the regulators to use a common (corrected) suspend bit setting but
+> one of regulators (LDO9) slipped through the crack.
+> 
+> 
+> This means that the original problem was not fixed for LDO9 and
+> also leads to a warning found by the test robot.
+> 	da9063-regulator.c:515:3: warning: initialized field overwritten
+> 
+> [...]
 
-    L2C: platform modifies aux control register: 0x02070000 -> 0x3e470001
-    L2C: platform provided aux values permit register corruption.
+Applied to
 
-Followed by this plain error message:
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
-    L2C-310: enabling full line of zeros but not enabled in Cortex-A9
+Thanks!
 
-To fix it, don't set the L310_AUX_CTRL_FULL_LINE_ZERO flag (bit 0) in
-the default value of l2c_aux_val.  It may instead be enabled when
-applicable by the logic in l2c310_enable() if the attribute
-"arm,full-line-zero-disable" was set in the device tree.
+[1/1] regulator: da9063: fix LDO9 suspend and warning.
+      commit: d7442ba13d62de9afc4e57344a676f9f4623dcaa
 
-The initial commit that introduced this default value was in v2.6.38:
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-  1cf0eb799759 "ARM: S5PV310: Add L2 cache init function in cpu.c"
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-However, the code to set the L310_AUX_CTRL_FULL_LINE_ZERO flag and
-manage that feature was added much later and the default value was not
-updated then.  So this seems to have been a subtle oversight
-especially since enabling it only in the cache and not in the A9 core
-doesn't actually prevent the platform from running.  According to the
-TRM, the opposite would be a real issue, if the feature was enabled in
-the A9 core but not in the cache controller.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-Reported-by: "kernelci.org bot" <bot@kernelci.org>
-Signed-off-by: Guillaume Tucker <guillaume.tucker@collabora.com>
----
- arch/arm/mach-exynos/exynos.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-diff --git a/arch/arm/mach-exynos/exynos.c b/arch/arm/mach-exynos/exynos.c
-index 7a8d1555db40..36c37444485a 100644
---- a/arch/arm/mach-exynos/exynos.c
-+++ b/arch/arm/mach-exynos/exynos.c
-@@ -193,7 +193,7 @@ static void __init exynos_dt_fixup(void)
- }
- 
- DT_MACHINE_START(EXYNOS_DT, "Samsung Exynos (Flattened Device Tree)")
--	.l2c_aux_val	= 0x3c400001,
-+	.l2c_aux_val	= 0x3c400000,
- 	.l2c_aux_mask	= 0xc20fffff,
- 	.smp		= smp_ops(exynos_smp_ops),
- 	.map_io		= exynos_init_io,
--- 
-2.20.1
-
+Thanks,
+Mark
