@@ -2,152 +2,114 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8337BC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 12:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C386AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 12:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D8DE20792
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 12:15:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591964158;
-	bh=ZPk3RP/f0vKFwVoKwXnjqpyMNkSKgrEOjYa45LKg+rQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QN8hAPZnXwaE2JUhqJ2dGMr9dOxB5VDDhakfHS78Ji/3INo1wcjwKQFmo/1uqlMDI
-	 w9CzV3vBA0AVoq4TZ42kv3V57VKZqch3KPNe8KmQkTGbeBd05hPDMkdqR2htr1FUlN
-	 wh1SUZDfYZNLRePxM1jSzStvfkiAk0rB1QXTzrKM=
+	by mail.kernel.org (Postfix) with ESMTP id AC7E520792
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 12:18:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbgFLMP5 (ORCPT
+        id S1726269AbgFLMSS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 08:15:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58188 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726085AbgFLMP4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 08:15:56 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3A5F20792;
-        Fri, 12 Jun 2020 12:15:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591964155;
-        bh=ZPk3RP/f0vKFwVoKwXnjqpyMNkSKgrEOjYa45LKg+rQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mYukDCqvVukI/cgKxL76dOAdzJ8ilgzVdwGLOAbWjq2kaml+oL68YHhQsMI75wf8U
-         wniLfUuujTb0AAsPLlWrfPdwepSMGEvlPRPc6BKBFEcxxOG0cVMl71asG7PlskTvvt
-         A4Z00Fr8TCqm0kXjnQtLkp3A2guSt4kEspl+V0fo=
-Date:   Fri, 12 Jun 2020 14:15:49 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        tytso@mit.edu
-Cc:     syzbot <syzbot+0113b9be6667b5b50840@syzkaller.appspotmail.com>
-Subject: Re: upstream test error: BUG: using smp_processor_id() in
- preemptible code in ext4_mb_new_blocks
-Message-ID: <20200612121549.GA2603@kroah.com>
-References: <0000000000007a16f705a7b1096d@google.com>
+        Fri, 12 Jun 2020 08:18:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35616 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725886AbgFLMSS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 08:18:18 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14444C03E96F
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 05:18:18 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1jjidP-00049v-Bx; Fri, 12 Jun 2020 14:18:11 +0200
+Received: from [IPv6:2a03:f580:87bc:d400:b44d:6713:e0e9:e23c] (unknown [IPv6:2a03:f580:87bc:d400:b44d:6713:e0e9:e23c])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits)
+         client-signature RSA-PSS (4096 bits))
+        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
+        (Authenticated sender: mkl@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id 4B9D3515194;
+        Fri, 12 Jun 2020 12:18:08 +0000 (UTC)
+Subject: Re: [PATCH] i2c: imx: Fix external abort on early interrupt
+To:     Wolfram Sang <wsa@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Oleksij Rempel <o.rempel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org
+References: <1591796802-23504-1-git-send-email-krzk@kernel.org>
+ <20200612090517.GA3030@ninjato> <20200612092941.GA25990@pi3>
+ <20200612095604.GA17763@ninjato> <20200612102113.GA26056@pi3>
+ <20200612103149.2onoflu5qgwaooli@pengutronix.de> <20200612103949.GB26056@pi3>
+ <20200612115116.GA18557@ninjato>
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
+ mQINBFFVq30BEACtnSvtXHoeHJxG6nRULcvlkW6RuNwHKmrqoksispp43X8+nwqIFYgb8UaX
+ zu8T6kZP2wEIpM9RjEL3jdBjZNCsjSS6x1qzpc2+2ivjdiJsqeaagIgvy2JWy7vUa4/PyGfx
+ QyUeXOxdj59DvLwAx8I6hOgeHx2X/ntKAMUxwawYfPZpP3gwTNKc27dJWSomOLgp+gbmOmgc
+ 6U5KwhAxPTEb3CsT5RicsC+uQQFumdl5I6XS+pbeXZndXwnj5t84M+HEj7RN6bUfV2WZO/AB
+ Xt5+qFkC/AVUcj/dcHvZwQJlGeZxoi4veCoOT2MYqfR0ax1MmN+LVRvKm29oSyD4Ts/97cbs
+ XsZDRxnEG3z/7Winiv0ZanclA7v7CQwrzsbpCv+oj+zokGuKasofzKdpywkjAfSE1zTyF+8K
+ nxBAmzwEqeQ3iKqBc3AcCseqSPX53mPqmwvNVS2GqBpnOfY7Mxr1AEmxdEcRYbhG6Xdn+ACq
+ Dq0Db3A++3PhMSaOu125uIAIwMXRJIzCXYSqXo8NIeo9tobk0C/9w3fUfMTrBDtSviLHqlp8
+ eQEP8+TDSmRP/CwmFHv36jd+XGmBHzW5I7qw0OORRwNFYBeEuiOIgxAfjjbLGHh9SRwEqXAL
+ kw+WVTwh0MN1k7I9/CDVlGvc3yIKS0sA+wudYiselXzgLuP5cQARAQABtCZNYXJjIEtsZWlu
+ ZS1CdWRkZSA8bWtsQHBlbmd1dHJvbml4LmRlPokCVAQTAQoAPgIbAwIeAQIXgAULCQgHAwUV
+ CgkICwUWAgMBABYhBMFAC6CzmJ5vvH1bXCte4hHFiupUBQJcUsSbBQkM366zAAoJECte4hHF
+ iupUgkAP/2RdxKPZ3GMqag33jKwKAbn/fRqAFWqUH9TCsRH3h6+/uEPnZdzhkL4a9p/6OeJn
+ Z6NXqgsyRAOTZsSFcwlfxLNHVxBWm8pMwrBecdt4lzrjSt/3ws2GqxPsmza1Gs61lEdYvLST
+ Ix2vPbB4FAfE0kizKAjRZzlwOyuHOr2ilujDsKTpFtd8lV1nBNNn6HBIBR5ShvJnwyUdzuby
+ tOsSt7qJEvF1x3y49bHCy3uy+MmYuoEyG6zo9udUzhVsKe3hHYC2kfB16ZOBjFC3lH2U5An+
+ yQYIIPZrSWXUeKjeMaKGvbg6W9Oi4XEtrwpzUGhbewxCZZCIrzAH2hz0dUhacxB201Y/faY6
+ BdTS75SPs+zjTYo8yE9Y9eG7x/lB60nQjJiZVNvZ88QDfVuLl/heuIq+fyNajBbqbtBT5CWf
+ mOP4Dh4xjm3Vwlz8imWW/drEVJZJrPYqv0HdPbY8jVMpqoe5jDloyVn3prfLdXSbKPexlJaW
+ 5tnPd4lj8rqOFShRnLFCibpeHWIumqrIqIkiRA9kFW3XMgtU6JkIrQzhJb6Tc6mZg2wuYW0d
+ Wo2qvdziMgPkMFiWJpsxM9xPk9BBVwR+uojNq5LzdCsXQ2seG0dhaOTaaIDWVS8U/V8Nqjrl
+ 6bGG2quo5YzJuXKjtKjZ4R6k762pHJ3tnzI/jnlc1sXz
+Message-ID: <859e8211-2c56-8dd5-d6fb-33e4358e4128@pengutronix.de>
+Date:   Fri, 12 Jun 2020 14:18:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0000000000007a16f705a7b1096d@google.com>
+In-Reply-To: <20200612115116.GA18557@ninjato>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 06:48:13PM -0700, syzbot wrote:
-> Hello,
+On 6/12/20 1:51 PM, Wolfram Sang wrote:
 > 
-> syzbot found the following crash on:
+>> This basically kills the concept of devm for interrupts. Some other
 > 
-> HEAD commit:    5b14671b Merge tag 'fuse-update-5.8' of git://git.kernel.o..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=12a11ec1100000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=d1ea633f7958e008
-> dashboard link: https://syzkaller.appspot.com/bug?extid=0113b9be6667b5b50840
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+0113b9be6667b5b50840@syzkaller.appspotmail.com
-> 
-> BUG: using smp_processor_id() in preemptible [00000000] code: systemd-rfkill/6740
-> caller is ext4_mb_new_blocks+0xa77/0x3b30 fs/ext4/mballoc.c:4711
-> CPU: 0 PID: 6740 Comm: systemd-rfkill Not tainted 5.7.0-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x18f/0x20d lib/dump_stack.c:118
->  check_preemption_disabled lib/smp_processor_id.c:47 [inline]
->  debug_smp_processor_id.cold+0x88/0x9b lib/smp_processor_id.c:57
->  ext4_mb_new_blocks+0xa77/0x3b30 fs/ext4/mballoc.c:4711
->  ext4_ext_map_blocks+0x2044/0x3410 fs/ext4/extents.c:4244
->  ext4_map_blocks+0x4cb/0x1640 fs/ext4/inode.c:626
->  ext4_getblk+0xad/0x520 fs/ext4/inode.c:833
->  ext4_bread+0x7c/0x380 fs/ext4/inode.c:883
->  ext4_append+0x153/0x360 fs/ext4/namei.c:67
->  ext4_init_new_dir fs/ext4/namei.c:2757 [inline]
->  ext4_mkdir+0x5e0/0xdf0 fs/ext4/namei.c:2802
->  vfs_mkdir+0x419/0x690 fs/namei.c:3641
->  do_mkdirat+0x21e/0x280 fs/namei.c:3664
->  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
->  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> RIP: 0033:0x7f449ff49687
-> Code: Bad RIP value.
-> RSP: 002b:00007ffdd3b9fe58 EFLAGS: 00000246 ORIG_RAX: 0000000000000053
-> RAX: ffffffffffffffda RBX: 00005567752fd985 RCX: 00007f449ff49687
-> RDX: 00007ffdd3b9fd20 RSI: 00000000000001ed RDI: 00005567752fd985
-> RBP: 00007f449ff49680 R08: 0000000000000100 R09: 0000000000000000
-> R10: 00005567752fd980 R11: 0000000000000246 R12: 00000000000001ed
-> R13: 00007ffdd3b9ffe0 R14: 0000000000000000 R15: 0000000000000000
+> It only works when you can ensure you have all interrupts disabled (and
+> none pending) in remove() or the error paths of probe() etc.
 
-I am seeing this all over the place on Linus's tree right now:
+But when requesting the interrupt as shared the interrupt handler can get called
+any time, even if you have disabled the IRQ source in your IP core....The shared
+IRQ debug code tests this.
 
-[  +0.008563] BUG: using smp_processor_id() in preemptible [00000000] code: systemd/1
-[  +0.000011] caller is ext4_mb_new_blocks+0x2ac/0xc10
-[  +0.000002] CPU: 31 PID: 1 Comm: systemd Not tainted 5.7.0-14371-g25ae6195a4c7 #66
-[  +0.000002] Hardware name: Micro-Star International Co., Ltd. MS-7C59/Creator TRX40 (MS-7C59), BIOS 1.50 05/13/2020
-[  +0.000001] Call Trace:
-[  +0.000008]  dump_stack+0x57/0x70
-[  +0.000004]  debug_smp_processor_id.cold+0x4e/0x53
-[  +0.000001]  ext4_mb_new_blocks+0x2ac/0xc10
-[  +0.000004]  ? ext4_find_extent+0x3e8/0x450
-[  +0.000002]  ext4_ext_map_blocks+0x9f6/0x1b10
-[  +0.000003]  ? ext4_mark_iloc_dirty+0x60f/0xa50
-[  +0.000003]  ? __ext4_journal_get_write_access+0x2d/0x70
-[  +0.000004]  ext4_map_blocks+0x119/0x5a0
-[  +0.000004]  ext4_getblk+0x66/0x1c0
-[  +0.000003]  ext4_bread+0x26/0xc0
-[  +0.000002]  ext4_append+0x49/0xe0
-[  +0.000002]  ext4_mkdir+0x233/0x450
-[  +0.000005]  vfs_mkdir+0x11d/0x1b0
-[  +0.000003]  do_mkdirat+0x92/0x130
-[  +0.000004]  do_syscall_64+0x43/0x80
-[  +0.000004]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[  +0.000003] RIP: 0033:0x7fef3df7a72b
-[  +0.000001] Code: Bad RIP value.
-[  +0.000001] RSP: 002b:00007ffdb4eba0c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000053
-[  +0.000003] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 00007fef3df7a72b
-[  +0.000001] RDX: 0000000000000000 RSI: 00000000000001c0 RDI: 0000563b11cf26e0
-[  +0.000001] RBP: 0000563b11cf2731 R08: 000000000000000d R09: 0000000000000002
-[  +0.000000] R10: 11175e4331068ed5 R11: 0000000000000246 R12: 0000563b11cf26e0
-[  +0.000002] R13: 00007fef3e019c20 R14: 00007ffdb4eba0f0 R15: 8421084210842109
+Marc
 
-Just a constant stream of them.
-
-There's a few other fun:
-
-[  +0.453222] BUG: unable to handle page fault for address: ffffb59cc2719000
-[  +0.000004] #PF: supervisor write access in kernel mode
-[  +0.000001] #PF: error_code(0x000b) - reserved bit violation
-
-messages at times, but I don't think that's an ext4 issue, but rather
-something in the sound stack...
-
-EXT4 developers, any hints/patches to try?
-
-thanks,
-
-greg k-h
+-- 
+Pengutronix e.K.                 | Marc Kleine-Budde           |
+Embedded Linux                   | https://www.pengutronix.de  |
+Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
