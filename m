@@ -2,213 +2,141 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D0BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA06FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 158C02078C
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:01:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JKqqRUn9"
+	by mail.kernel.org (Postfix) with ESMTP id 95C3320835
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:08:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726331AbgFLABM (ORCPT
+        id S1726349AbgFLAIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 20:01:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35240 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726284AbgFLABM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 20:01:12 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A08B1C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 17:01:11 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id s1so9073653ljo.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 17:01:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=69MnTpFDJK4LtDPAHdkNHQCCDPBuXyYRUZTZxf0W1QA=;
-        b=JKqqRUn9urXpgo+mw0qGabqO3diMkUoq6fb8MaF7hRwxtNrUQ3YFkp7m71qOR0xgnq
-         vAxB+FD0hTfdvpxj77Y7u9hKh33BmXscgIT6xsrRxRzAPXGgyBpcbLRk+g2KCGWZlVCo
-         S32qiOpKaGpAuDLGaXYJjVLGYSJHROWvMFU/sSLWbmMR8et5500nIFLUJmtDGY04kklT
-         DQI08qWjfKpJoW6Ovzh4AjK49JwTi4TogwTqTi+zZ5s10F2nmKllNL9eultVp6x/6fl5
-         y75H5OBAZ2gvQd0V8+2R9PZ62RbIEmQBUQAxbibUZnAFMyMlEQv4Jbyz/vzxKHnReEqS
-         r4WA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=69MnTpFDJK4LtDPAHdkNHQCCDPBuXyYRUZTZxf0W1QA=;
-        b=YdYycefalZiq+2wdq2PzTnUyJgt4h7vSkbzvi120BL+j+NVw3wGqUWpIkMcKDWFP8t
-         N5tM0+B/aF6vhWvvtxx0fSYWxObm/QFyDjDpusYi33KhmDtmigTS7GUO1H1tdWj4yq9U
-         SGIS4MT77JCdqyoo8D1M37mRyldWVsGa40yDGeyAe16j5ceYS9BENVp/14IxquN+Uk55
-         4QvQumhLBcsIyzX/aRg2dUUIWYjWnaDHB5oPV3LX9hRGtT3HAWLf/RmVzyyNxCfR0r8N
-         4VBcdLQ5el7xRTMA7zaDfZ0nHbOKlGiRTFpsrWT6T61LDI7brkFlbnZ6uLVI0/zfxnRP
-         JPQQ==
-X-Gm-Message-State: AOAM530KSrMOQBKYbtkI76DHLTnkW8sIdfBzDJNnn5fYEeOnfhmmxol/
-        pyCsRmI2mXjXN8NPkx15PxyngnF+WgAboMYRgKI=
-X-Google-Smtp-Source: ABdhPJzrlEajDrnfjNM3TEqVmLY4lQVwpZwf2IKM3U82wD8FutIWkee2t3UponlBZu6OMjSr7pg49nRJ4KR8skeqvso=
-X-Received: by 2002:a2e:8107:: with SMTP id d7mr5820605ljg.363.1591920069655;
- Thu, 11 Jun 2020 17:01:09 -0700 (PDT)
+        Thu, 11 Jun 2020 20:08:11 -0400
+Received: from mga07.intel.com ([134.134.136.100]:43945 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726285AbgFLAIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 20:08:10 -0400
+IronPort-SDR: qjxm5hOmsZlLIm/0efie+PCu+6i/007anO7Cvb15Ct0OYi5PYsbNC+mMUex/agDbFN99/dLOeo
+ xrMt/vVemDYg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 17:08:10 -0700
+IronPort-SDR: SChgA/m6icPmV5QRr9zntSHPzlPC2L09Himj6iC2lnq0FM0aKGzhTw+6cPOyKTNjjBU7r4XKup
+ sGclRox0Mjtg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,501,1583222400"; 
+   d="scan'208";a="448119325"
+Received: from pl-dbox.sh.intel.com (HELO intel.com) ([10.239.159.39])
+  by orsmga005.jf.intel.com with ESMTP; 11 Jun 2020 17:08:06 -0700
+Date:   Fri, 12 Jun 2020 08:07:32 +0800
+From:   Philip Li <philip.li@intel.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        Jann Horn <jannh@google.com>, Christoph Hellwig <hch@lst.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Kirill Shutemov <kirill@shutemov.name>,
+        Jan Kara <jack@suse.cz>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+Subject: Re: [LKP] Re: [gup] 17839856fd: stress-ng.vm-splice.ops_per_sec
+ 2158.6% improvement
+Message-ID: <20200612000732.GA23169@intel.com>
+References: <20200611040453.GK12456@shao2-debian>
+ <CAHk-=whCjhBgJv0z6JoOKMyfnBp0WhH6oa=ayuRRLtgJxOkd5Q@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200611031652.200401-1-daeho43@gmail.com> <20200611162721.GB1152@sol.localdomain>
- <CACOAw_zKC24BhNOF2BpuRfuYzBEsis82MafU9HqXwLj2sZ3Azg@mail.gmail.com> <20200611230043.GA18185@gmail.com>
-In-Reply-To: <20200611230043.GA18185@gmail.com>
-From:   Daeho Jeong <daeho43@gmail.com>
-Date:   Fri, 12 Jun 2020 09:00:58 +0900
-Message-ID: <CACOAw_zZY4W9PYY4VAZ_5tGB5LxCEZKh6Sc523MRzVCvKNhinQ@mail.gmail.com>
-Subject: Re: [f2fs-dev] [PATCH v2] f2fs: add F2FS_IOC_SEC_TRIM_FILE ioctl
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com,
-        Daeho Jeong <daehojeong@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whCjhBgJv0z6JoOKMyfnBp0WhH6oa=ayuRRLtgJxOkd5Q@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For the incremental way of erasing, we might as well support the
-(offset, length) option in a unit of 4KiB.
-
-So, you might use this ioctl like the below. Does it work for you?
-struct f2fs_sec_trim {
-        u64 startblk;
-        u64 blklen;
-        u32 flags;
-};
-
-sectrim.startblk =3D 0;
-sectrim.blklen =3D 256;     // 1MiB
-sectrim.flags =3D F2FS_TRIM_FILE_DISCARD | F2FS_TRIM_FILE_ZEROOUT;
-ret =3D ioctl(fd, F2FS_SEC_TRIM_FILE, &sectrim);
-
-2020=EB=85=84 6=EC=9B=94 12=EC=9D=BC (=EA=B8=88) =EC=98=A4=EC=A0=84 8:00, E=
-ric Biggers <ebiggers@kernel.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
-
->
-> On Fri, Jun 12, 2020 at 07:49:12AM +0900, Daeho Jeong wrote:
-> > 2020=EB=85=84 6=EC=9B=94 12=EC=9D=BC (=EA=B8=88) =EC=98=A4=EC=A0=84 1:2=
-7, Eric Biggers <ebiggers@kernel.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
-> > >
-> > > On Thu, Jun 11, 2020 at 12:16:52PM +0900, Daeho Jeong wrote:
-> > > > +     for (index =3D pg_start; index < pg_end;) {
-> > > > +             struct dnode_of_data dn;
-> > > > +             unsigned int end_offset;
-> > > > +
-> > > > +             set_new_dnode(&dn, inode, NULL, NULL, 0);
-> > > > +             ret =3D f2fs_get_dnode_of_data(&dn, index, LOOKUP_NOD=
-E);
-> > > > +             if (ret)
-> > > > +                     goto out;
-> > > > +
-> > > > +             end_offset =3D ADDRS_PER_PAGE(dn.node_page, inode);
-> > > > +             if (pg_end < end_offset + index)
-> > > > +                     end_offset =3D pg_end - index;
-> > > > +
-> > > > +             for (; dn.ofs_in_node < end_offset;
-> > > > +                             dn.ofs_in_node++, index++) {
-> > > > +                     struct block_device *cur_bdev;
-> > > > +                     block_t blkaddr =3D f2fs_data_blkaddr(&dn);
-> > > > +
-> > > > +                     if (__is_valid_data_blkaddr(blkaddr)) {
-> > > > +                             if (!f2fs_is_valid_blkaddr(F2FS_I_SB(=
-inode),
-> > > > +                                     blkaddr, DATA_GENERIC_ENHANCE=
-)) {
-> > > > +                                     ret =3D -EFSCORRUPTED;
-> > > > +                                     goto out;
-> > > > +                             }
-> > > > +                     } else
-> > > > +                             continue;
-> > > > +
-> > > > +                     cur_bdev =3D f2fs_target_device(sbi, blkaddr,=
- NULL);
-> > > > +                     if (f2fs_is_multi_device(sbi)) {
-> > > > +                             int i =3D f2fs_target_device_index(sb=
-i, blkaddr);
-> > > > +
-> > > > +                             blkaddr -=3D FDEV(i).start_blk;
-> > > > +                     }
-> > > > +
-> > > > +                     if (len) {
-> > > > +                             if (prev_bdev =3D=3D cur_bdev &&
-> > > > +                                     blkaddr =3D=3D prev_block + l=
-en) {
-> > > > +                                     len++;
-> > > > +                             } else {
-> > > > +                                     ret =3D f2fs_secure_erase(pre=
-v_bdev,
-> > > > +                                                     prev_block, l=
-en, flags);
-> > > > +                                     if (ret)
-> > > > +                                             goto out;
-> > > > +
-> > > > +                                     len =3D 0;
-> > > > +                             }
-> > > > +                     }
-> > > > +
-> > > > +                     if (!len) {
-> > > > +                             prev_bdev =3D cur_bdev;
-> > > > +                             prev_block =3D blkaddr;
-> > > > +                             len =3D 1;
-> > > > +                     }
-> > > > +             }
-> > > > +
-> > > > +             f2fs_put_dnode(&dn);
-> > > > +     }
-> > >
-> > > This loop processes the entire file, which may be very large.  So it =
-could take
-> > > a very long time to execute.
-> > >
-> > > It should at least use the following to make the task killable and pr=
-eemptible:
-> > >
-> > >                 if (fatal_signal_pending(current)) {
-> > >                         err =3D -EINTR;
-> > >                         goto out;
-> > >                 }
-> > >                 cond_resched();
-> > >
+On Thu, Jun 11, 2020 at 01:24:09PM -0700, Linus Torvalds wrote:
+> On Wed, Jun 10, 2020 at 9:05 PM kernel test robot <rong.a.chen@intel.com> wrote:
 > >
-> > Good point!
+> > FYI, we noticed a 2158.6% improvement of stress-ng.vm-splice.ops_per_sec due to commit:
 > >
-> > > Also, perhaps this ioctl should be made incremental, i.e. take in an
-> > > (offset, length) like pwrite()?
-> > >
-> > > - Eric
+> > commit: 17839856fd588f4ab6b789f482ed3ffd7c403e1f ("gup: document and work around "COW can break either way" issue")
+> 
+> Well, that is amusing, and seeing improvements is always nice, but
+> somehow I think the test is broken.
+> 
+> I can't see why you'd ever see an improvement from that commit, and if
+> you do see one, not one by a factor of 20x.
+got it, we will double check again, that we go through the data
+and it can be reproduced in our environment before sending out report.
+
+> 
+> > In addition to that, the commit also has significant impact on the following tests:
 > >
-> > Discard and Zeroing will be treated in a unit of block, which is 4KB
-> > in F2FS case.
-> > Do you really need the (offset, length) option here even if the unit
-> > is a 4KB block? I guess this option might make the user even
-> > inconvenienced to use this ioctl, because they have to bear 4KB
-> > alignment in mind.
->
-> The ioctl as currently proposed always erases the entire file, which coul=
-d be
-> gigabytes.  That could take a very long time.
->
-> I'm suggesting considering making it possible to call the ioctl multiple =
-times
-> to process the file incrementally, like you would do with write() or pwri=
-te().
->
-> That implies that for each ioctl call, the length would need to be specif=
-ied
-> unless it's hardcoded to 4KiB which would be very inefficient.  Users wou=
-ld
-> probably want to process a larger amount at a time, like 1 MiB, right?
->
-> Likewise the offset would need to be specified as well, unless it were to=
- be
-> taken implicitly from f_pos.
->
-> - Eric
+> > | testcase: change | stress-ng: stress-ng.vm-splice.ops_per_sec 372.8% improvement        |
+> > | testcase: change | stress-ng: stress-ng.vm-splice.ops_per_sec 2052.7% improvement       |
+> 
+> Ok, so it's affecting other runs of the same test, and the smaller
+> ("only" 378%) improvement seems to be just from using fewer threads.
+> 
+> So maybe forcing the COW ends up avoiding some very specific cache
+> thrashing case.
+> 
+> > To reproduce:
+> >
+> >         git clone https://github.com/intel/lkp-tests.git
+> >         cd lkp-tests
+> >         bin/lkp install job.yaml  # job file is attached in this email
+> >         bin/lkp run     job.yaml
+> 
+> Is there some place where you'd actually _see_ what
+> "stress-ng.vm-splice.ops_per_sec" actually means and does?
+> 
+> Yeah, I can go and find the actual stress-ng git repo, and take a
+> look. I kind of did. But the step from your "to reproduce" to actually
+> figuring out what is going on is pretty big.
+> 
+> It would be nice to know what it actually does - do you have a
+> database of descriptions for the different tests and how to run them
+> individually or anything like that?
+Hi Linus, it is currently embedded in different scripts, like tests/stress-ng,
+but it now depends on up level script like lkp run to call them to pass the
+parameters from job.yaml. It can provide some basic information. Meanwhile
+we try to generate a reproduce script for test running, I add more info
+in below reply, kindly check.
+
+> 
+> IOW, rather than the above "just run all fo the lkp scripts",
+> something like how to run the actual individual test would be good.
+> 
+> IOW how do those yaml files translate into _actually_ running the
+> 'stress-ng' program?
+Thanks Linus for your feedback, we will improve this to provide
+more clear reproduce information.
+
+In the attachment, there's a reproduce script with content like below,
+which is another way to directly run the stress-ng. This helps to show
+which parameters we are using when having this report. Would you mind to
+have a look?
+
+for cpu_dir in /sys/devices/system/cpu/cpu[0-9]*
+do
+	online_file="$cpu_dir"/online
+	[ -f "$online_file" ] && [ "$(cat "$online_file")" -eq 0 ] && continue
+
+	file="$cpu_dir"/cpufreq/scaling_governor
+	[ -f "$file" ] && echo "performance" > "$file"
+done
+
+ "stress-ng" "--timeout" "30" "--times" "--verify" "--metrics-brief" "--sequential" "96" "--class" "pipe" "--exclude" "spawn,exec,swap"
+
+Thanks
+
+> 
+>                 Linus
+> _______________________________________________
+> LKP mailing list -- lkp@lists.01.org
+> To unsubscribe send an email to lkp-leave@lists.01.org
