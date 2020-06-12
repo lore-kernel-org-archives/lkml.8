@@ -2,144 +2,184 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D21FEC433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9EA8C433E0
 	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B533720792
+	by mail.kernel.org (Postfix) with ESMTP id 88BAA206D7
 	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:00:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="coedfnGz"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="SQhP3Z+/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbgFLTAf (ORCPT
+        id S1726304AbgFLTA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 15:00:35 -0400
-Received: from mout.web.de ([212.227.17.12]:42779 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726219AbgFLTAc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 15:00:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1591988425;
-        bh=WSvz5iR9hp1Prq3Qr+9+rmXYQSibTT4zi0zEBk9MRw8=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=coedfnGz2HS6Ucd60bUzLqBoROH/x4hqhKq1EbucltTJFML9+uXNWNnD1bntvsvy0
-         sYZV/oM9ZUE7TUV1wuouKztmRnBX7i/jae0tjF663mlGvj2PgmM4FR7dpHEbgCpl6f
-         EugGsx4BwC6z3KN3dFSFGto78rjelDZxx3WmxBI4=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.95.40]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MTfol-1jMQTs2Mo9-00U0CQ; Fri, 12
- Jun 2020 21:00:25 +0200
-Subject: Re: [v2] proc/fd: Remove unnecessary variable initialisations in
- seq_show()
-To:     Matthew Wilcox <willy@infradead.org>,
-        Kaitao Cheng <pilgrimtao@gmail.com>,
-        linux-fsdevel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Muchun Song <songmuchun@bytedance.com>
-References: <20200612160946.21187-1-pilgrimtao@gmail.com>
- <7fdada40-370d-37b3-3aab-bfbedaa1804f@web.de>
- <20200612170033.GF8681@bombadil.infradead.org>
- <80794080-138f-d015-39df-36832e9ab5d4@web.de>
- <20200612170431.GG8681@bombadil.infradead.org>
- <cd8f10b2-ffbd-e10f-4921-82d75d1760f4@web.de>
- <20200612182811.GH8681@bombadil.infradead.org>
- <d3d13ca7-754d-cf52-8f2c-9b82b8cc301f@web.de>
- <20200612184701.GI8681@bombadil.infradead.org>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <d01e5cb7-c812-746d-667c-06cca202bdcf@web.de>
-Date:   Fri, 12 Jun 2020 21:00:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200612184701.GI8681@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+        Fri, 12 Jun 2020 15:00:29 -0400
+Received: from mail-dm6nam10on2135.outbound.protection.outlook.com ([40.107.93.135]:53793
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726219AbgFLTA2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 15:00:28 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=K9AWszs7xt1UpAnCZ42jvn8UmiCHqpIrv+Hntci+xRWRTrLwJdECcFOAo4aaaD+AcOoLfUw7cYBkZxo4RS7Dhr2boHaNgWoki3Whrn+a3UcWK+R1H1YBo2DfAiRw650bklMT9aW5UtjWhfVpFu9LzaG2gC3bC1ziKhgFYPJjwSH1YMWmqO1Yg7Rk+GPN3qrpfoCRpjCqprpTHEAf5ASsOmWKmxFvUXBgDebLAFKnSXOVdwgtIFsFEOLRJ7SfIUvoXhPTPgyn5senX9K7h9iMQb2qSFvmuwzaZUzx1fJEFtpPXtoyT0RqnFxGm4c5MEo9b+cDfsMfwlnQL3Thbxdx+A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cZOzYtYYy4YMfCPqWH0YfUQQUUsra+kP3Q82vuyMDrM=;
+ b=h37u+sDIHplwo9UvnQoEDiSgFheO3J5EZIoxvE4h8k4cjA7pCp6JR4c6f4KjOLDcYrWoHrXyXQ1Xqe/nhmOiBQLupuLliSQL79Onb/elpJ8GK+3ZTxdqkLQxRdrZWnzj/zzUNFG7oc6XkCWxKCWGu5Uz6qa4LxJgIFsgMWlPBpUnFgvCsKLfs9LzoNy4iVLMl4UsZVNIMywSYichVgeMzunPufPhLOkYuNdkePwSnvOIGCNn+hetxgCn3fnv0a6zoFGPFu465M/oWKp9n2nZcQrBR7UCt644UBpRkJ0B+8kK4Gzp4lU8Y6EsD073CAxo9qq4Gr0RTimW5d6oe5G6zw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cZOzYtYYy4YMfCPqWH0YfUQQUUsra+kP3Q82vuyMDrM=;
+ b=SQhP3Z+/La9FMwuyBKwQGrBsW9x9EmDNPh/6CD/g/rPSMGgKveMXVNxX6cptpbPs8eo5gmRHXrr2475fH+lWxYzQNMtObvZphwv7nQtwvmPmyEXFF93lYDIXNiDLw6WTY1Lra/ydtkTU/d+jhpwJMQ78lvfn7OSEtV4sIlREGQI=
+Received: from BN7PR21MB1667.namprd21.prod.outlook.com (2603:10b6:406:ad::15)
+ by BN6PR21MB0626.namprd21.prod.outlook.com (2603:10b6:404:11a::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.7; Fri, 12 Jun
+ 2020 19:00:14 +0000
+Received: from BN7PR21MB1667.namprd21.prod.outlook.com
+ ([fe80::9132:d87f:7a76:e632]) by BN7PR21MB1667.namprd21.prod.outlook.com
+ ([fe80::9132:d87f:7a76:e632%3]) with mapi id 15.20.3109.011; Fri, 12 Jun 2020
+ 19:00:13 +0000
+From:   Steve MacLean <Steve.MacLean@microsoft.com>
+To:     Nick Gasson <nick.gasson@arm.com>, Ian Rogers <irogers@google.com>
+CC:     Steve MacLean <steve.maclean@linux.microsoft.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: RE: [EXTERNAL] Re: [PATCH v4] perf inject --jit: Remove //anon mmap
+ events
+Thread-Topic: [EXTERNAL] Re: [PATCH v4] perf inject --jit: Remove //anon mmap
+ events
+Thread-Index: AQHWM8mKGkvgLkOO8Em0Algb20rYzKi8SrMAgAACEUCAAB83gIAA0mCAgAYSsoCAACu4AIAAE0SAgBHal7A=
+Date:   Fri, 12 Jun 2020 19:00:13 +0000
+Message-ID: <BN7PR21MB166740321F6EACF49E9BC874F7810@BN7PR21MB1667.namprd21.prod.outlook.com>
+References: <1590544271-125795-1-git-send-email-steve.maclean@linux.microsoft.com>
+ <CAP-5=fXGXqkTbSwKv7eq9UkPvVqRJXDm3E-XNxD8+5fmQk3bpg@mail.gmail.com>
+ <MN2PR21MB15185419971A29EF52B8138FF7B10@MN2PR21MB1518.namprd21.prod.outlook.com>
+ <CAP-5=fVHo262Lo_Re31wM8Bt0soJ-m51J7MEnwvdTg5P8J6e6A@mail.gmail.com>
+ <CAP-5=fV7F4u66388HC-q8btOYWKxtb1gTTi4LK_Besb-zE25Rw@mail.gmail.com>
+ <xgl9tuzvz4wc.fsf@arm.com>
+ <CAP-5=fWU==y-DMd5sD7AxHCUNg0L4Qt_VRVvyDVNYPCOdxmU_A@mail.gmail.com>
+ <xgl9mu5nyugm.fsf@arm.com>
+In-Reply-To: <xgl9mu5nyugm.fsf@arm.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-06-12T19:00:11Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d3aa0a85-c0c8-4965-8072-356270cd1449;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
+authentication-results: arm.com; dkim=none (message not signed)
+ header.d=none;arm.com; dmarc=none action=none header.from=microsoft.com;
+x-originating-ip: [75.182.186.176]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d4c82566-2d48-4a24-3291-08d80f02d6bc
+x-ms-traffictypediagnostic: BN6PR21MB0626:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN6PR21MB06265BE748C3E285627C819DF7810@BN6PR21MB0626.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0432A04947
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: jHe8uW1cjvNgaDzxRhfPqVkfGTIpuEDAAhl5EhuyLDf+9dgnpxDjCtu3tLZd4xbayCIk7NLFhK22O3Vb9Rs1FreUIWBSztsNSenleCYGlYAHoFGJyR5a36qQe7zR00imNyQqbtlY60OtcPkQ+gHUmklI2v4f8btEFi06M1ye/74iI3tc5zbGfAb0zP8rX2i/zGJntMNl34XC+sOnttiqlx7VDmulnipzAWKV5DR/y9CQ+2hfcGiPPGKkP0M72wWWyI/sVU4QVpgyz6FAiLCXU4/iHfHPEP30Pnxi5NgCdil7pDELWp4e8cQNLVwD07+arhXGtw3iPRI+k87Q2NQx/A==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN7PR21MB1667.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(136003)(376002)(366004)(39860400002)(6506007)(83380400001)(76116006)(82950400001)(2906002)(66946007)(66556008)(7696005)(86362001)(54906003)(7416002)(26005)(82960400001)(64756008)(66476007)(186003)(66446008)(52536014)(5660300002)(8676002)(4326008)(478600001)(316002)(110136005)(10290500003)(8990500004)(71200400001)(55016002)(8936002)(33656002)(9686003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: HSK2Ta2oDrF+lq2ajCeoZSN6oAIF1jq8ihvZ/30rmcV3zFryOR2M8MOgpvcICHhcC8J5E3xL3Zk+1mwgnMoQ+Mj9mRxlNTJQ8O8acXBReNELZCLmQkoATFOW5CAel8Mu87so6HS62U4dgp7mVlMOTL5vu7gk/M7ZwyEeoQ2QgZIRmd2rVu5fBEVBQK4TVe8NXnrYmdbBhCGqClMb4YbcAew+/EBmONHYjBfBzkdpd6CP1LGHmaEj4innEsVbLJaGnGybmjOrgTwX97gAeg49VqsSFaU3HCfE96PJCe6e5OAG0YuPjJ5XO7uWQRV+fcitE/udQOuYullG5rbLfrapOXvqqKb7Z5/CgLGgTCbDXvlCVCB2los8rla9OVEJjrxDJEeN0XEQbsJTz+IUzWOphF4NeF7ANHYQFhq2no9slVtS9FiHXa3P3Pvg8l7GOgduNnA5rFng2ZAJ8XLCoc2uyV6SSMm1a0KaLW9gYM8AV1aOFAcwU4E/N0SL1I1TxQ4C
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:GMNHRY8OVbovmdEwZ8cY8IZYdhyo3yrFrxX2P5Pr/8j/e82L4Uj
- EY0bjNZ5jJRdMWZimmE6RrFMAy7e6Ku8nVOQrgMYsn1Erf0n7TFmmlgkeoQDiFzTuZUTmQz
- u6mBN+tcFCoBRtoR36lMEDuJYUdT7kX8CosHN+wLfyAsJbh9vsrVbZoFFWovCOwsBysMDrb
- tlVgIrcddZaFNQnbZYp/g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:AJJOby13OXw=:WVqs47nSbxzZdGjoktkwiL
- wsbt8D2EgLvB7E5AzOVk8/VdNV9o9Klnwi3V1u2VNA+8Z2s5gA+aJ5x/0lsFGfrKM5XizvGlT
- pUr2W05aBl6ToTliZCskjcGfdX8kdIZvTYp5HBL85R/AD5UoAo18tTRHQPdLTv91eDqi7bMOb
- 1ijwzs661OLekSSqPXuVEkAUE3ya1YKSnuQ5kDW4ofz/byn4GDUJkrtl0hgKtvsSQ4D430w9L
- umB9b8JvRxgGxT/qYk1uoMQKMFKhKjv2Jm3LuC5iX6WWxxdu7YA6M+66HKuR7VSzKdtaAk/b8
- 8Jf4wDyln1r8w9MTk648+kqjJt86wXm/D+KtFQ1+8RnogrKCe07H8CPUo+GFnsEpyhGTNnPB6
- KhoZGJsf5hCIgCN9HxsAXLiw0b7eR02cutInCma4LWhgbj2+dHRx4Q8RcMDVSAm6oNydjVCqu
- O4eOHyUFpeyJuKdKvOTlMIOHP2PTB5PTFMLFd9AOD4Arf1ScsnsUxlP7fUUym3ziCbGiRlf4w
- YR6V8OpsxT+NCtu2Yaak9RHvOPlIrsHAPPhYi3DL/GrSYaw5zXGRm/u8ONUlOc5XexVzYCJIw
- jR4qe7505+vCTCYln9vTv8frNn2R+UUi707m31d40zZ8mz9NdIcCFrn93glpLia+NuFyt8J48
- AMU5+1+VT1MXWqnpAPIgRzx1SSKsWNqZf3pWJi71s0TLHFz287W++hz37pJGMC6gXIk8N1wqi
- /5MyeUWOcFAeqKYFvttSbg3qjTOQuQpMUyOHfHQkC2FGskZErpcG7+OCydta8DLrYMP3l+JEp
- hyna8oFesgNN8bRFZ1Gp2bjPzSi1DoKMo4Kp3IjtdZFdRoBgIZ/osn9X7YMrz6QOnB7VFTUqY
- vLLcYPt5mERESpEtZYbOkxp32/JcPUvpY0+SJSDp/IbZgpQAEyIpQCDQkgoBHHGtRLpXpqgm7
- Yk6ZdmvtyBo0HiPqfAVLpEU0sDMuwJpTniurRx7u6v29sLxzhZcjrpi+bYtaO5+r4lhS/nJmD
- rLoeHe5RHosFdVTHxqYYffctIitjnrxZIzCkB1BDcgXFO7uI3Qzn2AhR6r+TJUpGtC4ujmV34
- HnBCFcSLItu9/yzU1ADH+tHH8SZCY/Ghd6l19sNZ/R123JTnLl35pnI/Nb5acLs8C8GHl3OlZ
- AoMOZEJ/DRhlIT534X5hZtarsSct1ofTKOZJBivat/djx4q27ha2TzIYsIHtYuh6oYoCv0ThN
- U44iXQg8/SWsmdpRA
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d4c82566-2d48-4a24-3291-08d80f02d6bc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2020 19:00:13.8335
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Mq/D6PWSpRnL0EsIc0kMltpwVcL+G6MNcVDgGJZDXVaD2yjeUv6n3Ib7S/+gULIilt6O6/bW1ft2tpwCZoHwVA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR21MB0626
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> I suggest to take another look at published software development activi=
-ties.
+>>> Hi Ian,
+>>>
+>>>> I tried this as well with latest perf/core. The difference is that=20
+>>> unresolved addresses currently look like:
+>>>
+>>>      0.00%  java             [JIT] tid 221782       [.] 0x0000ffff45149=
+9a4
+>>>      0.00%  java             [JIT] tid 221782       [.] 0x0000ffff4514f=
+3e8
+>>>      0.00%  java             [JIT] tid 221782       [.] 0x0000ffff45149=
+394
+>>>
+>>> But after Steve's patch this becomes:
+>>>
+>>>      0.00%  java             [unknown]              [.] 0x0000ffff58557=
+d14
+>>>      0.00%  java             [unknown]              [.] 0x0000ffff785c0=
+3b4
+>>>      0.00%  java             [unknown]              [.] 0x0000ffff58386=
+520
+>>>
+>>> I couldn't see any events that were symbolised before but are no=20
+>>> longer symbolised after this patch.
+>>
+>> I see this, thanks for digging into the explanation! Were you able to=20
+>> get a test case where the unknowns went down? For example, by forcing=20
+>> the code cache size to be small? This is the result I'd expect to see.
 >
-> Do you collateral evolution in the twenty?
+>I tried the same Dacapo benchmark as you with different values of InitialC=
+odeCacheSize and grepped for -e '\[unknown\]' -e '\[JIT\]'.
+>
+>       Base   Patched
+> 100M  338    373
+> 50M   333    315
+> 25M   323    368
+> 15M   1238   309
+> 10M   2600   333
+> 1M    6035   337
+>
+>This looks fairly convincing to me: the cliff at 15M is where the code cac=
+he starts needing to be enlarged.
+>
 
-Evolutions and software refactorings are just happening.
-Can we continue to clarify the concrete programming items
-also for a more constructive review of this patch variant?
+Removing the anonymous mappings causes a small regression.  Specifically,
+the reporting of the module name goes from "[JIT] tid <tid>" to "[unknown]"=
+.
+This occurs when the JIT fails to report memory used in jitdump before it=20
+is used.
 
-Regards,
-Markus
+However there is also confirmation that JAVA does see the reported issue=20
+when using a small code cache.  The current patch resolves the issue in
+this case.
+
+I see two options:
+
++ Accept the regression. Since this is a regression for a jit dump=20
+reporting synchronization error, this may be a reasonable option.
+
++ Design a more complicated patch. Either
+    + Only strip parts of // anon mmap events overlapping existing=20
+      jitted-<pid>-<code_index>.so mmap events.
+    + Only strip parts of // anon mmap events overlapping prior
+      // anon mmap events
+
+Any opinions?
