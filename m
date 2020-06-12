@@ -2,132 +2,108 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FORGED_MUA_MOZILLA,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17463C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B6FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D927B208B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:50:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFFB820801
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:53:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LKj+wOy3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbgFLQut (ORCPT
+        id S1726317AbgFLQxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 12:50:49 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22104 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726089AbgFLQus (ORCPT
+        Fri, 12 Jun 2020 12:53:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49846 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726108AbgFLQxH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 12:50:48 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05CGY8tQ020097;
-        Fri, 12 Jun 2020 12:50:42 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31mce2t80h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 12 Jun 2020 12:50:42 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05CGjIA1009834;
-        Fri, 12 Jun 2020 16:50:40 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma04ams.nl.ibm.com with ESMTP id 31g2s83nxn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 12 Jun 2020 16:50:40 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05CGnLAa590470
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jun 2020 16:49:21 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C1DD25204F;
-        Fri, 12 Jun 2020 16:50:37 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.93.125])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 415A752052;
-        Fri, 12 Jun 2020 16:50:36 +0000 (GMT)
-Subject: Re: upstream test error: BUG: using smp_processor_id() in preemptible
- code in ext4_mb_new_blocks
-To:     Greg KH <gregkh@linuxfoundation.org>, adilger.kernel@dilger.ca,
-        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, tytso@mit.edu
-Cc:     syzbot <syzbot+0113b9be6667b5b50840@syzkaller.appspotmail.com>
-References: <0000000000007a16f705a7b1096d@google.com>
- <20200612121549.GA2603@kroah.com>
-From:   Ritesh Harjani <riteshh@linux.ibm.com>
-Date:   Fri, 12 Jun 2020 22:20:35 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 12 Jun 2020 12:53:07 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 985DAC03E96F;
+        Fri, 12 Jun 2020 09:53:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=P/jNQXjNSM/A6oN+60RJrl9Lv/d/a/2jIE6Q5ifN8/s=; b=LKj+wOy3l57klhVmnW+yujCrgG
+        K7vkYi8Xm/4X3STZKa3XkUVc5AWgi7GO+GsOh+Bf1JE7dJHBKvlapqkZV0d9gYyCrh2J2Z4/kPTY9
+        eelN7KE71KCqEPJLY22K0lXk1Ybhak4ch2hFNUsnJOnAq0JnQ/5vGXDnAmn/SHUfGAH/r3rjIEoH+
+        GaaphLBJxhYFqpz+IeuImATeDu4sovDgngfnxkVC8r35iNWt+5x3sr+LWGuKxIjjCP9Qog63+PLHF
+        jIphBiN6QCX8C98YlF0kJECi8dCAaccSYeNUekLCIHGQG7AgjrszTRsgowpiiHyc8cPivjxu43f3L
+        XtfHf8Cw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jjmvG-0006Qb-09; Fri, 12 Jun 2020 16:52:54 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BB7CB3003E4;
+        Fri, 12 Jun 2020 18:52:51 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9937E213DCC6A; Fri, 12 Jun 2020 18:52:51 +0200 (CEST)
+Date:   Fri, 12 Jun 2020 18:52:51 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: Re: [v2 PATCH] printk: Make linux/printk.h self-contained
+Message-ID: <20200612165251.GG2497@hirez.programming.kicks-ass.net>
+References: <20200611125144.GA2506@gondor.apana.org.au>
+ <20200612043634.GA30181@gondor.apana.org.au>
+ <20200612131405.GI4311@linux-b0ei>
 MIME-Version: 1.0
-In-Reply-To: <20200612121549.GA2603@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Message-Id: <20200612165036.415A752052@d06av21.portsmouth.uk.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-12_12:2020-06-12,2020-06-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
- lowpriorityscore=0 phishscore=0 spamscore=0 mlxscore=0 impostorscore=0
- malwarescore=0 bulkscore=0 mlxlogscore=999 adultscore=0
- cotscore=-2147483648 suspectscore=0 priorityscore=1501 classifier=spam
- adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006120121
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200612131405.GI4311@linux-b0ei>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> I am seeing this all over the place on Linus's tree right now:
+On Fri, Jun 12, 2020 at 03:14:05PM +0200, Petr Mladek wrote:
+> On Fri 2020-06-12 14:36:35, Herbert Xu wrote:
+> > As it stands if you include printk.h by itself it will fail to
+> > compile because it requires definitions from ratelimit.h.  However,
+> > simply including ratelimit.h from printk.h does not work due to
+> > inclusion loops involving sched.h and kernel.h.
+> > 
+> > This patch solves this by moving bits from ratelimit.h into a new
+> > header file which can then be included by printk.h without any
+> > worries about header loops.
+> > 
+> > The build bot then revealed some intriguing failures arising out
+> > of this patch.  On s390 there is an inclusion loop with asm/bug.h
+> > and linux/kernel.h that triggers a compile failure, because kernel.h
+> > will cause asm-generic/bug.h to be included before s390's own
+> > asm/bug.h has finished processing.  This has been fixed by not
+> > including kernel.h in arch/s390/include/asm/bug.h.
+> > 
+> > A related failure was seen on powerpc where asm/bug.h leads to
+> > the inclusion of linux/kernel.h via asm-generic/bug.h which then
+> > prematurely tries to use the very macros defined in asm/bug.h.
+> > The particular inclusion path which led to this involves lockdep.h.
+> > I have fixed this moving the type definitions lockdep.h into the
+> > new lockdep_types.h.
+> > 
+> > Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 > 
-> [  +0.008563] BUG: using smp_processor_id() in preemptible [00000000] code: systemd/1
-> [  +0.000011] caller is ext4_mb_new_blocks+0x2ac/0xc10
-> [  +0.000002] CPU: 31 PID: 1 Comm: systemd Not tainted 5.7.0-14371-g25ae6195a4c7 #66
-> [  +0.000002] Hardware name: Micro-Star International Co., Ltd. MS-7C59/Creator TRX40 (MS-7C59), BIOS 1.50 05/13/2020
-> [  +0.000001] Call Trace:
-> [  +0.000008]  dump_stack+0x57/0x70
-> [  +0.000004]  debug_smp_processor_id.cold+0x4e/0x53
-> [  +0.000001]  ext4_mb_new_blocks+0x2ac/0xc10
-> [  +0.000004]  ? ext4_find_extent+0x3e8/0x450
-> [  +0.000002]  ext4_ext_map_blocks+0x9f6/0x1b10
-> [  +0.000003]  ? ext4_mark_iloc_dirty+0x60f/0xa50
-> [  +0.000003]  ? __ext4_journal_get_write_access+0x2d/0x70
-> [  +0.000004]  ext4_map_blocks+0x119/0x5a0
-> [  +0.000004]  ext4_getblk+0x66/0x1c0
-> [  +0.000003]  ext4_bread+0x26/0xc0
-> [  +0.000002]  ext4_append+0x49/0xe0
-> [  +0.000002]  ext4_mkdir+0x233/0x450
-> [  +0.000005]  vfs_mkdir+0x11d/0x1b0
-> [  +0.000003]  do_mkdirat+0x92/0x130
-> [  +0.000004]  do_syscall_64+0x43/0x80
-> [  +0.000004]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> [  +0.000003] RIP: 0033:0x7fef3df7a72b
-> [  +0.000001] Code: Bad RIP value.
-> [  +0.000001] RSP: 002b:00007ffdb4eba0c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000053
-> [  +0.000003] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 00007fef3df7a72b
-> [  +0.000001] RDX: 0000000000000000 RSI: 00000000000001c0 RDI: 0000563b11cf26e0
-> [  +0.000001] RBP: 0000563b11cf2731 R08: 000000000000000d R09: 0000000000000002
-> [  +0.000000] R10: 11175e4331068ed5 R11: 0000000000000246 R12: 0000563b11cf26e0
-> [  +0.000002] R13: 00007fef3e019c20 R14: 00007ffdb4eba0f0 R15: 8421084210842109
+> I am fine with the changes as long as the kernel test robot
+> does not complain ;-)
 > 
-> Just a constant stream of them.
+> Acked-by: Petr Mladek <pmladek@suse.com>
 > 
-> There's a few other fun:
-> 
-> [  +0.453222] BUG: unable to handle page fault for address: ffffb59cc2719000
-> [  +0.000004] #PF: supervisor write access in kernel mode
-> [  +0.000001] #PF: error_code(0x000b) - reserved bit violation
-> 
-> messages at times, but I don't think that's an ext4 issue, but rather
-> something in the sound stack...
-> 
-> EXT4 developers, any hints/patches to try?
-> 
+> Well, I wonder if PeterZ is fine with the lockdep part. It might make
+> sense to split it into separate patch as a prerequisite.
 
-Below patch should fix the ext4 issue coming from ext4_mb_new_blocks().
-
-https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git/commit/?h=dev&id=811985365378df01386c3cfb7ff716e74ca376d5
-
-Not sure about the second one though.
-
--ritesh
-
+They look fine, but yes, I think it makes sense to split that out.
