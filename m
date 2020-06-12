@@ -2,86 +2,84 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC047C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E2BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BE1F20801
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:18:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="YcJ5J/GM"
+	by mail.kernel.org (Postfix) with ESMTP id 45C9B2068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:21:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbgFLJSN (ORCPT
+        id S1726403AbgFLJVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 05:18:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36098 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726302AbgFLJSM (ORCPT
+        Fri, 12 Jun 2020 05:21:18 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52930 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726302AbgFLJVR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 05:18:12 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58911C03E96F
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 02:18:12 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id h10so124061pgq.10
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 02:18:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=ea05IbzOsFLNzK/q1opdgiePX7/yQgXvQW1ZI8l1OV0=;
-        b=YcJ5J/GME/6OIE7GKIsIYPbJBOn9vMjQq8TeEYfj+ViczSLokFiKbgVemPZrSLwG1+
-         SpS5qfEwaxNM0Y+lPV07VdRyLVZPHocM9UZJHHd6kphl1408svBB5mjw9x7oCL+PcN0U
-         4Qpvt+A/mWF1Wj42xgr26GGYHU/L18VliNyE2dSThiCQMQfsJwo0JvKeQGH2xifET/GT
-         9j2hDlj6/dUCz6Y4vLL8ZHieO4OQE8kWIRfn0KaMWhA0poUc2jDmkNtok/gjVkr1TXF2
-         u5xEcVwlZP2qdWlVF97oQyTnrVQhgZGyZGI2ADU16rEDbrOOnUm8on20kp2uMOHIukTw
-         VgGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=ea05IbzOsFLNzK/q1opdgiePX7/yQgXvQW1ZI8l1OV0=;
-        b=WEUi7ITphvH2URJR0qsloA7A5m4CjTwO7M6VIJbOERqPn0PkrZurgY1KE0VkyVno9C
-         TWADPG5dWHuHn9Ji/3OLp36H9KSHAlfTEmOOBsSkj76Sg3z8Y9ZSagkYSk73s4E4WSUm
-         3A3YrMdNfStBNKcOhBWwqT0BhL94FZp/AEOHIEJnvK6LUwIY+LR6IrMX73Uk3E5OjR5p
-         UuLsWuw84tZJoc1G66Gxzram76VSm8CSeM3FT1yXho/y3olgMaOS8daIxwLo+cg1M7Kq
-         d4eEakVyTfYQ2iGZnI8qEXMr6l4wAMSTaOHlVXSpMZt8KKutwV65gFdSQtmKeoZpOuzt
-         ugoA==
-X-Gm-Message-State: AOAM532j2NGEl/1lmCDDruCB/EnzuhG/T88zCQ0hBMlvPdih8jtAQORV
-        LSwIXBnqADGx+ioxZsnNJiaSUw==
-X-Google-Smtp-Source: ABdhPJw7p3AmjrmF4gOEPh4Mj8IFSG1eQgga0wJBu8krDLvWm/OqeLmjNLzSHAr0nxxzeYgL9rsYzA==
-X-Received: by 2002:aa7:9537:: with SMTP id c23mr10802234pfp.149.1591953491704;
-        Fri, 12 Jun 2020 02:18:11 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:c0da:d349:5a19:d9c1? ([2601:646:c200:1ef2:c0da:d349:5a19:d9c1])
-        by smtp.gmail.com with ESMTPSA id m9sm5530035pfo.200.2020.06.12.02.18.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Jun 2020 02:18:10 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: Perf: WARNING: arch/x86/entry/common.c:624 idtentry_exit_cond_rcu+0x92/0xc0
-Date:   Fri, 12 Jun 2020 02:18:07 -0700
-Message-Id: <8DD3180E-0E69-4FD6-92C3-311AAB3F688F@amacapital.net>
-References: <87imfwd5f6.fsf@nanos.tec.linutronix.de>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        X86 ML <x86@kernel.org>, cj.chengjian@huawei.com,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michel Lespinasse <walken@google.com>,
-        lkft-triage@lists.linaro.org,
-        Dave Hansen <dave.hansen@linux.intel.com>
-In-Reply-To: <87imfwd5f6.fsf@nanos.tec.linutronix.de>
-To:     Thomas Gleixner <tglx@linutronix.de>
-X-Mailer: iPhone Mail (17F80)
+        Fri, 12 Jun 2020 05:21:17 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05C91aFS097027;
+        Fri, 12 Jun 2020 05:21:14 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31m2yfeqsr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 12 Jun 2020 05:21:14 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05C9I5gE156020;
+        Fri, 12 Jun 2020 05:21:14 -0400
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31m2yfeqry-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 12 Jun 2020 05:21:13 -0400
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05C9BkQQ006444;
+        Fri, 12 Jun 2020 09:21:12 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma01fra.de.ibm.com with ESMTP id 31g2s7vje0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 12 Jun 2020 09:21:12 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05C9L9IH64815448
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 12 Jun 2020 09:21:09 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 605B042049;
+        Fri, 12 Jun 2020 09:21:09 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E287242042;
+        Fri, 12 Jun 2020 09:21:08 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.76.70])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 12 Jun 2020 09:21:08 +0000 (GMT)
+Subject: Re: [PATCH] s390: protvirt: virtio: Refuse device without IOMMU
+To:     Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     pasic@linux.ibm.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
+        mst@redhat.com, cohuck@redhat.com, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+References: <1591794711-5915-1-git-send-email-pmorel@linux.ibm.com>
+ <467d5b58-b70c-1c45-4130-76b6e18c05af@redhat.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Message-ID: <f7eb1154-0f52-0f12-129f-2b511f5a4685@linux.ibm.com>
+Date:   Fri, 12 Jun 2020 11:21:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <467d5b58-b70c-1c45-4130-76b6e18c05af@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-11_23:2020-06-11,2020-06-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
+ phishscore=0 cotscore=-2147483648 clxscore=1015 priorityscore=1501
+ mlxscore=0 lowpriorityscore=0 malwarescore=0 mlxlogscore=999 spamscore=0
+ adultscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006110174
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -89,56 +87,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-> On Jun 12, 2020, at 2:01 AM, Thomas Gleixner <tglx@linutronix.de> wrote:
->=20
-> =EF=BB=BFAndy Lutomirski <luto@kernel.org> writes:
->> On Thu, Jun 11, 2020 at 4:22 PM Andy Lutomirski <luto@kernel.org> wrote:
->>=20
->> Two bugs here.
->>=20
->> 1. We had an issue with WARN. Patch sent.
->=20
-> Grabbed it
->=20
->> 2. idtentry.h has, for x86_32:
->>=20
->> # define DEFINE_IDTENTRY_IST  DEFINE_IDTENTRY
->>=20
->> This is nonsense.  It's getting late over here and I'd rather focus on
->> the more interesting RCU issue, so that's all from me today.
->=20
-> Well, this might be nonsense, but it's exactly matching the current code
-> in mainline which, e.g. for #DB does:
->=20
-> SYM_CODE_START(debug)
->    /*
->     * Entry from sysenter is now handled in common_exception
->     */
->    ASM_CLAC
->    pushl    $0
->    pushl    $do_debug
->    jmp    common_exception
-> SYM_CODE_END(debug)
->=20
-> There is no IST on 32bit, never was. We do software stack switching for
-> device interrupts, but that's a different story.
->=20
-
-DEFINE_IDTENTRY does the idtentry_enter_cond_rcu() dance, which isn=E2=80=99=
-t intended to be safe from NMI context.  It should probably map to DEFINE_ID=
-TENTRY_RAW() instead.  The specific issue is that NMI ends up there, and at l=
-east DEFINE_IDTENTRY_NMI should be raw.
-
-I haven=E2=80=99t tried this at all, nor have I dug through all the users of=
- these macros to check what they expect.  Perhaps we should not have the _IS=
-T one defined at all on 32 bit and rename it to DEFINE_IDTENTRY_IST_RAW on 6=
-4 bit to make it more clear what=E2=80=99s going on when reading the C code.=
+On 2020-06-11 05:10, Jason Wang wrote:
+> 
+> On 2020/6/10 下午9:11, Pierre Morel wrote:
+>> Protected Virtualisation protects the memory of the guest and
+>> do not allow a the host to access all of its memory.
+>>
+>> Let's refuse a VIRTIO device which does not use IOMMU
+>> protected access.
+>>
+>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+>> ---
+>>   drivers/s390/virtio/virtio_ccw.c | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/drivers/s390/virtio/virtio_ccw.c 
+>> b/drivers/s390/virtio/virtio_ccw.c
+>> index 5730572b52cd..06ffbc96587a 100644
+>> --- a/drivers/s390/virtio/virtio_ccw.c
+>> +++ b/drivers/s390/virtio/virtio_ccw.c
+>> @@ -986,6 +986,11 @@ static void virtio_ccw_set_status(struct 
+>> virtio_device *vdev, u8 status)
+>>       if (!ccw)
+>>           return;
+>> +    /* Protected Virtualisation guest needs IOMMU */
+>> +    if (is_prot_virt_guest() &&
+>> +        !__virtio_test_bit(vdev, VIRTIO_F_IOMMU_PLATFORM))
+>> +            status &= ~VIRTIO_CONFIG_S_FEATURES_OK;
+>> +
+>>       /* Write the status to the host. */
+>>       vcdev->dma_area->status = status;
+>>       ccw->cmd_code = CCW_CMD_WRITE_STATUS;
+> 
+> 
+> I wonder whether we need move it to virtio core instead of ccw.
+> 
+> I think the other memory protection technologies may suffer from this as 
+> well.
+> 
+> Thanks
+> 
 
 
-Or maybe I=E2=80=99m too sleepy and I=E2=80=99m nuts. But I don=E2=80=99t th=
-ink I am.
+What would you think of the following, also taking into account Connie's 
+comment on where the test should be done:
 
+- declare a weak function in virtio.c code, returning that memory 
+protection is not in use.
 
-> Thanks,
->=20
->        tglx
+- overwrite the function in the arch code
+
+- call this function inside core virtio_finalize_features() and if 
+required fail if the device don't have VIRTIO_F_IOMMU_PLATFORM.
+
+Alternative could be to test a global variable that the architecture 
+would overwrite if needed but I find the weak function solution more 
+flexible.
+
+With a function, we also have the possibility to provide the device as 
+argument and take actions depending it, this may answer Halil's concern.
+
+Regards,
+Pierre
+
+-- 
+Pierre Morel
+IBM Lab Boeblingen
