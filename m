@@ -2,176 +2,107 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A805EC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE4EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82917207F7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:51:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9A62207F7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:52:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="twqPTnJj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JkcibBjZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726281AbgFLPvH (ORCPT
+        id S1726317AbgFLPwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 11:51:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40302 "EHLO
+        Fri, 12 Jun 2020 11:52:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbgFLPvG (ORCPT
+        with ESMTP id S1726053AbgFLPwK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 11:51:06 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EF3FC03E96F;
-        Fri, 12 Jun 2020 08:51:06 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9288324F;
-        Fri, 12 Jun 2020 17:51:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1591977062;
-        bh=qXkGSwqpIOKoYMuhuC/4oW4KcJufyzD6Vg7+7q65YzE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=twqPTnJjUPS+PrVhTQl0SgNrtmIbV1SXtVfN4RgBV+MnWdi7vMhRWxCXhHOGqQJ6d
-         4sEHC6UovkeOjOxKckIeUl7CyseqGk1hr9WglzXWQ2zOIoWa2NuVsTpdO27bPQ/QAP
-         0ojMd+SglZD/NmQhKw6ixWvHyo1scr34Pdg2pJbE=
-Date:   Fri, 12 Jun 2020 18:50:41 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc:     Jacopo Mondi <jacopo@jmondi.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
-        horms@verge.net.au, uli+renesas@fpond.eu,
-        VenkataRajesh.Kalakodima@in.bosch.com, airlied@linux.ie,
-        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        Harsha.ManjulaMallikarjun@in.bosch.com, ezequiel@collabora.com,
-        seanpaul@chromium.org, linux-renesas-soc@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        michael.dege@renesas.com, gotthard.voellmeke@renesas.com,
-        efriedrich@de.adit-jv.com, mrodin@de.adit-jv.com,
-        ChaitanyaKumar.Borah@in.bosch.com,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [PATCH v5 0/8] drm: rcar-du: Add Color Management Module (CMM)
-Message-ID: <20200612155041.GB28336@pendragon.ideasonboard.com>
-References: <20191015104621.62514-1-jacopo+renesas@jmondi.org>
- <20200527071555.GA23912@lxhi-065.adit-jv.com>
- <20200605132900.on527xcggg6f6pil@uno.localdomain>
- <20200605134124.GA28734@lxhi-065.adit-jv.com>
- <20200605135315.xlph44pl7kvmt23a@uno.localdomain>
- <20200607024158.GD7339@pendragon.ideasonboard.com>
- <20200609142959.GA621@lxhi-065.adit-jv.com>
- <20200612150032.pnqaqip54qfrbqst@uno.localdomain>
- <20200612151005.GA28336@pendragon.ideasonboard.com>
- <20200612153607.GA23962@lxhi-065.adit-jv.com>
+        Fri, 12 Jun 2020 11:52:10 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 356ACC03E96F;
+        Fri, 12 Jun 2020 08:52:09 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id r9so8626543wmh.2;
+        Fri, 12 Jun 2020 08:52:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NakzWRM9YS38023tyzkXCgU45379YlUYam+cS/rkKzA=;
+        b=JkcibBjZFtxDJjCe7rNgAWuZPSFz/l74sya5KCgxX1puQYARTDVPkMTqKyIt5EpIUH
+         4F3kyF+oTM6HJVj5TS0Br88XcWz4oMVCvxm+GaMJQ/grSt4phr3AarzBJesFzobd3Mwc
+         d+fEreUGvnqMyRN6ApKvTwQLhzufl5SwNsJh3n9szMFpRspEHfIYOrHY/So9fmW7Q2M4
+         AOXVDtU4CCLqqAUBydr7iHsxmL0EA7LD/npE2dlo8ytAZLIbD4rEElJS//+0LzBeqLrV
+         gkypsnxnMO4YWAvA8/HmQcOsu7WEuxJnWlI1p0X/p7fX1oq0BdQ3w29vZelIaXWzckx2
+         H5oQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NakzWRM9YS38023tyzkXCgU45379YlUYam+cS/rkKzA=;
+        b=C34xSePMJmOdBAS7W8ThjhZbiswYHCrGC0q9ld8udGARBRWLJc0mg976GwymNaaoKr
+         s6T/BEd7EnbmUccV0FTxCScgwhS0azWXgLOVPbU0xenmBVi9BhWipt+yX2hTi+EbZQwp
+         XD2lJ/7TyXuy7cXk8e1Hy1z9zEp2FydRiIQ1xI1+BUJKtAu/zPX9z4yKXZaUYTlXRQmu
+         AJYCgb2gtjktydJaJYVCQBFenQAIGYDdZ+jrCUA+yhrOn+pzhyOW9AR4sQXz8X9Tf3ub
+         fTWzDAGZ02tL0RhOJTEKOlbFMgiC95/P1bwszgl3G/X6xJ2DgNIV0jmlES39eULfhq/O
+         kqmg==
+X-Gm-Message-State: AOAM532B8ROt12mVY7jQKuuYdcnl6eo4jwJ3I4DfJo6sb6EKmI9NLA3m
+        cT86/SsRd1vQVX1FYpTyKA6yX0GH
+X-Google-Smtp-Source: ABdhPJz9rJQyiph7wv5btXmqBVlSkIVBLc5HurMludqDUg1MJgJISCmF1zBCH3yhhOLXRWvX7e9rPQ==
+X-Received: by 2002:a05:600c:2045:: with SMTP id p5mr15005247wmg.91.1591977128004;
+        Fri, 12 Jun 2020 08:52:08 -0700 (PDT)
+Received: from ?IPv6:2a02:8084:e84:2480:228:f8ff:fe6f:83a8? ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
+        by smtp.gmail.com with ESMTPSA id p16sm11413855wru.27.2020.06.12.08.52.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Jun 2020 08:52:07 -0700 (PDT)
+Subject: Re: [PATCH v2 2/3] serial: core: fix sysrq overhead regression
+To:     Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jiri Slaby <jslaby@suse.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200610152232.16925-1-johan@kernel.org>
+ <20200610152232.16925-3-johan@kernel.org>
+From:   Dmitry Safonov <0x7f454c46@gmail.com>
+Message-ID: <8c6d7bae-0ebd-caa7-f9c7-96ec7035abfb@gmail.com>
+Date:   Fri, 12 Jun 2020 16:52:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
+In-Reply-To: <20200610152232.16925-3-johan@kernel.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200612153607.GA23962@lxhi-065.adit-jv.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eugeniu,
-
-On Fri, Jun 12, 2020 at 05:36:07PM +0200, Eugeniu Rosca wrote:
-> On Fri, Jun 12, 2020 at 06:10:05PM +0300, Laurent Pinchart wrote:
-> > On Fri, Jun 12, 2020 at 05:00:32PM +0200, Jacopo Mondi wrote:
-> > > On Tue, Jun 09, 2020 at 04:29:59PM +0200, Eugeniu Rosca wrote:
-> > > > On Sun, Jun 07, 2020 at 05:41:58AM +0300, Laurent Pinchart wrote:
-> > > > > Note that the CMM driver is controlled by the DU driver. As the DU
-> > > > > driver will reenable the display during resume, it will call
-> > > > > rcar_du_cmm_setup() at resume time, which will reprogram the CMM. There
-> > > > > should thus be no need for manual suspend/resume handling in the CMM as
-> > > > > far as I can tell, but we need to ensure that the CMM is suspended
-> > > > > before and resumed after the DU. I believe this could be implemented
-> > > > > using device links.
-> > > >
-> > > > Based on below quote [*] from Jacopo's commit [**], isn't the device
-> > > > link relationship already in place?
-> > > 
-> > > Yes, it's in place already.
-> > > 
-> > > I added pm_ops to cmm just to be able to printout when suspend/resume
-> > > happens and the sequence is what comment [*] reports
-> > > 
-> > > [  222.909002] rcar_du_pm_suspend:505
-> > > [  223.145497] rcar_cmm_pm_suspend:193
-> > > 
-> > > [  223.208053] rcar_cmm_pm_resume:200
-> > > [  223.460094] rcar_du_pm_resume:513
-> > > 
-> > > However, Laurent mentioned that in his comment here that he expects
-> > > the opposite sequence to happen (CMM to suspend before and resume after
-> > > DU).
-> > > 
-> > > I still think what is implemented is correct:
-> > > - CMM is suspended after DU: when CMM is suspended, DU is not feeding
-> > >   it with data
-> > > - CMM is resumed before: once DU restart operations CMM is ready to
-> > >   receive data.
-> > > 
-> > > Laurent, what do you think ?
-> > 
-> > I think I shouldn't have written the previous e-mail in the middle of
-> > the night :-) Suspending CMM after DU is obviously correct.
+On 6/10/20 4:22 PM, Johan Hovold wrote:
+> Commit 8e20fc391711 ("serial_core: Move sysrq functions from header
+> file") converted the inline sysrq helpers to exported functions which
+> are now called for every received character, interrupt and break signal
+> also on systems without CONFIG_MAGIC_SYSRQ_SERIAL instead of being
+> optimised away by the compiler.
 > 
-> Thanks to Renesas team (kudos to Gotthard and Michael), we've
-> figured out that below sequence of clock handling (happening during
-> concurrent suspend and HDMI display unplug) leads to SoC lockup:
+> Inlining these helpers again also avoids the function call overhead when
+> CONFIG_MAGIC_SYSRQ_SERIAL is enabled (e.g. when the port is not used as
+> a console).
 > 
-> cmm1 OFF 	(caused by HDMI unplug)
-> x21-clock OFF 	(caused by HDMI unplug)
-> du1 OFF 	(caused by HDMI unplug)
-> cmm1 ON (caused by suspend to ram, as preparation for CMM register save)
-> # Freeze happens
-> 
-> That seems to be explained by Chapter 35A.4.3 "Restriction of enabling
-> clock signal of the CMM" of HW User's manual (Rev.2.00 Jul 2019):
-> 
->  -----8<-----
->  When the clock signal of the CMM is enabled (RMSTPCR7.CMMn or
->  SMSTPCR7.CMMn = 0), the clock signal of the DU should be also enabled
->  (RMSTPCR7.DUn or SMSTPCR7.DUn = 0).
->  -----8<-----
-> 
-> So, the lesson learned from the above is: do not enable the CMMi clock
-> while the DUi clock is disabled. I expect this to also potentially
-> give some input w.r.t. what to suspend/resume first, CMM or DU.
+> Fixes: 8e20fc391711 ("serial_core: Move sysrq functions from header file")
+> Cc: Dmitry Safonov <0x7f454c46@gmail.com>
+> Signed-off-by: Johan Hovold <johan@kernel.org>
 
-This may be an ugly one. The DU driver needs to disable the CMM when
-suspending, and enabling the CMM when resuming. To do so, it calls
-functions of the CMM driver, and those functions access CMM registers.
-We can't do so while the CMM is suspended, so the DU has to suspend
-before the CMM, and resume after the CMM.
+Thanks for sending and the numbers, it's a bit pity that we need to move
+them back to the header, but as it matters for your setup,
 
-On the other hand, as you state here, we need to make sure the CMM clock
-is disabled first. The CMM thus needs to suspend before the DU, and
-resume after the DU.
+Reviewed-by: Dmitry Safonov <0x7f454c46@gmail.com>
 
-Those are conflicting requirements.
-
-One option could be to use the .suspend_late() and .resume_early() PM
-operations for the DU, to turn the DU clock off late and turn it back on
-early. Integrating it with the DRM suspend/resume helpers will likely be
-complicated though. I wonder if we could find a more elegant solution.
-
-I the above sequence, you list "cmm1 ON" as a preparation for CMM
-register save. We don't need to save any register, the CMM driver has no
-.suspend() handler. The PM core should really skip waking up the device
-at that point (I recall complaining about the spurious wake ups at
-suspend time a while ago, but that neevr got addressed). Geert, any
-opinion on that ?
-
-> > > > [*] Quote from commit [**]
-> > > >    Enforce the probe and suspend/resume ordering of DU and CMM by
-> > > >    creating a stateless device link between the two.
-> > > >
-> > > > [**] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=8de707aeb45241
-> > > >     ("drm: rcar-du: kms: Initialize CMM instances")
-
--- 
-Regards,
-
-Laurent Pinchart
+Thanks,
+           Dmitry
