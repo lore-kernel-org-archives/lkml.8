@@ -2,147 +2,182 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ACA8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 08:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D931BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 08:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 455D720578
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 08:01:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VyleD0Vz"
+	by mail.kernel.org (Postfix) with ESMTP id BC0F7207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 08:02:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726517AbgFLIB6 (ORCPT
+        id S1726455AbgFLICt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 04:01:58 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22615 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726262AbgFLIB5 (ORCPT
+        Fri, 12 Jun 2020 04:02:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52788 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726262AbgFLICt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 04:01:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591948916;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zFV5q/tNv+oXc5JuBy2ztRIX+iFtdAsbYIzI6VMlHtM=;
-        b=VyleD0Vz3hxhiNG4VGsuHodMhh/nTbSufH7l4/+Vf29+rfogYQBliW1TYpFROqFbF9RK2l
-        V2YiI+pmjlcPOurlObiJUnVdHacxfOKvGpk5lSPGtyzhbDxh+NtkzowblqZ/V1TI4Mzd/9
-        JsILQjIzmBCTeCPmNJhnmiYm/DpiwXo=
-Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
- [209.85.167.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-246-7q7saOrwPTe76YJ6u6_Xgg-1; Fri, 12 Jun 2020 04:01:53 -0400
-X-MC-Unique: 7q7saOrwPTe76YJ6u6_Xgg-1
-Received: by mail-lf1-f69.google.com with SMTP id j21so2385452lfg.18
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 01:01:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zFV5q/tNv+oXc5JuBy2ztRIX+iFtdAsbYIzI6VMlHtM=;
-        b=sbn0YZ4PuiGbJTFd1Gss33Y6355zNdDdbnEckng0LZmgeNDrzKNF9XM6vZyHhOUFhp
-         Cij/zueeywqp/7UNO4057FX0C7RfqUoPBBohR8ODnNhHBwaFLfk1n+e8u+iy5XBXIP6X
-         FXLthwBpt+9pjPkxtaLOfRkUFiAbbK3pHKSnvXhvjYoREauR3cdBJqDJzsGSMSSevEpV
-         bnZUysQPm4+zegmWBLXjgwevKSS39s67zyhHMfzNi++f31numsoBqAY+r1W7DIUy2qPy
-         mZH76ovIPCVIfQ5slIrJjT7L/qxnfV2mnd7zh6e4UR0yYLTt8129FzU5c/0NKkk9iK+v
-         zhxg==
-X-Gm-Message-State: AOAM530TN6UIdhZeyNo8KeQNoWOYqn7NFLsIAyLAh1gEkJ/1pqOoyn79
-        Htq6CsuaQXVuTo6vot9BdRSVH+cmJ5pWfJZWtW+4bMQaK5ZF75f2vdOObAAhU9Ow48UujlsgrQI
-        WMF+gLg5G5zQsA2ALF08zrPWInFtQ1oO8+Nvv9lFg
-X-Received: by 2002:a05:651c:1126:: with SMTP id e6mr6205518ljo.123.1591948912217;
-        Fri, 12 Jun 2020 01:01:52 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwgPk3fFoP16ga9S+l/Fq6iJDO3J+vleOTImQgKQw9EjoBMbPNYFSQq3fvFAoYR9jqtbw6BD5CZoffhGjAp85c=
-X-Received: by 2002:a05:651c:1126:: with SMTP id e6mr6205500ljo.123.1591948911907;
- Fri, 12 Jun 2020 01:01:51 -0700 (PDT)
+        Fri, 12 Jun 2020 04:02:49 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D216C03E96F
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 01:02:48 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jjee9-0005y1-Pv; Fri, 12 Jun 2020 10:02:41 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jjee8-0002KU-He; Fri, 12 Jun 2020 10:02:40 +0200
+Date:   Fri, 12 Jun 2020 10:02:40 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Fugang Duan <B38611@freescale.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org, Gao Pan <b54642@freescale.com>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Wolfram Sang <wsa@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org
+Subject: Re: [PATCH] i2c: imx: Fix external abort on early interrupt
+Message-ID: <20200612080240.73xkiu2esgg6nbp3@pengutronix.de>
+References: <1591796802-23504-1-git-send-email-krzk@kernel.org>
+ <20200612055114.alhm2uakoze6epvf@pengutronix.de>
+ <20200612073815.GA25803@pi3>
 MIME-Version: 1.0
-References: <20200611204746.6370-1-trix@redhat.com> <20200611204746.6370-2-trix@redhat.com>
- <CAHC9VhSyo9GZKVZ04w3d3bLV9-_61W0KznATZPmqZBYXT2J=xw@mail.gmail.com>
- <d8cee44a-316f-d1be-9893-428598ada2d8@redhat.com> <CAHC9VhSPygyQAiWuaAWViuraCP6A9KTqmQeEt2_Rxta_WFsu5Q@mail.gmail.com>
-In-Reply-To: <CAHC9VhSPygyQAiWuaAWViuraCP6A9KTqmQeEt2_Rxta_WFsu5Q@mail.gmail.com>
-From:   Ondrej Mosnacek <omosnace@redhat.com>
-Date:   Fri, 12 Jun 2020 10:01:41 +0200
-Message-ID: <CAFqZXNuVevzXLhCBujJKTPL+HBhOxkUv6a-J1NGY9BzTJ7aWCA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] selinux: fix another double free
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Tom Rix <trix@redhat.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Wei Yongjun <weiyongjun1@huawei.com>,
-        SElinux list <selinux@vger.kernel.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="exe7tgb6se3ukbnm"
+Content-Disposition: inline
+In-Reply-To: <20200612073815.GA25803@pi3>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:42:33 up 209 days, 23:01, 197 users,  load average: 0.01, 0.03,
+ 0.05
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 1:27 AM Paul Moore <paul@paul-moore.com> wrote:
-> On Thu, Jun 11, 2020 at 6:41 PM Tom Rix <trix@redhat.com> wrote:
-> > On 6/11/20 3:30 PM, Paul Moore wrote:
-> > > On Thu, Jun 11, 2020 at 4:48 PM <trix@redhat.com> wrote:
-> > >> From: Tom Rix <trix@redhat.com>
-> > >>
-> > >> Clang static analysis reports this double free error
-> > >>
-> > >> security/selinux/ss/conditional.c:139:2: warning: Attempt to free released memory [unix.Malloc]
-> > >>         kfree(node->expr.nodes);
-> > >>         ^~~~~~~~~~~~~~~~~~~~~~~
-> > >>
-> > >> When cond_read_node fails, it calls cond_node_destroy which frees the
-> > >> node but does not poison the entry in the node list.  So when it
-> > >> returns to its caller cond_read_list, cond_read_list deletes the
-> > >> partial list.  The latest entry in the list will be deleted twice.
-> > >>
-> > >> So instead of freeing the node in cond_read_node, let list freeing in
-> > >> code_read_list handle the freeing the problem node along with all of the
-> > >> earlier nodes.
-> > >>
-> > >> Because cond_read_node no longer does any error handling, the goto's
-> > >> the error case are redundant.  Instead just return the error code.
-> > >>
-> > >> Fixes a problem was introduced by commit
-> > >>
-> > >>   selinux: convert cond_list to array
-> > >>
-> > >> Signed-off-by: Tom Rix <trix@redhat.com>
-> > >> ---
-> > >>  security/selinux/ss/conditional.c | 11 +++--------
-> > >>  1 file changed, 3 insertions(+), 8 deletions(-)
-> > > Hi Tom,
-> > >
-> > > Thanks for the patch!  A few more notes, in no particular order:
-> > >
-> > > * There is no need to send a cover letter for just a single patch.
-> > > Typically cover letters are reserved for large patchsets that require
-> > > some additional explanation and/or instructions beyond the individual
-> > > commit descriptions.
-> >
-> > I was doing this to carry the repo name and tag info.
-> >
-> > So how do folks know which repo and commit the change applies to ?
->
-> We read your mind ;)
->
-> Generally it's pretty obvious, and in the rare occasion when it isn't,
-> we ask.  Most of the time you can deduce the destination repo by the
-> files changed and the mailing lists on the To/CC line.  From there it
-> is then just a matter of -next vs -stable and that is something that
-> is usually sorted out based on the context of the patch, and if
-> needed, a discussion on-list.
 
-Yes, it is normally not necessary, but I wouldn't discourage people
-from providing the info if they want to / are used to do that. It can
-be really useful in some situations, especially in case of
-cross-subsystem changes that are sent to many mailing lists. But of
-course this information belongs either to the cover letter or in case
-of single patches to the "informational" section between "---" and
-"diff --git [...]".
+--exe7tgb6se3ukbnm
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Ondrej Mosnacek
-Software Engineer, Platform Security - SELinux kernel
-Red Hat, Inc.
+On Fri, Jun 12, 2020 at 09:38:15AM +0200, Krzysztof Kozlowski wrote:
+> On Fri, Jun 12, 2020 at 07:51:14AM +0200, Oleksij Rempel wrote:
+> > Hi Krzysztof,
+> >=20
+> > thank you for your patch.
+> >=20
+> > On Wed, Jun 10, 2020 at 03:46:42PM +0200, Krzysztof Kozlowski wrote:
+> > > If interrupt comes early (could be triggered with CONFIG_DEBUG_SHIRQ),
+> > > the i2c_imx_isr() will access registers before the I2C hardware is
+> > > initialized.  This leads to external abort on non-linefetch on Toradex
+> > > Colibri VF50 module (with Vybrid VF5xx):
+> > >=20
+> > >     Unhandled fault: external abort on non-linefetch (0x1008) at 0x88=
+82d003
+> > >     Internal error: : 1008 [#1] ARM
+> > >     Modules linked in:
+> > >     CPU: 0 PID: 1 Comm: swapper Not tainted 5.7.0 #607
+> > >     Hardware name: Freescale Vybrid VF5xx/VF6xx (Device Tree)
+> > >       (i2c_imx_isr) from [<8017009c>] (free_irq+0x25c/0x3b0)
+> > >       (free_irq) from [<805844ec>] (release_nodes+0x178/0x284)
+> > >       (release_nodes) from [<80580030>] (really_probe+0x10c/0x348)
+> > >       (really_probe) from [<80580380>] (driver_probe_device+0x60/0x17=
+0)
+> > >       (driver_probe_device) from [<80580630>] (device_driver_attach+0=
+x58/0x60)
+> > >       (device_driver_attach) from [<805806bc>] (__driver_attach+0x84/=
+0xc0)
+> > >       (__driver_attach) from [<8057e228>] (bus_for_each_dev+0x68/0xb4)
+> > >       (bus_for_each_dev) from [<8057f3ec>] (bus_add_driver+0x144/0x1e=
+c)
+> > >       (bus_add_driver) from [<80581320>] (driver_register+0x78/0x110)
+> > >       (driver_register) from [<8010213c>] (do_one_initcall+0xa8/0x2f4)
+> > >       (do_one_initcall) from [<80c0100c>] (kernel_init_freeable+0x178=
+/0x1dc)
+> > >       (kernel_init_freeable) from [<80807048>] (kernel_init+0x8/0x110)
+> > >       (kernel_init) from [<80100114>] (ret_from_fork+0x14/0x20)
+> > >=20
+> > > Additionally, the i2c_imx_isr() could wake up the wait queue
+> > > (imx_i2c_struct->queue) before its initialization happens.
+> > >=20
+> > > Fixes: 1c4b6c3bcf30 ("i2c: imx: implement bus recovery")
+> > > Cc: <stable@vger.kernel.org>
+> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> >=20
+> >=20
+> > I assume register access is aborted, because the IP core clock is not
+> > enabled. In this case we have bigger problem then just probe.
+>=20
+> If by IP core clock you mean the clock which driver is getting, then
+> answer is no. This clock is enabled.
+>=20
+> > Since this driver support runtime power management, the clock will be
+> > disabled as soon as transfer is done. It means, on shared interrupt, we
+> > will get in trouble even if there is no active transfer.
+>=20
+> The driver's runtime PM plays only with this one clock, so it seems
+> you meant i2c_imx->clk. It is not this problem.
+>=20
+> >=20
+> > So, probably the only way to fix it, is to check in i2c_imx_isr() if the
+> > HW is expected to be active and register access should be save.
+>=20
+> Checking in every interrupt whether the interrupt should be serviced
+> based on some SW flag because HW might be disabled? That looks unusual,
+> like a hack.
+>=20
+> No, the interrupt should be registered when the driver and some other
+> pieces of HW are ready to service it.
 
+OK.
+please make sure, irq is probed before calling
+i2c_add_numbered_adapter(). This will trigger deferred probing of
+slave devices. Since the irq handler will be added later, tx completion
+of some requests will be lost or fail.
+
+Regards,
+Oleksij
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--exe7tgb6se3ukbnm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl7jNpcACgkQ4omh9DUa
+UbPcng//UVsGN28mv1+t7JOIEucwlTOIZAiNvZ74YvumoRi+5bOa84YTnZKQE1Bp
+vpdeG7H+ciZj6WGLLU/TPNUZCr5ii06UFpWHvRsA/fCDnMtu5nFUrj6CKyrVZpXP
+kYv1ZqBn7ExANbhDQr8XMz5dXjF4t04/1jm1+Yv7NwlCGCyyweH2ivByfBskvavc
+GXdmwhqt4nI8JA8q4oINjOrDq0HDgK7gixplmsH4Ta3fHXnPnWdCujqGz5IBPsrf
+23X+hm3QWrVlPIKCHZ8j+aolgONO2zoDl1V6eKpNwKWbPRgqmP+X2QEeJniuewXa
+6ge05cdpzhPYAm06o/G/b5gWe5qKpoJAqhYh/s7/1QA5bDw/bj3eKBMNWzkwoYbr
+MoNZUw+J5vP9kr1cBUbOegYOYeDWNCWzEgx8HHVYxmPWj+e2rZnY3d8UNJfu1dyG
+3tsT0sWwRY2mT1Di/PWg7H/i1LgXLJFm3n2D28ITx4elwFlVhe2+eBwFLwvo5MPA
+wK8xpmBTZeV3vW+B6PFtJzG20h4yYXCPhZiXhdvvi0DFAcYPuyQbYnNzI/UJIuB4
+KIP2ZAsb8Pl7NZkb1x3fkgnzDv0KHWyuIjks/cQvIN5+QAF26N4j0v5vMG5XTKf9
+efZvqZJ2cLHqLs48H3atMXx7xH4tKOsFGyVQsonAJ/O/QRRywrY=
+=5oXh
+-----END PGP SIGNATURE-----
+
+--exe7tgb6se3ukbnm--
