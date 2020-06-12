@@ -2,179 +2,61 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D009C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 11:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0537C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 11:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46027207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 11:55:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591962939;
-	bh=R9fUAb69jfuGHp0kjWTmWBEsF5bRfr4Vc5lM3U42acg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cDbqWOkq71hRBajNnFEg42m2dLHIaDRhvzgtU86bg11k1iFKn+I1TvhkQNE+YeIAg
-	 b+0jYR9ocm08ISTmZ4Apm32tttRwuv2ECSQoUQJrkYL0TwS+vdJ9Hoh+MzmsA7a5gh
-	 X1O3iDBAg3zgCvfC9YHTqrWl9XC4fd6sMzNXeoxk=
+	by mail.kernel.org (Postfix) with ESMTP id 9456A20801
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 11:56:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726278AbgFLLzh (ORCPT
+        id S1726327AbgFLL4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 07:55:37 -0400
-Received: from mail-oi1-f181.google.com ([209.85.167.181]:39148 "EHLO
-        mail-oi1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725791AbgFLLzh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 07:55:37 -0400
-Received: by mail-oi1-f181.google.com with SMTP id d67so8390979oig.6;
-        Fri, 12 Jun 2020 04:55:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bicOXJoaBdeTIG0+nGNRFjA7MnO99BifAFXX4dFEZGQ=;
-        b=fzNOlKeEaahF/qKcL2cRfkb3SLT6Y2dBTKwUWZl8TP+K45uRchNGbYb+/KtmMRF3mD
-         flalqFEk8nmedSzEQbt3IbMVWRbGAZBF0hWMaehkQ5TUDlqODkjsvr0hfOGPfvnxyN53
-         OtMMLlrTIaAqg5h+dWJIrWgXJW49WhbjgsqX+ltdb/qobx5hHSAHLJ3MQleHIq6YobuU
-         0YCZm+O3wsfuNpBVzAARG2jktvg+eEPRi3+b8vEtOX9AhQ5j77tD+rrvLIhlUNaSyMRL
-         WCOoRs1WuSADn9rxOBfECrSdqJ5lRIdZzAtTd0LTw7M2B8H1WDKYz3MoYw5F2NwrCMzx
-         0uMg==
-X-Gm-Message-State: AOAM531Io86SY+OwvyPCNaZO+6bFDsVTkzq+c4D2EDf0xAlwjTUv8guu
-        5jC2pmhgPByJ9MGJY+mu7+0khIHvlX2dcHGvqKc=
-X-Google-Smtp-Source: ABdhPJxPxwjjyP2s9AnGNeNs28+BIfHw1D31gCdTaiwZvHPe3mQh6f1XaWVCeLy4+bEyj9Nim5cvrVAXJ8cIoUMCLY0=
-X-Received: by 2002:aca:ad88:: with SMTP id w130mr1897354oie.103.1591962935897;
- Fri, 12 Jun 2020 04:55:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <f1773fdc-f6ef-ec28-0c0a-4a09e66ab63b@huawei.com>
- <20200603075200.hbyofgcyiwocl565@vireshk-i7> <CAJZ5v0iR3H+PFnJiroNmZcj-a4bCkvT6xB-nd2ntMvakWFOvAg@mail.gmail.com>
- <39d37e1b-7959-9a8f-6876-f2ed4c1dbc37@huawei.com> <20200604044140.xlv7h62jfowo3rxe@vireshk-i7>
- <CAJZ5v0jj5OS4oB7MYBqKeYejy_3Vz_2oy0hn-Xm=D7XAszM_vg@mail.gmail.com>
- <20200604125822.GB12397@bogus> <20200610094057.GA28144@arm.com> <9d715cb0-0a94-0008-5653-e8d9ad1c5332@huawei.com>
-In-Reply-To: <9d715cb0-0a94-0008-5653-e8d9ad1c5332@huawei.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 12 Jun 2020 13:55:20 +0200
-Message-ID: <CAJZ5v0h1-AE31axGJXmDgc22-jMZ6vWTc1K7b2BmbO8JTwX7tg@mail.gmail.com>
-Subject: Re: [Question]: about 'cpuinfo_cur_freq' shown in sysfs when the CPU
- is in idle state
-To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Cc:     Ionela Voinescu <ionela.voinescu@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 12 Jun 2020 07:56:30 -0400
+Received: from sym2.noone.org ([178.63.92.236]:40482 "EHLO sym2.noone.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726219AbgFLL4a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 07:56:30 -0400
+Received: by sym2.noone.org (Postfix, from userid 1002)
+        id 49jzhr5Jnbzvjc1; Fri, 12 Jun 2020 13:56:28 +0200 (CEST)
+From:   Tobias Klauser <tklauser@distanz.ch>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] objtool: Free memory in error case in special_get_alts
+Date:   Fri, 12 Jun 2020 13:56:28 +0200
+Message-Id: <20200612115628.8992-1-tklauser@distanz.ch>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 3:52 AM Xiongfeng Wang
-<wangxiongfeng2@huawei.com> wrote:
->
-> Hi Ionela,
->
-> Thanks for your reply !
->
-> On 2020/6/10 17:40, Ionela Voinescu wrote:
-> > Hi guys,
-> >
-> > Sorry for showing up late to the party, I was on holiday last week.
-> >
-> > On Thursday 04 Jun 2020 at 13:58:22 (+0100), Sudeep Holla wrote:
-> >> On Thu, Jun 04, 2020 at 12:42:06PM +0200, Rafael J. Wysocki wrote:
-> >>> On Thu, Jun 4, 2020 at 6:41 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> >>>>
-> >>>> On 04-06-20, 09:32, Xiongfeng Wang wrote:
-> >>>>> On 2020/6/3 21:39, Rafael J. Wysocki wrote:
-> >>>>>> The frequency value obtained by kicking the CPU out of idle
-> >>>>>> artificially is bogus, though.  You may as well return a random number
-> >>>>>> instead.
-> >>>>>
-> >>>>> Yes, it may return a randowm number as well.
-> >>>>>
-> >>>>>>
-> >>>>>> The frequency of a CPU in an idle state is in fact unknown in the case
-> >>>>>> at hand, so returning 0 looks like the cleanest option to me.
-> >>>>>
-> >>>>> I am not sure about how the user will use 'cpuinfo_cur_freq' in sysfs. If I
-> >>>>> return 0 when the CPU is idle, when I run a light load on the CPU, I will get a
-> >>>>> zero value for 'cpuinfo_cur_freq' when the CPU is idle. When the CPU is not
-> >>>>> idle, I will get a non-zero value. The user may feel odd about
-> >>>>> 'cpuinfo_cur_frreq' switching between a zero value and a non-zero value. They
-> >>>>> may hope it can return the frequency when the CPU execute instructions, namely
-> >>>>> in C0 state. I am not so sure about the user will look at 'cpuinfo_cur_freq'.
-> >>>>
-> >>>> This is what I was worried about as well. The interface to sysfs needs
-> >>>> to be robust. Returning frequency on some readings and 0 on others
-> >>>> doesn't look right to me as well. This will break scripts (I am not
-> >>>> sure if some scripts are there to look for these values) with the
-> >>>> randomness of values returned by it.
-> >>>
-> >>> The only thing the scripts need to do is to skip zeros (or anything
-> >>> less than the minimum hw frequency for that matter) coming from that
-> >>> attribute.
-> >>>
-> >>>> On reading values locally from the CPU, I thought about the case where
-> >>>> userspace can prevent a CPU going into idle just by reading its
-> >>>> frequency from sysfs (and so waste power), but the same can be done by
-> >>>> userspace to run arbitrary load on the CPUs.
-> >>>>
-> >>>> Can we do some sort of caching of the last frequency the CPU was
-> >>>> running at before going into idle ? Then we can just check if cpu is
-> >>>> idle and so return cached value.
-> >>>
-> >>> That is an option, but it looks like in this case the cpuinfo_cur_freq
-> >>> attribute should not be present at all, as per the documentation.
-> >>>
-> >>
-> >> +1 for dropping the attribute.
-> >>
-> >
-> > I've been experimenting with some code quite recently that uses the
-> > scheduler frequency scale factor to compute this hardware current rate
-> > for CPPC.
-> >
-> > On the scheduler tick, the scale factor is computed in
-> > arch_scale_freq_tick() to give an indication on delivered performance,
-> > using AMUs on arm64 [1] and APERF/MPERF on x86 [2]. Basically, this scale
-> > factor has the cached value of the average delivered performance between
-> > the last two scheduler ticks, on a capacity scale: 0-1024. All that would
-> > be needed is to convert from the scheduler frequency scale to the CPPC
-> > expected performance scale.
-> >
-> > The gist of the code would be:
-> >
-> > delivered_perf = topology_get_freq_scale(cpu);
-> > delivered_perf *= fb_ctrs.reference_perf;
-> > delivered_perf = div64_u64(delivered_perf << SCHED_CAPACITY_SHIFT,
-> >                          per_cpu(arch_max_freq_scale, cpu));
-> >
-> > While this solution is not perfect, it would provide the best view of
-> > the hardware "current" rate without the cost of waking up the CPU when
-> > idle, scheduling additional work on the CPU, doing checks on whether
-> > the CPU is idle and/or providing other caching mechanisms.
->
-> I think it's a good idea. It's just that the value is a average frequency in the
-> last two scheduler ticks, not an instantaneous frequency. What
-> 'cppc_cpufreq_get_rate()' get is also not an  instantaneous frequency. It's a
-> average frequency in 2us. I check the interval between two frequency updates on
-> my machine. It's about 10ms. So the frequency will change at least one time in
-> two scheduler ticks if HZ is 1000.
->
-> I am not sure how people will use 'cpuinfo_cur_freq'. They may not expect a very
-> accurate frequency. How about we return this value when CPU is idle? Or just
-> return 0 in idle is better ?
+Avoid a memory leak in case get_alt_entry returns an error.
 
-According to the documentation, if this attribute is present, it
-should return the exact frequency of the CPU (with a caveat that it
-may change already when user space is able to consume the value), and
-which is what the users may expect.
+Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
+---
+ tools/objtool/special.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-As I said before, IMO the CPPC driver should not cause the core to
-expose cpuinfo_cur_freq at all.
+diff --git a/tools/objtool/special.c b/tools/objtool/special.c
+index e74e0189de22..f6f7dee1ba77 100644
+--- a/tools/objtool/special.c
++++ b/tools/objtool/special.c
+@@ -188,8 +188,10 @@ int special_get_alts(struct elf *elf, struct list_head *alts)
+ 			memset(alt, 0, sizeof(*alt));
+ 
+ 			ret = get_alt_entry(elf, entry, sec, idx, alt);
+-			if (ret)
++			if (ret) {
++				free(alt);
+ 				return ret;
++			}
+ 
+ 			list_add_tail(&alt->list, alts);
+ 		}
+-- 
+2.27.0
 
-Thanks!
