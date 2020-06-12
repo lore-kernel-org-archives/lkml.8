@@ -2,190 +2,252 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A4DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 11:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9828C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 11:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6CC3207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 11:19:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6318220792
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 11:22:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="EyaHB6Um";
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="YgsAK9m1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="S4H44/r+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726271AbgFLLTz (ORCPT
+        id S1726108AbgFLLWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 07:19:55 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:26121 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbgFLLTx (ORCPT
+        Fri, 12 Jun 2020 07:22:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55222 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725791AbgFLLWU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 07:19:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1591960792; x=1623496792;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=MzeAv/uxP+03PmE8sGcor5TRaIUdworcjSgMGdxm/zU=;
-  b=EyaHB6UmUnEOhObHmUGFL/Svo43Iusqyi1eSihTyThCHqYZLy2NdQCGD
-   cXV9WvBnBc+HUWj5GDSh1aCF92w7js4jd/kEaAiKIV1uZtsV92NL0buTb
-   fmbdjkVy3M3CHC98/4ZvxBZjsHmugEG325spHSiIGUohe4QeEd+Y5OGj0
-   5XShIuHdBdvt6I17WHLwrCBj4IcARziEY2SNfbgyR1llaoKsXsPmFQOiV
-   vhB+qhVFOWs3hdIkcdI4aiyCAwK42O4qeIN/A2vgz0jwDYejbNaoglU/l
-   UXln5V0R16GSE9TGwQ+chx7f0LT3kij4e69OaZdmWVjkAoy4OkDm8FzVW
-   Q==;
-IronPort-SDR: TlXdqw7HBokRsaptRgqS0yI+GxWUhaGHXLtguS15MR1s9CBroPvJIFf8wP45xt3ucPxcL7v1t9
- k3VL0bGfSR01JgGbPdKhVNHRpXG99q5JvyrzNdN2WUqiLqIY0LK13G2PMjySzXIN/4fBbhDzLR
- KPy7bnpRIzXIxhJ5gtpX1oeESJvsdGrxTsNlhm8kt6E+zKBT5jGGpjgk4XfLtPZPoriyF3Ac58
- RetA8FWKA9gRcd+E3fPLfZ3fO9CTZFD7KTkf9HXP70ZeMjNo+FfsQBfq58nzkUWvac0kXAlHs2
- +IA=
-X-IronPort-AV: E=Sophos;i="5.73,503,1583218800"; 
-   d="scan'208";a="79852257"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 12 Jun 2020 04:19:52 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Fri, 12 Jun 2020 04:19:48 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3 via Frontend
- Transport; Fri, 12 Jun 2020 04:19:48 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kVF5QvfcbHSRC0wtBAzk6mnNgB5wa11fhyWcqOs55/xAVVhOcq1jAZwjK5INp5xi8jjPfhFudVD7tlz0R11JM2CRDuAdDEg/E9V5jxS0lFMR5XyiQz8ubuorqRY9duKVmpg6NxyQCpvxUHUnJvkOkbXgegbwYhdY1qYUAOYgscVUmACKSGZj6C6OINloh3FoCszxjmwp3D1QdPl8Zbs1ihbjJTkebJMSBO4taWpleDlIrSPjNAlXi3X5LXgbVJ9LttMokRN1L9Kvm4U+QPsyiZOVuZK9bdd+T8is6SIIaBWGVM0n0738Ik2xj46ccbLBPqD6Oy1EirNbBHwQmDYbWQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BtE5mJzFD2ITjLh14Q0+u1iHMZX+ApnVyj3ixnSpRvU=;
- b=D71nhHKpx/u916QLmqlUHp1M7qKRryJKx0CjaTW5wusim64VgjHP4cVugdQoxm+dWvASWoqmoKDmH+0XmplG0/gF6G5hKbwaYfYfdIcgIHBt2D/MUQ3ckZgwpQuavjlue/684CpKsHnTSP8O2vRcbSbZ5UFV3Kt1LIhJY/UoO1j9ziF6HgEkraHBrrw9xRYSyyA9oX+OavJQPqU6sHjMpo9t3QrOiIC1XPeqE1DRt167z/e6CckJjIbwFquG7dtTFlL+EHgST7MO1FDDtGwYicUutdjdJR0wdhYxB2CpDlNSp1BkEvrsNTfsTxtU1ZoZ76fEX3SZ8F5GtGddhRzAow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BtE5mJzFD2ITjLh14Q0+u1iHMZX+ApnVyj3ixnSpRvU=;
- b=YgsAK9m1dF3/f9XsMpq7/kv8mJZAyFbFeqXz0az9I40qYsKlnquiw30QZ4d82hybfQUYSss/YTq9OcF9PCMqI9suuuwbFvi74GWlawDHQQZRlTa64uIPrCkpPzLxrBEZH/NI/6G0GEj27iStsu3rJioqCysFBJzSw2i/zcMgu4w=
-Received: from BYAPR11MB2999.namprd11.prod.outlook.com (2603:10b6:a03:90::17)
- by BYAPR11MB3655.namprd11.prod.outlook.com (2603:10b6:a03:f6::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.21; Fri, 12 Jun
- 2020 11:19:48 +0000
-Received: from BYAPR11MB2999.namprd11.prod.outlook.com
- ([fe80::a9a1:a786:2e11:a5f5]) by BYAPR11MB2999.namprd11.prod.outlook.com
- ([fe80::a9a1:a786:2e11:a5f5%3]) with mapi id 15.20.3066.023; Fri, 12 Jun 2020
- 11:19:48 +0000
-From:   <Eugen.Hristev@microchip.com>
-To:     <linux-media@vger.kernel.org>
-CC:     <lkp@intel.com>, <kbuild-all@lists.01.org>,
-        <clang-built-linux@googlegroups.com>,
-        <linux-kernel@vger.kernel.org>, <mchehab@kernel.org>,
-        <hverkuil@xs4all.nl>
-Subject: Re: drivers/media/platform/atmel/atmel-sama5d2-isc.c:323:34: warning:
- unused variable 'atmel_isc_of_match'
-Thread-Topic: drivers/media/platform/atmel/atmel-sama5d2-isc.c:323:34:
- warning: unused variable 'atmel_isc_of_match'
-Thread-Index: AQHWQH8vHj1heRZtYkSl4nyeGq2n4ajU1cSA
-Date:   Fri, 12 Jun 2020 11:19:48 +0000
-Message-ID: <328e45a4-ed0b-9ff7-9849-7a68d1a110d7@microchip.com>
-References: <202006121424.PByDmwjQ%lkp@intel.com>
-In-Reply-To: <202006121424.PByDmwjQ%lkp@intel.com>
-Accept-Language: en-US, ro-RO
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-authentication-results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=microchip.com;
-x-originating-ip: [82.76.24.202]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e507d32a-33d8-4d71-2e40-08d80ec284a9
-x-ms-traffictypediagnostic: BYAPR11MB3655:
-x-microsoft-antispam-prvs: <BYAPR11MB3655A6D41CD35914B1797BFFE8810@BYAPR11MB3655.namprd11.prod.outlook.com>
-x-bypassexternaltag: True
-x-ms-oob-tlc-oobclassifiers: OLM:26;
-x-forefront-prvs: 0432A04947
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Q/Q2rZJ412XoyxeKpy/6P5ChazMBLkqy3muOfzB9YRC5i/lGk6jNS6FCw/lKN9t6ohK7u45A+ICJTvM6GZ6i4F/fQx184Qa/EamYZTi05H67bM8MzC+JOAQIMgkdNSg5FsVrOJl7oFZaKauS2SvKAKGtrPec0vYi09m0cJ6ksWONzT0MgI9d7Yb89KieTC2U4KCXiyChtisbDcecKDS8iZ1ssw1TmUBwpLeARRsmdh/HHKO5p/D9oFau6XbzapytepyDdgDX9XzoCbk8S6Is1V5Pz6IRFZGFcNFuONFdt7TRmauIkT+omDhm45QaJpnynKRrm7V7JoTpF11v89oet1zBBjSj4fpWuo6O6DwuA6SXi8ZATBasu+kSOAu8MMxK5SyQOALvKSypz7hcbEACDLl+cSD3/x6qdiR4ll5Nmm70ARs6s8Omg+IQvToBKlENIk+FlPeAMSR8eh0A69cSxw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB2999.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(396003)(376002)(366004)(136003)(346002)(66556008)(83380400001)(2906002)(6506007)(4326008)(6512007)(26005)(53546011)(71200400001)(186003)(83080400001)(5660300002)(6916009)(54906003)(8936002)(66476007)(316002)(478600001)(64756008)(2616005)(8676002)(966005)(66946007)(6486002)(31696002)(36756003)(66446008)(76116006)(91956017)(31686004)(86362001)(43740500002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: GbOpwJtmPheB7fy7aBs2EQvsNhT3ZHg11LvPjkUWmJpxYKjT9kih+CihjsQ5nVR4bZ2cbavf+qSZMbhGsFMoP+jprvSUTkzNxJXvfPes8SjkUuX+/xlhPe8nP7vUEnmRMPTJoPXYX2TQ/Dh/iaEudZkMaXKulpfWFVSiuppz2iko/kDOJm/i6Ul+d42txLacsKU1PMGuMP3E4VbJb8Fu5N9VKHJNBv4GeZFmFSeRSJC/H4/6DW9IeJC+/S1BmvhVLdZtzXKfTuNXf9L5Z3QcT63YOjZY1G9WOJINH4fGj1yO8puf1C3bfiSfdefTaig9BK5Pc3lBUH/Wu59K4F5bYOpfN8085jB4W8AuGfB1XFyb62hwnNnJIq63qe4Rf1BsOkzUyJ8Dv9OyIFnxOjoHIbjqfT6krHonVxHt03+F+KHGRZf60JxR1Eym7nJDKo84hGRT6SSF5MaNAOw5Xm+5pNyS1d1n4bbOFHxPWRZqfgg=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <8E156AB7CF1C004690A2DBAC90DDB8C2@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 12 Jun 2020 07:22:20 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 872E5C03E96F;
+        Fri, 12 Jun 2020 04:22:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=iQ3cJVOqFbwAFC9lqlAOVqpOP5T72nL9q2aV8aA74xo=; b=S4H44/r+VksRHlDi95QSfK1Lj
+        4y7fH8APnwFRucZfDFfZ9yaS8FXx6dDuGOWt4msQ2f5FDheEtfksC4uTCYF7Xtq800R2yhuih6GMQ
+        IfhAgPG0Mj3qvGtDCmRRARBZ7MFUDvq5eLS69eQQL27184Yorvdks7XEK96Eva1Ri52oLjdBbppmr
+        c5ancELwZOt6jFiJIO/d1W79laOXy5//xkLqysAMt1b2KBRdkHscBQRuuCcPXIyPIEe1v2SLQcTlK
+        T+I4eNDfw94q2og8eMAn0AFCQOzwMaSjKY69RK2QRGnQqhgXGOTqS0rkCac4NnioDZlDFq56OH6hh
+        EM//YR0zA==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:52656)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jjhlG-0002iS-Ax; Fri, 12 Jun 2020 12:22:14 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jjhlF-0006DP-Gf; Fri, 12 Jun 2020 12:22:13 +0100
+Date:   Fri, 12 Jun 2020 12:22:13 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
+Subject: Re: [PATCH v2] net: mvneta: Fix Serdes configuration for 2.5Gbps
+ modes
+Message-ID: <20200612112213.GH1551@shell.armlinux.org.uk>
+References: <20200612083847.29942-1-s.hauer@pengutronix.de>
+ <20200612084710.GC1551@shell.armlinux.org.uk>
+ <20200612100114.GE1551@shell.armlinux.org.uk>
+ <20200612101820.GF1551@shell.armlinux.org.uk>
+ <20200612104208.GG1551@shell.armlinux.org.uk>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: e507d32a-33d8-4d71-2e40-08d80ec284a9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2020 11:19:48.3790
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: P0xaAebiM6fzKfkLfhgp0IMHlumg+r55ON+yIthZ3ljZOXdDfZJgp5GzHxBQVgnFFjwPubVeaxYZsz8hCI5wc+5GK4Mm426IPyMHOxnvCjw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB3655
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200612104208.GG1551@shell.armlinux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12.06.2020 09:02, kernel test robot wrote:
+On Fri, Jun 12, 2020 at 11:42:08AM +0100, Russell King - ARM Linux admin wrote:
+> On Fri, Jun 12, 2020 at 11:18:20AM +0100, Russell King - ARM Linux admin wrote:
+> > On Fri, Jun 12, 2020 at 11:01:15AM +0100, Russell King - ARM Linux admin wrote:
+> > > On Fri, Jun 12, 2020 at 09:47:10AM +0100, Russell King - ARM Linux admin wrote:
+> > > > On Fri, Jun 12, 2020 at 10:38:47AM +0200, Sascha Hauer wrote:
+> > > > > The Marvell MVNETA Ethernet controller supports a 2.5Gbps SGMII mode
+> > > > > called DRSGMII. Depending on the Port MAC Control Register0 PortType
+> > > > > setting this seems to be either an overclocked SGMII mode or 2500BaseX.
+> > > > > 
+> > > > > This patch adds the necessary Serdes Configuration setting for the
+> > > > > 2.5Gbps modes. There is no phy interface mode define for overclocked
+> > > > > SGMII, so only 2500BaseX is handled for now.
+> > > > > 
+> > > > > As phy_interface_mode_is_8023z() returns true for both
+> > > > > PHY_INTERFACE_MODE_1000BASEX and PHY_INTERFACE_MODE_2500BASEX we
+> > > > > explicitly test for 1000BaseX instead of using
+> > > > > phy_interface_mode_is_8023z() to differentiate the different
+> > > > > possibilities.
+> > > > > 
+> > > > > Fixes: da58a931f248f ("net: mvneta: Add support for 2500Mbps SGMII")
+> > > > > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> > > > 
+> > > > 2500base-X is used today on Armada 388 and Armada 3720 platforms and
+> > > > works - it is known to interoperate with Marvell PP2.2 hardware, as
+> > > > well was various SFPs such as the Huawei MA5671A at 2.5Gbps.  The way
+> > > > it is handled on these platforms is via the COMPHY, requesting that
+> > > > the serdes is upclocked from 1.25Gbps to 3.125Gbps.
+> > > > 
+> > > > This "DRSGMII" mode is not mentioned in the functional specs for either
+> > > > the Armada 388 or Armada 3720, the value you poke into the register is
+> > > > not mentioned either.  As I've already requested, some information on
+> > > > exactly what this "DRSGMII" is would be very useful, it can't be
+> > > > "double-rate SGMII" because that would give you 2Gbps instead of 1Gbps.
+> > > > 
+> > > > So, I suspect this breaks the platforms that are known to work.
+> > > > 
+> > > > We need a proper description of what DRSGMII is before we can consider
+> > > > taking any patches for it.
+> > > 
+> > > Okay, having dug through the Armada XP, 370, 388, 3720 specs, I think
+> > > this is fine after all - but something that will help for the future
+> > > would be to document that this register does not exist on the 388 and
+> > > 3720 devices (which brings up the question whether we should be writing
+> > > it there.)  The field was moved into the comphy on those devices.
+> > > 
+> > > So, it looks like if we have a comphy, we should not be writing this
+> > > register.
+> > > 
+> > > What's more, the write to MVNETA_SERDES_CFG should not be in
+> > > mvneta_port_power_up(); it's likely that XP and 370 will not work
+> > > properly with phylink.  It needs to be done in a similar location to
+> > > mvneta_comphy_init(), so that phylink can switch between 1G and 2.5G
+> > > speeds.
+> > > 
+> > > As you have an Armada XP system, you are best placed to test moving
+> > > that write.
+> > 
+> > Here's my suggestion - it won't apply to mainline or net* trees, but
+> > gives you the idea I'm proposing:
+> > 
+> > diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
+> > index 9e25d608d856..17db74d61bc2 100644
+> > --- a/drivers/net/ethernet/marvell/mvneta.c
+> > +++ b/drivers/net/ethernet/marvell/mvneta.c
+> > @@ -107,9 +107,11 @@
+> >  #define      MVNETA_TX_IN_PRGRS                  BIT(1)
+> >  #define      MVNETA_TX_FIFO_EMPTY                BIT(8)
+> >  #define MVNETA_RX_MIN_FRAME_SIZE                 0x247c
+> > +/* Only exists on Armada XP and Armada 370 */
+> >  #define MVNETA_SERDES_CFG			 0x24A0
+> > -#define      MVNETA_SGMII_SERDES_PROTO		 0x0cc7
+> >  #define      MVNETA_QSGMII_SERDES_PROTO		 0x0667
+> > +#define      MVNETA_SGMII_SERDES_PROTO		 0x0cc7
+> > +#define      MVNETA_HSGMII_SERDES_PROTO		 0x1107
+> >  #define MVNETA_TYPE_PRIO                         0x24bc
+> >  #define      MVNETA_FORCE_UNI                    BIT(21)
+> >  #define MVNETA_TXQ_CMD_1                         0x24e4
+> > @@ -3457,9 +3459,6 @@ static int mvneta_comphy_init(struct mvneta_port *pp)
+> >  {
+> >  	int ret;
+> >  
+> > -	if (!pp->comphy)
+> > -		return 0;
+> > -
+> >  	ret = phy_set_mode_ext(pp->comphy, PHY_MODE_ETHERNET,
+> >  			       pp->phy_interface);
+> >  	if (ret)
+> > @@ -3468,11 +3467,47 @@ static int mvneta_comphy_init(struct mvneta_port *pp)
+> >  	return phy_power_on(pp->comphy);
+> >  }
+> >  
+> > +static int mvneta_config_interface(struct mvneta_port *pp,i
+> > +				   phy_interface_t interface)
+> > +{
+> > +	int ret = 0;
+> > +
+> > +	if (pp->comphy) {
+> > +		if (interface == PHY_INTERFACE_MODE_SGMII ||
+> > +		    interface == PHY_INTERFACE_MODE_1000BASEX ||
+> > +		    interface == PHY_INTERFACE_MODE_2500BASEX) {
+> > +			ret = mvneta_comphy_init(pp);
+> > +		}
+> > +	} else {
+> > +		switch (interface) {
+> > +		case PHY_INTERFACE_MODE_QSGMII:
+> > +			mvreg_write(pp, MVNETA_SERDES_CFG,
+> > +				    MVNETA_QSGMII_SERDES_PROTO);
+> > +			break;
+> > +
+> > +		case PHY_INTERFACE_MODE_SGMII:
+> > +		case PHY_INTERFACE_MODE_1000BASEX:
+> > +			mvreg_write(pp, MVNETA_SERDES_CFG,
+> > +				    MVNETA_SGMII_SERDES_PROTO);
+> > +			break;
+> > +
+> > +		case PHY_INTERFACE_MODE_2500BASEX:
+> > +			mvreg_write(pp, MVNETA_SERDES_CFG,
+> > +				    MVNETA_HSGMII_SERDES_PROTO);
+> > +			break;
+> > +		}
+> > +	}
+> > +
+> > +	pp->phy_interface = interface;
+> > +
+> > +	return ret;
+> > +}
+> > +
+> >  static void mvneta_start_dev(struct mvneta_port *pp)
+> >  {
+> >  	int cpu;
+> >  
+> > -	WARN_ON(mvneta_comphy_init(pp));
+> > +	WARN_ON(mvneta_config_interface(pp, pp->phy_interface));
+> >  
+> >  	mvgmac_set_max_rx_size(&pp->gmac, pp->pkt_size);
+> >  	mvneta_txq_max_tx_size_set(pp, pp->pkt_size);
+> > @@ -3702,14 +3737,9 @@ static int mvneta_pcs_config(struct phylink_config *config,
+> >  	/* We should never see Asym_Pause set */
+> >  	WARN_ON(phylink_test(advertising, Asym_Pause));
+> >  
+> > -	if (pp->comphy && pp->phy_interface != interface &&
+> > -	    (interface == PHY_INTERFACE_MODE_SGMII ||
+> > -	     interface == PHY_INTERFACE_MODE_1000BASEX ||
+> > -	     interface == PHY_INTERFACE_MODE_2500BASEX)) {
+> > -		pp->phy_interface = interface;
+> > -
+> > +	if (pp->phy_interface != interface) {
+> >  		WARN_ON(phy_power_off(pp->comphy));
+> > -		WARN_ON(mvneta_comphy_init(pp));
+> > +		mvneta_config_interface(pp, interface);
+> >  	}
+> >  
+> >  	if (want_1ms_clock) {
+> > @@ -4794,12 +4824,10 @@ static int mvneta_port_power_up(struct mvneta_port *pp, int phy_mode)
+> >  	/* MAC Cause register should be cleared */
+> >  	mvreg_write(pp, MVNETA_UNIT_INTR_CAUSE, 0);
+> >  
+> > -	if (phy_mode == PHY_INTERFACE_MODE_QSGMII)
+> > -		mvreg_write(pp, MVNETA_SERDES_CFG, MVNETA_QSGMII_SERDES_PROTO);
+> > -	else if (phy_mode == PHY_INTERFACE_MODE_SGMII ||
+> > -		 phy_interface_mode_is_8023z(phy_mode))
+> > -		mvreg_write(pp, MVNETA_SERDES_CFG, MVNETA_SGMII_SERDES_PROTO);
+> > -	else if (!phy_interface_mode_is_rgmii(phy_mode))
+> > +	if (phy_mode != PHY_INTERFACE_MODE_QSGMII &&
+> > +	    phy_mode != PHY_INTERFACE_MODE_SGMII &&
+> > +	    !phy_interface_mode_is_8023z(phy_mode) &&
+> > +	    !phy_interface_mode_is_rgmii(phy_mode))
+> >  		return -EINVAL;
+> >  
+> >  	return 0;
+> 
+> With the obvious mistakes fixed (extraneous 'i' and lack of default
+> case), it seems to still work on Armada 388 Clearfog Pro with 2.5G
+> modules.
 
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
-t master
-> head:   b791d1bdf9212d944d749a5c7ff6febdba241771
-> commit: 0a0e265515db7619d0da9331d74245d02c741f07 media: atmel: atmel-isc:=
- split driver into driver base and isc
-> date:   12 months ago
-> config: x86_64-randconfig-a012-20200612 (attached as .config)
-> compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project 3b43=
-f006294971b8049d4807110032169780e5b8)
-> reproduce (this is a W=3D1 build):
->          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sb=
-in/make.cross -O ~/bin/make.cross
->          chmod +x ~/bin/make.cross
->          # install x86_64 cross compiling tool for clang build
->          # apt-get install binutils-x86-64-linux-gnu
->          git checkout 0a0e265515db7619d0da9331d74245d02c741f07
->          # save the attached .config to linux build tree
->          COMPILER_INSTALL_PATH=3D$HOME/0day COMPILER=3Dclang make.cross A=
-RCH=3Dx86_64
->=20
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
+... and the other bug fixed - mvneta_comphy_init() needs to be passed
+the interface mode.
 
-Sent a patch to address this warning
-
-Thanks
-
->=20
-> All warnings (new ones prefixed by >>, old ones prefixed by <<):
->=20
->>> drivers/media/platform/atmel/atmel-sama5d2-isc.c:323:34: warning: unuse=
-d variable 'atmel_isc_of_match' [-Wunused-const-variable]
-> static const struct of_device_id atmel_isc_of_match[] =3D {
-> ^
-> 1 warning generated.
->=20
-> vim +/atmel_isc_of_match +323 drivers/media/platform/atmel/atmel-sama5d2-=
-isc.c
->=20
->     322
->   > 323  static const struct of_device_id atmel_isc_of_match[] =3D {
->     324          { .compatible =3D "atmel,sama5d2-isc" },
->     325          { }
->     326  };
->     327  MODULE_DEVICE_TABLE(of, atmel_isc_of_match);
->     328
->=20
-> ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
->=20
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
