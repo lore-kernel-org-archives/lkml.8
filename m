@@ -6,39 +6,41 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 800CEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7BA5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6954320792
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:19:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82C79206A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:19:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbgFLNTf (ORCPT
+        id S1726263AbgFLNTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 09:19:35 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:60228 "EHLO
+        Fri, 12 Jun 2020 09:19:41 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:40600 "EHLO
         mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726109AbgFLNTf (ORCPT
+        with ESMTP id S1726109AbgFLNTj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 09:19:35 -0400
+        Fri, 12 Jun 2020 09:19:39 -0400
 Received: from marcel-macbook.fritz.box (ip-109-41-64-170.web.vodafone.de [109.41.64.170])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 64E66CED03;
-        Fri, 12 Jun 2020 15:29:22 +0200 (CEST)
+        by mail.holtmann.org (Postfix) with ESMTPSA id C462FCED04;
+        Fri, 12 Jun 2020 15:29:23 +0200 (CEST)
 Content-Type: text/plain;
         charset=us-ascii
 Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH v1] Bluetooth: hci_qca: Request Tx clock vote off only
- when Tx is pending
+Subject: Re: [PATCH v1] Bluetooth: hci_qca: Increase SoC idle timeout to 200ms
 From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <1591964117-8228-1-git-send-email-bgodavar@codeaurora.org>
-Date:   Fri, 12 Jun 2020 15:19:30 +0200
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>, mka@chromium.org,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        abhishekpandit@chromium.org, rjliao@codeaurora.org,
-        gubbaven@codeaurora.org
+In-Reply-To: <1591964491-9776-1-git-send-email-bgodavar@codeaurora.org>
+Date:   Fri, 12 Jun 2020 15:19:32 +0200
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
+        Hemantg <hemantg@codeaurora.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        Rocky Liao <rjliao@codeaurora.org>, gubbaven@codeaurora.org
 Content-Transfer-Encoding: 7bit
-Message-Id: <29DD7F7E-A91D-439D-9FAA-23C8A16BD586@holtmann.org>
-References: <1591964117-8228-1-git-send-email-bgodavar@codeaurora.org>
+Message-Id: <401C6D1C-3B67-4604-A83B-D2D4C4EE81DA@holtmann.org>
+References: <1591964491-9776-1-git-send-email-bgodavar@codeaurora.org>
 To:     Balakrishna Godavarthi <bgodavar@codeaurora.org>
 X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -48,13 +50,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi Balakrishna,
 
-> Tx pending flag is set to true when HOST IBS state is AWAKE or
-> AWAKEING. If IBS state is ASLEEP, then Tx clock is already voted
-> off. To optimize further directly calling serial_clock_vote()
-> instead of qca_wq_serial_tx_clock_vote_off(), at this point of
-> qca_suspend() already data is sent out. No need to wake up hci to
-> send data.
+> In some version of WCN399x, SoC idle timeout is configured
+> as 80ms instead of 20ms or 40ms. To honor all the SoC's
+> supported in the driver increasing SoC idle timeout to 200ms.
 > 
+> Fixes: 41d5b25fed0a0 ("Bluetooth: hci_qca: add PM support")
 > Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
 > ---
 > drivers/bluetooth/hci_qca.c | 2 +-
