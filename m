@@ -2,86 +2,83 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EBBFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B762C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12F30206A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:14:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71CC920792
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:15:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591967731;
+	bh=gqHvU/1Bea5OI6WzTyqp6DJjbssi2I6OQ1ot+gxcKww=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ans1yROB74xHqhbDBvrgy3+D/6r6o9uJ5UkiyctM8QEAEt98pfzrD481A2k0LjAYj
+	 uVFRlu8WihZRJgn9lWuX35kPTykR0xID5MiSRNSPLGPcdi1808ZLsb1Bw5qIIfoeP9
+	 MoevIl0kvjEFJMctHwnMKhx60hBc2ORvsRSlq2bg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726363AbgFLNOM (ORCPT
+        id S1726347AbgFLNP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 09:14:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35546 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726279AbgFLNOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 09:14:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id C8964AB98;
-        Fri, 12 Jun 2020 13:14:09 +0000 (UTC)
-Date:   Fri, 12 Jun 2020 15:14:05 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: Re: [v2 PATCH] printk: Make linux/printk.h self-contained
-Message-ID: <20200612131405.GI4311@linux-b0ei>
-References: <20200611125144.GA2506@gondor.apana.org.au>
- <20200612043634.GA30181@gondor.apana.org.au>
+        Fri, 12 Jun 2020 09:15:28 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:32789 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbgFLNP2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 09:15:28 -0400
+Received: by mail-ed1-f68.google.com with SMTP id o26so6393718edq.0;
+        Fri, 12 Jun 2020 06:15:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4D2rMsygZsdGfX84JAU3QPYEGsf4eDb0utLXSNRnqdE=;
+        b=WxjHSjzdwBrHgXMxdaUZMwN131dq3WxMAzrALq8I94VdZ2Lhe4XIHidxBeukJEaDBJ
+         UUQkDafcxMrq+zretoyJS7uWwMLXZF2/CmtbjQpgewwzvvc/j1Cgu+vQh4bjfmZxDBuV
+         RmJlEEWaSfK08e17PtXBhD+HL0En/EcY9Thc4MTCV2/gqecoAyjGnSzMqbOc1khQbm1U
+         PODbt9m5vH8U6TmDjfuDmNhN3k9yknzpWpc9kf32mO9eWlyWzNtDhhSdQl0Dl3ky55bb
+         kHv0VS0s//eMQhcjTwaNPEJmfIP/O6TW5GIzgkVzkf6+PNTmKymNWpmoDhxvHnnGC4Z9
+         VaPA==
+X-Gm-Message-State: AOAM531h/lDyZ+bFqpR6v5BrfPFxChwSQ4iI9FTVUiToB9qxY2phmQ/r
+        xJfN3578FaI57BLQvrJEIkAa2J3X
+X-Google-Smtp-Source: ABdhPJxZAN+MpAUgvjVkAQg1d9EuGxVZtBwP08eklGQ0IeLSZabnx/BuqQc34BEID84/FRflGJdQIQ==
+X-Received: by 2002:a05:6402:3078:: with SMTP id bs24mr11524415edb.284.1591967725620;
+        Fri, 12 Jun 2020 06:15:25 -0700 (PDT)
+Received: from pi3 ([194.230.155.184])
+        by smtp.googlemail.com with ESMTPSA id bm9sm3068676edb.84.2020.06.12.06.15.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2020 06:15:24 -0700 (PDT)
+Date:   Fri, 12 Jun 2020 15:15:23 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Oleksij Rempel <o.rempel@pengutronix.de>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] lib: update DEBUG_SHIRQ docs to match reality
+Message-ID: <20200612131523.GB26279@pi3>
+References: <20200612124844.19422-1-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200612043634.GA30181@gondor.apana.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200612124844.19422-1-wsa+renesas@sang-engineering.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 2020-06-12 14:36:35, Herbert Xu wrote:
-> As it stands if you include printk.h by itself it will fail to
-> compile because it requires definitions from ratelimit.h.  However,
-> simply including ratelimit.h from printk.h does not work due to
-> inclusion loops involving sched.h and kernel.h.
+On Fri, Jun 12, 2020 at 02:48:44PM +0200, Wolfram Sang wrote:
+> There is no extra interrupt when registering a shared interrupt handler
+> since 2011. Update the Kconfig text to make it clear and to avoid wrong
+> assumptions when debugging issues found by it.
 > 
-> This patch solves this by moving bits from ratelimit.h into a new
-> header file which can then be included by printk.h without any
-> worries about header loops.
-> 
-> The build bot then revealed some intriguing failures arising out
-> of this patch.  On s390 there is an inclusion loop with asm/bug.h
-> and linux/kernel.h that triggers a compile failure, because kernel.h
-> will cause asm-generic/bug.h to be included before s390's own
-> asm/bug.h has finished processing.  This has been fixed by not
-> including kernel.h in arch/s390/include/asm/bug.h.
-> 
-> A related failure was seen on powerpc where asm/bug.h leads to
-> the inclusion of linux/kernel.h via asm-generic/bug.h which then
-> prematurely tries to use the very macros defined in asm/bug.h.
-> The particular inclusion path which led to this involves lockdep.h.
-> I have fixed this moving the type definitions lockdep.h into the
-> new lockdep_types.h.
-> 
-> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+> Fixes: 6d83f94db95c ("genirq: Disable the SHIRQ_DEBUG call in request_threaded_irq for now")
+> Link: https://lore.kernel.org/linux-i2c/859e8211-2c56-8dd5-d6fb-33e4358e4128@pengutronix.de/T/#mf24d7070d7e0c8f17b6be6ceb51df94b7d7613b3
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-I am fine with the changes as long as the kernel test robot
-does not complain ;-)
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Acked-by: Petr Mladek <pmladek@suse.com>
+Best regards,
+Krzysztof
 
-Well, I wonder if PeterZ is fine with the lockdep part. It might make
-sense to split it into separate patch as a prerequisite.
-
-Best Regards,
-Petr
