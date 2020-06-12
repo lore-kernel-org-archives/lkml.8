@@ -4,69 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B0FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F83EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 814BE207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A61F2081A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:10:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Vk8nXv4l"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="f1Z7wn8O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbgFLHKY (ORCPT
+        id S1726583AbgFLHK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 03:10:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44690 "EHLO
+        Fri, 12 Jun 2020 03:10:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726468AbgFLHKQ (ORCPT
+        with ESMTP id S1726564AbgFLHKY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 03:10:16 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53134C08C5C1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 00:10:15 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id b5so2756285pgm.8
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 00:10:15 -0700 (PDT)
+        Fri, 12 Jun 2020 03:10:24 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5462AC03E96F
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 00:10:24 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id l63so1466753pge.12
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 00:10:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=TqEeZZCFAo9j2EFFuYpPOcmAMjD+t0h5vXYjlCC88NI=;
-        b=Vk8nXv4lbi60VdlETy0d9EHMvCMv6fvKZN7WSJqO8Yazl8SmgsXXBVnpEdhhbfA6U6
-         IsRjgiXT1RcyvifqbfANAKXfWf9zgSjGNNC8zwH2SOwquvk0yPTzl/bgCFuQvzFqJVyx
-         T/QnIAE8JHW27tQv2laLYiXgPZnqbMeTEMiE2nvFH+fCSSAfZjuwOK4wkAmNt3J4egyL
-         gktCEfFKGLc2yAws1DCe3q7msFiIg+t0pCeXmtIz1dc3lyIA1jA4hgQBOWSVnW1zVIaZ
-         xRD8wy6R1sSLyOKQ3EMRr9OAKnrmjNq17Y7jyMTfEQM9LNMIv38SwTMU/MwVxNnmXpwG
-         mlyA==
+        bh=4+NJ3t8NefDvMBlOVrpO6HJOHxIomSxMyV3y0MN34qw=;
+        b=f1Z7wn8ODMszNV5yRo5L00AOwSuvcWankDXBey/J0QSLJG9bar/NSgUX25Wf91d1YQ
+         5jTTw17cQ1hw7xOBPBBQ9dTwf/asfw6P4tueUtHCjF6xfDYqvxV+RbjLrEf3JSYufQrq
+         SVFqIwb6LJdn0xkyOOzidLm8X73EuPp9qtXWZORQIpHfsKWED3a62HM+Y6vnNy8R9OYX
+         mZnTkDgGWrW/CVOneAPhCKGFArrxn/ktvFFwvSZppc2iPRm8nHWorVISFKCnohdbsYEc
+         xMtJi/eOG58tRvohlc9pV8PNIPF5KlTlxs79VRmAmjTH/CXwVma5BI1Ymc36kILlHImI
+         D+0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=TqEeZZCFAo9j2EFFuYpPOcmAMjD+t0h5vXYjlCC88NI=;
-        b=hTX4FveDZVWNwMOJSdgfCYLvCa4R9bZanlpuiOsl3y25SQ+hzeyS8CmgcMGbRFhFra
-         3c5NmJ8XfBuFIxipdhTgu8xzeiD2AqDrTh3u+dnQnoNBw/rY+jzjlhj570kRwX355Xf7
-         f8BdBnH9xlvVDPB/I5HFbV+NGFPs8zSUAvdBK2IZwT4TgpM3xtlKLWbtAWsYCclbJ99Q
-         pAsjzQISAU+6bpbDBzK2sKBbql52amvIw8OR+tNV525afQgV9X2yUNRDJY8YxKs1J35S
-         WYOjHWNfOyMbZgs5WxOp7qHDTaqnKFtsDMol1JaEDMbiRLEhqB99A9wkOcvS9rJ9pKFh
-         K1bQ==
-X-Gm-Message-State: AOAM531ysL08DbuchHSPtPt6/f1YitAOlpKQ1O6h/tkE0k5kM4Kwk9GF
-        /XhpchIj0NB8yuIzoBK8xdFOsw==
-X-Google-Smtp-Source: ABdhPJyjEH+ADL2W4THCxsHXC9WxaaeveHWyMCLC47yacVreM5QB1kMYVKztlYuLn7XFuwTbzNN8eQ==
-X-Received: by 2002:a62:7b41:: with SMTP id w62mr9986107pfc.142.1591945814828;
-        Fri, 12 Jun 2020 00:10:14 -0700 (PDT)
+        bh=4+NJ3t8NefDvMBlOVrpO6HJOHxIomSxMyV3y0MN34qw=;
+        b=EaDgv2H854pZBZN1lFsneBQkq6buYxj2xmKhb3kgJpPuUIxrFjV5sHJi5MFFNUcfTz
+         daAHz5tAmmIiNQlXKM0Yux20quxaALkbphdcuXCn0toUIrLWNVqEfE/pMUr0TB5P+2ib
+         Z3P/DxSVofeJiMKpVcFQ7W++7ZH21cRqcCTKsM+DTZcy5EzSfbVCz4mccCaJLzPcvHKJ
+         DrJ47OFEEaMR4OiVH2cidhi6/aird0gBFXvC1MOABnSjju5qt2fXRU1w2OZ7KHdT55FT
+         P752abbNZYuqLnUvKH3Q/5Xowac7lphc6SrtBoWIJWu3HEHP0mem+BMaKCqrWOfYDaov
+         iBNg==
+X-Gm-Message-State: AOAM531SElBbY3rzswXrUSLASi0qgkZPduaDAoFWteCkQIWS8bzC3Li2
+        UzILYeYZR8kvBxEB7Yc7sPlcoA==
+X-Google-Smtp-Source: ABdhPJxIEogp+RWDoHXMgGJLewWmgiLwJtVEzXgBro7HgtTSJx6CPinawDSwZAjC+NoKJKtLZwdlng==
+X-Received: by 2002:aa7:9439:: with SMTP id y25mr10621687pfo.268.1591945823802;
+        Fri, 12 Jun 2020 00:10:23 -0700 (PDT)
 Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
-        by smtp.gmail.com with ESMTPSA id d2sm4336919pgp.56.2020.06.12.00.10.12
+        by smtp.gmail.com with ESMTPSA id d2sm4336919pgp.56.2020.06.12.00.10.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 00:10:14 -0700 (PDT)
+        Fri, 12 Jun 2020 00:10:23 -0700 (PDT)
 From:   Greentime Hu <greentime.hu@sifive.com>
 To:     greentime.hu@sifive.com, oleg@redhat.com, guoren@linux.alibaba.com,
         vincent.chen@sifive.com, paul.walmsley@sifive.com,
         palmerdabbelt@google.com, linux-riscv@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 02/13] riscv: Separate patch for cflags and aflags
-Date:   Fri, 12 Jun 2020 15:09:51 +0800
-Message-Id: <fb337ff3ed0f6d04da25f45db3c5c7713824ab13.1591344965.git.greentime.hu@sifive.com>
+Subject: [PATCH 06/13] riscv: Add vector feature to compile
+Date:   Fri, 12 Jun 2020 15:09:55 +0800
+Message-Id: <cd64796afb84d9f3d97168fbfead633c15f68ce3.1591344965.git.greentime.hu@sifive.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <cover.1591344965.git.greentime.hu@sifive.com>
 References: <cover.1591344965.git.greentime.hu@sifive.com>
@@ -79,46 +79,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Guo Ren <guoren@linux.alibaba.com>
 
-From: Guo Ren <ren_guo@c-sky.com>
-
-Use "subst fd" in Makefile is a hack way and it's not convenient
-to add new ISA feature. Just separate them into riscv-march-cflags
-and riscv-march-aflags.
+This patch adds a new config option which could enable assembler's
+vector feature.
 
 Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
 ---
- arch/riscv/Makefile | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ arch/riscv/Kconfig  | 9 +++++++++
+ arch/riscv/Makefile | 1 +
+ 2 files changed, 10 insertions(+)
 
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index 74f82cf4f781..3b742d949a09 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -305,6 +305,15 @@ config FPU
+ 
+ 	  If you don't know what to do here, say Y.
+ 
++config VECTOR
++	bool "VECTOR support"
++	default n
++	help
++	  Say N here if you want to disable all vector related procedure
++	  in the kernel.
++
++	  If you don't know what to do here, say Y.
++
+ endmenu
+ 
+ menu "Kernel features"
 diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
-index fb6e37db836d..957d064bead0 100644
+index 957d064bead0..7c80c95582e3 100644
 --- a/arch/riscv/Makefile
 +++ b/arch/riscv/Makefile
-@@ -37,12 +37,18 @@ else
- endif
+@@ -46,6 +46,7 @@ riscv-march-aflags-$(CONFIG_ARCH_RV32I)		:= rv32ima
+ riscv-march-aflags-$(CONFIG_ARCH_RV64I)		:= rv64ima
+ riscv-march-aflags-$(CONFIG_FPU)		:= $(riscv-march-aflags-y)fd
+ riscv-march-aflags-$(CONFIG_RISCV_ISA_C)	:= $(riscv-march-aflags-y)c
++riscv-march-aflags-$(CONFIG_VECTOR)		:= $(riscv-march-aflags-y)v
  
- # ISA string setting
--riscv-march-$(CONFIG_ARCH_RV32I)	:= rv32ima
--riscv-march-$(CONFIG_ARCH_RV64I)	:= rv64ima
--riscv-march-$(CONFIG_FPU)		:= $(riscv-march-y)fd
--riscv-march-$(CONFIG_RISCV_ISA_C)	:= $(riscv-march-y)c
--KBUILD_CFLAGS += -march=$(subst fd,,$(riscv-march-y))
--KBUILD_AFLAGS += -march=$(riscv-march-y)
-+riscv-march-cflags-$(CONFIG_ARCH_RV32I)		:= rv32ima
-+riscv-march-cflags-$(CONFIG_ARCH_RV64I)		:= rv64ima
-+riscv-march-$(CONFIG_FPU)			:= $(riscv-march-y)fd
-+riscv-march-cflags-$(CONFIG_RISCV_ISA_C)	:= $(riscv-march-cflags-y)c
-+
-+riscv-march-aflags-$(CONFIG_ARCH_RV32I)		:= rv32ima
-+riscv-march-aflags-$(CONFIG_ARCH_RV64I)		:= rv64ima
-+riscv-march-aflags-$(CONFIG_FPU)		:= $(riscv-march-aflags-y)fd
-+riscv-march-aflags-$(CONFIG_RISCV_ISA_C)	:= $(riscv-march-aflags-y)c
-+
-+KBUILD_CFLAGS += -march=$(riscv-march-cflags-y)
-+KBUILD_AFLAGS += -march=$(riscv-march-aflags-y)
- 
- KBUILD_CFLAGS += -mno-save-restore
- KBUILD_CFLAGS += -DCONFIG_PAGE_OFFSET=$(CONFIG_PAGE_OFFSET)
+ KBUILD_CFLAGS += -march=$(riscv-march-cflags-y)
+ KBUILD_AFLAGS += -march=$(riscv-march-aflags-y)
 -- 
 2.27.0
 
