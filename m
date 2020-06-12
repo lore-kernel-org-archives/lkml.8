@@ -2,224 +2,189 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E1ECC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61ACBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FEEB20801
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:07:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EDE020801
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:10:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="NqMKvKu8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726507AbgFLHHe convert rfc822-to-8bit (ORCPT
+        id S1726403AbgFLHKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 03:07:34 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:10175 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726332AbgFLHHd (ORCPT
+        Fri, 12 Jun 2020 03:10:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44680 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbgFLHKL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 03:07:33 -0400
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id E578E240006;
-        Fri, 12 Jun 2020 07:07:29 +0000 (UTC)
-Date:   Fri, 12 Jun 2020 09:07:28 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Kamal Dasu <kdasu.kdev@gmail.com>
-Cc:     Brian Norris <computersforpeace@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] mtd: rawnand: brcmnand: Ecc error handling on EDU
- transfers
-Message-ID: <20200612090728.043b6baf@xps13>
-In-Reply-To: <CAC=U0a3RXScu12LkU+hCv_5Lp_he92ExRFSgqLkwx40D6Xtrag@mail.gmail.com>
-References: <20200611054454.2547-1-kdasu.kdev@gmail.com>
-        <20200611054454.2547-2-kdasu.kdev@gmail.com>
-        <20200611092707.75da8c6a@xps13>
-        <CAC=U0a3RXScu12LkU+hCv_5Lp_he92ExRFSgqLkwx40D6Xtrag@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 12 Jun 2020 03:10:11 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C445CC03E96F
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 00:10:11 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id k1so3285478pls.2
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 00:10:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kQZyIiBqc8KPdWdVqaey2IviWAM/6vRzniUCGgL2lS0=;
+        b=NqMKvKu8SfII1N5LB8HmQ4nKLCgDNq/QVOTNwdGrhopXtJ6zghK/SW4C//kCe+67Vg
+         xYnlsUo2GIaEnGN8D40HK8VcCNtwZK624oDUgaDCB/UTQiToPEK9zbJCyAFJFQPNCZoa
+         4H236PyrB24fRPEyOJq/+pS43QLVQroyrqNgqQAp8NMCbsQfwCczQCkcbxT8ntTdtDRs
+         GjHcaQDFq4fDWv0sEWpYUJtkWQmtnKIVEF4r7MmF4vHbB8yZImevsfeXDhvqHVwOL5i+
+         MTXC6ANcnTHKa/LqtgYcPo8ZeUfS1K2fCrYvs937UMB+RQ6sy32Q6tpqWJmm9AMhsBTh
+         YrsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kQZyIiBqc8KPdWdVqaey2IviWAM/6vRzniUCGgL2lS0=;
+        b=Eq3iBzZgxuOOqOkxpP6maVwyvKxzoZaXe7Bxm9fKimJiXF73aKOPdLq/NzsLl064fj
+         7G/Hy0B3BL78cN4+1e+AoPYJGgyAM2a+2qYLpqeVq1Qn4OTndfnVy/0DVvDMH885kp1i
+         toV8xJI4Iq5a3rPO3AmjH+5h3GSJnsukOmhCq24XpWgpIiOfZDpIEsPIy5BAvzm76AiK
+         M+n3Tk1VE/90nBLAEqGr6YWUHThRYYr1X3iAK1n1nRaovCKAUAdP4YsigQZJLSbox5Ar
+         giWEToBktFegKeGXenz8Y6JcyD0g/ZFIzlJCFo4J5wljwCKCqpWPzywGKGVANXP4+8RG
+         8k6A==
+X-Gm-Message-State: AOAM532M96dwPZLbNMS0pELJKjX5vaTheA77V0R64LB0YppK3TbpCNGf
+        jQhOPrz7SfsoUv4OljubX2lXYw==
+X-Google-Smtp-Source: ABdhPJx+gb/cdgFjOWNnJPgLUUmYHWGw1AaYHWBLRV9f7fSRlhLMqzpY2VxxbTthbT5iKhpGgFkcuw==
+X-Received: by 2002:a17:902:fe95:: with SMTP id x21mr10511865plm.17.1591945810577;
+        Fri, 12 Jun 2020 00:10:10 -0700 (PDT)
+Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
+        by smtp.gmail.com with ESMTPSA id d2sm4336919pgp.56.2020.06.12.00.10.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2020 00:10:09 -0700 (PDT)
+From:   Greentime Hu <greentime.hu@sifive.com>
+To:     greentime.hu@sifive.com, oleg@redhat.com, guoren@linux.alibaba.com,
+        vincent.chen@sifive.com, paul.walmsley@sifive.com,
+        palmerdabbelt@google.com, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v6 00/13] riscv: Add vector ISA support
+Date:   Fri, 12 Jun 2020 15:09:49 +0800
+Message-Id: <cover.1591344965.git.greentime.hu@sifive.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kamal,
+This patchset is based on Guo Ren's v3 patchset to add dynamic vlen vector
+support for all different kinds of vector length in riscv. To make this
+happened we defined a new __riscv_v_state in sigcontext to save the vector
+related registers. In kernel space, the datap pointer in __riscv_v_state
+will be allocated dynamically to save vector registers. In user space,
+datap will point to the address right after the __riscv_v_state data
+structure to save vector registers in stack of signal handler. So does the
+implementation in ptrace, they will be saved in ubuf in which we put the
+__riscv_v_state data structure and datap pointer points to the address
+right after the __riscv_v_state for saving vector registers. This patchset
+also fixes several bugs for vector lazy save/restore mechanism and vtype
+not saving issue. It also adds new vector CSRs support based on the 0.9
+vector spec and clean up some unused macros.
 
-Kamal Dasu <kdasu.kdev@gmail.com> wrote on Thu, 11 Jun 2020 12:04:29
--0400:
+This patchset is rebased to v5.7-rc4 and it is tested by running several
+vector programs simultaneously. It also can get the correct ucontext_t in
+signal handler and restore correct context after sigreturn. It is also
+tested with ptrace() syscall to use PTRACE_GETREGSET/PTRACE_SETREGSET to
+get/set the vector registers. I have tested vlen=128 and vlen=256 cases in
+virt machine of qemu-system-riscv32 and qemu-system-riscv64 provided by
+Zhiwei Lui and Frank Chang.
 
-> On Thu, Jun 11, 2020 at 3:27 AM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> >
-> > Hi Kamal,
-> >
-> > Kamal Dasu <kdasu.kdev@gmail.com> wrote on Thu, 11 Jun 2020 01:44:54
-> > -0400:
-> >  
-> > > Implemented ECC correctable and uncorrectable error handling for EDU  
-> >
-> > Implement?
-> >  
-> > > reads. If ECC correctable bitflips are encountered  on EDU transfer,  
-> >
-> > extra space                                         ^
-> >  
-> > > read page again using pio, This is needed due to a controller lmitation  
-> >
-> > s/pio/PIO/
-> >  
-> > > where read and corrected data is not transferred to the DMA buffer on ECC
-> > > errors. This holds true for ECC correctable errors beyond set threshold.  
-> >
-> > error.
-> >
-> > Not sure what the last sentence means?
-> >  
-> 
-> NAND controller allows for setting a correctable  ECC threshold number
-> of bits beyond which it will actually report the error to the driver.
-> e.g. for BCH-4 the threshold is 3, so 3-bit and 4-bit errors will
-> generate correctable ECC interrupt however 1-bit and 2-bit errors will
-> be corrected silently.
-> From the above example EDU hardware will not transfer corrected data
-> to the DMA buffer for 3-bit and 4-bit errors that get reported. So
-> once we detect
-> the error duing EDU we read the page again using pio.
+Since the vector spec is under developing, the implementation might be
+changed. We may need to discuss the default value of MINSIGSTKSZ and
+SIGSTKSZ. They might also need to set a proper number. They are 2048 and
+8096 now. Since the stack in signal will be reserved for ucontext and the
+vector registers might be larger and larger someday, these two macros will
+need to be defined as a proper value or maybe we should provide a better
+mechanism to provide user to get a better default signal stack size.
 
-Ok I see what you mean, can't you fake the threshold instead? The NAND
-controller in Linux is not supposed to handle this threshold, the NAND
-core is in charge. So what the controller driver should do is just:
-increase the number of bitflips + return the maximum number or bitflip
-or increase the failure counter. Is this already the case?
+Vincent Chen is working on the glibc porting for vector, we will post it
+later.
 
-> 
-> > >
-> > > Fixes: a5d53ad26a8b ("mtd: rawnand: brcmnand: Add support for flash-edu for dma transfers")
-> > > Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
-> > > ---  
-> >
-> > Minor nits below :)
-> >  
-> > >  drivers/mtd/nand/raw/brcmnand/brcmnand.c | 26 ++++++++++++++++++++++++
-> > >  1 file changed, 26 insertions(+)
-> > >
-> > > diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> > > index 0c1d6e543586..d7daa83c8a58 100644
-> > > --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> > > +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> > > @@ -1855,6 +1855,22 @@ static int brcmnand_edu_trans(struct brcmnand_host *host, u64 addr, u32 *buf,
-> > >       edu_writel(ctrl, EDU_STOP, 0); /* force stop */
-> > >       edu_readl(ctrl, EDU_STOP);
-> > >
-> > > +     if (ret == 0 && edu_cmd == EDU_CMD_READ) {  
-> >
-> > !ret
-> >  
-> > > +             u64 err_addr = 0;
-> > > +
-> > > +             /*
-> > > +              * check for ecc errors here, subpage ecc erros are
-> > > +              * retained in ecc error addr register  
-> >
-> > s/ecc/ECC/
-> > s/erros/errors/
-> > s/addr/address/
-> >  
-> > > +              */
-> > > +             err_addr = brcmnand_get_uncorrecc_addr(ctrl);
-> > > +             if (!err_addr) {
-> > > +                     err_addr = brcmnand_get_correcc_addr(ctrl);
-> > > +                     if (err_addr)
-> > > +                             ret = -EUCLEAN;
-> > > +             } else
-> > > +                     ret = -EBADMSG;  
-> >
-> > I don't like very much to see these values being used within NAND
-> > controller drivers but I see it's already the cause, so I guess I can
+ [1] https://github.com/riscv/riscv-v-spec/blob/0.9/v-spec.adoc
+ [2] https://github.com/sifive/riscv-qemu/tree/linux-vector-dev-rvv-0.9-phase-1
+ [3] https://blog.linuxplumbersconf.org/2017/ocw/sessions/4671.html
 
-s/cause/case/
+---
+Changelog V6
+ - Replace vle.v/vse.v instructions with vle8.v/vse8.v based on 0.9 spec
+ - Add comments based on mailinglist feedback
+ - Fix rv32 build error
 
-> > live with that.
-> >  
-> > > +     }
-> > > +
-> > >       return ret;
-> > >  }
-> > >
-> > > @@ -2058,6 +2074,7 @@ static int brcmnand_read(struct mtd_info *mtd, struct nand_chip *chip,
-> > >       u64 err_addr = 0;
-> > >       int err;
-> > >       bool retry = true;
-> > > +     bool edu_read = false;
-> > >
-> > >       dev_dbg(ctrl->dev, "read %llx -> %p\n", (unsigned long long)addr, buf);
-> > >
-> > > @@ -2075,6 +2092,10 @@ static int brcmnand_read(struct mtd_info *mtd, struct nand_chip *chip,
-> > >                       else
-> > >                               return -EIO;
-> > >               }
-> > > +
-> > > +             if (has_edu(ctrl))
-> > > +                     edu_read = true;  
-> >
-> > You don't need this extra value, you already have the cmd parameter
-> > which tells you if it is a read or a write. You might even want to
-> > create a if block so set dir and edu_cmd and eventually a local
-> > edu_read if you think it still makes sense.
-> >  
-> 
-> I needed the value since dma and edu read has multiple conditions like
-> oob is not included, buffer is aligned, virtual address is good. This
-> indicates to
-> the if (mtd_is_bitflip(err))  block that the error was from an edu
-> transaction that happened.This way all ecc error handling for dma,
-> edu, pio is in one place.
-> Also there is more controller version specific logic for read error
-> handling in there and this allows us to maintain the hierarchy how we
-> handle both correctable
-> and uncorrectable error.
+Changelog V5
+ - Using regset_size() correctly in generic ptrace
+ - Fix the ptrace porting
+ - Fix compile warning
 
-Fair enough.
+Changelog V4
+ - Support dynamic vlen
+ - Fix bugs: lazy save/resotre, not saving vtype
+ - Update VS bit offset based on latest vector spec
+ - Add new vector csr based on latest vector spec
+ - Code refine and removed unused macros
 
-> 
-> > > +
-> > >       } else {
-> > >               if (oob)
-> > >                       memset(oob, 0x99, mtd->oobsize);
-> > > @@ -2122,6 +2143,11 @@ static int brcmnand_read(struct mtd_info *mtd, struct nand_chip *chip,
-> > >       if (mtd_is_bitflip(err)) {
-> > >               unsigned int corrected = brcmnand_count_corrected(ctrl);
-> > >
-> > > +             /* in case of edu correctable error we read again using pio */  
-> >
-> > s/edu/EDU/ ?
-> > s/pio/PIO/
-> >  
-> > > +             if (edu_read)
-> > > +                     err = brcmnand_read_by_pio(mtd, chip, addr, trans, buf,
-> > > +                                                oob, &err_addr);
-> > > +
-> > >               dev_dbg(ctrl->dev, "corrected error at 0x%llx\n",
-> > >                       (unsigned long long)err_addr);
-> > >               mtd->ecc_stats.corrected += corrected;  
-> >  
-> 
-> Will fix all the other typos.
-> 
-> > Thanks,
-> > Miquèl  
-> 
-> Thanks
-> Kamal
+Changelog V3
+ - Rebase linux-5.6-rc3 and tested with qemu
+ - Seperate patches with Anup's advice
+ - Give out a ABI puzzle with unlimited vlen
 
+Changelog V2
+ - Fixup typo "vecotr, fstate_save->vstate_save".
+ - Fixup wrong saved registers' length in vector.S.
+ - Seperate unrelated patches from this one.
 
-Thanks,
-Miquèl
+Greentime Hu (7):
+  ptrace: Use regset_size() for dynamic regset
+  riscv: Add new csr defines related to vector extension
+  riscv: Add has_vector/riscv_vsize to save vector features.
+  riscv: Add vector struct and assembler definitions
+  riscv: Add task switch support for vector
+  riscv: Add ptrace vector support
+  riscv: Add sigcontext save/restore for vector
+
+Guo Ren (5):
+  riscv: Separate patch for cflags and aflags
+  riscv: Rename __switch_to_aux -> fpu
+  riscv: Extending cpufeature.c to detect V-extension
+  riscv: Add vector feature to compile
+  riscv: Reset vector register
+
+Vincent Chen (1):
+  riscv: signal: Report signal frame size to userspace via auxv
+
+ arch/riscv/Kconfig                       |   9 ++
+ arch/riscv/Makefile                      |  19 ++--
+ arch/riscv/include/asm/csr.h             |  16 +++-
+ arch/riscv/include/asm/elf.h             |  17 +++-
+ arch/riscv/include/asm/processor.h       |   3 +
+ arch/riscv/include/asm/switch_to.h       |  77 ++++++++++++++-
+ arch/riscv/include/uapi/asm/auxvec.h     |   2 +
+ arch/riscv/include/uapi/asm/elf.h        |   1 +
+ arch/riscv/include/uapi/asm/hwcap.h      |   1 +
+ arch/riscv/include/uapi/asm/ptrace.h     |  13 +++
+ arch/riscv/include/uapi/asm/sigcontext.h |   2 +
+ arch/riscv/kernel/Makefile               |   1 +
+ arch/riscv/kernel/asm-offsets.c          |   8 ++
+ arch/riscv/kernel/cpufeature.c           |  16 +++-
+ arch/riscv/kernel/entry.S                |   6 +-
+ arch/riscv/kernel/head.S                 |  49 +++++++++-
+ arch/riscv/kernel/process.c              |  40 ++++++++
+ arch/riscv/kernel/ptrace.c               | 114 +++++++++++++++++++++++
+ arch/riscv/kernel/setup.c                |   5 +
+ arch/riscv/kernel/signal.c               | 108 ++++++++++++++++++++-
+ arch/riscv/kernel/vector.S               |  84 +++++++++++++++++
+ include/uapi/linux/elf.h                 |   1 +
+ kernel/ptrace.c                          |   2 +-
+ 23 files changed, 569 insertions(+), 25 deletions(-)
+ create mode 100644 arch/riscv/kernel/vector.S
+
+-- 
+2.27.0
+
