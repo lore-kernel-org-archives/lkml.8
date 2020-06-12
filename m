@@ -2,59 +2,94 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B396CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 20:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C84E4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 20:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F86A207ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 20:47:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A10F020801
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 20:48:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbgFLUrB (ORCPT
+        id S1726368AbgFLUsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 16:47:01 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:38758 "EHLO vps0.lunn.ch"
+        Fri, 12 Jun 2020 16:48:08 -0400
+Received: from mga03.intel.com ([134.134.136.65]:44482 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726268AbgFLUrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 16:47:01 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jjqZM-000KbY-Gu; Fri, 12 Jun 2020 22:46:32 +0200
-Date:   Fri, 12 Jun 2020 22:46:32 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Aditya Pakki <pakki001@umn.edu>
-Cc:     kjlu@umn.edu, wu000273@umn.edu,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Enrico Weigelt <info@metux.net>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Michael S. Tsirkin" <mst@redhat.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: ethernet: Fix potential memory leak caused in error
- handling
-Message-ID: <20200612204632.GB69216@lunn.ch>
-References: <20200612200656.56019-1-pakki001@umn.edu>
+        id S1726268AbgFLUsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 16:48:07 -0400
+IronPort-SDR: T7EW+TBF+4jkSITuM1sJRqvEMPMwoc5BeoBbSP7NiKovzhr0T1bzkpq2Ofz2pvO2K/iCn/46yh
+ p7281TyMm5CQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2020 13:48:07 -0700
+IronPort-SDR: LFgYyzHi1cf6/D4dh3wIX+ANgQ30imkG5tn9trlkftoohDgt4bJgNWyrwJyDfgLr3bATu/+5G8
+ CdBnIvZrXwzg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,504,1583222400"; 
+   d="scan'208";a="307352135"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 12 Jun 2020 13:48:06 -0700
+Received: from debox1-desk2.jf.intel.com (debox1-desk2.jf.intel.com [10.54.75.16])
+        by linux.intel.com (Postfix) with ESMTP id C7EDF5803C5;
+        Fri, 12 Jun 2020 13:48:06 -0700 (PDT)
+From:   "David E. Box" <david.e.box@linux.intel.com>
+To:     shyjumon.n@intel.com, rjw@rjwysocki.net, lenb@kernel.org,
+        bhelgaas@google.com, dan.j.williams@intel.com, kbusch@kernel.org,
+        axboe@fb.com, hch@lst.de, sagi@grimberg.me
+Cc:     "David E. Box" <david.e.box@linux.intel.com>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org
+Subject: [PATCH V2 0/2] nvme: Add support for ACPI StorageD3Enable property
+Date:   Fri, 12 Jun 2020 13:48:18 -0700
+Message-Id: <20200612204820.20111-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200428003214.3764-1-david.e.box@linux.intel.com>
+References: <20200428003214.3764-1-david.e.box@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200612200656.56019-1-pakki001@umn.edu>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 03:06:54PM -0500, Aditya Pakki wrote:
-> In ethoc_probe, a failure of mdiobus_register() does not release
-> the memory allocated by mdiobus_alloc. The patch fixes this issue.
+This patch set implements a solution for a BIOS hack used on some currently
+shipping Intel systems to address issues with power management policy
+decisions concerning PCIe NVMe drives. Some newer Intel platforms, like
+some Comet Lake systems, require that PCIe devices use D3 when doing
+suspend-to-idle in order to allow the platform to realize maximum power
+savings. This is particularly needed to support ATX power supply shutdown
+on desktop systems. In order to ensure this happens for root ports with
+storage devices, Microsoft apparently created this ACPI _DSD property as a
+way to override their driver policy. To my knowledge this property has not
+been discussed with the NVME specification body.
 
-Hi Aditya
+Though the solution is not ideal, it addresses a problem that also affects
+Linux since the NVMe driver's default policy of using NVMe APST during
+suspend-to-idle would lead to higher power consumption for these platforms.
 
-Please improve the Subject: line to indicate which driver you are
-fixing.
+Patch 1 provides a symbol in the PCI/ACPI layer to read the property.
+Patch 2 uses the symbol in the NVMe driver to select D3 as a quirk if set.
 
-A Fixes: tag would also be nice.
+Changes from V2:
+	- Export the pci_acpi_storage_d3 function for use by drivers as
+	  needed instead of modifying the pci header.
+	- Add missing put on acpi device handle.
+	- Add 'noacpi' module parameter to allow undoing this change.
+	- Add info message that this is a platform quirk.
 
-  Andrew
+David E. Box (2):
+  PCI: Add ACPI StorageD3Enable _DSD support
+  drivers/nvme: Add support for ACPI StorageD3Enable property
+
+ drivers/acpi/property.c |  3 +++
+ drivers/nvme/host/pci.c | 14 ++++++++++
+ drivers/pci/pci-acpi.c  | 59 +++++++++++++++++++++++++++++++++++++++++
+ include/linux/pci.h     |  2 ++
+ 4 files changed, 78 insertions(+)
+
+-- 
+2.20.1
+
