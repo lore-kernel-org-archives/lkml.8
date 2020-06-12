@@ -6,42 +6,42 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65FA5C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C1AC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CF9C207ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:37:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CC2C207ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:37:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726519AbgFLEhn (ORCPT
+        id S1726536AbgFLEhr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 00:37:43 -0400
-Received: from mga07.intel.com ([134.134.136.100]:65452 "EHLO mga07.intel.com"
+        Fri, 12 Jun 2020 00:37:47 -0400
+Received: from mga04.intel.com ([192.55.52.120]:17735 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725862AbgFLEhl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 00:37:41 -0400
-IronPort-SDR: 4DfNwFhLA1qW4HQRDgzzYToV0vd0bpoV6onI8hzv+aIuGBXm6fM+lP3jAg7iMCRk6WrOhVYhGX
- LKjMSiaw4SUQ==
+        id S1726502AbgFLEhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 00:37:42 -0400
+IronPort-SDR: i//XuqmtXYgfH2XB66e4kcYWYVay4a3L0jW5Mew0QxOymdGSxZO6mzOn8Tl+EtUrVEXy98n1/3
+ Ii/nIzcakMYw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 21:37:40 -0700
-IronPort-SDR: tmWgcBz5T5neyc4zyDXCoe2aKU0gifPCchazESvPmh7pxaR6KcvaWVSM8QJuxaeiVJK5HkTJUJ
- EONhliFDQBpQ==
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 21:37:41 -0700
+IronPort-SDR: lJ/0byFuVpi4bHjwkR0OJHR2TFErSZSJmp2QkK+S+Wl7Gy7RbU4E8IRYwoQOhxZo+jW5f5y8JM
+ YTavNIqPhMww==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,501,1583222400"; 
-   d="scan'208";a="259792723"
+   d="scan'208";a="275583405"
 Received: from lkp-server01.sh.intel.com (HELO b6eec31c25be) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 11 Jun 2020 21:37:39 -0700
+  by orsmga006.jf.intel.com with ESMTP; 11 Jun 2020 21:37:39 -0700
 Received: from kbuild by b6eec31c25be with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1jjbRi-0000V8-TT; Fri, 12 Jun 2020 04:37:38 +0000
-Date:   Fri, 12 Jun 2020 12:36:51 +0800
+        id 1jjbRj-0000VJ-4e; Fri, 12 Jun 2020 04:37:39 +0000
+Date:   Fri, 12 Jun 2020 12:36:41 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     "x86-ml" <x86@kernel.org>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:locking/kcsan] BUILD SUCCESS
- 1f44328ea24c9de368a3cfe5cc0e110b949afb2e
-Message-ID: <5ee30663.pnjVdhcvNLatfGUL%lkp@intel.com>
+Subject: [tip:ras/core] BUILD SUCCESS
+ 7ccddc4613db446dc3cbb69a3763ba60ec651d13
+Message-ID: <5ee30659.GGO1g+oAwpykFKR0%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -51,12 +51,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  locking/kcsan
-branch HEAD: 1f44328ea24c9de368a3cfe5cc0e110b949afb2e  compiler_types.h, kasan: Use __SANITIZE_ADDRESS__ instead of CONFIG_KASAN to decide inlining
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  ras/core
+branch HEAD: 7ccddc4613db446dc3cbb69a3763ba60ec651d13  x86/mce/dev-mcelog: Fix -Wstringop-truncation warning about strncpy()
 
-elapsed time: 628m
+elapsed time: 768m
 
-configs tested: 96
+configs tested: 102
 configs skipped: 1
 
 The following configs have been built successfully.
@@ -76,12 +76,6 @@ alpha                            alldefconfig
 mips                     loongson1b_defconfig
 alpha                               defconfig
 mips                       bmips_be_defconfig
-c6x                        evmc6678_defconfig
-powerpc                          g5_defconfig
-arc                            hsdk_defconfig
-arm                          tango4_defconfig
-mips                           ip32_defconfig
-sh                        edosk7705_defconfig
 i386                              allnoconfig
 i386                             allyesconfig
 i386                                defconfig
@@ -126,6 +120,18 @@ powerpc                          rhel-kconfig
 powerpc                          allmodconfig
 powerpc                           allnoconfig
 powerpc                             defconfig
+i386                 randconfig-a006-20200611
+i386                 randconfig-a002-20200611
+i386                 randconfig-a001-20200611
+i386                 randconfig-a004-20200611
+i386                 randconfig-a005-20200611
+i386                 randconfig-a003-20200611
+x86_64               randconfig-a001-20200612
+x86_64               randconfig-a003-20200612
+x86_64               randconfig-a002-20200612
+x86_64               randconfig-a006-20200612
+x86_64               randconfig-a005-20200612
+x86_64               randconfig-a004-20200612
 i386                 randconfig-a015-20200612
 i386                 randconfig-a011-20200612
 i386                 randconfig-a014-20200612
@@ -148,8 +154,8 @@ sparc64                          allyesconfig
 sparc64                          allmodconfig
 um                               allmodconfig
 um                                allnoconfig
-um                               allyesconfig
 um                                  defconfig
+um                               allyesconfig
 x86_64                                   rhel
 x86_64                         rhel-7.2-clear
 x86_64                                    lkp
