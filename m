@@ -2,88 +2,90 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D133C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3279C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8343C20792
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:30:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D201020801
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:31:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591975882;
+	bh=d9swAF1lBTUQKkD5upsXh8wG4RhL83NxrON4es3zSVU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PRO3POHqL9S0xuSpOUqhykQVxRZE/0ii2RyR8wjA/iESw1sS0Qxgvip+cpll0xFVZ
+	 IWWUX0yGf07QE0JKM99Np5F8nefbyzCW9FUygAsgapOdYsBTQmd4mmgQc7fHzGfbDk
+	 wwg4v8ql4362CRCSStVn5/LnNVEecHQM6oaACYa0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726417AbgFLPaZ (ORCPT
+        id S1726485AbgFLPbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 11:30:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37104 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726085AbgFLPaZ (ORCPT
+        Fri, 12 Jun 2020 11:31:21 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:43869 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbgFLPbU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 11:30:25 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 055D0C03E96F
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 08:30:25 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 54BF72A5693
-Subject: Re: [RESEND PATCH 0/3] Convert mtk-dpi to drm_bridge API
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-kernel@vger.kernel.org,
-        Collabora Kernel ML <kernel@collabora.com>
-Cc:     narmstrong@baylibre.com, a.hajda@samsung.com,
-        boris.brezillon@collabora.com, laurent.pinchart@ideasonboard.com,
-        matthias.bgg@gmail.com, drinkcat@chromium.org, hsinyi@chromium.org,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-References: <20200518173909.2259259-1-enric.balletbo@collabora.com>
-Message-ID: <d5f0fb47-f0cf-f3cb-485a-3bba97c736fc@collabora.com>
-Date:   Fri, 12 Jun 2020 17:30:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 12 Jun 2020 11:31:20 -0400
+Received: by mail-lj1-f194.google.com with SMTP id n24so11502084lji.10;
+        Fri, 12 Jun 2020 08:31:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=uQ85dD+vKUnEGdAVOTFoEvlnzXCa2uFEesLCGgB0kCQ=;
+        b=WpEqnePT3wbb9MbpWk/aeLPp31mIZJeYeexehHNriKxgc59eOJEA1yYPmM+IRtapZz
+         oMAdbPdWwgPzLxIkbgbpP4slQmdsJMnrUPkPIWwKGyDTOZqP/MmMbDmvS8QCw8Qn7DPi
+         sf6ZbiCk2w+Xpl4oTN1NsM1yO6HV2m/i30u9v72/LwLeWc6yaG3S2bZABIyKWUoK/EOt
+         Pq6xzrGXClAMs3Qz+1an+ao1gqw10R7iqWm4SgSMIK9wAOK4MhPJqiVpWK5GY4c5KCt5
+         +e/zXPnpRjeFFd2LBe9EHhdqcqhB2QXV7k9TQijJ4LzEpbvOeWPvJZ500y/mk3gz88rq
+         ecUA==
+X-Gm-Message-State: AOAM531Xn9W0ylNliNpmcetvdI+K6HPwrjpDERZmxtGzGUK6ODXQ+tec
+        1MlIC87IT+L2fhDtnwRs0Eo=
+X-Google-Smtp-Source: ABdhPJwWMr52gFX6uBnkI/KD9R+p2DM9xpdSQRmup0YZVLc1Ow5T944W2VM9Akv2DEpG4aYIFx2veg==
+X-Received: by 2002:a2e:a495:: with SMTP id h21mr7296320lji.436.1591975878090;
+        Fri, 12 Jun 2020 08:31:18 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id v28sm1750024ljv.40.2020.06.12.08.31.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2020 08:31:17 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@kernel.org>)
+        id 1jjleH-0002pF-La; Fri, 12 Jun 2020 17:31:17 +0200
+Date:   Fri, 12 Jun 2020 17:31:17 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] serial: core: fix up sysrq regressions
+Message-ID: <20200612153117.GQ19480@localhost>
+References: <20200610152232.16925-1-johan@kernel.org>
+ <20200610162134.GL2428291@smile.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200518173909.2259259-1-enric.balletbo@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200610162134.GL2428291@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Jun 10, 2020 at 07:21:34PM +0300, Andy Shevchenko wrote:
+> On Wed, Jun 10, 2020 at 05:22:29PM +0200, Johan Hovold wrote:
+> > This series fixes a few regressions introduced by the recent sysrq
+> > rework that went into 5.6.
+> > 
+> > The fix for the unnecessary per-character overhead probably could have
+> > been marked for stable but I left that decision to the maintainers as it
+> > is a bit intrusive (although mostly shuffling code around).
+> 
+> I see a problem, thanks for pointing out!
+> The fix LGTM! FWIW,
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-On 18/5/20 19:39, Enric Balletbo i Serra wrote:
-> The reason for this resend is because I forget to add some bridge
-> maintainers. So adding them and collect the actual tags.
-> 
-> The mtk-dpi driver still uses the drm_encoder API which is now somewhat
-> deprecated. We started to move all the Mediatek drivers to the drm_bridge API,
-> like we did for the mtk-dsi driver [1], this is another small step to be able to
-> fully convert the DRM Mediatek drivers to the drm_bridge API. A dummy
-> drm_encoder is maintained in the mtk-dpi driver but the end goal is move all the
-> dummy drm_encoder (mtk-dsi, mtk-dpi, etc) to the main mtk_drm_drv driver.
-> 
-> [1] https://lore.kernel.org/patchwork/project/lkml/list/?series=441559
-> 
-> 
-> Enric Balletbo i Serra (3):
->   drm/mediatek: mtk_dpi: Rename bridge to next_bridge
->   drm/mediatek: mtk_dpi: Convert to bridge driver
->   drm/mediatek: mtk_dpi: Use simple encoder
-> 
->  drivers/gpu/drm/mediatek/mtk_dpi.c | 84 ++++++++++++++----------------
+Thanks for reviewing, Andy.
 
-A gentle ping, I think this patchset still is missing a reviewed tag from bridge
-maintainers if is fine.
-
-Thanks,
- Enric
-
-
->  1 file changed, 39 insertions(+), 45 deletions(-)
-> 
+Johan
