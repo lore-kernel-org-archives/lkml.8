@@ -2,170 +2,138 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=FORGED_MUA_MOZILLA,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D5BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E1DC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F48B2074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:31:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="UiLbIo2M"
+	by mail.kernel.org (Postfix) with ESMTP id C966D20801
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:39:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726349AbgFLNbg (ORCPT
+        id S1726290AbgFLNja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 09:31:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46874 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbgFLNbJ (ORCPT
+        Fri, 12 Jun 2020 09:39:30 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59188 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726053AbgFLNj3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 09:31:09 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 400E0C03E96F
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 06:31:06 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id o26so6430476edq.0
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 06:31:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d01buqxZYdIU2y12ViZTn0UU3aSbuc7TBEB4RtzP2wo=;
-        b=UiLbIo2MlUzW+ohtKAtNNoB1U6eRB79fOIzs+Q2Jgllzl6LcDbMdd5z429pVr39//N
-         xIQPCQQbiZkqpsgEk/VatF3uEsLtmxF4g7HdeLSEXv7BkTq849GgFeS6tDjn5/nYeQGq
-         wXh4cAvpDeyYjxTiUvKcCS+DWoz9sUT/CEWx6K17uy3L7QeSC/Ehz2nbG4Ges+S0zwv2
-         ogFtyX0ClcI1EB8Dio4Yo+77XzvvGW2Cbajfrx94/cq5HDp6Pj4ciBct17r1oBozJ3HI
-         y2v6POjwVITB8rYB2F1JMwbuJrlZF1Ivp/Oir19sh2WcoxC0oKzGFnab4i//KKcKLKmL
-         hnjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d01buqxZYdIU2y12ViZTn0UU3aSbuc7TBEB4RtzP2wo=;
-        b=G+ajoiK7owe4VLys5FfObSS6JvhAcYmVDo3o1tJvrMzqgHbWtl8qHxNEnnput/CYsM
-         DBbe8oeIMqJTknKQLvWwn0yJtrANjDw3XnsvlCY8/D+bJe/X7oQx40CmR7F5IT75imc5
-         Sv5DIs+DuaNqsHXWYtWp0UtUT/bOXeCSrpfwguUa36iWflbAr4RK2g6H750nNrp5GOPF
-         OMIVB/90iIoV8lJUp6oTIZk4juv5GKw1+q+Nu84/X4aCY1hUYBT2UEyD62fE3wxCzb18
-         An6+FqtsAJT8C0CLj3Gmg4UpV207PCPAcB39p7HWiiDTs37MofaEkdmF+59H00Oey2y4
-         8FhA==
-X-Gm-Message-State: AOAM530Kg7GZsII8Fe6HpUylFYaZWg37eu8wQwLgbDAQswRAjPjeJpRv
-        vnw3k2et6GJEWnRpU/o34ty11Ls1Ff8DPh0gL/Vz
-X-Google-Smtp-Source: ABdhPJxkS1P9eYZyRJ+nchncVypsdrnFPrRr9Tdk7r9VlHvGkcJPx7lPPnERUCGLUvWfWQv5iDPnmQThrEcKbqN89/I=
-X-Received: by 2002:aa7:de08:: with SMTP id h8mr11332863edv.164.1591968664063;
- Fri, 12 Jun 2020 06:31:04 -0700 (PDT)
+        Fri, 12 Jun 2020 09:39:29 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05CD5EeP062360;
+        Fri, 12 Jun 2020 09:39:13 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31kw207kkg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 12 Jun 2020 09:39:12 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05CDUcPk002182;
+        Fri, 12 Jun 2020 13:39:10 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma04fra.de.ibm.com with ESMTP id 31ku7c0g7r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 12 Jun 2020 13:39:09 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05CDd7mX63963198
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 12 Jun 2020 13:39:07 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A12165204F;
+        Fri, 12 Jun 2020 13:39:07 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.93.125])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id CDF9A5204E;
+        Fri, 12 Jun 2020 13:39:05 +0000 (GMT)
+Subject: Re: linux-next test error: BUG: using smp_processor_id() in
+ preemptible [ADDR] code: syz-fuzzer/6792
+To:     Ido Schimmel <idosch@idosch.org>
+Cc:     syzbot <syzbot+82f324bb69744c5f6969@syzkaller.appspotmail.com>,
+        adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+        sfr@canb.auug.org.au, syzkaller-bugs@googlegroups.com,
+        tytso@mit.edu
+References: <0000000000008ff8ea05a71818b5@google.com>
+ <20200602124130.256274203F@d06av24.portsmouth.uk.ibm.com>
+ <20200612124340.GA23832@splinter>
+From:   Ritesh Harjani <riteshh@linux.ibm.com>
+Date:   Fri, 12 Jun 2020 19:09:04 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200611204746.6370-1-trix@redhat.com> <20200611204746.6370-2-trix@redhat.com>
- <CAHC9VhSyo9GZKVZ04w3d3bLV9-_61W0KznATZPmqZBYXT2J=xw@mail.gmail.com>
- <d8cee44a-316f-d1be-9893-428598ada2d8@redhat.com> <CAHC9VhSPygyQAiWuaAWViuraCP6A9KTqmQeEt2_Rxta_WFsu5Q@mail.gmail.com>
- <CAFqZXNuVevzXLhCBujJKTPL+HBhOxkUv6a-J1NGY9BzTJ7aWCA@mail.gmail.com>
-In-Reply-To: <CAFqZXNuVevzXLhCBujJKTPL+HBhOxkUv6a-J1NGY9BzTJ7aWCA@mail.gmail.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Fri, 12 Jun 2020 09:30:53 -0400
-Message-ID: <CAHC9VhRWcRbQi0z90_BHMSBzaCW+muD4Oy_hwNfuxyVjLJsA+A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] selinux: fix another double free
-To:     Ondrej Mosnacek <omosnace@redhat.com>
-Cc:     Tom Rix <trix@redhat.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Wei Yongjun <weiyongjun1@huawei.com>,
-        SElinux list <selinux@vger.kernel.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200612124340.GA23832@splinter>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Message-Id: <20200612133905.CDF9A5204E@d06av21.portsmouth.uk.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-11_23:2020-06-11,2020-06-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ cotscore=-2147483648 bulkscore=0 clxscore=1011 priorityscore=1501
+ phishscore=0 lowpriorityscore=0 malwarescore=0 adultscore=0 spamscore=0
+ suspectscore=0 impostorscore=0 mlxscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006110174
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 4:01 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
-> On Fri, Jun 12, 2020 at 1:27 AM Paul Moore <paul@paul-moore.com> wrote:
-> > On Thu, Jun 11, 2020 at 6:41 PM Tom Rix <trix@redhat.com> wrote:
-> > > On 6/11/20 3:30 PM, Paul Moore wrote:
-> > > > On Thu, Jun 11, 2020 at 4:48 PM <trix@redhat.com> wrote:
-> > > >> From: Tom Rix <trix@redhat.com>
-> > > >>
-> > > >> Clang static analysis reports this double free error
-> > > >>
-> > > >> security/selinux/ss/conditional.c:139:2: warning: Attempt to free released memory [unix.Malloc]
-> > > >>         kfree(node->expr.nodes);
-> > > >>         ^~~~~~~~~~~~~~~~~~~~~~~
-> > > >>
-> > > >> When cond_read_node fails, it calls cond_node_destroy which frees the
-> > > >> node but does not poison the entry in the node list.  So when it
-> > > >> returns to its caller cond_read_list, cond_read_list deletes the
-> > > >> partial list.  The latest entry in the list will be deleted twice.
-> > > >>
-> > > >> So instead of freeing the node in cond_read_node, let list freeing in
-> > > >> code_read_list handle the freeing the problem node along with all of the
-> > > >> earlier nodes.
-> > > >>
-> > > >> Because cond_read_node no longer does any error handling, the goto's
-> > > >> the error case are redundant.  Instead just return the error code.
-> > > >>
-> > > >> Fixes a problem was introduced by commit
-> > > >>
-> > > >>   selinux: convert cond_list to array
-> > > >>
-> > > >> Signed-off-by: Tom Rix <trix@redhat.com>
-> > > >> ---
-> > > >>  security/selinux/ss/conditional.c | 11 +++--------
-> > > >>  1 file changed, 3 insertions(+), 8 deletions(-)
-> > > > Hi Tom,
-> > > >
-> > > > Thanks for the patch!  A few more notes, in no particular order:
-> > > >
-> > > > * There is no need to send a cover letter for just a single patch.
-> > > > Typically cover letters are reserved for large patchsets that require
-> > > > some additional explanation and/or instructions beyond the individual
-> > > > commit descriptions.
-> > >
-> > > I was doing this to carry the repo name and tag info.
-> > >
-> > > So how do folks know which repo and commit the change applies to ?
-> >
-> > We read your mind ;)
-> >
-> > Generally it's pretty obvious, and in the rare occasion when it isn't,
-> > we ask.  Most of the time you can deduce the destination repo by the
-> > files changed and the mailing lists on the To/CC line.  From there it
-> > is then just a matter of -next vs -stable and that is something that
-> > is usually sorted out based on the context of the patch, and if
-> > needed, a discussion on-list.
->
-> Yes, it is normally not necessary, but I wouldn't discourage people
-> from providing the info if they want to / are used to do that.
 
-I would discourage adding this info into the commit.  It clutters up
-the commit description and is of little value once the patch has been
-merged.
+On 6/12/20 6:13 PM, Ido Schimmel wrote:
+> On Tue, Jun 02, 2020 at 06:11:29PM +0530, Ritesh Harjani wrote:
+>> #syz test:
+>> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+>> 0e21d4620dd047da7952f44a2e1ac777ded2d57e
+> 
+>> >From cc1cf67d99d5fa61db0651c89c288df31bad6b8e Mon Sep 17 00:00:00 2001
+>> From: Ritesh Harjani <riteshh@linux.ibm.com>
+>> Date: Tue, 2 Jun 2020 17:54:12 +0530
+>> Subject: [PATCH 1/1] ext4: mballoc: Use raw_cpu_ptr in case if preemption is enabled
+>>
+>> It doesn't matter really in ext4_mb_new_blocks() about whether the code
+>> is rescheduled on any other cpu due to preemption. Because we care
+>> about discard_pa_seq only when the block allocation fails and then too
+>> we add the seq counter of all the cpus against the initial sampled one
+>> to check if anyone has freed any blocks while we were doing allocation.
+>>
+>> So just use raw_cpu_ptr to not trigger this BUG.
+>>
+>> BUG: using smp_processor_id() in preemptible [00000000] code: syz-fuzzer/6927
+>> caller is ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
+>> CPU: 1 PID: 6927 Comm: syz-fuzzer Not tainted 5.7.0-next-20200602-syzkaller #0
+>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+>> Call Trace:
+>>   __dump_stack lib/dump_stack.c:77 [inline]
+>>   dump_stack+0x18f/0x20d lib/dump_stack.c:118
+>>   check_preemption_disabled+0x20d/0x220 lib/smp_processor_id.c:48
+>>   ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
+>>   ext4_ext_map_blocks+0x201b/0x33e0 fs/ext4/extents.c:4244
+>>   ext4_map_blocks+0x4cb/0x1640 fs/ext4/inode.c:626
+>>   ext4_getblk+0xad/0x520 fs/ext4/inode.c:833
+>>   ext4_bread+0x7c/0x380 fs/ext4/inode.c:883
+>>   ext4_append+0x153/0x360 fs/ext4/namei.c:67
+>>   ext4_init_new_dir fs/ext4/namei.c:2757 [inline]
+>>   ext4_mkdir+0x5e0/0xdf0 fs/ext4/namei.c:2802
+>>   vfs_mkdir+0x419/0x690 fs/namei.c:3632
+>>   do_mkdirat+0x21e/0x280 fs/namei.c:3655
+>>   do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
+>>   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>>
+>> Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
+>> Reported-by: syzbot+82f324bb69744c5f6969@syzkaller.appspotmail.com
+> 
+> Hi,
+> 
+> Are you going to submit this patch formally? Without it I'm constantly
+> seeing the above splat.
+> 
 
-> It can be really useful in some situations, especially in case of
-> cross-subsystem changes that are sent to many mailing lists.
+I see Ted has already taken v2 of this patch in his dev repo.
+Should be able to see in linux tree soon.
 
-It has been my experience that those situations are rare enough that
-in the case where there is some question it is easily resolved over
-email.  It's not something worth worrying about.
+https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git/commit/?h=dev&id=811985365378df01386c3cfb7ff716e74ca376d5
 
-> But of
-> course this information belongs either to the cover letter or in case
-> of single patches to the "informational" section between "---" and
-> "diff --git [...]".
 
-Here is my perspective ... Cover letters for single patches are
-annoying, either the information should be included in the commit
-description itself or the information is really not that important
-anyway.  I also tend to like seeing only changelog information in that
-"informational" section so that it stays relatively clean and
-uncluttered.  This means there really is no *good* place to put the
-repo information for single patches, which is okay, because as I've
-said before this really isn't a problem in practice; or at least it
-hasn't been a significant problem in the roughly seven years I've been
-maintaining the SELinux repo.
-
-If this ever becomes a common issue I'm open to discussing this
-further, but for right now let's not clutter things up to solve a
-problem that really isn't a major issue.
-
--- 
-paul moore
-www.paul-moore.com
+-ritesh
