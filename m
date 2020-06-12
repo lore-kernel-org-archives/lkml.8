@@ -2,116 +2,234 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C31C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 03:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B54F2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 03:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CB352078C
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 03:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DE0F2078C
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 03:22:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i2i7UIT9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hPVYoqh8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726456AbgFLDUL (ORCPT
+        id S1726505AbgFLDWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 23:20:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37600 "EHLO
+        Thu, 11 Jun 2020 23:22:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbgFLDUL (ORCPT
+        with ESMTP id S1726321AbgFLDWG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 23:20:11 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E0A4C03E96F
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 20:20:11 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id z1so6191963qtn.2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 20:20:10 -0700 (PDT)
+        Thu, 11 Jun 2020 23:22:06 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B10BFC03E96F;
+        Thu, 11 Jun 2020 20:22:04 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id mb16so8641679ejb.4;
+        Thu, 11 Jun 2020 20:22:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=+yD7ZB4hsM8qhEU9lec/skmL6DmzijWeewUvhB26PdM=;
-        b=i2i7UIT91hsDSYLJGFv0cTL8x9X38MwzzxrU4uemvyQ5jG83MPAEPEVxpm9vgWXjG8
-         CPOVtq66EJiTZxtxIu3vxSlbSfXNPYmocnn0wfAg2w6rY+RZCdflcqxMxErRODxlgawK
-         dZ3418AAawe8Mr9bPvjqneKwzyUCnvE86pZ6y6DJjk9hZADgEtP0+SILFtK+1DDBizhA
-         irAjYgChF96XjCOPwS5bkfU2NqmoSRreg/9MaoFZa3Cl99QpiL+sU6vOIpA6UvnpSHus
-         8cQ9HsVCS+cB/XeqzO7IaOnqeQPyJ65ouUD67t+wLXMOjkPmv9ny5+bLeZ5XsiVNPH5b
-         RkeA==
+         :cc;
+        bh=B4Mrm1gIXHBqQrJzDMxE7hny1sPLrSiwXYO/60LCrf4=;
+        b=hPVYoqh8jPs/l54Gc1r4kVaNzjMB73wKzEjspttHVKjphYyFYBNLvFvhAQHgCVuMXD
+         UrW+7t7+BjCCRAb619IpW+4HHRVsgemrpBPTZgHjC/3gzR+obgnFNZvECSNXA9/pCqXz
+         HhQmCLyRPV4bDpj/WbkqT06lRQ5NGJDrYyClx7y0Pw1u1IrVuE89/OQi/G/Xfxj2P6/A
+         q50xVFJ9qf09Fj3gXSwSGq/TCkNbFQz1FMxOxyxexgyiUDja4LM8/ZfhMrlDakdtj+7B
+         mLQMDgcvIZWW4w4wgQpH4a5uPbkhNBMMS2LzQSmi1fC6hyZj/87JizBAF+eT4jMoDrjk
+         jv8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=+yD7ZB4hsM8qhEU9lec/skmL6DmzijWeewUvhB26PdM=;
-        b=jFzYoSJvYlQeXh42yjZH7eni6rqhN9xsnHZw/BNkcEXyx3A7mc4iZXj2lOZI6zUL3h
-         BaZDt7zvzXSDZu2UsVF2exW6l4CDZF1eF5zr/IVMtWD+b2KEErF0VTLugdOfIioXgn9C
-         3/K8WM1g3cfZ4acDEprc3oZZxcznY9beJnVrAPEgb+ldbQxB0+pyCuPYFTaQl2ok1yfN
-         wMV92140Cl8XhN4FAdEujPLDjXnMLDT5x4uLv8CVGS28m5DIA+ULSbLTRspCyHGBspBc
-         P/3+SSX5ovGdj4FY73sBYj61ATZ29K/fJecVX77TeFL9/E6TPzdr13Fcn6vDBSbsLjuZ
-         GoMQ==
-X-Gm-Message-State: AOAM530akZH6oJRY2+XLHtv1k97PluElOfB4DsKH/KitPHqVNc04B+Ht
-        9rMEKnBiIYTk2SXSnP+KryROX59Ce+UgCS00MSc=
-X-Google-Smtp-Source: ABdhPJwlq05oUUzSr2iXDlthywXBELjgP1Nr6qJereipQfYBcjDhATYTFeZzP+9MDq38iAQgorplrQKX3BZsMIOxeMw=
-X-Received: by 2002:ac8:4cce:: with SMTP id l14mr1148401qtv.35.1591932009842;
- Thu, 11 Jun 2020 20:20:09 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=B4Mrm1gIXHBqQrJzDMxE7hny1sPLrSiwXYO/60LCrf4=;
+        b=HXWtGI/tJK1qM+zTGlmFOHpesYKYSogma80wl7UCfnvHQnNMlX5bZsrVxb5sZMhxge
+         oYz1fT8eENDeWGDd3MLzymdlaQ56iUVIkVVnDi1XkVUBSVTDDzi/x126pMWu5f5il1LW
+         vwq6PJSLpzUYHit1w8UhlKDrKM+PdUL5ShyJfitEYMbmKXP8tMdbA2L8utFQeS28KUIP
+         9UfIZWPJwfKw+Lz0Cl1wzrKI/TL9kQnNShF/1unR1P1M08HzqeM5ggW417U0VV/5KxK6
+         lb3RjjN3r8jW+r+Z3LURCD+Qiv9bf+rSh2OQY5kJak0ijB2RdDQM9uIX2ANtAS9xRCwB
+         MOcA==
+X-Gm-Message-State: AOAM531fznmuSqhRFC2FQowPFa64TR9JUBtavo/ZkpEz485gI1IRdwYQ
+        Fc6xTgXwKF6PV36WMDHZ5So07Ywfn++fQUjMP5k=
+X-Google-Smtp-Source: ABdhPJyzNHPsnPsZMtc0S9NLfKpqe1fzAhLdA7GvVWT23D3A2fUYLq5KDR2bpDt/AdIyu5RKOlbarT8SJfsSUirryUA=
+X-Received: by 2002:a17:906:1088:: with SMTP id u8mr11881278eju.428.1591932123108;
+ Thu, 11 Jun 2020 20:22:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAAmzW4MMLw=4BHRtt=g8BHpQLTaSmhG03Ct6WMjmDxVnOkNQYA@mail.gmail.com>
- <20200527134333.GF6781@cmpxchg.org> <CAAmzW4NW+cv7VnNApWKJr4r9=QKaufK3y5apyNXo-M-y=q0dgg@mail.gmail.com>
- <20200528170155.GA69521@cmpxchg.org> <CAAmzW4NEPZRWL5PBXEWwg9kBOL9fYUNqTTzh3WRDWbaSPLv=CQ@mail.gmail.com>
- <20200529151228.GA92892@cmpxchg.org> <CAAmzW4Pccc4UcBThhKyqbtY=kK83Fz7k4vYR4eJN4te2E25=_A@mail.gmail.com>
- <20200601155615.GA131075@cmpxchg.org> <20200601204424.GA212944@cmpxchg.org>
- <561b79e8-48c7-f2eb-6081-cd82ad7e6010@suse.cz> <20200604150539.GA322130@cmpxchg.org>
-In-Reply-To: <20200604150539.GA322130@cmpxchg.org>
-From:   Joonsoo Kim <js1304@gmail.com>
-Date:   Fri, 12 Jun 2020 12:19:58 +0900
-Message-ID: <CAAmzW4NVoViiGzDx_7fFi-ShhbkB8PXHHSK=Eaa3D7vfZGGFNw@mail.gmail.com>
-Subject: Re: [PATCH 05/14] mm: workingset: let cache workingset challenge anon
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        Rik van Riel <riel@surriel.com>,
-        Minchan Kim <minchan.kim@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        LKML <linux-kernel@vger.kernel.org>, kernel-team@fb.com
+References: <20200611222921.464-1-jcrouse@codeaurora.org> <20200611222921.464-7-jcrouse@codeaurora.org>
+In-Reply-To: <20200611222921.464-7-jcrouse@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Thu, 11 Jun 2020 20:22:29 -0700
+Message-ID: <CAF6AEGuyqgYKZsnBPCii4W=jxPcFU7JYKn4NBd8JVq7Pt1kR_Q@mail.gmail.com>
+Subject: Re: [PATCH 6/6] drm/msm/a6xx: Add support for per-instance pagetables
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Akhil P Oommen <akhilpo@codeaurora.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>, Eric Anholt <eric@anholt.net>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Sean Paul <sean@poorly.run>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=EB=85=84 6=EC=9B=94 5=EC=9D=BC (=EA=B8=88) =EC=98=A4=EC=A0=84 12:06, J=
-ohannes Weiner <hannes@cmpxchg.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+On Thu, Jun 11, 2020 at 3:29 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
 >
-> On Thu, Jun 04, 2020 at 03:35:27PM +0200, Vlastimil Babka wrote:
-> > On 6/1/20 10:44 PM, Johannes Weiner wrote:
-> > > From a8faceabc1454dfd878caee2a8422493d937a394 Mon Sep 17 00:00:00 200=
-1
-> > > From: Johannes Weiner <hannes@cmpxchg.org>
-> > > Date: Mon, 1 Jun 2020 14:04:09 -0400
-> > > Subject: [PATCH] mm: workingset: let cache workingset challenge anon =
-fix
-> >
-> > Looks like the whole series is now in mainline (that was quick!) withou=
-t this
-> > followup? As such it won't be squashed so perhaps the subject should be=
- more
-> > "standalone" now, description referencing commit 34e58cac6d8f ("mm: wor=
-kingset:
-> > let cache workingset challenge anon"), possibly with Fixes: tag etc...
+> Add support for using per-instance pagetables if all the dependencies are
+> available.
 >
-> Yep, I'll send a stand-alone version of this. It was a bit fat to get
-> squashed last minute anyway, and I don't mind having a bit of extra
-> time to quantify the actual impact of this delta.
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> ---
+>
+>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 69 ++++++++++++++++++++++++++-
+>  drivers/gpu/drm/msm/msm_ringbuffer.h  |  1 +
+>  2 files changed, 69 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> index a1589e040c57..5e82b85d4d55 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> @@ -79,6 +79,58 @@ static void get_stats_counter(struct msm_ringbuffer *ring, u32 counter,
+>         OUT_RING(ring, upper_32_bits(iova));
+>  }
+>
+> +static void a6xx_set_pagetable(struct msm_gpu *gpu, struct msm_ringbuffer *ring,
+> +               struct msm_file_private *ctx)
+> +{
+> +       phys_addr_t ttbr;
+> +       u32 asid;
+> +
+> +       if (msm_iommu_pagetable_params(ctx->aspace->mmu, &ttbr, &asid))
+> +               return;
+> +
+> +       OUT_PKT7(ring, CP_SET_PROTECTED_MODE, 1);
+> +       OUT_RING(ring, 0);
+> +
+> +       /* Turn on APIV mode to access critical regions */
+> +       OUT_PKT4(ring, REG_A6XX_CP_MISC_CNTL, 1);
+> +       OUT_RING(ring, 1);
+> +
+> +       /* Make sure the ME is synchronized before staring the update */
+> +       OUT_PKT7(ring, CP_WAIT_FOR_ME, 0);
+> +
+> +       /* Execute the table update */
+> +       OUT_PKT7(ring, CP_SMMU_TABLE_UPDATE, 4);
+> +       OUT_RING(ring, lower_32_bits(ttbr));
+> +       OUT_RING(ring, (((u64) asid) << 48) | upper_32_bits(ttbr));
+> +       /* CONTEXTIDR is currently unused */
+> +       OUT_RING(ring, 0);
+> +       /* CONTEXTBANK is currently unused */
+> +       OUT_RING(ring, 0);
 
-Hello, Johannes.
+I can add this to xml (on userspace side, we've been describing packet
+payload in xml and using the generated builders), and update generated
+headers, if you agree to not add more open-coded pkt7 building ;-)
 
-Now, a week has passed. I hope that this patch is merged as soon as possibl=
-e,
-since my WIP patchset depends on this patch. How about trying to merge
-this patch now? If you don't mind, I could send it on your behalf.
+> +
+> +       /*
+> +        * Write the new TTBR0 to the memstore. This is good for debugging.
+> +        */
+> +       OUT_PKT7(ring, CP_MEM_WRITE, 4);
+> +       OUT_RING(ring, lower_32_bits(rbmemptr(ring, ttbr0)));
+> +       OUT_RING(ring, upper_32_bits(rbmemptr(ring, ttbr0)));
+> +       OUT_RING(ring, lower_32_bits(ttbr));
+> +       OUT_RING(ring, (((u64) asid) << 48) | upper_32_bits(ttbr));
+> +
+> +       /* Invalidate the draw state so we start off fresh */
+> +       OUT_PKT7(ring, CP_SET_DRAW_STATE, 3);
+> +       OUT_RING(ring, 0x40000);
+> +       OUT_RING(ring, 1);
+> +       OUT_RING(ring, 0);
 
-Thanks.
+Ie, this would look like:
+
+    OUT_PKT7(ring, CP_SET_DRAW_STATE, 3);
+    OUT_RING(ring, CP_SET_DRAW_STATE__0_COUNT(0) |
+            CP_SET_DRAW_STATE__0_DISABLE_ALL_GROUPS |
+            CP_SET_DRAW_STATE__0_GROUP_ID(0));
+    OUT_RING(ring, CP_SET_DRAW_STATE__1_ADDR_LO(1));
+    OUT_RING(ring, CP_SET_DRAW_STATE__2_ADDR_HI(0));
+
+.. but written that way, I think you meant ADDR_LO to be zero?
+
+(it is possible we need to regen headers for that to work, the kernel
+headers are somewhat out of date by now)
+
+BR,
+-R
+
+> +
+> +       /* Turn off APRIV */
+> +       OUT_PKT4(ring, REG_A6XX_CP_MISC_CNTL, 1);
+> +       OUT_RING(ring, 0);
+> +
+> +       /* Turn off protected mode */
+> +       OUT_PKT7(ring, CP_SET_PROTECTED_MODE, 1);
+> +       OUT_RING(ring, 1);
+> +}
+> +
+>  static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
+>         struct msm_file_private *ctx)
+>  {
+> @@ -89,6 +141,8 @@ static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
+>         struct msm_ringbuffer *ring = submit->ring;
+>         unsigned int i;
+>
+> +       a6xx_set_pagetable(gpu, ring, ctx);
+> +
+>         get_stats_counter(ring, REG_A6XX_RBBM_PERFCTR_CP_0_LO,
+>                 rbmemptr_stats(ring, index, cpcycles_start));
+>
+> @@ -872,6 +926,18 @@ static unsigned long a6xx_gpu_busy(struct msm_gpu *gpu)
+>         return (unsigned long)busy_time;
+>  }
+>
+> +struct msm_gem_address_space *a6xx_address_space_instance(struct msm_gpu *gpu)
+> +{
+> +       struct msm_mmu *mmu;
+> +
+> +       mmu = msm_iommu_pagetable_create(gpu->aspace->mmu);
+> +       if (IS_ERR(mmu))
+> +               return msm_gem_address_space_get(gpu->aspace);
+> +
+> +       return msm_gem_address_space_create(mmu,
+> +               "gpu", 0x100000000ULL, 0x1ffffffffULL);
+> +}
+> +
+>  static const struct adreno_gpu_funcs funcs = {
+>         .base = {
+>                 .get_param = adreno_get_param,
+> @@ -893,8 +959,9 @@ static const struct adreno_gpu_funcs funcs = {
+>  #if defined(CONFIG_DRM_MSM_GPU_STATE)
+>                 .gpu_state_get = a6xx_gpu_state_get,
+>                 .gpu_state_put = a6xx_gpu_state_put,
+> -               .create_address_space = adreno_iommu_create_address_space,
+>  #endif
+> +               .create_address_space = adreno_iommu_create_address_space,
+> +               .address_space_instance = a6xx_address_space_instance,
+>         },
+>         .get_timestamp = a6xx_get_timestamp,
+>  };
+> diff --git a/drivers/gpu/drm/msm/msm_ringbuffer.h b/drivers/gpu/drm/msm/msm_ringbuffer.h
+> index 7764373d0ed2..0987d6bf848c 100644
+> --- a/drivers/gpu/drm/msm/msm_ringbuffer.h
+> +++ b/drivers/gpu/drm/msm/msm_ringbuffer.h
+> @@ -31,6 +31,7 @@ struct msm_rbmemptrs {
+>         volatile uint32_t fence;
+>
+>         volatile struct msm_gpu_submit_stats stats[MSM_GPU_SUBMIT_STATS_COUNT];
+> +       volatile u64 ttbr0;
+>  };
+>
+>  struct msm_ringbuffer {
+> --
+> 2.17.1
+>
