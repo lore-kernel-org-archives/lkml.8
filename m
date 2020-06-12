@@ -2,429 +2,230 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB47BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A93CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACF1220829
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:05:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54A192078C
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:07:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bbIr5Mr6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MmowBu5g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgFLEFu (ORCPT
+        id S1726510AbgFLEHg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 00:05:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44562 "EHLO
+        Fri, 12 Jun 2020 00:07:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbgFLEFs (ORCPT
+        with ESMTP id S1725372AbgFLEHf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 00:05:48 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96C83C03E96F
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 21:05:48 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id n9so3225712plk.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 21:05:48 -0700 (PDT)
+        Fri, 12 Jun 2020 00:07:35 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 653B8C03E96F;
+        Thu, 11 Jun 2020 21:07:35 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id y1so6203007qtv.12;
+        Thu, 11 Jun 2020 21:07:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=n95gky3M8BGKrJ+IO/bBRqgu9c7XhvrCAgQUGFel/pM=;
-        b=bbIr5Mr6Ew/cZVOdBVqfYXN8Yfl+nj+re+oAXDuctv8zad9EgUk8+n8O+oLv590Ljb
-         ZiaC8NrgmwwSMi52Js3PUuMYsT4ohrpUfHycec2YZIpb7b/ji/A1T+C808lA3+r8brDY
-         jmvu+TOiOrMcKkKP05XuImWgOUPvwU61gUL/Y=
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=W9N0HI/VJRXYdn3DxBbsnmWiEpklzY4+CMZBCSjxVLI=;
+        b=MmowBu5g/zlVcPTy3ZBmy5iY8SG0VMb2dSPwH5MLFgedHfF8GKgeUxCK3uT+YrmbGS
+         RacRhfM+AeWoO2epbNIPBsWgS5T7UE4jGevyuf6ruVakGyJdMgmeTUrQOZaKHQU97ykb
+         tanSneGEeRFWtndHd69u5NxH6sVd1mGwvJqHyK16AXgLmttUQgiZz3sXLu88bIq3KxFi
+         RLTeKXpvVyTpibyZiGdxDP7/R+g8uS4KoCGADEFB6XmAuYfCBY6vY3tiVXCGTenBkf/F
+         Qx+3549AhBVymIp5SXL4UtYDx/fkunNCkaX+1XAmaX/eNojPWWSTsIkSMMaZCLdqboxN
+         2/dQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=n95gky3M8BGKrJ+IO/bBRqgu9c7XhvrCAgQUGFel/pM=;
-        b=WMxQFyt84GDo/DBNsV3peubyz+WiBaucxMasW8/SG3t/h4Y3+nKXdkjHbrdWqLQthy
-         bZI2fizO/M8vbV3srRiSBrVdJFCWuRcybQ8UAen0zx4TXtz/LoNKLMTItd8xa/OS5RfF
-         QMfMt1mfgFr+qJZSoE0rY7MkMjgkClUudBga9u2dI/H/sOtlGkoPCncJbTz4KypP/I2O
-         LmFcx6NNOFyoCvtOxm122KdI9ECM3M/NxgsMLymXqUOyUl5W6LWqKGbhy3+zymBsFp3j
-         qXbEUhrz74HMJqbJ9fLrmkOa76y2vzDucWrFo3mssVz9z+BSQskQpHiEoIngGWm7Aa9W
-         sFqA==
-X-Gm-Message-State: AOAM53037/BTVYIw1kIQ8FoPkU1tumEa6XZ93opHw0QhOxOXMM+arDBN
-        W3F9t3zQOKoFzoLUFNfm1lsrxQ==
-X-Google-Smtp-Source: ABdhPJw/SNrHDZmQ4eABu2aYM/zvSG5uqCX6ZKZPzkekm1Y6wMKgCGfIHzzVb/GY9hVFhGFD+5nFRw==
-X-Received: by 2002:a17:902:ea8a:: with SMTP id x10mr5668056plb.330.1591934747979;
-        Thu, 11 Jun 2020 21:05:47 -0700 (PDT)
-Received: from pihsun-glaptop.lan (180-176-97-18.dynamic.kbronet.com.tw. [180.176.97.18])
-        by smtp.googlemail.com with ESMTPSA id u7sm4686983pfu.162.2020.06.11.21.05.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 21:05:47 -0700 (PDT)
-From:   Pi-Hsun Shih <pihsun@chromium.org>
-Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Prashant Malani <pmalani@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=W9N0HI/VJRXYdn3DxBbsnmWiEpklzY4+CMZBCSjxVLI=;
+        b=Qjx4+wZZIKJzuVqWTw99vcP7bbthuANMGnvkeXMQS02N9xuvzDgaziSrFWcDrbIgbW
+         34s8rBIiphpM3fJ0ACDwQ7XP/qzXIjvtBcZ8vrFqDSmScWffWuMvS2izl9euskotyvWl
+         H9YEdAkNxwEGoVW63S+CBC+oqpLSh7iNgSu4D9aiWoJHGMXpYI2TzONi/Rb63nW4Ncp7
+         UAf7cUdEanudaw1mDRt06ESSpCA692dqq7kxxaV8ZUIZdx0MFlMAhEFTkPW964KbQqpT
+         d8rDf2JLD1KNqv1JmlgVUShWttB6Q/oLH2/dX1xW7IM72GVzxSkuDTo80L48Om8Jm0yS
+         qjnA==
+X-Gm-Message-State: AOAM531E2sFGdeDcKcDJu7LgNjnG+Xz1trBh7PIwE9m/PETuNwH4ns1n
+        CuzGs1ErjSIMUvEZJPfgmQjugB2e1n0=
+X-Google-Smtp-Source: ABdhPJxQuukhtwanmQJb52xJH/9PJDz7QPdp/qzb+qaQvTRo3KgSQnfSIXB3TMpsb+uFZnWTDW6TxA==
+X-Received: by 2002:aed:358c:: with SMTP id c12mr1177305qte.214.1591934854411;
+        Thu, 11 Jun 2020 21:07:34 -0700 (PDT)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id c6sm3609080qkg.93.2020.06.11.21.07.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Jun 2020 21:07:33 -0700 (PDT)
+Subject: Re: [RFC] MFD's relationship with Device Tree (OF)
+To:     Lee Jones <lee.jones@linaro.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Michael Walle <michael@walle.cc>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Brown <broonie@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v6 3/3] regulator: Add driver for cros-ec-regulator
-Date:   Fri, 12 Jun 2020 12:05:20 +0800
-Message-Id: <20200612040526.192878-4-pihsun@chromium.org>
-X-Mailer: git-send-email 2.27.0.290.gba653c62da-goog
-In-Reply-To: <20200612040526.192878-1-pihsun@chromium.org>
-References: <20200612040526.192878-1-pihsun@chromium.org>
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        GregKroah-Hartmangregkh@linuxfoundation.org
+References: <20200609110136.GJ4106@dell>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <7cf94809-7346-31bc-877c-679ecc4d9710@gmail.com>
+Date:   Thu, 11 Jun 2020 23:07:32 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20200609110136.GJ4106@dell>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add driver for cros-ec-regulator, representing a voltage regulator that
-is connected and controlled by ChromeOS EC, and is controlled by kernel
-with EC host commands.
+Hi Lee,
 
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-Reviewed-by: Prashant Malani <pmalani@chromium.org>
-Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
-Changes from v5:
-* Move introduction of new host command to a separate patch.
-* Use devm_regulator_register.
-* sizeof -> ARRAY_SIZE.
-* Small whitespace change.
+Please add me to the distribution list for future versions of this.
 
-Changes from v4:
-* Change compatible name from regulator-cros-ec to cros-ec-regulator.
+-Frank
 
-Changes from v3:
-* Remove check around CONFIG_OF.
-* Add new host commands to cros_ec_trace.
-* Use devm_kstrdup for duping regulator name.
-* Change license header and add MODULE_AUTHOR.
-* Address review comments.
-
-Changes from v2:
-* Add 'depends on OF' to Kconfig.
-* Add Kconfig description about compiling as module.
-
-Changes from v1:
-* Change compatible string to google,regulator-cros-ec.
-* Use reg property in device tree.
-* Address comments on code styles.
-
-This patch contains function cros_ec_cmd that is copied from the series:
-https://lore.kernel.org/patchwork/project/lkml/list/?series=428457.
-
-I can't find the first patch in that v2 series, so the function is
-modified from v1 of that series according to reviewers comment:
-https://lore.kernel.org/patchwork/patch/1188110/
-
-I copied the function instead of depending on that series since I feel
-the function is small enough, and the series has stalled for some time.
----
- drivers/regulator/Kconfig             |  10 +
- drivers/regulator/Makefile            |   1 +
- drivers/regulator/cros-ec-regulator.c | 257 ++++++++++++++++++++++++++
- 3 files changed, 268 insertions(+)
- create mode 100644 drivers/regulator/cros-ec-regulator.c
-
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index 8f677f5d79b4..c398e90e0e73 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -238,6 +238,16 @@ config REGULATOR_CPCAP
- 	  Say y here for CPCAP regulator found on some Motorola phones
- 	  and tablets such as Droid 4.
- 
-+config REGULATOR_CROS_EC
-+	tristate "ChromeOS EC regulators"
-+	depends on CROS_EC && OF
-+	help
-+	  This driver supports voltage regulators that is connected to ChromeOS
-+	  EC and controlled through EC host commands.
-+
-+	  This driver can also be built as a module. If so, the module
-+	  will be called cros-ec-regulator.
-+
- config REGULATOR_DA903X
- 	tristate "Dialog Semiconductor DA9030/DA9034 regulators"
- 	depends on PMIC_DA903X
-diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-index e8f163371071..46592c160d22 100644
---- a/drivers/regulator/Makefile
-+++ b/drivers/regulator/Makefile
-@@ -13,6 +13,7 @@ obj-$(CONFIG_REGULATOR_USERSPACE_CONSUMER) += userspace-consumer.o
- obj-$(CONFIG_REGULATOR_88PG86X) += 88pg86x.o
- obj-$(CONFIG_REGULATOR_88PM800) += 88pm800-regulator.o
- obj-$(CONFIG_REGULATOR_88PM8607) += 88pm8607.o
-+obj-$(CONFIG_REGULATOR_CROS_EC) += cros-ec-regulator.o
- obj-$(CONFIG_REGULATOR_CPCAP) += cpcap-regulator.o
- obj-$(CONFIG_REGULATOR_AAT2870) += aat2870-regulator.o
- obj-$(CONFIG_REGULATOR_AB3100) += ab3100.o
-diff --git a/drivers/regulator/cros-ec-regulator.c b/drivers/regulator/cros-ec-regulator.c
-new file mode 100644
-index 000000000000..35f97246bc48
---- /dev/null
-+++ b/drivers/regulator/cros-ec-regulator.c
-@@ -0,0 +1,257 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+//
-+// Copyright 2020 Google LLC.
-+
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_data/cros_ec_proto.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/driver.h>
-+#include <linux/regulator/machine.h>
-+#include <linux/regulator/of_regulator.h>
-+#include <linux/slab.h>
-+
-+struct cros_ec_regulator_data {
-+	struct regulator_desc desc;
-+	struct regulator_dev *dev;
-+	struct cros_ec_device *ec_dev;
-+
-+	u32 index;
-+
-+	u16 *voltages_mV;
-+	u16 num_voltages;
-+};
-+
-+static int cros_ec_cmd(struct cros_ec_device *ec, u32 version, u32 command,
-+		       void *outdata, u32 outsize, void *indata, u32 insize)
-+{
-+	struct cros_ec_command *msg;
-+	int ret;
-+
-+	msg = kzalloc(sizeof(*msg) + max(outsize, insize), GFP_KERNEL);
-+	if (!msg)
-+		return -ENOMEM;
-+
-+	msg->version = version;
-+	msg->command = command;
-+	msg->outsize = outsize;
-+	msg->insize = insize;
-+
-+	if (outdata && outsize > 0)
-+		memcpy(msg->data, outdata, outsize);
-+
-+	ret = cros_ec_cmd_xfer_status(ec, msg);
-+	if (ret < 0)
-+		goto cleanup;
-+
-+	if (insize)
-+		memcpy(indata, msg->data, insize);
-+
-+cleanup:
-+	kfree(msg);
-+	return ret;
-+}
-+
-+static int cros_ec_regulator_enable(struct regulator_dev *dev)
-+{
-+	struct cros_ec_regulator_data *data = rdev_get_drvdata(dev);
-+	struct ec_params_regulator_enable cmd = {
-+		.index = data->index,
-+		.enable = 1,
-+	};
-+
-+	return cros_ec_cmd(data->ec_dev, 0, EC_CMD_REGULATOR_ENABLE, &cmd,
-+			  sizeof(cmd), NULL, 0);
-+}
-+
-+static int cros_ec_regulator_disable(struct regulator_dev *dev)
-+{
-+	struct cros_ec_regulator_data *data = rdev_get_drvdata(dev);
-+	struct ec_params_regulator_enable cmd = {
-+		.index = data->index,
-+		.enable = 0,
-+	};
-+
-+	return cros_ec_cmd(data->ec_dev, 0, EC_CMD_REGULATOR_ENABLE, &cmd,
-+			  sizeof(cmd), NULL, 0);
-+}
-+
-+static int cros_ec_regulator_is_enabled(struct regulator_dev *dev)
-+{
-+	struct cros_ec_regulator_data *data = rdev_get_drvdata(dev);
-+	struct ec_params_regulator_is_enabled cmd = {
-+		.index = data->index,
-+	};
-+	struct ec_response_regulator_is_enabled resp;
-+	int ret;
-+
-+	ret = cros_ec_cmd(data->ec_dev, 0, EC_CMD_REGULATOR_IS_ENABLED, &cmd,
-+			  sizeof(cmd), &resp, sizeof(resp));
-+	if (ret < 0)
-+		return ret;
-+	return resp.enabled;
-+}
-+
-+static int cros_ec_regulator_list_voltage(struct regulator_dev *dev,
-+					  unsigned int selector)
-+{
-+	struct cros_ec_regulator_data *data = rdev_get_drvdata(dev);
-+
-+	if (selector >= data->num_voltages)
-+		return -EINVAL;
-+
-+	return data->voltages_mV[selector] * 1000;
-+}
-+
-+static int cros_ec_regulator_get_voltage(struct regulator_dev *dev)
-+{
-+	struct cros_ec_regulator_data *data = rdev_get_drvdata(dev);
-+	struct ec_params_regulator_get_voltage cmd = {
-+		.index = data->index,
-+	};
-+	struct ec_response_regulator_get_voltage resp;
-+	int ret;
-+
-+	ret = cros_ec_cmd(data->ec_dev, 0, EC_CMD_REGULATOR_GET_VOLTAGE, &cmd,
-+			  sizeof(cmd), &resp, sizeof(resp));
-+	if (ret < 0)
-+		return ret;
-+	return resp.voltage_mv * 1000;
-+}
-+
-+static int cros_ec_regulator_set_voltage(struct regulator_dev *dev, int min_uV,
-+					 int max_uV, unsigned int *selector)
-+{
-+	struct cros_ec_regulator_data *data = rdev_get_drvdata(dev);
-+	int min_mV = DIV_ROUND_UP(min_uV, 1000);
-+	int max_mV = max_uV / 1000;
-+	struct ec_params_regulator_set_voltage cmd = {
-+		.index = data->index,
-+		.min_mv = min_mV,
-+		.max_mv = max_mV,
-+	};
-+
-+	/*
-+	 * This can happen when the given range [min_uV, max_uV] doesn't
-+	 * contain any voltage that can be represented exactly in mV.
-+	 */
-+	if (min_mV > max_mV)
-+		return -EINVAL;
-+
-+	return cros_ec_cmd(data->ec_dev, 0, EC_CMD_REGULATOR_SET_VOLTAGE, &cmd,
-+			   sizeof(cmd), NULL, 0);
-+}
-+
-+static struct regulator_ops cros_ec_regulator_voltage_ops = {
-+	.enable = cros_ec_regulator_enable,
-+	.disable = cros_ec_regulator_disable,
-+	.is_enabled = cros_ec_regulator_is_enabled,
-+	.list_voltage = cros_ec_regulator_list_voltage,
-+	.get_voltage = cros_ec_regulator_get_voltage,
-+	.set_voltage = cros_ec_regulator_set_voltage,
-+};
-+
-+static int cros_ec_regulator_init_info(struct device *dev,
-+				       struct cros_ec_regulator_data *data)
-+{
-+	struct ec_params_regulator_get_info cmd = {
-+		.index = data->index,
-+	};
-+	struct ec_response_regulator_get_info resp;
-+	int ret;
-+
-+	ret = cros_ec_cmd(data->ec_dev, 0, EC_CMD_REGULATOR_GET_INFO, &cmd,
-+			   sizeof(cmd), &resp, sizeof(resp));
-+	if (ret < 0)
-+		return ret;
-+
-+	data->num_voltages =
-+		min_t(u16, ARRAY_SIZE(resp.voltages_mv), resp.num_voltages);
-+	data->voltages_mV =
-+		devm_kmemdup(dev, resp.voltages_mv,
-+			     sizeof(u16) * data->num_voltages, GFP_KERNEL);
-+	data->desc.n_voltages = data->num_voltages;
-+
-+	/* Make sure the returned name is always a valid string */
-+	resp.name[ARRAY_SIZE(resp.name) - 1] = '\0';
-+	data->desc.name = devm_kstrdup(dev, resp.name, GFP_KERNEL);
-+	if (!data->desc.name)
-+		return -ENOMEM;
-+
-+	return 0;
-+}
-+
-+static int cros_ec_regulator_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	struct cros_ec_regulator_data *drvdata;
-+	struct regulator_init_data *init_data;
-+	struct regulator_config cfg = {};
-+	struct regulator_desc *desc;
-+	int ret;
-+
-+	drvdata = devm_kzalloc(
-+		&pdev->dev, sizeof(struct cros_ec_regulator_data), GFP_KERNEL);
-+	if (!drvdata)
-+		return -ENOMEM;
-+
-+	drvdata->ec_dev = dev_get_drvdata(dev->parent);
-+	desc = &drvdata->desc;
-+
-+	init_data = of_get_regulator_init_data(dev, np, desc);
-+	if (!init_data)
-+		return -EINVAL;
-+
-+	ret = of_property_read_u32(np, "reg", &drvdata->index);
-+	if (ret < 0)
-+		return ret;
-+
-+	desc->owner = THIS_MODULE;
-+	desc->type = REGULATOR_VOLTAGE;
-+	desc->ops = &cros_ec_regulator_voltage_ops;
-+
-+	ret = cros_ec_regulator_init_info(dev, drvdata);
-+	if (ret < 0)
-+		return ret;
-+
-+	cfg.dev = &pdev->dev;
-+	cfg.init_data = init_data;
-+	cfg.driver_data = drvdata;
-+	cfg.of_node = np;
-+
-+	drvdata->dev = devm_regulator_register(dev, &drvdata->desc, &cfg);
-+	if (IS_ERR(drvdata->dev)) {
-+		ret = PTR_ERR(drvdata->dev);
-+		dev_err(&pdev->dev, "Failed to register regulator: %d\n", ret);
-+		goto free_name;
-+	}
-+
-+	platform_set_drvdata(pdev, drvdata);
-+
-+	return 0;
-+
-+free_name:
-+	kfree(desc->name);
-+	return ret;
-+}
-+
-+static const struct of_device_id regulator_cros_ec_of_match[] = {
-+	{ .compatible = "google,cros-ec-regulator", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, regulator_cros_ec_of_match);
-+
-+static struct platform_driver cros_ec_regulator_driver = {
-+	.probe		= cros_ec_regulator_probe,
-+	.driver		= {
-+		.name		= "cros-ec-regulator",
-+		.of_match_table = regulator_cros_ec_of_match,
-+	},
-+};
-+
-+module_platform_driver(cros_ec_regulator_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("ChromeOS EC controlled regulator");
-+MODULE_AUTHOR("Pi-Hsun Shih <pihsun@chromium.org>");
--- 
-2.27.0.290.gba653c62da-goog
+On 2020-06-09 06:01, Lee Jones wrote:
+> Good morning,
+> 
+> After a number of reports/queries surrounding a known long-term issue
+> in the MFD core, including the submission of a couple of attempted
+> solutions, I've decided to finally tackle this one myself.
+> 
+> Currently, when a child platform device (sometimes referred to as a
+> sub-device) is registered via the Multi-Functional Device (MFD) API,
+> the framework attempts to match the newly registered platform device
+> with its associated Device Tree (OF) node.  Until now, the device has
+> been allocated the first node found with an identical OF compatible
+> string.  Unfortunately, if there are, say for example '3' devices
+> which are to be handled by the same driver and therefore have the same
+> compatible string, each of them will be allocated a pointer to the
+> *first* node.
+> 
+> Let me give you an example.
+> 
+> I have knocked up an example 'parent' and 'child' device driver.  The
+> parent utilises the MFD API to register 3 identical children, each
+> controlled by the same driver.  This happens a lot.  Fortunately, in
+> the majority of cases, the OF nodes are also totally identical, but
+> what if you wish to configure one of the child devices with different
+> attributes or resources supplied via Device Tree, like a clock?  This
+> is currently impossible.
+> 
+> Here is the Device Tree representation for the 1 parent and the 3
+> child (sub) devices described above:
+> 
+>         parent {
+>                 compatible = "mfd,of-test-parent";
+> 
+>                 child@0 {
+>                         compatible = "mfd,of-test-child";
+> 			clocks = <&clock 0>;
+>                 };
+> 
+>                 child@1 {
+>                         compatible = "mfd,of-test-child";
+> 			clocks = <&clock 1>;
+> 		};
+> 
+> 	        child@2 {
+>                         compatible = "mfd,of-test-child";
+> 			clocks = <&clock 2>;
+>                 };
+>         };
+> 
+> This is how we register those devices from MFD:
+> 
+> static const struct mfd_cell mfd_of_test_cell[] = {
+>         OF_MFD_CELL("mfd_of_test_child", NULL, NULL, 0, 0, "mfd,of-test-child"),
+>         OF_MFD_CELL("mfd_of_test_child", NULL, NULL, 0, 1, "mfd,of-test-child"),
+> 	OF_MFD_CELL("mfd_of_test_child", NULL, NULL, 0, 2, "mfd,of-test-child")
+> };
+> 
+> ... which we pass into mfd_add_devices() for processing.
+> 
+> In an ideal world.  The devices with the platform_id; 0, 1 and 2 would
+> be matched up to Device Tree nodes; child@0, child@1 and child@2
+> respectively.  Instead all 3 devices will be allocated a pointer to
+> child@0's OF node, which is obviously not correct.
+> 
+> This is how it looks when each of the child devices are probed:
+> 
+>  [0.708287] mfd-of-test-parent mfd_of_test: Registering 3 devices
+>  [...]
+>  [0.712511] mfd-of-test-child mfd_of_test_child.0: Probing platform device: 0
+>  [0.712710] mfd-of-test-child mfd_of_test_child.0: Using OF node: child@0
+>  [0.713033] mfd-of-test-child mfd_of_test_child.1: Probing platform device: 1
+>  [0.713381] mfd-of-test-child mfd_of_test_child.1: Using OF node: child@0
+>  [0.713691] mfd-of-test-child mfd_of_test_child.2: Probing platform device: 2
+>  [0.713889] mfd-of-test-child mfd_of_test_child.2: Using OF node: child@0
+> 
+> "Why is it when I change child 2's clock rate, it also changes 0's?"
+> 
+> Whoops!
+> 
+> So in order to fix this, we need to make MFD more-cleverer!
+> 
+> However, this is not so simple.  There are some rules we should abide
+> by (I use "should" intentionally here, as something might just have to
+> give):
+> 
+>  a) Since Device Tree is designed to describe hardware, inserting
+>     arbitrary properties into DT is forbidden.  This precludes things
+>     we would ordinarily be able to match on, like 'id' or 'name'.
+>  b) As an extension to a) DTs should also be OS agnostic, so
+>     properties like 'mfd-device', 'mfd-order' etc are also not
+>     not suitable for inclusion.
+>  c) The final solution should ideally be capable of supporting both
+>     newly defined and current trees (without retroactive edits)
+>     alike.
+>  d) Existing properties could be used, but not abused.  For example,
+>     one of my suggestions (see below) is to use the 'reg' property.
+>     This is fine in principle but loading 'reg' with arbitrary values
+>     (such as; 0, 1, 2 ... x) which 1) clearly do not have anything to
+>     do with registers and 2) would be meaningless in other OSes/
+>     implementations, just to serve our purpose, is to be interpreted
+>     as an abuse.
+> 
+> Proposal 1:
+> 
+> As mentioned above, my initial thoughts were to use the 'reg' property
+> to match an MFD cell entry with the correct DT node.  However, not
+> all Device Tree nodes have 'reg' properties.  Particularly true in the
+> case of MFD, where memory resources are usually shared with the parent
+> via Regmap, or (as in the case of the ab8500) the MFD handles all
+> register transactions via its own API. 
+> 
+> Proposal 2:
+> 
+> If we can't guarantee that all DT nodes will have at least one
+> property in common to be used for matching and we're prevented from
+> supplying additional, potentially bespoke properties, then we must
+> seek an alternative procedure.
+> 
+> It should be possible to match based on order.  However, the developer
+> would have to guarantee that the order in which the child devices are
+> presented to the MFD API are in exactly the same order as they are
+> represented in the Device Tree.  The obvious draw-back to this
+> strategy is that it's potentially very fragile.
+> 
+> Current Proposal:
+> 
+> How about a collection of Proposal 1 and Proposal 2?  First we could
+> attempt a match on the 'reg' property.  Then, if that fails, we would
+> use the fragile-but-its-all-we-have Proposal 2 as the fall-back.
+> 
+> Thoughts?
+> 
 
