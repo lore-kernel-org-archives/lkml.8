@@ -2,50 +2,44 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E8A3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 02:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 137B8C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 02:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6814920835
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 02:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D768F2078C
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 02:35:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="RHl1lg3X"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="CCfpYwFc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbgFLC2K (ORCPT
+        id S1726517AbgFLCfJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 22:28:10 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:21170 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbgFLC2H (ORCPT
+        Thu, 11 Jun 2020 22:35:09 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:35827 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbgFLCfH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 22:28:07 -0400
-Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200612022803epoutp03e6a1dd88d680393e59d7530eba843d6f~XquKIbVkN2065220652epoutp03V
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 02:28:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200612022803epoutp03e6a1dd88d680393e59d7530eba843d6f~XquKIbVkN2065220652epoutp03V
+        Thu, 11 Jun 2020 22:35:07 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200612023503epoutp016c4e67745aa5c7424153c43e6bcf60f8~Xq0RLtNq61763017630epoutp01i
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 02:35:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200612023503epoutp016c4e67745aa5c7424153c43e6bcf60f8~Xq0RLtNq61763017630epoutp01i
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1591928883;
-        bh=hdov1UyoasQI8pS6FcIxfYTfSmxps6Svz6JY4APTa/A=;
+        s=mail20170921; t=1591929303;
+        bh=OfPXcKb6SWjuFyRP7Ix12rFArx8O98KZKofQrzhVp9Q=;
         h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=RHl1lg3XUHpp+pyXqVMHyr6U/M+jGbYyNP7C6bGNpnnW04Ut0jnIOjpEAuY7mgdHS
-         gCu2cAOrc74+nke7tJFmjO0lWyKY2djH5otc57S7O71JEEUhScJEU+Aw06PqugP3dp
-         JeYHfylhx56NL//rmVrNfCRWClTkdrR7Ss+nmBVA=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas2p4.samsung.com (KnoxPortal) with ESMTP id
-        20200612022802epcas2p42b47335386aea0f153933fec99d2048f~XquJHdqaF1818718187epcas2p4O;
-        Fri, 12 Jun 2020 02:28:02 +0000 (GMT)
-Received: from epsmges2p3.samsung.com (unknown [182.195.40.184]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 49jl4x0bZKzMqYkl; Fri, 12 Jun
-        2020 02:28:01 +0000 (GMT)
-X-AuditID: b6c32a47-fc5ff70000006b31-1d-5ee2e830fab6
-Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
-        epsmges2p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        3C.75.27441.038E2EE5; Fri, 12 Jun 2020 11:28:00 +0900 (KST)
+        b=CCfpYwFcuqQkD8Sx9Fo/XF7SN1F0Gw89K/qotvAevuKanoMd5yWfeEFlXxMY9Nrqa
+         iC1wxAV4ea6du7RO5vhVuKUYsmARjP3RcTUUqcXZf97J5tAJmIefmx+Z0+dQzObbp4
+         Q3PHNL+M+Y9WMn8cAK0aFPhq5SOMG7EPhPXkpMDc=
+Received: from epcpadp1 (unknown [182.195.40.11]) by epcas1p1.samsung.com
+        (KnoxPortal) with ESMTP id
+        20200612023502epcas1p1c157b3977b551021cf2290af43e63356~Xq0Qz5bYo3017330173epcas1p1J;
+        Fri, 12 Jun 2020 02:35:02 +0000 (GMT)
 Mime-Version: 1.0
-Subject: Re: [RFC PATCH 2/5] scsi: ufs: Add UFS-feature layer
+Subject: Re: [RFC PATCH 3/5] scsi: ufs: Introduce HPB module
 Reply-To: daejun7.park@samsung.com
 From:   Daejun Park <daejun7.park@samsung.com>
 To:     Bart Van Assche <bvanassche@acm.org>,
@@ -69,128 +63,241 @@ CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
         BoRam Shin <boram.shin@samsung.com>
 X-Priority: 3
 X-Content-Kind-Code: NORMAL
-In-Reply-To: <1319810e-a323-c022-5e27-902f88cefe8f@acm.org>
+In-Reply-To: <76831c81-7879-8be7-54a4-ca6bfa68c30e@acm.org>
 X-CPGS-Detection: blocking_info_exchange
 X-Drm-Type: N,general
 X-Msg-Generator: Mail
 X-Msg-Type: PERSONAL
 X-Reply-Demand: N
-Message-ID: <20200612022759epcms2p47929b76eb2e809240f415c19f9383f92@epcms2p4>
-Date:   Fri, 12 Jun 2020 11:27:59 +0900
-X-CMS-MailID: 20200612022759epcms2p47929b76eb2e809240f415c19f9383f92
+Message-ID: <336371513.41591929302700.JavaMail.epsvc@epcpadp1>
+Date:   Fri, 12 Jun 2020 11:29:53 +0900
+X-CMS-MailID: 20200612022953epcms2p6ba18adf3e029bcab69d1382a6ec82b00
 Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: AUTO_CONFIDENTIAL
 X-CPGSPASS: Y
 X-CPGSPASS: Y
-CMS-TYPE: 102P
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrLJsWRmVeSWpSXmKPExsWy7bCmqa7Bi0dxBvsOiVhsvPuK1eLBvG1s
-        FnvbTrBbvPx5lc3i4MNOFovDt9+xW0z78JPZ4tP6ZawWLw9pWqx6EG7R27+VzWLRjW1MFpd3
-        zWGz6L6+g81i+fF/TBYTXi5hsVi69SajRef0NSwWH3rqLBYt3M3iIOJx+Yq3x+W+XiaPxXte
-        MnlMWHSA0aPl5H4Wj+/rO9g8Pj69xeLRt2UVo8fnTXIe7Qe6mQK4onJsMlITU1KLFFLzkvNT
-        MvPSbZW8g+Od403NDAx1DS0tzJUU8hJzU22VXHwCdN0yc4CeU1IoS8wpBQoFJBYXK+nb2RTl
-        l5akKmTkF5fYKqUWpOQUGBoW6BUn5haX5qXrJefnWhkaGBiZAlUm5GT8u32SveCmSMXVzR/Z
-        Ghi7BLoYOTkkBEwkThxYzdjFyMUhJLCDUeL+8WNADgcHr4CgxN8dwiA1wgK2EhfXLGEGsYUE
-        lCTWX5zFDhHXk7j1cA0jiM0moCMx/cR9sLiIwEQWief7XUFmMgt8Y5LYfPEIG8QyXokZ7U9Z
-        IGxpie3Lt4Lt4hSwlvj/SAwirCHxY1kvM4QtKnFz9Vt2GPv9sfmMELaIROu9s1A1ghIPfu6G
-        iktKHNv9gQnCrpfYeucX2F8SAj2MEod33mKFSOhLXOvYCHYDr4CvxJxrEMtYBFQlZrzfAdXs
-        IvGi5T9YPbOAvMT2t3OYQe5kFtCUWL9LH8SUEFCWOHKLBearho2/2dHZzAJ8Eh2H/8LFd8x7
-        AjVdTWLdz/VMExiVZyECehaSXbMQdi1gZF7FKJZaUJybnlpsVGCMHLebGMHpXMt9B+OMtx/0
-        DjEycTAeYpTgYFYS4RUUfxgnxJuSWFmVWpQfX1Sak1p8iNEU6MuJzFKiyfnAjJJXEm9oamRm
-        ZmBpamFqZmShJM5bbHUhTkggPbEkNTs1tSC1CKaPiYNTqoGpRHGD1g9n7dTfa5Tb5uqcWsCp
-        WeXkdunn/TCxuHM/GP4p3jH6eUZRy6d0zWpDNfnLTYFvf1xu/K5Q+/rJTpubO7IvxCZZP/Bn
-        0Np8f31C7qS4M/+Nuoyyf9YqnBSsFjkzucW+qfdjHqu/vtia4nuF37qeXX3DmHOQ+a3Q+44d
-        ke088s9rmLqriv2+ih/da1TZkf752x+Xp9EhxXsDX6VfDjzpErW28OxxAa3J614X3WLuP7NM
-        Qvmk1vng8vSyH4vk/Pb4G9t8y3J4HeUoHyt2bv4nrcvdcxYtftf9f7lUCcfjQ6pP7Ux9+6T0
-        gkJNJzwodGwROiE2u3dGM9POZTecM4v2vzh9NqzlwuJvCgeUWIozEg21mIuKEwFtWO/BcAQA
-        AA==
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
+X-Hop-Count: 3
 X-CMS-RootMailID: 20200605011604epcms2p8bec8ef6682583d7248dc7d9dc1bfc882
-References: <1319810e-a323-c022-5e27-902f88cefe8f@acm.org>
+References: <76831c81-7879-8be7-54a4-ca6bfa68c30e@acm.org>
+        <336371513.41591320902369.JavaMail.epsvc@epcpadp1>
         <963815509.21591320301642.JavaMail.epsvc@epcpadp1>
         <231786897.01591320001492.JavaMail.epsvc@epcpadp1>
-        <336371513.41591320902369.JavaMail.epsvc@epcpadp1>
-        <CGME20200605011604epcms2p8bec8ef6682583d7248dc7d9dc1bfc882@epcms2p4>
+        <231786897.01591322101492.JavaMail.epsvc@epcpadp1>
+        <CGME20200605011604epcms2p8bec8ef6682583d7248dc7d9dc1bfc882@epcms2p6>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bart,
+> > +  if (total_srgn_cnt != 0) {
+> > +    dev_err(hba->dev, "ufshpb(%d) error total_subregion_count %d",
+> > +      hpb->lun, total_srgn_cnt);
+> > +    goto release_srgn_table;
+> > +  }
+> > +
+> > +  return 0;
+> > +release_srgn_table:
+> > +  for (i = 0; i < rgn_idx; i++) {
+> > +    rgn = rgn_table + i;
+> > +    if (rgn->srgn_tbl)
+> > +      kvfree(rgn->srgn_tbl);
+> > +  }
 
-On 2020-06-04 18:30, Daejun Park wrote:
-> > +inline void ufsf_slave_configure(struct ufs_hba *hba,
-> > +         struct scsi_device *sdev)
-> > +{
-> > +  /* skip well-known LU */
-> > +  if (sdev->lun >= UFS_UPIU_MAX_UNIT_NUM_ID)
-> > +    return;
-> > +
-> > +  if (!(hba->dev_info.b_ufs_feature_sup & UFS_FEATURE_SUPPORT_HPB_BIT))
-> > +    return;
-> > +
-> > +  atomic_inc(&hba->ufsf.slave_conf_cnt);
-> > +  smp_mb__after_atomic(); /* for slave_conf_cnt */
-> > +
-> > +  /* waiting sdev init.*/
-> > +  if (waitqueue_active(&hba->ufsf.sdev_wait))
-> > +    wake_up(&hba->ufsf.sdev_wait);
-> > +}
+> Please insert a blank line above goto labels as is done in most of the
+> kernel code.
+OK, I will fix it.
 
-> Guarding a wake_up() call with a waitqueue_active() check is an
-> anti-pattern. Please don't do that and call wake_up() directly.
-> Additionally, wake_up() includes a barrier if it wakes up a kernel
-> thread so the smp_mb__after_atomic() can be left out if the
-> waitqueue_active() call is removed.
-OK, I will change it.
-
-> > +/**
-> > + * struct ufsf_operation - UFS feature specific callbacks
-> > + * @prep_fn: called after construct upiu structure
-> > + * @reset: called after proving hba
-                           ^^^^^^^
-> Is this a typo? Should "proving" perhaps be changed into "probing"?
-Yes, I will change.
-
-> > +struct ufshpb_driver {
-> > +  struct device_driver drv;
-> > +  struct list_head lh_hpb_lu;
-> > +
-> > +  struct ufsf_operation ufshpb_ops;
-> > +
-> > +  /* memory management */
-> > +  struct kmem_cache *ufshpb_mctx_cache;
-> > +  mempool_t *ufshpb_mctx_pool;
-> > +  mempool_t *ufshpb_page_pool;
-> > +
-> > +  struct workqueue_struct *ufshpb_wq;
+> > +static struct device_attribute ufshpb_sysfs_entries[] = {
+> > +  __ATTR(hit_count, 0444, ufshpb_sysfs_show_hit_cnt, NULL),
+> > +  __ATTR(miss_count, 0444, ufshpb_sysfs_show_miss_cnt, NULL),
+> > +  __ATTR(rb_noti_count, 0444, ufshpb_sysfs_show_rb_noti_cnt, NULL),
+> > +  __ATTR(rb_active_count, 0444, ufshpb_sysfs_show_rb_active_cnt, NULL),
+> > +  __ATTR(rb_inactive_count, 0444, ufshpb_sysfs_show_rb_inactive_cnt,
+> > +         NULL),
+> > +  __ATTR(map_req_count, 0444, ufshpb_sysfs_show_map_req_cnt, NULL),
+> > +  __ATTR_NULL
 > > +};
 
-> Why is a dedicated workqueue needed? Why are the standard workqueues not
-> good enough?
-The map_work handles map related operations, including IO operations. So, adding
-this task to the standard WQ can interfere with other jobs and degrade HPB related performance.
+> Please use __ATTR_RO() where appropriate.
+They are only readable attributes. So I changed the code to use __ATTR_RO.
 
-
-> > @@ -2525,6 +2525,8 @@ static int ufshcd_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
-> >  
-> >    ufshcd_comp_scsi_upiu(hba, lrbp);
-> >  
-> > +  ufsf_ops_prep_fn(hba, lrbp);
+> > +static int ufshpb_create_sysfs(struct ufs_hba *hba, struct ufshpb_lu *hpb)
+> > +{
+> > +  struct device_attribute *attr;
+> > +  int ret;
 > > +
-> >    err = ufshcd_map_sg(hba, lrbp);
-> >    if (err) {
-> >      lrbp->cmd = NULL;
+> > +  device_initialize(&hpb->hpb_lu_dev);
+> > +
+> > +  ufshpb_stat_init(hpb);
+> > +
+> > +  hpb->hpb_lu_dev.parent = get_device(&hba->ufsf.hpb_dev);
+> > +  hpb->hpb_lu_dev.release = ufshpb_dev_release;
+> > +  dev_set_name(&hpb->hpb_lu_dev, "ufshpb_lu%d", hpb->lun);
+> > +
+> > +  ret = device_add(&hpb->hpb_lu_dev);
+> > +  if (ret) {
+> > +    dev_err(hba->dev, "ufshpb(%d) device_add failed",
+> > +      hpb->lun);
+> > +    return -ENODEV;
+> > +  }
+> > +
+> > +  for (attr = ufshpb_sysfs_entries; attr->attr.name != NULL; attr++) {
+> > +    if (device_create_file(&hpb->hpb_lu_dev, attr))
+> > +      dev_err(hba->dev, "ufshpb(%d) %s create file error\n",
+> > +        hpb->lun, attr->attr.name);
+> > +  }
+> > +
+> > +  return 0;
+> > +}
 
-> What happens if a SCSI command is retried and hence ufsf_ops_prep_fn()
-> is called multiple times for the same SCSI command?
-Developers of UFS features should implement it so that prep_fn does not have
-any problems even if it processes the same SCSI command multiple times.
-In HPB feature, prep_fn modifies only upiu  structure. So it is ok to call
-it multiple times because the upiu is rebuilt from ufshcd_comp_scsi_upiu().
+> This is the wrong way to create sysfs attributes. Please set the
+> 'groups' member of struct device instead of using a loop to create sysfs
+> attributes. The former approach is compatible with udev but the latter
+> approach is not.
+OK, I changed to create attributes without loop.
+
+> > +static void ufshpb_probe_async(void *data, async_cookie_t cookie)
+> > +{
+> > +  struct ufshpb_dev_info hpb_dev_info = { 0 };
+> > +  struct ufs_hba *hba = data;
+> > +  char *desc_buf;
+> > +  int ret;
+> > +
+> > +  desc_buf = kzalloc(QUERY_DESC_MAX_SIZE, GFP_KERNEL);
+> > +  if (!desc_buf)
+> > +    goto release_desc_buf;
+> > +
+> > +  ret = ufshpb_get_dev_info(hba, &hpb_dev_info, desc_buf);
+> > +  if (ret)
+> > +    goto release_desc_buf;
+> > +
+> > +  /*
+> > +   * Because HPB driver uses scsi_device data structure,
+> > +   * we should wait at this point until finishing initialization of all
+> > +   * scsi devices. Even if timeout occurs, HPB driver will search
+> > +   * the scsi_device list on struct scsi_host (shost->__host list_head)
+> > +   * and can find out HPB logical units in all scsi_devices
+> > +   */
+> > +  wait_event_timeout(hba->ufsf.sdev_wait,
+> > +         (atomic_read(&hba->ufsf.slave_conf_cnt)
+> > +        == hpb_dev_info.num_lu),
+> > +         SDEV_WAIT_TIMEOUT);
+> > +
+> > +  dev_dbg(hba->dev, "ufshpb: slave count %d, lu count %d\n",
+> > +    atomic_read(&hba->ufsf.slave_conf_cnt), hpb_dev_info.num_lu);
+> > +
+> > +  ufshpb_scan_hpb_lu(hba, &hpb_dev_info, desc_buf);
+> > +release_desc_buf:
+> > +  kfree(desc_buf);
+> > +}
+
+> What happens if two LUNs are added before the above code is woken up?
+> Will that perhaps cause the wait_event_timeout() call to wait forever?
+I don't think it is problem. I think that the wait_event_timeout() will
+check the condition before waiting.
+
+> > +static int ufshpb_probe(struct device *dev)
+> > +{
+> > +  struct ufs_hba *hba;
+> > +  struct ufsf_feature_info *ufsf;
+> > +
+> > +  if (dev->type != &ufshpb_dev_type)
+> > +    return -ENODEV;
+> > +
+> > +  ufsf = container_of(dev, struct ufsf_feature_info, hpb_dev);
+> > +  hba = container_of(ufsf, struct ufs_hba, ufsf);
+> > +
+> > +  async_schedule(ufshpb_probe_async, hba);
+> > +  return 0;
+> > +}
+
+> So this is an asynchronous probe that is not visible to the device
+> driver core? Could the PROBE_PREFER_ASYNCHRONOUS flag have been used
+> instead to make device probing asynchronous?
+I added the PROBE_PREFER_ASYNCHRONOUS flag to code and changed it to 
+probe synchronously.
+ 
+> > +static int ufshpb_remove(struct device *dev)
+> > +{
+> > +  struct ufshpb_lu *hpb, *n_hpb;
+> > +  struct ufsf_feature_info *ufsf;
+> > +  struct scsi_device *sdev;
+> > +
+> > +  ufsf = container_of(dev, struct ufsf_feature_info, hpb_dev);
+> > +
+> > +  dev_set_drvdata(&ufsf->hpb_dev, NULL);
+> > +
+> > +  list_for_each_entry_safe(hpb, n_hpb, &ufshpb_drv.lh_hpb_lu,
+> > +         list_hpb_lu) {
+> > +    ufshpb_set_state(hpb, HPB_FAILED);
+> > +
+> > +    sdev = hpb->sdev_ufs_lu;
+> > +    sdev->hostdata = NULL;
+> > +
+> > +    device_del(&hpb->hpb_lu_dev);
+> > +
+> > +    dev_info(&hpb->hpb_lu_dev, "hpb_lu_dev refcnt %d\n",
+> > +       kref_read(&hpb->hpb_lu_dev.kobj.kref));
+> > +    put_device(&hpb->hpb_lu_dev);
+> > +  }
+> > +  dev_info(dev, "ufshpb: remove success\n");
+> > +
+> > +  return 0;
+> > +}
+
+> Where is the code that waits for the asynchronously scheduled probe
+> calls to finish?
+I changed it to probe without async_schedule.
+
+> > diff --git a/drivers/scsi/ufs/ufshpb.h b/drivers/scsi/ufs/ufshpb.h
+> > new file mode 100644
+> > index 000000000000..c6dd88e00849
+> > --- /dev/null
+> > +++ b/drivers/scsi/ufs/ufshpb.h
+> > @@ -0,0 +1,185 @@
+> > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > +/*
+> > + * Universal Flash Storage Host Performance Booster
+> > + *
+> > + * Copyright (C) 2017-2018 Samsung Electronics Co., Ltd.
+> > + *
+> > + * Authors:
+> > + *  Yongmyung Lee <ymhungry.lee@samsung.com>
+> > + *  Jinyoung Choi <j-young.choi@samsung.com>
+> > + *
+> > + * This program is free software; you can redistribute it and/or
+> > + * modify it under the terms of the GNU General Public License
+> > + * as published by the Free Software Foundation; either version 2
+> > + * of the License, or (at your option) any later version.
+> > + * See the COPYING file in the top-level directory or visit
+> > + * <http://www.gnu.org/licenses/gpl-2.0.html>
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + *
+> > + * This program is provided "AS IS" and "WITH ALL FAULTS" and
+> > + * without warranty of any kind. You are solely responsible for
+> > + * determining the appropriateness of using and distributing
+> > + * the program and assume all risks associated with your exercise
+> > + * of rights with respect to the program, including but not limited
+> > + * to infringement of third party rights, the risks and costs of
+> > + * program errors, damage to or loss of data, programs or equipment,
+> > + * and unavailability or interruption of operations. Under no
+> > + * circumstances will the contributor of this Program be liable for
+> > + * any damages of any kind arising from your use or distribution of
+> > + * this program.
+> > + *
+> > + * The Linux Foundation chooses to take subject only to the GPLv2
+> > + * license terms, and distributes only under these terms.
+> > + */
+
+> Please use an SPDX declaration instead of the full GPLv2 text.
+OK, I will.
 
 Thanks,
-
 Daejun.
+
 
