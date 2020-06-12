@@ -2,277 +2,532 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D91C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2583DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 101D12087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:17:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAA6220842
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:21:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbgFLARK (ORCPT
+        id S1726377AbgFLAVE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 20:17:10 -0400
-Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:53937 "EHLO
-        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726285AbgFLARK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 20:17:10 -0400
-Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
- EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
- 15.0.1156.6; Thu, 11 Jun 2020 17:17:05 -0700
-Received: from localhost (unknown [10.200.193.92])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 7A01A40CBD;
-        Thu, 11 Jun 2020 17:17:09 -0700 (PDT)
-Date:   Thu, 11 Jun 2020 17:17:09 -0700
-From:   Matt Helsley <mhelsley@vmware.com>
-To:     Adrian Reber <areber@redhat.com>
-CC:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        Nicolas Viennot <Nicolas.Viennot@twosigma.com>,
-        =?utf-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>,
-        Kamil Yurtsever <kyurtsever@google.com>,
-        Dirk Petersen <dipeit@gmail.com>,
-        Christine Flood <chf@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        Serge Hallyn <serge@hallyn.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Aaron Goidel <acgoide@tycho.nsa.gov>,
-        <linux-security-module@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <selinux@vger.kernel.org>,
-        Eric Paris <eparis@parisplace.org>,
-        Jann Horn <jannh@google.com>
-Subject: Re: [PATCH] capabilities: Introduce CAP_RESTORE
-Message-ID: <20200612001709.GA25598@rlwimi.vmware.com>
-Mail-Followup-To: Matt Helsley <mhelsley@vmware.com>,
-        Adrian Reber <areber@redhat.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        Nicolas Viennot <Nicolas.Viennot@twosigma.com>,
-        =?utf-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>,
-        Kamil Yurtsever <kyurtsever@google.com>,
-        Dirk Petersen <dipeit@gmail.com>, Christine Flood <chf@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        Serge Hallyn <serge@hallyn.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Sargun Dhillon <sargun@sargun.me>, Arnd Bergmann <arnd@arndb.de>,
-        Aaron Goidel <acgoide@tycho.nsa.gov>,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-        selinux@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
-        Jann Horn <jannh@google.com>
-References: <20200522055350.806609-1-areber@redhat.com>
+        Thu, 11 Jun 2020 20:21:04 -0400
+Received: from mga02.intel.com ([134.134.136.20]:60439 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726285AbgFLAVE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 20:21:04 -0400
+IronPort-SDR: DuxJSfxE0WyA0Wrs6VNlrgOGkvV0luv1csBr9YD9FHj/RNUD93U4FgvuzL0l+1XFNLMHS1dcYF
+ 6NIw38ei2SzQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 17:21:02 -0700
+IronPort-SDR: P/Xh06Pk3C4AmHegX/v/+LNnTO0Kn6kOU86gQXPm1PXkhRc/6EhwTREBhF8lf4KJtoDLgvG8dJ
+ zpoc0V8UGlvQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,501,1583222400"; 
+   d="scan'208";a="275507704"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga006.jf.intel.com with ESMTP; 11 Jun 2020 17:21:02 -0700
+Date:   Thu, 11 Jun 2020 17:27:27 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>, jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v2 1/3] docs: IOMMU user API
+Message-ID: <20200611172727.78dbb822@jacob-builder>
+In-Reply-To: <20200611144047.79613c32@x1.home>
+References: <1591848735-12447-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1591848735-12447-2-git-send-email-jacob.jun.pan@linux.intel.com>
+        <20200611094741.6d118fa8@w520.home>
+        <20200611125205.1e0280d3@jacob-builder>
+        <20200611144047.79613c32@x1.home>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200522055350.806609-1-areber@redhat.com>
-Received-SPF: None (EX13-EDG-OU-002.vmware.com: mhelsley@vmware.com does not
- designate permitted sender hosts)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 07:53:50AM +0200, Adrian Reber wrote:
-> This enables CRIU to checkpoint and restore a process as non-root.
-> 
-> Over the last years CRIU upstream has been asked a couple of time if it
-> is possible to checkpoint and restore a process as non-root. The answer
-> usually was: 'almost'.
-> 
-> The main blocker to restore a process was that selecting the PID of the
-> restored process, which is necessary for CRIU, is guarded by CAP_SYS_ADMIN.
-> 
-> In the last two years the questions about checkpoint/restore as non-root
-> have increased and especially in the last few months we have seen
-> multiple people inventing workarounds.
-> 
-> The use-cases so far and their workarounds:
-> 
->  * Checkpoint/Restore in an HPC environment in combination with
->    a resource manager distributing jobs. Users are always running
->    as non root, but there was the desire to provide a way to
->    checkpoint and restore long running jobs.
->    Workaround: setuid wrapper to start CRIU as root as non-root
->    https://github.com/FredHutch/slurm-examples/blob/master/checkpointer/lib/checkpointer/checkpointer-suid.c
->  * Another use case to checkpoint/restore processes as non-root
->    uses as workaround a non privileged process which cycles through
->    PIDs by calling fork() as fast as possible with a rate of
->    100,000 pids/s instead of writing to ns_last_pid
->    https://github.com/twosigma/set_ns_last_pid
->  * Fast Java startup using checkpoint/restore.
->    We have been in contact with JVM developers who are integrating
->    CRIU into a JVM to decrease the startup time.
->    Workaround so far: patch out CAP_SYS_ADMIN checks in the kernel
->  * Container migration as non root. There are people already
->    using CRIU to migrate containers as non-root. The solution
->    there is to run it in a user namespace. So if you are able
->    to carefully setup your environment with the namespaces
->    it is already possible to restore a container/process as non-root.
->    Unfortunately it is not always possible to setup an environment
->    in such a way and for easier access to non-root based container
->    migration this patch is also required.
-> 
-> There are probably a few more things guarded by CAP_SYS_ADMIN required
-> to run checkpoint/restore as non-root, but by applying this patch I can
-> already checkpoint and restore processes as non-root. As there are
-> already multiple workarounds I would prefer to do it correctly in the
-> kernel to avoid that CRIU users are starting to invent more workarounds.
-> 
-> I have used the following tests to verify that this change works as
-> expected by setting the new capability CAP_RESTORE on the two resulting
-> test binaries:
-> 
-> $ cat ns_last_pid.c
->  // http://efiop-notes.blogspot.com/2014/06/how-to-set-pid-using-nslastpid.html
->  #include <stdio.h>
->  #include <stdlib.h>
->  #include <string.h>
->  #include <sys/file.h>
->  #include <sys/types.h>
->  #include <unistd.h>
-> 
-> int main(int argc, char *argv[])
-> {
-> 	pid_t pid, new_pid;
-> 	char buf[32];
-> 	int fd;
-> 
-> 	if (argc != 2)
-> 		return 1;
-> 
-> 	printf("Opening ns_last_pid...\n");
-> 	fd = open("/proc/sys/kernel/ns_last_pid", O_RDWR | O_CREAT, 0644);
-> 	if (fd < 0) {
-> 		perror("Cannot open ns_last_pid");
-> 		return 1;
-> 	}
-> 
-> 	printf("Locking ns_last_pid...\n");
-> 	if (flock(fd, LOCK_EX)) {
-> 		close(fd);
-> 		printf("Cannot lock ns_last_pid\n");
-> 		return 1;
-> 	}
-> 
-> 	pid = atoi(argv[1]);
-> 	snprintf(buf, sizeof(buf), "%d", pid - 1);
-> 	printf("Writing pid-1 to ns_last_pid...\n");
-> 	if (write(fd, buf, strlen(buf)) != strlen(buf)) {
-> 		printf("Cannot write to buf\n");
-> 		return 1;
-> 	}
-> 
-> 	printf("Forking...\n");
-> 	new_pid = fork();
-> 	if (new_pid == 0) {
-> 		printf("I am the child!\n");
-> 		exit(0);
-> 	} else if (new_pid == pid)
-> 		printf("I am the parent. My child got the pid %d!\n", new_pid);
-> 	else
-> 		printf("pid (%d) does not match expected pid (%d)\n", new_pid, pid);
-> 
-> 	printf("Cleaning up...\n");
-> 	if (flock(fd, LOCK_UN))
-> 		printf("Cannot unlock\n");
-> 	close(fd);
-> 	return 0;
-> }
-> $ id -u; /home/libcap/ns_last_pid 300000
-> 1001
-> Opening ns_last_pid...
-> Locking ns_last_pid...
-> Writing pid-1 to ns_last_pid...
-> Forking...
-> I am the parent. My child got the pid 300000!
-> I am the child!
-> Cleaning up...
-> 
-> For the clone3() based approach:
-> $ cat clone3_set_tid.c
->  #define _GNU_SOURCE
->  #include <linux/sched.h>
->  #include <stdint.h>
->  #include <stdio.h>
->  #include <stdlib.h>
->  #include <string.h>
->  #include <sys/types.h>
->  #include <sys/stat.h>
->  #include <sys/syscall.h>
->  #include <unistd.h>
-> 
->  #define ptr_to_u64(ptr) ((__u64)((uintptr_t)(ptr)))
-> 
-> int main(int argc, char *argv[])
-> {
-> 	struct clone_args c_args = { };
-> 	pid_t pid, new_pid;
-> 
-> 	if (argc != 2)
-> 		return 1;
-> 
-> 	pid = atoi(argv[1]);
-> 	c_args.set_tid = ptr_to_u64(&pid);
-> 	c_args.set_tid_size = 1;
-> 
-> 	printf("Forking...\n");
-> 	new_pid = syscall(__NR_clone3, &c_args, sizeof(c_args));
+On Thu, 11 Jun 2020 14:40:47 -0600
+Alex Williamson <alex.williamson@redhat.com> wrote:
 
-(Note: I'm going to call the capability CAP_RESTORE but I think this
-applies regardless of whether the permissions stay with CAP_SYS_ADMIN..)
+> On Thu, 11 Jun 2020 12:52:05 -0700
+> Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
+> 
+> > Hi Alex,
+> > 
+> > On Thu, 11 Jun 2020 09:47:41 -0600
+> > Alex Williamson <alex.williamson@redhat.com> wrote:
+> >   
+> > > On Wed, 10 Jun 2020 21:12:13 -0700
+> > > Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
+> > >     
+> > > > IOMMU UAPI is newly introduced to support communications between
+> > > > guest virtual IOMMU and host IOMMU. There has been lots of
+> > > > discussions on how it should work with VFIO UAPI and userspace
+> > > > in general.
+> > > > 
+> > > > This document is indended to clarify the UAPI design and usage.
+> > > > The mechenics of how future extensions should be achieved are
+> > > > also covered in this documentation.
+> > > > 
+> > > > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> > > > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > > > ---
+> > > >  Documentation/userspace-api/iommu.rst | 210
+> > > > ++++++++++++++++++++++++++++++++++ 1 file changed, 210
+> > > > insertions(+) create mode 100644
+> > > > Documentation/userspace-api/iommu.rst
+> > > > 
+> > > > diff --git a/Documentation/userspace-api/iommu.rst
+> > > > b/Documentation/userspace-api/iommu.rst new file mode 100644
+> > > > index 000000000000..e95dc5a04a41
+> > > > --- /dev/null
+> > > > +++ b/Documentation/userspace-api/iommu.rst
+> > > > @@ -0,0 +1,210 @@
+> > > > +.. SPDX-License-Identifier: GPL-2.0
+> > > > +.. iommu:
+> > > > +
+> > > > +=====================================
+> > > > +IOMMU Userspace API
+> > > > +=====================================
+> > > > +
+> > > > +IOMMU UAPI is used for virtualization cases where
+> > > > communications are +needed between physical and virtual IOMMU
+> > > > drivers. For native +usage, IOMMU is a system device which does
+> > > > not need to communicate +with user space directly.
+> > > > +
+> > > > +The primary use cases are guest Shared Virtual Address (SVA)
+> > > > and +guest IO virtual address (IOVA), wherein virtual IOMMU
+> > > > (vIOMMU) is +required to communicate with the physical IOMMU in
+> > > > the host. +
+> > > > +.. contents:: :local:
+> > > > +
+> > > > +Functionalities
+> > > > +====================================================
+> > > > +Communications of user and kernel involve both directions. The
+> > > > +supported user-kernel APIs are as follows:
+> > > > +
+> > > > +1. Alloc/Free PASID
+> > > > +2. Bind/unbind guest PASID (e.g. Intel VT-d)
+> > > > +3. Bind/unbind guest PASID table (e.g. ARM sMMU)
+> > > > +4. Invalidate IOMMU caches
+> > > > +5. Service page request
+> > > > +
+> > > > +Requirements
+> > > > +====================================================
+> > > > +The IOMMU UAPIs are generic and extensible to meet the
+> > > > following +requirements:
+> > > > +
+> > > > +1. Emulated and para-virtualised vIOMMUs
+> > > > +2. Multiple vendors (Intel VT-d, ARM sMMU, etc.)
+> > > > +3. Extensions to the UAPI shall not break existing user space
+> > > > +
+> > > > +Interfaces
+> > > > +====================================================
+> > > > +Although the data structures defined in IOMMU UAPI are
+> > > > self-contained, +there is no user API functions introduced.
+> > > > Instead, IOMMU UAPI is +designed to work with existing user
+> > > > driver frameworks such as VFIO. +
+> > > > +Extension Rules & Precautions
+> > > > +-----------------------------
+> > > > +When IOMMU UAPI gets extended, the data structures can *only*
+> > > > be +modified in two ways:
+> > > > +
+> > > > +1. Adding new fields by re-purposing the padding[] field. No
+> > > > size change. +2. Adding new union members at the end. May
+> > > > increase in size. +
+> > > > +No new fields can be added *after* the variable size union in
+> > > > that it +will break backward compatibility when offset moves.
+> > > > In both cases, a +new flag must be accompanied with a new field
+> > > > such that the IOMMU +driver can process the data based on the
+> > > > new flag. Version field is +only reserved for the unlikely
+> > > > event of UAPI upgrade at its entirety. +
+> > > > +It's *always* the caller's responsibility to indicate the size
+> > > > of the +structure passed by setting argsz appropriately.
+> > > > +
+> > > > +When IOMMU UAPI extension results in size increase, user such
+> > > > as VFIO +has to handle the following scenarios:
+> > > > +
+> > > > +1. User and kernel has exact size match
+> > > > +2. An older user with older kernel header (smaller UAPI size)
+> > > > running on a
+> > > > +   newer kernel (larger UAPI size)
+> > > > +3. A newer user with newer kernel header (larger UAPI size)
+> > > > running
+> > > > +   on a older kernel.
+> > > > +4. A malicious/misbehaving user pass illegal/invalid size but
+> > > > within
+> > > > +   range. The data may contain garbage.
+> > > > +
+> > > > +
+> > > > +Feature Checking
+> > > > +----------------
+> > > > +While launching a guest with vIOMMU, it is important to ensure
+> > > > that host +can support the UAPI data structures to be used for
+> > > > vIOMMU-pIOMMU +communications. Without the upfront compatibility
+> > > > checking, future +faults are difficult to report even in normal
+> > > > conditions. For example, +TLB invalidations should always
+> > > > succeed from vIOMMU's +perspective. There is no architectural
+> > > > way to report back to the vIOMMU +if the UAPI data is
+> > > > incompatible. For this reason the following IOMMU +UAPIs cannot
+> > > > fail: +
+> > > > +1. Free PASID
+> > > > +2. Unbind guest PASID
+> > > > +3. Unbind guest PASID table (SMMU)
+> > > > +4. Cache invalidate
+> > > > +5. Page response
+> > > > +
+> > > > +User applications such as QEMU is expected to import kernel
+> > > > UAPI +headers. Only backward compatibility is supported. For
+> > > > example, an +older QEMU (with older kernel header) can run on
+> > > > newer kernel. Newer +QEMU (with new kernel header) may fail on
+> > > > older kernel.      
+> > > 
+> > > "Build your user application against newer kernels and it may
+> > > break on older kernels" is not a great selling point of this
+> > > UAPI.  Clearly new features may not be available on older kernels
+> > > and an application that depends on a newer feature may be
+> > > restricted to newer kernels. 
+> > Perhaps "fail on older kernel" is not the right statement. I meant
+> > to say "Newer QEMU (with new kernel header) may fail the
+> > compatibility check on older kernel". Here compatibility check
+> > involves argsz check and feature check.
+> > 
+> > Does it sound right?  
+> 
+> If simply recompiling QEMU against a new kernel header causes it to
+> fail on an old kernel, we've done something very wrong in this UAPI.
+> 
 
-I haven't fully reviewed the discussion of the security consequences but
-my sense is this would require retaining CAP_RESTORE down the entire tree
-of processes being restored so each parent could call clone3() with the
-correct pid value for its child(ren).
+I agree we should make best effort to support the fields in the new
+header that was supported in the older kernel.
 
-Ideally you would drop CAP_RESTORE sooner -- preferrably only one
-process would need it. I think you could do that by changing what you pass
-down; instead of passing down a capability and a pid number, pass down a
-special "reservation" pidfd:
+But there will be cases that new app fails on old kernel if the new
+fields from the new header are used. Do we have consensus on this?
 
-1. Have CAP_RESTORE enable opening a pidfd with the desired pid as a
-   reservation for the pid (i.e. can't use it to signal, wait, ...
-   perhaps these return -EBUSY, -EAGAIN or something...).
+> > > > +
+> > > > +IOMMU vendor driver should report the below features to IOMMU
+> > > > UAPI +consumers (e.g. via VFIO).
+> > > > +
+> > > > +1. IOMMU_NESTING_FEAT_SYSWIDE_PASID
+> > > > +2. IOMMU_NESTING_FEAT_BIND_PGTBL
+> > > > +3. IOMMU_NESTING_FEAT_BIND_PASID_TABLE
+> > > > +4. IOMMU_NESTING_FEAT_CACHE_INVLD
+> > > > +5. IOMMU_NESTING_FEAT_PAGE_REQUEST
+> > > > +
+> > > > +Take VFIO as example, upon request from VFIO user space (e.g.
+> > > > QEMU), +VFIO kernel code shall query IOMMU vendor driver for the
+> > > > support of +the above features. Query result can then be
+> > > > reported back to the +user-space caller. Details can be found in
+> > > > +Documentation/driver-api/vfio.rst.
+> > > > +
+> > > > +
+> > > > +Data Passing Example with VFIO
+> > > > +------------------------------
+> > > > +As the ubiquitous userspace driver framework, VFIO is already
+> > > > IOMMU +aware and share many key concepts such as device model,
+> > > > group, and +protection domain. Other user driver frameworks can
+> > > > also be extended +to support IOMMU UAPI but it is outside the
+> > > > scope of this document. +
+> > > > +In this tight-knit VFIO-IOMMU interface, the ultimate consumer
+> > > > of the +IOMMU UAPI data is the host IOMMU driver. VFIO
+> > > > facilitates user-kernel +transport, capability checking,
+> > > > security, and life cycle management of +process address space
+> > > > ID (PASID). +
+> > > > +Unlike normal user data passed via VFIO UAPI IOTCL, IOMMU
+> > > > driver is the +ultimate consumer of its UAPI data. At VFIO
+> > > > layer, the IOMMU UAPI data +is wrapped in a VFIO UAPI data for
+> > > > sanity checking. It follows the +pattern below:
+> > > > +
+> > > > +::
+> > > > +
+> > > > +   struct {
+> > > > +	__u32 argsz;
+> > > > +	__u32 flags;
+> > > > +	__u8  data[];
+> > > > +  }
+> > > > +
+> > > > +Here data[] contains the IOMMU UAPI data structures.
+> > > > +
+> > > > +In order to determine the size and feature set of the user
+> > > > data, argsz +and flags are also embedded in the IOMMU UAPI data
+> > > > structures. +A "__u32 argsz" field is *always* at the beginning
+> > > > of each structure. +
+> > > > +For example:
+> > > > +::
+> > > > +
+> > > > +   struct iommu_gpasid_bind_data {
+> > > > +	__u32 argsz;
+> > > > +	__u32 version;
+> > > > +	#define IOMMU_PASID_FORMAT_INTEL_VTD	1
+> > > > +	__u32 format;
+> > > > +	#define IOMMU_SVA_GPASID_VAL	(1 << 0)
+> > > > +	__u64 flags;
+> > > > +	__u64 gpgd;
+> > > > +	__u64 hpasid;
+> > > > +	__u64 gpasid;
+> > > > +	__u32 addr_width;
+> > > > +	__u8  padding[12];
+> > > > +	/* Vendor specific data */
+> > > > +	union {
+> > > > +		struct iommu_gpasid_bind_data_vtd vtd;
+> > > > +	};
+> > > > +  };
+> > > > +
+> > > > +Use bind guest PASID as an example, VFIO code shall process
+> > > > IOMMU UAPI +request as follows:
+> > > > +
+> > > > +::
+> > > > +
+> > > > + 1        /* Minsz must include IOMMU UAPI "argsz" of __u32 */
+> > > > + 2        minsz = offsetofend(struct vfio_iommu_type1_bind,
+> > > > flags) +
+> > > > +                              sizeof(u32);      
+> > > 
+> > > In the example structure above:
+> > >     
+> > > > +   struct {
+> > > > +	__u32 argsz;
+> > > > +	__u32 flags;
+> > > > +	__u8  data[];
+> > > > +  }      
+> > > 
+> > > This presumes that vfio does not use flags to identify a different
+> > > layout, for example a field before data or defining a flag that
+> > > provides no data.  IOW, the IOMMU guarantees argsz at the
+> > > beginning of all structures, but let's not limit how vfio chooses
+> > > to bundle that structure.  minsz should be based on flags, which
+> > > we'll evaluate to determine how much more to copy.
+> > >     
+> > Got it, VFIO owns its flags therefore minsz. How about reword the
+> > example data struct as:
+> >    struct {
+> > 	__u32 argsz;
+> > 	__u32 flags;
+> > 	__u8  data[];
+> >   }
+> > 
+> > Here data[] contains the IOMMU UAPI data structures. VFIO has the
+> > freedom to bundle the data as well as parse data size based on its
+> > own flags.
+> > 
+> > In the example code:
+> > 
+> > "Use bind guest PASID as an example, VFIO code shall first
+> > process the flags field to determine the size to copy for IOMMU
+> > UAPI. The flags could indicate different layout of the VFIO data
+> > and the types of IOMMU UAPI data."  
+> 
+> I think this should probably go no further than to say that the IOMMU
+> UAPI data structure is expected to be embedded opaquely into the VFIO
+> API, for example, VFIO may use a structure such as:
+> 
+>     struct {
+>  	__u32 argsz;
+>  	__u32 flags;
+>  	__u8  data[];
+>    }
+> 
+> where data[] contains an IOMMU UAPI structure, including the user
+> provided argsz field relative to that embedded structure.  This format
+> allows VFIO to multiplex multiple IOMMU UAPI interfaces through a
+> reduced set of ioctls.
+> 
+Sounds good, thanks for the summary.
 
-2. Only one process needs CAP_RESTORE -- it can drop CAP_RESTORE after
-   reserving all of the pids but before kicking off the clone3() calls
-   to recreate all of the tasks.
+> > > > UAPI +request as follows:    
+> >   
+> > > > + 3        copy_from_user(&vfio_bind, (void __user *)arg,
+> > > > minsz);
+> > > > + 4
+> > > > + 5        /* Check VFIO argsz */
+> > > > + 6        if (vfio_bind.argsz < minsz)
+> > > > + 7                return -EINVAL;
+> > > > + 8
+> > > > + 9        /* VFIO flags must be included in minsz */
+> > > > + 10        switch (vfio_bind.flags) {
+> > > > + 11        case VFIO_IOMMU_BIND_GUEST_PGTBL:
+> > > > + 12                /*
+> > > > + 13                 * Get the current IOMMU bind GPASID data
+> > > > size,
+> > > > + 14                 * which accounted for the largest union
+> > > > member.
+> > > > + 15                 */
+> > > > + 16                data_size = sizeof(struct
+> > > > iommu_gpasid_bind_data);
+> > > > + 17                iommu_argsz = vfio_bind.argsz - minsz;      
+> > > 
+> > > Note that by including the IOMMU UAPI argsz within minsz, this is
+> > > incorrect.
+> > >     
+> > Good catch, should be:
+> > iommu_argsz = vfio_bind.argsz - minsz - sizeof(u32)
+> >   
+> > > > + 18                if (iommu_argsz > data_size) {
+> > > > + 19                        /* User data > current kernel */
+> > > > + 20                        return -E2BIG;
+> > > > + 21                }      
+> > > 
+> > > Now I see why you're making the claim that QEMU compiled against
+> > > an new kernel may not work on an older kernel.  We can do
+> > > better.  The current sizeof the data structure should be the
+> > > maximum we'll copy from the user, and we can update the user
+> > > provided IOMMU UAPI argsz as we pass it down from the user to
+> > > avoid exposing ourselves to an arbitrarily large user buffer.
+> > > The IOMMU UAPI interfaces should then also use argsz and flags to
+> > > determine whether the data is present for a specified flag. That
+> > > should allow a user application compiled against a newer kernel
+> > > header, but only using features found on older kernels to
+> > > continue to work on older kernels, which seems like a basic
+> > > requirement to me. 
+> > I got your point. But I don't understand why VFIO layer will update
+> > IOMMU argsz, IOMMU layer is not exposed to arbitrary large user
+> > size in that it can not exceed the current UAPI data size.  
+> 
+> I was thinking about the case where userspace is compiled against a
+> newer kernel and might provide argsz = sizeof(struct iommu_uapi_foo')
+> but vfio only knows sizeof(struct iommu_uapi_foo).  We don't want to
+> copy an arbitrary amount of data from userspace, so vfio would use
+> MIN(argsz, sizeof(struct iommu_uapi_foo)) for the copy_from_user().
+> The IOMMU UAPI would then need to depend on the reduced argsz.
+> 
+> But then I thought it even better if VFIO leaves the entire
+> copy_from_user() to the layer consuming it.
+> 
+OK. Sounds good, that was what Kevin suggested also. I just wasn't sure
+how much VFIO wants to inspect, I thought VFIO layer wanted to do a
+sanity check.
 
-3. Pass the pidfd down the tree of restoring processes. Note how the
-   set of specific pids to be created is limited at this point --
-   the software cannot be tricked into recreating processes other pids
-   using a capability, CAP_RESTORE, it doesn't have. You might even set a
-   flag on the pidfd which closes the pidfd in the sender when it's passed
-   over a socket so that only the appropriate processes retain the pidfd.
+Anyway, I will move copy_from_user to iommu uapi layer.
 
-4. The parent can then pass the *reserved* pidfd into clone3(). The
-   reserved pidfd seamlessly turns into a pidfd reference to the child if
-   clone3() succeeds. If it fails the eservation is still consumed -- a
-   given pidfd reserved for clone3() can only be passed to clone3() and
-   succeed once.
+> > I agree we should make effort to allow features found in the older
+> > kernel continue to work.  
+> 
+> That's a requirement.  Breaking existing userspace without following a
+> deprecation model is a bug.
+Sorry I don't understand why it is breaking existing userspace. If a
+userspace is recompiled with new kernel header, it is not *existing*.
 
-Perhaps this scheme could concentrate the need for CAP_SYS_ADMIN
-to one process so maybe it would obviate the need for CAP_RESTORE.
-That said, perhaps there's something that prevents implementing such
-a pidfd or perhaps I have misunderstood what CRIU is doing and this
-pidfd idea isn't workable.
+> But I think so too is the fact that this
+> interface actually specifies and provides an example where simply
+> recompiling existing userspace against a new kernel header where the
+> size of structure may be changed to support a feature will cause that
+> application to fail to run on older kernels.  That's not feasible for
+> a distribution to support.
+> 
+I see your point, my assumption was that app (e.g. QEMU) imports new
+header selectively. The new header must be imported with an intention
+of using the new flags/fields. I guess this may not *always* be true.
+I will add the support for older kernel to run on new header (if no new
+fields/flags are used).
 
-Cheers,
-    -Matt Helsley
+
+Thanks a lot!
+
+> > > > + 22                copy_from_user(&iommu_bind, (void __user *)
+> > > > + 23                               vfio_bind.data, iommu_argsz);
+> > > > + 24               /*
+> > > > + 25                * Deal with trailing bytes that is bigger
+> > > > than user
+> > > > + 26                * provided UAPI size but smaller than the
+> > > > current
+> > > > + 27                * kernel data size. Zero fill the trailing
+> > > > bytes.
+> > > > + 28                */
+> > > > + 29                memset(iommu_bind + iommu_argsz, 0,
+> > > > data_size -
+> > > > + 30                       iommu_argsz;      
+> > > 
+> > > The IOMMU UAPI interface having access to argsz should make this
+> > > unnecessary.  Performing this memset() seems like it suggests to
+> > > the next layer that it can rely on all fields being present and
+> > > valid, which defeats the purpose of argsz.
+> > >     
+> > This memset does not suggest all fields are present and valid. Only
+> > filter out the obvious invalid data based on current size. My
+> > intention is to reduce the burden of checking not eliminate.  
+> 
+> I'm afraid that reducing the burden on the IOMMU UAPI layers leads to
+> reduced visibility which leads to less stringent validation.  We're
+> defining a UAPI layer for the kernel where VFIO just happens to be an
+> interface through to that UAPI.  The UAPI should therefore be
+> providing the validation, not VFIO.  Create a wrapper in the IOMMU
+> UAPI layer if you want to share common validation.
+> 
+> > > > + 31
+> > > > + 32                iommu_sva_bind_gpasid(domain, dev,
+> > > > iommu_bind_data);
+> > > > + 33                break;
+> > > > +
+> > > > +
+> > > > +Case #1 & 2 are supported per backward compatibility rule.
+> > > > +
+> > > > +Case #3 will fail with -E2BIG at line #20. Case      
+> > > 
+> > > This is not acceptable IMO.
+> > >     
+> > Got it. Will copy up to the current data size and let IOMMU driver
+> > handle supported flags/features.
+> >   
+> > > > +Case #4 may result in other error processed by IOMMU vendor
+> > > > driver. However, +the damage shall not exceed the scope of the
+> > > > offending user.      
+> > > 
+> > > This is a concern in this double wrapped interface, the IOMMU UAPI
+> > > layer may expect the vfio layer to validate the data.  Zeroing the
+> > > remainder of the data structure is evidence towards that.  The
+> > > IOMMU UAPI layer needs to consider all of this untrusted, so why
+> > > would we not reflect that by passing a __user pointer through to
+> > > the IOMMU UAPI such that it can copy the data from the user
+> > > itself rather than being mislead that the contents have been
+> > > somehow verified?  Thanks, 
+> > I am OK with IOMMU layer does the copy_from_user. One of my
+> > original thinking was that since some APIs (e.g page response) also
+> > used by in-kernel code, I would avoid user pointer or another
+> > wrapper.
+> > 
+> > Perhaps need to clarify the roles of each layer, IMHO the roles are:
+> > - VFIO
+> > 	1. bundle IOMMU UAPI data with flags & argsz
+> > 	2. sanity check argsz > minsz
+> > 	3. determine the copy_from_user size based on VFIO flags &
+> > argsz
+> > 
+> > - IOMMU UAPI
+> > 	1. check argsz against current kernel IOMMU UAPI data size,
+> > its own minsz
+> > 	2. parse data based on feature/flags
+> > 
+> > So if VFIO already can decide the copy_from_user size as in VFIO.3,
+> > why can't it just do the copy as well. VFIO only checks and ensures
+> > size, nothing specific to the content of IOMMU UAPI. Does the role
+> > partition sound right?  
+> 
+> As above, the only way that this can be a generic UAPI is if VFIO is
+> just a passthrough, otherwise this just becomes VFIO API and we might
+> as well not pretend we're creating a UAPI between the VFIO and IOMMU.
+> If a second user of the UAPI would duplicate the code from VFIO, then
+> it shouldn't be in VFIO.  Thanks,
+> 
+> Alex
+> 
+
+[Jacob Pan]
