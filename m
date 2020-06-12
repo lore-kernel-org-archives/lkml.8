@@ -6,86 +6,96 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3279C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB71C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D201020801
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:31:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D48420835
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:32:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591975882;
-	bh=d9swAF1lBTUQKkD5upsXh8wG4RhL83NxrON4es3zSVU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PRO3POHqL9S0xuSpOUqhykQVxRZE/0ii2RyR8wjA/iESw1sS0Qxgvip+cpll0xFVZ
-	 IWWUX0yGf07QE0JKM99Np5F8nefbyzCW9FUygAsgapOdYsBTQmd4mmgQc7fHzGfbDk
-	 wwg4v8ql4362CRCSStVn5/LnNVEecHQM6oaACYa0=
+	s=default; t=1591975948;
+	bh=1bzFs/3D9de07O+VVT9Y1Exb8KtBe+TWOs5uYgeoTAs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=U/9Yu3HF1oYO9fpYsScnUs6TOh8MNvpjuqz7hWYADr0Uhf3Kg6kJ65mScyFpOoTv3
+	 LX/8oyk3gbLnGB5psOW0rg30RqfxKx5F7pS1EAwrOlUvkb1ajINbrSxjfBwyVO5fFa
+	 rtQvt3KgEt/LbWifRCf/DIFdyKCag9oGkq6nJz94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbgFLPbV (ORCPT
+        id S1726514AbgFLPc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 11:31:21 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:43869 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726085AbgFLPbU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 11:31:20 -0400
-Received: by mail-lj1-f194.google.com with SMTP id n24so11502084lji.10;
-        Fri, 12 Jun 2020 08:31:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=uQ85dD+vKUnEGdAVOTFoEvlnzXCa2uFEesLCGgB0kCQ=;
-        b=WpEqnePT3wbb9MbpWk/aeLPp31mIZJeYeexehHNriKxgc59eOJEA1yYPmM+IRtapZz
-         oMAdbPdWwgPzLxIkbgbpP4slQmdsJMnrUPkPIWwKGyDTOZqP/MmMbDmvS8QCw8Qn7DPi
-         sf6ZbiCk2w+Xpl4oTN1NsM1yO6HV2m/i30u9v72/LwLeWc6yaG3S2bZABIyKWUoK/EOt
-         Pq6xzrGXClAMs3Qz+1an+ao1gqw10R7iqWm4SgSMIK9wAOK4MhPJqiVpWK5GY4c5KCt5
-         +e/zXPnpRjeFFd2LBe9EHhdqcqhB2QXV7k9TQijJ4LzEpbvOeWPvJZ500y/mk3gz88rq
-         ecUA==
-X-Gm-Message-State: AOAM531Xn9W0ylNliNpmcetvdI+K6HPwrjpDERZmxtGzGUK6ODXQ+tec
-        1MlIC87IT+L2fhDtnwRs0Eo=
-X-Google-Smtp-Source: ABdhPJwWMr52gFX6uBnkI/KD9R+p2DM9xpdSQRmup0YZVLc1Ow5T944W2VM9Akv2DEpG4aYIFx2veg==
-X-Received: by 2002:a2e:a495:: with SMTP id h21mr7296320lji.436.1591975878090;
-        Fri, 12 Jun 2020 08:31:18 -0700 (PDT)
-Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id v28sm1750024ljv.40.2020.06.12.08.31.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 08:31:17 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.93.0.4)
-        (envelope-from <johan@kernel.org>)
-        id 1jjleH-0002pF-La; Fri, 12 Jun 2020 17:31:17 +0200
-Date:   Fri, 12 Jun 2020 17:31:17 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] serial: core: fix up sysrq regressions
-Message-ID: <20200612153117.GQ19480@localhost>
-References: <20200610152232.16925-1-johan@kernel.org>
- <20200610162134.GL2428291@smile.fi.intel.com>
+        Fri, 12 Jun 2020 11:32:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50606 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726341AbgFLPc1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 11:32:27 -0400
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DCDB20897
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 15:32:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591975946;
+        bh=1bzFs/3D9de07O+VVT9Y1Exb8KtBe+TWOs5uYgeoTAs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=t/BJGapHgyyVp0rAEapRuPoZCWwU9+VAHlCvOKkUD1WLOOAqzV1TofaFn4eixuiTb
+         wW3NXMUj+GKBzxbCdX4YvJLIsvoeSS+QqOnELPRBiSDsEFKZYoNTiIMDVR4Lb7YbEc
+         HnFDylLPtVaKl7IFOYeDkFzvbeacoITpPU0JARPQ=
+Received: by mail-wr1-f46.google.com with SMTP id l10so10149265wrr.10
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 08:32:26 -0700 (PDT)
+X-Gm-Message-State: AOAM533dv1If+7XXGud5apYRVyZwcnS1O2RemzHejlFH3D7sNZaj5z/a
+        aSyBIlBzBgjUg5SlvJRa4nYLX2nNtTzDClwLRq8WSA==
+X-Google-Smtp-Source: ABdhPJzQB9LssgQGmvqHFwk9xZh2VrVhNFjOs6eTIw1uvdewBQcpNsBpLgMhosfLlEhD0545J0Q0fO+qWejcN9qscNA=
+X-Received: by 2002:a5d:49c5:: with SMTP id t5mr15864784wrs.18.1591975944724;
+ Fri, 12 Jun 2020 08:32:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200610162134.GL2428291@smile.fi.intel.com>
+References: <20200611235305.GA32342@paulmck-ThinkPad-P72> <CALCETrWo-zpiDsYGtKvm8LzW6CQ5L19a3+Ag_9g8aL4wHaJj9g@mail.gmail.com>
+ <871rmkzcc8.fsf@nanos.tec.linutronix.de> <87wo4cxubv.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87wo4cxubv.fsf@nanos.tec.linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 12 Jun 2020 08:32:13 -0700
+X-Gmail-Original-Message-ID: <CALCETrUCAeVGQv34bM2TT-KTemYQ6fA2v8JngCKOZCjMCydvug@mail.gmail.com>
+Message-ID: <CALCETrUCAeVGQv34bM2TT-KTemYQ6fA2v8JngCKOZCjMCydvug@mail.gmail.com>
+Subject: Re: [PATCH x86/entry: Force rcu_irq_enter() when in idle task
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, rcu@vger.kernel.org,
+        Andrew Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 07:21:34PM +0300, Andy Shevchenko wrote:
-> On Wed, Jun 10, 2020 at 05:22:29PM +0200, Johan Hovold wrote:
-> > This series fixes a few regressions introduced by the recent sysrq
-> > rework that went into 5.6.
-> > 
-> > The fix for the unnecessary per-character overhead probably could have
-> > been marked for stable but I left that decision to the maintainers as it
-> > is a bit intrusive (although mostly shuffling code around).
-> 
-> I see a problem, thanks for pointing out!
-> The fix LGTM! FWIW,
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Fri, Jun 12, 2020 at 6:55 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> The idea of conditionally calling into rcu_irq_enter() only when RCU is
+> not watching turned out to be not completely thought through.
+>
+> Paul noticed occasional premature end of grace periods in RCU torture
+> testing. Bisection led to the commit which made the invocation of
+> rcu_irq_enter() conditional on !rcu_is_watching().
+>
+> It turned out that this conditional breaks RCU assumptions about the idle
+> task when the scheduler tick happens to be a nested interrupt. Nested
+> interrupts can happen when the first interrupt invokes softirq processing
+> on return which enables interrupts. If that nested tick interrupt does not
+> invoke rcu_irq_enter() then the nest accounting in RCU claims that this is
+> the first interrupt which might mark a quiescient state and end grace
+> periods prematurely.
+>
+> Change the condition from !rcu_is_watching() to is_idle_task(current) which
+> enforces that interrupts in the idle task unconditionally invoke
+> rcu_irq_enter() independent of the RCU state.
+>
+> This is also correct vs. user mode entries in NOHZ full scenarios because
+> user mode entries bring RCU out of EQS and force the RCU irq nesting state
+> accounting to nested. As only the first interrupt can enter from user mode
+> a nested tick interrupt will enter from kernel mode and as the nesting
+> state accounting is forced to nesting it will not do anything stupid even
+> if rcu_irq_enter() has not been invoked.
 
-Thanks for reviewing, Andy.
-
-Johan
+Acked-by: Andy Lutomirski <luto@kernel.org>
