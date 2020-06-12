@@ -2,82 +2,73 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9DB7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 285ACC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7269206A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 104B4206A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:02:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbgFLOAg (ORCPT
+        id S1726416AbgFLOCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 10:00:36 -0400
-Received: from foss.arm.com ([217.140.110.172]:36752 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726085AbgFLOAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 10:00:36 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C1DB31B;
-        Fri, 12 Jun 2020 07:00:35 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DFBA33F6CF;
-        Fri, 12 Jun 2020 07:00:33 -0700 (PDT)
-Date:   Fri, 12 Jun 2020 15:00:31 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Quentin Perret <qperret@google.com>
-Cc:     Doug Anderson <dianders@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        hsinyi@chromium.org, Joel Fernandes <joelaf@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        ctheegal@codeaurora.org, Guenter Roeck <groeck@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] cros_ec_spi: Even though we're RT priority, don't bump
- cpu freq
-Message-ID: <20200612140031.4rrnbmdcb3hv755h@e107158-lin.cambridge.arm.com>
-References: <20200610151818.1.I666ecd9c6f3c6405bd75831a21001b8109b6438c@changeid>
- <20200611110301.GA132747@google.com>
- <CAD=FV=V2FvFcYrghxUSdHNxmcS3DKpnBbk2oL64w7hh=tV-DfQ@mail.gmail.com>
- <20200612092454.GA94228@google.com>
- <20200612123448.fcmzv3rdtsbawmpd@e107158-lin.cambridge.arm.com>
- <20200612134721.GA142550@google.com>
+        Fri, 12 Jun 2020 10:02:13 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:59631 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726085AbgFLOCM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 10:02:12 -0400
+Received: (qmail 13466 invoked by uid 1000); 12 Jun 2020 10:02:11 -0400
+Date:   Fri, 12 Jun 2020 10:02:11 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Macpaul Lin <macpaul.lin@mediatek.com>
+Cc:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, Jim Lin <jilin@nvidia.com>,
+        Siqi Lin <siqilin@google.com>,
+        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
+        Macpaul Lin <macpaul.lin@gmail.com>
+Subject: Re: [PATCH] usb: replace hardcoded maximum usb string length by
+ definition
+Message-ID: <20200612140211.GA12639@rowland.harvard.edu>
+References: <y>
+ <1591939967-29943-1-git-send-email-macpaul.lin@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200612134721.GA142550@google.com>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <1591939967-29943-1-git-send-email-macpaul.lin@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/12/20 14:47, Quentin Perret wrote:
-
-[...]
-
-> > > > somehow measure whether or not the task is making its deadlines and
-> > > > boost the CPU frequency up if deadlines are not being met.  I'm sure
-> > > > there are fancier ways.
-> > 
-> > You need to use SCHED_DEADLINE then :)
+On Fri, Jun 12, 2020 at 01:32:47PM +0800, Macpaul Lin wrote:
+> Replace hardcoded maximum usb string length (126 bytes) by definition
+> "MAX_USB_STRING_LEN".
 > 
-> Well, not quite :-)
-> 
-> The frequency selection for DL is purely based on the userspace-provided
-> parameters, from which we derive the bandwidth request. But we don't do
-> things like 'raise the frequency if the actual runtime gets close to the
-> WCET', or anything of the sort. All of that would have to be implemented
-> in userspace ATM.
+> Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
 
-Hmm okay. I am not a deadline expert so sorry if I was misleading. But it's the
-only scheduling class that has the concept of deadline.
+...
 
-Cheers
+> diff --git a/include/linux/usb.h b/include/linux/usb.h
+> index 9f3c721..df4a9cb 100644
+> --- a/include/linux/usb.h
+> +++ b/include/linux/usb.h
+> @@ -1815,6 +1815,8 @@ static inline int usb_get_ptm_status(struct usb_device *dev, void *data)
+>  		0, data);
+>  }
+>  
+> +/* USB String descriptors can contain at most 126 characters. */
+> +#define MAX_USB_STRING_LEN	126
 
---
-Qais Yousef
+This definition belongs in include/uapi/linux/usb/ch9.h (near the 
+definition of struct usb_string_descriptor) because it is part of the USB 
+standard rather than specific to the Linux USB stack.
+
+Alan Stern
