@@ -7,71 +7,69 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF41C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E9AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5D2920792
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:05:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26A9320801
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:05:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mQ9C4Aw7"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gnXZmq2p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbgFLEFl (ORCPT
+        id S1726507AbgFLEFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 00:05:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44530 "EHLO
+        Fri, 12 Jun 2020 00:05:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbgFLEFi (ORCPT
+        with ESMTP id S1725372AbgFLEFp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 00:05:38 -0400
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3437CC03E96F
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 21:05:38 -0700 (PDT)
-Received: by mail-pg1-x52e.google.com with SMTP id b5so2569424pgm.8
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 21:05:38 -0700 (PDT)
+        Fri, 12 Jun 2020 00:05:45 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5180C03E96F
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 21:05:43 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id bg4so3219071plb.3
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 21:05:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=iNfpgONIX6TRQlY7VCVFuaZAaeCFmiBcxeh3q+Q9Emc=;
-        b=mQ9C4Aw7UnLy8MGjbM2OH+sYJjoMshBz0UObVOleGhuXtYJKLHLkDe4CS64GHsAzzf
-         qFBNAYjYV108HaXThdR2E1c1lUCTsjwairMoiRkIKp4PnaLs2fRPuGdM97LHIBX+jQi/
-         PPQi1BwP8ENk3T37NSGb4nw6ZIrVVN3ZcpVJs=
+        bh=Z7KT5I7U1YXhD3nQj1u4RH7XpnG0VmMFsKPtB+Swx1E=;
+        b=gnXZmq2psjWMV3e8rEyFIJF4IaB8OqsvNdfEdKbLT+8uAGTVbmRjHkxRLpJAQcn28A
+         D7vWLI2qJ907fFzOlx224ZlCikagvhMV/WRQ2rbkL1rOz5idaraQIe05eKIHRxS+TIK4
+         90TlWIFNforFuw0IOktbYOw9MeBl9jrPFCtCg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=iNfpgONIX6TRQlY7VCVFuaZAaeCFmiBcxeh3q+Q9Emc=;
-        b=fXfLLkPidD41i7uB6qNKIVK4GAK+Y79EBcvhEj3h0pKT9Gc9nZaxk/JiOsVnNs5E9A
-         Pz+iWsMmXZpHEg4dlEgFmqM/51KDdqdO+DHy3JtfLtOswCd3o1E88mrp79yLxkP6NRw+
-         7ppeOYNMlZwgyHbz1hDhA1E3lb6tNHwKwYOMLa1EULeTk8rKNjU9v5RJO96/2zwCHRGl
-         CxVBNp9bNeclNY6hooOQ4xClvNAwVrnMfQwwghTgKsf6y56i5UAb016x0eGbTz0NU+Ys
-         8yOhiJXthRWI0mQiYiHWagfThPmkmr5kW/oqKlo/t01Bloo+/pk4oYqGYrFGc2iCRvk0
-         lIvw==
-X-Gm-Message-State: AOAM530m/J6FjbWcprA/EDUVS3H3bh66IYjB6MFdj/Bqg4i5x314AJgO
-        t943/A6dbZI5jFrZ3hbX1kd9Kw==
-X-Google-Smtp-Source: ABdhPJxxsRu3FD1Od7Fa7yYEkFAdUaJPbFEkxFnnoj3uFGxKNpxdBkkwp6nH80ZLBRxpPBPTYKEp0w==
-X-Received: by 2002:a65:508c:: with SMTP id r12mr9391678pgp.233.1591934737734;
-        Thu, 11 Jun 2020 21:05:37 -0700 (PDT)
+        bh=Z7KT5I7U1YXhD3nQj1u4RH7XpnG0VmMFsKPtB+Swx1E=;
+        b=L3cMXZgqXAR4KVbJg4YQvBBBkgp4XGWBlzoK29efq7X6Dvow/WBxuoupxfsLE36wwQ
+         RiSd1cNnqL9Q6PLi/rk7x5jb5DSjNp4Fz0Vn5bYlgpFlmgj+bjROVIyp0d8/kB/uYjTO
+         +G7+2BWLyCRpcbjYL81+mQYtEe8kqDtTNjMY9ntUAjA1VRGmZT9xAtvT6v0NUSHMjc6I
+         QH6/dYt5eAzi6S5cGsU9/yFRQGG5SwD3l6ycNevEddXfBGT2SM8dInr01DCCDDCouSU2
+         QMo4fq/5sQARNtwWAakg+8N5cRX0UOCrUR/T+Mhqtj2qoGMVe5/MM2TkDgrbOXkwukke
+         XaiA==
+X-Gm-Message-State: AOAM532arG8kYunrPKACsp5K6KAMi801/rJtPdaofiYUquM5XVTn76cU
+        Srgb6tmnYRwJ/mYYVoXGYU+7ig==
+X-Google-Smtp-Source: ABdhPJxqzcJDHNMHJ1fqwkwHZenKSmgHGRdImTU41q+wNz1qkqCGc7a70RFcGYA+3r2tb28vHV7x+w==
+X-Received: by 2002:a17:90a:20c2:: with SMTP id f60mr11663887pjg.29.1591934743371;
+        Thu, 11 Jun 2020 21:05:43 -0700 (PDT)
 Received: from pihsun-glaptop.lan (180-176-97-18.dynamic.kbronet.com.tw. [180.176.97.18])
-        by smtp.googlemail.com with ESMTPSA id u7sm4686983pfu.162.2020.06.11.21.05.34
+        by smtp.googlemail.com with ESMTPSA id u7sm4686983pfu.162.2020.06.11.21.05.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 21:05:36 -0700 (PDT)
+        Thu, 11 Jun 2020 21:05:42 -0700 (PDT)
 From:   Pi-Hsun Shih <pihsun@chromium.org>
 Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
         Nicolas Boichat <drinkcat@chromium.org>,
         Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
         Benson Leung <bleung@chromium.org>,
         Guenter Roeck <groeck@chromium.org>,
-        linux-kernel@vger.kernel.org (open list:VOLTAGE AND CURRENT REGULATOR
-        FRAMEWORK),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS)
-Subject: [PATCH v6 1/3] dt-bindings: regulator: Add DT binding for cros-ec-regulator
-Date:   Fri, 12 Jun 2020 12:05:18 +0800
-Message-Id: <20200612040526.192878-2-pihsun@chromium.org>
+        Mark Brown <broonie@kernel.org>,
+        Tzung-Bi Shih <tzungbi@google.com>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Yicheng Li <yichengli@chromium.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v6 2/3] platform/chrome: cros_ec: Add command for regulator control.
+Date:   Fri, 12 Jun 2020 12:05:19 +0800
+Message-Id: <20200612040526.192878-3-pihsun@chromium.org>
 X-Mailer: git-send-email 2.27.0.290.gba653c62da-goog
 In-Reply-To: <20200612040526.192878-1-pihsun@chromium.org>
 References: <20200612040526.192878-1-pihsun@chromium.org>
@@ -83,91 +81,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DT binding documentation for cros-ec-regulator, a voltage regulator
-controlled by ChromeOS EC.
+Add host commands for voltage regulator control through ChromeOS EC.
 
 Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
 Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 ---
 Changes from v5:
-* No change
-
-Changes from v4:
-* Change compatible name from regulator-cros-ec to cros-ec-regulator.
-
-Changes from v3:
-* Fix dt bindings file name.
-* Add full example.
-
-Changes from v2:
-* No change
-
-Changes from v1:
-* Change compatible string to google,regulator-cros-ec.
-* Use reg property in device tree.
-* Change license for dt binding according to checkpatch.pl.
+* Extract into a separate patch.
 ---
- .../regulator/google,cros-ec-regulator.yaml   | 51 +++++++++++++++++++
- 1 file changed, 51 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/google,cros-ec-regulator.yaml
+ drivers/platform/chrome/cros_ec_trace.c       |  5 ++
+ .../linux/platform_data/cros_ec_commands.h    | 82 +++++++++++++++++++
+ 2 files changed, 87 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/regulator/google,cros-ec-regulator.yaml b/Documentation/devicetree/bindings/regulator/google,cros-ec-regulator.yaml
-new file mode 100644
-index 000000000000..c9453d7ce227
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/google,cros-ec-regulator.yaml
-@@ -0,0 +1,51 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/google,cros-ec-regulator.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/platform/chrome/cros_ec_trace.c b/drivers/platform/chrome/cros_ec_trace.c
+index 523a39bd0ff6..425e9441b7ca 100644
+--- a/drivers/platform/chrome/cros_ec_trace.c
++++ b/drivers/platform/chrome/cros_ec_trace.c
+@@ -161,6 +161,11 @@
+ 	TRACE_SYMBOL(EC_CMD_ADC_READ), \
+ 	TRACE_SYMBOL(EC_CMD_ROLLBACK_INFO), \
+ 	TRACE_SYMBOL(EC_CMD_AP_RESET), \
++	TRACE_SYMBOL(EC_CMD_REGULATOR_GET_INFO), \
++	TRACE_SYMBOL(EC_CMD_REGULATOR_ENABLE), \
++	TRACE_SYMBOL(EC_CMD_REGULATOR_IS_ENABLED), \
++	TRACE_SYMBOL(EC_CMD_REGULATOR_SET_VOLTAGE), \
++	TRACE_SYMBOL(EC_CMD_REGULATOR_GET_VOLTAGE), \
+ 	TRACE_SYMBOL(EC_CMD_CR51_BASE), \
+ 	TRACE_SYMBOL(EC_CMD_CR51_LAST), \
+ 	TRACE_SYMBOL(EC_CMD_FP_PASSTHRU), \
+diff --git a/include/linux/platform_data/cros_ec_commands.h b/include/linux/platform_data/cros_ec_commands.h
+index 69210881ebac..a417b51b5764 100644
+--- a/include/linux/platform_data/cros_ec_commands.h
++++ b/include/linux/platform_data/cros_ec_commands.h
+@@ -5430,6 +5430,88 @@ struct ec_response_rollback_info {
+ /* Issue AP reset */
+ #define EC_CMD_AP_RESET 0x0125
+ 
++/*****************************************************************************/
++/* Voltage regulator controls */
 +
-+title: ChromeOS EC controlled voltage regulators
++/*
++ * Get basic info of voltage regulator for given index.
++ *
++ * Returns the regulator name and supported voltage list in mV.
++ */
++#define EC_CMD_REGULATOR_GET_INFO 0x012B
 +
-+maintainers:
-+  - Pi-Hsun Shih <pihsun@chromium.org>
++/* Maximum length of regulator name */
++#define EC_REGULATOR_NAME_MAX_LEN 16
 +
-+description:
-+  Any property defined as part of the core regulator binding, defined in
-+  regulator.yaml, can also be used.
++/* Maximum length of the supported voltage list. */
++#define EC_REGULATOR_VOLTAGE_MAX_COUNT 16
 +
-+allOf:
-+  - $ref: "regulator.yaml#"
++struct ec_params_regulator_get_info {
++	uint32_t index;
++} __ec_align4;
 +
-+properties:
-+  compatible:
-+    const: google,cros-ec-regulator
++struct ec_response_regulator_get_info {
++	char name[EC_REGULATOR_NAME_MAX_LEN];
++	uint16_t num_voltages;
++	uint16_t voltages_mv[EC_REGULATOR_VOLTAGE_MAX_COUNT];
++} __ec_align1;
 +
-+  reg:
-+    maxItems: 1
-+    description: Identifier for the voltage regulator to ChromeOS EC.
++/*
++ * Configure the regulator as enabled / disabled.
++ */
++#define EC_CMD_REGULATOR_ENABLE 0x012C
 +
-+required:
-+  - compatible
-+  - reg
++struct ec_params_regulator_enable {
++	uint32_t index;
++	uint8_t enable;
++} __ec_align4;
 +
-+examples:
-+  - |
-+    spi0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
++/*
++ * Query if the regulator is enabled.
++ *
++ * Returns 1 if the regulator is enabled, 0 if not.
++ */
++#define EC_CMD_REGULATOR_IS_ENABLED 0x012D
 +
-+        cros_ec: ec@0 {
-+            compatible = "google,cros-ec-spi";
-+            reg = <0>;
-+            #address-cells = <1>;
-+            #size-cells = <0>;
++struct ec_params_regulator_is_enabled {
++	uint32_t index;
++} __ec_align4;
 +
-+            regulator@0 {
-+                compatible = "google,cros-ec-regulator";
-+                regulator-min-microvolt = <1800000>;
-+                regulator-max-microvolt = <3300000>;
-+                reg = <0>;
-+            };
-+        };
-+    };
-+...
++struct ec_response_regulator_is_enabled {
++	uint8_t enabled;
++} __ec_align1;
++
++/*
++ * Set voltage for the voltage regulator within the range specified.
++ *
++ * The driver should select the voltage in range closest to min_mv.
++ *
++ * Also note that this might be called before the regulator is enabled, and the
++ * setting should be in effect after the regulator is enabled.
++ */
++#define EC_CMD_REGULATOR_SET_VOLTAGE 0x012E
++
++struct ec_params_regulator_set_voltage {
++	uint32_t index;
++	uint32_t min_mv;
++	uint32_t max_mv;
++} __ec_align4;
++
++/*
++ * Get the currently configured voltage for the voltage regulator.
++ *
++ * Note that this might be called before the regulator is enabled.
++ */
++#define EC_CMD_REGULATOR_GET_VOLTAGE 0x012F
++
++struct ec_params_regulator_get_voltage {
++	uint32_t index;
++} __ec_align4;
++
++struct ec_response_regulator_get_voltage {
++	uint32_t voltage_mv;
++} __ec_align4;
++
+ /*****************************************************************************/
+ /* The command range 0x200-0x2FF is reserved for Rotor. */
+ 
 -- 
 2.27.0.290.gba653c62da-goog
 
