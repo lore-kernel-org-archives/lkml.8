@@ -2,102 +2,153 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE8FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 21:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33468C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 21:57:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 572DF2078E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 21:56:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B95E20791
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 21:57:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591999015;
-	bh=mWMXi6xqoC2+eKZfze2WcCelGr8w6FXyOKbi5oEX2as=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=KhRJmvH2NTLJiYH7YfJIgMt8XaP0TvqG7GSqLbYFVDhES2ckAu8DQBdoe+MeVMmZw
-	 gVgZdNsYiKRTItfl0r4uFC1zcl6kY4ME7q6IrvGWP8IPR00wHgfjSmdt+jVcQOJOaH
-	 NVGPB4iJtIidZhq8zzwpW7btmpvjzsR0d2fbo94c=
+	s=default; t=1591999023;
+	bh=ZIZ4sIXIZ6E+xOI19O0kDIxdWbOSynFYe6/KY0KTS90=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TuKKwV0PDpX19y+/bCb/TcwXR2cKYjEyfSBUfg6e08f96qdyBbCfqO2sANYKVuSqC
+	 4EajJA1T/+E6NkkxpnVe7bgP/0kixVc5zYbLkQnjjzcfO73s7Gt4P/5uOxcem5rIOY
+	 LrEAuWiplq5fd68x74sl+I8tMHfBIT1fqCroOkVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbgFLV4w (ORCPT
+        id S1726397AbgFLV5B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 17:56:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45036 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726304AbgFLV4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 17:56:51 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82F20206DC;
-        Fri, 12 Jun 2020 21:56:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591999010;
-        bh=mWMXi6xqoC2+eKZfze2WcCelGr8w6FXyOKbi5oEX2as=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=A89F5YbzfyufclIGNaDWvLyh8iSo6b5hovTNFiZUqBJpsGz3YmoS7w6xOfYusMRS/
-         SRYicMV62L9j+NhNJHd/4uia8P7y/oDvJTsnjuM7mRWDZtZrkEEFEhy08Hd2MjlUs1
-         oSjTSce0+m45Dr/RGoffJyPyMnk2El/1r7ySNGzM=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 69EBD3522658; Fri, 12 Jun 2020 14:56:50 -0700 (PDT)
-Date:   Fri, 12 Jun 2020 14:56:50 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, rcu@vger.kernel.org,
-        Andrew Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH x86/entry: Force rcu_irq_enter() when in idle task
-Message-ID: <20200612215650.GN4455@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <87r1ukxf1b.fsf@nanos.tec.linutronix.de>
- <87k10ccc2n.fsf@nanos.tec.linutronix.de>
+        Fri, 12 Jun 2020 17:57:01 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:41088 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726304AbgFLV47 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 17:56:59 -0400
+Received: by mail-il1-f193.google.com with SMTP id c75so10136007ila.8;
+        Fri, 12 Jun 2020 14:56:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=+ERj0Rs2fBV1qZjih5Ki74R7VK7giFh3Euk5Qsf66JA=;
+        b=dUm6KGJ+8qgpMY4iUKd/KFKd+pb9WFZLtc8GzvWoZn1ftqWzFZ8LTRVIWUqFLCOko7
+         g+ILx9grd4aAJ9VOybyZcBkcHaMJIN4tf52Tkyn28ZmN4++n/QVNzfEdjxNuf5QC1ah0
+         CM+bMozBhxaYDR649m9b8d/XfNH19eovaLX+i79vOIO62lCRENBwRNmXlpqUfLIJbGox
+         Oc40ziPrEKdNFL+IR20A+mGn7XfkFFhcK2ty1tW0trG0/v7mk6PKAHrbqTJ4aZmew9OM
+         1Kln/4ytKdIpF8tfCNgV/zD6y+05AmbVwxC+8883c6rJu0wJBHhu/PKNLFFuXeYRi2/2
+         H20A==
+X-Gm-Message-State: AOAM532qW2+nwznnP+cOWZE7lwxJfa5JX40ty86Ym20BYtvVOhy6sKbj
+        2jKN2ZGy4GnJV9lWLzv8SbVZAq0=
+X-Google-Smtp-Source: ABdhPJxl0sSVvAJJyMg0adHj0Sf5cuUGj9Wcok8qKjC3vDCQNiH7E/L2mz9vX5+UwoQgJheAsUTMQg==
+X-Received: by 2002:a92:c78b:: with SMTP id c11mr14999885ilk.56.1591999018567;
+        Fri, 12 Jun 2020 14:56:58 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id y2sm3652530ilg.69.2020.06.12.14.56.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2020 14:56:58 -0700 (PDT)
+Received: (nullmailer pid 3884138 invoked by uid 1000);
+        Fri, 12 Jun 2020 21:56:56 -0000
+Date:   Fri, 12 Jun 2020 15:56:56 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>
+Cc:     hauke@hauke-m.de, zajec5@gmail.com, tsbogend@alpha.franken.de,
+        f.fainelli@gmail.com, jonas.gorski@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 1/9] dt-bindings: soc: brcm: add BCM63xx power domain
+ binding
+Message-ID: <20200612215656.GB3881384@bogus>
+References: <20200610163301.461160-1-noltari@gmail.com>
+ <20200610171630.465579-1-noltari@gmail.com>
+ <20200610171630.465579-2-noltari@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <87k10ccc2n.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200610171630.465579-2-noltari@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 09:34:56PM +0200, Thomas Gleixner wrote:
-> Thomas Gleixner <tglx@linutronix.de> writes:
+On Wed, Jun 10, 2020 at 07:16:22PM +0200, Álvaro Fernández Rojas wrote:
+> BCM6318, BCM6328, BCM6362 and BCM63268 SoCs have a power domain controller
+> to enable/disable certain components in order to save power.
 > 
-> > "Paul E. McKenney" <paulmck@kernel.org> writes:
-> >> On Fri, Jun 12, 2020 at 10:49:53AM -0700, Paul E. McKenney wrote:
-> >>> I will therefore address this issue in a follow-on patch.
-> >>
-> >> I should add that -your- patch from yesterday did -not- cause this
-> >> problem, in case that is of interest.
-> >
-> > So I still can add it back and amend the changelog and comment:
-> >
-> > Change the condition from !rcu_is_watching() to is_idle_task(current) ||
-> > rcu_is_watching() which enforces that interrupts in the idle task
-> > unconditionally invoke rcu_irq_enter() independent of the RCU state. For
-> > most scenarios is_idle_task() would be sufficient but Task RCU needs it
-> > according to Paul.
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  v3: fix reg maxItems and quote #power-domain-cells.
+>  v2: Add separate YAML file.
 > 
-> After talking to Paul some more we came to the conclusion that the
-> failure scenario of task rcu is not completely clear and the trigger
-> scenario is obscure enough. This needs more investigation and the
-> important part which we were chasing is fixed and agreed on. So I go
-> with the simple version now and Paul will follow up once it can be
-> properly explained.
+>  .../bindings/soc/bcm/brcm,bcm63xx-power.yaml  | 44 +++++++++++++++++++
 
-So the whole TASKS03 failure issue turned out to be me applying the
-wrong patches onto the wrong commits.  Retesting with -tip x86/entry
-passes TASKS03, as in more than 100 instances of it.
+Goes in bindings/power/
 
-I am rerunning the whole stack, but I don't see the need to wait for
-that.  (I will be running increasingly long tests over Friday night,
-Pacific Time.)
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/bcm/brcm,bcm63xx-power.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/bcm/brcm,bcm63xx-power.yaml b/Documentation/devicetree/bindings/soc/bcm/brcm,bcm63xx-power.yaml
+> new file mode 100644
+> index 000000000000..fd4204d9aaf6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/bcm/brcm,bcm63xx-power.yaml
+> @@ -0,0 +1,44 @@
+> +# SPDX-License-Identifier: GPL-2.0-or-later
 
-							Thanx, Paul
+Okay with GPLv9? Dual license new bindings:
+
+(GPL-2.0-only OR BSD-2-Clause)
+
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/soc/brcm/brcm,bcm63xx-power.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: BCM63xx power domain driver
+> +
+> +maintainers:
+> +  - Álvaro Fernández Rojas <noltari@gmail.com>
+> +
+> +description: |
+> +  BCM6318, BCM6328, BCM6362 and BCM63268 SoCs have a power domain controller
+> +  to enable/disable certain components in order to save power.
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - brcm,bcm6318-power-controller
+> +          - brcm,bcm6328-power-controller
+> +          - brcm,bcm6362-power-controller
+> +          - brcm,bcm63268-power-controller
+> +
+> +  reg:
+> +    maxItems: 2
+> +
+> +  "#power-domain-cells":
+> +    const: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#power-domain-cells"
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    periph_pwr: power-controller@10001848 {
+> +        compatible = "brcm,bcm6328-power-controller";
+> +        reg = <0x10001848 0x4>;
+> +        #power-domain-cells = <1>;
+> +    };
+> -- 
+> 2.26.2
+> 
