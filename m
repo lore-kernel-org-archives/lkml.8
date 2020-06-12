@@ -2,73 +2,137 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3274C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FEA4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87EAB207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:11:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54020207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:17:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbgFLHLM (ORCPT
+        id S1726380AbgFLHRE convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 03:11:12 -0400
-Received: from m17617.mail.qiye.163.com ([59.111.176.17]:10377 "EHLO
-        m17617.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbgFLHLK (ORCPT
+        Fri, 12 Jun 2020 03:17:04 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:52913 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbgFLHRD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 03:11:10 -0400
-Received: from vivo-HP-ProDesk-680-G4-PCI-MT.vivo.xyz (unknown [58.251.74.226])
-        by m17617.mail.qiye.163.com (Hmail) with ESMTPA id 209C72618FF;
-        Fri, 12 Jun 2020 15:11:06 +0800 (CST)
-From:   Wang Qing <wangqing@vivo.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        virtualization@lists.linux-foundation.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Wang Qing <wangqing@vivo.com>
-Subject: [PATCH] drivers\block: Use kobj_to_dev() API
-Date:   Fri, 12 Jun 2020 15:10:56 +0800
-Message-Id: <1591945856-14749-1-git-send-email-wangqing@vivo.com>
-X-Mailer: git-send-email 2.7.4
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgYFAkeWUFZS1VLWVdZKFlBSE83V1ktWUFJV1kPCR
-        oVCBIfWUFZS0oZQkNPGUJDSE5PVkpOQkpCT05DTU1OSk5VEwETFhoSFyQUDg9ZV1kWGg8SFR0UWU
-        FZT0tIVUpKS0hKQ1VKS0tZBg++
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MyI6PSo4EjgyLwtIFxk9TT9L
-        FygwCg9VSlVKTkJKQk9OQ01MS0tNVTMWGhIXVQwaFRwKEhUcOw0SDRRVGBQWRVlXWRILWUFZTkNV
-        SU5KVUxPVUlJTVlXWQgBWUFKQ0NNNwY+
-X-HM-Tid: 0a72a75e2cb19375kuws209c72618ff
+        Fri, 12 Jun 2020 03:17:03 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 1D41D2000D;
+        Fri, 12 Jun 2020 07:16:59 +0000 (UTC)
+Date:   Fri, 12 Jun 2020 09:16:58 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Cc:     richard@nod.at, vigneshr@ti.com, peter.ujfalusi@ti.com,
+        boris.brezillon@collabora.com, architt@codeaurora.org,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH V3 1/2] mtd: rawnand: qcom: avoid write to unavailable
+ register
+Message-ID: <20200612091658.4f9fba49@xps13>
+In-Reply-To: <1591944589-14357-2-git-send-email-sivaprak@codeaurora.org>
+References: <1591944589-14357-1-git-send-email-sivaprak@codeaurora.org>
+        <1591944589-14357-2-git-send-email-sivaprak@codeaurora.org>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use kobj_to_dev() API instead of container_of().
+Hi Sivaprakash,
 
-Signed-off-by: Wang Qing <wangqing@vivo.com>
----
- drivers/block/virtio_blk.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
- mode change 100644 => 100755 drivers/block/virtio_blk.c
+Sivaprakash Murugesan <sivaprak@codeaurora.org> wrote on Fri, 12 Jun
+2020 12:19:48 +0530:
 
-diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-index 9d21bf0..c808405
---- a/drivers/block/virtio_blk.c
-+++ b/drivers/block/virtio_blk.c
-@@ -630,7 +630,7 @@ static struct attribute *virtblk_attrs[] = {
- static umode_t virtblk_attrs_are_visible(struct kobject *kobj,
- 		struct attribute *a, int n)
- {
--	struct device *dev = container_of(kobj, struct device, kobj);
-+	struct device *dev = kobj_to_dev(kobj);
- 	struct gendisk *disk = dev_to_disk(dev);
- 	struct virtio_blk *vblk = disk->private_data;
- 	struct virtio_device *vdev = vblk->vdev;
--- 
-2.7.4
+> SFLASHC_BURST_CFG is only available on older ipq nand platforms, this
+> register has been removed when the NAND controller is moved as part of qpic
+> controller.
+> 
+> avoid register writes to this register on devices which are based on qpic
 
+Avoid writing this register on ...
+
+> NAND controllers.
+> 
+> Fixes: a0637834 (mtd: nand: qcom: support for IPQ4019 QPIC NANDcontroller)
+> Fixes: dce84760 (mtd: nand: qcom: Support for IPQ8074 QPIC NAND controller)
+
+I don't think having two Fixes tag is allowed. Take the older one
+instead.
+
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> ---
+> [V3]
+>  * Addressed Miquel comments, added flag based on nand controller hw
+>    to avoid the register writes to specific ipq platforms
+>  drivers/mtd/nand/raw/qcom_nandc.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mtd/nand/raw/qcom_nandc.c b/drivers/mtd/nand/raw/qcom_nandc.c
+> index f1daf33..e0c55bb 100644
+> --- a/drivers/mtd/nand/raw/qcom_nandc.c
+> +++ b/drivers/mtd/nand/raw/qcom_nandc.c
+> @@ -459,11 +459,13 @@ struct qcom_nand_host {
+>   * among different NAND controllers.
+>   * @ecc_modes - ecc mode for NAND
+>   * @is_bam - whether NAND controller is using BAM
+> + * @is_qpic - whether NAND CTRL is part of qpic IP
+>   * @dev_cmd_reg_start - NAND_DEV_CMD_* registers starting offset
+>   */
+>  struct qcom_nandc_props {
+>  	u32 ecc_modes;
+>  	bool is_bam;
+> +	bool is_qpic;
+>  	u32 dev_cmd_reg_start;
+>  };
+>  
+> @@ -2774,7 +2776,8 @@ static int qcom_nandc_setup(struct qcom_nand_controller *nandc)
+>  	u32 nand_ctrl;
+>  
+>  	/* kill onenand */
+> -	nandc_write(nandc, SFLASHC_BURST_CFG, 0);
+> +	if (!nandc->props->is_qpic)
+> +		nandc_write(nandc, SFLASHC_BURST_CFG, 0);
+>  	nandc_write(nandc, dev_cmd_reg_addr(nandc, NAND_DEV_CMD_VLD),
+>  		    NAND_DEV_CMD_VLD_VAL);
+>  
+> @@ -3029,18 +3032,21 @@ static int qcom_nandc_remove(struct platform_device *pdev)
+>  static const struct qcom_nandc_props ipq806x_nandc_props = {
+>  	.ecc_modes = (ECC_RS_4BIT | ECC_BCH_8BIT),
+>  	.is_bam = false,
+> +	.is_qpic = false,
+
+This line is unneeded.
+
+>  	.dev_cmd_reg_start = 0x0,
+>  };
+>  
+>  static const struct qcom_nandc_props ipq4019_nandc_props = {
+>  	.ecc_modes = (ECC_BCH_4BIT | ECC_BCH_8BIT),
+>  	.is_bam = true,
+> +	.is_qpic = true,
+>  	.dev_cmd_reg_start = 0x0,
+>  };
+>  
+>  static const struct qcom_nandc_props ipq8074_nandc_props = {
+>  	.ecc_modes = (ECC_BCH_4BIT | ECC_BCH_8BIT),
+>  	.is_bam = true,
+> +	.is_qpic = true,
+>  	.dev_cmd_reg_start = 0x7000,
+>  };
+>  
+
+Much better patch IMHO, just a few nits and we'll be good.
+
+Thanks,
+Miquèl
