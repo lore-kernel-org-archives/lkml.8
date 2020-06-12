@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 840B2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDE4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B8B8207F7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:51:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11FBD207F7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:52:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591984312;
-	bh=jE1Kxz2Q5wrlavTl5ZVstoZ1/4ZvO5O8KR250OyGjB8=;
+	s=default; t=1591984352;
+	bh=q+5z7cVTThqiMbNhEpYBI/PR2+OqYXGqJO2cXdMTqMY=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=pvd/1WSFWwqv4Rs8GbFfnkUb4Imu1CJOKNEd+ymZvBOFk1Frc8LqsY2IOso8+Wh9I
-	 CzJJzUF3f7RHmoKWovcVQNgmgmMpZqq5kS80dXBspP8rtPu9iqoxqR8FHDxHuj4roa
-	 LuJoSjz5ZFIROGITkRupdbbTK62P31eXj6ctM01g=
+	b=rJNskKsmDWbGER4iXnOXjCXlLh+uimOW0VL2q/hrCWrgf6T07Nh4U+vpXpoac3wyq
+	 hKuQxiJ577wMqnnM7gTF17UeSox77l3qV1kXLhwZBnmJqjigd5yDcKyHGV2eNkRNf2
+	 eo1AVSXa/kYGVvI8bBSpUcCesrH/sV0L0t5zSoH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726343AbgFLRvv (ORCPT
+        id S1726391AbgFLRwa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 13:51:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39246 "EHLO mail.kernel.org"
+        Fri, 12 Jun 2020 13:52:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726085AbgFLRvu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 13:51:50 -0400
+        id S1726085AbgFLRwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 13:52:30 -0400
 Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1402207ED;
-        Fri, 12 Jun 2020 17:51:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E258207ED;
+        Fri, 12 Jun 2020 17:52:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591984310;
-        bh=jE1Kxz2Q5wrlavTl5ZVstoZ1/4ZvO5O8KR250OyGjB8=;
+        s=default; t=1591984349;
+        bh=q+5z7cVTThqiMbNhEpYBI/PR2+OqYXGqJO2cXdMTqMY=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=2GWLVH09vN3J8G3JrxTqgRA1rtLQN8CflYHzrglIClD7/pAlMY2Hpfd9Sgga6+yCZ
-         uyWsEtFQcmyxbR0tTa8Y+VMjD2HohYsbM0y5W2ChDP+Hx/hopa2UtzSyMjpLAvZH53
-         ygcX6VXAZ0AOab9buV0Xkud/7HIxZCsINc84SIok=
-Date:   Fri, 12 Jun 2020 10:51:48 -0700
+        b=bCfos6/Uzgi5Yba9XWzT1sJPOdvCkvNvmfLJOdC5TPrnyfvcUBUFyZihuAi0hRTHD
+         LsImEBqgXQfX0LLTyrjgwxHolNUtfsUtRNjhDIl0c7iwtUIHYauQEDUpAm1xXov4MH
+         2UOoEoQ65UA2TEmcFf3NPxRLXzzZ0Tm/AnwVTVKw=
+Date:   Fri, 12 Jun 2020 10:52:27 -0700
 From:   Jakub Kicinski <kuba@kernel.org>
 To:     Andrea Mayer <andrea.mayer@uniroma2.it>
 Cc:     David Ahern <dsahern@kernel.org>,
@@ -52,12 +52,11 @@ Cc:     David Ahern <dsahern@kernel.org>,
         Stefano Salsano <stefano.salsano@uniroma2.it>,
         Paolo Lungaroni <paolo.lungaroni@cnit.it>,
         Ahmed Abdelsalam <ahabdels@gmail.com>
-Subject: Re: [RFC,net-next, 1/5] l3mdev: add infrastructure for table to VRF
- mapping
-Message-ID: <20200612105148.1b977dc3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200612164937.5468-2-andrea.mayer@uniroma2.it>
+Subject: Re: [RFC,net-next, 3/5] vrf: add sysctl parameter for strict mode
+Message-ID: <20200612105227.2f85e3d7@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200612164937.5468-4-andrea.mayer@uniroma2.it>
 References: <20200612164937.5468-1-andrea.mayer@uniroma2.it>
-        <20200612164937.5468-2-andrea.mayer@uniroma2.it>
+        <20200612164937.5468-4-andrea.mayer@uniroma2.it>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
@@ -66,16 +65,24 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 12 Jun 2020 18:49:33 +0200 Andrea Mayer wrote:
-> Add infrastructure to l3mdev (the core code for Layer 3 master devices) in
-> order to find out the corresponding VRF device for a given table id.
-> Therefore, the l3mdev implementations:
->  - can register a callback that returns the device index of the l3mdev
->    associated with a given table id;
->  - can offer the lookup function (table to VRF device).
+On Fri, 12 Jun 2020 18:49:35 +0200 Andrea Mayer wrote:
+> Add net.vrf.strict_mode sysctl parameter.
+> 
+> When net.vrf.strict_mode=0 (default) it is possible to associate multiple
+> VRF devices to the same table. Conversely, when net.vrf.strict_mode=1 a
+> table can be associated to a single VRF device.
+> 
+> When switching from net.vrf.strict_mode=0 to net.vrf.strict_mode=1, a check
+> is performed to verify that all tables have at most one VRF associated,
+> otherwise the switch is not allowed.
+> 
+> The net.vrf.strict_mode parameter is per network namespace.
 > 
 > Signed-off-by: Andrea Mayer <andrea.mayer@uniroma2.it>
 
-net/l3mdev/l3mdev.c:12:1: warning: symbol 'l3mdev_lock' was not declared. Should it be static?
-
-Please make sure it doesn't add errors with W=1 C=1 :)
+drivers/net/vrf.c:1771:49: warning: incorrect type in argument 3 (different address spaces)
+drivers/net/vrf.c:1771:49:    expected void *
+drivers/net/vrf.c:1771:49:    got void [noderef] <asn:1> *buffer
+drivers/net/vrf.c:1785:35: warning: incorrect type in initializer (incompatible argument 3 (different address spaces))
+drivers/net/vrf.c:1785:35:    expected int ( [usertype] *proc_handler )( ... )
+drivers/net/vrf.c:1785:35:    got int ( * )( ... )
