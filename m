@@ -2,107 +2,128 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE4EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F421C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9A62207F7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:52:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JkcibBjZ"
+	by mail.kernel.org (Postfix) with ESMTP id 86AE52068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:55:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726317AbgFLPwL (ORCPT
+        id S1726302AbgFLPzU convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 11:52:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40464 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbgFLPwK (ORCPT
+        Fri, 12 Jun 2020 11:55:20 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:40534 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726085AbgFLPzT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 11:52:10 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 356ACC03E96F;
-        Fri, 12 Jun 2020 08:52:09 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id r9so8626543wmh.2;
-        Fri, 12 Jun 2020 08:52:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=NakzWRM9YS38023tyzkXCgU45379YlUYam+cS/rkKzA=;
-        b=JkcibBjZFtxDJjCe7rNgAWuZPSFz/l74sya5KCgxX1puQYARTDVPkMTqKyIt5EpIUH
-         4F3kyF+oTM6HJVj5TS0Br88XcWz4oMVCvxm+GaMJQ/grSt4phr3AarzBJesFzobd3Mwc
-         d+fEreUGvnqMyRN6ApKvTwQLhzufl5SwNsJh3n9szMFpRspEHfIYOrHY/So9fmW7Q2M4
-         AOXVDtU4CCLqqAUBydr7iHsxmL0EA7LD/npE2dlo8ytAZLIbD4rEElJS//+0LzBeqLrV
-         gkypsnxnMO4YWAvA8/HmQcOsu7WEuxJnWlI1p0X/p7fX1oq0BdQ3w29vZelIaXWzckx2
-         H5oQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NakzWRM9YS38023tyzkXCgU45379YlUYam+cS/rkKzA=;
-        b=C34xSePMJmOdBAS7W8ThjhZbiswYHCrGC0q9ld8udGARBRWLJc0mg976GwymNaaoKr
-         s6T/BEd7EnbmUccV0FTxCScgwhS0azWXgLOVPbU0xenmBVi9BhWipt+yX2hTi+EbZQwp
-         XD2lJ/7TyXuy7cXk8e1Hy1z9zEp2FydRiIQ1xI1+BUJKtAu/zPX9z4yKXZaUYTlXRQmu
-         AJYCgb2gtjktydJaJYVCQBFenQAIGYDdZ+jrCUA+yhrOn+pzhyOW9AR4sQXz8X9Tf3ub
-         fTWzDAGZ02tL0RhOJTEKOlbFMgiC95/P1bwszgl3G/X6xJ2DgNIV0jmlES39eULfhq/O
-         kqmg==
-X-Gm-Message-State: AOAM532B8ROt12mVY7jQKuuYdcnl6eo4jwJ3I4DfJo6sb6EKmI9NLA3m
-        cT86/SsRd1vQVX1FYpTyKA6yX0GH
-X-Google-Smtp-Source: ABdhPJz9rJQyiph7wv5btXmqBVlSkIVBLc5HurMludqDUg1MJgJISCmF1zBCH3yhhOLXRWvX7e9rPQ==
-X-Received: by 2002:a05:600c:2045:: with SMTP id p5mr15005247wmg.91.1591977128004;
-        Fri, 12 Jun 2020 08:52:08 -0700 (PDT)
-Received: from ?IPv6:2a02:8084:e84:2480:228:f8ff:fe6f:83a8? ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id p16sm11413855wru.27.2020.06.12.08.52.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Jun 2020 08:52:07 -0700 (PDT)
-Subject: Re: [PATCH v2 2/3] serial: core: fix sysrq overhead regression
-To:     Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Jiri Slaby <jslaby@suse.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200610152232.16925-1-johan@kernel.org>
- <20200610152232.16925-3-johan@kernel.org>
-From:   Dmitry Safonov <0x7f454c46@gmail.com>
-Message-ID: <8c6d7bae-0ebd-caa7-f9c7-96ec7035abfb@gmail.com>
-Date:   Fri, 12 Jun 2020 16:52:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200610152232.16925-3-johan@kernel.org>
-Content-Type: text/plain; charset=utf-8
+        Fri, 12 Jun 2020 11:55:19 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-256-WF26PnyoMeW0bYbJgCCLOA-1; Fri, 12 Jun 2020 16:55:15 +0100
+X-MC-Unique: WF26PnyoMeW0bYbJgCCLOA-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 12 Jun 2020 16:55:15 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 12 Jun 2020 16:55:15 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Kees Cook' <keescook@chromium.org>,
+        Sargun Dhillon <sargun@sargun.me>
+CC:     Christian Brauner <christian.brauner@ubuntu.com>,
+        "containers@lists.linux-foundation.org" 
+        <containers@lists.linux-foundation.org>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Robert Sesek <rsesek@google.com>,
+        Chris Palmer <palmer@google.com>, Jann Horn <jannh@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Matt Denton <mpdenton@google.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Tejun Heo <tj@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: RE: [PATCH v3 1/4] fs, net: Standardize on file_receive helper to
+ move fds across processes
+Thread-Topic: [PATCH v3 1/4] fs, net: Standardize on file_receive helper to
+ move fds across processes
+Thread-Index: AQHWP+BcCi14oegu0U6J73sUpcDiU6jTfHDAgACI+YCAAKH2YIAAcPLvgAAKH6A=
+Date:   Fri, 12 Jun 2020 15:55:14 +0000
+Message-ID: <b598484958d140fc9f523e200490b942@AcuMS.aculab.com>
+References: <037A305F-B3F8-4CFA-B9F8-CD4C9EF9090B@ubuntu.com>
+ <202006092227.D2D0E1F8F@keescook>
+ <20200610081237.GA23425@ircssh-2.c.rugged-nimbus-611.internal>
+ <202006101953.899EFB53@keescook>
+ <20200611100114.awdjswsd7fdm2uzr@wittgenstein>
+ <20200611110630.GB30103@ircssh-2.c.rugged-nimbus-611.internal>
+ <067f494d55c14753a31657f958cb0a6e@AcuMS.aculab.com>
+ <202006111634.8237E6A5C6@keescook>
+ <94407449bedd4ba58d85446401ff0a42@AcuMS.aculab.com>
+ <20200612104629.GA15814@ircssh-2.c.rugged-nimbus-611.internal>
+ <202006120806.E770867EF@keescook>
+In-Reply-To: <202006120806.E770867EF@keescook>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/10/20 4:22 PM, Johan Hovold wrote:
-> Commit 8e20fc391711 ("serial_core: Move sysrq functions from header
-> file") converted the inline sysrq helpers to exported functions which
-> are now called for every received character, interrupt and break signal
-> also on systems without CONFIG_MAGIC_SYSRQ_SERIAL instead of being
-> optimised away by the compiler.
+From: Kees Cook
+> Sent: 12 June 2020 16:13
+...
+> > 	/* Fixed size ioctls. Can be converted later on? */
+> > 	switch (cmd) {
+> > 	case SECCOMP_IOCTL_NOTIF_RECV:
+> > 		return seccomp_notify_recv(filter, buf);
+> > 	case SECCOMP_IOCTL_NOTIF_SEND:
+> > 		return seccomp_notify_send(filter, buf);
+> > 	case SECCOMP_IOCTL_NOTIF_ID_VALID:
+> > 		return seccomp_notify_id_valid(filter, buf);
+> > 	}
+> >
+> > 	/* Probably should make some nicer macros here */
+> > 	switch (SIZE_MASK(DIR_MASK(cmd))) {
+> > 	case SIZE_MASK(DIR_MASK(SECCOMP_IOCTL_NOTIF_ADDFD)):
 > 
-> Inlining these helpers again also avoids the function call overhead when
-> CONFIG_MAGIC_SYSRQ_SERIAL is enabled (e.g. when the port is not used as
-> a console).
+> Ah yeah, I like this because of what you mention below: it's forward
+> compat too. (I'd just use the ioctl masks directly...)
 > 
-> Fixes: 8e20fc391711 ("serial_core: Move sysrq functions from header file")
-> Cc: Dmitry Safonov <0x7f454c46@gmail.com>
-> Signed-off-by: Johan Hovold <johan@kernel.org>
+> 	switch (cmd & ~(_IOC_SIZEMASK | _IOC_DIRMASK))
 
-Thanks for sending and the numbers, it's a bit pity that we need to move
-them back to the header, but as it matters for your setup,
+Since you need the same mask on the case labels I think
+I'd define a helper just across the switch statement:
 
-Reviewed-by: Dmitry Safonov <0x7f454c46@gmail.com>
+#define M(cmd) ((cmd & ~(_IOC_SIZEMASK | _IOC_DIRMASK))
+	switch (M(cmd)) {
+	case M(SECCOMP_IOCTL_NOTIF_RECV):
+	...
+	}
+#undef M
 
-Thanks,
-           Dmitry
+It is probably wrong to mask off DIRMASK.
+But you might need to add extra case labels for
+the broken one(s).
+
+Prior to worries about indirect jumps you could
+get a dense set of case label and faster code.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
