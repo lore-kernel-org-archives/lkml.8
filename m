@@ -2,234 +2,194 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B54F2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 03:22:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD1E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 03:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DE0F2078C
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 03:22:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hPVYoqh8"
+	by mail.kernel.org (Postfix) with ESMTP id A70E320878
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 03:26:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591932401;
+	bh=HR8RVi4akUBWyDcQsxs2TtLmSm4GKbNLfDmkTSvwbtc=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=aLzghmP3v/jvUUNh/+R891HtZLi3Lc1Ppnm6Ure2ymDRUhhOHJddH6tWC0P3b8DLP
+	 bYUYi3qcyipHKH2DrCGXX5FejsnflBxw7lUaG+lxXnZqQV/m1C7640+CSOp34r1QH9
+	 zL2FUZR5i8J4WTVRFwRH5YFvcNCZ5pFIHqq8L2fM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbgFLDWG (ORCPT
+        id S1726405AbgFLD0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 23:22:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37894 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726321AbgFLDWG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 23:22:06 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B10BFC03E96F;
-        Thu, 11 Jun 2020 20:22:04 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id mb16so8641679ejb.4;
-        Thu, 11 Jun 2020 20:22:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=B4Mrm1gIXHBqQrJzDMxE7hny1sPLrSiwXYO/60LCrf4=;
-        b=hPVYoqh8jPs/l54Gc1r4kVaNzjMB73wKzEjspttHVKjphYyFYBNLvFvhAQHgCVuMXD
-         UrW+7t7+BjCCRAb619IpW+4HHRVsgemrpBPTZgHjC/3gzR+obgnFNZvECSNXA9/pCqXz
-         HhQmCLyRPV4bDpj/WbkqT06lRQ5NGJDrYyClx7y0Pw1u1IrVuE89/OQi/G/Xfxj2P6/A
-         q50xVFJ9qf09Fj3gXSwSGq/TCkNbFQz1FMxOxyxexgyiUDja4LM8/ZfhMrlDakdtj+7B
-         mLQMDgcvIZWW4w4wgQpH4a5uPbkhNBMMS2LzQSmi1fC6hyZj/87JizBAF+eT4jMoDrjk
-         jv8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B4Mrm1gIXHBqQrJzDMxE7hny1sPLrSiwXYO/60LCrf4=;
-        b=HXWtGI/tJK1qM+zTGlmFOHpesYKYSogma80wl7UCfnvHQnNMlX5bZsrVxb5sZMhxge
-         oYz1fT8eENDeWGDd3MLzymdlaQ56iUVIkVVnDi1XkVUBSVTDDzi/x126pMWu5f5il1LW
-         vwq6PJSLpzUYHit1w8UhlKDrKM+PdUL5ShyJfitEYMbmKXP8tMdbA2L8utFQeS28KUIP
-         9UfIZWPJwfKw+Lz0Cl1wzrKI/TL9kQnNShF/1unR1P1M08HzqeM5ggW417U0VV/5KxK6
-         lb3RjjN3r8jW+r+Z3LURCD+Qiv9bf+rSh2OQY5kJak0ijB2RdDQM9uIX2ANtAS9xRCwB
-         MOcA==
-X-Gm-Message-State: AOAM531fznmuSqhRFC2FQowPFa64TR9JUBtavo/ZkpEz485gI1IRdwYQ
-        Fc6xTgXwKF6PV36WMDHZ5So07Ywfn++fQUjMP5k=
-X-Google-Smtp-Source: ABdhPJyzNHPsnPsZMtc0S9NLfKpqe1fzAhLdA7GvVWT23D3A2fUYLq5KDR2bpDt/AdIyu5RKOlbarT8SJfsSUirryUA=
-X-Received: by 2002:a17:906:1088:: with SMTP id u8mr11881278eju.428.1591932123108;
- Thu, 11 Jun 2020 20:22:03 -0700 (PDT)
+        Thu, 11 Jun 2020 23:26:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35900 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726321AbgFLD0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 23:26:40 -0400
+Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D98E20878;
+        Fri, 12 Jun 2020 03:26:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591932399;
+        bh=HR8RVi4akUBWyDcQsxs2TtLmSm4GKbNLfDmkTSvwbtc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=mZ4ICSiXB6Y1Il8ydBYWtJMp0WqUkwzGn6g5Jf5hn1QKvz+beqJHZWAWHnUmYVM1A
+         o+QY69JBL554R1nZkQfL4IW3EWWMHpU8GikXvOZ3lG/njlcgtuByK0HFjvUKbEhirj
+         S6796C79/4V0/Vy57Pimq6H02N0tZNOrx1tedHio=
+From:   Andy Lutomirski <luto@kernel.org>
+To:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Cc:     Andy Lutomirski <luto@kernel.org>
+Subject: [PATCH] x86/entry: Treat BUG/WARN as NMI-like entries
+Date:   Thu, 11 Jun 2020 20:26:38 -0700
+Message-Id: <f8fe40e0088749734b4435b554f73eee53dcf7a8.1591932307.git.luto@kernel.org>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-References: <20200611222921.464-1-jcrouse@codeaurora.org> <20200611222921.464-7-jcrouse@codeaurora.org>
-In-Reply-To: <20200611222921.464-7-jcrouse@codeaurora.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Thu, 11 Jun 2020 20:22:29 -0700
-Message-ID: <CAF6AEGuyqgYKZsnBPCii4W=jxPcFU7JYKn4NBd8JVq7Pt1kR_Q@mail.gmail.com>
-Subject: Re: [PATCH 6/6] drm/msm/a6xx: Add support for per-instance pagetables
-To:     Jordan Crouse <jcrouse@codeaurora.org>
-Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        Akhil P Oommen <akhilpo@codeaurora.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>, Eric Anholt <eric@anholt.net>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Sean Paul <sean@poorly.run>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 3:29 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
->
-> Add support for using per-instance pagetables if all the dependencies are
-> available.
->
-> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> ---
->
->  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 69 ++++++++++++++++++++++++++-
->  drivers/gpu/drm/msm/msm_ringbuffer.h  |  1 +
->  2 files changed, 69 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> index a1589e040c57..5e82b85d4d55 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> @@ -79,6 +79,58 @@ static void get_stats_counter(struct msm_ringbuffer *ring, u32 counter,
->         OUT_RING(ring, upper_32_bits(iova));
->  }
->
-> +static void a6xx_set_pagetable(struct msm_gpu *gpu, struct msm_ringbuffer *ring,
-> +               struct msm_file_private *ctx)
-> +{
-> +       phys_addr_t ttbr;
-> +       u32 asid;
-> +
-> +       if (msm_iommu_pagetable_params(ctx->aspace->mmu, &ttbr, &asid))
-> +               return;
-> +
-> +       OUT_PKT7(ring, CP_SET_PROTECTED_MODE, 1);
-> +       OUT_RING(ring, 0);
-> +
-> +       /* Turn on APIV mode to access critical regions */
-> +       OUT_PKT4(ring, REG_A6XX_CP_MISC_CNTL, 1);
-> +       OUT_RING(ring, 1);
-> +
-> +       /* Make sure the ME is synchronized before staring the update */
-> +       OUT_PKT7(ring, CP_WAIT_FOR_ME, 0);
-> +
-> +       /* Execute the table update */
-> +       OUT_PKT7(ring, CP_SMMU_TABLE_UPDATE, 4);
-> +       OUT_RING(ring, lower_32_bits(ttbr));
-> +       OUT_RING(ring, (((u64) asid) << 48) | upper_32_bits(ttbr));
-> +       /* CONTEXTIDR is currently unused */
-> +       OUT_RING(ring, 0);
-> +       /* CONTEXTBANK is currently unused */
-> +       OUT_RING(ring, 0);
+If we BUG or WARN in a funny RCU context, we cleverly optimize the
+BUG/WARN using the ud2 hack, which takes us through the
+idtentry_enter...() paths, which might helpfully WARN that the RCU
+context is invalid, which results in infinite recursion.
 
-I can add this to xml (on userspace side, we've been describing packet
-payload in xml and using the generated builders), and update generated
-headers, if you agree to not add more open-coded pkt7 building ;-)
+Split the BUG/WARN handling into an nmi_enter()/nmi_exit() path in
+exc_invalid_op() to increase the chance that we survive the
+experience.
 
-> +
-> +       /*
-> +        * Write the new TTBR0 to the memstore. This is good for debugging.
-> +        */
-> +       OUT_PKT7(ring, CP_MEM_WRITE, 4);
-> +       OUT_RING(ring, lower_32_bits(rbmemptr(ring, ttbr0)));
-> +       OUT_RING(ring, upper_32_bits(rbmemptr(ring, ttbr0)));
-> +       OUT_RING(ring, lower_32_bits(ttbr));
-> +       OUT_RING(ring, (((u64) asid) << 48) | upper_32_bits(ttbr));
-> +
-> +       /* Invalidate the draw state so we start off fresh */
-> +       OUT_PKT7(ring, CP_SET_DRAW_STATE, 3);
-> +       OUT_RING(ring, 0x40000);
-> +       OUT_RING(ring, 1);
-> +       OUT_RING(ring, 0);
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+---
 
-Ie, this would look like:
+This is not as well tested as I would like, but it does cause the splat
+I'm chasing to display a nice warning instead of causing an undebuggable
+stack overflow.
 
-    OUT_PKT7(ring, CP_SET_DRAW_STATE, 3);
-    OUT_RING(ring, CP_SET_DRAW_STATE__0_COUNT(0) |
-            CP_SET_DRAW_STATE__0_DISABLE_ALL_GROUPS |
-            CP_SET_DRAW_STATE__0_GROUP_ID(0));
-    OUT_RING(ring, CP_SET_DRAW_STATE__1_ADDR_LO(1));
-    OUT_RING(ring, CP_SET_DRAW_STATE__2_ADDR_HI(0));
+(It would have been debuggable on x86_64, but it's a 32-bit splat, and
+x86_32 doesn't have ORC.)
 
-.. but written that way, I think you meant ADDR_LO to be zero?
+ arch/x86/kernel/traps.c | 61 +++++++++++++++++++++++------------------
+ arch/x86/mm/extable.c   | 15 ++++++++--
+ 2 files changed, 48 insertions(+), 28 deletions(-)
 
-(it is possible we need to regen headers for that to work, the kernel
-headers are somewhat out of date by now)
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index cb8c3d26cdf5..6340b12a6616 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -98,24 +98,6 @@ int is_valid_bugaddr(unsigned long addr)
+ 	return ud == INSN_UD0 || ud == INSN_UD2;
+ }
+ 
+-int fixup_bug(struct pt_regs *regs, int trapnr)
+-{
+-	if (trapnr != X86_TRAP_UD)
+-		return 0;
+-
+-	switch (report_bug(regs->ip, regs)) {
+-	case BUG_TRAP_TYPE_NONE:
+-	case BUG_TRAP_TYPE_BUG:
+-		break;
+-
+-	case BUG_TRAP_TYPE_WARN:
+-		regs->ip += LEN_UD2;
+-		return 1;
+-	}
+-
+-	return 0;
+-}
+-
+ static nokprobe_inline int
+ do_trap_no_signal(struct task_struct *tsk, int trapnr, const char *str,
+ 		  struct pt_regs *regs,	long error_code)
+@@ -191,13 +173,6 @@ static void do_error_trap(struct pt_regs *regs, long error_code, char *str,
+ {
+ 	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
+ 
+-	/*
+-	 * WARN*()s end up here; fix them up before we call the
+-	 * notifier chain.
+-	 */
+-	if (!user_mode(regs) && fixup_bug(regs, trapnr))
+-		return;
+-
+ 	if (notify_die(DIE_TRAP, str, regs, error_code, trapnr, signr) !=
+ 			NOTIFY_STOP) {
+ 		cond_local_irq_enable(regs);
+@@ -242,9 +217,43 @@ static inline void handle_invalid_op(struct pt_regs *regs)
+ 		      ILL_ILLOPN, error_get_trap_addr(regs));
+ }
+ 
+-DEFINE_IDTENTRY(exc_invalid_op)
++DEFINE_IDTENTRY_RAW(exc_invalid_op)
+ {
++	bool rcu_exit;
++
++	/*
++	 * Handle BUG/WARN like NMIs instead of like normal idtentries:
++	 * if we bugged/warned in a bad RCU context, for example, the last
++	 * thing we want is to BUG/WARN again in the idtentry code, ad
++	 * infinitum.
++	 */
++	if (!user_mode(regs) && is_valid_bugaddr(regs->ip)) {
++		enum bug_trap_type type;
++
++		nmi_enter();
++		instrumentation_begin();
++		type = report_bug(regs->ip, regs);
++		instrumentation_end();
++		nmi_exit();
++
++		if (type == BUG_TRAP_TYPE_WARN) {
++			/* Skip the ud2. */
++			regs->ip += LEN_UD2;
++			return;
++		}
++
++		/*
++		 * Else, if this was a BUG and report_bug returns or if this
++		 * was just a normal #UD, we want to continue onward and
++		 * crash.
++		 */
++	}
++
++	rcu_exit = idtentry_enter_cond_rcu(regs);
++	instrumentation_begin();
+ 	handle_invalid_op(regs);
++	instrumentation_end();
++	idtentry_exit_cond_rcu(regs, rcu_exit);
+ }
+ 
+ DEFINE_IDTENTRY(exc_coproc_segment_overrun)
+diff --git a/arch/x86/mm/extable.c b/arch/x86/mm/extable.c
+index b991aa4bdfae..1d6cb07f4f86 100644
+--- a/arch/x86/mm/extable.c
++++ b/arch/x86/mm/extable.c
+@@ -204,8 +204,19 @@ void __init early_fixup_exception(struct pt_regs *regs, int trapnr)
+ 	if (fixup_exception(regs, trapnr, regs->orig_ax, 0))
+ 		return;
+ 
+-	if (fixup_bug(regs, trapnr))
+-		return;
++	if (trapnr == X86_TRAP_UD) {
++		if (report_bug(regs->ip, regs) == BUG_TRAP_TYPE_WARN) {
++			/* Skip the ud2. */
++			regs->ip += LEN_UD2;
++			return;
++		}
++
++		/*
++		 * If this was a BUG and report_bug returns or if this
++		 * was just a normal #UD, we want to continue onward and
++		 * crash.
++		 */
++	}
+ 
+ fail:
+ 	early_printk("PANIC: early exception 0x%02x IP %lx:%lx error %lx cr2 0x%lx\n",
+-- 
+2.25.4
 
-BR,
--R
-
-> +
-> +       /* Turn off APRIV */
-> +       OUT_PKT4(ring, REG_A6XX_CP_MISC_CNTL, 1);
-> +       OUT_RING(ring, 0);
-> +
-> +       /* Turn off protected mode */
-> +       OUT_PKT7(ring, CP_SET_PROTECTED_MODE, 1);
-> +       OUT_RING(ring, 1);
-> +}
-> +
->  static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
->         struct msm_file_private *ctx)
->  {
-> @@ -89,6 +141,8 @@ static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
->         struct msm_ringbuffer *ring = submit->ring;
->         unsigned int i;
->
-> +       a6xx_set_pagetable(gpu, ring, ctx);
-> +
->         get_stats_counter(ring, REG_A6XX_RBBM_PERFCTR_CP_0_LO,
->                 rbmemptr_stats(ring, index, cpcycles_start));
->
-> @@ -872,6 +926,18 @@ static unsigned long a6xx_gpu_busy(struct msm_gpu *gpu)
->         return (unsigned long)busy_time;
->  }
->
-> +struct msm_gem_address_space *a6xx_address_space_instance(struct msm_gpu *gpu)
-> +{
-> +       struct msm_mmu *mmu;
-> +
-> +       mmu = msm_iommu_pagetable_create(gpu->aspace->mmu);
-> +       if (IS_ERR(mmu))
-> +               return msm_gem_address_space_get(gpu->aspace);
-> +
-> +       return msm_gem_address_space_create(mmu,
-> +               "gpu", 0x100000000ULL, 0x1ffffffffULL);
-> +}
-> +
->  static const struct adreno_gpu_funcs funcs = {
->         .base = {
->                 .get_param = adreno_get_param,
-> @@ -893,8 +959,9 @@ static const struct adreno_gpu_funcs funcs = {
->  #if defined(CONFIG_DRM_MSM_GPU_STATE)
->                 .gpu_state_get = a6xx_gpu_state_get,
->                 .gpu_state_put = a6xx_gpu_state_put,
-> -               .create_address_space = adreno_iommu_create_address_space,
->  #endif
-> +               .create_address_space = adreno_iommu_create_address_space,
-> +               .address_space_instance = a6xx_address_space_instance,
->         },
->         .get_timestamp = a6xx_get_timestamp,
->  };
-> diff --git a/drivers/gpu/drm/msm/msm_ringbuffer.h b/drivers/gpu/drm/msm/msm_ringbuffer.h
-> index 7764373d0ed2..0987d6bf848c 100644
-> --- a/drivers/gpu/drm/msm/msm_ringbuffer.h
-> +++ b/drivers/gpu/drm/msm/msm_ringbuffer.h
-> @@ -31,6 +31,7 @@ struct msm_rbmemptrs {
->         volatile uint32_t fence;
->
->         volatile struct msm_gpu_submit_stats stats[MSM_GPU_SUBMIT_STATS_COUNT];
-> +       volatile u64 ttbr0;
->  };
->
->  struct msm_ringbuffer {
-> --
-> 2.17.1
->
