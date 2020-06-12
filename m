@@ -6,64 +6,68 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA43C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 349A4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F074206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:26:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 125F3206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:26:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591989965;
-	bh=n8TjGPlzZHBN3WuBTWOI5Lhh92feVSg1DUZw+cdVaTQ=;
+	s=default; t=1591989971;
+	bh=o66TgqJCCvgx5tH/sel8vwZ11HbUm8QXxlYucoJdTLM=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=yjZov6onu5KYfjmcUBL4ujYGgn/HWK24RS9s4yJacFIE82pkVkoOE7wAkTuCOhMey
-	 g6bvKZ7rMIJQ3+H/XCZPM+HfeQaqfhJjsH9DbCTZlwB3meA/PgmhnxH89tak6bMhbz
-	 sLHaLrSwC3ta9FX4saTyEns3yLHiokA/z3hg0/3c=
+	b=mWU9GLQ+K33gjddtAEFcp9lnC055EbmFv0nLCn+06XlZF0AezYm33U1xfhmIdJ0m2
+	 1DQvE7b9yAuBCN4QN6KudjlinwHjyOFIIsIAFcRdYISBM0RPNlrnUBiRsb8bcX7xPo
+	 EBVKhRrcrcN/tKR4Fyx/YLzGV98/6rFGkHrFX4d0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbgFLTZc (ORCPT
+        id S1726606AbgFLT0J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 15:25:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36788 "EHLO mail.kernel.org"
+        Fri, 12 Jun 2020 15:26:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726381AbgFLTZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 15:25:29 -0400
-Subject: Re: [GIT PULL] arch/nios2 update for 5.8-rc1
+        id S1726424AbgFLTZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 15:25:31 -0400
+Subject: Re: [GIT PULL] printk for 5.8
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591989929;
-        bh=n8TjGPlzZHBN3WuBTWOI5Lhh92feVSg1DUZw+cdVaTQ=;
+        s=default; t=1591989930;
+        bh=o66TgqJCCvgx5tH/sel8vwZ11HbUm8QXxlYucoJdTLM=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=zc4aWD+wxQakKJKd44jz+Cd8vmDeya+QtJMq7gqU4Q8WmFg+ItgI7jlsLsVbaK1ML
-         c/qFmjiJ7sUIGgfj3G+v1ZbWodyoU6T/DGJFSHO0tp/0H+YG/LmGCv5/jhjTNKgk7V
-         4KqwAjWI9p7fIvmAeYTkSP2iGqxzZxV0OKsNGjC4=
+        b=J0r120bcOQ25099xb/mvmf9K2I+abAwl6qp6Ub91BrpyYM0FGVmVIuLP9EKBF7NwO
+         uVWqIED32BYwzdnFz7bJQzCTcdFonqmPEoCCwj8uOZzqIjriA+4TzsIEmYrJNwkgO8
+         Z9p+C25Km7nDrp4FsOc88fbrVpMm2Vwi6lN4lAgM=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <BY5PR11MB3893D9118F509981F5612029CC810@BY5PR11MB3893.namprd11.prod.outlook.com>
-References: <BY5PR11MB3893D9118F509981F5612029CC810@BY5PR11MB3893.namprd11.prod.outlook.com>
+In-Reply-To: <20200612084049.GC4311@linux-b0ei>
+References: <20200612084049.GC4311@linux-b0ei>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <BY5PR11MB3893D9118F509981F5612029CC810@BY5PR11MB3893.namprd11.prod.outlook.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/lftan/nios2.git
- tags/nios2-v5.8-rc1
-X-PR-Tracked-Commit-Id: 6b57fa4d374bb8c005dee396c56598c14b9c01a6
+X-PR-Tracked-Message-Id: <20200612084049.GC4311@linux-b0ei>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/printk/linux
+ tags/printk-for-5.8-kdb-nmi
+X-PR-Tracked-Commit-Id: 2a9e5ded9543436620a7fbc9329ddcc32bf97bc7
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 7de26c41c19fc7b2e078d31fd039e1a017064b89
-Message-Id: <159198992932.4050.12321009333314946641.pr-tracker-bot@kernel.org>
-Date:   Fri, 12 Jun 2020 19:25:29 +0000
-To:     "Tan, Ley Foon" <ley.foon.tan@intel.com>
+X-PR-Merge-Commit-Id: 5c2fb57af0f42550eb718a3b0b445c81ec923895
+Message-Id: <159198993089.4050.1219224835189781022.pr-tracker-bot@kernel.org>
+Date:   Fri, 12 Jun 2020 19:25:30 +0000
+To:     Petr Mladek <pmladek@suse.com>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ley Foon Tan <lftan.linux@gmail.com>,
-        "christian.brauner@ubuntu.com" <christian.brauner@ubuntu.com>,
-        "gustavoars@kernel.org" <gustavoars@kernel.org>
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Daniel Thompson <daniel.thompson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 12 Jun 2020 08:13:51 +0000:
+The pull request you sent on Fri, 12 Jun 2020 10:40:49 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/lftan/nios2.git tags/nios2-v5.8-rc1
+> git://git.kernel.org/pub/scm/linux/kernel/git/printk/linux tags/printk-for-5.8-kdb-nmi
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/7de26c41c19fc7b2e078d31fd039e1a017064b89
+https://git.kernel.org/torvalds/c/5c2fb57af0f42550eb718a3b0b445c81ec923895
 
 Thank you!
 
