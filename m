@@ -2,149 +2,93 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7463C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 01:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37913C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 01:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2FBF206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 01:16:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SScLMHqv"
+	by mail.kernel.org (Postfix) with ESMTP id 1465F206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 01:18:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726364AbgFLBPd (ORCPT
+        id S1726396AbgFLBSt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 21:15:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46642 "EHLO
+        Thu, 11 Jun 2020 21:18:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbgFLBPd (ORCPT
+        with ESMTP id S1726305AbgFLBSt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 21:15:33 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B17CCC03E96F;
-        Thu, 11 Jun 2020 18:15:31 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id k8so5279100edq.4;
-        Thu, 11 Jun 2020 18:15:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WrXOAPR1wUIoCz970nhKAMLDJMKaQFBhK9kaj7+c6o0=;
-        b=SScLMHqvdfTGJ4XcYw/pdc3oc6RjUnJ5qkedbCLfkGyQGpxl/6/5SFXJAJoi6ninOB
-         v5uAGMs+3NrtiOooTsQw22dcG0kHNgNrTEgCTxXgE/SQ6MPMMly9DuEZ5R940F/QmDSR
-         ijJp+63tgkpG//qDR2D99dezWkbQJ0WM57e9I2mGLaZInRIu1In5Ozhj57a38WJUn6JN
-         uRTEdNkH8idNZNrl72iWC51hmQS9/6ZIds+qo366r1GUPGFJ3Lt5R+NSmjhJm9cf8kbZ
-         1lc1ty5ZDfMBN8b6CIRbk8hA4ma52xhvz+yoz6KFKfu0rahW8caETMgbWXlIHNgkdeam
-         JW/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WrXOAPR1wUIoCz970nhKAMLDJMKaQFBhK9kaj7+c6o0=;
-        b=a/P3OpJegvTYsSfAknczOqrrCBYFbfD1+Ya87/Fg6CbPUCxHWhZYr+fwoTvxJf61J4
-         n2baodlo3SPViUAy8aSGKf+DCn7Omk6HIHHnGjfDGY3yIczvYdhyOFD3YOV0FcP4nAoE
-         EdfOry/WmHO9xa+cg0OKgJu4NO3oOb3NIFJAh7NahL/1Sa9yfPIcbBFCowldf3NM2v3p
-         FxM0VPvYjhgisuQ6KTdIrlbxZKm68zzt6s3GkrrrJwVioSNogkhCL/bWyg1GNJZmPgXJ
-         BwLMru5c3H/8HslUpXbRK2GAHpDHNBIfP5RuL7/o6g7D51hfJHFM9ium+UCU46moOST6
-         SW6g==
-X-Gm-Message-State: AOAM533ioQfODSdF14FwlFrihyE6hHfABNwSA7VBcrsR8nchggJrdgqb
-        gEjQPJfk7OOeExSTz1XPzRDWg2oKX6VrJlm3w1M=
-X-Google-Smtp-Source: ABdhPJy9T4eu6IOqnyeQMZ34m2hL2Q7kSjQjI0lZKf4aSXI+VN7o0jMNAKociU3mfaxZazZru8sdte/ZygxwmqluBuM=
-X-Received: by 2002:a50:cdc6:: with SMTP id h6mr9230698edj.111.1591924530127;
- Thu, 11 Jun 2020 18:15:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <1591665267-37713-1-git-send-email-sugar.zhang@rock-chips.com> <CAMdYzYr+NF7L3KKzcGano=j9V844Gy8gH03hD++CoPe8Ao1QxQ@mail.gmail.com>
-In-Reply-To: <CAMdYzYr+NF7L3KKzcGano=j9V844Gy8gH03hD++CoPe8Ao1QxQ@mail.gmail.com>
-From:   Peter Geis <pgwipeout@gmail.com>
-Date:   Thu, 11 Jun 2020 21:15:17 -0400
-Message-ID: <CAMdYzYqRTbePLKZ6q39Ao3sgLU0xUvrLmwYTVU3feEb4ob6FuQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/13] Patches to improve transfer efficiency for
- Rockchip SoCs.
-To:     Sugar Zhang <sugar.zhang@rock-chips.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
-        devicetree@vger.kernel.org, Carlos de Paula <me@carlosedp.com>,
-        dmaengine@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Johan Jonker <jbx6244@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Leonidas P. Papadakos" <papadakospan@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 11 Jun 2020 21:18:49 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 360EEC03E96F;
+        Thu, 11 Jun 2020 18:18:49 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id EC35A128AE837;
+        Thu, 11 Jun 2020 18:18:45 -0700 (PDT)
+Date:   Thu, 11 Jun 2020 18:18:42 -0700 (PDT)
+Message-Id: <20200611.181842.2083721665296210889.davem@davemloft.net>
+To:     dhowells@redhat.com
+Cc:     netdev@vger.kernel.org, linux-afs@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] rxrpc: Fix race between incoming ACK parser and
+ retransmitter
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <159190902048.3557242.17524953697020439394.stgit@warthog.procyon.org.uk>
+References: <159190902048.3557242.17524953697020439394.stgit@warthog.procyon.org.uk>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 11 Jun 2020 18:18:46 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 9:06 PM Peter Geis <pgwipeout@gmail.com> wrote:
->
-> Good Evening,
->
-> I am currently testing this on the rk3399-rockpro64, and it appears to
-> fully fix the gmac problem without using txpbl.
-> PCIe also seems to be more stable at high load.
-> I need to conduct long term testing, but it seems to be doing very well.
+From: David Howells <dhowells@redhat.com>
+Date: Thu, 11 Jun 2020 21:57:00 +0100
 
-Belay that, it does make it harder to trigger, but the issue still
-remains on the rk3399.
+> There's a race between the retransmission code and the received ACK parser.
+> The problem is that the retransmission loop has to drop the lock under
+> which it is iterating through the transmission buffer in order to transmit
+> a packet, but whilst the lock is dropped, the ACK parser can crank the Tx
+> window round and discard the packets from the buffer.
+> 
+> The retransmission code then updated the annotations for the wrong packet
+> and a later retransmission thought it had to retransmit a packet that
+> wasn't there, leading to a NULL pointer dereference.
+> 
+> Fix this by:
+> 
+>  (1) Moving the annotation change to before we drop the lock prior to
+>      transmission.  This means we can't vary the annotation depending on
+>      the outcome of the transmission, but that's fine - we'll retransmit
+>      again later if it failed now.
+> 
+>  (2) Skipping the packet if the skb pointer is NULL.
+> 
+> The following oops was seen:
+> 
+> 	BUG: kernel NULL pointer dereference, address: 000000000000002d
+> 	Workqueue: krxrpcd rxrpc_process_call
+> 	RIP: 0010:rxrpc_get_skb+0x14/0x8a
+> 	...
+> 	Call Trace:
+> 	 rxrpc_resend+0x331/0x41e
+> 	 ? get_vtime_delta+0x13/0x20
+> 	 rxrpc_process_call+0x3c0/0x4ac
+> 	 process_one_work+0x18f/0x27f
+> 	 worker_thread+0x1a3/0x247
+> 	 ? create_worker+0x17d/0x17d
+> 	 kthread+0xe6/0xeb
+> 	 ? kthread_delayed_work_timer_fn+0x83/0x83
+> 	 ret_from_fork+0x1f/0x30
+> 
+> Fixes: 248f219cb8bc ("rxrpc: Rewrite the data and ack handling code")
+> Signed-off-by: David Howells <dhowells@redhat.com>
 
->
-> Unfortunately it doesn't fix the rk3328 gmac controller.
->
-> Tested-by: Peter Geis <pgwipeout@gmail.com>
->
-> On Mon, Jun 8, 2020 at 9:15 PM Sugar Zhang <sugar.zhang@rock-chips.com> wrote:
-> >
-> >
-> >
-> > Changes in v2:
-> > - fix FATAL ERROR: Unable to parse input tree
-> >
-> > Sugar Zhang (13):
-> >   dmaengine: pl330: Remove the burst limit for quirk 'NO-FLUSHP'
-> >   dmaengine: pl330: Add quirk 'arm,pl330-periph-burst'
-> >   dt-bindings: dma: pl330: Document the quirk 'arm,pl330-periph-burst'
-> >   ARM: dts: rk3036: Add 'arm,pl330-periph-burst' for dmac
-> >   ARM: dts: rk322x: Add 'arm,pl330-periph-burst' for dmac
-> >   ARM: dts: rk3288: Add 'arm,pl330-periph-burst' for dmac
-> >   ARM: dts: rk3xxx: Add 'arm,pl330-periph-burst' for dmac
-> >   ARM: dts: rv1108: Add 'arm,pl330-periph-burst' for dmac
-> >   arm64: dts: px30: Add 'arm,pl330-periph-burst' for dmac
-> >   arm64: dts: rk3308: Add 'arm,pl330-periph-burst' for dmac
-> >   arm64: dts: rk3328: Add 'arm,pl330-periph-burst' for dmac
-> >   arm64: dts: rk3368: Add 'arm,pl330-periph-burst' for dmac
-> >   arm64: dts: rk3399: Add 'arm,pl330-periph-burst' for dmac
-> >
-> >  .../devicetree/bindings/dma/arm-pl330.txt          |  1 +
-> >  arch/arm/boot/dts/rk3036.dtsi                      |  1 +
-> >  arch/arm/boot/dts/rk322x.dtsi                      |  1 +
-> >  arch/arm/boot/dts/rk3288.dtsi                      |  3 ++
-> >  arch/arm/boot/dts/rk3xxx.dtsi                      |  3 ++
-> >  arch/arm/boot/dts/rv1108.dtsi                      |  1 +
-> >  arch/arm64/boot/dts/rockchip/px30.dtsi             |  1 +
-> >  arch/arm64/boot/dts/rockchip/rk3308.dtsi           |  2 +
-> >  arch/arm64/boot/dts/rockchip/rk3328.dtsi           |  1 +
-> >  arch/arm64/boot/dts/rockchip/rk3368.dtsi           |  2 +
-> >  arch/arm64/boot/dts/rockchip/rk3399.dtsi           |  2 +
-> >  drivers/dma/pl330.c                                | 44 +++++++++++++++-------
-> >  12 files changed, 49 insertions(+), 13 deletions(-)
-> >
-> > --
-> > 2.7.4
-> >
-> >
-> >
-> >
-> > _______________________________________________
-> > Linux-rockchip mailing list
-> > Linux-rockchip@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-rockchip
+Applied, thanks.
