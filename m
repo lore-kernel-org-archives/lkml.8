@@ -2,86 +2,73 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1321CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 20:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40EC4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 20:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E29C020723
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 20:02:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C0AA20792
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 20:02:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="nn5atouC"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="h7u6dR4B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726365AbgFLUCB (ORCPT
+        id S1726381AbgFLUC5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 16:02:01 -0400
-Received: from mta-p8.oit.umn.edu ([134.84.196.208]:34186 "EHLO
-        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbgFLUCA (ORCPT
+        Fri, 12 Jun 2020 16:02:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50920 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726304AbgFLUC4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 16:02:00 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 49kBT34YqCz9vZTZ
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 20:01:59 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p8.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id qOLmtil1fOTu for <linux-kernel@vger.kernel.org>;
-        Fri, 12 Jun 2020 15:01:59 -0500 (CDT)
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id 49kBT32pdyz9vZTK
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 15:01:59 -0500 (CDT)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p8.oit.umn.edu 49kBT32pdyz9vZTK
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p8.oit.umn.edu 49kBT32pdyz9vZTK
-Received: by mail-io1-f72.google.com with SMTP id p8so6813716ios.19
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 13:01:59 -0700 (PDT)
+        Fri, 12 Jun 2020 16:02:56 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90FDAC08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 13:02:55 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id m1so4627005pgk.1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 13:02:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
+        d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=imHRrGBvGVpcQig7cLuElCC6UJZ82NGJhVcu/IBvqQM=;
-        b=nn5atouCc/tNlop8bGQTSwAWR1UpUfAftV6DdLjiUZ8BpCnJokk+Xc/nFUSUXGqGXx
-         Z9ufGv1umv18UE2bvYoMJGJGiovJrb/fLS3rx//EFUYE2K0QFdN34Yjj9rXNH29dulnB
-         nLOe2RIbVYtscO7M0XkmkvhPBl/avIo1Rd1IxvFh4eD71h0em69a2Pe02mSp16teRu1w
-         mCxiUI+cFFwVu5AUPnLVl5wc8OvgYWutc+IuahNAW5xQxZzoLMdHlvK3vgeO19aPlqQi
-         wH9f0z5HwrtsktF6mqkBu7KvX3k4ufWYj12ozM2C+qdIN2LMOxPag/3jyGbJw9rYYRRp
-         phrA==
+        bh=6uGSExpyps+wiw7uOwP+l2H0cv+SpFFWTmb8dRKkt6U=;
+        b=h7u6dR4B19jQUlPQPyqjXka9J3KhpwDNlIcPUaI2++siCsOQzCELypYC05rGhkBGfK
+         g6A0zotR7FceCE016nrOeQktoGXFoxfPsVMkwkGm2ZK8vzxnm9PHYfuf86mrONiRQW2Z
+         Zw4dDBZtjL34Gk9sshcTJuMJRBFPMalZqIERo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=imHRrGBvGVpcQig7cLuElCC6UJZ82NGJhVcu/IBvqQM=;
-        b=fKeI7hNJWgX5vAl4bqbR55Wuo6BB8hUW9l2hp+zK5lexwgJTFi6iA+7ND/JEevpz/s
-         0oZyKJ2DZDeoDSGKldbwlxmg7KnYUTtA78i1bYmJ3M84cy/rG4/4W+S1ZHr09HZcZzoc
-         ESJzymhFsfQfbfpDqOjujO6SqINqYNpd+BK4rlfvS4gWe+c6QwvbL40xJHaxvx8YWJLe
-         TR+BhNOLN6C6WTqm9xMMfK79lgvysKUwaJ2JFN6fGQGO3SpVIhlPuiLXTKQoIT6oOxBz
-         mFGtC73ZLoj8S4Z3u4VSqhW1sd8ZBf5qeWeU3egRCvvi/DddnrdTknerDbywhUQxiPFF
-         8ung==
-X-Gm-Message-State: AOAM531yIvebHd9xGccuIQccJV1Nld+koHzr38JTbxS9OASt9asY9VDA
-        +urutn46hsMuMgUmn25lFW3UM3oPMVdEZ14JDBcfWXlGWboCX0zuku1JaohDY6Mxul3CX4ECgJr
-        SVQYk5uR8kLar1j748TlPdbC2bs0F
-X-Received: by 2002:a6b:9054:: with SMTP id s81mr15219657iod.122.1591992118587;
-        Fri, 12 Jun 2020 13:01:58 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxRUmPTr/16TxYq2aOphiwdmxs3OwZOEejbQPuzgta6zECKOw59nmZGUZlqZ3H10vZwXLg9cQ==
-X-Received: by 2002:a6b:9054:: with SMTP id s81mr15219629iod.122.1591992118398;
-        Fri, 12 Jun 2020 13:01:58 -0700 (PDT)
-Received: from piston-t1.hsd1.mn.comcast.net ([2601:445:4380:5b90:79cf:2597:a8f1:4c97])
-        by smtp.googlemail.com with ESMTPSA id d1sm3559363ilq.3.2020.06.12.13.01.57
+        bh=6uGSExpyps+wiw7uOwP+l2H0cv+SpFFWTmb8dRKkt6U=;
+        b=Pjoh89HU7uLMyWfRbBPSpeNaW+ZkMZ088B/chPkj9Zz7A0xGIfgdJ/E/EjIgIZlXMU
+         oAjs//jFNFTtTdv87/1BL4P76kQfBMr8s0oaZKgRmoTyRn/tN3TshOjuAgPVB55gwVQC
+         7N6SZ4YbynWA/+RXCsMfcM9mxtjo1rxzN/9VgCHfqet7IB8CfRQz7M9Qr1PBaEEjllVP
+         qeRBbZx0evQdIPanteaEe4dW78bcnDeSZycggOLXr+FHND4O+xxfYlVYYB6pzZrNbKGj
+         zhdOx4nuXpK3cS8lXnvWELMQbbR32xeRadYuLhs/AFSpuCCNWOx25gfXpHetKF1bw+ri
+         0rBg==
+X-Gm-Message-State: AOAM533OjP9UxrwFy3XhepSYkfyJjAgo2n5ThKFKzdTz3HeE6v4vwfLA
+        JGiDkbWBUCLhvb+kk1jBg8Fd+w==
+X-Google-Smtp-Source: ABdhPJz0sMFDiDA11ABe5kT1o/km+Y+ock0L+fTuGu64VLLvv2xzyZOb5s8slfiJArkBbrcCb8SSjA==
+X-Received: by 2002:a63:1617:: with SMTP id w23mr12597286pgl.248.1591992175014;
+        Fri, 12 Jun 2020 13:02:55 -0700 (PDT)
+Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
+        by smtp.gmail.com with ESMTPSA id f7sm6544851pje.1.2020.06.12.13.02.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 13:01:58 -0700 (PDT)
-From:   Aditya Pakki <pakki001@umn.edu>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, wu000273@umn.edu, Jiri Pirko <jiri@mellanox.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] test_objagg: Fix potential memory leak in error handling
-Date:   Fri, 12 Jun 2020 15:01:54 -0500
-Message-Id: <20200612200154.55243-1-pakki001@umn.edu>
-X-Mailer: git-send-email 2.25.1
+        Fri, 12 Jun 2020 13:02:54 -0700 (PDT)
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+To:     heiko@sntech.de, linux-rockchip@lists.infradead.org
+Cc:     linux-bluetooth@vger.kernel.org,
+        chromeos-bluetooth-upstreaming@chromium.org, mka@chromium.org,
+        dianders@chromium.org,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2] ARM: dts: rockchip: Add marvell BT irq config
+Date:   Fri, 12 Jun 2020 13:02:48 -0700
+Message-Id: <20200612130219.v2.1.I66864be898aa835ccb66b6cd5220d0b082338a81@changeid>
+X-Mailer: git-send-email 2.27.0.290.gba653c62da-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -89,32 +76,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case of failure of check_expect_hints_stats(), the resources
-allocated by objagg_hints_get should be freed. The patch fixes
-this issue.
+Veyron Jaq and Mighty both use the Marvel 8897 WiFi+BT chip. Add wakeup
+and pinctrl block to devicetree so the btmrvl driver can correctly
+configure the wakeup interrupt.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Reviewed-by: Reviewed-by: Douglas Anderson <dianders@chromium.org>
 ---
- lib/test_objagg.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+The Veyron Mighty Chromebook (rk3288 based board) is missing the wake
+configuration for Bluetooth. Without this change, the wake irq was not
+configurable and wake on Bluetooth was broken.
 
-diff --git a/lib/test_objagg.c b/lib/test_objagg.c
-index 72c1abfa154d..da137939a410 100644
---- a/lib/test_objagg.c
-+++ b/lib/test_objagg.c
-@@ -979,10 +979,10 @@ static int test_hints_case(const struct hints_case *hints_case)
- err_world2_obj_get:
- 	for (i--; i >= 0; i--)
- 		world_obj_put(&world2, objagg, hints_case->key_ids[i]);
--	objagg_hints_put(hints);
--	objagg_destroy(objagg2);
- 	i = hints_case->key_ids_count;
-+	objagg_destroy(objagg2);
- err_check_expect_hints_stats:
-+	objagg_hints_put(hints);
- err_hints_get:
- err_check_expect_stats:
- err_world_obj_get:
+I verified this change with additional changes in the Bluetooth driver
+(the series is at https://patchwork.kernel.org/cover/11599101/). The
+driver changes are not necessary for this dts change and shouldn't block
+it.
+
+
+Changes in v2:
+- Move sdio0 ahead of sdmmc
+
+ arch/arm/boot/dts/rk3288-veyron-jaq.dts | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/arch/arm/boot/dts/rk3288-veyron-jaq.dts b/arch/arm/boot/dts/rk3288-veyron-jaq.dts
+index 171ba6185b6d39..c15d6865f5a390 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-jaq.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-jaq.dts
+@@ -44,6 +44,21 @@ regulator-state-mem {
+ 	};
+ };
+ 
++&sdio0 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	btmrvl: btmrvl@2 {
++		compatible = "marvell,sd8897-bt";
++		reg = <2>;
++		interrupt-parent = <&gpio4>;
++		interrupts = <RK_PD7 IRQ_TYPE_LEVEL_LOW>;
++		marvell,wakeup-pin = /bits/ 16 <13>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&bt_host_wake_l>;
++	};
++};
++
+ &sdmmc {
+ 	disable-wp;
+ 	pinctrl-names = "default";
 -- 
-2.25.1
+2.27.0.290.gba653c62da-goog
 
