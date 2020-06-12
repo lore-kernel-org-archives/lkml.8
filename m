@@ -2,116 +2,99 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EBFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 12:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CFF0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 12:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 550C720792
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 12:12:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 173DC20792
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 12:15:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Cx7RuQ86"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mwfqShPi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726268AbgFLMMq (ORCPT
+        id S1726278AbgFLMPl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 08:12:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34758 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725791AbgFLMMp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 08:12:45 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37A21C03E96F;
-        Fri, 12 Jun 2020 05:12:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=yK0/1c9HKj2vF/aVFuOZ5pmsjzwvYf0jnH1dHlUlTaU=; b=Cx7RuQ86PB3ddeJ2xmouu/uKH
-        0xZPWb+ognvv1FUceCJLBroZnRKagl9MUwZtLcQp8ifCoKSPaAwBSg4qyIg59XcxrGEzZ1WpyLaEk
-        nZkhKYaSi41JVrdTtOpk1kAa8Xu+KrKX4mGgpSu43l7w0/ltuajXq80uObZcLGWovVTnzm4LMdwJu
-        OWqfGyzdRtsPRxXmhNB/TADT39c2G+V63xY3xMmen/TWEoCLRDExipNWDvbGZaCmnebG5czbGfhXb
-        jTrEsyyS9XksQmjs06sI57lA/Y4zG5RqGVuRMxKa3hEg04XGdwd9B+35wJaHd79bY8WzLTHMLyRV0
-        Ycld0pp5w==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:44620)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jjiY4-0002oG-A5; Fri, 12 Jun 2020 13:12:40 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jjiY3-0006G9-Lp; Fri, 12 Jun 2020 13:12:39 +0100
-Date:   Fri, 12 Jun 2020 13:12:39 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
-Subject: Re: [PATCH v2] net: mvneta: Fix Serdes configuration for 2.5Gbps
- modes
-Message-ID: <20200612121239.GJ1551@shell.armlinux.org.uk>
-References: <20200612083847.29942-1-s.hauer@pengutronix.de>
- <20200612084710.GC1551@shell.armlinux.org.uk>
- <20200612100114.GE1551@shell.armlinux.org.uk>
- <20200612101820.GF1551@shell.armlinux.org.uk>
- <20200612120604.GT11869@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200612120604.GT11869@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 12 Jun 2020 08:15:41 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:24087 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726024AbgFLMPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 08:15:41 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591964140; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=EoClYSfrCGrpW053Sq3rBKR7kbmultBOqn3icL3Su/k=; b=mwfqShPi1YD8a8qIW1Z3PtLXNBlYk6P9qeIZTgb1O38FhGoEsYG8UerpT8IMLl6Jk7xQ1pIN
+ Q55TO1+lBjPvOG7AksQ2QKhPfpLcaAjeOm7/o9x4NiXWnZOPjDdKWBnfIL9wSRQLcVLzZ8+c
+ G72uPGIYpWLuUVJs84ceciWelyQ=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
+ 5ee371e5567385e8e7ef5648 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 12 Jun 2020 12:15:33
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id BA23BC43387; Fri, 12 Jun 2020 12:15:32 +0000 (UTC)
+Received: from bgodavar-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: bgodavar)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CCD4EC433CA;
+        Fri, 12 Jun 2020 12:15:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CCD4EC433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bgodavar@codeaurora.org
+From:   Balakrishna Godavarthi <bgodavar@codeaurora.org>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com
+Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, abhishekpandit@chromium.org,
+        rjliao@codeaurora.org, gubbaven@codeaurora.org,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Subject: [PATCH v1] Bluetooth: hci_qca: Request Tx clock vote off only when Tx is pending
+Date:   Fri, 12 Jun 2020 17:45:17 +0530
+Message-Id: <1591964117-8228-1-git-send-email-bgodavar@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 02:06:04PM +0200, Sascha Hauer wrote:
-> And here is the same patch which applies on master and the net tree.
-> It works as expected on my Armada XP in 2.5Gbps mode. Provided you are
-> happy with the patch I can send it as a formal patch on monday if by
-> then you haven't done that already.
+Tx pending flag is set to true when HOST IBS state is AWAKE or
+AWAKEING. If IBS state is ASLEEP, then Tx clock is already voted
+off. To optimize further directly calling serial_clock_vote()
+instead of qca_wq_serial_tx_clock_vote_off(), at this point of
+qca_suspend() already data is sent out. No need to wake up hci to
+send data.
 
-As mentioned in one of my replies, there's a bug the patch I sent...
+Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+---
+ drivers/bluetooth/hci_qca.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> @@ -3533,9 +3535,6 @@ static int mvneta_comphy_init(struct mvneta_port *pp)
->  {
->  	int ret;
->  
-> -	if (!pp->comphy)
-> -		return 0;
-> -
->  	ret = phy_set_mode_ext(pp->comphy, PHY_MODE_ETHERNET,
->  			       pp->phy_interface);
-
-mvneta_comphy_init() needs to be passed the interface mode, and pass it
-thrugh to phy_set_mode_ext().
-
->  	if (ret)
-> @@ -3544,11 +3543,49 @@ static int mvneta_comphy_init(struct mvneta_port *pp)
->  	return phy_power_on(pp->comphy);
->  }
->  
-> +static int mvneta_config_interface(struct mvneta_port *pp,
-> +				   phy_interface_t interface)
-> +{
-> +	int ret = 0;
-> +
-> +	if (pp->comphy) {
-> +		if (interface == PHY_INTERFACE_MODE_SGMII ||
-> +		    interface == PHY_INTERFACE_MODE_1000BASEX ||
-> +		    interface == PHY_INTERFACE_MODE_2500BASEX) {
-> +			ret = mvneta_comphy_init(pp);
-
-and this needs to be:
-			ret = mvneta_comphy_init(pp, interface);
-
-Otherwise, the comphy uses the _old_ interface mode each time this
-function is called.
-
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index f3fde99..50f896f 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -2107,6 +2107,7 @@ static int __maybe_unused qca_suspend(struct device *dev)
+ 	if (tx_pending) {
+ 		serdev_device_wait_until_sent(hu->serdev,
+ 					      msecs_to_jiffies(CMD_TRANS_TIMEOUT_MS));
++		serial_clock_vote(HCI_IBS_TX_VOTE_CLOCK_OFF, hu);
+ 	}
+ 
+ 	/* Wait for HCI_IBS_SLEEP_IND sent by device to indicate its Tx is going
+@@ -2120,7 +2121,6 @@ static int __maybe_unused qca_suspend(struct device *dev)
+ 		goto error;
+ 	}
+ 
+-	qca_wq_serial_tx_clock_vote_off(&qca->ws_tx_vote_off);
+ 	return 0;
+ 
+ error:
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
