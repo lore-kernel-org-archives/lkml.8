@@ -2,162 +2,199 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5EF2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 779B6C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:48:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9147D20801
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41DF920792
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:48:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qrSl08+L"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="WYCybxa1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726450AbgFLNra (ORCPT
+        id S1726371AbgFLNss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 09:47:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49370 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726257AbgFLNr2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 09:47:28 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 995B7C03E96F
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 06:47:28 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id y17so9783978wrn.11
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 06:47:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=FRGSaoaZXAME28NoyxgD/FZqB6wuHhSggY6fzT6nWF4=;
-        b=qrSl08+LFjVLPVlqix58AoGdl8qP7msVljgP0k0oI8DW1wKfoNerfLHGE3b2+QdLw1
-         wSMJ5VoewY6Vral8iG8AACybnjl8MKml2VoKlXX7z3uMjxVModSVy0HFmmZ01KNRz+hN
-         up1RjPsufCbFlZn65HtBts1MLg8tTKOv3b+ZWjv1A2lotc6WygTiV22qX+3hZp5GW9UW
-         SDW0kuG3xy8dkOdOm1Q44i4FYiR8xa9JScurdYyVuA3a4/ahxQOlKvZUACBTEy+LBsw8
-         iRsTdB6vMOzb9iOT3cL5c418aWjFyvPfDWv/5/eIP3c3Xnvy2CDiwzT3iypZMENcbG8j
-         LZLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FRGSaoaZXAME28NoyxgD/FZqB6wuHhSggY6fzT6nWF4=;
-        b=Hm9Rr+rXi1IWBx7E8VXLbqd5PAwOkO27tNni3SZSElw74c6o4ugLB0ZasFcfnUbpgE
-         ZARq1CLKa7il9qxqtgbLVyPhgfYLbmp1LRt7IQtO+ZfkuABexiVIqLhWajC6K/RA6f/Q
-         dyXeDTxVqfB+GBL3ILmjR3JlfI9FJADgiJHKHXj5LLZRdlj57mWDyGUwVWYxX+AoT07t
-         PDxrtvUTCWAryQX/rX7aW1vwgrRe46MvGMZgaUz11hEIHelsQs0naeuVZliMVx6r/LvB
-         64vl396Klaqygfqy4p/RQLEbhEX/+bmHLfW4hWcRO1nLv+7qLtkNhcavnNRLtC6s+d3Y
-         nQCA==
-X-Gm-Message-State: AOAM530n7hyyCRnHfQetA2BDVf8eqKdqECyg4QLj8gU8+wmvHePOmTSB
-        90BwoKvDs3FqBG0SUVaf6zn06g==
-X-Google-Smtp-Source: ABdhPJxYZXjECba+nbE9tk2s6BTEOkK7Zvtj8zBoTmkEQculfoPOyyOWcljy/pVOGks04A4LAA3pkg==
-X-Received: by 2002:a5d:5489:: with SMTP id h9mr14678096wrv.125.1591969645858;
-        Fri, 12 Jun 2020 06:47:25 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id a16sm9881227wrx.8.2020.06.12.06.47.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 06:47:25 -0700 (PDT)
-Date:   Fri, 12 Jun 2020 14:47:21 +0100
-From:   Quentin Perret <qperret@google.com>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Doug Anderson <dianders@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        hsinyi@chromium.org, Joel Fernandes <joelaf@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        ctheegal@codeaurora.org, Guenter Roeck <groeck@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] cros_ec_spi: Even though we're RT priority, don't bump
- cpu freq
-Message-ID: <20200612134721.GA142550@google.com>
-References: <20200610151818.1.I666ecd9c6f3c6405bd75831a21001b8109b6438c@changeid>
- <20200611110301.GA132747@google.com>
- <CAD=FV=V2FvFcYrghxUSdHNxmcS3DKpnBbk2oL64w7hh=tV-DfQ@mail.gmail.com>
- <20200612092454.GA94228@google.com>
- <20200612123448.fcmzv3rdtsbawmpd@e107158-lin.cambridge.arm.com>
+        Fri, 12 Jun 2020 09:48:48 -0400
+Received: from mail-db8eur05on2072.outbound.protection.outlook.com ([40.107.20.72]:44355
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726085AbgFLNsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 09:48:47 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=O95KL2qFHLiDnU3O5slPzXLX1Q6O4vDMxl5NGGSCtfglOaMdKEbISkrhOg69pEX3b+rCAOyExCF2g0YLQF5XUTQ11dRNirnb7F3axMi/0apddMFZDugLVGlViwp/nEmv2T+EggpRzibOLVt5THGKg4j4mXSOHYZMppiENqyn2WZ9WTJ3VKhVaUfCOu2i9hcHJVE3LFq4TyVRYnGc/8zIKak71Garn/8JRLB7C+wvtCTnyYqF2ItsGP2oQIpZBGY6TKVhdBnsGMFJGNY2hYE+HHuxdx30o+KMPIfERKtpyG/eHV6i2VPpyPGjbwHBx66uVjiGeEylfLYe7gz2QEwKxQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=r2YIDp6GHGax1Y/wq0Zn16DkgNqU/L1oMbvftaQswBY=;
+ b=hmPpqgbON8lz9/Xwq+eSvocTXVYdeSSds9e+KMzpXn7Q2ZW2ZJmjsyYg08cJuKVFvhj3X3i2czXVXDdrberj5wtMd2d/AnUUcP99WMOd6dhEwPwHN3SJ5cw/qijJqpHbGbOTQuvfTiYcEnvFs+2I9YUXV8V1SmDDNZgzW4u8NblXwTYk+mx2xSjfKSmp9YrD8rlzb83RzCW5XLo8n3wkBm6d0D4JfHTniWLpDPFlNIzXxXZVjvjYdi9qOCx/Dz0wR8QGRaDiV/nUVEComnV4RXNXJO6dC0l4vvlPga24w579EUzQwZWblsuwipR8eRy+1jmDuQwfMMUf2xpRyTYxeQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=r2YIDp6GHGax1Y/wq0Zn16DkgNqU/L1oMbvftaQswBY=;
+ b=WYCybxa1b9+dGUgOQWOEsJmhubB3KCGG0zvoarRluGYBYJnRJQD9+zaEEhfAJgQOTe4/RVfoyTYB4+P93YdmJZNZfQeVaebn2fNq2I6vInEW0d547Ho9zLdHZaE4z9p75qyo7xtDFiSmYyq/nCzXi1ts5pTDt3OePFUi4paZMCA=
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
+ by VE1PR04MB6512.eurprd04.prod.outlook.com (2603:10a6:803:120::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.24; Fri, 12 Jun
+ 2020 13:48:42 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3066.023; Fri, 12 Jun 2020
+ 13:48:42 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Mark Brown <broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>
+CC:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "matthias.schiffer@ew.tq-group.com" 
+        <matthias.schiffer@ew.tq-group.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v1 RFC 1/2] spi: introduce fallback to pio
+Thread-Topic: [PATCH v1 RFC 1/2] spi: introduce fallback to pio
+Thread-Index: AQHWP6z7CX2etPvPnk+oddH8JEW5FKjTbHIAgADDYUCAAJUwgIAACjoQ
+Date:   Fri, 12 Jun 2020 13:48:41 +0000
+Message-ID: <VE1PR04MB66384013797FE6B01943F2A889810@VE1PR04MB6638.eurprd04.prod.outlook.com>
+References: <1591880310-1813-1-git-send-email-yibin.gong@nxp.com>
+ <1591880310-1813-2-git-send-email-yibin.gong@nxp.com>
+ <20200611134042.GG4671@sirena.org.uk>
+ <VE1PR04MB66383245FAD2AE33CFEA76F789810@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200612101357.GA5396@sirena.org.uk>
+In-Reply-To: <20200612101357.GA5396@sirena.org.uk>
+Accept-Language: en-US
+Content-Language: en-US
+X-Mentions: vkoul@kernel.org
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [92.121.68.129]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 4acdc9ae-97ab-4a33-187d-08d80ed7518c
+x-ms-traffictypediagnostic: VE1PR04MB6512:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB651204A259840B9682AC373F89810@VE1PR04MB6512.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0432A04947
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: LVKPDfKBfsY0dJg3z/urxBuxyAvdsVRcggqFczgcBbOOEKV4C79Vvtp8zeRdj4wa7DV5nEo5LVx5cT9raZyWgW5mk3pPJbWKiGUjGtHTCb3G99ApJkO3y4EQOdrSPcdek47op7kI2NU4X+zhUB1CEfbCdKlwhBgxYwaPdAP3jCG3yZGLlBYtwN6k19kJn6a+VAxQRJf8mPLgyhQNZRK6gT0aHmC96Hech6BdpMv0j/9kIAaKHePgjaDDel5TJ0wgmVSlMcU0xiTE+lKoPREjghBc1+YTMLLKw2uPTD4ZVRu1HeVqh4hRD51VO3eMQ3KVmH/rKxiZsHXN2JNZuWyAjA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(136003)(396003)(39860400002)(366004)(76116006)(66446008)(66476007)(66556008)(64756008)(66946007)(6506007)(7696005)(26005)(9686003)(52536014)(5660300002)(55016002)(2906002)(71200400001)(8676002)(7416002)(53546011)(45080400002)(186003)(8936002)(316002)(54906003)(110136005)(86362001)(33656002)(83380400001)(4326008)(478600001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: e38FYVhVjbA9Gb5yhs2i0D4c/1JiQX5J08GwC1Q4Lc4JrBTNSRPQyls4ZG3StrAyp1Iwpzn3Qw7VuDKHH6cLVCFnpFUI7X7Fbi5cSepMeB+k2ZT9omObw0grxAdvwgWq6FOMX8IjUqBky9Zt5Wta8/9gAnMuTbidDXGQZGQ1zhu3jeHzpsQvqTszeLgRPdmqO4fvSEbcLyFBUobLpCgwoZ+eitdYLpzMot3os/Gwbylpqzwr6UbZsJbj09u6td3sgjTi9yxXIAirzJApxVTx1DOxanL79Y9JOOK0impNurFvXVOF+NX6Iy13Ch/jH05Jlqcx1nBkjy4OfIlq4OAYtCiYCv4+T2pLfEAx+/537B0xV3+Mz1V1qKwU37btEhh2hzBimI8eJaQWIE62i9oM3iQVC8vP8e5XI4ZndHg0MxsMyC6a8f77b5Q1m7ZMYpd5lvMmgNyED6dCo9HDJnKU70mat3sskstFhffSwPYloH4LAbwL1Ahuvr0wHfkQqbMT
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200612123448.fcmzv3rdtsbawmpd@e107158-lin.cambridge.arm.com>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4acdc9ae-97ab-4a33-187d-08d80ed7518c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2020 13:48:41.9259
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Eri9epfNICapusUFyS4dw+S2KaQHhFVxPrEQ4SpeKWCC3kRWByOvOyWm3oqSvCYQ3oL9lOHNqCUwNvx220Uvtg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6512
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday 12 Jun 2020 at 13:34:48 (+0100), Qais Yousef wrote:
-> > On Thursday 11 Jun 2020 at 10:48:40 (-0700), Doug Anderson wrote:
-> > > I'm not totally a fan, but I'm definitely not an expert in this area
-> > > (I've also only read the patch description and not the patch or the
-> > > whole thread).  I really don't want yet another value that I need to
-> > > tune from board to board.  Even worse, this tuning value isn't
-> > > board-specific but a combination of board and software specific.  By
-> > > this, I'd imagine a scenario where you're using a real-time task to
-> > > get audio decoding done within a certain latency.  I guess you'd tune
-> > > this value to make sure that you can get all your audio decoding done
-> > > in time but also not burn extra power.  Now, imagine that the OS
-> > > upgrades and the audio task suddenly has to decode more complex
-> > > streams.  You've got to go across all of your boards and re-tune every
-> > > one?  ...or, nobody thinks about it and older boards start getting
-> > > stuttery audio?  Perhaps the opposite happens and someone comes up
-> > > with a newer lower-cpu-intensive codec and you could save power.
-> > > Sounds like a bit of a nightmare.
-> 
-> Generally I would expect this global tunable to be part of a vendor's SoC BSP.
-> 
-> People tend to think of the flagship SoCs which are powerful, but if you
-> consider the low and medium end devices there's a massive spectrum over there
-> that this range is trying to cover.
-> 
-> I would expect older boards init script to be separate for newer boards init
-> script. The OS by default boosts all RT tasks unless a platform specific script
-> overrides that. So I can't see how an OS upgrade would affect older boards.
+On 2020/06/12 18:14 Mark Brown <broonie@kernel.org> wrote:=20
+> On Fri, Jun 12, 2020 at 02:18:32AM +0000, Robin Gong wrote:
+> > On 2020/06/11 21: 41 Mark Brown <broonie@kernel.org> wrote:
+>=20
+> Please look at the formatting of your e-mails - they're really hard to re=
+ad.  The
+> line length is over 80 columns and there's no breaks between paragraphs.
+Sorry for that, seems my outlook format issue, hope it's ok now this time :=
+)
 
-I think Doug meant that the device-specific values need re-tuning in
-case of major OS updates, which is indeed a pain. But yeah, I'm not sure
-if we have a better solution than that, though.
+>=20
+> > > If we were going to do this I don't see why we'd have a flag for
+> > > this rather than just doing it unconditionally but...
+>=20
+> > What do you mean flag here, 'master->flags' or SPI_MASTER_FALLBACK?
+> 'master->flags'
+> > could let client fallback to PIO finally and spi core clear this flag
+> > once this transfer done, so that DMA could be tried again in the next t=
+ransfer.
+> Client could enable this feature by choosing SPI_MASTER_FALLBACK freely
+> without any impact on others.
+>=20
+> SPI_MASTER_FALLBACK.  If this works why would any driver not enable the
+> flag?
+Just make sure little impact if it's not good enough and potential issue ma=
+y
+come out after it's merged into mainline. TBH, I'm not sure if it has taken
+care all in spi core. Besides, I don't know if other spi client need this f=
+eature.
 
-> This knob still allows you to disable the max boosting and use the per-task
-> uclamp interface to boost only those tasks you care about. AFAIK this is
-> already done in a hacky way in android devices via special vendors provisions.
-> 
-> > > 
-> > > I'd rather have a boolean value: boost all RT threads to max vs. don't
-> > > boost all RT threads to max.  Someone that just wanted RT stuff to run
-> 
-> If that's what your use case requires, you can certainly treat it like
-> a boolean if you want.
+>=20
+> > > ...I don't think this can work sensibly - this is going to try PIO
+> > > if there's *any* error.  We might have had some sort of issue during
+> > > the transfer for example so have some noise on the bus.  Like I said
+> > > on a prior version of this I really
+>=20
+> > Any error happen in DMA could fallback to PIO , seems a nice to have,
+> because it could
+> > give chance to run in PIO which is more reliable. But if there is also =
+error in
+> PIO, thus may loop here, it's better adding limit try times here?
+>=20
+> An error doesn't mean nothing happened on the bus, an error could for
+> example also be something like a FIFO overrun which corrupts data.
+Do you mean fallback to PIO may cause FIFO overrun since some latency
+involved so that this patch seems not useful as expected?
 
-+1
+>=20
+> > > think that we need to be figuring out if the DMA controller can
+> > > support the transaction before we even map the buffer for it, having
+> > > the controller just randomly fail underneath the consumer just does n=
+ot
+> sound robust.
+>=20
+> > But dmaengine_prep_slave_sg still may return failure even if anything
+> > about DMA is ok before spi transfer start, such as dma description
+> > malloc failure. This patch seems could make spi a bit robust...
+>=20
+> It *could* but only in extreme situations, and again this isn't just hand=
+ling
+> errors from failure to prepare the hardware but also anything that happen=
+s
+> after it.
+Okay, understood your point. You prefer to some interface provided by dma
+engine before dmaengine_prep_slave_sg so that can_dma() can know if
+this dma channel is ready indeed. But unfortunately, seems there is no one.=
+...
 
-> > > as fast as possible without any hassle on their system and didn't care
-> > > about power efficiency could turn this on.  Anyone who really cared
-> > > about power could turn this off and then could find a more targeted
-> > > way to boost things, hopefully in a way that doesn't require tuning.
-> > > One option would be to still boost the CPU to max but only for certain
-> > > tasks known to be really latency sensitive.  Another might be to
-> 
-> per-task uclamp interface allows you to do that. But SoC vendors/system
-> integrators need to decide that. I'm saying this with Android in mind
-> specifically. Linux based laptops that are tuned in similar way are rare. But
-> hopefully this will change at some point :)
-> 
-> > > somehow measure whether or not the task is making its deadlines and
-> > > boost the CPU frequency up if deadlines are not being met.  I'm sure
-> > > there are fancier ways.
-> 
-> You need to use SCHED_DEADLINE then :)
+dmaengine_slave_config is the best one I think probably do that, but the
+'direction' is deprecated and Vinod may remove it in the future. That's
+important for sdma since sdma need to know the load_address of script which
+is running on this channel by checking 'direction', then, could know if
+the script is ready or not(ram script not ready if sdma firmware not loaded=
+, but
+rom script should be ready always). But now, as it's 'deprecated', until
+dmaengine_prep_* phase sdma could know what's the load_address of script
+running on this dma channel and if it's ready or not(firmware loaded or not=
+).
+commit 107d06441b70 ("dmaengine: imx-sdma: remove dma_slave_config directio=
+n usage and leave sdma_event_enable() ")
 
-Well, not quite :-)
-
-The frequency selection for DL is purely based on the userspace-provided
-parameters, from which we derive the bandwidth request. But we don't do
-things like 'raise the frequency if the actual runtime gets close to the
-WCET', or anything of the sort. All of that would have to be implemented
-in userspace ATM.
-
-Cheers,
-Quentin
+Hi @Vinod Koul, sorry for pulling you, Could we keep 'direction' in dma_sla=
+ve_config?
+This's useful for checking if the script used on channel is ready or not in
+dmaengine_slave_config phase so that can easily for spi or other drivers de=
+cide to
+start dma rather than the last dmaengine_prep_* phase where dma buffers hav=
+e
+been already map in spi core. =20
+=20
