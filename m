@@ -2,139 +2,96 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B7DC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 12:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B10D8C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 12:28:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EBDD20838
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 12:27:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MH05/iQO"
+	by mail.kernel.org (Postfix) with ESMTP id 8F39520835
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 12:28:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591964882;
+	bh=ncMPaD4x7wzZV+qowE0+m2KtMfiPQApWLlMfwu1FgDU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sZraPaowULLdY5qI2HN7oo6hfZl2YRxdg5K+chjjuzWMZSAND1XE5gEQTtaTIbC0o
+	 5hRLMF7YM3JCmLh+LEsFPKpLNU1lKv2VsxWW9KSBgjd/RVaGxdz4cJe1bTyVcLpC2X
+	 1+6tP0CVusINq0pMrC8OcHzNbx+t2KZNoU4vHDd8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgFLM1h (ORCPT
+        id S1726323AbgFLM2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 08:27:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37060 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725886AbgFLM1f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 08:27:35 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B566DC03E96F;
-        Fri, 12 Jun 2020 05:27:35 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id q8so8693788qkm.12;
-        Fri, 12 Jun 2020 05:27:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=tLsYfW4RvheYw9CTrX8bz1lS4lnmm2tAaCXBCxYWoEQ=;
-        b=MH05/iQOWHCHtXEzT/j87+oMOe4Ehszd4i8qMJaU6IlFrgT0hhW5I3HK1PrbLC/Qck
-         aAv/hhZ8afPHNSDyMGRD2r88qciFMfDNjbugPS7sBf2RsxvRNjInlBnlVqqqzDIiI7Rh
-         1zXeabBiBZuftgS4wow31QmOGoT1lczlwEtPi0YoYwGZH65tgoGk3nium8hrEtYYrEuj
-         RjvWysY3mmxHSxNZ2DOJZLhOhyEJh9MHpIx6OsWIpOUGIi5XY53/miD1Ib714okQUse5
-         0u4n7rfBHd09G/wHg7WdoN42B2qJ9LVpxJDEg2nhv36TDAaS3g+90/f7pZz2cydGNeRu
-         tE3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tLsYfW4RvheYw9CTrX8bz1lS4lnmm2tAaCXBCxYWoEQ=;
-        b=paydBjKjcWPnDOVAMSS0E5KRlnKd6yRebKAdpl32j9iEGeGDIS/1zgxoexkFPzJyxg
-         vT/56Touj3ssotVV5QQL0yvGZULf7TH/vhkvMHi4vI1/I27Xt1I7Er/9gp4nH0p14xEU
-         5R6GM9Fhk6vLjgLkbX4tbysfIyCbQlZOfXRMQciOa+WRyiZaJ8BWlAesB+Ayry5ElMZ4
-         Wv6lzPnutIMCgzXfY643nB/WcXOH4hh3iYnTGifOf79zcFEdlCBsS867Ngc2LUTVKpaP
-         p+cgtMIXxMEFLwCZ9dYmVrCzu4wLQwxvQmteqRWL5akS9HtRs0UBgIqXFqbr9Bqr2K1F
-         PBxQ==
-X-Gm-Message-State: AOAM5314mhi7zFfdXmjAwPuz2Wbzql6dF/ykw+pTNrUIqWMVxv1mdcwd
-        JbFhg+jvkEx85U/boC/PX+o=
-X-Google-Smtp-Source: ABdhPJzQrd9/sO1InrMTv8fzLY+uBcD1JYvMHAmp8wEARA5eSwbGqDdAQI7YwopBMXTQ4OfmSLiqtA==
-X-Received: by 2002:a37:be43:: with SMTP id o64mr2658766qkf.322.1591964855029;
-        Fri, 12 Jun 2020 05:27:35 -0700 (PDT)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id o66sm4306188qka.60.2020.06.12.05.27.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Jun 2020 05:27:34 -0700 (PDT)
-Subject: Re: [PATCH v2 2/3] mfd: core: Fix formatting of MFD helpers
-To:     Lee Jones <lee.jones@linaro.org>, andy.shevchenko@gmail.com,
-        michael@walle.cc, robh+dt@kernel.org, broonie@kernel.org,
-        devicetree@vger.kernel.org, linus.walleij@linaro.org,
-        linux@roeck-us.net, andriy.shevchenko@linux.intel.com,
-        robin.murphy@arm.com, gregkh@linuxfoundation.org,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200611191002.2256570-1-lee.jones@linaro.org>
- <20200611191002.2256570-2-lee.jones@linaro.org>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <e46a0d3f-80c4-dc36-8002-96740316b442@gmail.com>
-Date:   Fri, 12 Jun 2020 07:27:33 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 12 Jun 2020 08:28:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33552 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725872AbgFLM2A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 08:28:00 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58D052081A;
+        Fri, 12 Jun 2020 12:27:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591964880;
+        bh=ncMPaD4x7wzZV+qowE0+m2KtMfiPQApWLlMfwu1FgDU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hIAsKX4R1LaQNFBFADVYhnWU2IJbUFKqGIuVHtOa+LA1qHWDpyzLyzqZ0gRZe4Uco
+         +D5ifAB5o2/KdMAMSf62QbtZFwbRBnmuBGTOqRLax1YbtbLJXjs7pHGY7MgeW8n//y
+         O2wEybC585I+qLAvXoAtIHg9CDEYag/Y5zYFATYY=
+Date:   Fri, 12 Jun 2020 13:27:57 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     lgirdwood@gmail.com, robh+dt@kernel.org,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] ASoC: ti: Add custom machine driver for j721e EVM
+ (CPB and IVI)
+Message-ID: <20200612122757.GF5396@sirena.org.uk>
+References: <20200612085909.15018-1-peter.ujfalusi@ti.com>
+ <20200612085909.15018-4-peter.ujfalusi@ti.com>
+ <7f2c4297-3ad9-5b8f-c9a5-5120078120c6@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20200611191002.2256570-2-lee.jones@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="FeAIMMcddNRN4P4/"
+Content-Disposition: inline
+In-Reply-To: <7f2c4297-3ad9-5b8f-c9a5-5120078120c6@ti.com>
+X-Cookie: As seen on TV.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Frank (me)
 
-On 2020-06-11 14:10, Lee Jones wrote:
-> Remove unnecessary '\'s and leading tabs.
-> 
-> This will help to clean-up future diffs when subsequent changes are
-> made.
-> 
-> Hint: The aforementioned changes follow this patch.
-> 
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  include/linux/mfd/core.h | 20 ++++++++++----------
->  1 file changed, 10 insertions(+), 10 deletions(-)
-> 
-> diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
-> index a148b907bb7f1..ae1c6f90388ba 100644
-> --- a/include/linux/mfd/core.h
-> +++ b/include/linux/mfd/core.h
-> @@ -26,20 +26,20 @@
->  		.id = (_id),						\
->  	}
->  
-> -#define OF_MFD_CELL(_name, _res, _pdata, _pdsize,_id, _compat)		\
-> -	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat, NULL)	\
-> +#define OF_MFD_CELL(_name, _res, _pdata, _pdsize,_id, _compat) \
-> +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat, NULL)
->  
-> -#define ACPI_MFD_CELL(_name, _res, _pdata, _pdsize, _id, _match)	\
-> -	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, _match)	\
-> +#define ACPI_MFD_CELL(_name, _res, _pdata, _pdsize, _id, _match) \
-> +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, _match)
->  
-> -#define MFD_CELL_BASIC(_name, _res, _pdata, _pdsize, _id)		\
-> -	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, NULL)	\
-> +#define MFD_CELL_BASIC(_name, _res, _pdata, _pdsize, _id) \
-> +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, NULL)
->  
-> -#define MFD_CELL_RES(_name, _res)					\
-> -	MFD_CELL_ALL(_name, _res, NULL, 0, 0, NULL, NULL)		\
-> +#define MFD_CELL_RES(_name, _res) \
-> +	MFD_CELL_ALL(_name, _res, NULL, 0, 0, NULL, NULL)
->  
-> -#define MFD_CELL_NAME(_name)						\
-> -	MFD_CELL_ALL(_name, NULL, NULL, 0, 0, NULL, NULL)		\
-> +#define MFD_CELL_NAME(_name) \
-> +	MFD_CELL_ALL(_name, NULL, NULL, 0, 0, NULL, NULL)
->  
->  struct irq_domain;
->  struct property_entry;
-> 
+--FeAIMMcddNRN4P4/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Fri, Jun 12, 2020 at 12:27:17PM +0300, Peter Ujfalusi wrote:
+
+> > +	if (IS_ERR(clocks->target)) {
+> > +		ret = PTR_ERR(clocks->target);
+> > +		if (ret != -EPROBE_DEFER)
+> > +			dev_err(dev, "failed to acquire %s': %d\n",
+
+> Looks like I have extra "'" in the prints...
+
+Apart from the issues you pointed out yourself this all looks reasonable
+to me.
+
+--FeAIMMcddNRN4P4/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7jdMwACgkQJNaLcl1U
+h9AFuAf/QQTYkt2gQ+jespg63weznQYk0ssXoebt2m9iNQNRFaGLpmqKNn3lj0KG
+V0x7spEYXKSbVHrfSY7zAxwsvArrY6W3jbwPBEqCDtnHtCG3tTO3Gy9p3x+iJedU
+WUojc8srqGDh70REYmQAhGQNEJECulHW2Ed1/ZTCiz0hERlty1kFx3XbYUkUSvcA
+suAVMJAFF2evebQV0r47V7/TqNR08VQoW/8vWDkWfhTILWsK59CjDd3CPPkE5Bt1
+1VybBgG/AZp/oV/zX5uceG2toHuNMyzS++qA8XqwGvD7d5r2OyTz2MyJcZ2cIrgX
+C6kNGFamvaNBJsUq4Leun5wiL7CxxQ==
+=XNBU
+-----END PGP SIGNATURE-----
+
+--FeAIMMcddNRN4P4/--
