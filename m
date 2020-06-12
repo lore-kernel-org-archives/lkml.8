@@ -2,270 +2,197 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4DCCC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1C0C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3EE1208C7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:28:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D4042067B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:32:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wbAUXz//"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbgFLR2Z (ORCPT
+        id S1726309AbgFLRco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 13:28:25 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:46611 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726085AbgFLR2Y (ORCPT
+        Fri, 12 Jun 2020 13:32:44 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:47328 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbgFLRcn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 13:28:24 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 8EE263C04C1;
-        Fri, 12 Jun 2020 19:28:20 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id F4mlFpUaCfBe; Fri, 12 Jun 2020 19:28:11 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id EC9273C00BB;
-        Fri, 12 Jun 2020 19:28:11 +0200 (CEST)
-Received: from vmlxhi-121.adit-jv.com (10.72.92.132) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.487.0; Fri, 12 Jun
- 2020 19:28:11 +0200
-Date:   Fri, 12 Jun 2020 19:28:06 +0200
-From:   Michael Rodin <mrodin@de.adit-jv.com>
-To:     Suresh Udipi <sudipi@jp.adit-jv.com>
-CC:     Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        <mrodin@de.adit-jv.com>, <efriedrich@de.adit-jv.com>,
-        <erosca@de.adit-jv.com>, <linux-kernel@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
-        <mchehab@kernel.org>, <michael@rodin.online>,
-        <securitycheck@denso.co.jp>,
-        Kazuyoshi Akiyama <akiyama@nds-osk.co.jp>
-Subject: Re: [PATCH v6] media: rcar-csi2: Correct the selection of hsfreqrange
-Message-ID: <20200612172806.GA46338@vmlxhi-121.adit-jv.com>
-References: <20200605184426.GA5206@vmlxhi-121.adit-jv.com>
- <1591586703-32246-1-git-send-email-sudipi@jp.adit-jv.com>
- <20200610134004.GA192296@oden.dyn.berto.se>
- <20200612031051.GA18602@jp-u0004>
+        Fri, 12 Jun 2020 13:32:43 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05CHUUAN039824;
+        Fri, 12 Jun 2020 12:30:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591983030;
+        bh=sr2KEVEQVbaiZmHzFtwyvYGxG5ls7pPhGG6jAjqwh3M=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=wbAUXz//1QR6GveZJRYVE6er4iYGDqc9JHH9yXVhRS/vgKTlxa1JH7D9kwDc9RuJN
+         nwQU7gBSr+icGaxgEtUaGm9uhqXg6/YOMu3PJEWl2o8EvN7ma9q1A+/tcJucx+I+9/
+         PR5UMwbmE0ZmHglwZ37U0A4k/JXxwdBMll1hVUjE=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05CHUUUE104980
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 12 Jun 2020 12:30:30 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 12
+ Jun 2020 12:30:29 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 12 Jun 2020 12:30:29 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05CHUTf7052587;
+        Fri, 12 Jun 2020 12:30:29 -0500
+Subject: Re: [RFC PATCH 2/2] ASoc: tas2563: DSP Firmware loading support
+To:     Mark Brown <broonie@kernel.org>
+CC:     <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
+        <robh@kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200609172841.22541-1-dmurphy@ti.com>
+ <20200609172841.22541-3-dmurphy@ti.com> <20200609175000.GO4583@sirena.org.uk>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <f9601516-2091-322b-85ff-7cea484fd933@ti.com>
+Date:   Fri, 12 Jun 2020 12:30:29 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
+In-Reply-To: <20200609175000.GO4583@sirena.org.uk>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200612031051.GA18602@jp-u0004>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Originating-IP: [10.72.92.132]
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Niklas,
-Hi Suresh,
+Mark
 
-On Fri, Jun 12, 2020 at 12:10:51PM +0900, Suresh Udipi wrote:
-> On Wed, Jun 10, 2020 at 03:40:04PM +0200, Niklas SÃ¶derlund wrote:
-> > Hi Suresh,
-> > 
-> > Thanks for your persistent work!
-> > 
-> > On 2020-06-08 12:25:03 +0900, Suresh Udipi wrote:
-> > > hsfreqrange should be chosen based on the calculated mbps which
-> > > is closer to the default bit rate  and within the range as per
-> > > table[1]. But current calculation always selects first value which
-> > > is greater than or equal to the calculated mbps which may lead
-> > > to chosing a wrong range in some cases.
-> > > 
-> > > For example for 360 mbps for H3/M3N
-> > > Existing logic selects
-> > > Calculated value 360Mbps : Default 400Mbps Range [368.125 -433.125 mbps]
-> > > 
-> > > This hsfreqrange is out of range.
-> > > 
-> > > The logic is changed to get the default value which is closest to the
-> > > calculated value [1]
-> > > 
-> > > Calculated value 360Mbps : Default 350Mbps  Range [320.625 -380.625 mpbs]
-> > > 
-> > > [1] specs r19uh0105ej0200-r-car-3rd-generation.pdf [Table 25.9]
-> > > 
-> > > Please note that According to Renesas in Table 25.9 the range for
-> > > 220 default value is corrected as below
-> > > 
-> > >  |Range (Mbps)     |  Default  Bit rate (Mbps) |
-> > >  -----------------------------------------------
-> > >  | 197.125-244.125 |     220                   |
-> > >  -----------------------------------------------
-> > > 
-> > > Fixes: 769afd212b16 ("media: rcar-csi2: add Renesas R-Car MIPI CSI-2 receiver driver")
-> > > 
-> > > Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
-> > > Signed-off-by: Kazuyoshi Akiyama <akiyama@nds-osk.co.jp>
-> > > Signed-off-by: Michael Rodin <mrodin@de.adit-jv.com>
-> > > ---
-> > >  Changes in v2:
-> > >   - Added the boundary check for the maximum bit rate.
-> > > 
-> > >   - Simplified the logic by remmoving range check
-> > >     as only the closest default value covers most
-> > >     of the use cases.
-> > > 
-> > >   - Aligning the commit message based on the above change
-> > > 
-> > > 
-> > >  Changes in v3:
-> > >     - Added max member from struct rcsi2_mbps_reg.
-> > >       mbps varialbe cannot be removed from rcsi2_mbps_reg,
-> > >       since this structure is reused for
-> > >       phtw_mbps_h3_v3h_m3n/phtw_mbps_v3m_e3 where mbps is
-> > >       used.
-> > > 
-> > > 
-> > >    -  Update the walk of the array in rcsi2_set_phypll() so that it finds
-> > >       the first entry where the calculated bit rate is less than the max.
-> > > 
-> > >    - Support lower bit rates less than 80Mbps like 48Mbps
-> > >      (Raspberry pi camera 640x480 connected to Kingfisher)
-> > >      can also be supported by selecting the lowest default bit rate 80Mbps
-> > >      as done before this fix
-> > > 
-> > >    - Alignement of the commit message based on above changes.
-> > > 
-> > >  Changes in v4:
-> > >   -  Remove unncessary braces.
-> > > 
-> > >  Changes in v5:
-> > >    - Removed mbps variable in rcsi2_mbps_reg and aligned all 
-> > >      tables accordingly
-> > > 	 
-> > >  Changes in v6
-> > >    - Renesas correct the range of default value 220Mbps. Now
-> > >      if we select the nearest value to the default value all
-> > > 	 the values are in range. So reverting back to original patch
-> > > 	 
-> > >    - Added warning for values less than Minimum 80Mbps
-> > > 
-> > > 
-> > >  drivers/media/platform/rcar-vin/rcar-csi2.c | 23 ++++++++++++++++++-----
-> > >  1 file changed, 18 insertions(+), 5 deletions(-)
-> > > 
-> > > diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c b/drivers/media/platform/rcar-vin/rcar-csi2.c
-> > > index 151e6a9..8c502b7 100644
-> > > --- a/drivers/media/platform/rcar-vin/rcar-csi2.c
-> > > +++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
-> > > @@ -199,6 +199,8 @@ static const struct rcsi2_mbps_reg phtw_mbps_v3m_e3[] = {
-> > >  /* PHY Frequency Control */
-> > >  #define PHYPLL_REG			0x68
-> > >  #define PHYPLL_HSFREQRANGE(n)		((n) << 16)
-> > > +#define PHYPLL_HSFREQRANGE_MAX		1500
-> > > +#define PHYPLL_HSFREQRANGE_MIN		  80
-> > >  
-> > >  static const struct rcsi2_mbps_reg hsfreqrange_h3_v3h_m3n[] = {
-> > >  	{ .mbps =   80, .reg = 0x00 },
-> > > @@ -431,16 +433,27 @@ static int rcsi2_wait_phy_start(struct rcar_csi2 *priv)
-> > >  static int rcsi2_set_phypll(struct rcar_csi2 *priv, unsigned int mbps)
-> > >  {
-> > >  	const struct rcsi2_mbps_reg *hsfreq;
-> > > +	const struct rcsi2_mbps_reg *hsfreq_prev = NULL;
-> > >  
-> > > -	for (hsfreq = priv->info->hsfreqrange; hsfreq->mbps != 0; hsfreq++)
-> > > -		if (hsfreq->mbps >= mbps)
-> > > -			break;
-> > > -
-> > > -	if (!hsfreq->mbps) {
-> > > +	if (mbps > PHYPLL_HSFREQRANGE_MAX) {
-> > >  		dev_err(priv->dev, "Unsupported PHY speed (%u Mbps)", mbps);
-> > >  		return -ERANGE;
-> > >  	}
-> > >  
-> > > +	if (mbps < PHYPLL_HSFREQRANGE_MIN)
-> > > +		dev_warn(priv->dev, "PHY speed (%u Mbps) less \
-> > > +			 than Min 80Mbps\n", mbps);
-> > 
-> > I would drop this warning.
-> > 
-> 
->   This was suggested by Michael. Michael is it ok to drop this warning
->   as it is not available before this changes also. 
-> 
+On 6/9/20 12:50 PM, Mark Brown wrote:
+> On Tue, Jun 09, 2020 at 12:28:41PM -0500, Dan Murphy wrote:
+>
+>>   	.val_bits = 8,
+>>   
+>> -	.max_register = 5 * 128,
+>> +	.max_register = 255 * 128,
+>>   	.cache_type = REGCACHE_RBTREE,
+>>   	.reg_defaults = tas2562_reg_defaults,
+>>   	.num_reg_defaults = ARRAY_SIZE(tas2562_reg_defaults),
+> Should some or all of the DSP memory be marked as volatile?  I guess if
+> we only write program to it then on reload after power off it should be
+> fine to just blast everything in again and ignore the fact that some
+> will have changed, but it might be helpful for debugging to be able to
+> read the live values back and do something more clever for restore.
 
-I strongly disagree. We should keep the warning for the following reasons:
+Well the only values I see that change that regmap should care about are 
+in first page of the register map.
 
- 1. Renesas explicitly states in the hardware manual tables, that 80Mbps is
-    the lowest supported bit rate (I guess, for a good reason), so using
-    devices with lower bit rates is at our own risk.
- 2. Failing for mbps > PHYPLL_HSFREQRANGE_MAX with an ERANGE error but
-    silently succeeding for mbps < PHYPLL_HSFREQRANGE_MIN does not look
-    consistent. Both values are out of the official hardware specs.
- 3. Although rcar csi2 seems to work with at least 1 device in the range
-    mbps < PHYPLL_HSFREQRANGE_MIN, there is no guarantee that ALL devices
-    work. And from my experience, users are very happy about any warning,
-    which points them to a possible reason, why their new device does not
-    work ;)
+After reverse engineering a binary I found that its contents modify page 
+0 registers of the device.
 
-> > > +
-> > > +	for (hsfreq = priv->info->hsfreqrange; hsfreq->mbps != 0; hsfreq++) {
-> > > +		if (hsfreq->mbps >= mbps)
-> > > +			break;
-> > > +		hsfreq_prev = hsfreq;
-> > > +	}
-> > > +
-> > > +	if (hsfreq_prev &&
-> > > +	    ((mbps - hsfreq_prev->mbps) <= (hsfreq->mbps - mbps)))
-> > 
-> > Longer lines are now OK [1] and I think it would add to the readability 
-> > here.
-> > 
-> > > +		hsfreq = hsfreq_prev;
-> > > +
-> > 
-> > How about
-> > 
-> > static int rcsi2_set_phypll(struct rcar_csi2 *priv, unsigned int mbps)
-> > {
-> >     const struct rcsi2_mbps_reg *hsfreq;
-> >     const struct rcsi2_mbps_reg *hsfreq_prev = NULL;
-> > 
-> >     for (hsfreq = priv->info->hsfreqrange; hsfreq->mbps != 0; hsfreq++) {
-> > 	if (hsfreq->mbps >= mbps)
-> > 		break;
-> > 	hsfreq_prev = hsfreq;
-> >     }
-> > 
-> >     if (!hsfreq->mbps) {
-> > 	dev_err(priv->dev, "Unsupported PHY speed (%u Mbps)", mbps);
-> > 	return -ERANGE;
-> >     }
-> > 
-> >     if (hsfreq_prev && ((mbps - hsfreq_prev->mbps) <= (hsfreq->mbps - mbps)))
-> > 	hsfreq = hsfreq_prev;
-> > 
-> >     rcsi2_write(priv, PHYPLL_REG, PHYPLL_HSFREQRANGE(hsfreq->reg));
-> > 
-> >     return 0;
-> > }
-> > 
-> > >  	rcsi2_write(priv, PHYPLL_REG, PHYPLL_HSFREQRANGE(hsfreq->reg));
-> > >  
-> > >  	return 0;
-> 
-> Agreed I will do the changes and update.
-> > > -- 
-> > > 2.7.4
-> > > 
-> > 
-> > 1. https://lkml.org/lkml/2020/5/29/1038
-> > 
-> > -- 
-> > Regards,
-> > Niklas SÃ¶derlund
-> 
-> -- 
-> Best Regards,
-> Suresh Udipi.
+Not a fan of this as it causes un-wanted changes that may have been setup.
 
--- 
-Best Regards,
-Michael
+>
+>>   #define TAS2562_PAGE_CTRL      0x00
+>> +#define TAS2562_BOOK_CTRL      0x7f
+> *sigh*  Of course the two levels of paging register are not located
+> anywhere near each other so we can't easily pretend they're one double
+> width page address.  :/
+Yes I agree
+>
+>> +static int tas25xx_process_fw_single(struct tas2562_data *tas2562,
+>> +				     struct tas25xx_cmd_data *cmd_data,
+>> +				     u8 *fw_out)
+>> +{
+>> +	int num_writes = cpu_to_be16(cmd_data->length);
+>> +	int i;
+>> +	int ret;
+>> +	int offset = 4;
+>> +	int reg_data, write_reg;
+>> +
+>> +	for (i = 0; i < num_writes; i++) {
+>> +		/* Reset Page to 0 */
+>> +		ret = regmap_write(tas2562->regmap, TAS2562_PAGE_CTRL, 0);
+>> +		if (ret)
+>> +			return ret;
+> Why?
+
+Well the reason to set this back to page 0 is that is where the book 
+register is.
+
+So setting this back to page 0 set the Book register appropriately.
+
+>
+>> +
+>> +		cmd_data->book = fw_out[offset];
+>> +		cmd_data->page = fw_out[offset + 1];
+>> +		cmd_data->offset = fw_out[offset + 2];
+>> +		reg_data = fw_out[offset + 3];
+>> +		offset += 4;
+>> +
+>> +		ret = regmap_write(tas2562->regmap, TAS2562_BOOK_CTRL,
+>> +				   cmd_data->book);
+>> +		if (ret)
+>> +			return ret;
+> This manual paging doesn't fill me with with joy especially with regard
+> to caching and doing the books behind the back of regmap.  I didn't spot
+> anything disabling cache or anything in the code.  I think you should
+> either bypass the cache while doing this or teach regmap about the
+> books (which may require core updates, I can't remember if the range
+> code copes with nested levels of paging - I remember thinking about it).
+
+Yeah. After reading this and thinking about this for a couple days.  
+This actually has contention issues with the ALSA controls.
+
+There needs to also be some locks put into place.
+
+I prefer to disable the cache.  Not sure how many other devices use 
+Books and pages for register maps besides TI.
+
+Adding that to regmap might be to specific to our devices.
+
+>
+>> +static ssize_t write_config_store(struct device *dev,
+>> +				struct device_attribute *tas25xx_attr,
+>> +				const char *buf, size_t size)
+>> +{
+> This looks like it could just be an enum (it looks like there's names we
+> could use) or just a simple numbered control?  Same for all the other
+> controls, they're just small integers so don't look hard to handle.  But
+> perhaps I'm missing something?
+
+No you are right.  The issue with using enums is that the binary is not 
+parsed until after codec_probe and the device is registered.
+
+So the controls would appear later which could be a race condition for 
+the user space.
+
+>
+>> +	tas2562->fw_data->fw_hdr = devm_kzalloc(tas2562->dev, hdr_size,
+>> +						GFP_KERNEL);
+>> +	if (!tas2562->fw_data->fw_hdr)
+>> +		return -ENOMEM;
+>> +
+>> +	memcpy(tas2562->fw_data->fw_hdr, &fw->data[0], hdr_size);
+> Should validate that the firmware is actually at least hdr_size big, and
+> similarly for all the other lengths we get from the header we should
+> check that there's actually enough data in the file.  ATM we just
+> blindly copy.
+
+I will have to look into doing this.  I blindly copy this data because 
+there is really not a viable and reliable way to check sizes against the 
+structures.
+
+
+> It'd also be good to double check that the number of configs and
+> programs is within bounds.
+
+This I can check once the data is copied.
+
+Dan
+
