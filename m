@@ -4,79 +4,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70255C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FCFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C35B207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:02:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79DAE207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:02:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591956122;
-	bh=xFacIB852PBLC/3e4BDu950ODxUlC/jBtFDBNjC/Xrs=;
+	s=default; t=1591956138;
+	bh=l002a0NI7RcMCZFY1NEScRszB3jXR41FbOH3xKTIu0Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aQyT+VFI9dPow8Fx18dzqzvZ3a65FuK+rK4nzBMY9W9XQ1Q4F0SwEECfFPWm7iGOR
-	 lgNrQ/C8y+GinwmKat+cBsIT/H0GjVUkNEj1iHONPkzUaNUR8EKuk0ZHtjx9NDuHR3
-	 LPfZLKx5tJ4yIAB+E9rXCH2X9qhrfSga1vaCusw4=
+	b=FE5A/gcp6Oz0b4Ua+tKfxCSAvJeCCb5Ykm2s5m3c8HmSCvpNf1YxdhDb5fbWQhULa
+	 OymwEiF1fOTm+/MhAYghj3Y135Aj8cBOJwAK2WW4++osWS0Y1UZY31tw6ViYoInQSa
+	 JTE6UvthIZp5xSkqLGh6jsF/I+TAFjBzp/ji6IIM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726372AbgFLKCA (ORCPT
+        id S1726393AbgFLKCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 06:02:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36206 "EHLO mail.kernel.org"
+        Fri, 12 Jun 2020 06:02:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726335AbgFLKB7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 06:01:59 -0400
+        id S1726255AbgFLKCO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 06:02:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A15FB207D8;
-        Fri, 12 Jun 2020 10:01:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2E41207D8;
+        Fri, 12 Jun 2020 10:02:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591956119;
-        bh=xFacIB852PBLC/3e4BDu950ODxUlC/jBtFDBNjC/Xrs=;
+        s=default; t=1591956134;
+        bh=l002a0NI7RcMCZFY1NEScRszB3jXR41FbOH3xKTIu0Q=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VNYglQsRlly8rbbI+CxH46C6AJYu3iMe73SHsZPQ8KMvuRDNKxK0VZ1KUmCVcwxeY
-         Yu5NeF//kbEJ2XcA0RVpWu8pKF98Xn692Eq0Zu9o/GjPNe/BX1Mrp1WGx03veLMdDR
-         1QN5YWBRBZ8rm9u0JTKknELf8bSXnmj4EgPz7ChU=
-Date:   Fri, 12 Jun 2020 12:01:50 +0200
+        b=cGQdHZmQx6Iz8xd3sx/auS+VvqT2rGKjwfQDZ8h/dBY2N2tzM5D3OjiRqCBIJdRNt
+         k3ZsGLsKQ0VDgLNZVywYD8ZTtz+nDSJlguxS1fAIOQyJNqOCsAgLELeYzZMjTiVfh1
+         0hwtFX08T7047fYPzwaBnokj2V2ZnBXqxMNnMqdI=
+Date:   Fri, 12 Jun 2020 12:02:05 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Tetsuhiro Kohada <kohada.t2@gmail.com>,
-        linux-fsdevel@vger.kernel.org,
-        Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.mitsubishielectric.co.jp>,
-        Takahiro Mori <Mori.Takahiro@ab.mitsubishielectric.co.jp>,
-        Hirotaka Motai <motai.hirotaka@aj.mitsubishielectric.co.jp>,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] exfat: remove EXFAT_SB_DIRTY flag
-Message-ID: <20200612100150.GC3157576@kroah.com>
-References: <4591596d-b33c-7e6d-803b-3375064bcf3f@web.de>
+Cc:     Bernard Zhao <bernard@vivo.com>, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        opensource.kernel@vivo.com, linux-kernel@vger.kernel.org,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>
+Subject: Re: [PATCH] drm/msm: Fix memory leak in msm_submitqueue_create()
+Message-ID: <20200612100205.GD3157576@kroah.com>
+References: <acd53f06-845b-75e0-24c5-40c751d12945@web.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <4591596d-b33c-7e6d-803b-3375064bcf3f@web.de>
+In-Reply-To: <acd53f06-845b-75e0-24c5-40c751d12945@web.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 10:48:20AM +0200, Markus Elfring wrote:
-> > remove EXFAT_SB_DIRTY flag and related codes.
+On Fri, Jun 12, 2020 at 11:37:33AM +0200, Markus Elfring wrote:
+> > In fucntin msm_submitqueue_create, the queue is a local
+> > variable, in return -EINVAL branch, queue didn`t add to ctx`s
+> > list yet, and also didn`t kfree, this maybe bring in potential
+> > memleak.
 > 
-> I suggest to omit this sentence because a similar information
-> is provided a bit later again for this change description.
+> I suggest to improve also this change description.
+> How do you think about a wording variant like the following?
 > 
-> 
-> > If performe 'sync' in this state, VOL_DIRTY will not be cleared.
-> 
-> Please improve this wording.
+>    Release the GPU submission queue object after an input parameter validation failed.
 > 
 > 
 > Would you like to add the tag “Fixes” to the commit message?
 > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=b791d1bdf9212d944d749a5c7ff6febdba241771#n183
+> 
+> 
+> How do you think about to reorder any statements for this function implementation?
 > 
 > Regards,
 > Markus
