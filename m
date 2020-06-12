@@ -2,152 +2,135 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E69C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E92C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AC6320835
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:26:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E2B720842
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:26:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fu7kbwSR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="avRfAddo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbgFLAZ7 (ORCPT
+        id S1726417AbgFLA0u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 20:25:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39026 "EHLO
+        Thu, 11 Jun 2020 20:26:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726285AbgFLAZ6 (ORCPT
+        with ESMTP id S1726285AbgFLA0t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 20:25:58 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1605CC03E96F;
-        Thu, 11 Jun 2020 17:25:58 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49jhN164F1z9sRh;
-        Fri, 12 Jun 2020 10:25:53 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591921554;
-        bh=L8tCWPltN/xAI7QDpTH/Fy/OEUyVfxLAB5DzPFh4fHI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=fu7kbwSRnoxqE+KziPWAoBtEFQ6QfwiRCmXT1oOnCFpiSr2Wf0irOcrkcP1YcUt2T
-         vlUeEXZvaLqddhGQtOgWPpfRYBnMII8Tqp5lw5ycnlq9I6fKXRSH/yPFkECpv2kcmb
-         yZ8o1FzXpHOFLcw4Q8HGO1pZO2qquvSq95ZrD/ARCGkb/hownQODRp3/3B5UzMQCQa
-         ldd0uswVWvHepSCTDWfCSVyvWcxJRLOmgKVyR2N8DWJ7QUYAKf2wlTv5z3WOjK8nqy
-         N7XXrIy8jRxLLphyrJvYf+r7KrNSGmgTuNOFeL8hCzvk/+8RWCxOkYnH9uKeK9wt/U
-         BaW7VzSIgWRYg==
-Date:   Fri, 12 Jun 2020 10:25:52 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mukul Joshi <mukul.joshi@amd.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: linux-next: build failure after merge of the amdgpu tree
-Message-ID: <20200612102552.2d573ebb@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_//YDjZ=x5XDQyQjqly7tOMoX";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Thu, 11 Jun 2020 20:26:49 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3856FC03E96F;
+        Thu, 11 Jun 2020 17:26:49 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id c14so7453326qka.11;
+        Thu, 11 Jun 2020 17:26:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:in-reply-to:references;
+        bh=XihjhM7PNDe6DTRFb+Tb27kII0d9sFsX2YnNNfTFAB8=;
+        b=avRfAddoVxJIjKVncxYfHxppQQ7YN8qOh8YfKqE4FfoemEVefjMYlKjkqkOznaYqmZ
+         pyZzyLpXUOiiBUHGxpFH3AH5eylL8l+dhxkqKAdgeii/rtRqL0SLBJrrWQqNuYkwGBih
+         8wfe6q6YWxLZ1TrsRGWbaYzaBoUJ1pwgoFcSiy7QMspcAeqycVXGF3yBXeyvxlm0sGye
+         XTpS48XBPAUwRr7PRrKM7G9huEk8qq6w8HcPzFegv2ldPlN26HldKlW+PguCO516uTtI
+         F3BWZndIqcsZi8O3yO7U34vRbY9mGR1XPmWJSZ5H6un/mTY0GAA8SAFGbzE9UGyzaP+f
+         4gmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references;
+        bh=XihjhM7PNDe6DTRFb+Tb27kII0d9sFsX2YnNNfTFAB8=;
+        b=MgXUmTEMzBLRn+RK6q4xLJLC/BPvzvKRUGBfrMTfILR/urnOzQuFSS+RBNDiBWVB63
+         WzYTt1EDH9ZkEhBKZkEZxkkcvBbpGQaJ7J09X5xugVTVtJGXJvKP+wnLGhH7gQFuvXzF
+         ZbOho2oAS3rGrHW/zbYk3eRiKcmFUvJOFuycAcmcyM7JWlCRVAyvEYAxx656RQE1pKVp
+         1TzNUuiScAO7QJFGNdsmfNhdo9XlqnmgBn2CkOGkD5PGeYYPgdsD8+3hwbzf4a9iuheL
+         Mp5SrDvwjL6OjdcBFcaSLh5E2FAKIU1tJXJGFX/4IkUXVOt9gaMtIK6BFYo7cE+BOP92
+         qmQg==
+X-Gm-Message-State: AOAM531rnSQj8ago5NDdPlk5puvTlyIj58duWOKkNZgqDDUWrY1HrtQY
+        l/5rHSWXJDmmEwFBDtT1U3xrLxXlk5Gs5Q==
+X-Google-Smtp-Source: ABdhPJxDqnEbvb8lxMuzHTWY9tCTZCqUUTQzLRifCeRxqyhsYTRHsS2yVdhnOePkUXI6mVlOUo7sUA==
+X-Received: by 2002:ae9:f40b:: with SMTP id y11mr604223qkl.107.1591921608305;
+        Thu, 11 Jun 2020 17:26:48 -0700 (PDT)
+Received: from linux.home ([2604:2000:1344:41d:f00a:33d2:6ec2:475c])
+        by smtp.googlemail.com with ESMTPSA id g47sm3696421qtk.53.2020.06.11.17.26.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2020 17:26:47 -0700 (PDT)
+From:   Gaurav Singh <gaurav1086@gmail.com>
+To:     gaurav1086@gmail.com, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        KP Singh <kpsingh@chromium.org>,
+        netdev@vger.kernel.org (open list:XDP (eXpress Data Path)),
+        bpf@vger.kernel.org (open list:XDP (eXpress Data Path)),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] xdp_rxq_info_user: Replace malloc/memset w/calloc
+Date:   Thu, 11 Jun 2020 20:26:33 -0400
+Message-Id: <20200612002639.32173-1-gaurav1086@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200611150221.15665-1-gaurav1086@gmail.com>
+References: <20200611150221.15665-1-gaurav1086@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_//YDjZ=x5XDQyQjqly7tOMoX
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Replace malloc/memset with calloc
 
-Hi all,
-
-After merging the amdgpu tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
-
-drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_process.c: In function 'kfd_sdma_a=
-ctivity_worker':
-drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_process.c:118:2: error: implicit d=
-eclaration of function 'use_mm' [-Werror=3Dimplicit-function-declaration]
-  118 |  use_mm(mm);
-      |  ^~~~~~
-drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_process.c:145:2: error: implicit d=
-eclaration of function 'unuse_mm' [-Werror=3Dimplicit-function-declaration]
-  145 |  unuse_mm(mm);
-      |  ^~~~~~~~
-
-Caused by commit
-
-  32cb59f31362 ("drm/amdkfd: Track SDMA utilization per process")
-
-interacting with commit
-
-  f5678e7f2ac3 ("kernel: better document the use_mm/unuse_mm API contract")
-
-from Linus' tree.
-
-I have applied the following merge fix for today (that was previously
-part of the akpm tree).
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Thu, 28 May 2020 20:15:34 +1000
-Subject: [PATCH] drm/amdkfd: fix up for {un}use_mm() rename
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Fixes: 0fca931a6f21 ("samples/bpf: program demonstrating access to xdp_rxq_info") Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
 ---
- drivers/gpu/drm/amd/amdkfd/kfd_process.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ samples/bpf/xdp_rxq_info_user.c | 13 +++----------
+ 1 file changed, 3 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_process.c b/drivers/gpu/drm/amd=
-/amdkfd/kfd_process.c
-index db010c5da144..25636789f3d3 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_process.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
-@@ -114,7 +114,7 @@ static void kfd_sdma_activity_worker(struct work_struct=
- *work)
- 		return;
- 	}
-=20
--	use_mm(mm);
-+	kthread_use_mm(mm);
-=20
- 	dqm_lock(dqm);
-=20
-@@ -141,7 +141,7 @@ static void kfd_sdma_activity_worker(struct work_struct=
- *work)
- 	}
-=20
- 	dqm_unlock(dqm);
--	unuse_mm(mm);
-+	kthread_unuse_mm(mm);
- 	mmput(mm);
- }
-=20
---=20
-2.26.2
+diff --git a/samples/bpf/xdp_rxq_info_user.c b/samples/bpf/xdp_rxq_info_user.c
+index 4fe47502ebed..caa4e7ffcfc7 100644
+--- a/samples/bpf/xdp_rxq_info_user.c
++++ b/samples/bpf/xdp_rxq_info_user.c
+@@ -198,11 +198,8 @@ static struct datarec *alloc_record_per_cpu(void)
+ {
+ 	unsigned int nr_cpus = bpf_num_possible_cpus();
+ 	struct datarec *array;
+-	size_t size;
+ 
+-	size = sizeof(struct datarec) * nr_cpus;
+-	array = malloc(size);
+-	memset(array, 0, size);
++	array = calloc(nr_cpus, sizeof(struct datarec));
+ 	if (!array) {
+ 		fprintf(stderr, "Mem alloc error (nr_cpus:%u)\n", nr_cpus);
+ 		exit(EXIT_FAIL_MEM);
+@@ -214,11 +211,8 @@ static struct record *alloc_record_per_rxq(void)
+ {
+ 	unsigned int nr_rxqs = bpf_map__def(rx_queue_index_map)->max_entries;
+ 	struct record *array;
+-	size_t size;
+ 
+-	size = sizeof(struct record) * nr_rxqs;
+-	array = malloc(size);
+-	memset(array, 0, size);
++	array = calloc(nr_rxqs, sizeof(struct record));
+ 	if (!array) {
+ 		fprintf(stderr, "Mem alloc error (nr_rxqs:%u)\n", nr_rxqs);
+ 		exit(EXIT_FAIL_MEM);
+@@ -232,8 +226,7 @@ static struct stats_record *alloc_stats_record(void)
+ 	struct stats_record *rec;
+ 	int i;
+ 
+-	rec = malloc(sizeof(*rec));
+-	memset(rec, 0, sizeof(*rec));
++	rec = calloc(1, sizeof(struct stats_record));
+ 	if (!rec) {
+ 		fprintf(stderr, "Mem alloc error\n");
+ 		exit(EXIT_FAIL_MEM);
+-- 
+2.17.1
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_//YDjZ=x5XDQyQjqly7tOMoX
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7iy5AACgkQAVBC80lX
-0GzHIAf+JkqjD5UqHEsR69FRf4puIQM1C1GuCLFncHR8C+BrCu3ZYEe0PXJN1kN7
-0lsr4hRXtX4SrS3M5nPnguvR0jp/e1NENO9CmgV0PIhOAjfeiVPfLAJFMbKwtCmS
-BPLobh84TIic/1w/g5pRQZrcSk023FDsvlvX0MDqCoAYrwYzIgYzwQ+E85sK1gKp
-uW4+xeyxo4HjssYQ7CVXQm8nyhTf2Rlrbtp0DPEwxiguFgmIz2WcYNV+jXBNGejj
-DVGOeXiI7SdqcVaonY1EVb/WM7QTPjE+3XhUyNWEOuqv7XhkOEb93bYmAJ4siWyo
-MwLOD6sVOiCDPNucdpRgbFPUs4MXMQ==
-=VZgp
------END PGP SIGNATURE-----
-
---Sig_//YDjZ=x5XDQyQjqly7tOMoX--
