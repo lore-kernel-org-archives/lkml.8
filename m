@@ -7,66 +7,67 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7ED3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:10:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F456C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A021D2084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:10:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EC4F207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:10:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Fc/RmOfg"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="bYf2ca0p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgFLHKh (ORCPT
+        id S1726637AbgFLHKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 03:10:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44744 "EHLO
+        Fri, 12 Jun 2020 03:10:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726594AbgFLHKb (ORCPT
+        with ESMTP id S1726603AbgFLHKd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 03:10:31 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AD16C03E96F
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 00:10:31 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id z63so2953643pfb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 00:10:31 -0700 (PDT)
+        Fri, 12 Jun 2020 03:10:33 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1423BC08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 00:10:33 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id b7so3957662pju.0
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 00:10:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=Bt52k9Bvf6mwoBH8BO99Cl1SZAUWj8JPjBOKu49Dflg=;
-        b=Fc/RmOfgUenC1huViLl/zLKhIYopdecJLV5VD2dJhaN267VO6VkoMGplqRcZ7bos2+
-         Wb+yl4Cd5cB8HwFCeCFWz42VYHvuzOcw8O3LW7JJ5vvZndUYNM/B8JOs2x9JBEheZQmR
-         R94SW60bIr/7HaO6oNg1yMXH1Htlxkwt36l/C3KR+1kfnJhgMbydFY96Vp7NIHRXxxLm
-         fzs/HMyxeNFHl1wdrdNPMaL06WQMM+GHIcSK/JL7Y+VYwaHPqiNQOxxcP5OGSEpa59rA
-         uT3nUgYAtPpwmiipEPCZk0Aqjs6puRTNijHtj+C13r6ciR7iu4xkPSz4R1ta6nyv2RuS
-         Fjgw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=oxY+GEGW58gRs4X3wAEY9YflVh8sZNhuS06ZzQHTlOU=;
+        b=bYf2ca0prWH5VkCAX0BKWaVwimC2C3YOvMCg9eNTbmfw5UDY5oRv2hJTZOzZJiNXJ/
+         UydYZv2pwrhTdIfN8BHiou4PGeBuPiO7qwYweHfxT3aDxNh+gnBnCDkcy5aaEQq8Cejo
+         mjIwKOtzvVlCUrgnR6MiquRuDwa/j4kt6TjBT1PML91QcxFW14HZxgiKTd33+Wj2UxMY
+         eq0+yuFXbRtJHt+wgG10k5i01wHnW8b8H6LbcTRxAcIwA18Jv13+k9miBGj9XEPtMUtD
+         pSaxRemoysoyJ8dQXZM5UH1nQD8SKPa+6H4dGCBFwIEPeQ+TA3A5S3+E5Wd+jSRUKspJ
+         ehmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Bt52k9Bvf6mwoBH8BO99Cl1SZAUWj8JPjBOKu49Dflg=;
-        b=HifEqyxUvRGAt0CZm3/K9smhcKJ21UCBkD95AjKg5n5j66aG73EOcuEPLNxNa+VSJt
-         y68K94XT+KgW6uQsxMWl8BkDr+ehiVKLPJf+MmWpbRMLYBmOw8ZtUgBl99hT/9XUR8ui
-         iSzzD6h+VzqpvdugJma58l4Fi05sB44LDLXSrVwdnCqMwcP4MyasLwgX01gnJ8YPa9x7
-         ETPKMffp5r5uVCvhpi2W9/Qz8srJkFEaRegxvV3O4IFZJSXlSIpYIKGsCdcXrFgacnWH
-         xxgNqILBFgwO43iPB1KWj4juNOVJkOs9JVAcTbkKsEetYUFSF8M48RnC0ucvajdJZ3aN
-         ++gQ==
-X-Gm-Message-State: AOAM531DeCdB6aHBeAjM9hCRGnpvUBHBPKOKTcC0SMnFAT/S+0OhtaYF
-        31Q7g022fQvYvdnrsdz/Px1TYg==
-X-Google-Smtp-Source: ABdhPJzcGkM7/3ILCBONGZKG4PpCtorJ3xtsrdL+K4vr+cBUu+pfS0s625IeEIqoX+ldCpeFmfNF/A==
-X-Received: by 2002:a63:7f5d:: with SMTP id p29mr9628085pgn.337.1591945828140;
-        Fri, 12 Jun 2020 00:10:28 -0700 (PDT)
+        bh=oxY+GEGW58gRs4X3wAEY9YflVh8sZNhuS06ZzQHTlOU=;
+        b=fgcVBB70rNpfDmnmyU06E+EwQeEL3enc9MmUKfxB9Eve2KShtCZYy9nc47KVsrvZdJ
+         Fwnhx9xsfUeKggvXH87pzk1XejwMCU2am4VT80qnu8gmJKTCtFsk2asV44GcVISmyJ3J
+         sEPoPhRzaEtficdrZHVCHNxOM1aZhERtVwPSWW7XCYCt1Z1hKkRdTl5ntUOPenkSF8xd
+         qvpkN7DSyw5kQ3qxXbFfsQnYiSKjn+5osm3WbtdXrkhqQ7LJ3qQv50p5aN722DnGxdEA
+         keyeI3MahzK6fpS47pYulAIInJGFogBXNPDeYYL1e73wM70LJBXdb1afrMSg7MyxLPrC
+         xh3w==
+X-Gm-Message-State: AOAM5325b/nVULVBzyAgoCaa8vYuDW/lZfPugW651ZR/OFDNqG8TTCim
+        iP7vQ2QEZSm7DkcJvmYsQaBbqw==
+X-Google-Smtp-Source: ABdhPJyFG6z1DGdSbNi4UEz2b4RML3S9N58L5su0dAAyi8LgzJF1AKeDdZV2+FRyX3g2Ij4kQtmORg==
+X-Received: by 2002:a17:90a:ae11:: with SMTP id t17mr12268990pjq.157.1591945832518;
+        Fri, 12 Jun 2020 00:10:32 -0700 (PDT)
 Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
-        by smtp.gmail.com with ESMTPSA id d2sm4336919pgp.56.2020.06.12.00.10.26
+        by smtp.gmail.com with ESMTPSA id d2sm4336919pgp.56.2020.06.12.00.10.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 00:10:27 -0700 (PDT)
+        Fri, 12 Jun 2020 00:10:32 -0700 (PDT)
 From:   Greentime Hu <greentime.hu@sifive.com>
 To:     greentime.hu@sifive.com, oleg@redhat.com, guoren@linux.alibaba.com,
         vincent.chen@sifive.com, paul.walmsley@sifive.com,
         palmerdabbelt@google.com, linux-riscv@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 08/13] riscv: Reset vector register
-Date:   Fri, 12 Jun 2020 15:09:57 +0800
-Message-Id: <63ca68cb344d18fdae0036e1b66770f1f9a90fbc.1591344965.git.greentime.hu@sifive.com>
+Cc:     Nick Knight <nick.knight@sifive.com>
+Subject: [PATCH 10/13] riscv: Add task switch support for vector
+Date:   Fri, 12 Jun 2020 15:09:59 +0800
+Message-Id: <d031e37f995b56ad87cab324a52f74b282454ee3.1591344965.git.greentime.hu@sifive.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <cover.1591344965.git.greentime.hu@sifive.com>
 References: <cover.1591344965.git.greentime.hu@sifive.com>
@@ -77,106 +78,293 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guo Ren <guoren@linux.alibaba.com>
+This patch adds task switch support for vector. It supports lazy
+save and restore mechanism. It also supports all lengths of vlen.
 
-Reset vector registers at boot-time and disable vector instructions
-execution for kernel mode.
-
-[greentime.hu@sifive.com: add comments]
+[guoren@linux.alibaba.com: First available porting to support vector
+context switching]
+[nick.knight@sifive.com: Rewrite vector.S to support dynamic vlen, xlen and
+code refine]
+Signed-off-by: Nick Knight <nick.knight@sifive.com>
 Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
 Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
 ---
- arch/riscv/kernel/entry.S |  6 ++---
- arch/riscv/kernel/head.S  | 49 +++++++++++++++++++++++++++++++++++++--
- 2 files changed, 50 insertions(+), 5 deletions(-)
+ arch/riscv/include/asm/switch_to.h | 71 +++++++++++++++++++++++++
+ arch/riscv/kernel/Makefile         |  1 +
+ arch/riscv/kernel/process.c        | 40 ++++++++++++++
+ arch/riscv/kernel/vector.S         | 84 ++++++++++++++++++++++++++++++
+ 4 files changed, 196 insertions(+)
+ create mode 100644 arch/riscv/kernel/vector.S
 
-diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
-index 56d071b2c0a1..2184153836ca 100644
---- a/arch/riscv/kernel/entry.S
-+++ b/arch/riscv/kernel/entry.S
-@@ -67,10 +67,10 @@ _save_context:
- 	 * Disable user-mode memory access as it should only be set in the
- 	 * actual user copy routines.
- 	 *
--	 * Disable the FPU to detect illegal usage of floating point in kernel
--	 * space.
-+	 * Disable the FPU/Vector to detect illegal usage of floating point
-+	 * or vector in kernel space.
- 	 */
--	li t0, SR_SUM | SR_FS
-+	li t0, SR_SUM | SR_FS | SR_VS
+diff --git a/arch/riscv/include/asm/switch_to.h b/arch/riscv/include/asm/switch_to.h
+index b9234e7178d0..a047dd75e09d 100644
+--- a/arch/riscv/include/asm/switch_to.h
++++ b/arch/riscv/include/asm/switch_to.h
+@@ -6,10 +6,12 @@
+ #ifndef _ASM_RISCV_SWITCH_TO_H
+ #define _ASM_RISCV_SWITCH_TO_H
  
- 	REG_L s0, TASK_TI_USER_SP(tp)
- 	csrrc s1, CSR_STATUS, t0
-diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-index 98a406474e7d..1290ef680125 100644
---- a/arch/riscv/kernel/head.S
-+++ b/arch/riscv/kernel/head.S
-@@ -181,10 +181,10 @@ ENTRY(_start_kernel)
- .option pop
++#include <linux/slab.h>
+ #include <linux/sched/task_stack.h>
+ #include <asm/processor.h>
+ #include <asm/ptrace.h>
+ #include <asm/csr.h>
++#include <asm/asm-offsets.h>
  
- 	/*
--	 * Disable FPU to detect illegal usage of
-+	 * Disable FPU & VECTOR to detect illegal usage of
- 	 * floating point in kernel space
- 	 */
--	li t0, SR_FS
-+	li t0, SR_FS | SR_VS
- 	csrc CSR_STATUS, t0
+ #ifdef CONFIG_FPU
+ extern void __fstate_save(struct task_struct *save_to);
+@@ -63,6 +65,73 @@ extern bool has_fpu;
+ #define __switch_to_fpu(__prev, __next) do { } while (0)
+ #endif
  
- #ifdef CONFIG_SMP
-@@ -341,6 +341,51 @@ ENTRY(reset_regs)
- 	csrw	fcsr, 0
- 	/* note that the caller must clear SR_FS */
- #endif /* CONFIG_FPU */
-+
 +#ifdef CONFIG_VECTOR
-+	csrr	t0, CSR_MISA
-+	li	t1, (COMPAT_HWCAP_ISA_V >> 16)
-+	slli	t1, t1, 16
-+	and	t0, t0, t1
-+	beqz	t0, .Lreset_regs_done
++extern bool has_vector;
++extern unsigned long riscv_vsize;
++extern void __vstate_save(struct __riscv_v_state *save_to, void *datap);
++extern void __vstate_restore(struct __riscv_v_state *restore_from, void *datap);
 +
-+	li	t1, SR_VS
-+	csrs	CSR_STATUS, t1
-+	vmv.v.i v0, 0
-+	vmv.v.i v1, 0
-+	vmv.v.i v2, 0
-+	vmv.v.i v3, 0
-+	vmv.v.i v4, 0
-+	vmv.v.i v5, 0
-+	vmv.v.i v6, 0
-+	vmv.v.i v7, 0
-+	vmv.v.i v8, 0
-+	vmv.v.i v9, 0
-+	vmv.v.i v10, 0
-+	vmv.v.i v11, 0
-+	vmv.v.i v12, 0
-+	vmv.v.i v13, 0
-+	vmv.v.i v14, 0
-+	vmv.v.i v15, 0
-+	vmv.v.i v16, 0
-+	vmv.v.i v17, 0
-+	vmv.v.i v18, 0
-+	vmv.v.i v19, 0
-+	vmv.v.i v20, 0
-+	vmv.v.i v21, 0
-+	vmv.v.i v22, 0
-+	vmv.v.i v23, 0
-+	vmv.v.i v24, 0
-+	vmv.v.i v25, 0
-+	vmv.v.i v26, 0
-+	vmv.v.i v27, 0
-+	vmv.v.i v28, 0
-+	vmv.v.i v29, 0
-+	vmv.v.i v30, 0
-+	vmv.v.i v31, 0
-+	/* note that the caller must clear SR_VS */
-+#endif /* CONFIG_VECTOR */
++static inline void __vstate_clean(struct pt_regs *regs)
++{
++	regs->status = (regs->status & ~(SR_VS)) | SR_VS_CLEAN;
++}
 +
- .Lreset_regs_done:
- 	ret
- END(reset_regs)
++static inline void vstate_off(struct task_struct *task,
++			      struct pt_regs *regs)
++{
++	regs->status = (regs->status & ~SR_VS) | SR_VS_OFF;
++}
++
++static inline void vstate_save(struct task_struct *task,
++			       struct pt_regs *regs)
++{
++	if ((regs->status & SR_VS) == SR_VS_DIRTY) {
++		struct __riscv_v_state *vstate = &(task->thread.vstate);
++
++		/* Allocate space for vector registers. */
++		if (!vstate->datap) {
++			vstate->datap = kzalloc(riscv_vsize, GFP_KERNEL);
++			vstate->size = riscv_vsize;
++		}
++		__vstate_save(vstate, vstate->datap);
++		__vstate_clean(regs);
++	}
++}
++
++static inline void vstate_restore(struct task_struct *task,
++				  struct pt_regs *regs)
++{
++	if ((regs->status & SR_VS) != SR_VS_OFF) {
++		struct __riscv_v_state *vstate = &(task->thread.vstate);
++
++		/* Allocate space for vector registers. */
++		if (!vstate->datap) {
++			vstate->datap = kzalloc(riscv_vsize, GFP_KERNEL);
++			vstate->size = riscv_vsize;
++		}
++		__vstate_restore(vstate, vstate->datap);
++		__vstate_clean(regs);
++	}
++}
++
++static inline void __switch_to_vector(struct task_struct *prev,
++				   struct task_struct *next)
++{
++	struct pt_regs *regs;
++
++	regs = task_pt_regs(prev);
++	if (unlikely(regs->status & SR_SD))
++		vstate_save(prev, regs);
++	vstate_restore(next, task_pt_regs(next));
++}
++
++#else
++#define has_vector false
++#define vstate_save(task, regs) do { } while (0)
++#define vstate_restore(task, regs) do { } while (0)
++#define __switch_to_vector(__prev, __next) do { } while (0)
++#endif
++
+ extern struct task_struct *__switch_to(struct task_struct *,
+ 				       struct task_struct *);
+ 
+@@ -72,6 +141,8 @@ do {							\
+ 	struct task_struct *__next = (next);		\
+ 	if (has_fpu)					\
+ 		__switch_to_fpu(__prev, __next);	\
++	if (has_vector)					\
++		__switch_to_vector(__prev, __next);	\
+ 	((last) = __switch_to(__prev, __next));		\
+ } while (0)
+ 
+diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+index 86c83081044f..dee489a1a526 100644
+--- a/arch/riscv/kernel/Makefile
++++ b/arch/riscv/kernel/Makefile
+@@ -33,6 +33,7 @@ obj-$(CONFIG_MMU) += vdso.o vdso/
+ 
+ obj-$(CONFIG_RISCV_M_MODE)	+= clint.o traps_misaligned.o
+ obj-$(CONFIG_FPU)		+= fpu.o
++obj-$(CONFIG_VECTOR)		+= vector.o
+ obj-$(CONFIG_SMP)		+= smpboot.o
+ obj-$(CONFIG_SMP)		+= smp.o
+ obj-$(CONFIG_SMP)		+= cpu_ops.o
+diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
+index 610c11e91606..fc8761c04e9f 100644
+--- a/arch/riscv/kernel/process.c
++++ b/arch/riscv/kernel/process.c
+@@ -76,6 +76,16 @@ void start_thread(struct pt_regs *regs, unsigned long pc,
+ 		 */
+ 		fstate_restore(current, regs);
+ 	}
++
++	if (has_vector) {
++		regs->status |= SR_VS_INITIAL;
++		/*
++		 * Restore the initial value to the vector register
++		 * before starting the user program.
++		 */
++		vstate_restore(current, regs);
++	}
++
+ 	regs->epc = pc;
+ 	regs->sp = sp;
+ 	set_fs(USER_DS);
+@@ -92,15 +102,45 @@ void flush_thread(void)
+ 	fstate_off(current, task_pt_regs(current));
+ 	memset(&current->thread.fstate, 0, sizeof(current->thread.fstate));
+ #endif
++#ifdef CONFIG_VECTOR
++	/* Reset vector state */
++	vstate_off(current, task_pt_regs(current));
++	memset(&current->thread.vstate, 0, sizeof(current->thread.vstate));
++#endif
+ }
+ 
+ int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src)
+ {
+ 	fstate_save(src, task_pt_regs(src));
++	if (has_vector)
++		/* To make sure every dirty vector context is saved. */
++		vstate_save(src, task_pt_regs(src));
+ 	*dst = *src;
++	if (has_vector) {
++		/* Copy vector context to the forked task from parent. */
++		if ((task_pt_regs(src)->status & SR_VS) != SR_VS_OFF) {
++			unsigned long size = src->thread.vstate.size;
++
++			dst->thread.vstate.datap = kzalloc(size, GFP_KERNEL);
++			/* Failed to allocate memory. */
++			if (!dst->thread.vstate.datap)
++				return -ENOMEM;
++			/* Copy the src vector context to dst. */
++			memcpy(dst->thread.vstate.datap,
++			       src->thread.vstate.datap, size);
++		}
++	}
++
+ 	return 0;
+ }
+ 
++void arch_release_task_struct(struct task_struct *tsk)
++{
++	/* Free the vector context of datap. */
++	if (has_vector)
++		kfree(tsk->thread.vstate.datap);
++}
++
+ int copy_thread_tls(unsigned long clone_flags, unsigned long usp,
+ 	unsigned long arg, struct task_struct *p, unsigned long tls)
+ {
+diff --git a/arch/riscv/kernel/vector.S b/arch/riscv/kernel/vector.S
+new file mode 100644
+index 000000000000..4c880b1c32aa
+--- /dev/null
++++ b/arch/riscv/kernel/vector.S
+@@ -0,0 +1,84 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2012 Regents of the University of California
++ * Copyright (C) 2017 SiFive
++ * Copyright (C) 2019 Alibaba Group Holding Limited
++ *
++ *   This program is free software; you can redistribute it and/or
++ *   modify it under the terms of the GNU General Public License
++ *   as published by the Free Software Foundation, version 2.
++ *
++ *   This program is distributed in the hope that it will be useful,
++ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *   GNU General Public License for more details.
++ */
++
++#include <linux/linkage.h>
++
++#include <asm/asm.h>
++#include <asm/csr.h>
++#include <asm/asm-offsets.h>
++
++#define vstatep  a0
++#define datap    a1
++#define x_vstart t0
++#define x_vtype  t1
++#define x_vl     t2
++#define x_vcsr   t3
++#define incr     t4
++#define m_one    t5
++#define status   t6
++
++ENTRY(__vstate_save)
++	li      status, SR_VS
++	csrs    sstatus, status
++
++	csrr    x_vstart, CSR_VSTART
++	csrr    x_vtype, CSR_VTYPE
++	csrr    x_vl, CSR_VL
++	csrr    x_vcsr, CSR_VCSR
++	li      m_one, -1
++	vsetvli incr, m_one, e8, m8
++	vse8.v   v0, (datap)
++	add     datap, datap, incr
++	vse8.v   v8, (datap)
++	add     datap, datap, incr
++	vse8.v   v16, (datap)
++	add     datap, datap, incr
++	vse8.v   v24, (datap)
++
++	REG_S   x_vstart, RISCV_V_STATE_VSTART(vstatep)
++	REG_S   x_vtype, RISCV_V_STATE_VTYPE(vstatep)
++	REG_S   x_vl, RISCV_V_STATE_VL(vstatep)
++	REG_S   x_vcsr, RISCV_V_STATE_VCSR(vstatep)
++
++	csrc	sstatus, status
++	ret
++ENDPROC(__vstate_save)
++
++ENTRY(__vstate_restore)
++	li      status, SR_VS
++	csrs    sstatus, status
++
++	li      m_one, -1
++	vsetvli incr, m_one, e8, m8
++	vle8.v   v0, (datap)
++	add     datap, datap, incr
++	vle8.v   v8, (datap)
++	add     datap, datap, incr
++	vle8.v   v16, (datap)
++	add     datap, datap, incr
++	vle8.v   v24, (datap)
++
++	REG_L   x_vstart, RISCV_V_STATE_VSTART(vstatep)
++	REG_L   x_vtype, RISCV_V_STATE_VTYPE(vstatep)
++	REG_L   x_vl, RISCV_V_STATE_VL(vstatep)
++	REG_L   x_vcsr, RISCV_V_STATE_VCSR(vstatep)
++	vsetvl  x0, x_vl, x_vtype
++	csrw    CSR_VSTART, x_vstart
++	csrw    CSR_VCSR, x_vcsr
++
++	csrc	sstatus, status
++	ret
++ENDPROC(__vstate_restore)
 -- 
 2.27.0
 
