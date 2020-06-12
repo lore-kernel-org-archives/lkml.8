@@ -2,102 +2,92 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90620C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8585BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 602AE207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:01:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="D5L2iCYN";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SqZY9HAv"
+	by mail.kernel.org (Postfix) with ESMTP id 6389620835
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:01:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591956106;
+	bh=IBzrqa8288WHt0Vr+2XSR3sZwtmgNbA3oFvFtV3/1MQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NpbsFOSDFHWJheiSdwqvsYrPB9PS+/uxBQvsS1o2/uU9eNCwcD9Lx/O1HOaUKogIJ
+	 /rIkj9GZHHxYWa+Ubziu4WHGDzsAG4y41s/CRHEniJHU6nP+/q0glI4JQDjqpgSbpm
+	 gbbIHJfw8ZDjaegXcD12ycvVKG6D0h8+Fq1bCsoI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726319AbgFLKBc (ORCPT
+        id S1726352AbgFLKBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 06:01:32 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:42637 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725805AbgFLKBa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 06:01:30 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id CD8785C00C6;
-        Fri, 12 Jun 2020 06:01:27 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Fri, 12 Jun 2020 06:01:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=k9Hc0n0ZZ+r2PM/CxaFyy+acOdU
-        13GIRtpmvbo4Scvg=; b=D5L2iCYNJvs1gTEpItjsH85GlZQdEXixFw1xImAjDYh
-        KDXQu+rOyhfQ+V7T8pvJk290aZowGukLNGIRDftlZe/eg1g3qjrjagDPPUe9wGs9
-        Ikc0VfpF6fWsAJjCwnu5eq7Z3R/t1A3F0rFihxstBLei50s5yrd9h7E917qFuZ4R
-        k6Q1P3gX4TsLe1KCrRHwUIlj+WJumV561XjIrwie2sTGzVBuES72LoG2qufr167H
-        wppqGhfsyCCiyBbD/A9oTIFISQ1Q99dUTYIUXCHK9wCM7Wc5y8pv1UJrmhXbxeKM
-        qj+4kxxt2auxu1EUsFDteF45zY+danP6qp0ZioDUyHg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=k9Hc0n
-        0ZZ+r2PM/CxaFyy+acOdU13GIRtpmvbo4Scvg=; b=SqZY9HAvgKrAzKIwAteYtM
-        bHUxJ+E/+SOf+uczdqw8tuPaWBE1vBEzyvLFe0QsaZaR+/78zDIYUD3q0bE/igt9
-        x/dNzVBG231z/y9tLosoADDA2cTn5WJ88AQ/I0Iwt5rflDA6ZjoSdYCCVDOECd/E
-        vn27Xu6L0m+DJ3oiv6DxDGhWdS03WDQvPMrk+m+nVXOJCKRSKaMrXrFNG2Qs4uLT
-        ajKJFgRMGGiiXmr2vrQTFEb8oAQl9UT/yu6tVbOyztwR3IpldGerro2bRFJONJjO
-        KB5x54Cz+k4kabCJKsz8biKLFsLEGHdFXx5jJ8RZAacPVBJO2Dwhmk+39I+CEUdg
-        ==
-X-ME-Sender: <xms:c1LjXjtbUoLQLWh24Xw1PNX9tj9ckKsftBYTgk1LN8IAXyi5hkrp7g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudeiuddgvdegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeevueehje
-    fgfffgiedvudekvdektdelleelgefhleejieeugeegveeuuddukedvteenucfkphepkeef
-    rdekiedrkeelrddutdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
-    hilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhm
-X-ME-Proxy: <xmx:c1LjXkf2YQed55oCLiGxpGONoKGwz3_5Bzz7s7W28SwIdqFHt6b5EQ>
-    <xmx:c1LjXmz-zbq9KoJJYlstbCUaCmhDHp4u1BrI6iPw1WEYE8IpSNB-MA>
-    <xmx:c1LjXiPIvRQsyC1qBv12yXEl1eNsJ7pSkpyr4qc23OlFOkgHJQP_dQ>
-    <xmx:d1LjXukvL5SdC2m3M83mE2b74Bu4DICQVt7-6ZeUEMwQp2ukNnU5RA>
+        Fri, 12 Jun 2020 06:01:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36036 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725805AbgFLKBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 06:01:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id F3ACE328005E;
-        Fri, 12 Jun 2020 06:01:22 -0400 (EDT)
-Date:   Fri, 12 Jun 2020 12:01:11 +0200
-From:   Greg KH <greg@kroah.com>
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DE6A207D8;
+        Fri, 12 Jun 2020 10:01:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591956101;
+        bh=IBzrqa8288WHt0Vr+2XSR3sZwtmgNbA3oFvFtV3/1MQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=V2vPFMorhf1SoQns9I/vVtVFeBl5WXxk3cGLGvcK//oMZ6nuV87wkamGEdT9lVhuA
+         5/Oh1w5iuhlsKrHP4iiWxu7+icB1Rf0xEcwk16Ht5CJX6iPxFHhhdRK7+eyyxemqAL
+         jwWFREBmJhoD2QZdkNWo5iPAze0FaCHpdXyg46S8=
+Date:   Fri, 12 Jun 2020 12:01:32 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Cheng Jian <cj.chengjian@huawei.com>,
-        Chen Wandun <chenwandun@huawei.com>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v2 1/2] perf tools: Fix potential memory leaks in perf
- events parser
-Message-ID: <20200612100111.GA3157576@kroah.com>
-References: <20200611145605.21427-1-chenwandun@huawei.com>
- <20200611145605.21427-2-chenwandun@huawei.com>
- <51efcf82-4c0c-70d3-9700-6969e6decde1@web.de>
+Cc:     Bernard Zhao <bernard@vivo.com>, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        opensource.kernel@vivo.com, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>
+Subject: Re: [PATCH] drm/msm: Improve exception handling in
+ msm_gpu_crashstate_capture()
+Message-ID: <20200612100132.GB3157576@kroah.com>
+References: <56a615b6-9881-ff01-fa0f-8ea070fc03e7@web.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <51efcf82-4c0c-70d3-9700-6969e6decde1@web.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <56a615b6-9881-ff01-fa0f-8ea070fc03e7@web.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 08:50:58PM +0200, Markus Elfring wrote:
-> > Fix memory leak of in function parse_events_term__sym_hw()
-> > and parse_events_term__clone() when error occur.
+On Fri, Jun 12, 2020 at 09:36:09AM +0200, Markus Elfring wrote:
+> > Function msm_gpu_crashstate_capture maybe called for several
+> > times, and then the state->bos is a potential memleak. Also
+> > the state->pos maybe alloc failed, but now without any handle.
+> > This change is to fix some potential memleak and add error
+> > handle when alloc failed.
 > 
+> I suggest to improve the provided information.
 > How do you think about a wording variant like the following?
 > 
->    Release a configuration object after a string duplication failed.
+>    The function “msm_gpu_crashstate_capture” can be called multiple times.
+>    The members “comm”, “cmd” and “bos” of the data structure “msm_gpu_state”
+>    are reassigned with pointers according to dynamic memory allocations
+>    if the preprocessor symbol “CONFIG_DEV_COREDUMP” was defined.
+>    But the function “kfree” was not called for them before.
 > 
-> Regards,
-> Markus
+>    Thus add missing actions.
+>    * Release previous objects.
+>    * Use further null pointer checks.
+>    * Complete the corresponding exception handling.
+> 
+> 
+> Would you like to add the tag “Fixes” to the commit message?
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=b791d1bdf9212d944d749a5c7ff6febdba241771#n183
+> 
+> 
 
 Hi,
 
