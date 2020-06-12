@@ -4,38 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC08C433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF27C433E1
 	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68830208C3
+	by mail.kernel.org (Postfix) with ESMTP id B92AB20838
 	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:47:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="UyWTZEqh"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Ai1NCP3W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbgFLOrX (ORCPT
+        id S1726574AbgFLOr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 10:47:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58688 "EHLO
+        Fri, 12 Jun 2020 10:47:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726455AbgFLOrV (ORCPT
+        with ESMTP id S1726542AbgFLOrX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 10:47:21 -0400
+        Fri, 12 Jun 2020 10:47:23 -0400
 Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3642BC03E96F;
-        Fri, 12 Jun 2020 07:47:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7530DC03E96F;
+        Fri, 12 Jun 2020 07:47:23 -0700 (PDT)
 Received: from Q.local (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id A8AF82C2;
-        Fri, 12 Jun 2020 16:47:18 +0200 (CEST)
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4D121B1A;
+        Fri, 12 Jun 2020 16:47:21 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1591973239;
-        bh=zG5q8wP2mfuUfE3Cb1aWpp0x99T6/VB9E5oBYr5LdzA=;
+        s=mail; t=1591973242;
+        bh=zsgqf8RLDeGBCTHNd5KBZWdXP+BQTaHck9Vt+IcKzeY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UyWTZEqhGniRoN8Z5E7jg60igEqq9qoJHaKOvOJm0rtGhskCI5wvILfdU/60aXgc0
-         uEOTI/48Z/wyyRK9SviAnH3HD4fLS4OdCfOTt/0urCS8gR4Fz6Xucwax76otKzD/Z0
-         w3SUwf86O0i6DzQPRZRDS3AOUAuP9k17t5LrXrSk=
+        b=Ai1NCP3W7T8o7ReurqbVkkYV9xjTfh/ma4ckUHh+KedCs84Q46vG7EWKDfNhiiH4j
+         7KmLWZMSW5dccOotqNtSqBjZNbqnA+QsMoEehtTUPV+u5QZ55MN8lkjPKyFousevT1
+         yBu6/oXbotwwnaG8Mm8kGznyMObuUlSSRGXr+ALY=
 From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 To:     linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
         linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
@@ -51,15 +51,12 @@ Cc:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
         Jacopo Mondi <jacopo+renesas@jmondi.org>,
         Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
         Rob Herring <robh@kernel.org>
-Subject: [PATCH v10 1/4] dt-bindings: media: i2c: Add bindings for Maxim Integrated MAX9286
-Date:   Fri, 12 Jun 2020 15:47:10 +0100
-Message-Id: <20200612144713.502006-2-kieran.bingham+renesas@ideasonboard.com>
+Subject: [PATCH v10 3/4] dt-bindings: media: i2c: Add bindings for IMI RDACM2x
+Date:   Fri, 12 Jun 2020 15:47:12 +0100
+Message-Id: <20200612144713.502006-4-kieran.bingham+renesas@ideasonboard.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200612144713.502006-1-kieran.bingham+renesas@ideasonboard.com>
 References: <20200612144713.502006-1-kieran.bingham+renesas@ideasonboard.com>
@@ -71,53 +68,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-The MAX9286 deserializes video data received on up to 4 Gigabit
-Multimedia Serial Links (GMSL) and outputs them on a CSI-2 port using up
-to 4 data lanes.
+The IMI RDACM20 and IMI RDACM21 are Gigabit Multimedia Serial Link
+(GMSL) camera capable of transmitting video and I2C control messages on
+a coax cable physical link for automotive applications.
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Document their device tree bindings.
+
 Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Reviewed-by: Rob Herring <robh@kernel.org>
 
 ---
+v2:
+ - Provide imi vendor prefix
+ - Fix minor spelling
+
+v3:
+ - update binding descriptions
+
+v4:
+ - No change
+
+v5:
+ - Specify optional third reg address for the MCU
 
 v7:
- - Collect Rob's RB tag
- - Remove redundant maxItems from remote-endpoints
- - Fix SPDX licence tag
+ [Jacopo]
+ - Rename to imi,rdacm2x-gmsl.yaml
+ - Exand bindings to describe RDACM21
 
-v10:
-[Jacopo]
- - Fix dt-validation
- - Fix dt-binding examples with 2 reg entries
+v9:
+  [Jacopo]
+  - Rework 'compatible' property as suggested by Rob
+  - Re-order vendor prefixes ('g' comes before 'i' ... )
+  - Add Rob's tag
 
-[Kieran]
- - Correctly match the hex camera node reg
- - Add (required) GPIO controller support
+ .../bindings/media/i2c/imi,rdacm2x-gmsl.yaml  | 159 ++++++++++++++++++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ 2 files changed, 161 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/imi,rdacm2x-gmsl.yaml
 
- .../bindings/media/i2c/maxim,max9286.yaml     | 366 ++++++++++++++++++
- 1 file changed, 366 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/maxim,max9286.yaml
-
-diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max9286.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max9286.yaml
+diff --git a/Documentation/devicetree/bindings/media/i2c/imi,rdacm2x-gmsl.yaml b/Documentation/devicetree/bindings/media/i2c/imi,rdacm2x-gmsl.yaml
 new file mode 100644
-index 000000000000..c632a10a753a
+index 000000000000..fe524490e6a2
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/maxim,max9286.yaml
-@@ -0,0 +1,366 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++++ b/Documentation/devicetree/bindings/media/i2c/imi,rdacm2x-gmsl.yaml
+@@ -0,0 +1,159 @@
++# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
 +# Copyright (C) 2019 Renesas Electronics Corp.
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/media/i2c/maxim,max9286.yaml#
++$id: http://devicetree.org/schemas/media/i2c/imi,rdacm2x-gmsl.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Maxim Integrated Quad GMSL Deserializer
++title:  IMI D&D RDACM20 and RDACM21 Automotive Camera Platforms
 +
 +maintainers:
 +  - Jacopo Mondi <jacopo+renesas@jmondi.org>
@@ -125,16 +132,51 @@ index 000000000000..c632a10a753a
 +  - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 +  - Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 +
-+description: |
-+  The MAX9286 deserializer receives video data on up to 4 Gigabit Multimedia
-+  Serial Links (GMSL) and outputs them on a CSI-2 D-PHY port using up to 4 data
-+  lanes.
++description: -|
++  The IMI D&D RDACM20 and RDACM21 are GMSL-compatible camera designed for
++  automotive applications.
 +
-+  In addition to video data, the GMSL links carry a bidirectional control
-+  channel that encapsulates I2C messages. The MAX9286 forwards all I2C traffic
-+  not addressed to itself to the other side of the links, where a GMSL
-+  serializer will output it on a local I2C bus. In the other direction all I2C
-+  traffic received over GMSL by the MAX9286 is output on the local I2C bus.
++  The RDACM20 camera module encloses a Maxim Integrated MAX9271 GMSL serializer,
++  coupled with an OV10635 image sensor and an embedded MCU. Both the MCU and
++  the image sensor are connected to the serializer local I2C bus and are
++  accessible by the host SoC by direct addressing.
++
++  The RDACM21 camera module encloses the same serializer, coupled with an
++  OV10640 image sensor and an OV490 ISP. Only the OV490 ISP is interfaced to
++  the serializer local I2C bus while the image sensor is not accessible from
++  the host SoC.
++
++  They both connect to a remote GMSL endpoint through a coaxial cable.
++
++                                                   IMI RDACM20
++  +---------------+                        +--------------------------------+
++  |      GMSL     |   <- Video Stream      |       <- Video--------\        |
++  |               |< === GMSL Link ====== >|MAX9271<- I2C bus-> <-->OV10635 |
++  | de-serializer |   <- I2C messages ->   |                   \<-->MCU     |
++  +---------------+                        +--------------------------------+
++
++                                                   IMI RDACM21
++  +---------------+                        +--------------------------------+
++  |      GMSL     |   <- Video Stream      |       <- Video--------\        |
++  |               |< === GMSL Link ====== >|MAX9271<- I2C bus-> <-->OV490   |
++  |               |   <- I2C messages ->   |                          |     |
++  | de-serializer |                        |          OV10640 <-------|     |
++  +---------------+                        +--------------------------------+
++
++  Both camera modules serialize video data generated by the embedded camera
++  sensor on the GMSL serial channel to a remote GMSL de-serializer. They also
++  receive and transmit I2C messages encapsulated and transmitted on the GMSL
++  bidirectional control channel.
++
++  All I2C traffic received on the GMSL link not directed to the serializer is
++  propagated on the local I2C bus to the remote device there connected. All the
++  I2C traffic generated on the local I2C bus not directed to the serializer is
++  propagated to the remote de-serializer encapsulated in the GMSL control
++  channel.
++
++  The RDACM20 and RDACM21 DT node should be a direct child of the GMSL
++  deserializer's I2C bus corresponding to the GMSL link that the camera is
++  attached to.
 +
 +properties:
 +  '#address-cells':
@@ -144,338 +186,109 @@ index 000000000000..c632a10a753a
 +    const: 0
 +
 +  compatible:
-+    const: maxim,max9286
++    enum:
++      - imi,rdacm20
++      - imi,rdacm21
 +
 +  reg:
-+    description: I2C device address
-+    maxItems: 1
++    description: -|
++      I2C device addresses, the first to be assigned to the serializer, the
++      following ones to be assigned to the remote devices.
 +
-+  poc-supply:
-+    description: Regulator providing Power over Coax to the cameras
-+    maxItems: 1
++      For RDACM20 the second entry of the property is assigned to the
++      OV10635 image sensor and the optional third one to the embedded MCU.
 +
-+  enable-gpios:
-+    description: GPIO connected to the \#PWDN pin with inverted polarity
-+    maxItems: 1
++      For RDACM21 the second entry is assigned to the OV490 ISP and the optional
++      third one ignored.
 +
-+  gpio-controller: true
++    minItems: 2
++    maxItems: 3
 +
-+  '#gpio-cells':
-+      const: 2
-+
-+  ports:
++  port:
 +    type: object
-+    description: |
-+      The connections to the MAX9286 GMSL and its endpoint nodes are modelled
-+      using the OF graph bindings in accordance with the video interface
-+      bindings defined in
++    additionalProperties: false
++    description: -|
++      Connection to the remote GMSL endpoint are modelled using the OF graph
++      bindings in accordance with the video interface bindings defined in
 +      Documentation/devicetree/bindings/media/video-interfaces.txt.
 +
-+      The following table lists the port number corresponding to each device
-+      port.
-+
-+        Port            Description
-+        ----------------------------------------
-+        Port 0          GMSL Input 0
-+        Port 1          GMSL Input 1
-+        Port 2          GMSL Input 2
-+        Port 3          GMSL Input 3
-+        Port 4          CSI-2 Output
++      The device node contains a single "port" child node with a single
++      "endpoint" sub-device.
 +
 +    properties:
-+      '#address-cells':
-+        const: 1
-+
-+      '#size-cells':
-+        const: 0
-+
-+      port@[0-3]:
++      endpoint:
 +        type: object
-+        properties:
-+          reg:
-+            enum: [ 0, 1, 2, 3 ]
-+
-+          endpoint:
-+            type: object
-+
-+            properties:
-+              remote-endpoint:
-+                description: |
-+                 phandle to the remote GMSL source endpoint subnode in the
-+                 remote node port.
-+
-+            required:
-+              - remote-endpoint
-+
-+        required:
-+          - reg
-+          - endpoint
-+
 +        additionalProperties: false
 +
-+      port@4:
-+        type: object
 +        properties:
-+          reg:
-+            const: 4
-+
-+          endpoint:
-+            type: object
-+
-+            properties:
-+              remote-endpoint:
-+                description: phandle to the remote CSI-2 sink endpoint.
-+
-+              data-lanes:
-+                description: array of physical CSI-2 data lane indexes.
-+
-+            required:
-+              - remote-endpoint
-+              - data-lanes
-+
-+        required:
-+          - reg
-+          - endpoint
-+
-+        additionalProperties: false
-+
-+    required:
-+      - port@4
-+
-+  i2c-mux:
-+    type: object
-+    description: |
-+      Each GMSL link is modelled as a child bus of an i2c bus
-+      multiplexer/switch, in accordance with bindings described in
-+      Documentation/devicetree/bindings/i2c/i2c-mux.txt.
-+
-+    properties:
-+      '#address-cells':
-+        const: 1
-+
-+      '#size-cells':
-+        const: 0
-+
-+    patternProperties:
-+      "^i2c@[0-3]$":
-+        type: object
-+        description: |
-+          Child node of the i2c bus multiplexer which represents a GMSL link.
-+          Each serializer device on the GMSL link remote end is represented with
-+          an i2c-mux child node. The MAX9286 chip supports up to 4 GMSL
-+          channels.
-+
-+        properties:
-+          '#address-cells':
-+            const: 1
-+
-+          '#size-cells':
-+            const: 0
-+
-+          reg:
-+            description: The index of the GMSL channel.
++          remote-endpoint:
++            description: -|
++              phandle to the remote GMSL endpoint sub-node in the remote node
++              port.
 +            maxItems: 1
 +
-+        patternProperties:
-+          "^camera@[a-f0-9]+$":
-+            type: object
-+            description: |
-+              The remote camera device, composed by a GMSL serializer and a
-+              connected video source.
++        required:
++          - remote-endpoint
 +
-+            properties:
-+              compatible:
-+                description: The remote device compatible string.
-+
-+              reg:
-+                minItems: 2
-+                maxItems: 3
-+                description: |
-+                  The I2C addresses to be assigned to the remote devices through
-+                  address reprogramming. The number of entries depends on the
-+                  requirements of the currently connected remote device.
-+
-+              port:
-+                type: object
-+
-+                properties:
-+                  endpoint:
-+                    type: object
-+
-+                    properties:
-+                      remote-endpoint:
-+                        description: phandle to the MAX9286 sink endpoint.
-+
-+                    required:
-+                      - remote-endpoint
-+
-+                    additionalProperties: false
-+
-+                required:
-+                  - endpoint
-+
-+                additionalProperties: false
-+
-+            required:
-+              - compatible
-+              - reg
-+              - port
-+
-+            additionalProperties: false
-+
-+        additionalProperties: false
-+
-+    additionalProperties: false
++    required:
++      - endpoint
 +
 +required:
 +  - compatible
 +  - reg
-+  - ports
-+  - i2c-mux
-+  - gpio-controller
-+
-+additionalProperties: false
++  - port
 +
 +examples:
 +  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
 +    i2c@e66d8000 {
 +      #address-cells = <1>;
 +      #size-cells = <0>;
 +
 +      reg = <0 0xe66d8000 0 0x40>;
 +
-+      gmsl-deserializer@2c {
-+        compatible = "maxim,max9286";
-+        reg = <0x2c>;
-+        poc-supply = <&camera_poc_12v>;
-+        enable-gpios = <&gpio 13 GPIO_ACTIVE_HIGH>;
++      camera@31 {
++        compatible = "imi,rdacm20";
++        reg = <0x31>, <0x41>, <0x51>;
 +
-+        gpio-controller;
-+        #gpio-cells = <2>;
-+
-+        ports {
-+          #address-cells = <1>;
-+          #size-cells = <0>;
-+
-+          port@0 {
-+            reg = <0>;
-+
-+            max9286_in0: endpoint {
-+              remote-endpoint = <&rdacm20_out0>;
-+            };
-+          };
-+
-+          port@1 {
-+            reg = <1>;
-+
-+            max9286_in1: endpoint {
-+              remote-endpoint = <&rdacm20_out1>;
-+            };
-+          };
-+
-+          port@2 {
-+            reg = <2>;
-+
-+            max9286_in2: endpoint {
-+              remote-endpoint = <&rdacm20_out2>;
-+            };
-+          };
-+
-+          port@3 {
-+            reg = <3>;
-+
-+            max9286_in3: endpoint {
-+              remote-endpoint = <&rdacm20_out3>;
-+            };
-+          };
-+
-+          port@4 {
-+            reg = <4>;
-+
-+            max9286_out: endpoint {
-+              data-lanes = <1 2 3 4>;
-+              remote-endpoint = <&csi40_in>;
-+            };
-+          };
-+        };
-+
-+        i2c-mux {
-+          #address-cells = <1>;
-+          #size-cells = <0>;
-+
-+          i2c@0 {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+            reg = <0>;
-+
-+            camera@51 {
-+              compatible = "imi,rdacm20";
-+              reg = <0x51>, <0x61>;
-+
-+              port {
-+                rdacm20_out0: endpoint {
-+                  remote-endpoint = <&max9286_in0>;
-+                };
-+              };
-+
-+            };
-+          };
-+
-+          i2c@1 {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+            reg = <1>;
-+
-+            camera@52 {
-+              compatible = "imi,rdacm20";
-+              reg = <0x52>, <0x62>;
-+
-+              port {
-+                rdacm20_out1: endpoint {
-+                  remote-endpoint = <&max9286_in1>;
-+                };
-+              };
-+            };
-+          };
-+
-+          i2c@2 {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+            reg = <2>;
-+
-+            camera@53 {
-+              compatible = "imi,rdacm20";
-+              reg = <0x53>, <0x63>;
-+
-+              port {
-+                rdacm20_out2: endpoint {
-+                  remote-endpoint = <&max9286_in2>;
-+                };
-+              };
-+            };
-+          };
-+
-+          i2c@3 {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+            reg = <3>;
-+
-+            camera@54 {
-+              compatible = "imi,rdacm20";
-+              reg = <0x54>, <0x64>;
-+
-+              port {
-+                rdacm20_out3: endpoint {
-+                  remote-endpoint = <&max9286_in3>;
-+                };
-+              };
-+            };
++        port {
++          rdacm20_out0: endpoint {
++            remote-endpoint = <&max9286_in0>;
 +          };
 +        };
 +      };
 +    };
++
++  - |
++    i2c@e66d8000 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      reg = <0 0xe66d8000 0 0x40>;
++
++      camera@31 {
++        compatible = "imi,rdacm21";
++        reg = <0x31>, <0x41>;
++
++        port {
++          rdacm21_out0: endpoint {
++            remote-endpoint = <&max9286_in0>;
++          };
++        };
++      };
++    };
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index d3891386d671..f0f09a4c23ad 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -455,6 +455,8 @@ patternProperties:
+     description: ILI Technology Corporation (ILITEK)
+   "^img,.*":
+     description: Imagination Technologies Ltd.
++  "^imi,.*":
++    description: Integrated Micro-Electronics Inc.
+   "^incircuit,.*":
+     description: In-Circuit GmbH
+   "^inet-tek,.*":
 -- 
 2.25.1
 
