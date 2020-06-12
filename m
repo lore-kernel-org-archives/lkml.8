@@ -2,95 +2,150 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E76C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C51D9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEF8D206A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:48:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 987752067B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:52:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qfmIpy0v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbgFLOsA (ORCPT
+        id S1726484AbgFLOwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 10:48:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58778 "EHLO
+        Fri, 12 Jun 2020 10:52:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726581AbgFLOrx (ORCPT
+        with ESMTP id S1726268AbgFLOwV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 10:47:53 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C31BC03E96F;
-        Fri, 12 Jun 2020 07:47:53 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jjky9-0005Nb-33; Fri, 12 Jun 2020 16:47:45 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 71061100F5A; Fri, 12 Jun 2020 16:47:44 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, rcu@vger.kernel.org,
-        Andrew Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH x86/entry: Force rcu_irq_enter() when in idle task
-In-Reply-To: <20200612142621.GA8009@lenoir>
-References: <20200611235305.GA32342@paulmck-ThinkPad-P72> <CALCETrWo-zpiDsYGtKvm8LzW6CQ5L19a3+Ag_9g8aL4wHaJj9g@mail.gmail.com> <871rmkzcc8.fsf@nanos.tec.linutronix.de> <87wo4cxubv.fsf@nanos.tec.linutronix.de> <20200612142621.GA8009@lenoir>
-Date:   Fri, 12 Jun 2020 16:47:44 +0200
-Message-ID: <87tuzgxrvz.fsf@nanos.tec.linutronix.de>
+        Fri, 12 Jun 2020 10:52:21 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3C7DC03E96F;
+        Fri, 12 Jun 2020 07:52:20 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id p20so10464344iop.11;
+        Fri, 12 Jun 2020 07:52:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qxIGr9FPyH+Gs91n0/fHkQIhX/ZfGolDhhvbaK9CMlU=;
+        b=qfmIpy0vKvOQEg/Mekd63hToHWPWLlIvidIzy+oN0SOwAisx5FaGV15mzFf4/SG1XD
+         YkkeaiRj7mIZnBq6r3kLIUASIbZeSu8HznRwCFWmNMbbEq6qTLki9uRl/2bA37R0Yd8f
+         x1BT9M8ZDilHh7sgnQfXaJEg50uQ6CSlIqzCStBBrKrEYU6u5T3+lE1PvOVHytWhvX7o
+         HZLneUwAmGVYQZa8vOEeO8p8EQmsPvqSLeipOxZNj/gj9FRuZEccTkNCBQfIZ4WzsD8I
+         H82KAkf9tQpw3z5iVbukpynC6cAX/HddRbOOUP7jADQxGuvEpfAbnlHWDguonIx2hLwd
+         W2Yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qxIGr9FPyH+Gs91n0/fHkQIhX/ZfGolDhhvbaK9CMlU=;
+        b=ikUfAj0sA6fMDqmhaPJm/AmZIqE8vqFPgE34ezR3W3cIO2AsN1ZpEv2hZxaxBfju8K
+         fnnP44BTwCOke3vEaBY9f9z6Wt7x3xtmPr0I3n7JPHZrx5WnW+jyX53Z6mgAop+WPPfz
+         mhJzX2OrVSUzKLKzu338somYvsBd59qqEgYbS84pxwPw3MEkPQlwxfuTGKE9o53GPn9n
+         z6j5Lw8nq4r0K8wflVGgf8gUHrXKw99aZ3hmJ9NHKXgt9tgiaIDgXA/IfdNfwV39+Cyx
+         o0/Ub1PdTjauCPbmDpMINEoUkxpYBCe6pxBEvsdqBfcYNqbb1743UQ2/Af68hq/CAXhe
+         GvwA==
+X-Gm-Message-State: AOAM532VnJcvg1T+Tm7k5bFU2cGOyBPqV11Q8kRarJl/Ejc7098m7NUM
+        1XG2wNjdTlABm3UUgmongFxjgV4CCxU4JT31jng=
+X-Google-Smtp-Source: ABdhPJwkwYAHKc1eSyBzc7anF6WXW3t6WgRRKZVAv0DvCcQ7TbDLRDreyBbhq8KXqUrYsEfQKddTA6prsuzBI4O8TTA=
+X-Received: by 2002:a05:6602:491:: with SMTP id y17mr14024412iov.72.1591973539142;
+ Fri, 12 Jun 2020 07:52:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200612092603.GB3183@techsingularity.net> <CAOQ4uxikbJ19npQFWzGm6xnqXm0W8pV3NOWE0ZxS9p_G2A39Aw@mail.gmail.com>
+ <20200612131854.GD3183@techsingularity.net>
+In-Reply-To: <20200612131854.GD3183@techsingularity.net>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Fri, 12 Jun 2020 17:52:08 +0300
+Message-ID: <CAOQ4uxghy5zOT6i=shZfFHsXOgPrd7-4iPkJBDcsHU6bUSFUFg@mail.gmail.com>
+Subject: Re: [PATCH] fs: Do not check if there is a fsnotify watcher on pseudo inodes
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Jan Kara <jack@suse.cz>, Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Frederic Weisbecker <frederic@kernel.org> writes:
-
-> On Fri, Jun 12, 2020 at 03:55:00PM +0200, Thomas Gleixner wrote:
->> The idea of conditionally calling into rcu_irq_enter() only when RCU is
->> not watching turned out to be not completely thought through.
->> 
->> Paul noticed occasional premature end of grace periods in RCU torture
->> testing. Bisection led to the commit which made the invocation of
->> rcu_irq_enter() conditional on !rcu_is_watching().
->> 
->> It turned out that this conditional breaks RCU assumptions about the idle
->> task when the scheduler tick happens to be a nested interrupt. Nested
->> interrupts can happen when the first interrupt invokes softirq processing
->> on return which enables interrupts. If that nested tick interrupt does not
->> invoke rcu_irq_enter() then the nest accounting in RCU claims that this is
->> the first interrupt which might mark a quiescient state and end grace
->> periods prematurely.
->> 
->> Change the condition from !rcu_is_watching() to is_idle_task(current) which
->> enforces that interrupts in the idle task unconditionally invoke
->> rcu_irq_enter() independent of the RCU state.
->> 
->> This is also correct vs. user mode entries in NOHZ full scenarios because
->> user mode entries bring RCU out of EQS and force the RCU irq nesting state
->> accounting to nested. As only the first interrupt can enter from user mode
->> a nested tick interrupt will enter from kernel mode and as the nesting
->> state accounting is forced to nesting it will not do anything stupid even
->> if rcu_irq_enter() has not been invoked.
->> 
->> Fixes: 3eeec3858488 ("x86/entry: Provide idtentry_entry/exit_cond_rcu()")
->> Reported-by: "Paul E. McKenney" <paulmck@kernel.org>
->> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+On Fri, Jun 12, 2020 at 4:18 PM Mel Gorman <mgorman@techsingularity.net> wrote:
 >
-> Acked-by: Frederic Weisbecker <frederic@kernel.org>
+> On Fri, Jun 12, 2020 at 12:52:28PM +0300, Amir Goldstein wrote:
+> > On Fri, Jun 12, 2020 at 12:26 PM Mel Gorman <mgorman@techsingularity.net> wrote:
+> > >
+> > > The kernel uses internal mounts for a number of purposes including pipes.
+> > > On every vfs_write regardless of filesystem, fsnotify_modify() is called
+> > > to notify of any changes which incurs a small amount of overhead in fsnotify
+> > > even when there are no watchers.
+> > >
+> > > A patch is pending that reduces, but does not eliminte, the overhead
+> > > of fsnotify but for the internal mounts, even the small overhead is
+> > > unnecessary. The user API is based on the pathname and a dirfd and proc
+> > > is the only visible path for inodes on an internal mount. Proc does not
+> > > have the same pathname as the internal entry so even if fatrace is used
+> > > on /proc, no events trigger for the /proc/X/fd/ files.
+> > >
+> >
+> > This looks like a good direction and I was going to suggest that as well.
+> > However, I am confused by the use of terminology "internal mount".
+> > The patch does not do anything dealing with "internal mount".
 >
-> So, in the end the call to rcu_irq_enter() in irq_enter() is going to
-> be useless in x86, right?
+> I was referring to users of kern_mount.
 
-x86 is not calling irq_enter() anymore. It's using irq_enter_rcu().
+I see. I am not sure if all kern_mount hand out only anonymous inodes,
+but FYI, now there a MNT_NS_INTERNAL that is not SB_KERNMOUNT:
+df820f8de4e4 ovl: make private mounts longterm
+
+>
+> > If alloc_file_pseudo() is only called for filesystems mounted as
+> > internal mounts,
+>
+> I believe this is the case and I did not find a counter-example.  The
+> changelog that introduced the helper is not explicit but it was created
+> in the context of converting a number of internal mounts like pipes,
+> anon inodes to a common helper. If I'm wrong, Al will likely point it out.
+>
+> > please include this analysis in commit message.
+> > In any case, not every file of internal mount is allocated with
+> > alloc_file_pseudo(),
+> > right?
+>
+> Correct. It is not required and there is at least one counter example
+> in arch/ia64/kernel/perfmon.c but I don't think that is particularly
+> important, I don't think anyone is kept awake at night worrying about
+> small performance overhead on Itanium.
+>
+> > So maybe it would be better to list all users of alloc_file_pseudo()
+> > and say that they all should be opted out of fsnotify, without mentioning
+> > "internal mount"?
+> >
+>
+> The users are DMA buffers, CXL, aio, anon inodes, hugetlbfs, anonymous
+> pipes, shmem and sockets although not all of them necessary end up using
+> a VFS operation that triggers fsnotify.  Either way, I don't think it
+> makes sense (or even possible) to watch any of those with fanotify so
+> setting the flag seems reasonable.
+>
+
+I also think this seems reasonable, but the more accurate reason IMO
+is found in the comment for d_alloc_pseudo():
+"allocate a dentry (for lookup-less filesystems)..."
+
+> I updated the changelog and maybe this is clearer.
+
+I still find the use of "internal mount" terminology too vague.
+"lookup-less filesystems" would have been more accurate,
+because as you correctly point out, the user API to set a watch
+requires that the marked object is looked up in the filesystem.
+
+There are also some kernel internal users that set watches
+like audit and nfsd, but I think they are also only interested in
+inodes that have a path at the time that the mark is setup.
+
+Thanks,
+Amir.
