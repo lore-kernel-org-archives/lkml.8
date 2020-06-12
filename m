@@ -2,100 +2,166 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD08C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 652F1C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB76C20792
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:21:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591957309;
-	bh=tpzlq4rZc+tZKZjNYxCpc8hi6Wzy3Os1tfa8kmtPiew=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x9Rv0CaFZom3Y+xwAHHxTmTRsDb7xbMh2sUESiklga2QZnttkrbDw4SLzkNaHoFYe
-	 fq7xxPfGZxsWGxdXjWHLcH+2P/ZX465MRQDsJjOTJd5xN37l0s82MzXcKVs4C+WB+X
-	 ab0aA3SoEhC8ajVNq6L1pX48j5V7hzBYnBVV6pKU=
+	by mail.kernel.org (Postfix) with ESMTP id 2B3A620792
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:23:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BcVsS0xJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726275AbgFLKVj (ORCPT
+        id S1726317AbgFLKXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 06:21:39 -0400
-Received: from mail-ej1-f67.google.com ([209.85.218.67]:32792 "EHLO
-        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgFLKVS (ORCPT
+        Fri, 12 Jun 2020 06:23:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46032 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726306AbgFLKWr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 06:21:18 -0400
-Received: by mail-ej1-f67.google.com with SMTP id n24so9597501ejd.0;
-        Fri, 12 Jun 2020 03:21:16 -0700 (PDT)
+        Fri, 12 Jun 2020 06:22:47 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68098C03E96F;
+        Fri, 12 Jun 2020 03:22:38 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id 10so4094664pfx.8;
+        Fri, 12 Jun 2020 03:22:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=noIaDqzF0Hy0wDxWXCxde4St7xMeQMqL/FRpa5in1SM=;
+        b=BcVsS0xJ/2gsIyBtE2ca+koozYrlg3aXsx8+9/oVbeUe+martaZOV0yydRA4arQvQv
+         7VSy6fpArXlSUIPcWDctuHiCSBG/jA0XZWoDBf+4n6UvLxPglf6E3KYvtcMx+B9u5gd/
+         HLcvmC9dc1kpfuICLvaO+sP/yoT3G0BR/ZUZDuImXORuk8y15CsV30uLomxeWsrDPlZ0
+         p2xtvdicL41O+yUH7slDvjTsbj0wpHiqGA2LjIFncrpzZp8MczRI7tFj3lvqnH/Bv2sC
+         Z143D0BIV5UiUR0p3refrlLVZpfXmv0Lza77Cy9Cn/3ZA94rcVQOk84vUBEG6F47H+BI
+         Dhvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=UCmnkQ+7r4Yl/XA1DWNILW2Cx3UCtYcdqwjb2/DioLQ=;
-        b=mD1pqe16Ipvj13XKi+L6puzVnNsydwHvj2mShUC1LP7O7rpujc3NPfkyTu/ai9Q36Z
-         4K9Y5dOzQm9ARVstVW4TVFnTzbluZuuFh4bqL+PhRki24UwjrE9+cYC06eLfOqTRYoOg
-         wwvJdjjmu2FKGe7RevBWw4qVloBg5SNwm69jLgfnoz8FItCBOmQkCwb0M0309BCfa3fM
-         PSLu3CGI7ftK9S13AfTOYqKEWg97GPpuR0wKuM8SuM8CaHG1oTazE3P35Cld90+K1Y3p
-         LurczdAsYM/8aY4y/gwh7cmWVZdqD9gsBVM1zDzeYjX6B7pLxVd6Efn5NaNrYlT5XIaN
-         oZNA==
-X-Gm-Message-State: AOAM5331XfNb2iMkxPAsTnfkMUe5HeVVgJYvZuJTH4pbVmKbBkLPtaIx
-        n+gItteF3MTsN9vz2ES2Vxs=
-X-Google-Smtp-Source: ABdhPJzJ6RaY0eAM4hGkuYlc3SLJUwUFh4TiDwD8FMRxFmZkjqZLgmm7NPWi924xDJTeY04nohakWQ==
-X-Received: by 2002:a17:906:c2c6:: with SMTP id ch6mr12273554ejb.36.1591957276099;
-        Fri, 12 Jun 2020 03:21:16 -0700 (PDT)
-Received: from pi3 ([194.230.155.184])
-        by smtp.googlemail.com with ESMTPSA id ws10sm3227738ejb.24.2020.06.12.03.21.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 03:21:15 -0700 (PDT)
-Date:   Fri, 12 Jun 2020 12:21:13 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Wolfram Sang <wsa@kernel.org>
-Cc:     Oleksij Rempel <linux@rempel-privat.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] i2c: imx: Fix external abort on early interrupt
-Message-ID: <20200612102113.GA26056@pi3>
-References: <1591796802-23504-1-git-send-email-krzk@kernel.org>
- <20200612090517.GA3030@ninjato>
- <20200612092941.GA25990@pi3>
- <20200612095604.GA17763@ninjato>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=noIaDqzF0Hy0wDxWXCxde4St7xMeQMqL/FRpa5in1SM=;
+        b=Mullao7Ou16ruyYlB2gnNT97wMvBymvMp2UFf453GANo6gUJLTPRf/KTNIGkDF0n9c
+         GTQITDbzJheAqEjfGak0MlvC4WPoFSqD0tolywvCG4taqxN5eij8BGG/1xbiFgjr4n+q
+         GcsFw2DB14Qb9FuzqcqN1cSonCi4fNKh65H4Cvn5Nhlogc3MWeqKUKtdDFO6idhv/1qa
+         4qD7ZnKT77cALk1Ct2OECkLmmc6ktouBY0liYBaXC1q9OquNMZUX1xN04CjAKarFV/qh
+         +PVGWnCUI11jADh/wybUAuA/zATvf0TDOZGIY97KM5vUFO/khwjtQwbuclYfBGh6D7Ov
+         Z2Tg==
+X-Gm-Message-State: AOAM533oqmAuxBoK6hhbGd0cUbLZXzB7gPioKcF1Rl9+GiAonFZwuX6d
+        xqEyIdgf55+6CunGXfPCz4U6nflQcJM=
+X-Google-Smtp-Source: ABdhPJxVR2y4IaH8q1HR7ZzBxF6FhLYrHNMJSiOBUxoR+/+FRJYk6nW5RAnpxOXqb6wjl8PLHJbUow==
+X-Received: by 2002:aa7:9252:: with SMTP id 18mr11339511pfp.17.1591957357401;
+        Fri, 12 Jun 2020 03:22:37 -0700 (PDT)
+Received: from ?IPv6:2404:7a87:83e0:f800:40d4:9829:ac15:641f? ([2404:7a87:83e0:f800:40d4:9829:ac15:641f])
+        by smtp.gmail.com with ESMTPSA id f7sm5484198pje.1.2020.06.12.03.22.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Jun 2020 03:22:36 -0700 (PDT)
+Subject: Re: [PATCH] exfat: remove EXFAT_SB_DIRTY flag
+To:     Sungjong Seo <sj1557.seo@samsung.com>
+Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
+        mori.takahiro@ab.mitsubishielectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp,
+        'Namjae Jeon' <namjae.jeon@samsung.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <CGME20200612012902epcas1p4194d6fa3b3f7c46a8becb9bb6ce23d56@epcas1p4.samsung.com>
+ <20200612012834.13503-1-kohada.t2@gmail.com>
+ <219a01d64094$5418d7a0$fc4a86e0$@samsung.com>
+From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
+Message-ID: <b29d254b-212a-bfcb-ab7c-456f481b85c8@gmail.com>
+Date:   Fri, 12 Jun 2020 19:22:34 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200612095604.GA17763@ninjato>
+In-Reply-To: <219a01d64094$5418d7a0$fc4a86e0$@samsung.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 11:56:04AM +0200, Wolfram Sang wrote:
-> On Fri, Jun 12, 2020 at 11:29:41AM +0200, Krzysztof Kozlowski wrote:
-> > On Fri, Jun 12, 2020 at 11:05:17AM +0200, Wolfram Sang wrote:
-> > > On Wed, Jun 10, 2020 at 03:46:42PM +0200, Krzysztof Kozlowski wrote:
-> > > > If interrupt comes early (could be triggered with CONFIG_DEBUG_SHIRQ),
-> > > 
-> > > That code is disabled since 2011 (6d83f94db95c ("genirq: Disable the
-> > > SHIRQ_DEBUG call in request_threaded_irq for now"))? So, you had this
-> > > without fake injection, I assume?
-> > 
-> > No, I observed it only after enabling DEBUG_SHIRQ (to a kernel with
-> > some debugging options already).
+On 2020/06/12 17:34, Sungjong Seo wrote:
+>> remove EXFAT_SB_DIRTY flag and related codes.
+>>
+>> This flag is set/reset in exfat_put_super()/exfat_sync_fs() to avoid
+>> sync_blockdev().
+>> However ...
+>> - exfat_put_super():
+>> Before calling this, the VFS has already called sync_filesystem(), so sync
+>> is never performed here.
+>> - exfat_sync_fs():
+>> After calling this, the VFS calls sync_blockdev(), so, it is meaningless
+>> to check EXFAT_SB_DIRTY or to bypass sync_blockdev() here.
+>> Not only that, but in some cases can't clear VOL_DIRTY.
+>> ex:
+>> VOL_DIRTY is set when rmdir starts, but when non-empty-dir is detected,
+>> return error without setting EXFAT_SB_DIRTY.
+>> If performe 'sync' in this state, VOL_DIRTY will not be cleared.
+>>
+>> Remove the EXFAT_SB_DIRTY check to ensure synchronization.
+>> And, remove the code related to the flag.
+>>
+>> Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
+>> ---
+>>   fs/exfat/balloc.c   |  4 ++--
+>>   fs/exfat/dir.c      | 16 ++++++++--------
+>>   fs/exfat/exfat_fs.h |  5 +----
+>>   fs/exfat/fatent.c   |  7 ++-----
+>>   fs/exfat/misc.c     |  3 +--
+>>   fs/exfat/namei.c    | 12 ++++++------
+>>   fs/exfat/super.c    | 11 +++--------
+>>   7 files changed, 23 insertions(+), 35 deletions(-)
+>>
+> [snip]
+>>
+>> @@ -62,11 +59,9 @@ static int exfat_sync_fs(struct super_block *sb, int
+>> wait)
+>>
+>>   	/* If there are some dirty buffers in the bdev inode */
+>>   	mutex_lock(&sbi->s_lock);
+>> -	if (test_and_clear_bit(EXFAT_SB_DIRTY, &sbi->s_state)) {
+>> -		sync_blockdev(sb->s_bdev);
+>> -		if (exfat_set_vol_flags(sb, VOL_CLEAN))
+>> -			err = -EIO;
+>> -	}
 > 
-> Interesting. Maybe probe was deferred and you got the extra irq when
-> deregistering?
+> I looked through most codes related to EXFAT_SB_DIRTY and VOL_DIRTY.
+> And your approach looks good because all of them seem to be protected by
+> s_lock.
+> 
+> BTW, as you know, sync_filesystem() calls sync_fs() with 'nowait' first,
+> and then calls it again with 'wait' twice. No need to sync with lock twice.
+> If so, isn't it okay to do nothing when wait is 0?
 
-Yes, good catch. The abort happens right after deferred probe exit.  It
-could be then different reason than I thought - the interrupt is freed
-through devm infrastructure quite late.  At this time, the clock might
-be indeed disabled (error path of probe()).
+I also think  ‘do nothing when wait is 0’ as you say, but I'm still not sure.
 
-Best regards,
-Krzysztof
+Some other Filesystems do nothing with nowait and just return.
+However, a few Filesystems always perform sync.
+
+sync_blockdev() waits for completion, so it may be inappropriate to call with  nowait. (But it was called in the original code)
+
+I'm still not sure, so I excluded it in this patch.
+Is it okay to include it?
+
+
+>> +	sync_blockdev(sb->s_bdev);
+>> +	if (exfat_set_vol_flags(sb, VOL_CLEAN))
+>> +		err = -EIO;
+>>   	mutex_unlock(&sbi->s_lock);
+>>   	return err;
+>>   }
+>> --
+>> 2.25.1
+> 
+> 
+
+BR
+---
+Tetsuhiro Kohada <kohada.t2@gmail.com>
 
