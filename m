@@ -2,130 +2,80 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72187C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 20:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07345C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 20:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B95920792
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 20:16:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591993014;
-	bh=QUC9Vj/fPspnjGFKP3D4+NQHhBpL1neIBtQNzVUWW4U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LDea6K+63v1RcAF1PMRZPeg7GWy0pxm2e3143I3cmAdVuikAvFl1MqwDZfJBffVrX
-	 E+ly73w8laKtT4Tk7BCvASNaVbSx9fajoO9i0yJfstl1g36irAe650tLiby+rLpgCE
-	 rTsMPqy7kwMCUmJyknvOCzkH56SNuHlRgTzwDCxI=
+	by mail.kernel.org (Postfix) with ESMTP id DE9682074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 20:20:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726349AbgFLUQp (ORCPT
+        id S1726341AbgFLUUI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 16:16:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53062 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgFLUQp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 16:16:45 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD8C1C03E96F
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 13:16:44 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id i27so12459245ljb.12
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 13:16:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VjHcaOx4S1RfVqvh9kuI/Bcyvm42oiPgyVgZu0Sg6m4=;
-        b=AfAWySfN821FeNR16WQmuw215qJR8AVMOkTfpVB24lCp6KOteA+4AblFeJWJG2aZPS
-         MVQj9LgFumRvVDeZvVsJWoEVtPQuVl2/ODmbIUHAjSKxDelM38hAFwle+FhIZi+jVCR4
-         KPuzs+SwqJKh0LF5IUO5bkcVXqzNsgfv1mW8Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VjHcaOx4S1RfVqvh9kuI/Bcyvm42oiPgyVgZu0Sg6m4=;
-        b=FwHirTRqT7Pej3zzuhkvwd6H8CyDi7eSu232BtWRQQuuhPRCM/oclsEec9YwBl5EAr
-         qHf3lBqYiCoFrlxVzGe3fZX+B4MBLksXJ10s5nJKXN5KPMVw5k2InBBUiazFsKDPSMm7
-         PhX93IqsVe31kR++YWO1/YNriHqLarElFv5Zo184Kn8fm9LCPMj7GOd8Z07okwd6Fq3t
-         bXKK4zswZLvedPKQvsTeRnJxUjJ/PT9UknHFh5uskbF5ScM/NND8JyQBETLX9too51Jx
-         whJ34WcmiA1duo5SGgpSiePCUvyuOxIrHVPN/swdc4HvWjS5ClO6CSbqBSN5njN42/q+
-         QYcQ==
-X-Gm-Message-State: AOAM533KyXfCvfVwcVx+Xmk/g/koDWsIf6Ly3T37JSjLmYITLndNx9v0
-        TkCUbLW1OgBlJ5RVrLWyuJDmLuxMpq4=
-X-Google-Smtp-Source: ABdhPJyWpnCrUAFTGbWeNDPcp5gZvFzZJbFEEjMRxPTAhRSqHGvBgDX9qonkrRCkXJScuwtYWYX2+A==
-X-Received: by 2002:a2e:b0d0:: with SMTP id g16mr7981256ljl.130.1591993002394;
-        Fri, 12 Jun 2020 13:16:42 -0700 (PDT)
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
-        by smtp.gmail.com with ESMTPSA id i24sm762804lfg.83.2020.06.12.13.16.41
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Jun 2020 13:16:41 -0700 (PDT)
-Received: by mail-lj1-f170.google.com with SMTP id e4so12523888ljn.4
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 13:16:41 -0700 (PDT)
-X-Received: by 2002:a2e:97c3:: with SMTP id m3mr8089466ljj.312.1591993000764;
- Fri, 12 Jun 2020 13:16:40 -0700 (PDT)
+        Fri, 12 Jun 2020 16:20:08 -0400
+Received: from mga03.intel.com ([134.134.136.65]:42446 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726307AbgFLUUH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 16:20:07 -0400
+IronPort-SDR: xsqYDBkZnFjxwC9MVHmnDdmakSM3d2LtInCHJXl3KepEPCwfn7qsu/rdA4utj5O8fzm8p6jdUm
+ pcCypgeRdCUg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2020 13:20:07 -0700
+IronPort-SDR: 4xilpdnf7ON93lxqV3VprOhe8x3XEw605cJ4dtj+hHSFWxNW/BS40ravYxfV1GsezB4R83EeKI
+ oPmSn4JOwdXQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,504,1583222400"; 
+   d="scan'208";a="260005081"
+Received: from lkp-server02.sh.intel.com (HELO de5642daf266) ([10.239.97.151])
+  by fmsmga007.fm.intel.com with ESMTP; 12 Jun 2020 13:20:05 -0700
+Received: from kbuild by de5642daf266 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jjq9k-000064-CP; Fri, 12 Jun 2020 20:20:04 +0000
+Date:   Sat, 13 Jun 2020 04:19:03 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Michal Kalderon <michal.kalderon@marvell.com>
+Cc:     kbuild-all@lists.01.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ariel Elior <ariel.elior@marvell.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH stable] RDMA/qedr: qedr_iw_load_qp() can be static
+Message-ID: <20200612201903.GA57396@0a3611e7790e>
+References: <202006130434.950ZY2zY%lkp@intel.com>
 MIME-Version: 1.0
-References: <875zc8kxyg.fsf@x220.int.ebiederm.org> <87zh9atx0x.fsf@x220.int.ebiederm.org>
- <871rmkozf5.fsf_-_@x220.int.ebiederm.org> <CAHk-=wh7nZNf81QPcgpDh-0jzt2sOF3rdUEB0UcZvYFHDiMNkw@mail.gmail.com>
- <87v9jwm4s7.fsf@x220.int.ebiederm.org>
-In-Reply-To: <87v9jwm4s7.fsf@x220.int.ebiederm.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 12 Jun 2020 13:16:24 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whEMmvh=gAgo=Ae0zaJ06vfaYrKxa3jV+AgPBz450Rerw@mail.gmail.com>
-Message-ID: <CAHk-=whEMmvh=gAgo=Ae0zaJ06vfaYrKxa3jV+AgPBz450Rerw@mail.gmail.com>
-Subject: Re: [GIT PULL] proc fixes v2 for v5.8-rc1
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Alexey Dobriyan <adobriyan@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202006130434.950ZY2zY%lkp@intel.com>
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 1:06 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
->
-> I have a sense that a use after free that anyone can trigger could be a
-> bit dangerous, and despite not being the only virtual filesystem in the
-> kernel proc is the only virtual filesystem that called new_inode_pseudo.
 
-So the reason I pulled that change despite my questions was that I do
-agree with the whole "there's probably little point to use
-new_inode_pseudo() here" argument.
+Fixes: 8a69220b659c ("RDMA/qedr: Fix synchronization methods and memory leaks in qedr")
+Signed-off-by: kernel test robot <lkp@intel.com>
+---
+ qedr_iw_cm.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-But at the same time, I ghet the feeling that this partly just is
-papering over the problem. If fsnotify causes problems with a
-new_inode_pseudo() inode, then fsnotify should be _checking_ for that
-case.
-
-And if fsnotify were to check for it, then the reason for /proc to use
-it would largely go away. Maybe the debug check for umount matters,
-but honestly it doesn't really seem to be a big deal.
-
-A pseudo-inode is basically independent of the filesystem it was
-mounted as, so the generic_shutdown_super() check not triggering for
-them is sensible, I feel.
-
-But yeah, we could also make the rule go the other way, and simply
-make sure that "new_inode_pseudo()" itself checks that the super-block
-you give it is something fundamenally unmountable and was created with
-'kern_mount()'.
-
-That would have also figured out that the /proc case was broken.
-
-So the main objection I have here is really that this fix feels
-incomplete, and doesn't really reflect the underlying issue, just
-fixes the symptom.
-
-Either the underlying issue is that you shouldn't call 'fsnotify' on
-/proc, or the underlying issue is that /proc was using a bad inode and
-nobody even noticed until the fsnotify issue.
-
-This is not a huge deal. I think you've fixed the bug, I just have
-this itch that the thing that triggered it shouldn't have happened in
-the first place.
-
-             Linus
+diff --git a/drivers/infiniband/hw/qedr/qedr_iw_cm.c b/drivers/infiniband/hw/qedr/qedr_iw_cm.c
+index 5e9732990be5c..a98002018f0ce 100644
+--- a/drivers/infiniband/hw/qedr/qedr_iw_cm.c
++++ b/drivers/infiniband/hw/qedr/qedr_iw_cm.c
+@@ -506,7 +506,7 @@ qedr_addr6_resolve(struct qedr_dev *dev,
+ 	return rc;
+ }
+ 
+-struct qedr_qp *qedr_iw_load_qp(struct qedr_dev *dev, u32 qpn)
++static struct qedr_qp *qedr_iw_load_qp(struct qedr_dev *dev, u32 qpn)
+ {
+ 	struct qedr_qp *qp;
+ 
