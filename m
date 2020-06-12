@@ -2,220 +2,216 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A92BBC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:11:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BABC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 879DC20835
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:11:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B84F2081A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:13:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JSjDP2ux"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbgFLPL5 (ORCPT
+        id S1726501AbgFLPNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 11:11:57 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2304 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726286AbgFLPL4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 11:11:56 -0400
-Received: from lhreml705-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 6750ADA06B09320AA0F5;
-        Fri, 12 Jun 2020 16:11:54 +0100 (IST)
-Received: from fraeml704-chm.china.huawei.com (10.206.15.53) by
- lhreml705-chm.china.huawei.com (10.201.108.54) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Fri, 12 Jun 2020 16:11:54 +0100
-Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
- fraeml704-chm.china.huawei.com (10.206.15.53) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Fri, 12 Jun 2020 17:11:53 +0200
-Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
- fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1913.007;
- Fri, 12 Jun 2020 17:11:53 +0200
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     Maurizio Drocco <maurizio.drocco@ibm.com>,
-        "zohar@linux.ibm.com" <zohar@linux.ibm.com>
-CC:     "dmitry.kasatkin@gmail.com" <dmitry.kasatkin@gmail.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "jmorris@namei.org" <jmorris@namei.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        Fri, 12 Jun 2020 11:13:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34496 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbgFLPNa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 11:13:30 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99B95C08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 08:13:28 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id e18so4260618pgn.7
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 08:13:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Pno+5kYSHMw8xwXOucwExt5jksL9Xbw8epr6Z7fMvHE=;
+        b=JSjDP2ux5xIsExDkMu+jKwnIWyDo4yP7FcO/2uWZWDhSupr7sF/6Bfpw0z0x2wQ2jD
+         j1ozQAHLCGlCTem8qZTE8r5BEHrMzvoaVFkJpu0QI/WYFW09ANKlCOnUPTxBzpCa6lzT
+         u+IsrxgbSZPWpttOWWycjfaNnRDFQE2NPKRQo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Pno+5kYSHMw8xwXOucwExt5jksL9Xbw8epr6Z7fMvHE=;
+        b=dtZR+9obKyoUyMcbdZPA4jMfILzapqgAe6oof286f0bBXtgjNShoVgH6St1cKbJh2P
+         QVBxjooawvQHBrx25vs4xlUNht6ofGNWaQIKtLOE9AogMvUPN5qp1TjYc2NSaY54rFcJ
+         FZDm/2cVAhdbkKGKxI83oZmdbUziXGk69+vZK9TA3LI/Zlu3BouY4DHP6Qp19MeJzSuG
+         DeYKng4BGasJ+KEoWuD72wDXq9YIDomeID56ICgKUNUgzfGPiVUFwzCzjaCik8WUMvbd
+         JGHs+nx7IeE+RHuaAPqmLvwkEB0wNVpLno7syRPtc+VInmNqeiNwEvyNYPdAODAtwrQJ
+         8kRQ==
+X-Gm-Message-State: AOAM5316Ew8qRFEcoWKjeaVKPlaDdMYXZkuIzCXmQcpB9+iWeTcjnuTi
+        OTGyKDs1x8LZqoHHRFzeNhVZag==
+X-Google-Smtp-Source: ABdhPJyXqtcPGd0aOR35qpAPznOfkgdDl72Ymk+kTDk2BJaQ8wwoEcZmw5DNB85G8nblxzhkxmohAQ==
+X-Received: by 2002:a62:8c15:: with SMTP id m21mr11771587pfd.182.1591974808293;
+        Fri, 12 Jun 2020 08:13:28 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y4sm6573117pfr.182.2020.06.12.08.13.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2020 08:13:27 -0700 (PDT)
+Date:   Fri, 12 Jun 2020 08:13:25 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Sargun Dhillon <sargun@sargun.me>
+Cc:     David Laight <David.Laight@ACULAB.COM>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        "containers@lists.linux-foundation.org" 
+        <containers@lists.linux-foundation.org>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Robert Sesek <rsesek@google.com>,
+        Chris Palmer <palmer@google.com>, Jann Horn <jannh@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "serge@hallyn.com" <serge@hallyn.com>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
-Subject: RE: [PATCH] extend IMA boot_aggregate with kernel measurements
-Thread-Topic: [PATCH] extend IMA boot_aggregate with kernel measurements
-Thread-Index: AQHWQCo8nqt7HKCznkGnNWX+y9c+NajT/1SAgADtAgCAACbgMA==
-Date:   Fri, 12 Jun 2020 15:11:53 +0000
-Message-ID: <380af929b2d2440a9dc35ba0b374247d@huawei.com>
-References: <1591921795.11061.12.camel@linux.ibm.com>
- <20200612143812.1609-1-maurizio.drocco@ibm.com>
-In-Reply-To: <20200612143812.1609-1-maurizio.drocco@ibm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.220.96.108]
-Content-Type: multipart/mixed;
-        boundary="_002_380af929b2d2440a9dc35ba0b374247dhuaweicom_"
+        Matt Denton <mpdenton@google.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Tejun Heo <tj@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v3 1/4] fs, net: Standardize on file_receive helper to
+ move fds across processes
+Message-ID: <202006120806.E770867EF@keescook>
+References: <037A305F-B3F8-4CFA-B9F8-CD4C9EF9090B@ubuntu.com>
+ <202006092227.D2D0E1F8F@keescook>
+ <20200610081237.GA23425@ircssh-2.c.rugged-nimbus-611.internal>
+ <202006101953.899EFB53@keescook>
+ <20200611100114.awdjswsd7fdm2uzr@wittgenstein>
+ <20200611110630.GB30103@ircssh-2.c.rugged-nimbus-611.internal>
+ <067f494d55c14753a31657f958cb0a6e@AcuMS.aculab.com>
+ <202006111634.8237E6A5C6@keescook>
+ <94407449bedd4ba58d85446401ff0a42@AcuMS.aculab.com>
+ <20200612104629.GA15814@ircssh-2.c.rugged-nimbus-611.internal>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200612104629.GA15814@ircssh-2.c.rugged-nimbus-611.internal>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---_002_380af929b2d2440a9dc35ba0b374247dhuaweicom_
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+On Fri, Jun 12, 2020 at 10:46:30AM +0000, Sargun Dhillon wrote:
+> My suggest, written out (no idea if this code actually works), is as follows:
+> 
+> ioctl.h:
+> /* This needs to be added */
+> #define IOCDIR_MASK	(_IOC_DIRMASK << _IOC_DIRSHIFT)
 
-> From: linux-integrity-owner@vger.kernel.org [mailto:linux-integrity-
-> owner@vger.kernel.org] On Behalf Of Maurizio Drocco
-> Sent: Friday, June 12, 2020 4:38 PM
-> IMA is not considering TPM registers 8-9 when calculating the boot
-> aggregate. When registers 8-9 are used to store measurements of the
-> kernel and its command line (e.g., grub2 bootloader with tpm module
-> enabled), IMA should include them in the boot aggregate.
->=20
-> Signed-off-by: Maurizio Drocco <maurizio.drocco@ibm.com>
-> ---
->  security/integrity/ima/ima.h        |  2 +-
->  security/integrity/ima/ima_crypto.c | 15 ++++++++++++++-
->  2 files changed, 15 insertions(+), 2 deletions(-)
->=20
-> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-> index df93ac258e01..9d94080bdad8 100644
-> --- a/security/integrity/ima/ima.h
-> +++ b/security/integrity/ima/ima.h
-> @@ -30,7 +30,7 @@
->=20
->  enum ima_show_type { IMA_SHOW_BINARY,
-> IMA_SHOW_BINARY_NO_FIELD_LEN,
->  		     IMA_SHOW_BINARY_OLD_STRING_FMT,
-> IMA_SHOW_ASCII };
-> -enum tpm_pcrs { TPM_PCR0 =3D 0, TPM_PCR8 =3D 8 };
-> +enum tpm_pcrs { TPM_PCR0 =3D 0, TPM_PCR8 =3D 8, TPM_PCR10 =3D 10 };
->=20
->  /* digest size for IMA, fits SHA1 or MD5 */
->  #define IMA_DIGEST_SIZE		SHA1_DIGEST_SIZE
-> diff --git a/security/integrity/ima/ima_crypto.c
-> b/security/integrity/ima/ima_crypto.c
-> index 220b14920c37..64f5e3151e18 100644
-> --- a/security/integrity/ima/ima_crypto.c
-> +++ b/security/integrity/ima/ima_crypto.c
-> @@ -809,7 +809,7 @@ static void ima_pcrread(u32 idx, struct tpm_digest *d=
-)
->  static int ima_calc_boot_aggregate_tfm(char *digest, u16 alg_id,
->  				       struct crypto_shash *tfm)
->  {
-> -	struct tpm_digest d =3D { .alg_id =3D alg_id, .digest =3D {0} };
-> +	struct tpm_digest d =3D { .alg_id =3D alg_id, .digest =3D {0} }, d0 =3D=
- d;
->  	int rc;
->  	u32 i;
->  	SHASH_DESC_ON_STACK(shash, tfm);
-> @@ -830,6 +830,19 @@ static int ima_calc_boot_aggregate_tfm(char
-> *digest, u16 alg_id,
->  		rc =3D crypto_shash_update(shash, d.digest,
->  					 crypto_shash_digestsize(tfm));
->  	}
-> +	/*
-> +	 * extend cumulative sha1 over tpm registers 8-9, which contain
+This exists already:
 
-Hi Maurizio
+#define _IOC_DIRMASK    ((1 << _IOC_DIRBITS)-1)
 
-with recent patches, boot_aggregate can be calculated from non-SHA1
-PCR banks. I would replace with:
+> 
+> 
+> seccomp.h:
+> 
+> struct struct seccomp_notif_addfd {
+> 	__u64 fd;
+> 	...
+> }
+> 
+> /* or IOW? */
+> #define SECCOMP_IOCTL_NOTIF_ADDFD	SECCOMP_IOWR(3, struct seccomp_notif_addfd)
+> 
+> seccomp.c:
+> static long seccomp_notify_addfd(struct seccomp_filter *filter,
+> 				 struct seccomp_notif_addfd __user *uaddfd int size)
+> {
+> 	struct seccomp_notif_addfd addfd;
+> 	int ret;
+> 
+> 	if (size < 32)
+> 		return -EINVAL;
+> 	if (size > PAGE_SIZE)
+> 		return -E2BIG;
 
-Extend cumulative digest over ...
+(Tanget: what was the reason for copy_struct_from_user() not including
+the min/max check? I have a memory of Al objecting to having an
+"internal" limit?)
 
-Given that with this patch boot_aggregate is calculated differently,
-shouldn't we call it boot_aggregate_v2 and enable it with a new
-option?
+> 
+> 	ret = copy_struct_from_user(&addfd, sizeof(addfd), uaddfd, size);
+> 	if (ret)
+> 		return ret;
+> 
+> 	...
+> }
+> 
+> /* Mask out size */
+> #define SIZE_MASK(cmd)	(~IOCSIZE_MASK & cmd)
+> 
+> /* Mask out direction */
+> #define DIR_MASK(cmd)	(~IOCDIR_MASK & cmd)
+> 
+> static long seccomp_notify_ioctl(struct file *file, unsigned int cmd,
+> 				 unsigned long arg)
+> {
+> 	struct seccomp_filter *filter = file->private_data;
+> 	void __user *buf = (void __user *)arg;
+> 
+> 	/* Fixed size ioctls. Can be converted later on? */
+> 	switch (cmd) {
+> 	case SECCOMP_IOCTL_NOTIF_RECV:
+> 		return seccomp_notify_recv(filter, buf);
+> 	case SECCOMP_IOCTL_NOTIF_SEND:
+> 		return seccomp_notify_send(filter, buf);
+> 	case SECCOMP_IOCTL_NOTIF_ID_VALID:
+> 		return seccomp_notify_id_valid(filter, buf);
+> 	}
+> 
+> 	/* Probably should make some nicer macros here */
+> 	switch (SIZE_MASK(DIR_MASK(cmd))) {
+> 	case SIZE_MASK(DIR_MASK(SECCOMP_IOCTL_NOTIF_ADDFD)):
 
-Thanks
+Ah yeah, I like this because of what you mention below: it's forward
+compat too. (I'd just use the ioctl masks directly...)
 
-Roberto
+	switch (cmd & ~(_IOC_SIZEMASK | _IOC_DIRMASK))
 
-HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
-Managing Director: Li Peng, Li Jian, Shi Yanli
+> 		return seccomp_notify_addfd(filter, buf, _IOC_SIZE(cmd));
 
-> +	 * measurement for the kernel command line (reg. 8) and image
-> (reg. 9)
-> +	 * in a typical PCR allocation.
-> +	 */
-> +	for (i =3D TPM_PCR8; i < TPM_PCR10; i++) {
-> +		ima_pcrread(i, &d);
-> +		/* if not zero, accumulate with current aggregate */
-> +		if (memcmp(d.digest, d0.digest,
-> +			   crypto_shash_digestsize(tfm)) !=3D 0)
-> +			rc =3D crypto_shash_update(shash, d.digest,
-> +
-> crypto_shash_digestsize(tfm));
-> +	}
->  	if (!rc)
->  		crypto_shash_final(shash, digest);
->  	return rc;
-> --
-> 2.17.1
+I really like that this ends up having the same construction as a
+standard EA syscall: the size is part of the syscall arguments.
 
+> 	default:
+> 		return -EINVAL;
+> 	}
+> }
+> 
+> --------
+> 
+> What boxes does this tick?
+> * Forwards (and backwards) compatibility
+> * Applies to existing commands
+> * Command can be extended without requiring new ioctl to be defined
 
---_002_380af929b2d2440a9dc35ba0b374247dhuaweicom_
-Content-Type: message/rfc822
-Content-Disposition: attachment;
-	creation-date="Fri, 12 Jun 2020 15:11:53 GMT";
-	modification-date="Fri, 12 Jun 2020 15:11:53 GMT"
+(Technically, a new one is always redefined, but it's automatic in that
+the kernel needs to do nothing.)
 
-Received: from fraeml709-chm.china.huawei.com (10.206.15.37) by
- fraeml714-chm.china.huawei.com (10.206.15.33) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5
- via Mailbox Transport; Thu, 28 May 2020 09:33:39 +0200
-Received: from fraeml703-chm.china.huawei.com (10.206.15.52) by
- fraeml709-chm.china.huawei.com (10.206.15.37) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.1913.5; Thu, 28 May 2020 09:33:39 +0200
-Received: from fraeml703-chm.china.huawei.com (10.206.15.52) by
- fraeml703-chm.china.huawei.com (10.206.15.52) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Thu, 28 May 2020 09:33:38 +0200
-Received: from DGGEMS412-HUB.china.huawei.com (10.3.19.212) by
- fraeml703-chm.china.huawei.com (10.206.15.52) with Microsoft SMTP Server
- (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA_P256) id
- 15.1.1913.5 via Frontend Transport; Thu, 28 May 2020 09:33:38 +0200
-Received: from hulknmm (10.175.113.134) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.487.0; Thu, 28 May
- 2020 15:33:32 +0800
-From: pmail_patchwork <patchwork@huawei.com>
-To: Roberto Sassu <roberto.sassu@huawei.com>
-CC: pmail_hulkcommits <hulkcommits@huawei.com>, pmail_hulkcommits
-	<hulkcommits@huawei.com>
-Subject: re: [PATCH 9/9] ima: Don't remove security.ima if file must not be
- appraised
-Thread-Topic: [PATCH 9/9] ima: Don't remove security.ima if file must not be
- appraised
-Thread-Index: AQHWNMJOo5mVCMbjDE6NnqkX1hFZvg==
-Date: Thu, 28 May 2020 08:03:43 +0000
-Message-ID: <20200528080343.54677.49365@hulknmm>
-References: <20200528065732.22351-4-roberto.sassu@huawei.com>
-In-Reply-To: <20200528065732.22351-4-roberto.sassu@huawei.com>
-Content-Language: en-US
-X-MS-Exchange-Organization-AuthMechanism: 06
-X-MS-Exchange-Organization-AuthSource: DGGEMS412-HUB.china.huawei.com
-X-MS-Has-Attach:
-X-MS-Exchange-Organization-Network-Message-Id: f8904490-833d-4cc6-2086-08d802d9700c
-X-MS-TNEF-Correlator:
-X-MS-Exchange-Organization-RecordReviewCfmType: 0
-x-ms-exchange-organization-originalserveripaddress: 10.3.19.212
-x-ms-exchange-organization-originalclientipaddress: 10.175.113.134
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0235E133B9F18A49A545EE45BB2C6001@huawei.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+> * It well accomodates the future where we want to have a kernel
+>   helper copy the structures from userspace
 
-VG90YWw6IDAgd2FybmluZ3MsIDAgZXJyb3JzLCAzIGl0ZW1zIGNoZWNrZWQNCg0KQWxsIDMgdGVz
-dCBpdGVtcyBTVUNDRVNTLg0KDQpMaW5rOiBodHRwOi8vcGF0Y2h3b3JrLmh1YXdlaS5jb20vcGF0
-Y2gvNTI4OTAvDQoNCi0tLQ0KSHVsayBSb2JvdA0K
+Yeah, this is a good solution.
 
---_002_380af929b2d2440a9dc35ba0b374247dhuaweicom_--
+> The fact that the size of the argument struct, and the ioctl are defined in the 
+> same header gives us the ability to "cheat", and for the argument size to be 
+> included / embedded for free in the command passed to ioctl. In turn, this
+> gives us two benefits. First, it means we don't have to copy from user twice,
+> and can just do it all in one shot since the size is passed with the syscall
+> arguments. Second, it means that the user does not have to do the following:
+> 
+> seccomp_notif_addfd addfd = {};
+> addfd.size = sizeof(struct seccomp_notif_addfd)
+> 
+> Because sizeof(struct seccomp_notif_addfd) is embedded in 
+> SECCOMP_IOCTL_NOTIF_ADDFD based on the same headers they plucked the struct out of.
+
+Cool. I will do more patch reworking! ;)
+
+-- 
+Kees Cook
