@@ -2,192 +2,93 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7CEC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 263E8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33F0720801
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:17:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9C0920801
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:19:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Kb2v6eU1"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GAP2vffs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726357AbgFLQRJ (ORCPT
+        id S1726281AbgFLQTq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 12:17:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44328 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgFLQRJ (ORCPT
+        Fri, 12 Jun 2020 12:19:46 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:44302 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726108AbgFLQTq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 12:17:09 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2597FC03E96F;
-        Fri, 12 Jun 2020 09:17:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=RnYnvByuD6092LD9qRL6lklNo/rsSsLnkPCjmPNChsI=; b=Kb2v6eU1OWtyJ5Cds7VcNHvhyN
-        VYvwdEDuoaStENVAT/pl8juV4An2f3FCSF0jmQRdmxMd2StcX59RcgbrIDAhtOttN+OH2aAdhQ2w8
-        n66oSZfx6hhbkcHI4mquWrQoEQjL29KXM1+ZLXF4//sL7wyBdDXGp4+6g7tj+mV2WpIa3XJfY5lhi
-        AuldmWxCMIlaAPmxiv1QhP4GY+X0kUR7z5rXo6sbOvIxddeggB3s3QXuGfQWNOMKWtWBtF04p+mWT
-        RCmvdek3BbiRU6C9bCpu3KSM4zBu3+qeMv1TqN6J26rJRjEbzOhxlGwVUzcvy5+cunJVjiIvRvdh8
-        5PQyN13w==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jjmMb-0003Au-QO; Fri, 12 Jun 2020 16:17:05 +0000
-Date:   Fri, 12 Jun 2020 09:17:05 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 21/51] block: Support THPs in page_is_mergeable
-Message-ID: <20200612161705.GE8681@bombadil.infradead.org>
-References: <20200610201345.13273-1-willy@infradead.org>
- <20200610201345.13273-22-willy@infradead.org>
+        Fri, 12 Jun 2020 12:19:46 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05CGJ3NZ008385;
+        Fri, 12 Jun 2020 11:19:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591978743;
+        bh=qdnsUxScp0+e7+Rcpeem3AhfcgDvP3Hz7jFw8jx1lT8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=GAP2vffsMCWro9ZC609aRrgEkttKyDM6Il74FmQw2z8xIPhzCPGSy0CYsW/NGLE60
+         Ju9BVR4rLSpgInOvL8Gw//psG6ukTo+mIAcM6R7FFDwrp+mChFs6Y2/NoUVsPR2wmV
+         RLk2DMSfdaNRzzN4/O3QMueOLcyNW6bv/q9s/6us=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05CGJ3Tb127945
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 12 Jun 2020 11:19:03 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 12
+ Jun 2020 11:19:03 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 12 Jun 2020 11:19:03 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05CGJ2Rb045616;
+        Fri, 12 Jun 2020 11:19:02 -0500
+Subject: Re: [PATCH v3 2/2] ASoC: tas2562: Update shutdown GPIO property
+To:     Mark Brown <broonie@kernel.org>
+CC:     <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
+        <robh@kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200612160603.2456-1-dmurphy@ti.com>
+ <20200612160603.2456-2-dmurphy@ti.com> <20200612160922.GL5396@sirena.org.uk>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <0e482167-71c2-a128-b8b4-a054557d30e9@ti.com>
+Date:   Fri, 12 Jun 2020 11:18:57 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200610201345.13273-22-willy@infradead.org>
+In-Reply-To: <20200612160922.GL5396@sirena.org.uk>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 01:13:15PM -0700, Matthew Wilcox wrote:
-> page_is_mergeable() would incorrectly claim that two IOs were on different
-> pages because they were on different base pages rather than on the
-> same THP.  This led to a reference counting bug in iomap.  Simplify the
-> 'same_page' test by just comparing whether we have the same struct page
-> instead of doing arithmetic on the physical addresses.
-> 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> ---
->  block/bio.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/block/bio.c b/block/bio.c
-> index 5235da6434aa..cd677cde853d 100644
-> --- a/block/bio.c
-> +++ b/block/bio.c
-> @@ -747,7 +747,7 @@ static inline bool page_is_mergeable(const struct bio_vec *bv,
->  	if (xen_domain() && !xen_biovec_phys_mergeable(bv, page))
->  		return false;
->  
-> -	*same_page = ((vec_end_addr & PAGE_MASK) == page_addr);
-> +	*same_page = bv->bv_page == page;
->  	if (!*same_page && pfn_to_page(PFN_DOWN(vec_end_addr)) + 1 != page)
->  		return false;
->  	return true;
+Mark
 
-No, this is also wrong.  If you put two order-2 pages into the same
-bvec, and then add the contents of each subpage one at a time, page 0
-will be !same, pages 1-3 will be same, but then pages 4-7 will all be
-!same instead of page 4 being !same and pages 5-7 being !same.  And the
-reference count will be wrong on the second THP.
+On 6/12/20 11:09 AM, Mark Brown wrote:
+> On Fri, Jun 12, 2020 at 11:06:03AM -0500, Dan Murphy wrote:
+>
+>> -	tas2562->sdz_gpio = devm_gpiod_get_optional(dev, "shut-down-gpio",
+>> +	tas2562->sdz_gpio = devm_gpiod_get_optional(dev, "shutdown",
+>>   						      GPIOD_OUT_HIGH);
+> This also changes the name from shut-down to shutdown which will be
+> incompatible (IIRC we do try -gpio as well as -gpios).
+Yes the non-standardish name was highlighted by Rob[1].
 
-But now I'm thinking about the whole interaction with the block
-layer, and it's all a bit complicated.  Changing the definition
-of page_is_mergeable() to treat compound pages differently without
-also changing bio_next_segment() seems like it'll cause problems with
-refcounting if any current users can submit (parts of) a compound page.
-And changing how bio_next_segment() works requires auditing all the users,
-and I don't want to do that.
+Also I checked the GPIO library and it looks at both -gpio and gpios as 
+property suffixes.
 
-We could use a bio flag to indicate whether this is a THP-bearing BIO
-and how it should decide whether two pages are actually part of the same
-page, but that seems like a really bad bit of added complexity.
+Since this is a single GPIO the singular should be used in this case
 
-We could also pass a flag to __bio_try_merge_page() from the iomap code,
-but again added complexity.  We could also add a __bio_try_merge_thp()
-that would only be called from iomap for now.  That would call a new
-thp_is_mergable() which would use the THP definition of what a "same
-page" is.  I think I hate this idea least of all the ones named so far.
+[1] https://lore.kernel.org/patchwork/patch/1251670/
 
-My preferred solution is to change the definition of iop->write_count
-(and iop->read_count).  Instead of being a count of the number of segments
-submitted, make it a count of the number of bytes submitted.  Like this:
+Dan
 
-diff -u b/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
---- b/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -174,9 +174,9 @@
- }
- 
- static void
--iomap_read_finish(struct iomap_page *iop, struct page *page)
-+iomap_read_finish(struct iomap_page *iop, struct page *page, unsigned int len)
- {
--	if (!iop || atomic_dec_and_test(&iop->read_count))
-+	if (!iop || atomic_sub_and_test(len, &iop->read_count))
- 		unlock_page(page);
- }
- 
-@@ -193,7 +193,7 @@
- 		iomap_set_range_uptodate(page, bvec->bv_offset, bvec->bv_len);
- 	}
- 
--	iomap_read_finish(iop, page);
-+	iomap_read_finish(iop, page, bvec->bv_len);
- }
- 
- static void
-@@ -294,8 +294,8 @@
- 
- 	if (is_contig &&
- 	    __bio_try_merge_page(ctx->bio, page, plen, poff, &same_page)) {
--		if (!same_page && iop)
--			atomic_inc(&iop->read_count);
-+		if (iop)
-+			atomic_add(plen, &iop->read_count);
- 		goto done;
- 	}
- 
-@@ -305,7 +305,7 @@
- 	 * that we don't prematurely unlock the page.
- 	 */
- 	if (iop)
--		atomic_inc(&iop->read_count);
-+		atomic_add(plen, &iop->read_count);
- 
- 	if (!ctx->bio || !is_contig || bio_full(ctx->bio, plen)) {
- 		gfp_t gfp = mapping_gfp_constraint(page->mapping, GFP_KERNEL);
-@@ -1090,7 +1090,7 @@
- 
- static void
- iomap_finish_page_writeback(struct inode *inode, struct page *page,
--		int error)
-+		int error, unsigned int len)
- {
- 	struct iomap_page *iop = iomap_page_create(inode, page);
- 
-@@ -1101,7 +1101,7 @@
- 
- 	WARN_ON_ONCE(iop && atomic_read(&iop->write_count) <= 0);
- 
--	if (!iop || atomic_dec_and_test(&iop->write_count))
-+	if (!iop || atomic_sub_and_test(len, &iop->write_count))
- 		end_page_writeback(page);
- }
- 
-@@ -1135,7 +1135,8 @@
- 
- 		/* walk each page on bio, ending page IO on them */
- 		bio_for_each_thp_segment_all(bv, bio, iter_all)
--			iomap_finish_page_writeback(inode, bv->bv_page, error);
-+			iomap_finish_page_writeback(inode, bv->bv_page, error,
-+					bv->bv_len);
- 		bio_put(bio);
- 	}
- 	/* The ioend has been freed by bio_put() */
-@@ -1351,8 +1352,8 @@
- 
- 	merged = __bio_try_merge_page(wpc->ioend->io_bio, page, len, poff,
- 			&same_page);
--	if (iop && !same_page)
--		atomic_inc(&iop->write_count);
-+	if (iop)
-+		atomic_add(len, &iop->write_count);
- 
- 	if (!merged) {
- 		if (bio_full(wpc->ioend->io_bio, len)) {
