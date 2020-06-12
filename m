@@ -6,66 +6,65 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B413C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 08:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E5D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 08:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4825B2081A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 08:00:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA9BA20578
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 08:00:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Dupr1m37"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="BG27RaLl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgFLIAF (ORCPT
+        id S1726513AbgFLIA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 04:00:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52352 "EHLO
+        Fri, 12 Jun 2020 04:00:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbgFLIAE (ORCPT
+        with ESMTP id S1726357AbgFLIA0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 04:00:04 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D73AC03E96F
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 01:00:03 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id er17so3977015qvb.8
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 01:00:03 -0700 (PDT)
+        Fri, 12 Jun 2020 04:00:26 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E0E2C03E96F
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 01:00:25 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id e16so6526193qtg.0
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 01:00:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=zAch9IlDTp6iEr5w238b0yuLmT7aOF6imYemNYoLEcM=;
-        b=Dupr1m37CTGw4+ohb5QSfamEzZj2PxJPeG5irXL+9QuTzFHpCgE8yPpn5blX9p3G4N
-         KkjCYbpH56ulQEGwMu4HVjdpUpzbibqcRaIC/BcmW5X02t5/gmDSiZAK3IbQetQhKl2J
-         J5fZG/dZ7lk7FdAZ0zXuoRxcXte73Vr7+RSypUkKfYeJOI8H9aMVf0nFEv0iLD94Wil4
-         xRWvs1k++ma1V/PiVoijg0pVmcL3y5AuWrQT3GS/kmsj8dTndoosa90F3FAX5BT6NEk5
-         sXDCvnf3L4vJy+n3Fsek9Yy7vsAxX21X4W9DEE+Zkllq3EGDQD7ItZXleP5iUQGn2vCQ
-         tkbw==
+        bh=xYHnyazKvcx6oiktPL+KRZOzioT3qEIvMI6fjShgXbs=;
+        b=BG27RaLl7FuvmC5qU5wo4ULsee1aMeqmd1sslVReRMtYPxsWHNUm5OoERRNwakoEzm
+         709bwkfolIi6KCsVjA3qsZO+nCd1OUyh5rZQX8Cji3wYlvwi9hDo/WNQhpQpJIP7QhVl
+         x+JF95YyyQuzmDBorBxn5M84Xi/aPS2P3H+/xNBbL2aUhEZQRdMIA+qR28Vo3BoBbOyk
+         94YxGuprV2rGTnhMWpNxb2xHOkhGnpb9OCf0nWyUsdBcNUxqji94F+f/KTBazXuUIIwT
+         EKFj00jyu7zKFEVrD9fgUw5Hv9w83a2BuC++knBLuhnGBUXg4QIk7Gs2fZitZXhS3r68
+         1Zmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zAch9IlDTp6iEr5w238b0yuLmT7aOF6imYemNYoLEcM=;
-        b=pviUPDuPCpjHIAM9IMdepkynwbnmJaz4Bn3bJCLsZseOdy3o4R3Q40wqZkJ4r6droE
-         HG5IyHui6+XJPBeMscLDj4IHzU1ERcuaQi4J1T+lfJx2WnDmJeV9j4gDwBlTwp3DlxII
-         I/vNCQsF7gAtEfiiWNTcLe8xr1pBeVHymi7wn1L4fmvwZzPhKJeyNwqO8UwyU20cPWvG
-         pGJFJ07csyLr9fy11zl+oKVasMiCwJla2Z4jpwIVJ1haS386ieUMkJH5TOTiVUChEO7Z
-         fCmnyTEZa8E0IFZxZD3+gKEUnhZKD+0wJl1VVR7qvil2IEhgTXbY6ZvL5OHYVa2lxryl
-         rAJw==
-X-Gm-Message-State: AOAM530L7lZuMbG7UMLz1aPW8042jFFpAJYulX8iUBxRyP2A9+/ti3GT
-        C2JQCSm4osp2HUtRGkzLBZDIu2hgpsdnSBmWzlwg8A==
-X-Google-Smtp-Source: ABdhPJzu+ikYeKslS04C6iqRdh+KuS10EdJ8EzagLxWO+G6bPpS74j9WkEF9YzTpHGGWSiZXeAW9AVmnAHKn5Rn+vKA=
-X-Received: by 2002:a0c:f652:: with SMTP id s18mr10954998qvm.96.1591948802450;
- Fri, 12 Jun 2020 01:00:02 -0700 (PDT)
+        bh=xYHnyazKvcx6oiktPL+KRZOzioT3qEIvMI6fjShgXbs=;
+        b=r5vPIzaAVYsRBUvnklKOHeFck4UlxhFmsVfXzEhMzWqqcR+LkrevyR+cmnrog3TI7E
+         DztLaBZg8xC9wYRbRVhYbSS/WAs2yYn1CMllIvlXeUhrdzHbyeIkAMT7X6/Z6LYFUONn
+         aJiLb2BHXtspkleC3JOfVPe024T76jT0/g6Ppn6sS3iyaRGP8psIK95zwkLu/njeFbXy
+         oAJIJYaj5Uy22ioOCgWrdZqk0Q7OxQE0/vFuCzVhc7rRPXH0lzr3ysgr4p8qyE7GX7nK
+         cO1prin/1vi8UqAnABHFGY10vWJTHk90elxqZZvf7oRdK/gcT9uqHRubsimCsaoqlT7e
+         dHhA==
+X-Gm-Message-State: AOAM533E33QFL1hruGb0cWdvLz8LW5tyOPV8brpHy06o02brhDKQ60cm
+        mVnTGCuuaQEpHbepcdXn5rO1DZSJ7yXuaEteA+9UEA==
+X-Google-Smtp-Source: ABdhPJwJ3Spmc+G/ols3thU5v7DezP+CeZxDjbS74NAReXP2ceQRu6iqs8rn4ci7iLABCMQCd0ppK3jldKhvR/2HMqo=
+X-Received: by 2002:ac8:23fb:: with SMTP id r56mr1812691qtr.197.1591948823593;
+ Fri, 12 Jun 2020 01:00:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200612045034.27425-1-warthog618@gmail.com> <20200612045034.27425-2-warthog618@gmail.com>
-In-Reply-To: <20200612045034.27425-2-warthog618@gmail.com>
+References: <20200612045034.27425-1-warthog618@gmail.com> <20200612045034.27425-3-warthog618@gmail.com>
+In-Reply-To: <20200612045034.27425-3-warthog618@gmail.com>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 12 Jun 2020 09:59:51 +0200
-Message-ID: <CAMpxmJWUmiEADN44DeZ8tRwOSZGr_eYnutQy5zGsxhDTM7PSFg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] gpiolib: cdev: fix -Wmissing-prototypes warnings
+Date:   Fri, 12 Jun 2020 10:00:12 +0200
+Message-ID: <CAMpxmJUUd2+1A-3UJF+UOU5PYs33t7E3otYaO9GUTcXAT+VoNQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpiolib: cdev: fix file comment
 To:     Kent Gibson <warthog618@gmail.com>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        kernel test robot <lkp@intel.com>
+        Linus Walleij <linus.walleij@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,27 +75,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 pt., 12 cze 2020 o 06:51 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a)=
 :
 >
-> Fix -Wmissing-prototypes warnings by including module's header.
+> Replace file comment carried over from gpiolib.c with one more
+> appropriate for gpiolib-cdev.c.
 >
-> Fixes: f6d984418ffd (gpiolib: split character device into gpiolib-cdev)
-> Reported-by: kernel test robot <lkp@intel.com>
 > Signed-off-by: Kent Gibson <warthog618@gmail.com>
 > ---
->  drivers/gpio/gpiolib-cdev.c | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/gpio/gpiolib-cdev.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
 >
 > diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-> index 971470bdc9c9..58011ba88a1d 100644
+> index 58011ba88a1d..17d5541d76a0 100644
 > --- a/drivers/gpio/gpiolib-cdev.c
 > +++ b/drivers/gpio/gpiolib-cdev.c
-> @@ -23,6 +23,7 @@
->
->
+> @@ -25,11 +25,10 @@
 >  #include "gpiolib.h"
-> +#include "gpiolib-cdev.h"
+>  #include "gpiolib-cdev.h"
 >
->  /* Implementation infrastructure for GPIO interfaces.
+> -/* Implementation infrastructure for GPIO interfaces.
+> +/* Character device interface to GPIO.
 >   *
+> - * The GPIO programming interface allows for inlining speed-critical
+> - * get/set operations for common cases, so that access to SOC-integrated
+> - * GPIOs can sometimes cost only an instruction or two per bit.
+> + * The GPIO character device, /dev/gpiochipN, provides userspace an
+> + * interface to gpiolib GPIOs via ioctl()s.
+>   */
+>
+>  /*
 > --
 > 2.27.0
 >
