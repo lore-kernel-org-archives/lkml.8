@@ -2,158 +2,155 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE0A5C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 05:11:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE55C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 05:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6628520838
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 05:11:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="cilwx1I8"
+	by mail.kernel.org (Postfix) with ESMTP id 89BCB20801
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 05:15:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgFLFLU (ORCPT
+        id S1726387AbgFLFPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 01:11:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54574 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbgFLFLT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 01:11:19 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C973C08C5C2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 22:11:19 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id a21so7618111oic.8
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 22:11:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8V+bxbj5WCvzCnxozwhnhcY6TUJ/xexRHaQJ/PDvKQU=;
-        b=cilwx1I8Xw8l4cOfCtUN5yHqBSWj+Ms0FUPp+RDFC2UUkvd9G/tKIonAgnCPmV7ju7
-         ytE8iPnQdG6xCmbt2X4xyBjcOKSUmiTKGphnksjQ2SRiZLT5IbW006hcE7QfZHx6BSiX
-         vrqTUkoSTB5lgrB2uyXPGdQVfa22TxwaFK1IQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8V+bxbj5WCvzCnxozwhnhcY6TUJ/xexRHaQJ/PDvKQU=;
-        b=VzX+UmoWridBGQed+b0GlW+hlUeefi8xSZ9yikFfyheI3zlgp/qE3CbI+lb2FI0CK0
-         F2bvHNMC/mokBDCGwlWY/HsulmJU55NYwHy9WrqQ8aG81fANOsr90a//dVJEfYG2dKdX
-         DjaiVtMQjo9vyjXnvR9i3mqwhSPEkNc4s3lswmpUG6uJ7oHWMoLhnF6BmZo4sx9USgPt
-         Jmg9ppad9yO0q5e22xXT4YZFMN6FGBz3z+CF+Lfls7Fc49DeXRaEKgE2CqQroyUHIJLf
-         WqN2/U42WFRoxYhxqeGs9L4BDKfssRZtyFnjvaiw266QqqwhDqvlA8lLOiN4Dvl0B/lZ
-         MX3w==
-X-Gm-Message-State: AOAM531o/PfEdTjk9kGutHtmw1EUac1Njyi12bgvY0GLLmFJBCPaCQxL
-        sQfKmYpO9iD5ywP9Vxum0k8Md61i3TfKIvUYAVQUxw==
-X-Google-Smtp-Source: ABdhPJzrYoClOB8B8OguvLlFrj2m7W+GxCU2S2r//wrUh7MPNfSE//K6chPjLrBcT0Xc1X5J0GrxFt1X3IqO0jmAaSg=
-X-Received: by 2002:a05:6808:6d7:: with SMTP id m23mr980424oih.14.1591938678473;
- Thu, 11 Jun 2020 22:11:18 -0700 (PDT)
+        Fri, 12 Jun 2020 01:15:17 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:54454 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726029AbgFLFPQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 01:15:16 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49jpnp5nvYz9v0mr;
+        Fri, 12 Jun 2020 07:15:10 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 4R3ERbEzavAN; Fri, 12 Jun 2020 07:15:10 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49jpnp4Y9Rz9v0mq;
+        Fri, 12 Jun 2020 07:15:10 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id BCA4F8B77C;
+        Fri, 12 Jun 2020 07:15:11 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id RBYjxCbtSQ-e; Fri, 12 Jun 2020 07:15:11 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E81138B75B;
+        Fri, 12 Jun 2020 07:15:10 +0200 (CEST)
+Subject: Re: arch/powerpc/kexec/core.c:246:29: sparse: sparse: incorrect type
+ in assignment (different base types)
+To:     kernel test robot <lkp@intel.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>
+References: <202006120012.MZ8EDP2d%lkp@intel.com>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <add1bf7c-c06b-6c85-6154-e520262f4116@csgroup.eu>
+Date:   Fri, 12 Jun 2020 07:15:04 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200604081224.863494-1-daniel.vetter@ffwll.ch>
- <20200604081224.863494-5-daniel.vetter@ffwll.ch> <b11c2140-1b9c-9013-d9bb-9eb2c1906710@shipmail.org>
- <20200611083430.GD20149@phenom.ffwll.local> <20200611141515.GW6578@ziepe.ca> <4702e170-fd02-88fa-3da4-ea64252fff9a@amd.com>
-In-Reply-To: <4702e170-fd02-88fa-3da4-ea64252fff9a@amd.com>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Fri, 12 Jun 2020 07:11:07 +0200
-Message-ID: <CAKMK7uFE0uc5GNU49dYYQLNWbMFmQPcz_dAHHQT-dNe+Zzva-A@mail.gmail.com>
-Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep annotations
-To:     Felix Kuehling <felix.kuehling@amd.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28Intel=29?= 
-        <thomas_os@shipmail.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>,
-        Thomas Hellstrom <thomas.hellstrom@intel.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Mika Kuoppala <mika.kuoppala@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <202006120012.MZ8EDP2d%lkp@intel.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 1:35 AM Felix Kuehling <felix.kuehling@amd.com> wrote:
->
-> Am 2020-06-11 um 10:15 a.m. schrieb Jason Gunthorpe:
-> > On Thu, Jun 11, 2020 at 10:34:30AM +0200, Daniel Vetter wrote:
-> >>> I still have my doubts about allowing fence waiting from within shrinkers.
-> >>> IMO ideally they should use a trywait approach, in order to allow memory
-> >>> allocation during command submission for drivers that
-> >>> publish fences before command submission. (Since early reservation object
-> >>> release requires that).
-> >> Yeah it is a bit annoying, e.g. for drm/scheduler I think we'll end up
-> >> with a mempool to make sure it can handle it's allocations.
-> >>
-> >>> But since drivers are already waiting from within shrinkers and I take your
-> >>> word for HMM requiring this,
-> >> Yeah the big trouble is HMM and mmu notifiers. That's the really awkward
-> >> one, the shrinker one is a lot less established.
-> > I really question if HW that needs something like DMA fence should
-> > even be using mmu notifiers - the best use is HW that can fence the
-> > DMA directly without having to get involved with some command stream
-> > processing.
-> >
-> > Or at the very least it should not be a generic DMA fence but a
-> > narrowed completion tied only into the same GPU driver's command
-> > completion processing which should be able to progress without
-> > blocking.
-> >
-> > The intent of notifiers was never to endlessly block while vast
-> > amounts of SW does work.
-> >
-> > Going around and switching everything in a GPU to GFP_ATOMIC seems
-> > like bad idea.
-> >
-> >> I've pinged a bunch of armsoc gpu driver people and ask them how much this
-> >> hurts, so that we have a clear answer. On x86 I don't think we have much
-> >> of a choice on this, with userptr in amd and i915 and hmm work in nouveau
-> >> (but nouveau I think doesn't use dma_fence in there).
->
-> Soon nouveau will get company. We're working on a recoverable page fault
-> implementation for HMM in amdgpu where we'll need to update page tables
-> using the GPUs SDMA engine and wait for corresponding fences in MMU
-> notifiers.
-
-Well amdgpu already has dma_fence waits in the hmm callbacks, so
-nothing new. But since you start using these in amdkfd ... perfect
-opportunity to annotate the amdkfd paths for fence signalling critical
-sections? Especially the preempt-ctx fence should be an interesting
-case to annotate and see whether lockdep finds anything. Not sure what
-else there is.
--Daniel
-
->
-> Regards,
->   Felix
->
->
-> > Right, nor will RDMA ODP.
-> >
-> > Jason
-> > _______________________________________________
-> > amd-gfx mailing list
-> > amd-gfx@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/amd-gfx
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Le 11/06/2020 à 18:01, kernel test robot a écrit :
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   b29482fde649c72441d5478a4ea2c52c56d97a5e
+> commit: 793b08e2efff3ec020c5c5861d00ed394fcdd488 powerpc/kexec: Move kexec files into a dedicated subdir.
+> date:   7 months ago
+> config: powerpc-randconfig-s032-20200611 (attached as .config)
+> compiler: powerpc-linux-gcc (GCC) 9.3.0
+> reproduce:
+>          # apt-get install sparse
+>          # sparse version: v0.6.1-250-g42323db3-dirty
+>          git checkout 793b08e2efff3ec020c5c5861d00ed394fcdd488
+>          # save the attached .config to linux build tree
+>          make W=1 C=1 ARCH=powerpc CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+> 
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
 
 
+That's the second time the robot reports sparse errors on that commit, 
+but the only thing I did is move code, that commit didn't add any code, 
+so I don't know what I should do about it.
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Christophe
+
+
+> 
+> 
+> sparse warnings: (new ones prefixed by >>)
+> 
+>>> arch/powerpc/kexec/core.c:246:29: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned long long static [addressable] [toplevel] [usertype] crashk_base @@     got restricted __be32 [usertype] @@
+>     arch/powerpc/kexec/core.c:246:29: sparse:     expected unsigned long long static [addressable] [toplevel] [usertype] crashk_base
+>     arch/powerpc/kexec/core.c:246:29: sparse:     got restricted __be32 [usertype]
+>>> arch/powerpc/kexec/core.c:248:29: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned long long static [addressable] [toplevel] [usertype] crashk_size @@     got restricted __be32 [usertype] @@
+>     arch/powerpc/kexec/core.c:248:29: sparse:     expected unsigned long long static [addressable] [toplevel] [usertype] crashk_size
+>     arch/powerpc/kexec/core.c:248:29: sparse:     got restricted __be32 [usertype]
+>     arch/powerpc/kexec/core.c:256:19: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned long long static [addressable] [toplevel] mem_limit @@     got restricted __be32 [usertype] @@
+>     arch/powerpc/kexec/core.c:256:19: sparse:     expected unsigned long long static [addressable] [toplevel] mem_limit
+>     arch/powerpc/kexec/core.c:256:19: sparse:     got restricted __be32 [usertype]
+>>> arch/powerpc/kexec/core.c:272:20: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned long long static [addressable] [toplevel] [usertype] kernel_end @@     got restricted __be32 [usertype] @@
+>     arch/powerpc/kexec/core.c:272:20: sparse:     expected unsigned long long static [addressable] [toplevel] [usertype] kernel_end
+>     arch/powerpc/kexec/core.c:272:20: sparse:     got restricted __be32 [usertype]
+> 
+> vim +246 arch/powerpc/kexec/core.c
+> 
+> ea961a828fe725 arch/powerpc/kernel/machine_kexec.c Anton Blanchard      2014-01-22  235
+> 6f29c3298b1821 arch/powerpc/kernel/machine_kexec.c Dale Farnsworth      2008-12-17  236  static void __init export_crashk_values(struct device_node *node)
+> 6f29c3298b1821 arch/powerpc/kernel/machine_kexec.c Dale Farnsworth      2008-12-17  237  {
+> 6f29c3298b1821 arch/powerpc/kernel/machine_kexec.c Dale Farnsworth      2008-12-17  238  	/* There might be existing crash kernel properties, but we can't
+> 6f29c3298b1821 arch/powerpc/kernel/machine_kexec.c Dale Farnsworth      2008-12-17  239  	 * be sure what's in them, so remove them. */
+> 925e2d1ded80fc arch/powerpc/kernel/machine_kexec.c Suraj Jitindar Singh 2016-04-28  240  	of_remove_property(node, of_find_property(node,
+> 925e2d1ded80fc arch/powerpc/kernel/machine_kexec.c Suraj Jitindar Singh 2016-04-28  241  				"linux,crashkernel-base", NULL));
+> 925e2d1ded80fc arch/powerpc/kernel/machine_kexec.c Suraj Jitindar Singh 2016-04-28  242  	of_remove_property(node, of_find_property(node,
+> 925e2d1ded80fc arch/powerpc/kernel/machine_kexec.c Suraj Jitindar Singh 2016-04-28  243  				"linux,crashkernel-size", NULL));
+> 6f29c3298b1821 arch/powerpc/kernel/machine_kexec.c Dale Farnsworth      2008-12-17  244
+> 6f29c3298b1821 arch/powerpc/kernel/machine_kexec.c Dale Farnsworth      2008-12-17  245  	if (crashk_res.start != 0) {
+> ea961a828fe725 arch/powerpc/kernel/machine_kexec.c Anton Blanchard      2014-01-22 @246  		crashk_base = cpu_to_be_ulong(crashk_res.start),
+> 79d1c712958f94 arch/powerpc/kernel/machine_kexec.c Nathan Fontenot      2012-10-02  247  		of_add_property(node, &crashk_base_prop);
+> ea961a828fe725 arch/powerpc/kernel/machine_kexec.c Anton Blanchard      2014-01-22 @248  		crashk_size = cpu_to_be_ulong(resource_size(&crashk_res));
+> 79d1c712958f94 arch/powerpc/kernel/machine_kexec.c Nathan Fontenot      2012-10-02  249  		of_add_property(node, &crashk_size_prop);
+> 6f29c3298b1821 arch/powerpc/kernel/machine_kexec.c Dale Farnsworth      2008-12-17  250  	}
+> 4bc77a5ed215b4 arch/powerpc/kernel/machine_kexec.c Suzuki Poulose       2012-08-21  251
+> 4bc77a5ed215b4 arch/powerpc/kernel/machine_kexec.c Suzuki Poulose       2012-08-21  252  	/*
+> 4bc77a5ed215b4 arch/powerpc/kernel/machine_kexec.c Suzuki Poulose       2012-08-21  253  	 * memory_limit is required by the kexec-tools to limit the
+> 4bc77a5ed215b4 arch/powerpc/kernel/machine_kexec.c Suzuki Poulose       2012-08-21  254  	 * crash regions to the actual memory used.
+> 4bc77a5ed215b4 arch/powerpc/kernel/machine_kexec.c Suzuki Poulose       2012-08-21  255  	 */
+> ea961a828fe725 arch/powerpc/kernel/machine_kexec.c Anton Blanchard      2014-01-22  256  	mem_limit = cpu_to_be_ulong(memory_limit);
+> 79d1c712958f94 arch/powerpc/kernel/machine_kexec.c Nathan Fontenot      2012-10-02  257  	of_update_property(node, &memory_limit_prop);
+> 6f29c3298b1821 arch/powerpc/kernel/machine_kexec.c Dale Farnsworth      2008-12-17  258  }
+> 6f29c3298b1821 arch/powerpc/kernel/machine_kexec.c Dale Farnsworth      2008-12-17  259
+> 2e8e4f5b80e101 arch/powerpc/kernel/machine_kexec.c Dale Farnsworth      2008-12-16  260  static int __init kexec_setup(void)
+> 2e8e4f5b80e101 arch/powerpc/kernel/machine_kexec.c Dale Farnsworth      2008-12-16  261  {
+> 2e8e4f5b80e101 arch/powerpc/kernel/machine_kexec.c Dale Farnsworth      2008-12-16  262  	struct device_node *node;
+> 2e8e4f5b80e101 arch/powerpc/kernel/machine_kexec.c Dale Farnsworth      2008-12-16  263
+> 2e8e4f5b80e101 arch/powerpc/kernel/machine_kexec.c Dale Farnsworth      2008-12-16  264  	node = of_find_node_by_path("/chosen");
+> 2e8e4f5b80e101 arch/powerpc/kernel/machine_kexec.c Dale Farnsworth      2008-12-16  265  	if (!node)
+> 2e8e4f5b80e101 arch/powerpc/kernel/machine_kexec.c Dale Farnsworth      2008-12-16  266  		return -ENOENT;
+> 2e8e4f5b80e101 arch/powerpc/kernel/machine_kexec.c Dale Farnsworth      2008-12-16  267
+> 2e8e4f5b80e101 arch/powerpc/kernel/machine_kexec.c Dale Farnsworth      2008-12-16  268  	/* remove any stale properties so ours can be found */
+> 925e2d1ded80fc arch/powerpc/kernel/machine_kexec.c Suraj Jitindar Singh 2016-04-28  269  	of_remove_property(node, of_find_property(node, kernel_end_prop.name, NULL));
+> 2e8e4f5b80e101 arch/powerpc/kernel/machine_kexec.c Dale Farnsworth      2008-12-16  270
+> 2e8e4f5b80e101 arch/powerpc/kernel/machine_kexec.c Dale Farnsworth      2008-12-16  271  	/* information needed by userspace when using default_machine_kexec */
+> ea961a828fe725 arch/powerpc/kernel/machine_kexec.c Anton Blanchard      2014-01-22 @272  	kernel_end = cpu_to_be_ulong(__pa(_end));
+> 
+> :::::: The code at line 246 was first introduced by commit
+> :::::: ea961a828fe7250e954f086d74d9323c3d44c3e4 powerpc: Fix endian issues in kexec and crash dump code
+> 
+> :::::: TO: Anton Blanchard <anton@samba.org>
+> :::::: CC: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> 
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> 
