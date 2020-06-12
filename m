@@ -2,160 +2,225 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7378BC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A15C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D46320835
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:16:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591971378;
-	bh=rjTKmlfjn2R4qsN7ijSXQ0sc9veNt5Fvq/im3PhhshA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=M5lu1yYjouV7rLGicIQJ0OouwGAkOcLJa9qptMdYq4M03KYP3qZrlG+7FsQ3dHp0q
-	 Q78Ce9ppSTBR+u8JmZM0dXW3T7qw/SRtli3icIE4SDcCJT1DZDn5qMwimObtm7+JMc
-	 6ZHr9j5jDHFeJbILWt75okh3ERFzInOX0XefKK7k=
+	by mail.kernel.org (Postfix) with ESMTP id 80E7E2067B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:18:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fGmwpg13"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbgFLOQQ (ORCPT
+        id S1726466AbgFLOSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 10:16:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38534 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726089AbgFLOQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 10:16:15 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DA442067B;
-        Fri, 12 Jun 2020 14:16:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591971375;
-        bh=rjTKmlfjn2R4qsN7ijSXQ0sc9veNt5Fvq/im3PhhshA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=r4CwAbYngJblvQB3nesA7U2qZLkgHIjF/NVj67Y8cU/ccol3A9zUALDHSHcgU0Mu5
-         4L13AmJ32q78+eIY3XXZNuC9GIK+6RCHg7sB80cV9wDyJDhMhkG4tgcNAzeym3RDlB
-         zT8D0EvsorW8ymFq4Gj9DgEP4tCvNcnXvBpnLQFg=
-Date:   Fri, 12 Jun 2020 15:16:11 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "matthias.schiffer@ew.tq-group.com" 
-        <matthias.schiffer@ew.tq-group.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 RFC 1/2] spi: introduce fallback to pio
-Message-ID: <20200612141611.GI5396@sirena.org.uk>
-References: <1591880310-1813-1-git-send-email-yibin.gong@nxp.com>
- <1591880310-1813-2-git-send-email-yibin.gong@nxp.com>
- <20200611134042.GG4671@sirena.org.uk>
- <VE1PR04MB66383245FAD2AE33CFEA76F789810@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20200612101357.GA5396@sirena.org.uk>
- <VE1PR04MB66384013797FE6B01943F2A889810@VE1PR04MB6638.eurprd04.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="y96v7rNg6HAoELs5"
-Content-Disposition: inline
-In-Reply-To: <VE1PR04MB66384013797FE6B01943F2A889810@VE1PR04MB6638.eurprd04.prod.outlook.com>
-X-Cookie: As seen on TV.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 12 Jun 2020 10:18:05 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:54280 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbgFLOSE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 10:18:04 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05CEGVHu072690;
+        Fri, 12 Jun 2020 14:18:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=FLO2dmSYnd+8KwMbQIvAENHAq6wW4XjxXYdHK1Ch854=;
+ b=fGmwpg13pPmieOAX/2wjjkE3cxHST4RkEfRZUF3LtLDDasAbO4DsmthjyLg6UokIc+dD
+ ba9hqZ6m2TQVFcs5igpHjApjRCoXFSSvz7RNBXn9gGtw4bxunZLDvKZTszlLKMxXPs8P
+ r/gYzJSU8putOgo9B3IQJdLEAGWIm4OMec/sekDTbJE7lg8iqXMf2ZamLQkUYx4KMt5B
+ Zd3K3VBpH6gkwoqTjLFd6O+814l1YDTUeuB4d6rmlYYGIwLX0oEYbgCuRwn35MCdsi0R
+ gsUKwV2JUN5FBRRohMk1st8hz89JYYSKSZ0f2xlDv8nX5iy8by6a55ZoIG1Th2e9GqSQ tQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 31g3snd4uu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 12 Jun 2020 14:18:01 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05CEHfel002650;
+        Fri, 12 Jun 2020 14:18:01 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 31mb9mg0ms-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 12 Jun 2020 14:18:01 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05CE7xG0006062;
+        Fri, 12 Jun 2020 14:07:59 GMT
+Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 12 Jun 2020 07:07:59 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.14\))
+Subject: Re: net/sunrpc/svcsock.c:226:5: warning:
+ "ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE" is not defined
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <202006121445.hPwlQgTl%lkp@intel.com>
+Date:   Fri, 12 Jun 2020 10:07:58 -0400
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <AC2CCF35-1313-464A-B20F-AC3424692C31@oracle.com>
+References: <202006121445.hPwlQgTl%lkp@intel.com>
+To:     kernel test robot <lkp@intel.com>
+X-Mailer: Apple Mail (2.3445.104.14)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9649 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 adultscore=0
+ mlxlogscore=999 bulkscore=0 suspectscore=0 phishscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006120107
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9649 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 impostorscore=0 cotscore=-2147483648 suspectscore=0
+ spamscore=0 bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0
+ mlxlogscore=999 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006120106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello-
 
---y96v7rNg6HAoELs5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Jun 12, 2020, at 2:31 AM, kernel test robot <lkp@intel.com> wrote:
+>=20
+> Hi Chuck,
+>=20
+> FYI, the error/warning still remains.
+>=20
+> tree:   =
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git =
+master
+> head:   b791d1bdf9212d944d749a5c7ff6febdba241771
+> commit: ca07eda33e01eafa7a26ec06974f7eacee6a89c8 SUNRPC: Refactor =
+svc_recvfrom()
+> date:   3 weeks ago
+> config: i386-randconfig-r016-20200612 (attached as .config)
+> compiler: gcc-6 (Debian 6.3.0-18+deb9u1) 6.3.0 20170516
+> reproduce (this is a W=3D1 build):
+>        git checkout ca07eda33e01eafa7a26ec06974f7eacee6a89c8
+>        # save the attached .config to linux build tree
+>        make W=3D1 ARCH=3Di386=20
+>=20
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+>=20
+> All warnings (new ones prefixed by >>, old ones prefixed by <<):
+>=20
+>>> net/sunrpc/svcsock.c:226:5: warning: =
+"ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE" is not defined [-Wundef]
+> #if ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE
+> ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-On Fri, Jun 12, 2020 at 01:48:41PM +0000, Robin Gong wrote:
-> On 2020/06/12 18:14 Mark Brown <broonie@kernel.org> wrote:=20
+IIUC this is a problem with the headers for the i386 architecture.
+That macro is defined for most others:
 
-> > Please look at the formatting of your e-mails - they're really hard to =
-read.  The
-> > line length is over 80 columns and there's no breaks between paragraphs.
+[cel@klimt linux]$ git grep ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE
+arch/alpha/include/asm/cacheflush.h:#define =
+ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 0
+arch/arc/include/asm/cacheflush.h:#define =
+ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
+arch/arm/include/asm/cacheflush.h:#define =
+ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
+arch/arm64/include/asm/cacheflush.h:#define =
+ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
+arch/c6x/include/asm/cacheflush.h:#define =
+ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 0
+arch/csky/abiv1/inc/abi/cacheflush.h:#define =
+ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
+arch/csky/abiv2/inc/abi/cacheflush.h:#define =
+ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
+arch/hexagon/include/asm/cacheflush.h:#define =
+ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 0
+arch/ia64/include/asm/cacheflush.h:#define =
+ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
+arch/m68k/include/asm/cacheflush_mm.h:#define =
+ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
+arch/m68k/include/asm/cacheflush_no.h:#define =
+ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 0
+arch/microblaze/include/asm/cacheflush.h:#define =
+ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
+arch/mips/include/asm/cacheflush.h:#define =
+ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
+arch/nds32/include/asm/cacheflush.h:#define =
+ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
+arch/nios2/include/asm/cacheflush.h:#define =
+ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
+arch/openrisc/include/asm/cacheflush.h:#define =
+ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
+arch/parisc/include/asm/cacheflush.h:#define =
+ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
+arch/powerpc/include/asm/cacheflush.h:#define =
+ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
+arch/riscv/include/asm/cacheflush.h:#define =
+ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 0
+arch/sh/include/asm/cacheflush.h:#define =
+ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
+arch/sparc/include/asm/cacheflush_32.h:#define =
+ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
+arch/sparc/include/asm/cacheflush_64.h:#define =
+ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
+arch/unicore32/include/asm/cacheflush.h:#define =
+ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
+arch/xtensa/include/asm/cacheflush.h:#define =
+ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
+arch/xtensa/include/asm/cacheflush.h:#define =
+ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 0
+block/blk-core.c:#if ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE
+include/asm-generic/cacheflush.h:#define =
+ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 0
+include/crypto/scatterwalk.h:           /* Test =
+ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE first as
+include/crypto/scatterwalk.h:           if =
+(ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE && !PageSlab(page))
+include/linux/blkdev.h:#ifndef ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE
+include/linux/blkdev.h:# error  "You should define =
+ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE for your platform"
+include/linux/blkdev.h:#if ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE
+net/packet/af_packet.c:#if ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE =3D=3D 1
+net/packet/af_packet.c:#if ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE =3D=3D 1
+net/packet/af_packet.c:#if ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE =3D=3D 1
+net/sunrpc/svcsock.c:#if ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE
+net/sunrpc/xprtsock.c:#if ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE
+[cel@klimt linux]$
 
-> Sorry for that, seems my outlook format issue, hope it's ok now this time=
- :)
+Please let me know how to proceed.
 
-Yes, looks good thanks!
 
-> > Client could enable this feature by choosing SPI_MASTER_FALLBACK freely
-> > without any impact on others.
+> vim +/ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE +226 net/sunrpc/svcsock.c
+>=20
+>   225=09
+>> 226	#if ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE
+>   227	static void svc_flush_bvec(const struct bio_vec *bvec, size_t =
+size, size_t seek)
+>   228	{
+>   229		struct bvec_iter bi =3D {
+>   230			.bi_size	=3D size,
+>   231		};
+>   232		struct bio_vec bv;
+>   233=09
+>   234		bvec_iter_advance(bvec, &bi, seek & PAGE_MASK);
+>   235		for_each_bvec(bv, bvec, bi, bi)
+>   236			flush_dcache_page(bv.bv_page);
+>   237	}
+>   238	#else
+>   239	static inline void svc_flush_bvec(const struct bio_vec *bvec, =
+size_t size,
+>   240					  size_t seek)
+>   241	{
+>   242	}
+>   243	#endif
+>   244=09
+>=20
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> <.config.gz>
 
-> > SPI_MASTER_FALLBACK.  If this works why would any driver not enable the
-> > flag?
+--
+Chuck Lever
 
-> Just make sure little impact if it's not good enough and potential issue =
-may
-> come out after it's merged into mainline. TBH, I'm not sure if it has tak=
-en
-> care all in spi core. Besides, I don't know if other spi client need this=
- feature.
 
-It's not something that's going to come up a lot for most devices, it'd
-be a mapping failure due to running out of memory or something, but your
-point about that being possible is valid.
 
-> > > Any error happen in DMA could fallback to PIO , seems a nice to have,
-> > because it could
-> > > give chance to run in PIO which is more reliable. But if there is als=
-o error in
-
-> > PIO, thus may loop here, it's better adding limit try times here?
-
-> > An error doesn't mean nothing happened on the bus, an error could for
-> > example also be something like a FIFO overrun which corrupts data.
-
-> Do you mean fallback to PIO may cause FIFO overrun since some latency
-> involved so that this patch seems not useful as expected?
-
-No, I mean that the reason the DMA transfer fails may be something that
-happens after we've started putting things on the bus - the bit about
-FIFOs is just a random example of an error that could happen.
-
-> > It *could* but only in extreme situations, and again this isn't just ha=
-ndling
-> > errors from failure to prepare the hardware but also anything that happ=
-ens
-> > after it.
-
-> Okay, understood your point. You prefer to some interface provided by dma
-> engine before dmaengine_prep_slave_sg so that can_dma() can know if
-> this dma channel is ready indeed. But unfortunately, seems there is no on=
-e....
-
-Well, this is free software and everything can be modified!  The other
-option would be framework changes in SPI that allowed us to indicate
-=66rom the driver that an error occured before we started doing anything
-to the hardware (like happens here) through something like a special
-error code or splitting up the API.
-
---y96v7rNg6HAoELs5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7jjisACgkQJNaLcl1U
-h9Bhxgf/f3T8+uesnT6I1A7PkdLyqPQzcvBKKuMxmr6a6gei+O6Z2E2DXrkgZnBH
-egPtk0PkWozxvGSFKHjn0bWeN/cUS6YmM2T9LoXLP3aVYzsY6u1IutoUU6RabAij
-AoWbBzfvClylFsQeOyo1FcdDXSRCqAN0nZy8ui8v9etgiQ6fjLSk0GNmmxPZ7eAG
-FOwpDRyqmKCXqL66n+XROqHIz9og7wZm7GKJd7TewrCwDaT/MOoqpBN0vwHd7lYj
-Ay0dT138sTtsmSXL2ujVLanOV1rwtx8uFSP+8kBapWjpZ5uko6QNs9XJoq1JFKDd
-OwnndBidkU1L4Hl3h5BJ/hD59UsqCw==
-=3+JR
------END PGP SIGNATURE-----
-
---y96v7rNg6HAoELs5--
