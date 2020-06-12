@@ -2,302 +2,97 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 137B8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 02:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6FAC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 03:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D768F2078C
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 02:35:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="CCfpYwFc"
+	by mail.kernel.org (Postfix) with ESMTP id B3F6020835
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 03:01:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726517AbgFLCfJ (ORCPT
+        id S1726401AbgFLDBV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 22:35:09 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:35827 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbgFLCfH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 22:35:07 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200612023503epoutp016c4e67745aa5c7424153c43e6bcf60f8~Xq0RLtNq61763017630epoutp01i
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 02:35:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200612023503epoutp016c4e67745aa5c7424153c43e6bcf60f8~Xq0RLtNq61763017630epoutp01i
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1591929303;
-        bh=OfPXcKb6SWjuFyRP7Ix12rFArx8O98KZKofQrzhVp9Q=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=CCfpYwFcuqQkD8Sx9Fo/XF7SN1F0Gw89K/qotvAevuKanoMd5yWfeEFlXxMY9Nrqa
-         iC1wxAV4ea6du7RO5vhVuKUYsmARjP3RcTUUqcXZf97J5tAJmIefmx+Z0+dQzObbp4
-         Q3PHNL+M+Y9WMn8cAK0aFPhq5SOMG7EPhPXkpMDc=
-Received: from epcpadp1 (unknown [182.195.40.11]) by epcas1p1.samsung.com
-        (KnoxPortal) with ESMTP id
-        20200612023502epcas1p1c157b3977b551021cf2290af43e63356~Xq0Qz5bYo3017330173epcas1p1J;
-        Fri, 12 Jun 2020 02:35:02 +0000 (GMT)
-Mime-Version: 1.0
-Subject: Re: [RFC PATCH 3/5] scsi: ufs: Introduce HPB module
-Reply-To: daejun7.park@samsung.com
-From:   Daejun Park <daejun7.park@samsung.com>
-To:     Bart Van Assche <bvanassche@acm.org>,
-        Daejun Park <daejun7.park@samsung.com>,
-        ALIM AKHTAR <alim.akhtar@samsung.com>,
-        "avri.altman@wdc.com" <avri.altman@wdc.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <76831c81-7879-8be7-54a4-ca6bfa68c30e@acm.org>
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <336371513.41591929302700.JavaMail.epsvc@epcpadp1>
-Date:   Fri, 12 Jun 2020 11:29:53 +0900
-X-CMS-MailID: 20200612022953epcms2p6ba18adf3e029bcab69d1382a6ec82b00
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-X-CPGSPASS: Y
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20200605011604epcms2p8bec8ef6682583d7248dc7d9dc1bfc882
-References: <76831c81-7879-8be7-54a4-ca6bfa68c30e@acm.org>
-        <336371513.41591320902369.JavaMail.epsvc@epcpadp1>
-        <963815509.21591320301642.JavaMail.epsvc@epcpadp1>
-        <231786897.01591320001492.JavaMail.epsvc@epcpadp1>
-        <231786897.01591322101492.JavaMail.epsvc@epcpadp1>
-        <CGME20200605011604epcms2p8bec8ef6682583d7248dc7d9dc1bfc882@epcms2p6>
+        Thu, 11 Jun 2020 23:01:21 -0400
+Received: from mga17.intel.com ([192.55.52.151]:2926 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726305AbgFLDBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 23:01:21 -0400
+IronPort-SDR: tT/nT+aYZ3qRKKwxHqguD0Ixza69Ih+1J/M3Ek+aFowucsmOZPcgZ7RuUL8OgfHCPJvXDj8EQz
+ Qcs1OibAC1xg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 20:01:20 -0700
+IronPort-SDR: kRONiryIl7k1ZLF2oTkDgiHjjtz0CEGVLhDDccOIdDjcPUecHII6ew0MaeWKxtLkabQ/jBenHw
+ BcZyPr3AX71A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,501,1583222400"; 
+   d="scan'208";a="271782429"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga003.jf.intel.com with ESMTP; 11 Jun 2020 20:01:17 -0700
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, balbi@kernel.org, robh@kernel.org,
+        p.zabel@pengutronix.de
+Cc:     gregkh@linuxfoundation.org, devicetree@vger.kernel.org,
+        linux-usb@vger.kernel.org, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, yin1.li@intel.com,
+        andriy.shevchenko@intel.com,
+        "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v3 0/2] usb : phy: Add USB PHY support on Intel LGM SoC
+Date:   Fri, 12 Jun 2020 10:59:39 +0800
+Message-Id: <20200612025941.5484-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > +  if (total_srgn_cnt != 0) {
-> > +    dev_err(hba->dev, "ufshpb(%d) error total_subregion_count %d",
-> > +      hpb->lun, total_srgn_cnt);
-> > +    goto release_srgn_table;
-> > +  }
-> > +
-> > +  return 0;
-> > +release_srgn_table:
-> > +  for (i = 0; i < rgn_idx; i++) {
-> > +    rgn = rgn_table + i;
-> > +    if (rgn->srgn_tbl)
-> > +      kvfree(rgn->srgn_tbl);
-> > +  }
+The USB PHY provides the optimized for low power dissipation while active, idle, or on standby.
+Requires minimal external components, a single resistor, for best operation.
+Supports 10/5-Gbps high-speed data transmission rates through 3-m USB 3.x cable
+---
+v3:
+  - Andy's review comments update
+  - hardcode return value changed to actual return value from the callee
+  - add error check is fixed according to the above 
+  - correct the assignment in redundant
+  - combine the split line into one line
+v2:
+  - Address Phillip's review comments
+  - replace devm_reset_control_get() by devm_reset_control_get_exclusive()
+  - re-design the assert and deassert fucntion calls as per review comments
+  - address kbuild bot warnings
+  - add the comments
+v1:
+  - initial version
 
-> Please insert a blank line above goto labels as is done in most of the
-> kernel code.
-OK, I will fix it.
-
-> > +static struct device_attribute ufshpb_sysfs_entries[] = {
-> > +  __ATTR(hit_count, 0444, ufshpb_sysfs_show_hit_cnt, NULL),
-> > +  __ATTR(miss_count, 0444, ufshpb_sysfs_show_miss_cnt, NULL),
-> > +  __ATTR(rb_noti_count, 0444, ufshpb_sysfs_show_rb_noti_cnt, NULL),
-> > +  __ATTR(rb_active_count, 0444, ufshpb_sysfs_show_rb_active_cnt, NULL),
-> > +  __ATTR(rb_inactive_count, 0444, ufshpb_sysfs_show_rb_inactive_cnt,
-> > +         NULL),
-> > +  __ATTR(map_req_count, 0444, ufshpb_sysfs_show_map_req_cnt, NULL),
-> > +  __ATTR_NULL
-> > +};
-
-> Please use __ATTR_RO() where appropriate.
-They are only readable attributes. So I changed the code to use __ATTR_RO.
-
-> > +static int ufshpb_create_sysfs(struct ufs_hba *hba, struct ufshpb_lu *hpb)
-> > +{
-> > +  struct device_attribute *attr;
-> > +  int ret;
-> > +
-> > +  device_initialize(&hpb->hpb_lu_dev);
-> > +
-> > +  ufshpb_stat_init(hpb);
-> > +
-> > +  hpb->hpb_lu_dev.parent = get_device(&hba->ufsf.hpb_dev);
-> > +  hpb->hpb_lu_dev.release = ufshpb_dev_release;
-> > +  dev_set_name(&hpb->hpb_lu_dev, "ufshpb_lu%d", hpb->lun);
-> > +
-> > +  ret = device_add(&hpb->hpb_lu_dev);
-> > +  if (ret) {
-> > +    dev_err(hba->dev, "ufshpb(%d) device_add failed",
-> > +      hpb->lun);
-> > +    return -ENODEV;
-> > +  }
-> > +
-> > +  for (attr = ufshpb_sysfs_entries; attr->attr.name != NULL; attr++) {
-> > +    if (device_create_file(&hpb->hpb_lu_dev, attr))
-> > +      dev_err(hba->dev, "ufshpb(%d) %s create file error\n",
-> > +        hpb->lun, attr->attr.name);
-> > +  }
-> > +
-> > +  return 0;
-> > +}
-
-> This is the wrong way to create sysfs attributes. Please set the
-> 'groups' member of struct device instead of using a loop to create sysfs
-> attributes. The former approach is compatible with udev but the latter
-> approach is not.
-OK, I changed to create attributes without loop.
-
-> > +static void ufshpb_probe_async(void *data, async_cookie_t cookie)
-> > +{
-> > +  struct ufshpb_dev_info hpb_dev_info = { 0 };
-> > +  struct ufs_hba *hba = data;
-> > +  char *desc_buf;
-> > +  int ret;
-> > +
-> > +  desc_buf = kzalloc(QUERY_DESC_MAX_SIZE, GFP_KERNEL);
-> > +  if (!desc_buf)
-> > +    goto release_desc_buf;
-> > +
-> > +  ret = ufshpb_get_dev_info(hba, &hpb_dev_info, desc_buf);
-> > +  if (ret)
-> > +    goto release_desc_buf;
-> > +
-> > +  /*
-> > +   * Because HPB driver uses scsi_device data structure,
-> > +   * we should wait at this point until finishing initialization of all
-> > +   * scsi devices. Even if timeout occurs, HPB driver will search
-> > +   * the scsi_device list on struct scsi_host (shost->__host list_head)
-> > +   * and can find out HPB logical units in all scsi_devices
-> > +   */
-> > +  wait_event_timeout(hba->ufsf.sdev_wait,
-> > +         (atomic_read(&hba->ufsf.slave_conf_cnt)
-> > +        == hpb_dev_info.num_lu),
-> > +         SDEV_WAIT_TIMEOUT);
-> > +
-> > +  dev_dbg(hba->dev, "ufshpb: slave count %d, lu count %d\n",
-> > +    atomic_read(&hba->ufsf.slave_conf_cnt), hpb_dev_info.num_lu);
-> > +
-> > +  ufshpb_scan_hpb_lu(hba, &hpb_dev_info, desc_buf);
-> > +release_desc_buf:
-> > +  kfree(desc_buf);
-> > +}
-
-> What happens if two LUNs are added before the above code is woken up?
-> Will that perhaps cause the wait_event_timeout() call to wait forever?
-I don't think it is problem. I think that the wait_event_timeout() will
-check the condition before waiting.
-
-> > +static int ufshpb_probe(struct device *dev)
-> > +{
-> > +  struct ufs_hba *hba;
-> > +  struct ufsf_feature_info *ufsf;
-> > +
-> > +  if (dev->type != &ufshpb_dev_type)
-> > +    return -ENODEV;
-> > +
-> > +  ufsf = container_of(dev, struct ufsf_feature_info, hpb_dev);
-> > +  hba = container_of(ufsf, struct ufs_hba, ufsf);
-> > +
-> > +  async_schedule(ufshpb_probe_async, hba);
-> > +  return 0;
-> > +}
-
-> So this is an asynchronous probe that is not visible to the device
-> driver core? Could the PROBE_PREFER_ASYNCHRONOUS flag have been used
-> instead to make device probing asynchronous?
-I added the PROBE_PREFER_ASYNCHRONOUS flag to code and changed it to 
-probe synchronously.
+---
+dt-bindings: usb: Add USB PHY support for Intel LGM SoC
+v3:
+  - No Change
+v2:
+  - No Change
+v1:
+  - initial version
  
-> > +static int ufshpb_remove(struct device *dev)
-> > +{
-> > +  struct ufshpb_lu *hpb, *n_hpb;
-> > +  struct ufsf_feature_info *ufsf;
-> > +  struct scsi_device *sdev;
-> > +
-> > +  ufsf = container_of(dev, struct ufsf_feature_info, hpb_dev);
-> > +
-> > +  dev_set_drvdata(&ufsf->hpb_dev, NULL);
-> > +
-> > +  list_for_each_entry_safe(hpb, n_hpb, &ufshpb_drv.lh_hpb_lu,
-> > +         list_hpb_lu) {
-> > +    ufshpb_set_state(hpb, HPB_FAILED);
-> > +
-> > +    sdev = hpb->sdev_ufs_lu;
-> > +    sdev->hostdata = NULL;
-> > +
-> > +    device_del(&hpb->hpb_lu_dev);
-> > +
-> > +    dev_info(&hpb->hpb_lu_dev, "hpb_lu_dev refcnt %d\n",
-> > +       kref_read(&hpb->hpb_lu_dev.kobj.kref));
-> > +    put_device(&hpb->hpb_lu_dev);
-> > +  }
-> > +  dev_info(dev, "ufshpb: remove success\n");
-> > +
-> > +  return 0;
-> > +}
 
-> Where is the code that waits for the asynchronously scheduled probe
-> calls to finish?
-I changed it to probe without async_schedule.
 
-> > diff --git a/drivers/scsi/ufs/ufshpb.h b/drivers/scsi/ufs/ufshpb.h
-> > new file mode 100644
-> > index 000000000000..c6dd88e00849
-> > --- /dev/null
-> > +++ b/drivers/scsi/ufs/ufshpb.h
-> > @@ -0,0 +1,185 @@
-> > +/* SPDX-License-Identifier: GPL-2.0-only */
-> > +/*
-> > + * Universal Flash Storage Host Performance Booster
-> > + *
-> > + * Copyright (C) 2017-2018 Samsung Electronics Co., Ltd.
-> > + *
-> > + * Authors:
-> > + *  Yongmyung Lee <ymhungry.lee@samsung.com>
-> > + *  Jinyoung Choi <j-young.choi@samsung.com>
-> > + *
-> > + * This program is free software; you can redistribute it and/or
-> > + * modify it under the terms of the GNU General Public License
-> > + * as published by the Free Software Foundation; either version 2
-> > + * of the License, or (at your option) any later version.
-> > + * See the COPYING file in the top-level directory or visit
-> > + * <http://www.gnu.org/licenses/gpl-2.0.html>
-> > + *
-> > + * This program is distributed in the hope that it will be useful,
-> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > + * GNU General Public License for more details.
-> > + *
-> > + * This program is provided "AS IS" and "WITH ALL FAULTS" and
-> > + * without warranty of any kind. You are solely responsible for
-> > + * determining the appropriateness of using and distributing
-> > + * the program and assume all risks associated with your exercise
-> > + * of rights with respect to the program, including but not limited
-> > + * to infringement of third party rights, the risks and costs of
-> > + * program errors, damage to or loss of data, programs or equipment,
-> > + * and unavailability or interruption of operations. Under no
-> > + * circumstances will the contributor of this Program be liable for
-> > + * any damages of any kind arising from your use or distribution of
-> > + * this program.
-> > + *
-> > + * The Linux Foundation chooses to take subject only to the GPLv2
-> > + * license terms, and distributes only under these terms.
-> > + */
+Ramuthevar Vadivel Murugan (2):
+  dt-bindings: usb: Add USB PHY support for Intel LGM SoC
+  usb: phy: Add USB3 PHY support for Intel LGM SoC
 
-> Please use an SPDX declaration instead of the full GPLv2 text.
-OK, I will.
+ .../devicetree/bindings/usb/intel,lgm-usb-phy.yaml |  53 ++++
+ drivers/usb/phy/Kconfig                            |  11 +
+ drivers/usb/phy/Makefile                           |   1 +
+ drivers/usb/phy/phy-lgm-usb.c                      | 278 +++++++++++++++++++++
+ 4 files changed, 343 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/intel,lgm-usb-phy.yaml
+ create mode 100644 drivers/usb/phy/phy-lgm-usb.c
 
-Thanks,
-Daejun.
-
+-- 
+2.11.0
 
