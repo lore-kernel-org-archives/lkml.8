@@ -2,107 +2,85 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A40E7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 21:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 067B5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 21:48:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70008207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 21:47:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCCA7206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 21:48:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="U2tbyQGN"
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="odzUhjLA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726341AbgFLVrz (ORCPT
+        id S1726371AbgFLVsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 17:47:55 -0400
-Received: from mail-bn7nam10on2056.outbound.protection.outlook.com ([40.107.92.56]:6044
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726302AbgFLVry (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 17:47:54 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jRmyRFzvzAhFGM3JfdRDanmwyY07ROrXdRiPOreLqEd8DYz4YZshCLglXckBVsg55VXfiA8O30D4kPhqnmwwkUbTAR0iTPwxrV3TEj2dGxsDP1DZZI5vzcqnV2fViBMr3aJzYL13I35Y+m6j3VEZa8w8FWfu+7vT5mo9J/OeSCih+V8WEWvcOamgWPXbvKib27H9tEpbmNz1vMXMPv6+eUPLMoA8fDfTILXG1FZO2f1WGgAVy5GLFHgh56uCUL5pbBFuh+nCtjQVc5Ed8u/rBkSud/732fuVxkskQkFNOskHncjWhLELakHHjcTA63aZaQrqOzRTpejYZFnn3tI1Lw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aXf8puD4Y4xYQOec5F1Rp85j+myLquCU3JWoB1fl++s=;
- b=hnTMhVCWoWjBzYXfY0VjqkIWeK6uTQwVbINx8oRebHKHrFSxUXzrm6ijyOtf7MQs4tved2sPHTzCv5P9KbNzLbo6t8eBQyYYO2BeKVxitO1pDW5Bu491PIMuytRLCEs430K2xFLlYweOEokESQ7Q+qV3IVzFQyMSOKdfuFwCJnoZYoTd6GLIaaFBLlYYlmrzdtsgMV+HbWCmjfVOhPVQpjJt4Do4h/J54DfyfU69tHMSNfyeVpsKIH2QQBtxneeMIMTZ9KpJhgLTJ/Ar0wNxEsPhjJKIZf8xJI5evyt0f6zpig76/lYt7VnC1Im+ZXSnDnO8ZHLetmnZ+K5j7l87EQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aXf8puD4Y4xYQOec5F1Rp85j+myLquCU3JWoB1fl++s=;
- b=U2tbyQGNgWzlyYohS14xC2vHrURtQWCvCh7qpwFlQ7q9LSgijfSfAmrZkpS64lF9mwFACXqczenc887nSy7VD2A4uAthHEOT0426CsEWQbteZEi3l6pyan6QkZA8WU+O6+tlqK6hS5/ogPzGQgKNw4RweorTpC2fjzroaMII7aI=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
-Received: from SN1PR12MB2560.namprd12.prod.outlook.com (2603:10b6:802:26::19)
- by SN1PR12MB2384.namprd12.prod.outlook.com (2603:10b6:802:25::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.23; Fri, 12 Jun
- 2020 21:47:49 +0000
-Received: from SN1PR12MB2560.namprd12.prod.outlook.com
- ([fe80::2102:cc6b:b2db:4c2]) by SN1PR12MB2560.namprd12.prod.outlook.com
- ([fe80::2102:cc6b:b2db:4c2%3]) with mapi id 15.20.3088.021; Fri, 12 Jun 2020
- 21:47:49 +0000
-Subject: Re: [PATCH 3/3] KVM:SVM: Enable INVPCID feature on AMD
-To:     Jim Mattson <jmattson@google.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>, Joerg Roedel <joro@8bytes.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>
-References: <159191202523.31436.11959784252237488867.stgit@bmoger-ubuntu>
- <159191213022.31436.11150808867377936241.stgit@bmoger-ubuntu>
- <CALMp9eSC-wwP50gtprpakKjPYeZ5LdDSFS6i__csVCJwUKmqjA@mail.gmail.com>
- <d0b09992-eb87-651a-3b97-0787e07cc46d@amd.com>
- <CALMp9eRZQXgJvt3MGreq47ApM5ObTU7YFQV_GcY5N+jozGK1Uw@mail.gmail.com>
-From:   Babu Moger <babu.moger@amd.com>
-Message-ID: <d0c38022-2d82-aacc-4829-02c557edddc0@amd.com>
-Date:   Fri, 12 Jun 2020 16:47:46 -0500
+        Fri, 12 Jun 2020 17:48:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38824 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726347AbgFLVsL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 17:48:11 -0400
+X-Greylist: delayed 2539 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 12 Jun 2020 14:48:11 PDT
+Received: from mx0a-00190b01.pphosted.com (mx0a-00190b01.pphosted.com [IPv6:2620:100:9001:583::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12241C03E96F
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 14:48:11 -0700 (PDT)
+Received: from pps.filterd (m0050095.ppops.net [127.0.0.1])
+        by m0050095.ppops.net-00190b01. (8.16.0.42/8.16.0.42) with SMTP id 05CL42l9013014;
+        Fri, 12 Jun 2020 22:05:49 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=jan2016.eng;
+ bh=d1xhnEJ2u7GOYfH7O2aC15ZtQ2SBqf4tZ6eKc92acNI=;
+ b=odzUhjLA1u59iNpWZgHok2xp5qBzdambDwH4YyC0J2Skvp2LXNH46jQzrB8fp6+PEx0a
+ QTyavJUMYfTsfVifL/3+L7/wqf4pZ4XFGrZFT6ExD2sRLqrKcMINCvfL0rkv6OCiNw1W
+ ZkZqzMLvcdJrjCfJomeR7kmIJINPj1fsCvgKXyjGb3Zade1zalEfQxlGdmnAPixNtu0D
+ 5xKgCrzVwfedLbDi28iKyZvPuDz9KP4Ti3oVyk4rFjWPedg1sbY4DIBn5N/TS5+10zDs
+ EdCJ+T5HtdV56XXhS6+9HVtZlERQb0MWGwcMkMjyLyMfUttRs00wKJ0AS9gw5LzTL4da ag== 
+Received: from prod-mail-ppoint1 (prod-mail-ppoint1.akamai.com [184.51.33.18] (may be forged))
+        by m0050095.ppops.net-00190b01. with ESMTP id 31kh9fx01f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 12 Jun 2020 22:05:49 +0100
+Received: from pps.filterd (prod-mail-ppoint1.akamai.com [127.0.0.1])
+        by prod-mail-ppoint1.akamai.com (8.16.0.42/8.16.0.42) with SMTP id 05CKKk7h009233;
+        Fri, 12 Jun 2020 17:05:48 -0400
+Received: from prod-mail-relay10.akamai.com ([172.27.118.251])
+        by prod-mail-ppoint1.akamai.com with ESMTP id 31g6fy69r0-1;
+        Fri, 12 Jun 2020 17:05:47 -0400
+Received: from [0.0.0.0] (prod-ssh-gw01.bos01.corp.akamai.com [172.27.119.138])
+        by prod-mail-relay10.akamai.com (Postfix) with ESMTP id B5CC939EB1;
+        Fri, 12 Jun 2020 21:05:47 +0000 (GMT)
+Subject: Re: [PATCH 12/16] dyndbg: add filter parameter to ddebug_parse_flags
+To:     Jim Cromie <jim.cromie@gmail.com>, linux-kernel@vger.kernel.org,
+        akpm@linuxfoundation.org, gregkh@linuxfoundation.org
+Cc:     linux@rasmusvillemoes.dk
+References: <20200605162645.289174-1-jim.cromie@gmail.com>
+ <20200605162645.289174-13-jim.cromie@gmail.com>
+From:   Jason Baron <jbaron@akamai.com>
+Message-ID: <549fd78f-d9e0-3ae9-276f-38cde40a7ac1@akamai.com>
+Date:   Fri, 12 Jun 2020 17:05:47 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
-In-Reply-To: <CALMp9eRZQXgJvt3MGreq47ApM5ObTU7YFQV_GcY5N+jozGK1Uw@mail.gmail.com>
+MIME-Version: 1.0
+In-Reply-To: <20200605162645.289174-13-jim.cromie@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: DM3PR12CA0120.namprd12.prod.outlook.com
- (2603:10b6:0:51::16) To SN1PR12MB2560.namprd12.prod.outlook.com
- (2603:10b6:802:26::19)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.236.31.79] (165.204.77.1) by DM3PR12CA0120.namprd12.prod.outlook.com (2603:10b6:0:51::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18 via Frontend Transport; Fri, 12 Jun 2020 21:47:48 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 18ed1d97-728b-46ac-c201-08d80f1a3ffe
-X-MS-TrafficTypeDiagnostic: SN1PR12MB2384:
-X-Microsoft-Antispam-PRVS: <SN1PR12MB238435E745233EC9D6721B0195810@SN1PR12MB2384.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
-X-Forefront-PRVS: 0432A04947
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: dbpZoNc20TPLOI637qVojy1RhoozeMrB5T/620sUz40CtctatLxeDsEQCT5jQtA/K1LcQPBIRmlga1hJRhA7TBL8TyBQhWr4GU/X+ppIclN5ZYcmVvsorEkrRJqnnyKDRwDFnhqeUCbQgutK/q4P89Ll3Ubj3gCdQOEHEszkpf55YQQI9W1UQYB8iodwyF/J3mVT5ZoVMY2FrmQdWo2/U9IPxhRO4+cSBaCcTIZkikzftPBKRhGYnjC/K3SFkJE8xPUsFaJYWklp88hxYfhS7WEPb6r3ssoIhGEpg83xnpZZNNw6+/mFY/KZXNApMs/pLS1xahTbIVuxP20h/spUjv3paXfMnoURNcEDdnW4bSKE3fNEtIQ5TMogs46N8Q/350L7mpkedSEmcBPOZvOW32s+Jd92bF643CATcqvhdwT0Dy67lrQh8jf2TdvWXVtL
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(346002)(366004)(39860400002)(396003)(86362001)(54906003)(2616005)(6486002)(956004)(83080400001)(45080400002)(478600001)(316002)(6916009)(966005)(7416002)(44832011)(83380400001)(31696002)(16576012)(16526019)(66476007)(2906002)(66946007)(66556008)(53546011)(8676002)(4326008)(26005)(8936002)(52116002)(5660300002)(186003)(36756003)(31686004)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: a/2EGdRWRnJWhc/+BCDL0nm9QhFyc81gfUGc1TnlQzXYL71x9np+LTuQSgDXjHnSsOLDXFey0jYL5XNIYuaEieHuU5muKrD5qQRnQbWffnViFOhigih96MnYPmLRhlOPPw6WE9EFxcWuep738c3WnMIpkmN0AkHbl+0ZB+PZyTaUFo8fRujR2qhtj4bYzSvDcv/QOmJ/Hw2SgjW/ceVVoVX4pBvRwHfNiwozO4GBvBFmhOcG7Sw9rkchC3X9/Co+IddbHE57wkJ5Hgq7pcstuA0G2gGvogur2WB1OCxwXx9zZqCbwDpZx5UZg+ewdOl8jfmMzRvVgmDnHfOZuv57jV5e3nfc9ol3GZESlT4TxLzSQxu8QCElO1wxStqxzukzt6uT9FeMypEBvv9CSgbLtk7UjWTb9fLwB9r/Kx5nm3TGWB2QeByuSUBqk8oGEshDJiYIsmzkLc7scICVMFgjpaf91zUzMzHKdqvv0jbx2FU=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 18ed1d97-728b-46ac-c201-08d80f1a3ffe
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2020 21:47:49.2260
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: z5iSt2C3zWsDtxHFGON6d+jxkmKPxRBc8cWk1czdwpiPiyUYbCY7OpO/KZqtWcsW
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2384
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-12_16:2020-06-12,2020-06-12 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0
+ mlxlogscore=999 bulkscore=0 malwarescore=0 suspectscore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006120148
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-12_17:2020-06-12,2020-06-12 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 phishscore=0
+ lowpriorityscore=0 clxscore=1015 priorityscore=1501 cotscore=-2147483648
+ malwarescore=0 mlxlogscore=999 adultscore=0 spamscore=0 bulkscore=0
+ impostorscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006120154
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -110,236 +88,88 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 6/12/20 3:10 PM, Jim Mattson wrote:
-> On Fri, Jun 12, 2020 at 12:35 PM Babu Moger <babu.moger@amd.com> wrote:
->>
->>
->>
->>> -----Original Message-----
->>> From: Jim Mattson <jmattson@google.com>
->>> Sent: Thursday, June 11, 2020 6:51 PM
->>> To: Moger, Babu <Babu.Moger@amd.com>
->>> Cc: Wanpeng Li <wanpengli@tencent.com>; Joerg Roedel <joro@8bytes.org>;
->>> the arch/x86 maintainers <x86@kernel.org>; Sean Christopherson
->>> <sean.j.christopherson@intel.com>; Ingo Molnar <mingo@redhat.com>;
->>> Borislav Petkov <bp@alien8.de>; H . Peter Anvin <hpa@zytor.com>; Paolo
->>> Bonzini <pbonzini@redhat.com>; Vitaly Kuznetsov <vkuznets@redhat.com>;
->>> Thomas Gleixner <tglx@linutronix.de>; LKML <linux-kernel@vger.kernel.org>;
->>> kvm list <kvm@vger.kernel.org>
->>> Subject: Re: [PATCH 3/3] KVM:SVM: Enable INVPCID feature on AMD
->>>
->>> On Thu, Jun 11, 2020 at 2:48 PM Babu Moger <babu.moger@amd.com> wrote:
->>>>
->>>> The following intercept is added for INVPCID instruction:
->>>> Code    Name            Cause
->>>> A2h     VMEXIT_INVPCID  INVPCID instruction
->>>>
->>>> The following bit is added to the VMCB layout control area
->>>> to control intercept of INVPCID:
->>>> Byte Offset     Bit(s)    Function
->>>> 14h             2         intercept INVPCID
->>>>
->>>> For the guests with nested page table (NPT) support, the INVPCID
->>>> feature works as running it natively. KVM does not need to do any
->>>> special handling in this case.
->>>>
->>>> Interceptions are required in the following cases.
->>>> 1. If the guest tries to disable the feature when the underlying
->>>> hardware supports it. In this case hypervisor needs to report #UD.
->>>
->>> Per the AMD documentation, attempts to use INVPCID at CPL>0 will
->>> result in a #GP, regardless of the intercept bit. If the guest CPUID
->>> doesn't enumerate the feature, shouldn't the instruction raise #UD
->>> regardless of CPL? This seems to imply that we should intercept #GP
->>> and decode the instruction to see if we should synthesize #UD instead.
->>
->> Purpose here is to report UD when the guest CPUID doesn't enumerate the
->> INVPCID feature When Bare-metal supports it. It seems to work fine for
->> that purpose. You are right. The #GP for CPL>0 takes precedence over
->> interception. No. I am not planning to intercept GP.
-> 
-> WIthout intercepting #GP, you fail to achieve your stated purpose.
+On 6/5/20 12:26 PM, Jim Cromie wrote:
+> Add a new *filter param to ddebug_parse_flags(), allowing it to
+> communicate optional filter flags back to its caller: ddebug_change()
+>
 
-I think I have misunderstood this part. I was not inteding to change the
-#GP behaviour. I will remove this part. My intension of these series is to
-handle invpcid in shadow page mode. I have verified that part. Hope I did
-not miss anything else.
+I think you meant ddebug_exec_query() here?
 
+Thanks,
+
+
+-Jason
+
+
+> Also, ddebug_change doesn't alter any of its arguments, including its 2
+> new ones; mods, filter.  Say so by adding const modifier to them.
 > 
->> I will change the text. How about this?
->>
->> Interceptions are required in the following cases.
->> 1. If the guest CPUID doesn't enumerate the INVPCID feature when the
->> underlying hardware supports it,  hypervisor needs to report UD. However,
->> #GP for CPL>0 takes precedence over interception.
+> Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
+> ---
+>  lib/dynamic_debug.c | 17 ++++++++++++-----
+>  1 file changed, 12 insertions(+), 5 deletions(-)
 > 
-> This text is not internally consistent. In one sentence, you say that
-> "hypervisor needs to report #UD." In the next sentence, you are
-> essentially saying that the hypervisor doesn't need to report #UD.
-> Which is it?
+> diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
+> index 2ecabfd3f432..32eb7d9545c7 100644
+> --- a/lib/dynamic_debug.c
+> +++ b/lib/dynamic_debug.c
+> @@ -146,7 +146,8 @@ static void vpr_info_dq(const struct ddebug_query *query, const char *msg)
+>   * logs the changes.  Takes ddebug_lock.
+>   */
+>  static int ddebug_change(const struct ddebug_query *query,
+> -			 struct flagsettings *mods)
+> +			 const struct flagsettings *mods,
+> +			 const struct flagsettings *filter)
+>  {
+>  	int i;
+>  	struct ddebug_table *dt;
+> @@ -444,7 +445,10 @@ static int ddebug_read_flags(const char *str, struct flagsettings *f)
+>   * flags fields of matched _ddebug's.  Returns 0 on success
+>   * or <0 on error.
+>   */
+> -static int ddebug_parse_flags(const char *str, struct flagsettings *mods)
+> +
+> +static int ddebug_parse_flags(const char *str,
+> +			      struct flagsettings *mods,
+> +			      struct flagsettings *filter)
+>  {
+>  	int op;
+>  
+> @@ -476,7 +480,9 @@ static int ddebug_parse_flags(const char *str, struct flagsettings *mods)
+>  		mods->flags = 0;
+>  		break;
+>  	}
+> -	vpr_info("*flagsp=0x%x *maskp=0x%x\n", mods->flags, mods->mask);
+> +
+> +	vpr_info("mods:flags=0x%x,mask=0x%x filter:flags=0x%x,mask=0x%x\n",
+> +		 mods->flags, mods->mask, filter->flags, filter->mask);
+>  
+>  	return 0;
+>  }
+> @@ -484,6 +490,7 @@ static int ddebug_parse_flags(const char *str, struct flagsettings *mods)
+>  static int ddebug_exec_query(char *query_string, const char *modname)
+>  {
+>  	struct flagsettings mods = {};
+> +	struct flagsettings filter = {};
+>  	struct ddebug_query query;
+>  #define MAXWORDS 9
+>  	int nwords, nfound;
+> @@ -495,7 +502,7 @@ static int ddebug_exec_query(char *query_string, const char *modname)
+>  		return -EINVAL;
+>  	}
+>  	/* check flags 1st (last arg) so query is pairs of spec,val */
+> -	if (ddebug_parse_flags(words[nwords-1], &mods)) {
+> +	if (ddebug_parse_flags(words[nwords-1], &mods, &filter)) {
+>  		pr_err("flags parse failed\n");
+>  		return -EINVAL;
+>  	}
+> @@ -504,7 +511,7 @@ static int ddebug_exec_query(char *query_string, const char *modname)
+>  		return -EINVAL;
+>  	}
+>  	/* actually go and implement the change */
+> -	nfound = ddebug_change(&query, &mods);
+> +	nfound = ddebug_change(&query, &mods, &filter);
+>  	vpr_info_dq(&query, nfound ? "applied" : "no-match");
+>  
+>  	return nfound;
 > 
->>>> 2. When the guest is running with shadow page table enabled, in
->>>> this case the hypervisor needs to handle the tlbflush based on the
->>>> type of invpcid instruction type.
->>>>
->>>> AMD documentation for INVPCID feature is available at "AMD64
->>>> Architecture Programmer’s Manual Volume 2: System Programming,
->>>> Pub. 24593 Rev. 3.34(or later)"
->>>>
->>>> The documentation can be obtained at the links below:
->>>> Link:
->>> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.a
->>> md.com%2Fsystem%2Ffiles%2FTechDocs%2F24593.pdf&amp;data=02%7C01%7
->>> Cbabu.moger%40amd.com%7C36861b25f6d143e3b38e08d80e624472%7C3dd8
->>> 961fe4884e608e11a82d994e183d%7C0%7C0%7C637275163374103811&amp;s
->>> data=E%2Fdb6T%2BdO4nrtUoqhKidF6XyorsWrphj6O4WwNZpmYA%3D&amp;res
->>> erved=0
->>>> Link:
->>> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fbugzilla.
->>> kernel.org%2Fshow_bug.cgi%3Fid%3D206537&amp;data=02%7C01%7Cbabu.m
->>> oger%40amd.com%7C36861b25f6d143e3b38e08d80e624472%7C3dd8961fe488
->>> 4e608e11a82d994e183d%7C0%7C0%7C637275163374103811&amp;sdata=b81
->>> 9W%2FhKS93%2BAp3QvcsR0BwTQpUVUFMbIaNaisgWHRY%3D&amp;reserved=
->>> 0
->>>>
->>>> Signed-off-by: Babu Moger <babu.moger@amd.com>
->>>> ---
->>>>  arch/x86/include/asm/svm.h      |    4 ++++
->>>>  arch/x86/include/uapi/asm/svm.h |    2 ++
->>>>  arch/x86/kvm/svm/svm.c          |   42
->>> +++++++++++++++++++++++++++++++++++++++
->>>>  3 files changed, 48 insertions(+)
->>>>
->>>> diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
->>>> index 62649fba8908..6488094f67fa 100644
->>>> --- a/arch/x86/include/asm/svm.h
->>>> +++ b/arch/x86/include/asm/svm.h
->>>> @@ -55,6 +55,10 @@ enum {
->>>>         INTERCEPT_RDPRU,
->>>>  };
->>>>
->>>> +/* Extended Intercept bits */
->>>> +enum {
->>>> +       INTERCEPT_INVPCID = 2,
->>>> +};
->>>>
->>>>  struct __attribute__ ((__packed__)) vmcb_control_area {
->>>>         u32 intercept_cr;
->>>> diff --git a/arch/x86/include/uapi/asm/svm.h
->>> b/arch/x86/include/uapi/asm/svm.h
->>>> index 2e8a30f06c74..522d42dfc28c 100644
->>>> --- a/arch/x86/include/uapi/asm/svm.h
->>>> +++ b/arch/x86/include/uapi/asm/svm.h
->>>> @@ -76,6 +76,7 @@
->>>>  #define SVM_EXIT_MWAIT_COND    0x08c
->>>>  #define SVM_EXIT_XSETBV        0x08d
->>>>  #define SVM_EXIT_RDPRU         0x08e
->>>> +#define SVM_EXIT_INVPCID       0x0a2
->>>>  #define SVM_EXIT_NPF           0x400
->>>>  #define SVM_EXIT_AVIC_INCOMPLETE_IPI           0x401
->>>>  #define SVM_EXIT_AVIC_UNACCELERATED_ACCESS     0x402
->>>> @@ -171,6 +172,7 @@
->>>>         { SVM_EXIT_MONITOR,     "monitor" }, \
->>>>         { SVM_EXIT_MWAIT,       "mwait" }, \
->>>>         { SVM_EXIT_XSETBV,      "xsetbv" }, \
->>>> +       { SVM_EXIT_INVPCID,     "invpcid" }, \
->>>>         { SVM_EXIT_NPF,         "npf" }, \
->>>>         { SVM_EXIT_AVIC_INCOMPLETE_IPI,         "avic_incomplete_ipi" }, \
->>>>         { SVM_EXIT_AVIC_UNACCELERATED_ACCESS,
->>> "avic_unaccelerated_access" }, \
->>>> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
->>>> index 285e5e1ff518..82d974338f68 100644
->>>> --- a/arch/x86/kvm/svm/svm.c
->>>> +++ b/arch/x86/kvm/svm/svm.c
->>>> @@ -813,6 +813,11 @@ static __init void svm_set_cpu_caps(void)
->>>>         if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) ||
->>>>             boot_cpu_has(X86_FEATURE_AMD_SSBD))
->>>>                 kvm_cpu_cap_set(X86_FEATURE_VIRT_SSBD);
->>>> +
->>>> +       /* Enable INVPCID if both PCID and INVPCID enabled */
->>>> +       if (boot_cpu_has(X86_FEATURE_PCID) &&
->>>> +           boot_cpu_has(X86_FEATURE_INVPCID))
->>>> +               kvm_cpu_cap_set(X86_FEATURE_INVPCID);
->>>>  }
->>>>
->>>>  static __init int svm_hardware_setup(void)
->>>> @@ -1099,6 +1104,17 @@ static void init_vmcb(struct vcpu_svm *svm)
->>>>                 clr_intercept(svm, INTERCEPT_PAUSE);
->>>>         }
->>>>
->>>> +       /*
->>>> +        * Intercept INVPCID instruction only if shadow page table is
->>>> +        * enabled. Interception is not required with nested page table.
->>>> +        */
->>>> +       if (boot_cpu_has(X86_FEATURE_INVPCID)) {
->>>> +               if (!npt_enabled)
->>>> +                       set_extended_intercept(svm, INTERCEPT_INVPCID);
->>>> +               else
->>>> +                       clr_extended_intercept(svm, INTERCEPT_INVPCID);
->>>> +       }
->>>> +
->>>>         if (kvm_vcpu_apicv_active(&svm->vcpu))
->>>>                 avic_init_vmcb(svm);
->>>>
->>>> @@ -2715,6 +2731,23 @@ static int mwait_interception(struct vcpu_svm
->>> *svm)
->>>>         return nop_interception(svm);
->>>>  }
->>>>
->>>> +static int invpcid_interception(struct vcpu_svm *svm)
->>>> +{
->>>> +       struct kvm_vcpu *vcpu = &svm->vcpu;
->>>> +       unsigned long type;
->>>> +       gva_t gva;
->>>> +
->>>> +       /*
->>>> +        * For an INVPCID intercept:
->>>> +        * EXITINFO1 provides the linear address of the memory operand.
->>>> +        * EXITINFO2 provides the contents of the register operand.
->>>> +        */
->>>> +       type = svm->vmcb->control.exit_info_2;
->>>> +       gva = svm->vmcb->control.exit_info_1;
->>>> +
->>>> +       return kvm_handle_invpcid_types(vcpu,  gva, type);
->>>> +}
->>>> +
->>>>  static int (*const svm_exit_handlers[])(struct vcpu_svm *svm) = {
->>>>         [SVM_EXIT_READ_CR0]                     = cr_interception,
->>>>         [SVM_EXIT_READ_CR3]                     = cr_interception,
->>>> @@ -2777,6 +2810,7 @@ static int (*const svm_exit_handlers[])(struct
->>> vcpu_svm *svm) = {
->>>>         [SVM_EXIT_MWAIT]                        = mwait_interception,
->>>>         [SVM_EXIT_XSETBV]                       = xsetbv_interception,
->>>>         [SVM_EXIT_RDPRU]                        = rdpru_interception,
->>>> +       [SVM_EXIT_INVPCID]                      = invpcid_interception,
->>>>         [SVM_EXIT_NPF]                          = npf_interception,
->>>>         [SVM_EXIT_RSM]                          = rsm_interception,
->>>>         [SVM_EXIT_AVIC_INCOMPLETE_IPI]          =
->>> avic_incomplete_ipi_interception,
->>>> @@ -3562,6 +3596,14 @@ static void svm_cpuid_update(struct kvm_vcpu
->>> *vcpu)
->>>>         svm->nrips_enabled = kvm_cpu_cap_has(X86_FEATURE_NRIPS) &&
->>>>                              guest_cpuid_has(&svm->vcpu, X86_FEATURE_NRIPS);
->>>>
->>>> +       /*
->>>> +        * Intercept INVPCID instruction if the baremetal has the support
->>>> +        * but the guest doesn't claim the feature.
->>>> +        */
->>>> +       if (boot_cpu_has(X86_FEATURE_INVPCID) &&
->>>> +           !guest_cpuid_has(vcpu, X86_FEATURE_INVPCID))
->>>> +               set_extended_intercept(svm, INTERCEPT_INVPCID);
->>>> +
->>>
->>> What if INVPCID is enabled in the guest CPUID later? Shouldn't we then
->>> clear this intercept bit?
->>
->> I assume the feature enable comes in the same code path as this. I can add
->> "if else" check here if that is what you are suggesting.
-> 
-> Yes, that's what I'm suggesting.
-> 
->>>
->>>>         if (!kvm_vcpu_apicv_active(vcpu))
->>>>                 return;
->>>>
->>>>
