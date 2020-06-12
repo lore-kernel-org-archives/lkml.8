@@ -2,168 +2,75 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC91C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6931EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 01:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E3C520801
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:57:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="v2kfQ6gZ"
+	by mail.kernel.org (Postfix) with ESMTP id 43FAC20801
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 01:01:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbgFLA5U (ORCPT
+        id S1726396AbgFLBBP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 20:57:20 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:56182 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbgFLA5T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 20:57:19 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05C0uWCT139167;
-        Fri, 12 Jun 2020 00:57:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=G7qsYAo6+TVtQ8VyceFO8x8YzKDVMYcOi5p/gHiivcY=;
- b=v2kfQ6gZ8eybpn9y2AU/igZyxPMPc+VkN7QoINeR29tTCSc4TJDVhZMjelqf9udxerVz
- k7k4WoJIn8Ol+wgaGXgjeBImAlcZchgaLhmVXBEcka1y07Vtqb897vSPkNkJMbv4T4pT
- XzVAB2ix3lnwB9iZp2C7APoeTiNg2ycTtQHd+DYb577ibCPOZEqWVFTc9iSKFlrXJ1g0
- wJst+s30PQLysUXnSVyhLgXTmjXX4MRIgLo5IZdlHSkQr0YG71K/NO3pkInbSTFas1hu
- d3c7k0GvTofyNfK9X1ZmqMRH9TwzRgyhK0N9shgxOObNUK51LGUZ3Mj2QvM4CwBRJVRj kQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 31g3snagvu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 12 Jun 2020 00:57:06 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05C0lmKr021833;
-        Fri, 12 Jun 2020 00:57:05 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 31kye50grm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jun 2020 00:57:05 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05C0l0tH007043;
-        Fri, 12 Jun 2020 00:47:00 GMT
-Received: from monkey.oracle.com (/50.38.35.18)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 11 Jun 2020 17:46:59 -0700
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-To:     linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Colin Walters <walters@verbum.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        syzbot <syzbot+d6ec23007e951dadf3de@syzkaller.appspotmail.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Subject: [PATCH v4 2/2] ovl: call underlying get_unmapped_area() routine. propogate FMODE_HUGETLBFS
-Date:   Thu, 11 Jun 2020 17:46:44 -0700
-Message-Id: <20200612004644.255692-2-mike.kravetz@oracle.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200612004644.255692-1-mike.kravetz@oracle.com>
-References: <20200612004644.255692-1-mike.kravetz@oracle.com>
+        Thu, 11 Jun 2020 21:01:15 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:42732 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726305AbgFLBBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 21:01:15 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id E532F75579B3E817CE12;
+        Fri, 12 Jun 2020 09:01:11 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.235) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Fri, 12 Jun 2020
+ 09:01:04 +0800
+Subject: Re: [PATCH V2] bcache: fix potential deadlock problem in
+ btree_gc_coalesce
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        <linux-bcache@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        Coly Li <colyli@suse.de>, Feilong Lin <linfeilong@huawei.com>,
+        Kent Overstreet <kmo@daterainc.com>, <mingfangsen@huawei.com>,
+        <renxudong1@huawei.com>, Wu Bo <wubo40@huawei.com>,
+        <yanxiaodan@huawei.com>
+References: <80c2a2c6-01b9-8280-34b4-ff6b9cfaf76a@web.de>
+From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Message-ID: <ae980a3c-f41b-caf6-a384-516656b6fa50@huawei.com>
+Date:   Fri, 12 Jun 2020 09:01:03 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9649 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 bulkscore=0
- malwarescore=0 mlxscore=0 spamscore=0 phishscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006120003
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9649 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
- lowpriorityscore=0 impostorscore=0 cotscore=-2147483648 suspectscore=0
- spamscore=0 bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0
- mlxlogscore=999 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006120004
+In-Reply-To: <80c2a2c6-01b9-8280-34b4-ff6b9cfaf76a@web.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.166.215.235]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The core routine get_unmapped_area will call a filesystem specific version
-of get_unmapped_area if it exists in file operations.  If a file is on a
-union/overlay, overlayfs does not contain a get_unmapped_area f_op and the
-underlying filesystem routine may be ignored.  Add an overlayfs f_op to call
-the underlying f_op if it exists.
+Sorry for late reply. I will improve the commit log as your suggestion in v3 patch.
+Thanks for your suggestion.
 
-The routine is_file_hugetlbfs() is used to determine if a file is on
-hugetlbfs.  This is determined by f_mode & FMODE_HUGETLBFS.  Copy the mode
-to the overlayfs file during open so that is_file_hugetlbfs() will work as
-intended.
-
-These two issues can result in the BUG as shown in [1].
-
-[1] https://lore.kernel.org/linux-mm/000000000000b4684e05a2968ca6@google.com/
-
-Reported-by: syzbot+d6ec23007e951dadf3de@syzkaller.appspotmail.com
-Signed-off-by: Miklos Szeredi <miklos@szeredi.hu>
-Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
----
- fs/overlayfs/file.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
-
-diff --git a/fs/overlayfs/file.c b/fs/overlayfs/file.c
-index 87c362f65448..41e5746ba3c6 100644
---- a/fs/overlayfs/file.c
-+++ b/fs/overlayfs/file.c
-@@ -124,6 +124,8 @@ static int ovl_real_fdget(const struct file *file, struct fd *real)
- 	return ovl_real_fdget_meta(file, real, false);
- }
- 
-+#define OVL_F_MODE_TO_UPPER	(FMODE_HUGETLBFS)
-+
- static int ovl_open(struct inode *inode, struct file *file)
- {
- 	struct file *realfile;
-@@ -140,6 +142,9 @@ static int ovl_open(struct inode *inode, struct file *file)
- 	if (IS_ERR(realfile))
- 		return PTR_ERR(realfile);
- 
-+	/* Copy modes from underlying file */
-+	file->f_mode |= (realfile->f_mode & OVL_F_MODE_TO_UPPER);
-+
- 	file->private_data = realfile;
- 
- 	return 0;
-@@ -757,6 +762,21 @@ static loff_t ovl_remap_file_range(struct file *file_in, loff_t pos_in,
- 			    remap_flags, op);
- }
- 
-+#ifdef CONFIG_MMU
-+static unsigned long ovl_get_unmapped_area(struct file *file,
-+				unsigned long uaddr, unsigned long len,
-+				unsigned long pgoff, unsigned long flags)
-+{
-+	struct file *realfile = file->private_data;
-+
-+	return (realfile->f_op->get_unmapped_area ?:
-+		current->mm->get_unmapped_area)(realfile,
-+						uaddr, len, pgoff, flags);
-+}
-+#else
-+#define ovl_get_unmapped_area NULL
-+#endif
-+
- const struct file_operations ovl_file_operations = {
- 	.open		= ovl_open,
- 	.release	= ovl_release,
-@@ -774,6 +794,7 @@ const struct file_operations ovl_file_operations = {
- 
- 	.copy_file_range	= ovl_copy_file_range,
- 	.remap_file_range	= ovl_remap_file_range,
-+	.get_unmapped_area	= ovl_get_unmapped_area,
- };
- 
- int __init ovl_aio_request_cache_init(void)
--- 
-2.25.4
+On 2020/4/27 2:16, Markus Elfring wrote:
+>> --
+>> V1->V2: rewrite commit log (suggested by Coly Li) and rename the patch
+> 
+> * The patch version description should be placed behind triple dashes.
+> 
+> * I would find a shorter version identification (without the arrow)
+>   also sufficient.
+> 
+> 
+>> Fixes: 2a285686c1 ("bcache: btree locking rework")>
+> 
+> Will a longer commit identifier be safer for the final change description?
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=b2768df24ec400dd4f7fa79542f797e904812053#n183
+> 
+> Regards,
+> Markus
+> 
 
