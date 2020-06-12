@@ -2,282 +2,134 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D87C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE134C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3B38207ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:31:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD15F20836
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:31:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SjheiYK8"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="osPVkyY/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726311AbgFLQbV (ORCPT
+        id S1726343AbgFLQby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 12:31:21 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:48725 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726085AbgFLQbV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 12:31:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591979477;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=h+wFNh6g1LwXDIcDojVcNUqQDtORiQxjs31ZgD6xXJA=;
-        b=SjheiYK8lio0esGeKuAH+rZrhmiZKYnwzlOpDhUtq3cmMQpNup9wiWvz/rTiB/DKW3l9sh
-        WrPJ8ly2U/cQPT3sWPwdeCUXhZAukEAd1ifvXxHxKE9DbF7CC7QQ3QRtRDz57i4Kb9s6Bb
-        xLOEWdlYGJIT9M3Qaw77SPfhHtGU1Ug=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-6-outWB-s5OVqPgnDOmzv44A-1; Fri, 12 Jun 2020 12:31:14 -0400
-X-MC-Unique: outWB-s5OVqPgnDOmzv44A-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B0A14800053;
-        Fri, 12 Jun 2020 16:31:13 +0000 (UTC)
-Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2D9D210013C1;
-        Fri, 12 Jun 2020 16:31:13 +0000 (UTC)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: [GIT PULL] Second batch of KVM patches for Linux 5.8
-Date:   Fri, 12 Jun 2020 12:31:12 -0400
-Message-Id: <20200612163112.16001-1-pbonzini@redhat.com>
-MIME-Version: 1.0
+        Fri, 12 Jun 2020 12:31:54 -0400
+Received: from mail-dm6nam10on2048.outbound.protection.outlook.com ([40.107.93.48]:26720
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726089AbgFLQbx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 12:31:53 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RxuUZ6daiwQDdxwjUiIg4iXqjYs8YvYBYF36j9W+fj2GOOxOK6BZE/Hriw0hXRYtNpfJgfc36nKGv3gp8Sjryr1SRTT2AZQWRuWt694P5/N88Law8KjYOZyTLXpkjLC3DEyWr0v09++jEADWIzbfYHIYQh8ZVDPO0VjKIKVi9wuVU6HyIFT9de/DOKll3eeZB7/TLUT+A9hZ0kV9oejrsWO7jwZZJcXU4hUzN/P1A2UG4Zv6fZmuHhFTcNL6SOGnRtf9yP/uLVbPUT1RXqfiYGbkux9duVM/YWiybuij2OxQsWuiKxsbUhEwm548VrkgpzhMpbtaiTUtctOxAsswZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QWYCOq5ichBtzOcLqhLn9mA0IaPvK6Mx+89H2sEAqRs=;
+ b=CsH+nKu71+0j+prR/TA/34VULpbw5J0ZGzA+Iw3ZHD4MV2+O16MKfjGXeJyT6MQ9qc3Pcqcx6JsrvkTTyug9v1plsNnmLnPuBjGJTNKoX5sFA3Lu4NbR7Nj0kJNm4KQL1Z6oRBi/kXFe1ihjLfpISDpDSP/I609jlNOLfSk0C09DfzwxwFlfxw2zFUyafQwtwiFZ9NEyFHVokG/4k5Uza5xI6hCUdynJtnMrttTXsYeDPwL88n/1x9Nd92LBCCwQy6m/g3NLKEp60gRe2DhpoOdSbbw105qm4DQsy7dT2Lr7mLhMeTglPZZnh1Nupt4bYdUFOYg2hgOgONgOoF96Ww==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QWYCOq5ichBtzOcLqhLn9mA0IaPvK6Mx+89H2sEAqRs=;
+ b=osPVkyY/yZH+W0rcRMP48CDg8fItt3xo1BE7fHVbmtGhZmN48DGpvA9w1O7flVi9HZ/qIttU1M5YT9H5b2MLl9xGArjOswhH+BhfQiALyHX3nxNGGmBsy9r373cJey7twpxCsmIM0kPdTmwGgNpu7SXCUFLndW+DYRTATSheF+s=
+Authentication-Results: amd.com; dkim=none (message not signed)
+ header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
+Received: from DM5PR12MB1337.namprd12.prod.outlook.com (2603:10b6:3:6e::11) by
+ DM6PR12MB2940.namprd12.prod.outlook.com (2603:10b6:5:15f::19) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3066.18; Fri, 12 Jun 2020 16:31:51 +0000
+Received: from DM5PR12MB1337.namprd12.prod.outlook.com
+ ([fe80::f51a:1689:5079:c01b]) by DM5PR12MB1337.namprd12.prod.outlook.com
+ ([fe80::f51a:1689:5079:c01b%11]) with mapi id 15.20.3088.025; Fri, 12 Jun
+ 2020 16:31:50 +0000
+From:   Akshu Agrawal <akshu.agrawal@amd.com>
+Cc:     akshu.agrawal@amd.com, yuhsuan@chromium.org,
+        albertchen@realtek.com, derek.fang@realtek.com,
+        Oder Chiou <oder_chiou@realtek.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        alsa-devel@alsa-project.org (moderated list:SOUND - SOC LAYER / DYNAMIC
+        AUDIO POWER MANAGEM...), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] ASoC: rt5682: Register clocks even when mclk is NULL
+Date:   Fri, 12 Jun 2020 22:01:11 +0530
+Message-Id: <20200612163111.11730-1-akshu.agrawal@amd.com>
+X-Mailer: git-send-email 2.20.1
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain
+X-ClientProxiedBy: MAXPR01CA0098.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:5d::16) To DM5PR12MB1337.namprd12.prod.outlook.com
+ (2603:10b6:3:6e::11)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from akshu-HP-EliteBook-745-G4.dlink.router (122.171.36.38) by MAXPR01CA0098.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:5d::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.19 via Frontend Transport; Fri, 12 Jun 2020 16:31:40 +0000
+X-Mailer: git-send-email 2.20.1
+X-Originating-IP: [122.171.36.38]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: e9e914be-eb8b-47da-4bfd-08d80eee1bb6
+X-MS-TrafficTypeDiagnostic: DM6PR12MB2940:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB29403800A3F1DC975444AFD9F8810@DM6PR12MB2940.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
+X-Forefront-PRVS: 0432A04947
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 5I3nuFhni4pPxhajP9ItJfMXf0bVCJGuFfYbY3ssiRApIgOG4cDNgDn+xSmw9C/i+7AmCAzvldDEyNesAoETLjMXpNXVH10wl6WzZ0koqfHO9jAUUK08bWuTRoHPTB6prJN1X8kBlHjnxFTF3wT2XsVzGWwhu8Q7iRkPO7z+EO9I996GoNYM8Vw4KHAU39gFNeg2pgsesb0x/1SMFKYOagwJ4wHzhDbhUcoz8swXWLQUmOqUHhu9qwQMnveFGr5B2ObFHf2m59EJGtMPXiN6wiIyPNaWEWcanmkV0QY6fw3YQgn1/EtBlm1PQSfOI58OIW4w659ZPp04kALSoVE7KDpBy5/OZftubM/kXKCALUWKhqkHnt3GO1tQenffXTEe
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1337.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(366004)(346002)(376002)(136003)(6666004)(52116002)(6486002)(5660300002)(4326008)(956004)(2616005)(36756003)(44832011)(186003)(16526019)(83380400001)(66476007)(478600001)(6506007)(6512007)(4744005)(2906002)(86362001)(66946007)(54906003)(66556008)(26005)(8676002)(316002)(7416002)(1076003)(109986005)(8936002)(266003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: nNZTm48gi20vh6OGaWXQpRiPN4HYGnourdWuW7J/mkSI7DH/hnHHUdigdb/+sdDczfwvr8zhHkyyHV/nirjANz7WgOv0d0n/lHdOjJrz0ZKutSileBJm0eo/SLRfWoPugoTl+SVaA/jpZqbYjMQmWP5HJPhC7B9iR91Q4/P/ahfxJs0hYJEkiyTtcbsgj7CXJAhAo3yJD8DAutC5j5eBYWx5nbIA8QUfViTD9B6Hl1Q34rqpDlx+CUl4MBoRVbPjRy03u7UCjbaJnpldM1lavQrobm4g5Jgx+anzUASAaD5TKjPx19ehD6yI/dlaEItHd/VOeE5e8BGmwbFp8AwZObd2ZRQyZsyjj4y8+CGSvLrhHIaAPLbK2Arrt3kmH8M4ySzJAsR3RPp0VU3rZ3qDKEEyDIXG3RFS0Jot3dcbGqJbaVfZMrDoVHe7ixt4Mi4DY54Qx30EDxTIY+6c/AouAQMNS0VT51KUh6/dunvXbbg=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e9e914be-eb8b-47da-4bfd-08d80eee1bb6
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2020 16:31:50.7860
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: hbosULiYIpiCcKiQpJWLVVrAjD47Dwy78e8yaqbmD37T56gKzhJ/Y2Qgk/36fXyRwklZesjKHFCfEjSM4m2ADg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2940
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+Fixes kernel crash on platforms which do not have mclk exposed
+in CCF framework. For these platforms have mclk as NULL and
+continue to register clocks.
 
-The following changes since commit 6929f71e46bdddbf1c4d67c2728648176c67c555:
+Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
+---
+ sound/soc/codecs/rt5682.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-  atomisp: avoid warning about unused function (2020-06-03 21:22:46 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
-
-for you to fetch changes up to 49b3deaad3452217d62dbd78da8df24eb0c7e169:
-
-  Merge tag 'kvmarm-fixes-5.8-1' of git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into HEAD (2020-06-11 14:02:32 -0400)
-
-----------------------------------------------------------------
-MIPS:
-- Loongson port
-
-PPC:
-- Fixes
-
-ARM:
-- Fixes
-
-x86:
-- KVM_SET_USER_MEMORY_REGION optimizations
-- Fixes
-- Selftest fixes
-
-The guest side of the asynchronous page fault work has been delayed to 5.9
-in order to sync with Thomas's interrupt entry rework.
-
-----------------------------------------------------------------
-Anthony Yznaga (3):
-      KVM: x86: remove unnecessary rmap walk of read-only memslots
-      KVM: x86: avoid unnecessary rmap walks when creating/moving slots
-      KVM: x86: minor code refactor and comments fixup around dirty logging
-
-Babu Moger (1):
-      KVM: x86: Move MPK feature detection to common code
-
-Chen Zhou (1):
-      KVM: PPC: Book3S HV: Remove redundant NULL check
-
-Colin Ian King (1):
-      kvm: i8254: remove redundant assignment to pointer s
-
-Denis Efremov (1):
-      KVM: Use vmemdup_user()
-
-Eiichi Tsukata (1):
-      KVM: x86: Fix APIC page invalidation race
-
-Felipe Franciosi (1):
-      KVM: x86: respect singlestep when emulating instruction
-
-Huacai Chen (12):
-      KVM: MIPS: Increase KVM_MAX_VCPUS and KVM_USER_MEM_SLOTS to 16
-      KVM: MIPS: Add EVENTFD support which is needed by VHOST
-      KVM: MIPS: Use lddir/ldpte instructions to lookup gpa_mm.pgd
-      KVM: MIPS: Introduce and use cpu_guest_has_ldpte
-      KVM: MIPS: Use root tlb to control guest's CCA for Loongson-3
-      KVM: MIPS: Let indexed cacheops cause guest exit on Loongson-3
-      KVM: MIPS: Add more types of virtual interrupts
-      KVM: MIPS: Add Loongson-3 Virtual IPI interrupt support
-      KVM: MIPS: Add CPUCFG emulation for Loongson-3
-      KVM: MIPS: Add CONFIG6 and DIAG registers emulation
-      KVM: MIPS: Add more MMIO load/store instructions emulation
-      KVM: MIPS: Enable KVM support for Loongson-3
-
-James Morse (3):
-      KVM: arm64: Stop writing aarch32's CSSELR into ACTLR
-      KVM: arm64: Add emulation for 32bit guests accessing ACTLR2
-      KVM: arm64: Stop save/restoring ACTLR_EL1
-
-Laurent Dufour (2):
-      KVM: PPC: Book3S HV: Read ibm,secure-memory nodes
-      KVM: PPC: Book3S HV: Relax check on H_SVM_INIT_ABORT
-
-Marc Zyngier (9):
-      KVM: arm64: Flush the instruction cache if not unmapping the VM on reboot
-      KVM: arm64: Save the host's PtrAuth keys in non-preemptible context
-      KVM: arm64: Handle PtrAuth traps early
-      KVM: arm64: Stop sparse from moaning at __hyp_this_cpu_ptr
-      KVM: arm64: Remove host_cpu_context member from vcpu structure
-      KVM: arm64: Make vcpu_cp1x() work on Big Endian hosts
-      KVM: arm64: Synchronize sysreg state on injecting an AArch32 exception
-      KVM: arm64: Move hyp_symbol_addr() to kvm_asm.h
-      Merge branch 'kvm-arm64/ptrauth-fixes' into kvmarm-master/next
-
-Paolo Bonzini (7):
-      KVM: let kvm_destroy_vm_debugfs clean up vCPU debugfs directories
-      Merge tag 'kvm-ppc-next-5.8-1' of git://git.kernel.org/.../paulus/powerpc into HEAD
-      KVM: x86: emulate reserved nops from 0f/18 to 0f/1f
-      KVM: SVM: fix calls to is_intercept
-      Merge branch 'kvm-basic-exit-reason' into HEAD
-      KVM: x86: do not pass poisoned hva to __kvm_set_memory_region
-      Merge tag 'kvmarm-fixes-5.8-1' of git://git.kernel.org/.../kvmarm/kvmarm into HEAD
-
-Paul Mackerras (2):
-      KVM: PPC: Book3S HV: Remove user-triggerable WARN_ON
-      KVM: PPC: Book3S HV: Close race with page faults around memslot flushes
-
-Qian Cai (2):
-      KVM: PPC: Book3S HV: Ignore kmemleak false positives
-      KVM: PPC: Book3S: Fix some RCU-list locks
-
-Sean Christopherson (5):
-      KVM: VMX: Always treat MSR_IA32_PERF_CAPABILITIES as a valid PMU MSR
-      x86/kvm: Remove defunct KVM_DEBUG_FS Kconfig
-      KVM: selftests: Ignore KVM 5-level paging support for VM_MODE_PXXV48_4K
-      KVM: x86: Unexport x86_fpu_cache and make it static
-      KVM: nVMX: Consult only the "basic" exit reason when routing nested exit
-
-Tianjia Zhang (2):
-      KVM: PPC: Remove redundant kvm_run from vcpu_arch
-      KVM: PPC: Clean up redundant 'kvm_run' parameters
-
-Vitaly Kuznetsov (10):
-      KVM: selftests: Fix build with "make ARCH=x86_64"
-      KVM: VMX: Properly handle kvm_read/write_guest_virt*() result
-      Revert "KVM: x86: work around leak of uninitialized stack contents"
-      KVM: selftests: Add x86_64/debug_regs to .gitignore
-      KVM: selftests: fix vmx_preemption_timer_test build with GCC10
-      KVM: selftests: do not substitute SVM/VMX check with KVM_CAP_NESTED_STATE check
-      KVM: selftests: Don't probe KVM_CAP_HYPERV_ENLIGHTENED_VMCS when nested VMX is unsupported
-      KVM: async_pf: Cleanup kvm_setup_async_pf()
-      KVM: async_pf: Inject 'page ready' event only if 'page not present' was previously injected
-      KVM: selftests: fix sync_with_host() in smm_test
-
-Xiaoyao Li (1):
-      KVM: x86: Assign correct value to array.maxnent
-
-Xing Li (2):
-      KVM: MIPS: Define KVM_ENTRYHI_ASID to cpu_asid_mask(&boot_cpu_data)
-      KVM: MIPS: Fix VPN2_MASK definition for variable cpu_vmbits
-
- arch/arm64/include/asm/kvm_asm.h                   |  33 +-
- arch/arm64/include/asm/kvm_emulate.h               |   6 -
- arch/arm64/include/asm/kvm_host.h                  |   9 +-
- arch/arm64/include/asm/kvm_mmu.h                   |  20 -
- arch/arm64/kvm/aarch32.c                           |  28 ++
- arch/arm64/kvm/arm.c                               |  25 +-
- arch/arm64/kvm/handle_exit.c                       |  32 +-
- arch/arm64/kvm/hyp/debug-sr.c                      |   4 +-
- arch/arm64/kvm/hyp/switch.c                        |  65 ++-
- arch/arm64/kvm/hyp/sysreg-sr.c                     |   8 +-
- arch/arm64/kvm/pmu.c                               |   8 +-
- arch/arm64/kvm/sys_regs.c                          |  25 +-
- arch/arm64/kvm/sys_regs_generic_v8.c               |  10 +
- arch/mips/Kconfig                                  |   1 +
- arch/mips/include/asm/cpu-features.h               |   3 +
- arch/mips/include/asm/kvm_host.h                   |  52 ++-
- arch/mips/include/asm/mipsregs.h                   |   4 +
- arch/mips/include/uapi/asm/inst.h                  |  11 +
- arch/mips/kernel/cpu-probe.c                       |   5 +-
- arch/mips/kvm/Kconfig                              |   1 +
- arch/mips/kvm/Makefile                             |   5 +-
- arch/mips/kvm/emulate.c                            | 503 ++++++++++++++++++++-
- arch/mips/kvm/entry.c                              |  19 +-
- arch/mips/kvm/interrupt.c                          |  93 +---
- arch/mips/kvm/interrupt.h                          |  14 +-
- arch/mips/kvm/loongson_ipi.c                       | 214 +++++++++
- arch/mips/kvm/mips.c                               |  47 +-
- arch/mips/kvm/tlb.c                                |  41 ++
- arch/mips/kvm/trap_emul.c                          |   3 +
- arch/mips/kvm/vz.c                                 | 237 +++++++---
- arch/powerpc/include/asm/kvm_book3s.h              |  16 +-
- arch/powerpc/include/asm/kvm_host.h                |   1 -
- arch/powerpc/include/asm/kvm_ppc.h                 |  27 +-
- arch/powerpc/kvm/book3s.c                          |   4 +-
- arch/powerpc/kvm/book3s.h                          |   2 +-
- arch/powerpc/kvm/book3s_64_mmu_hv.c                |  12 +-
- arch/powerpc/kvm/book3s_64_mmu_radix.c             |  36 +-
- arch/powerpc/kvm/book3s_64_vio.c                   |  18 +-
- arch/powerpc/kvm/book3s_emulate.c                  |  10 +-
- arch/powerpc/kvm/book3s_hv.c                       |  75 +--
- arch/powerpc/kvm/book3s_hv_nested.c                |  15 +-
- arch/powerpc/kvm/book3s_hv_uvmem.c                 |  14 +
- arch/powerpc/kvm/book3s_paired_singles.c           |  72 +--
- arch/powerpc/kvm/book3s_pr.c                       |  30 +-
- arch/powerpc/kvm/booke.c                           |  36 +-
- arch/powerpc/kvm/booke.h                           |   8 +-
- arch/powerpc/kvm/booke_emulate.c                   |   2 +-
- arch/powerpc/kvm/e500_emulate.c                    |  15 +-
- arch/powerpc/kvm/emulate.c                         |  10 +-
- arch/powerpc/kvm/emulate_loadstore.c               |  32 +-
- arch/powerpc/kvm/powerpc.c                         |  72 +--
- arch/powerpc/kvm/trace_hv.h                        |   6 +-
- arch/s390/include/asm/kvm_host.h                   |   2 +-
- arch/s390/kvm/kvm-s390.c                           |   4 +-
- arch/x86/Kconfig                                   |   8 -
- arch/x86/include/asm/kvm_host.h                    |   3 +-
- arch/x86/kernel/kvm.c                              |   1 -
- arch/x86/kvm/cpuid.c                               |  31 +-
- arch/x86/kvm/debugfs.c                             |  10 +-
- arch/x86/kvm/emulate.c                             |   8 +-
- arch/x86/kvm/i8254.c                               |   1 -
- arch/x86/kvm/svm/nested.c                          |   2 +-
- arch/x86/kvm/svm/svm.c                             |   4 +-
- arch/x86/kvm/vmx/nested.c                          |  82 ++--
- arch/x86/kvm/vmx/pmu_intel.c                       |   2 +-
- arch/x86/kvm/vmx/vmx.c                             |  38 +-
- arch/x86/kvm/vmx/vmx.h                             |   2 +
- arch/x86/kvm/x86.c                                 | 139 +++---
- include/linux/kvm_host.h                           |   8 +-
- tools/testing/selftests/kvm/.gitignore             |   1 +
- tools/testing/selftests/kvm/Makefile               |   4 +
- .../selftests/kvm/include/x86_64/svm_util.h        |   1 +
- tools/testing/selftests/kvm/include/x86_64/vmx.h   |   5 +-
- tools/testing/selftests/kvm/lib/kvm_util.c         |  11 +-
- tools/testing/selftests/kvm/lib/x86_64/svm.c       |  10 +-
- tools/testing/selftests/kvm/lib/x86_64/vmx.c       |   9 +-
- tools/testing/selftests/kvm/x86_64/evmcs_test.c    |   5 +-
- tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c  |   3 +-
- tools/testing/selftests/kvm/x86_64/smm_test.c      |  17 +-
- tools/testing/selftests/kvm/x86_64/state_test.c    |  13 +-
- .../kvm/x86_64/vmx_preemption_timer_test.c         |   4 +
- virt/kvm/async_pf.c                                |  21 +-
- virt/kvm/kvm_main.c                                |  53 ++-
- 83 files changed, 1801 insertions(+), 740 deletions(-)
- create mode 100644 arch/mips/kvm/loongson_ipi.c
+diff --git a/sound/soc/codecs/rt5682.c b/sound/soc/codecs/rt5682.c
+index d3245123101d..7c8b8d839db8 100644
+--- a/sound/soc/codecs/rt5682.c
++++ b/sound/soc/codecs/rt5682.c
+@@ -2829,12 +2829,11 @@ static int rt5682_probe(struct snd_soc_component *component)
+ 				return ret;
+ 			}
+ 			rt5682->mclk = NULL;
+-		} else {
+-			/* Register CCF DAI clock control */
+-			ret = rt5682_register_dai_clks(component);
+-			if (ret)
+-				return ret;
+ 		}
++		/* Register CCF DAI clock control */
++		ret = rt5682_register_dai_clks(component);
++		if (ret)
++			return ret;
+ 		/* Initial setup for CCF */
+ 		rt5682->lrck[RT5682_AIF1] = CLK_48;
+ #endif
+-- 
+2.20.1
 
