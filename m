@@ -2,446 +2,286 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92982C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 12:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4692DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 12:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 572922081A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 12:26:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mvBNrqlD"
+	by mail.kernel.org (Postfix) with ESMTP id 15FE52081A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 12:27:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726263AbgFLM0x (ORCPT
+        id S1726281AbgFLM1S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 08:26:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36954 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725886AbgFLM0w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 08:26:52 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 551B1C03E96F;
-        Fri, 12 Jun 2020 05:26:52 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id q8so8691916qkm.12;
-        Fri, 12 Jun 2020 05:26:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HTckS+Zm8WJaIWj/kN9QrZNO49sP2cr1DiUVJC7mNGM=;
-        b=mvBNrqlDPqZdNdUrk89O+UHCfxatSEbQ7I2pLF0W/UHq3NZM5XqdAqx08j738ufjFw
-         50HpkksFy19JPhzNj96BnImDxwqnPCVMkymRFr2ggg3C3zOYE4HyagA0jFNCTExTMZph
-         WT8mr+0GcLmJBf4hS8/0/N4zBOQ18L5Qb/Fh8C6pMqmZLThb1q+p5GO9qvlzcM2rXB/S
-         TLiNm5TcspL7Y6z60xuvT7wNxzf1wsOw3XCkU7U6skw3ZnC7CGvI81f8HLI1dIQWzmPA
-         c2wH0ZC/OszSNaaaWM+5aYuxdsGjt/3wFCbmsT9MawxsKsakVAzgIiyAiC/06dCAOEf/
-         ZeKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HTckS+Zm8WJaIWj/kN9QrZNO49sP2cr1DiUVJC7mNGM=;
-        b=ikOQv96OaDN94dqrL3YuJv7ikLu6o12Wpwm87QTWvUeDuLQAgvb0ay4u1WbchK2M5t
-         eZB346PpbHFAlZfS7B1TsUPZ0trSSyTij1zkr2nIFeF0fFz9uejklqVrpUc3FGO/FMBQ
-         KTbzWIxFmWXSTwZ5scOnL/YguFWuPiJUMax+siY8yWMr1vA6RY/46Oovgct6rPzov1HJ
-         jGxDnLWFEMOQfnAMZ30e07D4k2TsBLeB8nQA45wTZG6ND391/6VdlYAo40ffyilyh5Kw
-         eGlcRLsn09beUOR6MXFEjlPwLHto/E+MkFaafh+aTsInixOlmo/roko0aGYqEWgZEVw9
-         Fcfw==
-X-Gm-Message-State: AOAM532cQyjxQfhkLqL5pRFf/MjC3hEkUqFcf2uYEeu7CSKckQDw0q7Z
-        fM42gwn4V4JBCZcJS1Xwn1Q=
-X-Google-Smtp-Source: ABdhPJzrtT3SwWkhnmXaiUqLd+V6Pht7iF9Og7mogE7q8c+oxQiCUQ+hSf2KMAoIEx1Ne5NSuzQOQg==
-X-Received: by 2002:a37:4d89:: with SMTP id a131mr2795200qkb.223.1591964811417;
-        Fri, 12 Jun 2020 05:26:51 -0700 (PDT)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id x54sm5063444qta.42.2020.06.12.05.26.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Jun 2020 05:26:51 -0700 (PDT)
-Subject: Re: [PATCH v2 1/3] mfd: core: Make a best effort attempt to match
- devices with the correct of_nodes
-To:     Lee Jones <lee.jones@linaro.org>, andy.shevchenko@gmail.com,
-        michael@walle.cc, robh+dt@kernel.org, broonie@kernel.org,
-        devicetree@vger.kernel.org, linus.walleij@linaro.org,
-        linux@roeck-us.net, andriy.shevchenko@linux.intel.com,
-        robin.murphy@arm.com, gregkh@linuxfoundation.org,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200611191002.2256570-1-lee.jones@linaro.org>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <1caf7547-656b-4b71-9d67-0a0ed92c67f9@gmail.com>
-Date:   Fri, 12 Jun 2020 07:26:50 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 12 Jun 2020 08:27:18 -0400
+Received: from mga14.intel.com ([192.55.52.115]:10821 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725886AbgFLM1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 08:27:18 -0400
+IronPort-SDR: 8+DjIpNyjKa21fsS4JEFt40158dU05Pu+WwEZE+/UENfIpZYiXRjX0D6mSHafRyE6zkQ7+Dxhv
+ Fu8GZfzeBjbA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2020 05:27:02 -0700
+IronPort-SDR: 5WZaufnrzoUXsvtYe0Rxax+MystH0N8kwrQ67s/aKPc0w4EyzVUCDMIHxAARXSWKO+g5/i785j
+ 60savLejLf3g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,503,1583222400"; 
+   d="scan'208";a="259870518"
+Received: from rjwysock-mobl1.ger.corp.intel.com (HELO [10.249.145.154]) ([10.249.145.154])
+  by fmsmga007.fm.intel.com with ESMTP; 12 Jun 2020 05:26:59 -0700
+Subject: Re: slub freelist issue / BUG: unable to handle page fault for
+ address: 000000003ffe0018
+To:     "Kaneda, Erik" <erik.kaneda@intel.com>,
+        Vegard Nossum <vegard.nossum@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Moore, Robert" <robert.moore@intel.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Christoph Lameter <cl@linux.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Marco Elver <elver@google.com>,
+        Waiman Long <longman@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+References: <4dc93ff8-f86e-f4c9-ebeb-6d3153a78d03@oracle.com>
+ <7839183d-1c0b-da02-73a2-bf5e1e8b02b9@suse.cz>
+ <94296941-1073-913c-2adb-bf2e41be9f0f@oracle.com>
+ <202006041054.874AA564@keescook>
+ <cb0cdaaa-7825-0b87-0384-db22329305bb@suse.cz>
+ <34455dce-6675-1fc2-8d61-45bf56f3f554@suse.cz>
+ <6b2b149e-c2bc-f87a-ea2c-3046c5e39bf9@oracle.com>
+ <faea2c18-edbe-f8b4-b171-6be866624856@oracle.com>
+ <CAJZ5v0jqmUmf7mv3wjniVM-YqPqhDSjxunU0E4VYCsUQqvrF_Q@mail.gmail.com>
+ <ce333dcb-2b2c-3e1f-2a7e-02a7819b1db4@suse.cz>
+ <894e8cee-33df-1f63-fb12-72dceb024ea7@oracle.com>
+ <BYAPR11MB3096B20EECE8E5BCB12E3D09F0800@BYAPR11MB3096.namprd11.prod.outlook.com>
+From:   "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Organization: Intel Technology Poland Sp. z o. o., KRS 101882, ul. Slowackiego
+ 173, 80-298 Gdansk
+Message-ID: <874c4ec0-5c2a-da39-c4c0-83f781cba41d@intel.com>
+Date:   Fri, 12 Jun 2020 14:26:58 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200611191002.2256570-1-lee.jones@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <BYAPR11MB3096B20EECE8E5BCB12E3D09F0800@BYAPR11MB3096.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ Frank (me)
+On 6/11/2020 3:40 AM, Kaneda, Erik wrote:
+>
+>> -----Original Message-----
+>> From: Vegard Nossum <vegard.nossum@oracle.com>
+>> Sent: Friday, June 5, 2020 7:45 AM
+>> To: Vlastimil Babka <vbabka@suse.cz>; Rafael J. Wysocki
+>> <rafael@kernel.org>; Moore, Robert <robert.moore@intel.com>; Kaneda,
+>> Erik <erik.kaneda@intel.com>
+>> Cc: Kees Cook <keescook@chromium.org>; Wysocki, Rafael J
+>> <rafael.j.wysocki@intel.com>; Christoph Lameter <cl@linux.com>; Andrew
+>> Morton <akpm@linux-foundation.org>; Marco Elver <elver@google.com>;
+>> Waiman Long <longman@redhat.com>; LKML <linux-
+>> kernel@vger.kernel.org>; Linux MM <linux-mm@kvack.org>; ACPI Devel
+>> Maling List <linux-acpi@vger.kernel.org>; Len Brown <lenb@kernel.org>;
+>> Steven Rostedt <rostedt@goodmis.org>
+>> Subject: Re: slub freelist issue / BUG: unable to handle page fault for
+>> address: 000000003ffe0018
+>>
+>> On 2020-06-05 16:08, Vlastimil Babka wrote:
+>>> On 6/5/20 3:12 PM, Rafael J. Wysocki wrote:
+>>>> On Fri, Jun 5, 2020 at 2:48 PM Vegard Nossum
+>> <vegard.nossum@oracle.com> wrote:
+>>>>> On 2020-06-05 11:36, Vegard Nossum wrote:
+>>>>>> On 2020-06-05 11:11, Vlastimil Babka wrote:
+>>>>>>> On 6/4/20 8:46 PM, Vlastimil Babka wrote:
+>>>>>>>> On 6/4/20 7:57 PM, Kees Cook wrote:
+>>>>>>>>> On Thu, Jun 04, 2020 at 07:20:18PM +0200, Vegard Nossum wrote:
+>>>>>>>>>> On 2020-06-04 19:18, Vlastimil Babka wrote:
+>>>>>>>>>>> On 6/4/20 7:14 PM, Vegard Nossum wrote:
+>>>>>>>>>>>> Hi all,
+>>>>>>>>>>>>
+>>>>>>>>>>>> I ran into a boot problem with latest linus/master
+>>>>>>>>>>>> (6929f71e46bdddbf1c4d67c2728648176c67c555) that manifests
+>> like this:
+>>>>>>>>>>> Hi, what's the .config you use?
+>>>>>>>>>> Pretty much x86_64 defconfig minus a few options (PCI, USB,
+>>>>>>>>>> ...)
+>>>>>>>>> Oh yes indeed. I immediately crash in the same way with this config.
+>>>>>>>>> I'll
+>>>>>>>>> start digging...
+>>>>>>>>>
+>>>>>>>>> (defconfig finishes boot)
+>>>>>>>> This is funny, booting with slub_debug=F results in:
+>>>>>>>> I'm not sure if it's ACPI or ftrace wrong here, but looks like
+>>>>>>>> the changed free pointer offset merely exposes a bug in something
+>>>>>>>> else.
+>>>>>>> So, with Kees' patch reverted, booting with slub_debug=F (or even
+>>>>>>> more specific slub_debug=F,ftrace_event_field) also hits this bug
+>>>>>>> below. I wanted to bisect it, but v5.7 was also bad, and also
+>>>>>>> v5.6. Didn't try further in history. So it's not new at all, and
+>>>>>>> likely very specific to your config+QEMU? (and related to the ACPI
+>>>>>>> error messages that precede it?).
+>>>>>> I see it too, but not on v5.0. I can bisect it.
+>>>>> commit 67a72420a326b45514deb3f212085fb2cd1595b5
+>>>>> Author: Bob Moore <robert.moore@intel.com>
+>>>>> Date:   Fri Aug 16 14:43:21 2019 -0700
+>>>>>
+>>>>>        ACPICA: Increase total number of possible Owner IDs
+>>>>>
+>>>>>        ACPICA commit 1f1652dad88b9d767767bc1f7eb4f7d99e6b5324
+>>>>>
+>>>>>        From 255 to 4095 possible IDs.
+>>>>>
+>>>>>        Link: https://github.com/acpica/acpica/commit/1f1652da
+>>>>>        Reported-by: Hedi Berriche <hedi.berriche @hpe.com>
+>>>>>        Signed-off-by: Bob Moore <robert.moore@intel.com>
+>>>>>        Signed-off-by: Erik Schmauss <erik.schmauss@intel.com>
+>>>>>        Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>>> Bob, Erik, did we miss something in that patch?
+>>> Maybe the patch just changes layout in a way that exposes the bug.
+>>>
+>>> Anyway the "ftrace_event_field" cache is not really involved, this is
+>>> just because of slab merging. After adding "slub_nomerge" to
+>>> "slub_debug=F", it starts making more sense, as the cache becomes
+>>> Acpi-Namespace
+>>>
+>>> [    0.140408] ------------[ cut here ]------------
+>>> [    0.140837] cache_from_obj: Wrong slab cache. Acpi-Namespace but
+>> object is from kmalloc-64
+>>> [    0.141406] WARNING: CPU: 0 PID: 1 at mm/slab.h:524
+>> kmem_cache_free+0x1d3/0x250
+>>> [    0.142105] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.7.0+ #45
+>>> [    0.142393] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+>> BIOS rel-1.13.0-0-gf21b5a4-rebuilt.opensuse.org 04/01/2014
+>>> [    0.142393] RIP: 0010:kmem_cache_free+0x1d3/0x250
+>>> [    0.142393] Code: 18 4d 85 ed 0f 84 10 ff ff ff 4c 39 ed 74 2f 49 8b 4d 58 48
+>> 8b 55 58 48 c7 c6 10 47 a1 ac 48 c7 c7 00 c2 b0 ac e8 b1 cc eb ff <0f> 0b 48 89 de
+>> 4c 89 ef e8 10 d7 ff ff 48 8b 15 59 36 9b 00 4c 89
+>>> [    0.142393] RSP: 0018:ffffb39cc0013dc0 EFLAGS: 00010282
+>>> [    0.142393] RAX: 0000000000000000 RBX: ffff937287409e00 RCX:
+>> 0000000000000000
+>>> [    0.142393] RDX: 0000000000000001 RSI: 0000000000000092 RDI:
+>> ffffffffacfdd32c
+>>> [    0.142393] RBP: ffff93728742ef00 R08: ffffb39cc0013c7d R09:
+>> 00000000000000fc
+>>> [    0.142393] R10: ffffb39cc0013c78 R11: ffffb39cc0013c7d R12:
+>> ffff937307409e00
+>>> [    0.142393] R13: ffff937287401d00 R14: 0000000000000000 R15:
+>> 0000000000000000
+>>> [    0.142393] FS:  0000000000000000(0000) GS:ffff937287a00000(0000)
+>> knlGS:0000000000000000
+>>> [    0.142393] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>> [    0.142393] CR2: 0000000000000000 CR3: 0000000003a0a000 CR4:
+>> 00000000003406f0
+>>> [    0.142393] Call Trace:
+>>> [    0.142393]  acpi_os_release_object+0x5/0x10
+>>> [    0.142393]  acpi_ns_delete_children+0x46/0x59
+>>> [    0.142393]  acpi_ns_delete_namespace_subtree+0x5c/0x79
+>>> [    0.142393]  ? acpi_sleep_proc_init+0x1f/0x1f
+>>> [    0.142393]  acpi_ns_terminate+0xc/0x31
+>>> [    0.142393]  acpi_ut_subsystem_shutdown+0x45/0xa3
+>>> [    0.142393]  ? acpi_sleep_proc_init+0x1f/0x1f
+>>> [    0.142393]  acpi_terminate+0x5/0xf
+>>> [    0.142393]  acpi_init+0x27b/0x308
+>>> [    0.142393]  ? video_setup+0x79/0x79
+>>> [    0.142393]  do_one_initcall+0x7b/0x160
+>>> [    0.142393]  kernel_init_freeable+0x190/0x1f2
+>>> [    0.142393]  ? rest_init+0x9a/0x9a
+>>> [    0.142393]  kernel_init+0x5/0xf6
+>>> [    0.142393]  ret_from_fork+0x22/0x30
+>>> [    0.142393] ---[ end trace 3539f236ef812ba1 ]---
+>>> [    0.142396] ------------[ cut here ]------------
+>>>
+>>> I've also changed the warning so it's not printed just once, and also
+>>> prints tracking info (see the hunk at the end of my mail, I'll turn this to a
+>> proper patch later).
+>>> With "slub_debug=FU slub_nomerge" there are now multiple warnings,
+>> but they all look the same:
+>>> [    0.143815] ------------[ cut here ]------------
+>>> [    0.144131] cache_from_obj: Wrong slab cache. Acpi-Namespace but
+>> object is from kmalloc-64
+>>> [    0.144929] WARNING: CPU: 0 PID: 1 at mm/slab.h:524
+>> kmem_cache_free+0x1d3/0x250
+>>> [    0.145129] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.7.0+ #45
+>>> [    0.145129] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+>> BIOS rel-1.13.0-0-gf21b5a4-rebuilt.opensuse.org 04/01/2014
+>>> [    0.145129] RIP: 0010:kmem_cache_free+0x1d3/0x250
+>>> [    0.145129] Code: 18 4d 85 ed 0f 84 10 ff ff ff 4c 39 ed 74 2f 49 8b 4d 58 48
+>> 8b 55 58 48 c7 c6 10 47 c1 8d 48 c7 c7 00 c2 d0 8d e8 b1 cc eb ff <0f> 0b 48 89 de
+>> 4c 89 ef e8 10 d7 ff ff 48 8b 15 59 36 9b 00 4c 89
+>>> [    0.145129] RSP: 0018:ffff990b80013dc0 EFLAGS: 00010282
+>>> [    0.145129] RAX: 0000000000000000 RBX: ffff972d474ada80 RCX:
+>> 0000000000000000
+>>> [    0.145129] RDX: 0000000000000001 RSI: 0000000000000092 RDI:
+>> ffffffff8e1dd32c
+>>> [    0.145129] RBP: ffff972d47425680 R08: ffff990b80013c7d R09:
+>> 00000000000000fc
+>>> [    0.145129] R10: ffff990b80013c78 R11: ffff990b80013c7d R12:
+>> ffff972dc74ada80
+>>> [    0.145129] R13: ffff972d474038c0 R14: 0000000000000000 R15:
+>> 0000000000000000
+>>> [    0.145129] FS:  0000000000000000(0000) GS:ffff972d47a00000(0000)
+>> knlGS:0000000000000000
+>>> [    0.145129] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>> [    0.145129] CR2: 0000000000000000 CR3: 000000000660a000 CR4:
+>> 00000000003406f0
+>>> [    0.145129] Call Trace:
+>>> [    0.145129]  acpi_os_release_object+0x5/0x10
+>>> [    0.145129]  acpi_ns_delete_children+0x46/0x59
+>>> [    0.145129]  acpi_ns_delete_namespace_subtree+0x5c/0x79
+>>> [    0.145129]  ? acpi_sleep_proc_init+0x1f/0x1f
+>>> [    0.145129]  acpi_ns_terminate+0xc/0x31
+>>> [    0.145129]  acpi_ut_subsystem_shutdown+0x45/0xa3
+>>> [    0.145129]  ? acpi_sleep_proc_init+0x1f/0x1f
+>>> [    0.145129]  acpi_terminate+0x5/0xf
+>>> [    0.145129]  acpi_init+0x27b/0x308
+>>> [    0.145129]  ? video_setup+0x79/0x79
+>>> [    0.145129]  do_one_initcall+0x7b/0x160
+>>> [    0.145129]  kernel_init_freeable+0x190/0x1f2
+>>> [    0.145129]  ? rest_init+0x9a/0x9a
+>>> [    0.145129]  kernel_init+0x5/0xf6
+>>> [    0.145129]  ret_from_fork+0x22/0x30
+>>> [    0.145129] ---[ end trace 574554fca7bd06bb ]---
+>>> [    0.145133] INFO: Allocated in acpi_ns_root_initialize+0xb6/0x2d1 age=58
+>> cpu=0 pid=0
+>>> [    0.145881]  kmem_cache_alloc_trace+0x1a9/0x1c0
+>>> [    0.146132]  acpi_ns_root_initialize+0xb6/0x2d1
+>>> [    0.146578]  acpi_initialize_subsystem+0x65/0xa8
+>>> [    0.147024]  acpi_early_init+0x5d/0xd1
+>>> [    0.147132]  start_kernel+0x45b/0x518
+>>> [    0.147491]  secondary_startup_64+0xb6/0xc0
+>>> [    0.147897] ------------[ cut here ]------------
+>>>
+>>> And it seems ACPI is allocating an object via kmalloc() and then
+>>> freeing it via kmem_cache_free(<"Acpi-Namespace" kmem_cache>) which
+>> is wrong.
+>>>> ./scripts/faddr2line vmlinux 'acpi_ns_root_initialize+0xb6'
+>>> acpi_ns_root_initialize+0xb6/0x2d1:
+>>> kmalloc at include/linux/slab.h:555
+>>> (inlined by) kzalloc at include/linux/slab.h:669 (inlined by)
+>>> acpi_os_allocate_zeroed at include/acpi/platform/aclinuxex.h:57
+>>> (inlined by) acpi_ns_root_initialize at
+>>> drivers/acpi/acpica/nsaccess.c:102
+>>>
+> Hi Vegard,
+>
+>> That's it :-) This fixes it for me:
+> We'll take this patch for ACPICA and it will be in the next release.
+>
+> Rafael, do you want to take this as a part of the next rc?
 
-On 2020-06-11 14:10, Lee Jones wrote:
-> Currently, when a child platform device (sometimes referred to as a
-> sub-device) is registered via the Multi-Functional Device (MFD) API,
-> the framework attempts to match the newly registered platform device
-> with its associated Device Tree (OF) node.  Until now, the device has
-> been allocated the first node found with an identical OF compatible
-> string.  Unfortunately, if there are, say for example '3' devices
-> which are to be handled by the same driver and therefore have the same
-> compatible string, each of them will be allocated a pointer to the
-> *first* node.
-> 
-> An example Device Tree entry might look like this:
-> 
->   mfd_of_test {
->           compatible = "mfd,of-test-parent";
->           #address-cells = <0x02>;
->           #size-cells = <0x02>;
-> 
->           child@aaaaaaaaaaaaaaaa {
->                   compatible = "mfd,of-test-child";
->                   reg = <0xaaaaaaaa 0xaaaaaaaa 0 0x11>,
->                         <0xbbbbbbbb 0xbbbbbbbb 0 0x22>;
->           };
-> 
->           child@cccccccc {
->                   compatible = "mfd,of-test-child";
->                   reg = <0x00000000 0xcccccccc 0 0x33>;
->           };
-> 
->           child@dddddddd00000000 {
->                   compatible = "mfd,of-test-child";
->                   reg = <0xdddddddd 0x00000000 0 0x44>;
->           };
->   };
-> 
-> When used with example sub-device registration like this:
-> 
->   static const struct mfd_cell mfd_of_test_cell[] = {
->         OF_MFD_CELL("mfd-of-test-child", NULL, NULL, 0, 0, "mfd,of-test-child"),
->         OF_MFD_CELL("mfd-of-test-child", NULL, NULL, 0, 1, "mfd,of-test-child"),
->         OF_MFD_CELL("mfd-of-test-child", NULL, NULL, 0, 2, "mfd,of-test-child")
->   };
-> 
-> ... the current implementation will result in all devices being allocated
-> the first OF node found containing a matching compatible string:
-> 
->   [0.712511] mfd-of-test-child mfd-of-test-child.0: Probing platform device: 0
->   [0.712710] mfd-of-test-child mfd-of-test-child.0: Using OF node: child@aaaaaaaaaaaaaaaa
->   [0.713033] mfd-of-test-child mfd-of-test-child.1: Probing platform device: 1
->   [0.713381] mfd-of-test-child mfd-of-test-child.1: Using OF node: child@aaaaaaaaaaaaaaaa
->   [0.713691] mfd-of-test-child mfd-of-test-child.2: Probing platform device: 2
->   [0.713889] mfd-of-test-child mfd-of-test-child.2: Using OF node: child@aaaaaaaaaaaaaaaa
-> 
-> After this patch each device will be allocated a unique OF node:
-> 
->   [0.712511] mfd-of-test-child mfd-of-test-child.0: Probing platform device: 0
->   [0.712710] mfd-of-test-child mfd-of-test-child.0: Using OF node: child@aaaaaaaaaaaaaaaa
->   [0.713033] mfd-of-test-child mfd-of-test-child.1: Probing platform device: 1
->   [0.713381] mfd-of-test-child mfd-of-test-child.1: Using OF node: child@cccccccc
->   [0.713691] mfd-of-test-child mfd-of-test-child.2: Probing platform device: 2
->   [0.713889] mfd-of-test-child mfd-of-test-child.2: Using OF node: child@dddddddd00000000
-> 
-> Which is fine if all OF nodes are identical.  However if we wish to
-> apply an attribute to particular device, we really need to ensure the
-> correct OF node will be associated with the device containing the
-> correct address.  We accomplish this by matching the device's address
-> expressed in DT with one provided during sub-device registration.
-> Like this:
-> 
->   static const struct mfd_cell mfd_of_test_cell[] = {
->         OF_MFD_CELL_REG("mfd-of-test-child", NULL, NULL, 0, 1, "mfd,of-test-child", 0xdddddddd00000000),
->         OF_MFD_CELL_REG("mfd-of-test-child", NULL, NULL, 0, 2, "mfd,of-test-child", 0xaaaaaaaaaaaaaaaa),
->         OF_MFD_CELL_REG("mfd-of-test-child", NULL, NULL, 0, 3, "mfd,of-test-child", 0x00000000cccccccc)
->   };
-> 
-> This will ensure a specific device (designated here using the
-> platform_ids; 1, 2 and 3) is matched with a particular OF node:
-> 
->   [0.712511] mfd-of-test-child mfd-of-test-child.0: Probing platform device: 0
->   [0.712710] mfd-of-test-child mfd-of-test-child.0: Using OF node: child@dddddddd00000000
->   [0.713033] mfd-of-test-child mfd-of-test-child.1: Probing platform device: 1
->   [0.713381] mfd-of-test-child mfd-of-test-child.1: Using OF node: child@aaaaaaaaaaaaaaaa
->   [0.713691] mfd-of-test-child mfd-of-test-child.2: Probing platform device: 2
->   [0.713889] mfd-of-test-child mfd-of-test-child.2: Using OF node: child@cccccccc
-> 
-> This implementation is still not infallible, hence the mention of
-> "best effort" in the commit subject.  Since we have not *insisted* on
-> the existence of 'reg' properties (in some scenarios they just do not
-> make sense) and no device currently uses the new 'of_reg' attribute,
-> we have to make an on-the-fly judgement call whether to associate the
-> OF node anyway.  Which we do in cases where parent drivers haven't
-> specified a particular OF node to match to.  So there is a *slight*
-> possibility of the following result (note: the implementation here is
-> convoluted, but it shows you one means by which this process can
-> still break):
-> 
->   /*
->    * First entry will match to the first OF node with matching compatible
->    * Second will fail, since the first took its OF node and is no longer available
->    * Third will succeed
->    */
->   static const struct mfd_cell mfd_of_test_cell[] = {
->         OF_MFD_CELL("mfd-of-test-child", NULL, NULL, 0, 1, "mfd,of-test-child"),
-> 	OF_MFD_CELL_REG("mfd-of-test-child", NULL, NULL, 0, 2, "mfd,of-test-child", 0xaaaaaaaaaaaaaaaa),
->         OF_MFD_CELL_REG("mfd-of-test-child", NULL, NULL, 0, 3, "mfd,of-test-child", 0x00000000cccccccc)
->   };
-> 
-> The result:
-> 
->   [0.753869] mfd-of-test-parent mfd_of_test: Registering 3 devices
->   [0.756597] mfd-of-test-child: Failed to locate of_node [id: 2]
->   [0.759999] mfd-of-test-child mfd-of-test-child.1: Probing platform device: 1
->   [0.760314] mfd-of-test-child mfd-of-test-child.1: Using OF node: child@aaaaaaaaaaaaaaaa
->   [0.760908] mfd-of-test-child mfd-of-test-child.2: Probing platform device: 2
->   [0.761183] mfd-of-test-child mfd-of-test-child.2: No OF node associated with this device
->   [0.761621] mfd-of-test-child mfd-of-test-child.3: Probing platform device: 3
->   [0.761899] mfd-of-test-child mfd-of-test-child.3: Using OF node: child@cccccccc
-> 
-> We could code around this with some pre-parsing semantics, but the
-> added complexity required to cover each and every corner-case is not
-> justified.  Merely patching the current failing (via this patch) is
-> already working with some pretty small corner-cases.  Other issues
-> should be patched in the parent drivers which can be achieved simply
-> by implementing OF_MFD_CELL_REG().
-> 
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
-> 
-> Changelog:
-> 
-> v1 => v2:
->   * Simply return -EAGAIN if node is already in use
->   * Allow for valid of_reg=0 by introducing use_of_reg boolean flag
->   * Split helpers out into separate patch
-> 
-> drivers/mfd/mfd-core.c   | 99 +++++++++++++++++++++++++++++++++++-----
->  include/linux/mfd/core.h | 10 ++++
->  2 files changed, 97 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-> index e831e733b38cf..120803717b828 100644
-> --- a/drivers/mfd/mfd-core.c
-> +++ b/drivers/mfd/mfd-core.c
-> @@ -10,6 +10,7 @@
->  #include <linux/kernel.h>
->  #include <linux/platform_device.h>
->  #include <linux/acpi.h>
-> +#include <linux/list.h>
->  #include <linux/property.h>
->  #include <linux/mfd/core.h>
->  #include <linux/pm_runtime.h>
-> @@ -17,8 +18,17 @@
->  #include <linux/module.h>
->  #include <linux/irqdomain.h>
->  #include <linux/of.h>
-> +#include <linux/of_address.h>
->  #include <linux/regulator/consumer.h>
->  
-> +static LIST_HEAD(mfd_of_node_list);
-> +
-> +struct mfd_of_node_entry {
-> +	struct list_head list;
-> +	struct device *dev;
-> +	struct device_node *np;
-> +};
-> +
->  static struct device_type mfd_dev_type = {
->  	.name	= "mfd_device",
->  };
-> @@ -107,6 +117,54 @@ static inline void mfd_acpi_add_device(const struct mfd_cell *cell,
->  }
->  #endif
->  
-> +static int mfd_match_of_node_to_dev(struct platform_device *pdev,
-> +				    struct device_node *np,
-> +				    const struct mfd_cell *cell)
-> +{
-> +	struct mfd_of_node_entry *of_entry;
-> +	const __be32 *reg;
-> +	u64 of_node_addr;
-> +
-> +	/* Skip devices 'disabled' by Device Tree */
-> +	if (!of_device_is_available(np))
-> +		return -ENODEV;
-> +
-> +	/* Skip if OF node has previously been allocated to a device */
-> +	list_for_each_entry(of_entry, &mfd_of_node_list, list)
-> +		if (of_entry->np == np)
-> +			return -EAGAIN;
-> +
-> +	if (!cell->use_of_reg)
-> +		/* No of_reg defined - allocate first free compatible match */
-> +		goto allocate_of_node;
-> +
-> +	/* We only care about each node's first defined address */
-> +	reg = of_get_address(np, 0, NULL, NULL);
-> +	if (!reg)
-> +		/* OF node does not contatin a 'reg' property to match to */
-> +		return -EAGAIN;
-> +
-> +	of_node_addr = of_read_number(reg, of_n_addr_cells(np));
-> +
-> +	if (cell->of_reg != of_node_addr)
-> +		/* No match */
-> +		return -EAGAIN;
-> +
-> +allocate_of_node:
-> +	of_entry = kzalloc(sizeof(*of_entry), GFP_KERNEL);
-> +	if (!of_entry)
-> +		return -ENOMEM;
-> +
-> +	of_entry->dev = &pdev->dev;
-> +	of_entry->np = np;
-> +	list_add_tail(&of_entry->list, &mfd_of_node_list);
-> +
-> +	pdev->dev.of_node = np;
-> +	pdev->dev.fwnode = &np->fwnode;
-> +
-> +	return 0;
-> +}
-> +
->  static int mfd_add_device(struct device *parent, int id,
->  			  const struct mfd_cell *cell,
->  			  struct resource *mem_base,
-> @@ -115,6 +173,7 @@ static int mfd_add_device(struct device *parent, int id,
->  	struct resource *res;
->  	struct platform_device *pdev;
->  	struct device_node *np = NULL;
-> +	struct mfd_of_node_entry *of_entry, *tmp;
->  	int ret = -ENOMEM;
->  	int platform_id;
->  	int r;
-> @@ -149,19 +208,22 @@ static int mfd_add_device(struct device *parent, int id,
->  	if (ret < 0)
->  		goto fail_res;
->  
-> -	if (parent->of_node && cell->of_compatible) {
-> +	if (IS_ENABLED(CONFIG_OF) && parent->of_node && cell->of_compatible) {
->  		for_each_child_of_node(parent->of_node, np) {
->  			if (of_device_is_compatible(np, cell->of_compatible)) {
-> -				if (!of_device_is_available(np)) {
-> -					/* Ignore disabled devices error free */
-> -					ret = 0;
-> +				ret = mfd_match_of_node_to_dev(pdev, np, cell);
-> +				if (ret == -EAGAIN)
-> +					continue;
-> +				if (ret)
->  					goto fail_alias;
-> -				}
-> -				pdev->dev.of_node = np;
-> -				pdev->dev.fwnode = &np->fwnode;
-> +
->  				break;
->  			}
->  		}
-> +
-> +		if (!pdev->dev.of_node)
-> +			pr_warn("%s: Failed to locate of_node [id: %d]\n",
-> +				cell->name, platform_id);
->  	}
->  
->  	mfd_acpi_add_device(cell, pdev);
-> @@ -170,13 +232,13 @@ static int mfd_add_device(struct device *parent, int id,
->  		ret = platform_device_add_data(pdev,
->  					cell->platform_data, cell->pdata_size);
->  		if (ret)
-> -			goto fail_alias;
-> +			goto fail_of_entry;
->  	}
->  
->  	if (cell->properties) {
->  		ret = platform_device_add_properties(pdev, cell->properties);
->  		if (ret)
-> -			goto fail_alias;
-> +			goto fail_of_entry;
->  	}
->  
->  	for (r = 0; r < cell->num_resources; r++) {
-> @@ -213,18 +275,18 @@ static int mfd_add_device(struct device *parent, int id,
->  			if (has_acpi_companion(&pdev->dev)) {
->  				ret = acpi_check_resource_conflict(&res[r]);
->  				if (ret)
-> -					goto fail_alias;
-> +					goto fail_of_entry;
->  			}
->  		}
->  	}
->  
->  	ret = platform_device_add_resources(pdev, res, cell->num_resources);
->  	if (ret)
-> -		goto fail_alias;
-> +		goto fail_of_entry;
->  
->  	ret = platform_device_add(pdev);
->  	if (ret)
-> -		goto fail_alias;
-> +		goto fail_of_entry;
->  
->  	if (cell->pm_runtime_no_callbacks)
->  		pm_runtime_no_callbacks(&pdev->dev);
-> @@ -233,6 +295,12 @@ static int mfd_add_device(struct device *parent, int id,
->  
->  	return 0;
->  
-> +fail_of_entry:
-> +	list_for_each_entry_safe(of_entry, tmp, &mfd_of_node_list, list)
-> +		if (of_entry->dev == &pdev->dev) {
-> +			list_del(&of_entry->list);
-> +			kfree(of_entry);
-> +		}
->  fail_alias:
->  	regulator_bulk_unregister_supply_alias(&pdev->dev,
->  					       cell->parent_supplies,
-> @@ -287,6 +355,7 @@ static int mfd_remove_devices_fn(struct device *dev, void *data)
->  {
->  	struct platform_device *pdev;
->  	const struct mfd_cell *cell;
-> +	struct mfd_of_node_entry *of_entry, *tmp;
->  
->  	if (dev->type != &mfd_dev_type)
->  		return 0;
-> @@ -297,6 +366,12 @@ static int mfd_remove_devices_fn(struct device *dev, void *data)
->  	regulator_bulk_unregister_supply_alias(dev, cell->parent_supplies,
->  					       cell->num_parent_supplies);
->  
-> +	list_for_each_entry_safe(of_entry, tmp, &mfd_of_node_list, list)
-> +		if (of_entry->dev == dev) {
-> +			list_del(&of_entry->list);
-> +			kfree(of_entry);
-> +		}
-> +
->  	kfree(cell);
->  
->  	platform_device_unregister(pdev);
-> diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
-> index d01d1299e49dc..a148b907bb7f1 100644
-> --- a/include/linux/mfd/core.h
-> +++ b/include/linux/mfd/core.h
-> @@ -78,6 +78,16 @@ struct mfd_cell {
->  	 */
->  	const char		*of_compatible;
->  
-> +	/*
-> +	 * Address as defined in Device Tree.  Used to compement 'of_compatible'
-> +	 * (above) when matching OF nodes with devices that have identical
-> +	 * compatible strings
-> +	 */
-> +	const u64 of_reg;
-> +
-> +	/* Set to 'true' to use 'of_reg' (above) - allows for of_reg=0 */
-> +	bool use_of_reg;
-> +
->  	/* Matches ACPI */
->  	const struct mfd_cell_acpi_match	*acpi_match;
->  
-> 
+Yes, I do.
+
+Cheers!
+
 
