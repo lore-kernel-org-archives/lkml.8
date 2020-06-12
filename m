@@ -2,146 +2,94 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80AABC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 22:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 904CCC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 22:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 565E020663
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 22:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DB0E20663
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 22:17:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591999871;
-	bh=t2X4nNOdMk0FZ9axDRZXWf+eJHwrZNmQojidYZvDW8Y=;
+	s=default; t=1592000227;
+	bh=WzsiNZXNYMNLYi0eqtQqepSzKxcHJqYFyL9lPtpp4zo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XWAY+y0QVCqHLjRI1+fchxWsUKYP1k0WwnPK4KvGZXECH73g7k8C5t+jM7xPr1zcO
-	 GaLz9YYee+52VQsUsnwdk0EoQjWYyYay44qK62uDhB6xCxkOqZvft1k1OQyByRhs75
-	 rmJT5Qj8PJh23GSW9jRcqN9cCnP47TrTXRRKy3OI=
+	b=xKVu/DMFha+6u7MLA+UN/EY5Qq2eD3kSVWDzLipY3lxRsa+/7iUxsFxIgGW3Q5/nD
+	 pkwG2k3w595ACUa7Mnmkau/C+vByIDFgzW4d4TYt8Mz/B56l5XejCxJjhT7/wu56s0
+	 YSQ+ZTjc7SOCriBoQ5XJ2SpAHZieOn85vWSEqJRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726392AbgFLWLH (ORCPT
+        id S1726340AbgFLWRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 18:11:07 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:45581 "EHLO
+        Fri, 12 Jun 2020 18:17:06 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:33089 "EHLO
         mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgFLWLH (ORCPT
+        with ESMTP id S1726302AbgFLWRE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 18:11:07 -0400
-Received: by mail-il1-f196.google.com with SMTP id 9so10152942ilg.12;
-        Fri, 12 Jun 2020 15:11:06 -0700 (PDT)
+        Fri, 12 Jun 2020 18:17:04 -0400
+Received: by mail-il1-f196.google.com with SMTP id z2so10204647ilq.0;
+        Fri, 12 Jun 2020 15:17:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=jpvSUDf0/nkQwsjRoUmLSe2QQX32OCv3LjO7DJXzG5w=;
-        b=JRHBGaf+rvkFE9HNrLugAOKjL1aX8uzs/r3leQzfMbaty3UhlbbOFsHm542/K1G5qK
-         vwFGlhORu3S7+ghzfL+iGd8cQr+VP0POU0OALAVi8JfCXUdYeFs1Hp5FZBzOywhedOVJ
-         H7A47O+bucp9ldp/RENABWWWxPi0BnDZ+odeavSkFfDPQYts/7xsd+aIxQ/Lwue/RZZx
-         BsX0ubqB3LlPirtL0m/TJrQuzTm4von/PCk/QLyLl8jnWjorrrPHrBW4nS6UKkCP5dnj
-         hBT5bJKnjtd9i+aJkOqGTK0ALkUnGsPBLBjryQ4Dh8Vq+njyt6VHlasGynFxALA481cK
-         Icjw==
-X-Gm-Message-State: AOAM530qsfyfR7TF/DosXObb90OxCY/OvMQmygikg45T7lhF3SjLq8bu
-        GExkSvNywVqqDEoZeYV0GA==
-X-Google-Smtp-Source: ABdhPJzVQ3CvvaInomzBLMgI0cF9hNEtCmQT2cZsfVUg9eb57JrurneemlctD9bij5LEyLYkZepnig==
-X-Received: by 2002:a92:4948:: with SMTP id w69mr13848326ila.15.1591999865751;
-        Fri, 12 Jun 2020 15:11:05 -0700 (PDT)
+        bh=PJtM6TUUgZ0NsS5nwxzOPsUT4RArH9pVS2H787pOfts=;
+        b=ajMMrD3y+2Ck7IZsWZrVQrnvVo5goubYER6gs8Tg4TM8bUJgANaN+Zv71mu686GU9u
+         +N7V43l12XGj8bo7lJgBkMM+UsUet4F6agyh9y6+At04KM0tbMOzSh/rGZGxgPqd4sD5
+         ZcNSoNkrBEwnhsjrUvymyz61ucaXkG5xehGPTVHCdEKlpjVCukCQpjWtB4FhZv+AxB81
+         8TSu3VHuZls2kYWuO+kK3ep4VUk6i4OS7oST8fdiTlO8ngouavh0sB2aeKeJZg7KWlZt
+         MbmQhP4SuKgf0pv3tguvYIOf7fkCPB5Sz/evF8Ex8omob8OPQsEEYnMZGEnk2wWRnDxO
+         JBfA==
+X-Gm-Message-State: AOAM532RhsBq7K9wYV8xV49c3iTFtmws4bS97g809uBXeg9mEENUkriw
+        nntNoEnCOJdgvtYewAkWP+IiiAk=
+X-Google-Smtp-Source: ABdhPJxceJL0d8X9BDVlULnQItsixz2fNFtthKa/xUU8I02pk9qhJxqjcDqeraevcBESW83uuZAmTQ==
+X-Received: by 2002:a92:8919:: with SMTP id n25mr14174833ild.158.1592000223384;
+        Fri, 12 Jun 2020 15:17:03 -0700 (PDT)
 Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id b29sm3692399ioc.32.2020.06.12.15.11.04
+        by smtp.gmail.com with ESMTPSA id l138sm3916214ill.63.2020.06.12.15.17.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 15:11:05 -0700 (PDT)
-Received: (nullmailer pid 3903476 invoked by uid 1000);
-        Fri, 12 Jun 2020 22:11:03 -0000
-Date:   Fri, 12 Jun 2020 16:11:03 -0600
+        Fri, 12 Jun 2020 15:17:02 -0700 (PDT)
+Received: (nullmailer pid 3917505 invoked by uid 1000);
+        Fri, 12 Jun 2020 22:17:01 -0000
+Date:   Fri, 12 Jun 2020 16:17:01 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc:     Hyun Kwon <hyunk@xilinx.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        sakari.ailus@iki.fi, linux-media@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        linux-renesas-soc@vger.kernel.org,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        devicetree@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>, Jacopo Mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v10 3/4] dt-bindings: media: i2c: Add bindings for IMI
- RDACM2x
-Message-ID: <20200612221103.GA3902762@bogus>
-References: <20200612144713.502006-1-kieran.bingham+renesas@ideasonboard.com>
- <20200612144713.502006-4-kieran.bingham+renesas@ideasonboard.com>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [RESEND PATCH] dt-bindings: property-units: Add picoseconds type
+Message-ID: <20200612221701.GA3916707@bogus>
+References: <20200602164219.3159-1-dmurphy@ti.com>
+ <e7644623-e9c2-2ebc-8bbd-1bd5dea8942a@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200612144713.502006-4-kieran.bingham+renesas@ideasonboard.com>
+In-Reply-To: <e7644623-e9c2-2ebc-8bbd-1bd5dea8942a@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 12 Jun 2020 15:47:12 +0100, Kieran Bingham wrote:
-> From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> 
-> The IMI RDACM20 and IMI RDACM21 are Gigabit Multimedia Serial Link
-> (GMSL) camera capable of transmitting video and I2C control messages on
-> a coax cable physical link for automotive applications.
-> 
-> Document their device tree bindings.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-> ---
-> v2:
->  - Provide imi vendor prefix
->  - Fix minor spelling
-> 
-> v3:
->  - update binding descriptions
-> 
-> v4:
->  - No change
-> 
-> v5:
->  - Specify optional third reg address for the MCU
-> 
-> v7:
->  [Jacopo]
->  - Rename to imi,rdacm2x-gmsl.yaml
->  - Exand bindings to describe RDACM21
-> 
-> v9:
->   [Jacopo]
->   - Rework 'compatible' property as suggested by Rob
->   - Re-order vendor prefixes ('g' comes before 'i' ... )
->   - Add Rob's tag
-> 
->  .../bindings/media/i2c/imi,rdacm2x-gmsl.yaml  | 159 ++++++++++++++++++
->  .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
->  2 files changed, 161 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/imi,rdacm2x-gmsl.yaml
-> 
+On Thu, Jun 11, 2020 at 02:46:28PM -0500, Dan Murphy wrote:
+> Bump
 
+Merge window. Will apply when over.
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/i2c/imi,rdacm2x-gmsl.example.dt.yaml: example-0: i2c@e66d8000:reg:0: [0, 3865935872, 0, 64] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/i2c/imi,rdacm2x-gmsl.example.dt.yaml: example-1: i2c@e66d8000:reg:0: [0, 3865935872, 0, 64] is too long
-
-
-See https://patchwork.ozlabs.org/patch/1308279
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
-
+> 
+> On 6/2/20 11:42 AM, Dan Murphy wrote:
+> > Add the '-ps' picosecond unit suffix for property names.
+> > 
+> > Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> > ---
+> >   Documentation/devicetree/bindings/property-units.txt | 1 +
+> >   1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/property-units.txt b/Documentation/devicetree/bindings/property-units.txt
+> > index e9b8360b3288..00094070bdac 100644
+> > --- a/Documentation/devicetree/bindings/property-units.txt
+> > +++ b/Documentation/devicetree/bindings/property-units.txt
+> > @@ -17,6 +17,7 @@ Time/Frequency
+> >   -ms		: millisecond
+> >   -us		: microsecond
+> >   -ns		: nanosecond
+> > +-ps		: picosecond
+> >   Distance
+> >   ----------------------------------------
