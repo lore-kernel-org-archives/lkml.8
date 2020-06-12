@@ -2,104 +2,117 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E269C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 11:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E285FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 11:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47F1C20792
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 11:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B637220792
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 11:32:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="BPPJPbvO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RVkI+V3m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726219AbgFLLai (ORCPT
+        id S1726272AbgFLLcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 07:30:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56502 "EHLO
+        Fri, 12 Jun 2020 07:32:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725791AbgFLLah (ORCPT
+        with ESMTP id S1725791AbgFLLcO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 07:30:37 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFC7EC03E96F;
-        Fri, 12 Jun 2020 04:30:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=etPHGVYvPw7yw2ygbiMI5MNxWS/RjHHBmbLSJinvfLQ=; b=BPPJPbvODmjIQrnUW1eLG3MI8
-        MmiCthfkt1Hdtyn/HSY9hCKkDpas84Fqt+nvsYXWDKexRAJBWEinHZKdspRfDwE7Ig5eFUfrFAZNP
-        bauAmpNpZMXsNcOqJQljGkcypGA86h/mqpjRBiwgMfehzxmQqfhnB5Yjed2maatQ59ghRdxsMjsLO
-        6yGON/9In+kv6jrt8fAP5TOaq3LQ+8g+WUYZPYAeN77Rr1nU6bEUWW/EmtR5UllksU4OXAJwM9Sr6
-        46OimonqgIi2TUGEAyr6ZdgVgDM5S8n3flbzOok+2Xr+sXSRn8NOVOcpvpPaPHSdiJSsQcnofxVT9
-        IbazVLegA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:44598)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jjhtI-0002jO-3N; Fri, 12 Jun 2020 12:30:32 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jjhtH-0006Dh-Eb; Fri, 12 Jun 2020 12:30:31 +0100
-Date:   Fri, 12 Jun 2020 12:30:31 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        kernel@pengutronix.de
-Subject: Re: [PATCH v2] net: mvneta: Fix Serdes configuration for 2.5Gbps
- modes
-Message-ID: <20200612113031.GI1551@shell.armlinux.org.uk>
-References: <20200612083847.29942-1-s.hauer@pengutronix.de>
- <20200612084710.GC1551@shell.armlinux.org.uk>
- <20200612100114.GE1551@shell.armlinux.org.uk>
- <20200612101820.GF1551@shell.armlinux.org.uk>
- <20200612104208.GG1551@shell.armlinux.org.uk>
- <20200612112213.GH1551@shell.armlinux.org.uk>
+        Fri, 12 Jun 2020 07:32:14 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1C53C03E96F;
+        Fri, 12 Jun 2020 04:32:13 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id e9so3996723pgo.9;
+        Fri, 12 Jun 2020 04:32:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=0lgE32Ou0V39R4GTxZ5rk8NdY6XmTkz6GrQZdcG8x7g=;
+        b=RVkI+V3mvBlLHDAS1i/drw5fhqljNH8F4sM0b2t2jGK1cU9LFc7kvWBEzT21tbyedp
+         WaTeoUzDHrOQjHMgr+oVmRDbhFXoyTfluHAR0spRY2kRJhoo+M9H2pqO+gnMe2FG5rOl
+         OLGHgg9LeXUx7ibdQirfQBbRSQo05Vmp9ki0ewZRTnrCk2OYU3ce7tWFBEQqEdOM7QW0
+         zRrWq6xUxMNNj/DEYaJKYaHdjniT/wYqgRjaErO+htz028ne2XN0gSbdaj068JoS4AOE
+         1lcwUEmcd+SPMTAfdiqZkxeVPFapsbE8bw6poQ9dFYXG/tHDhCNRyuG6vz4nW1wgAfoP
+         10aA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=0lgE32Ou0V39R4GTxZ5rk8NdY6XmTkz6GrQZdcG8x7g=;
+        b=QECEckMEcxw5+xEa2M6jzHYKZ37dFqiIwUcskTDB2TkA4Wwsd/NY7rqyOo31cOikiJ
+         bVlZzvFZ9zD17dDmu+nBm1YBPoG7HilqYT5Bw73C0EVOyaVB8KhTc7+Uhcp6d0sl3Q1F
+         yVmA7C7M1Hq2kGKciewHN1H149TwyWwABGnXgHVi3HOxIR4lSPYdqCRaCKcv5XLfJgD5
+         vS6utF7mEBdbOZ55AdaOwKgnjw7LYJ7JyeDWBzvH21/PgMwBVEFNq+4m+MGsxTGWTb4t
+         +WqQmcLSPrZSqPAk8VbwhDiJqEHHrHs86uvW6fX4dqDTRgZOZnToChXZpTnGbG0WJNWV
+         LaAA==
+X-Gm-Message-State: AOAM532eYeRH0zmAoHwy9WTUg1mBpeKGXSVJ58CpMSzQwBH6UAuUk8z/
+        KMNfLLaB4YsnLQUq7fY/h+4=
+X-Google-Smtp-Source: ABdhPJyml9rJjczDyYfvCjWWUSwV/e5wIDm9KSchWpwfBoH9jucVWeZxnt0opoOeSzMWKgI4VKlwKw==
+X-Received: by 2002:a63:f413:: with SMTP id g19mr9499214pgi.200.1591961533176;
+        Fri, 12 Jun 2020 04:32:13 -0700 (PDT)
+Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
+        by smtp.gmail.com with ESMTPSA id x11sm6208541pfq.169.2020.06.12.04.32.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2020 04:32:12 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Date:   Fri, 12 Jun 2020 20:32:09 +0900
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: Re: [v2 PATCH] printk: Make linux/printk.h self-contained
+Message-ID: <20200612113209.GA1204@jagdpanzerIV.localdomain>
+References: <20200611125144.GA2506@gondor.apana.org.au>
+ <20200612043634.GA30181@gondor.apana.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200612112213.GH1551@shell.armlinux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200612043634.GA30181@gondor.apana.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 12:22:13PM +0100, Russell King - ARM Linux admin wrote:
-> On Fri, Jun 12, 2020 at 11:42:08AM +0100, Russell King - ARM Linux admin wrote:
-> > With the obvious mistakes fixed (extraneous 'i' and lack of default
-> > case), it seems to still work on Armada 388 Clearfog Pro with 2.5G
-> > modules.
+On (20/06/12 14:36), Herbert Xu wrote:
+> As it stands if you include printk.h by itself it will fail to
+> compile because it requires definitions from ratelimit.h.  However,
+> simply including ratelimit.h from printk.h does not work due to
+> inclusion loops involving sched.h and kernel.h.
 > 
-> ... and the other bug fixed - mvneta_comphy_init() needs to be passed
-> the interface mode.
+> This patch solves this by moving bits from ratelimit.h into a new
+> header file which can then be included by printk.h without any
+> worries about header loops.
+> 
+> The build bot then revealed some intriguing failures arising out
+> of this patch.  On s390 there is an inclusion loop with asm/bug.h
+> and linux/kernel.h that triggers a compile failure, because kernel.h
+> will cause asm-generic/bug.h to be included before s390's own
+> asm/bug.h has finished processing.  This has been fixed by not
+> including kernel.h in arch/s390/include/asm/bug.h.
+> 
+> A related failure was seen on powerpc where asm/bug.h leads to
+> the inclusion of linux/kernel.h via asm-generic/bug.h which then
+> prematurely tries to use the very macros defined in asm/bug.h.
+> The particular inclusion path which led to this involves lockdep.h.
+> I have fixed this moving the type definitions lockdep.h into the
+> new lockdep_types.h.
+> 
+> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 
-Unrelated to the patch, has anyone noticed that mvneta's performance
-seems to have reduced?  I've only just noticed it (which makes 2.5Gbps
-rather pointless).  This is iperf between two clearfogs with a 2.5G
-fibre link:
+FWIW,
+Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 
-root@clearfog21:~# iperf -V -c fe80::250:43ff:fe02:303%eno2
-------------------------------------------------------------
-Client connecting to fe80::250:43ff:fe02:303%eno2, TCP port 5001
-TCP window size: 43.8 KByte (default)
-------------------------------------------------------------
-[  3] local fe80::250:43ff:fe21:203 port 48928 connected with fe80::250:43ff:fe02:303 port 5001
-[ ID] Interval       Transfer     Bandwidth
-[  3]  0.0-10.0 sec   553 MBytes   464 Mbits/sec
-
-I checked with Jon Nettleton, and he confirms my recollection that
-mvneta on Armada 388 used to be able to fill a 2.5Gbps link.
-
-If Armada 388 can't manage, then I suspect Armada XP will have worse
-performance being an earlier revision SoC.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+	-ss
