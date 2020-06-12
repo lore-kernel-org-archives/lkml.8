@@ -2,188 +2,129 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB1BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 08:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3082C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 08:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48D48207ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 08:18:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tkh3ejkZ"
+	by mail.kernel.org (Postfix) with ESMTP id D3D86207ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 08:18:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726319AbgFLISD (ORCPT
+        id S1726448AbgFLISM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 04:18:03 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:42518 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726297AbgFLISB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 04:18:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591949880;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LbTU48ojgO2FlIo9PAsC9R4igbZ13z+cUADaXE0FnOU=;
-        b=Tkh3ejkZXDN8pEFvcVn1r3AMpy0Ti3rb9et1sZJA7rLix3i5CdVp49qUj4IPLYsrDKSwEi
-        R0sb9An+q7Je6S5XrDYmX9oybJmEZiCIs/WSAkFAS8miSLGA48izlBmifmGP4eM/rHKHwd
-        lGquSXSqbCjKH/wqs8ou2iKuzdjSAaI=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-306-D33w7HwjOs6Djm6dnA3vlQ-1; Fri, 12 Jun 2020 04:17:57 -0400
-X-MC-Unique: D33w7HwjOs6Djm6dnA3vlQ-1
-Received: by mail-ej1-f69.google.com with SMTP id ca6so3841742ejb.7
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 01:17:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LbTU48ojgO2FlIo9PAsC9R4igbZ13z+cUADaXE0FnOU=;
-        b=BkNOdm/xlnDdbn3J9zxZp9hn0KZ6ssw384uhKwmTAdDYWgsZvm195Vh0fXecyb+IKp
-         Z874cZjdoHh7u0a74KQu5b4U4olmnPIGeKRgt3lb6E34Cm0bPhbJnmMuZNtq600imkMD
-         mMV9DSaBV6o4ympPpTJPE7Xzj/TIAREMtVJIJ+QgsGTxjlxykY75QD2JrpfSbLetv34a
-         SLf2eXKiSp+KoR1xxU8oRgOvC7RSziEIhFbg94+iLWGHbj5uwst416lYL6b3DgFGLYH7
-         4107KKsz7wg2YQpU+nlDfxv/ESsZZTzjDaiMjMmSCJRS05xZvEan/hUycpf1PsvUkM59
-         Iu9g==
-X-Gm-Message-State: AOAM532/+6STmmFR1h5Dq59QyeJJIHd4bSUJ8AVh0iKoyd6EA/wlZS0e
-        ZG+GKIhGSYUlzw7MqDvcCuVUIzq1gkzgc8T3C79v0Bks6N21p0OARdFegPthczSfvVtSChxqwJH
-        IEQvxi1SXV2HOmaBkfCRQgPJJ
-X-Received: by 2002:a17:906:ccdd:: with SMTP id ot29mr11758817ejb.119.1591949875882;
-        Fri, 12 Jun 2020 01:17:55 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxwtNGBDEJyj/avNl3UCU7R4ntwBo4aI35VOBMw7tHPjvk5hJcx1khBKXvQ05G75ytNLMmeTQ==
-X-Received: by 2002:a17:906:ccdd:: with SMTP id ot29mr11758779ejb.119.1591949875662;
-        Fri, 12 Jun 2020 01:17:55 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id mf24sm3166452ejb.13.2020.06.12.01.17.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Jun 2020 01:17:54 -0700 (PDT)
-Subject: Re: [PATCH v4 0/7] Support inhibiting input devices
-To:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-tegra@vger.kernel.org, patches@opensource.cirrus.com,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Barry Song <baohua@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Nick Dyer <nick@shmanahar.org>,
-        Ferruh Yigit <fery@cypress.com>,
-        Sangwon Jee <jeesw@melfas.com>,
-        Peter Hutterer <peter.hutterer@redhat.com>,
-        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
-        kernel@collabora.com
-References: <2336e15d-ff4b-bbb6-c701-dbf3aa110fcd@redhat.com>
- <20200608112211.12125-1-andrzej.p@collabora.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <1821a5b7-cbf3-a739-2203-a93b06f0c6f2@redhat.com>
-Date:   Fri, 12 Jun 2020 10:17:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 12 Jun 2020 04:18:12 -0400
+Received: from mga11.intel.com ([192.55.52.93]:15825 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726324AbgFLISM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 04:18:12 -0400
+IronPort-SDR: wCSePci76Oale64BGi0QviYSzV8lo4Eg2Qfrh47kfVuqydBBmkGjr1vNCutJqGD0goREEDy6LD
+ s9FGXHPL1ZLw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2020 01:18:11 -0700
+IronPort-SDR: uJDN/hRZ26RQ33AZ6c0vXiUKRVPPJEZYwh5Z3gqGn2MxeOei2Mxy+K2Uls+Yn/WkhhXNT97HCC
+ XEfQ6+FFNKVQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,502,1583222400"; 
+   d="scan'208";a="296880859"
+Received: from janlundk-mobl1.ger.corp.intel.com ([10.249.254.139])
+  by fmsmga004.fm.intel.com with ESMTP; 12 Jun 2020 01:18:08 -0700
+Message-ID: <11fc5db81237fb3383b1df327d2cd2e308c0e525.camel@intel.com>
+Subject: Re: [PATCH] iwl: fix crash in iwl_dbg_tlv_alloc_trigger
+From:   Luciano Coelho <luciano.coelho@intel.com>
+To:     Kalle Valo <kvalo@codeaurora.org>, Jiri Slaby <jslaby@suse.cz>
+Cc:     johannes.berg@intel.com, linux-kernel@vger.kernel.org,
+        Dieter =?ISO-8859-1?Q?N=FCtzel?= <Dieter@nuetzel-hh.de>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Date:   Fri, 12 Jun 2020 11:18:08 +0300
+In-Reply-To: <87d064k9a9.fsf@codeaurora.org>
+References: <20200612073800.27742-1-jslaby@suse.cz>
+         <87d064k9a9.fsf@codeaurora.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2-1 
 MIME-Version: 1.0
-In-Reply-To: <20200608112211.12125-1-andrzej.p@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, 2020-06-12 at 10:55 +0300, Kalle Valo wrote:
+> Jiri Slaby <jslaby@suse.cz> writes:
+> 
+> > The tlv passed to iwl_dbg_tlv_alloc_trigger comes from a loaded firmware
+> > file. The memory can be marked as read-only as firmware could be
+> > shared. In anyway, writing to this memory is not expected. So,
+> > iwl_dbg_tlv_alloc_trigger can crash now:
+> > 
+> >   BUG: unable to handle page fault for address: ffffae2c01bfa794
+> >   PF: supervisor write access in kernel mode
+> >   PF: error_code(0x0003) - permissions violation
+> >   PGD 107d51067 P4D 107d51067 PUD 107d52067 PMD 659ad2067 PTE 8000000662298161
+> >   CPU: 2 PID: 161 Comm: kworker/2:1 Not tainted 5.7.0-3.gad96a07-default #1 openSUSE Tumbleweed (unreleased)
+> >   RIP: 0010:iwl_dbg_tlv_alloc_trigger+0x25/0x60 [iwlwifi]
+> >   Code: eb f2 0f 1f 00 66 66 66 66 90 83 7e 04 33 48 89 f8 44 8b 46 10 48 89 f7 76 40 41 8d 50 ff 83 fa 19 77 23 8b 56 20 85 d2 75 07 <c7> 46 20 ff ff ff ff 4b 8d 14 40 48 c1 e2 04 48 8d b4 10 00 05 00
+> >   RSP: 0018:ffffae2c00417ce8 EFLAGS: 00010246
+> >   RAX: ffff8f0522334018 RBX: ffff8f0522334018 RCX: ffffffffc0fc26c0
+> >   RDX: 0000000000000000 RSI: ffffae2c01bfa774 RDI: ffffae2c01bfa774
+> >   RBP: 0000000000000000 R08: 0000000000000004 R09: 0000000000000001
+> >   R10: 0000000000000034 R11: ffffae2c01bfa77c R12: ffff8f0522334230
+> >   R13: 0000000001000009 R14: ffff8f0523fdbc00 R15: ffff8f051f395800
+> >   FS:  0000000000000000(0000) GS:ffff8f0527c80000(0000) knlGS:0000000000000000
+> >   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >   CR2: ffffae2c01bfa794 CR3: 0000000389eba000 CR4: 00000000000006e0
+> >   Call Trace:
+> >    iwl_dbg_tlv_alloc+0x79/0x120 [iwlwifi]
+> >    iwl_parse_tlv_firmware.isra.0+0x57d/0x1550 [iwlwifi]
+> >    iwl_req_fw_callback+0x3f8/0x6a0 [iwlwifi]
+> >    request_firmware_work_func+0x47/0x90
+> >    process_one_work+0x1e3/0x3b0
+> >    worker_thread+0x46/0x340
+> >    kthread+0x115/0x140
+> >    ret_from_fork+0x1f/0x40
+> > 
+> > As can be seen, write bit is not set in the PTE. Read of
+> > trig->occurrences succeeds in iwl_dbg_tlv_alloc_trigger, but
+> > trig->occurrences = cpu_to_le32(-1); fails there, obviously.
+> > 
+> > This is likely because we (at SUSE) use compressed firmware and that is
+> > marked as RO after decompression (see fw_map_paged_buf).
+> > 
+> > Fix it by creating a temporary buffer in case we need to change the
+> > memory.
+> > 
+> > Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+> > Reported-by: Dieter Nützel <Dieter@nuetzel-hh.de>
+> > Tested-by: Dieter Nützel <Dieter@nuetzel-hh.de>
+> > Cc: Johannes Berg <johannes.berg@intel.com>
+> > Cc: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+> > Cc: Luca Coelho <luciano.coelho@intel.com>
+> > Cc: Intel Linux Wireless <linuxwifi@intel.com>
+> > Cc: Kalle Valo <kvalo@codeaurora.org>
+> > Cc: "David S. Miller" <davem@davemloft.net>
+> > Cc: Jakub Kicinski <kuba@kernel.org>
+> > Cc: linux-wireless@vger.kernel.org
+> > Cc: netdev@vger.kernel.org
+> > ---
+> >  drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c | 16 ++++++++++++++--
+> 
+> The prefix should be "iwlwifi: ", I can fix that.
+> 
+> Luca, should I take this to wireless-drivers?
 
-On 6/8/20 1:22 PM, Andrzej Pietrasiewicz wrote:
-> This is a quick respin of v3, with just two small changes, please see
-> the changelog below.
-> 
-> Userspace might want to implement a policy to temporarily disregard input
-> from certain devices.
-> 
-> An example use case is a convertible laptop, whose keyboard can be folded
-> under the screen to create tablet-like experience. The user then must hold
-> the laptop in such a way that it is difficult to avoid pressing the keyboard
-> keys. It is therefore desirable to temporarily disregard input from the
-> keyboard, until it is folded back. This obviously is a policy which should
-> be kept out of the kernel, but the kernel must provide suitable means to
-> implement such a policy.
-> 
-> Due to interactions with suspend/resume, a helper has been added for drivers
-> to decide if the device is being used or not (PATCH 1/7) and it has been
-> applied to relevant drivers (PATCH 2,4,5,6/7).
-> 
-> PATCH 7/7 adds support for inhibiting input devices.
-> 
-> This work is inspired by:
-> 
-> https://chromium.googlesource.com/chromiumos/third_party/kernel/+/45c2d7bb398f74adfae0017e20b224152fde3822
-> 
-> and
-> 
-> https://chromium.googlesource.com/chromiumos/third_party/kernel/+/4ce0e8a3697edb8fd071110b3af65014512061c7
-> 
-> In this respin the elan_i2c patch is dropped and converting it will be
-> addressed later.
-> 
-> v3..v4:
-> - updated the comment in input_open_device() (Hans)
-> - used more straightforward locking pattern in adc/exynos (Michał)
-> 
-> v2..v3:
-> - ignored autorepeat events in input_get_disposition() if a key is not
-> pressed (Hans)
-> - dropped inhibit()/uninhibit() driver callbacks (Hans)
-> - split ACPI button patch into taking the lock and using the helper (Rafael)
-> - dropped the elan_i2c conversion
-> - fixed typos in exynos adc
-> 
-> v1..v2:
-> - added input_device_enabled() helper and used it in drivers (Dmitry)
-> - the fact of open() and close() being called in inhibit/uninhibit paths has
-> been emphasized in the commit message of PATCH 6/7 (Dmitry)
-> 
-> Andrzej Pietrasiewicz (6):
->    Input: add input_device_enabled()
->    Input: use input_device_enabled()
->    ACPI: button: Access input device's users under appropriate mutex
->    ACPI: button: Use input_device_enabled() helper
->    iio: adc: exynos: Use input_device_enabled()
->    platform/x86: thinkpad_acpi: Use input_device_enabled()
-> 
-> Patrik Fimml (1):
->    Input: Add "inhibited" property
+Yeah, this looks good.  Thanks, Jiri!
 
-The entire series looks good to me:
+And yes, Kalle, please apply it directly to w-d.  Thank you!
 
-Acked-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
+--
+Cheers,
+Luca.
 
