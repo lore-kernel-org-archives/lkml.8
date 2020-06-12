@@ -2,135 +2,159 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E92C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A183AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E2B720842
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:26:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="avRfAddo"
+	by mail.kernel.org (Postfix) with ESMTP id 889BF20853
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:30:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726417AbgFLA0u (ORCPT
+        id S1726387AbgFLAaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 20:26:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39162 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726285AbgFLA0t (ORCPT
+        Thu, 11 Jun 2020 20:30:08 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:19424 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726294AbgFLAaH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 20:26:49 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3856FC03E96F;
-        Thu, 11 Jun 2020 17:26:49 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id c14so7453326qka.11;
-        Thu, 11 Jun 2020 17:26:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=XihjhM7PNDe6DTRFb+Tb27kII0d9sFsX2YnNNfTFAB8=;
-        b=avRfAddoVxJIjKVncxYfHxppQQ7YN8qOh8YfKqE4FfoemEVefjMYlKjkqkOznaYqmZ
-         pyZzyLpXUOiiBUHGxpFH3AH5eylL8l+dhxkqKAdgeii/rtRqL0SLBJrrWQqNuYkwGBih
-         8wfe6q6YWxLZ1TrsRGWbaYzaBoUJ1pwgoFcSiy7QMspcAeqycVXGF3yBXeyvxlm0sGye
-         XTpS48XBPAUwRr7PRrKM7G9huEk8qq6w8HcPzFegv2ldPlN26HldKlW+PguCO516uTtI
-         F3BWZndIqcsZi8O3yO7U34vRbY9mGR1XPmWJSZ5H6un/mTY0GAA8SAFGbzE9UGyzaP+f
-         4gmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references;
-        bh=XihjhM7PNDe6DTRFb+Tb27kII0d9sFsX2YnNNfTFAB8=;
-        b=MgXUmTEMzBLRn+RK6q4xLJLC/BPvzvKRUGBfrMTfILR/urnOzQuFSS+RBNDiBWVB63
-         WzYTt1EDH9ZkEhBKZkEZxkkcvBbpGQaJ7J09X5xugVTVtJGXJvKP+wnLGhH7gQFuvXzF
-         ZbOho2oAS3rGrHW/zbYk3eRiKcmFUvJOFuycAcmcyM7JWlCRVAyvEYAxx656RQE1pKVp
-         1TzNUuiScAO7QJFGNdsmfNhdo9XlqnmgBn2CkOGkD5PGeYYPgdsD8+3hwbzf4a9iuheL
-         Mp5SrDvwjL6OjdcBFcaSLh5E2FAKIU1tJXJGFX/4IkUXVOt9gaMtIK6BFYo7cE+BOP92
-         qmQg==
-X-Gm-Message-State: AOAM531rnSQj8ago5NDdPlk5puvTlyIj58duWOKkNZgqDDUWrY1HrtQY
-        l/5rHSWXJDmmEwFBDtT1U3xrLxXlk5Gs5Q==
-X-Google-Smtp-Source: ABdhPJxDqnEbvb8lxMuzHTWY9tCTZCqUUTQzLRifCeRxqyhsYTRHsS2yVdhnOePkUXI6mVlOUo7sUA==
-X-Received: by 2002:ae9:f40b:: with SMTP id y11mr604223qkl.107.1591921608305;
-        Thu, 11 Jun 2020 17:26:48 -0700 (PDT)
-Received: from linux.home ([2604:2000:1344:41d:f00a:33d2:6ec2:475c])
-        by smtp.googlemail.com with ESMTPSA id g47sm3696421qtk.53.2020.06.11.17.26.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 17:26:47 -0700 (PDT)
-From:   Gaurav Singh <gaurav1086@gmail.com>
-To:     gaurav1086@gmail.com, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        KP Singh <kpsingh@chromium.org>,
-        netdev@vger.kernel.org (open list:XDP (eXpress Data Path)),
-        bpf@vger.kernel.org (open list:XDP (eXpress Data Path)),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] xdp_rxq_info_user: Replace malloc/memset w/calloc
-Date:   Thu, 11 Jun 2020 20:26:33 -0400
-Message-Id: <20200612002639.32173-1-gaurav1086@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200611150221.15665-1-gaurav1086@gmail.com>
-References: <20200611150221.15665-1-gaurav1086@gmail.com>
+        Thu, 11 Jun 2020 20:30:07 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05BMWr86077654;
+        Thu, 11 Jun 2020 20:30:01 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31ktm4eyv8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 11 Jun 2020 20:30:01 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05C0TDLd069624;
+        Thu, 11 Jun 2020 20:30:01 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31ktm4eyuh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 11 Jun 2020 20:30:01 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05C0FDhA019144;
+        Fri, 12 Jun 2020 00:29:59 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 31g2s82et8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 12 Jun 2020 00:29:58 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05C0Tugi63832342
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 12 Jun 2020 00:29:56 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C362E11C04A;
+        Fri, 12 Jun 2020 00:29:56 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A50F911C04C;
+        Fri, 12 Jun 2020 00:29:55 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.183.79])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 12 Jun 2020 00:29:55 +0000 (GMT)
+Message-ID: <1591921795.11061.12.camel@linux.ibm.com>
+Subject: Re: [PATCH] extend IMA boot_aggregate with kernel measurements
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Maurizio Drocco <maurizio.drocco@ibm.com>,
+        linux-integrity@vger.kernel.org
+Cc:     jejb@linux.ibm.com, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "open list:SECURITY SUBSYSTEM" 
+        <linux-security-module@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Date:   Thu, 11 Jun 2020 20:29:55 -0400
+In-Reply-To: <20200611195422.2117-1-maurizio.drocco@ibm.com>
+References: <20200611195422.2117-1-maurizio.drocco@ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-11_23:2020-06-11,2020-06-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
+ mlxlogscore=999 suspectscore=0 impostorscore=0 cotscore=-2147483648
+ mlxscore=0 malwarescore=0 bulkscore=0 clxscore=1015 priorityscore=1501
+ lowpriorityscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006110174
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace malloc/memset with calloc
+Hi Maurizo,
 
-Fixes: 0fca931a6f21 ("samples/bpf: program demonstrating access to xdp_rxq_info") Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
----
- samples/bpf/xdp_rxq_info_user.c | 13 +++----------
- 1 file changed, 3 insertions(+), 10 deletions(-)
+On Thu, 2020-06-11 at 15:54 -0400, Maurizio Drocco wrote:
+> IMA is not considering TPM registers 8-9 when calculating the boot
+> aggregate. When registers 8-9 are used to store measurements of the
+> kernel and its command line (e.g., grub2 bootloader with tpm module
+> enabled), IMA should include them in the boot aggregate.
+> 
+> Signed-off-by: Maurizio Drocco <maurizio.drocco@ibm.com>
 
-diff --git a/samples/bpf/xdp_rxq_info_user.c b/samples/bpf/xdp_rxq_info_user.c
-index 4fe47502ebed..caa4e7ffcfc7 100644
---- a/samples/bpf/xdp_rxq_info_user.c
-+++ b/samples/bpf/xdp_rxq_info_user.c
-@@ -198,11 +198,8 @@ static struct datarec *alloc_record_per_cpu(void)
- {
- 	unsigned int nr_cpus = bpf_num_possible_cpus();
- 	struct datarec *array;
--	size_t size;
- 
--	size = sizeof(struct datarec) * nr_cpus;
--	array = malloc(size);
--	memset(array, 0, size);
-+	array = calloc(nr_cpus, sizeof(struct datarec));
- 	if (!array) {
- 		fprintf(stderr, "Mem alloc error (nr_cpus:%u)\n", nr_cpus);
- 		exit(EXIT_FAIL_MEM);
-@@ -214,11 +211,8 @@ static struct record *alloc_record_per_rxq(void)
- {
- 	unsigned int nr_rxqs = bpf_map__def(rx_queue_index_map)->max_entries;
- 	struct record *array;
--	size_t size;
- 
--	size = sizeof(struct record) * nr_rxqs;
--	array = malloc(size);
--	memset(array, 0, size);
-+	array = calloc(nr_rxqs, sizeof(struct record));
- 	if (!array) {
- 		fprintf(stderr, "Mem alloc error (nr_rxqs:%u)\n", nr_rxqs);
- 		exit(EXIT_FAIL_MEM);
-@@ -232,8 +226,7 @@ static struct stats_record *alloc_stats_record(void)
- 	struct stats_record *rec;
- 	int i;
- 
--	rec = malloc(sizeof(*rec));
--	memset(rec, 0, sizeof(*rec));
-+	rec = calloc(1, sizeof(struct stats_record));
- 	if (!rec) {
- 		fprintf(stderr, "Mem alloc error\n");
- 		exit(EXIT_FAIL_MEM);
--- 
-2.17.1
+Looks good.  Just a minor comment below.  Could you be a bit more
+specific as to what is being measured into which PCR.  Perhaps include
+a reference to some doc or spec.
+
+In order to test, ima-evm-utils needs to be updated as well.  Could
+you post the corresponding evmctl change?  Please post the patch
+against the ima-evm-utils next-testing branch.
+
+> ---
+>  security/integrity/ima/ima.h        |  2 +-
+>  security/integrity/ima/ima_crypto.c | 11 ++++++++++-
+>  2 files changed, 11 insertions(+), 2 deletions(-)
+> 
+> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+> index df93ac258e01..9d94080bdad8 100644
+> --- a/security/integrity/ima/ima.h
+> +++ b/security/integrity/ima/ima.h
+> @@ -30,7 +30,7 @@
+>  
+>  enum ima_show_type { IMA_SHOW_BINARY, IMA_SHOW_BINARY_NO_FIELD_LEN,
+>  		     IMA_SHOW_BINARY_OLD_STRING_FMT, IMA_SHOW_ASCII };
+> -enum tpm_pcrs { TPM_PCR0 = 0, TPM_PCR8 = 8 };
+> +enum tpm_pcrs { TPM_PCR0 = 0, TPM_PCR8 = 8, TPM_PCR10 = 10 };
+>  
+>  /* digest size for IMA, fits SHA1 or MD5 */
+>  #define IMA_DIGEST_SIZE		SHA1_DIGEST_SIZE
+> diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
+> index 220b14920c37..6f0137bdaf61 100644
+> --- a/security/integrity/ima/ima_crypto.c
+> +++ b/security/integrity/ima/ima_crypto.c
+> @@ -809,7 +809,7 @@ static void ima_pcrread(u32 idx, struct tpm_digest *d)
+>  static int ima_calc_boot_aggregate_tfm(char *digest, u16 alg_id,
+>  				       struct crypto_shash *tfm)
+>  {
+> -	struct tpm_digest d = { .alg_id = alg_id, .digest = {0} };
+> +	struct tpm_digest d = { .alg_id = alg_id, .digest = {0} }, d0 = d;
+>  	int rc;
+>  	u32 i;
+>  	SHASH_DESC_ON_STACK(shash, tfm);
+> @@ -830,6 +830,15 @@ static int ima_calc_boot_aggregate_tfm(char *digest, u16 alg_id,
+>  		rc = crypto_shash_update(shash, d.digest,
+>  					 crypto_shash_digestsize(tfm));
+>  	}
+> +	/* extend cumulative sha1 over tpm registers 8-9 */
+> +	for (i = TPM_PCR8; i < TPM_PCR10; i++) {
+> +		ima_pcrread(i, &d);
+> +		/* if not zero, accumulate with current aggregate */
+> +		if (memcmp(d.digest, d0.digest,
+> +					crypto_shash_digestsize(tfm) != 0))
+
+The formatting here is a bit off.
+
+thanks,
+
+Mimi
+
+> +			rc = crypto_shash_update(shash, d.digest,
+> +					crypto_shash_digestsize(tfm));
+> +	}
+>  	if (!rc)
+>  		crypto_shash_final(shash, digest);
+>  	return rc;
 
