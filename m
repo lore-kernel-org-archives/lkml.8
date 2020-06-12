@@ -2,141 +2,171 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA06FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47CB0C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95C3320835
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25F7620835
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:09:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SM9Ay2c/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726349AbgFLAIL (ORCPT
+        id S1726416AbgFLAJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 20:08:11 -0400
-Received: from mga07.intel.com ([134.134.136.100]:43945 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726285AbgFLAIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 20:08:10 -0400
-IronPort-SDR: qjxm5hOmsZlLIm/0efie+PCu+6i/007anO7Cvb15Ct0OYi5PYsbNC+mMUex/agDbFN99/dLOeo
- xrMt/vVemDYg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 17:08:10 -0700
-IronPort-SDR: SChgA/m6icPmV5QRr9zntSHPzlPC2L09Himj6iC2lnq0FM0aKGzhTw+6cPOyKTNjjBU7r4XKup
- sGclRox0Mjtg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,501,1583222400"; 
-   d="scan'208";a="448119325"
-Received: from pl-dbox.sh.intel.com (HELO intel.com) ([10.239.159.39])
-  by orsmga005.jf.intel.com with ESMTP; 11 Jun 2020 17:08:06 -0700
-Date:   Fri, 12 Jun 2020 08:07:32 +0800
-From:   Philip Li <philip.li@intel.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        Jann Horn <jannh@google.com>, Christoph Hellwig <hch@lst.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Kirill Shutemov <kirill@shutemov.name>,
-        Jan Kara <jack@suse.cz>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-Subject: Re: [LKP] Re: [gup] 17839856fd: stress-ng.vm-splice.ops_per_sec
- 2158.6% improvement
-Message-ID: <20200612000732.GA23169@intel.com>
-References: <20200611040453.GK12456@shao2-debian>
- <CAHk-=whCjhBgJv0z6JoOKMyfnBp0WhH6oa=ayuRRLtgJxOkd5Q@mail.gmail.com>
+        Thu, 11 Jun 2020 20:09:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36470 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726285AbgFLAJR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 20:09:17 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C0C0C08C5C1;
+        Thu, 11 Jun 2020 17:09:16 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id y123so4376330vsb.6;
+        Thu, 11 Jun 2020 17:09:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dQ0wVuVD5mbnL9oat3E9xbZZtGvABVpYY6zoc/gC/as=;
+        b=SM9Ay2c/2xgFdaM32eJi+cNPWo3yB3m6cBPUuiHhkD3ji1sb4saRSL6ZbZzg4xzfzC
+         Ego6OC6WRzAMugcreC7TNtKgVF2EXQj5tjsLBlWwGNxQd3g+pQo1WSDsHq8gLQPslSb3
+         qYCUJmIec6mluqiRWzPf7jmgb+UcRBbbgiD+kkwOSmXamFlGeqv4rRicZwBjhtddJv8N
+         hxYqaMTbKHEVg/CCboYR7XW4a4Mnh8K11q8r45irojfEgdFCz0TStwMS5vbQsV1yQuJY
+         XpiGeICTU6PeKdq0oLyX0cd2FXsHe8XhKZDRY8wtP+TxgbhYLu4/yAGowrLOVRya4fhn
+         VDdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dQ0wVuVD5mbnL9oat3E9xbZZtGvABVpYY6zoc/gC/as=;
+        b=KxVcX1WSjbFHFxzJsNjm66+1Nd8fZIjUBOxWAqCjBfSZtvAr2lYizKv4e8yHS8Pn2B
+         CBfj8hpvuoQAnr64xhYDZYFPiiPjWczM+DXEq4iRYFxTMxWUFyulST957AqmE3Vu7O/o
+         QJ6J14ZTaDCLHmJFGFL+zYxuxlFN2ucjvQgk/UisurfWDFETR9WHIu/BZxin5adIqLdJ
+         ECbusvOyIaJl2Iwr0R5jcZLbWMIAf9C3STo7J0AN9edJGCNnUk6IwVjX85AbOU133g4l
+         IYRRp2et5mQ9mbxbUZanVsTDbukPslQMqHZdHUldjXomyAFV4awQLe1DadD1AQN2NFb9
+         3r9g==
+X-Gm-Message-State: AOAM5338trVPdixgOYMt+U9XtV2SoiQxdJBkqn04IAv/+1Pji2z1D+sg
+        WRDH9EU/fscAkwkgyrU39rEx9PZRJcUGybdCBU0Yn2zJ
+X-Google-Smtp-Source: ABdhPJxKR4zwGXMlhODAP+l4ncod5fB9+ttu3+isDcOuBHeikejSU3l6mGXzKvhEiYWPJ02PLPMfcY/lN2W1EhnbQIk=
+X-Received: by 2002:a67:f918:: with SMTP id t24mr8872355vsq.18.1591920554784;
+ Thu, 11 Jun 2020 17:09:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whCjhBgJv0z6JoOKMyfnBp0WhH6oa=ayuRRLtgJxOkd5Q@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200609104604.1594-7-stanimir.varbanov@linaro.org>
+ <20200609111414.GC780233@kroah.com> <dc85bf9e-e3a6-15a1-afaa-0add3e878573@linaro.org>
+ <20200610133717.GB1906670@kroah.com> <31e1aa72b41f9ff19094476033511442bb6ccda0.camel@perches.com>
+ <2fab7f999a6b5e5354b23d06aea31c5018b9ce18.camel@perches.com>
+ <20200611062648.GA2529349@kroah.com> <bc92ee5948c3e71b8f1de1930336bbe162d00b34.camel@perches.com>
+ <20200611105217.73xwkd2yczqotkyo@holly.lan> <ed7dd5b4-aace-7558-d012-fb16ce8c92d6@linaro.org>
+ <20200611121817.narzkqf5x7cvl6hp@holly.lan> <CAJfuBxzE=A0vzsjNai_jU_16R_P0haYA-FHnjZcaHOR_3fy__A@mail.gmail.com>
+In-Reply-To: <CAJfuBxzE=A0vzsjNai_jU_16R_P0haYA-FHnjZcaHOR_3fy__A@mail.gmail.com>
+From:   jim.cromie@gmail.com
+Date:   Thu, 11 Jun 2020 18:08:48 -0600
+Message-ID: <CAJfuBxyUfzM-Jmf_39YJHgfy0jLXdRjhdsNLuUacZbJA2unjcg@mail.gmail.com>
+Subject: Re: [PATCH v3 6/7] venus: Make debug infrastructure more flexible
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Joe Perches <joe@perches.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Documentation List <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-acpi@vger.kernel.org, netdev@vger.kernel.org,
+        Jason Baron <jbaron@akamai.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 01:24:09PM -0700, Linus Torvalds wrote:
-> On Wed, Jun 10, 2020 at 9:05 PM kernel test robot <rong.a.chen@intel.com> wrote:
-> >
-> > FYI, we noticed a 2158.6% improvement of stress-ng.vm-splice.ops_per_sec due to commit:
-> >
-> > commit: 17839856fd588f4ab6b789f482ed3ffd7c403e1f ("gup: document and work around "COW can break either way" issue")
-> 
-> Well, that is amusing, and seeing improvements is always nice, but
-> somehow I think the test is broken.
-> 
-> I can't see why you'd ever see an improvement from that commit, and if
-> you do see one, not one by a factor of 20x.
-got it, we will double check again, that we go through the data
-and it can be reproduced in our environment before sending out report.
+calling out some thinkos
 
-> 
-> > In addition to that, the commit also has significant impact on the following tests:
-> >
-> > | testcase: change | stress-ng: stress-ng.vm-splice.ops_per_sec 372.8% improvement        |
-> > | testcase: change | stress-ng: stress-ng.vm-splice.ops_per_sec 2052.7% improvement       |
-> 
-> Ok, so it's affecting other runs of the same test, and the smaller
-> ("only" 378%) improvement seems to be just from using fewer threads.
-> 
-> So maybe forcing the COW ends up avoiding some very specific cache
-> thrashing case.
-> 
-> > To reproduce:
-> >
-> >         git clone https://github.com/intel/lkp-tests.git
-> >         cd lkp-tests
-> >         bin/lkp install job.yaml  # job file is attached in this email
-> >         bin/lkp run     job.yaml
-> 
-> Is there some place where you'd actually _see_ what
-> "stress-ng.vm-splice.ops_per_sec" actually means and does?
-> 
-> Yeah, I can go and find the actual stress-ng git repo, and take a
-> look. I kind of did. But the step from your "to reproduce" to actually
-> figuring out what is going on is pretty big.
-> 
-> It would be nice to know what it actually does - do you have a
-> database of descriptions for the different tests and how to run them
-> individually or anything like that?
-Hi Linus, it is currently embedded in different scripts, like tests/stress-ng,
-but it now depends on up level script like lkp run to call them to pass the
-parameters from job.yaml. It can provide some basic information. Meanwhile
-we try to generate a reproduce script for test running, I add more info
-in below reply, kindly check.
+On Thu, Jun 11, 2020 at 3:19 PM <jim.cromie@gmail.com> wrote:
+>
+> heres what I have in mind.  whats described here is working.
+> I'll send it out soon
+>
+> commit 20298ec88cc2ed64269c8be7b287a24e60a5347e
+> Author: Jim Cromie <jim.cromie@gmail.com>
+> Date:   Wed Jun 10 12:55:08 2020 -0600
+>
+>     dyndbg: WIP towards module->debugflags based callsite controls
+>
+>     There are *lots* of ad-hoc debug printing solutions in kernel,
+>     this is a 1st attempt at providing a common mechanism for many of them.
+>
+>     Basically, there are 2 styles of debug printing:
+>     - levels, with increasing verbosity, 1-10 forex
+>     - bits/flags, independently controlling separate groups of dprints
+>
+>     This patch does bits/flags (with no distinction made yet between 2)
+>
+>     API:
+>
+>     - change pr_debug(...)  -->  pr_debug_typed(type_id=0, ...)
 
-> 
-> IOW, rather than the above "just run all fo the lkp scripts",
-> something like how to run the actual individual test would be good.
-> 
-> IOW how do those yaml files translate into _actually_ running the
-> 'stress-ng' program?
-Thanks Linus for your feedback, we will improve this to provide
-more clear reproduce information.
+pr_debug, pr_debug_n now in printk.h
 
-In the attachment, there's a reproduce script with content like below,
-which is another way to directly run the stress-ng. This helps to show
-which parameters we are using when having this report. Would you mind to
-have a look?
+_?_?dynamic_.+_cl  adaptations in dynamic_debug.h
 
-for cpu_dir in /sys/devices/system/cpu/cpu[0-9]*
-do
-	online_file="$cpu_dir"/online
-	[ -f "$online_file" ] && [ "$(cat "$online_file")" -eq 0 ] && continue
+>     - all existing uses have type_id=0
+>     - developer creates exclusive types of log messages with type_id>0
+>       1, 2, 3 are disjoint groups, for example: hi, mid, low
+>
+>     - !!type_id is just an additional callsite selection criterion
+>
+>       Qfoo() { echo module foo $* >/proc/dynamic_debug/control }
+>       Qfoo +p               # all groups, including default 0
+>       Qfoo mflags 1 +p      # only group 1
+>       Qfoo mflags 12 +p     # TBD[1]: groups 1 or 2
+>       Qfoo mflags 0 +p      # ignored atm TBD[2]
+>       Qfoo mflags af +p     # TBD[3]: groups a or f (10 or 15)
+>
+>     so patch does:
+>
+>     - add u32 debugflags to struct module. Each bit is a separate print-class.
 
-	file="$cpu_dir"/cpufreq/scaling_governor
-	[ -f "$file" ] && echo "performance" > "$file"
-done
+this is feeling wrong now.
+setting these bits would have to trigger an update via ddebug_exec_query
+kinda like setting a bit would trigger
+       echo module $foo mflags $bitpos +p > control
 
- "stress-ng" "--timeout" "30" "--times" "--verify" "--metrics-brief" "--sequential" "96" "--class" "pipe" "--exclude" "spawn,exec,swap"
+its possible, but not 1st, or 2nd perhaps.
+In general Im quite leery of rigging up some callback to do it.
 
-Thanks
+its prudent to effect all debug changes via >control
 
-> 
->                 Linus
-> _______________________________________________
-> LKP mailing list -- lkp@lists.01.org
-> To unsubscribe send an email to lkp-leave@lists.01.org
+>     - in ddebug_change()
+>       filter on !! module->debugflags,
+>       IFF query->module is given, and matches dt->mod_name
+>       and query->mflags is given, and bitmatches module->debugflags
+
+wrong, ddebug_change cannot respond to changes of debugflags,
+most it could do is consult it on queries
+
+
+>     - in parse_query()
+>       accept new query term: mflags $arg
+>       populate query->mflags
+>       arg-type needs some attention, but basic plumbing is there
+>
+>     WIP: not included:
+>
+>     - pr_debug_typed( bitpos=0, ....)'
+
+now done, as pr_debug_n, pr_debug in printk.h
+
+Ive adapted the macros with a "_cl(cl, " insertion,
+
+also added trailing prcls to control output
+
+>
+>     - no way to exersize new code in ddebug_change
+>       need pr_debug_typed() to make a (not-null) typed callsite.
+>       also no way to set module->debugflags
+
+close enough to see the thinkos
