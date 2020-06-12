@@ -2,134 +2,70 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E6AC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA5F7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D512208B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:03:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EAE4207ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:03:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbgFLHC7 convert rfc822-to-8bit (ORCPT
+        id S1726514AbgFLHDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 03:02:59 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:47283 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726287AbgFLHC7 (ORCPT
+        Fri, 12 Jun 2020 03:03:16 -0400
+Received: from m17617.mail.qiye.163.com ([59.111.176.17]:37494 "EHLO
+        m17617.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbgFLHDP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 03:02:59 -0400
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id EE08910000A;
-        Fri, 12 Jun 2020 07:02:53 +0000 (UTC)
-Date:   Fri, 12 Jun 2020 09:02:52 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6?= Rojas <noltari@gmail.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>, tsbogend@alpha.franken.de,
-        bcm-kernel-feedback-list@broadcom.com, richard@nod.at,
-        vigneshr@ti.com, Jonas Gorski <jonas.gorski@gmail.com>,
-        linus.walleij@linaro.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org
-Subject: Re: [PATCH v2] mtd: parsers: bcm63xx: simplify CFE detection
-Message-ID: <20200612090252.02581c21@xps13>
-In-Reply-To: <7DC0E349-1319-47FE-8565-9B30C190EACB@gmail.com>
-References: <20200608094053.3381512-1-noltari@gmail.com>
-        <20200608160649.3717152-1-noltari@gmail.com>
-        <20200611095540.250184d2@xps13>
-        <779D37C7-58CB-49AF-8739-C34295B86FC4@gmail.com>
-        <715b0947-f4dd-0c04-5c52-5da06c04d665@gmail.com>
-        <7DC0E349-1319-47FE-8565-9B30C190EACB@gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+        Fri, 12 Jun 2020 03:03:15 -0400
+X-Greylist: delayed 417 seconds by postgrey-1.27 at vger.kernel.org; Fri, 12 Jun 2020 03:03:14 EDT
+Received: from vivo-HP-ProDesk-680-G4-PCI-MT.vivo.xyz (unknown [58.251.74.227])
+        by m17617.mail.qiye.163.com (Hmail) with ESMTPA id 6DFCF261796;
+        Fri, 12 Jun 2020 15:03:11 +0800 (CST)
+From:   Wang Qing <wangqing@vivo.com>
+To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Wang Qing <wangqing@vivo.com>
+Subject: [PATCH] drivers\watchdog: Use kobj_to_dev() API
+Date:   Fri, 12 Jun 2020 15:03:04 +0800
+Message-Id: <1591945384-14587-1-git-send-email-wangqing@vivo.com>
+X-Mailer: git-send-email 2.7.4
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgYFAkeWUFZS1VLWVdZKFlBSE83V1ktWUFJV1kPCR
+        oVCBIfWUFZGR9OTElDT0gZTkkYVkpOQkpCT05IQkpMSk1VEwETFhoSFyQUDg9ZV1kWGg8SFR0UWU
+        FZT0tIVUpKS0hKQ1VKS0tZBg++
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PCI6Exw5ETg2SgsCVjENSlES
+        SiwaFCNVSlVKTkJKQk9OSEJJSktJVTMWGhIXVQwaFRwKEhUcOw0SDRRVGBQWRVlXWRILWUFZTkNV
+        SU5KVUxPVUlJTFlXWQgBWUFKTkxDNwY+
+X-HM-Tid: 0a72a756ee0a9375kuws6dfcf261796
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Álvaro,
+Use kobj_to_dev() API instead of container_of().
 
-Álvaro Fernández Rojas <noltari@gmail.com> wrote on Thu, 11 Jun 2020
-18:14:20 +0200:
+Signed-off-by: Wang Qing <wangqing@vivo.com>
+---
+ drivers/watchdog/watchdog_dev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+ mode change 100644 => 100755 drivers/watchdog/watchdog_dev.c
 
-> Hi Florian,
-> 
-> > El 11 jun 2020, a las 17:42, Florian Fainelli <f.fainelli@gmail.com> escribió:
-> > 
-> > 
-> > 
-> > On 6/11/2020 8:16 AM, Álvaro Fernández Rojas wrote:  
-> >> Hi Miquel,
-> >>   
-> >>> El 11 jun 2020, a las 9:55, Miquel Raynal <miquel.raynal@bootlin.com> escribió:
-> >>> 
-> >>> Hi Álvaro,
-> >>> 
-> >>> Álvaro Fernández Rojas <noltari@gmail.com> wrote on Mon,  8 Jun 2020
-> >>> 18:06:49 +0200:
-> >>>   
-> >>>> Instead of trying to parse CFE version string, which is customized by some
-> >>>> vendors, let's just check that "CFE1" was passed on argument 3.
-> >>>> 
-> >>>> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-> >>>> Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
-> >>>> ---
-> >>>> v2: use CFE_EPTSEAL definition and avoid using an additional funtion.
-> >>>> 
-> >>>> drivers/mtd/parsers/bcm63xxpart.c | 29 ++++-------------------------
-> >>>> 1 file changed, 4 insertions(+), 25 deletions(-)
-> >>>> 
-> >>>> diff --git a/drivers/mtd/parsers/bcm63xxpart.c b/drivers/mtd/parsers/bcm63xxpart.c
-> >>>> index 78f90c6c18fd..493a75b2f266 100644
-> >>>> --- a/drivers/mtd/parsers/bcm63xxpart.c
-> >>>> +++ b/drivers/mtd/parsers/bcm63xxpart.c
-> >>>> @@ -22,6 +22,9 @@
-> >>>> #include <linux/mtd/partitions.h>
-> >>>> #include <linux/of.h>
-> >>>> 
-> >>>> +#include <asm/bootinfo.h>
-> >>>> +#include <asm/fw/cfe/cfe_api.h>  
-> >>> 
-> >>> Are you sure both includes are needed?  
-> >> 
-> >> asm/bootinfo.h is needed for fw_arg3 and asm/fw/cfe/cfe_api.h is needed for CFE_EPTSEAL.
-> >>   
-> >>> 
-> >>> I don't think it is a good habit to include asm/ headers, are you sure
-> >>> there is not another header doing it just fine?  
-> >> 
-> >> Both are needed unless you want to add another definition of CFE_EPTSEAL value.
-> >> There are currently two CFE magic definitions, the one in asm/fw/cfe/cfe_api.h and another one in bcm47xxpart.c:
-> >> https://github.com/torvalds/linux/blob/master/arch/mips/include/asm/fw/cfe/cfe_api.h#L28
-> >> https://github.com/torvalds/linux/blob/master/drivers/mtd/parsers/bcm47xxpart.c#L33  
-> > 
-> > The caveat with that approach is that this reduces the compilation
-> > surface to MIPS and BMIPS_GENERIC and BCM63XX only, which is a bit
-> > small. If we could move the CFE definitions to a shared header, and
-> > consolidate the value used by bcm47xxpart.c as well, that would allow us
-> > to build the bcm63xxpart.c file with COMPILE_TEST on other
-> > architectures. This does not really have functional value, but for
-> > maintainers like Miquel, it allows them to quickly test their entire
-> > drivers/mtd/ directory.  
-> 
-> I don’t think fw_arg3 available on non mips archs, is it?
-> I’m happy to move it to a shared header (which would be a good location for this?), but if I’m right it would still be restricted to MIPS.
+diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
+index 7e4cd34..9da2360
+--- a/drivers/watchdog/watchdog_dev.c
++++ b/drivers/watchdog/watchdog_dev.c
+@@ -587,7 +587,7 @@ static DEVICE_ATTR_RW(pretimeout_governor);
+ static umode_t wdt_is_visible(struct kobject *kobj, struct attribute *attr,
+ 				int n)
+ {
+-	struct device *dev = container_of(kobj, struct device, kobj);
++	struct device *dev = kobj_to_dev(kobj);
+ 	struct watchdog_device *wdd = dev_get_drvdata(dev);
+ 	umode_t mode = attr->mode;
+ 
+-- 
+2.7.4
 
-Restricting a definition to MIPS, even if it makes sense for you is
-very limiting for me. I need to be able to build as much drivers as I
-can from my laptop and verify they at least compile correctly. If I need
-a MIPS toolchain, an ARC toolchain, a PowerPC, an ARM, an ARM64 and
-whatever other funky toolchain to do just that in X steps: it's very
-painful. We have been adding COMPILE_TEST dependencies on as much
-drivers as we could and we want to continue moving forward. Using such
-include would need to drop the COMPILE_TEST condition from Kconfig and
-this is not something I am willing to do.
-
-Thanks for your understanding :)
-Miquèl
