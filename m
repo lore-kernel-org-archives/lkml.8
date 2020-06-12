@@ -2,96 +2,100 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F85C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65AE0C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 512DE20801
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:01:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31DA720801
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:05:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591952728;
+	bh=g+DVVhzwFZZP3ZF6+Ys3Gfc1NPeDfFWz7ksYnNkVqcM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jf8t3iSXutdYrpHJXXSuPCiLpYmGwnRm4ngiUbS9hk5WXeYXVEF5Py6HAh80cH/Hz
+	 VxJ/82P0ENVRJvZb8qbpWISXh8H7Bsiz6SNCggndgDjmW6uiN4SfubmtdLIYlASewf
+	 aygb9nGIU98oSDKTmxkvw2C9K56QWIMTDC6UnXK8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726398AbgFLJBZ (ORCPT
+        id S1726397AbgFLJF0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 05:01:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33514 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726319AbgFLJBZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 05:01:25 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8C61C08C5C1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 02:01:24 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jjfYc-0000VY-SN; Fri, 12 Jun 2020 11:01:02 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id DD984100F5A; Fri, 12 Jun 2020 11:01:01 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Lutomirski <luto@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        X86 ML <x86@kernel.org>, cj.chengjian@huawei.com,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michel Lespinasse <walken@google.com>,
-        lkft-triage@lists.linaro.org,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: Perf: WARNING: arch/x86/entry/common.c:624 idtentry_exit_cond_rcu+0x92/0xc0
-In-Reply-To: <CALCETrVQxFq2b5ydSk-w4W-7+6OMro0jyHQqtFoM2Tvn_=aLSQ@mail.gmail.com>
-References: <CA+G9fYvF3cyrY+-iw_SZtpN-i2qA2BruHg4M=QYECU2-dNdsMw@mail.gmail.com> <CALCETrXqhwJzhsAoM72tskso5aDELgfGLnHdGYHiAFmgCPforQ@mail.gmail.com> <20200611192518.GA2483@worktop.programming.kicks-ass.net> <CALCETrXq2sVuT39+oB2CskQBP3nNk4ogx+cwv-Jc3vE-uZazYg@mail.gmail.com> <CALCETrVQxFq2b5ydSk-w4W-7+6OMro0jyHQqtFoM2Tvn_=aLSQ@mail.gmail.com>
-Date:   Fri, 12 Jun 2020 11:01:01 +0200
-Message-ID: <87imfwd5f6.fsf@nanos.tec.linutronix.de>
+        Fri, 12 Jun 2020 05:05:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48050 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726319AbgFLJF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 05:05:26 -0400
+Received: from localhost (p54b33104.dip0.t-ipconnect.de [84.179.49.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFBEF204EC;
+        Fri, 12 Jun 2020 09:05:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591952725;
+        bh=g+DVVhzwFZZP3ZF6+Ys3Gfc1NPeDfFWz7ksYnNkVqcM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lZBomTF/+JzcIRFMC0KDevuLux+uzv9UCX/MeSRsOpxkw3P5wfPuVc2sNezMgoA39
+         M5N2uVcW7V5PIKI/dy6oPaqYR5EQpeArj+QLI96Vmj3Y+pIzBRbnlbrnZji5yLweNM
+         Li2OJtGqgZEBvpQERXA6A4Fq4yiVuHfSW/Q4v02k=
+Date:   Fri, 12 Jun 2020 11:05:17 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Oleksij Rempel <linux@rempel-privat.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Gao Pan <b54642@freescale.com>,
+        Fugang Duan <B38611@freescale.com>, linux-i2c@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] i2c: imx: Fix external abort on early interrupt
+Message-ID: <20200612090517.GA3030@ninjato>
+References: <1591796802-23504-1-git-send-email-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="fUYQa+Pmc3FrFX/N"
+Content-Disposition: inline
+In-Reply-To: <1591796802-23504-1-git-send-email-krzk@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy Lutomirski <luto@kernel.org> writes:
-> On Thu, Jun 11, 2020 at 4:22 PM Andy Lutomirski <luto@kernel.org> wrote:
->
-> Two bugs here.
->
-> 1. We had an issue with WARN. Patch sent.
 
-Grabbed it
+--fUYQa+Pmc3FrFX/N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> 2. idtentry.h has, for x86_32:
->
-> # define DEFINE_IDTENTRY_IST  DEFINE_IDTENTRY
->
-> This is nonsense.  It's getting late over here and I'd rather focus on
-> the more interesting RCU issue, so that's all from me today.
+On Wed, Jun 10, 2020 at 03:46:42PM +0200, Krzysztof Kozlowski wrote:
+> If interrupt comes early (could be triggered with CONFIG_DEBUG_SHIRQ),
 
-Well, this might be nonsense, but it's exactly matching the current code
-in mainline which, e.g. for #DB does:
+That code is disabled since 2011 (6d83f94db95c ("genirq: Disable the
+SHIRQ_DEBUG call in request_threaded_irq for now"))? So, you had this
+without fake injection, I assume?
 
-SYM_CODE_START(debug)
-	/*
-	 * Entry from sysenter is now handled in common_exception
-	 */
-	ASM_CLAC
-	pushl	$0
-	pushl	$do_debug
-	jmp	common_exception
-SYM_CODE_END(debug)
 
-There is no IST on 32bit, never was. We do software stack switching for
-device interrupts, but that's a different story.
+--fUYQa+Pmc3FrFX/N
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks,
+-----BEGIN PGP SIGNATURE-----
 
-        tglx
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7jRUkACgkQFA3kzBSg
+KbZdkQ/+IZPMlXrFfdz5kWsASmwsLZaJa7dd9xv/IayrAehh/ERAm+m4BbpOUOI8
+IuCPYKhvaiaBMek0qNpVXffcGHJwpRPbBuQNEk7FKR75YQtm8KbwZICDMzG0J9b9
+n7D7/ZTEytKy24fYLQR0cZSc5xxqlsKtC9Hy0CPStkUtqojl/JK4M1DM4IzP0KG0
+VXQmewDvW4ZIEC4FDFO4boEwo6YT5fgl0qmwmbyLRKwTozizjbbLKlXBUKtBB0op
+2RtikZ5Go/BOkeIo5hHhMF5zY6W8fVDVHFQx0Ieq32rxxhTzS/JGy6oiUW4OOPCJ
+9P7pFzjMOVav0owX6wk/bANz+4epMut/lB64Lv0T0Q2VDdfXzVq6ROJasZIdpSTF
+jktWK1hPJUJ3MEOw/5BddvFiZ/RliEOCcD4fjYT6FohTC76DdUv2/oOUYEjLxaO4
+AJlqGM/7RiEtSKD1GFkfPv/b9Tz64yl8MmnKhLvK49c2VVeVcvU6V4E2NmMjpdg8
+qNVc+MZBzJKPCd5YaRBMLD8/bnaI3c94UvjFAYX2kL2n3cud9+qhTFNS+LXh4/z4
+bt2E55+LUNiyt4vPv8anFZn/JGnf89SE8ftrFPYxltmfEQHg8XDg1jeS3NiofhO1
+2OkgvR3UcYR+O/4nSlU97W40qyYijEdZigq20Cmn4Fa6ospa92Y=
+=OepP
+-----END PGP SIGNATURE-----
+
+--fUYQa+Pmc3FrFX/N--
