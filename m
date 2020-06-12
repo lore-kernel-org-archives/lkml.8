@@ -2,109 +2,145 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,PLING_QUERY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20368C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 22:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCDB9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 23:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF5962078E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 22:58:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EbllFoiE"
+	by mail.kernel.org (Postfix) with ESMTP id ACF91206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 23:08:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726367AbgFLW6R (ORCPT
+        id S1726340AbgFLXFz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 18:58:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49736 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgFLW6Q (ORCPT
+        Fri, 12 Jun 2020 19:05:55 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:58802 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbgFLXFz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 18:58:16 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CF78C03E96F;
-        Fri, 12 Jun 2020 15:58:15 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id x207so4995551pfc.5;
-        Fri, 12 Jun 2020 15:58:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:message-id:in-reply-to:references:subject
-         :mime-version:content-transfer-encoding;
-        bh=WF0yayqOy4vitr2gfwwxeEUgwqbRugYbv4Z4Yh4JOl4=;
-        b=EbllFoiElAHgOlHuOBsYnZw3EV7nEKET3GVw8VLabZnhR2G5qwcm0KpbXCS434NAa+
-         prl7pJAzOJYbKBfeY5NHA4NGBO7fRO6meV9DbBaN5L059YmK8OvR0DlWNvob/0F3uJrz
-         APW0jeuNj1Dq4kjUj67nX37v6b5fvtNNxxk7QaXVksRLTC6b3KCQZn4VvIiUe7o2oWe9
-         GkYaMJMu/iyET+WA+/95mWHdbrAREXX56i3M0hQB9mbL7EiRhLcKAhMI+/UnFb1aNZsO
-         EYr+z7PPwsfmu3ei8mwfam4SaB/eRDevBVPQtoDiv8JAuomvFvFof5u4OJHK8Qb1tgWa
-         KxTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
-         :references:subject:mime-version:content-transfer-encoding;
-        bh=WF0yayqOy4vitr2gfwwxeEUgwqbRugYbv4Z4Yh4JOl4=;
-        b=F6gFlu6oVa4hFSxS228BsHYqSp75IlSbXL3xO2IzKDkyE0f2sXg99LqkM//jJeah+D
-         mAU0kWIU5b/BkjPpcHo6YTqINE9ESB4OTrevVxLVPvCxx12HN9Cc+AZBekbbFT4G+vVa
-         vNHwO+XI/U5+2mLFb0rQxJV5AqwRjn7HqzntvrE/uxk74ZAsVk86TYw//cyXAhzh3Pig
-         +pVfYtMSVYVPAK//kN3aRNy3ng9+/G2YvkThVfQRoaymD918F/lg5TP34VyjiaqsPSOx
-         WYslREfaw6CM/LLCE7WYBOzjxb/z5/U822VD5YaQe4JYfLw2156Ve5NHmmOu8r7U6vpI
-         G9YQ==
-X-Gm-Message-State: AOAM532FtXLbvlq69VG2Hl9XWC28gydvw3hB66Wg+HnJIXgMScaJBW+0
-        aoYowjB8d78GE2W8b06VUSE=
-X-Google-Smtp-Source: ABdhPJx68gvq0ln2m7dj26qlbfcCUwPTiaCl9rQkZuvCNbCfnHJTdrkvJwpSGUzpaBRklRpCfYuAgQ==
-X-Received: by 2002:a62:3381:: with SMTP id z123mr14095536pfz.274.1592002695001;
-        Fri, 12 Jun 2020 15:58:15 -0700 (PDT)
-Received: from localhost ([184.63.162.180])
-        by smtp.gmail.com with ESMTPSA id y5sm6092183pgl.85.2020.06.12.15.58.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 15:58:13 -0700 (PDT)
-Date:   Fri, 12 Jun 2020 15:58:06 -0700
-From:   John Fastabend <john.fastabend@gmail.com>
-To:     Jesper Dangaard Brouer <brouer@redhat.com>,
-        Gaurav Singh <gaurav1086@gmail.com>
-Cc:     brouer@redhat.com, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        KP Singh <kpsingh@chromium.org>,
-        "(open list:XDP \\(eXpress Data Path\\))" <netdev@vger.kernel.org>,
-        bpf@vger.kernel.org (open list:XDP \(eXpress Data Path\)),
-        "(open list:XDP \\(eXpress Data Path\\) open list)" 
-        <linux-kernel@vger.kernel.org>
-Message-ID: <5ee4087e2b5a_489d2af902f845b4b7@john-XPS-13-9370.notmuch>
-In-Reply-To: <20200612222031.515d5338@carbon>
-References: <20200611150221.15665-1-gaurav1086@gmail.com>
- <20200612185328.4671-1-gaurav1086@gmail.com>
- <20200612222031.515d5338@carbon>
-Subject: Re: [PATCH] xdp_rxq_info_user: Fix null pointer dereference. Replace
- malloc/memset with calloc.
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+        Fri, 12 Jun 2020 19:05:55 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id DCF521C0C0A; Sat, 13 Jun 2020 01:05:53 +0200 (CEST)
+Date:   Sat, 13 Jun 2020 01:05:52 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@osdl.org>, mhocko@suse.cz,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: Re: 5.7-rc0: kswapd eats cpu during a disk test?!
+Message-ID: <20200612230552.GA3593@amd>
+References: <20200531103431.GA28429@amd>
+ <e3afe444-4541-b420-0888-575cae8aa46d@suse.cz>
+ <20200612224532.GA24103@amd>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="J2SCkAp4GZ/dPZZf"
+Content-Disposition: inline
+In-Reply-To: <20200612224532.GA24103@amd>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jesper Dangaard Brouer wrote:
-> On Fri, 12 Jun 2020 14:53:27 -0400
-> Gaurav Singh <gaurav1086@gmail.com> wrote:
-> 
-> > Memset on the pointer right after malloc can cause a
-> > null pointer deference if it failed to allocate memory.
-> > A simple fix is to replace malloc/memset with a calloc()
-> > 
-> > Fixes: 0fca931a6f21 ("samples/bpf: program demonstrating access to xdp_rxq_info")
-> > Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
-> 
-> Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
-> 
 
-Acked-by: John Fastabend <john.fastabend@gmail.com>
+--J2SCkAp4GZ/dPZZf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> > +CC linux-mm
+> >=20
+> > On 5/31/20 12:34 PM, Pavel Machek wrote:
+> > > Hi!
+> > >=20
+> > > This is simple cat /dev/sda > /dev/zero... on thinkpad x60 (x86-32),
+> > > with spinning rust.
+> > >=20
+> > >   PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+  =
+COMMAND
+> > >    1000 root      20   0       0      0      0 R  53.3  0.0  57:34.93=
+  kswapd0
+> > >   27897 root      20   0    6976    580    536 R  44.5  0.0   1:44.53=
+  cat
+> > >=20
+> > > It keeps both CPUs busy... and I don't think that's right.
+> >=20
+> > Does an older kernel behave differently here?
+>=20
+> Let me try on x220 (x86-64, first):
+>=20
+>   737 root      20   0    5404    744    680 R  31.2   0.0   0:09.98 cat =
+      =20
+>  1024 root      20   0       0      0      0 S  21.4   0.0 165:22.68 kswa=
+pd0   =20
+>=20
+> That was with ssd, result with spinning rust is similar:
+>=20
+>   859 root      20   0    5404    740    672 D  21.1   0.0   0:03.33 cat =
+      =20
+>  1024 root      20   0       0      0      0 R  11.8   0.0 165:33.07 kswa=
+pd0   =20
+>=20
+> 5.7-rc1+ kernel.
+>=20
+> Performance of spinning rust is down, too, on x60:
+>=20
+> pavel@amd:~/misc/hw/hdd1t$ sudo ddrescue --force /dev/sda1 /dev/null
+> GNU ddrescue 1.19
+> Press Ctrl-C to interrupt
+> rescued:     2147 MB,  errsize:       0 B,  current rate:    3080 kB/s
+>    ipos:     2147 MB,   errors:       0,    average rate:    5382 kB/s
+>       opos:     2147 MB, run time:    6.65 m,  successful read:
+>       0 s ago
+>       Finished
+> pavel@amd:~/misc/hw/hdd1t$ uname -a
+> Linux amd 5.7.0-next-20200611+ #123 SMP PREEMPT Thu Jun 11
+>  15:41:22 CEST 2020 i686 GNU/Linux
+>=20
+> And there's something clearly wrong here:
+>=20
+>   966 root      20   0       0      0      0 R  94.4  0.0   8:18.82   ksw=
+apd0
+>   23933 root      20   0    4612   1112   1028 D  80.6  0.0   0:26.40   d=
+drescue
+>  =20
+
+Same x60 under older kernel:
+
+pavel@amd:/data/fast/pavel$ sudo ddrescue --force /dev/sda4 /dev/null
+GNU ddrescue 1.19
+Press Ctrl-C to interrupt
+rescued:     6593 MB,  errsize:       0 B,  current rate:   60424 kB/s
+   ipos:     6593 MB,   errors:       0,    average rate:   95563 kB/s
+
+ 3539 root      20   0    4616   1136   1048 D  21.4  0.0   0:15.63 ddrescue
+   865 root      20   0       0      0      0 S   6.9  0.0   0:04.91  kswap=
+d0
+
+Linux amd 4.6.0+ #172 SMP Sun Aug 14 11:25:34 CEST 2016 i686 GNU/Linux
+
+These are more reasonable numbers.
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--J2SCkAp4GZ/dPZZf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl7kClAACgkQMOfwapXb+vL9CwCfYbc2+YM+k2PuNUEa5voPfTrS
+LIAAn1vwrCTCwORMMFy3I7mp2ALQxe3r
+=7s82
+-----END PGP SIGNATURE-----
+
+--J2SCkAp4GZ/dPZZf--
