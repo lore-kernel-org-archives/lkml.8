@@ -2,166 +2,117 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB4FAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F78C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 944FC20792
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:14:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591935242;
-	bh=iJITbY+DEttlSxTaUcGFjT9hSo+Icka2a08PNQZ0i+Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XXu76y3inDg7R2LL0aVKUf13Vc5rgoypj/Ah09FLqcTczQ3xr+GpyWOL4mzlwmhJ1
-	 nfRJLhdVMT3qiiVxfciO+Rgb0ZzJWPC1YzMzt+Xiljm5USgRh8AxbHk48xxNsoNCKZ
-	 ZeKpG7JfYLdYC39h2+v1rlYrzuXF+/86wuu9YBBU=
+	by mail.kernel.org (Postfix) with ESMTP id DA69020792
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:15:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="gTF6Iot9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbgFLEOB (ORCPT
+        id S1726441AbgFLEPv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 00:14:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51520 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725809AbgFLEOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 00:14:00 -0400
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+        Fri, 12 Jun 2020 00:15:51 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:22507 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726385AbgFLEPu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 00:15:50 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591935350; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=qOBjRzQMndVJEIv6uF7Wx6Dgh2zeX7Iww1fuxfR2S3I=; b=gTF6Iot98ozGAOt+ki+wfJ7NvTYPwLqOIXmE4saoDEBncNoPweAOLcg0r0TuG50aTETKX0qs
+ 9MxDdQgQBWflLa59sq2rpM/dWXWQYsCc9hiUXoFamb357ahVkEivIJWI+Y2M7qUKP9ozz8O6
+ T7UJtUxkjLdQAU+ShDfHj65i6go=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n08.prod.us-west-2.postgun.com with SMTP id
+ 5ee301595866879c7691efbd (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 12 Jun 2020 04:15:21
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8B986C43395; Fri, 12 Jun 2020 04:15:21 +0000 (UTC)
+Received: from [10.110.17.171] (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A89A2078C
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 04:13:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591935239;
-        bh=iJITbY+DEttlSxTaUcGFjT9hSo+Icka2a08PNQZ0i+Q=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Ch24rLAkQWnDW5bQJn04Yt2LiCiJBRyv4LN+M3ocxKjM/0JHdvnzxKWd2XJAyfW+Q
-         QxT2EFDbyGRpIbAJs96v9wehB1TGdvdBVIlLb5uxAi5c2uezkVe6c7uEmjF7ixY+3Z
-         /llFm7A8TZWBEGlcu8V5TxQQz2qQ+KkDPlRdaWDg=
-Received: by mail-wr1-f46.google.com with SMTP id x6so8251823wrm.13
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 21:13:59 -0700 (PDT)
-X-Gm-Message-State: AOAM530+WiLpUyh6J45yRzYGtL6WsmaASD2WPt0HhH5wI755noYp+G2Z
-        L+ejaIUjxbY+W2NtMycPwdfgQCp79MaOfScKZRMOYw==
-X-Google-Smtp-Source: ABdhPJwGREheVp5xuWljvoGvBoJvs3IF9fw8nAejDtSxXaHVEH/6yQ4oasGQhUfxz7i2GVTI1XS7CtIE/7jl0eQUAhU=
-X-Received: by 2002:adf:e387:: with SMTP id e7mr12559642wrm.70.1591935237960;
- Thu, 11 Jun 2020 21:13:57 -0700 (PDT)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3145FC433CB;
+        Fri, 12 Jun 2020 04:15:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3145FC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+Subject: Re: [PATCH 1/3] usb: typec: Add QCOM PMIC typec detection driver
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        heikki.krogerus@linux.intel.com, gregkh@linuxfoundation.org,
+        mark.rutland@arm.com, robh+dt@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
+        jackp@codeaurora.org, bryan.odonoghue@linaro.org
+References: <20200609205851.30113-1-wcheng@codeaurora.org>
+ <20200609205851.30113-2-wcheng@codeaurora.org>
+ <ccfc3e7c-d1ce-27bd-b24c-df5fbc468449@infradead.org>
+From:   Wesley Cheng <wcheng@codeaurora.org>
+Message-ID: <47651298-f94c-c487-d346-41abfb8a80a7@codeaurora.org>
+Date:   Thu, 11 Jun 2020 21:15:19 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <f8fe40e0088749734b4435b554f73eee53dcf7a8.1591932307.git.luto@kernel.org>
-In-Reply-To: <f8fe40e0088749734b4435b554f73eee53dcf7a8.1591932307.git.luto@kernel.org>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 11 Jun 2020 21:13:46 -0700
-X-Gmail-Original-Message-ID: <CALCETrUE48wbHUoaha=oEZFooM3yrcCwiCYZZ0MnEBDK-JFJAw@mail.gmail.com>
-Message-ID: <CALCETrUE48wbHUoaha=oEZFooM3yrcCwiCYZZ0MnEBDK-JFJAw@mail.gmail.com>
-Subject: Re: [PATCH] x86/entry: Treat BUG/WARN as NMI-like entries
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <ccfc3e7c-d1ce-27bd-b24c-df5fbc468449@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 8:26 PM Andy Lutomirski <luto@kernel.org> wrote:
->
-> If we BUG or WARN in a funny RCU context, we cleverly optimize the
-> BUG/WARN using the ud2 hack, which takes us through the
-> idtentry_enter...() paths, which might helpfully WARN that the RCU
-> context is invalid, which results in infinite recursion.
->
-> Split the BUG/WARN handling into an nmi_enter()/nmi_exit() path in
-> exc_invalid_op() to increase the chance that we survive the
-> experience.
->
-> Signed-off-by: Andy Lutomirski <luto@kernel.org>
-> ---
->
-> This is not as well tested as I would like, but it does cause the splat
-> I'm chasing to display a nice warning instead of causing an undebuggable
-> stack overflow.
->
-> (It would have been debuggable on x86_64, but it's a 32-bit splat, and
-> x86_32 doesn't have ORC.)
->
->  arch/x86/kernel/traps.c | 61 +++++++++++++++++++++++------------------
->  arch/x86/mm/extable.c   | 15 ++++++++--
->  2 files changed, 48 insertions(+), 28 deletions(-)
->
-> diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-> index cb8c3d26cdf5..6340b12a6616 100644
-> --- a/arch/x86/kernel/traps.c
-> +++ b/arch/x86/kernel/traps.c
-> @@ -98,24 +98,6 @@ int is_valid_bugaddr(unsigned long addr)
->         return ud == INSN_UD0 || ud == INSN_UD2;
->  }
->
-> -int fixup_bug(struct pt_regs *regs, int trapnr)
-> -{
-> -       if (trapnr != X86_TRAP_UD)
-> -               return 0;
-> -
-> -       switch (report_bug(regs->ip, regs)) {
-> -       case BUG_TRAP_TYPE_NONE:
-> -       case BUG_TRAP_TYPE_BUG:
-> -               break;
-> -
-> -       case BUG_TRAP_TYPE_WARN:
-> -               regs->ip += LEN_UD2;
-> -               return 1;
-> -       }
-> -
-> -       return 0;
-> -}
-> -
->  static nokprobe_inline int
->  do_trap_no_signal(struct task_struct *tsk, int trapnr, const char *str,
->                   struct pt_regs *regs, long error_code)
-> @@ -191,13 +173,6 @@ static void do_error_trap(struct pt_regs *regs, long error_code, char *str,
->  {
->         RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
->
-> -       /*
-> -        * WARN*()s end up here; fix them up before we call the
-> -        * notifier chain.
-> -        */
-> -       if (!user_mode(regs) && fixup_bug(regs, trapnr))
-> -               return;
-> -
->         if (notify_die(DIE_TRAP, str, regs, error_code, trapnr, signr) !=
->                         NOTIFY_STOP) {
->                 cond_local_irq_enable(regs);
-> @@ -242,9 +217,43 @@ static inline void handle_invalid_op(struct pt_regs *regs)
->                       ILL_ILLOPN, error_get_trap_addr(regs));
->  }
->
-> -DEFINE_IDTENTRY(exc_invalid_op)
-> +DEFINE_IDTENTRY_RAW(exc_invalid_op)
->  {
-> +       bool rcu_exit;
-> +
-> +       /*
-> +        * Handle BUG/WARN like NMIs instead of like normal idtentries:
-> +        * if we bugged/warned in a bad RCU context, for example, the last
-> +        * thing we want is to BUG/WARN again in the idtentry code, ad
-> +        * infinitum.
-> +        */
-> +       if (!user_mode(regs) && is_valid_bugaddr(regs->ip)) {
-> +               enum bug_trap_type type;
-> +
-> +               nmi_enter();
-> +               instrumentation_begin();
-> +               type = report_bug(regs->ip, regs);
-> +               instrumentation_end();
-> +               nmi_exit();
 
-Hmm, maybe this should be:
 
-        nmi_enter();
-        instrumentation_begin();
-        trace_hardirqs_off_finish();
-        type = report_bug(regs->ip, regs);
-        if (regs->flags & X86_EFLAGS_IF)
-            trace_hardirqs_on_prepare();
-        instrumentation_end();
-        nmi_exit();
+On 6/9/2020 2:20 PM, Randy Dunlap wrote:
+> On 6/9/20 1:58 PM, Wesley Cheng wrote:
+>> diff --git a/drivers/usb/typec/Kconfig b/drivers/usb/typec/Kconfig
+>> index 559dd06..8de2520 100644
+>> --- a/drivers/usb/typec/Kconfig
+>> +++ b/drivers/usb/typec/Kconfig
+>> @@ -73,6 +73,17 @@ config TYPEC_TPS6598X
+>>  	  If you choose to build this driver as a dynamically linked module, the
+>>  	  module will be called tps6598x.ko.
+>>
+> 
+> Hi,
+> Please spell "Type-C" like all of the other drivers do.
+> 
+>> +config TYPEC_QCOM_PMIC
+>> +	tristate "Qualcomm PMIC USB typec driver"
+>> +	depends on ARCH_QCOM
+>> +	help
+>> +	  Driver for supporting role switch over the Qualcomm PMIC.  This will
+>> +	  handle the type C role and orientation detection reported by the QCOM
+>> +	  PMIC if the PMIC has the capability to handle type C detection.
+>> +
+>> +	  It will also enable the VBUS output to connected devices when a
+>> +	  DFP connection is made.
+>> +
+>>  source "drivers/usb/typec/mux/Kconfig"
+>>  
+>>  source "drivers/usb/typec/altmodes/Kconfig"
 
-tglx or peterz, feel free to fix this up and apply it however you like.
+Hi Randy,
+
+Will do.
+
+Thanks
+> 
+> 
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
