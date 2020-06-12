@@ -3,101 +3,142 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A08C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC047C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 142AE207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:14:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BE1F20801
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:18:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="L2YlPGms"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="YcJ5J/GM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbgFLJOS (ORCPT
+        id S1726380AbgFLJSN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 05:14:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35506 "EHLO
+        Fri, 12 Jun 2020 05:18:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726319AbgFLJOS (ORCPT
+        with ESMTP id S1726302AbgFLJSM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 05:14:18 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CA77C03E96F;
-        Fri, 12 Jun 2020 02:14:17 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49jw5f1gZPz9s1x;
-        Fri, 12 Jun 2020 19:14:14 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591953254;
-        bh=OFe7pSR6WejLTC2rUGx9oPF64ZtQ8I2djy9fI8KRR2w=;
-        h=Date:From:To:Cc:Subject:From;
-        b=L2YlPGmskFQOFyyoBqts+Tola9r/aMW9PUZdiAtYOCyKJRaYBAdWV3Nw3HXc6jfxg
-         k3H+MjjQYZudh7BaiuOAiievbnnJCXfbqcu4Gy/0CqlOwFUWadS2OG+IZbc4wPPo5c
-         GqC/BkJXvtctvPcQK5BaqV07IVChvAO9wGjPhTA8x/59vGs4r2/d4+KuLiHsKudh+g
-         NZSjeneytZlTlVHTYRFrUEzmHFSKh2QDGNjD09lsrQJXxjF6mcun8AuRxAYVFmoDZo
-         X2OSRt9O2eVuDsGm/KUz8lVDKz521yiUSan0qFL0n8k5Jw2OtwRNcw5p2BVqfXFx0K
-         DpCRKo/IH2G/g==
-Date:   Fri, 12 Jun 2020 19:14:12 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Linux Crypto List <linux-crypto@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Fixes tag needs some work in the crypto-current tree
-Message-ID: <20200612191412.543f8fd2@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/n4TX5Oe76boiL6uYs0gCcxP";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Fri, 12 Jun 2020 05:18:12 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58911C03E96F
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 02:18:12 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id h10so124061pgq.10
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 02:18:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=ea05IbzOsFLNzK/q1opdgiePX7/yQgXvQW1ZI8l1OV0=;
+        b=YcJ5J/GME/6OIE7GKIsIYPbJBOn9vMjQq8TeEYfj+ViczSLokFiKbgVemPZrSLwG1+
+         SpS5qfEwaxNM0Y+lPV07VdRyLVZPHocM9UZJHHd6kphl1408svBB5mjw9x7oCL+PcN0U
+         4Qpvt+A/mWF1Wj42xgr26GGYHU/L18VliNyE2dSThiCQMQfsJwo0JvKeQGH2xifET/GT
+         9j2hDlj6/dUCz6Y4vLL8ZHieO4OQE8kWIRfn0KaMWhA0poUc2jDmkNtok/gjVkr1TXF2
+         u5xEcVwlZP2qdWlVF97oQyTnrVQhgZGyZGI2ADU16rEDbrOOnUm8on20kp2uMOHIukTw
+         VgGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=ea05IbzOsFLNzK/q1opdgiePX7/yQgXvQW1ZI8l1OV0=;
+        b=WEUi7ITphvH2URJR0qsloA7A5m4CjTwO7M6VIJbOERqPn0PkrZurgY1KE0VkyVno9C
+         TWADPG5dWHuHn9Ji/3OLp36H9KSHAlfTEmOOBsSkj76Sg3z8Y9ZSagkYSk73s4E4WSUm
+         3A3YrMdNfStBNKcOhBWwqT0BhL94FZp/AEOHIEJnvK6LUwIY+LR6IrMX73Uk3E5OjR5p
+         UuLsWuw84tZJoc1G66Gxzram76VSm8CSeM3FT1yXho/y3olgMaOS8daIxwLo+cg1M7Kq
+         d4eEakVyTfYQ2iGZnI8qEXMr6l4wAMSTaOHlVXSpMZt8KKutwV65gFdSQtmKeoZpOuzt
+         ugoA==
+X-Gm-Message-State: AOAM532j2NGEl/1lmCDDruCB/EnzuhG/T88zCQ0hBMlvPdih8jtAQORV
+        LSwIXBnqADGx+ioxZsnNJiaSUw==
+X-Google-Smtp-Source: ABdhPJw7p3AmjrmF4gOEPh4Mj8IFSG1eQgga0wJBu8krDLvWm/OqeLmjNLzSHAr0nxxzeYgL9rsYzA==
+X-Received: by 2002:aa7:9537:: with SMTP id c23mr10802234pfp.149.1591953491704;
+        Fri, 12 Jun 2020 02:18:11 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:c0da:d349:5a19:d9c1? ([2601:646:c200:1ef2:c0da:d349:5a19:d9c1])
+        by smtp.gmail.com with ESMTPSA id m9sm5530035pfo.200.2020.06.12.02.18.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Jun 2020 02:18:10 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: Perf: WARNING: arch/x86/entry/common.c:624 idtentry_exit_cond_rcu+0x92/0xc0
+Date:   Fri, 12 Jun 2020 02:18:07 -0700
+Message-Id: <8DD3180E-0E69-4FD6-92C3-311AAB3F688F@amacapital.net>
+References: <87imfwd5f6.fsf@nanos.tec.linutronix.de>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, cj.chengjian@huawei.com,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michel Lespinasse <walken@google.com>,
+        lkft-triage@lists.linaro.org,
+        Dave Hansen <dave.hansen@linux.intel.com>
+In-Reply-To: <87imfwd5f6.fsf@nanos.tec.linutronix.de>
+To:     Thomas Gleixner <tglx@linutronix.de>
+X-Mailer: iPhone Mail (17F80)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/n4TX5Oe76boiL6uYs0gCcxP
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-In commit
+> On Jun 12, 2020, at 2:01 AM, Thomas Gleixner <tglx@linutronix.de> wrote:
+>=20
+> =EF=BB=BFAndy Lutomirski <luto@kernel.org> writes:
+>> On Thu, Jun 11, 2020 at 4:22 PM Andy Lutomirski <luto@kernel.org> wrote:
+>>=20
+>> Two bugs here.
+>>=20
+>> 1. We had an issue with WARN. Patch sent.
+>=20
+> Grabbed it
+>=20
+>> 2. idtentry.h has, for x86_32:
+>>=20
+>> # define DEFINE_IDTENTRY_IST  DEFINE_IDTENTRY
+>>=20
+>> This is nonsense.  It's getting late over here and I'd rather focus on
+>> the more interesting RCU issue, so that's all from me today.
+>=20
+> Well, this might be nonsense, but it's exactly matching the current code
+> in mainline which, e.g. for #DB does:
+>=20
+> SYM_CODE_START(debug)
+>    /*
+>     * Entry from sysenter is now handled in common_exception
+>     */
+>    ASM_CLAC
+>    pushl    $0
+>    pushl    $do_debug
+>    jmp    common_exception
+> SYM_CODE_END(debug)
+>=20
+> There is no IST on 32bit, never was. We do software stack switching for
+> device interrupts, but that's a different story.
+>=20
 
-  dc03ab101464 ("crypto: ccp - Fix sparse warnings in sev-dev")
+DEFINE_IDTENTRY does the idtentry_enter_cond_rcu() dance, which isn=E2=80=99=
+t intended to be safe from NMI context.  It should probably map to DEFINE_ID=
+TENTRY_RAW() instead.  The specific issue is that NMI ends up there, and at l=
+east DEFINE_IDTENTRY_NMI should be raw.
 
-Fixes tag
+I haven=E2=80=99t tried this at all, nor have I dug through all the users of=
+ these macros to check what they expect.  Perhaps we should not have the _IS=
+T one defined at all on 32 bit and rename it to DEFINE_IDTENTRY_IST_RAW on 6=
+4 bit to make it more clear what=E2=80=99s going on when reading the C code.=
 
-  Fixes: 76a2b524a4b1 ("crypto: ccp - introduce SEV_GET_ID2 command")
 
-has these problem(s):
+Or maybe I=E2=80=99m too sleepy and I=E2=80=99m nuts. But I don=E2=80=99t th=
+ink I am.
 
-  - Subject does not match target commit subject
-    Just use
-	git log -1 --format=3D'Fixes: %h ("%s")'
 
-Fixes: 76a2b524a4b1 ("crypto: ccp: Implement SEV_PDH_CERT_EXPORT ioctl comm=
-and")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/n4TX5Oe76boiL6uYs0gCcxP
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7jR2QACgkQAVBC80lX
-0Gx0MQf+KFPNAo2pTzotO6AypmjvmUZltCZcCAC4pWEhklog7ZrdCxJaWmpY90ZV
-pysPYMHMk346NH12zudQtNHSJTuBEOyk3BT5PlZ8J01DV7YuG4FZi4L8hBGKFFUr
-Rn77v43QVRU03K8Gqprf2vYZM/YQ2jZHY7dJI4qxEPIFVtImilbfOf6IiiVlsuwU
-IzU2rYWj2iMdPo3QrbBtYRf3DbuzLK0mdlfCZObZAzdJBljWO8LT+KETWoVFgC8a
-3p96Cw2zpcz5npm/qM1u3/wFz20zpOqAvnwMkoJpgfPoxyeeL7pFt/vXKZZU3dRJ
-awDsFWUH87EvUl7I+GF/XdOit81myg==
-=5eIb
------END PGP SIGNATURE-----
-
---Sig_/n4TX5Oe76boiL6uYs0gCcxP--
+> Thanks,
+>=20
+>        tglx
