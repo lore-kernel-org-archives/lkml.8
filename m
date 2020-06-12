@@ -2,163 +2,240 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 454BBC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6C2C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19163206DC
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:38:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lmPADEL1"
+	by mail.kernel.org (Postfix) with ESMTP id 8600C20792
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:40:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726278AbgFLJi2 (ORCPT
+        id S1726279AbgFLJki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 05:38:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39272 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726255AbgFLJi1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 05:38:27 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67B47C03E96F;
-        Fri, 12 Jun 2020 02:38:27 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id 9so8171047ilg.12;
-        Fri, 12 Jun 2020 02:38:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MaicPOH+dZ5Iktboa0xwfp898xC8kU9RpGqq/bUg94o=;
-        b=lmPADEL1QE7uLca5G0SgDmNgtt0R3H+Z37M2M2PMe82alYpfulRyapt7IqaKSWgiEe
-         Ehme3eJRiDO8J0MrCs/IroygkGwY6JQ7V8GEQpQg4iBlz7mPa+CildirAIyQL2Puk5I/
-         bs17JXmv6lnsQQtX0ijTf0PWPisa1BpyIUhaOcFu2kyxPwovmeB8elqmL7AbXEVAZlv7
-         mvXL6q3/fVeSEV4sHrTRJbbRgnux+5zwgUmf2cmA0LaJgRZ+AbtWoHF+WB+WrrRISAVN
-         u74Pk6/O1m/pgdPbrbul5+Xj3xzvOpwBGM0oor6gvZu+WIFWWXpEj1rE15e3ah6Qzfxn
-         8Zxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MaicPOH+dZ5Iktboa0xwfp898xC8kU9RpGqq/bUg94o=;
-        b=IpT28+CWq1uT/vWzloZtk75Wg9p5Fg0nb92Mw5kl92qUqDAvRg2kFOB+Mb38QYKNsL
-         iVaHm4nInomdWmtCMPb7G1Ipv9BuUkSuu/Gfbe3gVf/ZwVLsHwQfIB5aI6xOSkQKvyAo
-         Ba9iPEcnsHgFt7KCAXITucKzL5kSQO3M4jtoiTZjlYOjbd/15LC5x+j9CCJIkNkxrnnn
-         7UjaORZwCswWP+o1lNNXsRhv9Ygk7lBu4s2LNF8Rus6jZdbiSklvxEa9HRrwjMb+R7P0
-         RJQ56JB0ca7eoOSR4S/Xrxr55M8ob5Yd5w7Z4jqboq1Vh21Fv9Hh1+ucqi1ioYnB3M06
-         RJPg==
-X-Gm-Message-State: AOAM530KHdD2UhPDaB6sQt+AdVicILJ2+5cYJZKWM9n0df/il/QUIMZp
-        fgiHwVsfKaRCn3PxeERi0sWV2JPUjm0Tp0SPipnGKQ==
-X-Google-Smtp-Source: ABdhPJxfx/BGLWcuK0MV9QvPYJddv2c73grXn4F3GllNy7ffLPXnQM54+k7eLK6VxEBGFhB3V8/GZ0dctPwIVDphlMM=
-X-Received: by 2002:a92:c9ce:: with SMTP id k14mr12036308ilq.250.1591954706642;
- Fri, 12 Jun 2020 02:38:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200608140557.GG3127@techsingularity.net> <CAOQ4uxhb1p5_rO9VjNb6assCczwQRx3xdAOXZ9S=mOA1g-0JVg@mail.gmail.com>
- <20200608160614.GH3127@techsingularity.net> <CAOQ4uxh=Z92ppBQbRJyQqC61k944_7qG1mYqZgGC2tU7YAH7Kw@mail.gmail.com>
- <20200608180130.GJ3127@techsingularity.net> <CAOQ4uxgcUHuqiXFPO5mX=rvDwP-DOoTZrXvpVNphwEMFYHtyCw@mail.gmail.com>
- <CAOQ4uxhbE46S65-icLhaJqT+jKqz-ZdX=Ypm9hAt9Paeb+huhQ@mail.gmail.com>
- <20200610125920.GM3127@techsingularity.net> <CAOQ4uxhcFO4=e-s7uStbEkZU==8kraD1=owZGu4SWx_iR72gTA@mail.gmail.com>
-In-Reply-To: <CAOQ4uxhcFO4=e-s7uStbEkZU==8kraD1=owZGu4SWx_iR72gTA@mail.gmail.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Fri, 12 Jun 2020 12:38:15 +0300
-Message-ID: <CAOQ4uxjTFCJa1y2Uq8NztXxkPRmvDvtUUt22QMwPkdd=eJdkyw@mail.gmail.com>
-Subject: Re: [PATCH] fsnotify: Rearrange fast path to minimise overhead when
- there is no watcher
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Jan Kara <jack@suse.cz>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 12 Jun 2020 05:40:38 -0400
+Received: from mga14.intel.com ([192.55.52.115]:63902 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725911AbgFLJkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 05:40:37 -0400
+IronPort-SDR: eWdB0Kvp60qgh/jQ/A5Zb9V5KjISx0h9YhC167JhiXoXJRx8U8hVjMxgyuC1FyvnaHecvOxwao
+ dPCYw2iBTRjg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2020 02:40:37 -0700
+IronPort-SDR: KBQZU9z58rpqTwpu9tCbyKSjpBSSmOXZZ4wzJCaxBG9pFuVzBJrU6lU9y9hIxKQYKx40CZLVKJ
+ 9aokEKKkL2XQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,502,1583222400"; 
+   d="scan'208";a="289830522"
+Received: from ipu5-build.bj.intel.com ([10.238.232.196])
+  by orsmga002.jf.intel.com with ESMTP; 12 Jun 2020 02:40:34 -0700
+From:   Bingbu Cao <bingbu.cao@intel.com>
+To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sakari.ailus@linux.intel.com
+Cc:     srinivas.kandagatla@linaro.org, tfiga@chromium.org,
+        bingbu.cao@intel.com, bingbu.cao@linux.intel.com
+Subject: [PATCH] media: ov2740: add NVMEM interface to read customized OTP data
+Date:   Fri, 12 Jun 2020 17:42:02 +0800
+Message-Id: <1591954922-14006-1-git-send-email-bingbu.cao@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 4:24 PM Amir Goldstein <amir73il@gmail.com> wrote:
->
-> On Wed, Jun 10, 2020 at 3:59 PM Mel Gorman <mgorman@techsingularity.net> wrote:
-> >
-> > On Mon, Jun 08, 2020 at 11:39:26PM +0300, Amir Goldstein wrote:
-> > > > Let me add your optimizations on top of my branch with the needed
-> > > > adaptations and send you a branch for testing.
-> > >
-> > > https://github.com/amir73il/linux/commits/fsnotify_name-for-mel
-> > >
-> >
-> > Sorry for the delay getting back. The machine was busy with other tests
-> > and it took a while to reach this on the queue. Fairly good news
-> >
-> > hackbench-process-pipes
-> >                               5.7.0                  5.7.0                  5.7.0                  5.7.0
-> >                             vanilla      fastfsnotify-v1r1          amir-20200608           amir-for-mel
-> > Amean     1       0.4837 (   0.00%)      0.4630 *   4.27%*      0.4967 *  -2.69%*      0.4680 (   3.24%)
-> > Amean     3       1.5447 (   0.00%)      1.4557 (   5.76%)      1.6587 *  -7.38%*      1.4807 (   4.14%)
-> > Amean     5       2.6037 (   0.00%)      2.4363 (   6.43%)      2.6400 (  -1.40%)      2.4900 (   4.37%)
-> > Amean     7       3.5987 (   0.00%)      3.4757 (   3.42%)      3.9040 *  -8.48%*      3.5130 (   2.38%)
-> > Amean     12      5.8267 (   0.00%)      5.6983 (   2.20%)      6.2593 (  -7.43%)      5.6967 (   2.23%)
-> > Amean     18      8.4400 (   0.00%)      8.1327 (   3.64%)      8.9940 (  -6.56%)      7.7240 *   8.48%*
-> > Amean     24     11.0187 (   0.00%)     10.0290 *   8.98%*     11.7247 *  -6.41%*      9.5793 *  13.06%*
-> > Amean     30     13.1013 (   0.00%)     12.8510 (   1.91%)     14.0290 *  -7.08%*     12.1630 (   7.16%)
-> > Amean     32     13.9190 (   0.00%)     13.2410 (   4.87%)     14.7140 *  -5.71%*     13.2457 *   4.84%*
-> >
-> > First two sets of results are vanilla kernel and just my patch respectively
-> > to have two baselines. amir-20200608 is the first git branch you pointed
-> > me to and amir-for-mel is this latest branch. Comparing the optimisation
-> > and your series, we get
-> >
-> > hackbench-process-pipes
-> >                               5.7.0                  5.7.0
-> >                   fastfsnotify-v1r1           amir-for-mel
-> > Amean     1       0.4630 (   0.00%)      0.4680 (  -1.08%)
-> > Amean     3       1.4557 (   0.00%)      1.4807 (  -1.72%)
-> > Amean     5       2.4363 (   0.00%)      2.4900 (  -2.20%)
-> > Amean     7       3.4757 (   0.00%)      3.5130 (  -1.07%)
-> > Amean     12      5.6983 (   0.00%)      5.6967 (   0.03%)
-> > Amean     18      8.1327 (   0.00%)      7.7240 (   5.03%)
-> > Amean     24     10.0290 (   0.00%)      9.5793 (   4.48%)
-> > Amean     30     12.8510 (   0.00%)     12.1630 (   5.35%)
-> > Amean     32     13.2410 (   0.00%)     13.2457 (  -0.04%)
-> >
-> > As you can see, your patches with the optimisation layered on top is
-> > comparable to just the optimisation on its own. It's not universally
-> > better but it would not look like a regression when comparing releases.
-> > The differences are mostly within the noise as there is some variability
-> > involved for this workload so I would not worry too much about it (caveats
-> > are other machines may be different as well as other workloads).
->
-> Excellent!
-> Thanks for verifying.
->
-> TBH, this result is not surprising, because despite all the changes from
-> fastfsnotify-v1r1 to amir-for-mel, the code that is executed when there
-> are no watches should be quite similar. Without any unexpected compiler
-> optimizations that may differ between our versions, fsnotify hooks called
-> for directories should execute the exact same code.
->
-> fsnotify hooks called for non-directories (your workload) should execute
-> almost the same code. I spotted one additional test for access to
-> d_inode and one additional test of:
-> dentry->d_flags & DCACHE_FSNOTIFY_PARENT_WATCHED
-> in the entry to __fsnotify_parent().
->
-> > A minor
-> > issue is that this is probably a bisection hazard. If a series is merged
-> > and LKP points the finger somewhere in the middle of your series then
-> > I suggest you ask them to test the optimisation commit ID to see if the
-> > regression goes away.
-> >
->
-> No worries. I wasn't planning on submitted the altered patch.
-> I just wanted to let you test the final result.
-> I will apply your change before my series and make sure to keep
-> optimizations while my changes are applied on top of that.
->
+From: Qingwu Zhang <qingwu.zhang@intel.com>
 
-FYI, just posted your patch with a minor style change at the bottom
-of my prep patch series.
+ov2740 includes 512bytes of one-time programmable memory and
+256 bytes are reserved for customers which can be used to store
+customized information. This patch provide an NVMEM interface
+to support read out the customized data in OTP.
 
-Thanks,
-Amir.
+Signed-off-by: Bingbu Cao <bingbu.cao@intel.com>
+Signed-off-by: Qingwu Zhang <qingwu.zhang@intel.com>
+---
+ drivers/media/i2c/ov2740.c | 145 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 145 insertions(+)
+
+diff --git a/drivers/media/i2c/ov2740.c b/drivers/media/i2c/ov2740.c
+index 33025c6d23ac..fd0b6a903ec1 100644
+--- a/drivers/media/i2c/ov2740.c
++++ b/drivers/media/i2c/ov2740.c
+@@ -7,6 +7,8 @@
+ #include <linux/i2c.h>
+ #include <linux/module.h>
+ #include <linux/pm_runtime.h>
++#include <linux/nvmem-provider.h>
++#include <linux/regmap.h>
+ #include <media/v4l2-ctrls.h>
+ #include <media/v4l2-device.h>
+ #include <media/v4l2-fwnode.h>
+@@ -59,6 +61,21 @@
+ #define OV2740_TEST_PATTERN_ENABLE	BIT(7)
+ #define OV2740_TEST_PATTERN_BAR_SHIFT	2
+ 
++/* ISP CTRL00 */
++#define OV2740_REG_ISP_CTRL00		0x5000
++/* ISP CTRL01 */
++#define OV2740_REG_ISP_CTRL01		0x5001
++/* Customer Addresses: 0x7010 - 0x710F */
++#define CUSTOMER_USE_OTP_SIZE		0x100
++/* OTP registers from sensor */
++#define OV2740_REG_OTP_CUSTOMER		0x7010
++
++struct nvm_data {
++	char *nvm_buffer;
++	struct nvmem_device *nvmem;
++	struct regmap *regmap;
++};
++
+ enum {
+ 	OV2740_LINK_FREQ_360MHZ_INDEX,
+ };
+@@ -915,6 +932,130 @@ static int ov2740_remove(struct i2c_client *client)
+ 	return 0;
+ }
+ 
++static int ov2740_load_otp_data(struct i2c_client *client, struct nvm_data *nvm)
++{
++	struct ov2740 *ov2740 = to_ov2740(i2c_get_clientdata(client));
++	u32 isp_ctrl00 = 0;
++	u32 isp_ctrl01 = 0;
++	int ret;
++
++	ret = ov2740_read_reg(ov2740, OV2740_REG_ISP_CTRL00, 1, &isp_ctrl00);
++	if (ret) {
++		dev_err(&client->dev, "failed to read ISP CTRL00\n");
++		goto exit;
++	}
++	ret = ov2740_read_reg(ov2740, OV2740_REG_ISP_CTRL01, 1, &isp_ctrl01);
++	if (ret) {
++		dev_err(&client->dev, "failed to read ISP CTRL01\n");
++		goto exit;
++	}
++
++	/* Clear bit 5 of ISP CTRL00 */
++	ret = ov2740_write_reg(ov2740, OV2740_REG_ISP_CTRL00, 1,
++			       isp_ctrl00 & ~BIT(5));
++	if (ret) {
++		dev_err(&client->dev, "failed to write ISP CTRL00\n");
++		goto exit;
++	}
++
++	/* Clear bit 7 of ISP CTRL01 */
++	ret = ov2740_write_reg(ov2740, OV2740_REG_ISP_CTRL01, 1,
++			       isp_ctrl01 & ~BIT(7));
++	if (ret) {
++		dev_err(&client->dev, "failed to write ISP CTRL01\n");
++		goto exit;
++	}
++
++	ret = ov2740_write_reg(ov2740, OV2740_REG_MODE_SELECT, 1,
++			       OV2740_MODE_STREAMING);
++	if (ret) {
++		dev_err(&client->dev, "failed to start streaming\n");
++		goto exit;
++	}
++
++	/*
++	 * Users are not allowed to access OTP-related registers and memory
++	 * during the 20 ms period after streaming starts (0x100 = 0x01).
++	 */
++	msleep(20);
++
++	ret = regmap_bulk_read(nvm->regmap, OV2740_REG_OTP_CUSTOMER,
++			       nvm->nvm_buffer, CUSTOMER_USE_OTP_SIZE);
++	if (ret) {
++		dev_err(&client->dev, "failed to read OTP data, ret %d\n", ret);
++		goto exit;
++	}
++
++	ov2740_write_reg(ov2740, OV2740_REG_MODE_SELECT, 1,
++			 OV2740_MODE_STANDBY);
++	ov2740_write_reg(ov2740, OV2740_REG_ISP_CTRL01, 1, isp_ctrl01);
++	ov2740_write_reg(ov2740, OV2740_REG_ISP_CTRL00, 1, isp_ctrl00);
++
++exit:
++	return ret;
++}
++
++static int ov2740_nvmem_read(void *priv, unsigned int off, void *val,
++			     size_t count)
++{
++	struct nvm_data *nvm = priv;
++
++	memcpy(val, nvm->nvm_buffer + off, count);
++
++	return 0;
++}
++
++static int ov2740_register_nvmem(struct i2c_client *client)
++{
++	struct nvm_data *nvm;
++	struct regmap_config regmap_config = { };
++	struct nvmem_config nvmem_config = { };
++	struct regmap *regmap;
++	struct device *dev = &client->dev;
++	int ret = 0;
++
++	nvm = devm_kzalloc(dev, sizeof(*nvm), GFP_KERNEL);
++	if (!nvm)
++		return -ENOMEM;
++
++	regmap_config.val_bits = 8;
++	regmap_config.reg_bits = 16;
++	regmap_config.disable_locking = true;
++	regmap = devm_regmap_init_i2c(client, &regmap_config);
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
++
++	nvm->regmap = regmap;
++
++	nvmem_config.name = dev_name(dev);
++	nvmem_config.dev = dev;
++	nvmem_config.read_only = true;
++	nvmem_config.root_only = true;
++	nvmem_config.owner = THIS_MODULE;
++	nvmem_config.compat = true;
++	nvmem_config.base_dev = dev;
++	nvmem_config.reg_read = ov2740_nvmem_read;
++	nvmem_config.reg_write = NULL;
++	nvmem_config.priv = nvm;
++	nvmem_config.stride = 1;
++	nvmem_config.word_size = 1;
++	nvmem_config.size = CUSTOMER_USE_OTP_SIZE;
++
++	nvm->nvmem = devm_nvmem_register(dev, &nvmem_config);
++	if (IS_ERR(nvm->nvmem))
++		return PTR_ERR(nvm->nvmem);
++
++	nvm->nvm_buffer = devm_kzalloc(dev, CUSTOMER_USE_OTP_SIZE, GFP_KERNEL);
++	if (!nvm->nvm_buffer)
++		return -ENOMEM;
++
++	ret = ov2740_load_otp_data(client, nvm);
++	if (ret)
++		dev_err(dev, "failed to load OTP data, ret %d\n", ret);
++
++	return ret;
++}
++
+ static int ov2740_probe(struct i2c_client *client)
+ {
+ 	struct ov2740 *ov2740;
+@@ -964,6 +1105,10 @@ static int ov2740_probe(struct i2c_client *client)
+ 		goto probe_error_media_entity_cleanup;
+ 	}
+ 
++	ret = ov2740_register_nvmem(client);
++	if (ret)
++		dev_err(&client->dev, "register nvmem failed, ret %d\n", ret);
++
+ 	/*
+ 	 * Device is already turned on by i2c-core with ACPI domain PM.
+ 	 * Enable runtime PM and turn off the device.
+-- 
+2.7.4
+
