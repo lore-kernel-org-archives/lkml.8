@@ -2,156 +2,101 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 825BDC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:51:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D11BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51404206A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:51:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TFBggTfw"
+	by mail.kernel.org (Postfix) with ESMTP id 4CA16206A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:54:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726053AbgFLNu6 (ORCPT
+        id S1726108AbgFLNyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 09:50:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49910 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbgFLNu4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 09:50:56 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AFA1C03E96F;
-        Fri, 12 Jun 2020 06:50:56 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id c3so9786892wru.12;
-        Fri, 12 Jun 2020 06:50:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=psNTl7b3xz3hbJPsvAGnz66wfWri0qx+KAw09sdE0Xk=;
-        b=TFBggTfwRjqnOuEKjxpDDkhy2wbHaO8tEw971I5tUTibRIOJtRCCVxY6m4zCFdvq4V
-         licSW1m+gS6w13OdxcdcLT8em5KDKj5zE5XEY67zbhBUzAN375j6a4iSyCScDBKYrCgw
-         hZwm+97fF0JaQlf9Df/uWZrV82IS6YTJ1PhOMgjl6zQlCbQi0XkSlZs0d6S8IccoPx0h
-         LgG0gs1lzX+6N8siz+/eSOSh4nQ0fXnuyczJJ7G3hdc5xrke7ssYZ1g4sEP7T0ww/2Qd
-         uFPb/klEza8/E/f5fZVhQYYVRPZhNdW5K25hKgOLGN01wlgpBaF5I3YgDhbDuR8jSeYB
-         n34Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=psNTl7b3xz3hbJPsvAGnz66wfWri0qx+KAw09sdE0Xk=;
-        b=fjnsJUnnmmT+RkmiN5cUx2NuQSVMnfTCHhv2t1KgfMo1O6czBIlLXRLs2tQ0n2YmRO
-         jouN5/VJgrR1UTuEY/HoLQ6tX6nOUwl0emg1fAfxxlyW0IaPU5+IFDA5OeljVQ3MC/cx
-         w3VYX6+rKuyADpiKA6gA4HoVQX6jKQb+r48pZPJ3Yfhsuw2cDX2YobWrptRi9qKFAMnW
-         p4lPcYM/s397y8s9ih4YryDtV3YldijcIzel5ej0X3BECgzQm2f37W0Suctpc1cuSH2a
-         OTqI0l9Xu4aSTQbc1YfnqhtfTnCkpFi7569rKdlHSJ3lwprYxM4h0rhBnr33N3cmg7gr
-         4ApQ==
-X-Gm-Message-State: AOAM532ogi1YerXJKs3yIfYruzH/cuWQGmsb2/CG7qKFjotPvUc5RqDi
-        ahkw35PMhjs1hGnJ0bUGWpA=
-X-Google-Smtp-Source: ABdhPJzF0H2UhUM06r7ogNE4ze5O3T+jwsB+vZ9LcFaG7UcyVHIyQEqcnsknnU+9YRA9Py4WHSwiZw==
-X-Received: by 2002:a5d:52c6:: with SMTP id r6mr14770656wrv.74.1591969855000;
-        Fri, 12 Jun 2020 06:50:55 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id t8sm10020795wro.56.2020.06.12.06.50.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 06:50:53 -0700 (PDT)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] pwm: Changes for v5.8-rc1
-Date:   Fri, 12 Jun 2020 15:50:49 +0200
-Message-Id: <20200612135049.2341678-1-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        Fri, 12 Jun 2020 09:54:15 -0400
+Received: from mga07.intel.com ([134.134.136.100]:1771 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726085AbgFLNyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 09:54:13 -0400
+IronPort-SDR: gNmQgvGGfcuLLcteRZO90T7juy8DowFBomZpiKZ9d0iK4q+2qfjSiC+nsDny2KExKOcUbwVEQO
+ z1iOhFnQER3w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2020 06:54:13 -0700
+IronPort-SDR: iU+h/Z8i+sjCatce5NdcOtdhdZZDJIOZGF71b5m5MN4vThRRmEjquCTlpE/3j38okJWWhCb356
+ YC6OBGMqmNhg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,503,1583222400"; 
+   d="scan'208";a="315134584"
+Received: from rrhill-mobl1.amr.corp.intel.com (HELO [10.254.71.222]) ([10.254.71.222])
+  by FMSMGA003.fm.intel.com with ESMTP; 12 Jun 2020 06:54:11 -0700
+Subject: Re: [GIT PULL] sound fixes for 5.8-rc1
+To:     Mark Brown <broonie@kernel.org>,
+        John Stultz <john.stultz@linaro.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Vinod Koul <vinod.koul@linaro.org>,
+        Amit Pundir <amit.pundir@linaro.org>
+References: <s5himfxet1c.wl-tiwai@suse.de>
+ <CANcMJZAG4QqJ2Cxt+1RLsa8Z4oR=2y8zyD_sqy3sm_8MXyhg2g@mail.gmail.com>
+ <CALAqxLWEfRJ_Jr0iDgmvqop5Etz5xve89Zy3OeUbnKUGtqjCqQ@mail.gmail.com>
+ <20200612121946.GE5396@sirena.org.uk>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <7cd79261-6f8d-cad0-c65b-57570a40a6b6@linux.intel.com>
+Date:   Fri, 12 Jun 2020 08:54:11 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200612121946.GE5396@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
 
-The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
 
-  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+On 6/12/20 7:19 AM, Mark Brown wrote:
+> On Thu, Jun 11, 2020 at 05:49:29PM -0700, John Stultz wrote:
+>> On Thu, Jun 11, 2020 at 5:13 PM John Stultz <john.stultz@linaro.org> wrote:
+> 
+>>>   I've bisected it down to the following commit from this pull req:
+>>>    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=b73287f0b0745961b14e5ebcce92cc8ed24d4d52
+> 
+> For the benefit of readers that's "ASoC: soc-pcm: dpcm: fix
+> playback/capture checks".
+> 
+>> I don't know the backgroun again, but would something like the
+>> following make sense?
+>> https://git.linaro.org/people/john.stultz/android-dev.git/commit/?h=dev/db845c-mainline-WIP&id=7e49b248db77b5ed29b2aa278268e77650c75482
+> 
+> That's a small out of tree test patch which has no changelog so I'm not
+> entirely clear what the intent or motivation is but it looks like the
+> goal is to change so that we only warn when a link says it supports
+> playback/capture but some of the DAIs lack the capability instead of
+> returning an error.  I'm not sure I understand how that helps, it seems
+> like the link is still misconfigured and we still have a warning which
+> isn't great?  Surely the issue is that we've flagged the link as
+> supporting capture when it doesn't?
 
-are available in the Git repository at:
+Indeed the addition of stricter checks will expose cases where the links 
+are not well configured, probably for years. The patch "ASoC: soc-pcm: 
+dpcm: fix playback/capture checks" did not add those checks, only fixed 
+them for the multi-dai case.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.8-rc1
+I think that those configuration errors are the problem and should be 
+fixed as a prerequisite to the removal of the duplication between 
+dpcm_playback/dpcm_capture/playback_only/capture_only. it may be painful 
+and generate noise for a while, but if we only throw a warning what are 
+the odds all those configuration errors will eventually be fixed?
 
-for you to fetch changes up to f5641d053d46a9a18fe13f2ecb4a7b4a66d9cdf7:
-
-  pwm: Add missing "CONFIG_" prefix (2020-06-04 19:09:28 +0200)
-
-Thanks,
-Thierry
-
-----------------------------------------------------------------
-pwm: Changes for v5.8-rc1
-
-Nothing too exciting for this cycle. A couple of fixes across the board,
-and Lee volunteered to help with patch review.
-
-----------------------------------------------------------------
-Christophe JAILLET (1):
-      pwm: Add missing '\n' in log messages
-
-Hans de Goede (1):
-      pwm: lpss: Fix get_state runtime-pm reference handling
-
-Jeff LaBundy (1):
-      pwm: Add support for Azoteq IQS620A PWM generator
-
-Kees Cook (1):
-      pwm: Add missing "CONFIG_" prefix
-
-Navid Emamdoost (1):
-      pwm: img: Call pm_runtime_put() in pm_runtime_get_sync() failed case
-
-Paul Cercueil (4):
-      pwm: jz4740: Drop dependency on MACH_INGENIC
-      pwm: jz4740: Enhance precision in calculation of duty cycle
-      pwm: jz4740: Make PWM start with the active part
-      pwm: jz4740: Add support for the JZ4725B
-
-Peter Vasil (1):
-      pwm: sun4i: Support direct clock output on Allwinner A64
-
-Rasmus Villemoes (1):
-      pwm: rockchip: Simplify rockchip_pwm_get_state()
-
-Sandipan Patra (1):
-      pwm: tegra: Support dynamic clock frequency configuration
-
-Thierry Reding (1):
-      MAINTAINERS: Add Lee Jones as reviewer for the PWM subsystem
-
-Uwe Kleine-König (1):
-      pwm: imx27: Fix rounding behavior
-
-Yoshihiro Shimoda (1):
-      dt-bindings: pwm: rcar: add r8a77961 support
-
- .../devicetree/bindings/pwm/renesas,pwm-rcar.yaml  |   1 +
- MAINTAINERS                                        |   1 +
- drivers/pwm/Kconfig                                |  12 +-
- drivers/pwm/Makefile                               |   1 +
- drivers/pwm/core.c                                 |   4 +-
- drivers/pwm/pwm-img.c                              |   8 +-
- drivers/pwm/pwm-imx27.c                            |  20 +-
- drivers/pwm/pwm-iqs620a.c                          | 270 +++++++++++++++++++++
- drivers/pwm/pwm-jz4740.c                           |  55 +++--
- drivers/pwm/pwm-lpss.c                             |  15 +-
- drivers/pwm/pwm-rockchip.c                         |   7 +-
- drivers/pwm/pwm-sun4i.c                            |   9 +
- drivers/pwm/pwm-tegra.c                            |  80 +++++-
- 13 files changed, 438 insertions(+), 45 deletions(-)
- create mode 100644 drivers/pwm/pwm-iqs620a.c
+If we need more time for validation on all platforms, then maybe we can 
+first relax the check for 5.8-rc1 as suggested by John, but re-add the 
+-EINVAL on -next to give a target of 5.9 with all configurations fixed?
