@@ -6,61 +6,64 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF77DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA43C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCA0B2083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:26:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F074206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:26:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591989961;
-	bh=BEnJrzqvMuYpXAMpphS0j5QS8iaksoh4GLbaBhcMbAI=;
+	s=default; t=1591989965;
+	bh=n8TjGPlzZHBN3WuBTWOI5Lhh92feVSg1DUZw+cdVaTQ=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=GrP7TfIVMRI/Ca4Z8ShBKlf3c02uVo6Z8mdL1GUwSv+wpH1LRojv2qWPEJHiUQpTU
-	 QUiNE7MiVO+ggvlvSeZCCyoURm6FmSOHztSsSuP0zS2nxLdjUV3F1lmuy6FWr8BDoO
-	 fF216v+3fGTkKT/K560smJ15tNaNjFYxOWNKTdPQ=
+	b=yjZov6onu5KYfjmcUBL4ujYGgn/HWK24RS9s4yJacFIE82pkVkoOE7wAkTuCOhMey
+	 g6bvKZ7rMIJQ3+H/XCZPM+HfeQaqfhJjsH9DbCTZlwB3meA/PgmhnxH89tak6bMhbz
+	 sLHaLrSwC3ta9FX4saTyEns3yLHiokA/z3hg0/3c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726576AbgFLTZ7 (ORCPT
+        id S1726393AbgFLTZc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 15:25:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36888 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726460AbgFLTZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 12 Jun 2020 15:25:32 -0400
-Subject: Re: [git pull] iommu: Move Intel and AMD drivers to a subdirectory
+Received: from mail.kernel.org ([198.145.29.99]:36788 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726381AbgFLTZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 15:25:29 -0400
+Subject: Re: [GIT PULL] arch/nios2 update for 5.8-rc1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591989932;
-        bh=BEnJrzqvMuYpXAMpphS0j5QS8iaksoh4GLbaBhcMbAI=;
+        s=default; t=1591989929;
+        bh=n8TjGPlzZHBN3WuBTWOI5Lhh92feVSg1DUZw+cdVaTQ=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=uXFNm8u3IEk9U3bVwC76ryJ5Aem1ysPI9bgyMzCZsFGJRtWgC0GclObvluj5IvSZJ
-         ssgg2abB08g8J4z8Ycl8q59EcFw15niVYrJtts+fomyw1IHT11n6qoyj0I1UaLsPHD
-         FW7yPVB4HenhPP3gZpPyu0KgnvJgoENbvhWZKjgE=
+        b=zc4aWD+wxQakKJKd44jz+Cd8vmDeya+QtJMq7gqU4Q8WmFg+ItgI7jlsLsVbaK1ML
+         c/qFmjiJ7sUIGgfj3G+v1ZbWodyoU6T/DGJFSHO0tp/0H+YG/LmGCv5/jhjTNKgk7V
+         4KqwAjWI9p7fIvmAeYTkSP2iGqxzZxV0OKsNGjC4=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200612152205.GA18833@8bytes.org>
-References: <20200612152205.GA18833@8bytes.org>
+In-Reply-To: <BY5PR11MB3893D9118F509981F5612029CC810@BY5PR11MB3893.namprd11.prod.outlook.com>
+References: <BY5PR11MB3893D9118F509981F5612029CC810@BY5PR11MB3893.namprd11.prod.outlook.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200612152205.GA18833@8bytes.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git
- tags/iommu-drivers-move-v5.8
-X-PR-Tracked-Commit-Id: 672cf6df9b8a3a6d70a6a5c30397f76fa40d3178
+X-PR-Tracked-Message-Id: <BY5PR11MB3893D9118F509981F5612029CC810@BY5PR11MB3893.namprd11.prod.outlook.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/lftan/nios2.git
+ tags/nios2-v5.8-rc1
+X-PR-Tracked-Commit-Id: 6b57fa4d374bb8c005dee396c56598c14b9c01a6
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 8f02f363f76f99f08117336cfac7f24c76b25be3
-Message-Id: <159198993250.4050.3240312078488270067.pr-tracker-bot@kernel.org>
-Date:   Fri, 12 Jun 2020 19:25:32 +0000
-To:     Joerg Roedel <joro@8bytes.org>
+X-PR-Merge-Commit-Id: 7de26c41c19fc7b2e078d31fd039e1a017064b89
+Message-Id: <159198992932.4050.12321009333314946641.pr-tracker-bot@kernel.org>
+Date:   Fri, 12 Jun 2020 19:25:29 +0000
+To:     "Tan, Ley Foon" <ley.foon.tan@intel.com>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ley Foon Tan <lftan.linux@gmail.com>,
+        "christian.brauner@ubuntu.com" <christian.brauner@ubuntu.com>,
+        "gustavoars@kernel.org" <gustavoars@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 12 Jun 2020 17:22:10 +0200:
+The pull request you sent on Fri, 12 Jun 2020 08:13:51 +0000:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git tags/iommu-drivers-move-v5.8
+> git://git.kernel.org/pub/scm/linux/kernel/git/lftan/nios2.git tags/nios2-v5.8-rc1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/8f02f363f76f99f08117336cfac7f24c76b25be3
+https://git.kernel.org/torvalds/c/7de26c41c19fc7b2e078d31fd039e1a017064b89
 
 Thank you!
 
