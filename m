@@ -2,88 +2,113 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 134A4C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD92C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3D732074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:11:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="b+qIjrVX"
+	by mail.kernel.org (Postfix) with ESMTP id 304932081A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:12:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591971171;
+	bh=K9mmWg+RlhSzEFgOR5fzEuEol7HVAlTxtf93HYgh604=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=z4j8EGe0YLGBeLtEDEHS75tSAJKz4Yd88dUgrhrtAIm4egWlBO3RLTFtesq4CMdeT
+	 b7IyOZV+o3FEwMhj9i2CR5r9yj5Cfip0k8mQcM4yKFfiPFwbybGV7nm8iU4uN4BIlJ
+	 KPOWBD0uSIle37TrPZ+x3Qe38kwIx0MAr9LBGaaI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgFLOLj (ORCPT
+        id S1726491AbgFLOMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 10:11:39 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:59147 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726451AbgFLOLg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 10:11:36 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 6BFE05C0198;
-        Fri, 12 Jun 2020 10:11:35 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Fri, 12 Jun 2020 10:11:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=N2UTN5
-        zf4fI0fEU1GAssqOF62PIajnZlEs++lgSKQbc=; b=b+qIjrVXrY+JWnlhm+V7kj
-        KCEFRHny1iUTmOd1iSHkK8slA/Rmg52yRFS3Dbl8ysb2m6LGfLlPvUavZgEch1D1
-        50wDCaGsNwqoUM3DGsmmTAsmMvNoSEnohbNjiF12V68ehGOPkuy6czWEX++b1Fbc
-        7jL3nE0XeYby72N1WzjwVErOatuQXkxyATCn3AePyBR5OHycWsKc1wQAT8/qHTYF
-        4I+C/j2VG6x6pa1v8GwWFAQQKXW+7oQIMTe/zyR/GJOlbinmwO/ogyhwdShcP8xn
-        ysqgFPTy59ijXmy56iEHo2bJztvn1Llo5ztP4FsWmZq0p3LL3fkN2iOOFS+To1tQ
-        ==
-X-ME-Sender: <xms:FI3jXr7zLtYmKIwGNCcWN3YyA4cxOdiGQQ36vu6_6pES5fUAnWXSzQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudeiuddgjeehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefkughoucfu
-    tghhihhmmhgvlhcuoehiughoshgthhesihguohhstghhrdhorhhgqeenucggtffrrghtth
-    gvrhhnpefgvefgveeuudeuffeiffehieffgfejleevtdetueetueffkeevgffgtddugfek
-    veenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeejledrudejledrledtrd
-    efvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehi
-    ughoshgthhesihguohhstghhrdhorhhg
-X-ME-Proxy: <xmx:FI3jXg6YGCCa8T3yZL8FddXBYToroM75whLfyMMtWLvsetLmKNjs5w>
-    <xmx:FI3jXieqXQv6Etc3KefcYG9j9RPrz0cbVXvvNBNQsCk93tTqGMCG0g>
-    <xmx:FI3jXsLol_COGgpBtXEfJZup2-MVr8Qvsd8QG6LGDw0Jx3NDDBS0Jw>
-    <xmx:F43jXsGwt9-2XShtxzNUuXCg5z4DLWfgwG0kRhaR9e5NgeZljYXQMg>
-Received: from localhost (bzq-79-179-90-32.red.bezeqint.net [79.179.90.32])
-        by mail.messagingengine.com (Postfix) with ESMTPA id E060432800D0;
-        Fri, 12 Jun 2020 09:51:35 -0400 (EDT)
-Date:   Fri, 12 Jun 2020 16:51:33 +0300
-From:   Ido Schimmel <idosch@idosch.org>
-To:     Ritesh Harjani <riteshh@linux.ibm.com>
-Cc:     syzbot <syzbot+82f324bb69744c5f6969@syzkaller.appspotmail.com>,
-        adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
-        sfr@canb.auug.org.au, syzkaller-bugs@googlegroups.com,
-        tytso@mit.edu
-Subject: Re: linux-next test error: BUG: using smp_processor_id() in
- preemptible [ADDR] code: syz-fuzzer/6792
-Message-ID: <20200612135133.GA28968@splinter>
-References: <0000000000008ff8ea05a71818b5@google.com>
- <20200602124130.256274203F@d06av24.portsmouth.uk.ibm.com>
- <20200612124340.GA23832@splinter>
- <20200612133905.CDF9A5204E@d06av21.portsmouth.uk.ibm.com>
+        Fri, 12 Jun 2020 10:12:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37832 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726089AbgFLOMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 10:12:49 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F0E12074B;
+        Fri, 12 Jun 2020 14:12:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591971168;
+        bh=K9mmWg+RlhSzEFgOR5fzEuEol7HVAlTxtf93HYgh604=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=AVWvWB9g9k+/rFhJefunRgtgjW5ow5mKi1qTflEXkM9vhNW9klyoEvr6KjXYTOZe3
+         s2Qr8urrS0qqfqGfcKm7J6vhCeg+pEmCpuMAki0ij1PVOrEKlnAGrkT53J63HiAUlV
+         kcPHQ+oAu/60bsUsv7Cef7icshuHllFhyTBH91qc=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 7FC353521A8D; Fri, 12 Jun 2020 07:12:48 -0700 (PDT)
+Date:   Fri, 12 Jun 2020 07:12:48 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Wei Yang <richard.weiyang@linux.alibaba.com>
+Cc:     josh@joshtriplett.org, rostedt@goodmis.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        joel@joelfernandes.org, trivial@kernel.org, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] rcu: use gp_seq instead of rcu_gp_seq for consistency
+Message-ID: <20200612141248.GK4455@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200612020755.50526-1-richard.weiyang@linux.alibaba.com>
+ <20200612020755.50526-5-richard.weiyang@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200612133905.CDF9A5204E@d06av21.portsmouth.uk.ibm.com>
+In-Reply-To: <20200612020755.50526-5-richard.weiyang@linux.alibaba.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 07:09:04PM +0530, Ritesh Harjani wrote:
-> I see Ted has already taken v2 of this patch in his dev repo.
-> Should be able to see in linux tree soon.
+On Fri, Jun 12, 2020 at 10:07:55AM +0800, Wei Yang wrote:
+> Commit de30ad512a66 ("rcu: Introduce grace-period sequence numbers")
+> introduce gp_seq in rcu_state/rcu_node/rcu_data. And this field in last
+> two structure track the one in first.
 > 
-> https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git/commit/?h=dev&id=811985365378df01386c3cfb7ff716e74ca376d5
+> While the comment use rcu_gp_seq which is a little misleading for
+> audience. Let's use the exact name gp_seq for consistency.
+> 
+> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
 
-Great, thanks a lot. I've replaced previous patch with this one in my
-testing tree.
+I applied and pushed the others -- good eyes, and thank you!
+
+This one does not apply.  Could you please forward-port it to
+the "dev" branch of -rcu?
+
+git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git
+
+							Thanx, Paul
+
+> ---
+>  kernel/rcu/tree.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
+> index 512829eed545..3356842bc185 100644
+> --- a/kernel/rcu/tree.h
+> +++ b/kernel/rcu/tree.h
+> @@ -41,7 +41,7 @@ struct rcu_node {
+>  	raw_spinlock_t __private lock;	/* Root rcu_node's lock protects */
+>  					/*  some rcu_state fields as well as */
+>  					/*  following. */
+> -	unsigned long gp_seq;	/* Track rsp->rcu_gp_seq. */
+> +	unsigned long gp_seq;	/* Track rsp->gp_seq. */
+>  	unsigned long gp_seq_needed; /* Track furthest future GP request. */
+>  	unsigned long completedqs; /* All QSes done for this node. */
+>  	unsigned long qsmask;	/* CPUs or groups that need to switch in */
+> @@ -149,7 +149,7 @@ union rcu_noqs {
+>  /* Per-CPU data for read-copy update. */
+>  struct rcu_data {
+>  	/* 1) quiescent-state and grace-period handling : */
+> -	unsigned long	gp_seq;		/* Track rsp->rcu_gp_seq counter. */
+> +	unsigned long	gp_seq;		/* Track rsp->gp_seq. */
+>  	unsigned long	gp_seq_needed;	/* Track furthest future GP request. */
+>  	union rcu_noqs	cpu_no_qs;	/* No QSes yet for this CPU. */
+>  	bool		core_needs_qs;	/* Core waits for quiesc state. */
+> -- 
+> 2.20.1 (Apple Git-117)
+> 
