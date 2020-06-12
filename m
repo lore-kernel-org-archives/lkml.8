@@ -6,256 +6,103 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8229C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCEB5C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B317020801
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B629420801
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:29:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591975688;
-	bh=3yHkAwubmunjmiesfM1rpsD37zARlutAh9UqD8QN8/E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YQbsrPV54oeTepO9ES7WVsQP4yImCCQNyp3OKhMEAcdZ+3DChJ2bjN+l7805DIu8t
-	 z8sY6CI19ljZORJFhDV+W/zAWg8/ulk99cJG5YXPFylqdmEGyfT4rdZWO/mzfSmcnR
-	 fLKi4nyzOejJv7Z4IUB9p6OuuYQqkh1MOK5RVSvA=
+	s=default; t=1591975766;
+	bh=2gcTLGQ/YAq3hCULFYWKp1jg32rkHtZfqYIP+dnmats=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bLzhAae5OkOOP6Ae9GimSdyQY7pXJuvX610Rerwbn97wJM+PgAsdOvOZho4ZRXU8E
+	 UffS08e3YAIIlf895AK0YKdp0slpg5JSwiekandcLFKUJjqh2p3yqQChIuZVDMkGsG
+	 RNrX+2m8v2YXpLzeYQRsexdaPnfWIXfGvoOj/EvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbgFLP2G (ORCPT
+        id S1726551AbgFLP30 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 11:28:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47086 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726085AbgFLP2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 11:28:04 -0400
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E16FA20835;
-        Fri, 12 Jun 2020 15:28:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591975683;
-        bh=3yHkAwubmunjmiesfM1rpsD37zARlutAh9UqD8QN8/E=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=O3tSNdHzuZcgNHn9HdaY2O6n8HPcJ5t7i/x7C1z0ogjs7cl+G8eflb5siB18LUeNr
-         lTpbIuOtoakfc0L92Ip5SCoTTNhItXU/ubp/8M0qMFxMjiJ7mTT7knjGgYxPtkv0Um
-         VVF90NfntS3ECg8XrwPmZIOK6V5rVL/I2u+a54FM=
-Received: by mail-ed1-f49.google.com with SMTP id m21so6696193eds.13;
-        Fri, 12 Jun 2020 08:28:02 -0700 (PDT)
-X-Gm-Message-State: AOAM533Bwk48EUZtFOLCFu248VDFdI3RWieJ4OvypqFNxil1WciG+k2D
-        IrZGnV2lifTAedrMLZDD3f71FnF1Q5o0r4vGRA==
-X-Google-Smtp-Source: ABdhPJx4hf1qYx8OMecO3zKZjUrgZ6Cu0RNr2WqkSXT6FEmCa+mY/AG8YYudQbNDLiDsLdfpgLvN1G09M+5JXUzk7WA=
-X-Received: by 2002:aa7:c4c7:: with SMTP id p7mr12645730edr.271.1591975681395;
- Fri, 12 Jun 2020 08:28:01 -0700 (PDT)
+        Fri, 12 Jun 2020 11:29:26 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41134 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbgFLP3Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 11:29:25 -0400
+Received: by mail-lj1-f194.google.com with SMTP id 9so11558356ljc.8;
+        Fri, 12 Jun 2020 08:29:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QuAjxxaqKlcJRQ0p/qwMZ0zHnlOSAqFpzmJBK0X5aP0=;
+        b=ev9mg2I4h0IJtr86/A5+dUEujlPr9enW3Pf4/EfAWGkf0rWsht+erpKC0yGhYMrALi
+         +ESH78IbWvHQPu9H/JlGgQS6+fjsN2qsyPE4bnx+gDkdfZQcHMIoYIg+nLTET5NDGAAq
+         4VpZcE4zDu4TYinLBYWMFxvw63f9Pzpdvu1ZdRr+3WDjzkywrmzGvLTP2cwXlk/8GB9L
+         qkLZ6zMouPjhH5NVbsHk1I32veyTQa0H0b/dWdvjHLULhVmJBmTEIOHTg31np/ugk9dr
+         oOIh/LhwKcgjQ4FIjIFW2ARE7yVqMBh7953VqIezzZAGvia1r+u/HjWo3jVqMFdVtd/4
+         e2Eg==
+X-Gm-Message-State: AOAM530YoXOEtjGm/sCEG9d3wR3t6oh+oo2NIA3/xHJFJ0g7n7Adu3Ez
+        dCSSn6xNuKryVUY7xOVcer8=
+X-Google-Smtp-Source: ABdhPJzNXjjcNDZ/7ULp47Al+CYcSlnN1Ku7GCqNvR32XQmRfp4aVCQT5OovsZ+JCAhxCKjZ405sCg==
+X-Received: by 2002:a2e:8901:: with SMTP id d1mr7378051lji.37.1591975761815;
+        Fri, 12 Jun 2020 08:29:21 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id w17sm2183199ljj.108.2020.06.12.08.29.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2020 08:29:20 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@kernel.org>)
+        id 1jjlcP-0002oc-77; Fri, 12 Jun 2020 17:29:21 +0200
+Date:   Fri, 12 Jun 2020 17:29:21 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Dmitry Safonov <0x7f454c46@gmail.com>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] serial: core: fix sysrq overhead regression
+Message-ID: <20200612152921.GP19480@localhost>
+References: <20200610152232.16925-1-johan@kernel.org>
+ <20200610152232.16925-3-johan@kernel.org>
+ <19008afb-bfbb-35e2-3bd5-e7fd1b7355cc@gmail.com>
 MIME-Version: 1.0
-References: <1591698261-22639-1-git-send-email-neal.liu@mediatek.com>
- <1591698261-22639-3-git-send-email-neal.liu@mediatek.com> <CAAOTY__g3Fnwsoqx=x_tgdMii5K_L9TmF_9048XbAOSJwb-Cxg@mail.gmail.com>
- <1591867563.27949.9.camel@mtkswgap22> <CAAOTY_8gOjr9nBUVA6oNu0v+D0Rc0AbhJ41wBCvDpMme+kuHmA@mail.gmail.com>
- <1591931042.32738.26.camel@mtkswgap22>
-In-Reply-To: <1591931042.32738.26.camel@mtkswgap22>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Fri, 12 Jun 2020 23:27:49 +0800
-X-Gmail-Original-Message-ID: <CAAOTY__zXZvv1gcKgxnbpv2RjDLyuQ1NEz8Nr+dtn4GKE1cvMA@mail.gmail.com>
-Message-ID: <CAAOTY__zXZvv1gcKgxnbpv2RjDLyuQ1NEz8Nr+dtn4GKE1cvMA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] soc: mediatek: devapc: add devapc-mt6873 driver
-To:     Neal Liu <neal.liu@mediatek.com>
-Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <19008afb-bfbb-35e2-3bd5-e7fd1b7355cc@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Neal:
+On Wed, Jun 10, 2020 at 05:24:57PM +0100, Dmitry Safonov wrote:
+> Hi Johan,
+> 
+> On 6/10/20 4:22 PM, Johan Hovold wrote:
+> > Commit 8e20fc391711 ("serial_core: Move sysrq functions from header
+> > file") converted the inline sysrq helpers to exported functions which
+> > are now called for every received character, interrupt and break signal
+> > also on systems without CONFIG_MAGIC_SYSRQ_SERIAL instead of being
+> > optimised away by the compiler.
+> 
+> The part with ifdeffing looks good to me.
+> 
+> > Inlining these helpers again also avoids the function call overhead when
+> > CONFIG_MAGIC_SYSRQ_SERIAL is enabled (e.g. when the port is not used as
+> > a console).
+> 
+> But this one, coul you add measures? (it will also help to understand if
+> it's a stable material).
 
-Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B46=E6=9C=8812=E6=97=
-=A5 =E9=80=B1=E4=BA=94 =E4=B8=8A=E5=8D=8811:04=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Hi Chun-Kuang,
->
-> [snip]
-> > > > > +/*
-> > > > > + * devapc_violation_irq - the devapc Interrupt Service Routine (=
-ISR) will dump
-> > > > > + *                       violation information including which m=
-aster violates
-> > > > > + *                       access slave.
-> > > > > + */
-> > > > > +static irqreturn_t devapc_violation_irq(int irq_number, void *de=
-v_id)
-> > > > > +{
-> > > > > +       u32 slave_type_num =3D mtk_devapc_ctx->soc->slave_type_nu=
-m;
-> > > > > +       const struct mtk_device_info **device_info;
-> > > > > +       struct mtk_devapc_vio_info *vio_info;
-> > > > > +       int slave_type, vio_idx, index;
-> > > > > +       const char *vio_master;
-> > > > > +       unsigned long flags;
-> > > > > +       bool normal;
-> > > > > +       u8 perm;
-> > > > > +
-> > > > > +       spin_lock_irqsave(&devapc_lock, flags);
-> > > > > +
-> > > > > +       device_info =3D mtk_devapc_ctx->soc->device_info;
-> > > > > +       vio_info =3D mtk_devapc_ctx->soc->vio_info;
-> > > > > +       normal =3D false;
-> > > > > +       vio_idx =3D -1;
-> > > > > +       index =3D -1;
-> > > > > +
-> > > > > +       /* There are multiple DEVAPC_PD */
-> > > > > +       for (slave_type =3D 0; slave_type < slave_type_num; slave=
-_type++) {
-> > > > > +               if (!check_type2_vio_status(slave_type, &vio_idx,=
- &index))
-> > > > > +                       if (!mtk_devapc_dump_vio_dbg(slave_type, =
-&vio_idx,
-> > > > > +                                                    &index))
-> > > > > +                               continue;
-> > > > > +
-> > > > > +               /* Ensure that violation info are written before
-> > > > > +                * further operations
-> > > > > +                */
-> > > > > +               smp_mb();
-> > > > > +               normal =3D true;
-> > > > > +
-> > > > > +               mask_module_irq(slave_type, vio_idx, true);
-> > > > > +
-> > > > > +               if (clear_vio_status(slave_type, vio_idx))
-> > > > > +                       pr_warn(PFX "%s, %s:0x%x, %s:0x%x\n",
-> > > > > +                               "clear vio status failed",
-> > > > > +                               "slave_type", slave_type,
-> > > > > +                               "vio_index", vio_idx);
-> > > > > +
-> > > > > +               perm =3D get_permission(slave_type, index, vio_in=
-fo->domain_id);
-> > > > > +
-> > > > > +               vio_master =3D mtk_devapc_ctx->soc->master_get
-> > > > > +                       (vio_info->master_id,
-> > > > > +                        vio_info->vio_addr,
-> > > > > +                        slave_type,
-> > > > > +                        vio_info->shift_sta_bit,
-> > > > > +                        vio_info->domain_id);
-> > > >
-> > > > Call mt6873_bus_id_to_master() directly. For first patch, make thin=
-gs
-> > > > as simple as possible.
-> > >
-> > > In devapc_violation_irq() function, we use common flow to handle each
-> > > devapc violation on different platforms. The master_get() has differe=
-nt
-> > > implementation on different platforms, that why it called indirectly.
-> > >
-> > > Once we have new platform, we only have to update devapc-mtxxxx.c
-> > > instead of common handler flow.
-> >
-> > You just upstream one SoC now, so I have no information of 2nd SoC.
-> > Without the 2nd SoC, how do we know what is common and what is SoC spec=
-ial?
-> > So the first patch should not consider the things which does not exist =
-yet.
-> >
-> > Regards,
-> > Chun-Kuang.
-> >
->
-> It has lots of refactoring work need to do if you really want make it
-> "simple". Could I explain more details and let you judge it is simple
-> enough?
+Interrupt processing takes 2-3% longer without the inlining with
+8250_omap on a beagleboard for example.
 
-Making driver "simple" is very important, so it worth to spend effort
-to make things simple. Everybody could modify this driver, so make
-this driver simple and everybody would join this easily.
+> If one function call actually matters here, than should
+> uart_insert_char() also go into header?
 
-> For most MediaTek DEVAPC hw, the violation interrupt handling sequence
-> is shown below.
->
-> 1. Domain processor receives a interrupt issued by DEVAPC.
-> 2. Software read the violation status and identify it.
-> 3. Software read the debug information which are stored in hw register.
->         a. debug information includes master ID, domain ID, violation
-> address, ...
-> 4. Transfer debug information to human readable strings.
-> 5. Extra handler to dispatch owner directly.
+Good question, it actually was originally intended to be inlined as all
+other per-character processing. Separate discussion though.
 
-I don't know why need extra handler? What does this extra handler could do?
-If indeed need it, separate extra handler part to an independent patch.
+The point is that we don't want a rarely used debugging feature to incur
+unnecessary additional overhead that can easily be avoided.
 
->
-> What we really care is which master violates the rules, and which slave
-> had been accessed unexpectedly.
->
-> Here are platform specific information:
-> 1. Slaves layout (platform devices)
-> 2. hw register layout which are stored violation information
-> 3. Master ID mapping table
-> 4. Domain ID mapping table
->
-> Hope these steps could help you understand what is common and what is
-> SoC specific. If you want to see the 2nd SoC's driver, I can also send
-> it for you to take a look.
-
-Please upstream 2nd SoC's driver, so I could review common part and
-SoC specific part.
-
-Regards,
-Chun-Kuang.
-
->
-> Thanks,
-> Neal
->
-> > >
-> > > >
-> > > > > +
-> > > > > +               if (!vio_master) {
-> > > > > +                       pr_warn(PFX "master_get failed\n");
-> > > > > +                       vio_master =3D "UNKNOWN_MASTER";
-> > > > > +               }
-> > > > > +
-> > > > > +               pr_info(PFX "%s - %s:0x%x, %s:0x%x, %s:0x%x, %s:0=
-x%x\n",
-> > > > > +                       "Violation", "slave_type", slave_type,
-> > > > > +                       "sys_index",
-> > > > > +                       device_info[slave_type][index].sys_index,
-> > > > > +                       "ctrl_index",
-> > > > > +                       device_info[slave_type][index].ctrl_index=
-,
-> > > > > +                       "vio_index",
-> > > > > +                       device_info[slave_type][index].vio_index)=
-;
-> > > > > +
-> > > > > +               pr_info(PFX "%s %s %s %s\n",
-> > > > > +                       "Violation - master:", vio_master,
-> > > > > +                       "access violation slave:",
-> > > > > +                       device_info[slave_type][index].device);
-> > > > > +
-> > > > > +               devapc_vio_reason(perm);
-> > > > > +
-> > > > > +               devapc_extra_handler(slave_type, vio_master, vio_=
-idx,
-> > > > > +                                    vio_info->vio_addr);
-> > > > > +
-> > > > > +               mask_module_irq(slave_type, vio_idx, false);
-> > > > > +       }
-> > > > > +
-> > > > > +       if (normal) {
-> > > > > +               spin_unlock_irqrestore(&devapc_lock, flags);
-> > > > > +               return IRQ_HANDLED;
-> > > > > +       }
-> > > > > +
-> > > > > +       spin_unlock_irqrestore(&devapc_lock, flags);
-> > > > > +       return IRQ_HANDLED;
-> > > > > +}
-> > > > > +
-> > >
-> > > [snip]
-> > >
-> > >
->
+Johan
