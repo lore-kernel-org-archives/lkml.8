@@ -2,308 +2,193 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBEF0C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E042DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A126720792
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:46:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6488206A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:50:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="g3fc+Wbv"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="n2lti7DG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726317AbgFLKqg (ORCPT
+        id S1726309AbgFLKui (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 06:46:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49726 "EHLO
+        Fri, 12 Jun 2020 06:50:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbgFLKqe (ORCPT
+        with ESMTP id S1726219AbgFLKui (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 06:46:34 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 408C4C08C5C3
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 03:46:33 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id t9so9708252ioj.13
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 03:46:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sargun.me; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=UhVaLcte/bQZseZm2UZAFNzVmahOYzGWl5NVHlmJpxM=;
-        b=g3fc+WbvrUuf7fzhuoSM0Bqtwx6DTuuljS5pqb5+sbhRyn7AozlgkV+xVvsrlIJm70
-         y8tnoO/CsR6mb0Qa+dTCCs+7QzzoMp5qBXlQzRnYVyzHvf4CXEh1ywyUXJYbFmR55tcp
-         +VWYtTQvNY9NU7lIhBRJqHs/gV43ZZhe2W8vI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UhVaLcte/bQZseZm2UZAFNzVmahOYzGWl5NVHlmJpxM=;
-        b=nUNvjTvCjiDy63rGkvIUrUTGDSkI6Jbwgop/C3GMz0barvJ6ojNG++oHFjzJTta7QF
-         yl6Y9xCtwYa/LI2pfuufAOsyPEP44Vsl9hGBYNJZVRP92r5OyK5SA8UzeNXssJDi1P3B
-         zkmwHjKv2xNn+5HWECHglhogPYwbTMGRS7GS38E0nXyxsa7QgE9w31Ra3E3d4XmUPLi4
-         aMPH2skt8aZWyNv77son+VQO8yUxzjwXojHBHYjUGtIWVdIP27k+wDWDxlEm1/lUHqfS
-         MeSRawaAz3/x1z3g77ZVw6uFDmdTyu8gOw+IW8NEoOMb67hVMqW/AZvyK/MrQbo/48bI
-         80qg==
-X-Gm-Message-State: AOAM532mgc4UQFb13D4cT9YemiZEwzN+B5niHZQq1MVbMNwag1u4KZAl
-        oJ4J8wCMbCP96zYLpLflFzr7FA==
-X-Google-Smtp-Source: ABdhPJwDceQMPwhQ9vSubJSTgFKXwO8RIBuV4ZgX7eSDJLKP7PusyHeuFmqsaFLk5Uw9SZlsvaWDuA==
-X-Received: by 2002:a6b:6709:: with SMTP id b9mr13217066ioc.108.1591958792714;
-        Fri, 12 Jun 2020 03:46:32 -0700 (PDT)
-Received: from ircssh-2.c.rugged-nimbus-611.internal (80.60.198.104.bc.googleusercontent.com. [104.198.60.80])
-        by smtp.gmail.com with ESMTPSA id l12sm2930795ilj.8.2020.06.12.03.46.31
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 12 Jun 2020 03:46:31 -0700 (PDT)
-Date:   Fri, 12 Jun 2020 10:46:30 +0000
-From:   Sargun Dhillon <sargun@sargun.me>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     'Kees Cook' <keescook@chromium.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        "containers@lists.linux-foundation.org" 
-        <containers@lists.linux-foundation.org>,
-        Giuseppe Scrivano <gscrivan@redhat.com>,
-        Robert Sesek <rsesek@google.com>,
-        Chris Palmer <palmer@google.com>, Jann Horn <jannh@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Wagner <daniel.wagner@bmw-carit.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Matt Denton <mpdenton@google.com>,
-        John Fastabend <john.r.fastabend@intel.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Tejun Heo <tj@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v3 1/4] fs, net: Standardize on file_receive helper to
- move fds across processes
-Message-ID: <20200612104629.GA15814@ircssh-2.c.rugged-nimbus-611.internal>
-References: <202006091346.66B79E07@keescook>
- <037A305F-B3F8-4CFA-B9F8-CD4C9EF9090B@ubuntu.com>
- <202006092227.D2D0E1F8F@keescook>
- <20200610081237.GA23425@ircssh-2.c.rugged-nimbus-611.internal>
- <202006101953.899EFB53@keescook>
- <20200611100114.awdjswsd7fdm2uzr@wittgenstein>
- <20200611110630.GB30103@ircssh-2.c.rugged-nimbus-611.internal>
- <067f494d55c14753a31657f958cb0a6e@AcuMS.aculab.com>
- <202006111634.8237E6A5C6@keescook>
- <94407449bedd4ba58d85446401ff0a42@AcuMS.aculab.com>
+        Fri, 12 Jun 2020 06:50:38 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95B54C03E96F
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 03:50:37 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0af400c173145ce686c7e8.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:f400:c173:145c:e686:c7e8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7CF6D1EC02E0;
+        Fri, 12 Jun 2020 12:50:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1591959034;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:references;
+        bh=i67OvWK19gpLvFCtSsadQeL9dLaZioiCanotMz9MAN4=;
+        b=n2lti7DGntdg6i8Xr02yv60JBjBlu4dSe7Jl39iorfmHHkkPCpskSkS7GPXhxuya1pkyag
+        Zph75nKViDADXboKl4MFuuI2wd94mFYp1gQiFR63xLZgx3g1mHi65f42wY9+Vj0kLxXvxo
+        NX4B+nrVEItKlgBDsIh+QaSLeKqe9Y8=
+Date:   Fri, 12 Jun 2020 12:50:26 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     x86-ml <x86@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>
+Subject: [RFC PATCH] x86/msr: Filter MSR writes
+Message-ID: <20200612105026.GA22660@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <94407449bedd4ba58d85446401ff0a42@AcuMS.aculab.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 08:36:03AM +0000, David Laight wrote:
-> From: Kees Cook
-> > Sent: 12 June 2020 00:50
-> > > From: Sargun Dhillon
-> > > > Sent: 11 June 2020 12:07
-> > > > Subject: Re: [PATCH v3 1/4] fs, net: Standardize on file_receive helper to move fds across
-> > processes
-> > > >
-> > > > On Thu, Jun 11, 2020 at 12:01:14PM +0200, Christian Brauner wrote:
-> > > > > On Wed, Jun 10, 2020 at 07:59:55PM -0700, Kees Cook wrote:
-> > > > > > On Wed, Jun 10, 2020 at 08:12:38AM +0000, Sargun Dhillon wrote:
-> > > > > > > As an aside, all of this junk should be dropped:
-> > > > > > > +	ret = get_user(size, &uaddfd->size);
-> > > > > > > +	if (ret)
-> > > > > > > +		return ret;
-> > > > > > > +
-> > > > > > > +	ret = copy_struct_from_user(&addfd, sizeof(addfd), uaddfd, size);
-> > > > > > > +	if (ret)
-> > > > > > > +		return ret;
-> > > > > > >
-> > > > > > > and the size member of the seccomp_notif_addfd struct. I brought this up
-> > > > > > > off-list with Tycho that ioctls have the size of the struct embedded in them. We
-> > > > > > > should just use that. The ioctl definition is based on this[2]:
-> > > > > > > #define _IOC(dir,type,nr,size) \
-> > > > > > > 	(((dir)  << _IOC_DIRSHIFT) | \
-> > > > > > > 	 ((type) << _IOC_TYPESHIFT) | \
-> > > > > > > 	 ((nr)   << _IOC_NRSHIFT) | \
-> > > > > > > 	 ((size) << _IOC_SIZESHIFT))
-> > > > > > >
-> > > > > > >
-> > > > > > > We should just use copy_from_user for now. In the future, we can either
-> > > > > > > introduce new ioctl names for new structs, or extract the size dynamically from
-> > > > > > > the ioctl (and mask it out on the switch statement in seccomp_notify_ioctl.
-> > > > > >
-> > > > > > Yeah, that seems reasonable. Here's the diff for that part:
-> > > > >
-> > > > > Why does it matter that the ioctl() has the size of the struct embedded
-> > > > > within? Afaik, the kernel itself doesn't do anything with that size. It
-> > > > > merely checks that the size is not pathological and it does so at
-> > > > > compile time.
-> > > > >
-> > > > > #ifdef __CHECKER__
-> > > > > #define _IOC_TYPECHECK(t) (sizeof(t))
-> > > > > #else
-> > > > > /* provoke compile error for invalid uses of size argument */
-> > > > > extern unsigned int __invalid_size_argument_for_IOC;
-> > > > > #define _IOC_TYPECHECK(t) \
-> > > > > 	((sizeof(t) == sizeof(t[1]) && \
-> > > > > 	  sizeof(t) < (1 << _IOC_SIZEBITS)) ? \
-> > > > > 	  sizeof(t) : __invalid_size_argument_for_IOC)
-> > > > > #endif
-> > > > >
-> > > > > The size itself is not verified at runtime. copy_struct_from_user()
-> > > > > still makes sense at least if we're going to allow expanding the struct
-> > > > > in the future.
-> > > > Right, but if we simply change our headers and extend the struct, it will break
-> > > > all existing programs compiled against those headers. In order to avoid that, if
-> > > > we intend on extending this struct by appending to it, we need to have a
-> > > > backwards compatibility mechanism. Just having copy_struct_from_user isn't
-> > > > enough. The data structure either must be fixed size, or we need a way to handle
-> > > > multiple ioctl numbers derived from headers with different sized struct arguments
-> > > >
-> > > > The two approaches I see are:
-> > > > 1. use more indirection. This has previous art in drm[1]. That's look
-> > > > something like this:
-> > > >
-> > > > struct seccomp_notif_addfd_ptr {
-> > > > 	__u64 size;
-> > > > 	__u64 addr;
-> > > > }
-> > > >
-> > > > ... And then it'd be up to us to dereference the addr and copy struct from user.
-> > >
-> > > Do not go down that route. It isn't worth the pain.
-> > >
-> > > You should also assume that userspace might have a compile-time check
-> > > on the buffer length (I've written one - not hard) and that the kernel
-> > > might (in the future - or on a BSD kernel) be doing the user copies
-> > > for you.
-> > >
-> > > Also, if you change the structure you almost certainly need to
-> > > change the name of the ioctl cmd as well as its value.
-> > > Otherwise a recompiled program will pass the new cmd value (and
-> > > hopefully the right sized buffer) but it won't have initialised
-> > > the buffer properly.
-> > > This is likely to lead to unexpected behaviour.
-Why do you say this? Assuming people are just pulling in <linux/seccomp.h>
-they will get both the ioctl number, and the struct. The one case where
-I can see things going wrong is languages which implement their own struct
-packing / ioctls and wouldn't get the updated # because it's hard coded.
+Hi,
 
+so this has been popping up from time to time in the last couple of
+years so let's have a go at it. The reason for it is explained in the
+commit message below but basically the goal is to have MSR writes
+disabled by default on distros and on the general Linux setup and only
+those who know what they're doing, can reenable them if they really need
+to.
 
-> > 
-> > Hmmm.
-> > 
-> > So, while initially I thought Sargun's observation about ioctl's fixed
-> > struct size was right, I think I've been swayed to Christian's view
-> > (which is supported by the long tail of struct size pain we've seen in
-> > other APIs).
-> > 
-> > Doing a separate ioctl for each structure version seems like the "old
-> > solution" now that we've got EA syscalls. So, I'd like to keep the size
-> > and copy_struct_from_user().
-> 
-> If the size is variable then why not get the application to fill
-> in the size of the structure it is sending at the time of the ioctl.
-> 
-> So you'd have:
-> #define xxx_IOCTL_17(param) _IOCW('X', 17, sizeof *(param))
-> 
-> The application code would then do:
-> 	ioctl(fd, xxx_IOCTL_17(arg), arg);
-> 
-> The kernel code can either choose to have specific 'case'
-> for each size, or mask off the length bits and do the
-> length check later.
-> 
-> 	David
-> 
-> 
-My suggest, written out (no idea if this code actually works), is as follows:
+The other, more important goal is to stop the perpetuation of poking at
+naked MSRs from userspace instead of defining proper functionality and
+interfaces which synchronize with the kernel's access to those MSRs.
 
-ioctl.h:
-/* This needs to be added */
-#define IOCDIR_MASK	(_IOC_DIRMASK << _IOC_DIRSHIFT)
+Hell, even while testing this, I did
 
+# wrmsr --all 0x10 12; rdmsr --all 0x10
 
-seccomp.h:
+0x10 being the TSC MSR and the module wouldn't unload after that. And
+this is just the latest example of what can go wrong.
 
-struct struct seccomp_notif_addfd {
-	__u64 fd;
-	...
-}
+Now, a concern with questionable validity has been raised that this
+might break "some tools on github" which poke directly at MSRs. And we
+don't break userspace.
 
-/* or IOW? */
-#define SECCOMP_IOCTL_NOTIF_ADDFD	SECCOMP_IOWR(3, struct seccomp_notif_addfd)
+Well, for starters, the functionality is still there - it is just behind
+a module parameter. Then, it'll hopefully convince people providing the
+functionality controlled by those MSRs, to design proper interfaces for
+that.
 
-seccomp.c:
-static long seccomp_notify_addfd(struct seccomp_filter *filter,
-				 struct seccomp_notif_addfd __user *uaddfd int size)
-{
-	struct seccomp_notif_addfd addfd;
-	int ret;
+For example, the whitelisted MSR_IA32_ENERGY_PERF_BIAS is used by
+cpupower in tools/. The hope is that this gets converted to a proper
+interface too.
 
-	if (size < 32)
-		return -EINVAL;
-	if (size > PAGE_SIZE)
-		return -E2BIG;
+In any case, let me add Linus as I might be missing some angle here.
 
-	ret = copy_struct_from_user(&addfd, sizeof(addfd), uaddfd, size);
-	if (ret)
-		return ret;
+Thx.
 
-	...
-}
+--
 
-/* Mask out size */
-#define SIZE_MASK(cmd)	(~IOCSIZE_MASK & cmd)
+Disable writing to MSRs from userspace by default. Writes can still be
+allowed by supplying the allow_writes=1 module parameter and the kernel
+will be tainted so that it shows in oopses.
 
-/* Mask out direction */
-#define DIR_MASK(cmd)	(~IOCDIR_MASK & cmd)
+Having unfettered access to all MSRs on a system is and has always been
+a disaster waiting to happen. Think performance counter MSRs, MSRs with
+sticky or locked bits, MSRs making major system changes like loading
+microcode, MTRRs, PAT configuration, TSC counter, security mitigations
+MSRs, you name it.
 
-static long seccomp_notify_ioctl(struct file *file, unsigned int cmd,
-				 unsigned long arg)
-{
-	struct seccomp_filter *filter = file->private_data;
-	void __user *buf = (void __user *)arg;
+This also destroys all the kernel's caching of MSR values for
+performance, as the recent case with MSR_AMD64_LS_CFG showed.
 
-	/* Fixed size ioctls. Can be converted later on? */
-	switch (cmd) {
-	case SECCOMP_IOCTL_NOTIF_RECV:
-		return seccomp_notify_recv(filter, buf);
-	case SECCOMP_IOCTL_NOTIF_SEND:
-		return seccomp_notify_send(filter, buf);
-	case SECCOMP_IOCTL_NOTIF_ID_VALID:
-		return seccomp_notify_id_valid(filter, buf);
-	}
+Another example is writing MSRs by mistake by simply typing the wrong
+MSR address. System freezes have been experienced that way.
 
-	/* Probably should make some nicer macros here */
-	switch (SIZE_MASK(DIR_MASK(cmd))) {
-	case SIZE_MASK(DIR_MASK(SECCOMP_IOCTL_NOTIF_ADDFD)):
-		return seccomp_notify_addfd(filter, buf, _IOC_SIZE(cmd));
-	default:
-		return -EINVAL;
-	}
-}
+In general, poking at MSRs under the kernel's feet is a bad bad idea.
 
---------
+So disable poking directly at the MSRs by default. If userspace still
+wants to do that, then proper interfaces should be defined which
+are under the kernel's control and accesses to those MSRs can be
+synchronized and sanitized properly.
 
-What boxes does this tick?
-* Forwards (and backwards) compatibility
-* Applies to existing commands
-* Command can be extended without requiring new ioctl to be defined
-* It well accomodates the future where we want to have a kernel
-  helper copy the structures from userspace
+Signed-off-by: Borislav Petkov <bp@suse.de>
 
-The fact that the size of the argument struct, and the ioctl are defined in the 
-same header gives us the ability to "cheat", and for the argument size to be 
-included / embedded for free in the command passed to ioctl. In turn, this
-gives us two benefits. First, it means we don't have to copy from user twice,
-and can just do it all in one shot since the size is passed with the syscall
-arguments. Second, it means that the user does not have to do the following:
-
-seccomp_notif_addfd addfd = {};
-addfd.size = sizeof(struct seccomp_notif_addfd)
-
-Because sizeof(struct seccomp_notif_addfd) is embedded in 
-SECCOMP_IOCTL_NOTIF_ADDFD based on the same headers they plucked the struct out of.
-
+diff --git a/arch/x86/kernel/msr.c b/arch/x86/kernel/msr.c
+index 1547be359d7f..931e7b00ffb7 100644
+--- a/arch/x86/kernel/msr.c
++++ b/arch/x86/kernel/msr.c
+@@ -41,6 +41,7 @@
+ 
+ static struct class *msr_class;
+ static enum cpuhp_state cpuhp_msr_state;
++static bool allow_writes;
+ 
+ static ssize_t msr_read(struct file *file, char __user *buf,
+ 			size_t count, loff_t *ppos)
+@@ -70,6 +71,18 @@ static ssize_t msr_read(struct file *file, char __user *buf,
+ 	return bytes ? bytes : err;
+ }
+ 
++static int filter_write(u32 reg)
++{
++	switch (reg) {
++	case MSR_IA32_ENERGY_PERF_BIAS:
++		return 0;
++
++	default:
++		pr_err("%s: Filter out MSR write to 0x%x\n", __func__, reg);
++		return -EPERM;
++	}
++}
++
+ static ssize_t msr_write(struct file *file, const char __user *buf,
+ 			 size_t count, loff_t *ppos)
+ {
+@@ -84,6 +97,12 @@ static ssize_t msr_write(struct file *file, const char __user *buf,
+ 	if (err)
+ 		return err;
+ 
++	if (!allow_writes) {
++		err = filter_write(reg);
++		if (err)
++			return err;
++	}
++
+ 	if (count % 8)
+ 		return -EINVAL;	/* Invalid chunk size */
+ 
+@@ -95,11 +114,18 @@ static ssize_t msr_write(struct file *file, const char __user *buf,
+ 		err = wrmsr_safe_on_cpu(cpu, reg, data[0], data[1]);
+ 		if (err)
+ 			break;
++
+ 		tmp += 2;
+ 		bytes += 8;
+ 	}
+ 
+-	return bytes ? bytes : err;
++	if (bytes) {
++		add_taint(TAINT_CPU_OUT_OF_SPEC, LOCKDEP_STILL_OK);
++
++		return bytes;
++	}
++
++	return err;
+ }
+ 
+ static long msr_ioctl(struct file *file, unsigned int ioc, unsigned long arg)
+@@ -242,6 +268,8 @@ static void __exit msr_exit(void)
+ }
+ module_exit(msr_exit)
+ 
++module_param(allow_writes, bool, 0400);
++
+ MODULE_AUTHOR("H. Peter Anvin <hpa@zytor.com>");
+ MODULE_DESCRIPTION("x86 generic MSR driver");
+ MODULE_LICENSE("GPL");
