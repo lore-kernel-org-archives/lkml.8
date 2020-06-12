@@ -2,139 +2,135 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B812AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 358EFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9ABED20835
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:30:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09EC32081A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:30:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbgFLOaQ (ORCPT
+        id S1726569AbgFLOaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 10:30:16 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49582 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726089AbgFLOaQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 10:30:16 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05CD46FF013211;
-        Fri, 12 Jun 2020 10:30:06 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31kgs524vs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 12 Jun 2020 10:30:05 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05CELQQG005959;
-        Fri, 12 Jun 2020 14:30:02 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma04ams.nl.ibm.com with ESMTP id 31g2s83gfv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 12 Jun 2020 14:30:02 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05CEShCb36307422
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jun 2020 14:28:43 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AB6B9A4060;
-        Fri, 12 Jun 2020 14:29:59 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BA9A9A405F;
-        Fri, 12 Jun 2020 14:29:56 +0000 (GMT)
-Received: from satheesh.ibmuc.com (unknown [9.102.1.49])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 12 Jun 2020 14:29:56 +0000 (GMT)
-From:   Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org
-Cc:     Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH V2] powerpc/pseries/svm: Drop unused align argument in alloc_shared_lppaca() function
-Date:   Fri, 12 Jun 2020 19:59:53 +0530
-Message-Id: <20200612142953.135408-1-sathnaga@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.26.2
+        Fri, 12 Jun 2020 10:30:22 -0400
+Received: from foss.arm.com ([217.140.110.172]:36932 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726089AbgFLOaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 10:30:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AE90931B;
+        Fri, 12 Jun 2020 07:30:18 -0700 (PDT)
+Received: from red-moon.cambridge.arm.com (unknown [10.57.14.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C4A753F6CF;
+        Fri, 12 Jun 2020 07:30:14 -0700 (PDT)
+Date:   Fri, 12 Jun 2020 15:30:06 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     John Garry <john.garry@huawei.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>, Marc Zyngier <maz@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>,
+        iommu <iommu@lists.linux-foundation.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Saravana Kannan <saravanak@google.com>, robh@kernel.org
+Subject: Re: arm64 iommu groups issue
+Message-ID: <20200612143006.GA4905@red-moon.cambridge.arm.com>
+References: <9625faf4-48ef-2dd3-d82f-931d9cf26976@huawei.com>
+ <4768c541-ebf4-61d5-0c5e-77dee83f8f94@arm.com>
+ <a18b7f26-9713-a5c7-507e-ed70e40bc007@huawei.com>
+ <ddc7eaff-c3f9-4304-9b4e-75eff2c66cd5@huawei.com>
+ <be464e2a-03d5-0b2e-24ee-96d0d14fd739@arm.com>
+ <35fc8d13-b1c1-6a9e-4242-284da7f00764@huawei.com>
+ <68643b18-c920-f997-a6d4-a5d9177c0f4e@arm.com>
+ <828ec7b3-27af-f0b9-b4a6-0886b0c24b5a@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-11_23:2020-06-11,2020-06-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=964 spamscore=0
- mlxscore=0 suspectscore=1 lowpriorityscore=0 cotscore=-2147483648
- bulkscore=0 priorityscore=1501 malwarescore=0 adultscore=0 phishscore=0
- clxscore=1015 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006110174
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <828ec7b3-27af-f0b9-b4a6-0886b0c24b5a@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Argument "align" in alloc_shared_lppaca() was unused inside the
-function. Let's drop it and update code comment for page alignment.
+On Mon, Feb 17, 2020 at 12:08:48PM +0000, John Garry wrote:
+> > > 
+> > > Right, and even worse is that it relies on the port driver even
+> > > existing at all.
+> > > 
+> > > All this iommu group assignment should be taken outside device
+> > > driver probe paths.
+> > > 
+> > > However we could still consider device links for sync'ing the SMMU
+> > > and each device probing.
+> > 
+> > Yes, we should get that for DT now thanks to the of_devlink stuff, but
+> > cooking up some equivalent for IORT might be worthwhile.
+> 
+> It doesn't solve this problem, but at least we could remove the iommu_ops
+> check in iort_iommu_xlate().
+> 
+> We would need to carve out a path from pci_device_add() or even device_add()
+> to solve all cases.
+> 
+> > 
+> > > > Another thought that crosses my mind is that when pci_device_group()
+> > > > walks up to the point of ACS isolation and doesn't find an existing
+> > > > group, it can still infer that everything it walked past *should* be put
+> > > > in the same group it's then eventually going to return. Unfortunately I
+> > > > can't see an obvious way for it to act on that knowledge, though, since
+> > > > recursive iommu_probe_device() is unlikely to end well.
+> > > 
+> 
+> [...]
+> 
+> > > And this looks to be the reason for which current
+> > > iommu_bus_init()->bus_for_each_device(..., add_iommu_group) fails
+> > > also.
+> > 
+> > Of course, just adding a 'correct' add_device replay without the
+> > of_xlate process doesn't help at all. No wonder this looked suspiciously
+> > simpler than where the first idea left off...
+> > 
+> > (on reflection, the core of this idea seems to be recycling the existing
+> > iommu_bus_init walk rather than building up a separate "waiting list",
+> > while forgetting that that wasn't the difficult part of the original
+> > idea anyway)
+> 
+> We could still use a bus walk to add the group per iommu, but we would need
+> an additional check to ensure the device is associated with the IOMMU.
+> 
+> > 
+> > > On this current code mentioned, the principle of this seems wrong to
+> > > me - we call bus_for_each_device(..., add_iommu_group) for the first
+> > > SMMU in the system which probes, but we attempt to add_iommu_group()
+> > > for all devices on the bus, even though the SMMU for that device may
+> > > yet to have probed.
+> > 
+> > Yes, iommu_bus_init() is one of the places still holding a
+> > deeply-ingrained assumption that the ops go live for all IOMMU instances
+> > at once, which is what warranted the further replay in
+> > of_iommu_configure() originally. Moving that out of
+> > of_platform_device_create() to support probe deferral is where the
+> > trouble really started.
+> 
+> I'm not too familiar with the history here, but could this be reverted now
+> with the introduction of of_devlink stuff?
 
-Cc: linux-kernel@vger.kernel.org
-Cc: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc: Ram Pai <linuxram@us.ibm.com>
-Cc: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
-Cc: Laurent Dufour <ldufour@linux.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Signed-off-by: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
----
+Hi John,
 
-V2:
-Added reviewed by Thiago.
-Dropped align argument as per Michael suggest.
-Modified commit msg.
+have we managed to reach a consensus on this thread on how to solve
+the issue ? Asking because this thread seems stalled - I am keen on
+getting it fixed.
 
-V1: http://patchwork.ozlabs.org/project/linuxppc-dev/patch/20200609113909.17236-1-sathnaga@linux.vnet.ibm.com/
----
- arch/powerpc/kernel/paca.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
-
-diff --git a/arch/powerpc/kernel/paca.c b/arch/powerpc/kernel/paca.c
-index 8d96169c597e..a174d64d9b4d 100644
---- a/arch/powerpc/kernel/paca.c
-+++ b/arch/powerpc/kernel/paca.c
-@@ -57,8 +57,8 @@ static void *__init alloc_paca_data(unsigned long size, unsigned long align,
- 
- #define LPPACA_SIZE 0x400
- 
--static void *__init alloc_shared_lppaca(unsigned long size, unsigned long align,
--					unsigned long limit, int cpu)
-+static void *__init alloc_shared_lppaca(unsigned long size, unsigned long limit,
-+					int cpu)
- {
- 	size_t shared_lppaca_total_size = PAGE_ALIGN(nr_cpu_ids * LPPACA_SIZE);
- 	static unsigned long shared_lppaca_size;
-@@ -68,6 +68,12 @@ static void *__init alloc_shared_lppaca(unsigned long size, unsigned long align,
- 	if (!shared_lppaca) {
- 		memblock_set_bottom_up(true);
- 
-+		/* See Documentation/powerpc/ultravisor.rst for mode details
-+		 *
-+		 * UV/HV data share is in PAGE granularity, In order to
-+		 * minimize the number of pages shared and maximize the
-+		 * use of a page, let's use page align.
-+		 */
- 		shared_lppaca =
- 			memblock_alloc_try_nid(shared_lppaca_total_size,
- 					       PAGE_SIZE, MEMBLOCK_LOW_LIMIT,
-@@ -122,7 +128,7 @@ static struct lppaca * __init new_lppaca(int cpu, unsigned long limit)
- 		return NULL;
- 
- 	if (is_secure_guest())
--		lp = alloc_shared_lppaca(LPPACA_SIZE, 0x400, limit, cpu);
-+		lp = alloc_shared_lppaca(LPPACA_SIZE, limit, cpu);
- 	else
- 		lp = alloc_paca_data(LPPACA_SIZE, 0x400, limit, cpu);
- 
--- 
-2.26.2
-
+Thanks,
+Lorenzo
