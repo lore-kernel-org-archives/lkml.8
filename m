@@ -2,91 +2,111 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 345F1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCAFAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CE0E20835
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:09:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591978168;
-	bh=fw3+y3jTQ/X9e2wxCd6+ulf0I5tMAzgBntQiTxh6tj0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lkgmXujZcPM8ojB2OU/YOcspSBRXTzg7CjKi4yfO9NVI517sY6N4C6m2FbOeZSnoh
-	 SOi1BECZoq+IvZsooxW5/mY9Sn2MSl72IxwD6X2GKq8fQnpwyb0CDsadcn2w6GaJw2
-	 Z0Ra2K+Ho68A2e0H/pBlw3soSVF9QHKrHVZU7O+4=
+	by mail.kernel.org (Postfix) with ESMTP id AE96520801
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:10:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LWM0Jgqe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726308AbgFLQJ0 (ORCPT
+        id S1726352AbgFLQKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 12:09:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45906 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726053AbgFLQJZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 12:09:25 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABDFC20836;
-        Fri, 12 Jun 2020 16:09:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591978165;
-        bh=fw3+y3jTQ/X9e2wxCd6+ulf0I5tMAzgBntQiTxh6tj0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vfM5E2k+jRvOGx5FUPL2TzrsdL03GrvntWrM9UGRM32rWx0PHS3pshPiudTDVkI5s
-         JD6RDgKyF/BmXsCdd24KcBopCMSBxZM7/zM2RFpr7d1SgTe4VL6sNmahb+2fAntQS3
-         qpj0aMNN0J+M91nYmruvkYk2w9Z6bE85ulhvmi2Q=
-Date:   Fri, 12 Jun 2020 17:09:22 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        robh@kernel.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] ASoC: tas2562: Update shutdown GPIO property
-Message-ID: <20200612160922.GL5396@sirena.org.uk>
-References: <20200612160603.2456-1-dmurphy@ti.com>
- <20200612160603.2456-2-dmurphy@ti.com>
+        Fri, 12 Jun 2020 12:10:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43258 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbgFLQKE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 12:10:04 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C90E8C03E96F;
+        Fri, 12 Jun 2020 09:10:04 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id i4so4051153pjd.0;
+        Fri, 12 Jun 2020 09:10:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xGowqnfFw5R0e+Qkd5MSY7h9qfsgL+NMoQac/0huSiE=;
+        b=LWM0JgqePgHG1PtiYO/tQhhZ1IXZhDY688eqkDRtu1G1KB+lncE7qt6C/K+OD2wmIo
+         tev4g5xZQfGKLtZ0hvJbO+hFbxh7VtYJUr0VfhammcNc+16YdKyPEoDrU+UqTTNm7XLq
+         mekKCMO+v1GtAxaPyZszhPsElYm4alT9pqHosUEB+yoz/ipvIZkjuTReR1HFg5aPgTIp
+         YUI/maaYipbxTTfA9mf7qWkSnmRZP3EbkWmXiOssuTHB6qN6L2YJ+0pm2Kt3lMpONx62
+         RUYKiVwKxZdPpFIkevS+tVZYMrn24QAyZsQIk6WxXsFgGDP+UxyUvpPcUqHyzBftA3Xm
+         toIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xGowqnfFw5R0e+Qkd5MSY7h9qfsgL+NMoQac/0huSiE=;
+        b=FvxgINoX7u0GGrWc8QdTTi8QI6leOgUe44hadKgm+rwUTPb0EZJ56WE+qUO27Ha1wb
+         0dmLuHztCuPADe3k8IU0YgykqQboVnCw/nsi2f/yJVyB3oTGcQOczdElkcYZIUZkQUqO
+         loFqiIgco6UY4UL04betue9TrGiOD1K5ZbZEeXcXrMOipAHBvDuwnfQarfiNZLtXKhQ4
+         u1Sy+n26zXFEUDLG72AfzgUjn16dLCgVXc0RYT1Fmd12xhuxg4tHn09tDsNFfV5rH1l7
+         kjmC8dyb5qz/0iYDQNCdB1ZSEoqIfbRyMwLkZWACc8ve+XyIk5BJH3LKhCDn5s2ZxTAe
+         VFOQ==
+X-Gm-Message-State: AOAM532kQlNOjZUZrRkh06c9BKEjmQQ5c5DdAHxqe9RyZMU2zzB6YMRu
+        gTZJVylgclVUPrk+qOdT8No=
+X-Google-Smtp-Source: ABdhPJxdvPCcklOmzTvVthz1jvb5cZfjfI+ke/dS44xFChUkO0IZXR8rFybDkP8OxkPZmS5VPqeVig==
+X-Received: by 2002:a17:902:b718:: with SMTP id d24mr11541086pls.185.1591978204151;
+        Fri, 12 Jun 2020 09:10:04 -0700 (PDT)
+Received: from Smcdef-MBP.lan ([103.136.221.72])
+        by smtp.gmail.com with ESMTPSA id x1sm5794879pju.3.2020.06.12.09.10.01
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 12 Jun 2020 09:10:03 -0700 (PDT)
+From:   Kaitao Cheng <pilgrimtao@gmail.com>
+To:     adobriyan@gmail.com, Markus.Elfring@web.de
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        songmuchun@bytedance.com, kernel-janitors@vger.kernel.org,
+        Kaitao Cheng <pilgrimtao@gmail.com>
+Subject: [PATCH v2] proc/fd: Remove unnecessary {files, f_flags, file} initialization in seq_show()
+Date:   Sat, 13 Jun 2020 00:09:46 +0800
+Message-Id: <20200612160946.21187-1-pilgrimtao@gmail.com>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="IuJpT0rwbUevm2bB"
-Content-Disposition: inline
-In-Reply-To: <20200612160603.2456-2-dmurphy@ti.com>
-X-Cookie: As seen on TV.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+'files' will be immediately reassigned. 'f_flags' and 'file' will be
+overwritten in the if{} or seq_show() directly exits with an error.
+so we don't need to consume CPU resources to initialize them.
 
---IuJpT0rwbUevm2bB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Kaitao Cheng <pilgrimtao@gmail.com>
+---
 
-On Fri, Jun 12, 2020 at 11:06:03AM -0500, Dan Murphy wrote:
+v2 ChangeLog:
+  1. Fix some commit message
+  2. Remove unnecessary f_flags initialization
 
-> -	tas2562->sdz_gpio = devm_gpiod_get_optional(dev, "shut-down-gpio",
-> +	tas2562->sdz_gpio = devm_gpiod_get_optional(dev, "shutdown",
->  						      GPIOD_OUT_HIGH);
+ fs/proc/fd.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-This also changes the name from shut-down to shutdown which will be
-incompatible (IIRC we do try -gpio as well as -gpios).
+diff --git a/fs/proc/fd.c b/fs/proc/fd.c
+index 81882a13212d..d3854b76e95e 100644
+--- a/fs/proc/fd.c
++++ b/fs/proc/fd.c
+@@ -19,9 +19,9 @@
+ 
+ static int seq_show(struct seq_file *m, void *v)
+ {
+-	struct files_struct *files = NULL;
+-	int f_flags = 0, ret = -ENOENT;
+-	struct file *file = NULL;
++	struct files_struct *files;
++	int f_flags, ret = -ENOENT;
++	struct file *file;
+ 	struct task_struct *task;
+ 
+ 	task = get_proc_task(m->private);
+-- 
+2.20.1
 
---IuJpT0rwbUevm2bB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7jqLEACgkQJNaLcl1U
-h9CZ8wf/d5qODxuDpJv7I7DVUFHsWC+TEvljN5BSeNaWD8YPZp7AGUL7Ayfvc8jv
-LHN5Bjt52gLgOGS9Sg8n3bCgI6fh72PPzPJcpV7GeniZx+WWU7nUdN9yz1kouS4H
-NPPMG9qaWS2hRFtB7IWEH+DBDTCcNQ/piY8DICO4fzw17JcK1uDec0jk1dila3hx
-UozPf3Z/icwZHOvrityv25rWt0V6lStgMJTWntynX/TbCVUzgLgmEbhboo5OqQp8
-FdM6CJxkqelIG3SsswJyfGESVZLUpLMDfzwwLuGPvdCEzoKlv7VEX7LyEHFaBVID
-1QTPOijQpcapd3GyZ1ziauKed7H2MQ==
-=vLSK
------END PGP SIGNATURE-----
-
---IuJpT0rwbUevm2bB--
