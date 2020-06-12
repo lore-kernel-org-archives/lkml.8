@@ -2,135 +2,152 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF68C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CDA1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5EFB2084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28A4120801
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:04:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Bem2VpT4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726538AbgFLREB (ORCPT
+        id S1726562AbgFLREH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 13:04:01 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41048 "EHLO mx2.suse.de"
+        Fri, 12 Jun 2020 13:04:07 -0400
+Received: from mout.web.de ([212.227.17.12]:45997 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726521AbgFLREA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 13:04:00 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 7629CAECE;
-        Fri, 12 Jun 2020 17:04:01 +0000 (UTC)
-Date:   Fri, 12 Jun 2020 19:03:52 +0200
-From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Chris Down <chris@chrisdown.name>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>, Roman Gushchin <guro@fb.com>,
-        linux-mm@kvack.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH 3/6] mm, memcg: Prevent memory.low load/store tearing
-Message-ID: <20200612170352.GA40768@blackbook>
-References: <cover.1584034301.git.chris@chrisdown.name>
- <448206f44b0fa7be9dad2ca2601d2bcb2c0b7844.1584034301.git.chris@chrisdown.name>
+        id S1726529AbgFLRED (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 13:04:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1591981431;
+        bh=YSEcAwOr387X5HBmVwv6BhS4b5bKKB88hiXcZp0ZjIY=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=Bem2VpT4SAL8WPc7TCdBlS8RKB1muu1WhG0QO0x9xUpDHmQec+vtW73pGUdcYrd0N
+         FtboUu/vN9Ptg4rX8dn2XhGW3DRs44hK7wDIla1jDJfCEoeazFpnBDWgkF8eZpZl/3
+         m34Ekqxy+oTj9P//Wjpy3YlmZOtldQ1zFuJqFOsg=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.131.95.40]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MYNrh-1jNX6M0Cob-00VCW4; Fri, 12
+ Jun 2020 19:03:51 +0200
+Subject: Re: [PATCH v2] proc/fd: Remove unnecessary variable initialisations
+ in seq_show()
+To:     Matthew Wilcox <willy@infradead.org>,
+        Kaitao Cheng <pilgrimtao@gmail.com>,
+        linux-fsdevel@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Muchun Song <songmuchun@bytedance.com>
+References: <20200612160946.21187-1-pilgrimtao@gmail.com>
+ <7fdada40-370d-37b3-3aab-bfbedaa1804f@web.de>
+ <20200612170033.GF8681@bombadil.infradead.org>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <98892099-4319-d442-5c6f-9f498d55e2c5@web.de>
+Date:   Fri, 12 Jun 2020 19:03:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6TrnltStXW4iwmi0"
-Content-Disposition: inline
-In-Reply-To: <448206f44b0fa7be9dad2ca2601d2bcb2c0b7844.1584034301.git.chris@chrisdown.name>
+In-Reply-To: <20200612170033.GF8681@bombadil.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:9sFaHUXWouaJW1+LYeqwBmbvgak1ESoDaQM3tkYgPLf+p9oxaM+
+ usBuy1WdMMLBoCyUCN4wKjEMizqTXeHF2AychDAr6lbQIjUaoE02hvsLqHWZJk8X2T3uJ91
+ XpfHTRM9fBgi56tyauJ9DtRxVYbZFtPsOEaSu/2J/nwFa4mDAmAJzlSmP701HCp0WAmjyok
+ umdWcKZY3vMr6wfwF34IQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:LuMuYuLr1/E=:+DxN5yWpLCcgZXKyA4GLHq
+ Y0QHcenj0EbqMHmNgMvZi7dQ4E7S14yBJl7zLLkN9fp406I8njImDp1CM6d9Rn2CVNVir9Rg7
+ +/jiqs/gb20yrGEAnSWK2ivONyTKSFjZ+DoLIp6HVM8zJFQKkA5CcHIHp7S3CKIBcp5MQwCoi
+ bBJvnGmuJVRg7kP534NvkkPBzg+sy7yjCYwKhLAFF1SzCJ/FIKjMceAy+zhjj1adpRQh7glAC
+ e5keSIj0p3azZ7+l4SnQh1NBamYAQPu1U5w0YvUsrxDmgVwy94KZ69H2CPPE4E2wCTHV6mNuT
+ wSLQTfbWSofw3NzGwH5ojHjSva4H9BW0oj/AUkQIHNiu8U4my99aFoVtCc6tONujDti1V5NVu
+ kL85eoxv7z5cefWCnLffzn54shzNgijZoVbi+Fs1HRiDILL6TAgt1IeevWXudaXCLEziOgVsW
+ yi5fQG907BUywH1QRQg3ltmKtMKb/yn/KMnTfWOMk5DQLrRQfAHH5OvW0JTfC5kszv4sQmZpM
+ nghVOh/y5pTnwM71dVwMNMCsPoutwzNS+p67Uc/0G4iz1mSLG5bKhAnyuq0QjbFeKtsAPmrfY
+ PEerE/t7jaSjjL3X43OjdToAIg4vLcuEo7j1xm1fPMq4j3UJKO0pVClvxOKLB1/waLBmyaiQz
+ I//qylMEEt7vGZ8wxLj/mMN4mSNQ6nBC7rUd0Xbnio6l1klXdbb9ScBFcnNw+5V2rMy9X+WMn
+ WKbZH8y0hwqFLwuR7shRXz48bcoIBLRIYPCqDs14BLCP/ELJr/WeFeDa1SisdF0QukO1/7E2R
+ 6XGxLibjtiYBK4/GzydPlzXU77sDtISB9EuuxOPljv7orOqiH1JIFunCs5W/IN+75mTULoKQi
+ TLh/tdGXkc6ndxI4ddS3BkQIy4Fd5Rw3fFozBadFhSyLNByF3z3B3duqL7/f5tIR5L/Rk3t0V
+ U3qNmARq4r1j2N29aon2DQKzLbMxea0YE4EqHJSxJtHlznBWSgK2ZGpp7sHy7hdbXtsPj78Ri
+ CQvDsCCR1JTJRJ8ZFU+w/TQKQl+dLvKb2wA0V2b9cqKGfJNJMoXYSO7KGAUlwk+UFu7O0ZzCo
+ asMSuuhee/yPCWfXdtmjhE/4N5gDoMdCRgXZ3CnkMCrmqwMIMBk04AG+D9Ky4o3eAWsM9Nym6
+ H9uoBxNa34BuiPPiVat0Somy94CfKvD1R4wivpm2jFIAq38mN4MWHRJ2NqCYHSmaiS+8wR+fM
+ 8OARsNIRDOHLS2mIh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---6TrnltStXW4iwmi0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hello.
-
-I see suspicious asymmetry, in the current mainline:
->	WRITE_ONCE(memcg->memory.emin, effective_protection(usage, parent_usage,
->			READ_ONCE(memcg->memory.min),
->			READ_ONCE(parent->memory.emin),
->			atomic_long_read(&parent->memory.children_min_usage)));
+>>> 'files' will be immediately reassigned. 'f_flags' and 'file' will be
+>>> overwritten in the if{} or seq_show() directly exits with an error.
+>>> so we don't need to consume CPU resources to initialize them.
+>>
+>> I suggest to improve also this change description.
+>>
+>> * Should the mentioned identifiers refer to variables?
+>>
+>> * Will another imperative wording be preferred?
+>>   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tr=
+ee/Documentation/process/submitting-patches.rst?id=3Db791d1bdf9212d944d749=
+a5c7ff6febdba241771#n151
+>>
+>> * I propose to extend the patch a bit more.
+>>   How do you think about to convert the initialisation for the variable=
+ =E2=80=9Cret=E2=80=9D
+>>   also into a later assignment?
 >
->	WRITE_ONCE(memcg->memory.elow, effective_protection(usage, parent_usage,
->			memcg->memory.low, READ_ONCE(parent->memory.elow),
->			atomic_long_read(&parent->memory.children_low_usage)));
+> Please stop commenting on people's changelogs.  You add no value.
 
-On Thu, Mar 12, 2020 at 05:33:01PM +0000, Chris Down <chris@chrisdown.name>=
- wrote:
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index aca2964ea494..c85a304fa4a1 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -6262,7 +6262,7 @@ enum mem_cgroup_protection mem_cgroup_protected(str=
-uct mem_cgroup *root,
->  		return MEMCG_PROT_NONE;
-> =20
->  	emin =3D memcg->memory.min;
-> -	elow =3D memcg->memory.low;
-> +	elow =3D READ_ONCE(memcg->memory.low);
-> =20
->  	parent =3D parent_mem_cgroup(memcg);
->  	/* No parent means a non-hierarchical mode on v1 memcg */
-> @@ -6291,7 +6291,7 @@ enum mem_cgroup_protection mem_cgroup_protected(str=
-uct mem_cgroup *root,
->  	if (elow && parent_elow) {
->  		unsigned long low_usage, siblings_low_usage;
-> =20
-> -		low_usage =3D min(usage, memcg->memory.low);
-> +		low_usage =3D min(usage, READ_ONCE(memcg->memory.low));
->  		siblings_low_usage =3D atomic_long_read(
->  			&parent->memory.children_low_usage);
-Is it possible that these hunks were lost during rebase/merge?
+Would you like to clarify concrete software development ideas?
 
-IMHO it should apply as:
-
--- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -6428,7 +6428,8 @@ enum mem_cgroup_protection mem_cgroup_protected(struc=
-t mem_cgroup *root,
-                        atomic_long_read(&parent->memory.children_min_usage=
-)));
-
-        WRITE_ONCE(memcg->memory.elow, effective_protection(usage, parent_u=
-sage,
--                       memcg->memory.low, READ_ONCE(parent->memory.elow),
-+                       READ_ONCE(memcg->memory.low),
-+                       READ_ONCE(parent->memory.elow),
-                        atomic_long_read(&parent->memory.children_low_usage=
-)));
-
- out:
-
-
-Michal
-
---6TrnltStXW4iwmi0
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl7jtXIACgkQia1+riC5
-qSjUig//d3bjL+7mCpm6speHzN1vPZbVuEsBjl+P4DhMwGSl1iiwWP8chYdm30Xg
-5l8eACsZox2Zta2TvNkqUKaYSanJ3+cY4j6vFecnJ2ADRwTG5OgKJHz4pPpTSDox
-9YVzYsOzLVF/cfoOiD2GPer+YBaEMyppaqWwfzAb2XoKUmdHsY1A/nBllvbTSm6c
-zbGdMqb3kt/ixm8cljE/0Wyk26QeyydHBQuU9XW1VQZniQhDWwi4tR7lfFCxMYtQ
-9/PUKtgmZ+ku8YOEoc9twXbOxR8C3MZo7zZslrcVvqrF1bVOkpYAZMIMGnSLFf9Q
-Mdcmbf81yPWEd/7hRO8vC8ICfBnU1nN14f1+MuXt56VWtmLnn/UqJ5sS3vqF5tgV
-iBlucq9xjxMKsvoT15tNq3DX+CKL5bdqAOglSmT/XwUW1hsVycQ0spCWQ5J4K/bQ
-ljahv3T9G4UgGouUwrVTZxU2+JC7YQg5BqJoC4sf0hLdFcVjdcq/aQis4b8TZLVs
-36wBd/QpHGVEh1bZ5LN2AcFY+WhahNswJjM2rx2WB1S9IMhukeIe2C/PjpKnc2Zw
-ff7+GBkyif/+0Xwj7N+aXSsLQ/0Xjv3kgcbOXGU0jjdoEpQxyOVtb8mAKGDRHt1D
-hIr7XNHBIOUgzGC+YBl0fGDVYCWXEg45umFPdf6OTx8MCONUjQI=
-=Uooi
------END PGP SIGNATURE-----
-
---6TrnltStXW4iwmi0--
+Regards,
+Markus
