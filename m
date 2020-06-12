@@ -2,83 +2,121 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB3DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D15B7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:09:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DA2B207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:09:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD49B20792
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:09:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591967363;
+	bh=I9d1ojAZUiTYSiLDBLRIoX88enbVpojzIv0+kaMNjT8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XUtb6sbacGT0ObJ9K/6CWvSEdeu5PK9DVKqVJyTDL3cMpAksOUwVaLefQytjc4By4
+	 SkzOmRi9awkScvX2kpdmicpLxnxCn+eMZJoOYVnTgK4P1QHZwiXRI84VTq4/YWB/47
+	 njJEEo9Mbiv5aNuunxhcP+egvDWGJFrI+dbhWoLI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbgFLNJR (ORCPT
+        id S1726432AbgFLNJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 09:09:17 -0400
-Received: from foss.arm.com ([217.140.110.172]:36196 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726112AbgFLNJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 09:09:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D93F61F1;
-        Fri, 12 Jun 2020 06:09:15 -0700 (PDT)
-Received: from [10.57.9.128] (unknown [10.57.9.128])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 197103F6CF;
-        Fri, 12 Jun 2020 06:09:13 -0700 (PDT)
-Subject: Re: [PATCH] drm/mediatek: remove unnecessary conversion to bool
-To:     Bernard Zhao <bernard@vivo.com>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     opensource.kernel@vivo.com
-References: <20200612124007.4990-1-bernard@vivo.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <e070b38f-fa77-5872-ea59-13098cebbe56@arm.com>
-Date:   Fri, 12 Jun 2020 14:09:07 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 12 Jun 2020 09:09:22 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:37066 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726112AbgFLNJU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 09:09:20 -0400
+Received: by mail-ed1-f68.google.com with SMTP id k8so6390441edq.4;
+        Fri, 12 Jun 2020 06:09:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=W6pdgl2PLO28Quo1DrifG6f4mzYJJhuViqwZMRjapYc=;
+        b=AP3Hcy8L+zzUSNaWB3Q1J7i8Hf0rMALuw1egau3JlyZSY67JK//9wf8mZLWOTyO40a
+         ESk+bYdsj33dfbOFtvJ3E9jciv7HGHN46s4F9LKi2mzrancbV/KN9gXfyMnHXSTH4M9r
+         0+fW65qkJ0kIIpdiEl3934dBJAksoeSdHWrCtswCIVidAho+gYm/9H7LoEc5RmkvgQOt
+         +lFTcisnQg/Y8csWKHFjgMSA+7tMwT94IlUxPsqlyxbxf+gEKgl+lXSnW+rxCLPxVdVl
+         4uhJyhYqBor/B7rS0J/d5/B8kppDz7hFb/KDW7+hFhiQgaRXHF7nOZSq0+h/InROPznp
+         D7qA==
+X-Gm-Message-State: AOAM532cQjN0UyNFKAvTR+GagL/H3EqC4gVB+u58TcKaxvUiG+VVDib4
+        HFqz3sUQLC2O/kQQ9Psxu9Y=
+X-Google-Smtp-Source: ABdhPJw2FHzo7NNJNvXCM5/NTxYsQrs4+yzO9DeAX0Qa3/zidsZXMTnnAP95p3AzhjAz2Ichf6M24g==
+X-Received: by 2002:a50:f145:: with SMTP id z5mr12174687edl.78.1591967358525;
+        Fri, 12 Jun 2020 06:09:18 -0700 (PDT)
+Received: from pi3 ([194.230.155.184])
+        by smtp.googlemail.com with ESMTPSA id p13sm3114724edx.69.2020.06.12.06.09.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2020 06:09:17 -0700 (PDT)
+Date:   Fri, 12 Jun 2020 15:09:15 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Wolfram Sang <wsa@kernel.org>
+Cc:     Marc Kleine-Budde <mkl@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Oleksij Rempel <o.rempel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org
+Subject: Re: [PATCH] i2c: imx: Fix external abort on early interrupt
+Message-ID: <20200612130915.GA26279@pi3>
+References: <1591796802-23504-1-git-send-email-krzk@kernel.org>
+ <20200612090517.GA3030@ninjato>
+ <20200612092941.GA25990@pi3>
+ <20200612095604.GA17763@ninjato>
+ <20200612102113.GA26056@pi3>
+ <20200612103149.2onoflu5qgwaooli@pengutronix.de>
+ <20200612103949.GB26056@pi3>
+ <20200612115116.GA18557@ninjato>
+ <859e8211-2c56-8dd5-d6fb-33e4358e4128@pengutronix.de>
+ <20200612130003.GB18557@ninjato>
 MIME-Version: 1.0
-In-Reply-To: <20200612124007.4990-1-bernard@vivo.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200612130003.GB18557@ninjato>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-12 13:40, Bernard Zhao wrote:
-> In function mtk_dsi_clk_hs_state, remove unnecessary conversion
-> to bool return, this change is to make the code a bit readable.
+On Fri, Jun 12, 2020 at 03:00:03PM +0200, Wolfram Sang wrote:
+> On Fri, Jun 12, 2020 at 02:18:06PM +0200, Marc Kleine-Budde wrote:
+> > On 6/12/20 1:51 PM, Wolfram Sang wrote:
+> > > 
+> > >> This basically kills the concept of devm for interrupts. Some other
+> > > 
+> > > It only works when you can ensure you have all interrupts disabled (and
+> > > none pending) in remove() or the error paths of probe() etc.
+> > 
+> > But when requesting the interrupt as shared the interrupt handler can get called
+> > any time, even if you have disabled the IRQ source in your IP core....The shared
+> > IRQ debug code tests this.
 > 
-> Signed-off-by: Bernard Zhao <bernard@vivo.com>
-> ---
->   drivers/gpu/drm/mediatek/mtk_dsi.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+> Yes, so you'd need something like
 > 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> index 270bf22c98fe..4491e64b3f06 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> @@ -319,7 +319,7 @@ static bool mtk_dsi_clk_hs_state(struct mtk_dsi *dsi)
->   	u32 tmp_reg1;
->   
->   	tmp_reg1 = readl(dsi->regs + DSI_PHY_LCCON);
-> -	return ((tmp_reg1 & LC_HS_TX_EN) == 1) ? true : false;
-> +	return ((tmp_reg1 & LC_HS_TX_EN) == 1);
+> 	if (clks_are_off)
+> 		return IRQ_NONE;
 
-FWIW the "== 1" is also redundant, not to mention a little confusing - 
-unless you go and look up the definition of LC_HS_TX_EN, it looks like 
-this is doing something more than simply testing if a single bit is set.
+Maybe then:
+	if (pm_runtime_enabled())?
 
-Robin.
+The device structure should be valid at this point so the call should
+work.
 
->   }
->   
->   static void mtk_dsi_clk_hs_mode(struct mtk_dsi *dsi, bool enter)
+
 > 
+> or skip devm_ for interrupts and handle it manually. (IIRC the input
+> subsystem really frowns upon devm + irqs for such reasons)
+> 
+> D'accord?
+
+I guess dream of managing every resource automatically is an utopia :)
+
+Best regards,
+Krzysztof
+
+
