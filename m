@@ -2,242 +2,184 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A34C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE4BBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:36:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6789020835
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DE8420691
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:36:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="BnwR7wP2";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="X5b6o91S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726543AbgFLPdY (ORCPT
+        id S1726379AbgFLPgD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 11:33:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51090 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726268AbgFLPdX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 11:33:23 -0400
-Received: from [10.44.0.192] (unknown [103.48.210.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC75920801;
-        Fri, 12 Jun 2020 15:33:19 +0000 (UTC)
-Subject: Re: drivers/net/can/kvaser_pciefd.c:801:17: sparse: sparse: cast
- removes address space '<asn:2>' of expression
-To:     Marc Kleine-Budde <mkl@pengutronix.de>,
-        kernel test robot <lkp@intel.com>,
-        Henning Colliander <henning.colliander@evidente.se>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Jimmy Assarsson <extja@kvaser.com>,
-        Christer Beskow <chbe@kvaser.com>
-References: <202006121356.lKucoVPo%lkp@intel.com>
- <e93fe895-a6b8-34ff-f9c8-00ec7138b1c1@pengutronix.de>
-From:   Greg Ungerer <gerg@linux-m68k.org>
-Message-ID: <9b599221-3c15-909c-168a-766c554827d9@linux-m68k.org>
-Date:   Sat, 13 Jun 2020 01:33:16 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 12 Jun 2020 11:36:03 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:57511 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726085AbgFLPgC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 11:36:02 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 938105C01A5;
+        Fri, 12 Jun 2020 11:36:00 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Fri, 12 Jun 2020 11:36:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=i46wPfrcUIR0bEAZlAykfvGtcc2
+        1AKB8ziEcZQaaqkw=; b=BnwR7wP2lY41wkLEtaL3I1g01xCASKpwAAI7z2XF24F
+        rNBvnzNRsYm2jdjA32TOQelLkZd9bPZ2PHiC5tU/o4VqgpnjIytRWO1aKF4gK2y8
+        UZuY9GiJEfq041OS0ipEUk8lRFc8yNBEPbwRY/SNZlWvxPtCY38pcojsDRiX1Bio
+        uiNxXDU0e5KPmslLxHvGhKr6mAuqCNm/JR0gGm8PHzV3IDMHKrs1xNJYppql9XRw
+        NlpZ/zNQhojPrcwRsWkuaKbpHw2sXnZ1PIBCnIEgqz1RAIly95UXujl5xPquwj26
+        unquYGFtTijdtxd/vw/sOU81LST4Cl190fxQVyxrSbA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=i46wPf
+        rcUIR0bEAZlAykfvGtcc21AKB8ziEcZQaaqkw=; b=X5b6o91SO/aDmqT6iWePhe
+        lDkgjaJJ59dVQoB8qP/jnAvNqt4nMhengMrO1EPhIDRmaMRDz28TslaqLtbvJyKL
+        bD02iLd6HyakJTRgqTQJIn2yVeXWGgg/8vOlqgP4oXL/Em4oRT4E4p6LZ2DUrEQP
+        I6b8+fvFWqEIgTuf3nMgUOujxY8RsRSAGNdwvQYTtj6mdNuDoyYzwGpQmnTLGehY
+        n0f4O4EMaVgFOql3ddH4OWcJj5a1X1q0N+OfSMx7o3orjB+UijQqLAF0gl+Fabkd
+        P1ttHEs3RJFFqgdkkY8mX51LkXJSmviMOOmm8XZaBKXBi2TWJbnEczTgwGsQk3kQ
+        ==
+X-ME-Sender: <xms:4KDjXgEg8GE_QHnW5MKlqja3GyOfCe6e_8Bj77QSByNcAeZzVBhgSQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudeiuddgledvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
+    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:4KDjXpWi4BZThfNVw3Rs8D334SYqOA4xl4d-LVhhW44eH2YMNT4SPg>
+    <xmx:4KDjXqJvc54evPMOFJFdT7NaOmc0h7U4-1RFN73w6WgXtKEo7Dss_w>
+    <xmx:4KDjXiGArdcVByWkVn_aveCfrcZ33-GZihId-VHUAbG6ZeTOT7b5sQ>
+    <xmx:4KDjXoKHGUr-bt_Qs5S2k8v2ixtTNUqdfGgeFB9v9ItkIvAPvv5iiw>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id C39BA30614FA;
+        Fri, 12 Jun 2020 11:35:59 -0400 (EDT)
+Date:   Fri, 12 Jun 2020 17:35:58 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Eric Anholt <eric@anholt.net>
+Cc:     Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>
+Subject: Re: [PATCH v3 032/105] drm/vc4: crtc: Enable and disable the PV in
+ atomic_enable / disable
+Message-ID: <20200612153558.3ekadlu3e2qctvf6@gilmour.lan>
+References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
+ <d2c1850e38e14f3def4c0307240e6826e296c14b.1590594512.git-series.maxime@cerno.tech>
+ <CADaigPU7c=1u47R9GzvGCH_Z2fywY1foGYEy=KbBikjUQpwUFg@mail.gmail.com>
+ <20200602141228.7zbkob7bw3owajsq@gilmour>
+ <CAPY8ntDZWJeu14mL5a0jqUWHFOEWm2OOBBkh4yjjP0oLU83UCQ@mail.gmail.com>
+ <CADaigPUHPhdrt9JkTfaw0iT7Z8z3Si-v2VJ-s+dhnFQaDNkAaA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <e93fe895-a6b8-34ff-f9c8-00ec7138b1c1@pengutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="kjenvng7r4phiuyn"
+Content-Disposition: inline
+In-Reply-To: <CADaigPUHPhdrt9JkTfaw0iT7Z8z3Si-v2VJ-s+dhnFQaDNkAaA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
 
-On 12/6/20 5:48 pm, Marc Kleine-Budde wrote:
-> the k-build robot found this sparse problem, triggered by building a CAN driver
-> for m68k. Is this a problem in our CAN driver or in the m68k headers?
+--kjenvng7r4phiuyn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I suspect a problem with the m68k (specifically non-mmu) headers.
+Hi Eric,
 
+On Tue, Jun 02, 2020 at 12:31:37PM -0700, Eric Anholt wrote:
+> On Tue, Jun 2, 2020 at 8:02 AM Dave Stevenson
+> <dave.stevenson@raspberrypi.com> wrote:
+> >
+> > Hi Maxime and Eric
+> >
+> > On Tue, 2 Jun 2020 at 15:12, Maxime Ripard <maxime@cerno.tech> wrote:
+> > >
+> > > Hi Eric
+> > >
+> > > On Wed, May 27, 2020 at 09:54:44AM -0700, Eric Anholt wrote:
+> > > > On Wed, May 27, 2020 at 8:50 AM Maxime Ripard <maxime@cerno.tech> w=
+rote:
+> > > > >
+> > > > > The VIDEN bit in the pixelvalve currently being used to enable or=
+ disable
+> > > > > the pixelvalve seems to not be enough in some situations, which w=
+hill end
+> > > > > up with the pixelvalve stalling.
+> > > > >
+> > > > > In such a case, even re-enabling VIDEN doesn't bring it back and =
+we need to
+> > > > > clear the FIFO. This can only be done if the pixelvalve is disabl=
+ed though.
+> > > > >
+> > > > > In order to overcome this, we can configure the pixelvalve during
+> > > > > mode_set_no_fb, but only enable it in atomic_enable and flush the=
+ FIFO
+> > > > > there, and in atomic_disable disable the pixelvalve again.
+> > > >
+> > > > What displays has this been tested with?  Getting this sequencing
+> > > > right is so painful, and things like DSI are tricky to get to light
+> > > > up.
+> > >
+> > > That FIFO is between the HVS and the HDMI PVs, so this was obviously
+> > > tested against that. Dave also tested the DSI output IIRC, so we shou=
+ld
+> > > be covered here.
+> >
+> > DSI wasn't working on the first patch set that Maxime sent - I haven't
+> > tested this one as yet but will do so.
+> > DPI was working early on to both an Adafruit 800x480 DPI panel, and
+> > via a VGA666 as VGA.
+> > HDMI is obviously working.
+> > VEC is being ignored now. The clock structure is more restricted than
+> > earlier chips, so to get the required clocks for the VEC without using
+> > fractional divides it compromises the clock that other parts of the
+> > system can run at (IIRC including the ARM). That's why the VEC has to
+> > be explicitly enabled for the firmware to enable it as the only
+> > output. It's annoying, but that's just a restriction of the chip.
+>=20
+> I'm more concerned with "make sure we don't regress pre-pi4 with this
+> series" than "pi4 displays all work from the beginning"
 
-> On 6/12/20 7:28 AM, kernel test robot wrote:
->> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
->> head:   b791d1bdf9212d944d749a5c7ff6febdba241771
->> commit: 26ad340e582d3d5958ed8456a1911d79cfb567b4 can: kvaser_pciefd: Add driver for Kvaser PCIEcan devices
->> date:   11 months ago
->> config: m68k-randconfig-s032-20200612 (attached as .config)
->> compiler: m68k-linux-gcc (GCC) 9.3.0
->> reproduce:
->>          # apt-get install sparse
->>          # sparse version: v0.6.1-250-g42323db3-dirty
->>          git checkout 26ad340e582d3d5958ed8456a1911d79cfb567b4
->>          # save the attached .config to linux build tree
->>          make W=1 C=1 ARCH=m68k CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
->>
->> If you fix the issue, kindly add following tag as appropriate
->> Reported-by: kernel test robot <lkp@intel.com>
->>
->>
->> sparse warnings: (new ones prefixed by >>)
->>
->>>> drivers/net/can/kvaser_pciefd.c:801:17: sparse: sparse: cast removes address space '<asn:2>' of expression
->>     drivers/net/can/kvaser_pciefd.c:805:17: sparse: sparse: cast removes address space '<asn:2>' of expression
->>     arch/m68k/include/asm/io_no.h:77:24: sparse: sparse: cast removes address space '<asn:2>' of expression
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast removes address space '<asn:2>' of expression
+I tested the DSI today on an RPI3, and I had to fix an issue with the
+HVS-PV muxing, but otherwise it works with this series. Otherwise, the
+HDMI and TXP work on the Pi3 too, I'll give a try to the VGA adapter on
+it next week to test DPI too.
 
-I think this one is due to not forcing the volatile cast in __raw_write().
-So this change will fix that:
+As a side note, my DSI display without my patches gives DSI transfer
+timeouts at boot, since at least (mainline) 5.4, I haven't tested
+further back. It just stalls the modeset for a while, but the display
+works fine after that.
 
-diff --git a/arch/m68k/include/asm/io_no.h b/arch/m68k/include/asm/io_no.h
-index 0498192e1d98..1bc739f1f1ad 100644
---- a/arch/m68k/include/asm/io_no.h
-+++ b/arch/m68k/include/asm/io_no.h
-@@ -14,15 +14,15 @@
-   * that behavior here first before we include asm-generic/io.h.
-   */
-  #define __raw_readb(addr) \
--    ({ unsigned char __v = (*(volatile unsigned char *) (addr)); __v; })
-+    ({ u8 __v = (*(__force volatile u8 *) (addr)); __v; })
-  #define __raw_readw(addr) \
--    ({ unsigned short __v = (*(volatile unsigned short *) (addr)); __v; })
-+    ({ u16 __v = (*(__force volatile u16 *) (addr)); __v; })
-  #define __raw_readl(addr) \
--    ({ unsigned int __v = (*(volatile unsigned int *) (addr)); __v; })
-+    ({ u32 __v = (*(__force volatile u32 *) (addr)); __v; })
-  
--#define __raw_writeb(b, addr) (void)((*(volatile unsigned char *) (addr)) = (b))
--#define __raw_writew(b, addr) (void)((*(volatile unsigned short *) (addr)) = (b))
--#define __raw_writel(b, addr) (void)((*(volatile unsigned int *) (addr)) = (b))
-+#define __raw_writeb(b, addr) (void)((*(__force volatile u8 *) (addr)) = (b))
-+#define __raw_writew(b, addr) (void)((*(__force volatile u16 *) (addr)) = (b))
-+#define __raw_writel(b, addr) (void)((*(__force volatile u32 *) (addr)) = (b))
-  
-  #if defined(CONFIG_COLDFIRE)
-  /*
+Does that ring any bell?
 
+Maxime
 
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast to restricted __le32
+--kjenvng7r4phiuyn
+Content-Type: application/pgp-signature; name="signature.asc"
 
-This one I am not sure about yet.
-Still investigating.
+-----BEGIN PGP SIGNATURE-----
 
-Regards
-Greg
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXuOg3gAKCRDj7w1vZxhR
+xRIVAQCQ9i9hYXPvUtEka4284eq9v67Twhyjfiex//nc2r4PIAD7BvQEVc4JW4id
+g0nVDJpdj1tkhinSfTe+fu1vNaG1fgU=
+=qQpW
+-----END PGP SIGNATURE-----
 
-
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast removes address space '<asn:2>' of expression
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast to restricted __le32
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast removes address space '<asn:2>' of expression
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast to restricted __le32
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast removes address space '<asn:2>' of expression
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast to restricted __le32
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast removes address space '<asn:2>' of expression
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast to restricted __le32
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast removes address space '<asn:2>' of expression
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast to restricted __le32
->>     arch/m68k/include/asm/io_no.h:77:24: sparse: sparse: cast removes address space '<asn:2>' of expression
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast removes address space '<asn:2>' of expression
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast to restricted __le32
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast removes address space '<asn:2>' of expression
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast to restricted __le32
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast removes address space '<asn:2>' of expression
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast to restricted __le32
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast removes address space '<asn:2>' of expression
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast to restricted __le32
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast removes address space '<asn:2>' of expression
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast to restricted __le32
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast removes address space '<asn:2>' of expression
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast to restricted __le32
->>     arch/m68k/include/asm/io_no.h:77:24: sparse: sparse: cast removes address space '<asn:2>' of expression
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast removes address space '<asn:2>' of expression
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast to restricted __le32
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast removes address space '<asn:2>' of expression
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast to restricted __le32
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast removes address space '<asn:2>' of expression
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast to restricted __le32
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast removes address space '<asn:2>' of expression
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast to restricted __le32
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast removes address space '<asn:2>' of expression
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast to restricted __le32
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast removes address space '<asn:2>' of expression
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast to restricted __le32
->>     arch/m68k/include/asm/io_no.h:77:24: sparse: sparse: cast removes address space '<asn:2>' of expression
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast removes address space '<asn:2>' of expression
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast to restricted __le32
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast removes address space '<asn:2>' of expression
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast to restricted __le32
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast removes address space '<asn:2>' of expression
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast to restricted __le32
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast removes address space '<asn:2>' of expression
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast to restricted __le32
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast removes address space '<asn:2>' of expression
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast to restricted __le32
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast removes address space '<asn:2>' of expression
->>     arch/m68k/include/asm/io_no.h:78:16: sparse: sparse: cast to restricted __le32
->>
->> vim +801 drivers/net/can/kvaser_pciefd.c
->>
->>     764	
->>     765	static netdev_tx_t kvaser_pciefd_start_xmit(struct sk_buff *skb,
->>     766						    struct net_device *netdev)
->>     767	{
->>     768		struct kvaser_pciefd_can *can = netdev_priv(netdev);
->>     769		unsigned long irq_flags;
->>     770		struct kvaser_pciefd_tx_packet packet;
->>     771		int nwords;
->>     772		u8 count;
->>     773	
->>     774		if (can_dropped_invalid_skb(netdev, skb))
->>     775			return NETDEV_TX_OK;
->>     776	
->>     777		nwords = kvaser_pciefd_prepare_tx_packet(&packet, can, skb);
->>     778	
->>     779		spin_lock_irqsave(&can->echo_lock, irq_flags);
->>     780	
->>     781		/* Prepare and save echo skb in internal slot */
->>     782		can_put_echo_skb(skb, netdev, can->echo_idx);
->>     783	
->>     784		/* Move echo index to the next slot */
->>     785		can->echo_idx = (can->echo_idx + 1) % can->can.echo_skb_max;
->>     786	
->>     787		/* Write header to fifo */
->>     788		iowrite32(packet.header[0],
->>     789			  can->reg_base + KVASER_PCIEFD_KCAN_FIFO_REG);
->>     790		iowrite32(packet.header[1],
->>     791			  can->reg_base + KVASER_PCIEFD_KCAN_FIFO_REG);
->>     792	
->>     793		if (nwords) {
->>     794			u32 data_last = ((u32 *)packet.data)[nwords - 1];
->>     795	
->>     796			/* Write data to fifo, except last word */
->>     797			iowrite32_rep(can->reg_base +
->>     798				      KVASER_PCIEFD_KCAN_FIFO_REG, packet.data,
->>     799				      nwords - 1);
->>     800			/* Write last word to end of fifo */
->>   > 801			__raw_writel(data_last, can->reg_base +
->>     802				     KVASER_PCIEFD_KCAN_FIFO_LAST_REG);
->>     803		} else {
->>     804			/* Complete write to fifo */
->>     805			__raw_writel(0, can->reg_base +
->>     806				     KVASER_PCIEFD_KCAN_FIFO_LAST_REG);
->>     807		}
->>     808	
->>     809		count = ioread32(can->reg_base + KVASER_PCIEFD_KCAN_TX_NPACKETS_REG);
->>     810		/* No room for a new message, stop the queue until at least one
->>     811		 * successful transmit
->>     812		 */
->>     813		if (count >= KVASER_PCIEFD_CAN_TX_MAX_COUNT ||
->>     814		    can->can.echo_skb[can->echo_idx])
->>     815			netif_stop_queue(netdev);
->>     816	
->>     817		spin_unlock_irqrestore(&can->echo_lock, irq_flags);
->>     818	
->>     819		return NETDEV_TX_OK;
->>     820	}
->>     821	
->>
->> ---
->> 0-DAY CI Kernel Test Service, Intel Corporation
->> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
->>
-> 
-> 
+--kjenvng7r4phiuyn--
