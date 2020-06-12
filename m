@@ -2,82 +2,120 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F176CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28751C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:27:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D71CB2074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:22:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02B922074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:27:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="c9DqVWlN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbgFLNWc (ORCPT
+        id S1726258AbgFLN1a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 09:22:32 -0400
-Received: from mga07.intel.com ([134.134.136.100]:64106 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726108AbgFLNWb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 09:22:31 -0400
-IronPort-SDR: 63gCey8JAfw0Q2D8vxCz9r0elzj68/6cKxaTnVFs8LRZwfyGMCPt/ZpBUwO3iRifNsIlewfx9D
- I2b9Sg/4LhZg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2020 06:22:30 -0700
-IronPort-SDR: SX89+EBuBgxAxrixyu2cRCTTkInMh0breXbEkcZpPaEhyA49f6UaS3hr6X/MaTouw6dqetDT+B
- Pv4ZRVio/8Eg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,503,1583222400"; 
-   d="scan'208";a="260827179"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 12 Jun 2020 06:22:29 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1jjjdf-00CZGm-Sd; Fri, 12 Jun 2020 16:22:31 +0300
-Date:   Fri, 12 Jun 2020 16:22:31 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
-Cc:     kishon@ti.com, vkoul@kernel.org, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        adrian.hunter@intel.com
-Subject: Re: [PATCH v4 2/2] phy: intel: Add Keem Bay eMMC PHY support
-Message-ID: <20200612132231.GH2428291@smile.fi.intel.com>
-References: <20200612035359.14246-1-wan.ahmad.zainie.wan.mohamad@intel.com>
- <20200612035359.14246-3-wan.ahmad.zainie.wan.mohamad@intel.com>
+        Fri, 12 Jun 2020 09:27:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46308 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbgFLN13 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 09:27:29 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A94DEC03E96F
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 06:27:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=bUBhyKW0TgX82+vyX9VE1I4aaadgLyRSmyDZenRqXG4=; b=c9DqVWlN9XHVVXEGOPovDQpEAe
+        FYb5pHmRpeQaPFN2e17zDrouGAyCOps/JJCFeuSE1E4LM5kC5z24NCXifxCzDePkAvYcCflUEGo+F
+        ZHNsKbuDoQr9plCsjAHNLwUek+T3+IP8W3OGXiubYA5G4NZSOqgk58njAjzqKSiPdzTp6hRmlvfCk
+        YKIXcM2RNPvWB+w8ehyyoGW6Xsb2tVCAeC6yOGKXWumLxlc0iAknvGpSpVoETQBfCgqgVQl0WXgWv
+        Vc/Lfbs/tHKJg+RwyvKNG0Fv1cBMvTPN7L5iVvSq+gK02JW3m/YJjBxYDjh5+I8D59aaCQxdscBm+
+        1GJyfn0w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jjji0-0004F4-D1; Fri, 12 Jun 2020 13:27:00 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 494533003E7;
+        Fri, 12 Jun 2020 15:26:57 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 07DD82BE34E29; Fri, 12 Jun 2020 15:26:57 +0200 (CEST)
+Date:   Fri, 12 Jun 2020 15:26:56 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Matt Helsley <mhelsley@vmware.com>
+Cc:     linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Julien Thierry <jthierry@redhat.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Subject: Re: [RFC][PATCH v4 18/32] objtool: mcount: Move nop_mcount()
+Message-ID: <20200612132656.GQ2531@hirez.programming.kicks-ass.net>
+References: <cover.1591125127.git.mhelsley@vmware.com>
+ <7109ceb239a88c2901eeb7f52c29f69cdb413cd3.1591125127.git.mhelsley@vmware.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200612035359.14246-3-wan.ahmad.zainie.wan.mohamad@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <7109ceb239a88c2901eeb7f52c29f69cdb413cd3.1591125127.git.mhelsley@vmware.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 11:53:59AM +0800, Wan Ahmad Zainie wrote:
-> Add support for eMMC PHY on Intel Keem Bay SoC.
+On Tue, Jun 02, 2020 at 12:50:11PM -0700, Matt Helsley wrote:
+> +static int nop_mcount(struct section * const rels,
+> +		      const char *const txtname)
+> +{
+> +	struct reloc *reloc;
+> +	struct section *txts = find_section_by_index(lf, rels->sh.sh_info);
+> +	unsigned mcountsym = 0;
+> +	int once = 0;
+> +
+> +	list_for_each_entry(reloc, &rels->reloc_list, list) {
+> +		int ret = -1;
+> +
+> +		if (!mcountsym)
+> +			mcountsym = get_mcountsym(reloc);
+> +
+> +		if (mcountsym == GELF_R_INFO(reloc->sym->idx, reloc->type) && !is_fake_mcount(reloc)) {
 
-Pretty much good, my comments below.
+This makes no sense to me; why not have mcountsym be a 'struct symbol
+*' and have get_mcountsym() return one of those.
 
-...
+	if (reloc->sym == mcountsym && ... )
 
-> +config PHY_KEEMBAY_EMMC
-> +	tristate "Intel Keem Bay EMMC PHY Driver"
+is much nicer, no?
 
-> +	depends on OF
+> +			if (make_nop) {
+> +				ret = make_nop(txts, reloc->offset);
+> +				if (ret < 0)
+> +					return -1;
+> +			}
+> +			if (warn_on_notrace_sect && !once) {
+> +				printf("Section %s has mcount callers being ignored\n",
+> +				       txtname);
+> +				once = 1;
+> +				/* just warn? */
+> +				if (!make_nop)
+> +					return 0;
+> +			}
+> +		}
+> +
+> +		/*
+> +		 * If we successfully removed the mcount, mark the relocation
+> +		 * as a nop (don't do anything with it).
+> +		 */
+> +		if (!ret) {
+> +			reloc->type = rel_type_nop;
+> +			rels->changed = true;
 
-No compile test?
+I have an elf_write_rela(), I'll make sure to Cc you.
 
-> +	select GENERIC_PHY
-> +	select REGMAP_MMIO
-> +	help
-> +	  Enable this to support the Keem Bay EMMC PHY.
-
-Please, be more verbose here, do I, as a user, need this? What will be the module name?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> +		}
+> +	}
+> +	return 0;
+> +}
