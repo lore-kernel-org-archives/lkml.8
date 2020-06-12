@@ -2,149 +2,168 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65139C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 23:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 301DDC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 23:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DC46206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 23:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A5772078A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 23:46:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Lw4T3E4Z"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WK4D0qcB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbgFLX0s (ORCPT
+        id S1726424AbgFLXqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 19:26:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54114 "EHLO
+        Fri, 12 Jun 2020 19:46:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726340AbgFLX0s (ORCPT
+        with ESMTP id S1726393AbgFLXqR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 19:26:48 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EE69C08C5C2
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 16:26:48 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id a127so5005214pfa.12
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 16:26:48 -0700 (PDT)
+        Fri, 12 Jun 2020 19:46:17 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7D81C08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 16:46:15 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id d8so4366491plo.12
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 16:46:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=cd8LTTDCxtDjnKjbsZ9jO43bYWe9oEBWpIizX4GQU0U=;
-        b=Lw4T3E4ZIvoTyrIoTGXbuwzkYPKLdcRB67fh6nMYa158xML70GfkNouZD/EYE7TP8Y
-         xNtj4cTC+2h6OZaQ1iXjCGAofdLANd7EOzdqX1xPjOVDOJR3pRYWFYyGnKF1YdcM4vzV
-         vGArfAei+IpSal6g6kpNg91GqadqRzJGLTaTE=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cGRzpb5lB92OX59ZTLb3ILoKGjAfwI8TyMX6hJG2aFU=;
+        b=WK4D0qcBlxRaJ4ICJ4AKgC72AKQhP9eKgCDlnSWkh1Vu7x2SGnx8b+w0dw8bkrhrZc
+         E5+A79X5XGoMa3N1nh7BOviCHx+N9YeQ3koFvfjtroCiUOmlVcILexZX2qf3uOfrkRPS
+         ANdpvT0x1t/mWNB4s0PaADQpGi/RZqq8zimSg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=cd8LTTDCxtDjnKjbsZ9jO43bYWe9oEBWpIizX4GQU0U=;
-        b=pIRXjVmdSbiDg+Ibu6XUyzl2Y2/VvgHMDKrOWZYCBGssoZJ6eDQ2qPWEQzGGlCYKci
-         DtJ7oYfHqTLP3neXwqv7kGvtZb3a5YgJTdwVcKYClBzM/xULPC1qAd0iZRY+HDjxp3C+
-         Iv7YGHyQUbzFIk65xS6L6ra9HDGXNxTscEeszMc4jurTLNUP2U1nDrbv1PMynT0KAfLA
-         tq8Qq05OeXToPAumVZcsIFZjVCeMhnKwfDwwZuX3gu8/jI1i45x6ICMV/zcgM0B98vpH
-         IoPCRCFvrtadPWNvqaYyPgKpsOYRccxKmdqQ/9TU6nUMrAgrNDnzgIwEWVlGH3uE//6U
-         d2zA==
-X-Gm-Message-State: AOAM530bLWGu7JMMmW5SwMfTApqgFORHOQw6q5nh69rXP1wljtkvsF58
-        Rzkslp3S/bN24t8AU7sQjR6HMw==
-X-Google-Smtp-Source: ABdhPJzK3Vh997LsBtVPHovSMTQbFpaNghRNnzPcII8FDjjXnQEctHlOWB1h2ubEGIERyr5pJ8Ulmg==
-X-Received: by 2002:a63:9e02:: with SMTP id s2mr12540767pgd.170.1592004407192;
-        Fri, 12 Jun 2020 16:26:47 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id i14sm6253209pju.24.2020.06.12.16.26.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 16:26:46 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cGRzpb5lB92OX59ZTLb3ILoKGjAfwI8TyMX6hJG2aFU=;
+        b=gXJrZVjmsVkBx9Bafot11X490RdWX+QktFhxSIfUT3Nb+QQgNByismlvAwat8fLUxm
+         iQlA8V5ZdLDJhAhTqkcciaHAU8LHSOHDhtEgAO/IdORmzvdENQa0S6x3x6gc7D7YwQS/
+         4rnjoXXxxqAeEHI+2H1VeMlEaCxO6Q9kdQ1O7gq/hwbxeYRa377ajAkC02yD/KEigZlj
+         mHMh8ovVjOCjwoNVLwLNN3C/sV8tP1IYT/JdBlcb5mg8Lm5v+Y/r4JaKtVL1ko2948tI
+         4sWfGh6MdRIFyGUD6HuVJeFXmewU89OJRM+L8vVE866TR6TAKVCiviFcaYWJQjG/I605
+         xVIg==
+X-Gm-Message-State: AOAM531SdTX/yfcBDFtGfuSuOceg1w+BEQE3RU6ZKYbXYge8sskInbT8
+        wyIdalJUmmTMKswPSAdJW76yag==
+X-Google-Smtp-Source: ABdhPJwA7krUN2We5VsuUZM60FdTbjQhCBCJa8wPWTZs8e/1st6xqlaRG9iTgKTewBXG1ggCmlk0Bw==
+X-Received: by 2002:a17:902:ee15:: with SMTP id z21mr13463040plb.233.1592005575019;
+        Fri, 12 Jun 2020 16:46:15 -0700 (PDT)
+Received: from mcchou0.mtv.corp.google.com ([2620:15c:202:201:b46:ac84:1014:9555])
+        by smtp.gmail.com with ESMTPSA id b19sm6198639pjo.57.2020.06.12.16.46.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 12 Jun 2020 16:46:13 -0700 (PDT)
+From:   Miao-chen Chou <mcchou@chromium.org>
+To:     Bluetooth Kernel Mailing List <linux-bluetooth@vger.kernel.org>
+Cc:     Alain Michaud <alainm@chromium.org>,
+        Michael Sun <michaelfsun@google.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Yoni Shavit <yshavit@chromium.org>,
+        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+        Miao-chen Chou <mcchou@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH v4 1/7] Bluetooth: Add definitions for advertisement monitor features
+Date:   Fri, 12 Jun 2020 16:45:50 -0700
+Message-Id: <20200612164243.v4.1.I636f906bf8122855dfd2ba636352bbdcb50c35ed@changeid>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200612015030.16072-1-tanmay@codeaurora.org>
-References: <20200612015030.16072-1-tanmay@codeaurora.org>
-Subject: Re: [PATCH v6 0/5] Add support for DisplayPort driver on
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, seanpaul@chromium.org,
-        robdclark@gmail.com, aravindh@codeaurora.org,
-        abhinavk@codeaurora.org, Tanmay Shah <tanmay@codeaurora.org>
-To:     Tanmay Shah <tanmay@codeaurora.org>, robh+dt@kernel.org,
-        sam@ravnborg.org
-Date:   Fri, 12 Jun 2020 16:26:45 -0700
-Message-ID: <159200440578.62212.5195358467251573190@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Tanmay Shah (2020-06-11 18:50:25)
-> These patches add support for Display-Port driver on SnapDragon
-> hardware. It adds
-> DP driver and DP PLL driver files along with the needed device-tree
-> bindings.
->=20
-> The block diagram of DP driver is shown below:
->=20
->=20
->                  +-------------+
->                  |DRM FRAMEWORK|
->                  +------+------+
->                         |
->                    +----v----+
->                    | DP DRM  |
->                    +----+----+
->                         |
->                    +----v----+
->      +------------+|   DP    +----------++------+
->      +        +---+| DISPLAY |+---+      |      |
->      |        +    +-+-----+-+    |      |      |
->      |        |      |     |      |      |      |
->      |        |      |     |      |      |      |
->      |        |      |     |      |      |      |
->      v        v      v     v      v      v      v
->  +------+ +------+ +---+ +----+ +----+ +---+ +-----+
->  |  DP  | |  DP  | |DP | | DP | | DP | |DP | | DP  |
->  |PARSER| | HPD  | |AUX| |LINK| |CTRL| |PHY| |POWER|
->  +--+---+ +---+--+ +---+ +----+ +--+-+ +-+-+ +-----+
->     |                              |     |
->  +--v---+                         +v-----v+
->  |DEVICE|                         |  DP   |
->  | TREE |                         |CATALOG|
->  +------+                         +---+---+
->                                       |
->                                   +---v----+
->                                   |CTRL/PHY|
->                                   |   HW   |
->                                   +--------+
->=20
+This adds support for Advertisement Monitor API. Here are the commands
+and events added.
+- Read Advertisement Monitor Feature command
+- Add Advertisement Pattern Monitor command
+- Remove Advertisement Monitor command
+- Advertisement Monitor Added event
+- Advertisement Monitor Removed event
 
-I've never seen a block diagram for a driver before...
+Signed-off-by: Miao-chen Chou <mcchou@chromium.org>
+---
 
->=20
-> These patches have dependency on clock driver changes mentioned below:
-> https://patchwork.kernel.org/patch/11245895/
-> https://patchwork.kernel.org/cover/11069083/
+Changes in v4: None
+Changes in v3:
+- Update command/event opcodes.
+- Correct data types.
 
-These are merged right? Don't need to include this if it's already
-merged.
+Changes in v2: None
 
-Can you include a changelog in the cover letter too so we know what has
-changed between versions of the patchset?
+ include/net/bluetooth/mgmt.h | 49 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
 
->=20
-> Chandan Uddaraju (4):
->   dt-bindings: msm/dp: add bindings of DP/DP-PLL driver for Snapdragon
->   drm: add constant N value in helper file
->   drm/msm/dp: add displayPort driver support
->   drm/msm/dp: add support for DP PLL driver
->=20
-> Jeykumar Sankaran (1):
->   drm/msm/dpu: add display port support in DPU
->=20
-[...]
->=20
->=20
-> base-commit: 48f99181fc118d82dc8bf6c7221ad1c654cb8bc2
+diff --git a/include/net/bluetooth/mgmt.h b/include/net/bluetooth/mgmt.h
+index 16e0d87bd8fae..fcc5d0349f549 100644
+--- a/include/net/bluetooth/mgmt.h
++++ b/include/net/bluetooth/mgmt.h
+@@ -702,6 +702,45 @@ struct mgmt_rp_set_exp_feature {
+ 	__le32 flags;
+ } __packed;
+ 
++#define MGMT_ADV_MONITOR_FEATURE_MASK_OR_PATTERNS    BIT(0)
++
++#define MGMT_OP_READ_ADV_MONITOR_FEATURES	0x0051
++#define MGMT_READ_ADV_MONITOR_FEATURES_SIZE	0
++struct mgmt_rp_read_adv_monitor_features {
++	__le32 supported_features;
++	__le32 enabled_features;
++	__le16 max_num_handles;
++	__u8 max_num_patterns;
++	__le16 num_handles;
++	__le16 handles[];
++}  __packed;
++
++struct mgmt_adv_pattern {
++	__u8 ad_type;
++	__u8 offset;
++	__u8 length;
++	__u8 value[31];
++} __packed;
++
++#define MGMT_OP_ADD_ADV_PATTERNS_MONITOR	0x0052
++struct mgmt_cp_add_adv_patterns_monitor {
++	__u8 pattern_count;
++	struct mgmt_adv_pattern patterns[];
++} __packed;
++#define MGMT_ADD_ADV_PATTERNS_MONITOR_SIZE	1
++struct mgmt_rp_add_adv_patterns_monitor {
++	__le16 monitor_handle;
++} __packed;
++
++#define MGMT_OP_REMOVE_ADV_MONITOR		0x0053
++struct mgmt_cp_remove_adv_monitor {
++	__le16 monitor_handle;
++} __packed;
++#define MGMT_REMOVE_ADV_MONITOR_SIZE		2
++struct mgmt_rp_remove_adv_monitor {
++	__le16 monitor_handle;
++} __packed;
++
+ #define MGMT_EV_CMD_COMPLETE		0x0001
+ struct mgmt_ev_cmd_complete {
+ 	__le16	opcode;
+@@ -933,3 +972,13 @@ struct mgmt_ev_exp_feature_changed {
+ 	__u8	uuid[16];
+ 	__le32	flags;
+ } __packed;
++
++#define MGMT_EV_ADV_MONITOR_ADDED	0x002b
++struct mgmt_ev_adv_monitor_added {
++	__le16 monitor_handle;
++}  __packed;
++
++#define MGMT_EV_ADV_MONITOR_REMOVED	0x002c
++struct mgmt_ev_adv_monitor_removed {
++	__le16 monitor_handle;
++}  __packed;
+-- 
+2.26.2
 
-What is this commit? I don't see it in linux-next.
