@@ -2,82 +2,135 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1037C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF68C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE7A720801
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:03:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="kUCOgcNL"
+	by mail.kernel.org (Postfix) with ESMTP id C5EFB2084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:04:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbgFLRDN (ORCPT
+        id S1726538AbgFLREB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 13:03:13 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:57992 "EHLO mail.skyhub.de"
+        Fri, 12 Jun 2020 13:04:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41048 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726089AbgFLRDJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 13:03:09 -0400
-Received: from zn.tnic (p200300ec2f0af40048a70bbbe71adfd0.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:f400:48a7:bbb:e71a:dfd0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 42D4E1EC0286;
-        Fri, 12 Jun 2020 19:03:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1591981388;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=wKDkjgF19/IiDKySgt9F5cncsG16y1YBxi2M6a3xPN0=;
-        b=kUCOgcNLwxQG2N1XYoUn9cdLG8LbkKJPKu31XMOnWZ0oShF3qldTth6z7CdA++rWcW5+ev
-        aEY0+Z42/gLRZ815rmrUQjJCpNS/0hxAJxlUScu9OO8EQugEj5jM0fkPPScnRgPOreTjzs
-        5HQ9DqSEEyjlYJWsZx7BG6Vz7/2dngY=
-Date:   Fri, 12 Jun 2020 19:03:03 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     x86-ml <x86@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH] x86/msr: Filter MSR writes
-Message-ID: <20200612170303.GD22660@zn.tnic>
-References: <20200612105026.GA22660@zn.tnic>
- <20200612163406.GA1026@linux.intel.com>
- <20200612164602.GC22660@zn.tnic>
- <20200612165709.GB1026@linux.intel.com>
+        id S1726521AbgFLREA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 13:04:00 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 7629CAECE;
+        Fri, 12 Jun 2020 17:04:01 +0000 (UTC)
+Date:   Fri, 12 Jun 2020 19:03:52 +0200
+From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Chris Down <chris@chrisdown.name>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>, Roman Gushchin <guro@fb.com>,
+        linux-mm@kvack.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: Re: [PATCH 3/6] mm, memcg: Prevent memory.low load/store tearing
+Message-ID: <20200612170352.GA40768@blackbook>
+References: <cover.1584034301.git.chris@chrisdown.name>
+ <448206f44b0fa7be9dad2ca2601d2bcb2c0b7844.1584034301.git.chris@chrisdown.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="6TrnltStXW4iwmi0"
 Content-Disposition: inline
-In-Reply-To: <20200612165709.GB1026@linux.intel.com>
+In-Reply-To: <448206f44b0fa7be9dad2ca2601d2bcb2c0b7844.1584034301.git.chris@chrisdown.name>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 09:57:09AM -0700, Sean Christopherson wrote:
-> DS_AREA takes a virtual (linear) address, i.e. the address can be legal from
-> the CPUs perspective but still lead to a #PF due to the address not being
-> mapped in the page tables.
 
-It's not that - peterz and tglx - and I assume you meant that too - you
-all want to taint on the very *attempt* to WRMSR, regardless of whether
-the MSR exists or not.
+--6TrnltStXW4iwmi0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I don't necessarily agree with that because I don't think we should
-taint when the MSR doesn't exist but if you all want it, sure, whatever.
-I don't care that deeply.
+Hello.
 
-> So users don't have to unload and reload the module just to enable or
-> disable writes.  I don't think it changes the protections in any way, a
-> priveleged user still needs to explicitly toggle the control.
+I see suspicious asymmetry, in the current mainline:
+>	WRITE_ONCE(memcg->memory.emin, effective_protection(usage, parent_usage,
+>			READ_ONCE(memcg->memory.min),
+>			READ_ONCE(parent->memory.emin),
+>			atomic_long_read(&parent->memory.children_min_usage)));
+>
+>	WRITE_ONCE(memcg->memory.elow, effective_protection(usage, parent_usage,
+>			memcg->memory.low, READ_ONCE(parent->memory.elow),
+>			atomic_long_read(&parent->memory.children_low_usage)));
 
-There's /sys/module/msr/parameters/. A privileged user can do whatever.
-A non-privileged should not disable that.
+On Thu, Mar 12, 2020 at 05:33:01PM +0000, Chris Down <chris@chrisdown.name>=
+ wrote:
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index aca2964ea494..c85a304fa4a1 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -6262,7 +6262,7 @@ enum mem_cgroup_protection mem_cgroup_protected(str=
+uct mem_cgroup *root,
+>  		return MEMCG_PROT_NONE;
+> =20
+>  	emin =3D memcg->memory.min;
+> -	elow =3D memcg->memory.low;
+> +	elow =3D READ_ONCE(memcg->memory.low);
+> =20
+>  	parent =3D parent_mem_cgroup(memcg);
+>  	/* No parent means a non-hierarchical mode on v1 memcg */
+> @@ -6291,7 +6291,7 @@ enum mem_cgroup_protection mem_cgroup_protected(str=
+uct mem_cgroup *root,
+>  	if (elow && parent_elow) {
+>  		unsigned long low_usage, siblings_low_usage;
+> =20
+> -		low_usage =3D min(usage, memcg->memory.low);
+> +		low_usage =3D min(usage, READ_ONCE(memcg->memory.low));
+>  		siblings_low_usage =3D atomic_long_read(
+>  			&parent->memory.children_low_usage);
+Is it possible that these hunks were lost during rebase/merge?
 
--- 
-Regards/Gruss,
-    Boris.
+IMHO it should apply as:
 
-https://people.kernel.org/tglx/notes-about-netiquette
+-- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -6428,7 +6428,8 @@ enum mem_cgroup_protection mem_cgroup_protected(struc=
+t mem_cgroup *root,
+                        atomic_long_read(&parent->memory.children_min_usage=
+)));
+
+        WRITE_ONCE(memcg->memory.elow, effective_protection(usage, parent_u=
+sage,
+-                       memcg->memory.low, READ_ONCE(parent->memory.elow),
++                       READ_ONCE(memcg->memory.low),
++                       READ_ONCE(parent->memory.elow),
+                        atomic_long_read(&parent->memory.children_low_usage=
+)));
+
+ out:
+
+
+Michal
+
+--6TrnltStXW4iwmi0
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl7jtXIACgkQia1+riC5
+qSjUig//d3bjL+7mCpm6speHzN1vPZbVuEsBjl+P4DhMwGSl1iiwWP8chYdm30Xg
+5l8eACsZox2Zta2TvNkqUKaYSanJ3+cY4j6vFecnJ2ADRwTG5OgKJHz4pPpTSDox
+9YVzYsOzLVF/cfoOiD2GPer+YBaEMyppaqWwfzAb2XoKUmdHsY1A/nBllvbTSm6c
+zbGdMqb3kt/ixm8cljE/0Wyk26QeyydHBQuU9XW1VQZniQhDWwi4tR7lfFCxMYtQ
+9/PUKtgmZ+ku8YOEoc9twXbOxR8C3MZo7zZslrcVvqrF1bVOkpYAZMIMGnSLFf9Q
+Mdcmbf81yPWEd/7hRO8vC8ICfBnU1nN14f1+MuXt56VWtmLnn/UqJ5sS3vqF5tgV
+iBlucq9xjxMKsvoT15tNq3DX+CKL5bdqAOglSmT/XwUW1hsVycQ0spCWQ5J4K/bQ
+ljahv3T9G4UgGouUwrVTZxU2+JC7YQg5BqJoC4sf0hLdFcVjdcq/aQis4b8TZLVs
+36wBd/QpHGVEh1bZ5LN2AcFY+WhahNswJjM2rx2WB1S9IMhukeIe2C/PjpKnc2Zw
+ff7+GBkyif/+0Xwj7N+aXSsLQ/0Xjv3kgcbOXGU0jjdoEpQxyOVtb8mAKGDRHt1D
+hIr7XNHBIOUgzGC+YBl0fGDVYCWXEg45umFPdf6OTx8MCONUjQI=
+=Uooi
+-----END PGP SIGNATURE-----
+
+--6TrnltStXW4iwmi0--
