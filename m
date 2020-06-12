@@ -2,172 +2,160 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 555DFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 06:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93820C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 06:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24E1C207F7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 06:16:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CAFC20838
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 06:16:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="K+sn4gF6"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="exZ6gq4j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgFLGQH (ORCPT
+        id S1726664AbgFLGQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 02:16:07 -0400
-Received: from mga06.intel.com ([134.134.136.31]:12539 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726385AbgFLGQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 02:16:02 -0400
-IronPort-SDR: cY/UCXhvWARYpXZbw+vpwu0y2GU6BFbZMxqMuMfe/VJi2VIz7T4tMOP5i/RdL5qEiIzexe7dfX
- jyTtzgf+JeLw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 23:16:02 -0700
-IronPort-SDR: 3luFmiIe3X4V+MPkUKGxO4cWOxonjOAxi31TJhfyS0YDh5FUIEhuG8UFJJfT3OEe8NPupkgGvW
- kmrNwMsAI16A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,502,1583222400"; 
-   d="scan'208";a="260748083"
-Received: from orsmsx107.amr.corp.intel.com ([10.22.240.5])
-  by orsmga007.jf.intel.com with ESMTP; 11 Jun 2020 23:16:02 -0700
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX107.amr.corp.intel.com (10.22.240.5) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 11 Jun 2020 23:16:01 -0700
-Received: from orsmsx608.amr.corp.intel.com (10.22.229.21) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 11 Jun 2020 23:16:01 -0700
-Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
- orsmsx608.amr.corp.intel.com (10.22.229.21) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 11 Jun 2020 23:16:01 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.177)
- by edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 11 Jun 2020 23:16:01 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Lxakwbe/TeLU3OYKIyB6JQSuGTgvamJlTe8Zp7iSOMyaFT9GVtCbG0cLHlBF1TBGSGvElWJxEnvLaItaaUUD45BrSuth2gK81rJKFA0hWcrUDFYBqkGbdyanpfAOuva10gcniyVN8tkAb8BIfqJVk800kGbVU713dhXg0SJmmq5THaEFpS8DPupExvEVnNPzDGDzdwIbVvcZqzcUCEJSpNc+XiCqvFs13HRnHGNL6szScK4J60pqiwFo5IZRMsLgD0WEwh2zzLF7ILiyYIoiJTGF5D23rVH10kJZWaWj8aB1Ayx7IWqYTY5WJdmB5w2Ifx/vxhNSs5PFt2n6dKC2HQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j0lBjlmXZcLKUJMtdzVWCqpg+RGiOlHN380p4TNOyUA=;
- b=PhuDrHpJdhAtDFgV/R9rivzTNQChN7T9w3MaYTZ7BR6WzARpgMHuuNDIxSNXFVWDa96A4LMQ2cw9N38hNpQ2a+FJG1uKHC/7lN9inUDGz2O1ckdLdy7rdCCQ+uDl5dQ9gPCJDi4aw2W4pgCoQ9w/OQS+OnQQwzrvavfJVO0Pn06V3JhvDYK2FytaYz1QDoGPDq/+ZIcrz1xmM7FiF5jZqbH+brk6t05LE9cxeaeo8R++y1GZ+PEgHg/E5FshIPGONDIU7rX0SU5l4hhqB7lLBS+LbqgdEcZnRFw+n/uPXGZHo3h5n0rdrkXVr/VZfmvzkfl8i0Vw/yJ2EV7uHEpvCQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j0lBjlmXZcLKUJMtdzVWCqpg+RGiOlHN380p4TNOyUA=;
- b=K+sn4gF66v0F8QBPbds8eVJY+hSXuyKIReivdK0131+INhh08R5Myv5TlwB1oYx4KnbixRDKAJXEdiXdNt1G+LTfm/dDMxZ0pyWTK5JeofaQ2rogVasyUWE9C80+6XYqPPe82O/HpArig7cLWoJl9tMQcVa0bRZ9gUs1NHn26HE=
-Received: from DM6PR11MB4316.namprd11.prod.outlook.com (2603:10b6:5:205::16)
- by DM6PR11MB2586.namprd11.prod.outlook.com (2603:10b6:5:c0::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.21; Fri, 12 Jun
- 2020 06:15:59 +0000
-Received: from DM6PR11MB4316.namprd11.prod.outlook.com
- ([fe80::b4fa:727e:34a9:b1a4]) by DM6PR11MB4316.namprd11.prod.outlook.com
- ([fe80::b4fa:727e:34a9:b1a4%5]) with mapi id 15.20.3066.023; Fri, 12 Jun 2020
- 06:15:58 +0000
-From:   "Lu, Brent" <brent.lu@intel.com>
-To:     Takashi Iwai <tiwai@suse.de>
-CC:     Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "Pierre-Louis Bossart DRIVERS" <pierre-louis.bossart@linux.intel.com>,
-        "authored:2/16=12%,added_lines:21/248=8%,removed_lines:5/84=6%,),Liam
-        Girdwood DRIVERS )" <lgirdwood@gmail.com>,
-        "commit_signer:6/16=38%,authored:6/16=38%,added_lines:123/248=50% 
-        ,removed_lines:36/84=43%,Kai Vehmanen DRIVERS )" 
-        <kai.vehmanen@linux.intel.com>,
-        "Daniel Baluta DRIVERS )" <daniel.baluta@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
-        Zhu Yingjiang <yingjiang.zhu@linux.intel.com>,
-        Keyon Jie <yang.jie@linux.intel.com>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        "sound-open-firmware@alsa-project.orgDRIVERS" 
-        <sound-open-firmware@alsa-project.orgDRIVERS>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] ASoC: SOF: Intel: hda: unsolicited RIRB response
-Thread-Topic: [PATCH] ASoC: SOF: Intel: hda: unsolicited RIRB response
-Thread-Index: AQHWP/c4ukUWDBOd20aRgUpUZ24R5KjTeMYAgAAAtZCAADqtAIAAy8xA
-Date:   Fri, 12 Jun 2020 06:15:58 +0000
-Message-ID: <DM6PR11MB4316E9E9E965C123E797210E97810@DM6PR11MB4316.namprd11.prod.outlook.com>
-References: <1591883073-17190-1-git-send-email-brent.lu@intel.com>
-        <b7e0b822a9deea506acaa40e0e31cc9f488bb446.camel@linux.intel.com>
-        <DM6PR11MB4316108BCF449D52E49C7E4297800@DM6PR11MB4316.namprd11.prod.outlook.com>
- <s5h5zbxeb5t.wl-tiwai@suse.de>
-In-Reply-To: <s5h5zbxeb5t.wl-tiwai@suse.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: suse.de; dkim=none (message not signed)
- header.d=none;suse.de; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [36.230.210.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c1b523e8-dbd1-4dec-2321-08d80e981303
-x-ms-traffictypediagnostic: DM6PR11MB2586:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB25867FB39D97212621641B6497810@DM6PR11MB2586.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1468;
-x-forefront-prvs: 0432A04947
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: PAf4Yh/vjzDrq/iu/oL2K7A00X6x0WlX5DnF9EXTsOJcmR+DF06xGHtAr0mCJITrcU80TDCJd0JvA/e3y2qt1NXzS2L4Rzb7NU5OYkxXcbreTF9seUPnQ1JF91+f8+X8nII/jECbsFn2B9attRmViFTZCdHAkqK6bTIvVvZC5E/8+83pjQw8BBuspXELGFXmaAWMz5ENiBGIdoz2kwigZelxIKr6GFfqPH99j0FJtQCnor48QxkNxSVVIFufsCSOQTvVBSBqL2SuYqWDZqgPCVEjd+xoUQ9zJAwILXCwzRe8Qg+9CEuDDrqV3byUZufrebCPNXFCKGKEUUPytGz4tA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB4316.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(136003)(396003)(376002)(346002)(39860400002)(4744005)(6916009)(52536014)(54906003)(55016002)(8936002)(33656002)(316002)(7696005)(71200400001)(66476007)(6506007)(2906002)(66946007)(8676002)(66446008)(9686003)(83380400001)(4326008)(66556008)(86362001)(76116006)(7416002)(26005)(186003)(5660300002)(478600001)(64756008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 9iB0tpFYuLHsQeSZb1lvIolMvFQ/oDDhhd4u1OOhV6Iq3Ahh1qFlbBZmH3KdwOJOQdVe+eylxDVOkV6qAucgu3Qcgo+4FLK8q+6X4dCVwduNh1EuztBft4hJB2pbF/g+R/01Tv2nYNUHa099xk/qMegJr+HgzXhZltSVjPjz0YuYCEeDfHAtCS7It/wv430jgdxb7i7GRLJZrMuvUQ9nOd2RMH9UO540fTxkXz5QvSXbrTVtb+EX1wlIaUlFykegBCza7n9MRU3lm6YJuPoLsCpxY7xdb0GVWJ7qTYXZGgJPir2Cf9ifsG4O2bgQz6gG10PjRvB8hUmoDLmxR7e7fgasxmyLR1mT0ms3tlxRSJFvow5NaTMilxur7LmCwSPqOayBenGHmWDWBAp9pjnupLIegGrJiVHkTqzSHgrRVRD8DihkeqaXZJnL7zAXArukrmrwlfwcc0SltCsrG2LtqN9tcNgZr4v80dCroNTi7ngI5VZ+TcD4mnL01dDLzt3e
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 12 Jun 2020 02:16:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36212 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726559AbgFLGPn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 02:15:43 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0CFDC08C5C7
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 23:15:42 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id h95so3433312pje.4
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 23:15:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=B/AHWNUq2hQO+UxX262IRskqa77C3GfCCHKEkjol6ks=;
+        b=exZ6gq4jica7r1Am4MijAZBEmoV17NqQcQgJBgDTB2O7D/eIFqcS+QBv09tg+lpoX4
+         4yo1vthRuvAuJoA+pjrPN3RhmCOry3XQAYhqxQqbsYkwnVGzXldC2S3UsDKayHHlOkkX
+         zm716mYH2jX82WEfVBfoR6ixRw+Serj/6RX7w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=B/AHWNUq2hQO+UxX262IRskqa77C3GfCCHKEkjol6ks=;
+        b=knmjV9fGgsCuUVFpyrXUMXjquFXvU6b9XW8LTIuKMT2mlW8T2jEhjA/aU2Mwlctp7d
+         lWnqU+pZNYJ2kNRyOMLWO2Udhf7kbLTTfqTL8RTmk8Hgauxs106tlz0yGk48Sn48RGvn
+         QRi/FxE73cCWfe8vQz7NOBHFzU6uX5adOZDFH4PvZG4dnUNimmgU9ZcgJ9TCrwhTNlIJ
+         sc1FAAKVCauZHB+Fv15PebYMoDb3NXSWambRSFaQqExo+qx4bLiEjtnl9IRzqczHtAMN
+         pKKWGpq8cIEGO11yAyS41uvi2NsI3juYi37dDzicMIFjoirfWvUMlQtI3Sh0EigPdbqx
+         AmSg==
+X-Gm-Message-State: AOAM533Cmwa6zbZmSDy0IfAPLxtPWc8ZecRKi2qZb+bO11Znf0jlgzWt
+        73kFC5a98+lkBpTr0JJzvue3Sg==
+X-Google-Smtp-Source: ABdhPJz8NU4IP8LCjEiHNcslLnkzsS225CV7pvoO8bQcuchT0N4rkCWqqcW8gUl2rbwYiD6sdOug/w==
+X-Received: by 2002:a17:902:7408:: with SMTP id g8mr9559400pll.143.1591942542347;
+        Thu, 11 Jun 2020 23:15:42 -0700 (PDT)
+Received: from mcchou0.mtv.corp.google.com ([2620:15c:202:201:b46:ac84:1014:9555])
+        by smtp.gmail.com with ESMTPSA id g6sm4933923pfb.164.2020.06.11.23.15.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Jun 2020 23:15:41 -0700 (PDT)
+From:   Miao-chen Chou <mcchou@chromium.org>
+To:     Bluetooth Kernel Mailing List <linux-bluetooth@vger.kernel.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+        Alain Michaud <alainm@chromium.org>,
+        Michael Sun <michaelfsun@google.com>,
+        Yoni Shavit <yshavit@chromium.org>,
+        Miao-chen Chou <mcchou@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH v3 5/7] Bluetooth: Notify adv monitor added event
+Date:   Thu, 11 Jun 2020 23:15:27 -0700
+Message-Id: <20200611231459.v3.5.Idb2c6bf4deb8728c363c3938b1d33057e07ca9c9@changeid>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200611231459.v3.1.I636f906bf8122855dfd2ba636352bbdcb50c35ed@changeid>
+References: <20200611231459.v3.1.I636f906bf8122855dfd2ba636352bbdcb50c35ed@changeid>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: c1b523e8-dbd1-4dec-2321-08d80e981303
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2020 06:15:58.6897
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xkU+IJO8TfQWZX9ecXcEcat/HsQNAhsxcrRcxeagEcCzTLCas5G4rnynMQry0NoOx2Aj9WA/usqBZ5oBTPnBkQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB2586
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->=20
-> Now I noticed that the legacy driver already addressed it recently via co=
-mmit
-> 6d011d5057ff
->     ALSA: hda: Clear RIRB status before reading WP
->=20
-> We should have checked SOF at the same time, too...
->=20
->=20
-> thanks,
->=20
-> Takashi
+This notifies management sockets on MGMT_EV_ADV_MONITOR_ADDED event.
 
-Hi Takashi-san,
+The following test was performed.
+- Start two btmgmt consoles, issue a btmgmt advmon-add command on one
+console and observe a MGMT_EV_ADV_MONITOR_ADDED event on the other
 
-Yes you are correct. I tested Chrome v5.4 on a CML Chromebook 'hatch' and
-realize the SOF does no suffer from this issue because the 'sync write' fea=
-ture
-is enabled in hda_init. Soon I can reproduce the issue after turning it off=
-. So I
-think it's still worthy to have this fix in case we need to disable 'sync w=
-rite'
-someday.
+Signed-off-by: Miao-chen Chou <mcchou@chromium.org>
+---
 
+Changes in v3:
+- Convert the endianness of the returned handle.
 
-Regards,
-Brent
+Changes in v2: None
+
+ net/bluetooth/mgmt.c | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
+
+diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
+index 5dc47bba98a90..949964862c1b6 100644
+--- a/net/bluetooth/mgmt.c
++++ b/net/bluetooth/mgmt.c
+@@ -155,6 +155,7 @@ static const u16 mgmt_events[] = {
+ 	MGMT_EV_EXT_INFO_CHANGED,
+ 	MGMT_EV_PHY_CONFIGURATION_CHANGED,
+ 	MGMT_EV_EXP_FEATURE_CHANGED,
++	MGMT_EV_ADV_MONITOR_ADDED,
+ };
+ 
+ static const u16 mgmt_untrusted_commands[] = {
+@@ -3853,6 +3854,16 @@ static int set_exp_feature(struct sock *sk, struct hci_dev *hdev,
+ 			       MGMT_STATUS_NOT_SUPPORTED);
+ }
+ 
++static void mgmt_adv_monitor_added(struct sock *sk, struct hci_dev *hdev,
++				   u16 handle)
++{
++	struct mgmt_ev_adv_monitor_added ev;
++
++	ev.monitor_handle = cpu_to_le16(handle);
++
++	mgmt_event(MGMT_EV_ADV_MONITOR_ADDED, hdev, &ev, sizeof(ev), sk);
++}
++
+ static int read_adv_monitor_features(struct sock *sk, struct hci_dev *hdev,
+ 				     void *data, u16 len)
+ {
+@@ -3905,8 +3916,8 @@ static int add_adv_patterns_monitor(struct sock *sk, struct hci_dev *hdev,
+ 	struct mgmt_rp_add_adv_patterns_monitor rp;
+ 	struct adv_monitor *m = NULL;
+ 	struct adv_pattern *p = NULL;
++	unsigned int mp_cnt = 0, prev_adv_monitors_cnt;
+ 	__u8 cp_ofst = 0, cp_len = 0;
+-	unsigned int mp_cnt = 0;
+ 	int err, i;
+ 
+ 	BT_DBG("request for %s", hdev->name);
+@@ -3970,6 +3981,8 @@ static int add_adv_patterns_monitor(struct sock *sk, struct hci_dev *hdev,
+ 
+ 	hci_dev_lock(hdev);
+ 
++	prev_adv_monitors_cnt = hdev->adv_monitors_cnt;
++
+ 	err = hci_add_adv_monitor(hdev, m);
+ 	if (err) {
+ 		if (err == -ENOSPC) {
+@@ -3980,6 +3993,9 @@ static int add_adv_patterns_monitor(struct sock *sk, struct hci_dev *hdev,
+ 		goto unlock;
+ 	}
+ 
++	if (hdev->adv_monitors_cnt > prev_adv_monitors_cnt)
++		mgmt_adv_monitor_added(sk, hdev, m->handle);
++
+ 	hci_dev_unlock(hdev);
+ 
+ 	rp.monitor_handle = cpu_to_le16(m->handle);
+-- 
+2.26.2
 
