@@ -2,95 +2,115 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5206EC433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78AE6C433E1
 	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 399D6206DC
+	by mail.kernel.org (Postfix) with ESMTP id 4F4F520801
 	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:56:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="FSm9EqJj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726271AbgFLK4F (ORCPT
+        id S1726309AbgFLK4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 06:56:05 -0400
-Received: from mga09.intel.com ([134.134.136.24]:62716 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726024AbgFLK4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 06:56:04 -0400
-IronPort-SDR: 73cvHR1/QySTocqbYgYCtLQcVWPVHnwmIf9mPhhyO8PW9PKfWgevYyedTdUot/oVj7pnrb7dG5
- cAnJrRxAyLSw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2020 03:56:04 -0700
-IronPort-SDR: ZcGLl+RkwYt02Z8/gxScjrfLCyrd+lsf9nChOIzUYX1xpa7CjJqsblc7ofsxXz5d63WK5YLMdh
- xCLDm9xZbaWg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,503,1583222400"; 
-   d="scan'208";a="259857472"
-Received: from brentlu-desk0.itwn.intel.com ([10.5.253.11])
-  by fmsmga007.fm.intel.com with ESMTP; 12 Jun 2020 03:56:00 -0700
-From:   Brent Lu <brent.lu@intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Zhu Yingjiang <yingjiang.zhu@linux.intel.com>,
-        Keyon Jie <yang.jie@linux.intel.com>,
-        Brent Lu <brent.lu@intel.com>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        sound-open-firmware@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] ASoC: SOF: Intel: hda: Clear RIRB status before reading WP
-Date:   Fri, 12 Jun 2020 18:50:48 +0800
-Message-Id: <1591959048-15813-1-git-send-email-brent.lu@intel.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 12 Jun 2020 06:56:22 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:58513 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726024AbgFLK4V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 06:56:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1591959380; x=1623495380;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=WWTV6V3EFdUZ6uazqf/6M9yQYgZJ+MIkC2KGee9erVs=;
+  b=FSm9EqJji3KWUbCWNX3gfccQyXcse0jB+UqMkyiCZah5wb8M9/skPY3m
+   XAEhLxJFgyJnlweqItO2I4KXQa5DJFgDHbUTlnqIMRguiJF8b1WH5WPi1
+   3/XaKewgFMdB6qZ1DHKynALAzSQymoE4Y4tLYLW1YpF8ecVljYP9BmiZW
+   rLLUbhcVlWVY27zBfVch57sxdLQX+gQRHOtx8FmeSUI4nQD2RKvgOFGhg
+   9rIOVd6PO7VrzEHWpZs8yqn3SrrmJFMALCiyE0qE0dHGAsdGmcEsJ5Um4
+   IHGWBjfXfaEXE4I2SL7aS/F577G7MOHUG5c/JGHh1a06hgFB45WAFNLfx
+   g==;
+IronPort-SDR: Iq7B5YvpwuoVaOGLIs9fPMJo81/7L0RzDvZDcsw2isMNxcvUuc5X9liNcNGl1KOXt87rkTGXOp
+ es+pp/u1MxfjsrpntiXpVRtHWtzKDreIAnMC6Yi5uSiEVPtTwR93CvU88kb7m/C4/gQs1ZfzH2
+ oC7rozV9hNu22RjifYbPaZYgKCijWc567HsmKcGd+ttyAVCBaYcXmI1bJ6t28KlBqVQjW/jwBG
+ dhaH19avIdHBoCzo+C1yvllXhGiyTXdnjHLE49ZDnYmZ57ODnEZUiO5Uqec6+HBMeUfbfAEHwt
+ AWA=
+X-IronPort-AV: E=Sophos;i="5.73,503,1583218800"; 
+   d="scan'208";a="83307579"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 12 Jun 2020 03:56:20 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 12 Jun 2020 03:56:20 -0700
+Received: from ROB-ULT-M18282.microchip.com (10.10.115.15) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Fri, 12 Jun 2020 03:56:17 -0700
+From:   Eugen Hristev <eugen.hristev@microchip.com>
+To:     <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Eugen Hristev <eugen.hristev@microchip.com>,
+        kernel test robot <lkp@intel.com>
+Subject: [PATCH] media: atmel: atmel-sama5d2-isc: fix warning in configs without OF
+Date:   Fri, 12 Jun 2020 13:56:02 +0300
+Message-ID: <20200612105602.203036-1-eugen.hristev@microchip.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Port commit 6d011d5057ff ("ALSA: hda: Clear RIRB status before reading
-WP") from legacy HDA driver to fix the get response timeout issue.
-Current SOF driver does not suffer from this issue because sync write
-is enabled in hda_init. The issue will come back if the sync write is
-disabled for some reason.
+All warnings (new ones prefixed by >>, old ones prefixed by <<):
 
-Signed-off-by: Brent Lu <brent.lu@intel.com>
+>> drivers/media/platform/atmel/atmel-sama5d2-isc.c:323:34: warning: unused variable 'atmel_isc_of_match' [-Wunused-const-variable]
+static const struct of_device_id atmel_isc_of_match[] = {
+^
+1 warning generated.
+
+vim +/atmel_isc_of_match +323 drivers/media/platform/atmel/atmel-sama5d2-isc.c
+
+   322
+ > 323  static const struct of_device_id atmel_isc_of_match[] = {
+   324          { .compatible = "atmel,sama5d2-isc" },
+   325          { }
+   326  };
+   327  MODULE_DEVICE_TABLE(of, atmel_isc_of_match);
+   328
+
+Fixed warning by guarding the atmel_isc_of_match by CONFIG_OF.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
 ---
- sound/soc/sof/intel/hda-stream.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/media/platform/atmel/atmel-sama5d2-isc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/sof/intel/hda-stream.c b/sound/soc/sof/intel/hda-stream.c
-index 7f65dcc..1bda14c 100644
---- a/sound/soc/sof/intel/hda-stream.c
-+++ b/sound/soc/sof/intel/hda-stream.c
-@@ -653,11 +653,16 @@ irqreturn_t hda_dsp_stream_threaded_handler(int irq, void *context)
- 		if (status & AZX_INT_CTRL_EN) {
- 			rirb_status = snd_hdac_chip_readb(bus, RIRBSTS);
- 			if (rirb_status & RIRB_INT_MASK) {
-+				/*
-+				 * Clearing the interrupt status here ensures
-+				 * that no interrupt gets masked after the RIRB
-+				 * wp is read in snd_hdac_bus_update_rirb.
-+				 */
-+				snd_hdac_chip_writeb(bus, RIRBSTS,
-+						     RIRB_INT_MASK);
- 				active = true;
- 				if (rirb_status & RIRB_INT_RESPONSE)
- 					snd_hdac_bus_update_rirb(bus);
--				snd_hdac_chip_writeb(bus, RIRBSTS,
--						     RIRB_INT_MASK);
- 			}
- 		}
- #endif
+diff --git a/drivers/media/platform/atmel/atmel-sama5d2-isc.c b/drivers/media/platform/atmel/atmel-sama5d2-isc.c
+index 78381651238d..a3304f49e499 100644
+--- a/drivers/media/platform/atmel/atmel-sama5d2-isc.c
++++ b/drivers/media/platform/atmel/atmel-sama5d2-isc.c
+@@ -321,11 +321,13 @@ static const struct dev_pm_ops atmel_isc_dev_pm_ops = {
+ 	SET_RUNTIME_PM_OPS(isc_runtime_suspend, isc_runtime_resume, NULL)
+ };
+ 
++#if IS_ENABLED(CONFIG_OF)
+ static const struct of_device_id atmel_isc_of_match[] = {
+ 	{ .compatible = "atmel,sama5d2-isc" },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, atmel_isc_of_match);
++#endif
+ 
+ static struct platform_driver atmel_isc_driver = {
+ 	.probe	= atmel_isc_probe,
 -- 
-2.7.4
+2.25.1
 
