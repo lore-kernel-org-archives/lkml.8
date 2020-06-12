@@ -2,200 +2,123 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA6C9C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 11:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA3DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 11:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5FEE207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 11:07:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A58820801
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 11:13:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Rqi0/V5P"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UICuNo0V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726289AbgFLLHa (ORCPT
+        id S1726307AbgFLLN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 07:07:30 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:38600 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725868AbgFLLH3 (ORCPT
+        Fri, 12 Jun 2020 07:13:58 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:52685 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726039AbgFLLN5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 07:07:29 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591960049; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=BnCXV1eT4PYNxgO3yiQdkkkdhOl00dNU0VRujVxajZ8=; b=Rqi0/V5Pn+cYI4AwSShmVwzbob7MsP38PWPRuX/3wI8UW4lLFsKjwvlfgM076o55yBaDP32z
- 7JXtG9Srelwcjy3uok2fIiCaAVNRVwXCWwRUmkDgDwArtjJ9iXaWnDOUxRrPNA9o/H7KJNP1
- t8NISpLLYV6J7JDzEz+2stoiX00=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
- 5ee361efad153efa342b57df (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 12 Jun 2020 11:07:27
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id BB888C433C8; Fri, 12 Jun 2020 11:07:27 +0000 (UTC)
-Received: from [192.168.1.102] (unknown [183.83.143.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 12 Jun 2020 07:13:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591960435;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=XraRyLmV9YVoqx7YIwPq7Sb6loBVWSYc7ETqFptiuSE=;
+        b=UICuNo0V4Zry7EzaS3OmVSAkIO8Hwn9tz0KgH65+m80U5mSfyqeJYq3X+wnfL0RjHnkcM4
+        6EmctJ+32piLGmh9qjbJdGDB90pzU4qkryZ5puIlgpqo/TRqnmdJXsjGARU2IjyxugFJQq
+        SNS+InH23oPpOzFl8wA6YyDgH8eb0so=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-451-Hl5tpEZNM3Cw8eSsu026JA-1; Fri, 12 Jun 2020 07:13:51 -0400
+X-MC-Unique: Hl5tpEZNM3Cw8eSsu026JA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: charante)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6870DC433CA;
-        Fri, 12 Jun 2020 11:07:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6870DC433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=charante@codeaurora.org
-Subject: Re: [PATCH] mm, page_alloc: skip ->waternark_boost for atomic order-0
- allocations
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, vinmenon@codeaurora.org
-References: <1589882284-21010-1-git-send-email-charante@codeaurora.org>
- <20200609122811.GK3127@techsingularity.net>
-From:   Charan Teja Kalla <charante@codeaurora.org>
-Message-ID: <8a94eccb-5d57-7168-9c6a-03241407630d@codeaurora.org>
-Date:   Fri, 12 Jun 2020 16:37:22 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200609122811.GK3127@techsingularity.net>
-Content-Type: text/plain; charset=iso-8859-15
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 48397EC1A1;
+        Fri, 12 Jun 2020 11:13:49 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-112-67.ams2.redhat.com [10.36.112.67])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2D79160BF1;
+        Fri, 12 Jun 2020 11:13:46 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 1F5AC16E16; Fri, 12 Jun 2020 13:13:45 +0200 (CEST)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Gerd Hoffmann <kraxel@redhat.com>, 1882851@bugs.launchpad.net,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Chia-I Wu <olvaffe@gmail.com>,
+        virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] drm/virtio: fix unblank
+Date:   Fri, 12 Jun 2020 13:13:31 +0200
+Message-Id: <20200612111331.6982-1-kraxel@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Mel for feedback.
+When going through a disable/enable cycle without changing the framebuffer
+the optimization added by commit 3954ff10e06e causes the screen stay
+blank.  Add a bool to force an update to fix that.
 
-On 6/9/2020 5:58 PM, Mel Gorman wrote:
-> On Tue, May 19, 2020 at 03:28:04PM +0530, Charan Teja Reddy wrote:
->> When boosting is enabled, it is observed that rate of atomic order-0
->> allocation failures are high due to the fact that free levels in the
->> system are checked with ->watermark_boost offset. This is not a problem
->> for sleepable allocations but for atomic allocations which looks like
->> regression.
->>
-> 
-> Are high-order allocations in general of interest to this platform? If
-> not then a potential option is to simply disable boosting. The patch is
-> still relevant but it's worth thinking about.
-> 
+Cc: 1882851@bugs.launchpad.net
+Fixes: 3954ff10e06e ("drm/virtio: skip set_scanout if framebuffer didn't change")
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+---
+ drivers/gpu/drm/virtio/virtgpu_drv.h     | 1 +
+ drivers/gpu/drm/virtio/virtgpu_display.c | 1 +
+ drivers/gpu/drm/virtio/virtgpu_plane.c   | 4 +++-
+ 3 files changed, 5 insertions(+), 1 deletion(-)
 
-Yes we do care till order-3.
-
->> This problem is seen frequently on system setup of Android kernel
->> running on Snapdragon hardware with 4GB RAM size. When no extfrag event
->> occurred in the system, ->watermark_boost factor is zero, thus the
->> watermark configurations in the system are:
->>    _watermark = (
->>           [WMARK_MIN] = 1272, --> ~5MB
->>           [WMARK_LOW] = 9067, --> ~36MB
->>           [WMARK_HIGH] = 9385), --> ~38MB
->>    watermark_boost = 0
->>
->> After launching some memory hungry applications in Android which can
->> cause extfrag events in the system to an extent that ->watermark_boost
->> can be set to max i.e. default boost factor makes it to 150% of high
->> watermark.
->>    _watermark = (
->>           [WMARK_MIN] = 1272, --> ~5MB
->>           [WMARK_LOW] = 9067, --> ~36MB
->>           [WMARK_HIGH] = 9385), --> ~38MB
->>    watermark_boost = 14077, -->~57MB
->>
->> With default system configuration, for an atomic order-0 allocation to
->> succeed, having free memory of ~2MB will suffice. But boosting makes
->> the min_wmark to ~61MB thus for an atomic order-0 allocation to be
->> successful system should have minimum of ~23MB of free memory(from
->> calculations of zone_watermark_ok(), min = 3/4(min/2)). But failures are
->> observed despite system is having ~20MB of free memory. In the testing,
->> this is reproducible as early as first 300secs since boot and with
->> furtherlowram configurations(<2GB) it is observed as early as first
->> 150secs since boot.
->>
->> These failures can be avoided by excluding the ->watermark_boost in
->> watermark caluculations for atomic order-0 allocations.
->>
->> Signed-off-by: Charan Teja Reddy <charante@codeaurora.org>
->> ---
->>  mm/page_alloc.c | 12 ++++++++++++
->>  1 file changed, 12 insertions(+)
->>
->> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
->> index d001d61..5193d7e 100644
->> --- a/mm/page_alloc.c
->> +++ b/mm/page_alloc.c
->> @@ -3709,6 +3709,18 @@ static bool zone_allows_reclaim(struct zone *local_zone, struct zone *zone)
->>  		}
->>  
->>  		mark = wmark_pages(zone, alloc_flags & ALLOC_WMARK_MASK);
->> +		/*
->> +		 * Allow GFP_ATOMIC order-0 allocations to exclude the
->> +		 * zone->watermark_boost in its watermark calculations.
->> +		 * We rely on the ALLOC_ flags set for GFP_ATOMIC
->> +		 * requests in gfp_to_alloc_flags() for this. Reason not to
->> +		 * use the GFP_ATOMIC directly is that we want to fall back
->> +		 * to slow path thus wake up kswapd.
->> +		 */
-> 
-> The comment is a bit difficult to parse. Maybe this.
-> 
-> 	/*
-> 	 * Ignore watermark boosting for GFP_ATOMIC order-0 allocations
-> 	 * when checking the min watermark. The min watermark is the
-> 	 * point where boosting is ignored so that kswapd is woken up
-> 	 * when below the low watermark.
-> 	 */
-> 
-> I left out the ALLOC_ part for reasons that are explained blow.
-> 
->> +		if (unlikely(!order && !(alloc_flags & ALLOC_WMARK_MASK) &&
->> +		     (alloc_flags & (ALLOC_HARDER | ALLOC_HIGH)))) {
->> +			mark = zone->_watermark[WMARK_MIN];
->> +		}
-> 
-> The second check is a bit more obscure than it needs to be and depends
-> on WMARK_MIN == 0. That will probably be true forever but it's not
-> obvious at a glance. I suggest something like
-> ((alloc_flags & ALLOC_WMARK_MASK) == WMARK_MIN).
-> 
-> For detecting atomic alloctions, you rely on the either ALLOC_HARDER or
-> ALLOC_HIGH being set. ALLOC_HIGH can be set for non-atomic allocations
-> and ALLOC_HARDER can be set for RT tasks. You probably should just test
-> the gfp_mask because as it stands non-atomic allocations can ignore the
-> boost too.
-> 
-> Finally, the patch puts an unlikely check into a relatively fast path even
-> though watermarks may be fine with or without boosting.  Instead you could
-> put the checks in zone_watermark_fast() if and only if the watermarks
-> failed the first time. If the checks pass, the watermarks get checked
-> a second time. This will be fractionally slower for requests failing
-> watermark checks but there is no penalty for most allocation requests.
-> It would need the gfp_mask to be passed into zone_watermark_fast but
-> as it's an inlined function, there should be no cost to passing in the
-> arguement i.e. do something like this at the end of zone_watermark_fast
-> 
-> 	if (__zone_watermark_ok(z, order, mark, classzone_idx, alloc_flags, free_pages))
-> 		return true;
-> 
-> 	/* Ignore watermark boosting for .... */
-> 	if (unlikely(!order .....) {
-> 		mark = ...
-> 		return __zone_watermark_ok(...);
-> 	}
-> 
-> 	return false;
-> 
-
-Incorporated these suggestions at:
-https://lore.kernel.org/patchwork/patch/1254998/. Can you please help in
-reviewing?
-
+diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
+index 7879ff58236f..6d5410d5dd84 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_drv.h
++++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
+@@ -138,6 +138,7 @@ struct virtio_gpu_output {
+ 	int cur_x;
+ 	int cur_y;
+ 	bool enabled;
++	bool need_update;
+ };
+ #define drm_crtc_to_virtio_gpu_output(x) \
+ 	container_of(x, struct virtio_gpu_output, crtc)
+diff --git a/drivers/gpu/drm/virtio/virtgpu_display.c b/drivers/gpu/drm/virtio/virtgpu_display.c
+index 2b7e6ae65546..44e9c7b874f5 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_display.c
++++ b/drivers/gpu/drm/virtio/virtgpu_display.c
+@@ -99,6 +99,7 @@ static void virtio_gpu_crtc_atomic_enable(struct drm_crtc *crtc,
+ 	struct virtio_gpu_output *output = drm_crtc_to_virtio_gpu_output(crtc);
+ 
+ 	output->enabled = true;
++	output->need_update = true;
+ }
+ 
+ static void virtio_gpu_crtc_atomic_disable(struct drm_crtc *crtc,
+diff --git a/drivers/gpu/drm/virtio/virtgpu_plane.c b/drivers/gpu/drm/virtio/virtgpu_plane.c
+index 52d24179bcec..5948031a9ce8 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_plane.c
++++ b/drivers/gpu/drm/virtio/virtgpu_plane.c
+@@ -163,7 +163,8 @@ static void virtio_gpu_primary_plane_update(struct drm_plane *plane,
+ 	    plane->state->src_w != old_state->src_w ||
+ 	    plane->state->src_h != old_state->src_h ||
+ 	    plane->state->src_x != old_state->src_x ||
+-	    plane->state->src_y != old_state->src_y) {
++	    plane->state->src_y != old_state->src_y ||
++	    output->need_update) {
+ 		DRM_DEBUG("handle 0x%x, crtc %dx%d+%d+%d, src %dx%d+%d+%d\n",
+ 			  bo->hw_res_handle,
+ 			  plane->state->crtc_w, plane->state->crtc_h,
+@@ -178,6 +179,7 @@ static void virtio_gpu_primary_plane_update(struct drm_plane *plane,
+ 					   plane->state->src_h >> 16,
+ 					   plane->state->src_x >> 16,
+ 					   plane->state->src_y >> 16);
++		output->need_update = false;
+ 	}
+ 
+ 	virtio_gpu_cmd_resource_flush(vgdev, bo->hw_res_handle,
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
-Forum, a Linux Foundation Collaborative Project
+2.18.4
+
