@@ -2,532 +2,565 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2583DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EECD6C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAA6220842
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:21:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC5D020835
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:22:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RgXu17KZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbgFLAVE (ORCPT
+        id S1726391AbgFLAWH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 20:21:04 -0400
-Received: from mga02.intel.com ([134.134.136.20]:60439 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726285AbgFLAVE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 20:21:04 -0400
-IronPort-SDR: DuxJSfxE0WyA0Wrs6VNlrgOGkvV0luv1csBr9YD9FHj/RNUD93U4FgvuzL0l+1XFNLMHS1dcYF
- 6NIw38ei2SzQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 17:21:02 -0700
-IronPort-SDR: P/Xh06Pk3C4AmHegX/v/+LNnTO0Kn6kOU86gQXPm1PXkhRc/6EhwTREBhF8lf4KJtoDLgvG8dJ
- zpoc0V8UGlvQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,501,1583222400"; 
-   d="scan'208";a="275507704"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga006.jf.intel.com with ESMTP; 11 Jun 2020 17:21:02 -0700
-Date:   Thu, 11 Jun 2020 17:27:27 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Lu Baolu" <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        "Christoph Hellwig" <hch@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>, jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v2 1/3] docs: IOMMU user API
-Message-ID: <20200611172727.78dbb822@jacob-builder>
-In-Reply-To: <20200611144047.79613c32@x1.home>
-References: <1591848735-12447-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1591848735-12447-2-git-send-email-jacob.jun.pan@linux.intel.com>
-        <20200611094741.6d118fa8@w520.home>
-        <20200611125205.1e0280d3@jacob-builder>
-        <20200611144047.79613c32@x1.home>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Thu, 11 Jun 2020 20:22:07 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:59780 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726285AbgFLAWG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 20:22:06 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05C0Lw85008286;
+        Thu, 11 Jun 2020 19:21:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591921318;
+        bh=i0fM58bGqFjTpLXrxPhodYdHp1u0yDhWyAaa5N1STCE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=RgXu17KZF2imFXvaNOp98F+l7s2vaUgVFO8TsHpWdB/u2PH7pytohEkqSPIY519uM
+         qdp5mOQjTRqYZj2dtSFpQPFs2F0ZL3CcRltvRpthNagLSHzgqM74NcU9BQ/Q7h+Uo0
+         YhmLEoXLoNgL0XQ3LU9ErsZzPJbnycEVsjY7AyjI=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05C0LwK7078852
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 11 Jun 2020 19:21:58 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 11
+ Jun 2020 19:21:58 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 11 Jun 2020 19:21:58 -0500
+Received: from [10.250.48.148] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05C0Lwcg051898;
+        Thu, 11 Jun 2020 19:21:58 -0500
+Subject: Re: [PATCH v7 4/5] remoteproc: ingenic: Added remoteproc driver
+To:     Paul Cercueil <paul@crapouillou.net>
+CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>, <od@zcrc.me>,
+        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+References: <20200515104340.10473-1-paul@crapouillou.net>
+ <20200515104340.10473-4-paul@crapouillou.net>
+ <8cdcf5ef-1268-89f6-b229-ac711a80b790@ti.com>
+ <FR8SBQ.5WXNHNH8P2P7@crapouillou.net>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <fc1e14e7-4551-48c3-2820-f5889c50becb@ti.com>
+Date:   Thu, 11 Jun 2020 19:21:58 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <FR8SBQ.5WXNHNH8P2P7@crapouillou.net>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 11 Jun 2020 14:40:47 -0600
-Alex Williamson <alex.williamson@redhat.com> wrote:
+Hi Paul,
 
-> On Thu, 11 Jun 2020 12:52:05 -0700
-> Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
+On 6/11/20 5:21 PM, Paul Cercueil wrote:
+> Hi Suman,
 > 
-> > Hi Alex,
-> > 
-> > On Thu, 11 Jun 2020 09:47:41 -0600
-> > Alex Williamson <alex.williamson@redhat.com> wrote:
-> >   
-> > > On Wed, 10 Jun 2020 21:12:13 -0700
-> > > Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
-> > >     
-> > > > IOMMU UAPI is newly introduced to support communications between
-> > > > guest virtual IOMMU and host IOMMU. There has been lots of
-> > > > discussions on how it should work with VFIO UAPI and userspace
-> > > > in general.
-> > > > 
-> > > > This document is indended to clarify the UAPI design and usage.
-> > > > The mechenics of how future extensions should be achieved are
-> > > > also covered in this documentation.
-> > > > 
-> > > > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> > > > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > > > ---
-> > > >  Documentation/userspace-api/iommu.rst | 210
-> > > > ++++++++++++++++++++++++++++++++++ 1 file changed, 210
-> > > > insertions(+) create mode 100644
-> > > > Documentation/userspace-api/iommu.rst
-> > > > 
-> > > > diff --git a/Documentation/userspace-api/iommu.rst
-> > > > b/Documentation/userspace-api/iommu.rst new file mode 100644
-> > > > index 000000000000..e95dc5a04a41
-> > > > --- /dev/null
-> > > > +++ b/Documentation/userspace-api/iommu.rst
-> > > > @@ -0,0 +1,210 @@
-> > > > +.. SPDX-License-Identifier: GPL-2.0
-> > > > +.. iommu:
-> > > > +
-> > > > +=====================================
-> > > > +IOMMU Userspace API
-> > > > +=====================================
-> > > > +
-> > > > +IOMMU UAPI is used for virtualization cases where
-> > > > communications are +needed between physical and virtual IOMMU
-> > > > drivers. For native +usage, IOMMU is a system device which does
-> > > > not need to communicate +with user space directly.
-> > > > +
-> > > > +The primary use cases are guest Shared Virtual Address (SVA)
-> > > > and +guest IO virtual address (IOVA), wherein virtual IOMMU
-> > > > (vIOMMU) is +required to communicate with the physical IOMMU in
-> > > > the host. +
-> > > > +.. contents:: :local:
-> > > > +
-> > > > +Functionalities
-> > > > +====================================================
-> > > > +Communications of user and kernel involve both directions. The
-> > > > +supported user-kernel APIs are as follows:
-> > > > +
-> > > > +1. Alloc/Free PASID
-> > > > +2. Bind/unbind guest PASID (e.g. Intel VT-d)
-> > > > +3. Bind/unbind guest PASID table (e.g. ARM sMMU)
-> > > > +4. Invalidate IOMMU caches
-> > > > +5. Service page request
-> > > > +
-> > > > +Requirements
-> > > > +====================================================
-> > > > +The IOMMU UAPIs are generic and extensible to meet the
-> > > > following +requirements:
-> > > > +
-> > > > +1. Emulated and para-virtualised vIOMMUs
-> > > > +2. Multiple vendors (Intel VT-d, ARM sMMU, etc.)
-> > > > +3. Extensions to the UAPI shall not break existing user space
-> > > > +
-> > > > +Interfaces
-> > > > +====================================================
-> > > > +Although the data structures defined in IOMMU UAPI are
-> > > > self-contained, +there is no user API functions introduced.
-> > > > Instead, IOMMU UAPI is +designed to work with existing user
-> > > > driver frameworks such as VFIO. +
-> > > > +Extension Rules & Precautions
-> > > > +-----------------------------
-> > > > +When IOMMU UAPI gets extended, the data structures can *only*
-> > > > be +modified in two ways:
-> > > > +
-> > > > +1. Adding new fields by re-purposing the padding[] field. No
-> > > > size change. +2. Adding new union members at the end. May
-> > > > increase in size. +
-> > > > +No new fields can be added *after* the variable size union in
-> > > > that it +will break backward compatibility when offset moves.
-> > > > In both cases, a +new flag must be accompanied with a new field
-> > > > such that the IOMMU +driver can process the data based on the
-> > > > new flag. Version field is +only reserved for the unlikely
-> > > > event of UAPI upgrade at its entirety. +
-> > > > +It's *always* the caller's responsibility to indicate the size
-> > > > of the +structure passed by setting argsz appropriately.
-> > > > +
-> > > > +When IOMMU UAPI extension results in size increase, user such
-> > > > as VFIO +has to handle the following scenarios:
-> > > > +
-> > > > +1. User and kernel has exact size match
-> > > > +2. An older user with older kernel header (smaller UAPI size)
-> > > > running on a
-> > > > +   newer kernel (larger UAPI size)
-> > > > +3. A newer user with newer kernel header (larger UAPI size)
-> > > > running
-> > > > +   on a older kernel.
-> > > > +4. A malicious/misbehaving user pass illegal/invalid size but
-> > > > within
-> > > > +   range. The data may contain garbage.
-> > > > +
-> > > > +
-> > > > +Feature Checking
-> > > > +----------------
-> > > > +While launching a guest with vIOMMU, it is important to ensure
-> > > > that host +can support the UAPI data structures to be used for
-> > > > vIOMMU-pIOMMU +communications. Without the upfront compatibility
-> > > > checking, future +faults are difficult to report even in normal
-> > > > conditions. For example, +TLB invalidations should always
-> > > > succeed from vIOMMU's +perspective. There is no architectural
-> > > > way to report back to the vIOMMU +if the UAPI data is
-> > > > incompatible. For this reason the following IOMMU +UAPIs cannot
-> > > > fail: +
-> > > > +1. Free PASID
-> > > > +2. Unbind guest PASID
-> > > > +3. Unbind guest PASID table (SMMU)
-> > > > +4. Cache invalidate
-> > > > +5. Page response
-> > > > +
-> > > > +User applications such as QEMU is expected to import kernel
-> > > > UAPI +headers. Only backward compatibility is supported. For
-> > > > example, an +older QEMU (with older kernel header) can run on
-> > > > newer kernel. Newer +QEMU (with new kernel header) may fail on
-> > > > older kernel.      
-> > > 
-> > > "Build your user application against newer kernels and it may
-> > > break on older kernels" is not a great selling point of this
-> > > UAPI.  Clearly new features may not be available on older kernels
-> > > and an application that depends on a newer feature may be
-> > > restricted to newer kernels. 
-> > Perhaps "fail on older kernel" is not the right statement. I meant
-> > to say "Newer QEMU (with new kernel header) may fail the
-> > compatibility check on older kernel". Here compatibility check
-> > involves argsz check and feature check.
-> > 
-> > Does it sound right?  
+> Le jeu. 11 juin 2020 à 16:47, Suman Anna <s-anna@ti.com> a écrit :
+>> Hi Paul,
+>>
+>> On 5/15/20 5:43 AM, Paul Cercueil wrote:
+>>> This driver is used to boot, communicate with and load firmwares to the
+>>> MIPS co-processor found in the VPU hardware of the JZ47xx SoCs from
+>>> Ingenic.
+>>
+>> I have a few comments w.r.t pm_runtime usage in this driver.
+>>
+>>>
+>>> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>> Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+>>> ---
+>>>
+>>> Notes:
+>>>      v2: Remove exception for always-mapped memories
+>>>      v3: - Use clk_bulk API
+>>>          - Move device-managed code to its own patch [3/4]
+>>>          - Move devicetree table right above ingenic_rproc_driver
+>>>          - Removed #ifdef CONFIG_OF around devicetree table
+>>>          - Removed .owner = THIS_MODULE in ingenic_rproc_driver
+>>>          - Removed useless platform_set_drvdata()
+>>>      v4: - Add fix reported by Julia
+>>>          - Change Kconfig symbol to INGENIC_VPU_RPROC
+>>>          - Add documentation to struct vpu
+>>>          - disable_irq_nosync() -> disable_irq()
+>>>      v5: No change
+>>>      v6: Instead of prepare/unprepare callbacks, use PM runtime 
+>>> callbacks
+>>>      v7: - Remove use of of_match_ptr()
+>>>          - Move Kconfig symbol so that it's in alphabetical order
+>>>          - Add missing doc for private structure field aux_base
+>>>          - Don't check for (len <= 0) in da_to_va()
+>>>          - Add missing \n in dev_info/dev_err messages
+>>>
+>>>   drivers/remoteproc/Kconfig         |   9 +
+>>>   drivers/remoteproc/Makefile        |   1 +
+>>>   drivers/remoteproc/ingenic_rproc.c | 280 +++++++++++++++++++++++++++++
+>>>   3 files changed, 290 insertions(+)
+>>>   create mode 100644 drivers/remoteproc/ingenic_rproc.c
+>>>
+>>> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+>>> index fbaed079b299..c4d1731295eb 100644
+>>> --- a/drivers/remoteproc/Kconfig
+>>> +++ b/drivers/remoteproc/Kconfig
+>>> @@ -23,6 +23,15 @@ config IMX_REMOTEPROC
+>>>           It's safe to say N here.
+>>>   +config INGENIC_VPU_RPROC
+>>> +    tristate "Ingenic JZ47xx VPU remoteproc support"
+>>> +    depends on MIPS || COMPILE_TEST
+>>> +    help
+>>> +      Say y or m here to support the VPU in the JZ47xx SoCs from 
+>>> Ingenic.
+>>> +
+>>> +      This can be either built-in or a loadable module.
+>>> +      If unsure say N.
+>>> +
+>>>   config MTK_SCP
+>>>       tristate "Mediatek SCP support"
+>>>       depends on ARCH_MEDIATEK
+>>> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
+>>> index 0effd3825035..e8b886e511f0 100644
+>>> --- a/drivers/remoteproc/Makefile
+>>> +++ b/drivers/remoteproc/Makefile
+>>> @@ -10,6 +10,7 @@ remoteproc-y                += remoteproc_sysfs.o
+>>>   remoteproc-y                += remoteproc_virtio.o
+>>>   remoteproc-y                += remoteproc_elf_loader.o
+>>>   obj-$(CONFIG_IMX_REMOTEPROC)        += imx_rproc.o
+>>> +obj-$(CONFIG_INGENIC_VPU_RPROC)        += ingenic_rproc.o
+>>>   obj-$(CONFIG_MTK_SCP)            += mtk_scp.o mtk_scp_ipi.o
+>>>   obj-$(CONFIG_OMAP_REMOTEPROC)        += omap_remoteproc.o
+>>>   obj-$(CONFIG_WKUP_M3_RPROC)        += wkup_m3_rproc.o
+>>> diff --git a/drivers/remoteproc/ingenic_rproc.c 
+>>> b/drivers/remoteproc/ingenic_rproc.c
+>>> new file mode 100644
+>>> index 000000000000..189020d77b25
+>>> --- /dev/null
+>>> +++ b/drivers/remoteproc/ingenic_rproc.c
+>>> @@ -0,0 +1,280 @@
+>>> +// SPDX-License-Identifier: GPL-2.0+
+>>> +/*
+>>> + * Ingenic JZ47xx remoteproc driver
+>>> + * Copyright 2019, Paul Cercueil <paul@crapouillou.net>
+>>> + */
+>>> +
+>>> +#include <linux/bitops.h>
+>>> +#include <linux/clk.h>
+>>> +#include <linux/err.h>
+>>> +#include <linux/interrupt.h>
+>>> +#include <linux/io.h>
+>>> +#include <linux/module.h>
+>>> +#include <linux/platform_device.h>
+>>> +#include <linux/pm_runtime.h>
+>>> +#include <linux/remoteproc.h>
+>>> +
+>>> +#include "remoteproc_internal.h"
+>>> +
+>>> +#define REG_AUX_CTRL        0x0
+>>> +#define REG_AUX_MSG_ACK        0x10
+>>> +#define REG_AUX_MSG        0x14
+>>> +#define REG_CORE_MSG_ACK    0x18
+>>> +#define REG_CORE_MSG        0x1C
+>>> +
+>>> +#define AUX_CTRL_SLEEP        BIT(31)
+>>> +#define AUX_CTRL_MSG_IRQ_EN    BIT(3)
+>>> +#define AUX_CTRL_NMI_RESETS    BIT(2)
+>>> +#define AUX_CTRL_NMI        BIT(1)
+>>> +#define AUX_CTRL_SW_RESET    BIT(0)
+>>> +
+>>> +struct vpu_mem_map {
+>>> +    const char *name;
+>>> +    unsigned int da;
+>>> +};
+>>> +
+>>> +struct vpu_mem_info {
+>>> +    const struct vpu_mem_map *map;
+>>> +    unsigned long len;
+>>> +    void __iomem *base;
+>>> +};
+>>> +
+>>> +static const struct vpu_mem_map vpu_mem_map[] = {
+>>> +    { "tcsm0", 0x132b0000 },
+>>> +    { "tcsm1", 0xf4000000 },
+>>> +    { "sram",  0x132f0000 },
+>>> +};
+>>> +
+>>> +/**
+>>> + * struct vpu - Ingenic VPU remoteproc private structure
+>>> + * @irq: interrupt number
+>>> + * @clks: pointers to the VPU and AUX clocks
+>>> + * @aux_base: raw pointer to the AUX interface registers
+>>> + * @mem_info: array of struct vpu_mem_info, which contain the 
+>>> mapping info of
+>>> + *            each of the external memories
+>>> + * @dev: private pointer to the device
+>>> + */
+>>> +struct vpu {
+>>> +    int irq;
+>>> +    struct clk_bulk_data clks[2];
+>>> +    void __iomem *aux_base;
+>>> +    struct vpu_mem_info mem_info[ARRAY_SIZE(vpu_mem_map)];
+>>> +    struct device *dev;
+>>> +};
+>>> +
+>>> +static int ingenic_rproc_start(struct rproc *rproc)
+>>> +{
+>>> +    struct vpu *vpu = rproc->priv;
+>>> +    u32 ctrl;
+>>> +
+>>> +    enable_irq(vpu->irq);
+>>> +
+>>> +    /* Reset the AUX and enable message IRQ */
+>>> +    ctrl = AUX_CTRL_NMI_RESETS | AUX_CTRL_NMI | AUX_CTRL_MSG_IRQ_EN;
+>>> +    writel(ctrl, vpu->aux_base + REG_AUX_CTRL);
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +static int ingenic_rproc_stop(struct rproc *rproc)
+>>> +{
+>>> +    struct vpu *vpu = rproc->priv;
+>>> +
+>>> +    disable_irq(vpu->irq);
+>>> +
+>>> +    /* Keep AUX in reset mode */
+>>> +    writel(AUX_CTRL_SW_RESET, vpu->aux_base + REG_AUX_CTRL);
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +static void ingenic_rproc_kick(struct rproc *rproc, int vqid)
+>>> +{
+>>> +    struct vpu *vpu = rproc->priv;
+>>> +
+>>> +    writel(vqid, vpu->aux_base + REG_CORE_MSG);
+>>> +}
+>>> +
+>>> +static void *ingenic_rproc_da_to_va(struct rproc *rproc, u64 da, 
+>>> size_t len)
+>>> +{
+>>> +    struct vpu *vpu = rproc->priv;
+>>> +    void __iomem *va = NULL;
+>>> +    unsigned int i;
+>>> +
+>>> +    for (i = 0; i < ARRAY_SIZE(vpu_mem_map); i++) {
+>>> +        const struct vpu_mem_info *info = &vpu->mem_info[i];
+>>> +        const struct vpu_mem_map *map = info->map;
+>>> +
+>>> +        if (da >= map->da && (da + len) < (map->da + info->len)) {
+>>> +            va = info->base + (da - map->da);
+>>> +            break;
+>>> +        }
+>>> +    }
+>>> +
+>>> +    return (__force void *)va;
+>>> +}
+>>> +
+>>> +static struct rproc_ops ingenic_rproc_ops = {
+>>> +    .start = ingenic_rproc_start,
+>>> +    .stop = ingenic_rproc_stop,
+>>> +    .kick = ingenic_rproc_kick,
+>>> +    .da_to_va = ingenic_rproc_da_to_va,
+>>> +};
+>>> +
+>>> +static irqreturn_t vpu_interrupt(int irq, void *data)
+>>> +{
+>>> +    struct rproc *rproc = data;
+>>> +    struct vpu *vpu = rproc->priv;
+>>> +    u32 vring;
+>>> +
+>>> +    vring = readl(vpu->aux_base + REG_AUX_MSG);
+>>> +
+>>> +    /* Ack the interrupt */
+>>> +    writel(0, vpu->aux_base + REG_AUX_MSG_ACK);
+>>> +
+>>> +    return rproc_vq_interrupt(rproc, vring);
+>>> +}
+>>> +
+>>> +static void ingenic_rproc_disable_clks(void *data)
+>>> +{
+>>> +    struct vpu *vpu = data;
+>>> +
+>>> +    pm_runtime_resume(vpu->dev);
+>>> +    pm_runtime_disable(vpu->dev);
+>>> +
+>>> +    clk_bulk_disable_unprepare(ARRAY_SIZE(vpu->clks), vpu->clks);
+>>> +}
+>>> +
+>>> +static int ingenic_rproc_probe(struct platform_device *pdev)
+>>> +{
+>>> +    struct device *dev = &pdev->dev;
+>>> +    struct resource *mem;
+>>> +    struct rproc *rproc;
+>>> +    struct vpu *vpu;
+>>> +    unsigned int i;
+>>> +    int ret;
+>>> +
+>>> +    rproc = devm_rproc_alloc(dev, "ingenic-vpu",
+>>> +                 &ingenic_rproc_ops, NULL, sizeof(*vpu));
+>>> +    if (!rproc)
+>>> +        return -ENOMEM;
+>>> +
+>>> +    vpu = rproc->priv;
+>>> +    vpu->dev = &pdev->dev;
+>>> +    platform_set_drvdata(pdev, vpu);
+>>> +
+>>> +    mem = platform_get_resource_byname(pdev, IORESOURCE_MEM, "aux");
+>>> +    vpu->aux_base = devm_ioremap_resource(dev, mem);
+>>> +    if (IS_ERR(vpu->aux_base)) {
+>>> +        dev_err(dev, "Failed to ioremap\n");
+>>> +        return PTR_ERR(vpu->aux_base);
+>>> +    }
+>>> +
+>>> +    for (i = 0; i < ARRAY_SIZE(vpu_mem_map); i++) {
+>>> +        mem = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+>>> +                           vpu_mem_map[i].name);
+>>> +
+>>> +        vpu->mem_info[i].base = devm_ioremap_resource(dev, mem);
+>>> +        if (IS_ERR(vpu->mem_info[i].base)) {
+>>> +            ret = PTR_ERR(vpu->mem_info[i].base);
+>>> +            dev_err(dev, "Failed to ioremap\n");
+>>> +            return ret;
+>>> +        }
+>>> +
+>>> +        vpu->mem_info[i].len = resource_size(mem);
+>>> +        vpu->mem_info[i].map = &vpu_mem_map[i];
+>>> +    }
+>>> +
+>>> +    vpu->clks[0].id = "vpu";
+>>> +    vpu->clks[1].id = "aux";
+>>> +
+>>> +    ret = devm_clk_bulk_get(dev, ARRAY_SIZE(vpu->clks), vpu->clks);
+>>> +    if (ret) {
+>>> +        dev_err(dev, "Failed to get clocks\n");
+>>> +        return ret;
+>>> +    }
+>>> +
+>>> +    vpu->irq = platform_get_irq(pdev, 0);
+>>> +    if (vpu->irq < 0)
+>>> +        return vpu->irq;
+>>> +
+>>> +    ret = devm_request_irq(dev, vpu->irq, vpu_interrupt, 0, "VPU", 
+>>> rproc);
+>>> +    if (ret < 0) {
+>>> +        dev_err(dev, "Failed to request IRQ\n");
+>>> +        return ret;
+>>> +    }
+>>> +
+>>> +    disable_irq(vpu->irq);
+>>> +
+>>> +    /* The clocks must be enabled for the firmware to be loaded in 
+>>> TCSM */
+>>> +    ret = clk_bulk_prepare_enable(ARRAY_SIZE(vpu->clks), vpu->clks);
+>>> +    if (ret) {
+>>> +        dev_err(dev, "Unable to start clocks\n");
+>>> +        return ret;
+>>> +    }
+>>
+>> You are enabling the clocks directly here and also trying to manage 
+>> them through pm_runtime callbacks again.
 > 
-> If simply recompiling QEMU against a new kernel header causes it to
-> fail on an old kernel, we've done something very wrong in this UAPI.
+> Yes. The clocks need to be enabled in the probe.
+
+For the preferred non CONFIG_PM case now and lack of prepare/unprepare().
+
+> 
+>>> +
+>>> +    pm_runtime_irq_safe(dev);
+>>
+>> Nothing wrong with this, but this does take an additional reference 
+>> count on the parent device (a bus device for you??), and also implies 
+>> that your clk driver code can all run in atomic context so unless you 
+>> have a strong reason, it is safe to drop this.
+> 
+> The clock driver code can run in atomic context, it is guaranteed by the 
+> clk API.
+
+OK.
+
+> 
+>>
+>>> +    pm_runtime_set_active(dev);
+>>
+>> The get_sync below would have been sufficient if you had either 
+>> limited the clk API above to just clk_prepare, or you could have moved 
+>> the whole clk API above into your runtime resume callback.
+> 
+> You assume that pm_runtime_get() will enable the clocks, but that's only 
+> true if CONFIG_PM is set.
+> 
+> The reason the clocks are enabled in the probe, and 
+> pm_runtime_set_active() is called, is that it works whether or not 
+> CONFIG_PM is set.
+
+As I said, if the intention is to reflect the clocks active state in rpm 
+status, then pm_runtime_get_noresume() does the job for you instead of 
+get_sync(). pm_runtime_get_sync() typically does 3 things - increment 
+the usage count, invoke your callbacks (enable clocks for you), and sets 
+the status to active, with the last two steps optional depending on 
+usage count.
+
+> 
+>>> +    pm_runtime_enable(dev);
+>>> +    pm_runtime_get_sync(dev);
+>>
+>> If the intention was to increment the usage count with the above 
+>> sequence, pm_runtime_get_noresume() is better. But dropping all of the 
+>> above and just using get_sync would have been sufficient.
+>>
+>>> +    pm_runtime_use_autosuspend(dev);
+>>
+>> I don't see any setting of the autosuspend delay (default value is 0). 
+>> So, you might have as well just not used this at all, and just used 
+>> pm_runtime_put() below.
+> 
+> Autosuspend delay value can be set from userspace.
+
+Yes, but I don't see a specific purpose for it in your driver. Either 
+you have remoteproc running (and so clocks enabled always), or you don't 
+have a firmware loaded and want clocks disabled (not sure you would want 
+to waste power for certain of amount of time).
+
+> 
+>>> +
+>>> +    ret = devm_add_action_or_reset(dev, ingenic_rproc_disable_clks, 
+>>> vpu);
+>>> +    if (ret) {
+>>> +        dev_err(dev, "Unable to register action\n");
+>>> +        goto out_pm_put;
+>>> +    }
+>>> +
+>>> +    ret = devm_rproc_add(dev, rproc);
+>>> +    if (ret) {
+>>> +        dev_err(dev, "Failed to register remote processor\n");
+>>> +        goto out_pm_put;
+>>> +    }
+>>
+>> You are using auto-boot, so the firmware loading is an asynchronous 
+>> event and most probably you would run through below sequence first, 
+>> and end up disabling the clocks with an incorrect rpm status.
+> 
+> The driver can auto-load the firmware, but that does not mean it will. 
+> We actually don't do that, and load a task-specific firmware onto the 
+> remote processor on demand.
+
+Yeah OK, depends on what is preferred by default. If it is more standard 
+practise that the remoteproc is booted by userspace always, then I 
+suggest setting auto_boot as false. But nothing wrong with expecting to 
+boot by default with a starting firmware.
+
+> 
+>>> +
+>>> +out_pm_put:
+>>> +    pm_runtime_put_autosuspend(dev);
+>>
+>> And finally, with the remoteproc core rpm patch, this would all have 
+>> been unnecessary.
+>>
+>>> +
+>>> +    return ret;
+>>> +}
+>>> +
+>>> +static const struct of_device_id ingenic_rproc_of_matches[] = {
+>>> +    { .compatible = "ingenic,jz4770-vpu-rproc", },
+>>> +    {}
+>>> +};
+>>> +MODULE_DEVICE_TABLE(of, ingenic_rproc_of_matches);
+>>> +
+>>> +static int __maybe_unused ingenic_rproc_suspend(struct device *dev)
+>>> +{
+>>> +    struct vpu *vpu = dev_get_drvdata(dev);
+>>> +
+>>> +    clk_bulk_disable(ARRAY_SIZE(vpu->clks), vpu->clks);
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +static int __maybe_unused ingenic_rproc_resume(struct device *dev)
+>>> +{
+>>> +    struct vpu *vpu = dev_get_drvdata(dev);
+>>> +
+>>> +    return clk_bulk_enable(ARRAY_SIZE(vpu->clks), vpu->clks);
+>>> +}
+>>> +
+>>> +static const struct dev_pm_ops __maybe_unused ingenic_rproc_pm = {
+>>> +    SET_RUNTIME_PM_OPS(ingenic_rproc_suspend, ingenic_rproc_resume, 
+>>> NULL)
+>>> +};
+>>> +
+>>> +static struct platform_driver ingenic_rproc_driver = {
+>>> +    .probe = ingenic_rproc_probe,
+>>> +    .driver = {
+>>> +        .name = "ingenic-vpu",
+>>> +#ifdef CONFIG_PM
+>>
+>> Not sure why you would want to maintain this conditional, because 
+>> runtime_pm is a core dependency now for your driver to work properly.
+> 
+> No, it is not - the driver works perfectly fine with CONFIG_PM being 
+> disabled, and having a hardcoded dependency on CONFIG_PM is not 
+> something we want.
+
+OK, so if IIUC, in general CONFIG_PM is not a typical usage for your 
+MIPS platforms. Your driver is the first non-ARM remoteproc driver :), 
+CONFIG_PM is almost a given on most ARM platforms.
+
+So, I fail to see how your clocks can stay disabled then when 
+CONFIG_PM=n if the remoteproc fails to load with the current code, which 
+was your primary argument for using prepare/unprepare (based on comments 
+on prior versions). It looks to me that your needs are indeed better 
+suited with the prepare/unprepare ops as in your initial series.
+
+And in the case of CONFIG_PM=y, you have three levels of code that 
+enables the clocks (the bare clk API, the pm_runtime_get in probe, and 
+the pm_runtime_get in the remoteproc core). Depending on the rpm status, 
+it may or may not invoke the callbacks.
+
+regards
+Suman
+
+> 
+> Cheers,
+> -Paul
+> 
+>> regards
+>> Suman
+>>
+>>> +        .pm = &ingenic_rproc_pm,
+>>> +#endif
+>>> +        .of_match_table = ingenic_rproc_of_matches,
+>>> +    },
+>>> +};
+>>> +module_platform_driver(ingenic_rproc_driver);
+>>> +
+>>> +MODULE_LICENSE("GPL");
+>>> +MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
+>>> +MODULE_DESCRIPTION("Ingenic JZ47xx Remote Processor control driver");
+>>>
+>>
+> 
 > 
 
-I agree we should make best effort to support the fields in the new
-header that was supported in the older kernel.
-
-But there will be cases that new app fails on old kernel if the new
-fields from the new header are used. Do we have consensus on this?
-
-> > > > +
-> > > > +IOMMU vendor driver should report the below features to IOMMU
-> > > > UAPI +consumers (e.g. via VFIO).
-> > > > +
-> > > > +1. IOMMU_NESTING_FEAT_SYSWIDE_PASID
-> > > > +2. IOMMU_NESTING_FEAT_BIND_PGTBL
-> > > > +3. IOMMU_NESTING_FEAT_BIND_PASID_TABLE
-> > > > +4. IOMMU_NESTING_FEAT_CACHE_INVLD
-> > > > +5. IOMMU_NESTING_FEAT_PAGE_REQUEST
-> > > > +
-> > > > +Take VFIO as example, upon request from VFIO user space (e.g.
-> > > > QEMU), +VFIO kernel code shall query IOMMU vendor driver for the
-> > > > support of +the above features. Query result can then be
-> > > > reported back to the +user-space caller. Details can be found in
-> > > > +Documentation/driver-api/vfio.rst.
-> > > > +
-> > > > +
-> > > > +Data Passing Example with VFIO
-> > > > +------------------------------
-> > > > +As the ubiquitous userspace driver framework, VFIO is already
-> > > > IOMMU +aware and share many key concepts such as device model,
-> > > > group, and +protection domain. Other user driver frameworks can
-> > > > also be extended +to support IOMMU UAPI but it is outside the
-> > > > scope of this document. +
-> > > > +In this tight-knit VFIO-IOMMU interface, the ultimate consumer
-> > > > of the +IOMMU UAPI data is the host IOMMU driver. VFIO
-> > > > facilitates user-kernel +transport, capability checking,
-> > > > security, and life cycle management of +process address space
-> > > > ID (PASID). +
-> > > > +Unlike normal user data passed via VFIO UAPI IOTCL, IOMMU
-> > > > driver is the +ultimate consumer of its UAPI data. At VFIO
-> > > > layer, the IOMMU UAPI data +is wrapped in a VFIO UAPI data for
-> > > > sanity checking. It follows the +pattern below:
-> > > > +
-> > > > +::
-> > > > +
-> > > > +   struct {
-> > > > +	__u32 argsz;
-> > > > +	__u32 flags;
-> > > > +	__u8  data[];
-> > > > +  }
-> > > > +
-> > > > +Here data[] contains the IOMMU UAPI data structures.
-> > > > +
-> > > > +In order to determine the size and feature set of the user
-> > > > data, argsz +and flags are also embedded in the IOMMU UAPI data
-> > > > structures. +A "__u32 argsz" field is *always* at the beginning
-> > > > of each structure. +
-> > > > +For example:
-> > > > +::
-> > > > +
-> > > > +   struct iommu_gpasid_bind_data {
-> > > > +	__u32 argsz;
-> > > > +	__u32 version;
-> > > > +	#define IOMMU_PASID_FORMAT_INTEL_VTD	1
-> > > > +	__u32 format;
-> > > > +	#define IOMMU_SVA_GPASID_VAL	(1 << 0)
-> > > > +	__u64 flags;
-> > > > +	__u64 gpgd;
-> > > > +	__u64 hpasid;
-> > > > +	__u64 gpasid;
-> > > > +	__u32 addr_width;
-> > > > +	__u8  padding[12];
-> > > > +	/* Vendor specific data */
-> > > > +	union {
-> > > > +		struct iommu_gpasid_bind_data_vtd vtd;
-> > > > +	};
-> > > > +  };
-> > > > +
-> > > > +Use bind guest PASID as an example, VFIO code shall process
-> > > > IOMMU UAPI +request as follows:
-> > > > +
-> > > > +::
-> > > > +
-> > > > + 1        /* Minsz must include IOMMU UAPI "argsz" of __u32 */
-> > > > + 2        minsz = offsetofend(struct vfio_iommu_type1_bind,
-> > > > flags) +
-> > > > +                              sizeof(u32);      
-> > > 
-> > > In the example structure above:
-> > >     
-> > > > +   struct {
-> > > > +	__u32 argsz;
-> > > > +	__u32 flags;
-> > > > +	__u8  data[];
-> > > > +  }      
-> > > 
-> > > This presumes that vfio does not use flags to identify a different
-> > > layout, for example a field before data or defining a flag that
-> > > provides no data.  IOW, the IOMMU guarantees argsz at the
-> > > beginning of all structures, but let's not limit how vfio chooses
-> > > to bundle that structure.  minsz should be based on flags, which
-> > > we'll evaluate to determine how much more to copy.
-> > >     
-> > Got it, VFIO owns its flags therefore minsz. How about reword the
-> > example data struct as:
-> >    struct {
-> > 	__u32 argsz;
-> > 	__u32 flags;
-> > 	__u8  data[];
-> >   }
-> > 
-> > Here data[] contains the IOMMU UAPI data structures. VFIO has the
-> > freedom to bundle the data as well as parse data size based on its
-> > own flags.
-> > 
-> > In the example code:
-> > 
-> > "Use bind guest PASID as an example, VFIO code shall first
-> > process the flags field to determine the size to copy for IOMMU
-> > UAPI. The flags could indicate different layout of the VFIO data
-> > and the types of IOMMU UAPI data."  
-> 
-> I think this should probably go no further than to say that the IOMMU
-> UAPI data structure is expected to be embedded opaquely into the VFIO
-> API, for example, VFIO may use a structure such as:
-> 
->     struct {
->  	__u32 argsz;
->  	__u32 flags;
->  	__u8  data[];
->    }
-> 
-> where data[] contains an IOMMU UAPI structure, including the user
-> provided argsz field relative to that embedded structure.  This format
-> allows VFIO to multiplex multiple IOMMU UAPI interfaces through a
-> reduced set of ioctls.
-> 
-Sounds good, thanks for the summary.
-
-> > > > UAPI +request as follows:    
-> >   
-> > > > + 3        copy_from_user(&vfio_bind, (void __user *)arg,
-> > > > minsz);
-> > > > + 4
-> > > > + 5        /* Check VFIO argsz */
-> > > > + 6        if (vfio_bind.argsz < minsz)
-> > > > + 7                return -EINVAL;
-> > > > + 8
-> > > > + 9        /* VFIO flags must be included in minsz */
-> > > > + 10        switch (vfio_bind.flags) {
-> > > > + 11        case VFIO_IOMMU_BIND_GUEST_PGTBL:
-> > > > + 12                /*
-> > > > + 13                 * Get the current IOMMU bind GPASID data
-> > > > size,
-> > > > + 14                 * which accounted for the largest union
-> > > > member.
-> > > > + 15                 */
-> > > > + 16                data_size = sizeof(struct
-> > > > iommu_gpasid_bind_data);
-> > > > + 17                iommu_argsz = vfio_bind.argsz - minsz;      
-> > > 
-> > > Note that by including the IOMMU UAPI argsz within minsz, this is
-> > > incorrect.
-> > >     
-> > Good catch, should be:
-> > iommu_argsz = vfio_bind.argsz - minsz - sizeof(u32)
-> >   
-> > > > + 18                if (iommu_argsz > data_size) {
-> > > > + 19                        /* User data > current kernel */
-> > > > + 20                        return -E2BIG;
-> > > > + 21                }      
-> > > 
-> > > Now I see why you're making the claim that QEMU compiled against
-> > > an new kernel may not work on an older kernel.  We can do
-> > > better.  The current sizeof the data structure should be the
-> > > maximum we'll copy from the user, and we can update the user
-> > > provided IOMMU UAPI argsz as we pass it down from the user to
-> > > avoid exposing ourselves to an arbitrarily large user buffer.
-> > > The IOMMU UAPI interfaces should then also use argsz and flags to
-> > > determine whether the data is present for a specified flag. That
-> > > should allow a user application compiled against a newer kernel
-> > > header, but only using features found on older kernels to
-> > > continue to work on older kernels, which seems like a basic
-> > > requirement to me. 
-> > I got your point. But I don't understand why VFIO layer will update
-> > IOMMU argsz, IOMMU layer is not exposed to arbitrary large user
-> > size in that it can not exceed the current UAPI data size.  
-> 
-> I was thinking about the case where userspace is compiled against a
-> newer kernel and might provide argsz = sizeof(struct iommu_uapi_foo')
-> but vfio only knows sizeof(struct iommu_uapi_foo).  We don't want to
-> copy an arbitrary amount of data from userspace, so vfio would use
-> MIN(argsz, sizeof(struct iommu_uapi_foo)) for the copy_from_user().
-> The IOMMU UAPI would then need to depend on the reduced argsz.
-> 
-> But then I thought it even better if VFIO leaves the entire
-> copy_from_user() to the layer consuming it.
-> 
-OK. Sounds good, that was what Kevin suggested also. I just wasn't sure
-how much VFIO wants to inspect, I thought VFIO layer wanted to do a
-sanity check.
-
-Anyway, I will move copy_from_user to iommu uapi layer.
-
-> > I agree we should make effort to allow features found in the older
-> > kernel continue to work.  
-> 
-> That's a requirement.  Breaking existing userspace without following a
-> deprecation model is a bug.
-Sorry I don't understand why it is breaking existing userspace. If a
-userspace is recompiled with new kernel header, it is not *existing*.
-
-> But I think so too is the fact that this
-> interface actually specifies and provides an example where simply
-> recompiling existing userspace against a new kernel header where the
-> size of structure may be changed to support a feature will cause that
-> application to fail to run on older kernels.  That's not feasible for
-> a distribution to support.
-> 
-I see your point, my assumption was that app (e.g. QEMU) imports new
-header selectively. The new header must be imported with an intention
-of using the new flags/fields. I guess this may not *always* be true.
-I will add the support for older kernel to run on new header (if no new
-fields/flags are used).
-
-
-Thanks a lot!
-
-> > > > + 22                copy_from_user(&iommu_bind, (void __user *)
-> > > > + 23                               vfio_bind.data, iommu_argsz);
-> > > > + 24               /*
-> > > > + 25                * Deal with trailing bytes that is bigger
-> > > > than user
-> > > > + 26                * provided UAPI size but smaller than the
-> > > > current
-> > > > + 27                * kernel data size. Zero fill the trailing
-> > > > bytes.
-> > > > + 28                */
-> > > > + 29                memset(iommu_bind + iommu_argsz, 0,
-> > > > data_size -
-> > > > + 30                       iommu_argsz;      
-> > > 
-> > > The IOMMU UAPI interface having access to argsz should make this
-> > > unnecessary.  Performing this memset() seems like it suggests to
-> > > the next layer that it can rely on all fields being present and
-> > > valid, which defeats the purpose of argsz.
-> > >     
-> > This memset does not suggest all fields are present and valid. Only
-> > filter out the obvious invalid data based on current size. My
-> > intention is to reduce the burden of checking not eliminate.  
-> 
-> I'm afraid that reducing the burden on the IOMMU UAPI layers leads to
-> reduced visibility which leads to less stringent validation.  We're
-> defining a UAPI layer for the kernel where VFIO just happens to be an
-> interface through to that UAPI.  The UAPI should therefore be
-> providing the validation, not VFIO.  Create a wrapper in the IOMMU
-> UAPI layer if you want to share common validation.
-> 
-> > > > + 31
-> > > > + 32                iommu_sva_bind_gpasid(domain, dev,
-> > > > iommu_bind_data);
-> > > > + 33                break;
-> > > > +
-> > > > +
-> > > > +Case #1 & 2 are supported per backward compatibility rule.
-> > > > +
-> > > > +Case #3 will fail with -E2BIG at line #20. Case      
-> > > 
-> > > This is not acceptable IMO.
-> > >     
-> > Got it. Will copy up to the current data size and let IOMMU driver
-> > handle supported flags/features.
-> >   
-> > > > +Case #4 may result in other error processed by IOMMU vendor
-> > > > driver. However, +the damage shall not exceed the scope of the
-> > > > offending user.      
-> > > 
-> > > This is a concern in this double wrapped interface, the IOMMU UAPI
-> > > layer may expect the vfio layer to validate the data.  Zeroing the
-> > > remainder of the data structure is evidence towards that.  The
-> > > IOMMU UAPI layer needs to consider all of this untrusted, so why
-> > > would we not reflect that by passing a __user pointer through to
-> > > the IOMMU UAPI such that it can copy the data from the user
-> > > itself rather than being mislead that the contents have been
-> > > somehow verified?  Thanks, 
-> > I am OK with IOMMU layer does the copy_from_user. One of my
-> > original thinking was that since some APIs (e.g page response) also
-> > used by in-kernel code, I would avoid user pointer or another
-> > wrapper.
-> > 
-> > Perhaps need to clarify the roles of each layer, IMHO the roles are:
-> > - VFIO
-> > 	1. bundle IOMMU UAPI data with flags & argsz
-> > 	2. sanity check argsz > minsz
-> > 	3. determine the copy_from_user size based on VFIO flags &
-> > argsz
-> > 
-> > - IOMMU UAPI
-> > 	1. check argsz against current kernel IOMMU UAPI data size,
-> > its own minsz
-> > 	2. parse data based on feature/flags
-> > 
-> > So if VFIO already can decide the copy_from_user size as in VFIO.3,
-> > why can't it just do the copy as well. VFIO only checks and ensures
-> > size, nothing specific to the content of IOMMU UAPI. Does the role
-> > partition sound right?  
-> 
-> As above, the only way that this can be a generic UAPI is if VFIO is
-> just a passthrough, otherwise this just becomes VFIO API and we might
-> as well not pretend we're creating a UAPI between the VFIO and IOMMU.
-> If a second user of the UAPI would duplicate the code from VFIO, then
-> it shouldn't be in VFIO.  Thanks,
-> 
-> Alex
-> 
-
-[Jacob Pan]
