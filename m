@@ -2,144 +2,147 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69597C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 18:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8ABBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 18:51:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 402C7206DC
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 18:47:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S2x9dGEH"
+	by mail.kernel.org (Postfix) with ESMTP id 9F35C2068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 18:51:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbgFLSru (ORCPT
+        id S1726319AbgFLSvY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 14:47:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39326 "EHLO
+        Fri, 12 Jun 2020 14:51:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgFLSrt (ORCPT
+        with ESMTP id S1726085AbgFLSvX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 14:47:49 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2093C03E96F;
-        Fri, 12 Jun 2020 11:47:49 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id x189so2239329iof.9;
-        Fri, 12 Jun 2020 11:47:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=LZDy9XcI4N1lUd1gGa7ISl9lwNSdZf1QWRf62wPMnVw=;
-        b=S2x9dGEHkOnJf+7GpQkXBNyZgMb+NG5lpVqGB+F8ObbicBblcPnt1Zj0z2T2BJN1ak
-         BE5tyB3SXO/vcPpoE1SV0kY1Hyiuhx8BaCvyI4y2wl5zVlTziIxk6WAAGlfkyrGWK2Ab
-         ZJmk91KRA2HRL5FDYwjDYXfdoxwSeDYU2+fZ5Z8Mkt+x8+aREd4LyXa1focAkMeBM167
-         RGDhyMr0dOAIZK/jg79jEb+znkyhK/DuF8F1TzcM7Ak+2abPElSzvfEwgLwHRZ/tiXLT
-         XcVd6vAWGmnp9IO5dm4LC11qH4Ycso5wykJuil7n4kQNX5Uq5tVU5q/eYugeOmAWp9i4
-         NGUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=LZDy9XcI4N1lUd1gGa7ISl9lwNSdZf1QWRf62wPMnVw=;
-        b=Wugerj51NeCUivMnRVXoyO0tDkrZ+JBGsATk6DIN0w1zDfuLheiMC9ryCHlh38vdDW
-         3Pr+jyo7D9n/ToGOr5DSczfFM6uPjCJpOG+yILvgwxCpKOWwqRQmropefAmNt8A1Xdtw
-         x0apvtMYr/MJBjAwVPORLsWqacQAX0dEzjZnSCodvKWuUlH3RIgR7+Qvb6EXAvorZP9W
-         4xwsYa9VwNApTKspcOdCHDv7tsnQA3FC040F9//kptPv+ONBnnkEM58c+CA2Dz0hrAGT
-         tAZp/XqexR8scpsjgeVD2PmunY8prQGesgSRYdx5zfsB2Ffx/0lGQXiu6Z1HtTGqym2t
-         kxBg==
-X-Gm-Message-State: AOAM531gW2iZA1E/vlRn3Vh6cGKQ2YfEoFcl72i65Lt0qLkY4VEppCfa
-        9SKzIwvEajfeOefJ1SUGmaeN5eBuZ+5v//ce428=
-X-Google-Smtp-Source: ABdhPJzfRaFPvLx+fMxGrt+I4C3SRFJHleONaqg7i4IvAGQ6aQvoRRGtLFcMRTSg9k7ZAk6Yl7tZSKL1xoRRRuVrgIQ=
-X-Received: by 2002:a05:6602:1601:: with SMTP id x1mr15442631iow.129.1591987668271;
- Fri, 12 Jun 2020 11:47:48 -0700 (PDT)
+        Fri, 12 Jun 2020 14:51:23 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4CF6C03E96F;
+        Fri, 12 Jun 2020 11:51:23 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: tonyk)
+        with ESMTPSA id 52F862A5160
+From:   =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
+To:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        peterz@infradead.org
+Cc:     krisman@collabora.com, kernel@collabora.com,
+        andrealmeid@collabora.com, dvhart@infradead.org, mingo@redhat.com,
+        pgriffais@valvesoftware.com, fweimer@redhat.com,
+        libc-alpha@sourceware.org, malteskarupke@web.de,
+        linux-api@vger.kernel.org
+Subject: [RFC 0/4] futex2: Add new futex interface
+Date:   Fri, 12 Jun 2020 15:51:18 -0300
+Message-Id: <20200612185122.327860-1-andrealmeid@collabora.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20200605170720.2478262-1-noltari@gmail.com>
-In-Reply-To: <20200605170720.2478262-1-noltari@gmail.com>
-From:   Kamal Dasu <kdasu.kdev@gmail.com>
-Date:   Fri, 12 Jun 2020 14:47:37 -0400
-Message-ID: <CAC=U0a3xa9k76mxsiVKDyXsuvboZAyMkXT-S3-6oVZKjnWkeHA@mail.gmail.com>
-Subject: Re: [PATCH] mtd: rawnand: brcmnand: force raw OOB writes
-To:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
-Cc:     Brian Norris <computersforpeace@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        "R, Vignesh" <vigneshr@ti.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 1:07 PM =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gm=
-ail.com> wrote:
->
-> MTD_OPS_AUTO_OOB is writting OOB with ECC enabled, which changes all ECC =
-bytes
-> from an erased page to 0x00 when JFFS2 cleanmarkers are added with mtd-ut=
-ils.
->          | BBI |   JFFS2   |   ECC   |   JFFS2   | Spare  |
-> 00000800  ff ff 19 85 20 03 00 00  00 00 00 00 08 ff ff ff
->
-> However, if OOB is written with ECC disabled, the JFFS2 cleanmarkers are
-> correctly written without changing the ECC bytes:
->          | BBI |   JFFS2   |   ECC   |   JFFS2   | Spare  |
-> 00000800  ff ff 19 85 20 03 ff ff  ff 00 00 00 08 ff ff ff
+Hello,
 
-Both brcmand_write_oob_raw() and brcmnand_write_oob() use
-brcmnand_write() that uses PROGRAM_PAGE cmd, means also programs data
-areas and ECC when enabled  is always calculated on DATA+OOB.  since
-in both cases we only want to modify OOB, data is always assumed to be
-0xffs (means erased state). So as far as this api always is used on
-the erased page it should be good. Are the sub-pages/oob areas read by
-jffs2  also read without ecc enabled?. Just want to be sure that it
-does not break any other utilities like nandwrite.
+This RFC is a followup to the previous discussion initiated from my last
+patch "futex: Implement mechanism to wait on any of several futexes"[1].
+As stated in the thread, the correct approach to move forward with the
+wait multiple operation would be to create a new syscall that would have
+all new cool features.
 
->
-> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
-> ---
->  drivers/mtd/nand/raw/brcmnand/brcmnand.c | 9 +--------
->  1 file changed, 1 insertion(+), 8 deletions(-)
->
-> diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/=
-raw/brcmnand/brcmnand.c
-> index 8f9ffb46a09f..566281770841 100644
-> --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> @@ -2279,13 +2279,6 @@ static int brcmnand_write_page_raw(struct nand_chi=
-p *chip, const uint8_t *buf,
->         return nand_prog_page_end_op(chip);
->  }
->
-> -static int brcmnand_write_oob(struct nand_chip *chip, int page)
-> -{
-> -       return brcmnand_write(nand_to_mtd(chip), chip,
-> -                             (u64)page << chip->page_shift, NULL,
-> -                             chip->oob_poi);
-> -}
-> -
->  static int brcmnand_write_oob_raw(struct nand_chip *chip, int page)
->  {
->         struct mtd_info *mtd =3D nand_to_mtd(chip);
-> @@ -2642,7 +2635,7 @@ static int brcmnand_init_cs(struct brcmnand_host *h=
-ost, struct device_node *dn)
->         chip->ecc.write_oob_raw =3D brcmnand_write_oob_raw;
->         chip->ecc.read_oob_raw =3D brcmnand_read_oob_raw;
->         chip->ecc.read_oob =3D brcmnand_read_oob;
-> -       chip->ecc.write_oob =3D brcmnand_write_oob;
-> +       chip->ecc.write_oob =3D brcmnand_write_oob_raw;
->
->         chip->controller =3D &ctrl->controller;
->
-> --
-> 2.26.2
->
+The first patch adds the new interface and just translate the call for
+the old interface, without implementing new features. The goal here is
+to establish the interface and to check if everyone is happy with this
+API. The rest of patches are selftests to show the interface in action.
+I have the following questions:
+
+- Has anyone stared worked on a implementation of this interface? If
+  yes, it would be nice to share the progress so we don't have duplicated
+  work.
+
+- What suggestions do you have to implement this? Start from scratch or
+  reuse the most code possible?
+
+- The interface seems correct and implements the requirements asked by you?
+
+- The proposed interface uses ktime_t type for absolute timeout, and I
+  assumed that it should use values in a nsec resolution. If this is true,
+  we have some problems with i386 ABI, please check out the
+  COMPAT_32BIT_TIME implementation in patch 1 for more details. I
+  haven't added a time64 implementation yet, until this is clarified.
+
+- Is expected to have a x32 ABI implementation as well? In the case of
+  wait and wake, we could use the same as x86_64 ABI. However, for the
+  waitv (aka wait on multiple futexes) we would need a proper x32 entry
+  since we are dealing with 32bit pointers.
+
+Those are the cool new features that this syscall should address some
+day:
+
+- Operate with variable bit size futexes, not restricted to 32:
+  8, 16 and 64
+
+- Wait on multiple futexes, using the following semantics:
+
+  struct futex_wait {
+	void *uaddr;
+	unsigned long val;
+	unsigned long flags;
+  };
+
+  sys_futex_waitv(struct futex_wait *waiters, unsigned int nr_waiters,
+		  unsigned long flags, ktime_t *timo);
+
+- Have NUMA optimizations: if FUTEX_NUMA_FLAG is present, the `void *uaddr`
+  argument won't be a u{8, 16, 32, 64} value anymore, but a struct
+  containing a NUMA node hint:
+
+  struct futex32_numa {
+	  u32 value __attribute__ ((aligned (8)));
+	  u32 hint;
+  };
+
+  struct futex64_numa {
+	  u64 value __attribute__ ((aligned (16)));
+	  u64 hint;
+  };
+
+Thanks,
+	André
+
+André Almeida (4):
+  futex2: Add new futex interface
+  selftests: futex: Add futex2 wake/wait test
+  selftests: futex: Add futex2 timeout test
+  selftests: futex: Add futex2 wouldblock test
+
+ MAINTAINERS                                   |   2 +-
+ arch/x86/entry/syscalls/syscall_32.tbl        |   2 +
+ arch/x86/entry/syscalls/syscall_64.tbl        |   2 +
+ include/linux/syscalls.h                      |   9 ++
+ include/uapi/asm-generic/unistd.h             |   7 +-
+ include/uapi/linux/futex.h                    |  10 ++
+ init/Kconfig                                  |   7 ++
+ kernel/Makefile                               |   1 +
+ kernel/futex2.c                               |  97 ++++++++++++++++
+ kernel/sys_ni.c                               |   5 +
+ tools/include/uapi/asm-generic/unistd.h       |   7 +-
+ .../selftests/futex/functional/.gitignore     |   1 +
+ .../selftests/futex/functional/Makefile       |   4 +-
+ .../selftests/futex/functional/futex2_wait.c  | 106 ++++++++++++++++++
+ .../futex/functional/futex_wait_timeout.c     |  27 ++++-
+ .../futex/functional/futex_wait_wouldblock.c  |  34 +++++-
+ .../testing/selftests/futex/functional/run.sh |   3 +
+ .../selftests/futex/include/futex2test.h      |  50 +++++++++
+ 18 files changed, 361 insertions(+), 13 deletions(-)
+ create mode 100644 kernel/futex2.c
+ create mode 100644 tools/testing/selftests/futex/functional/futex2_wait.c
+ create mode 100644 tools/testing/selftests/futex/include/futex2test.h
+
+-- 
+2.27.0
+
