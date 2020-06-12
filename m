@@ -2,137 +2,103 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FEA4C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 354E1C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54020207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 128962081A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:22:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="FYGfNpDf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbgFLHRE convert rfc822-to-8bit (ORCPT
+        id S1726441AbgFLHWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 03:17:04 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:52913 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbgFLHRD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 03:17:03 -0400
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 1D41D2000D;
-        Fri, 12 Jun 2020 07:16:59 +0000 (UTC)
-Date:   Fri, 12 Jun 2020 09:16:58 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Cc:     richard@nod.at, vigneshr@ti.com, peter.ujfalusi@ti.com,
-        boris.brezillon@collabora.com, architt@codeaurora.org,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH V3 1/2] mtd: rawnand: qcom: avoid write to unavailable
- register
-Message-ID: <20200612091658.4f9fba49@xps13>
-In-Reply-To: <1591944589-14357-2-git-send-email-sivaprak@codeaurora.org>
-References: <1591944589-14357-1-git-send-email-sivaprak@codeaurora.org>
-        <1591944589-14357-2-git-send-email-sivaprak@codeaurora.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+        Fri, 12 Jun 2020 03:22:43 -0400
+Received: from mx1.tq-group.com ([62.157.118.193]:36108 "EHLO mx1.tq-group.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726349AbgFLHWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 03:22:42 -0400
+IronPort-SDR: Nc4pdbAZB7Zb0hSTufC5aDJENs09uJDjijKEi0rckHuJmUZMc+HbtyJh44aHWQ2kZ4iJDz+TNd
+ tpgoJbf9+0pVzVWtEkzsUGSdLRz/DFg21/mhW559NZ5gZi+XVf3C5iiU796IVQPiS+EqVO5Q7w
+ JWQswwSTiTNJDAV/qSUj/AySZ5HHG1tHcu14mnUKK2WryPbNzC1mU/i70iVUFcze3+7EmkJmgJ
+ /w1wMzyQu4+x5o+XxqfdVLp6lTJPJePWpJeD0rg/YB3Vos5nBa5cmD7J3H/B8sjbqmvzNTskfe
+ glg=
+X-IronPort-AV: E=Sophos;i="5.73,502,1583190000"; 
+   d="scan'208";a="12657240"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 12 Jun 2020 09:22:40 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Fri, 12 Jun 2020 09:22:40 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Fri, 12 Jun 2020 09:22:40 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1591946560; x=1623482560;
+  h=from:to:cc:subject:date:message-id;
+  bh=fswM+upoobDK3SZQ3Lk7Spn5j3s1LgDDzID4tgIKQKo=;
+  b=FYGfNpDfbnfVciJy+omDaBP1tNYcvmPk4Y3Ox+JKFbge+ElspVWN/fGt
+   uvajo3m4KtyaMMp7VZb43dreiMHsPF3Iu0WDaSVFkPeal1bmLTJlW1lZ1
+   aN9wo6SkSpc9P/aPf5Gk8vGOcJc+rqPJOd9Lgw2W9g9GT9A9wU3OOS4Ku
+   JNIASh5ZjqYAY9+2L5PKskm1njIkIQSDlhAnAXNKs3P7m4SY3UFBrks9A
+   6u0t/r6vP7jbw1iwfCumN3McGlmGp+trNV7MMMUJhV+LjYe9sdgCh5gzM
+   3vutsvSIDNYL5Xh/JMj92gRTTHE3Lkvyyog8FJ+lfKJQlOM6PwNmwzO8C
+   A==;
+IronPort-SDR: CxZdULvQnOKEWtol3vQScgJl3EvnJ73XMA8LIpbeTsS9IBbHUbNd6tHEbY+LhiXURpZlX2zeK1
+ hqnyEbiSTMUjD43m7Kntuk27wI7HFRnGFTqEk94k5xzxXND/DJrE1fYDniXhrlcm7S0diK8Wib
+ pf/BfO9bc+AqPpiZT7YvGtmVtq23dzG1lXelE/6czYrfh5G4l5e2Ins7u7Lhv0JQ3bCA8rB8IQ
+ TOW7qrelmvOfYUzLFOY4dQCU5te2RnkKHcBfegqS0Nk7rwojzsPWn0Qr2O41JVIGbxwObH7w5g
+ x4U=
+X-IronPort-AV: E=Sophos;i="5.73,502,1583190000"; 
+   d="scan'208";a="12657239"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 12 Jun 2020 09:22:40 +0200
+Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 3C73B280065;
+        Fri, 12 Jun 2020 09:22:40 +0200 (CEST)
+From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Subject: [PATCH RESEND v2 0/4] panel-simple: CDTech S070PWS19HP-FC21 and S070SWV29HG-DC44, Tianma TM070JVHG33
+Date:   Fri, 12 Jun 2020 09:22:15 +0200
+Message-Id: <20200612072219.13669-1-matthias.schiffer@ew.tq-group.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sivaprakash,
+From: Matthias Schiffer <matthias.schiffer@tq-group.com>
 
-Sivaprakash Murugesan <sivaprak@codeaurora.org> wrote on Fri, 12 Jun
-2020 12:19:48 +0530:
+This adds a few panels TQ-Systems uses with various starterkit
+mainboards. Device trees actually using these panels will be added with
+a later submission.
 
-> SFLASHC_BURST_CFG is only available on older ipq nand platforms, this
-> register has been removed when the NAND controller is moved as part of qpic
-> controller.
-> 
-> avoid register writes to this register on devices which are based on qpic
 
-Avoid writing this register on ...
+Matthias Schiffer (2):
+  dt-bindings: display: simple: add CDTech S070PWS19HP-FC21 and
+    S070SWV29HG-DC44
+  dt-bindings: display: simple: add Tianma TM070JVHG33
 
-> NAND controllers.
-> 
-> Fixes: a0637834 (mtd: nand: qcom: support for IPQ4019 QPIC NANDcontroller)
-> Fixes: dce84760 (mtd: nand: qcom: Support for IPQ8074 QPIC NAND controller)
+Max Merchel (1):
+  drm/panel: simple: add Tianma TM070JVHG33
 
-I don't think having two Fixes tag is allowed. Take the older one
-instead.
+Michael Krummsdorf (1):
+  drm/panel: simple: add CDTech S070PWS19HP-FC21 and S070SWV29HG-DC44
 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
-> ---
-> [V3]
->  * Addressed Miquel comments, added flag based on nand controller hw
->    to avoid the register writes to specific ipq platforms
->  drivers/mtd/nand/raw/qcom_nandc.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mtd/nand/raw/qcom_nandc.c b/drivers/mtd/nand/raw/qcom_nandc.c
-> index f1daf33..e0c55bb 100644
-> --- a/drivers/mtd/nand/raw/qcom_nandc.c
-> +++ b/drivers/mtd/nand/raw/qcom_nandc.c
-> @@ -459,11 +459,13 @@ struct qcom_nand_host {
->   * among different NAND controllers.
->   * @ecc_modes - ecc mode for NAND
->   * @is_bam - whether NAND controller is using BAM
-> + * @is_qpic - whether NAND CTRL is part of qpic IP
->   * @dev_cmd_reg_start - NAND_DEV_CMD_* registers starting offset
->   */
->  struct qcom_nandc_props {
->  	u32 ecc_modes;
->  	bool is_bam;
-> +	bool is_qpic;
->  	u32 dev_cmd_reg_start;
->  };
->  
-> @@ -2774,7 +2776,8 @@ static int qcom_nandc_setup(struct qcom_nand_controller *nandc)
->  	u32 nand_ctrl;
->  
->  	/* kill onenand */
-> -	nandc_write(nandc, SFLASHC_BURST_CFG, 0);
-> +	if (!nandc->props->is_qpic)
-> +		nandc_write(nandc, SFLASHC_BURST_CFG, 0);
->  	nandc_write(nandc, dev_cmd_reg_addr(nandc, NAND_DEV_CMD_VLD),
->  		    NAND_DEV_CMD_VLD_VAL);
->  
-> @@ -3029,18 +3032,21 @@ static int qcom_nandc_remove(struct platform_device *pdev)
->  static const struct qcom_nandc_props ipq806x_nandc_props = {
->  	.ecc_modes = (ECC_RS_4BIT | ECC_BCH_8BIT),
->  	.is_bam = false,
-> +	.is_qpic = false,
+ .../bindings/display/panel/panel-simple.yaml  |  6 ++
+ drivers/gpu/drm/panel/panel-simple.c          | 75 +++++++++++++++++++
+ 2 files changed, 81 insertions(+)
 
-This line is unneeded.
+-- 
+2.17.1
 
->  	.dev_cmd_reg_start = 0x0,
->  };
->  
->  static const struct qcom_nandc_props ipq4019_nandc_props = {
->  	.ecc_modes = (ECC_BCH_4BIT | ECC_BCH_8BIT),
->  	.is_bam = true,
-> +	.is_qpic = true,
->  	.dev_cmd_reg_start = 0x0,
->  };
->  
->  static const struct qcom_nandc_props ipq8074_nandc_props = {
->  	.ecc_modes = (ECC_BCH_4BIT | ECC_BCH_8BIT),
->  	.is_bam = true,
-> +	.is_qpic = true,
->  	.dev_cmd_reg_start = 0x7000,
->  };
->  
-
-Much better patch IMHO, just a few nits and we'll be good.
-
-Thanks,
-Miquèl
