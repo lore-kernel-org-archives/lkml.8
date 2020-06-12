@@ -2,121 +2,87 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E25ABC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DB9C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB1DB20723
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:50:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2266B20723
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:50:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="VnnOl8MD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbgFLTuQ (ORCPT
+        id S1726448AbgFLTuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 15:50:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48952 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726397AbgFLTuM (ORCPT
+        Fri, 12 Jun 2020 15:50:18 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:60316 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726396AbgFLTuP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 15:50:12 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDFF6C03E96F;
-        Fri, 12 Jun 2020 12:50:11 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jjpgn-0003Pg-A2; Fri, 12 Jun 2020 21:50:09 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 762901C032F;
-        Fri, 12 Jun 2020 21:50:08 +0200 (CEST)
-Date:   Fri, 12 Jun 2020 19:50:08 -0000
-From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/entry] x86/entry: Make NMI use IDTENTRY_RAW
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <CA+G9fYvF3cyrY+-iw_SZtpN-i2qA2BruHg4M=QYECU2-dNdsMw@mail.gmail.com>
-References: <CA+G9fYvF3cyrY+-iw_SZtpN-i2qA2BruHg4M=QYECU2-dNdsMw@mail.gmail.com>
+        Fri, 12 Jun 2020 15:50:15 -0400
+Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id B356C205DDAF;
+        Fri, 12 Jun 2020 12:50:14 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B356C205DDAF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1591991414;
+        bh=GdD9+kQ9aITh+TAeiBW5btAMPcCymvbqsDCBMG9pDJY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=VnnOl8MDm+ruzYyoWNTT6EMXTeW1KeweCnFkTcpwagJQWqkhh3u2nYF34qqGdvPBo
+         aKpmwhEtVxIJ52SRseNK4B+wSrg34/L38VYKHNrJKNIGKH9mAEuhek8tb571EKHoaS
+         LUA0x4yXrn6jiMXz029ksb3O+OHqmzVjEI6yk2LE=
+Subject: Re: [PATCH 1/2] integrity: Add errno field in audit message
+To:     Mimi Zohar <zohar@linux.ibm.com>, sgrubb@redhat.com,
+        paul@paul-moore.com
+Cc:     rgb@redhat.com, linux-integrity@vger.kernel.org,
+        linux-audit@redhat.com, linux-kernel@vger.kernel.org
+References: <20200611000400.3771-1-nramas@linux.microsoft.com>
+ <1591989920.11061.90.camel@linux.ibm.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <42482562-d74c-2678-069f-1d8ef4feffac@linux.microsoft.com>
+Date:   Fri, 12 Jun 2020 12:50:14 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Message-ID: <159199140829.16989.15278153096023573456.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <1591989920.11061.90.camel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/entry branch of tip:
+On 6/12/20 12:25 PM, Mimi Zohar wrote:
 
-Commit-ID:     71ed49d8fb33023f242419a77ecb1141c029cac4
-Gitweb:        https://git.kernel.org/tip/71ed49d8fb33023f242419a77ecb1141c029cac4
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Fri, 12 Jun 2020 14:02:27 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Fri, 12 Jun 2020 14:15:48 +02:00
+> The idea is a good idea, but you're assuming that "result" is always
+> errno.  That was probably true originally, but isn't now.  For
+> example, ima_appraise_measurement() calls xattr_verify(), which
+> compares the security.ima hash with the calculated file hash.  On
+> failure, it returns the result of memcmp().  Each and every code path
+> will need to be checked.
+> 
 
-x86/entry: Make NMI use IDTENTRY_RAW
+Good catch Mimi.
 
-For no reason other than beginning brainmelt, IDTENTRY_NMI was mapped to
-IDTENTRY_IST.
+Instead of "errno" should we just use "result" and log the value given 
+in the result parameter?
 
-This is not a problem on 64bit because the IST default entry point maps to
-IDTENTRY_RAW which does not any entry handling. The surplus function
-declaration for the noist C entry point is unused and as there is no ASM
-code emitted for NMI this went unnoticed.
+ From the audit field dictionary (link given below) "result" is already 
+a known field that is used to indicate the result of the audited operation.
 
-On 32bit IDTENTRY_IST maps to a regular IDTENTRY which does the normal
-entry handling. That is clearly the wrong thing to do for NMI.
+@Steve\Paul:
+Like "res" is "result" also expected to have only values "0" or "1", or 
+can it be any result code?
 
-Map it to IDTENTRY_RAW to unbreak it. The IDTENTRY_NMI mapping needs to
-stay to avoid emitting ASM code.
+https://github.com/linux-audit/audit-documentation/blob/master/specs/fields/field-dictionary.csv
 
-Fixes: 6271fef00b34 ("x86/entry: Convert NMI to IDTENTRY_NMI")
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Debugged-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/CA+G9fYvF3cyrY+-iw_SZtpN-i2qA2BruHg4M=QYECU2-dNdsMw@mail.gmail.com
----
- arch/x86/include/asm/idtentry.h | 4 ++--
- arch/x86/kernel/nmi.c           | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+res 	alphanumeric 	result of the audited operation(success/fail) 	
 
-diff --git a/arch/x86/include/asm/idtentry.h b/arch/x86/include/asm/idtentry.h
-index 2fc6b0c..cf51c50 100644
---- a/arch/x86/include/asm/idtentry.h
-+++ b/arch/x86/include/asm/idtentry.h
-@@ -391,8 +391,8 @@ __visible noinstr void func(struct pt_regs *regs,			\
- #define DEFINE_IDTENTRY_MCE		DEFINE_IDTENTRY_IST
- #define DEFINE_IDTENTRY_MCE_USER	DEFINE_IDTENTRY_NOIST
- 
--#define DECLARE_IDTENTRY_NMI		DECLARE_IDTENTRY_IST
--#define DEFINE_IDTENTRY_NMI		DEFINE_IDTENTRY_IST
-+#define DECLARE_IDTENTRY_NMI		DECLARE_IDTENTRY_RAW
-+#define DEFINE_IDTENTRY_NMI		DEFINE_IDTENTRY_RAW
- 
- #define DECLARE_IDTENTRY_DEBUG		DECLARE_IDTENTRY_IST
- #define DEFINE_IDTENTRY_DEBUG		DEFINE_IDTENTRY_IST
-diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-index 3a98ff3..2de365f 100644
---- a/arch/x86/kernel/nmi.c
-+++ b/arch/x86/kernel/nmi.c
-@@ -476,7 +476,7 @@ static DEFINE_PER_CPU(enum nmi_states, nmi_state);
- static DEFINE_PER_CPU(unsigned long, nmi_cr2);
- static DEFINE_PER_CPU(unsigned long, nmi_dr7);
- 
--DEFINE_IDTENTRY_NMI(exc_nmi)
-+DEFINE_IDTENTRY_RAW(exc_nmi)
- {
- 	if (IS_ENABLED(CONFIG_SMP) && cpu_is_offline(smp_processor_id()))
- 		return;
+result 	alphanumeric 	result of the audited operation(success/fail)
+
+thanks,
+  -lakshmi
