@@ -2,89 +2,113 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E43C3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8264DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B670120691
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:56:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 688A620691
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:57:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbgFLO4P (ORCPT
+        id S1726365AbgFLO5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 10:56:15 -0400
-Received: from mga14.intel.com ([192.55.52.115]:22980 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726089AbgFLO4O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 10:56:14 -0400
-IronPort-SDR: h8lMnBsfWzjtfZjvLRYWWupsKPAOcfmn3krDb3CAMtkpmMDZVMvrgn+k5w00gHFaZC/lm+yE/D
- f0Vv2uzfGMRw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2020 07:56:11 -0700
-IronPort-SDR: asisTQgMwswpJfxS/ZiJlY5lEmVksHF6rrVuDzDH7o1EIu3myWbGMGgaZFSQt6NV8iBf0sso0X
- q+2wJTdsUvvA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,503,1583222400"; 
-   d="scan'208";a="315148421"
-Received: from rrhill-mobl1.amr.corp.intel.com (HELO [10.254.71.222]) ([10.254.71.222])
-  by FMSMGA003.fm.intel.com with ESMTP; 12 Jun 2020 07:56:09 -0700
-Subject: Re: [GIT PULL] sound fixes for 5.8-rc1
-To:     Mark Brown <broonie@kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>, Takashi Iwai <tiwai@suse.de>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        Vinod Koul <vinod.koul@linaro.org>,
-        Amit Pundir <amit.pundir@linaro.org>
-References: <s5himfxet1c.wl-tiwai@suse.de>
- <CANcMJZAG4QqJ2Cxt+1RLsa8Z4oR=2y8zyD_sqy3sm_8MXyhg2g@mail.gmail.com>
- <CALAqxLWEfRJ_Jr0iDgmvqop5Etz5xve89Zy3OeUbnKUGtqjCqQ@mail.gmail.com>
- <20200612121946.GE5396@sirena.org.uk>
- <7cd79261-6f8d-cad0-c65b-57570a40a6b6@linux.intel.com>
- <20200612144646.GJ5396@sirena.org.uk>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <26a99d25-4333-9496-ad5d-b96f7b7e2a33@linux.intel.com>
-Date:   Fri, 12 Jun 2020 09:56:09 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 12 Jun 2020 10:57:19 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:49809 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbgFLO5T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 10:57:19 -0400
+Received: from uno.localdomain (93-34-118-233.ip49.fastwebnet.it [93.34.118.233])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 9DDD9100009;
+        Fri, 12 Jun 2020 14:57:08 +0000 (UTC)
+Date:   Fri, 12 Jun 2020 17:00:32 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
+        horms@verge.net.au, uli+renesas@fpond.eu,
+        VenkataRajesh.Kalakodima@in.bosch.com, airlied@linux.ie,
+        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        Harsha.ManjulaMallikarjun@in.bosch.com, ezequiel@collabora.com,
+        seanpaul@chromium.org, linux-renesas-soc@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        michael.dege@renesas.com, gotthard.voellmeke@renesas.com,
+        efriedrich@de.adit-jv.com, mrodin@de.adit-jv.com,
+        ChaitanyaKumar.Borah@in.bosch.com,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [PATCH v5 0/8] drm: rcar-du: Add Color Management Module (CMM)
+Message-ID: <20200612150032.pnqaqip54qfrbqst@uno.localdomain>
+References: <20191015104621.62514-1-jacopo+renesas@jmondi.org>
+ <20200527071555.GA23912@lxhi-065.adit-jv.com>
+ <20200605132900.on527xcggg6f6pil@uno.localdomain>
+ <20200605134124.GA28734@lxhi-065.adit-jv.com>
+ <20200605135315.xlph44pl7kvmt23a@uno.localdomain>
+ <20200607024158.GD7339@pendragon.ideasonboard.com>
+ <20200609142959.GA621@lxhi-065.adit-jv.com>
 MIME-Version: 1.0
-In-Reply-To: <20200612144646.GJ5396@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200609142959.GA621@lxhi-065.adit-jv.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Eugeniu,
 
+On Tue, Jun 09, 2020 at 04:29:59PM +0200, Eugeniu Rosca wrote:
+> Hi Laurent,
+>
+> On Sun, Jun 07, 2020 at 05:41:58AM +0300, Laurent Pinchart wrote:
+> > Note that the CMM driver is controlled by the DU driver. As the DU
+> > driver will reenable the display during resume, it will call
+> > rcar_du_cmm_setup() at resume time, which will reprogram the CMM. There
+> > should thus be no need for manual suspend/resume handling in the CMM as
+> > far as I can tell, but we need to ensure that the CMM is suspended
+> > before and resumed after the DU. I believe this could be implemented
+> > using device links.
+>
+> Based on below quote [*] from Jacopo's commit [**], isn't the device
+> link relationship already in place?
 
-On 6/12/20 9:46 AM, Mark Brown wrote:
-> On Fri, Jun 12, 2020 at 08:54:11AM -0500, Pierre-Louis Bossart wrote:
-> 
->> I think that those configuration errors are the problem and should be fixed
->> as a prerequisite to the removal of the duplication between
->> dpcm_playback/dpcm_capture/playback_only/capture_only. it may be painful and
->> generate noise for a while, but if we only throw a warning what are the odds
->> all those configuration errors will eventually be fixed?
-> 
-> Yeah, I'm kind of pessimistic about the likelyhood of people paying
-> attention to warnings.
-> 
->> If we need more time for validation on all platforms, then maybe we can
->> first relax the check for 5.8-rc1 as suggested by John, but re-add the
->> -EINVAL on -next to give a target of 5.9 with all configurations fixed?
-> 
-> I can't help feeling that it'd be postponing the inevitable, but perhaps
-> I'm being overly pessimistic here.  The change did obviously go in quite
-> late though so it's not the worst idea if you want to send the patch?
+Yes, it's in place already.
 
-I see patches from Srinivas to fix the issue reported by John, so maybe 
-apply those patches first and if we see another issue on another 
-platform we relax the check?
+I added pm_ops to cmm just to be able to printout when suspend/resume
+happens and the sequence is what comment [*] reports
+
+[  222.909002] rcar_du_pm_suspend:505
+[  223.145497] rcar_cmm_pm_suspend:193
+
+[  223.208053] rcar_cmm_pm_resume:200
+[  223.460094] rcar_du_pm_resume:513
+
+However, Laurent mentioned that in his comment here that he expects
+the opposite sequence to happen (CMM to suspend before and resume after
+DU).
+
+I still think what is implemented is correct:
+- CMM is suspended after DU: when CMM is suspended, DU is not feeding
+  it with data
+- CMM is resumed before: once DU restart operations CMM is ready to
+  receive data.
+
+Laurent, what do you think ?
+
+Thanks
+  j
+
+>
+> [*] Quote from commit [**]
+>    Enforce the probe and suspend/resume ordering of DU and CMM by
+>    creating a stateless device link between the two.
+>
+> [**] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=8de707aeb45241
+>     ("drm: rcar-du: kms: Initialize CMM instances")
+>
+> --
+> Best regards,
+> Eugeniu Rosca
