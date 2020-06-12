@@ -2,73 +2,260 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 753C7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 08:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB9BC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 08:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A79D207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 08:28:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B16B7207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 08:30:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IfB0Re+H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbgFLI2F (ORCPT
+        id S1726401AbgFLIal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 04:28:05 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:55173 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726264AbgFLI2F (ORCPT
+        Fri, 12 Jun 2020 04:30:41 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:55151 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726335AbgFLIak (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 04:28:05 -0400
-Received: from [111.196.61.134] (helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <aaron.ma@canonical.com>)
-        id 1jjf2Y-0001kT-7U; Fri, 12 Jun 2020 08:27:55 +0000
-From:   Aaron Ma <aaron.ma@canonical.com>
-To:     aaron.ma@canonical.com, yhchuang@realtek.com, kvalo@codeaurora.org,
-        davem@davemloft.net, kuba@kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] rtw88: 8822ce: add support for device ID 0xc82f
-Date:   Fri, 12 Jun 2020 16:27:45 +0800
-Message-Id: <20200612082745.204400-1-aaron.ma@canonical.com>
-X-Mailer: git-send-email 2.27.0
+        Fri, 12 Jun 2020 04:30:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591950638;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=OPWeA1qjGBNWCHfcjBnCq0fW8SyKcT5HP9U/4tli77g=;
+        b=IfB0Re+Hw8n5xqCi3O5/730isKOLBbSEGIWPZ1mHiWzPXR1dCDhuBdNIviCvrqn8iyj7H5
+        z9HGBViZmwIyIZh0zImW1bO475W2xNCyB+39ucdiPdmc8wPuZskS+DdeccdT5O0zRSFt1W
+        /RZWwirfmBtYrUbPRrsOmtjfGijqs7M=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-391-ZBiBvGpPMvOVVt17vKAVqA-1; Fri, 12 Jun 2020 04:30:28 -0400
+X-MC-Unique: ZBiBvGpPMvOVVt17vKAVqA-1
+Received: by mail-ed1-f71.google.com with SMTP id i11so679522edx.4
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 01:30:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OPWeA1qjGBNWCHfcjBnCq0fW8SyKcT5HP9U/4tli77g=;
+        b=dpN1snBe2ddbgsxPGk5Lvl6pmer67E/OEex3rxZtVjy6+InWfk3uzqVHp9Wj3cU0wB
+         Aj4G6AOtNs/qrOIQ5H8YGBMVfCTTvqtNpMu6KWRSrJeB98zzfIMSjiJAPzhoBXkAljMo
+         UyKfaAO0yWEW0BXUyqi6K0IS25rcFFU57n7o6Q5LlHESBXkT5yzhLhkkU5uTeEWR+dOY
+         ibGncLOoKQiipZPErUc5eTkvKiv2MvsafhnIxS5MacT8YB0W28n1X/UCvrU6m2dmnFkN
+         VR4qQ9GEeoDXjpdluOLG5Rwg2JswUVMBcfZ8eAYISuvVJU455wxkOIb9TZRLjwBvqWuT
+         GF+w==
+X-Gm-Message-State: AOAM530Jndmt3F5dK7dOtPaUGn2JUrxJYzdQ4G5vo5krtbKL2yJZz+yo
+        Dglhk6AN78ve2kCEn43lKAng3DyIlqANbTvwXk50VsbMojVTo3NKBrHghmpybZFabIwIPs7qTLG
+        mqTf78GB95M8QiPhpW+FNYEsv
+X-Received: by 2002:a17:906:150c:: with SMTP id b12mr11118827ejd.545.1591950627661;
+        Fri, 12 Jun 2020 01:30:27 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzK+lnhXJPHcxkk+0REwmXPmNz4y9unDpw9LWEppS+/VYsL4Zuy/fGvFVeGkarTC5boVCicqQ==
+X-Received: by 2002:a17:906:150c:: with SMTP id b12mr11118797ejd.545.1591950627331;
+        Fri, 12 Jun 2020 01:30:27 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id k24sm2761134edk.95.2020.06.12.01.30.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Jun 2020 01:30:26 -0700 (PDT)
+Subject: Re: [PATCH v4 0/7] Support inhibiting input devices
+To:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-iio@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Samsung SoC <linux-samsung-soc@vger.kernel.org>,
+        linux-input@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        patches@opensource.cirrus.com,
+        ibm-acpi-devel@lists.sourceforge.net,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Barry Song <baohua@kernel.org>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Nick Dyer <nick@shmanahar.org>,
+        Ferruh Yigit <fery@cypress.com>,
+        Sangwon Jee <jeesw@melfas.com>,
+        Peter Hutterer <peter.hutterer@redhat.com>,
+        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
+        Collabora Kernel ML <kernel@collabora.com>
+References: <2336e15d-ff4b-bbb6-c701-dbf3aa110fcd@redhat.com>
+ <20200608112211.12125-1-andrzej.p@collabora.com>
+ <964ca07a-3da5-101f-7edf-64bdeec98a4b@redhat.com>
+ <CAJZ5v0hB2ra2K=dd9ZjVyy1V2b1PmFHm79uDO2HtHU1D_4YUbw@mail.gmail.com>
+ <6136f26c-e090-e025-af55-4c5f3a6aec92@collabora.com>
+ <3e61c9c1-b211-da9f-c55b-b44eb6522f2a@redhat.com>
+ <2d5fd063-66bc-c707-4041-84a17c0a7d04@collabora.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <40988408-8f36-3a52-6439-34084de6b129@redhat.com>
+Date:   Fri, 12 Jun 2020 10:30:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <2d5fd063-66bc-c707-4041-84a17c0a7d04@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-New device ID 0xc82f found on Lenovo ThinkCenter.
-Tested it with c822 driver, works good.
+Hi,
 
-PCI id:
-03:00.0 Network controller [0280]: Realtek Semiconductor Co., Ltd.
-Device [10ec:c82f]
-        Subsystem: Lenovo Device [17aa:c02f]
+On 6/10/20 3:41 PM, Andrzej Pietrasiewicz wrote:
+> Hi Hans,
+> 
+> W dniu 10.06.2020 o 15:21, Hans de Goede pisze:
+>> Hi,
+>>
+>> On 6/10/20 3:12 PM, Andrzej Pietrasiewicz wrote:
+>>> Hi All,
+>>>
+>>> W dniu 10.06.2020 o 12:38, Rafael J. Wysocki pisze:
+>>>> On Wed, Jun 10, 2020 at 11:50 AM Hans de Goede <hdegoede@redhat.com> wrote:
+>>>>>
+>>>>> Hi All,
+>>>>>
+>>>>> On 6/8/20 1:22 PM, Andrzej Pietrasiewicz wrote:
+>>>>>> This is a quick respin of v3, with just two small changes, please see
+>>>>>> the changelog below.
+>>>>>>
+>>>>>> Userspace might want to implement a policy to temporarily disregard input
+>>>>>> from certain devices.
+>>>>>>
+>>>>>> An example use case is a convertible laptop, whose keyboard can be folded
+>>>>>> under the screen to create tablet-like experience. The user then must hold
+>>>>>> the laptop in such a way that it is difficult to avoid pressing the keyboard
+>>>>>> keys. It is therefore desirable to temporarily disregard input from the
+>>>>>> keyboard, until it is folded back. This obviously is a policy which should
+>>>>>> be kept out of the kernel, but the kernel must provide suitable means to
+>>>>>> implement such a policy.
+>>>>>
+>>>>> First of all sorry to start a somewhat new discussion about this
+>>>>> while this patch set is also somewhat far along in the review process,
+>>>>> but I believe what I discuss below needs to be taken into account.
+>>>>>
+>>>>> Yesterday I have been looking into why an Asus T101HA would not stay
+>>>>> suspended when the LID is closed. The cause is that the USB HID multi-touch
+>>>>> touchpad in the base of the device starts sending events when the screen
+>>>>> gets close to the touchpad (so when the LID is fully closed) and these
+>>>>> events are causing a wakeup from suspend. HID multi-touch devices
+>>>>> do have a way to tell them to fully stop sending events, also disabling
+>>>>> the USB remote wakeup the device is doing. The question is when to tell
+>>>>> it to not send events though ...
+>>>>>
+>>>>> So now I've been thinking about how to fix this and I believe that there
+>>>>> is some interaction between this problem and this patch-set.
+>>>>>
+>>>>> The problem I'm seeing on the T101HA is about wakeups, so the question
+>>>>> which I want to discuss is:
+>>>>>
+>>>>> 1. How does inhibiting interact with enabling /
+>>>>> disabling the device as a wakeup source ?
+>>>>>
+>>>>> 2. Since we have now made inhibiting equal open/close how does open/close
+>>>>> interact with a device being a wakeup source ?
+>>>>>
+>>>>> And my own initial (to be discussed) answers to these questions:
+>>>>>
+>>>>> 1. It seems to me that when a device is inhibited it should not be a
+>>>>> wakeup source, so where possible a input-device-driver should disable
+>>>>> a device's wakeup capabilities on suspend if inhibited
+>>>>
+>>>> If "inhibit" means "do not generate any events going forward", then
+>>>> this must also cover wakeup events, so I agree.
+>>>
+>>> I agree, too.
+>>>
+>>>>
+>>>>> 2. This one is trickier I don't think we have really clearly specified
+>>>>> any behavior here. The default behavior of most drivers seems to be
+>>>>> using something like this in their suspend callback:
+>>>>>
+>>>>>           if (device_may_wakeup(dev))
+>>>>>                   enable_irq_wake(data->irq);
+>>>>>           else if (input->users)
+>>>>>                   foo_stop_receiving_events(data);
+>>>>>
+>>>>> Since this is what most drivers seem to do I believe we should keep
+>>>>> this as is and that we should just clearly document that if the
+>>>>> input_device has users (has been opened) or not does not matter
+>>>>> for its wakeup behavior.
+>>>>>
+>>>>> Combining these 2 answers leads to this new pseudo code template
+>>>>> for an input-device's suspend method:
+>>>>>
+>>>>>          /*
+>>>>>           * If inhibited we have already disabled events and
+>>>>>           * we do NOT want to setup the device as wake source.
+>>>>>           */
+>>>>>          if (input->inhibited)
+>>>>>                  return 0;
+>>>
+>>> Right, if a device is inhibited it shouldn't become a wakeup source,
+>>> because that would contradict the purpose of being inhibited.
+>>
+>> Ack. Note I do think that we need to document this (and more
+>> in general the answer to both questions from above) clearly so
+>> that going forward if there are any questions about how this is
+>> supposed to work we can just point to the docs.
+>>
+>> Can you do a follow-up patch, or include a patch in your next
+>> version which documents this (once we agree on what "this"
+>> exactly is) ?
+> 
+> Sure I can. Just need to know when "this" becomes stable enough ;)
+> If this series otherwise looks mature enough I would opt for a
+> follow-up patch.
 
-Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
----
- drivers/net/wireless/realtek/rtw88/rtw8822ce.c | 4 ++++
- 1 file changed, 4 insertions(+)
+FWIW after my flip-flop to agreeing with Dmitry that the 2
+(inhibit vs wakeup) should be completely orthogonal this new
+policy is stable/mature from my pov (and consistent with how
+we handle wakeup vs input_dev->users).
 
-diff --git a/drivers/net/wireless/realtek/rtw88/rtw8822ce.c b/drivers/net/wireless/realtek/rtw88/rtw8822ce.c
-index 7b6bd990651e..026ac49ce6e3 100644
---- a/drivers/net/wireless/realtek/rtw88/rtw8822ce.c
-+++ b/drivers/net/wireless/realtek/rtw88/rtw8822ce.c
-@@ -11,6 +11,10 @@ static const struct pci_device_id rtw_8822ce_id_table[] = {
- 		PCI_DEVICE(PCI_VENDOR_ID_REALTEK, 0xC822),
- 		.driver_data = (kernel_ulong_t)&rtw8822c_hw_spec
- 	},
-+	{
-+		PCI_DEVICE(PCI_VENDOR_ID_REALTEK, 0xC82F),
-+		.driver_data = (kernel_ulong_t)&rtw8822c_hw_spec
-+	},
- 	{}
- };
- MODULE_DEVICE_TABLE(pci, rtw_8822ce_id_table);
--- 
-2.27.0
+I still think it would be good to do a follow-up documentation
+patch documenting that these (and esp. inhibit) are orthogonal.
+
+This will mean for example that if a device is inhibit but
+still wakeup enabled and the device's close method silences
+the devices, that it needs to be unsilenced in suspend.
+This might be worth mentioning in the docs even though
+drivers which silence the device on close should already
+unsilence the device on suspend when it is wakeup-enabled.
+
+Note maybe we should give it a couple of days for others to
+give their opinion before you submit the follow-up documentation
+patch.
+
+Regards,
+
+Hans
+
+
 
