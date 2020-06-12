@@ -2,73 +2,105 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 285ACC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99857C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 104B4206A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:02:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67F0020801
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:06:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591970793;
+	bh=K18l24DjovwEYHOQ7k+M0/KaNKer8w4ba5zMXo429sQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=U7GggGV49FMmhh5/l1O5E/eZjCJtzP076b1CTdFB55vkBRgANiIVTq7IlcCJPf7EI
+	 EdZ6ValrIGBZTIudKb0nMCjf+zVl1vwNnWkEHc6r3ptizak26m7ha0V4rpI7OUvvFJ
+	 nzYjr04H3IeiHGdAEv35WvXxLaFaElVHVCzXMtpg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726416AbgFLOCN (ORCPT
+        id S1726353AbgFLOGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 10:02:13 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:59631 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726085AbgFLOCM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 10:02:12 -0400
-Received: (qmail 13466 invoked by uid 1000); 12 Jun 2020 10:02:11 -0400
-Date:   Fri, 12 Jun 2020 10:02:11 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Macpaul Lin <macpaul.lin@mediatek.com>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, Jim Lin <jilin@nvidia.com>,
-        Siqi Lin <siqilin@google.com>,
-        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
-        Macpaul Lin <macpaul.lin@gmail.com>
-Subject: Re: [PATCH] usb: replace hardcoded maximum usb string length by
- definition
-Message-ID: <20200612140211.GA12639@rowland.harvard.edu>
-References: <y>
- <1591939967-29943-1-git-send-email-macpaul.lin@mediatek.com>
+        Fri, 12 Jun 2020 10:06:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36150 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726085AbgFLOGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 10:06:31 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A47A32074B;
+        Fri, 12 Jun 2020 14:06:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591970790;
+        bh=K18l24DjovwEYHOQ7k+M0/KaNKer8w4ba5zMXo429sQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=sZNeKKbaFCkzh0sVwnu9L6NEeK7rsl/cYeBGCZDvl8Uf8kWQBOqc+zeACzfSy8RDd
+         xtuVe1d6VozAs99+I9ZCpB+9zDdmTw0i1KHUgWeRAZhdF04zF3RM32RgyLZoJ5Fzk2
+         eh54rqt6O9LOhFARvsciOsT5exE+dceTq1UF69Es=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jjkKD-002Q27-4o; Fri, 12 Jun 2020 15:06:29 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1591939967-29943-1-git-send-email-macpaul.lin@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 12 Jun 2020 15:06:29 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Palmer Dabbelt <palmer@dabbelt.com>
+Cc:     Anup Patel <Anup.Patel@wdc.com>, tglx@linutronix.de,
+        jason@lakedaemon.net, Paul Walmsley <paul.walmsley@sifive.com>,
+        aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, kernel-team@android.com,
+        Palmer Dabbelt <palmerdabbelt@google.com>
+Subject: Re: [PATCH] irqchip: riscv-intc: Fix a typo in a pr_warn()
+In-Reply-To: <20200611175302.253540-1-palmer@dabbelt.com>
+References: <20200611175302.253540-1-palmer@dabbelt.com>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <edd04e6af3c16eabc83f28fe650a36f0@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: palmer@dabbelt.com, Anup.Patel@wdc.com, tglx@linutronix.de, jason@lakedaemon.net, paul.walmsley@sifive.com, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, kernel-team@android.com, palmerdabbelt@google.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 01:32:47PM +0800, Macpaul Lin wrote:
-> Replace hardcoded maximum usb string length (126 bytes) by definition
-> "MAX_USB_STRING_LEN".
+On 2020-06-11 18:53, Palmer Dabbelt wrote:
+> From: Palmer Dabbelt <palmerdabbelt@google.com>
 > 
-> Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
+> Anup originally re-spun his patch set to include this fix, but it was a 
+> bit too
+> late for my PR so I've split it out.
+> 
+> Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
+> ---
+>  drivers/irqchip/irq-riscv-intc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/irqchip/irq-riscv-intc.c 
+> b/drivers/irqchip/irq-riscv-intc.c
+> index a6f97fa6ff69..8017f6d32d52 100644
+> --- a/drivers/irqchip/irq-riscv-intc.c
+> +++ b/drivers/irqchip/irq-riscv-intc.c
+> @@ -99,7 +99,7 @@ static int __init riscv_intc_init(struct device_node 
+> *node,
+> 
+>  	hartid = riscv_of_parent_hartid(node);
+>  	if (hartid < 0) {
+> -		pr_warn("unable to fine hart id for %pOF\n", node);
+> +		pr_warn("unable to find hart id for %pOF\n", node);
+>  		return 0;
+>  	}
 
-...
+I'll pick it post -rc1, once I merge Linus' tree into mine.
 
-> diff --git a/include/linux/usb.h b/include/linux/usb.h
-> index 9f3c721..df4a9cb 100644
-> --- a/include/linux/usb.h
-> +++ b/include/linux/usb.h
-> @@ -1815,6 +1815,8 @@ static inline int usb_get_ptm_status(struct usb_device *dev, void *data)
->  		0, data);
->  }
->  
-> +/* USB String descriptors can contain at most 126 characters. */
-> +#define MAX_USB_STRING_LEN	126
+Thanks,
 
-This definition belongs in include/uapi/linux/usb/ch9.h (near the 
-definition of struct usb_string_descriptor) because it is part of the USB 
-standard rather than specific to the Linux USB stack.
-
-Alan Stern
+         M.
+-- 
+Jazz is not dead. It just smells funny...
