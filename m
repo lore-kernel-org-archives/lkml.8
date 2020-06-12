@@ -2,118 +2,98 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E9CEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 18:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2973C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 18:22:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F73920723
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 18:21:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B968C20723
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 18:22:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726343AbgFLSVK (ORCPT
+        id S1726327AbgFLSWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 14:21:10 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:45380 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726085AbgFLSVK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 14:21:10 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jjoIc-0005i8-Gf; Fri, 12 Jun 2020 18:21:06 +0000
-Date:   Fri, 12 Jun 2020 20:21:05 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Shuah Khan <shuah@kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        linux-kselftest@vger.kernel.org,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/7] selftests: Remove unneeded selftest API headers
-Message-ID: <20200612182105.w22td5jb5g6iltd7@wittgenstein>
-References: <20200611224028.3275174-1-keescook@chromium.org>
- <20200611224028.3275174-3-keescook@chromium.org>
+        Fri, 12 Jun 2020 14:22:32 -0400
+Received: from mga11.intel.com ([192.55.52.93]:44495 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726085AbgFLSWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 14:22:32 -0400
+IronPort-SDR: Z12PSZSG+mI4KWSv01DKOWd6ZlHXKRv1NH6VtA2ytmn/7ztHo+Vn1B0UxWDuYg72MuaxeQJCs1
+ utOQ0yBcbsOg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2020 11:22:32 -0700
+IronPort-SDR: VYM7jvspyQwv6EtaDpbciatVWJk76aW7QuH7VlgsL2YMsYDMgO8nYKfj3qJlX2p0NwsR72Ku5k
+ mUajBmJh60rg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,504,1583222400"; 
+   d="scan'208";a="275821509"
+Received: from unknown (HELO [10.255.231.235]) ([10.255.231.235])
+  by orsmga006.jf.intel.com with ESMTP; 12 Jun 2020 11:22:31 -0700
+Date:   Fri, 12 Jun 2020 11:22:31 -0700 (PDT)
+From:   Mat Martineau <mathew.j.martineau@linux.intel.com>
+X-X-Sender: mjmartin@mjmartin-mac01.local
+To:     Geliang Tang <geliangtang@gmail.com>
+cc:     Matthieu Baerts <matthieu.baerts@tessares.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        mptcp@lists.01.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mptcp: use list_first_entry_or_null
+In-Reply-To: <9958d3f15d2d181eb9d48ffe5bf3251ec900f27a.1591941826.git.geliangtang@gmail.com>
+Message-ID: <alpine.OSX.2.22.394.2006121114030.74555@mjmartin-mac01.local>
+References: <9958d3f15d2d181eb9d48ffe5bf3251ec900f27a.1591941826.git.geliangtang@gmail.com>
+User-Agent: Alpine 2.22 (OSX 394 2020-01-19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200611224028.3275174-3-keescook@chromium.org>
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 03:40:23PM -0700, Kees Cook wrote:
-> Remove unused includes of the kselftest.h header.
-> 
-> Cc: Christian Brauner <christian@brauner.io>
-> Cc: Shuah Khan <shuah@kernel.org>
-> Cc: linux-kselftest@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+
+Hello Geliang,
+
+On Fri, 12 Jun 2020, Geliang Tang wrote:
+
+> Use list_first_entry_or_null to simplify the code.
+>
+> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
 > ---
-
-Thanks!
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-
->  tools/testing/selftests/pid_namespace/regression_enomem.c | 1 -
->  tools/testing/selftests/pidfd/pidfd_getfd_test.c          | 1 -
->  tools/testing/selftests/pidfd/pidfd_setns_test.c          | 1 -
->  tools/testing/selftests/uevent/uevent_filtering.c         | 1 -
->  4 files changed, 4 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/pid_namespace/regression_enomem.c b/tools/testing/selftests/pid_namespace/regression_enomem.c
-> index 73d532556d17..7d84097ad45c 100644
-> --- a/tools/testing/selftests/pid_namespace/regression_enomem.c
-> +++ b/tools/testing/selftests/pid_namespace/regression_enomem.c
-> @@ -11,7 +11,6 @@
->  #include <syscall.h>
->  #include <sys/wait.h>
->  
-> -#include "../kselftest.h"
->  #include "../kselftest_harness.h"
->  #include "../pidfd/pidfd.h"
->  
-> diff --git a/tools/testing/selftests/pidfd/pidfd_getfd_test.c b/tools/testing/selftests/pidfd/pidfd_getfd_test.c
-> index 401a7c1d0312..eecbf18510fd 100644
-> --- a/tools/testing/selftests/pidfd/pidfd_getfd_test.c
-> +++ b/tools/testing/selftests/pidfd/pidfd_getfd_test.c
-> @@ -18,7 +18,6 @@
->  #include <linux/kcmp.h>
->  
->  #include "pidfd.h"
-> -#include "../kselftest.h"
->  #include "../kselftest_harness.h"
->  
->  /*
-> diff --git a/tools/testing/selftests/pidfd/pidfd_setns_test.c b/tools/testing/selftests/pidfd/pidfd_setns_test.c
-> index 133ec5b6cda8..f66861cf9c4d 100644
-> --- a/tools/testing/selftests/pidfd/pidfd_setns_test.c
-> +++ b/tools/testing/selftests/pidfd/pidfd_setns_test.c
-> @@ -20,7 +20,6 @@
->  
->  #include "pidfd.h"
->  #include "../clone3/clone3_selftests.h"
-> -#include "../kselftest.h"
->  #include "../kselftest_harness.h"
->  
->  enum {
-> diff --git a/tools/testing/selftests/uevent/uevent_filtering.c b/tools/testing/selftests/uevent/uevent_filtering.c
-> index f83391aa42cf..5cebfb356345 100644
-> --- a/tools/testing/selftests/uevent/uevent_filtering.c
-> +++ b/tools/testing/selftests/uevent/uevent_filtering.c
-> @@ -19,7 +19,6 @@
->  #include <sys/wait.h>
->  #include <unistd.h>
->  
-> -#include "../kselftest.h"
->  #include "../kselftest_harness.h"
->  
->  #define __DEV_FULL "/sys/devices/virtual/mem/full/uevent"
+> net/mptcp/protocol.h | 5 +----
+> 1 file changed, 1 insertion(+), 4 deletions(-)
+>
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 86d265500cf6..55c65abcad64 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -234,10 +234,7 @@ static inline struct mptcp_data_frag *mptcp_rtx_head(const struct sock *sk)
+> {
+> 	struct mptcp_sock *msk = mptcp_sk(sk);
+>
+> -	if (list_empty(&msk->rtx_queue))
+> -		return NULL;
+> -
+> -	return list_first_entry(&msk->rtx_queue, struct mptcp_data_frag, list);
+> +	return list_first_entry_or_null(&msk->rtx_queue, struct mptcp_data_frag, list);
+> }
+>
+> struct mptcp_subflow_request_sock {
 > -- 
-> 2.25.1
-> 
+> 2.17.1
+
+As Matthieu mentioned on your earlier patch, please submit patches to 
+netdev with either a [PATCH net] or [PATCH net-next] tag. In this case, 
+these are non-critical bug fixes so they should be targeted at net-next.
+
+Note that net-next branch is currently closed to submissions due to the 
+v5.8 merge window. Please resubmit both MPTCP patches for net-next when 
+David announces that it is open again. The change does look ok but will 
+not be merged now.
+
+Thanks for your patch,
+
+--
+Mat Martineau
+Intel
