@@ -2,100 +2,98 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A8F1C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 21:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 686E9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 21:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BE5F20663
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 21:27:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34D01207F7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 21:28:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nj+J/Vvw"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CP8z1KxP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726363AbgFLV1I (ORCPT
+        id S1726381AbgFLV2c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 17:27:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35594 "EHLO
+        Fri, 12 Jun 2020 17:28:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgFLV1H (ORCPT
+        with ESMTP id S1726268AbgFLV23 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 17:27:07 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4935C03E96F;
-        Fri, 12 Jun 2020 14:27:05 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id w9so8264503qtv.3;
-        Fri, 12 Jun 2020 14:27:05 -0700 (PDT)
+        Fri, 12 Jun 2020 17:28:29 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA2BDC03E96F
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 14:28:28 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id s88so4379148pjb.5
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 14:28:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/FNlqd4vn3jX2Jmt/9TRki01CcbjDa14Kvi+mmqzptw=;
-        b=nj+J/VvwqCfTau72ioAUq5oKCN8g/qV2edpgsv0WnT8SfdZZjxrZTwItqS70PsWwdD
-         a+DndK94Nv/Q2gKHO36aCfthMvlOfhDuzJwOqeFlwRMq1KaepTKUb3ekksGHu8R4JJaQ
-         8yG9PsQjVXRtvmbyYKoxjHEAzr57B+xliKfzoIJp0MR4lHx71tMOrifp0PQhCDn67JUU
-         HfYInEI4L/4MRLE6EF+t//e+99m3vgl94UAgMm358K7qP9mGh7SAA/gasjVePvINUlIc
-         jYzVvZsHhy+KlQwjv/uvc88/DMPtB3to2fMey6wBlC1HCy7I2BWlbt1t8Dm60fzYev/X
-         R1mg==
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=q50EF1oi6iVj0g/hX2lXZBGzTAbXnNZchr5c5rsTc8U=;
+        b=CP8z1KxPyKGd6QZi4PnOdQpR8ev8eekuKH/CynZh0Exe5JIjxFvJUaJvmjOBXdjTM4
+         GXzKPX21EqBTryBElczC/QqQ1+VpQqkM/DZKOaAIT8tgiBlJjAlWlKRXQRXNk7SyZNMn
+         Bxa+KmFCqY56wgY2Pfb0R5JtUhx4g1t6PpKLE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/FNlqd4vn3jX2Jmt/9TRki01CcbjDa14Kvi+mmqzptw=;
-        b=CyHsUVbzooAeYF2HNTVtHQ5dUHowXHbIGKv9H0BHICczAqkm/c9HPQFNe1m6oxYmbk
-         BjmqL/bjQr8svO1TaVNq2VMA7gFP1kzNryO2HXE1aYDOGucgo9bQEwwXhfswHEkhRwhH
-         0BAYcU6EwJKCRi3pjZfHCpsX7YUiPiuEau52iSM4GEBicTRi/Yno9SPYGKrAerXlukZA
-         6gYgJzhoEloAfEeDcr3OqmezII6eGIBEtNi939Woode5DZHNtK5oQE/tkAJOcMYHK4Kq
-         1iCRXFiFKxdlWmY9THfwd6aq/Uyz7a0BeqWLmPeSNwKOPwyhUKIuqV+Go8PD/192Jb9R
-         R62w==
-X-Gm-Message-State: AOAM533XLyrZ8o+VQUAh7mWPCBAHAktR72A+w59mQHyNvFZprgMZFJTO
-        TzC1xDnDgLaaNF+bp70Hhw==
-X-Google-Smtp-Source: ABdhPJz8TotqDhM9hw4Dp+f1CREb1prIfiQgFl+jpkq+iCMCGtdgqNOgjFQPhkBhkd1zHV//PcGaWA==
-X-Received: by 2002:ac8:1285:: with SMTP id y5mr5208330qti.245.1591997224732;
-        Fri, 12 Jun 2020 14:27:04 -0700 (PDT)
-Received: from localhost.localdomain ([142.118.26.59])
-        by smtp.googlemail.com with ESMTPSA id m82sm5340591qke.3.2020.06.12.14.27.03
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=q50EF1oi6iVj0g/hX2lXZBGzTAbXnNZchr5c5rsTc8U=;
+        b=mnhgz+4veTSsaih6TAYF+D3fWWakacXGnSHJzgLQO7TKeQmCbDgj+dXeDbQ0Was2MA
+         NKS70CLcl+X0217+hKCI2h2uB69rdgocnxhrr6oSQUrdUG/FiD2uPRXaoxxTNoiWrbZy
+         69oUy9a5+QnqEbFRTDRWoe0Tc/VG759QZgSn2P4d7Ml72NTsYva/HkojkEiDl1GJbVrR
+         F5CkcPMdjagnm2ruz/+sslHcIaoCNQMPy1ukNfq5L9L3fGye+FfZOxqLhTeu3vbjFet7
+         JuNHLOasLYRnf4Z0qc+dA40o1h9dsoDtY+1G0OKd++RZ9uK3OdvFOeBTTVCraxbd9CSc
+         pNoA==
+X-Gm-Message-State: AOAM533RS6qmTCYgRbTzgU06X3vSyXtmtkxs2eq5EEJh+QSDEHYn33wi
+        l/xiNA3HCF9QQP04+mUMnvW07g==
+X-Google-Smtp-Source: ABdhPJzNsJkluvv0T/kJePCV/uW7PiR/CaUosJPHKH78onXcX0T8ami55T1bac/+kv0z7GN7hv7Qsg==
+X-Received: by 2002:a17:90a:f87:: with SMTP id 7mr817869pjz.3.1591997307711;
+        Fri, 12 Jun 2020 14:28:27 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id z11sm7194528pfk.141.2020.06.12.14.28.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 14:27:04 -0700 (PDT)
-From:   Keyur Patel <iamkeyur96@gmail.com>
-To:     Wolfram Sang <wsa@kernel.org>, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Keyur Patel <iamkeyur96@gmail.com>
-Subject: [PATCH] i2c: smbus: Fix spelling mistake in the comments
-Date:   Fri, 12 Jun 2020 17:26:35 -0400
-Message-Id: <20200612212635.177380-1-iamkeyur96@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Fri, 12 Jun 2020 14:28:27 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200612123003.v2.4.Ia4376fd88cdc6e8f8b43c65548458305f82f1d61@changeid>
+References: <20200612123003.v2.1.Ibe95d8f3daef01e5c57d4c8c398f04d6a839492c@changeid> <20200612123003.v2.4.Ia4376fd88cdc6e8f8b43c65548458305f82f1d61@changeid>
+Subject: Re: [PATCH v2 4/4] drm/bridge: ti-sn65dsi86: Check the regmap return value when setting a GPIO
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     spanda@codeaurora.org, bjorn.andersson@linaro.org,
+        robdclark@chromium.org, Douglas Anderson <dianders@chromium.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+To:     Douglas Anderson <dianders@chromium.org>, a.hajda@samsung.com,
+        narmstrong@baylibre.com, sam@ravnborg.org
+Date:   Fri, 12 Jun 2020 14:28:26 -0700
+Message-ID: <159199730620.62212.13255273805624622339@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix spelling mistake in the comments with help of `codespell`.
-seperate ==> separate
+Quoting Douglas Anderson (2020-06-12 12:30:50)
+> The ti_sn_bridge_gpio_set() got the return value of
+> regmap_update_bits() but didn't check it.  The function can't return
+> an error value, but we should at least print a warning if it didn't
+> work.
+>=20
+> This fixes a compiler warning about setting "ret" but not using it.
+>=20
+> Fixes: 27ed2b3f22ed ("drm/bridge: ti-sn65dsi86: Export bridge GPIOs to Li=
+nux")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
 
-Signed-off-by: Keyur Patel <iamkeyur96@gmail.com>
----
- drivers/i2c/i2c-core-smbus.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/i2c/i2c-core-smbus.c b/drivers/i2c/i2c-core-smbus.c
-index b34d2ff06931..56bb840142e3 100644
---- a/drivers/i2c/i2c-core-smbus.c
-+++ b/drivers/i2c/i2c-core-smbus.c
-@@ -4,7 +4,7 @@
-  *
-  * This file contains the SMBus functions which are always included in the I2C
-  * core because they can be emulated via I2C. SMBus specific extensions
-- * (e.g. smbalert) are handled in a seperate i2c-smbus module.
-+ * (e.g. smbalert) are handled in a separate i2c-smbus module.
-  *
-  * All SMBus-related things are written by Frodo Looijaard <frodol@dds.nl>
-  * SMBus 2.0 support by Mark Studebaker <mdsxyz123@yahoo.com> and
--- 
-2.26.2
-
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
