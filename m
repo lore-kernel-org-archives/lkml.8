@@ -2,303 +2,132 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F4210C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 06:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6BE4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 06:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3071207F7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 06:46:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tgg4peML"
+	by mail.kernel.org (Postfix) with ESMTP id ABD3620801
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 06:46:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726357AbgFLGqu (ORCPT
+        id S1726456AbgFLGqz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 12 Jun 2020 02:46:55 -0400
+Received: from nautica.notk.org ([91.121.71.147]:50528 "EHLO nautica.notk.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726095AbgFLGqu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 12 Jun 2020 02:46:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41046 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726287AbgFLGqu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 02:46:50 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFA63C03E96F;
-        Thu, 11 Jun 2020 23:46:49 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id 25so7744085oiy.13;
-        Thu, 11 Jun 2020 23:46:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=293SJMmZmVCGOunUSuOi65UyFjlasgM11ygVhvjbjJQ=;
-        b=Tgg4peMLB7HLe6fFzbX/bV38F19jJEw53LDr4gqmFzn0YdXeuXOBeE7/tbUN1ftDeF
-         5rqmhuRCjRXHuyowOnRl60WM9rnRIuAse0pD0eEpcgXlTlJ1banSdeS4jWgxwDO+GIkc
-         gDG3k8FUED4MjtDIzYUjZdWUgVei6K8wprT1bZXLLkrshifcZqZnfJudi8bvYag52B6A
-         c1XPT48eteML5JkQ1yYtstkCoqNVP0lc2WWI3X0o05SSzG47haIhXpuGqJobAx4egBkj
-         1ymaPgXgOpJwsqs0t8sQndl9XCc8bdKFoHO/JbRn1PfAFFTHNNmyvwAA9VsvnoOufWY4
-         n7MA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=293SJMmZmVCGOunUSuOi65UyFjlasgM11ygVhvjbjJQ=;
-        b=TTYk1qGvKB2xw9L5YuuOdVhGU8kp9SAjppxAIWYi9r0mE9Hz/eNWczjqU2FAh0nD0z
-         r8myTJrMpZE4ys65aVuSCKeSHW/IdPu+WaFLY4rfXdQA5OOzfZ7/sOiamcXnnEysfRsv
-         7wWosARRYz6nshEhTuPGLwqDHCenlV4ho9qdvhrJij/7gG8Bmy5sLDHPTSc4PLdYpT+Z
-         jZ1Hsyc41uNcvDbIQF56QGbGfXYhozMeezJxhgyeZ60LMLP1BcrYXKv0SxrKSbmKwoQM
-         s1yQCUAOZxJJTjicYhS3fRsKFs7bix9j25wou2+aJqEVrcR66GqQXWGwg4vP4LXGsip0
-         ULpA==
-X-Gm-Message-State: AOAM531/I5ofjRyeTyWVdtYKitvhZ4hx4AMQJl1Tik572A0tP9u0wATh
-        iS6loZq+TH554qehkmR/2JE=
-X-Google-Smtp-Source: ABdhPJyDpZTY3Hr/oyAfz5V+2fGR2ae7hl9bs3HHZ91XwAvggeW+B3teTT2a4uUuMhadvnHdXaB2yw==
-X-Received: by 2002:aca:438a:: with SMTP id q132mr623443oia.44.1591944408956;
-        Thu, 11 Jun 2020 23:46:48 -0700 (PDT)
-Received: from ubuntu-n2-xlarge-x86 ([2604:1380:4111:8b00::3])
-        by smtp.gmail.com with ESMTPSA id v2sm853810oib.26.2020.06.11.23.46.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 23:46:48 -0700 (PDT)
-Date:   Thu, 11 Jun 2020 23:46:47 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Sami Tolvanen <samitolvanen@google.com>,
-        yuu ichii <byahu140@heisei.be>
-Subject: Re: [PATCH] ACPI: sysfs: Fix pm_profile_attr type
-Message-ID: <20200612064647.GA34712@ubuntu-n2-xlarge-x86>
-References: <20200612045149.1837-1-natechancellor@gmail.com>
- <202006112217.2E6CE093@keescook>
+Received: by nautica.notk.org (Postfix, from userid 1001)
+        id BDA7BC009; Fri, 12 Jun 2020 08:46:47 +0200 (CEST)
+Date:   Fri, 12 Jun 2020 08:46:32 +0200
+From:   Dominique Martinet <asmadeus@codewreck.org>
+To:     "wanghai (M)" <wanghai38@huawei.com>
+Cc:     ericvh@gmail.com, lucho@ionkov.net, davem@davemloft.net,
+        v9fs-developer@lists.sourceforge.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] 9p/trans_fd: Fix concurrency del of req_list in
+ p9_fd_cancelled/p9_read_work
+Message-ID: <20200612064632.GA19461@nautica>
+References: <20200611014855.60550-1-wanghai38@huawei.com>
+ <20200611145055.GA28945@nautica>
+ <7bed531c-0ea5-b5f8-eaf8-4feb9ccf1b31@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <202006112217.2E6CE093@keescook>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7bed531c-0ea5-b5f8-eaf8-4feb9ccf1b31@huawei.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 11:17:14PM -0700, Kees Cook wrote:
-> On Thu, Jun 11, 2020 at 09:51:50PM -0700, Nathan Chancellor wrote:
-> > When running a kernel with Clang's Control Flow Integrity implemented,
-> > there is a violation that happens when accessing
-> > /sys/firmware/acpi/pm_profile:
-> > 
-> > $ cat /sys/firmware/acpi/pm_profile
-> > 0
-> > 
-> > $ dmesg
-> > ...
-> > [   17.352564] ------------[ cut here ]------------
-> > [   17.352568] CFI failure (target: acpi_show_profile+0x0/0x8):
-> > [   17.352572] WARNING: CPU: 3 PID: 497 at kernel/cfi.c:29 __cfi_check_fail+0x33/0x40
-> > [   17.352573] Modules linked in:
-> > [   17.352575] CPU: 3 PID: 497 Comm: cat Tainted: G        W         5.7.0-microsoft-standard+ #1
-> > [   17.352576] RIP: 0010:__cfi_check_fail+0x33/0x40
-> > [   17.352577] Code: 48 c7 c7 50 b3 85 84 48 c7 c6 50 0a 4e 84 e8 a4 d8 60 00 85 c0 75 02 5b c3 48 c7 c7 dc 5e 49 84 48 89 de 31 c0 e8 7d 06 eb ff <0f> 0b 5b c3 00 00 cc cc 00 00 cc cc 00 85 f6 74 25 41 b9 ea ff ff
-> > [   17.352577] RSP: 0018:ffffaa6dc3c53d30 EFLAGS: 00010246
-> > [   17.352578] RAX: 331267e0c06cee00 RBX: ffffffff83d85890 RCX: ffffffff8483a6f8
-> > [   17.352579] RDX: ffff9cceabbb37c0 RSI: 0000000000000082 RDI: ffffffff84bb9e1c
-> > [   17.352579] RBP: ffffffff845b2bc8 R08: 0000000000000001 R09: ffff9cceabbba200
-> > [   17.352579] R10: 000000000000019d R11: 0000000000000000 R12: ffff9cc947766f00
-> > [   17.352580] R13: ffffffff83d6bd50 R14: ffff9ccc6fa80000 R15: ffffffff845bd328
-> > [   17.352582] FS:  00007fdbc8d13580(0000) GS:ffff9cce91ac0000(0000) knlGS:0000000000000000
-> > [   17.352582] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [   17.352583] CR2: 00007fdbc858e000 CR3: 00000005174d0000 CR4: 0000000000340ea0
-> > [   17.352584] Call Trace:
-> > [   17.352586]  ? rev_id_show+0x8/0x8
-> > [   17.352587]  ? __cfi_check+0x45bac/0x4b640
-> > [   17.352589]  ? kobj_attr_show+0x73/0x80
-> > [   17.352590]  ? sysfs_kf_seq_show+0xc1/0x140
-> > [   17.352592]  ? ext4_seq_options_show.cfi_jt+0x8/0x8
-> > [   17.352593]  ? seq_read+0x180/0x600
-> > [   17.352595]  ? sysfs_create_file_ns.cfi_jt+0x10/0x10
-> > [   17.352596]  ? tlbflush_read_file+0x8/0x8
-> > [   17.352597]  ? __vfs_read+0x6b/0x220
-> > [   17.352598]  ? handle_mm_fault+0xa23/0x11b0
-> > [   17.352599]  ? vfs_read+0xa2/0x130
-> > [   17.352599]  ? ksys_read+0x6a/0xd0
-> > [   17.352601]  ? __do_sys_getpgrp+0x8/0x8
-> > [   17.352602]  ? do_syscall_64+0x72/0x120
-> > [   17.352603]  ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > [   17.352604] ---[ end trace 7b1fa81dc897e419 ]---
-> > 
-> > When /sys/firmware/acpi/pm_profile is read, sysfs_kf_seq_show is called,
-> > which in turn calls kobj_attr_show, which gets the ->show callback
-> > member by calling container_of on attr (casting it to struct
-> > kobj_attribute) then calls it.
-> > 
-> > There is a CFI violation because pm_profile_attr is of type
-> > struct device_attribute but kobj_attr_show calls ->show expecting it
-> > to be from struct kobj_attribute. CFI checking ensures that function
-> > pointer types match when doing indirect calls. Fix pm_profile_attr to
-> > be defined in terms of kobj_attribute so there is no violation or
-> > mismatch.
-> > 
-> > Fixes: 362b646062b2 ("ACPI: Export FADT pm_profile integer value to userspace")
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/1051
-> > Reported-by: yuu ichii <byahu140@heisei.be>
-> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> > ---
-> >  drivers/acpi/sysfs.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/acpi/sysfs.c b/drivers/acpi/sysfs.c
-> > index 3a89909b50a6..76c668c05fa0 100644
-> > --- a/drivers/acpi/sysfs.c
-> > +++ b/drivers/acpi/sysfs.c
-> > @@ -938,13 +938,13 @@ static void __exit interrupt_stats_exit(void)
-> >  }
-> >  
-> >  static ssize_t
-> > -acpi_show_profile(struct device *dev, struct device_attribute *attr,
-> > +acpi_show_profile(struct kobject *kobj, struct kobj_attribute *attr,
-> >  		  char *buf)
-> >  {
-> >  	return sprintf(buf, "%d\n", acpi_gbl_FADT.preferred_profile);
-> >  }
-> >  
-> > -static const struct device_attribute pm_profile_attr =
-> > +static const struct kobj_attribute pm_profile_attr =
-> >  	__ATTR(pm_profile, S_IRUGO, acpi_show_profile, NULL);
+wanghai (M) wrote on Fri, Jun 12, 2020:
+> You are right, I got a syzkaller bug.
 > 
-> My mind absolutely rebelled at how this could not have been caught
-> at compile time nor runtime already. Everything appears to be wrong
-> here. It's a different structure, it's getting assigned, it's getting
-> called! And then I went looking and started to scream. Apologies if this
-> investigation is redundant to a thread I didn't see...
+> "p9_read_work+0x7c3/0xd90" points to list_del(&m->rreq->req_list);
+> 
+> [   62.733598] kasan: CONFIG_KASAN_INLINE enabled
+> [   62.734484] kasan: GPF could be caused by NULL-ptr deref or user memory access
+> [   62.735670] general protection fault: 0000 [#1] SMP KASAN PTI
+> [   62.736577] CPU: 3 PID: 82 Comm: kworker/3:1 Not tainted 4.19.124+ #2
+> [   62.737582] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+> [   62.738988] Workqueue: events p9_read_work
+> [   62.739642] RIP: 0010:p9_read_work+0x7c3/0xd90
+> [   62.740348] Code: 48 c1 e9 03 80 3c 01 00 0f 85 cb 05 00 00 48 8d 7a 08 48 b9 00 00 00 00 00 fc ff df 49 8b 87 b8 00 00 00 48 89 fe 48 c1 ee 03 <80> 3c 0e 00 0f 85 89 05 00 00 48 89 c6 48 b9 00 00 00 00 00 fc ff
+> [   62.743236] RSP: 0018:ffff8883ece17ca0 EFLAGS: 00010a06
+> [   62.744059] RAX: dead000000000200 RBX: ffff8883d45666b0 RCX: dffffc0000000000
+> [   62.745173] RDX: dead000000000100 RSI: 1bd5a00000000021 RDI: dead000000000108
+> [   62.746279] RBP: ffff8883d4566590 R08: ffffed107a8acf31 R09: ffffed107a8acf31
+> [   62.747398] R10: 0000000000000001 R11: ffffed107a8acf30 R12: 1ffff1107d9c2f9b
+> [   62.748505] R13: ffff8883d45665d0 R14: ffff8883d4566608 R15: ffff8883e1f1c000
+> [   62.749615] FS:  0000000000000000(0000) GS:ffff8883ef180000(0000) knlGS:0000000000000000
+> [   62.750881] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   62.751784] CR2: 0000000000000000 CR3: 000000009c622003 CR4: 00000000007606e0
+> [   62.752898] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [   62.754011] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [   62.755126] PKRU: 55555554
+> [   62.755561] Call Trace:
+> [   62.755963]  ? p9_write_work+0xa00/0xa00
+> [   62.756592]  process_one_work+0xae4/0x1b20
+> [   62.757252]  ? apply_wqattrs_commit+0x3e0/0x3e0
+> [   62.757985]  worker_thread+0x8c/0xe80
+> [   62.758600]  ? __kthread_parkme+0xe9/0x190
+> [   62.759254]  ? process_one_work+0x1b20/0x1b20
+> [   62.759950]  kthread+0x341/0x410
+> [   62.760479]  ? kthread_create_worker_on_cpu+0xf0/0xf0
+> [   62.761296]  ret_from_fork+0x3a/0x50
+> [   62.761874] Modules linked in:
+> [   62.762378] Dumping ftrace buffer:
+> [   62.762942]    (ftrace buffer empty)
+> [   62.763547] ---[ end trace 69672816613947a3 ]---
 
-Yes, I was rather shocked as well... There was no prior discussion to
-this patch, just something that was reported to me (the initial
-reproducer was 'grep -irl uname /sys').
+This looks like:
+https://syzkaller.appspot.com/bug?id=5df4f85d764ee89863d0294b4e0c87ef2fd2c624
+I'm not sure how active this still is but please also add this
+Reported-by tag:
+Reported-by: syzbot+77a25acfa0382e06ab23@syzkaller.appspotmail.com
 
-> First, __ATTR(), like most static initializer macros, is not typed.
-> Normally this is okay because different structures have different
-> members, so it wouldn't compile. But not in this case here. Everything
-> assigned by __ATTR exists in both because ... they have an identical set
-> of structure member names:
-> 
-> struct device_attribute {
->         struct attribute        attr;
->         ssize_t (*show)(struct device *dev, struct device_attribute *attr,
->                         char *buf);
->         ssize_t (*store)(struct device *dev, struct device_attribute *attr,
->                          const char *buf, size_t count);
-> };
-> 
-> struct kobj_attribute {
->         struct attribute attr;
->         ssize_t (*show)(struct kobject *kobj, struct kobj_attribute *attr,
->                         char *buf);
->         ssize_t (*store)(struct kobject *kobj, struct kobj_attribute *attr,
->                          const char *buf, size_t count);
-> };
-> 
-> But the show and store are different prototypes, so surely any variable
-> assignments or argument passing would catch the mismatch. But no!
-> The sysfs API only takes the .attr member address:
-> 
->         result = sysfs_create_file(acpi_kobj, &pm_profile_attr.attr);
-> 
-> and, of course, that doesn't break because both struct device_attribute
-> and struct kobj_attribute do, in fact, use the same structure for their
-> .attr (struct attribute).
-> 
-> But here's the kicker:
-> 
-> static ssize_t kobj_attr_show(struct kobject *kobj, struct attribute *attr,
->                               char *buf)
-> {
->         struct kobj_attribute *kattr;
->         ssize_t ret = -EIO;
-> 
->         kattr = container_of(attr, struct kobj_attribute, attr);
->         if (kattr->show)
->                 ret = kattr->show(kobj, kattr, buf);
-> 	...
-> 
-> A container_of() is used to calculate the offset. This doesn't explode
-> (normally) at runtime because, as established, these structures have the
-> same layout, so .show is in the same place.
+(can keep both)
 
-Yes, this is all what I noticed as well (and tried to summarize in my
-commit message, hopefully it made sense).
 
-> Some thoughts that I am terrified to check or attempt, but I can't help
-> myself:
+> Yes，In this case,  all further 9p messages will not be read.
+> >p9_read_work probably should handle REQ_STATUS_FLSHD in a special case
+> >that just throws the message away without error as well.
 > 
-> 1) Is __ATTR() regularly used to perform cross-structure initialization?
+> Can it be solved like this?
 > 
-> Answer appears to be "yes":
-> 
-> include/linux/device.h: struct device_attribute dev_attr_##_name = __ATTR_WO(_name)
-> include/linux/device/bus.h:     struct bus_attribute bus_attr_##_name = __ATTR_RW(_name)
-> 
-> 2) Should static initializer macros be typed to catch bad cross-type
->    assignments? (Which depends on "1" being "no".)
-> 
-> Changing this looks very hard, but it does make me wonder about doing
-> stuff like this for static initializer macros:
-> 
-> -#define __ATTR(_name, _mode, _show, _store) { \
-> +#define __ATTR(_name, _mode, _show, _store) (struct kobject *) { \
-> 
-> Obviously not possible here, though.
-> 
-> 3) This cannot possibly be the only case of this. Given the answer to
->    #1, this bug must be endemic.
-> 
-> static inline int __must_check sysfs_create_file(struct kobject *kobj,
->                                                  const struct attribute *attr)
-> {
->         return sysfs_create_file_ns(kobj, attr, NULL);
-> }
-> 
-> $ git grep 'sysfs_create_file.*, &.*\.attr' | wc -l
-> 51
-> 
-> 16 appear to actually be kobj_attribute. Those are fine.
-> 
-> Similar to the patch above, 9 more are from DEVICE_ATTR() (named
-> "dev_attr_$foo):
-> 
-> #define DEVICE_ATTR(_name, _mode, _show, _store) \
->         struct device_attribute dev_attr_##_name = __ATTR(_name, _mode, _show, _store)
-> 
-> And a here are a bunch more macro-based ones:
-> 
-> class_attr	is struct class_attribute
-> 
-> mdev_type_attr	is struct mdev_type_attribute
-> 
-> format_attr	is half struct device_attribute and half struct kobj_attribute:
-> 
-> arch/x86/events/amd/uncore.c:static struct device_attribute format_attr_##_dev##_name = __ATTR_RO(_dev);
-> arch/x86/events/intel/cstate.c:static struct kobj_attribute format_attr_##_var =                \
-> arch/x86/events/intel/uncore.h:static struct kobj_attribute format_attr_##_var =                   \
-> arch/x86/events/rapl.c:static struct kobj_attribute format_attr_##_var = \
-> drivers/perf/thunderx2_pmu.c:static struct device_attribute format_attr_##_var =                   \
-> include/linux/perf_event.h:static struct device_attribute format_attr_##_name = __ATTR_RO(_name)
-> 
-> These 2 are also not kobj_attribute:
-> 
-> include/linux/module.h:extern struct module_attribute module_uevent;
-> kernel/module.c:struct module_attribute module_uevent =
-> 
-> I think all of these non-kobj_attribute cases will trip CFI too, and
-> this design pattern appears to be intentional. So that will be fun! :)
-> 
-> I haven't gone through all of the 51 carefully, but this looks like a
-> much larger problem than just this one place. :(
+> --- a/net/9p/trans_fd.c
+> +++ b/net/9p/trans_fd.c
+> @@ -362,7 +362,7 @@ static void p9_read_work(struct work_struct *work)
+>                 if (m->rreq->status == REQ_STATUS_SENT) {
+>                         list_del(&m->rreq->req_list);
+>                         p9_client_cb(m->client, m->rreq, REQ_STATUS_RCVD);
+> -               } else {
+> +               } else if (m->rreq->status != REQ_STATUS_FLSHD) {
+>                         spin_unlock(&m->client->lock);
+>                         p9_debug(P9_DEBUG_ERROR,
+>                                  "Request tag %d errored out while
+> we were reading the reply\n",
 
-Yikes... :/ that is going to be fun to fully uncover. I am interested in
-seeing which ones I can get to trigger on real hardware.
+Yes that is probably correct.
+Please add a comment above saying we ignore replies associated with a
+cancelled request.
 
-Thanks for the full analysis, I should have probably added some more
-myself.
+> This patch "afd8d65411" just moved list_del into cancelled ops. It
+> is not actually the initial patch that caused the bug
+> 
+> In 60ff779c4abb ("9p: client: remove unused code and any reference
+> to "cancelled" function")
+> 
+> It moved spin_lock under "if (oldreq->status == REQ_STATUS_FLSH)" .
+> 
+> After "if (oldreq->status == REQ_STATUS_FLSH)", oldreq may be
+> changed by other thread.
 
-Cheers,
-Nathan
+Ok, thank you for explaining; I agree now.
+
+-- 
+Dominique
