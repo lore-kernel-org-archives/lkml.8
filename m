@@ -2,71 +2,100 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BCEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1024C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D351F2068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:25:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 801892068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:26:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbgFLJZw (ORCPT
+        id S1726553AbgFLJ0H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 05:25:52 -0400
-Received: from 8bytes.org ([81.169.241.247]:47506 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726343AbgFLJZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 05:25:52 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 1052E3AA; Fri, 12 Jun 2020 11:25:50 +0200 (CEST)
-Date:   Fri, 12 Jun 2020 11:25:49 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Tom Lendacky <thomas.lendacky@amd.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v3 59/75] x86/sev-es: Handle MONITOR/MONITORX Events
-Message-ID: <20200612092549.GB3701@8bytes.org>
-References: <20200428151725.31091-1-joro@8bytes.org>
- <20200428151725.31091-60-joro@8bytes.org>
- <20200520063845.GC17090@linux.intel.com>
- <20200611131045.GE11924@8bytes.org>
- <20200611171305.GJ29918@linux.intel.com>
- <eac2d02f-951c-16d4-d4f7-55357e790bcd@amd.com>
+        Fri, 12 Jun 2020 05:26:07 -0400
+Received: from outbound-smtp59.blacknight.com ([46.22.136.243]:35467 "EHLO
+        outbound-smtp59.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726302AbgFLJ0H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 05:26:07 -0400
+Received: from mail.blacknight.com (pemlinmail06.blacknight.ie [81.17.255.152])
+        by outbound-smtp59.blacknight.com (Postfix) with ESMTPS id 674DDFADE4
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 10:26:05 +0100 (IST)
+Received: (qmail 12271 invoked from network); 12 Jun 2020 09:26:05 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.5])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 12 Jun 2020 09:26:05 -0000
+Date:   Fri, 12 Jun 2020 10:26:03 +0100
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: [PATCH] fs: Do not check if there is a fsnotify watcher on pseudo
+ inodes
+Message-ID: <20200612092603.GB3183@techsingularity.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <eac2d02f-951c-16d4-d4f7-55357e790bcd@amd.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 02:33:12PM -0500, Tom Lendacky wrote:
-> I don't think there is any guarantee that MONITOR/MWAIT would work within a
-> guest (I'd have to dig some more on that to get a definitive answer, but
-> probably not necessary to do). As you say, if KVM emulates it as a NOP,
-> there's no sense in exposing the GPA - make it a NOP in the handler. I just
-> need to poke some other hypervisor vendors and hear what they have to say.
+The kernel uses internal mounts for a number of purposes including pipes.
+On every vfs_write regardless of filesystem, fsnotify_modify() is called
+to notify of any changes which incurs a small amount of overhead in fsnotify
+even when there are no watchers.
 
-Okay, makes sense. I made monitor/mwait nops in the patch-set.
+A patch is pending that reduces, but does not eliminte, the overhead
+of fsnotify but for the internal mounts, even the small overhead is
+unnecessary. The user API is based on the pathname and a dirfd and proc
+is the only visible path for inodes on an internal mount. Proc does not
+have the same pathname as the internal entry so even if fatrace is used
+on /proc, no events trigger for the /proc/X/fd/ files.
 
-Regards,
+This patch changes alloc_file_pseudo() to set the internal-only
+FMODE_NONOTIFY flag on f_flags so that no check is made for fsnotify
+watchers on internal mounts. When fsnotify is updated, it may be that
+this patch becomes redundant but it is more robust against any future
+changes that may reintroduce overhead for fsnotify on inodes with no
+watchers. The test motivating this was "perf bench sched messaging
+--pipe". On a single-socket machine using threads the difference of the
+patch was as follows.
 
-	Joerg
+                              5.7.0                  5.7.0
+                            vanilla        nofsnotify-v1r1
+Amean     1       1.3837 (   0.00%)      1.3547 (   2.10%)
+Amean     3       3.7360 (   0.00%)      3.6543 (   2.19%)
+Amean     5       5.8130 (   0.00%)      5.7233 *   1.54%*
+Amean     7       8.1490 (   0.00%)      7.9730 *   2.16%*
+Amean     12     14.6843 (   0.00%)     14.1820 (   3.42%)
+Amean     18     21.8840 (   0.00%)     21.7460 (   0.63%)
+Amean     24     28.8697 (   0.00%)     29.1680 (  -1.03%)
+Amean     30     36.0787 (   0.00%)     35.2640 *   2.26%*
+Amean     32     38.0527 (   0.00%)     38.1223 (  -0.18%)
+
+The difference is small but in some cases it's outside the noise so
+while marginal, there is still a small benefit to ignoring fsnotify
+for internal mounts.
+
+Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+---
+ fs/file_table.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/file_table.c b/fs/file_table.c
+index 30d55c9a1744..0076ccf67a7d 100644
+--- a/fs/file_table.c
++++ b/fs/file_table.c
+@@ -229,7 +229,7 @@ struct file *alloc_file_pseudo(struct inode *inode, struct vfsmount *mnt,
+ 		d_set_d_op(path.dentry, &anon_ops);
+ 	path.mnt = mntget(mnt);
+ 	d_instantiate(path.dentry, inode);
+-	file = alloc_file(&path, flags, fops);
++	file = alloc_file(&path, flags | FMODE_NONOTIFY, fops);
+ 	if (IS_ERR(file)) {
+ 		ihold(inode);
+ 		path_put(&path);
