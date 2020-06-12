@@ -2,139 +2,128 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA0E1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0451FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6D4620792
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:56:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D31C820723
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:56:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Eq3vD3hp"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="jydBlfme"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726353AbgFLT4G (ORCPT
+        id S1726381AbgFLT4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 15:56:06 -0400
-Received: from mail-eopbgr10070.outbound.protection.outlook.com ([40.107.1.70]:55223
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726268AbgFLT4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 15:56:05 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fQLbC85plqmqo9wY3FWmk9V8rYQe6lNdDTX6ZCiC5xk5iQKjP7bQfv9jp3wrt/8htjLbxylkfR0xsPr5BYsjmz08hPnysWodO590TndOBmUF3Pmgbngg1Oog39k3w2DHNMUit3ETv1t0G9b3JtK1zGXrQ63gGQm0mOpwcqPjImH4yRDDffvOTlkILNdWsHr2z4zGtrDS7YtFTYfwBoYUicix1W01i9RQetNhlxOFXXEWbG6EVClOJ8zs3WCzvxSTvLwhEf0E+f5RY5JNEbIBgcxtf1xWS6mm2z1m/MY2yUgclApGBnUhVYAjpFrAwoojWhmIO3x9vVOU58Hw55r3dg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gMPzWPA2pGlBjHoarRzT1gV96y/tLFDZNwVWTSndmro=;
- b=nB8Xjp+X347z722R6sV1C2gTB6z45s+IRYeaxcmr2SNVknT4Opnfo/bAQvetXh2/lFGwv4xnwlnIMqWg5VFBAcG0HUE0vKpT3PxmVjj8IYHCl7L+0BtZsroTRhBfH8B9p4z3Cc9cMC+RCQk3XeMmYISBje/XFk+eZoHRravKS5iJv3yrxIYCJLc8IWJ9Eac142IM7T2a97rs1zMyT7iFUiudd1niucBcm3YQxphCKnzcSw+wrOlXh3qNNcC/YyKJV8kXnv0NvIBXg8QLTzUCJtI8CTHC9vx2Ss0l2xJCzwhVOep3FJ3S/4f1x8AHTdff4VPrmr0/dgiLLk2Ub/HJBA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gMPzWPA2pGlBjHoarRzT1gV96y/tLFDZNwVWTSndmro=;
- b=Eq3vD3hpfFLch+N9kOyg+mHHaxV4HvRIxoY4FUyWnUibtEgQ1rEF9JR8YmXt2+lvfdrQg9HlOWP2I007X7E9o7hlYM8DGnADn9kEY9vt/ERpUIQtbPrBQlih/ljQtRByZia0LgHUsuEB/z71w1WceVsgJppuN3wn+dOvcScwNkY=
-Authentication-Results: nvidia.com; dkim=none (message not signed)
- header.d=none;nvidia.com; dmarc=none action=none header.from=mellanox.com;
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
- by VI1PR05MB5134.eurprd05.prod.outlook.com (2603:10a6:803:ad::28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.22; Fri, 12 Jun
- 2020 19:55:59 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::848b:fcd0:efe3:189e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::848b:fcd0:efe3:189e%7]) with mapi id 15.20.3088.023; Fri, 12 Jun 2020
- 19:55:59 +0000
-Date:   Fri, 12 Jun 2020 16:55:56 -0300
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-Cc:     Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] mm/hmm: remove redundant check non_swap_entry()
-Message-ID: <20200612195556.GN65026@mellanox.com>
-References: <20200612192618.32579-1-rcampbell@nvidia.com>
- <20200612193524.GL8681@bombadil.infradead.org>
- <20200612194204.GM65026@mellanox.com>
- <266b26e6-5f6f-9178-948a-fcae20c16112@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <266b26e6-5f6f-9178-948a-fcae20c16112@nvidia.com>
-X-ClientProxiedBy: MN2PR20CA0056.namprd20.prod.outlook.com
- (2603:10b6:208:235::25) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
+        Fri, 12 Jun 2020 15:56:43 -0400
+Received: from mout.web.de ([212.227.17.12]:59691 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726268AbgFLT4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 15:56:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1591991788;
+        bh=7m9D9uhJfOvU9oe94bssZb6aR8Jdd/LzEcEotEJw5yk=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=jydBlfmeg01uwJWgOzAOuRWcCTz6EvIm3Q8XbSAAS/l3/6eHbylqiY8da+ZZoRes3
+         f86KaY6beCOIQcv2M9MFBP7VuFWmzgK/8WDNllH8OcXuOuUJxB3QUgv4CTkA+aOFH/
+         y1zKL+ipnjX8uVVC8ZXnvW/E9Z+v3EoMXoZvCtKg=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.131.95.40]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MHEXi-1jfS4B3tpI-00DIdq; Fri, 12
+ Jun 2020 21:56:28 +0200
+To:     weifenghai <zzuedu2000@163.com>, cgroups@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
+        Li Zefan <lizefan@huawei.com>, Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH] Fix code style in css_task_iter_next_css_set()
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <52681580-7ab4-a73c-6c86-bc9872de4fe8@web.de>
+Date:   Fri, 12 Jun 2020 21:56:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR20CA0056.namprd20.prod.outlook.com (2603:10b6:208:235::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.19 via Frontend Transport; Fri, 12 Jun 2020 19:55:59 +0000
-Received: from jgg by mlx with local (Exim 4.93)        (envelope-from <jgg@mellanox.com>)      id 1jjpmO-006mAu-9U; Fri, 12 Jun 2020 16:55:56 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: a88762ee-d214-4ed2-c67d-08d80f0aa0e0
-X-MS-TrafficTypeDiagnostic: VI1PR05MB5134:
-X-Microsoft-Antispam-PRVS: <VI1PR05MB51341A1A1BB14DF7F9E0A78FCF810@VI1PR05MB5134.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 0432A04947
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: oFdKU5unx0XD1XX/IIu1A+scqtcrRn7peJrdE7NvPK6VFqtOb8uEqxTg1XDznYSxutBonG2XA3QoQMM9WufdHgXsOklYQ7Wbrr5QOrM0sQ7evll2c+r5JesImhlus4CagtvT1OFmWzbhIyBgNSCv8Z5ddtWl9H6t0ex2N6C8hj3elZlu1L+Y2Ur8SW9PWevbYViHvQxO+uSIFqseC3l2b4XXTWmgwfm0BM8ojnld4cFqHcUwxu1nxGz9gRgbVofKV3AX44T25+lSaDsXvmN1wxFXNXBfl1Na+Qot6YiM+le04VRHaiR4XEsproR+3urU
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(39860400002)(376002)(136003)(346002)(316002)(4326008)(54906003)(66556008)(6916009)(478600001)(186003)(66476007)(26005)(53546011)(66946007)(83380400001)(9746002)(5660300002)(8676002)(9786002)(2906002)(1076003)(8936002)(36756003)(2616005)(33656002)(86362001)(426003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 2E+wVdV9tDiUY1dwpXddwTM+NuQqrCHgvSaRSablkP8DzbjczY5C3M6jS/VpgkNsCW3N0Cm+f6UNKxbVsiMV+JBzU5tD7TNEw9BZGwv+Wsw2P7OgipzKL9z/crEsXe4P9WHib/1rVlDU2Qscpw2NONaHL9t0e1IqmvU63HUq/sKvX9LW6DsNMno+NhPaqnk9K/NXWrGSDIkGIhWZkI4MQyjw21R8auSH9O9bE5WBJG2sDCgclYsZyzNn53beKB0gKjMSLVC4QxXUjIOCSPE7X1LfsPbkuanUqOv2+0bjAI6bWaSSUZdGnYWbsPZ5nqyBUuBLg/sNLBkJrgzw5ThBZ2mhieQkkdGR/9i5Rk8cUDyEpXJNy99K56bVUI64DElAjyUz8Jgevy05W8YZgOz6uPI9M6CH97DH591E0D1VHIMZa597IcdAszmbw586U4gnwu6HlYUF7XAkzZtR8e59jMnfED/3e0JKO1Ea0D5KKBo=
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a88762ee-d214-4ed2-c67d-08d80f0aa0e0
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2020 19:55:59.6999
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: N2C6066mykd9bdb2hWB9aLheMuFSpDtOPQjzHOiCZX/uI583reRcairINwwdZ6CBdIvzsnqjdfZDPt2bSPOcgw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5134
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:W+sZCJ0djnSI6RvRfvd7Owm0DUz5XUjc8d0gcm8AUEktIhH+1R/
+ a1SriapME/FQa7Lm9qsTivFic/wTaxZ5DGxOZJVF7GNo0dQnBs+mhFF4cRlHRcyKu1I0ZP1
+ vsAqISwDqvX++pnoQkELeLqfxcgF7xulwVRn5zvJg9yTNJjK4RJwqTuDpY33IOgSINi6Gd7
+ 617GYymyTjVH6w2BBdXrg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:tvAGkxyYkZg=:NUAfDZ4qSPPGOM3UIuMsb4
+ 9s2xn22t50seXERsgZFyonJ/wy2Aiblqu4ZOeVY/cxsvmw1UOXSxCBkWfSsUuYgMYChW9Lksw
+ gRI2RtZmj9LJbxiS2sZmgiSSOZqrK8ypyNHqDKwTzvBmjqLhLaYsi1LLYrgkN4I78lJudkI7O
+ 0HQw1As7pjIqQKDnQB/HfmpAiz06je5PRponiHsWXOkij4Gq8As2bNRwIPO2j1Cf1a73Qe7Nr
+ 9H9N1FfrXKA2j5d9zER+2qm5EqtsviIQODTUezyJxjsixcb5dZPBVySsVkNem3PN6/475AaBL
+ xnTUf9AaWhLlA3YQWON++lHIdIiJ6Z/ZeEkQuP0oyKms9Ufc4lBxwPyLm44MWVw+4/FcR/NYT
+ uuvVQexqGBrKReplscLL0RN0CzVXS5RALqBWUjdzxG6IK0dZ+aZaqiGFUwLFeCHp5HbXEINiD
+ F7RsIVkkd7Vhpjt/CS+PQu5y0972IH5M2WXLXGwe1sLwWzWqBcC+66w+ejc3MMF/PkZCAXEwm
+ RIBEmoj93feV6lMXSMUhMWpdHXX2J9ucPEHCVn6v/Yy8EOM6gK6RYOgvgRVNdbp09vFW9MpBE
+ obXtFlAXzoPgWfBy1cHLAO/XXdTl28nE14khLAvvn3dcZPZbOy33Ot+dlT2cpU0XWPFnF/RZN
+ T/x3EZsqMoOGKg1BqDv0Sh0qkGX7v6SC/VgCE5Kcq6fBkdAS+Q+XKRnXIqluzoRfOVITnlPUM
+ VsibIYY8qNzN23LyAx/9swZeH9TXENUpt+DbAzDuO06ERHPz6TZty6cuBVEzgqaOZ/8qxdO0a
+ RtYvV/m6zxIFYYwJGVYZ15VvVabgb31ACaJiLGpFWkjNIP9BdQLgHM7B0HlD5SiqSxLzx79gj
+ 7sYW2ZafXFtLM+BJowQ/yvfbl2WIvSPjeBfum9iGpQr5yvyqMv5ygueZ15qKVpEYXNSdXWA27
+ alY3xpZ+Q0Qn5KNexue2OfbaJMwZwh9dEJEF1VG8KBaYiaavjmqLo0b3plIvYvjpLci0gCHgE
+ My4tYcHM76GGtgYVfMENbFCHtU046142mq7/N95m8NKGVQu3d0xah2w0AAaq4idaz9uK5Svs/
+ remAlSMlHRdWhlSgx2Bhw0JM+L+oVW2aL4Jsd+CH+BN4s1uCKN7RlAWySn4yl8wGN4WUMH531
+ qM0CvLdlYAnrV81+LsRQWCqR2KXoRFzATT/DIeioJcbkOiQt5LUVr2Qw49YenRG54uHvqSjx6
+ TFwdRgDA/6x+RWMOg
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 12:53:23PM -0700, Ralph Campbell wrote:
-> 
-> On 6/12/20 12:42 PM, Jason Gunthorpe wrote:
-> > On Fri, Jun 12, 2020 at 12:35:24PM -0700, Matthew Wilcox wrote:
-> > > On Fri, Jun 12, 2020 at 12:26:18PM -0700, Ralph Campbell wrote:
-> > > > In zap_pte_range(), the check for non_swap_entry() and
-> > > > is_device_private_entry() is redundant since the latter is a subset of the
-> > > > former. Remove the redundant check to simplify the code and for clarity.
-> > > 
-> > > That is highly configuration dependent.
-> > > 
-> > > #else /* CONFIG_DEVICE_PRIVATE */
-> > > ...
-> > > static inline bool is_device_private_entry(swp_entry_t entry)
-> > > {
-> > >          return false;
-> > > }
-> > 
-> > The commit message might be a bit confusing, as it is not a subset, I
-> > would say that device_private_entry alone is sufficient to tell if the
-> > entry is private or not.
-> > 
-> > For the !CONFIG_DEVICE_PRIVATE case having it wired to false is
-> > right.
-> > 
-> > Jason
-> > 
-> 
-> How about the following message instead?
-> 
-> In zap_pte_range(), the check for non_swap_entry() and
-> is_device_private_entry() is unnecessary since the latter is sufficient
-> to determine if the page is a device private page. Remove the test for
-> non_swap_entry() to simplify the code and for clarity.
+> One line similar code before in this function
 
-Yes, that is clearer to me
+I suggest to improve the commit message.
+How do you think about a wording variant like the following?
 
-Jason
+   Combine two assignments for the variable =E2=80=9Cl=E2=80=9D into one s=
+tatement.
+
+Regards,
+Markus
