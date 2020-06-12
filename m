@@ -2,132 +2,143 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E711EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 01:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B65C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 01:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF87720835
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 01:02:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5E65206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 01:06:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mNx6536r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726416AbgFLBCw (ORCPT
+        id S1726441AbgFLBGY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 21:02:52 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:44454 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726305AbgFLBCv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 21:02:51 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id CFC2F10795EDF25801FC;
-        Fri, 12 Jun 2020 09:02:49 +0800 (CST)
-Received: from [127.0.0.1] (10.166.215.235) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Fri, 12 Jun 2020
- 09:02:41 +0800
-To:     Coly Li <colyli@suse.de>, Kent Overstreet <kmo@daterainc.com>,
-        <linux-bcache@vger.kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "wubo (T)" <wubo40@huawei.com>,
-        Mingfangsen <mingfangsen@huawei.com>,
-        Yanxiaodan <yanxiaodan@huawei.com>,
-        linfeilong <linfeilong@huawei.com>,
-        renxudong <renxudong1@huawei.com>
-From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Subject: [PATCH V3] bcache: fix potential deadlock problem in
- btree_gc_coalesce
-Message-ID: <ac6f566d-8503-5c4f-eea3-9bfdddaad41e@huawei.com>
-Date:   Fri, 12 Jun 2020 09:02:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 11 Jun 2020 21:06:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45250 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbgFLBGV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 21:06:21 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A043C03E96F;
+        Thu, 11 Jun 2020 18:06:21 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id l27so8431675ejc.1;
+        Thu, 11 Jun 2020 18:06:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xWMqM4EWUTN/tZ1PSJ29RPSc7m9eyjQgLenvkceVjOU=;
+        b=mNx6536r715NBnskOPn1bdL5xCLTV9aec/WpZqRnZrhvWlD+kxiMUC9R+o/sQtOPK1
+         m2ldqoyMAEgUFiwM2DFUto+MuvVzSYlnys5Gwx99yKzZhRVmtm6FI19U8PDeV+0oKHIf
+         4qtt5+hz0BWxGpHxFEakWLwDW+m/zs76ThXZ1XMjIyEk5CRBaHHDtzj11Eo3Q3AFYzAl
+         Y/SD6ODdt/SSDEo+kliR/bCL7fe9qra4GEEHjAaxEVAiiqWgp+XJyXHBjWRhUkO2MkzE
+         JyLgiLlc82/T3yfRmqXBMnPXlTzqI0OaJ0WbFqHQMkBBw73fJCszzV0zQsePLAMWCgpS
+         XF0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xWMqM4EWUTN/tZ1PSJ29RPSc7m9eyjQgLenvkceVjOU=;
+        b=ciAPXQXkKHUEDfvDWW39RinX3IgINK8kVvqjqPivlU8EX8AMXi6rSShHzxaIEPUPVS
+         3ibGQeOlV8+vsJqBloAhUnPekKbstzA0WZZS3PaL09mIuJydyspfgeJeM/xGXo2fgblZ
+         1X0m5jTYzHgbVWZAmiVEw73CIGnEyTOcvQoWFpvB0UDqchL3myHwPQ7zSiMR8ZTEorAm
+         yu3uxYnVU5L3H+SwUuECqSzLjX4abCvut/qQqKCnleo5WT3LBxkV+SAqriUjih0d7877
+         eYxBceAAqkZq6Zk2eaov0GwS47aGevKHuZCcqkaBQST+euwgvA1vzw5o3kHghrQU+DS5
+         RtBA==
+X-Gm-Message-State: AOAM5332ALMv7PAsuF3uL8ou10QL8t+KE4F1E+dTll/LDaaXInbI7V8v
+        EQJqYrnxng5ja40FaL7wkm0B1OdBHg97Hz3SKow=
+X-Google-Smtp-Source: ABdhPJyZ5DVMliAOduWmg47LdIrQ4yp92mfh3e85UoCZsPM9fdn/2djYt+DceiV9URZ9A6OY+OcY2ks7Bhv9wyUHhhI=
+X-Received: by 2002:a17:906:5595:: with SMTP id y21mr11305629ejp.61.1591923979560;
+ Thu, 11 Jun 2020 18:06:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.166.215.235]
-X-CFilter-Loop: Reflected
+References: <1591665267-37713-1-git-send-email-sugar.zhang@rock-chips.com>
+In-Reply-To: <1591665267-37713-1-git-send-email-sugar.zhang@rock-chips.com>
+From:   Peter Geis <pgwipeout@gmail.com>
+Date:   Thu, 11 Jun 2020 21:06:07 -0400
+Message-ID: <CAMdYzYr+NF7L3KKzcGano=j9V844Gy8gH03hD++CoPe8Ao1QxQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/13] Patches to improve transfer efficiency for
+ Rockchip SoCs.
+To:     Sugar Zhang <sugar.zhang@rock-chips.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+        devicetree@vger.kernel.org, Carlos de Paula <me@carlosedp.com>,
+        dmaengine@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-kernel@vger.kernel.org,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Johan Jonker <jbx6244@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Leonidas P. Papadakos" <papadakospan@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Good Evening,
 
-coccicheck reports:
-  drivers/md//bcache/btree.c:1538:1-7: preceding lock on line 1417
+I am currently testing this on the rk3399-rockpro64, and it appears to
+fully fix the gmac problem without using txpbl.
+PCIe also seems to be more stable at high load.
+I need to conduct long term testing, but it seems to be doing very well.
 
-In btree_gc_coalesce func, if the coalescing process fails, we will goto
-to out_nocoalesce tag directly without releasing new_nodes[i]->write_lock.
-Then, it will cause a deadlock when trying to acquire new_nodes[i]->write_lock
-for freeing new_nodes[i] before return.
+Unfortunately it doesn't fix the rk3328 gmac controller.
 
-btree_gc_coalesce func details as follows:
-	if alloc new_nodes[i] fails:
-		goto out_nocoalesce;
-	mutex_lock(&new_nodes[i]->write_lock) // obtain new_nodes[i]->write_lock
-	for (i = nodes - 1; i > 0; --i)	      // main coalescing process
-		……
-		if coalescing process fails:
-			goto out_nocoalesce;  // Here, directly goto out_nocoalesce
-					      // tag will cause a deadlock
-		……
-	mutex_unlock(&new_nodes[i]->write_lock)	// release new_nodes[i]->write_lock
-	return;					// coalesing succ, return
-	out_nocoalesce:
-		btree_node_free(new_nodes[i])	// free new_nodes[i]
-			mutex_lock(&new_nodes[i]->write_lock);	// obtain new_nodes[i]->write_lock
-			clear_bit(BTREE_NODE_dirty, &ew_nodes[i]->flags); // set flag for reuse
-			mutex_unlock(&new_nodes[i]->write_lock); // release new_nodes[i]->write_lock
+Tested-by: Peter Geis <pgwipeout@gmail.com>
 
-To fix the problem, we add a new tag 'out_unlock_nocoalesce' for releasing
-new_nodes[i]->write_lock before out_nocoalesce tag. If coalescing process fails,
-we will go to out_unlock_nocoalesce tag for releasing new_nodes[i]->write_lock
-before free new_nodes[i] in out_nocoalesce tag.
-
-Fixes: 2a285686c109816 ("bcache: btree locking rework")
-Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
----
-Changelog:
-	V3: improve commit log again (suggested by Markus and Coly)
-	V2: improve commit log
-	V1: initial version
-
- drivers/md/bcache/btree.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/md/bcache/btree.c b/drivers/md/bcache/btree.c
-index 72856e5f23a3..fd1f288fd801 100644
---- a/drivers/md/bcache/btree.c
-+++ b/drivers/md/bcache/btree.c
-@@ -1389,7 +1389,7 @@ static int btree_gc_coalesce(struct btree *b, struct btree_op *op,
- 			if (__set_blocks(n1, n1->keys + n2->keys,
- 					 block_bytes(b->c)) >
- 			    btree_blocks(new_nodes[i]))
--				goto out_nocoalesce;
-+				goto out_unlock_nocoalesce;
-
- 			keys = n2->keys;
- 			/* Take the key of the node we're getting rid of */
-@@ -1418,7 +1418,7 @@ static int btree_gc_coalesce(struct btree *b, struct btree_op *op,
-
- 		if (__bch_keylist_realloc(&keylist,
- 					  bkey_u64s(&new_nodes[i]->key)))
--			goto out_nocoalesce;
-+			goto out_unlock_nocoalesce;
-
- 		bch_btree_node_write(new_nodes[i], &cl);
- 		bch_keylist_add(&keylist, &new_nodes[i]->key);
-@@ -1464,6 +1464,10 @@ static int btree_gc_coalesce(struct btree *b, struct btree_op *op,
- 	/* Invalidated our iterator */
- 	return -EINTR;
-
-+out_unlock_nocoalesce:
-+	for (i = 0; i < nodes; i++)
-+		mutex_unlock(&new_nodes[i]->write_lock);
-+
- out_nocoalesce:
- 	closure_sync(&cl);
-
--- 
-2.19.1
-
-
+On Mon, Jun 8, 2020 at 9:15 PM Sugar Zhang <sugar.zhang@rock-chips.com> wrote:
+>
+>
+>
+> Changes in v2:
+> - fix FATAL ERROR: Unable to parse input tree
+>
+> Sugar Zhang (13):
+>   dmaengine: pl330: Remove the burst limit for quirk 'NO-FLUSHP'
+>   dmaengine: pl330: Add quirk 'arm,pl330-periph-burst'
+>   dt-bindings: dma: pl330: Document the quirk 'arm,pl330-periph-burst'
+>   ARM: dts: rk3036: Add 'arm,pl330-periph-burst' for dmac
+>   ARM: dts: rk322x: Add 'arm,pl330-periph-burst' for dmac
+>   ARM: dts: rk3288: Add 'arm,pl330-periph-burst' for dmac
+>   ARM: dts: rk3xxx: Add 'arm,pl330-periph-burst' for dmac
+>   ARM: dts: rv1108: Add 'arm,pl330-periph-burst' for dmac
+>   arm64: dts: px30: Add 'arm,pl330-periph-burst' for dmac
+>   arm64: dts: rk3308: Add 'arm,pl330-periph-burst' for dmac
+>   arm64: dts: rk3328: Add 'arm,pl330-periph-burst' for dmac
+>   arm64: dts: rk3368: Add 'arm,pl330-periph-burst' for dmac
+>   arm64: dts: rk3399: Add 'arm,pl330-periph-burst' for dmac
+>
+>  .../devicetree/bindings/dma/arm-pl330.txt          |  1 +
+>  arch/arm/boot/dts/rk3036.dtsi                      |  1 +
+>  arch/arm/boot/dts/rk322x.dtsi                      |  1 +
+>  arch/arm/boot/dts/rk3288.dtsi                      |  3 ++
+>  arch/arm/boot/dts/rk3xxx.dtsi                      |  3 ++
+>  arch/arm/boot/dts/rv1108.dtsi                      |  1 +
+>  arch/arm64/boot/dts/rockchip/px30.dtsi             |  1 +
+>  arch/arm64/boot/dts/rockchip/rk3308.dtsi           |  2 +
+>  arch/arm64/boot/dts/rockchip/rk3328.dtsi           |  1 +
+>  arch/arm64/boot/dts/rockchip/rk3368.dtsi           |  2 +
+>  arch/arm64/boot/dts/rockchip/rk3399.dtsi           |  2 +
+>  drivers/dma/pl330.c                                | 44 +++++++++++++++-------
+>  12 files changed, 49 insertions(+), 13 deletions(-)
+>
+> --
+> 2.7.4
+>
+>
+>
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
