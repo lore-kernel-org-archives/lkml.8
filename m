@@ -2,150 +2,89 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C51D9C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E43C3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 987752067B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:52:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qfmIpy0v"
+	by mail.kernel.org (Postfix) with ESMTP id B670120691
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:56:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbgFLOwW (ORCPT
+        id S1726283AbgFLO4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 10:52:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59462 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgFLOwV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 10:52:21 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3C7DC03E96F;
-        Fri, 12 Jun 2020 07:52:20 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id p20so10464344iop.11;
-        Fri, 12 Jun 2020 07:52:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qxIGr9FPyH+Gs91n0/fHkQIhX/ZfGolDhhvbaK9CMlU=;
-        b=qfmIpy0vKvOQEg/Mekd63hToHWPWLlIvidIzy+oN0SOwAisx5FaGV15mzFf4/SG1XD
-         YkkeaiRj7mIZnBq6r3kLIUASIbZeSu8HznRwCFWmNMbbEq6qTLki9uRl/2bA37R0Yd8f
-         x1BT9M8ZDilHh7sgnQfXaJEg50uQ6CSlIqzCStBBrKrEYU6u5T3+lE1PvOVHytWhvX7o
-         HZLneUwAmGVYQZa8vOEeO8p8EQmsPvqSLeipOxZNj/gj9FRuZEccTkNCBQfIZ4WzsD8I
-         H82KAkf9tQpw3z5iVbukpynC6cAX/HddRbOOUP7jADQxGuvEpfAbnlHWDguonIx2hLwd
-         W2Yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qxIGr9FPyH+Gs91n0/fHkQIhX/ZfGolDhhvbaK9CMlU=;
-        b=ikUfAj0sA6fMDqmhaPJm/AmZIqE8vqFPgE34ezR3W3cIO2AsN1ZpEv2hZxaxBfju8K
-         fnnP44BTwCOke3vEaBY9f9z6Wt7x3xtmPr0I3n7JPHZrx5WnW+jyX53Z6mgAop+WPPfz
-         mhJzX2OrVSUzKLKzu338somYvsBd59qqEgYbS84pxwPw3MEkPQlwxfuTGKE9o53GPn9n
-         z6j5Lw8nq4r0K8wflVGgf8gUHrXKw99aZ3hmJ9NHKXgt9tgiaIDgXA/IfdNfwV39+Cyx
-         o0/Ub1PdTjauCPbmDpMINEoUkxpYBCe6pxBEvsdqBfcYNqbb1743UQ2/Af68hq/CAXhe
-         GvwA==
-X-Gm-Message-State: AOAM532VnJcvg1T+Tm7k5bFU2cGOyBPqV11Q8kRarJl/Ejc7098m7NUM
-        1XG2wNjdTlABm3UUgmongFxjgV4CCxU4JT31jng=
-X-Google-Smtp-Source: ABdhPJwkwYAHKc1eSyBzc7anF6WXW3t6WgRRKZVAv0DvCcQ7TbDLRDreyBbhq8KXqUrYsEfQKddTA6prsuzBI4O8TTA=
-X-Received: by 2002:a05:6602:491:: with SMTP id y17mr14024412iov.72.1591973539142;
- Fri, 12 Jun 2020 07:52:19 -0700 (PDT)
+        Fri, 12 Jun 2020 10:56:15 -0400
+Received: from mga14.intel.com ([192.55.52.115]:22980 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726089AbgFLO4O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 10:56:14 -0400
+IronPort-SDR: h8lMnBsfWzjtfZjvLRYWWupsKPAOcfmn3krDb3CAMtkpmMDZVMvrgn+k5w00gHFaZC/lm+yE/D
+ f0Vv2uzfGMRw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2020 07:56:11 -0700
+IronPort-SDR: asisTQgMwswpJfxS/ZiJlY5lEmVksHF6rrVuDzDH7o1EIu3myWbGMGgaZFSQt6NV8iBf0sso0X
+ q+2wJTdsUvvA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,503,1583222400"; 
+   d="scan'208";a="315148421"
+Received: from rrhill-mobl1.amr.corp.intel.com (HELO [10.254.71.222]) ([10.254.71.222])
+  by FMSMGA003.fm.intel.com with ESMTP; 12 Jun 2020 07:56:09 -0700
+Subject: Re: [GIT PULL] sound fixes for 5.8-rc1
+To:     Mark Brown <broonie@kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>, Takashi Iwai <tiwai@suse.de>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Vinod Koul <vinod.koul@linaro.org>,
+        Amit Pundir <amit.pundir@linaro.org>
+References: <s5himfxet1c.wl-tiwai@suse.de>
+ <CANcMJZAG4QqJ2Cxt+1RLsa8Z4oR=2y8zyD_sqy3sm_8MXyhg2g@mail.gmail.com>
+ <CALAqxLWEfRJ_Jr0iDgmvqop5Etz5xve89Zy3OeUbnKUGtqjCqQ@mail.gmail.com>
+ <20200612121946.GE5396@sirena.org.uk>
+ <7cd79261-6f8d-cad0-c65b-57570a40a6b6@linux.intel.com>
+ <20200612144646.GJ5396@sirena.org.uk>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <26a99d25-4333-9496-ad5d-b96f7b7e2a33@linux.intel.com>
+Date:   Fri, 12 Jun 2020 09:56:09 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200612092603.GB3183@techsingularity.net> <CAOQ4uxikbJ19npQFWzGm6xnqXm0W8pV3NOWE0ZxS9p_G2A39Aw@mail.gmail.com>
- <20200612131854.GD3183@techsingularity.net>
-In-Reply-To: <20200612131854.GD3183@techsingularity.net>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Fri, 12 Jun 2020 17:52:08 +0300
-Message-ID: <CAOQ4uxghy5zOT6i=shZfFHsXOgPrd7-4iPkJBDcsHU6bUSFUFg@mail.gmail.com>
-Subject: Re: [PATCH] fs: Do not check if there is a fsnotify watcher on pseudo inodes
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Jan Kara <jack@suse.cz>, Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200612144646.GJ5396@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 4:18 PM Mel Gorman <mgorman@techsingularity.net> wrote:
->
-> On Fri, Jun 12, 2020 at 12:52:28PM +0300, Amir Goldstein wrote:
-> > On Fri, Jun 12, 2020 at 12:26 PM Mel Gorman <mgorman@techsingularity.net> wrote:
-> > >
-> > > The kernel uses internal mounts for a number of purposes including pipes.
-> > > On every vfs_write regardless of filesystem, fsnotify_modify() is called
-> > > to notify of any changes which incurs a small amount of overhead in fsnotify
-> > > even when there are no watchers.
-> > >
-> > > A patch is pending that reduces, but does not eliminte, the overhead
-> > > of fsnotify but for the internal mounts, even the small overhead is
-> > > unnecessary. The user API is based on the pathname and a dirfd and proc
-> > > is the only visible path for inodes on an internal mount. Proc does not
-> > > have the same pathname as the internal entry so even if fatrace is used
-> > > on /proc, no events trigger for the /proc/X/fd/ files.
-> > >
-> >
-> > This looks like a good direction and I was going to suggest that as well.
-> > However, I am confused by the use of terminology "internal mount".
-> > The patch does not do anything dealing with "internal mount".
->
-> I was referring to users of kern_mount.
 
-I see. I am not sure if all kern_mount hand out only anonymous inodes,
-but FYI, now there a MNT_NS_INTERNAL that is not SB_KERNMOUNT:
-df820f8de4e4 ovl: make private mounts longterm
 
->
-> > If alloc_file_pseudo() is only called for filesystems mounted as
-> > internal mounts,
->
-> I believe this is the case and I did not find a counter-example.  The
-> changelog that introduced the helper is not explicit but it was created
-> in the context of converting a number of internal mounts like pipes,
-> anon inodes to a common helper. If I'm wrong, Al will likely point it out.
->
-> > please include this analysis in commit message.
-> > In any case, not every file of internal mount is allocated with
-> > alloc_file_pseudo(),
-> > right?
->
-> Correct. It is not required and there is at least one counter example
-> in arch/ia64/kernel/perfmon.c but I don't think that is particularly
-> important, I don't think anyone is kept awake at night worrying about
-> small performance overhead on Itanium.
->
-> > So maybe it would be better to list all users of alloc_file_pseudo()
-> > and say that they all should be opted out of fsnotify, without mentioning
-> > "internal mount"?
-> >
->
-> The users are DMA buffers, CXL, aio, anon inodes, hugetlbfs, anonymous
-> pipes, shmem and sockets although not all of them necessary end up using
-> a VFS operation that triggers fsnotify.  Either way, I don't think it
-> makes sense (or even possible) to watch any of those with fanotify so
-> setting the flag seems reasonable.
->
+On 6/12/20 9:46 AM, Mark Brown wrote:
+> On Fri, Jun 12, 2020 at 08:54:11AM -0500, Pierre-Louis Bossart wrote:
+> 
+>> I think that those configuration errors are the problem and should be fixed
+>> as a prerequisite to the removal of the duplication between
+>> dpcm_playback/dpcm_capture/playback_only/capture_only. it may be painful and
+>> generate noise for a while, but if we only throw a warning what are the odds
+>> all those configuration errors will eventually be fixed?
+> 
+> Yeah, I'm kind of pessimistic about the likelyhood of people paying
+> attention to warnings.
+> 
+>> If we need more time for validation on all platforms, then maybe we can
+>> first relax the check for 5.8-rc1 as suggested by John, but re-add the
+>> -EINVAL on -next to give a target of 5.9 with all configurations fixed?
+> 
+> I can't help feeling that it'd be postponing the inevitable, but perhaps
+> I'm being overly pessimistic here.  The change did obviously go in quite
+> late though so it's not the worst idea if you want to send the patch?
 
-I also think this seems reasonable, but the more accurate reason IMO
-is found in the comment for d_alloc_pseudo():
-"allocate a dentry (for lookup-less filesystems)..."
-
-> I updated the changelog and maybe this is clearer.
-
-I still find the use of "internal mount" terminology too vague.
-"lookup-less filesystems" would have been more accurate,
-because as you correctly point out, the user API to set a watch
-requires that the marked object is looked up in the filesystem.
-
-There are also some kernel internal users that set watches
-like audit and nfsd, but I think they are also only interested in
-inodes that have a path at the time that the mark is setup.
-
-Thanks,
-Amir.
+I see patches from Srinivas to fix the issue reported by John, so maybe 
+apply those patches first and if we see another issue on another 
+platform we relax the check?
