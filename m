@@ -2,131 +2,113 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F89C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21859C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F5352084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:13:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="TI6S+Mwl"
+	by mail.kernel.org (Postfix) with ESMTP id F386720836
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:13:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726289AbgFLRNk (ORCPT
+        id S1726352AbgFLRNs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 13:13:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53024 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbgFLRNj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 13:13:39 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED370C08C5C1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 10:13:37 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id l10so10458708wrr.10
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 10:13:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6/WKj2RP2D9n4+fw5DYObbawXZCZEXk2atts5/6vXZA=;
-        b=TI6S+MwlPkt8KC/tPABYYKsT1TobgOSEYvn7gfp61hj7IWbDiaISOUSExWX249s6fi
-         EIYHO6hkn1K1f6HNJlpcgTM7TC6HcJ9Bz/i/U+52KQ4SDr9GmgcRXdjV7av4HWETWXxM
-         fxu5PbxWzUePUak1TSIszwbrfNsSF2Mef0XA8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6/WKj2RP2D9n4+fw5DYObbawXZCZEXk2atts5/6vXZA=;
-        b=rVqqCFmG4SQXb3Qn/FFGzS9KHNoxro5NBRYncjCRZkJYdsrekdN2XrbAujvYA0rnKy
-         x+2mEBKMV3T1jCQEYiey5ybGPm2BdDqgpHJtSAR62QgSZaD4+4FCdU0LgN6K2lhtqRJe
-         Bvu3gj+MLjfiGUgktcIG/BQdINYPKa2iAhV3BpiPHAlM7uQW346ISYk/V1AajkTdpCrI
-         0LbD3tE3CjwaVD6hSVKfKO5OaGI/94abvHtQqfhQq1BMs7U3n7A3XIkWZPz3QiMomcZL
-         ihfPerQOdNBccp50IH/fFbrybx9hwSn/iF/xqCAjCeIZZ62zSN+N6+xZ44xgg5u5IJej
-         j99A==
-X-Gm-Message-State: AOAM533JZluhG4MFJzJJyWAUmnPh8FgOuKmF5DckaWjZzE53Ziv9v8rl
-        VdURj9sTcVZ5s8PReojHFyhIrg==
-X-Google-Smtp-Source: ABdhPJzlc5PIQbzc9wrrQMNksbeyPR5ziC+iT8uaWIdBJcsqaBBESl71xk5jFNvubBzbMwIi3XoqOw==
-X-Received: by 2002:a5d:4404:: with SMTP id z4mr16439075wrq.189.1591982016383;
-        Fri, 12 Jun 2020 10:13:36 -0700 (PDT)
-Received: from localhost ([2a01:4b00:8432:8a00:63de:dd93:20be:f460])
-        by smtp.gmail.com with ESMTPSA id b185sm16603283wmd.3.2020.06.12.10.13.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 10:13:35 -0700 (PDT)
-Date:   Fri, 12 Jun 2020 18:13:35 +0100
-From:   Chris Down <chris@chrisdown.name>
-To:     Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>, Roman Gushchin <guro@fb.com>,
-        linux-mm@kvack.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH 3/6] mm, memcg: Prevent memory.low load/store tearing
-Message-ID: <20200612171335.GA341094@chrisdown.name>
-References: <cover.1584034301.git.chris@chrisdown.name>
- <448206f44b0fa7be9dad2ca2601d2bcb2c0b7844.1584034301.git.chris@chrisdown.name>
- <20200612170352.GA40768@blackbook>
+        Fri, 12 Jun 2020 13:13:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50424 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726286AbgFLRNo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 13:13:44 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id A2947AED9;
+        Fri, 12 Jun 2020 17:13:46 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
+        p.zabel@pengutronix.de, linux-kernel@vger.kernel.org
+Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org, helgaas@kernel.org,
+        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
+        lorenzo.pieralisi@arm.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Rob Herring <robh@kernel.org>, Eric Anholt <eric@anholt.net>,
+        devicetree@vger.kernel.org
+Subject: [PATCH v3 0/9] Raspberry Pi 4 USB firmware initialization rework
+Date:   Fri, 12 Jun 2020 19:13:24 +0200
+Message-Id: <20200612171334.26385-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="r5Pyd7+fXNt84Ff3"
-Content-Disposition: inline
-In-Reply-To: <20200612170352.GA40768@blackbook>
-User-Agent: Mutt/1.14.2 (2020-05-25)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
+loaded directly from an EEPROM or, if not present, by the SoC's
+co-processor, VideoCore. This series reworks how we handle this.
 
---r5Pyd7+fXNt84Ff3
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The previous solution makes use of PCI quirks and exporting platform
+specific functions. Albeit functional it feels pretty shoehorned. This
+proposes an alternative way of handling the triggering of the xHCI chip
+initialization trough means of a reset controller.
 
-Hi Michal,
+The benefits are pretty evident: less platform churn in core xHCI code,
+and no explicit device dependency management in pcie-brcmstb.
 
-Good catch! Andrew and I must have missed these when massaging the commits =
-with=20
-other stuff in -mm, which is totally understandable considering the amount =
-of=20
-places being touched by this and other patch series at the same time. Just =
-goes=20
-to show how complex it can be sometimes, since I even double checked these =
-and=20
-didn't see that missed hunk :-)
+Note that patch #1 depends on another series[1].
 
-The good news is that these are belt-and-suspenders: this avoids a rare=20
-theoretical case, not something likely to be practically dangerous. But yes=
-, we=20
-should fix it up. Since the commit is already out, I'll just submit a new o=
-ne.
+The series is based on next-20200611
 
-Thanks for the report!
+v2: https://lkml.org/lkml/2020/6/9/875
+v1: https://lore.kernel.org/linux-usb/20200608192701.18355-1-nsaenzjulienne@suse.de/T/#t
 
-Chris
+[1] https://lwn.net/ml/linux-kernel/cover.662a8d401787ef33780d91252a352de91dc4be10.1590594293.git-series.maxime@cerno.tech/
 
---r5Pyd7+fXNt84Ff3
-Content-Type: application/pgp-signature; name="signature.asc"
+---
 
------BEGIN PGP SIGNATURE-----
+Changes since v2:
+ - Add reset to resume routine in xhci-pci
+ - Correct of refcount in pci-quirks
+ - Correct typos
+ - Use include file to define firmware reset IDs
 
-iQKTBAEBCgB9FiEECEkprPvCOwsaJqhB340hthYRgHAFAl7jt79fFIAAAAAALgAo
-aXNzdWVyLWZwckBub3RhdGlvbnMub3BlbnBncC5maWZ0aGhvcnNlbWFuLm5ldDA4
-NDkyOUFDRkJDMjNCMEIxQTI2QTg0MURGOEQyMUI2MTYxMTgwNzAACgkQ340hthYR
-gHAerQ//Zf+6DzdEaZvfnvPNq5+6NbmAAs+Pw1AZn2s81dipkRY38MGPNTqY8oBL
-qd46ZDJ24zSUPAcHvu6E3UGwpjO8VSynvP+CfEoFlS+R5k15oEqTe36C7l9eA+IY
-zTDyLj9LrFhy5qD2V2GKH9Dp9ZQC9BrIls1Gc0J+XaB7h9umEc2g1Ybadj1d3ouk
-xAX/6iV19fAW4uFgXVOq70BhYGXGXvWCX0NYQ3Yz18Kkr5bSnjzTz2irIxCbaWZ+
-q2Gj+Q1JFN/yhkRUt+m+8qtJZAb/i4cXqDJp9kqJ6t9cLjIhybFNRnXMueGr1Puc
-byWoWK7i9+vEjnY6VbjToicAWQPeId063wxJzzhp/uqQ+zoCMDX+P7Iz4s1u+6l6
-R3nXQSRcrw9VNc3ZOfJjXy1R/hIwGBbeGt/ndPnyNrznWu8yYJJr7qZirk8Uy4lp
-wTmv/5QTkal+TiVXOMW6VwXMLLvu50Q+E3/7dIz4waKt98kfM8hd8zjB676rwcGD
-olHRJHD956i7HOAU3uzFrijiMOgOnXAiJIDj1+MxLXdTL0ZidJizBh6eeSbxUrcg
-egr+KPJSKcxuZ+K8c+yZD8MoCLJX84xTU1LdtTwQC9x10M1HnT1OMFLrfso4yWTK
-SYtQxYe6sGiKMLvN3tYD5Ql63m8D2CIK5NDiK/hxG9hZtiYOH9k=
-=2HeI
------END PGP SIGNATURE-----
+Changes since v1:
+ - Rework reset controller so it's less USB centric.
+ - Use correct reset controller API in xhci-pci
+ - Correct typos
 
---r5Pyd7+fXNt84Ff3--
+Nicolas Saenz Julienne (9):
+  dt-bindings: reset: Add a binding for the RPi Firmware reset
+    controller
+  reset: Add Raspberry Pi 4 firmware reset controller
+  ARM: dts: bcm2711: Add firmware usb reset node
+  ARM: dts: bcm2711: Add reset controller to xHCI node
+  usb: xhci-pci: Add support for reset controllers
+  Revert "USB: pci-quirks: Add Raspberry Pi 4 quirk"
+  usb: host: pci-quirks: Bypass xHCI quirks for Raspberry Pi 4
+  Revert "firmware: raspberrypi: Introduce vl805 init routine"
+  Revert "PCI: brcmstb: Wait for Raspberry Pi's firmware when present"
+
+ .../arm/bcm/raspberrypi,bcm2835-firmware.yaml |  21 +++
+ arch/arm/boot/dts/bcm2711-rpi-4-b.dts         |  14 ++
+ drivers/firmware/Kconfig                      |   3 +-
+ drivers/firmware/raspberrypi.c                |  61 ---------
+ drivers/pci/controller/pcie-brcmstb.c         |  17 ---
+ drivers/reset/Kconfig                         |  11 ++
+ drivers/reset/Makefile                        |   1 +
+ drivers/reset/reset-raspberrypi.c             | 122 ++++++++++++++++++
+ drivers/usb/host/pci-quirks.c                 |  22 ++--
+ drivers/usb/host/xhci-pci.c                   |  10 ++
+ drivers/usb/host/xhci.h                       |   2 +
+ .../reset/raspberrypi,firmware-reset.h        |  13 ++
+ include/soc/bcm2835/raspberrypi-firmware.h    |   7 -
+ 13 files changed, 207 insertions(+), 97 deletions(-)
+ create mode 100644 drivers/reset/reset-raspberrypi.c
+ create mode 100644 include/dt-bindings/reset/raspberrypi,firmware-reset.h
+
+-- 
+2.26.2
+
