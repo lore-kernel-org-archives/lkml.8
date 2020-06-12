@@ -2,165 +2,107 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DCD8C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 18:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3292C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 18:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D72A207ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 18:28:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A736207ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 18:34:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726365AbgFLS23 (ORCPT
+        id S1726338AbgFLSeZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 14:28:29 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:45497 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726085AbgFLS22 (ORCPT
+        Fri, 12 Jun 2020 14:34:25 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:42843 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726309AbgFLSeV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 14:28:28 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jjoPZ-0006KF-MP; Fri, 12 Jun 2020 18:28:17 +0000
-Date:   Fri, 12 Jun 2020 20:28:16 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Sargun Dhillon <sargun@sargun.me>,
-        Giuseppe Scrivano <gscrivan@redhat.com>,
-        Robert Sesek <rsesek@google.com>,
-        Chris Palmer <palmer@google.com>, Jann Horn <jannh@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "containers@lists.linux-foundation.org" 
-        <containers@lists.linux-foundation.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Matt Denton <mpdenton@google.com>, Tejun Heo <tj@kernel.org>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v3 1/4] fs, net: Standardize on file_receive helper to
- move fds across processes
-Message-ID: <20200612182816.okwylihs6u6wkgxd@wittgenstein>
-References: <202006092227.D2D0E1F8F@keescook>
- <20200610081237.GA23425@ircssh-2.c.rugged-nimbus-611.internal>
- <202006101953.899EFB53@keescook>
- <20200611100114.awdjswsd7fdm2uzr@wittgenstein>
- <20200611110630.GB30103@ircssh-2.c.rugged-nimbus-611.internal>
- <067f494d55c14753a31657f958cb0a6e@AcuMS.aculab.com>
- <202006111634.8237E6A5C6@keescook>
- <94407449bedd4ba58d85446401ff0a42@AcuMS.aculab.com>
- <20200612104629.GA15814@ircssh-2.c.rugged-nimbus-611.internal>
- <202006120806.E770867EF@keescook>
+        Fri, 12 Jun 2020 14:34:21 -0400
+Received: by mail-io1-f72.google.com with SMTP id a16so6703962iow.9
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 11:34:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=GP5kyNnAoMO+Y+j8GajalB1W8y9R1MA095I7NPSnTDs=;
+        b=U5O+7ZK7OVuPzQF3FAZNHEOmWwtfnRPXvDkoyvrGqgOepntaMPfj10sDoP0uAOzME2
+         V5EnhNTvPAd9hPUwscXTAq+2ehuufBue0WKK9yKQBihvNzZS8AEQ1TH3rzjcDGYYGKoY
+         yJRU8bAm9MfvaQbUI64XFDdPNcC688tqieTJRBFl+vTk/rkj3s8qz8xFGkP9RSbCdlpb
+         6ryVIK4YHW5QrSln+48qeLsZA44MhU2iiMlhYV7qmZXjtyZRVzqhRmnxpQSKbEVcSDq8
+         RtJa4/FDdH3iLLKnmtLwUuDOSPomvSGNY+Qkj5LDtd9Lv5li6N1okCNplRtnQBOcVu6U
+         Vczg==
+X-Gm-Message-State: AOAM53109u0J7uSho9EO2Nf4p0YrXAUtAKouL0qSPAY7SruwrAC5BCS9
+        u7ynMpzRzWZR5p5bdDPeeerO98ZBQ3jf67HnAFbIlWshcV9x
+X-Google-Smtp-Source: ABdhPJxkzP1X/Sc4h5xBvzyleoSa7OQigmndmQWmhwM/LOvU0piOR/suDQx5LmuSsPprWS5mCsm1uSWYK6gTZMac3FGouptucEre
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <202006120806.E770867EF@keescook>
+X-Received: by 2002:a05:6638:ce:: with SMTP id w14mr9773000jao.27.1591986857779;
+ Fri, 12 Jun 2020 11:34:17 -0700 (PDT)
+Date:   Fri, 12 Jun 2020 11:34:17 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000025269c05a7e753d0@google.com>
+Subject: net test error: BUG: using smp_processor_id() in preemptible code in ext4_mb_new_blocks
+From:   syzbot <syzbot+38af52cdcc116cee7742@syzkaller.appspotmail.com>
+To:     adilger.kernel@dilger.ca, davem@davemloft.net, kuba@kernel.org,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        tytso@mit.edu
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 08:13:25AM -0700, Kees Cook wrote:
-> On Fri, Jun 12, 2020 at 10:46:30AM +0000, Sargun Dhillon wrote:
-> > My suggest, written out (no idea if this code actually works), is as follows:
-> > 
-> > ioctl.h:
-> > /* This needs to be added */
-> > #define IOCDIR_MASK	(_IOC_DIRMASK << _IOC_DIRSHIFT)
-> 
-> This exists already:
-> 
-> #define _IOC_DIRMASK    ((1 << _IOC_DIRBITS)-1)
-> 
-> > 
-> > 
-> > seccomp.h:
-> > 
-> > struct struct seccomp_notif_addfd {
-> > 	__u64 fd;
-> > 	...
-> > }
-> > 
-> > /* or IOW? */
-> > #define SECCOMP_IOCTL_NOTIF_ADDFD	SECCOMP_IOWR(3, struct seccomp_notif_addfd)
-> > 
-> > seccomp.c:
-> > static long seccomp_notify_addfd(struct seccomp_filter *filter,
-> > 				 struct seccomp_notif_addfd __user *uaddfd int size)
-> > {
-> > 	struct seccomp_notif_addfd addfd;
-> > 	int ret;
-> > 
-> > 	if (size < 32)
-> > 		return -EINVAL;
-> > 	if (size > PAGE_SIZE)
-> > 		return -E2BIG;
-> 
-> (Tanget: what was the reason for copy_struct_from_user() not including
-> the min/max check? I have a memory of Al objecting to having an
-> "internal" limit?)
+Hello,
 
-Al didn't want the PAGE_SIZE limit in there because there's nothing
-inherently wrong with copying insane amounts of memory.
+syzbot found the following crash on:
 
-(Another tangent. I've asked this on Twitter not too long ago: do we
-have stats how long copy_from_user()/copy_struct_from_user() takes with
-growing struct/memory size? I'd be really interested in this. I have a
-feeling that clone3()'s and - having had a chat with David Howells -
-openat2()'s structs will continue to grow for a while... and I'd really
-like to have some numbers on when copy_struct_from_user() becomes
-costly or how costly it becomes.)
+HEAD commit:    18dbd4cd Merge branch 'net-ipa-endpoint-configuration-fixes'
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=13f762ea100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b366fd92adf6f8b4
+dashboard link: https://syzkaller.appspot.com/bug?extid=38af52cdcc116cee7742
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-> 
-> > 
-> > 	ret = copy_struct_from_user(&addfd, sizeof(addfd), uaddfd, size);
-> > 	if (ret)
-> > 		return ret;
-> > 
-> > 	...
-> > }
-> > 
-> > /* Mask out size */
-> > #define SIZE_MASK(cmd)	(~IOCSIZE_MASK & cmd)
-> > 
-> > /* Mask out direction */
-> > #define DIR_MASK(cmd)	(~IOCDIR_MASK & cmd)
-> > 
-> > static long seccomp_notify_ioctl(struct file *file, unsigned int cmd,
-> > 				 unsigned long arg)
-> > {
-> > 	struct seccomp_filter *filter = file->private_data;
-> > 	void __user *buf = (void __user *)arg;
-> > 
-> > 	/* Fixed size ioctls. Can be converted later on? */
-> > 	switch (cmd) {
-> > 	case SECCOMP_IOCTL_NOTIF_RECV:
-> > 		return seccomp_notify_recv(filter, buf);
-> > 	case SECCOMP_IOCTL_NOTIF_SEND:
-> > 		return seccomp_notify_send(filter, buf);
-> > 	case SECCOMP_IOCTL_NOTIF_ID_VALID:
-> > 		return seccomp_notify_id_valid(filter, buf);
-> > 	}
-> > 
-> > 	/* Probably should make some nicer macros here */
-> > 	switch (SIZE_MASK(DIR_MASK(cmd))) {
-> > 	case SIZE_MASK(DIR_MASK(SECCOMP_IOCTL_NOTIF_ADDFD)):
-> 
-> Ah yeah, I like this because of what you mention below: it's forward
-> compat too. (I'd just use the ioctl masks directly...)
-> 
-> 	switch (cmd & ~(_IOC_SIZEMASK | _IOC_DIRMASK))
-> 
-> > 		return seccomp_notify_addfd(filter, buf, _IOC_SIZE(cmd));
-> 
-> I really like that this ends up having the same construction as a
-> standard EA syscall: the size is part of the syscall arguments.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+38af52cdcc116cee7742@syzkaller.appspotmail.com
 
-This is basically what I had proposed in my previous mail, right?
+BUG: using smp_processor_id() in preemptible [00000000] code: systemd-rfkill/6838
+caller is ext4_mb_new_blocks+0xa77/0x3b30 fs/ext4/mballoc.c:4711
+CPU: 1 PID: 6838 Comm: systemd-rfkill Not tainted 5.7.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ check_preemption_disabled lib/smp_processor_id.c:47 [inline]
+ debug_smp_processor_id.cold+0x88/0x9b lib/smp_processor_id.c:57
+ ext4_mb_new_blocks+0xa77/0x3b30 fs/ext4/mballoc.c:4711
+ ext4_ext_map_blocks+0x2044/0x3410 fs/ext4/extents.c:4244
+ ext4_map_blocks+0x4cb/0x1640 fs/ext4/inode.c:626
+ ext4_getblk+0xad/0x520 fs/ext4/inode.c:833
+ ext4_bread+0x7c/0x380 fs/ext4/inode.c:883
+ ext4_append+0x153/0x360 fs/ext4/namei.c:67
+ ext4_init_new_dir fs/ext4/namei.c:2757 [inline]
+ ext4_mkdir+0x5e0/0xdf0 fs/ext4/namei.c:2802
+ vfs_mkdir+0x419/0x690 fs/namei.c:3627
+ do_mkdirat+0x21e/0x280 fs/namei.c:3650
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x7fa2f1d24687
+Code: 00 b8 ff ff ff ff c3 0f 1f 40 00 48 8b 05 09 d8 2b 00 64 c7 00 5f 00 00 00 b8 ff ff ff ff c3 0f 1f 40 00 b8 53 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d e1 d7 2b 00 f7 d8 64 89 01 48
+RSP: 002b:00007fffeaa243a8 EFLAGS: 00000246 ORIG_RAX: 0000000000000053
+RAX: ffffffffffffffda RBX: 00005638ed5e0985 RCX: 00007fa2f1d24687
+RDX: 00007fffeaa24270 RSI: 00000000000001ed RDI: 00005638ed5e0985
+RBP: 00007fa2f1d24680 R08: 0000000000000100 R09: 0000000000000000
+R10: 00005638ed5e0980 R11: 0000000000000246 R12: 00000000000001ed
+R13: 00007fffeaa24530 R14: 0000000000000000 R15: 0000000000000000
 
-Christian
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
