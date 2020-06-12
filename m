@@ -2,80 +2,90 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 701CDC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D30E7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 490062068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:29:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4A652068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:29:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591954188;
+	bh=zVyHpyDtFCiXB5xPJc1k5wAK9p1eJ1A1sj8x1rolMaU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bPVeGHkXxvMJu0gm+kGg4rCFSnL/+y2jg19YiuW7T8d5XqZBtjsq6fHIZwrB7cWAD
+	 ISHyEXLNIhc4CdPtotsXI32VQxQW9gJkGmc8s4oCyk1n8Y/l/+18VeCRPjpncziBXO
+	 PAcJk0VTqUpA9u7/LC65nUT0JWbaubqE1EIuIdz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726543AbgFLJ24 (ORCPT
+        id S1726547AbgFLJ3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 05:28:56 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:59153 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726361AbgFLJ2x (ORCPT
+        Fri, 12 Jun 2020 05:29:46 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:36352 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726302AbgFLJ3q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 05:28:53 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R771e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0U.LjMey_1591954130;
-Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U.LjMey_1591954130)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 12 Jun 2020 17:28:51 +0800
-From:   Wei Yang <richard.weiyang@linux.alibaba.com>
-To:     rostedt@goodmis.org, mingo@redhat.com
-Cc:     linux-kernel@vger.kernel.org,
-        Wei Yang <richard.weiyang@linux.alibaba.com>
-Subject: [PATCH 1/4] tracing: not necessary to undefine DEFINE_EVENT again
-Date:   Fri, 12 Jun 2020 17:28:41 +0800
-Message-Id: <20200612092844.56107-2-richard.weiyang@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
-In-Reply-To: <20200612092844.56107-1-richard.weiyang@linux.alibaba.com>
-References: <20200612092844.56107-1-richard.weiyang@linux.alibaba.com>
+        Fri, 12 Jun 2020 05:29:46 -0400
+Received: by mail-ed1-f66.google.com with SMTP id y6so670641edi.3;
+        Fri, 12 Jun 2020 02:29:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ULB+5Eic/UpB9LwZ16CsVWwd9UTnUABnWsy4r1SRht8=;
+        b=RKAwMtOxB0WjJ3L2xBrc3uN/J23ab0/1qgcz82buo9JUdv9wSuTHUxGcZNbXZdZ4sf
+         VW6YDHPHk0w8RH4qzVLhGO6LJ9/eoZBYc5rLFsNAYZXOAGWp4xxF1VUk6vneyzR7gIei
+         DQ6gwJ3cJ2DaMreO1hs1b+tlM35PRORyFgVdWh3piZk8bbNbkI059y9qzx9brxATRzKt
+         y/4xp/W2mFIV6GN8Oq8aijnOQcTfmD/uccMDfJRDC9pkbcUxQsyiuMUSd38r53srF2+3
+         TGlI18ejytPh6mBP55UYSZTxo1zIx7gR5fEKy88VTDFZNZqx8hjs3MgtmCQDlxZoBCjI
+         A+IA==
+X-Gm-Message-State: AOAM532vkP3O/WJlDcU9bVU4zeQx9mHj/4a+87iWbl42Le10AFL0OegD
+        TJA8PXPJnGug4kEUTgSR4yc=
+X-Google-Smtp-Source: ABdhPJwMP+GFoBzoOi50JTnAJ2Za87KnSv0JbQ7xeD1nBi+czQydI34qF9r34jzHKwJE5BzeOwXU6w==
+X-Received: by 2002:a50:b065:: with SMTP id i92mr11435029edd.112.1591954183850;
+        Fri, 12 Jun 2020 02:29:43 -0700 (PDT)
+Received: from pi3 ([194.230.155.184])
+        by smtp.googlemail.com with ESMTPSA id l16sm3335817ejx.19.2020.06.12.02.29.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2020 02:29:43 -0700 (PDT)
+Date:   Fri, 12 Jun 2020 11:29:41 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Wolfram Sang <wsa@kernel.org>
+Cc:     Oleksij Rempel <linux@rempel-privat.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Gao Pan <b54642@freescale.com>,
+        Fugang Duan <B38611@freescale.com>, linux-i2c@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] i2c: imx: Fix external abort on early interrupt
+Message-ID: <20200612092941.GA25990@pi3>
+References: <1591796802-23504-1-git-send-email-krzk@kernel.org>
+ <20200612090517.GA3030@ninjato>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200612090517.GA3030@ninjato>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After un-define DEFINE_EVENT in Stage 2, DEFINE_EVENT is not defined to a
-specific form. It is not necessary to un-define it again.
+On Fri, Jun 12, 2020 at 11:05:17AM +0200, Wolfram Sang wrote:
+> On Wed, Jun 10, 2020 at 03:46:42PM +0200, Krzysztof Kozlowski wrote:
+> > If interrupt comes early (could be triggered with CONFIG_DEBUG_SHIRQ),
+> 
+> That code is disabled since 2011 (6d83f94db95c ("genirq: Disable the
+> SHIRQ_DEBUG call in request_threaded_irq for now"))? So, you had this
+> without fake injection, I assume?
 
-Let's skip this.
+No, I observed it only after enabling DEBUG_SHIRQ (to a kernel with
+some debugging options already).
 
-Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
----
- include/trace/trace_events.h | 6 ------
- 1 file changed, 6 deletions(-)
-
-diff --git a/include/trace/trace_events.h b/include/trace/trace_events.h
-index 502c7be50b8d..a4994761bdaf 100644
---- a/include/trace/trace_events.h
-+++ b/include/trace/trace_events.h
-@@ -443,9 +443,6 @@ static struct trace_event_fields trace_event_fields_##call[] = {	\
- 	tstruct								\
- 	{} };
- 
--#undef DEFINE_EVENT
--#define DEFINE_EVENT(template, name, proto, args)
--
- #undef DEFINE_EVENT_PRINT
- #define DEFINE_EVENT_PRINT(template, name, proto, args, print)	\
- 	DEFINE_EVENT(template, name, PARAMS(proto), PARAMS(args))
-@@ -523,9 +520,6 @@ static inline notrace int trace_event_get_offsets_##call(		\
- 	return __data_size;						\
- }
- 
--#undef DEFINE_EVENT
--#define DEFINE_EVENT(template, name, proto, args)
--
- #undef DEFINE_EVENT_PRINT
- #define DEFINE_EVENT_PRINT(template, name, proto, args, print)	\
- 	DEFINE_EVENT(template, name, PARAMS(proto), PARAMS(args))
--- 
-2.20.1 (Apple Git-117)
+Best regards,
+Krzysztof
 
