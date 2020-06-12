@@ -2,244 +2,172 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A38E1C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 06:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 555DFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 06:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76091207F7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 06:15:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24E1C207F7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 06:16:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kJRJpvGZ"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="K+sn4gF6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbgFLGPw (ORCPT
+        id S1726647AbgFLGQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 02:15:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36214 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbgFLGPp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 02:15:45 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22F3EC08C5D1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 23:15:45 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id x22so3829010pfn.3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 23:15:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=BuPxU1w4R8fuyQ7XkJBUmlYClVjKYfq0qGJvqOdH0h0=;
-        b=kJRJpvGZfLo53CUfeFMYkgP1wplG/YYpNlZrRAgxdLbemNNLUbOKP8sgd/PjRLt0F6
-         9YzpQ8MehL+syNCcbP+foHZNvVkB8Bfwu9DGVCRJiqd054YHxyIo774sNgYs2FwkRujy
-         IsLNAZMrpejFPHTia2a3Hqt98z1zGccR58ZXc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=BuPxU1w4R8fuyQ7XkJBUmlYClVjKYfq0qGJvqOdH0h0=;
-        b=h6vV+wpD8fFQdgRP4P4Kwk8iHM6SdAhXXfyYS6tmnu4uXedt81SDMpiKsBH7ET5keU
-         ZGn41/6Sa/msoxTNyv2g8BiOHK+NDzt/3WJN6keQ2yHUuJh/9VT+7vH1EGDR8hmnX5vw
-         YKQfpxmwNcuHmZyRNKe/ScYa9AmFyy6HsLqBoLKD0SLXNuEnMzy8IAvqIBPm9kSnnbSh
-         MO7rAvoad1rZDJqNz6DtFCGCt8Nr6RpZsrgGrqKLMMNGIb8Gl4yYrzgbS+U+u+/2BVy0
-         ZgLIvvtBhY8kvczapSCu7DRZh0l212EDjBKx2Z2sKdqmN3ScNDjT/MjFTY51EI1rGMdE
-         zXjA==
-X-Gm-Message-State: AOAM531HfmU46rLOIkpQ8n+yLA5ouuHpqddfqvNlMGpBMPt89xlawHSU
-        JQIxnlrrqv2uX9SMY7vMvAvJaw==
-X-Google-Smtp-Source: ABdhPJyOmnMyhQdTpr0mZuif9h0pEz0x/XmoJmJJGvm+y6VSIurQJYCQpghAzVofZlHFRCUFRKYcIA==
-X-Received: by 2002:a63:ee0c:: with SMTP id e12mr3605188pgi.83.1591942544612;
-        Thu, 11 Jun 2020 23:15:44 -0700 (PDT)
-Received: from mcchou0.mtv.corp.google.com ([2620:15c:202:201:b46:ac84:1014:9555])
-        by smtp.gmail.com with ESMTPSA id g6sm4933923pfb.164.2020.06.11.23.15.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Jun 2020 23:15:44 -0700 (PDT)
-From:   Miao-chen Chou <mcchou@chromium.org>
-To:     Bluetooth Kernel Mailing List <linux-bluetooth@vger.kernel.org>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
-        Alain Michaud <alainm@chromium.org>,
-        Michael Sun <michaelfsun@google.com>,
-        Yoni Shavit <yshavit@chromium.org>,
-        Miao-chen Chou <mcchou@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH v3 7/7] Bluetooth: Update background scan and report device based on advertisement monitors
-Date:   Thu, 11 Jun 2020 23:15:29 -0700
-Message-Id: <20200611231459.v3.7.Id9ca021d5a3e8c748ea5c0a1c81582b9a8183f45@changeid>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200611231459.v3.1.I636f906bf8122855dfd2ba636352bbdcb50c35ed@changeid>
-References: <20200611231459.v3.1.I636f906bf8122855dfd2ba636352bbdcb50c35ed@changeid>
+        Fri, 12 Jun 2020 02:16:07 -0400
+Received: from mga06.intel.com ([134.134.136.31]:12539 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726385AbgFLGQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 02:16:02 -0400
+IronPort-SDR: cY/UCXhvWARYpXZbw+vpwu0y2GU6BFbZMxqMuMfe/VJi2VIz7T4tMOP5i/RdL5qEiIzexe7dfX
+ jyTtzgf+JeLw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 23:16:02 -0700
+IronPort-SDR: 3luFmiIe3X4V+MPkUKGxO4cWOxonjOAxi31TJhfyS0YDh5FUIEhuG8UFJJfT3OEe8NPupkgGvW
+ kmrNwMsAI16A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,502,1583222400"; 
+   d="scan'208";a="260748083"
+Received: from orsmsx107.amr.corp.intel.com ([10.22.240.5])
+  by orsmga007.jf.intel.com with ESMTP; 11 Jun 2020 23:16:02 -0700
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX107.amr.corp.intel.com (10.22.240.5) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 11 Jun 2020 23:16:01 -0700
+Received: from orsmsx608.amr.corp.intel.com (10.22.229.21) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 11 Jun 2020 23:16:01 -0700
+Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
+ orsmsx608.amr.corp.intel.com (10.22.229.21) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 11 Jun 2020 23:16:01 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.177)
+ by edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 11 Jun 2020 23:16:01 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Lxakwbe/TeLU3OYKIyB6JQSuGTgvamJlTe8Zp7iSOMyaFT9GVtCbG0cLHlBF1TBGSGvElWJxEnvLaItaaUUD45BrSuth2gK81rJKFA0hWcrUDFYBqkGbdyanpfAOuva10gcniyVN8tkAb8BIfqJVk800kGbVU713dhXg0SJmmq5THaEFpS8DPupExvEVnNPzDGDzdwIbVvcZqzcUCEJSpNc+XiCqvFs13HRnHGNL6szScK4J60pqiwFo5IZRMsLgD0WEwh2zzLF7ILiyYIoiJTGF5D23rVH10kJZWaWj8aB1Ayx7IWqYTY5WJdmB5w2Ifx/vxhNSs5PFt2n6dKC2HQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=j0lBjlmXZcLKUJMtdzVWCqpg+RGiOlHN380p4TNOyUA=;
+ b=PhuDrHpJdhAtDFgV/R9rivzTNQChN7T9w3MaYTZ7BR6WzARpgMHuuNDIxSNXFVWDa96A4LMQ2cw9N38hNpQ2a+FJG1uKHC/7lN9inUDGz2O1ckdLdy7rdCCQ+uDl5dQ9gPCJDi4aw2W4pgCoQ9w/OQS+OnQQwzrvavfJVO0Pn06V3JhvDYK2FytaYz1QDoGPDq/+ZIcrz1xmM7FiF5jZqbH+brk6t05LE9cxeaeo8R++y1GZ+PEgHg/E5FshIPGONDIU7rX0SU5l4hhqB7lLBS+LbqgdEcZnRFw+n/uPXGZHo3h5n0rdrkXVr/VZfmvzkfl8i0Vw/yJ2EV7uHEpvCQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=j0lBjlmXZcLKUJMtdzVWCqpg+RGiOlHN380p4TNOyUA=;
+ b=K+sn4gF66v0F8QBPbds8eVJY+hSXuyKIReivdK0131+INhh08R5Myv5TlwB1oYx4KnbixRDKAJXEdiXdNt1G+LTfm/dDMxZ0pyWTK5JeofaQ2rogVasyUWE9C80+6XYqPPe82O/HpArig7cLWoJl9tMQcVa0bRZ9gUs1NHn26HE=
+Received: from DM6PR11MB4316.namprd11.prod.outlook.com (2603:10b6:5:205::16)
+ by DM6PR11MB2586.namprd11.prod.outlook.com (2603:10b6:5:c0::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.21; Fri, 12 Jun
+ 2020 06:15:59 +0000
+Received: from DM6PR11MB4316.namprd11.prod.outlook.com
+ ([fe80::b4fa:727e:34a9:b1a4]) by DM6PR11MB4316.namprd11.prod.outlook.com
+ ([fe80::b4fa:727e:34a9:b1a4%5]) with mapi id 15.20.3066.023; Fri, 12 Jun 2020
+ 06:15:58 +0000
+From:   "Lu, Brent" <brent.lu@intel.com>
+To:     Takashi Iwai <tiwai@suse.de>
+CC:     Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "Pierre-Louis Bossart DRIVERS" <pierre-louis.bossart@linux.intel.com>,
+        "authored:2/16=12%,added_lines:21/248=8%,removed_lines:5/84=6%,),Liam
+        Girdwood DRIVERS )" <lgirdwood@gmail.com>,
+        "commit_signer:6/16=38%,authored:6/16=38%,added_lines:123/248=50% 
+        ,removed_lines:36/84=43%,Kai Vehmanen DRIVERS )" 
+        <kai.vehmanen@linux.intel.com>,
+        "Daniel Baluta DRIVERS )" <daniel.baluta@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
+        Zhu Yingjiang <yingjiang.zhu@linux.intel.com>,
+        Keyon Jie <yang.jie@linux.intel.com>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        "sound-open-firmware@alsa-project.orgDRIVERS" 
+        <sound-open-firmware@alsa-project.orgDRIVERS>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] ASoC: SOF: Intel: hda: unsolicited RIRB response
+Thread-Topic: [PATCH] ASoC: SOF: Intel: hda: unsolicited RIRB response
+Thread-Index: AQHWP/c4ukUWDBOd20aRgUpUZ24R5KjTeMYAgAAAtZCAADqtAIAAy8xA
+Date:   Fri, 12 Jun 2020 06:15:58 +0000
+Message-ID: <DM6PR11MB4316E9E9E965C123E797210E97810@DM6PR11MB4316.namprd11.prod.outlook.com>
+References: <1591883073-17190-1-git-send-email-brent.lu@intel.com>
+        <b7e0b822a9deea506acaa40e0e31cc9f488bb446.camel@linux.intel.com>
+        <DM6PR11MB4316108BCF449D52E49C7E4297800@DM6PR11MB4316.namprd11.prod.outlook.com>
+ <s5h5zbxeb5t.wl-tiwai@suse.de>
+In-Reply-To: <s5h5zbxeb5t.wl-tiwai@suse.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.2.0.6
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+authentication-results: suse.de; dkim=none (message not signed)
+ header.d=none;suse.de; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [36.230.210.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c1b523e8-dbd1-4dec-2321-08d80e981303
+x-ms-traffictypediagnostic: DM6PR11MB2586:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR11MB25867FB39D97212621641B6497810@DM6PR11MB2586.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1468;
+x-forefront-prvs: 0432A04947
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: PAf4Yh/vjzDrq/iu/oL2K7A00X6x0WlX5DnF9EXTsOJcmR+DF06xGHtAr0mCJITrcU80TDCJd0JvA/e3y2qt1NXzS2L4Rzb7NU5OYkxXcbreTF9seUPnQ1JF91+f8+X8nII/jECbsFn2B9attRmViFTZCdHAkqK6bTIvVvZC5E/8+83pjQw8BBuspXELGFXmaAWMz5ENiBGIdoz2kwigZelxIKr6GFfqPH99j0FJtQCnor48QxkNxSVVIFufsCSOQTvVBSBqL2SuYqWDZqgPCVEjd+xoUQ9zJAwILXCwzRe8Qg+9CEuDDrqV3byUZufrebCPNXFCKGKEUUPytGz4tA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB4316.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(136003)(396003)(376002)(346002)(39860400002)(4744005)(6916009)(52536014)(54906003)(55016002)(8936002)(33656002)(316002)(7696005)(71200400001)(66476007)(6506007)(2906002)(66946007)(8676002)(66446008)(9686003)(83380400001)(4326008)(66556008)(86362001)(76116006)(7416002)(26005)(186003)(5660300002)(478600001)(64756008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: 9iB0tpFYuLHsQeSZb1lvIolMvFQ/oDDhhd4u1OOhV6Iq3Ahh1qFlbBZmH3KdwOJOQdVe+eylxDVOkV6qAucgu3Qcgo+4FLK8q+6X4dCVwduNh1EuztBft4hJB2pbF/g+R/01Tv2nYNUHa099xk/qMegJr+HgzXhZltSVjPjz0YuYCEeDfHAtCS7It/wv430jgdxb7i7GRLJZrMuvUQ9nOd2RMH9UO540fTxkXz5QvSXbrTVtb+EX1wlIaUlFykegBCza7n9MRU3lm6YJuPoLsCpxY7xdb0GVWJ7qTYXZGgJPir2Cf9ifsG4O2bgQz6gG10PjRvB8hUmoDLmxR7e7fgasxmyLR1mT0ms3tlxRSJFvow5NaTMilxur7LmCwSPqOayBenGHmWDWBAp9pjnupLIegGrJiVHkTqzSHgrRVRD8DihkeqaXZJnL7zAXArukrmrwlfwcc0SltCsrG2LtqN9tcNgZr4v80dCroNTi7ngI5VZ+TcD4mnL01dDLzt3e
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: c1b523e8-dbd1-4dec-2321-08d80e981303
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2020 06:15:58.6897
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xkU+IJO8TfQWZX9ecXcEcat/HsQNAhsxcrRcxeagEcCzTLCas5G4rnynMQry0NoOx2Aj9WA/usqBZ5oBTPnBkQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB2586
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This calls hci_update_background_scan() when there is any update on the
-advertisement monitors. If there is at least one advertisement monitor,
-the filtering policy of scan parameters should be 0x00. This also reports
-device found mgmt events if there is at least one monitor.
+>=20
+> Now I noticed that the legacy driver already addressed it recently via co=
+mmit
+> 6d011d5057ff
+>     ALSA: hda: Clear RIRB status before reading WP
+>=20
+> We should have checked SOF at the same time, too...
+>=20
+>=20
+> thanks,
+>=20
+> Takashi
 
-The following cases were tested with btmgmt advmon-* commands.
-(1) add a ADV monitor and observe that the passive scanning is
-triggered.
-(2) remove the last ADV monitor and observe that the passive scanning is
-terminated.
-(3) with a LE peripheral paired, repeat (1) and observe the passive
-scanning continues.
-(4) with a LE peripheral paired, repeat (2) and observe the passive
-scanning continues.
-(5) with a ADV monitor, suspend/resume the host and observe the passive
-scanning continues.
+Hi Takashi-san,
 
-Signed-off-by: Miao-chen Chou <mcchou@chromium.org>
----
+Yes you are correct. I tested Chrome v5.4 on a CML Chromebook 'hatch' and
+realize the SOF does no suffer from this issue because the 'sync write' fea=
+ture
+is enabled in hda_init. Soon I can reproduce the issue after turning it off=
+. So I
+think it's still worthy to have this fix in case we need to disable 'sync w=
+rite'
+someday.
 
-Changes in v3: None
-Changes in v2: None
 
- include/net/bluetooth/hci_core.h |  1 +
- net/bluetooth/hci_core.c         | 13 +++++++++++++
- net/bluetooth/hci_event.c        |  5 +++--
- net/bluetooth/hci_request.c      | 17 ++++++++++++++---
- net/bluetooth/mgmt.c             |  5 ++++-
- 5 files changed, 35 insertions(+), 6 deletions(-)
-
-diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
-index 78ac7fd282d77..1ce89e546a64e 100644
---- a/include/net/bluetooth/hci_core.h
-+++ b/include/net/bluetooth/hci_core.h
-@@ -1243,6 +1243,7 @@ void hci_adv_monitors_clear(struct hci_dev *hdev);
- void hci_free_adv_monitor(struct adv_monitor *monitor);
- int hci_add_adv_monitor(struct hci_dev *hdev, struct adv_monitor *monitor);
- int hci_remove_adv_monitor(struct hci_dev *hdev, u16 handle);
-+bool hci_is_adv_monitoring(struct hci_dev *hdev);
- 
- void hci_event_packet(struct hci_dev *hdev, struct sk_buff *skb);
- 
-diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-index d0f30e2e29471..2d318916e9ebc 100644
---- a/net/bluetooth/hci_core.c
-+++ b/net/bluetooth/hci_core.c
-@@ -3005,6 +3005,8 @@ void hci_adv_monitors_clear(struct hci_dev *hdev)
- 		hci_free_adv_monitor(monitor);
- 
- 	idr_destroy(&hdev->adv_monitors_idr);
-+
-+	hci_update_background_scan(hdev);
- }
- 
- void hci_free_adv_monitor(struct adv_monitor *monitor)
-@@ -3038,6 +3040,9 @@ int hci_add_adv_monitor(struct hci_dev *hdev, struct adv_monitor *monitor)
- 
- 	hdev->adv_monitors_cnt++;
- 	monitor->handle = handle;
-+
-+	hci_update_background_scan(hdev);
-+
- 	return 0;
- }
- 
-@@ -3069,9 +3074,17 @@ int hci_remove_adv_monitor(struct hci_dev *hdev, u16 handle)
- 		idr_for_each(&hdev->adv_monitors_idr, &free_adv_monitor, hdev);
- 	}
- 
-+	hci_update_background_scan(hdev);
-+
- 	return 0;
- }
- 
-+/* This function requires the caller holds hdev->lock */
-+bool hci_is_adv_monitoring(struct hci_dev *hdev)
-+{
-+	return !idr_is_empty(&hdev->adv_monitors_idr);
-+}
-+
- struct bdaddr_list *hci_bdaddr_list_lookup(struct list_head *bdaddr_list,
- 					 bdaddr_t *bdaddr, u8 type)
- {
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index cfeaee347db32..cbcc0b590fd41 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -5447,14 +5447,15 @@ static void process_adv_report(struct hci_dev *hdev, u8 type, bdaddr_t *bdaddr,
- 
- 	/* Passive scanning shouldn't trigger any device found events,
- 	 * except for devices marked as CONN_REPORT for which we do send
--	 * device found events.
-+	 * device found events, or advertisement monitoring requested.
- 	 */
- 	if (hdev->le_scan_type == LE_SCAN_PASSIVE) {
- 		if (type == LE_ADV_DIRECT_IND)
- 			return;
- 
- 		if (!hci_pend_le_action_lookup(&hdev->pend_le_reports,
--					       bdaddr, bdaddr_type))
-+					       bdaddr, bdaddr_type) &&
-+		    idr_is_empty(&hdev->adv_monitors_idr))
- 			return;
- 
- 		if (type == LE_ADV_NONCONN_IND || type == LE_ADV_SCAN_IND)
-diff --git a/net/bluetooth/hci_request.c b/net/bluetooth/hci_request.c
-index 1acf5b8e0910c..d465dbbb1963c 100644
---- a/net/bluetooth/hci_request.c
-+++ b/net/bluetooth/hci_request.c
-@@ -418,11 +418,15 @@ static void __hci_update_background_scan(struct hci_request *req)
- 	 */
- 	hci_discovery_filter_clear(hdev);
- 
-+	BT_DBG("%s ADV monitoring is %s", hdev->name,
-+	       hci_is_adv_monitoring(hdev) ? "on" : "off");
-+
- 	if (list_empty(&hdev->pend_le_conns) &&
--	    list_empty(&hdev->pend_le_reports)) {
-+	    list_empty(&hdev->pend_le_reports) &&
-+	    !hci_is_adv_monitoring(hdev)) {
- 		/* If there is no pending LE connections or devices
--		 * to be scanned for, we should stop the background
--		 * scanning.
-+		 * to be scanned for or no ADV monitors, we should stop the
-+		 * background scanning.
- 		 */
- 
- 		/* If controller is not scanning we are done. */
-@@ -798,6 +802,13 @@ static u8 update_white_list(struct hci_request *req)
- 			return 0x00;
- 	}
- 
-+	/* Once the controller offloading of advertisement monitor is in place,
-+	 * the if condition should include the support of MSFT extension
-+	 * support.
-+	 */
-+	if (!idr_is_empty(&hdev->adv_monitors_idr))
-+		return 0x00;
-+
- 	/* Select filter policy to use white list */
- 	return 0x01;
- }
-diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
-index 03cd0efd987ae..d4460ded2f4c5 100644
---- a/net/bluetooth/mgmt.c
-+++ b/net/bluetooth/mgmt.c
-@@ -8435,8 +8435,11 @@ void mgmt_device_found(struct hci_dev *hdev, bdaddr_t *bdaddr, u8 link_type,
- 	if (!hci_discovery_active(hdev)) {
- 		if (link_type == ACL_LINK)
- 			return;
--		if (link_type == LE_LINK && list_empty(&hdev->pend_le_reports))
-+		if (link_type == LE_LINK &&
-+		    list_empty(&hdev->pend_le_reports) &&
-+		    !hci_is_adv_monitoring(hdev)) {
- 			return;
-+		}
- 	}
- 
- 	if (hdev->discovery.result_filtering) {
--- 
-2.26.2
+Regards,
+Brent
 
