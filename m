@@ -2,198 +2,181 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87032C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D289C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DB242067B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01D0E20801
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:06:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TWFYJhy9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbgFLQF1 (ORCPT
+        id S1726340AbgFLQGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 12:05:27 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:36564 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbgFLQF0 (ORCPT
+        Fri, 12 Jun 2020 12:06:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42622 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbgFLQGF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 12:05:26 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 7E5FC2A56A5
-Received: by earth.universe (Postfix, from userid 1000)
-        id C11383C08C7; Fri, 12 Jun 2020 18:05:21 +0200 (CEST)
-Date:   Fri, 12 Jun 2020 18:05:21 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com
-Subject: Re: [PATCHv3 1/5] dt-bindings: touchscreen: Convert EETI EXC3000
- touchscreen to json-schema
-Message-ID: <20200612160521.gneedgeu4x4ml27c@earth.universe>
-References: <20200520153936.46869-1-sebastian.reichel@collabora.com>
- <20200520153936.46869-2-sebastian.reichel@collabora.com>
+        Fri, 12 Jun 2020 12:06:05 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CACEC03E96F
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 09:06:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=N1uaLpyQMdwVjun7pUEBDc50plR3DjmpgwYvI+V9ogo=; b=TWFYJhy9OxMpaFG1lwTqeVGxib
+        75Y2VwSLQUxKx92r9Vh0nNiA/53AXfMu//G9WrL7mjR13Pc5GK3U4LkD9U2HJEWQ6SvlbYX44WJHl
+        dmdIg/4IqctMS6qbRJ1Fv1UD0gVskFs30vZUBiSmR8FP6C+V7dRrkpuVgqY+VbReBHNsM4rAp/QwQ
+        AqkHMqpDxYB/9fV4BSFv+W7o0E9WQGfQIQ1Hbd1WQHVqtRvw5YQTFZkbhcj3s9Pw2aJasM3rzi8Hn
+        MjQR5x6pNBCMz4q49yPdAvPR2EMuWuU16XkKnykpSA5W2d2yVwKfB1NAfB4Fq0Y2e8Lp2p+cAlKV/
+        BVk+6cSw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jjmBV-00075H-QS; Fri, 12 Jun 2020 16:05:38 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 79106301AC6;
+        Fri, 12 Jun 2020 18:05:34 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 322E32146F532; Fri, 12 Jun 2020 18:05:34 +0200 (CEST)
+Date:   Fri, 12 Jun 2020 18:05:34 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Matt Helsley <mhelsley@vmware.com>
+Cc:     linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Julien Thierry <jthierry@redhat.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Subject: Re: [RFC][PATCH v4 18/32] objtool: mcount: Move nop_mcount()
+Message-ID: <20200612160534.GD2554@hirez.programming.kicks-ass.net>
+References: <cover.1591125127.git.mhelsley@vmware.com>
+ <7109ceb239a88c2901eeb7f52c29f69cdb413cd3.1591125127.git.mhelsley@vmware.com>
+ <20200612132656.GQ2531@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xnevn6eizwjclo62"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200520153936.46869-2-sebastian.reichel@collabora.com>
+In-Reply-To: <20200612132656.GQ2531@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 12, 2020 at 03:26:57PM +0200, Peter Zijlstra wrote:
+> On Tue, Jun 02, 2020 at 12:50:11PM -0700, Matt Helsley wrote:
+> > +static int nop_mcount(struct section * const rels,
+> > +		      const char *const txtname)
+> > +{
+> > +	struct reloc *reloc;
+> > +	struct section *txts = find_section_by_index(lf, rels->sh.sh_info);
+> > +	unsigned mcountsym = 0;
+> > +	int once = 0;
+> > +
+> > +	list_for_each_entry(reloc, &rels->reloc_list, list) {
+> > +		int ret = -1;
+> > +
+> > +		if (!mcountsym)
+> > +			mcountsym = get_mcountsym(reloc);
+> > +
+> > +		if (mcountsym == GELF_R_INFO(reloc->sym->idx, reloc->type) && !is_fake_mcount(reloc)) {
+> 
+> This makes no sense to me; why not have mcountsym be a 'struct symbol
+> *' and have get_mcountsym() return one of those.
+> 
+> 	if (reloc->sym == mcountsym && ... )
+> 
+> is much nicer, no?
 
---xnevn6eizwjclo62
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On top of that, I suppose we can do something like the below.
 
-Hi Rob,
+Then you can simply write:
 
-I justed noticed, that I forgot to have you in To/Cc. Can you please
-have a look at the patch? The full thread is available via Lore,
-please tell me if you need a resend.
+	if (reloc->sym->class == SYM_MCOUNT && ..)
 
-https://lore.kernel.org/linux-input/20200520153936.46869-1-sebastian.reiche=
-l@collabora.com/
+---
 
-Sorry for the inconvenience,
-
--- Sebastian
-
-On Wed, May 20, 2020 at 05:39:32PM +0200, Sebastian Reichel wrote:
-> Convert the EETI EXC3000 binding to DT schema format using json-schema
->=20
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
->  .../input/touchscreen/eeti,exc3000.yaml       | 53 +++++++++++++++++++
->  .../bindings/input/touchscreen/exc3000.txt    | 26 ---------
->  2 files changed, 53 insertions(+), 26 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/e=
-eti,exc3000.yaml
->  delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/e=
-xc3000.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/eeti,exc=
-3000.yaml b/Documentation/devicetree/bindings/input/touchscreen/eeti,exc300=
-0.yaml
-> new file mode 100644
-> index 000000000000..022aa69a5dfe
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/eeti,exc3000.ya=
-ml
-> @@ -0,0 +1,53 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/input/touchscreen/eeti,exc3000.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: EETI EXC3000 series touchscreen controller
-> +
-> +maintainers:
-> +  - Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> +
-> +allOf:
-> +  - $ref: touchscreen.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: eeti,exc3000
-> +  reg:
-> +    const: 0x2a
-> +  interrupts:
-> +    maxItems: 1
-> +  touchscreen-size-x: true
-> +  touchscreen-size-y: true
-> +  touchscreen-inverted-x: true
-> +  touchscreen-inverted-y: true
-> +  touchscreen-swapped-x-y: true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - touchscreen-size-x
-> +  - touchscreen-size-y
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include "dt-bindings/interrupt-controller/irq.h"
-> +    i2c {
-> +        #address-cells =3D <1>;
-> +        #size-cells =3D <0>;
-> +        touchscreen@2a {
-> +                compatible =3D "eeti,exc3000";
-> +                reg =3D <0x2a>;
-> +                interrupt-parent =3D <&gpio1>;
-> +                interrupts =3D <9 IRQ_TYPE_LEVEL_LOW>;
-> +                touchscreen-size-x =3D <4096>;
-> +                touchscreen-size-y =3D <4096>;
-> +                touchscreen-inverted-x;
-> +                touchscreen-swapped-x-y;
-> +        };
-> +    };
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/exc3000.=
-txt b/Documentation/devicetree/bindings/input/touchscreen/exc3000.txt
-> deleted file mode 100644
-> index 68291b94fec2..000000000000
-> --- a/Documentation/devicetree/bindings/input/touchscreen/exc3000.txt
-> +++ /dev/null
-> @@ -1,26 +0,0 @@
-> -* EETI EXC3000 Multiple Touch Controller
-> -
-> -Required properties:
-> -- compatible: must be "eeti,exc3000"
-> -- reg: i2c slave address
-> -- interrupts: touch controller interrupt
-> -- touchscreen-size-x: See touchscreen.txt
-> -- touchscreen-size-y: See touchscreen.txt
-> -
-> -Optional properties:
-> -- touchscreen-inverted-x: See touchscreen.txt
-> -- touchscreen-inverted-y: See touchscreen.txt
-> -- touchscreen-swapped-x-y: See touchscreen.txt
-> -
-> -Example:
-> -
-> -	touchscreen@2a {
-> -		compatible =3D "eeti,exc3000";
-> -		reg =3D <0x2a>;
-> -		interrupt-parent =3D <&gpio1>;
-> -		interrupts =3D <9 IRQ_TYPE_LEVEL_LOW>;
-> -		touchscreen-size-x =3D <4096>;
-> -		touchscreen-size-y =3D <4096>;
-> -		touchscreen-inverted-x;
-> -		touchscreen-swapped-x-y;
-> -	};
-> --=20
-> 2.26.2
->=20
-
---xnevn6eizwjclo62
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7jp7sACgkQ2O7X88g7
-+pp9EQ/7BhIOTvcurDFoYgC8ux4KZktjk79cpt9MTDeBQ1hlNEq0X0U4GeEbJTkO
-dl7CIGHs8J8rR+uHL7qRMPKkrW13pN1Uy4syd1dsWRl3ukO5uNrQvKU3x8InCWev
-sb/+AsSxMMU7hdum7qZqTNrKIGoXrQ+E0CWEE4Pvrujho1iU4o0eV/f7Z8N3Xg6/
-r7F0eip2UMBZDMkYjbtU7oWUJyYPIJRcXkS1c/jmHMAfQR2qxDJLblwL+c1QtLLM
-DyawUfDlf5XOAq0LNvy86lnZNi16v4yqrfy1zDVy654z3j2KwveiSTTG4L4i+sbR
-w/0MFQZav2hxBeDQYOIuMciis6G1+632N6J13g2wVbn5OYV1LNa4XvMkUc4YHv06
-QVyrSRPPvfDAnWtBexPeX76sm3/XnnoBfEmM7UKtHSTF7VLpNeN5F37MirkX5//V
-84HU9Orseqa8ymqdvgY0cc+7E80jVHe4OKfYVc57EMoT9v5+eUxSJcOpI9O34g4W
-zoR19VPVvTHXzHY/lClP8mA3c5Tg+CWIR8le+592RmUmPBcr/qg13+ee0TBEgkqN
-2vTOQhbtg2+E9x+Qe8iifxwjdj9jZgWl7oyAhO3y2f3Q9kx5u08wqw4ScKmZCyAg
-hJLzFNqPHUBp0QxVOU/wMFMzbHGe/C/0fsTH6W3zabRDSgxGofg=
-=+YBY
------END PGP SIGNATURE-----
-
---xnevn6eizwjclo62--
+diff --git a/kernel/locking/Makefile b/kernel/locking/Makefile
+index 45452facff3b..94e4b8fcf9c1 100644
+--- a/kernel/locking/Makefile
++++ b/kernel/locking/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # Any varying coverage in these files is non-deterministic
+ # and is generally not a function of system call inputs.
+-KCOV_INSTRUMENT		:= n
++# KCOV_INSTRUMENT		:= n
+ 
+ obj-y += mutex.o semaphore.o rwsem.o percpu-rwsem.o
+ 
+diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
+index 432417a83902..133c0c285be6 100644
+--- a/tools/objtool/elf.c
++++ b/tools/objtool/elf.c
+@@ -341,6 +341,24 @@ static int read_sections(struct elf *elf)
+ 	return 0;
+ }
+ 
++static bool is_mcount_symbol(const char *name)
++{
++	if (name[0] == '.')
++		name++;
++
++	if (name[0] == '_')
++		name++;
++
++	return !strcmp(name, "mcount", 6) ||
++	       !strcmp(name, "_fentry__") ||
++	       !strcmp(name, "_gnu_mcount_nc");
++}
++
++static bool is_kcov_symbol(const char *name)
++{
++	return !strncmp(name, "__sanitizer_cov_", 16);
++}
++
+ static int read_symbols(struct elf *elf)
+ {
+ 	struct section *symtab, *symtab_shndx, *sec;
+@@ -410,6 +428,12 @@ static int read_symbols(struct elf *elf)
+ 		} else
+ 			sym->sec = find_section_by_index(elf, 0);
+ 
++
++		if (is_mcount_symbol(sym->name))
++			sym->class = SYM_MCOUNT;
++		else if (is_kcov_symbol(sym->name))
++			sym->class = SYM_KCOV;
++
+ 		sym->offset = sym->sym.st_value;
+ 		sym->len = sym->sym.st_size;
+ 
+diff --git a/tools/objtool/elf.h b/tools/objtool/elf.h
+index 78a2db23b8b6..3c1cccb7b5ff 100644
+--- a/tools/objtool/elf.h
++++ b/tools/objtool/elf.h
+@@ -42,6 +42,12 @@ struct section {
+ 	bool changed, text, rodata, noinstr;
+ };
+ 
++enum symbol_class {
++	SYM_REGULAR = 0,
++	SYM_MCOUNT,
++	SYM_KCOV,
++};
++
+ struct symbol {
+ 	struct list_head list;
+ 	struct rb_node node;
+@@ -55,6 +61,7 @@ struct symbol {
+ 	unsigned long offset;
+ 	unsigned int len;
+ 	struct symbol *pfunc, *cfunc, *alias;
++	enum symbol_class class;
+ 	bool uaccess_safe;
+ };
+ 
