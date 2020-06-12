@@ -2,126 +2,105 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF01C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 11:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D212EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 11:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D70B20792
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 11:27:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A635420792
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 11:28:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="S9sT7t5Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726253AbgFLL1j (ORCPT
+        id S1726302AbgFLL2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 07:27:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56032 "EHLO
+        Fri, 12 Jun 2020 07:28:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgFLL1i (ORCPT
+        with ESMTP id S1726275AbgFLL2D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 07:27:38 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58121C03E96F
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 04:27:38 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1jjhqP-0006nM-Qj; Fri, 12 Jun 2020 13:27:33 +0200
-Received: from [IPv6:2a03:f580:87bc:d400:b44d:6713:e0e9:e23c] (unknown [IPv6:2a03:f580:87bc:d400:b44d:6713:e0e9:e23c])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
-        (Authenticated sender: mkl@blackshift.org)
-        by smtp.blackshift.org (Postfix) with ESMTPSA id 29399515107;
-        Fri, 12 Jun 2020 11:27:32 +0000 (UTC)
-Subject: Re: [PATCH 0/6] Add Microchip MCP25XXFD CAN driver
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        wg@grandegger.com
-Cc:     kernel@martin.sperl.org, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200610074442.10808-1-manivannan.sadhasivam@linaro.org>
- <fbbca009-3c53-6aa9-94ed-7e9e337c31a4@pengutronix.de>
- <ed3f66c0-28e5-9bfc-729b-457d564638f9@pengutronix.de>
-Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
- mQINBFFVq30BEACtnSvtXHoeHJxG6nRULcvlkW6RuNwHKmrqoksispp43X8+nwqIFYgb8UaX
- zu8T6kZP2wEIpM9RjEL3jdBjZNCsjSS6x1qzpc2+2ivjdiJsqeaagIgvy2JWy7vUa4/PyGfx
- QyUeXOxdj59DvLwAx8I6hOgeHx2X/ntKAMUxwawYfPZpP3gwTNKc27dJWSomOLgp+gbmOmgc
- 6U5KwhAxPTEb3CsT5RicsC+uQQFumdl5I6XS+pbeXZndXwnj5t84M+HEj7RN6bUfV2WZO/AB
- Xt5+qFkC/AVUcj/dcHvZwQJlGeZxoi4veCoOT2MYqfR0ax1MmN+LVRvKm29oSyD4Ts/97cbs
- XsZDRxnEG3z/7Winiv0ZanclA7v7CQwrzsbpCv+oj+zokGuKasofzKdpywkjAfSE1zTyF+8K
- nxBAmzwEqeQ3iKqBc3AcCseqSPX53mPqmwvNVS2GqBpnOfY7Mxr1AEmxdEcRYbhG6Xdn+ACq
- Dq0Db3A++3PhMSaOu125uIAIwMXRJIzCXYSqXo8NIeo9tobk0C/9w3fUfMTrBDtSviLHqlp8
- eQEP8+TDSmRP/CwmFHv36jd+XGmBHzW5I7qw0OORRwNFYBeEuiOIgxAfjjbLGHh9SRwEqXAL
- kw+WVTwh0MN1k7I9/CDVlGvc3yIKS0sA+wudYiselXzgLuP5cQARAQABtCZNYXJjIEtsZWlu
- ZS1CdWRkZSA8bWtsQHBlbmd1dHJvbml4LmRlPokCVAQTAQoAPgIbAwIeAQIXgAULCQgHAwUV
- CgkICwUWAgMBABYhBMFAC6CzmJ5vvH1bXCte4hHFiupUBQJcUsSbBQkM366zAAoJECte4hHF
- iupUgkAP/2RdxKPZ3GMqag33jKwKAbn/fRqAFWqUH9TCsRH3h6+/uEPnZdzhkL4a9p/6OeJn
- Z6NXqgsyRAOTZsSFcwlfxLNHVxBWm8pMwrBecdt4lzrjSt/3ws2GqxPsmza1Gs61lEdYvLST
- Ix2vPbB4FAfE0kizKAjRZzlwOyuHOr2ilujDsKTpFtd8lV1nBNNn6HBIBR5ShvJnwyUdzuby
- tOsSt7qJEvF1x3y49bHCy3uy+MmYuoEyG6zo9udUzhVsKe3hHYC2kfB16ZOBjFC3lH2U5An+
- yQYIIPZrSWXUeKjeMaKGvbg6W9Oi4XEtrwpzUGhbewxCZZCIrzAH2hz0dUhacxB201Y/faY6
- BdTS75SPs+zjTYo8yE9Y9eG7x/lB60nQjJiZVNvZ88QDfVuLl/heuIq+fyNajBbqbtBT5CWf
- mOP4Dh4xjm3Vwlz8imWW/drEVJZJrPYqv0HdPbY8jVMpqoe5jDloyVn3prfLdXSbKPexlJaW
- 5tnPd4lj8rqOFShRnLFCibpeHWIumqrIqIkiRA9kFW3XMgtU6JkIrQzhJb6Tc6mZg2wuYW0d
- Wo2qvdziMgPkMFiWJpsxM9xPk9BBVwR+uojNq5LzdCsXQ2seG0dhaOTaaIDWVS8U/V8Nqjrl
- 6bGG2quo5YzJuXKjtKjZ4R6k762pHJ3tnzI/jnlc1sXz
-Message-ID: <690da22a-0cba-43c1-7a29-fac5bc696ce4@pengutronix.de>
-Date:   Fri, 12 Jun 2020 13:27:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Fri, 12 Jun 2020 07:28:03 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABD5AC08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 04:28:02 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id q19so9730693eja.7
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 04:28:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=x+EzCa13oBkDmmedkJhpOdOSq/9OAyMQhRjI6L6Gk/o=;
+        b=S9sT7t5ZIpfYCDAbMcB8jwtLa9MGKk4nqPnImEddN0kepR2Z2qESMoSN67etrUmroP
+         5QE5GwFi7YDu7pm2Eqp1OZ7LmU+DXSlFqm3Js6tHBg6u2TDbxzqtQu940+Cgd+XtqYhl
+         //2bmHmnG6qgnSQSqHZ/epqvSiZ1jb8gbfaJX0fko6dCVNmJs4BFRpdReRJ9d76Ui4vY
+         qgwSALEkjxQjQiiTAhpqu1t/sst2pzjGpuSjiz+7iL5YL6q9Yf4rqQBCxWyw1U2TplfR
+         ou4iHSigiIisVr6BInNL7yCRKp2Uz+nkp1juM7ujUqL0KImK8i0aA00J+oiEpe6FJLet
+         V0Yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=x+EzCa13oBkDmmedkJhpOdOSq/9OAyMQhRjI6L6Gk/o=;
+        b=Aif5CId7taTYmhdUMN8gaF37fe45ATDV6IIQZe7+mm8TRTrwjws9Y0DOiIVcbOabTU
+         yOWPg5cgkyvsw4S24Ph0aGgzQC5DrUOrOyZh0VdFFnUkUHUFZFokYNBt+4xyA4+dmPhQ
+         GhWdQVzBbpKTfWbqqLNrmYVENoSKpxNH8RzNXyRPfhOiZFBAlbMXSJsz/bKzzDhc2Gpa
+         OavwRFhFTXX0m6jElEx/uJ6PsDlSOTdKPv57fbmFDFHlZPgsLwu1BHx5nPKgn7lciLVp
+         C0mRhIJ0uuBBx0MF5sTEd9ABRNIXlSzt2RZrAezICnGgrgURrrPnamDeXw5aHMz5wPUA
+         mgdw==
+X-Gm-Message-State: AOAM530Wzrx6fhxVTu5RM0YVlXT7jcJzgY9n98QTqX7IkHlW2kcAt5NZ
+        MVWwNMbwfzTXHSjxCOSpul3AKg==
+X-Google-Smtp-Source: ABdhPJz41qD396e8oQ3tm1hW5XAIn/LJUid1p+0iAEYyEf4Y0r8td0r8b0A9+lQuL6oaAsmx37Tuzg==
+X-Received: by 2002:a17:906:3548:: with SMTP id s8mr12279231eja.202.1591961281224;
+        Fri, 12 Jun 2020 04:28:01 -0700 (PDT)
+Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
+        by smtp.gmail.com with ESMTPSA id y62sm2957534edy.61.2020.06.12.04.28.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2020 04:28:00 -0700 (PDT)
+Date:   Fri, 12 Jun 2020 13:27:58 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Tony Lindgren <tony@atomide.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>
+Subject: [PATCH] pinctrl: single: fix function name in documentation
+Message-ID: <20200612112758.GA3407886@x1>
 MIME-Version: 1.0
-In-Reply-To: <ed3f66c0-28e5-9bfc-729b-457d564638f9@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/11/20 10:30 PM, Marc Kleine-Budde wrote:
-> On 6/11/20 6:26 PM, Marc Kleine-Budde wrote:
->> I initially started looking at Martin's driver and it was not using several
->> modern CAN driver infrastructures. I then posted some cleanup patches but Martin
->> was not working on the driver any more. Then I decided to rewrite the driver,
->> that is the one I'm hoping to mainline soon.
-> 
-> Seems the driver still suffers from the same problems the last time I looked at it:
-> 
-> I'm on a raspi4 with a mcp2518fd connected to spi0 cs0 and cs1.
-> 
-> Running a canfdtest -vg can0; canfdtest -v can1. It  runs into this problem on a
-> unloaded system and scaling_governor=performance  within minutes:
-> 
->> Jun 11 21:27:08 rpi4 kernel: mcp25xxfd spi0.0 can1: Something is wrong - we got a TEF interrupt but we were not able to detect a finished fifo
->> Jun 11 21:27:08 rpi4 kernel: mcp25xxfd spi0.0 can1: Something is wrong - we got a TEF interrupt but we were not able to detect a finished fifo
->> Jun 11 21:27:08 rpi4 kernel: mcp25xxfd spi0.0 can1: tefif: fifo 6 not pending - tef data: id: 00000078 flags: 00000c08, ts: 0addbed3 - this may be a problem with spi signal quality- try reducing spi-clock speed if this can get reproduced
->> Jun 11 21:27:08 rpi4 kernel: mcp25xxfd spi0.0 can1: tefif: fifo 7 not pending - tef data: id: 00000078 flags: 00000e08, ts: 0addc2e5 - this may be a problem with spi signal quality- try reducing spi-clock speed if this can get reproduced
->> Jun 11 21:27:08 rpi4 kernel: mcp25xxfd spi0.0 can1: tefif: fifo 1 not pending - tef data: id: 00000078 flags: 00000208, ts: 0addc701 - this may be a problem with spi signal quality- try reducing spi-clock speed if this can get reproduced
->> Jun 11 21:27:08 rpi4 kernel: mcp25xxfd spi0.0 can1: tefif: fifo 2 not pending - tef data: id: 00000078 flags: 00000408, ts: 0addcb1b - this may be a problem with spi signal quality- try reducing spi-clock speed if this can get reproduced
+Use the correct the function name in the documentation for
+"pcs_parse_one_pinctrl_entry()".
 
-Further two mcp2517 on the rpi4, unloaded system, performance dovernor running
-cansequence -v can0 -p; cansequence can1 -v; gives:
+"smux_parse_one_pinctrl_entry()" appears to be an artifact from the
+development of a prior patch series ("simple pinmux driver") which
+transformed into pinctrl-single.
 
-> Jun 12 12:17:53 rpi4 kernel: mcp25xxfd spi1.0: ECC single bit error at 800
-> Jun 12 12:17:53 rpi4 kernel: mcp25xxfd spi1.0: ECC single bit error at 800
-> Jun 12 12:17:54 rpi4 kernel: mcp25xxfd spi1.0: ECC double bit error at 800
-> Jun 12 12:17:54 rpi4 kernel: mcp25xxfd spi1.0: unidentified system interrupt - intf =  b91a1118
-> Jun 12 12:17:54 rpi4 kernel: mcp25xxfd spi1.0: ECC double bit error at 800
+Signed-off-by: Drew Fustini <drew@beagleboard.org>
+---
+ drivers/pinctrl/pinctrl-single.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I don't see these problems with my driver.
-
-Marc
-
+diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
+index a9d511982780..02f677eb1d53 100644
+--- a/drivers/pinctrl/pinctrl-single.c
++++ b/drivers/pinctrl/pinctrl-single.c
+@@ -958,7 +958,7 @@ static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
+ }
+ 
+ /**
+- * smux_parse_one_pinctrl_entry() - parses a device tree mux entry
++ * pcs_parse_one_pinctrl_entry() - parses a device tree mux entry
+  * @pctldev: pin controller device
+  * @pcs: pinctrl driver instance
+  * @np: device node of the mux entry
 -- 
-Pengutronix e.K.                 | Marc Kleine-Budde           |
-Embedded Linux                   | https://www.pengutronix.de  |
-Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
+2.25.1
+
