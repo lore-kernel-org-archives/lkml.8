@@ -2,197 +2,389 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F1AAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B66C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31846206A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:56:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE95520792
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:56:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AGm49oXO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ddFsPwMK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbgFLN4C (ORCPT
+        id S1726616AbgFLN4R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 09:56:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50712 "EHLO
+        Fri, 12 Jun 2020 09:56:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726581AbgFLNzq (ORCPT
+        with ESMTP id S1726448AbgFLNyc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 09:55:46 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CEC4C03E96F
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 06:55:46 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id w20so4165622pga.6
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 06:55:46 -0700 (PDT)
+        Fri, 12 Jun 2020 09:54:32 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A74FC08C5C9
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 06:54:28 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id e4so11191188ljn.4
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 06:54:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jjd0AuUqDMS+kg7RMfFuNDT5WMCpvxZwxODMYSMGb1M=;
-        b=AGm49oXOJa5zvbGQSmCtPupmqX/vK0ZW8yO+FtbKQdYZhs/qHaUS/YrDhFOr2Ohk2C
-         vmm3wEH/np8fZhGqc4XNfrMnILSw+UvGZdh/wynEj63vaoMLII/YBTTwfnYG1oMkd4yi
-         mTsaj9JZb9qzBuD1CwqYPNRWvT82p5TKFWey09Jyp+fc0NjpoYrOH9XkEmy19ojS8tJB
-         bcm/JOqSpb+/aYnPpOBvKGsvTRzsD7FLRL86I+HhWCdtQgLN/F4Jn6yCLgjwWIuUGWh6
-         EpgBun44z05r0/yWcQIBB+1WyCZrI2OfsoCxeHxH3rFDK+tZWE1El3KgmYVY7xldognU
-         KF0Q==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=7kqfMUc+k2k/CiQ8rg2p7L02Gn6NnHmpWC1JYpqHUwA=;
+        b=ddFsPwMKjSzo2EQi1Zqx3EnOMCVYa3kNjaMMi/H4r2p3LatbMak66e7dd6IwSU10X+
+         zPdd5mxI01/xadY9BLBoJMSN3iV9Vi3mA8vB7fL3ZXKo8dZRHncOiaIQulWBR5h02U1W
+         NToR+Blffkx4NO7rgHKYCdYnO8L6JZceghBlinU7dshVfNdpSv9+Mdfy1hCZ27z9yYkj
+         rGBN9IA+iSxqoZ6snZvKGzF9+9xAcdTF/kPeGeumUI7nvhBPUbeDqlqbEFjMHHa1m5sn
+         JPiB7FgrrVnefgFDsOB2pZcUOOcnG/3p9RSwn427aP3vR7k6kvbmRBwsdYQigy23Q+7J
+         fXwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jjd0AuUqDMS+kg7RMfFuNDT5WMCpvxZwxODMYSMGb1M=;
-        b=qdtzOKATRrE941leYuTzwKa3i9oG+W6yXXsGQjv7XL28Y/2D41qqPVSUn3zNpmX0br
-         FNJ4X7+Y1orFOh0eHC7ScEQ2sm8mrr4B21/vnTrhj801LothKHHwc708V1HBDAs/g55I
-         n20IiUzB4cnzTiMbpfT0mbYat8SQ5njCY0Rm2/w0O3xIPjKLWpgFkiy8KSckuFlyy1C8
-         4iaJTUNOtxM9bGhfaLcMaDcA4ocCCfnji6zoHZChDwEGJCvr3LZWvCX7XkmURvQG4K+P
-         WKqG+i197gEp+tgRa2bG0MzMQ7571JuDcKhRw1mOliT3/+WBsuRcCZNnN0lHjWao06Kj
-         bNBQ==
-X-Gm-Message-State: AOAM5331BR3MirjqorR6K2G6OUzvqbplXGwogcFU5n6NiF1o+eSN71rs
-        EADwoQI+SkxEUiG9kwAhXtg=
-X-Google-Smtp-Source: ABdhPJxZsluvfDXjcLYcixbYMCGaCMI0iW8Tje9KJtl2C3rbqpPHE3nY5bBWjfZrbopCFK5js/mV7w==
-X-Received: by 2002:a63:7707:: with SMTP id s7mr10832085pgc.295.1591970145638;
-        Fri, 12 Jun 2020 06:55:45 -0700 (PDT)
-Received: from localhost ([49.207.50.185])
-        by smtp.gmail.com with ESMTPSA id e127sm6617854pfe.45.2020.06.12.06.55.44
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 12 Jun 2020 06:55:44 -0700 (PDT)
-Date:   Fri, 12 Jun 2020 19:25:38 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [RFC 1/3] lib: copy_{from,to}_user using gup & kmap_atomic()
-Message-ID: <20200612135538.GA13399@afzalpc>
-References: <cover.1591885760.git.afzal.mohd.ma@gmail.com>
- <9e1de19f35e2d5e1d115c9ec3b7c3284b4a4e077.1591885760.git.afzal.mohd.ma@gmail.com>
- <CAK8P3a1XUJHC0kG_Qwh4D4AoxTgCL5ggHd=45yNSmzaYWLUWXw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a1XUJHC0kG_Qwh4D4AoxTgCL5ggHd=45yNSmzaYWLUWXw@mail.gmail.com>
-User-Agent: Mutt/1.9.3 (2018-01-21)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=7kqfMUc+k2k/CiQ8rg2p7L02Gn6NnHmpWC1JYpqHUwA=;
+        b=Hzemu25XVg2cF9FggDU2WDKAG2gydftKq+tgDBg4sQ7WBXuvhbpfWb/l5mhNyex0ih
+         WRAz5ACC+m5oUlypEW8RRkLqh7eUdbvrubfZZndM2nesg8KFMnYWh50tIrve7JlJQ67R
+         gkjOkKm1M4pQDQGsCdx94+TRPpfywPxAer1lf8diJkruXIIXpIAMKyxbBdOn7jQl+Td3
+         2pLOvzLLzBwI8luqI0RPE1CjmJKS943qeP5p4l6BrA7jA6RVecojgBGQmsHiDlB43noe
+         tCHdwaV3aFlT7KDREOoi0x2qB7JDODglBQfpTbWXTKtSkFSP1eVnS9ON+NAQS6cyOl4m
+         ic4A==
+X-Gm-Message-State: AOAM532lHo88W/eR+O6mvqzTg/UsRzAHq0NUM5c2e0hfOkPmTeNcb92K
+        o/rhSUPCF/W/N7Ko1GjD24XRUg==
+X-Google-Smtp-Source: ABdhPJyDBnrD3DlLh7dSvnCrLclg55A+bSStipj3gqqSMeNA7e1fZAY83WXzWV6h0RqFYcGfLoT59g==
+X-Received: by 2002:a2e:818f:: with SMTP id e15mr6754881ljg.376.1591970066440;
+        Fri, 12 Jun 2020 06:54:26 -0700 (PDT)
+Received: from localhost.localdomain (37-144-159-139.broadband.corbina.ru. [37.144.159.139])
+        by smtp.googlemail.com with ESMTPSA id a1sm2414415lfi.36.2020.06.12.06.54.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2020 06:54:25 -0700 (PDT)
+From:   Andrey Konovalov <andrey.konovalov@linaro.org>
+To:     mchehab@kernel.org, sakari.ailus@iki.fi,
+        manivannan.sadhasivam@linaro.org
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org,
+        Andrey Konovalov <andrey.konovalov@linaro.org>
+Subject: [PATCH v5 04/10] media: i2c: imx290: Add support for 2 data lanes
+Date:   Fri, 12 Jun 2020 16:53:49 +0300
+Message-Id: <20200612135355.30286-5-andrey.konovalov@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200612135355.30286-1-andrey.konovalov@linaro.org>
+References: <20200612135355.30286-1-andrey.konovalov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-On Fri, Jun 12, 2020 at 02:02:13PM +0200, Arnd Bergmann wrote:
-> On Fri, Jun 12, 2020 at 12:18 PM afzal mohammed <afzal.mohd.ma@gmail.com> wrote:
+The IMX290 sensor can output frames with 2/4 CSI2 data lanes. This commit
+adds support for 2 lane mode in addition to the 4 lane and also
+configuring the data lane settings in the driver based on system
+configuration.
 
-> > Roughly a one-third drop in performance. Disabling highmem improves
-> > performance only slightly.
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
+---
+ drivers/media/i2c/imx290.c | 147 +++++++++++++++++++++++++++++++++----
+ 1 file changed, 133 insertions(+), 14 deletions(-)
 
-> There are probably some things that can be done to optimize it,
-> but I guess most of the overhead is from the page table operations
-> and cannot be avoided.
+diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
+index 7b1de1f0c8b7..ffb393962ffc 100644
+--- a/drivers/media/i2c/imx290.c
++++ b/drivers/media/i2c/imx290.c
+@@ -25,7 +25,12 @@
+ #define IMX290_STANDBY 0x3000
+ #define IMX290_REGHOLD 0x3001
+ #define IMX290_XMSTA 0x3002
++#define IMX290_FR_FDG_SEL 0x3009
+ #define IMX290_GAIN 0x3014
++#define IMX290_HMAX_LOW 0x301c
++#define IMX290_HMAX_HIGH 0x301d
++#define IMX290_PHY_LANE_NUM 0x3407
++#define IMX290_CSI_LANE_MODE 0x3443
+ 
+ #define IMX290_DEFAULT_LINK_FREQ 445500000
+ 
+@@ -45,6 +50,7 @@ struct imx290_regval {
+ struct imx290_mode {
+ 	u32 width;
+ 	u32 height;
++	u32 hmax;
+ 	u32 pixel_rate;
+ 	u32 link_freq_index;
+ 
+@@ -56,6 +62,7 @@ struct imx290 {
+ 	struct device *dev;
+ 	struct clk *xclk;
+ 	struct regmap *regmap;
++	u8 nlanes;
+ 
+ 	struct v4l2_subdev sd;
+ 	struct v4l2_fwnode_endpoint ep;
+@@ -89,14 +96,11 @@ static const struct regmap_config imx290_regmap_config = {
+ 
+ static const struct imx290_regval imx290_global_init_settings[] = {
+ 	{ 0x3007, 0x00 },
+-	{ 0x3009, 0x00 },
+ 	{ 0x3018, 0x65 },
+ 	{ 0x3019, 0x04 },
+ 	{ 0x301a, 0x00 },
+-	{ 0x3443, 0x03 },
+ 	{ 0x3444, 0x20 },
+ 	{ 0x3445, 0x25 },
+-	{ 0x3407, 0x03 },
+ 	{ 0x303a, 0x0c },
+ 	{ 0x3040, 0x00 },
+ 	{ 0x3041, 0x00 },
+@@ -169,7 +173,6 @@ static const struct imx290_regval imx290_1080p_settings[] = {
+ 	{ 0x3164, 0x1a },
+ 	{ 0x3480, 0x49 },
+ 	/* data rate settings */
+-	{ 0x3009, 0x01 },
+ 	{ 0x3405, 0x10 },
+ 	{ 0x3446, 0x57 },
+ 	{ 0x3447, 0x00 },
+@@ -187,8 +190,6 @@ static const struct imx290_regval imx290_1080p_settings[] = {
+ 	{ 0x3453, 0x00 },
+ 	{ 0x3454, 0x17 },
+ 	{ 0x3455, 0x00 },
+-	{ 0x301c, 0x98 },
+-	{ 0x301d, 0x08 },
+ };
+ 
+ static const struct imx290_regval imx290_720p_settings[] = {
+@@ -210,7 +211,6 @@ static const struct imx290_regval imx290_720p_settings[] = {
+ 	{ 0x3164, 0x1a },
+ 	{ 0x3480, 0x49 },
+ 	/* data rate settings */
+-	{ 0x3009, 0x01 },
+ 	{ 0x3405, 0x10 },
+ 	{ 0x3446, 0x4f },
+ 	{ 0x3447, 0x00 },
+@@ -228,8 +228,6 @@ static const struct imx290_regval imx290_720p_settings[] = {
+ 	{ 0x3453, 0x00 },
+ 	{ 0x3454, 0x17 },
+ 	{ 0x3455, 0x00 },
+-	{ 0x301c, 0xe4 },
+-	{ 0x301d, 0x0c },
+ };
+ 
+ static const struct imx290_regval imx290_10bit_settings[] = {
+@@ -250,10 +248,11 @@ static const s64 imx290_link_freq[] = {
+ };
+ 
+ /* Mode configs */
+-static const struct imx290_mode imx290_modes[] = {
++static const struct imx290_mode imx290_modes_2lanes[] = {
+ 	{
+ 		.width = 1920,
+ 		.height = 1080,
++		.hmax = 0x1130,
+ 		.data = imx290_1080p_settings,
+ 		.data_size = ARRAY_SIZE(imx290_1080p_settings),
+ 		.pixel_rate = 178200000,
+@@ -262,6 +261,7 @@ static const struct imx290_mode imx290_modes[] = {
+ 	{
+ 		.width = 1280,
+ 		.height = 720,
++		.hmax = 0x19c8,
+ 		.data = imx290_720p_settings,
+ 		.data_size = ARRAY_SIZE(imx290_720p_settings),
+ 		.pixel_rate = 178200000,
+@@ -269,6 +269,44 @@ static const struct imx290_mode imx290_modes[] = {
+ 	},
+ };
+ 
++static const struct imx290_mode imx290_modes_4lanes[] = {
++	{
++		.width = 1920,
++		.height = 1080,
++		.hmax = 0x0898,
++		.data = imx290_1080p_settings,
++		.data_size = ARRAY_SIZE(imx290_1080p_settings),
++		.pixel_rate = 178200000,
++		.link_freq_index = 0,
++	},
++	{
++		.width = 1280,
++		.height = 720,
++		.hmax = 0x0ce4,
++		.data = imx290_720p_settings,
++		.data_size = ARRAY_SIZE(imx290_720p_settings),
++		.pixel_rate = 178200000,
++		.link_freq_index = 0,
++	},
++};
++
++static inline const struct imx290_mode *imx290_modes_ptr(const struct imx290 *imx290)
++{
++	/* We rely on imx290_probe() to ensure that nlanes is either 2 or 4 */
++	if (imx290->nlanes == 2)
++		return imx290_modes_2lanes;
++	else
++		return imx290_modes_4lanes;
++}
++
++static inline int imx290_modes_num(const struct imx290 *imx290)
++{
++	if (imx290->nlanes == 2)
++		return ARRAY_SIZE(imx290_modes_2lanes);
++	else
++		return ARRAY_SIZE(imx290_modes_4lanes);
++}
++
+ static inline struct imx290 *to_imx290(struct v4l2_subdev *_sd)
+ {
+ 	return container_of(_sd, struct imx290, sd);
+@@ -450,9 +488,8 @@ static int imx290_set_fmt(struct v4l2_subdev *sd,
+ 
+ 	mutex_lock(&imx290->lock);
+ 
+-	mode = v4l2_find_nearest_size(imx290_modes,
+-				      ARRAY_SIZE(imx290_modes),
+-				      width, height,
++	mode = v4l2_find_nearest_size(imx290_modes_ptr(imx290),
++				      imx290_modes_num(imx290), width, height,
+ 				      fmt->format.width, fmt->format.height);
+ 
+ 	fmt->format.width = mode->width;
+@@ -522,6 +559,25 @@ static int imx290_write_current_format(struct imx290 *imx290,
+ 	return 0;
+ }
+ 
++static int imx290_set_hmax(struct imx290 *imx290, u32 val)
++{
++	int ret;
++
++	ret = imx290_write_reg(imx290, IMX290_HMAX_LOW, (val & 0xff));
++	if (ret) {
++		dev_err(imx290->dev, "Error setting HMAX register\n");
++		return ret;
++	}
++
++	ret = imx290_write_reg(imx290, IMX290_HMAX_HIGH, ((val >> 8) & 0xff));
++	if (ret) {
++		dev_err(imx290->dev, "Error setting HMAX register\n");
++		return ret;
++	}
++
++	return 0;
++}
++
+ /* Start streaming */
+ static int imx290_start_streaming(struct imx290 *imx290)
+ {
+@@ -550,6 +606,9 @@ static int imx290_start_streaming(struct imx290 *imx290)
+ 		dev_err(imx290->dev, "Could not set current mode\n");
+ 		return ret;
+ 	}
++	ret = imx290_set_hmax(imx290, imx290->current_mode->hmax);
++	if (ret < 0)
++		return ret;
+ 
+ 	/* Apply customized values from user */
+ 	ret = v4l2_ctrl_handler_setup(imx290->sd.ctrl_handler);
+@@ -607,6 +666,49 @@ static int imx290_get_regulators(struct device *dev, struct imx290 *imx290)
+ 				       imx290->supplies);
+ }
+ 
++static int imx290_set_data_lanes(struct imx290 *imx290)
++{
++	int ret = 0, laneval, frsel;
++
++	switch (imx290->nlanes) {
++	case 2:
++		laneval = 0x01;
++		frsel = 0x02;
++		break;
++	case 4:
++		laneval = 0x03;
++		frsel = 0x01;
++		break;
++	default:
++		/*
++		 * We should never hit this since the data lane count is
++		 * validated in probe itself
++		 */
++		dev_err(imx290->dev, "Lane configuration not supported\n");
++		ret = -EINVAL;
++		goto exit;
++	}
++
++	ret = imx290_write_reg(imx290, IMX290_PHY_LANE_NUM, laneval);
++	if (ret) {
++		dev_err(imx290->dev, "Error setting Physical Lane number register\n");
++		goto exit;
++	}
++
++	ret = imx290_write_reg(imx290, IMX290_CSI_LANE_MODE, laneval);
++	if (ret) {
++		dev_err(imx290->dev, "Error setting CSI Lane mode register\n");
++		goto exit;
++	}
++
++	ret = imx290_write_reg(imx290, IMX290_FR_FDG_SEL, frsel);
++	if (ret)
++		dev_err(imx290->dev, "Error setting FR/FDG SEL register\n");
++
++exit:
++	return ret;
++}
++
+ static int imx290_power_on(struct device *dev)
+ {
+ 	struct i2c_client *client = to_i2c_client(dev);
+@@ -631,6 +733,9 @@ static int imx290_power_on(struct device *dev)
+ 	gpiod_set_value_cansleep(imx290->rst_gpio, 0);
+ 	usleep_range(30000, 31000);
+ 
++	/* Set data lane count */
++	imx290_set_data_lanes(imx290);
++
+ 	return 0;
+ }
+ 
+@@ -677,6 +782,7 @@ static int imx290_probe(struct i2c_client *client)
+ 	struct fwnode_handle *endpoint;
+ 	struct imx290 *imx290;
+ 	u32 xclk_freq;
++	u32 default_pixel_rate;
+ 	int ret;
+ 
+ 	imx290 = devm_kzalloc(dev, sizeof(*imx290), GFP_KERNEL);
+@@ -703,6 +809,16 @@ static int imx290_probe(struct i2c_client *client)
+ 		goto free_err;
+ 	}
+ 
++	/* Get number of data lanes */
++	imx290->nlanes = imx290->ep.bus.mipi_csi2.num_data_lanes;
++	if (imx290->nlanes != 2 && imx290->nlanes != 4) {
++		dev_err(dev, "Invalid data lanes: %d\n", imx290->nlanes);
++		ret = -EINVAL;
++		goto free_err;
++	}
++
++	dev_dbg(dev, "Using %u data lanes\n", imx290->nlanes);
++
+ 	if (!imx290->ep.nr_of_link_frequencies) {
+ 		dev_err(dev, "link-frequency property not found in DT\n");
+ 		ret = -EINVAL;
+@@ -780,10 +896,13 @@ static int imx290_probe(struct i2c_client *client)
+ 	if (imx290->link_freq)
+ 		imx290->link_freq->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+ 
++	default_pixel_rate = imx290->nlanes == 2 ?
++			     imx290_modes_2lanes[0].pixel_rate :
++			     imx290_modes_4lanes[0].pixel_rate;
+ 	imx290->pixel_rate = v4l2_ctrl_new_std(&imx290->ctrls, &imx290_ctrl_ops,
+ 					       V4L2_CID_PIXEL_RATE, 1,
+ 					       INT_MAX, 1,
+-					       imx290_modes[0].pixel_rate);
++					       default_pixel_rate);
+ 
+ 	imx290->sd.ctrl_handler = &imx290->ctrls;
+ 
+-- 
+2.17.1
 
-Ingo's series did a follow_page() first, then as a fallback did it
-invoke get_user_pages(), i will try that way as well.
-
-Yes, i too feel get_user_pages_fast() path is the most time consuming,
-will instrument & check.
-
-> What was the exact 'dd' command you used, in particular the block size?
-> Note that by default, 'dd' will request 512 bytes at a time, so you usually
-> only access a single page. It would be interesting to see the overhead with
-> other typical or extreme block sizes, e.g. '1', '64', '4K', '64K' or '1M'.
-
-It was the default(512), more test results follows (in MB/s),
-
-                512     1K      4K      16K     32K     64K     1M
-
-w/o series      30      46      89      95      90      85      65
-
-w/ series       22      36      72      79      78      75      61
-
-perf drop       26%     21%     19%     16%     13%     12%    6%
-
-Hmm, results ain't that bad :)
-
-> If you want to drill down into where exactly the overhead is (i.e.
-> get_user_pages or kmap_atomic, or something different), using
-> 'perf record dd ..', and 'perf report' may be helpful.
-
-Let me dig deeper & try to find out where the major overhead and try
-to figure out ways to reduce it.
-
-One reason to disable highmem & test (results mentioned earlier) was
-to make kmap_atomic() very lightweight, that was not making much
-difference, around 3% only.
-
-> > +static int copy_chunk_from_user(unsigned long from, int len, void *arg)
-> > +{
-> > +       unsigned long *to_ptr = arg, to = *to_ptr;
-> > +
-> > +       memcpy((void *) to, (void *) from, len);
-> > +       *to_ptr += len;
-> > +       return 0;
-> > +}
-> > +
-> > +static int copy_chunk_to_user(unsigned long to, int len, void *arg)
-> > +{
-> > +       unsigned long *from_ptr = arg, from = *from_ptr;
-> > +
-> > +       memcpy((void *) to, (void *) from, len);
-> > +       *from_ptr += len;
-> > +       return 0;
-> > +}
-> 
-> Will gcc optimize away the indirect function call and inline everything?
-> If not, that would be a small part of the overhead.
-
-i think not, based on objdump, i will make these & wherever other
-places possible inline & see the difference.
-
-> > +       num_pages = DIV_ROUND_UP((unsigned long)from + n, PAGE_SIZE) -
-> > +                                (unsigned long)from / PAGE_SIZE;
-> 
-> Make sure this doesn't turn into actual division operations but uses shifts.
-> It might even be clearer here to open-code the shift operation so readers
-> can see what this is meant to compile into.
-
-Okay
-
-> 
-> > +       pages = kmalloc_array(num_pages, sizeof(*pages), GFP_KERNEL | __GFP_ZERO);
-> > +       if (!pages)
-> > +               goto end;
-> 
-> Another micro-optimization may be to avoid the kmalloc for the common case,
-> e.g. anything with "num_pages <= 64", using an array on the stack.
-
-Okay
-
-> > +       ret = get_user_pages_fast((unsigned long)from, num_pages, 0, pages);
-> > +       if (ret < 0)
-> > +               goto free_pages;
-> > +
-> > +       if (ret != num_pages) {
-> > +               num_pages = ret;
-> > +               goto put_pages;
-> > +       }
-> 
-> I think this is technically incorrect: if get_user_pages_fast() only
-> gets some of the
-> pages, you should continue with the short buffer and return the number
-> of remaining
-> bytes rather than not copying anything. I think you did that correctly
-> for a failed
-> kmap_atomic(), but this has to use the same logic.
-
-yes, will fix that.
-
-
-Regards
-afzal
