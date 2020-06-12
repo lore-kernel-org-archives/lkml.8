@@ -2,105 +2,94 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F206C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E93B2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00F8D207F7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:48:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="nXMB+gtG"
+	by mail.kernel.org (Postfix) with ESMTP id BE979207F7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:49:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbgFLRsI (ORCPT
+        id S1726365AbgFLRtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 13:48:08 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:36408 "EHLO mail.skyhub.de"
+        Fri, 12 Jun 2020 13:49:02 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38336 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726085AbgFLRsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 13:48:07 -0400
-Received: from zn.tnic (p200300ec2f0af40048a70bbbe71adfd0.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:f400:48a7:bbb:e71a:dfd0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E42381EC0347;
-        Fri, 12 Jun 2020 19:48:05 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1591984086;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=ZKZxsM5a5G9fsFkncYcChjTgy88lxnyyigEFrVGgfRE=;
-        b=nXMB+gtGmD/bUpS8O23Yll0N6ahvef0MhsPpx35tMt0gZ82RAvFjdS648eOd7ChpdZMdgf
-        SGgAPxcldR5k3G4lzYAkVVlCz+KUBpDskRQisUS1H8PWq8ZKeER9hLdgsQlpQ5pPzZuLli
-        q/f7NNKUDnyrOAlXrvfDJ7o3SF+Bi1M=
-Date:   Fri, 12 Jun 2020 19:48:01 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH] x86/msr: Filter MSR writes
-Message-ID: <20200612174801.GE22660@zn.tnic>
-References: <20200612105026.GA22660@zn.tnic>
- <CAHk-=wjKr+eAdPg3q7S6N4Cwd1aMEOHc5qLaKE-wwhouZRo=uw@mail.gmail.com>
+        id S1726085AbgFLRtC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 13:49:02 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 227E5AB8F;
+        Fri, 12 Jun 2020 17:49:04 +0000 (UTC)
+Subject: Re: [PATCH] qla2xxx: Set NVME status code for failed NVME FCP request
+To:     Daniel Wagner <dwagner@suse.de>, linux-scsi@vger.kernel.org
+Cc:     Nilesh Javali <njavali@marvell.com>,
+        GR-QLogic-Storage-Upstream@marvell.com,
+        linux-kernel@vger.kernel.org
+References: <20200604100745.89250-1-dwagner@suse.de>
+From:   Hannes Reinecke <hare@suse.de>
+Message-ID: <95091326-e5b4-e747-b187-21a049a1c541@suse.de>
+Date:   Fri, 12 Jun 2020 19:48:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wjKr+eAdPg3q7S6N4Cwd1aMEOHc5qLaKE-wwhouZRo=uw@mail.gmail.com>
+In-Reply-To: <20200604100745.89250-1-dwagner@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 10:20:03AM -0700, Linus Torvalds wrote:
-> Since you already added the filtering, this looks fairly sane.
+On 6/4/20 12:07 PM, Daniel Wagner wrote:
+> The qla2xxx driver knows when request was processed successfully or
+> not. But it always sets the NVME status code to 0/NVME_SC_SUCCESS. The
+> upper layer needs to figure out from the rcv_rsplen and
+> transferred_length variables if the request was successfully. This is
+> not always possible, e.g. when the request data length is 0, the
+> transferred_length is also set 0 which is interpreted as success in
+> nvme_fc_fcpio_done(). Let's inform the upper
+> layer (nvme_fc_fcpio_done()) when something went wrong.
 > 
-> IOW, what MSR's do we expect people to maybe write to normally? You
-> added MSR_IA32_ENERGY_PERF_BIAS as an allowed MST, maybe there are
-> others?
-
-Right, this MSR is being written by cpupower in tools/. My search was
-confined within the kernel source only so there very likely are others.
-
-If we want to add others, though, I think the criteria would be, if
-writing to a MSR is safe - and this is where it becomes fuzzy but to use
-the above example: if all it does is give hints to the hw but the hw can
-ignore those hints and there's no other effect on the hw, then those
-writes are fairly safe.
-
-I'm pretty sure we'll massage that definition of "safe" over time.
-
-> So I'm not against this, but I suspect the whitelist should be thought
-> through more,
-
-Yap.
-
-> and then maybe the "allow_writes" parameter should be
-> yes/no/default/<msr-list>, where "default" is that list of
-> known-normal MSR's.
-
-So I know of another out-of-tree tool which has a whole whitelist
-management of MSRs: https://github.com/LLNL/msr-safe
-
-Question is, what use cases we want to support. My thinking is to start
-small and then keep extending it based on use cases we want to support.
-
-> And I suspect it's a lot longer list than your single one. IIRC,
-> people were working around CPU bugs or features by doing MSR writes at
-> startup.
+> nvme_fc_fcpio_done() maps all non NVME_SC_SUCCESS status codes to
+> NVME_SC_HOST_PATH_ERROR. There isn't any benefit to map the QLA status
+> code to the NVME status code. Therefore, let's use NVME_SC_INTERNAL to
+> indicate an error which aligns it with the lpfc driver.
 > 
-> So the first phase might be to introduce this, but have the default
-> for non-recognized MSR's be "log", not "deny".
+> Signed-off-by: Daniel Wagner <dwagner@suse.de>
+> ---
+>   drivers/scsi/qla2xxx/qla_nvme.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/scsi/qla2xxx/qla_nvme.c b/drivers/scsi/qla2xxx/qla_nvme.c
+> index d66d47a0f958..fa695a4007f8 100644
+> --- a/drivers/scsi/qla2xxx/qla_nvme.c
+> +++ b/drivers/scsi/qla2xxx/qla_nvme.c
+> @@ -139,11 +139,12 @@ static void qla_nvme_release_fcp_cmd_kref(struct kref *kref)
+>   	sp->priv = NULL;
+>   	if (priv->comp_status == QLA_SUCCESS) {
+>   		fd->rcv_rsplen = le16_to_cpu(nvme->u.nvme.rsp_pyld_len);
+> +		fd->status = NVME_SC_SUCCESS;
+>   	} else {
+>   		fd->rcv_rsplen = 0;
+>   		fd->transferred_length = 0;
+> +		fd->status = NVME_SC_INTERNAL;
+>   	}
+> -	fd->status = 0;
+>   	spin_unlock_irqrestore(&priv->cmd_lock, flags);
+>   
+>   	fd->done(fd);
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-Ok. How are we going to "learn" about those non-recognized MSRs? Ask
-people to send us a note to lkml so that we can fix the list once they
-see the logged message?
+Cheers,
 
-Thx.
-
+Hannes
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Dr. Hannes Reinecke            Teamlead Storage & Networking
+hare@suse.de                               +49 911 74053 688
+SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
