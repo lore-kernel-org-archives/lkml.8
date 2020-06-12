@@ -2,71 +2,89 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 046CEC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 06:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89977C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 06:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E123B207F7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 06:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E963207F7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 06:36:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I4V/AbtL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgFLGfJ (ORCPT
+        id S1726527AbgFLGgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 02:35:09 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5880 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726364AbgFLGfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 02:35:09 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A43A7391322C2965F40D;
-        Fri, 12 Jun 2020 14:35:06 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 12 Jun 2020 14:35:01 +0800
-From:   Guo Fan <guofan5@huawei.com>
-To:     <jgg@ziepe.ca>, <leon@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-rdma@vger.kernel.org>
-Subject: [PATCH] IB/mad: fix possible memory leak in ib_mad_post_receive_mads()
-Date:   Fri, 12 Jun 2020 14:38:24 +0800
-Message-ID: <20200612063824.180611-1-guofan5@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 12 Jun 2020 02:36:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39452 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726332AbgFLGgc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 02:36:32 -0400
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C306CC03E96F
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 23:36:31 -0700 (PDT)
+Received: by mail-lf1-x131.google.com with SMTP id c12so4856417lfc.10
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 23:36:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=dKefQVYRAMri+oQH2++zVvlRQ/KmlKt8ijY5Ux7ySbg=;
+        b=I4V/AbtL6WSuMu4aDY8W9u/MBzNmFAqAkQs9bwL59L8gjzMBEZI9KcUQILjKxEExA7
+         538AHcum1IcjOtyfo0Z6Ta42inofWVPtpag34DXDOIdONCenwf7J4R5Hw+p2HsY67uLF
+         ZGgk3F9oIgjd2hWhuuhpqEJLg85nt0BQlN+mdS9owPqm5gK6NiWYHhCJKAOPjdUtQXy5
+         Mo9+78yRUDVVZvLjYKqsp20o3tkl4rPZ2FAL0c7DkQfZMopwCM/U35l7NClxqsNFkp8S
+         1YTBZb22ccA+l9LRcDqbdQl3K62Am7ZRxLxn3AXgYMaaMFWF6KLfblMSlEEhNzU/PXgg
+         rl2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=dKefQVYRAMri+oQH2++zVvlRQ/KmlKt8ijY5Ux7ySbg=;
+        b=Ol/cJT9G+g7nf9efzKFWefKcNMe29QSIe4Za532dVq1HmXKS9WKF1xq0YXspMNfDmE
+         QfK5v1FvU2GsVN8SHd7ljtYFlMFkDRqXj2SHOK5wwOB+kkIGc8kMxHfyHQZGP4dguCkD
+         LbVKypeqFNhgdSCjAMQk8lxF9z6JmI6C4A/LxcezgcWvPG20T6LpCH/o31H7ZUHLt8Vv
+         hNFpIMZXjIAx9GRLiHdYe8zo6EfGTAwvt2E5XxkdYp7FadpWFNnyZkp66d/U5HVC5zPE
+         PuIbSbNloQxdSiFP3OuqhsqxE0NqCMcnYDT8OkfopQMB1QC21cE1ssmVVJ1ZfModOl2p
+         y7ng==
+X-Gm-Message-State: AOAM530Q4xUQ7fX1OtsirBAz81wnnYVGO1Ge0ZbnBgqYWvYjQu/854R6
+        GoGNQWEI5UoFfyg2nBAHFAfVjb2gvKr80JG15If+YFHaZe4=
+X-Google-Smtp-Source: ABdhPJzKZ5pn2l5FiL3+aPJV6ZUcHDO31zflVPBxSI58vtzsAJI2Splqhg1tqXHOEzuem86IDlA6JuPVj1egkwnppII=
+X-Received: by 2002:ac2:490f:: with SMTP id n15mr6072521lfi.39.1591943790160;
+ Thu, 11 Jun 2020 23:36:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+From:   Garry Filakhtov <filakhtov@gmail.com>
+Date:   Fri, 12 Jun 2020 16:36:19 +1000
+Message-ID: <CALKTHW0B-kpjRgJVtHwdo0sqszYzHSCH3x_Oph2gDpa0diyEVA@mail.gmail.com>
+Subject: KVM guest freeze on Linux > 4.19
+To:     linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fan Guo <guofan5@huawei.com>
+Good time of the day,
 
-If ib_dma_mapping_error() returns non-zero value, ib_mad_post_receive_mads
-will jump out of loops and return -ENOMEM without freeing mad_priv. We fix
-this memory-leak problem by freeing mad_priv in this case.
+Hope you all are staying safe during these challenging times.
 
-Fixes: 2c34e68f4261 ("IB/mad: Check and handle potential DMA mapping errors")
-Signed-off-by: Fan Guo <guofan5@huawei.com>
----
- drivers/infiniband/core/mad.c | 1 +
- 1 file changed, 1 insertion(+)
+I have been struggling with KVM guest freezes after the upgrade from
+4.19 LTS to 5.4 LTS.
 
-diff --git a/drivers/infiniband/core/mad.c b/drivers/infiniband/core/mad.c
-index 186e0d652e8b..5e080191a725 100644
---- a/drivers/infiniband/core/mad.c
-+++ b/drivers/infiniband/core/mad.c
-@@ -2718,6 +2718,7 @@ static int ib_mad_post_receive_mads(struct ib_mad_qp_info *qp_info,
- 						 DMA_FROM_DEVICE);
- 		if (unlikely(ib_dma_mapping_error(qp_info->port_priv->device,
- 						  sg_list.addr))) {
-+			kfree(mad_priv);
- 			ret = -ENOMEM;
- 			break;
- 		}
--- 
-2.25.1
+Searching through the internet lead me to
+https://www.reddit.com/r/VFIO/comments/b1xx0g/windows_10_qemukvm_freezes_after_50x_kernel_update/
+and Kernel Bugzilla revealed
+https://bugzilla.kernel.org/show_bug.cgi?id=200101. I have added a
+detailed problem description on the aforementioned bug.
 
+Would like to get some attention from people who might know more about
+this, and see if I need to create a brand new bug report or if that's
+okay to work through the existing bug.
+
+Also, any suggestions where else to look to find any clues that can
+help resolve the issue or identify what's causing it are highly
+appreciated.
+
+Kind regards,
+Garry Filakhtov
