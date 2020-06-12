@@ -2,109 +2,118 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 201DBC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05084C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBFA720723
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:53:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C577920723
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:54:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="k/lNNGBh"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="RGOBe2C5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbgFLTxa (ORCPT
+        id S1726361AbgFLTyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 15:53:30 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:13675 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgFLTxa (ORCPT
+        Fri, 12 Jun 2020 15:54:39 -0400
+Received: from mta-p8.oit.umn.edu ([134.84.196.208]:60328 "EHLO
+        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbgFLTyi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 15:53:30 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ee3dd0b0000>; Fri, 12 Jun 2020 12:52:43 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 12 Jun 2020 12:53:29 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 12 Jun 2020 12:53:29 -0700
-Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 12 Jun
- 2020 19:53:24 +0000
-Subject: Re: [PATCH] mm/hmm: remove redundant check non_swap_entry()
-To:     Jason Gunthorpe <jgg@mellanox.com>,
-        Matthew Wilcox <willy@infradead.org>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20200612192618.32579-1-rcampbell@nvidia.com>
- <20200612193524.GL8681@bombadil.infradead.org>
- <20200612194204.GM65026@mellanox.com>
-X-Nvconfidentiality: public
-From:   Ralph Campbell <rcampbell@nvidia.com>
-Message-ID: <266b26e6-5f6f-9178-948a-fcae20c16112@nvidia.com>
-Date:   Fri, 12 Jun 2020 12:53:23 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 12 Jun 2020 15:54:38 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 49kBJY3XHfz9vCHj
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 19:54:37 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p8.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id CawIXldQr1X7 for <linux-kernel@vger.kernel.org>;
+        Fri, 12 Jun 2020 14:54:37 -0500 (CDT)
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id 49kBJY1qm5z9vCGX
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 14:54:37 -0500 (CDT)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p8.oit.umn.edu 49kBJY1qm5z9vCGX
+DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p8.oit.umn.edu 49kBJY1qm5z9vCGX
+Received: by mail-io1-f69.google.com with SMTP id x2so1388779iof.0
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 12:54:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KVNEopejGTcquUzpholqEMyuQDrUJhXxHJx5sPEa/is=;
+        b=RGOBe2C5HrCbXKC28ByOVDr8j1J4cDTQVN3GtugZW/o2E/sTrXC2FAn2Lk8+CtNMuZ
+         ha15zgGasOcZbIvJvOozIp7UgqDsRSaVG1wzN/BQfypCHL9W1pVzKHTN8to0+GkuFCnQ
+         TCFD5V9BozUfF+LzG4SmyF2wHJIr0BLzsb9Reorp5i7wX2WCKGyWbYJz14S0B/pD5tOH
+         Ax7Mpy7cgAmw3Tt2JSk9SIPVmXUZCHkJYAB3BBpkUB9nV16E81pyiEBogtswlNu3jVLU
+         oTuDp9vhjjfYUrFi5/YLhhFmSOJJY6AwqUEK+GO9UGLHd5GZgkneSsmtZAD5d4xfJybK
+         UjKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KVNEopejGTcquUzpholqEMyuQDrUJhXxHJx5sPEa/is=;
+        b=BiV6VEQnISrlC6w3PbKqSWsEiNWzW0X5YVRM19ptNXPFSMU/uyQ8J49cehEtuTc3BS
+         CUBMMXd0W8Cekm1ushQY20OcEWI1kuYEdOrrEy6MmaTzP6B5OSCa1pxdEvcejtPxDSfS
+         YtPGQ1SsiSHXZEk/cfWbqnxICn/K1HsKRs1bEzugr4vjzD7v6GiHlelVeWQKfQI9ytOU
+         /cOwJMfZAbuSYo7/9UXlQxVjXmlz4A+bLsD3yBAiblGa4tidN+PKBNBT4mA5W++jBN0M
+         6qfgiRHg3XRGwWeiKqCFuQYJGUwkzpf/PbsujAE6Q1FqB1urJ5XTMOnCPijVf34Uc3na
+         qA5g==
+X-Gm-Message-State: AOAM530BdDuUD6ZLTFFqYezjQC1XUGm28UJ4KkLBe0JmAcN75RgvPSpM
+        sSt/s1qM87DzCm1K4JY98XFOyP0YuTost1rSuMq/I51V26m8d/DWwpNNutcOhncMhecFXDTvpxm
+        JCLYSULLL3HTUuJYtReP2ScGv9aiJ
+X-Received: by 2002:a05:6e02:6c9:: with SMTP id p9mr13783919ils.185.1591991676902;
+        Fri, 12 Jun 2020 12:54:36 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzJv1BxyuEFAefrdvOCv2COicwn4idUnD3ytLomV6kVXKtkyonUXgIPxGUe+T5+I9OVlVjvzA==
+X-Received: by 2002:a05:6e02:6c9:: with SMTP id p9mr13783908ils.185.1591991676748;
+        Fri, 12 Jun 2020 12:54:36 -0700 (PDT)
+Received: from piston-t1.hsd1.mn.comcast.net ([2601:445:4380:5b90:79cf:2597:a8f1:4c97])
+        by smtp.googlemail.com with ESMTPSA id c1sm3479728ilh.35.2020.06.12.12.54.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2020 12:54:36 -0700 (PDT)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, wu000273@umn.edu,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] RDMA/rvt: Fix potential memory leak caused by rvt_alloc_rq
+Date:   Fri, 12 Jun 2020 14:54:26 -0500
+Message-Id: <20200612195426.54133-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200612194204.GM65026@mellanox.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1591991563; bh=0OEkAeXHnbstwmHFscadQ/FCSGGM9Wj3sCp54HXFs6I=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=k/lNNGBhXbpnc/5LBW1zGsU34nc7RmLXWFZejYx0xWvEQF9ZdSHov3/InpXaFzjHK
-         Z+oDt/5EzD85bXWjufFCsNzX/ZAgEO0ade0BuIM4lqd2zlJKYWt/AbPROOfej+VGAK
-         rzXTgyvseFAbiJ856edQE6+0/Ahe5rsTTpBKHnDmwwDt9k5CeBsE40u/qXPN18IG9s
-         JdGJ0Pqb0PXe9cKHu1rNYrsW0KdXSQCCFDnYRoQAa817jvQ0qzQv1FAPWiPI4ZhW/G
-         xkgjYmkIBsC8FzCf3vykZwO7EYaczu+wTK4tVXo5CSzwHg9kZVRt0FXJGhYlfWuXyj
-         FaT2BTy0rGTyQ==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In case of failure of alloc_ud_wq_attr, the memory allocated by
+rvt_alloc_rq() is not freed. The patch fixes this issue by
+calling rvt_free_rq().
 
-On 6/12/20 12:42 PM, Jason Gunthorpe wrote:
-> On Fri, Jun 12, 2020 at 12:35:24PM -0700, Matthew Wilcox wrote:
->> On Fri, Jun 12, 2020 at 12:26:18PM -0700, Ralph Campbell wrote:
->>> In zap_pte_range(), the check for non_swap_entry() and
->>> is_device_private_entry() is redundant since the latter is a subset of the
->>> former. Remove the redundant check to simplify the code and for clarity.
->>
->> That is highly configuration dependent.
->>
->> #else /* CONFIG_DEVICE_PRIVATE */
->> ...
->> static inline bool is_device_private_entry(swp_entry_t entry)
->> {
->>          return false;
->> }
-> 
-> The commit message might be a bit confusing, as it is not a subset, I
-> would say that device_private_entry alone is sufficient to tell if the
-> entry is private or not.
-> 
-> For the !CONFIG_DEVICE_PRIVATE case having it wired to false is
-> right.
-> 
-> Jason
-> 
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+---
+ drivers/infiniband/sw/rdmavt/qp.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-How about the following message instead?
+diff --git a/drivers/infiniband/sw/rdmavt/qp.c b/drivers/infiniband/sw/rdmavt/qp.c
+index 511b72809e14..17ea7da73bf9 100644
+--- a/drivers/infiniband/sw/rdmavt/qp.c
++++ b/drivers/infiniband/sw/rdmavt/qp.c
+@@ -1203,6 +1203,7 @@ struct ib_qp *rvt_create_qp(struct ib_pd *ibpd,
+ 			qp->s_flags = RVT_S_SIGNAL_REQ_WR;
+ 		err = alloc_ud_wq_attr(qp, rdi->dparms.node);
+ 		if (err) {
++			rvt_free_rq(&qp->r_rq);
+ 			ret = (ERR_PTR(err));
+ 			goto bail_driver_priv;
+ 		}
+-- 
+2.25.1
 
-In zap_pte_range(), the check for non_swap_entry() and
-is_device_private_entry() is unnecessary since the latter is sufficient
-to determine if the page is a device private page. Remove the test for
-non_swap_entry() to simplify the code and for clarity.
