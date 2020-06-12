@@ -2,106 +2,106 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4470DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19702C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1ADF3207F7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:01:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9964207F7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:02:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="my5eY2yc"
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="PBYbhxCM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbgFLQBS (ORCPT
+        id S1726381AbgFLQCG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 12:01:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41872 "EHLO
+        Fri, 12 Jun 2020 12:02:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgFLQBR (ORCPT
+        with ESMTP id S1726349AbgFLQCC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 12:01:17 -0400
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30AE1C03E96F
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 09:01:17 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id k1so3814671pls.2
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 09:01:17 -0700 (PDT)
+        Fri, 12 Jun 2020 12:02:02 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12DB4C08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 09:02:02 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id c3so10226828wru.12
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 09:02:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8arUOApLiXDRUGCMIRF3WITWesa059DBqowSaJoP3kg=;
-        b=my5eY2ycooXFvDMr0LtDM+kEGSVSJON/nRXck6cJWtWaIvr79zLH9d5AaK9o2wxpjG
-         R0+znBSCLwP73h9oARXj0WqD2Z2JyPWOUqIuW2K67Dx0xEFL40Nq3/cTS2U6leGwAVeS
-         wg3TtmCvTNn84lFYU1JH7E8HUps+G7lLxw93BgFo9DY9xpTdQLS6HWpbhY2Dahe8xFvG
-         uFIvsGL0xoAGUzG8/xpt/1dUj/W8qYiCfz/kZaqv77dkNoBIeuIoRj4H+4iLL87M/X/Z
-         8T8BwdULYyr3fhtNVYHMhLbOJ5II+7xWeUK7ESCoRhhPs2r+lEFAaX+HLvY+vne1WGDA
-         JKjQ==
+        d=cloudflare.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=zQejEshYFNqUb7v3sioackX6D/pyfet7gpxzYUl52wE=;
+        b=PBYbhxCMm9X+7/S47/3y+XNZktGaW42Z7fcfOreCztwwDU50QNAbPSjHdjzR+nZFit
+         305TjsQRfWasNDoU/NywVe2HLHqNrWeS7kF/hLOrAeXpuypJ4icYBdiY3OxolNpJVbsC
+         j2Bp60+NVG2kGFpa1PAj91qYQMPUEWyZsQQqM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8arUOApLiXDRUGCMIRF3WITWesa059DBqowSaJoP3kg=;
-        b=MiCUmOyRdo7GtSfXdGNK3P0c5ULi1qiPEYbn+O30qS6sXHS111wy0PWjuUpnDFQjrS
-         NbxvRcgcf2Hwq6OPkymtk5s9y8hv5/InAq7ttXVdMcky7bhd+hlpEVCM9p1d/bRiFdof
-         oPN6WlPNXjgigZKIiVcxPSK6tEd3+nHiKo0auY8QMdMlsyTXo/RHtnWM5RA/ct1YRkEh
-         6+Ze009tZ5a4c0id4AYQWC56y2/Pufcu6NhRCbYc8guc8XihANUh+2DFzugorT7seQiY
-         7EX1OfSgyQIBK0GF1HQZxTosfEfmPKgh74wGz/z0wZqQSFjM2ko9FJLhclpn0AlqrodQ
-         eOxg==
-X-Gm-Message-State: AOAM533OCr3BQa+hnKt5+Qq1SqyAsrbnMPFR/IM8rOFZpg9PLsPcSzCc
-        tUjzKl/4I+WegIW2alkz1fY=
-X-Google-Smtp-Source: ABdhPJwP1eHttivf0/PWqEs9M6GPvKgYt8tIyp75MZaGCIFg/3sT6iI0wPkeT3MKAFbjn+gEQjSAVA==
-X-Received: by 2002:a17:90a:266f:: with SMTP id l102mr14542976pje.190.1591977675395;
-        Fri, 12 Jun 2020 09:01:15 -0700 (PDT)
-Received: from localhost ([49.205.221.68])
-        by smtp.gmail.com with ESMTPSA id u4sm6473576pfl.102.2020.06.12.09.01.14
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 12 Jun 2020 09:01:14 -0700 (PDT)
-Date:   Fri, 12 Jun 2020 21:31:12 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     Nicolas Pitre <nico@fluxnic.net>
-Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [RFC 0/3] ARM: copy_{from,to}_user() for vmsplit 4g/4g
-Message-ID: <20200612160112.GA27659@afzalpc>
-References: <cover.1591885760.git.afzal.mohd.ma@gmail.com>
- <nycvar.YSQ.7.77.849.2006121117250.3341460@knanqh.ubzr>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=zQejEshYFNqUb7v3sioackX6D/pyfet7gpxzYUl52wE=;
+        b=sprG5fkQk36x7xyNkQgMi2vEH1VvUUr61WzAUfBuMboSyvzJEjq1ay0F9jD+PiUZGp
+         ttZNYQbyBIw6Fiksn7jI7D3llGlF94HL+IftPhWH1fIX1A6ob5OnniV8A/phRRbDNLrw
+         8O/vnL6taH+4TGSIc+NazD8TqPs4p3vqt7hF/WfsfrT2AGtmPM+v2W0J9kfuAbZWCXE+
+         Rr+anA1Fmel+Bv4VisupBo5q7BCsEfKISVys/KKXoCX3Be8XtJNWXEmTPdodurbJdXAY
+         OXEa5CgpohDL6ZhqtaaTse6Rvx6dHz6WkLMCt67/MQ5vuS2cuPDd7C8rYOR9J8wdl1me
+         xqNw==
+X-Gm-Message-State: AOAM530lw+WITeYzRbwOtlo5SiILpRpMy64g8Jx6AOVRugXQUrUx+APX
+        UtWK6vjGc00DWPDb0sxbewMwMA==
+X-Google-Smtp-Source: ABdhPJwmxuL4QdXOsFvU61egyGC88qJdz9nI+m0Pp8bmpgmWGAwH/RDq42CraRgRg31Tvv29fPJ3/g==
+X-Received: by 2002:adf:e9cb:: with SMTP id l11mr15244107wrn.86.1591977720712;
+        Fri, 12 Jun 2020 09:02:00 -0700 (PDT)
+Received: from antares.lan (1.e.7.e.0.1.3.6.1.5.d.2.f.1.0.9.f.f.6.2.a.5.a.7.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:7a5a:26ff:901f:2d51:6310:e7e1])
+        by smtp.gmail.com with ESMTPSA id k16sm11169941wrp.66.2020.06.12.09.01.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2020 09:02:00 -0700 (PDT)
+From:   Lorenz Bauer <lmb@cloudflare.com>
+To:     John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Lorenz Bauer <lmb@cloudflare.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>
+Cc:     kernel-team@cloudflare.com, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH bpf 2/2] bpf: sockmap: reject invalid attach_flags
+Date:   Fri, 12 Jun 2020 17:01:41 +0100
+Message-Id: <20200612160141.188370-2-lmb@cloudflare.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200612160141.188370-1-lmb@cloudflare.com>
+References: <20200612160141.188370-1-lmb@cloudflare.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <nycvar.YSQ.7.77.849.2006121117250.3341460@knanqh.ubzr>
-User-Agent: Mutt/1.9.3 (2018-01-21)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Using BPF_PROG_ATTACH on a sockmap program currently understands no
+flags, but accepts any value. Return EINVAL if any flags are specified.
 
-On Fri, Jun 12, 2020 at 11:19:23AM -0400, Nicolas Pitre wrote:
-> On Fri, 12 Jun 2020, afzal mohammed wrote:
+Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+Fixes: 604326b41a6f ("bpf, sockmap: convert to generic sk_msg interface")
+---
+ net/core/sock_map.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> > Performance wise, results are not encouraging, 'dd' on tmpfs results,
-
-> Could you compare with CONFIG_UACCESS_WITH_MEMCPY as well?
-
-                 512     1K      4K     16K     32K     64K     1M
+diff --git a/net/core/sock_map.c b/net/core/sock_map.c
+index 00a26cf2cfe9..6f0894909138 100644
+--- a/net/core/sock_map.c
++++ b/net/core/sock_map.c
+@@ -70,6 +70,9 @@ int sock_map_get_from_fd(const union bpf_attr *attr, struct bpf_prog *prog)
+ 	struct fd f;
+ 	int ret;
  
-normal           30      46      89     95      90      85      65
++	if (attr->attach_flags)
++		return -EINVAL;
++
+ 	f = fdget(ufd);
+ 	map = __bpf_map_get(f);
+ 	if (IS_ERR(map))
+-- 
+2.25.1
 
-uaccess_w_memcpy 28.5    45      85     92      91      85      65
-
-w/ series        22      36      72     79      78      75      61
-
-There are variations in the range +/-2 in some readings when repeated,
-not put above, to keep comparison simple.
-
-Regards
-afzal
