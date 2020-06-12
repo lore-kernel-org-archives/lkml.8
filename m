@@ -2,107 +2,200 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3292C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 18:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8007AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 18:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A736207ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 18:34:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CCFC20801
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 18:35:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="S74xKWuA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbgFLSeZ (ORCPT
+        id S1726362AbgFLSfD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 14:34:25 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:42843 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726309AbgFLSeV (ORCPT
+        Fri, 12 Jun 2020 14:35:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37306 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726309AbgFLSfD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 14:34:21 -0400
-Received: by mail-io1-f72.google.com with SMTP id a16so6703962iow.9
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 11:34:19 -0700 (PDT)
+        Fri, 12 Jun 2020 14:35:03 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 306A4C03E96F
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 11:35:03 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id h185so4706914pfg.2
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 11:35:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=lo23MkK3oKdy4eP+VnzY6Z8lJ6ELcmkBOBeirsdef6w=;
+        b=S74xKWuAXXukOQlwacSEcEdt1GgjV38lUB4QRPuRWJL/ZEWtRpBCmS/DR2BDqixQq4
+         dpuZrg+TFAqn5gtk0gQyAk/PzbCJTSlH7/y7DRq+ZRALtZr9lzyQaNnS7uzDNAHjeCKq
+         0onKFvecNb5QdESMgLCpN6ALow3kidAVUSwL4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=GP5kyNnAoMO+Y+j8GajalB1W8y9R1MA095I7NPSnTDs=;
-        b=U5O+7ZK7OVuPzQF3FAZNHEOmWwtfnRPXvDkoyvrGqgOepntaMPfj10sDoP0uAOzME2
-         V5EnhNTvPAd9hPUwscXTAq+2ehuufBue0WKK9yKQBihvNzZS8AEQ1TH3rzjcDGYYGKoY
-         yJRU8bAm9MfvaQbUI64XFDdPNcC688tqieTJRBFl+vTk/rkj3s8qz8xFGkP9RSbCdlpb
-         6ryVIK4YHW5QrSln+48qeLsZA44MhU2iiMlhYV7qmZXjtyZRVzqhRmnxpQSKbEVcSDq8
-         RtJa4/FDdH3iLLKnmtLwUuDOSPomvSGNY+Qkj5LDtd9Lv5li6N1okCNplRtnQBOcVu6U
-         Vczg==
-X-Gm-Message-State: AOAM53109u0J7uSho9EO2Nf4p0YrXAUtAKouL0qSPAY7SruwrAC5BCS9
-        u7ynMpzRzWZR5p5bdDPeeerO98ZBQ3jf67HnAFbIlWshcV9x
-X-Google-Smtp-Source: ABdhPJxkzP1X/Sc4h5xBvzyleoSa7OQigmndmQWmhwM/LOvU0piOR/suDQx5LmuSsPprWS5mCsm1uSWYK6gTZMac3FGouptucEre
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=lo23MkK3oKdy4eP+VnzY6Z8lJ6ELcmkBOBeirsdef6w=;
+        b=WQFuJIZOTe9FJkgNL7KOqCi3K3E7ORP/gnPIfpaGCuZYw6XNFx4wSPNq3nyCGpDT+u
+         w/FSexLfBhRRK08qRpYQrtfBI3mbKXVIF1Wn/elmuFmJiFx3CucwE+7IvCImbdlgX3Y3
+         uRWWK17xs6K8DoMXmWkYtEHQKvxgWqwlIsh5f1SIs69poKd9NkA3K26aO+ZUQ32u+4Nu
+         bX6C+mMdlL+5wINT+pfNd/Qf4qVm/hG7xsuOUAVQ1z88BfWqdLTZ3pE/GZqAmIYnG9DS
+         uscJJ/miCFWdQQOMt+bW/bWwGr3aih6EOYcLKgGFDzMEut7U2nIrQcK9WpOLO1NBGcNV
+         zdig==
+X-Gm-Message-State: AOAM533Hh7GjMyPYF5eOcTwfd8Qx4nS6oYA464352w545KfQBR0Wg1+G
+        yahsJePf5pHZoSOMuYCnlXItuA==
+X-Google-Smtp-Source: ABdhPJxhwGwkzKdk9t7CQwMydxRXXOeJ7UAS9/ZuSNwcjXG0p3iRqAjZ7HiZ6IsnOfVijRtf3Dr5Ig==
+X-Received: by 2002:a63:3587:: with SMTP id c129mr12357594pga.190.1591986902726;
+        Fri, 12 Jun 2020 11:35:02 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id w190sm6750641pfw.35.2020.06.12.11.35.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2020 11:35:01 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        David Windsor <dwindsor@gmail.com>,
+        Hans Liljestrand <ishkamiel@gmail.com>,
+        Xiaoming Ni <nixiaoming@huawei.com>,
+        Paul Moore <paul@paul-moore.com>, edumazet@google.com,
+        paulmck@kernel.org, David Howells <dhowells@redhat.com>,
+        shakeelb@google.com, James Morris <jamorris@linux.microsoft.com>,
+        alex.huangjianhui@huawei.com, dylix.dailei@huawei.com,
+        chenzefeng2@huawei.com, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/3] groups: convert group_info.usage to refcount_t
+Date:   Fri, 12 Jun 2020 11:34:49 -0700
+Message-Id: <20200612183450.4189588-3-keescook@chromium.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200612183450.4189588-1-keescook@chromium.org>
+References: <20200612183450.4189588-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:ce:: with SMTP id w14mr9773000jao.27.1591986857779;
- Fri, 12 Jun 2020 11:34:17 -0700 (PDT)
-Date:   Fri, 12 Jun 2020 11:34:17 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000025269c05a7e753d0@google.com>
-Subject: net test error: BUG: using smp_processor_id() in preemptible code in ext4_mb_new_blocks
-From:   syzbot <syzbot+38af52cdcc116cee7742@syzkaller.appspotmail.com>
-To:     adilger.kernel@dilger.ca, davem@davemloft.net, kuba@kernel.org,
-        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        tytso@mit.edu
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Elena Reshetova <elena.reshetova@intel.com>
 
-syzbot found the following crash on:
+atomic_t variables are currently used to implement reference
+counters with the following properties:
+ - counter is initialized to 1 using atomic_set()
+ - a resource is freed upon counter reaching zero
+ - once counter reaches zero, its further
+   increments aren't allowed
+ - counter schema uses basic atomic operations
+   (set, inc, inc_not_zero, dec_and_test, etc.)
 
-HEAD commit:    18dbd4cd Merge branch 'net-ipa-endpoint-configuration-fixes'
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=13f762ea100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b366fd92adf6f8b4
-dashboard link: https://syzkaller.appspot.com/bug?extid=38af52cdcc116cee7742
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Such atomic variables should be converted to a newly provided
+refcount_t type and API that prevents accidental counter overflows
+and underflows. This is important since overflows and underflows
+can lead to use-after-free situation and be exploitable.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+38af52cdcc116cee7742@syzkaller.appspotmail.com
+The variable group_info.usage is used as pure reference counter.
+Convert it to refcount_t and fix up the operations.
 
-BUG: using smp_processor_id() in preemptible [00000000] code: systemd-rfkill/6838
-caller is ext4_mb_new_blocks+0xa77/0x3b30 fs/ext4/mballoc.c:4711
-CPU: 1 PID: 6838 Comm: systemd-rfkill Not tainted 5.7.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- check_preemption_disabled lib/smp_processor_id.c:47 [inline]
- debug_smp_processor_id.cold+0x88/0x9b lib/smp_processor_id.c:57
- ext4_mb_new_blocks+0xa77/0x3b30 fs/ext4/mballoc.c:4711
- ext4_ext_map_blocks+0x2044/0x3410 fs/ext4/extents.c:4244
- ext4_map_blocks+0x4cb/0x1640 fs/ext4/inode.c:626
- ext4_getblk+0xad/0x520 fs/ext4/inode.c:833
- ext4_bread+0x7c/0x380 fs/ext4/inode.c:883
- ext4_append+0x153/0x360 fs/ext4/namei.c:67
- ext4_init_new_dir fs/ext4/namei.c:2757 [inline]
- ext4_mkdir+0x5e0/0xdf0 fs/ext4/namei.c:2802
- vfs_mkdir+0x419/0x690 fs/namei.c:3627
- do_mkdirat+0x21e/0x280 fs/namei.c:3650
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x7fa2f1d24687
-Code: 00 b8 ff ff ff ff c3 0f 1f 40 00 48 8b 05 09 d8 2b 00 64 c7 00 5f 00 00 00 b8 ff ff ff ff c3 0f 1f 40 00 b8 53 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d e1 d7 2b 00 f7 d8 64 89 01 48
-RSP: 002b:00007fffeaa243a8 EFLAGS: 00000246 ORIG_RAX: 0000000000000053
-RAX: ffffffffffffffda RBX: 00005638ed5e0985 RCX: 00007fa2f1d24687
-RDX: 00007fffeaa24270 RSI: 00000000000001ed RDI: 00005638ed5e0985
-RBP: 00007fa2f1d24680 R08: 0000000000000100 R09: 0000000000000000
-R10: 00005638ed5e0980 R11: 0000000000000246 R12: 00000000000001ed
-R13: 00007fffeaa24530 R14: 0000000000000000 R15: 0000000000000000
+**Important note for maintainers:
 
+Some functions from refcount_t API defined in lib/refcount.c
+have different memory ordering guarantees than their atomic
+counterparts. Please check Documentation/core-api/refcount-vs-atomic.rst
+for more information.
 
+Normally the differences should not matter since refcount_t provides
+enough guarantees to satisfy the refcounting use cases, but in
+some rare cases it might matter.
+Please double check that you don't have some undocumented
+memory guarantees for this variable usage.
+
+For the group_info.usage it might make a difference
+in following places:
+ - put_group_info(): decrement in refcount_dec_and_test() only
+   provides RELEASE ordering and ACQUIRE ordering on success
+   vs. fully ordered atomic counterpart
+
+Suggested-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Elena Reshetova <elena.reshetova@intel.com>
+Reviewed-by: David Windsor <dwindsor@gmail.com>
+Reviewed-by: Hans Liljestrand <ishkamiel@gmail.com>
+Link: https://lore.kernel.org/r/20190306110549.7628-3-elena.reshetova@intel.com
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ include/linux/cred.h | 7 ++++---
+ kernel/cred.c        | 2 +-
+ kernel/groups.c      | 2 +-
+ 3 files changed, 6 insertions(+), 5 deletions(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/include/linux/cred.h b/include/linux/cred.h
+index 18639c069263..32be0daf5a32 100644
+--- a/include/linux/cred.h
++++ b/include/linux/cred.h
+@@ -12,6 +12,7 @@
+ #include <linux/init.h>
+ #include <linux/key.h>
+ #include <linux/atomic.h>
++#include <linux/refcount.h>
+ #include <linux/uidgid.h>
+ #include <linux/sched.h>
+ #include <linux/sched/user.h>
+@@ -23,7 +24,7 @@ struct inode;
+  * COW Supplementary groups list
+  */
+ struct group_info {
+-	atomic_t	usage;
++	refcount_t	usage;
+ 	int		ngroups;
+ 	kgid_t		gid[0];
+ } __randomize_layout;
+@@ -39,7 +40,7 @@ struct group_info {
+  */
+ static inline struct group_info *get_group_info(struct group_info *gi)
+ {
+-	atomic_inc(&gi->usage);
++	refcount_inc(&gi->usage);
+ 	return gi;
+ }
+ 
+@@ -49,7 +50,7 @@ static inline struct group_info *get_group_info(struct group_info *gi)
+  */
+ #define put_group_info(group_info)			\
+ do {							\
+-	if (atomic_dec_and_test(&(group_info)->usage))	\
++	if (refcount_dec_and_test(&(group_info)->usage))	\
+ 		groups_free(group_info);		\
+ } while (0)
+ 
+diff --git a/kernel/cred.c b/kernel/cred.c
+index 421b1149c651..ed95117d07c4 100644
+--- a/kernel/cred.c
++++ b/kernel/cred.c
+@@ -33,7 +33,7 @@ do {									\
+ static struct kmem_cache *cred_jar;
+ 
+ /* init to 2 - one for init_task, one to ensure it is never freed */
+-struct group_info init_groups = { .usage = ATOMIC_INIT(2) };
++struct group_info init_groups = { .usage = REFCOUNT_INIT(2) };
+ 
+ /*
+  * The initial credentials for the initial task
+diff --git a/kernel/groups.c b/kernel/groups.c
+index 6ee6691f6839..22f2892dbaf3 100644
+--- a/kernel/groups.c
++++ b/kernel/groups.c
+@@ -24,7 +24,7 @@ struct group_info *groups_alloc(int gidsetsize)
+ 	if (!gi)
+ 		return NULL;
+ 
+-	atomic_set(&gi->usage, 1);
++	refcount_set(&gi->usage, 1);
+ 	gi->ngroups = gidsetsize;
+ 	return gi;
+ }
+-- 
+2.25.1
+
