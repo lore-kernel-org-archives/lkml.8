@@ -2,179 +2,240 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F04C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA9DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:37:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53C85207ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:36:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9CCC20801
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:37:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Af0NH3lN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PhguIX6y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbgFLHgd (ORCPT
+        id S1726499AbgFLHhG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 03:36:33 -0400
-Received: from mout.web.de ([212.227.17.12]:33721 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726292AbgFLHgc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 03:36:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1591947378;
-        bh=h5ZPMHTuTFfrSkrmMG5IcppBLQvvPKTCErPFDyibaIU=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=Af0NH3lNwEeUA533gNNhlZpeb/YT8RO6yRE822dFwX3E3A5KKLmxrk755XYmdlePc
-         8DGG1c8F3Cwr+PvPwJTyv21rKAerMOXI0vQuf33RH8mMXcRneWO6QbIiNqRDDa40MS
-         MrnAzj19sHqVzG2Im2XGaxDqG+EcUUGRO5Hyj5lw=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.95.40]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MduMb-1jZXTD0jZl-00PcZZ; Fri, 12
- Jun 2020 09:36:18 +0200
-To:     Bernard Zhao <bernard@vivo.com>, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        opensource.kernel@vivo.com
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>
-Subject: Re: [PATCH] drm/msm: Improve exception handling in
- msm_gpu_crashstate_capture()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <56a615b6-9881-ff01-fa0f-8ea070fc03e7@web.de>
-Date:   Fri, 12 Jun 2020 09:36:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+        Fri, 12 Jun 2020 03:37:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48826 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726292AbgFLHhF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 03:37:05 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2531FC08C5C1;
+        Fri, 12 Jun 2020 00:37:05 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id l17so7170508wmj.0;
+        Fri, 12 Jun 2020 00:37:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=CsPuEwz2KlKcr5rLdEZdgFQzBHepX142JSK3awOfHpU=;
+        b=PhguIX6ypQRgdjVXR+wFQ0fAgJI9dze6MoTAo68YQJjW5o3whOVHXFIbSZkoVignW2
+         jaop0c04clt8cd482jr625DJBJU2KzRQikhOLrp+XpGpwjjkXl+u/zynMndQ8P1ETpwn
+         0Qc2DJgPP5KpQKx3s/y0oPHSxCPWhxmIjQbEUky/VJD2Aj3U20yNLbhiafmaK5s7NuU/
+         +x1jxTyAUM0lIyV9/Uxp4oatKyefs1mE5k3sOSeyGRzTQu3oA4mCE85lJJLxEIeppdRH
+         VvdaVhbJlxKNGBrgzb1Za2wQEP17Bewi3NQy96mNm+Soas/RPWk3V9XZaQHxG0JTT+Wr
+         11Gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=CsPuEwz2KlKcr5rLdEZdgFQzBHepX142JSK3awOfHpU=;
+        b=O70Gln0juupJi9G8qLdmv0LYYBEEhcZGibBWSJx79pAxFzzDE/Nj+hJF9QbIIXB1FA
+         hAESZLr+7dSSoGOv0iAdAgrGsv3IC7Z3UdS40tqWXKy6L/aEoSnHp8DroAGFXneh8KbC
+         IgcuFdFVzyzwJPdBvE8MKLZlbXAOGtoXnjbDzSZL2xvvU8gTOpE7/FiTegcRKMEuJLyX
+         tfNgWVxlklPACXWiIUvCCivNZ4AwfdMGP0uRWlpkArZyG0Q8ptc3/uJMhNgYW5mQHSOP
+         I+WPiT2qyJeu7ee76EvRPYiglnDSPN9hFGu6ymzPX8DmGVe3c6AMHq7rPGtgqCVxYpt4
+         65YA==
+X-Gm-Message-State: AOAM532mxLgPOpQ8SDEB+gXdPvNhrZg4jQJF0nCQp6XJ20O10UY0pnbt
+        nlf2aCMC6t+k70r0FqdJxM0=
+X-Google-Smtp-Source: ABdhPJxGoZ4A2ik/ERBCMKYhORtojyMzKbx2GGzEv0JjrAARr7tCz9FS832K2SbggeD5tZg5kejqjw==
+X-Received: by 2002:a7b:c041:: with SMTP id u1mr12651939wmc.56.1591947423652;
+        Fri, 12 Jun 2020 00:37:03 -0700 (PDT)
+Received: from macbook-pro-alvaro.lan (28.red-83-49-61.dynamicip.rima-tde.net. [83.49.61.28])
+        by smtp.gmail.com with ESMTPSA id p7sm8835714wro.26.2020.06.12.00.37.02
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 12 Jun 2020 00:37:02 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH v2] mtd: parsers: bcm63xx: simplify CFE detection
+From:   =?utf-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
+In-Reply-To: <20200612093345.511f6d45@xps13>
+Date:   Fri, 12 Jun 2020 09:37:01 +0200
+Cc:     Florian Fainelli <f.fainelli@gmail.com>, tsbogend@alpha.franken.de,
+        bcm-kernel-feedback-list@broadcom.com, richard@nod.at,
+        vigneshr@ti.com, Jonas Gorski <jonas.gorski@gmail.com>,
+        linus.walleij@linaro.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:de8Lnx6+IBoUWlDadcLQfDWQBbTUgx3M1EpzL9s+sqP4ZHhiHxG
- RiMmk/9ZsayD4zFAZRuOv7flpCtes1V1Ccb0bV5HWrz/OoubMtgxoF6C/bAJHkYYf7foWrk
- z4qBW2vWmFxXBHgIN3Qm3nviG8nzpXf50ZVd0vtV33uJcnFiXwKLoiP31Qb16umqRzZdRTE
- ZP7iogJYGSZ2YavcIMdxQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:mwThrUYpLl8=:w+irajj0GB4nRreNUwZqSq
- aS4V9V94V9rfq0TChZM/LXx5jXTHcQkywWmzH0gakrYnykjl8LrsXPvegLZJHed8SKK/YKlrS
- yTpsRUTm+sofsVsGlJZYNeiLHUISQjclQz5Vt5q8sHAtxPneYax3IgdOKsiJkA4Gd94fB+e6t
- GdFET6GRETpEU1XpXGBZ4JtESAlQIFvJ0ATdStnnCpBePz8jn+8f10IQ5ElGWcapauWqSB5aW
- S3T28t99CSCyhOFxNgNNG4qBcR9/JHQAlLuuBUPuL3cAgd7bkaufgrbjUvOEIVxiVKDWWbcff
- BxKVMdRR1Mq8LQ0CsVjt4EguXVdWI8iPQbf0W1d1dcTSR3/Xl4FyPv78cJitx5DU4sbG5imMP
- K/57XDvJA6zH9MshUdoKIX6+5/cAj/6uVHeNRHoHlG8XXkZXayicZ65ryb4k1+j1NihaiwSso
- gCTU0a5XWVBR33js3pFbt0jJzC/PKcwp7jxeHEZafY9BSv8U2pE2eiGDYzS/v5hSEPPeuz+y1
- TpxCNyz/87soHwA5g865hIRGmlehBgFSknaT34PItU6y8JZ1L2dFNueVLucgu7VYdKfJtOtPo
- uUOYiwfNK6SZsKX8MKY1Rfouqm2eyDMg+jmVZ/sH/huOXFj5nXptyJp6jSiFxQ/9OagIRHCx4
- 3A/biJlUPX5komcJwKwoHPDkGwf9fY4rdxR4yceAzG30exOfe3RhJWk1DIDue7NQ0vimK1g9t
- qdmIdOfJR82oFRbvPzG78FfeGpRYvlZQnXjseMF5AWD8SYbVA0/XRB/i/CC8EtN4JjRwHgxem
- 9BQqsLVnFn3fZ2WcAKAsInx6wM/7mfAxod2PkH+yGtygb3sYn300fTuCuqZsNfANi42ALD1hL
- fvCjqfVC4ByhIb3mRzygJArzHjG7g2CGszQgd2KEzoa6MpLk2fSM0HBn4JfM1KnlLJHBfi3/A
- BE6j5Ve/D3Pov5E/mxUthRxtXJriqCT2K8s0cwtOsN1vucTq9SYtW/NUHPDEhyxhv3lHDpTfO
- 1dY4V8cxNEp2YVwVZLmg8gOMBaUu3lJvtq1F65tCseowodJHoDGGnjXQUET23etIBDSth4sTq
- OMUXEGge2CgAN/GB/jfW1/VAReriI2NM/wreYlsFR7Bn1zB1got6WoRRvSOFGyZdStIBJqLy0
- 0mqvWQJ10qYL0Z+HAWh8ys2sXCZ2MMEnmJmymatBA398qiOf7dfJo2R72+M3r3tkGaKX3Uhxo
- aACe46nmP6Z4dGeOu
+Message-Id: <011AB0DF-CE82-4A4B-8B15-7A584DB274A8@gmail.com>
+References: <20200608094053.3381512-1-noltari@gmail.com>
+ <20200608160649.3717152-1-noltari@gmail.com> <20200611095540.250184d2@xps13>
+ <779D37C7-58CB-49AF-8739-C34295B86FC4@gmail.com>
+ <715b0947-f4dd-0c04-5c52-5da06c04d665@gmail.com>
+ <7DC0E349-1319-47FE-8565-9B30C190EACB@gmail.com>
+ <20200612090252.02581c21@xps13>
+ <CBDB2BF7-07CB-4231-B200-86DE2BFE86A0@gmail.com>
+ <20200612093345.511f6d45@xps13>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Function msm_gpu_crashstate_capture maybe called for several
-> times, and then the state->bos is a potential memleak. Also
-> the state->pos maybe alloc failed, but now without any handle.
-> This change is to fix some potential memleak and add error
-> handle when alloc failed.
+Hi Miqu=C3=A8l,
 
-I suggest to improve the provided information.
-How do you think about a wording variant like the following?
+> El 12 jun 2020, a las 9:33, Miquel Raynal <miquel.raynal@bootlin.com> =
+escribi=C3=B3:
+>=20
+> Hi =C3=81lvaro,
+>=20
+> =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com> wrote on Fri, 12 =
+Jun 2020
+> 09:30:27 +0200:
+>=20
+>> Hi Miqu=C3=A8l,
+>>=20
+>>> El 12 jun 2020, a las 9:02, Miquel Raynal =
+<miquel.raynal@bootlin.com> escribi=C3=B3:
+>>>=20
+>>> Hi =C3=81lvaro,
+>>>=20
+>>> =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com> wrote on Thu, =
+11 Jun 2020
+>>> 18:14:20 +0200:
+>>>=20
+>>>> Hi Florian,
+>>>>=20
+>>>>> El 11 jun 2020, a las 17:42, Florian Fainelli =
+<f.fainelli@gmail.com> escribi=C3=B3:
+>>>>>=20
+>>>>>=20
+>>>>>=20
+>>>>> On 6/11/2020 8:16 AM, =C3=81lvaro Fern=C3=A1ndez Rojas wrote:   =20=
 
-   The function =E2=80=9Cmsm_gpu_crashstate_capture=E2=80=9D can be called=
- multiple times.
-   The members =E2=80=9Ccomm=E2=80=9D, =E2=80=9Ccmd=E2=80=9D and =E2=80=9C=
-bos=E2=80=9D of the data structure =E2=80=9Cmsm_gpu_state=E2=80=9D
-   are reassigned with pointers according to dynamic memory allocations
-   if the preprocessor symbol =E2=80=9CCONFIG_DEV_COREDUMP=E2=80=9D was de=
-fined.
-   But the function =E2=80=9Ckfree=E2=80=9D was not called for them before=
-.
+>>>>>> Hi Miquel,
+>>>>>>=20
+>>>>>>> El 11 jun 2020, a las 9:55, Miquel Raynal =
+<miquel.raynal@bootlin.com> escribi=C3=B3:
+>>>>>>>=20
+>>>>>>> Hi =C3=81lvaro,
+>>>>>>>=20
+>>>>>>> =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com> wrote on =
+Mon,  8 Jun 2020
+>>>>>>> 18:06:49 +0200:
+>>>>>>>=20
+>>>>>>>> Instead of trying to parse CFE version string, which is =
+customized by some
+>>>>>>>> vendors, let's just check that "CFE1" was passed on argument 3.
+>>>>>>>>=20
+>>>>>>>> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas =
+<noltari@gmail.com>
+>>>>>>>> Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
+>>>>>>>> ---
+>>>>>>>> v2: use CFE_EPTSEAL definition and avoid using an additional =
+funtion.
+>>>>>>>>=20
+>>>>>>>> drivers/mtd/parsers/bcm63xxpart.c | 29 =
+++++-------------------------
+>>>>>>>> 1 file changed, 4 insertions(+), 25 deletions(-)
+>>>>>>>>=20
+>>>>>>>> diff --git a/drivers/mtd/parsers/bcm63xxpart.c =
+b/drivers/mtd/parsers/bcm63xxpart.c
+>>>>>>>> index 78f90c6c18fd..493a75b2f266 100644
+>>>>>>>> --- a/drivers/mtd/parsers/bcm63xxpart.c
+>>>>>>>> +++ b/drivers/mtd/parsers/bcm63xxpart.c
+>>>>>>>> @@ -22,6 +22,9 @@
+>>>>>>>> #include <linux/mtd/partitions.h>
+>>>>>>>> #include <linux/of.h>
+>>>>>>>>=20
+>>>>>>>> +#include <asm/bootinfo.h>
+>>>>>>>> +#include <asm/fw/cfe/cfe_api.h>   =20
+>>>>>>>=20
+>>>>>>> Are you sure both includes are needed?   =20
+>>>>>>=20
+>>>>>> asm/bootinfo.h is needed for fw_arg3 and asm/fw/cfe/cfe_api.h is =
+needed for CFE_EPTSEAL.
+>>>>>>=20
+>>>>>>>=20
+>>>>>>> I don't think it is a good habit to include asm/ headers, are =
+you sure
+>>>>>>> there is not another header doing it just fine?   =20
+>>>>>>=20
+>>>>>> Both are needed unless you want to add another definition of =
+CFE_EPTSEAL value.
+>>>>>> There are currently two CFE magic definitions, the one in =
+asm/fw/cfe/cfe_api.h and another one in bcm47xxpart.c:
+>>>>>> =
+https://github.com/torvalds/linux/blob/master/arch/mips/include/asm/fw/cfe=
+/cfe_api.h#L28
+>>>>>> =
+https://github.com/torvalds/linux/blob/master/drivers/mtd/parsers/bcm47xxp=
+art.c#L33   =20
+>>>>>=20
+>>>>> The caveat with that approach is that this reduces the compilation
+>>>>> surface to MIPS and BMIPS_GENERIC and BCM63XX only, which is a bit
+>>>>> small. If we could move the CFE definitions to a shared header, =
+and
+>>>>> consolidate the value used by bcm47xxpart.c as well, that would =
+allow us
+>>>>> to build the bcm63xxpart.c file with COMPILE_TEST on other
+>>>>> architectures. This does not really have functional value, but for
+>>>>> maintainers like Miquel, it allows them to quickly test their =
+entire
+>>>>> drivers/mtd/ directory.   =20
+>>>>=20
+>>>> I don=E2=80=99t think fw_arg3 available on non mips archs, is it?
+>>>> I=E2=80=99m happy to move it to a shared header (which would be a =
+good location for this?), but if I=E2=80=99m right it would still be =
+restricted to MIPS. =20
+>>>=20
+>>> Restricting a definition to MIPS, even if it makes sense for you is
+>>> very limiting for me. I need to be able to build as much drivers as =
+I
+>>> can from my laptop and verify they at least compile correctly. If I =
+need
+>>> a MIPS toolchain, an ARC toolchain, a PowerPC, an ARM, an ARM64 and
+>>> whatever other funky toolchain to do just that in X steps: it's very
+>>> painful. We have been adding COMPILE_TEST dependencies on as much
+>>> drivers as we could and we want to continue moving forward. Using =
+such
+>>> include would need to drop the COMPILE_TEST condition from Kconfig =
+and
+>>> this is not something I am willing to do. =20
+>>=20
+>> I totally understand and agree with your point, but I still think =
+that there could be a solution which would be valid for both of us.
+>=20
+> What do you suggest?
 
-   Thus add missing actions.
-   * Release previous objects.
-   * Use further null pointer checks.
-   * Complete the corresponding exception handling.
+I=E2=80=99ve just sent v3 with my suggestion.
+If this isn=E2=80=99t valid then I=E2=80=99m out of ideas...
 
-
-Would you like to add the tag =E2=80=9CFixes=E2=80=9D to the commit messag=
-e?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?id=3Db791d1bdf9212d944d749a5c7f=
-f6febdba241771#n183
-
-
-=E2=80=A6
-> +++ b/drivers/gpu/drm/msm/msm_gpu.c
-> @@ -366,8 +366,11 @@  static void msm_gpu_crashstate_capture(struct msm_=
-gpu *gpu,
->  			if (!should_dump(submit, submit->cmd[i].idx))
->  				nr++;
->
-> +		kfree(state->bos);
->  		state->bos =3D kcalloc(nr,
->  			sizeof(struct msm_gpu_state_bo), GFP_KERNEL);
-> +		if (!state->bos)
-> +			return;
-=E2=80=A6
-
-Will there be a need to reconsider the indentation for function call param=
-eters
-in such source files?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/coding-style.rst?id=3Db791d1bdf9212d944d749a5c7ff6febd=
-ba241771#n93
+>=20
+>>=20
+>>>=20
+>>> Thanks for your understanding :) =20
+>>=20
+>> The current way of detecting CFE isn=E2=80=99t the proper one.
+>> Thank you for understanding that too.
+>=20
+> Of course, I'm not saying I don't want this change, I'm just saying we
+> should find another way to handle it, the below idea is totally fine =
+by
+> me.
+>=20
+>=20
+> Thanks,
+> Miqu=C3=A8l
 
 Regards,
-Markus
+=C3=81lvaro.
+
