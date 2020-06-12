@@ -2,216 +2,130 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBD2C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E89FBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E163320801
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:24:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uWo82/a5"
+	by mail.kernel.org (Postfix) with ESMTP id C89FB20801
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:28:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbgFLEYJ (ORCPT
+        id S1726391AbgFLE2i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 00:24:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47350 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbgFLEYI (ORCPT
+        Fri, 12 Jun 2020 00:28:38 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40545 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725809AbgFLE2i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 00:24:08 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24204C03E96F;
-        Thu, 11 Jun 2020 21:24:07 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id o26so5469127edq.0;
-        Thu, 11 Jun 2020 21:24:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eDw2IckdwMgZNx/RcM3g1bGV48bIHbJTu1OTL4Mb9dA=;
-        b=uWo82/a5SvqD5vhe4pBLnNZ5TXPTxmCro4Zb7tBB9dhuhuB5D/1snBgHddyYyoiO3d
-         4XLZjfVDfB/SNN1Pdd+1Wwq0QXK7UVMe20V+NNsogHzDHMtW6Q8qPX6bgVNMDr3YKpQU
-         tHuDNtcBlKoe+XBaec7zKoM7149ESQEEGDGAAHsC+TCmic3pPcg1OCyZVGEJZK58PCtN
-         /D3em6zKYmJJ9lYEhrZg7wZVjOfnGKJ4kUqZX166SHuoWPVZK2T8M38ZZ0bYBrkxbkoE
-         XsEyPvVzvA/1dXtgOFjIPXi6h581nJ3VxaCghZ1Y0ovtT+vs+V5xT5H7KrTKc7hQvef9
-         knnQ==
+        Fri, 12 Jun 2020 00:28:38 -0400
+Received: by mail-pf1-f195.google.com with SMTP id s23so3713707pfh.7;
+        Thu, 11 Jun 2020 21:28:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eDw2IckdwMgZNx/RcM3g1bGV48bIHbJTu1OTL4Mb9dA=;
-        b=a7ErASf9TYgDvpOQwTFVgYUr2fGHu+THxZu+t1skW4wHrRGrnV4OIN9pi6Lk9ffjI5
-         M6/1xIcIcqSZuhrL3swjopU9qJKXCZ9OzX2U1ao6/n4riO3y2qbZEMbj/RR1o7MEtTHE
-         R0p2y9zs2C+iuzgIJ97u9SJECIZObgzBop28udm5Md8ZUINcLnyvo2gMQYJu6yIBjq/7
-         hRuU7G3WZXhRm9eXjTUR0ofJ0BUlSOD0fumM6TnuHdbMXT8xw1VJi+6s0LX9Ol1pTdF6
-         neHax2BUcuEdj3Agm5ry+yMEOzypSmKa1gHPk5kccZNRlaolRdw5K3C4v7+QFr/ML9Ib
-         NFrg==
-X-Gm-Message-State: AOAM532cy5GkFnpViqVM33Rk+ssvCsyjqJ35K0rYscTjpy/4I8GM9rkz
-        81UNWx0kf7UyiBAs+jpU2dMfrzE4S2YEZulBHV71pqQY7dM=
-X-Google-Smtp-Source: ABdhPJymyEVd8+oMQfu2ojKyHE/Mxz7JgpMXD7uI6wrtO77fo5tKiAU6zjP5jnwXv137W70Qf3ksGdnWh/BJtTe5nAs=
-X-Received: by 2002:aa7:d0cb:: with SMTP id u11mr9456640edo.381.1591935844108;
- Thu, 11 Jun 2020 21:24:04 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=7FHd7ZEofWmIKV3Vjvxv3qh2Z1UvkaKjplL+2txj47M=;
+        b=WkaYAghFoDyfthQ27QZVpctLKNZw6ENkEPdDNodUUx4ccvX4gBX1scuAn8rRClYcWb
+         srNhjWzFhAAByFSnZm8o+LVX4npJ2iK0GPYl6ogVtHAlfgQCqBcCYjTZMpMADH/7bX+P
+         9c+JGeHAKFXWEwC5GUCPlKpnPAXGFP6/Hn20pAXnAcjjDNVIkIlf0YkcM/PDUVo1JIER
+         KuwgFn9gtSfhmFzAnzPEcUT8s296THbZNXpxRJ4KX2aHBBF+mNZvWfx4Y9ZG85YqeTzj
+         Gdan8Ej8mnj/TGF9DrStNZUa4cJadFiZKMAS/B2jzzOf4JJN9HoSZEECSyJ7FvP6ndf+
+         +7YA==
+X-Gm-Message-State: AOAM531oCD4KRGvA3TM2R3WF6L8CzIprmFA72TsV3rECZ5aHfk54JOxy
+        Y3Hg7cNrYzycPW/R/F7eYXM2WCmc
+X-Google-Smtp-Source: ABdhPJwNRN31QbwBE/HjFTZmaD6FLUvogfMml2ZjqNVAfCWe6impYXKcDxVSiAWonUVNVcVnXJ0HNA==
+X-Received: by 2002:a62:3785:: with SMTP id e127mr10235922pfa.210.1591936117373;
+        Thu, 11 Jun 2020 21:28:37 -0700 (PDT)
+Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
+        by smtp.gmail.com with ESMTPSA id i5sm4549593pfd.5.2020.06.11.21.28.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Jun 2020 21:28:36 -0700 (PDT)
+Subject: Re: [RFC PATCH 2/5] scsi: ufs: Add UFS-feature layer
+To:     daejun7.park@samsung.com, ALIM AKHTAR <alim.akhtar@samsung.com>,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>
+Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+References: <1319810e-a323-c022-5e27-902f88cefe8f@acm.org>
+ <963815509.21591320301642.JavaMail.epsvc@epcpadp1>
+ <231786897.01591320001492.JavaMail.epsvc@epcpadp1>
+ <336371513.41591320902369.JavaMail.epsvc@epcpadp1>
+ <CGME20200605011604epcms2p8bec8ef6682583d7248dc7d9dc1bfc882@epcms2p4>
+ <20200612022759epcms2p47929b76eb2e809240f415c19f9383f92@epcms2p4>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <cf01e1d2-50e9-7fa8-b2ee-88a900231304@acm.org>
+Date:   Thu, 11 Jun 2020 21:28:34 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200602024804.GA3776630@p50-ethernet.mattst88.com> <202006021052.E52618F@keescook>
-In-Reply-To: <202006021052.E52618F@keescook>
-From:   Matt Turner <mattst88@gmail.com>
-Date:   Thu, 11 Jun 2020 21:23:52 -0700
-Message-ID: <CAEdQ38F2GP92xB2gMXTrEo-Adbbc9Cy1DWHU9yveGLzJNd2HrA@mail.gmail.com>
-Subject: Re: Regression bisected to f2f84b05e02b (bug: consolidate
- warn_slowpath_fmt() usage)
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Linux-Arch <linux-arch@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-alpha <linux-alpha@vger.kernel.org>,
-        Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200612022759epcms2p47929b76eb2e809240f415c19f9383f92@epcms2p4>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 2, 2020 at 11:03 AM Kees Cook <keescook@chromium.org> wrote:
+On 2020-06-11 19:27, Daejun Park wrote:
+>>> @@ -2525,6 +2525,8 @@ static int ufshcd_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
+>>>  
+>>>    ufshcd_comp_scsi_upiu(hba, lrbp);
+>>>  
+>>> +  ufsf_ops_prep_fn(hba, lrbp);
+>>> +
+>>>    err = ufshcd_map_sg(hba, lrbp);
+>>>    if (err) {
+>>>      lrbp->cmd = NULL;
+> 
+>> What happens if a SCSI command is retried and hence ufsf_ops_prep_fn()
+>> is called multiple times for the same SCSI command?
 >
-> On Mon, Jun 01, 2020 at 07:48:04PM -0700, Matt Turner wrote:
-> > I bisected a regression on alpha to f2f84b05e02b (bug: consolidate
-> > warn_slowpath_fmt() usage) which looks totally innocuous.
-> >
-> > Reverting it on master confirms that it somehow is the trigger. At or a
-> > little after starting userspace, I'll see an oops like this:
-> >
-> > Unable to handle kernel paging request at virtual address 0000000000000000
-> > CPU 0
-> > kworker/u2:5(98): Oops -1
-> > pc = [<0000000000000000>]  ra = [<0000000000000000>]  ps = 0000    Not tainted
-> > pc is at 0x0
->
-> ^^^^ so, the instruction pointer is NULL. The only way I can imagine
-> that happening would be from this line:
->
->         worker->current_func(work);
->
-> > ra is at 0x0
-> > v0 = 0000000000000007  t0 = 0000000000000001  t1 = 0000000000000001
-> > t2 = 0000000000000000  t3 = fffffc00bfe68780  t4 = 0000000000000001
-> > t5 = fffffc00bf8cc780  t6 = 00000000026f8000  t7 = fffffc00bfe70000
-> > s0 = fffffc000250d310  s1 = fffffc000250d310  s2 = fffffc000250d310
-> > s3 = fffffc000250ca40  s4 = fffffc000250caa0  s5 = 0000000000000000
-> > s6 = fffffc000250ca40
-> > a0 = fffffc00024f0488  a1 = fffffc00bfe73d98  a2 = fffffc00bfe68800
-> > a3 = fffffc00bf881400  a4 = 0001000000000000  a5 = 0000000000000002
-> > t8 = 0000000000000000  t9 = 0000000000000000  t10= 0000000001321800
-> > t11= 000000000000ba4e  pv = fffffc000189ca00  at = 0000000000000000
-> > gp = fffffc000253e430  sp = 0000000043a83c2e
-> > Disabling lock debugging due to kernel taint
-> > Trace:
-> > [<fffffc000105c8ac>] process_one_work+0x25c/0x5a0
->
-> Can you verify where this     ^^^^^^^^^^^^^^   is?
+> Developers of UFS features should implement it so that prep_fn does not have
+> any problems even if it processes the same SCSI command multiple times.
+> In HPB feature, prep_fn modifies only upiu  structure. So it is ok to call
+> it multiple times because the upiu is rebuilt from ufshcd_comp_scsi_upiu().
 
-It is kernel/workqueue.c:2268, which contains
+Please make sure that this expectation is documented somewhere.
 
-        worker->current_func(work);
+Thanks,
 
-as you predicted.
-
-> > [<fffffc000105cc4c>] worker_thread+0x5c/0x7d0
-> > [<fffffc0001066c88>] kthread+0x188/0x1f0
-> > [<fffffc0001011b48>] ret_from_kernel_thread+0x18/0x20
-> > [<fffffc0001066b00>] kthread+0x0/0x1f0
-> > [<fffffc000105cbf0>] worker_thread+0x0/0x7d0
-> >
-> > Code:
-> >  00000000
-> >  00000000
-> >  00063301
-> >  000012e2
-> >  00001111
-> >  0005ffde
-> >
-> > It seems to cause a hard lock on an SMP system, but not on a system with
-> > a single CPU. Similarly, if I boot the SMP system (2 CPUs) with
-> > maxcpus=1 the oops doesn't happen. Until I tested on a non-SMP system
-> > today I suspected that it was unaffected, but I saw the oops there too.
-> > With the revert applied, I don't see a warning or an oops.
-> >
-> > Any clues how this patch could have triggered the oops?
->
-> I cannot begin to imagine. :P Compared to other things I've seen like
-> this in the past maybe it's some kind of effect from the code size
-> changing the location/alignment or timing of something else?
->
-> Various questions ranging in degrees of sanity:
->
-> Does alpha use work queues for WARN?
-
-I do not know. I don't see much in a few greps of arch/alpha that
-would indicate that it uses work queues.
-
-> Which work queue is getting a NULL function? (And then things like "if
-> WARN was much slower or much faster, is there a race to something
-> setting itself to NULL?")
->
-> Was there a WARN before the above Oops?
-
-No, which I suspect means that your much scarier suggestion that this
-is somehow due to code size or alignment is increasingly plausible.
-
-> Does WARN have side-effects on alpha?
-
-alpha just uses the asm-generic implementation of WARN as far as I can
-tell, so I think not.
-
-> Does __WARN_printf() do something bad that warn_slowpath_null() doesn't?
->
-> Does making incremental changes narrow anything down? (e.g. instead of
-> this revert, remove the __warn() call in warn_slowpath_fmt() that was
-> added? (I mean, that'll be quite broken for WARN, but will it not oops?)
-
-Commenting out the added __warn does not work around the problem.
-
-Readding warn_slowpath_null and the EXPORT_SYMBOL (but not calling it
-from WARN) does not work around the problem.
-
-Calling warn_slowpath_fmt() with fmt=" " instead of fmt=NULL does not
-work around the problem.
-
-I also tried GCC-10.1 as a stab in the dark, and that doesn't work
-around the problem.
-
-So I'm thinking it's something about code size or alignment. I would
-be worried it's to do with memory ordering (since this is on Alpha)
-but I'm seeing the problem on a single CPU system, so that should be
-ruled out, I think?
-
-Using CONFIG_CC_OPTIMIZE_FOR_SIZE=y doesn't work around the problem.
-So that hurts the theory of code size being the trigger.
-
-Since I noticed earlier that using maxcpus=1 on a 2-CPU system
-prevented the system from hanging, I tried disabling CONFIG_SMP on my
-1-CPU system as well. In doing so, I discovered that the RCU torture
-module (RCU_TORTURE_TEST) triggers some null pointer dereferences on
-Alpha when CONFIG_SMP is set, but works successfully when CONFIG_SMP
-is unset.
-
-That seems likely to be a symptom of the same underlying problem that
-started this thread, don't you think? If so, I'll focus my attention
-on that.
-
-> Does alpha have hardware breakpoints? When I had to track down a
-> corruption in the io scheduler, I ended up setting breakpoints on the
-> thing that went crazy (in this case, I assume the work queue function
-> pointer) to figure out what touched it.
-
-As far as I know we don't have anything implemented in the kernel, but
-they could be implemented by faulting on read/write.
-
-> ... I can't think of anything else.
-
-Thanks for your time and suggestions!
-
-Matt
+Bart.
