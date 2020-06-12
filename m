@@ -2,322 +2,88 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E49C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 134A4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C7CF2074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:11:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3D732074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:11:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bfs.de header.i=@bfs.de header.b="lspbOloZ"
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="b+qIjrVX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726445AbgFLOLU (ORCPT
+        id S1726488AbgFLOLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 10:11:20 -0400
-Received: from mx01-sz.bfs.de ([194.94.69.67]:22797 "EHLO mx01-sz.bfs.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726085AbgFLOLU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 10:11:20 -0400
-Received: from SRVEX01-SZ.bfs.intern (exchange-sz.bfs.de [10.129.90.31])
-        by mx01-sz.bfs.de (Postfix) with ESMTPS id 35DE4202F0;
-        Fri, 12 Jun 2020 16:11:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bfs.de; s=dkim201901;
-        t=1591971077;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rCt+zPHuTM/eBgI+6Wbu3vlbltRttVGV2Uwnv+yEG1Y=;
-        b=lspbOloZqL6u0qm35FR4cpXwIxvjaTbA9WeHGq1aJcyucsCvtNmBYhM2ofH3b2fgpZrget
-        YVHzFyJtnVIewtpf3gXokjF4lsx6vcdAniwJvrijMp8AZmT/leUVdkUQB8BgJ1HMQXQ+Gs
-        I2BVfj12UONhuU/JI8WKZxbjBPIGkusv1sjrra8HRy/00+9Jz4Un9K3Ss7rSbKNALDoPKA
-        9CSeXAachkec1csCm8ljiKz4gQZY/qIzBZ0cdtCr2NTpbQcHXyX4hm0cXqWvJoIE1fXXtc
-        QVddZfTSSOUaQJE04von+c3C6OWkjm2Vn7RjMmEfvfBbrfKnOmSa4k/HYedQEQ==
-Received: from SRVEX01-SZ.bfs.intern (10.129.90.31) by SRVEX01-SZ.bfs.intern
- (10.129.90.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.1913.5; Fri, 12 Jun
- 2020 16:11:16 +0200
-Received: from SRVEX01-SZ.bfs.intern ([fe80::7d2d:f9cb:2761:d24a]) by
- SRVEX01-SZ.bfs.intern ([fe80::7d2d:f9cb:2761:d24a%6]) with mapi id
- 15.01.1913.005; Fri, 12 Jun 2020 16:11:16 +0200
-From:   Walter Harms <wharms@bfs.de>
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Mike Leach <mike.leach@linaro.org>
-CC:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
-Subject: AW: [PATCH] coresight: cti: Fix error handling in probe
-Thread-Topic: [PATCH] coresight: cti: Fix error handling in probe
-Thread-Index: AQHWQL/uFacPuxfT5k+bfPO1tVl2Q6jVA0Va
-Date:   Fri, 12 Jun 2020 14:11:16 +0000
-Message-ID: <6c59bdbc15714b089d256ad50aee58cb@bfs.de>
-References: <20200612121047.GF4282@kadam>,<20200612121133.GA1139533@mwanda>
-In-Reply-To: <20200612121133.GA1139533@mwanda>
-Accept-Language: de-DE, en-US
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.137.16.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 12 Jun 2020 10:11:39 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:59147 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726451AbgFLOLg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 10:11:36 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 6BFE05C0198;
+        Fri, 12 Jun 2020 10:11:35 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Fri, 12 Jun 2020 10:11:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=N2UTN5
+        zf4fI0fEU1GAssqOF62PIajnZlEs++lgSKQbc=; b=b+qIjrVXrY+JWnlhm+V7kj
+        KCEFRHny1iUTmOd1iSHkK8slA/Rmg52yRFS3Dbl8ysb2m6LGfLlPvUavZgEch1D1
+        50wDCaGsNwqoUM3DGsmmTAsmMvNoSEnohbNjiF12V68ehGOPkuy6czWEX++b1Fbc
+        7jL3nE0XeYby72N1WzjwVErOatuQXkxyATCn3AePyBR5OHycWsKc1wQAT8/qHTYF
+        4I+C/j2VG6x6pa1v8GwWFAQQKXW+7oQIMTe/zyR/GJOlbinmwO/ogyhwdShcP8xn
+        ysqgFPTy59ijXmy56iEHo2bJztvn1Llo5ztP4FsWmZq0p3LL3fkN2iOOFS+To1tQ
+        ==
+X-ME-Sender: <xms:FI3jXr7zLtYmKIwGNCcWN3YyA4cxOdiGQQ36vu6_6pES5fUAnWXSzQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudeiuddgjeehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefkughoucfu
+    tghhihhmmhgvlhcuoehiughoshgthhesihguohhstghhrdhorhhgqeenucggtffrrghtth
+    gvrhhnpefgvefgveeuudeuffeiffehieffgfejleevtdetueetueffkeevgffgtddugfek
+    veenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeejledrudejledrledtrd
+    efvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehi
+    ughoshgthhesihguohhstghhrdhorhhg
+X-ME-Proxy: <xmx:FI3jXg6YGCCa8T3yZL8FddXBYToroM75whLfyMMtWLvsetLmKNjs5w>
+    <xmx:FI3jXieqXQv6Etc3KefcYG9j9RPrz0cbVXvvNBNQsCk93tTqGMCG0g>
+    <xmx:FI3jXsLol_COGgpBtXEfJZup2-MVr8Qvsd8QG6LGDw0Jx3NDDBS0Jw>
+    <xmx:F43jXsGwt9-2XShtxzNUuXCg5z4DLWfgwG0kRhaR9e5NgeZljYXQMg>
+Received: from localhost (bzq-79-179-90-32.red.bezeqint.net [79.179.90.32])
+        by mail.messagingengine.com (Postfix) with ESMTPA id E060432800D0;
+        Fri, 12 Jun 2020 09:51:35 -0400 (EDT)
+Date:   Fri, 12 Jun 2020 16:51:33 +0300
+From:   Ido Schimmel <idosch@idosch.org>
+To:     Ritesh Harjani <riteshh@linux.ibm.com>
+Cc:     syzbot <syzbot+82f324bb69744c5f6969@syzkaller.appspotmail.com>,
+        adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+        sfr@canb.auug.org.au, syzkaller-bugs@googlegroups.com,
+        tytso@mit.edu
+Subject: Re: linux-next test error: BUG: using smp_processor_id() in
+ preemptible [ADDR] code: syz-fuzzer/6792
+Message-ID: <20200612135133.GA28968@splinter>
+References: <0000000000008ff8ea05a71818b5@google.com>
+ <20200602124130.256274203F@d06av24.portsmouth.uk.ibm.com>
+ <20200612124340.GA23832@splinter>
+ <20200612133905.CDF9A5204E@d06av21.portsmouth.uk.ibm.com>
 MIME-Version: 1.0
-Authentication-Results: mx01-sz.bfs.de;
-        none
-X-Spamd-Result: default: False [-2.65 / 7.00];
-         ARC_NA(0.00)[];
-         TO_DN_EQ_ADDR_SOME(0.00)[];
-         HAS_XOIP(0.00)[];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[9];
-         NEURAL_HAM(-0.00)[-1.034];
-         RCVD_NO_TLS_LAST(0.10)[];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         RCVD_COUNT_TWO(0.00)[2];
-         MID_RHS_MATCH_FROM(0.00)[];
-         BAYES_HAM(-2.65)[98.44%]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200612133905.CDF9A5204E@d06av21.portsmouth.uk.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dan,
+On Fri, Jun 12, 2020 at 07:09:04PM +0530, Ritesh Harjani wrote:
+> I see Ted has already taken v2 of this patch in his dev repo.
+> Should be able to see in linux tree soon.
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git/commit/?h=dev&id=811985365378df01386c3cfb7ff716e74ca376d5
 
-nit picking in cti_pm_release()
-
-IMHO this should be done in 2 steps:
-      if (--nr_cti_cpu =3D=3D 0)
-->
-  --nr_cti_cpu ;
- if ( nr_cti_cpu =3D=3D 0)
-
-the decrement is easy to miss (what i did first).
-
-yes, i noticed that it is also in the original code and
-it is not that important but while you are here ...
-
-jm2c,
-re,
- wh
-________________________________________
-Von: kernel-janitors-owner@vger.kernel.org <kernel-janitors-owner@vger.kern=
-el.org> im Auftrag von Dan Carpenter <dan.carpenter@oracle.com>
-Gesendet: Freitag, 12. Juni 2020 14:11:33
-An: Mike Leach
-Cc: Mathieu Poirier; Suzuki K Poulose; Alexander Shishkin; Greg Kroah-Hartm=
-an; linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org; ker=
-nel-janitors@vger.kernel.org
-Betreff: [PATCH] coresight: cti: Fix error handling in probe
-
-There were a couple problems with error handling in the probe function:
-1)  If the "drvdata" allocation failed then it lead to a NULL
-    dereference.
-2)  On several error paths we decremented "nr_cti_cpu" before it was
-    incremented which lead to a reference counting bug.
-
-There were also some parts of the error handling which were not bugs but
-were messy.  The error handling was confusing to read.  It printed some
-unnecessary error messages.
-
-The simplest way to fix these problems was to create a cti_pm_setup()
-function that did all the power management setup in one go.  That way
-when we call cti_pm_release() we don't have to deal with the
-complications of a partially configured power management config.
-
-I reversed the "if (drvdata->ctidev.cpu >=3D 0)" condition in cti_pm_releas=
-e()
-so that it mirros the new cti_pm_setup() function.
-
-Fixes: 6a0953ce7de9 ("coresight: cti: Add CPU idle pm notifer to CTI device=
-s")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
-Please note!!!  I cannot compile this patch.  Mike can you review it?
-
- drivers/hwtracing/coresight/coresight-cti.c | 96 ++++++++++++---------
- 1 file changed, 54 insertions(+), 42 deletions(-)
-
-diff --git a/drivers/hwtracing/coresight/coresight-cti.c b/drivers/hwtracin=
-g/coresight/coresight-cti.c
-index 40387d58c8e7..d2da5bf9f552 100644
---- a/drivers/hwtracing/coresight/coresight-cti.c
-+++ b/drivers/hwtracing/coresight/coresight-cti.c
-@@ -747,17 +747,50 @@ static int cti_dying_cpu(unsigned int cpu)
-        return 0;
- }
-
-+static int cti_pm_setup(struct cti_drvdata *drvdata)
-+{
-+       int ret;
-+
-+       if (drvdata->ctidev.cpu =3D=3D -1)
-+               return 0;
-+
-+       if (nr_cti_cpu)
-+               goto done;
-+
-+       cpus_read_lock();
-+       ret =3D cpuhp_setup_state_nocalls_cpuslocked(
-+                       CPUHP_AP_ARM_CORESIGHT_CTI_STARTING,
-+                       "arm/coresight_cti:starting",
-+                       cti_starting_cpu, cti_dying_cpu);
-+       if (ret) {
-+               cpus_read_unlock();
-+               return ret;
-+       }
-+
-+       ret =3D cpu_pm_register_notifier(&cti_cpu_pm_nb);
-+       cpus_read_unlock();
-+       if (ret) {
-+               cpuhp_remove_state_nocalls(CPUHP_AP_ARM_CORESIGHT_CTI_START=
-ING);
-+               return ret;
-+       }
-+
-+done:
-+       nr_cti_cpu++;
-+       cti_cpu_drvdata[drvdata->ctidev.cpu] =3D drvdata;
-+
-+       return 0;
-+}
-+
- /* release PM registrations */
- static void cti_pm_release(struct cti_drvdata *drvdata)
- {
--       if (drvdata->ctidev.cpu >=3D 0) {
--               if (--nr_cti_cpu =3D=3D 0) {
--                       cpu_pm_unregister_notifier(&cti_cpu_pm_nb);
-+       if (drvdata->ctidev.cpu =3D=3D -1)
-+               return;
-
--                       cpuhp_remove_state_nocalls(
--                               CPUHP_AP_ARM_CORESIGHT_CTI_STARTING);
--               }
--               cti_cpu_drvdata[drvdata->ctidev.cpu] =3D NULL;
-+       cti_cpu_drvdata[drvdata->ctidev.cpu] =3D drvdata;
-+       if (--nr_cti_cpu =3D=3D 0) {
-+               cpu_pm_unregister_notifier(&cti_cpu_pm_nb);
-+               cpuhp_remove_state_nocalls(CPUHP_AP_ARM_CORESIGHT_CTI_START=
-ING);
-        }
- }
-
-@@ -823,19 +856,14 @@ static int cti_probe(struct amba_device *adev, const =
-struct amba_id *id)
-
-        /* driver data*/
-        drvdata =3D devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
--       if (!drvdata) {
--               ret =3D -ENOMEM;
--               dev_info(dev, "%s, mem err\n", __func__);
--               goto err_out;
--       }
-+       if (!drvdata)
-+               return -ENOMEM;
-
-        /* Validity for the resource is already checked by the AMBA core */
-        base =3D devm_ioremap_resource(dev, res);
--       if (IS_ERR(base)) {
--               ret =3D PTR_ERR(base);
--               dev_err(dev, "%s, remap err\n", __func__);
--               goto err_out;
--       }
-+       if (IS_ERR(base))
-+               return PTR_ERR(base);
-+
-        drvdata->base =3D base;
-
-        dev_set_drvdata(dev, drvdata);
-@@ -854,8 +882,7 @@ static int cti_probe(struct amba_device *adev, const st=
-ruct amba_id *id)
-        pdata =3D coresight_cti_get_platform_data(dev);
-        if (IS_ERR(pdata)) {
-                dev_err(dev, "coresight_cti_get_platform_data err\n");
--               ret =3D  PTR_ERR(pdata);
--               goto err_out;
-+               return  PTR_ERR(pdata);
-        }
-
-        /* default to powered - could change on PM notifications */
-@@ -867,35 +894,20 @@ static int cti_probe(struct amba_device *adev, const =
-struct amba_id *id)
-                                               drvdata->ctidev.cpu);
-        else
-                cti_desc.name =3D coresight_alloc_device_name(&cti_sys_devs=
-, dev);
--       if (!cti_desc.name) {
--               ret =3D -ENOMEM;
--               goto err_out;
--       }
-+       if (!cti_desc.name)
-+               return -ENOMEM;
-
-        /* setup CPU power management handling for CPU bound CTI devices. *=
-/
--       if (drvdata->ctidev.cpu >=3D 0) {
--               cti_cpu_drvdata[drvdata->ctidev.cpu] =3D drvdata;
--               if (!nr_cti_cpu++) {
--                       cpus_read_lock();
--                       ret =3D cpuhp_setup_state_nocalls_cpuslocked(
--                               CPUHP_AP_ARM_CORESIGHT_CTI_STARTING,
--                               "arm/coresight_cti:starting",
--                               cti_starting_cpu, cti_dying_cpu);
--
--                       if (!ret)
--                               ret =3D cpu_pm_register_notifier(&cti_cpu_p=
-m_nb);
--                       cpus_read_unlock();
--                       if (ret)
--                               goto err_out;
--               }
--       }
-+       ret =3D cti_pm_setup(drvdata);
-+       if (ret)
-+               return ret;
-
-        /* create dynamic attributes for connections */
-        ret =3D cti_create_cons_sysfs(dev, drvdata);
-        if (ret) {
-                dev_err(dev, "%s: create dynamic sysfs entries failed\n",
-                        cti_desc.name);
--               goto err_out;
-+               goto pm_release;
-        }
-
-        /* set up coresight component description */
-@@ -908,7 +920,7 @@ static int cti_probe(struct amba_device *adev, const st=
-ruct amba_id *id)
-        drvdata->csdev =3D coresight_register(&cti_desc);
-        if (IS_ERR(drvdata->csdev)) {
-                ret =3D PTR_ERR(drvdata->csdev);
--               goto err_out;
-+               goto pm_release;
-        }
-
-        /* add to list of CTI devices */
-@@ -927,7 +939,7 @@ static int cti_probe(struct amba_device *adev, const st=
-ruct amba_id *id)
-        dev_info(&drvdata->csdev->dev, "CTI initialized\n");
-        return 0;
-
--err_out:
-+pm_release:
-        cti_pm_release(drvdata);
-        return ret;
- }
---
-2.27.0
-
+Great, thanks a lot. I've replaced previous patch with this one in my
+testing tree.
