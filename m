@@ -2,86 +2,111 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A996DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA46C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83AAB20792
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:57:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591970232;
-	bh=qiggyIcE7qbtQhCY+8kNF7cLJi+quWCbJ37ghWdEb24=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=W0sEeoYwGHpdR7JDEh7qmP9yh8cLfexjPDTG0BO1atQMwJ+1VQn5yG/VWJ55SLXfX
-	 zkywGYshAxWyUKGMmw3k3VGvi/99yjCQV5bCNB7fCBEvcHEMIL4Ydf44EioNkcgIUN
-	 VtswAguDk+zsQtPTPEFEPDKF/fMxtN5K7W53gL4Q=
+	by mail.kernel.org (Postfix) with ESMTP id 3D43120792
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:57:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PeAruZbC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgFLN5K (ORCPT
+        id S1726524AbgFLN5m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 09:57:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60364 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726353AbgFLN5J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 09:57:09 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 12 Jun 2020 09:57:42 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:60552 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726279AbgFLN5l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 09:57:41 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591970261; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=Nnwzt7zuQMOUqUoSvTtGqjQ2ZaQh545isYVqaS3gMII=; b=PeAruZbCvaFGZvq+6sebTUV12a9i0bOGqMGzJhZbafuFb+zebQ2WmeIur772esI2p8bgkjOM
+ gDekolHZ4MsK9rxzsMAapGQlrcmcwHtTmVOqbiDONwcd59qjzZksmABq3yKqDtwGEbZ9+NZ0
+ bmBjBzmwrx+C4//OGideU2Gp9Vc=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5ee389cba3d8a44743905998 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 12 Jun 2020 13:57:31
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id AFF69C433C8; Fri, 12 Jun 2020 13:57:30 +0000 (UTC)
+Received: from [10.213.44.202] (unknown [202.46.22.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6AD4206A4;
-        Fri, 12 Jun 2020 13:57:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591970228;
-        bh=qiggyIcE7qbtQhCY+8kNF7cLJi+quWCbJ37ghWdEb24=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=SGTEbqh4DTpoz3GhDLb8nsg5Rmt6x415hbBLRp8uA+dgcQZak57tFzWquSwJidbs+
-         +opRlqSTxqodOSz9xrMTT8+KgvCBOSqfVoHikXPqePwFWl0rLp4aZ7m2ShFJDzVNTO
-         CxEAcOCCgJGKR4PGYGPzS03dTIEx6DBDTrK6Twnk=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id B4E853521A8D; Fri, 12 Jun 2020 06:57:08 -0700 (PDT)
-Date:   Fri, 12 Jun 2020 06:57:08 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, rcu@vger.kernel.org, luto@kernel.org,
-        x86@kernel.org, frederic@kernel.org, rostedt@goodmis.org,
-        joel@joelfernandes.org, mathieu.desnoyers@efficios.com,
-        will@kernel.org, peterz@infradead.org
-Subject: Re: [PATCH RFC] x86/entry: Ask RCU if it needs rcu_irq_{enter,exit}()
-Message-ID: <20200612135708.GJ4455@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200611235305.GA32342@paulmck-ThinkPad-P72>
- <87ftb0d47a.fsf@nanos.tec.linutronix.de>
+        (Authenticated sender: sthombre)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 97A90C433CB;
+        Fri, 12 Jun 2020 13:57:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 97A90C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sthombre@codeaurora.org
+Subject: Re: [PATCH] arm64: mm: reset address tag set by kasan sw tagging
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     will.deacon@arm.com, ard.biesheuvel@arm.com, mark.rutland@arm.com,
+        anshuman.khandual@arm.com, sashal@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        jcrouse@codeaurora.org
+References: <1591787384-5823-1-git-send-email-sthombre@codeaurora.org>
+ <20200610113626.GI26099@gaia>
+From:   Shyam Thombre <sthombre@codeaurora.org>
+Message-ID: <809f4dc3-cba1-25b9-36cf-492e3b434530@codeaurora.org>
+Date:   Fri, 12 Jun 2020 19:27:14 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87ftb0d47a.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200610113626.GI26099@gaia>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 11:27:21AM +0200, Thomas Gleixner wrote:
-> "Paul E. McKenney" <paulmck@kernel.org> writes:
-> > +static __always_inline bool rcu_needs_irq_enter(void)
-> > +{
-> > +	return !IS_ENABLED(CONFIG_TINY_RCU) &&
-> > +               (context_tracking_enabled_cpu(smp_processor_id()) || is_idle_task(current));
-> 
-> This reintroduces the #PF problem which started the whole conditional
-> RCU entry discussion:
-> 
->    https://lore.kernel.org/lkml/20200515235125.628629605@linutronix.de/
-> 
-> and which made us all come to the conclusion that we can do it always
-> conditional. No biscuit for you. :)
+Hi Catalin,
 
-We can only be thankful that source-code control systems mean that my
-coding session yesterday afternoon will have no permanent effect.
 
-Let this be a lesson to all of you:  Hacking RCU while sleep-deprived
-is a really bad idea.  ;-)
+On 6/10/2020 5:06 PM, Catalin Marinas wrote:
+> On Wed, Jun 10, 2020 at 04:39:44PM +0530, Shyam Thombre wrote:
+>> KASAN sw tagging sets a random tag of 8 bits in the top byte of the pointer
+>> returned by the memory allocating functions. So for the functions unaware
+>> of this change, the top 8 bits of the address must be reset which is done
+>> by the function arch_kasan_reset_tag().
+>>
+>> Signed-off-by: Shyam Thombre <sthombre@codeaurora.org>
+>> ---
+>>   arch/arm64/mm/mmu.c | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+>> index e7fbc62..eae7655 100644
+>> --- a/arch/arm64/mm/mmu.c
+>> +++ b/arch/arm64/mm/mmu.c
+>> @@ -723,6 +723,7 @@ int kern_addr_valid(unsigned long addr)
+>>   	pmd_t *pmdp, pmd;
+>>   	pte_t *ptep, pte;
+>>   
+>> +	addr = arch_kasan_reset_tag(addr);
+>>   	if ((((long)addr) >> VA_BITS) != -1UL)
+>>   		return 0;
+> 
+> It would be interesting to know what fails without this patch. The only
+> user seems to be read_kcore() and, at a quick look, I don't see how it
+> can generate tagged addresses.
+> 
 
-							Thanx, Paul
+This issue is seen in downstream GPU drivers. It currently doesn't look 
+to impact any upstream users.
+
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
