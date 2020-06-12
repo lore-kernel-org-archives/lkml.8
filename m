@@ -2,104 +2,118 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B24C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 22:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 192A3C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 22:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFBE6206DC
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 22:46:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D82942078E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 22:47:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W6hJE3pE"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="fortF6f1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbgFLWqF (ORCPT
+        id S1726396AbgFLWrD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 18:46:05 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:52081 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726304AbgFLWqE (ORCPT
+        Fri, 12 Jun 2020 18:47:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48000 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726304AbgFLWrC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 18:46:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592001963;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=XngKIHoPUzwowSFibg7u3t/oC1rcUf+BN/K3UuWtgcw=;
-        b=W6hJE3pEjI/zWSQ1fFe4hB6PGqvlCMKEKChorvuOn3a7z2kMFTbDigr/38CammlDY52FOo
-        lbGZYKH5jVtptmrF2GDzTFIiNVM56kB2j9g52iPa5aZ94yOz7k4cy2ALt6cQrktkuZdF8z
-        +nTPyy9HBCc1B4j0NKDnuHCf8Vhj6VE=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-83-V8BfrgNPMlW5GPmyfco4Bg-1; Fri, 12 Jun 2020 18:45:56 -0400
-X-MC-Unique: V8BfrgNPMlW5GPmyfco4Bg-1
-Received: by mail-qk1-f200.google.com with SMTP id a6so9373457qka.9
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 15:45:56 -0700 (PDT)
+        Fri, 12 Jun 2020 18:47:02 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E29EC03E96F
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 15:47:02 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id x25so562981edr.8
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 15:47:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=2LCJlPjQS0gd4aoPiMI6xbg97Spn/0YYSiPlNrj5IrU=;
+        b=fortF6f1kvl3IV2y2CB+0zJ6WvpATfMGUcgF5oUrAxMu1rYMY5zjRkS66sDRr5nOJ0
+         ytTSAEhGL/y84gWKEKvIXRyFFD2iY39+jorRG3+9kimLTpbBPrbKtFuHOsswExzf1KTf
+         jFmHBd50RTeoc7e/9UkxpLSz1rzGd+Jq9e+qPU0pWtKt4FEsOutCOLS3VVEWNvBxOiCo
+         GA7/JVMenN8HtZRAIJBbmajGWbHanikY6jtrimLmqPEGExtcuJGpbQC5l4B5+v300JXr
+         V5QKd+4VKibZzffoCyi81sjd3NCoSLnvh7h0PRni7WwWh6ZYvtxWcZJOP7Krv/VgbFj7
+         ZAkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=XngKIHoPUzwowSFibg7u3t/oC1rcUf+BN/K3UuWtgcw=;
-        b=d1h+aS9F9bRNYJwox//7DpD5Sj0lXU+HK8jj4g3IpdmvohTtegjHFxdRQ/INVW6Jmu
-         B35ppcs7PadMWiBBvKcvKS7pf2hnK7+mSORNJWD0ixaOcRg4Noghll9iZeDUebQLfJCq
-         FXyQnr16wNqHUt5XjtW1wvh38/0xk9jCzETxZTKx1INt7dV1kR0h9TdEHv9gDHCoZQOq
-         7d+86tmLKFGng6yNcm714Qajie+O/Wgb94IzoCb6bbEA3XGh6WjIy0TOe7hBdJUbDabx
-         wzta8Tgf+ePcDXnQ++703MLJ44ywgYwdijNLXe9rROghRd6wT8+PF9W1lva+gGYTfMJA
-         mfNA==
-X-Gm-Message-State: AOAM530IbHWZlfmfkc7Pl+V51eZQgD+IkISdkruh9vmZSfd1JPZPt23X
-        oF2O/RzeyWU2SXJDO+zHF9OzGB1vXKnypIzhhva0hHNBvLxg56NxhlDqS9OvPjdeb5evq8uZ9DF
-        h7anSQyix7yDfecmk8I5Gboba
-X-Received: by 2002:ac8:1772:: with SMTP id u47mr5424183qtk.177.1592001956426;
-        Fri, 12 Jun 2020 15:45:56 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxR9cLLTPkn/jtykSo+mxzD0t8ZanXXWaoMvTV6nL402rGN/D4wMGRjb3u9WJx6uVmzbqjYig==
-X-Received: by 2002:ac8:1772:: with SMTP id u47mr5424170qtk.177.1592001956155;
-        Fri, 12 Jun 2020 15:45:56 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id z77sm5761451qka.59.2020.06.12.15.45.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 15:45:55 -0700 (PDT)
-From:   trix@redhat.com
-To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
-Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tom Rix <trix@redhat.com>
-Subject: [PATCH] nfs: Fix memory leak of export_path
-Date:   Fri, 12 Jun 2020 15:45:49 -0700
-Message-Id: <20200612224549.11762-1-trix@redhat.com>
-X-Mailer: git-send-email 2.18.1
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=2LCJlPjQS0gd4aoPiMI6xbg97Spn/0YYSiPlNrj5IrU=;
+        b=l+E1y9muu1bftFmEY7j8XZZhOH8+flIPyVERw0uuNIR/MDPh+T8TFq1VEnoAmTfEGC
+         wGVXfQwMSkbnR2+thgsoBLttFhl4haCuiP+aZBpG4EjGnm2EdPfFyn3ysQxn6IahLzAW
+         4v+l66aFSFmnNND69Z5LALWyA490v2cb/h1L+zFecG+ZGSE4vTKVvo1T8/d3Vm+suVUZ
+         sBTK8e3v9bnNbiPwt64EuBM6GxivFG+HUSl4lE/cl9EXztWL1Tu3MwZpu9WXZJ7xk4XL
+         I+h2mQMlBz91LXOeaLWVPzuHVyS/z+ityWgGliq/6Cf3+kadluWO46ri2lgCqVLv62Oj
+         lQcA==
+X-Gm-Message-State: AOAM530GSh1Ypq628kT8dJnVemaDWNW8ADRuQolm8UdwTYeb5cRBYrYA
+        hcWllCy87XOkJb/QafktblKP/k/VlK+raRvcixPX+A==
+X-Google-Smtp-Source: ABdhPJxNe68eLGh3J4q+DFbYhyzpnTNd+T3ljiVc/zosVTnbXp/wpXXs3GloAfAO/DB7e69vJ+Aa9oWtwEehNctjfbU=
+X-Received: by 2002:aa7:c489:: with SMTP id m9mr14552170edq.102.1592002021252;
+ Fri, 12 Jun 2020 15:47:01 -0700 (PDT)
+MIME-Version: 1.0
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 12 Jun 2020 15:46:50 -0700
+Message-ID: <CAPcyv4jDQ9VVZJTD=cz+VvPxo6FNQGbW=BYA1Qhix-yQkSWeCQ@mail.gmail.com>
+Subject: [GIT PULL] libnvdimm for v5.8
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Vaibhav Jain <vaibhav@linux.ibm.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+Hi Linus, please pull from:
 
-The try_location function is called within a loop by nfs_follow_referral.
-try_location calls nfs4_pathname_string to created the export_path.
-nfs4_pathname_string allocates the memory. export_path is stored in the
-nfs_fs_context/fs_context structure similarly as hostname and source.
-But whereas the ctx hostname and source are freed before assignment,
-export_path is not.  So if there are multiple loops, the new export_path
-will overwrite the old without the old being freed.
+  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
+tags/libnvdimm-for-5.8
 
-So call kfree for export_path.
+...to receive a smattering of cleanups for v5.8. I was considering at
+least one more late breaking topic for -rc1 (papr_scm device health
+reporting), but a last minute kbuild-robot report kicked it out. I
+might bring that back for -rc2 since it was nearly ready save for that
+late breaking test report.
 
-Signed-off-by: Tom Rix <trix@redhat.com>
+Otherwise, this has appeared in -next with no reported issues.
+
 ---
- fs/nfs/nfs4namespace.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/fs/nfs/nfs4namespace.c b/fs/nfs/nfs4namespace.c
-index a3ab6e219061..873342308dc0 100644
---- a/fs/nfs/nfs4namespace.c
-+++ b/fs/nfs/nfs4namespace.c
-@@ -308,6 +308,7 @@ static int try_location(struct fs_context *fc,
- 	if (IS_ERR(export_path))
- 		return PTR_ERR(export_path);
- 
-+	kfree(ctx->nfs_server.export_path);
- 	ctx->nfs_server.export_path = export_path;
- 
- 	source = kmalloc(len + 1 + ctx->nfs_server.export_path_len + 1,
--- 
-2.18.1
+The following changes since commit ae83d0b416db002fe95601e7f97f64b59514d936:
 
+  Linux 5.7-rc2 (2020-04-19 14:35:30 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
+tags/libnvdimm-for-5.8
+
+for you to fetch changes up to 6ec26b8b2d70b41d7c2affd8660d94ce78b3823c:
+
+  nvdimm/pmem: stop using ->queuedata (2020-05-13 15:15:37 -0700)
+
+----------------------------------------------------------------
+libnvdimm for 5.8
+
+- Small collection of cleanups to rework usage of ->queuedata and the
+  GUID api.
+
+----------------------------------------------------------------
+Andy Shevchenko (1):
+      libnvdimm: Replace guid_copy() with import_guid() where it makes sense
+
+Christoph Hellwig (3):
+      nvdimm/blk: stop using ->queuedata
+      nvdimm/btt: stop using ->queuedata
+      nvdimm/pmem: stop using ->queuedata
+
+ drivers/acpi/nfit/core.c | 2 +-
+ drivers/nvdimm/blk.c     | 5 ++---
+ drivers/nvdimm/btt.c     | 3 +--
+ drivers/nvdimm/pmem.c    | 6 +++---
+ 4 files changed, 7 insertions(+), 9 deletions(-)
