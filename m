@@ -2,72 +2,69 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D976C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 02:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C02C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 02:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 001F62087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 02:18:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8692B20835
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 02:20:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="bFZo8Wo8"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Io552wD3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbgFLCSl (ORCPT
+        id S1726468AbgFLCU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 22:18:41 -0400
-Received: from mail-eopbgr50053.outbound.protection.outlook.com ([40.107.5.53]:39237
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        Thu, 11 Jun 2020 22:20:28 -0400
+Received: from mail-eopbgr140054.outbound.protection.outlook.com ([40.107.14.54]:1529
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726305AbgFLCSj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 22:18:39 -0400
+        id S1726305AbgFLCU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 22:20:27 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BlfcDQzOwnw8/G9zxETWMpGuZ9LBV9O/zoF4T9dqoKxoU29mhhepI9Befkq6nEQyS03KuG7b2CvG5ACSwGUgIux1a2caIzuyRfmOSC9qPOtl0zIttT9o9XZ4VyoM402eho6EvIBmQrlqXPcts8/n+QvGBTyp03fXaPQ18ewa2ImXmLSgZrx+2yanQLe23SR+ha4UvZ66byOxiqxhmIlWXo4AW4WDiJuBi2o49/DgMFGzaJMhD7iJ7T2to/UINgPaBEoiiKtm5Ir593U/v/itZ5UUYPg61fCO6s2dPL17LobpIdRLsmgH5oOf1drWza00r0mzg+TaR30FtEHhqumnmQ==
+ b=MuaEIbIZwv9q8G275p29KcRNdXwWk8qXP1xXKwVMFieMYJmRotY8fo7kcHPOA/lcObgP7yge9XsU6gbGRUHo31J5a3dvkfnovjSWZy3jIZpi3j9Y12ESL4W+NW7J4+KQvc/BN2sn435RyTsiTMA/AwjNC59SB0uv+UntvlAyDYtei4BxNYmxdrk4IMvzGGbFtUGRi9u/jxiPG9/QmNKg3zAttPXdAFgQTO3lAMY8bP5kTNQHq3QCSSTaHhOZ5bZxVRDNU3J9agqk+X8TGoZTITvFnVQ4QqwCwqh5MRVpukQ/uQsPfEUoBB8XSpstLtP2sgfSya6Kj0hXBQ/kHuUtQg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dHOoT8na1ffMKrVbK2XadykwDl7QE51+OUO8aCLZYI4=;
- b=nOfIA/iqe9wuuDWm6ej89VD9Cq6h6wnFRCDlweYBPzl2FlwPdbCp14smz7JF4I3WbsDtlBwnWuEt0OxCQHw2aLy04MOvnR6fW/G109p0VnlSMS8LkfzBUdBPuAnra+ln7pJIt9k/zo3uxGAijlncArD2AVGZZsURVxkIk2J/d+OTMqm1wWgPXebEWtSqkN460tS+oPe6pMNdUOL7XLkxWm+tVItwRkAqiGn+x+CDlas7y6Q9zXZNNsikHEt9wz9CUD7QOVpyqbqdpK6rtWNOkBRZCZ0T86X2iMvMjTOc2nB2gHJklj/XtUhzxPmhu3bKZ12QdgO1Vlq+HHyBLRu5pg==
+ bh=rqL1/6L2dZocGGnJXwRmXodAiDDCtcA4wR0Eko6VDXs=;
+ b=XI92biUohEpLcBjwafcDy06moAd7HlkHYh23awPQOrX0EwPUVaZQjTUckGj4hLlT9QBRcGkMubuPgmmQg9sbkg/mj/Ed/OhfEvVSyeYMUbJXWiLlj0Ge2JZ07jtRiZCI+MU7yjMs/s7nEaGFdmPehiKE/XZk5mYT//ByxN/BB1BFeYGYIxv6rzTCg4Pdh18G2mepyzVy73lrrKE5K+K0YNppO010+3gVg5nOIkLLrX9s7r1KhWnVgP8HPRYWo8bi1SCgSW9PfzqJlFaccRHl7uOjgYZRSJgCZgLfzK4tRGfYzYCKjLg5xNFuKVcY/cAdGWRQbr3/PVh9ex+UGh3/pw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dHOoT8na1ffMKrVbK2XadykwDl7QE51+OUO8aCLZYI4=;
- b=bFZo8Wo8+cVDZcGtYtmHWLaMDeHpuXn13IGKg6YzonqdF3Ya/rsYe/aueU09TA3ip3izGnl2TQXxjwkZHqb8MaZZtKzC3REKoyFA1OBXepvFRLh89oB25ohJ+tmEZfYIWbCbQP+ru9Ff4Le5qG3XEwf71HU+xDmZbvRxBIfRMKQ=
+ bh=rqL1/6L2dZocGGnJXwRmXodAiDDCtcA4wR0Eko6VDXs=;
+ b=Io552wD3rVq3qDcnylNnVUMAC0TggTu+Clo3K1rZ6K9LxS8wDiwdTl78IBk1qDXH/xuRZwCOSDQE1X6BCjvpgBjRY3DkrtMZqceLQmq983DScXHSvoALkpksXRXge8J4yVs3HBJggwjs3fnT4fE+UuZo+nSQOZpwg5O+TVyc9UQ=
 Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
  by VE1PR04MB6352.eurprd04.prod.outlook.com (2603:10a6:803:129::21) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.20; Fri, 12 Jun
- 2020 02:18:32 +0000
+ 2020 02:20:23 +0000
 Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
  ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
  ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3066.023; Fri, 12 Jun 2020
- 02:18:32 +0000
+ 02:20:23 +0000
 From:   Robin Gong <yibin.gong@nxp.com>
-To:     Mark Brown <broonie@kernel.org>
-CC:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "matthias.schiffer@ew.tq-group.com" 
-        <matthias.schiffer@ew.tq-group.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Angelo Dureghello <angelo@sysam.it>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v1 RFC 1/2] spi: introduce fallback to pio
-Thread-Topic: [PATCH v1 RFC 1/2] spi: introduce fallback to pio
-Thread-Index: AQHWP6z7CX2etPvPnk+oddH8JEW5FKjTbHIAgADDYUA=
-Date:   Fri, 12 Jun 2020 02:18:32 +0000
-Message-ID: <VE1PR04MB66383245FAD2AE33CFEA76F789810@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <1591880310-1813-1-git-send-email-yibin.gong@nxp.com>
- <1591880310-1813-2-git-send-email-yibin.gong@nxp.com>
- <20200611134042.GG4671@sirena.org.uk>
-In-Reply-To: <20200611134042.GG4671@sirena.org.uk>
+CC:     Peng Ma <peng.ma@nxp.com>, Fabio Estevam <festevam@gmail.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH] dmaengine: mcf-edma: Fix NULL pointer exception in
+ mcf_edma_tx_handler
+Thread-Topic: [PATCH] dmaengine: mcf-edma: Fix NULL pointer exception in
+ mcf_edma_tx_handler
+Thread-Index: AQHWP/NB2exjiYlMX0OoWLZ0jRl7cqjUP9EA
+Date:   Fri, 12 Jun 2020 02:20:23 +0000
+Message-ID: <VE1PR04MB6638DCDB48DF10410C983A0A89810@VE1PR04MB6638.eurprd04.prod.outlook.com>
+References: <1591877861-28156-2-git-send-email-krzk@kernel.org>
+ <1591881665-25592-1-git-send-email-krzk@kernel.org>
+In-Reply-To: <1591881665-25592-1-git-send-email-krzk@kernel.org>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -77,78 +74,88 @@ authentication-results: kernel.org; dkim=none (message not signed)
 x-originating-ip: [119.31.174.66]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 61648114-780b-475a-539d-08d80e76e7b3
+x-ms-office365-filtering-correlation-id: 6dcade02-7c75-43c2-0953-08d80e7729b2
 x-ms-traffictypediagnostic: VE1PR04MB6352:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB63520D161E338E4F8C9BE9EE89810@VE1PR04MB6352.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-microsoft-antispam-prvs: <VE1PR04MB6352BB21FF790CC30556711889810@VE1PR04MB6352.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
 x-forefront-prvs: 0432A04947
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: DEiW76s4wzi1S5XdKXAgF3akdk+z1jF9TMofHYZwidLFnYXML+TEL2FHyHM351GENSXmqwTraVpRddcikCIMakwS+18CIF/nbXlUexmyOiHYQL8bqpcPA7NON56YCaWiyDl5Mr5tMMwo1NIvdyjD93hReqhMXGmVKXHYCtgPKwAsJVNa5KTdmrxBma1I0B64GqiJwD0Lr5e+TNpZCE0V2pkaBF2Dt8EOEkrKM2z0D9S8lilCJne0XPzqQXaxfgUTnx0mmsiXkujUmvKvoOXV9K72ZMHL60znNWsBj7wTKgU1JoYLNQzAFsNfvFdtIZCcjelEd4vX6TZV7qTA7JrmgA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(39860400002)(366004)(136003)(396003)(376002)(186003)(26005)(4326008)(83380400001)(86362001)(8936002)(7416002)(52536014)(8676002)(478600001)(66556008)(5660300002)(316002)(6916009)(2906002)(66446008)(66946007)(55016002)(54906003)(76116006)(33656002)(7696005)(71200400001)(6506007)(64756008)(66476007)(9686003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: DV59bNnfLvJaTSGCQGmq+4gxb76h8zDXrr5V8GfMvWgWdpBsNLICs80/lnseTph8A+9FImLorC/R20JIbiuRdVRMlkotuA9tjn6LzJwoBgV3mUtzki4W56DvLJN6/yTdJs3LjTGfv3tP1RJoCaHTQmpNqV6vqpg3qDO35LuAYoAKC8RaplP1vv2R4OlGRyfkcZ7PZLQ+PqTG6L2sIodxO+ZsLHqjbUr38PCc+uqoa5uj+SCHqS9LXHLPsbDy7eQ+DoAFzIkWbgI9Vh9wcVFc2AS96fuLQe+KGoUuuYHY+B/I9TzurXwI6R9hP5Z899v8sLcof/rvwH+TAHMPmsiucQ46gQIbBrqm+b3shV7CwZXIC1CCyOSy7/72TxtE+5EnDT9PGpJzCuSW6wtU7Q1FL+WmVrnK9YgOLwIYwDk4iOTf5hdjBvmlYMJRPqtwr3sEFhLZf7fSyUbGO17ptLDBCI5nMy2Advaa4+0iH3/VrUU=
+x-microsoft-antispam-message-info: UkpHv2n073X/ejG79Oy3E6VDm0MQTYftXmm/SbnRqBOML2WNZoO/pW3cmuEFCpRE75eFe9m7irku53EqU54f2nFfX7bR2Q2WY5osw535RnVegwfU9cs/lssIXtQXd5zbAPdXFtPteQVcaqMhFYRVF4Nphh/qkxoz7edzs6tZu5CIjSt7UdUwcV/2LFniwRJBTyUhf7Y7UuBaB0cLeUGMG4GmTSD21FvziITaHB/tbDLXAVLIuBu8lbwKygdhxFDhLsgkXF6Hn+iTYT75EMYOaiSglReO6AeL1Xxr1K0KRSjq1zznPj+X8nNPMYL+Wy7K6x2tS2Www+PNtmbNSdWtFA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(39860400002)(366004)(136003)(396003)(376002)(186003)(26005)(4326008)(83380400001)(86362001)(8936002)(52536014)(8676002)(478600001)(66556008)(5660300002)(316002)(110136005)(2906002)(66446008)(66946007)(55016002)(54906003)(76116006)(33656002)(7696005)(71200400001)(6506007)(64756008)(66476007)(9686003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: zuVVa60j9Q4cUMO+drG4PwvQiPeKiTg7PYUJ11LBMRm5ntosv9EENawLXx8AaAbxYtQ9fElkENsirrMfO98pyZfgMO9AkJcr/pi+LTuTqKrxYIG7lw8WK/dkZIo+NVzdXdz+4Mjp9deNBp3LrBUBRusEYr9qNrIOcqD7MAHgLCf2a/gZJdi0Hg+URSzVMXQaegBaj4lXTT+YTmx9mO99nQ8xHe5VJGRaUIWNe5nAFq/kjVrCMC57aAAQLMe/BhZFSZfPXtpts0zzqdaXT6UNLV7G6JmylPP9z4YMEujyb0RxCxWE1BL0Ew8N8/eemPtdukvDmwtaJ9jBdDzR8oMUdGt+Gm2rbc0T/wucxwPWDbYDVibU69uor9mVBM4iwGMbYTF4Qf8CWtUFFeEiaeOIQ68G81ck9h9h9NKs9ET4t6nWHVzluJl9iTiuifLNbn2jDCwjmtRMHif5Ng00i1HqO7LTrFajr3rhw1ggDXNIB/s=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 61648114-780b-475a-539d-08d80e76e7b3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2020 02:18:32.7785
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6dcade02-7c75-43c2-0953-08d80e7729b2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2020 02:20:23.4786
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9M6VJuoOCLXgwbt5zVjDPCaxBJG5y80jtihGJ8PM6XnMIu4pJpyftBeu9KG47Pb1NahhhiK24+W0kzNseJpqdw==
+X-MS-Exchange-CrossTenant-userprincipalname: g1SuwCW7ubXaxuVbK2stBYLNIg5ZY06YB05jltZ4KvN9R7nMufI0CWf8crIRx+a31lG2VvmiK/ftmlQbcKo7HA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6352
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/06/11 21: 41 Mark Brown <broonie@kernel.org> wrote:
-> On Thu, Jun 11, 2020 at 08:58:29PM +0800, Robin Gong wrote:
-> > Add SPI_CONTROLLER_FALLBACK to fallback to pio mode in case dma
-> > transfer failed.
-> > If spi client driver want to enable this feature please set
-> > master->flags with SPI_MASTER_FALLBACK and add master->fallback
-> > checking in its can_dma() as spi-imx.c
+On 2020/06/11 Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> On Toradex Colibri VF50 (Vybrid VF5xx) with fsl-edma driver NULL pointer
+> exception happens occasionally on serial output initiated by login timeou=
+t.
 >=20
-> If we were going to do this I don't see why we'd have a flag for this rat=
-her than
-> just doing it unconditionally but...
-What do you mean flag here, 'master->flags' or SPI_MASTER_FALLBACK? 'master=
-->flags'
-could let client fallback to PIO finally and spi core clear this flag once =
-this transfer done,
-so that DMA could be tried again in the next transfer. Client could enable =
-this feature by choosing SPI_MASTER_FALLBACK freely without any impact on o=
-thers.
+> This was reproduced only if kernel was built with significant debugging o=
+ptions
+> and EDMA driver is used with serial console.
 >=20
-> >  			ret =3D ctlr->transfer_one(ctlr, msg->spi, xfer);
-> >  			if (ret < 0) {
-> > +				if (ctlr->cur_msg_mapped &&
-> > +				   (ctlr->flags & SPI_CONTROLLER_FALLBACK)) {
-> > +					__spi_unmap_msg(ctlr, msg);
-> > +					ctlr->fallback =3D true;
-> > +					goto fallback_pio;
-> > +				}
+> Issue looks like a race condition between interrupt handler
+> fsl_edma_tx_handler() (called as a result of fsl_edma_xfer_desc()) and
+> terminating the transfer with fsl_edma_terminate_all().
 >=20
-> ...I don't think this can work sensibly - this is going to try PIO if the=
-re's *any*
-> error.  We might have had some sort of issue during the transfer for exam=
-ple
-> so have some noise on the bus.  Like I said on a prior version of this I =
-really
-Any error happen in DMA could fallback to PIO , seems a nice to have, becau=
-se it could
-give chance to run in PIO which is more reliable. But if there is also erro=
-r in PIO, thus may loop here, it's better adding limit try times here?   =20
-> think that we need to be figuring out if the DMA controller can support t=
-he
-> transaction before we even map the buffer for it, having the controller j=
-ust
-> randomly fail underneath the consumer just does not sound robust.
-But dmaengine_prep_slave_sg still may return failure even if anything about
-DMA is ok before spi transfer start, such as dma description malloc failure=
-. This
-patch seems could make spi a bit robust...
+> The fsl_edma_tx_handler() handles interrupt for a transfer with already f=
+reed
+> edesc and idle=3D=3Dtrue.
+>=20
+> The mcf-edma driver shares design and lot of code with fsl-edma.  It look=
+s like
+> being affected by same problem.  Fix this pattern the same way as fix for
+> fsl-edma driver.
+>=20
+> Fixes: e7a3ff92eaf1 ("dmaengine: fsl-edma: add ColdFire mcf5441x edma
+> support")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reviewed-by: Robin Gong <yibin.gong@nxp.com>
+>=20
+> ---
+>=20
+> Not tested on HW.
+> ---
+>  drivers/dma/mcf-edma.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>=20
+> diff --git a/drivers/dma/mcf-edma.c b/drivers/dma/mcf-edma.c index
+> e15bd15a9ef6..e12b754e6398 100644
+> --- a/drivers/dma/mcf-edma.c
+> +++ b/drivers/dma/mcf-edma.c
+> @@ -35,6 +35,13 @@ static irqreturn_t mcf_edma_tx_handler(int irq, void
+> *dev_id)
+>  			mcf_chan =3D &mcf_edma->chans[ch];
+>=20
+>  			spin_lock(&mcf_chan->vchan.lock);
+> +
+> +			if (!mcf_chan->edesc) {
+> +				/* terminate_all called before */
+> +				spin_unlock(&mcf_chan->vchan.lock);
+> +				continue;
+> +			}
+> +
+>  			if (!mcf_chan->edesc->iscyclic) {
+>  				list_del(&mcf_chan->edesc->vdesc.node);
+>  				vchan_cookie_complete(&mcf_chan->edesc->vdesc);
+> --
+> 2.7.4
+
