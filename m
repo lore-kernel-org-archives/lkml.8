@@ -2,143 +2,119 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B65C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 01:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55FD7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 01:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5E65206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 01:06:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mNx6536r"
+	by mail.kernel.org (Postfix) with ESMTP id 331D820842
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 01:08:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591924080;
+	bh=TFInTkHIbkTJqhuVQy0vXj9Dfmfs4VSM33hgXD/T2sk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JRytFP58EFwpCjd4aIgzwMdwkbzopZbepzBasiAMaL4RGUoc4swK4zTMWY42GyMmQ
+	 F/TsP4LztgjsLJGayzIPaf+/uw0WYF/6EJpcD7W1bsqapCvmvBQG60H7jfz8dh4Lye
+	 7VfVlmZ3ShEnJAcKfYmgmEGRHRallBSzS3ojB9+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726441AbgFLBGY (ORCPT
+        id S1726448AbgFLBH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 21:06:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45250 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbgFLBGV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 21:06:21 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A043C03E96F;
-        Thu, 11 Jun 2020 18:06:21 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id l27so8431675ejc.1;
-        Thu, 11 Jun 2020 18:06:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xWMqM4EWUTN/tZ1PSJ29RPSc7m9eyjQgLenvkceVjOU=;
-        b=mNx6536r715NBnskOPn1bdL5xCLTV9aec/WpZqRnZrhvWlD+kxiMUC9R+o/sQtOPK1
-         m2ldqoyMAEgUFiwM2DFUto+MuvVzSYlnys5Gwx99yKzZhRVmtm6FI19U8PDeV+0oKHIf
-         4qtt5+hz0BWxGpHxFEakWLwDW+m/zs76ThXZ1XMjIyEk5CRBaHHDtzj11Eo3Q3AFYzAl
-         Y/SD6ODdt/SSDEo+kliR/bCL7fe9qra4GEEHjAaxEVAiiqWgp+XJyXHBjWRhUkO2MkzE
-         JyLgiLlc82/T3yfRmqXBMnPXlTzqI0OaJ0WbFqHQMkBBw73fJCszzV0zQsePLAMWCgpS
-         XF0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xWMqM4EWUTN/tZ1PSJ29RPSc7m9eyjQgLenvkceVjOU=;
-        b=ciAPXQXkKHUEDfvDWW39RinX3IgINK8kVvqjqPivlU8EX8AMXi6rSShHzxaIEPUPVS
-         3ibGQeOlV8+vsJqBloAhUnPekKbstzA0WZZS3PaL09mIuJydyspfgeJeM/xGXo2fgblZ
-         1X0m5jTYzHgbVWZAmiVEw73CIGnEyTOcvQoWFpvB0UDqchL3myHwPQ7zSiMR8ZTEorAm
-         yu3uxYnVU5L3H+SwUuECqSzLjX4abCvut/qQqKCnleo5WT3LBxkV+SAqriUjih0d7877
-         eYxBceAAqkZq6Zk2eaov0GwS47aGevKHuZCcqkaBQST+euwgvA1vzw5o3kHghrQU+DS5
-         RtBA==
-X-Gm-Message-State: AOAM5332ALMv7PAsuF3uL8ou10QL8t+KE4F1E+dTll/LDaaXInbI7V8v
-        EQJqYrnxng5ja40FaL7wkm0B1OdBHg97Hz3SKow=
-X-Google-Smtp-Source: ABdhPJyZ5DVMliAOduWmg47LdIrQ4yp92mfh3e85UoCZsPM9fdn/2djYt+DceiV9URZ9A6OY+OcY2ks7Bhv9wyUHhhI=
-X-Received: by 2002:a17:906:5595:: with SMTP id y21mr11305629ejp.61.1591923979560;
- Thu, 11 Jun 2020 18:06:19 -0700 (PDT)
+        Thu, 11 Jun 2020 21:07:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45058 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726326AbgFLBH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 21:07:57 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A1E020842;
+        Fri, 12 Jun 2020 01:07:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591924076;
+        bh=TFInTkHIbkTJqhuVQy0vXj9Dfmfs4VSM33hgXD/T2sk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sm4viin1nDwqYaWsgKMeRaagqwOUD0UK8hvTDgr3/7auKkkWA9IFaYZJrV7WFMYMl
+         Zw0FbyDAxukyo1JCVHoSxWNS2s6BJn+FnLjByO1kP4hY8igAixQDG1xj95BLR+e3Sp
+         JpnJynA12mavuFjzo5qxvSFYVd8JDo3L1LTX30yU=
+Date:   Thu, 11 Jun 2020 21:07:55 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Saeed Mahameed <saeedm@mellanox.com>
+Cc:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "paul.gortmaker@windriver.com" <paul.gortmaker@windriver.com>,
+        Mark Bloch <markb@mellanox.com>, Roi Dayan <roid@mellanox.com>
+Subject: Re: [PATCH 4.19 25/25] Revert "net/mlx5: Annotate mutex destroy for
+ root ns"
+Message-ID: <20200612010755.GW1407771@sasha-vm>
+References: <20200609174048.576094775@linuxfoundation.org>
+ <20200609174051.624603139@linuxfoundation.org>
+ <9233056dbbce44ab5e3a3d401e4e5da119a36780.camel@mellanox.com>
 MIME-Version: 1.0
-References: <1591665267-37713-1-git-send-email-sugar.zhang@rock-chips.com>
-In-Reply-To: <1591665267-37713-1-git-send-email-sugar.zhang@rock-chips.com>
-From:   Peter Geis <pgwipeout@gmail.com>
-Date:   Thu, 11 Jun 2020 21:06:07 -0400
-Message-ID: <CAMdYzYr+NF7L3KKzcGano=j9V844Gy8gH03hD++CoPe8Ao1QxQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/13] Patches to improve transfer efficiency for
- Rockchip SoCs.
-To:     Sugar Zhang <sugar.zhang@rock-chips.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
-        devicetree@vger.kernel.org, Carlos de Paula <me@carlosedp.com>,
-        dmaengine@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Johan Jonker <jbx6244@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Leonidas P. Papadakos" <papadakospan@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <9233056dbbce44ab5e3a3d401e4e5da119a36780.camel@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Good Evening,
+On Thu, Jun 11, 2020 at 10:17:33PM +0000, Saeed Mahameed wrote:
+>On Tue, 2020-06-09 at 19:45 +0200, Greg Kroah-Hartman wrote:
+>> From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>
+>> This reverts commit 95fde2e46860c183f6f47a99381a3b9bff488bd5 which is
+>> commit 9ca415399dae133b00273a4283ef31d003a6818d upstream.
+>>
+>> It was backported incorrectly, Paul writes at:
+>> 	https://lore.kernel.org/r/20200607203425.GD23662@windriver.com
+>>
+>> 	I happened to notice this commit:
+>>
+>> 	9ca415399dae - "net/mlx5: Annotate mutex destroy for root ns"
+>>
+>> 	...was backported to 4.19 and 5.4 and v5.6 in linux-stable.
+>>
+>> 	It patches del_sw_root_ns() - which only exists after v5.7-rc7
+>> from:
+>>
+>> 	6eb7a268a99b - "net/mlx5: Don't maintain a case of del_sw_func
+>> being
+>> 	null"
+>>
+>> 	which creates the one line del_sw_root_ns stub function around
+>> 	kfree(node) by breaking it out of tree_put_node().
+>>
+>> 	In the absense of del_sw_root_ns - the backport finds an
+>> identical one
+>> 	line kfree stub fcn - named del_sw_prio from this earlier
+>> commit:
+>>
+>> 	139ed6c6c46a - "net/mlx5: Fix steering memory leak"  [in v4.15-
+>> rc5]
+>>
+>> 	and then puts the mutex_destroy() into that (wrong) function,
+>> instead of
+>> 	putting it into tree_put_node where the root ns case used to be
+>> hand
+>>
+>> Reported-by: Paul Gortmaker <paul.gortmaker@windriver.com>
+>> Cc: Roi Dayan <roid@mellanox.com>
+>> Cc: Mark Bloch <markb@mellanox.com>
+>> Cc: Saeed Mahameed <saeedm@mellanox.com>
+>> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>
+>Acked-by: Saeed Mahameed <saeedm@mellanox.com>
+>
+>
+>I don't know if this was due to something wrong in my backporting
+>process or AUTOSEL/wrong Fixes tag related. I will check later and will
+>try my best to avoid this in the future.
 
-I am currently testing this on the rk3399-rockpro64, and it appears to
-fully fix the gmac problem without using txpbl.
-PCIe also seems to be more stable at high load.
-I need to conduct long term testing, but it seems to be doing very well.
+I'm not sure what happened there, but FWIW - AUTOSEL wasn't involved.
 
-Unfortunately it doesn't fix the rk3328 gmac controller.
-
-Tested-by: Peter Geis <pgwipeout@gmail.com>
-
-On Mon, Jun 8, 2020 at 9:15 PM Sugar Zhang <sugar.zhang@rock-chips.com> wrote:
->
->
->
-> Changes in v2:
-> - fix FATAL ERROR: Unable to parse input tree
->
-> Sugar Zhang (13):
->   dmaengine: pl330: Remove the burst limit for quirk 'NO-FLUSHP'
->   dmaengine: pl330: Add quirk 'arm,pl330-periph-burst'
->   dt-bindings: dma: pl330: Document the quirk 'arm,pl330-periph-burst'
->   ARM: dts: rk3036: Add 'arm,pl330-periph-burst' for dmac
->   ARM: dts: rk322x: Add 'arm,pl330-periph-burst' for dmac
->   ARM: dts: rk3288: Add 'arm,pl330-periph-burst' for dmac
->   ARM: dts: rk3xxx: Add 'arm,pl330-periph-burst' for dmac
->   ARM: dts: rv1108: Add 'arm,pl330-periph-burst' for dmac
->   arm64: dts: px30: Add 'arm,pl330-periph-burst' for dmac
->   arm64: dts: rk3308: Add 'arm,pl330-periph-burst' for dmac
->   arm64: dts: rk3328: Add 'arm,pl330-periph-burst' for dmac
->   arm64: dts: rk3368: Add 'arm,pl330-periph-burst' for dmac
->   arm64: dts: rk3399: Add 'arm,pl330-periph-burst' for dmac
->
->  .../devicetree/bindings/dma/arm-pl330.txt          |  1 +
->  arch/arm/boot/dts/rk3036.dtsi                      |  1 +
->  arch/arm/boot/dts/rk322x.dtsi                      |  1 +
->  arch/arm/boot/dts/rk3288.dtsi                      |  3 ++
->  arch/arm/boot/dts/rk3xxx.dtsi                      |  3 ++
->  arch/arm/boot/dts/rv1108.dtsi                      |  1 +
->  arch/arm64/boot/dts/rockchip/px30.dtsi             |  1 +
->  arch/arm64/boot/dts/rockchip/rk3308.dtsi           |  2 +
->  arch/arm64/boot/dts/rockchip/rk3328.dtsi           |  1 +
->  arch/arm64/boot/dts/rockchip/rk3368.dtsi           |  2 +
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi           |  2 +
->  drivers/dma/pl330.c                                | 44 +++++++++++++++-------
->  12 files changed, 49 insertions(+), 13 deletions(-)
->
-> --
-> 2.7.4
->
->
->
->
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+-- 
+Thanks,
+Sasha
