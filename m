@@ -2,278 +2,322 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5117C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E45C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 18:02:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCB6E20836
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:56:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16237207ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 18:02:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="P0QBFaNP"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jv/2G/vn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbgFLR4E (ORCPT
+        id S1726304AbgFLSCl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 13:56:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59510 "EHLO
+        Fri, 12 Jun 2020 14:02:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726085AbgFLR4D (ORCPT
+        with ESMTP id S1726108AbgFLSCk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 13:56:03 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC20FC08C5C1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 10:55:59 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id d8so4031803plo.12
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 10:55:59 -0700 (PDT)
+        Fri, 12 Jun 2020 14:02:40 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BB41C03E96F
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 11:02:40 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id 9so9560719ilg.12
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 11:02:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=MaAieVTop1wR3hLn5aMF4hBciiYGPZ3mmgoQxGR0ne0=;
-        b=P0QBFaNP0zIuJ3uLz4arPkeLR8Uvwl/8E2eLU/tQUS0Lc3SVSyWwszvFumzijOztlt
-         fQFUA8AVrMOJAcAMnlxZivOqzNkHZ4/j9yEdHgtnuWNu82cSZ0Vv0nnQ4VLFnt58tSXm
-         xZBgD/4ZQPod0aZ33iSCHverNzRMzIom5G78tPhY+kkL2avTb4dUVlWIyro8XzPCDpZr
-         mPUagCc1OKak6Ao4uOKWZrb5/MUUXcLKpuW0TRhQOsCJh1mYtosZxyCvi3+H9RUuzXBS
-         4A+x0argkZBpyUkgAJqh2HYF1UXrwJBLuSVNfHMxAQQ0LfgPVmoncLnFWFy5vLbKQbbD
-         Hk2A==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9RL+bnA/t2I9/+f9q05Ybqo0E3j+56AnUDjas91ew54=;
+        b=Jv/2G/vn4x8GMl1fZ0geyYu4vyr+9hmLf0uaIzTgdJJJEZTB9bZ5j/o40j4iJOlFSF
+         ER2WuILuNoFA7JbFr8BJ3zJNhOTxe9iuHk5xnfuJsFs/Drs8nfMJKcqkDz0HCUwrXh0L
+         zGpp1MLMv7nmDSyxMaLpP7RdRv5gvP5XcfIoDSowiHxaw+zH5xvByj3T+LWkQJdmAKNK
+         /ES++BBIygsuY7os+0wwrQ3g4v+lygL8FQRwtRmImzr57NiO9zN3fvh71Z3+CwVn0OL+
+         gcUaQpLqyBzRjGioJePGNxWlazWp2TgAi89mGP+L1xVQHkLLLjk3Hg04fphtdykSKfP3
+         Qyfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=MaAieVTop1wR3hLn5aMF4hBciiYGPZ3mmgoQxGR0ne0=;
-        b=GLtEAucWSHa50z3GPhZmixSHEikmFz+eOTlIvSZ2KFNwOj2H7JRX0Nr8/T19A5M0HQ
-         qJOus/jcL0W4F/kYaJlMXF3j+tuOdsdGxkdoR15lZQcech09bcEvQIiTtJ3N9J0axisF
-         QbA3fCRYhnPLX7TPGYVvk+uAQh7KtxTdzX7kzFmY4kJ+Q4+CVrTkxoPJqU608tcc8ZLH
-         7r1nOMkRjYmOzRlmaHAUgoyaNeVbv3dqvmaxDLynD6hJiY7PKqzm7u9larJKMaYTz+e2
-         GnPLF1pcdJQ/oBu0rOehNfnEKOK16UGsNytcRinDi75m4nuWaLBihgyWxigf0UMFvobN
-         ogzA==
-X-Gm-Message-State: AOAM532ffpOptoc7n37VK91h8an3p58WAIXgGaDuSvHpVyPi9jObjH/N
-        b64BrXzZmIViVLPnaVA7Zr3mvwhYJtwnJQ==
-X-Google-Smtp-Source: ABdhPJxHJrkhxq32PFCFZBtxfbpqAH9Cu1DvtNDPz1dQh0fqFcjHomVFJlDeHA1AGQ9kbyOjGLqwzQ==
-X-Received: by 2002:a17:90b:1009:: with SMTP id gm9mr60426pjb.213.1591984559192;
-        Fri, 12 Jun 2020 10:55:59 -0700 (PDT)
-Received: from kaaira-HP-Pavilion-Notebook ([103.113.213.178])
-        by smtp.gmail.com with ESMTPSA id o18sm7575370pfu.138.2020.06.12.10.55.55
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 12 Jun 2020 10:55:58 -0700 (PDT)
-Date:   Fri, 12 Jun 2020 23:25:50 +0530
-From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
-To:     hverkuil@xs4all.nl, Helen Koike <helen.koike@collabora.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>
-Subject: [PATCH] vimc: Add colors' order over test image
-Message-ID: <20200612175550.GA13676@kaaira-HP-Pavilion-Notebook>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9RL+bnA/t2I9/+f9q05Ybqo0E3j+56AnUDjas91ew54=;
+        b=qYcmhbZ8UJ/eyssHboEtHx6Os6WFG28kdRfskBkqPE4v7cyYb1d8/9XTvd/EVB//e1
+         ThdpS8rkN0pmNxJj/xnXMrfSHwVOU31RCBuxAv2lBoM8Y1v8Bqgw9BkKVlyvC9YLf0M1
+         RJEdl7VIBH2SW7WDUPn0/WTve6oV5t0CGl6ZjIjza1xD7mOhzEbsx5w+JYbFZ7y/oSjT
+         scyh3TXVYNhVzDVOqkDa2+Tq3l/26/v6qXiMJ6u5dxyvD70qbMDiVeDaIQlw/Qt4ExZm
+         hJkUbVSmXMdDVl27fEy7X/eTRMVSEOM/SwvMFfleguU6QqJQP2VBWels87GdYbqhlcjg
+         Uhsw==
+X-Gm-Message-State: AOAM530zcPov+rKOqx5+HWwjx/d7G7KuDi+SDWI8s4F3UwG99eh2dMfL
+        H7TwRetIk9tWUbsmREDftsR8vLNvXzrU0ytk4S6viA==
+X-Google-Smtp-Source: ABdhPJzv+UbygrLkbplfQ0ru5zjr+YIfYtosjexMqhll0H1zaMLhcXAncJgne3gr2xVXTmCOtMNsXHLM/+KS7jvi7w4=
+X-Received: by 2002:a05:6e02:11a5:: with SMTP id 5mr14477842ilj.108.1591984959242;
+ Fri, 12 Jun 2020 11:02:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <159191202523.31436.11959784252237488867.stgit@bmoger-ubuntu> <159191211555.31436.7157754769653935735.stgit@bmoger-ubuntu>
+In-Reply-To: <159191211555.31436.7157754769653935735.stgit@bmoger-ubuntu>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Fri, 12 Jun 2020 11:02:28 -0700
+Message-ID: <CALMp9eQrC5a2oquCPerEm29p482mik7Zbh=o74waTY6xqXZohA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] KVM: X86: Move handling of INVPCID types to x86
+To:     Babu Moger <babu.moger@amd.com>
+Cc:     Wanpeng Li <wanpengli@tencent.com>, Joerg Roedel <joro@8bytes.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently there is no method to know if the test image generated by vimc
-is correct (except for comparing it with a known 'correct' image). Add a
-function which returns the correct order of the colors in test pattern.
-And hence, add that text over the test image.
+On Thu, Jun 11, 2020 at 2:48 PM Babu Moger <babu.moger@amd.com> wrote:
+>
+> INVPCID instruction handling is mostly same across both VMX and
+> SVM. So, move the code to common x86.c.
+>
+> Signed-off-by: Babu Moger <babu.moger@amd.com>
+> ---
+>  arch/x86/kvm/vmx/vmx.c |   78 +-----------------------------------------
+>  arch/x86/kvm/x86.c     |   89 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  arch/x86/kvm/x86.h     |    2 +
+>  3 files changed, 92 insertions(+), 77 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 170cc76a581f..d9c35f337da6 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -5477,29 +5477,15 @@ static int handle_invpcid(struct kvm_vcpu *vcpu)
+>  {
+>         u32 vmx_instruction_info;
+>         unsigned long type;
+> -       bool pcid_enabled;
+>         gva_t gva;
+> -       struct x86_exception e;
+> -       unsigned i;
+> -       unsigned long roots_to_free = 0;
+>         struct {
+>                 u64 pcid;
+>                 u64 gla;
+>         } operand;
+>
+> -       if (!guest_cpuid_has(vcpu, X86_FEATURE_INVPCID)) {
+> -               kvm_queue_exception(vcpu, UD_VECTOR);
+> -               return 1;
+> -       }
+> -
+>         vmx_instruction_info = vmcs_read32(VMX_INSTRUCTION_INFO);
+>         type = kvm_register_readl(vcpu, (vmx_instruction_info >> 28) & 0xf);
+>
+> -       if (type > 3) {
+> -               kvm_inject_gp(vcpu, 0);
+> -               return 1;
+> -       }
+> -
 
-Add a null check in tpg_gen_text() for patterns for which color order
-does not exist/make sense to print.
+You've introduced some fault priority inversions by sinking the above
+tests for #UD and #GP below the call to get_vmx_mem_address(), which
+may raise #UD, #GP, or #SS.
 
-Make a separate control for the same in vimc to make displaying the
-text optional.
-
-Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
----
- drivers/media/common/v4l2-tpg/v4l2-tpg-core.c | 24 ++++++++++++-
- drivers/media/test-drivers/vimc/Kconfig       |  2 ++
- drivers/media/test-drivers/vimc/vimc-common.h |  1 +
- drivers/media/test-drivers/vimc/vimc-sensor.c | 34 +++++++++++++++++++
- include/media/tpg/v4l2-tpg.h                  |  1 +
- 5 files changed, 61 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-index 50f1e0b28b25..e32586aaae5c 100644
---- a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-+++ b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-@@ -1962,7 +1962,7 @@ void tpg_gen_text(const struct tpg_data *tpg, u8 *basep[TPG_MAX_PLANES][2],
- 	unsigned len = strlen(text);
- 	unsigned p;
- 
--	if (font8x16 == NULL || basep == NULL)
-+	if (font8x16 == NULL || basep == NULL || text == NULL)
- 		return;
- 
- 	/* Checks if it is possible to show string */
-@@ -2006,6 +2006,28 @@ void tpg_gen_text(const struct tpg_data *tpg, u8 *basep[TPG_MAX_PLANES][2],
- }
- EXPORT_SYMBOL_GPL(tpg_gen_text);
- 
-+const char *tpg_g_color_order(const struct tpg_data *tpg)
-+{
-+	switch (tpg->pattern) {
-+	case (TPG_PAT_75_COLORBAR || TPG_PAT_100_COLORBAR || TPG_PAT_CSC_COLORBAR):
-+		return "Left to right: white, yellow, cyan, green, magenta, red, blue, black";
-+	case TPG_PAT_100_HCOLORBAR:
-+		return "Top to bottom: white, yellow, cyan, green, magenta, red, blue, black";
-+	case TPG_PAT_BLACK:
-+		return "Black";
-+	case TPG_PAT_WHITE:
-+		return "White";
-+	case TPG_PAT_RED:
-+		return "Red";
-+	case TPG_PAT_GREEN:
-+		return "Green";
-+	case TPG_PAT_BLUE:
-+		return "Blue";
-+	default:
-+		return;
-+	}
-+}
-+
- void tpg_update_mv_step(struct tpg_data *tpg)
- {
- 	int factor = tpg->mv_hor_mode > TPG_MOVE_NONE ? -1 : 1;
-diff --git a/drivers/media/test-drivers/vimc/Kconfig b/drivers/media/test-drivers/vimc/Kconfig
-index 4068a67585f9..da4b2ad6e40c 100644
---- a/drivers/media/test-drivers/vimc/Kconfig
-+++ b/drivers/media/test-drivers/vimc/Kconfig
-@@ -2,6 +2,8 @@
- config VIDEO_VIMC
- 	tristate "Virtual Media Controller Driver (VIMC)"
- 	depends on VIDEO_DEV && VIDEO_V4L2
-+	select FONT_SUPPORT
-+	select FONT_8x16
- 	select MEDIA_CONTROLLER
- 	select VIDEO_V4L2_SUBDEV_API
- 	select VIDEOBUF2_VMALLOC
-diff --git a/drivers/media/test-drivers/vimc/vimc-common.h b/drivers/media/test-drivers/vimc/vimc-common.h
-index ae163dec2459..52376ba6146b 100644
---- a/drivers/media/test-drivers/vimc/vimc-common.h
-+++ b/drivers/media/test-drivers/vimc/vimc-common.h
-@@ -20,6 +20,7 @@
- #define VIMC_CID_VIMC_CLASS		(0x00f00000 | 1)
- #define VIMC_CID_TEST_PATTERN		(VIMC_CID_VIMC_BASE + 0)
- #define VIMC_CID_MEAN_WIN_SIZE		(VIMC_CID_VIMC_BASE + 1)
-+#define VIMC_TEST_PATTERN_ORDER		(VIMC_CID_VIMC_BASE + 2)
- 
- #define VIMC_FRAME_MAX_WIDTH 4096
- #define VIMC_FRAME_MAX_HEIGHT 2160
-diff --git a/drivers/media/test-drivers/vimc/vimc-sensor.c b/drivers/media/test-drivers/vimc/vimc-sensor.c
-index a2f09ac9a360..236eae9f2f8d 100644
---- a/drivers/media/test-drivers/vimc/vimc-sensor.c
-+++ b/drivers/media/test-drivers/vimc/vimc-sensor.c
-@@ -5,6 +5,7 @@
-  * Copyright (C) 2015-2017 Helen Koike <helen.fornazier@gmail.com>
-  */
- 
-+#include <linux/font.h>
- #include <linux/v4l2-mediabus.h>
- #include <linux/vmalloc.h>
- #include <media/v4l2-ctrls.h>
-@@ -19,6 +20,7 @@ struct vimc_sen_device {
- 	struct v4l2_subdev sd;
- 	struct tpg_data tpg;
- 	u8 *frame;
-+	bool showOrder;
- 	/* The active format */
- 	struct v4l2_mbus_framefmt mbus_format;
- 	struct v4l2_ctrl_handler hdl;
-@@ -185,10 +187,18 @@ static const struct v4l2_subdev_pad_ops vimc_sen_pad_ops = {
- static void *vimc_sen_process_frame(struct vimc_ent_device *ved,
- 				    const void *sink_frame)
- {
-+	u8 *basep[TPG_MAX_PLANES][2];
-+	char str[100];
- 	struct vimc_sen_device *vsen = container_of(ved, struct vimc_sen_device,
- 						    ved);
- 
- 	tpg_fill_plane_buffer(&vsen->tpg, 0, 0, vsen->frame);
-+	if (vsen->showOrder == 1) {
-+		tpg_calc_text_basep(&vsen->tpg, basep, 0, vsen->frame);
-+		snprintf(str, sizeof(str), tpg_g_color_order(&vsen->tpg));
-+		tpg_gen_text(&vsen->tpg, basep, 1, 1, str);
-+	}
-+
- 	return vsen->frame;
- }
- 
-@@ -200,6 +210,14 @@ static int vimc_sen_s_stream(struct v4l2_subdev *sd, int enable)
- 	if (enable) {
- 		const struct vimc_pix_map *vpix;
- 		unsigned int frame_size;
-+		const struct font_desc *font = find_font("VGA8x16");
-+
-+		if (font == NULL) {
-+			pr_err("vimc: could not find font\n");
-+			return -ENODEV;
-+		}
-+
-+		tpg_set_font(font->data);
- 
- 		/* Calculate the frame size */
- 		vpix = vimc_pix_map_by_code(vsen->mbus_format.code);
-@@ -269,6 +287,9 @@ static int vimc_sen_s_ctrl(struct v4l2_ctrl *ctrl)
- 	case V4L2_CID_SATURATION:
- 		tpg_s_saturation(&vsen->tpg, ctrl->val);
- 		break;
-+	case VIMC_TEST_PATTERN_ORDER:
-+		vsen->showOrder = ctrl->val;
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -307,6 +328,17 @@ static const struct v4l2_ctrl_config vimc_sen_ctrl_test_pattern = {
- 	.qmenu = tpg_pattern_strings,
- };
- 
-+static const struct v4l2_ctrl_config vimc_sen_ctrl_order = {
-+	.ops = &vimc_sen_ctrl_ops,
-+	.id = VIMC_TEST_PATTERN_ORDER,
-+	.name = "Show Order",
-+	.type = V4L2_CTRL_TYPE_BOOLEAN,
-+	.min = 0,
-+	.max = 1,
-+	.step = 1,
-+	.def = 1,
-+};
-+
- static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
- 					    const char *vcfg_name)
- {
-@@ -323,6 +355,7 @@ static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
- 
- 	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_class, NULL);
- 	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_test_pattern, NULL);
-+	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_order, NULL);
- 	v4l2_ctrl_new_std(&vsen->hdl, &vimc_sen_ctrl_ops,
- 			  V4L2_CID_VFLIP, 0, 1, 1, 0);
- 	v4l2_ctrl_new_std(&vsen->hdl, &vimc_sen_ctrl_ops,
-@@ -362,6 +395,7 @@ static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
- 
- 	/* Initialize the frame format */
- 	vsen->mbus_format = fmt_default;
-+	vsen->showOrder = vimc_sen_ctrl_order.def;
- 
- 	return &vsen->ved;
- 
-diff --git a/include/media/tpg/v4l2-tpg.h b/include/media/tpg/v4l2-tpg.h
-index eb191e85d363..2b404744322e 100644
---- a/include/media/tpg/v4l2-tpg.h
-+++ b/include/media/tpg/v4l2-tpg.h
-@@ -252,6 +252,7 @@ void tpg_fillbuffer(struct tpg_data *tpg, v4l2_std_id std,
- bool tpg_s_fourcc(struct tpg_data *tpg, u32 fourcc);
- void tpg_s_crop_compose(struct tpg_data *tpg, const struct v4l2_rect *crop,
- 		const struct v4l2_rect *compose);
-+const char *tpg_g_color_order(const struct tpg_data *tpg);
- 
- static inline void tpg_s_pattern(struct tpg_data *tpg, enum tpg_pattern pattern)
- {
--- 
-2.17.1
-
+>         /* According to the Intel instruction reference, the memory operand
+>          * is read even if it isn't needed (e.g., for type==all)
+>          */
+> @@ -5508,69 +5494,7 @@ static int handle_invpcid(struct kvm_vcpu *vcpu)
+>                                 sizeof(operand), &gva))
+>                 return 1;
+>
+> -       if (kvm_read_guest_virt(vcpu, gva, &operand, sizeof(operand), &e)) {
+> -               kvm_inject_emulated_page_fault(vcpu, &e);
+> -               return 1;
+> -       }
+> -
+> -       if (operand.pcid >> 12 != 0) {
+> -               kvm_inject_gp(vcpu, 0);
+> -               return 1;
+> -       }
+> -
+> -       pcid_enabled = kvm_read_cr4_bits(vcpu, X86_CR4_PCIDE);
+> -
+> -       switch (type) {
+> -       case INVPCID_TYPE_INDIV_ADDR:
+> -               if ((!pcid_enabled && (operand.pcid != 0)) ||
+> -                   is_noncanonical_address(operand.gla, vcpu)) {
+> -                       kvm_inject_gp(vcpu, 0);
+> -                       return 1;
+> -               }
+> -               kvm_mmu_invpcid_gva(vcpu, operand.gla, operand.pcid);
+> -               return kvm_skip_emulated_instruction(vcpu);
+> -
+> -       case INVPCID_TYPE_SINGLE_CTXT:
+> -               if (!pcid_enabled && (operand.pcid != 0)) {
+> -                       kvm_inject_gp(vcpu, 0);
+> -                       return 1;
+> -               }
+> -
+> -               if (kvm_get_active_pcid(vcpu) == operand.pcid) {
+> -                       kvm_mmu_sync_roots(vcpu);
+> -                       kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
+> -               }
+> -
+> -               for (i = 0; i < KVM_MMU_NUM_PREV_ROOTS; i++)
+> -                       if (kvm_get_pcid(vcpu, vcpu->arch.mmu->prev_roots[i].pgd)
+> -                           == operand.pcid)
+> -                               roots_to_free |= KVM_MMU_ROOT_PREVIOUS(i);
+> -
+> -               kvm_mmu_free_roots(vcpu, vcpu->arch.mmu, roots_to_free);
+> -               /*
+> -                * If neither the current cr3 nor any of the prev_roots use the
+> -                * given PCID, then nothing needs to be done here because a
+> -                * resync will happen anyway before switching to any other CR3.
+> -                */
+> -
+> -               return kvm_skip_emulated_instruction(vcpu);
+> -
+> -       case INVPCID_TYPE_ALL_NON_GLOBAL:
+> -               /*
+> -                * Currently, KVM doesn't mark global entries in the shadow
+> -                * page tables, so a non-global flush just degenerates to a
+> -                * global flush. If needed, we could optimize this later by
+> -                * keeping track of global entries in shadow page tables.
+> -                */
+> -
+> -               /* fall-through */
+> -       case INVPCID_TYPE_ALL_INCL_GLOBAL:
+> -               kvm_mmu_unload(vcpu);
+> -               return kvm_skip_emulated_instruction(vcpu);
+> -
+> -       default:
+> -               BUG(); /* We have already checked above that type <= 3 */
+> -       }
+> +       return kvm_handle_invpcid_types(vcpu,  gva, type);
+>  }
+>
+>  static int handle_pml_full(struct kvm_vcpu *vcpu)
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 9e41b5135340..13373359608c 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -72,6 +72,7 @@
+>  #include <asm/hypervisor.h>
+>  #include <asm/intel_pt.h>
+>  #include <asm/emulate_prefix.h>
+> +#include <asm/tlbflush.h>
+>  #include <clocksource/hyperv_timer.h>
+>
+>  #define CREATE_TRACE_POINTS
+> @@ -10714,6 +10715,94 @@ u64 kvm_spec_ctrl_valid_bits(struct kvm_vcpu *vcpu)
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_spec_ctrl_valid_bits);
+>
+> +int kvm_handle_invpcid_types(struct kvm_vcpu *vcpu, gva_t gva,
+> +                            unsigned long type)
+> +{
+> +       unsigned long roots_to_free = 0;
+> +       struct x86_exception e;
+> +       bool pcid_enabled;
+> +       unsigned i;
+> +       struct {
+> +               u64 pcid;
+> +               u64 gla;
+> +       } operand;
+> +
+> +       if (!guest_cpuid_has(vcpu, X86_FEATURE_INVPCID)) {
+> +               kvm_queue_exception(vcpu, UD_VECTOR);
+> +               return 1;
+> +       }
+> +
+> +       if (type > 3) {
+> +               kvm_inject_gp(vcpu, 0);
+> +               return 1;
+> +       }
+> +
+> +       if (kvm_read_guest_virt(vcpu, gva, &operand, sizeof(operand), &e)) {
+> +               kvm_inject_emulated_page_fault(vcpu, &e);
+> +               return 1;
+> +       }
+> +
+> +       if (operand.pcid >> 12 != 0) {
+> +               kvm_inject_gp(vcpu, 0);
+> +               return 1;
+> +       }
+> +
+> +       pcid_enabled = kvm_read_cr4_bits(vcpu, X86_CR4_PCIDE);
+> +
+> +       switch (type) {
+> +       case INVPCID_TYPE_INDIV_ADDR:
+> +               if ((!pcid_enabled && (operand.pcid != 0)) ||
+> +                   is_noncanonical_address(operand.gla, vcpu)) {
+> +                       kvm_inject_gp(vcpu, 0);
+> +                       return 1;
+> +               }
+> +               kvm_mmu_invpcid_gva(vcpu, operand.gla, operand.pcid);
+> +               return kvm_skip_emulated_instruction(vcpu);
+> +
+> +       case INVPCID_TYPE_SINGLE_CTXT:
+> +               if (!pcid_enabled && (operand.pcid != 0)) {
+> +                       kvm_inject_gp(vcpu, 0);
+> +                       return 1;
+> +               }
+> +
+> +               if (kvm_get_active_pcid(vcpu) == operand.pcid) {
+> +                       kvm_mmu_sync_roots(vcpu);
+> +                       kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
+> +               }
+> +
+> +               for (i = 0; i < KVM_MMU_NUM_PREV_ROOTS; i++)
+> +                       if (kvm_get_pcid(vcpu, vcpu->arch.mmu->prev_roots[i].pgd)
+> +                           == operand.pcid)
+> +                               roots_to_free |= KVM_MMU_ROOT_PREVIOUS(i);
+> +
+> +               kvm_mmu_free_roots(vcpu, vcpu->arch.mmu, roots_to_free);
+> +               /*
+> +                * If neither the current cr3 nor any of the prev_roots use the
+> +                * given PCID, then nothing needs to be done here because a
+> +                * resync will happen anyway before switching to any other CR3.
+> +                */
+> +
+> +               return kvm_skip_emulated_instruction(vcpu);
+> +
+> +       case INVPCID_TYPE_ALL_NON_GLOBAL:
+> +               /*
+> +                * Currently, KVM doesn't mark global entries in the shadow
+> +                * page tables, so a non-global flush just degenerates to a
+> +                * global flush. If needed, we could optimize this later by
+> +                * keeping track of global entries in shadow page tables.
+> +                */
+> +
+> +               /* fall-through */
+> +       case INVPCID_TYPE_ALL_INCL_GLOBAL:
+> +               kvm_mmu_unload(vcpu);
+> +               return kvm_skip_emulated_instruction(vcpu);
+> +
+> +       default:
+> +               BUG(); /* We have already checked above that type <= 3 */
+> +       }
+> +}
+> +EXPORT_SYMBOL_GPL(kvm_handle_invpcid_types);
+> +
+>  EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_exit);
+>  EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_fast_mmio);
+>  EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_inj_virq);
+> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+> index 6eb62e97e59f..8e23f2705344 100644
+> --- a/arch/x86/kvm/x86.h
+> +++ b/arch/x86/kvm/x86.h
+> @@ -365,5 +365,7 @@ void kvm_load_guest_xsave_state(struct kvm_vcpu *vcpu);
+>  void kvm_load_host_xsave_state(struct kvm_vcpu *vcpu);
+>  u64 kvm_spec_ctrl_valid_bits(struct kvm_vcpu *vcpu);
+>  bool kvm_vcpu_exit_request(struct kvm_vcpu *vcpu);
+> +int kvm_handle_invpcid_types(struct kvm_vcpu *vcpu, gva_t gva,
+> +                            unsigned long type);
+>
+>  #endif
+>
