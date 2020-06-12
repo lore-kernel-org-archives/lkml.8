@@ -2,209 +2,143 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 286C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42878C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F046F206A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:55:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YKUm5+MX"
+	by mail.kernel.org (Postfix) with ESMTP id 1EC21206A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:55:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726538AbgFLNz1 (ORCPT
+        id S1726563AbgFLNzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 09:55:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50564 "EHLO
+        Fri, 12 Jun 2020 09:55:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbgFLNyu (ORCPT
+        with ESMTP id S1726323AbgFLNzM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 09:54:50 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 409C8C08C5C2
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 06:54:49 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id x18so11161474lji.1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 06:54:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=dfWTJRln/wUkUezGYMWTWyc7bZ4R2M6yJEVL+/18MoU=;
-        b=YKUm5+MXtyoghi4Yx87JKWrhK8cqKD7Pbsn3qttgdfSTtHv9XJDTFN6NgT4uvktIZ4
-         uoW5GEgLbTnrIKjiPQH6wahznKsDQ5arq9tYg0nV3URIhCV9lEdy9f9oGwW4Y1W1y9u9
-         w9/5i2Een1oXqRDGaVhEBRV7FFxMTbNX43qg0J+qjrXwn2xDKJ/ytgQrOnogGLijj0/T
-         9Jlw5TytVFnb97n2RZU8Et8Hf57kDLGSF0BPJ8W4BWtNgD3Z+dTD755+KLZnXI2WcLwl
-         IqqKciv1se3OjH7IzAN57JRVq66HbgvpNjVFwb1TDU5vjEHitTUcjc1F7oeh2JdCwLLz
-         xlyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=dfWTJRln/wUkUezGYMWTWyc7bZ4R2M6yJEVL+/18MoU=;
-        b=NUGxlh5Fl96Y3TaM1GJaq481cJ3xioaChocN9HEkVVv3DKJYBTCUE/NaM7NLmbtLcw
-         ZM1idrJnKLicJzlipuSTsMzqktUUi45xjFKasnOmq3gdOj68BK3mfsQ7g/Aklv4JRXbD
-         EvPYN/8clXMnVGBPVobi4SH0656gyt65UIfFpH2UXIF8PQm7LiSucOGNjqf2YdrhSe+P
-         IikC56MISCtDVUnj9DDd00snDvyE6iagZnUKPLXz75be1JzmBgQLE3XQ9/2HHF6mr2ge
-         +bFW1PM8Nj4OkXG35UgMSyOIIsQ8baVOQd8rL/KQv+vQoKF6IpRSSK2DqRMvu2N/ihbl
-         pA4A==
-X-Gm-Message-State: AOAM531pVMDkp932lNQZ7VyV4Uxl5xX4juuGC+7AYDCGe0FBnpZ8rNR6
-        m4JccaRlSm6v1jnOkvzmI9qIIKCHLqDqBQ==
-X-Google-Smtp-Source: ABdhPJzkvrMx8Yl1wKGOV7GyTAN+Yk3rUFpSNV9AQJqPXtZtgFKoZ6hefDkjfeWUdm8RijLAnD9lYQ==
-X-Received: by 2002:a2e:81c5:: with SMTP id s5mr6643701ljg.372.1591970087696;
-        Fri, 12 Jun 2020 06:54:47 -0700 (PDT)
-Received: from localhost.localdomain (37-144-159-139.broadband.corbina.ru. [37.144.159.139])
-        by smtp.googlemail.com with ESMTPSA id a1sm2414415lfi.36.2020.06.12.06.54.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 06:54:47 -0700 (PDT)
-From:   Andrey Konovalov <andrey.konovalov@linaro.org>
-To:     mchehab@kernel.org, sakari.ailus@iki.fi,
-        manivannan.sadhasivam@linaro.org
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org,
-        Andrey Konovalov <andrey.konovalov@linaro.org>
-Subject: [PATCH v5 10/10] media: i2c: imx290: set bus_type before calling v4l2_fwnode_endpoint_alloc_parse()
-Date:   Fri, 12 Jun 2020 16:53:55 +0300
-Message-Id: <20200612135355.30286-11-andrey.konovalov@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200612135355.30286-1-andrey.konovalov@linaro.org>
-References: <20200612135355.30286-1-andrey.konovalov@linaro.org>
+        Fri, 12 Jun 2020 09:55:12 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BF27C03E96F;
+        Fri, 12 Jun 2020 06:55:12 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jjk97-0004ZH-Er; Fri, 12 Jun 2020 15:55:01 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id B42B9100F5A; Fri, 12 Jun 2020 15:55:00 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, rcu@vger.kernel.org,
+        Andrew Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH x86/entry: Force rcu_irq_enter() when in idle task
+In-Reply-To: <871rmkzcc8.fsf@nanos.tec.linutronix.de>
+References: <20200611235305.GA32342@paulmck-ThinkPad-P72> <CALCETrWo-zpiDsYGtKvm8LzW6CQ5L19a3+Ag_9g8aL4wHaJj9g@mail.gmail.com> <871rmkzcc8.fsf@nanos.tec.linutronix.de>
+Date:   Fri, 12 Jun 2020 15:55:00 +0200
+Message-ID: <87wo4cxubv.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The bus_type field of v4l2_fwnode_endpoint structure passed as the argument
-to v4l2_fwnode_endpoint_alloc_parse() function must be initiaized.
-Set it to V4L2_MBUS_CSI2_DPHY, and check for -ENXIO which is returned
-when the requested media bus type doesn't match the fwnode.
+The idea of conditionally calling into rcu_irq_enter() only when RCU is
+not watching turned out to be not completely thought through.
 
-Also remove v4l2_fwnode_endpoint field from struct imx290 as it is only
-needed in the probe function: use the local variable for this purpose.
+Paul noticed occasional premature end of grace periods in RCU torture
+testing. Bisection led to the commit which made the invocation of
+rcu_irq_enter() conditional on !rcu_is_watching().
 
-Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
+It turned out that this conditional breaks RCU assumptions about the idle
+task when the scheduler tick happens to be a nested interrupt. Nested
+interrupts can happen when the first interrupt invokes softirq processing
+on return which enables interrupts. If that nested tick interrupt does not
+invoke rcu_irq_enter() then the nest accounting in RCU claims that this is
+the first interrupt which might mark a quiescient state and end grace
+periods prematurely.
+
+Change the condition from !rcu_is_watching() to is_idle_task(current) which
+enforces that interrupts in the idle task unconditionally invoke
+rcu_irq_enter() independent of the RCU state.
+
+This is also correct vs. user mode entries in NOHZ full scenarios because
+user mode entries bring RCU out of EQS and force the RCU irq nesting state
+accounting to nested. As only the first interrupt can enter from user mode
+a nested tick interrupt will enter from kernel mode and as the nesting
+state accounting is forced to nesting it will not do anything stupid even
+if rcu_irq_enter() has not been invoked.
+
+Fixes: 3eeec3858488 ("x86/entry: Provide idtentry_entry/exit_cond_rcu()")
+Reported-by: "Paul E. McKenney" <paulmck@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- drivers/media/i2c/imx290.c | 38 +++++++++++++++++++-------------------
- 1 file changed, 19 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
-index 02001c1b0dfc..9c97830164e9 100644
---- a/drivers/media/i2c/imx290.c
-+++ b/drivers/media/i2c/imx290.c
-@@ -70,7 +70,6 @@ struct imx290 {
- 	u8 bpp;
- 
- 	struct v4l2_subdev sd;
--	struct v4l2_fwnode_endpoint ep;
- 	struct media_pad pad;
- 	struct v4l2_mbus_framefmt current_format;
- 	const struct imx290_mode *current_mode;
-@@ -914,17 +913,18 @@ static const struct media_entity_operations imx290_subdev_entity_ops = {
-  * of MIPI data lanes are mentioned in the device tree, or the value of the
-  * first missing frequency otherwise.
-  */
--static s64 imx290_check_link_freqs(const struct imx290 *imx290)
-+static s64 imx290_check_link_freqs(const struct imx290 *imx290,
-+				   const struct v4l2_fwnode_endpoint *ep)
- {
- 	int i, j;
- 	const s64 *freqs = imx290_link_freqs_ptr(imx290);
- 	int freqs_count = imx290_link_freqs_num(imx290);
- 
- 	for (i = 0; i < freqs_count; i++) {
--		for (j = 0; j < imx290->ep.nr_of_link_frequencies; j++)
--			if (freqs[i] == imx290->ep.link_frequencies[j])
-+		for (j = 0; j < ep->nr_of_link_frequencies; j++)
-+			if (freqs[i] == ep->link_frequencies[j])
- 				break;
--		if (j == imx290->ep.nr_of_link_frequencies)
-+		if (j == ep->nr_of_link_frequencies)
- 			return freqs[i];
- 	}
- 	return 0;
-@@ -934,6 +934,10 @@ static int imx290_probe(struct i2c_client *client)
- {
- 	struct device *dev = &client->dev;
- 	struct fwnode_handle *endpoint;
-+	/* Only CSI2 is supported for now: */
-+	struct v4l2_fwnode_endpoint ep = {
-+		.bus_type = V4L2_MBUS_CSI2_DPHY
-+	};
- 	struct imx290 *imx290;
- 	u32 xclk_freq;
- 	s64 fq;
-@@ -956,15 +960,18 @@ static int imx290_probe(struct i2c_client *client)
- 		return -EINVAL;
+ arch/x86/entry/common.c |   35 ++++++++++++++++++++++++++++-------
+ 1 file changed, 28 insertions(+), 7 deletions(-)
+--- a/arch/x86/entry/common.c
++++ b/arch/x86/entry/common.c
+@@ -557,14 +557,34 @@ bool noinstr idtentry_enter_cond_rcu(str
+ 		return false;
  	}
  
--	ret = v4l2_fwnode_endpoint_alloc_parse(endpoint, &imx290->ep);
-+	ret = v4l2_fwnode_endpoint_alloc_parse(endpoint, &ep);
- 	fwnode_handle_put(endpoint);
--	if (ret) {
-+	if (ret == -ENXIO) {
-+		dev_err(dev, "Unsupported bus type, should be CSI2\n");
-+		goto free_err;
-+	} else if (ret) {
- 		dev_err(dev, "Parsing endpoint node failed\n");
- 		goto free_err;
+-	if (!__rcu_is_watching()) {
++	/*
++	 * If this entry hit the idle task invoke rcu_irq_enter() whether
++	 * RCU is watching or not.
++	 *
++	 * Interupts can nest when the first interrupt invokes softirq
++	 * processing on return which enables interrupts.
++	 *
++	 * Scheduler ticks in the idle task can mark quiescent state and
++	 * terminate a grace period, if and only if the timer interrupt is
++	 * not nested into another interrupt.
++	 *
++	 * Checking for __rcu_is_watching() here would prevent the nesting
++	 * interrupt to invoke rcu_irq_enter(). If that nested interrupt is
++	 * the tick then rcu_flavor_sched_clock_irq() would wrongfully
++	 * assume that it is the first interupt and eventually claim
++	 * quiescient state and end grace periods prematurely.
++	 *
++	 * Unconditionally invoke rcu_irq_enter() so RCU state stays
++	 * consistent.
++	 *
++	 * TINY_RCU does not support EQS, so let the compiler eliminate
++	 * this part when enabled.
++	 */
++	if (!IS_ENABLED(CONFIG_TINY_RCU) && is_idle_task(current)) {
+ 		/*
+ 		 * If RCU is not watching then the same careful
+ 		 * sequence vs. lockdep and tracing is required
+ 		 * as in enter_from_user_mode().
+-		 *
+-		 * This only happens for IRQs that hit the idle
+-		 * loop, i.e. if idle is not using MWAIT.
+ 		 */
+ 		lockdep_hardirqs_off(CALLER_ADDR0);
+ 		rcu_irq_enter();
+@@ -576,9 +596,10 @@ bool noinstr idtentry_enter_cond_rcu(str
  	}
  
- 	/* Get number of data lanes */
--	imx290->nlanes = imx290->ep.bus.mipi_csi2.num_data_lanes;
-+	imx290->nlanes = ep.bus.mipi_csi2.num_data_lanes;
- 	if (imx290->nlanes != 2 && imx290->nlanes != 4) {
- 		dev_err(dev, "Invalid data lanes: %d\n", imx290->nlanes);
- 		ret = -EINVAL;
-@@ -973,27 +980,20 @@ static int imx290_probe(struct i2c_client *client)
- 
- 	dev_dbg(dev, "Using %u data lanes\n", imx290->nlanes);
- 
--	if (!imx290->ep.nr_of_link_frequencies) {
-+	if (!ep.nr_of_link_frequencies) {
- 		dev_err(dev, "link-frequency property not found in DT\n");
- 		ret = -EINVAL;
- 		goto free_err;
- 	}
- 
- 	/* Check that link frequences for all the modes are in device tree */
--	fq = imx290_check_link_freqs(imx290);
-+	fq = imx290_check_link_freqs(imx290, &ep);
- 	if (fq) {
- 		dev_err(dev, "Link frequency of %lld is not supported\n", fq);
- 		ret = -EINVAL;
- 		goto free_err;
- 	}
- 
--	/* Only CSI2 is supported for now */
--	if (imx290->ep.bus_type != V4L2_MBUS_CSI2_DPHY) {
--		dev_err(dev, "Unsupported bus type, should be CSI2\n");
--		ret = -EINVAL;
--		goto free_err;
--	}
--
- 	/* get system clock (xclk) */
- 	imx290->xclk = devm_clk_get(dev, "xclk");
- 	if (IS_ERR(imx290->xclk)) {
-@@ -1108,7 +1108,7 @@ static int imx290_probe(struct i2c_client *client)
- 	pm_runtime_enable(dev);
- 	pm_runtime_idle(dev);
- 
--	v4l2_fwnode_endpoint_free(&imx290->ep);
-+	v4l2_fwnode_endpoint_free(&ep);
- 
- 	return 0;
- 
-@@ -1118,7 +1118,7 @@ static int imx290_probe(struct i2c_client *client)
- 	v4l2_ctrl_handler_free(&imx290->ctrls);
- 	mutex_destroy(&imx290->lock);
- free_err:
--	v4l2_fwnode_endpoint_free(&imx290->ep);
-+	v4l2_fwnode_endpoint_free(&ep);
- 
- 	return ret;
- }
--- 
-2.17.1
-
+ 	/*
+-	 * If RCU is watching then RCU only wants to check
+-	 * whether it needs to restart the tick in NOHZ
+-	 * mode.
++	 * If RCU is watching then RCU only wants to check whether it needs
++	 * to restart the tick in NOHZ mode. rcu_irq_enter_check_tick()
++	 * already contains a warning when RCU is not watching, so no point
++	 * in having another one here.
+ 	 */
+ 	instrumentation_begin();
+ 	rcu_irq_enter_check_tick();
