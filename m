@@ -6,61 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23631C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 311C3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED567207ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:25:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FDB8206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:25:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591989940;
-	bh=TPvJCwvOXdh8mLjnahnee+4KPe5QqLKe09oiqI+ts+k=;
+	s=default; t=1591989947;
+	bh=DcjK10GvDFeAl9mARoMVV4tuAvpVpKVU/efnkMi2GfM=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=loVtvR68fv3qbEzqGfy60EEoQH876X/3s9KDLsyTZBeVgMpoigjl6YTWNWht3VnCU
-	 fsFoRFtmkJrCPxkg37Cnumq+IJ5n6xsC5lQc3qF45I41yF+xlMN8PixJ/GZy5nR/7d
-	 tT9ULbTsbliH4qyZq6+8PL7UnjAvdB/Z1FXuko9M=
+	b=y+hCsi++HIWKzfftwSIwqAriNxlcCyftHNxG7BairXDyBs6B6L0aRYdb84FRPz+d1
+	 FrEvNc0ncRWK+/8B3uMaeOap5kOdxp0VrnH1xR4CALMvEk1GbIgXU4uNSYUw1aJ33Y
+	 +FyDopD9iGU5l3O1MyNForBbkQfufNXYdb10aVVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbgFLTZj (ORCPT
+        id S1726544AbgFLTZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 15:25:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36980 "EHLO mail.kernel.org"
+        Fri, 12 Jun 2020 15:25:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726417AbgFLTZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 15:25:34 -0400
-Subject: Re: [GIT PULL] Second batch of KVM patches for Linux 5.8
+        id S1726492AbgFLTZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 15:25:35 -0400
+Subject: Re: [GIT PULL] Devicetree fixes for v5.8-rc
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591989934;
-        bh=TPvJCwvOXdh8mLjnahnee+4KPe5QqLKe09oiqI+ts+k=;
+        s=default; t=1591989935;
+        bh=DcjK10GvDFeAl9mARoMVV4tuAvpVpKVU/efnkMi2GfM=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=S4CyH3TUP5fAleADvfWltMfiE+5i8z2rEJpcQxIWgHAcl54c/yClGv+UwhKIba0IZ
-         WU2Nn1aRZ1JxGro6U2UdwxnIZCPaZFaD1M+WVLdPd1auPtxrtbxWugBvMFNOZzCtkq
-         t6oU4t3V+pPwQNUGr9s4ilwPDvKudXIwbZ25r9+g=
+        b=Gq0jNa65zyKidBw9g5liYqzdlMvMwg+E1yD6e48slKnfeJQ6mZ8mTpmWDYId8wbfD
+         BvqhnIG7uYIzSstb5iTLuv31QIyAce1vEuNA7fR4LUyyIBWI7tlPrdeINuW1FFg//L
+         yYRm4j2Xk2zIqe4KscEhPXHmh/OmbGYuoW4/N5DU=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200612163112.16001-1-pbonzini@redhat.com>
-References: <20200612163112.16001-1-pbonzini@redhat.com>
+In-Reply-To: <20200612174800.GA3459802@bogus>
+References: <20200612174800.GA3459802@bogus>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200612163112.16001-1-pbonzini@redhat.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/virt/kvm/kvm.git
- tags/for-linus
-X-PR-Tracked-Commit-Id: 49b3deaad3452217d62dbd78da8df24eb0c7e169
+X-PR-Tracked-Message-Id: <20200612174800.GA3459802@bogus>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+ tags/devicetree-fixes-for-5.8-1
+X-PR-Tracked-Commit-Id: 8440d4a75d90556cfb8fb3e244443f67381aafd6
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 52cd0d972fa6491928add05f11f97a4a59babe92
-Message-Id: <159198993397.4050.12494916014185458605.pr-tracker-bot@kernel.org>
-Date:   Fri, 12 Jun 2020 19:25:33 +0000
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
+X-PR-Merge-Commit-Id: 4071b856afc8a49ec41e98ff45151bb0800bc46d
+Message-Id: <159198993544.4050.9158713986979540025.pr-tracker-bot@kernel.org>
+Date:   Fri, 12 Jun 2020 19:25:35 +0000
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Frank Rowand <frowand.list@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 12 Jun 2020 12:31:12 -0400:
+The pull request you sent on Fri, 12 Jun 2020 11:48:00 -0600:
 
-> https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-5.8-1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/52cd0d972fa6491928add05f11f97a4a59babe92
+https://git.kernel.org/torvalds/c/4071b856afc8a49ec41e98ff45151bb0800bc46d
 
 Thank you!
 
