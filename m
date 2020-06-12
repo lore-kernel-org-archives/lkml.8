@@ -2,96 +2,278 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEFD2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5117C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA9F1207ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:52:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCB6E20836
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:56:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="aNrTtBaI"
+	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="P0QBFaNP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726408AbgFLRwz (ORCPT
+        id S1726309AbgFLR4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 13:52:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59038 "EHLO
+        Fri, 12 Jun 2020 13:56:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726085AbgFLRwz (ORCPT
+        with ESMTP id S1726085AbgFLR4D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 13:52:55 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80861C03E96F
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 10:52:54 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f0af40048a70bbbe71adfd0.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:f400:48a7:bbb:e71a:dfd0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 64B6E1EC01B7;
-        Fri, 12 Jun 2020 19:52:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1591984371;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=kG6EUCeSj6POYagjaW4AM51ET/bvqa7j1f4YuWkH9TU=;
-        b=aNrTtBaI8u0TmoVNJs+mzmra4hfeUaZqJIRMOVqa8ELSJC3uDFlSROrYPiPxwjVmEjBZk/
-        ccD3ZROHnKBW7hyPSv1+tWmZ8IhLTm8e6w/a0Jg7Ta3VhU9p1Rt/PNcHKj4uj2ZoKufmBG
-        NBvdarm7WpxirdaXVP9uWyLoV/Ll+EY=
-Date:   Fri, 12 Jun 2020 19:52:51 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     x86-ml <x86@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH] x86/msr: Filter MSR writes
-Message-ID: <20200612175251.GF22660@zn.tnic>
-References: <20200612105026.GA22660@zn.tnic>
- <20200612163406.GA1026@linux.intel.com>
- <20200612164602.GC22660@zn.tnic>
- <20200612165709.GB1026@linux.intel.com>
- <20200612170303.GD22660@zn.tnic>
- <20200612174307.GD1026@linux.intel.com>
+        Fri, 12 Jun 2020 13:56:03 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC20FC08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 10:55:59 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id d8so4031803plo.12
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 10:55:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=MaAieVTop1wR3hLn5aMF4hBciiYGPZ3mmgoQxGR0ne0=;
+        b=P0QBFaNP0zIuJ3uLz4arPkeLR8Uvwl/8E2eLU/tQUS0Lc3SVSyWwszvFumzijOztlt
+         fQFUA8AVrMOJAcAMnlxZivOqzNkHZ4/j9yEdHgtnuWNu82cSZ0Vv0nnQ4VLFnt58tSXm
+         xZBgD/4ZQPod0aZ33iSCHverNzRMzIom5G78tPhY+kkL2avTb4dUVlWIyro8XzPCDpZr
+         mPUagCc1OKak6Ao4uOKWZrb5/MUUXcLKpuW0TRhQOsCJh1mYtosZxyCvi3+H9RUuzXBS
+         4A+x0argkZBpyUkgAJqh2HYF1UXrwJBLuSVNfHMxAQQ0LfgPVmoncLnFWFy5vLbKQbbD
+         Hk2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=MaAieVTop1wR3hLn5aMF4hBciiYGPZ3mmgoQxGR0ne0=;
+        b=GLtEAucWSHa50z3GPhZmixSHEikmFz+eOTlIvSZ2KFNwOj2H7JRX0Nr8/T19A5M0HQ
+         qJOus/jcL0W4F/kYaJlMXF3j+tuOdsdGxkdoR15lZQcech09bcEvQIiTtJ3N9J0axisF
+         QbA3fCRYhnPLX7TPGYVvk+uAQh7KtxTdzX7kzFmY4kJ+Q4+CVrTkxoPJqU608tcc8ZLH
+         7r1nOMkRjYmOzRlmaHAUgoyaNeVbv3dqvmaxDLynD6hJiY7PKqzm7u9larJKMaYTz+e2
+         GnPLF1pcdJQ/oBu0rOehNfnEKOK16UGsNytcRinDi75m4nuWaLBihgyWxigf0UMFvobN
+         ogzA==
+X-Gm-Message-State: AOAM532ffpOptoc7n37VK91h8an3p58WAIXgGaDuSvHpVyPi9jObjH/N
+        b64BrXzZmIViVLPnaVA7Zr3mvwhYJtwnJQ==
+X-Google-Smtp-Source: ABdhPJxHJrkhxq32PFCFZBtxfbpqAH9Cu1DvtNDPz1dQh0fqFcjHomVFJlDeHA1AGQ9kbyOjGLqwzQ==
+X-Received: by 2002:a17:90b:1009:: with SMTP id gm9mr60426pjb.213.1591984559192;
+        Fri, 12 Jun 2020 10:55:59 -0700 (PDT)
+Received: from kaaira-HP-Pavilion-Notebook ([103.113.213.178])
+        by smtp.gmail.com with ESMTPSA id o18sm7575370pfu.138.2020.06.12.10.55.55
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 12 Jun 2020 10:55:58 -0700 (PDT)
+Date:   Fri, 12 Jun 2020 23:25:50 +0530
+From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
+To:     hverkuil@xs4all.nl, Helen Koike <helen.koike@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>
+Subject: [PATCH] vimc: Add colors' order over test image
+Message-ID: <20200612175550.GA13676@kaaira-HP-Pavilion-Notebook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200612174307.GD1026@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 10:43:07AM -0700, Sean Christopherson wrote:
-> The problem is a fault on WRMSR doesn't mean the MSR doesn't exist, it only
-> means WRMSR faulted.  WRMSR can for all intents and purpose trigger completely
-> arbitrary microcode flows, e.g. WRMSR 0x79 can fundamentally change the
-> behavior of the CPU.
+Currently there is no method to know if the test image generated by vimc
+is correct (except for comparing it with a known 'correct' image). Add a
+function which returns the correct order of the colors in test pattern.
+And hence, add that text over the test image.
 
-Yes, that case is in the commit message.
+Add a null check in tpg_gen_text() for patterns for which color order
+does not exist/make sense to print.
 
-> And it's not like the WRMSR->taint is atomic, e.g. changing a platform scoped
-> MSR that affects voltage settings or something of that nature could easily
-> tank the system on a successful WRMSR before the kernel can be marked tainted.
+Make a separate control for the same in vimc to make displaying the
+text optional.
 
-Yes, yes, I'll taint before the WRMSR.
+Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+---
+ drivers/media/common/v4l2-tpg/v4l2-tpg-core.c | 24 ++++++++++++-
+ drivers/media/test-drivers/vimc/Kconfig       |  2 ++
+ drivers/media/test-drivers/vimc/vimc-common.h |  1 +
+ drivers/media/test-drivers/vimc/vimc-sensor.c | 34 +++++++++++++++++++
+ include/media/tpg/v4l2-tpg.h                  |  1 +
+ 5 files changed, 61 insertions(+), 1 deletion(-)
 
-> 0400 only allows a privelged user to read the parameter, e.g. for parameters
-> that are snapshotted at module load time and/or changing the param while the
-> module is running would cause breakage.
-> 
-> 0600 allows a priveleged user to read and write the parameter, which AFAICT
-> is safe here.
-
-Ok, we can do that.
-
-> 0644 allows a priveleged user to read and write the parameter, and allows an
-> unpriveleged user to read the param.
-
-Not so sure about that. Why would the unprivileged user need to read it?
-
+diff --git a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
+index 50f1e0b28b25..e32586aaae5c 100644
+--- a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
++++ b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
+@@ -1962,7 +1962,7 @@ void tpg_gen_text(const struct tpg_data *tpg, u8 *basep[TPG_MAX_PLANES][2],
+ 	unsigned len = strlen(text);
+ 	unsigned p;
+ 
+-	if (font8x16 == NULL || basep == NULL)
++	if (font8x16 == NULL || basep == NULL || text == NULL)
+ 		return;
+ 
+ 	/* Checks if it is possible to show string */
+@@ -2006,6 +2006,28 @@ void tpg_gen_text(const struct tpg_data *tpg, u8 *basep[TPG_MAX_PLANES][2],
+ }
+ EXPORT_SYMBOL_GPL(tpg_gen_text);
+ 
++const char *tpg_g_color_order(const struct tpg_data *tpg)
++{
++	switch (tpg->pattern) {
++	case (TPG_PAT_75_COLORBAR || TPG_PAT_100_COLORBAR || TPG_PAT_CSC_COLORBAR):
++		return "Left to right: white, yellow, cyan, green, magenta, red, blue, black";
++	case TPG_PAT_100_HCOLORBAR:
++		return "Top to bottom: white, yellow, cyan, green, magenta, red, blue, black";
++	case TPG_PAT_BLACK:
++		return "Black";
++	case TPG_PAT_WHITE:
++		return "White";
++	case TPG_PAT_RED:
++		return "Red";
++	case TPG_PAT_GREEN:
++		return "Green";
++	case TPG_PAT_BLUE:
++		return "Blue";
++	default:
++		return;
++	}
++}
++
+ void tpg_update_mv_step(struct tpg_data *tpg)
+ {
+ 	int factor = tpg->mv_hor_mode > TPG_MOVE_NONE ? -1 : 1;
+diff --git a/drivers/media/test-drivers/vimc/Kconfig b/drivers/media/test-drivers/vimc/Kconfig
+index 4068a67585f9..da4b2ad6e40c 100644
+--- a/drivers/media/test-drivers/vimc/Kconfig
++++ b/drivers/media/test-drivers/vimc/Kconfig
+@@ -2,6 +2,8 @@
+ config VIDEO_VIMC
+ 	tristate "Virtual Media Controller Driver (VIMC)"
+ 	depends on VIDEO_DEV && VIDEO_V4L2
++	select FONT_SUPPORT
++	select FONT_8x16
+ 	select MEDIA_CONTROLLER
+ 	select VIDEO_V4L2_SUBDEV_API
+ 	select VIDEOBUF2_VMALLOC
+diff --git a/drivers/media/test-drivers/vimc/vimc-common.h b/drivers/media/test-drivers/vimc/vimc-common.h
+index ae163dec2459..52376ba6146b 100644
+--- a/drivers/media/test-drivers/vimc/vimc-common.h
++++ b/drivers/media/test-drivers/vimc/vimc-common.h
+@@ -20,6 +20,7 @@
+ #define VIMC_CID_VIMC_CLASS		(0x00f00000 | 1)
+ #define VIMC_CID_TEST_PATTERN		(VIMC_CID_VIMC_BASE + 0)
+ #define VIMC_CID_MEAN_WIN_SIZE		(VIMC_CID_VIMC_BASE + 1)
++#define VIMC_TEST_PATTERN_ORDER		(VIMC_CID_VIMC_BASE + 2)
+ 
+ #define VIMC_FRAME_MAX_WIDTH 4096
+ #define VIMC_FRAME_MAX_HEIGHT 2160
+diff --git a/drivers/media/test-drivers/vimc/vimc-sensor.c b/drivers/media/test-drivers/vimc/vimc-sensor.c
+index a2f09ac9a360..236eae9f2f8d 100644
+--- a/drivers/media/test-drivers/vimc/vimc-sensor.c
++++ b/drivers/media/test-drivers/vimc/vimc-sensor.c
+@@ -5,6 +5,7 @@
+  * Copyright (C) 2015-2017 Helen Koike <helen.fornazier@gmail.com>
+  */
+ 
++#include <linux/font.h>
+ #include <linux/v4l2-mediabus.h>
+ #include <linux/vmalloc.h>
+ #include <media/v4l2-ctrls.h>
+@@ -19,6 +20,7 @@ struct vimc_sen_device {
+ 	struct v4l2_subdev sd;
+ 	struct tpg_data tpg;
+ 	u8 *frame;
++	bool showOrder;
+ 	/* The active format */
+ 	struct v4l2_mbus_framefmt mbus_format;
+ 	struct v4l2_ctrl_handler hdl;
+@@ -185,10 +187,18 @@ static const struct v4l2_subdev_pad_ops vimc_sen_pad_ops = {
+ static void *vimc_sen_process_frame(struct vimc_ent_device *ved,
+ 				    const void *sink_frame)
+ {
++	u8 *basep[TPG_MAX_PLANES][2];
++	char str[100];
+ 	struct vimc_sen_device *vsen = container_of(ved, struct vimc_sen_device,
+ 						    ved);
+ 
+ 	tpg_fill_plane_buffer(&vsen->tpg, 0, 0, vsen->frame);
++	if (vsen->showOrder == 1) {
++		tpg_calc_text_basep(&vsen->tpg, basep, 0, vsen->frame);
++		snprintf(str, sizeof(str), tpg_g_color_order(&vsen->tpg));
++		tpg_gen_text(&vsen->tpg, basep, 1, 1, str);
++	}
++
+ 	return vsen->frame;
+ }
+ 
+@@ -200,6 +210,14 @@ static int vimc_sen_s_stream(struct v4l2_subdev *sd, int enable)
+ 	if (enable) {
+ 		const struct vimc_pix_map *vpix;
+ 		unsigned int frame_size;
++		const struct font_desc *font = find_font("VGA8x16");
++
++		if (font == NULL) {
++			pr_err("vimc: could not find font\n");
++			return -ENODEV;
++		}
++
++		tpg_set_font(font->data);
+ 
+ 		/* Calculate the frame size */
+ 		vpix = vimc_pix_map_by_code(vsen->mbus_format.code);
+@@ -269,6 +287,9 @@ static int vimc_sen_s_ctrl(struct v4l2_ctrl *ctrl)
+ 	case V4L2_CID_SATURATION:
+ 		tpg_s_saturation(&vsen->tpg, ctrl->val);
+ 		break;
++	case VIMC_TEST_PATTERN_ORDER:
++		vsen->showOrder = ctrl->val;
++		break;
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -307,6 +328,17 @@ static const struct v4l2_ctrl_config vimc_sen_ctrl_test_pattern = {
+ 	.qmenu = tpg_pattern_strings,
+ };
+ 
++static const struct v4l2_ctrl_config vimc_sen_ctrl_order = {
++	.ops = &vimc_sen_ctrl_ops,
++	.id = VIMC_TEST_PATTERN_ORDER,
++	.name = "Show Order",
++	.type = V4L2_CTRL_TYPE_BOOLEAN,
++	.min = 0,
++	.max = 1,
++	.step = 1,
++	.def = 1,
++};
++
+ static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
+ 					    const char *vcfg_name)
+ {
+@@ -323,6 +355,7 @@ static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
+ 
+ 	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_class, NULL);
+ 	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_test_pattern, NULL);
++	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_order, NULL);
+ 	v4l2_ctrl_new_std(&vsen->hdl, &vimc_sen_ctrl_ops,
+ 			  V4L2_CID_VFLIP, 0, 1, 1, 0);
+ 	v4l2_ctrl_new_std(&vsen->hdl, &vimc_sen_ctrl_ops,
+@@ -362,6 +395,7 @@ static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
+ 
+ 	/* Initialize the frame format */
+ 	vsen->mbus_format = fmt_default;
++	vsen->showOrder = vimc_sen_ctrl_order.def;
+ 
+ 	return &vsen->ved;
+ 
+diff --git a/include/media/tpg/v4l2-tpg.h b/include/media/tpg/v4l2-tpg.h
+index eb191e85d363..2b404744322e 100644
+--- a/include/media/tpg/v4l2-tpg.h
++++ b/include/media/tpg/v4l2-tpg.h
+@@ -252,6 +252,7 @@ void tpg_fillbuffer(struct tpg_data *tpg, v4l2_std_id std,
+ bool tpg_s_fourcc(struct tpg_data *tpg, u32 fourcc);
+ void tpg_s_crop_compose(struct tpg_data *tpg, const struct v4l2_rect *crop,
+ 		const struct v4l2_rect *compose);
++const char *tpg_g_color_order(const struct tpg_data *tpg);
+ 
+ static inline void tpg_s_pattern(struct tpg_data *tpg, enum tpg_pattern pattern)
+ {
 -- 
-Regards/Gruss,
-    Boris.
+2.17.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
