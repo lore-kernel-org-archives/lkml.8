@@ -6,64 +6,57 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F19FEC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 11:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68119C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 11:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE5AE207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 11:51:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44C5F20801
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 11:52:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591962682;
-	bh=4SU7cE5K1zuUDgcSqNx4a6863ycbWxNzjj6+RY5JyS4=;
+	s=default; t=1591962728;
+	bh=mTt+Jh35Pp0ahlcoy+6Sr39U4JxkvotoC11yiL0zg+Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wilJHfXrbhvCzsAGJuHf5pXdy2Kl/KLGyaiHe7vKyQxdhWAfpGoU6hrdC/GOaY5gI
-	 BZti9zAW1VxbFRLgItHTzYXa0LADBddQ5bBDw1Bbjqr7MvTvzqIu7Da2zm8HNnrjEw
-	 1onT1E6dZhTsR3yjKukC2qX4knuF8xnUu1obrdqQ=
+	b=h5y+er4BRJkgltXik+b2CXrU7kSTEretUXGb0UrhCu1aNPKoRYjCBFEskCxdq3zF4
+	 7E3uieYtl+vU8QkzTxxGEq7dRFB4y1QQX4pmkQYoki5DIH8a0ukLX+B6hep7Yt4BPZ
+	 4WXUSnQWunulJJ1k1JM93lyqZE4pOco2tpIwjX3I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbgFLLvU (ORCPT
+        id S1726323AbgFLLwH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 07:51:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50688 "EHLO mail.kernel.org"
+        Fri, 12 Jun 2020 07:52:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725791AbgFLLvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 07:51:20 -0400
-Received: from localhost (p54b33104.dip0.t-ipconnect.de [84.179.49.4])
+        id S1725791AbgFLLwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 07:52:07 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED897207D8;
-        Fri, 12 Jun 2020 11:51:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 919A4207D8;
+        Fri, 12 Jun 2020 11:52:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591962679;
-        bh=4SU7cE5K1zuUDgcSqNx4a6863ycbWxNzjj6+RY5JyS4=;
+        s=default; t=1591962726;
+        bh=mTt+Jh35Pp0ahlcoy+6Sr39U4JxkvotoC11yiL0zg+Y=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BkdqVphjX1fv36AiWfuo2mhxrD9X8RnCZZRgbLw6LVw7pofACnD2PF9cW8ZQXuUEo
-         vF6eZ+/C5O4ujSsMH+4vPZfQgQb1EOa7TQ/ofyezZIhqzglD8/VdscYUTZSnV+tk/4
-         V6wgTeI0gGoYt77aXLKX+10YRZe/Ece1AJjYAedk=
-Date:   Fri, 12 Jun 2020 13:51:16 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org
-Subject: Re: [PATCH] i2c: imx: Fix external abort on early interrupt
-Message-ID: <20200612115116.GA18557@ninjato>
-References: <1591796802-23504-1-git-send-email-krzk@kernel.org>
- <20200612090517.GA3030@ninjato>
- <20200612092941.GA25990@pi3>
- <20200612095604.GA17763@ninjato>
- <20200612102113.GA26056@pi3>
- <20200612103149.2onoflu5qgwaooli@pengutronix.de>
- <20200612103949.GB26056@pi3>
+        b=lYqpgiPGkmnchmysC/r96L+hiQO/H31xeJQ00HMxLUKEREjrNwNoQX4H2cdNrnKz1
+         fjswOjh7m2dvum/xgq7g+TMrHPvg1JqnyPJNMCC8WAoXR3/3i7gTlz+Ya22G8qvs+t
+         aZG6GyZ1AQEziUyb3oBrbL6MuX3J89F9xwfcQD8o=
+Date:   Fri, 12 Jun 2020 12:52:02 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Xu Yilun <yilun.xu@intel.com>
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        trix@redhat.com, hao.wu@intel.com, matthew.gerlach@linux.intel.com,
+        russell.h.weight@intel.com
+Subject: Re: [PATCH 4/6] spi: altera: use regmap instead of direct mmio
+ register access
+Message-ID: <20200612115202.GD5396@sirena.org.uk>
+References: <1591845911-10197-1-git-send-email-yilun.xu@intel.com>
+ <1591845911-10197-5-git-send-email-yilun.xu@intel.com>
+ <20200611110211.GD4671@sirena.org.uk>
+ <20200612044346.GC21214@yilunxu-OptiPlex-7050>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="BXVAT5kNtrzKuDFl"
+        protocol="application/pgp-signature"; boundary="T7mxYSe680VjQnyC"
 Content-Disposition: inline
-In-Reply-To: <20200612103949.GB26056@pi3>
+In-Reply-To: <20200612044346.GC21214@yilunxu-OptiPlex-7050>
+X-Cookie: As seen on TV.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -71,35 +64,53 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---BXVAT5kNtrzKuDFl
+--T7mxYSe680VjQnyC
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
+On Fri, Jun 12, 2020 at 12:43:46PM +0800, Xu Yilun wrote:
 
-> This basically kills the concept of devm for interrupts. Some other
+> So we think of creating regmap to abstract the actually register accessing
+> detail. The parent device driver creates the regmap of indirect access,
+> and it creates the spi-altera platform device as child. Spi-altera
+> driver could just get the regmap from parent, don't have to care about
+> the indirect access detail.
 
-It only works when you can ensure you have all interrupts disabled (and
-none pending) in remove() or the error paths of probe() etc.
+To be clear there's absolutely no problem with the end result, my
+concern is the way that we're getting there.
 
+> It seems your concern is how to gracefully let spi-altera driver get the
+> regmap. or not using it. Since our platform doesn't enable device tree
+> support, seems the only way to talk to platform device is the
+> platform_data.
 
---BXVAT5kNtrzKuDFl
+No, the problem is with how that platform data is structured.  Based on
+what you're saying I'd suggest adding another device ID for this - you
+can use the id_table field in struct platform_driver to have more than
+one ID like you can have more than one ACPI ID or OF compatible.  That
+would mirror how this would be handled if things were enumerated through
+firmware.
+
+> I think the driver may need to figure out the role of the device in
+> system, whether it is a subdev of other device (like MFD? Many mfd subdev
+> driver will get parent regmap by default), or it is an independent mmio
+> device. But I'm not sure how to do it in right way.
+
+Yes, it sounds like this card is a MFD.
+
+--T7mxYSe680VjQnyC
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7jbDAACgkQFA3kzBSg
-KbYmdg//RW9DluIKVfF71z6Q72EfwO+kHdqZsli+39eCQGi+J2lBHJpJXsWzim+B
-FXD88zlC2PC0Jg/svBtzq9t4FfmxA/YJH/rwUrr/2f6HYR7dXLfxFJDc+o2j5hFX
-mgHPY9Ol+5l8R8jBDMO87i5Z/Dk8CRcEoiIMnfpnbFjhRdlR3hNxfwQV0u+yLQ5A
-bHfcm3trfqSZooJtfAwoxY0LsrgAcStKVuNKqCS9676Vr5ah11BFGKaklQYNEWRG
-0t5Xnkf6QSVbIHfVj20h70nvTPK4YP+quTs2GDcl/pYXESIduY1qxsbjfSXigi3H
-27Dbu+Vzu1gLaoem3zFgxefBl6JdYsBmoQYPPGiOmayseWg2VTDJrHpgTs7eu2uM
-6o8d3MA4g56sQJocsGSOMvStqu8xEVJ/V5kt6lDR0j7Ue9rhtXZRiDw6/DW3Gmro
-s1BiEX3UwvwXqdGK9z1j+q/skFd3noXVY/goYsxqwwoyO+uMnhy6tW7HCJvse8e+
-ojfwLkXX2Lu4+12+MnDhWEsa/jCEL2ozQC0tU594l5FLU5VYQCetAM7XnUfbDqDF
-B17Ro5HH5+WhaAWwUkWUO5jaVtRe6w0e9P2ChQocQjktjoLNzVPXX8x2vzGGQUrl
-CaGs+J26V4mod0xqhOZkACLpdBUJwb0Ji2/C1ewgBxXkcLofM+4=
-=6fqc
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7jbGEACgkQJNaLcl1U
+h9AMAwf+N/1o1gxv/MaYstof7MSjapJ2xT9M3K7h+qCIyYAdNQkfqEVoP0Iz9mt1
+fFHuBiDzA6J4QtLtMSbhZVt8LcmjLGy6jd7d+Id5slh/e7EaExUMDoqtCgr9nG3s
+A4mRr7hd44KTXbZELLKMtV0AfRD8l3fcEUdEnWRDDQCm3v3m07gbKZIwSo5y3/yF
+SdelKa+ihiJVfntXICDMTvyeXoJ8FtLGVUzZyeakfzabOi7ej7i7vNeQXWlSjq1c
+XFkO4/3v9f5HXPNEPCaAIlcR1rbgS+OpRatLfpCj5dkZWo9WRHRRLjrdb364Eayc
+Z9SHE/1eDmWAkSdBqcY2Yn5y46WHNA==
+=+BqO
 -----END PGP SIGNATURE-----
 
---BXVAT5kNtrzKuDFl--
+--T7mxYSe680VjQnyC--
