@@ -2,136 +2,94 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B648BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D4DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 838ED20878
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:36:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rlAdwRm9"
+	by mail.kernel.org (Postfix) with ESMTP id BA37720823
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:39:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726405AbgFLAgu (ORCPT
+        id S1726357AbgFLAjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 20:36:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40732 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726321AbgFLAgt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 20:36:49 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C815C03E96F;
-        Thu, 11 Jun 2020 17:36:49 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id c12so5927705qtq.11;
-        Thu, 11 Jun 2020 17:36:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=boR49jpVVRV/Q0WW/lSHnRqxWQvt+zi1RK7D2cfa/KQ=;
-        b=rlAdwRm9hTb9aJanRInl8J1ga3yBiPstojKvPwkWPLmWuhIfnagqRf2036p2pa7Q8A
-         RWu+NMUefznT+bPIVBlAfmv7d5vyOOipVD8HsRVHKtu06OL3V2c11fgP/8QE4emjSNtD
-         33wi+hHa5G97wharcnrXbgMpWMylPcxvZYMHce+FHT6kEEn98NFDhOfnnwfux1qBHw3H
-         /gfdxPgeGbhjpmsyIK/k/5zOFWMtScvvhasE5yPPAdtTWMvY8sii62idNBcAM3Gl1Zss
-         +km/niDjnK5rAm8UvK6mCLrvTajNjdne/kuTXkXmmxlpvSQB9DNjrw7CeTeljT/V0Xaw
-         cfiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references;
-        bh=boR49jpVVRV/Q0WW/lSHnRqxWQvt+zi1RK7D2cfa/KQ=;
-        b=DbAIuxPnZPywXMrpvgd1mxIa6i62Z0S25q8GPxcOmvVht9ATE6CsEI3/Grh6ENWTEm
-         T1LD54yHKoDxWkOuyj64zQAIS0BXWJwttng+RuG2WgFarP2Dbrl/v4paDlfyni0hBbbW
-         KqKRjxntJiXvbtGRYdv+BOswOGXfLue0Q4YxnlCt3lLXtpO4FoNJfZ8lzLu0shn74ulM
-         ypZ28hVQQA+kHvviyjyyzRmf7MYE0CtOcLHtzpWK7w7jZW1qj8lOADzzudet+7glmjOZ
-         R2n1WIrWU0hD+EZP8Y8kWq5a2TePfbqETq5uAXNO5Qj8aUgz92SEEf7iCD8Zr+gajRum
-         2gPg==
-X-Gm-Message-State: AOAM531NL+KxMHB3bdPi2zQRRe7Jocvax45yuj4pnuODSuz2Ck6SrVvl
-        L/I2CtffeoQnZs9L4T0rm8s=
-X-Google-Smtp-Source: ABdhPJyMNFemg5AAjTj1xQ2S4u9yW3ZUeOWoSPep6xN2RyxhGudxiyuxJn96SJvdohjSw9lew8hQ8A==
-X-Received: by 2002:ac8:1742:: with SMTP id u2mr641083qtk.341.1591922208515;
-        Thu, 11 Jun 2020 17:36:48 -0700 (PDT)
-Received: from linux.home ([2604:2000:1344:41d:f00a:33d2:6ec2:475c])
-        by smtp.googlemail.com with ESMTPSA id m126sm3432996qke.99.2020.06.11.17.36.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 17:36:48 -0700 (PDT)
-From:   Gaurav Singh <gaurav1086@gmail.com>
-To:     gaurav1086@gmail.com, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        KP Singh <kpsingh@chromium.org>,
-        netdev@vger.kernel.org (open list:XDP (eXpress Data Path)),
-        bpf@vger.kernel.org (open list:XDP (eXpress Data Path)),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] xdp_rxq_info_user: Replace malloc/memset w/calloc
-Date:   Thu, 11 Jun 2020 20:36:40 -0400
-Message-Id: <20200612003640.16248-1-gaurav1086@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200611150221.15665-1-gaurav1086@gmail.com>
-References: <20200611150221.15665-1-gaurav1086@gmail.com>
+        Thu, 11 Jun 2020 20:39:13 -0400
+Received: from mga14.intel.com ([192.55.52.115]:48138 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726305AbgFLAjN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 20:39:13 -0400
+IronPort-SDR: CSLwh9Mg7/B7kfiNeDc1qkvsDS35SJ2dEHUVTEwJlOWKjB4D/YTMmqZGLJOuh3a8YjkfY7gWgn
+ gY72cWlkBChQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 17:39:10 -0700
+IronPort-SDR: wshLOBkxm7VTi24nZCKMAnZmolS6pcJEKl4T15eV9XISp/VfYclrA6qWTOz8yg7uwPrVG5UBI+
+ t8hd8Bzw2Z1g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,501,1583222400"; 
+   d="scan'208";a="307134811"
+Received: from xingzhen-mobl1.ccr.corp.intel.com (HELO [10.238.6.47]) ([10.238.6.47])
+  by fmsmga002.fm.intel.com with ESMTP; 11 Jun 2020 17:39:09 -0700
+Subject: Re: [LKP] [ima] 8eb613c0b8: stress-ng.icache.ops_per_sec -84.2%
+ regression
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        kernel test robot <rong.a.chen@intel.com>
+Cc:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+References: <20200603091150.GH12456@shao2-debian>
+ <099cfe59-1601-a0fc-3849-13eee8754130@linux.intel.com>
+ <1591797185.5140.2.camel@linux.ibm.com>
+ <cb6a244c-5bab-1ccc-4386-e1b1caf48eb3@linux.intel.com>
+ <1591872811.5140.41.camel@linux.ibm.com>
+From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
+Message-ID: <d5b6a48b-005c-e5cb-a82f-5f7225741100@linux.intel.com>
+Date:   Fri, 12 Jun 2020 08:39:08 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <1591872811.5140.41.camel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace malloc/memset with calloc
 
-Fixes: 0fca931a6f21 ("samples/bpf: program demonstrating access to xdp_rxq_info")
-Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
----
- samples/bpf/xdp_rxq_info_user.c | 13 +++----------
- 1 file changed, 3 insertions(+), 10 deletions(-)
 
-diff --git a/samples/bpf/xdp_rxq_info_user.c b/samples/bpf/xdp_rxq_info_user.c
-index 4fe47502ebed..caa4e7ffcfc7 100644
---- a/samples/bpf/xdp_rxq_info_user.c
-+++ b/samples/bpf/xdp_rxq_info_user.c
-@@ -198,11 +198,8 @@ static struct datarec *alloc_record_per_cpu(void)
- {
- 	unsigned int nr_cpus = bpf_num_possible_cpus();
- 	struct datarec *array;
--	size_t size;
- 
--	size = sizeof(struct datarec) * nr_cpus;
--	array = malloc(size);
--	memset(array, 0, size);
-+	array = calloc(nr_cpus, sizeof(struct datarec));
- 	if (!array) {
- 		fprintf(stderr, "Mem alloc error (nr_cpus:%u)\n", nr_cpus);
- 		exit(EXIT_FAIL_MEM);
-@@ -214,11 +211,8 @@ static struct record *alloc_record_per_rxq(void)
- {
- 	unsigned int nr_rxqs = bpf_map__def(rx_queue_index_map)->max_entries;
- 	struct record *array;
--	size_t size;
- 
--	size = sizeof(struct record) * nr_rxqs;
--	array = malloc(size);
--	memset(array, 0, size);
-+	array = calloc(nr_rxqs, sizeof(struct record));
- 	if (!array) {
- 		fprintf(stderr, "Mem alloc error (nr_rxqs:%u)\n", nr_rxqs);
- 		exit(EXIT_FAIL_MEM);
-@@ -232,8 +226,7 @@ static struct stats_record *alloc_stats_record(void)
- 	struct stats_record *rec;
- 	int i;
- 
--	rec = malloc(sizeof(*rec));
--	memset(rec, 0, sizeof(*rec));
-+	rec = calloc(1, sizeof(struct stats_record));
- 	if (!rec) {
- 		fprintf(stderr, "Mem alloc error\n");
- 		exit(EXIT_FAIL_MEM);
+On 6/11/2020 6:53 PM, Mimi Zohar wrote:
+> On Thu, 2020-06-11 at 15:10 +0800, Xing Zhengjun wrote:
+>> On 6/10/2020 9:53 PM, Mimi Zohar wrote:
+>>   	ucode: 0x500002c
+>>>
+>>> Does the following change resolve it?
+>>>
+>>> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+>>> index c44414a7f82e..78e1dfc8a3f2 100644
+>>> --- a/security/integrity/ima/ima_main.c
+>>> +++ b/security/integrity/ima/ima_main.c
+>>> @@ -426,7 +426,8 @@ int ima_file_mprotect(struct vm_area_struct *vma, unsigned long prot)
+>>>    	int pcr;
+>>>    
+>>>    	/* Is mprotect making an mmap'ed file executable? */
+>>> -	if (!vma->vm_file || !(prot & PROT_EXEC) || (vma->vm_flags & VM_EXEC))
+>>> +	if (!(ima_policy_flag & IMA_APPRAISE) || !vma->vm_file ||
+>>> +	    !(prot & PROT_EXEC) || (vma->vm_flags & VM_EXEC))
+>>>    		return 0;
+>>>    
+>>>    	security_task_getsecid(current, &secid);
+>>>
+>> Thanks. I test the change, it can resolve the regression.
+> 
+> Thanks!  Can I get your "Tested-by" tag?
+> 
+> Mimi
+> 
+
+Sure.
+
 -- 
-2.17.1
-
+Zhengjun Xing
