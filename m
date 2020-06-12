@@ -2,115 +2,83 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 330F8C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 18:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C12A9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 18:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F5CF207ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 18:26:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F070207ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 18:28:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="K0LoFKfR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726317AbgFLS0L (ORCPT
+        id S1726329AbgFLS2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 14:26:11 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:37918 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726269AbgFLS0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 14:26:10 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49k8LS03QszB09ZR;
-        Fri, 12 Jun 2020 20:26:08 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id zK0L2Sz9oYi5; Fri, 12 Jun 2020 20:26:07 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49k8LR67jKzB09ZQ;
-        Fri, 12 Jun 2020 20:26:07 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id CE57B8B78B;
-        Fri, 12 Jun 2020 20:26:07 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id ksxZW3-Cg00s; Fri, 12 Jun 2020 20:26:07 +0200 (CEST)
-Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9490B8B77C;
-        Fri, 12 Jun 2020 20:26:07 +0200 (CEST)
-Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 5369865ACE; Fri, 12 Jun 2020 18:26:07 +0000 (UTC)
-Message-Id: <694a25fdce548c5ee8b060ef6a4b02746b8f25c0.1591986307.git.christophe.leroy@csgroup.eu>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v2] tty: serial: cpm_uart: Fix behaviour for non existing
- GPIOs
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-serial@vger.kernel.org
-Date:   Fri, 12 Jun 2020 18:26:07 +0000 (UTC)
+        Fri, 12 Jun 2020 14:28:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36236 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbgFLS2S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 14:28:18 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74963C03E96F;
+        Fri, 12 Jun 2020 11:28:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=fMK1eYp0u+euxgVOHw3duKdBcD5DBcCm6cJKZJ/S5Ew=; b=K0LoFKfReLadDNKAZKp1+itnoH
+        v8A8dgGBIgan1mqcohgDbHer/ZNOHIwRT7uW5XbU/ERBTKINqAE/pMHlES0Sf+xxWDthJp9FnLFC/
+        ggMyycSwdgbQ3d78716YqH5Ut7Bw+PikAXz7vj9bpYjd7GJY3vOx6lwKoN3TENTuj0mt/ok9L3xrn
+        6ctNZfK+IU96OwH6aCg2kk6gblFozL0R2I9Ri4TUrp3pewmLjG1mP9esGujSEaanv73UjT/zJVqRn
+        QquSt5sNP4Fc+J14oyiTQPa+R+vyfhmAfCebIisd6ZLWzx7dEJ3rJ3xClwOf198NEy6Y0AECywjq5
+        stCWouag==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jjoPU-0007Ua-0T; Fri, 12 Jun 2020 18:28:12 +0000
+Date:   Fri, 12 Jun 2020 11:28:11 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Kaitao Cheng <pilgrimtao@gmail.com>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Muchun Song <songmuchun@bytedance.com>
+Subject: Re: [v2] proc/fd: Remove unnecessary variable initialisations in
+ seq_show()
+Message-ID: <20200612182811.GH8681@bombadil.infradead.org>
+References: <20200612160946.21187-1-pilgrimtao@gmail.com>
+ <7fdada40-370d-37b3-3aab-bfbedaa1804f@web.de>
+ <20200612170033.GF8681@bombadil.infradead.org>
+ <80794080-138f-d015-39df-36832e9ab5d4@web.de>
+ <20200612170431.GG8681@bombadil.infradead.org>
+ <cd8f10b2-ffbd-e10f-4921-82d75d1760f4@web.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cd8f10b2-ffbd-e10f-4921-82d75d1760f4@web.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-devm_gpiod_get_index() doesn't return NULL but -ENOENT when the
-requested GPIO doesn't exist,  leading to the following messages:
+On Fri, Jun 12, 2020 at 08:22:43PM +0200, Markus Elfring wrote:
+> >> Would you like to clarify concrete software development ideas?
+> >
+> > Yes.  Learn something deeply, then your opinion will have value.
+> 
+> The presented suggestions trigger different views by involved contributors.
 
-[    2.742468] gpiod_direction_input: invalid GPIO (errorpointer)
-[    2.748147] can't set direction for gpio #2: -2
-[    2.753081] gpiod_direction_input: invalid GPIO (errorpointer)
-[    2.758724] can't set direction for gpio #3: -2
-[    2.763666] gpiod_direction_output: invalid GPIO (errorpointer)
-[    2.769394] can't set direction for gpio #4: -2
-[    2.774341] gpiod_direction_input: invalid GPIO (errorpointer)
-[    2.779981] can't set direction for gpio #5: -2
-[    2.784545] ff000a20.serial: ttyCPM1 at MMIO 0xfff00a20 (irq = 39, base_baud = 8250000) is a CPM UART
+Most of the views I've heard are "Markus, go away".  Do you not hear these
+views?
 
-Use devm_gpiod_get_index_optional() instead.
+> In which directions can the desired clarification evolve?
 
-At the same time, handle the error case and properly exit
-with an error.
+You could try communicating in a way that the rest of us do.  For
+example, instead of saying something weird about "collateral evolution"
+you could say "I think there's a similar bug here".
 
-Fixes: 97cbaf2c829b ("tty: serial: cpm_uart: Convert to use GPIO descriptors")
-Cc: stable@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
-v2: Using devm_gpiod_get_index_optional() and exiting if error
----
- drivers/tty/serial/cpm_uart/cpm_uart_core.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+> How do you think about further function design alternatives?
 
-diff --git a/drivers/tty/serial/cpm_uart/cpm_uart_core.c b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
-index a04f74d2e854..4df47d02b34b 100644
---- a/drivers/tty/serial/cpm_uart/cpm_uart_core.c
-+++ b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
-@@ -1215,7 +1215,12 @@ static int cpm_uart_init_port(struct device_node *np,
- 
- 		pinfo->gpios[i] = NULL;
- 
--		gpiod = devm_gpiod_get_index(dev, NULL, i, GPIOD_ASIS);
-+		gpiod = devm_gpiod_get_index_optional(dev, NULL, i, GPIOD_ASIS);
-+
-+		if (IS_ERR(gpiod)) {
-+			ret = PTR_ERR(gpiod);
-+			goto out_irq;
-+		}
- 
- 		if (gpiod) {
- 			if (i == GPIO_RTS || i == GPIO_DTR)
-@@ -1237,6 +1242,8 @@ static int cpm_uart_init_port(struct device_node *np,
- 
- 	return cpm_uart_request_port(&pinfo->port);
- 
-+out_irq:
-+	irq_dispose_mapping(pinfo->port.irq);
- out_pram:
- 	cpm_uart_unmap_pram(pinfo, pram);
- out_mem:
--- 
-2.25.0
-
+Could you repeat that in German?  I don't know what you mean.
