@@ -2,122 +2,104 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F92C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF1A4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F0182074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:46:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A23392074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:46:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726340AbgFLPp6 (ORCPT
+        id S1726362AbgFLPqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 11:45:58 -0400
-Received: from mga07.intel.com ([134.134.136.100]:10047 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726112AbgFLPp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 11:45:58 -0400
-IronPort-SDR: 6NESIibgOnlhwWwplCLGumUQh+2R/zILy2HJ99Ouu7AUtWZw7h+P2GnlXifW2wpl7v0EDId3rH
- YLZz0L4N4yhA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2020 08:45:57 -0700
-IronPort-SDR: vEpkrF0S0lkXZ+9C/LiR7LbQmJWHluZyADAKAuHQdlxvLZxNKfEHDS0Ua5ZGj+VLc8K4FR5v1i
- 4X04R3ix94nw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,503,1583222400"; 
-   d="scan'208";a="380731890"
-Received: from amritada-mobl.amr.corp.intel.com (HELO spandruv-mobl3.amr.corp.intel.com) ([10.254.106.203])
-  by fmsmga001.fm.intel.com with ESMTP; 12 Jun 2020 08:45:55 -0700
-Message-ID: <89e856e6c76b460c1515b70677e44bc50033bc17.camel@linux.intel.com>
-Subject: Re: [PATCH] cpufreq: intel_pstate: Add additional OOB enabling bit
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Doug Smythies <dsmythies@telus.net>, lenb@kernel.org,
-        viresh.kumar@linaro.org, rjw@rjwysocki.net
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Fri, 12 Jun 2020 08:45:54 -0700
-In-Reply-To: <000301d640c3$4e6d61c0$eb482540$@net>
-References: <20200611174838.2822533-1-srinivas.pandruvada@linux.intel.com>
-         <000301d640c3$4e6d61c0$eb482540$@net>
+        Fri, 12 Jun 2020 11:46:12 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16464 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726112AbgFLPqM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 11:46:12 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05CF4jDw117181;
+        Fri, 12 Jun 2020 11:46:10 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31kq692t97-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 12 Jun 2020 11:46:10 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05CFjWGn025858;
+        Fri, 12 Jun 2020 15:46:08 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma02fra.de.ibm.com with ESMTP id 31g2s84rvu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 12 Jun 2020 15:46:08 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05CFin1C56230358
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 12 Jun 2020 15:44:49 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2A88952050;
+        Fri, 12 Jun 2020 15:46:06 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.133.187])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id B1FE55204E;
+        Fri, 12 Jun 2020 15:46:05 +0000 (GMT)
+Message-ID: <1591976765.11061.76.camel@linux.ibm.com>
+Subject: [GIT PULL] integrity bug fix v5.8 (#1)
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-integrity <linux-integrity@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Fri, 12 Jun 2020 11:46:05 -0400
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-11_23:2020-06-11,2020-06-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
+ cotscore=-2147483648 impostorscore=0 mlxscore=0 lowpriorityscore=0
+ suspectscore=2 mlxlogscore=999 spamscore=0 malwarescore=0 phishscore=0
+ priorityscore=1501 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006110174
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-06-12 at 07:11 -0700, Doug Smythies wrote:
-> On 2020.06.11 10:49 Srinivas Pandruvada wrote:
-> 
-> > Add additional bit for OOB (Out of band) enabling of P-states. In
-> > this
-> > case intel_pstate shouldn't load. Currently, only "BIT(8) == 1" of
-> > the
-> > MSR MSR_MISC_PWR_MGMT is considered as OOB. Also add "BIT(18) == 1"
-> > as
-> > OOB condition.
-> 
-> Shouldn't those bits be defined in these files:
-> arch/x86/include/asm/msr-index.h
-> and
-> tools/arch/x86/include/asm/msr-index.h
-> 
-> ?
-The rule from arch-x86 maintainers requires use in more than one place
-to go there.
+Hi Linus,
 
-> 
-> By the way, I couldn't find those bits defined in Intel docs that I
-> have.
-Usually, they end up in data sheets.
+One IMA performance fix for v5.8-rc to return immediately if IMA-
+appraise is not enabled, before doing any mprotect IMA rules checking.
 
->  
-> > Signed-off-by: Srinivas Pandruvada <
-> > srinivas.pandruvada@linux.intel.com>
-> > ---
-> >  drivers/cpufreq/intel_pstate.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/cpufreq/intel_pstate.c
-> > b/drivers/cpufreq/intel_pstate.c
-> > index 8e23a698ce04..f21761443c90 100644
-> > --- a/drivers/cpufreq/intel_pstate.c
-> > +++ b/drivers/cpufreq/intel_pstate.c
-> > @@ -2686,8 +2686,8 @@ static bool __init
-> > intel_pstate_platform_pwr_mgmt_exists(void)
-> >  	id = x86_match_cpu(intel_pstate_cpu_oob_ids);
-> >  	if (id) {
-> >  		rdmsrl(MSR_MISC_PWR_MGMT, misc_pwr);
-> > -		if (misc_pwr & (1 << 8)) {
-> > -			pr_debug("Bit 8 in the MISC_PWR_MGMT MSR
-> > set\n");
-> > +		if ((misc_pwr & BIT(8)) || (misc_pwr & BIT(18))) {
-> 
-> And then those bit definitions used above.
-I didn't understand the comment.
+thanks,
 
-> 
-> > +			pr_debug("Bit 8 or 18 in the MISC_PWR_MGMT MSR
-> > set\n");
-> 
-> And then some insight also printed  with the debug message.
-> At least say "Out of Band".
-We can.
+Mimi
 
-Thanks,
-Srinivas
+The following changes since commit
+42413b49804b250ced70dac8815388af2d4ad872:
 
-> 
-> >  			return true;
-> >  		}
-> >  	}
-> > --
-> > 2.24.1
-> 
-> 
+  ima: Directly free *entry in ima_alloc_init_template() if digests is
+NULL (2020-06-05 06:04:11 -0400)
 
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-
+integrity.git tags/integrity-v5.8-fix
+
+for you to fetch changes up to
+4235b1a4efe19dd0309250170bbf0aa95e559626:
+
+  ima: fix mprotect checking (2020-06-12 11:30:18 -0400)
+
+----------------------------------------------------------------
+ima: mprotect performance fix
+
+----------------------------------------------------------------
+Mimi Zohar (1):
+      ima: fix mprotect checking
+
+ security/integrity/ima/ima_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
