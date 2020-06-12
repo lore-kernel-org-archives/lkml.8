@@ -2,194 +2,122 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A63C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 20:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4A4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 20:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75FE8206C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 20:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EBBE206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 20:28:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="R3pCRUqH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbgFLUYA (ORCPT
+        id S1726335AbgFLU2D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 16:24:00 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:24478 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726290AbgFLUYA (ORCPT
+        Fri, 12 Jun 2020 16:28:03 -0400
+Received: from mta-p7.oit.umn.edu ([134.84.196.207]:51994 "EHLO
+        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbgFLU2C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 16:24:00 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05CJaJ11142959;
-        Fri, 12 Jun 2020 16:23:58 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31mg0v96wq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 12 Jun 2020 16:23:58 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05CKLMwq178341;
-        Fri, 12 Jun 2020 16:23:57 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31mg0v96vx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 12 Jun 2020 16:23:57 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05CKLTIr027621;
-        Fri, 12 Jun 2020 20:23:55 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma04ams.nl.ibm.com with ESMTP id 31g2s83w5f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 12 Jun 2020 20:23:55 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05CKMacX64160150
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jun 2020 20:22:36 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 33B3452050;
-        Fri, 12 Jun 2020 20:23:53 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.133.187])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 4D0675204F;
-        Fri, 12 Jun 2020 20:23:52 +0000 (GMT)
-Message-ID: <1591993431.11061.116.camel@linux.ibm.com>
-Subject: Re: [PATCH 2/2] IMA: Add audit log for failure conditions
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        sgrubb@redhat.com, paul@paul-moore.com
-Cc:     rgb@redhat.com, linux-integrity@vger.kernel.org,
-        linux-audit@redhat.com, linux-kernel@vger.kernel.org
-Date:   Fri, 12 Jun 2020 16:23:51 -0400
-In-Reply-To: <20200611000400.3771-2-nramas@linux.microsoft.com>
-References: <20200611000400.3771-1-nramas@linux.microsoft.com>
-         <20200611000400.3771-2-nramas@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+        Fri, 12 Jun 2020 16:28:02 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 49kC361SYMz9vpNQ
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 20:28:02 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p7.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 1XlsPzMKRKNS for <linux-kernel@vger.kernel.org>;
+        Fri, 12 Jun 2020 15:28:02 -0500 (CDT)
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id 49kC356vFhz9vpNR
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 15:28:01 -0500 (CDT)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p7.oit.umn.edu 49kC356vFhz9vpNR
+DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p7.oit.umn.edu 49kC356vFhz9vpNR
+Received: by mail-io1-f70.google.com with SMTP id p8so6858745ios.19
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 13:28:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=15g7t7Uei6AmpLN3ekbAqZ45/3DFCsrsD7nCEei6vOg=;
+        b=R3pCRUqHU9BitaWWtCt5Z2/yajAtRzxQgM0OvAPYqThro6GY8jb5QI3sfLmf0JHjG1
+         2i1TuFSnZ7utZNNYoQ1e/ttJ5lNDz+Y1RfsBFueSj57DghPX0XxhFvGmvrtBSqsI5XBC
+         g/jlLtaLjh34bTcS0P54PfMVDHa1SNU4eiuXYaVk1cwGQUmF109ois/t/BhzRlAS9atI
+         nV49jCWjqSw0i+KPPiBV4dMhCO8WyXlJq3V0selPPMqWGNkZcnVgMRhJXrPwDebXt6FR
+         zKR4Js63iOuGRMsJDXakKew2cezTXYOJM1khIwJJaaLklO9NUYOka3rjSmqrsk12EJAg
+         YHsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=15g7t7Uei6AmpLN3ekbAqZ45/3DFCsrsD7nCEei6vOg=;
+        b=oUA4iCYzEUbdSCTkbvAA64LL2PBNuRDr1AlZ7ZnrVThr1+0nGcq/bx3KJAweGVb3ly
+         aGgYo9G8WhNxzl9pIeX2alL3IV2DKhYcP4F+TUKPYq0opAV7wOY7ea10zWYFZ8vLSZMi
+         skC7CRFOHPK1uSbpVv3Wv2gujclxxUsyG8ucPcs4BaJTW5yZ0jxs8j1DKygp+y0Hl5lz
+         5KTn6TzsQqLq3mBMYqS70GYbFIQFTc7Lhh5E9uLxG0LTitvLOIajNm2IE8Cv+uvhzjo2
+         Zw6HKSdJ4eEcA5oiWxsSoHho2zcTXBvlbx5MR3+bMQ557dukOnAa2cqPNdLJRC13lzQM
+         Rhdw==
+X-Gm-Message-State: AOAM533QjFXLqRiq0tmeg33YnoRjm5RrXzVd2runE05LN+SOY6cuKE29
+        FP5m6fhlNIA2wUc7YhINaaIqs7kWGqRdJGECTti58/Q02LZ9CafEeH0tNmbPIyZGzyGTqvNx1k1
+        Z2QtgIxFa7S88phcYCLu0r/AfS89Y
+X-Received: by 2002:a05:6e02:8ea:: with SMTP id n10mr14152592ilt.58.1591993681604;
+        Fri, 12 Jun 2020 13:28:01 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwrCxyRcnu/uj9UMguP3lKGMvs3vnk4/rXTUtjzr6ELOw0xUTbZ5xJTp7kURkky+wDW/4Kaww==
+X-Received: by 2002:a05:6e02:8ea:: with SMTP id n10mr14152574ilt.58.1591993681403;
+        Fri, 12 Jun 2020 13:28:01 -0700 (PDT)
+Received: from piston-t1.hsd1.mn.comcast.net ([2601:445:4380:5b90:79cf:2597:a8f1:4c97])
+        by smtp.googlemail.com with ESMTPSA id r1sm3565653iln.77.2020.06.12.13.28.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2020 13:28:00 -0700 (PDT)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, wu000273@umn.edu, Jiri Pirko <jiri@resnulli.us>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] rocker: fix incorrect error handling in dma_rings_init
+Date:   Fri, 12 Jun 2020 15:27:55 -0500
+Message-Id: <20200612202755.57418-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-11_23:2020-06-11,2020-06-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
- adultscore=0 cotscore=-2147483648 malwarescore=0 phishscore=0
- clxscore=1015 priorityscore=1501 bulkscore=0 spamscore=0 suspectscore=0
- mlxlogscore=999 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006110174
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lakshmi,
+In rocker_dma_rings_init, the goto blocks in case of errors
+caused by the functions rocker_dma_cmd_ring_waits_alloc() and
+rocker_dma_ring_create() are incorrect. The patch fixes the
+order consistent with cleanup in rocker_dma_rings_fini().
 
-I haven't yet tested the patch.  Below are a couple of comments.
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+---
+ drivers/net/ethernet/rocker/rocker_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On Wed, 2020-06-10 at 17:04 -0700, Lakshmi Ramasubramanian wrote:
-> The final log statement in process_buffer_measurement() for failure
-> condition is at debug level. This does not log the message unless
-> the system log level is raised which would significantly increase
-> the messages in the system log. Change this to an audit message to
-> audit integrity failures with the "op" field of the audit message
-> set to indicate the measurement operation that failed.
-
-The problem with the existing "pr" level is kind of irrelevant.   You
-could keep the existing pr_debug() statement, if you wanted to.  The
-reason for auditing a failure is because it is "integrity" relevant or
-more generically "security" relevant.  The first patch addresses the
-change in the audit message format.
-
-> 
-> Also, add an audit message for failures in ima_alloc_key_entry().
-> 
-> Sample audit messages:
-> 
-> [    6.284329] audit: type=1804 audit(1591756723.627:2): pid=1 uid=0
-> auid=4294967295 ses=4294967295 subj=kernel
-> op=measuring_kexec_cmdline cause=alloc_entry errno=-12
-> comm="swapper/0" name="kexec-cmdline" res=0
-> 
-> [    8.017126] audit: type=1804 audit(1591756725.360:10): pid=1
-> uid=0 auid=4294967295 ses=4294967295
-> subj=system_u:system_r:init_t:s0 op=measuring_key
-> cause=hashing_error errno=-22 comm="systemd"
-> name=".builtin_trusted_keys" res=0
-> 
-> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-> Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
-> ---
->  security/integrity/ima/ima.h            | 48 ++++++++++++++++---------
->  security/integrity/ima/ima_main.c       | 18 +++++++---
->  security/integrity/ima/ima_policy.c     |  2 +-
->  security/integrity/ima/ima_queue_keys.c |  5 +++
->  4 files changed, 51 insertions(+), 22 deletions(-)
-> 
-> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-> index df93ac258e01..e42101eebd69 100644
-> --- a/security/integrity/ima/ima.h
-> +++ b/security/integrity/ima/ima.h
-> @@ -186,27 +186,43 @@ static inline unsigned int ima_hash_key(u8 *digest)
->  	return (digest[0] | digest[1] << 8) % IMA_MEASURE_HTABLE_SIZE;
->  }
->  
-> -#define __ima_hooks(hook)		\
-> -	hook(NONE)			\
-> -	hook(FILE_CHECK)		\
-> -	hook(MMAP_CHECK)		\
-> -	hook(BPRM_CHECK)		\
-> -	hook(CREDS_CHECK)		\
-> -	hook(POST_SETATTR)		\
-> -	hook(MODULE_CHECK)		\
-> -	hook(FIRMWARE_CHECK)		\
-> -	hook(KEXEC_KERNEL_CHECK)	\
-> -	hook(KEXEC_INITRAMFS_CHECK)	\
-> -	hook(POLICY_CHECK)		\
-> -	hook(KEXEC_CMDLINE)		\
-> -	hook(KEY_CHECK)			\
-> -	hook(MAX_CHECK)
-> -#define __ima_hook_enumify(ENUM)	ENUM,
-> +#define __ima_hooks(hook)				\
-> +	hook(NONE, none)				\
-> +	hook(FILE_CHECK, file)				\
-> +	hook(MMAP_CHECK, mmap)				\
-> +	hook(BPRM_CHECK, bprm)				\
-> +	hook(CREDS_CHECK, creds)			\
-> +	hook(POST_SETATTR, post_setattr)		\
-> +	hook(MODULE_CHECK, module)			\
-> +	hook(FIRMWARE_CHECK, firmware)			\
-> +	hook(KEXEC_KERNEL_CHECK, kexec_kernel)		\
-> +	hook(KEXEC_INITRAMFS_CHECK, kexec_initramfs)	\
-> +	hook(POLICY_CHECK, policy)			\
-> +	hook(KEXEC_CMDLINE, kexec_cmdline)		\
-> +	hook(KEY_CHECK, key)				\
-> +	hook(MAX_CHECK, none)
-> +
-> +#define __ima_hook_enumify(ENUM, str)	ENUM,
-> +#define __ima_stringify(arg) (#arg)
-> +#define __ima_hook_measuring_stringify(ENUM, str) \
-> +		(__ima_stringify(measuring_ ##str)),
->  
->  enum ima_hooks {
->  	__ima_hooks(__ima_hook_enumify)
->  };
->  
-> +static const char * const ima_hooks_measure_str[] = {
-> +	__ima_hooks(__ima_hook_measuring_stringify)
-> +};
-> +
-> +static inline const char *ima_hooks_func_measure_str(enum ima_hooks func)
-
-"ima_hooks_func_measure_str" is a bit long.  There's no reason for
-having both "hooks" and "func" in the name.  Also this is a static
-function, so it doesn't really need to be prefixed with "ima_".  Maybe
-truncate it to "func_measure_str()", similar to "func_token".
-
-Mimi
-
-> +{
-> +	if (func >= MAX_CHECK)
-> +		return ima_hooks_measure_str[NONE];
-> +
-> +	return ima_hooks_measure_str[func];
-> +}
-> +
->  extern const char *const func_tokens[];
+diff --git a/drivers/net/ethernet/rocker/rocker_main.c b/drivers/net/ethernet/rocker/rocker_main.c
+index 7585cd2270ba..fc99e7118e49 100644
+--- a/drivers/net/ethernet/rocker/rocker_main.c
++++ b/drivers/net/ethernet/rocker/rocker_main.c
+@@ -647,10 +647,10 @@ static int rocker_dma_rings_init(struct rocker *rocker)
+ err_dma_event_ring_bufs_alloc:
+ 	rocker_dma_ring_destroy(rocker, &rocker->event_ring);
+ err_dma_event_ring_create:
++	rocker_dma_cmd_ring_waits_free(rocker);
++err_dma_cmd_ring_waits_alloc:
+ 	rocker_dma_ring_bufs_free(rocker, &rocker->cmd_ring,
+ 				  PCI_DMA_BIDIRECTIONAL);
+-err_dma_cmd_ring_waits_alloc:
+-	rocker_dma_cmd_ring_waits_free(rocker);
+ err_dma_cmd_ring_bufs_alloc:
+ 	rocker_dma_ring_destroy(rocker, &rocker->cmd_ring);
+ 	return err;
+-- 
+2.25.1
 
