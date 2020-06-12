@@ -2,201 +2,116 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9CDC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 12:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EBFC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 12:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A188A20792
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 12:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 550C720792
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 12:12:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="D/X4Lr/b"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Cx7RuQ86"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbgFLMJf (ORCPT
+        id S1726268AbgFLMMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 08:09:35 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:55994 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726259AbgFLMJf (ORCPT
+        Fri, 12 Jun 2020 08:12:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34758 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725791AbgFLMMp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 08:09:35 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200612120933euoutp02df5123aa41d0fbac9369dd3518b0a38d~Xyp4E3Lnd2732127321euoutp02-
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 12:09:33 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200612120933euoutp02df5123aa41d0fbac9369dd3518b0a38d~Xyp4E3Lnd2732127321euoutp02-
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1591963773;
-        bh=dTgb0aDOsdW8dndgwJIretJ8lZpwDeagig+xzF9HRe4=;
-        h=To:Cc:From:Subject:Date:References:From;
-        b=D/X4Lr/bHQEKjFvYjka6Hh03+ya9Ek0eCeaeM/AAY7Y23gFSXOAK/ioj0heV9exdB
-         c+LLzXRthpS+JneWQGRigP3QoTCkPvXSyzGNl9lP5ym0CRxVIgP3NvsLcm/tmH+1mp
-         7MnMjtwmyvpiATWofRWZ2lHgfKOvbCDVl6mTHfeU=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200612120932eucas1p1f963a07711503087e331b5a761f47cf9~Xyp3shBKJ0102601026eucas1p15;
-        Fri, 12 Jun 2020 12:09:32 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id D4.62.60698.C7073EE5; Fri, 12
-        Jun 2020 13:09:32 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200612120932eucas1p29411e0c60963fad8c36ca35f2e6b8872~Xyp3YdLuE0030800308eucas1p2M;
-        Fri, 12 Jun 2020 12:09:32 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200612120932eusmtrp199d1b76f882695df09220ed25fa130d6~Xyp3X2ZCK2263322633eusmtrp1G;
-        Fri, 12 Jun 2020 12:09:32 +0000 (GMT)
-X-AuditID: cbfec7f5-a0fff7000001ed1a-85-5ee3707cd135
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 99.2F.08375.C7073EE5; Fri, 12
-        Jun 2020 13:09:32 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200612120932eusmtip1f5a2a2fc60ad74c0d6a5082b15f12b55~Xyp3E61511573915739eusmtip17;
-        Fri, 12 Jun 2020 12:09:32 +0000 (GMT)
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     kernel test robot <lkp@intel.com>, Christoph Hellwig <hch@lst.de>,
-        linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH] ata: fix AHCI_SHT() macro definition
-Message-ID: <0d803e72-b15e-4673-4858-4741f2772fc4@samsung.com>
-Date:   Fri, 12 Jun 2020 14:09:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Fri, 12 Jun 2020 08:12:45 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37A21C03E96F;
+        Fri, 12 Jun 2020 05:12:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=yK0/1c9HKj2vF/aVFuOZ5pmsjzwvYf0jnH1dHlUlTaU=; b=Cx7RuQ86PB3ddeJ2xmouu/uKH
+        0xZPWb+ognvv1FUceCJLBroZnRKagl9MUwZtLcQp8ifCoKSPaAwBSg4qyIg59XcxrGEzZ1WpyLaEk
+        nZkhKYaSi41JVrdTtOpk1kAa8Xu+KrKX4mGgpSu43l7w0/ltuajXq80uObZcLGWovVTnzm4LMdwJu
+        OWqfGyzdRtsPRxXmhNB/TADT39c2G+V63xY3xMmen/TWEoCLRDExipNWDvbGZaCmnebG5czbGfhXb
+        jTrEsyyS9XksQmjs06sI57lA/Y4zG5RqGVuRMxKa3hEg04XGdwd9B+35wJaHd79bY8WzLTHMLyRV0
+        Ycld0pp5w==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:44620)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jjiY4-0002oG-A5; Fri, 12 Jun 2020 13:12:40 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jjiY3-0006G9-Lp; Fri, 12 Jun 2020 13:12:39 +0100
+Date:   Fri, 12 Jun 2020 13:12:39 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
+Subject: Re: [PATCH v2] net: mvneta: Fix Serdes configuration for 2.5Gbps
+ modes
+Message-ID: <20200612121239.GJ1551@shell.armlinux.org.uk>
+References: <20200612083847.29942-1-s.hauer@pengutronix.de>
+ <20200612084710.GC1551@shell.armlinux.org.uk>
+ <20200612100114.GE1551@shell.armlinux.org.uk>
+ <20200612101820.GF1551@shell.armlinux.org.uk>
+ <20200612120604.GT11869@pengutronix.de>
 MIME-Version: 1.0
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprDKsWRmVeSWpSXmKPExsWy7djP87o1BY/jDHYfM7RYfbefzWLl6qNM
-        Fsd2PGKyuLxrDpvFq+ZHbA6sHov3vGTyuHy21GP3zQY2j8+b5AJYorhsUlJzMstSi/TtErgy
-        vqz8z1awR6rie8duxgbG3aJdjJwcEgImEn8f3mXsYuTiEBJYwSixcckVKOcLo0Tb7StsEM5n
-        RonzDz6zwrT8WzOPCSKxnFHi9+mpUM5bRokVj+cyg1SJCChI9PxeCdbOLNDAKHH25S52kASb
-        gJXExPZVjCC2sICpxO5bp8DivAJ2Etu2/QRrZhFQlXh6vQGsRlQgQuLTg8OsEDWCEidnPmEB
-        sZkFxCVuPZnPBGHLSzRvnc0MskxCoJ1d4sLiH0ANHECOi0RnqzzE2cISr45vYYewZSROT+5h
-        gahfxyjxt+MFVPN2Ronlk/+xQVRZS9w594sNZBCzgKbE+l36EGFHieVnJzNCzOeTuPFWEOIG
-        PolJ26YzQ4R5JTrahCCq1SQ2LNvABrO2a+dKZgjbQ2L93W62CYyKs5B8NgvJZ7OQfDYL4YYF
-        jCyrGMVTS4tz01OLjfNSy/WKE3OLS/PS9ZLzczcxAtPM6X/Hv+5g3Pcn6RCjAAejEg+vQcLj
-        OCHWxLLiytxDjBIczEoivE5nT8cJ8aYkVlalFuXHF5XmpBYfYpTmYFES5zVe9DJWSCA9sSQ1
-        OzW1ILUIJsvEwSnVwJjx9OMu7gLJ7Wwbu8xjzLtKavMTljnPupqv4nn9oe3cu7/zdlWz5X95
-        N+nvpcmXJ/40cczJ/CznrfLG8QpjyFX+rry//fETcn84v+jgyJsTNHXjRMu35f+P575633vd
-        6r2c777Tpe9vq+1v+Mo8xfamX2iel67183N9AWyV7V+uXbf+OuFYFIMSS3FGoqEWc1FxIgBb
-        PsjqLwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprKIsWRmVeSWpSXmKPExsVy+t/xu7o1BY/jDM6flLNYfbefzWLl6qNM
-        Fsd2PGKyuLxrDpvFq+ZHbA6sHov3vGTyuHy21GP3zQY2j8+b5AJYovRsivJLS1IVMvKLS2yV
-        og0tjPQMLS30jEws9QyNzWOtjEyV9O1sUlJzMstSi/TtEvQyvqz8z1awR6rie8duxgbG3aJd
-        jJwcEgImEv/WzGPqYuTiEBJYyijx++9sti5GDqCEjMTx9WUQNcISf651sUHUvGaUWD91GxNI
-        QkRAQaLn90qwBLNAA6PE84ln2EASbAJWEhPbVzGC2MICphK7b51iB7F5Bewktm37yQxiswio
-        Sjy93gBWIyoQIXF4xyxGiBpBiZMzn7CA2MwC6hJ/5l1ihrDFJW49mc8EYctLNG+dzTyBUWAW
-        kpZZSFpmIWmZhaRlASPLKkaR1NLi3PTcYkO94sTc4tK8dL3k/NxNjMAo2Xbs5+YdjJc2Bh9i
-        FOBgVOLh7Uh6HCfEmlhWXJl7iFGCg1lJhNfp7Ok4Id6UxMqq1KL8+KLSnNTiQ4ymQA9NZJYS
-        Tc4HRnBeSbyhqaG5haWhubG5sZmFkjhvh8DBGCGB9MSS1OzU1ILUIpg+Jg5OqQZG1Svhk+qE
-        rX9OO+lzi0/vmm2CddGiG1PuJYac5vnCFXEqWfqq+9p7RorMIlPlZY656dclWVz2zHS9xuC1
-        2Mpfneke34X/ZydMbHgiFam9hndji+2iJZOKhb1D5jOudv/XOe2tg8iqUmkWcfYdJ1xO7Zbk
-        iV3mGpZYurc6OGe5dT9nUNbx6UuVWIozEg21mIuKEwFP4N7tqAIAAA==
-X-CMS-MailID: 20200612120932eucas1p29411e0c60963fad8c36ca35f2e6b8872
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200612120932eucas1p29411e0c60963fad8c36ca35f2e6b8872
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200612120932eucas1p29411e0c60963fad8c36ca35f2e6b8872
-References: <CGME20200612120932eucas1p29411e0c60963fad8c36ca35f2e6b8872@eucas1p2.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200612120604.GT11869@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix AHCI_SHT() macro definition to not reinitialize .can_queue and
-.sdev_attrs fields.
+On Fri, Jun 12, 2020 at 02:06:04PM +0200, Sascha Hauer wrote:
+> And here is the same patch which applies on master and the net tree.
+> It works as expected on my Armada XP in 2.5Gbps mode. Provided you are
+> happy with the patch I can send it as a formal patch on monday if by
+> then you haven't done that already.
 
-This removes gcc warnings from W=1 builds such as:
+As mentioned in one of my replies, there's a bug the patch I sent...
 
-  CC      drivers/ata/ahci_platform.o
-In file included from drivers/ata/ahci_platform.c:21:0:
-drivers/ata/ahci.h:384:16: warning: initialized field overwritten [-Woverride-init]
-  .can_queue  = AHCI_MAX_CMDS,   \
-                ^
-drivers/ata/ahci_platform.c:40:2: note: in expansion of macro ‘AHCI_SHT’
-  AHCI_SHT(DRV_NAME),
-  ^
-drivers/ata/ahci.h:384:16: note: (near initialization for ‘ahci_platform_sht.can_queue’)
-  .can_queue  = AHCI_MAX_CMDS,   \
-                ^
-drivers/ata/ahci_platform.c:40:2: note: in expansion of macro ‘AHCI_SHT’
-  AHCI_SHT(DRV_NAME),
-  ^
-drivers/ata/ahci.h:388:17: warning: initialized field overwritten [-Woverride-init]
-  .sdev_attrs  = ahci_sdev_attrs
-                 ^
-drivers/ata/ahci_platform.c:40:2: note: in expansion of macro ‘AHCI_SHT’
-  AHCI_SHT(DRV_NAME),
-  ^
-drivers/ata/ahci.h:388:17: note: (near initialization for ‘ahci_platform_sht.sdev_attrs’)
-  .sdev_attrs  = ahci_sdev_attrs
-                 ^
-drivers/ata/ahci_platform.c:40:2: note: in expansion of macro ‘AHCI_SHT’
-  AHCI_SHT(DRV_NAME),
-  ^
+> @@ -3533,9 +3535,6 @@ static int mvneta_comphy_init(struct mvneta_port *pp)
+>  {
+>  	int ret;
+>  
+> -	if (!pp->comphy)
+> -		return 0;
+> -
+>  	ret = phy_set_mode_ext(pp->comphy, PHY_MODE_ETHERNET,
+>  			       pp->phy_interface);
 
-Reported-by: kernel test robot <lkp@intel.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
----
- drivers/ata/ahci.h     |    7 ++++---
- include/linux/libata.h |    3 ++-
- 2 files changed, 6 insertions(+), 4 deletions(-)
+mvneta_comphy_init() needs to be passed the interface mode, and pass it
+thrugh to phy_set_mode_ext().
 
-Index: b/drivers/ata/ahci.h
-===================================================================
---- a/drivers/ata/ahci.h
-+++ b/drivers/ata/ahci.h
-@@ -378,15 +378,16 @@ extern struct device_attribute *ahci_sde
- 
- /*
-  * This must be instantiated by the edge drivers.  Read the comments
-- * for ATA_BASE_SHT
-+ * for __ATA_BASE_SHT
-  */
- #define AHCI_SHT(drv_name)						\
--	ATA_NCQ_SHT(drv_name),						\
-+	__ATA_BASE_SHT(drv_name),					\
- 	.can_queue		= AHCI_MAX_CMDS,			\
- 	.sg_tablesize		= AHCI_MAX_SG,				\
- 	.dma_boundary		= AHCI_DMA_BOUNDARY,			\
- 	.shost_attrs		= ahci_shost_attrs,			\
--	.sdev_attrs		= ahci_sdev_attrs
-+	.sdev_attrs		= ahci_sdev_attrs,			\
-+	.change_queue_depth	= ata_scsi_change_queue_depth
- 
- extern struct ata_port_operations ahci_ops;
- extern struct ata_port_operations ahci_platform_ops;
-Index: b/include/linux/libata.h
-===================================================================
---- a/include/linux/libata.h
-+++ b/include/linux/libata.h
-@@ -1389,7 +1389,6 @@ extern struct device_attribute *ata_comm
- 	ATA_SCSI_COMPAT_IOCTL					\
- 	.queuecommand		= ata_scsi_queuecmd,		\
- 	.dma_need_drain		= ata_scsi_dma_need_drain,	\
--	.can_queue		= ATA_DEF_QUEUE,		\
- 	.tag_alloc_policy	= BLK_TAG_ALLOC_RR,		\
- 	.this_id		= ATA_SHT_THIS_ID,		\
- 	.emulated		= ATA_SHT_EMULATED,		\
-@@ -1401,6 +1400,7 @@ extern struct device_attribute *ata_comm
- 
- #define ATA_BASE_SHT(drv_name)					\
- 	__ATA_BASE_SHT(drv_name),				\
-+	.can_queue		= ATA_DEF_QUEUE,		\
- 	.sdev_attrs		= ata_common_sdev_attrs
- 
- #ifdef CONFIG_SATA_HOST
-@@ -1408,6 +1408,7 @@ extern struct device_attribute *ata_ncq_
- 
- #define ATA_NCQ_SHT(drv_name)					\
- 	__ATA_BASE_SHT(drv_name),				\
-+	.can_queue		= ATA_DEF_QUEUE,		\
- 	.sdev_attrs		= ata_ncq_sdev_attrs,		\
- 	.change_queue_depth	= ata_scsi_change_queue_depth
- #endif
+>  	if (ret)
+> @@ -3544,11 +3543,49 @@ static int mvneta_comphy_init(struct mvneta_port *pp)
+>  	return phy_power_on(pp->comphy);
+>  }
+>  
+> +static int mvneta_config_interface(struct mvneta_port *pp,
+> +				   phy_interface_t interface)
+> +{
+> +	int ret = 0;
+> +
+> +	if (pp->comphy) {
+> +		if (interface == PHY_INTERFACE_MODE_SGMII ||
+> +		    interface == PHY_INTERFACE_MODE_1000BASEX ||
+> +		    interface == PHY_INTERFACE_MODE_2500BASEX) {
+> +			ret = mvneta_comphy_init(pp);
+
+and this needs to be:
+			ret = mvneta_comphy_init(pp, interface);
+
+Otherwise, the comphy uses the _old_ interface mode each time this
+function is called.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
