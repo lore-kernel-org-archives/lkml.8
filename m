@@ -2,89 +2,78 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D50C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4FE8C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B03B52083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 782F120835
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:00:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vGI28vVX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PqGggWcK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726341AbgFLQ5k (ORCPT
+        id S1726314AbgFLRAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 12:57:40 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:42586 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbgFLQ5k (ORCPT
+        Fri, 12 Jun 2020 13:00:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51006 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbgFLRAe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 12:57:40 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05CGuuJu030516;
-        Fri, 12 Jun 2020 11:56:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1591981016;
-        bh=OU3pn1t5FYea3bFqCtFWnP4GmmnGVMj/bcuK7sNhq10=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=vGI28vVXGx+yv1vsG9v42c/WH5sZlY170secgk19y4iOCb9VMs095BEw/Hq1ZmC8x
-         YMpMZKxs1jDdFEJMazl1C2o/Ak7uiiCqa+LEs5dOcKXEuBkrJeZ+7CSiFm8JQCA6h0
-         Zhr71oyZ/rnm3IcRffZFU+osSZZTxcHk0sshD/y8=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05CGutYk068326;
-        Fri, 12 Jun 2020 11:56:56 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 12
- Jun 2020 11:56:55 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 12 Jun 2020 11:56:55 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05CGutnF006600;
-        Fri, 12 Jun 2020 11:56:55 -0500
-Subject: Re: [PATCH v3 2/2] ASoC: tas2562: Update shutdown GPIO property
-To:     Mark Brown <broonie@kernel.org>
-CC:     <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
-        <robh@kernel.org>, <alsa-devel@alsa-project.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20200612160603.2456-1-dmurphy@ti.com>
- <20200612160603.2456-2-dmurphy@ti.com> <20200612160922.GL5396@sirena.org.uk>
- <0e482167-71c2-a128-b8b4-a054557d30e9@ti.com>
- <20200612162200.GM5396@sirena.org.uk>
- <432c41fe-8afa-2ccb-8917-fd64f4895144@ti.com>
- <20200612163009.GN5396@sirena.org.uk>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <531b2af3-43b2-d753-ddd4-8dd68cae9a71@ti.com>
-Date:   Fri, 12 Jun 2020 11:56:55 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 12 Jun 2020 13:00:34 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D7D9C03E96F;
+        Fri, 12 Jun 2020 10:00:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=LB92fBYU7FIFr1cqrh9b2+gYP6egb7aYQX2MBBJTLlQ=; b=PqGggWcKugbvK/p3Jmkq4v0f8f
+        KodxE7sDJyvfzUdXYv8y080mGvzFWv0kNg5UbIfwicX/DwYaihiSS5+HrqITy87E0feUrHX3Q04qE
+        ekGgI0+EtkN+ikT7CMSYl1OK7QA6stAMGYW5Z93Zjinl+3ex5oipfh6uGbdQuwCSL5Bqei1POdAJn
+        pXdm8qMeFvqWVkJxlO6EyrRk1rD5Qldo80dJ5YT1xgrp/GxGRwu9ZMSko7Ri6Rc0X0FtkowJ0b+IU
+        ADWVlfdxoI6/2hMjSgxHYHHdIrvZOD4J0EXwOEhW8S6oPP4cSVqQxpaSRB4y6v3oSyleuWbGzZDC5
+        xs62Ebjg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jjn2f-0003nu-It; Fri, 12 Jun 2020 17:00:33 +0000
+Date:   Fri, 12 Jun 2020 10:00:33 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Kaitao Cheng <pilgrimtao@gmail.com>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Muchun Song <songmuchun@bytedance.com>
+Subject: Re: [PATCH v2] proc/fd: Remove unnecessary variable initialisations
+ in seq_show()
+Message-ID: <20200612170033.GF8681@bombadil.infradead.org>
+References: <20200612160946.21187-1-pilgrimtao@gmail.com>
+ <7fdada40-370d-37b3-3aab-bfbedaa1804f@web.de>
 MIME-Version: 1.0
-In-Reply-To: <20200612163009.GN5396@sirena.org.uk>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7fdada40-370d-37b3-3aab-bfbedaa1804f@web.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark
+On Fri, Jun 12, 2020 at 06:45:57PM +0200, Markus Elfring wrote:
+> > 'files' will be immediately reassigned. 'f_flags' and 'file' will be
+> > overwritten in the if{} or seq_show() directly exits with an error.
+> > so we don't need to consume CPU resources to initialize them.
+> 
+> I suggest to improve also this change description.
+> 
+> * Should the mentioned identifiers refer to variables?
+> 
+> * Will another imperative wording be preferred?
+>   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=b791d1bdf9212d944d749a5c7ff6febdba241771#n151
+> 
+> * I propose to extend the patch a bit more.
+>   How do you think about to convert the initialisation for the variable “ret”
+>   also into a later assignment?
 
-On 6/12/20 11:30 AM, Mark Brown wrote:
-> On Fri, Jun 12, 2020 at 11:27:04AM -0500, Dan Murphy wrote:
->
->> Well should we then just revert back to the non-standard name and just fix
->> up the code?
->> Or should we support both properties?
-> Either option is fine for me, supporting both is a little nicer.
-
-Sounds good I will mark the incorrect property as deprecated: true
-
-Dan
-
+Please stop commenting on people's changelogs.  You add no value.
