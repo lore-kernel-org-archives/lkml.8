@@ -6,42 +6,42 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C1AC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B349BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CC2C207ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95B5A207ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:37:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbgFLEhr (ORCPT
+        id S1726568AbgFLEhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 00:37:47 -0400
-Received: from mga04.intel.com ([192.55.52.120]:17735 "EHLO mga04.intel.com"
+        Fri, 12 Jun 2020 00:37:53 -0400
+Received: from mga12.intel.com ([192.55.52.136]:33678 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726502AbgFLEhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 00:37:42 -0400
-IronPort-SDR: i//XuqmtXYgfH2XB66e4kcYWYVay4a3L0jW5Mew0QxOymdGSxZO6mzOn8Tl+EtUrVEXy98n1/3
- Ii/nIzcakMYw==
+        id S1726491AbgFLEhl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 00:37:41 -0400
+IronPort-SDR: jFK5e23oUhKjNxfFTB0Q+Qho7vnunEznktCBQHa9SsOJHyXDBGahTxgEiB7XxC+P479YZuPgFz
+ OTHhdI7TEYLQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 21:37:41 -0700
-IronPort-SDR: lJ/0byFuVpi4bHjwkR0OJHR2TFErSZSJmp2QkK+S+Wl7Gy7RbU4E8IRYwoQOhxZo+jW5f5y8JM
- YTavNIqPhMww==
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 21:37:41 -0700
+IronPort-SDR: JyA1krM+x4k7LFEI9WnVj3bQoGczl44N80RaRcpmSwv34qq3rtyhXNBwo0z9LYwadt7fVo808w
+ 2V9R1H7/EWSQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,501,1583222400"; 
-   d="scan'208";a="275583405"
+   d="scan'208";a="296831430"
 Received: from lkp-server01.sh.intel.com (HELO b6eec31c25be) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 11 Jun 2020 21:37:39 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 11 Jun 2020 21:37:39 -0700
 Received: from kbuild by b6eec31c25be with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1jjbRj-0000VJ-4e; Fri, 12 Jun 2020 04:37:39 +0000
-Date:   Fri, 12 Jun 2020 12:36:41 +0800
+        id 1jjbRj-0000VG-44; Fri, 12 Jun 2020 04:37:39 +0000
+Date:   Fri, 12 Jun 2020 12:36:43 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     "x86-ml" <x86@kernel.org>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:ras/core] BUILD SUCCESS
- 7ccddc4613db446dc3cbb69a3763ba60ec651d13
-Message-ID: <5ee30659.GGO1g+oAwpykFKR0%lkp@intel.com>
+Subject: [tip:x86/entry] BUILD SUCCESS
+ f0178fc01fe46bab6a95415f5647d1a74efcad1b
+Message-ID: <5ee3065b.+Wp7lNpyhsXyIBVB%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -51,12 +51,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  ras/core
-branch HEAD: 7ccddc4613db446dc3cbb69a3763ba60ec651d13  x86/mce/dev-mcelog: Fix -Wstringop-truncation warning about strncpy()
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/entry
+branch HEAD: f0178fc01fe46bab6a95415f5647d1a74efcad1b  x86/entry: Unbreak __irqentry_text_start/end magic
 
-elapsed time: 768m
+elapsed time: 767m
 
-configs tested: 102
+configs tested: 96
 configs skipped: 1
 
 The following configs have been built successfully.
@@ -71,11 +71,11 @@ arm64                               defconfig
 arm64                            allmodconfig
 arm64                             allnoconfig
 c6x                        evmc6457_defconfig
-nds32                               defconfig
 alpha                            alldefconfig
 mips                     loongson1b_defconfig
-alpha                               defconfig
 mips                       bmips_be_defconfig
+nds32                               defconfig
+alpha                               defconfig
 i386                              allnoconfig
 i386                             allyesconfig
 i386                                defconfig
@@ -126,12 +126,6 @@ i386                 randconfig-a001-20200611
 i386                 randconfig-a004-20200611
 i386                 randconfig-a005-20200611
 i386                 randconfig-a003-20200611
-x86_64               randconfig-a001-20200612
-x86_64               randconfig-a003-20200612
-x86_64               randconfig-a002-20200612
-x86_64               randconfig-a006-20200612
-x86_64               randconfig-a005-20200612
-x86_64               randconfig-a004-20200612
 i386                 randconfig-a015-20200612
 i386                 randconfig-a011-20200612
 i386                 randconfig-a014-20200612
@@ -146,9 +140,9 @@ s390                             allyesconfig
 s390                              allnoconfig
 s390                             allmodconfig
 s390                                defconfig
+sparc64                             defconfig
 sparc                            allyesconfig
 sparc                               defconfig
-sparc64                             defconfig
 sparc64                           allnoconfig
 sparc64                          allyesconfig
 sparc64                          allmodconfig
