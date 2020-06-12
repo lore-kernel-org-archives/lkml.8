@@ -2,143 +2,141 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AEB4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C22C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A6DE207ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:38:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72D71207ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:38:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591947503;
+	bh=gQR0Hp36iG2N2CS38e+FWKGQiB6L7dW7ADwZEH6dwXY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZNGw7up6+8mZO3dj8ed4AXUsqk50h7KgfsxfYWztnSxdqy6ZAQOmNn2wK5K38Ptxq
+	 EwF8S65V1Yo86Qxa7L2AkRQL5wIAI5rf3PAZTYMmJHH2rwZ/iFIX8qMNLJ88nN0A8f
+	 /Gkn4Z+3/11IY0aPVE/C1ZmCDKdtd0fzxF3cyaQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbgFLHiF (ORCPT
+        id S1726521AbgFLHiV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 03:38:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55260 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726292AbgFLHiE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 03:38:04 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 02A87AC9F;
-        Fri, 12 Jun 2020 07:38:05 +0000 (UTC)
-From:   Jiri Slaby <jslaby@suse.cz>
-To:     johannes.berg@intel.com
-Cc:     linux-kernel@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
-        =?UTF-8?q?Dieter=20N=C3=BCtzel?= <Dieter@nuetzel-hh.de>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH] iwl: fix crash in iwl_dbg_tlv_alloc_trigger
-Date:   Fri, 12 Jun 2020 09:38:00 +0200
-Message-Id: <20200612073800.27742-1-jslaby@suse.cz>
-X-Mailer: git-send-email 2.27.0
+        Fri, 12 Jun 2020 03:38:21 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:34798 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726292AbgFLHiV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 03:38:21 -0400
+Received: by mail-ed1-f67.google.com with SMTP id w7so5742161edt.1;
+        Fri, 12 Jun 2020 00:38:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FWuaSFu9jX7IUIcDf07jPsuJOKsC8Mu741YqNeRzDzY=;
+        b=BmauoYrzgwJWNsKuMqe+9Taildr/THIy1u33miJYOZZqfy42d2tpjNEhd445XpSFUO
+         QTToK8/77TpPi4dl+pvSKGD3kQfMkkW08JxAdVtXkCILSYve0cBm/s8+jtA3CGbyIRM4
+         voVgOCiYzWvh9jgg/6Q5deMHbhKQr/KvVTU0tHu2gtDFtpd85kww7rKIAsynr072wRTC
+         dK1yp5lfGlBJf7Th9hhl6WW7fCzakWCmWXKel4/6T3+UFk88rxu0QDe0sV7nOM2XNOAv
+         ByYy7jfG45ZSPrhIwERds19dVHPIOeSDSuoCrIQdC4iUKw3RkqF4I6HgXGkCANG1zPaR
+         pH/A==
+X-Gm-Message-State: AOAM532semBKqZ+kqtP+ii05Gy2xQEnUOGt/7QP/TkxV7xofQsEK+tPM
+        r4/uVC7J+OQKM3jpwrHfXlA=
+X-Google-Smtp-Source: ABdhPJweHlcdWuMQzdxB5rmfs8APfFi+GW/cMHAITZAvIdNpW9I9oqsv3gZnCkzDtnzKBrjZ0gnEKg==
+X-Received: by 2002:a50:e1c5:: with SMTP id m5mr10470676edl.47.1591947498509;
+        Fri, 12 Jun 2020 00:38:18 -0700 (PDT)
+Received: from pi3 ([194.230.155.184])
+        by smtp.googlemail.com with ESMTPSA id i23sm3162911eja.37.2020.06.12.00.38.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2020 00:38:17 -0700 (PDT)
+Date:   Fri, 12 Jun 2020 09:38:15 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Oleksij Rempel <linux@rempel-privat.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Gao Pan <b54642@freescale.com>,
+        Fugang Duan <B38611@freescale.com>,
+        Wolfram Sang <wsa@kernel.org>, linux-i2c@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] i2c: imx: Fix external abort on early interrupt
+Message-ID: <20200612073815.GA25803@pi3>
+References: <1591796802-23504-1-git-send-email-krzk@kernel.org>
+ <20200612055114.alhm2uakoze6epvf@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200612055114.alhm2uakoze6epvf@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The tlv passed to iwl_dbg_tlv_alloc_trigger comes from a loaded firmware
-file. The memory can be marked as read-only as firmware could be
-shared. In anyway, writing to this memory is not expected. So,
-iwl_dbg_tlv_alloc_trigger can crash now:
+On Fri, Jun 12, 2020 at 07:51:14AM +0200, Oleksij Rempel wrote:
+> Hi Krzysztof,
+> 
+> thank you for your patch.
+> 
+> On Wed, Jun 10, 2020 at 03:46:42PM +0200, Krzysztof Kozlowski wrote:
+> > If interrupt comes early (could be triggered with CONFIG_DEBUG_SHIRQ),
+> > the i2c_imx_isr() will access registers before the I2C hardware is
+> > initialized.  This leads to external abort on non-linefetch on Toradex
+> > Colibri VF50 module (with Vybrid VF5xx):
+> > 
+> >     Unhandled fault: external abort on non-linefetch (0x1008) at 0x8882d003
+> >     Internal error: : 1008 [#1] ARM
+> >     Modules linked in:
+> >     CPU: 0 PID: 1 Comm: swapper Not tainted 5.7.0 #607
+> >     Hardware name: Freescale Vybrid VF5xx/VF6xx (Device Tree)
+> >       (i2c_imx_isr) from [<8017009c>] (free_irq+0x25c/0x3b0)
+> >       (free_irq) from [<805844ec>] (release_nodes+0x178/0x284)
+> >       (release_nodes) from [<80580030>] (really_probe+0x10c/0x348)
+> >       (really_probe) from [<80580380>] (driver_probe_device+0x60/0x170)
+> >       (driver_probe_device) from [<80580630>] (device_driver_attach+0x58/0x60)
+> >       (device_driver_attach) from [<805806bc>] (__driver_attach+0x84/0xc0)
+> >       (__driver_attach) from [<8057e228>] (bus_for_each_dev+0x68/0xb4)
+> >       (bus_for_each_dev) from [<8057f3ec>] (bus_add_driver+0x144/0x1ec)
+> >       (bus_add_driver) from [<80581320>] (driver_register+0x78/0x110)
+> >       (driver_register) from [<8010213c>] (do_one_initcall+0xa8/0x2f4)
+> >       (do_one_initcall) from [<80c0100c>] (kernel_init_freeable+0x178/0x1dc)
+> >       (kernel_init_freeable) from [<80807048>] (kernel_init+0x8/0x110)
+> >       (kernel_init) from [<80100114>] (ret_from_fork+0x14/0x20)
+> > 
+> > Additionally, the i2c_imx_isr() could wake up the wait queue
+> > (imx_i2c_struct->queue) before its initialization happens.
+> > 
+> > Fixes: 1c4b6c3bcf30 ("i2c: imx: implement bus recovery")
+> > Cc: <stable@vger.kernel.org>
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> 
+> I assume register access is aborted, because the IP core clock is not
+> enabled. In this case we have bigger problem then just probe.
 
-  BUG: unable to handle page fault for address: ffffae2c01bfa794
-  PF: supervisor write access in kernel mode
-  PF: error_code(0x0003) - permissions violation
-  PGD 107d51067 P4D 107d51067 PUD 107d52067 PMD 659ad2067 PTE 8000000662298161
-  CPU: 2 PID: 161 Comm: kworker/2:1 Not tainted 5.7.0-3.gad96a07-default #1 openSUSE Tumbleweed (unreleased)
-  RIP: 0010:iwl_dbg_tlv_alloc_trigger+0x25/0x60 [iwlwifi]
-  Code: eb f2 0f 1f 00 66 66 66 66 90 83 7e 04 33 48 89 f8 44 8b 46 10 48 89 f7 76 40 41 8d 50 ff 83 fa 19 77 23 8b 56 20 85 d2 75 07 <c7> 46 20 ff ff ff ff 4b 8d 14 40 48 c1 e2 04 48 8d b4 10 00 05 00
-  RSP: 0018:ffffae2c00417ce8 EFLAGS: 00010246
-  RAX: ffff8f0522334018 RBX: ffff8f0522334018 RCX: ffffffffc0fc26c0
-  RDX: 0000000000000000 RSI: ffffae2c01bfa774 RDI: ffffae2c01bfa774
-  RBP: 0000000000000000 R08: 0000000000000004 R09: 0000000000000001
-  R10: 0000000000000034 R11: ffffae2c01bfa77c R12: ffff8f0522334230
-  R13: 0000000001000009 R14: ffff8f0523fdbc00 R15: ffff8f051f395800
-  FS:  0000000000000000(0000) GS:ffff8f0527c80000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: ffffae2c01bfa794 CR3: 0000000389eba000 CR4: 00000000000006e0
-  Call Trace:
-   iwl_dbg_tlv_alloc+0x79/0x120 [iwlwifi]
-   iwl_parse_tlv_firmware.isra.0+0x57d/0x1550 [iwlwifi]
-   iwl_req_fw_callback+0x3f8/0x6a0 [iwlwifi]
-   request_firmware_work_func+0x47/0x90
-   process_one_work+0x1e3/0x3b0
-   worker_thread+0x46/0x340
-   kthread+0x115/0x140
-   ret_from_fork+0x1f/0x40
+If by IP core clock you mean the clock which driver is getting, then
+answer is no. This clock is enabled.
 
-As can be seen, write bit is not set in the PTE. Read of
-trig->occurrences succeeds in iwl_dbg_tlv_alloc_trigger, but
-trig->occurrences = cpu_to_le32(-1); fails there, obviously.
+> Since this driver support runtime power management, the clock will be
+> disabled as soon as transfer is done. It means, on shared interrupt, we
+> will get in trouble even if there is no active transfer.
 
-This is likely because we (at SUSE) use compressed firmware and that is
-marked as RO after decompression (see fw_map_paged_buf).
+The driver's runtime PM plays only with this one clock, so it seems
+you meant i2c_imx->clk. It is not this problem.
 
-Fix it by creating a temporary buffer in case we need to change the
-memory.
+> 
+> So, probably the only way to fix it, is to check in i2c_imx_isr() if the
+> HW is expected to be active and register access should be save.
 
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Reported-by: Dieter Nützel <Dieter@nuetzel-hh.de>
-Tested-by: Dieter Nützel <Dieter@nuetzel-hh.de>
-Cc: Johannes Berg <johannes.berg@intel.com>
-Cc: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
-Cc: Luca Coelho <luciano.coelho@intel.com>
-Cc: Intel Linux Wireless <linuxwifi@intel.com>
-Cc: Kalle Valo <kvalo@codeaurora.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: linux-wireless@vger.kernel.org
-Cc: netdev@vger.kernel.org
----
- drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+Checking in every interrupt whether the interrupt should be serviced
+based on some SW flag because HW might be disabled? That looks unusual,
+like a hack.
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c b/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c
-index 7987a288917b..27116c7d3f4f 100644
---- a/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c
-+++ b/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c
-@@ -271,6 +271,8 @@ static int iwl_dbg_tlv_alloc_trigger(struct iwl_trans *trans,
- {
- 	struct iwl_fw_ini_trigger_tlv *trig = (void *)tlv->data;
- 	u32 tp = le32_to_cpu(trig->time_point);
-+	struct iwl_ucode_tlv *dup = NULL;
-+	int ret;
- 
- 	if (le32_to_cpu(tlv->length) < sizeof(*trig))
- 		return -EINVAL;
-@@ -283,10 +285,20 @@ static int iwl_dbg_tlv_alloc_trigger(struct iwl_trans *trans,
- 		return -EINVAL;
- 	}
- 
--	if (!le32_to_cpu(trig->occurrences))
-+	if (!le32_to_cpu(trig->occurrences)) {
-+		dup = kmemdup(tlv, sizeof(*tlv) + le32_to_cpu(tlv->length),
-+				GFP_KERNEL);
-+		if (!dup)
-+			return -ENOMEM;
-+		trig = (void *)dup->data;
- 		trig->occurrences = cpu_to_le32(-1);
-+		tlv = dup;
-+	}
-+
-+	ret = iwl_dbg_tlv_add(tlv, &trans->dbg.time_point[tp].trig_list);
-+	kfree(dup);
- 
--	return iwl_dbg_tlv_add(tlv, &trans->dbg.time_point[tp].trig_list);
-+	return ret;
- }
- 
- static int (*dbg_tlv_alloc[])(struct iwl_trans *trans,
--- 
-2.27.0
+No, the interrupt should be registered when the driver and some other
+pieces of HW are ready to service it.
 
+Best regards,
+Krzysztof
