@@ -2,127 +2,72 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74ECDC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 12:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 983E7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 12:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 581BD2081A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 12:40:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 715812074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 12:42:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbgFLMk5 (ORCPT
+        id S1726283AbgFLMm3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 08:40:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39106 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726024AbgFLMk4 (ORCPT
+        Fri, 12 Jun 2020 08:42:29 -0400
+Received: from outbound-smtp34.blacknight.com ([46.22.139.253]:43335 "EHLO
+        outbound-smtp34.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726085AbgFLMm2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 08:40:56 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43B4DC03E96F;
-        Fri, 12 Jun 2020 05:40:56 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jjizA-0003TQ-Rr; Fri, 12 Jun 2020 14:40:40 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id AA722100F5A; Fri, 12 Jun 2020 14:40:39 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Lutomirski <luto@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, rcu@vger.kernel.org,
-        Andrew Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH RFC] x86/entry: Ask RCU if it needs rcu_irq_{enter,exit}()
-In-Reply-To: <CALCETrWo-zpiDsYGtKvm8LzW6CQ5L19a3+Ag_9g8aL4wHaJj9g@mail.gmail.com>
-References: <20200611235305.GA32342@paulmck-ThinkPad-P72> <CALCETrWo-zpiDsYGtKvm8LzW6CQ5L19a3+Ag_9g8aL4wHaJj9g@mail.gmail.com>
-Date:   Fri, 12 Jun 2020 14:40:39 +0200
-Message-ID: <871rmkzcc8.fsf@nanos.tec.linutronix.de>
+        Fri, 12 Jun 2020 08:42:28 -0400
+Received: from mail.blacknight.com (pemlinmail04.blacknight.ie [81.17.254.17])
+        by outbound-smtp34.blacknight.com (Postfix) with ESMTPS id 38CCB1E4B
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 13:42:27 +0100 (IST)
+Received: (qmail 3855 invoked from network); 12 Jun 2020 12:42:27 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.5])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 12 Jun 2020 12:42:27 -0000
+Date:   Fri, 12 Jun 2020 13:42:25 +0100
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Jan Kara <jack@suse.cz>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] fsnotify: Rearrange fast path to minimise overhead when
+ there is no watcher
+Message-ID: <20200612124225.GC3183@techsingularity.net>
+References: <20200608140557.GG3127@techsingularity.net>
+ <CAOQ4uxhb1p5_rO9VjNb6assCczwQRx3xdAOXZ9S=mOA1g-0JVg@mail.gmail.com>
+ <20200608160614.GH3127@techsingularity.net>
+ <CAOQ4uxh=Z92ppBQbRJyQqC61k944_7qG1mYqZgGC2tU7YAH7Kw@mail.gmail.com>
+ <20200608180130.GJ3127@techsingularity.net>
+ <CAOQ4uxgcUHuqiXFPO5mX=rvDwP-DOoTZrXvpVNphwEMFYHtyCw@mail.gmail.com>
+ <CAOQ4uxhbE46S65-icLhaJqT+jKqz-ZdX=Ypm9hAt9Paeb+huhQ@mail.gmail.com>
+ <20200610125920.GM3127@techsingularity.net>
+ <CAOQ4uxhcFO4=e-s7uStbEkZU==8kraD1=owZGu4SWx_iR72gTA@mail.gmail.com>
+ <CAOQ4uxjTFCJa1y2Uq8NztXxkPRmvDvtUUt22QMwPkdd=eJdkyw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <CAOQ4uxjTFCJa1y2Uq8NztXxkPRmvDvtUUt22QMwPkdd=eJdkyw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy Lutomirski <luto@kernel.org> writes:
->
-> This is saying we were idle and __rcu_is_watching() correctly returned
-> false.  We got sysvec_apic_timer_interrupt(), which did
-> rcu_irq_enter() and then turned on IRQs for softirq processing.  Then
-> we got sysvec_call_function_single() inside that, and
-> sysvec_call_function_single() noticed that RCU was already watching
-> and did *not* call rcu_irq_enter().  And, if
-> sysvec_call_function_single() does rcu_is_cpu_rrupt_from_idle(), it
-> will return true.  So the issue is that RCU thinks that, since it
->
->
->> +static __always_inline bool rcu_needs_irq_enter(void)
->> +{
->> +       return !IS_ENABLED(CONFIG_TINY_RCU) &&
->> +               (context_tracking_enabled_cpu(smp_processor_id()) || is_idle_task(current));
->> +}
->
-> x86 shouldn't need this context tracking check -- we won't even call
-> this if we came from user mode, and we make sure we never run with
-> IRQs on when we're in CONTEXT_USER.
+On Fri, Jun 12, 2020 at 12:38:15PM +0300, Amir Goldstein wrote:
+> > No worries. I wasn't planning on submitted the altered patch.
+> > I just wanted to let you test the final result.
+> > I will apply your change before my series and make sure to keep
+> > optimizations while my changes are applied on top of that.
+> >
+> 
+> FYI, just posted your patch with a minor style change at the bottom
+> of my prep patch series.
+> 
 
-As I told Paul already, it's broken.
+Thanks!
 
-> I think my preference would be to fix this with something more like
-> tglx's patch but with an explanation:
-
-Yes, explanation is definitely required :)
-
-> diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
-> index f0b657097a2a..93fd9d6fe033 100644
-> --- a/arch/x86/entry/common.c
-> +++ b/arch/x86/entry/common.c
-> @@ -571,7 +571,7 @@ bool noinstr idtentry_enter_cond_rcu(struct pt_regs *regs)
->                 return false;
->         }
->
-> -       if (!__rcu_is_watching()) {
-> +       if (!__rcu_is_watching() || is_idle_task(current)) {
-
-Actually that __rcu_is_watching() check is pointless because this can
-only return false when current is the idle task. If the entry came from
-user mode then this path is not taken. Entry from user mode with NOHZ
-full does:
-
-  enter_from_user_mode()
-    user_exit_irqoff()
-      __context_tracking_exit(CONTEXT_USER)
-         rcu_user_exit()
-           rcu_eqs_exit(1)
-       	      WRITE_ONCE(rdp->dynticks_nmi_nesting, DYNTICK_IRQ_NONIDLE);
-
-So if an interrupt hits the kernel after enabling interrupts then:
-
-  1) RCU is watching and out of EQS
-  2) The dynticks_nmi_nesting counter is not longer relevant
-
-That remains that way until returning to user or scheduling out to idle
-which means:
-
-     if (is_idle_task(current))
-
-is completely sufficient. And we don't care about unconditional
-rcu_irq_enter() in this case. If idle triggers a #PF which wants to
-sleep then the RCU state is the least of our worries.
-
-Thanks,
-
-        tglx
-
+-- 
+Mel Gorman
+SUSE Labs
