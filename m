@@ -2,156 +2,157 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A10C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 562E1C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07F6820835
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32B0020835
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:48:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591984018;
-	bh=T2ujSUMcw4VznKUQ1es+CI7i3QTbNB8CVewQY5nNbNI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0t58CqgZg9BLTxe1bnKVjHf7ibBxW5EoUSZLmVqdIoRbZhnYP+XgorlvL6G1tCqQR
-	 Lh4NbuIwLu2v5b0KY3fPsp9an4m54wLlRZ9iQ4oUsmIOeUyIelKKw8/A7sBmByFXiq
-	 qd4ynslDRu5vroIKW0ptSSMYOcvgTlEP6X7cvfvc=
+	s=default; t=1591984085;
+	bh=g91e/1wv5G9GRPLmh4Bj7jc/z9hjVNSYS/5MOWo0vlg=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=V594Io+B8UqG7bJ12wgZwkIdefdmhV4VQvXRn2m281XtjcCgE5APs1KLV5SmnfBDr
+	 siCU8kwBh/iif+Jhf8+dzLiGzh1oDacNtfBm1rOznY2/psuqnCajss7+IoXNKZDPOG
+	 hEcPm0Tof5uK2K5mo1qKBCGrQIavcWMpVRPRTsHc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726302AbgFLRq5 (ORCPT
+        id S1726314AbgFLRsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 13:46:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37292 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726085AbgFLRq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 13:46:56 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE3D4207F7;
-        Fri, 12 Jun 2020 17:46:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591984015;
-        bh=T2ujSUMcw4VznKUQ1es+CI7i3QTbNB8CVewQY5nNbNI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=S6N2mh/90Xu0MjOiCpqZWkF6PpPcmr1PDAz+Gl5c1U+4/1oooNbiJZh4TZBkxNxX0
-         KGRHd2UGLYovhrhZCV95FWPBxQjOuBmh0EFuWTC/Df9tkIocYfscJ+NJBx5UAu+Ixf
-         xQ4woHSijHizGRYsLjkDEsxqODznfDDbsIL0TAag=
-Date:   Fri, 12 Jun 2020 18:46:52 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        robh@kernel.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [RFC PATCH 2/2] ASoc: tas2563: DSP Firmware loading support
-Message-ID: <20200612174652.GQ5396@sirena.org.uk>
-References: <20200609172841.22541-1-dmurphy@ti.com>
- <20200609172841.22541-3-dmurphy@ti.com>
- <20200609175000.GO4583@sirena.org.uk>
- <f9601516-2091-322b-85ff-7cea484fd933@ti.com>
+        Fri, 12 Jun 2020 13:48:03 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:42351 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbgFLRsD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 13:48:03 -0400
+Received: by mail-io1-f67.google.com with SMTP id x189so2050100iof.9;
+        Fri, 12 Jun 2020 10:48:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=uWyUwWKv705gfBnI7xH7f3sQ7/rOjfVXvN6QQKVwLtg=;
+        b=hpQP4dBhFBA90/3jTs6s7vLUYoJKuuRIQ44/yAobhCJQjJn1nLMXBh+sntGSqvHchI
+         d2rXk/6H+NVZ4pLowp1ngasZIDl8+QogyU9YlaPsM++uCaKebEQgqXdi7PJfrwPvZ8iY
+         7l3Wks4UtB0SG1Wa2JSp4XQ/vsHn0cD2RA5uM+r4PJ2Ci+wB728YusVFXH9LJArMsqsC
+         EimEJCoGPQPDGicPOgO5kNyuOPho58r/TK4gE+ZxqhuA/jyb5Edbq3EBBp064T/pvXY2
+         Ct96xVh5EXDuFlzSjDKQlj9wb5TuuBTr8UAiGFd3q4moFqmSSgYk+EOu8QB9A6LBb2LS
+         oVhQ==
+X-Gm-Message-State: AOAM533AWb85YbNo2Vh5+oKLO0yCWKI7/afGwvCiVSNcaaOnOrLao9R+
+        qRZsqhWhOBOzdf8xIa8geA==
+X-Google-Smtp-Source: ABdhPJzwJCr4I0Uc4XSq+L9Lzoz3AqWujTzu0zZU+qqJjfl21exA2K0aKAXB3zdsPK+6/+8v2SXDdg==
+X-Received: by 2002:a02:b0c4:: with SMTP id w4mr9021925jah.45.1591984081872;
+        Fri, 12 Jun 2020 10:48:01 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id n17sm3399021ilq.13.2020.06.12.10.48.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2020 10:48:01 -0700 (PDT)
+Received: (nullmailer pid 3462082 invoked by uid 1000);
+        Fri, 12 Jun 2020 17:48:00 -0000
+Date:   Fri, 12 Jun 2020 11:48:00 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Frank Rowand <frowand.list@gmail.com>
+Subject: [GIT PULL] Devicetree fixes for v5.8-rc
+Message-ID: <20200612174800.GA3459802@bogus>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="PPxI8paQBs33t8dK"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f9601516-2091-322b-85ff-7cea484fd933@ti.com>
-X-Cookie: As seen on TV.
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Linus,
 
---PPxI8paQBs33t8dK
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Please pull a few DT fixes for v5.8-rc.
 
-On Fri, Jun 12, 2020 at 12:30:29PM -0500, Dan Murphy wrote:
-> On 6/9/20 12:50 PM, Mark Brown wrote:
-> > On Tue, Jun 09, 2020 at 12:28:41PM -0500, Dan Murphy wrote:
+Rob
 
-> > > +		/* Reset Page to 0 */
-> > > +		ret =3D regmap_write(tas2562->regmap, TAS2562_PAGE_CTRL, 0);
-> > > +		if (ret)
-> > > +			return ret;
+The following changes since commit 2dca74a40e1e7ff45079d85fc507769383039b9d:
 
-> > Why?
+  Merge tag 'mailbox-v5.8' of git://git.linaro.org/landing-teams/working/fujitsu/integration (2020-06-11 12:42:14 -0700)
 
-> Well the reason to set this back to page 0 is that is where the book
-> register is.
+are available in the Git repository at:
 
-> So setting this back to page 0 set the Book register appropriately.
+  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-5.8-1
 
-Oh dear, usually the paging register is always visible :/
+for you to fetch changes up to 8440d4a75d90556cfb8fb3e244443f67381aafd6:
 
-> > This manual paging doesn't fill me with with joy especially with regard
-> > to caching and doing the books behind the back of regmap.  I didn't spot
-> > anything disabling cache or anything in the code.  I think you should
-> > either bypass the cache while doing this or teach regmap about the
-> > books (which may require core updates, I can't remember if the range
-> > code copes with nested levels of paging - I remember thinking about it).
+  Merge branch 'dt/schema-cleanups' into dt/linus (2020-06-12 09:57:00 -0600)
 
-> Yeah. After reading this and thinking about this for a couple days.=A0 Th=
-is
-> actually has contention issues with the ALSA controls.
+----------------------------------------------------------------
+Devicetree fixes for v5.8:
 
-> There needs to also be some locks put into place.
+- Another round of whack-a-mole removing 'allOf', redundant cases of
+  'maxItems' and incorrect 'reg' sizes
 
-That's not too surprising for something like this.
+- Fix support for yaml.h in non-standard paths
 
-> I prefer to disable the cache.=A0 Not sure how many other devices use Boo=
-ks
-> and pages for register maps besides TI.
+----------------------------------------------------------------
+Masahiro Yamada (1):
+      scripts/dtc: use pkg-config to include <yaml.h> in non-standard path
 
-> Adding that to regmap might be to specific to our devices.
+Rob Herring (5):
+      dt-bindings: Remove more cases of 'allOf' containing a '$ref'
+      dt-bindings: phy: qcom: Fix missing 'ranges' and example addresses
+      dt-bindings: Fix more incorrect 'reg' property sizes in examples
+      dt-bindings: Remove redundant 'maxItems'
+      Merge branch 'dt/schema-cleanups' into dt/linus
 
-Single level pages are in there already, TI is a big user but I've seen
-this from other vendors too.  I do remember some discussion of multi
-level paging before, I think with a TI part, and I *think* it already
-happens to work without needing to do anything but I'd need to go back
-and check and it's 7pm on a Friday night.  IIRC if one paging register
-is within another paged region the code manages to recurse and sort
-things out, but I could be wrong.  I agree that it's a bit specialist if
-it needs anything non-trivial and something driver local would be
-reasonable.
-
-> > > +	tas2562->fw_data->fw_hdr =3D devm_kzalloc(tas2562->dev, hdr_size,
-> > > +						GFP_KERNEL);
-> > > +	if (!tas2562->fw_data->fw_hdr)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	memcpy(tas2562->fw_data->fw_hdr, &fw->data[0], hdr_size);
-
-> > Should validate that the firmware is actually at least hdr_size big, and
-> > similarly for all the other lengths we get from the header we should
-> > check that there's actually enough data in the file.  ATM we just
-> > blindly copy.
-
-> I will have to look into doing this.=A0 I blindly copy this data because =
-there
-> is really not a viable and reliable way to check sizes against the
-> structures.
-
-Yeah, that's reasonable - I was just thinking about checking it against
-the size of the file to make sure it doesn't actually overflow the
-buffer and corrupt things or crash.  Obviously sanity checking is good
-but there's limits on what's sensible.
-
---PPxI8paQBs33t8dK
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7jv4sACgkQJNaLcl1U
-h9BMlwf/cj1YHjgwLNHXDgZjBK7TERfRpzfITO0GwHt/Qh5/Rm3okvB6pnAZOVqO
-OUCX2lQJnVWAavciTR5byOJjB2I5dPrNYgPzOoFtm4N99uLVDecWckSJMw8OK0+k
-FoVcg2KRbKEllkA757zrQccDj8j8nG6Q9jPNMgS3AO7tBG4nz1c0px6mkIs9WK3L
-V56H/5IzZyCVnFEYJfMMlGPTiIBGHRRfKDuDMfJZJ1YdGMH2TonKZtgVkgvRHAWG
-r/m6zWIx6ZK1JTMzMtA8RpItA4zjOULJjl+OJvqDw3r9r8VCTGzDXugk+md0HJcg
-Q4u3PD3TpzBfB3cl6wWBYmrmgLPbtw==
-=Stm+
------END PGP SIGNATURE-----
-
---PPxI8paQBs33t8dK--
+ .../bindings/arm/tegra/nvidia,tegra20-pmc.yaml     |   5 +-
+ .../devicetree/bindings/ata/sata_highbank.yaml     |  21 +-
+ .../devicetree/bindings/bus/baikal,bt1-apb.yaml    |   4 +-
+ .../devicetree/bindings/bus/baikal,bt1-axi.yaml    |   4 +-
+ .../devicetree/bindings/clock/imx6q-clock.yaml     |   1 -
+ .../devicetree/bindings/clock/imx6sl-clock.yaml    |   1 -
+ .../devicetree/bindings/clock/imx6sll-clock.yaml   |   1 -
+ .../devicetree/bindings/clock/imx6sx-clock.yaml    |   1 -
+ .../devicetree/bindings/clock/imx6ul-clock.yaml    |   1 -
+ .../bindings/display/rockchip/rockchip-vop.yaml    |   4 +-
+ .../devicetree/bindings/gpio/snps,dw-apb-gpio.yaml |   7 +-
+ .../devicetree/bindings/iio/imu/adi,adis16475.yaml |   3 +-
+ .../bindings/iio/light/amstaos,tsl2563.yaml        |   5 +-
+ .../devicetree/bindings/input/iqs269a.yaml         | 222 +++++++++------------
+ .../interrupt-controller/loongson,pch-msi.yaml     |  14 +-
+ .../interrupt-controller/loongson,pch-pic.yaml     |   7 +-
+ .../devicetree/bindings/ipmi/ipmi-smic.yaml        |  10 +-
+ .../bindings/leds/backlight/qcom-wled.yaml         |  43 ++--
+ .../devicetree/bindings/leds/leds-aw2013.yaml      |   3 +-
+ .../devicetree/bindings/leds/leds-sgm3140.yaml     |   3 +-
+ .../devicetree/bindings/mailbox/sprd-mailbox.yaml  |   2 +-
+ .../devicetree/bindings/media/i2c/ov8856.yaml      |   3 +-
+ .../devicetree/bindings/media/rockchip,vdec.yaml   |   2 +-
+ .../devicetree/bindings/media/rockchip-vpu.yaml    |   2 +-
+ .../bindings/memory-controllers/ingenic,nemc.yaml  |   5 +-
+ .../bindings/mtd/arasan,nand-controller.yaml       |   2 +-
+ .../bindings/net/ti,k3-am654-cpsw-nuss.yaml        |   3 +-
+ .../devicetree/bindings/net/ti,k3-am654-cpts.yaml  |   8 +-
+ .../devicetree/bindings/pci/cdns-pcie-ep.yaml      |   3 +-
+ .../devicetree/bindings/pci/cdns-pcie-host.yaml    |   3 +-
+ .../devicetree/bindings/phy/calxeda-combophy.yaml  |   5 +-
+ .../devicetree/bindings/phy/qcom,qmp-phy.yaml      |  20 +-
+ .../bindings/phy/qcom,qmp-usb3-dp-phy.yaml         |  38 ++--
+ .../bindings/phy/qcom,usb-snps-femto-v2.yaml       |   2 +-
+ .../devicetree/bindings/phy/renesas,usb3-phy.yaml  |   5 +-
+ .../bindings/power/supply/cw2015_battery.yaml      |  15 +-
+ .../bindings/power/supply/sbs,sbs-battery.yaml     |   6 +-
+ Documentation/devicetree/bindings/pwm/imx-pwm.yaml |   2 -
+ .../bindings/regulator/maxim,max77826.yaml         |   9 +-
+ .../bindings/regulator/rohm,bd71847-regulator.yaml |  27 +--
+ .../devicetree/bindings/rng/arm-cctrng.yaml        |   6 +-
+ .../devicetree/bindings/serial/samsung_uart.yaml   |   5 +-
+ .../devicetree/bindings/soc/qcom/qcom,geni-se.yaml |   9 +-
+ .../devicetree/bindings/sound/fsl,easrc.yaml       |  21 +-
+ .../devicetree/bindings/sound/simple-card.yaml     |  10 +-
+ .../devicetree/bindings/sound/tlv320adcx140.yaml   |  26 ++-
+ .../thermal/socionext,uniphier-thermal.yaml        |   5 +-
+ .../devicetree/bindings/usb/aspeed,usb-vhub.yaml   |  24 +--
+ .../devicetree/bindings/usb/nvidia,tegra-xudc.yaml |   2 -
+ .../devicetree/bindings/watchdog/arm-smc-wdt.yaml  |   3 +-
+ scripts/dtc/Makefile                               |   3 +
+ 51 files changed, 273 insertions(+), 363 deletions(-)
