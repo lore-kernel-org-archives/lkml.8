@@ -2,640 +2,163 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DB2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65FA5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5C9E20836
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:37:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CF9C207ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:37:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgFLEhj (ORCPT
+        id S1726519AbgFLEhn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 00:37:39 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:38554 "EHLO fornost.hmeau.com"
+        Fri, 12 Jun 2020 00:37:43 -0400
+Received: from mga07.intel.com ([134.134.136.100]:65452 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725862AbgFLEhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 00:37:38 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1jjbQh-0007rY-3q; Fri, 12 Jun 2020 14:36:36 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 12 Jun 2020 14:36:35 +1000
-Date:   Fri, 12 Jun 2020 14:36:35 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: [v2 PATCH] printk: Make linux/printk.h self-contained
-Message-ID: <20200612043634.GA30181@gondor.apana.org.au>
-References: <20200611125144.GA2506@gondor.apana.org.au>
+        id S1725862AbgFLEhl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 00:37:41 -0400
+IronPort-SDR: 4DfNwFhLA1qW4HQRDgzzYToV0vd0bpoV6onI8hzv+aIuGBXm6fM+lP3jAg7iMCRk6WrOhVYhGX
+ LKjMSiaw4SUQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 21:37:40 -0700
+IronPort-SDR: tmWgcBz5T5neyc4zyDXCoe2aKU0gifPCchazESvPmh7pxaR6KcvaWVSM8QJuxaeiVJK5HkTJUJ
+ EONhliFDQBpQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,501,1583222400"; 
+   d="scan'208";a="259792723"
+Received: from lkp-server01.sh.intel.com (HELO b6eec31c25be) ([10.239.97.150])
+  by fmsmga007.fm.intel.com with ESMTP; 11 Jun 2020 21:37:39 -0700
+Received: from kbuild by b6eec31c25be with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jjbRi-0000V8-TT; Fri, 12 Jun 2020 04:37:38 +0000
+Date:   Fri, 12 Jun 2020 12:36:51 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:locking/kcsan] BUILD SUCCESS
+ 1f44328ea24c9de368a3cfe5cc0e110b949afb2e
+Message-ID: <5ee30663.pnjVdhcvNLatfGUL%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200611125144.GA2506@gondor.apana.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As it stands if you include printk.h by itself it will fail to
-compile because it requires definitions from ratelimit.h.  However,
-simply including ratelimit.h from printk.h does not work due to
-inclusion loops involving sched.h and kernel.h.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  locking/kcsan
+branch HEAD: 1f44328ea24c9de368a3cfe5cc0e110b949afb2e  compiler_types.h, kasan: Use __SANITIZE_ADDRESS__ instead of CONFIG_KASAN to decide inlining
 
-This patch solves this by moving bits from ratelimit.h into a new
-header file which can then be included by printk.h without any
-worries about header loops.
+elapsed time: 628m
 
-The build bot then revealed some intriguing failures arising out
-of this patch.  On s390 there is an inclusion loop with asm/bug.h
-and linux/kernel.h that triggers a compile failure, because kernel.h
-will cause asm-generic/bug.h to be included before s390's own
-asm/bug.h has finished processing.  This has been fixed by not
-including kernel.h in arch/s390/include/asm/bug.h.
+configs tested: 96
+configs skipped: 1
 
-A related failure was seen on powerpc where asm/bug.h leads to
-the inclusion of linux/kernel.h via asm-generic/bug.h which then
-prematurely tries to use the very macros defined in asm/bug.h.
-The particular inclusion path which led to this involves lockdep.h.
-I have fixed this moving the type definitions lockdep.h into the
-new lockdep_types.h.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+c6x                        evmc6457_defconfig
+nds32                               defconfig
+alpha                            alldefconfig
+mips                     loongson1b_defconfig
+alpha                               defconfig
+mips                       bmips_be_defconfig
+c6x                        evmc6678_defconfig
+powerpc                          g5_defconfig
+arc                            hsdk_defconfig
+arm                          tango4_defconfig
+mips                           ip32_defconfig
+sh                        edosk7705_defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+i386                 randconfig-a015-20200612
+i386                 randconfig-a011-20200612
+i386                 randconfig-a014-20200612
+i386                 randconfig-a016-20200612
+i386                 randconfig-a013-20200612
+i386                 randconfig-a012-20200612
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
 
-diff --git a/include/linux/ratelimit_types.h b/include/linux/ratelimit_types.h
-new file mode 100644
-index 000000000000..b676aa419eef
---- /dev/null
-+++ b/include/linux/ratelimit_types.h
-@@ -0,0 +1,43 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_RATELIMIT_TYPES_H
-+#define _LINUX_RATELIMIT_TYPES_H
-+
-+#include <linux/bits.h>
-+#include <linux/param.h>
-+#include <linux/spinlock_types.h>
-+
-+#define DEFAULT_RATELIMIT_INTERVAL	(5 * HZ)
-+#define DEFAULT_RATELIMIT_BURST		10
-+
-+/* issue num suppressed message on exit */
-+#define RATELIMIT_MSG_ON_RELEASE	BIT(0)
-+
-+struct ratelimit_state {
-+	raw_spinlock_t	lock;		/* protect the state */
-+
-+	int		interval;
-+	int		burst;
-+	int		printed;
-+	int		missed;
-+	unsigned long	begin;
-+	unsigned long	flags;
-+};
-+
-+#define RATELIMIT_STATE_INIT(name, interval_init, burst_init) {		\
-+		.lock		= __RAW_SPIN_LOCK_UNLOCKED(name.lock),	\
-+		.interval	= interval_init,			\
-+		.burst		= burst_init,				\
-+	}
-+
-+#define RATELIMIT_STATE_INIT_DISABLED					\
-+	RATELIMIT_STATE_INIT(ratelimit_state, 0, DEFAULT_RATELIMIT_BURST)
-+
-+#define DEFINE_RATELIMIT_STATE(name, interval_init, burst_init)		\
-+									\
-+	struct ratelimit_state name =					\
-+		RATELIMIT_STATE_INIT(name, interval_init, burst_init)	\
-+
-+extern int ___ratelimit(struct ratelimit_state *rs, const char *func);
-+#define __ratelimit(state) ___ratelimit(state, __func__)
-+
-+#endif /* _LINUX_RATELIMIT_TYPES_H */
-diff --git a/include/linux/printk.h b/include/linux/printk.h
-index e061635e0409..1cd862cfd2f4 100644
---- a/include/linux/printk.h
-+++ b/include/linux/printk.h
-@@ -7,6 +7,7 @@
- #include <linux/kern_levels.h>
- #include <linux/linkage.h>
- #include <linux/cache.h>
-+#include <linux/ratelimit_types.h>
- 
- extern const char linux_banner[];
- extern const char linux_proc_banner[];
-diff --git a/include/linux/ratelimit.h b/include/linux/ratelimit.h
-index 8ddf79e9207a..b17e0cd0a30c 100644
---- a/include/linux/ratelimit.h
-+++ b/include/linux/ratelimit.h
-@@ -2,41 +2,10 @@
- #ifndef _LINUX_RATELIMIT_H
- #define _LINUX_RATELIMIT_H
- 
--#include <linux/param.h>
-+#include <linux/ratelimit_types.h>
- #include <linux/sched.h>
- #include <linux/spinlock.h>
- 
--#define DEFAULT_RATELIMIT_INTERVAL	(5 * HZ)
--#define DEFAULT_RATELIMIT_BURST		10
--
--/* issue num suppressed message on exit */
--#define RATELIMIT_MSG_ON_RELEASE	BIT(0)
--
--struct ratelimit_state {
--	raw_spinlock_t	lock;		/* protect the state */
--
--	int		interval;
--	int		burst;
--	int		printed;
--	int		missed;
--	unsigned long	begin;
--	unsigned long	flags;
--};
--
--#define RATELIMIT_STATE_INIT(name, interval_init, burst_init) {		\
--		.lock		= __RAW_SPIN_LOCK_UNLOCKED(name.lock),	\
--		.interval	= interval_init,			\
--		.burst		= burst_init,				\
--	}
--
--#define RATELIMIT_STATE_INIT_DISABLED					\
--	RATELIMIT_STATE_INIT(ratelimit_state, 0, DEFAULT_RATELIMIT_BURST)
--
--#define DEFINE_RATELIMIT_STATE(name, interval_init, burst_init)		\
--									\
--	struct ratelimit_state name =					\
--		RATELIMIT_STATE_INIT(name, interval_init, burst_init)	\
--
- static inline void ratelimit_state_init(struct ratelimit_state *rs,
- 					int interval, int burst)
- {
-@@ -73,9 +42,6 @@ ratelimit_set_flags(struct ratelimit_state *rs, unsigned long flags)
- 
- extern struct ratelimit_state printk_ratelimit_state;
- 
--extern int ___ratelimit(struct ratelimit_state *rs, const char *func);
--#define __ratelimit(state) ___ratelimit(state, __func__)
--
- #ifdef CONFIG_PRINTK
- 
- #define WARN_ON_RATELIMIT(condition, state)	({		\
-diff --git a/arch/s390/include/asm/bug.h b/arch/s390/include/asm/bug.h
-index 7725f8006fdf..0b25f28351ed 100644
---- a/arch/s390/include/asm/bug.h
-+++ b/arch/s390/include/asm/bug.h
-@@ -2,7 +2,7 @@
- #ifndef _ASM_S390_BUG_H
- #define _ASM_S390_BUG_H
- 
--#include <linux/kernel.h>
-+#include <linux/compiler.h>
- 
- #ifdef CONFIG_BUG
- 
-diff --git a/include/linux/lockdep_types.h b/include/linux/lockdep_types.h
-new file mode 100644
-index 000000000000..7b9350624577
---- /dev/null
-+++ b/include/linux/lockdep_types.h
-@@ -0,0 +1,196 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Runtime locking correctness validator
-+ *
-+ *  Copyright (C) 2006,2007 Red Hat, Inc., Ingo Molnar <mingo@redhat.com>
-+ *  Copyright (C) 2007 Red Hat, Inc., Peter Zijlstra
-+ *
-+ * see Documentation/locking/lockdep-design.rst for more details.
-+ */
-+#ifndef __LINUX_LOCKDEP_TYPES_H
-+#define __LINUX_LOCKDEP_TYPES_H
-+
-+#include <linux/types.h>
-+
-+#define MAX_LOCKDEP_SUBCLASSES		8UL
-+
-+enum lockdep_wait_type {
-+	LD_WAIT_INV = 0,	/* not checked, catch all */
-+
-+	LD_WAIT_FREE,		/* wait free, rcu etc.. */
-+	LD_WAIT_SPIN,		/* spin loops, raw_spinlock_t etc.. */
-+
-+#ifdef CONFIG_PROVE_RAW_LOCK_NESTING
-+	LD_WAIT_CONFIG,		/* CONFIG_PREEMPT_LOCK, spinlock_t etc.. */
-+#else
-+	LD_WAIT_CONFIG = LD_WAIT_SPIN,
-+#endif
-+	LD_WAIT_SLEEP,		/* sleeping locks, mutex_t etc.. */
-+
-+	LD_WAIT_MAX,		/* must be last */
-+};
-+
-+#ifdef CONFIG_LOCKDEP
-+
-+#include <linux/list.h>
-+
-+/*
-+ * We'd rather not expose kernel/lockdep_states.h this wide, but we do need
-+ * the total number of states... :-(
-+ */
-+#define XXX_LOCK_USAGE_STATES		(1+2*4)
-+
-+/*
-+ * NR_LOCKDEP_CACHING_CLASSES ... Number of classes
-+ * cached in the instance of lockdep_map
-+ *
-+ * Currently main class (subclass == 0) and signle depth subclass
-+ * are cached in lockdep_map. This optimization is mainly targeting
-+ * on rq->lock. double_rq_lock() acquires this highly competitive with
-+ * single depth.
-+ */
-+#define NR_LOCKDEP_CACHING_CLASSES	2
-+
-+/*
-+ * A lockdep key is associated with each lock object. For static locks we use
-+ * the lock address itself as the key. Dynamically allocated lock objects can
-+ * have a statically or dynamically allocated key. Dynamically allocated lock
-+ * keys must be registered before being used and must be unregistered before
-+ * the key memory is freed.
-+ */
-+struct lockdep_subclass_key {
-+	char __one_byte;
-+} __attribute__ ((__packed__));
-+
-+/* hash_entry is used to keep track of dynamically allocated keys. */
-+struct lock_class_key {
-+	union {
-+		struct hlist_node		hash_entry;
-+		struct lockdep_subclass_key	subkeys[MAX_LOCKDEP_SUBCLASSES];
-+	};
-+};
-+
-+extern struct lock_class_key __lockdep_no_validate__;
-+
-+struct lock_trace;
-+
-+#define LOCKSTAT_POINTS		4
-+
-+/*
-+ * The lock-class itself. The order of the structure members matters.
-+ * reinit_class() zeroes the key member and all subsequent members.
-+ */
-+struct lock_class {
-+	/*
-+	 * class-hash:
-+	 */
-+	struct hlist_node		hash_entry;
-+
-+	/*
-+	 * Entry in all_lock_classes when in use. Entry in free_lock_classes
-+	 * when not in use. Instances that are being freed are on one of the
-+	 * zapped_classes lists.
-+	 */
-+	struct list_head		lock_entry;
-+
-+	/*
-+	 * These fields represent a directed graph of lock dependencies,
-+	 * to every node we attach a list of "forward" and a list of
-+	 * "backward" graph nodes.
-+	 */
-+	struct list_head		locks_after, locks_before;
-+
-+	const struct lockdep_subclass_key *key;
-+	unsigned int			subclass;
-+	unsigned int			dep_gen_id;
-+
-+	/*
-+	 * IRQ/softirq usage tracking bits:
-+	 */
-+	unsigned long			usage_mask;
-+	const struct lock_trace		*usage_traces[XXX_LOCK_USAGE_STATES];
-+
-+	/*
-+	 * Generation counter, when doing certain classes of graph walking,
-+	 * to ensure that we check one node only once:
-+	 */
-+	int				name_version;
-+	const char			*name;
-+
-+	short				wait_type_inner;
-+	short				wait_type_outer;
-+
-+#ifdef CONFIG_LOCK_STAT
-+	unsigned long			contention_point[LOCKSTAT_POINTS];
-+	unsigned long			contending_point[LOCKSTAT_POINTS];
-+#endif
-+} __no_randomize_layout;
-+
-+#ifdef CONFIG_LOCK_STAT
-+struct lock_time {
-+	s64				min;
-+	s64				max;
-+	s64				total;
-+	unsigned long			nr;
-+};
-+
-+enum bounce_type {
-+	bounce_acquired_write,
-+	bounce_acquired_read,
-+	bounce_contended_write,
-+	bounce_contended_read,
-+	nr_bounce_types,
-+
-+	bounce_acquired = bounce_acquired_write,
-+	bounce_contended = bounce_contended_write,
-+};
-+
-+struct lock_class_stats {
-+	unsigned long			contention_point[LOCKSTAT_POINTS];
-+	unsigned long			contending_point[LOCKSTAT_POINTS];
-+	struct lock_time		read_waittime;
-+	struct lock_time		write_waittime;
-+	struct lock_time		read_holdtime;
-+	struct lock_time		write_holdtime;
-+	unsigned long			bounces[nr_bounce_types];
-+};
-+
-+struct lock_class_stats lock_stats(struct lock_class *class);
-+void clear_lock_stats(struct lock_class *class);
-+#endif
-+
-+/*
-+ * Map the lock object (the lock instance) to the lock-class object.
-+ * This is embedded into specific lock instances:
-+ */
-+struct lockdep_map {
-+	struct lock_class_key		*key;
-+	struct lock_class		*class_cache[NR_LOCKDEP_CACHING_CLASSES];
-+	const char			*name;
-+	short				wait_type_outer; /* can be taken in this context */
-+	short				wait_type_inner; /* presents this context */
-+#ifdef CONFIG_LOCK_STAT
-+	int				cpu;
-+	unsigned long			ip;
-+#endif
-+};
-+
-+struct pin_cookie { unsigned int val; };
-+
-+#else /* !CONFIG_LOCKDEP */
-+
-+/*
-+ * The class key takes no space if lockdep is disabled:
-+ */
-+struct lock_class_key { };
-+
-+/*
-+ * The lockdep_map takes no space if lockdep is disabled:
-+ */
-+struct lockdep_map { };
-+
-+struct pin_cookie { };
-+
-+#endif /* !LOCKDEP */
-+
-+#endif /* __LINUX_LOCKDEP_TYPES_H */
-diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 206774ac6946..1655d767c2c7 100644
---- a/include/linux/lockdep.h
-+++ b/include/linux/lockdep.h
-@@ -10,181 +10,20 @@
- #ifndef __LINUX_LOCKDEP_H
- #define __LINUX_LOCKDEP_H
- 
-+#include <linux/lockdep_types.h>
-+
- struct task_struct;
--struct lockdep_map;
- 
- /* for sysctl */
- extern int prove_locking;
- extern int lock_stat;
- 
--#define MAX_LOCKDEP_SUBCLASSES		8UL
--
--#include <linux/types.h>
--
--enum lockdep_wait_type {
--	LD_WAIT_INV = 0,	/* not checked, catch all */
--
--	LD_WAIT_FREE,		/* wait free, rcu etc.. */
--	LD_WAIT_SPIN,		/* spin loops, raw_spinlock_t etc.. */
--
--#ifdef CONFIG_PROVE_RAW_LOCK_NESTING
--	LD_WAIT_CONFIG,		/* CONFIG_PREEMPT_LOCK, spinlock_t etc.. */
--#else
--	LD_WAIT_CONFIG = LD_WAIT_SPIN,
--#endif
--	LD_WAIT_SLEEP,		/* sleeping locks, mutex_t etc.. */
--
--	LD_WAIT_MAX,		/* must be last */
--};
--
- #ifdef CONFIG_LOCKDEP
- 
- #include <linux/linkage.h>
--#include <linux/list.h>
- #include <linux/debug_locks.h>
- #include <linux/stacktrace.h>
- 
--/*
-- * We'd rather not expose kernel/lockdep_states.h this wide, but we do need
-- * the total number of states... :-(
-- */
--#define XXX_LOCK_USAGE_STATES		(1+2*4)
--
--/*
-- * NR_LOCKDEP_CACHING_CLASSES ... Number of classes
-- * cached in the instance of lockdep_map
-- *
-- * Currently main class (subclass == 0) and signle depth subclass
-- * are cached in lockdep_map. This optimization is mainly targeting
-- * on rq->lock. double_rq_lock() acquires this highly competitive with
-- * single depth.
-- */
--#define NR_LOCKDEP_CACHING_CLASSES	2
--
--/*
-- * A lockdep key is associated with each lock object. For static locks we use
-- * the lock address itself as the key. Dynamically allocated lock objects can
-- * have a statically or dynamically allocated key. Dynamically allocated lock
-- * keys must be registered before being used and must be unregistered before
-- * the key memory is freed.
-- */
--struct lockdep_subclass_key {
--	char __one_byte;
--} __attribute__ ((__packed__));
--
--/* hash_entry is used to keep track of dynamically allocated keys. */
--struct lock_class_key {
--	union {
--		struct hlist_node		hash_entry;
--		struct lockdep_subclass_key	subkeys[MAX_LOCKDEP_SUBCLASSES];
--	};
--};
--
--extern struct lock_class_key __lockdep_no_validate__;
--
--struct lock_trace;
--
--#define LOCKSTAT_POINTS		4
--
--/*
-- * The lock-class itself. The order of the structure members matters.
-- * reinit_class() zeroes the key member and all subsequent members.
-- */
--struct lock_class {
--	/*
--	 * class-hash:
--	 */
--	struct hlist_node		hash_entry;
--
--	/*
--	 * Entry in all_lock_classes when in use. Entry in free_lock_classes
--	 * when not in use. Instances that are being freed are on one of the
--	 * zapped_classes lists.
--	 */
--	struct list_head		lock_entry;
--
--	/*
--	 * These fields represent a directed graph of lock dependencies,
--	 * to every node we attach a list of "forward" and a list of
--	 * "backward" graph nodes.
--	 */
--	struct list_head		locks_after, locks_before;
--
--	const struct lockdep_subclass_key *key;
--	unsigned int			subclass;
--	unsigned int			dep_gen_id;
--
--	/*
--	 * IRQ/softirq usage tracking bits:
--	 */
--	unsigned long			usage_mask;
--	const struct lock_trace		*usage_traces[XXX_LOCK_USAGE_STATES];
--
--	/*
--	 * Generation counter, when doing certain classes of graph walking,
--	 * to ensure that we check one node only once:
--	 */
--	int				name_version;
--	const char			*name;
--
--	short				wait_type_inner;
--	short				wait_type_outer;
--
--#ifdef CONFIG_LOCK_STAT
--	unsigned long			contention_point[LOCKSTAT_POINTS];
--	unsigned long			contending_point[LOCKSTAT_POINTS];
--#endif
--} __no_randomize_layout;
--
--#ifdef CONFIG_LOCK_STAT
--struct lock_time {
--	s64				min;
--	s64				max;
--	s64				total;
--	unsigned long			nr;
--};
--
--enum bounce_type {
--	bounce_acquired_write,
--	bounce_acquired_read,
--	bounce_contended_write,
--	bounce_contended_read,
--	nr_bounce_types,
--
--	bounce_acquired = bounce_acquired_write,
--	bounce_contended = bounce_contended_write,
--};
--
--struct lock_class_stats {
--	unsigned long			contention_point[LOCKSTAT_POINTS];
--	unsigned long			contending_point[LOCKSTAT_POINTS];
--	struct lock_time		read_waittime;
--	struct lock_time		write_waittime;
--	struct lock_time		read_holdtime;
--	struct lock_time		write_holdtime;
--	unsigned long			bounces[nr_bounce_types];
--};
--
--struct lock_class_stats lock_stats(struct lock_class *class);
--void clear_lock_stats(struct lock_class *class);
--#endif
--
--/*
-- * Map the lock object (the lock instance) to the lock-class object.
-- * This is embedded into specific lock instances:
-- */
--struct lockdep_map {
--	struct lock_class_key		*key;
--	struct lock_class		*class_cache[NR_LOCKDEP_CACHING_CLASSES];
--	const char			*name;
--	short				wait_type_outer; /* can be taken in this context */
--	short				wait_type_inner; /* presents this context */
--#ifdef CONFIG_LOCK_STAT
--	int				cpu;
--	unsigned long			ip;
--#endif
--};
--
- static inline void lockdep_copy_map(struct lockdep_map *to,
- 				    struct lockdep_map *from)
- {
-@@ -421,8 +260,6 @@ static inline void lock_set_subclass(struct lockdep_map *lock,
- 
- extern void lock_downgrade(struct lockdep_map *lock, unsigned long ip);
- 
--struct pin_cookie { unsigned int val; };
--
- #define NIL_COOKIE (struct pin_cookie){ .val = 0U, }
- 
- extern struct pin_cookie lock_pin_lock(struct lockdep_map *lock);
-@@ -501,10 +338,6 @@ static inline void lockdep_set_selftest_task(struct task_struct *task)
- # define lockdep_reset()		do { debug_locks = 1; } while (0)
- # define lockdep_free_key_range(start, size)	do { } while (0)
- # define lockdep_sys_exit() 			do { } while (0)
--/*
-- * The class key takes no space if lockdep is disabled:
-- */
--struct lock_class_key { };
- 
- static inline void lockdep_register_key(struct lock_class_key *key)
- {
-@@ -514,11 +347,6 @@ static inline void lockdep_unregister_key(struct lock_class_key *key)
- {
- }
- 
--/*
-- * The lockdep_map takes no space if lockdep is disabled:
-- */
--struct lockdep_map { };
--
- #define lockdep_depth(tsk)	(0)
- 
- #define lockdep_is_held_type(l, r)		(1)
-@@ -530,8 +358,6 @@ struct lockdep_map { };
- 
- #define lockdep_recursing(tsk)			(0)
- 
--struct pin_cookie { };
--
- #define NIL_COOKIE (struct pin_cookie){ }
- 
- #define lockdep_pin_lock(l)			({ struct pin_cookie cookie = { }; cookie; })
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
