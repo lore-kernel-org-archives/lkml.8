@@ -2,225 +2,143 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6316EC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 08:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA3FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 08:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 451132068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 08:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B623207F7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 08:48:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Vg1jix1j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbgFLIsC (ORCPT
+        id S1726488AbgFLIsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 04:48:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59678 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbgFLIsB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 04:48:01 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6CBCC03E96F;
-        Fri, 12 Jun 2020 01:48:00 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: andrzej.p)
-        with ESMTPSA id ADEDA2A52ED
-Subject: Re: [PATCH v4 0/7] Support inhibiting input devices
-To:     Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Samsung SoC <linux-samsung-soc@vger.kernel.org>,
-        linux-input@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        patches@opensource.cirrus.com,
-        ibm-acpi-devel@lists.sourceforge.net,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Barry Song <baohua@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Nick Dyer <nick@shmanahar.org>,
-        Ferruh Yigit <fery@cypress.com>,
-        Sangwon Jee <jeesw@melfas.com>,
-        Peter Hutterer <peter.hutterer@redhat.com>,
-        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
-        Collabora Kernel ML <kernel@collabora.com>
-References: <2336e15d-ff4b-bbb6-c701-dbf3aa110fcd@redhat.com>
- <20200608112211.12125-1-andrzej.p@collabora.com>
- <964ca07a-3da5-101f-7edf-64bdeec98a4b@redhat.com>
- <CAJZ5v0hB2ra2K=dd9ZjVyy1V2b1PmFHm79uDO2HtHU1D_4YUbw@mail.gmail.com>
- <6136f26c-e090-e025-af55-4c5f3a6aec92@collabora.com>
- <3e61c9c1-b211-da9f-c55b-b44eb6522f2a@redhat.com>
- <2d5fd063-66bc-c707-4041-84a17c0a7d04@collabora.com>
- <40988408-8f36-3a52-6439-34084de6b129@redhat.com>
-From:   Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Message-ID: <16342ec8-2c8e-d030-b253-0db534f04ba6@collabora.com>
-Date:   Fri, 12 Jun 2020 10:47:54 +0200
+        Fri, 12 Jun 2020 04:48:33 -0400
+Received: from mout.web.de ([212.227.17.12]:50475 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726292AbgFLIsd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 04:48:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1591951701;
+        bh=HK2Dio0rEolq34BLqaplYRdsKrzgzy/oPHEw5z7wh5Q=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=Vg1jix1jbt63dt1rYG6cujTkSF9nisdydf0dqcHczRBDlWufI9DyKOPKHjqEis3iL
+         1oirA7Po8gyvShvxfHPCPQOq86uupWeKYxrE2l6JLlR0nQxqLk1Bh0jGnoM+yhq9UP
+         EEi38gepmF/+0X3kk/w7sZ8T1RFJjS/225ytkW0I=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.131.95.40]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0Mg7I1-1jXF8i13sz-00NPdJ; Fri, 12
+ Jun 2020 10:48:21 +0200
+To:     Tetsuhiro Kohada <kohada.t2@gmail.com>,
+        linux-fsdevel@vger.kernel.org
+Cc:     Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>,
+        Takahiro Mori <Mori.Takahiro@ab.MitsubishiElectric.co.jp>,
+        Hirotaka Motai <motai.hirotaka@aj.MitsubishiElectric.co.jp>,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] exfat: remove EXFAT_SB_DIRTY flag
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
+ +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
+ mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
+ lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
+ YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
+ GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
+ rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
+ 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
+ jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
+ BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
+ cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
+ Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
+ g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
+ OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
+ CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
+ LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
+ sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
+ kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
+ i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
+ g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
+ q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
+ NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
+ nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
+ 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
+ 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
+ wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
+ riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
+ DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
+ fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
+ 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
+ xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
+ qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
+ Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
+ Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
+ +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
+ hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
+ /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
+ tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
+ qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
+ Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
+ x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
+ pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
+Message-ID: <4591596d-b33c-7e6d-803b-3375064bcf3f@web.de>
+Date:   Fri, 12 Jun 2020 10:48:20 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <40988408-8f36-3a52-6439-34084de6b129@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:wkgP/M8BFsNaww6uQtIh8+GIB/f3o2qn+dcL/nn1qnv6EJVBcyt
+ ZSjmY+HeHbGWC3FauJOJEX/vF/QpgqRQCAov5snCi16bCZW9HyLM/Y3v9IHjYtNEFSEQQim
+ dfJlRRgqJNVLenHsy+TCQwAMHsVPr7y3ZfYYYBzERWvBgFq7Rs0OvtCEErOvIM2ep0wW0Ys
+ gwRG7IkCFW5tFQtsnHCGQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:fX3/Il3Wc6c=:XLnUazOB0peALOiA2mJwhQ
+ grukQXKVITIFKLEnlmCBPax5YsFmuuu3B9xFj5dW5MtoImq0ZVsktJedCaMrE9TgaaRD/9L/8
+ 2Y5XAdJehQzOdjUK9UDNxu/OKfMGJF7Gg/NIWFOIppK5DacZdl9WZnTn4do52NbP+aLxKQ0wo
+ De6LQpnDm8DsD3O+gkml/LcbEs7YAhL+xIvx/fjxZGvHCLzPG6jVmKvJm7q+Q34JkQIK9mZRN
+ IQWqWzDhXlSpTC4QcevicXD8DQWANdjACiP7UUWHqRgfNxWJ1M7di3NfPdGDcNDQrOC2V13kg
+ szDnYs1YG1MMd0o1IOQEAJFIyRFxRH5XRf54ZyBj6WfmZ/V3+vPRnNrCU1ojqR+ON9GU8GbyW
+ D2n/R48fnZmnLLPmU8L/OySxU3n0UHlUnbyZWJAZKnQKHjMvAYvbVQHfwWH7NhMZAlrnFmFVz
+ At61T65GepxFfxXoFDr0znmwHK5LosqyFsL3YYzSkFkTwMHvs94mLueYbiYeSGj3UEctzNlYW
+ jafOeePJVX+jlX3Z0g/7+v8fYxCQLnBNGOGR3rbya1S78nPtABSFIqrtH/mhrDaExohpcWr2r
+ 54SQRAjHz/wvQow7pb84+jXkokgjkpGTZuhUnR5KxltfW7Ys2Dt+29M340ERFouGgsMlja350
+ R16yBllW6lP0g9ZUyDYgT4CWkPsc0eUGdQBnCxgy5R5Nrme11jxYbR+ddOU+vGsBip9g+2Xf5
+ nMq5YxWCOKAO/KUG5kmmvldHR0tqIhAcxPek6ifp8MdT1rosdE9O63P2qIHTge/b+YldJErfJ
+ tgc+KU1Ya/6boHUTjXs25dOI9kQSwoLZArqdvCMSq+YrUI7jYtWxfa1TywSxeyYvBh1S+y1tK
+ QQ3OBulvEEOKu+7g7mvgCxy3FiU9BPr8Ui1zD5ocwaCuyaonNHKf8KCYwY4R5Df2UOvB85zH6
+ WUfvfk58WBQnO3k3V036wN8alErpbkWWSyb/wanzd2RYsX/2W2jNFd1sHJ2XWw0czDMjdLf+U
+ u1ienj4lxaxXUkaOmM8XzVu7nOCgKcN7qjDgdeNRi1UBRNm+bmiiu5F7BE5NRPi7M04r/06Sx
+ UKMQcZrqm6/LG4Vh5Y4pThEDIhMMNBhtGKWWRgq1Bho9WpM39BerS0DYJHps5z7HV6s8poHEg
+ dgRLwp2qH3AYx2eZWylnXC9Bdx6/E+ekEc+WAUafeqMukGzEnwuyFB6QfDp9CpkZWd7Slxb3V
+ 63kY1dcjGEk4bJ6WW
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hans,
+> remove EXFAT_SB_DIRTY flag and related codes.
 
-W dniu 12.06.2020 o 10:30, Hans de Goede pisze:
-> Hi,
-> 
-> On 6/10/20 3:41 PM, Andrzej Pietrasiewicz wrote:
->> Hi Hans,
->>
->> W dniu 10.06.2020 o 15:21, Hans de Goede pisze:
->>> Hi,
->>>
->>> On 6/10/20 3:12 PM, Andrzej Pietrasiewicz wrote:
->>>> Hi All,
->>>>
->>>> W dniu 10.06.2020 o 12:38, Rafael J. Wysocki pisze:
->>>>> On Wed, Jun 10, 2020 at 11:50 AM Hans de Goede <hdegoede@redhat.com> wrote:
->>>>>>
->>>>>> Hi All,
->>>>>>
->>>>>> On 6/8/20 1:22 PM, Andrzej Pietrasiewicz wrote:
->>>>>>> This is a quick respin of v3, with just two small changes, please see
->>>>>>> the changelog below.
->>>>>>>
->>>>>>> Userspace might want to implement a policy to temporarily disregard input
->>>>>>> from certain devices.
->>>>>>>
->>>>>>> An example use case is a convertible laptop, whose keyboard can be folded
->>>>>>> under the screen to create tablet-like experience. The user then must hold
->>>>>>> the laptop in such a way that it is difficult to avoid pressing the keyboard
->>>>>>> keys. It is therefore desirable to temporarily disregard input from the
->>>>>>> keyboard, until it is folded back. This obviously is a policy which should
->>>>>>> be kept out of the kernel, but the kernel must provide suitable means to
->>>>>>> implement such a policy.
->>>>>>
->>>>>> First of all sorry to start a somewhat new discussion about this
->>>>>> while this patch set is also somewhat far along in the review process,
->>>>>> but I believe what I discuss below needs to be taken into account.
->>>>>>
->>>>>> Yesterday I have been looking into why an Asus T101HA would not stay
->>>>>> suspended when the LID is closed. The cause is that the USB HID multi-touch
->>>>>> touchpad in the base of the device starts sending events when the screen
->>>>>> gets close to the touchpad (so when the LID is fully closed) and these
->>>>>> events are causing a wakeup from suspend. HID multi-touch devices
->>>>>> do have a way to tell them to fully stop sending events, also disabling
->>>>>> the USB remote wakeup the device is doing. The question is when to tell
->>>>>> it to not send events though ...
->>>>>>
->>>>>> So now I've been thinking about how to fix this and I believe that there
->>>>>> is some interaction between this problem and this patch-set.
->>>>>>
->>>>>> The problem I'm seeing on the T101HA is about wakeups, so the question
->>>>>> which I want to discuss is:
->>>>>>
->>>>>> 1. How does inhibiting interact with enabling /
->>>>>> disabling the device as a wakeup source ?
->>>>>>
->>>>>> 2. Since we have now made inhibiting equal open/close how does open/close
->>>>>> interact with a device being a wakeup source ?
->>>>>>
->>>>>> And my own initial (to be discussed) answers to these questions:
->>>>>>
->>>>>> 1. It seems to me that when a device is inhibited it should not be a
->>>>>> wakeup source, so where possible a input-device-driver should disable
->>>>>> a device's wakeup capabilities on suspend if inhibited
->>>>>
->>>>> If "inhibit" means "do not generate any events going forward", then
->>>>> this must also cover wakeup events, so I agree.
->>>>
->>>> I agree, too.
->>>>
->>>>>
->>>>>> 2. This one is trickier I don't think we have really clearly specified
->>>>>> any behavior here. The default behavior of most drivers seems to be
->>>>>> using something like this in their suspend callback:
->>>>>>
->>>>>>           if (device_may_wakeup(dev))
->>>>>>                   enable_irq_wake(data->irq);
->>>>>>           else if (input->users)
->>>>>>                   foo_stop_receiving_events(data);
->>>>>>
->>>>>> Since this is what most drivers seem to do I believe we should keep
->>>>>> this as is and that we should just clearly document that if the
->>>>>> input_device has users (has been opened) or not does not matter
->>>>>> for its wakeup behavior.
->>>>>>
->>>>>> Combining these 2 answers leads to this new pseudo code template
->>>>>> for an input-device's suspend method:
->>>>>>
->>>>>>          /*
->>>>>>           * If inhibited we have already disabled events and
->>>>>>           * we do NOT want to setup the device as wake source.
->>>>>>           */
->>>>>>          if (input->inhibited)
->>>>>>                  return 0;
->>>>
->>>> Right, if a device is inhibited it shouldn't become a wakeup source,
->>>> because that would contradict the purpose of being inhibited.
->>>
->>> Ack. Note I do think that we need to document this (and more
->>> in general the answer to both questions from above) clearly so
->>> that going forward if there are any questions about how this is
->>> supposed to work we can just point to the docs.
->>>
->>> Can you do a follow-up patch, or include a patch in your next
->>> version which documents this (once we agree on what "this"
->>> exactly is) ?
->>
->> Sure I can. Just need to know when "this" becomes stable enough ;)
->> If this series otherwise looks mature enough I would opt for a
->> follow-up patch.
-> 
-> FWIW after my flip-flop to agreeing with Dmitry that the 2
-> (inhibit vs wakeup) should be completely orthogonal this new
-> policy is stable/mature from my pov (and consistent with how
-> we handle wakeup vs input_dev->users).
-> 
-> I still think it would be good to do a follow-up documentation
-> patch documenting that these (and esp. inhibit) are orthogonal.
-> 
-> This will mean for example that if a device is inhibit but
-> still wakeup enabled and the device's close method silences
-> the devices, that it needs to be unsilenced in suspend.
-> This might be worth mentioning in the docs even though
-> drivers which silence the device on close should already
-> unsilence the device on suspend when it is wakeup-enabled.
-> 
-> Note maybe we should give it a couple of days for others to
-> give their opinion before you submit the follow-up documentation
-> patch.
-> 
+I suggest to omit this sentence because a similar information
+is provided a bit later again for this change description.
 
-True. I will send something after the weekend.
 
-Andrzej
+> If performe 'sync' in this state, VOL_DIRTY will not be cleared.
+
+Please improve this wording.
+
+
+Would you like to add the tag =E2=80=9CFixes=E2=80=9D to the commit messag=
+e?
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?id=3Db791d1bdf9212d944d749a5c7f=
+f6febdba241771#n183
+
+Regards,
+Markus
