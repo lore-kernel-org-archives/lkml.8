@@ -6,55 +6,55 @@ X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D58D6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F471C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABCB0206A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:37:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26F9B206A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:38:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m7dUqlsL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gPjUOGaW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbgFLOhw (ORCPT
+        id S1726317AbgFLOhv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 10:37:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57234 "EHLO
+        Fri, 12 Jun 2020 10:37:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726257AbgFLOhv (ORCPT
+        with ESMTP id S1726255AbgFLOhv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 12 Jun 2020 10:37:51 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25AF4C08C5C1
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23439C03E96F
         for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 07:37:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=tr0PHMWQDKASoKKJIXhHrp4k0+3m9wdOXqJFrwxEy6w=; b=m7dUqlsLdWPj6NFEZfD5d1/Rd3
-        Tlll3lUpiZGZxF8hgawXhytv2+kQjDA5UPIBpi1ouXmIjmRMskY+qsg7uLX7j8LSLMi2XaMFy+gwG
-        a6bOoG7elz6CGMuRbRHrOhpgdJIJhrxTEsolDt34GmNXDBffN1A+ToB0GunvRz9GmQ3RpxhWNEyGX
-        vsmqM4CFADfKccySgpmN8mMoMTkiDMksXLxS7T43d3AynTGZSkj4Zih6wkqvFZEHTmWLBWYjMJQ9/
-        dtPxahH/y75c5A1AmXsXIrAFiyQGRKSRUBeFP0V2JnQ2QGgP/xXfO9dxwd7g7QMgGSCslwO9mEIkc
-        pUgPzoOw==;
+        bh=kakeDoR/GGglcn+BZp0dW1O4+OSB36QYcD/P0d2uCAM=; b=gPjUOGaWaNUZjaMfyu5tQPbDrp
+        BCMoPSbTmxp2VokC0UQH2VUHVdbHzOUU6B9nilynt/XCQs4ZcS0IleYfVZKNID9a6f20pAABf4LR6
+        g7uswkyAXHxmV8KmZlphdC2+q5/6vt8ZEeeS1DrvIs28bHyyHvflfyLT2ApR1Uvitr4bHmwHalQq5
+        1jAQYlnIa6AZqaGRpqA10hzOzUZL91StZ9bYOJSF398Gta14oRRZym8CL8Ioab+1fX5L+UHAjym3+
+        Ob+nH5gK5f2OR4wjBoddCSMPURB3aMzkJvth0XMQn1WbmuHG4EbyVE6Ne4OvdZ2eaIeVnsPUZ2Bts
+        UfIGGClw==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jjkoI-0006uc-6M; Fri, 12 Jun 2020 14:37:34 +0000
+        id 1jjkoI-0006ud-6S; Fri, 12 Jun 2020 14:37:34 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EC7CD301AC6;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E1D313003E4;
         Fri, 12 Jun 2020 16:37:31 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id CBA7C2389EBA3; Fri, 12 Jun 2020 16:37:31 +0200 (CEST)
-Message-ID: <20200612143554.071314718@infradead.org>
+        id C3D3C209C23B8; Fri, 12 Jun 2020 16:37:31 +0200 (CEST)
+Message-ID: <20200612143553.953897818@infradead.org>
 User-Agent: quilt/0.66
-Date:   Fri, 12 Jun 2020 16:30:37 +0200
+Date:   Fri, 12 Jun 2020 16:30:35 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     Josh Poimboeuf <jpoimboe@redhat.com>
 Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, dvyukov@google.com,
         elver@google.com, andreyknvl@google.com, mark.rutland@arm.com,
         mhelsley@vmware.com, rostedt@goodmis.org, jthierry@redhat.com,
         mbenes@suse.cz, peterz@infradead.org
-Subject: [RFC][PATCH 3/3] objtool: Fix noinstr vs KCOV
+Subject: [RFC][PATCH 1/3] objtool: Clean up elf_write() condition
 References: <20200612143034.933422660@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,106 +63,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since many compilers cannot disable KCOV with a function attribute,
-help it to NOP out any __sanitizer_cov_*() calls injected in noinstr
-code.
-
-This turns:
-
-12:   e8 00 00 00 00          callq  17 <lockdep_hardirqs_on+0x17>
-		13: R_X86_64_PLT32      __sanitizer_cov_trace_pc-0x4
-
-into:
-
-12:   0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
-		13: R_X86_64_NONE      __sanitizer_cov_trace_pc-0x4
-
-Just like recordmcount does.
+With there being multiple ways to change the ELF data, let's more
+concisely track modification.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- tools/objtool/arch.h                      |    2 ++
- tools/objtool/arch/x86/decode.c           |   18 ++++++++++++++++++
- tools/objtool/arch/x86/include/arch_elf.h |    6 ++++++
- tools/objtool/check.c                     |   19 +++++++++++++++++++
- 4 files changed, 45 insertions(+)
+ tools/objtool/check.c |    2 ++
+ tools/objtool/elf.c   |    8 +++++++-
+ tools/objtool/elf.h   |    3 ++-
+ 3 files changed, 11 insertions(+), 2 deletions(-)
 
---- a/tools/objtool/arch.h
-+++ b/tools/objtool/arch.h
-@@ -84,4 +84,6 @@ unsigned long arch_jump_destination(stru
- 
- unsigned long arch_dest_reloc_offset(int addend);
- 
-+const char *arch_nop_insn(int len);
-+
- #endif /* _ARCH_H */
---- a/tools/objtool/arch/x86/decode.c
-+++ b/tools/objtool/arch/x86/decode.c
-@@ -565,3 +565,21 @@ void arch_initial_func_cfi_state(struct
- 	state->regs[16].base = CFI_CFA;
- 	state->regs[16].offset = -8;
- }
-+
-+const char *arch_nop_insn(int len)
-+{
-+	static const char nops[5][5] = {
-+		/* 1 */ { 0x90 },
-+		/* 2 */ { 0x66, 0x90 },
-+		/* 3 */ { 0x0f, 0x1f, 0x00 },
-+		/* 4 */ { 0x0f, 0x1f, 0x40, 0x00 },
-+		/* 5 */ { 0x0f, 0x1f, 0x44, 0x00, 0x00 },
-+	};
-+
-+	if (len < 1 || len > 5) {
-+		WARN("invalid NOP size: %d\n", len);
-+		return NULL;
-+	}
-+
-+	return nops[len-1];
-+}
---- /dev/null
-+++ b/tools/objtool/arch/x86/include/arch_elf.h
-@@ -0,0 +1,6 @@
-+#ifndef _OBJTOOL_ARCH_ELF
-+#define _OBJTOOL_ARCH_ELF
-+
-+#define R_NONE R_X86_64_NONE
-+
-+#endif /* _OBJTOOL_ARCH_ELF */
 --- a/tools/objtool/check.c
 +++ b/tools/objtool/check.c
-@@ -12,6 +12,7 @@
- #include "check.h"
- #include "special.h"
- #include "warn.h"
-+#include "arch_elf.h"
+@@ -2779,7 +2779,9 @@ int check(const char *_objname, bool orc
+ 		ret = create_orc_sections(&file);
+ 		if (ret < 0)
+ 			goto out;
++	}
  
- #include <linux/hashtable.h>
- #include <linux/kernel.h>
-@@ -744,6 +745,24 @@ static int add_call_destinations(struct
- 			insn->call_dest = reloc->sym;
++	if (file.elf->changed) {
+ 		ret = elf_write(file.elf);
+ 		if (ret < 0)
+ 			goto out;
+--- a/tools/objtool/elf.c
++++ b/tools/objtool/elf.c
+@@ -746,6 +746,8 @@ struct section *elf_create_section(struc
+ 	elf_hash_add(elf->section_hash, &sec->hash, sec->idx);
+ 	elf_hash_add(elf->section_name_hash, &sec->name_hash, str_hash(sec->name));
  
- 		/*
-+		 * Many compilers cannot disable KCOV with a function attribute
-+		 * so they need a little help, NOP out any KCOV calls from noinstr
-+		 * text.
-+		 */
-+		if (insn->sec->noinstr &&
-+		    !strncmp(insn->call_dest->name, "__sanitizer_cov_", 16)) {
-+			if (reloc) {
-+				reloc->type = R_NONE;
-+				elf_write_reloc(file->elf, reloc);
-+			}
++	elf->changed = true;
 +
-+			elf_write_insn(file->elf, insn->sec,
-+				       insn->offset, insn->len,
-+				       arch_nop_insn(insn->len));
-+			insn->type = INSN_NOP;
-+		}
+ 	return sec;
+ }
+ 
+@@ -862,7 +864,7 @@ int elf_rebuild_reloc_section(struct sec
+ 	return elf_rebuild_rela_section(sec, nr);
+ }
+ 
+-int elf_write(const struct elf *elf)
++int elf_write(struct elf *elf)
+ {
+ 	struct section *sec;
+ 	Elf_Scn *s;
+@@ -879,6 +881,8 @@ int elf_write(const struct elf *elf)
+ 				WARN_ELF("gelf_update_shdr");
+ 				return -1;
+ 			}
 +
-+		/*
- 		 * Whatever stack impact regular CALLs have, should be undone
- 		 * by the RETURN of the called function.
- 		 *
++			sec->changed = false;
+ 		}
+ 	}
+ 
+@@ -891,6 +895,8 @@ int elf_write(const struct elf *elf)
+ 		return -1;
+ 	}
+ 
++	elf->changed = false;
++
+ 	return 0;
+ }
+ 
+--- a/tools/objtool/elf.h
++++ b/tools/objtool/elf.h
+@@ -79,6 +79,7 @@ struct elf {
+ 	Elf *elf;
+ 	GElf_Ehdr ehdr;
+ 	int fd;
++	bool changed;
+ 	char *name;
+ 	struct list_head sections;
+ 	DECLARE_HASHTABLE(symbol_hash, ELF_HASH_BITS);
+@@ -121,7 +122,7 @@ struct elf *elf_open_read(const char *na
+ struct section *elf_create_section(struct elf *elf, const char *name, size_t entsize, int nr);
+ struct section *elf_create_reloc_section(struct elf *elf, struct section *base, int reltype);
+ void elf_add_reloc(struct elf *elf, struct reloc *reloc);
+-int elf_write(const struct elf *elf);
++int elf_write(struct elf *elf);
+ void elf_close(struct elf *elf);
+ 
+ struct section *find_section_by_name(const struct elf *elf, const char *name);
 
 
