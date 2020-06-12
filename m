@@ -2,82 +2,102 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F58C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A08C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBB06207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:12:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 142AE207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:14:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="L2YlPGms"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726547AbgFLJMR (ORCPT
+        id S1726451AbgFLJOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 05:12:17 -0400
-Received: from 8bytes.org ([81.169.241.247]:47472 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726302AbgFLJMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 05:12:17 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 845443AA; Fri, 12 Jun 2020 11:12:14 +0200 (CEST)
-Date:   Fri, 12 Jun 2020 11:12:11 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v3 64/75] x86/sev-es: Cache CPUID results for improved
- performance
-Message-ID: <20200612091210.GA3701@8bytes.org>
-References: <20200428151725.31091-1-joro@8bytes.org>
- <20200428151725.31091-65-joro@8bytes.org>
+        Fri, 12 Jun 2020 05:14:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35506 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726319AbgFLJOS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 05:14:18 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CA77C03E96F;
+        Fri, 12 Jun 2020 02:14:17 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49jw5f1gZPz9s1x;
+        Fri, 12 Jun 2020 19:14:14 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591953254;
+        bh=OFe7pSR6WejLTC2rUGx9oPF64ZtQ8I2djy9fI8KRR2w=;
+        h=Date:From:To:Cc:Subject:From;
+        b=L2YlPGmskFQOFyyoBqts+Tola9r/aMW9PUZdiAtYOCyKJRaYBAdWV3Nw3HXc6jfxg
+         k3H+MjjQYZudh7BaiuOAiievbnnJCXfbqcu4Gy/0CqlOwFUWadS2OG+IZbc4wPPo5c
+         GqC/BkJXvtctvPcQK5BaqV07IVChvAO9wGjPhTA8x/59vGs4r2/d4+KuLiHsKudh+g
+         NZSjeneytZlTlVHTYRFrUEzmHFSKh2QDGNjD09lsrQJXxjF6mcun8AuRxAYVFmoDZo
+         X2OSRt9O2eVuDsGm/KUz8lVDKz521yiUSan0qFL0n8k5Jw2OtwRNcw5p2BVqfXFx0K
+         DpCRKo/IH2G/g==
+Date:   Fri, 12 Jun 2020 19:14:12 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Linux Crypto List <linux-crypto@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Fixes tag needs some work in the crypto-current tree
+Message-ID: <20200612191412.543f8fd2@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200428151725.31091-65-joro@8bytes.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_/n4TX5Oe76boiL6uYs0gCcxP";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 05:17:14PM +0200, Joerg Roedel wrote:
-> From: Mike Stunes <mstunes@vmware.com>
-> 
-> To avoid a future VMEXIT for a subsequent CPUID function, cache the
-> results returned by CPUID into an xarray.
-> 
->  [tl: coding standard changes, register zero extension]
-> 
-> Signed-off-by: Mike Stunes <mstunes@vmware.com>
-> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-> [ jroedel@suse.de: - Wrapped cache handling into vc_handle_cpuid_cached()
->                    - Used lower_32_bits() where applicable
-> 		   - Moved cache_index out of struct es_em_ctxt ]
-> Co-developed-by: Joerg Roedel <jroedel@suse.de>
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> ---
->  arch/x86/kernel/sev-es-shared.c |  12 ++--
->  arch/x86/kernel/sev-es.c        | 119 +++++++++++++++++++++++++++++++-
->  2 files changed, 124 insertions(+), 7 deletions(-)
+--Sig_/n4TX5Oe76boiL6uYs0gCcxP
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Okay, following the discussion, I am dropping this patch for now. We can
-revisit CPUID caching later when we have a better justification.
+Hi all,
 
-Regards,
+In commit
 
-	Joerg
+  dc03ab101464 ("crypto: ccp - Fix sparse warnings in sev-dev")
+
+Fixes tag
+
+  Fixes: 76a2b524a4b1 ("crypto: ccp - introduce SEV_GET_ID2 command")
+
+has these problem(s):
+
+  - Subject does not match target commit subject
+    Just use
+	git log -1 --format=3D'Fixes: %h ("%s")'
+
+Fixes: 76a2b524a4b1 ("crypto: ccp: Implement SEV_PDH_CERT_EXPORT ioctl comm=
+and")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/n4TX5Oe76boiL6uYs0gCcxP
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7jR2QACgkQAVBC80lX
+0Gx0MQf+KFPNAo2pTzotO6AypmjvmUZltCZcCAC4pWEhklog7ZrdCxJaWmpY90ZV
+pysPYMHMk346NH12zudQtNHSJTuBEOyk3BT5PlZ8J01DV7YuG4FZi4L8hBGKFFUr
+Rn77v43QVRU03K8Gqprf2vYZM/YQ2jZHY7dJI4qxEPIFVtImilbfOf6IiiVlsuwU
+IzU2rYWj2iMdPo3QrbBtYRf3DbuzLK0mdlfCZObZAzdJBljWO8LT+KETWoVFgC8a
+3p96Cw2zpcz5npm/qM1u3/wFz20zpOqAvnwMkoJpgfPoxyeeL7pFt/vXKZZU3dRJ
+awDsFWUH87EvUl7I+GF/XdOit81myg==
+=5eIb
+-----END PGP SIGNATURE-----
+
+--Sig_/n4TX5Oe76boiL6uYs0gCcxP--
