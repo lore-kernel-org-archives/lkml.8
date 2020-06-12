@@ -2,96 +2,100 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8724CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 21:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A8F1C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 21:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63BC320663
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 21:23:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591997009;
-	bh=GWbucJlHAKAuWyG/jAfjMXZVJTNUvUMWRMBjIDkwRHc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qoJbd2ZHgLUdllWSO1eWuaGZBwRDHBYyINo/R6+1jSi9xjr6TDztlZPBNd3FuzMcb
-	 JFUIxjjCnggw1wcwMcbBEJrnwEGPvPY+N1s0jOPbkuxtuUAGhESKh3Fria3ArzV6bz
-	 qcmyPCTWXrvqeImq2+jmQDvbhKtF5neMjn8HIDxc=
+	by mail.kernel.org (Postfix) with ESMTP id 3BE5F20663
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 21:27:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nj+J/Vvw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbgFLVX1 (ORCPT
+        id S1726363AbgFLV1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 17:23:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35036 "EHLO
+        Fri, 12 Jun 2020 17:27:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbgFLVX1 (ORCPT
+        with ESMTP id S1726268AbgFLV1H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 17:23:27 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CB4CC03E96F
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 14:23:26 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id i3so8129418ljg.3
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 14:23:26 -0700 (PDT)
+        Fri, 12 Jun 2020 17:27:07 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4935C03E96F;
+        Fri, 12 Jun 2020 14:27:05 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id w9so8264503qtv.3;
+        Fri, 12 Jun 2020 14:27:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DneVe3TvWGEFvY6ffxpfkbEvILOh996RTrpL4zTe4ME=;
-        b=CpTHsPKeHgGX6LiwbKToRuV9OL2n9dMtvwuGysyrQpMMf72lp5zL0WSu9rHSerWf2N
-         zG9LyevjHKt99IxDAnQTFaj//Gu06xM++Y4DnEEjALpphE1egQt/xUuLx69pcxqlqjGM
-         Ba0+PsCCetnKw1M1i5D11aI6ya1VSI3UeGMu0=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/FNlqd4vn3jX2Jmt/9TRki01CcbjDa14Kvi+mmqzptw=;
+        b=nj+J/VvwqCfTau72ioAUq5oKCN8g/qV2edpgsv0WnT8SfdZZjxrZTwItqS70PsWwdD
+         a+DndK94Nv/Q2gKHO36aCfthMvlOfhDuzJwOqeFlwRMq1KaepTKUb3ekksGHu8R4JJaQ
+         8yG9PsQjVXRtvmbyYKoxjHEAzr57B+xliKfzoIJp0MR4lHx71tMOrifp0PQhCDn67JUU
+         HfYInEI4L/4MRLE6EF+t//e+99m3vgl94UAgMm358K7qP9mGh7SAA/gasjVePvINUlIc
+         jYzVvZsHhy+KlQwjv/uvc88/DMPtB3to2fMey6wBlC1HCy7I2BWlbt1t8Dm60fzYev/X
+         R1mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DneVe3TvWGEFvY6ffxpfkbEvILOh996RTrpL4zTe4ME=;
-        b=QtJ3MKLeI58ExIzs5/ufwyibKNGvJEBytYu3uXavnh3SC6+cUCSuEEQqnV1YyOmixX
-         pveeu1wWQBmCii0h/B8Ze75xbvVHqkmBvBWwk82fa7/kY0Yl/1CvKmVmOrHt142VqhFZ
-         IObeD+BdpNx+geZZZk4tvAa+Ea9vZjjJ2rh+6xyO7wOd/aX4q2zkVGeXfcoMIDMZZIG7
-         TMQpUB5+hWUnjJ75PXXfQhAzKE2UuxlFwLSqqt7uj0uKebTTG8Xyd/tn5mDVSaVbnuok
-         NvcZOTEHfeQjI8SUvjhkKMPch/4pdFLwgYdLGwvnxoPI0Nhs6urZHtNytjGz4BTdc2L9
-         +t/g==
-X-Gm-Message-State: AOAM530/W0ia4Eox5mF8zOMnYfknsRtJweJ9WJKJoJ8qWe0T2oMLskWB
-        zeR/X24b83gpqSVqpBzSEnMMzdBSqOw=
-X-Google-Smtp-Source: ABdhPJx4eZWLoBx3bA8PZPhxeWnyoQR0L6rf70aXNq/8TdW1Jgg5wl5d8v+AtSGmX/VPrg7vtVccVg==
-X-Received: by 2002:a2e:7219:: with SMTP id n25mr7281359ljc.168.1591997002939;
-        Fri, 12 Jun 2020 14:23:22 -0700 (PDT)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
-        by smtp.gmail.com with ESMTPSA id f16sm2321020lfa.10.2020.06.12.14.23.21
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Jun 2020 14:23:21 -0700 (PDT)
-Received: by mail-lj1-f178.google.com with SMTP id e4so12699978ljn.4
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 14:23:21 -0700 (PDT)
-X-Received: by 2002:a2e:b5d7:: with SMTP id g23mr7212084ljn.70.1591997000694;
- Fri, 12 Jun 2020 14:23:20 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/FNlqd4vn3jX2Jmt/9TRki01CcbjDa14Kvi+mmqzptw=;
+        b=CyHsUVbzooAeYF2HNTVtHQ5dUHowXHbIGKv9H0BHICczAqkm/c9HPQFNe1m6oxYmbk
+         BjmqL/bjQr8svO1TaVNq2VMA7gFP1kzNryO2HXE1aYDOGucgo9bQEwwXhfswHEkhRwhH
+         0BAYcU6EwJKCRi3pjZfHCpsX7YUiPiuEau52iSM4GEBicTRi/Yno9SPYGKrAerXlukZA
+         6gYgJzhoEloAfEeDcr3OqmezII6eGIBEtNi939Woode5DZHNtK5oQE/tkAJOcMYHK4Kq
+         1iCRXFiFKxdlWmY9THfwd6aq/Uyz7a0BeqWLmPeSNwKOPwyhUKIuqV+Go8PD/192Jb9R
+         R62w==
+X-Gm-Message-State: AOAM533XLyrZ8o+VQUAh7mWPCBAHAktR72A+w59mQHyNvFZprgMZFJTO
+        TzC1xDnDgLaaNF+bp70Hhw==
+X-Google-Smtp-Source: ABdhPJz8TotqDhM9hw4Dp+f1CREb1prIfiQgFl+jpkq+iCMCGtdgqNOgjFQPhkBhkd1zHV//PcGaWA==
+X-Received: by 2002:ac8:1285:: with SMTP id y5mr5208330qti.245.1591997224732;
+        Fri, 12 Jun 2020 14:27:04 -0700 (PDT)
+Received: from localhost.localdomain ([142.118.26.59])
+        by smtp.googlemail.com with ESMTPSA id m82sm5340591qke.3.2020.06.12.14.27.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2020 14:27:04 -0700 (PDT)
+From:   Keyur Patel <iamkeyur96@gmail.com>
+To:     Wolfram Sang <wsa@kernel.org>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Keyur Patel <iamkeyur96@gmail.com>
+Subject: [PATCH] i2c: smbus: Fix spelling mistake in the comments
+Date:   Fri, 12 Jun 2020 17:26:35 -0400
+Message-Id: <20200612212635.177380-1-iamkeyur96@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <CAJ-EccOy4qDpbfrP5=KH40LSOx1F4-ciY2=hFv_c+goUHLJ6PQ@mail.gmail.com>
-In-Reply-To: <CAJ-EccOy4qDpbfrP5=KH40LSOx1F4-ciY2=hFv_c+goUHLJ6PQ@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 12 Jun 2020 14:23:04 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiLXXR1+o4VAuw5MM3V1D8h6C6te3y8VMvW8iAJw6noJg@mail.gmail.com>
-Message-ID: <CAHk-=wiLXXR1+o4VAuw5MM3V1D8h6C6te3y8VMvW8iAJw6noJg@mail.gmail.com>
-Subject: Re: [GIT PULL] SafeSetID LSM changes for v5.8
-To:     Micah Morton <mortonm@chromium.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Finally emptied my normal pull request queue and starting to look at
-things I wanted to look at more closely..
+Fix spelling mistake in the comments with help of `codespell`.
+seperate ==> separate
 
-On Tue, Jun 9, 2020 at 11:26 AM Micah Morton <mortonm@chromium.org> wrote:
->
-> This patch was sent to the security mailing list and there were no objections.
+Signed-off-by: Keyur Patel <iamkeyur96@gmail.com>
+---
+ drivers/i2c/i2c-core-smbus.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-That patch as committed has both the wrong authorship, and the wrong
-sign-off chain.
+diff --git a/drivers/i2c/i2c-core-smbus.c b/drivers/i2c/i2c-core-smbus.c
+index b34d2ff06931..56bb840142e3 100644
+--- a/drivers/i2c/i2c-core-smbus.c
++++ b/drivers/i2c/i2c-core-smbus.c
+@@ -4,7 +4,7 @@
+  *
+  * This file contains the SMBus functions which are always included in the I2C
+  * core because they can be emulated via I2C. SMBus specific extensions
+- * (e.g. smbalert) are handled in a seperate i2c-smbus module.
++ * (e.g. smbalert) are handled in a separate i2c-smbus module.
+  *
+  * All SMBus-related things are written by Frodo Looijaard <frodol@dds.nl>
+  * SMBus 2.0 support by Mark Studebaker <mdsxyz123@yahoo.com> and
+-- 
+2.26.2
 
-Not pulling.
-
-                 Linus
