@@ -2,151 +2,299 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A9C3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4812C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:26:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 434BF2081A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:25:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xm8r5tns"
+	by mail.kernel.org (Postfix) with ESMTP id 87E0120792
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:26:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726272AbgFLKZ4 (ORCPT
+        id S1726310AbgFLK0N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 06:25:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46532 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725868AbgFLKZy (ORCPT
+        Fri, 12 Jun 2020 06:26:13 -0400
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:51583 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726281AbgFLK0N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 06:25:54 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3151BC03E96F
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 03:25:54 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id m7so3578519plt.5
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 03:25:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cUX8I3zbQvQLr1JtDLu8cxMFi8HBUB/7MciF2bMGdXA=;
-        b=Xm8r5tnsMoGuSi4xpAI9+p+TAX+EGw+C+Bue1QyTIMG0CVcJ9jRKmmIQxK/wnkpKbc
-         7nrAjHjR87jnCXJtSLUFuKFm8t1Ukhq9UleBP4oTnjOyi1e3KODNkQ76Zl4p/jjC2EVb
-         nvby513WQsjxYOWwsX961qlEo67QxJpVx0VbsnG+mTmtxHntGmXDANcbX4bVNkx7T4cl
-         Y6yb2hI1yDphLwpBYlkoLmM/9BlN/wAnLgWEdQt7iOW8PcbSRhoqcuP5iJMz8hpHPJsf
-         cXLICpttu05Pg/MMeRnlZxEg0OEn9eI2zvYAJbs72qRf9Uzy2WZNqfX9LrSZFK2eHaIC
-         1B3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cUX8I3zbQvQLr1JtDLu8cxMFi8HBUB/7MciF2bMGdXA=;
-        b=hjt7vRFvZUPjHNdOhaWcapLQjpoEyS8vus6s5Ah9lh7pipBs8i16WoL/p0iwvwqIch
-         /nkCRPWLBvUxRHQq9MIxm2C7ylxyvH+BiPJy3rBb6VuIHYjXHUxpRq8WsEtJBuzR6Vxx
-         eB2RJthvpbLXQ27WXZWgEtCvH2ZWh1cbg40EEtpAmB5/SnYERTJ/S9avwsj6qdM2hxWL
-         zEYizjSbECct9Tsz2wfb/HOWW5Vy68KrND/zAsQ8y+bWaCAXezuzSpXqkEiPgOKEeJwJ
-         k+Jca8IBpiv4SSVZrbqKuQqSLVH5nvXQXxiM9btTL+VPb3aFANHzLqLdFVOg9i77Zgjj
-         1bDg==
-X-Gm-Message-State: AOAM531VdxUnmES5Z6Itc8O4oMY8qJmQg+SLGXCrhFbd48eGiwkb06gb
-        qVwqI443SMAyaIli6viybd4OI7LK
-X-Google-Smtp-Source: ABdhPJyDf0t7pZ2FhXW0i0j+FfjSrBnypvQDMT+Lriq057tGe/P55czkaQp9gxDfqZGw9iHCNuzHJg==
-X-Received: by 2002:a17:902:9346:: with SMTP id g6mr10732696plp.19.1591957553757;
-        Fri, 12 Jun 2020 03:25:53 -0700 (PDT)
-Received: from localhost ([49.205.222.116])
-        by smtp.gmail.com with ESMTPSA id x18sm5750238pfr.106.2020.06.12.03.25.52
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 12 Jun 2020 03:25:53 -0700 (PDT)
-Date:   Fri, 12 Jun 2020 15:55:51 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: ARM: vmsplit 4g/4g
-Message-ID: <20200612102551.GA5377@afzalpc>
-References: <20200514111755.GA4997@afzalpc>
- <CAK8P3a2PNZY-9L9+SFDLtrp731ZGo6Nbs-7jY6E2PwWXa0kfKw@mail.gmail.com>
- <20200514133545.GA5020@afzalpc>
- <CAK8P3a1PVwkAi8ycUAB-7EMk4nQ_qOu0rC5vJAQk_q9j5xvOJw@mail.gmail.com>
- <20200516060624.GA6371@afzalpc>
- <CAK8P3a01FYoWY9sZKU1q=UQ3ut4srwXXUeGRzW6APi+GpoKo1w@mail.gmail.com>
- <20200607125932.GA4576@afzalpc>
- <20200607161116.GN1551@shell.armlinux.org.uk>
- <20200608110902.GA5736@afzalpc>
- <CACRpkdboPBGBdHaRtZ=OAFvikYZVh=BVu192uyiB8T=yeHHEbA@mail.gmail.com>
+        Fri, 12 Jun 2020 06:26:13 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0U.LngYm_1591957564;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U.LngYm_1591957564)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 12 Jun 2020 18:26:05 +0800
+Subject: Re: [PATCH v12 10/16] mm/compaction: do page isolation first in
+ compaction
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
+        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
+        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
+        willy@infradead.org, hannes@cmpxchg.org, lkp@intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, shakeelb@google.com,
+        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com
+References: <1591856209-166869-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1591856209-166869-11-git-send-email-alex.shi@linux.alibaba.com>
+Message-ID: <16b0041f-59ce-5685-f2c5-875af81f5221@linux.alibaba.com>
+Date:   Fri, 12 Jun 2020 18:26:02 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdboPBGBdHaRtZ=OAFvikYZVh=BVu192uyiB8T=yeHHEbA@mail.gmail.com>
-User-Agent: Mutt/1.9.3 (2018-01-21)
+In-Reply-To: <1591856209-166869-11-git-send-email-alex.shi@linux.alibaba.com>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Merged Hugh Dickins' fix,
 
-On Wed, Jun 10, 2020 at 12:10:21PM +0200, Linus Walleij wrote:
-> On Mon, Jun 8, 2020 at 1:09 PM afzal mohammed <afzal.mohd.ma@gmail.com> wrote:
+Hi Hugh, 
 
-> > Not yet. Yes, i will do the performance evaluation.
-> >
-> > i am also worried about the impact on performance as these
-> > [ get_user_pages() or friends, kmap_atomic() ] are additionally
-> > invoked in the copy_{from,to}_user() path now.
-> 
-> I am happy to help!
+Do you mind to add a Signed-off for this patch?
 
-Thanks Linus
+Thanks
+Alex
 
-> I am anyway working on MMU-related code (KASan) so I need to be on
-> top of this stuff.
+From eca8de4afe04afd4ec1160ef593587d7b1a26129 Mon Sep 17 00:00:00 2001
+From: Alex Shi <alex.shi@linux.alibaba.com>
+Date: Tue, 26 May 2020 16:52:07 +0800
+Subject: [PATCH v12 10/16] mm/compaction: do page isolation first in
+ compaction
 
-i earlier went thr' KASAN series secretly & did learn a thing or two
-from that!
+Johannes Weiner has suggested:
+"So here is a crazy idea that may be worth exploring:
 
-> What test is appropriate for this? I would intuitively think hackbench?
+Right now, pgdat->lru_lock protects both PageLRU *and* the lruvec's
+linked list.
 
-'dd', i think, as you mentioned 'hackbench' i will use that as well.
+Can we make PageLRU atomic and use it to stabilize the lru_lock
+instead, and then use the lru_lock only serialize list operations?
+..."
 
-> > Note that this was done on a topic branch for user copy. Changes for
-> > kernel static mapping to vmalloc has not been merged with these.
-> > Also having kernel lowmem w/ a separate asid & switching at kernel
-> > entry/exit b/n user & kernel lowmem by changing ttbr0 is yet to be
-> > done. Quite a few things remaining to be done to achieve vmsplit 4g/4g
-> 
-> I will be very excited to look at patches or a git branch once you have
-> something you want to show. Also to just understand how you go about
-> this.
+Yes, this patch is doing so on  __isolate_lru_page which is the core
+page isolation func in compaction and shrinking path.
+With this patch, the compaction will only deal the PageLRU set and now
+isolated pages to skip the just alloced page which no LRU bit. And the
+isolation could exclusive the other isolations in memcg move_account,
+page migrations and thp split_huge_page.
 
-Don't put too much expectation on me, this is more of a learning for
-me. For user copy, the baby steps has been posted (To'ed you). On the
-static kernel mapping on vmalloc front, i do not want to post the
-patches in the current shape, though git-ized, will result in me
-getting mercilessly thrashed in public :). Many of the other platforms
-would fail and is not multi-platform friendly. i do not yet have a
-public git branch, i can send you the (ugly) patches separately, just
-let me know.
+As a side effect, PageLRU may be cleared during shrink_inactive_list
+path for isolation reason. If so, we can skip that page.
 
-> I have several elder systems under my roof
+Hugh Dickins <hughd@google.com> fixed following bugs in this patch's
+early version:
 
-i have only a few low RAM & CPU systems, so that is certainly helpful.
+Fix lots of crashes under compaction load: isolate_migratepages_block()
+must clean up appropriately when rejecting a page, setting PageLRU again
+if it had been cleared; and a put_page() after get_page_unless_zero()
+cannot safely be done while holding locked_lruvec - it may turn out to
+be the final put_page(), which will take an lruvec lock when PageLRU.
+And move __isolate_lru_page_prepare back after get_page_unless_zero to
+make trylock_page() safe:
+trylock_page() is not safe to use at this time: its setting PG_locked
+can race with the page being freed or allocated ("Bad page"), and can
+also erase flags being set by one of those "sole owners" of a freshly
+allocated page who use non-atomic __SetPageFlag().
 
-> so my contribution could hopefully be to help and debug any issues
+Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org
+---
+ include/linux/swap.h |  2 +-
+ mm/compaction.c      | 42 +++++++++++++++++++++++++++++++++---------
+ mm/vmscan.c          | 38 ++++++++++++++++++++++----------------
+ 3 files changed, 56 insertions(+), 26 deletions(-)
 
-If you would like, we can work together, at the same time keep in mind
-that me spending time on it would be intermittent & erratic (though i
-am trying to keep a consistent, but slow pace) perhaps making it
-difficult to coordinate. Or else i will continue the same way & request
-your help when required.
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index 29ba748b0d99..6811d0c34261 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -357,7 +357,7 @@ extern void lru_cache_add_active_or_unevictable(struct page *page,
+ extern unsigned long zone_reclaimable_pages(struct zone *zone);
+ extern unsigned long try_to_free_pages(struct zonelist *zonelist, int order,
+ 					gfp_t gfp_mask, nodemask_t *mask);
+-extern int __isolate_lru_page(struct page *page, isolate_mode_t mode);
++extern int __isolate_lru_page_prepare(struct page *page, isolate_mode_t mode);
+ extern unsigned long try_to_free_mem_cgroup_pages(struct mem_cgroup *memcg,
+ 						  unsigned long nr_pages,
+ 						  gfp_t gfp_mask,
+diff --git a/mm/compaction.c b/mm/compaction.c
+index 5d59e77cd424..8d222036b8a0 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -869,6 +869,7 @@ static bool too_many_isolated(pg_data_t *pgdat)
+ 		if (!valid_page && IS_ALIGNED(low_pfn, pageblock_nr_pages)) {
+ 			if (!cc->ignore_skip_hint && get_pageblock_skip(page)) {
+ 				low_pfn = end_pfn;
++				page = NULL;
+ 				goto isolate_abort;
+ 			}
+ 			valid_page = page;
+@@ -950,6 +951,21 @@ static bool too_many_isolated(pg_data_t *pgdat)
+ 		if (!(cc->gfp_mask & __GFP_FS) && page_mapping(page))
+ 			goto isolate_fail;
+ 
++		/*
++		 * Be careful not to clear PageLRU until after we're
++		 * sure the page is not being freed elsewhere -- the
++		 * page release code relies on it.
++		 */
++		if (unlikely(!get_page_unless_zero(page)))
++			goto isolate_fail;
++
++		if (__isolate_lru_page_prepare(page, isolate_mode) != 0)
++			goto isolate_fail_put;
++
++		/* Try isolate the page */
++		if (!TestClearPageLRU(page))
++			goto isolate_fail_put;
++
+ 		/* If we already hold the lock, we can skip some rechecking */
+ 		if (!locked) {
+ 			locked = compact_lock_irqsave(&pgdat->lru_lock,
+@@ -962,10 +978,6 @@ static bool too_many_isolated(pg_data_t *pgdat)
+ 					goto isolate_abort;
+ 			}
+ 
+-			/* Recheck PageLRU and PageCompound under lock */
+-			if (!PageLRU(page))
+-				goto isolate_fail;
+-
+ 			/*
+ 			 * Page become compound since the non-locked check,
+ 			 * and it's on LRU. It can only be a THP so the order
+@@ -973,16 +985,13 @@ static bool too_many_isolated(pg_data_t *pgdat)
+ 			 */
+ 			if (unlikely(PageCompound(page) && !cc->alloc_contig)) {
+ 				low_pfn += compound_nr(page) - 1;
+-				goto isolate_fail;
++				SetPageLRU(page);
++				goto isolate_fail_put;
+ 			}
+ 		}
+ 
+ 		lruvec = mem_cgroup_page_lruvec(page, pgdat);
+ 
+-		/* Try isolate the page */
+-		if (__isolate_lru_page(page, isolate_mode) != 0)
+-			goto isolate_fail;
+-
+ 		/* The whole page is taken off the LRU; skip the tail pages. */
+ 		if (PageCompound(page))
+ 			low_pfn += compound_nr(page) - 1;
+@@ -1011,6 +1020,15 @@ static bool too_many_isolated(pg_data_t *pgdat)
+ 		}
+ 
+ 		continue;
++
++isolate_fail_put:
++		/* Avoid potential deadlock in freeing page under lru_lock */
++		if (locked) {
++			spin_unlock_irqrestore(&pgdat->lru_lock, flags);
++			locked = false;
++		}
++		put_page(page);
++
+ isolate_fail:
+ 		if (!skip_on_failure)
+ 			continue;
+@@ -1047,9 +1065,15 @@ static bool too_many_isolated(pg_data_t *pgdat)
+ 	if (unlikely(low_pfn > end_pfn))
+ 		low_pfn = end_pfn;
+ 
++	page = NULL;
++
+ isolate_abort:
+ 	if (locked)
+ 		spin_unlock_irqrestore(&pgdat->lru_lock, flags);
++	if (page) {
++		SetPageLRU(page);
++		put_page(page);
++	}
+ 
+ 	/*
+ 	 * Updated the cached scanner pfn once the pageblock has been scanned
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 08910ca9fa40..17b34e5b7ad5 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -1543,7 +1543,7 @@ unsigned int reclaim_clean_pages_from_list(struct zone *zone,
+  *
+  * returns 0 on success, -ve errno on failure.
+  */
+-int __isolate_lru_page(struct page *page, isolate_mode_t mode)
++int __isolate_lru_page_prepare(struct page *page, isolate_mode_t mode)
+ {
+ 	int ret = -EINVAL;
+ 
+@@ -1597,20 +1597,9 @@ int __isolate_lru_page(struct page *page, isolate_mode_t mode)
+ 	if ((mode & ISOLATE_UNMAPPED) && page_mapped(page))
+ 		return ret;
+ 
+-	if (likely(get_page_unless_zero(page))) {
+-		/*
+-		 * Be careful not to clear PageLRU until after we're
+-		 * sure the page is not being freed elsewhere -- the
+-		 * page release code relies on it.
+-		 */
+-		ClearPageLRU(page);
+-		ret = 0;
+-	}
+-
+-	return ret;
++	return 0;
+ }
+ 
+-
+ /*
+  * Update LRU sizes after isolating pages. The LRU size updates must
+  * be complete before mem_cgroup_update_lru_size due to a sanity check.
+@@ -1690,17 +1679,34 @@ static unsigned long isolate_lru_pages(unsigned long nr_to_scan,
+ 		 * only when the page is being freed somewhere else.
+ 		 */
+ 		scan += nr_pages;
+-		switch (__isolate_lru_page(page, mode)) {
++		switch (__isolate_lru_page_prepare(page, mode)) {
+ 		case 0:
++			/*
++			 * Be careful not to clear PageLRU until after we're
++			 * sure the page is not being freed elsewhere -- the
++			 * page release code relies on it.
++			 */
++			if (unlikely(!get_page_unless_zero(page)))
++				goto busy;
++
++			if (!TestClearPageLRU(page)) {
++				/*
++				 * This page may in other isolation path,
++				 * but we still hold lru_lock.
++				 */
++				put_page(page);
++				goto busy;
++			}
++
+ 			nr_taken += nr_pages;
+ 			nr_zone_taken[page_zonenum(page)] += nr_pages;
+ 			list_move(&page->lru, dst);
+ 			break;
+-
++busy:
+ 		case -EBUSY:
+ 			/* else it is being freed elsewhere */
+ 			list_move(&page->lru, src);
+-			continue;
++			break;
+ 
+ 		default:
+ 			BUG();
+-- 
+1.8.3.1
 
-For the next 3 weeks, right now, i cannot say whether i would be able
-to spend time on it, perhaps might be possible, but only during that
-time i will know.
-
-Regards
-afzal
