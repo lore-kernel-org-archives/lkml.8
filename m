@@ -2,131 +2,113 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D76C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 20:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1369EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 20:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98AB720723
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 20:03:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Mrwrs2/W"
+	by mail.kernel.org (Postfix) with ESMTP id E8A6020792
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 20:06:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbgFLUDM (ORCPT
+        id S1726319AbgFLUG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 16:03:12 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:14320 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbgFLUDH (ORCPT
+        Fri, 12 Jun 2020 16:06:29 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:37340 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbgFLUG2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 16:03:07 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ee3df4d0000>; Fri, 12 Jun 2020 13:02:21 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 12 Jun 2020 13:03:07 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 12 Jun 2020 13:03:07 -0700
-Received: from [10.2.62.89] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 12 Jun
- 2020 20:03:07 +0000
-Subject: Re: [PATCH 1/2] docs: mm/gup: pin_user_pages.rst: add a "case 5"
-To:     Matthew Wilcox <willy@infradead.org>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>, Dave Chinner <david@fromorbit.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <virtualization@lists.linux-foundation.org>,
-        <netdev@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        <linux-mm@kvack.org>
-References: <20200529234309.484480-1-jhubbard@nvidia.com>
- <20200529234309.484480-2-jhubbard@nvidia.com>
- <20200612192426.GK8681@bombadil.infradead.org>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <d717e596-4ac7-9350-8734-379852c151d2@nvidia.com>
-Date:   Fri, 12 Jun 2020 13:03:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 12 Jun 2020 16:06:28 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jjpwY-0006O0-FH; Fri, 12 Jun 2020 14:06:26 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jjpwX-0004KZ-Jw; Fri, 12 Jun 2020 14:06:26 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Alexey Dobriyan <adobriyan@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>
+References: <875zc8kxyg.fsf@x220.int.ebiederm.org>
+        <87zh9atx0x.fsf@x220.int.ebiederm.org>
+        <871rmkozf5.fsf_-_@x220.int.ebiederm.org>
+        <CAHk-=wh7nZNf81QPcgpDh-0jzt2sOF3rdUEB0UcZvYFHDiMNkw@mail.gmail.com>
+Date:   Fri, 12 Jun 2020 15:02:16 -0500
+In-Reply-To: <CAHk-=wh7nZNf81QPcgpDh-0jzt2sOF3rdUEB0UcZvYFHDiMNkw@mail.gmail.com>
+        (Linus Torvalds's message of "Fri, 12 Jun 2020 12:46:25 -0700")
+Message-ID: <87v9jwm4s7.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20200612192426.GK8681@bombadil.infradead.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1591992141; bh=fN6zAnkb8dRIBQrks+Oz4+vRiYcHSYaYUuw0BewGGEk=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Mrwrs2/WN8fnEejZcAvFi1E+ICWIQc+5sT7wEIyruy1+L8O2vF2rU8etd+2m3Rcye
-         /0MGen72j1T2YMz8qzXatSCP76QXdLxycn/9MxrzFz+r0k+oGKr5wqPp43sFbsvvxJ
-         kG6DIrwJ31WVrfLqK6RrOt/FtCmOVWN8cByBMW2OYkwN5lYUueiqAzGuWU0cmQv94Q
-         Uvvv505bPXRH5YPkRvyIKX1owhLczul7/YDNdthyhbC86t0EtjEp8X1e75YFPqEGn9
-         iBucQvKo4smd+Vzmm9MOxV5oQ6ufLiUCUz2qRrkZ0AZiZ94MfBBuULhA48FkMlAfRC
-         xpX4UyB4FOplg==
+Content-Type: text/plain
+X-XM-SPF: eid=1jjpwX-0004KZ-Jw;;;mid=<87v9jwm4s7.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19rI2YLtPTLE+FOTW0jPO8xz0tK2h1ERYk=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [GIT PULL] proc fixes v2 for v5.8-rc1
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-12 12:24, Matthew Wilcox wrote:
-> On Fri, May 29, 2020 at 04:43:08PM -0700, John Hubbard wrote:
->> +CASE 5: Pinning in order to write to the data within the page
->> +-------------------------------------------------------------
->> +Even though neither DMA nor Direct IO is involved, just a simple case of "pin,
->> +access page's data, unpin" can cause a problem. Case 5 may be considered a
->> +superset of Case 1, plus Case 2, plus anything that invokes that pattern. In
->> +other words, if the code is neither Case 1 nor Case 2, it may still require
->> +FOLL_PIN, for patterns like this:
->> +
->> +Correct (uses FOLL_PIN calls):
->> +    pin_user_pages()
->> +    access the data within the pages
->> +    set_page_dirty_lock()
->> +    unpin_user_pages()
->> +
->> +INCORRECT (uses FOLL_GET calls):
->> +    get_user_pages()
->> +    access the data within the pages
->> +    set_page_dirty_lock()
->> +    put_page()
-> 
-> Why does this case need to pin?  Why can't it just do ...
-> 
-> 	get_user_pages()
-> 	lock_page(page);
-> 	... modify the data ...
-> 	set_page_dirty(page);
-> 	unlock_page(page);
-> 
+Linus Torvalds <torvalds@linux-foundation.org> writes:
 
-Yes, it could do that. And that would also make a good additional "correct"
-example. Especially for the case of just dealing with a single page,
-lock_page() has the benefit of completely fixing the problem *today*,
-without waiting for the pin_user_pages*() handling improvements to get
-implemented.
+> On Fri, Jun 12, 2020 at 12:34 PM Eric W. Biederman
+> <ebiederm@xmission.com> wrote:
+>>
+>> ebiederm@xmission.com (Eric W. Biederman) writes:
+>
+> What happened to that first version of the email? I never got it..
 
-And it's also another (probably better) way to fix the vhost.c problem, than
-commit 690623e1b496 ("vhost: convert get_user_pages() --> pin_user_pages()").
+A little distracted I think.  I forgot to edit the above line out,
+and v2 because it is my second pull request for a proc fix into
+v5.8-rc1.
 
-I'm inclined to leave vhost.c alone for now, unless someone really prefers
-it to be changed, but to update the Case 5 documentation with your point
-above. Sound about right?
+>> Looking at the code the fsnotify watch should have been removed by
+>> fsnotify_sb_delete in generic_shutdown_super.
+>
+> Hmm. Correct. The new_inode_pseudo() is for things that don't have
+> quotas, fsnotify or writeback.
+>
+> That was used somewhat intentionally on /proc, though. /proc certainly
+> doesn't have quotas or writeback.
 
+It also means we break our debugging by not putting inodes on the s_inodes list.
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+AKA this line in generic_shutdown_super is also depent on that behavior.
+	if (!list_empty(&sb->s_inodes)) {
+		printk("VFS: Busy inodes after unmount of %s. "
+		   "Self-destruct in 5 seconds.  Have a nice day...\n",
+		   sb->s_id);
+	}
+
+> And fsnotify on /proc seems a bit questionably too. Do people actually
+> _do_ this and depend on it, or is this just about syzbot doing
+> something odd and thus showing the problem?
+>
+> Anyway, I have pulled your fix, because I think it's reasonable and
+> safe, but I do wonder if we should have kept the new_inode_pseudo(),
+> and instead just make fsnotify say "you can't notify on an inode that
+> isn't on the superblock list". Hmm?
+>
+> Is fsnotify on /proc really sensible? Do we actually generate any
+> useful notifications?
+
+I don't know of any proc code that does anything to make
+fsnotify/inotify work.  Since changes to proc are not initialiated
+through the vfs that probably means fsnotify is pretty much useless.
+
+I have a sense that a use after free that anyone can trigger could be a
+bit dangerous, and despite not being the only virtual filesystem in the
+kernel proc is the only virtual filesystem that called new_inode_pseudo.
+
+Eric
+
