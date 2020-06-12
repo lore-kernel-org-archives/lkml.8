@@ -7,61 +7,60 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30505C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADCC5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DD6D2063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:31:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B34D206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:31:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WzECtsn5"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NXzPbPlf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726384AbgFLTbC (ORCPT
+        id S1726401AbgFLTbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 15:31:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45990 "EHLO
+        Fri, 12 Jun 2020 15:31:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbgFLTbA (ORCPT
+        with ESMTP id S1726327AbgFLTbC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 15:31:00 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63355C03E96F
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 12:30:59 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id ga6so4045865pjb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 12:30:59 -0700 (PDT)
+        Fri, 12 Jun 2020 15:31:02 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86BFCC08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 12:31:02 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id ga6so4045913pjb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 12:31:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IGMzjkhMjOHffrm0MUbn2WAGnae39l2+rYHo11+y6eM=;
-        b=WzECtsn5cH0OoinAmzjjiwAaORsCILg5BjcE2ScC3ercyJwv5IqLLyN+nSVp3brQOl
-         KJmIA9SVjkYNpI1ACF38HqARcQKD1PUgmbK1dFdFm1SFZDjT4vfQAVMQoQ9yKTb54ukO
-         l8pJ8POvMkV9L7YxvMLwGk1P/1/eR3yj2X9ko=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=/JLcL+eXskupadvzRPr0KYY4jNSs8dr6KFn31X50BKA=;
+        b=NXzPbPlf441w11iFHGJ9W+Y5ontYOUwpkp86hqoqbgJR2zRFsLy6IrP6O+bPWiagdK
+         qiSa5hgegSw3yVsSvyzmUrpNdQUnheUeuSEjk17lEob7A95e3T0oJdW1NpS0aaPSyQzE
+         Qox/wJm24EvNxtf14X0Upc72JOgNWu4E4/u/8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IGMzjkhMjOHffrm0MUbn2WAGnae39l2+rYHo11+y6eM=;
-        b=jvsC9x1KqOGF0xrdf712o0NJOShhRoI8f6qik0TzDWgrJuDd/nZFYZjLyfiARw8ARU
-         V068hrCR83Fx9iY64GJO+mYXbMO0LMkumSVAn/VZ3jhYitBsMgS9qT8K0dE615TJYfk6
-         vRBMi4K4fHJzIQAl1N7oi5O4qm+8mrkRrdkPxu88RYb/0RP+97PdjqpSqNRUaibt+htM
-         j0mSVTTbIKT3y95rNSDOkyKMUbbf5adCb9r9TJfoj+x/PNsVzF/c7pyLjiw3a5zbnP+h
-         mr35lT1yFZbYEXgu91lWmOYAp3d6I2u8TKkMS9qT8ZMyL4Lu/M25ywEw4bIQiQEvr+ew
-         SzsQ==
-X-Gm-Message-State: AOAM5320XyF6iOa2SqM7pkPipYCD1IJBcCIAxW4nYTToPrXuUSj/A8QT
-        Y4d1JY5gib0iOubxjgiephFP+Q==
-X-Google-Smtp-Source: ABdhPJxQdLqwY7OobVFFXwfOjXMluaqP9V1tFz7TRtrtpqculJa7afZWCLVRCtERdeCqb/8V9M2KtA==
-X-Received: by 2002:a17:90a:6483:: with SMTP id h3mr390383pjj.229.1591990258822;
-        Fri, 12 Jun 2020 12:30:58 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=/JLcL+eXskupadvzRPr0KYY4jNSs8dr6KFn31X50BKA=;
+        b=IgEU88U2dgjYc6qM9o/hmoMTIvfCnoo8369yOlq16fsIsrN+6KpQ0I11vbd0Uvp/NC
+         S688d4Dqr2RMGWEBvrh4cOyRqEAHB+A+bTrESiMlw3SRnw8M01TwD6M4CXiB21wZZgPa
+         Hb0S3DCxiUmX1WUycXx2t230g6NO8++xQqGbS2xv8O1W4t0yW7LSkcITfmDinLMqmtnM
+         C0Z+c1SW7mpqyPUeaHf/f62tYbidUDKAgw7pAqGUZDQH8f8eVgA3ZRk9O4zHUQPh/dJD
+         yeCdZOoNInjLcjtdXRrRJfocezC3bwL9M8T+VJBj9wvAo8mTwHoGEsR2c3tnpGQ5vKkr
+         YUMA==
+X-Gm-Message-State: AOAM531nAuswtSwxREUv9U549d8WqTPbrbcB7/byWriYJx1SKJYxNy8E
+        C5XiCZbyZIr/z3NdvRCNHNB5fg==
+X-Google-Smtp-Source: ABdhPJzOVu00ZU0TwmAIoVI0f6eQMllaYaWPr850VAglM8s0JUILuRPjAG0K84Sfcu8Qs1SEo2VMNA==
+X-Received: by 2002:a17:902:507:: with SMTP id 7mr12495042plf.115.1591990262080;
+        Fri, 12 Jun 2020 12:31:02 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id n69sm6966934pjc.25.2020.06.12.12.30.57
+        by smtp.gmail.com with ESMTPSA id n69sm6966934pjc.25.2020.06.12.12.31.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 12:30:58 -0700 (PDT)
+        Fri, 12 Jun 2020 12:31:01 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     a.hajda@samsung.com, narmstrong@baylibre.com, sam@ravnborg.org
 Cc:     swboyd@chromium.org, spanda@codeaurora.org,
         bjorn.andersson@linaro.org, robdclark@chromium.org,
         Douglas Anderson <dianders@chromium.org>,
-        kernel test robot <lkp@intel.com>,
         Daniel Vetter <daniel@ffwll.ch>,
         David Airlie <airlied@linux.ie>,
         Jernej Skrabec <jernej.skrabec@siol.net>,
@@ -69,10 +68,12 @@ Cc:     swboyd@chromium.org, spanda@codeaurora.org,
         Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/4] drm/bridge: ti-sn65dsi86: Don't compile GPIO bits if not CONFIG_OF_GPIO
-Date:   Fri, 12 Jun 2020 12:30:47 -0700
-Message-Id: <20200612123003.v2.1.Ibe95d8f3daef01e5c57d4c8c398f04d6a839492c@changeid>
+Subject: [PATCH v2 4/4] drm/bridge: ti-sn65dsi86: Check the regmap return value when setting a GPIO
+Date:   Fri, 12 Jun 2020 12:30:50 -0700
+Message-Id: <20200612123003.v2.4.Ia4376fd88cdc6e8f8b43c65548458305f82f1d61@changeid>
 X-Mailer: git-send-email 2.27.0.290.gba653c62da-goog
+In-Reply-To: <20200612123003.v2.1.Ibe95d8f3daef01e5c57d4c8c398f04d6a839492c@changeid>
+References: <20200612123003.v2.1.Ibe95d8f3daef01e5c57d4c8c398f04d6a839492c@changeid>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -80,66 +81,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kernel test robot noted that if "OF" is defined (which is needed
-to select DRM_TI_SN65DSI86 at all) but not OF_GPIO that we'd get
-compile failures because some of the members that we access in "struct
-gpio_chip" are only defined "#if defined(CONFIG_OF_GPIO)".
+The ti_sn_bridge_gpio_set() got the return value of
+regmap_update_bits() but didn't check it.  The function can't return
+an error value, but we should at least print a warning if it didn't
+work.
 
-All the GPIO bits in the driver are all nicely separated out.  We'll
-guard them with the same "#if defined" that the header has and add a
-little stub function if OF_GPIO is not defined.
+This fixes a compiler warning about setting "ret" but not using it.
 
 Fixes: 27ed2b3f22ed ("drm/bridge: ti-sn65dsi86: Export bridge GPIOs to Linux")
-Reported-by: kernel test robot <lkp@intel.com>
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 ---
 
-Changes in v2: None
+Changes in v2:
+- GPIO %u because it's unsigned.
 
- drivers/gpu/drm/bridge/ti-sn65dsi86.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/gpu/drm/bridge/ti-sn65dsi86.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-index 2240e9973178..6fa7e10b31af 100644
+index 1080e4f9df96..bd3eb0a09732 100644
 --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
 +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-@@ -151,8 +151,10 @@ struct ti_sn_bridge {
- 	u8				ln_assign;
- 	u8				ln_polrs;
- 
-+#if defined(CONFIG_OF_GPIO)
- 	struct gpio_chip		gchip;
- 	DECLARE_BITMAP(gchip_output, SN_NUM_GPIOS);
-+#endif
- };
- 
- static const struct regmap_range ti_sn_bridge_volatile_ranges[] = {
-@@ -925,6 +927,8 @@ static int ti_sn_bridge_parse_dsi_host(struct ti_sn_bridge *pdata)
- 	return 0;
+@@ -999,6 +999,9 @@ static void ti_sn_bridge_gpio_set(struct gpio_chip *chip, unsigned int offset,
+ 	ret = regmap_update_bits(pdata->regmap, SN_GPIO_IO_REG,
+ 				 BIT(SN_GPIO_OUTPUT_SHIFT + offset),
+ 				 val << (SN_GPIO_OUTPUT_SHIFT + offset));
++	if (ret)
++		dev_warn(pdata->dev,
++			 "Failed to set bridge GPIO %u: %d\n", offset, ret);
  }
  
-+#if defined(CONFIG_OF_GPIO)
-+
- static int tn_sn_bridge_of_xlate(struct gpio_chip *chip,
- 				 const struct of_phandle_args *gpiospec,
- 				 u32 *flags)
-@@ -1092,6 +1096,15 @@ static int ti_sn_setup_gpio_controller(struct ti_sn_bridge *pdata)
- 	return ret;
- }
- 
-+#else
-+
-+static inline int ti_sn_setup_gpio_controller(struct ti_sn_bridge *pdata)
-+{
-+	return 0;
-+}
-+
-+#endif
-+
- static void ti_sn_bridge_parse_lanes(struct ti_sn_bridge *pdata,
- 				     struct device_node *np)
- {
+ static int ti_sn_bridge_gpio_direction_input(struct gpio_chip *chip,
 -- 
 2.27.0.290.gba653c62da-goog
 
