@@ -2,151 +2,125 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB62C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE88C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3463B206A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2D2520801
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:17:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mf9B6yfn"
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="Hwpa5+EB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726296AbgFLKRY (ORCPT
+        id S1726009AbgFLKR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 06:17:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45218 "EHLO
+        Fri, 12 Jun 2020 06:17:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgFLKRR (ORCPT
+        with ESMTP id S1725872AbgFLKR4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 06:17:17 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98CA4C03E96F
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 03:17:17 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id b7so4125141pju.0
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 03:17:17 -0700 (PDT)
+        Fri, 12 Jun 2020 06:17:56 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81340C08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 03:17:55 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id n24so10403428lji.10
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 03:17:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=NuFUeTohvLpQWGhiqBdRsl/f7g8QqSrYLrklZCYzpe4=;
-        b=mf9B6yfne8i5p+FK67Vk9AiEK5fD4PvBFIip527ISBpgGePf2EnzbA3MdmU9LFWoBW
-         FNeOb36cqMG+AOdSZuKhKOxarUNXkIcY0LNdbWmwN0ooWmSvGMfBHYPAsqBVvsHH/guu
-         g/ay8oAFqRLes9MnNInE3NxYZFMzoP+Klm+sUPyCGe1grUoJqLXGO63kOh9VDRM8hC0h
-         +gqT/Xs5CpcaQtaegXvVEFWdCWtbjpiseq3xKEazpATYTj7s1vKpUBKymR76MOdxSpRN
-         QFpSAn0ZZqh5FQEevGgspmRv4P/uhmsuT7cdpjTOh7eODGQmrmGDSJLp1r01AIvB7tKl
-         WsHA==
+        d=cloudflare.com; s=google;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=WZlUc07Rr8ksgIjTvwWUAkRdKf7159z7g2XNRXUltyI=;
+        b=Hwpa5+EBWwC9JsHgTzkp9L0UNfpjyRoItxBOXVRcDB6BTWyLsPP66VWj7jFMRA7Jfn
+         S3Ta3hY844UuAJyhy91+zzoZt3JF7YCMoR0+N42NKBr7WUwnBW0QqDaHbw/OCACM3R9x
+         IxLn99jsfxcVSimF8KQS7D5rCyRCEHKpf6pR4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=NuFUeTohvLpQWGhiqBdRsl/f7g8QqSrYLrklZCYzpe4=;
-        b=kEeYqhXcopy+U9i1vXqsznwuiWxS1qGJMnwZrPHqa+1UVKWWFJEJNZ93eQ54f+Jw8X
-         AOsO7qm2IxkmPX97gDnvLSX967guUuH/26ohYP9JZ5Hl9/1bSwGdi6tu6RPHoPoZoxAc
-         SXuAk2RzNFpZLugkSoAD1hHyTxTxAxCG5Y9Ha6gWrktHhurZYoCwefqHLj6FXTdox5Pg
-         1kdRWynhAHl/5tyQtd4fgsbvL9FkwmpcB+y59w+G5L+1b1iUTOdtaKzolKBF/lDycTbX
-         NeWzeH75O4fSXV4kaBT7h7dGRbzLFkbi9QjSPY4kbTdzyIWhjv0Pe6bhI1RN1BQb7aad
-         tHBA==
-X-Gm-Message-State: AOAM533lNATHC1Q+EgNTs873/5BY5omeBfC+miBubaT8FClqNV2+5rnY
-        Atruz9zY2lmo8rlAvNggmiUlnT4a
-X-Google-Smtp-Source: ABdhPJwEHIXkVHC+92pBUECg3eFaNPBwA7ppYh+HoSCnhECs/00e4Cd2PLigErL2X54s3fHED5dqPQ==
-X-Received: by 2002:a17:90b:188c:: with SMTP id mn12mr12284862pjb.8.1591957037151;
-        Fri, 12 Jun 2020 03:17:17 -0700 (PDT)
-Received: from localhost ([49.205.222.116])
-        by smtp.gmail.com with ESMTPSA id w190sm5685388pfw.35.2020.06.12.03.17.15
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 12 Jun 2020 03:17:16 -0700 (PDT)
-Date:   Fri, 12 Jun 2020 15:47:14 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Subject: [RFC 0/3] ARM: copy_{from,to}_user() for vmsplit 4g/4g
-Message-ID: <cover.1591885760.git.afzal.mohd.ma@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=WZlUc07Rr8ksgIjTvwWUAkRdKf7159z7g2XNRXUltyI=;
+        b=mcb4XVSsyXRya8ubZ1YOZoz72NVDa6T/iUaulV8nKJLXtFlFqTHRJx6W8v33qyPkAi
+         bXC9dgY/DggZ0+PzdwznlEuh70sz0yRfFqMTqTQ/0QG9M/hzyhzqpINdBr0/4uwqKUZU
+         Lw6H7Koa0shwqv8FfwqabomashcNzhiHO/LJ6ic47xGQrXamAoEMk3SRsYQ4W836HDqO
+         ojJm0f6yXt9PhT/RVV8SqMdsvbgCuTdXn3qUwyHCvk2gZHZtaWBMI1O1hGvHH/JzOQT7
+         EKWwIwOpmssUtq4F7z2qraxEycXF0U9HfBWB3eICywwrR5WoTzErwaMY8u8IxuGSTX84
+         xFRQ==
+X-Gm-Message-State: AOAM532rUewYBMWa6b+8xBJTKQ2tsmCJ/ILyMySp+kAcpTZi6VMOncPR
+        cao70xoQEbPi13Z9QhtH0i/CuA==
+X-Google-Smtp-Source: ABdhPJwUV5CjBcNm4+qoH43nmTNZKJ7PSGvfl/7KprEX5/5c/ou5DN9IOooDPHtM807G80gC7++NLA==
+X-Received: by 2002:a2e:8690:: with SMTP id l16mr5792715lji.462.1591957073513;
+        Fri, 12 Jun 2020 03:17:53 -0700 (PDT)
+Received: from toad ([2a02:a310:c262:aa00:b35e:8938:2c2a:ba8b])
+        by smtp.gmail.com with ESMTPSA id w15sm1655270lfl.51.2020.06.12.03.17.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2020 03:17:53 -0700 (PDT)
+Date:   Fri, 12 Jun 2020 12:17:50 +0200
+From:   Jakub Sitnicki <jakub@cloudflare.com>
+To:     Lorenz Bauer <lmb@cloudflare.com>
+Cc:     John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        kernel-team@cloudflare.com, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf] bpf: sockmap: don't attach programs to UDP sockets
+Message-ID: <20200612121750.0004c74d@toad>
+In-Reply-To: <20200611172520.327602-1-lmb@cloudflare.com>
+References: <20200611172520.327602-1-lmb@cloudflare.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.3 (2018-01-21)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, 11 Jun 2020 18:25:20 +0100
+Lorenz Bauer <lmb@cloudflare.com> wrote:
 
-copy_{from,to}_user() uaccess helpers are implemented by user page
-pinning, followed by temporary kernel mapping & then memcpy(). This
-helps to achieve user page copy when current virtual address mapping
-of the CPU excludes user pages.
+> The stream parser infrastructure isn't set up to deal with UDP
+> sockets, so we mustn't try to attach programs to them.
+> 
+> I remember making this change at some point, but I must have lost
+> it while rebasing or something similar.
+> 
+> Fixes: 7b98cd42b049 ("bpf: sockmap: Add UDP support")
+> Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+> ---
+>  net/core/sock_map.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/net/core/sock_map.c b/net/core/sock_map.c
+> index 00a26cf2cfe9..35cea36f3892 100644
+> --- a/net/core/sock_map.c
+> +++ b/net/core/sock_map.c
+> @@ -424,10 +424,7 @@ static int sock_map_get_next_key(struct bpf_map *map, void *key, void *next)
+>  	return 0;
+>  }
+>  
+> -static bool sock_map_redirect_allowed(const struct sock *sk)
+> -{
+> -	return sk->sk_state != TCP_LISTEN;
+> -}
+> +static bool sock_map_redirect_allowed(const struct sock *sk);
+>  
+>  static int sock_map_update_common(struct bpf_map *map, u32 idx,
+>  				  struct sock *sk, u64 flags)
+> @@ -508,6 +505,11 @@ static bool sk_is_udp(const struct sock *sk)
+>  	       sk->sk_protocol == IPPROTO_UDP;
+>  }
+>  
+> +static bool sock_map_redirect_allowed(const struct sock *sk)
+> +{
+> +	return sk_is_tcp(sk) && sk->sk_state != TCP_LISTEN;
+> +}
+> +
+>  static bool sock_map_sk_is_suitable(const struct sock *sk)
+>  {
+>  	return sk_is_tcp(sk) || sk_is_udp(sk);
 
-Other uaccess routines are also planned to be modified to make use of
-pinning plus kmap_atomic() based on the feedback here.
-
-This is done as one of the initial steps to achieve 4G virtual
-address mapping for user as well as Kernel on ARMv7 w/ LPAE.
-
-Motive behind this is to enable Kernel access till 4GiB (almost) as
-lowmem, thus helping in removing highmem support for platforms having
-upto 4GiB RAM. In the case of platforms having >4GiB, highmem is still
-required for the Kernel to be able to access whole RAM.
-
-Performance wise, results are not encouraging, 'dd' on tmpfs results,
-
-ARM Cortex-A8, BeagleBone White (256MiB RAM):
-w/o series - ~29.5 MB/s
-w/ series - ~20.5 MB/s
-w/ series & highmem disabled - ~21.2 MB/s
-
-On Cortex-A15(2GiB RAM) in QEMU:
-w/o series - ~4 MB/s
-w/ series - ~2.6 MB/s
-
-Roughly a one-third drop in performance. Disabling highmem improves
-performance only slightly.
-
-'hackbench' also showed a similar pattern.
-
-Ways to improve the performance has to be explored, if any one has
-thoughts on it, please share.
-
-uaccess routines using page pinning & temporary kernel mapping is not
-something new, it has been done by Ingo long long ago [1] as part of
-4G/4G user/kernel mapping implementation on x86, though not merged in
-mainline.
-
-Arnd has outlined basic design for vmsplit 4g/4g, uaccess routines
-using user page pinning plus kmap_atomic() is one part of that.
-
-[1] https://lore.kernel.org/lkml/Pine.LNX.4.44.0307082332450.17252-100000@localhost.localdomain/
-
-Last 2 patches are only meant for testing first patch.
-
-Regards
-afzal
-
-afzal mohammed (3):
-  lib: copy_{from,to}_user using gup & kmap_atomic()
-  ARM: uaccess: let UACCESS_GUP_KMAP_MEMCPY enabling
-  ARM: provide CONFIG_VMSPLIT_4G_DEV for development
-
- arch/arm/Kconfig               |   9 ++
- arch/arm/include/asm/uaccess.h |  20 ++++
- arch/arm/kernel/armksyms.c     |   2 +
- arch/arm/lib/Makefile          |   7 +-
- lib/Kconfig                    |   4 +
- lib/Makefile                   |   3 +
- lib/uaccess_gup_kmap_memcpy.c  | 162 +++++++++++++++++++++++++++++++++
- 7 files changed, 205 insertions(+), 2 deletions(-)
- create mode 100644 lib/uaccess_gup_kmap_memcpy.c
-
--- 
-2.26.2
-
+Acked-by: Jakub Sitnicki <jakub@cloudflare.com>
