@@ -2,106 +2,194 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 773CEC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D3FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57F692068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:23:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A85B62068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:24:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbgFLJXa (ORCPT
+        id S1726513AbgFLJYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 05:23:30 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46810 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbgFLJXa (ORCPT
+        Fri, 12 Jun 2020 05:24:17 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:48489 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726302AbgFLJYO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 05:23:30 -0400
-Received: by mail-lj1-f194.google.com with SMTP id z9so10262330ljh.13
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 02:23:27 -0700 (PDT)
+        Fri, 12 Jun 2020 05:24:14 -0400
+Received: by mail-il1-f199.google.com with SMTP id o4so6003494ilc.15
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 02:24:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=GTlETfJAqgPvg35DMgD/h26+y1CLIe8qwd990R5lpVA=;
-        b=hPAWDVjCTHgcAHgnJikGnkFA1W0jlhzGpB/LfWhVzAoy4KKfSfaZjavXoGXKaA3k0a
-         hLlaceDCZTAqST5R42DVkFsTJ/BJjDQMtT0a/qeaPFSo8/HIKzevTxRpwdeqTuBdVz0N
-         evY8JczF42SMjOlImkg9RnrQlMV21KvE4tuhCXTJbb6Q/+scWCjIX+1KCtCEmrf047kk
-         Muzl/Ui2am5yjsD8iPrMLV61Led2cHOGzJIlCCMZMEHHm87fVggtipFAjXRRWv+6iAOp
-         Q7c70NF2RqB1FdJod/Lpb6mR4GFfqC5iv4apehXQ/NULJYjLNoUq46Sgvo1x8LTAT2O0
-         qErg==
-X-Gm-Message-State: AOAM531unYbdggIDXQRmw5mXJPyYFTSGUfE5ZsZDNKvPqSbeFQKhEr/K
-        reUClePcz5MDQXZYi61+sLc=
-X-Google-Smtp-Source: ABdhPJzAB6w+a7tqY2PnFiKVfk26wEVoV99hp4Tyrd8LqPTvlSMbdJ+0xo+j4fSm5WcCPVaWVlORMQ==
-X-Received: by 2002:a2e:750c:: with SMTP id q12mr6540338ljc.142.1591953807116;
-        Fri, 12 Jun 2020 02:23:27 -0700 (PDT)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id a1sm2087395lfi.36.2020.06.12.02.23.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 02:23:26 -0700 (PDT)
-Date:   Fri, 12 Jun 2020 12:23:17 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH] regulator: Fix pickable ranges mapping
-Message-ID: <20200612090225.GA3243@localhost.localdomain>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=G+HZh4mhFhAwMVR6n/No7HJ3NlUbn0CRpmJVSgxGS9g=;
+        b=SXtLl3Q6nZTspYEsrl0/CrdI7xamYYeJDQ21lSYjyQXoAlbkXtrvSsa5IFrCIxdEKw
+         qanPdXcmYHv05Uh32H8PkKJHNjbvL1RO0Jsk/VgZ69w4jGmc6N7Oc/YO2QrAxP8rbE18
+         LvCsXgq0yqdov2xYWG2Ff/sp4LrZxigFyIAfRrvzVcU/iqsnUlS7vnUr+29YVtuBswK/
+         2757DXdat1jU1LwNshzDWgRgnYQpHV5gDvAyxy63IZttMtcYtTDeQMEd7s+M6Mbv5CU4
+         N6M3pdecHDY4v21xyjn9KYgFIgTGl1j6Git8nKjzv72SuVh4q1ISPbJtIsRqJ8bW7U3c
+         EuUQ==
+X-Gm-Message-State: AOAM531PsHYlVxaoIS7HwTIJWATcC1z9CmiLTbjuSTbxSNmbn4t1L8Pz
+        P454kIokM4LKMYvskhDmFMVKBkdUEMpFGGmVLxXKemV7LSXa
+X-Google-Smtp-Source: ABdhPJzjURpQ1YBkZ95I8AFVO4cvr2ERC+3dMIHpwpYHXvZTNy24xl3t5Dpe0hqVhPsYDUPT/5r7Qd2kvhLlhbo2N/xr3Jr4YiX3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Received: by 2002:a92:c6cd:: with SMTP id v13mr11574126ilm.150.1591953851908;
+ Fri, 12 Jun 2020 02:24:11 -0700 (PDT)
+Date:   Fri, 12 Jun 2020 02:24:11 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000d788c905a7dfa3f4@google.com>
+Subject: KASAN: use-after-free Write in fsnotify_detach_connector_from_object
+From:   syzbot <syzbot+7d2debdcdb3cb93c1e5e@syzkaller.appspotmail.com>
+To:     a@unstable.cc, adobriyan@gmail.com, akpm@linux-foundation.org,
+        alex.dewar@gmx.co.uk, amir73il@gmail.com,
+        anton.ivanov@cambridgegreys.com, b.a.t.m.a.n@lists.open-mesh.org,
+        davem@davemloft.net, ebiederm@xmission.com, jack@suse.cz,
+        jdike@addtoit.com, kuba@kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-um@lists.infradead.org,
+        mareklindner@neomailbox.ch, netdev@vger.kernel.org, richard@nod.at,
+        sfr@canb.auug.org.au, sven@narfation.org, sw@simonwunderlich.de,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pickable ranges mapping function never used range min selector. Thus
-existing drivers broke when proper linear_ranges functionality was taken
-in use. Fix this for now just by ignoring the minimum selector.
+Hello,
 
-Fixes: commit 60ab7f4153b6 ("regulator: use linear_ranges helper")
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+syzbot found the following crash on:
+
+HEAD commit:    7ae77150 Merge tag 'powerpc-5.8-1' of git://git.kernel.org..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=120b26c1100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d195fe572fb15312
+dashboard link: https://syzkaller.appspot.com/bug?extid=7d2debdcdb3cb93c1e5e
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1724b246100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14ceb3de100000
+
+The bug was bisected to:
+
+commit 76313c70c52f930af4afd21684509ca52297ea71
+Author: Eric W. Biederman <ebiederm@xmission.com>
+Date:   Wed Feb 19 16:37:15 2020 +0000
+
+    uml: Create a private mount of proc for mconsole
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=117c4912100000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=137c4912100000
+console output: https://syzkaller.appspot.com/x/log.txt?x=157c4912100000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+7d2debdcdb3cb93c1e5e@syzkaller.appspotmail.com
+Fixes: 76313c70c52f ("uml: Create a private mount of proc for mconsole")
+
+==================================================================
+BUG: KASAN: use-after-free in atomic64_inc include/asm-generic/atomic-instrumented.h:1049 [inline]
+BUG: KASAN: use-after-free in atomic_long_inc include/asm-generic/atomic-long.h:160 [inline]
+BUG: KASAN: use-after-free in fsnotify_detach_connector_from_object+0x25e/0x380 fs/notify/mark.c:185
+Write of size 8 at addr ffff88809fd7e7c0 by task syz-executor972/8021
+
+CPU: 1 PID: 8021 Comm: syz-executor972 Not tainted 5.7.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd3/0x413 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ check_memory_region_inline mm/kasan/generic.c:186 [inline]
+ check_memory_region+0x141/0x190 mm/kasan/generic.c:192
+ atomic64_inc include/asm-generic/atomic-instrumented.h:1049 [inline]
+ atomic_long_inc include/asm-generic/atomic-long.h:160 [inline]
+ fsnotify_detach_connector_from_object+0x25e/0x380 fs/notify/mark.c:185
+ fsnotify_put_mark+0x367/0x580 fs/notify/mark.c:250
+ fsnotify_clear_marks_by_group+0x33f/0x490 fs/notify/mark.c:764
+ fsnotify_destroy_group+0xc9/0x300 fs/notify/group.c:61
+ inotify_release+0x33/0x40 fs/notify/inotify/inotify_user.c:271
+ __fput+0x33e/0x880 fs/file_table.c:281
+ task_work_run+0xf4/0x1b0 kernel/task_work.c:123
+ exit_task_work include/linux/task_work.h:22 [inline]
+ do_exit+0xb3f/0x2de0 kernel/exit.c:806
+ do_group_exit+0x125/0x340 kernel/exit.c:904
+ __do_sys_exit_group kernel/exit.c:915 [inline]
+ __se_sys_exit_group kernel/exit.c:913 [inline]
+ __x64_sys_exit_group+0x3a/0x50 kernel/exit.c:913
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x445448
+Code: Bad RIP value.
+RSP: 002b:00007ffe48521018 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000445448
+RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
+RBP: 00000000004cca90 R08: 00000000000000e7 R09: ffffffffffffffd0
+R10: 00007ffe48521060 R11: 0000000000000246 R12: 0000000000000001
+R13: 00000000006e0340 R14: 0000000000000007 R15: 000000000000002d
+
+Allocated by task 8026:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc mm/kasan/common.c:494 [inline]
+ __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:467
+ kmem_cache_alloc_trace+0x153/0x7d0 mm/slab.c:3551
+ kmalloc include/linux/slab.h:555 [inline]
+ kzalloc include/linux/slab.h:669 [inline]
+ alloc_super+0x52/0x9d0 fs/super.c:203
+ sget_fc+0x13f/0x790 fs/super.c:530
+ vfs_get_super+0x6d/0x2d0 fs/super.c:1186
+ vfs_get_tree+0x89/0x2f0 fs/super.c:1547
+ do_new_mount fs/namespace.c:2874 [inline]
+ do_mount+0x1306/0x1b40 fs/namespace.c:3199
+ __do_sys_mount fs/namespace.c:3409 [inline]
+ __se_sys_mount fs/namespace.c:3386 [inline]
+ __x64_sys_mount+0x18f/0x230 fs/namespace.c:3386
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+Freed by task 23:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ kasan_set_free_info mm/kasan/common.c:316 [inline]
+ __kasan_slab_free+0xf7/0x140 mm/kasan/common.c:455
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x109/0x2b0 mm/slab.c:3757
+ process_one_work+0x965/0x16a0 kernel/workqueue.c:2268
+ worker_thread+0x96/0xe20 kernel/workqueue.c:2414
+ kthread+0x388/0x470 kernel/kthread.c:268
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
+
+The buggy address belongs to the object at ffff88809fd7e000
+ which belongs to the cache kmalloc-4k of size 4096
+The buggy address is located 1984 bytes inside of
+ 4096-byte region [ffff88809fd7e000, ffff88809fd7f000)
+The buggy address belongs to the page:
+page:ffffea00027f5f80 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 head:ffffea00027f5f80 order:1 compound_mapcount:0
+flags: 0xfffe0000010200(slab|head)
+raw: 00fffe0000010200 ffffea000247aa88 ffffea000242ef08 ffff8880aa002000
+raw: 0000000000000000 ffff88809fd7e000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88809fd7e680: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88809fd7e700: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff88809fd7e780: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                           ^
+ ffff88809fd7e800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88809fd7e880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
 ---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-I noticed BD71847 voltage changes for BUCK3 did not work as expected.
-Setting voltage to 1050000 did not work even though this should be
-supported. It appears I broke pickable-ranges support with
-linear_ranges change. I expect the MAX77650 and BD71847/BD71850 to
-be broken.
-
- drivers/regulator/helpers.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/regulator/helpers.c b/drivers/regulator/helpers.c
-index e970e9d2f8be..e4bb09bbd3fa 100644
---- a/drivers/regulator/helpers.c
-+++ b/drivers/regulator/helpers.c
-@@ -486,7 +486,7 @@ int regulator_map_voltage_pickable_linear_range(struct regulator_dev *rdev,
- 			continue;
- 		}
- 
--		ret = selector + sel;
-+		ret = selector + sel - range->min_sel;
- 
- 		voltage = rdev->desc->ops->list_voltage(rdev, ret);
- 
-
-base-commit: 0b0c0bd818ef76a20f58c3cb1ac96a3056ccb681
--- 
-2.21.0
-
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
