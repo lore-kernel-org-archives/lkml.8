@@ -4,94 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3677AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 06:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7124C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 06:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04EA9207F7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 06:40:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9526E20801
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 06:43:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="QyhSnDux"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KDIb675c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgFLGkq (ORCPT
+        id S1726542AbgFLGnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 02:40:46 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:5613 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726332AbgFLGkq (ORCPT
+        Fri, 12 Jun 2020 02:43:02 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57228 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726300AbgFLGnB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 02:40:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1591944045; x=1623480045;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=rqJsxKpWqEeDoioD2e5z7H/GiuoSDTICtmPX3jiDK9s=;
-  b=QyhSnDuxImJUnD1a8wdN2+WdHjaS4Mt+JfpitxS6AHLVA2DEJ/agj8h8
-   NgAhiD4isSzR5B2YKBTIFJ7cPKSPdgFFFrymjvySUhTKb03w4cFc8cC+9
-   YyERYR19BLdGY/WpUZwgr+BBBBeh/2rzdtI71XwHvKM1/xfghCplElfG/
-   c=;
-IronPort-SDR: VE2d4dB/KC0LmF6pogl9AIS3oZR0Ffubv7PmyUOmWpOdNb3AqoelOLV1NO5iiJYf+xt2y+4eg6
- wu73N6w34TCg==
-X-IronPort-AV: E=Sophos;i="5.73,502,1583193600"; 
-   d="scan'208";a="50403555"
-Received: from sea32-co-svc-lb4-vlan2.sea.corp.amazon.com (HELO email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com) ([10.47.23.34])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 12 Jun 2020 06:40:38 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com (Postfix) with ESMTPS id 981BEA1C66;
-        Fri, 12 Jun 2020 06:40:34 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 12 Jun 2020 06:40:33 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.97) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 12 Jun 2020 06:40:27 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     Joe Perches <joe@perches.com>
-CC:     Jiri Slaby <jslaby@suse.cz>, SeongJae Park <sjpark@amazon.com>,
-        <akpm@linux-foundation.org>, <apw@canonical.com>,
-        SeongJae Park <sjpark@amazon.de>, <colin.king@canonical.com>,
-        <sj38.park@gmail.com>, <linux-kernel@vger.kernel.org>,
-        <kristen.c.accardi@intel.com>, <mishi@linux.com>,
-        <skhan@linuxfoundation.org>, <gregkh@linuxfoundation.org>
-Subject: Re: Re: [PATCH v4 0/2] Recommend denylist/allowlist instead of blacklist/whitelist
-Date:   Fri, 12 Jun 2020 08:40:09 +0200
-Message-ID: <20200612064009.31523-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <3144e9630c814ca08cd940d7aff12aab822676d9.camel@perches.com> (raw)
+        Fri, 12 Jun 2020 02:43:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591944179;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5UhtuP90l943Isqu6Ks89etrSpmI2RwrlhSkwDRnr7w=;
+        b=KDIb675cJ0bDbkf24x/IkjlXhwtru3ryuXqBwqUGXOsJv6CFy6s5bjZWoeiSxIG2nayw46
+        kiNwBxvNTjClgOHYlfeiZkDJyalVo67aIj28uWFPzT0PxHSJJXMQm1Dmhmqx/D29nLexzZ
+        Bf4vsuwYLbyaJMfJboKFz92+dmn2XTY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-503-MK4jfssWMfSNJ0xQZQHuzw-1; Fri, 12 Jun 2020 02:42:55 -0400
+X-MC-Unique: MK4jfssWMfSNJ0xQZQHuzw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6C1F6801504;
+        Fri, 12 Jun 2020 06:42:53 +0000 (UTC)
+Received: from carbon (unknown [10.40.208.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 992705D9CA;
+        Fri, 12 Jun 2020 06:42:48 +0000 (UTC)
+Date:   Fri, 12 Jun 2020 08:42:44 +0200
+From:   Jesper Dangaard Brouer <jbrouer@redhat.com>
+To:     Gaurav Singh <gaurav1086@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        KP Singh <kpsingh@chromium.org>,
+        netdev@vger.kernel.org (open list:XDP (eXpress Data Path)),
+        bpf@vger.kernel.org (open list:XDP (eXpress Data Path)),
+        linux-kernel@vger.kernel.org (open list)
+Subject: Re: [PATCH] xdp_rxq_info_user: Replace malloc/memset w/calloc
+Message-ID: <20200612084244.4ab4f6c6@carbon>
+In-Reply-To: <20200612003640.16248-1-gaurav1086@gmail.com>
+References: <20200611150221.15665-1-gaurav1086@gmail.com>
+        <20200612003640.16248-1-gaurav1086@gmail.com>
+Organization: Red Hat Inc.
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.97]
-X-ClientProxiedBy: EX13P01UWB004.ant.amazon.com (10.43.161.213) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 11 Jun 2020 03:43:32 -0700 Joe Perches <joe@perches.com> wrote:
+On Thu, 11 Jun 2020 20:36:40 -0400
+Gaurav Singh <gaurav1086@gmail.com> wrote:
 
-> On Thu, 2020-06-11 at 10:32 +0200, Jiri Slaby wrote:
-> > On 11. 06. 20, 10:30, SeongJae Park wrote:
-> > > For example, as it seems at least you and I agree on the f-word to hug
-> > > replacement, we could add ``fuck||hug`` in the `deprecated_terms.txt` file to
-> > > avoid future spread of the f-words.
-> > 
-> > You will likely get my ACK on that, if that helps.
+> Replace malloc/memset with calloc
 > 
-> But likely not mine.
+> Fixes: 0fca931a6f21 ("samples/bpf: program demonstrating access to xdp_rxq_info")
+> Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
 
-It's ok, I will respect every opinion.  But...
+Above is the correct use of Fixes + Signed-off-by.
 
-> 
-> $ git grep -i '\bfuck' | wc -l
-> 15
+Now you need to update/improve the description, to also
+mention/describe that this also solves the bug you found.
 
-I'm not understanding what you're meaning with this.  Could I ask your
-explanation, please?
+-- 
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
 
-
-Thanks,
-SeongJae Park
