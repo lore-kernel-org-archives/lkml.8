@@ -8,29 +8,29 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1ABDC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D96FAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA67C207F7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 15:56:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B204D207F7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:00:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=yehs2007@zoho.com header.b="nqvwkCtV"
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=yehs2007@zoho.com header.b="eNoIDLXc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbgFLP4O (ORCPT
+        id S1726290AbgFLQAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 11:56:14 -0400
-Received: from sender4-pp-o92.zoho.com ([136.143.188.92]:25213 "EHLO
+        Fri, 12 Jun 2020 12:00:53 -0400
+Received: from sender4-pp-o92.zoho.com ([136.143.188.92]:25226 "EHLO
         sender4-pp-o92.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726085AbgFLP4N (ORCPT
+        with ESMTP id S1726053AbgFLQAx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 11:56:13 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1591977365; cv=none; 
+        Fri, 12 Jun 2020 12:00:53 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1591977590; cv=none; 
         d=zohomail.com; s=zohoarc; 
-        b=Agc3IKRHXUGW6x+nrxvlCv3cOc8hz+yosPNHClx+b8o3ba8vWHSbHXW86oDJkehi3F5+5nO2RM0bUTidbUBldiwIyUyfZpYcp5jvc9amj/2pEextemRDuddCKWdjXlXuoroWXw0PcXebxpQECzQhW3qdiYtg4BBd4+ODHI8p7Kw=
+        b=ATQJhj0fE03xuSNVt21N+EI8x9Em6KCI5bBIbxOkYI0W1s7DvVkeehXwcgYzHC5HpNjiMNcKJw8nxKIV6YhWgUvjRtnwqSEIRPwaMX8GU1yPEGSCopuZR1PvMjCMrQqXs/47ELzovLSxUj4eUXnGfJujTRhQYGbHSOk38Q8qIXc=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1591977365; h=Cc:Date:From:Message-ID:Subject:To; 
-        bh=ux0XK/KllVcDT9frERy+i5aI2PpALEGnPgdm8/WW9NU=; 
-        b=Zdw7hqhzqVNC+Q4aGs+S5KyngKcx0WYG6EO72lEFH87vMSffsYSbfPOAR7RlErlFXvCUGhGH/5GuMXsUSC8aEV+9bB1aC6n60oNA1GnesNyQhpa/pnPovTfnOQG3v7mlXwNJ9iU9GBQJyATBQvfmOPQ5eGLDM8mP2DvHVZ4ujKM=
+        t=1591977590; h=Cc:Date:From:Message-ID:Subject:To; 
+        bh=AbCyrlMVxtFExEvwn074Cj50QCw50WDefmOdHOqkC0s=; 
+        b=fuCA20tyRes58chU5EVP7KuGNEgDQ1A3BkV7zOsOaSmmuNtTxfe8en+52yqtCnxdCsmQKL3E7Mx3X8J7B8A5trsvhinQUJqDMyv5/UY5ALynWsM4U4GHaTlXjNd+p+hxJmofGOJaQlcDvSjHus0uefx7WZDAz9csj3qTt/n+nDw=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
         dkim=pass  header.i=zoho.com;
         spf=pass  smtp.mailfrom=yehs2007@zoho.com;
@@ -38,24 +38,24 @@ ARC-Authentication-Results: i=1; mx.zohomail.com;
 DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
   s=zapps768; d=zoho.com; 
   h=from:to:cc:subject:date:message-id; 
-  b=vJwJXSqwD1evDm12+N1z4hvQCTPTSLWJGxgC/c2OJlC9xkFqYBUScBdtOV/goP9K5kVLd3ZI0FqP
-    T1Mh4XAWe6sIpWT9EUMS3UlgkiqnShLznaL0niRTvEOQhWPKJdFj  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1591977365;
+  b=jwib4dOSM4dN3RdXv+76K4G5TxQ+2UkhB8qPHsbvUdrrJ2zTmRf5BX66PW6cvNYcpcble5sSv1JL
+    lZzNJRcGyyEmxucQTypF2ncMei/TrRY2NNc6/I7PfM9OSzbPyeO+  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1591977590;
         s=zm2020; d=zoho.com; i=yehs2007@zoho.com;
         h=From:To:Cc:Subject:Date:Message-Id;
-        bh=ux0XK/KllVcDT9frERy+i5aI2PpALEGnPgdm8/WW9NU=;
-        b=nqvwkCtV1ql3bNG9cYgOEq4I+QzXSEYJhvvnmz7Lk/Iz8ZonFR9Bd2pN4+c9QpRD
-        HcI4/cK3HHqATclVd1KHv4TEkeYx9tk82Uqhfr7Ui712w1AuxsMZSgRXBXdC+c6OhMj
-        xZpk8ZkRnHdvJaUFfCoqt52NEIutABDUTpMIgu18=
+        bh=AbCyrlMVxtFExEvwn074Cj50QCw50WDefmOdHOqkC0s=;
+        b=eNoIDLXcYUZA1jnq/kGKhMX7uuFz2EFIhfeKC4fpGtMxpNg7iS+ptLB2wgOAeJCn
+        x6blyjT6/BlVGFZZxaeHYY6STACwc/oa6z3UCNA0Y3wovBaLaeBhx2aBbAlM0KLelfM
+        Wv6GLvvl0LE8AhdjkWLet01cAMTFEPmjtxblsbbI=
 Received: from YEHS1XPF1D05WL.lenovo.com (111.197.254.230 [111.197.254.230]) by mx.zohomail.com
-        with SMTPS id 159197736366961.0283403658716; Fri, 12 Jun 2020 08:56:03 -0700 (PDT)
+        with SMTPS id 15919775869391016.4366660991806; Fri, 12 Jun 2020 08:59:46 -0700 (PDT)
 From:   Huaisheng Ye <yehs2007@zoho.com>
 To:     mpatocka@redhat.com, snitzer@redhat.com, agk@redhat.com
 Cc:     dm-devel@redhat.com, linux-kernel@vger.kernel.org,
         Huaisheng Ye <yehs1@lenovo.com>
-Subject: [PATCH] dm writecache: skip writecache_wait when using pmem mode
-Date:   Fri, 12 Jun 2020 23:55:44 +0800
-Message-Id: <20200612155544.90348-1-yehs2007@zoho.com>
+Subject: [PATCH] dm writecache: correct uncommitted_block when discarding uncommitted entry
+Date:   Fri, 12 Jun 2020 23:59:11 +0800
+Message-Id: <20200612155911.96528-1-yehs2007@zoho.com>
 X-Mailer: git-send-email 2.17.0.windows.1
 X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
@@ -65,31 +65,27 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Huaisheng Ye <yehs1@lenovo.com>
 
-The array bio_in_progress is only used with ssd mode. So skip
-writecache_wait_for_ios in writecache_discard when pmem mode.
+When uncommitted entry has been discarded, correct wc->uncommitted_block
+for getting the exact number.
 
 Signed-off-by: Huaisheng Ye <yehs1@lenovo.com>
 ---
- drivers/md/dm-writecache.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/md/dm-writecache.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/drivers/md/dm-writecache.c b/drivers/md/dm-writecache.c
-index 66f3a3b..4367cc7 100644
+index 4367cc7..64b4527 100644
 --- a/drivers/md/dm-writecache.c
 +++ b/drivers/md/dm-writecache.c
-@@ -849,8 +849,10 @@ static void writecache_discard(struct dm_writecache *wc, sector_t start, sector_
- 
- 		if (likely(!e->write_in_progress)) {
- 			if (!discarded_something) {
--				writecache_wait_for_ios(wc, READ);
--				writecache_wait_for_ios(wc, WRITE);
-+				if (!WC_MODE_PMEM(wc)) {
-+					writecache_wait_for_ios(wc, READ);
-+					writecache_wait_for_ios(wc, WRITE);
-+				}
+@@ -855,6 +855,8 @@ static void writecache_discard(struct dm_writecache *wc, sector_t start, sector_
+ 				}
  				discarded_something = true;
  			}
++			if (!writecache_entry_is_committed(wc, e))
++				wc->uncommitted_blocks--;
  			writecache_free_entry(wc, e);
+ 		}
+ 
 -- 
 1.8.3.1
 
