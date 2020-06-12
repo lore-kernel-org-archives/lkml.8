@@ -2,116 +2,289 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD5CC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 08:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DAE6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 08:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B461208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 08:14:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E5FF207ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 08:14:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="kyvH0EUB"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fLdkaDcJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726448AbgFLIOB (ORCPT
+        id S1726483AbgFLIOc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 04:14:01 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:48266 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726264AbgFLIOA (ORCPT
+        Fri, 12 Jun 2020 04:14:32 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31058 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726455AbgFLIOZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 04:14:00 -0400
-X-UUID: d5d6f6122080406ebe9cdfcfe03565a6-20200612
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=0GUyHvRF9VSyT75UO1lemvQzocW+/xKvL/7X1JD+e3c=;
-        b=kyvH0EUBv92HPX2ACqV0iGmIsriy/5p9EwSAR3r4T1xcSU5vwKwEtzt9COkq0ShUR8M9thPr/QQ9I5d26rbTQtS7gHAh7GNGONyzcGjpBUtQ/Hluusz7r4KZYYDlIFvp1q+oJolP3loCoYOKwriwq0zoG8DWbE7y64Jmbkg3FZg=;
-X-UUID: d5d6f6122080406ebe9cdfcfe03565a6-20200612
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <eastl.lee@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1851533519; Fri, 12 Jun 2020 16:13:56 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 12 Jun 2020 16:13:54 +0800
-Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 12 Jun 2020 16:13:53 +0800
-Message-ID: <1591949635.23595.9.camel@mtkswgap22>
-Subject: Re: [PATCH v4 4/4] dmaengine: mediatek-cqdma: add dma mask for
- capability
-From:   EastL <EastL.Lee@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-CC:     Sean Wang <sean.wang@mediatek.com>, <vkoul@kernel.org>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>
-Date:   Fri, 12 Jun 2020 16:13:55 +0800
-In-Reply-To: <ea26fb2c-aec0-c031-ac30-9e5099943d9c@gmail.com>
-References: <1590659832-31476-1-git-send-email-EastL.Lee@mediatek.com>
-         <1590659832-31476-5-git-send-email-EastL.Lee@mediatek.com>
-         <ea26fb2c-aec0-c031-ac30-9e5099943d9c@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Fri, 12 Jun 2020 04:14:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591949663;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=V2zTglIal5OiHZJ8iFKvfCqf75RWAmlyagUCe+VaIC8=;
+        b=fLdkaDcJhKyjlbOI5ITXal+WFuvkxpLcN7mLoOe4Wdz2422JzybFxc/Vm/WxP3vC2cIbYW
+        1T4J/MQene0DP7LcN7ys1EFePjpUcP8/BfoTFJuOuU3AQo++cmqhdKjIS8VjS828NmFA7x
+        nEF1aam4Ja11KoheiaAdxBW8jQ2p+H0=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-306-wa18AWinNMKS6w4zEa2GfA-1; Fri, 12 Jun 2020 04:14:21 -0400
+X-MC-Unique: wa18AWinNMKS6w4zEa2GfA-1
+Received: by mail-ej1-f69.google.com with SMTP id do21so3877172ejc.2
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 01:14:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=V2zTglIal5OiHZJ8iFKvfCqf75RWAmlyagUCe+VaIC8=;
+        b=k8T99g6fm5fLIPhrG9k3Ut7FZ1Wah5ZFO48PM4tpuKh63TTRr0lwS65dJxT8clXUAv
+         buqSMEV7u2o0q0v30xm/FEdwPESeRw6fc0NyI9Fc/xU+glI3jB5AxX/oNKEmyJDQRvF5
+         OzFwgLwah7j9FxXNbQevB9TSZkeOdR3iV5D+94RpDKa5xrG+kv3jisaLG0FO9ChFApUY
+         0LXWYUyTYgDbRxCNEAeQ1wDg54HebN4CgxHFnWkLUn16HyDHvlDTQRb2kBsTRuYON7yW
+         DIFDTG6pTWTymHxvqIx2k0qgHEJ7pV+caaWzBtCew98tbzLmyw6NXb6JfqXmtPGpqGea
+         e0ZQ==
+X-Gm-Message-State: AOAM532xSkq7SMbk3qsI/NaVZYtXC+WTWfDHlf0DuncmVj9j7S8jwz4s
+        wvZyIVgUb5heqCqfsSZexC0VeMr38cvouUcLKDt0ONN5cWqxLXNkFzD3ZABTdU50xtuCWEeyNA0
+        Q1LQ3CKWqxr3GCypRP7p0e5ta
+X-Received: by 2002:a17:907:209b:: with SMTP id pv27mr11743721ejb.146.1591949659895;
+        Fri, 12 Jun 2020 01:14:19 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyBAHer5t4lrLm+vMdTXed6gLDbil+57VlZQwx847llFMXVqLhRHTvWPje2pJt4EUELeeQ+uA==
+X-Received: by 2002:a17:907:209b:: with SMTP id pv27mr11743678ejb.146.1591949659541;
+        Fri, 12 Jun 2020 01:14:19 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id h1sm2725555edz.88.2020.06.12.01.14.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Jun 2020 01:14:18 -0700 (PDT)
+Subject: Re: [PATCH v4 0/7] Support inhibiting input devices
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-iio@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Samsung SoC <linux-samsung-soc@vger.kernel.org>,
+        linux-input@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        patches@opensource.cirrus.com,
+        ibm-acpi-devel@lists.sourceforge.net,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Barry Song <baohua@kernel.org>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Nick Dyer <nick@shmanahar.org>,
+        Ferruh Yigit <fery@cypress.com>,
+        Sangwon Jee <jeesw@melfas.com>,
+        Peter Hutterer <peter.hutterer@redhat.com>,
+        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
+        Collabora Kernel ML <kernel@collabora.com>
+References: <2336e15d-ff4b-bbb6-c701-dbf3aa110fcd@redhat.com>
+ <20200608112211.12125-1-andrzej.p@collabora.com>
+ <964ca07a-3da5-101f-7edf-64bdeec98a4b@redhat.com>
+ <CAJZ5v0hB2ra2K=dd9ZjVyy1V2b1PmFHm79uDO2HtHU1D_4YUbw@mail.gmail.com>
+ <20200610182836.GA248110@dtor-ws>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <2e4bd050-117c-cc5f-8cf0-055b5304717f@redhat.com>
+Date:   Fri, 12 Jun 2020 10:14:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200610182836.GA248110@dtor-ws>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTA1LTI4IGF0IDE2OjEwICswMjAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
-Og0KPiANCj4gT24gMjgvMDUvMjAyMCAxMTo1NywgRWFzdEwgd3JvdGU6DQo+ID4gVGhpcyBwYXRj
-aCBhZGQgZG1hIG1hc2sgZm9yIGNhcGFiaWxpdHkuDQo+ID4gDQo+ID4gQ2hhbmdlLUlkOiBJMzFm
-NDYyMmY5NTQxZDc2OTcwMjAyOTUzMmU1ZjVmMTg1ODE1ZGRhMg0KPiANCj4gTm8gQ2hhbmdlLUlk
-IGluIHRoZSBjb21taXQgbWVzc2FnZSBwbGVhc2UuDQo+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IEVh
-c3RMIDxFYXN0TC5MZWVAbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL2RtYS9t
-ZWRpYXRlay9tdGstY3FkbWEuYyB8IDEzICsrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5n
-ZWQsIDEzIGluc2VydGlvbnMoKykNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9kbWEv
-bWVkaWF0ZWsvbXRrLWNxZG1hLmMgYi9kcml2ZXJzL2RtYS9tZWRpYXRlay9tdGstY3FkbWEuYw0K
-PiA+IGluZGV4IGJjYTcxMTguLjE4MDVhNzYgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9kbWEv
-bWVkaWF0ZWsvbXRrLWNxZG1hLmMNCj4gPiArKysgYi9kcml2ZXJzL2RtYS9tZWRpYXRlay9tdGst
-Y3FkbWEuYw0KPiA+IEBAIC0xMTcsNiArMTE3LDcgQEAgc3RydWN0IG10a19jcWRtYV92Y2hhbiB7
-DQo+ID4gICAqIEBjbGs6ICAgICAgICAgICAgICAgICAgICBUaGUgY2xvY2sgdGhhdCBkZXZpY2Ug
-aW50ZXJuYWwgaXMgdXNpbmcNCj4gPiAgICogQGRtYV9yZXF1ZXN0czogICAgICAgICAgIFRoZSBu
-dW1iZXIgb2YgVkNzIHRoZSBkZXZpY2Ugc3VwcG9ydHMgdG8NCj4gPiAgICogQGRtYV9jaGFubmVs
-czogICAgICAgICAgIFRoZSBudW1iZXIgb2YgUENzIHRoZSBkZXZpY2Ugc3VwcG9ydHMgdG8NCj4g
-PiArICogQGRtYV9tYXNrOiAgICAgICAgICAgICAgIEEgbWFzayBmb3IgRE1BIGNhcGFiaWxpdHkN
-Cj4gPiAgICogQHZjOiAgICAgICAgICAgICAgICAgICAgIFRoZSBwb2ludGVyIHRvIGFsbCBhdmFp
-bGFibGUgVkNzDQo+ID4gICAqIEBwYzogICAgICAgICAgICAgICAgICAgICBUaGUgcG9pbnRlciB0
-byBhbGwgdGhlIHVuZGVybHlpbmcgUENzDQo+ID4gICAqLw0KPiA+IEBAIC0xMjYsNiArMTI3LDcg
-QEAgc3RydWN0IG10a19jcWRtYV9kZXZpY2Ugew0KPiA+ICANCj4gPiAgCXUzMiBkbWFfcmVxdWVz
-dHM7DQo+ID4gIAl1MzIgZG1hX2NoYW5uZWxzOw0KPiA+ICsJdTMyIGRtYV9tYXNrOw0KPiA+ICAJ
-c3RydWN0IG10a19jcWRtYV92Y2hhbiAqdmM7DQo+ID4gIAlzdHJ1Y3QgbXRrX2NxZG1hX3BjaGFu
-ICoqcGM7DQo+ID4gIH07DQo+ID4gQEAgLTU0OSw2ICs1NTEsNyBAQCBzdGF0aWMgdm9pZCBtdGtf
-Y3FkbWFfaHdfZGVpbml0KHN0cnVjdCBtdGtfY3FkbWFfZGV2aWNlICpjcWRtYSkNCj4gPiAgfTsN
-Cj4gPiAgTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgbXRrX2NxZG1hX21hdGNoKTsNCj4gPiAgDQo+
-ID4gK3N0YXRpYyB1NjQgY3FkbWFfZG1hbWFzazsNCj4gPiAgc3RhdGljIGludCBtdGtfY3FkbWFf
-cHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gPiAgew0KPiA+ICAJc3RydWN0
-IG10a19jcWRtYV9kZXZpY2UgKmNxZG1hOw0KPiA+IEBAIC02MDcsNiArNjEwLDE2IEBAIHN0YXRp
-YyBpbnQgbXRrX2NxZG1hX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4g
-IAkJY3FkbWEtPmRtYV9jaGFubmVscyA9IE1US19DUURNQV9OUl9QQ0hBTlM7DQo+ID4gIAl9DQo+
-ID4gIA0KPiA+ICsJaWYgKHBkZXYtPmRldi5vZl9ub2RlICYmIG9mX3Byb3BlcnR5X3JlYWRfdTMy
-KHBkZXYtPmRldi5vZl9ub2RlLA0KPiA+ICsJCQkJCQkgICAgICAiZG1hLWNoYW5uZWwtbWFzayIs
-DQo+ID4gKwkJCQkJCSAgICAgICZjcWRtYS0+ZG1hX21hc2spKSB7DQo+IA0KPiBJJ2QgcHJlZmVy
-Og0KPiANCj4gaWYgKHBkZXYtPmRldi5vZl9ub2RlKQ0KPiAgICAgcmV0ID0gb2ZfcHJvcGVydHlf
-cmVhZF91MzIocGRldi0+ZGV2Lm9mX25vZGUsDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAiZG1hLWNoYW5uZWwtbWFzayIsDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAmY3FkbWEtPmRtYV9tYXNrKSkNCj4gaWYgKHJldCkgew0KPiAgICAgZGV2X3dhcm4oJnBkZXYt
-PmRldiwNCj4gICAgICAgICAgICAgICJVc2luZyAwIGFzIG1pc3NpbmcgZG1hLWNoYW5uZWwtbWFz
-aw0KPiAgICAgICAgICAgICAgIHByb3BlcnR5XG4iKTsNCj4gICAgIGNxZG1hLT5kbWFfbWFzayA9
-IDA7DQo+IH0NCj4gDQo+ID4gKwkJZGV2X2luZm8oJnBkZXYtPmRldiwNCj4gPiArCQkJICJVc2lu
-ZyAwIGFzIG1pc3NpbmcgZG1hLWNoYW5uZWwtbWFzayBwcm9wZXJ0eVxuIik7DQo+IA0KPiBkZXZf
-d2FybiBzaG91bGQgYmUgT0suDQo+IA0KPiA+ICsJfSBlbHNlIHsNCj4gPiArCQljcWRtYV9kbWFt
-YXNrID0gRE1BX0JJVF9NQVNLKGNxZG1hLT5kbWFfbWFzayk7DQo+ID4gKwkJcGRldi0+ZGV2LmRt
-YV9tYXNrID0gJmNxZG1hX2RtYW1hc2s7DQo+IA0KPiBpZiAoZG1hX3NldF9tYXNrKCZwZGV2LT5k
-ZXYsDQo+ICAgICBETUFfQklUX01BU0soY3FkbWEtPmRtYV9tYXNrKSkgew0KPiAgICAgICAgICAv
-KiBlcnJvciBvdXQgKi8NCj4gfQ0KPiANCk9LLCBJJ2xsIGZpeCBpdCBvbiBuZXh0IHZlcnNpb24u
-DQoNCj4gPiArCX0NCj4gPiArDQo+ID4gIAljcWRtYS0+cGMgPSBkZXZtX2tjYWxsb2MoJnBkZXYt
-PmRldiwgY3FkbWEtPmRtYV9jaGFubmVscywNCj4gPiAgCQkJCSBzaXplb2YoKmNxZG1hLT5wYyks
-IEdGUF9LRVJORUwpOw0KPiA+ICAJaWYgKCFjcWRtYS0+cGMpDQo+ID4gDQoNCg==
+Hi,
+
+On 6/10/20 8:28 PM, Dmitry Torokhov wrote:
+> On Wed, Jun 10, 2020 at 12:38:30PM +0200, Rafael J. Wysocki wrote:
+>> On Wed, Jun 10, 2020 at 11:50 AM Hans de Goede <hdegoede@redhat.com> wrote:
+>>>
+>>> Hi All,
+>>>
+>>> On 6/8/20 1:22 PM, Andrzej Pietrasiewicz wrote:
+>>>> This is a quick respin of v3, with just two small changes, please see
+>>>> the changelog below.
+>>>>
+>>>> Userspace might want to implement a policy to temporarily disregard input
+>>>> from certain devices.
+>>>>
+>>>> An example use case is a convertible laptop, whose keyboard can be folded
+>>>> under the screen to create tablet-like experience. The user then must hold
+>>>> the laptop in such a way that it is difficult to avoid pressing the keyboard
+>>>> keys. It is therefore desirable to temporarily disregard input from the
+>>>> keyboard, until it is folded back. This obviously is a policy which should
+>>>> be kept out of the kernel, but the kernel must provide suitable means to
+>>>> implement such a policy.
+>>>
+>>> First of all sorry to start a somewhat new discussion about this
+>>> while this patch set is also somewhat far along in the review process,
+>>> but I believe what I discuss below needs to be taken into account.
+>>>
+>>> Yesterday I have been looking into why an Asus T101HA would not stay
+>>> suspended when the LID is closed. The cause is that the USB HID multi-touch
+>>> touchpad in the base of the device starts sending events when the screen
+>>> gets close to the touchpad (so when the LID is fully closed) and these
+>>> events are causing a wakeup from suspend. HID multi-touch devices
+>>> do have a way to tell them to fully stop sending events, also disabling
+>>> the USB remote wakeup the device is doing. The question is when to tell
+>>> it to not send events though ...
+>>>
+>>> So now I've been thinking about how to fix this and I believe that there
+>>> is some interaction between this problem and this patch-set.
+>>>
+>>> The problem I'm seeing on the T101HA is about wakeups, so the question
+>>> which I want to discuss is:
+>>>
+>>> 1. How does inhibiting interact with enabling /
+>>> disabling the device as a wakeup source ?
+> 
+> One should not affect the other.
+> 
+>>>
+>>> 2. Since we have now made inhibiting equal open/close how does open/close
+>>> interact with a device being a wakeup source ?
+> 
+> One did not affect another, and it should not.
+> 
+>>>
+>>> And my own initial (to be discussed) answers to these questions:
+>>>
+>>> 1. It seems to me that when a device is inhibited it should not be a
+>>> wakeup source, so where possible a input-device-driver should disable
+>>> a device's wakeup capabilities on suspend if inhibited
+>>
+>> If "inhibit" means "do not generate any events going forward", then
+>> this must also cover wakeup events, so I agree.
+> 
+> Why? These are separate concepts. Do we disable wake on lan when
+> bringing network interface down? Do we update power/wakeup when device
+> is inhibited? Do we restore it afterwards? Do we un-inhibit if we
+> reenable wakeup after device is inhibited? Do we return error? How?
+> 
+> Inhibit works on logical level, i.e. if I have several input interfaces
+> on the same hardware device, I cam inhibit one leaving others intact.
+> This does not mean that the device should stop generating wakeup events.
+> We can't even guarantee this for composite devices.
+
+After thinking more about this I believe you are right and we should
+keep these as 2 separate, completely independent settings.
+
+Especially since the wakeup setting typically is a setting of the
+parent device, where as the inhibit is done on the actual input-dev.
+
+###
+
+Some quick background info on my original thoughts here, as mentioned
+I started thinking about this because of spurious wakeups from suspend
+when the lid of an asus t101ha is "touching" its touchpad. The HID
+multi-touch protocol has a setting where we can ask the device to
+stop sending events. So even though the kbd + touchpad are a
+single composite USB device, we can disable wakeup (in a way)
+for just the touchpad at the hid-multitouch level.
+
+So I was thinking maybe adding a separate wakeup setting to the
+input device itself for this. But thinking more about it, when
+the lid is closed we can just disable wakeup on the entire USB
+device, since the keyboard is covered by the lid too.
+
+And then on suspend the hid-multitouch driver can detect that its
+parent (or parents parent in the case of USB) has wakeup disabled
+and also tell the device to stop scanning for fingers to save some
+power.
+
+We probably also need a close and open callbacks add the HID-driver
+level, so that if there are no touchpad users we can also use
+the same option to put the HID multi-touch device in a low power mode
+where it does not scan for fingers.
+
+<snip>
+
+>>> A different, but related issue is how to make devices actually use the
+>>> new inhibit support on the builtin keyboard + touchpad when say the lid
+>>> is closed.   Arguably this is an userspace problem, but it is a tricky
+>>> one. Currently on most modern Linux distributions suspend-on-lid-close
+>>> is handled by systemd-logind and most modern desktop-environments are
+>>> happy to have logind handle this for them.
+>>>
+>>> But most knowledge about input devices and e.g. heurisitics to decide
+>>> if a touchpad is internal or external are part of libinput. Now we could
+>>> have libinput use the new inhibit support (1), but then when the lid
+>>> closes we get race between whatever process is using libinput trying
+>>> to inhibit the touchpad (which must be done before to suspend to disable
+>>> it as wakeup source) and logind trying to suspend the system.
+>>>
+>>> One solution here would be to move the setting of the inhibit sysfs
+>>> attr into logind, but that requires adding a whole bunch of extra
+>>> knowledge to logind which does not really belong there IMHO.
+> 
+> You do not need to push the knowledge into logind, you just need to
+> communicate to logind what devices can be wakeup sources and which ones
+> should not. Chrome OS uses udev tags/properties for that.
+
+True, I did not think of doing the tag thingie + letting logind do
+the inhibit on LID close based on that. logind could also disable
+wakeup (to save power while suspended) on devices which are tagged
+for it to do that (should probably be a separate tag from the
+inhibit tag).
+
+>>> I've been thinking a bit about this and to me it seems that the kernel
+>>> is in the ideal position to automatically inhibit some devices when
+>>> some EV_SW transitions from 0->1 (and uninhibit again on 1->0). The
+>>> issue here is to chose on which devices to enable this. I believe
+>>> that the auto inhibit on some switches mechanism is best done inside
+>>> the kernel (disabled by default) and then we can have a sysfs
+>>> attr called auto_inhibit_ev_sw_mask which can be set to e.g.
+>>> (1 << SW_LID) to make the kernel auto-inhibit the input-device whenever
+>>> the lid is closed, or to ((1 << SW_LID) | (1 << SW_TABLET_MODE)) to
+>>> inhibit both when the lid is closed or when switched to tablet mode.
+> 
+> This is a policy and should be kept out of the kernel. Yes, we had it
+> implemented with rfkill input handler, but it caused quite a few issues.
+> As far as I know it is not being used anymore and we should not try with
+> SW_LID->inhibit either.
+> 
+> I know it is faster to patch the kernel than to roll out proper
+> userspace because everyone updates kernel regularly, but it does not
+> mean it is the right solution.
+
+Agreed, I just could not come up with a clean userspace solution, but
+using udev+hwdb to set a tag for logind instead of having the write
+to a new auto_inhibit_ev_sw_mask will work nicely.
+
+So I think this is all resolved now (or at least we have a plan for it).
+
+Regards,
+
+Hans
 
