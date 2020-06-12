@@ -2,104 +2,93 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 567BAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 23:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E769AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 23:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3263F206DC
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 23:52:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B54A520575
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 23:58:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ci92my1Z"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pyIeBb07"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726384AbgFLXwK (ORCPT
+        id S1726408AbgFLX55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 19:52:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58088 "EHLO
+        Fri, 12 Jun 2020 19:57:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726381AbgFLXwK (ORCPT
+        with ESMTP id S1726368AbgFLX54 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 19:52:10 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1ABFC08C5C1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 16:52:09 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id y11so12976423ljm.9
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 16:52:09 -0700 (PDT)
+        Fri, 12 Jun 2020 19:57:56 -0400
+Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E095C03E96F
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 16:57:56 -0700 (PDT)
+Received: by mail-oo1-xc44.google.com with SMTP id x17so2274534oog.6
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 16:57:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=M5ngALuwgd2UZp15ZYB2LhrDQynYsE132uhUeXOpEus=;
-        b=ci92my1ZAUe4UyS0wP9gpUITvBjosTAhuGtf9IxMXi1eY2r/xuLb2p+Qvo+UCOXgvk
-         Zstx17w5x487Vl9jajqvZlnrqSRg7Az/eH8km2aMCoilixtUYE+alqukimUB7QOcY6eR
-         Jls33PaT5jVnckx47c0nQwOvup15kWdja40zw=
+        bh=HOWpXRhAQPZLUNyvQpWGm4V2ESJc01BbPvWojl719Lc=;
+        b=pyIeBb07D6klnrVJySMCOCDBMj+63aMBxanzNDWnEd3JBhf2w5ZQ7nvBLq4eyQSfaB
+         ph2G+6zQGlAqIvUkvLzvnBRHzheVmGPn4G+MmjebcYL1/pMSSD9R5CJCcnUJFU9Miaw8
+         7wK0BVQg3cKIdmproJ3X8dETn9W1yMH/zRn+mFPUgVCso3on/JGNKQIDq63Opgb15Hg0
+         apFCQBCGNSZHvFyEqKiCDDfcojETw0QiMIBmdG9ruEUR3DgUQAPKfbWOpjVsmvpC7jpa
+         TYpbVuIBYZ3cFH06zcwTWptWYg6U3HvHLgkNtLU6KNqNidYwJyosOtKzaEMUVASCDrcO
+         uRDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=M5ngALuwgd2UZp15ZYB2LhrDQynYsE132uhUeXOpEus=;
-        b=QWoKmW0pjZwllbjOX22vnR8m3osTwlywzb71zlPO4r2ujFiHgYVPP01IrSN022/QAd
-         1r1y+PeTIX2yseAPC1ahl0+oC5pBgu7z2LlcpcIQo2ymcueJqkL9cu4xnHDVnurIRQdU
-         +T1qxDjFHJRm5Jg3pjQnJu+Gq3DNwJwMZN4LGcQvnqI7EDkvX2sIgeuyYVenU4+DdAzM
-         +SAFp3mm1bOUUkwxH+LfM4iJwdEK+r6PTysVjkSXerVmgY33C7IucM2z0AMfenrChnTU
-         SxboA4K5skJxyh0PpieB018ysvZxXaosMGpsvplS7pM/EPhmrzuS19coFRg80/8klb5J
-         SFCQ==
-X-Gm-Message-State: AOAM531GA+tCW3jfwGG+E0EkeN21FhCgocQecWzrgJZgK7ND6g6FNyY8
-        ZcGMDFw1T5R+GsJM/25GAh64gMg0wjP9V40KDysdtA==
-X-Google-Smtp-Source: ABdhPJz2Mdm0Z7Fl1At0M2nCNbzBCJBpo+fZ879WiaZQKbv5YiEXypRoNYnkQLC3gigJDLewRFNFFS+qryDgCKFP1jg=
-X-Received: by 2002:a2e:92cf:: with SMTP id k15mr8109767ljh.333.1592005928015;
- Fri, 12 Jun 2020 16:52:08 -0700 (PDT)
+        bh=HOWpXRhAQPZLUNyvQpWGm4V2ESJc01BbPvWojl719Lc=;
+        b=RvIvwFqeYyNWtXoRxmJKrN6fBadccVGt/f+WPl8MOeqS980FfH3Tln7ZWLT3OFt1yW
+         V7QXfWlJ3MMTb8XHwMyD03G5Bf+10gzMpRv5/fioPXgUj5bbijmrLjTIpuHzmnwwPUZ7
+         L3Q9kRTxSta4urTtiFsibTBq5DMMR+DRxUBCv7Gsy1Q4S0SqNkYrBZnT7/mWS2FuK2rW
+         jgGXTFvzQ6xBVO7F+zMm0Qceth6qkU7L4+rhgRoo+JTCy1mXtqfk8noLuL1z89DdGrU6
+         dKkaAaIeRHD5VffF37O2idpoP9Rl6OH2y+Wzk7HpHiZq5X4XZiE5ErJ35WFLUkdirrJg
+         8wwQ==
+X-Gm-Message-State: AOAM531jKmBG0Pmzws9EqaG9kjHk/RP2PUYlglTVqtBvc7cuKW2rkm4s
+        cAa/8kSJQ2CAHsoqO7XN8WYENt42r4vqXD9BFJ9/Rg==
+X-Google-Smtp-Source: ABdhPJxX1QaScGqT8ta8x6SqAo6M+yAgHqmGZa56fHwOocpCvZA5JKmeRudDWRkQQsDu9uhaEXtmbrhNKZJiEL89R1U=
+X-Received: by 2002:a4a:ddd7:: with SMTP id i23mr12822037oov.9.1592006275829;
+ Fri, 12 Jun 2020 16:57:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200611231459.v3.1.I636f906bf8122855dfd2ba636352bbdcb50c35ed@changeid>
- <20200611231459.v3.4.Ib4effd5813fb2f8585e2c7394735050c16a765eb@changeid> <20200612104952.0955d965@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200612104952.0955d965@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   Miao-chen Chou <mcchou@chromium.org>
-Date:   Fri, 12 Jun 2020 16:51:57 -0700
-Message-ID: <CABmPvSHphwBuWy-pr4rro1MxS_NO5OLYsq56Fd=oed8gx7hYkg@mail.gmail.com>
-Subject: Re: [PATCH v3 4/7] Bluetooth: Add handler of MGMT_OP_REMOVE_ADV_MONITOR
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Bluetooth Kernel Mailing List <linux-bluetooth@vger.kernel.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
-        Alain Michaud <alainm@chromium.org>,
-        Michael Sun <michaelfsun@google.com>,
-        Yoni Shavit <yshavit@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
+References: <20200612123711.29130-1-srinivas.kandagatla@linaro.org> <20200612123711.29130-2-srinivas.kandagatla@linaro.org>
+In-Reply-To: <20200612123711.29130-2-srinivas.kandagatla@linaro.org>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Fri, 12 Jun 2020 16:57:43 -0700
+Message-ID: <CALAqxLUqPw_h-BQ1NuP3AP5VMseCSyz13dYKkwqHVjk_QqXmdA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] ASoC: qcom: common: set correct directions for dailinks
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     Mark Brown <broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        lkml <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jakub,
-
-I uploaded v4 to address these. Thanks for the reminder.
-
-Regards,
-Miao
-
-On Fri, Jun 12, 2020 at 10:49 AM Jakub Kicinski <kuba@kernel.org> wrote:
+On Fri, Jun 12, 2020 at 5:38 AM Srinivas Kandagatla
+<srinivas.kandagatla@linaro.org> wrote:
 >
-> On Thu, 11 Jun 2020 23:15:26 -0700 Miao-chen Chou wrote:
-> > This adds the request handler of MGMT_OP_REMOVE_ADV_MONITOR command.
-> > Note that the controller-based monitoring is not yet in place. This
-> > removes the internal monitor(s) without sending HCI traffic, so the
-> > request returns immediately.
-> >
-> > The following test was performed.
-> > - Issue btmgmt advmon-remove with valid and invalid handles.
-> >
-> > Signed-off-by: Miao-chen Chou <mcchou@chromium.org>
+> Currently both FE and BE dai-links are configured bi-directional,
+> However the DSP BE dais are only single directional,
+> so set the directions as supported by the BE dais.
 >
-> Still doesn't build cleanly with W=1 C=1
->
-> net/bluetooth/mgmt.c:4009:46: warning: incorrect type in argument 2 (different base types)
-> net/bluetooth/mgmt.c:4009:46:    expected unsigned short [usertype] handle
-> net/bluetooth/mgmt.c:4009:46:    got restricted __le16 [usertype] monitor_handle
-> net/bluetooth/mgmt.c:4018:29: warning: cast from restricted __le16
+> Fixes: c25e295cd77b (ASoC: qcom: Add support to parse common audio device nodes")
+> Reported-by: John Stultz <john.stultz@linaro.org>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+
+Yep, this resolves the recent issue for me!  Thanks so much for the quick fix!
+
+Tested-by: John Stultz <john.stultz@linaro.org>
+
+thanks again!
+-john
