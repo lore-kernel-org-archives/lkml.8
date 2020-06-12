@@ -2,128 +2,104 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8DCDC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 23:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 165F8C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 23:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83A192078E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 23:17:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592003828;
-	bh=egIaeDvlLClgROPOhXowlWDstwIaYaP7fH8KEmN6qKM=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=lGWmtriCArUrEPy8hRaBxomQA7eO0qBGOiXlNSe7LLxX2e/kryuKjvdBssWdmX1FF
-	 W1QEXfdmHlLllgyK5vh1ZzL8++kNcHM+3NwYp67LKUEJ6RnUkgwgnpx+6CWEEMGwXu
-	 dkCieBPyAPFzAP1E/DdtofMYwKntxGWrptGhDqFc=
+	by mail.kernel.org (Postfix) with ESMTP id E7659206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 23:19:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="wNGSJ1ri"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbgFLXRG (ORCPT
+        id S1726367AbgFLXT3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 19:17:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41258 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726310AbgFLXRF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 19:17:05 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 12 Jun 2020 19:19:29 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:34156 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726310AbgFLXT2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 19:19:28 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592003967; h=Content-Transfer-Encoding: MIME-Version:
+ References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=QSOzr5wrDqacBKtxNCX2eFHenw8CKJrTOB+F3GlS0og=; b=wNGSJ1riokYyelbgJngzgw6IfHHo2dbvV4pw+EpeFy3ZmxnPqMF3HZGxzBEVutT8lk5uXqmZ
+ rQDqRXHqxagDX/wFxXpjwXG4I2qczHH5CUY5hIcVF3rx8op1lFaqbV8fKazmehcaaDkhbdWu
+ COn9lg3KcLlbL3F/1s3JPF4iBkA=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
+ 5ee40d7fad153efa348d5e9d (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 12 Jun 2020 23:19:27
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2E796C433A0; Fri, 12 Jun 2020 23:19:27 +0000 (UTC)
+Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F2F8206D7;
-        Fri, 12 Jun 2020 23:17:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592003825;
-        bh=egIaeDvlLClgROPOhXowlWDstwIaYaP7fH8KEmN6qKM=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=a1cPM1dd4ZdQempC/TazcQVi2A2B7PfWLLPfxCXhnasKFVq+KwEuAOtinEKa141J8
-         Mw7IHEK6LS3cPIRwnclmaA350Oum8Tgyc5uR3BnGkgJrFW0tKuBLSRPEsmez7ibiy2
-         VOglXxEXEVXamOkKT2RUHeFMXDrUDFBMGCsKh0Cc=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 26BF43522658; Fri, 12 Jun 2020 16:17:05 -0700 (PDT)
-Date:   Fri, 12 Jun 2020 16:17:05 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Wei Yang <richard.weiyang@gmail.com>
-Cc:     Wei Yang <richard.weiyang@linux.alibaba.com>,
-        josh@joshtriplett.org, rostedt@goodmis.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        joel@joelfernandes.org, trivial@kernel.org, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] rcu: use gp_seq instead of rcu_gp_seq for consistency
-Message-ID: <20200612231705.GO4455@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200612020755.50526-1-richard.weiyang@linux.alibaba.com>
- <20200612020755.50526-5-richard.weiyang@linux.alibaba.com>
- <20200612141248.GK4455@paulmck-ThinkPad-P72>
- <20200612221025.7ry7wffycoa7pned@master>
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B18A9C43391;
+        Fri, 12 Jun 2020 23:19:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B18A9C43391
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+From:   Wesley Cheng <wcheng@codeaurora.org>
+To:     robh+dt@kernel.org, heikki.krogerus@linux.intel.com,
+        gregkh@linuxfoundation.org, mark.rutland@arm.com,
+        broonie@kernel.org, lgirdwood@gmail.com, agross@kernel.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
+        lijun.kernel@gmail.com, rdunlap@infradead.org,
+        jackp@codeaurora.org, bryan.odonoghue@linaro.org,
+        Wesley Cheng <wcheng@codeaurora.org>
+Subject: [PATCH v2 3/6] arm64: boot: dts: qcom: pm8150b: Add node for USB type C block
+Date:   Fri, 12 Jun 2020 16:19:15 -0700
+Message-Id: <20200612231918.8001-4-wcheng@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200612231918.8001-1-wcheng@codeaurora.org>
+References: <20200612231918.8001-1-wcheng@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200612221025.7ry7wffycoa7pned@master>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 10:10:25PM +0000, Wei Yang wrote:
-> On Fri, Jun 12, 2020 at 07:12:48AM -0700, Paul E. McKenney wrote:
-> >On Fri, Jun 12, 2020 at 10:07:55AM +0800, Wei Yang wrote:
-> >> Commit de30ad512a66 ("rcu: Introduce grace-period sequence numbers")
-> >> introduce gp_seq in rcu_state/rcu_node/rcu_data. And this field in last
-> >> two structure track the one in first.
-> >> 
-> >> While the comment use rcu_gp_seq which is a little misleading for
-> >> audience. Let's use the exact name gp_seq for consistency.
-> >> 
-> >> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
-> >
-> >I applied and pushed the others -- good eyes, and thank you!
-> >
-> >This one does not apply.  Could you please forward-port it to
-> >the "dev" branch of -rcu?
-> 
-> The reason is someone has already fixed this :-)
+The PM8150B has a dedicated USB type C block, which can be used for type C
+orientation and role detection.  Create the reference node to this type C
+block for further use.
 
-That would explain it!  ;-)
+Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/pm8150b.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-							Thanx, Paul
+diff --git a/arch/arm64/boot/dts/qcom/pm8150b.dtsi b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
+index 322379d5c31f..ec44a8bc2f84 100644
+--- a/arch/arm64/boot/dts/qcom/pm8150b.dtsi
++++ b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
+@@ -22,6 +22,14 @@ power-on@800 {
+ 			status = "disabled";
+ 		};
+ 
++		qcom,typec@1500 {
++			compatible = "qcom,pm8150b-usb-typec";
++			status = "disabled";
++			reg = <0x1500>;
++			interrupts =
++				<0x2 0x15 0x5 IRQ_TYPE_EDGE_RISING>;
++		};
++
+ 		adc@3100 {
+ 			compatible = "qcom,spmi-adc5";
+ 			reg = <0x3100>;
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-> >git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git
-> >
-> >							Thanx, Paul
-> >
-> >> ---
-> >>  kernel/rcu/tree.h | 4 ++--
-> >>  1 file changed, 2 insertions(+), 2 deletions(-)
-> >> 
-> >> diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
-> >> index 512829eed545..3356842bc185 100644
-> >> --- a/kernel/rcu/tree.h
-> >> +++ b/kernel/rcu/tree.h
-> >> @@ -41,7 +41,7 @@ struct rcu_node {
-> >>  	raw_spinlock_t __private lock;	/* Root rcu_node's lock protects */
-> >>  					/*  some rcu_state fields as well as */
-> >>  					/*  following. */
-> >> -	unsigned long gp_seq;	/* Track rsp->rcu_gp_seq. */
-> >> +	unsigned long gp_seq;	/* Track rsp->gp_seq. */
-> >>  	unsigned long gp_seq_needed; /* Track furthest future GP request. */
-> >>  	unsigned long completedqs; /* All QSes done for this node. */
-> >>  	unsigned long qsmask;	/* CPUs or groups that need to switch in */
-> >> @@ -149,7 +149,7 @@ union rcu_noqs {
-> >>  /* Per-CPU data for read-copy update. */
-> >>  struct rcu_data {
-> >>  	/* 1) quiescent-state and grace-period handling : */
-> >> -	unsigned long	gp_seq;		/* Track rsp->rcu_gp_seq counter. */
-> >> +	unsigned long	gp_seq;		/* Track rsp->gp_seq. */
-> >>  	unsigned long	gp_seq_needed;	/* Track furthest future GP request. */
-> >>  	union rcu_noqs	cpu_no_qs;	/* No QSes yet for this CPU. */
-> >>  	bool		core_needs_qs;	/* Core waits for quiesc state. */
-> >> -- 
-> >> 2.20.1 (Apple Git-117)
-> >> 
-> 
-> -- 
-> Wei Yang
-> Help you, Help me
