@@ -2,118 +2,74 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A492AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A946BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88682206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:25:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9544920835
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:25:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbgFLTZd (ORCPT
+        id S1726499AbgFLTZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 15:25:33 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58216 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726417AbgFLTZ3 (ORCPT
+        Fri, 12 Jun 2020 15:25:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45142 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726478AbgFLTZe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 15:25:29 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05CIXtr5115011;
-        Fri, 12 Jun 2020 15:25:26 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31m1vc0ptv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 12 Jun 2020 15:25:26 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05CIg3gu142032;
-        Fri, 12 Jun 2020 15:25:26 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31m1vc0pth-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 12 Jun 2020 15:25:26 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05CJLhMt029152;
-        Fri, 12 Jun 2020 19:25:24 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma03ams.nl.ibm.com with ESMTP id 31g2s83t5x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 12 Jun 2020 19:25:24 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05CJPMuI63373472
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jun 2020 19:25:22 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0B6B652051;
-        Fri, 12 Jun 2020 19:25:22 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.133.187])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 3569F5204F;
-        Fri, 12 Jun 2020 19:25:21 +0000 (GMT)
-Message-ID: <1591989920.11061.90.camel@linux.ibm.com>
-Subject: Re: [PATCH 1/2] integrity: Add errno field in audit message
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        sgrubb@redhat.com, paul@paul-moore.com
-Cc:     rgb@redhat.com, linux-integrity@vger.kernel.org,
-        linux-audit@redhat.com, linux-kernel@vger.kernel.org
-Date:   Fri, 12 Jun 2020 15:25:20 -0400
-In-Reply-To: <20200611000400.3771-1-nramas@linux.microsoft.com>
-References: <20200611000400.3771-1-nramas@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-11_23:2020-06-11,2020-06-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
- lowpriorityscore=0 bulkscore=0 impostorscore=0 clxscore=1015 phishscore=0
- mlxlogscore=999 cotscore=-2147483648 adultscore=0 spamscore=0
- suspectscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006110174
+        Fri, 12 Jun 2020 15:25:34 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B1ADC03E96F;
+        Fri, 12 Jun 2020 12:25:34 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jjpIn-00030f-Le; Fri, 12 Jun 2020 21:25:21 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id E09E0100F5A; Fri, 12 Jun 2020 21:25:20 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     paulmck@kernel.org
+Cc:     LKML <linux-kernel@vger.kernel.org>, rcu@vger.kernel.org,
+        Andrew Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH x86/entry: Force rcu_irq_enter() when in idle task
+In-Reply-To: <20200612191921.GA18255@paulmck-ThinkPad-P72>
+References: <20200611235305.GA32342@paulmck-ThinkPad-P72> <CALCETrWo-zpiDsYGtKvm8LzW6CQ5L19a3+Ag_9g8aL4wHaJj9g@mail.gmail.com> <871rmkzcc8.fsf@nanos.tec.linutronix.de> <87wo4cxubv.fsf@nanos.tec.linutronix.de> <20200612174953.GA19188@paulmck-ThinkPad-P72> <20200612191921.GA18255@paulmck-ThinkPad-P72>
+Date:   Fri, 12 Jun 2020 21:25:20 +0200
+Message-ID: <87r1ukxf1b.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-06-10 at 17:03 -0700, Lakshmi Ramasubramanian wrote:
-> Error code is not included in the audit messages logged by
-> the integrity subsystem. Add a new field namely "errno" in
-> the audit message and set the value to the error code passed
-> to integrity_audit_msg() in the "result" parameter.
-> 
-> Sample audit message:
-> 
-> [    6.284329] audit: type=1804 audit(1591756723.627:2): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=kernel op=add_boot_aggregate cause=alloc_entry errno=-12 comm="swapper/0" name="boot_aggregate" res=0
-> 
-> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-> Suggested-by: Steve Grubb <sgrubb@redhat.com>
----
->  security/integrity/integrity_audit.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/security/integrity/integrity_audit.c b/security/integrity/integrity_audit.c
-> index 5109173839cc..8cbf415bb977 100644
-> --- a/security/integrity/integrity_audit.c
-> +++ b/security/integrity/integrity_audit.c
-> @@ -42,7 +42,8 @@ void integrity_audit_msg(int audit_msgno, struct inode *inode,
->  			 from_kuid(&init_user_ns, audit_get_loginuid(current)),
->  			 audit_get_sessionid(current));
->  	audit_log_task_context(ab);
-> -	audit_log_format(ab, " op=%s cause=%s comm=", op, cause);
-> +	audit_log_format(ab, " op=%s cause=%s errno=%d comm=",
-> +			 op, cause, result);
+"Paul E. McKenney" <paulmck@kernel.org> writes:
+> On Fri, Jun 12, 2020 at 10:49:53AM -0700, Paul E. McKenney wrote:
+>> I will therefore address this issue in a follow-on patch.
+>
+> I should add that -your- patch from yesterday did -not- cause this
+> problem, in case that is of interest.
 
-The idea is a good idea, but you're assuming that "result" is always
-errno.  That was probably true originally, but isn't now.  For
-example, ima_appraise_measurement() calls xattr_verify(), which
-compares the security.ima hash with the calculated file hash.  On
-failure, it returns the result of memcmp().  Each and every code path
-will need to be checked.
+So I still can add it back and amend the changelog and comment:
 
->  	audit_log_untrustedstring(ab, get_task_comm(name, current));
->  	if (fname) {
->  		audit_log_format(ab, " name=");
+Change the condition from !rcu_is_watching() to is_idle_task(current) ||
+rcu_is_watching() which enforces that interrupts in the idle task
+unconditionally invoke rcu_irq_enter() independent of the RCU state. For
+most scenarios is_idle_task() would be sufficient but Task RCU needs it
+according to Paul.
 
+Thanks,
+
+        tglx
