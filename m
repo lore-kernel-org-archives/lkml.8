@@ -2,248 +2,150 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA1DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E24AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0197C20792
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:42:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="hiBvsAJI"
+	by mail.kernel.org (Postfix) with ESMTP id 2F73620792
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:43:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbgFLKmQ (ORCPT
+        id S1726347AbgFLKnu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 06:42:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49048 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgFLKmO (ORCPT
+        Fri, 12 Jun 2020 06:43:50 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:39656 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725911AbgFLKns (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 06:42:14 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13751C03E96F;
-        Fri, 12 Jun 2020 03:42:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=+/zVZ4xSc6zf51pb/iTgXAxueiSidaaop3BzA6MhzUQ=; b=hiBvsAJIBYZ8ZZDa+zJ29MUiv
-        Zv0DcEwn8VQsQ3JAalW80R/pMSSRvxDen5ptzjZzCLyDHaPx7rMUy9ITaby4wNmfdDOcCvqLPpCSN
-        V8P1ZyPoibCU0dR/eF1lCvhR0oD4N4XQfs+nHOPaYk86r+lqZjjPtCbQ9qVbGgeHMn27NKLtbF5W+
-        FFxZXnibXRPasTZV61Te5zfYGmJ9GNo4NAqUMzTihS7+ZwImTJhJOsu+xX+6kOwCF+mgfgxZVw/HV
-        I0WV+6YILRg2ePxEGlKBSbvF75cAIyVZukTHtwfkUSKPR5IBWoD6CN8x8m1GwBPH9jnA/HiLz31i9
-        yhamC4eNg==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:52644)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jjh8T-0002du-HW; Fri, 12 Jun 2020 11:42:09 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jjh8S-0006CC-RA; Fri, 12 Jun 2020 11:42:08 +0100
-Date:   Fri, 12 Jun 2020 11:42:08 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        kernel@pengutronix.de
-Subject: Re: [PATCH v2] net: mvneta: Fix Serdes configuration for 2.5Gbps
- modes
-Message-ID: <20200612104208.GG1551@shell.armlinux.org.uk>
-References: <20200612083847.29942-1-s.hauer@pengutronix.de>
- <20200612084710.GC1551@shell.armlinux.org.uk>
- <20200612100114.GE1551@shell.armlinux.org.uk>
- <20200612101820.GF1551@shell.armlinux.org.uk>
+        Fri, 12 Jun 2020 06:43:48 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R981e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0U.M.ky._1591958621;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U.M.ky._1591958621)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 12 Jun 2020 18:43:41 +0800
+Subject: Re: [PATCH v11 00/16] per memcg lru lock
+To:     Hugh Dickins <hughd@google.com>
+Cc:     akpm@linux-foundation.org, mgorman@techsingularity.net,
+        tj@kernel.org, khlebnikov@yandex-team.ru,
+        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
+        willy@infradead.org, hannes@cmpxchg.org, lkp@intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, shakeelb@google.com,
+        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com
+References: <1590663658-184131-1-git-send-email-alex.shi@linux.alibaba.com>
+ <alpine.LSU.2.11.2006072100390.2001@eggly.anvils>
+ <31943f08-a8e8-be38-24fb-ab9d25fd96ff@linux.alibaba.com>
+ <alpine.LSU.2.11.2006091904530.2779@eggly.anvils>
+ <730c595b-f4bf-b16a-562e-de25b9b7eb97@linux.alibaba.com>
+ <alpine.LSU.2.11.2006111409280.10801@eggly.anvils>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <b6b5b74e-d960-8d2c-3f2f-f4a38eb633c3@linux.alibaba.com>
+Date:   Fri, 12 Jun 2020 18:43:39 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200612101820.GF1551@shell.armlinux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <alpine.LSU.2.11.2006111409280.10801@eggly.anvils>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 11:18:20AM +0100, Russell King - ARM Linux admin wrote:
-> On Fri, Jun 12, 2020 at 11:01:15AM +0100, Russell King - ARM Linux admin wrote:
-> > On Fri, Jun 12, 2020 at 09:47:10AM +0100, Russell King - ARM Linux admin wrote:
-> > > On Fri, Jun 12, 2020 at 10:38:47AM +0200, Sascha Hauer wrote:
-> > > > The Marvell MVNETA Ethernet controller supports a 2.5Gbps SGMII mode
-> > > > called DRSGMII. Depending on the Port MAC Control Register0 PortType
-> > > > setting this seems to be either an overclocked SGMII mode or 2500BaseX.
-> > > > 
-> > > > This patch adds the necessary Serdes Configuration setting for the
-> > > > 2.5Gbps modes. There is no phy interface mode define for overclocked
-> > > > SGMII, so only 2500BaseX is handled for now.
-> > > > 
-> > > > As phy_interface_mode_is_8023z() returns true for both
-> > > > PHY_INTERFACE_MODE_1000BASEX and PHY_INTERFACE_MODE_2500BASEX we
-> > > > explicitly test for 1000BaseX instead of using
-> > > > phy_interface_mode_is_8023z() to differentiate the different
-> > > > possibilities.
-> > > > 
-> > > > Fixes: da58a931f248f ("net: mvneta: Add support for 2500Mbps SGMII")
-> > > > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> > > 
-> > > 2500base-X is used today on Armada 388 and Armada 3720 platforms and
-> > > works - it is known to interoperate with Marvell PP2.2 hardware, as
-> > > well was various SFPs such as the Huawei MA5671A at 2.5Gbps.  The way
-> > > it is handled on these platforms is via the COMPHY, requesting that
-> > > the serdes is upclocked from 1.25Gbps to 3.125Gbps.
-> > > 
-> > > This "DRSGMII" mode is not mentioned in the functional specs for either
-> > > the Armada 388 or Armada 3720, the value you poke into the register is
-> > > not mentioned either.  As I've already requested, some information on
-> > > exactly what this "DRSGMII" is would be very useful, it can't be
-> > > "double-rate SGMII" because that would give you 2Gbps instead of 1Gbps.
-> > > 
-> > > So, I suspect this breaks the platforms that are known to work.
-> > > 
-> > > We need a proper description of what DRSGMII is before we can consider
-> > > taking any patches for it.
-> > 
-> > Okay, having dug through the Armada XP, 370, 388, 3720 specs, I think
-> > this is fine after all - but something that will help for the future
-> > would be to document that this register does not exist on the 388 and
-> > 3720 devices (which brings up the question whether we should be writing
-> > it there.)  The field was moved into the comphy on those devices.
-> > 
-> > So, it looks like if we have a comphy, we should not be writing this
-> > register.
-> > 
-> > What's more, the write to MVNETA_SERDES_CFG should not be in
-> > mvneta_port_power_up(); it's likely that XP and 370 will not work
-> > properly with phylink.  It needs to be done in a similar location to
-> > mvneta_comphy_init(), so that phylink can switch between 1G and 2.5G
-> > speeds.
-> > 
-> > As you have an Armada XP system, you are best placed to test moving
-> > that write.
-> 
-> Here's my suggestion - it won't apply to mainline or net* trees, but
-> gives you the idea I'm proposing:
-> 
-> diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
-> index 9e25d608d856..17db74d61bc2 100644
-> --- a/drivers/net/ethernet/marvell/mvneta.c
-> +++ b/drivers/net/ethernet/marvell/mvneta.c
-> @@ -107,9 +107,11 @@
->  #define      MVNETA_TX_IN_PRGRS                  BIT(1)
->  #define      MVNETA_TX_FIFO_EMPTY                BIT(8)
->  #define MVNETA_RX_MIN_FRAME_SIZE                 0x247c
-> +/* Only exists on Armada XP and Armada 370 */
->  #define MVNETA_SERDES_CFG			 0x24A0
-> -#define      MVNETA_SGMII_SERDES_PROTO		 0x0cc7
->  #define      MVNETA_QSGMII_SERDES_PROTO		 0x0667
-> +#define      MVNETA_SGMII_SERDES_PROTO		 0x0cc7
-> +#define      MVNETA_HSGMII_SERDES_PROTO		 0x1107
->  #define MVNETA_TYPE_PRIO                         0x24bc
->  #define      MVNETA_FORCE_UNI                    BIT(21)
->  #define MVNETA_TXQ_CMD_1                         0x24e4
-> @@ -3457,9 +3459,6 @@ static int mvneta_comphy_init(struct mvneta_port *pp)
->  {
->  	int ret;
->  
-> -	if (!pp->comphy)
-> -		return 0;
-> -
->  	ret = phy_set_mode_ext(pp->comphy, PHY_MODE_ETHERNET,
->  			       pp->phy_interface);
->  	if (ret)
-> @@ -3468,11 +3467,47 @@ static int mvneta_comphy_init(struct mvneta_port *pp)
->  	return phy_power_on(pp->comphy);
->  }
->  
-> +static int mvneta_config_interface(struct mvneta_port *pp,i
-> +				   phy_interface_t interface)
-> +{
-> +	int ret = 0;
-> +
-> +	if (pp->comphy) {
-> +		if (interface == PHY_INTERFACE_MODE_SGMII ||
-> +		    interface == PHY_INTERFACE_MODE_1000BASEX ||
-> +		    interface == PHY_INTERFACE_MODE_2500BASEX) {
-> +			ret = mvneta_comphy_init(pp);
-> +		}
-> +	} else {
-> +		switch (interface) {
-> +		case PHY_INTERFACE_MODE_QSGMII:
-> +			mvreg_write(pp, MVNETA_SERDES_CFG,
-> +				    MVNETA_QSGMII_SERDES_PROTO);
-> +			break;
-> +
-> +		case PHY_INTERFACE_MODE_SGMII:
-> +		case PHY_INTERFACE_MODE_1000BASEX:
-> +			mvreg_write(pp, MVNETA_SERDES_CFG,
-> +				    MVNETA_SGMII_SERDES_PROTO);
-> +			break;
-> +
-> +		case PHY_INTERFACE_MODE_2500BASEX:
-> +			mvreg_write(pp, MVNETA_SERDES_CFG,
-> +				    MVNETA_HSGMII_SERDES_PROTO);
-> +			break;
-> +		}
-> +	}
-> +
-> +	pp->phy_interface = interface;
-> +
-> +	return ret;
-> +}
-> +
->  static void mvneta_start_dev(struct mvneta_port *pp)
->  {
->  	int cpu;
->  
-> -	WARN_ON(mvneta_comphy_init(pp));
-> +	WARN_ON(mvneta_config_interface(pp, pp->phy_interface));
->  
->  	mvgmac_set_max_rx_size(&pp->gmac, pp->pkt_size);
->  	mvneta_txq_max_tx_size_set(pp, pp->pkt_size);
-> @@ -3702,14 +3737,9 @@ static int mvneta_pcs_config(struct phylink_config *config,
->  	/* We should never see Asym_Pause set */
->  	WARN_ON(phylink_test(advertising, Asym_Pause));
->  
-> -	if (pp->comphy && pp->phy_interface != interface &&
-> -	    (interface == PHY_INTERFACE_MODE_SGMII ||
-> -	     interface == PHY_INTERFACE_MODE_1000BASEX ||
-> -	     interface == PHY_INTERFACE_MODE_2500BASEX)) {
-> -		pp->phy_interface = interface;
-> -
-> +	if (pp->phy_interface != interface) {
->  		WARN_ON(phy_power_off(pp->comphy));
-> -		WARN_ON(mvneta_comphy_init(pp));
-> +		mvneta_config_interface(pp, interface);
->  	}
->  
->  	if (want_1ms_clock) {
-> @@ -4794,12 +4824,10 @@ static int mvneta_port_power_up(struct mvneta_port *pp, int phy_mode)
->  	/* MAC Cause register should be cleared */
->  	mvreg_write(pp, MVNETA_UNIT_INTR_CAUSE, 0);
->  
-> -	if (phy_mode == PHY_INTERFACE_MODE_QSGMII)
-> -		mvreg_write(pp, MVNETA_SERDES_CFG, MVNETA_QSGMII_SERDES_PROTO);
-> -	else if (phy_mode == PHY_INTERFACE_MODE_SGMII ||
-> -		 phy_interface_mode_is_8023z(phy_mode))
-> -		mvreg_write(pp, MVNETA_SERDES_CFG, MVNETA_SGMII_SERDES_PROTO);
-> -	else if (!phy_interface_mode_is_rgmii(phy_mode))
-> +	if (phy_mode != PHY_INTERFACE_MODE_QSGMII &&
-> +	    phy_mode != PHY_INTERFACE_MODE_SGMII &&
-> +	    !phy_interface_mode_is_8023z(phy_mode) &&
-> +	    !phy_interface_mode_is_rgmii(phy_mode))
->  		return -EINVAL;
->  
->  	return 0;
 
-With the obvious mistakes fixed (extraneous 'i' and lack of default
-case), it seems to still work on Armada 388 Clearfog Pro with 2.5G
-modules.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+在 2020/6/12 上午6:09, Hugh Dickins 写道:
+>> Anyway, I will send out new patchset
+>> with the first issue fixed. and then let's discussion base on it.
+> Sigh. I wish you had waited for me to send you fixes, or waited for an
+> identifiable tag like 5.8-rc1.  Andrew has been very hard at work with
+> mm patches to Linus, but it looks like there are still "data_race" mods
+> to come before -rc1, which may stop your v12 from applying cleanly.
+
+Sorry, I didn't aware you would had another sending... My fault.
+And yes, offical 5.8-rc is better base.
+
+> 
+>>> In the second, I was using rcu_read_lock() instead of trylock_page()
+>>> (like in my own patchset), but could not quite be sure of the case when
+>>> PageSwapCache gets set at the wrong moment. Gave up for the night, and
+>>> in the morning abandoned that, instead just shifting the call to
+>>> __isolate_lru_page_prepare() after the get_page_unless_zero(),
+>>> where that trylock_page() becomes safe (no danger of stomping on page
+>>> flags while page is being freed or newly allocated to another owner).
+>> Sorry, I don't know the problem of trylock_page here? Could you like to
+>> describe it as a race?
+> Races, yes. Look, I'll send you now patches 1 and 2: at least with those
+> in it should be safe for you and others to test compaction (if 5.8-rc1
+> turns out well: I think so much has gone in that it might have unrelated
+> problems, and often the -rc2 is much more stable).
+> 
+> But no point in sending 3 and 4 at this point, since ...
+> 
+
+I guess some concern may come from next mm bug?
+
+>>> I thought that a very safe change, but best to do some test runs with
+>>> it in before finalizing. And was then unpleasantly surprised to hit a
+>>> VM_BUG_ON_PAGE(lruvec_memcg(lruvec) != page->mem_cgroup) from
+>>> lock_page_lruvec_irqsave < relock_page_lruvec < pagevec_lru_move_fn <
+>>> pagevec_move_tail < lru_add_drain_cpu after 6 hours on one machine.
+>>> Then similar but < rotate_reclaimable_page after 8 hours on another.
+>>>
+>>> Only seen once before: that's what drove me to add patch 4 (with 3 to
+>>> revert the locking before it): somehow, when adding the lruvec locking
+>>> there, I just took it for granted that your patchset would have the
+>>> appropriate locking (or TestClearPageLRU magic) at the other end.
+>>>
+>>> But apparently not. And I'm beginning to think that TestClearPageLRU
+>>> was just to distract the audience from the lack of proper locking.
+>>>
+>>> I have certainly not concluded that yet, but I'm having to think about
+>>> an area of the code which I'd imagined you had under control (and I'm
+>>> puzzled why my testing has found it so very hard to hit). If we're
+>>> lucky, I'll find that pagevec_move_tail is a special case, and
+>>> nothing much else needs changing; but I doubt that will be so.
+> ... shows that your locking primitives are not yet good enough
+> to handle the case when tasks are moved between memcgs with
+> move_charge_at_immigrate set.  "bin/cg m" in the tests I sent,
+> but today I'm changing its "seconds=60" to "seconds=1" in hope
+> of speeding up the reproduction.
+
+Yes, I am using your great cases with 'm' parameter to do migration testing,
+but unlockly, no error found in my box.
+
+> 
+> Ah, good, two machines crashed in 1.5 hours: but I don't need to
+> examine the crashes, now that it's obvious there's no protection -
+> please, think about rotate_reclaimable_page() (there will be more
+> cases, but in practice that seems easiest to hit, so focus on that)
+> and how it is not protected from mem_cgroup_move_account().
+> > I'm thinking too. Maybe judicious use of lock_page_memcg() can fix it
+> (8 years ago it was unsuitable, but a lot has changed for the better
+> since then); otherwise it's back to what I've been doing all along,
+> taking the likely lruvec lock, and checking under that lock whether
+> we have the right lock (as your lruvec_memcg_debug() does), retrying
+> if not. Which may be more efficient than involving lock_page_memcg().
+> 
+> But I guess still worth sending my first two patches, since most of us
+> use move_charge_at_immigrate only for... testing move_charge_at_immigrate.
+> Whereas compaction bugs can hit any of us at any time.
+> 
+>>> There's one other unexplained and unfixed bug I've seen several times
+>>> while exercising mem_cgroup_move_account(): refcount_warn_saturate()
+>>> from where __mem_cgroup_clear_mc() calls mem_cgroup_id_get_many().
+>>> I'll be glad if that goes away when the lruvec locking is fixed,
+>>> but don't understand the connection. And it's quite possible that
+>>> this refcounting bug has nothing to do with your changes: I have
+>>> not succeeded in reproducing it on 5.7 nor on 5.7-rc7-mm1,
+>>> but I didn't really try long enough to be sure.
+> I got one of those quite quickly too after setting "cg m"'s seconds=1.
+> I think the best thing I can do while thinking and researching, is
+> give 5.7-rc7-mm1 a run on that machine with the speeded up moving,
+> to see whether or not that refcount bug reproduces.
+> 
+
+Millions thanks for help on this patchset!
+
+Alex
