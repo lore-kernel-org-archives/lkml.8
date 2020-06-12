@@ -2,172 +2,88 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED82C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 12:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 092A7C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 12:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EF052074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 12:46:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3283207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 12:49:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="E6VGAcVj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726281AbgFLMqk (ORCPT
+        id S1726290AbgFLMtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 08:46:40 -0400
-Received: from mga11.intel.com ([192.55.52.93]:14543 "EHLO mga11.intel.com"
+        Fri, 12 Jun 2020 08:49:06 -0400
+Received: from www.zeus03.de ([194.117.254.33]:35496 "EHLO mail.zeus03.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726253AbgFLMqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 08:46:39 -0400
-IronPort-SDR: 49zUuSK0a2jGt58vtpZE3Cp5JKCj49cKP8nfcl2IQOGRL3LZ5gsfmqf3Ef7av7/ILAig5OWKFb
- CtxRZnQ7blXQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2020 05:46:38 -0700
-IronPort-SDR: L21NZGrdqQp2qnuBtOPnXkZ0pSHOMGXSZDk/lEaKxTyXU2QxT6zlMggNm0vyLrifRezR3WBljH
- Kush8WavtS2A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,503,1583222400"; 
-   d="scan'208";a="380690326"
-Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 12 Jun 2020 05:46:35 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 12 Jun 2020 15:46:34 +0300
-Date:   Fri, 12 Jun 2020 15:46:34 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Prashant Malani <pmalani@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tim Wawrzynczak <twawrzynczak@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>
-Subject: Re: [PATCH 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
-Message-ID: <20200612124634.GD3213128@kuha.fi.intel.com>
-References: <20200422222242.241699-1-pmalani@chromium.org>
- <20200511192800.GA28762@bogus>
- <20200511204635.GC136540@google.com>
- <20200512134154.GC2085641@kuha.fi.intel.com>
- <CAL_JsqJ2pbh5BbjGd9eEiD6-sV94=omk6o+mLXjCYiVnUOtO=g@mail.gmail.com>
- <CACeCKadiiokPdPB2Q5WBQFrPuxjpm3TiDgaaerncVR_Z7Z0nvg@mail.gmail.com>
- <CAL_Jsq+MM3-ugLvSGc_wc6RvHVyxyDUD0DkvwQaQJMYCCFpfHg@mail.gmail.com>
- <20200609235740.GA154315@google.com>
- <20200610153356.GC3213128@kuha.fi.intel.com>
- <CAL_JsqKsObFhC+J6gK2EDXdpBLO6t+rswXDipnjt4uMr2Qx2zg@mail.gmail.com>
+        id S1726089AbgFLMtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 08:49:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=k1; bh=LHqHHlSRkMeun3OMl7GCaw/Jhst
+        3kMW958QRIBoAimc=; b=E6VGAcVjCTZfHOYZdDcB2jZtt66FmKKy1D0Tu0uJBFw
+        wgleUmX1Q8b02fh8arFowu7umeCaWSNAmtyxewMLwGNiY+0iC9IBxk8M96rVes6P
+        fElxd8Wx+mSFIs66+0bgNb1rUBxQEonMTM+bw6ORRChG80ccIZV2BJn+CD+qwO6A
+        =
+Received: (qmail 230824 invoked from network); 12 Jun 2020 14:49:03 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 12 Jun 2020 14:49:03 +0200
+X-UD-Smtp-Session: l3s3148p1@IEB/gOKnIOEgAwDPXwbpAGeWwLnioHPK
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-renesas-soc@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Oleksij Rempel <o.rempel@pengutronix.de>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>
+Subject: [PATCH] lib: update DEBUG_SHIRQ docs to match reality
+Date:   Fri, 12 Jun 2020 14:48:44 +0200
+Message-Id: <20200612124844.19422-1-wsa+renesas@sang-engineering.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKsObFhC+J6gK2EDXdpBLO6t+rswXDipnjt4uMr2Qx2zg@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 10:53:45AM -0600, Rob Herring wrote:
-> On Wed, Jun 10, 2020 at 9:34 AM Heikki Krogerus
-> <heikki.krogerus@linux.intel.com> wrote:
-> >
-> > On Tue, Jun 09, 2020 at 04:57:40PM -0700, Prashant Malani wrote:
-> > > Hi Rob,
-> > >
-> > > Thanks again for the comments and feedback. Kindly see responses inline:
-> > >
-> > > (Trimming unrelated text from thread):
-> > >
-> > > On Tue, Jun 09, 2020 at 02:30:11PM -0600, Rob Herring wrote:
-> > > > On Fri, May 29, 2020 at 5:30 PM Prashant Malani <pmalani@chromium.org> wrote:
-> > > > >
-> > > > > Nodes truncated and unrelated fields omitted in the interest of brevity:
-> > > > >
-> > > > > // Chrome OS EC Type C Port Manager.
-> > > > > typec {
-> > > > >     compatible = "google,cros-ec-typec";
-> > > > >     #address-cells = <1>;
-> > > > >     #size-cells = <0>;
-> > > > >
-> > > > >     connector@0 {
-> > > > >         compatible = "usb-c-connector";
-> > > > >         reg = <0>;
-> > > > >         power-role = "dual";
-> > > > >         data-role = "dual";
-> > > > >         try-power-role = "source";
-> > > > >         mode-switch = <&foo_mux>;
-> > > > >         // Other switches can point to the same mux.
-> > > > >         ....
-> > > >
-> > > > The connector is supposed to have 'ports' for USB2, USB3, and Aux
-> > > > unless the parent is the USB controller.
-> > > Understood; so, coupled with Heikki's explanation (see below for where
-> > > I've pasted it), would it be something like so? (adding inline to the connector
-> > > node definition):
-> > >
-> > >             ports {
-> > >                 #address-cells = <1>;
-> > >                 #size-cells = <0>;
-> > >
-> > >                 port@0 {
-> > >                     reg = <0>;
-> > >                     usb_con_hs: endpoint {
-> > >                         remote-endpoint = <&foo_usb_hs_controller>;
-> > >                     };
-> > >                 };
-> > >
-> > >                 port@1 {
-> > >                     reg = <1>;
-> > >                     usb_con0_ss: endpoint@0 {
-> > >                         remote-endpoint = <&mode_mux_in>;
-> > >                     };
-> > >                 };
-> > >
-> > >                 port@2 {
-> > >                     reg = <2>;
-> > >                     usb_con_sbu: endpoint {
-> > >                         remote-endpoint = <&foo_dp_aux>;
-> > >                     };
-> > >                 };
-> > >             };
-> >
-> > The pins that can be reassigned can in practice go anywhere. We can't
-> > group them in any way. What do we do for example when the two sideband
-> > pins go to different locations?
-> 
-> The sideband pins from the connector go to multiple places or the
-> sideband signal from a controller go to multiple connectors? Either
-> way, that's solved with multiple endpoints. In the former case, port@2
-> would have multiple endpoints with all the possible connections. The
-> general model of the graph is each port is a separate data channel and
-> multiple endpoints are either a mux or fanout depending on the data
-> direction.
+There is no extra interrupt when registering a shared interrupt handler
+since 2011. Update the Kconfig text to make it clear and to avoid wrong
+assumptions when debugging issues found by it.
 
-No, that's not what I'm trying to ask here. Bad example, sorry. I'm
-trying to understand why is it necessary to slit the connector into
-three separate interfaces? There does not seem to be anything in the
-kernel that would benefit from that. Why isn't the connector described
-as a single interface in devicetree?
+Fixes: 6d83f94db95c ("genirq: Disable the SHIRQ_DEBUG call in request_threaded_irq for now")
+Link: https://lore.kernel.org/linux-i2c/859e8211-2c56-8dd5-d6fb-33e4358e4128@pengutronix.de/T/#mf24d7070d7e0c8f17b6be6ceb51df94b7d7613b3
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+---
 
-My concern with the three separate interfaces is that they may force
-us to know in kernel which of the three interfaces are association
-with a mode, and actually not just the mode, but the possible the pin
-configurations of the mode. That is something that we may end up
-having to hard code into the drivers, even though it does not provide
-any useful information to us, and that would not be OK.
+I'd think this could go in via one of tglx' trees?
 
-Right now they also allow making assumptions regarding the alternate
-modes since there are no "bindings" for those, for example, if these
-OF graph ports have an endpoint to the DP, it means DP alt mode is
-supported. But that is of course not true. DisplayPort is used also
-with other alternate modes. We must never make any assumptions based
-on those interfaces. So again, why do we have them?
+ lib/Kconfig.debug | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Either I'm missing something, or the devicetree description of the
-Type-C connectors really is way too complex, way too "low level",
-causing us potential problems without providing anything that we could
-actually ever use in the operating system.
-
-
-thanks,
-
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index ef675beccab1..50522d3a7770 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -845,10 +845,10 @@ config DEBUG_SHIRQ
+ 	bool "Debug shared IRQ handlers"
+ 	depends on DEBUG_KERNEL
+ 	help
+-	  Enable this to generate a spurious interrupt as soon as a shared
+-	  interrupt handler is registered, and just before one is deregistered.
+-	  Drivers ought to be able to handle interrupts coming in at those
+-	  points; some don't and need to be caught.
++	  Enable this to generate a spurious interrupt just before a shared
++	  interrupt handler is deregistered (generating one when registering
++	  is currently disabled). Drivers need to handle this correctly. Some
++	  don't and need to be caught.
+ 
+ menu "Debug Oops, Lockups and Hangs"
+ 
 -- 
-heikki
+2.20.1
+
