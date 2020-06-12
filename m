@@ -2,160 +2,190 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FF3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 11:17:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A4DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 11:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14567207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 11:17:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6CC3207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 11:19:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PnDUJ1l1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="EyaHB6Um";
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="YgsAK9m1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726349AbgFLLRZ (ORCPT
+        id S1726271AbgFLLTz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 07:17:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726219AbgFLLRY (ORCPT
+        Fri, 12 Jun 2020 07:19:55 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:26121 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbgFLLTx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 07:17:24 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1755C03E96F
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 04:17:23 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id l17so7777750wmj.0
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 04:17:23 -0700 (PDT)
+        Fri, 12 Jun 2020 07:19:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1591960792; x=1623496792;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=MzeAv/uxP+03PmE8sGcor5TRaIUdworcjSgMGdxm/zU=;
+  b=EyaHB6UmUnEOhObHmUGFL/Svo43Iusqyi1eSihTyThCHqYZLy2NdQCGD
+   cXV9WvBnBc+HUWj5GDSh1aCF92w7js4jd/kEaAiKIV1uZtsV92NL0buTb
+   fmbdjkVy3M3CHC98/4ZvxBZjsHmugEG325spHSiIGUohe4QeEd+Y5OGj0
+   5XShIuHdBdvt6I17WHLwrCBj4IcARziEY2SNfbgyR1llaoKsXsPmFQOiV
+   vhB+qhVFOWs3hdIkcdI4aiyCAwK42O4qeIN/A2vgz0jwDYejbNaoglU/l
+   UXln5V0R16GSE9TGwQ+chx7f0LT3kij4e69OaZdmWVjkAoy4OkDm8FzVW
+   Q==;
+IronPort-SDR: TlXdqw7HBokRsaptRgqS0yI+GxWUhaGHXLtguS15MR1s9CBroPvJIFf8wP45xt3ucPxcL7v1t9
+ k3VL0bGfSR01JgGbPdKhVNHRpXG99q5JvyrzNdN2WUqiLqIY0LK13G2PMjySzXIN/4fBbhDzLR
+ KPy7bnpRIzXIxhJ5gtpX1oeESJvsdGrxTsNlhm8kt6E+zKBT5jGGpjgk4XfLtPZPoriyF3Ac58
+ RetA8FWKA9gRcd+E3fPLfZ3fO9CTZFD7KTkf9HXP70ZeMjNo+FfsQBfq58nzkUWvac0kXAlHs2
+ +IA=
+X-IronPort-AV: E=Sophos;i="5.73,503,1583218800"; 
+   d="scan'208";a="79852257"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 12 Jun 2020 04:19:52 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Fri, 12 Jun 2020 04:19:48 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3 via Frontend
+ Transport; Fri, 12 Jun 2020 04:19:48 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kVF5QvfcbHSRC0wtBAzk6mnNgB5wa11fhyWcqOs55/xAVVhOcq1jAZwjK5INp5xi8jjPfhFudVD7tlz0R11JM2CRDuAdDEg/E9V5jxS0lFMR5XyiQz8ubuorqRY9duKVmpg6NxyQCpvxUHUnJvkOkbXgegbwYhdY1qYUAOYgscVUmACKSGZj6C6OINloh3FoCszxjmwp3D1QdPl8Zbs1ihbjJTkebJMSBO4taWpleDlIrSPjNAlXi3X5LXgbVJ9LttMokRN1L9Kvm4U+QPsyiZOVuZK9bdd+T8is6SIIaBWGVM0n0738Ik2xj46ccbLBPqD6Oy1EirNbBHwQmDYbWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BtE5mJzFD2ITjLh14Q0+u1iHMZX+ApnVyj3ixnSpRvU=;
+ b=D71nhHKpx/u916QLmqlUHp1M7qKRryJKx0CjaTW5wusim64VgjHP4cVugdQoxm+dWvASWoqmoKDmH+0XmplG0/gF6G5hKbwaYfYfdIcgIHBt2D/MUQ3ckZgwpQuavjlue/684CpKsHnTSP8O2vRcbSbZ5UFV3Kt1LIhJY/UoO1j9ziF6HgEkraHBrrw9xRYSyyA9oX+OavJQPqU6sHjMpo9t3QrOiIC1XPeqE1DRt167z/e6CckJjIbwFquG7dtTFlL+EHgST7MO1FDDtGwYicUutdjdJR0wdhYxB2CpDlNSp1BkEvrsNTfsTxtU1ZoZ76fEX3SZ8F5GtGddhRzAow==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=lFJvzabjoEZ+HtsOECcEtmqFE9pBFs7uCPFeRIh5sLc=;
-        b=PnDUJ1l1npEElayWuGR6BbsRPZMBMfoz+SUfyLlD7JrXmEYvSkr27n9p5szcYOrl/9
-         B0fJ+fBTrwV3DAEyK0YGqEydXAUQk7egq6QTT7afNlyy1vEseRA7M+rPi6T6BJ+NC3Or
-         FVfZA/9Ieb3tOmQYm39PCrTAs0h5Um/vx1RiOait6i2WXtJMxl2QnUx14LFf1FxpeWFN
-         BOtFzC6Hdze7c3jUJ11SauoLPwcSeZbwDutqusueHnIm4NhiuumiBsKw5vNMPg6wFcFS
-         0ZJrUfgGXyBG+qPOsRZaB/3RHYZHQ59NqgXSZcau7sGGO2DNWpBI1QwEZ5zNrdibuNFu
-         8puQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=lFJvzabjoEZ+HtsOECcEtmqFE9pBFs7uCPFeRIh5sLc=;
-        b=QukZ+BH9MJydw0rYp9IBrF+GGPUP+79u6LvNSMoykwJOF7ugrfu2J+1y0uidWj+zCh
-         BtJTMpR0aTGuc2kD4sval2azq6a5bWZiSnm5hRo8CXRq3LjfE72gDXccWtehecKZ7gaO
-         4RN0QG4TmheEpTgpfXZfkDZ032zAXBbe5miuh9Q9N+as0X/f1s1bFple2Y7niVG2ZlAB
-         V1RPozodcFs/v19gSLR7nA8gecT1TGKJAWUGH48Cj2ej+u91/U2ICTLEvuR/nOVOF3CN
-         wqhtsblgrkNtlei/0v1vG2eQXEiLeQ3+BKMIdpjsjBPkdVdbLgO+35JZvsekNXtkyGdg
-         umGg==
-X-Gm-Message-State: AOAM530yAGU2rNpnyzV2qBjs7amU++AyWSdJHFXmYLkiVCXGMd+wm+hm
-        lJfuR67W2WlLTeNfpjsPbzGalXIkc5g=
-X-Google-Smtp-Source: ABdhPJy/H/RDxG/sjS0gqbAVmPeBzeGEkD+BK9JeLjyyQfM2QDREy9dBILVxAKQRbzNWeKEttBazIw==
-X-Received: by 2002:a05:600c:2945:: with SMTP id n5mr13825316wmd.189.1591960640116;
-        Fri, 12 Jun 2020 04:17:20 -0700 (PDT)
-Received: from dell ([2.27.167.101])
-        by smtp.gmail.com with ESMTPSA id p9sm8205945wma.48.2020.06.12.04.17.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 04:17:19 -0700 (PDT)
-Date:   Fri, 12 Jun 2020 12:17:17 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Gene Chen <gene.chen.richtek@gmail.com>
-Cc:     matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Gene Chen <gene_chen@richtek.com>, Wilma.Wu@mediatek.com,
-        shufan_lee@richtek.com, cy_huang@richtek.com
-Subject: Re: [PATCH] mfd: mt6360: Fix register driver NULL pointer by add
- driver name
-Message-ID: <20200612111717.GA2311694@dell>
-References: <1591609125-3761-1-git-send-email-gene.chen.richtek@gmail.com>
- <20200608192829.GG4106@dell>
- <CAE+NS36mxw-FpQhJ4qV=_+r2CXVi_PaGaZo2m3jXAGFuOO252Q@mail.gmail.com>
- <20200609125305.GL4106@dell>
- <CAE+NS36b8fV2JnSEJpky+0ES3KTYmQzC0MRTfRUf8yRsJh_bpQ@mail.gmail.com>
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BtE5mJzFD2ITjLh14Q0+u1iHMZX+ApnVyj3ixnSpRvU=;
+ b=YgsAK9m1dF3/f9XsMpq7/kv8mJZAyFbFeqXz0az9I40qYsKlnquiw30QZ4d82hybfQUYSss/YTq9OcF9PCMqI9suuuwbFvi74GWlawDHQQZRlTa64uIPrCkpPzLxrBEZH/NI/6G0GEj27iStsu3rJioqCysFBJzSw2i/zcMgu4w=
+Received: from BYAPR11MB2999.namprd11.prod.outlook.com (2603:10b6:a03:90::17)
+ by BYAPR11MB3655.namprd11.prod.outlook.com (2603:10b6:a03:f6::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.21; Fri, 12 Jun
+ 2020 11:19:48 +0000
+Received: from BYAPR11MB2999.namprd11.prod.outlook.com
+ ([fe80::a9a1:a786:2e11:a5f5]) by BYAPR11MB2999.namprd11.prod.outlook.com
+ ([fe80::a9a1:a786:2e11:a5f5%3]) with mapi id 15.20.3066.023; Fri, 12 Jun 2020
+ 11:19:48 +0000
+From:   <Eugen.Hristev@microchip.com>
+To:     <linux-media@vger.kernel.org>
+CC:     <lkp@intel.com>, <kbuild-all@lists.01.org>,
+        <clang-built-linux@googlegroups.com>,
+        <linux-kernel@vger.kernel.org>, <mchehab@kernel.org>,
+        <hverkuil@xs4all.nl>
+Subject: Re: drivers/media/platform/atmel/atmel-sama5d2-isc.c:323:34: warning:
+ unused variable 'atmel_isc_of_match'
+Thread-Topic: drivers/media/platform/atmel/atmel-sama5d2-isc.c:323:34:
+ warning: unused variable 'atmel_isc_of_match'
+Thread-Index: AQHWQH8vHj1heRZtYkSl4nyeGq2n4ajU1cSA
+Date:   Fri, 12 Jun 2020 11:19:48 +0000
+Message-ID: <328e45a4-ed0b-9ff7-9849-7a68d1a110d7@microchip.com>
+References: <202006121424.PByDmwjQ%lkp@intel.com>
+In-Reply-To: <202006121424.PByDmwjQ%lkp@intel.com>
+Accept-Language: en-US, ro-RO
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+authentication-results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none
+ header.from=microchip.com;
+x-originating-ip: [82.76.24.202]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e507d32a-33d8-4d71-2e40-08d80ec284a9
+x-ms-traffictypediagnostic: BYAPR11MB3655:
+x-microsoft-antispam-prvs: <BYAPR11MB3655A6D41CD35914B1797BFFE8810@BYAPR11MB3655.namprd11.prod.outlook.com>
+x-bypassexternaltag: True
+x-ms-oob-tlc-oobclassifiers: OLM:26;
+x-forefront-prvs: 0432A04947
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Q/Q2rZJ412XoyxeKpy/6P5ChazMBLkqy3muOfzB9YRC5i/lGk6jNS6FCw/lKN9t6ohK7u45A+ICJTvM6GZ6i4F/fQx184Qa/EamYZTi05H67bM8MzC+JOAQIMgkdNSg5FsVrOJl7oFZaKauS2SvKAKGtrPec0vYi09m0cJ6ksWONzT0MgI9d7Yb89KieTC2U4KCXiyChtisbDcecKDS8iZ1ssw1TmUBwpLeARRsmdh/HHKO5p/D9oFau6XbzapytepyDdgDX9XzoCbk8S6Is1V5Pz6IRFZGFcNFuONFdt7TRmauIkT+omDhm45QaJpnynKRrm7V7JoTpF11v89oet1zBBjSj4fpWuo6O6DwuA6SXi8ZATBasu+kSOAu8MMxK5SyQOALvKSypz7hcbEACDLl+cSD3/x6qdiR4ll5Nmm70ARs6s8Omg+IQvToBKlENIk+FlPeAMSR8eh0A69cSxw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB2999.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(396003)(376002)(366004)(136003)(346002)(66556008)(83380400001)(2906002)(6506007)(4326008)(6512007)(26005)(53546011)(71200400001)(186003)(83080400001)(5660300002)(6916009)(54906003)(8936002)(66476007)(316002)(478600001)(64756008)(2616005)(8676002)(966005)(66946007)(6486002)(31696002)(36756003)(66446008)(76116006)(91956017)(31686004)(86362001)(43740500002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: GbOpwJtmPheB7fy7aBs2EQvsNhT3ZHg11LvPjkUWmJpxYKjT9kih+CihjsQ5nVR4bZ2cbavf+qSZMbhGsFMoP+jprvSUTkzNxJXvfPes8SjkUuX+/xlhPe8nP7vUEnmRMPTJoPXYX2TQ/Dh/iaEudZkMaXKulpfWFVSiuppz2iko/kDOJm/i6Ul+d42txLacsKU1PMGuMP3E4VbJb8Fu5N9VKHJNBv4GeZFmFSeRSJC/H4/6DW9IeJC+/S1BmvhVLdZtzXKfTuNXf9L5Z3QcT63YOjZY1G9WOJINH4fGj1yO8puf1C3bfiSfdefTaig9BK5Pc3lBUH/Wu59K4F5bYOpfN8085jB4W8AuGfB1XFyb62hwnNnJIq63qe4Rf1BsOkzUyJ8Dv9OyIFnxOjoHIbjqfT6krHonVxHt03+F+KHGRZf60JxR1Eym7nJDKo84hGRT6SSF5MaNAOw5Xm+5pNyS1d1n4bbOFHxPWRZqfgg=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <8E156AB7CF1C004690A2DBAC90DDB8C2@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAE+NS36b8fV2JnSEJpky+0ES3KTYmQzC0MRTfRUf8yRsJh_bpQ@mail.gmail.com>
+X-MS-Exchange-CrossTenant-Network-Message-Id: e507d32a-33d8-4d71-2e40-08d80ec284a9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2020 11:19:48.3790
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: P0xaAebiM6fzKfkLfhgp0IMHlumg+r55ON+yIthZ3ljZOXdDfZJgp5GzHxBQVgnFFjwPubVeaxYZsz8hCI5wc+5GK4Mm426IPyMHOxnvCjw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB3655
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 12 Jun 2020, Gene Chen wrote:
+On 12.06.2020 09:02, kernel test robot wrote:
 
-> Lee Jones <lee.jones@linaro.org> 於 2020年6月9日 週二 下午8:53寫道：
-> >
-> > On Tue, 09 Jun 2020, Gene Chen wrote:
-> >
-> > > Lee Jones <lee.jones@linaro.org> 於 2020年6月9日 週二 上午3:28寫道：
-> > > >
-> > > > On Mon, 08 Jun 2020, Gene Chen wrote:
-> > > >
-> > > > > From: Gene Chen <gene_chen@richtek.com>
-> > > > >
-> > > > > accidentally remove driver name when
-> > > > > replace probe by probe_new in add mt6360 mfd driver patch v4
-> > > > >
-> > > > > [  121.243012] EAX: c2a8bc64 EBX: 00000000 ECX: 00000000 EDX: 00000000
-> > > > > [  121.243012] ESI: c2a8bc79 EDI: 00000000 EBP: e54bdea8 ESP: e54bdea0
-> > > > > [  121.243012] DS: 007b ES: 007b FS: 0000 GS: 0000 SS: 0068 EFLAGS: 00010286
-> > > > > [  121.243012] CR0: 80050033 CR2: 00000000 CR3: 02ec3000 CR4: 000006b0
-> > > > > [  121.243012] Call Trace:
-> > > > > [  121.243012]  kset_find_obj+0x3d/0xc0
-> > > > > [  121.243012]  driver_find+0x16/0x40
-> > > > > [  121.243012]  driver_register+0x49/0x100
-> > > > > [  121.243012]  ? i2c_for_each_dev+0x39/0x50
-> > > > > [  121.243012]  ? __process_new_adapter+0x20/0x20
-> > > > > [  121.243012]  ? cht_wc_driver_init+0x11/0x11
-> > > > > [  121.243012]  i2c_register_driver+0x30/0x80
-> > > > > [  121.243012]  ? intel_lpss_pci_driver_init+0x16/0x16
-> > > > > [  121.243012]  mt6360_pmu_driver_init+0xf/0x11
-> > > > > [  121.243012]  do_one_initcall+0x33/0x1a0
-> > > > > [  121.243012]  ? parse_args+0x1eb/0x3d0
-> > > > > [  121.243012]  ? __might_sleep+0x31/0x90
-> > > > > [  121.243012]  ? kernel_init_freeable+0x10a/0x17f
-> > > > > [  121.243012]  kernel_init_freeable+0x12c/0x17f
-> > > > > [  121.243012]  ? rest_init+0x110/0x110
-> > > > > [  121.243012]  kernel_init+0xb/0x100
-> > > > > [  121.243012]  ? schedule_tail_wrapper+0x9/0xc
-> > > > > [  121.243012]  ret_from_fork+0x19/0x24
-> > > > > [  121.243012] Modules linked in:
-> > > > > [  121.243012] CR2: 0000000000000000
-> > > > > [  121.243012] random: get_random_bytes called from init_oops_id+0x3a/0x40 with crng_init=0
-> > > > > [  121.243012] ---[ end trace 38a803400f1a2bee ]---
-> > > > > [  121.243012] EIP: strcmp+0x11/0x30
-> > > >
-> > > > How did this driver ever work for you?
-> > >
-> > > i ask my coworker help me verify.
-> > > i will check the patch myself, sincerely apologies for this.
-> >
-> > What does this mean?
-> >
-> > Are you saying that for all 10 versions of this patch submission, it
-> > has never been tested?  And despite being authored by you and
-> > submitted by you, you have never actually boot tested the driver
-> > yourself?  Relying instead on your co-worker to conduct the testing,
-> > who failed to do so.  Is that really correct?
-> >
-> 
-> On carefully reading to the document how to upstream, I find that I
-> had full duty for verify patch i sent.
-> The fault is entirely mine and I deeply regret that it should have occurred.
-> I will always verify patch by meself before sending it.
-> I have already verfied sub-device adc/led/regulator done in Mediatek
-> phone and Hikey960 development board
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
+t master
+> head:   b791d1bdf9212d944d749a5c7ff6febdba241771
+> commit: 0a0e265515db7619d0da9331d74245d02c741f07 media: atmel: atmel-isc:=
+ split driver into driver base and isc
+> date:   12 months ago
+> config: x86_64-randconfig-a012-20200612 (attached as .config)
+> compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project 3b43=
+f006294971b8049d4807110032169780e5b8)
+> reproduce (this is a W=3D1 build):
+>          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sb=
+in/make.cross -O ~/bin/make.cross
+>          chmod +x ~/bin/make.cross
+>          # install x86_64 cross compiling tool for clang build
+>          # apt-get install binutils-x86-64-linux-gnu
+>          git checkout 0a0e265515db7619d0da9331d74245d02c741f07
+>          # save the attached .config to linux build tree
+>          COMPILER_INSTALL_PATH=3D$HOME/0day COMPILER=3Dclang make.cross A=
+RCH=3Dx86_64
+>=20
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
 
-I'm not looking for someone to blame.  Instead, I would like to
-ascertain how this happened.  How was this driver ever
-tested/verified?  If you're not going to run/use it, does it even need
-to exist?
+Sent a patch to address this warning
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Thanks
+
+>=20
+> All warnings (new ones prefixed by >>, old ones prefixed by <<):
+>=20
+>>> drivers/media/platform/atmel/atmel-sama5d2-isc.c:323:34: warning: unuse=
+d variable 'atmel_isc_of_match' [-Wunused-const-variable]
+> static const struct of_device_id atmel_isc_of_match[] =3D {
+> ^
+> 1 warning generated.
+>=20
+> vim +/atmel_isc_of_match +323 drivers/media/platform/atmel/atmel-sama5d2-=
+isc.c
+>=20
+>     322
+>   > 323  static const struct of_device_id atmel_isc_of_match[] =3D {
+>     324          { .compatible =3D "atmel,sama5d2-isc" },
+>     325          { }
+>     326  };
+>     327  MODULE_DEVICE_TABLE(of, atmel_isc_of_match);
+>     328
+>=20
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+>=20
+
