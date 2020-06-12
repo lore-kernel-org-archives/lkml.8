@@ -2,178 +2,95 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 524D3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65EB3C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:27:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 278CB20836
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:22:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34445207ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:27:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GtDn19y6"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nRvp5ktR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726363AbgFLQW5 (ORCPT
+        id S1726283AbgFLQ1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 12:22:57 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:21666 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726085AbgFLQW4 (ORCPT
+        Fri, 12 Jun 2020 12:27:54 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:44424 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbgFLQ1x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 12:22:56 -0400
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200612162253epoutp01ddfb0250f6c4d8d5a5e13d08dc8bdcb3~X2HECf5Dq2106221062epoutp01I
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 16:22:53 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200612162253epoutp01ddfb0250f6c4d8d5a5e13d08dc8bdcb3~X2HECf5Dq2106221062epoutp01I
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1591978973;
-        bh=odVw2pPAyWLK5Z88W0uV7CR8eVQ6niomkBGBqsSTZqA=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=GtDn19y6HmsaNaNrT/PC+2WFlvr6GtJ5LdncDqtRLqicTWEZVBPLFFCtdPAmzId9D
-         +LpUTBjz9qukVI+USpEvBsGnglzVlYPmLyax066zqC+8MpNjyw3T4xFGTqg+EbqNAO
-         4DNILR68AQgBWguFGMmP8ZqhqOQRiq3h2dUTZz7s=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-        20200612162252epcas5p4a0b01a59989e95ff9002b927bdbecb7e~X2HDOVABo3159931599epcas5p4q;
-        Fri, 12 Jun 2020 16:22:52 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        3E.93.09475.CDBA3EE5; Sat, 13 Jun 2020 01:22:52 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200612162251epcas5p17799db495a306a323dc0e1740c8397d0~X2HCYsCZi1956119561epcas5p17;
-        Fri, 12 Jun 2020 16:22:51 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200612162251epsmtrp1c4f39db4ff9e0fc924aa272f813a0dac~X2HCXzRRN1965319653epsmtrp1g;
-        Fri, 12 Jun 2020 16:22:51 +0000 (GMT)
-X-AuditID: b6c32a4b-389ff70000002503-84-5ee3abdc2a6a
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        76.E4.08382.BDBA3EE5; Sat, 13 Jun 2020 01:22:51 +0900 (KST)
-Received: from alimakhtar02 (unknown [107.108.234.165]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200612162246epsmtip1cef97bb576d7a094db111ff37787dfcb~X2G_Pyzcr3056430564epsmtip1G;
-        Fri, 12 Jun 2020 16:22:46 +0000 (GMT)
-From:   "Alim Akhtar" <alim.akhtar@samsung.com>
-To:     "'Stanley Chu'" <stanley.chu@mediatek.com>,
-        <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
-        <avri.altman@wdc.com>, <jejb@linux.ibm.com>,
-        <asutoshd@codeaurora.org>
-Cc:     <beanhuo@micron.com>, <cang@codeaurora.org>,
-        <matthias.bgg@gmail.com>, <bvanassche@acm.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
-        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
-        <andy.teng@mediatek.com>, <chaotian.jing@mediatek.com>,
-        <cc.chou@mediatek.com>
-In-Reply-To: <20200612151000.27639-2-stanley.chu@mediatek.com>
-Subject: RE: [PATCH v1 1/2] scsi: ufs: Remove unused field in struct
- uic_command
-Date:   Fri, 12 Jun 2020 21:52:45 +0530
-Message-ID: <002801d640d5$b7ba7430$272f5c90$@samsung.com>
+        Fri, 12 Jun 2020 12:27:53 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05CGRAm3015312;
+        Fri, 12 Jun 2020 11:27:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591979230;
+        bh=Fkgey716kLKI5iJmQP/27R3X8I0hgKSTact+Z6ZhrrA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=nRvp5ktRa3UD52SFpinmzJWjGxRQgF6w36M+Y5QezRyrFu+O77uOkdTRy5rYRC/9T
+         2HAjkKHhYeD82VhVoUaw0508z3QU8ZX8aATV+IiDjNm0gUjY5LPcdFuseNoUtICQjV
+         J8WiQ/nQSDELSHTB4ouX2r/5ye2r0+hoM8Y/Czk0=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05CGRAOA025356;
+        Fri, 12 Jun 2020 11:27:10 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 12
+ Jun 2020 11:27:09 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 12 Jun 2020 11:27:09 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05CGR9nZ003371;
+        Fri, 12 Jun 2020 11:27:09 -0500
+Subject: Re: [PATCH v3 2/2] ASoC: tas2562: Update shutdown GPIO property
+To:     Mark Brown <broonie@kernel.org>
+CC:     <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
+        <robh@kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200612160603.2456-1-dmurphy@ti.com>
+ <20200612160603.2456-2-dmurphy@ti.com> <20200612160922.GL5396@sirena.org.uk>
+ <0e482167-71c2-a128-b8b4-a054557d30e9@ti.com>
+ <20200612162200.GM5396@sirena.org.uk>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <432c41fe-8afa-2ccb-8917-fd64f4895144@ti.com>
+Date:   Fri, 12 Jun 2020 11:27:04 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <20200612162200.GM5396@sirena.org.uk>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQDXcguafoUh6qhsLNKe8uQEpk41JwIvpsOBAO+mpQSqucyfkA==
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrPKsWRmVeSWpSXmKPExsWy7bCmhu6d1Y/jDHr281icnneV2WJv2wl2
-        i5c/r7JZHHzYyWIx7cNPZotP65exWvw//5vd4tqt+WwWq97sYLNYdGMbk0Xr/1fMFpseX2O1
-        uLxrDpvF5eaLjBbd14Gyy4//Y7JoajG22PrpN6vF0q03GR2EPS5f8fa43NfL5LFz1l12jwmL
-        DjB6bF5S79Fycj+Lx/f1HWweH5/eYvH4vEnOo/1AN1MAVxSXTUpqTmZZapG+XQJXxvF30QUb
-        eCsWt29ga2Cczt3FyMkhIWAi8frCb8YuRi4OIYHdjBIrv/WwQDifGCU2bN4D5XxjlHj3+TU7
-        TMuT5ROgWvYySvz9cRHKecMoMXnPRjaQKjYBXYkdi9vAbBGBbYwSR975ghQxC/xhktjRPAFo
-        LgcHp4CdxOeHSSA1wgJBEm9Pf2IFsVkEVCX6Z7SA9fIKWEpM/nGHCcIWlDg58wkLiM0sIC+x
-        /e0cZoiLFCR+Pl3GCjJSRMBJYlGnCESJuMTRnz3MIGslBKZzSsxpPcICUe8iseTvFlYIW1ji
-        1fEtUJ9JSbzsb2MHmSMhkC3Rs8sYIlwjsXTeMahWe4kDV+aAXc8soCmxfpc+xCo+id7fT5gg
-        OnklOtqEIKpVJZrfXYXqlJaY2N0NtdRDov/ZOrYJjIqzkPw1C8lfs5A8MAth2QJGllWMkqkF
-        xbnpqcWmBcZ5qeV6xYm5xaV56XrJ+bmbGMFpUst7B+OjBx/0DjEycTAeYpTgYFYS4RUUfxgn
-        xJuSWFmVWpQfX1Sak1p8iFGag0VJnFfpx5k4IYH0xJLU7NTUgtQimCwTB6dUA1Ni4M4W3hfL
-        JwjHyj+4tu4E99QZN66veePXVRdrLMXyVGexRq9m9/Q9925PuHemQil3tvnWs5fW7z+jqF+z
-        tyfdeFPklEfS5Y/e337sllZnP7Xu/0aTNmH+o44ntWTipbee9LDabzW1RXzD0Tohxk6Dsx4e
-        jldF7/X6rNpbspprgRgHX9Xkyr6rYQ8MO3o2zpC96nrsI/eeYsat+/e0b+ednX3nypX3jVbu
-        XaG3r8T2umXpF+pPbDFl/mMYvfDKHs5TawuDv3Uc5ew2sJwsethL1k287+h06U3uNz0utvEZ
-        bT+QuF1mWdL+T8s+7eo0DH9ilLNt6czpmntsThj2VWkbX5TKkTjiLmk9a12j0RUlluKMREMt
-        5qLiRAAM0mXoAgQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMIsWRmVeSWpSXmKPExsWy7bCSnO7t1Y/jDD5s5bM4Pe8qs8XethPs
-        Fi9/XmWzOPiwk8Vi2oefzBaf1i9jtfh//je7xbVb89ksVr3ZwWax6MY2JovW/6+YLTY9vsZq
-        cXnXHDaLy80XGS26rwNllx//x2TR1GJssfXTb1aLpVtvMjoIe1y+4u1xua+XyWPnrLvsHhMW
-        HWD02Lyk3qPl5H4Wj+/rO9g8Pj69xeLxeZOcR/uBbqYArigum5TUnMyy1CJ9uwSujOPvogs2
-        8FYsbt/A1sA4nbuLkZNDQsBE4snyCYxdjFwcQgK7GSWOnl7FCJGQlri+cQI7hC0ssfLfc3aI
-        oleMEisebWIGSbAJ6ErsWNzGBpIQEdjDKPF92X2wKmaBLmaJrwf/sEG0HGSUmNB9F2guBwen
-        gJ3E54dJIN3CAgES83bOAVvHIqAq0T+jhQ3E5hWwlJj84w4ThC0ocXLmExaQVmYBPYm2jWDl
-        zALyEtvfzmGGuE5B4ufTZawgJSICThKLOkUgSsQljv7sYZ7AKDwLyaBZCINmIRk0C0nHAkaW
-        VYySqQXFuem5xYYFhnmp5XrFibnFpXnpesn5uZsYwfGupbmDcfuqD3qHGJk4GA8xSnAwK4nw
-        Coo/jBPiTUmsrEotyo8vKs1JLT7EKM3BoiTOe6NwYZyQQHpiSWp2ampBahFMlomDU6qB6drM
-        MKXSj0euuiocrhfYNlH1Q/2amTPcjZ3T/af0ri1XXOMSOetNUeY0kWWFvh9SWAq8Zj8UNlra
-        NtPWqCNq2bQWG/aJtw77H2w3e+iknXn5cnlt+cMjq3eknHXW1z+mHxTfu3G3DMO6+IlbfxlU
-        3G09oHj2604/rSD3Wn/u20cYTkUV9LBEXdsnf9VVT+ol8/nZx+XtFA5sv7XBO+z5nZXLN7Q2
-        3rx5r8s7hutmYri1+j//k7t/26zTWNrpXnxF/SPTh7yerRvu9//dNP9dzpW1UbO3rbryRC0o
-        uCBjVtSkM2+WJ+959iuQ91LeiQ2Sj/KaRG6fORLgvk/yxd69T+60HZglvWzT6eNRMapBYRxK
-        LMUZiYZazEXFiQDOPU4uZgMAAA==
-X-CMS-MailID: 20200612162251epcas5p17799db495a306a323dc0e1740c8397d0
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200612151010epcas5p3f667305eeef2d3ce5c05e0e87482ae7c
-References: <20200612151000.27639-1-stanley.chu@mediatek.com>
-        <CGME20200612151010epcas5p3f667305eeef2d3ce5c05e0e87482ae7c@epcas5p3.samsung.com>
-        <20200612151000.27639-2-stanley.chu@mediatek.com>
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stanley
+Mark
 
-> -----Original Message-----
-> From: Stanley Chu <stanley.chu@mediatek.com>
-> Sent: 12 June 2020 20:40
-> To: linux-scsi@vger.kernel.org; martin.petersen@oracle.com;
-> avri.altman@wdc.com; alim.akhtar@samsung.com; jejb@linux.ibm.com;
-> asutoshd@codeaurora.org
-> Cc: beanhuo@micron.com; cang@codeaurora.org; matthias.bgg@gmail.com;
-> bvanassche@acm.org; linux-mediatek@lists.infradead.org; linux-arm-
-> kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
-> kuohong.wang@mediatek.com; peter.wang@mediatek.com; chun-
-> hung.wu@mediatek.com; andy.teng@mediatek.com;
-> chaotian.jing@mediatek.com; cc.chou@mediatek.com; Stanley Chu
-> <stanley.chu@mediatek.com>
-> Subject: [PATCH v1 1/2] scsi: ufs: Remove unused field in struct
-uic_command
-> 
-> Remove unused field "cmd_active" in struct ufs_command.
-> 
-> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-> ---
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+On 6/12/20 11:22 AM, Mark Brown wrote:
+> On Fri, Jun 12, 2020 at 11:18:57AM -0500, Dan Murphy wrote:
+>> On 6/12/20 11:09 AM, Mark Brown wrote:
+>>> On Fri, Jun 12, 2020 at 11:06:03AM -0500, Dan Murphy wrote:
+>>>> -	tas2562->sdz_gpio = devm_gpiod_get_optional(dev, "shut-down-gpio",
+>>>> +	tas2562->sdz_gpio = devm_gpiod_get_optional(dev, "shutdown",
+>>>>    						      GPIOD_OUT_HIGH);
+>>> This also changes the name from shut-down to shutdown which will be
+>>> incompatible (IIRC we do try -gpio as well as -gpios).
+>> Yes the non-standardish name was highlighted by Rob[1].
+> Yes, but we released with it so it's an ABI now and we should still
+> support the old name.
 
->  drivers/scsi/ufs/ufshcd.h | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h index
-> bf97d616e597..814e44871ff0 100644
-> --- a/drivers/scsi/ufs/ufshcd.h
-> +++ b/drivers/scsi/ufs/ufshcd.h
-> @@ -88,7 +88,6 @@ enum dev_cmd_type {
->   * @argument1: UIC command argument 1
->   * @argument2: UIC command argument 2
->   * @argument3: UIC command argument 3
-> - * @cmd_active: Indicate if UIC command is outstanding
->   * @result: UIC command result
->   * @done: UIC command completion
->   */
-> @@ -97,7 +96,6 @@ struct uic_command {
->  	u32 argument1;
->  	u32 argument2;
->  	u32 argument3;
-> -	int cmd_active;
->  	int result;
->  	struct completion done;
->  };
-> --
-> 2.18.0
+Well should we then just revert back to the non-standard name and just 
+fix up the code?
+
+Or should we support both properties?
+
+Dan
 
