@@ -2,129 +2,153 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3082C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 08:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB74BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 08:23:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3D86207ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 08:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A99D4207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 08:23:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591950215;
+	bh=/5txmzz7eCW6JtHsVo5HmBpwrOCoMUZ2cg34Poptxg0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=f6GiwnATH/J/KehrAD6OwZs0O59PA3iPKD6qr74Olx0J3hN2AN+djNY5Gkj9zk0XE
+	 qjqBNtHgawh5MHv99bAjgvV4oaC1RV0RQ+G2k35gWX0y8wWYfxNJy2+RdFLETP6uc7
+	 sKz4EsGaARUmbyuCzzJHx9w5pzue5nexjrretqNU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726448AbgFLISM (ORCPT
+        id S1726353AbgFLIXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 04:18:12 -0400
-Received: from mga11.intel.com ([192.55.52.93]:15825 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726324AbgFLISM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 04:18:12 -0400
-IronPort-SDR: wCSePci76Oale64BGi0QviYSzV8lo4Eg2Qfrh47kfVuqydBBmkGjr1vNCutJqGD0goREEDy6LD
- s9FGXHPL1ZLw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2020 01:18:11 -0700
-IronPort-SDR: uJDN/hRZ26RQ33AZ6c0vXiUKRVPPJEZYwh5Z3gqGn2MxeOei2Mxy+K2Uls+Yn/WkhhXNT97HCC
- XEfQ6+FFNKVQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,502,1583222400"; 
-   d="scan'208";a="296880859"
-Received: from janlundk-mobl1.ger.corp.intel.com ([10.249.254.139])
-  by fmsmga004.fm.intel.com with ESMTP; 12 Jun 2020 01:18:08 -0700
-Message-ID: <11fc5db81237fb3383b1df327d2cd2e308c0e525.camel@intel.com>
-Subject: Re: [PATCH] iwl: fix crash in iwl_dbg_tlv_alloc_trigger
-From:   Luciano Coelho <luciano.coelho@intel.com>
-To:     Kalle Valo <kvalo@codeaurora.org>, Jiri Slaby <jslaby@suse.cz>
-Cc:     johannes.berg@intel.com, linux-kernel@vger.kernel.org,
-        Dieter =?ISO-8859-1?Q?N=FCtzel?= <Dieter@nuetzel-hh.de>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Date:   Fri, 12 Jun 2020 11:18:08 +0300
-In-Reply-To: <87d064k9a9.fsf@codeaurora.org>
-References: <20200612073800.27742-1-jslaby@suse.cz>
-         <87d064k9a9.fsf@codeaurora.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2-1 
+        Fri, 12 Jun 2020 04:23:33 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:39807 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726264AbgFLIXd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 04:23:33 -0400
+Received: by mail-ed1-f67.google.com with SMTP id g1so5812887edv.6;
+        Fri, 12 Jun 2020 01:23:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=W7kjCf2/NPWzaAeHmAsGNvR+U/IDoRneEJh+pNJVKTI=;
+        b=rRwlEsGEidwnhVrlJr8ciBVdEz7z7zNlRfks+dZPjljVIj6O+5mwG4HGk6HuFuvOqx
+         EZtiPFi3tEGm3372WvMTYupVxFk5mY49qzSlM1Oc9HRwvmJfjBHlksK0ahP3diQqql+v
+         3BKxwhCkW1M9ZDR/F3zMiGHLk0Z19gwafaB5JwttznLTLc2zdEexuLsajTGgw/kvqIHX
+         57MUJQ0Mu8t48E7zxv74uIjyFGcaU0WGqNjRnM+sAFOZUzg5h+9aBWqc73y/gmHKh2ar
+         A1lRn49p5ysqqwmVPtaGksPjMuPyzmdBl6asnDfeC6duCYuMqFynUcouFeyRbdifaEPy
+         wgGQ==
+X-Gm-Message-State: AOAM5305kgABOa7HxU36CLhnCyCoSNgvRpFGr4hkSygp0t72xV/Z1I+j
+        OXt5P0DwpYGU25ZKtE6LzJM=
+X-Google-Smtp-Source: ABdhPJxxAoLFRIexOIimzunGIXKEGJy9vuUQgzNABANWPlkiFc4Cg/PTfeBSdakQzbTCe25y53Zq9g==
+X-Received: by 2002:a50:f1d9:: with SMTP id y25mr10284528edl.292.1591950211017;
+        Fri, 12 Jun 2020 01:23:31 -0700 (PDT)
+Received: from pi3 ([194.230.155.184])
+        by smtp.googlemail.com with ESMTPSA id g22sm2797843edj.63.2020.06.12.01.23.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2020 01:23:29 -0700 (PDT)
+Date:   Fri, 12 Jun 2020 10:23:27 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Fugang Duan <B38611@freescale.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org, Gao Pan <b54642@freescale.com>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Wolfram Sang <wsa@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org
+Subject: Re: [PATCH] i2c: imx: Fix external abort on early interrupt
+Message-ID: <20200612082327.GA25893@pi3>
+References: <1591796802-23504-1-git-send-email-krzk@kernel.org>
+ <20200612055114.alhm2uakoze6epvf@pengutronix.de>
+ <20200612073815.GA25803@pi3>
+ <20200612080240.73xkiu2esgg6nbp3@pengutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200612080240.73xkiu2esgg6nbp3@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-06-12 at 10:55 +0300, Kalle Valo wrote:
-> Jiri Slaby <jslaby@suse.cz> writes:
+On Fri, Jun 12, 2020 at 10:02:40AM +0200, Oleksij Rempel wrote:
+> On Fri, Jun 12, 2020 at 09:38:15AM +0200, Krzysztof Kozlowski wrote:
+> > On Fri, Jun 12, 2020 at 07:51:14AM +0200, Oleksij Rempel wrote:
+> > > Hi Krzysztof,
+> > > 
+> > > thank you for your patch.
+> > > 
+> > > On Wed, Jun 10, 2020 at 03:46:42PM +0200, Krzysztof Kozlowski wrote:
+> > > > If interrupt comes early (could be triggered with CONFIG_DEBUG_SHIRQ),
+> > > > the i2c_imx_isr() will access registers before the I2C hardware is
+> > > > initialized.  This leads to external abort on non-linefetch on Toradex
+> > > > Colibri VF50 module (with Vybrid VF5xx):
+> > > > 
+> > > >     Unhandled fault: external abort on non-linefetch (0x1008) at 0x8882d003
+> > > >     Internal error: : 1008 [#1] ARM
+> > > >     Modules linked in:
+> > > >     CPU: 0 PID: 1 Comm: swapper Not tainted 5.7.0 #607
+> > > >     Hardware name: Freescale Vybrid VF5xx/VF6xx (Device Tree)
+> > > >       (i2c_imx_isr) from [<8017009c>] (free_irq+0x25c/0x3b0)
+> > > >       (free_irq) from [<805844ec>] (release_nodes+0x178/0x284)
+> > > >       (release_nodes) from [<80580030>] (really_probe+0x10c/0x348)
+> > > >       (really_probe) from [<80580380>] (driver_probe_device+0x60/0x170)
+> > > >       (driver_probe_device) from [<80580630>] (device_driver_attach+0x58/0x60)
+> > > >       (device_driver_attach) from [<805806bc>] (__driver_attach+0x84/0xc0)
+> > > >       (__driver_attach) from [<8057e228>] (bus_for_each_dev+0x68/0xb4)
+> > > >       (bus_for_each_dev) from [<8057f3ec>] (bus_add_driver+0x144/0x1ec)
+> > > >       (bus_add_driver) from [<80581320>] (driver_register+0x78/0x110)
+> > > >       (driver_register) from [<8010213c>] (do_one_initcall+0xa8/0x2f4)
+> > > >       (do_one_initcall) from [<80c0100c>] (kernel_init_freeable+0x178/0x1dc)
+> > > >       (kernel_init_freeable) from [<80807048>] (kernel_init+0x8/0x110)
+> > > >       (kernel_init) from [<80100114>] (ret_from_fork+0x14/0x20)
+> > > > 
+> > > > Additionally, the i2c_imx_isr() could wake up the wait queue
+> > > > (imx_i2c_struct->queue) before its initialization happens.
+> > > > 
+> > > > Fixes: 1c4b6c3bcf30 ("i2c: imx: implement bus recovery")
+> > > > Cc: <stable@vger.kernel.org>
+> > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > > 
+> > > 
+> > > I assume register access is aborted, because the IP core clock is not
+> > > enabled. In this case we have bigger problem then just probe.
+> > 
+> > If by IP core clock you mean the clock which driver is getting, then
+> > answer is no. This clock is enabled.
+> > 
+> > > Since this driver support runtime power management, the clock will be
+> > > disabled as soon as transfer is done. It means, on shared interrupt, we
+> > > will get in trouble even if there is no active transfer.
+> > 
+> > The driver's runtime PM plays only with this one clock, so it seems
+> > you meant i2c_imx->clk. It is not this problem.
+> > 
+> > > 
+> > > So, probably the only way to fix it, is to check in i2c_imx_isr() if the
+> > > HW is expected to be active and register access should be save.
+> > 
+> > Checking in every interrupt whether the interrupt should be serviced
+> > based on some SW flag because HW might be disabled? That looks unusual,
+> > like a hack.
+> > 
+> > No, the interrupt should be registered when the driver and some other
+> > pieces of HW are ready to service it.
 > 
-> > The tlv passed to iwl_dbg_tlv_alloc_trigger comes from a loaded firmware
-> > file. The memory can be marked as read-only as firmware could be
-> > shared. In anyway, writing to this memory is not expected. So,
-> > iwl_dbg_tlv_alloc_trigger can crash now:
-> > 
-> >   BUG: unable to handle page fault for address: ffffae2c01bfa794
-> >   PF: supervisor write access in kernel mode
-> >   PF: error_code(0x0003) - permissions violation
-> >   PGD 107d51067 P4D 107d51067 PUD 107d52067 PMD 659ad2067 PTE 8000000662298161
-> >   CPU: 2 PID: 161 Comm: kworker/2:1 Not tainted 5.7.0-3.gad96a07-default #1 openSUSE Tumbleweed (unreleased)
-> >   RIP: 0010:iwl_dbg_tlv_alloc_trigger+0x25/0x60 [iwlwifi]
-> >   Code: eb f2 0f 1f 00 66 66 66 66 90 83 7e 04 33 48 89 f8 44 8b 46 10 48 89 f7 76 40 41 8d 50 ff 83 fa 19 77 23 8b 56 20 85 d2 75 07 <c7> 46 20 ff ff ff ff 4b 8d 14 40 48 c1 e2 04 48 8d b4 10 00 05 00
-> >   RSP: 0018:ffffae2c00417ce8 EFLAGS: 00010246
-> >   RAX: ffff8f0522334018 RBX: ffff8f0522334018 RCX: ffffffffc0fc26c0
-> >   RDX: 0000000000000000 RSI: ffffae2c01bfa774 RDI: ffffae2c01bfa774
-> >   RBP: 0000000000000000 R08: 0000000000000004 R09: 0000000000000001
-> >   R10: 0000000000000034 R11: ffffae2c01bfa77c R12: ffff8f0522334230
-> >   R13: 0000000001000009 R14: ffff8f0523fdbc00 R15: ffff8f051f395800
-> >   FS:  0000000000000000(0000) GS:ffff8f0527c80000(0000) knlGS:0000000000000000
-> >   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> >   CR2: ffffae2c01bfa794 CR3: 0000000389eba000 CR4: 00000000000006e0
-> >   Call Trace:
-> >    iwl_dbg_tlv_alloc+0x79/0x120 [iwlwifi]
-> >    iwl_parse_tlv_firmware.isra.0+0x57d/0x1550 [iwlwifi]
-> >    iwl_req_fw_callback+0x3f8/0x6a0 [iwlwifi]
-> >    request_firmware_work_func+0x47/0x90
-> >    process_one_work+0x1e3/0x3b0
-> >    worker_thread+0x46/0x340
-> >    kthread+0x115/0x140
-> >    ret_from_fork+0x1f/0x40
-> > 
-> > As can be seen, write bit is not set in the PTE. Read of
-> > trig->occurrences succeeds in iwl_dbg_tlv_alloc_trigger, but
-> > trig->occurrences = cpu_to_le32(-1); fails there, obviously.
-> > 
-> > This is likely because we (at SUSE) use compressed firmware and that is
-> > marked as RO after decompression (see fw_map_paged_buf).
-> > 
-> > Fix it by creating a temporary buffer in case we need to change the
-> > memory.
-> > 
-> > Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-> > Reported-by: Dieter Nützel <Dieter@nuetzel-hh.de>
-> > Tested-by: Dieter Nützel <Dieter@nuetzel-hh.de>
-> > Cc: Johannes Berg <johannes.berg@intel.com>
-> > Cc: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
-> > Cc: Luca Coelho <luciano.coelho@intel.com>
-> > Cc: Intel Linux Wireless <linuxwifi@intel.com>
-> > Cc: Kalle Valo <kvalo@codeaurora.org>
-> > Cc: "David S. Miller" <davem@davemloft.net>
-> > Cc: Jakub Kicinski <kuba@kernel.org>
-> > Cc: linux-wireless@vger.kernel.org
-> > Cc: netdev@vger.kernel.org
-> > ---
-> >  drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c | 16 ++++++++++++++--
-> 
-> The prefix should be "iwlwifi: ", I can fix that.
-> 
-> Luca, should I take this to wireless-drivers?
+> OK.
+> please make sure, irq is probed before calling
+> i2c_add_numbered_adapter(). This will trigger deferred probing of
+> slave devices. Since the irq handler will be added later, tx completion
+> of some requests will be lost or fail.
 
-Yeah, this looks good.  Thanks, Jiri!
+Right. I'll move the devm_request_irq().
 
-And yes, Kalle, please apply it directly to w-d.  Thank you!
-
---
-Cheers,
-Luca.
+Best regards,
+Krzysztof
 
