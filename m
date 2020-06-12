@@ -2,153 +2,73 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB74BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 08:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 753C7C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 08:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A99D4207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 08:23:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591950215;
-	bh=/5txmzz7eCW6JtHsVo5HmBpwrOCoMUZ2cg34Poptxg0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=f6GiwnATH/J/KehrAD6OwZs0O59PA3iPKD6qr74Olx0J3hN2AN+djNY5Gkj9zk0XE
-	 qjqBNtHgawh5MHv99bAjgvV4oaC1RV0RQ+G2k35gWX0y8wWYfxNJy2+RdFLETP6uc7
-	 sKz4EsGaARUmbyuCzzJHx9w5pzue5nexjrretqNU=
+	by mail.kernel.org (Postfix) with ESMTP id 5A79D207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 08:28:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726353AbgFLIXd (ORCPT
+        id S1726377AbgFLI2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 04:23:33 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:39807 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726264AbgFLIXd (ORCPT
+        Fri, 12 Jun 2020 04:28:05 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:55173 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726264AbgFLI2F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 04:23:33 -0400
-Received: by mail-ed1-f67.google.com with SMTP id g1so5812887edv.6;
-        Fri, 12 Jun 2020 01:23:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=W7kjCf2/NPWzaAeHmAsGNvR+U/IDoRneEJh+pNJVKTI=;
-        b=rRwlEsGEidwnhVrlJr8ciBVdEz7z7zNlRfks+dZPjljVIj6O+5mwG4HGk6HuFuvOqx
-         EZtiPFi3tEGm3372WvMTYupVxFk5mY49qzSlM1Oc9HRwvmJfjBHlksK0ahP3diQqql+v
-         3BKxwhCkW1M9ZDR/F3zMiGHLk0Z19gwafaB5JwttznLTLc2zdEexuLsajTGgw/kvqIHX
-         57MUJQ0Mu8t48E7zxv74uIjyFGcaU0WGqNjRnM+sAFOZUzg5h+9aBWqc73y/gmHKh2ar
-         A1lRn49p5ysqqwmVPtaGksPjMuPyzmdBl6asnDfeC6duCYuMqFynUcouFeyRbdifaEPy
-         wgGQ==
-X-Gm-Message-State: AOAM5305kgABOa7HxU36CLhnCyCoSNgvRpFGr4hkSygp0t72xV/Z1I+j
-        OXt5P0DwpYGU25ZKtE6LzJM=
-X-Google-Smtp-Source: ABdhPJxxAoLFRIexOIimzunGIXKEGJy9vuUQgzNABANWPlkiFc4Cg/PTfeBSdakQzbTCe25y53Zq9g==
-X-Received: by 2002:a50:f1d9:: with SMTP id y25mr10284528edl.292.1591950211017;
-        Fri, 12 Jun 2020 01:23:31 -0700 (PDT)
-Received: from pi3 ([194.230.155.184])
-        by smtp.googlemail.com with ESMTPSA id g22sm2797843edj.63.2020.06.12.01.23.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 01:23:29 -0700 (PDT)
-Date:   Fri, 12 Jun 2020 10:23:27 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Fugang Duan <B38611@freescale.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel@vger.kernel.org, Gao Pan <b54642@freescale.com>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Wolfram Sang <wsa@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org
-Subject: Re: [PATCH] i2c: imx: Fix external abort on early interrupt
-Message-ID: <20200612082327.GA25893@pi3>
-References: <1591796802-23504-1-git-send-email-krzk@kernel.org>
- <20200612055114.alhm2uakoze6epvf@pengutronix.de>
- <20200612073815.GA25803@pi3>
- <20200612080240.73xkiu2esgg6nbp3@pengutronix.de>
+        Fri, 12 Jun 2020 04:28:05 -0400
+Received: from [111.196.61.134] (helo=localhost.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <aaron.ma@canonical.com>)
+        id 1jjf2Y-0001kT-7U; Fri, 12 Jun 2020 08:27:55 +0000
+From:   Aaron Ma <aaron.ma@canonical.com>
+To:     aaron.ma@canonical.com, yhchuang@realtek.com, kvalo@codeaurora.org,
+        davem@davemloft.net, kuba@kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] rtw88: 8822ce: add support for device ID 0xc82f
+Date:   Fri, 12 Jun 2020 16:27:45 +0800
+Message-Id: <20200612082745.204400-1-aaron.ma@canonical.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200612080240.73xkiu2esgg6nbp3@pengutronix.de>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 10:02:40AM +0200, Oleksij Rempel wrote:
-> On Fri, Jun 12, 2020 at 09:38:15AM +0200, Krzysztof Kozlowski wrote:
-> > On Fri, Jun 12, 2020 at 07:51:14AM +0200, Oleksij Rempel wrote:
-> > > Hi Krzysztof,
-> > > 
-> > > thank you for your patch.
-> > > 
-> > > On Wed, Jun 10, 2020 at 03:46:42PM +0200, Krzysztof Kozlowski wrote:
-> > > > If interrupt comes early (could be triggered with CONFIG_DEBUG_SHIRQ),
-> > > > the i2c_imx_isr() will access registers before the I2C hardware is
-> > > > initialized.  This leads to external abort on non-linefetch on Toradex
-> > > > Colibri VF50 module (with Vybrid VF5xx):
-> > > > 
-> > > >     Unhandled fault: external abort on non-linefetch (0x1008) at 0x8882d003
-> > > >     Internal error: : 1008 [#1] ARM
-> > > >     Modules linked in:
-> > > >     CPU: 0 PID: 1 Comm: swapper Not tainted 5.7.0 #607
-> > > >     Hardware name: Freescale Vybrid VF5xx/VF6xx (Device Tree)
-> > > >       (i2c_imx_isr) from [<8017009c>] (free_irq+0x25c/0x3b0)
-> > > >       (free_irq) from [<805844ec>] (release_nodes+0x178/0x284)
-> > > >       (release_nodes) from [<80580030>] (really_probe+0x10c/0x348)
-> > > >       (really_probe) from [<80580380>] (driver_probe_device+0x60/0x170)
-> > > >       (driver_probe_device) from [<80580630>] (device_driver_attach+0x58/0x60)
-> > > >       (device_driver_attach) from [<805806bc>] (__driver_attach+0x84/0xc0)
-> > > >       (__driver_attach) from [<8057e228>] (bus_for_each_dev+0x68/0xb4)
-> > > >       (bus_for_each_dev) from [<8057f3ec>] (bus_add_driver+0x144/0x1ec)
-> > > >       (bus_add_driver) from [<80581320>] (driver_register+0x78/0x110)
-> > > >       (driver_register) from [<8010213c>] (do_one_initcall+0xa8/0x2f4)
-> > > >       (do_one_initcall) from [<80c0100c>] (kernel_init_freeable+0x178/0x1dc)
-> > > >       (kernel_init_freeable) from [<80807048>] (kernel_init+0x8/0x110)
-> > > >       (kernel_init) from [<80100114>] (ret_from_fork+0x14/0x20)
-> > > > 
-> > > > Additionally, the i2c_imx_isr() could wake up the wait queue
-> > > > (imx_i2c_struct->queue) before its initialization happens.
-> > > > 
-> > > > Fixes: 1c4b6c3bcf30 ("i2c: imx: implement bus recovery")
-> > > > Cc: <stable@vger.kernel.org>
-> > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > > 
-> > > 
-> > > I assume register access is aborted, because the IP core clock is not
-> > > enabled. In this case we have bigger problem then just probe.
-> > 
-> > If by IP core clock you mean the clock which driver is getting, then
-> > answer is no. This clock is enabled.
-> > 
-> > > Since this driver support runtime power management, the clock will be
-> > > disabled as soon as transfer is done. It means, on shared interrupt, we
-> > > will get in trouble even if there is no active transfer.
-> > 
-> > The driver's runtime PM plays only with this one clock, so it seems
-> > you meant i2c_imx->clk. It is not this problem.
-> > 
-> > > 
-> > > So, probably the only way to fix it, is to check in i2c_imx_isr() if the
-> > > HW is expected to be active and register access should be save.
-> > 
-> > Checking in every interrupt whether the interrupt should be serviced
-> > based on some SW flag because HW might be disabled? That looks unusual,
-> > like a hack.
-> > 
-> > No, the interrupt should be registered when the driver and some other
-> > pieces of HW are ready to service it.
-> 
-> OK.
-> please make sure, irq is probed before calling
-> i2c_add_numbered_adapter(). This will trigger deferred probing of
-> slave devices. Since the irq handler will be added later, tx completion
-> of some requests will be lost or fail.
+New device ID 0xc82f found on Lenovo ThinkCenter.
+Tested it with c822 driver, works good.
 
-Right. I'll move the devm_request_irq().
+PCI id:
+03:00.0 Network controller [0280]: Realtek Semiconductor Co., Ltd.
+Device [10ec:c82f]
+        Subsystem: Lenovo Device [17aa:c02f]
 
-Best regards,
-Krzysztof
+Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
+---
+ drivers/net/wireless/realtek/rtw88/rtw8822ce.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/net/wireless/realtek/rtw88/rtw8822ce.c b/drivers/net/wireless/realtek/rtw88/rtw8822ce.c
+index 7b6bd990651e..026ac49ce6e3 100644
+--- a/drivers/net/wireless/realtek/rtw88/rtw8822ce.c
++++ b/drivers/net/wireless/realtek/rtw88/rtw8822ce.c
+@@ -11,6 +11,10 @@ static const struct pci_device_id rtw_8822ce_id_table[] = {
+ 		PCI_DEVICE(PCI_VENDOR_ID_REALTEK, 0xC822),
+ 		.driver_data = (kernel_ulong_t)&rtw8822c_hw_spec
+ 	},
++	{
++		PCI_DEVICE(PCI_VENDOR_ID_REALTEK, 0xC82F),
++		.driver_data = (kernel_ulong_t)&rtw8822c_hw_spec
++	},
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(pci, rtw_8822ce_id_table);
+-- 
+2.27.0
 
