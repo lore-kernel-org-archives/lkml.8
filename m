@@ -2,111 +2,88 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E112C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 18:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD17C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 18:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D506206DC
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 18:41:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HMApzVGK"
+	by mail.kernel.org (Postfix) with ESMTP id 181E6206DC
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 18:42:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbgFLSlz (ORCPT
+        id S1726404AbgFLSm3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 14:41:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38372 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726286AbgFLSly (ORCPT
+        Fri, 12 Jun 2020 14:42:29 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:45718 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726307AbgFLSm3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 14:41:54 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 136E5C03E96F
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 11:41:53 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id bh7so4083784plb.11
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 11:41:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=qkjrCiKtn27Q86bEY5Zk8H6jpaZDgzX0V2ezg2m+c28=;
-        b=HMApzVGKyREgvBZcJ3L+ZHYzdU8A7u2LcP73qWYOlMUrqKOtbTinPJcTIWLT1XmDgj
-         dzNKNYDYm9DR+3r5Ls0MmPvx/weBNrWJ/pyA7WhHjfrPz4TKhqRDabII+ejN6s54hsGV
-         oNy43643FzpCg0BlZMemItXDkJqE9w3K3wM/Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qkjrCiKtn27Q86bEY5Zk8H6jpaZDgzX0V2ezg2m+c28=;
-        b=o65gLa+sk/H0vOBQ54r2fvXFIBYV13jiKN84rdmv0RRVexO5cm9ymzRDa2LB+4QN+U
-         TxgVGLAq/IbfgH2QxKq1z+oUzZWPBhy98uixg90xA+7GpWuMJsZAEtLduqqx/lfpwAXo
-         Mst2ztGNwUaRdUp2ZctNLlFIW5+VCpStmuPAaJiSplEdw735UKnXpGR8iKz35zaouBao
-         V5aKwYM7hEZ94wmpV92yWErQRU5NDWId3oQJA4b3nJmmZS4Q+11zxktTC5iwdMd1uSfh
-         77+oUul7kiCeh8gvb+ofrVrRtDgriFDYA5dAFFf7f1cEt7Okry8d34O89uNwHoLZavlE
-         i0XQ==
-X-Gm-Message-State: AOAM531vCt/XogqXgBmTRPB3O3eOihJ4MuZ6yc8yTDBFmtavfcu7XPHW
-        NXguehxeQ8KexuzGsFzvUO7zFQ==
-X-Google-Smtp-Source: ABdhPJw7+X28Su6pr5AQrgMOS6ASerURV1Q7yRXEHjjBew+WOoj/phuKUp8p7+5Gb/6yrzHFLe0jTg==
-X-Received: by 2002:a17:90a:2ec6:: with SMTP id h6mr292496pjs.82.1591987312542;
-        Fri, 12 Jun 2020 11:41:52 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b6sm6733713pfp.24.2020.06.12.11.41.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 11:41:51 -0700 (PDT)
-Date:   Fri, 12 Jun 2020 11:41:50 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Shuah Khan <shuah@kernel.org>,
+        Fri, 12 Jun 2020 14:42:29 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jjodC-0007Zp-RA; Fri, 12 Jun 2020 18:42:22 +0000
+Date:   Fri, 12 Jun 2020 20:42:21 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Giuseppe Scrivano <gscrivan@redhat.com>,
+        Robert Sesek <rsesek@google.com>,
+        Chris Palmer <palmer@google.com>, Jann Horn <jannh@google.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kselftest@vger.kernel.org,
-        Christian Brauner <christian@brauner.io>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/7] selftests/binderfs: Fix harness API usage
-Message-ID: <202006121141.1A0623336C@keescook>
-References: <20200611224028.3275174-1-keescook@chromium.org>
- <20200611224028.3275174-4-keescook@chromium.org>
- <20200612181900.6kyhxevm6ebhu43d@wittgenstein>
+        "containers@lists.linux-foundation.org" 
+        <containers@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Tejun Heo <tj@kernel.org>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Matt Denton <mpdenton@google.com>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH v3 1/4] fs, net: Standardize on file_receive helper to
+ move fds across processes
+Message-ID: <20200612184221.rszwhnhvhnigyazq@wittgenstein>
+References: <202006101953.899EFB53@keescook>
+ <20200611100114.awdjswsd7fdm2uzr@wittgenstein>
+ <20200611110630.GB30103@ircssh-2.c.rugged-nimbus-611.internal>
+ <067f494d55c14753a31657f958cb0a6e@AcuMS.aculab.com>
+ <202006111634.8237E6A5C6@keescook>
+ <94407449bedd4ba58d85446401ff0a42@AcuMS.aculab.com>
+ <20200612104629.GA15814@ircssh-2.c.rugged-nimbus-611.internal>
+ <202006120806.E770867EF@keescook>
+ <20200612182816.okwylihs6u6wkgxd@wittgenstein>
+ <202006121135.F04D66DFA@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200612181900.6kyhxevm6ebhu43d@wittgenstein>
+In-Reply-To: <202006121135.F04D66DFA@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 08:19:00PM +0200, Christian Brauner wrote:
-> On Thu, Jun 11, 2020 at 03:40:24PM -0700, Kees Cook wrote:
-> > The binderfs test mixed the full harness API and the selftest API.
-> > Adjust to use only the harness API so that the harness API can switch
-> > to using the selftest API internally in future patches.
-> > 
-> > Cc: Shuah Khan <shuah@kernel.org>
-> > Cc: Christian Brauner <christian.brauner@ubuntu.com>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: linux-kselftest@vger.kernel.org
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
+On Fri, Jun 12, 2020 at 11:38:33AM -0700, Kees Cook wrote:
+> On Fri, Jun 12, 2020 at 08:28:16PM +0200, Christian Brauner wrote:
+> > Al didn't want the PAGE_SIZE limit in there because there's nothing
+> > inherently wrong with copying insane amounts of memory.
 > 
-> I had this on my TODO but never actually got around to it, so thanks!
+> Right, ok.
 > 
-> In all honesty, I've done a "Does this overall look sane?" review.
-> Simply because I lack the time to do this in more detail right now but
-> I'm happy this work is done and so overall:
+> > (Another tangent. I've asked this on Twitter not too long ago: do we
+> > have stats how long copy_from_user()/copy_struct_from_user() takes with
+> > growing struct/memory size? I'd be really interested in this. I have a
+> > feeling that clone3()'s and - having had a chat with David Howells -
+> > openat2()'s structs will continue to grow for a while... and I'd really
+> > like to have some numbers on when copy_struct_from_user() becomes
+> > costly or how costly it becomes.)
 > 
-> Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+> How long it takes? It should be basically the same, the costs should be
+> mostly in switching memory protections, etc. I wouldn't imagine how many
+> bytes being copied would matter much here, given the sub-page sizes.
 
-I did actually do runtime tests of this (and found a couple bugs in my
-port that I fixed before sending the final version). So, fwiw, it passes
-for me.
+This makes me _very_ happy.
 
-Thanks for the review!
-
--Kees
-
--- 
-Kees Cook
+Christian
