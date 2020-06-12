@@ -2,148 +2,81 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B96C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A426DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 594DC206A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:14:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591956847;
-	bh=expc4CDnEYnki3mJuBqA6Oh/0tPydmqgZtKMrV+jKBk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nB2Qw2cxiSpm1+VotWCDotINrwHQs1a0QKAdR3U/hOaWJ54XmahT9F92J71nea6mL
-	 uzH9nUe8vXd5ZCboEriav+3Q6hhsSPfuJdOoKBmqyD+wJqwDWO4B13XiIV3y0spD7f
-	 Jo3KjguTCIXns+XHfCLHAGmZ8TiYD8EWJ8UvhEuE=
+	by mail.kernel.org (Postfix) with ESMTP id 7BF88206A4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 10:15:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbgFLKOF (ORCPT
+        id S1726366AbgFLKPJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 06:14:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40024 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725927AbgFLKOB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 06:14:01 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D2322081A;
-        Fri, 12 Jun 2020 10:14:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591956841;
-        bh=expc4CDnEYnki3mJuBqA6Oh/0tPydmqgZtKMrV+jKBk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MlWUnQDM+u/RIUYixIip7C8RrA/dgIItdp97UwUfbUfXG0D+AFnA3GqyMex8dunyS
-         SSPJxRyBr1KPHpnROeSumSMbIX5s2KP/X4HKr/DcNByipe0OMwcLE901IaXMGQ+FRm
-         3DI8LIOvmteSGJa/CaOcnr8ReTxNOOAhzakq3Gak=
-Date:   Fri, 12 Jun 2020 11:13:57 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "matthias.schiffer@ew.tq-group.com" 
-        <matthias.schiffer@ew.tq-group.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 RFC 1/2] spi: introduce fallback to pio
-Message-ID: <20200612101357.GA5396@sirena.org.uk>
-References: <1591880310-1813-1-git-send-email-yibin.gong@nxp.com>
- <1591880310-1813-2-git-send-email-yibin.gong@nxp.com>
- <20200611134042.GG4671@sirena.org.uk>
- <VE1PR04MB66383245FAD2AE33CFEA76F789810@VE1PR04MB6638.eurprd04.prod.outlook.com>
+        Fri, 12 Jun 2020 06:15:09 -0400
+Received: from smtprelay0080.hostedemail.com ([216.40.44.80]:56746 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725927AbgFLKPF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 06:15:05 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 5E8FE18002A55;
+        Fri, 12 Jun 2020 10:15:02 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: tree29_1c128ad26ddb
+X-Filterd-Recvd-Size: 2024
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf19.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 12 Jun 2020 10:14:59 +0000 (UTC)
+Message-ID: <427be84b1154978342ef861f1f4634c914d03a94.camel@perches.com>
+Subject: Re: [PATCH] xdp_rxq_info_user: Replace malloc/memset w/calloc
+From:   Joe Perches <joe@perches.com>
+To:     Jesper Dangaard Brouer <jbrouer@redhat.com>,
+        Gaurav Singh <gaurav1086@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        KP Singh <kpsingh@chromium.org>,
+        "open list:XDP (eXpress Data Path)" <netdev@vger.kernel.org>,
+        "open list:XDP (eXpress Data Path)" <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Date:   Fri, 12 Jun 2020 03:14:58 -0700
+In-Reply-To: <20200612084244.4ab4f6c6@carbon>
+References: <20200611150221.15665-1-gaurav1086@gmail.com>
+         <20200612003640.16248-1-gaurav1086@gmail.com>
+         <20200612084244.4ab4f6c6@carbon>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mYCpIKhGyMATD0i+"
-Content-Disposition: inline
-In-Reply-To: <VE1PR04MB66383245FAD2AE33CFEA76F789810@VE1PR04MB6638.eurprd04.prod.outlook.com>
-X-Cookie: As seen on TV.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 2020-06-12 at 08:42 +0200, Jesper Dangaard Brouer wrote:
+> On Thu, 11 Jun 2020 20:36:40 -0400
+> Gaurav Singh <gaurav1086@gmail.com> wrote:
+> 
+> > Replace malloc/memset with calloc
+> > 
+> > Fixes: 0fca931a6f21 ("samples/bpf: program demonstrating access to xdp_rxq_info")
+> > Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
+> 
+> Above is the correct use of Fixes + Signed-off-by.
+> 
+> Now you need to update/improve the description, to also
+> mention/describe that this also solves the bug you found.
 
---mYCpIKhGyMATD0i+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is not a fix, it's a conversion of one
+correct code to a shorter one.
 
-On Fri, Jun 12, 2020 at 02:18:32AM +0000, Robin Gong wrote:
-> On 2020/06/11 21: 41 Mark Brown <broonie@kernel.org> wrote:
 
-Please look at the formatting of your e-mails - they're really hard to
-read.  The line length is over 80 columns and there's no breaks between
-paragraphs.
-
-> > If we were going to do this I don't see why we'd have a flag for this r=
-ather than
-> > just doing it unconditionally but...
-
-> What do you mean flag here, 'master->flags' or SPI_MASTER_FALLBACK? 'mast=
-er->flags'
-> could let client fallback to PIO finally and spi core clear this flag onc=
-e this transfer done,
-> so that DMA could be tried again in the next transfer. Client could enabl=
-e this feature by choosing SPI_MASTER_FALLBACK freely without any impact on=
- others.
-
-SPI_MASTER_FALLBACK.  If this works why would any driver not enable the
-flag?
-
-> > ...I don't think this can work sensibly - this is going to try PIO if t=
-here's *any*
-> > error.  We might have had some sort of issue during the transfer for ex=
-ample
-> > so have some noise on the bus.  Like I said on a prior version of this =
-I really
-
-> Any error happen in DMA could fallback to PIO , seems a nice to have, bec=
-ause it could
-> give chance to run in PIO which is more reliable. But if there is also er=
-ror in PIO, thus may loop here, it's better adding limit try times here?   =
-=20
-
-An error doesn't mean nothing happened on the bus, an error could for
-example also be something like a FIFO overrun which corrupts data.
-
-> > think that we need to be figuring out if the DMA controller can support=
- the
-> > transaction before we even map the buffer for it, having the controller=
- just
-> > randomly fail underneath the consumer just does not sound robust.
-
-> But dmaengine_prep_slave_sg still may return failure even if anything abo=
-ut
-> DMA is ok before spi transfer start, such as dma description malloc failu=
-re. This
-> patch seems could make spi a bit robust...
-
-It *could* but only in extreme situations, and again this isn't just
-handling errors from failure to prepare the hardware but also anything
-that happens after it.
-
---mYCpIKhGyMATD0i+
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7jVWIACgkQJNaLcl1U
-h9Bozgf/UcNkCEZeiELBwx8bUG0lENlWEPOtNj5hIgl5N82SihwmCxoFw94tIgDg
-4TQJsn1axD1mvHMA8Lp17W5ez2e+zEfzaAKluwvg7rfk64VIWBb1Am9kX9hq2BIV
-N/lzF4sBC5KTJRa5k/tRDagDjAq0bd718Kj4rbXKazcDcHyKhq3JNH+JwPoo3QfH
-+5HE3kQ70uqqsHmufQR/kHG/0tXp50ZqvEnSMUzKYZErDwdQ1Fl2RHi/M6sQV6DV
-j5SkMSsgFE54nLeKU1HELK1RWz16w5TS+HaYjtHmRdIsaD+CM3buINDkVAfjkHsf
-imE/+07m4y/n6nyM28LDJhdDjoM8zQ==
-=SHv2
------END PGP SIGNATURE-----
-
---mYCpIKhGyMATD0i+--
