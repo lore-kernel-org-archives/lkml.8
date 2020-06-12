@@ -5,52 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A12C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 22:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 597E2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 22:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 257CE2078A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 22:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A7932078E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 22:54:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kBsLp8Mv"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ao3O9O0U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbgFLWyM (ORCPT
+        id S1726482AbgFLWyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 18:54:12 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:58110 "EHLO
+        Fri, 12 Jun 2020 18:54:11 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:58112 "EHLO
         fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726432AbgFLWyH (ORCPT
+        with ESMTP id S1726309AbgFLWyH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 12 Jun 2020 18:54:07 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05CMs3dB122149;
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05CMs3Ck122151;
         Fri, 12 Jun 2020 17:54:03 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
         s=ti-com-17Q1; t=1592002443;
-        bh=JsdLc3UrmL6+wRZKSVcyiE2egyVdZb4H4YQxivMTJl8=;
+        bh=4EvBtK/rfun7TTazLD264i1an7pFcd5qtvhAx6gjSkc=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=kBsLp8MvIuNiQE6PXdYWba9tcZ1TVyosIkcvik8haqzlaVQkP2w8e8sbDm2xfICyH
-         0iHRchPUMtEDKfdawMtxqfWkHlKZrEF/jYeMB2Vh4yguUToGoVLDMyI6gls8rjd3r7
-         krY3RHFTKqAhtVM9vySx/TkO4ilNJaIV1q5yov+4=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05CMs2aE125996
+        b=Ao3O9O0Ua7PlhJ8u+T/QqOahciZ5iT6mNrnBK0bVpqBoGe9/nY/QJiCDwIDNPwKuM
+         YYK5vKuiWlar0Bs11sy6khRZxEX7f6OJdG4EPZ5RuTsxCPqPTg7wM/xb3jhwxJ+qRQ
+         LRtBUjuJcVHcQ23YvY11zdPmLe3eI1Lyah2UsBBE=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05CMs2MG064443
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
         Fri, 12 Jun 2020 17:54:03 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 12
- Jun 2020 17:54:02 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ Jun 2020 17:54:01 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 12 Jun 2020 17:54:02 -0500
+ Frontend Transport; Fri, 12 Jun 2020 17:54:01 -0500
 Received: from fllv0103.dal.design.ti.com (fllv0103.dal.design.ti.com [10.247.120.73])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05CMs2is040959;
-        Fri, 12 Jun 2020 17:54:02 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05CMs1VI119270;
+        Fri, 12 Jun 2020 17:54:01 -0500
 Received: from localhost ([10.250.48.148])
-        by fllv0103.dal.design.ti.com (8.14.7/8.14.7) with ESMTP id 05CMs2YB063955;
-        Fri, 12 Jun 2020 17:54:02 -0500
+        by fllv0103.dal.design.ti.com (8.14.7/8.14.7) with ESMTP id 05CMs1vW063928;
+        Fri, 12 Jun 2020 17:54:01 -0500
 From:   Suman Anna <s-anna@ti.com>
 To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -59,9 +59,9 @@ CC:     Lokesh Vutla <lokeshvutla@ti.com>,
         <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, Suman Anna <s-anna@ti.com>
-Subject: [PATCH v3 2/2] remoteproc: k3-dsp: Add support for C71x DSPs
-Date:   Fri, 12 Jun 2020 17:53:57 -0500
-Message-ID: <20200612225357.8251-3-s-anna@ti.com>
+Subject: [PATCH v3 1/2] dt-bindings: remoteproc: k3-dsp: Update bindings for C71x DSPs
+Date:   Fri, 12 Jun 2020 17:53:56 -0500
+Message-ID: <20200612225357.8251-2-s-anna@ti.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200612225357.8251-1-s-anna@ti.com>
 References: <20200612225357.8251-1-s-anna@ti.com>
@@ -74,97 +74,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Texas Instrument's K3 J721E SoCs have a newer next-generation
-C71x DSP Subsystem in the MAIN voltage domain in addition to the
-previous generation C66x DSP subsystems. The C71x DSP subsystem is
-based on the TMS320C71x DSP CorePac module. The C71x CPU is a true
-64-bit machine including 64-bit memory addressing and single-cycle
-64-bit base arithmetic operations and supports vector signal processing
-providing a significant lift in DSP processing power over C66x DSPs.
-J721E SoCs use a C711 (a one-core 512-bit vector width CPU core) DSP
-that is cache coherent with the A72 Arm cores.
+Some Texas Instruments K3 family of SoCs have one of more newer
+generation TMS320C71x CorePac processor subsystem in addition to
+the existing TMS320C66x CorePac processor subsystems. Update the
+device tree bindings document for the C71x DSP devices.
 
-Each subsystem has one or more Fixed/Floating-Point DSP CPUs, with 32 KB
-of L1P Cache, 48 KB of L1D SRAM that can be configured and partitioned as
-either RAM and/or Cache, and 512 KB of L2 SRAM configurable as either RAM
-and/or Cache. The CorePac also includes a Matrix Multiplication Accelerator
-(MMA), a Stream Engine (SE) and a C71x Memory Management Unit (CMMU), an
-Interrupt Controller (INTC) and a Powerdown Management Unit (PMU) modules.
-
-Update the existing K3 DSP remoteproc driver to add support for this C71x
-DSP subsystem. The firmware loading support is provided by using the newly
-added 64-bit ELF loader support, and is limited to images using only
-external DDR memory at the moment. The L1D and L2 SRAMs are used as scratch
-memory when using as RAMs, and cannot be used for loadable segments. The
-CMMU is also not supported to begin with, and the driver is designed to
-treat the MMU as if it is in bypass mode.
+The example is also updated to show the single C71 DSP present
+on J721E SoCs.
 
 Signed-off-by: Suman Anna <s-anna@ti.com>
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
 v3:
- - No code changes, rebased patch
- - Picked up review tags
- - Switched from remoteproc/k3-dsp to remoteproc: k3-dsp in patch title
-v2: https://patchwork.kernel.org/patch/11563233/
+ - Dropped Rob's previous Reviewed-by tag due to decent changes in the
+   patch
+ - Replaced the minItems and maxItems from reg with actual items list
+ - Dropped C71 reserved memory nodes from example
+v2: https://patchwork.kernel.org/patch/11563231/
 
- drivers/remoteproc/ti_k3_dsp_remoteproc.c | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
+ .../bindings/remoteproc/ti,k3-dsp-rproc.yaml  | 68 +++++++++++++++----
+ 1 file changed, 55 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/remoteproc/ti_k3_dsp_remoteproc.c b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-index 668bb45b3fe8..861cc9126241 100644
---- a/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-+++ b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-@@ -407,8 +407,6 @@ static void *k3_dsp_rproc_da_to_va(struct rproc *rproc, u64 da, size_t len)
- }
+diff --git a/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
+index f03e88c42a6e..8eaf326b5a7f 100644
+--- a/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
++++ b/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
+@@ -30,21 +30,12 @@ allOf:
  
- static const struct rproc_ops k3_dsp_rproc_ops = {
--	.prepare	= k3_dsp_rproc_prepare,
--	.unprepare	= k3_dsp_rproc_unprepare,
- 	.start		= k3_dsp_rproc_start,
- 	.stop		= k3_dsp_rproc_stop,
- 	.kick		= k3_dsp_rproc_kick,
-@@ -618,6 +616,10 @@ static int k3_dsp_rproc_probe(struct platform_device *pdev)
+ properties:
+   compatible:
+-    const: ti,j721e-c66-dsp
++    enum:
++      - ti,j721e-c66-dsp
++      - ti,j721e-c71-dsp
+     description:
+       Use "ti,j721e-c66-dsp" for C66x DSPs on K3 J721E SoCs
+-
+-  reg:
+-    items:
+-      - description: Address and Size of the L2 SRAM internal memory region
+-      - description: Address and Size of the L1 PRAM internal memory region
+-      - description: Address and Size of the L1 DRAM internal memory region
+-
+-  reg-names:
+-    items:
+-      - const: l2sram
+-      - const: l1pram
+-      - const: l1dram
++      Use "ti,j721e-c71-dsp" for C71x DSPs on K3 J721E SoCs
  
- 	rproc->has_iommu = false;
- 	rproc->recovery_disabled = true;
-+	if (data->uses_lreset) {
-+		rproc->ops->prepare = k3_dsp_rproc_prepare;
-+		rproc->ops->unprepare = k3_dsp_rproc_unprepare;
-+	}
- 	kproc = rproc->priv;
- 	kproc->rproc = rproc;
- 	kproc->dev = dev;
-@@ -745,6 +747,12 @@ static const struct k3_dsp_mem_data c66_mems[] = {
- 	{ .name = "l1dram", .dev_addr = 0xf00000 },
- };
+   resets:
+     description: |
+@@ -92,6 +83,40 @@ properties:
+       should be defined as per the generic bindings in,
+       Documentation/devicetree/bindings/sram/sram.yaml
  
-+/* C71x cores only have a L1P Cache, there are no L1P SRAMs */
-+static const struct k3_dsp_mem_data c71_mems[] = {
-+	{ .name = "l2sram", .dev_addr = 0x800000 },
-+	{ .name = "l1dram", .dev_addr = 0xe00000 },
-+};
++if:
++  properties:
++    compatible:
++      enum:
++        - ti,j721e-c66-dsp
++then:
++  properties:
++    reg:
++      items:
++        - description: Address and Size of the L2 SRAM internal memory region
++        - description: Address and Size of the L1 PRAM internal memory region
++        - description: Address and Size of the L1 DRAM internal memory region
++    reg-names:
++      items:
++        - const: l2sram
++        - const: l1pram
++        - const: l1dram
++else:
++  if:
++    properties:
++      compatible:
++        enum:
++          - ti,j721e-c71-dsp
++  then:
++    properties:
++      reg:
++        items:
++          - description: Address and Size of the L2 SRAM internal memory region
++          - description: Address and Size of the L1 DRAM internal memory region
++      reg-names:
++        items:
++          - const: l2sram
++          - const: l1dram
 +
- static const struct k3_dsp_dev_data c66_data = {
- 	.mems = c66_mems,
- 	.num_mems = ARRAY_SIZE(c66_mems),
-@@ -752,8 +760,16 @@ static const struct k3_dsp_dev_data c66_data = {
- 	.uses_lreset = true,
- };
+ required:
+  - compatible
+  - reg
+@@ -116,6 +141,7 @@ examples:
+             #address-cells = <2>;
+             #size-cells = <2>;
+             ranges = <0x00 0x00100000 0x00 0x00100000 0x00 0x00020000>, /* ctrl mmr */
++                     <0x00 0x64800000 0x00 0x64800000 0x00 0x00800000>, /* C71_0 */
+                      <0x4d 0x80800000 0x4d 0x80800000 0x00 0x00800000>, /* C66_0 */
+                      <0x4d 0x81800000 0x4d 0x81800000 0x00 0x00800000>; /* C66_1 */
  
-+static const struct k3_dsp_dev_data c71_data = {
-+	.mems = c71_mems,
-+	.num_mems = ARRAY_SIZE(c71_mems),
-+	.boot_align_addr = SZ_2M,
-+	.uses_lreset = false,
-+};
+@@ -135,5 +161,21 @@ examples:
+                                 <&c66_0_memory_region>;
+                 mboxes = <&mailbox0_cluster3 &mbox_c66_0>;
+             };
 +
- static const struct of_device_id k3_dsp_of_match[] = {
- 	{ .compatible = "ti,j721e-c66-dsp", .data = &c66_data, },
-+	{ .compatible = "ti,j721e-c71-dsp", .data = &c71_data, },
- 	{ /* sentinel */ },
- };
- MODULE_DEVICE_TABLE(of, k3_dsp_of_match);
++            /* J721E C71_0 DSP node */
++            c71_0: dsp@64800000 {
++                compatible = "ti,j721e-c71-dsp";
++                reg = <0x00 0x64800000 0x00 0x00080000>,
++                      <0x00 0x64e00000 0x00 0x0000c000>;
++                reg-names = "l2sram", "l1dram";
++                ti,sci = <&dmsc>;
++                ti,sci-dev-id = <15>;
++                ti,sci-proc-ids = <0x30 0xFF>;
++                resets = <&k3_reset 15 1>;
++                firmware-name = "j7-c71_0-fw";
++                memory-region = <&c71_0_dma_memory_region>,
++                                <&c71_0_memory_region>;
++                mboxes = <&mailbox0_cluster4 &mbox_c71_0>;
++            };
+         };
+     };
 -- 
 2.26.0
 
