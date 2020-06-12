@@ -4,24 +4,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCC8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF74DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40AD220801
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:03:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FF0C20801
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 17:03:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726384AbgFLRDI (ORCPT
+        id S1726441AbgFLRDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 13:03:08 -0400
+        Fri, 12 Jun 2020 13:03:15 -0400
 Received: from smtp.uniroma2.it ([160.80.6.16]:43544 "EHLO smtp.uniroma2.it"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726089AbgFLRDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 13:03:03 -0400
+        id S1726290AbgFLRDJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 13:03:09 -0400
 X-Greylist: delayed 670 seconds by postgrey-1.27 at vger.kernel.org; Fri, 12 Jun 2020 13:02:58 EDT
 Received: from localhost.localdomain ([160.80.103.126])
-        by smtp-2015.uniroma2.it (8.14.4/8.14.4/Debian-8) with ESMTP id 05CGpXZs019363
+        by smtp-2015.uniroma2.it (8.14.4/8.14.4/Debian-8) with ESMTP id 05CGpXZq019363
         (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
         Fri, 12 Jun 2020 18:51:34 +0200
 From:   Andrea Mayer <andrea.mayer@uniroma2.it>
@@ -38,9 +38,9 @@ Cc:     Donald Sharp <sharpd@cumulusnetworks.com>,
         Paolo Lungaroni <paolo.lungaroni@cnit.it>,
         Ahmed Abdelsalam <ahabdels@gmail.com>,
         Andrea Mayer <andrea.mayer@uniroma2.it>
-Subject: [RFC,net-next, 3/5] vrf: add sysctl parameter for strict mode
-Date:   Fri, 12 Jun 2020 18:49:35 +0200
-Message-Id: <20200612164937.5468-4-andrea.mayer@uniroma2.it>
+Subject: [RFC,net-next, 1/5] l3mdev: add infrastructure for table to VRF mapping
+Date:   Fri, 12 Jun 2020 18:49:33 +0200
+Message-Id: <20200612164937.5468-2-andrea.mayer@uniroma2.it>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200612164937.5468-1-andrea.mayer@uniroma2.it>
 References: <20200612164937.5468-1-andrea.mayer@uniroma2.it>
@@ -53,180 +53,187 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add net.vrf.strict_mode sysctl parameter.
-
-When net.vrf.strict_mode=0 (default) it is possible to associate multiple
-VRF devices to the same table. Conversely, when net.vrf.strict_mode=1 a
-table can be associated to a single VRF device.
-
-When switching from net.vrf.strict_mode=0 to net.vrf.strict_mode=1, a check
-is performed to verify that all tables have at most one VRF associated,
-otherwise the switch is not allowed.
-
-The net.vrf.strict_mode parameter is per network namespace.
+Add infrastructure to l3mdev (the core code for Layer 3 master devices) in
+order to find out the corresponding VRF device for a given table id.
+Therefore, the l3mdev implementations:
+ - can register a callback that returns the device index of the l3mdev
+   associated with a given table id;
+ - can offer the lookup function (table to VRF device).
 
 Signed-off-by: Andrea Mayer <andrea.mayer@uniroma2.it>
 ---
- drivers/net/vrf.c | 119 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 119 insertions(+)
+ include/net/l3mdev.h | 37 +++++++++++++++++
+ net/l3mdev/l3mdev.c  | 95 ++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 132 insertions(+)
 
-diff --git a/drivers/net/vrf.c b/drivers/net/vrf.c
-index f772aac6a04c..bac118b615bc 100644
---- a/drivers/net/vrf.c
-+++ b/drivers/net/vrf.c
-@@ -102,6 +102,7 @@ struct netns_vrf {
- 	bool add_fib_rules;
+diff --git a/include/net/l3mdev.h b/include/net/l3mdev.h
+index e942372b077b..37aed117455f 100644
+--- a/include/net/l3mdev.h
++++ b/include/net/l3mdev.h
+@@ -10,6 +10,14 @@
+ #include <net/dst.h>
+ #include <net/fib_rules.h>
  
- 	struct vrf_map vmap;
-+	struct ctl_table_header	*ctl_hdr;
- };
- 
- struct net_vrf {
-@@ -245,6 +246,52 @@ static void vrf_map_unlock(struct vrf_map *vmap) __releases(&vmap->vmap_lock)
- 	spin_unlock(&vmap->vmap_lock);
- }
- 
-+static bool vrf_strict_mode(struct vrf_map *vmap)
-+{
-+	bool strict_mode;
-+
-+	vrf_map_lock(vmap);
-+	strict_mode = vmap->strict_mode;
-+	vrf_map_unlock(vmap);
-+
-+	return strict_mode;
-+}
-+
-+static int vrf_strict_mode_change(struct vrf_map *vmap, bool new_mode)
-+{
-+	bool *cur_mode;
-+	int res = 0;
-+
-+	vrf_map_lock(vmap);
-+
-+	cur_mode = &vmap->strict_mode;
-+	if (*cur_mode == new_mode)
-+		goto unlock;
-+
-+	if (*cur_mode) {
-+		/* disable strict mode */
-+		*cur_mode = false;
-+	} else {
-+		if (vmap->shared_tables) {
-+			/* we cannot allow strict_mode because there are some
-+			 * vrfs that share one or more tables.
-+			 */
-+			res = -EBUSY;
-+			goto unlock;
-+		}
-+
-+		/* no tables are shared among vrfs, so we can go back
-+		 * to 1:1 association between a vrf with its table.
-+		 */
-+		*cur_mode = true;
-+	}
-+
-+unlock:
-+	vrf_map_unlock(vmap);
-+
-+	return res;
-+}
-+
- /* called with rtnl lock held */
- static int
- vrf_map_register_dev(struct net_device *dev, struct netlink_ext_ack *extack)
-@@ -1701,19 +1748,91 @@ static int vrf_map_init(struct vrf_map *vmap)
- 	return 0;
- }
- 
-+static int vrf_shared_table_handler(struct ctl_table *table, int write,
-+				    void __user *buffer, size_t *lenp,
-+				    loff_t *ppos)
-+{
-+	struct net *net = (struct net *)table->extra1;
-+	struct vrf_map *vmap = netns_vrf_map(net);
-+	int proc_strict_mode = 0;
-+	struct ctl_table tmp = {
-+		.procname	= table->procname,
-+		.data		= &proc_strict_mode,
-+		.maxlen		= sizeof(int),
-+		.mode		= table->mode,
-+		.extra1		= SYSCTL_ZERO,
-+		.extra2		= SYSCTL_ONE,
-+	};
-+	int ret;
-+
-+	if (!write)
-+		proc_strict_mode = vrf_strict_mode(vmap);
-+
-+	ret = proc_dointvec_minmax(&tmp, write, buffer, lenp, ppos);
-+
-+	if (write && ret == 0)
-+		ret = vrf_strict_mode_change(vmap, (bool)proc_strict_mode);
-+
-+	return ret;
-+}
-+
-+static const struct ctl_table vrf_table[] = {
-+	{
-+		.procname	= "strict_mode",
-+		.data		= NULL,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= vrf_shared_table_handler,
-+		/* set by the vrf_netns_init */
-+		.extra1		= NULL,
-+	},
-+	{ },
++enum l3mdev_type {
++	L3MDEV_TYPE_UNSPEC,
++	L3MDEV_TYPE_VRF,
++	__L3MDEV_TYPE_MAX
 +};
 +
- /* Initialize per network namespace state */
- static int __net_init vrf_netns_init(struct net *net)
- {
- 	struct netns_vrf *nn_vrf = net_generic(net, vrf_net_id);
-+	struct ctl_table *table;
++#define L3MDEV_TYPE_MAX (__L3MDEV_TYPE_MAX - 1)
++
+ /**
+  * struct l3mdev_ops - l3mdev operations
+  *
+@@ -37,6 +45,15 @@ struct l3mdev_ops {
+ 
+ #ifdef CONFIG_NET_L3_MASTER_DEV
+ 
++int l3mdev_table_lookup_register(enum l3mdev_type l3type,
++				 int (*fn)(struct net *net, u32 table_id));
++
++void l3mdev_table_lookup_unregister(enum l3mdev_type l3type,
++				    int (*fn)(struct net *net, u32 table_id));
++
++int l3mdev_ifindex_lookup_by_table_id(enum l3mdev_type l3type, struct net *net,
++				      u32 table_id);
++
+ int l3mdev_fib_rule_match(struct net *net, struct flowi *fl,
+ 			  struct fib_lookup_arg *arg);
+ 
+@@ -280,6 +297,26 @@ struct sk_buff *l3mdev_ip6_out(struct sock *sk, struct sk_buff *skb)
+ 	return skb;
+ }
+ 
++static inline
++int l3mdev_table_lookup_register(enum l3mdev_type l3type,
++				 int (*fn)(struct net *net, u32 table_id))
++{
++	return -EOPNOTSUPP;
++}
++
++static inline
++void l3mdev_table_lookup_unregister(enum l3mdev_type l3type,
++				    int (*fn)(struct net *net, u32 table_id))
++{
++}
++
++static inline
++int l3mdev_ifindex_lookup_by_table_id(enum l3mdev_type l3type, struct net *net,
++				      u32 table_id)
++{
++	return -ENODEV;
++}
++
+ static inline
+ int l3mdev_fib_rule_match(struct net *net, struct flowi *fl,
+ 			  struct fib_lookup_arg *arg)
+diff --git a/net/l3mdev/l3mdev.c b/net/l3mdev/l3mdev.c
+index f35899d45a9a..6cc1fe7eb039 100644
+--- a/net/l3mdev/l3mdev.c
++++ b/net/l3mdev/l3mdev.c
+@@ -9,6 +9,101 @@
+ #include <net/fib_rules.h>
+ #include <net/l3mdev.h>
+ 
++DEFINE_SPINLOCK(l3mdev_lock);
++
++typedef int (*lookup_by_table_id_t)(struct net *net, u32 table_d);
++
++struct l3mdev_handler {
++	lookup_by_table_id_t dev_lookup;
++};
++
++static struct l3mdev_handler l3mdev_handlers[L3MDEV_TYPE_MAX + 1];
++
++static int l3mdev_check_type(enum l3mdev_type l3type)
++{
++	if (l3type <= L3MDEV_TYPE_UNSPEC || l3type > L3MDEV_TYPE_MAX)
++		return -EINVAL;
++
++	return 0;
++}
++
++int l3mdev_table_lookup_register(enum l3mdev_type l3type,
++				 lookup_by_table_id_t fn)
++{
++	struct l3mdev_handler *hdlr;
 +	int res;
- 
- 	nn_vrf->add_fib_rules = true;
- 	vrf_map_init(&nn_vrf->vmap);
- 
-+	table = kmemdup(vrf_table, sizeof(vrf_table), GFP_KERNEL);
-+	if (!table)
-+		return -ENOMEM;
 +
-+	/* init the extra1 parameter with the reference to current netns */
-+	table[0].extra1 = net;
++	res = l3mdev_check_type(l3type);
++	if (res)
++		return res;
 +
-+	nn_vrf->ctl_hdr = register_net_sysctl(net, "net/vrf", table);
-+	if (!nn_vrf->ctl_hdr) {
-+		res = -ENOMEM;
-+		goto free_table;
++	hdlr = &l3mdev_handlers[l3type];
++
++	spin_lock(&l3mdev_lock);
++
++	if (hdlr->dev_lookup) {
++		res = -EBUSY;
++		goto unlock;
 +	}
 +
- 	return 0;
++	hdlr->dev_lookup = fn;
++	res = 0;
 +
-+free_table:
-+	kfree(table);
++unlock:
++	spin_unlock(&l3mdev_lock);
 +
 +	return res;
 +}
++EXPORT_SYMBOL_GPL(l3mdev_table_lookup_register);
 +
-+static void __net_exit vrf_netns_exit(struct net *net)
++void l3mdev_table_lookup_unregister(enum l3mdev_type l3type,
++				    lookup_by_table_id_t fn)
 +{
-+	struct netns_vrf *nn_vrf = net_generic(net, vrf_net_id);
-+	struct ctl_table *table;
++	struct l3mdev_handler *hdlr;
 +
-+	table = nn_vrf->ctl_hdr->ctl_table_arg;
-+	unregister_net_sysctl_table(nn_vrf->ctl_hdr);
-+	kfree(table);
- }
- 
- static struct pernet_operations vrf_net_ops __net_initdata = {
- 	.init = vrf_netns_init,
-+	.exit = vrf_netns_exit,
- 	.id   = &vrf_net_id,
- 	.size = sizeof(struct netns_vrf),
- };
++	if (l3mdev_check_type(l3type))
++		return;
++
++	hdlr = &l3mdev_handlers[l3type];
++
++	spin_lock(&l3mdev_lock);
++
++	if (hdlr->dev_lookup == fn)
++		hdlr->dev_lookup = NULL;
++
++	spin_unlock(&l3mdev_lock);
++}
++EXPORT_SYMBOL_GPL(l3mdev_table_lookup_unregister);
++
++int l3mdev_ifindex_lookup_by_table_id(enum l3mdev_type l3type,
++				      struct net *net, u32 table_id)
++{
++	lookup_by_table_id_t lookup;
++	struct l3mdev_handler *hdlr;
++	int ifindex = -EINVAL;
++	int res;
++
++	res = l3mdev_check_type(l3type);
++	if (res)
++		return res;
++
++	hdlr = &l3mdev_handlers[l3type];
++
++	spin_lock(&l3mdev_lock);
++
++	lookup = hdlr->dev_lookup;
++	if (!lookup)
++		goto unlock;
++
++	ifindex = lookup(net, table_id);
++
++unlock:
++	spin_unlock(&l3mdev_lock);
++
++	return ifindex;
++}
++EXPORT_SYMBOL_GPL(l3mdev_ifindex_lookup_by_table_id);
++
+ /**
+  *	l3mdev_master_ifindex - get index of L3 master device
+  *	@dev: targeted interface
 -- 
 2.20.1
 
