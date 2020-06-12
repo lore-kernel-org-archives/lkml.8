@@ -2,163 +2,180 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A1AC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:37:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 060EEC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE770207ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:37:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA8FA2083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 04:42:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p2J2k390"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726547AbgFLEhv (ORCPT
+        id S1726401AbgFLEmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 00:37:51 -0400
-Received: from mga17.intel.com ([192.55.52.151]:10209 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726499AbgFLEhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 00:37:42 -0400
-IronPort-SDR: JnDQn4dKAS7leuAIxLCkmxNTrPWmwPl35AcFcwU8sK1bgL3ekCgYSpf1ZrSxozMCTtYPdTlgRw
- 08lnaVoJxKCA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 21:37:41 -0700
-IronPort-SDR: YuYqQAMD1opv6R7TFgoJbyzRaLJJfg9ndXVftHkg4PiHs8e4LmvahfGRRiBRgEMKI3npIeEn+L
- vJP9M8+BIC1Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,501,1583222400"; 
-   d="scan'208";a="350421417"
-Received: from lkp-server01.sh.intel.com (HELO b6eec31c25be) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 11 Jun 2020 21:37:39 -0700
-Received: from kbuild by b6eec31c25be with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jjbRj-0000VE-3S; Fri, 12 Jun 2020 04:37:39 +0000
-Date:   Fri, 12 Jun 2020 12:36:54 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- 8a7fd399f1a0bcf4943245dc87d75964546596a8
-Message-ID: <5ee30666.sAs6r1IHPtM+ILBd%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+        Fri, 12 Jun 2020 00:42:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50166 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725763AbgFLEme (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 00:42:34 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B728C03E96F;
+        Thu, 11 Jun 2020 21:42:34 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id g12so3242332pll.10;
+        Thu, 11 Jun 2020 21:42:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=tnkNvIy4NyhOcfhzdkEEgf5Q0aBBdpOiKM99Ch2kRHo=;
+        b=p2J2k390abBAM4NCbA9yAEM/LrDNElIECJSQNv3Nr8adiQVAS5SzbFY95WgXXxsQIh
+         WJkHweRSLgzRw+GhG7AdtIsCCWhBM8XJSKuStAPyg5GzWrP6UfZokkvvSDuCia7LKDe8
+         71ujb6m40rMGRbwrRU+cN48oUNWf6r0I2VKCdk3XFkhd7SI1mBjeH2MYM00dZWC5qOCP
+         FHXiJVbAQiG/K5Obfn+8x9PhykJbXAlXcTajBOJKJlM1Wemqs6OzfESWAa5E+VfI9uFY
+         0/YzlC1zdTftffN4s1iJyIMA8CW79XvwgF/CZ2Um4s/Uxf3elaXGjlbcz4Tn9Hlj3jV0
+         d2tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=tnkNvIy4NyhOcfhzdkEEgf5Q0aBBdpOiKM99Ch2kRHo=;
+        b=jnbxLZSaU7SwEo9AWESk+sdWpRd0acuQbNxVGlvA178Yr3FThVn9nxmrSnfij3jgYh
+         AbDNn0ylgjdUqtmpRWt3ncPcSIU8t5D/y/fZ2E2em3n82W7QIK5DE+ZgwsXvsTzjbf3q
+         WTjPi+44VD5V1UhCsBJUdD2SsfdNJQ/Tj/iCAstzTsCbNw5pEZS0rJMQ5aQ9XawhEVbM
+         Wm44JjZi4/SOq6RotGy4vZR2CTYHJ3YxpvnqHo92ijzOIvkRA/ZQr12CjDc56u8qLN21
+         bzjToWMY8SN2aLQ6+QRSBx3j6Ee2pWygpbaLPBtTEI4uNxocvoB6Bug2rjD2LnGJQyPM
+         Y2ug==
+X-Gm-Message-State: AOAM530n+c/lTU6DkdV0kw91aOr8y6QHbomFPES85YR/QxpC6TsRrqhu
+        LWugph0OAvPpHEYWa1g7HRo=
+X-Google-Smtp-Source: ABdhPJwVfVwWuvBqsmyJQUwzIkKhTVDfAOSa0G75EXUmTNsmKXeQmrkCijvdn4svfC9O7GaAMKn6pA==
+X-Received: by 2002:a17:902:c30c:: with SMTP id k12mr10389411plx.130.1591936953486;
+        Thu, 11 Jun 2020 21:42:33 -0700 (PDT)
+Received: from localhost.localdomain ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id s9sm4084239pgo.22.2020.06.11.21.42.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2020 21:42:32 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     stable@vger.kernel.org, will@kernel.org,
+        Will Deacon <will.deacon@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Christoffer Dall <christoffer.dall@linaro.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        linux-kernel@vger.kernel.org (open list),
+        kvm@vger.kernel.org (open list:KERNEL VIRTUAL MACHINE (KVM)),
+        kvmarm@lists.cs.columbia.edu (open list:KERNEL VIRTUAL MACHINE FOR
+        ARM64 (KVM/arm64))
+Subject: [PATCH stable 4.9] arm64: entry: Place an SB sequence following an ERET instruction
+Date:   Thu, 11 Jun 2020 21:42:18 -0700
+Message-Id: <20200612044219.31606-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
-branch HEAD: 8a7fd399f1a0bcf4943245dc87d75964546596a8  Merge branch 'ras/core' into auto-latest
+From: Will Deacon <will.deacon@arm.com>
 
-elapsed time: 625m
+commit 679db70801da9fda91d26caf13bf5b5ccc74e8e8 upstream
 
-configs tested: 96
-configs skipped: 1
+Some CPUs can speculate past an ERET instruction and potentially perform
+speculative accesses to memory before processing the exception return.
+Since the register state is often controlled by a lower privilege level
+at the point of an ERET, this could potentially be used as part of a
+side-channel attack.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+This patch emits an SB sequence after each ERET so that speculation is
+held up on exception return.
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-c6x                        evmc6457_defconfig
-nds32                               defconfig
-alpha                            alldefconfig
-mips                     loongson1b_defconfig
-alpha                               defconfig
-mips                       bmips_be_defconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a015-20200611
-x86_64               randconfig-a011-20200611
-x86_64               randconfig-a016-20200611
-x86_64               randconfig-a012-20200611
-x86_64               randconfig-a014-20200611
-x86_64               randconfig-a013-20200611
-i386                 randconfig-a015-20200612
-i386                 randconfig-a011-20200612
-i386                 randconfig-a014-20200612
-i386                 randconfig-a016-20200612
-i386                 randconfig-a013-20200612
-i386                 randconfig-a012-20200612
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                               allmodconfig
-um                                allnoconfig
-um                                  defconfig
-um                               allyesconfig
-x86_64                                   rhel
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+[florian: Adjust hyp-entry.S to account for the label]
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Will,
+
+Can you confirm that for 4.9 these are the only places that require
+patching? Thank you!
+
+ arch/arm64/kernel/entry.S      | 2 ++
+ arch/arm64/kvm/hyp/entry.S     | 1 +
+ arch/arm64/kvm/hyp/hyp-entry.S | 4 ++++
+ 3 files changed, 7 insertions(+)
+
+diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
+index ca978d7d98eb..3408c782702c 100644
+--- a/arch/arm64/kernel/entry.S
++++ b/arch/arm64/kernel/entry.S
+@@ -255,6 +255,7 @@ alternative_insn eret, nop, ARM64_UNMAP_KERNEL_AT_EL0
+ 	.else
+ 	eret
+ 	.endif
++	sb
+ 	.endm
+ 
+ 	.macro	get_thread_info, rd
+@@ -945,6 +946,7 @@ __ni_sys_trace:
+ 	mrs	x30, far_el1
+ 	.endif
+ 	eret
++	sb
+ 	.endm
+ 
+ 	.align	11
+diff --git a/arch/arm64/kvm/hyp/entry.S b/arch/arm64/kvm/hyp/entry.S
+index a360ac6e89e9..bc5c6cdb8538 100644
+--- a/arch/arm64/kvm/hyp/entry.S
++++ b/arch/arm64/kvm/hyp/entry.S
+@@ -83,6 +83,7 @@ ENTRY(__guest_enter)
+ 
+ 	// Do not touch any register after this!
+ 	eret
++	sb
+ ENDPROC(__guest_enter)
+ 
+ ENTRY(__guest_exit)
+diff --git a/arch/arm64/kvm/hyp/hyp-entry.S b/arch/arm64/kvm/hyp/hyp-entry.S
+index bf4988f9dae8..3675e7f0ab72 100644
+--- a/arch/arm64/kvm/hyp/hyp-entry.S
++++ b/arch/arm64/kvm/hyp/hyp-entry.S
+@@ -97,6 +97,7 @@ el1_sync:				// Guest trapped into EL2
+ 	do_el2_call
+ 
+ 2:	eret
++	sb
+ 
+ el1_hvc_guest:
+ 	/*
+@@ -147,6 +148,7 @@ wa_epilogue:
+ 	mov	x0, xzr
+ 	add	sp, sp, #16
+ 	eret
++	sb
+ 
+ el1_trap:
+ 	get_vcpu_ptr	x1, x0
+@@ -198,6 +200,7 @@ el2_error:
+ 	b.ne	__hyp_panic
+ 	mov	x0, #(1 << ARM_EXIT_WITH_SERROR_BIT)
+ 	eret
++	sb
+ 
+ ENTRY(__hyp_do_panic)
+ 	mov	lr, #(PSR_F_BIT | PSR_I_BIT | PSR_A_BIT | PSR_D_BIT |\
+@@ -206,6 +209,7 @@ ENTRY(__hyp_do_panic)
+ 	ldr	lr, =panic
+ 	msr	elr_el2, lr
+ 	eret
++	sb
+ ENDPROC(__hyp_do_panic)
+ 
+ ENTRY(__hyp_panic)
+-- 
+2.17.1
+
