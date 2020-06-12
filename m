@@ -2,87 +2,156 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D905C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C95C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:35:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B26B2063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 046F62063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:35:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VyD+5kQp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mMCretsj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726365AbgFLTfb (ORCPT
+        id S1726408AbgFLTf5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 15:35:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46696 "EHLO
+        Fri, 12 Jun 2020 15:35:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgFLTfa (ORCPT
+        with ESMTP id S1726268AbgFLTf4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 15:35:30 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D397CC03E96F
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 12:35:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=+5+IcG8sXlMhiox/FgJWWsRtf+hRc3YO/1sJoEPrqoM=; b=VyD+5kQpi5iwqF6m2FD8IlHyrV
-        r3e6fkIn6zAAxbvBjS2CrgIlvm9ufT9ImrZZEjsY6GgwyWdMmLiSI26vAUd3fyA328o7ccFDBq9S5
-        cyBy7JnaVqETitlmN8Ix25OwomjkkEpp7o7gqEpCmi0CFYbbtoo6APyITJ4N6ibrJrlSLVY+wlA00
-        BOSiA2fV4a8m5awRXHvf23bo57qkegL094Gh9rtY56+EPILfX2tcxNW8Flan9T1qv9bnTCBGwiwb8
-        z7v29o8XjqMdMRBrzvywPYHRJAmoSb1+QAX36JWnu8n3TkbOFSfzWZp7DWBLzcmIy9/ardtaVKYX0
-        EQapKAbA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jjpSW-0007FE-9J; Fri, 12 Jun 2020 19:35:24 +0000
-Date:   Fri, 12 Jun 2020 12:35:24 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] mm/hmm: remove redundant check non_swap_entry()
-Message-ID: <20200612193524.GL8681@bombadil.infradead.org>
-References: <20200612192618.32579-1-rcampbell@nvidia.com>
+        Fri, 12 Jun 2020 15:35:56 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B7E2C03E96F;
+        Fri, 12 Jun 2020 12:35:56 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id 9so9803448ilg.12;
+        Fri, 12 Jun 2020 12:35:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=fLyHowTjK9VUxR3jGuO5lsoKw9rsC/66b7MwWsYuiLE=;
+        b=mMCretsjGQovL2Vlqu0hsbPGV9nUaxzYLua9pej7fFxAD7NkX353fn9VZbdeG9jIVr
+         kquhPz7/1Ta1w+kL9+wTVqqCTNrVa5k23kFikoxbfmFV0xjSqnNjh3tQbkvQ0y7Y5qwx
+         kNZOO1+Db44CRGp68f0h+YDbC/j38IzIA/KDX1/eeSNSlfyUlPOfnkNMRc/vcYJ2SmOZ
+         MnFtfSTuFMRv73NPebXzEc9OqjxJpfkuIi7sfZbwNQP+sLP90b6ahbINtm98J4wBQ17x
+         pSv6n/1OXj713UVkpN+LRNcWYQ7Vjuiy60AV6XuAeBrZZFeWk0E3XfClw2rdhev/oRsP
+         9IZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=fLyHowTjK9VUxR3jGuO5lsoKw9rsC/66b7MwWsYuiLE=;
+        b=qwLKV2poFHMYcer6+gp7K2pidLO206AzPbYuFROYakqua+pw8P8pMkPmZuFS0Don31
+         zC4e9V98QcAJI+kEktEp/eLz63gtl8Gp7e7I4pSkUH7k44YkfK7mFvzPCbyqBNSJxPT5
+         rE55RvJjPh8P6LU1hMzhKVoa8F8uLUqlDXlMgKQRP5XhiUodWuRB79Usq/puWJ1FVi8b
+         3XkrjAueXR07LqL1ZBfEFYBzXsSWRyhEWpMGJoA8XZ0RUjIS3zC6dsRfyALuZR64MgoA
+         1Uog0VLCEprckQUVz3l99Zq+TuV0hfrDsw/EzmgOd6g5aMhbjcw3iJeZ4oESqSRGmTVZ
+         MbdQ==
+X-Gm-Message-State: AOAM533ebX/+SP3WrvmpJrKH6Usu1sIs6GLX3pjGo8rBYMpPJzsVn2LE
+        HiR4UWt7zli/DJZ/TBuVkPuD/fyHYROWOQFqWEzR6w==
+X-Google-Smtp-Source: ABdhPJyAjF3WU3IKNqwJ3ysnx28VR/sEcbZ7YwuFYFOfUGEotUuF4Rr54NtXcl5kh8pVZ5CQC+5AFFmaEzHv4Ykl0nQ=
+X-Received: by 2002:a92:9914:: with SMTP id p20mr8125160ili.273.1591990555172;
+ Fri, 12 Jun 2020 12:35:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200612192618.32579-1-rcampbell@nvidia.com>
+References: <20200612185122.327860-1-andrealmeid@collabora.com>
+In-Reply-To: <20200612185122.327860-1-andrealmeid@collabora.com>
+From:   "H.J. Lu" <hjl.tools@gmail.com>
+Date:   Fri, 12 Jun 2020 12:35:19 -0700
+Message-ID: <CAMe9rOqnBRzXv4xnhFvOgdVpDo0oRc1SYq38zcJWo9BPZseagg@mail.gmail.com>
+Subject: Re: [RFC 0/4] futex2: Add new futex interface
+To:     =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@collabora.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Florian Weimer <fweimer@redhat.com>, malteskarupke@web.de,
+        GNU C Library <libc-alpha@sourceware.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, dvhart@infradead.org,
+        kernel@collabora.com, krisman@collabora.com,
+        pgriffais@valvesoftware.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 12:26:18PM -0700, Ralph Campbell wrote:
-> In zap_pte_range(), the check for non_swap_entry() and
-> is_device_private_entry() is redundant since the latter is a subset of the
-> former. Remove the redundant check to simplify the code and for clarity.
+On Fri, Jun 12, 2020 at 11:53 AM Andr=C3=A9 Almeida via Libc-alpha
+<libc-alpha@sourceware.org> wrote:
+>
+> Hello,
+>
+> This RFC is a followup to the previous discussion initiated from my last
+> patch "futex: Implement mechanism to wait on any of several futexes"[1].
+> As stated in the thread, the correct approach to move forward with the
+> wait multiple operation would be to create a new syscall that would have
+> all new cool features.
+>
+> The first patch adds the new interface and just translate the call for
+> the old interface, without implementing new features. The goal here is
+> to establish the interface and to check if everyone is happy with this
+> API. The rest of patches are selftests to show the interface in action.
+> I have the following questions:
+>
+> - Has anyone stared worked on a implementation of this interface? If
+>   yes, it would be nice to share the progress so we don't have duplicated
+>   work.
+>
+> - What suggestions do you have to implement this? Start from scratch or
+>   reuse the most code possible?
+>
+> - The interface seems correct and implements the requirements asked by yo=
+u?
+>
+> - The proposed interface uses ktime_t type for absolute timeout, and I
+>   assumed that it should use values in a nsec resolution. If this is true=
+,
+>   we have some problems with i386 ABI, please check out the
+>   COMPAT_32BIT_TIME implementation in patch 1 for more details. I
+>   haven't added a time64 implementation yet, until this is clarified.
+>
+> - Is expected to have a x32 ABI implementation as well? In the case of
+>   wait and wake, we could use the same as x86_64 ABI. However, for the
+>   waitv (aka wait on multiple futexes) we would need a proper x32 entry
+>   since we are dealing with 32bit pointers.
 
-That is highly configuration dependent.
+x32 should be able to use the same i386 compat systcall entry.   Will it be
+problem?
 
-#else /* CONFIG_DEVICE_PRIVATE */
-...
-static inline bool is_device_private_entry(swp_entry_t entry)
-{
-        return false;
-}
+> Those are the cool new features that this syscall should address some
+> day:
+>
+> - Operate with variable bit size futexes, not restricted to 32:
+>   8, 16 and 64
+>
+> - Wait on multiple futexes, using the following semantics:
+>
+>   struct futex_wait {
+>         void *uaddr;
+>         unsigned long val;
+>         unsigned long flags;
+>   };
+>
+>   sys_futex_waitv(struct futex_wait *waiters, unsigned int nr_waiters,
+>                   unsigned long flags, ktime_t *timo);
+>
+> - Have NUMA optimizations: if FUTEX_NUMA_FLAG is present, the `void *uadd=
+r`
+>   argument won't be a u{8, 16, 32, 64} value anymore, but a struct
+>   containing a NUMA node hint:
+>
+>   struct futex32_numa {
+>           u32 value __attribute__ ((aligned (8)));
+>           u32 hint;
+>   };
+>
+>   struct futex64_numa {
+>           u64 value __attribute__ ((aligned (16)));
+>           u64 hint;
+>   };
+>
 
-...
-#if defined(CONFIG_MEMORY_FAILURE) || defined(CONFIG_MIGRATION) || \
-    defined(CONFIG_DEVICE_PRIVATE)
-static inline int non_swap_entry(swp_entry_t entry)
-{
-        return swp_type(entry) >= MAX_SWAPFILES;
-}
-#else
-static inline int non_swap_entry(swp_entry_t entry)
-{
-        return 0;
-}
-#endif
-
+H.J.
