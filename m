@@ -2,90 +2,58 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D30E7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4112BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4A652068E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:29:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591954188;
-	bh=zVyHpyDtFCiXB5xPJc1k5wAK9p1eJ1A1sj8x1rolMaU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bPVeGHkXxvMJu0gm+kGg4rCFSnL/+y2jg19YiuW7T8d5XqZBtjsq6fHIZwrB7cWAD
-	 ISHyEXLNIhc4CdPtotsXI32VQxQW9gJkGmc8s4oCyk1n8Y/l/+18VeCRPjpncziBXO
-	 PAcJk0VTqUpA9u7/LC65nUT0JWbaubqE1EIuIdz0=
+	by mail.kernel.org (Postfix) with ESMTP id 235152068E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 09:30:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726547AbgFLJ3q (ORCPT
+        id S1726610AbgFLJaA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 05:29:46 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:36352 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726302AbgFLJ3q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 05:29:46 -0400
-Received: by mail-ed1-f66.google.com with SMTP id y6so670641edi.3;
-        Fri, 12 Jun 2020 02:29:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ULB+5Eic/UpB9LwZ16CsVWwd9UTnUABnWsy4r1SRht8=;
-        b=RKAwMtOxB0WjJ3L2xBrc3uN/J23ab0/1qgcz82buo9JUdv9wSuTHUxGcZNbXZdZ4sf
-         VW6YDHPHk0w8RH4qzVLhGO6LJ9/eoZBYc5rLFsNAYZXOAGWp4xxF1VUk6vneyzR7gIei
-         DQ6gwJ3cJ2DaMreO1hs1b+tlM35PRORyFgVdWh3piZk8bbNbkI059y9qzx9brxATRzKt
-         y/4xp/W2mFIV6GN8Oq8aijnOQcTfmD/uccMDfJRDC9pkbcUxQsyiuMUSd38r53srF2+3
-         TGlI18ejytPh6mBP55UYSZTxo1zIx7gR5fEKy88VTDFZNZqx8hjs3MgtmCQDlxZoBCjI
-         A+IA==
-X-Gm-Message-State: AOAM532vkP3O/WJlDcU9bVU4zeQx9mHj/4a+87iWbl42Le10AFL0OegD
-        TJA8PXPJnGug4kEUTgSR4yc=
-X-Google-Smtp-Source: ABdhPJwMP+GFoBzoOi50JTnAJ2Za87KnSv0JbQ7xeD1nBi+czQydI34qF9r34jzHKwJE5BzeOwXU6w==
-X-Received: by 2002:a50:b065:: with SMTP id i92mr11435029edd.112.1591954183850;
-        Fri, 12 Jun 2020 02:29:43 -0700 (PDT)
-Received: from pi3 ([194.230.155.184])
-        by smtp.googlemail.com with ESMTPSA id l16sm3335817ejx.19.2020.06.12.02.29.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 02:29:43 -0700 (PDT)
-Date:   Fri, 12 Jun 2020 11:29:41 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Wolfram Sang <wsa@kernel.org>
-Cc:     Oleksij Rempel <linux@rempel-privat.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Gao Pan <b54642@freescale.com>,
-        Fugang Duan <B38611@freescale.com>, linux-i2c@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] i2c: imx: Fix external abort on early interrupt
-Message-ID: <20200612092941.GA25990@pi3>
-References: <1591796802-23504-1-git-send-email-krzk@kernel.org>
- <20200612090517.GA3030@ninjato>
+        Fri, 12 Jun 2020 05:30:00 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59948 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726302AbgFLJaA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 05:30:00 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 0A4B5ADC5;
+        Fri, 12 Jun 2020 09:30:02 +0000 (UTC)
+Date:   Fri, 12 Jun 2020 11:29:58 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Ilias Stamatis <stamatis.iliass@gmail.com>
+Cc:     tglx@linutronix.de, peterz@infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kthread: remove incorrect comment in
+ kthread_create_on_cpu()
+Message-ID: <20200612092958.GD4311@linux-b0ei>
+References: <20200611135920.240551-1-stamatis.iliass@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200612090517.GA3030@ninjato>
+In-Reply-To: <20200611135920.240551-1-stamatis.iliass@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 11:05:17AM +0200, Wolfram Sang wrote:
-> On Wed, Jun 10, 2020 at 03:46:42PM +0200, Krzysztof Kozlowski wrote:
-> > If interrupt comes early (could be triggered with CONFIG_DEBUG_SHIRQ),
+On Thu 2020-06-11 16:59:21, Ilias Stamatis wrote:
+> Originally kthread_create_on_cpu() parked and woke up the new thread.
+> However, since commit a65d40961dc7 ("kthread/smpboot: do not park in
+> kthread_create_on_cpu()") this is no longer the case. This patch removes
+> the comment that has been left behind and is now incorrect / stale.
 > 
-> That code is disabled since 2011 (6d83f94db95c ("genirq: Disable the
-> SHIRQ_DEBUG call in request_threaded_irq for now"))? So, you had this
-> without fake injection, I assume?
+> Signed-off-by: Ilias Stamatis <stamatis.iliass@gmail.com>
 
-No, I observed it only after enabling DEBUG_SHIRQ (to a kernel with
-some debugging options already).
+Good catch!
 
-Best regards,
-Krzysztof
+Fixes: a65d40961dc7 ("kthread/smpboot: do not park in kthread_create_on_cpu()")
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 
+Best Regards,
+Petr
