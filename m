@@ -2,60 +2,60 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 132D5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E713C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDE27207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:07:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A21520792
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:07:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="bbWvobok"
+	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="NuI67t30"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbgFLNHU (ORCPT
+        id S1726460AbgFLNHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 09:07:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43212 "EHLO
+        Fri, 12 Jun 2020 09:07:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726108AbgFLNHT (ORCPT
+        with ESMTP id S1726108AbgFLNHq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 09:07:19 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A1EAC08C5C1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 06:07:18 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id t7so3733262plr.0
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 06:07:18 -0700 (PDT)
+        Fri, 12 Jun 2020 09:07:46 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC5FFC08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 06:07:44 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id t7so4109906pgt.3
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 06:07:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=0x0f.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Z1wL/nTpoCfTcg366NsnGcxAQJ1eOVS2RuakcWo4bpQ=;
-        b=bbWvobokn1hMGVtYjKXn8jL0a0LeCtMPDb1/be00BoCaEAZ9W9JD9qacJJFtGsl/Gd
-         wUw1uPOr1miju7K8G5AWTsSAkKvNGpPiZ1SZrNiZzCJmRWHK97DhicFtvnPiFjZshXmx
-         hi5trNaMbOZLaFoD3CLLZcM131hIwxj10onW0=
+        bh=jxsELow/CoU16NBO8fCV4XFh+Vs58ACm8fFgodBIGbU=;
+        b=NuI67t30a905WyYSCiYxuh1Ijiy1/Wa8B9xKb7AeSHFnLHPFAIM5Sfi0YIomasGcew
+         vVxJOto3eAaqYzWsjqsn7w8L+iymOA09GwfQopEKadpZaPvLxDTOSYJT3oV7wXg0kOiL
+         Vtd2INi2ObnQNjqAPVoxyFZ4bIGuxdHbbZ3S0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Z1wL/nTpoCfTcg366NsnGcxAQJ1eOVS2RuakcWo4bpQ=;
-        b=Nl1Tjt9iwfM2G8qAhx3BXp2xNGHrJag4oXyV8gTpkn3QQFoR7CV449NSWQ1xClf9St
-         AJ10KOkxzxzgYyZwqsYpPOotnOvL7pbCXzqUWmiQZr8V0hHpjkqTO2dbMMZNg+U+THrM
-         JksK4aGTM+FT5OMoTBguNCZz3A1eiqoan1wKW9L9Qf48zsKrB87njgQiSTFzANcAW9YV
-         xMpECIYG++/sPGtqAnd7XOTs6vAjfBCXpDWR8oUl4N0yHB4GhYj4NyiE1fl/ryWP5jfr
-         3ejG7jMKVIx5fhSHjZ9z76AXNL5HvaJ83jbidmwjpiO4bdutQGaroiPXyJia3oU8dBTj
-         w7EA==
-X-Gm-Message-State: AOAM533k/4waDCBZwEauk1VscEwWsM8VSAGOgXT6OT0bKi+OXhDq0iq9
-        lcdJuIPXTPWxWKw8NdHTMI7cpimBcB9VUQ==
-X-Google-Smtp-Source: ABdhPJztVlOEvC0EqrVons+BbjARSXkv+88YEx+nBZ1tLtU1TyUeHyNXKIoIxoaYXc/0nKINXqE1Yw==
-X-Received: by 2002:a17:902:82ca:: with SMTP id u10mr11312443plz.294.1591967237499;
-        Fri, 12 Jun 2020 06:07:17 -0700 (PDT)
+        bh=jxsELow/CoU16NBO8fCV4XFh+Vs58ACm8fFgodBIGbU=;
+        b=NTGj91T7IU8T9HowvmLZq6Hu+YK0yY/yO4kBSR/ZB7rj1wJpfpuG689RWzohWJzCf/
+         BZ/i8x9OUHUGa2KVT6EcfHRjn9f9z/87rmdp8X3oOQ7ZoWYpx54CKCkSB25gMM55X0ab
+         UVHpM525seRjPcHgRD64FrMRl+3IriUz2DAIBwdF9KPx+cxu942ehZCOZWYhjoiLxMtt
+         CC6DeyCV/ktmYRIn7CfQspRSAsb0203mASe7Vcl4vwvM7+P+lCiODB2XvqO0CVy9KfPI
+         Klj6SCsLjS4Bf5NIN9Z/QnPuYrneCZ6ZBljA6PJ+qx3B2vfAa8yVPJ9Tvg+6o+BtpfOQ
+         7emw==
+X-Gm-Message-State: AOAM530gexwZFiTxj5/ESbIcXddXrP70AgVJNqvOSL6egycIyO6MjIMz
+        OKcq8Q0zT3GTJKVn35GafemfEjUQaMCjCg==
+X-Google-Smtp-Source: ABdhPJz2Y/2ZRGcxpgC59S7WYCQmMiJa7Peh3f0jjhater+MI9bFf679XvSAX4tfw/CcBWsGldRl5w==
+X-Received: by 2002:a62:e503:: with SMTP id n3mr11081283pff.197.1591967263956;
+        Fri, 12 Jun 2020 06:07:43 -0700 (PDT)
 Received: from shiro.work (p1285116-ipngn200805sizuokaden.shizuoka.ocn.ne.jp. [114.171.61.116])
-        by smtp.googlemail.com with ESMTPSA id k12sm5481939pgm.11.2020.06.12.06.07.10
+        by smtp.googlemail.com with ESMTPSA id k12sm5481939pgm.11.2020.06.12.06.07.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 06:07:16 -0700 (PDT)
+        Fri, 12 Jun 2020 06:07:43 -0700 (PDT)
 From:   Daniel Palmer <daniel@0x0f.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     daniel@0x0f.com, afaerber@suse.de, devicetree@vger.kernel.org,
@@ -70,25 +70,25 @@ Cc:     daniel@0x0f.com, afaerber@suse.de, devicetree@vger.kernel.org,
         Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jonathan Corbet <corbet@lwn.net>,
-        Arnd Bergmann <arnd@arndb.de>, Mike Rapoport <rppt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
         Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@kernel.org>,
         Doug Anderson <armlinux@m.disordat.com>,
         Benjamin Gaignard <benjamin.gaignard@linaro.org>,
         Gregory Fong <gregory.0xf0@gmail.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
         Nathan Chancellor <natechancellor@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Nathan Huckleberry <nhuck15@gmail.com>,
-        Christian Lamparter <chunkeey@gmail.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
         Marc Zyngier <maz@kernel.org>,
+        Nathan Huckleberry <nhuck15@gmail.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v3 10/12] ARM: mstar: Add mercury5 series dtsis
-Date:   Fri, 12 Jun 2020 22:00:10 +0900
-Message-Id: <20200612130032.3905240-11-daniel@0x0f.com>
+Subject: [PATCH v3 11/12] ARM: mstar: Add dts for msc313(e) based BreadBee boards
+Date:   Fri, 12 Jun 2020 22:00:11 +0900
+Message-Id: <20200612130032.3905240-12-daniel@0x0f.com>
 X-Mailer: git-send-email 2.27.0.rc0
 In-Reply-To: <20200612130032.3905240-1-daniel@0x0f.com>
 References: <20200610090421.3428945-1-daniel@0x0f.com>
@@ -100,63 +100,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds a family level dtsi for the mercury5 and then a
-chip level dtsi for the ssc8336n chip.
+BreadBee is an opensource development board based on the
+MStar msc313(e) SoC.
+
+Hardware details, schematics and so on can be found at:
+https://github.com/breadbee/breadbee
 
 Signed-off-by: Daniel Palmer <daniel@0x0f.com>
 ---
- MAINTAINERS                              |  1 +
- arch/arm/boot/dts/mercury5-ssc8336n.dtsi | 14 ++++++++++++++
- arch/arm/boot/dts/mercury5.dtsi          |  7 +++++++
- 3 files changed, 22 insertions(+)
- create mode 100644 arch/arm/boot/dts/mercury5-ssc8336n.dtsi
- create mode 100644 arch/arm/boot/dts/mercury5.dtsi
+ arch/arm/boot/dts/Makefile                    |  3 +++
+ .../dts/infinity-msc313-breadbee_crust.dts    | 25 +++++++++++++++++++
+ .../boot/dts/infinity3-msc313e-breadbee.dts   | 25 +++++++++++++++++++
+ 3 files changed, 53 insertions(+)
+ create mode 100644 arch/arm/boot/dts/infinity-msc313-breadbee_crust.dts
+ create mode 100644 arch/arm/boot/dts/infinity3-msc313e-breadbee.dts
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7673acf55172..246951ab0888 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2117,6 +2117,7 @@ S:	Maintained
- W:	http://linux-chenxing.org/
- F:	Documentation/devicetree/bindings/arm/mstar.yaml
- F:	arch/arm/boot/dts/infinity*.dtsi
-+F:	arch/arm/boot/dts/mercury*.dtsi
- F:	arch/arm/boot/dts/mstar-v7.dtsi
- F:	arch/arm/mach-mstar/
- 
-diff --git a/arch/arm/boot/dts/mercury5-ssc8336n.dtsi b/arch/arm/boot/dts/mercury5-ssc8336n.dtsi
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index e6a1cac0bfc7..4a5f8075a4f6 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -1342,6 +1342,9 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += \
+ 	mt8127-moose.dtb \
+ 	mt8135-evbp1.dtb
+ dtb-$(CONFIG_ARCH_MILBEAUT) += milbeaut-m10v-evb.dtb
++dtb-$(CONFIG_ARCH_MSTARV7) += \
++	infinity-msc313-breadbee_crust.dtb \
++	infinity3-msc313e-breadbee.dtb
+ dtb-$(CONFIG_ARCH_ZX) += zx296702-ad1.dtb
+ dtb-$(CONFIG_ARCH_ASPEED) += \
+ 	aspeed-ast2500-evb.dtb \
+diff --git a/arch/arm/boot/dts/infinity-msc313-breadbee_crust.dts b/arch/arm/boot/dts/infinity-msc313-breadbee_crust.dts
 new file mode 100644
-index 000000000000..7d4a4630c25c
+index 000000000000..f24c5580d3e4
 --- /dev/null
-+++ b/arch/arm/boot/dts/mercury5-ssc8336n.dtsi
-@@ -0,0 +1,14 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
++++ b/arch/arm/boot/dts/infinity-msc313-breadbee_crust.dts
+@@ -0,0 +1,25 @@
++// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (c) 2020 thingy.jp.
++ * Copyright (c) 2019 thingy.jp.
 + * Author: Daniel Palmer <daniel@thingy.jp>
 + */
 +
-+#include "mercury5.dtsi"
++/dts-v1/;
++#include "infinity-msc313.dtsi"
 +
 +/ {
-+	memory@20000000 {
-+		device_type = "memory";
-+		reg = <0x20000000 0x4000000>;
++	model = "BreadBee Crust";
++	compatible = "thingyjp,breadbee-crust", "mstar,infinity";
++
++	aliases {
++		serial0 = &pm_uart;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
 +	};
 +};
-diff --git a/arch/arm/boot/dts/mercury5.dtsi b/arch/arm/boot/dts/mercury5.dtsi
++
++&pm_uart {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/infinity3-msc313e-breadbee.dts b/arch/arm/boot/dts/infinity3-msc313e-breadbee.dts
 new file mode 100644
-index 000000000000..f68e6d59c328
+index 000000000000..1f93401c8530
 --- /dev/null
-+++ b/arch/arm/boot/dts/mercury5.dtsi
-@@ -0,0 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
++++ b/arch/arm/boot/dts/infinity3-msc313e-breadbee.dts
+@@ -0,0 +1,25 @@
++// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (c) 2020 thingy.jp.
++ * Copyright (c) 2019 thingy.jp.
 + * Author: Daniel Palmer <daniel@thingy.jp>
 + */
 +
-+#include "mstar-v7.dtsi"
++/dts-v1/;
++#include "infinity3-msc313e.dtsi"
++
++/ {
++	model = "BreadBee";
++	compatible = "thingyjp,breadbee", "mstar,infinity3";
++
++	aliases {
++		serial0 = &pm_uart;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
++
++&pm_uart {
++	status = "okay";
++};
 -- 
 2.27.0.rc0
 
