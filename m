@@ -2,73 +2,122 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FEC7C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 01:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 151E5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 01:26:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E44DA20835
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 01:26:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="b6P2p5g4"
+	by mail.kernel.org (Postfix) with ESMTP id F00C920823
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 01:26:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbgFLB0g (ORCPT
+        id S1726535AbgFLB0n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 21:26:36 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:19638 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726327AbgFLB0f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 21:26:35 -0400
-X-UUID: 63a286d6d0a64f7a9b2a98bd162a626c-20200612
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=mW39zfEbSzCeS9LVeu/0bwZR50QhQsI3o/dC6sfyMJQ=;
-        b=b6P2p5g41rMRVs+ND6EoPHHbghp7o3mNp/Hhy5ABTEoX0fweCzQ57qkPIWPr7so5YGLaGdDbE1ByaSsGJ3cDIkyKTrSkBMehT4A8yS/0RsnCCR36UEK7hst3oK7Cy98OkRfGNCMm1bMCHp5xmU80jjgpoV7QhmhERLychgDi4so=;
-X-UUID: 63a286d6d0a64f7a9b2a98bd162a626c-20200612
-Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw01.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 410470933; Fri, 12 Jun 2020 09:26:28 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 12 Jun 2020 09:26:27 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 12 Jun 2020 09:26:21 +0800
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
-        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
-        <jejb@linux.ibm.com>, <asutoshd@codeaurora.org>
-CC:     <beanhuo@micron.com>, <cang@codeaurora.org>,
-        <matthias.bgg@gmail.com>, <bvanassche@acm.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
-        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
-        <andy.teng@mediatek.com>, <chaotian.jing@mediatek.com>,
-        <cc.chou@mediatek.com>, Stanley Chu <stanley.chu@mediatek.com>
-Subject: [PATCH v2 0/2] scsi: ufs: Fix and cleanup device quirks
-Date:   Fri, 12 Jun 2020 09:26:23 +0800
-Message-ID: <20200612012625.6615-1-stanley.chu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Thu, 11 Jun 2020 21:26:43 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:56360 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726507AbgFLB0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 21:26:38 -0400
+Received: from [10.130.0.52] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxz2uG2OJeckpBAA--.2793S3;
+        Fri, 12 Jun 2020 09:21:11 +0800 (CST)
+Subject: Re: [PATCH] PCI: Loongson: Use DECLARE_PCI_FIXUP_EARLY for
+ bridge_class_quirk()
+To:     Bjorn Helgaas <helgaas@kernel.org>
+References: <20200611202604.GA1607130@bjorn-Precision-5520>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <3027869e-ae17-5387-ce98-f89b6b1e4915@loongson.cn>
+Date:   Fri, 12 Jun 2020 09:21:10 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200611202604.GA1607130@bjorn-Precision-5520>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9Dxz2uG2OJeckpBAA--.2793S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7tFy3uFyxCr4kKr4kuw15Arb_yoW8CFWxpr
+        15Ja17KF4ftFs8C3ZFqw4DG3Z8ZF9xGa48CFW5u3W2gF9xX3W5WrnFk3WFvF4UJrWDJa18
+        ZFWkCayrCa15Wr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUBj14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr
+        0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+        6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+        0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
+        n2IY04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21lc2xSY4AK67AK6w4l42xK82IYc2Ij64vIr4
+        1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
+        67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
+        8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAv
+        wI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
+        AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUHpB-UUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQp0aGlzIHNlcmllcyBwcm92aWRlcyBzb21lIGRldmljZSBxdWlyayBmaXhlcyBhbmQgY2xl
-YW51cHMuDQoNCnYxIC0+IHYyOg0KICAtIFNvcnQgZGV2aWNlIHF1aXJrcyBpbiBhbHBoYWJldGlj
-YWwgb3JkZXIgKEFsaW0gQWtodGFyKQ0KDQpTdGFubGV5IENodSAoMik6DQogIHNjc2k6IHVmczog
-QWRkIERFTEFZX0JFRk9SRV9MUE0gcXVpcmsgZm9yIE1pY3JvbiBkZXZpY2VzDQogIHNjc2k6IHVm
-czogQ2xlYW51cCBkZXZpY2UgdmVuZG9yIG5hbWUgYW5kIGRldmljZSBxdWlyayB0YWJsZQ0KDQog
-ZHJpdmVycy9zY3NpL3Vmcy91ZnNfcXVpcmtzLmggfCAgMyArKy0NCiBkcml2ZXJzL3Njc2kvdWZz
-L3Vmc2hjZC5jICAgICB8IDE1ICsrKysrKystLS0tLS0tLQ0KIDIgZmlsZXMgY2hhbmdlZCwgOSBp
-bnNlcnRpb25zKCspLCA5IGRlbGV0aW9ucygtKQ0KDQotLSANCjIuMTguMA0K
+On 06/12/2020 04:26 AM, Bjorn Helgaas wrote:
+> Subject line:
+>
+>    PCI: loongson: Use DECLARE_PCI_FIXUP_EARLY for bridge_class_quirk()
+>
+> (Driver names are conventionally lower case.)
+>
+> Lorenzo will probably silently fix this when applying, so this is
+> mostly just a reminder in case you need to revise this or for future
+> patches.
+Hi Bjorn,
+
+Thanks for your reminder, sorry for that.
+I will modify it and then send v2.
+
+>
+> On Wed, Jun 10, 2020 at 10:39:50AM +0800, Tiezhu Yang wrote:
+>> Use DECLARE_PCI_FIXUP_EARLY instead of DECLARE_PCI_FIXUP_HEADER
+>> for bridge_class_quirk() in pci-loongson.c, otherwise the fixup
+>> has no effect.
+>>
+>> Fixes: 1f58cca5cf2b ("PCI: Add Loongson PCI Controller support")
+>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>> ---
+>>
+>> This patch is based on mips-next tree.
+>>
+>>   drivers/pci/controller/pci-loongson.c | 6 +++---
+>>   1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+>> index 459009c..58b862a 100644
+>> --- a/drivers/pci/controller/pci-loongson.c
+>> +++ b/drivers/pci/controller/pci-loongson.c
+>> @@ -37,11 +37,11 @@ static void bridge_class_quirk(struct pci_dev *dev)
+>>   {
+>>   	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+>>   }
+>> -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+>>   			DEV_PCIE_PORT_0, bridge_class_quirk);
+>> -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+>>   			DEV_PCIE_PORT_1, bridge_class_quirk);
+>> -DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+>>   			DEV_PCIE_PORT_2, bridge_class_quirk);
+>>   
+>>   static void system_bus_quirk(struct pci_dev *pdev)
+>> -- 
+>> 2.1.0
+>>
 
