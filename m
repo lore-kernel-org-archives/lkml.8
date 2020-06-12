@@ -2,86 +2,113 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA32C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D66D4C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9680D2074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:09:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591970994;
-	bh=q4krEbdPco7MsiBYtM/F7P1LJc3hlmshAKjwldfNwTE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vcBJfPEX3qgsYmTSQkYljq/TYU2zBj8jiIS6nF3TKN6hO3gxigfGv2CYPfikNEMM0
-	 Co0W3dD5Ia4NphqGWuTnEi2bL3haeiLP8eO4ZJRXz39Ch7wi56YkdtkXHn5IciOsHH
-	 r9YmMX/D3bj8+Ymv+9I38JzJHeEW+nxe3xW04cb4=
+	by mail.kernel.org (Postfix) with ESMTP id AB8FF2074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:11:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="t3q1dyHO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726376AbgFLOJw (ORCPT
+        id S1726387AbgFLOLG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 10:09:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36868 "EHLO mail.kernel.org"
+        Fri, 12 Jun 2020 10:11:06 -0400
+Received: from cmta17.telus.net ([209.171.16.90]:51406 "EHLO cmta17.telus.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726085AbgFLOJw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 10:09:52 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A413E20801;
-        Fri, 12 Jun 2020 14:09:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591970991;
-        bh=q4krEbdPco7MsiBYtM/F7P1LJc3hlmshAKjwldfNwTE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tWcomgAeMEBeuf76DvFJWGzTcD6h7N9jQN02h3R/5OvMUTq1SF90tAwLFZwrkJD7E
-         y0GOwgmPmcv99vcGGRWnK0F3C9WfbA9yKKdzL5kLM4ePW7hb7RBsW/cXmoHrMy/6dI
-         iUEs14NqIWBrVrzR/6dY5nYghwwVvSdi0wegyHdo=
-Received: by pali.im (Postfix)
-        id B0786582; Fri, 12 Jun 2020 16:09:49 +0200 (CEST)
-Date:   Fri, 12 Jun 2020 16:09:49 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Y Paritcher <y.linux@paritcher.com>
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Mario.Limonciello@dell.com
-Subject: Re: [PATCH v4 0/3] platform/x86: dell-wmi: new keys
-Message-ID: <20200612140949.523opfqkxfv3x5cx@pali>
-References: <cover.1591584631.git.y.linux@paritcher.com>
- <cover.1591811549.git.y.linux@paritcher.com>
+        id S1726085AbgFLOLF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 10:11:05 -0400
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id jkOaj19TfmjwfjkOcjvol2; Fri, 12 Jun 2020 08:11:03 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1591971063; bh=SG/wpeS+dKg9fv0MxZ1Zm15eP51A4pXKFTzxeSulBUo=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=t3q1dyHO50+iQRbBD8/ryg5WamqRuZdr9tu56qJaXeMACbhoeKcIoEhTTM/HYacYo
+         m774a3BYxIZRLG0R0cQFyh3xDFkHzpig/MSx8mPVDPdbX2vcg/SoP29ZYwr9WJvKJ2
+         mhyiVX1aCk3XdDL9a12xpVZqAcGmA9vDjqmDkqlEp+XDCXowoc7H6d3kC5OAIidNI3
+         Yr17rcrQPMuSq1ftGPT19rn4+ADkLSf0EglUtF7nlQl5cuWU9kflr5mArx5Z6n5Xzh
+         1vBepQOi4Qc6uBqlfkD6NwNWTE+xRNcp/McpezbWMYczEgvn5MxusluaCE9YZoL1Mp
+         k91/YNmsvWhlA==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=ea5DgIMH c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=kj9zAlcOel0A:10 a=QyXUC8HyAAAA:8
+ a=RW1HiHj9obChybWJIagA:9 a=CjuIK1q_8ugA:10
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
+        <lenb@kernel.org>, <viresh.kumar@linaro.org>, <rjw@rjwysocki.net>
+Cc:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200611174838.2822533-1-srinivas.pandruvada@linux.intel.com>
+In-Reply-To: <20200611174838.2822533-1-srinivas.pandruvada@linux.intel.com>
+Subject: RE: [PATCH] cpufreq: intel_pstate: Add additional OOB enabling bit
+Date:   Fri, 12 Jun 2020 07:11:00 -0700
+Message-ID: <000301d640c3$4e6d61c0$eb482540$@net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cover.1591811549.git.y.linux@paritcher.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Content-Language: en-ca
+Thread-Index: AdZAGJu5Ay3KbrRgRI6H2FbqMrzlzgAqI0Hw
+X-CMAE-Envelope: MS4wfMjRQ3BDC+xdOcaCKok5AjVKMSRru3PpbJCCoEsyQbLM7tXg/QOx0ukUmUDRdJVNxkg9zBJMttmCKPYqi++Ryb4P3gtEgp1EFruwUDaeYaewvKayBKIw
+ qbr9OeBndF3Iv1tKBw4FybuThQLFGuNeO26cS7QcEw7eUXEsjOmt8LeMB4O5v0Wo2DbfUvIqjBgZtm3Uo5O7eupilzzy2JNhQZMafsWIoMKoR299XFrEEbg4
+ FfXwjqYzvcwxsBMs7BXUbscjpVZ+/PQoEwjMvNjM1hiqD2hfjStaZTRsEgto1flbypmwH/scP0sNUH1qiBn8ITm9afHTiF1ByO/dwlOEsY7gJXDQ6ukUt0Ed
+ GRz9cdvp
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday 10 June 2020 13:56:55 Y Paritcher wrote:
-> change since v3:
->     No code changes.
->     Update commit message to reflect info given by Mario at dell.
->     
-> Is there anything more i have to do for the patches that were reviewed
-> or will they be picked up by the maintainers?
-> Thanks
-> 
-> Y Paritcher (3):
->   platform/x86: dell-wmi: add new backlight events
->   platform/x86: dell-wmi: add new keymap type 0x0012
->   platform/x86: dell-wmi: add new dmi mapping for keycode 0xffff
-> 
->  drivers/platform/x86/dell-wmi.c | 28 +++++++++++++++++++++++++---
->  1 file changed, 25 insertions(+), 3 deletions(-)
-> 
-> -- 
-> 2.27.0
-> 
+On 2020.06.11 10:49 Srinivas Pandruvada wrote:
 
-I'm fine with this patch series too.
+> Add additional bit for OOB (Out of band) enabling of P-states. In this
+> case intel_pstate shouldn't load. Currently, only "BIT(8) == 1" of the
+> MSR MSR_MISC_PWR_MGMT is considered as OOB. Also add "BIT(18) == 1" as
+> OOB condition.
 
-Reviewed-by: Pali Rohár <pali@kernel.org>
+Shouldn't those bits be defined in these files:
+arch/x86/include/asm/msr-index.h
+and
+tools/arch/x86/include/asm/msr-index.h
+
+?
+
+By the way, I couldn't find those bits defined in Intel docs that I have.
+ 
+> 
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> ---
+>  drivers/cpufreq/intel_pstate.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+> index 8e23a698ce04..f21761443c90 100644
+> --- a/drivers/cpufreq/intel_pstate.c
+> +++ b/drivers/cpufreq/intel_pstate.c
+> @@ -2686,8 +2686,8 @@ static bool __init intel_pstate_platform_pwr_mgmt_exists(void)
+>  	id = x86_match_cpu(intel_pstate_cpu_oob_ids);
+>  	if (id) {
+>  		rdmsrl(MSR_MISC_PWR_MGMT, misc_pwr);
+> -		if (misc_pwr & (1 << 8)) {
+> -			pr_debug("Bit 8 in the MISC_PWR_MGMT MSR set\n");
+> +		if ((misc_pwr & BIT(8)) || (misc_pwr & BIT(18))) {
+
+And then those bit definitions used above.
+
+> +			pr_debug("Bit 8 or 18 in the MISC_PWR_MGMT MSR set\n");
+
+And then some insight also printed  with the debug message.
+At least say "Out of Band".
+
+>  			return true;
+>  		}
+>  	}
+> --
+> 2.24.1
+
+
