@@ -2,132 +2,143 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C61C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54424C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10DAD20823
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:49:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DBF820835
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:50:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="MWTbei/s"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QwJo2Bcg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726364AbgFLAtW (ORCPT
+        id S1726391AbgFLAtp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 20:49:22 -0400
-Received: from mail-eopbgr80050.outbound.protection.outlook.com ([40.107.8.50]:35200
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726305AbgFLAtV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 20:49:21 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TgKvDs0itCNwBoNwvZZH+rY3ZgMy+fhOlHqiZ7kRZn7V3uJRMf/NruPVxqA64+I8swwiUAy9oNXxbw309VJhv/TgOUbzpHKTgrS38FQi/xTweGViSYkmXK3HvAzQiqfDhFXWzxBtNUhBeYVA0SWXM/jbbuFYangpW8eazBKX68AbH0/SZVp59uYzFDfd2AtUrQYekrWDROG/qr+vuhfATBgLUPaitcJpcG7Xu06aJ5BfFZ6/GHBJcZfuIS/RG6ccqv4tmrIZA9gZItKgCJ6/iB55SDjaU3MU4vp4bMuYKWT2Q69J05Q2wwNhorDVmauOoYrDuGrC8VuvFzM1XtEgAQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=azDjWR9doyCywmdhAdppsha7g06leW4SRB9ro9Thbhw=;
- b=TOWCXRnT36GEbdqOoXlDJCfDt1QjJV4hlSwtZOge4vBrgtwHN3hN6Wn/KJ4y+dGkkubMz2gpE6n1PbPaSKbKP/s75jQ0RMP3K8OytIlwGw+znL9006B7jWLtV5KB75IiXfZu/WNvd+UFQfny6NCz8PxPjE9vlTjsh+wnbMCvomt8o7SS2EVZuI+snp54wx6KDnyIxBkIJnUjr+PHtBYj/2s9/+iym3Jdvt38VN5qUshJVVqERdOC5D6BDSd5kZo8JnEex+JvX5GId2FtH80GbpmPYzx0SfFQq50xbN60ZcpKNKlWLuSYvHMIegRYXwqdEYzD+I9tT4QlgwZbFz6+2w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=azDjWR9doyCywmdhAdppsha7g06leW4SRB9ro9Thbhw=;
- b=MWTbei/sBegLJXvjA/Bd0ZP8NYCsufMX2+VZGm/6VSIeDtP+b8tcnDbPoEPo8cMN7wb81zsfA2jFDKgGsi6oFwL8aNBAlcgDnU/C8fPXeMWNZbmxkGckWFKsSIjwIxgNT3psRwIAkU5nM2RQIvXyYPPnGb0/AZw4RKQ2vdrf1yw=
-Received: from AM0PR04MB4772.eurprd04.prod.outlook.com (2603:10a6:208:c2::17)
- by AM0PR04MB5281.eurprd04.prod.outlook.com (2603:10a6:208:c6::32) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.19; Fri, 12 Jun
- 2020 00:49:17 +0000
-Received: from AM0PR04MB4772.eurprd04.prod.outlook.com
- ([fe80::e906:2df6:5f0f:8c01]) by AM0PR04MB4772.eurprd04.prod.outlook.com
- ([fe80::e906:2df6:5f0f:8c01%2]) with mapi id 15.20.3066.023; Fri, 12 Jun 2020
- 00:49:17 +0000
-From:   Jiafei Pan <jiafei.pan@nxp.com>
-To:     Kurt Kanzenbach <kurt.kanzenbach@linutronix.de>,
-        Vladimir Oltean <olteanv@gmail.com>
-CC:     "linux-rt-users@vger.kernel.org" <linux-rt-users@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "rcu@vger.kernel.org" <rcu@vger.kernel.org>,
-        Colin King <colin.king@canonical.com>,
-        Jiafei Pan <jiafei.pan@nxp.com>
-Subject: RE: [EXT] Re: stress-ng --hrtimers hangs system
-Thread-Topic: [EXT] Re: stress-ng --hrtimers hangs system
-Thread-Index: AQHWOzjXl4hxTFW9UUeYcrHfuUnL/6jKAZSAgAaAYICAAN+6AIACzZKQ
-Date:   Fri, 12 Jun 2020 00:49:17 +0000
-Message-ID: <AM0PR04MB47726B40110E1B02471EEEDF8A810@AM0PR04MB4772.eurprd04.prod.outlook.com>
-References: <4781d250-9a29-cef3-268d-7d83c98bf16a@gmail.com>
- <87wo4lekm5.fsf@kurt>
- <CA+h21hqbKasMAuHL+B-2Gb-YQ3QGF+_pWGCxr8LTcusjvuqFeg@mail.gmail.com>
- <CA+h21hp+UsW+Uc-xHyQAMrRVLX9CXZu8B2Svq+9npLtxs0_DWw@mail.gmail.com>
- <87y2ovzcmd.fsf@kurt>
-In-Reply-To: <87y2ovzcmd.fsf@kurt>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: linutronix.de; dkim=none (message not signed)
- header.d=none;linutronix.de; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [124.64.121.250]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 781a382e-ef78-41cc-007d-08d80e6a6f99
-x-ms-traffictypediagnostic: AM0PR04MB5281:
-x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB5281FD791D1B3CC85DB7EC6C8A810@AM0PR04MB5281.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0432A04947
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: V+dRRHJL7awiM+BhwM2TMx4BqatQNDC1Anmz2xesa+54O5sPS+vCaDCiL8sfN+CKGMLZzn+lYQEnHLyNhD7E5784Gspxlm0+hltWwpTLX6Tnt7Nt2kXVDss4EKo9xdOk2SqfoLEYYjMCgpazYm735wNiSwWv6x40F2hEPt3m0rOzueKtjxMXOUefpNbu8uHPXq2nJLnP11jaY7TXQkey5cZHAahqKWB5mS1S1Px6rSpBscV2oZXvcFnkUOag9VaOK3rsT8Zl4ok98tyE1mvbLDLEqb7nsk+MXmVtCttpB5d18JL5wludwGIioc+vvHbrNKDDy/2XIg2o8pH8/aQkDg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB4772.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(376002)(39860400002)(346002)(396003)(86362001)(4326008)(66556008)(52536014)(6506007)(8676002)(8936002)(66946007)(66476007)(53546011)(76116006)(66446008)(64756008)(26005)(4744005)(5660300002)(186003)(33656002)(316002)(110136005)(2906002)(55016002)(44832011)(54906003)(71200400001)(9686003)(478600001)(83380400001)(7696005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: aYGtA6hDWXJ4LdCFtiNKK+3GerOQQyUSDllqupAtitp1QAmVXQEkoyLfL8mxMjgae5MYHlWp3PG8C6zeNErprrJ/xUdprxskSKOR8rHCaSWxK57qUXG323vgPg/dCIu8daJ8u+cDox9t3tCBj+5fVD3TQJHJNG7wyEJEIXyNu6Mzh6c5/r8lc2Lc4veA0JNhAXUT4OvIuWPz7hmTPW0opOe3rGFWMuEvQ+DwWRh+2tfBGfspwtb+ce39We7LwkiR+2ov4GdID0TqP8vzOKxC1L7Z2XF3i56rl1t3r5QcrOI9LlhQhAiytxXAGXIQB9i+AqjlSEDRd+ytA+JlKwCksT8yHRp9UO76wwxWvgY0LBYW8cOZ9WoMTAEfwdTy6REejMidu1cBRw5UYeCtkgJfj1HUfzq2x8OqskJquwCwiLiQxq5uIrtL6G442aUcE69CXyOe44zels2k6Zd8fMhlfVdSoI1e8i7DfK8QOHBG43zmwjAOwo0oKX8JpDGp5f4v
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 11 Jun 2020 20:49:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42704 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbgFLAtp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 20:49:45 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46F14C03E96F
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 17:49:44 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id k4so7234417oik.2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 17:49:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zYO/56jAlSJmEKKEC3sDbINPjtiMSsfklDTiY6BNZzs=;
+        b=QwJo2BcgHjI7iLhRJeSZg3J1BZLiuq1MVSI9inNjtXpuiOdHMPL1H9FuCPXUGaAIBw
+         qx4c+vbw/HjgU6OiLoUk05Pk1goSzEZc6FsKsWvtjdYEhhsI9xyrSB+tuZu0pyIbhFGX
+         UmvNVX0/8+2ljEl4Uv0d+HLjeRH9gGiKb0U5KNKbHkj3JH7Q1RQHZt1kp9zlIGZmeJEg
+         d3/rhv83qDlNHu5de0AmSMfPMLSPsyMN6rhTAchyA5so30AJPkdbwQWuhVJw0SFNo6GR
+         p3DpwQxJjE8RMRrx1uCuxUTbNo7x6tCW6mM1AZ+QoqLNvBMR2AG8LjpG2MPb5mADivBE
+         T0Bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zYO/56jAlSJmEKKEC3sDbINPjtiMSsfklDTiY6BNZzs=;
+        b=ktN9OjFXh7KkHVtmiyTpf4b2LwIrhtX7GEu4ZIcGC9o7N1LS26NJ1WEp38e+dk8MbC
+         LCFtWdXl4CCI+EdN2HyZMF9uHpvyHa8CvtTBtTfBTnWwJnKUk+0YxtdW3MbWYpFqmgYZ
+         5An8OWc65n0VMTCqvPBGwZVB/vaCQ8d/sCrDNv++5Zf6vYAzKpXtO+XyGzBnnKoGTxh4
+         BwSrtrOr+GI4zdQt3M4+H3IWh4VUYJKnvkSwUAedCE0uImgz1eZ+HzYn95tnOQLf2vI3
+         85uCGsiS3whAh2wGjBdGXdhW93+jtBDAkjq6ZrHGKSBcIMp+TpF12GVDWNF/wo1fNz+p
+         kHfA==
+X-Gm-Message-State: AOAM530476gfAUU5P39+em26MI/KF5IQVRk8E0G9Ce37dkqvizFHCpQp
+        lmFZJSV961Dwmdk9sBhsACAMlBv2WgKGxr+KtGyNOA==
+X-Google-Smtp-Source: ABdhPJzSRrQoexp66WEFwfTRVwH565Tou4tzj1+FW+C+utMOv2XLr+b0Pd1S88XOqeyBvZ29OMI0WqXRnUlsUcTyzoA=
+X-Received: by 2002:aca:5d0b:: with SMTP id r11mr454293oib.169.1591922983459;
+ Thu, 11 Jun 2020 17:49:43 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 781a382e-ef78-41cc-007d-08d80e6a6f99
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2020 00:49:17.2776
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: MH1NUdLerpDX/QxxBGsD38LzbfNf7LCMH4n9jPrVzzmtvUMcECciI4+n0Z9poIAhytyvrAbrNZ5nP61vj2dqgg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5281
+References: <s5himfxet1c.wl-tiwai@suse.de> <CANcMJZAG4QqJ2Cxt+1RLsa8Z4oR=2y8zyD_sqy3sm_8MXyhg2g@mail.gmail.com>
+In-Reply-To: <CANcMJZAG4QqJ2Cxt+1RLsa8Z4oR=2y8zyD_sqy3sm_8MXyhg2g@mail.gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Thu, 11 Jun 2020 17:49:29 -0700
+Message-ID: <CALAqxLWEfRJ_Jr0iDgmvqop5Etz5xve89Zy3OeUbnKUGtqjCqQ@mail.gmail.com>
+Subject: Re: [GIT PULL] sound fixes for 5.8-rc1
+To:     Takashi Iwai <tiwai@suse.de>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Vinod Koul <vinod.koul@linaro.org>,
+        Amit Pundir <amit.pundir@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Kurt,
+On Thu, Jun 11, 2020 at 5:13 PM John Stultz <john.stultz@linaro.org> wrote:
+>
+> On Thu, Jun 11, 2020 at 6:39 AM Takashi Iwai <tiwai@suse.de> wrote:
+> > sound fixes for 5.8-rc1
+> >
+> > Here are last-minute fixes gathered before merge window close;
+> > a few fixes are for the core while the rest majority are driver
+> > fixes.
+> >
+> > * PCM locking annotation fixes and the possible self-lock fix
+> > * ASoC DPCM regression fixes with multi-CPU DAI
+>
+> Just as a heads up, we just recently got HDMI audio working on the
+> Dragonboard 845c (Vinod has patches he's sending out here in the next
+> few days), but they suddenly stopped working today with the following
+> error:
+> [   13.110725] msm-snd-sdm845 soc@0:sound: snd-soc-dummy-dai <->
+> MultiMedia1 mapping ok
+> [   13.119343] msm-snd-sdm845 soc@0:sound: snd-soc-dummy-dai <->
+> MultiMedia2 mapping ok
+> [   13.127969] msm-snd-sdm845 soc@0:sound: snd-soc-dummy-dai <->
+> MultiMedia3 mapping ok
+> [   13.135891] msm-snd-sdm845 soc@0:sound: Compress ASoC:
+> snd-soc-dummy-dai <-> MultiMedia4 mapping ok
+> [   13.145042] msm-snd-sdm845 soc@0:sound: CPU DAI QUAT_MI2S_RX for
+> rtd HDMI Playback does not support capture
+> [   13.154873] msm-snd-sdm845 soc@0:sound: ASoC: can't create pcm HDMI
+> Playback :-22
+> [   13.165634] snd-malloc: invalid device type 0
+> [   13.170057] snd-malloc: invalid device type 0
+> [   13.174888] msm-snd-sdm845 soc@0:sound: Sound card registration failed
+> [   13.181574] msm-snd-sdm845: probe of soc@0:sound failed with error -22
+>
+>  I've bisected it down to the following commit from this pull req:
+>   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=b73287f0b0745961b14e5ebcce92cc8ed24d4d52
+>
+> Without this patch:
+> [   13.056906] msm-snd-sdm845 soc@0:sound: snd-soc-dummy-dai <->
+> MultiMedia1 mapping ok
+> [   13.075465] msm-snd-sdm845 soc@0:sound: snd-soc-dummy-dai <->
+> MultiMedia2 mapping ok
+> [   13.092949] msm-snd-sdm845 soc@0:sound: snd-soc-dummy-dai <->
+> MultiMedia3 mapping ok
+> [   13.109704] msm-snd-sdm845 soc@0:sound: Compress ASoC:
+> snd-soc-dummy-dai <-> MultiMedia4 mapping ok
+> [   13.125584] msm-snd-sdm845 soc@0:sound: i2s-hifi <-> QUAT_MI2S_RX mapping ok
+> [   13.125621] msm-snd-sdm845 soc@0:sound: multicodec <-> SLIMBUS_0_RX
+> mapping ok
+> [   13.141682] msm-snd-sdm845 soc@0:sound: wcd934x_tx1 <->
+> SLIMBUS_0_TX mapping ok
+> ...
+>
+> I've not managed to dig in with much analysis yet (possibly something
+> off with the current patches we have), but wanted to raise the issue
+> in case others start to see it too.
 
-May I know whether you used "root" user to run stress-ng? using "root" user=
- will change the scheduler to be "SCHED_RR", so would you please share test=
- result with root and non-root users? Thanks.=20
+I don't know the backgroun again, but would something like the
+following make sense?
+https://git.linaro.org/people/john.stultz/android-dev.git/commit/?h=dev/db845c-mainline-WIP&id=7e49b248db77b5ed29b2aa278268e77650c75482
 
-Best Regards,
-Jiafei.
+It avoids failing completely if playback or capture isn't found.
 
------Original Message-----
-From: linux-rt-users-owner@vger.kernel.org <linux-rt-users-owner@vger.kerne=
-l.org> On Behalf Of Kurt Kanzenbach
-Sent: Wednesday, June 10, 2020 1:58 PM
-To: Vladimir Oltean <olteanv@gmail.com>
-Cc: linux-rt-users@vger.kernel.org; lkml <linux-kernel@vger.kernel.org>; rc=
-u@vger.kernel.org; Colin King <colin.king@canonical.com>
-Subject: [EXT] Re: stress-ng --hrtimers hangs system
-
-Hi Vladimir,
-
-On Tue Jun 09 2020, Vladimir Oltean wrote:
-> Just out of curiosity, what and how many CPU cores does your ARM64 box=20
-> have, and what frequency are you running them at?
-> Mine is a dual-core A72 machine running at 1500 MHz.
-
-That particular machine has a dual core Cortex A53 running at 1GHz.
-
-Thanks,
-Kurt
+thanks
+-john
