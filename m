@@ -2,196 +2,143 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04EC8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D24A9C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE6B6206A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:17:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2370208B3
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 13:18:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726343AbgFLNRr (ORCPT
+        id S1726384AbgFLNSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 09:17:47 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:48219 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbgFLNRr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 09:17:47 -0400
-X-Originating-IP: 90.112.45.105
-Received: from [192.168.1.11] (lfbn-gre-1-325-105.w90-112.abo.wanadoo.fr [90.112.45.105])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 7929EC0011;
-        Fri, 12 Jun 2020 13:17:43 +0000 (UTC)
-Subject: Re: [PATCH 0/2] PUD/PGDIR entries for linear mapping
-From:   Alex Ghiti <alex@ghiti.fr>
-To:     Atish Patra <atishp@atishpatra.org>
-Cc:     Anup Patel <anup@brainfault.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>
-References: <20200603153608.30056-1-alex@ghiti.fr>
- <CAOnJCUJSKvLDsXC8+wyO1xsZDzLJmjY2kwMKhjz0t+uS8h0pDw@mail.gmail.com>
- <7ad7057e-fdab-14ef-9bdb-c77ccefd208a@ghiti.fr>
- <CAOnJCUKcMmchxgeHNx997EH5JM_OAJFUDCNT6Ca2B-xHE4YT5A@mail.gmail.com>
- <36739fc4-21ea-14f4-f2a6-52614b602dea@ghiti.fr>
-Message-ID: <8867b8d5-4a15-fbc1-67e1-7fc48be6eae3@ghiti.fr>
-Date:   Fri, 12 Jun 2020 09:17:42 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 12 Jun 2020 09:18:24 -0400
+Received: from mga03.intel.com ([134.134.136.65]:9961 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726108AbgFLNSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 09:18:23 -0400
+IronPort-SDR: Xl4wIJOotmnv+mePScFlOIvmkV/tpRdiaG1iXKyvcON0B0VUBWK48aSg14iuAzOEmnQnyJx2yx
+ hGRRbyiCYbFw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2020 06:18:23 -0700
+IronPort-SDR: qbMMbC3vf1k45oMKqRqK8eRrYVgDJdMebeYGvLUSX5uo04mv8WSH1rUkKUqF6zrOAMAuZZuVnc
+ 5iGrelD9ButQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,503,1583222400"; 
+   d="scan'208";a="307297849"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga002.fm.intel.com with ESMTP; 12 Jun 2020 06:18:20 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1jjjZe-00CZEa-Pq; Fri, 12 Jun 2020 16:18:22 +0300
+Date:   Fri, 12 Jun 2020 16:18:22 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, balbi@kernel.org, robh@kernel.org,
+        p.zabel@pengutronix.de, gregkh@linuxfoundation.org,
+        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com
+Subject: Re: [PATCH v3 2/2] usb: phy: Add USB3 PHY support for Intel LGM SoC
+Message-ID: <20200612131822.GG2428291@smile.fi.intel.com>
+References: <20200612025941.5484-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200612025941.5484-3-vadivel.muruganx.ramuthevar@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <36739fc4-21ea-14f4-f2a6-52614b602dea@ghiti.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: fr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200612025941.5484-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 6/12/20 à 8:59 AM, Alex Ghiti a écrit :
-> Hi Atish,
->
-> Le 6/11/20 à 1:29 PM, Atish Patra a écrit :
->> On Wed, Jun 10, 2020 at 11:51 PM Alex Ghiti<alex@ghiti.fr>  wrote:
->>> Hi Atish,
->>>
->>> Le 6/10/20 à 2:32 PM, Atish Patra a écrit :
->>>> On Wed, Jun 3, 2020 at 8:36 AM Alexandre Ghiti<alex@ghiti.fr>  wrote:
->>>>> This small patchset intends to use PUD/PGDIR entries for linear 
->>>>> mapping
->>>>> in order to better utilize TLB.
->>>>>
->>>>> At the moment, only PMD entries can be used since on common platforms
->>>>> (qemu/unleashed), the kernel is loaded at DRAM + 2MB which 
->>>>> dealigns virtual
->>>>> and physical addresses and then prevents the use of PUD/PGDIR 
->>>>> entries.
->>>>> So the kernel must be able to get those 2MB for PAGE_OFFSET to map 
->>>>> the
->>>>> beginning of the DRAM: this is achieved in patch 1.
->>>>>
->>>> I don't have in depth knowledge of how mm code works so this question
->>>> may be a completely
->>>> stupid one :). Just for my understanding,
->>>> As per my understanding, kernel will map those 2MB of memory but 
->>>> never use it.
->>>> How does the kernel ensure that it doesn't allocate any memory from 
->>>> those 2MB
->>>> memory if it is not marked as reserved?
->>> Yes, a 1GB hugepage will cover those 2MB: I rely on the previous boot
->>> stage to mark this region
->>> as reserved if there is something there (like opensbi). Otherwise, the
->>> kernel will indeed try to
->>> allocate memory from there :)
->>>
->> In that case, this patch mandates that the firmware region has to be
->> mark "reserved"
->> the device tree so that the Linux kernel doesn't try to allocate
->> memory from there.
->> OpenSBI is already doing it from v0.7. Thus, any user using latest
->> OpenSBI can leverage
->> this patch for a better TLB utilization.
->
->
-> Note that *currently* OpenSBI v0.7 still adds the "no-map" property 
-> which prevents such optimization.
->
->> However, legacy previous boot stages(BBL) do not reserve this area via
->> DT which may
->> result in an unexpected crash. I am not sure how many developers still
->> use BBL though.
->>
->> Few general suggestions to tackle this problem:
->> 1. This mandatory requirement should be added to the booting document
->> so that any other
->> SBI implementation is also aware of it.
->> 2. You may have to move the patch1 to a separate config so that any
->> users of legacy boot stages
->> can disable this feature.
->
->
-> IMHO, the region occupied by runtime services should be marked as 
-> reserved in the device-tree. So it seems redundant to add this as a 
-> requirement, I would rather consider its absence as a bug.
->
-> Even if I understand that this might break some system, I don't like 
-> the idea of a new config to support old "buggy" bootloaders: when will 
-> we be able to remove it ? We'll never know when people will stop using 
-> those bootloaders, so it will stay here forever...Where can I find the 
-> boot document you are talking about ? Can we simply state here that 
-> this kernel version will not be compatible with those bootloaders 
-> (we'll draw an exhaustive list here) ?
+On Fri, Jun 12, 2020 at 10:59:41AM +0800, Ramuthevar,Vadivel MuruganX wrote:
+> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> 
+> Add support for USB PHY on Intel LGM SoC.
+
+Thank you for an update, looks pretty much good, my comments below.
+
+...
+
+> +static int get_flipped(struct tca_apb *ta, bool *flipped)
+> +{
+> +	union extcon_property_value property;
+> +	int ret;
+> +
+> +	ret = extcon_get_property(ta->phy.edev, EXTCON_USB_HOST,
+> +				  EXTCON_PROP_USB_TYPEC_POLARITY, &property);
+> +	if (ret) {
+
+> +		dev_err(ta->phy.dev, "no polarity property from extcon\n");
+
+(1)
+
+> +		return ret;
+> +	}
+> +
+> +	*flipped = property.intval;
+> +
+> +	return ret;
+> +}
+
+...
+
+> +	ret = get_flipped(ta, &flipped);
+> +	if (ret)
+> +		dev_err(ta->phy.dev, "no polarity property from extcon\n");
+
+You already has a message in (1). You should decide which one to leave.
+
+But note, if it's a fatal error, you have to return here, otherwise, if you
+decide to leave message here, it should be not on error level.
+
+> +	connected = extcon_get_state(ta->phy.edev, EXTCON_USB_HOST);
+> +	if (connected == ta->connected)
+> +		return;
+> +
+> +	ta->connected = connected;
+> +	if (connected) {
+> +		val = TCPC_VALID | FIELD_PREP(TCPC_MUX_CTL, MUX_USB);
+> +		if (flipped)
+> +			val |= TCPC_FLIPPED;
+> +		dev_info(ta->phy.dev, "connected%s\n", flipped ? " flipped" : "");
+> +	} else {
+> +		val = TCPC_DISCONN;
+> +		dev_info(ta->phy.dev, "disconnected\n");
+> +	}
+> +
+> +	writel(val, ta->phy.io_priv + TCPC_OFFSET);
+> +
+
+> +	if (ta->phy.set_vbus(&ta->phy, connected))
+> +		dev_err(ta->phy.dev, "failed to set VBUS\n");
+
+Please, split it to
+	ret = ...;
+	if (ret)
+
+> +}
+
+...
+
+> +static int vbus_notifier(struct notifier_block *nb,
+> +			 unsigned long event, void *ptr)
+
+Consider to put it on one line (you can also shrink the names of unused
+parameters.
+
+> +{
+> +	return NOTIFY_DONE;
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-Ok, I have just found Documentation/riscv/boot-image-header.rst: could 
-we imagine doing something like incrementing the version and use that as 
-a hint in the kernel not to map the 2MB offset ? That's still legacy, 
-but at least it does not require to recompile a kernel as the check 
-would be done at runtime.
-
-
->
-> Alex
->
->
->>> Alex
->>>
->>>
->>>>> But furthermore, at the moment, the firmware (opensbi) explicitly 
->>>>> asks the
->>>>> kernel not to map the region it occupies, which is on those common
->>>>> platforms at the very beginning of the DRAM and then it also dealigns
->>>>> virtual and physical addresses. I proposed a patch here:
->>>>>
->>>>> https://github.com/riscv/opensbi/pull/167
->>>>>
->>>>> that removes this 'constraint' but *not* all the time as it offers 
->>>>> some
->>>>> kind of protection in case PMP is not available. So sometimes, we may
->>>>> have a part of the memory below the kernel that is removed creating a
->>>>> misalignment between virtual and physical addresses. So for 
->>>>> performance
->>>>> reasons, we must at least make sure that PMD entries can be used: 
->>>>> that
->>>>> is guaranteed by patch 1 too.
->>>>>
->>>>> Finally the second patch simply improves best_map_size so that 
->>>>> whenever
->>>>> possible, PUD/PGDIR entries are used.
->>>>>
->>>>> Below is the kernel page table without this patch on a 6G platform:
->>>>>
->>>>> ---[ Linear mapping ]---
->>>>> 0xffffc00000000000-0xffffc00176e00000 0x0000000080200000 5998M 
->>>>> PMD     D A . . . W R V
->>>>>
->>>>> And with this patchset + opensbi patch:
->>>>>
->>>>> ---[ Linear mapping ]---
->>>>> 0xffffc00000000000-0xffffc00140000000 0x0000000080000000         
->>>>> 5G PUD     D A . . . W R V
->>>>> 0xffffc00140000000-0xffffc00177000000 0x00000001c0000000 880M 
->>>>> PMD     D A . . . W R V
->>>>>
->>>>> Alexandre Ghiti (2):
->>>>>     riscv: Get memory below load_pa while ensuring linear mapping 
->>>>> is PMD
->>>>>       aligned
->>>>>     riscv: Use PUD/PGDIR entries for linear mapping when possible
->>>>>
->>>>>    arch/riscv/include/asm/page.h |  8 ++++
->>>>>    arch/riscv/mm/init.c          | 69 
->>>>> +++++++++++++++++++++++++++++------
->>>>>    2 files changed, 65 insertions(+), 12 deletions(-)
->>>>>
->>>>> -- 
->>>>> 2.20.1
->>>>>
->>>>>
->>
->
