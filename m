@@ -2,115 +2,114 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE46CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E19C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7199207ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:29:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC56D2063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:31:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MrnP4M4K"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="X6YqLiCq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726353AbgFLT35 (ORCPT
+        id S1726368AbgFLTbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 15:29:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45822 "EHLO
+        Fri, 12 Jun 2020 15:31:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgFLT34 (ORCPT
+        with ESMTP id S1726268AbgFLTbA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 15:29:56 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F827C03E96F
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 12:29:55 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id x207so4771770pfc.5
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 12:29:55 -0700 (PDT)
+        Fri, 12 Jun 2020 15:31:00 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51FB6C08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 12:31:00 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id t7so4149607plr.0
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 12:31:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=a4a2Pl1CFSq1GWe8QgYdCA4ph+xymGtgDfDZzT+4IG4=;
-        b=MrnP4M4KchL7FJOLTbUbPeOpodea9cEMKXenI/A9XfvsliD4gdI1bSGbPo1HCq+PeH
-         oUhU47XbIwNvM0D9ph7ctwVBwr6W40VlCNZqs43FVd5nzcvHLD8M3/uHBHRYkXCtQEHA
-         cxH82FsGLEeN7WqHFmUaIBmBaCyCejKE+QWjR20w+l2Bu/ILF2kFdtUMYtYx8UjGpkZN
-         wUnCINgTl53WsnF/rjdzmuwWp7QCP+QFIaJdK85+DncHWScwDNghqbdUEfYwLtmHe+XC
-         MiRMHphwN+URaJvMgL+HNSAasFx3k3VYwsdevmtFcSaot4+UFugcdAPD0ynpq9es6vxi
-         WVeA==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=H4xJr5jHCVeAEcRLOFPcb5oZvkfyMNzLWQX/m/ptM6s=;
+        b=X6YqLiCqFgiZc0NhYCB30C7wLDMPbYQ1KFjBFPpBQ0r5OO/xXc4YZgE7MHqjKarp0U
+         N7IeiQ6yhOUF/eWk1pWxJP+Ntzl8V3b4Z0XSxXCfNy9nHAWpTzEmPeCuvx+Eb8c077Cn
+         0kRaRMRetUI5j6Lk5LSttJVz2vl8Qr+gmey2U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=a4a2Pl1CFSq1GWe8QgYdCA4ph+xymGtgDfDZzT+4IG4=;
-        b=kL7PKeqhIX5If4eBfPfsjMJfTf5d8RPMmMgBk3ShWJPHB2o73riXpjelVDKxkV47f7
-         J5XVDEKkrpB7buoKlsFU49ZqQ+A9qSxNjyOoH1SgCEMJT0KH4WTsGW0fhN4gJBhMTlsU
-         AT7D5Kfk+gK53oOyAyJZ2tM5cq2hZS1p5CHOjwI47U0JjBZZPzoVLO9bUV8Dl31eLJ5d
-         bwJ0dmbrE3WIHOAVZ/fY2doOrds2u4pA58Co6/mtBMxJU3r3qUEU2lzMq2sLmH9e4XtS
-         zHTmybIWVmgzgM4kOtKxkxKBRQAYFt5Vo2Uy3JbgW2JAtQqqj+poztx75YJN/zj6IP1U
-         5vzg==
-X-Gm-Message-State: AOAM530VDc2LoL+cABvXtKcgTPu+NXE5kJsCE650t/NKWKfJJrJCVlHB
-        6avSDdChNJDKAX/cPJxj/lQ=
-X-Google-Smtp-Source: ABdhPJwseWqOvjBDHGRP7yoAe1UiXi1K4/GCKgBeAGhWekH7P5Vblc/Zm0oGbIJRoz6jgvwLhh+5gA==
-X-Received: by 2002:a65:5349:: with SMTP id w9mr12392157pgr.281.1591990194780;
-        Fri, 12 Jun 2020 12:29:54 -0700 (PDT)
-Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id c1sm6977123pfo.197.2020.06.12.12.29.54
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 12 Jun 2020 12:29:54 -0700 (PDT)
-Date:   Fri, 12 Jun 2020 12:29:43 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
-        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
-        alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ASoC: fsl_ssi: Fix bclk calculation for mono channel
-Message-ID: <20200612192942.GA26587@Asurada-Nvidia>
-References: <1591690768-1691-1-git-send-email-shengjiu.wang@nxp.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=H4xJr5jHCVeAEcRLOFPcb5oZvkfyMNzLWQX/m/ptM6s=;
+        b=EqIqG+rI0wwsFJhkK3tH/MUnE8fQEskcOKniInIqKJGU3/cxErkXN4cpkApmbYkPl5
+         R7KgSo9m1+sRI2mW2DjnlZ0H4pUQ+Pdt1taUGKc/TYVGE4PBa2lRlWaLHNWNHysE/JFt
+         MVgOrIKMlmvlPnY2jYluRz6cUmBsWABV6uMkNKwb0/g7Wdn1n32vYqG124jD77Ejk8xG
+         RbjSphudTuzhK6LlV6bOKhPWDq3c6c8jPkpaU3D56SWO3XCtBshegJpJ/fmWlbeoMdrA
+         qUWH4K6a8ufnjyPYePIRb9Ss/goe0l7JXHmc7tIZ6CzKrj7MIE1OEOziNaebrMbBo+Tq
+         Cmlw==
+X-Gm-Message-State: AOAM530Lf+Mx2cASUYRa17E2D+IpLE6P57rsFtvaJnsyriXS084KwvML
+        858eU9oUJmenliWf8u5nKm9ajw==
+X-Google-Smtp-Source: ABdhPJxQ5lcbMl7V73ZgbUO6jfK/4rDdndHu4h+o3zCtnTJevCht7YBpu0fJXUZdrdAoteLmZSaYQQ==
+X-Received: by 2002:a17:90a:de95:: with SMTP id n21mr458867pjv.100.1591990259869;
+        Fri, 12 Jun 2020 12:30:59 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id n69sm6966934pjc.25.2020.06.12.12.30.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2020 12:30:59 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     a.hajda@samsung.com, narmstrong@baylibre.com, sam@ravnborg.org
+Cc:     swboyd@chromium.org, spanda@codeaurora.org,
+        bjorn.andersson@linaro.org, robdclark@chromium.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/4] drm/bridge: ti-sn65dsi86: Don't use kernel-doc comment for local array
+Date:   Fri, 12 Jun 2020 12:30:48 -0700
+Message-Id: <20200612123003.v2.2.If3807e4ebf7f0440f64c3069edcfac9a70171940@changeid>
+X-Mailer: git-send-email 2.27.0.290.gba653c62da-goog
+In-Reply-To: <20200612123003.v2.1.Ibe95d8f3daef01e5c57d4c8c398f04d6a839492c@changeid>
+References: <20200612123003.v2.1.Ibe95d8f3daef01e5c57d4c8c398f04d6a839492c@changeid>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1591690768-1691-1-git-send-email-shengjiu.wang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 04:19:28PM +0800, Shengjiu Wang wrote:
-> For mono channel, ssi will switch to normal mode. In normal
-> mode, the Word Length Control bits control the word length
-> divider in clock generator, which is different with I2S master
-> mode, the word length is fixed to 32bit.
-> 
-> So we refine the famula for mono channel, otherwise there
-> will be sound issue for S24_LE.
-> 
-> Fixes: b0a7043d5c2c ("ASoC: fsl_ssi: Caculate bit clock rate using slot number and width")
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> ---
->  sound/soc/fsl/fsl_ssi.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/sound/soc/fsl/fsl_ssi.c b/sound/soc/fsl/fsl_ssi.c
-> index bad89b0d129e..e347776590f7 100644
-> --- a/sound/soc/fsl/fsl_ssi.c
-> +++ b/sound/soc/fsl/fsl_ssi.c
-> @@ -695,6 +695,11 @@ static int fsl_ssi_set_bclk(struct snd_pcm_substream *substream,
->  	/* Generate bit clock based on the slot number and slot width */
->  	freq = slots * slot_width * params_rate(hw_params);
->  
-> +	/* The slot_width is not fixed to 32 for normal mode */
-> +	if (params_channels(hw_params) == 1)
+When building we were getting an error:
 
-This function has a local variable that you can reuse here:
-	unsigned int slots = params_channels(hw_params);
+  warning: cannot understand function prototype:
+    'const unsigned int ti_sn_bridge_dp_rate_lut[] = '
 
-> +		freq = (slots <= 1 ? 2 : slots) * params_width(hw_params) *
-> +		       params_rate(hw_params);
+Arrays aren't supposed to be marked with "/**" kerneldoc comments.  Fix.
 
-We have a small section of slots and slot_width calculation
-at the top of this function where we can squash these in.
+Fixes: a095f15c00e2 ("drm/bridge: add support for sn65dsi86 bridge driver")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+---
+
+Changes in v2: None
+
+ drivers/gpu/drm/bridge/ti-sn65dsi86.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+index 6fa7e10b31af..fca7c2a0bcf9 100644
+--- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
++++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+@@ -504,7 +504,7 @@ static unsigned int ti_sn_bridge_get_bpp(struct ti_sn_bridge *pdata)
+ 		return 24;
+ }
+ 
+-/**
++/*
+  * LUT index corresponds to register value and
+  * LUT values corresponds to dp data rate supported
+  * by the bridge in Mbps unit.
+-- 
+2.27.0.290.gba653c62da-goog
+
