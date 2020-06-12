@@ -2,155 +2,173 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D9E4C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C41C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74372207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 203962074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 14:25:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="EQx7FfkS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbgFLOXG (ORCPT
+        id S1726559AbgFLOZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 10:23:06 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:35550 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgFLOXF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 10:23:05 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: gtucker)
-        with ESMTPSA id 2BCEC2A55B2
-Subject: Re: [PATCH] ARM: exynos: update l2c_aux_mask to fix alert message
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>, kernel@collabora.com,
-        linux-arm-kernel@lists.infradead.org
-References: <b29f34870380093e6268c11d3033033d6def61b7.1585756648.git.guillaume.tucker@collabora.com>
- <20200401163101.GV25745@shell.armlinux.org.uk>
- <35c7cf4b-e6b8-43aa-d934-4a1c2e738372@collabora.com>
- <20200402130352.GY25745@shell.armlinux.org.uk>
- <20200402131143.GZ25745@shell.armlinux.org.uk>
-From:   Guillaume Tucker <guillaume.tucker@collabora.com>
-Message-ID: <f2d05128-5188-d9b6-d8f9-8d56fd9d1d5d@collabora.com>
-Date:   Fri, 12 Jun 2020 15:23:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 12 Jun 2020 10:25:46 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:19194 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726310AbgFLOZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 10:25:45 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591971944; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=6TkXm7WIXe6JmUlAyDwjFnbArqNv0j3TvAXTAuTgCHs=;
+ b=EQx7FfkS4qsxANNyTyA/XEfazQaBNqAUilfgnRNy0c1LYNa4qIWLYfm3w8hFd+kh4i19NJrm
+ QHgVqlTEPOyMBwXM47Ncf/AWH21+RU8NDyLv5ODbzpe8iPAX/LBpY5L5uZwnw4Twy97yKk/d
+ /xxAPBuXBQ1dNtr6hLlQVQpm+6c=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n11.prod.us-east-1.postgun.com with SMTP id
+ 5ee39060356bcc26abfe7865 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 12 Jun 2020 14:25:36
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2E5F2C433CB; Fri, 12 Jun 2020 14:25:36 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: pillair)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 62898C433CA;
+        Fri, 12 Jun 2020 14:25:35 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <20200402131143.GZ25745@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Fri, 12 Jun 2020 19:55:35 +0530
+From:   pillair@codeaurora.org
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     kvalo@codeaurora.org, kuabhs@google.com,
+        saiprakash.ranjan@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, ath10k@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH] ath10k: Wait until copy complete is actually done before
+ completing
+In-Reply-To: <20200609082015.1.Ife398994e5a0a6830e4d4a16306ef36e0144e7ba@changeid>
+References: <20200609082015.1.Ife398994e5a0a6830e4d4a16306ef36e0144e7ba@changeid>
+Message-ID: <775536279e60ccc833c481ad6ab6dab2@codeaurora.org>
+X-Sender: pillair@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/04/2020 14:11, Russell King - ARM Linux admin wrote:
-> On Thu, Apr 02, 2020 at 02:03:52PM +0100, Russell King - ARM Linux admin wrote:
->> On Thu, Apr 02, 2020 at 01:13:24PM +0100, Guillaume Tucker wrote:
->>> On 01/04/2020 17:31, Russell King - ARM Linux admin wrote:
->>>> On Wed, Apr 01, 2020 at 05:08:03PM +0100, Guillaume Tucker wrote:
->>>>> Allow setting the number of cycles for RAM reads in the pl310 cache
->>>>> controller L2 auxiliary control register mask (bits 0-2) since it
->>>>> needs to be changed in software.  This only affects exynos4210 and
->>>>> exynos4412 as they use the pl310 cache controller.
->>>>>
->>>>> With the mask used until now, the following warnings were generated,
->>>>> the 2nd one being a pr_alert():
->>>>>
->>>>>   L2C: platform modifies aux control register: 0x02070000 -> 0x3e470001
->>>>>   L2C: platform provided aux values permit register corruption.
->>>>>
->>>>> This latency cycles value has always been set in software in spite of
->>>>> the warnings.  Keep it this way but clear the alert message about
->>>>> register corruption to acknowledge it is a valid thing to do.
->>>>
->>>> This is telling you that you are doing something you should not be
->>>> doing.  The L2C controller should be configured by board firmware
->>>> first and foremost, because if, for example, u-boot makes use of the
->>>> L2 cache, or any other pre-main kernel code (in other words,
->>>> decompressor) the setup of the L2 controller will be wrong.
->>>>
->>>> So, NAK.
->>>
->>> OK thanks, I guess I misinterpreted the meaning of the error
->>> message.  It's really saying that the register value was not the
->>> right one before the kernel tried to change it.  Next step for me
->>> is to look into U-Boot.
->>
->> The message "L2C: platform provided aux values permit register
->> corruption." means that bits are set in both the mask and the value
->> fields.  Since the new value is calculated as:
->>
->> 	old = register value;
->> 	new = old & mask;
->> 	new |= val;
->>
->> If bits are set in both "mask" and "val" for a multi-bit field, the
->> value ending up in the field may not be what is intended.  Consider
->> a 5-bit field set initially to 10101, and the requested value is
->> 01000 with a mask of 11111.  What you end up with is not 01000, but
->> 11101.  Hence, register corruption.  It is not possible to easily
->> tell whether the mask and values refer to a multi-bit field or not,
->> so the mere fact that bits are set in both issues the alert.
->>
->> The message "L2C: platform modifies aux control register ..." means
->> that you're trying to modify the value of the auxiliary control
->> register, which brings with it the problems I stated in my previous
->> email; platform configuration of the L2C must be done by firmware and
->> not the kernel for the reasons I've set out.
-> 
-> Actually, looking at the values there:
-> 
->         .l2c_aux_val    = 0x3c400001,
-> -       .l2c_aux_mask   = 0xc20fffff,
-> +       .l2c_aux_mask   = 0xc20ffff8,
-> 
-> Bit 0 is L310_AUX_CTRL_FULL_LINE_ZERO feature bit, which platforms have
-> no business fiddling with - it is a Cortex-A9/L2C310 specific feature
-> that needs both ends to be configured correctly to work.  The L2C code
-> knows this and will deal with it.  So, .l2c_aux_val should drop setting
-> bit 0.
+Hi Doug,
 
-Ack, I've just sent a patch to fix that:
-
-  ARM: exynos: clear L310_AUX_CTRL_FULL_LINE_ZERO in default l2c_aux_val
-
-Sorry about the confusion in my first patch, I got mislead with
-the TRM of an earlier revision of the L2C-310 when these bits
-were used to set the RAM data read latency.  So this all makes
-sense to me now with the matching documentation for the hardware.
-
-> It's also setting L310_AUX_CTRL_NS_LOCKDOWN, which the kernel already
-> deals with - this bit should be dropped as well.
-
-OK I'll take a look at that and send a separate patch.
-
-Presumably this bit should also be added to the mask to report an
-error if the kernel is changing it?
-
-> It's clearing L310_AUX_CTRL_CACHE_REPLACE_RR - this should be setup by
-> firmware.
-
-As far as I can tell, L310_AUX_CTRL_CACHE_REPLACE_RR is bit 25
-i.e. 0x02000000, which is set in hardware by default and is not
-changed by the kernel:
-
-    L2C: platform modifies aux control register: 0x02070000 -> 0x3e470001
-
-Also this bit is already in the mask, and there is no error about
-register corruption any more with the patch I sent today.
-
-> For the prefetching, I thought there were DT properties for that.
-> Please look at that, and see whether you can eliminate most of the
-> .l2c_aux_val field set bits, and the .l2c_aux_mask clear bits.
-
-Ack, it's handled by l2c310_of_parse().  I'll take a look and see
-if I can make another patch for that.
+The send callback for the CEs do check for hw_index/SRRI before trying 
+to free the buffer.
+But adding a check for copy-complete (before calling the individual CE 
+callbacks) seems to be the better approach. Hence I agree that this 
+patch should be added.
 
 Thanks,
-Guillaume
+Rakesh Pillai.
+
+On 2020-06-09 20:50, Douglas Anderson wrote:
+> On wcn3990 we have "per_ce_irq = true".  That makes the
+> ath10k_ce_interrupt_summary() function always return 0xfff. The
+> ath10k_ce_per_engine_service_any() function will see this and think
+> that _all_ copy engines have an interrupt.  Without checking, the
+> ath10k_ce_per_engine_service() assumes that if it's called that the
+> "copy complete" (cc) interrupt fired.  This combination seems bad.
+> 
+> Let's add a check to make sure that the "copy complete" interrupt
+> actually fired in ath10k_ce_per_engine_service().
+> 
+> This might fix a hard-to-reproduce failure where it appears that the
+> copy complete handlers run before the copy is really complete.
+> Specifically a symptom was that we were seeing this on a Qualcomm
+> sc7180 board:
+>   arm-smmu 15000000.iommu: Unhandled context fault:
+>   fsr=0x402, iova=0x7fdd45780, fsynr=0x30003, cbfrsynra=0xc1, cb=10
+> 
+> Even on platforms that don't have wcn3990 this still seems like it
+> would be a sane thing to do.  Specifically the current IRQ handler
+> comments indicate that there might be other misc interrupt sources
+> firing that need to be cleared.  If one of those sources was the one
+> that caused the IRQ handler to be called it would also be important to
+> double-check that the interrupt we cared about actually fired.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+
+
+Reviewed-by: Rakesh Pillai <pillair@codeaurora.org>
+
+
+> ---
+> 
+>  drivers/net/wireless/ath/ath10k/ce.c | 30 +++++++++++++++++++---------
+>  1 file changed, 21 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/ath/ath10k/ce.c
+> b/drivers/net/wireless/ath/ath10k/ce.c
+> index 294fbc1e89ab..ffdd4b995f33 100644
+> --- a/drivers/net/wireless/ath/ath10k/ce.c
+> +++ b/drivers/net/wireless/ath/ath10k/ce.c
+> @@ -481,6 +481,15 @@ static inline void
+> ath10k_ce_engine_int_status_clear(struct ath10k *ar,
+>  	ath10k_ce_write32(ar, ce_ctrl_addr + wm_regs->addr, mask);
+>  }
+> 
+> +static inline bool ath10k_ce_engine_int_status_check(struct ath10k 
+> *ar,
+> +						     u32 ce_ctrl_addr,
+> +						     unsigned int mask)
+> +{
+> +	struct ath10k_hw_ce_host_wm_regs *wm_regs = ar->hw_ce_regs->wm_regs;
+> +
+> +	return ath10k_ce_read32(ar, ce_ctrl_addr + wm_regs->addr) & mask;
+> +}
+> +
+>  /*
+>   * Guts of ath10k_ce_send.
+>   * The caller takes responsibility for any needed locking.
+> @@ -1301,19 +1310,22 @@ void ath10k_ce_per_engine_service(struct
+> ath10k *ar, unsigned int ce_id)
+> 
+>  	spin_lock_bh(&ce->ce_lock);
+> 
+> -	/* Clear the copy-complete interrupts that will be handled here. */
+> -	ath10k_ce_engine_int_status_clear(ar, ctrl_addr,
+> -					  wm_regs->cc_mask);
+> +	if (ath10k_ce_engine_int_status_check(ar, ctrl_addr,
+> +					      wm_regs->cc_mask)) {
+> +		/* Clear before handling */
+> +		ath10k_ce_engine_int_status_clear(ar, ctrl_addr,
+> +						  wm_regs->cc_mask);
+> 
+> -	spin_unlock_bh(&ce->ce_lock);
+> +		spin_unlock_bh(&ce->ce_lock);
+> 
+> -	if (ce_state->recv_cb)
+> -		ce_state->recv_cb(ce_state);
+> +		if (ce_state->recv_cb)
+> +			ce_state->recv_cb(ce_state);
+> 
+> -	if (ce_state->send_cb)
+> -		ce_state->send_cb(ce_state);
+> +		if (ce_state->send_cb)
+> +			ce_state->send_cb(ce_state);
+> 
+> -	spin_lock_bh(&ce->ce_lock);
+> +		spin_lock_bh(&ce->ce_lock);
+> +	}
+> 
+>  	/*
+>  	 * Misc CE interrupts are not being handled, but still need
