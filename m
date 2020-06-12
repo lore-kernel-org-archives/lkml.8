@@ -2,203 +2,307 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 583BEC433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D37C433E1
 	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 23:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30B5D206D7
+	by mail.kernel.org (Postfix) with ESMTP id 5875F2078E
 	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 23:16:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MiFMCE9Q"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f0onVB3w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726376AbgFLXPt (ORCPT
+        id S1726392AbgFLXPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 19:15:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52426 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbgFLXPp (ORCPT
+        Fri, 12 Jun 2020 19:15:54 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49058 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726310AbgFLXPp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 12 Jun 2020 19:15:45 -0400
-Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE9B3C08C5C1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 16:15:43 -0700 (PDT)
-Received: by mail-ua1-x942.google.com with SMTP id c15so3764689uar.9
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 16:15:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oq8VMZuaXGbd2S6QZmKfGmJLPLEtlVINersNYu3Hmq0=;
-        b=MiFMCE9QLz1s7wRwKCXByIZ2xd4K1DO67RKgkjq+lAP7DTtPvpc/G2vBsgSkuDtKa4
-         FwuG6iEAswE2oH+ZdM9YAuSFSl8c5HLxdf8lFHa6MAa5hxg4xLBQc2iWcDe8EDJA5S5k
-         RQB+M2lLyrChdz5hHyuTmUQ1NGV/zdHBXAStQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oq8VMZuaXGbd2S6QZmKfGmJLPLEtlVINersNYu3Hmq0=;
-        b=MKnBFnK7Dqt1DC3DPECGuG/HLv5bGN781CBULdGMNRc1JtLKbZNoSQI21yai105rsU
-         jOdK7UuAG/8sLRsWiMwRDRD1/pmFmSL0tMqNVWyIL21O5QeuVE41vuPYq1EceLEiPo3v
-         0VGQ90c+Rz/5myArbMReSRSTmVu07xJ1NiPOdMDCG1A3dSfhinyRn5vOddb9OiHRhVc4
-         p5B52JXBW3dLA4nh/rgX3s1Zv3ic3nDZZbzbW0CCMqAbi5u9mGOzTBlIGut3e5FCNTv+
-         3LIoPkiduSMGTtSase5GWcx29QPsoarWy/LFJhNvFtVv+5KL0BFS22vf97+dItWLr8lB
-         hoYQ==
-X-Gm-Message-State: AOAM530fOHTN+HWBfVlnPfKFuG3+ar1gx87h1NtXKOkqfyKVQs2uuRQ0
-        RJ86qOnyrYT0iTPCk+pD5BIshGj6v9U=
-X-Google-Smtp-Source: ABdhPJyqJmMIZzJqowYZST7olNcYEw39ETXw46/M9PGtIaxkIiZS9tzgu7ii+RSrUz1AeuURKt0ygQ==
-X-Received: by 2002:a9f:37e1:: with SMTP id q88mr10960307uaq.125.1592003742625;
-        Fri, 12 Jun 2020 16:15:42 -0700 (PDT)
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
-        by smtp.gmail.com with ESMTPSA id c7sm1061257uan.12.2020.06.12.16.15.41
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Jun 2020 16:15:41 -0700 (PDT)
-Received: by mail-vs1-f42.google.com with SMTP id o2so6258831vsr.0
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 16:15:41 -0700 (PDT)
-X-Received: by 2002:a67:e445:: with SMTP id n5mr13169309vsm.73.1592003741235;
- Fri, 12 Jun 2020 16:15:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592003742;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=lwW5//Ms4E7Fyn4j9oJf7GLsDQ1aST8AjVuss6myfXA=;
+        b=f0onVB3wxxniMN+aU/eocpI4XJtrODYPycVoyU3O45NpCPORhAkFHViI1Sw9cvjMNYWiTE
+        BYLa7scqcT59alhrU3ZKM61+utDvbseI3yFxjaLqHtWO+Rop1oStUGSZxVHFfMH89NHoJS
+        xIKcMy/rRa671PWZ9SBAOVcY7I0VLpA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-394-iM37GBLwOau9wqAmYNfa7Q-1; Fri, 12 Jun 2020 19:15:40 -0400
+X-MC-Unique: iM37GBLwOau9wqAmYNfa7Q-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8EA9BA0BD7;
+        Fri, 12 Jun 2020 23:15:39 +0000 (UTC)
+Received: from cantor.redhat.com (ovpn-112-134.phx2.redhat.com [10.3.112.134])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 16E4B5D9C5;
+        Fri, 12 Jun 2020 23:15:39 +0000 (UTC)
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+Cc:     Joerg Roedel <joro@8bytes.org>, Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH 1/2] iommu/vt-d: Move Kconfig and Makefile bits down into intel directory
+Date:   Fri, 12 Jun 2020 16:10:59 -0700
+Message-Id: <20200612231100.293734-2-jsnitsel@redhat.com>
+In-Reply-To: <20200612231100.293734-1-jsnitsel@redhat.com>
+References: <20200612231100.293734-1-jsnitsel@redhat.com>
 MIME-Version: 1.0
-References: <1591868882-16553-1-git-send-email-rbokka@codeaurora.org>
- <1591868882-16553-2-git-send-email-rbokka@codeaurora.org> <CAD=FV=WjvAWVmq3fTh=_f2p1Dv+sXg1RV-CqZr8KRgHe8_wT0w@mail.gmail.com>
-In-Reply-To: <CAD=FV=WjvAWVmq3fTh=_f2p1Dv+sXg1RV-CqZr8KRgHe8_wT0w@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 12 Jun 2020 16:15:29 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=W4QqjOOfh_pJgg3P1PCEGOv8cubFKFKeYOBC0VVk2mZg@mail.gmail.com>
-Message-ID: <CAD=FV=W4QqjOOfh_pJgg3P1PCEGOv8cubFKFKeYOBC0VVk2mZg@mail.gmail.com>
-Subject: Re: [RFC v2 1/3] dt-bindings: nvmem: Add devicetree bindings for qfprom-efuse
-To:     Ravi Kumar Bokka <rbokka@codeaurora.org>
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        dhavalp@codeaurora.org, mturney@codeaurora.org,
-        sparate@codeaurora.org, mkurumel@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Move Intel Kconfig and Makefile bits down into intel directory
+with the rest of the Intel specific files.
 
-On Fri, Jun 12, 2020 at 2:59 PM Doug Anderson <dianders@chromium.org> wrote:
->
-> Hi,
->
-> On Thu, Jun 11, 2020 at 2:49 AM Ravi Kumar Bokka <rbokka@codeaurora.org> wrote:
-> >
-> > This patch adds dt-bindings document for qfprom-efuse controller.
-> >
-> > Signed-off-by: Ravi Kumar Bokka <rbokka@codeaurora.org>
-> > ---
-> >  .../devicetree/bindings/nvmem/qfprom.yaml          | 52 ++++++++++++++++++++++
-> >  1 file changed, 52 insertions(+)
->
-> Overall comment: I reviewed your v1 series and so I'm obviously
-> interested in your series.  Please CC me on future versions.
->
-> I would also note that, since this is relevant to Qualcomm SoCs that
-> you probably should be CCing "linux-arm-msm@vger.kernel.org" on your
-> series.
->
->
-> >  create mode 100644 Documentation/devicetree/bindings/nvmem/qfprom.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/nvmem/qfprom.yaml b/Documentation/devicetree/bindings/nvmem/qfprom.yaml
-> > new file mode 100644
-> > index 0000000..7c8fc31
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/nvmem/qfprom.yaml
-> > @@ -0,0 +1,52 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/nvmem/qfprom.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Qualcomm Technologies Inc, QFPROM Efuse bindings
-> > +
-> > +maintainers:
-> > +  - Ravi Kumar Bokka <rbokka@codeaurora.org>
-> > +
-> > +allOf:
-> > +  - $ref: "nvmem.yaml#"
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - qcom,qfprom
->
-> As per discussion in patch #1, I believe SoC compatible should be here
-> too in case it is ever needed.  This is standard practice for dts
-> files for IP blocks embedded in an SoC.  AKA, this should be:
->
->     items:
->       - enum:
->           - qcom,apq8064-qfprom
->           - qcom,apq8084-qfprom
->           - qcom,msm8974-qfprom
->           - qcom,msm8916-qfprom
->           - qcom,msm8996-qfprom
->           - qcom,msm8998-qfprom
->           - qcom,qcs404-qfprom
->           - qcom,sc7180-qfprom
->           - qcom,sdm845-qfprom
->       - const: qcom,qfprom
->
-> NOTE: old SoCs won't have both of these and thus they will get flagged
-> with "dtbs_check", but I believe that's fine (Rob can correct me if
-> I'm wrong).  The code should still work OK if the SoC isn't there but
-> it would be good to fix old dts files to have the SoC specific string
-> too.
->
->
-> > +
-> > +  reg:
-> > +    maxItems: 3
->
-> Please address feedback feedback on v1.  If you disagree with my
-> feedback it's OK to say so (I make no claims of being always right),
-> but silently ignoring my feedback and sending the next version doesn't
-> make me feel like it's a good use of my time to keep reviewing your
-> series.  Specifically I suggested that you actually add descriptions
-> rather than just putting "maxItems: 3".
->
-> With all that has been discussed, I think the current best thing to
-> put there is:
->
->     # If the QFPROM is read-only OS image then only the corrected region
->     # needs to be provided.  If the QFPROM is writable then all 3 regions
->     # must be provided.
->     oneOf:
->       - items:
->           - description: The start of the corrected region.
->       - items:
->           - description: The start of the raw region.
->           - description: The start of the config region.
->           - description: The start of the corrected region.
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
+---
+ drivers/iommu/Kconfig        | 86 +-----------------------------------
+ drivers/iommu/Makefile       |  8 +---
+ drivers/iommu/intel/Kconfig  | 86 ++++++++++++++++++++++++++++++++++++
+ drivers/iommu/intel/Makefile |  7 +++
+ 4 files changed, 96 insertions(+), 91 deletions(-)
+ create mode 100644 drivers/iommu/intel/Kconfig
+ create mode 100644 drivers/iommu/intel/Makefile
 
-To address some of Srinivas's comments, I think you should actually
-add the 4th range in here too:
+diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+index aca76383f201..b12d4ec124f6 100644
+--- a/drivers/iommu/Kconfig
++++ b/drivers/iommu/Kconfig
+@@ -176,91 +176,7 @@ config AMD_IOMMU_DEBUGFS
+ 	  This option is -NOT- intended for production environments, and should
+ 	  not generally be enabled.
+ 
+-# Intel IOMMU support
+-config DMAR_TABLE
+-	bool
+-
+-config INTEL_IOMMU
+-	bool "Support for Intel IOMMU using DMA Remapping Devices"
+-	depends on PCI_MSI && ACPI && (X86 || IA64)
+-	select IOMMU_API
+-	select IOMMU_IOVA
+-	select NEED_DMA_MAP_STATE
+-	select DMAR_TABLE
+-	select SWIOTLB
+-	select IOASID
+-	help
+-	  DMA remapping (DMAR) devices support enables independent address
+-	  translations for Direct Memory Access (DMA) from devices.
+-	  These DMA remapping devices are reported via ACPI tables
+-	  and include PCI device scope covered by these DMA
+-	  remapping devices.
+-
+-config INTEL_IOMMU_DEBUGFS
+-	bool "Export Intel IOMMU internals in Debugfs"
+-	depends on INTEL_IOMMU && IOMMU_DEBUGFS
+-	help
+-	  !!!WARNING!!!
+-
+-	  DO NOT ENABLE THIS OPTION UNLESS YOU REALLY KNOW WHAT YOU ARE DOING!!!
+-
+-	  Expose Intel IOMMU internals in Debugfs.
+-
+-	  This option is -NOT- intended for production environments, and should
+-	  only be enabled for debugging Intel IOMMU.
+-
+-config INTEL_IOMMU_SVM
+-	bool "Support for Shared Virtual Memory with Intel IOMMU"
+-	depends on INTEL_IOMMU && X86
+-	select PCI_PASID
+-	select PCI_PRI
+-	select MMU_NOTIFIER
+-	select IOASID
+-	help
+-	  Shared Virtual Memory (SVM) provides a facility for devices
+-	  to access DMA resources through process address space by
+-	  means of a Process Address Space ID (PASID).
+-
+-config INTEL_IOMMU_DEFAULT_ON
+-	def_bool y
+-	prompt "Enable Intel DMA Remapping Devices by default"
+-	depends on INTEL_IOMMU
+-	help
+-	  Selecting this option will enable a DMAR device at boot time if
+-	  one is found. If this option is not selected, DMAR support can
+-	  be enabled by passing intel_iommu=on to the kernel.
+-
+-config INTEL_IOMMU_BROKEN_GFX_WA
+-	bool "Workaround broken graphics drivers (going away soon)"
+-	depends on INTEL_IOMMU && BROKEN && X86
+-	---help---
+-	  Current Graphics drivers tend to use physical address
+-	  for DMA and avoid using DMA APIs. Setting this config
+-	  option permits the IOMMU driver to set a unity map for
+-	  all the OS-visible memory. Hence the driver can continue
+-	  to use physical addresses for DMA, at least until this
+-	  option is removed in the 2.6.32 kernel.
+-
+-config INTEL_IOMMU_FLOPPY_WA
+-	def_bool y
+-	depends on INTEL_IOMMU && X86
+-	---help---
+-	  Floppy disk drivers are known to bypass DMA API calls
+-	  thereby failing to work when IOMMU is enabled. This
+-	  workaround will setup a 1:1 mapping for the first
+-	  16MiB to make floppy (an ISA device) work.
+-
+-config INTEL_IOMMU_SCALABLE_MODE_DEFAULT_ON
+-	bool "Enable Intel IOMMU scalable mode by default"
+-	depends on INTEL_IOMMU
+-	help
+-	  Selecting this option will enable by default the scalable mode if
+-	  hardware presents the capability. The scalable mode is defined in
+-	  VT-d 3.0. The scalable mode capability could be checked by reading
+-	  /sys/devices/virtual/iommu/dmar*/intel-iommu/ecap. If this option
+-	  is not selected, scalable mode support could also be enabled by
+-	  passing intel_iommu=sm_on to the kernel. If not sure, please use
+-	  the default value.
++source "drivers/iommu/intel/Kconfig"
+ 
+ config IRQ_REMAP
+ 	bool "Support for Interrupt Remapping"
+diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
+index 342190196dfb..71dd2f382e78 100644
+--- a/drivers/iommu/Makefile
++++ b/drivers/iommu/Makefile
+@@ -1,4 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
++obj-y += intel/
+ obj-$(CONFIG_IOMMU_API) += iommu.o
+ obj-$(CONFIG_IOMMU_API) += iommu-traces.o
+ obj-$(CONFIG_IOMMU_API) += iommu-sysfs.o
+@@ -17,13 +18,8 @@ obj-$(CONFIG_AMD_IOMMU_V2) += amd/iommu_v2.o
+ obj-$(CONFIG_ARM_SMMU) += arm_smmu.o
+ arm_smmu-objs += arm-smmu.o arm-smmu-impl.o arm-smmu-qcom.o
+ obj-$(CONFIG_ARM_SMMU_V3) += arm-smmu-v3.o
+-obj-$(CONFIG_DMAR_TABLE) += intel/dmar.o
+-obj-$(CONFIG_INTEL_IOMMU) += intel/iommu.o intel/pasid.o
+-obj-$(CONFIG_INTEL_IOMMU) += intel/trace.o
+-obj-$(CONFIG_INTEL_IOMMU_DEBUGFS) += intel/debugfs.o
+-obj-$(CONFIG_INTEL_IOMMU_SVM) += intel/svm.o
+ obj-$(CONFIG_IPMMU_VMSA) += ipmmu-vmsa.o
+-obj-$(CONFIG_IRQ_REMAP) += intel/irq_remapping.o irq_remapping.o
++obj-$(CONFIG_IRQ_REMAP) += irq_remapping.o
+ obj-$(CONFIG_MTK_IOMMU) += mtk_iommu.o
+ obj-$(CONFIG_MTK_IOMMU_V1) += mtk_iommu_v1.o
+ obj-$(CONFIG_OMAP_IOMMU) += omap-iommu.o
+diff --git a/drivers/iommu/intel/Kconfig b/drivers/iommu/intel/Kconfig
+new file mode 100644
+index 000000000000..ef5c4a7a9399
+--- /dev/null
++++ b/drivers/iommu/intel/Kconfig
+@@ -0,0 +1,86 @@
++# SPDX-License-Identifier: GPL-2.0-only
++# Intel IOMMU support
++config DMAR_TABLE
++	bool
++
++config INTEL_IOMMU
++	bool "Support for Intel IOMMU using DMA Remapping Devices"
++	depends on PCI_MSI && ACPI && (X86 || IA64)
++	select IOMMU_API
++	select IOMMU_IOVA
++	select NEED_DMA_MAP_STATE
++	select DMAR_TABLE
++	select SWIOTLB
++	select IOASID
++	help
++	  DMA remapping (DMAR) devices support enables independent address
++	  translations for Direct Memory Access (DMA) from devices.
++	  These DMA remapping devices are reported via ACPI tables
++	  and include PCI device scope covered by these DMA
++	  remapping devices.
++
++config INTEL_IOMMU_DEBUGFS
++	bool "Export Intel IOMMU internals in Debugfs"
++	depends on INTEL_IOMMU && IOMMU_DEBUGFS
++	help
++	  !!!WARNING!!!
++
++	  DO NOT ENABLE THIS OPTION UNLESS YOU REALLY KNOW WHAT YOU ARE DOING!!!
++
++	  Expose Intel IOMMU internals in Debugfs.
++
++	  This option is -NOT- intended for production environments, and should
++	  only be enabled for debugging Intel IOMMU.
++
++config INTEL_IOMMU_SVM
++	bool "Support for Shared Virtual Memory with Intel IOMMU"
++	depends on INTEL_IOMMU && X86
++	select PCI_PASID
++	select PCI_PRI
++	select MMU_NOTIFIER
++	select IOASID
++	help
++	  Shared Virtual Memory (SVM) provides a facility for devices
++	  to access DMA resources through process address space by
++	  means of a Process Address Space ID (PASID).
++
++config INTEL_IOMMU_DEFAULT_ON
++	def_bool y
++	prompt "Enable Intel DMA Remapping Devices by default"
++	depends on INTEL_IOMMU
++	help
++	  Selecting this option will enable a DMAR device at boot time if
++	  one is found. If this option is not selected, DMAR support can
++	  be enabled by passing intel_iommu=on to the kernel.
++
++config INTEL_IOMMU_BROKEN_GFX_WA
++	bool "Workaround broken graphics drivers (going away soon)"
++	depends on INTEL_IOMMU && BROKEN && X86
++	help
++	  Current Graphics drivers tend to use physical address
++	  for DMA and avoid using DMA APIs. Setting this config
++	  option permits the IOMMU driver to set a unity map for
++	  all the OS-visible memory. Hence the driver can continue
++	  to use physical addresses for DMA, at least until this
++	  option is removed in the 2.6.32 kernel.
++
++config INTEL_IOMMU_FLOPPY_WA
++	def_bool y
++	depends on INTEL_IOMMU && X86
++	help
++	  Floppy disk drivers are known to bypass DMA API calls
++	  thereby failing to work when IOMMU is enabled. This
++	  workaround will setup a 1:1 mapping for the first
++	  16MiB to make floppy (an ISA device) work.
++
++config INTEL_IOMMU_SCALABLE_MODE_DEFAULT_ON
++	bool "Enable Intel IOMMU scalable mode by default"
++	depends on INTEL_IOMMU
++	help
++	  Selecting this option will enable by default the scalable mode if
++	  hardware presents the capability. The scalable mode is defined in
++	  VT-d 3.0. The scalable mode capability could be checked by reading
++	  /sys/devices/virtual/iommu/dmar*/intel-iommu/ecap. If this option
++	  is not selected, scalable mode support could also be enabled by
++	  passing intel_iommu=sm_on to the kernel. If not sure, please use
++	  the default value.
+diff --git a/drivers/iommu/intel/Makefile b/drivers/iommu/intel/Makefile
+new file mode 100644
+index 000000000000..fb8e1e8c8029
+--- /dev/null
++++ b/drivers/iommu/intel/Makefile
+@@ -0,0 +1,7 @@
++# SPDX-License-Identifier: GPL-2.0
++obj-$(CONFIG_DMAR_TABLE) += dmar.o
++obj-$(CONFIG_INTEL_IOMMU) += iommu.o pasid.o
++obj-$(CONFIG_INTEL_IOMMU) += trace.o
++obj-$(CONFIG_INTEL_IOMMU_DEBUGFS) += debugfs.o
++obj-$(CONFIG_INTEL_IOMMU_SVM) += svm.o
++obj-$(CONFIG_IRQ_REMAP) += irq_remapping.o
+-- 
+2.27.0
 
-- description: The start of the security control region.
-
-That allows you to read 0x6000 and get the major/minor/step properly.
-
-
-I will also note that as I've started reviewing the driver code it'll
-probably make everyone's life easiest if you keep the "corrected"
-region first, even if it's not numerically first.
-
-
-I've updated my FIXUP patch again.  I might notice more comments as I
-review the driver more, but we'll see...
-
--Doug
