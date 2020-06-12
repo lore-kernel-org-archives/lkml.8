@@ -2,159 +2,261 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A183AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:30:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A0DCC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 889BF20853
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:30:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E9FA206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 00:31:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oqqdgIag"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726387AbgFLAaI (ORCPT
+        id S1726435AbgFLAbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 20:30:08 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:19424 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726294AbgFLAaH (ORCPT
+        Thu, 11 Jun 2020 20:31:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39856 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726285AbgFLAbQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 20:30:07 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05BMWr86077654;
-        Thu, 11 Jun 2020 20:30:01 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31ktm4eyv8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 11 Jun 2020 20:30:01 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05C0TDLd069624;
-        Thu, 11 Jun 2020 20:30:01 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31ktm4eyuh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 11 Jun 2020 20:30:01 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05C0FDhA019144;
-        Fri, 12 Jun 2020 00:29:59 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 31g2s82et8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 12 Jun 2020 00:29:58 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05C0Tugi63832342
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jun 2020 00:29:56 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C362E11C04A;
-        Fri, 12 Jun 2020 00:29:56 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A50F911C04C;
-        Fri, 12 Jun 2020 00:29:55 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.183.79])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 12 Jun 2020 00:29:55 +0000 (GMT)
-Message-ID: <1591921795.11061.12.camel@linux.ibm.com>
-Subject: Re: [PATCH] extend IMA boot_aggregate with kernel measurements
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Maurizio Drocco <maurizio.drocco@ibm.com>,
-        linux-integrity@vger.kernel.org
-Cc:     jejb@linux.ibm.com, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "open list:SECURITY SUBSYSTEM" 
-        <linux-security-module@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Thu, 11 Jun 2020 20:29:55 -0400
-In-Reply-To: <20200611195422.2117-1-maurizio.drocco@ibm.com>
-References: <20200611195422.2117-1-maurizio.drocco@ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-11_23:2020-06-11,2020-06-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
- mlxlogscore=999 suspectscore=0 impostorscore=0 cotscore=-2147483648
- mlxscore=0 malwarescore=0 bulkscore=0 clxscore=1015 priorityscore=1501
- lowpriorityscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006110174
+        Thu, 11 Jun 2020 20:31:16 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6632BC03E96F
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 17:31:16 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id z63so2523136pfb.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Jun 2020 17:31:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Ynp2Ywh0TeTSOhhf2AKkRBib7Iyqqnx9iZi2CH+BUCI=;
+        b=oqqdgIagHUplXQwh3jjLPuNuFgwozom5py97t6fCsmiZOq8/fv4dP9+MJgxl43mXvr
+         QaX6sN+IZnyzFc/n3w+Y7KKijtlKv2vLa9Jk+9BADSe83oALF69CYmhRFvO3r0pvAaK5
+         qsD4pvbeEv4nN5OUfK22rP8jHN3WfhXBXtQNbXVXUoc5FfH9bceomRRBmOhYXUCaxIwn
+         BuL6sJI8UF0bawkkdFJGigJ2F4NzmjCaXTvz9d4SmoPVC6wIV38tgWV8r1tBMk/QHi3i
+         d9dGsyvL/zcNmOYFWhaR3UMpfSqfPJc9M7gOCVOEBWsl6LCfm+fmzlgqKYktAvasOsIl
+         h6ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ynp2Ywh0TeTSOhhf2AKkRBib7Iyqqnx9iZi2CH+BUCI=;
+        b=XC0/sh4Og3kIDbUofXvzZRCe00MbI2iaW0DWVMisKlpCcFTQzk2ozRU1dKF1S/H+Q0
+         uUhFfgJiXRQLzRIcDe6bbeIc2J4C6Zj8bBI8bnrSn0J9+ByCL65cuMeAk0DbwqYpHA8r
+         /ebB+WmB4iEmNbCoCmowiy4b+NCCcrpuM4NJir16iv/Udy+Xoh8wK9228bkCF8OiXG1u
+         vrBM2TCVM6gTUJBD5ppoYBuvDGs3hUEey4T5dqTIrmSQ1e7NMI2tj5VHbZSWUcGmrBLA
+         +Rr7RPAvVSegT5JBdiZJCloc8vCeMjIM+hEXvK9xUcGgPr8djH0nf4KkPZB9vngI8J3O
+         /Elg==
+X-Gm-Message-State: AOAM533cN8AJUs01Fc340Moc6VmP0AjEZkpsMva8Uw+EqPCVJkw6frRP
+        Gn7/dfb7WY6qB3akvf6Zj0Q=
+X-Google-Smtp-Source: ABdhPJxcyJcM/ByQW/MIW6ihwmGi9lSpmej6qKyCH4YVIojXhzyJ5iHr4J9FyCeeOy3rh95fFAZnyQ==
+X-Received: by 2002:a62:fc86:: with SMTP id e128mr9855537pfh.133.1591921875669;
+        Thu, 11 Jun 2020 17:31:15 -0700 (PDT)
+Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
+        by smtp.gmail.com with ESMTPSA id y6sm4433379pfp.144.2020.06.11.17.31.14
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 11 Jun 2020 17:31:15 -0700 (PDT)
+Date:   Thu, 11 Jun 2020 17:31:04 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     lars@metafoo.de, perex@perex.cz, tiwai@suse.com,
+        lgirdwood@gmail.com, broonie@kernel.org, timur@kernel.org,
+        Xiubo.Lee@gmail.com, festevam@gmail.com,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [RFC PATCH v2 3/3] ASoC: fsl_asrc_dma: Reuse the dma channel if
+ available in Back-End
+Message-ID: <20200612003103.GA28228@Asurada-Nvidia>
+References: <cover.1591783089.git.shengjiu.wang@nxp.com>
+ <0473d4191ae04ab711d63c5c875e47f45f598137.1591783089.git.shengjiu.wang@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0473d4191ae04ab711d63c5c875e47f45f598137.1591783089.git.shengjiu.wang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maurizo,
-
-On Thu, 2020-06-11 at 15:54 -0400, Maurizio Drocco wrote:
-> IMA is not considering TPM registers 8-9 when calculating the boot
-> aggregate. When registers 8-9 are used to store measurements of the
-> kernel and its command line (e.g., grub2 bootloader with tpm module
-> enabled), IMA should include them in the boot aggregate.
+On Wed, Jun 10, 2020 at 06:05:49PM +0800, Shengjiu Wang wrote:
+> The dma channel has been requested by Back-End cpu dai driver already.
+> If fsl_asrc_dma requests dma chan with same dma:tx symlink, then
+> there will be below warning with SDMA.
 > 
-> Signed-off-by: Maurizio Drocco <maurizio.drocco@ibm.com>
-
-Looks good.  Just a minor comment below.  Could you be a bit more
-specific as to what is being measured into which PCR.  Perhaps include
-a reference to some doc or spec.
-
-In order to test, ima-evm-utils needs to be updated as well.  Could
-you post the corresponding evmctl change?  Please post the patch
-against the ima-evm-utils next-testing branch.
-
+> [   48.174236] fsl-esai-dai 2024000.esai: Cannot create DMA dma:tx symlink
+> 
+> or with EDMA the request operation will fail for EDMA channel
+> can only be requested once.
+> 
+> So If we can reuse the dma channel of Back-End, then the issue can be
+> fixed.
+> 
+> In order to get the dma channel which is already requested in Back-End.
+> we use the exported two functions (snd_soc_lookup_component_nolocked
+> and soc_component_to_pcm). If we can get the dma channel, then reuse it,
+> if can't, then request a new one.
+> 
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 > ---
->  security/integrity/ima/ima.h        |  2 +-
->  security/integrity/ima/ima_crypto.c | 11 ++++++++++-
->  2 files changed, 11 insertions(+), 2 deletions(-)
-> 
-> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-> index df93ac258e01..9d94080bdad8 100644
-> --- a/security/integrity/ima/ima.h
-> +++ b/security/integrity/ima/ima.h
-> @@ -30,7 +30,7 @@
+>  sound/soc/fsl/fsl_asrc_common.h |  2 ++
+>  sound/soc/fsl/fsl_asrc_dma.c    | 52 +++++++++++++++++++++++++--------
+>  2 files changed, 42 insertions(+), 12 deletions(-)
+
+> diff --git a/sound/soc/fsl/fsl_asrc_common.h b/sound/soc/fsl/fsl_asrc_common.h
+> index 77665b15c8db..09512bc79b80 100644
+> --- a/sound/soc/fsl/fsl_asrc_common.h
+> +++ b/sound/soc/fsl/fsl_asrc_common.h
+> @@ -32,6 +32,7 @@ enum asrc_pair_index {
+>   * @dma_chan: inputer and output DMA channels
+>   * @dma_data: private dma data
+>   * @pos: hardware pointer position
+> + * @req_dma_chan_dev_to_dev: flag for release dev_to_dev chan
+
+Since we only have dma_request call for back-end only:
++ * @req_dma_chan: flag to release back-end dma chan
+
+> diff --git a/sound/soc/fsl/fsl_asrc_dma.c b/sound/soc/fsl/fsl_asrc_dma.c
+> index d6a3fc5f87e5..5ecb77d466d3 100644
+> --- a/sound/soc/fsl/fsl_asrc_dma.c
+> +++ b/sound/soc/fsl/fsl_asrc_dma.c
+> @@ -160,6 +161,9 @@ static int fsl_asrc_dma_hw_params(struct snd_soc_component *component,
+>  		substream_be = snd_soc_dpcm_get_substream(be, stream);
+>  		dma_params_be = snd_soc_dai_get_dma_data(dai, substream_be);
+>  		dev_be = dai->dev;
+> +		component_be = snd_soc_lookup_component_nolocked(dev_be, SND_DMAENGINE_PCM_DRV_NAME);
+> +		if (component_be)
+> +			tmp_chan = soc_component_to_pcm(component_be)->chan[substream->stream];
+
+Should we use substream_be->stream or just substream->stream?
+
+And would be better to add these lines right before we really use
+tmp_chan because there's still some distance till it reaches that
+point. And would be better to have a line of comments too.
+
+> @@ -205,10 +209,14 @@ static int fsl_asrc_dma_hw_params(struct snd_soc_component *component,
+>  	 */
+>  	if (!asrc->use_edma) {
+>  		/* Get DMA request of Back-End */
+> -		tmp_chan = dma_request_slave_channel(dev_be, tx ? "tx" : "rx");
+> +		if (!tmp_chan) {
+> +			tmp_chan_new = dma_request_slave_channel(dev_be, tx ? "tx" : "rx");
+> +			tmp_chan = tmp_chan_new;
+
+This is a bit confusing...though I finally got it :)
+So probably better to have a line of comments.
+
+> @@ -220,9 +228,26 @@ static int fsl_asrc_dma_hw_params(struct snd_soc_component *component,
 >  
->  enum ima_show_type { IMA_SHOW_BINARY, IMA_SHOW_BINARY_NO_FIELD_LEN,
->  		     IMA_SHOW_BINARY_OLD_STRING_FMT, IMA_SHOW_ASCII };
-> -enum tpm_pcrs { TPM_PCR0 = 0, TPM_PCR8 = 8 };
-> +enum tpm_pcrs { TPM_PCR0 = 0, TPM_PCR8 = 8, TPM_PCR10 = 10 };
->  
->  /* digest size for IMA, fits SHA1 or MD5 */
->  #define IMA_DIGEST_SIZE		SHA1_DIGEST_SIZE
-> diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
-> index 220b14920c37..6f0137bdaf61 100644
-> --- a/security/integrity/ima/ima_crypto.c
-> +++ b/security/integrity/ima/ima_crypto.c
-> @@ -809,7 +809,7 @@ static void ima_pcrread(u32 idx, struct tpm_digest *d)
->  static int ima_calc_boot_aggregate_tfm(char *digest, u16 alg_id,
->  				       struct crypto_shash *tfm)
->  {
-> -	struct tpm_digest d = { .alg_id = alg_id, .digest = {0} };
-> +	struct tpm_digest d = { .alg_id = alg_id, .digest = {0} }, d0 = d;
->  	int rc;
->  	u32 i;
->  	SHASH_DESC_ON_STACK(shash, tfm);
-> @@ -830,6 +830,15 @@ static int ima_calc_boot_aggregate_tfm(char *digest, u16 alg_id,
->  		rc = crypto_shash_update(shash, d.digest,
->  					 crypto_shash_digestsize(tfm));
+>  		pair->dma_chan[dir] =
+>  			dma_request_channel(mask, filter, &pair->dma_data);
+> +		pair->req_dma_chan_dev_to_dev = true;
+>  	} else {
+> -		pair->dma_chan[dir] =
+> -			asrc->get_dma_channel(pair, dir);
+> +		/*
+> +		 * With EDMA, there is two dma channels can be used for p2p,
+> +		 * one is from ASRC, one is from another peripheral
+> +		 * (ESAI or SAI). Previously we select the dma channel of ASRC,
+> +		 * but find an issue for ideal ratio case, there is no control
+> +		 * for data copy speed, the speed is faster than sample
+> +		 * frequency.
+> +		 *
+> +		 * So we switch to use dma channel of peripheral (ESAI or SAI),
+> +		 * that copy speed of DMA is controlled by data consumption
+> +		 * speed in the peripheral FIFO.
+> +		 */
+
+This sounds like a different issue and should be fixed separately?
+If you prefer not to, better to move this one to commit log, other
+than having a changelog here, in my opinion.
+
+Since it no longer uses get_dma_channel() for EDMA case, we should
+update the comments at the top as well.
+
+> +		pair->req_dma_chan_dev_to_dev = false;
+> +		pair->dma_chan[dir] = tmp_chan;
+> +		if (!pair->dma_chan[dir]) {
+> +			pair->dma_chan[dir] = dma_request_slave_channel(dev_be, tx ? "tx" : "rx");
+> +			pair->req_dma_chan_dev_to_dev = true;
+> +		}
 >  	}
-> +	/* extend cumulative sha1 over tpm registers 8-9 */
-> +	for (i = TPM_PCR8; i < TPM_PCR10; i++) {
-> +		ima_pcrread(i, &d);
-> +		/* if not zero, accumulate with current aggregate */
-> +		if (memcmp(d.digest, d0.digest,
-> +					crypto_shash_digestsize(tfm) != 0))
 
-The formatting here is a bit off.
+Now there are some duplicated lines between these if-else routines, so
+combining my previous comments, we can do (sample change, not tested):
 
-thanks,
+@@ -197,18 +199,29 @@ static int fsl_asrc_dma_hw_params(struct snd_soc_component *component,
+ 	dma_cap_set(DMA_SLAVE, mask);
+ 	dma_cap_set(DMA_CYCLIC, mask);
+ 
++	/*
++	 * The Back-End device might have already requested a DMA channel,
++	 * so try to reuse it first, and then request a new one upon NULL.
++	 */
++	component_be = snd_soc_lookup_component_nolocked(dev_be, SND_DMAENGINE_PCM_DRV_NAME);
++	if (component_be)	// should probably error out if !component_be?
++		tmp_chan = be_chan = soc_component_to_pcm(component_be)->chan[substream->stream];
++	if (!tmp_chan)
++		tmp_chan = dma_request_slave_channel(dev_be, tx ? "tx" : "rx");
++
+ 	/*
+ 	 * An EDMA DEV_TO_DEV channel is fixed and bound with DMA event of each
+ 	 * peripheral, unlike SDMA channel that is allocated dynamically. So no
+-	 * need to configure dma_request and dma_request2, but get dma_chan via
+-	 * dma_request_slave_channel directly with dma name of Front-End device
++	 * need to configure dma_request and dma_request2, but get dma_chan of
++	 * Back-End device directly via dma_request_slave_channel.
+ 	 */
+ 	if (!asrc->use_edma) {
+ 		/* Get DMA request of Back-End */
+-		tmp_chan = dma_request_slave_channel(dev_be, tx ? "tx" : "rx");
+ 		tmp_data = tmp_chan->private;
+ 		pair->dma_data.dma_request = tmp_data->dma_request;
+-		dma_release_channel(tmp_chan);
++		/* Do not release tmp_chan if we are reusing the Back-End one */
++		if (!be_chan)
++			dma_release_channel(tmp_chan);
+ 
+ 		/* Get DMA request of Front-End */
+ 		tmp_chan = asrc->get_dma_channel(pair, dir);
+@@ -220,9 +233,11 @@ static int fsl_asrc_dma_hw_params(struct snd_soc_component *component,
+ 
+ 		pair->dma_chan[dir] =
+ 			dma_request_channel(mask, filter, &pair->dma_data);
++		pair->req_dma_chan = true;
+ 	} else {
+-		pair->dma_chan[dir] =
+-			asrc->get_dma_channel(pair, dir);
++		pair->dma_chan[dir] = tmp_chan;
++		/* Do not flag to release if we are reusing the Back-End one */
++		pair->req_dma_chan = !be_chan;
+ 	}
+ 
+ 	if (!pair->dma_chan[dir]) {
 
-Mimi
+> @@ -273,19 +299,21 @@ static int fsl_asrc_dma_hw_params(struct snd_soc_component *component,
+>  static int fsl_asrc_dma_hw_free(struct snd_soc_component *component,
+>  				struct snd_pcm_substream *substream)
+>  {
+> +	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
+>  	struct snd_pcm_runtime *runtime = substream->runtime;
+>  	struct fsl_asrc_pair *pair = runtime->private_data;
+> +	u8 dir = tx ? OUT : IN;
+>  
+>  	snd_pcm_set_runtime_buffer(substream, NULL);
+>  
+> -	if (pair->dma_chan[IN])
+> -		dma_release_channel(pair->dma_chan[IN]);
+> +	if (pair->dma_chan[!dir])
+> +		dma_release_channel(pair->dma_chan[!dir]);
+>  
+> -	if (pair->dma_chan[OUT])
+> -		dma_release_channel(pair->dma_chan[OUT]);
+> +	if (pair->dma_chan[dir] && pair->req_dma_chan_dev_to_dev)
+> +		dma_release_channel(pair->dma_chan[dir]);
 
-> +			rc = crypto_shash_update(shash, d.digest,
-> +					crypto_shash_digestsize(tfm));
-> +	}
->  	if (!rc)
->  		crypto_shash_final(shash, digest);
->  	return rc;
-
+Why we only apply this to one direction?
