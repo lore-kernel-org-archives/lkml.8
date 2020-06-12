@@ -2,194 +2,110 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD1E3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 03:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 105B9C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 03:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A70E320878
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 03:26:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591932401;
-	bh=HR8RVi4akUBWyDcQsxs2TtLmSm4GKbNLfDmkTSvwbtc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=aLzghmP3v/jvUUNh/+R891HtZLi3Lc1Ppnm6Ure2ymDRUhhOHJddH6tWC0P3b8DLP
-	 bYUYi3qcyipHKH2DrCGXX5FejsnflBxw7lUaG+lxXnZqQV/m1C7640+CSOp34r1QH9
-	 zL2FUZR5i8J4WTVRFwRH5YFvcNCZ5pFIHqq8L2fM=
+	by mail.kernel.org (Postfix) with ESMTP id E16AC20878
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 03:29:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WL6U4IPj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726405AbgFLD0k (ORCPT
+        id S1726473AbgFLD34 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Jun 2020 23:26:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35900 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726321AbgFLD0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Jun 2020 23:26:40 -0400
-Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D98E20878;
-        Fri, 12 Jun 2020 03:26:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591932399;
-        bh=HR8RVi4akUBWyDcQsxs2TtLmSm4GKbNLfDmkTSvwbtc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=mZ4ICSiXB6Y1Il8ydBYWtJMp0WqUkwzGn6g5Jf5hn1QKvz+beqJHZWAWHnUmYVM1A
-         o+QY69JBL554R1nZkQfL4IW3EWWMHpU8GikXvOZ3lG/njlcgtuByK0HFjvUKbEhirj
-         S6796C79/4V0/Vy57Pimq6H02N0tZNOrx1tedHio=
-From:   Andy Lutomirski <luto@kernel.org>
-To:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Cc:     Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH] x86/entry: Treat BUG/WARN as NMI-like entries
-Date:   Thu, 11 Jun 2020 20:26:38 -0700
-Message-Id: <f8fe40e0088749734b4435b554f73eee53dcf7a8.1591932307.git.luto@kernel.org>
-X-Mailer: git-send-email 2.25.4
+        Thu, 11 Jun 2020 23:29:56 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:59270 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726332AbgFLD34 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Jun 2020 23:29:56 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05C3NMO1116572;
+        Fri, 12 Jun 2020 03:29:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=3r/RFyunZuTefVau6GRBcKb6mgNqSQqMP2oHRrS/4LU=;
+ b=WL6U4IPjmtDQuEekJhKmta2nvIGEmMSRlZu+xJtd1BDk8o8JUoDRjLc97bGZfPhHp8yj
+ SX8xI2+IZmMiujumSfqgcrLuQvDsjyrmwSIEg7rrJinZN5NqW/7ESPZqNhGT7CkuLQmi
+ fNQgnJbcTucwgD1REL+tooy0smwpL7vdnp01worxGjUMV3wOtXbQIhVfPjyMUwJ7xCpj
+ wOIw2rFaMiNTnxPd6wvY4pJENY/rgG2CYJ58jhG2sQ9XasTC/iPPDPJq1XBX+sKUeZDQ
+ GrdxFiXdQbNX8y5Lzpke5clp21xsZ9MYTipjwDpWZ1nPuvWChWe+k4KVFY6Rl1j/YBMN yQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 31g2jrk0ge-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 12 Jun 2020 03:29:37 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05C3MtIB154197;
+        Fri, 12 Jun 2020 03:29:37 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 31m1rhgnke-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 12 Jun 2020 03:29:36 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05C3TYtc008852;
+        Fri, 12 Jun 2020 03:29:34 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 11 Jun 2020 20:29:33 -0700
+Date:   Thu, 11 Jun 2020 23:29:59 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Sistare <steven.sistare@oracle.com>
+Subject: Re: [PATCH v2] x86/mm: use max memory block size on bare metal
+Message-ID: <20200612032959.yo43ydg273zu35lx@ca-dmjordan1.us.oracle.com>
+References: <20200609225451.3542648-1-daniel.m.jordan@oracle.com>
+ <dc869b25-db3c-8c68-3278-8688c5288632@intel.com>
+ <20200611165910.6dwd3c7z5brimjbm@ca-dmjordan1.us.oracle.com>
+ <adcd3359-a90b-ab62-60e1-102277533e11@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <adcd3359-a90b-ab62-60e1-102277533e11@intel.com>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9649 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 bulkscore=0
+ malwarescore=0 mlxlogscore=999 spamscore=0 suspectscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006120025
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9649 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
+ cotscore=-2147483648 priorityscore=1501 spamscore=0 suspectscore=0
+ lowpriorityscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0 mlxscore=0
+ phishscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006120025
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If we BUG or WARN in a funny RCU context, we cleverly optimize the
-BUG/WARN using the ud2 hack, which takes us through the
-idtentry_enter...() paths, which might helpfully WARN that the RCU
-context is invalid, which results in infinite recursion.
+On Thu, Jun 11, 2020 at 10:05:38AM -0700, Dave Hansen wrote:
+> One other nit for this.  We *do* have actual hardware hotplug, and I'm
+> pretty sure the alignment guarantees for hardware hotplug are pretty
+> weak.  For instance, the alignment guarantees for persistent memory are
+> still only 64MB even on modern platforms.
+>
+> Let's say we're on bare metal and we see an SRAT table that has some
+> areas that show that hotplug might happen there.  Is this patch still
+> ideal there?
 
-Split the BUG/WARN handling into an nmi_enter()/nmi_exit() path in
-exc_invalid_op() to increase the chance that we survive the
-experience.
+Well, not if there's concern about hardware hotplug.
 
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
----
-
-This is not as well tested as I would like, but it does cause the splat
-I'm chasing to display a nice warning instead of causing an undebuggable
-stack overflow.
-
-(It would have been debuggable on x86_64, but it's a 32-bit splat, and
-x86_32 doesn't have ORC.)
-
- arch/x86/kernel/traps.c | 61 +++++++++++++++++++++++------------------
- arch/x86/mm/extable.c   | 15 ++++++++--
- 2 files changed, 48 insertions(+), 28 deletions(-)
-
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index cb8c3d26cdf5..6340b12a6616 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -98,24 +98,6 @@ int is_valid_bugaddr(unsigned long addr)
- 	return ud == INSN_UD0 || ud == INSN_UD2;
- }
- 
--int fixup_bug(struct pt_regs *regs, int trapnr)
--{
--	if (trapnr != X86_TRAP_UD)
--		return 0;
--
--	switch (report_bug(regs->ip, regs)) {
--	case BUG_TRAP_TYPE_NONE:
--	case BUG_TRAP_TYPE_BUG:
--		break;
--
--	case BUG_TRAP_TYPE_WARN:
--		regs->ip += LEN_UD2;
--		return 1;
--	}
--
--	return 0;
--}
--
- static nokprobe_inline int
- do_trap_no_signal(struct task_struct *tsk, int trapnr, const char *str,
- 		  struct pt_regs *regs,	long error_code)
-@@ -191,13 +173,6 @@ static void do_error_trap(struct pt_regs *regs, long error_code, char *str,
- {
- 	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
- 
--	/*
--	 * WARN*()s end up here; fix them up before we call the
--	 * notifier chain.
--	 */
--	if (!user_mode(regs) && fixup_bug(regs, trapnr))
--		return;
--
- 	if (notify_die(DIE_TRAP, str, regs, error_code, trapnr, signr) !=
- 			NOTIFY_STOP) {
- 		cond_local_irq_enable(regs);
-@@ -242,9 +217,43 @@ static inline void handle_invalid_op(struct pt_regs *regs)
- 		      ILL_ILLOPN, error_get_trap_addr(regs));
- }
- 
--DEFINE_IDTENTRY(exc_invalid_op)
-+DEFINE_IDTENTRY_RAW(exc_invalid_op)
- {
-+	bool rcu_exit;
-+
-+	/*
-+	 * Handle BUG/WARN like NMIs instead of like normal idtentries:
-+	 * if we bugged/warned in a bad RCU context, for example, the last
-+	 * thing we want is to BUG/WARN again in the idtentry code, ad
-+	 * infinitum.
-+	 */
-+	if (!user_mode(regs) && is_valid_bugaddr(regs->ip)) {
-+		enum bug_trap_type type;
-+
-+		nmi_enter();
-+		instrumentation_begin();
-+		type = report_bug(regs->ip, regs);
-+		instrumentation_end();
-+		nmi_exit();
-+
-+		if (type == BUG_TRAP_TYPE_WARN) {
-+			/* Skip the ud2. */
-+			regs->ip += LEN_UD2;
-+			return;
-+		}
-+
-+		/*
-+		 * Else, if this was a BUG and report_bug returns or if this
-+		 * was just a normal #UD, we want to continue onward and
-+		 * crash.
-+		 */
-+	}
-+
-+	rcu_exit = idtentry_enter_cond_rcu(regs);
-+	instrumentation_begin();
- 	handle_invalid_op(regs);
-+	instrumentation_end();
-+	idtentry_exit_cond_rcu(regs, rcu_exit);
- }
- 
- DEFINE_IDTENTRY(exc_coproc_segment_overrun)
-diff --git a/arch/x86/mm/extable.c b/arch/x86/mm/extable.c
-index b991aa4bdfae..1d6cb07f4f86 100644
---- a/arch/x86/mm/extable.c
-+++ b/arch/x86/mm/extable.c
-@@ -204,8 +204,19 @@ void __init early_fixup_exception(struct pt_regs *regs, int trapnr)
- 	if (fixup_exception(regs, trapnr, regs->orig_ax, 0))
- 		return;
- 
--	if (fixup_bug(regs, trapnr))
--		return;
-+	if (trapnr == X86_TRAP_UD) {
-+		if (report_bug(regs->ip, regs) == BUG_TRAP_TYPE_WARN) {
-+			/* Skip the ud2. */
-+			regs->ip += LEN_UD2;
-+			return;
-+		}
-+
-+		/*
-+		 * If this was a BUG and report_bug returns or if this
-+		 * was just a normal #UD, we want to continue onward and
-+		 * crash.
-+		 */
-+	}
- 
- fail:
- 	early_printk("PANIC: early exception 0x%02x IP %lx:%lx error %lx cr2 0x%lx\n",
--- 
-2.25.4
-
+My assumption going in was that this wasn't a problem in practice.
+078eb6aa50dc50 ("x86/mm/memory_hotplug: determine block size based on the end
+of boot memory") was merged in 2018 to address qemu hotplug failures and >64G
+systems have used a 2G block since 2014 with no complaints about alignment
+issues, to my knowledge anyway.
