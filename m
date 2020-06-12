@@ -2,134 +2,220 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE134C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC5AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD15F20836
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:31:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B949207ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 16:32:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="osPVkyY/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="olJfsyXk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726343AbgFLQby (ORCPT
+        id S1726352AbgFLQci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 12:31:54 -0400
-Received: from mail-dm6nam10on2048.outbound.protection.outlook.com ([40.107.93.48]:26720
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726089AbgFLQbx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 12:31:53 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RxuUZ6daiwQDdxwjUiIg4iXqjYs8YvYBYF36j9W+fj2GOOxOK6BZE/Hriw0hXRYtNpfJgfc36nKGv3gp8Sjryr1SRTT2AZQWRuWt694P5/N88Law8KjYOZyTLXpkjLC3DEyWr0v09++jEADWIzbfYHIYQh8ZVDPO0VjKIKVi9wuVU6HyIFT9de/DOKll3eeZB7/TLUT+A9hZ0kV9oejrsWO7jwZZJcXU4hUzN/P1A2UG4Zv6fZmuHhFTcNL6SOGnRtf9yP/uLVbPUT1RXqfiYGbkux9duVM/YWiybuij2OxQsWuiKxsbUhEwm548VrkgpzhMpbtaiTUtctOxAsswZA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QWYCOq5ichBtzOcLqhLn9mA0IaPvK6Mx+89H2sEAqRs=;
- b=CsH+nKu71+0j+prR/TA/34VULpbw5J0ZGzA+Iw3ZHD4MV2+O16MKfjGXeJyT6MQ9qc3Pcqcx6JsrvkTTyug9v1plsNnmLnPuBjGJTNKoX5sFA3Lu4NbR7Nj0kJNm4KQL1Z6oRBi/kXFe1ihjLfpISDpDSP/I609jlNOLfSk0C09DfzwxwFlfxw2zFUyafQwtwiFZ9NEyFHVokG/4k5Uza5xI6hCUdynJtnMrttTXsYeDPwL88n/1x9Nd92LBCCwQy6m/g3NLKEp60gRe2DhpoOdSbbw105qm4DQsy7dT2Lr7mLhMeTglPZZnh1Nupt4bYdUFOYg2hgOgONgOoF96Ww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Fri, 12 Jun 2020 12:32:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46690 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbgFLQch (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 12:32:37 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3157C03E96F;
+        Fri, 12 Jun 2020 09:32:36 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id c17so11750887lji.11;
+        Fri, 12 Jun 2020 09:32:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QWYCOq5ichBtzOcLqhLn9mA0IaPvK6Mx+89H2sEAqRs=;
- b=osPVkyY/yZH+W0rcRMP48CDg8fItt3xo1BE7fHVbmtGhZmN48DGpvA9w1O7flVi9HZ/qIttU1M5YT9H5b2MLl9xGArjOswhH+BhfQiALyHX3nxNGGmBsy9r373cJey7twpxCsmIM0kPdTmwGgNpu7SXCUFLndW+DYRTATSheF+s=
-Authentication-Results: amd.com; dkim=none (message not signed)
- header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
-Received: from DM5PR12MB1337.namprd12.prod.outlook.com (2603:10b6:3:6e::11) by
- DM6PR12MB2940.namprd12.prod.outlook.com (2603:10b6:5:15f::19) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3066.18; Fri, 12 Jun 2020 16:31:51 +0000
-Received: from DM5PR12MB1337.namprd12.prod.outlook.com
- ([fe80::f51a:1689:5079:c01b]) by DM5PR12MB1337.namprd12.prod.outlook.com
- ([fe80::f51a:1689:5079:c01b%11]) with mapi id 15.20.3088.025; Fri, 12 Jun
- 2020 16:31:50 +0000
-From:   Akshu Agrawal <akshu.agrawal@amd.com>
-Cc:     akshu.agrawal@amd.com, yuhsuan@chromium.org,
-        albertchen@realtek.com, derek.fang@realtek.com,
-        Oder Chiou <oder_chiou@realtek.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        alsa-devel@alsa-project.org (moderated list:SOUND - SOC LAYER / DYNAMIC
-        AUDIO POWER MANAGEM...), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] ASoC: rt5682: Register clocks even when mclk is NULL
-Date:   Fri, 12 Jun 2020 22:01:11 +0530
-Message-Id: <20200612163111.11730-1-akshu.agrawal@amd.com>
-X-Mailer: git-send-email 2.20.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MAXPR01CA0098.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:5d::16) To DM5PR12MB1337.namprd12.prod.outlook.com
- (2603:10b6:3:6e::11)
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=h9/hD+5cr+kQsdI9njfbrV+8m68DT/RHAyph11Pyn1Q=;
+        b=olJfsyXkiyvlLDR7lSo1KdmY4DZdXJE7J/mW0weHajgKJxOAjRApOVlkbPFmjSCtm0
+         Ufdb0JxuLgMClwlxM91aHd4i+w+wqXL7iq2fZkMOXyPJRbPlk8INeEUXpPy2v+stgdW9
+         vEJE8kVQvNQ0MKOfMWc3V01Unx/AJP6qy5g2+tQtJImaiipysuvGBR3Y3ILr+hOJ0jnq
+         zncaH18PUZRs1nhTob0OMYzc8C1PMXyVNoqHqNgvw3dnrm2iQFIb235Xa5DgMbYEnj6l
+         mRdzYTTduYp3yE8BfLDCm0gM4VrUXL97cT77nUkNiiYOFptO1rTOEGq0SyZDhLnO8tKp
+         me8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=h9/hD+5cr+kQsdI9njfbrV+8m68DT/RHAyph11Pyn1Q=;
+        b=LylZ57TunUdlaxdmPR2BVyqzZk2jNIYzXShV1Ib7uQlyecA7QMae0+2a17haxMh6eo
+         sVpimSiqA0lgvzip+iclKdBdJdgUz7cELQ3xzCecAUKP53eXkfEVX9HZfKgIeCaP+u2W
+         0TWsDOLb81YLjgna3qMINkLo+cyRLvZiyiona2DqhUneXwVh4ZemDNvpFrG1ZCSfAWiF
+         Vl9AWgw38t6hZBea6RpIrmDJPPw2Y9ic3zzkC3fDxEf2C6RY9Pgfq5EwpANsnaJd/KUH
+         w4wHymbdykAMLEW/NKYwpaFyPRPzsApQb08j49wbqd1FztZI562L/BFEJHGuetAot0wT
+         EU1w==
+X-Gm-Message-State: AOAM530PsbEQnAS1tauU0jfMv6xuspE/5pdnT2Xi3fci2dn3jVyt2MUz
+        bOC5dd6ITRPzJOc0/irjYVNV/TFC
+X-Google-Smtp-Source: ABdhPJw9NmR9vxMcwTecHWidsvl8CKA5zjxXH1L93pZrVmPeuI/wK9rkSyMZEqFzOC4GurWwS0l0pA==
+X-Received: by 2002:a2e:b0d0:: with SMTP id g16mr7594005ljl.130.1591979554907;
+        Fri, 12 Jun 2020 09:32:34 -0700 (PDT)
+Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
+        by smtp.googlemail.com with ESMTPSA id y21sm1793100ljy.74.2020.06.12.09.32.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Jun 2020 09:32:34 -0700 (PDT)
+Subject: Re: [PATCH v10 0/2] Panel rotation patches
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Sean Paul <sean@poorly.run>,
+        "dbasehore ." <dbasehore@chromium.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+References: <20200306002112.255361-1-dbasehore@chromium.org>
+ <ecbfb5f8-615a-4a88-5dac-de17158125bf@gmail.com>
+ <CAGAzgsqpjZxh7PEL_Dy7HrFeFGm7+=F6cL3QG9KmK9CHvDWZ9g@mail.gmail.com>
+ <6dc9ef16-9671-6ce8-27e6-aa1f4c009ee2@gmail.com>
+ <CAGAzgsrNrq+S+-5KEFVnJn6S5DRn1fKkToD5=KR911T9AOAF-w@mail.gmail.com>
+ <736ad1d2-4a28-87e8-62f7-28a5582c9fcf@gmail.com>
+ <CAMavQKJtbha_o==X+MX6GmjfAMYvdLyubvCFg48Tbn1mdgo40w@mail.gmail.com>
+ <fa443308-7610-9060-68eb-e14e446dd4bf@gmail.com>
+Message-ID: <cbfbe9dd-3340-2f90-c505-66a57031e620@gmail.com>
+Date:   Fri, 12 Jun 2020 19:32:32 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from akshu-HP-EliteBook-745-G4.dlink.router (122.171.36.38) by MAXPR01CA0098.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:5d::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.19 via Frontend Transport; Fri, 12 Jun 2020 16:31:40 +0000
-X-Mailer: git-send-email 2.20.1
-X-Originating-IP: [122.171.36.38]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: e9e914be-eb8b-47da-4bfd-08d80eee1bb6
-X-MS-TrafficTypeDiagnostic: DM6PR12MB2940:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB29403800A3F1DC975444AFD9F8810@DM6PR12MB2940.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
-X-Forefront-PRVS: 0432A04947
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 5I3nuFhni4pPxhajP9ItJfMXf0bVCJGuFfYbY3ssiRApIgOG4cDNgDn+xSmw9C/i+7AmCAzvldDEyNesAoETLjMXpNXVH10wl6WzZ0koqfHO9jAUUK08bWuTRoHPTB6prJN1X8kBlHjnxFTF3wT2XsVzGWwhu8Q7iRkPO7z+EO9I996GoNYM8Vw4KHAU39gFNeg2pgsesb0x/1SMFKYOagwJ4wHzhDbhUcoz8swXWLQUmOqUHhu9qwQMnveFGr5B2ObFHf2m59EJGtMPXiN6wiIyPNaWEWcanmkV0QY6fw3YQgn1/EtBlm1PQSfOI58OIW4w659ZPp04kALSoVE7KDpBy5/OZftubM/kXKCALUWKhqkHnt3GO1tQenffXTEe
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1337.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(366004)(346002)(376002)(136003)(6666004)(52116002)(6486002)(5660300002)(4326008)(956004)(2616005)(36756003)(44832011)(186003)(16526019)(83380400001)(66476007)(478600001)(6506007)(6512007)(4744005)(2906002)(86362001)(66946007)(54906003)(66556008)(26005)(8676002)(316002)(7416002)(1076003)(109986005)(8936002)(266003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: nNZTm48gi20vh6OGaWXQpRiPN4HYGnourdWuW7J/mkSI7DH/hnHHUdigdb/+sdDczfwvr8zhHkyyHV/nirjANz7WgOv0d0n/lHdOjJrz0ZKutSileBJm0eo/SLRfWoPugoTl+SVaA/jpZqbYjMQmWP5HJPhC7B9iR91Q4/P/ahfxJs0hYJEkiyTtcbsgj7CXJAhAo3yJD8DAutC5j5eBYWx5nbIA8QUfViTD9B6Hl1Q34rqpDlx+CUl4MBoRVbPjRy03u7UCjbaJnpldM1lavQrobm4g5Jgx+anzUASAaD5TKjPx19ehD6yI/dlaEItHd/VOeE5e8BGmwbFp8AwZObd2ZRQyZsyjj4y8+CGSvLrhHIaAPLbK2Arrt3kmH8M4ySzJAsR3RPp0VU3rZ3qDKEEyDIXG3RFS0Jot3dcbGqJbaVfZMrDoVHe7ixt4Mi4DY54Qx30EDxTIY+6c/AouAQMNS0VT51KUh6/dunvXbbg=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e9e914be-eb8b-47da-4bfd-08d80eee1bb6
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2020 16:31:50.7860
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hbosULiYIpiCcKiQpJWLVVrAjD47Dwy78e8yaqbmD37T56gKzhJ/Y2Qgk/36fXyRwklZesjKHFCfEjSM4m2ADg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2940
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <fa443308-7610-9060-68eb-e14e446dd4bf@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes kernel crash on platforms which do not have mclk exposed
-in CCF framework. For these platforms have mclk as NULL and
-continue to register clocks.
+18.05.2020 10:36, Dmitry Osipenko пишет:
+> 12.05.2020 23:59, Sean Paul пишет:
+>> On Thu, Apr 16, 2020 at 7:03 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+>>>
+>>> 15.04.2020 00:32, dbasehore . пишет:
+>>>> On Tue, Apr 14, 2020 at 2:18 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+>>>>>
+>>>>> 14.04.2020 22:32, dbasehore . пишет:
+>>>>>> Hi Dmitry, sorry for the late reply.
+>>>>>>
+>>>>>> On Sun, Mar 8, 2020 at 12:25 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+>>>>>>>
+>>>>>>> 06.03.2020 03:21, Derek Basehore пишет:
+>>>>>>>> This adds the plumbing for reading panel rotation from the devicetree
+>>>>>>>> and sets up adding a panel property for the panel orientation on
+>>>>>>>> Mediatek SoCs when a rotation is present.
+>>>>>>>
+>>>>>>> Hello Derek and everyone,
+>>>>>>>
+>>>>>>> I'm looking at adding display rotation support to NVIDIA Tegra DRM
+>>>>>>> driver because some devices have display panel physically mounted
+>>>>>>> upside-down, and thus, display controller's scan-out needs to be rotated
+>>>>>>> by 180° in this case.
+>>>>>>>
+>>>>>>> Derek, yours panel-rotation patches add support for assigning panel's
+>>>>>>> orientation to the connector, but then only primary display plane
+>>>>>>> receives rotation value in [1], while rotation needs to be applied to
+>>>>>>> all available overlay/cursor planes and this should happen in other
+>>>>>>> places than [1] as well.
+>>>>>>
+>>>>>> This is intended. We don't correct the output in the kernel. We
+>>>>>> instead rely on notifying userspace that the panel is rotated, then we
+>>>>>> handle it there.
+>>>>>>
+>>>>>>>
+>>>>>>> [1] drm_client_modeset_commit_atomic()
+>>>>>>>
+>>>>>>> Please also note that in a case of the scan-out rotation, plane's
+>>>>>>> coordinates need to be changed in accordance to the display's rotation.
+>>>>>>>
+>>>>>>> I looked briefly through the DRM code and my understanding that the DRM
+>>>>>>> core currently doesn't support use-case where scan-out needs to rotated
+>>>>>>> based on a panel's orientation, correct? Is it the use-case you're
+>>>>>>> working on for the Mediatek driver?
+>>>>>>
+>>>>>> Yes, we rely on userspace to rotate the output. The major reason for
+>>>>>> this is because there may not be a "free" hardware rotation that can
+>>>>>> be applied to the overlay. Sean Paul and others also preferred that
+>>>>>> userspace control what is output to the screen instead of the kernel
+>>>>>> taking care of it. This code just adds the drm property to the panel.
+>>>>>>
+>>>>>
+>>>>> Could you please explain what that userspace is?
+>>>>
+>>>> This was added for Chrome OS, which uses its own graphics stack,
+>>>> Ozone, instead of Xorg.
+>>>>
+>>>
+>>> Thank you very much for the clarification.
+>>>
+>>> It's probably not a big problem for something monolithic and customized
+>>> like ChromeOS to issue a software update in order to take into account
+>>> all specifics of a particular device, but this doesn't work nicely for a
+>>> generic software, like a usual Linux distro.
+>>>
+>>>>> AFAIK, things like Xorg modesetting don't support that orientation property.
+>>>
+>>> In my case it's not only the display panel which is upside-down, but
+>>> also the touchscreen. Hence both display output and touchscreen input
+>>> need to be rotated at once, otherwise you'll end up with either display
+>>> or input being upside-down.
+>>>
+>>> The 180° rotation should be free on NVIDIA Tegra. There are no known
+>>> limitations for the planes and BSP kernel video driver handles the
+>>> plane's coordinates/framebuffer rotation within the driver.
+>>>
+>>> The kernel's input subsystem allows us to transparently (for userspace)
+>>> remap the touchscreen input (by specifying generic touchscreen
+>>> device-tree properties), while this is not the case for the DRM subsystem.
+>>>
+>>> @Thierry, @Sean, @Daniel, could you please help me to understand how a
+>>> coordinated display / input rotation could be implemented, making the
+>>> rotation transparent to the user (i.e. avoiding xorg.conf hacking and
+>>> etc)? It should be nice if display's output could be flipped within the
+>>> DRM driver, hiding this fact from userspace.
+>>
+>> I think the right thing to do is to fix userspace to respect this
+>> property, since that has the most communal benefit.
+> 
+> Hello Sean,
+> 
+> This will be ideal, but it's difficult to achieve in a loosely
+> controlled userspace environment.
+> 
+>> However(!!) if you don't want to do that, how about inspecting the
+>> info->panel_orientation value after drm_panel_attach in tegra driver
+>> and then adjusting rotation values in the driver. Of course, you
+>> wouldn't want to expose the panel orientation property since you don't
+>> want userspaces to be double-rotating on you, but it's optional so
+>> you'd be fine.
+> 
+> Thank you very much for the suggestion, I'll be trying it out soon.
+> 
+>>>
+>>> Will it be okay if we'll add a transparent-rotation support specifically
+>>> to the Tegra DRM driver? For example if device-tree contains
+>>> nvidia,display-flip-y property, then the Tegra DRM driver will take care
+>>> of rotating coordinates/framebuffer of the display planes.
+>>
+>> I don't think this is necessary, but it also wouldn't really be
+>> appropriate to put software attributes into devicetree anyways.
+> 
+> Yes, I'm also not feeling very excited about this variant.
+> 
 
-Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
----
- sound/soc/codecs/rt5682.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+After some consideration, I decided that it will be better to start easy
+by supporting the minimum needed for the rotation property to work on
+Tegra, i.e. having userspace to take care of the rotation. It will be
+possible to change it later on if will be necessary.
 
-diff --git a/sound/soc/codecs/rt5682.c b/sound/soc/codecs/rt5682.c
-index d3245123101d..7c8b8d839db8 100644
---- a/sound/soc/codecs/rt5682.c
-+++ b/sound/soc/codecs/rt5682.c
-@@ -2829,12 +2829,11 @@ static int rt5682_probe(struct snd_soc_component *component)
- 				return ret;
- 			}
- 			rt5682->mclk = NULL;
--		} else {
--			/* Register CCF DAI clock control */
--			ret = rt5682_register_dai_clks(component);
--			if (ret)
--				return ret;
- 		}
-+		/* Register CCF DAI clock control */
-+		ret = rt5682_register_dai_clks(component);
-+		if (ret)
-+			return ret;
- 		/* Initial setup for CCF */
- 		rt5682->lrck[RT5682_AIF1] = CLK_48;
- #endif
--- 
-2.20.1
-
+@dbasehore, I'll prepare Tegra DRM patchset around Monday and will
+include yours two patches that add DT reading helper and set the display
+info, since these patches haven't been applied yet.
