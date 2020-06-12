@@ -2,322 +2,122 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ADE2C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD94C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56F682063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:36:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE13B2063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:42:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="EfDVx8jg"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="PKazNnre"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726468AbgFLTgC (ORCPT
+        id S1726340AbgFLTmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 15:36:02 -0400
-Received: from mail-dm6nam12on2057.outbound.protection.outlook.com ([40.107.243.57]:6196
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        Fri, 12 Jun 2020 15:42:13 -0400
+Received: from mail-eopbgr140079.outbound.protection.outlook.com ([40.107.14.79]:50070
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726268AbgFLTgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 15:36:01 -0400
+        id S1726268AbgFLTmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 15:42:13 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UUsGyEGbIrGmDkbpiqvp8In2yJqQ+pnrArZATfO7ZcWkK+kEoElwL8hvOSMut+DUggd8G7VOQh9VJiH8L23PNQEVdltX20afJVK1r/BLVGrojTm5uBJS+8MZzflAAzyJxRpCQ7U9LkP+qEtNzRHJUS7YBpiofLuhYwt4uIUO1w3YaMZjFk8XAejpM0BAZY5iyP+uDFvelaRadn8dR30EQte6H+c5Ky8Tgg+WLxtJbRBAlsu967wH5Vg3gyGs/nJ8DOIvihXgFym6WlbUEomrVBPjUEclQz1hISZ5OVpnM50Rf343fNfA4JQoY4nTvH8h3keMHRXTcyrrjEZ8Fu54ig==
+ b=MYQgeM1rYJEDpLVNRcdbcufhvA487k5Lb7PDRGyMhj/kqscqiJyn6+E7yP9uBnFv8DTdootkbgV9rZS9HkyqofJ+eNzTriwMv2MNcnM6cHF4fsiCZLMtgzVWhg8alEEL4CYE9nijF3pEMOSNmsfu5LGuFaYbLExolNNyJwxhiUTvQAn0ljzcA2h/15Y/JGx9XiaLVzEvV+s38hpe4gu+a7IIMVefvOMAQetLHaS+eBcsLZyJ80sbWxteW2qufWiXvbyArM4+ymxK7Pxmmuofp+2IpzdcrgQaa9bHKOKCsMMt9QsFGWh8JdNvHW8vI+TKNXYyVriwAj/yDz6BR+r8Yw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xrF5/SgF2yGrOcQcjbSE0dGk8/OrJyTLprvA0PjDbcM=;
- b=ec4u+9FbWoN4ZRtsMdhGzJUeYtn8fvUaeORwZTcxn16jtHX3A3+ecXfRUo6sMMKdpxQ8nYGx1E4JfQeT8kB5lYFjoyuMUTKlJpOGfpPp+CxXjz0FcYR7UqCmPFZd/PDbPcAhPSCpzRll94D3KFK69ZwQAHgqA3HiitBOkMSvFGoO/97L4N20lBiJIVOsnTr/aBOH6hGhydv98DNMlmlN1kyzi9vVx6Uilx+Fqa+I+wG8RGL2nxdMRPWmzdVYeyQFppGJwvgGP5wtyzWsMnUwTKu0yY0OJI2AhuTZWPBoT7SuD1me05Z/2CL1qt9vXUOa748utFbVFfhx6DCSS5HBRA==
+ bh=RxnfKGk2mLU+hg+gZW4GRIXObNuTdVcfuRM4I9Rd4C0=;
+ b=grykfotrxNoNRizQ4/MCRMAtSVKPwsJPhYeEl6VIRQHZ8dRw2VUWJeGTZaH80bjIemC6ncf/DGFnmo3gbRGlvpUaViJZqUFRW8CbVxC+Aph7+gZ883mAEtDHS0DGvdJeBynJZYV2srDB6bX3Zoe8EzDmYTYOw2QvCgPvAEMwMKsr8ZialYzpSmcH4mm8HFCoBUhlf6SHy7H5meuqcRz3ollRGkQ6yEhJW9aqayiByzdFvG8FwYhl8qHiMHtuKmB93i7LSgcvUuSzRZFzIf5+zbFd2/5xjpvSaxesjNlQh27rZpoGudfpA05nnyY4Uav/XbAXXxjRQqxmV2netp0uBA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xrF5/SgF2yGrOcQcjbSE0dGk8/OrJyTLprvA0PjDbcM=;
- b=EfDVx8jgX/TQ4WL9OEkoBK2MIiUzxDSlwYKgJ7YLfMfs7NsMPUUSloWSxbsj0LmMDDVgVNQ5dMM7RPBeBIrv8kAXOWsjfPQovF90OMyy6HdRzapEi8ToOJQ04gA+ou+VBGk7bwtaikMGAD3SpeKQ/uiP/QssgI0tk9z9E72adWo=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
-Received: from SN1PR12MB2560.namprd12.prod.outlook.com (2603:10b6:802:26::19)
- by SA0PR12MB4526.namprd12.prod.outlook.com (2603:10b6:806:98::23) with
+ bh=RxnfKGk2mLU+hg+gZW4GRIXObNuTdVcfuRM4I9Rd4C0=;
+ b=PKazNnredjuuCrQeBnKGMLxso976FvVGjJhy2ZegdhbX2i8O9LUkVa7uk6R11zxEVBkGstsQ8Bphb+z64ws/S4R1D96dYSC2BnXNbOnngW7YirfshiUH5SbUD7rZFBF9btxL/IjVeL3bzKa7Gky6M0jMhkhpSWqE867Cntv8nkY=
+Authentication-Results: infradead.org; dkim=none (message not signed)
+ header.d=none;infradead.org; dmarc=none action=none header.from=mellanox.com;
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
+ by VI1PR05MB6143.eurprd05.prod.outlook.com (2603:10a6:803:ed::25) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.24; Fri, 12 Jun
- 2020 19:35:57 +0000
-Received: from SN1PR12MB2560.namprd12.prod.outlook.com
- ([fe80::2102:cc6b:b2db:4c2]) by SN1PR12MB2560.namprd12.prod.outlook.com
- ([fe80::2102:cc6b:b2db:4c2%3]) with mapi id 15.20.3088.021; Fri, 12 Jun 2020
- 19:35:57 +0000
-From:   Babu Moger <babu.moger@amd.com>
-Subject: RE: [PATCH 3/3] KVM:SVM: Enable INVPCID feature on AMD
-To:     Jim Mattson <jmattson@google.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>, Joerg Roedel <joro@8bytes.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>
-References: <159191202523.31436.11959784252237488867.stgit@bmoger-ubuntu>
- <159191213022.31436.11150808867377936241.stgit@bmoger-ubuntu>
- <CALMp9eSC-wwP50gtprpakKjPYeZ5LdDSFS6i__csVCJwUKmqjA@mail.gmail.com>
-Message-ID: <d0b09992-eb87-651a-3b97-0787e07cc46d@amd.com>
-Date:   Fri, 12 Jun 2020 14:35:55 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <CALMp9eSC-wwP50gtprpakKjPYeZ5LdDSFS6i__csVCJwUKmqjA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN1PR12CA0080.namprd12.prod.outlook.com
- (2603:10b6:802:21::15) To SN1PR12MB2560.namprd12.prod.outlook.com
- (2603:10b6:802:26::19)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.21; Fri, 12 Jun
+ 2020 19:42:08 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::848b:fcd0:efe3:189e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::848b:fcd0:efe3:189e%7]) with mapi id 15.20.3088.023; Fri, 12 Jun 2020
+ 19:42:07 +0000
+Date:   Fri, 12 Jun 2020 16:42:04 -0300
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Ralph Campbell <rcampbell@nvidia.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] mm/hmm: remove redundant check non_swap_entry()
+Message-ID: <20200612194204.GM65026@mellanox.com>
+References: <20200612192618.32579-1-rcampbell@nvidia.com>
+ <20200612193524.GL8681@bombadil.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200612193524.GL8681@bombadil.infradead.org>
+X-ClientProxiedBy: MN2PR20CA0057.namprd20.prod.outlook.com
+ (2603:10b6:208:235::26) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.236.31.79] (165.204.77.1) by SN1PR12CA0080.namprd12.prod.outlook.com (2603:10b6:802:21::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18 via Frontend Transport; Fri, 12 Jun 2020 19:35:56 +0000
-X-Originating-IP: [165.204.77.1]
+Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR20CA0057.namprd20.prod.outlook.com (2603:10b6:208:235::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.19 via Frontend Transport; Fri, 12 Jun 2020 19:42:07 +0000
+Received: from jgg by mlx with local (Exim 4.93)        (envelope-from <jgg@mellanox.com>)      id 1jjpYy-006luk-2m; Fri, 12 Jun 2020 16:42:04 -0300
+X-Originating-IP: [156.34.48.30]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 7f2ab801-4326-418f-952f-08d80f07d3d7
-X-MS-TrafficTypeDiagnostic: SA0PR12MB4526:
-X-Microsoft-Antispam-PRVS: <SA0PR12MB45266CE15D25D6DFD7805A7995810@SA0PR12MB4526.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
+X-MS-Office365-Filtering-Correlation-Id: fe65fb2a-96e3-4fc6-9113-08d80f08b0fa
+X-MS-TrafficTypeDiagnostic: VI1PR05MB6143:
+X-Microsoft-Antispam-PRVS: <VI1PR05MB614367A592570F2D36ECB232CF810@VI1PR05MB6143.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
 X-Forefront-PRVS: 0432A04947
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: i9bQEDk6euYzAt/s4IpdAFHPVlRVmqng8FVXlzM80jVT3A6m0rIjavOF1D1xtaX+K8LzfFBgTBpMZiJ3eD2seyPtNVDcD92VR3Jqr/9soE1j/wgUedAlMKcRn1yFIrC2Reb02FtXfb8K+3E0ZMS8vkYdsFgx6SXB5PM9Jd2W9J5+8gyxMovtCGdrgAyNtUq3yLp7q46vI18L7XgUzyaLZCP3WdNGROv/WU48WS3zxtAYHkOahztDB6NN59i6w8MdbgdsbO0TSMmysmseqydikSnn5eV5I53rT9160XACywF5vSAHYdl+c609/2BYWIF0VCBHdYWqsY4JykHrA6r5HKXva49CgW2biIGBM7OYNE5g0eXx9KI+YDq3mi+jYsr89wToZXwe6YykQN3f0Lq9J2+3Yygkj+rxwfnnTQ5sLG45QsbhO4yXVZJ0UQPVMG5f
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(376002)(136003)(366004)(39860400002)(36756003)(83080400001)(31696002)(8676002)(66556008)(8936002)(66476007)(2906002)(66946007)(53546011)(16526019)(956004)(966005)(86362001)(2616005)(83380400001)(6486002)(186003)(44832011)(26005)(31686004)(316002)(4326008)(6916009)(52116002)(16576012)(478600001)(54906003)(45080400002)(5660300002)(7416002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: QRrkj95FOy9McmMzckeZjB9mu+kNevaNs3PLBZd2KZrZYz73U+zIWHhu/32Hhg5AY183ea6xov+neT3hRLwqId+AqhTMlPDTTklx2YipNmDdIN375RWVuGBespySNfdSM3+rbiwjQZ2F9B2FsWFrkiz8Zfhtrxp9TrJ3m3Dihk4suNE4K701tDw86MWimRehStW+6WhbzuPP2yiMS867Sju0VHJJeCyU5/bQpKEDjmXKde66IteCM0Jn9paYck/eQh3gVMXJtaQD1oQZxN5WAK9kY8W6C2+aRriz7JuORWCgHYLz+D3wJujTGtOujDLwNasMFa3WRYTIheDxbY/Kcyme9S6SmWcUAjpYKBQYJiX/c+V9kmmzyq1anEg+qZ7ZX5Ok8oy93ZXwKvMkjR8yGRZTMY2EYNNLPfh/9Uzotfv7iLDFM6NjK29Igu+uNYx/BDnYYPsn8hINfxyUN/QLkWHTiwmeFw1/OvVnrJhaVpY=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7f2ab801-4326-418f-952f-08d80f07d3d7
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2020 19:35:57.1061
+X-Microsoft-Antispam-Message-Info: hHYNpxl9tilXIWS7E+BW3qeLG9KcpNQcx2gQBqK4RrGuwaRsZsiVFcflUTdG2zObXiDmQ4ubg5/TNW8QK/9QijTozpp8rceGCdtg+LUl+XQjXFE4w7Em3u8WbPhPSAhvJAdvocUVPOtpRQPXBlsvORp80J0fVP81cfHkVbqJz8y6SLwI1EAUUAd0wI5Sd6DOyHZJlp9XsWZYN+kjbkr28zskDVLrD7Q4X6qGJGYzoHu/RzA4YCyroMIb8TSvOzY3SvpntY+T2JeLa/rg+5Ks8nTqDKdixC8yUz8QJxYKShLANyEMajY/+/ao0N1MuSSaDETzEkPjFKNT1CfDdqmr/A==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(366004)(376002)(136003)(396003)(39860400002)(4744005)(4326008)(1076003)(8936002)(33656002)(86362001)(8676002)(9746002)(9786002)(2906002)(6916009)(186003)(26005)(2616005)(478600001)(316002)(36756003)(66476007)(66556008)(54906003)(5660300002)(426003)(83380400001)(66946007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 1ecxqNkDqCW0FVS16nBRfn2rdjluUatgakOkLcAG5Iwo6QP22Gn5BxFrwBr/NWDHSgV2xJN6xrGBqhSqnKWOW4fWJxSnp/wJ0vRGPkAUK2D6YHvfqUEYKzT6YX7tJAf0dJxhIgXznGKF/cNvKG4odweAQJW2a0r7RD5ja5nRvlhKzuL5MvppUAAvI3lfNKpRayf+n+gJL2+lb/dtRaxweejvnT28QbporrVncObLVr6hZtI7662XcswpEVGm6TE8nwqZbjgdzjoxSjIEaskhLNh26i67yUq+WfcxqJKwZMP/PSnf2dq7aUo8bEMyfy+aANYPjYjYqSg6gzL1xAxxJfnRSVWfZQZe9PQaqKK0p27WDNCeOy8C0vb2QBH45/DJ4r4L3gm1TVI2Fq2yQoFu1lwbvqMksf5m6hihfZcfIw57yizO8s0n3N7phPQL+2vdaWqYfiD+WGyfP+PZSiTUm5+De07OsBncViVL37EPMdo=
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fe65fb2a-96e3-4fc6-9113-08d80f08b0fa
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2020 19:42:07.7940
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YBR+DxRw9iC8+9Pg93mu68eU39EGeweEtnp/ge4cZmx9IZ7NH1kMkNv2BWXIR2ni
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4526
+X-MS-Exchange-CrossTenant-UserPrincipalName: UGwGovo3aU2OAa+r0ivvuz1q4oxnQCkGbbr8TLUkgcjP0fZbqx9/dmUvOMlIAgUBs03QKM5R+a9IHmLJZl267Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6143
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Jim Mattson <jmattson@google.com>
-> Sent: Thursday, June 11, 2020 6:51 PM
-> To: Moger, Babu <Babu.Moger@amd.com>
-> Cc: Wanpeng Li <wanpengli@tencent.com>; Joerg Roedel <joro@8bytes.org>;
-> the arch/x86 maintainers <x86@kernel.org>; Sean Christopherson
-> <sean.j.christopherson@intel.com>; Ingo Molnar <mingo@redhat.com>;
-> Borislav Petkov <bp@alien8.de>; H . Peter Anvin <hpa@zytor.com>; Paolo
-> Bonzini <pbonzini@redhat.com>; Vitaly Kuznetsov <vkuznets@redhat.com>;
-> Thomas Gleixner <tglx@linutronix.de>; LKML <linux-kernel@vger.kernel.org>;
-> kvm list <kvm@vger.kernel.org>
-> Subject: Re: [PATCH 3/3] KVM:SVM: Enable INVPCID feature on AMD
+On Fri, Jun 12, 2020 at 12:35:24PM -0700, Matthew Wilcox wrote:
+> On Fri, Jun 12, 2020 at 12:26:18PM -0700, Ralph Campbell wrote:
+> > In zap_pte_range(), the check for non_swap_entry() and
+> > is_device_private_entry() is redundant since the latter is a subset of the
+> > former. Remove the redundant check to simplify the code and for clarity.
 > 
-> On Thu, Jun 11, 2020 at 2:48 PM Babu Moger <babu.moger@amd.com> wrote:
-> >
-> > The following intercept is added for INVPCID instruction:
-> > Code    Name            Cause
-> > A2h     VMEXIT_INVPCID  INVPCID instruction
-> >
-> > The following bit is added to the VMCB layout control area
-> > to control intercept of INVPCID:
-> > Byte Offset     Bit(s)    Function
-> > 14h             2         intercept INVPCID
-> >
-> > For the guests with nested page table (NPT) support, the INVPCID
-> > feature works as running it natively. KVM does not need to do any
-> > special handling in this case.
-> >
-> > Interceptions are required in the following cases.
-> > 1. If the guest tries to disable the feature when the underlying
-> > hardware supports it. In this case hypervisor needs to report #UD.
+> That is highly configuration dependent.
 > 
-> Per the AMD documentation, attempts to use INVPCID at CPL>0 will
-> result in a #GP, regardless of the intercept bit. If the guest CPUID
-> doesn't enumerate the feature, shouldn't the instruction raise #UD
-> regardless of CPL? This seems to imply that we should intercept #GP
-> and decode the instruction to see if we should synthesize #UD instead.
+> #else /* CONFIG_DEVICE_PRIVATE */
+> ...
+> static inline bool is_device_private_entry(swp_entry_t entry)
+> {
+>         return false;
+> }
 
-Purpose here is to report UD when the guest CPUID doesn't enumerate the
-INVPCID feature When Bare-metal supports it. It seems to work fine for
-that purpose. You are right. The #GP for CPL>0 takes precedence over
-interception. No. I am not planning to intercept GP.
+The commit message might be a bit confusing, as it is not a subset, I
+would say that device_private_entry alone is sufficient to tell if the
+entry is private or not.
 
-I will change the text. How about this?
+For the !CONFIG_DEVICE_PRIVATE case having it wired to false is
+right.
 
-Interceptions are required in the following cases.
-1. If the guest CPUID doesn't enumerate the INVPCID feature when the
-underlying hardware supports it,  hypervisor needs to report UD. However,
-#GP for CPL>0 takes precedence over interception.
-
-> > 2. When the guest is running with shadow page table enabled, in
-> > this case the hypervisor needs to handle the tlbflush based on the
-> > type of invpcid instruction type.
-> >
-> > AMD documentation for INVPCID feature is available at "AMD64
-> > Architecture Programmer’s Manual Volume 2: System Programming,
-> > Pub. 24593 Rev. 3.34(or later)"
-> >
-> > The documentation can be obtained at the links below:
-> > Link:
-> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.a
-> md.com%2Fsystem%2Ffiles%2FTechDocs%2F24593.pdf&amp;data=02%7C01%7
-> Cbabu.moger%40amd.com%7C36861b25f6d143e3b38e08d80e624472%7C3dd8
-> 961fe4884e608e11a82d994e183d%7C0%7C0%7C637275163374103811&amp;s
-> data=E%2Fdb6T%2BdO4nrtUoqhKidF6XyorsWrphj6O4WwNZpmYA%3D&amp;res
-> erved=0
-> > Link:
-> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fbugzilla.
-> kernel.org%2Fshow_bug.cgi%3Fid%3D206537&amp;data=02%7C01%7Cbabu.m
-> oger%40amd.com%7C36861b25f6d143e3b38e08d80e624472%7C3dd8961fe488
-> 4e608e11a82d994e183d%7C0%7C0%7C637275163374103811&amp;sdata=b81
-> 9W%2FhKS93%2BAp3QvcsR0BwTQpUVUFMbIaNaisgWHRY%3D&amp;reserved=
-> 0
-> >
-> > Signed-off-by: Babu Moger <babu.moger@amd.com>
-> > ---
-> >  arch/x86/include/asm/svm.h      |    4 ++++
-> >  arch/x86/include/uapi/asm/svm.h |    2 ++
-> >  arch/x86/kvm/svm/svm.c          |   42
-> +++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 48 insertions(+)
-> >
-> > diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
-> > index 62649fba8908..6488094f67fa 100644
-> > --- a/arch/x86/include/asm/svm.h
-> > +++ b/arch/x86/include/asm/svm.h
-> > @@ -55,6 +55,10 @@ enum {
-> >         INTERCEPT_RDPRU,
-> >  };
-> >
-> > +/* Extended Intercept bits */
-> > +enum {
-> > +       INTERCEPT_INVPCID = 2,
-> > +};
-> >
-> >  struct __attribute__ ((__packed__)) vmcb_control_area {
-> >         u32 intercept_cr;
-> > diff --git a/arch/x86/include/uapi/asm/svm.h
-> b/arch/x86/include/uapi/asm/svm.h
-> > index 2e8a30f06c74..522d42dfc28c 100644
-> > --- a/arch/x86/include/uapi/asm/svm.h
-> > +++ b/arch/x86/include/uapi/asm/svm.h
-> > @@ -76,6 +76,7 @@
-> >  #define SVM_EXIT_MWAIT_COND    0x08c
-> >  #define SVM_EXIT_XSETBV        0x08d
-> >  #define SVM_EXIT_RDPRU         0x08e
-> > +#define SVM_EXIT_INVPCID       0x0a2
-> >  #define SVM_EXIT_NPF           0x400
-> >  #define SVM_EXIT_AVIC_INCOMPLETE_IPI           0x401
-> >  #define SVM_EXIT_AVIC_UNACCELERATED_ACCESS     0x402
-> > @@ -171,6 +172,7 @@
-> >         { SVM_EXIT_MONITOR,     "monitor" }, \
-> >         { SVM_EXIT_MWAIT,       "mwait" }, \
-> >         { SVM_EXIT_XSETBV,      "xsetbv" }, \
-> > +       { SVM_EXIT_INVPCID,     "invpcid" }, \
-> >         { SVM_EXIT_NPF,         "npf" }, \
-> >         { SVM_EXIT_AVIC_INCOMPLETE_IPI,         "avic_incomplete_ipi" }, \
-> >         { SVM_EXIT_AVIC_UNACCELERATED_ACCESS,
-> "avic_unaccelerated_access" }, \
-> > diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> > index 285e5e1ff518..82d974338f68 100644
-> > --- a/arch/x86/kvm/svm/svm.c
-> > +++ b/arch/x86/kvm/svm/svm.c
-> > @@ -813,6 +813,11 @@ static __init void svm_set_cpu_caps(void)
-> >         if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) ||
-> >             boot_cpu_has(X86_FEATURE_AMD_SSBD))
-> >                 kvm_cpu_cap_set(X86_FEATURE_VIRT_SSBD);
-> > +
-> > +       /* Enable INVPCID if both PCID and INVPCID enabled */
-> > +       if (boot_cpu_has(X86_FEATURE_PCID) &&
-> > +           boot_cpu_has(X86_FEATURE_INVPCID))
-> > +               kvm_cpu_cap_set(X86_FEATURE_INVPCID);
-> >  }
-> >
-> >  static __init int svm_hardware_setup(void)
-> > @@ -1099,6 +1104,17 @@ static void init_vmcb(struct vcpu_svm *svm)
-> >                 clr_intercept(svm, INTERCEPT_PAUSE);
-> >         }
-> >
-> > +       /*
-> > +        * Intercept INVPCID instruction only if shadow page table is
-> > +        * enabled. Interception is not required with nested page table.
-> > +        */
-> > +       if (boot_cpu_has(X86_FEATURE_INVPCID)) {
-> > +               if (!npt_enabled)
-> > +                       set_extended_intercept(svm, INTERCEPT_INVPCID);
-> > +               else
-> > +                       clr_extended_intercept(svm, INTERCEPT_INVPCID);
-> > +       }
-> > +
-> >         if (kvm_vcpu_apicv_active(&svm->vcpu))
-> >                 avic_init_vmcb(svm);
-> >
-> > @@ -2715,6 +2731,23 @@ static int mwait_interception(struct vcpu_svm
-> *svm)
-> >         return nop_interception(svm);
-> >  }
-> >
-> > +static int invpcid_interception(struct vcpu_svm *svm)
-> > +{
-> > +       struct kvm_vcpu *vcpu = &svm->vcpu;
-> > +       unsigned long type;
-> > +       gva_t gva;
-> > +
-> > +       /*
-> > +        * For an INVPCID intercept:
-> > +        * EXITINFO1 provides the linear address of the memory operand.
-> > +        * EXITINFO2 provides the contents of the register operand.
-> > +        */
-> > +       type = svm->vmcb->control.exit_info_2;
-> > +       gva = svm->vmcb->control.exit_info_1;
-> > +
-> > +       return kvm_handle_invpcid_types(vcpu,  gva, type);
-> > +}
-> > +
-> >  static int (*const svm_exit_handlers[])(struct vcpu_svm *svm) = {
-> >         [SVM_EXIT_READ_CR0]                     = cr_interception,
-> >         [SVM_EXIT_READ_CR3]                     = cr_interception,
-> > @@ -2777,6 +2810,7 @@ static int (*const svm_exit_handlers[])(struct
-> vcpu_svm *svm) = {
-> >         [SVM_EXIT_MWAIT]                        = mwait_interception,
-> >         [SVM_EXIT_XSETBV]                       = xsetbv_interception,
-> >         [SVM_EXIT_RDPRU]                        = rdpru_interception,
-> > +       [SVM_EXIT_INVPCID]                      = invpcid_interception,
-> >         [SVM_EXIT_NPF]                          = npf_interception,
-> >         [SVM_EXIT_RSM]                          = rsm_interception,
-> >         [SVM_EXIT_AVIC_INCOMPLETE_IPI]          =
-> avic_incomplete_ipi_interception,
-> > @@ -3562,6 +3596,14 @@ static void svm_cpuid_update(struct kvm_vcpu
-> *vcpu)
-> >         svm->nrips_enabled = kvm_cpu_cap_has(X86_FEATURE_NRIPS) &&
-> >                              guest_cpuid_has(&svm->vcpu, X86_FEATURE_NRIPS);
-> >
-> > +       /*
-> > +        * Intercept INVPCID instruction if the baremetal has the support
-> > +        * but the guest doesn't claim the feature.
-> > +        */
-> > +       if (boot_cpu_has(X86_FEATURE_INVPCID) &&
-> > +           !guest_cpuid_has(vcpu, X86_FEATURE_INVPCID))
-> > +               set_extended_intercept(svm, INTERCEPT_INVPCID);
-> > +
-> 
-> What if INVPCID is enabled in the guest CPUID later? Shouldn't we then
-> clear this intercept bit?
-
-I assume the feature enable comes in the same code path as this. I can add
-"if else" check here if that is what you are suggesting.
-
-> 
-> >         if (!kvm_vcpu_apicv_active(vcpu))
-> >                 return;
-> >
-> >
+Jason
