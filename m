@@ -5,69 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C60C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B0FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99578207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:10:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 814BE207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 07:10:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="lj5U69Ck"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Vk8nXv4l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgFLHKU (ORCPT
+        id S1726568AbgFLHKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 03:10:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44696 "EHLO
+        Fri, 12 Jun 2020 03:10:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726287AbgFLHKS (ORCPT
+        with ESMTP id S1726468AbgFLHKQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 03:10:18 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7466EC03E96F
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 00:10:17 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id s88so3478013pjb.5
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 00:10:17 -0700 (PDT)
+        Fri, 12 Jun 2020 03:10:16 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53134C08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 00:10:15 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id b5so2756285pgm.8
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 00:10:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=zQ9MqfWdvKY0A/nub4Fo1FL/E8bJu3O4TVW1RUvcWdg=;
-        b=lj5U69Cksq6OCRUwr5FSFcfeGktJxkA9FTX+22+Wu+8dwxBHR77hXuHnIPRGOGie44
-         ERN9/bY0xBVAOg9TX0F1fwANzNIdEZDZ8O4zqyQKeVct1npSg+vhxUXazCaPOanobztU
-         9IPlSXq8y3X0DOryWc0JvgfCJkQrIvmRxtFpBJoIO0umdmsg88SzIQzbrWuSS5IaaqiC
-         7jVNrkCGrcOhX9nUMKOmAks8AXBrZNwWlqrDsZmzAFXqqRLSuMEsdwLqtJCyTc7uVnbg
-         trwbYhhJV97v47brW5F6K0w52j/zZa2BihQAIGVXfIz7oMjc6oE8qumbzxHB5NHRp0JI
-         AMPg==
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=TqEeZZCFAo9j2EFFuYpPOcmAMjD+t0h5vXYjlCC88NI=;
+        b=Vk8nXv4lbi60VdlETy0d9EHMvCMv6fvKZN7WSJqO8Yazl8SmgsXXBVnpEdhhbfA6U6
+         IsRjgiXT1RcyvifqbfANAKXfWf9zgSjGNNC8zwH2SOwquvk0yPTzl/bgCFuQvzFqJVyx
+         T/QnIAE8JHW27tQv2laLYiXgPZnqbMeTEMiE2nvFH+fCSSAfZjuwOK4wkAmNt3J4egyL
+         gktCEfFKGLc2yAws1DCe3q7msFiIg+t0pCeXmtIz1dc3lyIA1jA4hgQBOWSVnW1zVIaZ
+         xRD8wy6R1sSLyOKQ3EMRr9OAKnrmjNq17Y7jyMTfEQM9LNMIv38SwTMU/MwVxNnmXpwG
+         mlyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=zQ9MqfWdvKY0A/nub4Fo1FL/E8bJu3O4TVW1RUvcWdg=;
-        b=gINSqIBTfzmlxJbUH4cF8KHwyWOxF8BP/weoan9oX8DqRtgqjwhqBMoTlOt/7vvB1w
-         nYik8SNnonD9G+/P/uvnlteWyErNnJ268l8NWHkUZN2CrSnp7U9YARVX2dhmt/yJrdfG
-         UHbQ0kOgMcb2FGt4iOKEROEUnTfujMXrdUhreCCyA9bzZ/BeDtxGsoZGkpnxuT75cTyM
-         DQdcKtHixueJjIqboExOGTt/t4Fl88W+CbXA2NOc8dtyUzrIOymosAN6ykGm/sywLp89
-         c5yNjkgRRhr+XS+0yk7j5aSAKZP6JqiQMdyTrgTeTxiT0XKt7bgDyycb0DPT3gnEBYpi
-         9bfQ==
-X-Gm-Message-State: AOAM532K9+3gntywKbzTEa0CnpHCTKeMGrdqH2WydNbHTvDVx4DS+qY2
-        tlx3p57rREAHwqcf/Lkv9cXyhg==
-X-Google-Smtp-Source: ABdhPJwXTT29gm2ifat7CTG4weeyGOi00tGqBa0Ywljl2zNKwiR1hC9l0czmEkulm7P+V+zLBD+x/w==
-X-Received: by 2002:a17:90a:3b09:: with SMTP id d9mr12421250pjc.225.1591945817016;
-        Fri, 12 Jun 2020 00:10:17 -0700 (PDT)
+        bh=TqEeZZCFAo9j2EFFuYpPOcmAMjD+t0h5vXYjlCC88NI=;
+        b=hTX4FveDZVWNwMOJSdgfCYLvCa4R9bZanlpuiOsl3y25SQ+hzeyS8CmgcMGbRFhFra
+         3c5NmJ8XfBuFIxipdhTgu8xzeiD2AqDrTh3u+dnQnoNBw/rY+jzjlhj570kRwX355Xf7
+         f8BdBnH9xlvVDPB/I5HFbV+NGFPs8zSUAvdBK2IZwT4TgpM3xtlKLWbtAWsYCclbJ99Q
+         pAsjzQISAU+6bpbDBzK2sKBbql52amvIw8OR+tNV525afQgV9X2yUNRDJY8YxKs1J35S
+         WYOjHWNfOyMbZgs5WxOp7qHDTaqnKFtsDMol1JaEDMbiRLEhqB99A9wkOcvS9rJ9pKFh
+         K1bQ==
+X-Gm-Message-State: AOAM531ysL08DbuchHSPtPt6/f1YitAOlpKQ1O6h/tkE0k5kM4Kwk9GF
+        /XhpchIj0NB8yuIzoBK8xdFOsw==
+X-Google-Smtp-Source: ABdhPJyjEH+ADL2W4THCxsHXC9WxaaeveHWyMCLC47yacVreM5QB1kMYVKztlYuLn7XFuwTbzNN8eQ==
+X-Received: by 2002:a62:7b41:: with SMTP id w62mr9986107pfc.142.1591945814828;
+        Fri, 12 Jun 2020 00:10:14 -0700 (PDT)
 Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
-        by smtp.gmail.com with ESMTPSA id d2sm4336919pgp.56.2020.06.12.00.10.15
+        by smtp.gmail.com with ESMTPSA id d2sm4336919pgp.56.2020.06.12.00.10.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 00:10:16 -0700 (PDT)
+        Fri, 12 Jun 2020 00:10:14 -0700 (PDT)
 From:   Greentime Hu <greentime.hu@sifive.com>
 To:     greentime.hu@sifive.com, oleg@redhat.com, guoren@linux.alibaba.com,
         vincent.chen@sifive.com, paul.walmsley@sifive.com,
         palmerdabbelt@google.com, linux-riscv@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Cc:     Anup Patel <anup@brainfault.org>
-Subject: [PATCH 03/13] riscv: Rename __switch_to_aux -> fpu
-Date:   Fri, 12 Jun 2020 15:09:52 +0800
-Message-Id: <28ce87a2bf6b73b01faa33b35df440effaab9a8b.1591344965.git.greentime.hu@sifive.com>
+Subject: [PATCH 02/13] riscv: Separate patch for cflags and aflags
+Date:   Fri, 12 Jun 2020 15:09:51 +0800
+Message-Id: <fb337ff3ed0f6d04da25f45db3c5c7713824ab13.1591344965.git.greentime.hu@sifive.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <cover.1591344965.git.greentime.hu@sifive.com>
 References: <cover.1591344965.git.greentime.hu@sifive.com>
@@ -82,47 +81,44 @@ From: Guo Ren <guoren@linux.alibaba.com>
 
 From: Guo Ren <ren_guo@c-sky.com>
 
-The name of __switch_to_aux is not clear and rename it with the
-determine function: __switch_to_fpu. Next we could add other regs'
-switch.
+Use "subst fd" in Makefile is a hack way and it's not convenient
+to add new ISA feature. Just separate them into riscv-march-cflags
+and riscv-march-aflags.
 
 Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
-Reviewed-by: Anup Patel <anup@brainfault.org>
 ---
- arch/riscv/include/asm/switch_to.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/riscv/Makefile | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/arch/riscv/include/asm/switch_to.h b/arch/riscv/include/asm/switch_to.h
-index 407bcc96a710..b9234e7178d0 100644
---- a/arch/riscv/include/asm/switch_to.h
-+++ b/arch/riscv/include/asm/switch_to.h
-@@ -44,7 +44,7 @@ static inline void fstate_restore(struct task_struct *task,
- 	}
- }
+diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
+index fb6e37db836d..957d064bead0 100644
+--- a/arch/riscv/Makefile
++++ b/arch/riscv/Makefile
+@@ -37,12 +37,18 @@ else
+ endif
  
--static inline void __switch_to_aux(struct task_struct *prev,
-+static inline void __switch_to_fpu(struct task_struct *prev,
- 				   struct task_struct *next)
- {
- 	struct pt_regs *regs;
-@@ -60,7 +60,7 @@ extern bool has_fpu;
- #define has_fpu false
- #define fstate_save(task, regs) do { } while (0)
- #define fstate_restore(task, regs) do { } while (0)
--#define __switch_to_aux(__prev, __next) do { } while (0)
-+#define __switch_to_fpu(__prev, __next) do { } while (0)
- #endif
+ # ISA string setting
+-riscv-march-$(CONFIG_ARCH_RV32I)	:= rv32ima
+-riscv-march-$(CONFIG_ARCH_RV64I)	:= rv64ima
+-riscv-march-$(CONFIG_FPU)		:= $(riscv-march-y)fd
+-riscv-march-$(CONFIG_RISCV_ISA_C)	:= $(riscv-march-y)c
+-KBUILD_CFLAGS += -march=$(subst fd,,$(riscv-march-y))
+-KBUILD_AFLAGS += -march=$(riscv-march-y)
++riscv-march-cflags-$(CONFIG_ARCH_RV32I)		:= rv32ima
++riscv-march-cflags-$(CONFIG_ARCH_RV64I)		:= rv64ima
++riscv-march-$(CONFIG_FPU)			:= $(riscv-march-y)fd
++riscv-march-cflags-$(CONFIG_RISCV_ISA_C)	:= $(riscv-march-cflags-y)c
++
++riscv-march-aflags-$(CONFIG_ARCH_RV32I)		:= rv32ima
++riscv-march-aflags-$(CONFIG_ARCH_RV64I)		:= rv64ima
++riscv-march-aflags-$(CONFIG_FPU)		:= $(riscv-march-aflags-y)fd
++riscv-march-aflags-$(CONFIG_RISCV_ISA_C)	:= $(riscv-march-aflags-y)c
++
++KBUILD_CFLAGS += -march=$(riscv-march-cflags-y)
++KBUILD_AFLAGS += -march=$(riscv-march-aflags-y)
  
- extern struct task_struct *__switch_to(struct task_struct *,
-@@ -71,7 +71,7 @@ do {							\
- 	struct task_struct *__prev = (prev);		\
- 	struct task_struct *__next = (next);		\
- 	if (has_fpu)					\
--		__switch_to_aux(__prev, __next);	\
-+		__switch_to_fpu(__prev, __next);	\
- 	((last) = __switch_to(__prev, __next));		\
- } while (0)
- 
+ KBUILD_CFLAGS += -mno-save-restore
+ KBUILD_CFLAGS += -DCONFIG_PAGE_OFFSET=$(CONFIG_PAGE_OFFSET)
 -- 
 2.27.0
 
