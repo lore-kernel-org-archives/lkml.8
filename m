@@ -2,101 +2,94 @@ Return-Path: <SRS0=ixK5=7Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F17CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0279C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:24:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74DF8206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:24:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591989851;
-	bh=tkdoGaDmtkQIZe8s75Yl+A9UWwuBWQvVdxP629Si20c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=X+HanWimpZjpQHxlgyzVPd4Ee48rIYjZ6TZjBTM1VSDKtlZ0PGTTMlbuatT4zfY07
-	 Qy7LE5SsP3saI0pnalczOKZVdVTcrH9wGTaaHxcFr0RF+9C6ElG1rMQ9CynKh0jogO
-	 fTk2Mjis5UnyWrpkY7htX5T+dz4myVY9D/zU+o+w=
+	by mail.kernel.org (Postfix) with ESMTP id BEB63206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Jun 2020 19:24:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JWOkDkyk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbgFLTYK (ORCPT
+        id S1726379AbgFLTYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 15:24:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44924 "EHLO
+        Fri, 12 Jun 2020 15:24:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgFLTYJ (ORCPT
+        with ESMTP id S1726268AbgFLTYc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 15:24:09 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF115C03E96F
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 12:24:08 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id y11so12357003ljm.9
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 12:24:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TCcYxMzSmrdlhigKp7aCnsE882khzEZEkfB4TmM4Bdg=;
-        b=iNBWJvbJ26Z9sGmdy88BthOnQc6hc14YR9MWYyu8II9G3YLysxwW8697VXQMUTln/r
-         Xc6ZFFWFR3cp0sCyH1yStm8dQ8f1PheRAwGxmH8m/OGbjqjh36KdNvZAg4tlsLkIg31J
-         qlgKnPxT6+NzqQ9EtPTxK98KgxF/S0zZzH6Ns=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TCcYxMzSmrdlhigKp7aCnsE882khzEZEkfB4TmM4Bdg=;
-        b=cRnV+DK/EXXKFysYO21rOH8nbL2kxVj6j8qE7poVZMQ2Z5pCNzfYlG8DPOSS0icWqC
-         sdBYvuMtKnfbWIhTsD/F1JJd1lxf15oMBi+6HlQHQVZNrrS9/8vnuvzZU7R0iIesbyhW
-         SUiZURUQPv0yAVRWZsM6vID48Kzad7bltM/tSaTjQ1+yUNzrjjH8BzODENkDohvzT1NU
-         xDBDDPA7gPGoRiWGadZHlBv+97+wW37A5u75cw1LCuuvBecVgc9+fHIcqtyMsr/xU2GD
-         9rcsr4WM99/ZHD01iyhnyd/kZwIwCpzAg8D6F2yG3CO0piH1lEB16L8c/X115CGM2IrE
-         mTWg==
-X-Gm-Message-State: AOAM5305bKemkheckovPQjSJv7S1TEAzCqKchsFm0UY+hJuo+bHbxj6G
-        +2lzwAq4VxkeEHaB+Kc6LSVcEXQnDFs=
-X-Google-Smtp-Source: ABdhPJxT4DTsF1EduxZp888VudsegVVEGRJvu2YhmZXTKZTobwS+wr1E+3kCJqQpsQQOheSgZvfMnA==
-X-Received: by 2002:a2e:959a:: with SMTP id w26mr7061036ljh.74.1591989846763;
-        Fri, 12 Jun 2020 12:24:06 -0700 (PDT)
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
-        by smtp.gmail.com with ESMTPSA id l22sm1936217ljg.41.2020.06.12.12.24.05
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Jun 2020 12:24:05 -0700 (PDT)
-Received: by mail-lj1-f181.google.com with SMTP id 9so12331259ljv.5
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 12:24:05 -0700 (PDT)
-X-Received: by 2002:a2e:8991:: with SMTP id c17mr6689370lji.421.1591989845076;
- Fri, 12 Jun 2020 12:24:05 -0700 (PDT)
+        Fri, 12 Jun 2020 15:24:32 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11CE8C03E96F;
+        Fri, 12 Jun 2020 12:24:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=XNIkzHywKoH/b5FoSCgmMlwYaQtQXQo8Xsv8G4L19+I=; b=JWOkDkykP2kWcImMSx7orhKPGu
+        HQqxsoObXbcgFBrMCclC291CBzUDZx+2r9YIPj5QmzHGlljusdNWhWkt6AC8D25b5ACpf9qxNGPMF
+        f63BTFa3uWqJy4FaDGSz4Xh7rhJ4r9uMrqhzkGE4orGEFDDXzGymYhPSnJtz5/lqSNqF3bEFleH8F
+        iZIIcvEQlPD6tS8dtKPW88CcpSZ5YBV3xOYh88RSIxEzL+FbipCq/pC+XntBHNCTHzsTXGM9zEmWU
+        EZgqeVnfWg6mVgRLnanPIeMXv4T1rolzFIX4uMCeBAwTlkYXQvqQTjLYt+DHwJnFjLV3cRYpXlcq2
+        w2uGuFGA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jjpHu-0007JA-Bk; Fri, 12 Jun 2020 19:24:26 +0000
+Date:   Fri, 12 Jun 2020 12:24:26 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Jan Kara <jack@suse.cz>, Dave Chinner <david@fromorbit.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org
+Subject: Re: [PATCH 1/2] docs: mm/gup: pin_user_pages.rst: add a "case 5"
+Message-ID: <20200612192426.GK8681@bombadil.infradead.org>
+References: <20200529234309.484480-1-jhubbard@nvidia.com>
+ <20200529234309.484480-2-jhubbard@nvidia.com>
 MIME-Version: 1.0
-References: <20200612152205.GA18833@8bytes.org>
-In-Reply-To: <20200612152205.GA18833@8bytes.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 12 Jun 2020 12:23:49 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whtWYyUWP2Us3ZnOQB8i=C6JkVRZ7EG74rVY3K2v-gKaQ@mail.gmail.com>
-Message-ID: <CAHk-=whtWYyUWP2Us3ZnOQB8i=C6JkVRZ7EG74rVY3K2v-gKaQ@mail.gmail.com>
-Subject: Re: [git pull] iommu: Move Intel and AMD drivers to a subdirectory
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        iommu <iommu@lists.linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200529234309.484480-2-jhubbard@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 8:22 AM Joerg Roedel <joro@8bytes.org> wrote:
->
-> I am not sure it is the right time to send this.
+On Fri, May 29, 2020 at 04:43:08PM -0700, John Hubbard wrote:
+> +CASE 5: Pinning in order to write to the data within the page
+> +-------------------------------------------------------------
+> +Even though neither DMA nor Direct IO is involved, just a simple case of "pin,
+> +access page's data, unpin" can cause a problem. Case 5 may be considered a
+> +superset of Case 1, plus Case 2, plus anything that invokes that pattern. In
+> +other words, if the code is neither Case 1 nor Case 2, it may still require
+> +FOLL_PIN, for patterns like this:
+> +
+> +Correct (uses FOLL_PIN calls):
+> +    pin_user_pages()
+> +    access the data within the pages
+> +    set_page_dirty_lock()
+> +    unpin_user_pages()
+> +
+> +INCORRECT (uses FOLL_GET calls):
+> +    get_user_pages()
+> +    access the data within the pages
+> +    set_page_dirty_lock()
+> +    put_page()
 
-Looks good to me. Any time a directory starts to have a lot of
-filenames with a particular prefix, moving them deeper like this seems
-to make sense. And doing it just before the -rc1 release and avoiding
-unnecessary conflicts seems like the right time too.
+Why does this case need to pin?  Why can't it just do ...
 
-So pulled.
+	get_user_pages()
+	lock_page(page);
+	... modify the data ...
+	set_page_dirty(page);
+	unlock_page(page);
 
-Looking at it, it might even be worth moving the Kconfig and Makefile
-details down to the intel/amd subdirectories, and have them be
-included from the main iommu ones? But that's up to you.
-
-Thanks,
-
-            Linus
