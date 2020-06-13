@@ -2,101 +2,144 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82175C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 12:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0C7C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 12:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E51F52078E
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 12:28:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="huyz4bTp"
+	by mail.kernel.org (Postfix) with ESMTP id 536952078E
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 12:28:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726272AbgFMM2M (ORCPT
+        id S1726335AbgFMM2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 08:28:12 -0400
-Received: from mail.fudan.edu.cn ([202.120.224.10]:40697 "EHLO fudan.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726021AbgFMM2K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 08:28:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
-        Message-Id; bh=yYKEFGQVrzH801SxfuGZN+l0zsAnE+ezwtbbFK7MRMM=; b=h
-        uyz4bTpwJgl7Ofp9qbz6jPA4RodOOWcrUs+ZaojGv8a4mzdcUAqs2dmo3kge9PW2
-        vcOBH9c3E/IZNeNGr0hYo7y+vBQZhBxw0tMwUfoj248CfzNXwzdDQhZFv+71e4L6
-        x23TPQXfgO9yv8RxIJO1C4IuzXRdaIi31TRzTx+FMw=
-Received: from localhost.localdomain (unknown [120.229.255.202])
-        by app1 (Coremail) with SMTP id XAUFCgD3VhA+xuRe4KUYAA--.20537S3;
-        Sat, 13 Jun 2020 20:27:44 +0800 (CST)
-From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
-To:     Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, linux-kernel@vger.kernel.org
-Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
-        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>
-Subject: [PATCH] cifs: Fix cached_fid refcnt leak in open_shroot
-Date:   Sat, 13 Jun 2020 20:27:09 +0800
-Message-Id: <1592051229-93898-1-git-send-email-xiyuyang19@fudan.edu.cn>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: XAUFCgD3VhA+xuRe4KUYAA--.20537S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7JF4kur1UJF17GF4DGw4fuFg_yoW8JF4rpF
-        sxKr47KFZYga4kt34vy39Ygw1FkayDJw1YqF1qqa4UJr43X39YqrsagryDX3y3GFWvyF4Y
-        qrsF93s0yF4DCFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
-        JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
-        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IE
-        rcIFxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
-        v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkG
-        c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-        0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_
-        Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfUOlksUU
-        UUU
-X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
+        Sat, 13 Jun 2020 08:28:51 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:37649 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726021AbgFMM2u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jun 2020 08:28:50 -0400
+X-Originating-IP: 93.34.118.233
+Received: from uno.localdomain (93-34-118-233.ip49.fastwebnet.it [93.34.118.233])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 0F0CB1BF204;
+        Sat, 13 Jun 2020 12:28:43 +0000 (UTC)
+Date:   Sat, 13 Jun 2020 14:32:07 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hyun Kwon <hyunk@xilinx.com>, linux-media@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        sakari.ailus@iki.fi,
+        Niklas =?utf-8?Q?S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        devicetree@vger.kernel.org,
+        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        linux-renesas-soc@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v10 1/4] dt-bindings: media: i2c: Add bindings for Maxim
+ Integrated MAX9286
+Message-ID: <20200613123207.6ey6y5spfa5ajk4h@uno.localdomain>
+References: <20200612144713.502006-1-kieran.bingham+renesas@ideasonboard.com>
+ <20200612144713.502006-2-kieran.bingham+renesas@ideasonboard.com>
+ <20200612221003.GA3901624@bogus>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200612221003.GA3901624@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-open_shroot() invokes kref_get(), which increases the refcount of the
-"tcon->crfid" object. When open_shroot() returns not zero, it means the
-open operation failed and close_shroot() will not be called to decrement
-the refcount of the "tcon->crfid".
+Hi Rob,
 
-The reference counting issue happens in one normal path of
-open_shroot(). When the cached root have been opened successfully in a
-concurrent process, the function increases the refcount and jump to
-"oshr_free" to return. However the current return value "rc" may not
-equal to 0, thus the increased refcount will not be balanced outside the
-function, causing a refcnt leak.
+On Fri, Jun 12, 2020 at 04:10:03PM -0600, Rob Herring wrote:
+> On Fri, 12 Jun 2020 15:47:10 +0100, Kieran Bingham wrote:
+> > From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> >
+> > The MAX9286 deserializes video data received on up to 4 Gigabit
+> > Multimedia Serial Links (GMSL) and outputs them on a CSI-2 port using up
+> > to 4 data lanes.
+> >
+> > Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> > Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+> > Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> >
+> > ---
+> >
+> > v7:
+> >  - Collect Rob's RB tag
+> >  - Remove redundant maxItems from remote-endpoints
+> >  - Fix SPDX licence tag
+> >
+> > v10:
+> > [Jacopo]
+> >  - Fix dt-validation
+> >  - Fix dt-binding examples with 2 reg entries
+> >
+> > [Kieran]
+> >  - Correctly match the hex camera node reg
+> >  - Add (required) GPIO controller support
+> >
+> >  .../bindings/media/i2c/maxim,max9286.yaml     | 366 ++++++++++++++++++
+> >  1 file changed, 366 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/media/i2c/maxim,max9286.yaml
+> >
+>
+>
+> My bot found errors running 'make dt_binding_check' on your patch:
+>
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/i2c/maxim,max9286.example.dt.yaml: example-0: i2c@e66d8000:reg:0: [0, 3865935872, 0, 64] is too long
+>
+>
+> See https://patchwork.ozlabs.org/patch/1308280
+>
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure dt-schema is up to date:
+>
+> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+>
 
-Fix this issue by setting the value of "rc" to 0 before jumping to
-"oshr_free" label.
+I have updated my dt-schema installation to the latest github master
+-------------------------------------------------------------------------------
+Successfully installed dtschema-2020.6.dev8+g4d2d86c
 
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
----
- fs/cifs/smb2ops.c | 1 +
- 1 file changed, 1 insertion(+)
+https://github.com/devicetree-org/dt-schema/commit/4d2d86c5cd65cd3944ce0aaa400866bc36727bea
 
-diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
-index 736d86b8a910..28553d45604e 100644
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -763,6 +763,7 @@ int open_shroot(unsigned int xid, struct cifs_tcon *tcon,
- 			/* close extra handle outside of crit sec */
- 			SMB2_close(xid, tcon, fid.persistent_fid, fid.volatile_fid);
- 		}
-+		rc = 0;
- 		goto oshr_free;
- 	}
- 
--- 
-2.7.4
+$ /usr/bin/dt-validate -V
+2020.6.dev8+g4d2d86c
+-------------------------------------------------------------------------------
 
+But I still cannot reproduce the error.
+
+However, I see this commit in your next branch
+https://github.com/devicetree-org/dt-schema/commit/b72500282cfd2eba6f9df4d7553f696544b40ee6
+"schemas: Add a schema to check 'reg' sizes "
+
+Which sounds very likely related to the above reported error.
+Was this intentional ?
+
+I'm not sure how I should handle this. The error reports the i2c node
+parents should have both address-cells and size-cells properties set
+to 2, but in the example there is not i2c node parent at all :)
+Should I add a parent node for the i2c in the example snippet ?
+
+Thanks
+  j
+
+> Please check and re-submit.
+>
