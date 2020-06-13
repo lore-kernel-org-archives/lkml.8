@@ -2,107 +2,107 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 383D9C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 15:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0BAEC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 16:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12A9C2074D
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 15:59:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zj6xzOA0"
+	by mail.kernel.org (Postfix) with ESMTP id C9F1F2074D
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 16:01:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbgFMP7d (ORCPT
+        id S1726501AbgFMQBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 11:59:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34988 "EHLO
+        Sat, 13 Jun 2020 12:01:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgFMP6B (ORCPT
+        with ESMTP id S1726378AbgFMQBS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 11:58:01 -0400
-Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CC7DC03E96F
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 08:58:01 -0700 (PDT)
-Received: by mail-oo1-xc41.google.com with SMTP id f2so2542567ooo.5
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 08:58:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7LuUknDN6PlR7Taqo1rpiAxQDtU4FT1BBR3mE8leDF4=;
-        b=Zj6xzOA0oqxM88nnPyXjuB/7wtCHsIRcPDp1Nv1LqBinVeYmNo8n42XVMnHMIs/kZM
-         JxEBW1c+jwAf1j0A4k6jKEn3CF/1u1dIXBJNiB18RpnNTI5Sr66qDxqjfOnCMV+OHgKv
-         Rjfp1OsfWcpe6YE3fG4tq7WM295NtvjVcEl2GrAclLR7dT2URxxrH15Hc2imw5v+ial7
-         4bRM0fCw6LRNbbbNrUfXgLEDJ+IzOQ6icz3hSwH9ok+TmPHLexuouf3Hc/MU8RC1+n62
-         osIRDkQ2T9pr77lyWwRyIG17NS5o1w0Se1cuk0xaWavv5NLlRC6GAKN0lFtVDyLlfMmK
-         iMqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7LuUknDN6PlR7Taqo1rpiAxQDtU4FT1BBR3mE8leDF4=;
-        b=jYEDCa4dKjGRC2zto3jxtnf45QuL+/xxbGBsdCflg/Ruo9u/0TkHPf7oeteRYBJ9z7
-         U/0as5zc3LIYcCnDW9xOBRsb4r8DaE7YjU4xUbvncvvW+NDHPLFBPYA/vd+Kqx1XMXs8
-         eqB/ZHWuf3hrZtchSnRZ0UTNKkaLUE4gjaHtd51Mf/LT30X0XfQ9D4sM5rWSi2wGywOS
-         /ZPMNH6rKhbEjnS2PzROly1snoSXGOW4C258UHVVkpZvoSeHHTSABA6bDWnVJogf51rr
-         tJiVt0JdacZcSPfcuZgFZpPow5Zf6O9rHS+Ji103/Lrxcg9o0OxSluru76hAV1YPrz7j
-         EwVQ==
-X-Gm-Message-State: AOAM532NCOKJGAOaywtoJW0mkG9tXzJh0c+XYKlM3d5LrOcgijc4qpvH
-        sZPLGxtLi7pJOd2HNqSVe5Q=
-X-Google-Smtp-Source: ABdhPJx/AUXTkwW5plyM4ziMDBGHCr1i3spROwHN7jUvMZMPT4frEksBPLVnlRIq5KsaaJTM0JqS8g==
-X-Received: by 2002:a4a:e496:: with SMTP id s22mr14976624oov.67.1592063880742;
-        Sat, 13 Jun 2020 08:58:00 -0700 (PDT)
-Received: from frodo.hsd1.co.comcast.net ([2601:284:8204:6ba0::aaac])
-        by smtp.googlemail.com with ESMTPSA id 53sm2105565otv.22.2020.06.13.08.57.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Jun 2020 08:58:00 -0700 (PDT)
-From:   Jim Cromie <jim.cromie@gmail.com>
-To:     jbaron@akamai.com, linux-kernel@vger.kernel.org,
-        akpm@linuxfoundation.org, gregkh@linuxfoundation.org
-Cc:     linux@rasmusvillemoes.dk, Jim Cromie <jim.cromie@gmail.com>
-Subject: [PATCH v2 03/24] dyndbg: drop obsolete comment on ddebug_proc_open
-Date:   Sat, 13 Jun 2020 09:57:17 -0600
-Message-Id: <20200613155738.2249399-4-jim.cromie@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200613155738.2249399-1-jim.cromie@gmail.com>
-References: <20200613155738.2249399-1-jim.cromie@gmail.com>
+        Sat, 13 Jun 2020 12:01:18 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB847C03E96F
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 09:01:16 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
+        id 1jk8aG-008Em7-6w; Sat, 13 Jun 2020 16:00:40 +0000
+Date:   Sat, 13 Jun 2020 17:00:40 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     afzal mohammed <afzal.mohd.ma@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Subject: Re: [RFC 1/3] lib: copy_{from,to}_user using gup & kmap_atomic()
+Message-ID: <20200613160040.GI23230@ZenIV.linux.org.uk>
+References: <9e1de19f35e2d5e1d115c9ec3b7c3284b4a4e077.1591885760.git.afzal.mohd.ma@gmail.com>
+ <CAK8P3a1XUJHC0kG_Qwh4D4AoxTgCL5ggHd=45yNSmzaYWLUWXw@mail.gmail.com>
+ <20200612135538.GA13399@afzalpc>
+ <CAK8P3a25ffh_2Y1xKDbkL2xU9nLpGbEq7j6xHdODEwUtavgdwA@mail.gmail.com>
+ <20200613120432.GA5319@afzalpc>
+ <20200613125126.GE23230@ZenIV.linux.org.uk>
+ <20200613125615.GF23230@ZenIV.linux.org.uk>
+ <20200613134236.GA4086@afzalpc>
+ <20200613153102.GG23230@ZenIV.linux.org.uk>
+ <20200613154118.GH23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200613154118.GH23230@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 4bad78c55002 ("lib/dynamic_debug.c: use seq_open_private() instead of seq_open()")'
+On Sat, Jun 13, 2020 at 04:41:18PM +0100, Al Viro wrote:
+> On Sat, Jun 13, 2020 at 04:31:02PM +0100, Al Viro wrote:
+> > On Sat, Jun 13, 2020 at 07:12:36PM +0530, afzal mohammed wrote:
+> > > Hi,
+> > > 
+> > > On Sat, Jun 13, 2020 at 01:56:15PM +0100, Al Viro wrote:
+> > > 
+> > > > Incidentally, what about get_user()/put_user()?  _That_ is where it's
+> > > > going to really hurt...
+> > > 
+> > > All other uaccess routines are also planned to be added, posting only
+> > > copy_{from,to}_user() was to get early feedback (mentioned in the
+> > > cover letter)
+> > 
+> > Sure, but what I mean is that I'd expect the performance loss to be
+> > dominated by that, not by copy_from_user/copy_to_user on large amounts
+> > of data.  Especially on the loads like kernel builds - a lot of stat()
+> > and getdents() calls there.
+> 
+> To clarify: stat() means small copy_to_user(), getdents() - a mix of
+> put_user() and small copy_to_user().  I would be very surprised if it
+> does not hurt a lot.
 
-The commit was one of a tree-wide set which replaced open-coded
-boilerplate with a single tail-call.  It therefore obsoleted the
-comment about that boilerplate, clean that up now.
----
- lib/dynamic_debug.c | 7 -------
- 1 file changed, 7 deletions(-)
+PS: there's another fun issue here:
 
-diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index 321437bbf87d..2989a590ce9a 100644
---- a/lib/dynamic_debug.c
-+++ b/lib/dynamic_debug.c
-@@ -853,13 +853,6 @@ static const struct seq_operations ddebug_proc_seqops = {
- 	.stop = ddebug_proc_stop
- };
- 
--/*
-- * File_ops->open method for <debugfs>/dynamic_debug/control.  Does
-- * the seq_file setup dance, and also creates an iterator to walk the
-- * _ddebugs.  Note that we create a seq_file always, even for O_WRONLY
-- * files where it's not needed, as doing so simplifies the ->release
-- * method.
-- */
- static int ddebug_proc_open(struct inode *inode, struct file *file)
- {
- 	vpr_info("called\n");
--- 
-2.26.2
+fill a file with zeroes
+mmap that file in two areas, MAP_SHARED
+thread 1:
+munmap() the first area
+fill the second one with 'X'
+thread 2:
+write() from the first area into pipe
 
+One could expect that nothing by zeroes gets written into
+pipe - it might be a short write() (or -EFAULT), but finding
+any 'X' there would be a bug.
+
+Your patches allow for a possibility of write() doing
+get_user_pages_fast(), getting the first page just as
+munmap() is about to remove it from page tables and bugger
+off.  Then thread 1 proceeds with the store (via the
+second area).  And then thread 2 does memcpy() from that
+thing via a kmap_atomic()-created alias, observing the
+effect of the store.
+
+That might or might not be a POSIX violation, but it does
+look like a QoI issue...
