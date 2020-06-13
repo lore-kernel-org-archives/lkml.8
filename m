@@ -2,115 +2,180 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22ABCC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 19:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DCC2C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 19:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F33232078A
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 19:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A3B52078A
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 19:12:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="H+zVnOxp"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BFWO/pxM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbgFMTMT (ORCPT
+        id S1726614AbgFMTMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 15:12:19 -0400
-Received: from mta-p6.oit.umn.edu ([134.84.196.206]:50414 "EHLO
-        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726323AbgFMTMT (ORCPT
+        Sat, 13 Jun 2020 15:12:31 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:40766 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726323AbgFMTMa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 15:12:19 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 49knKF6cp4z9vC9d
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 19:12:17 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p6.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id P77DojhKMJa5 for <linux-kernel@vger.kernel.org>;
-        Sat, 13 Jun 2020 14:12:17 -0500 (CDT)
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 49knKF4y1pz9vC9L
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 14:12:17 -0500 (CDT)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p6.oit.umn.edu 49knKF4y1pz9vC9L
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p6.oit.umn.edu 49knKF4y1pz9vC9L
-Received: by mail-il1-f199.google.com with SMTP id t69so5561336ilk.13
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 12:12:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=7Y813RYwwOmmJkghTui2SQXtpRd6JSwcveUdZ5xBrjA=;
-        b=H+zVnOxpTd3c+HvoY9vSdECasdC3gd5/YMwDA6WMmolf8LpoOLgMDUw2pENL+mkikS
-         RH2M1AwUq+6zzqsyQZN8fdjWs3BLeJD9LhekB+z8jrTSrhavyEg5EqDN0z2C/xZ7USg7
-         JbcHdPSg4WiFhfDW3RzmbQ3AaNyDKCy3A/5l8wx0VmpMomx1lt4nDcB+7zabedbHcFvU
-         sC7BzDoepUioE4QiuwUWLM26nqill51nddXkif6/y0o4B18zRrdYvO1Avxk/YeNBdzCh
-         TyCyF69tyYi+9Nynw4UPTBXDq6codHG509j2HariqBvYG3SLMTXeiKkjyf2gspE7XVjF
-         xm7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=7Y813RYwwOmmJkghTui2SQXtpRd6JSwcveUdZ5xBrjA=;
-        b=WtUQl+xHkTmGDL5r1GIMs479tahKqsD81/i6tbFFXDdTsowj6OQP9BJME9BUASCqa1
-         mY9AOX39jLu/be8IULdeJ/0FIuA/Wp433Z/cHjF741Mv1LncOvnnWWGj45J1R+AGMqVK
-         h06FQ9uBqELvGGF9mnjaRJ0Kn3lUGzCAUWRsyDqbNIFQJuZRNVfr2bqnc/MjwOCxJI6z
-         2GSUefKkanKKi8G5L4erWltArSIX5Tpa0RhjEGyLL1pBqUXKQsSZpZCEsjtWU5XL3CBG
-         9nQXcH1FCiFKqHN79YjhS5k4qAPlv8KxSyT4rXAGz90nwzievTYxs4tGVeXja1d++Fjz
-         AQ6g==
-X-Gm-Message-State: AOAM531biQc1EInY8xaX+ra4yRjlZPOAQ1AWPJhYUfyivbE7qWMt6d8G
-        dLBK1z3/IsFPut1AGiQ0rGavir2jB8ltlh88VvqTexCdA0FIcHlK4ynEEc/gfhAwehBeX1IkIBb
-        J54/tI+Anfjibi6r3u0x9NRAb8X/M
-X-Received: by 2002:a5d:81d7:: with SMTP id t23mr20389784iol.142.1592075537263;
-        Sat, 13 Jun 2020 12:12:17 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx+/rxm8FPOXE3DMK7ZgH7u5mt39dCTxUsJ1COUdSD3G4P4elphErpI/6dxxTTzODdZM35cYA==
-X-Received: by 2002:a5d:81d7:: with SMTP id t23mr20389770iol.142.1592075537010;
-        Sat, 13 Jun 2020 12:12:17 -0700 (PDT)
-Received: from qiushi.cs.umn.edu ([2607:ea00:101:3c74:4874:45:bcb4:df60])
-        by smtp.gmail.com with ESMTPSA id y2sm5060001ilg.69.2020.06.13.12.12.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Jun 2020 12:12:16 -0700 (PDT)
-From:   wu000273@umn.edu
-To:     kjlu@umn.edu
-Cc:     wu000273@umn.edu, Takashi Iwai <tiwai@suse.de>,
-        Greg Kroah-Hartman <gregkh@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] edd: Fix a reference count leak.
-Date:   Sat, 13 Jun 2020 14:12:07 -0500
-Message-Id: <20200613191208.17633-1-wu000273@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        Sat, 13 Jun 2020 15:12:30 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05DJ2t70125135;
+        Sat, 13 Jun 2020 19:12:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=Pz4pQAMmCUEhD7BU5fQaqlQilXqbia6a1vauOMeTvug=;
+ b=BFWO/pxMrO/SthKxw/aSGmMo2aomTQ2LlV+h7SIs6nU8HnZd0tgn/bcxDRv5CHECnbmG
+ z/wL8iOMsOLk3HI3JavktCKU2pLcbnPV+JDBv/tvVhH8md2g/Qtvgz/CRnWbVvmAvOrk
+ WKwhzETJwfRbdQHe/Sb1wxAxt4xPyr3Yg4gJaCF36aWoyPVlMk+VrqJq8Zs7Dt5Ui+NN
+ onopUefBs+Lp4hcBoMkNsGPXV4Vb8p8YwiH/tzst4ZXqwL6hKVbPGWr/k22tUi8Vy+R2
+ +NxuW6v7nA94aFQ1gNu2CwccPvTvMS5mmEwQ+3XaUAysufdy9OfkdaZjK+YCZtEp69ma ww== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 31mp7r1ty1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sat, 13 Jun 2020 19:12:13 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05DJ8E4C064116;
+        Sat, 13 Jun 2020 19:12:12 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 31mpm137mt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 13 Jun 2020 19:12:12 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05DJC5rL015195;
+        Sat, 13 Jun 2020 19:12:07 GMT
+Received: from [192.168.2.112] (/50.38.35.18)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 13 Jun 2020 19:12:05 +0000
+Subject: Re: [PATCH v4 1/2] hugetlb: use f_mode & FMODE_HUGETLBFS to identify
+ hugetlbfs files
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Linux MM <linux-mm@kvack.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Matthew Wilcox <willy@infradead.org>,
+        Colin Walters <walters@verbum.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        syzbot <syzbot+d6ec23007e951dadf3de@syzkaller.appspotmail.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+References: <20200612004644.255692-1-mike.kravetz@oracle.com>
+ <20200612015842.GC23230@ZenIV.linux.org.uk>
+ <b1756da5-4e91-298f-32f1-e5642a680cbf@oracle.com>
+ <CAOQ4uxg=o2SVbfUiz0nOg-XHG8irvAsnXzFWjExjubk2v_6c_A@mail.gmail.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <6e8924b0-bfc4-eaf5-1775-54f506cdf623@oracle.com>
+Date:   Sat, 13 Jun 2020 12:12:04 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <CAOQ4uxg=o2SVbfUiz0nOg-XHG8irvAsnXzFWjExjubk2v_6c_A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9651 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 adultscore=0
+ phishscore=0 mlxlogscore=999 malwarescore=0 suspectscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006130171
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9651 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 clxscore=1011
+ cotscore=-2147483648 lowpriorityscore=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 mlxlogscore=999 bulkscore=0 mlxscore=0 impostorscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006130170
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+On 6/12/20 11:53 PM, Amir Goldstein wrote:
+>>> Incidentally, can a hugetlbfs be a lower layer, while the upper one
+>>> is a normal filesystem?  What should happen on copyup?
+>>
+>> Yes, that seems to work as expected.  When accessed for write the hugetlb
+>> file is copied to the normal filesystem.
+>>
+>> The BUG found by syzbot actually has a single hugetlbfs as both lower and
+>> upper.  With the BUG 'fixed', I am not exactly sure what the expected
+>> behavior is in this case.  I may be wrong, but I would expect any operations
+>> that can be performed on a stand alone hugetlbfs to also be performed on
+>> the overlay.  However, mmap() still fails.  I will look into it.
+>>
+>> I also looked at normal filesystem lower and hugetlbfs upper.  Yes, overlayfs
+>> allows this.  This is somewhat 'interesting' as write() is not supported in
+>> hugetlbfs.  Writing to files in the overlay actually ended up writing to
+>> files in the lower filesystem.  That seems wrong, but overlayfs is new to me.
+>>
+> 
+> I am not sure how that happened, but I think that ovl_open_realfile()
+> needs to fixup f_mode flags FMODE_CAN_WRITE | FMODE_CAN_READ
+> after open_with_fake_path().
+> 
+>> Earlier in the discussion of these issues, Colin Walters asked "Is there any
+>> actual valid use case for mounting an overlayfs on top of hugetlbfs?"  I can
+>> not think of one.  Perhaps we should consider limiting the ways in which
+>> hugetlbfs can be used in overlayfs?  Preventing it from being an upper
+>> filesystem might be a good start?  Or, do people think making hugetlbfs and
+>> overlayfs play nice together is useful?
+> 
+> If people think that making hugetlbfs and overlayfs play nice together maybe
+> they should work on this problem. It doesn't look like either
+> hugetlbfs developers
+> nor overlayfs developers care much about the combination.
 
-kobject_init_and_add() takes reference even when it fails.
-If this function returns an error, kobject_put() must be called to
-properly clean up the memory associated with the object.
+Thanks Amir,
 
-Fixes: dd002e807486 ("Kobject: change drivers/firmware/edd.c to use kobject_init_and_add")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
----
- drivers/firmware/edd.c | 2 ++
- 1 file changed, 2 insertions(+)
+As a hugetlbfs developer, I do not know of a use case for interoperability
+with overlayfs.  So yes, I am not too interested in making them work well
+together.  However, if there was an actual use case I would be more than
+happy to consider doing the work.  Just hate to put effort into fixing up
+two 'special' filesystems for functionality that may not be used.
 
-diff --git a/drivers/firmware/edd.c b/drivers/firmware/edd.c
-index 14d0970a7198..c8bb58824a76 100644
---- a/drivers/firmware/edd.c
-+++ b/drivers/firmware/edd.c
-@@ -718,6 +718,8 @@ edd_device_register(struct edd_device *edev, int i)
- 	if (!error) {
- 		edd_populate_dir(edev);
- 		kobject_uevent(&edev->kobj, KOBJ_ADD);
-+	} else {
-+		kobject_put(&edev->kobj);
- 	}
- 	return error;
- }
+I can't speak for overlayfs developers.
+
+> Your concern, I assume, is fixing the syzbot issue.
+
+That is the primary concern.  We should not BUG!  After fixing that up, Al
+asked how these things worked together.  I honestly did not look at
+interoperability before that.  I am not sure if anyone has done that in the
+past.
+
+> I agree with Colin's remark about adding limitations, but it would be a shame
+> if overlay had to special case hugetlbfs. It would have been better if we could
+> find a property of hugetlbfs that makes it inapplicable for overlayfs
+> upper/lower
+> or stacking fs in general.
+> 
+> The simplest thing for you to do in order to shush syzbot is what procfs does:
+>         /*
+>          * procfs isn't actually a stacking filesystem; however, there is
+>          * too much magic going on inside it to permit stacking things on
+>          * top of it
+>          */
+>         s->s_stack_depth = FILESYSTEM_MAX_STACK_DEPTH;
+> 
+> Currently, the only in-tree stacking fs are overlayfs and ecryptfs, but there
+> are some out of tree implementations as well (shiftfs).
+> So you may only take that option if you do not care about the combination
+> of hugetlbfs with any of the above.
+> 
+> overlayfs support of mmap is not as good as one might hope.
+> overlayfs.rst says:
+> "If a file residing on a lower layer is opened for read-only and then
+>  memory mapped with MAP_SHARED, then subsequent changes to
+>  the file are not reflected in the memory mapping."
+> 
+> So if I were you, I wouldn't go trying to fix overlayfs-huguetlb interop...
+
+Thanks again,
+
+I'll look at something as simple as s_stack_depth.
 -- 
-2.17.1
-
+Mike Kravetz
