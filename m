@@ -2,37 +2,37 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 336C0C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 08:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35175C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 08:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 009F320739
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 08:12:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FBC620739
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 08:12:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbgFMIMJ (ORCPT
+        id S1726640AbgFMIMS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 04:12:09 -0400
-Received: from mga07.intel.com ([134.134.136.100]:64586 "EHLO mga07.intel.com"
+        Sat, 13 Jun 2020 04:12:18 -0400
+Received: from mga07.intel.com ([134.134.136.100]:64611 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726538AbgFMIMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 04:12:02 -0400
-IronPort-SDR: XTBFLHg8hQ8qRg5nYPRUGrjkxV16EE6modBjI7IZIA0aBbDdWzQYJeHNKFbNx1AQTT4xfGwDah
- VcSwPq/ycdOQ==
+        id S1726570AbgFMILj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jun 2020 04:11:39 -0400
+IronPort-SDR: FgeE9e97xthOFHzWlJ0Nsop+I38LwSDLSOyn36DpCUXeRkrknJQLhT2Uii8uaCmCQkrg4C5WTN
+ BKNah2O01/dg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2020 01:11:29 -0700
-IronPort-SDR: MD26/cXuaZr5OmUoJIq/1HbTSaDeBW97q3yFzz90PlKZqelc54cq2imr6NSvnUDI0n0QXf6OyF
- jzEZfD/Pkm0w==
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2020 01:11:37 -0700
+IronPort-SDR: EWhDzJPbkRJ4BkuFB+j0sRW1P5napTO3QjlklnI/66bD6YiCojHmZdDwqF27bnNQcf0O9aaiAN
+ NZl96hYG1CNQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,506,1583222400"; 
-   d="scan'208";a="474467427"
+   d="scan'208";a="474467465"
 Received: from sqa-gate.sh.intel.com (HELO clx-ap-likexu.tsp.org) ([10.239.48.212])
-  by fmsmga006.fm.intel.com with ESMTP; 13 Jun 2020 01:11:25 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 13 Jun 2020 01:11:34 -0700
 From:   Like Xu <like.xu@linux.intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -43,9 +43,9 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Joerg Roedel <joro@8bytes.org>, ak@linux.intel.com,
         wei.w.wang@intel.com, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org, Like Xu <like.xu@linux.intel.com>
-Subject: [PATCH v12 08/11] KVM: vmx/pmu: Pass-through LBR msrs when guest LBR event is scheduled
-Date:   Sat, 13 Jun 2020 16:09:53 +0800
-Message-Id: <20200613080958.132489-9-like.xu@linux.intel.com>
+Subject: [PATCH v12 11/11] KVM: vmx/pmu: Release guest LBR event via lazy release mechanism
+Date:   Sat, 13 Jun 2020 16:09:56 +0800
+Message-Id: <20200613080958.132489-12-like.xu@linux.intel.com>
 X-Mailer: git-send-email 2.21.3
 In-Reply-To: <20200613080958.132489-1-like.xu@linux.intel.com>
 References: <20200613080958.132489-1-like.xu@linux.intel.com>
@@ -56,352 +56,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The guest first access on the LBR related msrs (including DEBUGCTLMSR and
-records msrs) is always interceptible. The KVM handler would create a guest
-LBR event which enables the callstack mode and none of hardware counter is
-assigned. The host perf would schedule and enable this event as usual but
-in an exclusive way.
+The vPMU uses GUEST_LBR_IN_USE_IDX (bit 58) in 'pmu->pmc_in_use' to
+indicate whether a guest LBR event is still needed by the vcpu. If the
+vcpu no longer accesses LBR related registers within a scheduling time
+slice, and the enable bit of LBR has been unset, vPMU will treat the
+guest LBR event as a bland event of a vPMC counter and release it
+as usual. Also the pass-through state of LBR records msrs is cancelled.
 
-If the guest LBR event is scheduled on with the corresponding vcpu context,
-KVM will pass-through all LBR records msrs to the guest. The LBR callstack
-mechanism implemented in the host could helps save/restore the guest LBR
-records during the event context switches, which reduces a lot of overhead
-if we save/restore tens of LBR msrs (e.g. 32 LBR records entries) in the
-much more frequent VMX transitions.
-
-To avoid reclaiming LBR resources from any higher priority event on host,
-KVM would always check the exist of guest LBR event and its state before
-vm-entry as late as possible. A negative result would cancel the
-pass-through state, and it also prevents real registers accesses and
-potential data leakage. If host reclaims the LBR between two checks, the
-interception state and LBR records can be safely preserved due to native
-save/restore support from guest LBR event.
-
-The KVM emits a pr_warn() when the LBR hardware is unavailable to the
-guest LBR event. The administer is supposed to reminder users that the
-guest result may be inaccurate if someone is using LBR to record
-hypervisor on the host side.
-
-The guest LBR event will be released when the vPMU is reset but soon,
-the lazy release mechanism would be applied to this event like a
-regular vPMC.
-
-Suggested-by: Andi Kleen <ak@linux.intel.com>
-Co-developed-by: Wei Wang <wei.w.wang@intel.com>
-Signed-off-by: Wei Wang <wei.w.wang@intel.com>
 Signed-off-by: Like Xu <like.xu@linux.intel.com>
 ---
- arch/x86/kvm/vmx/pmu_intel.c | 138 ++++++++++++++++++++++++++++++++++-
- arch/x86/kvm/vmx/vmx.c       |  70 +++++++++++++++++-
- arch/x86/kvm/vmx/vmx.h       |   8 ++
- 3 files changed, 212 insertions(+), 4 deletions(-)
+ arch/x86/kvm/pmu.c           |  7 +++++++
+ arch/x86/kvm/pmu.h           |  4 ++++
+ arch/x86/kvm/vmx/pmu_intel.c | 14 +++++++++++++-
+ arch/x86/kvm/vmx/vmx.c       |  4 ++++
+ 4 files changed, 28 insertions(+), 1 deletion(-)
 
+diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+index 5053f4238218..e5b76f1c3ce8 100644
+--- a/arch/x86/kvm/pmu.c
++++ b/arch/x86/kvm/pmu.c
+@@ -458,6 +458,7 @@ void kvm_pmu_cleanup(struct kvm_vcpu *vcpu)
+ 	struct kvm_pmc *pmc = NULL;
+ 	DECLARE_BITMAP(bitmask, X86_PMC_IDX_MAX);
+ 	int i;
++	bool arch_cleanup = false;
+ 
+ 	pmu->need_cleanup = false;
+ 
+@@ -469,8 +470,14 @@ void kvm_pmu_cleanup(struct kvm_vcpu *vcpu)
+ 
+ 		if (pmc && pmc->perf_event && !pmc_speculative_in_use(pmc))
+ 			pmc_stop_counter(pmc);
++
++		if (i == INTEL_GUEST_LBR_INUSE)
++			arch_cleanup = true;
+ 	}
+ 
++	if (arch_cleanup && kvm_x86_ops.pmu_ops->cleanup)
++		kvm_x86_ops.pmu_ops->cleanup(vcpu);
++
+ 	bitmap_zero(pmu->pmc_in_use, X86_PMC_IDX_MAX);
+ }
+ 
+diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
+index 095b84392b89..d5023eacd8ed 100644
+--- a/arch/x86/kvm/pmu.h
++++ b/arch/x86/kvm/pmu.h
+@@ -15,6 +15,9 @@
+ #define VMWARE_BACKDOOR_PMC_REAL_TIME		0x10001
+ #define VMWARE_BACKDOOR_PMC_APPARENT_TIME	0x10002
+ 
++/* Indicates whether Intel LBR msrs were accessed during the last time slice. */
++#define INTEL_GUEST_LBR_INUSE INTEL_PMC_IDX_FIXED_VLBR
++
+ struct kvm_event_hw_type_mapping {
+ 	u8 eventsel;
+ 	u8 unit_mask;
+@@ -38,6 +41,7 @@ struct kvm_pmu_ops {
+ 	void (*init)(struct kvm_vcpu *vcpu);
+ 	void (*reset)(struct kvm_vcpu *vcpu);
+ 	void (*deliver_pmi)(struct kvm_vcpu *vcpu);
++	void (*cleanup)(struct kvm_vcpu *vcpu);
+ };
+ 
+ static inline u64 pmc_bitmask(struct kvm_pmc *pmc)
 diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-index d92e95b64c74..a78c440ebff2 100644
+index 75ba0444b4d1..c1c5058acc90 100644
 --- a/arch/x86/kvm/vmx/pmu_intel.c
 +++ b/arch/x86/kvm/vmx/pmu_intel.c
-@@ -175,6 +175,24 @@ static inline bool lbr_is_enabled(struct kvm_vcpu *vcpu)
- 	return lbr->nr && (vcpu->arch.perf_capabilities & PMU_CAP_LBR_FMT);
- }
- 
-+static bool intel_is_valid_lbr_record_msr(struct kvm_vcpu *vcpu, u32 index)
-+{
-+	struct x86_pmu_lbr *lbr = &to_vmx(vcpu)->lbr_desc.lbr;
-+	bool ret = false;
-+
-+	if (!lbr_is_enabled(vcpu))
-+		return ret;
-+
-+	ret =  (index == MSR_LBR_SELECT) || (index == MSR_LBR_TOS) ||
-+		(index >= lbr->from && index < lbr->from + lbr->nr) ||
-+		(index >= lbr->to && index < lbr->to + lbr->nr);
-+
-+	if (!ret && lbr->info)
-+		ret = (index >= lbr->info && index < lbr->info + lbr->nr);
-+
-+	return ret;
-+}
-+
- static bool intel_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
+@@ -303,6 +303,7 @@ static void intel_pmu_free_lbr_event(struct kvm_vcpu *vcpu)
+ static bool access_lbr_record_msr(struct kvm_vcpu *vcpu,
+ 				     struct msr_data *msr_info, bool read)
  {
- 	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-@@ -194,7 +212,8 @@ static bool intel_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
- 	default:
- 		ret = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0) ||
- 			get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0) ||
--			get_fixed_pmc(pmu, msr) || get_fw_gp_pmc(pmu, msr);
-+			get_fixed_pmc(pmu, msr) || get_fw_gp_pmc(pmu, msr) ||
-+			intel_is_valid_lbr_record_msr(vcpu, msr);
- 		break;
- 	}
- 
-@@ -213,6 +232,113 @@ static struct kvm_pmc *intel_msr_idx_to_pmc(struct kvm_vcpu *vcpu, u32 msr)
- 	return pmc;
- }
- 
-+static int intel_pmu_create_lbr_event(struct kvm_vcpu *vcpu)
-+{
 +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-+	struct lbr_desc *lbr_desc = &to_vmx(vcpu)->lbr_desc;
-+	struct perf_event *event;
-+
-+	/*
-+	 * The perf_event_attr is constructed in the minimum efficient way:
-+	 * - set 'pinned = true' to make it task pinned so that if another
-+	 *   cpu pinned event reclaims LBR, the event->oncpu will be set to -1;
-+	 * - set '.exclude_host = true' to record guest branches behavior;
-+	 *
-+	 * - set '.config = INTEL_FIXED_VLBR_EVENT' to indicates host perf
-+	 *   schedule the event without a real HW counter but a fake one;
-+	 *   check is_guest_lbr_event() and __intel_get_event_constraints();
-+	 *
-+	 * - set 'sample_type = PERF_SAMPLE_BRANCH_STACK' and
-+	 *   'branch_sample_type = PERF_SAMPLE_BRANCH_CALL_STACK |
-+	 *   PERF_SAMPLE_BRANCH_USER' to configure it as a LBR callstack
-+	 *   event, which helps KVM to save/restore guest LBR records
-+	 *   during host context switches and reduces quite a lot overhead,
-+	 *   check branch_user_callstack() and intel_pmu_lbr_sched_task();
-+	 */
-+	struct perf_event_attr attr = {
-+		.type = PERF_TYPE_RAW,
-+		.size = sizeof(attr),
-+		.config = INTEL_FIXED_VLBR_EVENT,
-+		.sample_type = PERF_SAMPLE_BRANCH_STACK,
-+		.pinned = true,
-+		.exclude_host = true,
-+		.branch_sample_type = PERF_SAMPLE_BRANCH_CALL_STACK |
-+					PERF_SAMPLE_BRANCH_USER,
-+	};
-+
-+	if (unlikely(lbr_desc->event))
-+		return 0;
-+
-+	event = perf_event_create_kernel_counter(&attr, -1,
-+						current, NULL, NULL);
-+	if (IS_ERR(event)) {
-+		pr_debug_ratelimited("%s: failed %ld\n",
-+					__func__, PTR_ERR(event));
-+		return -ENOENT;
-+	}
-+	lbr_desc->event = event;
-+	pmu->event_count++;
-+	return 0;
-+}
-+
-+static void intel_pmu_free_lbr_event(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-+	struct lbr_desc *lbr_desc = &to_vmx(vcpu)->lbr_desc;
-+	struct perf_event *event = lbr_desc->event;
-+
-+	if (!event)
-+		return;
-+
-+	perf_event_release_kernel(event);
-+	lbr_desc->event = NULL;
-+	pmu->event_count--;
-+}
-+
-+/*
-+ * It's safe to access LBR msrs from guest when they have not
-+ * been passthrough since the host would help restore or reset
-+ * the LBR msrs records when the guest LBR event is scheduled in.
-+ */
-+static bool access_lbr_record_msr(struct kvm_vcpu *vcpu,
-+				     struct msr_data *msr_info, bool read)
-+{
-+	struct lbr_desc *lbr_desc = &to_vmx(vcpu)->lbr_desc;
-+	u32 index = msr_info->index;
-+
-+	if (!intel_is_valid_lbr_record_msr(vcpu, index))
-+		return false;
-+
-+	if (msr_info->host_initiated)
-+		goto dummy;
-+
-+	if (!lbr_desc->event && !intel_pmu_create_lbr_event(vcpu))
-+		goto dummy;
-+
-+	/*
-+	 * Disable irq to ensure the LBR feature doesn't get reclaimed by the
-+	 * host at the time the value is read from the msr, and this avoids the
-+	 * host LBR value to be leaked to the guest. If LBR has been reclaimed,
-+	 * return 0 on guest reads.
-+	 */
-+	local_irq_disable();
-+	if (lbr_desc->event->state == PERF_EVENT_STATE_ACTIVE) {
-+		if (read)
-+			rdmsrl(index, msr_info->data);
-+		else
-+			wrmsrl(index, msr_info->data);
-+	} else if (read)
-+		msr_info->data = 0;
-+	local_irq_enable();
-+
-+	return true;
-+
-+dummy:
-+	if (read)
-+		msr_info->data = 0;
-+	return true;
-+}
-+
- static int intel_pmu_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- {
- 	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-@@ -256,7 +382,8 @@ static int intel_pmu_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		} else if ((pmc = get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0))) {
- 			msr_info->data = pmc->eventsel;
- 			return 0;
--		}
-+		} else if (access_lbr_record_msr(vcpu, msr_info, true))
-+			return 0;
- 	}
+ 	struct lbr_desc *lbr_desc = &to_vmx(vcpu)->lbr_desc;
+ 	u32 index = msr_info->index;
  
- 	return 1;
-@@ -354,6 +481,8 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		if (data & ~vcpu_get_supported_debugctl(vcpu))
- 			return 1;
+@@ -331,6 +332,7 @@ static bool access_lbr_record_msr(struct kvm_vcpu *vcpu,
+ 		msr_info->data = 0;
+ 	local_irq_enable();
+ 
++	__set_bit(INTEL_GUEST_LBR_INUSE, pmu->pmc_in_use);
+ 	return true;
+ 
+ dummy:
+@@ -483,6 +485,7 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
  		vmcs_write64(GUEST_IA32_DEBUGCTL, data);
-+		if (!msr_info->host_initiated && !to_vmx(vcpu)->lbr_desc.event)
-+			intel_pmu_create_lbr_event(vcpu);
+ 		if (!msr_info->host_initiated && !to_vmx(vcpu)->lbr_desc.event)
+ 			intel_pmu_create_lbr_event(vcpu);
++		__set_bit(INTEL_GUEST_LBR_INUSE, pmu->pmc_in_use);
  		return 0;
  	default:
  		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0)) ||
-@@ -382,7 +511,8 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 				reprogram_gp_counter(pmc, data);
- 				return 0;
- 			}
--		}
-+		} else if (access_lbr_record_msr(vcpu, msr_info, false))
-+			return 0;
- 	}
+@@ -584,7 +587,9 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+ 		INTEL_PMC_MAX_GENERIC, pmu->nr_arch_fixed_counters);
  
- 	return 1;
-@@ -483,6 +613,7 @@ static void intel_pmu_init(struct kvm_vcpu *vcpu)
- 	vcpu->arch.perf_capabilities = guest_cpuid_has(vcpu, X86_FEATURE_PDCM) ?
- 		vmx_get_perf_capabilities() : 0;
- 	lbr_desc->lbr.nr = 0;
-+	lbr_desc->event = NULL;
+ 	if ((vcpu->arch.perf_capabilities & PMU_CAP_LBR_FMT) &&
+-	    x86_perf_get_lbr(&lbr_desc->lbr))
++	    !x86_perf_get_lbr(&lbr_desc->lbr))
++		bitmap_set(pmu->all_valid_pmc_idx, INTEL_GUEST_LBR_INUSE, 1);
++	else
+ 		vcpu->arch.perf_capabilities &= ~PMU_CAP_LBR_FMT;
+ 
+ 	nested_vmx_pmu_entry_exit_ctls_update(vcpu);
+@@ -672,6 +677,12 @@ static void intel_pmu_deliver_pmi(struct kvm_vcpu *vcpu)
+ 		intel_pmu_legacy_freezing_lbrs_on_pmi(vcpu);
  }
  
- static void intel_pmu_reset(struct kvm_vcpu *vcpu)
-@@ -507,6 +638,7 @@ static void intel_pmu_reset(struct kvm_vcpu *vcpu)
- 
- 	pmu->fixed_ctr_ctrl = pmu->global_ctrl = pmu->global_status =
- 		pmu->global_ovf_ctrl = 0;
-+	intel_pmu_free_lbr_event(vcpu);
- }
- 
++static void intel_pmu_cleanup(struct kvm_vcpu *vcpu)
++{
++	if (!(vmcs_read64(GUEST_IA32_DEBUGCTL) & DEBUGCTLMSR_LBR))
++		intel_pmu_free_lbr_event(vcpu);
++}
++
  struct kvm_pmu_ops intel_pmu_ops = {
+ 	.find_arch_event = intel_find_arch_event,
+ 	.find_fixed_event = intel_find_fixed_event,
+@@ -687,4 +698,5 @@ struct kvm_pmu_ops intel_pmu_ops = {
+ 	.init = intel_pmu_init,
+ 	.reset = intel_pmu_reset,
+ 	.deliver_pmi = intel_pmu_deliver_pmi,
++	.cleanup = intel_pmu_cleanup,
+ };
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 08e26a9518c2..58a8af433741 100644
+index 800a26e3b571..8521fc640b95 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -3857,6 +3857,71 @@ void pt_update_intercept_for_msr(struct vcpu_vmx *vmx)
- 	}
- }
- 
-+static void vmx_update_intercept_for_lbr_msrs(struct kvm_vcpu *vcpu, bool set)
-+{
-+	unsigned long *msr_bitmap = to_vmx(vcpu)->vmcs01.msr_bitmap;
-+	struct x86_pmu_lbr *lbr = &to_vmx(vcpu)->lbr_desc.lbr;
-+	int i;
-+
-+	WARN_ON_ONCE(!lbr->nr);
-+
-+	vmx_set_intercept_for_msr(msr_bitmap, MSR_LBR_SELECT, MSR_TYPE_RW, set);
-+	vmx_set_intercept_for_msr(msr_bitmap, MSR_LBR_TOS, MSR_TYPE_RW, set);
-+	for (i = 0; i < lbr->nr; i++) {
-+		vmx_set_intercept_for_msr(msr_bitmap,
-+			lbr->from + i, MSR_TYPE_RW, set);
-+		vmx_set_intercept_for_msr(msr_bitmap,
-+			lbr->to + i, MSR_TYPE_RW, set);
-+		if (lbr->info)
-+			vmx_set_intercept_for_msr(msr_bitmap,
-+				lbr->info + i, MSR_TYPE_RW, set);
-+	}
-+}
-+
-+static inline void vmx_lbr_disable_passthrough(struct kvm_vcpu *vcpu)
-+{
-+	vmx_update_intercept_for_lbr_msrs(vcpu, true);
-+}
-+
-+static inline void vmx_lbr_enable_passthrough(struct kvm_vcpu *vcpu)
-+{
-+	vmx_update_intercept_for_lbr_msrs(vcpu, false);
-+}
-+
-+/*
-+ * Higher priority host perf events (e.g. cpu pinned) could reclaim the
-+ * pmu resources (e.g. LBR) that were assigned to the guest. This is
-+ * usually done via ipi calls (more details in perf_install_in_context).
-+ *
-+ * Before entering the non-root mode (with irq disabled here), double
-+ * confirm that the pmu features enabled to the guest are not reclaimed
-+ * by higher priority host events. Otherwise, disallow vcpu's access to
-+ * the reclaimed features.
-+ */
-+static void vmx_passthrough_lbr_msrs(struct kvm_vcpu *vcpu)
-+{
-+	struct lbr_desc *lbr_desc = &to_vmx(vcpu)->lbr_desc;
-+
-+	if (!lbr_desc->event) {
-+		vmx_lbr_disable_passthrough(vcpu);
-+		if (vmcs_read64(GUEST_IA32_DEBUGCTL) & DEBUGCTLMSR_LBR)
-+			goto warn;
-+		return;
-+	}
-+
-+	if (lbr_desc->event->state < PERF_EVENT_STATE_ACTIVE) {
-+		vmx_lbr_disable_passthrough(vcpu);
-+		goto warn;
-+	} else
-+		vmx_lbr_enable_passthrough(vcpu);
-+
-+	return;
-+
-+warn:
-+	pr_warn_ratelimited("kvm: vcpu-%d: fail to passthrough LBR.\n",
-+		vcpu->vcpu_id);
-+}
-+
- static bool vmx_guest_apic_has_interrupt(struct kvm_vcpu *vcpu)
+@@ -3912,17 +3912,21 @@ static inline void vmx_lbr_enable_passthrough(struct kvm_vcpu *vcpu)
+  */
+ static void vmx_passthrough_lbr_msrs(struct kvm_vcpu *vcpu)
  {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
-@@ -6728,8 +6793,11 @@ static fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu)
++	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+ 	struct lbr_desc *lbr_desc = &to_vmx(vcpu)->lbr_desc;
  
- 	pt_guest_enter(vmx);
+ 	if (!lbr_desc->event) {
+ 		vmx_lbr_disable_passthrough(vcpu);
+ 		if (vmcs_read64(GUEST_IA32_DEBUGCTL) & DEBUGCTLMSR_LBR)
+ 			goto warn;
++		if (test_bit(INTEL_GUEST_LBR_INUSE, pmu->pmc_in_use))
++			goto warn;
+ 		return;
+ 	}
  
--	if (vcpu_to_pmu(vcpu)->version)
-+	if (vcpu_to_pmu(vcpu)->version) {
- 		atomic_switch_perf_msrs(vmx);
-+		if (vcpu->arch.perf_capabilities & PMU_CAP_LBR_FMT)
-+			vmx_passthrough_lbr_msrs(vcpu);
-+	}
- 	atomic_switch_umwait_control_msr(vmx);
- 
- 	if (enable_preemption_timer)
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index ef24338b194d..c67ce758412e 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -94,6 +94,14 @@ struct pt_desc {
- struct lbr_desc {
- 	/* Basic information about LBR records. */
- 	struct x86_pmu_lbr lbr;
-+
-+	/*
-+	 * Emulate LBR feature via passthrough LBR registers when the
-+	 * per-vcpu guest LBR event is scheduled on the current pcpu.
-+	 *
-+	 * The records may be inaccurate if the host reclaims the LBR.
-+	 */
-+	struct perf_event *event;
- };
- 
- /*
+ 	if (lbr_desc->event->state < PERF_EVENT_STATE_ACTIVE) {
+ 		vmx_lbr_disable_passthrough(vcpu);
++		__clear_bit(INTEL_GUEST_LBR_INUSE, pmu->pmc_in_use);
+ 		goto warn;
+ 	} else
+ 		vmx_lbr_enable_passthrough(vcpu);
 -- 
 2.21.3
 
