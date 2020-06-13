@@ -2,84 +2,201 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E97EC433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FB0C433E0
 	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 01:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1579620739
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 01:09:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ARwD0woT"
+	by mail.kernel.org (Postfix) with ESMTP id 02EEF206D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 01:09:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726453AbgFMBI7 (ORCPT
+        id S1726441AbgFMBIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 21:08:59 -0400
-Received: from m12-18.163.com ([220.181.12.18]:49567 "EHLO m12-18.163.com"
+        Fri, 12 Jun 2020 21:08:46 -0400
+Received: from gate.crashing.org ([63.228.1.57]:35008 "EHLO gate.crashing.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726377AbgFMBI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 21:08:58 -0400
-X-Greylist: delayed 907 seconds by postgrey-1.27 at vger.kernel.org; Fri, 12 Jun 2020 21:08:58 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=Kz/7X
-        sIp5vi6UQF9WmOwilNhRidydQLpthW7IODNcgs=; b=ARwD0woT59rUntfmArYjg
-        Zy7q5hAeeOd7TGZi9HMD0CI7ZoWn+7ai5MAb7A4uDoBLwct25tAZXe0UtswM4GEg
-        Xi3wWybnIXg1/ZqMTK8seP3SFbGkaxvFGRC8AeyoA+ABx9TPcU4fSTwFytgYBZWI
-        M8+8m+2BsIC3o8TNNl+CK0=
-Received: from localhost.localdomain (unknown [111.202.190.28])
-        by smtp14 (Coremail) with SMTP id EsCowADX3U1_I+Re+nFdFw--.10099S2;
-        Sat, 13 Jun 2020 08:53:19 +0800 (CST)
-From:   zzuedu2000@163.com
-To:     tj@kernel.org, lizefan@huawei.com, hannes@cmpxchg.org
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        weifenghai <zzuedu2000@163.com>
-Subject: [PATCH v2] Fix code style same in one function
-Date:   Sat, 13 Jun 2020 08:53:06 +0800
-Message-Id: <20200613005306.29988-1-zzuedu2000@163.com>
-X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        id S1726377AbgFMBIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 21:08:46 -0400
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 05D18GAQ009853;
+        Fri, 12 Jun 2020 20:08:16 -0500
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id 05D18FdZ009852;
+        Fri, 12 Jun 2020 20:08:15 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Fri, 12 Jun 2020 20:08:15 -0500
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Michael Ellerman <patch-notifications@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Paul Mackerras <paulus@samba.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH v4 1/2] powerpc/uaccess: Implement unsafe_put_user() using 'asm goto'
+Message-ID: <20200613010815.GR31009@gate.crashing.org>
+References: <49YBKY13Szz9sT4@ozlabs.org> <20200611224355.71174-1-ndesaulniers@google.com> <20200611235256.GL31009@gate.crashing.org> <CAKwvOdkKywb1KZ-SDwwuvQEmbsaAzJj9mEPqVG=qw1F5Ogv8rw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: EsCowADX3U1_I+Re+nFdFw--.10099S2
-X-Coremail-Antispam: 1Uf129KBjvdXoW7Gw4fAF1Dur4xKryUtw1rXrb_yoWxZwc_Z3
-        s3Xw1xKrySyw1qkrZ8Zws3Xa97KayrKrWv9r17KrWUAF1UJrs8JwnxKFn8JrsruFn3Cr90
-        9r93KF93KFsrWjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU1VWlJUUUUU==
-X-Originating-IP: [111.202.190.28]
-X-CM-SenderInfo: p22xvvbxsqiii6rwjhhfrp/1tbiRx9CQlc7PsK9XAAAsp
+In-Reply-To: <CAKwvOdkKywb1KZ-SDwwuvQEmbsaAzJj9mEPqVG=qw1F5Ogv8rw@mail.gmail.com>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: weifenghai <zzuedu2000@163.com>
+Hi!
 
-Combine two assignments for the variable “l” into one statement.
+On Fri, Jun 12, 2020 at 02:33:09PM -0700, Nick Desaulniers wrote:
+> On Thu, Jun 11, 2020 at 4:53 PM Segher Boessenkool
+> <segher@kernel.crashing.org> wrote:
+> > The PowerPC part of
+> > https://gcc.gnu.org/onlinedocs/gcc/Machine-Constraints.html#Machine-Constraints
+> > (sorry, no anchor) documents %U.
+> 
+> I thought those were constraints, not output templates?  Oh,
+>     The asm statement must also use %U<opno> as a placeholder for the
+>     “update” flag in the corresponding load or store instruction.
+> got it.
 
-Signed-off-by: weifenghai <zzuedu2000@163.com>
----
- kernel/cgroup/cgroup.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Traditionally, *all* constraints were documented here, including the
+ones that are only meant for GCC's internal use.  And the output
+modifiers were largely not documented at all.
 
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index 1ea181a58465..c3e6db6e44d8 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -4352,8 +4352,7 @@ static struct css_set *css_task_iter_next_css_set(struct css_task_iter *it)
- 	}
- 
- 	/* find the next cset */
--	l = it->cset_pos;
--	l = l->next;
-+	l = it->cset_pos->next;
- 	if (l == it->cset_head) {
- 		it->cset_pos = NULL;
- 		return NULL;
--- 
-2.17.1
+For GCC 10, for Power, I changed it to only document the constraints
+that should be public in gcc.info (and everything in gccint.info).  The
+output modifiers can neatly be documented here as well, since it such a
+short section now.  We're not quite there yet, but getting there.
+
+> > Traditionally the source code is the documentation for this.  The code
+> > here starts with the comment
+> >       /* Write second word of DImode or DFmode reference.  Works on register
+> >          or non-indexed memory only.  */
+> > (which is very out-of-date itself, it works fine for e.g. TImode as well,
+> > but alas).
+> >
+> > Unit tests are completely unsuitable for most compiler things like this.
+> 
+> What? No, surely one may write tests for output operands.  Grepping
+> for `%L` in gcc/ was less fun than I was hoping.
+
+You should look for 'L' instead (incl. those quotes) ;-)
+
+Unit tests are 100x as much work, and gets <5% of the problems, compared
+to regression tests.  Unit tests only test the stuff you should have
+written *anyway*.  It is much more useful to test that much higher level
+things work, IMNSHO.
+
+> > HtH,
+> 
+> Yes, perfect, thank you so much!  So it looks like LLVM does not yet
+> handle %L properly for memory operands.
+> https://bugs.llvm.org/show_bug.cgi?id=46186#c4
+> It's neat to see how this is implemented in GCC (and how many aren't
+> implemented in LLVM, yikes :( ).  For reference, this is implemented
+> in PPCAsmPrinter::PrintAsmOperand() and
+> PPCAsmPrinter::PrintAsmMemoryOperand() in
+> llvm/lib/Target/PowerPC/PPCAsmPrinter.cpp.  GCC switches first on the
+> modifier characters, then the operand type.
+
+That is what the rs6000 backend currently does, yeah.  The print_operand
+function just gets passed the modifier character (as "int code", or 0 if
+there is no modifier).  Since there are so many modifiers there aren't
+really any better options than just doing a "switch (code)" around
+everything else (well, things can be factored, some helper functions,
+etc., but this is mostly very old code, and it has grown organically).
+
+> LLVM dispatches on operand type, then modifier.
+
+That is neater, certainly for REG operands.
+
+> When I was looking into LLVM's AsmPrinter class,
+> I was surprised to see it's basically an assembler that just has
+> complex logic to just do a bunch of prints, so it makes sense to see
+> that pattern in GCC literally calling printf.
+
+GCC always outputs assembler code.  This is usually a big advantage, for
+things like output_operand.
+
+> Some things I don't understand from PPC parlance is the "mode"
+> (preinc, predec, premodify) and small data operands?
+
+"mode" is "machine mode" -- SImode and the like.  PRE_DEC etc. are
+*codes* (rtx codes), like,  (mem:DF (pre_dec:SI (reg:SI 39)))  (straight
+from the manual).
+
+> IIUC the bug report correctly, it looks like LLVM is failing for the
+> __put_user_asm2_goto case for -m32.  A simple reproducer:
+> https://godbolt.org/z/jBBF9b
+> 
+> void foo(long long in, long long* out) {
+> asm volatile(
+>   "stw%X1 %0, %1\n\t"
+>   "stw%X1 %L0, %L1"
+>   ::"r"(in), "m"(*out));
+> }
+
+This is wrong if operands[0] is a register, btw.  So it should use 'o'
+as constraint (not 'm'), and then the 'X' output modifier has become
+useless.
+
+> prints (in GCC):
+> foo:
+>   stw 3, 0(5)
+>   stw 4, 4(5)
+>   blr
+> (first time looking at ppc assembler, seems constants and registers
+> are not as easy to distinguish,
+
+The instruction mnemonic always tells you what types all arguments are.
+Traditionally we don't write spaces after commas, either.  That is
+actually easier to read -- well, if you are used to it, anyway! :-)
+
+> https://developer.ibm.com/technologies/linux/articles/l-ppc/ say "Get
+> used to it." LOL, ok).
+
+Since quite a while you can write your assembler using register names as
+well.  Not using the dangerous macros the Linux kernel had/has(with
+which you can write "rN" in place of any "N", and it doesn't force you
+to use the register name either, so you could write "li r3,r4" and
+"mr r3,0" and even "addi r3,r0,1234", all very misleading).
+
+> so that's "store word from register 3 into dereference of register 5
+> plus 0, then store word from register 4 into dereference of register 5
+> plus 4?"
+
+Yup.
+
+> Guessing the ppc32 abi is ILP32 putting long long's into two
+> separate registers?
+
+Yes, and the order is the same as it would be in memory (on BE, high
+half goes into the lower-numbered register; on LE, the wr^Wother way
+around).
+
+> Seems easy to implement in LLVM (short of those modes/small data operands).
+
+I don't know what SDATA variants LLVM does support?
+
+> https://reviews.llvm.org/D81767
+
+Output modifiers are not just for use by the calling convention (as your
+examples already show :-) )
+
+%Ln is the second word of a multi-word reference, not the "upper word"
+(%Yn is third, %Zn is fourth, and for BE it isn't the high half even
+for 2-word things).
+
+The code looks like it will work (I don't know most LLVM specifics of
+course).
+
+Cheers,
 
 
+Segher
