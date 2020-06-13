@@ -2,209 +2,208 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CEA7C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 02:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD9BC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 03:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63A52206F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 02:54:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592016890;
-	bh=jUlQZpYpsscl9TZb9hCBCUse56kQ/sYmb71vlw99LJc=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=HdaVdt6K+bKqQjGnxQA8CoT4gXGzZBqN9VFmiZxRo0KgCjSYZ6XzF0sRBfo0gacJM
-	 +fuOBwaBhgUhuejZbYmZHxduUIjDXOc7mFV0KzKtdK3J+QeaTyzVJssCdlKdRbdWa1
-	 gX4gXGGH3KdlgGgqYa/7plnzxgewtSPYxMStJmF4=
+	by mail.kernel.org (Postfix) with ESMTP id A045320825
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 03:04:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="kLnuFFqo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726416AbgFMCsb (ORCPT
+        id S1726483AbgFMDEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 22:48:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33152 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726290AbgFMCsb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 22:48:31 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E87EA206A4;
-        Sat, 13 Jun 2020 02:48:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592016509;
-        bh=jUlQZpYpsscl9TZb9hCBCUse56kQ/sYmb71vlw99LJc=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=BthQGZVhOQ62uMgdePehaEUcYEzxWTDyHUKp86a1QesP6sfrm84QaoQaqDuPBS0Ct
-         iT6Uprv3yd9eKY/JhWKgmeGYIvtR9uB+slcMTDwscukScxIM/As72D0CAHwq6X5mEm
-         TVLYxjIHeOwytXvIgpuG/1AHTeNf8YSyiUZqnArQ=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id CA93D3522778; Fri, 12 Jun 2020 19:48:29 -0700 (PDT)
-Date:   Fri, 12 Jun 2020 19:48:29 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@redhat.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org
-Subject: Re: BUG: kernel NULL pointer dereference from check_preempt_wakeup()
-Message-ID: <20200613024829.GA12958@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200604225445.GA32319@paulmck-ThinkPad-P72>
- <20200605131451.GE2750@hirez.programming.kicks-ass.net>
- <20200605141607.GB4455@paulmck-ThinkPad-P72>
- <20200605184159.GA4062@paulmck-ThinkPad-P72>
- <20200606005126.GA21507@paulmck-ThinkPad-P72>
- <20200606172942.GA30594@paulmck-ThinkPad-P72>
- <20200607185732.GA18906@paulmck-ThinkPad-P72>
- <20200609154016.GA17196@paulmck-ThinkPad-P72>
+        Fri, 12 Jun 2020 23:04:49 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:54515 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726401AbgFMDEn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 23:04:43 -0400
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200613030438epoutp03ad74446deeea5fb13f29123abc2c3407~X_3ZVjf4p3109231092epoutp03k
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 03:04:38 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200613030438epoutp03ad74446deeea5fb13f29123abc2c3407~X_3ZVjf4p3109231092epoutp03k
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1592017478;
+        bh=EJQ586JopX9Nh+Jh0icLV762x4EESw3HLRqH83Yavmg=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=kLnuFFqouHpGc2jho1CQqpJszfrYiEMv+cYWM3RT8d7gz/TeIEXYRfE/nZwFoKzdW
+         tS0TDc+H9+pYbuGDd0TnEwkVU39ZX6Rx1lbsQgHUjsL5OhIbuFzVNdSHzRvq1/vsYD
+         NFovB9qAD9qHszy9z3OEfdPPjEaCLTo7Udvo5K1Q=
+Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+        20200613030438epcas5p1818b0bde3976ae3c606df922f2bc7175~X_3YfchpN1950619506epcas5p13;
+        Sat, 13 Jun 2020 03:04:38 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D1.43.09475.54244EE5; Sat, 13 Jun 2020 12:04:37 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200613030436epcas5p38137bcaddd80ec5eed746a80a1fe31f5~X_3XNRevZ2268422684epcas5p3F;
+        Sat, 13 Jun 2020 03:04:36 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200613030436epsmtrp2ecb3e27c31e5bbb1c2b9027b1d2ca687~X_3XJ0SBz2362123621epsmtrp2r;
+        Sat, 13 Jun 2020 03:04:36 +0000 (GMT)
+X-AuditID: b6c32a4b-389ff70000002503-b1-5ee4424564ef
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        1F.B4.08303.44244EE5; Sat, 13 Jun 2020 12:04:36 +0900 (KST)
+Received: from Jaguar.sa.corp.samsungelectronics.net (unknown
+        [107.108.73.139]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200613030434epsmtip20bce7376305d84be447eda83dd85cdeb~X_3VMoJKF0568705687epsmtip2S;
+        Sat, 13 Jun 2020 03:04:34 +0000 (GMT)
+From:   Alim Akhtar <alim.akhtar@samsung.com>
+To:     robh@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-scsi@vger.kernel.org,
+        krzk@kernel.org, avri.altman@wdc.com, martin.petersen@oracle.com,
+        kwmad.kim@samsung.com, stanley.chu@mediatek.com,
+        cang@codeaurora.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kishon@ti.com, Alim Akhtar <alim.akhtar@samsung.com>
+Subject: [RESEND PATCH v10 00/10] exynos-ufs: Add support for UFS HCI
+Date:   Sat, 13 Jun 2020 08:16:56 +0530
+Message-Id: <20200613024706.27975-1-alim.akhtar@samsung.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200609154016.GA17196@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLKsWRmVeSWpSXmKPExsWy7bCmhq6r05M4g0cTLC0ezNvGZvHy51U2
+        i0/rl7FazD9yjtXiwtMeNovz5zewW9zccpTFYtPja6wWl3fNYbOYcX4fk0X39R1sFsuP/2Oy
+        +L9nB7vF0q03GR34PC739TJ5bFrVyeaxeUm9R8vJ/SweH5/eYvHo27KK0eP4je1MHp83yXm0
+        H+hmCuCM4rJJSc3JLEst0rdL4Mr4fqeLseCvTMW5K89ZGxgXi3UxcnBICJhIvL3u18XIxSEk
+        sJtR4tj9xYwQzidGiYNLjjJDOJ8ZJS6d/MEG03F5jgFEfBejxIPvz6CKWpgk5nesAmrn5GAT
+        0Ja4O30LE4gtIiAsceRbG1icWeAlk8SuRwUgtrCAq8T5U6vYQWwWAVWJ46+Ogdm8AjYSs5a+
+        ZwaxJQTkJVZvOMAMEReUODnzCQvEHHmJ5q2zoWq2cEjMvlwNYbtIXDo3jRHCFpZ4dXwLO4Qt
+        JfH53V6oB7IlenYZQ4RrJJbOO8YCYdtLHLgyhwWkhFlAU2L9Ln2ITXwSvb+fMEF08kp0tAlB
+        VKtKNL+7CtUpLTGxu5sVosRD4t1eCZCwkECsxJfN39kmMMrNQnL+LCTnz0LYtYCReRWjZGpB
+        cW56arFpgXFearlecWJucWleul5yfu4mRnCK0vLewfjowQe9Q4xMHIyHGCU4mJVEeAXFH8YJ
+        8aYkVlalFuXHF5XmpBYfYpTmYFES51X6cSZOSCA9sSQ1OzW1ILUIJsvEwSnVwLQ/aa3DdhGb
+        dn3zeLb5pyxtZFt6rdfduujVkct0JXjiUpk3EbcWFKzY+vjiya3ib4XyOu+df2Kl5jlV1ubq
+        k88qy9zmxIXq9d1c8C60e9k25tmT6x+yMBXcP1QZ+uFPkIXiEWl5nhi9/xOirwhpJbLauj37
+        c8hZYYfIvueiDt0hV/p2z7F+XPpupwe7htUTvodSs6L6VsyUjLjZ0ambWyF5+gjPo3TF1yUK
+        AZcDfK4Kf7LYytP0MrmgTvai5ZH5E9RCDusfcbQ5Ym7Cx8S9dV7izDcRtrn3+40yetlDn/Lx
+        +DYKxAglb/JRkV3J+fpI/uX1bIH8qn9Y/vZXzDZNn8d+dRGveHqCTGemiN01JZbijERDLeai
+        4kQAXrwTrsADAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrFLMWRmVeSWpSXmKPExsWy7bCSvK6L05M4gxVz5SwezNvGZvHy51U2
+        i0/rl7FazD9yjtXiwtMeNovz5zewW9zccpTFYtPja6wWl3fNYbOYcX4fk0X39R1sFsuP/2Oy
+        +L9nB7vF0q03GR34PC739TJ5bFrVyeaxeUm9R8vJ/SweH5/eYvHo27KK0eP4je1MHp83yXm0
+        H+hmCuCM4rJJSc3JLEst0rdL4Mr4fqeLseCvTMW5K89ZGxgXi3UxcnBICJhIXJ5j0MXIxSEk
+        sINR4u3CFcxdjJxAcWmJ6xsnsEPYwhIr/z0Hs4UEmpgknswKALHZBLQl7k7fwgRiiwDVHPnW
+        xggyiFngO5PEgQkTwAYJC7hKnD+1CqyZRUBV4virY2A2r4CNxKyl76GWyUus3nCAGSIuKHFy
+        5hMWkOOYBdQl1s8TAgkzA5U0b53NPIGRfxaSqlkIVbOQVC1gZF7FKJlaUJybnltsWGCUl1qu
+        V5yYW1yal66XnJ+7iREcPVpaOxj3rPqgd4iRiYPxEKMEB7OSCK+g+MM4Id6UxMqq1KL8+KLS
+        nNTiQ4zSHCxK4rxfZy2MExJITyxJzU5NLUgtgskycXBKNTApBkwQPRxQqcDI8rZN4NhPFy0r
+        i6ub41TXL911y/XvtNSDG7/tnGVnJ7Yqu3CDx9tZU7sm3pjK9XDVJd3G9PVRJ2pW115jmu6z
+        dfmuE2wxnlIetnNOt/3XXrvx08cDm859nnvV9or3bGP+tZs1AiO+uy7zaAjxzNT/4uLvqfTu
+        bv9Hw6nKlssWGQa7h6yK2LK9vuG//W1duT6e2K1PWkucS5nXBEetWVmVenHtN94deRy82jcU
+        kj97Nzw1mZR2zZLB+pPTpvTblycGvfW99XXfpuyJKxbd5j/3OKNV0f3nuoPrmg8e1Fze6aas
+        +2r6/6hbr+RljSb27LarlJp4aXZIVlX99FCO5V1mLSvsp/z8rsRSnJFoqMVcVJwIAHomHfcN
+        AwAA
+X-CMS-MailID: 20200613030436epcas5p38137bcaddd80ec5eed746a80a1fe31f5
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200613030436epcas5p38137bcaddd80ec5eed746a80a1fe31f5
+References: <CGME20200613030436epcas5p38137bcaddd80ec5eed746a80a1fe31f5@epcas5p3.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 08:40:16AM -0700, Paul E. McKenney wrote:
-> On Sun, Jun 07, 2020 at 11:57:32AM -0700, Paul E. McKenney wrote:
-> > On Sat, Jun 06, 2020 at 10:29:42AM -0700, Paul E. McKenney wrote:
-> > > On Fri, Jun 05, 2020 at 05:51:26PM -0700, Paul E. McKenney wrote:
-> > > > On Fri, Jun 05, 2020 at 11:41:59AM -0700, Paul E. McKenney wrote:
-> > > > > On Fri, Jun 05, 2020 at 07:16:07AM -0700, Paul E. McKenney wrote:
-> > > > > 
-> > > > > And in case it is helpful, here is the output of "git bisect view",
-> > > > > which lists rather more commits than "git bisect run" claims, but there
-> > > > > are only a few scheduler commits below.  I don't see anything that
-> > > > > I can prove can cause this problem, but there are some that are at
-> > > > > least related to this code path.
-> > > > > 
-> > > > > Is there anything that is actually relevant?
-> > > > 
-> > > > And the run with the WARN and tracing did hit two failures, and the
-> > > > corresponding console logs are in the attached tarball.  Both of them
-> > > > triggered a warning as well as the failure.
-> > > 
-> > > And the current state of the bisection, for whatever it is worth.
-> > 
-> > The bisection finished, finally!
-> > 
-> > 90b5363acd47 ("sched: Clean up scheduler_ipi()")
-> > 
-> > I don't see anything immediately obvious, but then again, I do not
-> > claim to understand this code.  If you have additional diagnostics,
-> > please let me know.
-> 
-> But lockdep just might have spotted something useful.
-> This was running the rcutorture SRCU-P scenario on
-> mainline commit abfbb29297c2 ("Merge tag 'rproc-v5.8' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/andersson/remoteproc").
-> Unlike TREE03, SRCU-P enables lockdep.
-> 
-> This splat features a couple of lockdep_assert_held() splats just before
-> the mysterious NULL pointer dereference.
+This patch-set introduces UFS (Universal Flash Storage) host controller support
+for Samsung family SoC. Mostly, it consists of UFS PHY and host specific driver.
 
-And an update based on your patch (https://paste.debian.net/1151802/)
-against 44ebe016df3a ("Merge branch 'proc-linus' of
-git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace").
+- Changes since v9
+* fixed the review comments by Rob on ufs dt bindings
+* Addeded Rob's reviwed-by tag on 08/10 patch
 
-Without your patch, 28 hours of rcutorture scenario TREE03 gets three NULL
-pointer dereferences.  With it, there are no NULL pointer dereferences,
-but I did see one of these:  https://paste.debian.net/1151842.
-(Also shown below.)
+- Changes since v8
+* fixed make dt_binding_check error as pointed by Rob
+* Addressed review comments from Randy Dunlap
 
-Related or not, who knows?  More as I learn more.
+- Changes since v7:
+* fixed review comments from Rob and Kishon
+* Addeded reviwed-by tags
+* rebased on top of v5.7-rc4
+ 
+- Changes since v6:
+* Addressed review comments from Avri and Christoph
+* Added Reviewed-by tags of Avri and Can on various patches
 
-There is only a 5% chance of the result with your patch being a
-false negative, so looking positive.
+- Changes since v5:
+* re-introduce various quicks which was removed because of no driver
+* consumer of those quirks, initial 4 patches does the same.
+* Added Reviewed-by tags
+* rebased on top of v5.7-rc1
+* included Kiwoong's patch in this series, which this driver needs
 
-						Thanx, Paul
+- Changes since v4:
+* Addressed review comments from Avir and Rob 
+* Minor improvment on the ufs phy and ufshc drivers
+* Added Tested-by from Pawel
+* Change UFS binding to DT schema format
 
-------------------------------------------------------------------------
 
-[ 1669.614123] rcu: INFO: rcu_preempt self-detected stall on CPU
-[ 1669.615634] rcu:     13-...!: (20999 ticks this GP) idle=fda/1/0x4000000000000002 softirq=234177/234177 fqs=0
-[ 1669.618350]  (t=21004 jiffies g=874585 q=4817)
-[ 1669.619395] rcu: rcu_preempt kthread starved for 21005 jiffies! g874585 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=0
-[ 1669.621920] rcu:     Unless rcu_preempt kthread gets sufficient CPU time, OOM is now expected behavior.
-[ 1669.624060] rcu: RCU grace-period kthread stack dump:
-[ 1669.625393] rcu_preempt     I15056    11      2 0x00004000
-[ 1669.626899] Call Trace:
-[ 1669.627697]  __schedule+0x25d/0x5d0
-[ 1669.628475]  ? _raw_spin_lock_irqsave+0x12/0x40
-[ 1669.629620]  schedule+0x37/0xe0
-[ 1669.630404]  schedule_timeout+0x109/0x210
-[ 1669.631145]  ? trace_raw_output_hrtimer_start+0x70/0x70
-[ 1669.632069]  rcu_gp_kthread+0x8e1/0x1260
-[ 1669.632995]  ? call_rcu+0x2d0/0x2d0
-[ 1669.633881]  kthread+0x138/0x160
-[ 1669.634558]  ? kthread_create_on_node+0x60/0x60
-[ 1669.635536]  ret_from_fork+0x22/0x30
-[ 1669.636307] NMI backtrace for cpu 13
-[ 1669.637257] CPU: 13 PID: 93 Comm: migration/13 Not tainted 5.7.0+ #18
-[ 1669.638624] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.11.0-2.el7 04/01/2014
-[ 1669.640360] Call Trace:
-[ 1669.640913]  <IRQ>
-[ 1669.641371]  dump_stack+0x57/0x70
-[ 1669.642090]  nmi_cpu_backtrace.cold.6+0x13/0x51
-[ 1669.643066]  ? lapic_can_unplug_cpu.cold.30+0x3e/0x3e
-[ 1669.644298]  nmi_trigger_cpumask_backtrace+0xc4/0xcd
-[ 1669.645197]  rcu_dump_cpu_stacks+0x96/0xc2
-[ 1669.645884]  rcu_sched_clock_irq.cold.86+0x118/0x506
-[ 1669.646955]  ? perf_event_task_tick+0x5f/0x280
-[ 1669.648053]  ? sched_clock+0x5/0x10
-[ 1669.648788]  ? cpuacct_account_field+0x14/0x70
-[ 1669.649961]  ? tick_switch_to_oneshot.cold.2+0x74/0x74
-[ 1669.651599]  update_process_times+0x1f/0x50
-[ 1669.652862]  tick_sched_timer+0x55/0x170
-[ 1669.653685]  __hrtimer_run_queues+0xfb/0x2c0
-[ 1669.654669]  hrtimer_interrupt+0x105/0x220
-[ 1669.655696]  smp_apic_timer_interrupt+0x7f/0x190
-[ 1669.656700]  apic_timer_interrupt+0xf/0x20
-[ 1669.657384]  </IRQ>
-[ 1669.657831] RIP: 0010:stop_machine_yield+0x2/0x10
-[ 1669.658554] Code: 0c 25 28 00 00 00 75 10 48 8d 65 f0 5b 41 5c 5d c3 b8 fe ff ff ff eb e0 e8 ab c0 f4 ff 90 66 2e 0f 1f 84 00 00 00 00 00 f3 90 <c3> 0f 1f 00 66 2e 0f 1f 84 00 00 00 00 00 41 57 41 56 41 55 41 54
-[ 1669.662249] RSP: 0000:ffffa7860039fe60 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
-[ 1669.664172] RAX: 0000000080000000 RBX: ffffa786006e3d10 RCX: 0000000000000001
-[ 1669.665782] RDX: 0000000000000000 RSI: 0000000000000282 RDI: ffffffffa520b0c8
-[ 1669.668058] RBP: ffffa786006e3d34 R08: 0000000000000298 R09: 0000000000008ebc
-[ 1669.669637] R10: 0000000000000001 R11: 0000000000261000 R12: 0000000000000001
-[ 1669.671023] R13: ffffffffa520b0c8 R14: 0000000000000000 R15: 0000000000000001
-[ 1669.672136]  multi_cpu_stop+0x8d/0xe0
-[ 1669.672705]  ? stop_machine_yield+0x10/0x10
-[ 1669.673595]  cpu_stopper_thread+0x6d/0x100
-[ 1669.674427]  ? sort_range+0x20/0x20
-[ 1669.675164]  smpboot_thread_fn+0x193/0x230
-[ 1669.676033]  kthread+0x138/0x160
-[ 1669.676732]  ? kthread_create_on_node+0x60/0x60
-[ 1669.678102]  ret_from_fork+0x22/0x30
-[ 1669.679213] Sending NMI from CPU 13 to CPUs 14:
-[ 1669.680542] NMI backtrace for cpu 14
-[ 1669.680543] CPU: 14 PID: 100 Comm: migration/14 Not tainted 5.7.0+ #18
-[ 1669.680543] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.11.0-2.el7 04/01/2014
-[ 1669.680544] RIP: 0010:rcu_momentary_dyntick_idle+0x2c/0x40
-[ 1669.680545] Code: c7 c3 80 9f 02 00 65 c6 05 7c df d4 5b 00 e8 bb 31 31 00 89 c0 48 03 1c c5 e0 b6 4d a5 b8 04 00 00 00 f0 0f c1 83 d8 00 00 00 <a8> 02 74 0c 5b 65 48 8b 3c 25 00 7d 01 00 eb a4 0f 0b eb f0 41 55
-[ 1669.680546] RSP: 0000:ffffa786003dbe58 EFLAGS: 00000282
-[ 1669.680546] RAX: 00000000b2bed872 RBX: ffff97111f5a9f80 RCX: 0000000000000001
-[ 1669.680547] RDX: 0000000000000000 RSI: 0000000000000282 RDI: ffffffffa520b0c8
-[ 1669.680547] RBP: ffffa786006e3d34 R08: 000000000000029f R09: 0000000000003057
-[ 1669.680547] R10: 0000000000000001 R11: 00000000000ce400 R12: 0000000000000001
-[ 1669.680548] R13: ffffffffa520b0c8 R14: 0000000000000000 R15: 0000000000000001
-[ 1669.680548] FS:  0000000000000000(0000) GS:ffff97111f580000(0000) knlGS:0000000000000000
-[ 1669.680548] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1669.680548] CR2: 00000000ffffffff CR3: 000000000540a000 CR4: 00000000000006e0
-[ 1669.680549] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[ 1669.680549] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[ 1669.680549] Call Trace:
-[ 1669.680549]  multi_cpu_stop+0x9b/0xe0
-[ 1669.680550]  ? stop_machine_yield+0x10/0x10
-[ 1669.680550]  cpu_stopper_thread+0x6d/0x100
-[ 1669.680550]  ? sort_range+0x20/0x20
-[ 1669.680550]  smpboot_thread_fn+0x193/0x230
-[ 1669.680551]  kthread+0x138/0x160
-[ 1669.680551]  ? kthread_create_on_node+0x60/0x60
-[ 1669.680551]  ret_from_fork+0x22/0x30
+- Changes since v3:
+* Addressed Kishon's and Avir's review comments
+* fixed make dt_binding_check error as pointed by Rob 
+
+- Changes since v2:
+* fixed build warning by kbuild test robot 
+* Added Reported-by tags
+
+- Changes since v1:
+* fixed make dt_binding_check error as pointed by Rob
+* Addressed Krzysztof's review comments
+* Added Reviewed-by tags
+
+Note: This series is based on Linux-5.7-rc4 (commit: 0e698dfa2822)
+
+Alim Akhtar (9):
+  scsi: ufs: add quirk to fix mishandling utrlclr/utmrlclr
+  scsi: ufs: add quirk to disallow reset of interrupt aggregation
+  scsi: ufs: add quirk to enable host controller without hce
+  scsi: ufs: introduce UFSHCD_QUIRK_PRDT_BYTE_GRAN quirk
+  dt-bindings: phy: Document Samsung UFS PHY bindings
+  phy: samsung-ufs: add UFS PHY driver for samsung SoC
+  dt-bindings: ufs: Add bindings for Samsung ufs host
+  scsi: ufs-exynos: add UFS host support for Exynos SoCs
+  arm64: dts: Add node for ufs exynos7
+
+Kiwoong Kim (1):
+  scsi: ufs: add quirk to fix abnormal ocs fatal error
+
+ .../bindings/phy/samsung,ufs-phy.yaml         |   75 +
+ .../bindings/ufs/samsung,exynos-ufs.yaml      |   89 ++
+ .../boot/dts/exynos/exynos7-espresso.dts      |    4 +
+ arch/arm64/boot/dts/exynos/exynos7.dtsi       |   43 +-
+ drivers/phy/samsung/Kconfig                   |    9 +
+ drivers/phy/samsung/Makefile                  |    1 +
+ drivers/phy/samsung/phy-exynos7-ufs.h         |   86 ++
+ drivers/phy/samsung/phy-samsung-ufs.c         |  380 +++++
+ drivers/phy/samsung/phy-samsung-ufs.h         |  143 ++
+ drivers/scsi/ufs/Kconfig                      |   12 +
+ drivers/scsi/ufs/Makefile                     |    1 +
+ drivers/scsi/ufs/ufs-exynos.c                 | 1292 +++++++++++++++++
+ drivers/scsi/ufs/ufs-exynos.h                 |  287 ++++
+ drivers/scsi/ufs/ufshcd.c                     |  126 +-
+ drivers/scsi/ufs/ufshcd.h                     |   29 +
+ drivers/scsi/ufs/unipro.h                     |   33 +
+ 16 files changed, 2596 insertions(+), 14 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/samsung,ufs-phy.yaml
+ create mode 100644 Documentation/devicetree/bindings/ufs/samsung,exynos-ufs.yaml
+ create mode 100644 drivers/phy/samsung/phy-exynos7-ufs.h
+ create mode 100644 drivers/phy/samsung/phy-samsung-ufs.c
+ create mode 100644 drivers/phy/samsung/phy-samsung-ufs.h
+ create mode 100644 drivers/scsi/ufs/ufs-exynos.c
+ create mode 100644 drivers/scsi/ufs/ufs-exynos.h
+
+
+base-commit: 0e698dfa282211e414076f9dc7e83c1c288314fd
+-- 
+2.17.1
+
