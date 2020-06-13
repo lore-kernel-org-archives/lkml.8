@@ -2,189 +2,115 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,PLING_QUERY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E28C433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64470C433E1
 	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 06:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32E77207FF
+	by mail.kernel.org (Postfix) with ESMTP id 44D372071A
 	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 06:51:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AjYiMJD5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726432AbgFMGsq (ORCPT
+        id S1726450AbgFMGte (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 02:48:46 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:59208 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725771AbgFMGso (ORCPT
+        Sat, 13 Jun 2020 02:49:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725771AbgFMGte (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 02:48:44 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 389A21C0C0B; Sat, 13 Jun 2020 08:48:43 +0200 (CEST)
-Date:   Sat, 13 Jun 2020 08:48:41 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@osdl.org>, mhocko@suse.cz,
-        linux mm <linux-mm@kvack.org>
-Subject: Re: 5.7-rc0: kswapd eats cpu during a disk test?!
-Message-ID: <20200613064841.GA3818@amd>
-References: <20200531103431.GA28429@amd>
- <e3afe444-4541-b420-0888-575cae8aa46d@suse.cz>
- <20200612224532.GA24103@amd>
- <20200613044738.11764-1-hdanton@sina.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="envbJBWh7q8WU6mo"
-Content-Disposition: inline
-In-Reply-To: <20200613044738.11764-1-hdanton@sina.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Sat, 13 Jun 2020 02:49:34 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2132C03E96F
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 23:49:33 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id f18so11248971qkh.1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 23:49:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=x78l+4Wurav+J/Fur91yS5OJaOV9TWUDD2A/LyJnk2M=;
+        b=AjYiMJD5jvxq4ec7chJEjIvsiQL91E784oo1S1YnmVPZbJwCxIrIYOEJk+8sT0jrST
+         srLtT/gasywFNXUGf36NKvkRiovpCVrBCqzPqZDK+HyAVAdNT7BBLtasxHrYmjpfZEZF
+         etMY6W44R2QpIx6BeSkFc8Ncm0Vi7xy/VTK/yTELYzCizUjjMfvesvrssTDWXw/JUB/Y
+         iXsyLk165CcndsoALhrXB9BEozVj54cN0NsA6zQIhSLshRIfx5BmfOefwiPeeA/g/+Sv
+         AAVYYNiWDeG+rR4z80ydwSmNpJcGQCkroZ7oLKZFaf26jnVCPZXKUWijmq0mTmvOH+FB
+         uWRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=x78l+4Wurav+J/Fur91yS5OJaOV9TWUDD2A/LyJnk2M=;
+        b=djC9rIX+RrxiyeyI8Cds2DK/T8rg7zi6HXRGBrP9tYO3ViJ8/E2kUH2NiMFIKgql+j
+         wRqcQLB5iCuqBTPLan01JYpZAhxcR34CPQ5QwjD4tWH5nGJlHPerlU7pYza2mGru0EIK
+         YFkOaXAB5i62o2LGMNUlvcTVU4fyqrCPTAWuM2YSwsOarHBUPozqKo2WhVB2Scj02dER
+         xy2zJjS4UjBD0RIvhFslvcU8sZwquzCQJGxapVceeAsf6mFg0ie8wLuVj6WrPpBfYAis
+         Jwx/GfXW0MNBogWgHzlfRRlkFhrL/BFl14IZEwoKVhIpx4NxgCkrRO5GTQvsu75rBmBb
+         KCjQ==
+X-Gm-Message-State: AOAM531RgGX7MsNIU0gehVkaOSEuSgrXdu0A4Ak/p+OstSypy0MfNKYp
+        6Caefz0MnBYprQdlj3ccm0YGoH1W
+X-Google-Smtp-Source: ABdhPJxOJAO6P2/rKc2y4Y1B3RvnqHO3Owc3JC47p8pxoXx4p43i/210mVq6B+sGouZM5g1yalVDdg==
+X-Received: by 2002:a37:45d6:: with SMTP id s205mr5923761qka.79.1592030973014;
+        Fri, 12 Jun 2020 23:49:33 -0700 (PDT)
+Received: from [192.168.1.204] (pool-98-118-94-114.bstnma.fios.verizon.net. [98.118.94.114])
+        by smtp.gmail.com with ESMTPSA id x41sm6815592qtb.76.2020.06.12.23.49.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Jun 2020 23:49:32 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Kamal Dasu <kdasu.kdev@gmail.com>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [Patch] mtd: set master partition panic write flag
+Date:   Sat, 13 Jun 2020 02:49:31 -0400
+Message-Id: <CB182F6C-EB9E-4E90-BF6E-115C925FCFFE@gmail.com>
+References: <20200504235403.13504-1-kdasu.kdev@gmail.com>
+Cc:     bcm-kernel-feedback-list@broadcom.com,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20200504235403.13504-1-kdasu.kdev@gmail.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+X-Mailer: iPhone Mail (17F80)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---envbJBWh7q8WU6mo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Can you please accept this if there are no objections.
 
-Hi!
+Kamal
 
-> > > Performance of spinning rust is down, too, on x60:
-> > >
-> > > pavel@amd:~/misc/hw/hdd1t$ sudo ddrescue --force /dev/sda1 /dev/null
-> > > GNU ddrescue 1.19
-> > > Press Ctrl-C to interrupt
-> > > rescued:     2147 MB,  errsize:       0 B,  current rate:    3080 kB/s
-> > >    ipos:     2147 MB,   errors:       0,    average rate:    5382 kB/s
-> > >       opos:     2147 MB, run time:    6.65 m,  successful read:
-> > >       0 s ago
-> > >       Finished
-> > > pavel@amd:~/misc/hw/hdd1t$ uname -a
-> > > Linux amd 5.7.0-next-20200611+ #123 SMP PREEMPT Thu Jun 11
-> > >  15:41:22 CEST 2020 i686 GNU/Linux
-> > >
-> > > And there's something clearly wrong here:
-> > >
-> > >     966 root      20   0       0      0      0 R  94.4  0.0   8:18.82=
-   kswapd0
-> > >   23933 root      20   0    4612   1112   1028 D  80.6  0.0   0:26.40=
-   ddrescue
-> > > =20
-> >=20
-> > Same x60 under older kernel:
-> >=20
-> > pavel@amd:/data/fast/pavel$ sudo ddrescue --force /dev/sda4 /dev/null
-> > GNU ddrescue 1.19
-> > Press Ctrl-C to interrupt
-> > rescued:     6593 MB,  errsize:       0 B,  current rate:   60424 kB/s
-> >    ipos:     6593 MB,   errors:       0,    average rate:   95563 kB/s
-> >=20
-> >   3539 root      20   0    4616   1136   1048 D  21.4  0.0   0:15.63 dd=
-rescue
-> >    865 root      20   0       0      0      0 S   6.9  0.0   0:04.91  k=
-swapd0
-> >=20
-> > Linux amd 4.6.0+ #172 SMP Sun Aug 14 11:25:34 CEST 2016 i686 GNU/Linux
-> >=20
-> > These are more reasonable numbers.
+> On May 4, 2020, at 7:54 PM, Kamal Dasu <kdasu.kdev@gmail.com> wrote:
 >=20
-> Treat referenced & active pages as reclaim cost.
-
-That helps a bit, but we are still nowehere near v4.6 performance:
-
-pavel@amd:/data/fast/pavel$ sudo ddrescue --force /dev/sda2 /dev/null
-GNU ddrescue 1.19
-Press Ctrl-C to interrupt
-rescued:     8559 MB,  errsize:       0 B,  current rate:   53084 kB/s
-   ipos:     8559 MB,   errors:       0,    average rate:   71327 kB/s
-
- 3933 root      20   0    4612   1216   1128 R  68.6  0.0   0:12.14  ddresc=
-ue
-   967 root      20   0       0      0      0 R  64.4  0.0   1:18.67  kswap=
-d0
-=20
-(I applied the patch on 5.7.0-next-20200611+).
-
-Do we know which original change is causing this? Any other ideas?
-
-Thanks,
-									Pavel
-
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -2020,6 +2020,7 @@ static void shrink_active_list(unsigned
->  	struct page *page;
->  	unsigned nr_deactivate, nr_activate;
->  	unsigned nr_rotated =3D 0;
-> +	unsigned nr_refered =3D 0;
->  	int file =3D is_file_lru(lru);
->  	struct pglist_data *pgdat =3D lruvec_pgdat(lruvec);
-> =20
-> @@ -2070,7 +2071,8 @@ static void shrink_active_list(unsigned
->  				nr_rotated +=3D hpage_nr_pages(page);
->  				list_add(&page->lru, &l_active);
->  				continue;
-> -			}
-> +			} else if (!file)
-> +				nr_refered++;
->  		}
-> =20
->  		ClearPageActive(page);	/* we are de-activating */
-> @@ -2098,6 +2100,14 @@ static void shrink_active_list(unsigned
->  	free_unref_page_list(&l_active);
->  	trace_mm_vmscan_lru_shrink_active(pgdat->node_id, nr_taken, nr_activate,
->  			nr_deactivate, nr_rotated, sc->priority, file);
-> +	if (file)
-> +		sc->file_cost +=3D nr_rotated;
-> +	else
-> +		/*
-> +		 * add cost to avoid swapin in the near future which incurs IO
-> +		 * on top of reclaim
-> +		 */
-> +		sc->anon_cost +=3D nr_refered;
->  }
-> =20
->  unsigned long reclaim_pages(struct list_head *page_list)
-> @@ -2311,11 +2321,13 @@ static void get_scan_count(struct lruvec
->  	file_cost =3D total_cost + sc->file_cost;
->  	total_cost =3D anon_cost + file_cost;
-> =20
-> -	ap =3D swappiness * (total_cost + 1);
-> -	ap /=3D anon_cost + 1;
-> -
-> -	fp =3D (200 - swappiness) * (total_cost + 1);
-> -	fp /=3D file_cost + 1;
-> +	ap =3D swappiness * total_cost;
-> +	if (anon_cost)
-> +		ap /=3D anon_cost;
-> +
-> +	fp =3D (200 - swappiness) * total_cost;
-> +	if (file_cost)
-> +		fp /=3D file_cost;
-> =20
->  	fraction[0] =3D ap;
->  	fraction[1] =3D fp;
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---envbJBWh7q8WU6mo
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl7kdskACgkQMOfwapXb+vJLZgCgr2WMQakHi4TeSFcM6DVT83aS
-daYAn1iKN+iF7Z0GWhcPUHseZYmT+x7A
-=yJgG
------END PGP SIGNATURE-----
-
---envbJBWh7q8WU6mo--
+> =EF=BB=BFCheck and set master panic write flag so that low level drivers
+> can use it to take required action to ensure oops data gets written
+> to assigned mtdoops device partition.
+>=20
+> Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+> ---
+> drivers/mtd/mtdcore.c | 4 ++--
+> 1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
+> index 2916674208b3..7e37ed2f38ea 100644
+> --- a/drivers/mtd/mtdcore.c
+> +++ b/drivers/mtd/mtdcore.c
+> @@ -1235,8 +1235,8 @@ int mtd_panic_write(struct mtd_info *mtd, loff_t to,=
+ size_t len, size_t *retlen,
+>        return -EROFS;
+>    if (!len)
+>        return 0;
+> -    if (!mtd->oops_panic_write)
+> -        mtd->oops_panic_write =3D true;
+> +    if (!master->oops_panic_write)
+> +        master->oops_panic_write =3D true;
+>=20
+>    return master->_panic_write(master, mtd_get_master_ofs(mtd, to), len,
+>                    retlen, buf);
+> --=20
+> 2.17.1
+>=20
