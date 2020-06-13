@@ -2,132 +2,155 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE9EC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 21:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD530C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 22:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DFCE20792
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 21:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DFB7207DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 22:08:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="ZClCkewZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dn1m888v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbgFMV7d (ORCPT
+        id S1726733AbgFMWIk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 17:59:33 -0400
-Received: from mta-p8.oit.umn.edu ([134.84.196.208]:51854 "EHLO
-        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbgFMV7c (ORCPT
+        Sat, 13 Jun 2020 18:08:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35108 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbgFMWIk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 17:59:32 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 49ks2B5JCzz9vZws
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 21:59:30 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p8.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id vN1gMTzxLsj6 for <linux-kernel@vger.kernel.org>;
-        Sat, 13 Jun 2020 16:59:30 -0500 (CDT)
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id 49ks2B3Wq0z9vZw4
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 16:59:30 -0500 (CDT)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p8.oit.umn.edu 49ks2B3Wq0z9vZw4
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p8.oit.umn.edu 49ks2B3Wq0z9vZw4
-Received: by mail-il1-f197.google.com with SMTP id e5so9180412ill.10
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 14:59:30 -0700 (PDT)
+        Sat, 13 Jun 2020 18:08:40 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DF21C03E96F;
+        Sat, 13 Jun 2020 15:08:38 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id p20so13534777ejd.13;
+        Sat, 13 Jun 2020 15:08:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=41c7FVjnuZxspya187rlx7OBSjVWB+zOwPrRB+ZgQSg=;
-        b=ZClCkewZT10IFwgu68fiRQ0a2lUNssxCW8Qpwbz1BlQQD9oo8RsEMk+B6NXFRWyjAR
-         G78hU9OGxRfC4up3QAteuRz5aiuxkQ8Ll64R9AxKIwttWPAnrnmXomK4nRuaAGD2Ka6T
-         eE0OIsZ0pHhG5bVrjTLwEbgdxG+V9gNKj3gwO4U0oNq3mxaYZb9n+lb1thduT55wQock
-         xRgRORglF9rM6zbJa60dU9T7cQ/tCIqV+E8kYCq0YV/S4ZcPMBhCqUGuzBYWT8oxCivW
-         ypVEGDWcM9GBGIjHClhYdXGsdYp5QWCWIP5rRfA661NNizK7nUMU3aqnMOCufYCeIEcA
-         zaag==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tFwM9eMIugQqVr1lzeb1hUV6KdfGNOsIPEThUz0xWw8=;
+        b=Dn1m888vkM7N+KTjvgHD3PykUMll8FA5bz1Up4dPhOE6/lzd5BqzDd4ytB9w/AyHqT
+         //iU+2dlWgUx4AJIkHSu7H7SaLOvg8c5TnGI/eJXm1DlkkREgYMQOyrc/Rr/6zzRDgMi
+         DdzmOeHPNM1S6aHl0vLMzccqWmT5QRlYj9+9UQ/k7T7zdBFkRgu8C1/SlSRLFI0Nudss
+         n345v59GHXSyXxJQPNwPFCdQ9q+zeEwu4W77S/DpPFPZckH8rXU8ppryoPoLGptuxwFu
+         ad5zmj+xWDgAES50Iz3eAaUzttLkwdm/I7jqxRhucgDfI4OnRnDetz4MJQPHM/sZUo/X
+         xKiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=41c7FVjnuZxspya187rlx7OBSjVWB+zOwPrRB+ZgQSg=;
-        b=QgwXcV/qNerElNFbQtVQH+RrerHQjUvgrHWDHu1FAxewyIoFFNlEjYK3qFy1n/Hnsc
-         04xZVXXWe1jp2pr7jz64E5mLhOBnJNwjowjeOoyRfsHYAVrGCiWyRjO7r4RafaVmBrCC
-         xIk+iPt8yB3mYc5mjsb4ZFtXGyevxkclvjvj2WldlJ19XWGhzMmBc/SlJvt5LvjWmmhh
-         D1UutIetms1MqxU53BPRtbIN2CX82yNbbkU4sWDCEh60ewSkOg+L8JskIrQpRofHDMzE
-         peVqe2CCPxdnrlmpM3RYTSt4YcBJ+H/9oiKrv2HvQS/eNLuy6QphjqV0E6gp3IxVHDcM
-         3TdQ==
-X-Gm-Message-State: AOAM530TEzxdNrEKDopEN5JC7bQBXTVxWqEa5s/Bt/U1gryrHLdYxS4S
-        BmsiWZLDgYW/B3rhgTRAXXsoLxfudY7I0XnhuUrUYgqIflZEfJC8KPGBQRrYSwkFIuaV/Xbl9lI
-        bc68ni0fYoKEMbI3P6ErL1zPg7cE+
-X-Received: by 2002:a5d:87c4:: with SMTP id q4mr20721687ios.169.1592085569970;
-        Sat, 13 Jun 2020 14:59:29 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzipdRZykMqI9KaxMvFY/GNQReGYjPRPDqXiZP3a3gDErwMDUCI4tYTOc9XVtuyQfZVY4AYBg==
-X-Received: by 2002:a5d:87c4:: with SMTP id q4mr20721663ios.169.1592085569733;
-        Sat, 13 Jun 2020 14:59:29 -0700 (PDT)
-Received: from qiushi.cs.umn.edu ([2607:ea00:101:3c74:4874:45:bcb4:df60])
-        by smtp.gmail.com with ESMTPSA id t12sm5321589ilj.75.2020.06.13.14.59.28
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tFwM9eMIugQqVr1lzeb1hUV6KdfGNOsIPEThUz0xWw8=;
+        b=DGHT4R3wHC5lC3BeMBQXOnYqQ7oEvCfhBGV8mApFqZ+iYQSE4lgQLaaROKCe3meHi7
+         L51ms4i4U+ErV4o18RwntidNbZgi7gVwwTDcSmWY+zkkyzWd4yP6S9lkHt/Z8Nlrn8JS
+         U4k+RBtV3HA8Zb1FJx7WKyIvVhg4iF15jURz1tV3jdTbTsBVjxkzcz18rPHc5so6qJNV
+         Q5GRw1qSlyjCUiRhjX0KYl/GFYiDRw6mWzL2MjXV88tSINow2GH/jge4EBRaloRYg6ZN
+         dnneSxzpPoFlmJlVSmfz7/kIifnt30hel9Mk8hDE739BiFl2P7+vuJ3iUQMpFD4pHZYS
+         x+YA==
+X-Gm-Message-State: AOAM533Se+QjTJEcrP3A4m6SoKPPIF62ufJ7Btn8MQPhTi1rf++eOiJB
+        qGHSUgt4LaI8+xFW+VMDcvq5ehjE
+X-Google-Smtp-Source: ABdhPJyPWAcNIekp1P8doyLkD7jhyQtYuap6gECNKAHQ1KMEAfL0d+QdbDbpzmt+iUgpTvoTmWCYxQ==
+X-Received: by 2002:a17:906:6403:: with SMTP id d3mr18783095ejm.386.1592086115860;
+        Sat, 13 Jun 2020 15:08:35 -0700 (PDT)
+Received: from localhost.localdomain ([188.26.56.128])
+        by smtp.gmail.com with ESMTPSA id kt10sm6044774ejb.54.2020.06.13.15.08.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Jun 2020 14:59:29 -0700 (PDT)
-From:   wu000273@umn.edu
-To:     kjlu@umn.edu
-Cc:     wu000273@umn.edu, Michal Simek <michal.simek@xilinx.com>,
-        Rob Herring <robh@kernel.org>, Wolfram Sang <wsa@kernel.org>,
-        Shubhrajyoti Datta <shubhraj@xilinx.com>,
-        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+        Sat, 13 Jun 2020 15:08:35 -0700 (PDT)
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     davem@davemloft.net, netdev@vger.kernel.org
+Cc:     UNGLinuxDriver@microchip.com, claudiu.manoil@nxp.com,
+        alexandre.belloni@bootlin.com, andrew@lunn.ch,
+        vivien.didelot@gmail.com, f.fainelli@gmail.com, kuba@kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] i2c: xiic: Fix reference count leaks.
-Date:   Sat, 13 Jun 2020 16:59:23 -0500
-Message-Id: <20200613215923.2611-1-wu000273@umn.edu>
-X-Mailer: git-send-email 2.17.1
+Subject: [PATCH net] MAINTAINERS: merge entries for felix and ocelot drivers
+Date:   Sun, 14 Jun 2020 01:07:53 +0300
+Message-Id: <20200613220753.948166-1-olteanv@gmail.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-when it returns an error code. Thus call pm_runtime_put_noidle()
-if pm_runtime_get_sync() fails.
+The ocelot switchdev driver also provides a set of library functions for
+the felix DSA driver, which in practice means that most of the patches
+will be of interest to both groups of driver maintainers.
 
-Fixes: 36ecbcab84d0 ("i2c: xiic: Implement power management")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+So, as also suggested in the discussion here, let's merge the 2 entries
+into a single larger one:
+https://www.spinics.net/lists/netdev/msg657412.html
+
+Note that the entry has been renamed into "OCELOT SWITCH" since neither
+Vitesse nor Microsemi exist any longer as company names, instead they
+are now named Microchip (which again might be subject to change in the
+future), so use the device family name instead.
+
+Suggested-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 ---
- drivers/i2c/busses/i2c-xiic.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ MAINTAINERS | 28 ++++++++++++----------------
+ 1 file changed, 12 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-xiic.c b/drivers/i2c/busses/i2c-xiic.c
-index 90c1c362394d..ffec41e6be72 100644
---- a/drivers/i2c/busses/i2c-xiic.c
-+++ b/drivers/i2c/busses/i2c-xiic.c
-@@ -696,8 +696,10 @@ static int xiic_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs, int num)
- 		xiic_getreg8(i2c, XIIC_SR_REG_OFFSET));
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f08f290df174..621474172fdf 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11339,14 +11339,6 @@ L:	dmaengine@vger.kernel.org
+ S:	Supported
+ F:	drivers/dma/at_xdmac.c
  
- 	err = pm_runtime_get_sync(i2c->dev);
--	if (err < 0)
-+	if (err < 0) {
-+		pm_runtime_put_noidle(i2c->dev);
- 		return err;
-+	}
+-MICROSEMI ETHERNET SWITCH DRIVER
+-M:	Alexandre Belloni <alexandre.belloni@bootlin.com>
+-M:	Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+-L:	netdev@vger.kernel.org
+-S:	Supported
+-F:	drivers/net/ethernet/mscc/
+-F:	include/soc/mscc/ocelot*
+-
+ MICROSEMI MIPS SOCS
+ M:	Alexandre Belloni <alexandre.belloni@bootlin.com>
+ M:	Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+@@ -12305,6 +12297,18 @@ M:	Peter Zijlstra <peterz@infradead.org>
+ S:	Supported
+ F:	tools/objtool/
  
- 	err = xiic_busy(i2c);
- 	if (err)
-@@ -860,8 +862,10 @@ static int xiic_i2c_remove(struct platform_device *pdev)
- 	i2c_del_adapter(&i2c->adap);
++OCELOT ETHERNET SWITCH DRIVER
++M:	Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
++M:	Vladimir Oltean <vladimir.oltean@nxp.com>
++M:	Claudiu Manoil <claudiu.manoil@nxp.com>
++M:	Alexandre Belloni <alexandre.belloni@bootlin.com>
++L:	netdev@vger.kernel.org
++S:	Supported
++F:	include/soc/mscc/ocelot*
++F:	drivers/net/ethernet/mscc/
++F:	drivers/net/dsa/ocelot/*
++F:	net/dsa/tag_ocelot.c
++
+ OCXL (Open Coherent Accelerator Processor Interface OpenCAPI) DRIVER
+ M:	Frederic Barrat <fbarrat@linux.ibm.com>
+ M:	Andrew Donnellan <ajd@linux.ibm.com>
+@@ -18188,14 +18192,6 @@ S:	Maintained
+ F:	drivers/input/serio/userio.c
+ F:	include/uapi/linux/userio.h
  
- 	ret = pm_runtime_get_sync(i2c->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(i2c->dev);
- 		return ret;
-+	}
- 
- 	xiic_deinit(i2c);
- 	pm_runtime_put_sync(i2c->dev);
+-VITESSE FELIX ETHERNET SWITCH DRIVER
+-M:	Vladimir Oltean <vladimir.oltean@nxp.com>
+-M:	Claudiu Manoil <claudiu.manoil@nxp.com>
+-L:	netdev@vger.kernel.org
+-S:	Maintained
+-F:	drivers/net/dsa/ocelot/*
+-F:	net/dsa/tag_ocelot.c
+-
+ VIVID VIRTUAL VIDEO DRIVER
+ M:	Hans Verkuil <hverkuil@xs4all.nl>
+ L:	linux-media@vger.kernel.org
 -- 
-2.17.1
+2.25.1
 
