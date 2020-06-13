@@ -2,104 +2,88 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA589C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 13:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 320EEC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 13:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B503720792
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 13:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01DAA2078A
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 13:23:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ja4aLfUr"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gGzsFUEY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbgFMNQa (ORCPT
+        id S1726280AbgFMNWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 09:16:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38652 "EHLO
+        Sat, 13 Jun 2020 09:22:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726021AbgFMNQ3 (ORCPT
+        with ESMTP id S1726045AbgFMNWJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 09:16:29 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C7D1C03E96F
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 06:16:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=CTgyUwh6cSz/c+OXjJ8SE3+Fh1Nd5s6JFCqdOiRWMDc=; b=ja4aLfUrZeDtb/Q+hi9fniI0n
-        oDUic4OelYU8+sBynGEk2HzV/Ov9l9/uO5FV6IoNCS3f7i1NHN20jS6OCla7IX1f3zbLTCvXjFunV
-        eyqoKi8AgqM/krztw6qZhGDJDwzLqzpn0hFEQhvsqiui8XVEzhR4KHuj9QlmEiw8Z898MGuh+MYzO
-        yAC1qt7vE2TLy7JQfPmzmoOhZdsEWNiB4+b1SXN3t+TexgESaR4MwHPpxaTVOTD5tP45yoUWH7WLc
-        m/5tNdo5HtvwcjOo+pCYohEuwEpbvpuiMGtwDBZ7cURslG8zRUeKZpukT5nXqjH23RafeSgA2QC0s
-        Kov0DeIXA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:51576)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jk60y-0005SM-Pj; Sat, 13 Jun 2020 14:16:08 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jk60m-0007LO-M9; Sat, 13 Jun 2020 14:15:52 +0100
-Date:   Sat, 13 Jun 2020 14:15:52 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     afzal mohammed <afzal.mohd.ma@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Nicolas Pitre <nico@fluxnic.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, Will Deacon <will@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [RFC 1/3] lib: copy_{from,to}_user using gup & kmap_atomic()
-Message-ID: <20200613131552.GL1551@shell.armlinux.org.uk>
-References: <cover.1591885760.git.afzal.mohd.ma@gmail.com>
- <9e1de19f35e2d5e1d115c9ec3b7c3284b4a4e077.1591885760.git.afzal.mohd.ma@gmail.com>
- <CAK8P3a1XUJHC0kG_Qwh4D4AoxTgCL5ggHd=45yNSmzaYWLUWXw@mail.gmail.com>
- <20200612135538.GA13399@afzalpc>
- <CAK8P3a25ffh_2Y1xKDbkL2xU9nLpGbEq7j6xHdODEwUtavgdwA@mail.gmail.com>
- <20200613120432.GA5319@afzalpc>
+        Sat, 13 Jun 2020 09:22:09 -0400
+Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DF8DC03E96F
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 06:22:08 -0700 (PDT)
+Received: by mail-qt1-x82b.google.com with SMTP id g18so9244883qtu.13
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 06:22:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sF3gKi34xsTEXIQvllX7g+i6XIfblAENNKgle9i5I1M=;
+        b=gGzsFUEYTZ45YYyX2GFO7hiIZld+W5DVjPXFl73f5htN40e5xBFreftHUYM7MH8b3S
+         R/0GbmwCnzcz/7QMx6Gq1v2xmX2f8PxlizfRp058LCQk+b7Rmmnx2Wjf4zwiSlRnsguZ
+         yKVV+3JLXA+4wKkNsDBDMaSKWFVsuTpOc1rFaJDw83kQM4EX7LtSiw4kcX915aRB9mki
+         rqVHRX7es+AhFM0PLWuZheWjsiSgiGk0D8JPaiWU4d/x3HivRQq55UNUYiG7x/4+1Qfm
+         l3BJpONRpzVqAM/OdMa664rtLr0LkOsBrRxyEz8ZtbJ46n4oDozpH/mZzYey/6mRSiCd
+         QB8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sF3gKi34xsTEXIQvllX7g+i6XIfblAENNKgle9i5I1M=;
+        b=HXWB7pwAAOoc2N30CvuNa/VW7SEeOCCe5sBbrvpaB4/v2nDmeRq356ZVHfZ5KdH4Ud
+         BxvDBoNIepMIofZMuPrfyofRZdqtYnT6oYn1VXKnGSyNsqrK/bfZhe20Lwum8T4t9EcG
+         jvFtlHyKMjZGeFJ6uO9DR2hqxSB081F+5piCWwWBDN/fdUuoz/nrgTk2IoYdqPOyVC3h
+         9HX+R5Sy/uGhOImPZpnG2pDMk8lTbZ9Hy86xmkbtqYIpgCeOGED/osHmgFLzR6I2jfZF
+         z7vdQzYBFmVevley226HrGL7dscqVDnPKtzpq+e9lDZpva3I2zmRMzmv3cmgeijUgu1P
+         XjOA==
+X-Gm-Message-State: AOAM531A8GGTTDnFrcWFLHi7jEtmMfyN9cr3xNh38mih3C4SCPq9UpvY
+        MZs1H84fwtmIFApm8ZIs3RD/1x/PeY6gYglCGiBBAZIE
+X-Google-Smtp-Source: ABdhPJwc9KSSN0yQfnXu0AhBUxCrBKiH3n8XxcdWZjgDSD6mRDCbz3N6esVmrzlKah0AL85DJBv2qvp0KSjOs5xrZ4U=
+X-Received: by 2002:ac8:1bc1:: with SMTP id m1mr7421059qtk.57.1592054526799;
+ Sat, 13 Jun 2020 06:22:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200613120432.GA5319@afzalpc>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <159192148730.1475.8112596092479045470.tglx@nanos.tec.linutronix.de>
+ <159192148975.1475.16272172258276079370.tglx@nanos.tec.linutronix.de> <159192782831.28098.9074267506729348260.pr-tracker-bot@kernel.org>
+In-Reply-To: <159192782831.28098.9074267506729348260.pr-tracker-bot@kernel.org>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Sat, 13 Jun 2020 15:21:55 +0200
+Message-ID: <CACT4Y+Z53-_X0+Bo3uGEgR0Da3oC0V7ROEpkpJPT+OVK1Zj4xQ@mail.gmail.com>
+Subject: Re: [GIT pull V2] locking/kcsan for v5.8
+To:     pr-tracker-bot@kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Will Deacon <will@kernel.org>, Marco Elver <elver@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 13, 2020 at 05:34:32PM +0530, afzal mohammed wrote:
-> Hi,
-> 
-> On Fri, Jun 12, 2020 at 10:07:28PM +0200, Arnd Bergmann wrote:
-> 
-> > I think a lot
-> > of usercopy calls are only for a few bytes, though this is of course
-> > highly workload dependent and you might only care about the large
-> > ones.
-> 
-> Observation is that max. pages reaching copy_{from,to}_user() is 2,
-> observed maximum of n (number of bytes) being 1 page size. i think C
-> library cuts any size read, write to page size (if it exceeds) &
-> invokes the system call. Max. pages reaching 2, happens when 'n'
-> crosses page boundary, this has been observed w/ small size request
-> as well w/ ones of exact page size (but not page aligned).
+On Fri, Jun 12, 2020 at 4:10 AM <pr-tracker-bot@kernel.org> wrote:
+>
+> The pull request you sent on Fri, 12 Jun 2020 00:24:49 -0000:
+>
+> > git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git locking-kcsan-2020-06-11
+>
+> has been merged into torvalds/linux.git:
+> https://git.kernel.org/torvalds/c/b791d1bdf9212d944d749a5c7ff6febdba241771
 
-You can't make that assumption about read(2).  stdio in the C library
-may read a page size of data at a time, but programs are allowed to
-call read(2) directly, and the C library will pass such a call straight
-through to the kernel.  So, if userspace requests a 16k read via
-read(2), then read(2) will be invoked covering 16k.
-
-As an extreme case, for example:
-
-$ strace -e read dd if=/dev/zero of=/dev/null bs=1048576 count=1
-read(0, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 1048576) = 1048576
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+Thomas, thank you for rebasing all of this!
