@@ -2,179 +2,200 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54AFAC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 09:14:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C11AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 09:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3476420739
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 09:14:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EqxjKs52"
+	by mail.kernel.org (Postfix) with ESMTP id 7AF7E204EA
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 09:15:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726361AbgFMJCC (ORCPT
+        id S1726392AbgFMJPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 05:02:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56252 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbgFMJCA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 05:02:00 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E6B1C03E96F;
-        Sat, 13 Jun 2020 02:01:59 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id l26so9956567wme.3;
-        Sat, 13 Jun 2020 02:01:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=VkuzFvdlM+WfXelz0UOaKXXxDWlDEXZOnTOaISWqbKw=;
-        b=EqxjKs52NJHgtFyMhVSpqyD3PWJhDN0rsx9hl9lfVFcvJr+NZbRIbchujrGGh2XBck
-         9awQrTW+DlyZH33L2UJ6aUDn/Yq1eW03/p3QtsmvU6BHqFNWLuDyISfNURMv4T1xu+/L
-         i1DnEzknJBrzz9JEFbmUP58rdiWlwJabZ0eTE0mMNzFXCSLDjlQseWhDJ+9Wz+iPH1WB
-         C9wQ6L31HVmuAyXjurZEDjBlveAorSw9USDN+i3KnWA0HCJ4G4s459EcUn5gvgV2/gos
-         JzM4Ikb16/00TpGZCdrn5ZBd6JDaWXNZ1sVcgWFYuzage+9DOBUQp9ZBnSdhIx9e4A6X
-         gUrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=VkuzFvdlM+WfXelz0UOaKXXxDWlDEXZOnTOaISWqbKw=;
-        b=BF6SeHzKoz+KruWQypyM23KAdIjNEYr2pAh02pNrusPTo21jLLF4NjtTjJ/V1B3Fkc
-         i/nAbCFAEGWPb9YJzKzbQM3THFivbB1kH3Ojjsj3egSeER5YEyAb4mNbjWdoE5wPM6l/
-         u/wbd0AQYG7Tfe3BB8lpiOjb5K3d34015iTRxJY5tqBZ93VBT+k+zDi3/qU98bcBouPo
-         xWHC473dQLgA8xfCV4NJDUXNPzNdEEbjYymOTIqLg+n/0O/GINAaZ3aK01dcEoRAcdjY
-         kuOEOjvOer3HqM0Wbu9Vszf3IJ8u8GkBgKEvLImrCIGxroyhKxWFHhC9o1UGniq6IQwG
-         FJgA==
-X-Gm-Message-State: AOAM533ST54FwT8sv7YEnt1Q8ya0ILjZrNt82BcyE4t7MVyHCLixe8rO
-        pucPUgo1LAgpbDcgS/WnbvI=
-X-Google-Smtp-Source: ABdhPJwu3rED1GP9pmDiBAlCpcu0C6Z5OC80/BR0W/RoDA2qCmKIZfNB+8MGMX4d7gHqRTyItrE7ig==
-X-Received: by 2002:a1c:2d83:: with SMTP id t125mr3122985wmt.187.1592038918000;
-        Sat, 13 Jun 2020 02:01:58 -0700 (PDT)
-Received: from macbook-pro-alvaro-eth.lan (168.red-88-20-188.staticip.rima-tde.net. [88.20.188.168])
-        by smtp.gmail.com with ESMTPSA id b143sm5746659wme.20.2020.06.13.02.01.57
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 13 Jun 2020 02:01:57 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH] mtd: rawnand: brcmnand: force raw OOB writes
-From:   =?utf-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
-In-Reply-To: <CAC=U0a3xa9k76mxsiVKDyXsuvboZAyMkXT-S3-6oVZKjnWkeHA@mail.gmail.com>
-Date:   Sat, 13 Jun 2020 11:01:56 +0200
-Cc:     Brian Norris <computersforpeace@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        "R, Vignesh" <vigneshr@ti.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <05C962F2-7D3B-4103-91DD-8D31C439D521@gmail.com>
-References: <20200605170720.2478262-1-noltari@gmail.com>
- <CAC=U0a3xa9k76mxsiVKDyXsuvboZAyMkXT-S3-6oVZKjnWkeHA@mail.gmail.com>
-To:     Kamal Dasu <kdasu.kdev@gmail.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Sat, 13 Jun 2020 05:15:11 -0400
+Received: from mga03.intel.com ([134.134.136.65]:1528 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726314AbgFMJPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jun 2020 05:15:04 -0400
+IronPort-SDR: Gyv6Nlf2DiVbZiQZtdNNdFqQ81RMdz4Lrc61z6mEt6CBwLdJ+D+qURWNoLVFFKbQIoggAqk056
+ WRYFoTdUx4aA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2020 02:15:03 -0700
+IronPort-SDR: pVhOY4l/eHdUJ4CPn9ZvbJGmQMP3bq1FGAlZr0mKMSQJ/9N8WlRsFdNEafge4fIkxjRgPB74Uw
+ QxZf/jfwLTzQ==
+X-IronPort-AV: E=Sophos;i="5.73,506,1583222400"; 
+   d="scan'208";a="448588271"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.172.45]) ([10.249.172.45])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2020 02:15:00 -0700
+Subject: Re: [PATCH v12 07/11] KVM: vmx/pmu: Unmask LBR fields in the
+ MSR_IA32_DEBUGCTLMSR emualtion
+To:     Like Xu <like.xu@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, ak@linux.intel.com,
+        wei.w.wang@intel.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+References: <20200613080958.132489-1-like.xu@linux.intel.com>
+ <20200613080958.132489-8-like.xu@linux.intel.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <654d931c-a724-ed69-6501-52ce195a6f44@intel.com>
+Date:   Sat, 13 Jun 2020 17:14:58 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
+MIME-Version: 1.0
+In-Reply-To: <20200613080958.132489-8-like.xu@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kamal,
+On 6/13/2020 4:09 PM, Like Xu wrote:
+> When the LBR feature is reported by the vmx_get_perf_capabilities(),
+> the LBR fields in the [vmx|vcpu]_supported debugctl should be unmasked.
+> 
+> The debugctl msr is handled separately in vmx/svm and they're not
+> completely identical, hence remove the common msr handling code.
+> 
+> Signed-off-by: Like Xu <like.xu@linux.intel.com>
+> ---
+>   arch/x86/kvm/vmx/capabilities.h | 12 ++++++++++++
+>   arch/x86/kvm/vmx/pmu_intel.c    | 19 +++++++++++++++++++
+>   arch/x86/kvm/x86.c              | 13 -------------
+>   3 files changed, 31 insertions(+), 13 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
+> index b633a90320ee..f6fcfabb1026 100644
+> --- a/arch/x86/kvm/vmx/capabilities.h
+> +++ b/arch/x86/kvm/vmx/capabilities.h
+> @@ -21,6 +21,8 @@ extern int __read_mostly pt_mode;
+>   #define PMU_CAP_FW_WRITES	(1ULL << 13)
+>   #define PMU_CAP_LBR_FMT		0x3f
+>   
+> +#define DEBUGCTLMSR_LBR_MASK		(DEBUGCTLMSR_LBR | DEBUGCTLMSR_FREEZE_LBRS_ON_PMI)
+> +
+>   struct nested_vmx_msrs {
+>   	/*
+>   	 * We only store the "true" versions of the VMX capability MSRs. We
+> @@ -387,4 +389,14 @@ static inline u64 vmx_get_perf_capabilities(void)
+>   	return perf_cap;
+>   }
+>   
+> +static inline u64 vmx_get_supported_debugctl(void)
+> +{
+> +	u64 val = 0;
+> +
+> +	if (vmx_get_perf_capabilities() & PMU_CAP_LBR_FMT)
+> +		val |= DEBUGCTLMSR_LBR_MASK;
+> +
+> +	return val;
+> +}
+> +
+>   #endif /* __KVM_X86_VMX_CAPS_H */
+> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+> index a953c7d633f6..d92e95b64c74 100644
+> --- a/arch/x86/kvm/vmx/pmu_intel.c
+> +++ b/arch/x86/kvm/vmx/pmu_intel.c
+> @@ -187,6 +187,7 @@ static bool intel_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
+>   	case MSR_CORE_PERF_GLOBAL_OVF_CTRL:
+>   		ret = pmu->version > 1;
+>   		break;
+> +	case MSR_IA32_DEBUGCTLMSR:
+>   	case MSR_IA32_PERF_CAPABILITIES:
+>   		ret = 1;
+>   		break;
+> @@ -237,6 +238,9 @@ static int intel_pmu_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>   			return 1;
+>   		msr_info->data = vcpu->arch.perf_capabilities;
+>   		return 0;
+> +	case MSR_IA32_DEBUGCTLMSR:
+> +		msr_info->data = vmcs_read64(GUEST_IA32_DEBUGCTL);
 
-> El 12 jun 2020, a las 20:47, Kamal Dasu <kdasu.kdev@gmail.com> =
-escribi=C3=B3:
->=20
-> On Fri, Jun 5, 2020 at 1:07 PM =C3=81lvaro Fern=C3=A1ndez Rojas =
-<noltari@gmail.com> wrote:
->>=20
->> MTD_OPS_AUTO_OOB is writting OOB with ECC enabled, which changes all =
-ECC bytes
->> from an erased page to 0x00 when JFFS2 cleanmarkers are added with =
-mtd-utils.
->>         | BBI |   JFFS2   |   ECC   |   JFFS2   | Spare  |
->> 00000800  ff ff 19 85 20 03 00 00  00 00 00 00 08 ff ff ff
->>=20
->> However, if OOB is written with ECC disabled, the JFFS2 cleanmarkers =
-are
->> correctly written without changing the ECC bytes:
->>         | BBI |   JFFS2   |   ECC   |   JFFS2   | Spare  |
->> 00000800  ff ff 19 85 20 03 ff ff  ff 00 00 00 08 ff ff ff
->=20
-> Both brcmand_write_oob_raw() and brcmnand_write_oob() use
-> brcmnand_write() that uses PROGRAM_PAGE cmd, means also programs data
-> areas and ECC when enabled  is always calculated on DATA+OOB.  since
+Can we put the emulation of MSR_IA32_DEBUGCTLMSR in 
+vmx_{get/set})_msr(). AFAIK, MSR_IA32_DEBUGCTLMSR is not a pure PMU 
+related MSR that there is bit 2 to enable #DB for bus lock.
 
-Are you sure about that? I think that HW ECC is only calculated for =
-DATA, not for OOB.
-The fact that we=E2=80=99re not writing any DATA seems to be the problem =
-that is changing all ECC bytes to 0x00.
+> +		return 0;
+>   	default:
+>   		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0)) ||
+>   		    (pmc = get_gp_pmc(pmu, msr, MSR_IA32_PMC0))) {
+> @@ -282,6 +286,16 @@ static inline bool lbr_is_compatible(struct kvm_vcpu *vcpu)
+>   	return true;
+>   }
+>   
+> +static inline u64 vcpu_get_supported_debugctl(struct kvm_vcpu *vcpu)
+> +{
+> +	u64 debugctlmsr = vmx_get_supported_debugctl();
+> +
+> +	if (!lbr_is_enabled(vcpu))
+> +		debugctlmsr &= ~DEBUGCTLMSR_LBR_MASK;
+> +
+> +	return debugctlmsr;
+> +}
+> +
+>   static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>   {
+>   	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+> @@ -336,6 +350,11 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>   		}
+>   		vcpu->arch.perf_capabilities = data;
+>   		return 0;
+> +	case MSR_IA32_DEBUGCTLMSR:
+> +		if (data & ~vcpu_get_supported_debugctl(vcpu))
+> +			return 1;
+> +		vmcs_write64(GUEST_IA32_DEBUGCTL, data);
+> +		return 0;
+>   	default:
+>   		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0)) ||
+>   		    (pmc = get_gp_pmc(pmu, msr, MSR_IA32_PMC0))) {
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 00c88c2f34e4..56f275eb4554 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -2840,18 +2840,6 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>   			return 1;
+>   		}
+>   		break;
+> -	case MSR_IA32_DEBUGCTLMSR:
+> -		if (!data) {
+> -			/* We support the non-activated case already */
+> -			break;
+> -		} else if (data & ~(DEBUGCTLMSR_LBR | DEBUGCTLMSR_BTF)) {
 
-> in both cases we only want to modify OOB, data is always assumed to be
-> 0xffs (means erased state). So as far as this api always is used on
-> the erased page it should be good. Are the sub-pages/oob areas read by
-> jffs2  also read without ecc enabled?. Just want to be sure that it
-> does not break any other utilities like nandwrite.
+So after this patch, guest trying to set bit DEBUGCTLMSR_BTF will get a 
+#GP instead of being ignored and printing a log in kernel.
 
-No, sub-pages/oob areas read by JFFS2 with ECC enabled.
-I don=E2=80=99t think this breaks anything at all, since I tested =
-nandwrite with OOB enabled and everything was written perfectly.
+These codes were introduced ~12 years ago in commit b5e2fec0ebc3 ("KVM: 
+Ignore DEBUGCTL MSRs with no effect"), just to make Netware happy. Maybe 
+I'm overthinking for that too old thing.
 
-BTW, I tried another approach that forced MTD_OPS_AUTO_OOB to be written =
-as raw OOB, but it was rejected:
-=
-http://patchwork.ozlabs.org/project/linux-mtd/patch/20200504094253.2741109=
--1-noltari@gmail.com/
-https://lkml.org/lkml/2020/5/4/215
+> -			/* Values other than LBR and BTF are vendor-specific,
+> -			   thus reserved and should throw a #GP */
+> -			return 1;
+> -		}
+> -		vcpu_unimpl(vcpu, "%s: MSR_IA32_DEBUGCTLMSR 0x%llx, nop\n",
+> -			    __func__, data);
+> -		break;
+>   	case 0x200 ... 0x2ff:
+>   		return kvm_mtrr_set_msr(vcpu, msr, data);
+>   	case MSR_IA32_APICBASE:
+> @@ -3120,7 +3108,6 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>   	switch (msr_info->index) {
+>   	case MSR_IA32_PLATFORM_ID:
+>   	case MSR_IA32_EBL_CR_POWERON:
+> -	case MSR_IA32_DEBUGCTLMSR:
+>   	case MSR_IA32_LASTBRANCHFROMIP:
+>   	case MSR_IA32_LASTBRANCHTOIP:
+>   	case MSR_IA32_LASTINTFROMIP:
+> 
 
->=20
->>=20
->> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
->> ---
->> drivers/mtd/nand/raw/brcmnand/brcmnand.c | 9 +--------
->> 1 file changed, 1 insertion(+), 8 deletions(-)
->>=20
->> diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c =
-b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
->> index 8f9ffb46a09f..566281770841 100644
->> --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
->> +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
->> @@ -2279,13 +2279,6 @@ static int brcmnand_write_page_raw(struct =
-nand_chip *chip, const uint8_t *buf,
->>        return nand_prog_page_end_op(chip);
->> }
->>=20
->> -static int brcmnand_write_oob(struct nand_chip *chip, int page)
->> -{
->> -       return brcmnand_write(nand_to_mtd(chip), chip,
->> -                             (u64)page << chip->page_shift, NULL,
->> -                             chip->oob_poi);
->> -}
->> -
->> static int brcmnand_write_oob_raw(struct nand_chip *chip, int page)
->> {
->>        struct mtd_info *mtd =3D nand_to_mtd(chip);
->> @@ -2642,7 +2635,7 @@ static int brcmnand_init_cs(struct =
-brcmnand_host *host, struct device_node *dn)
->>        chip->ecc.write_oob_raw =3D brcmnand_write_oob_raw;
->>        chip->ecc.read_oob_raw =3D brcmnand_read_oob_raw;
->>        chip->ecc.read_oob =3D brcmnand_read_oob;
->> -       chip->ecc.write_oob =3D brcmnand_write_oob;
->> +       chip->ecc.write_oob =3D brcmnand_write_oob_raw;
->>=20
->>        chip->controller =3D &ctrl->controller;
->>=20
->> --
->> 2.26.2
->>=20
-
-Best regards,
-=C3=81lvaro.=
