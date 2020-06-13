@@ -2,117 +2,121 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8F8C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 21:20:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F8CC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 21:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5C04207DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 21:20:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E776207DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 21:32:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f2rfWr3U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbgFMVUf convert rfc822-to-8bit (ORCPT
+        id S1726733AbgFMVbQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 17:20:35 -0400
-Received: from ispman.iskranet.ru ([62.213.33.10]:33166 "EHLO
-        ispman.iskranet.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726631AbgFMVUf (ORCPT
+        Sat, 13 Jun 2020 17:31:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57644 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbgFMVbP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 17:20:35 -0400
-Received: from himel (121.253.33.171.ip.orionnet.ru [171.33.253.121])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: asolokha@kb.kras.ru)
-        by ispman.iskranet.ru (Postfix) with ESMTPSA id 927FE8217A3;
-        Sun, 14 Jun 2020 04:20:27 +0700 (KRAT)
-From:   Arseny Solokha <asolokha@kb.kras.ru>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     Arseny Solokha <asolokha@kb.kras.ru>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Jason Yan <yanaijie@huawei.com>,
-        <linuxppc-dev@lists.ozlabs.org>, Scott Wood <oss@buserror.net>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
-Subject: Re: [PATCH] powerpc/fsl_booke/32: fix build with CONFIG_RANDOMIZE_BASE
-References: <20200613162801.1946619-1-asolokha@kb.kras.ru>
-        <754d31be-730b-8f18-4ead-ba2f303650d0@csgroup.eu>
-Date:   Sun, 14 Jun 2020 04:20:25 +0700
-In-Reply-To: <754d31be-730b-8f18-4ead-ba2f303650d0@csgroup.eu> (Christophe
-        Leroy's message of "Sat, 13 Jun 2020 19:28:19 +0200")
-Message-ID: <87imfupsrq.fsf@himel>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Sat, 13 Jun 2020 17:31:15 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD371C03E96F;
+        Sat, 13 Jun 2020 14:31:15 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id o4so6893797ybp.0;
+        Sat, 13 Jun 2020 14:31:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nOtq4IfCN7fb95vJs6iUg3mhuTz6pORH3UinBbE37sI=;
+        b=f2rfWr3UnBc7TAhoJXIMZSx2Fect0CYk4IxifgL8ua+OrYVv82/Hk89QPliiJK5PR0
+         6nqX26p8qqOljOi5Hvi1T7/xv7VvhfWhi3KqAESP6GuJ8/u1G1kaQr3M7jjmrp1aVtlD
+         en4ei33ZVHs/yj7S7QeMgQuinR2FiY68xms/EgLeAOGlow+rCRqpI3S0WcpsBVoaWB0+
+         GmcSeGyhtLIJ9hSkjE9uXrY9fcyupZZbOFC1CiBoW70dVrJFJYmDmg5vSviVWRh4hlWy
+         OMcpk1mMvX+KCkefaOWkZWeYQqRicdck/DUdyyTuCZ5unRJYw8HkvUrNaI5IBxrtJapR
+         zwJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nOtq4IfCN7fb95vJs6iUg3mhuTz6pORH3UinBbE37sI=;
+        b=HCP5FGNnCA3Jjq4pso7VOCSdzej/fKxSUln90PtwV4nBLqtpKDhvDCa2V6y/QPB5z3
+         SbpeuQD/H5wDSROzATGFs6NfotdCxt+4GEVjj7mFQKzA55tt5IqlO3g7eNEVHUiPbtHN
+         vMxxTThRsTlgOCP1299JQYxFJxHNQRpJb0iPQL377J3gfQv56GCvOy9F++Gtd1/sNh1e
+         EiaWIOOd3VoOygAl+TJOKQVTCbCJMQ/abH7rcQ99PK0lyCfhccFhm7gdA9FaNfiyjB3/
+         0OTMUAqSGHcFhb2T99VS/FxUBfbTR7DO7AM8/5cCrjeCTJQFvbFh4w2kiLHTq0SkfRyd
+         f62A==
+X-Gm-Message-State: AOAM530kRqS34fyCi0mRPqBBytZqxXFyEqczuT8fEvb0udhhrjZoUazJ
+        sDR4RBqSGqMzEfhSYyuUy9ewNaB/ROck+V0hQpI=
+X-Google-Smtp-Source: ABdhPJx/QdegrSi/PieXiJ1curU9LJV9mDZho/vWSlJm8ozO0w7/odlnaJPKy49cX/9cytFQFApn9bc4a861GJxFFXE=
+X-Received: by 2002:a25:ca45:: with SMTP id a66mr31494866ybg.85.1592083873963;
+ Sat, 13 Jun 2020 14:31:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+References: <1592051229-93898-1-git-send-email-xiyuyang19@fudan.edu.cn>
+In-Reply-To: <1592051229-93898-1-git-send-email-xiyuyang19@fudan.edu.cn>
+From:   Steve French <smfrench@gmail.com>
+Date:   Sat, 13 Jun 2020 16:31:02 -0500
+Message-ID: <CAH2r5msU3Oq4swZ2wkUHgNAW1BAM33NT01YEdaGWKSCK+NX-JQ@mail.gmail.com>
+Subject: Re: [PATCH] cifs: Fix cached_fid refcnt leak in open_shroot
+To:     Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Cc:     Steve French <sfrench@samba.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
+        LKML <linux-kernel@vger.kernel.org>, yuanxzhang@fudan.edu.cn,
+        kjlu@umn.edu, Xin Tan <tanxin.ctf@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Le 13/06/2020 à 18:28, Arseny Solokha a écrit :
->> Building the current 5.8 kernel for a e500 machine with
->> CONFIG_RANDOMIZE_BASE set yields the following failure:
->>
->>    arch/powerpc/mm/nohash/kaslr_booke.c: In function 'kaslr_early_init':
->>    arch/powerpc/mm/nohash/kaslr_booke.c:387:2: error: implicit declaration
->> of function 'flush_icache_range'; did you mean 'flush_tlb_range'?
->> [-Werror=implicit-function-declaration]
->>
->> Indeed, including asm/cacheflush.h into kaslr_booke.c fixes the build.
->>
->> The issue dates back to the introduction of that file and probably went
->> unnoticed because there's no in-tree defconfig with CONFIG_RANDOMIZE_BASE
->> set.
+added cc:stable and merged into cifs-2.6.git for-next
+
+On Sat, Jun 13, 2020 at 7:36 AM Xiyu Yang <xiyuyang19@fudan.edu.cn> wrote:
 >
-> I don't get this problem with mpc85xx_defconfig + RELOCATABLE +
-> RANDOMIZE_BASE.
-
-Ah, OK. So the critical difference between mpc85xx_defconfig and our custom
-config is that the former sets CONFIG_BLOCK while ours doesn't. Then we have the
-following dependence chain:
-
-arch/powerpc/mm/nohash/kaslr_booke.c
-  include/linux/swap.h
-    include/linux/memcontrol.h
-      include/linux/writeback.h
-        include/linux/blk-cgroup.h
-          include/linux/blkdev.h
-
-          #ifdef CONFIG_BLOCK
-          #include <linux/pagemap.h>
-          #endif
-
-          include/linux/pagemap.h
-            include/linux/highmem.h
-              arch/powerpc/include/asm/cacheflush.h
-
-and that's how the latter doesn't get included in
-arch/powerpc/mm/nohash/kaslr_booke.c, because in our config CONFIG_BLOCK is not
-defined in the first place.
-
-Arseny
-
-> Christophe
+> open_shroot() invokes kref_get(), which increases the refcount of the
+> "tcon->crfid" object. When open_shroot() returns not zero, it means the
+> open operation failed and close_shroot() will not be called to decrement
+> the refcount of the "tcon->crfid".
 >
->>
->> Fixes: 2b0e86cc5de6 ("powerpc/fsl_booke/32: implement KASLR infrastructure")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Arseny Solokha <asolokha@kb.kras.ru>
->> ---
->>   arch/powerpc/mm/nohash/kaslr_booke.c | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/arch/powerpc/mm/nohash/kaslr_booke.c b/arch/powerpc/mm/nohash/kaslr_booke.c
->> index 4a75f2d9bf0e..bce0e5349978 100644
->> --- a/arch/powerpc/mm/nohash/kaslr_booke.c
->> +++ b/arch/powerpc/mm/nohash/kaslr_booke.c
->> @@ -14,6 +14,7 @@
->>   #include <linux/memblock.h>
->>   #include <linux/libfdt.h>
->>   #include <linux/crash_core.h>
->> +#include <asm/cacheflush.h>
->>   #include <asm/pgalloc.h>
->>   #include <asm/prom.h>
->>   #include <asm/kdump.h>
->>
+> The reference counting issue happens in one normal path of
+> open_shroot(). When the cached root have been opened successfully in a
+> concurrent process, the function increases the refcount and jump to
+> "oshr_free" to return. However the current return value "rc" may not
+> equal to 0, thus the increased refcount will not be balanced outside the
+> function, causing a refcnt leak.
+>
+> Fix this issue by setting the value of "rc" to 0 before jumping to
+> "oshr_free" label.
+>
+> Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+> Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+> ---
+>  fs/cifs/smb2ops.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
+> index 736d86b8a910..28553d45604e 100644
+> --- a/fs/cifs/smb2ops.c
+> +++ b/fs/cifs/smb2ops.c
+> @@ -763,6 +763,7 @@ int open_shroot(unsigned int xid, struct cifs_tcon *tcon,
+>                         /* close extra handle outside of crit sec */
+>                         SMB2_close(xid, tcon, fid.persistent_fid, fid.volatile_fid);
+>                 }
+> +               rc = 0;
+>                 goto oshr_free;
+>         }
+>
+> --
+> 2.7.4
+>
+
+
+-- 
+Thanks,
+
+Steve
