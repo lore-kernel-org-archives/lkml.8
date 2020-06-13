@@ -2,125 +2,141 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5B5C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 06:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C957C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 06:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2227206A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 06:36:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="msaEkurV"
+	by mail.kernel.org (Postfix) with ESMTP id 2064C2071A
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 06:51:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbgFMGgp (ORCPT
+        id S1726381AbgFMGqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 02:36:45 -0400
-Received: from mout.web.de ([212.227.15.14]:35367 "EHLO mout.web.de"
+        Sat, 13 Jun 2020 02:46:47 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:21274 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbgFMGgp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 02:36:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1592030197;
-        bh=k2s8eb/2vmpIhCxWfTUYQO1d5bc6ZGIHEINUn8mcBYQ=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=msaEkurVfCeRrfBBs54vvu/2RGA7GuFXJ2bc1z9hznAefBtdBgJKFFXlEajUZ8fg4
-         1YZrI+JCRT+3bi1f0Y1mkUi7LTbjVa4ws+2KLdldrB7hrvDTAOF2w4VPZqdNPc7Xrk
-         PZlFow25j75aXyhQtt9cVbdaAAv4VqEmRjE9NYOg=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.132.51.155]) by smtp.web.de (mrweb001
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0Lcxfc-1j26J30RHM-00i9RM; Sat, 13
- Jun 2020 08:36:37 +0200
-To:     Aditya Pakki <pakki001@umn.edu>, netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Jiri Pirko <jiri@mellanox.com>,
-        Kangjie Lu <kjlu@umn.edu>, Qiushi Wu <wu000273@umn.edu>
-Subject: Re: [PATCH] test_objagg: Fix memory leak in test_hints_case()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <d248479f-7209-d8f8-6270-0580351d606a@web.de>
-Date:   Sat, 13 Jun 2020 08:36:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1725771AbgFMGqr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jun 2020 02:46:47 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49kSmy5MQRz9twtx;
+        Sat, 13 Jun 2020 08:46:42 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id sNXi3cRrh7Ub; Sat, 13 Jun 2020 08:46:42 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49kSmy3vdrz9twtw;
+        Sat, 13 Jun 2020 08:46:42 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id AF5FF8B771;
+        Sat, 13 Jun 2020 08:46:43 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id o_sKFmexd0LZ; Sat, 13 Jun 2020 08:46:43 +0200 (CEST)
+Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E6A0B8B76A;
+        Sat, 13 Jun 2020 08:46:42 +0200 (CEST)
+Subject: Re: [PATCH v4 1/2] powerpc/uaccess: Implement unsafe_put_user() using
+ 'asm goto'
+To:     Nick Desaulniers <ndesaulniers@google.com>,
+        Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Michael Ellerman <patch-notifications@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Paul Mackerras <paulus@samba.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+References: <49YBKY13Szz9sT4@ozlabs.org>
+ <20200611224355.71174-1-ndesaulniers@google.com>
+ <20200611235256.GL31009@gate.crashing.org>
+ <CAKwvOdkKywb1KZ-SDwwuvQEmbsaAzJj9mEPqVG=qw1F5Ogv8rw@mail.gmail.com>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <1d1f9aee-ff13-d18b-9454-1580067d7c71@csgroup.eu>
+Date:   Sat, 13 Jun 2020 06:46:33 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:gaX0WJqFoqG8TGAHIdw6lVhq+HMK45m/5S4T0Ei2rPskxBk464Q
- Z58pCXDzmNyVZttO9heEBsAR3C1f287HZ8EAmLuzEceMh0K57lqcmIUrNq/deRF+KlnDqGD
- 8F1WiwnA9fvJ/WiB5yKSCMgWOTykrMiE3mSPy7oY4xjOE1GxbAzYE7iVy5b4KKaoQywtIUY
- 9voQh/xz5CF90Sk6jk+qA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:vNHyLViQvh0=:t4GWMd9t8ZQaw3lO7KeVDb
- zFUJN4m+r6sH+s1DnI0bhDv1jVy7CjShuVHSOIf6lw3ijQvVIM909LCwyL0I0AlI5j7CUFj7H
- 80sKZq09ZNiw3/G5BWnfrDhD8kDl0bbvqwvlV2mB7XusIuEku0K9qzG2YkIb4EAvf2+PcPxfP
- 0qhbXVLpf6mJusVHOrWZlE5iv02TTeOewAP8ixiNIVLrqqmo96mfhyFjaulZPeraeTNEY0VEE
- E5B086WHi0tAOdmkgiE6wKfPJCMjPLm7EJsdtaCsUNIMPMiOFlaZ8c1PqiomZE9ymYIpZDQNl
- UmJHjPwN7W3my1s6mZTpEnS1evyJozGwbXHrl50hwBUckpn37CPzFGyi6YKPt6QZT1qgsqEFL
- PdRADrwRa4PVYG+/rO51BfSwudTzCtlPOlv/lbAHxA4vJtOKmJ/LPB2dwtR1f7Di76jtUPZW3
- PiUpBhY0wnbPHa38o7T9+MxlGHWiTrcenDh0ZJ4ZPycglO7LBlnz3pxtqGs34+3qd38f+Da6A
- hd5xjUoUwMr4NX1FLpVwcWzgCbO8bzAKqo+/Xiu5IqQK8e5D27KveXum7c2e2sqxMaHmsDRVR
- uGKBqDXD6oxADlcLo8Gubdq5J5YAKd7RgTfVVRUAjvAY+Hv+bW010+wH5YgrUUzNiRxvJpP15
- 3ylm4gdvn2mSCWIslbtaotqTDsx9tmwxYu7/oIlYcdmQpCghLsKeEROH0JKNVKN+lK31nMWdR
- 9afQFWdtxlBkhS5ZP/yrFF3bn2CiRW4yjF/PHW5cTgj4qP4AcKxTBaRTbbYQUDxWK+hkEr3uh
- Gp+JdOCX1IqQ4JbidOxAdNWwY4UWodyaPEVyRrZrE/HN9uUG/pwkdbVraV9eV0ycOd+Ej5aDB
- wvtMVOEKIpLMlmA7e0iNnhUxw3A45Gnz97RWMJE81sc/cysldHAUlf5SjbNM5X0iT3VOUkeqf
- iuK3/ivb9R2ItoIJ8x/CrKcgNCHtLJDPYoYaUQQr7SH4sI/uo0CMHDxnJFxuNFD8zAzttlod8
- 4Ic+fET4e9BbGl5u0Q76plxfP3vr39w55WFPSvDb9YlJU2auBTalLg/+4qTzkr3JnwitDZ+eA
- fwplVIBSJrpt0PBh/iZpV4Ihz8DAtlxqtjWp5eW8eZAibRMlksnL0Mmfeglhc97Rjmez5FjHO
- IbX/II2CQPvSk3vm+NDLFdoct9KZ4PMy01hUUiDTKrZmYsMgiryZyH+wHTNZ6Hism2fRmGaA/
- py1JwqNmOX5BU73KM
+In-Reply-To: <CAKwvOdkKywb1KZ-SDwwuvQEmbsaAzJj9mEPqVG=qw1F5Ogv8rw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> =E2=80=A6 The patch fixes this issue.
 
-I propose to replace this information by the tag =E2=80=9CFixes=E2=80=9D.
-Please choose another imperative wording for your change description.
 
-Regards,
-Markus
+On 06/12/2020 09:33 PM, Nick Desaulniers wrote:
+> 
+> IIUC the bug report correctly, it looks like LLVM is failing for the
+> __put_user_asm2_goto case for -m32.  A simple reproducer:
+> https://godbolt.org/z/jBBF9b
+> 
+> void foo(long long in, long long* out) {
+> asm volatile(
+>    "stw%X1 %0, %1\n\t"
+>    "stw%X1 %L0, %L1"
+>    ::"r"(in), "m"(*out));
+> }
+> prints (in GCC):
+> foo:
+>    stw 3, 0(5)
+>    stw 4, 4(5)
+>    blr
+> (first time looking at ppc assembler, seems constants and registers
+> are not as easy to distinguish,
+> https://developer.ibm.com/technologies/linux/articles/l-ppc/ say "Get
+> used to it." LOL, ok).
+
+When I do ppc-linux-objdump -d vmlinux, registers and constants are 
+easily distinguished, see below.
+
+c0002284 <start_here>:
+c0002284:	3c 40 c0 3c 	lis     r2,-16324
+c0002288:	60 42 45 00 	ori     r2,r2,17664
+c000228c:	3c 82 40 00 	addis   r4,r2,16384
+c0002290:	38 84 04 30 	addi    r4,r4,1072
+c0002294:	7c 93 43 a6 	mtsprg  3,r4
+c0002298:	3c 20 c0 3e 	lis     r1,-16322
+c000229c:	38 21 e0 00 	addi    r1,r1,-8192
+c00022a0:	38 00 00 00 	li      r0,0
+c00022a4:	94 01 1f f0 	stwu    r0,8176(r1)
+c00022a8:	48 35 e7 41 	bl      c03609e8 <early_init>
+c00022ac:	38 60 00 00 	li      r3,0
+c00022b0:	7f e4 fb 78 	mr      r4,r31
+c00022b4:	48 35 e7 8d 	bl      c0360a40 <machine_init>
+c00022b8:	48 35 eb e1 	bl      c0360e98 <MMU_init>
+c00022bc:	3c c0 c0 3c 	lis     r6,-16324
+c00022c0:	3c c6 40 00 	addis   r6,r6,16384
+c00022c4:	7c df c3 a6 	mtspr   799,r6
+c00022c8:	3c 80 c0 00 	lis     r4,-16384
+c00022cc:	60 84 22 e4 	ori     r4,r4,8932
+c00022d0:	3c 84 40 00 	addis   r4,r4,16384
+c00022d4:	38 60 10 02 	li      r3,4098
+c00022d8:	7c 9a 03 a6 	mtsrr0  r4
+c00022dc:	7c 7b 03 a6 	mtsrr1  r3
+c00022e0:	4c 00 00 64 	rfi
+c00022e4:	7c 00 02 e4 	tlbia
+c00022e8:	7c 00 04 ac 	hwsync
+c00022ec:	3c c6 c0 00 	addis   r6,r6,-16384
+c00022f0:	3c a0 c0 3c 	lis     r5,-16324
+c00022f4:	60 a5 40 00 	ori     r5,r5,16384
+c00022f8:	90 a0 00 f0 	stw     r5,240(0)
+c00022fc:	3c a5 40 00 	addis   r5,r5,16384
+c0002300:	90 c5 00 00 	stw     r6,0(r5)
+c0002304:	38 80 10 32 	li      r4,4146
+c0002308:	3c 60 c0 35 	lis     r3,-16331
+c000230c:	60 63 d6 a8 	ori     r3,r3,54952
+c0002310:	7c 7a 03 a6 	mtsrr0  r3
+c0002314:	7c 9b 03 a6 	mtsrr1  r4
+c0002318:	4c 00 00 64 	rfi
+
+For GCC, I think you call tell you want register names with -mregnames
+
+Christophe
