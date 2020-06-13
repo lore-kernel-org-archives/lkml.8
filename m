@@ -2,77 +2,107 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95933C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 14:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB322C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 14:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70D242078A
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 14:39:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 899342078A
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 14:39:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HrXvEgAl"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="sljE+Vlj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbgFMOjJ (ORCPT
+        id S1726490AbgFMOjT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 10:39:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51230 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726323AbgFMOjI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 10:39:08 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15563C03E96F;
-        Sat, 13 Jun 2020 07:39:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=/UHutX/651XYnkKnM6NBQmM9y2YAVAGn9Ikzmv3dpFY=; b=HrXvEgAlgagihhn3EqpqltDMf7
-        yF996n0G0Pn33lzbHmvYhJYxdX2LWPBDe6SDuGDCM+YcT+arcaXMJahc6LeqQE4Q19kpbVQaywGjA
-        AEil84nspQ/yWQG2TqX9ZXrtBpcoQLafN9wkXGtkL94oRtyKbPSQ8Fe8tsJMAfXQIqo6/InSiuK4F
-        vFnwAIPXCAE+QjvYyyUAa+PauVeEYpQRXNqinEPUqfkH8EV6I165Sf+KTYdSmJAnoE3ECKgLsNXe3
-        umf9gEUQdltUqPK5yO8hvMvM4JUf40Whej0I8TbZMumrTv0bbCHMpmeyo8ADEF7sM8p2BlfwLvORb
-        n+239RWg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jk7J8-0001SL-DS; Sat, 13 Jun 2020 14:38:54 +0000
-Date:   Sat, 13 Jun 2020 07:38:54 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux MM <linux-mm@kvack.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Colin Walters <walters@verbum.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        syzbot <syzbot+d6ec23007e951dadf3de@syzkaller.appspotmail.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: [PATCH v4 1/2] hugetlb: use f_mode & FMODE_HUGETLBFS to identify
- hugetlbfs files
-Message-ID: <20200613143854.GN8681@bombadil.infradead.org>
-References: <20200612004644.255692-1-mike.kravetz@oracle.com>
- <20200612015842.GC23230@ZenIV.linux.org.uk>
- <b1756da5-4e91-298f-32f1-e5642a680cbf@oracle.com>
- <CAOQ4uxg=o2SVbfUiz0nOg-XHG8irvAsnXzFWjExjubk2v_6c_A@mail.gmail.com>
+        Sat, 13 Jun 2020 10:39:19 -0400
+Received: from mout.web.de ([217.72.192.78]:46413 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726475AbgFMOjS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jun 2020 10:39:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1592059156;
+        bh=kgUISOdMmKx80S+QsK7f1L5ztAZevv9Jr71ZumikE6I=;
+        h=X-UI-Sender-Class:From:Subject:To:Cc:Date;
+        b=sljE+VljuPG5krFC9B/TACFE/+z3Ecr/6GoyCxKfD/s9c/4jZ1Bp5MdRjHKvti6Fa
+         u6oolWiU/dR8WS5XcXqz5qQ0omILdOj8Wo0TZCUvd4ha25i350WW9mFAoQ4kYEo4z+
+         uRKlAZ7AOSLszu8OJdqWRG2g5eaIq7p6Ik2wPz78=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.10] ([95.157.53.180]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MEVlN-1jiBNV1Izp-00FkiM; Sat, 13
+ Jun 2020 16:39:16 +0200
+From:   Jan Kiszka <jan.kiszka@web.de>
+Subject: [PATCH] gpio: pca953x: Add support for the PCAL9535
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Message-ID: <53b5504b-dd06-c1d5-5334-d4c5525eca93@web.de>
+Date:   Sat, 13 Jun 2020 16:39:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOQ4uxg=o2SVbfUiz0nOg-XHG8irvAsnXzFWjExjubk2v_6c_A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:d9OK0faWmrTbCao89AP45VVSNUvQ/hFJ4bgkLEx/Ype64hIF7e2
+ 0PZ66VftVkZzWXS/81kqmYnI3RFGJ9LHPzDn4E4n4PIXc5ex187Vzuf8ayT1oWmoSW6WysY
+ 5eBdKCqkCBlh40McJbO2SQh8RwGLL7OJKZ0VIIjF96ImjIromF/hLlkaQ3JakvdYH4vFKsu
+ 8GAq6Fwh15vEFxy8pkwlw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Grak4s5uaFU=:/HIgdIHfojvFVETLmKW3bW
+ sN05GIJJ44vVeFtfb/Iq0GedwG9UDnAm8AkQbSr9t6zXvbnE+FuidfANwm937G3rVEey60otv
+ 91ZQ+v5kpd2vLCooA3lOp6rpb/FTPYeeQbLKuB+XNbmYhfXX++T7EUlUeEEMQgY3jYdcdot2S
+ QmaCKfWm3PKa+o1fqx8ixFw2OPrSJv92PeYG5aw2bcFfSKTXbvE0iWWqD7N6R8FmvpUlHoni9
+ Z/s+kiwQEYBb9rjscz+B8sj8K1PDTPK1RyuNjZIlDTbZzn+5VkVEi3ZEyN2IS3eY2phpIop2z
+ YBdURmzn6tTT6Yx9OlcVUgIwBEHtASif8v0AZJbcaK7KaGgCdq2yonFIq8Clh7WsZuA2p0wrD
+ JVXSV1Ju8GkEyzDWbITToBB32hW7QYpyG3RUcSbQ/EV9ev54LidixEjvjvXikkvgNrA69FfPa
+ 1GhaXtkNC078VYxjudBlnOgdi9l27vraNpL6yZUv/qeaJEv//RbEps8zI9Wzq4lTtPhhEeBeh
+ wPXydSfNoA5OOOUXlLjzhlHjogpNPF0mlZtifdeBrKa9tA5UzZYuuD+6wfkn1BLJ1JWspWzRI
+ W71ETUpwphxODtLynTgUD4hkv1qyvyY3S5zdQsvmsdUx4pM2SjRIAsJtbkTBOVZ+Z1/vgxNtl
+ WwjUM70R8821M9apjOl5QMgIAMcYpeBm9Hw+PWB0u/dg5MIuJuoXfEYwPJwlcqwu5+YPmIJT4
+ YlX/K/+fuYdvUvxyiTQYTWdabmW/bS4lSu1okzaHRsKOT4R8b4m06+AtmtizdEW9GDsm2UlOa
+ M5mXfkB3AOm9yu+XITFgnYL2rFpchUIRaLiXBC0lAF4i13pYusand76434T9aelFUWd0zm0JY
+ 6BOfcfQgqIbv1tZN14CoG/7Hlf3QVY/dbs1OGgEhTbt1HVAuIMmvanS1Z1XbSHJj45fIkYw8R
+ dVhCJqIQG0GASOVsV70RXX1tHZANB4m3hw/J0J5kDt4v9Xw6TE6xhorHnKSZ4ooN4npBoOuwl
+ kfzOpsYccdSIeII985Sccy5D7ittgTpAw4CUQRuEVYLb3Wa5r0JnTvlUFVlgbVTvcVAkjm3fy
+ Cn903AoW2YxO3YRBauuC+IwsQpIkUtYfgVtV0NvDQZ+qjuJ1B5mGqsl0FOZy0+aUeoDZ0tT7z
+ 1ndU/dzeQZsBZwY55vkRYQGiJF8d7qbxVaKyXbSyk5ri4fJBzR6soTavELcpTmINHTlnxtj24
+ 75XLwPJ4fMuCYgwpv
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 13, 2020 at 09:53:24AM +0300, Amir Goldstein wrote:
-> Currently, the only in-tree stacking fs are overlayfs and ecryptfs, but there
-> are some out of tree implementations as well (shiftfs).
-> So you may only take that option if you do not care about the combination
-> of hugetlbfs with any of the above.
+From: Jan Kiszka <jan.kiszka@siemens.com>
 
-I could see shiftfs being interesting, maybe.  I don't really see
-the usecase for layering overlayfs or ecryptfs on top of a ram-based
-filesystem.
+The PCAL9535 [1] is compatible to the PCA9535. Additionally, it comes
+with interrupt support and input latching. Other features are not
+supported by the GPIO subsystem.
+
+[1] https://www.nxp.com/docs/en/data-sheet/PCAL9535A.pdf
+
+Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+=2D--
+ drivers/gpio/gpio-pca953x.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index 1fca8dd7824f..34d635e51dda 100644
+=2D-- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -1131,6 +1131,7 @@ static const struct of_device_id pca953x_dt_ids[] =
+=3D {
+ 	{ .compatible =3D "nxp,pca9505", .data =3D OF_953X(40, PCA_INT), },
+ 	{ .compatible =3D "nxp,pca9534", .data =3D OF_953X( 8, PCA_INT), },
+ 	{ .compatible =3D "nxp,pca9535", .data =3D OF_953X(16, PCA_INT), },
++	{ .compatible =3D "nxp,pcal9535", .data =3D OF_953X(16, PCA_LATCH_INT), =
+},
+ 	{ .compatible =3D "nxp,pca9536", .data =3D OF_953X( 4, 0), },
+ 	{ .compatible =3D "nxp,pca9537", .data =3D OF_953X( 4, PCA_INT), },
+ 	{ .compatible =3D "nxp,pca9538", .data =3D OF_953X( 8, PCA_INT), },
+=2D-
+2.26.2
+
