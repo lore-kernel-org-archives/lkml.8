@@ -4,88 +4,105 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF51FC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 17:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F375C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 17:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6A15207BC
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 17:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68C042074D
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 17:28:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbgFMRYz (ORCPT
+        id S1726535AbgFMR2c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 13:24:55 -0400
-Received: from mga01.intel.com ([192.55.52.88]:29564 "EHLO mga01.intel.com"
+        Sat, 13 Jun 2020 13:28:32 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:27111 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726460AbgFMRYy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 13:24:54 -0400
-IronPort-SDR: FRsNhMB74VnO045WCbNsHPP4QxTn8jIyrodjPs3ZyurCXCHD7LaFL5mwpubbVltvZ9bugmx+3L
- v05F4hOx29Yg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2020 10:24:54 -0700
-IronPort-SDR: sS9wkkOWP2IUuMY4gT3haiEa8VbnO9eTSK1mP/sr8WNa23DWL1nHQGbxoxvZapa5nBX+UhuSmo
- 1GNSmG5BWQqg==
-X-IronPort-AV: E=Sophos;i="5.73,507,1583222400"; 
-   d="scan'208";a="448689216"
-Received: from haqueshx-mobl2.amr.corp.intel.com (HELO [10.254.201.46]) ([10.254.201.46])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2020 10:24:52 -0700
-Subject: Re: [PATCH] RDMA/rvt: Fix potential memory leak caused by
- rvt_alloc_rq
-To:     Aditya Pakki <pakki001@umn.edu>
-Cc:     kjlu@umn.edu, wu000273@umn.edu,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200612195426.54133-1-pakki001@umn.edu>
-From:   Dennis Dalessandro <dennis.dalessandro@intel.com>
-Message-ID: <4db8021d-b5a8-448e-4d8d-c8ea91f19daa@intel.com>
-Date:   Sat, 13 Jun 2020 13:24:50 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        id S1726404AbgFMR2b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jun 2020 13:28:31 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49kl1Q0G8Fz9tyVJ;
+        Sat, 13 Jun 2020 19:28:26 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id V0taFgg7QO5z; Sat, 13 Jun 2020 19:28:25 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49kl1P50Mkz9tyVH;
+        Sat, 13 Jun 2020 19:28:25 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id EF0DE8B77C;
+        Sat, 13 Jun 2020 19:28:27 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id sBMC7z0GI5Bp; Sat, 13 Jun 2020 19:28:27 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id D512F8B76A;
+        Sat, 13 Jun 2020 19:28:26 +0200 (CEST)
+Subject: Re: [PATCH] powerpc/fsl_booke/32: fix build with
+ CONFIG_RANDOMIZE_BASE
+To:     Arseny Solokha <asolokha@kb.kras.ru>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Jason Yan <yanaijie@huawei.com>, linuxppc-dev@lists.ozlabs.org
+Cc:     Scott Wood <oss@buserror.net>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20200613162801.1946619-1-asolokha@kb.kras.ru>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <754d31be-730b-8f18-4ead-ba2f303650d0@csgroup.eu>
+Date:   Sat, 13 Jun 2020 19:28:19 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200612195426.54133-1-pakki001@umn.edu>
+In-Reply-To: <20200613162801.1946619-1-asolokha@kb.kras.ru>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/12/2020 3:54 PM, Aditya Pakki wrote:
-> In case of failure of alloc_ud_wq_attr, the memory allocated by
-> rvt_alloc_rq() is not freed. The patch fixes this issue by
-> calling rvt_free_rq().
+
+
+Le 13/06/2020 à 18:28, Arseny Solokha a écrit :
+> Building the current 5.8 kernel for a e500 machine with
+> CONFIG_RANDOMIZE_BASE set yields the following failure:
 > 
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+>    arch/powerpc/mm/nohash/kaslr_booke.c: In function 'kaslr_early_init':
+>    arch/powerpc/mm/nohash/kaslr_booke.c:387:2: error: implicit declaration
+> of function 'flush_icache_range'; did you mean 'flush_tlb_range'?
+> [-Werror=implicit-function-declaration]
+> 
+> Indeed, including asm/cacheflush.h into kaslr_booke.c fixes the build.
+> 
+> The issue dates back to the introduction of that file and probably went
+> unnoticed because there's no in-tree defconfig with CONFIG_RANDOMIZE_BASE
+> set.
+
+I don't get this problem with mpc85xx_defconfig + RELOCATABLE + 
+RANDOMIZE_BASE.
+
+Christophe
+
+> 
+> Fixes: 2b0e86cc5de6 ("powerpc/fsl_booke/32: implement KASLR infrastructure")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Arseny Solokha <asolokha@kb.kras.ru>
 > ---
->   drivers/infiniband/sw/rdmavt/qp.c | 1 +
+>   arch/powerpc/mm/nohash/kaslr_booke.c | 1 +
 >   1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/infiniband/sw/rdmavt/qp.c b/drivers/infiniband/sw/rdmavt/qp.c
-> index 511b72809e14..17ea7da73bf9 100644
-> --- a/drivers/infiniband/sw/rdmavt/qp.c
-> +++ b/drivers/infiniband/sw/rdmavt/qp.c
-> @@ -1203,6 +1203,7 @@ struct ib_qp *rvt_create_qp(struct ib_pd *ibpd,
->   			qp->s_flags = RVT_S_SIGNAL_REQ_WR;
->   		err = alloc_ud_wq_attr(qp, rdi->dparms.node);
->   		if (err) {
-> +			rvt_free_rq(&qp->r_rq);
->   			ret = (ERR_PTR(err));
->   			goto bail_driver_priv;
->   		}
+> diff --git a/arch/powerpc/mm/nohash/kaslr_booke.c b/arch/powerpc/mm/nohash/kaslr_booke.c
+> index 4a75f2d9bf0e..bce0e5349978 100644
+> --- a/arch/powerpc/mm/nohash/kaslr_booke.c
+> +++ b/arch/powerpc/mm/nohash/kaslr_booke.c
+> @@ -14,6 +14,7 @@
+>   #include <linux/memblock.h>
+>   #include <linux/libfdt.h>
+>   #include <linux/crash_core.h>
+> +#include <asm/cacheflush.h>
+>   #include <asm/pgalloc.h>
+>   #include <asm/prom.h>
+>   #include <asm/kdump.h>
 > 
-
-This should probably use the unwind code at the end to be consistent.
-
-Looks like the rvt_free_rq and free_ud_wq_attr have gotten out of order 
-and shouldn't be tied together, so that needs fixed up too.
-
-I'd need to study the git log a little more to see what happened but I 
-think d310c4bf8aea ("IB/{rdmavt, hfi1, qib}: Remove AH refcount for UD 
-QPs") just missed this.
-
--Denny
