@@ -2,149 +2,158 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB38C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 15:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B94C6C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 15:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 227EB207DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 15:09:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 840CB20739
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 15:15:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="v8JqO46k"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="hTr18Qkc";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="hTr18Qkc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbgFMPJN (ORCPT
+        id S1726449AbgFMPPO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 11:09:13 -0400
-Received: from mail-eopbgr680063.outbound.protection.outlook.com ([40.107.68.63]:19937
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726289AbgFMPJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 11:09:10 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=F6Tm5GcNw2xyOcKWhTpwQHdTkxXv08I1Q6kKgKFP8X4GmivrzsToTa3FPDRPnAkCVG0efY+6uV6jdp/6WYAcNRBxgscIG63tYfbd3jl1vFpvfH9EERtnRjHq4324iFx0mguWaduZbjwhZntLi+A8ebvAa0Rh7LFapLpwA5kdnyWk94tbsZnUPcj0v/bvzm3rmLPFxj1eX3jqDhVrcPosvHndzDyOUTohRyAew/RBXo7yCVaxsSnPD8KhrJhWoNm0toLM9pYzjt4l2RnuFm5/5q2t4AnXB7VEnLD3v3r/GVMBoYo5J/4JydTsPA9sYL5NvAJzv8B088n3OAMQn2uYFQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gfhsecbtgRwDfMbrbkhsyF5egVVlNKY3adIDorowvUU=;
- b=NzgVDC8xxRtM1PIEFiRUu9f+QPPkxmlnDHqQnFY4jdOKdqWXO/AKLpl8KoEuROnKUGUWAnV1TJLdWXYOgC6PvjhxchfY6DLW72xuUmJFzoY0aUxW+1Ee0YOVfJR7JlyC4JdCZZ4NLbXd6xWxL7i51jAdLWnJkr1wu1qMvrsFiLKlv6epZuPtqwMkQpeirGUvFY/nLzsKof6oqMzpJYcSJt6EvrGeU0jsBplGZ8SXlZrowAqL+/Ce3IXnOYVVl/ul+rc43kt5pRCZ1CVUjHxE9U8X+rke8jOAPjSDoKiSihFcgo9hEklr7/R8QUvS3zYZPlJxGttMsOG2ExLLRYnzeA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gfhsecbtgRwDfMbrbkhsyF5egVVlNKY3adIDorowvUU=;
- b=v8JqO46kXCIsSfs2KP59Ubk6rD0XMRApyoPo0a5lQN2pYR3rZURajuAeBaXYYwOy4Uy8X6r6zuZ2fxGutPpRA1cVLUq2YmSLkXAm6eJ6ln88kBA1hF3VUkjt4SOhUJShaCGUUZuJjke0Z3MXj7/yM1ZzxmplmBlYQrgkEsEVZjI=
-Authentication-Results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4401.namprd12.prod.outlook.com (2603:10b6:5:2a9::15)
- by DM5PR12MB1722.namprd12.prod.outlook.com (2603:10b6:3:107::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.22; Sat, 13 Jun
- 2020 15:09:06 +0000
-Received: from DM6PR12MB4401.namprd12.prod.outlook.com
- ([fe80::7949:b580:a2d5:f766]) by DM6PR12MB4401.namprd12.prod.outlook.com
- ([fe80::7949:b580:a2d5:f766%3]) with mapi id 15.20.3088.026; Sat, 13 Jun 2020
- 15:09:06 +0000
-Subject: Re: [PATCH] drm/ttm: Fix dma_fence refcnt leak in
- ttm_bo_vm_fault_reserved
-To:     Xiyu Yang <xiyuyang19@fudan.edu.cn>, Huang Rui <ray.huang@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
-Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
-        Xin Tan <tanxin.ctf@gmail.com>
-References: <1592051318-93958-1-git-send-email-xiyuyang19@fudan.edu.cn>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Message-ID: <5f1e83d6-9d3b-f7dc-d3e7-4f8ca46e9855@amd.com>
-Date:   Sat, 13 Jun 2020 17:08:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-In-Reply-To: <1592051318-93958-1-git-send-email-xiyuyang19@fudan.edu.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-ClientProxiedBy: AM0PR05CA0079.eurprd05.prod.outlook.com
- (2603:10a6:208:136::19) To DM6PR12MB4401.namprd12.prod.outlook.com
- (2603:10b6:5:2a9::15)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7] (2a02:908:1252:fb60:be8a:bd56:1f94:86e7) by AM0PR05CA0079.eurprd05.prod.outlook.com (2603:10a6:208:136::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18 via Frontend Transport; Sat, 13 Jun 2020 15:09:03 +0000
-X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 8528fb35-8da2-40d4-ef4b-08d80fabb6fa
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1722:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR12MB172292AE407BB220A29CDC76839E0@DM5PR12MB1722.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
-X-Forefront-PRVS: 0433DB2766
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: aqKxlpNkos9fZauUbooL0+SIF8tGuA4FufO5jxiS/AQb/gwqPmIGNKgUHr3L3cA6TUGcG6NQY3TkByQdKclpYObpgdIe/umdC4cx2IlCdcvF5+aXSwoQnt5DhmF80rG8MefSAX9JVLXQfL2oidlUpH5M5M4JlIIMXmkv45MQFaXan+yQrdzS+uyJ0elS5EzUvupnrELjCMe3k5+EGMbWLYITLz6+KahZ+YLpBrXltuUTO2sIacYPN6lga+UC0C+XjKl2aU3PjjIgeIfkKO6cUKmQjssNOK+1BQEiX33te0F4TntHOpdRXcKwIouLgy2LcV0/ycQFjxXCIsbrTdzggdBevHqQtn3A/WFIt4vTnJsfrdToUCg/Fyh/LBB9ONmm
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4401.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(39860400002)(376002)(136003)(346002)(66946007)(4326008)(66476007)(52116002)(186003)(6486002)(478600001)(31686004)(7416002)(8676002)(66556008)(16526019)(110136005)(6666004)(86362001)(5660300002)(316002)(2906002)(8936002)(31696002)(2616005)(36756003)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: +inmjCYr7PhxtkFbVfHqqLL3C3FlZA+djhY0SNIhjpij3ht30taEixFtDuHXYhjY43VANVxqTez5yBHyzrpXgoi4BBjytCvBRNUSJVlFQp86ipPeButdQ8zsRwmBmtpovTZ4djlKejCxSEGJe3eMSs5C+afvC0zc1sdEiZDGbirVAimlNIcviD5L5eJL2/yhdbzMh+oDcKoSVqCUv7Fu0QpymBjYSwns8jgogCzwPmNiZOI9XRpdmr3MDCxKWO1LvEsUW1hogSilMv7dtTLuqM68RTydEEOVwj2HQJRyqxcrKAOXcQK7VxrJK2t5b6Y4XdRyzVq3WSMbeiZlIaZvuWFebzjhK2ZZJQ1m5QzWVZLUf2ECbkaZR2Z9ACSqXJmLDMR/WfHBWpVSZpElmo6GuPGaP8smCXquxzBHcA1HjvjEGY0tasWG6O/E+vB0DolCZagyoG4cpydES00Z51Wx0Cvv58g8EQuf0A/vQQjDyg/F9kWDo/Va41sS6wApjAayyE/dlcqFXR2tGyMklTMbM5t6BJJxkflBH89m/mFF1+vi/Q7fOn1DejB/yBwrXYXW
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8528fb35-8da2-40d4-ef4b-08d80fabb6fa
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2020 15:09:06.0491
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6diPGeQjFVc6UBsTuchrUEi0LgG5NnXDTdUnmmOTP+N4MUA0FQeINWFXOKphR0ar
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1722
+        Sat, 13 Jun 2020 11:15:14 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:55746 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726304AbgFMPPN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jun 2020 11:15:13 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id DF3F38EE26A;
+        Sat, 13 Jun 2020 08:15:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1592061312;
+        bh=r3pb4loia2wlIRGMIh2JMH3UKQykuiHoGqNrtacmoic=;
+        h=Subject:From:To:Cc:Date:From;
+        b=hTr18QkcifOpwrv1Y/Ndgf6h+NidPrtYgwnHfFVzL3Lh6eQ+bf4ew5DVT4fMlw525
+         52Mvv1o4EChkdN3Dipu19Ff8bJTtgFsZn+ezK/ToWbNRNvY8DORTFV+pxUuHDUPpTh
+         5InU5MtttbOZw18f8Tc0lB0B8Ns+VHVFLkWPQOyQ=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id V_5DKU12lxnb; Sat, 13 Jun 2020 08:15:12 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.76.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 63C718EE200;
+        Sat, 13 Jun 2020 08:15:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1592061312;
+        bh=r3pb4loia2wlIRGMIh2JMH3UKQykuiHoGqNrtacmoic=;
+        h=Subject:From:To:Cc:Date:From;
+        b=hTr18QkcifOpwrv1Y/Ndgf6h+NidPrtYgwnHfFVzL3Lh6eQ+bf4ew5DVT4fMlw525
+         52Mvv1o4EChkdN3Dipu19Ff8bJTtgFsZn+ezK/ToWbNRNvY8DORTFV+pxUuHDUPpTh
+         5InU5MtttbOZw18f8Tc0lB0B8Ns+VHVFLkWPQOyQ=
+Message-ID: <1592061311.5201.7.camel@HansenPartnership.com>
+Subject: [GIT PULL] final round of SCSI updates for the 5.6+ merge window
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Sat, 13 Jun 2020 08:15:11 -0700
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 13.06.20 um 14:28 schrieb Xiyu Yang:
-> ttm_bo_vm_fault_reserved() invokes dma_fence_get(), which returns a
-> reference of the specified dma_fence object to "moving" with increased
-> refcnt.
->
-> When ttm_bo_vm_fault_reserved() returns, local variable "moving" becomes
-> invalid, so the refcount should be decreased to keep refcount balanced.
->
-> The reference counting issue happens in several exception handling paths
-> of ttm_bo_vm_fault_reserved(). When those error scenarios occur such as
-> "err" equals to -EBUSY, the function forgets to decrease the refcnt
-> increased by dma_fence_get(), causing a refcnt leak.
->
-> Fix this issue by calling dma_fence_put() when no_wait_gpu flag is
-> equals to true.
->
-> Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-> Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+This is the set of changes collected since just before the merge window
+opened.  It's mostly minor fixes in drivers.  The one non-driver set is
+the three optical disk (sr) changes where two are error path fixes and
+one is a helper conversion.  The big driver change is the hpsa
+compat_alloc_userspace rework by Al so he can kill the remaining user. 
+This has been tested and acked by the maintainer.
 
-Good catch, Reviewed-by: Christian König <christian.koenig@amd.com>.
+There's a minor merge conflict in sr.c because of a711d91cd97e ("block:
+add a cdrom_device_info pointer to struct gendisk") but the resolution
+is pretty obvious.
 
-Going to pick that up for drm-misc-fixes.
+The patch is available here:
 
-Christian.
+git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-misc
 
-> ---
->   drivers/gpu/drm/ttm/ttm_bo_vm.c | 2 ++
->   1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/gpu/drm/ttm/ttm_bo_vm.c b/drivers/gpu/drm/ttm/ttm_bo_vm.c
-> index a43aa7275f12..fa03fab02076 100644
-> --- a/drivers/gpu/drm/ttm/ttm_bo_vm.c
-> +++ b/drivers/gpu/drm/ttm/ttm_bo_vm.c
-> @@ -300,8 +300,10 @@ vm_fault_t ttm_bo_vm_fault_reserved(struct vm_fault *vmf,
->   			break;
->   		case -EBUSY:
->   		case -ERESTARTSYS:
-> +			dma_fence_put(moving);
->   			return VM_FAULT_NOPAGE;
->   		default:
-> +			dma_fence_put(moving);
->   			return VM_FAULT_SIGBUS;
->   		}
->   
+The short changelog is:
+
+Al Viro (4):
+      scsi: hpsa: hpsa_ioctl(): Tidy up a bit
+      scsi: hpsa: Get rid of compat_alloc_user_space()
+      scsi: hpsa: Don't bother with vmalloc for BIG_IOCTL_Command_struct
+      scsi: hpsa: Lift {BIG_,}IOCTL_Command_struct copy{in,out} into hpsa_ioctl()
+
+Bodo Stroesser (1):
+      scsi: target: tcmu: Fix size in calls to tcmu_flush_dcache_range
+
+Can Guo (1):
+      scsi: ufs: Don't update urgent bkops level when toggling auto bkops
+
+Christophe JAILLET (1):
+      scsi: acornscsi: Fix an error handling path in acornscsi_probe()
+
+Colin Ian King (1):
+      scsi: qedf: Remove redundant initialization of variable rc
+
+Dan Carpenter (1):
+      scsi: cxlflash: Remove an unnecessary NULL check
+
+Denis Efremov (1):
+      scsi: storvsc: Remove memset before memory freeing in storvsc_suspend()
+
+John Hubbard (1):
+      scsi: st: Convert convert get_user_pages() --> pin_user_pages()
+
+Qiushi Wu (1):
+      scsi: iscsi: Fix reference count leak in iscsi_boot_create_kobj
+
+Simon Arlott (2):
+      scsi: sr: Fix sr_probe() missing deallocate of device minor
+      scsi: sr: Fix sr_probe() missing mutex_destroy
+
+Stanley Chu (1):
+      scsi: ufs: Remove redundant urgent_bkop_lvl initialization
+
+Sudhakar Panneerselvam (4):
+      scsi: target: Rename target_setup_cmd_from_cdb() to target_cmd_parse_cdb()
+      scsi: target: Fix NULL pointer dereference
+      scsi: target: Initialize LUN in transport_init_se_cmd()
+      scsi: target: Factor out a new helper, target_cmd_init_cdb()
+
+Suganath Prabu S (1):
+      scsi: mpt3sas: Fix memset() in non-RDPQ mode
+
+Tyrel Datwyler (1):
+      scsi: ibmvscsi: Don't send host info in adapter info MAD after LPM
+
+And the diffstat:
+
+ drivers/scsi/arm/acornscsi.c           |   4 +-
+ drivers/scsi/cxlflash/main.c           |   3 -
+ drivers/scsi/hpsa.c                    | 199 +++++++++++++++------------------
+ drivers/scsi/ibmvscsi/ibmvscsi.c       |   2 +
+ drivers/scsi/iscsi_boot_sysfs.c        |   2 +-
+ drivers/scsi/mpt3sas/mpt3sas_base.c    |   5 +-
+ drivers/scsi/qedf/qedf_fip.c           |   2 +-
+ drivers/scsi/sr.c                      |   7 +-
+ drivers/scsi/st.c                      |  20 +---
+ drivers/scsi/storvsc_drv.c             |   3 -
+ drivers/scsi/ufs/ufshcd.c              |   6 +-
+ drivers/target/iscsi/iscsi_target.c    |  29 ++---
+ drivers/target/target_core_device.c    |  19 ++--
+ drivers/target/target_core_tmr.c       |   4 +-
+ drivers/target/target_core_transport.c |  55 ++++++---
+ drivers/target/target_core_user.c      |   4 +-
+ drivers/target/target_core_xcopy.c     |   9 +-
+ drivers/usb/gadget/function/f_tcm.c    |   6 +-
+ include/target/target_core_fabric.h    |   9 +-
+ 19 files changed, 195 insertions(+), 193 deletions(-)
+
+James
 
