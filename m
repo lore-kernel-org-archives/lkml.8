@@ -2,146 +2,86 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FAEFC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 06:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE82C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 06:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3D67207D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 06:53:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jwtT8ipp"
+	by mail.kernel.org (Postfix) with ESMTP id 2036F20789
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 06:55:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592031350;
+	bh=0tUaGopau1A1iufUyqtZihsBPAAnugU54NI34jtKwac=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ElGUl59oH/c0M0OELeJ1ZYZjerrc9j7P7YTJ2gu9bzoNZ6XtI7GNVOt/iO8MYiNdu
+	 gpzHUYdnaKOSszApVPcTizUaNC28/0BiFrOaPCteTqvclVVVoo3LHYRvxMpJuW8Vll
+	 hA0PuBKVpEHZ7uDstG7tfjB/NN3EQkF3pvnG6cZw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgFMGxh (ORCPT
+        id S1726444AbgFMGzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 02:53:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36662 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgFMGxg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 02:53:36 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5908DC03E96F;
-        Fri, 12 Jun 2020 23:53:36 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id 9so10771938ilg.12;
-        Fri, 12 Jun 2020 23:53:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wZmV14aQSRUcm2y4A/e4BOaEXbeaA7HzwVKU8FNN/60=;
-        b=jwtT8ipprgd7AseQDAlUj4ZfF3NouX0BU4A5re2DoqkBdfJjM/bk+kna0bDAfV0az5
-         rDb+u/x7w5bSaxpv+6VWq4kIGtl+TSOBm4aulgnrtaJ8SLZxpIwhxOsI9seg0IlOmmQG
-         8QdLPClwcY7izTJgguw9P/PM4jpvreziT3aTrpz6+zpFxgNr7PR5sMHh3FqucWU2ljLz
-         qa6R8eR3hvCk4Sz7GQmxtqBWaEVU7hzMGwM77W4+Kh/Q8iNvzmCb72eepE94GD//g9GN
-         iE6S5wF8FTYS/k7OoO+FM8rOI0yiMVs7cY8+HJeExH/aZ+Iwym80hrTahFTrOM6cg+lu
-         9lnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wZmV14aQSRUcm2y4A/e4BOaEXbeaA7HzwVKU8FNN/60=;
-        b=f+MpczMiTkl5/a3li+aWZI/mRMp9IXia4+mFV5Sn3zyc2O3RC1u/N/YZZZjMAX5FyW
-         xmKt2lp7nZgy7hl6FME67Q0VAEGHJj9u+yh0KUaAHjUioulWf/GViqG62sFeWhz2Vx3C
-         bRA82Wu3F3ZtygQZ6hDC0gXtlJY8MWBXtc4sB2l5Zn53s/F3UmXDuKs4DZk5K6bz0KSx
-         1Qaw5B1l1iY0dGLxAuV3qJjHKpmbD4jI0M2B8UKhimcgcmNsOJ+IL/xnN6Vo1JXSE8l5
-         d5bqM1blNXa7Yj/JMR7qzLmlyYWhKnCbtzDRGl7/PgOncFFwPfT/h7UYhfeHwrpKVcUs
-         /n1w==
-X-Gm-Message-State: AOAM533Gg8CJUR+HNU8s7LEfti6RNenEPSjSVjDJQJ0GY9P22vLQKhpU
-        h3h8J1MjwzMV9vOd13ldR2hm6TrIc9qn4DYSDhs=
-X-Google-Smtp-Source: ABdhPJxu1Fv5oTvN89HALcUnUPQVdWi2LFb8XAUkbJWwKm+5/Yp5FN9BEbw21Rp0AJk/9bkPJUlS9zPyfoQAKZ1Rb18=
-X-Received: by 2002:a92:2a0c:: with SMTP id r12mr16271149ile.275.1592031215605;
- Fri, 12 Jun 2020 23:53:35 -0700 (PDT)
+        Sat, 13 Jun 2020 02:55:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35896 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725783AbgFMGzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jun 2020 02:55:48 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E6902071A;
+        Sat, 13 Jun 2020 06:55:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592031346;
+        bh=0tUaGopau1A1iufUyqtZihsBPAAnugU54NI34jtKwac=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eTbYLuzrFqHleceBVMKJCymNK4FxLLJamy41y2Uz19hj6wwo0WTH0ESx+uIy9TjkZ
+         Qn9Qe5NNrxpJRXl3yvIWLwtpugwfNC/LXq41UW47tdAS2K2OHm4vX/qAyTUv/jIfcD
+         WM+plkvyKeJZv2Uyg7yPLsJzVKiAPguTRsMxouto=
+Date:   Sat, 13 Jun 2020 08:55:43 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 1/4] proc/bootconfig: Fix to use correct quotes for value
+Message-ID: <20200613065543.GA2599692@kroah.com>
+References: <6de85422-bdf6-e56c-1042-871b7e8a9a01@web.de>
 MIME-Version: 1.0
-References: <20200612004644.255692-1-mike.kravetz@oracle.com>
- <20200612015842.GC23230@ZenIV.linux.org.uk> <b1756da5-4e91-298f-32f1-e5642a680cbf@oracle.com>
-In-Reply-To: <b1756da5-4e91-298f-32f1-e5642a680cbf@oracle.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Sat, 13 Jun 2020 09:53:24 +0300
-Message-ID: <CAOQ4uxg=o2SVbfUiz0nOg-XHG8irvAsnXzFWjExjubk2v_6c_A@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] hugetlb: use f_mode & FMODE_HUGETLBFS to identify
- hugetlbfs files
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Linux MM <linux-mm@kvack.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Colin Walters <walters@verbum.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        syzbot <syzbot+d6ec23007e951dadf3de@syzkaller.appspotmail.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6de85422-bdf6-e56c-1042-871b7e8a9a01@web.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > Incidentally, can a hugetlbfs be a lower layer, while the upper one
-> > is a normal filesystem?  What should happen on copyup?
->
-> Yes, that seems to work as expected.  When accessed for write the hugetlb
-> file is copied to the normal filesystem.
->
-> The BUG found by syzbot actually has a single hugetlbfs as both lower and
-> upper.  With the BUG 'fixed', I am not exactly sure what the expected
-> behavior is in this case.  I may be wrong, but I would expect any operations
-> that can be performed on a stand alone hugetlbfs to also be performed on
-> the overlay.  However, mmap() still fails.  I will look into it.
->
-> I also looked at normal filesystem lower and hugetlbfs upper.  Yes, overlayfs
-> allows this.  This is somewhat 'interesting' as write() is not supported in
-> hugetlbfs.  Writing to files in the overlay actually ended up writing to
-> files in the lower filesystem.  That seems wrong, but overlayfs is new to me.
->
+On Fri, Jun 12, 2020 at 06:15:13PM +0200, Markus Elfring wrote:
+> > Fix /proc/bootconfig to show the correctly choose the
+> > double or single quotes according to the value.
+> 
+> I suggest to improve this wording a bit.
+> 
+> Regards,
 
-I am not sure how that happened, but I think that ovl_open_realfile()
-needs to fixup f_mode flags FMODE_CAN_WRITE | FMODE_CAN_READ
-after open_with_fake_path().
+Hi,
 
-> Earlier in the discussion of these issues, Colin Walters asked "Is there any
-> actual valid use case for mounting an overlayfs on top of hugetlbfs?"  I can
-> not think of one.  Perhaps we should consider limiting the ways in which
-> hugetlbfs can be used in overlayfs?  Preventing it from being an upper
-> filesystem might be a good start?  Or, do people think making hugetlbfs and
-> overlayfs play nice together is useful?
+This is the semi-friendly patch-bot of Greg Kroah-Hartman.
 
-If people think that making hugetlbfs and overlayfs play nice together maybe
-they should work on this problem. It doesn't look like either
-hugetlbfs developers
-nor overlayfs developers care much about the combination.
-Your concern, I assume, is fixing the syzbot issue.
+Markus, you seem to have sent a nonsensical or otherwise pointless
+review comment to a patch submission on a Linux kernel developer mailing
+list.  I strongly suggest that you not do this anymore.  Please do not
+bother developers who are actively working to produce patches and
+features with comments that, in the end, are a waste of time.
 
-I agree with Colin's remark about adding limitations, but it would be a shame
-if overlay had to special case hugetlbfs. It would have been better if we could
-find a property of hugetlbfs that makes it inapplicable for overlayfs
-upper/lower
-or stacking fs in general.
+Patch submitter, please ignore Markus's suggestion; you do not need to
+follow it at all.  The person/bot/AI that sent it is being ignored by
+almost all Linux kernel maintainers for having a persistent pattern of
+behavior of producing distracting and pointless commentary, and
+inability to adapt to feedback.  Please feel free to also ignore emails
+from them.
 
-The simplest thing for you to do in order to shush syzbot is what procfs does:
-        /*
-         * procfs isn't actually a stacking filesystem; however, there is
-         * too much magic going on inside it to permit stacking things on
-         * top of it
-         */
-        s->s_stack_depth = FILESYSTEM_MAX_STACK_DEPTH;
+thanks,
 
-Currently, the only in-tree stacking fs are overlayfs and ecryptfs, but there
-are some out of tree implementations as well (shiftfs).
-So you may only take that option if you do not care about the combination
-of hugetlbfs with any of the above.
-
-overlayfs support of mmap is not as good as one might hope.
-overlayfs.rst says:
-"If a file residing on a lower layer is opened for read-only and then
- memory mapped with MAP_SHARED, then subsequent changes to
- the file are not reflected in the memory mapping."
-
-So if I were you, I wouldn't go trying to fix overlayfs-huguetlb interop...
-
-Thanks,
-Amir.
+greg k-h's patch email bot
+> Markus
