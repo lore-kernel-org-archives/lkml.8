@@ -4,70 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD7C8C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 07:28:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34537C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 07:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7BAD20739
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 07:28:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19E362071A
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 07:38:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbgFMH2Y (ORCPT
+        id S1726393AbgFMHiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 03:28:24 -0400
-Received: from relay-2.mailobj.net ([213.182.54.5]:48979 "EHLO
-        relay-2.mailobj.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgFMH2U (ORCPT
+        Sat, 13 Jun 2020 03:38:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43424 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725771AbgFMHiE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 03:28:20 -0400
-Received: from v-1.localdomain (v-1.in.mailobj.net [192.168.90.191])
-        by relay-2.mailobj.net (Postfix) with SMTP id 0626312F5;
-        Sat, 13 Jun 2020 09:28:18 +0200 (CEST)
-Received: by ip-25.net-c.com [213.182.54.25] with ESMTP
-        Sat, 13 Jun 2020 09:29:13 +0200 (CEST)
-X-EA-Auth: /YZtz4n9ytcy8mBH8aKu5mU4c2etIp7EyxNz6tcam14WVXDxvs/lWBsSnIfhTnWHSz+Ytti5bx6ScrFOxgfpU2AqgdNxmOD4cEZFEqLRhA0=
-From:   Vincent Knecht <vincent.knecht@mailoo.org>
-To:     sboyd@kernel.org
-Cc:     konradybcio@gmail.com, Vincent Knecht <vincent.knecht@mailoo.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v4 4/4] dt-bindings: soc: qcom: Document MSM8936 SMD RPM
-Date:   Sat, 13 Jun 2020 09:27:45 +0200
-Message-Id: <20200613072745.1249003-5-vincent.knecht@mailoo.org>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200613072745.1249003-1-vincent.knecht@mailoo.org>
-References: <20200613072745.1249003-1-vincent.knecht@mailoo.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sat, 13 Jun 2020 03:38:04 -0400
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6680DC03E96F
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 00:38:04 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed20:b5c0:3e9f:54c6:a282])
+        by xavier.telenet-ops.be with bizsmtp
+        id qXdw2200e0MrZeJ01Xdwn6; Sat, 13 Jun 2020 09:37:59 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jk0jk-0003e2-MN; Sat, 13 Jun 2020 09:37:56 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jk0jk-0004KU-K2; Sat, 13 Jun 2020 09:37:56 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Mark Brown <broonie@kernel.org>, Qing Zhang <zhangqing@loongson.cn>
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] spi: uapi: spidev: Use TABs for alignment
+Date:   Sat, 13 Jun 2020 09:37:54 +0200
+Message-Id: <20200613073755.15906-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Vincent Knecht <vincent.knecht@mailoo.org>
+The UAPI <linux/spi/spidev.h> uses TABs for alignment.
+Convert the recently introduced spaces to TABs to restore consistency.
+
+Fixes: f30e8cbdf8ee1a43 ("spi: tools: Add macro definitions to fix build errors")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt | 1 +
- 1 file changed, 1 insertion(+)
+ include/uapi/linux/spi/spidev.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
-index 616fddcd09fd..55f8abd845a7 100644
---- a/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
-@@ -21,6 +21,7 @@ resources.
- 	Definition: must be one of:
- 		    "qcom,rpm-apq8084"
- 		    "qcom,rpm-msm8916"
-+		    "qcom,rpm-msm8936"
- 		    "qcom,rpm-msm8974"
- 		    "qcom,rpm-msm8976"
- 		    "qcom,rpm-msm8998"
+diff --git a/include/uapi/linux/spi/spidev.h b/include/uapi/linux/spi/spidev.h
+index 9390615d52f0c1cb..d56427c0b3e05953 100644
+--- a/include/uapi/linux/spi/spidev.h
++++ b/include/uapi/linux/spi/spidev.h
+@@ -48,10 +48,10 @@
+ #define SPI_TX_QUAD		0x200
+ #define SPI_RX_DUAL		0x400
+ #define SPI_RX_QUAD		0x800
+-#define SPI_CS_WORD             0x1000
+-#define SPI_TX_OCTAL            0x2000
+-#define SPI_RX_OCTAL            0x4000
+-#define SPI_3WIRE_HIZ           0x8000
++#define SPI_CS_WORD		0x1000
++#define SPI_TX_OCTAL		0x2000
++#define SPI_RX_OCTAL		0x4000
++#define SPI_3WIRE_HIZ		0x8000
+ 
+ /*---------------------------------------------------------------------------*/
+ 
 -- 
-2.25.4
-
+2.17.1
 
