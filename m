@@ -2,121 +2,137 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F8CC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 21:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92995C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 21:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E776207DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 21:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65D1620789
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 21:41:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f2rfWr3U"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="B+QgbMp5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgFMVbQ (ORCPT
+        id S1726618AbgFMVl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 17:31:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57644 "EHLO
+        Sat, 13 Jun 2020 17:41:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbgFMVbP (ORCPT
+        with ESMTP id S1726272AbgFMVl3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 17:31:15 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD371C03E96F;
-        Sat, 13 Jun 2020 14:31:15 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id o4so6893797ybp.0;
-        Sat, 13 Jun 2020 14:31:15 -0700 (PDT)
+        Sat, 13 Jun 2020 17:41:29 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1108C03E96F
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 14:41:28 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id 205so12381819qkg.3
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 14:41:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nOtq4IfCN7fb95vJs6iUg3mhuTz6pORH3UinBbE37sI=;
-        b=f2rfWr3UnBc7TAhoJXIMZSx2Fect0CYk4IxifgL8ua+OrYVv82/Hk89QPliiJK5PR0
-         6nqX26p8qqOljOi5Hvi1T7/xv7VvhfWhi3KqAESP6GuJ8/u1G1kaQr3M7jjmrp1aVtlD
-         en4ei33ZVHs/yj7S7QeMgQuinR2FiY68xms/EgLeAOGlow+rCRqpI3S0WcpsBVoaWB0+
-         GmcSeGyhtLIJ9hSkjE9uXrY9fcyupZZbOFC1CiBoW70dVrJFJYmDmg5vSviVWRh4hlWy
-         OMcpk1mMvX+KCkefaOWkZWeYQqRicdck/DUdyyTuCZ5unRJYw8HkvUrNaI5IBxrtJapR
-         zwJg==
+        d=lca.pw; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Qw8QtwNGUo+Eum7w2MvIheDYZG+1as/m6hwH6S16ckE=;
+        b=B+QgbMp53Pu1FGcIjMGBBgXvJSGIOiiEQ78JXoDNljwVxbac1cxJ83hnJ0ib8DZavC
+         dqQ3RJJt77KgagjUSsEOtWLK4ygp2hZY/SLqrnAz/BWTIg7Zts8wNpdx/VbOaDKa3J7m
+         K3TtsTKmSVqAy+f2DsIpZCfgtlY5QJY8tvlStbkdCQqmNccbTIVCULK2hXurHhBkaHeP
+         KavslPnHUaYe5XtVZ3ogdRlqHmdm79GpQiivb4GTJqVSYnoP3KnyLmbNQsH5C/CLeSjJ
+         qFrAYxjZ03DuvF+G51ibkco1Azs8x/EHP6rMOa+gNpbMHTB1MzKPDAQiIjMLI/r7gc+9
+         BWvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nOtq4IfCN7fb95vJs6iUg3mhuTz6pORH3UinBbE37sI=;
-        b=HCP5FGNnCA3Jjq4pso7VOCSdzej/fKxSUln90PtwV4nBLqtpKDhvDCa2V6y/QPB5z3
-         SbpeuQD/H5wDSROzATGFs6NfotdCxt+4GEVjj7mFQKzA55tt5IqlO3g7eNEVHUiPbtHN
-         vMxxTThRsTlgOCP1299JQYxFJxHNQRpJb0iPQL377J3gfQv56GCvOy9F++Gtd1/sNh1e
-         EiaWIOOd3VoOygAl+TJOKQVTCbCJMQ/abH7rcQ99PK0lyCfhccFhm7gdA9FaNfiyjB3/
-         0OTMUAqSGHcFhb2T99VS/FxUBfbTR7DO7AM8/5cCrjeCTJQFvbFh4w2kiLHTq0SkfRyd
-         f62A==
-X-Gm-Message-State: AOAM530kRqS34fyCi0mRPqBBytZqxXFyEqczuT8fEvb0udhhrjZoUazJ
-        sDR4RBqSGqMzEfhSYyuUy9ewNaB/ROck+V0hQpI=
-X-Google-Smtp-Source: ABdhPJx/QdegrSi/PieXiJ1curU9LJV9mDZho/vWSlJm8ozO0w7/odlnaJPKy49cX/9cytFQFApn9bc4a861GJxFFXE=
-X-Received: by 2002:a25:ca45:: with SMTP id a66mr31494866ybg.85.1592083873963;
- Sat, 13 Jun 2020 14:31:13 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Qw8QtwNGUo+Eum7w2MvIheDYZG+1as/m6hwH6S16ckE=;
+        b=fzZx72aiD/LshKraBYMo4uJRpdYeuM7RUEac/+6fiX4n53OPdZjSlPq0nzw/ddYMT/
+         mGJld/JmI1oBGWJ8BCVVQLlFkFw/1CZsw8AZP9ecFyK8g+coobZn1fpsbKDCePFvf9UZ
+         Kj8iUqr9/8NZ9mvG+c+jJlGgjLNbDn6SYLSN5A9BoWY3YCapXDjcYe+SR1a3JlV2ZD4W
+         BonxSiey3x1IwOSdOU7b0VxrhmQ/1v+I00hzGHCXKyAUHVmphvorFHnuok+F6UtgrMt9
+         /6Rh3MscoRzmBK3iFHq64Hd9cNl+6R32ydWgOQ1EwiPySp6df5Y7/XAipxiP70M4FuYm
+         7l9Q==
+X-Gm-Message-State: AOAM530u03EAbOHCNGwtmvXPK1KIqYvnOIRIi34yqHbOa6blPVS+dTD+
+        /Sn5ZNmlCrGI8NHi7mKo2rkMow==
+X-Google-Smtp-Source: ABdhPJzp8jZVoXCa8V3DcsSWREVzD4VLkOGZFOMwEG1ij3Fyk3zoWxRVjEThFvVQO3Zw4Eigo+AjTg==
+X-Received: by 2002:a37:a7c5:: with SMTP id q188mr8797992qke.384.1592084487526;
+        Sat, 13 Jun 2020 14:41:27 -0700 (PDT)
+Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id q32sm8760430qtf.36.2020.06.13.14.41.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 13 Jun 2020 14:41:26 -0700 (PDT)
+Date:   Sat, 13 Jun 2020 17:41:23 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        Alexander Potapenko <glider@google.com>
+Subject: Re: [patch V9 10/39] x86/entry: Provide helpers for execute on
+ irqstack
+Message-ID: <20200613214123.GC992@lca.pw>
+References: <87zh9cnfmg.fsf@nanos.tec.linutronix.de>
+ <87wo4gnetx.fsf@nanos.tec.linutronix.de>
+ <20200610123833.GD954@lca.pw>
+ <87h7vig17z.fsf@nanos.tec.linutronix.de>
+ <20200613135547.GA992@lca.pw>
+ <87a717cbc9.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <1592051229-93898-1-git-send-email-xiyuyang19@fudan.edu.cn>
-In-Reply-To: <1592051229-93898-1-git-send-email-xiyuyang19@fudan.edu.cn>
-From:   Steve French <smfrench@gmail.com>
-Date:   Sat, 13 Jun 2020 16:31:02 -0500
-Message-ID: <CAH2r5msU3Oq4swZ2wkUHgNAW1BAM33NT01YEdaGWKSCK+NX-JQ@mail.gmail.com>
-Subject: Re: [PATCH] cifs: Fix cached_fid refcnt leak in open_shroot
-To:     Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Cc:     Steve French <sfrench@samba.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
-        LKML <linux-kernel@vger.kernel.org>, yuanxzhang@fudan.edu.cn,
-        kjlu@umn.edu, Xin Tan <tanxin.ctf@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87a717cbc9.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-added cc:stable and merged into cifs-2.6.git for-next
+On Sat, Jun 13, 2020 at 04:03:02PM +0200, Thomas Gleixner wrote:
+> Qian,
+> 
+> Qian Cai <cai@lca.pw> writes:
+> > On Wed, Jun 10, 2020 at 09:38:56PM +0200, Thomas Gleixner wrote:
+> >
+> > Thomas, I get ahold of one of the affected systems now if you want some
+> > testing there.
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/entry
 
-On Sat, Jun 13, 2020 at 7:36 AM Xiyu Yang <xiyuyang19@fudan.edu.cn> wrote:
->
-> open_shroot() invokes kref_get(), which increases the refcount of the
-> "tcon->crfid" object. When open_shroot() returns not zero, it means the
-> open operation failed and close_shroot() will not be called to decrement
-> the refcount of the "tcon->crfid".
->
-> The reference counting issue happens in one normal path of
-> open_shroot(). When the cached root have been opened successfully in a
-> concurrent process, the function increases the refcount and jump to
-> "oshr_free" to return. However the current return value "rc" may not
-> equal to 0, thus the increased refcount will not be balanced outside the
-> function, causing a refcnt leak.
->
-> Fix this issue by setting the value of "rc" to 0 before jumping to
-> "oshr_free" label.
->
-> Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-> Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-> ---
->  fs/cifs/smb2ops.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
-> index 736d86b8a910..28553d45604e 100644
-> --- a/fs/cifs/smb2ops.c
-> +++ b/fs/cifs/smb2ops.c
-> @@ -763,6 +763,7 @@ int open_shroot(unsigned int xid, struct cifs_tcon *tcon,
->                         /* close extra handle outside of crit sec */
->                         SMB2_close(xid, tcon, fid.persistent_fid, fid.volatile_fid);
->                 }
-> +               rc = 0;
->                 goto oshr_free;
->         }
->
-> --
-> 2.7.4
->
+Looks good.
 
+<start>
+# cat /sys/kernel/debug/stackdepot/info
+Unique stacks: 27481
+Depot index:   285
+Depot offset:  3024
 
--- 
-Thanks,
+<after oom02>
+# cat /sys/kernel/debug/stackdepot/info
+Unique stacks: 29242
+Depot index:   308
+Depot offset:  6608
 
-Steve
+<after the full testsuite>
+# cat /sys/kernel/debug/stackdepot/info
+Unique stacks: 49221
+Depot index:   530
+Depot offset:  5888
