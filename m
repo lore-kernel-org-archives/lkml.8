@@ -2,129 +2,149 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 120B6C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 14:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB38C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 15:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0471207BC
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 14:57:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592060242;
-	bh=h0RBf3pmTklFQQUTKZEwrGTsYzYBmF6WgzwNYFx1FiI=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=vGK4Z4QInpGvXbCjRGf07WdNL6v9uaxSecKuGzrbe2U8DmFkvcxjni38Porr14WzJ
-	 PdDNpQr+9CCVxoPXzoM8dBSZfNKcfavjomQYOfd5jzIuJfx6fDH/leMfW+UkltQhKz
-	 CrT8KZTk+yyeckIEzkE9jsFpzRIZIseD3vigHToA=
+	by mail.kernel.org (Postfix) with ESMTP id 227EB207DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 15:09:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="v8JqO46k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbgFMO5U (ORCPT
+        id S1726460AbgFMPJN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 10:57:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60118 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726258AbgFMO5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 10:57:20 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 699892074D;
-        Sat, 13 Jun 2020 14:57:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592060239;
-        bh=h0RBf3pmTklFQQUTKZEwrGTsYzYBmF6WgzwNYFx1FiI=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=kUFzvMDXXyqpNTBId8HBUEmIPZmuCJioOhlujecvXXLaFu+xRMaaFIW5NrVg5Pa4w
-         CqWelJG2jcorZQwLaXNkMrCrhjMLOA7rQCSEQnPkbLO9eIt7LzEtXEzUGldfbQmtzu
-         iM/PpdpRIX1gmlDXFx+XFRW/fm44QW11pIXgkNKk=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 4DE483522698; Sat, 13 Jun 2020 07:57:19 -0700 (PDT)
-Date:   Sat, 13 Jun 2020 07:57:19 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, linux-kernel@vger.kernel.org
-Subject: Re: BUG: kernel NULL pointer dereference from check_preempt_wakeup()
-Message-ID: <20200613145719.GA2723@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200604225445.GA32319@paulmck-ThinkPad-P72>
- <20200605131451.GE2750@hirez.programming.kicks-ass.net>
- <20200605141607.GB4455@paulmck-ThinkPad-P72>
- <20200605184159.GA4062@paulmck-ThinkPad-P72>
- <20200606005126.GA21507@paulmck-ThinkPad-P72>
- <20200606172942.GA30594@paulmck-ThinkPad-P72>
- <20200607185732.GA18906@paulmck-ThinkPad-P72>
- <20200609154016.GA17196@paulmck-ThinkPad-P72>
- <20200613024829.GA12958@paulmck-ThinkPad-P72>
- <87ftazctov.fsf@nanos.tec.linutronix.de>
+        Sat, 13 Jun 2020 11:09:13 -0400
+Received: from mail-eopbgr680063.outbound.protection.outlook.com ([40.107.68.63]:19937
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726289AbgFMPJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jun 2020 11:09:10 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=F6Tm5GcNw2xyOcKWhTpwQHdTkxXv08I1Q6kKgKFP8X4GmivrzsToTa3FPDRPnAkCVG0efY+6uV6jdp/6WYAcNRBxgscIG63tYfbd3jl1vFpvfH9EERtnRjHq4324iFx0mguWaduZbjwhZntLi+A8ebvAa0Rh7LFapLpwA5kdnyWk94tbsZnUPcj0v/bvzm3rmLPFxj1eX3jqDhVrcPosvHndzDyOUTohRyAew/RBXo7yCVaxsSnPD8KhrJhWoNm0toLM9pYzjt4l2RnuFm5/5q2t4AnXB7VEnLD3v3r/GVMBoYo5J/4JydTsPA9sYL5NvAJzv8B088n3OAMQn2uYFQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gfhsecbtgRwDfMbrbkhsyF5egVVlNKY3adIDorowvUU=;
+ b=NzgVDC8xxRtM1PIEFiRUu9f+QPPkxmlnDHqQnFY4jdOKdqWXO/AKLpl8KoEuROnKUGUWAnV1TJLdWXYOgC6PvjhxchfY6DLW72xuUmJFzoY0aUxW+1Ee0YOVfJR7JlyC4JdCZZ4NLbXd6xWxL7i51jAdLWnJkr1wu1qMvrsFiLKlv6epZuPtqwMkQpeirGUvFY/nLzsKof6oqMzpJYcSJt6EvrGeU0jsBplGZ8SXlZrowAqL+/Ce3IXnOYVVl/ul+rc43kt5pRCZ1CVUjHxE9U8X+rke8jOAPjSDoKiSihFcgo9hEklr7/R8QUvS3zYZPlJxGttMsOG2ExLLRYnzeA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gfhsecbtgRwDfMbrbkhsyF5egVVlNKY3adIDorowvUU=;
+ b=v8JqO46kXCIsSfs2KP59Ubk6rD0XMRApyoPo0a5lQN2pYR3rZURajuAeBaXYYwOy4Uy8X6r6zuZ2fxGutPpRA1cVLUq2YmSLkXAm6eJ6ln88kBA1hF3VUkjt4SOhUJShaCGUUZuJjke0Z3MXj7/yM1ZzxmplmBlYQrgkEsEVZjI=
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB4401.namprd12.prod.outlook.com (2603:10b6:5:2a9::15)
+ by DM5PR12MB1722.namprd12.prod.outlook.com (2603:10b6:3:107::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.22; Sat, 13 Jun
+ 2020 15:09:06 +0000
+Received: from DM6PR12MB4401.namprd12.prod.outlook.com
+ ([fe80::7949:b580:a2d5:f766]) by DM6PR12MB4401.namprd12.prod.outlook.com
+ ([fe80::7949:b580:a2d5:f766%3]) with mapi id 15.20.3088.026; Sat, 13 Jun 2020
+ 15:09:06 +0000
+Subject: Re: [PATCH] drm/ttm: Fix dma_fence refcnt leak in
+ ttm_bo_vm_fault_reserved
+To:     Xiyu Yang <xiyuyang19@fudan.edu.cn>, Huang Rui <ray.huang@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
+Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
+        Xin Tan <tanxin.ctf@gmail.com>
+References: <1592051318-93958-1-git-send-email-xiyuyang19@fudan.edu.cn>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+Message-ID: <5f1e83d6-9d3b-f7dc-d3e7-4f8ca46e9855@amd.com>
+Date:   Sat, 13 Jun 2020 17:08:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+In-Reply-To: <1592051318-93958-1-git-send-email-xiyuyang19@fudan.edu.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-ClientProxiedBy: AM0PR05CA0079.eurprd05.prod.outlook.com
+ (2603:10a6:208:136::19) To DM6PR12MB4401.namprd12.prod.outlook.com
+ (2603:10b6:5:2a9::15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87ftazctov.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7] (2a02:908:1252:fb60:be8a:bd56:1f94:86e7) by AM0PR05CA0079.eurprd05.prod.outlook.com (2603:10a6:208:136::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18 via Frontend Transport; Sat, 13 Jun 2020 15:09:03 +0000
+X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 8528fb35-8da2-40d4-ef4b-08d80fabb6fa
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1722:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM5PR12MB172292AE407BB220A29CDC76839E0@DM5PR12MB1722.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-Forefront-PRVS: 0433DB2766
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: aqKxlpNkos9fZauUbooL0+SIF8tGuA4FufO5jxiS/AQb/gwqPmIGNKgUHr3L3cA6TUGcG6NQY3TkByQdKclpYObpgdIe/umdC4cx2IlCdcvF5+aXSwoQnt5DhmF80rG8MefSAX9JVLXQfL2oidlUpH5M5M4JlIIMXmkv45MQFaXan+yQrdzS+uyJ0elS5EzUvupnrELjCMe3k5+EGMbWLYITLz6+KahZ+YLpBrXltuUTO2sIacYPN6lga+UC0C+XjKl2aU3PjjIgeIfkKO6cUKmQjssNOK+1BQEiX33te0F4TntHOpdRXcKwIouLgy2LcV0/ycQFjxXCIsbrTdzggdBevHqQtn3A/WFIt4vTnJsfrdToUCg/Fyh/LBB9ONmm
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4401.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(39860400002)(376002)(136003)(346002)(66946007)(4326008)(66476007)(52116002)(186003)(6486002)(478600001)(31686004)(7416002)(8676002)(66556008)(16526019)(110136005)(6666004)(86362001)(5660300002)(316002)(2906002)(8936002)(31696002)(2616005)(36756003)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: +inmjCYr7PhxtkFbVfHqqLL3C3FlZA+djhY0SNIhjpij3ht30taEixFtDuHXYhjY43VANVxqTez5yBHyzrpXgoi4BBjytCvBRNUSJVlFQp86ipPeButdQ8zsRwmBmtpovTZ4djlKejCxSEGJe3eMSs5C+afvC0zc1sdEiZDGbirVAimlNIcviD5L5eJL2/yhdbzMh+oDcKoSVqCUv7Fu0QpymBjYSwns8jgogCzwPmNiZOI9XRpdmr3MDCxKWO1LvEsUW1hogSilMv7dtTLuqM68RTydEEOVwj2HQJRyqxcrKAOXcQK7VxrJK2t5b6Y4XdRyzVq3WSMbeiZlIaZvuWFebzjhK2ZZJQ1m5QzWVZLUf2ECbkaZR2Z9ACSqXJmLDMR/WfHBWpVSZpElmo6GuPGaP8smCXquxzBHcA1HjvjEGY0tasWG6O/E+vB0DolCZagyoG4cpydES00Z51Wx0Cvv58g8EQuf0A/vQQjDyg/F9kWDo/Va41sS6wApjAayyE/dlcqFXR2tGyMklTMbM5t6BJJxkflBH89m/mFF1+vi/Q7fOn1DejB/yBwrXYXW
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8528fb35-8da2-40d4-ef4b-08d80fabb6fa
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2020 15:09:06.0491
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6diPGeQjFVc6UBsTuchrUEi0LgG5NnXDTdUnmmOTP+N4MUA0FQeINWFXOKphR0ar
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1722
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 13, 2020 at 09:26:40AM +0200, Thomas Gleixner wrote:
-> "Paul E. McKenney" <paulmck@kernel.org> writes:
-> > And an update based on your patch (https://paste.debian.net/1151802/)
-> > against 44ebe016df3a ("Merge branch 'proc-linus' of
-> > git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace").
-> 
-> I'm running this patch since midnight on top of x86/entry. Still no NULL
-> pointer deref.
-> 
-> The cross-check with plain x86/entry has triggered it on all instances
-> by now.
+Am 13.06.20 um 14:28 schrieb Xiyu Yang:
+> ttm_bo_vm_fault_reserved() invokes dma_fence_get(), which returns a
+> reference of the specified dma_fence object to "moving" with increased
+> refcnt.
+>
+> When ttm_bo_vm_fault_reserved() returns, local variable "moving" becomes
+> invalid, so the refcount should be decreased to keep refcount balanced.
+>
+> The reference counting issue happens in several exception handling paths
+> of ttm_bo_vm_fault_reserved(). When those error scenarios occur such as
+> "err" equals to -EBUSY, the function forgets to decrease the refcnt
+> increased by dma_fence_get(), causing a refcnt leak.
+>
+> Fix this issue by calling dma_fence_put() when no_wait_gpu flag is
+> equals to true.
+>
+> Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+> Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
 
-That is consistent with my experience.  I have not yet see a NULL pointer
-dereference with Peter's patch.  As I said earlier, tests thus far
-at my end give 95% confidence that it is a fix for the NULL pointer
-problem.
+Good catch, Reviewed-by: Christian König <christian.koenig@amd.com>.
 
-I have seen two other problems, but I haven't yet see them often enough
-to have any confidence as to what they are related to.  The RCU CPU
-stall warning happened only once, so it might have been introduced in
-mainline sometime in the last few days.  The BUG was with Peter's patch
-on an intermediate state of x86/entry, so it might be specific to that
-intermediate state.  Or to my commit/patch confusion, perhaps.
+Going to pick that up for drm-misc-fixes.
 
-> So it looks your up to something here.
+Christian.
 
-Let's recap.
+> ---
+>   drivers/gpu/drm/ttm/ttm_bo_vm.c | 2 ++
+>   1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/ttm/ttm_bo_vm.c b/drivers/gpu/drm/ttm/ttm_bo_vm.c
+> index a43aa7275f12..fa03fab02076 100644
+> --- a/drivers/gpu/drm/ttm/ttm_bo_vm.c
+> +++ b/drivers/gpu/drm/ttm/ttm_bo_vm.c
+> @@ -300,8 +300,10 @@ vm_fault_t ttm_bo_vm_fault_reserved(struct vm_fault *vmf,
+>   			break;
+>   		case -EBUSY:
+>   		case -ERESTARTSYS:
+> +			dma_fence_put(moving);
+>   			return VM_FAULT_NOPAGE;
+>   		default:
+> +			dma_fence_put(moving);
+>   			return VM_FAULT_SIGBUS;
+>   		}
+>   
 
-I ran 140 hours each of TREE04 and TREE05 with Peter's patch on top of
-x86/entry in -tip with no complaints of any kind.  So that is good,
-and it means we have a good fix for the too-short grace periods.
-I already verified TASKS03 yesterday (not to be confused with TREE03).
-So we have a clean bill of health for x86/entry from my end with respect
-to too-short grace periods with insanely high confidence.
-
-I have started 28*TREE03 for a few hours with Peter's patch on top
-of x86/entry in -tip, which I expect will reproduce your result of
-no NULL pointer.  If so (as I fully expect it to), I will join you in
-proclaiming Peter's patch to be a fix for the NULL pointer problem.
-
-Then I follow up on https://paste.debian.net/1151842 and also on
-https://paste.debian.net/1151809.
-
-First, I run TREE03 longer on 44ebe016df3a ("Merge branch 'proc-linus' of
-git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace")
-in mainline without Peter's patch ignoring any occurrences of the NULL
-pointer problem to see what happens.  If that reproduces the RCU CPU
-stall in https://paste.debian.net/1151842 or the BUG on line 1046 of
-kernel/sched/rt.c in https://paste.debian.net/1151809, I will attempt
-to bisect those in mainline.
-
-If neither of those two reproduce, on to other things.
-
-Seem reasonable?
-
-							Thanx, Paul
