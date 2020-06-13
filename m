@@ -2,111 +2,129 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35444C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 11:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 432C2C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 12:04:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F56A2078A
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 11:56:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 205C02078A
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 12:04:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W+Gc4oBh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CU6y3HBb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726278AbgFMLzK (ORCPT
+        id S1726280AbgFMMEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 07:55:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54462 "EHLO
+        Sat, 13 Jun 2020 08:04:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbgFMLzJ (ORCPT
+        with ESMTP id S1726021AbgFMMEh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 07:55:09 -0400
+        Sat, 13 Jun 2020 08:04:37 -0400
 Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BE92C03E96F;
-        Sat, 13 Jun 2020 04:55:08 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id h185so5583905pfg.2;
-        Sat, 13 Jun 2020 04:55:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DAE5C03E96F
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 05:04:36 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id 64so5578632pfv.11
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 05:04:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=neCcG1dk3gHcTR94EupwHe3jWPWKcFSQgRt8l5SAAfw=;
-        b=W+Gc4oBh+/wch7Ht8yeb+NznsMjrv0+yvhqeFNVv8zQYreozgTPMCqo51zNBZ8R9Sl
-         YqD/wB60lKQ2iQW0uh4i8c2x/hd5R/JchCMgmw0TuCWGOQTiZFxenqstub2gbOSDWnmD
-         LayCE1D/qMnsh31F9H+EnD02dHbomn2HtSZ32Sf2SoP3vcTUFPO14o85PZ/mWt1S5Fcc
-         Y2PQlxPClH0tDWEQiMz9ZxogLxNivSvS0M9kHq9XS6NZcNtX1q740/kiPODDd6xx6CpA
-         AEvLk7mqtC5T/t4oKtVMBX0VjcUGRD/oDdOY3lYMzU7SFxgZmtj574kuGqxF0n6zzNmh
-         JPNg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LBrsfxO25w2eu+lrtvfG2KxIdSA+88lYE5tWiAEH8qM=;
+        b=CU6y3HBbj/n8jNq32wKmlGbKqblgo+cnqIRVSSA2jz7Qn3+T+ejYaQtqm4xEFmL6/t
+         7doJiv+0cF/A5BVpe3f6BdSc1JNyzs2vtcAU2MdYBNU0z1Z4K6pnnB0OqimD0U9szNeU
+         Y0OGDGOny5I3deJZfLq2iQYSPI6TuvDm35tjCMgWUMDTc7aeUsrQPrVjW0RZJ95djrgM
+         fkOzUadFV2+ZCwOOLy9YPEAaO93mgN37StRybZlo/Gzt53gP7b/6k6Y2+2FIy+KU66uM
+         8zCY5yan04lXaJw2BW8w52YzWseMaG5U1yaxcdwWAO4LI7vlFWGlp6txNonl2MiiS09l
+         aXlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=neCcG1dk3gHcTR94EupwHe3jWPWKcFSQgRt8l5SAAfw=;
-        b=RX3eSdZ8T4Lu1Auv8rHqintGU7S6p75oQ/U+MMKNsPK/c+HetNfjMENrZqApaHGU7j
-         V+JjCxO4s4ZuwsIXc8y4ip47Ip7uKru+UEH1glTtnscdjLED3emcp8VxZdGkQZTvj+Vp
-         3wMkNqi39taUgilYFARpfirZsOauB4AZfVW8J6VRKUQuM9KOdljfluYky/von1NqAzm3
-         Fn8nS+nXLog3wuu0NgqGWIg660KVwTHCut0/zaBLNVbvXI9UM+shlnfsUp76ZzWbhD+V
-         JdND8F/kaBVUeTy7zoVirufBKmlTm+TjTeLLNzXrFfdLLXrliopNFYXWxK1yBkoZDiP7
-         1xPA==
-X-Gm-Message-State: AOAM533TBMUhqgzyfsXfRT/rofWosgKpJlik3nQlNu74lx7KS4+PoeWv
-        1RJlUNt5nCyBcFuf+1vNAVP44FS3ATVX41dBYpA=
-X-Google-Smtp-Source: ABdhPJxGk4xboMH+GIcahbHKTkvpHYFaoS74gHxMBcezBknBQLLvTdaPWmzQTQyuzNWrMzwar/u2sbQroeEXGEqSRK4=
-X-Received: by 2002:a63:ff52:: with SMTP id s18mr14923524pgk.203.1592049308294;
- Sat, 13 Jun 2020 04:55:08 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LBrsfxO25w2eu+lrtvfG2KxIdSA+88lYE5tWiAEH8qM=;
+        b=ac4KVPLccg0CX/VxNi1EnYiBLhuAmE0YuOinGWfZ+PD/NAXiQctxzz0Yl2cRhRNRR2
+         6+mMdh2QDTLD1nKXMEZ4u/j80j72/WqeVlZdMlrAfjzighYI9Rw0NBu55vtjsBF/iLPT
+         m5HvFq7Sp4Fy5/t7+dW2CQc/TFGeHf8Y0TkdG10Pw7BEWgk7QoeCcBKEicSvJfxdH3b1
+         rwiZn2FokYIWmVxD3rczFUREJl1ubDJTo7/NPX4xOz+GQsYiB/9E0dju7D2pruwrwR4M
+         ojF06AtWm4/CgQmdiY1cSNbWRx7YV91fRg8cXVyWX8SwJdI/TKClLPATE9JbGwFAkl+l
+         gV0g==
+X-Gm-Message-State: AOAM533qPfuk4U0T1IG1sbTqPZxRmlTyZqvu+iuFaqSdzKs5AiZEZ0lq
+        x8l4fPnLFSS+t9vu3M7A0vo=
+X-Google-Smtp-Source: ABdhPJwmpmABGRrQm+OFl+czCBJy5iA0MDun8zYJpfbPLnNUBn63dzGlclRFHTHT74RVa9NQlqsc9Q==
+X-Received: by 2002:a63:e34a:: with SMTP id o10mr14362568pgj.258.1592049875852;
+        Sat, 13 Jun 2020 05:04:35 -0700 (PDT)
+Received: from localhost ([49.207.210.132])
+        by smtp.gmail.com with ESMTPSA id k12sm8778184pfk.219.2020.06.13.05.04.33
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 13 Jun 2020 05:04:35 -0700 (PDT)
+Date:   Sat, 13 Jun 2020 17:34:32 +0530
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [RFC 1/3] lib: copy_{from,to}_user using gup & kmap_atomic()
+Message-ID: <20200613120432.GA5319@afzalpc>
+References: <cover.1591885760.git.afzal.mohd.ma@gmail.com>
+ <9e1de19f35e2d5e1d115c9ec3b7c3284b4a4e077.1591885760.git.afzal.mohd.ma@gmail.com>
+ <CAK8P3a1XUJHC0kG_Qwh4D4AoxTgCL5ggHd=45yNSmzaYWLUWXw@mail.gmail.com>
+ <20200612135538.GA13399@afzalpc>
+ <CAK8P3a25ffh_2Y1xKDbkL2xU9nLpGbEq7j6xHdODEwUtavgdwA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200612124844.19422-1-wsa+renesas@sang-engineering.com>
- <CAHp75VdMPt60CKnP1HtkN8=3iY7+Kgrv6b9DTjcj-KMKaRknvw@mail.gmail.com> <20200613113924.GA5578@kunai>
-In-Reply-To: <20200613113924.GA5578@kunai>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 13 Jun 2020 14:54:51 +0300
-Message-ID: <CAHp75Vckh3NERodBs3e8wo3NxbrP=BPRY5g7MLmA4szqLFcfjA@mail.gmail.com>
-Subject: Re: [PATCH] lib: update DEBUG_SHIRQ docs to match reality
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a25ffh_2Y1xKDbkL2xU9nLpGbEq7j6xHdODEwUtavgdwA@mail.gmail.com>
+User-Agent: Mutt/1.9.3 (2018-01-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 13, 2020 at 2:39 PM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
->
->
-> > > There is no extra interrupt when registering a shared interrupt handler
-> > > since 2011. Update the Kconfig text to make it clear and to avoid wrong
-> > > assumptions when debugging issues found by it.
-> > >
-> >
-> > I'm not sure.
-> > I have recently fixed a bug in the IIO sensor during ->probe() due to
-> > an issued test interrupt exactly as soon as the handler is registered.
->
-> $ git grep DEBUG_SHIRQ_FIXME
-> kernel/irq/manage.c:#ifdef CONFIG_DEBUG_SHIRQ_FIXME
->
-> There is no place to enable this code.
->
-> Maybe your case was like Krzysztof's case where the issue turned out to
-> be the extra interrupt on deregistering after a deferred probe? He
-> thought it was the initial interrupt but it wasn't.
+Hi,
 
-Commit
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/iio/pressure/bmp280-core.c?id=97b31a6f5fb95b1ec6575b78a7240baddba34384
+On Fri, Jun 12, 2020 at 10:07:28PM +0200, Arnd Bergmann wrote:
 
-The relevant IRQ core code
-https://elixir.bootlin.com/linux/latest/source/kernel/irq/manage.c#L1774
+> I think a lot
+> of usercopy calls are only for a few bytes, though this is of course
+> highly workload dependent and you might only care about the large
+> ones.
 
-It runs it at deregistering, right.
+Observation is that max. pages reaching copy_{from,to}_user() is 2,
+observed maximum of n (number of bytes) being 1 page size. i think C
+library cuts any size read, write to page size (if it exceeds) &
+invokes the system call. Max. pages reaching 2, happens when 'n'
+crosses page boundary, this has been observed w/ small size request
+as well w/ ones of exact page size (but not page aligned).
 
--- 
-With Best Regards,
-Andy Shevchenko
+Even w/ dd of various size >4K, never is the number of pages required
+to be mapped going greater than 2 (even w/ 'dd' 'bs=1M')
+
+i have a worry (don't know whether it is an unnecessary one): even
+if we improve performance w/ large copy sizes, it might end up in a
+sluggishness w.r.t user experience due to most (hence a high amount)
+of user copy calls being few bytes & there the penalty being higher.
+And benchmark would not be able to detect anything abnormal since
+usercopy are being tested on large sizes.
+
+Quickly comparing boot-time on Beagle Bone White, boot time increases
+by only 4%, perhaps this worry is irrelevant, but just thought will
+put it across.
+
+> There is also still hope of optimizing small aligned copies like
+> 
+> set_ttbr0(user_ttbr);
+> ldm();
+> set_ttbr0(kernel_ttbr);
+> stm();
+
+Hmm, more needs to be done to be in a position to test it.
+
+Regards
+afzal
