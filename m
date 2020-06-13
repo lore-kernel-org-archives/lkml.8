@@ -2,87 +2,106 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B988C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 11:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96170C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 11:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 289E52078A
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 11:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6918F207DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 11:32:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VLshoWME"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earth.li header.i=@earth.li header.b="IpELI3Ff"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726306AbgFMLOc (ORCPT
+        id S1726132AbgFMLbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 07:14:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48310 "EHLO
+        Sat, 13 Jun 2020 07:31:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbgFMLOb (ORCPT
+        with ESMTP id S1725857AbgFMLbh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 07:14:31 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 298A1C03E96F;
-        Sat, 13 Jun 2020 04:14:31 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id ne5so4690750pjb.5;
-        Sat, 13 Jun 2020 04:14:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ynzO98iVzfOWrdbiRVVAvIwjn4Ogh7xOfjXabeEMm5w=;
-        b=VLshoWMEgEFMcQG/SzlL6NXOw/1HwPkhE0XOW7TdHnRnFPi5IawHvc2QjkJszop3ZD
-         eVbGUT+sO6Aj3wo2/yCPLhPOQStr6iIgKkqwyOdRNFD1X25SmOsmX2blLJVR4eRM0rvz
-         l/zwTxiRhlOsd4/chUM0pgm6m3l/XZ9gaCP3uzOIfSOmOIOAj9HGvT8Wsz7y3qQ9QaTR
-         dRioOnUcVTN8N1LToWQr0CAPHOIrwXcXACe85x0c2lVZRK360+t/nBRAHMUjUt/9QkOm
-         0ZP+uTPyGlCAlEtAlWrqzrv8xh2xWCUBpCRQMCgyn7oXk8oGhduUoshbmlONErpqcDu5
-         wJ2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ynzO98iVzfOWrdbiRVVAvIwjn4Ogh7xOfjXabeEMm5w=;
-        b=NV2rz6v0VzTSrC/9S3EIpNvepLBakk4f33Xz1URavpEWL58y+Cu2YtZhhzX6f4MG/2
-         hNmcYFuSZPGLiBtFWRn5cwNVeA7PAT+qpB+dQesMFih2BL9sNyu+50Ze8qu14Dj1ZSu6
-         Q8KypaVKG2DUpGgVcDelNfByjjY5tXb8tmDPez3JayniDoUnu1Ha1juMnuAxUXlxJ8q1
-         6JOEp2CWYCkEQbYw1naOwsO9hZCdk+dl3xzxzGtYOdNP09FnkGXEWlbbFvtuDU3gC/DX
-         +1IZcd3/5Qn6Irk1ZHn0z03z6yym0Pq9a98mbVi1vskT4xnwOY9mnCuKLBLXqm1yxy3Q
-         x4dg==
-X-Gm-Message-State: AOAM530dm+WYIFv+8zH9mme6/F3lf6YDBCgqejf7dUuH0V610uAtK3oZ
-        gesQpYnR0u0TZo+BNKIdJnZAI1x6BbQqRa7KTDp4ZJZvQkM=
-X-Google-Smtp-Source: ABdhPJxFYBiyu2Z2/Ts9/OnGYZzwIMCsRrv7K+RITbpFMBiuSEfC9R53XO6nS+7g6+bKzwH0mf5uSFApzZgZ/MO7fvo=
-X-Received: by 2002:a17:90a:ac05:: with SMTP id o5mr3234020pjq.228.1592046870430;
- Sat, 13 Jun 2020 04:14:30 -0700 (PDT)
+        Sat, 13 Jun 2020 07:31:37 -0400
+Received: from the.earth.li (the.earth.li [IPv6:2a00:1098:86:4d:c0ff:ee:15:900d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DE0EC03E96F;
+        Sat, 13 Jun 2020 04:31:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
+         s=the; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject
+        :Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=2i9hfgGNeitd7hYzWmJeqbpBgVgM1F/BZAahxCgFTeY=; b=IpELI3FfbNtHLseeTGv6y2epuB
+        +iUSCoO2Q4VtWg0Miqfi06FN5SFybtWDv5YW+EJy21EsHhWEB6psWCLuOLZWr5cYIahHvNdIQqDHH
+        IL9UkvoYT4EW6c6EVMP/dKsyJ6qwjYp4/Hib5wUf09Fia9IigX2QW9FkPkqhZmp7m532nJDzGDkZD
+        3sFO3MAQNGnkCjG57O4LQwE4IEq5tNMKbVnVupjHhKMh0UnrAqxdrz8IDd3uMX8tIaC3w+67lJ9y/
+        DFg0WzFQ4I7JdSCsSLTGLpInMrF6idgMjtVrWijgYlIEMfeFRaB3AXwnBDt7x2qaiJKrwHC9JAfzU
+        uEZzu1hA==;
+Received: from noodles by the.earth.li with local (Exim 4.92)
+        (envelope-from <noodles@earth.li>)
+        id 1jk4Nk-0000Zr-LO; Sat, 13 Jun 2020 12:31:28 +0100
+Date:   Sat, 13 Jun 2020 12:31:28 +0100
+From:   Jonathan McDowell <noodles@earth.li>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH v4 0/2] net: dsa: qca8k: Improve SGMII interface handling
+Message-ID: <cover.1592047530.git.noodles@earth.li>
+References: <cover.1591380105.git.noodles@earth.li>
+ <8ddd76e484e1bedd12c87ea0810826b60e004a65.1591380105.git.noodles@earth.li>
+ <20200605183843.GB1006885@lunn.ch>
+ <20200606074916.GM311@earth.li>
+ <20200606083741.GK1551@shell.armlinux.org.uk>
+ <20200606105909.GN311@earth.li>
+ <20200608183953.GR311@earth.li>
+ <cover.1591816172.git.noodles@earth.li>
 MIME-Version: 1.0
-References: <20200607182812.9438-1-max@enpas.org> <20200607184604.GA12911@ninjato>
-In-Reply-To: <20200607184604.GA12911@ninjato>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 13 Jun 2020 14:14:14 +0300
-Message-ID: <CAHp75VfcZ43QJ9f9-Ph9QboVYgReLeUbOPZ=Ckk0RzSq-xmQ_Q@mail.gmail.com>
-Subject: Re: [PATCH] i2c: icy: Fix build with CONFIG_AMIGA_PCMCIA=n
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     Max Staudt <max@enpas.org>, linux-i2c <linux-i2c@vger.kernel.org>,
-        linux-m68k@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1591816172.git.noodles@earth.li>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 7, 2020 at 9:48 PM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
-> On Sun, Jun 07, 2020 at 08:28:12PM +0200, Max Staudt wrote:
+Hopefully getting there, thanks for all the review comments.
 
-> Applied to for-next (i.e. for-5.8), thanks!
+This 2 patch series migrates the qca8k switch driver over to PHYLINK,
+and then adds the SGMII clean-ups (i.e. the missing initialisation) on
+top of that as a second patch.
 
-A bit of offtopic, merge window is at its end, do you have plans to
-send PR to Linus soon?
+As before, tested with a device where the CPU connection is RGMII (i.e.
+the common current use case) + one where the CPU connection is SGMII. I
+don't have any devices where the SGMII interface is brought out to
+something other than the CPU.
+
+v4:
+- Enable pcs_poll so we keep phylink updated when doing in-band
+  negotiation
+- Explicitly check for PHY_INTERFACE_MODE_1000BASEX when setting SGMII
+  port mode.
+- Address Vladimir's review comments
+v3:
+- Move phylink changes to separate patch
+- Address rmk review comments
+v2:
+- Switch to phylink
+- Avoid need for device tree configuration options
+
+Jonathan McDowell (2):
+  net: dsa: qca8k: Switch to PHYLINK instead of PHYLIB
+  net: dsa: qca8k: Improve SGMII interface handling
+
+ drivers/net/dsa/qca8k.c | 341 ++++++++++++++++++++++++++++------------
+ drivers/net/dsa/qca8k.h |  13 ++
+ 2 files changed, 256 insertions(+), 98 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.20.1
+
