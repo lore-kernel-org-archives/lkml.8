@@ -2,112 +2,135 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD0A8C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 08:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F29F8C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 08:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA86720739
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 08:19:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF455207FF
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 08:21:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HY64l0bH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pnPQEFr4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726408AbgFMITY (ORCPT
+        id S1726432AbgFMIVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 04:19:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49764 "EHLO
+        Sat, 13 Jun 2020 04:21:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgFMITX (ORCPT
+        with ESMTP id S1725783AbgFMIVp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 04:19:23 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC5F0C03E96F;
-        Sat, 13 Jun 2020 01:19:22 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id v24so4694254plo.6;
-        Sat, 13 Jun 2020 01:19:22 -0700 (PDT)
+        Sat, 13 Jun 2020 04:21:45 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17370C03E96F;
+        Sat, 13 Jun 2020 01:21:45 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id t18so12148813wru.6;
+        Sat, 13 Jun 2020 01:21:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=cKZcMqArBz9X4rHGW4KhCsa5aMipNmtz0BtqjL31pOg=;
-        b=HY64l0bHbuLUB4rEv2+YOeiTdTwoa7FNhGB7qTI5yZR+Cjrqstc39WEHhIrNk+VFeu
-         Q+ZgZQswm7Aeuc6/00c3ybDLkrukuXouazZkKOAZTfrZong3Gnoo4qOjs/U3tD/E5+IX
-         211CW+0du2Ol1aGBFxE4J+jt+OXiFDPa5ksk/w6vpGwex6E8Feq+Q+5zVVEjkQjcg1iJ
-         2UuLI1Ta05PJmdfuaMMqXI5eTcWWkLuObcof/m1eLR/1uKnf/Q5DFOuYGJkPAfhoQGZO
-         aNge5COJvtCp0Gr6Rp83s3oUf+hfZkaLlbpHpn7JlMst84LDIamZEnp+2W40k7mBwJyk
-         y2Mw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=u96+rSBzcvuJKQmsLPT95WNJaRtQiHeNyjReZCDFzSY=;
+        b=pnPQEFr4liss5K5xbfzMn1tzmUyypjIhnw3RSaB5blOyygSUBKCgBIpfvOy1MdJ3oW
+         1adpoRXb4dccRnASiMIXjPuCtF1JEz571GMH2QWkRNAwlDAhjW42nKXqtVSeJAscvcNX
+         2l+01+9YIWsNJzRA4EAbWSiDxq72uT4skM8n6R3WrpjCrrSi+b6xeYA0CcXf5TiDgBAV
+         KF3hmVE4XF39GeRC7ofXwSNc3QFNpr/Cco+1cXJnS31TtNY1Z36yKe1Aa8KY8djx33y6
+         dDnxjjtmjTje0wyKORz3XYA6NNaeaPOurlZLpP6MDwK6d01CPpPM8CFfyySZT1DOhAYt
+         DTtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=cKZcMqArBz9X4rHGW4KhCsa5aMipNmtz0BtqjL31pOg=;
-        b=NzkRMtUmzm/N5UAHFCqWMXdyo/7odRr7t35uXJCPnnSt7omW7G+Idi5riDr/iv7mwd
-         Aax7C4m4yMbuKxsIhJHxFhij0d50u5HK069qHILcnAqTOak1hZAilDCvqCWucHG6OlgD
-         xJc/TfpsZur86LsAbYwn/peHI5JSW9WAdDvrwIeqGGZvSxz/ksxAJerzYL3RbMiUGi1b
-         j2ErPLD7CSIe60R9bGy8pTqcB+QaF0LFRI/Nj8xJfBy6wLvqCTt+G6hegfknhEYDmBSo
-         ynSgyDZC6BI5l+kGQy21ZaS7ehJxaHOgtv0W9+H8gOtWtA63Em3mUUv41rKUHI/Pb1lV
-         jOdg==
-X-Gm-Message-State: AOAM532ovU0Rxvd1fCMOH07hyNjnKAFWi+xiwWICJIHhLxWQ0Z3wG5XK
-        RE7BcYzWC3+3sIczZnHPl1c=
-X-Google-Smtp-Source: ABdhPJyGmQrKnFQWVG5fMTU5uipONzIFT84K/obEhdoOMHU44yyZFYfq4TbyU3sS3LLIOCT+Gof1Eg==
-X-Received: by 2002:a17:90b:1108:: with SMTP id gi8mr2615297pjb.144.1592036362086;
-        Sat, 13 Jun 2020 01:19:22 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:5:6ac6:29af:f9d7:e4ec:8901])
-        by smtp.gmail.com with ESMTPSA id nl8sm7633203pjb.13.2020.06.13.01.19.16
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 13 Jun 2020 01:19:21 -0700 (PDT)
-From:   Mugilraj D <dmugil2000@gmail.com>
-Cc:     Mugilraj D <dmugil2000@gmail.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Bakker <xc-racer2@live.ca>, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] iio: accel: Replace symbolic permissions with octal permissions
-Date:   Sat, 13 Jun 2020 13:49:01 +0530
-Message-Id: <1592036351-10166-1-git-send-email-dmugil2000@gmail.com>
-X-Mailer: git-send-email 2.7.4
-To:     unlisted-recipients:; (no To-header on input)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=u96+rSBzcvuJKQmsLPT95WNJaRtQiHeNyjReZCDFzSY=;
+        b=hBGL/ta6od8C8NLrV42xuUXpri9dotzingucOq1cQY8QbpSWA5gnlax42pawSbyMS/
+         3Ab40LMrwqJRfhfrPjHL2hnX9n7cLXnt8F3+ururNI2V5l8ShHGETxjnpZ6xvOqL5Ksx
+         xxUhPOB/w5ODRx9gR+DWc5FhFTHjpL3lR0TC0yuEsu7YVl1hT5FhnsMqMWY5n7ZuoLhI
+         jPaNKxgJyba+Sxpw/V7mdK+17TGHBZ9hdpedn8D1WvmEG/8pdxx1UKvcoluzyE6Gdz8D
+         g6dfNE5Mwb3Mqoo3vL873C7BsJbMMsKC6tY0Q9ANFBajESSYVrDyGLE+Mnr4EqmGMBk7
+         vJuQ==
+X-Gm-Message-State: AOAM530t64dw6/soQBrMO/Uweh32ZUOw6MyQBY3Bn1qol8a+njrDvife
+        cLeVL9KEGfobBrdsFrrSsmQ=
+X-Google-Smtp-Source: ABdhPJw5CQuHg+8ucc6NHRSc0Qqxol1zn/CzcAseQTV40KLUTSXTJCWbJem1vvXYdaCLRmT8uSKI5w==
+X-Received: by 2002:adf:d0d0:: with SMTP id z16mr19349679wrh.308.1592036503434;
+        Sat, 13 Jun 2020 01:21:43 -0700 (PDT)
+Received: from skynet.lan (168.red-88-20-188.staticip.rima-tde.net. [88.20.188.168])
+        by smtp.gmail.com with ESMTPSA id n189sm12243603wmb.43.2020.06.13.01.21.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 13 Jun 2020 01:21:42 -0700 (PDT)
+From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+To:     hauke@hauke-m.de, zajec5@gmail.com, tsbogend@alpha.franken.de,
+        robh+dt@kernel.org, f.fainelli@gmail.com, jonas.gorski@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+Subject: [PATCH v4 0/9] bmips: add BCM63xx power domain controller
+Date:   Sat, 13 Jun 2020 10:21:31 +0200
+Message-Id: <20200613082140.2009461-1-noltari@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200610171630.465579-1-noltari@gmail.com>
+References: <20200610171630.465579-1-noltari@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Resolve following checkpatch issue:
-WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider
-using octal permissions '0444'.
+BCM6318, BCM6328, BCM6362 and BCM63268 SoCs have a power domain controller
+to enable/disable certain components in order to save power.
 
-Signed-off-by: Mugilraj D <dmugil2000@gmail.com>
----
- drivers/iio/accel/bma180.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+v4: Fix device tree bindings documentation.
+v3: Introduce changes suggested by Florian:
+  - Use dt-bindings definitions in power domain driver.
+  - Separate dt-bindings definitions from power domain .dtsi support.
+v2: Introduce changes suggested by Florian:
+  - Add separate YAML file for dt-bindings.
+  - Add bcm63xx folder in drivers/soc/bcm.
+  - Update MAINTAINERS.
+  - Add dt-bindings header files.
+  - Also add BCM63268 support.
 
-diff --git a/drivers/iio/accel/bma180.c b/drivers/iio/accel/bma180.c
-index 265722e..b716347 100644
---- a/drivers/iio/accel/bma180.c
-+++ b/drivers/iio/accel/bma180.c
-@@ -531,14 +531,13 @@ static ssize_t bma180_show_scale_avail(struct device *dev,
- }
- 
- static IIO_DEVICE_ATTR(in_accel_filter_low_pass_3db_frequency_available,
--	S_IRUGO, bma180_show_filter_freq_avail, NULL, 0);
-+	0444, bma180_show_filter_freq_avail, NULL, 0);
- 
- static IIO_DEVICE_ATTR(in_accel_scale_available,
--	S_IRUGO, bma180_show_scale_avail, NULL, 0);
-+	0444, bma180_show_scale_avail, NULL, 0);
- 
- static struct attribute *bma180_attributes[] = {
--	&iio_dev_attr_in_accel_filter_low_pass_3db_frequency_available.
--		dev_attr.attr,
-+	&iio_dev_attr_in_accel_filter_low_pass_3db_frequency_available.dev_attr.attr,
- 	&iio_dev_attr_in_accel_scale_available.dev_attr.attr,
- 	NULL,
- };
+Álvaro Fernández Rojas (9):
+  dt-bindings: soc: brcm: add BCM63xx power domain binding
+  mips: bmips: add BCM6328 power domain definitions
+  mips: bmips: add BCM6362 power domain definitions
+  mips: bmips: add BCM63268 power domain definitions
+  mips: bmips: add BCM6318 power domain definitions
+  soc: bcm: add BCM63xx power domain driver
+  mips: bmips: dts: add BCM6328 power domain support
+  mips: bmips: dts: add BCM6362 power domain support
+  mips: bmips: dts: add BCM63268 power domain support
+
+ .../bindings/power/brcm,bcm63xx-power.yaml    |  44 ++
+ MAINTAINERS                                   |   1 +
+ arch/mips/boot/dts/brcm/bcm63268.dtsi         |   6 +
+ arch/mips/boot/dts/brcm/bcm6328.dtsi          |   6 +
+ arch/mips/boot/dts/brcm/bcm6362.dtsi          |   6 +
+ drivers/soc/bcm/Kconfig                       |  10 +
+ drivers/soc/bcm/Makefile                      |   1 +
+ drivers/soc/bcm/bcm63xx/Kconfig               |  12 +
+ drivers/soc/bcm/bcm63xx/Makefile              |   2 +
+ drivers/soc/bcm/bcm63xx/bcm63xx-power.c       | 378 ++++++++++++++++++
+ include/dt-bindings/soc/bcm6318-pm.h          |  17 +
+ include/dt-bindings/soc/bcm63268-pm.h         |  21 +
+ include/dt-bindings/soc/bcm6328-pm.h          |  17 +
+ include/dt-bindings/soc/bcm6362-pm.h          |  21 +
+ 14 files changed, 542 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/brcm,bcm63xx-power.yaml
+ create mode 100644 drivers/soc/bcm/bcm63xx/Kconfig
+ create mode 100644 drivers/soc/bcm/bcm63xx/Makefile
+ create mode 100644 drivers/soc/bcm/bcm63xx/bcm63xx-power.c
+ create mode 100644 include/dt-bindings/soc/bcm6318-pm.h
+ create mode 100644 include/dt-bindings/soc/bcm63268-pm.h
+ create mode 100644 include/dt-bindings/soc/bcm6328-pm.h
+ create mode 100644 include/dt-bindings/soc/bcm6362-pm.h
+
 -- 
-2.7.4
+2.27.0
 
