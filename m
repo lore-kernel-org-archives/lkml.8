@@ -2,125 +2,252 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C46C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 02:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8CB4C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 02:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D0C22074B
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 02:42:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8548A20789
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 02:54:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbgFMCmQ (ORCPT
+        id S1726444AbgFMCyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 22:42:16 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45727 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbgFMCmQ (ORCPT
+        Fri, 12 Jun 2020 22:54:17 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:50723 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726392AbgFMCyR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 22:42:16 -0400
-Received: by mail-pf1-f194.google.com with SMTP id a127so5169576pfa.12;
-        Fri, 12 Jun 2020 19:42:15 -0700 (PDT)
+        Fri, 12 Jun 2020 22:54:17 -0400
+Received: by mail-il1-f197.google.com with SMTP id k63so5197700ilg.17
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 19:54:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=8EIm1ytLyvfKq4wo51mDirXPq09qojINRyvoAwJXTTI=;
-        b=MzoM6GBfqh57K/ipi8bcRDzNYnm+/FpauCSsWqWlJ+03jecH/PSKrMfbYAoYyaWA2P
-         eJs9c2EVcqzVyozqywCUeWKeL8NDG3VgWN0XjU+V4alR8gEFE6EOjHBu/HMblXjEfczn
-         fekJ1XJn7Fx42hoGdldf3gXA3mcs5H4fqu80Uu/7Fqj2eJrcqD+DEDhLrwSVBecvOMJa
-         7VXAkTWgbnGdN9NMoq3RmCBm5+KVP5EgHN+Gh+lwdSv3Mcd0k603NhohO6NG+u5dtRJT
-         XhXBA2rkjOOQq0JaSZVZmDcVWVTO0teUCTDEwNiA9nRLDxMMKyTv100ssxBKxkjqKHiF
-         zUaA==
-X-Gm-Message-State: AOAM531m6dav0yp2CxUvDhEHwzn9G6Q0ZMVsSNWRnii0t9HSO/EnqUs/
-        wu/4wQLiE2ue+7z+EdyZGto=
-X-Google-Smtp-Source: ABdhPJzRKqJooT/WNnq6D7zXsMVh6/yf0SqDijB0meAnmXfPO+ZbgvjuwwPi2qaSXvJkQ/oOjt7akA==
-X-Received: by 2002:a65:6446:: with SMTP id s6mr13588266pgv.59.1592016134716;
-        Fri, 12 Jun 2020 19:42:14 -0700 (PDT)
-Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
-        by smtp.gmail.com with ESMTPSA id n1sm7763197pfd.156.2020.06.12.19.42.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Jun 2020 19:42:13 -0700 (PDT)
-Subject: Re: [PATCH v6 6/6] blktrace: fix debugfs use after free
-To:     Luis Chamberlain <mcgrof@kernel.org>, axboe@kernel.dk,
-        viro@zeniv.linux.org.uk, gregkh@linuxfoundation.org,
-        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
-        ming.lei@redhat.com, nstange@suse.de, akpm@linux-foundation.org
-Cc:     mhocko@suse.com, yukuai3@huawei.com, martin.petersen@oracle.com,
-        jejb@linux.ibm.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
-References: <20200608170127.20419-1-mcgrof@kernel.org>
- <20200608170127.20419-7-mcgrof@kernel.org>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <ec643803-2339-fe8d-7f58-b37871c83386@acm.org>
-Date:   Fri, 12 Jun 2020 19:42:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=2sTEwf/dIwoLKdcZR4OJH4pgPYYKC7Y9Uyd/iQYIEmc=;
+        b=f8qcAQkl7hzf6fV/Ljj/d++ySUcPsQ7c8awvA/Sl1LtdMsEydiiIgRoJx5uj8/4lsO
+         Gpa4tjFbdnkPAnV2PASvVc5xol04t1p4U6CK/HoO/KFE5QpWMDn4ikAXtchhYguUcfev
+         ehFI/02jt0lOatmFvT1qG3H0Mpubqtu6ShrhygmrKWX9KzCUUgmM0dPunh/ecKTAZUR6
+         5FWG4XpwZvULnQIo60d0gH+d5B0vlOb86OanUmoCC2PewwT1sTqb4n6ojOcvm1Cy9PW2
+         6GfO0wJtwhrWhNYG7Rs7TIuhK2yq5xGcyTiyIsqG7jnC3ofMySsTKWronmsyo74gzkTk
+         OhQQ==
+X-Gm-Message-State: AOAM530HTsGDwGu7dUVIFxGV3T400RQbcRhpMFiCbSz/5oAyHFSgWV49
+        Ijv95vjB3v4wzPENazt4RC9vVDITKFr2ybBkqw4OEhKhsmdR
+X-Google-Smtp-Source: ABdhPJyTI2AmElM6YKf+llXBNJ0mP8Cc0Rmg6aWKuK96797tA+cQSAIFNoWLmJXkBJBJeC/6Cw35zYFbicZ3JZY60zs24jDyLeuq
 MIME-Version: 1.0
-In-Reply-To: <20200608170127.20419-7-mcgrof@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a6b:8b51:: with SMTP id n78mr16520705iod.120.1592016855260;
+ Fri, 12 Jun 2020 19:54:15 -0700 (PDT)
+Date:   Fri, 12 Jun 2020 19:54:15 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000022653b05a7ee4f9a@google.com>
+Subject: net boot error: BUG: using smp_processor_id() in preemptible code in ext4_mb_new_blocks
+From:   syzbot <syzbot+e10468d1d0662fdb7c8c@syzkaller.appspotmail.com>
+To:     adilger.kernel@dilger.ca, davem@davemloft.net, kuba@kernel.org,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        tytso@mit.edu
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-08 10:01, Luis Chamberlain wrote:
-> +	/*
-> +	 * Blktrace needs a debugfs name even for queues that don't register
-> +	 * a gendisk, so it lazily registers the debugfs directory.  But that
-> +	 * can get us into a situation where a SCSI device is found, with no
-> +	 * driver for it (yet).  Then blktrace is used on the device, creating
-> +	 * the debugfs directory, and only after that a driver is loaded. In
-> +	 * that case we might already have a debugfs directory registered here.
-> +	 * Even worse we could be racing with blktrace to register it.
-> +	 */
+Hello,
 
-There are LLD and ULD drivers in the SCSI subsystem. Please mention the
-driver type explicitly. I assume that you are referring to SCSI ULDs
-since only SCSI ULD drivers call device_add_disk()?
+syzbot found the following crash on:
 
-Could the above comment be made shorter by only mentioning that blktrace
-may have been set up before or concurrently with device_add_disk() and
-that device_add_disk() calls blk_register_queue()?
+HEAD commit:    6954a9e4 ibmvnic: Flush existing work items before device ..
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=1367d939100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b366fd92adf6f8b4
+dashboard link: https://syzkaller.appspot.com/bug?extid=e10468d1d0662fdb7c8c
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
->  	case BLKTRACESETUP:
-> +		if (!sdp->device->request_queue->sg_debugfs_dir)
-> +			blk_sg_debugfs_init(sdp->device->request_queue,
-> +					    sdp->disk->disk_name);
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+e10468d1d0662fdb7c8c@syzkaller.appspotmail.com
 
-How about moving the sg_debugfs_dir check into blk_sg_debugfs_init()?
+BUG: using smp_processor_id() in preemptible [00000000] code: systemd-tmpfile/3971
+caller is ext4_mb_new_blocks+0xa77/0x3b30 fs/ext4/mballoc.c:4711
+CPU: 0 PID: 3971 Comm: systemd-tmpfile Not tainted 5.7.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ check_preemption_disabled lib/smp_processor_id.c:47 [inline]
+ debug_smp_processor_id.cold+0x88/0x9b lib/smp_processor_id.c:57
+ ext4_mb_new_blocks+0xa77/0x3b30 fs/ext4/mballoc.c:4711
+ ext4_ext_map_blocks+0x2044/0x3410 fs/ext4/extents.c:4244
+ ext4_map_blocks+0x4cb/0x1640 fs/ext4/inode.c:626
+ ext4_getblk+0xad/0x520 fs/ext4/inode.c:833
+ ext4_bread+0x7c/0x380 fs/ext4/inode.c:883
+ ext4_append+0x153/0x360 fs/ext4/namei.c:67
+ ext4_init_new_dir fs/ext4/namei.c:2757 [inline]
+ ext4_mkdir+0x5e0/0xdf0 fs/ext4/namei.c:2802
+ vfs_mkdir+0x419/0x690 fs/namei.c:3627
+ do_mkdirat+0x21e/0x280 fs/namei.c:3650
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x7ffa928d3687
+Code: 00 b8 ff ff ff ff c3 0f 1f 40 00 48 8b 05 09 d8 2b 00 64 c7 00 5f 00 00 00 b8 ff ff ff ff c3 0f 1f 40 00 b8 53 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d e1 d7 2b 00 f7 d8 64 89 01 48
+RSP: 002b:00007fff732d3c08 EFLAGS: 00000246 ORIG_RAX: 0000000000000053
+RAX: ffffffffffffffda RBX: 00005637eeaceda0 RCX: 00007ffa928d3687
+RDX: 0000000000000000 RSI: 00000000000001ed RDI: 00005637eeaceda0
+RBP: 00000000000001ed R08: 000000000000feff R09: 000000000000004c
+R10: 00005637eeaced80 R11: 0000000000000246 R12: 0000000000000012
+R13: 00005637eeacf640 R14: 0000000000000000 R15: 0000000000000000
+BUG: using smp_processor_id() in preemptible [00000000] code: systemd-tmpfile/3971
+caller is ext4_mb_new_blocks+0xa77/0x3b30 fs/ext4/mballoc.c:4711
+CPU: 0 PID: 3971 Comm: systemd-tmpfile Not tainted 5.7.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ check_preemption_disabled lib/smp_processor_id.c:47 [inline]
+ debug_smp_processor_id.cold+0x88/0x9b lib/smp_processor_id.c:57
+ ext4_mb_new_blocks+0xa77/0x3b30 fs/ext4/mballoc.c:4711
+ ext4_ext_map_blocks+0x2044/0x3410 fs/ext4/extents.c:4244
+ ext4_map_blocks+0x4cb/0x1640 fs/ext4/inode.c:626
+ ext4_getblk+0xad/0x520 fs/ext4/inode.c:833
+ ext4_bread+0x7c/0x380 fs/ext4/inode.c:883
+ ext4_append+0x153/0x360 fs/ext4/namei.c:67
+ ext4_init_new_dir fs/ext4/namei.c:2757 [inline]
+ ext4_mkdir+0x5e0/0xdf0 fs/ext4/namei.c:2802
+ vfs_mkdir+0x419/0x690 fs/namei.c:3627
+ do_mkdirat+0x21e/0x280 fs/namei.c:3650
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x7ffa928d3687
+Code: 00 b8 ff ff ff ff c3 0f 1f 40 00 48 8b 05 09 d8 2b 00 64 c7 00 5f 00 00 00 b8 ff ff ff ff c3 0f 1f 40 00 b8 53 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d e1 d7 2b 00 f7 d8 64 89 01 48
+RSP: 002b:00007fff732d3c08 EFLAGS: 00000246 ORIG_RAX: 0000000000000053
+RAX: ffffffffffffffda RBX: 00005637eead0870 RCX: 00007ffa928d3687
+RDX: 0000000000000000 RSI: 00000000000003ff RDI: 00005637eead0870
+RBP: 00000000000003ff R08: 000000000000fec0 R09: 000000000000004c
+R10: 00005637eead0840 R11: 0000000000000246 R12: 0000000000000012
+R13: 00005637eead0890 R14: 0000000000000000 R15: 0000000000000000
+BUG: using smp_processor_id() in preemptible [00000000] code: systemd-tmpfile/3971
+caller is ext4_mb_new_blocks+0xa77/0x3b30 fs/ext4/mballoc.c:4711
+CPU: 1 PID: 3971 Comm: systemd-tmpfile Not tainted 5.7.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ check_preemption_disabled lib/smp_processor_id.c:47 [inline]
+ debug_smp_processor_id.cold+0x88/0x9b lib/smp_processor_id.c:57
+ ext4_mb_new_blocks+0xa77/0x3b30 fs/ext4/mballoc.c:4711
+ ext4_ext_map_blocks+0x2044/0x3410 fs/ext4/extents.c:4244
+ ext4_map_blocks+0x4cb/0x1640 fs/ext4/inode.c:626
+ ext4_getblk+0xad/0x520 fs/ext4/inode.c:833
+ ext4_bread+0x7c/0x380 fs/ext4/inode.c:883
+ ext4_append+0x153/0x360 fs/ext4/namei.c:67
+ ext4_init_new_dir fs/ext4/namei.c:2757 [inline]
+ ext4_mkdir+0x5e0/0xdf0 fs/ext4/namei.c:2802
+ vfs_mkdir+0x419/0x690 fs/namei.c:3627
+ do_mkdirat+0x21e/0x280 fs/namei.c:3650
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x7ffa928d3687
+Code: 00 b8 ff ff ff ff c3 0f 1f 40 00 48 8b 05 09 d8 2b 00 64 c7 00 5f 00 00 00 b8 ff ff ff ff c3 0f 1f 40 00 b8 53 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d e1 d7 2b 00 f7 d8 64 89 01 48
+RSP: 002b:00007fff732d3c08 EFLAGS: 00000246 ORIG_RAX: 0000000000000053
+RAX: ffffffffffffffda RBX: 00005637eeace050 RCX: 00007ffa928d3687
+RDX: 0000000000000000 RSI: 00000000000003ff RDI: 00005637eeace050
+RBP: 00000000000003ff R08: 000000000000fec0 R09: 000000000000004c
+R10: 00005637eeace040 R11: 0000000000000246 R12: 0000000000000012
+R13: 00005637eeace070 R14: 0000000000000000 R15: 0000000000000000
+BUG: using smp_processor_id() in preemptible [00000000] code: systemd-tmpfile/3971
+caller is ext4_mb_new_blocks+0xa77/0x3b30 fs/ext4/mballoc.c:4711
+CPU: 0 PID: 3971 Comm: systemd-tmpfile Not tainted 5.7.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ check_preemption_disabled lib/smp_processor_id.c:47 [inline]
+ debug_smp_processor_id.cold+0x88/0x9b lib/smp_processor_id.c:57
+ ext4_mb_new_blocks+0xa77/0x3b30 fs/ext4/mballoc.c:4711
+ ext4_ext_map_blocks+0x2044/0x3410 fs/ext4/extents.c:4244
+ ext4_map_blocks+0x4cb/0x1640 fs/ext4/inode.c:626
+ ext4_getblk+0xad/0x520 fs/ext4/inode.c:833
+ ext4_bread+0x7c/0x380 fs/ext4/inode.c:883
+ ext4_append+0x153/0x360 fs/ext4/namei.c:67
+ ext4_init_new_dir fs/ext4/namei.c:2757 [inline]
+ ext4_mkdir+0x5e0/0xdf0 fs/ext4/namei.c:2802
+ vfs_mkdir+0x419/0x690 fs/namei.c:3627
+ do_mkdirat+0x21e/0x280 fs/namei.c:3650
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x7ffa928d3687
+Code: 00 b8 ff ff ff ff c3 0f 1f 40 00 48 8b 05 09 d8 2b 00 64 c7 00 5f 00 00 00 b8 ff ff ff ff c3 0f 1f 40 00 b8 53 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d e1 d7 2b 00 f7 d8 64 89 01 48
+RSP: 002b:00007fff732d3c08 EFLAGS: 00000246 ORIG_RAX: 0000000000000053
+RAX: ffffffffffffffda RBX: 00005637eeace160 RCX: 00007ffa928d3687
+RDX: 0000000000000000 RSI: 00000000000003ff RDI: 00005637eeace160
+RBP: 00000000000003ff R08: 000000000000fec0 R09: 000000000000004c
+R10: 00005637eeace140 R11: 0000000000000246 R12: 0000000000000012
+R13: 00005637eeace180 R14: 0000000000000000 R15: 0000000000000000
+BUG: using smp_processor_id() in preemptible [00000000] code: systemd-tmpfile/3971
+caller is ext4_mb_new_blocks+0xa77/0x3b30 fs/ext4/mballoc.c:4711
+CPU: 0 PID: 3971 Comm: systemd-tmpfile Not tainted 5.7.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ check_preemption_disabled lib/smp_processor_id.c:47 [inline]
+ debug_smp_processor_id.cold+0x88/0x9b lib/smp_processor_id.c:57
+ ext4_mb_new_blocks+0xa77/0x3b30 fs/ext4/mballoc.c:4711
+ ext4_ext_map_blocks+0x2044/0x3410 fs/ext4/extents.c:4244
+ ext4_map_blocks+0x4cb/0x1640 fs/ext4/inode.c:626
+ ext4_getblk+0xad/0x520 fs/ext4/inode.c:833
+ ext4_bread+0x7c/0x380 fs/ext4/inode.c:883
+ ext4_append+0x153/0x360 fs/ext4/namei.c:67
+ ext4_init_new_dir fs/ext4/namei.c:2757 [inline]
+ ext4_mkdir+0x5e0/0xdf0 fs/ext4/namei.c:2802
+ vfs_mkdir+0x419/0x690 fs/namei.c:3627
+ do_mkdirat+0x21e/0x280 fs/namei.c:3650
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x7ffa928d3687
+Code: 00 b8 ff ff ff ff c3 0f 1f 40 00 48 8b 05 09 d8 2b 00 64 c7 00 5f 00 00 00 b8 ff ff ff ff c3 0f 1f 40 00 b8 53 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d e1 d7 2b 00 f7 d8 64 89 01 48
+RSP: 002b:00007fff732d3c08 EFLAGS: 00000246 ORIG_RAX: 0000000000000053
+RAX: ffffffffffffffda RBX: 00005637eead1890 RCX: 00007ffa928d3687
+RDX: 0000000000000000 RSI: 00000000000003ff RDI: 00005637eead1890
+RBP: 00000000000003ff R08: 000000000000fec0 R09: 000000000000004c
+R10: 00005637eead1880 R11: 0000000000000246 R12: 0000000000000012
+R13: 00005637eead18b0 R14: 0000000000000000 R15: 0000000000000000
+BUG: using smp_processor_id() in preemptible [00000000] code: systemd-tmpfile/3971
+caller is ext4_mb_new_blocks+0xa77/0x3b30 fs/ext4/mballoc.c:4711
+CPU: 0 PID: 3971 Comm: systemd-tmpfile Not tainted 5.7.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ check_preemption_disabled lib/smp_processor_id.c:47 [inline]
+ debug_smp_processor_id.cold+0x88/0x9b lib/smp_processor_id.c:57
+ ext4_mb_new_blocks+0xa77/0x3b30 fs/ext4/mballoc.c:4711
+ ext4_ext_map_blocks+0x2044/0x3410 fs/ext4/extents.c:4244
+ ext4_map_blocks+0x4cb/0x1640 fs/ext4/inode.c:626
+ ext4_getblk+0xad/0x520 fs/ext4/inode.c:833
+ ext4_bread+0x7c/0x380 fs/ext4/inode.c:883
+ ext4_append+0x153/0x360 fs/ext4/namei.c:67
+ ext4_init_new_dir fs/ext4/namei.c:2757 [inline]
+ ext4_mkdir+0x5e0/0xdf0 fs/ext4/namei.c:2802
+ vfs_mkdir+0x419/0x690 fs/namei.c:3627
+ do_mkdirat+0x21e/0x280 fs/namei.c:3650
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x7ffa928d3687
+Code: 00 b8 ff ff ff ff c3 0f 1f 40 00 48 8b 05 09 d8 2b 00 64 c7 00 5f 00 00 00 b8 ff ff ff ff c3 0f 1f 40 00 b8 53 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d e1 d7 2b 00 f7 d8 64 89 01 48
+RSP: 002b:00007fff732d3c08 EFLAGS: 00000246 ORIG_RAX: 0000000000000053
+RAX: ffffffffffffffda RBX: 00005637eead19a0 RCX: 00007ffa928d3687
+RDX: 0000000000000000 RSI: 00000000000003ff RDI: 00005637eead19a0
+RBP: 00000000000003ff R08: 000000000000fec0 R09: 000000000000004c
+R10: 00005637eead1980 R11: 0000000000000246 R12: 0000000000000012
+R13: 00005637eead19c0 R14: 0000000000000000 R15: 0000000000000000
 
-Thanks,
 
-Bart.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
