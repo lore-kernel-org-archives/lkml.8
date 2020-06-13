@@ -2,331 +2,146 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5601AC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 06:51:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FAEFC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 06:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20A4C2071A
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 06:51:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3D67207D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 06:53:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rMtVs683"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jwtT8ipp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbgFMGvb (ORCPT
+        id S1726442AbgFMGxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 02:51:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36350 "EHLO
+        Sat, 13 Jun 2020 02:53:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgFMGvb (ORCPT
+        with ESMTP id S1725783AbgFMGxg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 02:51:31 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DEAEC08C5C1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 23:51:30 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id f185so9902162wmf.3
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 23:51:30 -0700 (PDT)
+        Sat, 13 Jun 2020 02:53:36 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5908DC03E96F;
+        Fri, 12 Jun 2020 23:53:36 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id 9so10771938ilg.12;
+        Fri, 12 Jun 2020 23:53:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Q2zPWpPgFCMzXv5H7CN4nHl1Vt07w4Zt5NmeJ7/bUCA=;
-        b=rMtVs683HPlLLOFlVhjVcDVlYVmGasM8ozFdy/f5+pa33hTK5ttBbNDNQkr7xwcsPd
-         CffXa5L8vQ1RkR5PqNChV5JxQ4XyzsRgbsUFFxbCAgiblv7aIRXRDAVd+uzhRuYAe3lc
-         pmROpJ7KT0UJCwlr4mQdSiG/+gWTfeh2ScsCiTAXwmuNkABxTSue8q39l5fmkHXYzxmL
-         yzZr6d3FI8wPO7PlVWDR7p1Mi4RQWe3Ccn4taALFciVADixLATLqlnGj3u2eUFkf/0as
-         AKWPsSLUFY24BjhnQRnn2xsHZDage4MkcAvgf/VAa6gzhIDc6wBAUn9JkbTR+RerONya
-         LBBw==
+        bh=wZmV14aQSRUcm2y4A/e4BOaEXbeaA7HzwVKU8FNN/60=;
+        b=jwtT8ipprgd7AseQDAlUj4ZfF3NouX0BU4A5re2DoqkBdfJjM/bk+kna0bDAfV0az5
+         rDb+u/x7w5bSaxpv+6VWq4kIGtl+TSOBm4aulgnrtaJ8SLZxpIwhxOsI9seg0IlOmmQG
+         8QdLPClwcY7izTJgguw9P/PM4jpvreziT3aTrpz6+zpFxgNr7PR5sMHh3FqucWU2ljLz
+         qa6R8eR3hvCk4Sz7GQmxtqBWaEVU7hzMGwM77W4+Kh/Q8iNvzmCb72eepE94GD//g9GN
+         iE6S5wF8FTYS/k7OoO+FM8rOI0yiMVs7cY8+HJeExH/aZ+Iwym80hrTahFTrOM6cg+lu
+         9lnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Q2zPWpPgFCMzXv5H7CN4nHl1Vt07w4Zt5NmeJ7/bUCA=;
-        b=YHd2gmFIhX05x4ttVhj9jozOWRS2jN2RRhl8Z48sVdQvRNVsGrt8Ptnkmja9i1pl/y
-         HFnrBKYEf5d4SfW9ibZijfpGSeuN4q4Oh9tX/x8O1zdskFKfGLe/qmvPFWkGM1j/dMj1
-         DPB/ja7PqpXC5Ykmq7VG8CaIsGAuxCzr1Mf9ecvpuLiQaANr845pUz2Bmh3L+WbfZtEU
-         fzYjjHtpDdKDBwHXgW/XD3h5Y7EMo9t165sMwTXzMw/NO2ASpAUdW/b0BmklSoMQThg2
-         JimD/J4TqidPc9KVK+gbsOeOjhqUqcnryUJL+tDzMqaqEsCiMm7PS5uC+jZhqTYI35+q
-         QCoA==
-X-Gm-Message-State: AOAM530mmJmTBixk0q6RGxeB0Yub3Y7OS5xaLbQnfhoTYx34x0Zb4A91
-        Mg9Y7jLols497lYn4dcqmNJr/NE+KmrUFWQDM4kWgw==
-X-Google-Smtp-Source: ABdhPJwp4vYyLNyPc7dAZwXRGNHbZSLMreeiEAQArBBrLSn4fidZhTSshA3r2HpEW54ArY/tdXxmPtEluW3yrNB6Iro=
-X-Received: by 2002:a7b:cd94:: with SMTP id y20mr2467771wmj.87.1592031088802;
- Fri, 12 Jun 2020 23:51:28 -0700 (PDT)
+        bh=wZmV14aQSRUcm2y4A/e4BOaEXbeaA7HzwVKU8FNN/60=;
+        b=f+MpczMiTkl5/a3li+aWZI/mRMp9IXia4+mFV5Sn3zyc2O3RC1u/N/YZZZjMAX5FyW
+         xmKt2lp7nZgy7hl6FME67Q0VAEGHJj9u+yh0KUaAHjUioulWf/GViqG62sFeWhz2Vx3C
+         bRA82Wu3F3ZtygQZ6hDC0gXtlJY8MWBXtc4sB2l5Zn53s/F3UmXDuKs4DZk5K6bz0KSx
+         1Qaw5B1l1iY0dGLxAuV3qJjHKpmbD4jI0M2B8UKhimcgcmNsOJ+IL/xnN6Vo1JXSE8l5
+         d5bqM1blNXa7Yj/JMR7qzLmlyYWhKnCbtzDRGl7/PgOncFFwPfT/h7UYhfeHwrpKVcUs
+         /n1w==
+X-Gm-Message-State: AOAM533Gg8CJUR+HNU8s7LEfti6RNenEPSjSVjDJQJ0GY9P22vLQKhpU
+        h3h8J1MjwzMV9vOd13ldR2hm6TrIc9qn4DYSDhs=
+X-Google-Smtp-Source: ABdhPJxu1Fv5oTvN89HALcUnUPQVdWi2LFb8XAUkbJWwKm+5/Yp5FN9BEbw21Rp0AJk/9bkPJUlS9zPyfoQAKZ1Rb18=
+X-Received: by 2002:a92:2a0c:: with SMTP id r12mr16271149ile.275.1592031215605;
+ Fri, 12 Jun 2020 23:53:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200611215501.213058-1-vitor@massaru.org> <202006121403.CF8D57C@keescook>
-In-Reply-To: <202006121403.CF8D57C@keescook>
-From:   David Gow <davidgow@google.com>
-Date:   Sat, 13 Jun 2020 14:51:17 +0800
-Message-ID: <CABVgOSnofuJQ_fiCL-8KdKezg3Hnqk3A+X509c4YP_toKeBVBg@mail.gmail.com>
-Subject: Re: [PATCH] lib: kunit_test_overflow: add KUnit test of
- check_*_overflow functions
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Vitor Massaru Iha <vitor@massaru.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux@rasmusvillemoes.dk
+References: <20200612004644.255692-1-mike.kravetz@oracle.com>
+ <20200612015842.GC23230@ZenIV.linux.org.uk> <b1756da5-4e91-298f-32f1-e5642a680cbf@oracle.com>
+In-Reply-To: <b1756da5-4e91-298f-32f1-e5642a680cbf@oracle.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Sat, 13 Jun 2020 09:53:24 +0300
+Message-ID: <CAOQ4uxg=o2SVbfUiz0nOg-XHG8irvAsnXzFWjExjubk2v_6c_A@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] hugetlb: use f_mode & FMODE_HUGETLBFS to identify
+ hugetlbfs files
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Linux MM <linux-mm@kvack.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Matthew Wilcox <willy@infradead.org>,
+        Colin Walters <walters@verbum.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        syzbot <syzbot+d6ec23007e951dadf3de@syzkaller.appspotmail.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 13, 2020 at 6:36 AM Kees Cook <keescook@chromium.org> wrote:
+> > Incidentally, can a hugetlbfs be a lower layer, while the upper one
+> > is a normal filesystem?  What should happen on copyup?
 >
-> On Thu, Jun 11, 2020 at 06:55:01PM -0300, Vitor Massaru Iha wrote:
-> > This adds the convertion of the runtime tests of check_*_overflow fuctions,
-> > from `lib/test_overflow.c`to KUnit tests.
-> >
-> > The log similar to the one seen in dmesg running test_overflow can be
-> > seen in `test.log`.
-> >
-> > Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-> > ---
-> >  lib/Kconfig.debug         |  17 ++
-> >  lib/Makefile              |   1 +
-> >  lib/kunit_overflow_test.c | 590 ++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 608 insertions(+)
-> >  create mode 100644 lib/kunit_overflow_test.c
+> Yes, that seems to work as expected.  When accessed for write the hugetlb
+> file is copied to the normal filesystem.
 >
-> What tree is this based on? I can't apply it to v5.7, linux-next, nor
-> Linus's latest. I've fixed it up to apply to linux-next for now. :)
-
-This applies to the kselftest/kunit branch for me.
-
-> Looking at linux-next, though, I am reminded of my agony over naming:
+> The BUG found by syzbot actually has a single hugetlbfs as both lower and
+> upper.  With the BUG 'fixed', I am not exactly sure what the expected
+> behavior is in this case.  I may be wrong, but I would expect any operations
+> that can be performed on a stand alone hugetlbfs to also be performed on
+> the overlay.  However, mmap() still fails.  I will look into it.
 >
-> obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
-> obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
-> obj-$(CONFIG_OVERFLOW_KUNIT_TEST) += kunit_overflow_test.o
->
-> *-test
-> test_*
-> *_test
->
-> This has to get fixed now, and the naming convention needs to be
-> documented. For old tests, the preferred naming was test_*. For kunit, I
-> think it should be kunit_* (and no trailing _test; that's redundant).
->
-> For for this bikeshed, I think it should be kunit_overflow.c
->
-> For the CONFIG name, it seems to be suggested in docs to be
-> *_KUNIT_TEST:
->
-> ...
-> menuconfig). From there, you can enable any KUnit tests you want: they usually
-> have config options ending in ``_KUNIT_TEST``.
-> ...
-
-Yeah, _KUNIT_TEST was what we've sort-of implicitly decided on for
-config names, but the documentation does need to happen.
-We haven't put as much thought into standardising the filenames much, though.
-
-Both of these are slightly complicated by cases like this where tests
-are being ported from a non-KUnit test to KUnit. There's a small
-argument there for trying to keep the name the same, though personally
-I suspect consistency is more important.
-
-> I think much stronger language needs to be added to "Writing your first
-> test" (which actually recommends the wrong thing: "config
-> MISC_EXAMPLE_TEST"). And then doesn't specify a module file name, though
-> it hints at one:
->
-> ...
->         obj-$(CONFIG_MISC_EXAMPLE_TEST) += example-test.o
-> ...
->
-> So, please, let's get this documented: we really really need a single
-> naming convention for these.
->
-> For Kconfig in the tree, I see:
->
-> drivers/base/Kconfig:config PM_QOS_KUNIT_TEST
-> drivers/base/test/Kconfig:config KUNIT_DRIVER_PE_TEST
-> fs/ext4/Kconfig:config EXT4_KUNIT_TESTS
-> lib/Kconfig.debug:config SYSCTL_KUNIT_TEST
-> lib/Kconfig.debug:config OVERFLOW_KUNIT_TEST
-> lib/Kconfig.debug:config LIST_KUNIT_TEST
-> lib/Kconfig.debug:config LINEAR_RANGES_TEST
-> lib/kunit/Kconfig:menuconfig KUNIT
-> lib/kunit/Kconfig:config KUNIT_DEBUGFS
-> lib/kunit/Kconfig:config KUNIT_TEST
-> lib/kunit/Kconfig:config KUNIT_EXAMPLE_TEST
-> lib/kunit/Kconfig:config KUNIT_ALL_TESTS
->
-> Which is:
->
-> *_KUNIT_TEST
-> KUNIT_*_TEST
-> KUNIT_*_TESTS
-> *_TEST
->
-> Nooooo. ;)
->
-> If it should all be *_KUNIT_TEST, let's do that. I think just *_KUNIT
-> would be sufficient (again, adding the word "test" to "kunit" is
-> redundant). And it absolutely should not be a prefix, otherwise it'll
-> get sorted away from the thing it's named after. So my preference is
-> here would be CONFIG_OVERFLOW_KUNIT. (Yes the old convention was
-> CONFIG_TEST_*, but those things tended to be regression tests, not unit
-> tests.)
->
-> Please please, can we fix this before we add anything more?
-
-Alas, the plans to document test coding style / conventions kept
-getting pre-empted: I'll drag it back up to the top of the to-do list,
-and see if we can't prioritise it. I think we'd hoped to be able to
-catch these in review, but between a bit of forgetfulness and a few
-tests going upstream without our seeing them has made it obvious that
-doesn't work.
-
-Once something's documented (and the suitable bikeshedding has
-subsided), we can consider renaming existing tests if that seems
-worthwhile.
-
-My feeling is we'll go for:
-- Kconfig name: ~_KUNIT_TEST
-- filename: ~-test.c
-
-At least for the initial draft documentation, as those seem to be most
-common, but I think a thread on that would probably be the best place
-to add it.
-This would also be a good opportunity to document the "standard" KUnit
-boilerplate help text in the Kconfig options.
-
-> >
-> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> > index 1f4ab7a2bdee..72fcfe1f24a4 100644
-> > --- a/lib/Kconfig.debug
-> > +++ b/lib/Kconfig.debug
-> > @@ -2075,6 +2075,23 @@ config SYSCTL_KUNIT_TEST
-> >
-> >         If unsure, say N.
-> >
-> > +config OVERFLOW_KUNIT_TEST
-> > +     tristate "KUnit test for overflow" if !KUNIT_ALL_TESTS
-> > +     depends on KUNIT
-> > +     default KUNIT_ALL_TESTS
-> > +     help
-> > +       This builds the overflow KUnit tests.
-> > +
-> > +       KUnit tests run during boot and output the results to the debug log
-> > +       in TAP format (http://testanything.org/). Only useful for kernel devs
-> > +       running KUnit test harness and are not for inclusion into a production
-> > +       build.
-> > +
-> > +       For more information on KUnit and unit tests in general please refer
-> > +       to the KUnit documentation in Documentation/dev-tools/kunit/.
-> > +
-> > +       If unsure, say N.
-> > +
-> >  config LIST_KUNIT_TEST
-> >       tristate "KUnit Test for Kernel Linked-list structures" if !KUNIT_ALL_TESTS
-> >       depends on KUNIT
->
-> Regarding output:
->
-> [   36.611358] TAP version 14
-> [   36.611953]     # Subtest: overflow
-> [   36.611954]     1..3
-> ...
-> [   36.622914]     # overflow_calculation_test: s64: 21 arithmetic tests
-> [   36.624020]     ok 1 - overflow_calculation_test
-> ...
-> [   36.731096]     # overflow_shift_test: ok: (s64)(0 << 63) == 0
-> [   36.731840]     ok 2 - overflow_shift_test
-> ...
-> [   36.750294] kunit_try_catch: vmalloc: allocation failure: 18446744073709551615 bytes, mode:0xcc0(GFP_KERNEL), nodemask=(null),cpuset=/,mems_allowed=0
-> ...
-> [   36.805350]     # overflow_allocation_test: devm_kzalloc detected saturation
-> [   36.807763]     ok 3 - overflow_allocation_test
-> [   36.807765] ok 1 - overflow
->
-> A few things here....
-
-Tim Bird has just sent out an RFC for a "KTAP" specification, which
-we'll hope to support in KUnit:
-https://lore.kernel.org/linux-kselftest/CY4PR13MB1175B804E31E502221BC8163FD830@CY4PR13MB1175.namprd13.prod.outlook.com/T/#u
-
-That's probably where we'll end up trying to hash out exactly what
-this format should be. Fortunately, I don't think any of these will
-require any per-test work, just changes to the KUnit implementation.
-
-> - On the outer test report, there is no "plan" line (I was expecting
->   "1..1"). Technically it's optional, but it seems like the information
->   is available. :)
-
-There's work underway to support this, but it's hit a few minor snags:
-https://lkml.org/lkml/2020/2/27/2155
-
-> - The subtest should have its own "TAP version 14" line, and it should
->   be using the diagnostic line prefix for the top-level test (this is
->   what kselftest is doing).
-
-Alas, TAP itself hasn't standardised subtests. Personally, I think it
-doesn't fundamentally matter which way we do this (I actually prefer
-the way we're doing it currently slightly), but converging with what
-kselftest does would be ideal.
-
-> - There is no way to distinguish top-level TAP output from kernel log
->   lines. I think we should stick with the existing marker, which is
->   "# ", so that kernel output has no way to be interpreted as TAP
->   details -- unless it intentionally starts adding "#"s. ;)
-
-At the moment, we're doing this in KUnit tool by stripping anything
-before "TAP version 14" (e.g., the timestamp), and then only incuding
-lines which parse correctly (are a test plan, result, or a diagnostic
-line beginning with '#').
-This has worked pretty well thus far, and we do have the ability to
-get results from debugfs instead of the kernel log, which won't have
-the same problems.
-
-It's worth considering, though, particularly since our parser should
-handle this anyway without any changes.
-
-> - There is no summary line (to help humans). For example, the kselftest
->   API produces a final pass/fail report.
-
-Currently, we're relying on the kunit.py script to produce this, but
-it shouldn't be impossible to add to the kernel, particularly once the
-"KUnit Executor" changes mentioned above land.
-
-> Taken together, I was expecting the output to be:
->
-> [   36.611358] # TAP version 14
-> [   36.611953] # 1..1
-> [   36.611958] # # TAP version 14
-> [   36.611954] # # 1..3
-> ...
-> [   36.622914] # # # overflow_calculation_test: s64: 21 arithmetic tests
-> [   36.624020] # # ok 1 - overflow_calculation_test
-> ...
-> [   36.731096] # # # overflow_shift_test: ok: (s64)(0 << 63) == 0
-> [   36.731840] # # ok 2 - overflow_shift_test
-> ...
-> [   36.750294] kunit_try_catch: vmalloc: allocation failure: 18446744073709551615 bytes, mode:0xcc0(GFP_KERNEL), nodemask=(null),cpuset=/,mems_allowed=0
-> ...
-> [   36.805350] # # # overflow_allocation_test: devm_kzalloc detected saturation
-> [   36.807763] # # ok 3 - overflow_allocation_test
-> [   36.807763] # # # overflow: PASS
-> [   36.807765] # ok 1 - overflow
-> [   36.807767] # # kunit: PASS
->
-> But I assume there are threads on this that I've not read... :)
+> I also looked at normal filesystem lower and hugetlbfs upper.  Yes, overlayfs
+> allows this.  This is somewhat 'interesting' as write() is not supported in
+> hugetlbfs.  Writing to files in the overlay actually ended up writing to
+> files in the lower filesystem.  That seems wrong, but overlayfs is new to me.
 >
 
-These discussions all seem to be coming to a head now, so this is
-probably just the kick we need to prioritise this a bit more. The KTAP
-thread hasn't covered all of these (particularly the subtest stuff)
-yet, so I confess I hadn't realised the extent of the divergence
-between KUnit and kselftest here.
+I am not sure how that happened, but I think that ovl_open_realfile()
+needs to fixup f_mode flags FMODE_CAN_WRITE | FMODE_CAN_READ
+after open_with_fake_path().
 
-Cheers,
--- David
+> Earlier in the discussion of these issues, Colin Walters asked "Is there any
+> actual valid use case for mounting an overlayfs on top of hugetlbfs?"  I can
+> not think of one.  Perhaps we should consider limiting the ways in which
+> hugetlbfs can be used in overlayfs?  Preventing it from being an upper
+> filesystem might be a good start?  Or, do people think making hugetlbfs and
+> overlayfs play nice together is useful?
+
+If people think that making hugetlbfs and overlayfs play nice together maybe
+they should work on this problem. It doesn't look like either
+hugetlbfs developers
+nor overlayfs developers care much about the combination.
+Your concern, I assume, is fixing the syzbot issue.
+
+I agree with Colin's remark about adding limitations, but it would be a shame
+if overlay had to special case hugetlbfs. It would have been better if we could
+find a property of hugetlbfs that makes it inapplicable for overlayfs
+upper/lower
+or stacking fs in general.
+
+The simplest thing for you to do in order to shush syzbot is what procfs does:
+        /*
+         * procfs isn't actually a stacking filesystem; however, there is
+         * too much magic going on inside it to permit stacking things on
+         * top of it
+         */
+        s->s_stack_depth = FILESYSTEM_MAX_STACK_DEPTH;
+
+Currently, the only in-tree stacking fs are overlayfs and ecryptfs, but there
+are some out of tree implementations as well (shiftfs).
+So you may only take that option if you do not care about the combination
+of hugetlbfs with any of the above.
+
+overlayfs support of mmap is not as good as one might hope.
+overlayfs.rst says:
+"If a file residing on a lower layer is opened for read-only and then
+ memory mapped with MAP_SHARED, then subsequent changes to
+ the file are not reflected in the memory mapping."
+
+So if I were you, I wouldn't go trying to fix overlayfs-huguetlb interop...
+
+Thanks,
+Amir.
