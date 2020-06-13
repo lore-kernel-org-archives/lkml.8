@@ -2,123 +2,117 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A0CC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 20:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8F8C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 21:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7902620789
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 20:52:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="Ardg8aLx"
+	by mail.kernel.org (Postfix) with ESMTP id B5C04207DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 21:20:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbgFMUwL (ORCPT
+        id S1726722AbgFMVUf convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 16:52:11 -0400
-Received: from mta-p8.oit.umn.edu ([134.84.196.208]:44878 "EHLO
-        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726092AbgFMUwI (ORCPT
+        Sat, 13 Jun 2020 17:20:35 -0400
+Received: from ispman.iskranet.ru ([62.213.33.10]:33166 "EHLO
+        ispman.iskranet.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbgFMVUf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 16:52:08 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 49kqXR11gHz9vZTv
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 20:52:07 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p8.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id V-LTL5QAY37K for <linux-kernel@vger.kernel.org>;
-        Sat, 13 Jun 2020 15:52:07 -0500 (CDT)
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Sat, 13 Jun 2020 17:20:35 -0400
+Received: from himel (121.253.33.171.ip.orionnet.ru [171.33.253.121])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id 49kqXQ6JvXz9vZTh
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 15:52:06 -0500 (CDT)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p8.oit.umn.edu 49kqXQ6JvXz9vZTh
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p8.oit.umn.edu 49kqXQ6JvXz9vZTh
-Received: by mail-io1-f69.google.com with SMTP id x2so3177452iof.0
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 13:52:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=UkcroixAl0qAjD6GgNgyzou/IsN1STk9p+xVVDcmeP0=;
-        b=Ardg8aLxFj2jA4QjL4csIbDmbF7Qv6ioBUq9BFwPAzpqdsP+ivgI2B8v6vEDSmF5Kq
-         T+VI+cMiJyrltzxL2KJ+S2WHTXIUF/tzDx+Hy6iiCbHiebDtommqrsorIxWsJtD5Xxfl
-         rSzCIoMmPWNRk35WVAw7LbUcN+FwnWoL2ov7l39z+On9rB0EWpXx0pMhwvIoyqrXUaxN
-         SVjXxR5F+7oT+/CflVUIQ8BF6ijShRJTLfKceESF3Hx+zZ8lX0oXaFdA9bCViMHOZw8e
-         x1Ek4ACuuHNQSXcdq2kYUQsZrqkPdIsjq0SIXmIxXnf4IToCmyoJ83/4UJ3PDAddESUD
-         Xw8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=UkcroixAl0qAjD6GgNgyzou/IsN1STk9p+xVVDcmeP0=;
-        b=hI/JvNJzO/U1faBCyzUO4I18vMWdCQaduhz7w+pTznFvNTdpKv/wS8j5rivllEUtpV
-         NN/uNejSN0Wfvv/yVWrRDJqTSbt7kNZYGxXijMSiLzNzFx7wH8nEJkxF+BoSjTis7N9r
-         fO9yRqjswxGB9qHr3hyWDdLrpqdjx4h+rk3bF5pRYyqMuLUNCGPMli6vD21pP6jVM+w7
-         g+2Es2K+0jP8+OTJYC5d7WC56Rb4lYygVVfP/MQxh5j7LggQjO6Wyn86/6t3fjrzkCc8
-         tlPvnWYg5IN/GjgIHnSaFRdnuI8V8tp6MlGxvLqjrqQqWS3Ut2K9Ia72nx9lotvdr4Mc
-         RxCQ==
-X-Gm-Message-State: AOAM532auQ5JLyqWOzZaYKndkLFZBoReMTxnO8lRsLDYnQ77Jsvki0qA
-        bJWTt8egIQtMu0ohCX6i+Oo4jqaEfkW2ABqpvcTn1PT+CDsG9PG1eS/il5RIgphOc80BacyO6Wn
-        MaftXlNbmqYBolW4irlzq+dL420o5
-X-Received: by 2002:a05:6e02:542:: with SMTP id i2mr19700878ils.203.1592081526450;
-        Sat, 13 Jun 2020 13:52:06 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyWlEJFk6HoO+GE9Acy8SKo/fFC/orEpAve7+rluozITdaEPrSwu9DbTGUy6wx6oKsMcR3TDA==
-X-Received: by 2002:a05:6e02:542:: with SMTP id i2mr19700858ils.203.1592081526162;
-        Sat, 13 Jun 2020 13:52:06 -0700 (PDT)
-Received: from qiushi.cs.umn.edu ([2607:ea00:101:3c74:4874:45:bcb4:df60])
-        by smtp.gmail.com with ESMTPSA id c1sm5138369ilh.35.2020.06.13.13.52.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Jun 2020 13:52:05 -0700 (PDT)
-From:   wu000273@umn.edu
-To:     kjlu@umn.edu
-Cc:     wu000273@umn.edu, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sugar Zhang <sugar.zhang@rock-chips.com>,
-        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: rockchip: Fix a reference count leak.
-Date:   Sat, 13 Jun 2020 15:51:58 -0500
-Message-Id: <20200613205158.27296-1-wu000273@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        (Authenticated sender: asolokha@kb.kras.ru)
+        by ispman.iskranet.ru (Postfix) with ESMTPSA id 927FE8217A3;
+        Sun, 14 Jun 2020 04:20:27 +0700 (KRAT)
+From:   Arseny Solokha <asolokha@kb.kras.ru>
+To:     Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc:     Arseny Solokha <asolokha@kb.kras.ru>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Jason Yan <yanaijie@huawei.com>,
+        <linuxppc-dev@lists.ozlabs.org>, Scott Wood <oss@buserror.net>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
+Subject: Re: [PATCH] powerpc/fsl_booke/32: fix build with CONFIG_RANDOMIZE_BASE
+References: <20200613162801.1946619-1-asolokha@kb.kras.ru>
+        <754d31be-730b-8f18-4ead-ba2f303650d0@csgroup.eu>
+Date:   Sun, 14 Jun 2020 04:20:25 +0700
+In-Reply-To: <754d31be-730b-8f18-4ead-ba2f303650d0@csgroup.eu> (Christophe
+        Leroy's message of "Sat, 13 Jun 2020 19:28:19 +0200")
+Message-ID: <87imfupsrq.fsf@himel>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+> Le 13/06/2020 à 18:28, Arseny Solokha a écrit :
+>> Building the current 5.8 kernel for a e500 machine with
+>> CONFIG_RANDOMIZE_BASE set yields the following failure:
+>>
+>>    arch/powerpc/mm/nohash/kaslr_booke.c: In function 'kaslr_early_init':
+>>    arch/powerpc/mm/nohash/kaslr_booke.c:387:2: error: implicit declaration
+>> of function 'flush_icache_range'; did you mean 'flush_tlb_range'?
+>> [-Werror=implicit-function-declaration]
+>>
+>> Indeed, including asm/cacheflush.h into kaslr_booke.c fixes the build.
+>>
+>> The issue dates back to the introduction of that file and probably went
+>> unnoticed because there's no in-tree defconfig with CONFIG_RANDOMIZE_BASE
+>> set.
+>
+> I don't get this problem with mpc85xx_defconfig + RELOCATABLE +
+> RANDOMIZE_BASE.
 
-Calling pm_runtime_get_sync increments the counter even in case of
-failure, causing incorrect ref count if pm_runtime_put is not called in
-error handling paths. Call pm_runtime_put if pm_runtime_get_sync fails.
+Ah, OK. So the critical difference between mpc85xx_defconfig and our custom
+config is that the former sets CONFIG_BLOCK while ours doesn't. Then we have the
+following dependence chain:
 
-Fixes: fc05a5b22253 ("ASoC: rockchip: add support for pdm controller")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
----
- sound/soc/rockchip/rockchip_pdm.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+arch/powerpc/mm/nohash/kaslr_booke.c
+  include/linux/swap.h
+    include/linux/memcontrol.h
+      include/linux/writeback.h
+        include/linux/blk-cgroup.h
+          include/linux/blkdev.h
 
-diff --git a/sound/soc/rockchip/rockchip_pdm.c b/sound/soc/rockchip/rockchip_pdm.c
-index 7cd42fcfcf38..1707414cfa92 100644
---- a/sound/soc/rockchip/rockchip_pdm.c
-+++ b/sound/soc/rockchip/rockchip_pdm.c
-@@ -590,8 +590,10 @@ static int rockchip_pdm_resume(struct device *dev)
- 	int ret;
- 
- 	ret = pm_runtime_get_sync(dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put(dev);
- 		return ret;
-+	}
- 
- 	ret = regcache_sync(pdm->regmap);
- 
--- 
-2.17.1
+          #ifdef CONFIG_BLOCK
+          #include <linux/pagemap.h>
+          #endif
 
+          include/linux/pagemap.h
+            include/linux/highmem.h
+              arch/powerpc/include/asm/cacheflush.h
+
+and that's how the latter doesn't get included in
+arch/powerpc/mm/nohash/kaslr_booke.c, because in our config CONFIG_BLOCK is not
+defined in the first place.
+
+Arseny
+
+> Christophe
+>
+>>
+>> Fixes: 2b0e86cc5de6 ("powerpc/fsl_booke/32: implement KASLR infrastructure")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Arseny Solokha <asolokha@kb.kras.ru>
+>> ---
+>>   arch/powerpc/mm/nohash/kaslr_booke.c | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/powerpc/mm/nohash/kaslr_booke.c b/arch/powerpc/mm/nohash/kaslr_booke.c
+>> index 4a75f2d9bf0e..bce0e5349978 100644
+>> --- a/arch/powerpc/mm/nohash/kaslr_booke.c
+>> +++ b/arch/powerpc/mm/nohash/kaslr_booke.c
+>> @@ -14,6 +14,7 @@
+>>   #include <linux/memblock.h>
+>>   #include <linux/libfdt.h>
+>>   #include <linux/crash_core.h>
+>> +#include <asm/cacheflush.h>
+>>   #include <asm/pgalloc.h>
+>>   #include <asm/prom.h>
+>>   #include <asm/kdump.h>
+>>
