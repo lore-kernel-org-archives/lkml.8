@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D346BC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 08:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 331EAC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 08:22:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B187E207FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 08:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11DF62081A
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 08:22:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KfZDBbAZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L6qJwDrn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbgFMIWU (ORCPT
+        id S1726621AbgFMIW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 04:22:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50146 "EHLO
+        Sat, 13 Jun 2020 04:22:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726441AbgFMIVv (ORCPT
+        with ESMTP id S1726290AbgFMIVq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 04:21:51 -0400
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D5BFC08C5C2;
-        Sat, 13 Jun 2020 01:21:50 -0700 (PDT)
-Received: by mail-wm1-x32d.google.com with SMTP id d128so10025979wmc.1;
-        Sat, 13 Jun 2020 01:21:50 -0700 (PDT)
+        Sat, 13 Jun 2020 04:21:46 -0400
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F00EBC08C5C1;
+        Sat, 13 Jun 2020 01:21:45 -0700 (PDT)
+Received: by mail-wr1-x42e.google.com with SMTP id x13so12143304wrv.4;
+        Sat, 13 Jun 2020 01:21:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=eFELRKlgi51zXRTgZvULoamMhty3QhBmoZ29VwRZiTs=;
-        b=KfZDBbAZFKRdgc3DrMOy5US+r/xs5xOcPlRZNDrPt3zst6Mz8gOiU6Rut8NHj85onA
-         MhwJdL9h4kaK6wIiNxsDrBXEIxJobpdH8i0xKrlybi43dAz8fu6DXeNzkyAGMCdIX8kg
-         4getyyN3+eTxA/1b2U2w5ArrVJckk0CcKk4Tx6icB4vaIteEUFh6kPkWlKJiREpEX7Zs
-         zBnZHt17GbW2UvRzUYzPYmXQfmxcenyVnp4i4lyQvRw8Z8WKuGT4FTXY4c0ErPZ+vnhn
-         Wah7oGPjejzz6ULSk1yZ0faFlXyUySt5BxuMuO3GqSUv+IR9aBh5C3mVhOd3bQ2DZQ8o
-         Iviw==
+        bh=1E2Ih5H7xJKGoxw3JHd4DtWaa/tIBR+qMw0Gq6OYSe4=;
+        b=L6qJwDrnWn0ihRuKWVZpvfxkUnj9w+K8r6r4ikLAtSfUHokX3r1x645HtLs3Xglomu
+         BOD37kPT7T/QN5A1LLV7mXPjnN8xXAnYEDF0D3qYDRCVzSDSqeODq7ALfEpFEgNLabPa
+         Kq38sCWQ64zudFbRxszzZh0gDtdIFi0qX84TrtxauqOb4RwMTnpTh6ruZ2f37C69XUIw
+         /f7NYaMvIRObQb7IVgZrqEe7rICcsnbx6zl9UWLh1XGitCLYnlF0MxjcZdiVJdm6wHJA
+         ZMJJHGSNCy2TpbAfjD8ft2VEaNlTariNZ172us5UVWxTl4LUT8WsSVOE6dXfs1agyk9x
+         OQBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=eFELRKlgi51zXRTgZvULoamMhty3QhBmoZ29VwRZiTs=;
-        b=Bsi5CIC4ZIru8vCfKZX6/a97ffToo8/jerJ849UygFYMFNOq2YBvAp/c4EuUQUZQQ0
-         Uyb6ClL8p2N6wsdM3fBK87cOlvcW87boX4TYiBb3SDRJZxIIWsx5zIFKLejoHSy6/5oq
-         XlPvcbl7l2TRMgabJULqDUSq9R5qHUelYz/P1kr7j/rCGE8pysVgKr8HghQqTrZvzUyg
-         vPfAZsjuQnXpLycIUNrJ4eIYvBO6a4dKD77jeHHtOvfH+WS7iRdmrf/aM4XSZGy2JnXu
-         HgQ5vjSpIZg7TqFNPyy9gjdxQ1uVRi2F3F49teNQG/4j9/HbPYtR+LjKZ/+KMgAXRzN7
-         nIIg==
-X-Gm-Message-State: AOAM533douPPHqpS9A9aUZVP7Qt2eFpNooIjfppHqe0LlLKOzYJMEcbY
-        +NoVpyXWlDadUJrDr7gP3eI=
-X-Google-Smtp-Source: ABdhPJz9nU/D/VRRxp4n9kuI1XmXf+ipBXnCNKdlvJCgjqyVUG/Xb4Et2dJ3dt+soSRKl9cIvdRJdw==
-X-Received: by 2002:a1c:c904:: with SMTP id f4mr2901906wmb.69.1592036509020;
-        Sat, 13 Jun 2020 01:21:49 -0700 (PDT)
+        bh=1E2Ih5H7xJKGoxw3JHd4DtWaa/tIBR+qMw0Gq6OYSe4=;
+        b=eoM/ilkd4cLIXQdVLdTdkXw7fhNEP2WgTVUzpy/ZAs4NCExJtfOHhJ4eeTX9Yy9HJB
+         rng+bvARKS9oR+y3T1zemEFopsyij2AXSq+Z82DuQ9yQ++LIzo9wgU+r/6jr3mNdfyht
+         tVH46f8pQzwm6T+Y/EL9ioXXaJdFxSK1jAdPBXTE/ZdyrktYcNyfOo8qsrWSd7Lj3zBC
+         6TugiloHUShLfEMsaeK07b2JOf99lmegPXZB/eJH46u6f0abQc9aDHGYa31UIjP/BET2
+         HgcHpFVaSFF60sOY0y4s9PNpJ0epGmzTFN8CLeOZcQzzyjf3t6fiR/3HB45A1elk4RPS
+         b9Hw==
+X-Gm-Message-State: AOAM532+G5c7mOZUPFKMw1oYSb4bkDtJjl5TOJBuf5DsFKXc+SlyrcoJ
+        vsFrxox3LiRoqUPTB9l9gHM=
+X-Google-Smtp-Source: ABdhPJw1hjDRx32smBdpBxZq6dqT18RaiGPaijgAgtyFVgaMLRqjVXS/AGYQtyGbbQ2rzfHmb3702Q==
+X-Received: by 2002:adf:fdcd:: with SMTP id i13mr17893979wrs.190.1592036504596;
+        Sat, 13 Jun 2020 01:21:44 -0700 (PDT)
 Received: from skynet.lan (168.red-88-20-188.staticip.rima-tde.net. [88.20.188.168])
-        by smtp.gmail.com with ESMTPSA id n189sm12243603wmb.43.2020.06.13.01.21.48
+        by smtp.gmail.com with ESMTPSA id n189sm12243603wmb.43.2020.06.13.01.21.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Jun 2020 01:21:48 -0700 (PDT)
+        Sat, 13 Jun 2020 01:21:44 -0700 (PDT)
 From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
 To:     hauke@hauke-m.de, zajec5@gmail.com, tsbogend@alpha.franken.de,
@@ -69,9 +69,9 @@ To:     hauke@hauke-m.de, zajec5@gmail.com, tsbogend@alpha.franken.de,
         linux-arm-kernel@lists.infradead.org
 Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
-Subject: [PATCH v4 5/9] mips: bmips: add BCM6318 power domain definitions
-Date:   Sat, 13 Jun 2020 10:21:36 +0200
-Message-Id: <20200613082140.2009461-6-noltari@gmail.com>
+Subject: [PATCH v4 1/9] dt-bindings: soc: brcm: add BCM63xx power domain binding
+Date:   Sat, 13 Jun 2020 10:21:32 +0200
+Message-Id: <20200613082140.2009461-2-noltari@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200613082140.2009461-1-noltari@gmail.com>
 References: <20200610171630.465579-1-noltari@gmail.com>
@@ -84,42 +84,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-BCM6318 SoCs have a power domain controller to enable/disable certain
-components in order to save power.
+BCM6318, BCM6328, BCM6362 and BCM63268 SoCs have a power domain controller
+to enable/disable certain components in order to save power.
 
 Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- v4: no changes.
- v3: no changes (patch reordered).
- v2: Add BCM6318 dt-bindings header file.
+ v4: change license and move to bindings/power.
+ v3: fix reg maxItems and quote #power-domain-cells.
+ v2: Add separate YAML file.
 
- include/dt-bindings/soc/bcm6318-pm.h | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100644 include/dt-bindings/soc/bcm6318-pm.h
+ .../bindings/power/brcm,bcm63xx-power.yaml    | 44 +++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/brcm,bcm63xx-power.yaml
 
-diff --git a/include/dt-bindings/soc/bcm6318-pm.h b/include/dt-bindings/soc/bcm6318-pm.h
+diff --git a/Documentation/devicetree/bindings/power/brcm,bcm63xx-power.yaml b/Documentation/devicetree/bindings/power/brcm,bcm63xx-power.yaml
 new file mode 100644
-index 000000000000..05931dce8333
+index 000000000000..63b15ac6dde4
 --- /dev/null
-+++ b/include/dt-bindings/soc/bcm6318-pm.h
-@@ -0,0 +1,17 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
++++ b/Documentation/devicetree/bindings/power/brcm,bcm63xx-power.yaml
+@@ -0,0 +1,44 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/power/brcm,bcm63xx-power.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
-+#ifndef __DT_BINDINGS_BMIPS_BCM6318_PM_H
-+#define __DT_BINDINGS_BMIPS_BCM6318_PM_H
++title: BCM63xx power domain driver
 +
-+#define BCM6318_POWER_DOMAIN_PCIE	0
-+#define BCM6318_POWER_DOMAIN_USB	1
-+#define BCM6318_POWER_DOMAIN_EPHY0	2
-+#define BCM6318_POWER_DOMAIN_EPHY1	3
-+#define BCM6318_POWER_DOMAIN_EPHY2	4
-+#define BCM6318_POWER_DOMAIN_EPHY3	5
-+#define BCM6318_POWER_DOMAIN_LDO2P5	6
-+#define BCM6318_POWER_DOMAIN_LDO2P9	7
-+#define BCM6318_POWER_DOMAIN_SW1P0	8
-+#define BCM6318_POWER_DOMAIN_PAD	9
++maintainers:
++  - Álvaro Fernández Rojas <noltari@gmail.com>
 +
-+#endif /* __DT_BINDINGS_BMIPS_BCM6318_PM_H */
++description: |
++  BCM6318, BCM6328, BCM6362 and BCM63268 SoCs have a power domain controller
++  to enable/disable certain components in order to save power.
++
++properties:
++  compatible:
++    items:
++      - enum:
++          - brcm,bcm6318-power-controller
++          - brcm,bcm6328-power-controller
++          - brcm,bcm6362-power-controller
++          - brcm,bcm63268-power-controller
++
++  reg:
++    maxItems: 1
++
++  "#power-domain-cells":
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - "#power-domain-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    periph_pwr: power-controller@10001848 {
++        compatible = "brcm,bcm6328-power-controller";
++        reg = <0x10001848 0x4>;
++        #power-domain-cells = <1>;
++    };
 -- 
 2.27.0
 
