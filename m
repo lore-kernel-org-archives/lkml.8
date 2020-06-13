@@ -2,130 +2,142 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A47ABC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 06:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E970CC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 06:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7160A20739
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 06:26:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="pwf4Gy1o"
+	by mail.kernel.org (Postfix) with ESMTP id D3D06207D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 06:27:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbgFMG0q (ORCPT
+        id S1726455AbgFMG1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 02:26:46 -0400
-Received: from mout.web.de ([212.227.15.4]:53359 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725783AbgFMG0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 02:26:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1592029578;
-        bh=k2s8eb/2vmpIhCxWfTUYQO1d5bc6ZGIHEINUn8mcBYQ=;
-        h=X-UI-Sender-Class:Cc:Subject:To:From:Date;
-        b=pwf4Gy1ouTee0XHXCHwbw69wX4wC8rDPUX9+p1GbVlnAWHRtLcJHeUJQiQvQ97k3F
-         EWJwhqHTz/eiZvlzFms/pKo7wvKlUCLYD0YTELqb8OnikDqu9qeNknHlb6UDoXitI4
-         UA5+ZMj1C3cdEq9hfitpcAgaD6KIS3Sn0hHEBjyg=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.132.51.155]) by smtp.web.de (mrweb002
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MGzK6-1jg5sp3duU-00DohX; Sat, 13
- Jun 2020 08:26:18 +0200
-Cc:     linux-kernel@vger.kernel.org, Allison Randal <allison@lohutok.net>,
-        Andrew Lunn <andrew@lunn.ch>, Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, Kangjie Lu <kjlu@umn.edu>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Qiushi Wu <wu000273@umn.edu>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] ethernet: Fix memory leak in ethoc_probe()
-To:     Aditya Pakki <pakki001@umn.edu>, netdev@vger.kernel.org
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <2a13092a-53ed-bfab-0a99-08196ad22f59@web.de>
-Date:   Sat, 13 Jun 2020 08:26:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Sat, 13 Jun 2020 02:27:09 -0400
+Received: from relay-2.mailobj.net ([213.182.54.5]:48763 "EHLO
+        relay-2.mailobj.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbgFMG1J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jun 2020 02:27:09 -0400
+Received: from v-1.localdomain (v-1.in.mailobj.net [192.168.90.191])
+        by relay-2.mailobj.net (Postfix) with SMTP id 1317512EB;
+        Sat, 13 Jun 2020 08:27:06 +0200 (CEST)
+Received: by ip-25.net-c.com [213.182.54.25] with ESMTP
+        Sat, 13 Jun 2020 08:28:01 +0200 (CEST)
+X-EA-Auth: gCDkemgpab3r57raDVk3e6dU6QG0VvILS+PktL2zvaf02NHZKw8aazvbCo2bQXdeoms2YKGELTJ6kqWAggZLhPikVC84GhWGWUeRUvRoXTI=
+From:   Vincent Knecht <vincent.knecht@mailoo.org>
+To:     sboyd@kernel.org
+Cc:     konradybcio@gmail.com, Vincent Knecht <vincent.knecht@mailoo.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH v3 1/4] clk: qcom: smd: Add support for MSM8936 rpm clocks
+Date:   Sat, 13 Jun 2020 08:26:39 +0200
+Message-Id: <20200613062642.1213591-2-vincent.knecht@mailoo.org>
+X-Mailer: git-send-email 2.25.4
+In-Reply-To: <20200613062642.1213591-1-vincent.knecht@mailoo.org>
+References: <20200613062642.1213591-1-vincent.knecht@mailoo.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:1vvjpuo4KjUv3OJpsfh+xNe8zatBcNeqekGMOmId6Ghuq+fZafm
- 98rdcmd3K0k9lMBL+p7KZ1M9j/UjG8D2MMtVN3nSNIy9HmZHTWJv/tL6c/0V1yD+D1I5Mw5
- sb7iimFgxpk1rYecMRzva9hcQ1RmMIzHfKloDiMr87Ee//xaDukO8pZlZRvbRF/3JjO3qUZ
- rdVjuYfdHHOJ/2KJQ/O+g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:p4UWuv8jf5w=:NZL3lzsVFd9Xuuoev6YIdC
- xdVRzGuAQJWLC9RhTdJ3h1P97Q538fn9KZmljwvN4MFDGAjuSrguUTNXOCwtDCLg1UPCToHLB
- +puyyJU6LHhsdSIuP1sCjL6CX/1Z7D0ZJZU53EIBFy+CiEsgnzlUsY3I8E+se4R9mSsmkPIMb
- TKQGrCcBc3nXJEiTMDstlxlRT7cbmcU5jfzl746cjRf0G2FVafirbOhO2MxQKUvn8NeDxDrZG
- vtOsnKNAOFcjftvg+zlrbZZAbMfp4SyJccl+jmD3mmQBzUm2YUR2y7CW0WgS43RdaCWsdIzAq
- UcONW80qWpSRL20PYJNrwBTw4ttdmWINm/fZSS/CQi5iwhZNyCyGR2ycRd2FIjz6OdZfagHxA
- GgvFQITS+3PV2hsfo02jDqWLzNDaobT7Pn42XyIRFdxSPxIX1bYMe7B9a/ADliCKDjsb/VvmN
- Iok25w+uMsSkkMdvZd4EUrmzC0+lbFMTA3k8oiQQ6HHdtL4VJalxx8/IOfratm/iWZgPJz3m4
- P3JVeItVgyTLCKqYRtzVx/2Wjgskp0P5Ix8JUelaLe+F3WD8Ovzkg8+Mr2trx4/feXY0j4qw1
- 3xZ8lPOmb08l/nbODrvqMgShstR3iXo8XRqseqrE/U6DEQwjiDmPhGPeOPinKsqNXnxJ/aM0G
- lSGZbuLQuB7Sxdhs0xOH6p73h+inwjH0fY2atPGHpvUVCpZLhthau9kJAOetoHV9fwkE00Vxe
- e2uPbowZJY70Xpz4SZ46VUnNBVmLugxQF04nnYcpIh5jJI+RTFodI5Vto14ade1FCBraWnL/+
- q1iK0ejJ1QW15Ue/i30Ydhxh6PbdwZk/ZzWKcM2C3aZ7LHolb5iFMxLlE7H5wncUUmJToCd7f
- uGCQjhUrqWQLW2OlBbvTZomUJIAl/e6QP/A4SmPlidCa1z572xlVTp5Rzv0yxhNLfgTo+BxKE
- 4cG1Tm1qzSZwoaJuq7rXwrOUWM4vb/Ya9D6Ud7+E+G/Rerz+a3Ec8xx3SdHwZWiuZRxiiUQiN
- 7Dfga/IDd5KcyaTieqSpDCCsfPkVEnla6UzrQWlbspaLiLT+OEP69qFX/Lu0MMCvvasdC+fbP
- oS1z1nxq9NdUOJDrS2hyS5FAihPz6pJXThXiKhlTqyGAPxBZ+rjqRtCRDzLv07EDDGWsffthj
- lCo/n6m5LNRAlSqjLi0wDbf4jjvWRMg+2k7rbEqtieal0sKPkqFGxz7UkYXDk5uS1EmsHEnCm
- Bxqt/H6Bzi+tquqrj
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> =E2=80=A6 The patch fixes this issue.
+Add missing definition of rpm clk for msm8936 soc (also used by msm8939)
 
-I propose to replace this information by the tag =E2=80=9CFixes=E2=80=9D.
-Please choose another imperative wording for your change description.
+Signed-off-by: Vincent Knecht <vincent.knecht@mailoo.org>
+---
+ drivers/clk/qcom/clk-smd-rpm.c         | 50 ++++++++++++++++++++++++++
+ include/dt-bindings/clock/qcom,rpmcc.h |  2 ++
+ 2 files changed, 52 insertions(+)
 
-Regards,
-Markus
+diff --git a/drivers/clk/qcom/clk-smd-rpm.c b/drivers/clk/qcom/clk-smd-rpm.c
+index 52f63ad787ba..de42f012af57 100644
+--- a/drivers/clk/qcom/clk-smd-rpm.c
++++ b/drivers/clk/qcom/clk-smd-rpm.c
+@@ -452,6 +452,55 @@ static const struct rpm_smd_clk_desc rpm_clk_msm8916 = {
+ 	.num_clks = ARRAY_SIZE(msm8916_clks),
+ };
+ 
++/* msm8936 */
++DEFINE_CLK_SMD_RPM(msm8936, pcnoc_clk, pcnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 0);
++DEFINE_CLK_SMD_RPM(msm8936, snoc_clk, snoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 1);
++DEFINE_CLK_SMD_RPM(msm8936, bimc_clk, bimc_a_clk, QCOM_SMD_RPM_MEM_CLK, 0);
++DEFINE_CLK_SMD_RPM(msm8936, sysmmnoc_clk, sysmmnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 2);
++DEFINE_CLK_SMD_RPM_QDSS(msm8936, qdss_clk, qdss_a_clk, QCOM_SMD_RPM_MISC_CLK, 1);
++DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8936, bb_clk1, bb_clk1_a, 1);
++DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8936, bb_clk2, bb_clk2_a, 2);
++DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8936, rf_clk1, rf_clk1_a, 4);
++DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8936, rf_clk2, rf_clk2_a, 5);
++DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8936, bb_clk1_pin, bb_clk1_a_pin, 1);
++DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8936, bb_clk2_pin, bb_clk2_a_pin, 2);
++DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8936, rf_clk1_pin, rf_clk1_a_pin, 4);
++DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8936, rf_clk2_pin, rf_clk2_a_pin, 5);
++
++static struct clk_smd_rpm *msm8936_clks[] = {
++	[RPM_SMD_PCNOC_CLK]		= &msm8936_pcnoc_clk,
++	[RPM_SMD_PCNOC_A_CLK]		= &msm8936_pcnoc_a_clk,
++	[RPM_SMD_SNOC_CLK]		= &msm8936_snoc_clk,
++	[RPM_SMD_SNOC_A_CLK]		= &msm8936_snoc_a_clk,
++	[RPM_SMD_BIMC_CLK]		= &msm8936_bimc_clk,
++	[RPM_SMD_BIMC_A_CLK]		= &msm8936_bimc_a_clk,
++	[RPM_SMD_SYSMMNOC_CLK]		= &msm8936_sysmmnoc_clk,
++	[RPM_SMD_SYSMMNOC_A_CLK]	= &msm8936_sysmmnoc_a_clk,
++	[RPM_SMD_QDSS_CLK]		= &msm8936_qdss_clk,
++	[RPM_SMD_QDSS_A_CLK]		= &msm8936_qdss_a_clk,
++	[RPM_SMD_BB_CLK1]		= &msm8936_bb_clk1,
++	[RPM_SMD_BB_CLK1_A]		= &msm8936_bb_clk1_a,
++	[RPM_SMD_BB_CLK2]		= &msm8936_bb_clk2,
++	[RPM_SMD_BB_CLK2_A]		= &msm8936_bb_clk2_a,
++	[RPM_SMD_RF_CLK1]		= &msm8936_rf_clk1,
++	[RPM_SMD_RF_CLK1_A]		= &msm8936_rf_clk1_a,
++	[RPM_SMD_RF_CLK2]		= &msm8936_rf_clk2,
++	[RPM_SMD_RF_CLK2_A]		= &msm8936_rf_clk2_a,
++	[RPM_SMD_BB_CLK1_PIN]		= &msm8936_bb_clk1_pin,
++	[RPM_SMD_BB_CLK1_A_PIN]		= &msm8936_bb_clk1_a_pin,
++	[RPM_SMD_BB_CLK2_PIN]		= &msm8936_bb_clk2_pin,
++	[RPM_SMD_BB_CLK2_A_PIN]		= &msm8936_bb_clk2_a_pin,
++	[RPM_SMD_RF_CLK1_PIN]		= &msm8936_rf_clk1_pin,
++	[RPM_SMD_RF_CLK1_A_PIN]		= &msm8936_rf_clk1_a_pin,
++	[RPM_SMD_RF_CLK2_PIN]		= &msm8936_rf_clk2_pin,
++	[RPM_SMD_RF_CLK2_A_PIN]		= &msm8936_rf_clk2_a_pin,
++};
++
++static const struct rpm_smd_clk_desc rpm_clk_msm8936 = {
++		.clks = msm8936_clks,
++		.num_clks = ARRAY_SIZE(msm8936_clks),
++};
++
+ /* msm8974 */
+ DEFINE_CLK_SMD_RPM(msm8974, pnoc_clk, pnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 0);
+ DEFINE_CLK_SMD_RPM(msm8974, snoc_clk, snoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 1);
+@@ -768,6 +817,7 @@ static const struct rpm_smd_clk_desc rpm_clk_msm8998 = {
+ 
+ static const struct of_device_id rpm_smd_clk_match_table[] = {
+ 	{ .compatible = "qcom,rpmcc-msm8916", .data = &rpm_clk_msm8916 },
++	{ .compatible = "qcom,rpmcc-msm8936", .data = &rpm_clk_msm8936 },
+ 	{ .compatible = "qcom,rpmcc-msm8974", .data = &rpm_clk_msm8974 },
+ 	{ .compatible = "qcom,rpmcc-msm8976", .data = &rpm_clk_msm8976 },
+ 	{ .compatible = "qcom,rpmcc-msm8996", .data = &rpm_clk_msm8996 },
+diff --git a/include/dt-bindings/clock/qcom,rpmcc.h b/include/dt-bindings/clock/qcom,rpmcc.h
+index ae74c43c485d..4a0238ccf9f2 100644
+--- a/include/dt-bindings/clock/qcom,rpmcc.h
++++ b/include/dt-bindings/clock/qcom,rpmcc.h
+@@ -133,5 +133,7 @@
+ #define RPM_SMD_RF_CLK3_A			87
+ #define RPM_SMD_RF_CLK3_PIN			88
+ #define RPM_SMD_RF_CLK3_A_PIN			89
++#define RPM_SMD_SYSMMNOC_CLK			90
++#define RPM_SMD_SYSMMNOC_A_CLK			91
+ 
+ #endif
+-- 
+2.25.4
+
+
