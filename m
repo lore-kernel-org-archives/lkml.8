@@ -2,71 +2,70 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA5EBC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 19:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 587C6C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 19:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCABE20789
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 19:50:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592077816;
-	bh=k+djGvlAiR2dPOJFrAMMCAFoKzCyTdGmnQmF59oaoYA=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=QFrC+EZeKDXdAnKII8zCJHdSXDfaqUMQIU1kP7BaHvg5kFwOGKAsHGMBw84stvR82
-	 F97K7Y/gtvSuLO/+qp132gF6txMk8PnKWOxAt9RibbjX+SVIM7DELAFzgl43pqDMKt
-	 uyhJOaQ3XwMxpmd2PYgH4h0gftqzooh02U7uzbn8=
+	by mail.kernel.org (Postfix) with ESMTP id 2F96320789
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 19:54:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgFMTuL (ORCPT
+        id S1726626AbgFMTyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 15:50:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59518 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726323AbgFMTuF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 15:50:05 -0400
-Subject: Re: [GIT PULL] xfs: bug fixes for 5.8-rc1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592077805;
-        bh=k+djGvlAiR2dPOJFrAMMCAFoKzCyTdGmnQmF59oaoYA=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=Y1oTLC+t+/vRNvp/R0EYiMFzkqQZL1Jtiif0eRY2ulqDHIfzrNaJd7pMQkyuwoKhM
-         7bqKl3omnz7Jott+e+fL5LBQILPU0WS1EEMB6AZu6DyItcX+V4M0jETdFNqdbC6Ytf
-         mTzesDEGVZLr2+v/XyhpRpxyCM0+pmOYq1wF0DKE=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200613054130.GK11245@magnolia>
-References: <20200613054130.GK11245@magnolia>
-X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200613054130.GK11245@magnolia>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
- tags/xfs-5.8-merge-9
-X-PR-Tracked-Commit-Id: 8cc0072469723459dc6bd7beff81b2b3149f4cf4
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: c55572276834f8b17c859db7d20c224fe25b9eda
-Message-Id: <159207780513.22916.12350877297644827494.pr-tracker-bot@kernel.org>
-Date:   Sat, 13 Jun 2020 19:50:05 +0000
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        david@fromorbit.com, linux-kernel@vger.kernel.org,
-        sandeen@sandeen.net, hch@lst.de
+        Sat, 13 Jun 2020 15:54:16 -0400
+Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:8813 "EHLO
+        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726102AbgFMTyP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jun 2020 15:54:15 -0400
+Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
+ EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
+ 15.0.1156.6; Sat, 13 Jun 2020 12:54:10 -0700
+Received: from localhost (unknown [10.200.193.92])
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 6E658400BB;
+        Sat, 13 Jun 2020 12:54:15 -0700 (PDT)
+Date:   Sat, 13 Jun 2020 12:54:15 -0700
+From:   Matt Helsley <mhelsley@vmware.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
+        <dvyukov@google.com>, <elver@google.com>, <andreyknvl@google.com>,
+        <mark.rutland@arm.com>, <rostedt@goodmis.org>,
+        <jthierry@redhat.com>, <mbenes@suse.cz>
+Subject: Re: [RFC][PATCH 0/3] objtool: KCOV vs noinstr
+Message-ID: <20200613195415.GC25598@rlwimi.vmware.com>
+Mail-Followup-To: Matt Helsley <mhelsley@vmware.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, dvyukov@google.com, elver@google.com,
+        andreyknvl@google.com, mark.rutland@arm.com, rostedt@goodmis.org,
+        jthierry@redhat.com, mbenes@suse.cz
+References: <20200612143034.933422660@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200612143034.933422660@infradead.org>
+Received-SPF: None (EX13-EDG-OU-002.vmware.com: mhelsley@vmware.com does not
+ designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 12 Jun 2020 22:41:30 -0700:
+On Fri, Jun 12, 2020 at 04:30:34PM +0200, Peter Zijlstra wrote:
+> Hi All,
+> 
+> These patches go on top of objtool/core, although possibly we need them earlier.
+> 
+> In order to solve the KCOV-vs-noinstr situation, we need objtool to rewrite
+> calls to __sanitizer_cov_*() into NOPs, similar to what recordmcount does.
+> 
+> I'm hoping the pending objtool-recordmcount patches can also reuse some of this.
 
-> git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.8-merge-9
+This sounds great to me -- I'll have a look through your series and will try
+rebasing my work on this.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/c55572276834f8b17c859db7d20c224fe25b9eda
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Cheers,
+    -Matt Helsley
