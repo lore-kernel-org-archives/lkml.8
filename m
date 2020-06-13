@@ -2,98 +2,313 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6702C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 13:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1EC6C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 13:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A4B02074D
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 13:05:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RJwdVqsc"
+	by mail.kernel.org (Postfix) with ESMTP id A7D2120739
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 13:07:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbgFMNFC (ORCPT
+        id S1726378AbgFMNHc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 09:05:02 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:36211 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726045AbgFMNFB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 09:05:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592053500;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=8Vkn3rEZeq1POego0MCBFrp41m1L5KDYoTSqj0fJLmA=;
-        b=RJwdVqschafLBlCEf3PG2CBFxTCF4ynDxn8zrtd7lXaGWmGEmHHokI7JDYUTXuiTgUKRtn
-        8pd+oxjjWl7udXAxpGsah2mHJQ6PLVAYcx3+0abXloq/DF4LTs8bB5raADUXIaR+LOajQc
-        04JR1jWn/zbIvw4ME1YwBDIl3IdgfZ0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-59-2oUBF2pBMki-cnGHOZyJkg-1; Sat, 13 Jun 2020 09:04:58 -0400
-X-MC-Unique: 2oUBF2pBMki-cnGHOZyJkg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 70B02107ACCA;
-        Sat, 13 Jun 2020 13:04:56 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-114-66.rdu2.redhat.com [10.10.114.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 75D905D9C5;
-        Sat, 13 Jun 2020 13:04:53 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAHk-=whypJLi6T01HOZ5+UPe_rs+hft8wn6iOmQpZgbZzbAumA@mail.gmail.com>
-References: <CAHk-=whypJLi6T01HOZ5+UPe_rs+hft8wn6iOmQpZgbZzbAumA@mail.gmail.com> <1503686.1591113304@warthog.procyon.org.uk> <20200610111256.s47agmgy5gvj3zwz@ws.net.home>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     dhowells@redhat.com, Karel Zak <kzak@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>, Ian Kent <raven@themaw.net>,
-        andres@anarazel.de,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        keyrings@vger.kernel.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] General notification queue and key notifications
+        Sat, 13 Jun 2020 09:07:32 -0400
+Received: from mga07.intel.com ([134.134.136.100]:45005 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726045AbgFMNHb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jun 2020 09:07:31 -0400
+IronPort-SDR: 4FLJeaxhI6DOMIWt/eGE6XNu4Dy49lHP4yFNy5yCEojSAghNdK7ZWbHenK1aLBzHVC1iPqlOW+
+ /x5TRbCOPlUw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2020 06:07:31 -0700
+IronPort-SDR: vHst0eXicXHqYEf+pQk0FSDzcIS8JhPFi+JBqhLFRJPdt7Y4MLGJDj+ei71bhsRntiGwHJ+HBH
+ NIehc6CkMHjA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,507,1583222400"; 
+   d="scan'208";a="419815734"
+Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.255.28.93]) ([10.255.28.93])
+  by orsmga004.jf.intel.com with ESMTP; 13 Jun 2020 06:07:25 -0700
+Cc:     baolu.lu@linux.intel.com,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, iommu@lists.linux-foundation.org,
+        amd-gfx <amd-gfx@lists.freedesktop.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH v2 11/12] x86/mmu: Allocate/free PASID
+To:     Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Jacob Jun Pan <jacob.jun.pan@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Sohil Mehta <sohil.mehta@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>
+References: <1592008893-9388-1-git-send-email-fenghua.yu@intel.com>
+ <1592008893-9388-12-git-send-email-fenghua.yu@intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <59971fe5-31ec-defb-ead6-3e733aa371f7@linux.intel.com>
+Date:   Sat, 13 Jun 2020 21:07:24 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3984624.1592053492.1@warthog.procyon.org.uk>
-Date:   Sat, 13 Jun 2020 14:04:52 +0100
-Message-ID: <3984625.1592053492@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <1592008893-9388-12-git-send-email-fenghua.yu@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+Hi Fenghua,
 
-> I'm not even convinced O_NOTIFICATION_PIPE is necessary, but at worst
-> it will be a useful marker. I think the only real reason for it was to
-> avoid any clashes with splice(), which has more complex use of the
-> pipe buffers.
+On 2020/6/13 8:41, Fenghua Yu wrote:
+> A PASID is allocated for an "mm" the first time any thread attaches
+> to an SVM capable device. Later device attachments (whether to the same
+> device or another SVM device) will re-use the same PASID.
+> 
+> The PASID is freed when the process exits (so no need to keep
+> reference counts on how many SVM devices are sharing the PASID).
 
-The main reason is to prevent splice because the iov_iter rewind for splice
-gets quite tricky if the kernel can randomly insert packets into the pipe
-buffer in between what splice is inserting.
+FYI.
 
-> I'm so far just reading this thread and the arguments for users, and I
-> haven't yet looked at all the actual details in the pull request - but
-> last time I had objections to things it wasn't the code, it was the
-> lack of any use.
+Jean-Philippe Brucker has a patch for mm->pasid management in the vendor
+agnostic manner.
 
-Would you be willing at this point to consider pulling the mount notifications
-and fsinfo() which helps support that?  I could whip up pull reqs for those
-two pieces - or do you want to see more concrete patches that use it?
+https://www.spinics.net/lists/iommu/msg44459.html
 
-David
+Best regards,
+baolu
 
+> 
+> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+> Reviewed-by: Tony Luck <tony.luck@intel.com>
+> ---
+> v2:
+> - Define a helper free_bind() to simplify error exit code in bind_mm()
+>    (Thomas)
+> - Fix a ret error code in bind_mm() (Thomas)
+> - Change pasid's type from "int" to "unsigned int" to have consistent
+>    pasid type in iommu (Thomas)
+> - Simplify alloc_pasid() a bit.
+> 
+>   arch/x86/include/asm/iommu.h       |   2 +
+>   arch/x86/include/asm/mmu_context.h |  14 ++++
+>   drivers/iommu/intel/svm.c          | 101 +++++++++++++++++++++++++----
+>   3 files changed, 105 insertions(+), 12 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/iommu.h b/arch/x86/include/asm/iommu.h
+> index bf1ed2ddc74b..ed41259fe7ac 100644
+> --- a/arch/x86/include/asm/iommu.h
+> +++ b/arch/x86/include/asm/iommu.h
+> @@ -26,4 +26,6 @@ arch_rmrr_sanity_check(struct acpi_dmar_reserved_memory *rmrr)
+>   	return -EINVAL;
+>   }
+>   
+> +void __free_pasid(struct mm_struct *mm);
+> +
+>   #endif /* _ASM_X86_IOMMU_H */
+> diff --git a/arch/x86/include/asm/mmu_context.h b/arch/x86/include/asm/mmu_context.h
+> index 47562147e70b..f8c91ce8c451 100644
+> --- a/arch/x86/include/asm/mmu_context.h
+> +++ b/arch/x86/include/asm/mmu_context.h
+> @@ -13,6 +13,7 @@
+>   #include <asm/tlbflush.h>
+>   #include <asm/paravirt.h>
+>   #include <asm/debugreg.h>
+> +#include <asm/iommu.h>
+>   
+>   extern atomic64_t last_mm_ctx_id;
+>   
+> @@ -117,9 +118,22 @@ static inline int init_new_context(struct task_struct *tsk,
+>   	init_new_context_ldt(mm);
+>   	return 0;
+>   }
+> +
+> +static inline void free_pasid(struct mm_struct *mm)
+> +{
+> +	if (!IS_ENABLED(CONFIG_INTEL_IOMMU_SVM))
+> +		return;
+> +
+> +	if (!cpu_feature_enabled(X86_FEATURE_ENQCMD))
+> +		return;
+> +
+> +	__free_pasid(mm);
+> +}
+> +
+>   static inline void destroy_context(struct mm_struct *mm)
+>   {
+>   	destroy_context_ldt(mm);
+> +	free_pasid(mm);
+>   }
+>   
+>   extern void switch_mm(struct mm_struct *prev, struct mm_struct *next,
+> diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
+> index 4e775e12ae52..27dc866b8461 100644
+> --- a/drivers/iommu/intel/svm.c
+> +++ b/drivers/iommu/intel/svm.c
+> @@ -425,6 +425,53 @@ int intel_svm_unbind_gpasid(struct device *dev, unsigned int pasid)
+>   	return ret;
+>   }
+>   
+> +static void free_bind(struct intel_svm *svm, struct intel_svm_dev *sdev,
+> +		      bool new_pasid)
+> +{
+> +	if (new_pasid)
+> +		ioasid_free(svm->pasid);
+> +	kfree(svm);
+> +	kfree(sdev);
+> +}
+> +
+> +/*
+> + * If this mm already has a PASID, use it. Otherwise allocate a new one.
+> + * Let the caller know if a new PASID is allocated via 'new_pasid'.
+> + */
+> +static int alloc_pasid(struct intel_svm *svm, struct mm_struct *mm,
+> +		       unsigned int pasid_max, bool *new_pasid,
+> +		       unsigned int flags)
+> +{
+> +	unsigned int pasid;
+> +
+> +	*new_pasid = false;
+> +
+> +	/*
+> +	 * Reuse the PASID if the mm already has a PASID and not a private
+> +	 * PASID is requested.
+> +	 */
+> +	if (mm && mm->pasid && !(flags & SVM_FLAG_PRIVATE_PASID)) {
+> +		/*
+> +		 * Once a PASID is allocated for this mm, the PASID
+> +		 * stays with the mm until the mm is dropped. Reuse
+> +		 * the PASID which has been already allocated for the
+> +		 * mm instead of allocating a new one.
+> +		 */
+> +		ioasid_set_data(mm->pasid, svm);
+> +
+> +		return mm->pasid;
+> +	}
+> +
+> +	/* Allocate a new pasid. Do not use PASID 0, reserved for init PASID. */
+> +	pasid = ioasid_alloc(NULL, PASID_MIN, pasid_max - 1, svm);
+> +	if (pasid != INVALID_IOASID) {
+> +		/* A new pasid is allocated. */
+> +		*new_pasid = true;
+> +	}
+> +
+> +	return pasid;
+> +}
+> +
+>   /* Caller must hold pasid_mutex, mm reference */
+>   static int
+>   intel_svm_bind_mm(struct device *dev, unsigned int flags,
+> @@ -518,6 +565,8 @@ intel_svm_bind_mm(struct device *dev, unsigned int flags,
+>   	init_rcu_head(&sdev->rcu);
+>   
+>   	if (!svm) {
+> +		bool new_pasid;
+> +
+>   		svm = kzalloc(sizeof(*svm), GFP_KERNEL);
+>   		if (!svm) {
+>   			ret = -ENOMEM;
+> @@ -529,12 +578,9 @@ intel_svm_bind_mm(struct device *dev, unsigned int flags,
+>   		if (pasid_max > intel_pasid_max_id)
+>   			pasid_max = intel_pasid_max_id;
+>   
+> -		/* Do not use PASID 0, reserved for RID to PASID */
+> -		svm->pasid = ioasid_alloc(NULL, PASID_MIN,
+> -					  pasid_max - 1, svm);
+> +		svm->pasid = alloc_pasid(svm, mm, pasid_max, &new_pasid, flags);
+>   		if (svm->pasid == INVALID_IOASID) {
+> -			kfree(svm);
+> -			kfree(sdev);
+> +			free_bind(svm, sdev, new_pasid);
+>   			ret = -ENOSPC;
+>   			goto out;
+>   		}
+> @@ -547,9 +593,7 @@ intel_svm_bind_mm(struct device *dev, unsigned int flags,
+>   		if (mm) {
+>   			ret = mmu_notifier_register(&svm->notifier, mm);
+>   			if (ret) {
+> -				ioasid_free(svm->pasid);
+> -				kfree(svm);
+> -				kfree(sdev);
+> +				free_bind(svm, sdev, new_pasid);
+>   				goto out;
+>   			}
+>   		}
+> @@ -565,12 +609,18 @@ intel_svm_bind_mm(struct device *dev, unsigned int flags,
+>   		if (ret) {
+>   			if (mm)
+>   				mmu_notifier_unregister(&svm->notifier, mm);
+> -			ioasid_free(svm->pasid);
+> -			kfree(svm);
+> -			kfree(sdev);
+> +			free_bind(svm, sdev, new_pasid);
+>   			goto out;
+>   		}
+>   
+> +		if (mm && new_pasid && !(flags & SVM_FLAG_PRIVATE_PASID)) {
+> +			/*
+> +			 * Track the new pasid in the mm. The pasid will be
+> +			 * freed at process exit. Don't track requested
+> +			 * private PASID in the mm.
+> +			 */
+> +			mm->pasid = svm->pasid;
+> +		}
+>   		list_add_tail(&svm->list, &global_svm_list);
+>   	} else {
+>   		/*
+> @@ -640,7 +690,8 @@ static int intel_svm_unbind_mm(struct device *dev, unsigned int pasid)
+>   			kfree_rcu(sdev, rcu);
+>   
+>   			if (list_empty(&svm->devs)) {
+> -				ioasid_free(svm->pasid);
+> +				/* Clear data in the pasid. */
+> +				ioasid_set_data(pasid, NULL);
+>   				if (svm->mm)
+>   					mmu_notifier_unregister(&svm->notifier, svm->mm);
+>   				list_del(&svm->list);
+> @@ -1001,3 +1052,29 @@ unsigned int intel_svm_get_pasid(struct iommu_sva *sva)
+>   
+>   	return pasid;
+>   }
+> +
+> +/*
+> + * An invalid pasid is either 0 (init PASID value) or bigger than max PASID
+> + * (PASID_MAX - 1).
+> + */
+> +static bool invalid_pasid(unsigned int pasid)
+> +{
+> +	return (pasid == INIT_PASID) || (pasid >= PASID_MAX);
+> +}
+> +
+> +/* On process exit free the PASID (if one was allocated). */
+> +void __free_pasid(struct mm_struct *mm)
+> +{
+> +	unsigned int pasid = mm->pasid;
+> +
+> +	/* No need to free invalid pasid. */
+> +	if (invalid_pasid(pasid))
+> +		return;
+> +
+> +	/*
+> +	 * Since the pasid is not bound to any svm by now, there is no race
+> +	 * here with binding/unbinding and no need to protect the free
+> +	 * operation by pasid_mutex.
+> +	 */
+> +	ioasid_free(pasid);
+> +}
+> 
