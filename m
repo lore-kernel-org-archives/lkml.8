@@ -2,107 +2,92 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB322C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 14:39:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C9CC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 14:53:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 899342078A
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 14:39:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70C642074D
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 14:53:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="sljE+Vlj"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ikFcrtcW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbgFMOjT (ORCPT
+        id S1726483AbgFMOxR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 10:39:19 -0400
-Received: from mout.web.de ([217.72.192.78]:46413 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726475AbgFMOjS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 10:39:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1592059156;
-        bh=kgUISOdMmKx80S+QsK7f1L5ztAZevv9Jr71ZumikE6I=;
-        h=X-UI-Sender-Class:From:Subject:To:Cc:Date;
-        b=sljE+VljuPG5krFC9B/TACFE/+z3Ecr/6GoyCxKfD/s9c/4jZ1Bp5MdRjHKvti6Fa
-         u6oolWiU/dR8WS5XcXqz5qQ0omILdOj8Wo0TZCUvd4ha25i350WW9mFAoQ4kYEo4z+
-         uRKlAZ7AOSLszu8OJdqWRG2g5eaIq7p6Ik2wPz78=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.10] ([95.157.53.180]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MEVlN-1jiBNV1Izp-00FkiM; Sat, 13
- Jun 2020 16:39:16 +0200
-From:   Jan Kiszka <jan.kiszka@web.de>
-Subject: [PATCH] gpio: pca953x: Add support for the PCAL9535
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Message-ID: <53b5504b-dd06-c1d5-5334-d4c5525eca93@web.de>
-Date:   Sat, 13 Jun 2020 16:39:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Sat, 13 Jun 2020 10:53:17 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:46418 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726258AbgFMOxP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jun 2020 10:53:15 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05DErCMF069643;
+        Sat, 13 Jun 2020 09:53:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1592059992;
+        bh=8De/AOe/EMoDc+bfjvKtDPFHMj8PcrduA+Vt49AOtzs=;
+        h=From:To:CC:Subject:Date;
+        b=ikFcrtcWIXoH4iLc1VGrho4FbZjeF4K2G8RLquAzj7DhbonL8UZThv9jOOxojrpl/
+         VOyHTwNqZRp+ep7/DGHikgKfjLP0ojQIa1hiabZ2a9ns9z5J8QHZNJqvaljEejTZlq
+         Kg7s+ECRiXVA54hasPLeFCaKD4qSFXkuYEmJixsQ=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05DErB6f087975
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sat, 13 Jun 2020 09:53:11 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Sat, 13
+ Jun 2020 09:53:11 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Sat, 13 Jun 2020 09:53:11 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05DErAZg008051;
+        Sat, 13 Jun 2020 09:53:11 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>
+CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH] net: ethernet: ti: am65-cpsw-nuss: fix ale parameters init
+Date:   Sat, 13 Jun 2020 17:52:59 +0300
+Message-ID: <20200613145259.17044-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:d9OK0faWmrTbCao89AP45VVSNUvQ/hFJ4bgkLEx/Ype64hIF7e2
- 0PZ66VftVkZzWXS/81kqmYnI3RFGJ9LHPzDn4E4n4PIXc5ex187Vzuf8ayT1oWmoSW6WysY
- 5eBdKCqkCBlh40McJbO2SQh8RwGLL7OJKZ0VIIjF96ImjIromF/hLlkaQ3JakvdYH4vFKsu
- 8GAq6Fwh15vEFxy8pkwlw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Grak4s5uaFU=:/HIgdIHfojvFVETLmKW3bW
- sN05GIJJ44vVeFtfb/Iq0GedwG9UDnAm8AkQbSr9t6zXvbnE+FuidfANwm937G3rVEey60otv
- 91ZQ+v5kpd2vLCooA3lOp6rpb/FTPYeeQbLKuB+XNbmYhfXX++T7EUlUeEEMQgY3jYdcdot2S
- QmaCKfWm3PKa+o1fqx8ixFw2OPrSJv92PeYG5aw2bcFfSKTXbvE0iWWqD7N6R8FmvpUlHoni9
- Z/s+kiwQEYBb9rjscz+B8sj8K1PDTPK1RyuNjZIlDTbZzn+5VkVEi3ZEyN2IS3eY2phpIop2z
- YBdURmzn6tTT6Yx9OlcVUgIwBEHtASif8v0AZJbcaK7KaGgCdq2yonFIq8Clh7WsZuA2p0wrD
- JVXSV1Ju8GkEyzDWbITToBB32hW7QYpyG3RUcSbQ/EV9ev54LidixEjvjvXikkvgNrA69FfPa
- 1GhaXtkNC078VYxjudBlnOgdi9l27vraNpL6yZUv/qeaJEv//RbEps8zI9Wzq4lTtPhhEeBeh
- wPXydSfNoA5OOOUXlLjzhlHjogpNPF0mlZtifdeBrKa9tA5UzZYuuD+6wfkn1BLJ1JWspWzRI
- W71ETUpwphxODtLynTgUD4hkv1qyvyY3S5zdQsvmsdUx4pM2SjRIAsJtbkTBOVZ+Z1/vgxNtl
- WwjUM70R8821M9apjOl5QMgIAMcYpeBm9Hw+PWB0u/dg5MIuJuoXfEYwPJwlcqwu5+YPmIJT4
- YlX/K/+fuYdvUvxyiTQYTWdabmW/bS4lSu1okzaHRsKOT4R8b4m06+AtmtizdEW9GDsm2UlOa
- M5mXfkB3AOm9yu+XITFgnYL2rFpchUIRaLiXBC0lAF4i13pYusand76434T9aelFUWd0zm0JY
- 6BOfcfQgqIbv1tZN14CoG/7Hlf3QVY/dbs1OGgEhTbt1HVAuIMmvanS1Z1XbSHJj45fIkYw8R
- dVhCJqIQG0GASOVsV70RXX1tHZANB4m3hw/J0J5kDt4v9Xw6TE6xhorHnKSZ4ooN4npBoOuwl
- kfzOpsYccdSIeII985Sccy5D7ittgTpAw4CUQRuEVYLb3Wa5r0JnTvlUFVlgbVTvcVAkjm3fy
- Cn903AoW2YxO3YRBauuC+IwsQpIkUtYfgVtV0NvDQZ+qjuJ1B5mGqsl0FOZy0+aUeoDZ0tT7z
- 1ndU/dzeQZsBZwY55vkRYQGiJF8d7qbxVaKyXbSyk5ri4fJBzR6soTavELcpTmINHTlnxtj24
- 75XLwPJ4fMuCYgwpv
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kiszka <jan.kiszka@siemens.com>
+The ALE parameters structure is created on stack, so it has to be reset
+before passing to cpsw_ale_create() to avoid garbage values.
 
-The PCAL9535 [1] is compatible to the PCA9535. Additionally, it comes
-with interrupt support and input latching. Other features are not
-supported by the GPIO subsystem.
+Fixes: 93a76530316a ("net: ethernet: ti: introduce am65x/j721e gigabit eth subsystem driver")
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+ drivers/net/ethernet/ti/am65-cpsw-nuss.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-[1] https://www.nxp.com/docs/en/data-sheet/PCAL9535A.pdf
-
-Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
-=2D--
- drivers/gpio/gpio-pca953x.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index 1fca8dd7824f..34d635e51dda 100644
-=2D-- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -1131,6 +1131,7 @@ static const struct of_device_id pca953x_dt_ids[] =
-=3D {
- 	{ .compatible =3D "nxp,pca9505", .data =3D OF_953X(40, PCA_INT), },
- 	{ .compatible =3D "nxp,pca9534", .data =3D OF_953X( 8, PCA_INT), },
- 	{ .compatible =3D "nxp,pca9535", .data =3D OF_953X(16, PCA_INT), },
-+	{ .compatible =3D "nxp,pcal9535", .data =3D OF_953X(16, PCA_LATCH_INT), =
-},
- 	{ .compatible =3D "nxp,pca9536", .data =3D OF_953X( 4, 0), },
- 	{ .compatible =3D "nxp,pca9537", .data =3D OF_953X( 4, PCA_INT), },
- 	{ .compatible =3D "nxp,pca9538", .data =3D OF_953X( 8, PCA_INT), },
-=2D-
-2.26.2
+diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
+index 87a4775ed53a..1492648247d9 100644
+--- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
++++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
+@@ -1981,7 +1981,7 @@ MODULE_DEVICE_TABLE(of, am65_cpsw_nuss_of_mtable);
+ 
+ static int am65_cpsw_nuss_probe(struct platform_device *pdev)
+ {
+-	struct cpsw_ale_params ale_params;
++	struct cpsw_ale_params ale_params = { 0 };
+ 	const struct of_device_id *of_id;
+ 	struct device *dev = &pdev->dev;
+ 	struct am65_cpsw_common *common;
+-- 
+2.17.1
 
