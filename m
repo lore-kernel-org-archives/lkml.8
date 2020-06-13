@@ -2,107 +2,160 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8511EC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 13:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5004C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 13:56:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AF112074D
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 13:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B4D72078A
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 13:56:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="gYb65oh8"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="kWTF9IXH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726367AbgFMNxN (ORCPT
+        id S1726403AbgFMNz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 09:53:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44246 "EHLO
+        Sat, 13 Jun 2020 09:55:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726132AbgFMNxM (ORCPT
+        with ESMTP id S1726102AbgFMNz6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 09:53:12 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88ABCC03E96F
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 06:53:12 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49kfDx5FxGz9sRN;
-        Sat, 13 Jun 2020 23:53:05 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1592056386;
-        bh=x3HnQ5tespni0cpMcs1z9+u3bDF7bHti1qIwlnwuaU0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=gYb65oh8NUxarz2dOb5I5ewxZuOpqC6PmKm2ac+KnvOQWzPDsDm8ZPDC//wcE7O4N
-         ahKBVYJEM25u3v6kD7nShYO8S35iaqpwgnaAVRsIiGV/ts/1G1ob2OtP8Xevpjx90B
-         DRXSI7j4ZSsNE87qZgR8rkyMYPiUecnsh2fFIEXIq+McfQJ+2v0/Ksosa79VbqTvMG
-         NOq5mTFhexLSYTfru3ecyCiBqbxPiwi/o0OVRi6UmdJ26LVJsk/kAXRaJNgtrkSu62
-         2yAasHTSW9xIJlDOwl7r8fjQSjAgzx10rpIzBAJpWMhW64pjHij8epClHY4HlUy7Kn
-         LB/Z8AlFr0jUA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     aik@ozlabs.ru, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-5.8-2 tag
-Date:   Sat, 13 Jun 2020 23:53:29 +1000
-Message-ID: <87y2ordqcm.fsf@mpe.ellerman.id.au>
+        Sat, 13 Jun 2020 09:55:58 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41EA5C03E96F
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 06:55:57 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id f18so11756589qkh.1
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 06:55:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=P46+vTDp7JYJov+F0libzNKgpY7HwAGkSOwN20KITY4=;
+        b=kWTF9IXHl0Z+7CBmQeyaW2OZ0rrrei+4ArMWmRFP+JD5h/y7mpiV+cj6SK6qdapzJq
+         daCpJzcYLixOygK0f8hcTVw0kb/U2eoEDKWghkSUs5ywmVpd5Zj60n1xzwfFrH33kJ99
+         7iiVQ8GXNEUdbs1bKAlLP/kjxczunrye4ZlmpBgJHJ2mR/oFePgqAZS1y9BTO+PGha4a
+         40V12/03K4d1PgOzNmZP7kqaVryhUcZn1GMNGZkJqws1f9txqXMyKQusPCvAh4bjltHo
+         i2ZsmDK0vzPnO2ZKpF3pUNfSAk4HMtxFJ2hr3bJf3F2AqGYVxcRUqDz9BpftNZOi1VG2
+         X9ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=P46+vTDp7JYJov+F0libzNKgpY7HwAGkSOwN20KITY4=;
+        b=LzX+qJpiU4OPtCzXqgQvxpABTyfFiQD6X1ZMuCu6NwTYoa64PRjGA3g+auejnAFMH7
+         Vik1tU+9R2lBj56Y78r1r142f4fWbbUYPPMJN5utxJ39cgVDzAqWnhZK60ztl2QrmfrX
+         fjbaxhwnhAEyfbuxDydonT4o5ta8TONHRQGNReQiSe2Bd0le5uEnfAqcEG0ZJmZu81Eg
+         8ZyJcSbhNgEQif4OvA00yo92EyVmQZGnTEt7b9aYEPBxy/pciehzCcxUjQWbWrQIlwiO
+         1RSLCmWiGirjPLicnwWDq8AX0zI4owd7ezPMN+xQrnDMIZNzW+pzMLxrNiPUXBWzePdR
+         Lmfw==
+X-Gm-Message-State: AOAM530ikDMricsMWdEQ/++WTHzGlG/AhmdqCYNk2lyeSltZlu/ZmtNY
+        FrxrTc1BgfIv7NkEj1GfzH5xOw==
+X-Google-Smtp-Source: ABdhPJyLJxrjswk8POfZOYW5zmO/6EYR0kS53WZTtyYtgYLbGEcLVy95Fe4khgZreO0F0rYxopup5g==
+X-Received: by 2002:a37:813:: with SMTP id 19mr7396684qki.362.1592056556288;
+        Sat, 13 Jun 2020 06:55:56 -0700 (PDT)
+Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id c58sm7787498qtd.27.2020.06.13.06.55.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 13 Jun 2020 06:55:55 -0700 (PDT)
+Date:   Sat, 13 Jun 2020 09:55:47 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        Alexander Potapenko <glider@google.com>
+Subject: Re: [patch V9 10/39] x86/entry: Provide helpers for execute on
+ irqstack
+Message-ID: <20200613135547.GA992@lca.pw>
+References: <87zh9cnfmg.fsf@nanos.tec.linutronix.de>
+ <87wo4gnetx.fsf@nanos.tec.linutronix.de>
+ <20200610123833.GD954@lca.pw>
+ <87h7vig17z.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87h7vig17z.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA256
+On Wed, Jun 10, 2020 at 09:38:56PM +0200, Thomas Gleixner wrote:
+> Qian Cai <cai@lca.pw> writes:
+> > On Tue, Jun 09, 2020 at 10:50:50PM +0200, Thomas Gleixner wrote:
+> >> Thomas Gleixner <tglx@linutronix.de> writes:
+> >> >> BAD (after oom02)
+> >> >> # cat /sys/kernel/debug/stackdepot/info
+> >> >> Unique stacks: 140476
+> >> >
+> >> > That's indeed odd. I try to reproduce and figure out what really breaks
+> >> > here.
+> >> 
+> >> I checked your config file and I think I know where this comes from. Can
+> >> you plase disable KASAN just for testing purposes and compare before
+> >> after again?
+> >
+> > It turns out I'll need a few days to be able to get ahold of those
+> > affected systems again. I'll be reporting back as soon as possible.
+> 
+> I figured it out. It has nothing to do with asm_call_on...(). It's also
+> unrelated to page_owner. It's purely a KASAN issue.
+> 
+> KASAN trims stack traces with the help of filter_irq_stacks() which
+> relies on __irqentry_text_start/end
+> 
+> The entry rework moved the interrupt entry points out of the irqentry
+> section, which breaks that filter function.
+> 
+> I made it work again. Here are the numbers which make that obvious:
+> 
+> Mainline:
+> Unique stacks: 23403
+> Depot index:   244
+> Depot offset:  4208
+> 
+> x86/entry:
+> Unique stacks: 38835
+> Depot index:   464
+> Depot offset:  7616
+> 
+> x86/entry + fix:
+> Unique stacks: 23607
+> Depot index:   247
+> Depot offset:  14224
+> 
+> So with the non-working trimming this generates more unique stacks and
+> because they are not trimmed they become larger and eat more storage
+> space. The resulting average per stack shows that:
+> 
+> Mainline:           171 bytes per stack
+> x86/entry:          195 bytes per stack
+> x86/entry + fix:    172 bytes per stack
+> 
+> I'll point you to a test branch shortly.
 
-Hi Linus,
-
-Please pull a powerpc fix for 5.8:
-
-The following changes since commit 7ae77150d94d3b535c7b85e6b3647113095e79bf:
-
-  Merge tag 'powerpc-5.8-1' of git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux (2020-06-05 12:39:30 -0700)
-
-are available in the git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-5.8-2
-
-for you to fetch changes up to e881bfaf5a5f409390973e076333281465f2b0d9:
-
-  KVM: PPC: Fix nested guest RC bits update (2020-06-12 16:19:53 +1000)
-
-- ------------------------------------------------------------------
-powerpc fixes for 5.8 #2
-
-One fix for a recent change which broke nested KVM guests on Power9.
-
-Thanks to:
-  Alexey Kardashevskiy.
-
-- ------------------------------------------------------------------
-Alexey Kardashevskiy (1):
-      KVM: PPC: Fix nested guest RC bits update
-
-
- arch/powerpc/kvm/book3s_hv_nested.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEJFGtCPCthwEv2Y/bUevqPMjhpYAFAl7k2b0ACgkQUevqPMjh
-pYDmPQ/9Ffq4hgIdiJdzusd9tYEynumET8/cfRLYCmUVEkYQdpgpLgp/XnNFq/fg
-CqqDN173ioTg5xN1QEZkcPKFwOqmlG2oYJI4s93nMAINmuCE7h4bsrGLOZNPIx1G
-FD2v0piGkxmxRud1Qt7+cpIfbbw3wKnFqOQ1yzRop/weufp42PSUD00cY6DUa9Ip
-LKWxBcje6yl56U+z31iWvDjNxP2cwZUz79ioKQG7YDigQh+aSVFaZ1NboA5fjde0
-CSm0DrHfhPjlZTw2y3IvTbETCi7wU1dIrElf6e8RMsIOCg1UeUeiOsHP80fHnMFA
-NP1JlsIEPjIxUb9cJ7Uc03wwUMioQcx7ZwISTWP6aQZx20nEdcFErqleCLr8e/KC
-beWRz7TMfCG3v6GQv5yJKx+/AB8XWYcBe+X/8+7AAZS51DFHU4xvxIy9B43a3cCe
-UozRzo/OTVvRvRPsM4TaIIZNPBV/WWm/+CwEZgGEOBqXK+ZQpwkDh5kP5P/nWv0g
-HoK82XTGdMDokKuH+oStuo9kpMbj7ktJhOVFply8axXdQ9Jn2y/4t1mH4jsodza5
-OWqpDDnRXzOlTasWBPIcdgmriYeJfEQ5rDmxRXfoqBTEoSVt2TC3e1ooN0IkCVcy
-pPROKGvRHdfqMvXqwoDpLL3wF43u439bl8ROBC89nsxdpcBixoM=
-=VRzv
------END PGP SIGNATURE-----
+Thomas, I get ahold of one of the affected systems now if you want some
+testing there.
