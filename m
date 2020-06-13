@@ -2,275 +2,131 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B6DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 08:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74340C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 08:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1316206D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 08:39:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JOjb31zl"
+	by mail.kernel.org (Postfix) with ESMTP id 3CD132081A
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 08:42:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592037745;
+	bh=xCW5zEEUc0j8JdLZK9w8g52it34RuX3NHf5pgk9G+Q8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=0yOn1UAy5GgXk+SwW8ZiSZtDwn/bB0xofpgO1es99ctiJmr9Y70WBAkCThJog0r18
+	 YRjap6wtkZX5CqoXUvyPFya5o7BQjAdhw1TXZDT41IbhLJqmp8Fq5AqTKLhja3FVXf
+	 Siv/ffUwKkpRxSpDMx3tB0DVkPE7Vf8TVePsUWxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbgFMIjN (ORCPT
+        id S1726414AbgFMImX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 04:39:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52646 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbgFMIiU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 04:38:20 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06293C08C5C2;
-        Sat, 13 Jun 2020 01:38:20 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id c71so9913389wmd.5;
-        Sat, 13 Jun 2020 01:38:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=fGn8OGVIJlouJS3ntIMD902vMimxRcaD/4IsI9LdMpE=;
-        b=JOjb31zlCxXUgL7PRhpEtJfI8SMi/wybpfDWlIcrFAbl+9Zcm5mbwHVlNY+EhzBuYA
-         Hj+/BshoYLonHps3/8k0jK5uHA5gloBfHIUFyQpnIm48j1/nYBi8oO4P4V4sfPzGAtT2
-         XsIo8LkbXBfmU53ECYIwy7L4tRc9tZ2yQ0sfEKXx4qSA/a6OoGPQsBI4tuulrEtN+/JX
-         Uu+n6dGV7fnqXcwKSPewSeyBlpATYMgmyz9rQcYbGIHf+muL0T/shZqUftiuxvGD84BB
-         PIf6+dtzTbU7w71WoUIS8Opnm0sMcNMv5WiPPEjDPmWPOE461DDOTZYmyjMDfb+hSRni
-         gqGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=fGn8OGVIJlouJS3ntIMD902vMimxRcaD/4IsI9LdMpE=;
-        b=TrX+PCSjmvCJv4Zaayw2NUJfX5CFBIC9O5WDNe132vgYmfyNF6AH7RYVhSWC+YEN8s
-         /cNn+9Q7jnLFyOfUYP4ODd3w5qsrTQJY67PTMTCUfKH7O64FU4W2fXpnnmz6AZL9Dr2L
-         jD6skRG+H/FCXPwY1tEvz+LTtiQE7hsc9lpBQsqGi8X3KY7mjt6728VfkOJFz/D0CzyH
-         g4Mg+CNPpSYElDRiZ6yz+fOGFkOuQxAVMqH0IlPUOIdcgdw4k1aPVrrTW8VXDCzMn+kx
-         yMvamcZ+5D8a7J1QgCk7etTZa978fqNr6w4sYi8wOVwSK2urpmHBOip3HqQCSFvuu2XG
-         H2aQ==
-X-Gm-Message-State: AOAM530ypFHy4i9xf0f+p2fGvC6APfIBLthPDivmDKI5P8Mhu2KG/AaL
-        dRyTg/txrurWR+T9rJF8eqM=
-X-Google-Smtp-Source: ABdhPJzveJqegEvqPHYDXyaN+v2lTmwi70HcJbL9xbCNay/XPFmHoSTbfVX/KOhn9UE6RYpWbvvDDw==
-X-Received: by 2002:a1c:2b86:: with SMTP id r128mr3132951wmr.13.1592037498581;
-        Sat, 13 Jun 2020 01:38:18 -0700 (PDT)
-Received: from skynet.lan (168.red-88-20-188.staticip.rima-tde.net. [88.20.188.168])
-        by smtp.gmail.com with ESMTPSA id l17sm11622704wmi.3.2020.06.13.01.38.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Jun 2020 01:38:18 -0700 (PDT)
-From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-To:     p.zabel@pengutronix.de, robh+dt@kernel.org,
-        tsbogend@alpha.franken.de, f.fainelli@gmail.com,
-        jonas.gorski@gmail.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com
-Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-Subject: [PATCH v4 3/9] reset: add BCM6345 reset controller driver
-Date:   Sat, 13 Jun 2020 10:38:07 +0200
-Message-Id: <20200613083813.2027186-4-noltari@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200613083813.2027186-1-noltari@gmail.com>
-References: <20200610172859.466334-1-noltari@gmail.com>
- <20200613083813.2027186-1-noltari@gmail.com>
+        Sat, 13 Jun 2020 04:42:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53022 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725783AbgFMImW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jun 2020 04:42:22 -0400
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E54F8206D7;
+        Sat, 13 Jun 2020 08:42:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592037741;
+        bh=xCW5zEEUc0j8JdLZK9w8g52it34RuX3NHf5pgk9G+Q8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Iwfdc9+ZI0pFLKMFbArS+mmOOkBl1ZLAWFJpMtXB4coT8Weu+3DzBIZA9hHssCUQK
+         87L8LfuWJYOo9qkTMuTYh+aqRJHSVF0s1xU/HYyq1LMKqWBAwddQ26eJAvgGazoGq+
+         oPG0+TZWSTMtNg6qCkRl0NocHNo6y2qBHTtoT0WY=
+Received: by mail-lj1-f174.google.com with SMTP id 9so13665314ljv.5;
+        Sat, 13 Jun 2020 01:42:20 -0700 (PDT)
+X-Gm-Message-State: AOAM531FXcN8P+afd26iHaCcw4TVMgv43fJ3TiMNJAap1wRwYKa9zTMg
+        uwJbMg7CqySCnyi6ysDKElHdkMf/JRhiQLPP90Q=
+X-Google-Smtp-Source: ABdhPJy02XUNfPeMM6pACPbGXMYswnZVke4nUOam3qQ1p+P0sRElAvHF5XOt2Jc5DD+VGNKuP9OiS7sgLWH+7bFPoHs=
+X-Received: by 2002:a2e:7105:: with SMTP id m5mr7955290ljc.79.1592037739090;
+ Sat, 13 Jun 2020 01:42:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200610153935.13794-1-tklauser@distanz.ch>
+In-Reply-To: <20200610153935.13794-1-tklauser@distanz.ch>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Sat, 13 Jun 2020 16:42:07 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTRGVQcn5Hu+kaHfzhEpyXuMkQQYyfHkuxREYci4QJ0SoQ@mail.gmail.com>
+Message-ID: <CAJF2gTRGVQcn5Hu+kaHfzhEpyXuMkQQYyfHkuxREYci4QJ0SoQ@mail.gmail.com>
+Subject: Re: [PATCH] csky: remove unusued thread_saved_pc and *_segments functions/macros
+To:     Tobias Klauser <tklauser@distanz.ch>
+Cc:     Mao Han <han_mao@c-sky.com>, linux-csky@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for resetting blocks through the Linux reset controller
-subsystem for BCM63xx SoCs.
+Acked-by: Guo Ren <guoren@kernel.org>
 
-Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
----
- v4: no changes.
- v3: using reset-simple isn't possible since sleeping after performing the
-     reset is also needed.
- v2: add compatibility to reset-simple instead of adding a new driver.
+On Wed, Jun 10, 2020 at 11:45 PM Tobias Klauser <tklauser@distanz.ch> wrote:
+>
+> These are used nowhere in the tree (except for some architectures which
+> define them for their own use) and were already removed for other
+> architectures in:
+>
+> commit 6474924e2b5d ("arch: remove unused macro/function thread_saved_pc()")
+> commit c17c02040bf0 ("arch: remove unused *_segments() macros/functions")
+>
+> Remove them from arch/csky as well.
+>
+> Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
+> ---
+>  arch/csky/include/asm/processor.h |  6 ------
+>  arch/csky/kernel/process.c        | 10 ----------
+>  2 files changed, 16 deletions(-)
+>
+> diff --git a/arch/csky/include/asm/processor.h b/arch/csky/include/asm/processor.h
+> index 24442d8e86f9..4800f6563abb 100644
+> --- a/arch/csky/include/asm/processor.h
+> +++ b/arch/csky/include/asm/processor.h
+> @@ -82,12 +82,6 @@ static inline void release_thread(struct task_struct *dead_task)
+>
+>  extern int kernel_thread(int (*fn)(void *), void *arg, unsigned long flags);
+>
+> -#define copy_segments(tsk, mm)         do { } while (0)
+> -#define release_segments(mm)           do { } while (0)
+> -#define forget_segments()              do { } while (0)
+> -
+> -extern unsigned long thread_saved_pc(struct task_struct *tsk);
+> -
+>  unsigned long get_wchan(struct task_struct *p);
+>
+>  #define KSTK_EIP(tsk)          (task_pt_regs(tsk)->pc)
+> diff --git a/arch/csky/kernel/process.c b/arch/csky/kernel/process.c
+> index 8b3fad062ab2..3da63cf0bfde 100644
+> --- a/arch/csky/kernel/process.c
+> +++ b/arch/csky/kernel/process.c
+> @@ -30,16 +30,6 @@ asmlinkage void ret_from_kernel_thread(void);
+>   */
+>  void flush_thread(void){}
+>
+> -/*
+> - * Return saved PC from a blocked thread
+> - */
+> -unsigned long thread_saved_pc(struct task_struct *tsk)
+> -{
+> -       struct switch_stack *sw = (struct switch_stack *)tsk->thread.sp;
+> -
+> -       return sw->r15;
+> -}
+> -
+>  int copy_thread_tls(unsigned long clone_flags,
+>                 unsigned long usp,
+>                 unsigned long kthread_arg,
+> --
+> 2.27.0
+>
 
- drivers/reset/Kconfig         |   7 ++
- drivers/reset/Makefile        |   1 +
- drivers/reset/reset-bcm6345.c | 135 ++++++++++++++++++++++++++++++++++
- 3 files changed, 143 insertions(+)
- create mode 100644 drivers/reset/reset-bcm6345.c
 
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index d9efbfd29646..9f1da978cef6 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -41,6 +41,13 @@ config RESET_BERLIN
- 	help
- 	  This enables the reset controller driver for Marvell Berlin SoCs.
- 
-+config RESET_BCM6345
-+	bool "BCM6345 Reset Controller"
-+	depends on BMIPS_GENERIC || COMPILE_TEST
-+	default BMIPS_GENERIC
-+	help
-+	  This enables the reset controller driver for BCM6345 SoCs.
-+
- config RESET_BRCMSTB
- 	tristate "Broadcom STB reset controller"
- 	depends on ARCH_BRCMSTB || COMPILE_TEST
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index 249ed357c997..e642aae42f0f 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -6,6 +6,7 @@ obj-$(CONFIG_ARCH_TEGRA) += tegra/
- obj-$(CONFIG_RESET_A10SR) += reset-a10sr.o
- obj-$(CONFIG_RESET_ATH79) += reset-ath79.o
- obj-$(CONFIG_RESET_AXS10X) += reset-axs10x.o
-+obj-$(CONFIG_RESET_BCM6345) += reset-bcm6345.o
- obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
- obj-$(CONFIG_RESET_BRCMSTB) += reset-brcmstb.o
- obj-$(CONFIG_RESET_BRCMSTB_RESCAL) += reset-brcmstb-rescal.o
-diff --git a/drivers/reset/reset-bcm6345.c b/drivers/reset/reset-bcm6345.c
-new file mode 100644
-index 000000000000..6c9238762ee5
---- /dev/null
-+++ b/drivers/reset/reset-bcm6345.c
-@@ -0,0 +1,135 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * BCM6345 Reset Controller Driver
-+ *
-+ * Copyright (C) 2020 Álvaro Fernández Rojas <noltari@gmail.com>
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset-controller.h>
-+
-+#define BCM6345_RESET_NUM		32
-+#define BCM6345_RESET_SLEEP_MIN_US	10000
-+#define BCM6345_RESET_SLEEP_MAX_US	20000
-+
-+struct bcm6345_reset {
-+	struct reset_controller_dev rcdev;
-+	void __iomem *base;
-+	spinlock_t lock;
-+};
-+
-+static void bcm6345_reset_update(struct reset_controller_dev *rcdev,
-+				 unsigned long id, bool assert)
-+{
-+	struct bcm6345_reset *bcm6345_reset =
-+		container_of(rcdev, struct bcm6345_reset, rcdev);
-+	unsigned long flags;
-+	uint32_t val;
-+
-+	spin_lock_irqsave(&bcm6345_reset->lock, flags);
-+	val = __raw_readl(bcm6345_reset->base);
-+	if (assert)
-+		val &= ~BIT(id);
-+	else
-+		val |= BIT(id);
-+	__raw_writel(val, bcm6345_reset->base);
-+	spin_unlock_irqrestore(&bcm6345_reset->lock, flags);
-+}
-+
-+static int bcm6345_reset_assert(struct reset_controller_dev *rcdev,
-+				unsigned long id)
-+{
-+	bcm6345_reset_update(rcdev, id, true);
-+
-+	return 0;
-+}
-+
-+static int bcm6345_reset_deassert(struct reset_controller_dev *rcdev,
-+				  unsigned long id)
-+{
-+	bcm6345_reset_update(rcdev, id, false);
-+
-+	return 0;
-+}
-+
-+static int bcm6345_reset_reset(struct reset_controller_dev *rcdev,
-+			       unsigned long id)
-+{
-+	bcm6345_reset_update(rcdev, id, true);
-+	usleep_range(BCM6345_RESET_SLEEP_MIN_US,
-+		     BCM6345_RESET_SLEEP_MAX_US);
-+
-+	bcm6345_reset_update(rcdev, id, false);
-+	usleep_range(BCM6345_RESET_SLEEP_MIN_US,
-+		     BCM6345_RESET_SLEEP_MAX_US);
-+
-+	return 0;
-+}
-+
-+static int bcm6345_reset_status(struct reset_controller_dev *rcdev,
-+				unsigned long id)
-+{
-+	struct bcm6345_reset *bcm6345_reset =
-+		container_of(rcdev, struct bcm6345_reset, rcdev);
-+
-+	return !(__raw_readl(bcm6345_reset->base) & BIT(id));
-+}
-+
-+static struct reset_control_ops bcm6345_reset_ops = {
-+	.assert = bcm6345_reset_assert,
-+	.deassert = bcm6345_reset_deassert,
-+	.reset = bcm6345_reset_reset,
-+	.status = bcm6345_reset_status,
-+};
-+
-+static int __init bcm6345_reset_probe(struct platform_device *pdev)
-+{
-+	struct bcm6345_reset *bcm6345_reset;
-+	struct resource *res;
-+	int err;
-+
-+	bcm6345_reset = devm_kzalloc(&pdev->dev,
-+				     sizeof(*bcm6345_reset), GFP_KERNEL);
-+	if (!bcm6345_reset)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, bcm6345_reset);
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	bcm6345_reset->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(bcm6345_reset->base))
-+		return PTR_ERR(bcm6345_reset->base);
-+
-+	spin_lock_init(&bcm6345_reset->lock);
-+	bcm6345_reset->rcdev.ops = &bcm6345_reset_ops;
-+	bcm6345_reset->rcdev.owner = THIS_MODULE;
-+	bcm6345_reset->rcdev.of_node = pdev->dev.of_node;
-+	bcm6345_reset->rcdev.of_reset_n_cells = 1;
-+	bcm6345_reset->rcdev.nr_resets = BCM6345_RESET_NUM;
-+
-+	err = devm_reset_controller_register(&pdev->dev,
-+					     &bcm6345_reset->rcdev);
-+	if (err)
-+		return err;
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id bcm6345_reset_of_match[] = {
-+	{ .compatible = "brcm,bcm6345-reset" },
-+	{ },
-+};
-+
-+static struct platform_driver bcm6345_reset_driver = {
-+	.probe = bcm6345_reset_probe,
-+	.driver	= {
-+		.name = "bcm6345-reset",
-+		.of_match_table = bcm6345_reset_of_match,
-+		.suppress_bind_attrs = true,
-+	},
-+};
-+builtin_platform_driver(bcm6345_reset_driver);
 -- 
-2.27.0
+Best Regards
+ Guo Ren
 
+ML: https://lore.kernel.org/linux-csky/
