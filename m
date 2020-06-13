@@ -2,115 +2,89 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0095C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 05:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED64AC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 05:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB7A020739
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 05:40:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jYEk1+sf"
+	by mail.kernel.org (Postfix) with ESMTP id C81A5207DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 05:41:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592026896;
+	bh=ai2IRoP3IJBb3/30meNB0Re5ou7rGub0FTjCHdXopfU=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=inpVJx88RHjs/mHJKgGSLcmfhotY0e4lW9ZJGhThKl+DfzhxcZRrsbms89iJQG4pc
+	 ZL8B/YpUNj/PgbFdpcODQYasqU/dpTUrPYRj0uTtor5AnVWkCrkUcm5fs1DF05Tijg
+	 yY7i9PYVjGiY/BOmBDeBh22SAXco3eeaYcnbIbTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726391AbgFMFk2 (ORCPT
+        id S1726424AbgFMFlf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 01:40:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53786 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725272AbgFMFk2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 01:40:28 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDEDEC03E96F
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 22:40:27 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id er17so5391421qvb.8
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 22:40:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZSHq0vMaz4NURNRNupZyQB7rnizDXqa6ngrG3A3AhI0=;
-        b=jYEk1+sfMAFz+SrLypRsAkNDQ5RLJ+imA33j+umAGowJffc/gC0O75thPSf+L0OlcO
-         5BQC2HF8cYzqXzH+2A9HJYoxbg4Ovhgls5Dwcs5FXFoRImBxItW3pPSntOX2oQ5Cm7/1
-         rT4VimvLDXJq5Oqfxt2fbr/wOwkrnpThsfDhzetbNChyCaThpiFnkh4GXrngBQKEMyhC
-         QwQZf3msp8lncBATu9K/IN0Zws1fDWFyHs2UiuItJaEktCiZiCZeAtB4FNoZJnHSErMp
-         mhV5ewjawTWhA7FD9SawBKomKVn32xKXppae3sxjaML23JON/JSP6B3IeZPm140bJhva
-         svKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZSHq0vMaz4NURNRNupZyQB7rnizDXqa6ngrG3A3AhI0=;
-        b=gFBl/e37zzJqtUot3jpmWCTiBf2XIzv/DLCKEIb6V7qkpZkRtfk1lsybNx4UsOIxF9
-         2qhoeAwjqE33/+pYCkrksESChGhwoUQWRt8zmiNVq6QtdaVm/4h1ZgcxLPNLnkjGb41E
-         lTJm+jzXLqaIOVB0JYSbqRdv4gJkPpPHhU9MAA3jNpwN8g5/nGfbKHhdifc5Z1D9fEMc
-         /ngmIHP83gmYziDl/m3Tw577j2r0cW7aaAIkTkGamjSsJlhScwq1kDjxp4Hb9YKr2vwr
-         61eymU/dWT7/CjieceikTVQaP6UOCWzGg34EHhu4jRyLHMD6sdHY283mKNteU+Zx3bJK
-         +EQw==
-X-Gm-Message-State: AOAM533Oku5h1aOi6VL4MaYQjCsOKvoT6tG2LKVUXtQQxszjDELERj/m
-        eHug0SKbp+hvHtsrxjYGejpEwmWWmBOjnfZF9AgCbg==
-X-Google-Smtp-Source: ABdhPJywBFl9gueqSdscfDjudCkhUVPyPfhj7NAAGIg1WSS2TXBAr8ut2CHITYrZ7LTnAbe2QKSEemRn4jOamEvfgaI=
-X-Received: by 2002:ad4:494c:: with SMTP id o12mr16181257qvy.102.1592026827023;
- Fri, 12 Jun 2020 22:40:27 -0700 (PDT)
+        Sat, 13 Jun 2020 01:41:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50846 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725272AbgFMFlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jun 2020 01:41:35 -0400
+Received: from localhost (unknown [148.87.23.6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5915B20739;
+        Sat, 13 Jun 2020 05:41:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592026894;
+        bh=ai2IRoP3IJBb3/30meNB0Re5ou7rGub0FTjCHdXopfU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=EaqHxoZGlWcSMDBTFY+yxamT+8GpPhY3+/M/mADaNsVrHgvTHmdIKaLD/HzBViDL6
+         1Mketq5SWr/tuCsc1yZHL6p+qg6T1ElWFQsMW7iGDdY9S2qvwPexaJlKRTacO6fiDg
+         6v7OP6m4HV7zY6Bn10i+x5nxUenJkSjLM0fDYMHk=
+Date:   Fri, 12 Jun 2020 22:41:30 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        david@fromorbit.com, linux-kernel@vger.kernel.org,
+        sandeen@sandeen.net, hch@lst.de
+Subject: [GIT PULL] xfs: bug fixes for 5.8-rc1
+Message-ID: <20200613054130.GK11245@magnolia>
 MIME-Version: 1.0
-References: <20200612105026.GA22660@zn.tnic> <CAHk-=wjKr+eAdPg3q7S6N4Cwd1aMEOHc5qLaKE-wwhouZRo=uw@mail.gmail.com>
- <20200612174801.GE22660@zn.tnic> <20200612203935.GH2497@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200612203935.GH2497@hirez.programming.kicks-ass.net>
-From:   Tony Luck <tony.luck@gmail.com>
-Date:   Fri, 12 Jun 2020 22:40:14 -0700
-Message-ID: <CA+8MBbKNB3a41rQDqYnLD1AcYDDuQOJeyA=68m17zj4Neg9ZpQ@mail.gmail.com>
-Subject: Re: [RFC PATCH] x86/msr: Filter MSR writes
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 1:41 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Fri, Jun 12, 2020 at 07:48:01PM +0200, Borislav Petkov wrote:
-> > On Fri, Jun 12, 2020 at 10:20:03AM -0700, Linus Torvalds wrote:
-> > > Since you already added the filtering, this looks fairly sane.
-> > >
-> > > IOW, what MSR's do we expect people to maybe write to normally? You
-> > > added MSR_IA32_ENERGY_PERF_BIAS as an allowed MST, maybe there are
-> > > others?
-> >
-> > Right, this MSR is being written by cpupower in tools/. My search was
-> > confined within the kernel source only so there very likely are others.
->
-> So that tool writing to /dev/msr has already caused pain; the direct
-> result is that the intel pstate driver doesn't want to use an MSR shadow
-> variable to avoid RDMSR because that'd loose input.
->
-> https://lkml.org/lkml/2019/3/25/310
->
-> (sorry, that's what google found me)
->
-> So ideally we'd just disallow it too. It already has a sysfs file (per
-> those patches):
->
->   Documentation/admin-guide/pm/intel_epb.rst
+Hi Linus,
 
-Some group internal at Intel want something like this, but more extensive,
-They want to limit RDMSR to a subset (not exactly sure why, I don't
-know of MSRs that have side effects on read ... but then again
-not all of the MSR space is documented).
+Please pull this last merge request before -rc1.  We've settled down
+into the bugfix phase; this one fixes an error bailout path.
 
-On the write side they divide into categories:
-1) Some MSRs can only be cleared.
-2) Some MSRs can only have certain bits set
-3) Some MSRs allow any write
-4) Maybe something else ... this is from memory, and a somewhat
-cursory read of their patch.
+This branch merges cleanly with master as of a few minutes ago, so
+please let me know if anything strange happens.
 
-They have maybe a couple of dozen MSRs split between those classes.
+--D
 
--Tony
+The following changes since commit 6dcde60efd946e38fac8d276a6ca47492103e856:
+
+  xfs: more lockdep whackamole with kmem_alloc* (2020-05-27 08:49:28 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.8-merge-9
+
+for you to fetch changes up to 8cc0072469723459dc6bd7beff81b2b3149f4cf4:
+
+  xfs: Add the missed xfs_perag_put() for xfs_ifree_cluster() (2020-06-08 20:57:03 -0700)
+
+----------------------------------------------------------------
+Fixes for 5.8:
+- Fix a resource leak on an error bailout.
+
+----------------------------------------------------------------
+Chuhong Yuan (1):
+      xfs: Add the missed xfs_perag_put() for xfs_ifree_cluster()
+
+ fs/xfs/xfs_inode.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
