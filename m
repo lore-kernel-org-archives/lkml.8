@@ -2,224 +2,128 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80868C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 19:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5DCC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 19:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6632D207FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 19:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90DC5207BC
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 19:29:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="L/1yEubs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbgFMT25 (ORCPT
+        id S1726657AbgFMT3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 15:28:57 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:46292 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbgFMT24 (ORCPT
+        Sat, 13 Jun 2020 15:29:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39032 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726304AbgFMT3J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 15:28:56 -0400
-Received: from 89-77-60-66.dynamic.chello.pl (89.77.60.66) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id db32435290b12ab0; Sat, 13 Jun 2020 21:28:53 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     "Kaneda, Erik" <erik.kaneda@intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        Len Brown <lenb@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "Moore, Robert" <robert.moore@intel.com>
-Subject: Re: [RFT][PATCH 2/3] ACPICA: Remove unused memory mappings on interpreter exit
-Date:   Sat, 13 Jun 2020 21:28:52 +0200
-Message-ID: <34641620.ChEHEh4gq6@kreacher>
-In-Reply-To: <CAJZ5v0h0ax4N-Tk+MfAeAyJ_tDYPW5vseqUU49UShBKZ4+F6Bw@mail.gmail.com>
-References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com> <BYAPR11MB30963CB784B940A5CD58C4FAF0810@BYAPR11MB3096.namprd11.prod.outlook.com> <CAJZ5v0h0ax4N-Tk+MfAeAyJ_tDYPW5vseqUU49UShBKZ4+F6Bw@mail.gmail.com>
+        Sat, 13 Jun 2020 15:29:09 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 113B2C03E96F
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 12:29:08 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id b5so5927826pfp.9
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 12:29:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=xo8ytRHA8kMhSzgaf+vcCOJn1UirQ92SScXvh+BCUB4=;
+        b=L/1yEubsRWCHrnfgf6xtbij3KIJa1Fnvz53JJOSpVq9YiCmGymxgD3wLQCsX6X63ao
+         B0xS48rjEajSoNmCF7d/rhclbk0EPqpV3/tvUf87IC2FAwJp1lsO+GgAUQBbxLbdeZLl
+         SbeFjUa3cap1Ju+49TeV9PH48lqJhL6M9fmw9DwdOsJDIBc95U7/Ss2gcHLUUKDJyWGy
+         skT6e6GskED9pC/lurdufttvDWSCDJvjoKPuYzCKl8roKwX3jKWDuuoxDfcCezmwJ8gi
+         BQu9lTrTlli7icemq5yXKUVEQ4bo9D4QSmUwY+8TnzQy6TewvmTPMDELsCiMQv+ylAEc
+         kaOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=xo8ytRHA8kMhSzgaf+vcCOJn1UirQ92SScXvh+BCUB4=;
+        b=bML6RaHjw+D61ZeoXTwWm8mdd9Y0qb2bqW1dYuuLzC+INxH+ajcWtyYmxpyKu+QHpl
+         Z1gkYrwvIrgxNnukAa6iYL58cc4xjSXyjm+tGkx/BiwFx/kUAER4rPXcRipClFIUYBnb
+         HC9PjOA9qxONXwBFH2Comngo05FGiBcGq2OGdJmZBS441yKeJMb/RT16Mi74w+/EzMwg
+         uNVlhJvBl5qcBH9SEkvgmYee5Cr/Np6IJ5rR2A2IZcW52d/nBX/9Ii+9UbjTJWw4Wqs9
+         WMofMcX0E5jZbfpA/scu7mbFCW6q9F1oCCJIxhFbLjEdHaVCrfTjpf4Zn/+9r1eSQHAE
+         tQ6w==
+X-Gm-Message-State: AOAM533/X4mJnyX8JcaPwV4SfWk31hykj6u8yiEMEzrj8/fYkj9ZhcJI
+        E6cR6WX5yPMSdhrvLou0hkafEQ==
+X-Google-Smtp-Source: ABdhPJzK5lBTS6eJJybZBFDFzV+Je4R27TUx1fw5wg2waDHRc1M28kVvD4DdIG4PzGMG6/kz0yy3DQ==
+X-Received: by 2002:a62:7f58:: with SMTP id a85mr1385838pfd.89.1592076548331;
+        Sat, 13 Jun 2020 12:29:08 -0700 (PDT)
+Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id a10sm8313289pgv.72.2020.06.13.12.29.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 13 Jun 2020 12:29:07 -0700 (PDT)
+Date:   Sat, 13 Jun 2020 12:28:59 -0700
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     Andrea Mayer <andrea.mayer@uniroma2.it>
+Cc:     David Ahern <dsahern@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Shrijeet Mukherjee <shrijeet@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Donald Sharp <sharpd@cumulusnetworks.com>,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        Dinesh Dutt <didutt@gmail.com>,
+        Stefano Salsano <stefano.salsano@uniroma2.it>,
+        Paolo Lungaroni <paolo.lungaroni@cnit.it>,
+        Ahmed Abdelsalam <ahabdels@gmail.com>
+Subject: Re: [RFC,net-next, 2/5] vrf: track associations between VRF devices
+ and tables
+Message-ID: <20200613122859.4f5e2761@hermes.lan>
+In-Reply-To: <20200612164937.5468-3-andrea.mayer@uniroma2.it>
+References: <20200612164937.5468-1-andrea.mayer@uniroma2.it>
+        <20200612164937.5468-3-andrea.mayer@uniroma2.it>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday, June 12, 2020 2:05:01 PM CEST Rafael J. Wysocki wrote:
-> On Fri, Jun 12, 2020 at 2:12 AM Kaneda, Erik <erik.kaneda@intel.com> wrote:
-> >
-> >
-> >
-> > > -----Original Message-----
-> > > From: Rafael J. Wysocki <rjw@rjwysocki.net>
-> > > Sent: Wednesday, June 10, 2020 5:22 AM
-> > > To: Williams, Dan J <dan.j.williams@intel.com>
-> > > Cc: Kaneda, Erik <erik.kaneda@intel.com>; Wysocki, Rafael J
-> > > <rafael.j.wysocki@intel.com>; Len Brown <lenb@kernel.org>; Borislav
-> > > Petkov <bp@alien8.de>; Weiny, Ira <ira.weiny@intel.com>; James Morse
-> > > <james.morse@arm.com>; Myron Stowe <myron.stowe@redhat.com>;
-> > > Andy Shevchenko <andriy.shevchenko@linux.intel.com>; linux-
-> > > kernel@vger.kernel.org; linux-acpi@vger.kernel.org; linux-
-> > > nvdimm@lists.01.org; Moore, Robert <robert.moore@intel.com>
-> > > Subject: [RFT][PATCH 2/3] ACPICA: Remove unused memory mappings on
-> > > interpreter exit
-> > >
-> > > From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-> > >
-> > > For transient memory opregions that are created dynamically under
-> > > the namespace and interpreter mutexes and go away quickly, there
-> > > still is the problem that removing their memory mappings may take
-> > > significant time and so doing that while holding the mutexes should
-> > > be avoided.
-> > >
-> > > For example, unmapping a chunk of memory associated with a memory
-> > > opregion in Linux involves running synchronize_rcu_expedited()
-> > > which really should not be done with the namespace mutex held.
-> > >
-> > > To address that problem, notice that the unused memory mappings left
-> > > behind by the "dynamic" opregions that went away need not be unmapped
-> > > right away when the opregion is deactivated.  Instead, they may be
-> > > unmapped when exiting the interpreter, after the namespace and
-> > > interpreter mutexes have been dropped (there's one more place dealing
-> > > with opregions in the debug code that can be treated analogously).
-> > >
-> > > Accordingly, change acpi_ev_system_memory_region_setup() to put
-> > > the unused mappings into a global list instead of unmapping them
-> > > right away and add acpi_ev_system_release_memory_mappings() to
-> > > be called when leaving the interpreter in order to unmap the
-> > > unused memory mappings in the global list (which is protected
-> > > by the namespace mutex).
-> > >
-> > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > ---
-> > >  drivers/acpi/acpica/acevents.h |  2 ++
-> > >  drivers/acpi/acpica/dbtest.c   |  3 ++
-> > >  drivers/acpi/acpica/evrgnini.c | 51
-> > > ++++++++++++++++++++++++++++++++--
-> > >  drivers/acpi/acpica/exutils.c  |  3 ++
-> > >  drivers/acpi/acpica/utxface.c  | 23 +++++++++++++++
-> > >  include/acpi/acpixf.h          |  1 +
-> > >  6 files changed, 80 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/drivers/acpi/acpica/acevents.h b/drivers/acpi/acpica/acevents.h
-> > > index 79f292687bd6..463eb9124765 100644
-> > > --- a/drivers/acpi/acpica/acevents.h
-> > > +++ b/drivers/acpi/acpica/acevents.h
-> > > @@ -197,6 +197,8 @@ acpi_ev_execute_reg_method(union
-> > > acpi_operand_object *region_obj, u32 function);
-> > >  /*
-> > >   * evregini - Region initialization and setup
-> > >   */
-> > > +void acpi_ev_system_release_memory_mappings(void);
-> > > +
-> > >  acpi_status
-> > >  acpi_ev_system_memory_region_setup(acpi_handle handle,
-> > >                                  u32 function,
-> > > diff --git a/drivers/acpi/acpica/dbtest.c b/drivers/acpi/acpica/dbtest.c
-> > > index 6db44a5ac786..7dac6dae5c48 100644
-> > > --- a/drivers/acpi/acpica/dbtest.c
-> > > +++ b/drivers/acpi/acpica/dbtest.c
-> > > @@ -8,6 +8,7 @@
-> > >  #include <acpi/acpi.h>
-> > >  #include "accommon.h"
-> > >  #include "acdebug.h"
-> > > +#include "acevents.h"
-> > >  #include "acnamesp.h"
-> > >  #include "acpredef.h"
-> > >  #include "acinterp.h"
-> > > @@ -768,6 +769,8 @@ acpi_db_test_field_unit_type(union
-> > > acpi_operand_object *obj_desc)
-> > >               acpi_ut_release_mutex(ACPI_MTX_NAMESPACE);
-> > >               acpi_ut_release_mutex(ACPI_MTX_INTERPRETER);
-> > >
-> > > +             acpi_ev_system_release_memory_mappings();
-> > > +
-> > >               bit_length = obj_desc->common_field.bit_length;
-> > >               byte_length =
-> > > ACPI_ROUND_BITS_UP_TO_BYTES(bit_length);
-> > >
-> > > diff --git a/drivers/acpi/acpica/evrgnini.c b/drivers/acpi/acpica/evrgnini.c
-> > > index 48a5e6eaf9b9..946c4eef054d 100644
-> > > --- a/drivers/acpi/acpica/evrgnini.c
-> > > +++ b/drivers/acpi/acpica/evrgnini.c
-> > > @@ -16,6 +16,52 @@
-> > >  #define _COMPONENT          ACPI_EVENTS
-> > >  ACPI_MODULE_NAME("evrgnini")
-> > >
-> > > +#ifdef ACPI_OS_MAP_MEMORY_FAST_PATH
-> > > +static struct acpi_mem_mapping *unused_memory_mappings;
-> > > +
-> > > +/*********************************************************
-> > > **********************
-> > > + *
-> > > + * FUNCTION:    acpi_ev_system_release_memory_mappings
-> > > + *
-> > > + * PARAMETERS:  None
-> > > + *
-> > > + * RETURN:      None
-> > > + *
-> > > + * DESCRIPTION: Release all of the unused memory mappings in the queue
-> > > + *              under the interpreter mutex.
-> > > + *
-> > > +
-> > > **********************************************************
-> > > ********************/
-> > > +void acpi_ev_system_release_memory_mappings(void)
-> > > +{
-> > > +     struct acpi_mem_mapping *mapping;
-> > > +
-> > > +
-> > >       ACPI_FUNCTION_TRACE(acpi_ev_system_release_memory_mappin
-> > > gs);
-> > > +
-> > > +     acpi_ut_acquire_mutex(ACPI_MTX_NAMESPACE);
-> > > +
-> > > +     while (unused_memory_mappings) {
-> > > +             mapping = unused_memory_mappings;
-> > > +             unused_memory_mappings = mapping->next;
-> > > +
-> > > +             acpi_ut_release_mutex(ACPI_MTX_NAMESPACE);
-> > > +
-> > > +             acpi_os_unmap_memory(mapping->logical_address,
-> > > mapping->length);
-> >
-> > acpi_os_unmap_memory calls synchronize_rcu_expedited(). I'm no RCU expert but the
-> > definition of this function states:
-> >
-> > * Although this is a great improvement over previous expedited
-> >  * implementations, it is still unfriendly to real-time workloads, so is
-> >  * thus not recommended for any sort of common-case code.  In fact, if
-> >  * you are using synchronize_rcu_expedited() in a loop, please restructure
-> >  * your code to batch your updates, and then use a single synchronize_rcu()
-> >  * instead.
-> 
-> If this really ends up being a loop, the code without this patch will
-> also call synchronize_rcu_expedited() in a loop, but indirectly and
-> under the namespace and interpreter mutexes.
-> 
-> While I agree that this is still somewhat suboptimal, improving this
-> would require more changes in the OSL code.
+On Fri, 12 Jun 2020 18:49:34 +0200
+Andrea Mayer <andrea.mayer@uniroma2.it> wrote:
 
-After writing the above I started to think about the extra changes needed
-to improve that and I realized that it would take making the OS layer
-support deferred memory unmapping, such that the unused mappings would be
-queued up for later removal and then released in one go at a suitable time.
+> +	/* shared_tables:
+> +	 * count how many distinct tables does not comply with the
+> +	 * strict mode requirement.
+> +	 * shared_table value must be 0 in order to switch to strict mode.
+> +	 *
+> +	 * example of evolution of shared_table:
+> +	 *                                                        | time
+> +	 * add  vrf0 --> table 100        shared_tables = 0       | t0
+> +	 * add  vrf1 --> table 101        shared_tables = 0       | t1
+> +	 * add  vrf2 --> table 100        shared_tables = 1       | t2
+> +	 * add  vrf3 --> table 100        shared_tables = 1       | t3
+> +	 * add  vrf4 --> table 101        shared_tables = 2       v t4
+> +	 *
+> +	 * shared_tables is a "step function" (or "staircase function")
+> +	 * and is increased by one when the second vrf is associated to a table
+> +	 *
+> +	 * at t2, vrf0 and vrf2 are bound to table 100: shared_table = 1.
+> +	 *
+> +	 * at t3, another dev (vrf3) is bound to the same table 100 but the
+> +	 * shared_table counters is still 1.
+> +	 * This means that no matter how many new vrfs will register on the
+> +	 * table 100, the shared_table will not increase (considering only
+> +	 * table 100).
+> +	 *
+> +	 * at t4, vrf4 is bound to table 101, and shared_table = 2.
+> +	 *
+> +	 * Looking at the value of shared_tables we can immediately know if
+> +	 * the strict_mode can or cannot be enforced. Indeed, strict_mode
+> +	 * can be enforced iff shared_table = 0.
+> +	 *
+> +	 * Conversely, shared_table is decreased when a vrf is de-associated
+> +	 * from a table with exactly two associated vrfs.
+> +	 */
+> +	int shared_tables;
 
-However, that would be sufficient to address the issue addressed by this
-series, because the deferred unmapping could be used in
-acpi_ev_system_memory_region_setup() right away and that would be a much
-simpler change than the one made in patch [1/3].
-
-So I went ahead and implemented this and the result is there in the
-acpica-osl branch in my tree, but it hasn't been built yet, so caveat
-emptor.  Anyway, please feel free to have a look at it still.
-
-Cheers!
-
-
-
+Should this be unsigned?
+Should it be a fixed size?
