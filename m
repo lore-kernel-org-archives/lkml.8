@@ -2,93 +2,184 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBF1C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 00:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1143BC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 00:41:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF37F20739
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 00:29:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VPt/wr9b"
+	by mail.kernel.org (Postfix) with ESMTP id D88F6206F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 00:41:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbgFMA37 (ORCPT
+        id S1726432AbgFMAlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 20:29:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34822 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726377AbgFMA35 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 20:29:57 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF740C03E96F;
-        Fri, 12 Jun 2020 17:29:55 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id l12so11743239ejn.10;
-        Fri, 12 Jun 2020 17:29:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HombnuJvbLxDTQ6sqGxdyIkWc6G1lg94qCABceA1Ino=;
-        b=VPt/wr9bW7x5xMg3i821agO69xeL0wlCpPbQ465okWfllTGeLkNhlt+/90pxMfhr3d
-         myUX3fSJB3N2nWypqya2H9kJF4EKbVOdQeO2ye2hYmot//7HbzbrEwdJLxPBwhY/4bgm
-         2CRpCCR44bMqXlPZjvMiaK+P5nNfS+UPfTYnKEU0MhiOiKYWMVwq8TVXIIn1R8IbrPJg
-         PNj7CnoGOwV4K5W5FPJ8ilQtQeIM+tXC123TWUTSAQhrzfOwprKdHYSXL5MIrrAWcVk0
-         cJhrOWspDDeQ55dgvfFY7Y4fGSWc3TpLCzanOZXzs2/gM+FsP69b9WkPOJ34KJ5P59SP
-         Whuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HombnuJvbLxDTQ6sqGxdyIkWc6G1lg94qCABceA1Ino=;
-        b=h5rxoS5x2mHkRcMWVaPReNzUgPgCTvRpHCFPoXQEaNHLhnWot6cuNg3x27C9VW7k1r
-         68iK+/FUb0b6Smx3bGYZU25EYHqsnHXo/67Li+O/gm518SWvjYCtHLWq+9qB2Wl2555P
-         L/RMSPK3JmWHchEVN9Zw1FiYZ+gFo9jV2M2AJlOO4o7HsHIYBKSyfmI/CWGKbpe4wfk5
-         U7vv5ONQdDzYvryUTCzoyxFVlmBLCwRP2MhRISdxvDenSj5yZ703DvFTtB68H40cn+h/
-         8m7qSrRG0U4Scgv2rJY+cnsxPh43RYhlk1FHJtJXTjdVN3tK9yVgME1/txRGOVI0jnhT
-         U4rQ==
-X-Gm-Message-State: AOAM531ZJe+0yGh9suABbuXuB8xoW3C1S/ZoF8Ry9IdTEw5D1cimKnJ7
-        Lt4ynumeMM39Ax6DAbrMWkCWHHLSKqNoGmWfnQEMPhtd
-X-Google-Smtp-Source: ABdhPJx7X94KgqodtNOiXEGPBOHI5pEiVB0IuVvR2Ko2Hgf423ti+OcH9A+8DdYryY37rpvpqfWMLOMr+EuMabIZieg=
-X-Received: by 2002:a17:906:6403:: with SMTP id d3mr15322186ejm.386.1592008194697;
- Fri, 12 Jun 2020 17:29:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200611091139.8525-1-joro@8bytes.org>
-In-Reply-To: <20200611091139.8525-1-joro@8bytes.org>
-From:   Matt Turner <mattst88@gmail.com>
-Date:   Fri, 12 Jun 2020 17:29:42 -0700
-Message-ID: <CAEdQ38G_uCPiZ5voj5QP5H0sPUZjASWLLRGQ=VYaWgo+8FekPw@mail.gmail.com>
-Subject: Re: [PATCH] alpha: Fix build around srm_sysrq_reboot_op
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-alpha <linux-alpha@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 12 Jun 2020 20:41:49 -0400
+Received: from mga12.intel.com ([192.55.52.136]:1251 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726377AbgFMAls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Jun 2020 20:41:48 -0400
+IronPort-SDR: Fef97bZtOzL7O6ZL+NivrKiTluysoXtFYnB97onx0Y1Tq94lgwCTWnYttDYuDjKogV8a3xBRJ/
+ YMYZszy7BQcw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2020 17:41:48 -0700
+IronPort-SDR: WoMIso8V3FWKsyb0lsLDQ19+StbXXOz/wr1ZYkSEcwHPO/sUHfIYWLyoBTkUnHZP/SoPKwj3QZ
+ JJzYB65jcoVw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,505,1583222400"; 
+   d="scan'208";a="261011182"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by orsmga007.jf.intel.com with ESMTP; 12 Jun 2020 17:41:47 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     "Thomas Gleixner" <tglx@linutronix.de>,
+        "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
+        "H Peter Anvin" <hpa@zytor.com>,
+        "David Woodhouse" <dwmw2@infradead.org>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        "Frederic Barrat" <fbarrat@linux.ibm.com>,
+        "Andrew Donnellan" <ajd@linux.ibm.com>,
+        "Felix Kuehling" <Felix.Kuehling@amd.com>,
+        "Joerg Roedel" <joro@8bytes.org>,
+        "Dave Hansen" <dave.hansen@intel.com>,
+        "Tony Luck" <tony.luck@intel.com>,
+        "Ashok Raj" <ashok.raj@intel.com>,
+        "Jacob Jun Pan" <jacob.jun.pan@intel.com>,
+        "Dave Jiang" <dave.jiang@intel.com>,
+        "Yu-cheng Yu" <yu-cheng.yu@intel.com>,
+        "Sohil Mehta" <sohil.mehta@intel.com>,
+        "Ravi V Shankar" <ravi.v.shankar@intel.com>
+Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
+        "x86" <x86@kernel.org>, iommu@lists.linux-foundation.org,
+        "amd-gfx" <amd-gfx@lists.freedesktop.org>,
+        "linuxppc-dev" <linuxppc-dev@lists.ozlabs.org>,
+        Fenghua Yu <fenghua.yu@intel.com>
+Subject: [PATCH v2 00/12] x86: tag application address space for devices
+Date:   Fri, 12 Jun 2020 17:41:21 -0700
+Message-Id: <1592008893-9388-1-git-send-email-fenghua.yu@intel.com>
+X-Mailer: git-send-email 2.5.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 2:14 AM Joerg Roedel <joro@8bytes.org> wrote:
->
-> From: Joerg Roedel <jroedel@suse.de>
->
-> The patch introducing the struct was probably never compile tested,
-> because it sets a handler with a wrong function signature. Wrap the
-> handler into a functions with the correct signature to fix the build.
->
-> Fixes: 0f1c9688a194 ("tty/sysrq: alpha: export and use __sysrq_get_key_op()")
-> Cc: Emil Velikov <emil.l.velikov@gmail.com>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> ---
+Typical hardware devices require a driver stack to translate application
+buffers to hardware addresses, and a kernel-user transition to notify the
+hardware of new work. What if both the translation and transition overhead
+could be eliminated? This is what Shared Virtual Address (SVA) and ENQCMD
+enabled hardware like Data Streaming Accelerator (DSA) aims to achieve.
+Applications map portals in their local-address-space and directly submit
+work to them using a new instruction.
 
-Thanks, applied.
+This series enables ENQCMD and associated management of the new MSR
+(MSR_IA32_PASID). This new MSR allows an application address space to be
+associated with what the PCIe spec calls a Process Address Space ID (PASID).
+This PASID tag is carried along with all requests between applications and
+devices and allows devices to interact with the process address space.
+
+SVA and ENQCMD enabled device drivers need this series. The phase 2 DSA
+patches with SVA and ENQCMD support was released on the top of this series:
+https://lore.kernel.org/patchwork/cover/1244060/
+
+This series only provides simple and basic support for ENQCMD and the MSR:
+1. Clean up type definitions (patch 1-3). These patches can be in a
+   separate series.
+   - Define "pasid" as "unsigned int" consistently (patch 1 and 2).
+   - Define "flags" as "unsigned int"
+2. Explain different various technical terms used in the series (patch 4).
+3. Enumerate support for ENQCMD in the processor (patch 5).
+4. Handle FPU PASID state and the MSR during context switch (patches 6-7).
+5. Define "pasid" in mm_struct (patch 8).
+5. Clear PASID state for new mm and forked and cloned thread (patch 9-10).
+6. Allocate and free PASID for a process (patch 11).
+7. Fix up the PASID MSR in #GP handler when one thread in a process
+   executes ENQCMD for the first time (patches 12).
+
+This patch series and the DSA phase 2 series are in
+https://github.com/intel/idxd-driver/tree/idxd-stage2
+
+References:
+1. Detailed information on the ENQCMD/ENQCMDS instructions and the
+IA32_PASID MSR can be found in Intel Architecture Instruction Set
+Extensions and Future Features Programming Reference:
+https://software.intel.com/sites/default/files/managed/c5/15/architecture-instruction-set-extensions-programming-reference.pdf
+
+2. Detailed information on DSA can be found in DSA specification:
+https://software.intel.com/en-us/download/intel-data-streaming-accelerator-preliminary-architecture-specification
+
+Chang log:
+v2:
+- Add patches 1-3 to define "pasid" and "flags" as "unsigned int"
+  consistently (Thomas)
+  (these 3 patches could be in a separate patch set)
+- Add patch 8 to move "pasid" to generic mm_struct (Christoph).
+  Jean-Philippe Brucker released a virtually same patch. Upstream only
+  needs one of the two.
+- Add patch 9 to initialize PASID in a new mm.
+- Plus other changes described in each patch (Thomas)
+
+Ashok Raj (1):
+  docs: x86: Add documentation for SVA (Shared Virtual Addressing)
+
+Fenghua Yu (10):
+  iommu: Change type of pasid to unsigned int
+  ocxl: Change type of pasid to unsigned int
+  iommu/vt-d: Change flags type to unsigned int in binding mm
+  x86/cpufeatures: Enumerate ENQCMD and ENQCMDS instructions
+  x86/msr-index: Define IA32_PASID MSR
+  mm: Define pasid in mm
+  fork: Clear PASID for new mm
+  x86/process: Clear PASID state for a newly forked/cloned thread
+  x86/mmu: Allocate/free PASID
+  x86/traps: Fix up invalid PASID
+
+Yu-cheng Yu (1):
+  x86/fpu/xstate: Add supervisor PASID state for ENQCMD feature
+
+ Documentation/x86/index.rst            |   1 +
+ Documentation/x86/sva.rst              | 287 +++++++++++++++++++++++++
+ arch/x86/include/asm/cpufeatures.h     |   1 +
+ arch/x86/include/asm/fpu/types.h       |  10 +
+ arch/x86/include/asm/fpu/xstate.h      |   2 +-
+ arch/x86/include/asm/iommu.h           |   3 +
+ arch/x86/include/asm/mmu_context.h     |  14 ++
+ arch/x86/include/asm/msr-index.h       |   3 +
+ arch/x86/kernel/cpu/cpuid-deps.c       |   1 +
+ arch/x86/kernel/fpu/xstate.c           |   4 +
+ arch/x86/kernel/process.c              |  18 ++
+ arch/x86/kernel/traps.c                |  23 ++
+ drivers/gpu/drm/amd/amdkfd/kfd_iommu.c |   5 +-
+ drivers/gpu/drm/amd/amdkfd/kfd_priv.h  |   2 +-
+ drivers/iommu/amd/amd_iommu.h          |  13 +-
+ drivers/iommu/amd/amd_iommu_types.h    |  12 +-
+ drivers/iommu/amd/init.c               |   4 +-
+ drivers/iommu/amd/iommu.c              |  41 ++--
+ drivers/iommu/amd/iommu_v2.c           |  22 +-
+ drivers/iommu/intel/debugfs.c          |   2 +-
+ drivers/iommu/intel/dmar.c             |  13 +-
+ drivers/iommu/intel/intel-pasid.h      |  21 +-
+ drivers/iommu/intel/iommu.c            |   4 +-
+ drivers/iommu/intel/pasid.c            |  36 ++--
+ drivers/iommu/intel/svm.c              | 159 ++++++++++++--
+ drivers/iommu/iommu.c                  |   2 +-
+ drivers/misc/ocxl/config.c             |   3 +-
+ drivers/misc/ocxl/link.c               |   6 +-
+ drivers/misc/ocxl/ocxl_internal.h      |   6 +-
+ drivers/misc/ocxl/pasid.c              |   2 +-
+ drivers/misc/ocxl/trace.h              |  20 +-
+ drivers/misc/uacce/uacce.c             |   2 +-
+ include/linux/amd-iommu.h              |   9 +-
+ include/linux/intel-iommu.h            |  20 +-
+ include/linux/intel-svm.h              |   2 +-
+ include/linux/iommu.h                  |   8 +-
+ include/linux/mm_types.h               |   6 +
+ include/linux/uacce.h                  |   2 +-
+ include/misc/ocxl.h                    |   6 +-
+ kernel/fork.c                          |   8 +
+ 40 files changed, 656 insertions(+), 147 deletions(-)
+ create mode 100644 Documentation/x86/sva.rst
+
+-- 
+2.19.1
+
