@@ -2,121 +2,68 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB76BC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 19:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98221C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 19:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A94E20789
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 19:49:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 750162078A
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 19:50:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592077809;
+	bh=TLD8xFmWTGGIfcfYoHvl6FbeT6NluqOOwhP2GkGDUIQ=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=lG6RvE0D6QLmruSu+d5c3zI+Ck4BccyCeqk7aiW+VIcTiI6/7Sr6Iqxxn4r7IQR2c
+	 97KS8efbLbxAtyRwSsMPcqqFM8QZI7KbM9tBK3HverBxuK07YAuIepPmDYFdIqJuQR
+	 PR8NbLpk2rvh3jPFxfffdF0WUQEahdHaHZxrLc68=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726588AbgFMTtR (ORCPT
+        id S1726649AbgFMTuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 15:49:17 -0400
-Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:25967 "EHLO
-        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726102AbgFMTtN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 15:49:13 -0400
-Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
- EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
- 15.0.1156.6; Sat, 13 Jun 2020 12:49:07 -0700
-Received: from localhost (unknown [10.200.193.92])
-        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 3DD1DB13F0;
-        Sat, 13 Jun 2020 15:49:13 -0400 (EDT)
-Date:   Sat, 13 Jun 2020 12:49:12 -0700
-From:   Matt Helsley <mhelsley@vmware.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Julien Thierry <jthierry@redhat.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Subject: Re: [RFC][PATCH v4 18/32] objtool: mcount: Move nop_mcount()
-Message-ID: <20200613194912.GB25598@rlwimi.vmware.com>
-Mail-Followup-To: Matt Helsley <mhelsley@vmware.com>,
-        Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Julien Thierry <jthierry@redhat.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-References: <cover.1591125127.git.mhelsley@vmware.com>
- <7109ceb239a88c2901eeb7f52c29f69cdb413cd3.1591125127.git.mhelsley@vmware.com>
- <20200612132656.GQ2531@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200612132656.GQ2531@hirez.programming.kicks-ass.net>
-Received-SPF: None (EX13-EDG-OU-002.vmware.com: mhelsley@vmware.com does not
- designate permitted sender hosts)
+        Sat, 13 Jun 2020 15:50:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59488 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726323AbgFMTuE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jun 2020 15:50:04 -0400
+Subject: Re: [GIT PULL] 9p update for 5.8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592077803;
+        bh=TLD8xFmWTGGIfcfYoHvl6FbeT6NluqOOwhP2GkGDUIQ=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=seZb+iCiR5/N2sRCWJ8UAZvHCKPgdvGPhAT1F1wdVlxRQ5HHJO/2cXNaICgIE0+gD
+         /sX2QjVwsFE9N6H+iJtxVYBRZhPr3BYAXdU+xmry1rMSvjeJFBojRH0v0J5zgXnf2x
+         TE+x75HKX2cZsqAsb2nvCs/KI3kXcKkZbtUQlGN8=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200612221748.GA5666@nautica>
+References: <20200612221748.GA5666@nautica>
+X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200612221748.GA5666@nautica>
+X-PR-Tracked-Remote: https://github.com/martinetd/linux tags/9p-for-5.8
+X-PR-Tracked-Commit-Id: 36f9967531da27ff8cc6f005d93760b578baffb9
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 61f3e825bec7364790cb7d193a9a156c46119cff
+Message-Id: <159207780367.22916.12178095841307999537.pr-tracker-bot@kernel.org>
+Date:   Sat, 13 Jun 2020 19:50:03 +0000
+To:     Dominique Martinet <asmadeus@codewreck.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 03:26:56PM +0200, Peter Zijlstra wrote:
-> On Tue, Jun 02, 2020 at 12:50:11PM -0700, Matt Helsley wrote:
-> > +static int nop_mcount(struct section * const rels,
-> > +		      const char *const txtname)
-> > +{
-> > +	struct reloc *reloc;
-> > +	struct section *txts = find_section_by_index(lf, rels->sh.sh_info);
-> > +	unsigned mcountsym = 0;
-> > +	int once = 0;
-> > +
-> > +	list_for_each_entry(reloc, &rels->reloc_list, list) {
-> > +		int ret = -1;
-> > +
-> > +		if (!mcountsym)
-> > +			mcountsym = get_mcountsym(reloc);
-> > +
-> > +		if (mcountsym == GELF_R_INFO(reloc->sym->idx, reloc->type) && !is_fake_mcount(reloc)) {
-> 
-> This makes no sense to me; why not have mcountsym be a 'struct symbol
-> *' and have get_mcountsym() return one of those.
-> 
-> 	if (reloc->sym == mcountsym && ... )
-> 
-> is much nicer, no?
+The pull request you sent on Sat, 13 Jun 2020 00:17:48 +0200:
 
-Indeed! I'll change it from returning an unsigned long to struct symbol * before I
-move it out of the wrapper code.
+> https://github.com/martinetd/linux tags/9p-for-5.8
 
-> 
-> > +			if (make_nop) {
-> > +				ret = make_nop(txts, reloc->offset);
-> > +				if (ret < 0)
-> > +					return -1;
-> > +			}
-> > +			if (warn_on_notrace_sect && !once) {
-> > +				printf("Section %s has mcount callers being ignored\n",
-> > +				       txtname);
-> > +				once = 1;
-> > +				/* just warn? */
-> > +				if (!make_nop)
-> > +					return 0;
-> > +			}
-> > +		}
-> > +
-> > +		/*
-> > +		 * If we successfully removed the mcount, mark the relocation
-> > +		 * as a nop (don't do anything with it).
-> > +		 */
-> > +		if (!ret) {
-> > +			reloc->type = rel_type_nop;
-> > +			rels->changed = true;
-> 
-> I have an elf_write_rela(), I'll make sure to Cc you.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/61f3e825bec7364790cb7d193a9a156c46119cff
 
-Thanks! I might also make use of your patch to rewrite instructions. We
-need a way to turn certain prologue instructions into nops. Would it be
-more widely useful to move that functionality out of mcount and into
-the objtool ELF/per-arch code or do you think it's better inside the
-mcount subcommand code?
+Thank you!
 
-Cheers,
-     -Matt
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
