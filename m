@@ -7,55 +7,65 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74340C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 08:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3462CC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 08:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CD132081A
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 08:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 110B52081A
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 08:43:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592037745;
-	bh=xCW5zEEUc0j8JdLZK9w8g52it34RuX3NHf5pgk9G+Q8=;
+	s=default; t=1592037809;
+	bh=SyRgaHUOm/RP8zZ90+MyAGaRN4cSsWrzzNGHyfuBnCk=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=0yOn1UAy5GgXk+SwW8ZiSZtDwn/bB0xofpgO1es99ctiJmr9Y70WBAkCThJog0r18
-	 YRjap6wtkZX5CqoXUvyPFya5o7BQjAdhw1TXZDT41IbhLJqmp8Fq5AqTKLhja3FVXf
-	 Siv/ffUwKkpRxSpDMx3tB0DVkPE7Vf8TVePsUWxw=
+	b=Zgb3jPTIJSZaWBptIMKbLPs7oFmPSzh26DZuanwrHwKVpKnqkZgqujQ+trMHmJPXO
+	 0VnHnNYh6MXsy1rATwUdCauLVQG3ma8Fbufq513mhE/j7ohUNKIlbWr5KMzgckGIKE
+	 7J1qa7dARk+fXdYLDEKVuIROCdyb8mnDuO1qaDtY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbgFMImX (ORCPT
+        id S1726449AbgFMIn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 04:42:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53022 "EHLO mail.kernel.org"
+        Sat, 13 Jun 2020 04:43:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725783AbgFMImW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 04:42:22 -0400
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+        id S1725783AbgFMIn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jun 2020 04:43:26 -0400
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E54F8206D7;
-        Sat, 13 Jun 2020 08:42:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7507F20836;
+        Sat, 13 Jun 2020 08:43:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592037741;
-        bh=xCW5zEEUc0j8JdLZK9w8g52it34RuX3NHf5pgk9G+Q8=;
+        s=default; t=1592037805;
+        bh=SyRgaHUOm/RP8zZ90+MyAGaRN4cSsWrzzNGHyfuBnCk=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Iwfdc9+ZI0pFLKMFbArS+mmOOkBl1ZLAWFJpMtXB4coT8Weu+3DzBIZA9hHssCUQK
-         87L8LfuWJYOo9qkTMuTYh+aqRJHSVF0s1xU/HYyq1LMKqWBAwddQ26eJAvgGazoGq+
-         oPG0+TZWSTMtNg6qCkRl0NocHNo6y2qBHTtoT0WY=
-Received: by mail-lj1-f174.google.com with SMTP id 9so13665314ljv.5;
-        Sat, 13 Jun 2020 01:42:20 -0700 (PDT)
-X-Gm-Message-State: AOAM531FXcN8P+afd26iHaCcw4TVMgv43fJ3TiMNJAap1wRwYKa9zTMg
-        uwJbMg7CqySCnyi6ysDKElHdkMf/JRhiQLPP90Q=
-X-Google-Smtp-Source: ABdhPJy02XUNfPeMM6pACPbGXMYswnZVke4nUOam3qQ1p+P0sRElAvHF5XOt2Jc5DD+VGNKuP9OiS7sgLWH+7bFPoHs=
-X-Received: by 2002:a2e:7105:: with SMTP id m5mr7955290ljc.79.1592037739090;
- Sat, 13 Jun 2020 01:42:19 -0700 (PDT)
+        b=BgrzEr0T3JoHmKZPf5JHHJjvygSMZGF5NKn+13GG7QHtIS/IBZ7akYkLuc0TbufY0
+         IdI3tEBicGVpmTrhCjhPNSbLdEFx6l03HXU1AMn8ObSGPs2e5kB+GmV2Rt/rdkNQLA
+         gC00pV5XYzyrAQW5/CPir6q3bWaJ154iM+O+UJ14=
+Received: by mail-lj1-f173.google.com with SMTP id z9so13654752ljh.13;
+        Sat, 13 Jun 2020 01:43:25 -0700 (PDT)
+X-Gm-Message-State: AOAM530UMrNSLF4v9bMAv1GquAIAsJZVHEBg2VJ+ce9ilPP2+24WGcJW
+        9BJyo7cAOyU92QRBAJcL7HThNO6/3AQ43YFnCPM=
+X-Google-Smtp-Source: ABdhPJwZ1ylOrBsd6XVZmYSQ3sLMGYqoTKujz2SwyQaUfONmAEP2kaw8s4sWs89ZwT6ZjZ3AWnilqqgnG/azc96C0bc=
+X-Received: by 2002:a2e:2a42:: with SMTP id q63mr9000358ljq.265.1592037803689;
+ Sat, 13 Jun 2020 01:43:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200610153935.13794-1-tklauser@distanz.ch>
-In-Reply-To: <20200610153935.13794-1-tklauser@distanz.ch>
+References: <20200611095804.22026-1-f.suligoi@asem.it>
+In-Reply-To: <20200611095804.22026-1-f.suligoi@asem.it>
 From:   Guo Ren <guoren@kernel.org>
-Date:   Sat, 13 Jun 2020 16:42:07 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTRGVQcn5Hu+kaHfzhEpyXuMkQQYyfHkuxREYci4QJ0SoQ@mail.gmail.com>
-Message-ID: <CAJF2gTRGVQcn5Hu+kaHfzhEpyXuMkQQYyfHkuxREYci4QJ0SoQ@mail.gmail.com>
-Subject: Re: [PATCH] csky: remove unusued thread_saved_pc and *_segments functions/macros
-To:     Tobias Klauser <tklauser@distanz.ch>
-Cc:     Mao Han <han_mao@c-sky.com>, linux-csky@vger.kernel.org,
+Date:   Sat, 13 Jun 2020 16:43:11 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTTojGRnshstFwqu4xM_txeBOY=uFiWPTpXZPWv2uS6QqQ@mail.gmail.com>
+Message-ID: <CAJF2gTTojGRnshstFwqu4xM_txeBOY=uFiWPTpXZPWv2uS6QqQ@mail.gmail.com>
+Subject: Re: [PATCH] doc: devicetree: bindings: fix spelling mistake
+To:     Flavio Suligoi <f.suligoi@asem.it>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-csky@vger.kernel.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -65,63 +75,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Acked-by: Guo Ren <guoren@kernel.org>
 
-On Wed, Jun 10, 2020 at 11:45 PM Tobias Klauser <tklauser@distanz.ch> wrote:
+On Thu, Jun 11, 2020 at 5:58 PM Flavio Suligoi <f.suligoi@asem.it> wrote:
 >
-> These are used nowhere in the tree (except for some architectures which
-> define them for their own use) and were already removed for other
-> architectures in:
+> Fix typo: "triger" --> "trigger"
 >
-> commit 6474924e2b5d ("arch: remove unused macro/function thread_saved_pc()")
-> commit c17c02040bf0 ("arch: remove unused *_segments() macros/functions")
->
-> Remove them from arch/csky as well.
->
-> Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
+> Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
 > ---
->  arch/csky/include/asm/processor.h |  6 ------
->  arch/csky/kernel/process.c        | 10 ----------
->  2 files changed, 16 deletions(-)
+>  Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt | 2 +-
+>  .../devicetree/bindings/interrupt-controller/csky,mpintc.txt    | 2 +-
+>  Documentation/devicetree/bindings/timer/csky,mptimer.txt        | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
 >
-> diff --git a/arch/csky/include/asm/processor.h b/arch/csky/include/asm/processor.h
-> index 24442d8e86f9..4800f6563abb 100644
-> --- a/arch/csky/include/asm/processor.h
-> +++ b/arch/csky/include/asm/processor.h
-> @@ -82,12 +82,6 @@ static inline void release_thread(struct task_struct *dead_task)
+> diff --git a/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt b/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
+> index ba455589f869..e1c49b660d3a 100644
+> --- a/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
+> +++ b/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
+> @@ -12,7 +12,7 @@ Required properties for the top level node:
+>     Only the GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
+>  - #interrupt-cells : Specifies the number of cells needed to encode an
+>     interrupt. Should be 2. The first cell defines the interrupt number,
+> -   the second encodes the triger flags encoded as described in
+> +   the second encodes the trigger flags encoded as described in
+>     Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+>  - compatible:
+>    - "mediatek,mt7621-gpio" for Mediatek controllers
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
+> index e13405355166..e6bbcae4d07f 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
+> @@ -10,7 +10,7 @@ Interrupt number definition:
+>   16-31  : private  irq, and we use 16 as the co-processor timer.
+>   31-1024: common irq for soc ip.
 >
->  extern int kernel_thread(int (*fn)(void *), void *arg, unsigned long flags);
+> -Interrupt triger mode: (Defined in dt-bindings/interrupt-controller/irq.h)
+> +Interrupt trigger mode: (Defined in dt-bindings/interrupt-controller/irq.h)
+>   IRQ_TYPE_LEVEL_HIGH (default)
+>   IRQ_TYPE_LEVEL_LOW
+>   IRQ_TYPE_EDGE_RISING
+> diff --git a/Documentation/devicetree/bindings/timer/csky,mptimer.txt b/Documentation/devicetree/bindings/timer/csky,mptimer.txt
+> index 15cfec08fbb8..f5c7e99cf52b 100644
+> --- a/Documentation/devicetree/bindings/timer/csky,mptimer.txt
+> +++ b/Documentation/devicetree/bindings/timer/csky,mptimer.txt
+> @@ -8,7 +8,7 @@ regs is accessed by cpu co-processor 4 registers with mtcr/mfcr.
+>   - PTIM_CTLR "cr<0, 14>" Control reg to start reset timer.
+>   - PTIM_TSR  "cr<1, 14>" Interrupt cleanup status reg.
+>   - PTIM_CCVR "cr<3, 14>" Current counter value reg.
+> - - PTIM_LVR  "cr<6, 14>" Window value reg to triger next event.
+> + - PTIM_LVR  "cr<6, 14>" Window value reg to trigger next event.
 >
-> -#define copy_segments(tsk, mm)         do { } while (0)
-> -#define release_segments(mm)           do { } while (0)
-> -#define forget_segments()              do { } while (0)
-> -
-> -extern unsigned long thread_saved_pc(struct task_struct *tsk);
-> -
->  unsigned long get_wchan(struct task_struct *p);
->
->  #define KSTK_EIP(tsk)          (task_pt_regs(tsk)->pc)
-> diff --git a/arch/csky/kernel/process.c b/arch/csky/kernel/process.c
-> index 8b3fad062ab2..3da63cf0bfde 100644
-> --- a/arch/csky/kernel/process.c
-> +++ b/arch/csky/kernel/process.c
-> @@ -30,16 +30,6 @@ asmlinkage void ret_from_kernel_thread(void);
->   */
->  void flush_thread(void){}
->
-> -/*
-> - * Return saved PC from a blocked thread
-> - */
-> -unsigned long thread_saved_pc(struct task_struct *tsk)
-> -{
-> -       struct switch_stack *sw = (struct switch_stack *)tsk->thread.sp;
-> -
-> -       return sw->r15;
-> -}
-> -
->  int copy_thread_tls(unsigned long clone_flags,
->                 unsigned long usp,
->                 unsigned long kthread_arg,
+>  ==============================
+>  timer node bindings definition
 > --
-> 2.27.0
+> 2.17.1
 >
 
 
