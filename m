@@ -2,182 +2,122 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E34E8C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 03:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B201C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 04:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BADE32071A
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 03:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EA892071A
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 04:23:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n1owtPTK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbgFMDrs (ORCPT
+        id S1725857AbgFMEWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 23:47:48 -0400
-Received: from mga01.intel.com ([192.55.52.88]:17410 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726381AbgFMDrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 23:47:47 -0400
-IronPort-SDR: pbmUJD+N9ll7hTXaMz//RwFwiW7o5z7k8ynGY5hgXoJK9QffpfnBSlOQpCv4ezsiwBW32dsZ06
- YpezmaNp7EsQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2020 20:47:47 -0700
-IronPort-SDR: zK1OuGv2HXRvqHMN3cx1ncdKn29kGGGzymJ3x+pVf7vdkY8xDmGYrD42cMGKKZrQziZrrbsQEI
- qmAXhBOIPASA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,505,1583222400"; 
-   d="scan'208";a="275943497"
-Received: from lkp-server02.sh.intel.com (HELO de5642daf266) ([10.239.97.151])
-  by orsmga006.jf.intel.com with ESMTP; 12 Jun 2020 20:47:46 -0700
-Received: from kbuild by de5642daf266 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jjx8z-0000Cw-99; Sat, 13 Jun 2020 03:47:45 +0000
-Date:   Sat, 13 Jun 2020 11:47:41 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/entry] BUILD SUCCESS
- 0bf3924bfabd13ba21aa702344fc00b3b3263e5a
-Message-ID: <5ee44c5d.SUUL8DkbLfXO37It%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+        Sat, 13 Jun 2020 00:22:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41932 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725272AbgFMEWG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jun 2020 00:22:06 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CC82C03E96F
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 21:22:04 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id b5so4108134pgm.8
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 21:22:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=anOI65EuGWufQe95q4AY1YNBWRNaLqr1EwULyx7eqPc=;
+        b=n1owtPTKXLSYWZxpOAfJLYBTnLB49amE5hE4rZuOb3sNSj3Vtf9fJSnLkcorKmdM8e
+         1/WOfSp3udzaw7KbAmuaBZVnRtXTgdIJjnVwHpTveQphcOeiYFBboLV7OQ7q94XSrcZ2
+         SkPvn10qiyTOizb+NS5awrsoIME5Uw3o5oxwgDL007hfH9Voi25MxOm4w9hfy749uxZ5
+         9fV8ilJ5Rsd08uR1PWNXqcf9kxE+y2z/HuihWy1H00fq8vP7YB4mxKUyreThFOZcNegb
+         vxYNb/t3mFbAVtygQljAVLvx5E7Jsupe6f9UO0jaTLqU7HVjQRAbC/raMfoqyTG/Kslp
+         nzTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=anOI65EuGWufQe95q4AY1YNBWRNaLqr1EwULyx7eqPc=;
+        b=f7OCvMGOiOkHM2LvPZc0EzJ5sxtfdCdLIeCALgcf3pgAW3+Smhv0HepwyFtzy6J88e
+         hDKvp3waSgygXzKbOncF6I6frHuHBxYcjU/E8QLXCj6YBfrsXiII0VrE2myZtk84Syue
+         v8dxf9dj5xMkBLapxCobD/rr3QRrQQOTwPQvNLEuctd9/Gnm4X8doDjpUty8iGYIa7lf
+         7Rz3I0pLXM/mzECgdxbnP49tWg2Ub0ufLHZgUvCgEKvwy+PjmXjOY+FQ58Oxf9NOoVjp
+         V5/ludM9ScRmpYaM4q8UKu2Z+zV4MMqrfCGOtyqj2o0ZcosxVdLhHZUDGJfzs+EhK+oV
+         Mi0g==
+X-Gm-Message-State: AOAM530xelYFCf3O1k6M+X8cjGiak3xlBAAW6J8/3Ya5Gd7hJJuS5oOu
+        uToAUdYDqvckAO8HTgUhObJ+pVLiCmc=
+X-Google-Smtp-Source: ABdhPJzGMYCuY/za9R4qBuLeNIZHTPqJUnxWWu/ioBkOIdb8ujHo7WIYreHD+62yjKltYbY+atjfWg==
+X-Received: by 2002:a62:7705:: with SMTP id s5mr14024168pfc.325.1592022123264;
+        Fri, 12 Jun 2020 21:22:03 -0700 (PDT)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id w5sm7414719pfn.22.2020.06.12.21.22.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2020 21:22:02 -0700 (PDT)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        freedreno@lists.freedesktop.org
+Subject: [PATCH] drm/msm: Fix 0xfffflub in "Refactor address space initialization"
+Date:   Sat, 13 Jun 2020 04:21:59 +0000
+Message-Id: <20200613042159.109511-1-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/entry
-branch HEAD: 0bf3924bfabd13ba21aa702344fc00b3b3263e5a  x86/entry: Force rcu_irq_enter() when in idle task
+This week I started seeing GPU crashes on my DragonBoard 845c
+which I narrowed down to being caused by commit ccac7ce373c1
+("drm/msm: Refactor address space initialization").
 
-elapsed time: 481m
+Looking through the patch, Jordan and I couldn't find anything
+obviously wrong, so I ended up breaking that change up into a
+number of smaller logical steps so I could figure out which part
+was causing the trouble.
 
-configs tested: 115
-configs skipped: 12
+Ends up, visually counting 'f's is hard, esp across a number
+of lines:
+  0xfffffff != 0xffffffff
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+This patch corrects the end value we pass in to
+msm_gem_address_space_create() in
+adreno_iommu_create_address_space() so that it matches the value
+used before the problematic patch landed.
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-xtensa                         virt_defconfig
-arm                          moxart_defconfig
-arm                              zx_defconfig
-sh                   sh7770_generic_defconfig
-arm                          imote2_defconfig
-sh                               alldefconfig
-arc                            hsdk_defconfig
-mips                         cobalt_defconfig
-mips                        bcm63xx_defconfig
-arm                        clps711x_defconfig
-sh                 kfr2r09-romimage_defconfig
-arc                 nsimosci_hs_smp_defconfig
-xtensa                          iss_defconfig
-riscv                          rv32_defconfig
-c6x                        evmc6474_defconfig
-s390                          debug_defconfig
-mips                            ar7_defconfig
-arm                        keystone_defconfig
-arm                        mvebu_v7_defconfig
-arm                         assabet_defconfig
-sh                          urquell_defconfig
-powerpc                    amigaone_defconfig
-microblaze                          defconfig
-arm                          lpd270_defconfig
-arm                           efm32_defconfig
-powerpc                     pq2fads_defconfig
-arm                          tango4_defconfig
-c6x                        evmc6472_defconfig
-arm                          ixp4xx_defconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-i386                 randconfig-a015-20200612
-i386                 randconfig-a011-20200612
-i386                 randconfig-a014-20200612
-i386                 randconfig-a016-20200612
-i386                 randconfig-a013-20200612
-i386                 randconfig-a012-20200612
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                                allnoconfig
-um                               allyesconfig
-um                                  defconfig
-um                               allmodconfig
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
+With this change, I no longer see the GPU crashes that were
+affecting me.
 
+Cc: Shawn Guo <shawn.guo@linaro.org>
+Cc: Rob Clark <robdclark@gmail.com>
+Cc: Sean Paul <sean@poorly.run>
+Cc: Jordan Crouse <jcrouse@codeaurora.org>
+Cc: freedreno@lists.freedesktop.org
+Fixes: ccac7ce373c1 ("drm/msm: Refactor address space initialization")
+Signed-off-by: John Stultz <john.stultz@linaro.org>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+index 89673c7ed473..3d4efe684a98 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+@@ -194,7 +194,7 @@ adreno_iommu_create_address_space(struct msm_gpu *gpu,
+ 	struct msm_gem_address_space *aspace;
+ 
+ 	aspace = msm_gem_address_space_create(mmu, "gpu", SZ_16M,
+-		0xfffffff);
++		0xffffffff);
+ 
+ 	if (IS_ERR(aspace) && !IS_ERR(mmu))
+ 		mmu->funcs->destroy(mmu);
+-- 
+2.17.1
+
