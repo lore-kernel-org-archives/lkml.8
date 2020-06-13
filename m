@@ -4,67 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF37C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 18:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC69CC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 18:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F55520789
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 18:00:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98ABB2084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 18:00:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592071211;
-	bh=DiSJ1hWE/g9k99EDt5ikGF7JvqayWFuR3ud4Vg6KavE=;
+	s=default; t=1592071235;
+	bh=GXkstgz+713p7k1LwCYneHSBu16HFmMxzbL+XZp6ydk=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=btiOLsRlv8e0ok/z1gLLusAqgsQBRgPQ7Sn1G2HgBoww2+omcMCeQV+iSz31yG+zv
-	 ocBtfkFaJGCwuHZRLRUJsTm6czKAqaUqCgPcP1Hk2eRXJ6S0e5IQ/RLwl2Qrjt/Npv
-	 O9m9/4GNX5+hXOjRTujWjffcw2G2Xx4FdsvCtszo=
+	b=vwrotdi0PIArmk4HdX0BX6Gc1uGwoiQDiSNJBEc2vUzqHO79giRV6AEBAXQyxNTbi
+	 8Iyf0GYtKdwqSmc/RIrYFXPOBx6wsVtqWlSy3JTwGILizBquF9gfRLmkf/8PAyJNLr
+	 hdW1gM9hOYl/EhzUyk/SOkt/hKf+A7TzrEXoWcV0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgFMSAE (ORCPT
+        id S1726758AbgFMSAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 14:00:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59114 "EHLO mail.kernel.org"
+        Sat, 13 Jun 2020 14:00:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726700AbgFMSAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 14:00:04 -0400
-Subject: Re: [GIT PULL] General notification queue and key notifications
+        id S1726760AbgFMSAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jun 2020 14:00:30 -0400
+Subject: Re: [PULL] alpha.git
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592071203;
-        bh=DiSJ1hWE/g9k99EDt5ikGF7JvqayWFuR3ud4Vg6KavE=;
+        s=default; t=1592071230;
+        bh=GXkstgz+713p7k1LwCYneHSBu16HFmMxzbL+XZp6ydk=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=VeF6fHUTN1FLEDzMN8KmgBbDTO2nyyhX/Wanz2oSf19w1NxNeXZ5rXgP5Orc9n7qE
-         b0hirp7RTLr16wB2l2CmXnbokqW3w29B67ZbPYsbsDNG/fu/tKEYeNDDVAOQtXTVmV
-         vprVlV25gxZoO7OLqNqMTct5Dztd2KKCO98tJsw0=
+        b=vgEhdKwiG1FGEL9I55WTLe/loM9AoAxJtZkNtCGeT/pCJc1itHfGgC5sxS2CgVIKW
+         jl05fxr63U56+bJmNgmDGZ+x8dA6EdyNbfHNj+yzqyq5GFZrUsbI98bOuNGIkl9NWe
+         IB38v04Fd58TD18Sc4oAMihZK80JK/MzZ9oEa/p8=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <1503686.1591113304@warthog.procyon.org.uk>
-References: <1503686.1591113304@warthog.procyon.org.uk>
-X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <1503686.1591113304@warthog.procyon.org.uk>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
- tags/notifications-20200601
-X-PR-Tracked-Commit-Id: a8478a602913dc89a7cd2060e613edecd07e1dbd
+In-Reply-To: <20200613005719.GA344350@p50-ethernet.mattst88.com>
+References: <20200613005719.GA344350@p50-ethernet.mattst88.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200613005719.GA344350@p50-ethernet.mattst88.com>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/mattst88/alpha.git for-linus
+X-PR-Tracked-Commit-Id: 777747f634ba765085373f851e9c48dccb12ad52
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 6c3297841472b4e53e22e53826eea9e483d993e5
-Message-Id: <159207120392.28894.7192041280504683519.pr-tracker-bot@kernel.org>
-Date:   Sat, 13 Jun 2020 18:00:03 +0000
-To:     David Howells <dhowells@redhat.com>
-Cc:     torvalds@linux-foundation.org, dhowells@redhat.com,
-        viro@zeniv.linux.org.uk, dray@redhat.com, kzak@redhat.com,
-        mszeredi@redhat.com, swhiteho@redhat.com, jlayton@redhat.com,
-        raven@themaw.net, andres@anarazel.de, christian.brauner@ubuntu.com,
-        jarkko.sakkinen@linux.intel.com, keyrings@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: 66125d934b39889372b8d75e4c192818656efb80
+Message-Id: <159207123032.28894.5102920193974518200.pr-tracker-bot@kernel.org>
+Date:   Sat, 13 Jun 2020 18:00:30 +0000
+To:     Matt Turner <mattst88@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Joerg Roedel <jroedel@suse.de>, Xu Wang <vulab@iscas.ac.cn>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Jason Yan <yanaijie@huawei.com>,
+        Chuhong Yuan <hslester96@gmail.com>,
+        Enrico Weigelt <info@metux.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 02 Jun 2020 16:55:04 +0100:
+The pull request you sent on Fri, 12 Jun 2020 17:57:19 -0700:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/notifications-20200601
+> https://git.kernel.org/pub/scm/linux/kernel/git/mattst88/alpha.git for-linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/6c3297841472b4e53e22e53826eea9e483d993e5
+https://git.kernel.org/torvalds/c/66125d934b39889372b8d75e4c192818656efb80
 
 Thank you!
 
