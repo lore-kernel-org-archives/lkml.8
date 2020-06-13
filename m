@@ -2,118 +2,274 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F22C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 23:14:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0448C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 23:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71E7B20792
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 23:14:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9164820792
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 23:17:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="lfurDX56"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ewWw2NEw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbgFMXN7 (ORCPT
+        id S1726780AbgFMXRr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 19:13:59 -0400
-Received: from mta-p7.oit.umn.edu ([134.84.196.207]:55544 "EHLO
-        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726258AbgFMXN6 (ORCPT
+        Sat, 13 Jun 2020 19:17:47 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24742 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726258AbgFMXRr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 19:13:58 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 49kth51FM4z9vYdP
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 23:13:57 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p7.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id MYrtAo2FeTNp for <linux-kernel@vger.kernel.org>;
-        Sat, 13 Jun 2020 18:13:57 -0500 (CDT)
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Sat, 13 Jun 2020 19:17:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592090264;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ApR2mFs8WmdfbD3QAWWQrCCU456172MJbwZdqjigw+Y=;
+        b=ewWw2NEwlGxlXp9dY9FukpXpJ1VELmIcIHzex0i1u6IF3VV3sERIOrym94kfQ9yJcQYRKL
+        32zcXvJGkU7EMCBILIbxIX8rAFtM6Bd3rz4gIgiHUFpT/BXVMYl6NsHbZyVI1hZPemP8IR
+        5+AYO0yDw/dpPUx+ln8YoqyjQiSaTVM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-24-GrSBK3moOrSlFNIqC3nakQ-1; Sat, 13 Jun 2020 19:17:42 -0400
+X-MC-Unique: GrSBK3moOrSlFNIqC3nakQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id 49kth46gTSz9vYdM
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 18:13:56 -0500 (CDT)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p7.oit.umn.edu 49kth46gTSz9vYdM
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p7.oit.umn.edu 49kth46gTSz9vYdM
-Received: by mail-il1-f197.google.com with SMTP id q24so9258652ili.12
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 16:13:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=Lp/57Kv3gzuXj/K9oQ77nASFzku70Zj4jK0Z7RozDsE=;
-        b=lfurDX56hYBZrhdFYqEBnv2irvi2WRAzXzjIzOMzTNHuv42xHT5JVvBul2r6yRZfSr
-         Cedk/u4yLdw8aRqEc/y4ItmczY/Wy46YSJdJrRMiyu6axMe091p2oVRathwkVLAjctph
-         O1ryAN6KCqcJBCUYQiS5rpomqGicoXiT0GBMpThSYx8h/WfcepNjKEwEdueyxHsiT/QC
-         QuMW8qQhASGbepJxBMeb2/E+/u9MHhAnP4kSZh7r1eGnqZTnwEm5ywzhNHk5NVpJQ75p
-         aeacfU6DR3UAp/DccV5MCqEE1fH4GmLxOcOkkO/DPszNBMyGWO8UrRz2Jk+okWcCDdSo
-         lqPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Lp/57Kv3gzuXj/K9oQ77nASFzku70Zj4jK0Z7RozDsE=;
-        b=ZFSA/+Qf4wegxmFwM/+bvJv/x312Z4UJY0DctpqucdTr32OBiRINPtodk8N1it1j6u
-         DhZQzc+TeMgE62HNqGvIUhNjtiNN4YXveFvss80RFZv24CXD0gB8LRbGZWkriwzBbOxt
-         H4NW4NFAMFjoAJd+pOlksd00aj6vs6jKNDQBJcK6wInGi+VBnJ5Uxbc8gTV7aIxQ+ky8
-         13dGQFY7q2cFd/RfkfITXEb87DU86yupBuf4S6E05ntmgLxjX0BsasWHAruen6Q2PZsP
-         pzEyaLLaGt46TayQ7UjCxZQUAN+TOXcmJAmKlwGzHlT2ukRIpBzXtFP577F79xqH+umI
-         Xt9w==
-X-Gm-Message-State: AOAM530n6PqKVgxMMG40p2T03+f10+NZhwC4UPyOtsUbZAXYUd/HV18J
-        QS2jZVLQHXWNQUikRgM6adkXmYPIcB2xDrwN1l2l8iqDeU+lq59S5mef7j3M4JhI8CBISbsQM12
-        BgjNXs+zwkFdYXmjEryCGZ9bgj9ga
-X-Received: by 2002:a05:6e02:ef2:: with SMTP id j18mr19983908ilk.69.1592090036463;
-        Sat, 13 Jun 2020 16:13:56 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJztT1frvvFPpkKu648hyiONgeEYkHge5KRR8FaxCVSOS07PFim7J0gL5UIgkxz52VKBRrECXA==
-X-Received: by 2002:a05:6e02:ef2:: with SMTP id j18mr19983882ilk.69.1592090036227;
-        Sat, 13 Jun 2020 16:13:56 -0700 (PDT)
-Received: from qiushi.cs.umn.edu ([2607:ea00:101:3c74:4874:45:bcb4:df60])
-        by smtp.gmail.com with ESMTPSA id b8sm5368985ior.35.2020.06.13.16.13.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Jun 2020 16:13:55 -0700 (PDT)
-From:   wu000273@umn.edu
-To:     kjlu@umn.edu
-Cc:     wu000273@umn.edu, Jacob Chen <jacob-chen@iotwrt.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hans Verkuil <hansverk@cisco.com>, linux-media@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] media: rockchip/rga: Fix a reference count leak.
-Date:   Sat, 13 Jun 2020 18:13:49 -0500
-Message-Id: <20200613231350.15504-1-wu000273@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5BE5B1883600;
+        Sat, 13 Jun 2020 23:17:40 +0000 (UTC)
+Received: from localhost (ovpn-12-17.pek2.redhat.com [10.72.12.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CEDF360BF1;
+        Sat, 13 Jun 2020 23:17:38 +0000 (UTC)
+Date:   Sun, 14 Jun 2020 07:17:36 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Jaewon Kim <jaewon31.kim@gmail.com>
+Cc:     Jaewon Kim <jaewon31.kim@samsung.com>, mgorman@techsingularity.net,
+        minchan@kernel.org, mgorman@suse.de, hannes@cmpxchg.org,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, ytk.lee@samsung.com,
+        cmlaika.kim@samsung.com
+Subject: Re: [PATCH v2] page_alloc: consider highatomic reserve in
+ wmartermark fast
+Message-ID: <20200613231736.GJ20367@MiWiFi-R3L-srv>
+References: <CGME20200612085027epcas1p46383a7eda792eabbd1e74cd08fe988c9@epcas1p4.samsung.com>
+ <20200613025102.12880-1-jaewon31.kim@samsung.com>
+ <20200613094228.GB3346@MiWiFi-R3L-srv>
+ <CAJrd-Ut=QcK5FQP2TUm6==mowoVK_QVCB7x=LL4iUnZxBLYAmA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJrd-Ut=QcK5FQP2TUm6==mowoVK_QVCB7x=LL4iUnZxBLYAmA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+On 06/13/20 at 10:08pm, Jaewon Kim wrote:
+...
+> > > This is an example of ALLOC_HARDER allocation failure.
+> > >
+> > > <4>[ 6207.637280]  [3:  Binder:9343_3:22875] Binder:9343_3: page allocation failure: order:0, mode:0x480020(GFP_ATOMIC), nodemask=(null)
+> > > <4>[ 6207.637311]  [3:  Binder:9343_3:22875] Call trace:
+> > > <4>[ 6207.637346]  [3:  Binder:9343_3:22875] [<ffffff8008f40f8c>] dump_stack+0xb8/0xf0
+> > > <4>[ 6207.637356]  [3:  Binder:9343_3:22875] [<ffffff8008223320>] warn_alloc+0xd8/0x12c
+> > > <4>[ 6207.637365]  [3:  Binder:9343_3:22875] [<ffffff80082245e4>] __alloc_pages_nodemask+0x120c/0x1250
+> > > <4>[ 6207.637374]  [3:  Binder:9343_3:22875] [<ffffff800827f6e8>] new_slab+0x128/0x604
+> > > <4>[ 6207.637381]  [3:  Binder:9343_3:22875] [<ffffff800827b0cc>] ___slab_alloc+0x508/0x670
+> > > <4>[ 6207.637387]  [3:  Binder:9343_3:22875] [<ffffff800827ba00>] __kmalloc+0x2f8/0x310
+> > > <4>[ 6207.637396]  [3:  Binder:9343_3:22875] [<ffffff80084ac3e0>] context_struct_to_string+0x104/0x1cc
+> > > <4>[ 6207.637404]  [3:  Binder:9343_3:22875] [<ffffff80084ad8fc>] security_sid_to_context_core+0x74/0x144
+> > > <4>[ 6207.637412]  [3:  Binder:9343_3:22875] [<ffffff80084ad880>] security_sid_to_context+0x10/0x18
+> > > <4>[ 6207.637421]  [3:  Binder:9343_3:22875] [<ffffff800849bd80>] selinux_secid_to_secctx+0x20/0x28
+> > > <4>[ 6207.637430]  [3:  Binder:9343_3:22875] [<ffffff800849109c>] security_secid_to_secctx+0x3c/0x70
+> > > <4>[ 6207.637442]  [3:  Binder:9343_3:22875] [<ffffff8008bfe118>] binder_transaction+0xe68/0x454c
+> > > <4>[ 6207.637569]  [3:  Binder:9343_3:22875] Mem-Info:
+> > > <4>[ 6207.637595]  [3:  Binder:9343_3:22875] active_anon:102061 inactive_anon:81551 isolated_anon:0
+> > > <4>[ 6207.637595]  [3:  Binder:9343_3:22875]  active_file:59102 inactive_file:68924 isolated_file:64
+> > > <4>[ 6207.637595]  [3:  Binder:9343_3:22875]  unevictable:611 dirty:63 writeback:0 unstable:0
+> > > <4>[ 6207.637595]  [3:  Binder:9343_3:22875]  slab_reclaimable:13324 slab_unreclaimable:44354
+> > > <4>[ 6207.637595]  [3:  Binder:9343_3:22875]  mapped:83015 shmem:4858 pagetables:26316 bounce:0
+> > > <4>[ 6207.637595]  [3:  Binder:9343_3:22875]  free:2727 free_pcp:1035 free_cma:178
+> > > <4>[ 6207.637616]  [3:  Binder:9343_3:22875] Node 0 active_anon:408244kB inactive_anon:326204kB active_file:236408kB inactive_file:275696kB unevictable:2444kB isolated(anon):0kB isolated(file):256kB mapped:332060kB dirty:252kB writeback:0kB shmem:19432kB writeback_tmp:0kB unstable:0kB all_unreclaimable? no
+> > > <4>[ 6207.637627]  [3:  Binder:9343_3:22875] Normal free:10908kB min:6192kB low:44388kB high:47060kB active_anon:409160kB inactive_anon:325924kB active_file:235820kB inactive_file:276628kB unevictable:2444kB writepending:252kB present:3076096kB managed:2673676kB mlocked:2444kB kernel_stack:62512kB pagetables:105264kB bounce:0kB free_pcp:4140kB local_pcp:40kB free_cma:712kB
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-when it returns an error code. Thus call pm_runtime_put_noidle()
-if pm_runtime_get_sync() fails.
+Checked this mem info, wondering why there's no 'reserved_highatomic'
+printing in all these examples.
 
-Fixes: f7e7b48e6d79 ("[media] rockchip/rga: v4l2 m2m support")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
----
- drivers/media/platform/rockchip/rga/rga-buf.c | 1 +
- 1 file changed, 1 insertion(+)
+> > > <4>[ 6207.637632]  [3:  Binder:9343_3:22875] lowmem_reserve[]: 0 0
+> > > <4>[ 6207.637637]  [3:  Binder:9343_3:22875] Normal: 505*4kB (H) 357*8kB (H) 201*16kB (H) 65*32kB (H) 1*64kB (H) 0*128kB 0*256kB 0*512kB 0*1024kB 0*2048kB 0*4096kB = 10236kB
+> > > <4>[ 6207.637655]  [3:  Binder:9343_3:22875] 138826 total pagecache pages
+> > > <4>[ 6207.637663]  [3:  Binder:9343_3:22875] 5460 pages in swap cache
+> > > <4>[ 6207.637668]  [3:  Binder:9343_3:22875] Swap cache stats: add 8273090, delete 8267506, find 1004381/4060142
+> > >
+...
+> > >  mm/page_alloc.c | 61 ++++++++++++++++++++++++++++---------------------
+> > >  1 file changed, 35 insertions(+), 26 deletions(-)
+> > >
+> > > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> > > index 48eb0f1410d4..c2177e056f19 100644
+> > > --- a/mm/page_alloc.c
+> > > +++ b/mm/page_alloc.c
+> > > @@ -3487,6 +3487,29 @@ static noinline bool should_fail_alloc_page(gfp_t gfp_mask, unsigned int order)
+> > >  }
+> > >  ALLOW_ERROR_INJECTION(should_fail_alloc_page, TRUE);
+> > >
+> > > +static inline long __zone_watermark_unusable_free(struct zone *z,
+> > > +                             unsigned int order, unsigned int alloc_flags)
+> > > +{
+> > > +     const bool alloc_harder = (alloc_flags & (ALLOC_HARDER|ALLOC_OOM));
+> > > +     long unusable_free = (1 << order) - 1;
+> > > +
+> > > +     /*
+> > > +      * If the caller does not have rights to ALLOC_HARDER then subtract
+> > > +      * the high-atomic reserves. This will over-estimate the size of the
+> > > +      * atomic reserve but it avoids a search.
+> > > +      */
+> > > +     if (likely(!alloc_harder))
+> > > +             unusable_free += z->nr_reserved_highatomic;
+> > > +
+> > > +#ifdef CONFIG_CMA
+> > > +     /* If allocation can't use CMA areas don't use free CMA pages */
+> > > +     if (!(alloc_flags & ALLOC_CMA))
+> > > +             unusable_free += zone_page_state(z, NR_FREE_CMA_PAGES);
+> > > +#endif
+> > > +
+> > > +     return unusable_free;
+> > > +}
+> > > +
+> > >  /*
+> > >   * Return true if free base pages are above 'mark'. For high-order checks it
+> > >   * will return true of the order-0 watermark is reached and there is at least
+> > > @@ -3502,19 +3525,12 @@ bool __zone_watermark_ok(struct zone *z, unsigned int order, unsigned long mark,
+> > >       const bool alloc_harder = (alloc_flags & (ALLOC_HARDER|ALLOC_OOM));
+> > >
+> > >       /* free_pages may go negative - that's OK */
+> > > -     free_pages -= (1 << order) - 1;
+> > > +     free_pages -= __zone_watermark_unusable_free(z, order, alloc_flags);
+> > >
+> > >       if (alloc_flags & ALLOC_HIGH)
+> > >               min -= min / 2;
+> > >
+> > > -     /*
+> > > -      * If the caller does not have rights to ALLOC_HARDER then subtract
+> > > -      * the high-atomic reserves. This will over-estimate the size of the
+> > > -      * atomic reserve but it avoids a search.
+> > > -      */
+> > > -     if (likely(!alloc_harder)) {
+> > > -             free_pages -= z->nr_reserved_highatomic;
+> > > -     } else {
+> > > +     if (unlikely(alloc_harder)) {
+> > >               /*
+> > >                * OOM victims can try even harder than normal ALLOC_HARDER
+> > >                * users on the grounds that it's definitely going to be in
+> > > @@ -3527,13 +3543,6 @@ bool __zone_watermark_ok(struct zone *z, unsigned int order, unsigned long mark,
+> > >                       min -= min / 4;
+> > >       }
+> > >
+> > > -
+> > > -#ifdef CONFIG_CMA
+> > > -     /* If allocation can't use CMA areas don't use free CMA pages */
+> > > -     if (!(alloc_flags & ALLOC_CMA))
+> > > -             free_pages -= zone_page_state(z, NR_FREE_CMA_PAGES);
+> > > -#endif
+> > > -
+> > >       /*
+> > >        * Check watermarks for an order-0 allocation request. If these
+> > >        * are not met, then a high-order request also cannot go ahead
+> > > @@ -3582,14 +3591,11 @@ static inline bool zone_watermark_fast(struct zone *z, unsigned int order,
+> > >                               unsigned long mark, int highest_zoneidx,
+> > >                               unsigned int alloc_flags)
+> > >  {
+> > > -     long free_pages = zone_page_state(z, NR_FREE_PAGES);
+> > > -     long cma_pages = 0;
+> > > +     long free_pages;
+> > > +     long unusable_free;
+> > >
+> > > -#ifdef CONFIG_CMA
+> > > -     /* If allocation can't use CMA areas don't use free CMA pages */
+> > > -     if (!(alloc_flags & ALLOC_CMA))
+> > > -             cma_pages = zone_page_state(z, NR_FREE_CMA_PAGES);
+> > > -#endif
+> > > +     free_pages = zone_page_state(z, NR_FREE_PAGES);
+> > > +     unusable_free =  __zone_watermark_unusable_free(z, order, alloc_flags);
+> > >
+> > >       /*
+> > >        * Fast check for order-0 only. If this fails then the reserves
+> > > @@ -3598,9 +3604,12 @@ static inline bool zone_watermark_fast(struct zone *z, unsigned int order,
+> > >        * the caller is !atomic then it'll uselessly search the free
+> > >        * list. That corner case is then slower but it is harmless.
+> >
+> > Do we need remove or adjust the code comment at this place? So Mel have
+> > foreseen the corner case, just reclaiming to unreserve the highatomic
+> > might be ignored.
+> >
+> 
+> Hello thank you for your comment.
+> 
+> My previous mail to Vlastimil Babka seems to have html.
+> Let me put  again here because I also think the comment should be changed.
+> I'd like to hear opinions from the open source community.
 
-diff --git a/drivers/media/platform/rockchip/rga/rga-buf.c b/drivers/media/platform/rockchip/rga/rga-buf.c
-index 36b821ccc1db..bf9a75b75083 100644
---- a/drivers/media/platform/rockchip/rga/rga-buf.c
-+++ b/drivers/media/platform/rockchip/rga/rga-buf.c
-@@ -81,6 +81,7 @@ static int rga_buf_start_streaming(struct vb2_queue *q, unsigned int count)
- 
- 	ret = pm_runtime_get_sync(rga->dev);
- 	if (ret < 0) {
-+		pm_runtime_put_noidle(rga->dev);
- 		rga_buf_return_buffers(q, VB2_BUF_STATE_QUEUED);
- 		return ret;
- 	}
--- 
-2.17.1
+Yeah, your replying mail to Vlastimil looks a little messy on format, I
+didn't scroll down to check.
+
+> 
+> Additionally actually I think we need accurate counting of highatomic
+> free after this patch.
+> 
+> ----------------------------------------------------------------------------------------
+> 
+> As Mel also agreed with me in v1 mail thread, this highatomic reserved should
+> be considered even in watermark fast.
+> 
+> The comment, I think, may need to be changed. Prior to this patch, non
+> highatomic
+> allocation may do useless search, but it also can take ALL non highatomic free.
+> 
+> With this patch, non highatomic allocation will NOT do useless search. Rather,
+> it may be required direct reclamation even when there are some non
+> high atomic free.
+> 
+> i.e)
+> In following situation, watermark check fails (9MB - 8MB < 4MB) though there are
+> enough free (9MB - 4MB > 4MB). If this is really matter, we need to
+> count highatomic
+> free accurately.
+
+Seems to make sense. We only use zone->nr_reserved_highatomic to account
+the reserved highatomic, don't track how much have been used for
+highatomic allocation. But not sure if this will happen often, or just a
+very rare case, whether taking that into account will impact anything.
+
+> 
+> min : 4MB,
+> highatomic reserved : 8MB
+> Total free : 9MB
+>   actual highatomic free : 4MB
+>   non highatomic free : 5MB
+> 
+> > >        */
+> > > -     if (!order && (free_pages - cma_pages) >
+> > > -                             mark + z->lowmem_reserve[highest_zoneidx])
+> > > -             return true;
+> > > +     if (!order) {
+> > > +             long fast_free = free_pages - unusable_free;
+> > > +
+> > > +             if (fast_free > mark + z->lowmem_reserve[highest_zoneidx])
+> > > +                     return true;
+> > > +     }
+> > >
+> > >       return __zone_watermark_ok(z, order, mark, highest_zoneidx, alloc_flags,
+> > >                                       free_pages);
+> > > --
+> > > 2.17.1
+> > >
+> > >
+> >
+> 
 
