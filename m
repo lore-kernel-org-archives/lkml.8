@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 979CFC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 02:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DACAC433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 02:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72EA620789
+	by mail.kernel.org (Postfix) with ESMTP id DBA4D2078E
 	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 02:41:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="TsbozQNP"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="kEtciZBn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726455AbgFMCli (ORCPT
+        id S1726524AbgFMClu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 22:41:38 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:54106 "EHLO
+        Fri, 12 Jun 2020 22:41:50 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:54150 "EHLO
         linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726397AbgFMClh (ORCPT
+        with ESMTP id S1726441AbgFMCli (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 22:41:37 -0400
+        Fri, 12 Jun 2020 22:41:38 -0400
 Received: from localhost.localdomain (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 783EF20B4781;
-        Fri, 12 Jun 2020 19:41:36 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 783EF20B4781
+        by linux.microsoft.com (Postfix) with ESMTPSA id 6D1A520B4785;
+        Fri, 12 Jun 2020 19:41:37 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6D1A520B4785
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1592016096;
-        bh=h/7e7zImKiPAs9gLjjN0MWOthBgeaRk9JTCgA2PStTY=;
+        s=default; t=1592016097;
+        bh=bNdc4U/VTJDtcRp/g3v1Y+eSv6Ss10i7Sm+a4SYsn4Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TsbozQNPeiFK7RNK/QjbJhy9+Sw4DCK3i1rNYqVyO9gH5Pnm/R+fiNzWpAZFesotY
-         X0SJaSzez0aBKNTXipAEHX7UbI90sNLdSNcyTATW0PbizY75B2OvQZ48hnS1rPSPxp
-         3BAUF/TZdi39bQ9iR/Tb0Oy+nVS0LMIjDcjD0nMo=
+        b=kEtciZBnky8xzcdy61W0t1oH+SEDvfREdGt3kfQ5zWK7WGhu6dkMtNAfzwC6IRtIC
+         HmYSP+GUITWFKpb3NuY7oh5LOnsrVg6G4d/N0qVrowJd0WC7LKgM6CDlbHttv7QF5B
+         36jXNaGkAkwnbc2kC9HIUzluKrVLNK5TjMM6jDYc=
 From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 To:     zohar@linux.ibm.com, stephen.smalley@gmail.com,
         casey@schaufler-ca.com
 Cc:     jmorris@namei.org, linux-integrity@vger.kernel.org,
         linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/5] IMA: Define an IMA hook to measure LSM data
-Date:   Fri, 12 Jun 2020 19:41:27 -0700
-Message-Id: <20200613024130.3356-3-nramas@linux.microsoft.com>
+Subject: [PATCH 5/5] LSM: Define workqueue for measuring security module state
+Date:   Fri, 12 Jun 2020 19:41:30 -0700
+Message-Id: <20200613024130.3356-6-nramas@linux.microsoft.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200613024130.3356-1-nramas@linux.microsoft.com>
 References: <20200613024130.3356-1-nramas@linux.microsoft.com>
@@ -52,85 +52,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-LSM requires an IMA hook to be defined by the IMA subsystem to measure
-the data gathered from the security modules.
+The data maintained by the security modules could be tampered with by
+malware. The LSM needs to periodically query the state of
+the security modules and measure the data when the state is changed.
 
-Define a new IMA hook, namely ima_lsm_state(), that the LSM will call
-to measure the data gathered from the security modules.
-
-Sample IMA log entry for LSM measurement:
-
-10 47eed9... ima-buf sha256:402f6b... lsm-state:selinux 656e61626c65643d313b656e666f7263696e673d30
+Define a workqueue for handling this periodic query and measurement.
 
 Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 ---
- include/linux/ima.h               |  4 ++++
- security/integrity/ima/ima_main.c | 30 ++++++++++++++++++++++++++++++
- 2 files changed, 34 insertions(+)
+ security/security.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/include/linux/ima.h b/include/linux/ima.h
-index 9164e1534ec9..56681a648b3d 100644
---- a/include/linux/ima.h
-+++ b/include/linux/ima.h
-@@ -26,6 +26,7 @@ extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
- extern void ima_post_path_mknod(struct dentry *dentry);
- extern int ima_file_hash(struct file *file, char *buf, size_t buf_size);
- extern void ima_kexec_cmdline(const void *buf, int size);
-+extern void ima_lsm_state(const char *lsm_name, const void *buf, int size);
+diff --git a/security/security.c b/security/security.c
+index e7175db5a093..3dad6766cb9d 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -89,6 +89,11 @@ static __initdata struct lsm_info *exclusive;
+ static struct lsm_info *security_state_lsms;
+ static int security_state_lsms_count;
  
- #ifdef CONFIG_IMA_KEXEC
- extern void ima_add_kexec_buffer(struct kimage *image);
-@@ -104,6 +105,9 @@ static inline int ima_file_hash(struct file *file, char *buf, size_t buf_size)
- }
- 
- static inline void ima_kexec_cmdline(const void *buf, int size) {}
++static long security_state_timeout = 300000; /* 5 Minutes */
++static void security_state_handler(struct work_struct *work);
++static DECLARE_DELAYED_WORK(security_state_delayed_work,
++			    security_state_handler);
 +
-+static inline void ima_lsm_state(const char *lsm_name,
-+				 const void *buf, int size) {}
- #endif /* CONFIG_IMA */
- 
- #ifndef CONFIG_IMA_KEXEC
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index c1583d98c5e5..34be962054fb 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -827,6 +827,36 @@ void ima_kexec_cmdline(const void *buf, int size)
- 					   KEXEC_CMDLINE, 0, NULL);
+ static __initdata bool debug;
+ #define init_debug(...)						\
+ 	do {							\
+@@ -294,6 +299,26 @@ static void __init initialize_security_state_lsms(void)
+ 	security_state_lsms_count = count;
  }
  
-+/**
-+ * ima_lsm_state - measure LSM specific state
-+ * @lsm_name: Name of the LSM
-+ * @buf: pointer to buffer containing LSM specific state
-+ * @size: Number of bytes in buf
-+ *
-+ * Buffers can only be measured, not appraised.
-+ */
-+void ima_lsm_state(const char *lsm_name, const void *buf, int size)
++static void initialize_security_state_monitor(void)
 +{
-+	const char *eventname = "lsm-state:";
-+	char *lsmstatestring;
-+	int lsmstatelen;
-+
-+	if (!lsm_name || !buf || !size)
++	if (security_state_lsms_count == 0)
 +		return;
 +
-+	lsmstatelen = strlen(eventname) + strlen(lsm_name) + 1;
-+	lsmstatestring = kzalloc(lsmstatelen, GFP_KERNEL);
-+	if (!lsmstatestring)
-+		return;
-+
-+	strcpy(lsmstatestring, eventname);
-+	strcat(lsmstatestring, lsm_name);
-+
-+	process_buffer_measurement(buf, size, lsmstatestring,
-+				   LSM_STATE, 0, NULL);
-+	kfree(lsmstatestring);
++	schedule_delayed_work(&security_state_delayed_work,
++			      msecs_to_jiffies(security_state_timeout));
 +}
 +
- static int __init init_ima(void)
++static void security_state_handler(struct work_struct *work)
++{
++	int inx;
++
++	for (inx = 0; inx < security_state_lsms_count; inx++)
++		measure_security_state(&(security_state_lsms[inx]));
++
++	schedule_delayed_work(&security_state_delayed_work,
++			      msecs_to_jiffies(security_state_timeout));
++}
++
+ /* Populate ordered LSMs list from comma-separated LSM name list. */
+ static void __init ordered_lsm_parse(const char *order, const char *origin)
  {
- 	int error;
+@@ -417,6 +442,7 @@ static void __init ordered_lsm_init(void)
+ 	}
+ 
+ 	initialize_security_state_lsms();
++	initialize_security_state_monitor();
+ 
+ 	kfree(ordered_lsms);
+ }
 -- 
 2.27.0
 
