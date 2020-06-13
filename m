@@ -2,101 +2,126 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62688C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 17:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82734C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 17:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A0072078A
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 17:37:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZK3+qRQ9"
+	by mail.kernel.org (Postfix) with ESMTP id 693C02081A
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 17:53:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbgFMRhQ (ORCPT
+        id S1726570AbgFMRxV convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 13:37:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50186 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbgFMRhQ (ORCPT
+        Sat, 13 Jun 2020 13:53:21 -0400
+Received: from mail-ej1-f65.google.com ([209.85.218.65]:46741 "EHLO
+        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbgFMRxV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 13:37:16 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E393DC03E96F
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 10:37:15 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id bh7so5025171plb.11
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 10:37:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=7hwEyyxwUYdF2Guu+e/vMTnzyE7eAhVBBsibSIizD8I=;
-        b=ZK3+qRQ9MEgzaQnN0sw5cx1VU8LUSl6sYcO1FgxX0/z+6z4802WNxcKc1SToc+Dpdx
-         Oa3hXj2d+tz9W4Yo9N9WfOwy4jR54GMTrsYzTrazR/MCA1T2/f0fXuMADHlEfv8aboFH
-         zLZxrJGblUY3cuiGsske4xmoJTgpBCprbZVhplNFzdnaCXMwfyYMXlGme8HVI+Sk6uv4
-         AoOTT5pytSEx8cBR4hsjIy1uXARh5PNEfeBn25YWaVDevjuPIP59EW36ilfbCgfQxm5j
-         QQIZzlcV7DlSleYRzGoWJ8nhld0I0HtVnPPgz3c8UqZElPKaMUBAE1WGHuyza58tGghk
-         CuoA==
+        Sat, 13 Jun 2020 13:53:21 -0400
+Received: by mail-ej1-f65.google.com with SMTP id p20so13198524ejd.13;
+        Sat, 13 Jun 2020 10:53:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=7hwEyyxwUYdF2Guu+e/vMTnzyE7eAhVBBsibSIizD8I=;
-        b=mbsDSE1oYEFwFNYm1M+Z7nPX3+XjBu+VwaoVp8bahjKnM4Td3Gduh+sUJOIZyYUVkU
-         xcvuXmT4BUYseC0zGcjCLaA6CC0AM5U5JbRNwXZowurpBXOkADLw2HzqIla6D/g9k21k
-         nx7f+OKsQ/zPMfDnvG52w4VMrvl4Rs7tgElW0daTBD5uHTp3/KQcLNkBLJ+cRKVe1OPi
-         Xu6WveEeXlyHokggSm2EK8DSbHmPo1jlc93A1fDj7XLaeP+HyJVSLlaM12TwOk9vGpfV
-         ZxndEwURH+ubIyymf5IcCPOvaMRxLq889C5bDYvw39FlfhlY0iPq0y5sCwtEG+3nfkcP
-         oDbw==
-X-Gm-Message-State: AOAM530NULxW7xsOwaKqVp5MmG/qzHopNHv+YzLmbqvj8Ny1sruvdb6/
-        cb7j0YrRzsh5e1owlkFGOX4xxFTz
-X-Google-Smtp-Source: ABdhPJxYsfjAFdm78oynRBxtOMyhELttPaW0N0G0PuldldL+YPOprKPLiuk5Bl3IXWBnbWB6DhakbA==
-X-Received: by 2002:a17:90a:aa8f:: with SMTP id l15mr4546515pjq.211.1592069835215;
-        Sat, 13 Jun 2020 10:37:15 -0700 (PDT)
-Received: from ASMDT.1 ([114.125.253.62])
-        by smtp.gmail.com with ESMTPSA id y7sm9321768pfq.43.2020.06.13.10.37.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 13 Jun 2020 10:37:14 -0700 (PDT)
-To:     gregkh@linuxfoundation.org
-Cc:     arve@android.com, tkjos@android.com, maco@android.com,
-        joel@joelfernandes.org, christian@brauner.io,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-From:   Dio Putra <dioput12@gmail.com>
-Subject: [PATCH] staging: android: ashmem.c: Cleanup
-Message-ID: <4ba43a70-c29f-6c41-9c81-66a25b0432af@gmail.com>
-Date:   Sun, 14 Jun 2020 00:37:09 +0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3JeOvtc/eAFvXr156ydRZZGyosX/Qqp3aRK+SICpX5s=;
+        b=sLBPEvEKU7ScKIlWorrVKzreyEkCYAzSdXtL9zPV/k9a1iCPGYpmo4awxkrzKkhh6U
+         ljS0xWEq35aGHV9Q0TUqMU1Wr2CVfnEn8iWe0Qhbst7jpGqajcO/r1/Cx+D60g/28yEu
+         /BiMYnWuMDfIb+DpDY/Zs/2Q2do9UoeO2YbDn159AeKtyHVqs1Cp3mSIjOfrWge7j9Y8
+         JrKYEFomPaxiKPyp6s3r6eBWxnlZ4YXKs3cUZ+FtZtbT1jprsX+ACNwJlCzieQIgIVlZ
+         F+zMfkUBNJUrX24rZZqKrA40iaCnmUoVKhom/t/301MAiKixjLlkEjUppD5Jg5uAI5A3
+         ob5A==
+X-Gm-Message-State: AOAM530vb6vrzbiSMsUhb1/Aq7Po+9UT3wd2QquwWyCXktQ95PdidG93
+        0kNPymiV1LwZxxsLwl4xej3oTjmZUylVv0QT0sUpzw==
+X-Google-Smtp-Source: ABdhPJxBidEPydvBx4KSo0FSYx8i1Uqr0G7Qz/qzjO76L9wCItTl6v+val9pjKo6XeFlXTpivudQHulBPZcm4eDaPxQ=
+X-Received: by 2002:a17:906:27c5:: with SMTP id k5mr18340389ejc.251.1592070799112;
+ Sat, 13 Jun 2020 10:53:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200609113049.4035426-1-noltari@gmail.com> <20200609113049.4035426-3-noltari@gmail.com>
+ <1367fcf3-24ed-9106-a329-da5f8e168e17@gmail.com> <3E897527-55EB-47DB-99ED-C737725F0F9E@gmail.com>
+ <CAAdtpL7dUZ2RqkrqSxiZxDbp4qY-KdtSc7CyuR+rbnRRA2Yvrw@mail.gmail.com> <93c429b1-31f4-95c2-1bd9-b3756b396f3a@gmail.com>
+In-Reply-To: <93c429b1-31f4-95c2-1bd9-b3756b396f3a@gmail.com>
+From:   =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <f4bug@amsat.org>
+Date:   Sat, 13 Jun 2020 19:53:07 +0200
+Message-ID: <CAAdtpL6OXziD9Q0dBZzkcq0jPF04rmNd6o_hi7Frm5DejG29mA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] clk: bcm63xx-gate: add BCM6318 support
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        kbuild test robot <lkp@intel.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Minor cleanup to make file_operations const once again.
+On Wed, Jun 10, 2020 at 5:32 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+> On 6/10/2020 1:29 AM, Philippe Mathieu-Daudé wrote:
+> > Hi,
+> >
+> > On Wed, Jun 10, 2020 at 8:13 AM Álvaro Fernández Rojas
+> > <noltari@gmail.com> wrote:
+> >>
+> >> Hi Florian,
+> >>
+> >>> El 10 jun 2020, a las 4:27, Florian Fainelli <f.fainelli@gmail.com> escribió:
+> >>>
+> >>>
+> >>>
+> >>> On 6/9/2020 4:30 AM, Álvaro Fernández Rojas wrote:
+> >>>> +static const struct clk_bcm63xx_table_entry bcm6318_clocks[] = {
+> >>>> +    { .name = "adsl_asb", .bit = 0, },
+> >>>> +    { .name = "usb_asb", .bit = 1, },
+> >>>> +    { .name = "mips_asb", .bit = 2, },
+> >>>> +    { .name = "pcie_asb", .bit = 3, },
+> >>>> +    { .name = "phymips_asb", .bit = 4, },
+> >>>> +    { .name = "robosw_asb", .bit = 5, },
+> >>>> +    { .name = "sar_asb", .bit = 6, },
+> >>>> +    { .name = "sdr_asb", .bit = 7, },
+> >>>> +    { .name = "swreg_asb", .bit = 8, },
+> >>>> +    { .name = "periph_asb", .bit = 9, },
+> >>>> +    { .name = "cpubus160", .bit = 10, },
+> >>>> +    { .name = "adsl", .bit = 11, },
+> >>>> +    { .name = "sar124", .bit = 12, },
+> >>>
+> >>> Nit: this should be sar125
+> >>
+> >> Nice catch, I will fix this in v2.
+> >>
+> >>>
+> >>>> +    { .name = "mips", .bit = 13, .flags = CLK_IS_CRITICAL, },
+> >>>> +    { .name = "pcie", .bit = 14, },
+> >>>> +    { .name = "robosw250", .bit = 16, },
+> >>>> +    { .name = "robosw025", .bit = 17, },
+> >>>> +    { .name = "sdr", .bit = 19, .flags = CLK_IS_CRITICAL, },
+> >>>> +    { .name = "usb", .bit = 20, },
+> >>>
+> >>> This should probably be "usbd" to indicate this is the USB device clock
+> >>> (not host)
+> >>
+> >> Ok, I will change it. I got confused by the fact that both (usbd and usbh) were present on 6318_map_part.h:
+> >> #define USBD_CLK_EN         (1 << 20)
+> >> #define USBH_CLK_EN         (1 << 20)
+> >
+> > Is there a datasheet to verify that?
+>
+> Not a public one, but I can confirm this is correct given the internal
+> datasheet.
 
-Signed-off-by: Dio Putra <dioput12@gmail.com>
----
- drivers/staging/android/ashmem.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+OK thank you Florian.
 
-base-commit: aa5af974127d317071d6225a0f3678c5f520e7ce
-diff --git a/drivers/staging/android/ashmem.c b/drivers/staging/android/ashmem.c
-index 8044510d8ec6..fbb6ac9ba1ab 100644
---- a/drivers/staging/android/ashmem.c
-+++ b/drivers/staging/android/ashmem.c
-@@ -367,7 +367,7 @@ ashmem_vmfile_get_unmapped_area(struct file *file, unsigned long addr,
- 
- static int ashmem_mmap(struct file *file, struct vm_area_struct *vma)
- {
--	static struct file_operations vmfile_fops;
-+	static const struct file_operations vmfile_fops;
- 	struct ashmem_area *asma = file->private_data;
- 	int ret = 0;
- 
+> --
+> Florian
