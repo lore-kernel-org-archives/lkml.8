@@ -2,187 +2,112 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92749C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 08:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD0A8C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 08:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 733852081A
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 08:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA86720739
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 08:19:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HY64l0bH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgFMIMi (ORCPT
+        id S1726408AbgFMITY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 04:12:38 -0400
-Received: from mga07.intel.com ([134.134.136.100]:64586 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726497AbgFMIL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 04:11:28 -0400
-IronPort-SDR: oM6iM1XxgcOK+7bsyaX2grHhTlTLJSgERRWSSShUH9FpxwDuj5+oH2/avQlsjxsfwuhH4b+tmv
- 5mfHkSAa1fvA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2020 01:11:23 -0700
-IronPort-SDR: zy3TlMWoIN6mYecJxRXR2z7b0M+tT8VKkR3z1QXs5Zuz1FI/pWw7iWkprQYU0i9G+iVltwNQng
- 3tN5OH6dhaCQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,506,1583222400"; 
-   d="scan'208";a="474467364"
-Received: from sqa-gate.sh.intel.com (HELO clx-ap-likexu.tsp.org) ([10.239.48.212])
-  by fmsmga006.fm.intel.com with ESMTP; 13 Jun 2020 01:11:13 -0700
-From:   Like Xu <like.xu@linux.intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, ak@linux.intel.com,
-        wei.w.wang@intel.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Like Xu <like.xu@linux.intel.com>
-Subject: [PATCH v12 04/11] perf/x86: Add constraint to create guest LBR event without hw counter
-Date:   Sat, 13 Jun 2020 16:09:49 +0800
-Message-Id: <20200613080958.132489-5-like.xu@linux.intel.com>
-X-Mailer: git-send-email 2.21.3
-In-Reply-To: <20200613080958.132489-1-like.xu@linux.intel.com>
-References: <20200613080958.132489-1-like.xu@linux.intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sat, 13 Jun 2020 04:19:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49764 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbgFMITX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jun 2020 04:19:23 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC5F0C03E96F;
+        Sat, 13 Jun 2020 01:19:22 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id v24so4694254plo.6;
+        Sat, 13 Jun 2020 01:19:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=cKZcMqArBz9X4rHGW4KhCsa5aMipNmtz0BtqjL31pOg=;
+        b=HY64l0bHbuLUB4rEv2+YOeiTdTwoa7FNhGB7qTI5yZR+Cjrqstc39WEHhIrNk+VFeu
+         Q+ZgZQswm7Aeuc6/00c3ybDLkrukuXouazZkKOAZTfrZong3Gnoo4qOjs/U3tD/E5+IX
+         211CW+0du2Ol1aGBFxE4J+jt+OXiFDPa5ksk/w6vpGwex6E8Feq+Q+5zVVEjkQjcg1iJ
+         2UuLI1Ta05PJmdfuaMMqXI5eTcWWkLuObcof/m1eLR/1uKnf/Q5DFOuYGJkPAfhoQGZO
+         aNge5COJvtCp0Gr6Rp83s3oUf+hfZkaLlbpHpn7JlMst84LDIamZEnp+2W40k7mBwJyk
+         y2Mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=cKZcMqArBz9X4rHGW4KhCsa5aMipNmtz0BtqjL31pOg=;
+        b=NzkRMtUmzm/N5UAHFCqWMXdyo/7odRr7t35uXJCPnnSt7omW7G+Idi5riDr/iv7mwd
+         Aax7C4m4yMbuKxsIhJHxFhij0d50u5HK069qHILcnAqTOak1hZAilDCvqCWucHG6OlgD
+         xJc/TfpsZur86LsAbYwn/peHI5JSW9WAdDvrwIeqGGZvSxz/ksxAJerzYL3RbMiUGi1b
+         j2ErPLD7CSIe60R9bGy8pTqcB+QaF0LFRI/Nj8xJfBy6wLvqCTt+G6hegfknhEYDmBSo
+         ynSgyDZC6BI5l+kGQy21ZaS7ehJxaHOgtv0W9+H8gOtWtA63Em3mUUv41rKUHI/Pb1lV
+         jOdg==
+X-Gm-Message-State: AOAM532ovU0Rxvd1fCMOH07hyNjnKAFWi+xiwWICJIHhLxWQ0Z3wG5XK
+        RE7BcYzWC3+3sIczZnHPl1c=
+X-Google-Smtp-Source: ABdhPJyGmQrKnFQWVG5fMTU5uipONzIFT84K/obEhdoOMHU44yyZFYfq4TbyU3sS3LLIOCT+Gof1Eg==
+X-Received: by 2002:a17:90b:1108:: with SMTP id gi8mr2615297pjb.144.1592036362086;
+        Sat, 13 Jun 2020 01:19:22 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:5:6ac6:29af:f9d7:e4ec:8901])
+        by smtp.gmail.com with ESMTPSA id nl8sm7633203pjb.13.2020.06.13.01.19.16
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 13 Jun 2020 01:19:21 -0700 (PDT)
+From:   Mugilraj D <dmugil2000@gmail.com>
+Cc:     Mugilraj D <dmugil2000@gmail.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Bakker <xc-racer2@live.ca>, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] iio: accel: Replace symbolic permissions with octal permissions
+Date:   Sat, 13 Jun 2020 13:49:01 +0530
+Message-Id: <1592036351-10166-1-git-send-email-dmugil2000@gmail.com>
+X-Mailer: git-send-email 2.7.4
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The hypervisor may request the perf subsystem to schedule a time window
-to directly access the LBR records msrs for its own use. Normally, it would
-create a guest LBR event with callstack mode enabled, which is scheduled
-along with other ordinary LBR events on the host but in an exclusive way.
+Resolve following checkpatch issue:
+WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider
+using octal permissions '0444'.
 
-To avoid wasting a counter for the guest LBR event, the perf tracks its
-hw->idx via INTEL_PMC_IDX_FIXED_VLBR and assigns it with a fake VLBR
-counter with the help of new vlbr_constraint. As with the BTS event,
-there is actually no hardware counter assigned for the guest LBR event.
-
-Signed-off-by: Like Xu <like.xu@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200514083054.62538-5-like.xu@linux.intel.com
+Signed-off-by: Mugilraj D <dmugil2000@gmail.com>
 ---
- arch/x86/events/core.c            |  1 +
- arch/x86/events/intel/core.c      | 18 ++++++++++++++++++
- arch/x86/events/intel/lbr.c       |  4 ++++
- arch/x86/events/perf_event.h      |  1 +
- arch/x86/include/asm/perf_event.h | 22 +++++++++++++++++++++-
- 5 files changed, 45 insertions(+), 1 deletion(-)
+ drivers/iio/accel/bma180.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 9a5056472b67..1996f2ed7c83 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -1104,6 +1104,7 @@ static inline void x86_assign_hw_event(struct perf_event *event,
- 
- 	switch (hwc->idx) {
- 	case INTEL_PMC_IDX_FIXED_BTS:
-+	case INTEL_PMC_IDX_FIXED_VLBR:
- 		hwc->config_base = 0;
- 		hwc->event_base	= 0;
- 		break;
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 8dac4c61bf76..51e1fba7b1d1 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -2621,6 +2621,20 @@ intel_bts_constraints(struct perf_event *event)
- 	return NULL;
+diff --git a/drivers/iio/accel/bma180.c b/drivers/iio/accel/bma180.c
+index 265722e..b716347 100644
+--- a/drivers/iio/accel/bma180.c
++++ b/drivers/iio/accel/bma180.c
+@@ -531,14 +531,13 @@ static ssize_t bma180_show_scale_avail(struct device *dev,
  }
  
-+/*
-+ * Note: matches a fake event, like Fixed2.
-+ */
-+static struct event_constraint *
-+intel_vlbr_constraints(struct perf_event *event)
-+{
-+	struct event_constraint *c = &vlbr_constraint;
-+
-+	if (unlikely(constraint_match(c, event->hw.config)))
-+		return c;
-+
-+	return NULL;
-+}
-+
- static int intel_alt_er(int idx, u64 config)
- {
- 	int alt_idx = idx;
-@@ -2811,6 +2825,10 @@ __intel_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
- {
- 	struct event_constraint *c;
+ static IIO_DEVICE_ATTR(in_accel_filter_low_pass_3db_frequency_available,
+-	S_IRUGO, bma180_show_filter_freq_avail, NULL, 0);
++	0444, bma180_show_filter_freq_avail, NULL, 0);
  
-+	c = intel_vlbr_constraints(event);
-+	if (c)
-+		return c;
-+
- 	c = intel_bts_constraints(event);
- 	if (c)
- 		return c;
-diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index 2ed3f2a51bdf..d285d26c1578 100644
---- a/arch/x86/events/intel/lbr.c
-+++ b/arch/x86/events/intel/lbr.c
-@@ -1363,3 +1363,7 @@ int x86_perf_get_lbr(struct x86_pmu_lbr *lbr)
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(x86_perf_get_lbr);
-+
-+struct event_constraint vlbr_constraint =
-+	FIXED_EVENT_CONSTRAINT(INTEL_FIXED_VLBR_EVENT,
-+			       (INTEL_PMC_IDX_FIXED_VLBR - INTEL_PMC_IDX_FIXED));
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index eb37f6c43c96..77a6dd66bd9a 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -990,6 +990,7 @@ void release_ds_buffers(void);
- void reserve_ds_buffers(void);
+ static IIO_DEVICE_ATTR(in_accel_scale_available,
+-	S_IRUGO, bma180_show_scale_avail, NULL, 0);
++	0444, bma180_show_scale_avail, NULL, 0);
  
- extern struct event_constraint bts_constraint;
-+extern struct event_constraint vlbr_constraint;
- 
- void intel_pmu_enable_bts(u64 config);
- 
-diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index 5d2c30f0df02..2df707311d17 100644
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -192,9 +192,29 @@ struct x86_pmu_capability {
- #define GLOBAL_STATUS_UNC_OVF				BIT_ULL(61)
- #define GLOBAL_STATUS_ASIF				BIT_ULL(60)
- #define GLOBAL_STATUS_COUNTERS_FROZEN			BIT_ULL(59)
--#define GLOBAL_STATUS_LBRS_FROZEN			BIT_ULL(58)
-+#define GLOBAL_STATUS_LBRS_FROZEN_BIT			58
-+#define GLOBAL_STATUS_LBRS_FROZEN			BIT_ULL(GLOBAL_STATUS_LBRS_FROZEN_BIT)
- #define GLOBAL_STATUS_TRACE_TOPAPMI			BIT_ULL(55)
- 
-+/*
-+ * We model guest LBR event tracing as another fixed-mode PMC like BTS.
-+ *
-+ * We choose bit 58 because it's used to indicate LBR stack frozen state
-+ * for architectural perfmon v4, also we unconditionally mask that bit in
-+ * the handle_pmi_common(), so it'll never be set in the overflow handling.
-+ *
-+ * With this fake counter assigned, the guest LBR event user (such as KVM),
-+ * can program the LBR registers on its own, and we don't actually do anything
-+ * with then in the host context.
-+ */
-+#define INTEL_PMC_IDX_FIXED_VLBR	(GLOBAL_STATUS_LBRS_FROZEN_BIT)
-+
-+/*
-+ * Pseudo-encoding the guest LBR event as event=0x00,umask=0x1b,
-+ * since it would claim bit 58 which is effectively Fixed26.
-+ */
-+#define INTEL_FIXED_VLBR_EVENT	0x1b00
-+
- /*
-  * Adaptive PEBS v4
-  */
+ static struct attribute *bma180_attributes[] = {
+-	&iio_dev_attr_in_accel_filter_low_pass_3db_frequency_available.
+-		dev_attr.attr,
++	&iio_dev_attr_in_accel_filter_low_pass_3db_frequency_available.dev_attr.attr,
+ 	&iio_dev_attr_in_accel_scale_available.dev_attr.attr,
+ 	NULL,
+ };
 -- 
-2.21.3
+2.7.4
 
