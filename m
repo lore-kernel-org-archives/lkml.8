@@ -2,77 +2,74 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE82C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 15:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7AF9C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 15:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A67442078A
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 15:25:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7C6C2078A
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 15:32:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbgFMPZP (ORCPT
+        id S1726445AbgFMPbN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 11:25:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36908 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726361AbgFMPZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 11:25:15 -0400
-Received: from localhost (173-25-40-8.client.mchsi.com [173.25.40.8])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2DC6206B7;
-        Sat, 13 Jun 2020 15:25:14 +0000 (UTC)
-From:   Clark Williams <williams@redhat.com>
-Subject: [ANNOUNCE] 4.14.184-rt84
-Date:   Sat, 13 Jun 2020 15:22:02 -0000
-Message-ID: <159206172278.1098109.8375845910679325527@theseus.lan>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Daniel Wagner <daniel.wagner@suse.com>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Clark Williams <williams@redhat.com>
+        Sat, 13 Jun 2020 11:31:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59148 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726323AbgFMPbN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jun 2020 11:31:13 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 195E7C03E96F
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 08:31:13 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
+        id 1jk87a-008E71-Sq; Sat, 13 Jun 2020 15:31:03 +0000
+Date:   Sat, 13 Jun 2020 16:31:02 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     afzal mohammed <afzal.mohd.ma@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [RFC 1/3] lib: copy_{from,to}_user using gup & kmap_atomic()
+Message-ID: <20200613153102.GG23230@ZenIV.linux.org.uk>
+References: <cover.1591885760.git.afzal.mohd.ma@gmail.com>
+ <9e1de19f35e2d5e1d115c9ec3b7c3284b4a4e077.1591885760.git.afzal.mohd.ma@gmail.com>
+ <CAK8P3a1XUJHC0kG_Qwh4D4AoxTgCL5ggHd=45yNSmzaYWLUWXw@mail.gmail.com>
+ <20200612135538.GA13399@afzalpc>
+ <CAK8P3a25ffh_2Y1xKDbkL2xU9nLpGbEq7j6xHdODEwUtavgdwA@mail.gmail.com>
+ <20200613120432.GA5319@afzalpc>
+ <20200613125126.GE23230@ZenIV.linux.org.uk>
+ <20200613125615.GF23230@ZenIV.linux.org.uk>
+ <20200613134236.GA4086@afzalpc>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200613134236.GA4086@afzalpc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello RT-list!
+On Sat, Jun 13, 2020 at 07:12:36PM +0530, afzal mohammed wrote:
+> Hi,
+> 
+> On Sat, Jun 13, 2020 at 01:56:15PM +0100, Al Viro wrote:
+> 
+> > Incidentally, what about get_user()/put_user()?  _That_ is where it's
+> > going to really hurt...
+> 
+> All other uaccess routines are also planned to be added, posting only
+> copy_{from,to}_user() was to get early feedback (mentioned in the
+> cover letter)
 
-I'm pleased to announce the 4.14.184-rt84 stable release.
-
-In addition to the 4.14.184 stable release merge, this release contains
-the following three RT fixes:
-
-5bba64129745 tasklet: Address a race resulting in double-enqueue
-886fa0cf47d6 mm: slub: Always flush the delayed empty slubs in flush_all()
-8500870d1580 fs/dcache: Include swait.h header
-
-You can get this release via the git tree at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
-
-  branch: v4.14-rt
-  Head SHA1: 7c010a975cdc47eba4341b50e6262aa5fb53c17e
-
-Or to build 4.14.184-rt84 directly, the following patches should be applied:
-
-  https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.14.tar.xz
-
-  https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.14.184.xz
-
-  https://www.kernel.org/pub/linux/kernel/projects/rt/4.14/patch-4.14.184-rt84.patch.xz
-
-
-You can also build from 4.14.183-rt83 by applying the incremental patch:
-
-  https://www.kernel.org/pub/linux/kernel/projects/rt/4.14/incr/patch-4.14.183-rt83-rt84.patch.xz
-
-Enjoy!
-Clark
+Sure, but what I mean is that I'd expect the performance loss to be
+dominated by that, not by copy_from_user/copy_to_user on large amounts
+of data.  Especially on the loads like kernel builds - a lot of stat()
+and getdents() calls there.
