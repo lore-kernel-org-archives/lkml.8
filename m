@@ -7,65 +7,65 @@ X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4293BC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 15:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B301C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 15:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22F0C20789
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 15:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 782E02074D
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 15:59:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wy3dixhJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H7hQMTvJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbgFMP65 (ORCPT
+        id S1726752AbgFMP7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 11:58:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35122 "EHLO
+        Sat, 13 Jun 2020 11:59:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726583AbgFMP6h (ORCPT
+        with ESMTP id S1726618AbgFMP6X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 11:58:37 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 981F6C08C5C1
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 08:58:37 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id c194so11733728oig.5
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 08:58:37 -0700 (PDT)
+        Sat, 13 Jun 2020 11:58:23 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3299EC03E96F
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 08:58:23 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id n70so9765449ota.5
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 08:58:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=gl7hLsW2EEIyewv4iaFzOiTfdffkChsOHbVzBW70XfA=;
-        b=Wy3dixhJ89xAKNIjKWVD+OtCnUJlAn3RBHZN6FaEQoefeCprrrwOmhffjl1eXRSz0j
-         PxuvMV70CxX6J5k7ZkHAkm9OHoEYZn+zs5TElTIJAfS9kM0PKA41Ay3DRuKwgEnUXdH4
-         D6IJeah6YLFs0rq1IEdTNIjvLt17jkuCz7d/QPEL2njkjsAyY6mWhnCAKlX5B+ukwZ1a
-         GS9yjQxjb/+OxIDXdkiQxV7qvvPdFmw7+xQNY2nCMN+0OWw0dFHl1o21j6c3SatUnyAl
-         80Ank5nuzYiVFlT8eqhnjD0M39Kl7UanOUE4g6d6RIH4Xx+GY4tvmXpPC0849dIg0gve
-         XP9w==
+        bh=2waM161DAKaaC/jJszWFJ4b/dfYZwxUtS6N+459tvyI=;
+        b=H7hQMTvJ9EcP8KXtg8ZFZi8Q88kyHdEZ7ZeGZmGZoi7VnMJE8YXRG3chVPwzF+Ivks
+         t2mTOHb9sg1bqMFQCjhHFTjpt+IDpuwYFDhak2jPU6xvzbiWXM6jlF99Omlzu399MdjO
+         ase4dp3pvBgcTmtIEF0qOdTmJr9Yjf2NHdqLoa+xhupxVxYLaR2nEG6QLw92eZNWfr19
+         6R+owfvTWO3wBd3jip+qhT38a32FAXyPiiHntA+1sN93CHjwVKdWgkJk0EDkWcsztMXK
+         ycvQFMniGigyxeoCXy+uMPtpKANZ2M9KvO1F79PrNMTRxGySV1HuAraHZ8kMrQ9vkJp3
+         ywsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=gl7hLsW2EEIyewv4iaFzOiTfdffkChsOHbVzBW70XfA=;
-        b=Nqs1/NWZg1QcNHVudTmxCGROd5ikbyIOjzgNUCGTeq5bEI1BIo1BGFZIh43q16I8Hq
-         cJWglQpaYbQyzth6h49dBpkKxlY4pmT/wRvNhOkA97jR+9i14mwWb++ukSTfsfoEWvWF
-         05tjkBs1mVP/AbwCWopMyOaFzbLzoGi9OZnYc42QR9DRyynRpByetT3CkJfGPGumaoBC
-         2obZ8hKeh6Y68caVzGW9OLN7GEy/q60dmC/4b/kKbedAuhTvDY2+FNN45HG3x28Tl0jP
-         PJiTtk73ddHtle4ACIH3ohaJ7QRAq0l9VsJF+Ovm1bzxs5UZOhQDme5oxl2P+kAy1VZG
-         5tnA==
-X-Gm-Message-State: AOAM530sNrjy+hFHGpFW/00GZQeZJmEBYoK1yGp3+NO8jDZaF5LZNa57
-        rvYxf6gC1MWRw42OybY/Gns=
-X-Google-Smtp-Source: ABdhPJw1BonPv2EIVs8JMjp3GS/uzG6AO7n2GtFhzkIyeIRgymHKYVttJf4oNb0sMxGegKqWtpoB1Q==
-X-Received: by 2002:a05:6808:7c8:: with SMTP id f8mr3075221oij.51.1592063916855;
-        Sat, 13 Jun 2020 08:58:36 -0700 (PDT)
+        bh=2waM161DAKaaC/jJszWFJ4b/dfYZwxUtS6N+459tvyI=;
+        b=Dph/kidGRVeR6fWBpdBuJmRHkuugEeJH1WSAfUgWYtZ9kfPOB9Afd1p3hwMusdozkF
+         4iEQRrPKu5FAN5CcEuPLDR2UJFJyJuibJ06+43ZhK68eqAAWadlELlfqxdMM0f1q+swg
+         r7It16Xgoo8HbN439ulYT5SmKJ5FAJ7bZCmJoeXbK4l+aI+78r/H9utkEHyW7sEvPljP
+         nqeKY3oSZhmPxsa5gptB+3lhGMmbC4R4rdwKZ+UvchoAhLZ5gY3RQLK7FSh+UFk3oA4M
+         aRmvdpoib+lGBH2spBQHLZt8g5ECYcDDNrzaNZLKOEzDAWn2rPiNMgXIeCuSUAVNLdUQ
+         ZfTw==
+X-Gm-Message-State: AOAM532YKb2SCkxC4VIUouDTR26876sdFASm0mCVSrFw9T6+Sy+85KfP
+        P4uVwxMMCCF3KrvulKMgMa67xsb6Xwo=
+X-Google-Smtp-Source: ABdhPJwHt4So/uJ7GShZE7h9/MYPSLGVtdUPE2jbQncDRTkyGVvofnyDI2JaH3bCWKf4I7OFPjbk4A==
+X-Received: by 2002:a9d:6ad9:: with SMTP id m25mr15786524otq.206.1592063902597;
+        Sat, 13 Jun 2020 08:58:22 -0700 (PDT)
 Received: from frodo.hsd1.co.comcast.net ([2601:284:8204:6ba0::aaac])
-        by smtp.googlemail.com with ESMTPSA id 53sm2105565otv.22.2020.06.13.08.58.35
+        by smtp.googlemail.com with ESMTPSA id 53sm2105565otv.22.2020.06.13.08.58.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Jun 2020 08:58:36 -0700 (PDT)
+        Sat, 13 Jun 2020 08:58:22 -0700 (PDT)
 From:   Jim Cromie <jim.cromie@gmail.com>
 To:     jbaron@akamai.com, linux-kernel@vger.kernel.org,
         akpm@linuxfoundation.org, gregkh@linuxfoundation.org
 Cc:     linux@rasmusvillemoes.dk, Jim Cromie <jim.cromie@gmail.com>
-Subject: [PATCH v2 22/24] dyndbg: add print-class as trailing number to control output
-Date:   Sat, 13 Jun 2020 09:57:36 -0600
-Message-Id: <20200613155738.2249399-23-jim.cromie@gmail.com>
+Subject: [PATCH v2 16/24] dyndbg: prefer declarative init in caller, to memset in callee
+Date:   Sat, 13 Jun 2020 09:57:30 -0600
+Message-Id: <20200613155738.2249399-17-jim.cromie@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200613155738.2249399-1-jim.cromie@gmail.com>
 References: <20200613155738.2249399-1-jim.cromie@gmail.com>
@@ -76,44 +76,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change adds trailing 0 for all existing callsites, and N>0 for
-any uses of pr_debug_n().
-
-subsequent patches add pr_debug_n(1) & pr_debug_n(2) to kset-example,
-demonstrating that the callsite descriptors are getting initialized
-properly by the *_cl adaptations done previously.
-
-bash-5.0# modprobe kset-example
-bash-5.0# grep -v '0$' control
-[  311.060809] dynamic_debug:ddebug_proc_open: called
-samples/kobject/kset-example.c:80 [kset_example]foo_attr_store =_ "called" 2
-samples/kobject/kset-example.c:59 [kset_example]foo_attr_show =_ "called" 1
+drop memset in ddebug_parse_query, instead initialize the stack
+variable in the caller; let the compiler decide how to do it.
 ---
- lib/dynamic_debug.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ lib/dynamic_debug.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index 0035218d7059..262a6a761219 100644
+index 40436270d38a..b3c262c009d2 100644
 --- a/lib/dynamic_debug.c
 +++ b/lib/dynamic_debug.c
-@@ -919,7 +919,7 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
- 
- 	if (p == SEQ_START_TOKEN) {
- 		seq_puts(m,
--			 "# filename:lineno [module]function flags format\n");
-+			 "# filename:lineno [module]function flags format prcls\n");
- 		return 0;
+@@ -373,7 +373,6 @@ static int ddebug_parse_query(char *words[], int nwords,
+ 		pr_err("expecting pairs of match-spec <value>\n");
+ 		return -EINVAL;
  	}
+-	memset(query, 0, sizeof(*query));
  
-@@ -928,7 +928,7 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
- 		   iter->table->mod_name, dp->function,
- 		   ddebug_describe_flags(dp->flags, &flags));
- 	seq_escape(m, dp->format, "\t\r\n\"");
--	seq_puts(m, "\"\n");
-+	seq_printf(m, "\" %d\n", dp->pr_class);
- 
- 	return 0;
- }
+ 	if (modname)
+ 		/* support $modname.dyndbg=<multiple queries> */
+@@ -494,7 +493,7 @@ static int ddebug_exec_query(char *query_string, const char *modname)
+ {
+ 	struct flagsettings mods = {};
+ 	struct flagsettings filter = {};
+-	struct ddebug_query query;
++	struct ddebug_query query = {};
+ #define MAXWORDS 9
+ 	int nwords, nfound;
+ 	char *words[MAXWORDS];
 -- 
 2.26.2
 
