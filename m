@@ -2,198 +2,163 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C61C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 15:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB15C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 15:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E337D20792
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 15:16:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vHy2fGLc"
+	by mail.kernel.org (Postfix) with ESMTP id 92EE62078A
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 15:24:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbgFMPQn (ORCPT
+        id S1726455AbgFMPYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 11:16:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56920 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbgFMPQm (ORCPT
+        Sat, 13 Jun 2020 11:24:09 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:35132 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726323AbgFMPYI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 11:16:42 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71D28C03E96F;
-        Sat, 13 Jun 2020 08:16:41 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id i1so11441064ils.11;
-        Sat, 13 Jun 2020 08:16:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=6fNrHRViBCmNMN6HkRzSmxJVnPWhBWv7Mu2Mxbxlp0M=;
-        b=vHy2fGLcFLCbtpWWqJFnA1jlrFHl9io1ENiI+4kIfLPPcXyTE9Hq7EPUfMAFW79n65
-         Qq+Pa7/+I8v8X57833OggvQM5WR27MlUEytmGK7bYEVVWTQGx0ae7YCr43Qsg++tUVtT
-         ViUpKBrZ4pVg15Fj0MSCs1VEjFReakkIGylbGnjRdtU61qJ8uONU5V6mWhMcCZRZ6KgY
-         kFatsN4gylTALbe7rmPmZIbU69GbMHwdLdGAp0cMJXsri2+7RC3JkL3Vj9M9cRnQwkFN
-         5VvHfvZsXm10BqId4h71EQi+5PuNvKdENELyETs2965/b+naooHWB4WadicGKFsKnsBe
-         FYxg==
+        Sat, 13 Jun 2020 11:24:08 -0400
+Received: by mail-pl1-f194.google.com with SMTP id k1so4844837pls.2;
+        Sat, 13 Jun 2020 08:24:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=6fNrHRViBCmNMN6HkRzSmxJVnPWhBWv7Mu2Mxbxlp0M=;
-        b=JLp2bgPXxfH6JAanzVZ4pg6tPXaV4MYcJGhxZ8ZqQoQAw0A38yIPRHq0pkjMvu+ZSk
-         b8asjWW+jfmOLlFg96qheYQpcJb60D07Ah0wnngipAOp8DFznylKCmuXso5XJMUsA6sx
-         s52xV1jci2QK4ygjp7tMQVJpjhdi/dNRFbf/zq653iT104DjiElRNRl/oFHgMjqeIrbW
-         tZ5Tqqq7KkAxpUYcmLLlCht81ESAzyovvTecEbug7WySXfm2DWPJHSjms/r1au0JrUbQ
-         31s2G0lCLg/lKgbvblqa9Gib18dWj8jBVf032Pf5qit4ZXtYlii0rKeFzztNcHxwfEei
-         ZHzg==
-X-Gm-Message-State: AOAM530jUylp6vEMbx4kODlrOnrRDduQ0kqo0aPooA9oC/hsB6WmgUKM
-        LJT75ow7g0aKKA3niBKKCRjleAqNTPBtgzvvBkQ=
-X-Google-Smtp-Source: ABdhPJxTvor6HLoEX1aH1Eqdwj9rApUr3ZkZUyfZRSr0Qhpp27x1XuOodUoa4HJv5dNmCae5bwJEXluoVvWPft0xTNQ=
-X-Received: by 2002:a92:d704:: with SMTP id m4mr17667878iln.248.1592061399726;
- Sat, 13 Jun 2020 08:16:39 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=UfcBK4H6+ohdNeuGMt6p8le19zTz2XSkp3/CaqQe5O8=;
+        b=b7OGMAztATiBMhCEgX89EHKHAhB0BhPFp0ruXbyycH95HZ2cgz5AR7VOxBhlLeRy4e
+         tot4TZJu0PaQgW6rEQuwPEo8K37fIVtbkpRmQP/0UYBAC65yTJCt+LRPxdt8NWauCRF4
+         KpzlGDdHvfoTTxsY6EPVRwm3QvydJW9F+MITi7i3I1qdycMvuB52ssAgmEKg/mi41cls
+         Wt35aFGle9QG4tBDmN3zSeGeDNWa7/s7vgrsjHw5vcWQrAK2PjmuNSaZp37A+jmb4GIW
+         YlSwf2tVubKYgWblVyPmtYCVG+gmGeMwm7MmKOYxloKV2xehzVdCZ8AidpbeP4DVPbGC
+         BCTw==
+X-Gm-Message-State: AOAM532yFGb6NnJPdgZaxe8kcaJ6bnOx1QFJFSu7Ge49GbuBCcvji0Xb
+        LSJApl1XctrCRsSuulQh5P4=
+X-Google-Smtp-Source: ABdhPJymdjHm3iCGCIjhJV+CctFN8xPeZhVKyskO8vOoKFu3NUorZSrNpR7TMJevj+fQGTqZ/x3Wpw==
+X-Received: by 2002:a17:90b:283:: with SMTP id az3mr3982512pjb.232.1592061847390;
+        Sat, 13 Jun 2020 08:24:07 -0700 (PDT)
+Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
+        by smtp.gmail.com with ESMTPSA id z186sm7963645pgb.93.2020.06.13.08.24.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 13 Jun 2020 08:24:06 -0700 (PDT)
+Subject: Re: [RFC PATCH 4/5] scsi: ufs: L2P map management for HPB read
+To:     daejun7.park@samsung.com, ALIM AKHTAR <alim.akhtar@samsung.com>,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>
+Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+References: <0389f9cf-fea8-9990-7699-0e4322728e4a@acm.org>
+ <231786897.01591322101492.JavaMail.epsvc@epcpadp1>
+ <336371513.41591320902369.JavaMail.epsvc@epcpadp1>
+ <963815509.21591320301642.JavaMail.epsvc@epcpadp1>
+ <231786897.01591320001492.JavaMail.epsvc@epcpadp1>
+ <963815509.21591323002276.JavaMail.epsvc@epcpadp1>
+ <CGME20200605011604epcms2p8bec8ef6682583d7248dc7d9dc1bfc882@epcms2p5>
+ <963815509.21591934102518.JavaMail.epsvc@epcpadp1>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <6d570594-96f8-764e-e252-97a714731650@acm.org>
+Date:   Sat, 13 Jun 2020 08:24:04 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200605170720.2478262-1-noltari@gmail.com> <CAC=U0a3xa9k76mxsiVKDyXsuvboZAyMkXT-S3-6oVZKjnWkeHA@mail.gmail.com>
- <05C962F2-7D3B-4103-91DD-8D31C439D521@gmail.com>
-In-Reply-To: <05C962F2-7D3B-4103-91DD-8D31C439D521@gmail.com>
-From:   Kamal Dasu <kdasu.kdev@gmail.com>
-Date:   Sat, 13 Jun 2020 11:16:28 -0400
-Message-ID: <CAC=U0a0=7UHY2fH+2HS5hbxThe9rYvqTKggFJP4mm-5ib52dtA@mail.gmail.com>
-Subject: Re: [PATCH] mtd: rawnand: brcmnand: force raw OOB writes
-To:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
-Cc:     Brian Norris <computersforpeace@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        "R, Vignesh" <vigneshr@ti.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <963815509.21591934102518.JavaMail.epsvc@epcpadp1>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alvaro,
-
-
-On Sat, Jun 13, 2020 at 5:01 AM =C3=81lvaro Fern=C3=A1ndez Rojas
-<noltari@gmail.com> wrote:
+On 2020-06-11 20:37, Daejun Park wrote:
+>>> +static int ufshpb_execute_map_req(struct ufshpb_lu *hpb,
+>>> +				  struct ufshpb_req *map_req)
+>>> +{
+>>> +	struct request_queue *q;
+>>> +	struct request *req;
+>>> +	struct scsi_request *rq;
+>>> +	int ret = 0;
+>>> +
+>>> +	q = hpb->sdev_ufs_lu->request_queue;
+>>> +	ret = ufshpb_map_req_add_bio_page(hpb, q, map_req->bio,
+>>> +					  map_req->mctx);
+>>> +	if (ret) {
+>>> +		dev_notice(&hpb->hpb_lu_dev,
+>>> +			   "map_req_add_bio_page fail %d - %d\n",
+>>> +			   map_req->rgn_idx, map_req->srgn_idx);
+>>> +		return ret;
+>>> +	}
+>>> +
+>>> +	req = map_req->req;
+>>> +
+>>> +	blk_rq_append_bio(req, &map_req->bio);
+>>> +	req->rq_flags |= RQF_QUIET;
+>>> +	req->timeout = MAP_REQ_TIMEOUT;
+>>> +	req->end_io_data = (void *)map_req;
+>>> +
+>>> +	rq = scsi_req(req);
+>>> +	ufshpb_set_read_buf_cmd(rq->cmd, map_req->rgn_idx,
+>>> +				map_req->srgn_idx, hpb->srgn_mem_size);
+>>> +	rq->cmd_len = HPB_READ_BUFFER_CMD_LENGTH;
+>>> +
+>>> +	blk_execute_rq_nowait(q, NULL, req, 1, ufshpb_map_req_compl_fn);
+>>> +
+>>> +	atomic_inc(&hpb->stats.map_req_cnt);
+>>> +	return 0;
+>>> +}
+>> 
+>> Why a custom timeout instead of the SCSI LUN timeout?
 >
-> Hi Kamal,
->
-> > El 12 jun 2020, a las 20:47, Kamal Dasu <kdasu.kdev@gmail.com> escribi=
-=C3=B3:
-> >
-> > On Fri, Jun 5, 2020 at 1:07 PM =C3=81lvaro Fern=C3=A1ndez Rojas <noltar=
-i@gmail.com> wrote:
-> >>
-> >> MTD_OPS_AUTO_OOB is writting OOB with ECC enabled, which changes all E=
-CC bytes
-> >> from an erased page to 0x00 when JFFS2 cleanmarkers are added with mtd=
--utils.
-> >>         | BBI |   JFFS2   |   ECC   |   JFFS2   | Spare  |
-> >> 00000800  ff ff 19 85 20 03 00 00  00 00 00 00 08 ff ff ff
-> >>
-> >> However, if OOB is written with ECC disabled, the JFFS2 cleanmarkers a=
-re
-> >> correctly written without changing the ECC bytes:
-> >>         | BBI |   JFFS2   |   ECC   |   JFFS2   | Spare  |
-> >> 00000800  ff ff 19 85 20 03 ff ff  ff 00 00 00 08 ff ff ff
-> >
-> > Both brcmand_write_oob_raw() and brcmnand_write_oob() use
-> > brcmnand_write() that uses PROGRAM_PAGE cmd, means also programs data
-> > areas and ECC when enabled  is always calculated on DATA+OOB.  since
->
-> Are you sure about that? I think that HW ECC is only calculated for DATA,=
- not for OOB.
-> The fact that we=E2=80=99re not writing any DATA seems to be the problem =
-that is changing all ECC bytes to 0x00.
->
+> There was no suitable timeout value to use. I've included sd.h, so I'll
+> use sd_timeout.
 
-Only true for 1-bit hamming code on early controller versions.  For
-BCH algorithms both data+oob are covered. And the controller driver
-intentionally does not implement a spare area program cmd, even for
-OOB writes. Also BRCMNAND_ACC_CONTROL_PARTIAL_PAGE=3D0 (when present)
-does not allow for spare areas only writes.
+Wouldn't that be a layering violation? The UFS driver is a SCSI LLD
+driver and the sd driver is a SCSI ULD. A SCSI LLD must not make any
+assumptions about which ULD driver has been attached.
 
-> > in both cases we only want to modify OOB, data is always assumed to be
-> > 0xffs (means erased state). So as far as this api always is used on
-> > the erased page it should be good. Are the sub-pages/oob areas read by
-> > jffs2  also read without ecc enabled?. Just want to be sure that it
-> > does not break any other utilities like nandwrite.
->
-> No, sub-pages/oob areas read by JFFS2 with ECC enabled.
-> I don=E2=80=99t think this breaks anything at all, since I tested nandwri=
-te with OOB enabled and everything was written perfectly.
->
+How about leaving req->timeout zero such that blk_add_timer() sets it?
+blk_add_timer() is called by blk_mq_start_request(). From blk_add_timer():
 
-Going by the commit message you are assuming 1-bit hamming  code, that
-is the only exception on early version controllers where only data was
-covered for ecc calculations when enabled.
-Which version of the controller are you using  ?. Did you test with
-BCH-4 or any BCH ?.
+	if (!req->timeout)
+		req->timeout = q->rq_timeout;
 
-> BTW, I tried another approach that forced MTD_OPS_AUTO_OOB to be written =
-as raw OOB, but it was rejected:
-> http://patchwork.ozlabs.org/project/linux-mtd/patch/20200504094253.274110=
-9-1-noltari@gmail.com/
-> https://lkml.org/lkml/2020/5/4/215
->
+Thanks,
 
-Are there any other use cases other than jffs2 where only oob needs to
-be modified ?. But surely intentionally disabling ecc instead of
-forcing it is the way, but I am not sure it will still work for other
-BCH algorithms though where both data and oob are covered.
-
-> >
-> >>
-> >> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
-> >> ---
-> >> drivers/mtd/nand/raw/brcmnand/brcmnand.c | 9 +--------
-> >> 1 file changed, 1 insertion(+), 8 deletions(-)
-> >>
-> >> diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/na=
-nd/raw/brcmnand/brcmnand.c
-> >> index 8f9ffb46a09f..566281770841 100644
-> >> --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> >> +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> >> @@ -2279,13 +2279,6 @@ static int brcmnand_write_page_raw(struct nand_=
-chip *chip, const uint8_t *buf,
-> >>        return nand_prog_page_end_op(chip);
-> >> }
-> >>
-> >> -static int brcmnand_write_oob(struct nand_chip *chip, int page)
-> >> -{
-> >> -       return brcmnand_write(nand_to_mtd(chip), chip,
-> >> -                             (u64)page << chip->page_shift, NULL,
-> >> -                             chip->oob_poi);
-> >> -}
-> >> -
-> >> static int brcmnand_write_oob_raw(struct nand_chip *chip, int page)
-> >> {
-> >>        struct mtd_info *mtd =3D nand_to_mtd(chip);
-> >> @@ -2642,7 +2635,7 @@ static int brcmnand_init_cs(struct brcmnand_host=
- *host, struct device_node *dn)
-> >>        chip->ecc.write_oob_raw =3D brcmnand_write_oob_raw;
-> >>        chip->ecc.read_oob_raw =3D brcmnand_read_oob_raw;
-> >>        chip->ecc.read_oob =3D brcmnand_read_oob;
-> >> -       chip->ecc.write_oob =3D brcmnand_write_oob;
-> >> +       chip->ecc.write_oob =3D brcmnand_write_oob_raw;
-> >>
-> >>        chip->controller =3D &ctrl->controller;
-> >>
-> >> --
-> >> 2.26.2
-> >>
->
-> Best regards,
-> =C3=81lvaro.
+Bart.
