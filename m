@@ -6,71 +6,63 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4D3C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 15:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE4AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 15:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 586512074D
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 15:50:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B4302074D
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 15:54:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726499AbgFMPuu (ORCPT
+        id S1726466AbgFMPyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 11:50:50 -0400
-Received: from muru.com ([72.249.23.125]:57834 "EHLO muru.com"
+        Sat, 13 Jun 2020 11:54:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47286 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726289AbgFMPut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 11:50:49 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id A66CB80FA;
-        Sat, 13 Jun 2020 15:51:40 +0000 (UTC)
-Date:   Sat, 13 Jun 2020 08:50:46 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford-BE <aford@beaconembedded.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Paul Walmsley <paul@pwsan.com>,
-        Russell King <linux@armlinux.org.uk>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] ARM: dts: omap3: Migrate AES from hwmods to sysc-omap2
-Message-ID: <20200613155046.GV37466@atomide.com>
-References: <20200504230100.181926-1-aford173@gmail.com>
- <20200505184223.GR37466@atomide.com>
- <CAHCN7xJxg+uO4h2RcapyjormTMzXFwoMUOi7rh2hUsScJtK56Q@mail.gmail.com>
- <20200505233408.GS37466@atomide.com>
- <CAHCN7xJnBkihY0XwNw+7xj5qZhwz_Up-b_LEt3PY8aFWVYsnrQ@mail.gmail.com>
+        id S1726323AbgFMPyw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jun 2020 11:54:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 8A9DDAB76;
+        Sat, 13 Jun 2020 15:54:54 +0000 (UTC)
+Date:   Sat, 13 Jun 2020 17:54:49 +0200
+From:   Borislav Petkov <bp@suse.de>
+To:     Qian Cai <cai@lca.pw>
+Cc:     thomas.lendacky@amd.com, brijesh.singh@amd.com, tglx@linutronix.de,
+        glider@google.com, peterz@infradead.org, dvyukov@google.com,
+        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: Re: AMD SME + KASAN = doom
+Message-ID: <20200613155449.GB3090@zn.tnic>
+References: <20200613152408.GB992@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAHCN7xJnBkihY0XwNw+7xj5qZhwz_Up-b_LEt3PY8aFWVYsnrQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200613152408.GB992@lca.pw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Adam Ford <aford173@gmail.com> [200613 11:11]:
-> Through trial and error, I think I have the right IRQ for OMAP3630 for
-> the 2nd instance.
+On Sat, Jun 13, 2020 at 11:24:08AM -0400, Qian Cai wrote:
+> CONFIG_AMD_MEM_ENCRYPT_ACTIVE_BY_DEFAULT=y + KASAN (inline) will reset
+> the host right away after those lines on linux-next (the mainline has
+> the same problem when I tested a while back, so it seems never work),
 
-OK great.
+$ head arch/x86/mm/Makefile
+# SPDX-License-Identifier: GPL-2.0
+# Kernel does not boot with instrumentation of tlb.c and mem_encrypt*.c
+KCOV_INSTRUMENT_tlb.o                   := n
+KCOV_INSTRUMENT_mem_encrypt.o           := n
+KCOV_INSTRUMENT_mem_encrypt_identity.o  := n
 
-> > > I assume the second engine uses different interrupts.  I don't suppose
-> > > anyone know what it should be?
-> >
-> > Sorry no idea, usually the secure accelerator documentation is just
-> > left out it seems. My guess the values are the same as on omap3.
-> 
-> Tony - Could you review the hwmod transition I did for the first
-> engine to make sure I did it right?
+KASAN_SANITIZE_mem_encrypt.o            := n
+KASAN_SANITIZE_mem_encrypt_identity.o   := n
 
-Yeah that's about all there is to it :)
+so something else needs to be de-KASAN-ed too.
 
-> If you think I did it right, I'll post my V2.
+For now flip your Subject: AMD SME - KASAN = boot.
 
-Yes please do.
+-- 
+Regards/Gruss,
+    Boris.
 
-Regards,
-
-Tony
+SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
