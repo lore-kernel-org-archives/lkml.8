@@ -2,136 +2,179 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3462CC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 08:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54AFAC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 09:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 110B52081A
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 08:43:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592037809;
-	bh=SyRgaHUOm/RP8zZ90+MyAGaRN4cSsWrzzNGHyfuBnCk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Zgb3jPTIJSZaWBptIMKbLPs7oFmPSzh26DZuanwrHwKVpKnqkZgqujQ+trMHmJPXO
-	 0VnHnNYh6MXsy1rATwUdCauLVQG3ma8Fbufq513mhE/j7ohUNKIlbWr5KMzgckGIKE
-	 7J1qa7dARk+fXdYLDEKVuIROCdyb8mnDuO1qaDtY=
+	by mail.kernel.org (Postfix) with ESMTP id 3476420739
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 09:14:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EqxjKs52"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbgFMIn0 (ORCPT
+        id S1726361AbgFMJCC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 04:43:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53324 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725783AbgFMIn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 04:43:26 -0400
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7507F20836;
-        Sat, 13 Jun 2020 08:43:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592037805;
-        bh=SyRgaHUOm/RP8zZ90+MyAGaRN4cSsWrzzNGHyfuBnCk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=BgrzEr0T3JoHmKZPf5JHHJjvygSMZGF5NKn+13GG7QHtIS/IBZ7akYkLuc0TbufY0
-         IdI3tEBicGVpmTrhCjhPNSbLdEFx6l03HXU1AMn8ObSGPs2e5kB+GmV2Rt/rdkNQLA
-         gC00pV5XYzyrAQW5/CPir6q3bWaJ154iM+O+UJ14=
-Received: by mail-lj1-f173.google.com with SMTP id z9so13654752ljh.13;
-        Sat, 13 Jun 2020 01:43:25 -0700 (PDT)
-X-Gm-Message-State: AOAM530UMrNSLF4v9bMAv1GquAIAsJZVHEBg2VJ+ce9ilPP2+24WGcJW
-        9BJyo7cAOyU92QRBAJcL7HThNO6/3AQ43YFnCPM=
-X-Google-Smtp-Source: ABdhPJwZ1ylOrBsd6XVZmYSQ3sLMGYqoTKujz2SwyQaUfONmAEP2kaw8s4sWs89ZwT6ZjZ3AWnilqqgnG/azc96C0bc=
-X-Received: by 2002:a2e:2a42:: with SMTP id q63mr9000358ljq.265.1592037803689;
- Sat, 13 Jun 2020 01:43:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200611095804.22026-1-f.suligoi@asem.it>
-In-Reply-To: <20200611095804.22026-1-f.suligoi@asem.it>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Sat, 13 Jun 2020 16:43:11 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTTojGRnshstFwqu4xM_txeBOY=uFiWPTpXZPWv2uS6QqQ@mail.gmail.com>
-Message-ID: <CAJF2gTTojGRnshstFwqu4xM_txeBOY=uFiWPTpXZPWv2uS6QqQ@mail.gmail.com>
-Subject: Re: [PATCH] doc: devicetree: bindings: fix spelling mistake
-To:     Flavio Suligoi <f.suligoi@asem.it>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-csky@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 13 Jun 2020 05:02:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56252 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbgFMJCA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jun 2020 05:02:00 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E6B1C03E96F;
+        Sat, 13 Jun 2020 02:01:59 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id l26so9956567wme.3;
+        Sat, 13 Jun 2020 02:01:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=VkuzFvdlM+WfXelz0UOaKXXxDWlDEXZOnTOaISWqbKw=;
+        b=EqxjKs52NJHgtFyMhVSpqyD3PWJhDN0rsx9hl9lfVFcvJr+NZbRIbchujrGGh2XBck
+         9awQrTW+DlyZH33L2UJ6aUDn/Yq1eW03/p3QtsmvU6BHqFNWLuDyISfNURMv4T1xu+/L
+         i1DnEzknJBrzz9JEFbmUP58rdiWlwJabZ0eTE0mMNzFXCSLDjlQseWhDJ+9Wz+iPH1WB
+         C9wQ6L31HVmuAyXjurZEDjBlveAorSw9USDN+i3KnWA0HCJ4G4s459EcUn5gvgV2/gos
+         JzM4Ikb16/00TpGZCdrn5ZBd6JDaWXNZ1sVcgWFYuzage+9DOBUQp9ZBnSdhIx9e4A6X
+         gUrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=VkuzFvdlM+WfXelz0UOaKXXxDWlDEXZOnTOaISWqbKw=;
+        b=BF6SeHzKoz+KruWQypyM23KAdIjNEYr2pAh02pNrusPTo21jLLF4NjtTjJ/V1B3Fkc
+         i/nAbCFAEGWPb9YJzKzbQM3THFivbB1kH3Ojjsj3egSeER5YEyAb4mNbjWdoE5wPM6l/
+         u/wbd0AQYG7Tfe3BB8lpiOjb5K3d34015iTRxJY5tqBZ93VBT+k+zDi3/qU98bcBouPo
+         xWHC473dQLgA8xfCV4NJDUXNPzNdEEbjYymOTIqLg+n/0O/GINAaZ3aK01dcEoRAcdjY
+         kuOEOjvOer3HqM0Wbu9Vszf3IJ8u8GkBgKEvLImrCIGxroyhKxWFHhC9o1UGniq6IQwG
+         FJgA==
+X-Gm-Message-State: AOAM533ST54FwT8sv7YEnt1Q8ya0ILjZrNt82BcyE4t7MVyHCLixe8rO
+        pucPUgo1LAgpbDcgS/WnbvI=
+X-Google-Smtp-Source: ABdhPJwu3rED1GP9pmDiBAlCpcu0C6Z5OC80/BR0W/RoDA2qCmKIZfNB+8MGMX4d7gHqRTyItrE7ig==
+X-Received: by 2002:a1c:2d83:: with SMTP id t125mr3122985wmt.187.1592038918000;
+        Sat, 13 Jun 2020 02:01:58 -0700 (PDT)
+Received: from macbook-pro-alvaro-eth.lan (168.red-88-20-188.staticip.rima-tde.net. [88.20.188.168])
+        by smtp.gmail.com with ESMTPSA id b143sm5746659wme.20.2020.06.13.02.01.57
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 13 Jun 2020 02:01:57 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH] mtd: rawnand: brcmnand: force raw OOB writes
+From:   =?utf-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
+In-Reply-To: <CAC=U0a3xa9k76mxsiVKDyXsuvboZAyMkXT-S3-6oVZKjnWkeHA@mail.gmail.com>
+Date:   Sat, 13 Jun 2020 11:01:56 +0200
+Cc:     Brian Norris <computersforpeace@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        "R, Vignesh" <vigneshr@ti.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <05C962F2-7D3B-4103-91DD-8D31C439D521@gmail.com>
+References: <20200605170720.2478262-1-noltari@gmail.com>
+ <CAC=U0a3xa9k76mxsiVKDyXsuvboZAyMkXT-S3-6oVZKjnWkeHA@mail.gmail.com>
+To:     Kamal Dasu <kdasu.kdev@gmail.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Acked-by: Guo Ren <guoren@kernel.org>
+Hi Kamal,
 
-On Thu, Jun 11, 2020 at 5:58 PM Flavio Suligoi <f.suligoi@asem.it> wrote:
->
-> Fix typo: "triger" --> "trigger"
->
-> Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
-> ---
->  Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt | 2 +-
->  .../devicetree/bindings/interrupt-controller/csky,mpintc.txt    | 2 +-
->  Documentation/devicetree/bindings/timer/csky,mptimer.txt        | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt b/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
-> index ba455589f869..e1c49b660d3a 100644
-> --- a/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
-> +++ b/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
-> @@ -12,7 +12,7 @@ Required properties for the top level node:
->     Only the GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
->  - #interrupt-cells : Specifies the number of cells needed to encode an
->     interrupt. Should be 2. The first cell defines the interrupt number,
-> -   the second encodes the triger flags encoded as described in
-> +   the second encodes the trigger flags encoded as described in
->     Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
->  - compatible:
->    - "mediatek,mt7621-gpio" for Mediatek controllers
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-> index e13405355166..e6bbcae4d07f 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-> @@ -10,7 +10,7 @@ Interrupt number definition:
->   16-31  : private  irq, and we use 16 as the co-processor timer.
->   31-1024: common irq for soc ip.
->
-> -Interrupt triger mode: (Defined in dt-bindings/interrupt-controller/irq.h)
-> +Interrupt trigger mode: (Defined in dt-bindings/interrupt-controller/irq.h)
->   IRQ_TYPE_LEVEL_HIGH (default)
->   IRQ_TYPE_LEVEL_LOW
->   IRQ_TYPE_EDGE_RISING
-> diff --git a/Documentation/devicetree/bindings/timer/csky,mptimer.txt b/Documentation/devicetree/bindings/timer/csky,mptimer.txt
-> index 15cfec08fbb8..f5c7e99cf52b 100644
-> --- a/Documentation/devicetree/bindings/timer/csky,mptimer.txt
-> +++ b/Documentation/devicetree/bindings/timer/csky,mptimer.txt
-> @@ -8,7 +8,7 @@ regs is accessed by cpu co-processor 4 registers with mtcr/mfcr.
->   - PTIM_CTLR "cr<0, 14>" Control reg to start reset timer.
->   - PTIM_TSR  "cr<1, 14>" Interrupt cleanup status reg.
->   - PTIM_CCVR "cr<3, 14>" Current counter value reg.
-> - - PTIM_LVR  "cr<6, 14>" Window value reg to triger next event.
-> + - PTIM_LVR  "cr<6, 14>" Window value reg to trigger next event.
->
->  ==============================
->  timer node bindings definition
-> --
-> 2.17.1
->
+> El 12 jun 2020, a las 20:47, Kamal Dasu <kdasu.kdev@gmail.com> =
+escribi=C3=B3:
+>=20
+> On Fri, Jun 5, 2020 at 1:07 PM =C3=81lvaro Fern=C3=A1ndez Rojas =
+<noltari@gmail.com> wrote:
+>>=20
+>> MTD_OPS_AUTO_OOB is writting OOB with ECC enabled, which changes all =
+ECC bytes
+>> from an erased page to 0x00 when JFFS2 cleanmarkers are added with =
+mtd-utils.
+>>         | BBI |   JFFS2   |   ECC   |   JFFS2   | Spare  |
+>> 00000800  ff ff 19 85 20 03 00 00  00 00 00 00 08 ff ff ff
+>>=20
+>> However, if OOB is written with ECC disabled, the JFFS2 cleanmarkers =
+are
+>> correctly written without changing the ECC bytes:
+>>         | BBI |   JFFS2   |   ECC   |   JFFS2   | Spare  |
+>> 00000800  ff ff 19 85 20 03 ff ff  ff 00 00 00 08 ff ff ff
+>=20
+> Both brcmand_write_oob_raw() and brcmnand_write_oob() use
+> brcmnand_write() that uses PROGRAM_PAGE cmd, means also programs data
+> areas and ECC when enabled  is always calculated on DATA+OOB.  since
 
+Are you sure about that? I think that HW ECC is only calculated for =
+DATA, not for OOB.
+The fact that we=E2=80=99re not writing any DATA seems to be the problem =
+that is changing all ECC bytes to 0x00.
 
--- 
-Best Regards
- Guo Ren
+> in both cases we only want to modify OOB, data is always assumed to be
+> 0xffs (means erased state). So as far as this api always is used on
+> the erased page it should be good. Are the sub-pages/oob areas read by
+> jffs2  also read without ecc enabled?. Just want to be sure that it
+> does not break any other utilities like nandwrite.
 
-ML: https://lore.kernel.org/linux-csky/
+No, sub-pages/oob areas read by JFFS2 with ECC enabled.
+I don=E2=80=99t think this breaks anything at all, since I tested =
+nandwrite with OOB enabled and everything was written perfectly.
+
+BTW, I tried another approach that forced MTD_OPS_AUTO_OOB to be written =
+as raw OOB, but it was rejected:
+=
+http://patchwork.ozlabs.org/project/linux-mtd/patch/20200504094253.2741109=
+-1-noltari@gmail.com/
+https://lkml.org/lkml/2020/5/4/215
+
+>=20
+>>=20
+>> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
+>> ---
+>> drivers/mtd/nand/raw/brcmnand/brcmnand.c | 9 +--------
+>> 1 file changed, 1 insertion(+), 8 deletions(-)
+>>=20
+>> diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c =
+b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+>> index 8f9ffb46a09f..566281770841 100644
+>> --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+>> +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+>> @@ -2279,13 +2279,6 @@ static int brcmnand_write_page_raw(struct =
+nand_chip *chip, const uint8_t *buf,
+>>        return nand_prog_page_end_op(chip);
+>> }
+>>=20
+>> -static int brcmnand_write_oob(struct nand_chip *chip, int page)
+>> -{
+>> -       return brcmnand_write(nand_to_mtd(chip), chip,
+>> -                             (u64)page << chip->page_shift, NULL,
+>> -                             chip->oob_poi);
+>> -}
+>> -
+>> static int brcmnand_write_oob_raw(struct nand_chip *chip, int page)
+>> {
+>>        struct mtd_info *mtd =3D nand_to_mtd(chip);
+>> @@ -2642,7 +2635,7 @@ static int brcmnand_init_cs(struct =
+brcmnand_host *host, struct device_node *dn)
+>>        chip->ecc.write_oob_raw =3D brcmnand_write_oob_raw;
+>>        chip->ecc.read_oob_raw =3D brcmnand_read_oob_raw;
+>>        chip->ecc.read_oob =3D brcmnand_read_oob;
+>> -       chip->ecc.write_oob =3D brcmnand_write_oob;
+>> +       chip->ecc.write_oob =3D brcmnand_write_oob_raw;
+>>=20
+>>        chip->controller =3D &ctrl->controller;
+>>=20
+>> --
+>> 2.26.2
+>>=20
+
+Best regards,
+=C3=81lvaro.=
