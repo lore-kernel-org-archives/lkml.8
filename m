@@ -2,235 +2,150 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3DBEC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 20:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F5DC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 20:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB0BB2074D
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 20:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F8EB20789
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 20:20:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aAAn9Ybn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TVtRDFFM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbgFMULG (ORCPT
+        id S1726663AbgFMURK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 16:11:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45450 "EHLO
+        Sat, 13 Jun 2020 16:17:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbgFMULF (ORCPT
+        with ESMTP id S1726462AbgFMURI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 16:11:05 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A86ABC03E96F;
-        Sat, 13 Jun 2020 13:11:03 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id c35so8793866edf.5;
-        Sat, 13 Jun 2020 13:11:03 -0700 (PDT)
+        Sat, 13 Jun 2020 16:17:08 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FB7DC03E96F
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 13:17:08 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id z1so9786624qtn.2
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 13:17:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KL79S4+hUgkObdOESgcRP8w9AwkMqIeg4ECaVOYZgXE=;
-        b=aAAn9YbnKyY3xakCpUQqmSfpJ8TBXDoz23BN7tfWAmWXBB8ya095FrkwGKa6V4kKOz
-         bVgAz0+si/wTWRgNjiZVvgkc/KYla72rQEyHuzs+iDwIDglotg0+LiTFuPvA3NcNtgho
-         9rD2ESZb45Crnwt7ueXOTwfS6j1IcY6DBWUntQTSaTh7rt1mHKyjnFAoi5GfL3dP/Epx
-         B4zannS0VQNwZ8xScJkSWRSNNUDjtqas1c8EsTgGjT7YOWmFCFSFgXrW2wo/+VQc6ZUW
-         nDKf9REM9haCNwESR3woKWiQKVHEWwzzn1x8dv49Q0EITlcTO9G0dmJPAh7F9teWRs2z
-         A3eQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=XvmodwFRSbxZ4SI7zIxONP0m2KmZ4cn7dUMYubaK5Ks=;
+        b=TVtRDFFMNSw/l66ad19EjvoamliFx2a/IbcJQJllefvOFy6pOlBriThoJJMflyHn9r
+         mMfY2TQunbbGvbg5mEvBJGkEX/qtcUqXJjkDx++ZxZgiOhZz5j1wJHoHBQ1LIaINBS16
+         0WL4P9pN8Z1PexylK67mot7qXfFlTiHieZ96xUVBFxBWmlpHob9UgvAnei0Ar5u4sMtL
+         ME2bQgH5o/RbrXViwgvrOhH4loFcfg2NEqYPo0DYsFu38uEBKBr//Jzu2EY/uMFAXTpA
+         QYN2iOcVgDRuCs47X+Id4L8AAb3/F9DyZ7m7GaNO45gPGeCaXgtkosoQnMclldGinoZk
+         GDgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KL79S4+hUgkObdOESgcRP8w9AwkMqIeg4ECaVOYZgXE=;
-        b=G1vaXoL1pg/l5GVy8HlwY1wz00FPjs+PqSio/D50ZKUGxqbTVf4g3psi2LwLdUQRUp
-         LkHJQeHN4J5DQ3Kb0SXac0c/3fOxl42t7Yyrgx8OYu8A9q6TRWQlW4JMFurvFZdFpeMI
-         c+ZTLK+08wq0mCQTHvJUB68nJfXTYV6Y9ZCYqMEKOkt9tNclC5QAQ6lk6ZOzwluPuAkP
-         2jM/2XqadgSEb/Cwtn3XLvzLBLvu7AeM+iaC0BI6KcAx0Uyl19YOnHtvR5rT9f9AYZ5n
-         5Tpmt4hSYQiStq2OOTBOJk0NU2OMnBi7iX/w/tmLK4A68lpkkyXc1bvMyLtaw3bCYj5K
-         VnYQ==
-X-Gm-Message-State: AOAM531EMbKNd5Z1ac5KbLW450Ur+cFhV1zMZjMfFcQtpYVE0+rG0aIO
-        verxXECgUl3Nr50WJn63/tUET+vDurODUJdsa1E=
-X-Google-Smtp-Source: ABdhPJwmxCe3l7l+Q2sFU7DbBzL37uzSSvcK6IcY+3h34anGdhvzqzUr8OcdrPcp1XZ5TYekTfV+lESNz/ueDQd6ei4=
-X-Received: by 2002:a50:fb0b:: with SMTP id d11mr17783731edq.118.1592079060818;
- Sat, 13 Jun 2020 13:11:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1592047530.git.noodles@earth.li> <05dba86946541267e64438c2001aaeea16916391.1592047530.git.noodles@earth.li>
-In-Reply-To: <05dba86946541267e64438c2001aaeea16916391.1592047530.git.noodles@earth.li>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Sat, 13 Jun 2020 23:10:49 +0300
-Message-ID: <CA+h21hoCb4w2s=KHT_nemFsYn-W9BctB=ycfTUb5DPdiW=SLiA@mail.gmail.com>
-Subject: Re: [RFC PATCH v4 2/2] net: dsa: qca8k: Improve SGMII interface handling
-To:     Jonathan McDowell <noodles@earth.li>
-Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=XvmodwFRSbxZ4SI7zIxONP0m2KmZ4cn7dUMYubaK5Ks=;
+        b=bGXgRK+IL+fFPS152uvTO5cfDAHUUteyB+kizNOAQA3aE7MPK7FJMgTNJ4pqcONx71
+         idEYJqLD0QB7qAhN9m54IesPNPbC6BjAOKgxZjtaaOD2rGjYN2WofeKXbGPnVJme63Yf
+         MXAmXuNE7otO0dDWRGh6KNR5jDnspBYP5GWauXWOJvVqlm9IPadoM2IgFSHy8EMMrKKa
+         yvnL64vPAez5PQXmIJ+jaV1xFoi7PMp5RL11x/dXB3EZI0UxRTwMnI9M3iHxprvtlkeP
+         /DMIYhQhsxfXl8wQO1s0ki6VmyXi526K5IFRuf9GxIsYrhdTBUYfKGxDxdAhTZbcF6yj
+         2Fog==
+X-Gm-Message-State: AOAM531h1aRkEL3RWf4MQXJFJx1Vt7ZXyJV/62dY1n5fxQ6yAyPR+Riy
+        gjAxo5WZWp1KOE4IDvx7EHc=
+X-Google-Smtp-Source: ABdhPJwSVNAUudjU7V0EJt0q1PtzNAfLsF+rab1TmlO6E01e8qp0NXHIRvbCZ/1ah1drJ+1VTtPW4Q==
+X-Received: by 2002:ac8:4790:: with SMTP id k16mr9181655qtq.362.1592079427023;
+        Sat, 13 Jun 2020 13:17:07 -0700 (PDT)
+Received: from localhost.localdomain ([72.53.229.195])
+        by smtp.gmail.com with ESMTPSA id n25sm6969264qkk.76.2020.06.13.13.17.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 13 Jun 2020 13:17:06 -0700 (PDT)
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1] ARM: imx6plus: enable internal routing of clk_enet_ref where possible
+Date:   Sat, 13 Jun 2020 16:17:03 -0400
+Message-Id: <20200613201703.16788-1-TheSven73@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 13 Jun 2020 at 14:32, Jonathan McDowell <noodles@earth.li> wrote:
->
-> This patch improves the handling of the SGMII interface on the QCA8K
-> devices. Previously the driver did no configuration of the port, even if
-> it was selected. We now configure it up in the appropriate
-> PHY/MAC/Base-X mode depending on what phylink tells us we are connected
-> to and ensure it is enabled.
->
-> Tested with a device where the CPU connection is RGMII (i.e. the common
-> current use case) + one where the CPU connection is SGMII. I don't have
-> any devices where the SGMII interface is brought out to something other
-> than the CPU.
->
-> Signed-off-by: Jonathan McDowell <noodles@earth.li>
-> ---
->  drivers/net/dsa/qca8k.c | 33 ++++++++++++++++++++++++++++++++-
->  drivers/net/dsa/qca8k.h | 13 +++++++++++++
->  2 files changed, 45 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/net/dsa/qca8k.c b/drivers/net/dsa/qca8k.c
-> index dadf9ab2c14a..da7d2b92ed3e 100644
-> --- a/drivers/net/dsa/qca8k.c
-> +++ b/drivers/net/dsa/qca8k.c
-> @@ -673,6 +673,9 @@ qca8k_setup(struct dsa_switch *ds)
->         /* Flush the FDB table */
->         qca8k_fdb_flush(priv);
->
-> +       /* We don't have interrupts for link changes, so we need to poll */
-> +       priv->ds->pcs_poll = true;
-> +
+On imx6, the ethernet reference clock (clk_enet_ref) can be generated
+by either the imx6, or an external source (e.g. an oscillator or the
+PHY). When generated by the imx6, the clock source (from ANATOP)
+must be routed to the input of clk_enet_ref via two pads on the SoC,
+typically via a dedicated track on the PCB.
 
-You can access ds directly here.
+On an imx6 plus however, there is a new setting which enables this
+clock to be routed internally on the SoC, from its ANATOP clock
+source, straight to clk_enet_ref, without having to go through
+the SoC pads.
 
->         return 0;
->  }
->
-> @@ -681,7 +684,7 @@ qca8k_phylink_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
->                          const struct phylink_link_state *state)
->  {
->         struct qca8k_priv *priv = ds->priv;
-> -       u32 reg;
-> +       u32 reg, val;
->
->         switch (port) {
->         case 0: /* 1st CPU port */
-> @@ -740,6 +743,34 @@ qca8k_phylink_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
->         case PHY_INTERFACE_MODE_1000BASEX:
->                 /* Enable SGMII on the port */
->                 qca8k_write(priv, reg, QCA8K_PORT_PAD_SGMII_EN);
-> +
-> +               /* Enable/disable SerDes auto-negotiation as necessary */
-> +               val = qca8k_read(priv, QCA8K_REG_PWS);
-> +               if (phylink_autoneg_inband(mode))
-> +                       val &= ~QCA8K_PWS_SERDES_AEN_DIS;
-> +               else
-> +                       val |= QCA8K_PWS_SERDES_AEN_DIS;
-> +               qca8k_write(priv, QCA8K_REG_PWS, val);
-> +
-> +               /* Configure the SGMII parameters */
-> +               val = qca8k_read(priv, QCA8K_REG_SGMII_CTRL);
-> +
-> +               val |= QCA8K_SGMII_EN_PLL | QCA8K_SGMII_EN_RX |
-> +                       QCA8K_SGMII_EN_TX | QCA8K_SGMII_EN_SD;
-> +
-> +               if (dsa_is_cpu_port(ds, port)) {
+Board designs where the clock is generated by the imx6 should not
+be affected by routing the clock internally. Therefore on a plus,
+we can enable internal routing by default.
 
-I don't see any device tree in mainline for qca,qca8334 that uses
-SGMII on the CPU port, but there are some assumptions being made here,
-and there are also going to be some assumptions made in the MAC
-driver, and I just want to make sure that those assumptions are not
-going to be incompatible, so I would like you to make some
-clarifications.
-So there's a single SGMII interface which can go to port 0 (the CPU
-port) or to port 6, right? The SGMII port can behave as an AN master
-or as an AN slave, depending on whether MODE_CTRL is 1 or 2, or can
-have a forced speed (if SERDES_AEN is disabled)?
-We don't have a standard way to describe an SGMII AN master that is
-not a PHY in the device tree, because I don't think anybody needed to
-do that so far.
-Typically a MAC would describe the link towards the CPU port of the
-switch as a fixed-link. In that case, if the phy-mode is sgmii, it
-would disable in-band autoneg, because there's nothing really to
-negotiate (the link speed and duplex is fixed). For these, I think the
-expectation is that the switch does not enable in-band autoneg either,
-and has a fixed-link too. Per your configuration, you would disable
-SerDes AN, and you would configure the port as SGMII AN master (PHY),
-but that setting would be ignored because AN is disabled.
-In other configurations, the MAC might want to receive in-band status
-from the CPU port. In those cases, your answer to that problem seems
-to be to implement phylink ops on both drivers, and to set both to
-managed = "in-band-status" (MLO_AN_INBAND). This isn't a use case
-explicitly described by phylink (I would even go as far as saying that
-MLO_AN_INBAND means to be an SGMII AN slave), but it would work
-because of the check that we are a CPU port.
-As for the case of a cascaded qca8334-to-qca8334 setup, this would
-again work, because on one of the switches, dsa_is_cpu_port would be
-true and on the other one it would be false.
-So I'm not suggesting we should change anything, I just want to make
-sure I understand if this is the reason why you are configuring it
-like this.
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+---
+ arch/arm/mach-imx/mach-imx6q.c              | 18 ++++++++++++++++++
+ include/linux/mfd/syscon/imx6q-iomuxc-gpr.h |  1 +
+ 2 files changed, 19 insertions(+)
 
-> +                       /* CPU port, we're talking to the CPU MAC, be a PHY */
-> +                       val &= ~QCA8K_SGMII_MODE_CTRL_MASK;
-> +                       val |= QCA8K_SGMII_MODE_CTRL_PHY;
-> +               } else if (state->interface == PHY_INTERFACE_MODE_SGMII) {
-> +                       val &= ~QCA8K_SGMII_MODE_CTRL_MASK;
-> +                       val |= QCA8K_SGMII_MODE_CTRL_MAC;
-> +               } else if (state->interface == PHY_INTERFACE_MODE_1000BASEX) {
-> +                       val &= ~QCA8K_SGMII_MODE_CTRL_MASK;
-> +                       val |= QCA8K_SGMII_MODE_CTRL_BASEX;
-> +               }
-> +
-> +               qca8k_write(priv, QCA8K_REG_SGMII_CTRL, val);
->                 break;
->         default:
->                 dev_err(ds->dev, "xMII mode %s not supported for port %d\n",
-> diff --git a/drivers/net/dsa/qca8k.h b/drivers/net/dsa/qca8k.h
-> index 42d6ea24eb14..10ef2bca2cde 100644
-> --- a/drivers/net/dsa/qca8k.h
-> +++ b/drivers/net/dsa/qca8k.h
-> @@ -36,6 +36,8 @@
->  #define   QCA8K_MAX_DELAY                              3
->  #define   QCA8K_PORT_PAD_RGMII_RX_DELAY_EN             BIT(24)
->  #define   QCA8K_PORT_PAD_SGMII_EN                      BIT(7)
-> +#define QCA8K_REG_PWS                                  0x010
-> +#define   QCA8K_PWS_SERDES_AEN_DIS                     BIT(7)
->  #define QCA8K_REG_MODULE_EN                            0x030
->  #define   QCA8K_MODULE_EN_MIB                          BIT(0)
->  #define QCA8K_REG_MIB                                  0x034
-> @@ -69,6 +71,7 @@
->  #define   QCA8K_PORT_STATUS_LINK_UP                    BIT(8)
->  #define   QCA8K_PORT_STATUS_LINK_AUTO                  BIT(9)
->  #define   QCA8K_PORT_STATUS_LINK_PAUSE                 BIT(10)
-> +#define   QCA8K_PORT_STATUS_FLOW_AUTO                  BIT(12)
->  #define QCA8K_REG_PORT_HDR_CTRL(_i)                    (0x9c + (_i * 4))
->  #define   QCA8K_PORT_HDR_CTRL_RX_MASK                  GENMASK(3, 2)
->  #define   QCA8K_PORT_HDR_CTRL_RX_S                     2
-> @@ -77,6 +80,16 @@
->  #define   QCA8K_PORT_HDR_CTRL_ALL                      2
->  #define   QCA8K_PORT_HDR_CTRL_MGMT                     1
->  #define   QCA8K_PORT_HDR_CTRL_NONE                     0
-> +#define QCA8K_REG_SGMII_CTRL                           0x0e0
-> +#define   QCA8K_SGMII_EN_PLL                           BIT(1)
-> +#define   QCA8K_SGMII_EN_RX                            BIT(2)
-> +#define   QCA8K_SGMII_EN_TX                            BIT(3)
-> +#define   QCA8K_SGMII_EN_SD                            BIT(4)
-> +#define   QCA8K_SGMII_CLK125M_DELAY                    BIT(7)
-> +#define   QCA8K_SGMII_MODE_CTRL_MASK                   (BIT(22) | BIT(23))
-> +#define   QCA8K_SGMII_MODE_CTRL_BASEX                  (0 << 22)
-> +#define   QCA8K_SGMII_MODE_CTRL_PHY                    (1 << 22)
-> +#define   QCA8K_SGMII_MODE_CTRL_MAC                    (2 << 22)
->
->  /* EEE control registers */
->  #define QCA8K_REG_EEE_CTRL                             0x100
-> --
-> 2.20.1
->
+Tree: next-20200613
+
+diff --git a/arch/arm/mach-imx/mach-imx6q.c b/arch/arm/mach-imx/mach-imx6q.c
+index 85c084a716ab..4d22567bb650 100644
+--- a/arch/arm/mach-imx/mach-imx6q.c
++++ b/arch/arm/mach-imx/mach-imx6q.c
+@@ -203,6 +203,24 @@ static void __init imx6q_1588_init(void)
+ 	else
+ 		pr_err("failed to find fsl,imx6q-iomuxc-gpr regmap\n");
+ 
++	/*
++	 * On imx6 plus, enet_ref from ANATOP/CCM can be internally routed to
++	 * be the PTP clock source, instead of having to be routed through
++	 * pads.
++	 * Board designs which route the ANATOP/CCM clock through pads are
++	 * unaffected when routing happens internally. So on these designs,
++	 * route internally by default.
++	 */
++	if (clksel == IMX6Q_GPR1_ENET_CLK_SEL_ANATOP && cpu_is_imx6q() &&
++			imx_get_soc_revision() >= IMX_CHIP_REVISION_2_0) {
++		if (!IS_ERR(gpr))
++			regmap_update_bits(gpr, IOMUXC_GPR5,
++					IMX6Q_GPR5_ENET_TXCLK_SEL,
++					IMX6Q_GPR5_ENET_TXCLK_SEL);
++		else
++			pr_err("failed to find fsl,imx6q-iomuxc-gpr regmap\n");
++		}
++
+ 	clk_put(enet_ref);
+ put_ptp_clk:
+ 	clk_put(ptp_clk);
+diff --git a/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h b/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h
+index d4b5e527a7a3..eb65d48da0df 100644
+--- a/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h
++++ b/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h
+@@ -240,6 +240,7 @@
+ #define IMX6Q_GPR4_IPU_RD_CACHE_CTL		BIT(0)
+ 
+ #define IMX6Q_GPR5_L2_CLK_STOP			BIT(8)
++#define IMX6Q_GPR5_ENET_TXCLK_SEL		BIT(9)
+ #define IMX6Q_GPR5_SATA_SW_PD			BIT(10)
+ #define IMX6Q_GPR5_SATA_SW_RST			BIT(11)
+ 
+-- 
+2.17.1
+
