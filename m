@@ -6,64 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B21ECC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 18:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02603C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 18:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9314D2081A
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 18:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3ED320789
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 18:00:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592071237;
-	bh=dO+F7nepls+vJ+qAfc3moKZJdLN/jbY4PnqkWBigsu8=;
+	s=default; t=1592071240;
+	bh=Csj47HE+oJ1KGrLz38q4Gar3ApcNTulZI27Kjq+KAug=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=kKSP1UUAhI1r++U0lC2O5zOIqCPUjJvVDS+N5z/CVSXWx4WVYhLrTyQAFJulRyP1r
-	 fhJgiWS6Gmiya4Fcftq6SPldpRn6WLZmTmnLjtEs7sd0x7G+S3/dHIokiKF4MAQFIJ
-	 CTJS8BuYov8tUs4Lw7CZiyWLutg2Rz7vZnmL27I4=
+	b=U1sYu5lNapMBI+nM/WzadqO/146j+XwMtqCCcWUED2SepxlLebhUPWut3k1JwNSTh
+	 D07yFwiLztPH9Y2woxhKBlR0ziiRP3dC0kKUMEpXLg+fWvTP7lFLGx0vMqET20Ptxc
+	 g4X6Z2FpDkoPO9N2PJBAkXA1xiPkdruxY9jOp0Ns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbgFMSAf (ORCPT
+        id S1726805AbgFMSAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 14:00:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60166 "EHLO mail.kernel.org"
+        Sat, 13 Jun 2020 14:00:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726762AbgFMSAc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 14:00:32 -0400
-Subject: Re: [GIT pull resend] x86/entry for v5.8
+        id S1726785AbgFMSAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jun 2020 14:00:35 -0400
+Subject: Re: [GIT PULL] Please pull powerpc/linux.git powerpc-5.8-2 tag
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592071231;
-        bh=dO+F7nepls+vJ+qAfc3moKZJdLN/jbY4PnqkWBigsu8=;
+        s=default; t=1592071234;
+        bh=Csj47HE+oJ1KGrLz38q4Gar3ApcNTulZI27Kjq+KAug=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=OjRDrKoV6rNjVahKu+/98uwjiejlwCG4FR24m6qRt20neupybpLuZ1WbDAfm2UrsS
-         kHOzFXWOdY/1MXvEdWjLFUXmTqUqR2XKOP4VPCAmKn+5NuPtHbYUOE5d6t/ljHOGWS
-         m5AzC00g/CcBClrCqiygJJ3/prceXC+2MZD+PAdY=
+        b=Ap9Nz1fa39V/q/lZzP177OzmQtbHAhekJ0kaXR/tJjpqfJfat92a1ewaOaj2Lb1gP
+         n5XM6MP10mAn4YhuYBSNq/0aU4biooZ/MbsJ2M+kbtm5m6AGZOjDRgme6+tuPZh/fp
+         7N9e2B9OndE/ntSZdLNhhBGci5xisWY5+8/B3cA0=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <159199950554.21782.7550706843970155617.tglx@nanos.tec.linutronix.de>
-References: <159199950433.21782.7922990856385499228.tglx@nanos.tec.linutronix.de>
- <159199950554.21782.7550706843970155617.tglx@nanos.tec.linutronix.de>
+In-Reply-To: <87y2ordqcm.fsf@mpe.ellerman.id.au>
+References: <87y2ordqcm.fsf@mpe.ellerman.id.au>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <159199950554.21782.7550706843970155617.tglx@nanos.tec.linutronix.de>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
- x86-entry-2020-06-12
-X-PR-Tracked-Commit-Id: 0bf3924bfabd13ba21aa702344fc00b3b3263e5a
+X-PR-Tracked-Message-Id: <87y2ordqcm.fsf@mpe.ellerman.id.au>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git
+ tags/powerpc-5.8-2
+X-PR-Tracked-Commit-Id: e881bfaf5a5f409390973e076333281465f2b0d9
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 076f14be7fc942e112c94c841baec44124275cd0
-Message-Id: <159207123181.28894.14767895975819219683.pr-tracker-bot@kernel.org>
-Date:   Sat, 13 Jun 2020 18:00:31 +0000
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
+X-PR-Merge-Commit-Id: 08bf1a27c4c354b853fd81a79e953525bbcc8506
+Message-Id: <159207123480.28894.13432295695518771153.pr-tracker-bot@kernel.org>
+Date:   Sat, 13 Jun 2020 18:00:34 +0000
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>, aik@ozlabs.ru,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 12 Jun 2020 22:05:05 -0000:
+The pull request you sent on Sat, 13 Jun 2020 23:53:29 +1000:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-entry-2020-06-12
+> https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-5.8-2
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/076f14be7fc942e112c94c841baec44124275cd0
+https://git.kernel.org/torvalds/c/08bf1a27c4c354b853fd81a79e953525bbcc8506
 
 Thank you!
 
