@@ -2,99 +2,109 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC45C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 01:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34027C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 02:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0BD620656
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 01:54:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3766206F5
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 02:19:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ROp/0+QK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726468AbgFMByb (ORCPT
+        id S1726432AbgFMCTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Jun 2020 21:54:31 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:50268 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbgFMBya (ORCPT
+        Fri, 12 Jun 2020 22:19:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51564 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726392AbgFMCTm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Jun 2020 21:54:30 -0400
-Received: by mail-pj1-f67.google.com with SMTP id jz3so4377782pjb.0;
-        Fri, 12 Jun 2020 18:54:30 -0700 (PDT)
+        Fri, 12 Jun 2020 22:19:42 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46BDDC03E96F
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 19:19:41 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id g12so4474475pll.10
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 19:19:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Bo0TAuzTN7c9oRMEnH/nTxVp984RSzHy+ZWlZuT0u48=;
+        b=ROp/0+QK2eUfPPBuUEv9CrEl/J3QmKM5q4rYsB5p8kdf3h4bq2jl3JlUWLoT5mCkQf
+         6H7B+OWAFfcT+0p4n5sf1p5FX0CxeeQZq6rXBt4/upKbAgXS3c4oVTwIG1Tpcl2Xjs5b
+         SGN0u1NkTpz4BZ5n4JgKLnnwpC6UxSfi7cQsen9oKafX5dZQZjArfeTW46T7BgGBEp29
+         UFNCcHx20/ZzL2+LGSgiUZOsyNdkuxTpLw2wROvR4vRIYBpi0MOjD2d7qvI9f5qyCdaI
+         2KGAa/8WvuU4cXVCIzRGC9GQXcgslGipxpRrmWyv0+qdkW5oTP2vX9AfzRxgWenP4Yfy
+         qq9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=cJNj9QFTvVM0faLsMSdHiMpBNUH3giOQjYxucAwEHAo=;
-        b=LbsGVHCmISj10vgz5piDI/OAmg6e/Xr2yzG+DrTDX26UGDBMjPX0A8GxyEoKbvkJQe
-         BvrriEul4I+EW0NJHGF2vZ/14dKg2elCD+00r9K1YkirVvzIRa1WEQgEjVZfcPthuFqV
-         LuaatP3ewI3DRKmCprKejgD4fd/hK4N1Ml3zK6VSjGbBBL+HbM6ArUyBQuioBZWqS6md
-         Pii3ec8ZDO18QOd4Nr3Bw7awnwEHmSZr58xOVSO30IEiNxWfzgAj8Eeb9ZK4DZ3Snsht
-         okfCrpYi450vYIn/ApiMcTEfUU/hBlOQpJiX26bHBQoBbx5U+Z937z5xfFyJqIzkRTAC
-         IuWA==
-X-Gm-Message-State: AOAM5312iQg2ULtRqk8SU4p/schkfQRDLTh0+z3e/bkJ51I+5iEa708l
-        aPCK6qfPntK1ueROTSTJsgzky3VRGnw=
-X-Google-Smtp-Source: ABdhPJz6hOXig8fEEgC/zk6xZwxjmo1eVByYgfO+4ggxWI+P3wPYibwIdkFqUD1hlONOUQTvoIXCNg==
-X-Received: by 2002:a17:90a:a406:: with SMTP id y6mr1715079pjp.216.1592013269384;
-        Fri, 12 Jun 2020 18:54:29 -0700 (PDT)
-Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
-        by smtp.gmail.com with ESMTPSA id hv15sm6403577pjb.17.2020.06.12.18.54.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Jun 2020 18:54:28 -0700 (PDT)
-Subject: Re: [PATCH v6 4/6] blktrace: annotate required lock on
- do_blk_trace_setup()
-To:     Luis Chamberlain <mcgrof@kernel.org>, axboe@kernel.dk,
-        viro@zeniv.linux.org.uk, gregkh@linuxfoundation.org,
-        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
-        ming.lei@redhat.com, nstange@suse.de, akpm@linux-foundation.org
-Cc:     mhocko@suse.com, yukuai3@huawei.com, martin.petersen@oracle.com,
-        jejb@linux.ibm.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20200608170127.20419-1-mcgrof@kernel.org>
- <20200608170127.20419-5-mcgrof@kernel.org>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <b26de074-9745-c625-8284-fe2c6f91e3ea@acm.org>
-Date:   Fri, 12 Jun 2020 18:54:27 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Bo0TAuzTN7c9oRMEnH/nTxVp984RSzHy+ZWlZuT0u48=;
+        b=YGKqugrW46SUVJV4Ngds2vNvtbVkcBzeQxA2hOx6sBQLyGUzMgwflsv5Fultld+QeG
+         lbG2v32g0WKQs/WXWvL7ahPi4K16rGecXFnISjzuMXmiTqf7JPApWFEzAC7WJCLtzuSn
+         DyTm59ymhTMeVHBTR770imr5iBWJbyvifNDmtaDW4XYfQ0QN+96mSRl+ImbAxBDzvG96
+         vjzOjS56VteK8yv9HgCtAmrLxXzIwQ9+Kk53xiEH+MWJguJZOMp2kjZ+GxVdg5oLemt4
+         zhull2pvXY9sgucRHxuSC+9mOXYwf6RnyoDYxiivIxgIY9VXtV85+myNVl45OGvufUtl
+         Hl8g==
+X-Gm-Message-State: AOAM531OpV2XQjkmvqp54xWpPfSijTjPxKIGiq5ELpTZhlZd6mCQ6tgH
+        qeN0lJsuP5nH67mUyMu1MraAIDRg
+X-Google-Smtp-Source: ABdhPJzfg5fG/KiTssGHqRsSdRs82XZN06XUV0vl9NFITbS8LB1efTd2+AXFfrV27C/yzTfoMG0uKA==
+X-Received: by 2002:a17:90a:e007:: with SMTP id u7mr1689819pjy.208.1592014780295;
+        Fri, 12 Jun 2020 19:19:40 -0700 (PDT)
+Received: from localhost (g228.115-65-196.ppp.wakwak.ne.jp. [115.65.196.228])
+        by smtp.gmail.com with ESMTPSA id c2sm7343978pfi.71.2020.06.12.19.19.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2020 19:19:39 -0700 (PDT)
+Date:   Sat, 13 Jun 2020 11:19:37 +0900
+From:   Stafford Horne <shorne@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Openrisc <openrisc@lists.librecores.org>
+Subject: Re: [GIT PULL] OpenRISC updates for v5.8
+Message-ID: <20200613021937.GN75760@lianli.shorne-pla.net>
+References: <20200613021757.GM75760@lianli.shorne-pla.net>
 MIME-Version: 1.0
-In-Reply-To: <20200608170127.20419-5-mcgrof@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200613021757.GM75760@lianli.shorne-pla.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-08 10:01, Luis Chamberlain wrote:
-> Ensure it is clear which lock is required on do_blk_trace_setup().
+CCing list.
 
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-
+On Sat, Jun 13, 2020 at 11:17:57AM +0900, Stafford Horne wrote:
+> Hi Linus,
+> 
+> Please consider for pull:
+> 
+> The following changes since commit ae83d0b416db002fe95601e7f97f64b59514d936:
+> 
+>   Linux 5.7-rc2 (2020-04-19 14:35:30 -0700)
+> 
+> are available in the Git repository at:
+> 
+>   git://github.com/openrisc/linux.git tags/for-linus
+> 
+> for you to fetch changes up to 6bd140e14d9aaa734ec37985b8b20a96c0ece948:
+> 
+>   openrisc: Fix issue with argument clobbering for clone/fork (2020-06-01 06:15:32 +0900)
+> 
+> ----------------------------------------------------------------
+> OpenRISC updates for 5.8
+> 
+> One patch found wile I was getting the glibc port ready:
+>  - Fix issue with clone TLS arg getting overwritten
+> 
+> ----------------------------------------------------------------
+> Stafford Horne (1):
+>       openrisc: Fix issue with argument clobbering for clone/fork
+> 
+>  arch/openrisc/kernel/entry.S | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
