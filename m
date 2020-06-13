@@ -2,37 +2,36 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35175C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 08:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF1C8C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 08:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FBC620739
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 08:12:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0DDA20739
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 08:12:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbgFMIMS (ORCPT
+        id S1726662AbgFMIMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 04:12:18 -0400
-Received: from mga07.intel.com ([134.134.136.100]:64611 "EHLO mga07.intel.com"
+        Sat, 13 Jun 2020 04:12:31 -0400
+Received: from mga07.intel.com ([134.134.136.100]:64588 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726570AbgFMILj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 04:11:39 -0400
-IronPort-SDR: FgeE9e97xthOFHzWlJ0Nsop+I38LwSDLSOyn36DpCUXeRkrknJQLhT2Uii8uaCmCQkrg4C5WTN
- BKNah2O01/dg==
+        id S1726397AbgFMILb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jun 2020 04:11:31 -0400
+IronPort-SDR: 3Km5Mu4iNQzGva9f+fJk4iO72qdDdedrR++ImzFP5+uQApZqcltKjXn3xCEJtrJ6ADp8wHs1rX
+ IXpRA6Q/zmlg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2020 01:11:37 -0700
-IronPort-SDR: EWhDzJPbkRJ4BkuFB+j0sRW1P5napTO3QjlklnI/66bD6YiCojHmZdDwqF27bnNQcf0O9aaiAN
- NZl96hYG1CNQ==
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2020 01:11:25 -0700
+IronPort-SDR: IiYrePAYV0LKMKQOm7qWxd3AXL9wzyugZCnBFMF6qEAfCNHlunUbPbqgipIxawT+A1gemwlmCN
+ KlyzWvgYFESA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,506,1583222400"; 
-   d="scan'208";a="474467465"
+   d="scan'208";a="474467406"
 Received: from sqa-gate.sh.intel.com (HELO clx-ap-likexu.tsp.org) ([10.239.48.212])
-  by fmsmga006.fm.intel.com with ESMTP; 13 Jun 2020 01:11:34 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 13 Jun 2020 01:11:22 -0700
 From:   Like Xu <like.xu@linux.intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -43,9 +42,9 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Joerg Roedel <joro@8bytes.org>, ak@linux.intel.com,
         wei.w.wang@intel.com, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org, Like Xu <like.xu@linux.intel.com>
-Subject: [PATCH v12 11/11] KVM: vmx/pmu: Release guest LBR event via lazy release mechanism
-Date:   Sat, 13 Jun 2020 16:09:56 +0800
-Message-Id: <20200613080958.132489-12-like.xu@linux.intel.com>
+Subject: [PATCH v12 07/11] KVM: vmx/pmu: Unmask LBR fields in the MSR_IA32_DEBUGCTLMSR emualtion
+Date:   Sat, 13 Jun 2020 16:09:52 +0800
+Message-Id: <20200613080958.132489-8-like.xu@linux.intel.com>
 X-Mailer: git-send-email 2.21.3
 In-Reply-To: <20200613080958.132489-1-like.xu@linux.intel.com>
 References: <20200613080958.132489-1-like.xu@linux.intel.com>
@@ -56,154 +55,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The vPMU uses GUEST_LBR_IN_USE_IDX (bit 58) in 'pmu->pmc_in_use' to
-indicate whether a guest LBR event is still needed by the vcpu. If the
-vcpu no longer accesses LBR related registers within a scheduling time
-slice, and the enable bit of LBR has been unset, vPMU will treat the
-guest LBR event as a bland event of a vPMC counter and release it
-as usual. Also the pass-through state of LBR records msrs is cancelled.
+When the LBR feature is reported by the vmx_get_perf_capabilities(),
+the LBR fields in the [vmx|vcpu]_supported debugctl should be unmasked.
+
+The debugctl msr is handled separately in vmx/svm and they're not
+completely identical, hence remove the common msr handling code.
 
 Signed-off-by: Like Xu <like.xu@linux.intel.com>
 ---
- arch/x86/kvm/pmu.c           |  7 +++++++
- arch/x86/kvm/pmu.h           |  4 ++++
- arch/x86/kvm/vmx/pmu_intel.c | 14 +++++++++++++-
- arch/x86/kvm/vmx/vmx.c       |  4 ++++
- 4 files changed, 28 insertions(+), 1 deletion(-)
+ arch/x86/kvm/vmx/capabilities.h | 12 ++++++++++++
+ arch/x86/kvm/vmx/pmu_intel.c    | 19 +++++++++++++++++++
+ arch/x86/kvm/x86.c              | 13 -------------
+ 3 files changed, 31 insertions(+), 13 deletions(-)
 
-diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-index 5053f4238218..e5b76f1c3ce8 100644
---- a/arch/x86/kvm/pmu.c
-+++ b/arch/x86/kvm/pmu.c
-@@ -458,6 +458,7 @@ void kvm_pmu_cleanup(struct kvm_vcpu *vcpu)
- 	struct kvm_pmc *pmc = NULL;
- 	DECLARE_BITMAP(bitmask, X86_PMC_IDX_MAX);
- 	int i;
-+	bool arch_cleanup = false;
+diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
+index b633a90320ee..f6fcfabb1026 100644
+--- a/arch/x86/kvm/vmx/capabilities.h
++++ b/arch/x86/kvm/vmx/capabilities.h
+@@ -21,6 +21,8 @@ extern int __read_mostly pt_mode;
+ #define PMU_CAP_FW_WRITES	(1ULL << 13)
+ #define PMU_CAP_LBR_FMT		0x3f
  
- 	pmu->need_cleanup = false;
- 
-@@ -469,8 +470,14 @@ void kvm_pmu_cleanup(struct kvm_vcpu *vcpu)
- 
- 		if (pmc && pmc->perf_event && !pmc_speculative_in_use(pmc))
- 			pmc_stop_counter(pmc);
++#define DEBUGCTLMSR_LBR_MASK		(DEBUGCTLMSR_LBR | DEBUGCTLMSR_FREEZE_LBRS_ON_PMI)
 +
-+		if (i == INTEL_GUEST_LBR_INUSE)
-+			arch_cleanup = true;
- 	}
- 
-+	if (arch_cleanup && kvm_x86_ops.pmu_ops->cleanup)
-+		kvm_x86_ops.pmu_ops->cleanup(vcpu);
-+
- 	bitmap_zero(pmu->pmc_in_use, X86_PMC_IDX_MAX);
+ struct nested_vmx_msrs {
+ 	/*
+ 	 * We only store the "true" versions of the VMX capability MSRs. We
+@@ -387,4 +389,14 @@ static inline u64 vmx_get_perf_capabilities(void)
+ 	return perf_cap;
  }
  
-diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-index 095b84392b89..d5023eacd8ed 100644
---- a/arch/x86/kvm/pmu.h
-+++ b/arch/x86/kvm/pmu.h
-@@ -15,6 +15,9 @@
- #define VMWARE_BACKDOOR_PMC_REAL_TIME		0x10001
- #define VMWARE_BACKDOOR_PMC_APPARENT_TIME	0x10002
- 
-+/* Indicates whether Intel LBR msrs were accessed during the last time slice. */
-+#define INTEL_GUEST_LBR_INUSE INTEL_PMC_IDX_FIXED_VLBR
-+
- struct kvm_event_hw_type_mapping {
- 	u8 eventsel;
- 	u8 unit_mask;
-@@ -38,6 +41,7 @@ struct kvm_pmu_ops {
- 	void (*init)(struct kvm_vcpu *vcpu);
- 	void (*reset)(struct kvm_vcpu *vcpu);
- 	void (*deliver_pmi)(struct kvm_vcpu *vcpu);
-+	void (*cleanup)(struct kvm_vcpu *vcpu);
- };
- 
- static inline u64 pmc_bitmask(struct kvm_pmc *pmc)
-diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-index 75ba0444b4d1..c1c5058acc90 100644
---- a/arch/x86/kvm/vmx/pmu_intel.c
-+++ b/arch/x86/kvm/vmx/pmu_intel.c
-@@ -303,6 +303,7 @@ static void intel_pmu_free_lbr_event(struct kvm_vcpu *vcpu)
- static bool access_lbr_record_msr(struct kvm_vcpu *vcpu,
- 				     struct msr_data *msr_info, bool read)
- {
-+	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
- 	struct lbr_desc *lbr_desc = &to_vmx(vcpu)->lbr_desc;
- 	u32 index = msr_info->index;
- 
-@@ -331,6 +332,7 @@ static bool access_lbr_record_msr(struct kvm_vcpu *vcpu,
- 		msr_info->data = 0;
- 	local_irq_enable();
- 
-+	__set_bit(INTEL_GUEST_LBR_INUSE, pmu->pmc_in_use);
- 	return true;
- 
- dummy:
-@@ -483,6 +485,7 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		vmcs_write64(GUEST_IA32_DEBUGCTL, data);
- 		if (!msr_info->host_initiated && !to_vmx(vcpu)->lbr_desc.event)
- 			intel_pmu_create_lbr_event(vcpu);
-+		__set_bit(INTEL_GUEST_LBR_INUSE, pmu->pmc_in_use);
- 		return 0;
- 	default:
- 		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0)) ||
-@@ -584,7 +587,9 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
- 		INTEL_PMC_MAX_GENERIC, pmu->nr_arch_fixed_counters);
- 
- 	if ((vcpu->arch.perf_capabilities & PMU_CAP_LBR_FMT) &&
--	    x86_perf_get_lbr(&lbr_desc->lbr))
-+	    !x86_perf_get_lbr(&lbr_desc->lbr))
-+		bitmap_set(pmu->all_valid_pmc_idx, INTEL_GUEST_LBR_INUSE, 1);
-+	else
- 		vcpu->arch.perf_capabilities &= ~PMU_CAP_LBR_FMT;
- 
- 	nested_vmx_pmu_entry_exit_ctls_update(vcpu);
-@@ -672,6 +677,12 @@ static void intel_pmu_deliver_pmi(struct kvm_vcpu *vcpu)
- 		intel_pmu_legacy_freezing_lbrs_on_pmi(vcpu);
- }
- 
-+static void intel_pmu_cleanup(struct kvm_vcpu *vcpu)
++static inline u64 vmx_get_supported_debugctl(void)
 +{
-+	if (!(vmcs_read64(GUEST_IA32_DEBUGCTL) & DEBUGCTLMSR_LBR))
-+		intel_pmu_free_lbr_event(vcpu);
++	u64 val = 0;
++
++	if (vmx_get_perf_capabilities() & PMU_CAP_LBR_FMT)
++		val |= DEBUGCTLMSR_LBR_MASK;
++
++	return val;
 +}
 +
- struct kvm_pmu_ops intel_pmu_ops = {
- 	.find_arch_event = intel_find_arch_event,
- 	.find_fixed_event = intel_find_fixed_event,
-@@ -687,4 +698,5 @@ struct kvm_pmu_ops intel_pmu_ops = {
- 	.init = intel_pmu_init,
- 	.reset = intel_pmu_reset,
- 	.deliver_pmi = intel_pmu_deliver_pmi,
-+	.cleanup = intel_pmu_cleanup,
- };
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 800a26e3b571..8521fc640b95 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -3912,17 +3912,21 @@ static inline void vmx_lbr_enable_passthrough(struct kvm_vcpu *vcpu)
-  */
- static void vmx_passthrough_lbr_msrs(struct kvm_vcpu *vcpu)
+ #endif /* __KVM_X86_VMX_CAPS_H */
+diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+index a953c7d633f6..d92e95b64c74 100644
+--- a/arch/x86/kvm/vmx/pmu_intel.c
++++ b/arch/x86/kvm/vmx/pmu_intel.c
+@@ -187,6 +187,7 @@ static bool intel_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
+ 	case MSR_CORE_PERF_GLOBAL_OVF_CTRL:
+ 		ret = pmu->version > 1;
+ 		break;
++	case MSR_IA32_DEBUGCTLMSR:
+ 	case MSR_IA32_PERF_CAPABILITIES:
+ 		ret = 1;
+ 		break;
+@@ -237,6 +238,9 @@ static int intel_pmu_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 			return 1;
+ 		msr_info->data = vcpu->arch.perf_capabilities;
+ 		return 0;
++	case MSR_IA32_DEBUGCTLMSR:
++		msr_info->data = vmcs_read64(GUEST_IA32_DEBUGCTL);
++		return 0;
+ 	default:
+ 		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0)) ||
+ 		    (pmc = get_gp_pmc(pmu, msr, MSR_IA32_PMC0))) {
+@@ -282,6 +286,16 @@ static inline bool lbr_is_compatible(struct kvm_vcpu *vcpu)
+ 	return true;
+ }
+ 
++static inline u64 vcpu_get_supported_debugctl(struct kvm_vcpu *vcpu)
++{
++	u64 debugctlmsr = vmx_get_supported_debugctl();
++
++	if (!lbr_is_enabled(vcpu))
++		debugctlmsr &= ~DEBUGCTLMSR_LBR_MASK;
++
++	return debugctlmsr;
++}
++
+ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
  {
-+	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
- 	struct lbr_desc *lbr_desc = &to_vmx(vcpu)->lbr_desc;
- 
- 	if (!lbr_desc->event) {
- 		vmx_lbr_disable_passthrough(vcpu);
- 		if (vmcs_read64(GUEST_IA32_DEBUGCTL) & DEBUGCTLMSR_LBR)
- 			goto warn;
-+		if (test_bit(INTEL_GUEST_LBR_INUSE, pmu->pmc_in_use))
-+			goto warn;
- 		return;
- 	}
- 
- 	if (lbr_desc->event->state < PERF_EVENT_STATE_ACTIVE) {
- 		vmx_lbr_disable_passthrough(vcpu);
-+		__clear_bit(INTEL_GUEST_LBR_INUSE, pmu->pmc_in_use);
- 		goto warn;
- 	} else
- 		vmx_lbr_enable_passthrough(vcpu);
+ 	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+@@ -336,6 +350,11 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 		}
+ 		vcpu->arch.perf_capabilities = data;
+ 		return 0;
++	case MSR_IA32_DEBUGCTLMSR:
++		if (data & ~vcpu_get_supported_debugctl(vcpu))
++			return 1;
++		vmcs_write64(GUEST_IA32_DEBUGCTL, data);
++		return 0;
+ 	default:
+ 		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0)) ||
+ 		    (pmc = get_gp_pmc(pmu, msr, MSR_IA32_PMC0))) {
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 00c88c2f34e4..56f275eb4554 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -2840,18 +2840,6 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 			return 1;
+ 		}
+ 		break;
+-	case MSR_IA32_DEBUGCTLMSR:
+-		if (!data) {
+-			/* We support the non-activated case already */
+-			break;
+-		} else if (data & ~(DEBUGCTLMSR_LBR | DEBUGCTLMSR_BTF)) {
+-			/* Values other than LBR and BTF are vendor-specific,
+-			   thus reserved and should throw a #GP */
+-			return 1;
+-		}
+-		vcpu_unimpl(vcpu, "%s: MSR_IA32_DEBUGCTLMSR 0x%llx, nop\n",
+-			    __func__, data);
+-		break;
+ 	case 0x200 ... 0x2ff:
+ 		return kvm_mtrr_set_msr(vcpu, msr, data);
+ 	case MSR_IA32_APICBASE:
+@@ -3120,7 +3108,6 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 	switch (msr_info->index) {
+ 	case MSR_IA32_PLATFORM_ID:
+ 	case MSR_IA32_EBL_CR_POWERON:
+-	case MSR_IA32_DEBUGCTLMSR:
+ 	case MSR_IA32_LASTBRANCHFROMIP:
+ 	case MSR_IA32_LASTBRANCHTOIP:
+ 	case MSR_IA32_LASTINTFROMIP:
 -- 
 2.21.3
 
