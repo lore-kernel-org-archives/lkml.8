@@ -2,549 +2,68 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8189DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 07:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF530C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 07:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 501A320739
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 07:26:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="EAWX93ym"
+	by mail.kernel.org (Postfix) with ESMTP id B453B20739
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 07:27:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726391AbgFMH0Q (ORCPT
+        id S1726414AbgFMH1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 03:26:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41624 "EHLO
+        Sat, 13 Jun 2020 03:27:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgFMH0P (ORCPT
+        with ESMTP id S1725771AbgFMH1N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 03:26:15 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6939C03E96F
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 00:26:14 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id b201so5405838pfb.0
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 00:26:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sargun.me; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0cxjUp60+np/6LLx5JQwEXzXhrQwCyrDeJc10UG6O/0=;
-        b=EAWX93ym/2bBUo9RpNcNYYP4MvEN2zLYkwrJP78qMbbmnR/N0rbylR9kCG8ZKpzWmA
-         ycgraTpkwgR8Qr3/TrXVqY8DN2cyKL6k5AKVzXgB/xP/+KRykql4SDqSqIWQXBJopl60
-         5/YU+mnFmaua+8BkDdb+viFzvkT3XwKYlCoI4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0cxjUp60+np/6LLx5JQwEXzXhrQwCyrDeJc10UG6O/0=;
-        b=Jrt6290T7bjoT7CL4cEDgoLt6Y5P2gFEpff25ISg0HRBRrCZZcbkf5LS+YAHzGM4rJ
-         7LYA89h+DDjBxlZLCM+WULnToEWJzP9vZGwvrHTfYYlDdNtoe3H6i9WncSiWgUB+lNSf
-         Ymm8heZWdlEejGnvj4+mpmAkkQEKGNr/dTv80GSzHe4r/KS9O7LjsuvimkH23zphsaHn
-         +uqcP0F8Am8JR5tEORl2Kd4m052Ux9HbN0Phcj/DH0dUeLdJtYrD/il32tJqMea1BG3G
-         PEIr8OKltFjdaivuGTIqd7bn42QkQ+X6e/C0/xBWxeIrJIi9yVjdz8jxJNAbzhQKvpDO
-         0pUw==
-X-Gm-Message-State: AOAM531DyhXPFRyBxrtAJ2k6+XdkDGjqbnhTsaplJ0FedpGUe/WQ8I1Z
-        PzLPCgS40Z5AGOooci7NJ23dKw==
-X-Google-Smtp-Source: ABdhPJxPEvqgsQxKRExXJnfYxjV3lpLA41R4zCj1p6SeSuMwwfHECBoxF7Fzj2MiYHm314OeOBPB4Q==
-X-Received: by 2002:a63:3d85:: with SMTP id k127mr9323226pga.29.1592033172469;
-        Sat, 13 Jun 2020 00:26:12 -0700 (PDT)
-Received: from ubuntu.netflix.com (203.20.25.136.in-addr.arpa. [136.25.20.203])
-        by smtp.gmail.com with ESMTPSA id i34sm7249227pje.10.2020.06.13.00.26.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Jun 2020 00:26:11 -0700 (PDT)
-From:   Sargun Dhillon <sargun@sargun.me>
-To:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
-Cc:     Sargun Dhillon <sargun@sargun.me>, Tycho Andersen <tycho@tycho.ws>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org
-Subject: [RFC PATCH] seccomp: Add extensibility mechanism to read notifications
-Date:   Sat, 13 Jun 2020 00:26:09 -0700
-Message-Id: <20200613072609.5919-1-sargun@sargun.me>
-X-Mailer: git-send-email 2.25.1
+        Sat, 13 Jun 2020 03:27:13 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0526C03E96F
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 00:27:12 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jk0Yr-0006Ly-GS; Sat, 13 Jun 2020 09:26:41 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id C5C5E1013D0; Sat, 13 Jun 2020 09:26:40 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     paulmck@kernel.org, Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@redhat.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        linux-kernel@vger.kernel.org
+Subject: Re: BUG: kernel NULL pointer dereference from check_preempt_wakeup()
+In-Reply-To: <20200613024829.GA12958@paulmck-ThinkPad-P72>
+References: <20200604225445.GA32319@paulmck-ThinkPad-P72> <20200605131451.GE2750@hirez.programming.kicks-ass.net> <20200605141607.GB4455@paulmck-ThinkPad-P72> <20200605184159.GA4062@paulmck-ThinkPad-P72> <20200606005126.GA21507@paulmck-ThinkPad-P72> <20200606172942.GA30594@paulmck-ThinkPad-P72> <20200607185732.GA18906@paulmck-ThinkPad-P72> <20200609154016.GA17196@paulmck-ThinkPad-P72> <20200613024829.GA12958@paulmck-ThinkPad-P72>
+Date:   Sat, 13 Jun 2020 09:26:40 +0200
+Message-ID: <87ftazctov.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This introduces an extensibility mechanism to receive seccomp
-notifications. It uses read(2), as opposed to using an ioctl. The listener
-must be first configured to write the notification via the
-SECCOMP_IOCTL_NOTIF_CONFIG ioctl with the fields that the user is
-interested in.
+"Paul E. McKenney" <paulmck@kernel.org> writes:
+> And an update based on your patch (https://paste.debian.net/1151802/)
+> against 44ebe016df3a ("Merge branch 'proc-linus' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace").
 
-This is different than the old SECCOMP_IOCTL_NOTIF_RECV method as it allows
-for more flexibility. It allows the user to opt into certain fields, and
-not others. This is nice for users who want to opt into some fields like
-thread group leader. In the future, this mechanism can be used to expose
-file descriptors to users, such as a representation of the process's
-memory. It also has good forwards and backwards compatibility guarantees.
-Users with programs compiled against newer headers will work fine on older
-kernels as long as they don't opt into any sizes, or optional fields that
-are only available on newer kernels.
+I'm running this patch since midnight on top of x86/entry. Still no NULL
+pointer deref.
 
-The ioctl method relies on an extensible struct[1]. This extensible struct
-is slightly misleading[2] as the ioctl number changes when we extend it.
-This breaks backwards compatibility with older kernels even if we're not
-asking for any fields that we do not need. In order to deal with this, the
-ioctl number would need to be dynamic, or the user would need to pass the
-size they're expecting, and we would need to implemented "extended syscall"
-semantics in ioctl. This potentially causes issue to future work of
-kernel-assisted copying for ioctl user buffers.
+The cross-check with plain x86/entry has triggered it on all instances
+by now.
 
-read(2) offers slightly simpler semantics for the user, in that they do
-not need to pass in the size they're expecting to the kernel. Only the
-size of the buffer they have allocated. Since this information is passed
-along with the read syscall there isn't a requirement to read it back from
-userspace. It also doesn't get into the EA ioctl / dynamic ioctl number
-shenanigans discussed above.
+So it looks your up to something here.
 
-Also, it plugs in nicely to Golang (or othr high-level languages), as you
-can just treat it like a normal file. Go will put it into the event poll
-loop, and do a read on the buffer for you.
+Thanks,
 
-[1]: https://lore.kernel.org/linux-api/20181209182414.30862-4-tycho@tycho.ws/
-[2]: https://lore.kernel.org/lkml/20200610081237.GA23425@ircssh-2.c.rugged-nimbus-611.internal/
-
-Signed-off-by: Sargun Dhillon <sargun@sargun.me>
----
- include/uapi/linux/seccomp.h                  |  15 ++
- kernel/seccomp.c                              | 245 ++++++++++++++++--
- tools/testing/selftests/seccomp/seccomp_bpf.c |  61 +++++
- 3 files changed, 299 insertions(+), 22 deletions(-)
-
-diff --git a/include/uapi/linux/seccomp.h b/include/uapi/linux/seccomp.h
-index c1735455bc53..75a6cb56db84 100644
---- a/include/uapi/linux/seccomp.h
-+++ b/include/uapi/linux/seccomp.h
-@@ -77,6 +77,19 @@ struct seccomp_notif {
- 	struct seccomp_data data;
- };
- 
-+enum seccomp_data_version_size {
-+	SECCOMP_DATA_SIZE_NOT_PRESENT = 0,
-+	SECCOMP_DATA_SIZE_VER0 = 64,
-+	SECCOMP_DATA_SIZE_LATEST = SECCOMP_DATA_SIZE_VER0,
-+};
-+
-+#define SECCOMP_NOTIF_FIELD_PID	(1UL << 0)
-+
-+struct seccomp_notif_config {
-+	__u32 optional_fields; /* OR'd SECCOMP_NOTIF_FIELD_* */
-+	__u32 seccomp_data_size; /* seccomp_notif_field_data_version */
-+};
-+
- /*
-  * Valid flags for struct seccomp_notif_resp
-  *
-@@ -124,4 +137,6 @@ struct seccomp_notif_resp {
- #define SECCOMP_IOCTL_NOTIF_SEND	SECCOMP_IOWR(1,	\
- 						struct seccomp_notif_resp)
- #define SECCOMP_IOCTL_NOTIF_ID_VALID	SECCOMP_IOR(2, __u64)
-+#define SECCOMP_IOCTL_NOTIF_CONFIG	SECCOMP_IOW(3, \
-+						struct seccomp_notif_config)
- #endif /* _UAPI_LINUX_SECCOMP_H */
-diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-index 34dbf77569b3..006b387d3408 100644
---- a/kernel/seccomp.c
-+++ b/kernel/seccomp.c
-@@ -84,6 +84,27 @@ struct seccomp_knotif {
- 	struct list_head list;
- };
- 
-+/* Returns bytes written, negative number for error code */
-+typedef int (*seccomp_notification_appender_t)(struct seccomp_filter *filter,
-+					       void *buf,
-+					       struct seccomp_knotif *knotif);
-+
-+/**
-+ * struct notification_read_config - configuration for read calls against
-+ * seccomp listener FD. This is the specification of what the read size
-+ * and read format is.
-+ *
-+ * @read_size: The size of the configured read. If it 0, it means that the
-+ *             listener has not yet been configured.
-+ * @optional_fields: Bitmask of enabled optional fields
-+ * @seccomp_data: Callback to append seccomp_data to buffer
-+ */
-+struct notification_read_config {
-+	u32 read_size;
-+	u64 optional_fields;
-+	seccomp_notification_appender_t seccomp_data;
-+};
-+
- /**
-  * struct notification - container for seccomp userspace notifications. Since
-  * most seccomp filters will not have notification listeners attached and this
-@@ -100,6 +121,7 @@ struct notification {
- 	struct semaphore request;
- 	u64 next_id;
- 	struct list_head notifications;
-+	struct notification_read_config read_config;
- };
- 
- /**
-@@ -1086,11 +1108,49 @@ find_notification(struct seccomp_filter *filter, u64 id)
- 	return NULL;
- }
- 
-+/*
-+ * Return the next available notification. Must be called after decrementing
-+ * filter->notif->request.
-+ */
-+static struct seccomp_knotif *seccomp_next_notif(struct seccomp_filter *filter)
-+{
-+	struct seccomp_knotif *cur;
-+
-+	lockdep_assert_held(&filter->notify_lock);
-+
-+	list_for_each_entry(cur, &filter->notif->notifications, list) {
-+		if (cur->state == SECCOMP_NOTIFY_INIT) {
-+			cur->state = SECCOMP_NOTIFY_SENT;
-+			wake_up_poll(&filter->wqh, EPOLLOUT | EPOLLWRNORM);
-+			return cur;
-+		}
-+	}
-+
-+	/*
-+	 * If we didn't find a notification, it could be that the task was
-+	 * interrupted by a fatal signal between the time we were woken and
-+	 * when we were able to acquire the rw lock.
-+	 */
-+	return NULL;
-+}
-+
-+static void seccomp_reset_notif(struct seccomp_filter *filter, u64 id)
-+{
-+	struct seccomp_knotif *knotif;
-+
-+	mutex_lock(&filter->notify_lock);
-+	knotif = find_notification(filter, id);
-+	if (knotif) {
-+		knotif->state = SECCOMP_NOTIFY_INIT;
-+		up(&filter->notif->request);
-+	}
-+	mutex_unlock(&filter->notify_lock);
-+}
- 
- static long seccomp_notify_recv(struct seccomp_filter *filter,
- 				void __user *buf)
- {
--	struct seccomp_knotif *knotif, *cur;
-+	struct seccomp_knotif *knotif;
- 	struct seccomp_notif unotif;
- 	ssize_t ret;
- 
-@@ -1108,18 +1168,7 @@ static long seccomp_notify_recv(struct seccomp_filter *filter,
- 		return ret;
- 
- 	mutex_lock(&filter->notify_lock);
--	list_for_each_entry(cur, &filter->notif->notifications, list) {
--		if (cur->state == SECCOMP_NOTIFY_INIT) {
--			knotif = cur;
--			break;
--		}
--	}
--
--	/*
--	 * If we didn't find a notification, it could be that the task was
--	 * interrupted by a fatal signal between the time we were woken and
--	 * when we were able to acquire the rw lock.
--	 */
-+	knotif = seccomp_next_notif(filter);
- 	if (!knotif) {
- 		ret = -ENOENT;
- 		goto out;
-@@ -1129,8 +1178,6 @@ static long seccomp_notify_recv(struct seccomp_filter *filter,
- 	unotif.pid = task_pid_vnr(knotif->task);
- 	unotif.data = *(knotif->data);
- 
--	knotif->state = SECCOMP_NOTIFY_SENT;
--	wake_up_poll(&filter->wqh, EPOLLOUT | EPOLLWRNORM);
- 	ret = 0;
- out:
- 	mutex_unlock(&filter->notify_lock);
-@@ -1144,13 +1191,7 @@ static long seccomp_notify_recv(struct seccomp_filter *filter,
- 		 * may have died when we released the lock, so we need to make
- 		 * sure it's still around.
- 		 */
--		mutex_lock(&filter->notify_lock);
--		knotif = find_notification(filter, unotif.id);
--		if (knotif) {
--			knotif->state = SECCOMP_NOTIFY_INIT;
--			up(&filter->notif->request);
--		}
--		mutex_unlock(&filter->notify_lock);
-+		seccomp_reset_notif(filter, unotif.id);
- 	}
- 
- 	return ret;
-@@ -1224,6 +1265,162 @@ static long seccomp_notify_id_valid(struct seccomp_filter *filter,
- 	return ret;
- }
- 
-+static int append_noop(struct seccomp_filter *filter, void *buf,
-+		       struct seccomp_knotif *knotif)
-+{
-+	lockdep_assert_held(&filter->notify_lock);
-+
-+	return 0;
-+}
-+
-+static int append_seccomp_data_ver0(struct seccomp_filter *filter, void *buf,
-+				    struct seccomp_knotif *knotif)
-+{
-+	lockdep_assert_held(&filter->notify_lock);
-+
-+	/*
-+	 * Make sure the copy approach we're using here doesn't go out of sync
-+	 * with what the user requested. If this breaks, this mechanism of
-+	 * population needs to change.
-+	 */
-+	BUILD_BUG_ON(sizeof(*(knotif->data)) != SECCOMP_DATA_SIZE_VER0);
-+	memcpy(buf, knotif->data, SECCOMP_DATA_SIZE_VER0);
-+
-+	return SECCOMP_DATA_SIZE_VER0;
-+}
-+
-+static long seccomp_notify_config(struct seccomp_filter *filter,
-+				  void __user *buf)
-+{
-+	int err;
-+	struct seccomp_notif_config uconfig;
-+	struct notification_read_config kread_config = {
-+		/* The notification always includes ID */
-+		.read_size	= sizeof(u64),
-+	};
-+
-+	err = copy_from_user(&uconfig, buf, sizeof(uconfig));
-+	if (err)
-+		return err;
-+
-+	if (uconfig.optional_fields & ~SECCOMP_NOTIF_FIELD_PID)
-+		return -ENOTSUPP;
-+
-+	kread_config.optional_fields = uconfig.optional_fields;
-+	kread_config.read_size += 8 * __sw_hweight64(uconfig.optional_fields);
-+
-+	switch (uconfig.seccomp_data_size) {
-+	case SECCOMP_DATA_SIZE_NOT_PRESENT:
-+		kread_config.seccomp_data = append_noop;
-+		break;
-+	case SECCOMP_DATA_SIZE_VER0:
-+		kread_config.seccomp_data = append_seccomp_data_ver0;
-+		break;
-+	default:
-+		/* Invalid size */
-+		return uconfig.seccomp_data_size > SECCOMP_DATA_SIZE_LATEST ?
-+			-E2BIG : -EINVAL;
-+	}
-+	kread_config.read_size += uconfig.seccomp_data_size;
-+
-+	err = mutex_lock_interruptible(&filter->notify_lock);
-+	if (err < 0)
-+		return err;
-+
-+	filter->notif->read_config = kread_config;
-+
-+	mutex_unlock(&filter->notify_lock);
-+
-+	return kread_config.read_size;
-+}
-+
-+static ssize_t seccomp_notify_read(struct file *file, char __user *buf,
-+				   size_t count, loff_t *ppos)
-+{
-+	struct seccomp_filter *filter = file->private_data;
-+	struct notification_read_config read_config;
-+	struct seccomp_knotif *knotif = NULL;
-+	void *kbuf, *cursor;
-+	int ret;
-+	u64 id;
-+
-+	/* Get the seccomp read configuration */
-+	ret = mutex_lock_interruptible(&filter->notify_lock);
-+	if (ret)
-+		return ret;
-+
-+	read_config = filter->notif->read_config;
-+
-+	mutex_unlock(&filter->notify_lock);
-+
-+	if (read_config.read_size == 0)
-+		return -EINVAL;
-+	if (count < read_config.read_size)
-+		return -ENOSPC;
-+
-+	/*
-+	 * Prepare a buffer. We populate this buffer as opposed to populating
-+	 * user memory directly because we can't copy while we have the notify
-+	 * mutex held (since we might sleep).
-+	 */
-+	kbuf = kmalloc(read_config.read_size, GFP_KERNEL);
-+	if (!kbuf)
-+		return -ENOMEM;
-+
-+	/* Get the notification */
-+	ret = down_interruptible(&filter->notif->request);
-+	if (ret < 0)
-+		goto out;
-+
-+	mutex_lock(&filter->notify_lock);
-+	knotif = seccomp_next_notif(filter);
-+	if (!knotif) {
-+		ret = -ENOENT;
-+		goto out_unlock;
-+	}
-+
-+	cursor = kbuf;
-+	id = knotif->id;
-+
-+	/*
-+	 * Build the buffer. All optional fields are 8-byte aligned. Thus,
-+	 * individual fields that are smaller than 64-bit must be rounded up
-+	 * to s64 / u64. If there is an optional field that is compromised of
-+	 * multiple members, the entire size needs to be 8-byte aligned,
-+	 * and it is not necccessary to 8-byte align each member.
-+	 */
-+	*(__u64 *)cursor = id;
-+	cursor += sizeof(__u64);
-+	if (read_config.optional_fields & SECCOMP_NOTIF_FIELD_PID) {
-+		*(__u64 *)cursor = task_pid_vnr(knotif->task);
-+		cursor += sizeof(__u64);
-+	}
-+
-+	ret = read_config.seccomp_data(filter, cursor, knotif);
-+	if (ret < 0)
-+		goto out_unlock;
-+	cursor += ret;
-+
-+	ret = 0;
-+	WARN_ON(cursor != kbuf + read_config.read_size);
-+
-+out_unlock:
-+	mutex_unlock(&filter->notify_lock);
-+
-+	if (ret == 0) {
-+		ret = copy_to_user(buf, kbuf, read_config.read_size);
-+		if (ret)
-+			seccomp_reset_notif(filter, id);
-+		else
-+			ret = read_config.read_size;
-+	} else if (knotif) {
-+		seccomp_reset_notif(filter, id);
-+	}
-+out:
-+	kfree(kbuf);
-+	return ret;
-+}
-+
- static long seccomp_notify_ioctl(struct file *file, unsigned int cmd,
- 				 unsigned long arg)
- {
-@@ -1237,6 +1434,8 @@ static long seccomp_notify_ioctl(struct file *file, unsigned int cmd,
- 		return seccomp_notify_send(filter, buf);
- 	case SECCOMP_IOCTL_NOTIF_ID_VALID:
- 		return seccomp_notify_id_valid(filter, buf);
-+	case SECCOMP_IOCTL_NOTIF_CONFIG:
-+		return seccomp_notify_config(filter, buf);
- 	default:
- 		return -EINVAL;
- 	}
-@@ -1276,6 +1475,7 @@ static const struct file_operations seccomp_notify_ops = {
- 	.release = seccomp_notify_release,
- 	.unlocked_ioctl = seccomp_notify_ioctl,
- 	.compat_ioctl = seccomp_notify_ioctl,
-+	.read = seccomp_notify_read,
- };
- 
- static struct file *init_listener(struct seccomp_filter *filter)
-@@ -1640,6 +1840,7 @@ long seccomp_get_metadata(struct task_struct *task,
- 	__put_seccomp_filter(filter);
- 	return ret;
- }
-+
- #endif
- 
- #ifdef CONFIG_SYSCTL
-diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
-index 402ccb3a4e52..3073d56e9ee0 100644
---- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-+++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-@@ -3822,6 +3822,67 @@ TEST(user_notification_filter_empty_threaded)
- 	EXPECT_GT((pollfd.revents & POLLHUP) ?: 0, 0);
- }
- 
-+struct read_output_format {
-+	__u64 id;
-+	struct seccomp_data data;
-+};
-+
-+TEST(user_notification_read)
-+{
-+	long ret;
-+	int status, pid, listener, read_size;
-+	struct seccomp_notif_config config = {};
-+	struct seccomp_notif_resp resp = {};
-+	struct read_output_format buf = {};
-+
-+	ret = prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
-+	ASSERT_EQ(0, ret) {
-+		TH_LOG("Kernel does not support PR_SET_NO_NEW_PRIVS!");
-+	}
-+
-+	listener = user_trap_syscall(__NR_dup, SECCOMP_FILTER_FLAG_NEW_LISTENER);
-+	ASSERT_GE(listener, 0);
-+
-+	EXPECT_EQ(read(listener, &buf, sizeof(buf)), -1) {
-+		EXPECT_EQ(errno, -EINVAL);
-+	}
-+
-+	config.seccomp_data_size = sizeof(struct seccomp_data);
-+	config.optional_fields = ~(0);
-+	/* Make sure invalid fields are not accepted */
-+	ASSERT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_CONFIG, &config), -1);
-+
-+	config.optional_fields = 0;
-+	ASSERT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_CONFIG, &config), sizeof(buf)) {
-+		TH_LOG("Errno: %s", strerror(errno));
-+	}
-+
-+	pid = fork();
-+	ASSERT_GE(pid, 0);
-+	if (pid == 0)
-+		exit(syscall(__NR_dup, 42, 1, 1, 1) != USER_NOTIF_MAGIC);
-+
-+	/* Passing a smaller value in should fail */
-+	EXPECT_EQ(read(listener, &buf, sizeof(buf) - 1), -1) {
-+		EXPECT_EQ(errno, -E2BIG);
-+	}
-+
-+	/* Passing a larger value in should succeed */
-+	ASSERT_EQ(read(listener, &buf, 200), sizeof(buf));
-+	EXPECT_EQ(buf.data.args[0], 42);
-+	EXPECT_EQ(buf.data.nr, __NR_dup);
-+
-+	resp.id = buf.id;
-+	resp.error = 0;
-+	resp.val = USER_NOTIF_MAGIC;
-+
-+	EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_SEND, &resp), 0);
-+
-+	EXPECT_EQ(waitpid(pid, &status, 0), pid);
-+	EXPECT_EQ(true, WIFEXITED(status));
-+	EXPECT_EQ(0, WEXITSTATUS(status));
-+}
-+
- /*
-  * TODO:
-  * - expand NNP testing
--- 
-2.25.1
-
+        Thomas
