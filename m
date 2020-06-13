@@ -2,137 +2,115 @@ Return-Path: <SRS0=WLRa=72=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05667C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 05:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0095C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 05:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6A8C207DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 05:35:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB7A020739
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 05:40:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nagGTds8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jYEk1+sf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726441AbgFMFfp (ORCPT
+        id S1726391AbgFMFk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 01:35:45 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:60846 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725272AbgFMFfo (ORCPT
+        Sat, 13 Jun 2020 01:40:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53786 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725272AbgFMFk2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 01:35:44 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05D5Wu1F019675;
-        Sat, 13 Jun 2020 05:35:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=+48gp5NsajP3MjUnlmxOcUkUR7Y/jITP8z7coyvT02E=;
- b=nagGTds8EPCSogutD7A7j8gZgejKu+EA2PviOcK+wBtPsOwl5aChUAmUcBlxbyNRmcqP
- sq0Q144lepz0SFoPmYCb89oN3omwotEvlwh0sq6ZWpxVLdGBC9Psj0RZeQ7BCs2ZjzKU
- XM05dM0LYO71lTN65ZeIsHSMv1I5Lg2I6cZUCy0MQJCtKmXWn7/xjt5rwMMxRxjKeYkd
- 0jzNf1zOBFqFp3sleuMa4YlEiWsxiQ6X39QNmdnTbBOTJBnoubCLQHGHW0aC+EvpiqIQ
- 6Noues76IeA1aVlMxCj94ITW/WdD0JJLR9b2Im0S6HVexxZs92HTjPKhgBu4jeADkOkH JQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 31mp7r086p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 13 Jun 2020 05:35:37 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05D5XHaV055511;
-        Sat, 13 Jun 2020 05:35:36 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 31mkwq8kc3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 13 Jun 2020 05:35:36 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05D5ZY8u030096;
-        Sat, 13 Jun 2020 05:35:34 GMT
-Received: from localhost (/10.159.130.238)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 13 Jun 2020 05:35:34 +0000
-Date:   Fri, 12 Jun 2020 22:35:33 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Eric Sandeen <sandeen@sandeen.net>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [GIT PULL] xfs: new code for 5.8 (now with fixed To line)
-Message-ID: <20200613053533.GJ11245@magnolia>
-References: <20200602162644.GE8204@magnolia>
- <CAHk-=wgeiqB0TH_V2uTd2CX2hks+3TW344j73ftJFjqUteTxXA@mail.gmail.com>
+        Sat, 13 Jun 2020 01:40:28 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDEDEC03E96F
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 22:40:27 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id er17so5391421qvb.8
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Jun 2020 22:40:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZSHq0vMaz4NURNRNupZyQB7rnizDXqa6ngrG3A3AhI0=;
+        b=jYEk1+sfMAFz+SrLypRsAkNDQ5RLJ+imA33j+umAGowJffc/gC0O75thPSf+L0OlcO
+         5BQC2HF8cYzqXzH+2A9HJYoxbg4Ovhgls5Dwcs5FXFoRImBxItW3pPSntOX2oQ5Cm7/1
+         rT4VimvLDXJq5Oqfxt2fbr/wOwkrnpThsfDhzetbNChyCaThpiFnkh4GXrngBQKEMyhC
+         QwQZf3msp8lncBATu9K/IN0Zws1fDWFyHs2UiuItJaEktCiZiCZeAtB4FNoZJnHSErMp
+         mhV5ewjawTWhA7FD9SawBKomKVn32xKXppae3sxjaML23JON/JSP6B3IeZPm140bJhva
+         svKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZSHq0vMaz4NURNRNupZyQB7rnizDXqa6ngrG3A3AhI0=;
+        b=gFBl/e37zzJqtUot3jpmWCTiBf2XIzv/DLCKEIb6V7qkpZkRtfk1lsybNx4UsOIxF9
+         2qhoeAwjqE33/+pYCkrksESChGhwoUQWRt8zmiNVq6QtdaVm/4h1ZgcxLPNLnkjGb41E
+         lTJm+jzXLqaIOVB0JYSbqRdv4gJkPpPHhU9MAA3jNpwN8g5/nGfbKHhdifc5Z1D9fEMc
+         /ngmIHP83gmYziDl/m3Tw577j2r0cW7aaAIkTkGamjSsJlhScwq1kDjxp4Hb9YKr2vwr
+         61eymU/dWT7/CjieceikTVQaP6UOCWzGg34EHhu4jRyLHMD6sdHY283mKNteU+Zx3bJK
+         +EQw==
+X-Gm-Message-State: AOAM533Oku5h1aOi6VL4MaYQjCsOKvoT6tG2LKVUXtQQxszjDELERj/m
+        eHug0SKbp+hvHtsrxjYGejpEwmWWmBOjnfZF9AgCbg==
+X-Google-Smtp-Source: ABdhPJywBFl9gueqSdscfDjudCkhUVPyPfhj7NAAGIg1WSS2TXBAr8ut2CHITYrZ7LTnAbe2QKSEemRn4jOamEvfgaI=
+X-Received: by 2002:ad4:494c:: with SMTP id o12mr16181257qvy.102.1592026827023;
+ Fri, 12 Jun 2020 22:40:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgeiqB0TH_V2uTd2CX2hks+3TW344j73ftJFjqUteTxXA@mail.gmail.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9650 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 phishscore=0
- spamscore=0 mlxlogscore=999 malwarescore=0 bulkscore=0 suspectscore=1
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006130046
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9650 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 clxscore=1015
- cotscore=-2147483648 lowpriorityscore=0 priorityscore=1501 malwarescore=0
- suspectscore=1 mlxlogscore=999 bulkscore=0 mlxscore=0 impostorscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006130046
+References: <20200612105026.GA22660@zn.tnic> <CAHk-=wjKr+eAdPg3q7S6N4Cwd1aMEOHc5qLaKE-wwhouZRo=uw@mail.gmail.com>
+ <20200612174801.GE22660@zn.tnic> <20200612203935.GH2497@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200612203935.GH2497@hirez.programming.kicks-ass.net>
+From:   Tony Luck <tony.luck@gmail.com>
+Date:   Fri, 12 Jun 2020 22:40:14 -0700
+Message-ID: <CA+8MBbKNB3a41rQDqYnLD1AcYDDuQOJeyA=68m17zj4Neg9ZpQ@mail.gmail.com>
+Subject: Re: [RFC PATCH] x86/msr: Filter MSR writes
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 07:40:35PM -0700, Linus Torvalds wrote:
-> On Tue, Jun 2, 2020 at 9:26 AM Darrick J. Wong <djwong@kernel.org> wrote:
+On Fri, Jun 12, 2020 at 1:41 PM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Fri, Jun 12, 2020 at 07:48:01PM +0200, Borislav Petkov wrote:
+> > On Fri, Jun 12, 2020 at 10:20:03AM -0700, Linus Torvalds wrote:
+> > > Since you already added the filtering, this looks fairly sane.
+> > >
+> > > IOW, what MSR's do we expect people to maybe write to normally? You
+> > > added MSR_IA32_ENERGY_PERF_BIAS as an allowed MST, maybe there are
+> > > others?
 > >
-> > fs/xfs/xfs_log_recover.c                           | 2561 ++------------------
-> >  102 files changed, 4244 insertions(+), 4817 deletions(-)
-> 
-> Interestingly, the changes to that xfs_log_recover.c file really seem
-> to break the default git diff algorithm (the linear-space Myers'
-> algorithm)
-> 
-> The default settings give me
-> 
->  fs/xfs/xfs_log_recover.c                           | 2801 ++------------------
->  102 files changed, 4366 insertions(+), 4939 deletions(-)
-> 
-> which is not very close to yours. With the extra effort "--minimal" I get
-> 
->  fs/xfs/xfs_log_recover.c                           | 2561 ++------------------
->  102 files changed, 4246 insertions(+), 4819 deletions(-)
-> 
-> but based on your output, I suspect you used "--patience", which gives that
-> 
->  fs/xfs/xfs_log_recover.c                           | 2561 ++------------------
->  102 files changed, 4244 insertions(+), 4817 deletions(-)
-> 
-> output (the difference there wrt minimal came from
-> fs/xfs/libxfs/xfs_symlink_remote.c).
-> 
-> I'm used to seeing small differences in the line counts due to
-> different diff heuristics, but that 250 line difference for
-> "--patience" is more than you usually get.
-> 
-> None of this matters, and I'm not at all suggesting you change any of
-> your workflow.
+> > Right, this MSR is being written by cpupower in tools/. My search was
+> > confined within the kernel source only so there very likely are others.
+>
+> So that tool writing to /dev/msr has already caused pain; the direct
+> result is that the intel pstate driver doesn't want to use an MSR shadow
+> variable to avoid RDMSR because that'd loose input.
+>
+> https://lkml.org/lkml/2019/3/25/310
+>
+> (sorry, that's what google found me)
+>
+> So ideally we'd just disallow it too. It already has a sysfs file (per
+> those patches):
+>
+>   Documentation/admin-guide/pm/intel_epb.rst
 
-<nod> One of the XFS developers suggested I experiment with --patience
-to see if it would make the diff output a little less eager to minimize
-the changed lines even at the expense of reviewability.  The outcome is
-mostly identical, but there were a few places where using it really did
-help to try to keep basic code blocks together.
+Some group internal at Intel want something like this, but more extensive,
+They want to limit RDMSR to a subset (not exactly sure why, I don't
+know of MSRs that have side effects on read ... but then again
+not all of the MSR space is documented).
 
---D
+On the write side they divide into categories:
+1) Some MSRs can only be cleared.
+2) Some MSRs can only have certain bits set
+3) Some MSRs allow any write
+4) Maybe something else ... this is from memory, and a somewhat
+cursory read of their patch.
 
-> I'm just commenting because I was going "why am I not getting a
-> matching diffstat", and while I'm used to seeing small differences
-> from diff algorithms, that 240 line-count change was really a lot more
-> than I normally encounter.
-> 
->                       Linus
-> 
+They have maybe a couple of dozen MSRs split between those classes.
+
+-Tony
