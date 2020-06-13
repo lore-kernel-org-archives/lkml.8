@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCCBC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 08:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5974C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 08:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D01520739
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 08:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9FC820739
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Jun 2020 08:11:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726547AbgFMILe (ORCPT
+        id S1726595AbgFMILn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 04:11:34 -0400
-Received: from mga07.intel.com ([134.134.136.100]:64586 "EHLO mga07.intel.com"
+        Sat, 13 Jun 2020 04:11:43 -0400
+Received: from mga07.intel.com ([134.134.136.100]:64588 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726460AbgFMILZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 04:11:25 -0400
-IronPort-SDR: pYzNTe0Xd55z7HhcqY9028+PY5CElDg0l108df3B0PUavyE36pWA9GV1MKm9KBWSlvrk9dYWWj
- wl+bfclPiWUA==
+        id S1726553AbgFMILf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jun 2020 04:11:35 -0400
+IronPort-SDR: ROT/FVHTNhFtjDcxJ2n4uSZ5SoYC89vC0Al4d9tBXqtoAO/gkBi288w8VXZDmPy2Q1DdZxGN4g
+ yH2k/sAYE+7g==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2020 01:11:22 -0700
-IronPort-SDR: EPDCaGcVwlryAc7sVuB5xVqbAiL5ymdfmM3YZiQJ55hQ8tNuxa1tJhT4DpoK2axaVgpNlcNM7N
- ad9aMQ6Hv4yA==
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2020 01:11:34 -0700
+IronPort-SDR: DsydGXdWvck1TnL/AtC4qj2yDMHJCD7/zQgLXVI3sRRGgrSiuaDcE7wf5HHOtaCtpDyrvEHnf0
+ W2jVNiH5HSGA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,506,1583222400"; 
-   d="scan'208";a="474467349"
+   d="scan'208";a="474467453"
 Received: from sqa-gate.sh.intel.com (HELO clx-ap-likexu.tsp.org) ([10.239.48.212])
-  by fmsmga006.fm.intel.com with ESMTP; 13 Jun 2020 01:11:08 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 13 Jun 2020 01:11:32 -0700
 From:   Like Xu <like.xu@linux.intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -42,9 +42,9 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Joerg Roedel <joro@8bytes.org>, ak@linux.intel.com,
         wei.w.wang@intel.com, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org, Like Xu <like.xu@linux.intel.com>
-Subject: [PATCH v12 03/11] perf/x86/lbr: Add interface to get LBR information
-Date:   Sat, 13 Jun 2020 16:09:48 +0800
-Message-Id: <20200613080958.132489-4-like.xu@linux.intel.com>
+Subject: [PATCH v12 10/11] KVM: vmx/pmu: Reduce the overhead of LBR pass-through or cancellation
+Date:   Sat, 13 Jun 2020 16:09:55 +0800
+Message-Id: <20200613080958.132489-11-like.xu@linux.intel.com>
 X-Mailer: git-send-email 2.21.3
 In-Reply-To: <20200613080958.132489-1-like.xu@linux.intel.com>
 References: <20200613080958.132489-1-like.xu@linux.intel.com>
@@ -55,85 +55,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The LBR records msrs are model specific. The perf subsystem has already
-obtained the base addresses of LBR records based on the cpu model.
+When the LBR record msrs has already been pass-through, there is no
+need to call vmx_update_intercept_for_lbr_msrs() again and again, and
+vice versa.
 
-Therefore, an interface is added to allow callers outside the perf
-subsystem to obtain these LBR information. It's useful for hypervisors
-to emulate the LBR feature for guests with less code.
-
-Co-developed-by: Wei Wang <wei.w.wang@intel.com>
-Signed-off-by: Wei Wang <wei.w.wang@intel.com>
 Signed-off-by: Like Xu <like.xu@linux.intel.com>
 ---
- arch/x86/events/intel/lbr.c       | 20 ++++++++++++++++++++
- arch/x86/include/asm/perf_event.h | 12 ++++++++++++
- 2 files changed, 32 insertions(+)
+ arch/x86/kvm/vmx/pmu_intel.c |  1 +
+ arch/x86/kvm/vmx/vmx.c       | 12 ++++++++++++
+ arch/x86/kvm/vmx/vmx.h       |  3 +++
+ 3 files changed, 16 insertions(+)
 
-diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index 65113b16804a..2ed3f2a51bdf 100644
---- a/arch/x86/events/intel/lbr.c
-+++ b/arch/x86/events/intel/lbr.c
-@@ -1343,3 +1343,23 @@ void intel_pmu_lbr_init_knl(void)
- 	if (x86_pmu.intel_cap.lbr_format == LBR_FORMAT_LIP)
- 		x86_pmu.intel_cap.lbr_format = LBR_FORMAT_EIP_FLAGS;
+diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+index 85a675004cbb..75ba0444b4d1 100644
+--- a/arch/x86/kvm/vmx/pmu_intel.c
++++ b/arch/x86/kvm/vmx/pmu_intel.c
+@@ -614,6 +614,7 @@ static void intel_pmu_init(struct kvm_vcpu *vcpu)
+ 		vmx_get_perf_capabilities() : 0;
+ 	lbr_desc->lbr.nr = 0;
+ 	lbr_desc->event = NULL;
++	lbr_desc->already_passthrough = false;
  }
+ 
+ static void intel_pmu_reset(struct kvm_vcpu *vcpu)
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 58a8af433741..800a26e3b571 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -3880,12 +3880,24 @@ static void vmx_update_intercept_for_lbr_msrs(struct kvm_vcpu *vcpu, bool set)
+ 
+ static inline void vmx_lbr_disable_passthrough(struct kvm_vcpu *vcpu)
+ {
++	struct lbr_desc *lbr_desc = &to_vmx(vcpu)->lbr_desc;
 +
-+/**
-+ * x86_perf_get_lbr - get the LBR records information
-+ *
-+ * @lbr: the caller's memory to store the LBR records information
-+ *
-+ * Returns: 0 indicates the LBR info has been successfully obtained
-+ */
-+int x86_perf_get_lbr(struct x86_pmu_lbr *lbr)
-+{
-+	int lbr_fmt = x86_pmu.intel_cap.lbr_format;
++	if (!lbr_desc->already_passthrough)
++		return;
 +
-+	lbr->nr = x86_pmu.lbr_nr;
-+	lbr->from = x86_pmu.lbr_from;
-+	lbr->to = x86_pmu.lbr_to;
-+	lbr->info = (lbr_fmt == LBR_FORMAT_INFO) ? MSR_LBR_INFO_0 : 0;
+ 	vmx_update_intercept_for_lbr_msrs(vcpu, true);
++	lbr_desc->already_passthrough = false;
+ }
+ 
+ static inline void vmx_lbr_enable_passthrough(struct kvm_vcpu *vcpu)
+ {
++	struct lbr_desc *lbr_desc = &to_vmx(vcpu)->lbr_desc;
 +
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(x86_perf_get_lbr);
-diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index e855e9cf2c37..5d2c30f0df02 100644
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -333,6 +333,13 @@ struct perf_guest_switch_msr {
- 	u64 host, guest;
++	if (lbr_desc->already_passthrough)
++		return;
++
+ 	vmx_update_intercept_for_lbr_msrs(vcpu, false);
++	lbr_desc->already_passthrough = true;
+ }
+ 
+ /*
+diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+index c67ce758412e..c931463f75d9 100644
+--- a/arch/x86/kvm/vmx/vmx.h
++++ b/arch/x86/kvm/vmx/vmx.h
+@@ -102,6 +102,9 @@ struct lbr_desc {
+ 	 * The records may be inaccurate if the host reclaims the LBR.
+ 	 */
+ 	struct perf_event *event;
++
++	/* A flag to reduce the overhead of LBR pass-through or cancellation. */
++	bool already_passthrough;
  };
  
-+struct x86_pmu_lbr {
-+	unsigned int	nr;
-+	unsigned int	from;
-+	unsigned int	to;
-+	unsigned int	info;
-+};
-+
- extern void perf_get_x86_pmu_capability(struct x86_pmu_capability *cap);
- extern void perf_check_microcode(void);
- extern int x86_perf_rdpmc_index(struct perf_event *event);
-@@ -348,12 +355,17 @@ static inline void perf_check_microcode(void) { }
- 
- #if defined(CONFIG_PERF_EVENTS) && defined(CONFIG_CPU_SUP_INTEL)
- extern struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr);
-+extern int x86_perf_get_lbr(struct x86_pmu_lbr *lbr);
- #else
- static inline struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr)
- {
- 	*nr = 0;
- 	return NULL;
- }
-+static inline int x86_perf_get_lbr(struct x86_pmu_lbr *lbr)
-+{
-+	return -1;
-+}
- #endif
- 
- #ifdef CONFIG_CPU_SUP_INTEL
+ /*
 -- 
 2.21.3
 
