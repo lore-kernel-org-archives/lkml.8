@@ -2,199 +2,158 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A35CC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 13:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C58BFC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 13:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29D6A20714
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 13:05:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80DCF206D7
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 13:06:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="iOrpHeef"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="AkVdMyZj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgFNNFD (ORCPT
+        id S1727769AbgFNNGO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 09:05:03 -0400
-Received: from mail-eopbgr150078.outbound.protection.outlook.com ([40.107.15.78]:43015
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726925AbgFNNFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 09:05:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TJQrEynNskBdV2fad5mN0T7eBgqANFxyRlXEuI6giJMxj10OV1jXrN3Tp8U4PpdaEzIiYiIdeA6TEEZh0k74jAJIyHlnVkjFg75K4Nt4CvqobxECJJr7UTsLcN0vLhPgUp2YBviCbJl3tCb1GbStWbkYe6N0+hcV7Fyre7UtuzYTxuoIQu7ZUDM6GTJg4q8hUfKdIShvmwKUYMtdFi03Vb9nrfkZXye4x1oT/1uIfQqAWIF6OC8D6vmgmpB2BWIMAbEi8SAy8PG7wsxNH860wGOgfYTxl0vzvF3/ndamJxCnnhAK3Aj15nTjg1fh6g+9fZAX2+dC3FMPnqAVbJzvLw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=shAuxshqLV/5jVunuGkkf9gL6Ck71ggWjzcCIxlwE9E=;
- b=jyi7FhxpvDak3TGKGoHC3RE7OYgtXakCFNEgRdaZevebdedrIuM6/X0wW0uctDQEk4UGq5ZbN1MxGmaXANUk72twkklBjaL4W/qwxn7eSLbxPXJm9+R43/VdyF3ueCyhJBBJXhixElVzUSO3AtyEJ93mprzoPq9EL6aKMF4lmKMafccj9uJaz2JxF3jNKgv3mBFdppUxv//zKcokvmC0/EP9bDfnJD+iHb35y+oluaHpIVZqZ0S8PyHc/qF7VFtiMdp0U+gTonL79U3LNUpCbte9PeNfji4gbW0g0lJko48EYyv9K1bLsUH5stWWtCFPwbAAJh+QfIoZQQZmh9HK2w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=shAuxshqLV/5jVunuGkkf9gL6Ck71ggWjzcCIxlwE9E=;
- b=iOrpHeefjzfQb4tJr6gB1iSxKOBg5I7Ex1YYmQqTOk2vcWT1W1ffF22Vs6GEmRzDQPnJdkkivYfwYnnygBHOfSdokQV/PxPxlPwJS5+I8rFsTa9JRE937PjGN7yORDfB570LoaaaAXUy+VfL5iMciPWP0Kr5vRhA9wKiVVQAAmk=
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
- by VE1PR04MB6365.eurprd04.prod.outlook.com (2603:10a6:803:120::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.23; Sun, 14 Jun
- 2020 13:04:58 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3088.028; Sun, 14 Jun 2020
- 13:04:57 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     Mark Brown <broonie@kernel.org>
-CC:     Vinod Koul <vkoul@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "matthias.schiffer@ew.tq-group.com" 
-        <matthias.schiffer@ew.tq-group.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v1 RFC 1/2] spi: introduce fallback to pio
-Thread-Topic: [PATCH v1 RFC 1/2] spi: introduce fallback to pio
-Thread-Index: AQHWP6z7CX2etPvPnk+oddH8JEW5FKjTbHIAgADDYUCAAJUwgIAACjoQgAA5dICAAOmA8A==
-Date:   Sun, 14 Jun 2020 13:04:57 +0000
-Message-ID: <VE1PR04MB6638B43E3AC83286946DABCD899F0@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <1591880310-1813-1-git-send-email-yibin.gong@nxp.com>
- <1591880310-1813-2-git-send-email-yibin.gong@nxp.com>
- <20200611134042.GG4671@sirena.org.uk>
- <VE1PR04MB66383245FAD2AE33CFEA76F789810@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20200612101357.GA5396@sirena.org.uk>
- <VE1PR04MB66384013797FE6B01943F2A889810@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20200612141611.GI5396@sirena.org.uk>
-In-Reply-To: <20200612141611.GI5396@sirena.org.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [183.192.235.111]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 20e42814-dd67-4257-dc3b-08d810638a3c
-x-ms-traffictypediagnostic: VE1PR04MB6365:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB6365AB9B5DD121A0F1BF1BDE899F0@VE1PR04MB6365.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 04347F8039
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: adNTOvM2ROwkPGgCrHepMHc4wuEAvWfQNGV6VSmnyLARil0cTfvqDZ9DKLgRbubr1froxtqw8Np3nFZEClBWOPq1JKUZIEpe8YyDHKri79Zmf8WOHQ5q2PzQIeZkBxavVIUSaR57qwhcSFbO3flbPO/vKTeiOC2YrmqU94iFCf0P3OFDNxdsZCN4kFIWwa4xPRHImoOknqgqtc8O2FqsjmfoUfzmiYWeMMPSfG5is8rkBhrw9Ojw7+j4MGUOZxxqSCvuGAWX4XZDXlwShgC+wfAJpPrffUZRmdOhxKioVFUCm7Jo6ZSZTweenzqg1lsEerpT6tv6EzNYTOjOZ1JNl7XfwmgwN9QKUO9XDJH+3+ZrZ6Xz/mfy+MOctSDOICGA
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39850400004)(376002)(136003)(346002)(396003)(76116006)(2906002)(8676002)(6916009)(52536014)(66446008)(83380400001)(64756008)(8936002)(66476007)(66556008)(9686003)(5660300002)(55016002)(71200400001)(33656002)(66946007)(6506007)(7696005)(316002)(7416002)(53546011)(186003)(4326008)(54906003)(86362001)(45080400002)(26005)(478600001)(2004002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: Q5gOLL8oj/Y/fmfohULLOG/KaMa2TMIyKDa0ieYaXSAkRKby51qz6aSTA54nLbw6bBvzdRuKGDWWokFsfPoSSoCKy2U9l6r5PTtSePPeR7vR37FYpJYIc9V7KQLsKirWudLYRi9fqzopGamRdPr0y7rxIMFqJmMRBpHr1dPN4xzjFAba67vsTxFKQW3y2cfjih4Y5WojoRdF4nMI03D+Vrpg3lMANZZNNVWKPlWpbwib1dsLnxr7GebVKWr2WgaxMKLW9pO/LnNUftrSF12eJp082Zs0parwyU+pYE4pNUktjhnDDg8gS8RgdYheOqtZjhbFX72wrjFo2ef4FQtwMnzuCZgx7rfsLS8Jn3lbxg6ucQ4Aano5JIDHzmU61udctiNcPJQDPb4jBfVb00CxQbvMeH38VGluAGQwNnMhvn9RiVoY7+9KvCR4fdJ4XNFFz4pvs6KrSrpDBm26/6AGSx6nYhzY4W/y3avZ83zc1A4=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sun, 14 Jun 2020 09:06:14 -0400
+Received: from mout.web.de ([217.72.192.78]:55063 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726925AbgFNNGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 09:06:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1592139949;
+        bh=twBWjKWwkxqpHDAJyLnk+motZ58+jjTK9fg8hzaK/BM=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=AkVdMyZjAQLAIvy9qJ20t6E1XG/33Uri3FU+pir5Lz7Q2Rjp+66I1rZHnxu/dgQQT
+         CkhVQa17hiKw9CK8kgICRXsayajLB8OhNR1oxSGU4MRYKdoE/QkS3UsAcJ4NF3PWJ/
+         4lK/JoGE2KxGQIpIcXOQHpnIpNPLda3sZWLquZZw=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.131.103.145]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MsJOq-1ivWfX0yOA-00tkAx; Sun, 14
+ Jun 2020 15:05:49 +0200
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Cc:     Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>,
+        Qiushi Wu <wu000273@umn.edu>, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Shirish S <shirish.s@amd.com>, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>, Lyude Paul <lyude@redhat.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Yu Kuai <yukuai3@huawei.com>
+Subject: Re: [PATCH] drm/amdgpu: fix ref count leak in
+ amdgpu_display_crtc_set_config
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <241aaf11-d4a0-e5a9-9744-75839006c128@web.de>
+Date:   Sun, 14 Jun 2020 15:05:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 20e42814-dd67-4257-dc3b-08d810638a3c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2020 13:04:57.8287
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: RrpdPdsrC09ZxJ0RTJGN15XZELcMyglqDYack75/UUs+gqOJ25LLW61D5gwF2LCfTUO5oRrzt44VTBE0Igag1A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6365
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:jISW+Z2OwzdSP+oBBBHLf/NafH24FJYxgakUacwhi3+VepG1uKU
+ WMiRnTTFV/i3rpYkRVT6CSokq3Y1BnhkT8jsNYH5qKecsjMfIrxUk+L+S1M00hxoS+FjuGO
+ 1gZXQyX68il89HsZuDKwZ3g94irEijpqn7pGPtJeAddqx3cDkAF4CsB+ePRn/gdPABJL3V7
+ SFyuSJlTugi3zz6ejehmg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:v7eTGvr1Xs0=:XPocsuC/DHM9Xn8JheBKVW
+ XW/nyoUHPiXrgYDha2KtAgCeX6UTf7J0nchvy8vYbvZvLXqch721rKQEjkNDNIp7guqv5acEe
+ At08joOFPl4z2pzel8gdtoTp0MAxO0o+bzC7oLwBZfMOt+wqeGrDb1qFv2pLZc30s9dRG6AnT
+ SVPyYhU+Lt+Neqi1c4ask82Z5Cc3Uv8x7dElvgqdUcgjRDcsivpFsUYev4ZAJBLq5NPV1kYrn
+ oTgvU9gbqRIqAaD7+TAQUWJWIIISXhayK/Jv5ZQ0f6maA1x4VNKatyM+tlliwRLy0Orc+I20o
+ mmtG2FAJVPiftrRm+2hocFJ36naHsyJacW2rjUCOKCxoojU74jNcd6j8w13fSr0uzfvW0mx6k
+ 7RFgHfLmwct020oEZ+YyGpv0G7zUlLicXQJ+XhDOuD8ykqEQxtwy0nMBq0rbaHtDdW6LqmEYE
+ LsWmrW2QfdPceZ6VzJMP6Z0bnBaORjrHhpz8Z9XN4xQ+o0olSsydKS8Y+GiR1/6AT9GwYSk0W
+ /ZC5aOa5fES0QmF+k7rQI/Wxpopoc7sDh113mR348P1lqNwzXs/ZA5uXyV5dwrsA94ExY56el
+ kOmmlI71j7PzNYnnr4U56CC7LZIg3MHZxcRP7UF8yfIvj4vxBxYKIKBjfzqP8UlpmZtQztDoP
+ /zIYwbyxActTbC/J6fyXsGhvZskE6kks0iAqxM4qGh9eHs86DHaTDXUA1OsytuDNd5KzZ74xb
+ ifEjcINAsvfcFGTZNW9Dfcbo57xYk1w+EZwHHA6NyRudhHJIEiAB9tjR86b76WNGNMW5P5Ldv
+ aVpxzZ8CUMzmzI3KYJq2EmQq9Kv69p82Ykv1lKhAUJtxYz3KxNq67snJFqnXRFzyzd7PT4BYv
+ /ANCXPiTHqUDeNiExvJH1OLuTREwk+XVcnsXFhC4BpyR62NcMkLT3XlRqJiHFtYExw223kN0S
+ 8Gxy5tgR425YkC/lecpEsXxWjtL8eiQA7EMFOn9IvKW8sDEs0MkuQUxEuGTIiMzJc56grxKKd
+ r/UbBYBQAg7U8f1YROBUvWYVHZHdEUyZ6BClrHfHaFRxqoLurV6T4+5gFAd3X+L8DoWDPT8Du
+ BTP4j5l5Hnw3ZVNkUNxkYxRnEIzlSjEjCZWCb3yRXNHiLbF8jmh6ih67gChwzfjOiGj5Ynd8t
+ t4Ip5ZogHoGR6x8F9JtnmY5m9xnXhlHw4FGw12C89+0FYErRg1O76h5lvWfc3BCqTOgc2PiKp
+ U3iRys3OxLLBpCwd7
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/06/12 22:16 Mark Brown <broonie@kernel.org> wrote:=20
-> On Fri, Jun 12, 2020 at 01:48:41PM +0000, Robin Gong wrote:
-> > On 2020/06/12 18:14 Mark Brown <broonie@kernel.org> wrote:
->=20
-> > > Please look at the formatting of your e-mails - they're really hard
-> > > to read.  The line length is over 80 columns and there's no breaks be=
-tween
-> paragraphs.
->=20
-> > Sorry for that, seems my outlook format issue, hope it's ok now this
-> > time :)
->=20
-> Yes, looks good thanks!
->=20
-> > > Client could enable this feature by choosing SPI_MASTER_FALLBACK
-> > > freely without any impact on others.
->=20
-> > > SPI_MASTER_FALLBACK.  If this works why would any driver not enable
-> > > the flag?
->=20
-> > Just make sure little impact if it's not good enough and potential
-> > issue may come out after it's merged into mainline. TBH, I'm not sure
-> > if it has taken care all in spi core. Besides, I don't know if other sp=
-i client need
-> this feature.
->=20
-> It's not something that's going to come up a lot for most devices, it'd b=
-e a
-> mapping failure due to running out of memory or something, but your point
-> about that being possible is valid.
->=20
-> > > > Any error happen in DMA could fallback to PIO , seems a nice to
-> > > > have,
-> > > because it could
-> > > > give chance to run in PIO which is more reliable. But if there is
-> > > > also error in
->=20
-> > > PIO, thus may loop here, it's better adding limit try times here?
->=20
-> > > An error doesn't mean nothing happened on the bus, an error could
-> > > for example also be something like a FIFO overrun which corrupts data=
-.
->=20
-> > Do you mean fallback to PIO may cause FIFO overrun since some latency
-> > involved so that this patch seems not useful as expected?
->=20
-> No, I mean that the reason the DMA transfer fails may be something that
-> happens after we've started putting things on the bus - the bit about FIF=
-Os is
-> just a random example of an error that could happen.
->=20
-Sorry Mark for that I can't get your point... The bus error such as data co=
-rrupt
-seems not the spi core's business since it can only be caught in spi contro=
-ller
-driver or upper level such as mtd driver (spi-nor) which know what's the fa=
-ilure
-happen at spi bus HW level or what's the correct data/message. In other wor=
-ds,
-spi core can't detect such error by transfer_one().
+> in amdgpu_display_crtc_set_config, =E2=80=A6
 
-> > > It *could* but only in extreme situations, and again this isn't just
-> > > handling errors from failure to prepare the hardware but also
-> > > anything that happens after it.
->=20
-> > Okay, understood your point. You prefer to some interface provided by
-> > dma engine before dmaengine_prep_slave_sg so that can_dma() can know
-> > if this dma channel is ready indeed. But unfortunately, seems there is =
-no
-> one....
->=20
-> Well, this is free software and everything can be modified!  The other op=
-tion
-> would be framework changes in SPI that allowed us to indicate from the dr=
-iver
-> that an error occured before we started doing anything to the hardware (l=
-ike
-> happens here) through something like a special error code or splitting up=
- the
-> API.
-Yes, but both assume spi controller driver could detect such dma failure be=
-fore
-dmaengine_prep_*(). Let's wait Vinod's comment for that if dmaengine_slave_=
-config
-could keep direction.
-But despite of that case, do you think this patch is valid for transfer_one=
-() failue
-in dma and fallback to pio?
+* Can the term =E2=80=9Creference count=E2=80=9D become relevant also for =
+this commit message
+  besides other possible adjustments?
+
+* Can it be nicer to combine proposed updates for this software module
+  as a patch series (with a cover letter)?
+
+* Would you like to add the tag =E2=80=9CFixes=E2=80=9D?
+
+
+=E2=80=A6
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c
+=E2=80=A6
+> @@ -306,6 +306,7 @@  int amdgpu_display_crtc_set_config(struct drm_mode_=
+set *set,
+>  		adev->have_disp_power_ref =3D false;
+>  	}
+>
+> +out:
+>  	/* drop the power reference we got coming in here */
+>  	pm_runtime_put_autosuspend(dev->dev);
+>  	return ret;
+
+Perhaps use the label =E2=80=9Cput_runtime=E2=80=9D instead?
+
+Regards,
+Markus
