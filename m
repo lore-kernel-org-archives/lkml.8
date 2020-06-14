@@ -2,142 +2,136 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE247C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 15:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25613C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 15:40:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1BB4207BC
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 15:37:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XyV8mEkp"
+	by mail.kernel.org (Postfix) with ESMTP id 04BE8206D7
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 15:40:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbgFNPhl (ORCPT
+        id S1726982AbgFNPkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 11:37:41 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30230 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726717AbgFNPhk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 11:37:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592149059;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=pdjmOkI1bn7YFDE5FHbHtbuUsgKMpaTMy03LlVOQNFU=;
-        b=XyV8mEkplxPkmonF/ESQUmhwksYV8wXO243yRDgE8f6Gbd4By11rLeauXCHBrY25dUYQAj
-        sp2n/AnSz21KdrG1VdvufBN2UEy4f0jz8Bg9aWEGV4z4EMTkhr0NJeWesVZOsL6RBFF4kn
-        C1cRauBCdhWqooWAhXS6/zuB+OpbDHA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-317-l_vrs5qKOrq-3WyZp3l-VA-1; Sun, 14 Jun 2020 11:37:35 -0400
-X-MC-Unique: l_vrs5qKOrq-3WyZp3l-VA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0DED81883600;
-        Sun, 14 Jun 2020 15:37:33 +0000 (UTC)
-Received: from krava (unknown [10.40.192.38])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 2AED3D01E7;
-        Sun, 14 Jun 2020 15:37:29 +0000 (UTC)
-Date:   Sun, 14 Jun 2020 17:37:28 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>, paulmck@kernel.org,
-        joel@joelfernandes.org,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        David Miller <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@elte.hu>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ziqian SUN <zsun@redhat.com>, Jiri Olsa <jolsa@kernel.org>
-Subject: Re: [PATCH -tip V6 0/6] kprobes: Fixes mutex, rcu-list warnings and
- cleanups
-Message-ID: <20200614153728.GA2009260@krava>
-References: <158927054236.27680.18209720730136003586.stgit@devnote2>
- <20200527234941.a15490ee50669812df8183dc@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200527234941.a15490ee50669812df8183dc@kernel.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+        Sun, 14 Jun 2020 11:40:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49558 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725815AbgFNPkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 11:40:25 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 4E443ABCF;
+        Sun, 14 Jun 2020 15:40:26 +0000 (UTC)
+Date:   Sun, 14 Jun 2020 17:40:21 +0200
+Message-ID: <s5hr1uhac62.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
+Cc:     alsa-devel@alsa-project.org, bp@alien8.de, hch@infradead.org,
+        Christoph Hellwig <hch@lst.de>, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, mingo@redhat.com,
+        Pavel Machek <pavel@ucw.cz>, perex@perex.cz,
+        rientjes@google.com, tglx@linutronix.de, tiwai@suse.com,
+        x86@kernel.org
+Subject: Re: next-0519 on thinkpad x60: sound related? window manager crash
+In-Reply-To: <1592135950.lcpn6p9fh0.none@localhost>
+References: <20200520111136.GA3802@amd>
+        <1591545088.74ii116nf2.none@localhost>
+        <20200608061950.GA17476@lst.de>
+        <1591624340.z01ejtod28.none@localhost>
+        <20200609114733.GA1621@lst.de>
+        <s5hr1uogtna.wl-tiwai@suse.de>
+        <s5h8sgtede5.wl-tiwai@suse.de>
+        <1592065395.r5zwoblr15.none@localhost>
+        <s5hv9ju9dmd.wl-tiwai@suse.de>
+        <1592135950.lcpn6p9fh0.none@localhost>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 11:49:41PM +0900, Masami Hiramatsu wrote:
-> (Oops, I missed Jiri in loop.)
+On Sun, 14 Jun 2020 14:07:48 +0200,
+Alex Xu (Hello71) wrote:
 > 
-> Hi Ingo,
+> Excerpts from Takashi Iwai's message of June 14, 2020 5:54 am:
+> > On Sat, 13 Jun 2020 18:25:22 +0200,
+> > Alex Xu (Hello71) wrote:
+> >> 
+> >> Excerpts from Takashi Iwai's message of June 11, 2020 1:11 pm:
+> >> > Thanks, so something still missing in the mmap handling, I guess.
+> >> > 
+> >> > I've worked on two different branches for potential fixes of your
+> >> > problems.  Could you test topic/dma-fix and topic/dma-fix2 branches?
+> >> >   git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git
+> >> > Just pull one of them onto Linus' git HEAD.
+> >> > 
+> >> > I guess we'll go with David's new patch, but still it's interesting
+> >> > whether my changes do anything good actually.
+> >> > 
+> >> > 
+> >> > Takashi
+> >> > 
+> >> 
+> >> On torvalds 623f6dc593, topic/dma-fix causes sound to be output as 
+> >> alternating half-second bursts of noise and a few seconds of silence. 
+> >> topic/dma-fix2 appears to work properly.
+> > 
+> > OK, thanks for the feedback!  Just to make sure, you're using
+> > PulseAudio, right?
+> > If so, it was still something wrong about mmap, and the secondary
+> > method (the fallback to the continuous page) looks like a safer
+> > approach in the end.
+> > 
+> > I suppose that David's fix will be merged sooner or later.  Meanwhile
+> > I'll work on the change in the sound driver side to make things a bit
+> > more robust.  They don't conflict and both good applicable.
+> > 
+> > 
+> > thanks,
+> > 
+> > Takashi
+> > 
 > 
-> Could you take this series?
-> These are not adding any feature, but fixing real bugs.
+> Ah, no, I think that wasn't clear. I use ALSA directly with mostly 
+> default configuration, except an asym sets separate default playback and 
+> record devices.
+> 
+> asound.conf:
+> 
+> defaults.pcm.card 1
+> defaults.ctl.card 1
+> 
+> pcm.!default {
+>     type asym
+>     playback.pcm
+>     {
+>         type plug
+>         slave.pcm "dmix"
+>     }
+>     capture.pcm
+>     {
+>         type plug
+>         slave.pcm {
+>             type dsnoop
+>             ipc_key 6793
+>             slave.pcm "hw:U0x46d0x81d"
+>         }
+>     }
+> }
+> 
+> I think I wasn't able to set defaults.pcm.dmix.card and 
+> defaults.pcm.dsnoop.card for some reason, not sure why. I can try that, 
+> but I don't think it will affect this mmap issue.
 
-Hi,
-I still can't see this being pulled in, did I miss it?
+The dmix is an implementation exclusively with mmap, so yes, it's
+still about the mmap.  This also shows the same problem.
+
 
 thanks,
-jirka
 
-> 
-> Thank you,
-> 
-> On Tue, 12 May 2020 17:02:22 +0900
-> Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> 
-> > Hi Ingo,
-> > 
-> > Here is the 6th version of the series for kprobes. The previous
-> > version is here.
-> > 
-> >  https://lore.kernel.org/lkml/158583483116.26060.10517933482238348979.stgit@devnote2/
-> > 
-> > In this version, I picked 2 patches[1][2] which has been reviewed
-> > on LKML but not merged to tip tree yet.
-> > 
-> > [1] https://lore.kernel.org/lkml/20200408164641.3299633-1-jolsa@kernel.org/
-> > [2] https://lore.kernel.org/lkml/20200507185733.GA14931@embeddedor/
-> > 
-> > You can also pull this series from kprobes/core branch from
-> > 
-> >  https://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git/
-> > 
-> > Thank you,
-> > 
-> > ---
-> > 
-> > Gustavo A. R. Silva (1):
-> >       kprobes: Replace zero-length array with flexible-array
-> > 
-> > Jiri Olsa (1):
-> >       kretprobe: Prevent triggering kretprobe from within kprobe_flush_task
-> > 
-> > Masami Hiramatsu (4):
-> >       kprobes: Suppress the suspicious RCU warning on kprobes
-> >       kprobes: Use non RCU traversal APIs on kprobe_tables if possible
-> >       kprobes: Fix to protect kick_kprobe_optimizer() by kprobe_mutex
-> >       kprobes: Remove redundant arch_disarm_kprobe() call
-> > 
-> > 
-> >  arch/x86/kernel/kprobes/core.c |   16 ++--------
-> >  include/linux/kprobes.h        |    6 +++-
-> >  kernel/kprobes.c               |   61 +++++++++++++++++++++++++++++++---------
-> >  3 files changed, 56 insertions(+), 27 deletions(-)
-> > 
-> > --
-> > Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
-> 
-> 
-> -- 
-> Masami Hiramatsu <mhiramat@kernel.org>
-> 
-
+Takashi
