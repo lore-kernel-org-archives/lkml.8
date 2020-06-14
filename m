@@ -2,135 +2,98 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76C0EC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 04:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6AD7C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 04:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 414A320747
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 04:40:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 846A320747
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 04:45:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bxCvFM9b"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F1+EobDt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725849AbgFNEkw (ORCPT
+        id S1726535AbgFNEpv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 00:40:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38242 "EHLO
+        Sun, 14 Jun 2020 00:45:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725265AbgFNEkv (ORCPT
+        with ESMTP id S1725265AbgFNEpu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 00:40:51 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68393C03E96F
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 21:40:50 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id d66so6316063pfd.6
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 21:40:50 -0700 (PDT)
+        Sun, 14 Jun 2020 00:45:50 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D2FEC03E96F;
+        Sat, 13 Jun 2020 21:45:48 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id j6so2190409pgh.4;
+        Sat, 13 Jun 2020 21:45:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=X0jHmyTeV0liIsm64hbjioRiMTjKGIsGf1zJtDDDraA=;
-        b=bxCvFM9b61L0pKFDnjXvxZ39M+doP2fx0OwF6xPJJqWW3Rbc13bCUyg0HBgCgUsLKm
-         +D91gmU50kNXJkYkShzMH7MXG9WADaQFjdxb4LnYFc0CqGb76ZefvM15CrEyKWWAqLAj
-         6Smm/j0Gy9dLYYCw6j3TbubSnYCbg84EYbJzmox2Z0adLVLPHCb8yDBYSpwWPChvoD8Q
-         aMzqGl7gYG8dyVqMv+n4Fc9GYsKqiltn+DxOgaGqaLTn1bY1jOb7TEAgnQwH5iAwzf/x
-         grXv8UQTC2uIJ8syF3Et85ChUlR7Yuj4LEsYArK/K+kX+KqoAiBXecWWTONivB2mQOaf
-         brdw==
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=8gg5QrEU9y9uK+DCdRmHTpO7zkuXv8INfFU0qv5ZbRM=;
+        b=F1+EobDt1ICx3L43YXBaY/S+xi8hVpPb9gvHaLRnJeHlzyb2VV2FMGO/hXLQtZ0bqc
+         SlakszzsYNHaBmEitVc3aeqZ1tn3f7BHQ4kZCkPdspoSqq3+UjIV19M0Pq5/jPEVPg8q
+         fhO4NREKt/QTo+98AwAPb+WX6BsIVy7lP2fDH8h5uFbXGA9cyBDhVgHSCv0zh/Q0JDxo
+         bYdvTDJyztbGFJ4sAm/7laMuIj/SCC083/+ELhtdXdAn5PTdzfK9puNS1g++/2ACSjjj
+         m5LApDKS/3jGaLumbmr+ZMBdqa1Ibj0nN3nBRV1sje5rKTJlCZHAeD7xPGpcVSnm59zs
+         Xm1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+        h=x-gm-message-state:subject:to:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=X0jHmyTeV0liIsm64hbjioRiMTjKGIsGf1zJtDDDraA=;
-        b=XAVWWy2Z5/fsPqSKMXvRwHaN1V128rcjuBiywI6kISOFZTLG8/joOH1cuOvcckaK8v
-         uMJHlUtPUYODuUW+0QVBMZUykv665fpneWfdK/mdhPsnZDpOcFW5zrF7HeId7x/DNJck
-         Nw4DYsS7DkifzDIrZnpN1oyF4GPzDEqhGJfxqBQ8ERa243GrBy/vQDtQ142oFNpTFV5R
-         m/r7Ju8bt5daAmsCJqstGVXZPVmErgk5k/saR0twesXDPFejU0oCmIEdyLTUq91a2BOa
-         iKrQbjHSKE5ra5JxgA4B4yIn/Sp8ygZkh+FGmXm41+1p0jlC59e/njHq6UbWi1J3CqQ8
-         tU+Q==
-X-Gm-Message-State: AOAM531kriWUrzcKCcWW440BdHdatPpaEAgYJ/vT8PRuefmJpJ+n//DH
-        VY6pTb/wLWWAVijFm6HgR5ejq1eL
-X-Google-Smtp-Source: ABdhPJzb2adrqnTPbnPaGL4A3WTJNegJCfYtKHsH9IYilutj906HsCC6K8L5onSe63iESCAeEtNNUQ==
-X-Received: by 2002:a63:7d58:: with SMTP id m24mr16323995pgn.81.1592109649234;
-        Sat, 13 Jun 2020 21:40:49 -0700 (PDT)
-Received: from ASMDT.1 ([182.1.234.31])
-        by smtp.gmail.com with ESMTPSA id 192sm4228432pgg.39.2020.06.13.21.40.45
+        bh=8gg5QrEU9y9uK+DCdRmHTpO7zkuXv8INfFU0qv5ZbRM=;
+        b=HGWKnyorCsHAetCOV547Z0/EJFYZ+QAdgVsQGHp8XQjMAZJv0XkambFBTdnQMsOx3g
+         oGIdG1Fp0i37S33p/hXZ7dUlCthrQBufmJkzMfExid8uOGtcpPQSNiaNsPYhfEqg0STM
+         Lq77eBk2whC5tmbWcTnhomwUpORJ/uJV0nbAuQ6z1XpYjuRdxYAjLnyYBWjKgWxRq/uI
+         mOpZj58fy9tOT7/7Vm0nQgj+srQWFvsNr+LNq7ShTD3VBEljYXAOAI1MdxL4Y+Q2vVJp
+         dyJrYvMuao8E9FdsBePkABS46TIC79LbE50d9Gwb1pp+ROB3vH6UWOC9/c3ygWHWiXcQ
+         Wk6w==
+X-Gm-Message-State: AOAM532EQf4W3tYwBfN3HgvZZ/7I2lZg3T0KZN0yAVzcGTY0q2zIDW9S
+        3U8asPCwGd4dWTUGqIZSUNE=
+X-Google-Smtp-Source: ABdhPJzFP1BfCPGNEI7WxZci4ng51jhzqngxgUZKePXhK65118G4PfQSBVZX+xAlSFpKL4ppSfK3wg==
+X-Received: by 2002:a62:2942:: with SMTP id p63mr19181359pfp.56.1592109946808;
+        Sat, 13 Jun 2020 21:45:46 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id h3sm9644528pje.28.2020.06.13.21.45.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 13 Jun 2020 21:40:48 -0700 (PDT)
-Subject: Re: [PATCH] staging: android: ashmem.c: Cleanup
-From:   Dio Putra <dioput12@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     arve@android.com, tkjos@android.com, maco@android.com,
-        joel@joelfernandes.org, christian@brauner.io,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-References: <4ba43a70-c29f-6c41-9c81-66a25b0432af@gmail.com>
-Message-ID: <77288a97-c87a-8ef2-60ab-e7f89cde07ff@gmail.com>
-Date:   Sun, 14 Jun 2020 11:40:42 +0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Sat, 13 Jun 2020 21:45:45 -0700 (PDT)
+Subject: Re: [PATCH v4 2/9] mips: bmips: add BCM6328 power domain definitions
+To:     =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
+        hauke@hauke-m.de, zajec5@gmail.com, tsbogend@alpha.franken.de,
+        robh+dt@kernel.org, f.fainelli@gmail.com, jonas.gorski@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200610171630.465579-1-noltari@gmail.com>
+ <20200613082140.2009461-1-noltari@gmail.com>
+ <20200613082140.2009461-3-noltari@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <97cadafb-1b83-3d9e-a9f5-fd15a228febd@gmail.com>
+Date:   Sat, 13 Jun 2020 21:45:42 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <4ba43a70-c29f-6c41-9c81-66a25b0432af@gmail.com>
+In-Reply-To: <20200613082140.2009461-3-noltari@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Okay, my fault here. Changing the function a little bit didn't help unfortunately.
 
-$ cd ~/git/linux/
-$ make CC=clang W=1 M=drivers/staging/android
-  CC      drivers/staging/android/ashmem.o
-drivers/staging/android/ashmem.c:418:16: error: cannot assign to variable 'vmfile_fops' with const-qualified type 'const struct file_operations'
-                        vmfile_fops = *vmfile->f_op;
-                        ~~~~~~~~~~~ ^
-drivers/staging/android/ashmem.c:370:31: note: variable 'vmfile_fops' declared const here
-        const struct file_operations vmfile_fops;
-        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
-drivers/staging/android/ashmem.c:419:21: error: cannot assign to variable 'vmfile_fops' with const-qualified type 'const struct file_operations'
-                        vmfile_fops.mmap = ashmem_vmfile_mmap;
-                        ~~~~~~~~~~~~~~~~ ^
-drivers/staging/android/ashmem.c:370:31: note: variable 'vmfile_fops' declared const here
-        const struct file_operations vmfile_fops;
-        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
-drivers/staging/android/ashmem.c:420:34: error: cannot assign to variable 'vmfile_fops' with const-qualified type 'const struct file_operations'
-                        vmfile_fops.get_unmapped_area =
-                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ^
-drivers/staging/android/ashmem.c:370:31: note: variable 'vmfile_fops' declared const here
-        const struct file_operations vmfile_fops;
-        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
-3 errors generated.
-make[1]: *** [scripts/Makefile.build:267: drivers/staging/android/ashmem.o] Error 1
-make: *** [Makefile:1735: drivers/staging/android] Error 2
-$ 
 
-On 6/14/20 12:37 AM, Dio Putra wrote:
-> Minor cleanup to make file_operations const once again.
+On 6/13/2020 1:21 AM, Álvaro Fernández Rojas wrote:
+> BCM6328 SoCs have a power domain controller to enable/disable certain
+> components in order to save power.
 > 
-> Signed-off-by: Dio Putra <dioput12@gmail.com>
-> ---
->  drivers/staging/android/ashmem.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> base-commit: aa5af974127d317071d6225a0f3678c5f520e7ce
-> diff --git a/drivers/staging/android/ashmem.c b/drivers/staging/android/ashmem.c
-> index 8044510d8ec6..fbb6ac9ba1ab 100644
-> --- a/drivers/staging/android/ashmem.c
-> +++ b/drivers/staging/android/ashmem.c
-> @@ -367,7 +367,7 @@ ashmem_vmfile_get_unmapped_area(struct file *file, unsigned long addr,
->  
->  static int ashmem_mmap(struct file *file, struct vm_area_struct *vma)
->  {
-> -	static struct file_operations vmfile_fops;
-> +	static const struct file_operations vmfile_fops;
->  	struct ashmem_area *asma = file->private_data;
->  	int ret = 0;
->  
-> 
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
 
+Reviewed-by: Florian Fainelli <F.fainelli@gmail.com>
+-- 
+Florian
