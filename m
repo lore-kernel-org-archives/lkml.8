@@ -8,127 +8,92 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D814BC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 06:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A42BC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 06:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A41922065C
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 06:56:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7996D2065C
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 06:56:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nkVJFgev"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ruCs9b9Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbgFNGxD (ORCPT
+        id S1726464AbgFNG4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 02:53:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58348 "EHLO
+        Sun, 14 Jun 2020 02:56:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbgFNGxD (ORCPT
+        with ESMTP id S1725267AbgFNG4T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 02:53:03 -0400
+        Sun, 14 Jun 2020 02:56:19 -0400
 Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AED76C03E96F
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 23:53:01 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id z2so12479371ilq.0
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 23:53:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0F53C03E96F
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 23:56:19 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id c75so12456224ila.8
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 23:56:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=l7NqrBVPm55TBMnhB8GUWUjLTUxcL6eNHsDiGUxal5I=;
-        b=nkVJFgevcODeA1AiC94JJnvIYyQe+jwYYSgOR8nE5HriFZTKjNPyQJxSzqBnqEngiw
-         n5UisSMFNqj6olBJvMBQP+PvjRpqnaOv35p4N3RPkZrtRUgwTY0J475ABpsNm+99wASN
-         ATx7iNksqv4nRnhaI4H9/6dXXRXuRlD6Vyex43MJkpfaeWqI1trgomEwHjX0IWNoxMhL
-         SgwtpS/S/Z4YgYB6O5z/cOa6GMWpS/QOXrJrwVRAlvpBSurIiBGUgl5cCP7fbqh9GUh1
-         ycudI/SXnqFwuEFKYge9EajppLTMMhU3rwik2JFV/pF/V89nqA7+Kyjmx8DlHl7WSNLl
-         LpZQ==
+        bh=TpliVuQU/7sLPsVM57NGaPTp0yUaPg8e9YE17AlDXcs=;
+        b=ruCs9b9YlQlECerNcDTwY4ZAksDlHdq9kuYVhDkV1NCpUcGPSMcisPqw3OyZY3+xSC
+         NLssw50CcD5BMG8oXmMvOPUqfMBZLjAKU0hslN8gofADZ7S9K2U0cq9taQRBjgKNYxIb
+         D8NpUHWPP45WH/HDRaGr2larfLEPRyJ+ymOBgAMFwztfX5iDrwrV9YZkBAaAgDwBHyPB
+         A1klb/6XOXwF84xLfHqjWEvTFKKP6nRAp/eIowms/lN31Wi6bdyMH2nBbz2OvbCtGJw4
+         TExRz7f+x1Co/KwqSzmIMSa1ruWhttvhNsmXAGBoLh/QA70RNUuAFpo4+1QzBt0sOg4Q
+         OtDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=l7NqrBVPm55TBMnhB8GUWUjLTUxcL6eNHsDiGUxal5I=;
-        b=o/LtDch3mUKTC1iRDhutPxS7XuaOTkuZwnnx4/wauq82ABsbQYeTvYMwg/Wmt/cNrh
-         ArktUHb9exfHC8GEuHE3XssKNm5/d7UUdITOscYzPnTcKxDm48o81LLGYpNd8KSj+fVZ
-         1wzeFDYTJ8qOfsYDagW4LKg5HH8kZFr95W+JhZF7AqTyvJJaTh1mdc+qLEUlNHWl9+Q8
-         8WwZY52oq0K9gsyZWGz9suy1LQ4WYh+TeMsdGBU7360U1RHj96+oGDGg1Ozr6Lx6AQGS
-         8P+urr/YqG6gWUVqo8xXOzrjKf3kE1ZOlYGDa6iJCgaIzUD6kj8wzuNL5RlMxTH0U4JB
-         FqJQ==
-X-Gm-Message-State: AOAM530xJNYIUJsFn+RaLbDHTQcIo0p1oKx7nbKt97OmEl3mxYfcqPKl
-        0pzkc5pMBd6WiMh3HfLDYLY=
-X-Google-Smtp-Source: ABdhPJxaHRK5nnGHScRiGFj7JW23P9/j3SoAXAEFRUS2BO9oz5yv9zNOby9jq9cqp1b66vGrHSFMWA==
-X-Received: by 2002:a05:6e02:4a7:: with SMTP id e7mr20934834ils.180.1592117580805;
-        Sat, 13 Jun 2020 23:53:00 -0700 (PDT)
+        bh=TpliVuQU/7sLPsVM57NGaPTp0yUaPg8e9YE17AlDXcs=;
+        b=DBoiVEhpPatEt9TeZGCL1s2mg/f50JOhEw4ZN5xS15DunSGsczagxzXKg+rZgRYpz6
+         XTpdlrZ3vfNNMQYTUIxUox+W6tRsZBgBypdho9I0XxG4L3SvnAD6V8j1XbA9CyN9Dm2z
+         N0QbJes3vo3k9l07srn1ZTts3xH+cQaIVnWX8g6vegX1JhKCDX7HIE5bKvNPKAoeFIbv
+         8zFYiQ93DM7HAQzvV2vIomltrU8rfypsZYgmmXC+CDnosAz6Jh3Z87oR1a9oIhEwidet
+         QA2v8PpvA2WtuPdI91uhZQy1dYlz6P+9goxTdedkR0R1TFNpxtNUTT7L0dfZRATTO2ha
+         n2pQ==
+X-Gm-Message-State: AOAM533voDfhLDS0ZDC+YAsLua2jD9stNezGSS8mflHPsOmwLaGUhzCI
+        r8bZBIEQqED5gM3h68WCa/GN1yGfzhM=
+X-Google-Smtp-Source: ABdhPJzCzdSi2+fMwP6dLfmzzHIJihb+qkY/Q1cEa56HUaaAiTm+jtNydLieCm1FcWQT0NimzorZ5Q==
+X-Received: by 2002:a92:8b0a:: with SMTP id i10mr19990532ild.245.1592117778866;
+        Sat, 13 Jun 2020 23:56:18 -0700 (PDT)
 Received: from cs-u-kase.dtc.umn.edu (cs-u-kase.cs.umn.edu. [160.94.64.2])
-        by smtp.googlemail.com with ESMTPSA id n82sm5821135iod.23.2020.06.13.23.53.00
+        by smtp.googlemail.com with ESMTPSA id c20sm5823570iot.33.2020.06.13.23.56.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Jun 2020 23:53:00 -0700 (PDT)
+        Sat, 13 Jun 2020 23:56:18 -0700 (PDT)
 From:   Navid Emamdoost <navid.emamdoost@gmail.com>
 To:     Eric Anholt <eric@anholt.net>, David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
 Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
         Navid Emamdoost <navid.emamdoost@gmail.com>
-Subject: [PATCH] drm/vc4: fix ref count leak in vc4_dsi_encoder_enable
-Date:   Sun, 14 Jun 2020 01:52:50 -0500
-Message-Id: <20200614065251.94106-1-navid.emamdoost@gmail.com>
+Subject: [PATCH] drm/vc4: fix ref count leak in vc4_v3d_pm_get
+Date:   Sun, 14 Jun 2020 01:56:11 -0500
+Message-Id: <20200614065611.69502-1-navid.emamdoost@gmail.com>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-in vc4_dsi_encoder_enable, the call to pm_runtime_get_sync increments
-the counter even in case of failure, leading to incorrect
+in vc4_v3d_pm_get, the call to pm_runtime_get_sync increments the
+counter even in case of failure, leading to incorrect
 ref count. In case of failure, decrement the ref count before returning.
 
 Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 ---
- drivers/gpu/drm/vc4/vc4_dsi.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/vc4/vc4_v3d.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/vc4/vc4_dsi.c b/drivers/gpu/drm/vc4/vc4_dsi.c
-index eaf276978ee7..e651de9d1c7d 100644
---- a/drivers/gpu/drm/vc4/vc4_dsi.c
-+++ b/drivers/gpu/drm/vc4/vc4_dsi.c
-@@ -838,7 +838,7 @@ static void vc4_dsi_encoder_enable(struct drm_encoder *encoder)
- 	ret = pm_runtime_get_sync(dev);
- 	if (ret) {
- 		DRM_ERROR("Failed to runtime PM enable on DSI%d\n", dsi->port);
--		return;
-+		goto out;
- 	}
+diff --git a/drivers/gpu/drm/vc4/vc4_v3d.c b/drivers/gpu/drm/vc4/vc4_v3d.c
+index cea77a21b205..bb03c1d1bb4d 100644
+--- a/drivers/gpu/drm/vc4/vc4_v3d.c
++++ b/drivers/gpu/drm/vc4/vc4_v3d.c
+@@ -135,6 +135,7 @@ vc4_v3d_pm_get(struct vc4_dev *vc4)
  
- 	if (debug_dump_regs) {
-@@ -916,13 +916,13 @@ static void vc4_dsi_encoder_enable(struct drm_encoder *encoder)
- 	ret = clk_prepare_enable(dsi->escape_clock);
- 	if (ret) {
- 		DRM_ERROR("Failed to turn on DSI escape clock: %d\n", ret);
--		return;
-+		goto out;
- 	}
- 
- 	ret = clk_prepare_enable(dsi->pll_phy_clock);
- 	if (ret) {
- 		DRM_ERROR("Failed to turn on DSI PLL: %d\n", ret);
--		return;
-+		goto out;
- 	}
- 
- 	hs_clock = clk_get_rate(dsi->pll_phy_clock);
-@@ -944,7 +944,7 @@ static void vc4_dsi_encoder_enable(struct drm_encoder *encoder)
- 	ret = clk_prepare_enable(dsi->pixel_clock);
- 	if (ret) {
- 		DRM_ERROR("Failed to turn on DSI pixel clock: %d\n", ret);
--		return;
-+		goto out;
- 	}
- 
- 	/* How many ns one DSI unit interval is.  Note that the clock
-@@ -1088,6 +1088,8 @@ static void vc4_dsi_encoder_enable(struct drm_encoder *encoder)
- 		dev_info(&dsi->pdev->dev, "DSI regs after:\n");
- 		drm_print_regset32(&p, &dsi->regset);
- 	}
-+out:
-+	pm_runtime_put(dev);
- }
- 
- static ssize_t vc4_dsi_host_transfer(struct mipi_dsi_host *host,
+ 		if (ret < 0) {
+ 			vc4->power_refcount--;
++			pm_runtime_put(&vc4->v3d->pdev->dev);
+ 			mutex_unlock(&vc4->power_lock);
+ 			return ret;
+ 		}
 -- 
 2.17.1
 
