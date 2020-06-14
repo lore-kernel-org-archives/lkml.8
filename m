@@ -2,273 +2,189 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C91C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 17:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F3AC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 17:17:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CE06206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 17:10:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 492DD20747
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 17:17:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QAHhEFxe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbgFNRKL (ORCPT
+        id S1727039AbgFNRQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 13:10:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39452 "EHLO
+        Sun, 14 Jun 2020 13:16:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726905AbgFNRKK (ORCPT
+        with ESMTP id S1726966AbgFNRQs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 13:10:10 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C7B1C05BD43;
-        Sun, 14 Jun 2020 10:10:10 -0700 (PDT)
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1jkW8z-00031s-5Z; Sun, 14 Jun 2020 19:10:05 +0200
-Date:   Sun, 14 Jun 2020 19:10:05 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Stephen Berman <stephen.berman@gmx.net>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: power-off delay/hang due to commit 6d25be57 (mainline)
-Message-ID: <20200614171005.3zy673p6bpwoqnmq@linutronix.de>
-References: <87mu6aurfn.fsf@gmx.net>
- <20200522164012.ynyvrjompv42jtmx@linutronix.de>
- <87y2owwo2o.fsf@rub.de>
- <20200609202339.cgy57twm2zdtjhje@linutronix.de>
- <87tuzjcovq.fsf@gmx.net>
- <20200610102514.4vdzu5u7d6vnpicn@linutronix.de>
- <87imfyh6yx.fsf@gmx.net>
- <87wo4dligz.fsf@gmx.net>
- <20200612110122.jossn5zrktcvpbpm@linutronix.de>
- <87tuzdrgm5.fsf@gmx.net>
+        Sun, 14 Jun 2020 13:16:48 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1B9DC03E969
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 10:16:46 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id g10so12358365wmh.4
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 10:16:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1NB/Urk4sJ7NmljdwQD2Dnqq/4/xbrUeJIHIJ24wA9w=;
+        b=QAHhEFxeJmo0Om8T1XowjgXKEOtxoTEUtMZtDrPDZ16145txGi0czO09BgNHN6gHKc
+         Hqng+qmsvf0PiYElL5AYpW0PlOZar/aOBcvHd1iMzOfCMA9Qz5zA50S1NrmxuZ/DueoO
+         F20OgRGR60ysi4D1Xieo5pYVvVpPUfFqsXIKHRmamJAxD18hB+RXmqa5K2JpeAmJJG3/
+         lzF83lZZPc62cgwg67PFw60FRz0XJm1BqWuzxfS3qFVm+NNwvel93rCRiQB+E+araGBV
+         YaJ/eOuO7WhyU6kpAYespn4cTCZcBG8/JnTgfH/6xHCHA53xX36xR4Ing06Qdw9Q7p6i
+         Ed1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1NB/Urk4sJ7NmljdwQD2Dnqq/4/xbrUeJIHIJ24wA9w=;
+        b=d8h6OUBlrEfQCxQDfEIGUwxXwe6eKKFOkQ14jLAoZ61LSs5hknRTdUjICYvivQGLxp
+         VDJU44ehiKW6UT84a1ZcOwBb8RQtTnQB63Ricb5G++kPsMFHKA94Aa8X+SF1fhEgoyS9
+         Xv/XldEZZ01jdrZcQlSyWJSi2jkC+l0I9blIg49MiUSUxFbm5kQkg2Fxh5FsO5Sb9dJm
+         PaDaEnrVDpmZm0P4ZvYvPb6FreM91AGaju35nzTpMsim39o/2I+xzSCS7KOwAUjsAsac
+         j/qNmaBsWhQZ2fol/e0lSqij6PeFMbaRPElFzIyWuN55Dv+1Wn5aQHEB8rZ0XG8Paztj
+         QT1g==
+X-Gm-Message-State: AOAM533jbcYAj4iXar0sfAJsQnTjedpcKbnkU93Vk3rhTW100EYs/vyI
+        otg6q9v3Ixki/SAp/VC2mOne80+baIh9TZwMY4l9RQ==
+X-Google-Smtp-Source: ABdhPJyN4KeTIsKZyv/xnv0GBlMgsrAn8BwQKjsw6BJ2Bjm3+v4PjEme/I0FaAaWCNt3azLN5km5AF5DB41xZAPtEpw=
+X-Received: by 2002:a1c:2082:: with SMTP id g124mr9383717wmg.21.1592155004853;
+ Sun, 14 Jun 2020 10:16:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="jrrgi5ttcponjov2"
-Content-Disposition: inline
-In-Reply-To: <87tuzdrgm5.fsf@gmx.net>
+References: <20200614144534.237035-1-glider@google.com> <202006141000.B93DF245@keescook>
+In-Reply-To: <202006141000.B93DF245@keescook>
+From:   Alexander Potapenko <glider@google.com>
+Date:   Sun, 14 Jun 2020 19:16:33 +0200
+Message-ID: <CAG_fn=V0w2OShK+iQODkwdPoG094VpiPkhZ8O_F37m=g2XWwug@mail.gmail.com>
+Subject: Re: [PATCH] [RFC] security: allow using Clang's zero initialization
+ for stack variables
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        James Morris <jmorris@namei.org>,
+        =?UTF-8?Q?Maciej_=C5=BBenczykowski?= <maze@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---jrrgi5ttcponjov2
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On 2020-06-14 14:12:18 [+0200], Stephen Berman wrote:
-> On Fri, 12 Jun 2020 13:01:22 +0200 Sebastian Andrzej Siewior <bigeasy@lin=
-utronix.de> wrote:
->=20
-> steve [ ~ ]$ grep -E 'acpi|smbus' /proc/interrupts
->    9:          0          5          0          0          0          0  =
-        0          0          0          0          0          0   IO-APIC =
-   9-fasteoi   acpi
->   16:          0          0          0          0          0          0  =
-        0          0          0          0          0          0   IO-APIC =
-  16-fasteoi   i801_smbus
-
-okay, so it is not increasing at runtime.
-
-> > You could also do "echo t > /proc/sysrq-trigger" which gives you a lot
-> > of task state information, but at the end you will also see "howing busy
-> > workqueues and worker pools:" regarding the workqueue state. I am
-> > curious to see if you already have worker stuck in kacpid_notify with
-> > acpi_os_execute_deferred.
->=20
-> What am I supposed to do after "echo t > /proc/sysrq-trigger"?  Both
-> before and after doing that I get an error trying to open the file:
->=20
-> root [ ~ ]# cat /proc/sysrq-trigger
-> cat: /proc/sysrq-trigger: Input/output error
-
- echo "t > /proc/sysrq-trigger"
-
-not cat.
-
-> > Now that we know that know that acpi_os_execute_deferred() is stuck,
-> > lets shed some light in what it is trying to do. The patch at the end
-> > will dump this information into the console buffer (The `dmesg' command
-> > will print the whole kernel buffer). I have no idea if this starts
-> > printing while the system is running or during shutdown.  I would expect
-> > to see the Start line in acpi_os_execute_deferred() but not the End one.
-> >
-> > diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
-> > index 41168c027a5a4..0e983c558bcb5 100644
-> > --- a/drivers/acpi/osl.c
-> > +++ b/drivers/acpi/osl.c
-> > @@ -840,7 +840,9 @@ static void acpi_os_execute_deferred(struct work_st=
-ruct *work)
-> >  {
-> >  	struct acpi_os_dpc *dpc =3D container_of(work, struct acpi_os_dpc, wo=
-rk);
-> >
-> > +	pr_err("%s(%d) Start %px %pF(%px)\n", __func__, __LINE__, dpc, dpc->f=
-unction, dpc->context);
-> >  	dpc->function(dpc->context);
-> > +	pr_err("%s(%d) End   %px %pF(%px)\n", __func__, __LINE__, dpc, dpc->f=
-unction, dpc->context);
-> >  	kfree(dpc);
-> >  }
-
-argh, this should have been %pS not %pF. Sorry for that.
-
-> > @@ -1096,6 +1098,8 @@ acpi_status acpi_os_execute(acpi_execute_type typ=
-e,
-> >  	 */
-> >  	if (type =3D=3D OSL_NOTIFY_HANDLER) {
-> >  		queue =3D kacpi_notify_wq;
-> > +		pr_err("%s(%d) Adding %pS %px\n", __func__, __LINE__, function,
-> > +		       context);
-> >  		INIT_WORK(&dpc->work, acpi_os_execute_deferred);
-> >  	} else if (type =3D=3D OSL_GPE_HANDLER) {
-> >  		queue =3D kacpid_wq;
->=20
-> I applied this patch to 5.6.4 and recompiled, and on the next boot with
-> that kernel, the kernel buffer (and kernel and system logs) began to get
-> flooded with these messages:
->=20
-> Jun 14 10:37:13 strobe-jhalfs kernel: [    5.943987] acpi_os_execute_defe=
-rred(843) Start ffff8fb82c7b6500 000000003edf1e05(ffff8fb82c492990)
-> Jun 14 10:37:13 strobe-jhalfs kernel: [    5.944102] acpi_os_execute(1101=
-) Adding acpi_ev_asynch_enable_gpe+0x0/0x2f ffff8fb82c492990
-> Jun 14 10:37:13 strobe-jhalfs kernel: [    5.944104] acpi_os_execute_defe=
-rred(845) End   ffff8fb82c7b6500 000000003edf1e05(ffff8fb82c492990)
-> Jun 14 10:37:13 strobe-jhalfs kernel: [    5.944105] acpi_os_execute_defe=
-rred(843) Start ffff8fb82b844800 000000002ba560ea(ffff8fb82c492990)
-> Jun 14 10:37:13 strobe-jhalfs kernel: [    5.944124] acpi_os_execute_defe=
-rred(845) End   ffff8fb82b844800 000000002ba560ea(ffff8fb82c492990)
-> Jun 14 10:37:13 strobe-jhalfs kernel: [    5.944288] acpi_os_execute_defe=
-rred(843) Start ffff8fb82c7b6540 000000003edf1e05(ffff8fb82c492990)
-> Jun 14 10:37:13 strobe-jhalfs kernel: [    5.944387] acpi_os_execute(1101=
-) Adding acpi_ev_asynch_enable_gpe+0x0/0x2f ffff8fb82c492990
->=20
-> and so on without stopping.  I could start X and avoid seeing the
-> messages, but was afraid the logs would fill up the root partition if I
-> let it keep going, so I rebooted with another kernel.
->=20
-> Was this message flood because I booted with "ignore_loglevel
-> initcall_debug"?  In the logs there are also lots of messages like this:
-
-Is there a acpi_os_execute_* flood? The *few* at what appears to system
-startup and might be normal. If there appear *many* more and are
-constantly printing (check with dmesg) then we might be to something.
-
-> Jun 14 10:37:13 strobe-jhalfs kernel: [    6.237628] initcall i915_init+0=
-x0/0x66 returned 0 after 288657 usecs
-> Jun 14 10:37:13 strobe-jhalfs kernel: [    6.237644] calling  cn_proc_ini=
-t+0x0/0x35 @ 1
-> Jun 14 10:37:13 strobe-jhalfs kernel: [    6.237646] initcall cn_proc_ini=
-t+0x0/0x35 returned 0 after 0 usecs
-> Jun 14 10:37:13 strobe-jhalfs kernel: [    6.237648] calling  _nvm_misc_i=
-nit+0x0/0xc @ 1
-> Jun 14 10:37:13 strobe-jhalfs kernel: [    6.237687] initcall _nvm_misc_i=
-nit+0x0/0xc returned 0 after 36 usecs
-> Jun 14 10:37:13 strobe-jhalfs kernel: [    6.237690] calling  topology_sy=
-sfs_init+0x0/0x30 @ 1
-> Jun 14 10:37:13 strobe-jhalfs kernel: [    6.237720] initcall topology_sy=
-sfs_init+0x0/0x30 returned 0 after 28 usecs
+On Sun, Jun 14, 2020 at 7:04 PM Kees Cook <keescook@chromium.org> wrote:
 >
-> and so on.
+> On Sun, Jun 14, 2020 at 04:45:34PM +0200, glider@google.com wrote:
+> > In addition to -ftrivial-auto-var-init=pattern (used by
+> > CONFIG_INIT_STACK_ALL now) Clang also supports zero initialization for
+> > locals enabled by -ftrivial-auto-var-init=zero.
+> > The future of this flag is still being debated, see
+> > https://bugs.llvm.org/show_bug.cgi?id=45497
+> > Right now it is guarded by another flag,
+> > -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang,
+> > which means it may not be supported by future Clang releases.
+> > Another possible resolution is that -ftrivial-auto-var-init=zero will
+> > persist (as certain users have already started depending on it), but the
+> > name of the guard flag will change.
+> >
+> > In the meantime, zero initialization has proven itself as a good
+> > production mitigation measure against uninitialized locals. Unlike
+> > pattern initialization, which has a higher chance of triggering existing
+> > bugs, zero initialization provides safe defaults for strings, pointers,
+> > indexes, and sizes. On the other hand, pattern initialization remains
+> > safer for return values.
+> > Performance-wise, the difference between pattern and zero initialization
+> > is usually negligible, although the generated code for zero
+> > initialization is more compact.
+> >
+> > The proposed config, CONFIG_USE_CLANG_ZERO_INITIALIZATION, makes
+> > CONFIG_INIT_STACK_ALL use zero initialization if the corresponding flags
+> > are supported by Clang.
+> >
+> > Cc: Kees Cook <keescook@chromium.org>
+> > Cc: Nick Desaulniers <ndesaulniers@google.com>
+> > Signed-off-by: Alexander Potapenko <glider@google.com>
+> > ---
+> >  Makefile                   | 15 ++++++++++++++-
+> >  security/Kconfig.hardening | 16 ++++++++++++++++
+> >  2 files changed, 30 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Makefile b/Makefile
+> > index fd31992bf918..2860bad7e39a 100644
+> > --- a/Makefile
+> > +++ b/Makefile
+> > @@ -802,9 +802,22 @@ KBUILD_CFLAGS    += -fomit-frame-pointer
+> >  endif
+> >  endif
+> >
+> > -# Initialize all stack variables with a pattern, if desired.
+> > +# Initialize all stack variables, if desired.
+> >  ifdef CONFIG_INIT_STACK_ALL
+> > +
+> > +# Use pattern initialization by default.
+> > +ifndef CONFIG_USE_CLANG_ZERO_INITIALIZATION
+> >  KBUILD_CFLAGS        += -ftrivial-auto-var-init=pattern
+> > +else
+> > +
+> > +ifdef CONFIG_CC_HAS_AUTO_VAR_ZERO_INIT
+> > +# Future support for zero initialization is still being debated, see
+> > +# https://bugs.llvm.org/show_bug.cgi?id=45497. These flags are subject to being
+> > +# renamed or dropped.
+> > +KBUILD_CFLAGS        += -ftrivial-auto-var-init=zero -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang
+> > +endif
+> > +
+> > +endif
+> >  endif
+>
+> I'd prefer this be split instead of built as a nested if (i.e. entirely
+> control section via the Kconfig -- see below).
+>
+> >
+> >  DEBUG_CFLAGS := $(call cc-option, -fno-var-tracking-assignments)
+> > diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
+> > index af4c979b38ee..299d27c6d78c 100644
+> > --- a/security/Kconfig.hardening
+> > +++ b/security/Kconfig.hardening
+> > @@ -22,6 +22,9 @@ menu "Memory initialization"
+> >  config CC_HAS_AUTO_VAR_INIT
+> >       def_bool $(cc-option,-ftrivial-auto-var-init=pattern)
+> >
+> > +config CC_HAS_AUTO_VAR_ZERO_INIT
+> > +     def_bool $(cc-option,-ftrivial-auto-var-init=zero -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang)
+> > +
+>
+> I'd like to be more specific here. Let's rename CC_HAS_AUTO_VAR_INIT to
+> CC_HAS_AUTO_VAR_INIT_PATTERN, and change the other to
+> CC_HAS_AUTO_VAR_INIT_ZERO (they then both match the word order of the
+> option, and the thing that changes is the last word).
+>
+> >  choice
+> >       prompt "Initialize kernel stack variables at function entry"
+> >       default GCC_PLUGIN_STRUCTLEAK_BYREF_ALL if COMPILE_TEST && GCC_PLUGINS
+> > @@ -100,6 +103,19 @@ choice
+> >
+> >  endchoice
+> >
+> > +config USE_CLANG_ZERO_INITIALIZATION
+> > +     bool "Use Clang's zero initialization for local variables"
+> > +     depends on CC_HAS_AUTO_VAR_ZERO_INIT
+> > +     depends on INIT_STACK_ALL
+> > +     help
+> > +       If set, uses zeros instead of 0xAA to initialize local variables in
+> > +       INIT_STACK_ALL. Zeroing the stack provides safer defaults for strings,
+> > +       pointers, indexes, and sizes. The downsides are less-safe defaults for
+> > +       return values, and exposing fewer bugs where the underlying code
+> > +       relies on zero initialization.
+> > +       The corresponding flag isn't officially supported by Clang and may
+> > +       sooner or later go away or get renamed.
+> > +
+>
+> Similarly, I'd like to rename INIT_STACK_ALL to INIT_STACK_ALL_PATTERN
+> and then add INIT_STACK_ALL_ZERO.
 
-You have initcalls here which is due to "initcall_debug". The i915*
-message means that the i915 module was loaded.
-
-That "initcall_debug" prints you starts/stops of modules that are loaded
-(built-in or loaded modules) and shutdown callbacks which are invoked at
-system shutdown. The "ignore_loglevel" shows prints all messages to the
-console ignoring the current loglevel. Otherwise it would skip messages
-with a "minor" loglevel. With this we were able to see the shutdown
-callbacks (of the ahci module for instance).
-
-I attached the updated acpi patch. It limits the prints to the
-kacpi_notify_wq queue which appears to stuck at shutdown.
-
-The interesting part is to see if there is a acpi_os_execute() adding a
-specific event multiple times which does not complete. Maybe at runtime,
-maybe at shutdown time. If that is the case then ignoring this specific
-event might fix the shutdown problem. With all this information so far,
-I don't see a relation with this problem and the commit=E2=80=A6
-
-> Steve Berman
-
-Sebastian
-
---jrrgi5ttcponjov2
-Content-Type: text/x-diff; charset=utf-8
-Content-Disposition: attachment; filename="acpi_dbg.patch"
-
-diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
-index 762c5d50b8fe..a08789fb330e 100644
---- a/drivers/acpi/osl.c
-+++ b/drivers/acpi/osl.c
-@@ -844,6 +844,16 @@ static void acpi_os_execute_deferred(struct work_struct *work)
- 	kfree(dpc);
- }
- 
-+static void acpi_os_execute_deferred_notify(struct work_struct *work)
-+{
-+	struct acpi_os_dpc *dpc = container_of(work, struct acpi_os_dpc, work);
-+
-+	pr_err("%s(%d) Start %px %pS(%px)\n", __func__, __LINE__, dpc, dpc->function, dpc->context);
-+	dpc->function(dpc->context);
-+	pr_err("%s(%d) End   %px %pS(%px)\n", __func__, __LINE__, dpc, dpc->function, dpc->context);
-+	kfree(dpc);
-+}
-+
- #ifdef CONFIG_ACPI_DEBUGGER
- static struct acpi_debugger acpi_debugger;
- static bool acpi_debugger_initialized;
-@@ -1096,7 +1106,9 @@ acpi_status acpi_os_execute(acpi_execute_type type,
- 	 */
- 	if (type == OSL_NOTIFY_HANDLER) {
- 		queue = kacpi_notify_wq;
--		INIT_WORK(&dpc->work, acpi_os_execute_deferred);
-+		pr_err("%s(%d) Adding %pS %px <%px>\n", __func__, __LINE__, function,
-+		       context, dpc);
-+		INIT_WORK(&dpc->work, acpi_os_execute_deferred_notify);
- 	} else if (type == OSL_GPE_HANDLER) {
- 		queue = kacpid_wq;
- 		INIT_WORK(&dpc->work, acpi_os_execute_deferred);
-
---jrrgi5ttcponjov2
-Content-Type: text/x-diff; charset=utf-8
-Content-Disposition: attachment; filename="acpi_dbg.patch"
-
-diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
-index 762c5d50b8fe..a08789fb330e 100644
---- a/drivers/acpi/osl.c
-+++ b/drivers/acpi/osl.c
-@@ -844,6 +844,16 @@ static void acpi_os_execute_deferred(struct work_struct *work)
- 	kfree(dpc);
- }
- 
-+static void acpi_os_execute_deferred_notify(struct work_struct *work)
-+{
-+	struct acpi_os_dpc *dpc = container_of(work, struct acpi_os_dpc, work);
-+
-+	pr_err("%s(%d) Start %px %pS(%px)\n", __func__, __LINE__, dpc, dpc->function, dpc->context);
-+	dpc->function(dpc->context);
-+	pr_err("%s(%d) End   %px %pS(%px)\n", __func__, __LINE__, dpc, dpc->function, dpc->context);
-+	kfree(dpc);
-+}
-+
- #ifdef CONFIG_ACPI_DEBUGGER
- static struct acpi_debugger acpi_debugger;
- static bool acpi_debugger_initialized;
-@@ -1096,7 +1106,9 @@ acpi_status acpi_os_execute(acpi_execute_type type,
- 	 */
- 	if (type == OSL_NOTIFY_HANDLER) {
- 		queue = kacpi_notify_wq;
--		INIT_WORK(&dpc->work, acpi_os_execute_deferred);
-+		pr_err("%s(%d) Adding %pS %px <%px>\n", __func__, __LINE__, function,
-+		       context, dpc);
-+		INIT_WORK(&dpc->work, acpi_os_execute_deferred_notify);
- 	} else if (type == OSL_GPE_HANDLER) {
- 		queue = kacpid_wq;
- 		INIT_WORK(&dpc->work, acpi_os_execute_deferred);
-
---jrrgi5ttcponjov2--
+What are the policies regarding keeping the existing config flags?
+Don't we need to preserve INIT_STACK_ALL?
