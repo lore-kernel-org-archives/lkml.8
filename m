@@ -7,116 +7,114 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F59C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 03:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2295AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 03:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DAF820792
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 03:11:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E79FE206B7
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 03:15:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="dY/qYHxS"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="GujSemkD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbgFNDLH (ORCPT
+        id S1726552AbgFNDPh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 23:11:07 -0400
-Received: from mta-p7.oit.umn.edu ([134.84.196.207]:36592 "EHLO
+        Sat, 13 Jun 2020 23:15:37 -0400
+Received: from mta-p7.oit.umn.edu ([134.84.196.207]:38050 "EHLO
         mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726499AbgFNDLG (ORCPT
+        with ESMTP id S1726499AbgFNDPc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 23:11:06 -0400
+        Sat, 13 Jun 2020 23:15:32 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 49kzxj0PChz9vYdP
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 03:11:05 +0000 (UTC)
+        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 49l02q3CBPz9vYfL
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 03:15:31 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at umn.edu
 Received: from mta-p7.oit.umn.edu ([127.0.0.1])
         by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 79ZXYFFevYMS for <linux-kernel@vger.kernel.org>;
-        Sat, 13 Jun 2020 22:11:04 -0500 (CDT)
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+        with ESMTP id aji2tq_L6uqu for <linux-kernel@vger.kernel.org>;
+        Sat, 13 Jun 2020 22:15:31 -0500 (CDT)
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id 49kzxh5sqsz9vYdR
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 22:11:04 -0500 (CDT)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p7.oit.umn.edu 49kzxh5sqsz9vYdR
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p7.oit.umn.edu 49kzxh5sqsz9vYdR
-Received: by mail-io1-f70.google.com with SMTP id r11so8898946ioa.12
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 20:11:04 -0700 (PDT)
+        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id 49l02q1dSsz9vYdM
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 22:15:31 -0500 (CDT)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p7.oit.umn.edu 49l02q1dSsz9vYdM
+DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p7.oit.umn.edu 49l02q1dSsz9vYdM
+Received: by mail-il1-f197.google.com with SMTP id v14so9506442ilo.19
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 20:15:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=Tvzr1gexpz+XRT9cgNKtj6wgeM1vIvcw44KBepZR6D4=;
-        b=dY/qYHxSJdD8wAPz5h0FzAjVdWnVxvU72g1FCz0rJabbboMQPb4mkbyhXsW3/U4OSd
-         tG2GxLxvsYxVLnaDmrBSXbveACEyS381htloR096Mv2VmnZieGOW6NKYkZ7fWrV2iVFk
-         ax3PGuCq8fIkqEk843jjTIsJ4uPPnzUNyn6t6ba2w1u0gGl4RmuUKDXBMpwPCLXMCWh+
-         N6oaBSFszaA35qXd8F4iEDmVlLuXUaCgV9poTt2R1spjs+/ORhl5sK88oF3W7oNshyca
-         4x61BV8RjdvWh4c0DA1qre73dHxLnFLqeAI/J9rO+n3zIU3l8b9sM3TSvclk+yocs9kT
-         KvTA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bXGIj3w1yVBS8cfW/zmC/b0yQf048QtoGJ5/O/lSkls=;
+        b=GujSemkDgYkmQ6TzVyyR+dOZ5DTxdroUrcrQu9/15CrlDzCrUDPx55O5GhAzWLOV9d
+         hiORMnLrwN3mJB5NpgAvOA/NFfU4Glan2Yxq+FP6n3QI/ud7+N/cemQSnRb7hrvXWUbt
+         buuDCeZvwwRmzG0T4DPr3p4zUfpiNgCmVnpSGo2ZdDK+iToqyMFI3gTgIwGuUrruYiI/
+         d1ITrnv452S93jEMLHkVfZFm1sUiPBq5I6TKb02p2fj6oz7uP90zg+/ewrXAnGnK85b+
+         uKZqJ+bsYAOPCylH/oUi3I9LJ6qs+BVM/3yz+n4xc3T6HLfPRs+IAILZTAx6rg4s1eDT
+         gs8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Tvzr1gexpz+XRT9cgNKtj6wgeM1vIvcw44KBepZR6D4=;
-        b=iVnMnq1NiohtoSPt74+65oPOUciallfAEmzQcv0vBx7H7zEci4Nn+OcciafHDK/SPD
-         HO2JNECF1Bvy24pnhOlOEz8Do5WFfqRLOB3FnyYMnSkSauKAttxPggX4nOK4USnP/G2R
-         vaPH/IMjsoN7aHOei0VJilRdL54bgVz++jkVt8PKNh8moayaJqXtko2OZN2H7uk6nlpk
-         3QIOuLdLz9CHR8knTZsceiSBp9CX24c8CocdPIgDvuJcF+vbN83llvtd1KrqZP7B8LcW
-         H7u3g1Rc4BENl2saDy/TKlG02Xd3RvnwytSjAmoNyTfqZVJvsN5tjnfcmHm5ep/X02Hx
-         8aIw==
-X-Gm-Message-State: AOAM530Gfpr8j1tPtcyLm0DYUOPnXccMobBv6JC3NCpVRoILygHOb/WG
-        AgqbdQ7FGfhLmUc1LPL5qlnckW19jr+WwuhbW1smm5JcBH9642drSNG/NMC5t8rY3fG1l1vkODN
-        Qqo2KDOyZ3mHr9KlC7LT3bHXMCBB+
-X-Received: by 2002:a92:2906:: with SMTP id l6mr20963405ilg.105.1592104264295;
-        Sat, 13 Jun 2020 20:11:04 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwfPqC77rIfEaxFBW9gjDsioh8PzhonurOjVS/5EVI+YZOFekhI0LDWSnL9wCyzLaBMx6s77Q==
-X-Received: by 2002:a92:2906:: with SMTP id l6mr20963390ilg.105.1592104264017;
-        Sat, 13 Jun 2020 20:11:04 -0700 (PDT)
-Received: from qiushi.cs.umn.edu ([2607:ea00:101:3c74:4874:45:bcb4:df60])
-        by smtp.gmail.com with ESMTPSA id x12sm5667765ilm.48.2020.06.13.20.11.03
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bXGIj3w1yVBS8cfW/zmC/b0yQf048QtoGJ5/O/lSkls=;
+        b=IeQ6W9zWImQeACq4IPmFtM8ovk3xImk322I0ffqNc/LqlJOy27dTDYF/xT6FyuHnZ3
+         mn5jCA0y0E+UXKzRJweS+aZaBX5kiGhR2/u1pmJOTGtkh2hfDUv+n7dTKgvkLgirhX6W
+         L/Zl77HXJnfUrf71kSaDT5DM83wjrv1bkhbDulOCFcssz/2wbE0jta4knubdLOP/QLBE
+         93JBwyA5LRgzyqu2ykq3vRGgzWLNjonBWkplEzGQVLIxqIZeOCJvsVcu1sVu9VeP+6jy
+         1+44kIJlGe2iKulmoOJuZx3MZRLdtM2PZbkkCTsTnbUMt7hMiugqprKtUmqINhfjN6xw
+         /gMQ==
+X-Gm-Message-State: AOAM531eQ0Ab7nZqvahuFZqXrplG7dpfmT9Zn5LKBdvjKM8W8qfaC8GQ
+        Ix40o/gD6OO72FYbRgaB6JNmKXDGnXQce9iZRYy3hSpWzI+0BQS1kmYkmBb2lyDeg+SCS/MYTbB
+        jKCL7W6oI5M2Ed12gAGHMWVEw56ib
+X-Received: by 2002:a02:6605:: with SMTP id k5mr15606039jac.32.1592104530224;
+        Sat, 13 Jun 2020 20:15:30 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw2aMBvp3RZakdn77go2evc1SrKFgZNruyEMxHqmY5sbSNA6239KocqzN/goOWJX0cLIiwD/A==
+X-Received: by 2002:a02:6605:: with SMTP id k5mr15606026jac.32.1592104530000;
+        Sat, 13 Jun 2020 20:15:30 -0700 (PDT)
+Received: from syssec1.cs.umn.edu ([2607:ea00:101:3c74:49fa:9c47:e40b:9c40])
+        by smtp.gmail.com with ESMTPSA id d5sm5560197ioe.20.2020.06.13.20.15.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Jun 2020 20:11:03 -0700 (PDT)
-From:   wu000273@umn.edu
-To:     kjlu@umn.edu
-Cc:     wu000273@umn.edu, Kyungmin Park <kyungmin.park@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] media: exynos4-is: Fix a reference count leak due to pm_runtime_get_sync
-Date:   Sat, 13 Jun 2020 22:10:58 -0500
-Message-Id: <20200614031058.30161-1-wu000273@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        Sat, 13 Jun 2020 20:15:29 -0700 (PDT)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, wu000273@umn.edu, Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] usb: dwc3: pci: Fix reference count leak in dwc3_pci_resume_work
+Date:   Sat, 13 Jun 2020 22:15:25 -0500
+Message-Id: <20200614031525.128556-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+dwc3_pci_resume_work() calls pm_runtime_get_sync() that increments
+the reference counter. In case of failure, decrement the reference
+count and return the error.
 
-On calling pm_runtime_get_sync() the reference count of the device
-is incremented. In case of failure, decrement the
-reference count before returning the error.
-
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
 ---
- drivers/media/platform/exynos4-is/media-dev.c | 4 +++-
+ drivers/usb/dwc3/dwc3-pci.c | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
-index 9aaf3b8060d5..cfb6891180b0 100644
---- a/drivers/media/platform/exynos4-is/media-dev.c
-+++ b/drivers/media/platform/exynos4-is/media-dev.c
-@@ -484,8 +484,10 @@ static int fimc_md_register_sensor_entities(struct fimc_md *fmd)
- 		return -ENXIO;
+diff --git a/drivers/usb/dwc3/dwc3-pci.c b/drivers/usb/dwc3/dwc3-pci.c
+index b67372737dc9..96c05b121fac 100644
+--- a/drivers/usb/dwc3/dwc3-pci.c
++++ b/drivers/usb/dwc3/dwc3-pci.c
+@@ -206,8 +206,10 @@ static void dwc3_pci_resume_work(struct work_struct *work)
+ 	int ret;
  
- 	ret = pm_runtime_get_sync(fmd->pmf);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put(fmd->pmf);
- 		return ret;
+ 	ret = pm_runtime_get_sync(&dwc3->dev);
+-	if (ret)
++	if (ret) {
++		pm_runtime_put_sync_autosuspend(&dwc3->dev);
+ 		return;
 +	}
  
- 	fmd->num_sensors = 0;
- 
+ 	pm_runtime_mark_last_busy(&dwc3->dev);
+ 	pm_runtime_put_sync_autosuspend(&dwc3->dev);
 -- 
-2.17.1
+2.25.1
 
