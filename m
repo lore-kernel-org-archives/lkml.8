@@ -8,153 +8,100 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4213C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 05:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10068C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 05:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F43D20775
+	by mail.kernel.org (Postfix) with ESMTP id E50CB2068E
 	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 05:52:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hD9MB3Sa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gHJcDHok"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbgFNFsM (ORCPT
+        id S1726563AbgFNFwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 01:48:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48470 "EHLO
+        Sun, 14 Jun 2020 01:52:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbgFNFsL (ORCPT
+        with ESMTP id S1725267AbgFNFwQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 01:48:11 -0400
+        Sun, 14 Jun 2020 01:52:16 -0400
 Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31E79C03E96F;
-        Sat, 13 Jun 2020 22:48:11 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id s18so14499267ioe.2;
-        Sat, 13 Jun 2020 22:48:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41965C03E96F;
+        Sat, 13 Jun 2020 22:52:16 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id t9so14452645ioj.13;
+        Sat, 13 Jun 2020 22:52:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=1Y5Nb8DOGpugitpmCfQchHa7yq0JSnRAL5HG43dCpt8=;
-        b=hD9MB3SaPs8Z1iMxecsjY11f9X1fSEThjr9YCDOVafg2OgO5B5R6PBZ25tu5D3iGcP
-         dm7oNWDqfiX94j/oNpwP+a5bvJwNsivz5/chflENZPpzz/5KZSjRXud/juv1cxrGGIf2
-         wXNUpBe46L8M5toSTOgImNHtQAnP6Qj9z8ih8ZgPywOU+wJ3MIOlV/RO52QPD/JwvFLW
-         EHdbwt0muQUbQD3TUmfqYyoXhc5Kl77OuR7lHZ87vh3ySEx0jGdHcJDuvMieWVxRY0Xp
-         NAXhCGDcIZVO4MFB9SWJ2qJ+6/WeDhxpXMwkAE+GEtgdzV4+uYdRKsYwt+5XUKPex2P3
-         KHVg==
+        bh=DrRx8Zqr7BVJdF/cPBdEuNzCrZbPY6/lXdY8DcQfBd0=;
+        b=gHJcDHokOuZmGsg5abwkL5iIohsrcNbRBJaoLak+UNIbjeBv64Lo7aFTWoLm0kqyS5
+         7O5vfIzn7My8JRAaTRwzwmkjBRSVDXgr09mA8IuuYj4vPgWuhw/LXX3k7cheOXDTfWxj
+         z8CnWXYi5Hsqcqsfl4JEczOAu10P5ojxMm5uXn8tQaGBzga9ZlE0YPml/KORZAnKPkjI
+         AZRkpmZsnpxByEZXFv7aLHPLu6ax3q5IRyr5dIF9/U/w8AmN/V9ZIEn11jXBiTuHM0Us
+         zKNAYfF4Jl073ZsW/NirPVZ/HzHb458j5HcS0LfP/NNAHu7nrhgb1WAZ1mAhyu6QeFUa
+         neSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=1Y5Nb8DOGpugitpmCfQchHa7yq0JSnRAL5HG43dCpt8=;
-        b=tkCKaKF/uouUI1OHVvghYoxbnrroY1EwQSBLxtzw6Qt7HEqkiw2oQ76WcdDIgHWkqs
-         8GMIGGBK2lLJe3ovZyXJu/ZGBN74Ssp0r3TYMxpKDQimGF91HpVj8sVeiU+5rPZ9T06N
-         SmKwixMOBvARH9w1b+HZLYSMNsEmFTW9MYFLbWrkdSIcA7ixMsMjHPLkxtvxX2pMDfgL
-         22ZLjw11zov6084pPapBnw47R8VVLHWpnIOGLZa2Fs4Xiy4AJ9lJNjhq6W1aqI7aifoY
-         jrwLSzj2DfaocAf6UxfBD4FHdEPdqfNGRC52Iqxp0NQhB4cfyH1yIKfhlXFiKHlslyT1
-         +qcg==
-X-Gm-Message-State: AOAM532ybwYROBMzf2HskaCIFrm30bMIys8iktZzgbiwF1/7E0J2sUEO
-        tXfwNoMGUV4xbJulU8I3naw=
-X-Google-Smtp-Source: ABdhPJzbEANZZ2E1dFVjCHfDCJkNC2TOm3k+TQLvPnYL9NpF7j+hTxbbr99dbuq79PUf54kzsHqHVA==
-X-Received: by 2002:a5d:890d:: with SMTP id b13mr15520809ion.19.1592113690198;
-        Sat, 13 Jun 2020 22:48:10 -0700 (PDT)
+        bh=DrRx8Zqr7BVJdF/cPBdEuNzCrZbPY6/lXdY8DcQfBd0=;
+        b=fOHkVxjMW9wvd/mYI1mj0IyxA+YOMKccrJ6C5JQaVKaS8CkHYo5Cvh1KVtxbF0fB6N
+         KF7dmCNcdbiUgwas0z8JHu7+hw86VASU7yGTvhtwTBE+UpjD5h7dBZxWlF0FhKWvUOm4
+         jnKXJXNJBafAU+L0/r/hIvMuZ7S8Rl0zp0nCsfjk8NInALxV9dZ+SWmOLgJAeMjLfOnV
+         gmIIYSKuupAUJPF+EWYi0PvZm3+9/3mMOaTrfmyoHAAMCipIh3OraOGmOghl3dn2nqTY
+         1xDknTVzUxJxMkzBUV6gorsuVGRIyDLJRyLD7XITsYE96+w0nmYTjHe30YPncckGZhKy
+         UsZg==
+X-Gm-Message-State: AOAM531YvJ5xq7E+txReUDRoJ8OlTQN5aLf8hm9yFpRvKGzPaSmdZ34v
+        AAf30Vn4/6taNSxErDPlRI/NasUM
+X-Google-Smtp-Source: ABdhPJwJtaIxmPQUl4KOSBjiOtloCbM9S8kwpMw+evLIx92Lrhn4c9Q1B/8LYohocQRTlo/TDt81BA==
+X-Received: by 2002:a05:6638:101c:: with SMTP id r28mr16361556jab.84.1592113935503;
+        Sat, 13 Jun 2020 22:52:15 -0700 (PDT)
 Received: from cs-u-kase.dtc.umn.edu (cs-u-kase.cs.umn.edu. [160.94.64.2])
-        by smtp.googlemail.com with ESMTPSA id t12sm5832268ilj.75.2020.06.13.22.48.09
+        by smtp.googlemail.com with ESMTPSA id v11sm5864945ile.61.2020.06.13.22.52.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Jun 2020 22:48:09 -0700 (PDT)
+        Sat, 13 Jun 2020 22:52:15 -0700 (PDT)
 From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-To:     Nicolas Ferre <nicolas.ferre@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>
-Subject: [PATCH] net: macb: fix ref count leaking via pm_runtime_get_sync
-Date:   Sun, 14 Jun 2020 00:48:03 -0500
-Message-Id: <20200614054803.26757-1-navid.emamdoost@gmail.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu
+Subject: [PATCH] Input: omap4-keypad: fix ref count leak if pm_runtime_get_sync fails
+Date:   Sun, 14 Jun 2020 00:52:07 -0500
+Message-Id: <20200614055208.86350-1-navid.emamdoost@gmail.com>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-in macb_mdio_write, macb_mdio_read, and at91ether_open,
-pm_runtime_get_sync is called which increments the counter even in case of
-failure, leading to incorrect ref count.
-In case of failure, decrement the ref count before returning.
+calling pm_runtime_get_sync increments the counter even in case of
+failure, leading to incorrect ref count. In case of failure, decrement
+the ref count before returning.
 
 Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 ---
- drivers/net/ethernet/cadence/macb_main.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/input/keyboard/omap4-keypad.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index a0e8c5bbabc0..3646ab5a1e83 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -335,7 +335,7 @@ static int macb_mdio_read(struct mii_bus *bus, int mii_id, int regnum)
- 
- 	status = pm_runtime_get_sync(&bp->pdev->dev);
- 	if (status < 0)
--		goto mdio_pm_exit;
-+		goto mdio_pm_put;
- 
- 	status = macb_mdio_wait_for_idle(bp);
- 	if (status < 0)
-@@ -374,6 +374,7 @@ static int macb_mdio_read(struct mii_bus *bus, int mii_id, int regnum)
- 
- mdio_read_exit:
- 	pm_runtime_mark_last_busy(&bp->pdev->dev);
-+mdio_pm_put:
- 	pm_runtime_put_autosuspend(&bp->pdev->dev);
- mdio_pm_exit:
- 	return status;
-@@ -387,7 +388,7 @@ static int macb_mdio_write(struct mii_bus *bus, int mii_id, int regnum,
- 
- 	status = pm_runtime_get_sync(&bp->pdev->dev);
- 	if (status < 0)
--		goto mdio_pm_exit;
-+		goto mdio_pm_put;
- 
- 	status = macb_mdio_wait_for_idle(bp);
- 	if (status < 0)
-@@ -426,6 +427,7 @@ static int macb_mdio_write(struct mii_bus *bus, int mii_id, int regnum,
- 
- mdio_write_exit:
- 	pm_runtime_mark_last_busy(&bp->pdev->dev);
-+mdio_pm_put:
- 	pm_runtime_put_autosuspend(&bp->pdev->dev);
- mdio_pm_exit:
- 	return status;
-@@ -3817,7 +3819,7 @@ static int at91ether_open(struct net_device *dev)
- 
- 	ret = pm_runtime_get_sync(&lp->pdev->dev);
- 	if (ret < 0)
--		return ret;
-+		goto out;
- 
- 	/* Clear internal statistics */
- 	ctl = macb_readl(lp, NCR);
-@@ -3827,7 +3829,7 @@ static int at91ether_open(struct net_device *dev)
- 
- 	ret = at91ether_start(dev);
- 	if (ret)
--		return ret;
-+		goto out;
- 
- 	/* Enable MAC interrupts */
- 	macb_writel(lp, IER, MACB_BIT(RCOMP)	|
-@@ -3840,11 +3842,14 @@ static int at91ether_open(struct net_device *dev)
- 
- 	ret = macb_phylink_connect(lp);
- 	if (ret)
--		return ret;
-+		goto out;
- 
- 	netif_start_queue(dev);
- 
- 	return 0;
-+out:
-+	pm_runtime_put(&lp->pdev->dev);
-+	return ret;
- }
- 
- /* Close the interface */
+diff --git a/drivers/input/keyboard/omap4-keypad.c b/drivers/input/keyboard/omap4-keypad.c
+index 94c94d7f5155..35ac788d9fa0 100644
+--- a/drivers/input/keyboard/omap4-keypad.c
++++ b/drivers/input/keyboard/omap4-keypad.c
+@@ -280,7 +280,7 @@ static int omap4_keypad_probe(struct platform_device *pdev)
+ 	error = pm_runtime_get_sync(&pdev->dev);
+ 	if (error) {
+ 		dev_err(&pdev->dev, "pm_runtime_get_sync() failed\n");
+-		goto err_unmap;
++		goto err_pm_put_sync;
+ 	}
+ 	rev = __raw_readl(keypad_data->base + OMAP4_KBD_REVISION);
+ 	rev &= 0x03 << 30;
+@@ -372,7 +372,6 @@ static int omap4_keypad_probe(struct platform_device *pdev)
+ 	input_free_device(input_dev);
+ err_pm_put_sync:
+ 	pm_runtime_put_sync(&pdev->dev);
+-err_unmap:
+ 	iounmap(keypad_data->base);
+ err_release_mem:
+ 	release_mem_region(res->start, resource_size(res));
 -- 
 2.17.1
 
