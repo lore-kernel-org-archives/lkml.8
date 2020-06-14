@@ -2,101 +2,158 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0537AC433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 13:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0159DC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 13:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC74D20747
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 13:50:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592142625;
-	bh=mHHWS5Ej2gJwnTvcmppx1EhA+NuE7bzgO9ms3xfrNhw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=QslQC3QZWxEHI+6pl6WYx45c0nT7TWPPyplcpGVFSarnF71410Pv9UzKhm5hnWzwH
-	 unGrxGMbiSw+QvnPlF19OEcXvhqh+tIvaqMvSnaqsR1B0lRoBGHO/b1ScGwzuVOuRq
-	 LK4AehEeMAjIU893hbEIz3k3AO4xhcMomZU7A18Y=
+	by mail.kernel.org (Postfix) with ESMTP id D7B6C206D7
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 13:50:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727825AbgFNNuY (ORCPT
+        id S1727837AbgFNNue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 09:50:24 -0400
-Received: from mail-oo1-f53.google.com ([209.85.161.53]:43150 "EHLO
-        mail-oo1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727044AbgFNNuY (ORCPT
+        Sun, 14 Jun 2020 09:50:34 -0400
+Received: from smtpout1.mo528.mail-out.ovh.net ([46.105.34.251]:37171 "EHLO
+        smtpout1.mo528.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727044AbgFNNud (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 09:50:24 -0400
-Received: by mail-oo1-f53.google.com with SMTP id i4so113298ooj.10;
-        Sun, 14 Jun 2020 06:50:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RuiMPD/925GRUxPIwh/HAFgyStseOa7F2neLPlWYn2M=;
-        b=XhMDUcz/HYfUzDKB2ncaGtD6418+PLhlwYfgSS7RBe/u2hOS/f5H/GDY24me0JE6a3
-         Ai2tTl6aq4OCs54d0bTiVVM6qof/DzlunQrp4pZUF9ykRKBNiddZ6xhtzlg1uZQ0NEJl
-         yuTQ+qHO0t9XPSPiCxmUBCgbkk3w2vC/YOx5nIKmMXiSK29Iv7PG/9DAPixbkzFs64L6
-         9ey+iIqCoQL7uwkdOOgHOEE2yrHsJDn99CdO7isPj8UW82gIy4CD0rTg0pe9KG9vs18C
-         CFwzPoIzw5S10qUcMpQmiY/4R2O7FQ7/dPe/lhIkHF8ocuFNXaPIzrLjXPsUzXK0OeGy
-         hD1Q==
-X-Gm-Message-State: AOAM5323FMl+VDkO5AE1YGMGOpnLa9bdynFGbwxSRCDry+ni9R/p6FXI
-        92XqBOl7xbe4ym7/L22Ypn2tLbHm7yw5xvGs8XVMZdy1
-X-Google-Smtp-Source: ABdhPJzqVXu3vZeyVx1Kak6I0WdkwzIvuP8xTo0QW9K5ObbGwLsZAg3/DTHY2haRqgzA7QEnnq4LD9MXtNB2Qx0IpmY=
-X-Received: by 2002:a4a:5744:: with SMTP id u65mr17737133ooa.1.1592142623019;
- Sun, 14 Jun 2020 06:50:23 -0700 (PDT)
+        Sun, 14 Jun 2020 09:50:33 -0400
+Received: from pro2.mail.ovh.net (unknown [10.108.1.71])
+        by mo528.mail-out.ovh.net (Postfix) with ESMTPS id 3AF5262912E8;
+        Sun, 14 Jun 2020 15:50:28 +0200 (CEST)
+Received: from localhost (89.70.180.118) by DAG2EX1.emp2.local (172.16.2.11)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Sun, 14 Jun
+ 2020 15:50:27 +0200
+Date:   Sun, 14 Jun 2020 15:48:12 +0200
+From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
+To:     Jonathan Cameron <jic23@kernel.org>
+CC:     Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
+        <andy.shevchenko@gmail.com>, <pmeerw@pmeerw.net>
+Subject: Re: [PATCH v5 0/4] Add support for SCD30 sensor
+Message-ID: <20200614134812.GA20800@arch>
+References: <20200607175812.95777-1-tomasz.duszynski@octakon.com>
+ <20200614141738.0645a954@archlinux>
 MIME-Version: 1.0
-References: <20200614090751.GA2878@kunai>
-In-Reply-To: <20200614090751.GA2878@kunai>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Sun, 14 Jun 2020 15:50:11 +0200
-Message-ID: <CAJZ5v0g0qJDrEvRrxEboc1Bs_9dgqpV47rFOZrJQLvOS44nAXg@mail.gmail.com>
-Subject: Re: RFC: a failing pm_runtime_get increases the refcnt?
-To:     Wolfram Sang <wsa@kernel.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <20200614141738.0645a954@archlinux>
+X-Originating-IP: [89.70.180.118]
+X-ClientProxiedBy: DAG2EX2.emp2.local (172.16.2.12) To DAG2EX1.emp2.local
+ (172.16.2.11)
+X-Ovh-Tracer-Id: 3108609642860993618
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: 0
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrudeiiedgjedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucenucfjughrpeffhffvuffkfhggtggujghisehttdertddttdejnecuhfhrohhmpefvohhmrghsiicuffhushiihihnshhkihcuoehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomheqnecuggftrfgrthhtvghrnheptdehveethfffudetjeeftdekueehjeegjedvteffgfevkefffeegffeugeehgfejnecukfhppedtrddtrddtrddtpdekledrjedtrddukedtrdduudeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhrohdvrdhmrghilhdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepthhomhgrshiirdguuhhsiiihnhhskhhisehotghtrghkohhnrdgtohhmpdhrtghpthhtohepphhmvggvrhifsehpmhgvvghrfidrnhgvth
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 14, 2020 at 11:08 AM Wolfram Sang <wsa@kernel.org> wrote:
+On Sun, Jun 14, 2020 at 02:17:38PM +0100, Jonathan Cameron wrote:
+> On Sun, 7 Jun 2020 19:58:08 +0200
+> Tomasz Duszynski <tomasz.duszynski@octakon.com> wrote:
 >
-> Hi Linux-PM,
+> > Following series adds support for Sensirion SCD30 sensor module capable of
+> > measuring carbon dioxide, temperature and relative humidity. CO2 measurements
+> > base on NDIR principle while temperature and relative humidity are measured by
+> > the on board SHT31. As for sensor communication, both I2C and serial interfaces
+> > are supported.
 >
-> both in the I2C subsystem and also for Renesas drivers I maintain, I am
-> starting to get boilerplate patches doing some pm_runtime_put_* variant
-> because a failing pm_runtime_get is supposed to increase the ref
-> counters? Really?
-
-Yes.  Really.
-
-pm_runtime_get*() have been doing this forever, because the majority
-of their users do something like
-
-pm_runtime_get*()
-
-...
-
-pm_runtime_put*()
-
-without checking the return values and they don't need to worry about
-the refcounts, which wouldn't be possible otherwise.
-
-> This feels wrong and unintuitive to me. I expect there
-> has been a discussion around it but I couldn't find it. I wonder why we
-> don't fix the code where the incremented refcount is expected for some
-> reason.
+> Hi Tomasz,
 >
-> Can I have some pointers please?
+> All looks good to me.
+>
+> I'll let it sit on the list a bit longer though to give time for anyone
+> else to review if they wish and ideally pick up a DT review if
+> Rob has time.  It isn't unheard of me to somehow loose a set down
+> the back of the sofa, so do poke me if I seem to to have lost this
+> in a few weeks time! (I'll try not to of course!)
+>
 
-The behavior is actually documented in
-Documentation/power/runtime_pm.rst and I'm working on kerneldoc
-comments for runtime PM functions in general to make it a bit more
-clear.
+Okay thanks. Will keep an eye on the series.
 
-Cheers!
+> Thanks,
+>
+> Jonathan
+>
+> >
+> > v5:
+> > * set pressure calibration via output channel
+> > * use kstrtobool() to read value into _enabled attribute
+> > * drop explicit parent asignment as the default one is good enough
+> >   (seems 'iio: core: pass parent device as parameter during allocation'
+> >    series was accepted)
+> >
+> > v4:
+> > * improve formatting
+> > * improve error handling readability
+> > * fix message validity check on serial write
+> >
+> > v3:
+> > * simplify code by scaling temperature & humidity in _read_meas()
+> > * update realbits in scan types
+> > * s/adjecent/adjacent
+> > * drop IIO_CHAN_INFO_RAW from _write_raw_get_fmt because there's no raw
+> >   output channel
+> > * rework locking in _read_raw
+> > * fix endianess problem on BE machine
+> > * align timestamp properly before pushing to buffers
+> > * explain why interrupt gets disabled after registration
+> > * add trigger validation
+> > * drop SCALE for temperature and humidity channel as they are processed
+> > * register action which stops measuring after starting measurements
+> > * spit generic calibration attr into two doing specific things
+> > * add comment explaining why priv in struct scd30_state is for
+> > * rename node in binding example to co2-sensor
+> >
+> > v2:
+> > * move asm/byteorder.h towards the bottom of include list
+> > * make channel address names in enum more specific
+> > * add postfixes to defines and extra comments
+> > * drop unneeded i2c include from scd30 header
+> > * break generic command sending function into specialized options
+> > * expose automatic calibration and forced calibration via the same attr
+> > * use SAMP_FREQ to set frequency instead of meas_interval attr
+> > * use CALISCALE to set pressure compensation instead of pressure_comp attr
+> > * use CALIBBIAS to set temperature offset instead of temp_offset attr
+> > * fix order in MAINTAINERS
+> > * drop attribute allowing one to reset sensor
+> > * as we have dt probing drop board file based probing (i2c_device_id)
+> > * merge patches touching related files
+> > * use fwnode API to retrieve interrupt from dt
+> > * fix interrupt-parent spelling
+> > * change binding license
+> > * drop supply from required property
+> >
+> > Tomasz Duszynski (4):
+> >   iio: chemical: scd30: add core driver
+> >   iio: chemical: scd30: add I2C interface driver
+> >   iio: chemical: scd30: add serial interface driver
+> >   dt-bindings: iio: scd30: add device binding file
+> >
+> >  Documentation/ABI/testing/sysfs-bus-iio-scd30 |  34 +
+> >  .../iio/chemical/sensirion,scd30.yaml         |  68 ++
+> >  MAINTAINERS                                   |   9 +
+> >  drivers/iio/chemical/Kconfig                  |  33 +
+> >  drivers/iio/chemical/Makefile                 |   3 +
+> >  drivers/iio/chemical/scd30.h                  |  78 ++
+> >  drivers/iio/chemical/scd30_core.c             | 770 ++++++++++++++++++
+> >  drivers/iio/chemical/scd30_i2c.c              | 139 ++++
+> >  drivers/iio/chemical/scd30_serial.c           | 263 ++++++
+> >  9 files changed, 1397 insertions(+)
+> >  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-scd30
+> >  create mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
+> >  create mode 100644 drivers/iio/chemical/scd30.h
+> >  create mode 100644 drivers/iio/chemical/scd30_core.c
+> >  create mode 100644 drivers/iio/chemical/scd30_i2c.c
+> >  create mode 100644 drivers/iio/chemical/scd30_serial.c
+> >
+> > --
+> > 2.27.0
+> >
+>
