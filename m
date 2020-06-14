@@ -2,155 +2,109 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C6EC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 06:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE1FC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 06:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 705A42074D
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 06:05:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592114719;
-	bh=2CSDwCSzFnYCIB4Swm1XflYFwYFE1DwSm8DZiH5VAhs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cW15BIpLgrqyFfmDZgoR+PWM+281I/v+S17HZDVxuzIEYyRYMmTTTPqmvjPsgpvgD
-	 HV/PdkM666u7aLt6xtU1hbfhByCMhzJStMQQ+PeVa8QnxioMDlEJL+iB7qUJWAWCMn
-	 rqjIuW/3HsK1zR+WoBSRoVW1po8hHTYchRKay+RE=
+	by mail.kernel.org (Postfix) with ESMTP id EB9E12065C
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 06:11:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BrFABM4a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbgFNGFF (ORCPT
+        id S1726641AbgFNGLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 02:05:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38842 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725265AbgFNGFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 02:05:05 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EACD72068E;
-        Sun, 14 Jun 2020 06:05:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592114704;
-        bh=2CSDwCSzFnYCIB4Swm1XflYFwYFE1DwSm8DZiH5VAhs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ny5UCHwdApcnokCBTdXFaf8W81qxPwwfMoUizDWdc4hk1khnsFFu242s8gWg2LBnL
-         NbcSXX/Qz90BOZFKIbKeGkAfnjdlPx16AroAv8AuGsA17DOTDChKwppgGzwvldeiRB
-         le2OLPDPpo//8fAVkDlsTYu8lR3OPAd9QVe+yghM=
-Date:   Sun, 14 Jun 2020 08:05:01 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jim Cromie <jim.cromie@gmail.com>
-Cc:     jbaron@akamai.com, linux-kernel@vger.kernel.org,
-        akpm@linuxfoundation.org, linux@rasmusvillemoes.dk
-Subject: Re: [PATCH v2 23/24] kset-example: add pr_debug()s for easy
- visibility of its operation
-Message-ID: <20200614060501.GB2608744@kroah.com>
-References: <20200613155738.2249399-1-jim.cromie@gmail.com>
- <20200613155738.2249399-24-jim.cromie@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200613155738.2249399-24-jim.cromie@gmail.com>
+        Sun, 14 Jun 2020 02:11:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52006 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725550AbgFNGLa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 02:11:30 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18D63C03E96F
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 23:11:30 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id c3so16579011ybp.8
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 23:11:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=oGqf1++ISmFDrH0evkdua75pRZ4Kzg4x3LpxsrrLQ3g=;
+        b=BrFABM4ag3AiIkSAHTtzYJj0AVfZShfyt1f0NnrQp455Jd0W0DB6UkLYIIE25QbI5i
+         4oQjlZJygOW9OsWUpbYo1FOpfEIcV525+YWblJxIUp9aQCvnP8kHIONSCdLKeF0QrGRC
+         kdy0lTibbcyCtdaHFnannbdLfSqoLIkJkzQ1+Zh0f8M6injkicSk1bqvW99lAsN5/Z4c
+         TfeVCsnX9LEaV9GoifSVE4TyA734e7k1z05IpAZaoEMaB1ddmnOSemdp2//KLKNqDSnd
+         +6Z9ybiyd8pKCkVBFOC5Al7D23LY/9LV92IsE9YVknh5lgDV2R0bT5Qyp0GDPxqorIRH
+         e0Ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=oGqf1++ISmFDrH0evkdua75pRZ4Kzg4x3LpxsrrLQ3g=;
+        b=eJ0BocsMnnxhFxaELB9oIo5hHWpQFm1frnF0hXiAr7UIMfkmbazU+Y5CPKFlhch248
+         KD2HjO7kFxChTzlmg2B+/XrrdKD00p1FTt5IsPYV3l5uG+1g+xunPkgItE/tET4p2EXl
+         9+r+NfosMBuOUHiS2StLbLskYCsIQNuf5+i1PzHTbk77XI17apNl48dTdq5C5Qt3m4E8
+         J/wkt5PnzMjepFmxZrWr6EeQnGKnwKu7GFfhVMKGel8I4XIferIq4hAxO5eR2LZ+ph3A
+         kvAL5J9/a6PnLSFQUWt+BcKMWkMvPuaH3QeDcMuJLBEZjac8Zu9W8jx+3sH8aSn/l4gN
+         ftLQ==
+X-Gm-Message-State: AOAM530qrLwZZzqlHhOxY10m+MlJljY7gyrLGB66nwv6DC/sFVUzFR3E
+        Ko7hFUJ1iFgYRc4ZYu4AoUB0QCvZ8uLd
+X-Google-Smtp-Source: ABdhPJxxc0GMogasoSu0mC2tbZOz7tMTybNRR6DrolxuDsgmM7O1Gh44O1ln4xXp0yUDKzvhrDI33/b22P51
+X-Received: by 2002:a25:2604:: with SMTP id m4mr33252495ybm.470.1592115089241;
+ Sat, 13 Jun 2020 23:11:29 -0700 (PDT)
+Date:   Sat, 13 Jun 2020 23:11:22 -0700
+Message-Id: <20200614061122.35928-1-gthelen@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.290.gba653c62da-goog
+Subject: [PATCH] e1000e: add ifdef to avoid dead code
+From:   Greg Thelen <gthelen@google.com>
+To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Vitaly Lifshits <vitaly.lifshits@intel.com>
+Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Greg Thelen <gthelen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 13, 2020 at 09:57:37AM -0600, Jim Cromie wrote:
-> put pr_debug()s into most functions, to easily see code operate when
-> module is loaded and used.
-> 
->   #> dmesg -w &
->   #> modprobe kset-example dyndbg=+pfml
->   #> cat /sys/kernel/kset-example/*/*
-> ---
->  samples/kobject/kset-example.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/samples/kobject/kset-example.c b/samples/kobject/kset-example.c
-> index c8010f126808..27c9b1beec28 100644
-> --- a/samples/kobject/kset-example.c
-> +++ b/samples/kobject/kset-example.c
-> @@ -56,6 +56,7 @@ static ssize_t foo_attr_show(struct kobject *kobj,
->  	struct foo_attribute *attribute;
->  	struct foo_obj *foo;
->  
-> +	pr_debug("called");
->  	attribute = to_foo_attr(attr);
->  	foo = to_foo_obj(kobj);
->  
-> @@ -76,6 +77,7 @@ static ssize_t foo_attr_store(struct kobject *kobj,
->  	struct foo_attribute *attribute;
->  	struct foo_obj *foo;
->  
-> +	pr_debug("called");
->  	attribute = to_foo_attr(attr);
->  	foo = to_foo_obj(kobj);
->  
-> @@ -102,6 +104,7 @@ static void foo_release(struct kobject *kobj)
->  {
->  	struct foo_obj *foo;
->  
-> +	pr_debug("called");
->  	foo = to_foo_obj(kobj);
->  	kfree(foo);
->  }
-> @@ -112,6 +115,7 @@ static void foo_release(struct kobject *kobj)
->  static ssize_t foo_show(struct foo_obj *foo_obj, struct foo_attribute *attr,
->  			char *buf)
->  {
-> +	pr_debug("called");
->  	return sprintf(buf, "%d\n", foo_obj->foo);
->  }
->  
-> @@ -120,6 +124,7 @@ static ssize_t foo_store(struct foo_obj *foo_obj, struct foo_attribute *attr,
->  {
->  	int ret;
->  
-> +	pr_debug("called");
->  	ret = kstrtoint(buf, 10, &foo_obj->foo);
->  	if (ret < 0)
->  		return ret;
-> @@ -140,6 +145,7 @@ static ssize_t b_show(struct foo_obj *foo_obj, struct foo_attribute *attr,
->  {
->  	int var;
->  
-> +	pr_debug("called");
->  	if (strcmp(attr->attr.name, "baz") == 0)
->  		var = foo_obj->baz;
->  	else
-> @@ -152,6 +158,7 @@ static ssize_t b_store(struct foo_obj *foo_obj, struct foo_attribute *attr,
->  {
->  	int var, ret;
->  
-> +	pr_debug("called");
->  	ret = kstrtoint(buf, 10, &var);
->  	if (ret < 0)
->  		return ret;
-> @@ -201,6 +208,7 @@ static struct foo_obj *create_foo_obj(const char *name)
->  	struct foo_obj *foo;
->  	int retval;
->  
-> +	pr_debug("called");
->  	/* allocate the memory for the whole object */
->  	foo = kzalloc(sizeof(*foo), GFP_KERNEL);
->  	if (!foo)
-> @@ -235,11 +243,13 @@ static struct foo_obj *create_foo_obj(const char *name)
->  
->  static void destroy_foo_obj(struct foo_obj *foo)
->  {
-> +	pr_debug("called");
->  	kobject_put(&foo->kobj);
->  }
->  
->  static int __init example_init(void)
->  {
-> +	pr_debug("called");
+Commit e086ba2fccda ("e1000e: disable s0ix entry and exit flows for ME
+systems") added e1000e_check_me() but it's only called from
+CONFIG_PM_SLEEP protected code.  Thus builds without CONFIG_PM_SLEEP
+see:
+  drivers/net/ethernet/intel/e1000e/netdev.c:137:13: warning: 'e1000e_check_me' defined but not used [-Wunused-function]
 
-Why???  If you want to do something like this, use ftrace, that is what
-it is for.
+Add CONFIG_PM_SLEEP ifdef guard to avoid dead code.
 
-thanks,
+Fixes: e086ba2fccda ("e1000e: disable s0ix entry and exit flows for ME systems")
+Signed-off-by: Greg Thelen <gthelen@google.com>
+---
+ drivers/net/ethernet/intel/e1000e/netdev.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-greg k-h
+diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
+index a279f4fa9962..165f0aea22c9 100644
+--- a/drivers/net/ethernet/intel/e1000e/netdev.c
++++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+@@ -107,6 +107,7 @@ static const struct e1000_reg_info e1000_reg_info_tbl[] = {
+ 	{0, NULL}
+ };
+ 
++#ifdef CONFIG_PM_SLEEP
+ struct e1000e_me_supported {
+ 	u16 device_id;		/* supported device ID */
+ };
+@@ -145,6 +146,7 @@ static bool e1000e_check_me(u16 device_id)
+ 
+ 	return false;
+ }
++#endif /* CONFIG_PM_SLEEP */
+ 
+ /**
+  * __ew32_prepare - prepare to write to MAC CSR register on certain parts
+-- 
+2.27.0.290.gba653c62da-goog
+
