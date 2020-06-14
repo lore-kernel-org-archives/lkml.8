@@ -2,157 +2,142 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B198C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 13:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F214AC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 13:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A0002078A
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 13:17:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592140667;
-	bh=++eWGQXrMWbaOFfTJbiV3sV2IYNlyVegRPfYlHUt6dw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=d8XZaj/enVB4eC7y7KdYRHokSlTU3rhNt4gnOGOJxfHVALct7LDBFWj8K+w+g4oW3
-	 /SwuGby/0F6Ie0MyTHIJlKOlLVrwkKOfpSHsZ4H5ZiVY+eVMZR0yTcnN46kRf37NAo
-	 Pc1+r4PsPCcljJJpC6CkSkm0MpUyOfTooP5Io2ww=
+	by mail.kernel.org (Postfix) with ESMTP id D0C72207CD
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 13:21:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j2fAIXnY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbgFNNRo (ORCPT
+        id S1727124AbgFNNVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 09:17:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49548 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726925AbgFNNRn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 09:17:43 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16743206D7;
-        Sun, 14 Jun 2020 13:17:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592140662;
-        bh=++eWGQXrMWbaOFfTJbiV3sV2IYNlyVegRPfYlHUt6dw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=qlTzM7yWyCXf/T7Ck7IPddkZbl6zSwEPAI3w9qVmN7cjqHiNJVD33oF5eZJQjW/ok
-         f/rFx9ynb2sOK7nRb/pImOEdWm+C+wKMJxjvkulfzYmEkg+xTMwi5dIZ+WCOBRZtKs
-         y3rKSfbQ7UVgvADoMO5CpjXj1f5ceUDS++hdCamg=
-Date:   Sun, 14 Jun 2020 14:17:38 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
-        <andy.shevchenko@gmail.com>, <pmeerw@pmeerw.net>
-Subject: Re: [PATCH v5 0/4] Add support for SCD30 sensor
-Message-ID: <20200614141738.0645a954@archlinux>
-In-Reply-To: <20200607175812.95777-1-tomasz.duszynski@octakon.com>
-References: <20200607175812.95777-1-tomasz.duszynski@octakon.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 14 Jun 2020 09:21:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32864 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726925AbgFNNVq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 09:21:46 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79E91C05BD43
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 06:21:46 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id m2so5894517pjv.2
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 06:21:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=7cP+mQI0zQhwvMzCwzM1g6my9t24Zv77a3K2bh1EtiQ=;
+        b=j2fAIXnY31BJIK/Ksr6sAZdLsdL3/LaYUdn/acBEVQ4zcC2z06yKrYQlvbFJWZS4S9
+         eiReDtqSO96Hrm/W+k/l9StZi5Htbp/JWOIAWmyr5AH4jKW92uBRlISV6IAuHOspIZDE
+         v1fwN3089NBrHQJsM5sTaKnKmIerNZLfCS+8d/ok6BeMnCWC8m0PKdcOcfJXuycwhFq+
+         XRpbfeHl3YbTKtJq9mDs3EAvhoeoKLlsKF+DGB6kOjAqnF7ZFDzUSETcFvY/ISEH5Aun
+         nyl0lsAgfr2nvdZaqG0/+NRqRv2WNQpIHQ0iQKs344JCSIpwBC04/TCms5OAXaxxLVaC
+         aETg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=7cP+mQI0zQhwvMzCwzM1g6my9t24Zv77a3K2bh1EtiQ=;
+        b=pB0pZ0Os7AeYu0uXk53Wv6UalXKBZYEsspvOJAKy4G4a0gcFt9OgqNz3Gcj41g1ote
+         Bakfw2mbdJlPV6uwTSuZUtwDeQpt+GUBZjvQfIX9OrYklwmLIacmnSj+FOiChYdRRUfd
+         ThwPYZROAV8pKfGIIlVmadCIBodyi3F6k+4M542QTEhdEW4b+PBMTY0UV6Ki3v5GrDWt
+         SMoQog8qrQTrRi5zLcflbtwOzbz7yNa0WSTDoGry925cRa2IXKzHEtpougGjVorYZbwK
+         DO4lz78xsmNQOEMgPKTA0yWJcw7ftEzbc3zFFZ88CSqI6z5ciISu21glM2DrniDONIqA
+         vG9g==
+X-Gm-Message-State: AOAM531vn7ZsjjtvXCRjBv+fnm0qhtly7v0zOxQwvNLMv9A4Y84ibLqK
+        uHORO42Ze2SrBKB+H9RVC2s=
+X-Google-Smtp-Source: ABdhPJymbPMR9I+mWmNb9K2IXVZ9Xzx6fiqm4hLsTe6OUYPlBvObLcCmI+3Mf5QIm90Q+6b74FnFkQ==
+X-Received: by 2002:a17:90a:e288:: with SMTP id d8mr7936307pjz.173.1592140905737;
+        Sun, 14 Jun 2020 06:21:45 -0700 (PDT)
+Received: from localhost ([49.207.199.244])
+        by smtp.gmail.com with ESMTPSA id y9sm11333111pfr.184.2020.06.14.06.21.44
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 14 Jun 2020 06:21:45 -0700 (PDT)
+Date:   Sun, 14 Jun 2020 18:51:43 +0530
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [RFC 1/3] lib: copy_{from,to}_user using gup & kmap_atomic()
+Message-ID: <20200614132143.GA599@afzalpc>
+References: <cover.1591885760.git.afzal.mohd.ma@gmail.com>
+ <9e1de19f35e2d5e1d115c9ec3b7c3284b4a4e077.1591885760.git.afzal.mohd.ma@gmail.com>
+ <CAK8P3a1XUJHC0kG_Qwh4D4AoxTgCL5ggHd=45yNSmzaYWLUWXw@mail.gmail.com>
+ <20200612135538.GA13399@afzalpc>
+ <CAK8P3a25ffh_2Y1xKDbkL2xU9nLpGbEq7j6xHdODEwUtavgdwA@mail.gmail.com>
+ <20200613120432.GA5319@afzalpc>
+ <CAK8P3a2g6a=V4BmPAOM0vNYUfJqm_aZziQhCxfF8MT_fbHMMLg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK8P3a2g6a=V4BmPAOM0vNYUfJqm_aZziQhCxfF8MT_fbHMMLg@mail.gmail.com>
+User-Agent: Mutt/1.9.3 (2018-01-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 7 Jun 2020 19:58:08 +0200
-Tomasz Duszynski <tomasz.duszynski@octakon.com> wrote:
+Hi,
 
-> Following series adds support for Sensirion SCD30 sensor module capable of
-> measuring carbon dioxide, temperature and relative humidity. CO2 measurements
-> base on NDIR principle while temperature and relative humidity are measured by
-> the on board SHT31. As for sensor communication, both I2C and serial interfaces
-> are supported.
+On Sat, Jun 13, 2020 at 10:45:33PM +0200, Arnd Bergmann wrote:
 
-Hi Tomasz,
+> 4% boot time increase sounds like a lot, especially if that is only for
+> copy_from_user/copy_to_user. In the end it really depends on how well
+> get_user()/put_user() and small copies can be optimized in the end.
 
-All looks good to me.
+i mentioned the worst case(happened only once), normally it was in
+the range 2-3%
 
-I'll let it sit on the list a bit longer though to give time for anyone
-else to review if they wish and ideally pick up a DT review if
-Rob has time.  It isn't unheard of me to somehow loose a set down
-the back of the sofa, so do poke me if I seem to to have lost this
-in a few weeks time! (I'll try not to of course!)
+> From the numbers you
+> measured, it seems the beaglebone currently needs an extra ~6µs or
+> 3µs per copy_to/from_user() call with your patch, depending on what
+> your benchmark was (MB/s for just reading or writing vs MB/s for
+> copying from one file to another through a user space buffer).
 
-Thanks,
+It is MB/s for copying one file to another via user space buffer, i.e.
+the value coreutils 'dd' shows w/ status=progress (here it was busybox
+'dd', so instead it was enabling a compile time option)
 
-Jonathan
+> but if you want to test what the overhead is, you could try changing
+> /dev/zero (or a different chardev like it) to use a series of
+> put_user(0, u32uptr++) in place of whatever it has, and then replace the
+> 'str' instruction with dummy writes to ttbr0 using the value it already
+> has, like:
+> 
+>       mcr     p15, 0, %0, c2, c0, 0  /* set_ttbr0() */
+>       isb  /* prevent speculative access to kernel table */
+>       str    %1, [%2],0 /* write 32 bit to user space */
+>       mcr     p15, 0, %0, c2, c0, 0  /* set_ttbr0() */
+>       isb  /* prevent speculative access to user table */
 
-> 
-> v5:
-> * set pressure calibration via output channel
-> * use kstrtobool() to read value into _enabled attribute
-> * drop explicit parent asignment as the default one is good enough
->   (seems 'iio: core: pass parent device as parameter during allocation'
->    series was accepted)
-> 
-> v4:
-> * improve formatting
-> * improve error handling readability
-> * fix message validity check on serial write
-> 
-> v3:
-> * simplify code by scaling temperature & humidity in _read_meas()
-> * update realbits in scan types
-> * s/adjecent/adjacent
-> * drop IIO_CHAN_INFO_RAW from _write_raw_get_fmt because there's no raw
->   output channel
-> * rework locking in _read_raw
-> * fix endianess problem on BE machine
-> * align timestamp properly before pushing to buffers
-> * explain why interrupt gets disabled after registration
-> * add trigger validation
-> * drop SCALE for temperature and humidity channel as they are processed
-> * register action which stops measuring after starting measurements
-> * spit generic calibration attr into two doing specific things
-> * add comment explaining why priv in struct scd30_state is for
-> * rename node in binding example to co2-sensor
-> 
-> v2:
-> * move asm/byteorder.h towards the bottom of include list
-> * make channel address names in enum more specific
-> * add postfixes to defines and extra comments
-> * drop unneeded i2c include from scd30 header
-> * break generic command sending function into specialized options
-> * expose automatic calibration and forced calibration via the same attr
-> * use SAMP_FREQ to set frequency instead of meas_interval attr
-> * use CALISCALE to set pressure compensation instead of pressure_comp attr
-> * use CALIBBIAS to set temperature offset instead of temp_offset attr
-> * fix order in MAINTAINERS
-> * drop attribute allowing one to reset sensor
-> * as we have dt probing drop board file based probing (i2c_device_id)
-> * merge patches touching related files
-> * use fwnode API to retrieve interrupt from dt
-> * fix interrupt-parent spelling
-> * change binding license
-> * drop supply from required property
-> 
-> Tomasz Duszynski (4):
->   iio: chemical: scd30: add core driver
->   iio: chemical: scd30: add I2C interface driver
->   iio: chemical: scd30: add serial interface driver
->   dt-bindings: iio: scd30: add device binding file
-> 
->  Documentation/ABI/testing/sysfs-bus-iio-scd30 |  34 +
->  .../iio/chemical/sensirion,scd30.yaml         |  68 ++
->  MAINTAINERS                                   |   9 +
->  drivers/iio/chemical/Kconfig                  |  33 +
->  drivers/iio/chemical/Makefile                 |   3 +
->  drivers/iio/chemical/scd30.h                  |  78 ++
->  drivers/iio/chemical/scd30_core.c             | 770 ++++++++++++++++++
->  drivers/iio/chemical/scd30_i2c.c              | 139 ++++
->  drivers/iio/chemical/scd30_serial.c           | 263 ++++++
->  9 files changed, 1397 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-scd30
->  create mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
->  create mode 100644 drivers/iio/chemical/scd30.h
->  create mode 100644 drivers/iio/chemical/scd30_core.c
->  create mode 100644 drivers/iio/chemical/scd30_i2c.c
->  create mode 100644 drivers/iio/chemical/scd30_serial.c
-> 
-> --
-> 2.27.0
-> 
+> It would be interesting to compare it to the overhead of a
+> get_user_page_fast() based implementation.
 
+i have to relocate & be on quarantine couple of weeks, so i will
+temporarily stop here, otherwise might end up in roadside.
+
+Reading feedbacks from everyone, some of it i could grasp only bits &
+pieces, familiarizing more w/ mm & vfs would help me add value better
+to the goal/discussion. Linus Walleij, if you wish to explore things,
+feel free, right now don't know how my connectivity would be for next
+3 weeks.
+
+Regards
+afzal
