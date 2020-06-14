@@ -2,172 +2,172 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81EC8C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 14:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8035C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 14:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5ECDE20578
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 14:45:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592145925;
-	bh=wa4ADyDCZs0ntNfI9DvqdjwuNtQIO0NWurv/WWurd84=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Quqi0WdnwNpbhqjQs1GlLDyPOJlokkuCADIhDRcYrqXgn/aaym8Fo80GkB0MuX4re
-	 7hZpHfll06InTC6Dvjvjd3qQ9rVVoN91CbcTHhYmztPmKetpckWr2F6oyO6LO5TnRh
-	 XfyEy0mi1txLxucJZ/M2Xj+wM3hgsvsUAH2xBFBQ=
+	by mail.kernel.org (Postfix) with ESMTP id AE4E320747
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 14:45:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pMwlKrrH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbgFNOpY (ORCPT
+        id S1727039AbgFNOpp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 10:45:24 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:55629 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbgFNOpW (ORCPT
+        Sun, 14 Jun 2020 10:45:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45610 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726867AbgFNOpn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 10:45:22 -0400
-Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id 05EEhjq1024323;
-        Sun, 14 Jun 2020 23:43:46 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 05EEhjq1024323
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1592145827;
-        bh=2tNBTLIrpjvalARV+ZKm1wYdYtOnuZzF6U2fUm+curc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0MkqVwFcLmqBEkbwbyIVa3kclqsXzYF/ckTbUtRz6QfEd/JnCZ9JnDydoLKUEFQ7s
-         mpvI5rUGsxigQs2ynVeFgVee8i8Jqm3Azb2xyMBa7JHkrDi9zLimnrzziIm1xQXikg
-         S63ZoDQwP5Omql9Wmz9guRCQKIxj3Eywm8Mbe4qE3BrW8zvcqNLn1jrQGP9IJZuzwR
-         mT7SrcbjxR8uIERzDPERllhaV+/l//g3ktsutBTeKTACqI3HG69bjeKgumT3WgL6q5
-         YUsXnYSBSXvNUQ6KkMAqtLZBoNuQ5DamQq5igzLXy2TXUd4xftlBGSADXsLfJDdSWk
-         f+Nri5Ra+LB1w==
-X-Nifty-SrcIP: [126.90.202.47]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Changbin Du <changbin.du@intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] kconfig: unify cc-option and as-option
-Date:   Sun, 14 Jun 2020 23:43:41 +0900
-Message-Id: <20200614144341.1077495-2-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200614144341.1077495-1-masahiroy@kernel.org>
-References: <20200614144341.1077495-1-masahiroy@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sun, 14 Jun 2020 10:45:43 -0400
+Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39E8EC05BD43
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 07:45:40 -0700 (PDT)
+Received: by mail-qv1-xf49.google.com with SMTP id y2so11077591qvp.1
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 07:45:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=cES73WJaLMoUweYIM+OlRJ2Jm853+1vLwtEwV6Uh388=;
+        b=pMwlKrrHagVLWTUat4QRNSBaTmseF6Z+raXgWIIqRaGm32qet+ibqsVdxjZ1TQZOP6
+         3NrTDjoo72m0GXXw+6rq1i0wbY/80L2a/P2kf/i1+bbxZ01cJUPNcMcnD4Jfu/9mR5Hp
+         5DQCr+bpfXTbpo1LOmHyCtcIyoInzk+NtksLYTG/HmRUXIyLGd9NP3wpuRvXdTncf8fT
+         cJUQZsbItoIyZI/pn6Dt3j4v0X8B1MKBr57SpiusXEiIQKstqowTgHYgC5i0NkpphVgU
+         GNowbTVhXFd7DuYMnR+WXEcYSTXUL1dapX3wiNm8nCF7l49dweq/s+0WHf/HEkIY+qeT
+         VDgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=cES73WJaLMoUweYIM+OlRJ2Jm853+1vLwtEwV6Uh388=;
+        b=RJNih8KmNQ0wwUmCVAVy69Nrd3mcillWR+FSISpd6/McNGBcr3tEEW7yug3qzh1MXv
+         NdhiclMfpSEbaQi9rNdWUDH/HnUy55+BplcCs5ZhIWSyCG5B1K8OkA4jOnrJdGgtNhql
+         1sZWuOlowHQuW3PN7FG5qjEJ0tpGQG9ckf3q3AmoqPOPYNhF3sRHlE16pG1Gi2GPUPRN
+         Rwes5bqhkpgcGqnG9mkiZN1hGKejR7pjTSFLvblp2qKbPobGKTKIhZ0ZhRMjljpaRzE0
+         IevP716iaoLvPadOHHE5xMqplV9J0uGudge6SAUhHfcepdXzpsISiFFQg8hj9fPl/QEs
+         vCOg==
+X-Gm-Message-State: AOAM532YBUHKA1u8C7tSmzU2jNGnTj2+ulttEWzawIpgg9oIt6t+lvhQ
+        5Ervayj4UONYkb9L9VAOytc3myJb+BI=
+X-Google-Smtp-Source: ABdhPJz1k1RNu9dAXsmdsawTe7TyraBkMndQDppnCMV2qrWO1j7+QMn1X+iW+F38INV+PsKSU5IK3AvNUXA=
+X-Received: by 2002:a05:6214:713:: with SMTP id b19mr20890435qvz.199.1592145938185;
+ Sun, 14 Jun 2020 07:45:38 -0700 (PDT)
+Date:   Sun, 14 Jun 2020 16:45:34 +0200
+Message-Id: <20200614144534.237035-1-glider@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.290.gba653c62da-goog
+Subject: [PATCH] [RFC] security: allow using Clang's zero initialization for
+ stack variables
+From:   glider@google.com
+To:     yamada.masahiro@socionext.com, keescook@chromium.org,
+        jmorris@namei.org
+Cc:     maze@google.com, ndesaulniers@google.com,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Alexander Potapenko <glider@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-cc-option and as-option are almost the same; both pass the flag to
-$(CC). The main difference is the cc-option stops before the assemble
-stage (-S option) whereas as-option stops after it (-c option).
+In addition to -ftrivial-auto-var-init=pattern (used by
+CONFIG_INIT_STACK_ALL now) Clang also supports zero initialization for
+locals enabled by -ftrivial-auto-var-init=zero.
+The future of this flag is still being debated, see
+https://bugs.llvm.org/show_bug.cgi?id=45497
+Right now it is guarded by another flag,
+-enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang,
+which means it may not be supported by future Clang releases.
+Another possible resolution is that -ftrivial-auto-var-init=zero will
+persist (as certain users have already started depending on it), but the
+name of the guard flag will change.
 
-I chose -S because it is slightly faster, but $(cc-option,-gz=zlib)
-returns a wrong result (https://lkml.org/lkml/2020/6/9/1529).
-It has been fixed by a separate patch, but using -c is more robust.
+In the meantime, zero initialization has proven itself as a good
+production mitigation measure against uninitialized locals. Unlike
+pattern initialization, which has a higher chance of triggering existing
+bugs, zero initialization provides safe defaults for strings, pointers,
+indexes, and sizes. On the other hand, pattern initialization remains
+safer for return values.
+Performance-wise, the difference between pattern and zero initialization
+is usually negligible, although the generated code for zero
+initialization is more compact.
 
-However, you cannot simply replace -S with -c because the following
-code would break:
+The proposed config, CONFIG_USE_CLANG_ZERO_INITIALIZATION, makes
+CONFIG_INIT_STACK_ALL use zero initialization if the corresponding flags
+are supported by Clang.
 
-    depends on $(cc-option,-gsplit-dwarf)
-
-The combination of -c and -gsplit-dwarf does not accept /dev/null as
-output.
-
-  $ cat /dev/null | gcc -gsplit-dwarf -S -x c - -o /dev/null
-  $ echo $?
-  0
-
-  $ cat /dev/null | gcc -gsplit-dwarf -c -x c - -o /dev/null
-  objcopy: Warning: '/dev/null' is not an ordinary file
-  $ echo $?
-  1
-
-  $ cat /dev/null | gcc -gsplit-dwarf -c -x c - -o tmp.o
-  $ echo $?
-  0
-
-There is another flag that creates an separate file based on the
-object file path:
-
-  $ cat /dev/null | gcc -ftest-coverage -c -x c - -o /dev/null
-  <stdin>:1: error: cannot open /dev/null.gcno
-
-So, we cannot use /dev/null to sink the output.
-
-Align the cc-option implementation with scripts/Kbuild.include.
-
-With -c option used in cc-option, as-option is unneeded.
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Alexander Potapenko <glider@google.com>
 ---
+ Makefile                   | 15 ++++++++++++++-
+ security/Kconfig.hardening | 16 ++++++++++++++++
+ 2 files changed, 30 insertions(+), 1 deletion(-)
 
- arch/arm64/Kconfig      | 2 +-
- lib/Kconfig.debug       | 1 -
- scripts/Kconfig.include | 8 +-------
- 3 files changed, 2 insertions(+), 9 deletions(-)
-
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 31380da53689..6eb18f45258e 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -1564,7 +1564,7 @@ config CC_HAS_SIGN_RETURN_ADDRESS
- 	def_bool $(cc-option,-msign-return-address=all)
+diff --git a/Makefile b/Makefile
+index fd31992bf918..2860bad7e39a 100644
+--- a/Makefile
++++ b/Makefile
+@@ -802,9 +802,22 @@ KBUILD_CFLAGS	+= -fomit-frame-pointer
+ endif
+ endif
  
- config AS_HAS_PAC
--	def_bool $(as-option,-Wa$(comma)-march=armv8.3-a)
-+	def_bool $(cc-option,-Wa$(comma)-march=armv8.3-a)
+-# Initialize all stack variables with a pattern, if desired.
++# Initialize all stack variables, if desired.
+ ifdef CONFIG_INIT_STACK_ALL
++
++# Use pattern initialization by default.
++ifndef CONFIG_USE_CLANG_ZERO_INITIALIZATION
+ KBUILD_CFLAGS	+= -ftrivial-auto-var-init=pattern
++else
++
++ifdef CONFIG_CC_HAS_AUTO_VAR_ZERO_INIT
++# Future support for zero initialization is still being debated, see
++# https://bugs.llvm.org/show_bug.cgi?id=45497. These flags are subject to being
++# renamed or dropped.
++KBUILD_CFLAGS	+= -ftrivial-auto-var-init=zero -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang
++endif
++
++endif
+ endif
  
- config AS_HAS_CFI_NEGATE_RA_STATE
- 	def_bool $(as-instr,.cfi_startproc\n.cfi_negate_ra_state\n.cfi_endproc\n)
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 96999d4d2dda..9ad9210d70a1 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -229,7 +229,6 @@ config DEBUG_INFO_COMPRESSED
- 	bool "Compressed debugging information"
- 	depends on DEBUG_INFO
- 	depends on $(cc-option,-gz=zlib)
--	depends on $(as-option,-gz=zlib)
- 	depends on $(ld-option,--compress-debug-sections=zlib)
- 	help
- 	  Compress the debug information using zlib.  Requires GCC 5.0+ or Clang
-diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
-index c264da2b9b30..a5fe72c504ff 100644
---- a/scripts/Kconfig.include
-+++ b/scripts/Kconfig.include
-@@ -25,18 +25,12 @@ failure = $(if-success,$(1),n,y)
+ DEBUG_CFLAGS	:= $(call cc-option, -fno-var-tracking-assignments)
+diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
+index af4c979b38ee..299d27c6d78c 100644
+--- a/security/Kconfig.hardening
++++ b/security/Kconfig.hardening
+@@ -22,6 +22,9 @@ menu "Memory initialization"
+ config CC_HAS_AUTO_VAR_INIT
+ 	def_bool $(cc-option,-ftrivial-auto-var-init=pattern)
  
- # $(cc-option,<flag>)
- # Return y if the compiler supports <flag>, n otherwise
--cc-option = $(success,$(CC) -Werror $(CLANG_FLAGS) $(1) -S -x c /dev/null -o /dev/null)
-+cc-option = $(success,mkdir .tmp_$$$$; trap "rm -rf .tmp_$$$$" EXIT; $(CC) -Werror $(CLANG_FLAGS) $(1) -c -x c /dev/null -o .tmp_$$$$/tmp.o)
++config CC_HAS_AUTO_VAR_ZERO_INIT
++	def_bool $(cc-option,-ftrivial-auto-var-init=zero -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang)
++
+ choice
+ 	prompt "Initialize kernel stack variables at function entry"
+ 	default GCC_PLUGIN_STRUCTLEAK_BYREF_ALL if COMPILE_TEST && GCC_PLUGINS
+@@ -100,6 +103,19 @@ choice
  
- # $(ld-option,<flag>)
- # Return y if the linker supports <flag>, n otherwise
- ld-option = $(success,$(LD) -v $(1))
+ endchoice
  
--# $(as-option,<flag>)
--# /dev/zero is used as output instead of /dev/null as some assembler cribs when
--# both input and output are same. Also both of them have same write behaviour so
--# can be easily substituted.
--as-option = $(success, $(CC) $(CLANG_FLAGS) $(1) -c -x assembler /dev/null -o /dev/zero)
--
- # $(as-instr,<instr>)
- # Return y if the assembler supports <instr>, n otherwise
- as-instr = $(success,printf "%b\n" "$(1)" | $(CC) $(CLANG_FLAGS) -c -x assembler -o /dev/null -)
++config USE_CLANG_ZERO_INITIALIZATION
++	bool "Use Clang's zero initialization for local variables"
++	depends on CC_HAS_AUTO_VAR_ZERO_INIT
++	depends on INIT_STACK_ALL
++	help
++	  If set, uses zeros instead of 0xAA to initialize local variables in
++	  INIT_STACK_ALL. Zeroing the stack provides safer defaults for strings,
++	  pointers, indexes, and sizes. The downsides are less-safe defaults for
++	  return values, and exposing fewer bugs where the underlying code
++	  relies on zero initialization.
++	  The corresponding flag isn't officially supported by Clang and may
++	  sooner or later go away or get renamed.
++
+ config GCC_PLUGIN_STRUCTLEAK_VERBOSE
+ 	bool "Report forcefully initialized variables"
+ 	depends on GCC_PLUGIN_STRUCTLEAK
 -- 
-2.25.1
+2.27.0.290.gba653c62da-goog
 
