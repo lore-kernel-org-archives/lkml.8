@@ -2,189 +2,256 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E872FC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 06:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0149C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 06:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9CED206D7
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 06:39:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="zEhIacWz"
+	by mail.kernel.org (Postfix) with ESMTP id C4D7520714
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 06:42:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592116923;
+	bh=mnAFWP4PsuyztgglwUiPObo4Mp168az8uOclib+Sb7U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zC+uOz9hOWn9V8ezTBJmDs/mH2j/rzvnG2E0ouLKLoxIOX1m/gCYlzyzT98AfRIPr
+	 iwBAG98CllBg6vfMk+IUGBhewLVB8tfygZKx7WG383AwMd9w2eHrQP9Do+KjS50PPb
+	 puJa5ebGWcmslcmCQl/9NOV1UBMsYBLu85ITn3eY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgFNGje (ORCPT
+        id S1726722AbgFNGmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 02:39:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56310 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725265AbgFNGjd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 02:39:33 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81934C03E96F
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 23:39:33 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id u5so6186295pgn.5
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 23:39:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WBuxpUA3UgXQeJ6yjt0LyKTJBSZPG5D7qi17zQVgy78=;
-        b=zEhIacWz/ZuRcfT9j2C+weG+5nGXWYqbYPGmpkBacnxp/9N3Pt2pMxp8/FS1Zn4gPk
-         QIs7ZHjRX4UOEhWFJy9aQ2+uhmSD6h/sPZnhlrq43O/1Bok+/BCNgUGeZln0gPPqIkQN
-         eiH/NBD9vaXwWm243zf34rX0XxsJi7ynxaXz9mac0YAL2Ir6CEy4NID+sL6QMjvmJx0r
-         +3dO49QF0hMac8ZZqiNEb6X9S5RCtwAik3HSHogcyD/yqyh0XGTtkzWmZCL5IjsHgOz8
-         XjuPrrcca1qVJr57M6+qyk710FS5GwYNeL5mFGmCtPK6eagTkT+7AVcePY+hdRa629Z6
-         nYzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WBuxpUA3UgXQeJ6yjt0LyKTJBSZPG5D7qi17zQVgy78=;
-        b=o7Z63F4ETK30+X5PzH1MuuGYnEwdUCTUM4QUkGjTGPRZCWoeaM7Ior240grwpIXKZT
-         2FDwJbP9hhmgh7jB8h5osUJ8tyLmdKQn5HNmdL4DdePwnucEBp7EmUeAWg/sUImvmycg
-         eGfwRrHV3iJw8KWRWkWdO4spoALmSBmHso4rl00ZQ8hvzJ1Ie+1L4csP3ovSSZFa/lLG
-         1/Wljf/J3yJrKPYnkxPTOLPCrqnKFnbssok0zI/TdRoVJWnwoeM3XxLinAa5myvrsQjD
-         pwGXOMOUeusFQp8G7YXQa5gASPc2Yne+ZkCdar+BOALe8BdjwO/mUPfHy9rA+8gpxuEG
-         FYyA==
-X-Gm-Message-State: AOAM533DzXm3dq8fDuz0S7LeFZvlDd/fFQA+a7PdzUjfPEjdaxzVx0VH
-        BkQJEHf2WY5UkVXI/DQvjJ2N4g==
-X-Google-Smtp-Source: ABdhPJxfP1CRHnOtjXV37HOXDbESM8vh3+kuv+xWhizYvtbR3j7CtYbBNicmPe4jRaQ3z7Bb5Cs0Sw==
-X-Received: by 2002:a62:7a89:: with SMTP id v131mr18257746pfc.38.1592116772902;
-        Sat, 13 Jun 2020 23:39:32 -0700 (PDT)
-Received: from Smcdef-MBP.lan ([103.136.221.68])
-        by smtp.gmail.com with ESMTPSA id 191sm10453067pfy.161.2020.06.13.23.39.28
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 13 Jun 2020 23:39:32 -0700 (PDT)
-From:   Muchun Song <songmuchun@bytedance.com>
-To:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
-        iamjoonsoo.kim@lge.com, akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Muchun Song <songmuchun@bytedance.com>
-Subject: [PATCH] mm/slab: Add a __GFP_ACCOUNT GFP flag check for slab allocation
-Date:   Sun, 14 Jun 2020 14:38:58 +0800
-Message-Id: <20200614063858.85118-1-songmuchun@bytedance.com>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122)
+        Sun, 14 Jun 2020 02:42:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52472 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725265AbgFNGmB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 02:42:01 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94558206D7;
+        Sun, 14 Jun 2020 06:41:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592116920;
+        bh=mnAFWP4PsuyztgglwUiPObo4Mp168az8uOclib+Sb7U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=g0wPmcK1cvU6iJL0V/3BSt6DRWJaTfO0mallMz09wGX+4nNv3I/69dGxl3BMRJrWD
+         XB7VZlbdlqSPmhh9EXAqbq+tCMW4yGQ2MBCpNsiRCjo7TkCr4CPldJk2LncBL0io9Q
+         FoLpwOaaPynbIf/CAZxf+ZPiRb9LWEunzR/WrZUQ=
+Date:   Sun, 14 Jun 2020 09:41:56 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Divya Indi <divya.indi@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Gerd Rausch <gerd.rausch@oracle.com>,
+        =?iso-8859-1?Q?H=E5kon?= Bugge <haakon.bugge@oracle.com>,
+        Srinivas Eeda <srinivas.eeda@oracle.com>,
+        Rama Nichanamatlu <rama.nichanamatlu@oracle.com>,
+        Doug Ledford <dledford@redhat.com>
+Subject: Re: [PATCH v3] IB/sa: Resolving use-after-free in ib_nl_send_msg
+Message-ID: <20200614064156.GB2132762@unreal>
+References: <1591627576-920-1-git-send-email-divya.indi@oracle.com>
+ <1591627576-920-2-git-send-email-divya.indi@oracle.com>
+ <20200609070026.GJ164174@unreal>
+ <ee7139ff-465e-6c43-1b55-eab502044e0f@oracle.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ee7139ff-465e-6c43-1b55-eab502044e0f@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a kmem_cache is initialized with SLAB_ACCOUNT slab flag, we must
-not call kmem_cache_alloc with __GFP_ACCOUNT GFP flag. In this case,
-we can be accounted to kmemcg twice. This is not correct. So we add a
-__GFP_ACCOUNT GFP flag check for slab allocation.
+On Tue, Jun 09, 2020 at 07:45:21AM -0700, Divya Indi wrote:
+> Hi Leon,
+>
+> Thanks for taking the time to review.
+>
+> Please find my comments inline -
+>
+> On 6/9/20 12:00 AM, Leon Romanovsky wrote:
+> > On Mon, Jun 08, 2020 at 07:46:16AM -0700, Divya Indi wrote:
+> >> Commit 3ebd2fd0d011 ("IB/sa: Put netlink request into the request list before sending")'
+> >> -
+> >> 1. Adds the query to the request list before ib_nl_snd_msg.
+> >> 2. Removes ib_nl_send_msg from within the spinlock which also makes it
+> >> possible to allocate memory with GFP_KERNEL.
+> >>
+> >> However, if there is a delay in sending out the request (For
+> >> eg: Delay due to low memory situation) the timer to handle request timeout
+> >> might kick in before the request is sent out to ibacm via netlink.
+> >> ib_nl_request_timeout may release the query causing a use after free situation
+> >> while accessing the query in ib_nl_send_msg.
+> >>
+> >> Call Trace for the above race:
+> >>
+> >> [<ffffffffa02f43cb>] ? ib_pack+0x17b/0x240 [ib_core]
+> >> [<ffffffffa032aef1>] ib_sa_path_rec_get+0x181/0x200 [ib_sa]
+> >> [<ffffffffa0379db0>] rdma_resolve_route+0x3c0/0x8d0 [rdma_cm]
+> >> [<ffffffffa0374450>] ? cma_bind_port+0xa0/0xa0 [rdma_cm]
+> >> [<ffffffffa040f850>] ? rds_rdma_cm_event_handler_cmn+0x850/0x850
+> >> [rds_rdma]
+> >> [<ffffffffa040f22c>] rds_rdma_cm_event_handler_cmn+0x22c/0x850
+> >> [rds_rdma]
+> >> [<ffffffffa040f860>] rds_rdma_cm_event_handler+0x10/0x20 [rds_rdma]
+> >> [<ffffffffa037778e>] addr_handler+0x9e/0x140 [rdma_cm]
+> >> [<ffffffffa026cdb4>] process_req+0x134/0x190 [ib_addr]
+> >> [<ffffffff810a02f9>] process_one_work+0x169/0x4a0
+> >> [<ffffffff810a0b2b>] worker_thread+0x5b/0x560
+> >> [<ffffffff810a0ad0>] ? flush_delayed_work+0x50/0x50
+> >> [<ffffffff810a68fb>] kthread+0xcb/0xf0
+> >> [<ffffffff816ec49a>] ? __schedule+0x24a/0x810
+> >> [<ffffffff816ec49a>] ? __schedule+0x24a/0x810
+> >> [<ffffffff810a6830>] ? kthread_create_on_node+0x180/0x180
+> >> [<ffffffff816f25a7>] ret_from_fork+0x47/0x90
+> >> [<ffffffff810a6830>] ? kthread_create_on_node+0x180/0x180
+> >> ....
+> >> RIP  [<ffffffffa03296cd>] send_mad+0x33d/0x5d0 [ib_sa]
+> >>
+> >> To resolve the above issue -
+> >> 1. Add the req to the request list only after the request has been sent out.
+> >> 2. To handle the race where response comes in before adding request to
+> >> the request list, send(rdma_nl_multicast) and add to list while holding the
+> >> spinlock - request_lock.
+> >> 3. Use GFP_NOWAIT for rdma_nl_multicast since it is called while holding
+> >> a spinlock. In case of memory allocation failure, request will go out to SA.
+> >>
+> >> Signed-off-by: Divya Indi <divya.indi@oracle.com>
+> >> Fixes: 3ebd2fd0d011 ("IB/sa: Put netlink request into the request list
+> >> before sending")
+> > Author SOB should be after "Fixes" line.
+>
+> My bad. Noted.
+>
+> >
+> >> ---
+> >>  drivers/infiniband/core/sa_query.c | 34 +++++++++++++++++-----------------
+> >>  1 file changed, 17 insertions(+), 17 deletions(-)
+> >>
+> >> diff --git a/drivers/infiniband/core/sa_query.c b/drivers/infiniband/core/sa_query.c
+> >> index 74e0058..042c99b 100644
+> >> --- a/drivers/infiniband/core/sa_query.c
+> >> +++ b/drivers/infiniband/core/sa_query.c
+> >> @@ -836,6 +836,9 @@ static int ib_nl_send_msg(struct ib_sa_query *query, gfp_t gfp_mask)
+> >>  	void *data;
+> >>  	struct ib_sa_mad *mad;
+> >>  	int len;
+> >> +	unsigned long flags;
+> >> +	unsigned long delay;
+> >> +	int ret;
+> >>
+> >>  	mad = query->mad_buf->mad;
+> >>  	len = ib_nl_get_path_rec_attrs_len(mad->sa_hdr.comp_mask);
+> >> @@ -860,35 +863,32 @@ static int ib_nl_send_msg(struct ib_sa_query *query, gfp_t gfp_mask)
+> >>  	/* Repair the nlmsg header length */
+> >>  	nlmsg_end(skb, nlh);
+> >>
+> >> -	return rdma_nl_multicast(&init_net, skb, RDMA_NL_GROUP_LS, gfp_mask);
+> >> +	spin_lock_irqsave(&ib_nl_request_lock, flags);
+> >> +	ret =  rdma_nl_multicast(&init_net, skb, RDMA_NL_GROUP_LS, GFP_NOWAIT);
+> > It is hard to be convinced that this is correct solution. The mix of
+> > gfp_flags and GFP_NOWAIT at the same time and usage of
+> > ib_nl_request_lock to protect lists and suddenly rdma_nl_multicast() too
+> > makes this code unreadable/non-maintainable.
+>
+> Prior to 3ebd2fd0d011 ("IB/sa: Put netlink request into the request list
+> before sending"), we had ib_nl_send_msg under the spinlock ib_nl_request_lock.
+>
+> ie we had -
+>
+> 1. Get spinlock - ib_nl_request_lock
+> 2. ib_nl_send_msg
+> 	2.a) rdma_nl_multicast
+> 3. Add request to the req list
+> 4. Arm the timer if needed.
+> 5. Release spinlock
+>
+> However, ib_nl_send_msg involved a memory allocation using GFP_KERNEL.
+> hence, was moved out of the spinlock. In addition, req was now being
+> added prior to ib_nl_send_msg [To handle the race where response can
+> come in before we get a chance to add the request back to the list].
+>
+> This introduced another race resulting in use-after-free.[Described in the commit.]
+>
+> To resolve this, sending out the request and adding it to list need to
+> happen while holding the request_lock.
+> To ensure minimum allocations while holding the lock, instead of having
+> the entire ib_nl_send_msg under the lock, we only have rdma_nl_multicast
+> under this spinlock.
+>
+> However, do you think it would be a good idea to split ib_nl_send_msg
+> into 2 functions -
+> 1. Prepare the req/query [Outside the spinlock]
+> 2. Sending the req - rdma_nl_multicast [while holding spinlock]
+>
+> Would this be more intuitive?
 
-We also introduce a new helper named fixup_gfp_flags to do that check.
-We can reuse the fixup_gfp_flags for SLAB/SLUB.
+While it is always good idea to minimize the locked period. It still
+doesn't answer concern about mixing gfp_flags and direct GFP_NOWAIT.
+For example if user provides GFP_ATOMIC, the GFP_NOWAIT allocation will
+cause a trouble because latter is more lax than first one.
 
-Signed-off-by: Muchun Song <songmuchun@bytedance.com>
----
- mm/slab.c | 10 +---------
- mm/slab.h | 21 +++++++++++++++++++++
- mm/slub.c | 10 +---------
- 3 files changed, 23 insertions(+), 18 deletions(-)
+Thanks
 
-diff --git a/mm/slab.c b/mm/slab.c
-index 9350062ffc1a..6e0110bef2d6 100644
---- a/mm/slab.c
-+++ b/mm/slab.c
-@@ -126,8 +126,6 @@
- 
- #include <trace/events/kmem.h>
- 
--#include	"internal.h"
--
- #include	"slab.h"
- 
- /*
-@@ -2579,13 +2577,7 @@ static struct page *cache_grow_begin(struct kmem_cache *cachep,
- 	 * Be lazy and only check for valid flags here,  keeping it out of the
- 	 * critical path in kmem_cache_alloc().
- 	 */
--	if (unlikely(flags & GFP_SLAB_BUG_MASK)) {
--		gfp_t invalid_mask = flags & GFP_SLAB_BUG_MASK;
--		flags &= ~GFP_SLAB_BUG_MASK;
--		pr_warn("Unexpected gfp: %#x (%pGg). Fixing up to gfp: %#x (%pGg). Fix your code!\n",
--				invalid_mask, &invalid_mask, flags, &flags);
--		dump_stack();
--	}
-+	flags = fixup_gfp_flags(cachep, flags);
- 	WARN_ON_ONCE(cachep->ctor && (flags & __GFP_ZERO));
- 	local_flags = flags & (GFP_CONSTRAINT_MASK|GFP_RECLAIM_MASK);
- 
-diff --git a/mm/slab.h b/mm/slab.h
-index 815e4e9a94cd..0b91f2a7b033 100644
---- a/mm/slab.h
-+++ b/mm/slab.h
-@@ -109,6 +109,7 @@ struct memcg_cache_params {
- #include <linux/kmemleak.h>
- #include <linux/random.h>
- #include <linux/sched/mm.h>
-+#include "internal.h"
- 
- /*
-  * State of the slab allocator.
-@@ -627,6 +628,26 @@ struct kmem_cache_node {
- 
- };
- 
-+static inline gfp_t fixup_gfp_flags(struct kmem_cache *s, gfp_t flags)
-+{
-+	gfp_t invalid_mask = 0;
-+
-+	if (unlikely(flags & GFP_SLAB_BUG_MASK))
-+		invalid_mask |= flags & GFP_SLAB_BUG_MASK;
-+
-+	if (unlikely(flags & __GFP_ACCOUNT && s->flags & SLAB_ACCOUNT))
-+		invalid_mask |= __GFP_ACCOUNT;
-+
-+	if (unlikely(invalid_mask)) {
-+		flags &= ~invalid_mask;
-+		pr_warn("Unexpected gfp: %#x (%pGg). Fixing up to gfp: %#x (%pGg). Fix your code!\n",
-+				invalid_mask, &invalid_mask, flags, &flags);
-+		dump_stack();
-+	}
-+
-+	return flags;
-+}
-+
- static inline struct kmem_cache_node *get_node(struct kmem_cache *s, int node)
- {
- 	return s->node[node];
-diff --git a/mm/slub.c b/mm/slub.c
-index b8f798b50d44..49b5cb7da318 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -37,8 +37,6 @@
- 
- #include <trace/events/kmem.h>
- 
--#include "internal.h"
--
- /*
-  * Lock order:
-  *   1. slab_mutex (Global Mutex)
-@@ -1745,13 +1743,7 @@ static struct page *allocate_slab(struct kmem_cache *s, gfp_t flags, int node)
- 
- static struct page *new_slab(struct kmem_cache *s, gfp_t flags, int node)
- {
--	if (unlikely(flags & GFP_SLAB_BUG_MASK)) {
--		gfp_t invalid_mask = flags & GFP_SLAB_BUG_MASK;
--		flags &= ~GFP_SLAB_BUG_MASK;
--		pr_warn("Unexpected gfp: %#x (%pGg). Fixing up to gfp: %#x (%pGg). Fix your code!\n",
--				invalid_mask, &invalid_mask, flags, &flags);
--		dump_stack();
--	}
-+	flags = fixup_gfp_flags(s, flags);
- 
- 	return allocate_slab(s,
- 		flags & (GFP_RECLAIM_MASK | GFP_CONSTRAINT_MASK), node);
--- 
-2.11.0
-
+>
+> >> +	if (!ret) {
+> > Please use kernel coding style.
+> >
+> > if (ret) {
+> >   spin_unlock_irqrestore(&ib_nl_request_lock, flags);
+> >   return ret;
+> >   }
+> >
+> >  ....
+>
+> Noted. Will make this change.
+>
+> >
+> >> +		/* Put the request on the list.*/
+> >> +		delay = msecs_to_jiffies(sa_local_svc_timeout_ms);
+> >> +		query->timeout = delay + jiffies;
+> >> +		list_add_tail(&query->list, &ib_nl_request_list);
+> >> +		/* Start the timeout if this is the only request */
+> >> +		if (ib_nl_request_list.next == &query->list)
+> >> +			queue_delayed_work(ib_nl_wq, &ib_nl_timed_work, delay);
+> >> +	}
+> >> +	spin_unlock_irqrestore(&ib_nl_request_lock, flags);
+> >> +
+> >> +	return ret;
+> >>  }
+> >>
+> >>  static int ib_nl_make_request(struct ib_sa_query *query, gfp_t gfp_mask)
+> >>  {
+> >> -	unsigned long flags;
+> >> -	unsigned long delay;
+> >>  	int ret;
+> >>
+> >>  	INIT_LIST_HEAD(&query->list);
+> >>  	query->seq = (u32)atomic_inc_return(&ib_nl_sa_request_seq);
+> >>
+> >> -	/* Put the request on the list first.*/
+> >> -	spin_lock_irqsave(&ib_nl_request_lock, flags);
+> >> -	delay = msecs_to_jiffies(sa_local_svc_timeout_ms);
+> >> -	query->timeout = delay + jiffies;
+> >> -	list_add_tail(&query->list, &ib_nl_request_list);
+> >> -	/* Start the timeout if this is the only request */
+> >> -	if (ib_nl_request_list.next == &query->list)
+> >> -		queue_delayed_work(ib_nl_wq, &ib_nl_timed_work, delay);
+> >> -	spin_unlock_irqrestore(&ib_nl_request_lock, flags);
+> >> -
+> >>  	ret = ib_nl_send_msg(query, gfp_mask);
+> >>  	if (ret) {
+> >>  		ret = -EIO;
+> >> -		/* Remove the request */
+> >> -		spin_lock_irqsave(&ib_nl_request_lock, flags);
+> >> -		list_del(&query->list);
+> >> -		spin_unlock_irqrestore(&ib_nl_request_lock, flags);
+> >>  	}
+> > Brackets should be removed too.
+> Noted.
+> >>  	return ret;
+> >> --
+> >> 1.8.3.1
+> >>
