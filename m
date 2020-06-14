@@ -2,129 +2,112 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0217C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 21:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 014ACC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 21:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF43C2071A
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 21:03:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M1v4894O"
+	by mail.kernel.org (Postfix) with ESMTP id DC9DE206B7
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 21:04:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727937AbgFNVDJ (ORCPT
+        id S1727952AbgFNVEd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 17:03:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46792 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726938AbgFNVDG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 17:03:06 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D72CC03E97C;
-        Sun, 14 Jun 2020 14:03:05 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id w20so6710717pga.6;
-        Sun, 14 Jun 2020 14:03:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=LuKrGdsyJt363mkqnjfvHbulwnJ9TO1k3D/bFALSM6Q=;
-        b=M1v4894OoBgKF8izTIkH6jmFVP524510jNiBjJGnDTw/E0a1oBDAeC1R0j+05TPxad
-         CEGL557RLDnJuq/ExdD6BS1EOQZclyk74RTiDlDP77AlYuvQlbt3PZXgV8fhtXmu2hOL
-         JPbBP9sDP55x5+07FGVJHPV1l/c4QYOhEFYi4dy+oQWyYO0J9oL8qe6GT5EjK+upQ+sy
-         sAIMoSBxU5hoPudZ4wTMhTiD7w40r05FB2pfqqPXRMnEdKA0L50iUFetPr6ZM2qgWDjF
-         HnhtV2NqK3z6H8viGcZWTOYmFOBN0CxAgB7nSq61BbvBwgtVkPcCf4iOBp1PJh64XWxb
-         Gs7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=LuKrGdsyJt363mkqnjfvHbulwnJ9TO1k3D/bFALSM6Q=;
-        b=fefG5bB6TXXd5NQRpykQPRUNxZyzJXB+RiczElFE1hsu29q7v8Qo2ktVmFlPdSfxSI
-         iHmNP3Y+Rc8DwNahwpvQlk0l8nCYyu8uSvodEmU3gsGh8wk86oAO0aUFS/U6T9pgA8zd
-         WGqfXnjalTrHq1p76fpRQCnayjgIHLAaJd9lqZ6TDhoh+2FuBNHry3nH4BuU6GxUr0hs
-         Y/gJf5MZjj0rww3MCm5u51R0UXAOiUwf1l6ZZlOkeGwty5Qdmp4jyrvWOh5Mxnpy/gHJ
-         wSap1b7b7nCKz43g8WDil/lIhcAl8c/aC4iAapAv38O0vkOBWClm6R/uhVhw861lDtMC
-         EejQ==
-X-Gm-Message-State: AOAM531qyLpicWTCLpk+h5VMCPlqpIJxwgMbQCHWVOgle//+FtP6W71K
-        lk1JJGvi6GZhtXaiiZSAQho=
-X-Google-Smtp-Source: ABdhPJwXDOBq8wOZFlPoba1fs6Y0oquuokAQpP5cQY0aeDvPQ3lMxVJGG2HLpazYAGspfRPXVGz15Q==
-X-Received: by 2002:a63:6bc5:: with SMTP id g188mr14069494pgc.395.1592168585045;
-        Sun, 14 Jun 2020 14:03:05 -0700 (PDT)
-Received: from sultan-box.localdomain ([89.45.90.111])
-        by smtp.gmail.com with ESMTPSA id d184sm1827746pfd.85.2020.06.14.14.03.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Jun 2020 14:03:04 -0700 (PDT)
-From:   Sultan Alsawaf <sultan@kerneltoast.com>
-X-Google-Original-From: Sultan Alsawaf
-To:     Aaron Ma <aaron.ma@canonical.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        HungNien Chen <hn.chen@weidahitech.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-i2c@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Pavel Balan <admin@kryma.net>, Tin Huynh <tnhuynh@apm.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        You-Sheng Yang <vicamo.yang@canonical.com>
-Cc:     Sultan Alsawaf <sultan@kerneltoast.com>
-Subject: [PATCH 2/2] HID: i2c-hid: Use block reads when possible to save power
-Date:   Sun, 14 Jun 2020 14:02:55 -0700
-Message-Id: <20200614210255.4641-3-sultan@kerneltoast.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200614210255.4641-1-sultan@kerneltoast.com>
-References: <20200614210255.4641-1-sultan@kerneltoast.com>
+        Sun, 14 Jun 2020 17:04:33 -0400
+Received: from foss.arm.com ([217.140.110.172]:33566 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726844AbgFNVEd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 17:04:33 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 79B911F1;
+        Sun, 14 Jun 2020 14:04:32 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CD24A3F71F;
+        Sun, 14 Jun 2020 14:04:30 -0700 (PDT)
+References: <20200614010755.9129-2-valentin.schneider@arm.com> <202006141541.YN3AhUnc%lkp@intel.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     kernel test robot <lkp@intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pm@vger.kernel.org, kbuild-all@lists.01.org,
+        clang-built-linux@googlegroups.com,
+        Russell King <linux@armlinux.org.uk>,
+        Thara Gopinath <thara.gopinath@linaro.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH 1/3] thermal/cpu-cooling, sched/core: Cleanup thermal pressure definition
+In-reply-to: <202006141541.YN3AhUnc%lkp@intel.com>
+Date:   Sun, 14 Jun 2020 22:04:23 +0100
+Message-ID: <jhjlfkp1hrc.mognet@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sultan Alsawaf <sultan@kerneltoast.com>
 
-We have no way of knowing how large an incoming payload is going to be,
-so the only strategy available up until now has been to always retrieve
-the maximum possible report length over i2c, which can be quite
-inefficient. For devices that send reports in block read format, the i2c
-controller driver can read the payload length on the fly and terminate
-the i2c transaction early, resulting in considerable power savings.
+On 14/06/20 08:39, kernel test robot wrote:
+> Hi Valentin,
+>
+> Thank you for the patch! Perhaps something to improve:
+>
+> [auto build test WARNING on tip/auto-latest]
+> [also build test WARNING on driver-core/driver-core-testing tip/sched/core arm/for-next arm64/for-next/core soc/for-next linus/master v5.7 next-20200613]
+> [cannot apply to linux/master]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+>
+> url:    https://github.com/0day-ci/linux/commits/Valentin-Schneider/sched-arch_topology-Thermal-pressure-configuration-cleanup/20200614-091051
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git 8dc697d75c13ee2901d1a40f1d7d58163048c204
+> config: arm64-randconfig-r013-20200614 (attached as .config)
+> compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project cb5072d1877b38c972f95092db2cedbcddb81da6)
+> reproduce (this is a W=1 build):
 
-On a Dell Precision 15 5540 with an i9-9880H, resting my finger on the
-touchpad causes psys power readings to go up by about 4W and hover there
-until I remove my finger. With this patch, my psys readings go from 4.7W
-down to 3.1W, yielding about 1.6W in savings. This is because my
-touchpad's max report length is 60 bytes, but all of the regular reports
-it sends for touch events are only 32 bytes, so the i2c transfer is
-roughly halved for the common case.
+Ah, W=1! I thought I was going nuts.
 
-Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
----
- drivers/hid/i2c-hid/i2c-hid-core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+If desired, I can add a declaration in cpu_cooling.h, similar to what we
+have for the arch_set_freq_scale() stub.
 
-diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
-index 294c84e136d7..4b507de48d70 100644
---- a/drivers/hid/i2c-hid/i2c-hid-core.c
-+++ b/drivers/hid/i2c-hid/i2c-hid-core.c
-@@ -476,7 +476,8 @@ static void i2c_hid_get_input(struct i2c_hid *ihid)
- 	if (size > ihid->bufsize)
- 		size = ihid->bufsize;
- 
--	ret = i2c_master_recv(ihid->client, ihid->inbuf, size);
-+	ret = i2c_transfer_buffer_flags(ihid->client, ihid->inbuf, size,
-+					I2C_M_RD | I2C_M_RECV_LEN);
- 	if (ret != size) {
- 		if (ret < 0)
- 			return;
--- 
-2.27.0
-
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # install arm64 cross compiling tool for clang build
+>         # apt-get install binutils-aarch64-linux-gnu
+>         # save the attached .config to linux build tree
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=arm64
+>
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+>
+> All warnings (new ones prefixed by >>, old ones prefixed by <<):
+>
+>>> drivers/base/arch_topology.c:59:6: warning: no previous prototype for function 'arch_set_thermal_pressure' [-Wmissing-prototypes]
+> void arch_set_thermal_pressure(const struct cpumask *cpus,
+> ^
+> drivers/base/arch_topology.c:59:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+> void arch_set_thermal_pressure(const struct cpumask *cpus,
+> ^
+> static
+> 1 warning generated.
+>
+> vim +/arch_set_thermal_pressure +59 drivers/base/arch_topology.c
+>
+>     58
+>   > 59	void arch_set_thermal_pressure(const struct cpumask *cpus,
+>     60				       unsigned long th_pressure)
+>     61	{
+>     62		int cpu;
+>     63
+>     64		for_each_cpu(cpu, cpus)
+>     65			WRITE_ONCE(per_cpu(thermal_pressure, cpu), th_pressure);
+>     66	}
+>     67
+>
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
