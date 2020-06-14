@@ -2,96 +2,182 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A581BC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 16:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C094C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 16:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84D6F20747
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 16:26:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BFZhmc9k"
+	by mail.kernel.org (Postfix) with ESMTP id D323E2071A
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 16:44:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbgFNQ04 (ORCPT
+        id S1727029AbgFNQnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 12:26:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32834 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726772AbgFNQ0z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 12:26:55 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F57EC05BD43;
-        Sun, 14 Jun 2020 09:26:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=FBrl4ugPRoXqesloMxkA/RUdd2QTtkIhYi/oDtcA+pI=; b=BFZhmc9kch9DtqFlRZY6kAVze0
-        ptdNqXcCHmIzUSLc7FZSe4umBFI8Pt6SiK3Q6nFOXMw5x/CQJYpkQemlzbaf4uFbEMtB9HzpGd2rM
-        208bESHaF40xc/6lK0r8OXHZ2fUEjpNfsUnhSHqF8S8VX1tbIkM8ebmCjPeOyVVYtqRYwhb2GkXcU
-        tbOe0xlNP2sYNXvCqhw//9pV0RJutqE8P0syXpHyw5+fCvpKNr7pFem9UKv4/7DkKpbR0LL0pJmxk
-        SXFMDkCTnn3NXkXNLtSxRyCQCvj+tPBjXiFZPW9ABI9CMbRFgSbDjdu6YIqzc8bpTKZF4hbuCejXk
-        NpWMhZBA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jkVT8-0002sm-R5; Sun, 14 Jun 2020 16:26:50 +0000
-Date:   Sun, 14 Jun 2020 09:26:50 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Hugh Dickins <hughd@google.com>
-Subject: Re: [RFC v6 00/51] Large pages in the page cache
-Message-ID: <20200614162650.GP8681@bombadil.infradead.org>
-References: <20200610201345.13273-1-willy@infradead.org>
+        Sun, 14 Jun 2020 12:43:42 -0400
+Received: from mga14.intel.com ([192.55.52.115]:48021 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726905AbgFNQnm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 12:43:42 -0400
+IronPort-SDR: TTuok41/MnHsgtVAqDF+UKKiQAEFrDyqj4PeI10jhGBWkED0ibv1gTTl95GR78Dv8jHb1Wk8gh
+ 5EwI0NiZV5Tw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2020 09:43:41 -0700
+IronPort-SDR: bf+OuVodIyPgtGubF0PW147bIHSJ81sI1mA0T2GAzUFoR62aZ+7b22cZZI61QLL97NB8w+OmyG
+ B8Mg18IJ81gQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,511,1583222400"; 
+   d="scan'208";a="308317834"
+Received: from lkp-server02.sh.intel.com (HELO de5642daf266) ([10.239.97.151])
+  by fmsmga002.fm.intel.com with ESMTP; 14 Jun 2020 09:43:40 -0700
+Received: from kbuild by de5642daf266 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jkVjQ-0000mn-5i; Sun, 14 Jun 2020 16:43:40 +0000
+Date:   Mon, 15 Jun 2020 00:43:23 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:master] BUILD SUCCESS
+ b8b7f4dc10459dcacafa3441dd44c6fbe880e886
+Message-ID: <5ee653ab.QWO8S7+Ka84gFsGv%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200610201345.13273-1-willy@infradead.org>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 01:12:54PM -0700, Matthew Wilcox wrote:
-> Another fortnight, another dump of my current large pages work.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
+branch HEAD: b8b7f4dc10459dcacafa3441dd44c6fbe880e886  Merge branch 'WIP.core/headers'
 
-The generic/127 test has pointed out to me that range writeback is
-broken by this patchset.  Here's how (may not be exactly what's going on,
-but it's close):
+elapsed time: 481m
 
-page cache allocates an order-2 page covering indices 40-43.
-bytes are written, page is dirtied
-test then calls fallocate(FALLOC_FL_COLLAPSE_RANGE) for a range which
-starts in page 41.
-XFS calls filemap_write_and_wait_range() which calls
-__filemap_fdatawrite_range() which calls
-do_writepages() which calls
-iomap_writepages() which calls
-write_cache_pages() which calls
-tag_pages_for_writeback() which calls
-xas_for_each_marked() starting at page 41.  Which doesn't find page
-  41 because when we dirtied pages 40-43, we only marked index 40 as
-  being dirty.
+configs tested: 115
+configs skipped: 2
 
-Annoyingly, the XArray actually handles this just fine ... if we were
-using multi-order entries, we'd find it.  But we're still storing 2^N
-entries for an order N page.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-I can see two ways to fix this.  One is to bite the bullet and do the
-conversion of the page cache to use multi-order entries.  The second
-is to set and clear the marks on all entries.  I'm concerned about the
-performance of the latter solution.  Not so bad for order-2 pages, but for
-an order-9 page we have 520 bits to set, spread over 9 non-consecutive
-cachelines.  Also, I'm unenthusiastic about writing code that I want to
-throw away as quickly as possible.
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+sh                          rsk7269_defconfig
+arc                        nsim_700_defconfig
+powerpc                       holly_defconfig
+sparc64                          alldefconfig
+arm                       multi_v4t_defconfig
+powerpc                        cell_defconfig
+powerpc                    amigaone_defconfig
+arm                           stm32_defconfig
+mips                      loongson3_defconfig
+arm                        multi_v7_defconfig
+powerpc                    adder875_defconfig
+arm                       aspeed_g5_defconfig
+mips                       capcella_defconfig
+mips                          ath25_defconfig
+mips                        bcm63xx_defconfig
+arm                            zeus_defconfig
+arc                                 defconfig
+sh                             sh03_defconfig
+riscv                             allnoconfig
+sh                           se7750_defconfig
+powerpc                     pq2fads_defconfig
+arm                       versatile_defconfig
+mips                        bcm47xx_defconfig
+h8300                               defconfig
+arm                           sama5_defconfig
+arm                           viper_defconfig
+m68k                          multi_defconfig
+h8300                       h8s-sim_defconfig
+xtensa                generic_kc705_defconfig
+m68k                          amiga_defconfig
+arm                           tegra_defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a015-20200614
+i386                 randconfig-a011-20200614
+i386                 randconfig-a014-20200614
+i386                 randconfig-a013-20200614
+i386                 randconfig-a016-20200614
+i386                 randconfig-a012-20200614
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
 
-So unless somebody has a really good alternative idea, I'm going to
-convert the page cache over to multi-order entries.  This will have
-several positive effects:
-
- - Get DAX and regular page cache using the xarray in a more similar way
- - Saves about 4.5kB of memory for every 2MB page in tmpfs/shmem
- - Prep work for converting hugetlbfs to use the page cache the same
-   way as tmpfs
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
