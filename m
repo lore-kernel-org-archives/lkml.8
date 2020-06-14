@@ -2,113 +2,107 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E8AC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 08:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A3A9C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 09:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3653206D7
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 08:59:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J2dAsF/z"
+	by mail.kernel.org (Postfix) with ESMTP id 3D810206D7
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 09:00:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgFNI7d (ORCPT
+        id S1727069AbgFNJAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 04:59:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49282 "EHLO
+        Sun, 14 Jun 2020 05:00:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726828AbgFNI65 (ORCPT
+        with ESMTP id S1726853AbgFNJAO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 04:58:57 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D6D4C03E96F;
-        Sun, 14 Jun 2020 01:58:57 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id x14so14057756wrp.2;
-        Sun, 14 Jun 2020 01:58:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=z46IL+NfP+j1u2ta2mEQ0OsNNK1eTDRdh2B8eGPgsro=;
-        b=J2dAsF/zL/mQtILhuSpX+NmgenXxkCF0Tm5t6aRlvlTmJ3ymdUl6T14ZOaiQBEXDON
-         afFDDrsXji1ZIZW4vzL2Qjb37dlBjKq6tIOMQ9xviuc/bseobUkZQuiHWXFVEZsTaXVy
-         LWL1CEiMUz4tYeauz+glu4VMqO7EBN6zBSTpZ51laoXC+0Tn6HvDUE5pCtNy5/0akTCl
-         KxtDFdUB5aDXXrkNoanBs5L1PYPFGp4a680KBkEkKosOwNP7VbUlYK+jHpICCc4XsRol
-         zklIIZwSmrtkf68NZyzJHUn/Y8v+Hdq6jVEOrAw3CpLMWoR/OiMuhqP+2IbFR/KzceSb
-         JBoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=z46IL+NfP+j1u2ta2mEQ0OsNNK1eTDRdh2B8eGPgsro=;
-        b=GL/KnqY+1s57zgVMPHl52cXJjSMYnKLXhLZjJfpkehitgfwx9TxEQfrfQjoull3Gmb
-         qkjAS1NCK9pOhRWPI2ADf0ZngmSWQXtpwfVThWsQer9r2ZwsvfTGYLlwSv3k/8iV7ta8
-         vV47lTG7XzzJnbhJNwGVKM+ZVk1BkmtHp78GRrSNOv+6egrJ5ZpJp3q1kY1z3ypJwNqI
-         KYvX0ImNPDeyptY80+zMRIk6PQVzWGChOjjE3dduqzLRx6oGascruqeGdobppdcFY1UX
-         PmuWuRCx8yQpMBTgg24PZiETpRFsJXzWL5VTl9Wr6u3jMYrTYm3wkAC/h0Fn/+BynWm6
-         miQA==
-X-Gm-Message-State: AOAM530mBb78oUMjmsc1KbTZUxjGpzdh51vaVjEBkUQc3P1WnNL00B6v
-        BuHtjjAZuHbxrBqqwph/OIc=
-X-Google-Smtp-Source: ABdhPJw6hkucQQnnu9sLeXNYDfbPCWuNqXe6C76m54Ogkfs9CjiOlvbf/Znd81cx8yYPX2KvRE1mWg==
-X-Received: by 2002:a5d:4404:: with SMTP id z4mr24000670wrq.189.1592125136101;
-        Sun, 14 Jun 2020 01:58:56 -0700 (PDT)
-Received: from skynet.lan (168.red-88-20-188.staticip.rima-tde.net. [88.20.188.168])
-        by smtp.gmail.com with ESMTPSA id u4sm17174043wmb.48.2020.06.14.01.58.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Jun 2020 01:58:55 -0700 (PDT)
-From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-To:     p.zabel@pengutronix.de, robh+dt@kernel.org,
-        tsbogend@alpha.franken.de, f.fainelli@gmail.com,
-        jonas.gorski@gmail.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com
-Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-Subject: [PATCH v5 1/9] mips: bmips: select ARCH_HAS_RESET_CONTROLLER
-Date:   Sun, 14 Jun 2020 10:58:44 +0200
-Message-Id: <20200614085852.2130147-2-noltari@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200614085852.2130147-1-noltari@gmail.com>
-References: <20200613083813.2027186-1-noltari@gmail.com>
- <20200614085852.2130147-1-noltari@gmail.com>
+        Sun, 14 Jun 2020 05:00:14 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42AF5C03E969
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 02:00:12 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jkOUF-0000CJ-BD; Sun, 14 Jun 2020 10:59:31 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 858D81013DC; Sun, 14 Jun 2020 10:59:30 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        Alexander Potapenko <glider@google.com>
+Subject: Re: [patch V9 10/39] x86/entry: Provide helpers for execute on irqstack
+In-Reply-To: <20200613214123.GC992@lca.pw>
+References: <87zh9cnfmg.fsf@nanos.tec.linutronix.de> <87wo4gnetx.fsf@nanos.tec.linutronix.de> <20200610123833.GD954@lca.pw> <87h7vig17z.fsf@nanos.tec.linutronix.de> <20200613135547.GA992@lca.pw> <87a717cbc9.fsf@nanos.tec.linutronix.de> <20200613214123.GC992@lca.pw>
+Date:   Sun, 14 Jun 2020 10:59:30 +0200
+Message-ID: <874krec9al.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows to add reset controllers support.
+Qian Cai <cai@lca.pw> writes:
+> On Sat, Jun 13, 2020 at 04:03:02PM +0200, Thomas Gleixner wrote:
+>> Qian,
+>> 
+>> Qian Cai <cai@lca.pw> writes:
+>> > On Wed, Jun 10, 2020 at 09:38:56PM +0200, Thomas Gleixner wrote:
+>> >
+>> > Thomas, I get ahold of one of the affected systems now if you want some
+>> > testing there.
+>> 
+>>   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/entry
+>
+> Looks good.
+>
+> <start>
+> # cat /sys/kernel/debug/stackdepot/info
+> Unique stacks: 27481
+> Depot index:   285
+> Depot offset:  3024
+>
+> <after oom02>
+> # cat /sys/kernel/debug/stackdepot/info
+> Unique stacks: 29242
+> Depot index:   308
+> Depot offset:  6608
+>
+> <after the full testsuite>
+> # cat /sys/kernel/debug/stackdepot/info
+> Unique stacks: 49221
+> Depot index:   530
+> Depot offset:  5888
 
-Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
----
- v5: no changes
- v4: no changes
- v3: no changes
- v2: no changes
-
- arch/mips/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 6fee1a133e9d..b1840119cb64 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -227,6 +227,7 @@ config ATH79
- 
- config BMIPS_GENERIC
- 	bool "Broadcom Generic BMIPS kernel"
-+	select ARCH_HAS_RESET_CONTROLLER
- 	select ARCH_HAS_SYNC_DMA_FOR_CPU_ALL
- 	select ARCH_HAS_PHYS_TO_DMA
- 	select BOOT_RAW
--- 
-2.27.0
-
+Thanks for confirming!
