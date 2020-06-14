@@ -2,138 +2,133 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7198DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 19:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E3A5C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 20:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FDFA206D7
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 19:42:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE6C62053B
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 20:00:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbgFNTml (ORCPT
+        id S1727821AbgFNUAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 15:42:41 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:33103 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726648AbgFNTml (ORCPT
+        Sun, 14 Jun 2020 16:00:40 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:34687 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726648AbgFNUAk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 15:42:41 -0400
-Received: by mail-lf1-f65.google.com with SMTP id g2so648611lfb.0
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 12:42:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:to:cc:references:from:autocrypt:subject
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=rKH0beSWO1KrSueON52ZQjmsKWiZKDP0VtRmP+EBMss=;
-        b=LIOvSish+Ab6hgfDBtq2EJfb+jkvq3tP1efqR0V04ZRgmLSWdBIB2TT8zANCNm4XAB
-         QcY/xu/ZKGHZQdTOk7eBgqQ37Od8afjS6GTVG3nu2SA3y5Urbz6FYoQJX31Hk7kB+VoW
-         MzVDnySQcLCNcneEeQroUSQieLGLa00P6jyLVzus9uLh+7ZEiCiM1fdEnydGg9vHyF4K
-         16OrGnx481+UkemmPlgiPm5P7SjOh+lrtMIpWkjlp0qmz9M+Ss6RnsgnGP6LiHEKgARu
-         AE86mJ596RG9XHucYAeA/wuaKoMFe/7ExwY1+xRdJaLV3Q+w3luQnAlZiUTcLCQq9EPC
-         f+8w==
-X-Gm-Message-State: AOAM532PiSIIP2qAgEKdZpr5PB5XxQvX2KwGqgYNjqwxmXYmTENibL/H
-        2eBKjy2/9C//YdYS3lLK1u6SyaXnRcE=
-X-Google-Smtp-Source: ABdhPJzDWT3Ovw8YDpQuXW/idttdh/SMc+Pes5lOQxEVpFZ4bwESQMfNYwBe7+m9GSNubT7gM9m3xQ==
-X-Received: by 2002:ac2:53a6:: with SMTP id j6mr11741674lfh.73.1592163758239;
-        Sun, 14 Jun 2020 12:42:38 -0700 (PDT)
-Received: from [10.68.32.147] (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
-        by smtp.gmail.com with ESMTPSA id y4sm3412294ljd.111.2020.06.14.12.42.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 14 Jun 2020 12:42:37 -0700 (PDT)
-Reply-To: efremov@linux.com
-To:     Joe Perches <joe@perches.com>, Julia Lawall <Julia.Lawall@lip6.fr>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     cocci@systeme.lip6.fr, linux-kernel@vger.kernel.org
-References: <20200604140805.111613-1-efremov@linux.com>
- <e4981fd76a88e18376c4e634c235501b57d321e7.camel@perches.com>
-From:   Denis Efremov <efremov@linux.com>
-Autocrypt: addr=efremov@linux.com; keydata=
- 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
-Subject: Re: [PATCH] coccinelle: api: add kzfree script
-Message-ID: <345c783b-a8cf-9dd1-29c6-d32b9b29053f@linux.com>
-Date:   Sun, 14 Jun 2020 22:42:54 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Sun, 14 Jun 2020 16:00:40 -0400
+Received: from callcc.thunk.org (pool-100-0-195-244.bstnma.fios.verizon.net [100.0.195.244])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 05EK0Y1h027920
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 14 Jun 2020 16:00:35 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 2C2F342026D; Sun, 14 Jun 2020 16:00:34 -0400 (EDT)
+Date:   Sun, 14 Jun 2020 16:00:34 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     torvalds@linux-foundation.org
+Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] ext4 changes part 2 for 5.8
+Message-ID: <20200614200034.GA3294624@mit.edu>
 MIME-Version: 1.0
-In-Reply-To: <e4981fd76a88e18376c4e634c235501b57d321e7.camel@perches.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/4/20 7:27 PM, Joe Perches wrote:
-> On Thu, 2020-06-04 at 17:08 +0300, Denis Efremov wrote:
->> Check for memset() with 0 followed by kfree().
-> 
-> Perhaps those uses should be memzero_explicit or kvfree_sensitive.
-> 
+The following changes since commit 6b8ed62008a49751fc71fefd2a4f89202a7c2d4d:
 
-Is it safe to suggest to use kzfree instead of memzero_explicit && kfree?
-Or it would be better to use kvfree_sensitive in this case.
+  ext4: avoid unnecessary transaction starts during writeback (2020-06-03 23:16:56 -0400)
 
-kzfree uses memset(0) with no barrier_data.
+are available in the Git repository at:
 
-For example:
-diff -u -p a/drivers/crypto/inside-secure/safexcel_hash.c b/drivers/crypto/inside-secure/safexcel_hash.c
---- a/drivers/crypto/inside-secure/safexcel_hash.c
-+++ b/drivers/crypto/inside-secure/safexcel_hash.c
-@@ -1081,8 +1081,7 @@ static int safexcel_hmac_init_pad(struct
-                }
- 
-                /* Avoid leaking */
--               memzero_explicit(keydup, keylen);
--               kfree(keydup);
-+               kzfree(keydup);
- 
-                if (ret)
-                        return ret;
+  git://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git tags/ext4-for-linus-5.8-rc1-2
 
-Thanks,
-Denis
+for you to fetch changes up to 7b97d868b7ab2448859668de9222b8af43f76e78:
+
+  ext4, jbd2: ensure panic by fix a race between jbd2 abort and ext4 error handlers (2020-06-12 14:51:41 -0400)
+
+----------------------------------------------------------------
+This is the second round of ext4 commits for 5.8 merge window.  It
+includes the per-inode DAX support, which was dependant on the DAX
+infrastructure which came in via the XFS tree, and a number of
+regression and bug fixes; most notably the "BUG: using
+smp_processor_id() in preemptible code in ext4_mb_new_blocks" reported
+by syzkaller.
+
+----------------------------------------------------------------
+Eric Biggers (1):
+      ext4: avoid utf8_strncasecmp() with unstable name
+
+Ira Weiny (14):
+      fs: Remove unneeded IS_DAX() check in io_is_direct()
+      fs/stat: Define DAX statx attribute
+      Documentation/dax: Update Usage section
+      fs: Lift XFS_IDONTCACHE to the VFS layer
+      fs: Introduce DCACHE_DONTCACHE
+      fs/ext4: Narrow scope of DAX check in setflags
+      fs/ext4: Disallow verity if inode is DAX
+      fs/ext4: Change EXT4_MOUNT_DAX to EXT4_MOUNT_DAX_ALWAYS
+      fs/ext4: Update ext4_should_use_dax()
+      fs/ext4: Only change S_DAX on inode load
+      fs/ext4: Make DAX mount option a tri-state
+      fs/ext4: Remove jflag variable
+      fs/ext4: Introduce DAX inode flag
+      Documentation/dax: Update DAX enablement for ext4
+
+Jan (janneke) Nieuwenhuizen (1):
+      ext4: support xattr gnu.* namespace for the Hurd
+
+Jeffle Xu (1):
+      ext4: fix partial cluster initialization when splitting extent
+
+Ritesh Harjani (1):
+      ext4: mballoc: Use this_cpu_read instead of this_cpu_ptr
+
+Theodore Ts'o (2):
+      Enable ext4 support for per-file/directory dax operations
+      ext4: avoid race conditions when remounting with options that change dax
+
+yangerkun (1):
+      ext4: stop overwrite the errcode in ext4_setup_super
+
+zhangyi (F) (1):
+      ext4, jbd2: ensure panic by fix a race between jbd2 abort and ext4 error handlers
+
+ Documentation/filesystems/dax.txt         | 142 ++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ Documentation/filesystems/ext4/verity.rst |   3 ++
+ drivers/block/loop.c                      |   6 +--
+ fs/dcache.c                               |  19 ++++++++
+ fs/ext4/Makefile                          |   3 +-
+ fs/ext4/dir.c                             |  16 ++++++
+ fs/ext4/ext4.h                            |  27 ++++++++---
+ fs/ext4/extents.c                         |   2 +-
+ fs/ext4/ialloc.c                          |   2 +-
+ fs/ext4/inode.c                           |  26 +++++++---
+ fs/ext4/ioctl.c                           |  65 ++++++++++++++++++++-----
+ fs/ext4/mballoc.c                         |   2 +-
+ fs/ext4/super.c                           | 124 +++++++++++++++++++++++++++++++++--------------
+ fs/ext4/verity.c                          |   5 +-
+ fs/ext4/xattr.c                           |   2 +
+ fs/ext4/xattr.h                           |   1 +
+ fs/ext4/xattr_hurd.c                      |  51 ++++++++++++++++++++
+ fs/jbd2/journal.c                         |  17 +++++--
+ fs/stat.c                                 |   3 ++
+ fs/xfs/xfs_icache.c                       |   4 +-
+ fs/xfs/xfs_inode.h                        |   3 +-
+ fs/xfs/xfs_super.c                        |   2 +-
+ include/linux/dcache.h                    |   2 +
+ include/linux/fs.h                        |  14 +++---
+ include/linux/jbd2.h                      |   6 ++-
+ include/uapi/linux/fs.h                   |   1 +
+ include/uapi/linux/stat.h                 |   1 +
+ include/uapi/linux/xattr.h                |   4 ++
+ 28 files changed, 465 insertions(+), 88 deletions(-)
+ create mode 100644 fs/ext4/xattr_hurd.c
