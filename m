@@ -2,231 +2,147 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC769C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 14:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AC5C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 14:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B62E4206D7
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 14:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3553A206D7
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 14:40:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HJpq5dfL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbgFNOht (ORCPT
+        id S1726931AbgFNOkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 10:37:49 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:35990 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbgFNOhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 10:37:47 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 42EB3201186;
-        Sun, 14 Jun 2020 16:37:45 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9D447201182;
-        Sun, 14 Jun 2020 16:37:41 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 09034402D0;
-        Sun, 14 Jun 2020 22:37:36 +0800 (SGT)
-From:   Biwen Li <biwen.li@oss.nxp.com>
-To:     shawnguo@kernel.org, ran.wang_1@nxp.com, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jiafei.pan@nxp.com, Biwen Li <biwen.li@nxp.com>
-Subject: [v2 3/4] arm64: dts: ls1012a/ls1043a/ls1046a/ls1088a/ls208xa: add ftm_alarm0 node
-Date:   Sun, 14 Jun 2020 22:32:05 +0800
-Message-Id: <20200614143206.24993-3-biwen.li@oss.nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200614143206.24993-1-biwen.li@oss.nxp.com>
-References: <20200614143206.24993-1-biwen.li@oss.nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Sun, 14 Jun 2020 10:40:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44812 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726717AbgFNOkZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 10:40:25 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FBECC05BD43
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 07:40:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=Mr+YAzLD99XJJr7FqlLfOzEn6BvtdNusuprn3XV2Rvc=; b=HJpq5dfLZkPD8vSjn03StGVsVx
+        +rpnzrhiNwX890IOUzCZ82hNyByeK0oDCBdAA9hae4vBl2glafmbmek7KcQc3qZ8Dm/OQciZR0D0/
+        cl3+Hs+sVrAOowB/hBm5OvIcYLDVqpokJI0NNF5DSwMWuJ017kvR3koz/Idi0gn4vBd8S379NSSNR
+        57QBvi50iFPXfE46ZcCcXn9wxc3LpAR6GNf/ClKpz9vdSlK2Y/5mxdP3yEX5hwaGouJ9iAN8FUnLp
+        CKD19pdTCmggZJwyuCsTG61YmDefAbFmLHj0v3HoxW5IlwgHBy5MIkq1G1bdyotsA+Bw9+kn0ADdc
+        ptE5SzXw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jkTo0-0000Ep-PX; Sun, 14 Jun 2020 14:40:16 +0000
+Subject: Re: [Cocci] coccinelle issues
+To:     Julia Lawall <julia.lawall@inria.fr>
+Cc:     LKML <linux-kernel@vger.kernel.org>, cocci@systeme.lip6.fr
+References: <b14e6d1d-afa0-5c28-547a-9bb1a987f6fd@infradead.org>
+ <alpine.DEB.2.22.394.2006140932490.2849@hadrien>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <dadeaa1d-1146-c4b1-e757-14e9791dac59@infradead.org>
+Date:   Sun, 14 Jun 2020 07:40:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <alpine.DEB.2.22.394.2006140932490.2849@hadrien>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Biwen Li <biwen.li@nxp.com>
+On 6/14/20 12:39 AM, Julia Lawall wrote:
+> 
+> 
+> On Sat, 13 Jun 2020, Randy Dunlap wrote:
+> 
+>> Hi,
+>>
+>> OK, I've not used Coccinelle and now I am trying to use it.
+>> It seems that I am having a few issues.
+>> The primary one is when I run spatch (via 'make coccicheck' in
+>> the kernel source tree), it tells me:
+>>
+>> Python error: No module named coccilib.elems
+>>
+>> I do see "elems.py" in /usr/local/lib64/coccinelle/python/coccilib.
+>>
+>> I am using coccinelle-master downloaded from github on
+>> Friday June 12, 2020.
+>>
+>>
+>> I have also made the following notes while building/installing it.
+>>
+>>
+>> Note1: The latest coccinelle tarball is not actually available
+>> at the coccinelle home page although the kernel documentation says it is.
+> 
+> Yes, I'm aware of this problem.  We're not able to update the home page at
+> the moment.  This problem is being worked on.
+> 
+>>
+>> Note2: https://github.com/coccinelle/coccinelle/blob/master/install.txt
+>> says that 'spatch' is a script, but it seems to be a binary executable
+>> file.
+> 
+> Actually, it is a script, and the fact that you say it is a binary may be
+> the reason for your python problem.  Normally there is a script
+> (scripts/spatch) that make install puts in place that refers back to where
+> your Coccinelle is installed.
 
-The patch adds ftm_alarm0 DT node
-	- add new rcpm node
-	- add ftm_alarm0 node
-	- aliases ftm_alarm0 as rtc1
+Yes, I saw scripts/spatch, but that script is not what is installed in
+/usr/local/bin.
+(see more below)
 
-Signed-off-by: Biwen Li <biwen.li@nxp.com>
----
-Change in v2:
-	- use generic name
-	- use definition
+>> Note3: https://github.com/coccinelle/coccinelle/blob/master/install.txt
+>> probably should say to use 'sudo make install' instead of just
+>> 'make install', just like 'coccinelle.rst' file in the kernel tree says.
+> 
+> OK.  A lot of documentation for a lot of projects seems to omit the sudo,
+> but I have indeed never understood why.
+> 
+> Maybe try again with make distclean, ./autogen, ./configure, sudo make
+> install?
 
- arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi | 15 +++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 14 ++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 15 +++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 14 ++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 14 ++++++++++++++
- 5 files changed, 72 insertions(+)
+OK, I did all of those.
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-index 006e544..4742efe 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-@@ -22,6 +22,7 @@
- 		rtic-c = &rtic_c;
- 		rtic-d = &rtic_d;
- 		sec-mon = &sec_mon;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpus {
-@@ -512,6 +513,20 @@
- 					<0000 0 0 4 &gic 0 113 IRQ_TYPE_LEVEL_HIGH>;
- 			status = "disabled";
- 		};
-+
-+		rcpm: power-controller@1ee2140 {
-+			compatible = "fsl,ls1012a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1ee2140 0x0 0x4>;
-+			#fsl,rcpm-wakeup-cells = <1>;
-+		};
-+
-+		ftm_alarm0: timer@29d0000 {
-+			compatible = "fsl,ls1012a-ftm-alarm";
-+			reg = <0x0 0x29d0000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x20000>;
-+			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
-+			big-endian;
-+		};
- 	};
- 
- 	firmware {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index 3b641bd..55ceae7 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -27,6 +27,7 @@
- 		ethernet4 = &enet4;
- 		ethernet5 = &enet5;
- 		ethernet6 = &enet6;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpus {
-@@ -829,6 +830,19 @@
- 			big-endian;
- 		};
- 
-+		rcpm: power-controller@1ee2140 {
-+			compatible = "fsl,ls1043a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1ee2140 0x0 0x4>;
-+			#fsl,rcpm-wakeup-cells = <1>;
-+		};
-+
-+		ftm_alarm0: timer@29d0000 {
-+			compatible = "fsl,ls1043a-ftm-alarm";
-+			reg = <0x0 0x29d0000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x20000>;
-+			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
-+			big-endian;
-+		};
- 	};
- 
- 	firmware {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index d4c1da3..3c92c21 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -28,6 +28,7 @@
- 		ethernet5 = &enet5;
- 		ethernet6 = &enet6;
- 		ethernet7 = &enet7;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpus {
-@@ -765,6 +766,20 @@
- 			queue-sizes = <64 64>;
- 			big-endian;
- 		};
-+
-+		rcpm: power-controller@1ee2140 {
-+			compatible = "fsl,ls1046a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1ee2140 0x0 0x4>;
-+			#fsl,rcpm-wakeup-cells = <1>;
-+		};
-+
-+		ftm_alarm0: timer@29d0000 {
-+			compatible = "fsl,ls1046a-ftm-alarm";
-+			reg = <0x0 0x29d0000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x20000>;
-+			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
-+			big-endian;
-+		};
- 	};
- 
- 	reserved-memory {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index 36a7995..169f474 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -18,6 +18,7 @@
- 
- 	aliases {
- 		crypto = &crypto;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpus {
-@@ -781,6 +782,19 @@
- 				};
- 			};
- 		};
-+
-+		rcpm: power-controller@1e34040 {
-+			compatible = "fsl,ls1088a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1e34040 0x0 0x18>;
-+			#fsl,rcpm-wakeup-cells = <6>;
-+		};
-+
-+		ftm_alarm0: timer@2800000 {
-+			compatible = "fsl,ls1088a-ftm-alarm";
-+			reg = <0x0 0x2800000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0>;
-+			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-+		};
- 	};
- 
- 	firmware {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-index 3944ef1..0c74021 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-@@ -24,6 +24,7 @@
- 		serial1 = &serial1;
- 		serial2 = &serial2;
- 		serial3 = &serial3;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpu: cpus {
-@@ -763,6 +764,19 @@
- 			reg = <0x0 0x04000000 0x0 0x01000000>;
- 			interrupts = <0 12 4>;
- 		};
-+
-+		rcpm: power-controller@1e34040 {
-+			compatible = "fsl,ls208xa-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1e34040 0x0 0x18>;
-+			#fsl,rcpm-wakeup-cells = <6>;
-+		};
-+
-+		ftm_alarm0: timer@2800000 {
-+			compatible = "fsl,ls208xa-ftm-alarm";
-+			reg = <0x0 0x2800000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0>;
-+			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-+		};
- 	};
- 
- 	ddr1: memory-controller@1080000 {
+Is this expected?
+
+$ ./autogen
+cat: VERSION: No such file or directory
+cat: VERSION: No such file or directory
+cat: VERSION: No such file or directory
+cat: VERSION: No such file or directory
+cat: VERSION: No such file or directory
+cat: VERSION: No such file or directory
+cat: VERSION: No such file or directory
+cat: VERSION: No such file or directory
+cat: VERSION: No such file or directory
+cat: VERSION: No such file or directory
+cat: VERSION: No such file or directory
+
+
+spatch is installed in /usr/local/bin/spatch:
+
+$ ll /usr/local/bin/spatch
+-rwxr-xr-x 1 root root 15547736 Jun 14 07:32 /usr/local/bin/spatch*
+
+$ file /usr/local/bin/spatch
+/usr/local/bin/spatch: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/l, BuildID[sha1]=2b658c12a1a49deae24010b71d22d262988ce041, for GNU/Linux 3.2.0, with debug_info, not stripped
+
+
+I still get this runtime error:
+
+Python error: No module named coccilib.elems
+
 -- 
-2.7.4
+~Randy
 
