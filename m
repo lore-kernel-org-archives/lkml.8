@@ -2,144 +2,155 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B37C433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ABECC433DF
 	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 17:23:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5615B20776
+	by mail.kernel.org (Postfix) with ESMTP id 325DB20739
 	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 17:23:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f8Oh+lSo"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="ppYV3pfu";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="HWv8dzFQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgFNRXV (ORCPT
+        id S1727092AbgFNRXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 13:23:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41444 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726905AbgFNRXU (ORCPT
+        Sun, 14 Jun 2020 13:23:08 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:25770 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726905AbgFNRXG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 13:23:20 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28F88C05BD43;
-        Sun, 14 Jun 2020 10:23:20 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id y11so16427143ljm.9;
-        Sun, 14 Jun 2020 10:23:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DoRr46QhZzu0HYtQht+6OOn/uSyoSM/yNa2CkMx8bbU=;
-        b=f8Oh+lSoSCkVY/0YlicukXiWjUqLz/HYxP0U6jvwdYBi5gDOGiBl/oELXD49rw8YzR
-         E1qNDohgiFrb3XNcxlfWa/uzuVGnZHXd+ak8Uca1njRJaNmreEcmqY6v/sYDk90r+jpG
-         IeLL8EcukkC49BqJAHe8raVvYo5NjKs2xqDfOKGuAFine6bRWuvu/+0CtMO+wyHaKjo4
-         BaQOaMVGLAHi4bexKQuznFlg8QgLI6W2iOMGMlkllCLySgBrfeo7bSgKTZfqM1GIVuiT
-         Rw1eLxAg2V8tlWhxKuQl0t98kdYWR+hedXsk0TlMwrQev7a64vBT9ZtjeQFxzPMcdcUD
-         1OvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DoRr46QhZzu0HYtQht+6OOn/uSyoSM/yNa2CkMx8bbU=;
-        b=EQ5QSwiCbEW8Jwn4XOHU7y6UPaPLJNXjBgMYzuh6FZUGCWa8CmHdGgA8okEmvlvFaR
-         epF93L/yUsvs7Qj1FJgNRoBxg7tK7pbX1v1cN5owXfWjl3fgaElihBCJUddaYEwexXWH
-         HYQNWrPdsi9/CpS4QFnmZSS69rfAzLVvDEuHVDDvgpJhyKKkp+nGtXZzGY6ByWTX5HjB
-         3eHlGJrvwm4LAfrfmhdCtbMHRsu4Tn5hT1rIqobAQschWCmQl5J+FIfTorD9TGAy66Cx
-         kmdd9qujfrFIYtpk0JPQvMMpioxMmlTauhNC/cCQdL5z1UNoQBVdjt/tbD0tLLaj3esB
-         WMpQ==
-X-Gm-Message-State: AOAM533P60aZdFBIY0nj/CNB7dIkI9+4Xg5zhVy4/DOwZFN4/I3R3Vy0
-        5O+VPziRqfmvUqKpvomOND5brgSA
-X-Google-Smtp-Source: ABdhPJynr0Oqx6i5Cq+XWwMGVpYqQ9pToiSFkSouw+lixWm0qm2sn+p2xRDaApoDSVO8nh2oCCbdAQ==
-X-Received: by 2002:a2e:b8c2:: with SMTP id s2mr12065988ljp.368.1592155398456;
-        Sun, 14 Jun 2020 10:23:18 -0700 (PDT)
-Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.gmail.com with ESMTPSA id m14sm55144lfp.18.2020.06.14.10.23.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Jun 2020 10:23:17 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v7 0/6] Support DRM bridges on NVIDIA Tegra
-Date:   Sun, 14 Jun 2020 20:22:28 +0300
-Message-Id: <20200614172234.8856-1-digetx@gmail.com>
-X-Mailer: git-send-email 2.26.0
+        Sun, 14 Jun 2020 13:23:06 -0400
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 05EHKS3T022232;
+        Sun, 14 Jun 2020 10:22:59 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=UC2t9cOPa56YyaDDRH7B20GO+AqGGxmlmTJko6c2T1A=;
+ b=ppYV3pfuK1afmjx1JrpgTEKCyvuXDoJYdaA9O1T23HP+HBF577dv0596fyu8nZzJJ00k
+ B+wCq8KUpE6iixH4yZNO/pdSJeODdTBQcXSMLfPh4Jb7CFMJoAweYLGfsLGRRUst9Bf2
+ 1nTxr8k3SwajUxhCp3lzCxxI4DndbDTpJow= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0089730.ppops.net with ESMTP id 31mt9yc9u1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Sun, 14 Jun 2020 10:22:58 -0700
+Received: from NAM04-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Sun, 14 Jun 2020 10:22:57 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VKHs4AKjEHaCnm9hUxaK1RvnSOnV1oG80ZUE5biEBiKK9ychZDv4KJbOByWzbrlYligtaPb7loK2I8BowwigErG+Uo+srQ+l2e7nUHmlm6cl8ZPhLku/4pHfKf0DHLi9P6sheAFVVpJ/3XiSRnVdRUeUt3qkn4qgoh+Rnq2SrMIUQ9mW0H+jXlGNkEo/D36PuHQaZnC8rI4Q1i60CHWY34E+OxwDwCnYDCN3mBv2tRHnCIO+/QyKL17C2yfsfmUPHDjwarCsmv2cK9OXaxDUc2XvTFNa/2IcvLp+icrtuIPPgItfyGx5ktX70DY7msaE8kBq9P9Byw4G68Hs2b0SmA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UC2t9cOPa56YyaDDRH7B20GO+AqGGxmlmTJko6c2T1A=;
+ b=GP6d64dk5N0oREY4xir4vP32QL/CRqzDwJE2QpIWq8FOfse6ZFvy5LeRRKAoIiF22QdLKOjLU77aAUWJBUrVUIskI4HSSVT3OgbZEDTwuCwmEO+uZ+T60Wa5Hit20M2Qg2PSMLu1Hig9+6Y1CDegQulahl7onbv25Vfy8m9ncsddgYpqmIkmjNKuUZHnmbhyjqeuUfulHfQ/lCsj4czAytdf5u4q1sqQRdkfOGnY16koMHPYwp9qXXO3ud+iN4LXiJIhA5Dqjtud6aidkF+YBWxQfBqJXBzg9XeOqTL7pSUkJjzp+w8QAJwe3C3+kapCbb06zmqaJl65uEcq8zrSFg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UC2t9cOPa56YyaDDRH7B20GO+AqGGxmlmTJko6c2T1A=;
+ b=HWv8dzFQondlfTV5au2JyQmIXTrUOooWABTGitN1aK6F5scQoynVw/e22gMs9NZPql0OJ4Xzo+BBUX6TAzqpi1UBavUwxlj3ns/qfUz37xpV9Ssds2j2sbk9p72un2VH6CbB0Z9XUvvXAG6Iyc8fdwnAymrx3yIKHHBMzdKBDIM=
+Authentication-Results: bytedance.com; dkim=none (message not signed)
+ header.d=none;bytedance.com; dmarc=none action=none header.from=fb.com;
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
+ by BYAPR15MB2439.namprd15.prod.outlook.com (2603:10b6:a02:8e::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.25; Sun, 14 Jun
+ 2020 17:22:42 +0000
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::48e3:c159:703d:a2f1]) by BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::48e3:c159:703d:a2f1%5]) with mapi id 15.20.3088.028; Sun, 14 Jun 2020
+ 17:22:41 +0000
+Date:   Sun, 14 Jun 2020 10:22:38 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     Muchun Song <songmuchun@bytedance.com>
+CC:     <hannes@cmpxchg.org>, <mhocko@kernel.org>,
+        <vdavydov.dev@gmail.com>, <akpm@linux-foundation.org>,
+        <cai@lca.pw>, <cgroups@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm: memcontrol: Fix do not put the css reference
+Message-ID: <20200614172238.GA755479@carbon.DHCP.thefacebook.com>
+References: <20200614122653.98829-1-songmuchun@bytedance.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200614122653.98829-1-songmuchun@bytedance.com>
+X-ClientProxiedBy: BYAPR01CA0050.prod.exchangelabs.com (2603:10b6:a03:94::27)
+ To BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.DHCP.thefacebook.com (2620:10d:c090:400::5:f917) by BYAPR01CA0050.prod.exchangelabs.com (2603:10b6:a03:94::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.21 via Frontend Transport; Sun, 14 Jun 2020 17:22:40 +0000
+X-Originating-IP: [2620:10d:c090:400::5:f917]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: abb15d84-54bd-4322-3058-08d810878b08
+X-MS-TrafficTypeDiagnostic: BYAPR15MB2439:
+X-Microsoft-Antispam-PRVS: <BYAPR15MB243948C30EE915684CCDAEBCBE9F0@BYAPR15MB2439.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:639;
+X-Forefront-PRVS: 04347F8039
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 3t4cX3DQQVQJcLK+5rkdx1AapASXJbuPmPNyUfiV/8yOq4muy2PI2fQMzG+77HQqKntOzZBZ3+bvV0IX80O26XG94jRwrSbEPRiTPcdELT4IYKvhmZH2Vi9hyiRjTreOs+RqVlPwjz4JK8R06ixpCiVXCvidE4ahHXOyCA91G1QnPBjJPs+AMJ0qBA0y6adlJm++1fcFq/SopC5F16ewASpOL7yM+1HIzDoDBSIWFg2P5WQcQMtUq+JOVCcplRob/XW++dXpItStP/ww9qLKDYGP5c9rqBaLCDMhCMY7NfBtCW/W1d738fpbJUfmK28q5CVQZiIIwoufTHAcx7mvPg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(376002)(39860400002)(346002)(366004)(396003)(186003)(86362001)(8936002)(4744005)(66556008)(66946007)(6506007)(6916009)(5660300002)(2906002)(478600001)(16526019)(66476007)(52116002)(7696005)(83380400001)(33656002)(4326008)(55016002)(1076003)(316002)(8676002)(9686003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: oz9q69NdPmH9BTT/RR8MfL+hXiOeK/R55g/B7aXHEpu2orhimqKuhvwAmAhKbCFPFK8pigocnNCaVgQbMXuIQWpev3Z5itKA3HErQJ4PidMMQU/cC66rRP/TEmMj/M67EFKuBUrt7Co88KNLqijXBiLsB13ojBpy5UVL3CxIPq8RFjkEoPQ8GKNJOQ8FkIK1q58qCIxBgwtZpZoBKF+3aOq+Aptvnq4hQx5wGfnizzgswTUNe8sx7DvR74JyJqN+WqrSKzPeDtMmfAtDe76XDfuHu+CNJ7d0pxaYiNJTLvEvKSSDDjUUUQtF5vbmyO9nQUNKUD2K6T1cWA5aLLh35vsIFK0RrOErto+vIT1GLjbNdjAUb2cxUSYv4pgaJhahKOUwT/CEnxs+mSEQ97ZzXbVsBP1D5vqeX9o5Cm6qRMhcduBSoAf3f1HYDVZkik4GjRxb539Cub1ZKUWewME3Cx9h/a0Fq1Ylgv5EcBTR8F2ShLNKSp8Wf8dqF43mbbGIFau7qeZs/fVeLq+Bz9cD4Q==
+X-MS-Exchange-CrossTenant-Network-Message-Id: abb15d84-54bd-4322-3058-08d810878b08
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jun 2020 17:22:41.6201
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: kZgl4PM43yMox+1RFyZw7KwvERC74npHSjRb5KA9rcdk6ljihK6PCyL7HgJFE4iP
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2439
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-14_04:2020-06-12,2020-06-14 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=999
+ adultscore=0 impostorscore=0 mlxscore=0 priorityscore=1501
+ lowpriorityscore=0 clxscore=1011 bulkscore=0 malwarescore=0 spamscore=0
+ cotscore=-2147483648 phishscore=0 suspectscore=1 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006140153
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Sun, Jun 14, 2020 at 08:26:53PM +0800, Muchun Song wrote:
+> We should put the css reference when memory allocation failed.
+> 
+> Fixes: f0a3a24b532d ("mm: memcg/slab: rework non-root kmem_cache lifecycle management")
+> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+> ---
+>  mm/memcontrol.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 
-This series adds initial support for the DRM bridges to NVIDIA Tegra DRM
-driver. This is required by newer device-trees where we model the LVDS
-encoder bridge properly.
+Good catch, thank you!
 
-Changelog:
+Acked-by: Roman Gushchin <guro@fb.com>
 
-v7: - Removed the obscure unused structs (which GCC doesn't detect, but CLANG
-      does) in the patch "Wrap directly-connected panel into DRM bridge",
-      which was reported by kernel test robot for v6.
-
-v6: - Added r-b and acks from Rob Herring and Sam Ravnborg.
-
-    - Rebased on a recent linux-next, patches now apply without fuzz.
-
-v5: - Added new patches that make drm_of_find_panel_or_bridge() more usable
-      if graph isn't defined in a device-tree:
-
-        of_graph: add of_graph_get_local_port()
-        drm/of: Make drm_of_find_panel_or_bridge() to check graph's presence
-
-    - Updated "Support DRM bridges" patch to use drm_of_find_panel_or_bridge()
-      directly and added WARN_ON(output->panel || output->bridge) sanity-check.
-
-    - Added new "Wrap directly-connected panel into DRM bridge" patch, as
-      was suggested by Laurent Pinchart.
-
-v4: - Following review comments that were made by Laurent Pinchart to the v3,
-      we now create and use the "bridge connector".
-
-v3: - Following recommendation from Sam Ravnborg, the new bridge attachment
-      model is now being used, i.e. we ask bridge to *not* create a connector
-      using the DRM_BRIDGE_ATTACH_NO_CONNECTOR flag.
-
-    - The bridge is now created only for the RGB (LVDS) output, and only
-      when necessary. For now we don't need bridges for HDMI or DSI outputs.
-
-    - I noticed that we're leaking OF node in the panel's error code path,
-      this is fixed now by the new patch "Don't leak OF node on error".
-
-v2: - Added the new "rgb: Don't register connector if bridge is used"
-      patch, which hides the unused connector provided by the Tegra DRM
-      driver when bridge is used, since bridge provides its own connector
-      to us.
-
-Dmitry Osipenko (6):
-  of_graph: add of_graph_get_local_port()
-  drm/of: Make drm_of_find_panel_or_bridge() to check graph's presence
-  drm/tegra: output: Don't leak OF node on error
-  drm/tegra: output: Support DRM bridges
-  drm/tegra: output: rgb: Support LVDS encoder bridge
-  drm/tegra: output: rgb: Wrap directly-connected panel into DRM bridge
-
- drivers/gpu/drm/drm_of.c       |  13 ++++-
- drivers/gpu/drm/tegra/drm.h    |   2 +
- drivers/gpu/drm/tegra/output.c |  21 +++++--
- drivers/gpu/drm/tegra/rgb.c    | 102 +++++++++++++++++----------------
- drivers/of/property.c          |  32 ++++++++---
- include/linux/of_graph.h       |   7 +++
- 6 files changed, 114 insertions(+), 63 deletions(-)
-
--- 
-2.26.0
-
+> 
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 0b38b6ad547d..2323d811ee8e 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -2772,8 +2772,10 @@ static void memcg_schedule_kmem_cache_create(struct mem_cgroup *memcg,
+>  		return;
+>  
+>  	cw = kmalloc(sizeof(*cw), GFP_NOWAIT | __GFP_NOWARN);
+> -	if (!cw)
+> +	if (!cw) {
+> +		css_put(&memcg->css);
+>  		return;
+> +	}
+>  
+>  	cw->memcg = memcg;
+>  	cw->cachep = cachep;
+> -- 
+> 2.11.0
+> 
