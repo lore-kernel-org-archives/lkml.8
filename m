@@ -2,98 +2,136 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7E0C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 15:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B923C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 15:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6ED62071A
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 15:11:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="WojMRQ/H"
+	by mail.kernel.org (Postfix) with ESMTP id 599492071A
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 15:12:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592147574;
+	bh=Yu4oIIip+/ZJ5kqbC0h5tF0RcZI2sXFbGVjgLx+CI7I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0BzPq0FllTJ5ePsKPf2BfolbQfpXYyoaZmNX/VOvhpyQmEmpMv/7qOeiflDlPFdzt
+	 ngMTxGb89OgGG3NMKPnwjsX3lWzx7uyMT2m9ykoG8dmEBNM8CLAkV6AeXTFUufnhGb
+	 VWKrN5Nj1FzhfZh+mcD8w0iZ6pMvyzsEqGXQTiRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727017AbgFNPLI (ORCPT
+        id S1727023AbgFNPMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 11:11:08 -0400
-Received: from www381.your-server.de ([78.46.137.84]:41598 "EHLO
-        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbgFNPLH (ORCPT
+        Sun, 14 Jun 2020 11:12:53 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:38866 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbgFNPMw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 11:11:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
-         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=2DdAg+LgMBd0da3+ETcMF3kF+GgHUd3v2IJF8Z+RehE=; b=WojMRQ/HGD48weFeNClYtL1TYx
-        xS7hBXCEQWorRipPomN2p6KcuCRsXJi8Nc4JnoVU3NpqP6SWN3W6hwVGzs2QgjS+6VV2UjBqrun0r
-        mMulN2/Dl7lQys1FILORLf56YqqP9ZouTuhfgy7OxcGAOWesdzU52giqo1FVH0VIX5q2INuX3Nezs
-        NsF4vbU6C35QYjh1E7yaU/cPTCixz7uenHN0GtHnZ1dO6kp3OjUNoLHQl3ezS8gBxKHJE1NcIflQo
-        0cfhIIAS68MGNx28cMfUuqFwDyXPr5Uixl++4jVmV3XmFvAT/j/8H7ok4K+14RgMnGZDNCZ1otBE6
-        JF/osOWg==;
-Received: from sslproxy01.your-server.de ([78.46.139.224])
-        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <lars@metafoo.de>)
-        id 1jkUHd-0002I6-7W; Sun, 14 Jun 2020 17:10:53 +0200
-Received: from [82.135.70.239] (helo=[192.168.178.20])
-        by sslproxy01.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <lars@metafoo.de>)
-        id 1jkUHc-000Rve-TY; Sun, 14 Jun 2020 17:10:52 +0200
-Subject: Re: [PATCH v3 06/13] iio: imu: inv_icm42600: add temperature sensor
- support
-To:     Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>,
-        jic23@kernel.org, robh+dt@kernel.org, robh@kernel.org,
-        mchehab+huawei@kernel.org, davem@davemloft.net,
-        gregkh@linuxfoundation.org
-Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200608204250.3291-1-jmaneyrol@invensense.com>
- <20200608204250.3291-7-jmaneyrol@invensense.com>
-From:   Lars-Peter Clausen <lars@metafoo.de>
-Message-ID: <fd4918b6-a55f-4047-7f18-b796a8ccd020@metafoo.de>
-Date:   Sun, 14 Jun 2020 17:10:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sun, 14 Jun 2020 11:12:52 -0400
+Received: by mail-ed1-f67.google.com with SMTP id c35so9696582edf.5;
+        Sun, 14 Jun 2020 08:12:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pXf+9dtzzm6A97xwI2jlmo0hWvabn12gHNzGHXfcFq0=;
+        b=t+dC4sVbWT49TnBxreYn1kdDWXusrXEerjg3Yj3NRbSDXgqGk+qXfUT4HyKzTce2hg
+         Lk3Z3dr9uhy04BL9Fd4u6X+s/v5JhNQeRB0ZOoh2216fhMy+dvjP1iwjvJsx36mLX/+k
+         8LCwtIf89fGvaxb0gWs6NZNYTVBRhCbDTz4LizqPz+n1CC06VbLkPPMxJPwEG0Rx3gBO
+         EbIdyfrTJvRbE3NiM36n13SKA85QXZpCmX/S390kG3HkE70dO0ggjAX2x7ZxOtMxU11T
+         5ZqWeltUgo6gtOqMzrQKpqDnU8X+bNvjVCJ2cqMWxlMUucucNFHQvg37D5cqah54ofH5
+         uQpw==
+X-Gm-Message-State: AOAM530oVIL1wvkR35jdAioG06XkQiIV3f4RTMH/GBlgP6Tw/3ld/1z3
+        J9lb1wIq7cl+vh5jq4SEM+4=
+X-Google-Smtp-Source: ABdhPJwg6H4LSJOfgMUQ1Y0HV4ws4QLsMZDoOy+9RpWfhHandFMrpjez05/qk4UeD9ov+ev5Us8lHA==
+X-Received: by 2002:aa7:c2c7:: with SMTP id m7mr19925837edp.148.1592147570528;
+        Sun, 14 Jun 2020 08:12:50 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.184])
+        by smtp.googlemail.com with ESMTPSA id l8sm7255755ejc.85.2020.06.14.08.12.49
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 14 Jun 2020 08:12:49 -0700 (PDT)
+Date:   Sun, 14 Jun 2020 17:12:47 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Wolfram Sang <wsa@kernel.org>, stable@vger.kernel.org
+Subject: Re: [PATCH 2/2] spi: spi-fsl-dspi: Initialize completion before
+ possible interrupt
+Message-ID: <20200614151247.GA2494@kozik-lap>
+References: <1592132154-20175-1-git-send-email-krzk@kernel.org>
+ <1592132154-20175-2-git-send-email-krzk@kernel.org>
+ <CA+h21ho_pa0H2MG-aAmUCFj37aYW4es-2V75P4KL-Zjq7qtfRQ@mail.gmail.com>
+ <20200614111829.GA9694@kozik-lap>
+ <CA+h21hqE3RbD2XTBbcRsMhsO2OaZ65tAaevFOr00p9ezu8O+iA@mail.gmail.com>
+ <CA+h21hoVjJkGyxTEnh2Bixjoqxb12k-KK37U4Xy-27ntZz8aTw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200608204250.3291-7-jmaneyrol@invensense.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Authenticated-Sender: lars@metafoo.de
-X-Virus-Scanned: Clear (ClamAV 0.102.3/25843/Sun Jun 14 14:53:02 2020)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CA+h21hoVjJkGyxTEnh2Bixjoqxb12k-KK37U4Xy-27ntZz8aTw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/8/20 10:42 PM, Jean-Baptiste Maneyrol wrote:
-> +	case IIO_CHAN_INFO_PROCESSED:
-> +		ret = iio_device_claim_direct_mode(indio_dev);
-> +		if (ret)
-> +			return ret;
-> +		ret = inv_icm42600_temp_read(st, &temp);
-> +		iio_device_release_direct_mode(indio_dev);
-> +		if (ret)
-> +			return ret;
-> +		*val = temp;
-> +		return IIO_VAL_INT;
-> +	case IIO_CHAN_INFO_SCALE:
-> +		*val = 483;
-> +		*val2 = 91787;
-> +		return IIO_VAL_INT_PLUS_MICRO;
-> +	case IIO_CHAN_INFO_OFFSET:
-> +		*val = 25000;
-> +		return IIO_VAL_INT;
+On Sun, Jun 14, 2020 at 04:43:28PM +0300, Vladimir Oltean wrote:
+> On Sun, 14 Jun 2020 at 16:39, Vladimir Oltean <olteanv@gmail.com> wrote:
+> >
+> > On Sun, 14 Jun 2020 at 14:18, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > >
+> > > On Sun, Jun 14, 2020 at 02:14:15PM +0300, Vladimir Oltean wrote:
+> > > > On Sun, 14 Jun 2020 at 13:56, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > > > >
+> > > > > If interrupt fires early, the dspi_interrupt() could complete
+> > > > > (dspi->xfer_done) before its initialization happens.
+> > > > >
+> > > > > Fixes: 4f5ee75ea171 ("spi: spi-fsl-dspi: Replace interruptible wait queue with a simple completion")
+> 
+> Also please note that this patch merely replaced an
+> init_waitqueue_head with init_completion. But the "bug" (if we can
+> call it that) originates from even before.
 
-If the data is returned processed there is no need to specify scale and 
-offset.
+Yeah, I know, the Fixes is not accurate. Backport to earlier kernels
+would be manual so I am not sure if accurate Fixes matter.
 
-But since the transformation to turn the data into standard units is a 
-simple linear transform the preferred way to handle this is to return 
-RAW data and specify scale and offset.
+> 
+> > > > > Cc: <stable@vger.kernel.org>
+> > > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > > > > ---
+> > > >
+> > > > Why would an interrupt fire before spi_register_controller, therefore
+> > > > before dspi_transfer_one_message could get called?
+> > > > Is this master or slave mode?
+> > >
+> > > I guess practically it won't fire.  It's more of a matter of logical
+> > > order and:
+> > > 1. Someone might fix the CONFIG_DEBUG_SHIRQ_FIXME one day,
+> >
+> > And what if CONFIG_DEBUG_SHIRQ_FIXME gets fixed? I uncommented it, and
+> > still no issues. dspi_interrupt checks the status bit of the hw, sees
+> > there's nothing to do, and returns IRQ_NONE.
+
+Indeed, still the logical way of initializing is to do it before any
+possible use.
+
+> >
+> > > 2. The hardware is actually initialized before and someone could attach
+> > >    to SPI bus some weird device.
+> > >
+> >
+> > Some weird device that does what?
+
+You never know what people will connect to a SoM :).
+
+Wolfram made actually much better point - bootloaders are known to
+initialize some things and leaving them in whatever state, assuming that
+Linux kernel will redo any initialization properly.
+
+Best regards,
+Krzysztof
 
