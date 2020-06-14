@@ -2,156 +2,115 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED031C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 02:21:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2585C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 02:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C675820747
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 02:21:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="inDQYcmH"
+	by mail.kernel.org (Postfix) with ESMTP id 892C820747
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 02:22:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592101333;
+	bh=0JAkCDc+ufxK2P5Y8kYrWkcegiagKbGnUTQPJQBz3mU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=HUbPCbEv4VU7UFg2cdjn3WtCCiLS9pHf2GRUbjSGeDh2C4MHBCbYWZp886Gwo0WhG
+	 LrjzvHPs2Hn2UD9InuRKUQJQ6iQMe3xKZfuY6XjPaMl4uL0/LBD2eHg7tjWVhbXpVq
+	 OZoFFYJ17LLHsHKPbYPh+XhVFqzeYrUVtyY8H6hY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbgFNCV1 (ORCPT
+        id S1726602AbgFNCWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 22:21:27 -0400
-Received: from mta-p5.oit.umn.edu ([134.84.196.205]:44742 "EHLO
-        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbgFNCV0 (ORCPT
+        Sat, 13 Jun 2020 22:22:12 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:61901 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726455AbgFNCWL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 22:21:26 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 49kyrP1L1sz9vHfJ
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 02:21:25 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p5.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Nj4t_id0TdDo for <linux-kernel@vger.kernel.org>;
-        Sat, 13 Jun 2020 21:21:25 -0500 (CDT)
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 49kyrN6nZFz9vHdV
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 21:21:24 -0500 (CDT)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p5.oit.umn.edu 49kyrN6nZFz9vHdV
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p5.oit.umn.edu 49kyrN6nZFz9vHdV
-Received: by mail-il1-f197.google.com with SMTP id n2so9475096ilq.4
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 19:21:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1skhAYqgTNSWsq4lvqV5pXURB90mGpd6sDboa81hzn4=;
-        b=inDQYcmHcL3Cz+asrBz/w7/AH+tbLoHWzIu2j3/vBKxYRotaYrR5dtjBlReiW10muR
-         JgRA7bR5vnj1ZLaL/RZraj1F3mx2KnqSqFmaI0AN1pl7t3wXWBnHQtOwIfAiEqxfhDwV
-         HKUtr3/gv03Oz+PzAaaeW8sVCHIlPPzRLIpmlfBvilKpr1GJWbfuWfSLNFDpXlZKwGhc
-         AjwoKU9MfTAeNWiZ1q47UyU7QzPSNrEgTkJ73Byh6v5PoKL7iiSeU/4R35njyzj/5+uT
-         qCxwAwiiUTmGJIYYBX51YNcIcbOIgx4uvW6caEEPkoLiC+gnepFHBVifLyZ9PhjKnCD8
-         ZIvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1skhAYqgTNSWsq4lvqV5pXURB90mGpd6sDboa81hzn4=;
-        b=aUlppBqTdCv3UgNMu3Tnm/rTfztFK8jKpG5G68KlRVrd8b1rl0XYRtYbS014VphGE3
-         ox0QwLTuDjo0X9vSwjQFw7b74NbgEXp01iv4Us54ZXr4jVJdBqtGkuYVCZXHpQ2k/ixh
-         k8VzddSN7q6z2BSBnLNG7zCg0PlAHmIxqQoFGL4yxlMQp6Bz4f1RF/QnWVWLDU7b00Hg
-         QHKfpqYn7N6IcAXi9CE/1JTQNcf01DflFMXmihkmX39sEY5LRHCauPYP1vAKIuK8XkRD
-         M+WLD0tWYFuInZxSNiunJ5G3cS+pgKaLAiwTjko62jxQM8K5mJ+Wtkchp1Nm81Ff3ZQ3
-         xysQ==
-X-Gm-Message-State: AOAM530CRCBpyWi+ZGHSIi4Y2XnhM6NMkLqM9AJDKGlTjG1MhX4Ql8s0
-        oURZ3qMI5GHN/EQmsCHK+gxoPVU2fZ3OQTyVHIIZnt2C78JCFVad29tfutPaVA/Nfoz/OPAJqTc
-        KMndUDOCCkkJAFu3E3OeAt9OyoGbz
-X-Received: by 2002:a92:6a06:: with SMTP id f6mr19738336ilc.89.1592101284491;
-        Sat, 13 Jun 2020 19:21:24 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwE+vPbigALAessccDcAKFOmVWqMDFxxHN2H7lviB9iL6LRnhGo3tuBBjuUyQNOGb53QjP8Ew==
-X-Received: by 2002:a92:6a06:: with SMTP id f6mr19738330ilc.89.1592101284325;
-        Sat, 13 Jun 2020 19:21:24 -0700 (PDT)
-Received: from syssec1.cs.umn.edu ([2607:ea00:101:3c74:49fa:9c47:e40b:9c40])
-        by smtp.gmail.com with ESMTPSA id l26sm5762514ild.59.2020.06.13.19.21.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Jun 2020 19:21:23 -0700 (PDT)
-From:   Aditya Pakki <pakki001@umn.edu>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, wu000273@umn.edu,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/radeon: Fix reference count leaks caused by pm_runtime_get_sync
-Date:   Sat, 13 Jun 2020 21:21:22 -0500
-Message-Id: <20200614022122.124908-1-pakki001@umn.edu>
-X-Mailer: git-send-email 2.25.1
+        Sat, 13 Jun 2020 22:22:11 -0400
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 05E2Lisg007515
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 11:21:45 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 05E2Lisg007515
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1592101305;
+        bh=bkNCBeYotHt6hVdWI79jzm0i1HG49lYkucSsQujnZdg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=HXd0hnmBeVbbUiw4gdx7RDZm/Krurd3oGeP5v6lHp+nbqMh8fqXdiYdYRaXlGEX68
+         hHiF0VErRYszXXO7FsCvPz/dGwKZOvSwfcFMPYv1lLjPr/TM86ydzdhsHykb+MTeyk
+         EUF5aRwM/15s8Iz3lhxRC9CDpcYxl7m3kSiLrvzClAIWMBLa8Ar47lirOCOu1UzEY7
+         lYS1o84xy9Edwcrq0GjO1u14k7X/j3b9po5GYeSsjyLyrzmSopctdIHFKXhowfYt28
+         u0HjDXlarLQ8t3xG7p4JdHo0gwJ26n04e6EDJlEK15Z8UHIWAoYv3YH+2sWEAFeM+0
+         k2qY7nAmbe8uw==
+X-Nifty-SrcIP: [209.85.217.51]
+Received: by mail-vs1-f51.google.com with SMTP id q2so7474920vsr.1
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 19:21:44 -0700 (PDT)
+X-Gm-Message-State: AOAM530FDGUh51X8pq1gB5NkZ8LscY0KK4fe4zOVVYfUP7ZgQ4r7xPB9
+        kin2JQHGJIS6EZlv0zKj2gBF/yJJiBdbAOOkVyM=
+X-Google-Smtp-Source: ABdhPJw0pKuVRnI8PJdW3xi+AUeEJ5GVhq6sIqa6FZMzXuj9FcPx+YAkrXR0B6NS1V1p5je4bZcdVvwSda40fuABke4=
+X-Received: by 2002:a67:2d42:: with SMTP id t63mr14751077vst.181.1592101303358;
+ Sat, 13 Jun 2020 19:21:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAKwvOdnddAjiXDKA8fp3n2NN+R=Syp2N5DHbp1j=VRzM1dNnRw@mail.gmail.com>
+ <20200611220339.3971675-1-nivedita@alum.mit.edu> <CAKwvOdksFqf11-sdLrvNe4wrRvyAB2mVfwKU4KkNsapSnN_tRw@mail.gmail.com>
+In-Reply-To: <CAKwvOdksFqf11-sdLrvNe4wrRvyAB2mVfwKU4KkNsapSnN_tRw@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sun, 14 Jun 2020 11:21:07 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQAZ3PFvvj7M_AYZKo4uwui1DaJyjebWLmpnp-ism_=mQ@mail.gmail.com>
+Message-ID: <CAK7LNAQAZ3PFvvj7M_AYZKo4uwui1DaJyjebWLmpnp-ism_=mQ@mail.gmail.com>
+Subject: Re: [PATCH v2] Makefile: Improve compressed debug info support detection
+To:     Nick Desaulniers <ndesaulniers@google.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Fangrui Song <maskray@google.com>,
+        Rong Chen <rong.a.chen@intel.com>,
+        kernel test robot <lkp@intel.com>, kbuild-all@lists.01.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On calling pm_runtime_get_sync() the reference count of the device
-is incremented. In case of failure, decrement the
-reference count before returning the error.
+On Fri, Jun 12, 2020 at 8:39 AM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> On Thu, Jun 11, 2020 at 3:03 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> >
+> > Commit
+> >   10e68b02c861 ("Makefile: support compressed debug info")
+> > added support for compressed debug sections.
+> >
+> > Support is detected by checking
+> > - does the compiler support -gz=zlib
+> > - does the assembler support --compressed-debug-sections=zlib
+> > - does the linker support --compressed-debug-sections=zlib
+> >
+> > However, the gcc driver's support for this option is somewhat
+> > convoluted. The driver's builtin specs are set based on the version of
+> > binutils that it was configured with. It reports an error if the
+> > configure-time linker/assembler (i.e., not necessarily the actual
+> > assembler that will be run) do not support the option, but only if the
+> > assembler (or linker) is actually invoked when -gz=zlib is passed.
+> >
+> > The cc-option check in scripts/Kconfig.include does not invoke the
+> > assembler, so the gcc driver reports success even if it does not support
+> > the option being passed to the assembler.
+> >
+> > Because the as-option check passes the option directly to the assembler
+> > via -Wa,--compressed-debug-sections=zlib, the gcc driver does not see
+> > this option and will never report an error.
+>
+> Thanks for expanding on the failure.
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+>
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
----
- drivers/gpu/drm/radeon/radeon_display.c | 4 +++-
- drivers/gpu/drm/radeon/radeon_drv.c     | 4 +++-
- drivers/gpu/drm/radeon/radeon_kms.c     | 4 +++-
- 3 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/radeon/radeon_display.c b/drivers/gpu/drm/radeon/radeon_display.c
-index 35db79a168bf..df1a7eb73651 100644
---- a/drivers/gpu/drm/radeon/radeon_display.c
-+++ b/drivers/gpu/drm/radeon/radeon_display.c
-@@ -635,8 +635,10 @@ radeon_crtc_set_config(struct drm_mode_set *set,
- 	dev = set->crtc->dev;
- 
- 	ret = pm_runtime_get_sync(dev->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_autosuspend(dev->dev);
- 		return ret;
-+	}
- 
- 	ret = drm_crtc_helper_set_config(set, ctx);
- 
-diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
-index bbb0883e8ce6..62b5069122cc 100644
---- a/drivers/gpu/drm/radeon/radeon_drv.c
-+++ b/drivers/gpu/drm/radeon/radeon_drv.c
-@@ -549,8 +549,10 @@ long radeon_drm_ioctl(struct file *filp,
- 	long ret;
- 	dev = file_priv->minor->dev;
- 	ret = pm_runtime_get_sync(dev->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_autosuspend(dev->dev);
- 		return ret;
-+	}
- 
- 	ret = drm_ioctl(filp, cmd, arg);
- 	
-diff --git a/drivers/gpu/drm/radeon/radeon_kms.c b/drivers/gpu/drm/radeon/radeon_kms.c
-index c5d1dc9618a4..99ee60f8b604 100644
---- a/drivers/gpu/drm/radeon/radeon_kms.c
-+++ b/drivers/gpu/drm/radeon/radeon_kms.c
-@@ -638,8 +638,10 @@ int radeon_driver_open_kms(struct drm_device *dev, struct drm_file *file_priv)
- 	file_priv->driver_priv = NULL;
- 
- 	r = pm_runtime_get_sync(dev->dev);
--	if (r < 0)
-+	if (r < 0) {
-+		pm_runtime_put_autosuspend(dev->dev);
- 		return r;
-+	}
- 
- 	/* new gpu have virtual address space support */
- 	if (rdev->family >= CHIP_CAYMAN) {
+Applied to linux-kbuild/fixes.
+Thanks.
+
+
+
+
+
 -- 
-2.25.1
-
+Best Regards
+Masahiro Yamada
