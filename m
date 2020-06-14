@@ -2,189 +2,198 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F3AC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 17:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D8EC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 17:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 492DD20747
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 17:17:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 374082071A
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 17:21:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QAHhEFxe"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earth.li header.i=@earth.li header.b="cObSm3ws"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbgFNRQu (ORCPT
+        id S1727074AbgFNRUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 13:16:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40450 "EHLO
+        Sun, 14 Jun 2020 13:20:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726966AbgFNRQs (ORCPT
+        with ESMTP id S1726921AbgFNRUW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 13:16:48 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1B9DC03E969
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 10:16:46 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id g10so12358365wmh.4
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 10:16:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1NB/Urk4sJ7NmljdwQD2Dnqq/4/xbrUeJIHIJ24wA9w=;
-        b=QAHhEFxeJmo0Om8T1XowjgXKEOtxoTEUtMZtDrPDZ16145txGi0czO09BgNHN6gHKc
-         Hqng+qmsvf0PiYElL5AYpW0PlOZar/aOBcvHd1iMzOfCMA9Qz5zA50S1NrmxuZ/DueoO
-         F20OgRGR60ysi4D1Xieo5pYVvVpPUfFqsXIKHRmamJAxD18hB+RXmqa5K2JpeAmJJG3/
-         lzF83lZZPc62cgwg67PFw60FRz0XJm1BqWuzxfS3qFVm+NNwvel93rCRiQB+E+araGBV
-         YaJ/eOuO7WhyU6kpAYespn4cTCZcBG8/JnTgfH/6xHCHA53xX36xR4Ing06Qdw9Q7p6i
-         Ed1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1NB/Urk4sJ7NmljdwQD2Dnqq/4/xbrUeJIHIJ24wA9w=;
-        b=d8h6OUBlrEfQCxQDfEIGUwxXwe6eKKFOkQ14jLAoZ61LSs5hknRTdUjICYvivQGLxp
-         VDJU44ehiKW6UT84a1ZcOwBb8RQtTnQB63Ricb5G++kPsMFHKA94Aa8X+SF1fhEgoyS9
-         Xv/XldEZZ01jdrZcQlSyWJSi2jkC+l0I9blIg49MiUSUxFbm5kQkg2Fxh5FsO5Sb9dJm
-         PaDaEnrVDpmZm0P4ZvYvPb6FreM91AGaju35nzTpMsim39o/2I+xzSCS7KOwAUjsAsac
-         j/qNmaBsWhQZ2fol/e0lSqij6PeFMbaRPElFzIyWuN55Dv+1Wn5aQHEB8rZ0XG8Paztj
-         QT1g==
-X-Gm-Message-State: AOAM533jbcYAj4iXar0sfAJsQnTjedpcKbnkU93Vk3rhTW100EYs/vyI
-        otg6q9v3Ixki/SAp/VC2mOne80+baIh9TZwMY4l9RQ==
-X-Google-Smtp-Source: ABdhPJyN4KeTIsKZyv/xnv0GBlMgsrAn8BwQKjsw6BJ2Bjm3+v4PjEme/I0FaAaWCNt3azLN5km5AF5DB41xZAPtEpw=
-X-Received: by 2002:a1c:2082:: with SMTP id g124mr9383717wmg.21.1592155004853;
- Sun, 14 Jun 2020 10:16:44 -0700 (PDT)
+        Sun, 14 Jun 2020 13:20:22 -0400
+Received: from the.earth.li (the.earth.li [IPv6:2a00:1098:86:4d:c0ff:ee:15:900d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 081A7C05BD43;
+        Sun, 14 Jun 2020 10:20:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
+         s=the; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject
+        :Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=XXdAxRlWJJhbMn3pgE+3Xhvkc6IvWZxD6awKfKfAO9I=; b=cObSm3wsTCY3i1axrs9XEwCog4
+        bchJLL0Na5nIW0CEDBEF+HBL62Zca1KXECMO5/3kVo2qRhWYSIq9ebGfrPFSNomwvmvYL4NaP9c85
+        Tpe3MUIP6WNhqY3o3htgQr+wd2XbJjOHUVZEfk3nf2iisDBazY07e1Pu4JfYu/UbFfStoxcHF1kra
+        QWtOQgTn1TgfMm+SoWePhrri96e54IhQJUKoi5UiiCLiHU29sIk8aC8CyOEsMLaCSAAhW8Awr9WcP
+        o4V8vee03n4lO9rc04hkLbL4HHL2GJNOEl7tX3tcJSfcfaX7X5MC4+bWFkotCCWE0xcQIfV2dPipo
+        c8o3swkg==;
+Received: from noodles by the.earth.li with local (Exim 4.92)
+        (envelope-from <noodles@earth.li>)
+        id 1jkWIk-0003MZ-0w; Sun, 14 Jun 2020 18:20:10 +0100
+Date:   Sun, 14 Jun 2020 18:20:10 +0100
+From:   Jonathan McDowell <noodles@earth.li>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH v4 2/2] net: dsa: qca8k: Improve SGMII interface
+ handling
+Message-ID: <20200614172009.GA17897@earth.li>
+References: <cover.1592047530.git.noodles@earth.li>
+ <05dba86946541267e64438c2001aaeea16916391.1592047530.git.noodles@earth.li>
+ <CA+h21hoCb4w2s=KHT_nemFsYn-W9BctB=ycfTUb5DPdiW=SLiA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200614144534.237035-1-glider@google.com> <202006141000.B93DF245@keescook>
-In-Reply-To: <202006141000.B93DF245@keescook>
-From:   Alexander Potapenko <glider@google.com>
-Date:   Sun, 14 Jun 2020 19:16:33 +0200
-Message-ID: <CAG_fn=V0w2OShK+iQODkwdPoG094VpiPkhZ8O_F37m=g2XWwug@mail.gmail.com>
-Subject: Re: [PATCH] [RFC] security: allow using Clang's zero initialization
- for stack variables
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        James Morris <jmorris@namei.org>,
-        =?UTF-8?Q?Maciej_=C5=BBenczykowski?= <maze@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+h21hoCb4w2s=KHT_nemFsYn-W9BctB=ycfTUb5DPdiW=SLiA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 14, 2020 at 7:04 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Sun, Jun 14, 2020 at 04:45:34PM +0200, glider@google.com wrote:
-> > In addition to -ftrivial-auto-var-init=pattern (used by
-> > CONFIG_INIT_STACK_ALL now) Clang also supports zero initialization for
-> > locals enabled by -ftrivial-auto-var-init=zero.
-> > The future of this flag is still being debated, see
-> > https://bugs.llvm.org/show_bug.cgi?id=45497
-> > Right now it is guarded by another flag,
-> > -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang,
-> > which means it may not be supported by future Clang releases.
-> > Another possible resolution is that -ftrivial-auto-var-init=zero will
-> > persist (as certain users have already started depending on it), but the
-> > name of the guard flag will change.
+On Sat, Jun 13, 2020 at 11:10:49PM +0300, Vladimir Oltean wrote:
+> On Sat, 13 Jun 2020 at 14:32, Jonathan McDowell <noodles@earth.li> wrote:
 > >
-> > In the meantime, zero initialization has proven itself as a good
-> > production mitigation measure against uninitialized locals. Unlike
-> > pattern initialization, which has a higher chance of triggering existing
-> > bugs, zero initialization provides safe defaults for strings, pointers,
-> > indexes, and sizes. On the other hand, pattern initialization remains
-> > safer for return values.
-> > Performance-wise, the difference between pattern and zero initialization
-> > is usually negligible, although the generated code for zero
-> > initialization is more compact.
+> > This patch improves the handling of the SGMII interface on the QCA8K
+> > devices. Previously the driver did no configuration of the port, even if
+> > it was selected. We now configure it up in the appropriate
+> > PHY/MAC/Base-X mode depending on what phylink tells us we are connected
+> > to and ensure it is enabled.
 > >
-> > The proposed config, CONFIG_USE_CLANG_ZERO_INITIALIZATION, makes
-> > CONFIG_INIT_STACK_ALL use zero initialization if the corresponding flags
-> > are supported by Clang.
+> > Tested with a device where the CPU connection is RGMII (i.e. the common
+> > current use case) + one where the CPU connection is SGMII. I don't have
+> > any devices where the SGMII interface is brought out to something other
+> > than the CPU.
 > >
-> > Cc: Kees Cook <keescook@chromium.org>
-> > Cc: Nick Desaulniers <ndesaulniers@google.com>
-> > Signed-off-by: Alexander Potapenko <glider@google.com>
+> > Signed-off-by: Jonathan McDowell <noodles@earth.li>
 > > ---
-> >  Makefile                   | 15 ++++++++++++++-
-> >  security/Kconfig.hardening | 16 ++++++++++++++++
-> >  2 files changed, 30 insertions(+), 1 deletion(-)
+> >  drivers/net/dsa/qca8k.c | 33 ++++++++++++++++++++++++++++++++-
+> >  drivers/net/dsa/qca8k.h | 13 +++++++++++++
+> >  2 files changed, 45 insertions(+), 1 deletion(-)
 > >
-> > diff --git a/Makefile b/Makefile
-> > index fd31992bf918..2860bad7e39a 100644
-> > --- a/Makefile
-> > +++ b/Makefile
-> > @@ -802,9 +802,22 @@ KBUILD_CFLAGS    += -fomit-frame-pointer
-> >  endif
-> >  endif
+> > diff --git a/drivers/net/dsa/qca8k.c b/drivers/net/dsa/qca8k.c
+> > index dadf9ab2c14a..da7d2b92ed3e 100644
+> > --- a/drivers/net/dsa/qca8k.c
+> > +++ b/drivers/net/dsa/qca8k.c
+> > @@ -673,6 +673,9 @@ qca8k_setup(struct dsa_switch *ds)
+> >         /* Flush the FDB table */
+> >         qca8k_fdb_flush(priv);
 > >
-> > -# Initialize all stack variables with a pattern, if desired.
-> > +# Initialize all stack variables, if desired.
-> >  ifdef CONFIG_INIT_STACK_ALL
+> > +       /* We don't have interrupts for link changes, so we need to poll */
+> > +       priv->ds->pcs_poll = true;
 > > +
-> > +# Use pattern initialization by default.
-> > +ifndef CONFIG_USE_CLANG_ZERO_INITIALIZATION
-> >  KBUILD_CFLAGS        += -ftrivial-auto-var-init=pattern
-> > +else
-> > +
-> > +ifdef CONFIG_CC_HAS_AUTO_VAR_ZERO_INIT
-> > +# Future support for zero initialization is still being debated, see
-> > +# https://bugs.llvm.org/show_bug.cgi?id=45497. These flags are subject to being
-> > +# renamed or dropped.
-> > +KBUILD_CFLAGS        += -ftrivial-auto-var-init=zero -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang
-> > +endif
-> > +
-> > +endif
-> >  endif
->
-> I'd prefer this be split instead of built as a nested if (i.e. entirely
-> control section via the Kconfig -- see below).
->
-> >
-> >  DEBUG_CFLAGS := $(call cc-option, -fno-var-tracking-assignments)
-> > diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
-> > index af4c979b38ee..299d27c6d78c 100644
-> > --- a/security/Kconfig.hardening
-> > +++ b/security/Kconfig.hardening
-> > @@ -22,6 +22,9 @@ menu "Memory initialization"
-> >  config CC_HAS_AUTO_VAR_INIT
-> >       def_bool $(cc-option,-ftrivial-auto-var-init=pattern)
-> >
-> > +config CC_HAS_AUTO_VAR_ZERO_INIT
-> > +     def_bool $(cc-option,-ftrivial-auto-var-init=zero -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang)
-> > +
->
-> I'd like to be more specific here. Let's rename CC_HAS_AUTO_VAR_INIT to
-> CC_HAS_AUTO_VAR_INIT_PATTERN, and change the other to
-> CC_HAS_AUTO_VAR_INIT_ZERO (they then both match the word order of the
-> option, and the thing that changes is the last word).
->
-> >  choice
-> >       prompt "Initialize kernel stack variables at function entry"
-> >       default GCC_PLUGIN_STRUCTLEAK_BYREF_ALL if COMPILE_TEST && GCC_PLUGINS
-> > @@ -100,6 +103,19 @@ choice
-> >
-> >  endchoice
-> >
-> > +config USE_CLANG_ZERO_INITIALIZATION
-> > +     bool "Use Clang's zero initialization for local variables"
-> > +     depends on CC_HAS_AUTO_VAR_ZERO_INIT
-> > +     depends on INIT_STACK_ALL
-> > +     help
-> > +       If set, uses zeros instead of 0xAA to initialize local variables in
-> > +       INIT_STACK_ALL. Zeroing the stack provides safer defaults for strings,
-> > +       pointers, indexes, and sizes. The downsides are less-safe defaults for
-> > +       return values, and exposing fewer bugs where the underlying code
-> > +       relies on zero initialization.
-> > +       The corresponding flag isn't officially supported by Clang and may
-> > +       sooner or later go away or get renamed.
-> > +
->
-> Similarly, I'd like to rename INIT_STACK_ALL to INIT_STACK_ALL_PATTERN
-> and then add INIT_STACK_ALL_ZERO.
+> 
+> You can access ds directly here.
 
-What are the policies regarding keeping the existing config flags?
-Don't we need to preserve INIT_STACK_ALL?
+Good point, thanks.
+
+> >         return 0;
+> >  }
+> >
+> > @@ -681,7 +684,7 @@ qca8k_phylink_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
+> >                          const struct phylink_link_state *state)
+> >  {
+> >         struct qca8k_priv *priv = ds->priv;
+> > -       u32 reg;
+> > +       u32 reg, val;
+> >
+> >         switch (port) {
+> >         case 0: /* 1st CPU port */
+> > @@ -740,6 +743,34 @@ qca8k_phylink_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
+> >         case PHY_INTERFACE_MODE_1000BASEX:
+> >                 /* Enable SGMII on the port */
+> >                 qca8k_write(priv, reg, QCA8K_PORT_PAD_SGMII_EN);
+> > +
+> > +               /* Enable/disable SerDes auto-negotiation as necessary */
+> > +               val = qca8k_read(priv, QCA8K_REG_PWS);
+> > +               if (phylink_autoneg_inband(mode))
+> > +                       val &= ~QCA8K_PWS_SERDES_AEN_DIS;
+> > +               else
+> > +                       val |= QCA8K_PWS_SERDES_AEN_DIS;
+> > +               qca8k_write(priv, QCA8K_REG_PWS, val);
+> > +
+> > +               /* Configure the SGMII parameters */
+> > +               val = qca8k_read(priv, QCA8K_REG_SGMII_CTRL);
+> > +
+> > +               val |= QCA8K_SGMII_EN_PLL | QCA8K_SGMII_EN_RX |
+> > +                       QCA8K_SGMII_EN_TX | QCA8K_SGMII_EN_SD;
+> > +
+> > +               if (dsa_is_cpu_port(ds, port)) {
+
+> I don't see any device tree in mainline for qca,qca8334 that uses
+> SGMII on the CPU port, but there are some assumptions being made here,
+> and there are also going to be some assumptions made in the MAC
+> driver, and I just want to make sure that those assumptions are not
+> going to be incompatible, so I would like you to make some
+> clarifications.
+
+FWIW I have a DTS for the MikroTik RB3011 that should hopefully make it
+to 5.9 via the linux-msm tree, which has 2 qca,qca8337 devices, one
+connected via rgmii, one connected via sgmii. Sadly not chained to each
+other, instead connected to different CPU ethernet ports.
+
+> So there's a single SGMII interface which can go to port 0 (the CPU
+> port) or to port 6, right? The SGMII port can behave as an AN master
+> or as an AN slave, depending on whether MODE_CTRL is 1 or 2, or can
+> have a forced speed (if SERDES_AEN is disabled)?
+
+Yes.
+
+> We don't have a standard way to describe an SGMII AN master that is
+> not a PHY in the device tree, because I don't think anybody needed to
+> do that so far.
+>
+> Typically a MAC would describe the link towards the CPU port of the
+> switch as a fixed-link. In that case, if the phy-mode is sgmii, it
+> would disable in-band autoneg, because there's nothing really to
+> negotiate (the link speed and duplex is fixed). For these, I think the
+> expectation is that the switch does not enable in-band autoneg either,
+> and has a fixed-link too. Per your configuration, you would disable
+> SerDes AN, and you would configure the port as SGMII AN master (PHY),
+> but that setting would be ignored because AN is disabled.
+
+Right; this is the situation with my device. There's a fixed-link stanza
+in the DT.
+
+> In other configurations, the MAC might want to receive in-band status
+> from the CPU port. In those cases, your answer to that problem seems
+> to be to implement phylink ops on both drivers, and to set both to
+> managed = "in-band-status" (MLO_AN_INBAND). This isn't a use case
+> explicitly described by phylink (I would even go as far as saying that
+> MLO_AN_INBAND means to be an SGMII AN slave), but it would work
+> because of the check that we are a CPU port.
+
+> As for the case of a cascaded qca8334-to-qca8334 setup, this would
+> again work, because on one of the switches, dsa_is_cpu_port would be
+> true and on the other one it would be false.
+
+> So I'm not suggesting we should change anything, I just want to make
+> sure I understand if this is the reason why you are configuring it
+> like this.
+
+My primary concern was not breaking any existing users; after a reset
+the switch enabled AN on the SGMII port. I agree it's unlikely that this
+would be the case, but I erred on the side of caution, while also trying
+to handle what seem to be the sensible common cases.
+
+J.
+
+-- 
+He's weird? It's ok, I'm fluent in weird.
