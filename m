@@ -6,64 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D71DC433E1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD05C433DF
 	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 18:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DD1920739
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 18:55:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2258B2071A
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 18:55:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1592160932;
-	bh=lL1fGKkbZyXCQL2eS48VPf72RgVcfhKh0JitOJrCACI=;
+	bh=K4xDUOtGypMVSxo0Vi1uThZVPbJLPemsQEnMFSr/HGE=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=1pUsIIfB3Wp7eI++YzldYGQauYF8faOt+kI87/+H/tBmPSPxY8Iu64Mq4VxCDHz2l
-	 mUqI/16LjlH5sLVF6vPrvJKhV4hxCV4paBeSTnwGL59nbYCzOJ1fKJ1Wl4BYBkyRsy
-	 rcyYxw1bF2bMexld0SYy8bDmt99JQ4FkcyFYtxhI=
+	b=huWF2yO8UycrRgr/1pGXqp4OnMcAKzBTXbthnWa+tMJXGG3lCZKeJO1k/phHTxNgP
+	 xzCY6Q0olq5mtyQlqSLhbLTQQcdPTYTG2W4LpHI5WInk7b2lZr6erFaIfM4VnGIMxo
+	 tSK14eTmTfq7YmivFIQkVEDpWOaWWUSLubonRUvo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727788AbgFNSzb (ORCPT
+        id S1727089AbgFNSza (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 14:55:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51956 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726648AbgFNSza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 14 Jun 2020 14:55:30 -0400
-Subject: Re: Re: [GIT PULL] SafeSetID LSM changes for v5.8
+Received: from mail.kernel.org ([198.145.29.99]:51942 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726648AbgFNSz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 14:55:28 -0400
+Subject: Re: [GIT PULL] Btrfs updates for 5.8, part 2
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592160930;
-        bh=lL1fGKkbZyXCQL2eS48VPf72RgVcfhKh0JitOJrCACI=;
+        s=default; t=1592160928;
+        bh=K4xDUOtGypMVSxo0Vi1uThZVPbJLPemsQEnMFSr/HGE=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=XE839U3V2su0tyYzkgMs0yUglaKFI8iPJUiWpeubVn4TMR8wYsgzJusk2DwRiUo2u
-         CyhizDAUqAf3BdURJVibXgpIAZEa0OAUV55o7LZ8/01wx8dTTHabQJzU25Me4Ody7G
-         ZU7ZaE7ooKcP5EZfKzKyINBFm4AGOuQgOyT0o7r4=
+        b=maXewfQQyTyPay1Rfp+i3bcLD1g/E6BJsHPlSxmGT7jSHRmdzRisu5AIDI/vHkdTl
+         0A0rA84wy4zsWFArpkEhN8ELroBhnvST2bDCsYlZiK43kkuO5NEDKZJxPVvc/gnaVp
+         ThayHSu7xO3bfkx8O264EpIfpLTQr0mTXeeH55AY=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAJ-EccPGQ62yMK1Nmvie4qWzproSqb4POwAD4_0Nt62KLbGhqg@mail.gmail.com>
-References: <CAJ-EccOy4qDpbfrP5=KH40LSOx1F4-ciY2=hFv_c+goUHLJ6PQ@mail.gmail.com>
- <CAHk-=wiLXXR1+o4VAuw5MM3V1D8h6C6te3y8VMvW8iAJw6noJg@mail.gmail.com>
- <CAJ-EccPGQ62yMK1Nmvie4qWzproSqb4POwAD4_0Nt62KLbGhqg@mail.gmail.com>
+In-Reply-To: <cover.1592135316.git.dsterba@suse.com>
+References: <cover.1592135316.git.dsterba@suse.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAJ-EccPGQ62yMK1Nmvie4qWzproSqb4POwAD4_0Nt62KLbGhqg@mail.gmail.com>
-X-PR-Tracked-Remote: https://github.com/micah-morton/linux.git
- tags/LSM-add-setgid-hook-5.8-author-fix
-X-PR-Tracked-Commit-Id: 39030e1351aa1aa7443bb2da24426573077c83da
+X-PR-Tracked-Message-Id: <cover.1592135316.git.dsterba@suse.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git
+ for-5.8-part2-tag
+X-PR-Tracked-Commit-Id: 55e20bd12a56e06c38b953177bb162cbbaa96004
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 4a87b197c1da6b16608d5110709e0b3308e25dcd
-Message-Id: <159216093006.5153.590414223047911199.pr-tracker-bot@kernel.org>
-Date:   Sun, 14 Jun 2020 18:55:30 +0000
-To:     Micah Morton <mortonm@chromium.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>
+X-PR-Merge-Commit-Id: 9d645db853a4cd1b7077931491d0055602d3d420
+Message-Id: <159216092857.5153.16082036974540107892.pr-tracker-bot@kernel.org>
+Date:   Sun, 14 Jun 2020 18:55:28 +0000
+To:     David Sterba <dsterba@suse.com>
+Cc:     torvalds@linux-foundation.org, David Sterba <dsterba@suse.com>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 14 Jun 2020 11:03:58 -0700:
+The pull request you sent on Sun, 14 Jun 2020 13:56:05 +0200:
 
-> https://github.com/micah-morton/linux.git tags/LSM-add-setgid-hook-5.8-author-fix
+> git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.8-part2-tag
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/4a87b197c1da6b16608d5110709e0b3308e25dcd
+https://git.kernel.org/torvalds/c/9d645db853a4cd1b7077931491d0055602d3d420
 
 Thank you!
 
