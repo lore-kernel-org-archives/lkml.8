@@ -2,133 +2,85 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E3A5C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 20:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7458C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 20:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE6C62053B
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 20:00:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCC282071A
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 20:00:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727821AbgFNUAk (ORCPT
+        id S1727843AbgFNUAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 16:00:40 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:34687 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726648AbgFNUAk (ORCPT
+        Sun, 14 Jun 2020 16:00:53 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:34603 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726648AbgFNUAw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 16:00:40 -0400
-Received: from callcc.thunk.org (pool-100-0-195-244.bstnma.fios.verizon.net [100.0.195.244])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 05EK0Y1h027920
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 14 Jun 2020 16:00:35 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 2C2F342026D; Sun, 14 Jun 2020 16:00:34 -0400 (EDT)
-Date:   Sun, 14 Jun 2020 16:00:34 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     torvalds@linux-foundation.org
-Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] ext4 changes part 2 for 5.8
-Message-ID: <20200614200034.GA3294624@mit.edu>
+        Sun, 14 Jun 2020 16:00:52 -0400
+Received: from [37.163.176.33] (port=58546 helo=[192.168.43.3])
+        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1jkYoB-0007H9-7c; Sun, 14 Jun 2020 22:00:48 +0200
+Subject: Re: [RFC 2/4] regulator: lp87565: dt: remove duplicated section
+To:     Rob Herring <robh@kernel.org>, Keerthy <j-keerthy@ti.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Axel Lin <axel.lin@ingics.com>
+References: <20200603200319.16184-1-luca@lucaceresoli.net>
+ <20200603200319.16184-3-luca@lucaceresoli.net>
+ <20200612221954.GA3919662@bogus>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <532c0ac1-b520-3443-1f8f-12fd87011076@lucaceresoli.net>
+Date:   Sun, 14 Jun 2020 22:00:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In-Reply-To: <20200612221954.GA3919662@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 6b8ed62008a49751fc71fefd2a4f89202a7c2d4d:
+Hi Rob, Keerthy,
 
-  ext4: avoid unnecessary transaction starts during writeback (2020-06-03 23:16:56 -0400)
+On 13/06/20 00:19, Rob Herring wrote:
+> On Wed, Jun 03, 2020 at 10:03:17PM +0200, Luca Ceresoli wrote:
+>> The "Required properties:" section is copied verbatim for each of the two
+>> supported chips. In preparation to add a new chip variant make it a common
+>> section and keep the two examples to differentiate between the two chips.
+>>
+>> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+>> ---
+>>  .../devicetree/bindings/mfd/lp87565.txt       | 21 ++++---------------
+>>  1 file changed, 4 insertions(+), 17 deletions(-)
+> 
+> If you want to clean this up, can you convert it to DT schema?
 
-are available in the Git repository at:
+Sure, no problem. My only question is who should I set in the
+"maintainers" property.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git tags/ext4-for-linus-5.8-rc1-2
+Keerty, as the original author and TI employee, you surely know this
+chip series much better than I do. Would you like to be the maintainer
+for this binding document? Otherwise I can do it "best effort".
 
-for you to fetch changes up to 7b97d868b7ab2448859668de9222b8af43f76e78:
-
-  ext4, jbd2: ensure panic by fix a race between jbd2 abort and ext4 error handlers (2020-06-12 14:51:41 -0400)
-
-----------------------------------------------------------------
-This is the second round of ext4 commits for 5.8 merge window.  It
-includes the per-inode DAX support, which was dependant on the DAX
-infrastructure which came in via the XFS tree, and a number of
-regression and bug fixes; most notably the "BUG: using
-smp_processor_id() in preemptible code in ext4_mb_new_blocks" reported
-by syzkaller.
-
-----------------------------------------------------------------
-Eric Biggers (1):
-      ext4: avoid utf8_strncasecmp() with unstable name
-
-Ira Weiny (14):
-      fs: Remove unneeded IS_DAX() check in io_is_direct()
-      fs/stat: Define DAX statx attribute
-      Documentation/dax: Update Usage section
-      fs: Lift XFS_IDONTCACHE to the VFS layer
-      fs: Introduce DCACHE_DONTCACHE
-      fs/ext4: Narrow scope of DAX check in setflags
-      fs/ext4: Disallow verity if inode is DAX
-      fs/ext4: Change EXT4_MOUNT_DAX to EXT4_MOUNT_DAX_ALWAYS
-      fs/ext4: Update ext4_should_use_dax()
-      fs/ext4: Only change S_DAX on inode load
-      fs/ext4: Make DAX mount option a tri-state
-      fs/ext4: Remove jflag variable
-      fs/ext4: Introduce DAX inode flag
-      Documentation/dax: Update DAX enablement for ext4
-
-Jan (janneke) Nieuwenhuizen (1):
-      ext4: support xattr gnu.* namespace for the Hurd
-
-Jeffle Xu (1):
-      ext4: fix partial cluster initialization when splitting extent
-
-Ritesh Harjani (1):
-      ext4: mballoc: Use this_cpu_read instead of this_cpu_ptr
-
-Theodore Ts'o (2):
-      Enable ext4 support for per-file/directory dax operations
-      ext4: avoid race conditions when remounting with options that change dax
-
-yangerkun (1):
-      ext4: stop overwrite the errcode in ext4_setup_super
-
-zhangyi (F) (1):
-      ext4, jbd2: ensure panic by fix a race between jbd2 abort and ext4 error handlers
-
- Documentation/filesystems/dax.txt         | 142 ++++++++++++++++++++++++++++++++++++++++++++++++++++--
- Documentation/filesystems/ext4/verity.rst |   3 ++
- drivers/block/loop.c                      |   6 +--
- fs/dcache.c                               |  19 ++++++++
- fs/ext4/Makefile                          |   3 +-
- fs/ext4/dir.c                             |  16 ++++++
- fs/ext4/ext4.h                            |  27 ++++++++---
- fs/ext4/extents.c                         |   2 +-
- fs/ext4/ialloc.c                          |   2 +-
- fs/ext4/inode.c                           |  26 +++++++---
- fs/ext4/ioctl.c                           |  65 ++++++++++++++++++++-----
- fs/ext4/mballoc.c                         |   2 +-
- fs/ext4/super.c                           | 124 +++++++++++++++++++++++++++++++++--------------
- fs/ext4/verity.c                          |   5 +-
- fs/ext4/xattr.c                           |   2 +
- fs/ext4/xattr.h                           |   1 +
- fs/ext4/xattr_hurd.c                      |  51 ++++++++++++++++++++
- fs/jbd2/journal.c                         |  17 +++++--
- fs/stat.c                                 |   3 ++
- fs/xfs/xfs_icache.c                       |   4 +-
- fs/xfs/xfs_inode.h                        |   3 +-
- fs/xfs/xfs_super.c                        |   2 +-
- include/linux/dcache.h                    |   2 +
- include/linux/fs.h                        |  14 +++---
- include/linux/jbd2.h                      |   6 ++-
- include/uapi/linux/fs.h                   |   1 +
- include/uapi/linux/stat.h                 |   1 +
- include/uapi/linux/xattr.h                |   4 ++
- 28 files changed, 465 insertions(+), 88 deletions(-)
- create mode 100644 fs/ext4/xattr_hurd.c
+Regards,
+-- 
+Luca
