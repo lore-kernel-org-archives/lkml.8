@@ -2,124 +2,103 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB3BC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 13:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CE1C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 13:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F16EF20714
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 13:43:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T0mKqtpA"
+	by mail.kernel.org (Postfix) with ESMTP id 3541620714
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 13:46:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592142382;
+	bh=QbBE4shFaNYjMdGoSGuJ5GF3khrICZukXMlsb5/RyVI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=p+0R89/wRr8I71W0Oi31M+tkZdgZc3btVpf5n6gAjbqWgj/SJtMM+Klztq+e6+aSd
+	 plKGYO8SHGxVbtabJplcQ3S+3YEhLoSWt8pecbeTQ2HAZv4aVwHB42nQ9bA0dzN4qb
+	 nH4jFHZEC4XyBt7SGhlabpSaBY4FyHDnwksCzj3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727807AbgFNNnm (ORCPT
+        id S1727785AbgFNNqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 09:43:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36188 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727027AbgFNNnm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 09:43:42 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3B91C05BD43;
-        Sun, 14 Jun 2020 06:43:41 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id o15so14593553ejm.12;
-        Sun, 14 Jun 2020 06:43:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2JK7KGekdKk92ix3V6dwBOemAX4+Cg95WIG/xENrDWE=;
-        b=T0mKqtpAN81wMzgDobYRYrqAnj8bInha1NepnPIo9ZA5+Lgsq36OAfiUIraExtvObP
-         CrNmGqwyEEpj1gHZySt2CgOFimTsdV3zTGEDo8vYKz0QFdhHJajZT7X9U3cjIAmPkHbW
-         RXX3igy5p/2eRLIfSBepdR9Ix295sfi8U+dh9zSmiK6OWk4ZLo3UGq1YQGdcqSOJHh5u
-         bhdP4H9INgNyhIDQzbh0jpChNy4VySKyAixC0Ad1jkpiWLmh9/XO8syEL4IJO7Ez3LhX
-         AnrtXna3C68MG6yDx/dKeH50IwTMlHacBYPkOD8kTL+Id72b9gj/vjPPHZiKd5fkywKI
-         uOLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2JK7KGekdKk92ix3V6dwBOemAX4+Cg95WIG/xENrDWE=;
-        b=OztdUO/8RtSSAS6eUDcniga6zzC67yY6Yc8VkqcIx9dFC1WM8i5RxHrzuLX0/UHXIN
-         +5+RcRWRektJnJRiHtUuzqoN+hvBWkWLJSiBi8zrI6+TauXsGnaOWBlbWx642iyuQlK4
-         jAviZob+mb8hCheIVGdn7N8xD9zvclttgGpzGaja4IQ+dfRCfNGLNzaVVV68F7aMIF2F
-         j2+cAWPDQmlajNZIMKoSKSaYchRD5f0Y4U9WoJSz48qYDrcdgSzRTUJ1U4tL5A6rMQ/z
-         9xmpb/AKlN/muoMzXORPnNHuKgvX91QEq9K2l4yI9nMyvXJqQpnRkKWUl3xjJJ2uR30O
-         f7ww==
-X-Gm-Message-State: AOAM532jAZNtvHx0CaYi08SVF6UIi+8HyEjtnDr8AV735IJwwqr1V6np
-        +V1JbxjCLoKWJIn2X5Qi+TR20hqrHlCzpAR2bWvAx9Ow
-X-Google-Smtp-Source: ABdhPJxiLRhSn1vMvYdXG7qmdlKCmTZBmxhXrnyzgCKNUwOdM4r6MtZBxiGiHYXZfbA+EBEpchAae7BeldKLnUxJ7T0=
-X-Received: by 2002:a17:906:1149:: with SMTP id i9mr22576193eja.100.1592142220162;
- Sun, 14 Jun 2020 06:43:40 -0700 (PDT)
+        Sun, 14 Jun 2020 09:46:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40612 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725815AbgFNNqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 09:46:20 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A248520714;
+        Sun, 14 Jun 2020 13:46:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592142379;
+        bh=QbBE4shFaNYjMdGoSGuJ5GF3khrICZukXMlsb5/RyVI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=wQBJOSnZqLXrDdsCeMpoXkSXLbllgtIQ2WhNeu0o3yve6umC++S3ONi1uoQ7wwW2g
+         y/LPVsobpzxDHY0ycaMlYMWU4k5zNYuN30IbuGsKsSLjDWKE8AUiPxNjqfxI8B12es
+         4F5LxM8htSB3pIj733Xq6NlNsaz72Dz3GyBAnQtw=
+Date:   Sun, 14 Jun 2020 14:46:15 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Syed Nayyar Waris <syednwaris@gmail.com>
+Cc:     William Breathitt Gray <vilhelm.gray@gmail.com>,
+        linux-iio@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 2/3] counter: 104-quad-8: Add lock guards -
+ differential encoder
+Message-ID: <20200614144615.3d3dbbee@archlinux>
+In-Reply-To: <CACG_h5qwXxA0EthdCjz3jNbW0Lgtdy7ycCvt8xCHLh8dog-Xqw@mail.gmail.com>
+References: <20200316125006.GA415@syed.domain.name>
+        <20200318021802.GB45571@icarus>
+        <CACG_h5qwXxA0EthdCjz3jNbW0Lgtdy7ycCvt8xCHLh8dog-Xqw@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <1592132154-20175-1-git-send-email-krzk@kernel.org>
- <1592132154-20175-2-git-send-email-krzk@kernel.org> <CA+h21ho_pa0H2MG-aAmUCFj37aYW4es-2V75P4KL-Zjq7qtfRQ@mail.gmail.com>
- <20200614111829.GA9694@kozik-lap> <CA+h21hqE3RbD2XTBbcRsMhsO2OaZ65tAaevFOr00p9ezu8O+iA@mail.gmail.com>
-In-Reply-To: <CA+h21hqE3RbD2XTBbcRsMhsO2OaZ65tAaevFOr00p9ezu8O+iA@mail.gmail.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Sun, 14 Jun 2020 16:43:28 +0300
-Message-ID: <CA+h21hoVjJkGyxTEnh2Bixjoqxb12k-KK37U4Xy-27ntZz8aTw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] spi: spi-fsl-dspi: Initialize completion before
- possible interrupt
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Wolfram Sang <wsa@kernel.org>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 14 Jun 2020 at 16:39, Vladimir Oltean <olteanv@gmail.com> wrote:
->
-> On Sun, 14 Jun 2020 at 14:18, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On Sun, 7 Jun 2020 10:52:57 +0530
+Syed Nayyar Waris <syednwaris@gmail.com> wrote:
+
+> On Wed, Mar 18, 2020 at 7:48 AM William Breathitt Gray
+> <vilhelm.gray@gmail.com> wrote:
 > >
-> > On Sun, Jun 14, 2020 at 02:14:15PM +0300, Vladimir Oltean wrote:
-> > > On Sun, 14 Jun 2020 at 13:56, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > > >
-> > > > If interrupt fires early, the dspi_interrupt() could complete
-> > > > (dspi->xfer_done) before its initialization happens.
-> > > >
-> > > > Fixes: 4f5ee75ea171 ("spi: spi-fsl-dspi: Replace interruptible wait queue with a simple completion")
-
-Also please note that this patch merely replaced an
-init_waitqueue_head with init_completion. But the "bug" (if we can
-call it that) originates from even before.
-
-> > > > Cc: <stable@vger.kernel.org>
-> > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > > > ---
+> > On Mon, Mar 16, 2020 at 06:20:06PM +0530, Syed Nayyar Waris wrote:  
+> > > Add lock protection from race conditions to 104-quad-8 counter driver
+> > > for differential encoder status code changes. Mutex lock calls used for
+> > > protection.
 > > >
-> > > Why would an interrupt fire before spi_register_controller, therefore
-> > > before dspi_transfer_one_message could get called?
-> > > Is this master or slave mode?
+> > > Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
+> > > ---
+> > > Changes in v5:
+> > >  - Change spin lock calls to mutex lock calls.
+> > >  - Modify the title description.  
 > >
-> > I guess practically it won't fire.  It's more of a matter of logical
-> > order and:
-> > 1. Someone might fix the CONFIG_DEBUG_SHIRQ_FIXME one day,
->
-> And what if CONFIG_DEBUG_SHIRQ_FIXME gets fixed? I uncommented it, and
-> still no issues. dspi_interrupt checks the status bit of the hw, sees
-> there's nothing to do, and returns IRQ_NONE.
->
-> > 2. The hardware is actually initialized before and someone could attach
-> >    to SPI bus some weird device.
+> > Looks like the Fixes tags were dropped in these last two patches. I
+> > suppose they aren't really necessary though since these features haven't
+> > yet made it out of the IIO tree, so no need to backport these fixes.
 > >
->
-> Some weird device that does what?
->
-> > Best regards,
-> > Krzysztof
-> >
->
-> Thanks,
-> -Vladimir
+> > Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>  
+> 
+> Adding the 'Fixes' tag:
+> 
+> Fixes: bbef69e088c3 ("counter: 104-quad-8: Support Differential
+> Encoder Cable Status")
+That doesn't seem to be the correct hash upstream though it exists in my
+local tree. I'm not sure quite what happened here (and don't care enough
+to try and figure it out), so I've fixed to match the upstream hash.
+
+Applied to the fixes-togreg branch of iio.git.
+
+Thanks,
+
+Jonathan
+
+> 
+> Regards
+> Syed Nayyar Waris
+
