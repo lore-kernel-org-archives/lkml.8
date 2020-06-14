@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD50AC433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 19:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C847C433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 19:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B17EA2071A
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 19:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55C0B2071A
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 19:04:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cp+Gd07S"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ACmbn+5L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727839AbgFNTER (ORCPT
+        id S1727849AbgFNTES (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 15:04:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56898 "EHLO
+        Sun, 14 Jun 2020 15:04:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727811AbgFNTEK (ORCPT
+        with ESMTP id S1726648AbgFNTEL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 15:04:10 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5191CC08C5C6;
-        Sun, 14 Jun 2020 12:04:10 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id c21so8240131lfb.3;
-        Sun, 14 Jun 2020 12:04:10 -0700 (PDT)
+        Sun, 14 Jun 2020 15:04:11 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E024C08C5C2;
+        Sun, 14 Jun 2020 12:04:11 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id 9so16558642ljv.5;
+        Sun, 14 Jun 2020 12:04:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=lFel57lgzkdFi66A+blGOSEVo/1btB7qpZRFUjdwuaU=;
-        b=Cp+Gd07SBw9hSPEujgevVcOyWCocSb8AE/x3IHu8df9vPU4L80W7M4vTmH3z8C5QZo
-         sUwDBB1USSZa8/cRaTnUDXQQh26YkN9PcTptM7CRUh0Hlypdw0iYtKz0m5PHo9saGd34
-         f7LuEUID+FA4+nCs13JgBvmjoVLBPVG3E0OzL3zqHyDfnGYp6GqPaVn1yMlannrwdSQj
-         uaS/ZdJiGJAy5IMSi1N/f4RiuZbW8R4cYXz/HApJ4FrP5vfc9G4VzMk0zPDmGaptxbLR
-         0iDcSNq6vBdY4cUMXIlEGALaMgAh1z9P3IzZiCaB9tHEPlpuQseCx6Fvhl4lXfXPltJh
-         n/vQ==
+        bh=1tlVNSxgPSIVY7njRp82EoP3y9oei5GEhi6LB4YQ4wY=;
+        b=ACmbn+5LXY4ZgSyB5eD2v8bAUH7BhdjMukZJxujxn21BKNuQCWiZ6pskW4u3Tm5yr0
+         tDiPjS6qceDlCgDUbJgscgg2oTd5+P+OKeH6aTet8up1loIk7GrZbca3gwLO6ZWhtC6k
+         9DBOA9ckjUqT0Hw5EeYNOvsiUYVNxxeWEPZ9ycUTi8JEGh9wjMhDi5c7Sz53SMGozPTz
+         7ObH4sMO3A2aHTAMMmPDsjHZZ/kqv8nbR5PqpesorGkwfOGlhTZchvKwB+EtvAGaMEm2
+         SNmyqRbk4oasOKl1C6l2Aefo6oBLjDcj19++pAZE3rLyK1NK1BN6ZOUpXqoF3Zvq7Z0e
+         s5sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=lFel57lgzkdFi66A+blGOSEVo/1btB7qpZRFUjdwuaU=;
-        b=DsNbHFo0T90szZ6bqfw6SwTD6JbSogDsrVaX5lmlXj/lSRBWoqk27lL7SA2NwW3rR3
-         BktClbRTgvDorI0Hn5qF4noDoDxUhBfPVFzO8qKTLZ0AUKVRvnRlgJ5xu1qoSKeEJSEw
-         LUXV9dfFv6lpIBDm9Bf/EjYOS+0oWPC3zuEWzWyjLdsrMr+1Fguyw3tfeU93LpT2Tu+E
-         z/zCAIUQHXCd6iau3ng7CGgMW+T7+kHpH65PKb58THr+p37aXPWfy8Fp50LjYTYLIsdj
-         /0HrqBbKyECA/Ghctc4vRpBzigJAhtUcMzLkYj8yttU7XMeLV3wlEC3JV9iCQt8D/sl+
-         FOlw==
-X-Gm-Message-State: AOAM533aRRTpxwsoNwy6+EjaNWmCfzBU7pu3VR28b90ZlaHYpo0CRXPg
-        exnC+mo/Sy3+BucEdWoOpwE=
-X-Google-Smtp-Source: ABdhPJyiXu1TKbJxhwNWXMC6HYJcqRA74MiBjR//OFPlqWLa+1PMQnVOxILMzoDr1ib24Jk+ABNhDA==
-X-Received: by 2002:ac2:485a:: with SMTP id 26mr12022269lfy.57.1592161448852;
-        Sun, 14 Jun 2020 12:04:08 -0700 (PDT)
+        bh=1tlVNSxgPSIVY7njRp82EoP3y9oei5GEhi6LB4YQ4wY=;
+        b=nNfKASHXZem8VEr+sdrUVYV7zFcHNLgeQX9hcU8rtNzNe1ZCum3EB49MA33T3tyCiJ
+         giGHptgFX2AGszWQ6GbLUg/jNntgCR50igXlxrpGYtF27/I+iCQJuc0JUYpZNmGi9eRl
+         0192mMX1jQQNgtflQ7AbS6SjcgJ/Ikn51k4BvmBVhwiFjYfU/GmUkOPXC7Yv3jenHawt
+         OJUhU7hhj/ldrUqvdg7SwoXTJDQUEZtLyzOEIBDaZPEfhVwtyCtNU0TT3NVhUD3N9t4n
+         g+7E8sdhGdzl3RKJUOZSH+od5IJQP2OgRlXJLev+fp2NXZN0B8la8DT3jRoHyeFzAAyD
+         FzAA==
+X-Gm-Message-State: AOAM531xStREwjr+pKl0GFdUKbLy0APtkPq1sWxtYVzFfGh7SEN2+i+a
+        CWHBD0tw3T8QmPZBp17lUbM=
+X-Google-Smtp-Source: ABdhPJxQT3G2mCw18H746uY1ijS4rGlw8gNoDzHcB1Pz3EhK7VWgAyWf/terviKuL7YatcalbXOC6Q==
+X-Received: by 2002:a2e:6c12:: with SMTP id h18mr11938124ljc.62.1592161449972;
+        Sun, 14 Jun 2020 12:04:09 -0700 (PDT)
 Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.gmail.com with ESMTPSA id p15sm3410856ljn.53.2020.06.14.12.04.07
+        by smtp.gmail.com with ESMTPSA id p15sm3410856ljn.53.2020.06.14.12.04.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Jun 2020 12:04:08 -0700 (PDT)
+        Sun, 14 Jun 2020 12:04:09 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Thomas Zimmermann <tzimmermann@suse.de>,
@@ -69,9 +69,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Sean Paul <sean@poorly.run>
 Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v1 5/6] drm/tegra: plane: Support horizontal reflection mode
-Date:   Sun, 14 Jun 2020 22:03:47 +0300
-Message-Id: <20200614190348.12193-6-digetx@gmail.com>
+Subject: [PATCH v1 6/6] =?UTF-8?q?drm/tegra:=20plane:=20Support=20180?= =?UTF-8?q?=C2=B0=20rotation?=
+Date:   Sun, 14 Jun 2020 22:03:48 +0300
+Message-Id: <20200614190348.12193-7-digetx@gmail.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200614190348.12193-1-digetx@gmail.com>
 References: <20200614190348.12193-1-digetx@gmail.com>
@@ -83,137 +83,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support horizontal reflection mode which will allow to support 180°
-rotation mode when combined with the vertical reflection.
+Combining horizontal and vertical reflections gives us 180 degrees of
+rotation.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/gpu/drm/tegra/dc.c    | 24 ++++++++++++++++++++----
- drivers/gpu/drm/tegra/dc.h    |  1 +
- drivers/gpu/drm/tegra/plane.c |  1 +
- drivers/gpu/drm/tegra/plane.h |  1 +
- 4 files changed, 23 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/tegra/dc.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/tegra/dc.c b/drivers/gpu/drm/tegra/dc.c
-index ed282f88e409..f31bca27cde4 100644
+index f31bca27cde4..ddd9b88f8fce 100644
 --- a/drivers/gpu/drm/tegra/dc.c
 +++ b/drivers/gpu/drm/tegra/dc.c
-@@ -368,6 +368,12 @@ static void tegra_dc_setup_window(struct tegra_plane *plane,
- 	h_size = window->src.w * bpp;
- 	v_size = window->src.h;
- 
-+	if (window->reflect_x)
-+		h_offset += (window->src.w - 1) * bpp;
-+
-+	if (window->reflect_y)
-+		v_offset += window->src.h - 1;
-+
- 	value = V_PRESCALED_SIZE(v_size) | H_PRESCALED_SIZE(h_size);
- 	tegra_plane_writel(plane, value, DC_WIN_PRESCALED_SIZE);
- 
-@@ -404,9 +410,6 @@ static void tegra_dc_setup_window(struct tegra_plane *plane,
- 		tegra_plane_writel(plane, window->stride[0], DC_WIN_LINE_STRIDE);
- 	}
- 
--	if (window->reflect_y)
--		v_offset += window->src.h - 1;
--
- 	tegra_plane_writel(plane, h_offset, DC_WINBUF_ADDR_H_OFFSET);
- 	tegra_plane_writel(plane, v_offset, DC_WINBUF_ADDR_V_OFFSET);
- 
-@@ -470,6 +473,9 @@ static void tegra_dc_setup_window(struct tegra_plane *plane,
- 		value |= COLOR_EXPAND;
- 	}
- 
-+	if (window->reflect_x)
-+		value |= H_DIRECTION;
-+
- 	if (window->reflect_y)
- 		value |= V_DIRECTION;
- 
-@@ -601,7 +607,9 @@ static int tegra_plane_atomic_check(struct drm_plane *plane,
- 				    struct drm_plane_state *state)
+@@ -608,6 +608,7 @@ static int tegra_plane_atomic_check(struct drm_plane *plane,
  {
  	struct tegra_plane_state *plane_state = to_tegra_plane_state(state);
--	unsigned int rotation = DRM_MODE_ROTATE_0 | DRM_MODE_REFLECT_Y;
-+	unsigned int rotation = DRM_MODE_ROTATE_0 |
-+				DRM_MODE_REFLECT_X |
-+				DRM_MODE_REFLECT_Y;
+ 	unsigned int rotation = DRM_MODE_ROTATE_0 |
++				DRM_MODE_ROTATE_180 |
+ 				DRM_MODE_REFLECT_X |
+ 				DRM_MODE_REFLECT_Y;
  	struct tegra_bo_tiling *tiling = &plane_state->tiling;
- 	struct tegra_plane *tegra = to_tegra_plane(plane);
- 	struct tegra_dc *dc = to_tegra_dc(state->crtc);
-@@ -641,6 +649,11 @@ static int tegra_plane_atomic_check(struct drm_plane *plane,
- 
- 	rotation = drm_rotation_simplify(state->rotation, rotation);
- 
-+	if (rotation & DRM_MODE_REFLECT_X)
-+		plane_state->reflect_x = true;
-+	else
-+		plane_state->reflect_x = false;
-+
- 	if (rotation & DRM_MODE_REFLECT_Y)
- 		plane_state->reflect_y = true;
+@@ -659,6 +660,14 @@ static int tegra_plane_atomic_check(struct drm_plane *plane,
  	else
-@@ -706,6 +719,7 @@ static void tegra_plane_atomic_update(struct drm_plane *plane,
- 	window.dst.w = drm_rect_width(&plane->state->dst);
+ 		plane_state->reflect_y = false;
+ 
++	if (tegra_fb_is_bottom_up(state->fb))
++		plane_state->reflect_y = true;
++
++	if (rotation & DRM_MODE_ROTATE_180) {
++		plane_state->reflect_x = !plane_state->reflect_x;
++		plane_state->reflect_y = !plane_state->reflect_y;
++	}
++
+ 	/*
+ 	 * Tegra doesn't support different strides for U and V planes so we
+ 	 * error out if the user tries to display a framebuffer with such a
+@@ -720,7 +729,7 @@ static void tegra_plane_atomic_update(struct drm_plane *plane,
  	window.dst.h = drm_rect_height(&plane->state->dst);
  	window.bits_per_pixel = fb->format->cpp[0] * 8;
-+	window.reflect_x = state->reflect_x;
- 	window.reflect_y = tegra_fb_is_bottom_up(fb) || state->reflect_y;
+ 	window.reflect_x = state->reflect_x;
+-	window.reflect_y = tegra_fb_is_bottom_up(fb) || state->reflect_y;
++	window.reflect_y = state->reflect_y;
  
  	/* copy from state */
-@@ -792,6 +806,7 @@ static struct drm_plane *tegra_primary_plane_create(struct drm_device *drm,
+ 	window.zpos = plane->state->normalized_zpos;
+@@ -806,6 +815,7 @@ static struct drm_plane *tegra_primary_plane_create(struct drm_device *drm,
  	err = drm_plane_create_rotation_property(&plane->base,
  						 DRM_MODE_ROTATE_0,
  						 DRM_MODE_ROTATE_0 |
-+						 DRM_MODE_REFLECT_X |
++						 DRM_MODE_ROTATE_180 |
+ 						 DRM_MODE_REFLECT_X |
  						 DRM_MODE_REFLECT_Y);
  	if (err < 0)
- 		dev_err(dc->dev, "failed to create rotation property: %d\n",
-@@ -1079,6 +1094,7 @@ static struct drm_plane *tegra_dc_overlay_plane_create(struct drm_device *drm,
+@@ -1094,6 +1104,7 @@ static struct drm_plane *tegra_dc_overlay_plane_create(struct drm_device *drm,
  	err = drm_plane_create_rotation_property(&plane->base,
  						 DRM_MODE_ROTATE_0,
  						 DRM_MODE_ROTATE_0 |
-+						 DRM_MODE_REFLECT_X |
++						 DRM_MODE_ROTATE_180 |
+ 						 DRM_MODE_REFLECT_X |
  						 DRM_MODE_REFLECT_Y);
  	if (err < 0)
- 		dev_err(dc->dev, "failed to create rotation property: %d\n",
-diff --git a/drivers/gpu/drm/tegra/dc.h b/drivers/gpu/drm/tegra/dc.h
-index 98e1b625168e..051d03dcb9b0 100644
---- a/drivers/gpu/drm/tegra/dc.h
-+++ b/drivers/gpu/drm/tegra/dc.h
-@@ -136,6 +136,7 @@ struct tegra_dc_window {
- 	unsigned int stride[2];
- 	unsigned long base[3];
- 	unsigned int zpos;
-+	bool reflect_x;
- 	bool reflect_y;
- 
- 	struct tegra_bo_tiling tiling;
-diff --git a/drivers/gpu/drm/tegra/plane.c b/drivers/gpu/drm/tegra/plane.c
-index e05ef6013a97..4cd0461cc508 100644
---- a/drivers/gpu/drm/tegra/plane.c
-+++ b/drivers/gpu/drm/tegra/plane.c
-@@ -61,6 +61,7 @@ tegra_plane_atomic_duplicate_state(struct drm_plane *plane)
- 	copy->tiling = state->tiling;
- 	copy->format = state->format;
- 	copy->swap = state->swap;
-+	copy->reflect_x = state->reflect_x;
- 	copy->reflect_y = state->reflect_y;
- 	copy->opaque = state->opaque;
- 
-diff --git a/drivers/gpu/drm/tegra/plane.h b/drivers/gpu/drm/tegra/plane.h
-index 8047fc916d8c..c691dd79b27b 100644
---- a/drivers/gpu/drm/tegra/plane.h
-+++ b/drivers/gpu/drm/tegra/plane.h
-@@ -46,6 +46,7 @@ struct tegra_plane_state {
- 	u32 format;
- 	u32 swap;
- 
-+	bool reflect_x;
- 	bool reflect_y;
- 
- 	/* used for legacy blending support only */
 -- 
 2.26.0
 
