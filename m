@@ -2,81 +2,131 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1061AC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 13:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5486C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 13:16:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE90120747
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 13:06:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1C09206D7
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 13:16:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592140570;
+	bh=WbHgzaZ0tGmUeII0qMtwKp7soUXZ40jam2hrCr4ruBw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=PHuz5zHABfDvqyk6q4ZQq3fO9B8913ixOSebTukV6jsGEf8sTC7ech68AxW65kES1
+	 eiEO1c3UjX6+jvr1lB3eSy6JUJ14Itb7km87sXNdtJB7WLmGDnMbIiWeSyq8sjcbX7
+	 6yt95J74F83BCdS8nP5Wkow1LE4kQWDRgBPoqosY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbgFNNGs (ORCPT
+        id S1727116AbgFNNPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 09:06:48 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:37648 "EHLO smtp.al2klimov.de"
+        Sun, 14 Jun 2020 09:15:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726925AbgFNNGs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 09:06:48 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 049F91B59A6;
-        Sun, 14 Jun 2020 13:06:44 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] MAINTAINERS: move *@vger.kernel.org from M: to L:
-Date:   Sun, 14 Jun 2020 15:05:49 +0200
-Message-Id: <20200614130549.19309-1-grandmaster@al2klimov.de>
+        id S1726925AbgFNNPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 09:15:51 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14CD2206D7;
+        Sun, 14 Jun 2020 13:15:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592140550;
+        bh=WbHgzaZ0tGmUeII0qMtwKp7soUXZ40jam2hrCr4ruBw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ah/bS4UrgBjVM4vR6aG4D0tFb3+RytJ8FJdYP5vvl4dS7QfHay41vHskJvD4rfONm
+         u/lsPGtl0L8GDET5GDfuCU1iEy7dhhm1mu08LwICCyAHZ0Cf40GJuYfVyCq9CQW4hS
+         0AFAWLHuHoQV3+SLRlZCPa7EWvwumapTu+vSS8aM=
+Date:   Sun, 14 Jun 2020 14:15:46 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     kernel test robot <lkp@intel.com>
+Cc:     Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        linux-iio@vger.kernel.org, kbuild-all@lists.01.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, andy.shevchenko@gmail.com, pmeerw@pmeerw.net
+Subject: Re: [PATCH v5 1/4] iio: chemical: scd30: add core driver
+Message-ID: <20200614141546.7a1af2f5@archlinux>
+In-Reply-To: <202006090426.ENCJHJ1n%lkp@intel.com>
+References: <20200607175812.95777-2-tomasz.duszynski@octakon.com>
+        <202006090426.ENCJHJ1n%lkp@intel.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- MAINTAINERS | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+On Tue, 9 Jun 2020 04:18:56 +0800
+kernel test robot <lkp@intel.com> wrote:
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 68f21d46614c..86e9276ddb1d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8995,8 +8995,6 @@ F:	drivers/net/ethernet/sgi/ioc3-eth.c
- IOMAP FILESYSTEM LIBRARY
- M:	Christoph Hellwig <hch@infradead.org>
- M:	Darrick J. Wong <darrick.wong@oracle.com>
--M:	linux-xfs@vger.kernel.org
--M:	linux-fsdevel@vger.kernel.org
- L:	linux-xfs@vger.kernel.org
- L:	linux-fsdevel@vger.kernel.org
- S:	Supported
-@@ -13570,7 +13568,7 @@ F:	arch/mips/include/asm/mach-pistachio/
- F:	arch/mips/pistachio/
- 
- PKTCDVD DRIVER
--M:	linux-block@vger.kernel.org
-+L:	linux-block@vger.kernel.org
- S:	Orphan
- F:	drivers/block/pktcdvd.c
- F:	include/linux/pktcdvd.h
-@@ -18799,7 +18797,6 @@ F:	drivers/xen/*swiotlb*
- 
- XFS FILESYSTEM
- M:	Darrick J. Wong <darrick.wong@oracle.com>
--M:	linux-xfs@vger.kernel.org
- L:	linux-xfs@vger.kernel.org
- S:	Supported
- W:	http://xfs.org/
--- 
-2.27.0
+> Hi Tomasz,
+> 
+> I love your patch! Perhaps something to improve:
+> 
+> [auto build test WARNING on iio/togreg]
+> [also build test WARNING on robh/for-next linux/master v5.7]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Tomasz-Duszynski/Add-support-for-SCD30-sensor/20200608-020304
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
+> compiler: gcc-9 (Debian 9.3.0-13) 9.3.0
+> 
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+
+I'll tidy this up whilst applying assuming nothing else comes up.
+No comment on it's validity as a warning, but in my view it
+is always squashing warnings to keep the noise low for any
+more useful ones (as long as it's not too costly).
+
+Jonathan
+
+> 
+> 
+> cppcheck warnings: (new ones prefixed by >>)
+> 
+> >> drivers/iio/chemical/scd30_core.c:93:31: warning: Clarify calculation precedence for '&' and '?'. [clarifyCalculation]  
+>         sign = float32 & BIT(31) ? -1 : 1,
+>                                  ^
+> 
+> vim +93 drivers/iio/chemical/scd30_core.c
+> 
+>     87	
+>     88	/* simplified float to fixed point conversion with a scaling factor of 0.01 */
+>     89	static int scd30_float_to_fp(int float32)
+>     90	{
+>     91		int fraction, shift,
+>     92		    mantissa = float32 & GENMASK(22, 0),
+>   > 93		    sign = float32 & BIT(31) ? -1 : 1,  
+>     94		    exp = (float32 & ~BIT(31)) >> 23;
+>     95	
+>     96		/* special case 0 */
+>     97		if (!exp && !mantissa)
+>     98			return 0;
+>     99	
+>    100		exp -= 127;
+>    101		if (exp < 0) {
+>    102			exp = -exp;
+>    103			/* return values ranging from 1 to 99 */
+>    104			return sign * ((((BIT(23) + mantissa) * 100) >> 23) >> exp);
+>    105		}
+>    106	
+>    107		/* return values starting at 100 */
+>    108		shift = 23 - exp;
+>    109		float32 = BIT(exp) + (mantissa >> shift);
+>    110		fraction = mantissa & GENMASK(shift - 1, 0);
+>    111	
+>    112		return sign * (float32 * 100 + ((fraction * 100) >> shift));
+>    113	}
+>    114	
+> 
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 
