@@ -2,100 +2,64 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8543C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 09:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C0DCC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 09:17:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0F2620747
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 09:12:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592125927;
-	bh=zcRl5dzioE4oiJSEfWn1q1ANQ0yluGl7UnG8UepPK3M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pQTo63qFuUtOsLBnbEz7mYckF5X9D0/8wDBQUXxf0mnBuB5HJjj+fQwVovlArvnt+
-	 nILXFuon7i/sN8vJKudQQpj+z5RXkhQ2Tmsp9k5+/atDy15lyaSSDPlcOJb46XBqXs
-	 ac3cFdlCKd4R/sycWT73xhTZHAZs2a5T+/jekZC8=
+	by mail.kernel.org (Postfix) with ESMTP id 59F4D206B7
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 09:17:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726868AbgFNJMG (ORCPT
+        id S1726846AbgFNJRa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 05:12:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42454 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726014AbgFNJMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 05:12:06 -0400
-Received: from localhost (p5486c990.dip0.t-ipconnect.de [84.134.201.144])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20578206B7;
-        Sun, 14 Jun 2020 09:12:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592125925;
-        bh=zcRl5dzioE4oiJSEfWn1q1ANQ0yluGl7UnG8UepPK3M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dnH6BCMCsUSd/1yD1/tbpoUBB2a9th87D7C1PQCnXFF/MU/DRwhAiUyYa3WJtYM+P
-         +Wt/LJUp2S3R9qIVUF7HzdT6xl4Q+8SpIoPJqJ7t4VzX5hEEO5BLOr+3PNknK2h5KA
-         bej8V5iTQqiwMl1LzXLhh8ezDj58ZNu5rpkQ8mHY=
-Date:   Sun, 14 Jun 2020 11:12:03 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
-Cc:     kjlu@umn.edu, Markus Elfring <Markus.Elfring@web.de>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Fugang Duan <fugang.duan@nxp.com>, linux-i2c@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] [v3] i2c: imx-lpi2c: Fix runtime PM imbalance on error
-Message-ID: <20200614091203.GC2878@kunai>
-References: <20200601061640.27632-1-dinghao.liu@zju.edu.cn>
+        Sun, 14 Jun 2020 05:17:30 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:59425 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726014AbgFNJR3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 05:17:29 -0400
+X-IronPort-AV: E=Sophos;i="5.73,510,1583190000"; 
+   d="scan'208";a="454614095"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2020 11:17:27 +0200
+Date:   Sun, 14 Jun 2020 11:17:27 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Denis Efremov <efremov@linux.com>
+cc:     cocci@systeme.lip6.fr, linux-kernel@vger.kernel.org
+Subject: Re: [Cocci] [PATCH] coccinelle: api: add kvfree script
+In-Reply-To: <7ce5499c-037e-e192-b19e-58cb6f700b9f@linux.com>
+Message-ID: <alpine.DEB.2.22.394.2006141117040.4736@hadrien>
+References: <20200605204237.85055-1-efremov@linux.com> <alpine.DEB.2.21.2006052249160.28300@hadrien> <7ce5499c-037e-e192-b19e-58cb6f700b9f@linux.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="DSayHWYpDlRfCAAQ"
-Content-Disposition: inline
-In-Reply-To: <20200601061640.27632-1-dinghao.liu@zju.edu.cn>
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---DSayHWYpDlRfCAAQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Mon, Jun 01, 2020 at 02:16:40PM +0800, Dinghao Liu wrote:
-> pm_runtime_get_sync() increments the runtime PM usage counter even
-> the call returns an error code. Thus a corresponding decrement is
-> needed on the error handling path to keep the counter balanced.
+On Sun, 14 Jun 2020, Denis Efremov wrote:
 
-Can you point me to a discussion where it was decided that this is a
-proper fix? I'd think we rather should fix pm_runtime_get_sync() but
-maybe there are technical reasons against it.
+>
+>
+> On 6/5/20 11:51 PM, Julia Lawall wrote:
+> > Also, there is no need to exceed 80 characters here.  You can put a
+> > newline in the middle of a \( ... \)
+>
+> It's required. Looks like it's impossible to break "when" lines.
 
+That's true. Sorry for the noise.
 
---DSayHWYpDlRfCAAQ
-Content-Type: application/pgp-signature; name="signature.asc"
+julia
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7l6eMACgkQFA3kzBSg
-KbbomhAAsSDK9VozV4hQIjYDiVrG3P1dSoA0Nv0svNzvGBF3XDOvmYGFLM0oPPRA
-y/AhGqxktdvOK1iCa3xvdgN9WW8VvVf/wPE3anOmQ6YF8t+K8YIWxpEq7S5UE7kX
-qdKTwK6n5U6SCMPYRklp63lfCwxHxYOPz5LiF8Fahlm02xm5JTAR/DIZu97mFnMo
-vjKgDY6c1VfSKDSAhOJJEMwcdbpeSotsAUBUPSj0qyFymLng3Mip0iiI30ubfQxh
-DKimD5eJM7UXe3iuYw5mC6gXQX/ViWhpsAbP1otylqcMXEpebcPMdWGa7rr3R5yX
-TWNdBsFH0P3KUvr7ULY/XPzvOMfbijZoGCkqxa8ExihJZiK2PiLhDaxETR7LxrXy
-28eu3mH9KK45rraUO3I4fVosyqASJ1NbSCC5qg3ldu/pXnoS8jGZcpwgZwv0Udme
-nwrjevSPmJ487gPkYaFlkJRm8kaJM0DOlWFgWdYnrDClG8hw/u1eJUnsEwe24A90
-MmmiaUEwR0gMmAUIodwiTsqK9Y+8WYh6BuOEyw/8Cajq2iEYnYgDGm5I91y8hBvh
-9t5I8CTQNM3EGGGjMm85fuZAddTk/O/AmA3kCMPbAoxX3bhjm71imaF8Q02xaxml
-lVvEfC46bUpQKIXNK0ULE+i3aoJtk5eM8y6Lw6CzOrAd8tcViY4=
-=PEkp
------END PGP SIGNATURE-----
-
---DSayHWYpDlRfCAAQ--
+>
+> ... when != if (...) { ... E = \(vmalloc\|vzalloc\|vmalloc_user\|vmalloc_node\|vzalloc_node\|vmalloc_exec\|vmalloc_32\|vmalloc_32_user\|__vmalloc\|__vmalloc_node_range\|__vmalloc_node\|kvmalloc\|kvzalloc\|kvcalloc\|kvzalloc_node\|kvmalloc_node\|kvmalloc_array\)(...); ... }
+>
+> Thanks,
+> Denis
+>
