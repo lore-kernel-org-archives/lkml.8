@@ -2,125 +2,107 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 183FEC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 07:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08236C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 07:28:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF41620747
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 07:15:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592118954;
-	bh=zZll6urelXML0NUSf47w9Vs7Ajbn1wggmOPGwgn3j1A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NHX9VMQggrgm6aF4g9TtFJEVJZFmv94AzALu4jHJkbORNZYW+fMFQUNxeYDyjmSNt
-	 DyW6Qt+hxbBy4ffl5IWpAzijK3kmwfF0iOJJ075+dmOfpJab7CWOTfsYeJHvZdpoEU
-	 7OwUFu4aNSO6K10izd34tgGOekiQYA4CKNDSlcaw=
+	by mail.kernel.org (Postfix) with ESMTP id CA6FE206D7
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 07:28:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbgFNHPw (ORCPT
+        id S1725949AbgFNH1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 03:15:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34490 "EHLO mail.kernel.org"
+        Sun, 14 Jun 2020 03:27:10 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:37815 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725385AbgFNHPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 03:15:51 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72ADA20747;
-        Sun, 14 Jun 2020 07:15:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592118951;
-        bh=zZll6urelXML0NUSf47w9Vs7Ajbn1wggmOPGwgn3j1A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=u7C5T79t0SzgyScYuY2I5hl5Jv03Uc5Kh92W2UQ56gcNN3ZahJz7111Vp22nb4t3r
-         4svvn5fiL+13qCWi1zsmKCwwexgdPP1cDwXcFT7SfdtsWEk5Jh0EB1g0a46P1HJfgM
-         ZDL9+dupLe0uk3h1u+xlk0tIml+UB8NAqBIvvHfQ=
-Date:   Sun, 14 Jun 2020 09:15:48 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Aditya Pakki <pakki001@umn.edu>, linux-rdma@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Kangjie Lu <kjlu@umn.edu>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Qiushi Wu <wu000273@umn.edu>
-Subject: Re: [PATCH] RDMA/rvt: Improve exception handling in rvt_create_qp()
-Message-ID: <20200614071548.GG2629255@kroah.com>
-References: <5d99dfe5-67ed-00d2-c2da-77058fb770c6@web.de>
+        id S1725265AbgFNH1K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 03:27:10 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49l5d30V58z9tyQj;
+        Sun, 14 Jun 2020 09:27:03 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id CY8D_aO72Fh8; Sun, 14 Jun 2020 09:27:03 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49l5d26ZVvz9tyQh;
+        Sun, 14 Jun 2020 09:27:02 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B511C8B769;
+        Sun, 14 Jun 2020 09:27:06 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id fRjOAdJp24BP; Sun, 14 Jun 2020 09:27:06 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 369968B75F;
+        Sun, 14 Jun 2020 09:27:05 +0200 (CEST)
+Subject: Re: [PATCH] powerpc/powernv/pci: add ifdef to avoid dead code
+To:     Greg Thelen <gthelen@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Oliver O'Halloran <oohall@gmail.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20200614055418.33497-1-gthelen@google.com>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <37af499e-2b8b-7e78-ed4b-0aaf711fcb38@csgroup.eu>
+Date:   Sun, 14 Jun 2020 09:26:55 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <20200614055418.33497-1-gthelen@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <5d99dfe5-67ed-00d2-c2da-77058fb770c6@web.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 13, 2020 at 09:15:12AM +0200, Markus Elfring wrote:
-> > … The patch fixes this issue by
-> > calling rvt_free_rq().
-> 
-> I suggest to choose another imperative wording for your change description.
-> Will the tag “Fixes” become helpful for the commit message?
-> 
-> …
-> > +++ b/drivers/infiniband/sw/rdmavt/qp.c
-> > @@ -1203,6 +1203,7 @@  struct ib_qp *rvt_create_qp(struct ib_pd *ibpd,
-> >  			qp->s_flags = RVT_S_SIGNAL_REQ_WR;
-> >  		err = alloc_ud_wq_attr(qp, rdi->dparms.node);
-> >  		if (err) {
-> > +			rvt_free_rq(&qp->r_rq);
-> >  			ret = (ERR_PTR(err));
-> >  			goto bail_driver_priv;
-> >  		}
-> 
-> How do you think about the following code variant with the addition
-> of a jump target?
-> 
->  		err = alloc_ud_wq_attr(qp, rdi->dparms.node);
->  		if (err) {
->  			ret = (ERR_PTR(err));
-> -			goto bail_driver_priv;
-> +			goto bail_free_rq;
->  		}
-> 
-> …
-> 
->  bail_rq_wq:
-> -	rvt_free_rq(&qp->r_rq);
->  	free_ud_wq_attr(qp);
-> +
-> +bail_free_rq:
-> +	rvt_free_rq(&qp->r_rq);
-> 
->  bail_driver_priv:
-> 
-> 
-> Regards,
-> Markus
-
 Hi,
 
-This is the semi-friendly patch-bot of Greg Kroah-Hartman.
+Le 14/06/2020 à 07:54, Greg Thelen a écrit :
+> Commit dc3d8f85bb57 ("powerpc/powernv/pci: Re-work bus PE
+> configuration") removed a couple pnv_ioda_setup_bus_dma() calls.  The
+> only remaining calls are behind CONFIG_IOMMU_API.  Thus builds without
+> CONFIG_IOMMU_API see:
+>    arch/powerpc/platforms/powernv/pci-ioda.c:1888:13: error: 'pnv_ioda_setup_bus_dma' defined but not used
+> 
+> Add CONFIG_IOMMU_API ifdef guard to avoid dead code.
 
-Markus, you seem to have sent a nonsensical or otherwise pointless
-review comment to a patch submission on a Linux kernel developer mailing
-list.  I strongly suggest that you not do this anymore.  Please do not
-bother developers who are actively working to produce patches and
-features with comments that, in the end, are a waste of time.
+I think you should move the function down into the same ifdef as the 
+callers instead of adding a new ifdef.
 
-Patch submitter, please ignore Markus's suggestion; you do not need to
-follow it at all.  The person/bot/AI that sent it is being ignored by
-almost all Linux kernel maintainers for having a persistent pattern of
-behavior of producing distracting and pointless commentary, and
-inability to adapt to feedback.  Please feel free to also ignore emails
-from them.
+Christophe
 
-thanks,
-
-greg k-h's patch email bot
+> 
+> Fixes: dc3d8f85bb57 ("powerpc/powernv/pci: Re-work bus PE configuration")
+> Signed-off-by: Greg Thelen <gthelen@google.com>
+> ---
+>   arch/powerpc/platforms/powernv/pci-ioda.c | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+> index 73a63efcf855..f7762052b7c4 100644
+> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
+> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+> @@ -1885,6 +1885,7 @@ static bool pnv_pci_ioda_iommu_bypass_supported(struct pci_dev *pdev,
+>   	return false;
+>   }
+>   
+> +#ifdef CONFIG_IOMMU_API
+>   static void pnv_ioda_setup_bus_dma(struct pnv_ioda_pe *pe, struct pci_bus *bus)
+>   {
+>   	struct pci_dev *dev;
+> @@ -1897,6 +1898,7 @@ static void pnv_ioda_setup_bus_dma(struct pnv_ioda_pe *pe, struct pci_bus *bus)
+>   			pnv_ioda_setup_bus_dma(pe, dev->subordinate);
+>   	}
+>   }
+> +#endif
+>   
+>   static inline __be64 __iomem *pnv_ioda_get_inval_reg(struct pnv_phb *phb,
+>   						     bool real_mode)
+> 
