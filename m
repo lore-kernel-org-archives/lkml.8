@@ -2,97 +2,88 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18652C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 22:01:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51EABC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 22:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBF2020747
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 22:01:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30E6B2067B
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 22:08:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="LzghhAlf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbgFNWBI (ORCPT
+        id S1727955AbgFNWIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 18:01:08 -0400
-Received: from correo.us.es ([193.147.175.20]:33360 "EHLO mail.us.es"
+        Sun, 14 Jun 2020 18:08:55 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:44017 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727923AbgFNWBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 18:01:06 -0400
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id F2CC7FF913
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 00:01:04 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id E4502DA78E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 00:01:04 +0200 (CEST)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id D1D72DA855; Mon, 15 Jun 2020 00:01:04 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 79E35DA72F;
-        Mon, 15 Jun 2020 00:01:02 +0200 (CEST)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Mon, 15 Jun 2020 00:01:02 +0200 (CEST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (unknown [90.77.255.23])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727918AbgFNWIz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 18:08:55 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id 1FBD4426CCBA;
-        Mon, 15 Jun 2020 00:01:02 +0200 (CEST)
-Date:   Mon, 15 Jun 2020 00:01:01 +0200
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     Jan Engelhardt <jengelh@inai.de>
-Cc:     David Howells <dhowells@redhat.com>,
-        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, netdev@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: Re: Good idea to rename files in include/uapi/ ?
-Message-ID: <20200614220101.GA9367@salvia>
-References: <9feded75-4b45-2821-287b-af00ec5f910f@al2klimov.de>
- <174102.1592165965@warthog.procyon.org.uk>
- <nycvar.YFH.7.77.849.2006142244200.30230@n3.vanv.qr>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49lTBX6GjCz9sQx;
+        Mon, 15 Jun 2020 08:08:52 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1592172533;
+        bh=1/++QR+4EKEcqLfT+MyjoTvLJX1k1raXRvJ4WlGYVZQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=LzghhAlf9lG1vhb0vadRcAugvFP8Vzl3NolO85evUhG8+4WM0+umZAmVAqxoWRtPx
+         c1F9C9l9PmMTgSCjve1A67LuD3WIzcYHVIP4ZBc4xf6i1cAftGMWTQrvv29+PPf62y
+         qj27XV8MPX0hCdpn3C+f8Ec7tFfQLxFl0vLczyGGuL1LT2ONyUbWKw6pOO7pzFMMiW
+         hDmytMyBYbz7/VJWKJoRVZwQRaJHAayS6xdd6uqpAeKwalQO02bbA+q5cyRn8JPQvM
+         iEVk3eOyVZ8RYT33rK8FtZH81cfo6eEOhJRBcXoa34FoKElDsohJKSJNrGNoOSwE1O
+         DbPjZErpaMJnA==
+Date:   Mon, 15 Jun 2020 08:08:52 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
+Subject: linux-next: Signed-off-by missing for commit in the hwmon-staging
+ tree
+Message-ID: <20200615080852.1aa4d860@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <nycvar.YFH.7.77.849.2006142244200.30230@n3.vanv.qr>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: multipart/signed; boundary="Sig_/Q5bxGRJisZibO7lu_wfzj24";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 14, 2020 at 11:08:08PM +0200, Jan Engelhardt wrote:
-> 
-> On Sunday 2020-06-14 22:19, David Howells wrote:
-> >Alexander A. Klimov <grandmaster@al2klimov.de> wrote:
-> >
-> >> *Is it a good idea to rename files in include/uapi/ ?*
-> >
-> >Very likely not.  If programs out there are going to be built on a
-> >case-sensitive filesystem (which happens all the time), they're going to break
-> >if you rename the headers.  We're kind of stuck with them.
-> 
-> Netfilter has precedent for removing old headers, e.g.
-> 7200135bc1e61f1437dc326ae2ef2f310c50b4eb's ipt_ULOG.h.
+--Sig_/Q5bxGRJisZibO7lu_wfzj24
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-That's only because NFLOG has been there for ~10 years, so it was safe
-to remove ULOG support.
+Hi all,
+
+Commit
+
+  3c1c958a118e ("hwmon: (adm1275) Enable adm1278 ADM1278_TEMP1_EN")
+
+is missing a Signed-off-by from its author.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Q5bxGRJisZibO7lu_wfzj24
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7mn/QACgkQAVBC80lX
+0GyIjwf+KMPst0oRE+n12u2+C6ZeFgdFctpnTBwBw7UtagmtaEl3ZB3nLuBtSDPp
+H4C0TY7Odf4xYBqikopC+d8nAiUft4Jps3rj0RUqm4swZdAx7z8aRd8EMQrqEKjE
+zCtKnDjxgV2XC/OCiISp6awrB1dC5D9znn/yL/QXRcArcj77OLPB0v2/y01KphfP
+vEwcxxKatxKhGw8baCKvyUzd4h/RqTc2GNmtx1xqIiEyFaUmw0yBKpjdyseghdhm
+MondXk7cs1FgweXSad9AWW1nJEwLg4Wrq0WnY22lSn0s82tioIiHD7ygrJob+DVd
+AyjljyAow0U/+mlxOlPOThc3i8mx3w==
+=AAaC
+-----END PGP SIGNATURE-----
+
+--Sig_/Q5bxGRJisZibO7lu_wfzj24--
