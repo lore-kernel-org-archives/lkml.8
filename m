@@ -4,85 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81BEFC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 02:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE34C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 03:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6071B20789
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 02:56:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 810282083E
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 03:01:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="fneoPuxj"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="khudvC7k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgFNC4P (ORCPT
+        id S1726632AbgFNDBU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 22:56:15 -0400
-Received: from mta-p5.oit.umn.edu ([134.84.196.205]:58122 "EHLO
-        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726486AbgFNC4O (ORCPT
+        Sat, 13 Jun 2020 23:01:20 -0400
+Received: from mta-p8.oit.umn.edu ([134.84.196.208]:35852 "EHLO
+        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726499AbgFNDBT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 22:56:14 -0400
+        Sat, 13 Jun 2020 23:01:19 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 49kzcX6HxZz9vCCQ
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 02:56:12 +0000 (UTC)
+        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 49kzkQ5zv6z9vZw4
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 03:01:18 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p5.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id xc68N0bDF6tJ for <linux-kernel@vger.kernel.org>;
-        Sat, 13 Jun 2020 21:56:12 -0500 (CDT)
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+Received: from mta-p8.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 0o_eabydskmD for <linux-kernel@vger.kernel.org>;
+        Sat, 13 Jun 2020 22:01:18 -0500 (CDT)
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 49kzcX4W8Tz9vC9W
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 21:56:12 -0500 (CDT)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p5.oit.umn.edu 49kzcX4W8Tz9vC9W
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p5.oit.umn.edu 49kzcX4W8Tz9vC9W
-Received: by mail-io1-f71.google.com with SMTP id m11so8950280ioj.14
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 19:56:12 -0700 (PDT)
+        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id 49kzkQ4Dz3z9vZx6
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 22:01:18 -0500 (CDT)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p8.oit.umn.edu 49kzkQ4Dz3z9vZx6
+DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p8.oit.umn.edu 49kzkQ4Dz3z9vZx6
+Received: by mail-io1-f72.google.com with SMTP id d20so8930264iom.16
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 20:01:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=umn.edu; s=google;
         h=from:to:cc:subject:date:message-id;
-        bh=sfUbtD+8UmbRScetzBNuWx8h71Z2ueqfA2qMCF+mkCI=;
-        b=fneoPuxjbgjZ20tPjhKit5n/XkQZsnTeVuP6LXEZhSCquYV74bLpfB86eYpxiqKl1H
-         +bGm2eixLjW8kIj/1StBc/qKKa0B08abqZIUobkVEHl3vw0MYz/pxs7Nz8eICXmHDUUL
-         WzTlZnL5OQ+YEJ+CqZ6JgAkc8Mhux56zzUVAsLzLWE6INlUyXlFaRYOXUXjYsjxFRRKn
-         cXlbK+lcdMRTHOih7Qellu48K1ZaeOJbRWBeMXjKM10ChGYcJQ2jsCRfw0p2ztkfz6lj
-         yhrZ4XH2jabr2SK7PdRjAz1FpKkh47t00lln3p1UYGeETuRiMr8MSwhx+IPsuIaZh6q5
-         vv6w==
+        bh=cOgHpCEAAAGqQDbbixnX7uhIWd2KMk0lv565gUU7esU=;
+        b=khudvC7kbksJLnNR3xG6AAZ5VFW/9CNcXYYV/ulZ976gfAAaipmqB15w7jO76lIoMJ
+         YB9I982kBR9w2M2joRO5CDUZTExYtrIB+V0LlC2Clx8qohj4QgvSR4xKCR1+jz+K5P50
+         iRItj7gd4U5cgYXpFEh+c3c7xRYl7BDUXe9DZOV0IrWnVv0ODucjWYIR8kkFp+dMI3Bu
+         lvJssg30dL9Ac1IdAuA+cU0zeb5i61gOVz4dwY/txEbznKi7gXL0wmZKFE9PDWid04Jf
+         oeIBsk5tqxN5gI3+uj7e2wd8txqTd7SolqocLPy6eZg/QKXgxQ7oqulCFVCuO/Xp4QM3
+         FP6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=sfUbtD+8UmbRScetzBNuWx8h71Z2ueqfA2qMCF+mkCI=;
-        b=QOtUzoH+0DFSt7jByV6etNqHwJkFdWvypwgaD4Gaxwr3jico0d40siTHtpBiSHE0th
-         QwtB11xfH1/tAvy817KF15HO8IE/1+0M7DBq7cthvztY9W6kzVl83FSkR3PD3aQT4YBG
-         YxtyGtp1JvQAc7WKbNL+4tIocbeR/eLDeVvWvmmR+ikDaPgT42E+uIGzotdhaVzjWs/k
-         JcB4ZoNdXA971TQpaow/GzZuD5xK8Sqt1Fdduilh4fqDOEPBAZ9KYLB/TQRJKLYEikgE
-         Xgz+RxZ+76O/xkEu7cUrmkkLYKy2su9V93sMmF5BHbMKJ5rXdkLN9XwA8Nh+rJfYx01i
-         j4fQ==
-X-Gm-Message-State: AOAM530g9iwRox7p4cd+A47IRBgbQurD+599j3PbmhoDW3CXc0Hcy3K/
-        ubskuZ40LdSgoM89lY1ZKnH3IF4pxqDjCV8XAd/O3TTokVPN1/XzTrl+mIGBsqF6iNdY5vh4S5i
-        PQtfUVURhe92a+VDOwbKGUgVkQDml
-X-Received: by 2002:a92:d5c3:: with SMTP id d3mr20318750ilq.51.1592103372127;
-        Sat, 13 Jun 2020 19:56:12 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxT40lgbxZYXXfJLRdJt0H2oqsZMfaaWEzQECLPWBqB3tSO1dB9XwzkOS3idy+ANAfqNQG7Uw==
-X-Received: by 2002:a92:d5c3:: with SMTP id d3mr20318737ilq.51.1592103371890;
-        Sat, 13 Jun 2020 19:56:11 -0700 (PDT)
+        bh=cOgHpCEAAAGqQDbbixnX7uhIWd2KMk0lv565gUU7esU=;
+        b=cvMsZot7HGvK2kT7GbCGoEd2rOPnDl7+W6CD3i7qyhHmKiD/wIM+3pHlW/adjtjQ/A
+         pMXt7VlxHrln6dtmhdPu/gNTpAVh+GJDiwJZdM1h8SIc7uSXAdz1jC6Rz5kCfr5n0kLo
+         RHtUgYVbyqYu0jZuJ5BYmH0kUgkjNiN8gD6zfPAChHbYj9VNTMIg6Adh0ZAx4VgvYIjw
+         BBrvbNcvKJ4aAQ8qAP970x7YzvLFmJBW+HsgJwyTmSjA3rONib2xyCCNzygirwaahQnp
+         Vz3luFlXLfLbkZeNw/FVbbiHqScncpctQfSku1U/QYIgY591C/kDveDDQpzmMJVENCBj
+         iWYg==
+X-Gm-Message-State: AOAM533crPbSiBVy3ciAT0g5tRSQDP8sd5FDRByCGHksk8mmMHgMOfzL
+        jQenXv39evuPJ0DVsQZMmWseURLDA6iBLawyAQ2rg8kPMQ4qfKWVo0J4vJXlUvHCRUcEuAAbkQk
+        2NDO2ZJv1ihIg/E+dh/L1B7Htrc3T
+X-Received: by 2002:a92:d112:: with SMTP id a18mr19876653ilb.3.1592103678098;
+        Sat, 13 Jun 2020 20:01:18 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwTFVu29soAQKwJchdpgwjpKebLlBpdEM/Z/hVt5TRB+tZ1yqGgKWvSgKXVBGcdcozs35SC4w==
+X-Received: by 2002:a92:d112:: with SMTP id a18mr19876632ilb.3.1592103677826;
+        Sat, 13 Jun 2020 20:01:17 -0700 (PDT)
 Received: from qiushi.cs.umn.edu ([2607:ea00:101:3c74:4874:45:bcb4:df60])
-        by smtp.gmail.com with ESMTPSA id l16sm5565374ilm.58.2020.06.13.19.56.10
+        by smtp.gmail.com with ESMTPSA id q5sm5656947ile.37.2020.06.13.20.01.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Jun 2020 19:56:10 -0700 (PDT)
+        Sat, 13 Jun 2020 20:01:17 -0700 (PDT)
 From:   wu000273@umn.edu
 To:     kjlu@umn.edu
-Cc:     wu000273@umn.edu, Benoit Parrot <bparrot@ti.com>,
+Cc:     wu000273@umn.edu, Kyungmin Park <kyungmin.park@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Archit Taneja <archit@ti.com>,
-        Kamil Debski <k.debski@samsung.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] media: ti-vpe: Fix a missing check and reference count leak
-Date:   Sat, 13 Jun 2020 21:56:05 -0500
-Message-Id: <20200614025605.27728-1-wu000273@umn.edu>
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] media: exynos4-is: Fix a reference count leak
+Date:   Sat, 13 Jun 2020 22:01:11 -0500
+Message-Id: <20200614030111.28843-1-wu000273@umn.edu>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -94,30 +95,29 @@ From: Qiushi Wu <wu000273@umn.edu>
 pm_runtime_get_sync() increments the runtime PM usage counter even
 when it returns an error code, causing incorrect ref count if
 pm_runtime_put_noidle() is not called in error handling paths.
-And also, when the call of function vpe_runtime_get() failed,
-we won't call vpe_runtime_put().
-Thus call pm_runtime_put_noidle() if pm_runtime_get_sync() fails
-inside vpe_runtime_get().
+Thus call pm_runtime_put_noidle() if pm_runtime_get_sync() fails.
 
-Fixes: 4571912743ac ("[media] v4l: ti-vpe: Add VPE mem to mem driver")
 Signed-off-by: Qiushi Wu <wu000273@umn.edu>
 ---
- drivers/media/platform/ti-vpe/vpe.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/media/platform/exynos4-is/mipi-csis.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index cff2fcd6d812..82d3ee45e2e9 100644
---- a/drivers/media/platform/ti-vpe/vpe.c
-+++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -2475,6 +2475,8 @@ static int vpe_runtime_get(struct platform_device *pdev)
+diff --git a/drivers/media/platform/exynos4-is/mipi-csis.c b/drivers/media/platform/exynos4-is/mipi-csis.c
+index 540151bbf58f..1aac167abb17 100644
+--- a/drivers/media/platform/exynos4-is/mipi-csis.c
++++ b/drivers/media/platform/exynos4-is/mipi-csis.c
+@@ -510,8 +510,10 @@ static int s5pcsis_s_stream(struct v4l2_subdev *sd, int enable)
+ 	if (enable) {
+ 		s5pcsis_clear_counters(state);
+ 		ret = pm_runtime_get_sync(&state->pdev->dev);
+-		if (ret && ret != 1)
++		if (ret && ret != 1) {
++			pm_runtime_put_noidle(&state->pdev->dev);
+ 			return ret;
++		}
+ 	}
  
- 	r = pm_runtime_get_sync(&pdev->dev);
- 	WARN_ON(r < 0);
-+	if (r)
-+		pm_runtime_put_noidle(&pdev->dev);
- 	return r < 0 ? r : 0;
- }
- 
+ 	mutex_lock(&state->lock);
 -- 
 2.17.1
 
