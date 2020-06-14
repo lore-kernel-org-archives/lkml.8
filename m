@@ -2,90 +2,118 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4EC0C433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 01:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAAF8C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 01:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 829222074D
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 01:10:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76B062053B
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 01:20:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UUWwANTZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgFNBK3 (ORCPT
+        id S1726873AbgFNBUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 21:10:29 -0400
-Received: from foss.arm.com ([217.140.110.172]:53306 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726803AbgFNBK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 21:10:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AB1451042;
-        Sat, 13 Jun 2020 18:10:27 -0700 (PDT)
-Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C01193F73C;
-        Sat, 13 Jun 2020 18:10:25 -0700 (PDT)
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pm@vger.kernel.org
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Thara Gopinath <thara.gopinath@linaro.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>
-Subject: [PATCH 3/3] arm, arm64: Select CONFIG_SCHED_THERMAL_PRESSURE
-Date:   Sun, 14 Jun 2020 02:07:55 +0100
-Message-Id: <20200614010755.9129-4-valentin.schneider@arm.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200614010755.9129-1-valentin.schneider@arm.com>
-References: <20200614010755.9129-1-valentin.schneider@arm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sat, 13 Jun 2020 21:20:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36048 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726803AbgFNBUU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Jun 2020 21:20:20 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD785C03E96F;
+        Sat, 13 Jun 2020 18:20:18 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id 205so12620801qkg.3;
+        Sat, 13 Jun 2020 18:20:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id;
+        bh=weNT1L1XKUjhZ/GyqfyR6sCkF+DRrUdSjJ2ej+SbbZw=;
+        b=UUWwANTZUf9s6b09wIICLD5DT1wu6LnvZEZitokYHV2htO/B/xWJQS+FtpInW69ekG
+         JVqvmJUXWH8Bw9o2+7Q4+FeK5o7+KsIHbkds4v2MsUTHpBkrE9fngOW2kMXrF18tOn8p
+         NABJO8ZhMiWs2GCwhpu7If3MOXEYxXGJzQw6NvfhXMSlX5x0UUnOwzhy8IM+IwZDX4M1
+         3bY6aN3kwRnoDcQJq3gf5IeJws3uqAoa589vSlDcWcREZIhScvHocIKwKh0qcg2WtccV
+         ILJHtHVRoCuqsthHNkSaU1YBcyAhkmqq1K/1Ru8AKyXKYh8B2xIFl3T2fMXj0872XHVe
+         +vpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=weNT1L1XKUjhZ/GyqfyR6sCkF+DRrUdSjJ2ej+SbbZw=;
+        b=T5IeoVDOj/YJKXIKZQWEx4/umEqEr43dQNB9uLpLjto8ks1b1AUI13rphNTkBQiDwR
+         hDiYvweFPjNaxPWwdNoaFtvm0kVLk2MmKpDjc91KeL+4G6gcpaxW0Ap3uX3bWkxPofUs
+         IYm+AJ3Bn8jvcTDvCDtEwrTSXFbNRt1uHqjEOEFyCPmYjwfwyPXwHEvn2HvQUoElGUnD
+         PxzL2jpKnOSVVzEATqj6ySKErzKF1gpecGuomOijhixGXMTWzOhYYdn+/+6j6w9I2UOS
+         jWVjX/5ha5dz4XwQAhS2Ra9/zm0Z8H52KrCwNie0RU546B/Tlqd+/vtZZ80OlSRrNwnM
+         WY2A==
+X-Gm-Message-State: AOAM532+kRhbq83agZQz5MQJbwOfatdEvpZAlT+AOtOGGBBuF3oXqgkM
+        QUNoMdufF61fe3X971oAw0s=
+X-Google-Smtp-Source: ABdhPJxWbSwqsoRLmmhzpK3JmfQ7atmha/MGg4W9VIU4e/whsX6MJrO4pV4tEXhRaKT96K+BSIQMgQ==
+X-Received: by 2002:ae9:e8cc:: with SMTP id a195mr9819577qkg.408.1592097617772;
+        Sat, 13 Jun 2020 18:20:17 -0700 (PDT)
+Received: from linux.home ([2604:2000:1344:41d:8024:443:2d4f:1b98])
+        by smtp.googlemail.com with ESMTPSA id 124sm7966356qkm.115.2020.06.13.18.20.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 13 Jun 2020 18:20:16 -0700 (PDT)
+From:   Gaurav Singh <gaurav1086@gmail.com>
+To:     gaurav1086@gmail.com, Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Alex Dewar <alex.dewar@gmx.co.uk>,
+        =?UTF-8?q?Marc-Andr=C3=A9=20Lureau?= <marcandre.lureau@redhat.com>,
+        linux-um@lists.infradead.org (open list:USER-MODE LINUX (UML)),
+        linux-kernel@vger.kernel.org (open list),
+        netdev@vger.kernel.org (open list:BPF (Safe dynamic programs and tools)),
+        bpf@vger.kernel.org (open list:BPF (Safe dynamic programs and tools))
+Subject: [PATCH] Fix null pointer dereference in vector_user_bpf
+Date:   Sat, 13 Jun 2020 21:19:40 -0400
+Message-Id: <20200614012001.18468-1-gaurav1086@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This option now correctly depends on CPU_FREQ_THERMAL, so select it on the
-architectures that implement the required functions,
-arch_set_thermal_pressure() and arch_get_thermal_pressure().
+The bpf_prog is being checked for !NULL after uml_kmalloc
+but later its used directly for example: 
+bpf_prog->filter = bpf and is also later returned upon
+success. Fix this, do a NULL check and return right away.
 
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
 ---
- arch/arm/Kconfig   | 1 +
- arch/arm64/Kconfig | 1 +
- 2 files changed, 2 insertions(+)
+ arch/um/drivers/vector_user.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index c77c93c485a0..f80bc12dabed 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -46,6 +46,7 @@ config ARM
- 	select EDAC_ATOMIC_SCRUB
- 	select GENERIC_ALLOCATOR
- 	select GENERIC_ARCH_TOPOLOGY if ARM_CPU_TOPOLOGY
-+	select SCHED_THERMAL_PRESSURE if GENERIC_ARCH_TOPOLOGY
- 	select GENERIC_ATOMIC64 if CPU_V7M || CPU_V6 || !CPU_32v6K || !AEABI
- 	select GENERIC_CLOCKEVENTS_BROADCAST if SMP
- 	select GENERIC_CPU_AUTOPROBE
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 5d513f461957..8bfe9221309f 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -93,6 +93,7 @@ config ARM64
- 	select FRAME_POINTER
- 	select GENERIC_ALLOCATOR
- 	select GENERIC_ARCH_TOPOLOGY
-+	select SCHED_THERMAL_PRESSURE
- 	select GENERIC_CLOCKEVENTS
- 	select GENERIC_CLOCKEVENTS_BROADCAST
- 	select GENERIC_CPU_AUTOPROBE
+diff --git a/arch/um/drivers/vector_user.c b/arch/um/drivers/vector_user.c
+index c4a0f26b2824..0e6d6717bf73 100644
+--- a/arch/um/drivers/vector_user.c
++++ b/arch/um/drivers/vector_user.c
+@@ -789,10 +789,12 @@ void *uml_vector_user_bpf(char *filename)
+ 		return false;
+ 	}
+ 	bpf_prog = uml_kmalloc(sizeof(struct sock_fprog), UM_GFP_KERNEL);
+-	if (bpf_prog != NULL) {
+-		bpf_prog->len = statbuf.st_size / sizeof(struct sock_filter);
+-		bpf_prog->filter = NULL;
++	if (bpf_prog == NULL) {
++		printk(KERN_ERR "Failed to allocate bpf prog buffer");
++		return NULL;
+ 	}
++	bpf_prog->len = statbuf.st_size / sizeof(struct sock_filter);
++	bpf_prog->filter = NULL;
+ 	ffd = os_open_file(filename, of_read(OPENFLAGS()), 0);
+ 	if (ffd < 0) {
+ 		printk(KERN_ERR "Error %d opening bpf file", -errno);
 -- 
-2.27.0
+2.17.1
 
