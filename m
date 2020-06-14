@@ -4,120 +4,221 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE34C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 03:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFDD1C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 03:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 810282083E
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 03:01:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0BD620739
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 03:05:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="khudvC7k"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="jLMIfC3L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbgFNDBU (ORCPT
+        id S1726631AbgFNDFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 23:01:20 -0400
-Received: from mta-p8.oit.umn.edu ([134.84.196.208]:35852 "EHLO
-        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726499AbgFNDBT (ORCPT
+        Sat, 13 Jun 2020 23:05:41 -0400
+Received: from mta-p5.oit.umn.edu ([134.84.196.205]:33370 "EHLO
+        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726460AbgFNDFk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 23:01:19 -0400
+        Sat, 13 Jun 2020 23:05:40 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 49kzkQ5zv6z9vZw4
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 03:01:18 +0000 (UTC)
+        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 49kzqQ3dRzz9vYRT
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 03:05:38 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p8.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 0o_eabydskmD for <linux-kernel@vger.kernel.org>;
-        Sat, 13 Jun 2020 22:01:18 -0500 (CDT)
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+Received: from mta-p5.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id dcQVtSrJnP-F for <linux-kernel@vger.kernel.org>;
+        Sat, 13 Jun 2020 22:05:38 -0500 (CDT)
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id 49kzkQ4Dz3z9vZx6
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 22:01:18 -0500 (CDT)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p8.oit.umn.edu 49kzkQ4Dz3z9vZx6
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p8.oit.umn.edu 49kzkQ4Dz3z9vZx6
-Received: by mail-io1-f72.google.com with SMTP id d20so8930264iom.16
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 20:01:18 -0700 (PDT)
+        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 49kzqQ1sw0z9vYRS
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 22:05:38 -0500 (CDT)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p5.oit.umn.edu 49kzqQ1sw0z9vYRS
+DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p5.oit.umn.edu 49kzqQ1sw0z9vYRS
+Received: by mail-io1-f70.google.com with SMTP id v14so8970348iob.11
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 20:05:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=cOgHpCEAAAGqQDbbixnX7uhIWd2KMk0lv565gUU7esU=;
-        b=khudvC7kbksJLnNR3xG6AAZ5VFW/9CNcXYYV/ulZ976gfAAaipmqB15w7jO76lIoMJ
-         YB9I982kBR9w2M2joRO5CDUZTExYtrIB+V0LlC2Clx8qohj4QgvSR4xKCR1+jz+K5P50
-         iRItj7gd4U5cgYXpFEh+c3c7xRYl7BDUXe9DZOV0IrWnVv0ODucjWYIR8kkFp+dMI3Bu
-         lvJssg30dL9Ac1IdAuA+cU0zeb5i61gOVz4dwY/txEbznKi7gXL0wmZKFE9PDWid04Jf
-         oeIBsk5tqxN5gI3+uj7e2wd8txqTd7SolqocLPy6eZg/QKXgxQ7oqulCFVCuO/Xp4QM3
-         FP6A==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6RWcchMQUTnXRjfjU8MBgF+NaxmL7vStwB+9xEzccB8=;
+        b=jLMIfC3LZ8Py+m5+WvjpfVMtIgms+TIjE9xznz3oTHlHIBJPK6CM7jOKCdSCC61UlM
+         siLADkMA/mBmDJSyMe4te30jEuC22gf3CtpjcynC2s9Dx7nqTM8mulR6un1EOuoz0vjC
+         zpSLKTstk5jP9pmgS9JaxjMBlrbaUIhht1611dUyaYpv/cEdes/0U+DnbrWQCOz+zxOP
+         ym4fwA3wOLvT+tklF/ZO1/biKXBih5e0FQb4kxTnriBCq6z45hI+uHQheuT/Y+PsSYGP
+         rbtrry+QcU/9/g7gEvySAgzyye+QjQdkgWp//3aR9zjJxT+pRxQDRIrbbKi3ui8Vt9ex
+         KkZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=cOgHpCEAAAGqQDbbixnX7uhIWd2KMk0lv565gUU7esU=;
-        b=cvMsZot7HGvK2kT7GbCGoEd2rOPnDl7+W6CD3i7qyhHmKiD/wIM+3pHlW/adjtjQ/A
-         pMXt7VlxHrln6dtmhdPu/gNTpAVh+GJDiwJZdM1h8SIc7uSXAdz1jC6Rz5kCfr5n0kLo
-         RHtUgYVbyqYu0jZuJ5BYmH0kUgkjNiN8gD6zfPAChHbYj9VNTMIg6Adh0ZAx4VgvYIjw
-         BBrvbNcvKJ4aAQ8qAP970x7YzvLFmJBW+HsgJwyTmSjA3rONib2xyCCNzygirwaahQnp
-         Vz3luFlXLfLbkZeNw/FVbbiHqScncpctQfSku1U/QYIgY591C/kDveDDQpzmMJVENCBj
-         iWYg==
-X-Gm-Message-State: AOAM533crPbSiBVy3ciAT0g5tRSQDP8sd5FDRByCGHksk8mmMHgMOfzL
-        jQenXv39evuPJ0DVsQZMmWseURLDA6iBLawyAQ2rg8kPMQ4qfKWVo0J4vJXlUvHCRUcEuAAbkQk
-        2NDO2ZJv1ihIg/E+dh/L1B7Htrc3T
-X-Received: by 2002:a92:d112:: with SMTP id a18mr19876653ilb.3.1592103678098;
-        Sat, 13 Jun 2020 20:01:18 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwTFVu29soAQKwJchdpgwjpKebLlBpdEM/Z/hVt5TRB+tZ1yqGgKWvSgKXVBGcdcozs35SC4w==
-X-Received: by 2002:a92:d112:: with SMTP id a18mr19876632ilb.3.1592103677826;
-        Sat, 13 Jun 2020 20:01:17 -0700 (PDT)
-Received: from qiushi.cs.umn.edu ([2607:ea00:101:3c74:4874:45:bcb4:df60])
-        by smtp.gmail.com with ESMTPSA id q5sm5656947ile.37.2020.06.13.20.01.16
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6RWcchMQUTnXRjfjU8MBgF+NaxmL7vStwB+9xEzccB8=;
+        b=dyYjjFuqh6AM8Z4hYb5hVpDf/umm9qhqqmfAGrI9lL3/jjoOOS4rl8dCd42oFHC1oU
+         Zkq6EvV3K61sM5qyQtEpRgq37473UC2liJpRIVgjcioahhhIHvrAnS+Ne/EVB1W4sPMj
+         EVqXoeAf2LvjXgRBFHSsrFLh72iLCa236zFqGbUbrYrn53ehB+obg4chDAX9J27L8w4q
+         MaO3IM8MWK1kSHSkg3k1bkd8n2W4e6H0zL1Daab4tPQLu7m4ImU4oCDPGfodRQyxb2dS
+         H1ntCV06ClxgSpN4E0aAQOJbmjLV8uhtL6/N8vF7uq8MBx2kEl+NQUoAAGz1enBvC9Da
+         o9Lw==
+X-Gm-Message-State: AOAM533jtP+3wuuaKR3wJFcYEvEGOuw9z0TMyBkWewNp6szfxYh5UoWV
+        PhFGZ/CuO+Yyhn2Fp0e7Y6GxhcxLUjm5HLoC59eyLYDQgOCkI+LMwy2GfCCdrU4+UPaK7AOkAYH
+        Mid0Rgm57ClXg7FQ2PANfiILwBylc
+X-Received: by 2002:a92:7104:: with SMTP id m4mr20895002ilc.87.1592103937847;
+        Sat, 13 Jun 2020 20:05:37 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy/d2pz6beT8wngqr5vOspHH6/SSx6Djv4sq83HCf0e1WRj4oISMKS0wOWKdfH6MoZQfJ4RDg==
+X-Received: by 2002:a92:7104:: with SMTP id m4mr20894981ilc.87.1592103937588;
+        Sat, 13 Jun 2020 20:05:37 -0700 (PDT)
+Received: from syssec1.cs.umn.edu ([2607:ea00:101:3c74:49fa:9c47:e40b:9c40])
+        by smtp.gmail.com with ESMTPSA id t14sm5501737ilp.73.2020.06.13.20.05.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Jun 2020 20:01:17 -0700 (PDT)
-From:   wu000273@umn.edu
-To:     kjlu@umn.edu
-Cc:     wu000273@umn.edu, Kyungmin Park <kyungmin.park@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] media: exynos4-is: Fix a reference count leak
-Date:   Sat, 13 Jun 2020 22:01:11 -0500
-Message-Id: <20200614030111.28843-1-wu000273@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        Sat, 13 Jun 2020 20:05:37 -0700 (PDT)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, wu000273@umn.edu,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Enrico Weigelt <info@metux.net>,
+        "Andrew F. Davis" <afd@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        YueHaibing <yuehaibing@huawei.com>, linux-omap@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] omapfb: fix multiple reference count leaks due to pm_runtime_get_sync
+Date:   Sat, 13 Jun 2020 22:05:18 -0500
+Message-Id: <20200614030528.128064-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+On calling pm_runtime_get_sync() the reference count of the device
+is incremented. In case of failure, decrement the
+reference count before returning the error.
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-when it returns an error code, causing incorrect ref count if
-pm_runtime_put_noidle() is not called in error handling paths.
-Thus call pm_runtime_put_noidle() if pm_runtime_get_sync() fails.
-
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
 ---
- drivers/media/platform/exynos4-is/mipi-csis.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/video/fbdev/omap2/omapfb/dss/dispc.c | 7 +++++--
+ drivers/video/fbdev/omap2/omapfb/dss/dsi.c   | 7 +++++--
+ drivers/video/fbdev/omap2/omapfb/dss/dss.c   | 7 +++++--
+ drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c | 5 +++--
+ drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c | 5 +++--
+ drivers/video/fbdev/omap2/omapfb/dss/venc.c  | 7 +++++--
+ 6 files changed, 26 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/media/platform/exynos4-is/mipi-csis.c b/drivers/media/platform/exynos4-is/mipi-csis.c
-index 540151bbf58f..1aac167abb17 100644
---- a/drivers/media/platform/exynos4-is/mipi-csis.c
-+++ b/drivers/media/platform/exynos4-is/mipi-csis.c
-@@ -510,8 +510,10 @@ static int s5pcsis_s_stream(struct v4l2_subdev *sd, int enable)
- 	if (enable) {
- 		s5pcsis_clear_counters(state);
- 		ret = pm_runtime_get_sync(&state->pdev->dev);
--		if (ret && ret != 1)
-+		if (ret && ret != 1) {
-+			pm_runtime_put_noidle(&state->pdev->dev);
- 			return ret;
-+		}
- 	}
+diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dispc.c b/drivers/video/fbdev/omap2/omapfb/dss/dispc.c
+index 4a16798b2ecd..e2b572761bf6 100644
+--- a/drivers/video/fbdev/omap2/omapfb/dss/dispc.c
++++ b/drivers/video/fbdev/omap2/omapfb/dss/dispc.c
+@@ -520,8 +520,11 @@ int dispc_runtime_get(void)
+ 	DSSDBG("dispc_runtime_get\n");
  
- 	mutex_lock(&state->lock);
+ 	r = pm_runtime_get_sync(&dispc.pdev->dev);
+-	WARN_ON(r < 0);
+-	return r < 0 ? r : 0;
++	if (WARN_ON(r < 0)) {
++		pm_runtime_put_sync(&dispc.pdev->dev);
++		return r;
++	}
++	return 0;
+ }
+ EXPORT_SYMBOL(dispc_runtime_get);
+ 
+diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dsi.c b/drivers/video/fbdev/omap2/omapfb/dss/dsi.c
+index d620376216e1..6f9c25fec994 100644
+--- a/drivers/video/fbdev/omap2/omapfb/dss/dsi.c
++++ b/drivers/video/fbdev/omap2/omapfb/dss/dsi.c
+@@ -1137,8 +1137,11 @@ static int dsi_runtime_get(struct platform_device *dsidev)
+ 	DSSDBG("dsi_runtime_get\n");
+ 
+ 	r = pm_runtime_get_sync(&dsi->pdev->dev);
+-	WARN_ON(r < 0);
+-	return r < 0 ? r : 0;
++	if (WARN_ON(r < 0)) {
++		pm_runtime_put_sync(&dsi->pdev->dev);
++		return r;
++	}
++	return 0;
+ }
+ 
+ static void dsi_runtime_put(struct platform_device *dsidev)
+diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dss.c b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
+index 7252d22dd117..3586579c838f 100644
+--- a/drivers/video/fbdev/omap2/omapfb/dss/dss.c
++++ b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
+@@ -768,8 +768,11 @@ int dss_runtime_get(void)
+ 	DSSDBG("dss_runtime_get\n");
+ 
+ 	r = pm_runtime_get_sync(&dss.pdev->dev);
+-	WARN_ON(r < 0);
+-	return r < 0 ? r : 0;
++	if (WARN_ON(r < 0)) {
++		pm_runtime_put_sync(&dss.pdev->dev);
++		return r;
++	}
++	return 0;
+ }
+ 
+ void dss_runtime_put(void)
+diff --git a/drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c b/drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c
+index 7060ae56c062..4804aab34298 100644
+--- a/drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c
++++ b/drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c
+@@ -39,9 +39,10 @@ static int hdmi_runtime_get(void)
+ 	DSSDBG("hdmi_runtime_get\n");
+ 
+ 	r = pm_runtime_get_sync(&hdmi.pdev->dev);
+-	WARN_ON(r < 0);
+-	if (r < 0)
++	if (WARN_ON(r < 0)) {
++		pm_runtime_put_sync(&hdmi.pdev->dev);
+ 		return r;
++	}
+ 
+ 	return 0;
+ }
+diff --git a/drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c b/drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c
+index ac49531e4732..a06b6f1355bd 100644
+--- a/drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c
++++ b/drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c
+@@ -43,9 +43,10 @@ static int hdmi_runtime_get(void)
+ 	DSSDBG("hdmi_runtime_get\n");
+ 
+ 	r = pm_runtime_get_sync(&hdmi.pdev->dev);
+-	WARN_ON(r < 0);
+-	if (r < 0)
++	if (WARN_ON(r < 0)) {
++		pm_runtime_put_sync(&hdmi.pdev->dev);
+ 		return r;
++	}
+ 
+ 	return 0;
+ }
+diff --git a/drivers/video/fbdev/omap2/omapfb/dss/venc.c b/drivers/video/fbdev/omap2/omapfb/dss/venc.c
+index d5404d56c922..0b0ad20afd63 100644
+--- a/drivers/video/fbdev/omap2/omapfb/dss/venc.c
++++ b/drivers/video/fbdev/omap2/omapfb/dss/venc.c
+@@ -348,8 +348,11 @@ static int venc_runtime_get(void)
+ 	DSSDBG("venc_runtime_get\n");
+ 
+ 	r = pm_runtime_get_sync(&venc.pdev->dev);
+-	WARN_ON(r < 0);
+-	return r < 0 ? r : 0;
++	if (WARN_ON(r < 0)) {
++		pm_runtime_put_sync(&venc.pdev->dev);
++		return r;
++	}
++	return 0;
+ }
+ 
+ static void venc_runtime_put(void)
 -- 
-2.17.1
+2.25.1
 
