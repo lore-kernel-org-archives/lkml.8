@@ -2,254 +2,135 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E81FC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 15:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3805C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 16:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 469322071A
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 15:52:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E6B9206D7
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 16:12:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="0vzGm75I"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="L8t2Vk15"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgFNPwe (ORCPT
+        id S1726990AbgFNQMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 11:52:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55852 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726717AbgFNPwe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 11:52:34 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D6E0C03E969
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 08:52:34 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id 35so421812ple.0
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 08:52:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=TouUkFg/FHy2nyUUaR1tDwhIglitrb1TdRNmP/qgBCw=;
-        b=0vzGm75IeQt9SAORs1QTUrYr6o8vgsq+BaiCfqGAFx9xqowYywxn4eZLzLW5gUFnha
-         /T2R7REN+rjaK8VXqyHsJe8TUC3mPiZF4pA0OirFPpNPmJgz2fhp26S9COpWeh453t07
-         VKBuUrJUkHml9Zfm6v3Zu4t+odBNB4FtNQiiqzEGiO3jU+WFC/ooMyV9uRg6t2knHiMl
-         snU7hX1TuAx9wZs3HPxHPRuQgFQF2oK3Lk/9oRZhNO0o4hSsyZQJPkW/TzuohLVf9gI9
-         3GGSQXcr0Jer90Fwu0EdkahSTwqQtgCs/pXO04lN3cYi6tcjfn00Aw2q9KwNKIFh77gy
-         lGaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=TouUkFg/FHy2nyUUaR1tDwhIglitrb1TdRNmP/qgBCw=;
-        b=byaB72KfQOpo2tGtrs85zLAOtkrDZzhiyE6n95ZfcMErYLTPj8EtiCNOkXl5NKaLm+
-         9t2YJyplNA5ILaeBJQlNUHRbd0HByXzxypYUuw7+EQLr7xiQFV/G6vXRsVOrixZ7T0sE
-         RDvoBgblts1Gg0i5nS3xiRWwb2h8bPTfX8fL1BFkEKPTLb56eT52ANEndA6DZrTqNfFS
-         whsrcufvcOyhJXSXjf2cCcC/hhjBMmSKmAS8CK1327Q0qGrgNLkyApjdD2Q3Kj+19a4f
-         AaT5nRLLv5IAUm5htrCcMSivedBBlEGMkULcned2I5//90bzKmX4GIO0UBIPagSM1dex
-         hx3w==
-X-Gm-Message-State: AOAM533fHtniNvNLRADgzlP0Y/XGK177jbZM1bt5r6iDNBtA3Wsnrn+c
-        YbI/E92rM57FR7KuwLSTExTQ60HdFsxUnA==
-X-Google-Smtp-Source: ABdhPJzI5VRwXLels0h7tmfmSGRQi02F+qx3eTQIXbBZCFL8tUNm9IhJnLH6mWhwRRNE0yoJKxBg0g==
-X-Received: by 2002:a17:90a:326a:: with SMTP id k97mr8151376pjb.158.1592149953322;
-        Sun, 14 Jun 2020 08:52:33 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id y6sm11951512pfp.144.2020.06.14.08.52.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 14 Jun 2020 08:52:32 -0700 (PDT)
-Subject: Re: [RFC] io_uring: add restrictions to support untrusted
- applications and guests
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     Stefan Hajnoczi <stefanha@redhat.com>,
-        Jeff Moyer <jmoyer@redhat.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200609142406.upuwpfmgqjeji4lc@steredhat>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <f96beb0a-415c-92fb-96f4-3902b613e9e4@kernel.dk>
-Date:   Sun, 14 Jun 2020 09:52:30 -0600
+        Sun, 14 Jun 2020 12:12:39 -0400
+Received: from mout.web.de ([212.227.17.11]:58011 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726772AbgFNQMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 12:12:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1592151142;
+        bh=6JbQhdoSICrP+1+JUc3VeyJ1lfYceH1iM3T14pw3xpQ=;
+        h=X-UI-Sender-Class:Cc:Subject:To:From:Date;
+        b=L8t2Vk1552ObxoMZtsjiKDxILL6jOKy2GtQm93yWCdwSwJbdQt63n/K7lZmgzlSyS
+         q7pnV8TcaPhfajx0JsV++8rpmX2u05bbYWDVpcZA2uHXdrSrdTgmydPPI2mn/nR8BV
+         twWO9QGhFM0NbuWBh6Zk8k8U3+Xy3NyEzUGCmick=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.131.103.145]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1N1LwP-1imvhV1pLH-012lLJ; Sun, 14
+ Jun 2020 18:12:22 +0200
+Cc:     cocci@systeme.lip6.fr, linux-kernel@vger.kernel.org
+Subject: Re: [Cocci] coccinelle issues
+To:     Julia Lawall <julia.lawall@inria.fr>,
+        Randy Dunlap <rdunlap@infradead.org>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <417df11f-3dea-9efc-212f-dcaa8c6dc331@web.de>
+Date:   Sun, 14 Jun 2020 18:12:21 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200609142406.upuwpfmgqjeji4lc@steredhat>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+X-Provags-ID: V03:K1:f1AJNcpo8g4qLbIaU0pFgKFYtlJWz/7hPJwp3B9WgmIYml8jf1+
+ Mu5HaHAwb48i/rfwKTSxYtX2ukRi4P0liMsdfOIYbDH+c01x9MqFC1EIbLtdipJNYFs5pus
+ HcfJE//e03Cym2ou6y6BEINi/Nw9vnXVNCSxEXM6ynCu35b9u3/Gd8Dmsu4Z5aGF1epjdjy
+ oMe045iXdyA9lsuLAntwg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ZSPTPY+tvlA=://YXrtrLk8yrBtM5Vk70B3
+ COFq9MwMFLMkYDX5CBgxhtP3Usk3XOCDlLNkXRgqTtMfsTSNqp/uVaGW1cdiuVgnZZgbRAeFp
+ +qRq3C/xtVpeWDsvFyIX54qviqVR8ZFs/OaGV0rpZjF8PG0imlDlDBNuRmlSZUeLROeGx/TUV
+ 0ryYPGoxIZWncNWc/AK3Kvb32B1PKMlUiQGJWqFY+/Dwp0+1oKXl+s7wERj2QT/26We84OvOL
+ bNekaUxF2QU0Fe6T8qfDAAsVRmhuL9jrsUElQx1v2SkwzWWVMU0eRA2cCA6p8V5r92IMqbOZC
+ 3Nt8wADMgAOzCdil7ArxIwnb/dM7hIhlapawYhIgqQAdZcLsYCg7jFOOfQsMAStT0svPlMUsh
+ MsWF9htTmZjY0i7DTQ+Z6WYLB2ngmYrCb3aDh5r/WVYc4wQ84/xT3LZvpZl5Yd9y22G1lraiV
+ H+bLaa+WYKinrIiDHwI3L9SRCNPi3NQyQUPLlfYMRA8KNV6cogqwDcTrlDVsAzpbtF45du9ek
+ DpPDgWTRDSD/AVijkHo8HdYNuaj8+75zfI/ORva8E//Ta8IJfcIGtuQ3O+Q71E14FL7P/sM2M
+ ARlutNvPPJ1JdxRbdtgxDN1ri7zUK9MWiWYiyM/hgqHP0oSX4+YEYW06XiGFJ3byCBKqKDwgO
+ DvoKVt4WwTZ2MMWnMWaWBee0OxSnwvUxvkdJEwy+fa5VYJ89ItfDmaqgAdeNG/mqAcZbxo8yJ
+ aenCPi9est6mzpprJkuUblVUZu8/+Wtamdx6DbDtHD04mCBabVcGEAfANSvHqOkK230t8nn3Y
+ +jfGFCwFXTS4VbQ+kEU76PZN+nu9QSr7pRQR1tarx4zwQIagU+oz9U/IYeOw8CTpt6NqUII+8
+ 2m1f9sMSj+CLROZtKdbRpoWl2ok/QnVKuzLw93TOyjK354EHkmJGHY2k/H7RCGqMt0kh0HoXq
+ H8+ibQznJhb0PRNHUBHsahbuYxdMm7RB5qc3I5/9XexfQrM5nPzK4nS0BSBScLhppUs42yvVY
+ VEsgDQ7IcEbj48ySCX6x1OSb8Zcda/pgoV4DvJyZaodqthwp8qBaHJqq4e/nki0oa1r1x788z
+ cm6VbNB4QdgJ/LlsFwy3SqW4K3y19P2qp+02VTb/3znM0R+GCRse0nqd6AiI+LkIHhuioAANp
+ D4zKBJD7EIkBVtaOQwvs4yJXK5+ePNJfNLrzxiFnEbDCBlphNRMs5mHGK+W4tN0fXBiC2BeSj
+ fhlydXpy9iZAnB0cH
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/9/20 8:24 AM, Stefano Garzarella wrote:
-> Hi Jens,
-> Stefan and I have a proposal to share with io_uring community.
-> Before implementing it we would like to discuss it to receive feedbacks and
-> to see if it could be accepted:
-> 
-> Adding restrictions to io_uring
-> =====================================
-> The io_uring API provides submission and completion queues for performing
-> asynchronous I/O operations. The queues are located in memory that is
-> accessible to both the host userspace application and the kernel, making it
-> possible to monitor for activity through polling instead of system calls. This
-> design offers good performance and this makes exposing io_uring to guests an
-> attractive idea for improving I/O performance in virtualization.
-> 
-> PoC and preliminary benchmarks
-> ---------------------------
-> We realized a PoC, using QEMU and virtio-blk device, to share io_uring
-> CQ and SQ rings with the guest.
-> QEMU initializes io_uring, registers the device (NVMe) fd through
-> io_uring_register(2), and maps the rings in the guest memory.
-> The virtio-blk driver uses these rings to send requests instead of using
-> the standard virtqueues.
-> 
-> The PoC implements a pure polling solution where the application is polling
-> (IOPOLL enabled) in the guest and the sqpoll_kthread is polling in the host
-> (SQPOLL and IOPOLL enabled).
-> 
-> These are the encouraging results we obtained from this preliminary work;
-> we used fio (rw=randread bs=4k) to measure the kIOPS on a NVMe device:
-> 
-> - bare-metal
->                                                        iodepth
->   | fio ioengine                              |  1  |  8  |  16 |  32 |
->   |-------------------------------------------|----:|----:|----:|----:|
->   | io_uring (SQPOLL + IOPOLL)                | 119 | 550 | 581 | 585 |
->   | io_uring (IOPOLL)                         | 122 | 502 | 519 | 538 |
-> 
-> - QEMU/KVM guest (aio=io_uring)
->                                                        iodepth
->   | virtio-blk            | fio ioengine      |  1  |  8  |  16 |  32 |
->   |-----------------------|-------------------|----:|----:|----:|----:|
->   | virtqueues            | io_uring (IOPOLL) |  27 | 144 | 209 | 266 |
->   | virtqueues + iothread | io_uring (IOPOLL) |  73 | 264 | 306 | 312 |
->   | io_uring passthrough  | io_uring (IOPOLL) | 104 | 532 | 577 | 585 |
-> 
->   All guest experiments are using the QEMU io_uring backend with SQPOLL and
->   IOPOLL enabled. The virtio-blk driver is modified to support blovk io_poll
->   on both virtqueues and io_uring passthrough.
-> 
-> Before developing this proof-of-concept further we would like to discuss
-> io_uring changes required to restrict rings since this mechanism is a
-> prerequisite for real-world use cases where guests are untrusted.
-> 
-> Restrictions
-> ------------
-> This document proposes io_uring API changes that safely allow untrusted
-> applications or guests to use io_uring. io_uring's existing security model is
-> that of kernel system call handler code. It is designed to reject invalid
-> inputs from host userspace applications. Supporting guests as io_uring API
-> clients adds a new trust domain with access to even fewer resources than host
-> userspace applications.
-> 
-> Guests do not have direct access to host userspace application file descriptors
-> or memory. The host userspace application, a Virtual Machine Monitor (VMM) such
-> as QEMU, grants access to a subset of its file descriptors and memory. The
-> allowed file descriptors are typically the disk image files belonging to the
-> guest. The memory is typically the virtual machine's RAM that the VMM has
-> allocated on behalf of the guest.
-> 
-> The following extensions to the io_uring API allow the host application to
-> grant access to some of its file descriptors.
-> 
-> These extensions are designed to be applicable to other use cases besides
-> untrusted guests and are not virtualization-specific. For example, the
-> restrictions can be used to allow only a subset of sqe operations available to
-> an application similar to seccomp syscall whitelisting.
-> 
-> An address translation and memory restriction mechanism would also be
-> necessary, but we can discuss this later.
-> 
-> The IOURING_REGISTER_RESTRICTIONS opcode
-> ----------------------------------------
-> The new io_uring_register(2) IOURING_REGISTER_RESTRICTIONS opcode permanently
-> installs a feature whitelist on an io_ring_ctx. The io_ring_ctx can then be
-> passed to untrusted code with the knowledge that only operations present in the
-> whitelist can be executed.
-> 
-> The whitelist approach ensures that new features added to io_uring do not
-> accidentally become available when an existing application is launched on a
-> newer kernel version.
-> 
-> The IORING_REGISTER_RESTRICTIONS opcode takes an array of struct
-> io_uring_restriction elements that describe whitelisted features:
-> 
->   #define IORING_REGISTER_RESTRICTIONS 11
-> 
->   /* struct io_uring_restriction::opcode values */
->   enum {
->       /* Allow an io_uring_register(2) opcode */
->       IORING_RESTRICTION_REGISTER_OP,
-> 
->       /* Allow an sqe opcode */
->       IORING_RESTRICTION_SQE_OP,
-> 
->       /* Only allow fixed files */
->       IORING_RESTRICTION_FIXED_FILES_ONLY,
-> 
->       /* Only allow registered addresses and translate them */
->       IORING_RESTRICTION_BUFFER_CHECK
->   };
-> 
->   struct io_uring_restriction {
->       __u16 opcode;
->       union {
->           __u8 register_op; /* IORING_RESTRICTION_REGISTER_OP */
->           __u8 sqe_op;      /* IORING_RESTRICTION_SQE_OP */
->       };
->       __u8 resv;
->       __u32 resv2[3];
->   };
-> 
-> This call can only be made once. Afterwards it is not possible to change
-> restrictions anymore. This prevents untrusted code from removing restrictions.
-> 
-> Limiting access to io_uring operations
-> --------------------------------------
-> The following example shows how to whitelist IORING_OP_READV, IORING_OP_WRITEV,
-> and IORING_OP_FSYNC:
-> 
->   struct io_uring_restriction restrictions[] = {
->       {
->           .opcode = IORING_RESTRICTION_SQE_OP,
->           .sqe_op = IORING_OP_READV,
->       },
->       {
->           .opcode = IORING_RESTRICTION_SQE_OP,
->           .sqe_op = IORING_OP_WRITEV,
->       },
->       {
->           .opcode = IORING_RESTRICTION_SQE_OP,
->           .sqe_op = IORING_OP_FSYNC,
->       },
->       ...
->   };
-> 
->   io_uring_register(ringfd, IORING_REGISTER_RESTRICTIONS,
->                     restrictions, ARRAY_SIZE(restrictions));
-> 
-> Limiting access to file descriptors
-> -----------------------------------
-> The fixed files mechanism can be used to limit access to a set of file
-> descriptors:
-> 
->   struct io_uring_restriction restrictions[] = {
->       {
->           .opcode = IORING_RESTRICTION_FIXED_FILES_ONLY,
->       },
->       ...
->   };
-> 
->   io_uring_register(ringfd, IORING_REGISTER_RESTRICTIONS,
->                     restrictions, ARRAY_SIZE(restrictions));
-> 
-> Only requests with the sqe->flags IOSQE_FIXED_FILE bit set will be allowed.
+> > Note2: https://github.com/coccinelle/coccinelle/blob/master/install.txt
+> > says that 'spatch' is a script, but it seems to be a binary executable file.
+>
+> Actually, it is a script, and the fact that you say it is a binary may be
+> the reason for your python problem.  Normally there is a script
+> (scripts/spatch) that make install puts in place that refers back to where
+> your Coccinelle is installed.
 
-I don't think this sounds unreasonable, but I'd really like to see a
-prototype hacked up before rendering any further opinions on it :-)
+I suggest to take another look at the corresponding software development history.
+The build infrastructures were occasionally updated in the meantime.
 
--- 
-Jens Axboe
+elfring@Sonne:~> SP=$(which spatch) && file $SP && du -h $SP
+/usr/local/bin/spatch: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, with debug_info, not stripped
+16M	/usr/local/bin/spatch
 
+Regards,
+Markus
