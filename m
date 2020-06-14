@@ -2,158 +2,71 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 118C8C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 18:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D71DC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 18:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3282206B7
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 18:45:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="UUyYQbIT"
+	by mail.kernel.org (Postfix) with ESMTP id 3DD1920739
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 18:55:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592160932;
+	bh=lL1fGKkbZyXCQL2eS48VPf72RgVcfhKh0JitOJrCACI=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=1pUsIIfB3Wp7eI++YzldYGQauYF8faOt+kI87/+H/tBmPSPxY8Iu64Mq4VxCDHz2l
+	 mUqI/16LjlH5sLVF6vPrvJKhV4hxCV4paBeSTnwGL59nbYCzOJ1fKJ1Wl4BYBkyRsy
+	 rcyYxw1bF2bMexld0SYy8bDmt99JQ4FkcyFYtxhI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbgFNSpv (ORCPT
+        id S1727788AbgFNSzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 14:45:51 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:22452 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726648AbgFNSpu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 14:45:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1592160349; x=1623696349;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=sgsX8ySkFLBhREgHNtij5IKIrhlN4HxOXlYT+wYkyiQ=;
-  b=UUyYQbITE1Wr3rzArK9M1cTKYAoZ+iWEZSY1bGeLfKemYf44iDPECM1S
-   wIHviECgS1ad+b79zYaLUm7Cn9+CAW81BryT8ftwz96b9a+P4sU3qa06L
-   jyG48ZBX4Um4n6nyhAO5eYjn7wz/uABge5mce25UXwnZ7Zt/+LorzZAWj
-   I0PMkkN51+L1Q2wIk3iUVMz9YaXqo9pSxpyoobSx16+Q1ztTDmPe5AEST
-   mSI43yMV8CdVCstjYqkaDZBvvhHyOXkUS8LRr024C9UDsJeeZwFfpS9kO
-   /whQgw4ieJcQOutz/RzgDfCC7lYjeuwjnQ0wPCUniR1HELelbJ8p9aTvk
-   g==;
-IronPort-SDR: TEgTdmbmtAv7dsB6y9XEQzixIutkqK733LH0MqVdB8SSjYhTwmKz1WUnw/Yb8of4epU/vP4yl8
- 316yGdg0t3by+n7SbAzjGNkefa+blAeqGhuk7u608l0cD0nGyJz0lL/3R8VCVW2LS4rKRVMCpd
- vVmUHJpyL3/g1cmfVnxcGgUa34KHeqtXVXaVOUk8vs0+oy0LqPoqRpIRBV5yjNMXIEVuDbTor3
- 3FK5ItXujERWZ97pSrjNIThPuAJ9hEXYp5hgRAJEiJFwK+KQ8k0XZrdjdIIfPo0BBcC/dGtcLO
- s1M=
-X-IronPort-AV: E=Sophos;i="5.73,512,1583218800"; 
-   d="scan'208";a="15722889"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 14 Jun 2020 11:45:49 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Sun, 14 Jun 2020 11:45:48 -0700
-Received: from localhost (10.10.115.15) by chn-vm-ex04.mchp-main.com
- (10.10.85.152) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
- Transport; Sun, 14 Jun 2020 11:45:48 -0700
-Date:   Sun, 14 Jun 2020 20:45:47 +0200
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     Vladimir Oltean <olteanv@gmail.com>
-CC:     <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <UNGLinuxDriver@microchip.com>, <claudiu.manoil@nxp.com>,
-        <alexandre.belloni@bootlin.com>, <andrew@lunn.ch>,
-        <vivien.didelot@gmail.com>, <f.fainelli@gmail.com>,
-        <kuba@kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net] MAINTAINERS: merge entries for felix and ocelot
- drivers
-Message-ID: <20200614184547.ibnuhypftcix5evq@soft-dev3.localdomain>
-References: <20200613220753.948166-1-olteanv@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <20200613220753.948166-1-olteanv@gmail.com>
+        Sun, 14 Jun 2020 14:55:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51956 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726648AbgFNSza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 14:55:30 -0400
+Subject: Re: Re: [GIT PULL] SafeSetID LSM changes for v5.8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592160930;
+        bh=lL1fGKkbZyXCQL2eS48VPf72RgVcfhKh0JitOJrCACI=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=XE839U3V2su0tyYzkgMs0yUglaKFI8iPJUiWpeubVn4TMR8wYsgzJusk2DwRiUo2u
+         CyhizDAUqAf3BdURJVibXgpIAZEa0OAUV55o7LZ8/01wx8dTTHabQJzU25Me4Ody7G
+         ZU7ZaE7ooKcP5EZfKzKyINBFm4AGOuQgOyT0o7r4=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CAJ-EccPGQ62yMK1Nmvie4qWzproSqb4POwAD4_0Nt62KLbGhqg@mail.gmail.com>
+References: <CAJ-EccOy4qDpbfrP5=KH40LSOx1F4-ciY2=hFv_c+goUHLJ6PQ@mail.gmail.com>
+ <CAHk-=wiLXXR1+o4VAuw5MM3V1D8h6C6te3y8VMvW8iAJw6noJg@mail.gmail.com>
+ <CAJ-EccPGQ62yMK1Nmvie4qWzproSqb4POwAD4_0Nt62KLbGhqg@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAJ-EccPGQ62yMK1Nmvie4qWzproSqb4POwAD4_0Nt62KLbGhqg@mail.gmail.com>
+X-PR-Tracked-Remote: https://github.com/micah-morton/linux.git
+ tags/LSM-add-setgid-hook-5.8-author-fix
+X-PR-Tracked-Commit-Id: 39030e1351aa1aa7443bb2da24426573077c83da
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 4a87b197c1da6b16608d5110709e0b3308e25dcd
+Message-Id: <159216093006.5153.590414223047911199.pr-tracker-bot@kernel.org>
+Date:   Sun, 14 Jun 2020 18:55:30 +0000
+To:     Micah Morton <mortonm@chromium.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 06/14/2020 01:07, Vladimir Oltean wrote:
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> 
-> From: Vladimir Oltean <vladimir.oltean@nxp.com>
-> 
-> The ocelot switchdev driver also provides a set of library functions for
-> the felix DSA driver, which in practice means that most of the patches
-> will be of interest to both groups of driver maintainers.
-> 
-> So, as also suggested in the discussion here, let's merge the 2 entries
-> into a single larger one:
-> https://www.spinics.net/lists/netdev/msg657412.html
-> 
-> Note that the entry has been renamed into "OCELOT SWITCH" since neither
-> Vitesse nor Microsemi exist any longer as company names, instead they
-> are now named Microchip (which again might be subject to change in the
-> future), so use the device family name instead.
-> 
-> Suggested-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-> ---
->  MAINTAINERS | 28 ++++++++++++----------------
->  1 file changed, 12 insertions(+), 16 deletions(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index f08f290df174..621474172fdf 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -11339,14 +11339,6 @@ L:     dmaengine@vger.kernel.org
->  S:     Supported
->  F:     drivers/dma/at_xdmac.c
-> 
-> -MICROSEMI ETHERNET SWITCH DRIVER
-> -M:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-> -M:     Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
-> -L:     netdev@vger.kernel.org
-> -S:     Supported
-> -F:     drivers/net/ethernet/mscc/
-> -F:     include/soc/mscc/ocelot*
-> -
->  MICROSEMI MIPS SOCS
->  M:     Alexandre Belloni <alexandre.belloni@bootlin.com>
->  M:     Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
-> @@ -12305,6 +12297,18 @@ M:     Peter Zijlstra <peterz@infradead.org>
->  S:     Supported
->  F:     tools/objtool/
-> 
-> +OCELOT ETHERNET SWITCH DRIVER
-> +M:     Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
-> +M:     Vladimir Oltean <vladimir.oltean@nxp.com>
-> +M:     Claudiu Manoil <claudiu.manoil@nxp.com>
-> +M:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-> +L:     netdev@vger.kernel.org
-> +S:     Supported
-> +F:     include/soc/mscc/ocelot*
-> +F:     drivers/net/ethernet/mscc/
-> +F:     drivers/net/dsa/ocelot/*
-> +F:     net/dsa/tag_ocelot.c
-> +
->  OCXL (Open Coherent Accelerator Processor Interface OpenCAPI) DRIVER
->  M:     Frederic Barrat <fbarrat@linux.ibm.com>
->  M:     Andrew Donnellan <ajd@linux.ibm.com>
-> @@ -18188,14 +18192,6 @@ S:     Maintained
->  F:     drivers/input/serio/userio.c
->  F:     include/uapi/linux/userio.h
-> 
-> -VITESSE FELIX ETHERNET SWITCH DRIVER
-> -M:     Vladimir Oltean <vladimir.oltean@nxp.com>
-> -M:     Claudiu Manoil <claudiu.manoil@nxp.com>
-> -L:     netdev@vger.kernel.org
-> -S:     Maintained
-> -F:     drivers/net/dsa/ocelot/*
-> -F:     net/dsa/tag_ocelot.c
-> -
->  VIVID VIRTUAL VIDEO DRIVER
->  M:     Hans Verkuil <hverkuil@xs4all.nl>
->  L:     linux-media@vger.kernel.org
-> --
-> 2.25.1
-> 
+The pull request you sent on Sun, 14 Jun 2020 11:03:58 -0700:
 
-Acked-by: Horatiu Vultur<horatiu.vultur@microchip.com>
+> https://github.com/micah-morton/linux.git tags/LSM-add-setgid-hook-5.8-author-fix
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/4a87b197c1da6b16608d5110709e0b3308e25dcd
+
+Thank you!
 
 -- 
-/Horatiu
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
