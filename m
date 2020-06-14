@@ -2,93 +2,118 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D43B8C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 16:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D10C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 17:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9C35206D7
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 16:50:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592153440;
-	bh=v8X2IpTzgvRihpTvksL68U9GwXT6tMsMnBRZAroivhs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=lQyeYsHF5VLIr1PiMoQWMMF+FD0RBa4/ApZQ1ys3IaXJZvtZZ0hrbsgM4DfA47uT4
-	 qFWmPSRK7G0LabDgTtgR4s7PUXXSZuRQbPrhiZFVq9yypGjIpBsJSylPon21oRY2ev
-	 eU6URJvaY8v/wjIiRNeFerfmFkoRQdA/sCH8XhW0=
+	by mail.kernel.org (Postfix) with ESMTP id D3E86206D7
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 17:02:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z+OSw4DL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbgFNQuj (ORCPT
+        id S1727083AbgFNQ7p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 12:50:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36444 "EHLO
+        Sun, 14 Jun 2020 12:59:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726903AbgFNQui (ORCPT
+        with ESMTP id S1726903AbgFNQ7o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 12:50:38 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 151A5C05BD43
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 09:50:37 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id x27so8111562lfg.9
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 09:50:36 -0700 (PDT)
+        Sun, 14 Jun 2020 12:59:44 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 725BAC05BD43;
+        Sun, 14 Jun 2020 09:59:43 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id g7so6695229qvx.11;
+        Sun, 14 Jun 2020 09:59:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GNTbu2Bx7XRrmCnutxciM8zN4YdqKVJvKPFK7H3YQGg=;
-        b=NF91Lq6jqiu3UTIblaZW89jQJu97X+NJpMZiCPOoS7jkyPk4uajF4J2cU/f9tEhBn0
-         fLCM7fZMUTmXdz9Pj9yYR1TrHVa7OwMFD1XM6fElnwvlLWRFhMEeD0qDMqkKaOSjlDHG
-         Wzdc/fHywJ5oUxwF36rm9fuK4Zpm6taSzZsb8=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=F7zCqDPAcFeQ1dIJ8uLyY4RFFP0+JS+chzWpOQZqqwQ=;
+        b=Z+OSw4DLQoCsoz7od7iAIVoLNNmtINNUW/X7wIstEbNuji2fVZ0G8qqpcF1JbV1CZo
+         oJQGYqDPX7LQRODhuVjM1cO6rllEDHDq3MtU14emBs8chHXnbADaTAo68GftqLoEj8Pe
+         XHIoBaQ7KU0Uk+IH/GEUdOpYP6EsYbSF8AICK4fX650hBU1qrFWNhbs9myiTZGzD/dAm
+         cpC8yRjW1zKKi5R4d4XZZQFBj0A3sgf0A6LfOSb3JbV6yO09wSN4ZywAPyJzDPRL6obz
+         eePywyAqLJjcpdpvmTajA47tVOrHFtFcFyMHY3Unra03IkM1IEPJmT2tft4Dy/fB78dj
+         qIzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GNTbu2Bx7XRrmCnutxciM8zN4YdqKVJvKPFK7H3YQGg=;
-        b=NGF3rU3g1PNoXLj7OXYsNNU4lfVRPjfH0lI4but1EcT7ftZT+098+fKhsnCHJreVTM
-         /EEqRm9/C070SuP+KRZ7hSsnA1zFwAFWF4/mfXjU8umg5jZEs1rEvqzqwJmqk44U1THh
-         ToDaTzfEQdrplSwhXK1X1n1IFVqh8XJ8G3f4I9Zb58VBpczq8GoYF+fliwrVmD+p8qcx
-         1MGKFb63q63FmbL7LVIzrnJ7JUWfbRl2lrSEYuvWHJNE+RmKi4ZiQ9PYvpdIS4d5zCvO
-         fJknrYFERMggA0sqMQgCohZ/5bCwcI+gLKc1vFHBljnRT9XJzT1TNQffMEbr0Odv1BIH
-         KT+w==
-X-Gm-Message-State: AOAM531yeFsj8sqcGCn4+GywOz0e671bsV6U1orwI07bzPc/NV/IopaQ
-        xjnVEIrqvtdn6gWBzlUC3xxfD4vPllo=
-X-Google-Smtp-Source: ABdhPJyIu2USXxeTQDmGJgfvXBcIZ89zZS/ggLsF+tKWjcSuJudfhkYGt1PGHDpKjVLAEkjGm8v/QQ==
-X-Received: by 2002:a19:7612:: with SMTP id c18mr11710978lff.7.1592153434577;
-        Sun, 14 Jun 2020 09:50:34 -0700 (PDT)
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
-        by smtp.gmail.com with ESMTPSA id d8sm27652lfa.16.2020.06.14.09.50.33
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 14 Jun 2020 09:50:33 -0700 (PDT)
-Received: by mail-lj1-f177.google.com with SMTP id c17so16324949lji.11
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 09:50:33 -0700 (PDT)
-X-Received: by 2002:a2e:8e78:: with SMTP id t24mr10825078ljk.314.1592153433099;
- Sun, 14 Jun 2020 09:50:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1592135316.git.dsterba@suse.com>
-In-Reply-To: <cover.1592135316.git.dsterba@suse.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 14 Jun 2020 09:50:17 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whbO-6zmwfQaX2=cDfsq_sN1PZ6_CAbqLgw3DUptnFrPg@mail.gmail.com>
-Message-ID: <CAHk-=whbO-6zmwfQaX2=cDfsq_sN1PZ6_CAbqLgw3DUptnFrPg@mail.gmail.com>
-Subject: Re: [GIT PULL] Btrfs updates for 5.8, part 2
-To:     David Sterba <dsterba@suse.com>
-Cc:     linux-btrfs <linux-btrfs@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=F7zCqDPAcFeQ1dIJ8uLyY4RFFP0+JS+chzWpOQZqqwQ=;
+        b=scUeZu52xmLcZsQZQ42xTI9uFRCFbs0Ej/CZ6uFzVIAhd4dBpNsVrNenj03x1txhRM
+         HSCZBIv4UCOQLSYpjMN2/YdisG3bIvBpJsrXbovnkJVqNmZD0FLj9piZr5s1bDXA68X7
+         5iEShvyJAkpjMXe/6DGBby+1DueeKfyoXyNK7TqFJXVJ4EkYvhDv+4FNGCduw6GxH876
+         s6UJjJ0C9cC5bf/ZUipAoxBgR9djBNHcRcWF2dV8cvIEjDBP2CP5cRyg9th5aG/qVDFa
+         2T1bAUXELTOMqx50Qocx4m0lH2wsMdo0pgqSlAlQbXGGhdppjQpmSRssWQ2DWG1P4dvo
+         1VDA==
+X-Gm-Message-State: AOAM533l2I4GVOlC3OkUOgkqSOvDxJaQ9auPeTFvViI3dlDOOgQasKhr
+        GVbk4+hNSq0bJmHO3kktu9A=
+X-Google-Smtp-Source: ABdhPJyUqBWzPw5iGPWHWpX0+2uLzH97Q/LOC+TST8CX5VADUz3AVCQugKzCBaI312GEIJlrgeQUdw==
+X-Received: by 2002:a0c:8145:: with SMTP id 63mr2436076qvc.60.1592153982266;
+        Sun, 14 Jun 2020 09:59:42 -0700 (PDT)
+Received: from buszk-y710.fios-router.home (pool-108-54-206-188.nycmny.fios.verizon.net. [108.54.206.188])
+        by smtp.googlemail.com with ESMTPSA id k26sm10571827qtk.55.2020.06.14.09.59.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 14 Jun 2020 09:59:41 -0700 (PDT)
+From:   Zekun Shen <bruceshenzk@gmail.com>
+Cc:     Zekun Shen <bruceshenzk@gmail.com>,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Chris Snook <chris.snook@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net: alx: fix race condition in alx_remove
+Date:   Sun, 14 Jun 2020 12:59:12 -0400
+Message-Id: <20200614165912.25622-1-bruceshenzk@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 14, 2020 at 4:56 AM David Sterba <dsterba@suse.com> wrote:
->
-> Reverts are not great, but under current circumstances I don't see
-> better options.
+There is a race condition exist during termination. The path is
+alx_stop and then alx_remove. An alx_schedule_link_check could be called
+before alx_stop and invoke alx_link_check later. Alx_stop frees the
+napis, and alx_remove cancels any pending works. If any of the work is
+scheduled before termination and invoked before alx_remove, a
+null-ptr-deref occurs because both expect alx->napis[i].
 
-Pulled. Are people discussing how to make iomap work for everybody?
-It's a bit sad if we can't have the major filesystems move away from
-the old buffer head interfaces to a common more modern one..
+This patch fix the race condition by moving cancel_work_sync functions
+before alx_free_napis inside alx_stop.
 
-             Linus
+Signed-off-by: Zekun Shen <bruceshenzk@gmail.com>
+---
+ drivers/net/ethernet/atheros/alx/main.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/ethernet/atheros/alx/main.c b/drivers/net/ethernet/atheros/alx/main.c
+index b9b4edb91..1487d6765 100644
+--- a/drivers/net/ethernet/atheros/alx/main.c
++++ b/drivers/net/ethernet/atheros/alx/main.c
+@@ -1249,6 +1249,9 @@ static int __alx_open(struct alx_priv *alx, bool resume)
+ 
+ static void __alx_stop(struct alx_priv *alx)
+ {
++	cancel_work_sync(&alx->link_check_wk);
++	cancel_work_sync(&alx->reset_wk);
++
+ 	alx_halt(alx);
+ 	alx_free_irq(alx);
+ 	alx_free_rings(alx);
+@@ -1855,9 +1858,6 @@ static void alx_remove(struct pci_dev *pdev)
+ 	struct alx_priv *alx = pci_get_drvdata(pdev);
+ 	struct alx_hw *hw = &alx->hw;
+ 
+-	cancel_work_sync(&alx->link_check_wk);
+-	cancel_work_sync(&alx->reset_wk);
+-
+ 	/* restore permanent mac address */
+ 	alx_set_macaddr(hw, hw->perm_addr);
+ 
+-- 
+2.17.1
+
