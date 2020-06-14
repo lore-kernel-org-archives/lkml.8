@@ -2,183 +2,254 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 888C1C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 15:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E81FC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 15:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 679E5206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 15:48:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 469322071A
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 15:52:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V79ryVet"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="0vzGm75I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbgFNPsR (ORCPT
+        id S1727023AbgFNPwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 11:48:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55152 "EHLO
+        Sun, 14 Jun 2020 11:52:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726717AbgFNPsQ (ORCPT
+        with ESMTP id S1726717AbgFNPwe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 11:48:16 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81A05C05BD43;
-        Sun, 14 Jun 2020 08:48:16 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id x25so2765063edr.8;
-        Sun, 14 Jun 2020 08:48:16 -0700 (PDT)
+        Sun, 14 Jun 2020 11:52:34 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D6E0C03E969
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 08:52:34 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id 35so421812ple.0
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 08:52:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ME3U0G8Zt/SJ5gubx2EfaaOcuEB5wP9pzS5fCVI+pj8=;
-        b=V79ryVetzGA0qr5vZ7Vnt83Uyb9oXPnBDHqomghjxUYmingxu7NgaRktd9cGiJIU5A
-         e2/bQNc942hIsvBY1OTB1dN4MQdr1CXoNKn5XGGfvymlcY1DH7fHJI7/XPY0+yVKgjqv
-         T1mQkFBGRDwaKdh93H/D96w4M4x7vJ63uFs8tzPUhXFd0mtVEc4DcZRBON3IgtwI8kW6
-         AEX90mMNe9WX/vtFHDhZ//4LPhJ4Kqez1yyWU4ef13JINCsgEk2AIDQhymIxnb+jLYhR
-         +QClAr618cV7DmDmkzJw+gv+HyGCiPqcEn+jm/XnKg4KFC5Wyjre1GUPgdRBHexL7sd5
-         nzkg==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=TouUkFg/FHy2nyUUaR1tDwhIglitrb1TdRNmP/qgBCw=;
+        b=0vzGm75IeQt9SAORs1QTUrYr6o8vgsq+BaiCfqGAFx9xqowYywxn4eZLzLW5gUFnha
+         /T2R7REN+rjaK8VXqyHsJe8TUC3mPiZF4pA0OirFPpNPmJgz2fhp26S9COpWeh453t07
+         VKBuUrJUkHml9Zfm6v3Zu4t+odBNB4FtNQiiqzEGiO3jU+WFC/ooMyV9uRg6t2knHiMl
+         snU7hX1TuAx9wZs3HPxHPRuQgFQF2oK3Lk/9oRZhNO0o4hSsyZQJPkW/TzuohLVf9gI9
+         3GGSQXcr0Jer90Fwu0EdkahSTwqQtgCs/pXO04lN3cYi6tcjfn00Aw2q9KwNKIFh77gy
+         lGaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ME3U0G8Zt/SJ5gubx2EfaaOcuEB5wP9pzS5fCVI+pj8=;
-        b=YrGnge5/xUnqhWHJQJnpvjTmBZZ/3oSLVG7LtyJv77qeGt5muPI9VUR3ae7Yr1dNeo
-         Geb2dyFtvpIo85koOXo9em+pTSF3/B5NJDvUcCdKMxz2InpBZdfKaxDyo5b03g8Ouxyf
-         bdPQ+cNTYOPCvMy9d9RfO4ELuFE5/eylyfFnUOKE+x3l0Qk+n+6OZUD2QEG3wvfUQiw6
-         u18LPmoHFEzrJsteEau00BJeSC9Q3ZbfSKN+tBzAwJVadnS7XIAuoAftwOghauJtRBzt
-         26CA6OAbtr4XoybIbxaqMXODBJ7WmvB4jTGl2LhA0WELctNNakp3BnHPTdnEZ+Z/g/kS
-         BFLw==
-X-Gm-Message-State: AOAM532tIugjdebBOMCpyjkoN0HRvb/9iMm1BL3LFlmIFw7ArdjrZEcZ
-        aK+cNR/noftohFD5yFnGwv/Xth5qKvE7IfzeqVs=
-X-Google-Smtp-Source: ABdhPJyp4wBOegUn+3seNKmQIGLb0wXHmGsh6jzPeHw/EUphwLWjy3o460vOieqsqWdkPR1Wnf6x22oR7ibYyUDszas=
-X-Received: by 2002:a05:6402:545:: with SMTP id i5mr20655346edx.179.1592149695061;
- Sun, 14 Jun 2020 08:48:15 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TouUkFg/FHy2nyUUaR1tDwhIglitrb1TdRNmP/qgBCw=;
+        b=byaB72KfQOpo2tGtrs85zLAOtkrDZzhiyE6n95ZfcMErYLTPj8EtiCNOkXl5NKaLm+
+         9t2YJyplNA5ILaeBJQlNUHRbd0HByXzxypYUuw7+EQLr7xiQFV/G6vXRsVOrixZ7T0sE
+         RDvoBgblts1Gg0i5nS3xiRWwb2h8bPTfX8fL1BFkEKPTLb56eT52ANEndA6DZrTqNfFS
+         whsrcufvcOyhJXSXjf2cCcC/hhjBMmSKmAS8CK1327Q0qGrgNLkyApjdD2Q3Kj+19a4f
+         AaT5nRLLv5IAUm5htrCcMSivedBBlEGMkULcned2I5//90bzKmX4GIO0UBIPagSM1dex
+         hx3w==
+X-Gm-Message-State: AOAM533fHtniNvNLRADgzlP0Y/XGK177jbZM1bt5r6iDNBtA3Wsnrn+c
+        YbI/E92rM57FR7KuwLSTExTQ60HdFsxUnA==
+X-Google-Smtp-Source: ABdhPJzI5VRwXLels0h7tmfmSGRQi02F+qx3eTQIXbBZCFL8tUNm9IhJnLH6mWhwRRNE0yoJKxBg0g==
+X-Received: by 2002:a17:90a:326a:: with SMTP id k97mr8151376pjb.158.1592149953322;
+        Sun, 14 Jun 2020 08:52:33 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id y6sm11951512pfp.144.2020.06.14.08.52.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 14 Jun 2020 08:52:32 -0700 (PDT)
+Subject: Re: [RFC] io_uring: add restrictions to support untrusted
+ applications and guests
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     Stefan Hajnoczi <stefanha@redhat.com>,
+        Jeff Moyer <jmoyer@redhat.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200609142406.upuwpfmgqjeji4lc@steredhat>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <f96beb0a-415c-92fb-96f4-3902b613e9e4@kernel.dk>
+Date:   Sun, 14 Jun 2020 09:52:30 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <1592132154-20175-1-git-send-email-krzk@kernel.org>
-In-Reply-To: <1592132154-20175-1-git-send-email-krzk@kernel.org>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Sun, 14 Jun 2020 18:48:04 +0300
-Message-ID: <CA+h21hpsmG+xUjWgaNcSojxeWYm4bcbMsn6_hmZrJ0A3zfVEag@mail.gmail.com>
-Subject: Re: [PATCH 1/2] spi: spi-fsl-dspi: Fix external abort on interrupt in
- exit paths
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Wolfram Sang <wsa@kernel.org>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200609142406.upuwpfmgqjeji4lc@steredhat>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 14 Jun 2020 at 13:57, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> If interrupt comes late, during probe error path or device remove (could
-> be triggered with CONFIG_DEBUG_SHIRQ), the interrupt handler
-> dspi_interrupt() will access registers with the clock being disabled.  This
-> leads to external abort on non-linefetch on Toradex Colibri VF50 module
-> (with Vybrid VF5xx):
->
->     $ echo 4002d000.spi > /sys/devices/platform/soc/40000000.bus/4002d000.spi/driver/unbind
->
->     Unhandled fault: external abort on non-linefetch (0x1008) at 0x8887f02c
->     Internal error: : 1008 [#1] ARM
->     CPU: 0 PID: 136 Comm: sh Not tainted 5.7.0-next-20200610-00009-g5c913fa0f9c5-dirty #74
->     Hardware name: Freescale Vybrid VF5xx/VF6xx (Device Tree)
->       (regmap_mmio_read32le) from [<8061885c>] (regmap_mmio_read+0x48/0x68)
->       (regmap_mmio_read) from [<8060e3b8>] (_regmap_bus_reg_read+0x24/0x28)
->       (_regmap_bus_reg_read) from [<80611c50>] (_regmap_read+0x70/0x1c0)
->       (_regmap_read) from [<80611dec>] (regmap_read+0x4c/0x6c)
->       (regmap_read) from [<80678ca0>] (dspi_interrupt+0x3c/0xa8)
->       (dspi_interrupt) from [<8017acec>] (free_irq+0x26c/0x3cc)
->       (free_irq) from [<8017dcec>] (devm_irq_release+0x1c/0x20)
->       (devm_irq_release) from [<805f98ec>] (release_nodes+0x1e4/0x298)
->       (release_nodes) from [<805f9ac8>] (devres_release_all+0x40/0x60)
->       (devres_release_all) from [<805f5134>] (device_release_driver_internal+0x108/0x1ac)
->       (device_release_driver_internal) from [<805f521c>] (device_driver_detach+0x20/0x24)
->
-> The resource-managed framework should not be used for interrupt handling,
-> because the resource will be released too late - after disabling clocks.
-> The interrupt handler is not prepared for such case.
->
-> Fixes: 349ad66c0ab0 ("spi:Add Freescale DSPI driver for Vybrid VF610 platform")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->
-> ---
+On 6/9/20 8:24 AM, Stefano Garzarella wrote:
+> Hi Jens,
+> Stefan and I have a proposal to share with io_uring community.
+> Before implementing it we would like to discuss it to receive feedbacks and
+> to see if it could be accepted:
+> 
+> Adding restrictions to io_uring
+> =====================================
+> The io_uring API provides submission and completion queues for performing
+> asynchronous I/O operations. The queues are located in memory that is
+> accessible to both the host userspace application and the kernel, making it
+> possible to monitor for activity through polling instead of system calls. This
+> design offers good performance and this makes exposing io_uring to guests an
+> attractive idea for improving I/O performance in virtualization.
+> 
+> PoC and preliminary benchmarks
+> ---------------------------
+> We realized a PoC, using QEMU and virtio-blk device, to share io_uring
+> CQ and SQ rings with the guest.
+> QEMU initializes io_uring, registers the device (NVMe) fd through
+> io_uring_register(2), and maps the rings in the guest memory.
+> The virtio-blk driver uses these rings to send requests instead of using
+> the standard virtqueues.
+> 
+> The PoC implements a pure polling solution where the application is polling
+> (IOPOLL enabled) in the guest and the sqpoll_kthread is polling in the host
+> (SQPOLL and IOPOLL enabled).
+> 
+> These are the encouraging results we obtained from this preliminary work;
+> we used fio (rw=randread bs=4k) to measure the kIOPS on a NVMe device:
+> 
+> - bare-metal
+>                                                        iodepth
+>   | fio ioengine                              |  1  |  8  |  16 |  32 |
+>   |-------------------------------------------|----:|----:|----:|----:|
+>   | io_uring (SQPOLL + IOPOLL)                | 119 | 550 | 581 | 585 |
+>   | io_uring (IOPOLL)                         | 122 | 502 | 519 | 538 |
+> 
+> - QEMU/KVM guest (aio=io_uring)
+>                                                        iodepth
+>   | virtio-blk            | fio ioengine      |  1  |  8  |  16 |  32 |
+>   |-----------------------|-------------------|----:|----:|----:|----:|
+>   | virtqueues            | io_uring (IOPOLL) |  27 | 144 | 209 | 266 |
+>   | virtqueues + iothread | io_uring (IOPOLL) |  73 | 264 | 306 | 312 |
+>   | io_uring passthrough  | io_uring (IOPOLL) | 104 | 532 | 577 | 585 |
+> 
+>   All guest experiments are using the QEMU io_uring backend with SQPOLL and
+>   IOPOLL enabled. The virtio-blk driver is modified to support blovk io_poll
+>   on both virtqueues and io_uring passthrough.
+> 
+> Before developing this proof-of-concept further we would like to discuss
+> io_uring changes required to restrict rings since this mechanism is a
+> prerequisite for real-world use cases where guests are untrusted.
+> 
+> Restrictions
+> ------------
+> This document proposes io_uring API changes that safely allow untrusted
+> applications or guests to use io_uring. io_uring's existing security model is
+> that of kernel system call handler code. It is designed to reject invalid
+> inputs from host userspace applications. Supporting guests as io_uring API
+> clients adds a new trust domain with access to even fewer resources than host
+> userspace applications.
+> 
+> Guests do not have direct access to host userspace application file descriptors
+> or memory. The host userspace application, a Virtual Machine Monitor (VMM) such
+> as QEMU, grants access to a subset of its file descriptors and memory. The
+> allowed file descriptors are typically the disk image files belonging to the
+> guest. The memory is typically the virtual machine's RAM that the VMM has
+> allocated on behalf of the guest.
+> 
+> The following extensions to the io_uring API allow the host application to
+> grant access to some of its file descriptors.
+> 
+> These extensions are designed to be applicable to other use cases besides
+> untrusted guests and are not virtualization-specific. For example, the
+> restrictions can be used to allow only a subset of sqe operations available to
+> an application similar to seccomp syscall whitelisting.
+> 
+> An address translation and memory restriction mechanism would also be
+> necessary, but we can discuss this later.
+> 
+> The IOURING_REGISTER_RESTRICTIONS opcode
+> ----------------------------------------
+> The new io_uring_register(2) IOURING_REGISTER_RESTRICTIONS opcode permanently
+> installs a feature whitelist on an io_ring_ctx. The io_ring_ctx can then be
+> passed to untrusted code with the knowledge that only operations present in the
+> whitelist can be executed.
+> 
+> The whitelist approach ensures that new features added to io_uring do not
+> accidentally become available when an existing application is launched on a
+> newer kernel version.
+> 
+> The IORING_REGISTER_RESTRICTIONS opcode takes an array of struct
+> io_uring_restriction elements that describe whitelisted features:
+> 
+>   #define IORING_REGISTER_RESTRICTIONS 11
+> 
+>   /* struct io_uring_restriction::opcode values */
+>   enum {
+>       /* Allow an io_uring_register(2) opcode */
+>       IORING_RESTRICTION_REGISTER_OP,
+> 
+>       /* Allow an sqe opcode */
+>       IORING_RESTRICTION_SQE_OP,
+> 
+>       /* Only allow fixed files */
+>       IORING_RESTRICTION_FIXED_FILES_ONLY,
+> 
+>       /* Only allow registered addresses and translate them */
+>       IORING_RESTRICTION_BUFFER_CHECK
+>   };
+> 
+>   struct io_uring_restriction {
+>       __u16 opcode;
+>       union {
+>           __u8 register_op; /* IORING_RESTRICTION_REGISTER_OP */
+>           __u8 sqe_op;      /* IORING_RESTRICTION_SQE_OP */
+>       };
+>       __u8 resv;
+>       __u32 resv2[3];
+>   };
+> 
+> This call can only be made once. Afterwards it is not possible to change
+> restrictions anymore. This prevents untrusted code from removing restrictions.
+> 
+> Limiting access to io_uring operations
+> --------------------------------------
+> The following example shows how to whitelist IORING_OP_READV, IORING_OP_WRITEV,
+> and IORING_OP_FSYNC:
+> 
+>   struct io_uring_restriction restrictions[] = {
+>       {
+>           .opcode = IORING_RESTRICTION_SQE_OP,
+>           .sqe_op = IORING_OP_READV,
+>       },
+>       {
+>           .opcode = IORING_RESTRICTION_SQE_OP,
+>           .sqe_op = IORING_OP_WRITEV,
+>       },
+>       {
+>           .opcode = IORING_RESTRICTION_SQE_OP,
+>           .sqe_op = IORING_OP_FSYNC,
+>       },
+>       ...
+>   };
+> 
+>   io_uring_register(ringfd, IORING_REGISTER_RESTRICTIONS,
+>                     restrictions, ARRAY_SIZE(restrictions));
+> 
+> Limiting access to file descriptors
+> -----------------------------------
+> The fixed files mechanism can be used to limit access to a set of file
+> descriptors:
+> 
+>   struct io_uring_restriction restrictions[] = {
+>       {
+>           .opcode = IORING_RESTRICTION_FIXED_FILES_ONLY,
+>       },
+>       ...
+>   };
+> 
+>   io_uring_register(ringfd, IORING_REGISTER_RESTRICTIONS,
+>                     restrictions, ARRAY_SIZE(restrictions));
+> 
+> Only requests with the sqe->flags IOSQE_FIXED_FILE bit set will be allowed.
 
-I don't buy this argument that "the resource-managed framework should
-not be used for interrupt handling". What is it there for, then?
-Could you just call disable_irq before clk_disable_unprepare instead
-of this massive rework?
+I don't think this sounds unreasonable, but I'd really like to see a
+prototype hacked up before rendering any further opinions on it :-)
 
->
-> This is an follow up of my other patch for I2C IMX driver [1]. Let's fix the
-> issues consistently.
->
-> [1] https://lore.kernel.org/lkml/1592130544-19759-2-git-send-email-krzk@kernel.org/T/#u
-> ---
->  drivers/spi/spi-fsl-dspi.c | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-> index 58190c94561f..57e7a626ba00 100644
-> --- a/drivers/spi/spi-fsl-dspi.c
-> +++ b/drivers/spi/spi-fsl-dspi.c
-> @@ -1385,8 +1385,8 @@ static int dspi_probe(struct platform_device *pdev)
->                 goto poll_mode;
->         }
->
-> -       ret = devm_request_irq(&pdev->dev, dspi->irq, dspi_interrupt,
-> -                              IRQF_SHARED, pdev->name, dspi);
-> +       ret = request_threaded_irq(dspi->irq, dspi_interrupt, NULL,
-> +                                  IRQF_SHARED, pdev->name, dspi);
->         if (ret < 0) {
->                 dev_err(&pdev->dev, "Unable to attach DSPI interrupt\n");
->                 goto out_clk_put;
-> @@ -1400,7 +1400,7 @@ static int dspi_probe(struct platform_device *pdev)
->                 ret = dspi_request_dma(dspi, res->start);
->                 if (ret < 0) {
->                         dev_err(&pdev->dev, "can't get dma channels\n");
-> -                       goto out_clk_put;
-> +                       goto out_free_irq;
->                 }
->         }
->
-> @@ -1415,11 +1415,14 @@ static int dspi_probe(struct platform_device *pdev)
->         ret = spi_register_controller(ctlr);
->         if (ret != 0) {
->                 dev_err(&pdev->dev, "Problem registering DSPI ctlr\n");
-> -               goto out_clk_put;
-> +               goto out_free_irq;
->         }
->
->         return ret;
->
-> +out_free_irq:
-> +       if (dspi->irq > 0)
-> +               free_irq(dspi->irq, dspi);
->  out_clk_put:
->         clk_disable_unprepare(dspi->clk);
->  out_ctlr_put:
-> @@ -1435,6 +1438,8 @@ static int dspi_remove(struct platform_device *pdev)
->
->         /* Disconnect from the SPI framework */
->         dspi_release_dma(dspi);
-> +       if (dspi->irq > 0)
-> +               free_irq(dspi->irq, dspi);
->         clk_disable_unprepare(dspi->clk);
->         spi_unregister_controller(dspi->ctlr);
->
-> --
-> 2.7.4
->
+-- 
+Jens Axboe
 
-Thanks,
--Vladimir
