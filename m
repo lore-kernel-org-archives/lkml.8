@@ -2,229 +2,153 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 145D6C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 08:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C681C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 08:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8BAA206D7
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 08:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4753206D7
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 08:56:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k1x2oowR"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="NF9ccStd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbgFNIxO (ORCPT
+        id S1726935AbgFNI4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 04:53:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48402 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbgFNIxO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 04:53:14 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85D99C03E969;
-        Sun, 14 Jun 2020 01:53:12 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id l11so14053133wru.0;
-        Sun, 14 Jun 2020 01:53:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=b3VS3PUglWU05RRagqbS4YBCgN8jvE9wxE1b+IXwJg8=;
-        b=k1x2oowRu/p8CYe184hdaKdH+WgpxyUJ+jcROT3XOzPxfk63JicjMP0IKR7jvEyDAw
-         Sxd5owQsw6RlmbM3iPX3sSjx8esbZCIHtyF2ogc95RQ59bQlh7gnnLgmpi2GmzBdZEYC
-         FH6UaRk6pgJGIEaTAV5EeFUGYkdygxAaCzRTypJOs9WFFMal2nQp5dofFTBwncbNNssJ
-         hTvnGpfAxTDSdJR+rdutMx+YbXIy7br3FJwdq2jwAPVjUJptN2+9Q4TfWZcf+i6tJtVp
-         J5G1q8tIRGXWd2aO5tgrKVFmv+KC9ZfnNaLdkFKMriKWZ4U24jOiXKe6OMrttXyexFbV
-         8OBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=b3VS3PUglWU05RRagqbS4YBCgN8jvE9wxE1b+IXwJg8=;
-        b=LI7CCxRvhKFU7Fc9qOVdjy4OLPSmNjvPOPY+94mTHXQqITJoz1fWaJCzPejwnxqiUs
-         MIfxLHpOPnZMaPHq+RxERl9BjgJpMGsyM1X2KhVMsMSzeX9gOJm6pX6KaKMB9qOnDH5q
-         Oa+j1ACU8Toq0T+DnePab4O9RL+S/q5Dj1y9qGWARbueib2tCZ0bf8zFOI97eO6aES6m
-         CA/BrePmgz4fRqTaz4k2GKf4cAq6/4jRyj6CvmstOqEJvj6yfwps4SGFr83bX0M3G7Jm
-         6xVDf3lSiFirb1xuC5Ogq/Ca/83D3cZCmJkofDv8ob6dcvoxPlnz3yb6gXN7ZHQuWtOo
-         7TEw==
-X-Gm-Message-State: AOAM533nI//rfpZxc3jtTvhVeZYTB6hg+SXWWM6CgIhzkwSe27vNASh3
-        fZefk1IdLxccQfMVeUkDmGc=
-X-Google-Smtp-Source: ABdhPJwag0K1c4bIfKfdV5Sosa1eJtMO6AXiUBSa7TKSTvQPQAtg9gRn6k313b/GxQynhhh9WGndBA==
-X-Received: by 2002:a5d:4701:: with SMTP id y1mr23136233wrq.310.1592124790802;
-        Sun, 14 Jun 2020 01:53:10 -0700 (PDT)
-Received: from macbook-pro-alvaro-eth.lan (168.red-88-20-188.staticip.rima-tde.net. [88.20.188.168])
-        by smtp.gmail.com with ESMTPSA id a81sm18162266wmd.25.2020.06.14.01.53.09
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 14 Jun 2020 01:53:10 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH] mtd: rawnand: brcmnand: force raw OOB writes
-From:   =?utf-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
-In-Reply-To: <CAC=U0a0=7UHY2fH+2HS5hbxThe9rYvqTKggFJP4mm-5ib52dtA@mail.gmail.com>
-Date:   Sun, 14 Jun 2020 10:53:09 +0200
-Cc:     Brian Norris <computersforpeace@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        "R, Vignesh" <vigneshr@ti.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org
+        Sun, 14 Jun 2020 04:56:30 -0400
+Received: from mout.web.de ([212.227.17.11]:39239 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725265AbgFNI4a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 04:56:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1592124976;
+        bh=1XKwjy46DP0XP1BezOttDjslx/1Fvlxmazm0SmzeslA=;
+        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
+        b=NF9ccStdhdx4YYSPvH7fUAoH9YmOBXDbZpLo5nye251d5UFGudDBTFlZxHwyi6cjy
+         L/Q5AiaTJ4F57zLojdCngm9EDAKLrcenKG1Kw7UHZK3OJdH6gBBGOYsffTtW+jYLzf
+         oGWg5ITNIZ5fJiMPpjr/lLgv07/IfJqiC/WVVzs8=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.131.103.145]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MBTQo-1jb0Eg0S2w-00AUxb; Sun, 14
+ Jun 2020 10:56:16 +0200
+Cc:     Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>,
+        Qiushi Wu <wu000273@umn.edu>,
+        "David S. Miller" <davem@davemloft.net>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: macb: fix ref count leaking via pm_runtime_get_sync
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>, netdev@vger.kernel.org
+Message-ID: <c145121b-3d69-a02a-17f5-f0eb2f166663@web.de>
+Date:   Sun, 14 Jun 2020 10:56:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <F9D394A3-43EC-4E61-B4CA-C113C4516FB1@gmail.com>
-References: <20200605170720.2478262-1-noltari@gmail.com>
- <CAC=U0a3xa9k76mxsiVKDyXsuvboZAyMkXT-S3-6oVZKjnWkeHA@mail.gmail.com>
- <05C962F2-7D3B-4103-91DD-8D31C439D521@gmail.com>
- <CAC=U0a0=7UHY2fH+2HS5hbxThe9rYvqTKggFJP4mm-5ib52dtA@mail.gmail.com>
-To:     Kamal Dasu <kdasu.kdev@gmail.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+X-Provags-ID: V03:K1:YIGYcO6P89/n84JoJbJS+s6UtPxuIxy1TvrfeYMMdZk/xJySr6U
+ 59SvoFNUi7DB9aitWb7SwqJ3Bcawfo23Cvz1cIgzzX6Ih/dX9RgspQqpaRjtaQb/tA096T6
+ IRYipq5I3UDCCCuMnfHiXuviBWRK/+UUl5XAjJuB8sXsyVzwACthBX9XhHOtK3/zgkcpEw0
+ WuimbHrvGvebXWdOzUcww==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:eg7k3wsso20=:lcbrm8SQgQoTD/1/qEfMDy
+ cRuzbj3YLhaX0fCxLlo1QhztDSvpEFIElnQsBIZ8UZZFZecqQjOreWKnLedrid+XYIf0q/XBz
+ txTDAql446R4zGCDaRNl5zinbqVfgcLBEFY07FehG0da802LC4FlbWUiKwOQUJrF81DhgS0ZY
+ JgYeDynhn0xFYingk1o0xAr2hWARvSAz+ogeSX1QuZOZ4CJRXy3NlyVC7jwNvIN7tQWBkVSDg
+ LigGeg9YhOhBujOBJ9N7PjgXpZrfF5TFIxCWMGBF/Q6rAYoC/x80YIm40kgVp5CNwvDSJRk6x
+ B9IYYvkHEOYnn45Qn2/azW5K4bbgR3Rjt89bijkfTx0vauNI7J3865MXia1d0g+VdfmwNG/ey
+ rQqUb8IEaPXH2UoAUdySiGO6oNe0PYM/HlC/0oexMO85bu+8MrXUSz3BJYaEt8aDTxhhUVfmj
+ ra4fz+lhq2WMSyrkE2NWBTTIhhURrK3hs9Co2aEAZGaKyF3Njrii2qUeW1SsRMQjosvGn2Khy
+ Ein4fOgUojW4mzXoc9Q3Sz6NS/q6lJBZVXjDHLcwv8rFALX63D+MvW73w/m2ZWB8/laZG/CvJ
+ AuUcvrWg9CdFsYNkBFzmXyxrJQl2KM3XtTHnbjmuhAYO47D+w61jawcp5q0FO1WHKbyTzlaHU
+ ExqjGdmo7O4PQWdMBM7uyKBY4mTAxgxrD3oUQbU3FtlTcT2eZ0YeyDaQVw8xmXddidDuKh7/2
+ +alcdV8sT0XlXDL/P6Iaopia5uydBVjYGCCZvFROaiDgF97wIS8kiBZ1mvYckA/TORsUbk3cT
+ TtFlm2KiLE74qHlov5NAzEnoYtkt66dsveJ09/eMd/nW97hl0kklErQ/4IuF3JDxoBtIbRi+t
+ JL7PMBe/uX3B2gSvovxFb/LkXVT/Tizx3mb8gXi96aRKUX4MU2LbaB4rPTudQT0x7dQWA06Ip
+ SvaGEUBtQpkQ4tUx3Uneuo1F9cmEUhkfZApCYZB64TFIw408Z6jowscRxpGJquUsxHD6sz/Eu
+ zP2cB4X/z2sQx0p/p/P38136i3uaNM0+iajD1NKunSjH0S9rZyCPhFs+czsmVW6HAqAXBIda1
+ pTtgIR/QdSCuuEx0m10yPsE40K3sDUt4JJdKEaM2Yaf2kfMbFqI3GWMu6pmA5QoDZZQDe51w8
+ urEiH9d39zhiRF3C9119zfb90UZ0nTjrQucUrsdkOLCjTDzo38Fx2L4YctEQ49gbKtQquPpwd
+ x/uE/wqekthK8LF8h
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kamal,
+> in macb_mdio_write, =E2=80=A6
 
-> El 13 jun 2020, a las 17:16, Kamal Dasu <kdasu.kdev@gmail.com> =
-escribi=C3=B3:
->=20
-> Alvaro,
->=20
->=20
-> On Sat, Jun 13, 2020 at 5:01 AM =C3=81lvaro Fern=C3=A1ndez Rojas
-> <noltari@gmail.com> wrote:
->>=20
->> Hi Kamal,
->>=20
->>> El 12 jun 2020, a las 20:47, Kamal Dasu <kdasu.kdev@gmail.com> =
-escribi=C3=B3:
->>>=20
->>> On Fri, Jun 5, 2020 at 1:07 PM =C3=81lvaro Fern=C3=A1ndez Rojas =
-<noltari@gmail.com> wrote:
->>>>=20
->>>> MTD_OPS_AUTO_OOB is writting OOB with ECC enabled, which changes =
-all ECC bytes
->>>> from an erased page to 0x00 when JFFS2 cleanmarkers are added with =
-mtd-utils.
->>>>        | BBI |   JFFS2   |   ECC   |   JFFS2   | Spare  |
->>>> 00000800  ff ff 19 85 20 03 00 00  00 00 00 00 08 ff ff ff
->>>>=20
->>>> However, if OOB is written with ECC disabled, the JFFS2 =
-cleanmarkers are
->>>> correctly written without changing the ECC bytes:
->>>>        | BBI |   JFFS2   |   ECC   |   JFFS2   | Spare  |
->>>> 00000800  ff ff 19 85 20 03 ff ff  ff 00 00 00 08 ff ff ff
->>>=20
->>> Both brcmand_write_oob_raw() and brcmnand_write_oob() use
->>> brcmnand_write() that uses PROGRAM_PAGE cmd, means also programs =
-data
->>> areas and ECC when enabled  is always calculated on DATA+OOB.  since
->>=20
->> Are you sure about that? I think that HW ECC is only calculated for =
-DATA, not for OOB.
->> The fact that we=E2=80=99re not writing any DATA seems to be the =
-problem that is changing all ECC bytes to 0x00.
->>=20
->=20
-> Only true for 1-bit hamming code on early controller versions.  For
-> BCH algorithms both data+oob are covered. And the controller driver
-> intentionally does not implement a spare area program cmd, even for
-> OOB writes. Also BRCMNAND_ACC_CONTROL_PARTIAL_PAGE=3D0 (when present)
-> does not allow for spare areas only writes.
->=20
->>> in both cases we only want to modify OOB, data is always assumed to =
-be
->>> 0xffs (means erased state). So as far as this api always is used on
->>> the erased page it should be good. Are the sub-pages/oob areas read =
-by
->>> jffs2  also read without ecc enabled?. Just want to be sure that it
->>> does not break any other utilities like nandwrite.
->>=20
->> No, sub-pages/oob areas read by JFFS2 with ECC enabled.
->> I don=E2=80=99t think this breaks anything at all, since I tested =
-nandwrite with OOB enabled and everything was written perfectly.
->>=20
->=20
-> Going by the commit message you are assuming 1-bit hamming  code, that
-> is the only exception on early version controllers where only data was
-> covered for ecc calculations when enabled.
-> Which version of the controller are you using  ?. Did you test with
-> BCH-4 or any BCH ?.
+* Will a desire evolve to improve also this commit message?
 
-All my devices use hamming ECC, even the ones with controller version =
-v4.0 (BCM63268), which should also support BCH.
-Therefore I need to stick with hamming ECC if I want the bootloader to =
-be able to boot the kernel.
+* Will the tag =E2=80=9CFixes=E2=80=9D become helpful?
 
-However, I should get a new device with BCH in a few days.
-I=E2=80=99ll do more tests once I get it, but if BCH also covers OOB, =
-then we could conditionally force write_oob to RAW only if hamming is =
-configured.
 
->=20
->> BTW, I tried another approach that forced MTD_OPS_AUTO_OOB to be =
-written as raw OOB, but it was rejected:
->> =
-http://patchwork.ozlabs.org/project/linux-mtd/patch/20200504094253.2741109=
--1-noltari@gmail.com/
->> https://lkml.org/lkml/2020/5/4/215
->>=20
->=20
-> Are there any other use cases other than jffs2 where only oob needs to
-> be modified ?. But surely intentionally disabling ecc instead of
-> forcing it is the way, but I am not sure it will still work for other
-> BCH algorithms though where both data and oob are covered.
+=E2=80=A6
+> +++ b/drivers/net/ethernet/cadence/macb_main.c
+=E2=80=A6
+> @@ -3840,11 +3842,14 @@  static int at91ether_open(struct net_device *de=
+v)
+>
+>  	ret =3D macb_phylink_connect(lp);
+>  	if (ret)
+> -		return ret;
+> +		goto out;
+>
+>  	netif_start_queue(dev);
+>
+>  	return 0;
+> +out:
+> +	pm_runtime_put(&lp->pdev->dev);
+> +	return ret;
+>  }
+=E2=80=A6
 
-I=E2=80=99ll test this and report back once I get my new device.
+Perhaps use the label =E2=80=9Cput_runtime=E2=80=9D instead?
 
->=20
->>>=20
->>>>=20
->>>> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
->>>> ---
->>>> drivers/mtd/nand/raw/brcmnand/brcmnand.c | 9 +--------
->>>> 1 file changed, 1 insertion(+), 8 deletions(-)
->>>>=20
->>>> diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c =
-b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
->>>> index 8f9ffb46a09f..566281770841 100644
->>>> --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
->>>> +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
->>>> @@ -2279,13 +2279,6 @@ static int brcmnand_write_page_raw(struct =
-nand_chip *chip, const uint8_t *buf,
->>>>       return nand_prog_page_end_op(chip);
->>>> }
->>>>=20
->>>> -static int brcmnand_write_oob(struct nand_chip *chip, int page)
->>>> -{
->>>> -       return brcmnand_write(nand_to_mtd(chip), chip,
->>>> -                             (u64)page << chip->page_shift, NULL,
->>>> -                             chip->oob_poi);
->>>> -}
->>>> -
->>>> static int brcmnand_write_oob_raw(struct nand_chip *chip, int page)
->>>> {
->>>>       struct mtd_info *mtd =3D nand_to_mtd(chip);
->>>> @@ -2642,7 +2635,7 @@ static int brcmnand_init_cs(struct =
-brcmnand_host *host, struct device_node *dn)
->>>>       chip->ecc.write_oob_raw =3D brcmnand_write_oob_raw;
->>>>       chip->ecc.read_oob_raw =3D brcmnand_read_oob_raw;
->>>>       chip->ecc.read_oob =3D brcmnand_read_oob;
->>>> -       chip->ecc.write_oob =3D brcmnand_write_oob;
->>>> +       chip->ecc.write_oob =3D brcmnand_write_oob_raw;
->>>>=20
->>>>       chip->controller =3D &ctrl->controller;
->>>>=20
->>>> --
->>>> 2.26.2
->>>>=20
->>=20
->> Best regards,
->> =C3=81lvaro.
-
+Regards,
+Markus
