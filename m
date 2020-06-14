@@ -2,128 +2,195 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70656C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 20:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FFD4C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 20:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EFC420578
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 20:35:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 180CB20578
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 20:35:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tmgq9WZA"
+	dkim=pass (2048-bit key) header.d=invensense.com header.i=@invensense.com header.b="yWI9wiHD";
+	dkim=pass (1024-bit key) header.d=invensense.onmicrosoft.com header.i=@invensense.onmicrosoft.com header.b="iQDYZOEP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727904AbgFNUfR (ORCPT
+        id S1727933AbgFNUfd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 16:35:17 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55721 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727870AbgFNUfP (ORCPT
+        Sun, 14 Jun 2020 16:35:33 -0400
+Received: from mx0b-00328301.pphosted.com ([148.163.141.47]:8446 "EHLO
+        mx0b-00328301.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727870AbgFNUfc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 16:35:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592166914;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=eDQwvsx6hMB13gWyocZFDvXcBFPxQurPVUXmSPgoBxM=;
-        b=Tmgq9WZAJmbY4EmQXoIRzqMbvMQx3lM+vDyf66/x14WVOGPYWJ1xo+Bm32P192icknpUwd
-        fdj7TS+k260hN0Fx5wxyffyuWsD9GltFisc+IW6eUX8Vh7KVn9M77vzOV/2PxpcUViy4br
-        5V0mPcK6NEh59aJrYkm/cS8iLOnOufs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-50-WM2ql_62MzWi8YGLPlhzeA-1; Sun, 14 Jun 2020 16:35:10 -0400
-X-MC-Unique: WM2ql_62MzWi8YGLPlhzeA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 381151005512;
-        Sun, 14 Jun 2020 20:35:07 +0000 (UTC)
-Received: from localhost (unknown [10.36.110.3])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 352495D9C9;
-        Sun, 14 Jun 2020 20:35:00 +0000 (UTC)
-Date:   Sun, 14 Jun 2020 22:34:56 +0200
-From:   Stefano Brivio <sbrivio@redhat.com>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, netdev@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: Re: Good idea to rename files in include/uapi/ ?
-Message-ID: <20200614223456.13807a00@redhat.com>
-In-Reply-To: <9feded75-4b45-2821-287b-af00ec5f910f@al2klimov.de>
-References: <9feded75-4b45-2821-287b-af00ec5f910f@al2klimov.de>
-Organization: Red Hat
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        Sun, 14 Jun 2020 16:35:32 -0400
+Received: from pps.filterd (m0156136.ppops.net [127.0.0.1])
+        by mx0b-00328301.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05EKXWmi001358;
+        Sun, 14 Jun 2020 13:35:16 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=invensense.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pfpt1;
+ bh=dq67KSCrUgmX8Wfj5CNkaYAjOY/aIAmbwyr1Q8jev1s=;
+ b=yWI9wiHDsxGNlqlvaSDc3GGYBkj2hoi4oDqZ3xtOcfow2VtkI0H4s8UAiNlBDCudcu5u
+ Eg6i7VbhOWVdQaBliUfeP3RreiPAsy/GbxRGIspLbdOMEPn2e8do/f+PiPfHFcWLzSr9
+ C/J83oqUqsPHy7ESQjmDzEJrkpfK7GhLn0vIUi0E8s3kquh2KHeyDGlPMKUxFnwDhwsU
+ G+49qYqsCIFQi3Vva7oFScMzxJMLD8+KLyTTs5S46a4UawOIpbS0YVNmHJCSyn/Kc8Yq
+ 1otyk8kVZrsbwgwv/JwdEWhhpcoItXCBOZQaReld0Px6MJBIsDkHRQWaJm+n+aHw3eqS vQ== 
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2174.outbound.protection.outlook.com [104.47.59.174])
+        by mx0b-00328301.pphosted.com with ESMTP id 31mtrn0gdj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 14 Jun 2020 13:35:16 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=L52TsSV51DfZ+QUsumVSgS7Zo/ACdXNBuMv80Dkva+x8aIHuIhl713jmiGN7DTzyj6qUhwGyx3rKIBVz2KpF462h8SIJVSKAE13jcUItEZz4ncdLGrqS8qOwvSCwTUHCcKEgcVKxzxXH/CvBHN9xkph8UdHyvGlmyRn9hw+rxnYIo9b2fnR2MNwy+OpcY9h9MT3Fly+c57qjXceZhx3fdNOGFbaKRoZcP2yIwg3GNy0uk5DKQqlH34hmKlD7JXVaCR3SUKaoORoxWivtC/CG2q2sTyi9rk0THuajF5q6lVkiopBZZBOiMdQpzHDs7A3Et3MqLbe441e8JIS3R/r7ZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dq67KSCrUgmX8Wfj5CNkaYAjOY/aIAmbwyr1Q8jev1s=;
+ b=bEMIobkb8EEjTOHu+TuODIR6EwMGu2ImTaZ/E/cNvCvSdAB6oSeQRe9IKMg0ALYoTEpHBBMH3Me6X8raVc+SsWG2oKfxodC7UGUIlCDs5GgD4CVBN/uj+ChismPcbYGwmRmCY/lBVG9sno9wZh56T1LRmpJ/P6Z1kTKYoqsz3vuneq2CqnDint+I2s6bN7JnqG4y4DClDLz3g6M+wGa7qVzL5ci4gLrjKWRgcBK0EhN6KJBNPSFeP6OnHUj0UIp+r/RcjA8Z/lyetMOF1NDnptebiY5v7zGySZz2F9FHfRYok9IZ+tbJLDhQu5CpGVNHoqK2OgvLPzTdSVuFT9YNyw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=invensense.com; dmarc=pass action=none
+ header.from=invensense.com; dkim=pass header.d=invensense.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=invensense.onmicrosoft.com; s=selector2-invensense-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dq67KSCrUgmX8Wfj5CNkaYAjOY/aIAmbwyr1Q8jev1s=;
+ b=iQDYZOEPEtNT9AsLZz7d++ul72cqSIKlQXU3eq1J8vqkV6Hlx06guqFRLfh6YZuojP+0QKMXt6GQA0BcmPB++aEXhIoRwuVHW4VbdafyIwyyfSP0Qfr0UU2rFbQcG82fdj7gO3bybW7g8Bhhx03HupXPA01b8H8Rg0twpxiBNP4=
+Received: from MN2PR12MB4422.namprd12.prod.outlook.com (2603:10b6:208:265::9)
+ by MN2PR12MB4270.namprd12.prod.outlook.com (2603:10b6:208:1d9::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18; Sun, 14 Jun
+ 2020 20:35:14 +0000
+Received: from MN2PR12MB4422.namprd12.prod.outlook.com
+ ([fe80::8940:8e95:6996:cc0]) by MN2PR12MB4422.namprd12.prod.outlook.com
+ ([fe80::8940:8e95:6996:cc0%9]) with mapi id 15.20.3088.028; Sun, 14 Jun 2020
+ 20:35:13 +0000
+From:   Jean-Baptiste Maneyrol <JManeyrol@invensense.com>
+To:     Lars-Peter Clausen <lars@metafoo.de>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "mchehab+huawei@kernel.org" <mchehab+huawei@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+CC:     "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 06/13] iio: imu: inv_icm42600: add temperature sensor
+ support
+Thread-Topic: [PATCH v3 06/13] iio: imu: inv_icm42600: add temperature sensor
+ support
+Thread-Index: AQHWPdWIUjAhv0WNM0u1pU/hnDKuy6jYQFCAgABZXLc=
+Date:   Sun, 14 Jun 2020 20:35:13 +0000
+Message-ID: <MN2PR12MB4422148948CF6FC7953A6D2AC49F0@MN2PR12MB4422.namprd12.prod.outlook.com>
+References: <20200608204250.3291-1-jmaneyrol@invensense.com>
+ <20200608204250.3291-7-jmaneyrol@invensense.com>,<fd4918b6-a55f-4047-7f18-b796a8ccd020@metafoo.de>
+In-Reply-To: <fd4918b6-a55f-4047-7f18-b796a8ccd020@metafoo.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: metafoo.de; dkim=none (message not signed)
+ header.d=none;metafoo.de; dmarc=none action=none header.from=invensense.com;
+x-originating-ip: [2a01:e0a:393:a700:5eee:e32c:7422:df0]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6677bfc3-3a55-4a47-7958-08d810a270fa
+x-ms-traffictypediagnostic: MN2PR12MB4270:
+x-microsoft-antispam-prvs: <MN2PR12MB427027E9433A9A88674AEFA0C49F0@MN2PR12MB4270.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 04347F8039
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: v7Ho9fEqvKvztL6JblIUyXZEOvgTOsVPI6HBh6RZZaWoEUqOL3lHPqqtLrpDOXesinsV4txpXOb21ROAjOZ0zcpmSKG0733H4CWMUrb5Yrzk453SZcbvLxRzXdimtlmIsQkqM/OyviTtd7auQ6YjArgWnKy3P3/BnsVtX389u9U++pJ5fejIsX5pm7ooSVsilxokOM6ZCTHJWFnWgMyMSU8wMtL2fw0DxKiD4vPLqv860QuHbnIYuWjK2Qmxywj36sEN7IFo8T9g9/1zFGDgBqdttTqeFwX6UPlJez4LI5kSJxWtu48uXsxKCIGce9ItY7/t3mG0BYuKTjaG71UxIg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4422.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(396003)(39830400003)(346002)(366004)(136003)(7416002)(66946007)(66476007)(66446008)(64756008)(66556008)(33656002)(86362001)(91956017)(76116006)(4326008)(71200400001)(8676002)(186003)(2906002)(8936002)(54906003)(110136005)(316002)(53546011)(9686003)(478600001)(55016002)(6506007)(52536014)(7696005)(5660300002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 7id103ksoa7cyPiWUT7RO5CF834MNz6IE+cfOc0Hl4zztCy7mwt8Zpa6iItR06cSeI8CZ9n8aEI+3miicqjBByHMGKjnZwDwfeTN66pO4AHOG1k1GpChWkmDxVBNf8wiy6l+So/hrNFx/Xe5Bz+DQ8lDX+6jR/XtKgUBRwLeUMUnk4rjmxODQsZ5lFZtAFP2S46cCKM38CVqvn3EV9/sJpoVhQsB19KgZkt1rZrX55o+Ur1lGh2qR6P5kyh1R3NW/Gy3RsZSeYFeSLdjk10ZsmRhI/HNUwzBLdgDrOKKYIxzO0xXgakw8CCUTCkLKHYoCMRRvahWotp2xozHOWUigBvZNOlE7iUvClLFzqQM1GmbcHuUDwQqOB97KdexCx182z6GlIv0/VJRxfDMAgd8TPq3sjafLI5CZHFvETD/c7aho6AnJqzjavivHhqKO9SgI6qbr4RwuQZa5aUhMOIeeIzsY4mfRCPUF3GcwpPHYqI/Uz9tG9GbttZ6nKn4dSX9e9o18gufri00mxBGJWhs8Hs+CDTcwHkZ9BbTqcvzlmg=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+MIME-Version: 1.0
+X-OriginatorOrg: invensense.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6677bfc3-3a55-4a47-7958-08d810a270fa
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2020 20:35:13.7352
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 462b3b3b-e42b-47ea-801a-f1581aac892d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: UAelbfR9xOPbmO9way8Gy8UD9rekn/wzZKbfkEIY88dZHCdkM6FzVN7f5kJ/Gyff64elLGEyfMdZPfpMyhajjCiRzPKzeH66CX+HDuAX6Jg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4270
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-14_06:2020-06-12,2020-06-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ priorityscore=1501 cotscore=-2147483648 suspectscore=0 lowpriorityscore=0
+ malwarescore=0 mlxscore=0 phishscore=0 impostorscore=0 clxscore=1015
+ mlxlogscore=999 spamscore=0 bulkscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006140184
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 14 Jun 2020 21:41:17 +0200
-"Alexander A. Klimov" <grandmaster@al2klimov.de> wrote:
-
-> Hello there!
->=20
-> At the moment one can't checkout a clean working directory w/o any=20
-> changed files on a case-insensitive FS as the following file names have=20
-> lower-case duplicates:
-
-They are not duplicates: matching extensions are lowercase, target
-extensions are uppercase. DSCP is the extension to set DSCP bits, dscp
-is the extension to match on those packet bits.
-
-> =E2=9E=9C  linux git:(96144c58abe7) git ls-files |sort -f |uniq -id
-> include/uapi/linux/netfilter/xt_CONNMARK.h
-> include/uapi/linux/netfilter/xt_DSCP.h
-> include/uapi/linux/netfilter/xt_MARK.h
-> include/uapi/linux/netfilter/xt_RATEEST.h
-> include/uapi/linux/netfilter/xt_TCPMSS.h
-> include/uapi/linux/netfilter_ipv4/ipt_ECN.h
-> include/uapi/linux/netfilter_ipv4/ipt_TTL.h
-> include/uapi/linux/netfilter_ipv6/ip6t_HL.h
-> net/netfilter/xt_DSCP.c
-> net/netfilter/xt_HL.c
-> net/netfilter/xt_RATEEST.c
-> net/netfilter/xt_TCPMSS.c
-> tools/memory-model/litmus-tests/Z6.0+pooncelock+poonceLock+pombonce.litmus
-> =E2=9E=9C  linux git:(96144c58abe7)
->=20
-> Also even on a case-sensitive one VIm seems to have trouble with editing=
-=20
-> both case-insensitively equal files at the same time.
-
-...what trouble exactly?
-
-> I was going to make a patch renaming the respective duplicates, but I'm=20
-> not sure:
->=20
-> *Is it a good idea to rename files in include/uapi/ ?*
-
-I'm not sure it's a good idea to even use git on a case-insensitive
-filesystem. I'm curious, what is your use case?
-
---=20
-Stefano
-
+Hello Lars,=0A=
+=0A=
+for the temperature data, the problem is that temperature in the FIFO (used=
+ in buffer) is not in the same format than when reading the register.=0A=
+=0A=
+Reading the temperature register return a full precision value on 16 bits. =
+I am using a PROCESSED attribute for it.=0A=
+Temperature data in buffer (coming from the FIFO) is on 8 bits in lower pre=
+cision. It is reported as raw data, thus the need of the offset and scale v=
+alues.=0A=
+=0A=
+So offset and scale values are only for transforming the temperature data f=
+rom the buffer, and direct read is a full precision already processed in m=
+=B0C.=0A=
+=0A=
+Thanks for the review,=0A=
+JB=0A=
+=0A=
+From: Lars-Peter Clausen <lars@metafoo.de>=0A=
+Sent: Sunday, June 14, 2020 17:10=0A=
+To: Jean-Baptiste Maneyrol <JManeyrol@invensense.com>; jic23@kernel.org <ji=
+c23@kernel.org>; robh+dt@kernel.org <robh+dt@kernel.org>; robh@kernel.org <=
+robh@kernel.org>; mchehab+huawei@kernel.org <mchehab+huawei@kernel.org>; da=
+vem@davemloft.net <davem@davemloft.net>; gregkh@linuxfoundation.org <gregkh=
+@linuxfoundation.org>=0A=
+Cc: linux-iio@vger.kernel.org <linux-iio@vger.kernel.org>; devicetree@vger.=
+kernel.org <devicetree@vger.kernel.org>; linux-kernel@vger.kernel.org <linu=
+x-kernel@vger.kernel.org>=0A=
+Subject: Re: [PATCH v3 06/13] iio: imu: inv_icm42600: add temperature senso=
+r support =0A=
+=A0=0A=
+=A0CAUTION: This email originated from outside of the organization. Please =
+make sure the sender is who they say they are and do not click links or ope=
+n attachments unless you recognize the sender and know the content is safe.=
+=0A=
+=0A=
+On 6/8/20 10:42 PM, Jean-Baptiste Maneyrol wrote:=0A=
+> +=A0=A0=A0=A0 case IIO_CHAN_INFO_PROCESSED:=0A=
+> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 ret =3D iio_device_claim_direct_mod=
+e(indio_dev);=0A=
+> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (ret)=0A=
+> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return ret;=
+=0A=
+> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 ret =3D inv_icm42600_temp_read(st, =
+&temp);=0A=
+> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 iio_device_release_direct_mode(indi=
+o_dev);=0A=
+> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (ret)=0A=
+> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return ret;=
+=0A=
+> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 *val =3D temp;=0A=
+> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return IIO_VAL_INT;=0A=
+> +=A0=A0=A0=A0 case IIO_CHAN_INFO_SCALE:=0A=
+> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 *val =3D 483;=0A=
+> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 *val2 =3D 91787;=0A=
+> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return IIO_VAL_INT_PLUS_MICRO;=0A=
+> +=A0=A0=A0=A0 case IIO_CHAN_INFO_OFFSET:=0A=
+> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 *val =3D 25000;=0A=
+> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return IIO_VAL_INT;=0A=
+=0A=
+If the data is returned processed there is no need to specify scale and =0A=
+offset.=0A=
+=0A=
+But since the transformation to turn the data into standard units is a =0A=
+simple linear transform the preferred way to handle this is to return =0A=
+RAW data and specify scale and offset.=0A=
