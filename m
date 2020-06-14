@@ -2,132 +2,102 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A4AC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 09:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1838C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 09:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 595EF20714
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 09:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90F8920714
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 09:27:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TUy+QXvX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbgFNJXt (ORCPT
+        id S1726978AbgFNJ14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 05:23:49 -0400
-Received: from mail-lj1-f175.google.com ([209.85.208.175]:38106 "EHLO
-        mail-lj1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726823AbgFNJXs (ORCPT
+        Sun, 14 Jun 2020 05:27:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53730 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725265AbgFNJ1z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 05:23:48 -0400
-Received: by mail-lj1-f175.google.com with SMTP id 9so15657669ljv.5
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 02:23:46 -0700 (PDT)
+        Sun, 14 Jun 2020 05:27:55 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2CAAC03E969;
+        Sun, 14 Jun 2020 02:27:55 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id s88so5763260pjb.5;
+        Sun, 14 Jun 2020 02:27:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lUhVNgMNBvLuhdDecLJTYJjP1POR5VFuzoz3PWt0le8=;
+        b=TUy+QXvXeae7GFe0vxOs9GdhXkWBMRIwEBMfm9hsC+nteuz4EU3Zh3garNhl+/URl9
+         Se6npddwZirvj8b5fHp/1ateoUpnJBgnmFZbDwRDEVZ+uWRM7cKCNueGUGCaydmIhwmR
+         YrjH2KDK/q6Fk8SVlms8KQV9KUHWpYkvv8zZrd2kb33FS5AoX4C2FemwLCU5RSC2/xvX
+         ZzkoJZ+Dn8S2k+lama944RWnrT/fd0w6swlS4ufph0RQovf0kemGJCi/bD59pVzkJYCy
+         GqGIFL2zj4gJjwLThkg0hoeR5EgHmP2TqoSrDYpgIakVIVg67ZxOcrClXpj1e7ljurqd
+         LIzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=c03X9Ig2FnWuDJuACpts7VNtAE92xqutu5aVNzRluGw=;
-        b=eYZCag53LSWIiUG+C3mqXtSgl4jSmds+RpXwaYYIgpbw3lv9xtz3EsCKu+L9SGXqLx
-         z/o7aFpqYtDfLfw3dTYWyfEm+O6LoEsGmpCwg+w40Lkx+kW8R06LDWGzttMA/LaCMV3x
-         XLU1i8lFmSpkxqOo/QlDHMX+1feUgF5aehl97CCgrlULLXP5N1wR9hKk738qOY/SoQm1
-         LDVsg1BSNbsc6WM016/QuHxxxouIGjAJHPG1Hn95g7G39bAq75+WLEpFo87ZlxI2FXIK
-         LaL9L+3ZguzaxmReNfE0hC3MoxfCX5TMAl6BfMTrHpKaoL9bzHOixb5jdfAlXI7pdSUB
-         2zsQ==
-X-Gm-Message-State: AOAM530mTB9IF/NqOYfDWJUo0uxdViKAOkF7g/zXZeCEA6wWsG7ha1Dn
-        IXl4SAQuCR24rMiTwZKWoVuZelp1nlU=
-X-Google-Smtp-Source: ABdhPJzrkYMawVOzhfMr/Q4+e8dZZPxGyc6pffBYzQbcEmNXytGrnJmj2qD3t/IGCX46sffF1432og==
-X-Received: by 2002:a2e:9258:: with SMTP id v24mr10023904ljg.418.1592126625914;
-        Sun, 14 Jun 2020 02:23:45 -0700 (PDT)
-Received: from [10.68.32.147] (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
-        by smtp.gmail.com with ESMTPSA id m10sm3758242lfd.15.2020.06.14.02.23.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 14 Jun 2020 02:23:45 -0700 (PDT)
-Reply-To: efremov@linux.com
-Subject: Re: [Cocci] [PATCH] coccinelle: api: add kvfree script
-To:     Julia Lawall <julia.lawall@inria.fr>
-Cc:     cocci@systeme.lip6.fr, linux-kernel@vger.kernel.org
-References: <20200605204237.85055-1-efremov@linux.com>
- <alpine.DEB.2.21.2006052249160.28300@hadrien>
- <7ce5499c-037e-e192-b19e-58cb6f700b9f@linux.com>
- <alpine.DEB.2.22.394.2006141117040.4736@hadrien>
-From:   Denis Efremov <efremov@linux.com>
-Autocrypt: addr=efremov@linux.com; keydata=
- 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
-Message-ID: <9f5f6845-789f-a398-aa51-3cff85121e19@linux.com>
-Date:   Sun, 14 Jun 2020 12:24:00 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lUhVNgMNBvLuhdDecLJTYJjP1POR5VFuzoz3PWt0le8=;
+        b=jqcF1kefE0QFkonxA11BeBvy9ku+oDleS7VJWo3IpvMSaE6I75YH+7s1J+/9GNydJo
+         8c0/0pipgMbzhqYglbjolgZVcdkM2J/+A1W0rN8x+pAc7yTqQEeWychH4Pn3T8a3je4l
+         j83uRmF3rJrb/0CW2/12WymDuf/D4/9pPgypYlyKBiVPRWQxKikt8J240+qqNznrFffx
+         8x+cTGkyTSBSaoDOWpYTkx9C7XcgqY10qH7V/lh7pD/13GaX+CpFwrDLv4jTBPiNctvW
+         2UvnhjJKKiAt5CzjFNpElemPilr+qKMrqt/GbzMA9QRTx8cbv1+9HtjBQ0KRCi46vWyy
+         sBHg==
+X-Gm-Message-State: AOAM533Jgz7O2kldoxCLSbSARGcskKzqMkwhqC94b8qUPsaxzGcqZFAp
+        T3ACtqjOGUew+aaa8hbxoio9ILxej9SMkbOAH4M=
+X-Google-Smtp-Source: ABdhPJwKTTsWDfZbGYxTeCV5+JEMpSW1omIM1ULCCqN9ZPaclDUPdmv4B323Cu7Np5rOaeOkBXj9DF+PgUMXpmGYa48=
+X-Received: by 2002:a17:90a:220f:: with SMTP id c15mr7131529pje.129.1592126875196;
+ Sun, 14 Jun 2020 02:27:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.22.394.2006141117040.4736@hadrien>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200614055604.67969-1-navid.emamdoost@gmail.com>
+In-Reply-To: <20200614055604.67969-1-navid.emamdoost@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 14 Jun 2020 12:27:38 +0300
+Message-ID: <CAHp75VcuRvaQwcTP0+Y+QJTvjoEzYTvV40coUxnsZPfWnwcNMg@mail.gmail.com>
+Subject: Re: [PATCH] Input: bma150: fix ref count leak in bma150_open
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        linux-input <linux-input@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Navid Emamdoost <emamd001@umn.edu>, wu000273@umn.edu,
+        Kangjie Lu <kjlu@umn.edu>, Stephen McCamant <smccaman@umn.edu>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Jun 14, 2020 at 8:58 AM Navid Emamdoost
+<navid.emamdoost@gmail.com> wrote:
+>
+> in bma150_open, pm_runtime_get_sync is called which
+> increments the counter even in case of failure, leading to incorrect
+> ref count. In case of failure, decrement the ref count before returning.
 
+...
 
-On 6/14/20 12:17 PM, Julia Lawall wrote:
-> 
-> 
-> On Sun, 14 Jun 2020, Denis Efremov wrote:
-> 
->>
->>
->> On 6/5/20 11:51 PM, Julia Lawall wrote:
->>> Also, there is no need to exceed 80 characters here.  You can put a
->>> newline in the middle of a \( ... \)
->>
->> It's required. Looks like it's impossible to break "when" lines.
-> 
-> That's true. Sorry for the noise.
-> 
+>         error = pm_runtime_get_sync(&bma150->client->dev);
+>         if (error < 0 && error != -ENOSYS)
+> -               return error;
+> +               goto out;
 
-Anyway, I will send v2 with other lines fixed.
+So, what will happen in case of -ENOSYS?
 
-Thanks,
-Denis
+...
+
+> +       pm_runtime_put(&bma150->client->dev);
+
+Slightly better to use _put_noidle(). (More consistency with error path)
+
+-- 
+With Best Regards,
+Andy Shevchenko
