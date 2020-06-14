@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C847C433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 19:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB718C433E4
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 19:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55C0B2071A
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 19:04:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B812A2071A
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 19:04:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ACmbn+5L"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tDyw/Z0N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbgFNTES (ORCPT
+        id S1727863AbgFNTEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 15:04:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56902 "EHLO
+        Sun, 14 Jun 2020 15:04:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726648AbgFNTEL (ORCPT
+        with ESMTP id S1727121AbgFNTEJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 15:04:11 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E024C08C5C2;
-        Sun, 14 Jun 2020 12:04:11 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id 9so16558642ljv.5;
-        Sun, 14 Jun 2020 12:04:11 -0700 (PDT)
+        Sun, 14 Jun 2020 15:04:09 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66D4AC08C5C2;
+        Sun, 14 Jun 2020 12:04:08 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id o4so594707lfi.7;
+        Sun, 14 Jun 2020 12:04:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1tlVNSxgPSIVY7njRp82EoP3y9oei5GEhi6LB4YQ4wY=;
-        b=ACmbn+5LXY4ZgSyB5eD2v8bAUH7BhdjMukZJxujxn21BKNuQCWiZ6pskW4u3Tm5yr0
-         tDiPjS6qceDlCgDUbJgscgg2oTd5+P+OKeH6aTet8up1loIk7GrZbca3gwLO6ZWhtC6k
-         9DBOA9ckjUqT0Hw5EeYNOvsiUYVNxxeWEPZ9ycUTi8JEGh9wjMhDi5c7Sz53SMGozPTz
-         7ObH4sMO3A2aHTAMMmPDsjHZZ/kqv8nbR5PqpesorGkwfOGlhTZchvKwB+EtvAGaMEm2
-         SNmyqRbk4oasOKl1C6l2Aefo6oBLjDcj19++pAZE3rLyK1NK1BN6ZOUpXqoF3Zvq7Z0e
-         s5sw==
+        bh=ofH5y+DsAUKO47Nkj6CHgyEmv07V+x06WqiTKtmxkz8=;
+        b=tDyw/Z0NbyseYNFw0tmkDEmK0+rdlxT3B6Rx0ogIl0xtyfgXfz6h1CglbOficaxF7j
+         opyTD6xXyzEhidGf0dAsVGJxGEJLW+5tIFSWwFwYrEUtVp4RkJQwNVuVPpfTsfi/xGRg
+         lUvTrWWu5SISnnOknRogcrt75rMJBefk8sfOvpjnv1LtW5WIFo4NOx7jmgZESMgNxw0m
+         NRa2NWMragB95iD4zcf3Z2hYf4HA+Tph53CfFfyTJPB0ELrZ8dR4ekL6nrFaB6DJ0fd1
+         0HwkduwlYNPJdXHLlJHsa+VPG52wtU8H9fgC4wvWWAQQKdVLbiS8fWkw//BeawlVZBdF
+         OZUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1tlVNSxgPSIVY7njRp82EoP3y9oei5GEhi6LB4YQ4wY=;
-        b=nNfKASHXZem8VEr+sdrUVYV7zFcHNLgeQX9hcU8rtNzNe1ZCum3EB49MA33T3tyCiJ
-         giGHptgFX2AGszWQ6GbLUg/jNntgCR50igXlxrpGYtF27/I+iCQJuc0JUYpZNmGi9eRl
-         0192mMX1jQQNgtflQ7AbS6SjcgJ/Ikn51k4BvmBVhwiFjYfU/GmUkOPXC7Yv3jenHawt
-         OJUhU7hhj/ldrUqvdg7SwoXTJDQUEZtLyzOEIBDaZPEfhVwtyCtNU0TT3NVhUD3N9t4n
-         g+7E8sdhGdzl3RKJUOZSH+od5IJQP2OgRlXJLev+fp2NXZN0B8la8DT3jRoHyeFzAAyD
-         FzAA==
-X-Gm-Message-State: AOAM531xStREwjr+pKl0GFdUKbLy0APtkPq1sWxtYVzFfGh7SEN2+i+a
-        CWHBD0tw3T8QmPZBp17lUbM=
-X-Google-Smtp-Source: ABdhPJxQT3G2mCw18H746uY1ijS4rGlw8gNoDzHcB1Pz3EhK7VWgAyWf/terviKuL7YatcalbXOC6Q==
-X-Received: by 2002:a2e:6c12:: with SMTP id h18mr11938124ljc.62.1592161449972;
-        Sun, 14 Jun 2020 12:04:09 -0700 (PDT)
+        bh=ofH5y+DsAUKO47Nkj6CHgyEmv07V+x06WqiTKtmxkz8=;
+        b=Sfbj5AmgUsM8lhkPu/GXSR1yDM3OUu1iy7kCTnn4JIavHvXxHKpzmsZNk8xuz7Ux98
+         y62cvC0yOkB+1CE5YJ6DhOh+WosDUZ+znEe0UTd+VENpcUhY7CqWNac9yJkrMpCUzIuF
+         Owbpcm60OX7snfg9L0GFrPCi9mCcIqqwMVzfdekC53Zwee848OL4iJiPgViYiV0+t27V
+         uu7RrFuOaTNN/7vTLp8bbcA0clbuT4TQ5+CymWvFNJnRim+akuaGaG1yg+KnZzD5dy4j
+         xEAZGD2djGE7v1wVOgb5WBT1ObINxz+bE6vTn1sTQedFxIJCygJf6I5IM5z2HLFoncHI
+         qUYg==
+X-Gm-Message-State: AOAM5300aZrTLhRv7Bb8htUUhGTucdmbHRRFtvrqzQWEQ4aUS+HXCReX
+        1+XWcLQb9ppZlooIg4nvcpg=
+X-Google-Smtp-Source: ABdhPJwnG7yAfF3RYIYSWw/kDrX3Tt8hscqrxTuGTxm3j3w/fphxrbebeuo7y9inPvrpN1G6fHc9Ew==
+X-Received: by 2002:a19:7612:: with SMTP id c18mr11900032lff.7.1592161446900;
+        Sun, 14 Jun 2020 12:04:06 -0700 (PDT)
 Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.gmail.com with ESMTPSA id p15sm3410856ljn.53.2020.06.14.12.04.08
+        by smtp.gmail.com with ESMTPSA id p15sm3410856ljn.53.2020.06.14.12.04.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Jun 2020 12:04:09 -0700 (PDT)
+        Sun, 14 Jun 2020 12:04:06 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Thomas Zimmermann <tzimmermann@suse.de>,
@@ -69,80 +69,52 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Sean Paul <sean@poorly.run>
 Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v1 6/6] =?UTF-8?q?drm/tegra:=20plane:=20Support=20180?= =?UTF-8?q?=C2=B0=20rotation?=
-Date:   Sun, 14 Jun 2020 22:03:48 +0300
-Message-Id: <20200614190348.12193-7-digetx@gmail.com>
+Subject: [PATCH v1 3/6] drm/panel: lvds: Set up panel orientation
+Date:   Sun, 14 Jun 2020 22:03:45 +0300
+Message-Id: <20200614190348.12193-4-digetx@gmail.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200614190348.12193-1-digetx@gmail.com>
 References: <20200614190348.12193-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Combining horizontal and vertical reflections gives us 180 degrees of
-rotation.
+The panel orientation needs to parsed from a device-tree and assigned to
+the panel's connector in order to make orientation property available to
+userspace. That's what this patch does for the generic LVDS panel.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/gpu/drm/tegra/dc.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/panel/panel-lvds.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/gpu/drm/tegra/dc.c b/drivers/gpu/drm/tegra/dc.c
-index f31bca27cde4..ddd9b88f8fce 100644
---- a/drivers/gpu/drm/tegra/dc.c
-+++ b/drivers/gpu/drm/tegra/dc.c
-@@ -608,6 +608,7 @@ static int tegra_plane_atomic_check(struct drm_plane *plane,
- {
- 	struct tegra_plane_state *plane_state = to_tegra_plane_state(state);
- 	unsigned int rotation = DRM_MODE_ROTATE_0 |
-+				DRM_MODE_ROTATE_180 |
- 				DRM_MODE_REFLECT_X |
- 				DRM_MODE_REFLECT_Y;
- 	struct tegra_bo_tiling *tiling = &plane_state->tiling;
-@@ -659,6 +660,14 @@ static int tegra_plane_atomic_check(struct drm_plane *plane,
- 	else
- 		plane_state->reflect_y = false;
+diff --git a/drivers/gpu/drm/panel/panel-lvds.c b/drivers/gpu/drm/panel/panel-lvds.c
+index 5ce3f4a2b7a1..9421246ac80f 100644
+--- a/drivers/gpu/drm/panel/panel-lvds.c
++++ b/drivers/gpu/drm/panel/panel-lvds.c
+@@ -99,6 +99,7 @@ static int panel_lvds_get_modes(struct drm_panel *panel,
+ 	connector->display_info.bus_flags = lvds->data_mirror
+ 					  ? DRM_BUS_FLAG_DATA_LSB_TO_MSB
+ 					  : DRM_BUS_FLAG_DATA_MSB_TO_LSB;
++	drm_connector_set_panel_orientation(connector, lvds->panel.orientation);
  
-+	if (tegra_fb_is_bottom_up(state->fb))
-+		plane_state->reflect_y = true;
-+
-+	if (rotation & DRM_MODE_ROTATE_180) {
-+		plane_state->reflect_x = !plane_state->reflect_x;
-+		plane_state->reflect_y = !plane_state->reflect_y;
-+	}
-+
- 	/*
- 	 * Tegra doesn't support different strides for U and V planes so we
- 	 * error out if the user tries to display a framebuffer with such a
-@@ -720,7 +729,7 @@ static void tegra_plane_atomic_update(struct drm_plane *plane,
- 	window.dst.h = drm_rect_height(&plane->state->dst);
- 	window.bits_per_pixel = fb->format->cpp[0] * 8;
- 	window.reflect_x = state->reflect_x;
--	window.reflect_y = tegra_fb_is_bottom_up(fb) || state->reflect_y;
-+	window.reflect_y = state->reflect_y;
+ 	return 1;
+ }
+@@ -223,6 +224,11 @@ static int panel_lvds_probe(struct platform_device *pdev)
+ 	drm_panel_init(&lvds->panel, lvds->dev, &panel_lvds_funcs,
+ 		       DRM_MODE_CONNECTOR_LVDS);
  
- 	/* copy from state */
- 	window.zpos = plane->state->normalized_zpos;
-@@ -806,6 +815,7 @@ static struct drm_plane *tegra_primary_plane_create(struct drm_device *drm,
- 	err = drm_plane_create_rotation_property(&plane->base,
- 						 DRM_MODE_ROTATE_0,
- 						 DRM_MODE_ROTATE_0 |
-+						 DRM_MODE_ROTATE_180 |
- 						 DRM_MODE_REFLECT_X |
- 						 DRM_MODE_REFLECT_Y);
- 	if (err < 0)
-@@ -1094,6 +1104,7 @@ static struct drm_plane *tegra_dc_overlay_plane_create(struct drm_device *drm,
- 	err = drm_plane_create_rotation_property(&plane->base,
- 						 DRM_MODE_ROTATE_0,
- 						 DRM_MODE_ROTATE_0 |
-+						 DRM_MODE_ROTATE_180 |
- 						 DRM_MODE_REFLECT_X |
- 						 DRM_MODE_REFLECT_Y);
- 	if (err < 0)
++	ret = of_drm_get_panel_orientation(lvds->dev->of_node,
++					   &lvds->panel.orientation);
++	if (ret)
++		return ret;
++
+ 	ret = drm_panel_of_backlight(&lvds->panel);
+ 	if (ret)
+ 		return ret;
 -- 
 2.26.0
 
