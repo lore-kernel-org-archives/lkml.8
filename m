@@ -2,394 +2,121 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABAA6C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 18:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF742C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 18:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C5E1206D7
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 18:40:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A02C4206D7
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 18:41:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F6H+BuG9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RJAqddZp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbgFNSjs (ORCPT
+        id S1727785AbgFNSlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 14:39:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53166 "EHLO
+        Sun, 14 Jun 2020 14:41:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726946AbgFNSjr (ORCPT
+        with ESMTP id S1726905AbgFNSlO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 14:39:47 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B252DC08C5C3
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 11:39:46 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id b16so6808208pfi.13
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 11:39:46 -0700 (PDT)
+        Sun, 14 Jun 2020 14:41:14 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DAEEC08C5C2;
+        Sun, 14 Jun 2020 11:41:13 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id w90so10962081qtd.8;
+        Sun, 14 Jun 2020 11:41:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=19HC7VZegAFMIrVuT1WO9vNsblblWVfvq+qakcPsIak=;
-        b=F6H+BuG9wTvKTPAy8s8vLiyk2/w6yHtrCtpQTfexslP/WUr6JNSD1LCpm3rLd1kHrQ
-         ScPgWtHpj/PzaEFTzFoxPOibgmJFJTGOeeGFbm58OGXX4cZm2kJuQi6bURpfOnuqN8iR
-         5C9Arjkf7i8fORZjmmJguRBB4x+mMlQk64fqU=
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id;
+        bh=gbKqT2VlDYF8btDBBV8p9eIC1+5x1Xv1FhkzFosEmBU=;
+        b=RJAqddZpsXCGmQpjMNeF1S88f1P16hTpZ2+l46ov5INy9TIDmVHe7PetkJY87R4Fu4
+         AF3R2azbrVDE1IPIgGHTFMEUSvNps1gCAnMbIaJtNDUEtiphriBeaJjAGTe12KJZ+Ak8
+         X5i2eNiVxrl1Ltb8MZGKPG8MMYltxeg10fD0hxSOtP0ml8TOjlTqzaLyxe5wSCEZfRNL
+         OzuVlCCVOCr/i8zIfYk3XBbkslH6OJ/iy60idJaY0JKahtzw51N1TceCL9kFGe/qHVdc
+         CSIS+KQRVRJgnnXiIRZivvS1Hwo2/7SI3UkJx+z9V+B9SPvr2oNYKYcJh8TgaZ+sFfxy
+         XPJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=19HC7VZegAFMIrVuT1WO9vNsblblWVfvq+qakcPsIak=;
-        b=LQbS3/JzMNQTorudB1l7d+3Qu7yEMDMNHTEfLYCgJGwDkjJVCmfTTVejELJk+n3E+C
-         KAE4oGS6nf3tm5jznFpdzM8H2Yq6LrXcTrpem2DfDaJ1G3BJYsvl+UvfpLwL9YjVQsML
-         mvgnWDwn0OjwCaL9lrf/FORuptudFytP84sa7VH0nHfKOPGHkBO3fCcCfKZ5Wd7hGeYD
-         FYU8Z/z7A9P9379g1uS11pH7hT0UGxJ2n4ct/M4O0TZhpoSACdL0s6BhgpYCTutNYs3a
-         AKaQgwNHO6/qrn1gyaRlhzLdlI4ByMz7kk7VZQahkmv87rB4CEmCMAaOY0Gz13nZokV0
-         RSiA==
-X-Gm-Message-State: AOAM5305oxjSDsvgdN+ZWOR077Tc2FMdWexMf0fFau08qDd75lveu8Eg
-        7eoDJ3i4q4d1AhBDIAgCfDOZag==
-X-Google-Smtp-Source: ABdhPJxd3o+Zafq2+WNV78yg/XVCUpMrONSHsagkLDCLQQB6DK5Rs02u8CD1pIWebDWpd/Wlm4HIkQ==
-X-Received: by 2002:a63:3384:: with SMTP id z126mr18464190pgz.7.1592159985837;
-        Sun, 14 Jun 2020 11:39:45 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id hi19sm10281005pjb.49.2020.06.14.11.39.44
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=gbKqT2VlDYF8btDBBV8p9eIC1+5x1Xv1FhkzFosEmBU=;
+        b=D5F+6CEFHThgE/grE46OdYfTfob3rAarUhnyLnbSjAW/2AlDmx/WbeRVJdJ5JSP89J
+         +UrFyPXLiQ1wir7I+ApN4z8kFMRZmmHZML6/4r17qGViRQcoWG2aoVi45tctjxhryQ8f
+         YWMMdIrxDr+gra1LHbZZla3XSjC8L9USIowtsOmc9fL4MixKTn4sm0yAa67vZbNsXBo5
+         ah9BxPnZmPLtyYbvR8k4byYwEEMK89NFzS3jMQcVCaArIHYXZ+7VEHN4dOmVSzxKsBoP
+         yCzOBUGWYo3ptyOkPMjPOsvwJCW9v8awAHCgbPNNLfssG/wT6SdQjRf1RBuxeaowvahx
+         sfGg==
+X-Gm-Message-State: AOAM533qBl8W0ctnEBw8LMjgY2QT/9ZWg9eKNiXUm0MGYvHRCKdVWWXT
+        Huec2vyGivN0bTbdQHJG9P4=
+X-Google-Smtp-Source: ABdhPJyJWjgaueHQFHNwYrQM6ovCIrix85cqkvPOlobJK8Krs+9ZNgUolsAiHTFNnLdNMGZrEROIUg==
+X-Received: by 2002:ac8:6a11:: with SMTP id t17mr12892740qtr.272.1592160072669;
+        Sun, 14 Jun 2020 11:41:12 -0700 (PDT)
+Received: from linux.home ([2604:2000:1344:41d:b556:165b:f409:9052])
+        by smtp.googlemail.com with ESMTPSA id v189sm9378572qkb.64.2020.06.14.11.41.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Jun 2020 11:39:44 -0700 (PDT)
-Date:   Sun, 14 Jun 2020 11:39:43 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Bird, Tim" <Tim.Bird@sony.com>
-Cc:     "shuah@kernel.org" <shuah@kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: RFC - kernel selftest result documentation (KTAP)
-Message-ID: <202006141120.96FF8C5@keescook>
-References: <CY4PR13MB1175B804E31E502221BC8163FD830@CY4PR13MB1175.namprd13.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CY4PR13MB1175B804E31E502221BC8163FD830@CY4PR13MB1175.namprd13.prod.outlook.com>
+        Sun, 14 Jun 2020 11:41:12 -0700 (PDT)
+From:   Gaurav Singh <gaurav1086@gmail.com>
+To:     gaurav1086@gmail.com, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        netdev@vger.kernel.org (open list:BPF (Safe dynamic programs and tools)),
+        bpf@vger.kernel.org (open list:BPF (Safe dynamic programs and tools)),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] [bpf] xdp_monitor_user: Fix null pointer dereference
+Date:   Sun, 14 Jun 2020 14:41:02 -0400
+Message-Id: <20200614184102.30992-1-gaurav1086@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 06:11:06PM +0000, Bird, Tim wrote:
-> The kernel test result format consists of 5 major elements,
-> 4 of which are line-based:
->  * the output version line
->  * the plan line
+Memset() on the pointer right after malloc() can cause
+a null pointer dereference if it failed to allocate memory.
+Fix this by replacing malloc/memset with a single calloc().
 
-Note: making the plan line required differs from TAP13 and TAP14. I
-think it's the right choice, but we should be clear.
+Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
+---
+ samples/bpf/xdp_monitor_user.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
->  * one or more test result lines (also called test result lines)
->  * a possible "Bail out!" line
-
-"Bail out!" to be moved to "optional" elements, since it may not appear.
-And we should clarify TAP13 and TAP14's language to say it should only
-appear when the test is aborting without running later tests -- for this
-reason, I think the optional "description" following "Bail out!" should
-be made required. I.e. it must be: "Bail out! $reason"
-
-> optional elements:
->  * diagnostic data
-
-nit: diagnostic lines (not data)
-
-> The 5th element is diagnostic information, which is used to describe
-> items running in the test, and possibly to explain test results.
-> A sample test result is show below:
-> 
-> Some other lines may be placed the test harness, and are not emitted
-> by individual test programs:
->  * one or more test identification lines
->  * a possible results summary line
-> 
-> Here is an example:
-> 
-> 	TAP version 13
-> 	1..1
-> 	# selftests: cpufreq: main.sh
-> 	# pid 8101's current affinity mask: fff
-> 	# pid 8101's new affinity mask: 1
-> 	ok 1 selftests: cpufreq: main.sh
-
-Nit: for examples, I this should should show more than one test.
-(Preferably, it should show all the possible cases, ok, not ok, SKIP,
-etc.)
-
-> The output version line is: "TAP version 13"
-> 
-> The test plan is "1..1".
-> 
-> Element details
-> ===============
-> 
-> Output version line
-> -------------------
-> The output version line is always "TAP version 13".
-> 
-> Although the kernel test result format has some additions
-> to the TAP13 format, the version line reported by kselftest tests
-> is (currently) always the exact string "TAP version 13"
-> 
-> This is always the first line of test output.
-> 
-> Test plan line
-> --------------
-> The test plan indicates the number of individual test cases intended to
-> be executed by the test. It always starts with "1.." and is followed
-> by the number of tests cases.  In the example above, 1..1", indicates
-> that this test reports only 1 test case.
-> 
-> The test plan line can be placed in two locations:
->  * the second line of test output, when the number of test cases is known
->    in advance
->  * as the last line of test output, when the number of test cases is not
->    known in advance.
-> 
-> Most often, the number of test cases is known in advance, and the test plan
-> line appears as the second line of test output, immediately following
-> the output version line.  The number of test cases might not be known
-> in advance if the number of tests is calculated from runtime data.
-> In this case, the test plan line is emitted as the last line of test
-> output.
-
-"... must be ..." ?
-
-> 
-> Test result lines
-> -----------------
-> The test output consists of one or more test result lines that indicate
-> the actual results for the test.  These have the format:
-> 
->   <result> <number> <description> [<directive>] [<diagnostic data>]
-
-This should be:
-
-<result> <number> <description> [# [<directive> ][<diagnostic data>]]
-
-> 
-> The ''result'' must appear at the start of a line (except for when a
-> test is nested, see below), and must consist of one of the following
-> two phrases:
->   * ok
->   * not ok
-> 
-> If the test passed, then the result is reported as "ok".  If the test
-> failed, then the result is reported as "not ok".  These must be in
-> lower case, exactly as shown.
-> 
-> The ''number'' in the test result line represents the number of the
-> test case being performed by the test program.  This is often used by
-> test harnesses as a unique identifier for each test case.  The test
-> number is a base-10 number, starting with 1.  It should increase by
-> one for each new test result line emitted.  If possible the number
-> for a test case should be kept the same over the lifetime of the test.
-> 
-> The ''description'' is a short description of the test case.
-> This can be any string of words, but should avoid using colons (':')
-
-Must also avoid "#".
-
-> except as part of a fully qualifed test case name (see below).
-
-TAP13/14 makes description optional, are we making it required (I think
-we should). There seems to be a TAP13/14 "convention" of starting
-<description> with "- ", which I'm on the fence about it. It does make
-parsing maybe a little easier.
-
-> Finally, it is possible to use a test directive to indicate another
-> possible outcome for a test: that it was skipped.  To report that
-> a test case was skipped, the result line should start with the
-> result "not ok", and the directive "# SKIP" should be placed after
-> the test description. (Note that this deviates from the TAP13
-> specification).
-
-This is what TAP14 changed, I think (i.e. directive follows description
-now).
-
-> 
-> A test may be skipped for a variety of reasons, ranging for
-> insufficient privileges to missing features or resources required
-> to execute that test case.
-> 
-> It is usually helpful if a diagnostic message is emitted to explain
-> the reasons for the skip.  If the message is a single line and is
-> short, the diagnostic message may be placed after the '# SKIP'
-> directive on the same line as the test result.  However, if it is
-> not on the test result line, it should precede the test line (see
-> diagnostic data, next).
-> 
-> Diagnostic data
-> ---------------
-> Diagnostic data is text that reports on test conditions or test
-> operations, or that explains test results.  In the kernel test
-> result format, diagnostic data is placed on lines that start with a
-> hash sign, followed by a space ('# ').
-> 
-> One special format of diagnostic data is a test identification line,
-> that has the fully qualified name of a test case.  Such a test
-> identification line marks the start of test output for a test case.
-> 
-> In the example above, there are three lines that start with '#'
-> which precede the test result line:
-> 	# selftests: cpufreq: main.sh
-> 	# pid 8101's current affinity mask: fff
-> 	# pid 8101's new affinity mask: 1
-> These are used to indicate diagnostic data for the test case
-> 'selftests: cpufreq: main.sh'
-> 
-> Material in comments between the identification line and the test
-> result line are diagnostic data that can help to interpret the
-> results of the test.
-> 
-> The TAP specification indicates that automated test harnesses may
-> ignore any line that is not one of the mandatory prescribed lines
-> (that is, the output format version line, the plan line, a test
-> result line, or a "Bail out!" line.) 
-> 
-> Bail out!
-> ---------
-> If a line in the test output starts with 'Bail out!', it indicates
-> that the test was aborted for some reason.  It indicates that 
-> the test is unable to proceed, and no additional tests will be
-> performed.
-> 
-> This can be used at the very beginning of a test, or anywhere in the
-> middle of the test, to indicate that the test can not continue.
-
-I think the required syntax should be:
-
-Bail out! <reason>
-
-And to make it clear that this is optionally used to indicate an early
-abort. (Though with a leading plan line, a parser should be able to
-determine this on its own.)
-
-> --- from here on is not-yet-organized material
-> 
-> Tip:
->  - don't change the test plan based on skipped tests.
->    - it is better to report that a test case was skipped, than to
->      not report it
->    - that is, don't adjust the number of test cases based on skipped
->      tests
-
-Yes, totally.
-
-> Other things to mention:
-> TAP13 elements not used:
->  - yaml for diagnostic messages
->    - reason: try to keep things line-based, since output from other things
->    may be interspersed with messages from the test itself
-
-Agreed: the yaml extension is not sensible for our use.
-
->  - TODO directive
-
-Agreed: SKIP should cover everything TODO does.
-
-> KTAP Extensions beyond TAP13:
->  - nesting
-
-(I would call this 'subtests')
-
->    - via indentation
->      - indentation makes it easier for humans to read
-
-And allows for separable parsing of subtests.
-
->  - test identifier
->     - multiple parts, separated by ':'
-
-This is interesting... is the goal to be able to report test status over
-time by name?
-
->  - summary lines
->    - can be skipped by CI systems that do their own calculations
-
-Right -- I think per-test summary line should be included for the humans
-reading a single test (which may scroll off the screen).
-
-> Other notes:
->  - automatic assignment of result status based on exit code
-
-This is, I think, a matter for the kselftest running infrastructure, not
-the KTAP output?
-
-> Tips:
->  - do NOT describe the result in the test line
->    - the test case description should be the same whether the test
->      succeeds or fails
->    - use diagnostic lines to describe or explain results, if this is
->      desirable
-
-Right.
-
->  - test numbers are considered harmful
->    - test harnesses should use the test description as the identifier
->    - test numbers change when testcases are added or removed
->      - which means that results can't be compared between different
->        versions of the test
-
-Right.
-
->  - recommendations for diagnostic messages:
->    - reason for failure
->    - reason for skip
->    - diagnostic data should always preceding the result line
->      - problem: harness may emit result before test can do assessment
->        to determine reason for result
->      - this is what the kernel uses
-
-Right.
-
-> Differences between kernel test result format and TAP13:
->  - in KTAP the "# SKIP" directive is placed after the description on
->    the test result line
-
-Right, this is the same as TAP14, IIRC. KTAP's big deltas are the "#"
-diagnostic lines and the subtest handling.
-
-> ====== start of ktap-doc-rfc.txt ======
-> OK - that's the end of the RFC doc.
-> 
-> Here are a few questions:
->  - is this document desired or not?
-
-Yes.
-
->     - is it too long or too short?
-
-Should be slightly longer: more examples.
-
->  - if the document is desired, where should it be placed?
->    I assume somewhere under Documentation, and put into
->    .rst format. Suggestions for a name and location are welcome.
-
-Yes Documentation/*.rst Not sure on name yet, but where do kselftest
-docs live? :)
-
->  - is this document accurate?
->    I think KUNIT does a few things differently than this description.
-
-Let's fix it. :)
-
->    - is the intent to have kunit and kselftest have the same output format?
->       if so, then these should be rationalized.
-
-Yes please.
-
-> Finally,
->   - Should a SKIP result be 'ok' (TAP13 spec) or 'not ok' (current kselftest practice)?
-> See https://testanything.org/tap-version-13-specification.html
-
-Oh! I totally missed this. Uhm. I think "not ok" makes sense to me "it
-did not run successfully". ... but ... Uhhh ... how do XFAIL and SKIP
-relate? Neither SKIP nor XFAIL count toward failure, though, so both
-should be "ok"? I guess we should change it to "ok".
-
+diff --git a/samples/bpf/xdp_monitor_user.c b/samples/bpf/xdp_monitor_user.c
+index dd558cbb2309..ef53b93db573 100644
+--- a/samples/bpf/xdp_monitor_user.c
++++ b/samples/bpf/xdp_monitor_user.c
+@@ -509,11 +509,8 @@ static void *alloc_rec_per_cpu(int record_size)
+ {
+ 	unsigned int nr_cpus = bpf_num_possible_cpus();
+ 	void *array;
+-	size_t size;
+ 
+-	size = record_size * nr_cpus;
+-	array = malloc(size);
+-	memset(array, 0, size);
++	array = calloc(nr_cpus, record_size);
+ 	if (!array) {
+ 		fprintf(stderr, "Mem alloc error (nr_cpus:%u)\n", nr_cpus);
+ 		exit(EXIT_FAIL_MEM);
+@@ -528,8 +525,7 @@ static struct stats_record *alloc_stats_record(void)
+ 	int i;
+ 
+ 	/* Alloc main stats_record structure */
+-	rec = malloc(sizeof(*rec));
+-	memset(rec, 0, sizeof(*rec));
++	rec = calloc(1, sizeof(*rec));
+ 	if (!rec) {
+ 		fprintf(stderr, "Mem alloc error\n");
+ 		exit(EXIT_FAIL_MEM);
 -- 
-Kees Cook
+2.17.1
+
