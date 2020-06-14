@@ -2,132 +2,151 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6312C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 10:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 830DFC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 10:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8203520714
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 10:44:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ePjBDxUn"
+	by mail.kernel.org (Postfix) with ESMTP id 6013520739
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 10:56:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592132178;
+	bh=0+f7COukvRhk0sJvGOAJHgAJ8nVeYg/rGLOd/Bfrh9Y=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=XUD60UKo6iwLloUvCVKiRbGDsNjxZ+U2y2vdNkosq3T9YiW+AmrfGz9EEOshyoBeG
+	 KiLzwb7sKdhFgG7recYgBadEDJF8fb3xRcmsHn2AKs4uj604l39LsvQLKpVLayxA+a
+	 lFI97c6iM1ytzwqdDDJXsVLcMByqXEc2cWhVtBZ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbgFNKoz (ORCPT
+        id S1727015AbgFNK4N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 06:44:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37204 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbgFNKox (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 06:44:53 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADFDFC05BD43;
-        Sun, 14 Jun 2020 03:44:53 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id g12so5597125pll.10;
-        Sun, 14 Jun 2020 03:44:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wUcOt819f+ivq40xZB6TcXygEQX1UsKoHGTk/MjKzJU=;
-        b=ePjBDxUn9MITBDP0cVwxArkF7+p30KQt5PvIfsDC3J0xIiaDpKlDvGoGB1Ft5lRS+v
-         bbkXm3tDwD3EumIViK+w0W7ZJn3EayMJYL7Cq0fWjQ2pfl60+aP4S6YRPurlFfnbxY1n
-         5b/CUzlG2WYHjBJTGthjpHL1bYz0zfTloltz8sBV6pTGCGYcgzl6dReqNzA+z4iXJBff
-         fbHwtYjAKfYLiBxxE+SgoVdNTkiKZwVyMCPC8OnLf+uoCt999cpbpqVanC/vF1QNgaiE
-         kJXznFfMNyGs/p+C54ZCeX7xkhVFywdgQTfVp4Ufc+dI1LfYikzWoP2dguNmPe/N0Z9+
-         T25A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wUcOt819f+ivq40xZB6TcXygEQX1UsKoHGTk/MjKzJU=;
-        b=Q0jOUrKzuhJRIwuKc6phtpczziDxpq0ZWL7Hc1VfP6DSGBLNIyoEK/RXXu808SUk45
-         Yol5D8vf4hR7unaGYkij7zuJ98LpKVDGt1h3s5ELP99wewuPy/3k45BWxNHFVxlhYAjg
-         762s4oBTpcFaQSiuBsdGt7M3mAR+OODqZR5Z7iaeXzO1TKvnz84iONEQO8RL4sps/eTX
-         hponN2WEfnPXNpqLMSOpzo6fNOi5Fx6rB+wNpr4EruzW9eSy9ZB7uzj7DfoXqGiwe2nC
-         byIThLCwlD6deY7EVeK5Ozx+wS+aZApSIGikpmbaFgeKt9Ofr+kNiod2Ah1xHvJrXU/E
-         GHBg==
-X-Gm-Message-State: AOAM531iwcACUsdP+DeyZV0xKLy/rvtBlz5GIAHb14WcDPwLhJS9uq23
-        rjKQYVnBcv2yej1v1b+bLksa1243Y6YYuhuI/5s=
-X-Google-Smtp-Source: ABdhPJyEneOgBpKPU02VqOu7ehOjUCszRfNogXdrDsoroRhDEDHiX2u0BSC4LlPgZS77fv2NEI7b29aR2Fh4/J2e5Wc=
-X-Received: by 2002:a17:90a:b30d:: with SMTP id d13mr6965711pjr.181.1592131492548;
- Sun, 14 Jun 2020 03:44:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200614090751.GA2878@kunai> <CAHp75Vc2RV1daOHMM1zAT2P_YpFzYq=_NVXnagq7qBCS9En04g@mail.gmail.com>
- <CAHp75VdtJN4KbsWgP3G40P4giPGgPE6gdr0CDqOXQjp2wK+i+g@mail.gmail.com>
- <CAMuHMdUadYRNYdJ9JUX90Z1jvtHZmSS4gM+JKft4x-BK2Ry4zQ@mail.gmail.com> <CAMuHMdVJToSg_a3wQCV3ALyX5bHKsYRjyT1KrCtSgqxDgaFo2g@mail.gmail.com>
-In-Reply-To: <CAMuHMdVJToSg_a3wQCV3ALyX5bHKsYRjyT1KrCtSgqxDgaFo2g@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 14 Jun 2020 13:44:35 +0300
-Message-ID: <CAHp75Vc5DTnERihke4radxjHmRXzpTJGvD+-G1YnRBBnzDALkg@mail.gmail.com>
-Subject: Re: RFC: a failing pm_runtime_get increases the refcnt?
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Wolfram Sang <wsa@kernel.org>, Linux PM <linux-pm@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 14 Jun 2020 06:56:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38310 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725265AbgFNK4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 06:56:02 -0400
+Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDD0B20739;
+        Sun, 14 Jun 2020 10:55:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592132161;
+        bh=0+f7COukvRhk0sJvGOAJHgAJ8nVeYg/rGLOd/Bfrh9Y=;
+        h=From:To:Cc:Subject:Date:From;
+        b=1N2bgfp9vuZZf1cXB5D172/ioERkLuGv1fAgKgZ67CEvIViGGInqU8uo+si0bhx2X
+         9VSirgyXyKQu5Dfnoz2PZTvKdX0MmEZb79WD1tyQe3xgOaUAu4VcBkXUkuM9GSLjHa
+         IJ6vhsA9kIE23IirMz4Bd2p1xV0pEpg3B5pBk8rw=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Mark Brown <broonie@kernel.org>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Wolfram Sang <wsa@kernel.org>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>, stable@vger.kernel.org
+Subject: [PATCH 1/2] spi: spi-fsl-dspi: Fix external abort on interrupt in exit paths
+Date:   Sun, 14 Jun 2020 12:55:53 +0200
+Message-Id: <1592132154-20175-1-git-send-email-krzk@kernel.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 14, 2020 at 1:05 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Sun, Jun 14, 2020 at 12:00 PM Geert Uytterhoeven
-> <geert@linux-m68k.org> wrote:
-> > On Sun, Jun 14, 2020 at 11:43 AM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > > On Sun, Jun 14, 2020 at 12:34 PM Andy Shevchenko
-> > > <andy.shevchenko@gmail.com> wrote:
-> > > >
-> > > > On Sun, Jun 14, 2020 at 12:10 PM Wolfram Sang <wsa@kernel.org> wrote:
-> > > > > both in the I2C subsystem and also for Renesas drivers I maintain, I am
-> > > > > starting to get boilerplate patches doing some pm_runtime_put_* variant
-> > > > > because a failing pm_runtime_get is supposed to increase the ref
-> > > > > counters? Really? This feels wrong and unintuitive to me.
-> > > >
-> > > > Yeah, that is a well known issue with PM (I even have for a long time
-> > > > a coccinelle script, when I realized myself that there are a lot of
-> > > > cases like this, but someone else discovered this recently, like
-> > > > opening a can of worms).
-> > > >
-> > > > > I expect there
-> > > > > has been a discussion around it but I couldn't find it.
-> > > >
-> > > > Rafael explained (again) recently this. I can't find it quickly, unfortunately.
-> > >
-> > > I _think_ this discussion, but may be it's simple another tentacle of
-> > > the same octopus.
-> > > https://patchwork.ozlabs.org/project/linux-tegra/patch/20200520095148.10995-1-dinghao.liu@zju.edu.cn/
-> >
-> > Thanks, hadn't read that one! (so I was still at -1 from
-> > http://sweng.the-davies.net/Home/rustys-api-design-manifesto ;-)
-> >
-> > So "pm_runtime_put_noidle()" is the (definitive?) one to pair with a
-> > pm_runtime_get_sync() failure?
->
-> My biggest worry here is all those copycats jumping on the bandwagon,
-> and sending untested[*] patches that end up calling the wrong function.
->
-> [*] Several of them turned out to introduce trivial compile warnings, so
->     I now consider all patches authored by the same person as untested.
+If interrupt comes late, during probe error path or device remove (could
+be triggered with CONFIG_DEBUG_SHIRQ), the interrupt handler
+dspi_interrupt() will access registers with the clock being disabled.  This
+leads to external abort on non-linefetch on Toradex Colibri VF50 module
+(with Vybrid VF5xx):
 
-That's always a problem with janitors like patches...
-Once I tried to ask them to provide a testing material, but...
- - some maintainers just accept them without asking questions
- - some maintainers even defend them that they are doing a good job
-(and LWN top contributor statistics also motivate some of janitors,
-though I consider it not the best metrics)
- - practically almost no contributor answered to my queries, so, I
-consider all of them are untested independent to the name (if name
-appears in more than dozen patches, esp. in different subsystems)
- - and yes, it's a trade-off, some of the patches indeed useful.
+    $ echo 4002d000.spi > /sys/devices/platform/soc/40000000.bus/4002d000.spi/driver/unbind
 
+    Unhandled fault: external abort on non-linefetch (0x1008) at 0x8887f02c
+    Internal error: : 1008 [#1] ARM
+    CPU: 0 PID: 136 Comm: sh Not tainted 5.7.0-next-20200610-00009-g5c913fa0f9c5-dirty #74
+    Hardware name: Freescale Vybrid VF5xx/VF6xx (Device Tree)
+      (regmap_mmio_read32le) from [<8061885c>] (regmap_mmio_read+0x48/0x68)
+      (regmap_mmio_read) from [<8060e3b8>] (_regmap_bus_reg_read+0x24/0x28)
+      (_regmap_bus_reg_read) from [<80611c50>] (_regmap_read+0x70/0x1c0)
+      (_regmap_read) from [<80611dec>] (regmap_read+0x4c/0x6c)
+      (regmap_read) from [<80678ca0>] (dspi_interrupt+0x3c/0xa8)
+      (dspi_interrupt) from [<8017acec>] (free_irq+0x26c/0x3cc)
+      (free_irq) from [<8017dcec>] (devm_irq_release+0x1c/0x20)
+      (devm_irq_release) from [<805f98ec>] (release_nodes+0x1e4/0x298)
+      (release_nodes) from [<805f9ac8>] (devres_release_all+0x40/0x60)
+      (devres_release_all) from [<805f5134>] (device_release_driver_internal+0x108/0x1ac)
+      (device_release_driver_internal) from [<805f521c>] (device_driver_detach+0x20/0x24)
 
+The resource-managed framework should not be used for interrupt handling,
+because the resource will be released too late - after disabling clocks.
+The interrupt handler is not prepared for such case.
+
+Fixes: 349ad66c0ab0 ("spi:Add Freescale DSPI driver for Vybrid VF610 platform")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+
+---
+
+This is an follow up of my other patch for I2C IMX driver [1]. Let's fix the
+issues consistently.
+
+[1] https://lore.kernel.org/lkml/1592130544-19759-2-git-send-email-krzk@kernel.org/T/#u
+---
+ drivers/spi/spi-fsl-dspi.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index 58190c94561f..57e7a626ba00 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -1385,8 +1385,8 @@ static int dspi_probe(struct platform_device *pdev)
+ 		goto poll_mode;
+ 	}
+ 
+-	ret = devm_request_irq(&pdev->dev, dspi->irq, dspi_interrupt,
+-			       IRQF_SHARED, pdev->name, dspi);
++	ret = request_threaded_irq(dspi->irq, dspi_interrupt, NULL,
++				   IRQF_SHARED, pdev->name, dspi);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "Unable to attach DSPI interrupt\n");
+ 		goto out_clk_put;
+@@ -1400,7 +1400,7 @@ static int dspi_probe(struct platform_device *pdev)
+ 		ret = dspi_request_dma(dspi, res->start);
+ 		if (ret < 0) {
+ 			dev_err(&pdev->dev, "can't get dma channels\n");
+-			goto out_clk_put;
++			goto out_free_irq;
+ 		}
+ 	}
+ 
+@@ -1415,11 +1415,14 @@ static int dspi_probe(struct platform_device *pdev)
+ 	ret = spi_register_controller(ctlr);
+ 	if (ret != 0) {
+ 		dev_err(&pdev->dev, "Problem registering DSPI ctlr\n");
+-		goto out_clk_put;
++		goto out_free_irq;
+ 	}
+ 
+ 	return ret;
+ 
++out_free_irq:
++	if (dspi->irq > 0)
++		free_irq(dspi->irq, dspi);
+ out_clk_put:
+ 	clk_disable_unprepare(dspi->clk);
+ out_ctlr_put:
+@@ -1435,6 +1438,8 @@ static int dspi_remove(struct platform_device *pdev)
+ 
+ 	/* Disconnect from the SPI framework */
+ 	dspi_release_dma(dspi);
++	if (dspi->irq > 0)
++		free_irq(dspi->irq, dspi);
+ 	clk_disable_unprepare(dspi->clk);
+ 	spi_unregister_controller(dspi->ctlr);
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.7.4
+
