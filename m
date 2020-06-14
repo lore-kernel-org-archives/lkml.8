@@ -2,75 +2,124 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E37D2C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 13:42:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB3BC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 13:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1FB520714
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 13:42:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F16EF20714
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 13:43:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T0mKqtpA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727788AbgFNNmI (ORCPT
+        id S1727807AbgFNNnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 09:42:08 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:54527 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1727027AbgFNNmI (ORCPT
+        Sun, 14 Jun 2020 09:43:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36188 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727027AbgFNNnm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 09:42:08 -0400
-Received: (qmail 17826 invoked by uid 1000); 14 Jun 2020 09:42:07 -0400
-Date:   Sun, 14 Jun 2020 09:42:07 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Aditya Pakki <pakki001@umn.edu>
-Cc:     kjlu@umn.edu, wu000273@umn.edu,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "Lee, Chiasheng" <chiasheng.lee@intel.com>,
-        David Heinzelmann <heinzelmann.david@gmail.com>,
-        Hardik Gajjar <hgajjar@de.adit-jv.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usb: core: fix reference count leak in usb_port_resume
-Message-ID: <20200614134207.GA17297@rowland.harvard.edu>
-References: <20200614033355.129442-1-pakki001@umn.edu>
+        Sun, 14 Jun 2020 09:43:42 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3B91C05BD43;
+        Sun, 14 Jun 2020 06:43:41 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id o15so14593553ejm.12;
+        Sun, 14 Jun 2020 06:43:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2JK7KGekdKk92ix3V6dwBOemAX4+Cg95WIG/xENrDWE=;
+        b=T0mKqtpAN81wMzgDobYRYrqAnj8bInha1NepnPIo9ZA5+Lgsq36OAfiUIraExtvObP
+         CrNmGqwyEEpj1gHZySt2CgOFimTsdV3zTGEDo8vYKz0QFdhHJajZT7X9U3cjIAmPkHbW
+         RXX3igy5p/2eRLIfSBepdR9Ix295sfi8U+dh9zSmiK6OWk4ZLo3UGq1YQGdcqSOJHh5u
+         bhdP4H9INgNyhIDQzbh0jpChNy4VySKyAixC0Ad1jkpiWLmh9/XO8syEL4IJO7Ez3LhX
+         AnrtXna3C68MG6yDx/dKeH50IwTMlHacBYPkOD8kTL+Id72b9gj/vjPPHZiKd5fkywKI
+         uOLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2JK7KGekdKk92ix3V6dwBOemAX4+Cg95WIG/xENrDWE=;
+        b=OztdUO/8RtSSAS6eUDcniga6zzC67yY6Yc8VkqcIx9dFC1WM8i5RxHrzuLX0/UHXIN
+         +5+RcRWRektJnJRiHtUuzqoN+hvBWkWLJSiBi8zrI6+TauXsGnaOWBlbWx642iyuQlK4
+         jAviZob+mb8hCheIVGdn7N8xD9zvclttgGpzGaja4IQ+dfRCfNGLNzaVVV68F7aMIF2F
+         j2+cAWPDQmlajNZIMKoSKSaYchRD5f0Y4U9WoJSz48qYDrcdgSzRTUJ1U4tL5A6rMQ/z
+         9xmpb/AKlN/muoMzXORPnNHuKgvX91QEq9K2l4yI9nMyvXJqQpnRkKWUl3xjJJ2uR30O
+         f7ww==
+X-Gm-Message-State: AOAM532jAZNtvHx0CaYi08SVF6UIi+8HyEjtnDr8AV735IJwwqr1V6np
+        +V1JbxjCLoKWJIn2X5Qi+TR20hqrHlCzpAR2bWvAx9Ow
+X-Google-Smtp-Source: ABdhPJxiLRhSn1vMvYdXG7qmdlKCmTZBmxhXrnyzgCKNUwOdM4r6MtZBxiGiHYXZfbA+EBEpchAae7BeldKLnUxJ7T0=
+X-Received: by 2002:a17:906:1149:: with SMTP id i9mr22576193eja.100.1592142220162;
+ Sun, 14 Jun 2020 06:43:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200614033355.129442-1-pakki001@umn.edu>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1592132154-20175-1-git-send-email-krzk@kernel.org>
+ <1592132154-20175-2-git-send-email-krzk@kernel.org> <CA+h21ho_pa0H2MG-aAmUCFj37aYW4es-2V75P4KL-Zjq7qtfRQ@mail.gmail.com>
+ <20200614111829.GA9694@kozik-lap> <CA+h21hqE3RbD2XTBbcRsMhsO2OaZ65tAaevFOr00p9ezu8O+iA@mail.gmail.com>
+In-Reply-To: <CA+h21hqE3RbD2XTBbcRsMhsO2OaZ65tAaevFOr00p9ezu8O+iA@mail.gmail.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Sun, 14 Jun 2020 16:43:28 +0300
+Message-ID: <CA+h21hoVjJkGyxTEnh2Bixjoqxb12k-KK37U4Xy-27ntZz8aTw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] spi: spi-fsl-dspi: Initialize completion before
+ possible interrupt
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Wolfram Sang <wsa@kernel.org>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 13, 2020 at 10:33:53PM -0500, Aditya Pakki wrote:
-> usb_port_resume() calls pm_runtime_get_sync() that increments
-> the reference counter. In case of failure, decrement the reference
-> count and return the error.
-> 
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-> ---
->  drivers/usb/core/hub.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-> index b1e14beaac5f..a9231f27144e 100644
-> --- a/drivers/usb/core/hub.c
-> +++ b/drivers/usb/core/hub.c
-> @@ -3542,6 +3542,7 @@ int usb_port_resume(struct usb_device *udev, pm_message_t msg)
->  		if (status < 0) {
->  			dev_dbg(&udev->dev, "can't resume usb port, status %d\n",
->  					status);
-> +			pm_runtime_put_sync(&port_dev->dev);
+On Sun, 14 Jun 2020 at 16:39, Vladimir Oltean <olteanv@gmail.com> wrote:
+>
+> On Sun, 14 Jun 2020 at 14:18, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >
+> > On Sun, Jun 14, 2020 at 02:14:15PM +0300, Vladimir Oltean wrote:
+> > > On Sun, 14 Jun 2020 at 13:56, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > > >
+> > > > If interrupt fires early, the dspi_interrupt() could complete
+> > > > (dspi->xfer_done) before its initialization happens.
+> > > >
+> > > > Fixes: 4f5ee75ea171 ("spi: spi-fsl-dspi: Replace interruptible wait queue with a simple completion")
 
-This is wrong; you need to do test_and_clear_bit(port1, 
-hub->child_usage_bits) before calling pm_runtime_put_sync().  Otherwise 
-the child_usage_bits value will get out of sync with the port's runtime 
-status.
+Also please note that this patch merely replaced an
+init_waitqueue_head with init_completion. But the "bug" (if we can
+call it that) originates from even before.
 
-Alan Stern
-
+> > > > Cc: <stable@vger.kernel.org>
+> > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > > > ---
+> > >
+> > > Why would an interrupt fire before spi_register_controller, therefore
+> > > before dspi_transfer_one_message could get called?
+> > > Is this master or slave mode?
+> >
+> > I guess practically it won't fire.  It's more of a matter of logical
+> > order and:
+> > 1. Someone might fix the CONFIG_DEBUG_SHIRQ_FIXME one day,
+>
+> And what if CONFIG_DEBUG_SHIRQ_FIXME gets fixed? I uncommented it, and
+> still no issues. dspi_interrupt checks the status bit of the hw, sees
+> there's nothing to do, and returns IRQ_NONE.
+>
+> > 2. The hardware is actually initialized before and someone could attach
+> >    to SPI bus some weird device.
+> >
+>
+> Some weird device that does what?
+>
+> > Best regards,
+> > Krzysztof
+> >
+>
+> Thanks,
+> -Vladimir
