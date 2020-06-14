@@ -4,119 +4,113 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E92EC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 03:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D58C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 03:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2DAE2084D
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 03:38:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3EFA208C7
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 03:38:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="LGu4gU9j"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="ct5nHHcd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726630AbgFNDh5 (ORCPT
+        id S1726717AbgFNDiH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 23:37:57 -0400
-Received: from mta-p6.oit.umn.edu ([134.84.196.206]:54714 "EHLO
-        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbgFNDh5 (ORCPT
+        Sat, 13 Jun 2020 23:38:07 -0400
+Received: from mta-p5.oit.umn.edu ([134.84.196.205]:44228 "EHLO
+        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726679AbgFNDiG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 23:37:57 -0400
+        Sat, 13 Jun 2020 23:38:06 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 49l0Xh2pkyz9vYTw
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 03:37:56 +0000 (UTC)
+        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 49l0Xs5Y9zz9vHdR
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 03:38:05 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p6.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id DAiKyY9yeOut for <linux-kernel@vger.kernel.org>;
-        Sat, 13 Jun 2020 22:37:56 -0500 (CDT)
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+Received: from mta-p5.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id AbV1UIEpWM-p for <linux-kernel@vger.kernel.org>;
+        Sat, 13 Jun 2020 22:38:05 -0500 (CDT)
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 49l0Xh180zz9vYTj
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 22:37:56 -0500 (CDT)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p6.oit.umn.edu 49l0Xh180zz9vYTj
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p6.oit.umn.edu 49l0Xh180zz9vYTj
-Received: by mail-il1-f198.google.com with SMTP id o12so9539588ilf.6
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 20:37:56 -0700 (PDT)
+        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 49l0Xs3rP7z9v90G
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 22:38:05 -0500 (CDT)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p5.oit.umn.edu 49l0Xs3rP7z9v90G
+DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p5.oit.umn.edu 49l0Xs3rP7z9v90G
+Received: by mail-io1-f72.google.com with SMTP id l204so9027589ioa.4
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 20:38:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=IEXT8U99mfgcaOdzCXO1tyuVnx/v3mvO9nIAZY0Vi9A=;
-        b=LGu4gU9jBSN6jiOgLF41ABPSsY/SbnVsxr7z9IYaoaFRSa+PwgUohjJtEcBpz0YquI
-         vlvAhzT7q3EJefDVovTfAvEKoSA3LEHZjME9tIv1zzQuyrUAitpTSu2JMzm2RmaCxsrb
-         uMimGbJPmVjbDStWXv9le/WaB6MzdbE31YruEjQiOP20nslrOHn3fgHA26itdNxlRmh0
-         rRvuuE0Jb3zV974QSZ3Nwfc1tFvOWwPyi8UAeqnVFm5bM7paFHLpFxlgEejUZL0dNfzl
-         jw4MehN+jaPcLd1otPtLJ2j8VccfnoNzkWPuld3mku/oqw8aetUMdTEiZLjWlh+4hiis
-         1V3g==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=91lGP7Wm5pq1CQ7Bg1oytLRkqvicw3GL0Dm9LTiHqDc=;
+        b=ct5nHHcdYMCKCiWoBbUARbNzAur3vf0CYMr+Rvpk0MrDZYxJXqT1Owpf18E0yET9Gl
+         zkiV7FxQUV0AP1NEvResL1EywEJvMnUnfkx7f6EvX3i4d4D7VdDmtL+7N1eHH1AntDJ2
+         taWgC94IiGcHWkydgK4S+S1gNzCV6oUWz80INIJnPil4cYWu3E4m8ae4w+Ky1B/o03v9
+         2dSoMjp11+Qx6JpbSG1fDyhgxwoG9D+FIeI7XCNqMUeEQi2MuPqn2+psmrZRxxHtGa7T
+         LPF6jzXGQpAiFl5/HS1DJOiNX/szqIeIOwuZeGsbMc/5xico7D21HEjY45325Okz7gk2
+         MhJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=IEXT8U99mfgcaOdzCXO1tyuVnx/v3mvO9nIAZY0Vi9A=;
-        b=OBpy9Tx9lgUfljzByYQaOpDESz4Sevghy2fBq80e/67g1hqmdW3v2Iq3rc9G9OmYQe
-         jnMigFBEJ6LXnj5UY08AuwXK2dmV+JG27LmH90ntGaKzA9q+rRVRJUzmyGJetpsiQs0e
-         VMeQuWPXyboUvlk0LyyxnAGbcP0FzGuu3RFvlCpUdT6dzyKU5kRoGUIkG+XkG6CJqAWi
-         P2+3RquifMpwg5ffADn5LiVnLpa+mmjVtFaJ2RcJvjxrD1/8ZXjue52xNmyskNBhnq4a
-         Hlt+yY0NaRAh6ICdnsPmGnFdp0KfXuxzCd8mwpVmJww9jP76sBWb2VAju+7J7mo+Eb7i
-         BdDQ==
-X-Gm-Message-State: AOAM533xIhvnDNEoEowXwMLifa35xEgpUIjU2Lrzej2O4Djtc0DYguR7
-        5UsXBRvGFWjMuyN4mE+4D7c5d1zXZzViQviVy5exIPeyubmpoW/QApls95fprkEzLCAa5oU102i
-        fskn3arBhbXowzQvnpII6NUqMd4WF
-X-Received: by 2002:a92:c103:: with SMTP id p3mr21158766ile.166.1592105875714;
-        Sat, 13 Jun 2020 20:37:55 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw6w5D3XCbepCNS+UhKMisNZolwPKq5uHZS4sl0d2Z5/SkMwZE8Awl6R55bbPrcEZdeRAKnUA==
-X-Received: by 2002:a92:c103:: with SMTP id p3mr21158757ile.166.1592105875467;
-        Sat, 13 Jun 2020 20:37:55 -0700 (PDT)
-Received: from qiushi.cs.umn.edu ([2607:ea00:101:3c74:4874:45:bcb4:df60])
-        by smtp.gmail.com with ESMTPSA id y13sm5607734iob.51.2020.06.13.20.37.54
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=91lGP7Wm5pq1CQ7Bg1oytLRkqvicw3GL0Dm9LTiHqDc=;
+        b=B/9UHuqoSGr8o7MWPrV4E8ZRsXeDU6mi0l6ca5/82HCK+pJcm0IK2dTm3HeoEE3zCK
+         1yZFuuU3OoVyj1mq0yUP0lomqc8v914hfTQBKs2sBe2vbI2ZNDJZGkYhCVFNEUHfOZsN
+         o69UXUK4D2omuNoGq6GzZ96anPt1ZqkAlBcuLglOh6wklASmu7SVMewTAHJTXuvGfxrZ
+         XWBMEAgqNqikc0NL13k1N8etcU3SATREY8IQ4CO347eO1gUlCKnadcndi0Q9u4kP4Dhh
+         iPkbMpvLKQ/+xpGX8rCRyv1qkBhxEzuygkn3F7ThQ89ny0TeOsY00xZgYrH/OpwwLoJ1
+         RO2A==
+X-Gm-Message-State: AOAM5302cvLrnzwsr/fa0HavYJ87W2COKcNIX3T1R+b2NU0riPMfZdOf
+        IPIO5rYTupnJLPsdOVjbF/HncJLKxaAYCgoa0HVmhuF1Ijx7Ay0mkz3iqt3HYMpNtq0xCruNRBU
+        ViJqbM9eQjJnIsWs+2AkCPxtktjAq
+X-Received: by 2002:a92:a1d1:: with SMTP id b78mr20450142ill.164.1592105884955;
+        Sat, 13 Jun 2020 20:38:04 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJww1eonvnaCOekQgzTdb6G1q1H6ZKGwXudCnj0NSw0ZRX67Te36TMNJFGt9HxX/OEiMvYqCZg==
+X-Received: by 2002:a92:a1d1:: with SMTP id b78mr20450136ill.164.1592105884813;
+        Sat, 13 Jun 2020 20:38:04 -0700 (PDT)
+Received: from syssec1.cs.umn.edu ([2607:ea00:101:3c74:49fa:9c47:e40b:9c40])
+        by smtp.gmail.com with ESMTPSA id k185sm5862775ilk.16.2020.06.13.20.38.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Jun 2020 20:37:54 -0700 (PDT)
-From:   wu000273@umn.edu
-To:     kjlu@umn.edu
-Cc:     wu000273@umn.edu, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: img: Fix a reference count leak in img_i2s_in_set_fmt
-Date:   Sat, 13 Jun 2020 22:37:48 -0500
-Message-Id: <20200614033749.2975-1-wu000273@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        Sat, 13 Jun 2020 20:38:04 -0700 (PDT)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, wu000273@umn.edu, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] hwmon: (ina3221) Fix reference count leak in ina3221_write_enable
+Date:   Sat, 13 Jun 2020 22:38:03 -0500
+Message-Id: <20200614033803.129922-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+ina3221_write_enable() calls pm_runtime_get_sync() that increments
+the reference counter. In case of failure, decrement the reference
+count and return the error.
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-when it returns an error code, causing incorrect ref count if
-pm_runtime_put_noidle() is not called in error handling paths.
-Thus call pm_runtime_put_noidle() if pm_runtime_get_sync() fails.
-
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
 ---
- sound/soc/img/img-i2s-in.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/hwmon/ina3221.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/img/img-i2s-in.c b/sound/soc/img/img-i2s-in.c
-index e30b66b94bf6..0843235d73c9 100644
---- a/sound/soc/img/img-i2s-in.c
-+++ b/sound/soc/img/img-i2s-in.c
-@@ -343,8 +343,10 @@ static int img_i2s_in_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- 	chan_control_mask = IMG_I2S_IN_CH_CTL_CLK_TRANS_MASK;
- 
- 	ret = pm_runtime_get_sync(i2s->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(i2s->dev);
- 		return ret;
-+	}
- 
- 	for (i = 0; i < i2s->active_channels; i++)
- 		img_i2s_in_ch_disable(i2s, i);
+diff --git a/drivers/hwmon/ina3221.c b/drivers/hwmon/ina3221.c
+index f335d0cb0c77..9a3b46160de1 100644
+--- a/drivers/hwmon/ina3221.c
++++ b/drivers/hwmon/ina3221.c
+@@ -492,6 +492,7 @@ static int ina3221_write_enable(struct device *dev, int channel, bool enable)
+ 		ret = pm_runtime_get_sync(ina->pm_dev);
+ 		if (ret < 0) {
+ 			dev_err(dev, "Failed to get PM runtime\n");
++			pm_runtime_put_sync(ina->pm_dev);
+ 			return ret;
+ 		}
+ 	}
 -- 
-2.17.1
+2.25.1
 
