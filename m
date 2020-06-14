@@ -7,115 +7,94 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA0BC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 09:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 105FAC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 09:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6E772074D
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 09:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA42520714
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 09:50:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b1HebKnG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nkJFC3z1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbgFNJnR (ORCPT
+        id S1726947AbgFNJsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 05:43:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56096 "EHLO
+        Sun, 14 Jun 2020 05:48:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbgFNJnQ (ORCPT
+        with ESMTP id S1725815AbgFNJsY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 05:43:16 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E177C03E969;
-        Sun, 14 Jun 2020 02:43:15 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id h10so2544333pgq.10;
-        Sun, 14 Jun 2020 02:43:15 -0700 (PDT)
+        Sun, 14 Jun 2020 05:48:24 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47E3FC03E969
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 02:48:24 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id a127so6473709pfa.12
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 02:48:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=c4ITETWel1nh6WkDgCFbqSZSx7+aV6bKI8KvrZbuTzE=;
-        b=b1HebKnGC0QQAwhONczWtBrhC9j4bjcKBKCs2f8qgO9d1YhXJmhIINIRD2n0x3uw/6
-         0VfKDYttWaHsyt+V9N3rgHEvfh0whT2R9oGw50B7OZrGaJsyYX9C0SDIOQ7yJ9c9l+1d
-         Ap9wu9811rognik+khYYmjUUdG8K7EY+vpZO5C9pAw8H/G2aq7vzLl6993gbctwz1CpC
-         QkDIiFZzTtY7nzMQ6R5z+xEx/c1qrjkMEGgCzHE94mNtDCV062tZ3qCFOKhs++ccxbQB
-         jJgIuRVVnQLQ5gxbjbe/iZEfNoj3bgg9ZCJGghMcl2svy8ltovyV+Wa1ZFwira17WtTF
-         5IJg==
+        bh=rvxXGWImKK0idVHDWiFzUpEVLlobMFbDY9vn//eI/9A=;
+        b=nkJFC3z1IN6j1mHX2gbfdoVRUMFSXotIgLCRLgLxMSbaFtMSnRF9i6kPNYaLn0QY2e
+         KWLSX5yWkn1H57pNir1VZyy69tP0B4cvfNrKqFk6IJJaoGiGxCLEbdaUkHe7qtvhd5DS
+         vFsOyE+pK3shQ4G6+mAqNeZB0SEsE0vMc5xF8nAZgp01m5YYzqNOQqTpASlB+soZECmh
+         GCIwNbUjkKVjQQRMUQnKOoHbCaMpw1wgHqGMsth8ybEFjzjAARbMFCP8BZmrDFx3Jy5J
+         VoaROYENiQjg/qd/8KN/cIwZBaqSUczlgK4XHzX5xEcjnEBXf5YTQb1DorH79/IvM/NU
+         KR+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=c4ITETWel1nh6WkDgCFbqSZSx7+aV6bKI8KvrZbuTzE=;
-        b=rGTNlAehpSJqVikp7lzRIGU+RJ0VTTdkwG8np4Ql+XtW8ED6yZlWCpcJcrce3tzcTa
-         CKDw9pq1wn1drOONsUjoKDj3eGjcKfWjv9Sv1ceCz2+jZNwkULBPONBI+wdLidtDiax/
-         g94yiNq+wiakzsWHbvZD5DZ09eJNYHvfcCipECA6dPCBHLHsE4R2Bl8SpJOIv52i43u7
-         Jw+FYbolQqodHXW2v11Q8KHAWY4IINyukgGRPlujKUF62kc/jbSh6z4M7VZAeW/u8EAo
-         HSTSDCUmojX2UApm+IO+bulH3X9THVNM0gqD0+SmG3NWrT4EkdN5ULUXiqtbxO2IqxM4
-         sqFA==
-X-Gm-Message-State: AOAM5335qEREfIsFgNOc80c3D721IIsNM2ikm0XnPKDKeyV9LwyXFaVF
-        VsqQGliGTvsBmaFx33gdj9kWKu48tSMSCX0R73g=
-X-Google-Smtp-Source: ABdhPJySrUoUQVbdT4SP2sf0la+aHsR0e6tBCx175n8MjQEu80ssnTUIw8nm21kltD+udEP+12BObF2YfK1IbhsM/9M=
-X-Received: by 2002:a63:f042:: with SMTP id s2mr861874pgj.4.1592127794761;
- Sun, 14 Jun 2020 02:43:14 -0700 (PDT)
+        bh=rvxXGWImKK0idVHDWiFzUpEVLlobMFbDY9vn//eI/9A=;
+        b=of9oVzw3X4Iq6n220/N7RCu281snpyU6VMn/W+IimfjUSIM5fat3U8D2LPCBbI/ZFL
+         REPVqhQ+0ul4MLRbqPSWFu2nbgMnvS82txHRufOz5q9mxuturc1it5vjvQKLnkzCsDhJ
+         rTb1U8BYBQ6We44ojW3FK1ersFIs29BmYmzqWTr8GRPmFEwrot9Q+Ju8qJMy9X1XGFI4
+         bxWd9Md0pK3xFScrTh1rpckWtKnpKQYCmNzpxiZ+LiuAzhtR/towVFzMiph4GXCzSv4h
+         oxS8T+WdDbm6p/xcdin14VSYyWJKi2/9ohSejBU5TRWPxOsEhdvOlttiJAVakqdAErhZ
+         t6/g==
+X-Gm-Message-State: AOAM532jpDd8nhCViqYbEfYUJFBHYICql6xS6efr1U6yOVb+r7MwGcSf
+        QfSdc3HueHcfczfVzFKUKhXm4OD8QAIXiPqB1fg=
+X-Google-Smtp-Source: ABdhPJwYZavEWvdA0J1yrGBUxY/uYHKnkxZs2SsvB+9yof058vomrhWPnHEJZKAb221T+W5zWfJi7OS9ca5pfxCA65s=
+X-Received: by 2002:a62:5284:: with SMTP id g126mr12644494pfb.36.1592128103604;
+ Sun, 14 Jun 2020 02:48:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200614090751.GA2878@kunai> <CAHp75Vc2RV1daOHMM1zAT2P_YpFzYq=_NVXnagq7qBCS9En04g@mail.gmail.com>
-In-Reply-To: <CAHp75Vc2RV1daOHMM1zAT2P_YpFzYq=_NVXnagq7qBCS9En04g@mail.gmail.com>
+References: <20200614064601.7872-1-navid.emamdoost@gmail.com>
+In-Reply-To: <20200614064601.7872-1-navid.emamdoost@gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 14 Jun 2020 12:42:58 +0300
-Message-ID: <CAHp75VdtJN4KbsWgP3G40P4giPGgPE6gdr0CDqOXQjp2wK+i+g@mail.gmail.com>
-Subject: Re: RFC: a failing pm_runtime_get increases the refcnt?
-To:     Wolfram Sang <wsa@kernel.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+Date:   Sun, 14 Jun 2020 12:48:06 +0300
+Message-ID: <CAHp75VcLR2w9Ym0YOqUT9G8xT9qWrdD1-wP4UA-1wtuwCNxqSA@mail.gmail.com>
+Subject: Re: [PATCH] drm/etnaviv: fix ref count leak via pm_runtime_get_sync
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     Lucas Stach <l.stach@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, etnaviv@lists.freedesktop.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>
+        Navid Emamdoost <emamd001@umn.edu>, wu000273@umn.edu,
+        Kangjie Lu <kjlu@umn.edu>, Stephen McCamant <smccaman@umn.edu>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 14, 2020 at 12:34 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Sun, Jun 14, 2020 at 12:10 PM Wolfram Sang <wsa@kernel.org> wrote:
-> > both in the I2C subsystem and also for Renesas drivers I maintain, I am
-> > starting to get boilerplate patches doing some pm_runtime_put_* variant
-> > because a failing pm_runtime_get is supposed to increase the ref
-> > counters? Really? This feels wrong and unintuitive to me.
->
-> Yeah, that is a well known issue with PM (I even have for a long time
-> a coccinelle script, when I realized myself that there are a lot of
-> cases like this, but someone else discovered this recently, like
-> opening a can of worms).
->
-> > I expect there
-> > has been a discussion around it but I couldn't find it.
->
-> Rafael explained (again) recently this. I can't find it quickly, unfortunately.
+On Sun, Jun 14, 2020 at 9:48 AM Navid Emamdoost
+<navid.emamdoost@gmail.com> wrote:
 
-I _think_ this discussion, but may be it's simple another tentacle of
-the same octopus.
-https://patchwork.ozlabs.org/project/linux-tegra/patch/20200520095148.10995-1-dinghao.liu@zju.edu.cn/
+...
 
->
-> > I wonder why we
-> > don't fix the code where the incremented refcount is expected for some
-> > reason.
->
-> The main idea behind API that a lot of drivers do *not* check error
-> codes from runtime PM, so, we need to keep balance in case of
->
-> pm_runtime_get(...);
-> ...
-> pm_runtime_put(...);
->
-> > Can I have some pointers please?
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+> +               if (ret < 0) {
 
+> +                       pm_runtime_put(gpu->dev);
 
+Please, in all your patches fix this to be _put_noidle(). We wouldn't
+bear the flag day of fixing these parts again.
+Yes, I know that *now* behaviour is the same, but calling put here is
+slightly inconsistent.
+
+...
+
+> +               pm_runtime_put(gpu->dev);
 
 -- 
 With Best Regards,
