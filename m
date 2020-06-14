@@ -8,159 +8,127 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D91C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 06:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D814BC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 06:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EE56206D7
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 06:46:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A41922065C
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 06:56:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tpz6lloD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nkVJFgev"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbgFNGqJ (ORCPT
+        id S1726460AbgFNGxD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 02:46:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57308 "EHLO
+        Sun, 14 Jun 2020 02:53:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725265AbgFNGqI (ORCPT
+        with ESMTP id S1725267AbgFNGxD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 02:46:08 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C4FDC03E96F
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 23:46:08 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id x189so5436471iof.9
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 23:46:08 -0700 (PDT)
+        Sun, 14 Jun 2020 02:53:03 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AED76C03E96F
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 23:53:01 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id z2so12479371ilq.0
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 23:53:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=kNRgWSDrAxCQwXvPM8GfVhkSvHW0aGR2LY+D+JUgFPs=;
-        b=tpz6lloDe6hYvlh6jsWmIipsRXWnPP0UiedPptwWGRKELFOHp/S4yk/xo3VPtk7RBd
-         b8BFXR91yWxOWHo61kM6nPkTbM42uoBFw9J9MkGRlwsK++gjZyLouPCkub8FImugIyHD
-         gQjzKQI8AU15T1efls+KhXfuI7SJm/+61arQDI1rwg80tqlkK3ojzpFaaHplhjzAWxxH
-         qFdeORV4dtDSkk3i0W8wPQ1LR0WFdLrLCXWjQ4lqnaD+NOx5lYGizDu4Jng23mrTwoD+
-         35vusyT4LgYIvIyLsCA3X3CVASUFkJSCVowZ7588w2xOJiYWn+WtI+MShm6sx1TzcyvN
-         jh8A==
+        bh=l7NqrBVPm55TBMnhB8GUWUjLTUxcL6eNHsDiGUxal5I=;
+        b=nkVJFgevcODeA1AiC94JJnvIYyQe+jwYYSgOR8nE5HriFZTKjNPyQJxSzqBnqEngiw
+         n5UisSMFNqj6olBJvMBQP+PvjRpqnaOv35p4N3RPkZrtRUgwTY0J475ABpsNm+99wASN
+         ATx7iNksqv4nRnhaI4H9/6dXXRXuRlD6Vyex43MJkpfaeWqI1trgomEwHjX0IWNoxMhL
+         SgwtpS/S/Z4YgYB6O5z/cOa6GMWpS/QOXrJrwVRAlvpBSurIiBGUgl5cCP7fbqh9GUh1
+         ycudI/SXnqFwuEFKYge9EajppLTMMhU3rwik2JFV/pF/V89nqA7+Kyjmx8DlHl7WSNLl
+         LpZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=kNRgWSDrAxCQwXvPM8GfVhkSvHW0aGR2LY+D+JUgFPs=;
-        b=BNWkwlhNxGkriN+QSL5AQuJK392qh+YspwsjfcahssGHQ/17Pp92LkO5wdxwKRukzZ
-         8SpZg4tauk96NM4ABRyAEcRYeBBWIXqmMx00L90bvSB7qyFZURQof36gi/vg8Hm242te
-         jrY/bMwnfOj1MxOIi3CgAk/CeBEgCEzqcmmTSbhhJnAZ46U479YTUsuCOt58GhuGXR/U
-         dxIgaidbWctOs5dQov7MVMCgsc7F5ftnFm8d6Kj6KQitBEzfBAmgvXH/FRlrLt1KrNa7
-         nnEb2ZNE4s9CUdtj29yQL9Ic/fA3zlM8ftN89mqy5ldWb6wA2NCd7r4Iwnfd32ZCCFrx
-         IOjg==
-X-Gm-Message-State: AOAM533rWhPGTaWRYRNAQsfIzqaCf6J6DyepGo77iQDEyF1QsF3EInft
-        Itf07wW/hunyc6O9DXnKcJ0=
-X-Google-Smtp-Source: ABdhPJxsK9CUvgdKD6ZCZBAqfWYD1gdpJNSlmVez8DOhmPECL9S8rEWBfYR3H4BqgrwtUNAZdstTGw==
-X-Received: by 2002:a05:6602:22d6:: with SMTP id e22mr21867513ioe.128.1592117167830;
-        Sat, 13 Jun 2020 23:46:07 -0700 (PDT)
+        bh=l7NqrBVPm55TBMnhB8GUWUjLTUxcL6eNHsDiGUxal5I=;
+        b=o/LtDch3mUKTC1iRDhutPxS7XuaOTkuZwnnx4/wauq82ABsbQYeTvYMwg/Wmt/cNrh
+         ArktUHb9exfHC8GEuHE3XssKNm5/d7UUdITOscYzPnTcKxDm48o81LLGYpNd8KSj+fVZ
+         1wzeFDYTJ8qOfsYDagW4LKg5HH8kZFr95W+JhZF7AqTyvJJaTh1mdc+qLEUlNHWl9+Q8
+         8WwZY52oq0K9gsyZWGz9suy1LQ4WYh+TeMsdGBU7360U1RHj96+oGDGg1Ozr6Lx6AQGS
+         8P+urr/YqG6gWUVqo8xXOzrjKf3kE1ZOlYGDa6iJCgaIzUD6kj8wzuNL5RlMxTH0U4JB
+         FqJQ==
+X-Gm-Message-State: AOAM530xJNYIUJsFn+RaLbDHTQcIo0p1oKx7nbKt97OmEl3mxYfcqPKl
+        0pzkc5pMBd6WiMh3HfLDYLY=
+X-Google-Smtp-Source: ABdhPJxaHRK5nnGHScRiGFj7JW23P9/j3SoAXAEFRUS2BO9oz5yv9zNOby9jq9cqp1b66vGrHSFMWA==
+X-Received: by 2002:a05:6e02:4a7:: with SMTP id e7mr20934834ils.180.1592117580805;
+        Sat, 13 Jun 2020 23:53:00 -0700 (PDT)
 Received: from cs-u-kase.dtc.umn.edu (cs-u-kase.cs.umn.edu. [160.94.64.2])
-        by smtp.googlemail.com with ESMTPSA id m5sm5744932ioj.52.2020.06.13.23.46.07
+        by smtp.googlemail.com with ESMTPSA id n82sm5821135iod.23.2020.06.13.23.53.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Jun 2020 23:46:07 -0700 (PDT)
+        Sat, 13 Jun 2020 23:53:00 -0700 (PDT)
 From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-To:     Lucas Stach <l.stach@pengutronix.de>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, etnaviv@lists.freedesktop.org,
+To:     Eric Anholt <eric@anholt.net>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
 Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
         Navid Emamdoost <navid.emamdoost@gmail.com>
-Subject: [PATCH] drm/etnaviv: fix ref count leak via pm_runtime_get_sync
-Date:   Sun, 14 Jun 2020 01:46:01 -0500
-Message-Id: <20200614064601.7872-1-navid.emamdoost@gmail.com>
+Subject: [PATCH] drm/vc4: fix ref count leak in vc4_dsi_encoder_enable
+Date:   Sun, 14 Jun 2020 01:52:50 -0500
+Message-Id: <20200614065251.94106-1-navid.emamdoost@gmail.com>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-in etnaviv_gpu_submit, etnaviv_gpu_recover_hang, etnaviv_gpu_debugfs,
-and etnaviv_gpu_init the call to pm_runtime_get_sync increments the
-counter even in case of failure, leading to incorrect ref count.
-In case of failure, decrement the ref count before returning.
+in vc4_dsi_encoder_enable, the call to pm_runtime_get_sync increments
+the counter even in case of failure, leading to incorrect
+ref count. In case of failure, decrement the ref count before returning.
 
 Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 ---
- drivers/gpu/drm/etnaviv/etnaviv_gpu.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/vc4/vc4_dsi.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-index a31eeff2b297..16f5bc65771a 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-@@ -722,7 +722,7 @@ int etnaviv_gpu_init(struct etnaviv_gpu *gpu)
- 	ret = pm_runtime_get_sync(gpu->dev);
- 	if (ret < 0) {
- 		dev_err(gpu->dev, "Failed to enable GPU power domain\n");
--		return ret;
-+		goto pm_put;
+diff --git a/drivers/gpu/drm/vc4/vc4_dsi.c b/drivers/gpu/drm/vc4/vc4_dsi.c
+index eaf276978ee7..e651de9d1c7d 100644
+--- a/drivers/gpu/drm/vc4/vc4_dsi.c
++++ b/drivers/gpu/drm/vc4/vc4_dsi.c
+@@ -838,7 +838,7 @@ static void vc4_dsi_encoder_enable(struct drm_encoder *encoder)
+ 	ret = pm_runtime_get_sync(dev);
+ 	if (ret) {
+ 		DRM_ERROR("Failed to runtime PM enable on DSI%d\n", dsi->port);
+-		return;
++		goto out;
  	}
  
- 	etnaviv_hw_identify(gpu);
-@@ -819,6 +819,7 @@ int etnaviv_gpu_init(struct etnaviv_gpu *gpu)
- 
- fail:
- 	pm_runtime_mark_last_busy(gpu->dev);
-+pm_put:
- 	pm_runtime_put_autosuspend(gpu->dev);
- 
- 	return ret;
-@@ -859,7 +860,7 @@ int etnaviv_gpu_debugfs(struct etnaviv_gpu *gpu, struct seq_file *m)
- 
- 	ret = pm_runtime_get_sync(gpu->dev);
- 	if (ret < 0)
--		return ret;
-+		goto pm_put;
- 
- 	dma_lo = gpu_read(gpu, VIVS_FE_DMA_LOW);
- 	dma_hi = gpu_read(gpu, VIVS_FE_DMA_HIGH);
-@@ -1003,6 +1004,7 @@ int etnaviv_gpu_debugfs(struct etnaviv_gpu *gpu, struct seq_file *m)
- 	ret = 0;
- 
- 	pm_runtime_mark_last_busy(gpu->dev);
-+pm_put:
- 	pm_runtime_put_autosuspend(gpu->dev);
- 
- 	return ret;
-@@ -1016,7 +1018,7 @@ void etnaviv_gpu_recover_hang(struct etnaviv_gpu *gpu)
- 	dev_err(gpu->dev, "recover hung GPU!\n");
- 
- 	if (pm_runtime_get_sync(gpu->dev) < 0)
+ 	if (debug_dump_regs) {
+@@ -916,13 +916,13 @@ static void vc4_dsi_encoder_enable(struct drm_encoder *encoder)
+ 	ret = clk_prepare_enable(dsi->escape_clock);
+ 	if (ret) {
+ 		DRM_ERROR("Failed to turn on DSI escape clock: %d\n", ret);
 -		return;
-+		goto pm_put;
++		goto out;
+ 	}
  
- 	mutex_lock(&gpu->lock);
+ 	ret = clk_prepare_enable(dsi->pll_phy_clock);
+ 	if (ret) {
+ 		DRM_ERROR("Failed to turn on DSI PLL: %d\n", ret);
+-		return;
++		goto out;
+ 	}
  
-@@ -1035,6 +1037,7 @@ void etnaviv_gpu_recover_hang(struct etnaviv_gpu *gpu)
+ 	hs_clock = clk_get_rate(dsi->pll_phy_clock);
+@@ -944,7 +944,7 @@ static void vc4_dsi_encoder_enable(struct drm_encoder *encoder)
+ 	ret = clk_prepare_enable(dsi->pixel_clock);
+ 	if (ret) {
+ 		DRM_ERROR("Failed to turn on DSI pixel clock: %d\n", ret);
+-		return;
++		goto out;
+ 	}
  
- 	mutex_unlock(&gpu->lock);
- 	pm_runtime_mark_last_busy(gpu->dev);
-+pm_put:
- 	pm_runtime_put_autosuspend(gpu->dev);
+ 	/* How many ns one DSI unit interval is.  Note that the clock
+@@ -1088,6 +1088,8 @@ static void vc4_dsi_encoder_enable(struct drm_encoder *encoder)
+ 		dev_info(&dsi->pdev->dev, "DSI regs after:\n");
+ 		drm_print_regset32(&p, &dsi->regset);
+ 	}
++out:
++	pm_runtime_put(dev);
  }
  
-@@ -1308,8 +1311,10 @@ struct dma_fence *etnaviv_gpu_submit(struct etnaviv_gem_submit *submit)
- 
- 	if (!submit->runtime_resumed) {
- 		ret = pm_runtime_get_sync(gpu->dev);
--		if (ret < 0)
-+		if (ret < 0) {
-+			pm_runtime_put(gpu->dev);
- 			return NULL;
-+		}
- 		submit->runtime_resumed = true;
- 	}
- 
-@@ -1326,6 +1331,7 @@ struct dma_fence *etnaviv_gpu_submit(struct etnaviv_gem_submit *submit)
- 	ret = event_alloc(gpu, nr_events, event);
- 	if (ret) {
- 		DRM_ERROR("no free events\n");
-+		pm_runtime_put(gpu->dev);
- 		return NULL;
- 	}
- 
+ static ssize_t vc4_dsi_host_transfer(struct mipi_dsi_host *host,
 -- 
 2.17.1
 
