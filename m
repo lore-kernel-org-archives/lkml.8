@@ -6,62 +6,100 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D9BBC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 07:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 183FEC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 07:15:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A02A2074D
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 07:15:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF41620747
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 07:15:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592118942;
-	bh=L9AfSSTBubpQfdQR/vJSPzKQJFvcWlmqrQMK1lj9rqc=;
+	s=default; t=1592118954;
+	bh=zZll6urelXML0NUSf47w9Vs7Ajbn1wggmOPGwgn3j1A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=l2s3xAecoVFqD+X8Z11xFaWlMrEMfmcYBNJwkwN/Qi1F8sAahUOX3eAOf7dF6VRm2
-	 ISIe6R8QCfEXXj0y0sZIONAeLn9IhnKB609eDPt+45dL2Zv/PY1tRLb51tiDjq8owq
-	 0JltvBean3Lk2dvqVoGV7Rd1CuLNIIRdOqSih52s=
+	b=NHX9VMQggrgm6aF4g9TtFJEVJZFmv94AzALu4jHJkbORNZYW+fMFQUNxeYDyjmSNt
+	 DyW6Qt+hxbBy4ffl5IWpAzijK3kmwfF0iOJJ075+dmOfpJab7CWOTfsYeJHvZdpoEU
+	 7OwUFu4aNSO6K10izd34tgGOekiQYA4CKNDSlcaw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726931AbgFNHPk (ORCPT
+        id S1726943AbgFNHPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 03:15:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34384 "EHLO mail.kernel.org"
+        Sun, 14 Jun 2020 03:15:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725822AbgFNHPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 03:15:40 -0400
+        id S1725385AbgFNHPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 03:15:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0C9620747;
-        Sun, 14 Jun 2020 07:15:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72ADA20747;
+        Sun, 14 Jun 2020 07:15:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592118940;
-        bh=L9AfSSTBubpQfdQR/vJSPzKQJFvcWlmqrQMK1lj9rqc=;
+        s=default; t=1592118951;
+        bh=zZll6urelXML0NUSf47w9Vs7Ajbn1wggmOPGwgn3j1A=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wgfJuP09nhgfIBJTYFkj9RIcEhuXPgT2CvBexhNow4MH70MeLUCa2Q/s7xKDwgQpG
-         g6vrBivlj3pvZiNYhpgObR7uku816Yy9gp80WEQbkVWINtrHqX9aXyhFm8YXumqTGd
-         oqAQtt4UXw38pa6VY+aiPjZ70LGs00PQJRNQALZA=
-Date:   Sun, 14 Jun 2020 09:15:35 +0200
+        b=u7C5T79t0SzgyScYuY2I5hl5Jv03Uc5Kh92W2UQ56gcNN3ZahJz7111Vp22nb4t3r
+         4svvn5fiL+13qCWi1zsmKCwwexgdPP1cDwXcFT7SfdtsWEk5Jh0EB1g0a46P1HJfgM
+         ZDL9+dupLe0uk3h1u+xlk0tIml+UB8NAqBIvvHfQ=
+Date:   Sun, 14 Jun 2020 09:15:48 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Aditya Pakki <pakki001@umn.edu>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jiri Pirko <jiri@mellanox.com>,
-        Kangjie Lu <kjlu@umn.edu>, Qiushi Wu <wu000273@umn.edu>
-Subject: Re: [PATCH] test_objagg: Fix memory leak in test_hints_case()
-Message-ID: <20200614071535.GF2629255@kroah.com>
-References: <d248479f-7209-d8f8-6270-0580351d606a@web.de>
+Cc:     Aditya Pakki <pakki001@umn.edu>, linux-rdma@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Kangjie Lu <kjlu@umn.edu>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Qiushi Wu <wu000273@umn.edu>
+Subject: Re: [PATCH] RDMA/rvt: Improve exception handling in rvt_create_qp()
+Message-ID: <20200614071548.GG2629255@kroah.com>
+References: <5d99dfe5-67ed-00d2-c2da-77058fb770c6@web.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <d248479f-7209-d8f8-6270-0580351d606a@web.de>
+In-Reply-To: <5d99dfe5-67ed-00d2-c2da-77058fb770c6@web.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 13, 2020 at 08:36:36AM +0200, Markus Elfring wrote:
-> > … The patch fixes this issue.
+On Sat, Jun 13, 2020 at 09:15:12AM +0200, Markus Elfring wrote:
+> > … The patch fixes this issue by
+> > calling rvt_free_rq().
 > 
-> I propose to replace this information by the tag “Fixes”.
-> Please choose another imperative wording for your change description.
+> I suggest to choose another imperative wording for your change description.
+> Will the tag “Fixes” become helpful for the commit message?
+> 
+> …
+> > +++ b/drivers/infiniband/sw/rdmavt/qp.c
+> > @@ -1203,6 +1203,7 @@  struct ib_qp *rvt_create_qp(struct ib_pd *ibpd,
+> >  			qp->s_flags = RVT_S_SIGNAL_REQ_WR;
+> >  		err = alloc_ud_wq_attr(qp, rdi->dparms.node);
+> >  		if (err) {
+> > +			rvt_free_rq(&qp->r_rq);
+> >  			ret = (ERR_PTR(err));
+> >  			goto bail_driver_priv;
+> >  		}
+> 
+> How do you think about the following code variant with the addition
+> of a jump target?
+> 
+>  		err = alloc_ud_wq_attr(qp, rdi->dparms.node);
+>  		if (err) {
+>  			ret = (ERR_PTR(err));
+> -			goto bail_driver_priv;
+> +			goto bail_free_rq;
+>  		}
+> 
+> …
+> 
+>  bail_rq_wq:
+> -	rvt_free_rq(&qp->r_rq);
+>  	free_ud_wq_attr(qp);
+> +
+> +bail_free_rq:
+> +	rvt_free_rq(&qp->r_rq);
+> 
+>  bail_driver_priv:
+> 
 > 
 > Regards,
 > Markus
