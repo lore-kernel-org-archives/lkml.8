@@ -2,183 +2,171 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 763FBC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 08:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B08C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 08:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49D3B20714
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 08:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4744A206B7
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 08:26:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="seRFgt70"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Jl+8vUIR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbgFNIDa (ORCPT
+        id S1726833AbgFNI0A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 04:03:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40830 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725265AbgFNID3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 04:03:29 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D6FDC03E969
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 01:03:29 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id x16so6379628qvr.3
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 01:03:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GiVdg0/XTq6EfadHzCxE8in79joYlrqmvBcAlMl/dg0=;
-        b=seRFgt70D0QePUGJ8oQ/+neBFh/B0zsLl8SGjMlCXvFaOKxxsftbwQGar4WvYb7oVg
-         gx/4n2tASXfjEPcbZkGfXR7XACVBeYUBcFjO+1Z6UXSnuWtJ5Ft+FuPQzFRSh6heVb44
-         nCm4I8aoJdqhb/VX6t7qoYuGfneE7W+nWkW04mvcS5gBd2cha2SFACHlnDZIby3VwZe4
-         e0C1PHHA4j7t3P5otMCZrsvatq/bYCVLlErvLdk5QbLzHtzySZAW6okD5pkcE3SxOmYG
-         uqrYJCiJo5fXo/MhewL7qzl0UF3XTVKgk6RgquCVwAET8R1usRNaRqvMEA12o00E4EPR
-         YMzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GiVdg0/XTq6EfadHzCxE8in79joYlrqmvBcAlMl/dg0=;
-        b=DfOY8kF8uCHVkXOIaPlNV5D0iFKOAvZRme8+LU1LxmXiRs3JeTSfHIt7GVDXRHbTNZ
-         47mjdPudBXb0vK79IPojcvr9BRiK4Ckm5SoHCLP0YR0bQ9/Dmc4vTphKdLd6SoE+m+YW
-         e0uS5w+X5mXKYbNQ+s9nbDwT9kk/F5eT83AtuHR/CrRE3w9HLA1yRKCt6VJibUJuD4yZ
-         a/uBLAN1OtMeeA9JPC3rbX57qPJ/Bcpe5r4cus5b56CG963MA/VrzuBzFqw/Bbb3cGxR
-         bK7ENe0ugCim4J9vnLnkD06ukysMk2hiCTxHfg/3OAvsbvOGQ+1iXeIkPGuzaLkO2vqw
-         UBTg==
-X-Gm-Message-State: AOAM533YiKWalcZGY4AbxPKRBWC8uXPlzHb1Y56fZc2rvB6OF4O9dCOr
-        nIp9iGZOospMtowbMn0Qx5/l9LylavWFvX4xtgx2sQ==
-X-Google-Smtp-Source: ABdhPJyfyiFN7f/pMjOwj4bUFBtAVC/GCyc2VW2CVWffBrNbuXxZMVJc2T1JMCN+KJWxiagdRDCL0E7YicHSYao7HIg=
-X-Received: by 2002:ad4:42b1:: with SMTP id e17mr20105422qvr.159.1592121807848;
- Sun, 14 Jun 2020 01:03:27 -0700 (PDT)
+        Sun, 14 Jun 2020 04:26:00 -0400
+Received: from mout.web.de ([212.227.17.12]:40159 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725265AbgFNIZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 04:25:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1592123143;
+        bh=wxTFjGGrH+o7SM0GZXIuMetiHFRN0FqP7XJd2HJ5iNk=;
+        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
+        b=Jl+8vUIRKYn+caXq3AsvT1oUg1jYXwQAnTQJrnjIYTZ7++mwFwCsgD61fhJ24Z4Tm
+         nYOKOxgfmLQoo4K4IhQMhez5ylJylWosAmKQBIQY3ufxVCdlvNP9atThwlyEyvDSgK
+         bhboCJSOaIeX/WG0mIj2ybBUnM47MiOliCP83UuY=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.131.103.145]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1Mdf8F-1jAm5n3HDl-00ZW3I; Sun, 14
+ Jun 2020 10:25:42 +0200
+Cc:     Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
+        Stephen McCamant <mccamant@cs.umn.edu>,
+        Qiushi Wu <wu000273@umn.edu>,
+        "David S. Miller" <davem@davemloft.net>,
+        Fugang Duan <fugang.duan@nxp.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: fec: fix ref count leaking when pm_runtime_get_sync
+ fails
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>, netdev@vger.kernel.org
+Message-ID: <38dcaa5d-98ad-e1df-6e83-2e6dd677a483@web.de>
+Date:   Sun, 14 Jun 2020 10:25:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <000000000000ff323f05a053100c@google.com> <CAG48ez02bt7V4+n68MNK3bmHpXxDnNmLZn8LpZ8r2w63ZhrkiQ@mail.gmail.com>
- <CACT4Y+YokrJkh0ew-86=zsLLTr9Qnaom5gJeUX9TSMW7tDj=Eg@mail.gmail.com>
- <20200310061525.GA30283@ubuntu-m2-xlarge-x86> <CACT4Y+bx9w+Q5yJxykTbe8JDUt5ChLFRh5zGn78hHM8gqVZx7g@mail.gmail.com>
-In-Reply-To: <CACT4Y+bx9w+Q5yJxykTbe8JDUt5ChLFRh5zGn78hHM8gqVZx7g@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Sun, 14 Jun 2020 10:03:16 +0200
-Message-ID: <CACT4Y+Ym3Pc-UO3X33AhFE1rbdmr1gHcEmzJjtX7YZaBb2qexg@mail.gmail.com>
-Subject: Re: general protection fault in syscall_return_slowpath
-To:     Jann Horn <jannh@google.com>
-Cc:     syzkaller <syzkaller@googlegroups.com>,
-        syzbot <syzbot+cd66e43794b178bb5cd6@syzkaller.appspotmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:7JWjazx6Gvzi2ymxy+2LPOQa0z8Dej9yXLglMl9obS7g2gPBEPR
+ S6hV4uat1fQDm/HTsoxZI/QIJc1IXUCZ2IrpwR6BP0llJHeb5ctscDntvK0ifgBg8mb4oEF
+ SbVS8IjqoASxOfrPoOTGYeVJzzw5ckBfhNbyUxy0B6kidlLnbCBEtnhhxIck4z/kDT9hVKz
+ dnjLUEbNewhqoIc1BcdWw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:5KI8mUZQ6I4=:XxjMcKaIpU9m0d5pHrGTAA
+ Cr7KoCBpS1SdPd5P4MHMH+YA7IFlplOtTbi/VWnSlHoek0uvu/7enSpMvR6935WxVPdJymFZU
+ F5rtNagT6AvYJKT6ajgYCho1+Q86GF5hQdIbKYKowtUvaKmxEvj2RX+Ket3Sz8aNCvJLHvd6R
+ kKZx7I7gLZmC4nZNktSZs5+n7erCAVoPs8P6u35RtfLExy/zSIzoGcWQNzq5zS4BYEq8F8dDT
+ hBasCv/xUm+onUW/6q4FEmvDKcqoOgjxOYO/u+X9y5EyVPl0Lstw1yCPAWXmt0qNvAZ3G+/Nr
+ k8tWpaqEoIhHwnJb0jVp6z1DrqroH+UHlU0KeP/Uz42vqADL7lPfQEd/DI0iU8Vm0oefiZGEa
+ tPfKPAOvwSvKvabkebsOxNGbiOWiRoR6W5Jd8acjiROqfQzYymvXXGvY0MaL0FRizihkLbUGr
+ JeAMSbbJF86xdnQnL1eQAE+b79RQEatUBOoFLLYLlvCC3pg8D4i6JEI2dPjYZ++1vHJDaB/Y9
+ EmkDssC9Og5S+aUKvpoV9/hEFdMi9HBNjZ+DPBX9y0HftA+Zt2ysWqhL6sLsYYZaqEDyvCA77
+ Kpt8HccmYcWHMP0UPYTJqTUf4sOaI0ZidQ4KHriOEIXnyxOwUR3pdVLqQ6G0sQc7rExzjSSy1
+ j5Ys3VWHsKf6XDYmNUKAMzDTQi0uKyRo8L78TBjXfTQe9zJr4jmk6XLeiYY47BRPSE1ov2BuE
+ 3RtY5rlk/q33oOKcqSQem4ONwubp4QWwcCoV+lh+0W3ZSNp/FU7YtoMql/wWl0pPegTpa5sOC
+ pGY097zzsRVcmQyFR/SiRqPMn6x5P/VjEJyleawEHv0KZkILUzzt6djyXaYdiUH5ZDu2j0Q6Y
+ l7yDz5KiiZ7fps14gt6YBGVtWYhiCXE0eCV4ysv9AOu9Rr7YainF9L9SDA/yfFLjZoGM/yewx
+ qDs6CILE0M0lpoQK8Yoe5AaAMFoyV+OgGcRVw1vvU5MMthDuCC9YNuCzd8FauxNcTlKl1KvuW
+ AaX17KTZ2mUinQMVe7q1mjX5wvHtrN9W1c53GSrI24F6StfyleV1TRIF+F9TfnKkTzqFrpoTj
+ djXALIHLbE3ZgP+IgVI4jdKkfdQ3ABFAUHEGR74nKS2Dy5G1afjS3lfsvY+8VNeZPAdE+49Fu
+ 3uxkGrkrEqbu6fflmz6vgpy5R7/X29K+N9cbFqKhuWbD2SWBy4/gbI+gbyNFMzdgss1KI07Aq
+ 5nIarzJipuo5vGQPs
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 9:10 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+> in fec_enet_mdio_read, =E2=80=A6
+
+I am curious under which circumstances you would like to improve
+such commit messages.
+
+* Will the tag =E2=80=9CFixes=E2=80=9D become helpful?
+
+* Which source code analysis tools did trigger to send
+  update suggestions according to 16 similar issues for today?
+
+
+=E2=80=A6
+> +++ b/drivers/net/ethernet/freescale/fec_main.c
+=E2=80=A6
+> @@ -1893,8 +1895,10 @@  static int fec_enet_mdio_write(struct mii_bus *b=
+us, int mii_id, int regnum,
+>  	bool is_c45 =3D !!(regnum & MII_ADDR_C45);
 >
-> On Tue, Mar 10, 2020 at 7:15 AM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> >
-> > On Mon, Mar 09, 2020 at 09:20:58AM +0100, Dmitry Vyukov wrote:
-> > > On Sun, Mar 8, 2020 at 7:35 PM 'Jann Horn' via syzkaller-bugs
-> > > <syzkaller-bugs@googlegroups.com> wrote:
-> > > >
-> > > > On Sun, Mar 8, 2020 at 5:40 PM syzbot
-> > > > <syzbot+cd66e43794b178bb5cd6@syzkaller.appspotmail.com> wrote:
-> > > > > HEAD commit:    63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
-> > > > > git tree:       upstream
-> > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=16cfeac3e00000
-> > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=5d2e033af114153f
-> > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=cd66e43794b178bb5cd6
-> > > > > compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-> > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12a42329e00000
-> > > > >
-> > > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > > > Reported-by: syzbot+cd66e43794b178bb5cd6@syzkaller.appspotmail.com
-> > > > >
-> > > > > general protection fault, probably for non-canonical address 0x1ffffffff1255a6b: 0000 [#1] PREEMPT SMP KASAN
-> > > > > CPU: 0 PID: 8742 Comm: syz-executor.2 Not tainted 5.6.0-rc3-syzkaller #0
-> > > > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> > > > > RIP: 0010:arch_local_irq_disable arch/x86/include/asm/paravirt.h:757 [inline]
-> > > > > RIP: 0010:syscall_return_slowpath+0xeb/0x4a0 arch/x86/entry/common.c:277
-> > > > > Code: 00 10 0f 85 de 00 00 00 e8 b2 a3 76 00 48 c7 c0 58 d3 2a 89 48 c1 e8 03 80 3c 18 00 74 0c 48 c7 c7 58 d3 2a 89 e8 05 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> > > > > RSP: 0018:ffffc900020a7ed0 EFLAGS: 00010246
-> > > > > RAX: 1ffffffff1255a6b RBX: dffffc0000000000 RCX: ffff88808c512380
-> > > > > RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-> > > > > RBP: ffffc900020a7f10 R08: ffffffff810075bb R09: fffffbfff14d9182
-> > > > > R10: fffffbfff14d9182 R11: 0000000000000000 R12: 1ffff110118a2470
-> > > > > R13: 0000000000004000 R14: ffff88808c512380 R15: ffff88808c512380
-> > > > > FS:  000000000154f940(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
-> > > > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > > > CR2: 000000000076c000 CR3: 00000000a6b05000 CR4: 00000000001406f0
-> > > > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > > > > Call Trace:
-> > > > >  do_syscall_64+0x11f/0x1c0 arch/x86/entry/common.c:304
-> > > > >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > > > > BUG: kernel NULL pointer dereference, address: 0000000000000000
-> > > > > #PF: supervisor write access in kernel mode
-> > > > > #PF: error_code(0x0002) - not-present page
-> > > > > PGD 8fecc067 P4D 8fecc067 PUD 97953067 PMD 0
-> > > > > Oops: 0002 [#2] PREEMPT SMP KASAN
-> > > > > CPU: 0 PID: 8742 Comm: syz-executor.2 Not tainted 5.6.0-rc3-syzkaller #0
-> > > >
-> > > > Ugh, why does it build with -Werror...
-> >
-> > There are certain warnings that are specifically treated like errors:
-> >
-> > In the main Makefile:
-> >
-> > KBUILD_CFLAGS   += $(call cc-option,-Werror=incompatible-pointer-types)
-> >
-> > > Now I am realizing I don't know what's the proper way to turn off
-> > > warnings entirely...
-> > >
-> > > We turn off this CONFIG_ERROR_ON_WARNING historically:
-> > > https://github.com/google/syzkaller/blob/2e9971bbbfb4df6ba0118353163a7703f3dbd6ec/dashboard/config/bits-syzbot.config#L17
-> > > and I thought that's enough. But now I realize it's not even a thing.
-> > > I see it referenced in some ChromeOS threads and there are some
-> > > discussions re upstreaming, but apparently it never existed upstream.
-> > >
-> > > make has W=n, but it seems that it can only be used to produce more
-> > > warnings. We don't pass W=3 specifically and there is no W=0.
-> > >
-> > > Should we always build with CFLAGS=-w? Is it guaranteed to work? Or is
-> > > there a better way?
-> >
-> > Would passing -Wno-werror via KCFLAGS work? Otherwise, passing
-> > -Wno-error=<specific warning> should work.
-> >
-> > Cheers,
-> > Nathan
+>  	ret =3D pm_runtime_get_sync(dev);
+> -	if (ret < 0)
+> +	if (ret < 0) {
+> +		pm_runtime_put_autosuspend(dev);
+>  		return ret;
+> +	}
+>  	else
+>  		ret =3D 0;
+
+I suggest to adjust also the source code from the else branch.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/coding-style.rst?id=3D96144c58abe7ff767e754b5b80995f7b=
+8846d49b#n196
+
+
+=E2=80=A6
+> @@ -2276,6 +2280,7 @@  static void fec_enet_get_regs(struct net_device *=
+ndev,
+>  	}
 >
-> Filed https://github.com/google/syzkaller/issues/1635 so that this is not lost.
+>  	pm_runtime_mark_last_busy(dev);
+> +out:
+>  	pm_runtime_put_autosuspend(dev);
+>  }
 
-Jann,
+Perhaps use the label =E2=80=9Cput_runtime=E2=80=9D instead?
 
-Getting back to this.
-Are you sure building without warning will be better?
-
-Currently make enables these warnings as errors only:
-
--Werror=strict-prototypes
--Werror=implicit-function-declaration
--Werror=implicit-int
--Werror=date-time
--Werror=incompatible-pointer-types
--Werror=designated-init
-
-So most warnings won't cause build failure.
-And, say, converting T* to Y* implicitly may be an actual bug in the patch.
-
-The other concern is that some people may use syzbot testing as the
-only patch testing and then submit a patch that breaks build...
+Regards,
+Markus
