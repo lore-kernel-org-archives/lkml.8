@@ -2,151 +2,107 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D4D1C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 09:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 810BFC433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 09:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 476C820714
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 09:33:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FEFD20714
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 09:35:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="U0jPXtCF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FRY0wXHr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbgFNJdv (ORCPT
+        id S1727007AbgFNJfD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 05:33:51 -0400
-Received: from mout.web.de ([217.72.192.78]:47213 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725265AbgFNJdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 05:33:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1592127215;
-        bh=OH6G4YIWrOCwofY64qVP1rh+B9uREuwO7Gq1odxhXvk=;
-        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
-        b=U0jPXtCFnPBfYEaxAxSelNX6cUFBGAfg1JgzjRH+hLtXlGcuQM74aeVCO9+pRY39P
-         ehBvYzx2y/xPXn1CUeBPHTsa7G8z8kMPQr8FmbkWLBCT35D0+ME9h/y6ftcbhBGZSg
-         hUBX3wk/NZj/UMpmHzgydOASOy2CUFzuNGQFX+b0=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.103.145]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0Lheij-1j6NMk1fs1-00mreL; Sun, 14
- Jun 2020 11:33:35 +0200
-Cc:     Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>,
-        Qiushi Wu <wu000273@umn.edu>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Input: stmfts: fix ref count leak in stmfts_input_open
-From:   Markus Elfring <Markus.Elfring@web.de>
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <5b0147ab-f0bc-7380-6300-90e555534cb4@web.de>
-Date:   Sun, 14 Jun 2020 11:33:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Sun, 14 Jun 2020 05:35:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54848 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725265AbgFNJfD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 05:35:03 -0400
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA327C03E969;
+        Sun, 14 Jun 2020 02:35:02 -0700 (PDT)
+Received: by mail-pg1-x529.google.com with SMTP id u5so6284116pgn.5;
+        Sun, 14 Jun 2020 02:35:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VKQ+8f2oANWDrsRPwgbeAooMgImIhjiWyL6tb/ZNJwg=;
+        b=FRY0wXHryPnrpx+weUkFAhSaO2go/TxgvLOd90q7fyn2iSXm+6EI8exo+UPKuPgmHX
+         3LCZmXLghaqoG9wJS4Zp8XJVdfG34vYv9bKnHpqfEPD72GyhpKIq+Kq9WMGQegA9zBaj
+         IRRUFfwfMp1h/XBJKLP8EpZ6Wn1xG0kCrnkjXdoPgn3SCZmjRGGbksU8fnDMFwL9C/1j
+         DyIB3QblMCsuacZQ8Bw5JjsVw9TmFQIaz4YsvXAZYdzyaUCb2tL+b42EjKmHAItOv/T2
+         4eCjX1FnhTdtcGy7lNNe5VuELBk0qkNyrW17Mv/wZ5/kLp+78gg4PCfoEvUVYWurJKco
+         yfUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VKQ+8f2oANWDrsRPwgbeAooMgImIhjiWyL6tb/ZNJwg=;
+        b=cX3BJnIUNwCQHMBvJ7PIzCgDm8j4k9aHupuYUomDYEgDuzK8Dztm4/vTC+7Rh9DD+x
+         DYwVvJWh5haIP6soLwDLCsUjcgbHJroTPZLAYTRoyuRqaVgUqJZFOiiFnLBQaZJWrRCu
+         bSXczDqeEd9Jdgz6oWBLCYbMf9Hv6YBjCjSrKLbJWN4Z1xaWCTmsts9nJVY5gMm6FmRi
+         i4y/o6Ygyrii9b67aIKBA7A/dRXXXVaBu35mQP0agamlMhisO9FHXW8L2gjMUHodAHkQ
+         aLly7RNdBoNt6F30x138AAvA/hgcdIWEmZultujCJH7ywlGLZbTyUdum9a3xAsMcDfhR
+         dBvQ==
+X-Gm-Message-State: AOAM533Ka5BKyhFZJ7gQ2KA3c/dClIHUkNwn000MsqgXWQ+zPXHEqVYP
+        gSEBbbCnuQXh4/po6TNyrbX1jretLuvXrX4KUvw=
+X-Google-Smtp-Source: ABdhPJwxE9Cfu4p9MCcwtwkYi/z9aS3PU4hXscagiSNnvzkgEESfhi6hxoh0mnOm0UOM2oHd9cLvduL11vw2H4f0bow=
+X-Received: by 2002:a62:5284:: with SMTP id g126mr12615581pfb.36.1592127302057;
+ Sun, 14 Jun 2020 02:35:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:DAZlzO03MgQlRK84nwjKrl/6g/AAmCSSCTEfMQsrm11BvRkezO6
- AAp/YNWWVfr/8oNvMrLeS0iPKc0KALrvx1d2OqnM4t6VmmFhKuZS6cI5TH4rFcYhCIt4iUh
- LaGHHZ8iBDaMNS+uSR3t1hccjgf9MlOLVSWStBNsqD0sAtpSflZ9ZxQXW0MHNR1sjx2fkhI
- rIzmOSggGdZucVB3e/cMg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:urm8Ip8SAso=:E+BuA/MAZEHBAY2r3bwDk9
- ZbuYMm9lEN394lqdI6gELN7PULiRQi5r/lD89cpYkzwD38RNDmk6uD/RuiJPppQtOGaW+hMck
- gNJc7LVY7/xssUiowl2O4ol0xzZ2B3JPH0SZuyOFBZMKY1IbiFGhOoTaoFpgw2+vXh2ULtdtB
- SeIffR7BQKFcdeupwKW72dRAunGMXYjUlT+Dy7CbMyy0q1gEn/go7AJauM/rh5fbNbCAUR2a6
- yNMtttOvUW+aD8fNiwTQrjaZabZktVBWcv4GBVtd/1lh6Oo6gW3/EF3wxUejpfkKXhAZ2rqND
- XBUn0Jvarl2ZL79+eHDnT+KiSXx3m5R7yw8dvafVZUiHcZwYVfYaL54RRXmr6MDleLD3mMKTG
- g9ZYcfZs/m6NK3dTWO7xDXsTJ2NWPxoH0cw+VpFo8vU9Md/RTb53s/1RfCF6/TWG9fg9+b6Qe
- QDq3Om4+PvH3UWULDGpgSd+CeVlHn7P2jqmZriuhb4dYQAcTUjHTDx8t+WT9BNLDWS90hDQJO
- AHmSgxG4vB75mRQXC6xSy7JDb57UXzWqkdgECSuwmpdUlNGZJBWBLYTdvvzXH/eGOCZ3kzXa+
- WY5506lRHAM+8f2woeVGedGAXbYyCX9Llzwatheeou6uk9ljvW4Q0/pHX67dRpzZKC4VwqeVr
- aOpBCldA6uRSaTuc7uI6aGVwWabEEZTYQ4FGtgP+jQMFYEsotdGBxiq6iECpG7sEX7DX0UGmp
- PyFNsKjo9/3fc4ORTUFd6SuJsypwwnUWe6WReZpGfB0umEfxUidsv6Qhy5Ff5QMJlyVatXM/L
- T0eYvshWWzYLrNgTZxRobNeG+bi3QQ94v+l+2LlFKe/FkRUFortJ44WMp/zupZH9fE8FQNUZr
- /FGu3qepFbE0FPrD4I/J+2tz6DSBH6ofQ9dGJKLsW/ileyhETwiFoURSOYg1V97nQ+Y3R0GLc
- BBu7agcsVXFA2rqirp8xmQTFmQDI3PovpAUSX3noLlhODEzyBXOc71jSVKFbfUmmu871QyF0/
- /RfB2obzWeXfJnV3MIfq1vU9Fxi4jN+jieHIQ2UOY+t/pj25Noq2tIWHH2fQJdHuHA3sIB+Ou
- ce0hp+e/Re8ljmwDwgaFKX/hWZ9kw2XiFh/6xehqEqAjt1pbEoa2OmelWk9g+Q7EqdLSHNGCM
- VdTeM259cB9kBODF8d6CIFFVpgEsfJgD0iSgBHhNbsbfncS3iGLJ8s+N0Oqk9p370vxRYTM5O
- zRVKM1J+TXRdr6K9L
+References: <20200614090751.GA2878@kunai>
+In-Reply-To: <20200614090751.GA2878@kunai>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 14 Jun 2020 12:34:45 +0300
+Message-ID: <CAHp75Vc2RV1daOHMM1zAT2P_YpFzYq=_NVXnagq7qBCS9En04g@mail.gmail.com>
+Subject: Re: RFC: a failing pm_runtime_get increases the refcnt?
+To:     Wolfram Sang <wsa@kernel.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> in stmfts_input_open, =E2=80=A6
+On Sun, Jun 14, 2020 at 12:10 PM Wolfram Sang <wsa@kernel.org> wrote:
+> both in the I2C subsystem and also for Renesas drivers I maintain, I am
+> starting to get boilerplate patches doing some pm_runtime_put_* variant
+> because a failing pm_runtime_get is supposed to increase the ref
+> counters? Really? This feels wrong and unintuitive to me.
 
-* Can the term =E2=80=9Creference count=E2=80=9D become relevant also for =
-this commit message
-  besides other possible adjustments?
+Yeah, that is a well known issue with PM (I even have for a long time
+a coccinelle script, when I realized myself that there are a lot of
+cases like this, but someone else discovered this recently, like
+opening a can of worms).
 
-* Would you like to add the tag =E2=80=9CFixes=E2=80=9D?
+> I expect there
+> has been a discussion around it but I couldn't find it.
 
+Rafael explained (again) recently this. I can't find it quickly, unfortunately.
 
-=E2=80=A6
-> +++ b/drivers/input/touchscreen/stmfts.c
-=E2=80=A6
-> @@ -367,6 +367,9 @@  static int stmfts_input_open(struct input_dev *dev)
->  	}
->
->  	return 0;
-> +out:
-> +	pm_runtime_put(&sdata->client->dev);
-> +	return err;
->  }
-=E2=80=A6
+> I wonder why we
+> don't fix the code where the incremented refcount is expected for some
+> reason.
 
-Perhaps use the label =E2=80=9Cput_runtime=E2=80=9D instead?
+The main idea behind API that a lot of drivers do *not* check error
+codes from runtime PM, so, we need to keep balance in case of
 
-Regards,
-Markus
+pm_runtime_get(...);
+...
+pm_runtime_put(...);
+
+> Can I have some pointers please?
+
+-- 
+With Best Regards,
+Andy Shevchenko
