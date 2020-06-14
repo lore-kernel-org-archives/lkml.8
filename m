@@ -2,127 +2,68 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 831B8C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 23:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E7E2C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 23:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63B842068E
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 23:07:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61A42206D7
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 23:24:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="mnHKcxVe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbgFNXHU (ORCPT
+        id S1727994AbgFNXXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 19:07:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37556 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727928AbgFNXHT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 19:07:19 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 354CCC05BD43;
-        Sun, 14 Jun 2020 16:07:19 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id D5FF51B599B;
-        Sun, 14 Jun 2020 23:07:11 +0000 (UTC)
-Subject: Re: Good idea to rename files in include/uapi/ ?
-To:     Stefano Brivio <sbrivio@redhat.com>
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, netdev@vger.kernel.org,
-        linux-arch@vger.kernel.org
-References: <9feded75-4b45-2821-287b-af00ec5f910f@al2klimov.de>
- <20200614223456.13807a00@redhat.com>
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Message-ID: <5033402c-d95c-eecd-db84-75195b159fab@al2klimov.de>
-Date:   Mon, 15 Jun 2020 01:07:10 +0200
-MIME-Version: 1.0
-In-Reply-To: <20200614223456.13807a00@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+        Sun, 14 Jun 2020 19:23:34 -0400
+Received: from m12-15.163.com ([220.181.12.15]:51623 "EHLO m12-15.163.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727928AbgFNXXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 19:23:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=SOGSMjP33qpL7ktNpZ
+        lBjEhRk3kAp4OIE+OmxCw5kOM=; b=mnHKcxVeVzwxurr41nI19pY9PG8iqDcOa3
+        ZY1WReuIr0YbNRQKvxkX7rx/9z9jbEbVgBKPROzjBeruIk5kr13EtnnWViphk20l
+        kUc4F/BpsDzbq2md+zXZnTr0sYZD2dIRSi4KDc3d4O8aGPN17tZJBHmRTno5f/ih
+        ddlA9kHkk=
+Received: from localhost.localdomain (unknown [111.202.190.28])
+        by smtp11 (Coremail) with SMTP id D8CowAAXH4s6seZeGdtvGw--.51482S2;
+        Mon, 15 Jun 2020 07:22:34 +0800 (CST)
+From:   zzuedu2000@163.com
+To:     James.Bottomley@HansenPartnership.com
+Cc:     tj@kernel.org, lizefan@huawei.com, hannes@cmpxchg.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Markus.Elfring@web.de, songmuchun@bytedance.com,
+        buddy.zhang@aliyun.com
+Subject: Re: [PATCH] cgroup: Refactor two assignments in css_task_iter_next_css_set()
+Date:   Mon, 15 Jun 2020 07:22:24 +0800
+Message-Id: <20200614232224.1804-1-zzuedu2000@163.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <1592158208.5303.27.camel@HansenPartnership.com>
+References: <1592158208.5303.27.camel@HansenPartnership.com>
+X-CM-TRANSID: D8CowAAXH4s6seZeGdtvGw--.51482S2
+X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+        VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxU8Xo2DUUUU
+X-Originating-IP: [111.202.190.28]
+X-CM-SenderInfo: p22xvvbxsqiii6rwjhhfrp/1tbioxpDQlUMSsfoJQAAsh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, 2020-06-14 at 18:10 +0800, James.Bottomley@xxxxxxx wrote:
+
+> it's arguable that having two statements instead of one makes the code
+> marginally more readable.
+
+Above the function there is a similar line of code:
+l = it->tcset_pos->next;
+One line of code makes the code style consistent and more readable
 
 
-Am 14.06.20 um 22:34 schrieb Stefano Brivio:
-> On Sun, 14 Jun 2020 21:41:17 +0200
-> "Alexander A. Klimov" <grandmaster@al2klimov.de> wrote:
-> 
->> Hello there!
->>
->> At the moment one can't checkout a clean working directory w/o any
->> changed files on a case-insensitive FS as the following file names have
->> lower-case duplicates:
-> 
-> They are not duplicates: matching extensions are lowercase, target
-> extensions are uppercase. DSCP is the extension to set DSCP bits, dscp
-> is the extension to match on those packet bits.
-> 
->> ➜  linux git:(96144c58abe7) git ls-files |sort -f |uniq -id
->> include/uapi/linux/netfilter/xt_CONNMARK.h
->> include/uapi/linux/netfilter/xt_DSCP.h
->> include/uapi/linux/netfilter/xt_MARK.h
->> include/uapi/linux/netfilter/xt_RATEEST.h
->> include/uapi/linux/netfilter/xt_TCPMSS.h
->> include/uapi/linux/netfilter_ipv4/ipt_ECN.h
->> include/uapi/linux/netfilter_ipv4/ipt_TTL.h
->> include/uapi/linux/netfilter_ipv6/ip6t_HL.h
->> net/netfilter/xt_DSCP.c
->> net/netfilter/xt_HL.c
->> net/netfilter/xt_RATEEST.c
->> net/netfilter/xt_TCPMSS.c
->> tools/memory-model/litmus-tests/Z6.0+pooncelock+poonceLock+pombonce.litmus
->> ➜  linux git:(96144c58abe7)
->>
->> Also even on a case-sensitive one VIm seems to have trouble with editing
->> both case-insensitively equal files at the same time.
-> 
-> ...what trouble exactly?
-vi -O2 include/uapi/linux/netfilter/xt_CONNMARK.h 
-include/uapi/linux/netfilter/xt_connmark.h
+Regards,
 
-... opens the first file two times.
+Wei Fenghai
 
-> 
->> I was going to make a patch renaming the respective duplicates, but I'm
->> not sure:
->>
->> *Is it a good idea to rename files in include/uapi/ ?*
-> 
-> I'm not sure it's a good idea to even use git on a case-insensitive
-> filesystem. I'm curious, what is your use case?
-My MacOS workstation. Now as I discovered the problem I've created a r/w 
-image with a c/s FS, but the need of that for a clean `git checkout .' 
-is IMAO pretty silly.
-
-Don't worry, I run Linux, but only on my servers.
-
-Also this issue should also apply to M$ Windows workstations. By the way 
-at work I actually use Git on Windows if needed and it also just works. 
-However the software I work on doesn't have this issue.
-
-> 
