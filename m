@@ -2,118 +2,216 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECBFC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 06:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FF9C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 06:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7301920714
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 06:27:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aCxS2eGX"
+	by mail.kernel.org (Postfix) with ESMTP id BCAAF206B7
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 06:35:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592116516;
+	bh=KzlISDgeRkUj+FzZjCFmCjOm3ZPbmZPai75i047RsCQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mZcoFAHJvUVxgHsyIQVvwqzUbAsfefxEReK0zfM3I3VSliPmxIPoC65zxyieOU++0
+	 YzhKCYTQvCXqn914jdFljWTqrzzMT8HDdKUjYOfd6ONyJpbQZU5oNcUIlkBwfKwUlP
+	 QKMNXCZbtatLSGzww1GKr1njhkjtkR8iYe0OU86s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgFNG1j (ORCPT
+        id S1726755AbgFNGfP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 02:27:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54474 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725265AbgFNG1i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 02:27:38 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C61EC03E96F
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 23:27:37 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id q8so14503732iow.7
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 23:27:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Pr9n4V8YJiXG+OQICtAk6o8sqO5Fm3+cCzZ+CtFDMKY=;
-        b=aCxS2eGX+Ijgd2aSOJAZ0j+Xd/2Ni3mUe2bPVSeVpcqaLN05++JHFaQ+tcPnM5spHV
-         OiPsQF11IErXnCbYOl86IYeo0Df7FeaPxui4jd3H/Ahu8PdzEKfEAiKuTBaeZLOw8qLj
-         AN462QCPiiAwnF+Er0dVXpB6SpbF1+bO5TziaIRdM/7S63sdKzT2OfB8Dal+6fh/Sv+U
-         ud+4NA4Qly4/EVM4VR9ilH9nDqzp/z36k/GzOdARN9H+oAtOSM/+XYbUjoG0oLLhm5AU
-         P33hHC67x8C0P8yzI/W4sgFY8KX6GoHsxNcZ5Xq9/nYcuCNneW3S0l/TbH2ns7Zdaa62
-         dd3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Pr9n4V8YJiXG+OQICtAk6o8sqO5Fm3+cCzZ+CtFDMKY=;
-        b=mXO4H0l+n7/Ko/lYIGiHGn9FglobkG4VAHBStVoWW50dhdP0pbEFqUWHXkNf2l8B9w
-         6TEYFo54tjhNlhLZfD/mAQ6WEc8TRR3ZdLb2+nBZkMMDE10pNcV85L/iJLmPCrGvmFBo
-         4RAPUA8LleTTy9XvHG5pSL3lHg0mAvG2N0twGYneFbcIwRtyVYgQwMpEXO7vifESsg8V
-         9Z9KjZ6MpiukQj3EwUfT0PKug4Th1OsBm8TqbgY1zZEOt/mjzoypUQihzZ2xmWJUpZhf
-         I0zom7MU5jwTEqR+Q0FYcgdnkoZsYSSN9eDj1RoPh0OJhJsF3hXmYjbo/VgZUeSs9+oI
-         ebrw==
-X-Gm-Message-State: AOAM530QvUxseTejMXdtUT3rafMvKRYwbpddgcesdNBMymb59Y8kmrSu
-        6A+PdzxxB82qucWQtW5SAAo=
-X-Google-Smtp-Source: ABdhPJyF7zdFiHw1R+FvBcK1YMq5q5n/oke5Vs1Nd1IDb8neWJZtcKxPDxewjLW0gZuOITzL9Lupcg==
-X-Received: by 2002:a05:6602:809:: with SMTP id z9mr21441256iow.79.1592116056556;
-        Sat, 13 Jun 2020 23:27:36 -0700 (PDT)
-Received: from cs-u-kase.dtc.umn.edu (cs-u-kase.cs.umn.edu. [160.94.64.2])
-        by smtp.googlemail.com with ESMTPSA id b22sm5769329ios.21.2020.06.13.23.27.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Jun 2020 23:27:36 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-To:     Rob Herring <robh@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>
-Subject: [PATCH] drm/panfrost: fix ref count leak in panfrost_job_hw_submit
-Date:   Sun, 14 Jun 2020 01:27:30 -0500
-Message-Id: <20200614062730.46489-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 14 Jun 2020 02:35:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51264 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725265AbgFNGfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 02:35:15 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0BD12068E;
+        Sun, 14 Jun 2020 06:35:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592116514;
+        bh=KzlISDgeRkUj+FzZjCFmCjOm3ZPbmZPai75i047RsCQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uD6U20JSZJ99PvNurhBdMyDB0QLYVVxlItfch//Gk8jjZYTPtGKRMaLDte06u2uQL
+         N+dwSYQrnBnbyGcAC4YvOmFmRvl3cdsvVFQx9dIFh6IH2kwPIeN7QYypePhkIwm9KW
+         A+OmgTfDOP4n28tn11uSsSTBHiOY1qF6e50uh1dI=
+Date:   Sun, 14 Jun 2020 08:35:11 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] venus: Add debugfs interface to set firmware log
+ level
+Message-ID: <20200614063511.GA2611869@kroah.com>
+References: <20200613223919.7038-1-stanimir.varbanov@linaro.org>
+ <20200613223919.7038-2-stanimir.varbanov@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200613223919.7038-2-stanimir.varbanov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-in panfrost_job_hw_submit, pm_runtime_get_sync is called which
-increments the counter even in case of failure, leading to incorrect
-ref count. In case of failure, decrement the ref count before returning.
+On Sun, Jun 14, 2020 at 01:39:17AM +0300, Stanimir Varbanov wrote:
+> This will be useful when debugging specific issues related to
+> firmware HFI interface.
+> 
+> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- drivers/gpu/drm/panfrost/panfrost_job.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+You didn't cc: any of us on the patchs, like you did on 0/3 :(
 
-diff --git a/drivers/gpu/drm/panfrost/panfrost_job.c b/drivers/gpu/drm/panfrost/panfrost_job.c
-index 7914b1570841..89ac84667eb1 100644
---- a/drivers/gpu/drm/panfrost/panfrost_job.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_job.c
-@@ -147,11 +147,10 @@ static void panfrost_job_hw_submit(struct panfrost_job *job, int js)
- 
- 	ret = pm_runtime_get_sync(pfdev->dev);
- 	if (ret < 0)
--		return;
-+		goto out;
- 
- 	if (WARN_ON(job_read(pfdev, JS_COMMAND_NEXT(js)))) {
--		pm_runtime_put_sync_autosuspend(pfdev->dev);
--		return;
-+		goto out;
- 	}
- 
- 	cfg = panfrost_mmu_as_get(pfdev, &job->file_priv->mmu);
-@@ -184,6 +183,9 @@ static void panfrost_job_hw_submit(struct panfrost_job *job, int js)
- 				job, js, jc_head);
- 
- 	job_write(pfdev, JS_COMMAND_NEXT(js), JS_COMMAND_START);
-+out:
-+	pm_runtime_put_sync_autosuspend(pfdev->dev);
-+	return;
- }
- 
- static void panfrost_acquire_object_fences(struct drm_gem_object **bos,
--- 
-2.17.1
 
+> ---
+>  drivers/media/platform/qcom/venus/Makefile    |  2 +-
+>  drivers/media/platform/qcom/venus/core.c      |  3 +++
+>  drivers/media/platform/qcom/venus/core.h      |  3 +++
+>  drivers/media/platform/qcom/venus/dbgfs.c     | 21 +++++++++++++++++++
+>  drivers/media/platform/qcom/venus/dbgfs.h     | 12 +++++++++++
+>  drivers/media/platform/qcom/venus/hfi_venus.c |  7 ++++++-
+>  6 files changed, 46 insertions(+), 2 deletions(-)
+>  create mode 100644 drivers/media/platform/qcom/venus/dbgfs.c
+>  create mode 100644 drivers/media/platform/qcom/venus/dbgfs.h
+> 
+> diff --git a/drivers/media/platform/qcom/venus/Makefile b/drivers/media/platform/qcom/venus/Makefile
+> index 64af0bc1edae..dfc636865709 100644
+> --- a/drivers/media/platform/qcom/venus/Makefile
+> +++ b/drivers/media/platform/qcom/venus/Makefile
+> @@ -3,7 +3,7 @@
+>  
+>  venus-core-objs += core.o helpers.o firmware.o \
+>  		   hfi_venus.o hfi_msgs.o hfi_cmds.o hfi.o \
+> -		   hfi_parser.o pm_helpers.o
+> +		   hfi_parser.o pm_helpers.o dbgfs.o
+>  
+>  venus-dec-objs += vdec.o vdec_ctrls.o
+>  venus-enc-objs += venc.o venc_ctrls.o
+> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+> index 203c6538044f..249141e27fea 100644
+> --- a/drivers/media/platform/qcom/venus/core.c
+> +++ b/drivers/media/platform/qcom/venus/core.c
+> @@ -290,6 +290,8 @@ static int venus_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		goto err_dev_unregister;
+>  
+> +	venus_dbgfs_init(core);
+> +
+>  	return 0;
+>  
+>  err_dev_unregister:
+> @@ -337,6 +339,7 @@ static int venus_remove(struct platform_device *pdev)
+>  	v4l2_device_unregister(&core->v4l2_dev);
+>  	mutex_destroy(&core->pm_lock);
+>  	mutex_destroy(&core->lock);
+> +	venus_dbgfs_deinit(core);
+>  
+>  	return ret;
+>  }
+> diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
+> index 7118612673c9..b48782f9aa95 100644
+> --- a/drivers/media/platform/qcom/venus/core.h
+> +++ b/drivers/media/platform/qcom/venus/core.h
+> @@ -12,6 +12,7 @@
+>  #include <media/v4l2-ctrls.h>
+>  #include <media/v4l2-device.h>
+>  
+> +#include "dbgfs.h"
+>  #include "hfi.h"
+>  
+>  #define VIDC_CLKS_NUM_MAX		4
+> @@ -136,6 +137,7 @@ struct venus_caps {
+>   * @priv:	a private filed for HFI operations
+>   * @ops:		the core HFI operations
+>   * @work:	a delayed work for handling system fatal error
+> + * @root:	debugfs root directory
+>   */
+>  struct venus_core {
+>  	void __iomem *base;
+> @@ -185,6 +187,7 @@ struct venus_core {
+>  	unsigned int codecs_count;
+>  	unsigned int core0_usage_count;
+>  	unsigned int core1_usage_count;
+> +	struct dentry *root;
+>  };
+>  
+>  struct vdec_controls {
+> diff --git a/drivers/media/platform/qcom/venus/dbgfs.c b/drivers/media/platform/qcom/venus/dbgfs.c
+> new file mode 100644
+> index 000000000000..782d54ac1b8f
+> --- /dev/null
+> +++ b/drivers/media/platform/qcom/venus/dbgfs.c
+> @@ -0,0 +1,21 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2020 Linaro Ltd.
+> + */
+> +
+> +#include <linux/debugfs.h>
+> +
+> +#include "core.h"
+> +
+> +extern int venus_fw_debug;
+> +
+> +void venus_dbgfs_init(struct venus_core *core)
+> +{
+> +	core->root = debugfs_create_dir("venus", NULL);
+> +	debugfs_create_x32("fw_level", 0644, core->root, &venus_fw_debug);
+> +}
+> +
+> +void venus_dbgfs_deinit(struct venus_core *core)
+> +{
+> +	debugfs_remove_recursive(core->root);
+> +}
+> diff --git a/drivers/media/platform/qcom/venus/dbgfs.h b/drivers/media/platform/qcom/venus/dbgfs.h
+> new file mode 100644
+> index 000000000000..b7b621a8472f
+> --- /dev/null
+> +++ b/drivers/media/platform/qcom/venus/dbgfs.h
+> @@ -0,0 +1,12 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/* Copyright (C) 2020 Linaro Ltd. */
+> +
+> +#ifndef __VENUS_DBGFS_H__
+> +#define __VENUS_DBGFS_H__
+> +
+> +struct venus_core;
+> +
+> +void venus_dbgfs_init(struct venus_core *core);
+> +void venus_dbgfs_deinit(struct venus_core *core);
+> +
+> +#endif
+> diff --git a/drivers/media/platform/qcom/venus/hfi_venus.c b/drivers/media/platform/qcom/venus/hfi_venus.c
+> index 0d8855014ab3..3a04b08ab85a 100644
+> --- a/drivers/media/platform/qcom/venus/hfi_venus.c
+> +++ b/drivers/media/platform/qcom/venus/hfi_venus.c
+> @@ -130,7 +130,7 @@ struct venus_hfi_device {
+>  };
+>  
+>  static bool venus_pkt_debug;
+> -static int venus_fw_debug = HFI_DEBUG_MSG_ERROR | HFI_DEBUG_MSG_FATAL;
+> +int venus_fw_debug = HFI_DEBUG_MSG_ERROR | HFI_DEBUG_MSG_FATAL;
+>  static bool venus_sys_idle_indicator;
+>  static bool venus_fw_low_power_mode = true;
+>  static int venus_hw_rsp_timeout = 1000;
+> @@ -1130,9 +1130,14 @@ static int venus_session_init(struct venus_inst *inst, u32 session_type,
+>  			      u32 codec)
+>  {
+>  	struct venus_hfi_device *hdev = to_hfi_priv(inst->core);
+> +	struct device *dev = hdev->core->dev;
+>  	struct hfi_session_init_pkt pkt;
+>  	int ret;
+>  
+> +	ret = venus_sys_set_debug(hdev, venus_fw_debug);
+> +	if (ret)
+> +		dev_warn(dev, "setting fw debug msg ON failed (%d)\n", ret);
+
+Why do you care about this to tell the user about it?
+
+thanks,
+
+greg k-h
