@@ -2,269 +2,167 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D058BC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 18:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 187D9C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 18:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2D362071A
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 18:17:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4F462071A
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 18:18:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="imO/Ri9I"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="VvsFfJT1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbgFNSRx (ORCPT
+        id S1727769AbgFNSSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 14:17:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49778 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726657AbgFNSRw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 14:17:52 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90836C05BD43
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 11:17:52 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id h185so6814461pfg.2
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 11:17:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :in-reply-to;
-        bh=cb72U6z8Cr3P1sDvU4qKoKm5R8JCyir5KudWL5PBfe4=;
-        b=imO/Ri9IjD4cKro9T+4QV21TjLNGHMG84h8k8JDVGRPG/lHK243ckZNCe+G3H+somu
-         OL/M8bk8nLvnmkjCfLFwJZiSPs5XKzfU+4zW6+kqGhPBJJ8/qUvOa0ltRzQlWUf1kUh+
-         64Kjo3XlIX2tF4GTCv0UO0eZxM2cMtYeM7dBc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:in-reply-to;
-        bh=cb72U6z8Cr3P1sDvU4qKoKm5R8JCyir5KudWL5PBfe4=;
-        b=W/Zp36flOKGq7+lMwdOtI0xAevo1uyteHT6hU8vq4eO+4CO8s0EPd9Ic9LmMsrvsar
-         IFI4Ne8s3wde47+a3FPpAA0BvSH+GYkgo4uysTrIRjeW4AkOLYDYOhm7oQFQ0O4ObM/Y
-         lPN7+6DyqW9rqu6aY2569ydop3C2NTtljDdB4QLA8X2xpNSMJ4i1GJK4CREw65RSjsI1
-         zwqJbbKOYHAMTSh+ZvoQ2JjwoNMioq6OfeMEgcHH47fmr2WeN+W1b+QdUGmBfQEBNRf1
-         aAGFq6XtA0JnkGd6v36rYv51KuK11R9MPoUqFmdrVt1wm6oXgpDlxN78RwAHomoGI8x2
-         sUoA==
-X-Gm-Message-State: AOAM530HkQrVxzg4c2lk+CRylyP2KVOfekZrT8tvL9IxHgH+0/bVpPnS
-        9FzeFXfHN1lgJi4u9FpLIVdjkA==
-X-Google-Smtp-Source: ABdhPJwu5IBcA4n/0wLJc3MDmle+pQFHlC4oN8rj1R1/IVTU3LUF6VllWPCiJNuJcKG+Kg8WLb0yAQ==
-X-Received: by 2002:a65:52c3:: with SMTP id z3mr18513447pgp.146.1592158671493;
-        Sun, 14 Jun 2020 11:17:51 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 4sm1469791pgk.68.2020.06.14.11.17.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Jun 2020 11:17:50 -0700 (PDT)
-Date:   Sun, 14 Jun 2020 11:17:49 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     David Gow <davidgow@google.com>
-Cc:     Vitor Massaru Iha <vitor@massaru.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux@rasmusvillemoes.dk
-Subject: Re: RFC - kernel selftest result documentation (KTAP)
-Message-ID: <202006141050.5512F17@keescook>
+        Sun, 14 Jun 2020 14:18:44 -0400
+Received: from mout.web.de ([212.227.17.11]:53957 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726857AbgFNSSm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 14:18:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1592158709;
+        bh=GjzZSg97gLmVC/vC7cvQK/ON+SukqvS1B4g5gyTuXzQ=;
+        h=X-UI-Sender-Class:Subject:From:To:Cc:References:Date:In-Reply-To;
+        b=VvsFfJT1NqmDdtAd/T5rW19HOeJki1EeGeftNLa4mlyzX/2r80IRalypBoJgoVV6x
+         FSk6p8OV+rt1fL5K/0D4fzUGQEiliZITmcg81lYo7Z0eTtXtfvhEHvuCIhbM70txOu
+         T5FSEStnj0Z2uulXoD5+oLWqNK8sgHR9p6uhe38Q=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.131.103.145]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LhNnw-1j73a90WTg-00mdVi; Sun, 14
+ Jun 2020 20:18:29 +0200
+Subject: Re: [PATCH] RDMA/rvt: Improve exception handling in rvt_create_qp()
+From:   Markus Elfring <Markus.Elfring@web.de>
+To:     Aditya Pakki <pakki001@umn.edu>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        linux-rdma@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Kangjie Lu <kjlu@umn.edu>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Qiushi Wu <wu000273@umn.edu>
+References: <5d99dfe5-67ed-00d2-c2da-77058fb770c6@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <308f471c-8294-157f-3e3d-4a7f6473381e@web.de>
+Date:   Sun, 14 Jun 2020 20:18:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CY4PR13MB1175B804E31E502221BC8163FD830@CY4PR13MB1175.namprd13.prod.outlook.com>
+In-Reply-To: <5d99dfe5-67ed-00d2-c2da-77058fb770c6@web.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:aPcF2srBc3PEDSMgfGVR5kwzahjOzDbjeXJzrI6jVBNbVWNN9Jt
+ om7cQQHZqvLw7tr6vhVzUJGm5eVj07FBPQ9qeQf+Cwch6VIeoJnuVgmBbGHeTcS5iXXtAjk
+ hUurIVo4BGrnkIceebOy/wScvyYGyQAan1HlINTCTb756ksfjIPQ40lWPoOJO3m/Myc82/1
+ WCqAtfO0HfNq/maMX15OQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:y1cvzFeKGPE=:L4gnnwqTXX3dzFGvkUkefu
+ d6DLSHTJShkb9wU6KNp7D0HzgO2wCs66zGA+6/dnOcfF+S8rbr9p9FrP2D48OWdaXIRWqkWG6
+ V15ZrrZ2Gff21llnfL2p4PDU/yKJoM23zeCc9w16cFbYv9nu8TxdfMrW0kHQCxoBEAh3b6qQi
+ vt/c8y9ZtFzZ0Ns9BrHUL1Bf5umdZ8ZJUJbp+uMH1RAJe7CMI8XZPMtA/CdhgmZAFmwUSdEw3
+ Mc4SLi0hLtLLnlbpOaHCVqelppGt8acpYuLzcSfm85wNtwJuSFc5/Q9KCsXbK+HBN5dvFOALM
+ 9L7oZGEGkGbepHDa0AzU7HVYs9JgSxew++X/pm68w8hNpgE5v8sLA2zez1smzxSK5hn8ej4tg
+ Lj3JeNL3cjUC69kCyuFaKolwl8iqwfXNkQSnuKBhSvefhBEx3lINaTLMuBnoNkn4opfY7TbxI
+ XHTC5W0wYWFKXKIHLGJAr+TbXQtu7/mZLsLihKqGIcd7Hj0gUSJ3jQg6o4pPa9xp3ZSd1oOsD
+ L1s83u/vZXYR2BbnATSiC4RW71zGkvlhI4e0cxdmnKb5Z9SkbX8hWeUM6Uf6aeOG5wegTdBha
+ 4utf17l4nWasb/HLfPAiylv04/7B1EVQ+8Sss/wnJtsu6qxMb7r8QlR5Z1gr7QTjIgP/GxOw2
+ sGwT3PhW2v/nFjyRXGSmDoE4gPp6UN261B1TJAAiqnuMyO1XmPIetVPSYzNddYlGBK7Ng4zFv
+ RB00o1jEkkUuu2xjkYOCiokistJEl60m876ANGWiVWagE0hHZus85637aMXFKUWWPKsDDbV0o
+ XwGnpdhXEKm2MtCHnoDMXUZzy3+v1Vvw+eeuY2yQ6oQib6dnsOhVyI/PiuzNyem7E4c2rsvlq
+ g/rQ6CK4vE+L4kcOaaCQ6XvW4rcQjcq9ty7fyc2vF6oeZzSedhWyu+1JzankhZpnd9bTGY2Sq
+ 2eEfSI/OuGHo/Cw4+hykVMglznDkmwwn0exPUlG69/ce7YF5cUYtFxFg7uDOMaQWPpxEkBdpT
+ k37rGztyISW8FqehLdOac7dqXMIf4P4OYwcfBab78+fCnxmnSy5kqVvloZ/lfaa64736rB+2m
+ Zdx28vl6ZFDaf5XkvE5dKJGI4sMdKfw3yWeIwTwWW+E8UL4QAbg048QFK7bflb32Wzkr9EwIN
+ tlc0JgxO2Ifko2unETySfxW+VB040Y1uLEL53N74reltwnilb54MOiHdJ6cYrzrqk9fcZ+ayD
+ 2vjirUZInm4TpiK7u
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 13, 2020 at 02:51:17PM +0800, David Gow wrote:
-> On Sat, Jun 13, 2020 at 6:36 AM Kees Cook <keescook@chromium.org> wrote:
-> > Regarding output:
-> >
-> > [   36.611358] TAP version 14
-> > [   36.611953]     # Subtest: overflow
-> > [   36.611954]     1..3
-> > ...
-> > [   36.622914]     # overflow_calculation_test: s64: 21 arithmetic tests
-> > [   36.624020]     ok 1 - overflow_calculation_test
-> > ...
-> > [   36.731096]     # overflow_shift_test: ok: (s64)(0 << 63) == 0
-> > [   36.731840]     ok 2 - overflow_shift_test
-> > ...
-> > [   36.750294] kunit_try_catch: vmalloc: allocation failure: 18446744073709551615 bytes, mode:0xcc0(GFP_KERNEL), nodemask=(null),cpuset=/,mems_allowed=0
-> > ...
-> > [   36.805350]     # overflow_allocation_test: devm_kzalloc detected saturation
-> > [   36.807763]     ok 3 - overflow_allocation_test
-> > [   36.807765] ok 1 - overflow
-> >
-> > A few things here....
+> =E2=80=A6
+>> +++ b/drivers/infiniband/sw/rdmavt/qp.c
+>> @@ -1203,6 +1203,7 @@  struct ib_qp *rvt_create_qp(struct ib_pd *ibpd,
+>>  			qp->s_flags =3D RVT_S_SIGNAL_REQ_WR;
+>>  		err =3D alloc_ud_wq_attr(qp, rdi->dparms.node);
+>>  		if (err) {
+>> +			rvt_free_rq(&qp->r_rq);
+>>  			ret =3D (ERR_PTR(err));
+>>  			goto bail_driver_priv;
+>>  		}
 >
-> Tim Bird has just sent out an RFC for a "KTAP" specification, which
-> we'll hope to support in KUnit:
-
-Ah-ha! Thanks for the heads-up. :)
-
-> https://lore.kernel.org/linux-kselftest/CY4PR13MB1175B804E31E502221BC8163FD830@CY4PR13MB1175.namprd13.prod.outlook.com/T/#u
-
-*thread split/merge*
-
-This is coming from:
-https://lore.kernel.org/linux-kselftest/CABVgOSnofuJQ_fiCL-8KdKezg3Hnqk3A+X509c4YP_toKeBVBg@mail.gmail.com/
-But I'm attempting a thread jump... ;)
-
-> That's probably where we'll end up trying to hash out exactly what
-> this format should be. Fortunately, I don't think any of these will
-> require any per-test work, just changes to the KUnit implementation.
-
-Yup, good.
-
-> > - On the outer test report, there is no "plan" line (I was expecting
-> >   "1..1"). Technically it's optional, but it seems like the information
-> >   is available. :)
+> How do you think about the following code variant with the addition
+> of a jump target?
 >
-> There's work underway to support this, but it's hit a few minor snags:
-> https://lkml.org/lkml/2020/2/27/2155
-
-Okay, cool. It's not critical, I don't think.
-
-> > - The subtest should have its own "TAP version 14" line, and it should
-> >   be using the diagnostic line prefix for the top-level test (this is
-> >   what kselftest is doing).
+>  		err =3D alloc_ud_wq_attr(qp, rdi->dparms.node);
+>  		if (err) {
+>  			ret =3D (ERR_PTR(err));
+> -			goto bail_driver_priv;
+> +			goto bail_free_rq;
+>  		}
 >
-> Alas, TAP itself hasn't standardised subtests. Personally, I think it
-> doesn't fundamentally matter which way we do this (I actually prefer
-> the way we're doing it currently slightly), but converging with what
-> kselftest does would be ideal.
-
-I see the KTAP RFC doesn't discuss subtests at all, but kselftest actually
-already handles subtests. I strongly feel that line-start formatting is
-the correct way to deal with this, with each subtest having it's own
-self-contained KTAP. This allows for several important features:
-
-- the subtest, run on its own, needs no knowledge about its execution
-  environment: it simply emits its standard KTAP output.
-
-- subtest output can be externally parsed separably, without any
-  knowledge or parsing of the enclosing test.
-
-For example, with my recent series[1], "make -C seccomp run_tests"
-produces:
-
-TAP version 13
-1..2
-# selftests: seccomp: seccomp_bpf
-# TAP version 13
-# 1..77
-# # Starting 77 tests from 6 test cases.
-# #  RUN           global.mode_strict_support ...
-# #            OK  global.mode_strict_support
-# ok 1 global.mode_strict_support
-...
-# ok 77 TSYNC.two_siblings_not_under_filter
-# # FAILED: 73 / 77 tests passed.
-# # Totals: pass:72 fail:4 xfail:1 xpass:0 skip:0 error:0
-not ok 1 selftests: seccomp: seccomp_bpf # exit=1
-# selftests: seccomp: seccomp_benchmark
-#
-not ok 2 selftests: seccomp: seccomp_benchmark # TIMEOUT
-
-> > - There is no way to distinguish top-level TAP output from kernel log
-> >   lines. I think we should stick with the existing marker, which is
-> >   "# ", so that kernel output has no way to be interpreted as TAP
-> >   details -- unless it intentionally starts adding "#"s. ;)
+> =E2=80=A6
 >
-> At the moment, we're doing this in KUnit tool by stripping anything
-> before "TAP version 14" (e.g., the timestamp), and then only incuding
-> lines which parse correctly (are a test plan, result, or a diagnostic
-> line beginning with '#').
-> This has worked pretty well thus far, and we do have the ability to
-> get results from debugfs instead of the kernel log, which won't have
-> the same problems.
+>  bail_rq_wq:
+> -	rvt_free_rq(&qp->r_rq);
+>  	free_ud_wq_attr(qp);
+> +
+> +bail_free_rq:
+> +	rvt_free_rq(&qp->r_rq);
 >
-> It's worth considering, though, particularly since our parser should
-> handle this anyway without any changes.
+>  bail_driver_priv:
 
-For the KTAP parsing, actually think it's very important to include
-kernel log lines in the test output (as diagnostic lines), since they
-are "unexpected" (they fail to have the correct indentation) and may
-provide additional context for test failures when reading log files.
-(As in the "vmalloc: allocation failure" line in the quoted section
-above, to be included as a diagnostic line for test #3.)
+The improvement of affected implementation details is continued with
+another update suggestion.
 
-> > - There is no summary line (to help humans). For example, the kselftest
-> >   API produces a final pass/fail report.
->
-> Currently, we're relying on the kunit.py script to produce this, but
-> it shouldn't be impossible to add to the kernel, particularly once the
-> "KUnit Executor" changes mentioned above land.
+RDMA/rvt: Fix potential memory leak caused by rvt_alloc_rq
+https://lore.kernel.org/linux-rdma/20200614041148.131983-1-pakki001@umn.ed=
+u/
+https://lore.kernel.org/patchwork/patch/1255709/
 
-Cool. Yeah, it's not required, but I think there are two use cases:
-humans running a single test (where is a summary is valuable, especially
-for long tests that scroll off the screen), and automation (where it can
-ignore the summary, as it will produce its own in a regularized fashion).
-
-> > Taken together, I was expecting the output to be:
-> >
-> > [   36.611358] # TAP version 14
-> > [   36.611953] # 1..1
-> > [   36.611958] # # TAP version 14
-> > [   36.611954] # # 1..3
-> > ...
-> > [   36.622914] # # # overflow_calculation_test: s64: 21 arithmetic tests
-> > [   36.624020] # # ok 1 - overflow_calculation_test
-> > ...
-> > [   36.731096] # # # overflow_shift_test: ok: (s64)(0 << 63) == 0
-> > [   36.731840] # # ok 2 - overflow_shift_test
-> > ...
-> > [   36.750294] kunit_try_catch: vmalloc: allocation failure: 18446744073709551615 bytes, mode:0xcc0(GFP_KERNEL), nodemask=(null),cpuset=/,mems_allowed=0
-> > ...
-> > [   36.805350] # # # overflow_allocation_test: devm_kzalloc detected saturation
-> > [   36.807763] # # ok 3 - overflow_allocation_test
-> > [   36.807763] # # # overflow: PASS
-> > [   36.807765] # ok 1 - overflow
-> > [   36.807767] # # kunit: PASS
-> >
-> > But I assume there are threads on this that I've not read... :)
->
-> These discussions all seem to be coming to a head now, so this is
-> probably just the kick we need to prioritise this a bit more. The KTAP
-> thread hasn't covered all of these (particularly the subtest stuff)
-> yet, so I confess I hadn't realised the extent of the divergence
-> between KUnit and kselftest here.
-
-Cool. Yeah, I'd like to keep things as close as possible. In looking at
-this again, I wonder if perhaps it would be better to change the
-"indent" from "# " to "  ", which might make things more readable for
-both dmesg and terminal output:
-
-[   36.611358]   TAP version 14
-[   36.611953]   1..1
-[   36.611958]     TAP version 14
-[   36.611954]     1..3
-...
-[   36.622914]     # overflow_calculation_test: s64: 21 arithmetic tests
-[   36.624020]     ok 1 - overflow_calculation_test
-...
-[   36.731096]     # overflow_shift_test: ok: (s64)(0 << 63) == 0
-[   36.731840]     ok 2 - overflow_shift_test
-...
-[   36.750294] kunit_try_catch: vmalloc: allocation failure: 18446744073709551615 bytes, mode:0xcc0(GFP_KERNEL), nodemask=(null),cpuset=/,mems_allowed=0
-...
-[   36.805350]     # overflow_allocation_test: devm_kzalloc detected saturation
-[   36.807763]     ok 3 - overflow_allocation_test
-[   36.807763]     # overflow: PASS
-[   36.807765]   ok 1 - overflow
-[   36.807767]   # kunit: PASS
-
-As it happens, subtests are a bit rare in kselftests right now, but
-for kunit, the "common" output (IIUC) will fundamentally be a top-level
-test running all the subtests, so we should get it right. :)
-
--Kees
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=selftests/harness/tap
-
---
-Kees Cook
+Regards,
+Markus
