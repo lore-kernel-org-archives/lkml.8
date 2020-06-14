@@ -2,81 +2,68 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F95C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 07:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E470C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 07:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24A0520714
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 07:12:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF8AD20747
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 07:13:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592118764;
-	bh=0vN1w9ETUOy/X7MD4cx87lWgTNrDzSyXiwMz9T1CyeA=;
+	s=default; t=1592118821;
+	bh=G0YkOo/zB1bFhEFNAvhbmUwDkAVvzsSd01JJOtcdihM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yRz+BpZg2KRanI2wj7J+2eRmOSUu3kXXsUdTzKMdDnB5ppLMZt4R6Poq2lUWf80gX
-	 6TedHymlnUd3KA+PWJ0QMwfaj8sPridPLWp6C3bizOCnTSQU6kclB+7FBFsiynGtLg
-	 zQIE2XiQKEyTjgAp26yPBBUyiF6j7+UW7ka5qIwo=
+	b=YSmle0WrbxHQEqHhJrZ2QHNMZyn5eM0hjXSR3ABxD5PlSdf+08o9J5trIa1OCAZDl
+	 K8uDYgURXf32KhO5i/HMXRTLccybzfioNa+/mIzWkyJvqRHh6bx1Vwa4tvoEkfUXqg
+	 yQNcCepGQwhRcjqRKarXkSyuPThN3eiL8As669KY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgFNHMn (ORCPT
+        id S1726772AbgFNHNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 03:12:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60810 "EHLO mail.kernel.org"
+        Sun, 14 Jun 2020 03:13:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725265AbgFNHMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 03:12:40 -0400
+        id S1725265AbgFNHNj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 03:13:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72E7B20714;
-        Sun, 14 Jun 2020 07:12:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE33420714;
+        Sun, 14 Jun 2020 07:13:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592118760;
-        bh=0vN1w9ETUOy/X7MD4cx87lWgTNrDzSyXiwMz9T1CyeA=;
+        s=default; t=1592118818;
+        bh=G0YkOo/zB1bFhEFNAvhbmUwDkAVvzsSd01JJOtcdihM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=emUfJCiKDRvZYA9vTPzurljz+hHAFSsF1POBOJeAZlSsuDkdk+mJU0KsKE45mtvgk
-         ERE3ROK1Akj2xkMvKApmgrwh9s+m+uicxQJxX0nKUpfCBBhBRAXLSkHVErHU437Wzx
-         9yUjfCV0OuK0m1KnLN8T9x4L6khXelo1AHYMkvjc=
-Date:   Sun, 14 Jun 2020 09:12:35 +0200
+        b=absDd/JLqierYmu1LqtPo2LMI7JuTj4umdM9bXqwxtxIUU8GXB1zS18t9qaydSz4p
+         AmW3AgUxqPir6IBaoUHFlVbmi4L6GtaacX8QkTK64jO0PBj9aCiYbg6wM2aWHGjuED
+         KhOLrZVrEBSfcHFjKPWBQLntZ+wQYWYfXQab+2E8=
+Date:   Sun, 14 Jun 2020 09:13:35 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Kaitao Cheng <pilgrimtao@gmail.com>, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Muchun Song <songmuchun@bytedance.com>
-Subject: Re: [PATCH v2] proc/fd: Remove unnecessary variable initialisations
- in seq_show()
-Message-ID: <20200614071235.GA2629255@kroah.com>
-References: <20200612160946.21187-1-pilgrimtao@gmail.com>
- <7fdada40-370d-37b3-3aab-bfbedaa1804f@web.de>
+Cc:     weifenghai <zzuedu2000@163.com>, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
+        Li Zefan <lizefan@huawei.com>, Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH] Fix code style in css_task_iter_next_css_set()
+Message-ID: <20200614071335.GB2629255@kroah.com>
+References: <52681580-7ab4-a73c-6c86-bc9872de4fe8@web.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <7fdada40-370d-37b3-3aab-bfbedaa1804f@web.de>
+In-Reply-To: <52681580-7ab4-a73c-6c86-bc9872de4fe8@web.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 06:45:57PM +0200, Markus Elfring wrote:
-> > 'files' will be immediately reassigned. 'f_flags' and 'file' will be
-> > overwritten in the if{} or seq_show() directly exits with an error.
-> > so we don't need to consume CPU resources to initialize them.
+On Fri, Jun 12, 2020 at 09:56:26PM +0200, Markus Elfring wrote:
+> > One line similar code before in this function
 > 
-> I suggest to improve also this change description.
+> I suggest to improve the commit message.
+> How do you think about a wording variant like the following?
 > 
-> * Should the mentioned identifiers refer to variables?
-> 
-> * Will another imperative wording be preferred?
->   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=b791d1bdf9212d944d749a5c7ff6febdba241771#n151
-> 
-> * I propose to extend the patch a bit more.
->   How do you think about to convert the initialisation for the variable “ret”
->   also into a later assignment?
+>    Combine two assignments for the variable “l” into one statement.
 > 
 > Regards,
 > Markus
