@@ -2,172 +2,105 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8035C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 14:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7061DC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 14:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE4E320747
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 14:45:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A4DF206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 14:55:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pMwlKrrH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sazcY3c4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbgFNOpp (ORCPT
+        id S1726856AbgFNOzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 10:45:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45610 "EHLO
+        Sun, 14 Jun 2020 10:55:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbgFNOpn (ORCPT
+        with ESMTP id S1725815AbgFNOzL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 10:45:43 -0400
-Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39E8EC05BD43
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 07:45:40 -0700 (PDT)
-Received: by mail-qv1-xf49.google.com with SMTP id y2so11077591qvp.1
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 07:45:40 -0700 (PDT)
+        Sun, 14 Jun 2020 10:55:11 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECA3AC05BD43
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 07:55:10 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id s135so5790137pgs.2
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 07:55:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=cES73WJaLMoUweYIM+OlRJ2Jm853+1vLwtEwV6Uh388=;
-        b=pMwlKrrHagVLWTUat4QRNSBaTmseF6Z+raXgWIIqRaGm32qet+ibqsVdxjZ1TQZOP6
-         3NrTDjoo72m0GXXw+6rq1i0wbY/80L2a/P2kf/i1+bbxZ01cJUPNcMcnD4Jfu/9mR5Hp
-         5DQCr+bpfXTbpo1LOmHyCtcIyoInzk+NtksLYTG/HmRUXIyLGd9NP3wpuRvXdTncf8fT
-         cJUQZsbItoIyZI/pn6Dt3j4v0X8B1MKBr57SpiusXEiIQKstqowTgHYgC5i0NkpphVgU
-         GNowbTVhXFd7DuYMnR+WXEcYSTXUL1dapX3wiNm8nCF7l49dweq/s+0WHf/HEkIY+qeT
-         VDgw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=78et8/D357auQlo0tCw3bdJP4HVAFW0j/pRZND2qTtE=;
+        b=sazcY3c4vmvNP2euOvXd5CXPaq3kPKLH/MNh+gVDRpQaIKOaEWPeecO4JCEvIynp7S
+         0t30PpYebVU4RcPjQb4piVODuUru6rsiiaDv4NKUTvJ2Ek95EWHFOrYaFVJFW7W9R9HG
+         LIExhntgTIPGQPln0XnelSkS7ZeWo1k30J7/rKDzwnwgm2wTJNr0Kcu2wl0ZH6FTTuP7
+         JyF7usF9uS3WCU0od9zMpfU0I8wK/fNb8cEpir0zaGrGl9sAUaYqkrKHQDRnjarODso/
+         THxm3iGHYQCz+t7A76OoxBEErKJnVgzLX6+iKTEC21Ar4vGHoEE/lTJhKHnMGWeyEf6b
+         p4Gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=cES73WJaLMoUweYIM+OlRJ2Jm853+1vLwtEwV6Uh388=;
-        b=RJNih8KmNQ0wwUmCVAVy69Nrd3mcillWR+FSISpd6/McNGBcr3tEEW7yug3qzh1MXv
-         NdhiclMfpSEbaQi9rNdWUDH/HnUy55+BplcCs5ZhIWSyCG5B1K8OkA4jOnrJdGgtNhql
-         1sZWuOlowHQuW3PN7FG5qjEJ0tpGQG9ckf3q3AmoqPOPYNhF3sRHlE16pG1Gi2GPUPRN
-         Rwes5bqhkpgcGqnG9mkiZN1hGKejR7pjTSFLvblp2qKbPobGKTKIhZ0ZhRMjljpaRzE0
-         IevP716iaoLvPadOHHE5xMqplV9J0uGudge6SAUhHfcepdXzpsISiFFQg8hj9fPl/QEs
-         vCOg==
-X-Gm-Message-State: AOAM532YBUHKA1u8C7tSmzU2jNGnTj2+ulttEWzawIpgg9oIt6t+lvhQ
-        5Ervayj4UONYkb9L9VAOytc3myJb+BI=
-X-Google-Smtp-Source: ABdhPJz1k1RNu9dAXsmdsawTe7TyraBkMndQDppnCMV2qrWO1j7+QMn1X+iW+F38INV+PsKSU5IK3AvNUXA=
-X-Received: by 2002:a05:6214:713:: with SMTP id b19mr20890435qvz.199.1592145938185;
- Sun, 14 Jun 2020 07:45:38 -0700 (PDT)
-Date:   Sun, 14 Jun 2020 16:45:34 +0200
-Message-Id: <20200614144534.237035-1-glider@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.27.0.290.gba653c62da-goog
-Subject: [PATCH] [RFC] security: allow using Clang's zero initialization for
- stack variables
-From:   glider@google.com
-To:     yamada.masahiro@socionext.com, keescook@chromium.org,
-        jmorris@namei.org
-Cc:     maze@google.com, ndesaulniers@google.com,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Alexander Potapenko <glider@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=78et8/D357auQlo0tCw3bdJP4HVAFW0j/pRZND2qTtE=;
+        b=Wv0rK48iFTTij/gnmwtOsrLhhfWXXDSW1ZKNCqNxFxJpGve6nZTD0NHHw+DUIROajm
+         n3y37ZkXn5uqgf61p98eaYDXhDDiTdpoGJu7/sEFYBa+HAUKFUUa+L/4MlbwBWXgzk11
+         jiTCnGYuHqGm9jsA53VWKzy6omhAxlHmJRljEyFDjJku6Zn6FHNxKebMl8QyGKo17iHT
+         sQubazFKVLOfiNuwLRj0h7Gn2wrAf70Z4BRo4CazG1OfnawwFiOQ1FDEuu3kZuP1Bfsu
+         H3XDrOpddFii11krDzf+JATLJcewOF3rm9K63J+uhBfXuyCnrG/Ma7i5tI4kS+ZTj/fU
+         Z5jw==
+X-Gm-Message-State: AOAM532Lv1PQRTzDLmKHU2m9/PElMMgrkyq0I2sqwSfKFF8tMtkO0xeh
+        Y943VHfLQyL34TiETFuuAE0=
+X-Google-Smtp-Source: ABdhPJwob5y5LO2njY/GBTjC/Nb9xaivIHoaUJJmM7RQWU7OYld/epBeaS+a1qrdU1xmpEEEJKo52g==
+X-Received: by 2002:a62:2ccb:: with SMTP id s194mr19106321pfs.127.1592146510447;
+        Sun, 14 Jun 2020 07:55:10 -0700 (PDT)
+Received: from localhost ([49.207.192.101])
+        by smtp.gmail.com with ESMTPSA id l195sm1332101pfd.18.2020.06.14.07.55.09
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 14 Jun 2020 07:55:09 -0700 (PDT)
+Date:   Sun, 14 Jun 2020 20:25:07 +0530
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [RFC 1/3] lib: copy_{from,to}_user using gup & kmap_atomic()
+Message-ID: <20200614145356.GA3134@afzalpc>
+References: <cover.1591885760.git.afzal.mohd.ma@gmail.com>
+ <9e1de19f35e2d5e1d115c9ec3b7c3284b4a4e077.1591885760.git.afzal.mohd.ma@gmail.com>
+ <CAK8P3a1XUJHC0kG_Qwh4D4AoxTgCL5ggHd=45yNSmzaYWLUWXw@mail.gmail.com>
+ <20200612135538.GA13399@afzalpc>
+ <CAK8P3a25ffh_2Y1xKDbkL2xU9nLpGbEq7j6xHdODEwUtavgdwA@mail.gmail.com>
+ <20200613120432.GA5319@afzalpc>
+ <CAK8P3a2g6a=V4BmPAOM0vNYUfJqm_aZziQhCxfF8MT_fbHMMLg@mail.gmail.com>
+ <20200614132143.GA599@afzalpc>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200614132143.GA599@afzalpc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In addition to -ftrivial-auto-var-init=pattern (used by
-CONFIG_INIT_STACK_ALL now) Clang also supports zero initialization for
-locals enabled by -ftrivial-auto-var-init=zero.
-The future of this flag is still being debated, see
-https://bugs.llvm.org/show_bug.cgi?id=45497
-Right now it is guarded by another flag,
--enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang,
-which means it may not be supported by future Clang releases.
-Another possible resolution is that -ftrivial-auto-var-init=zero will
-persist (as certain users have already started depending on it), but the
-name of the guard flag will change.
+Hi,
 
-In the meantime, zero initialization has proven itself as a good
-production mitigation measure against uninitialized locals. Unlike
-pattern initialization, which has a higher chance of triggering existing
-bugs, zero initialization provides safe defaults for strings, pointers,
-indexes, and sizes. On the other hand, pattern initialization remains
-safer for return values.
-Performance-wise, the difference between pattern and zero initialization
-is usually negligible, although the generated code for zero
-initialization is more compact.
+On Sun, Jun 14, 2020 at 06:51:43PM +0530, afzal mohammed wrote:
 
-The proposed config, CONFIG_USE_CLANG_ZERO_INITIALIZATION, makes
-CONFIG_INIT_STACK_ALL use zero initialization if the corresponding flags
-are supported by Clang.
+> It is MB/s for copying one file to another via user space buffer, i.e.
+> the value coreutils 'dd' shows w/ status=progress (here it was busybox
+> 'dd', so instead it was enabling a compile time option)
 
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Alexander Potapenko <glider@google.com>
----
- Makefile                   | 15 ++++++++++++++-
- security/Kconfig.hardening | 16 ++++++++++++++++
- 2 files changed, 30 insertions(+), 1 deletion(-)
+Just for correctness, status=progress is not required, it's there in
+the default 3rd line of coreutils 'dd' o/p
 
-diff --git a/Makefile b/Makefile
-index fd31992bf918..2860bad7e39a 100644
---- a/Makefile
-+++ b/Makefile
-@@ -802,9 +802,22 @@ KBUILD_CFLAGS	+= -fomit-frame-pointer
- endif
- endif
- 
--# Initialize all stack variables with a pattern, if desired.
-+# Initialize all stack variables, if desired.
- ifdef CONFIG_INIT_STACK_ALL
-+
-+# Use pattern initialization by default.
-+ifndef CONFIG_USE_CLANG_ZERO_INITIALIZATION
- KBUILD_CFLAGS	+= -ftrivial-auto-var-init=pattern
-+else
-+
-+ifdef CONFIG_CC_HAS_AUTO_VAR_ZERO_INIT
-+# Future support for zero initialization is still being debated, see
-+# https://bugs.llvm.org/show_bug.cgi?id=45497. These flags are subject to being
-+# renamed or dropped.
-+KBUILD_CFLAGS	+= -ftrivial-auto-var-init=zero -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang
-+endif
-+
-+endif
- endif
- 
- DEBUG_CFLAGS	:= $(call cc-option, -fno-var-tracking-assignments)
-diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
-index af4c979b38ee..299d27c6d78c 100644
---- a/security/Kconfig.hardening
-+++ b/security/Kconfig.hardening
-@@ -22,6 +22,9 @@ menu "Memory initialization"
- config CC_HAS_AUTO_VAR_INIT
- 	def_bool $(cc-option,-ftrivial-auto-var-init=pattern)
- 
-+config CC_HAS_AUTO_VAR_ZERO_INIT
-+	def_bool $(cc-option,-ftrivial-auto-var-init=zero -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang)
-+
- choice
- 	prompt "Initialize kernel stack variables at function entry"
- 	default GCC_PLUGIN_STRUCTLEAK_BYREF_ALL if COMPILE_TEST && GCC_PLUGINS
-@@ -100,6 +103,19 @@ choice
- 
- endchoice
- 
-+config USE_CLANG_ZERO_INITIALIZATION
-+	bool "Use Clang's zero initialization for local variables"
-+	depends on CC_HAS_AUTO_VAR_ZERO_INIT
-+	depends on INIT_STACK_ALL
-+	help
-+	  If set, uses zeros instead of 0xAA to initialize local variables in
-+	  INIT_STACK_ALL. Zeroing the stack provides safer defaults for strings,
-+	  pointers, indexes, and sizes. The downsides are less-safe defaults for
-+	  return values, and exposing fewer bugs where the underlying code
-+	  relies on zero initialization.
-+	  The corresponding flag isn't officially supported by Clang and may
-+	  sooner or later go away or get renamed.
-+
- config GCC_PLUGIN_STRUCTLEAK_VERBOSE
- 	bool "Report forcefully initialized variables"
- 	depends on GCC_PLUGIN_STRUCTLEAK
--- 
-2.27.0.290.gba653c62da-goog
-
+Regards
+afzal
