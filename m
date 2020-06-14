@@ -6,66 +6,67 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F03BEC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 07:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C4DC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 07:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF0D920714
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 07:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0BD420747
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 07:15:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592118887;
-	bh=zbXjGnPMX45JTqiR/mVy9+/B30zxTdS7yJsyaBGVEpM=;
+	s=default; t=1592118900;
+	bh=3JlDssrSZoB0F+GktGKDrpB2an7++l0WZtEXqaB0Yt8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FbcLwJikXgvK28YUH5kAbzPYAX181uB6t+OzVw+NjQZ96QrglsPwkJYuGPKaqkb1c
-	 tcETCtrZMDy8PS3Go4nsQoOR2IyoQvWt9Cdim8hATFe9/cGa7IoypALWQh/fSpfW1z
-	 Efr9YyCfBJu0BLLr7Gkdqqj9DX/3EwptgwKx4EIk=
+	b=yommn2tUZ5Ht3QlzCa9mU5/8fwtrMveLZmhfTN/xeWcJRXbMmTVldWU6OCr5zghhF
+	 OmetTjr9EdxoO+VEpZnKyETVdXo5PmyCMh30J2vcXyyjl7gbhwrvH6IONn438MeGBx
+	 EG+EHAAQgkZXR4uQoPm+l9mywPDGhSz84iZSfF4k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgFNHOq (ORCPT
+        id S1726909AbgFNHO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 03:14:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33886 "EHLO mail.kernel.org"
+        Sun, 14 Jun 2020 03:14:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725949AbgFNHOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 03:14:45 -0400
+        id S1725949AbgFNHO6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 03:14:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B122F20714;
-        Sun, 14 Jun 2020 07:14:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F352220714;
+        Sun, 14 Jun 2020 07:14:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592118885;
-        bh=zbXjGnPMX45JTqiR/mVy9+/B30zxTdS7yJsyaBGVEpM=;
+        s=default; t=1592118898;
+        bh=3JlDssrSZoB0F+GktGKDrpB2an7++l0WZtEXqaB0Yt8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=W3O5JXHe6DexW5W8Wge6ykuSUJFdZCx2nwpHNc6Wg/SnV8nFeIZss+ts3PyIrpjnK
-         99MKA+lUhztVHk4QlgKLCbcsrPPoI3bzsU30JfpWe9pcCR4nPjFVDcg1c5eDAIt+W6
-         S/NUlfPlgioxjUPpvamcw9wncg5IE9zPw9sICnuU=
-Date:   Sun, 14 Jun 2020 09:14:42 +0200
+        b=BW2qTMSu/HZtEoXpoAozDahjkSD/nRtSc3Q5Q4miFARJiOT2zHl2LXPrDo0wjqU0E
+         QowjzYJ35nkiBRMYOtxADknB0v0A9OKGbsr048kZlqGdWVzr8Smi65FDk+38BfVqrB
+         lBaILnYglEo3gS1n6R4pTbGSopJum2eAHI+4vMBA=
+Date:   Sun, 14 Jun 2020 09:14:56 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Markus Elfring <Markus.Elfring@web.de>
 Cc:     Aditya Pakki <pakki001@umn.edu>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Allison Randal <allison@lohutok.net>,
+        Andrew Lunn <andrew@lunn.ch>, Arnd Bergmann <arnd@arndb.de>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@resnulli.us>, Kangjie Lu <kjlu@umn.edu>,
-        Qiushi Wu <wu000273@umn.edu>
-Subject: Re: [PATCH] rocker: Fix error handling in dma_rings_init()
-Message-ID: <20200614071442.GD2629255@kroah.com>
-References: <c87858ed-a91f-22d3-09d7-17a00703d168@web.de>
+        Jakub Kicinski <kuba@kernel.org>, Kangjie Lu <kjlu@umn.edu>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Qiushi Wu <wu000273@umn.edu>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] ethernet: Fix memory leak in ethoc_probe()
+Message-ID: <20200614071456.GE2629255@kroah.com>
+References: <2a13092a-53ed-bfab-0a99-08196ad22f59@web.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <c87858ed-a91f-22d3-09d7-17a00703d168@web.de>
+In-Reply-To: <2a13092a-53ed-bfab-0a99-08196ad22f59@web.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 13, 2020 at 08:14:13AM +0200, Markus Elfring wrote:
-> > … The patch fixes the
-> > order consistent with cleanup in rocker_dma_rings_fini().
+On Sat, Jun 13, 2020 at 08:26:12AM +0200, Markus Elfring wrote:
+> > … The patch fixes this issue.
 > 
-> I suggest to choose another imperative wording for your change description.
-> Will the tag “Fixes” become helpful for the commit message?
+> I propose to replace this information by the tag “Fixes”.
+> Please choose another imperative wording for your change description.
 > 
 > Regards,
 > Markus
