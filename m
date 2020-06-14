@@ -2,209 +2,132 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F71BC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 10:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6312C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 10:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F275120747
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 10:34:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8203520714
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 10:44:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=boo.tc header.i=@boo.tc header.b="U0fJhpnS";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QzKF7G23"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ePjBDxUn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbgFNKe2 (ORCPT
+        id S1726959AbgFNKoz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 06:34:28 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:47651 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725265AbgFNKeY (ORCPT
+        Sun, 14 Jun 2020 06:44:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37204 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbgFNKox (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 06:34:24 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 614D958023B;
-        Sun, 14 Jun 2020 06:34:22 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Sun, 14 Jun 2020 06:34:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=boo.tc; h=
-        subject:to:cc:references:from:message-id:date:mime-version
-        :in-reply-to:content-type:content-transfer-encoding; s=fm3; bh=c
-        T4DLrJqcF3AZNwx/h9teF9k/KdmITBW6mDn7iJQ924=; b=U0fJhpnS5Fa5GPcNG
-        mXyUWW8AakNG0V+t1eoUKvdp39D0bAMoPJVSXE7KXNqWILsjZ3NPPRos9yBI/YYn
-        8U7JQNL0+roTfwWE5103O4EATs1ZN+hjrAkraBmDJmUmgMTJ+qau5yocvnc0xhID
-        OfpRKu6RSIXW0qgzsEzxK3z+jja6BhM2ehbOX46YpOIwRbak7EeSod8EY5uptl8M
-        Nu8fEOe4sqX7aCs+uyrljUhmLG9kE/aAxE60o3n4YOWc3HdvGT8hX4AOdy34511f
-        I+m5IhD9x2khvtjOqol6C24WHp6gBeRfgxyb0IwioEGNaGGHIYs8IHdtXHfVyPk7
-        ePR7w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=cT4DLrJqcF3AZNwx/h9teF9k/KdmITBW6mDn7iJQ9
-        24=; b=QzKF7G236FYpBybYsxCuH4RGw1HsYiA5c5Cl+zDPFE9JD7JZbkDBAzOdY
-        JiuZDmA6nf+rzNXg+YFsBJADhAg+/CqXc8rF/umsjhuy5e8xdTyARf+zEcazv/4X
-        UsECcXKfWakyT2I4wmtx10azgycJoR58PcLh1WjFCH3og6eMWYAMvjiDDyu11C37
-        SrOc/w7i/AisndFCyJb/PVoAfZEKwnvBY4blysM1zJuAItINTQEyz6S1L/Qbe2Nr
-        a8MuEcigpUbUeix0DVKHb4pDDhUrs33IB3zhgc7JNiv+LM2UC4j340OErICwB9fI
-        7I47iczoqOSF5rqv+E5KHqCYHQ41Q==
-X-ME-Sender: <xms:Lf3lXqn4AxO4zix686EioHM9n9fI4Tq3qcs6cAkJUboxXU68rs23Ww>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudeiiedgfeduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    gfrhhlucfvnfffucdlvdehmdenucfjughrpefuvfhfhffkffgfgggjtgfgsehtjeertddt
-    feejnecuhfhrohhmpeevhhhrihhsuceuohhothcuoegsohhothgtsegsohhordhttgeqne
-    cuggftrfgrthhtvghrnhepteeugfevhffhudegteevkedvlefhhfelvdfhuedvkeefudfh
-    hfdvheegffefuddvnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepkedurd
-    dukeejrdehhedrleefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
-    lhhfrhhomhepsghoohhttgessghoohdrthgt
-X-ME-Proxy: <xmx:Lf3lXh3S2ruGN7mKk4U_R1X2xQb7vSEph3xYHj4OVbOD-9uaJ25t_Q>
-    <xmx:Lf3lXorcDWVqa1BL7wvXafCXzjmttID2c0htvYVbpCZ-a93-IRkFGw>
-    <xmx:Lf3lXulOJrux8VPGKGUtmWNbXeVBm-D3wNLZ5WNlZmPLZkJOzG1-rQ>
-    <xmx:Lv3lXpL7dKrs-rUoOodHOKHdNJd-XflRo-NPjcFZ5r1aswWPBetbiQ>
-Received: from heen.boo.tc (heen.boo.tc [81.187.55.93])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 59CFC328005D;
-        Sun, 14 Jun 2020 06:34:20 -0400 (EDT)
-Subject: Re: [PATCH] scsi: target/sbp: remove firewire SBP target driver
-To:     Finn Thain <fthain@telegraphics.com.au>,
-        Chris Boot <bootc@bootc.net>
-Cc:     linuxppc-dev@lists.ozlabs.org, target-devel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux1394-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Nicholas Bellinger <nab@linux-iscsi.org>,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>
-References: <01020172acd3d10f-3964f076-a820-43fc-9494-3f3946e9b7b5-000000@eu-west-1.amazonses.com>
- <alpine.LNX.2.22.394.2006140934520.15@nippy.intranet>
-From:   Chris Boot <bootc@boo.tc>
-Autocrypt: addr=bootc@boo.tc; prefer-encrypt=mutual;
- keydata= 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
- 1QBDj3S+cCP/8Pe5l3n1B7V4SkVPBQs/H/ClB6o=
-Message-ID: <7ad14946-5c25-fc49-1e48-72d37a607832@boo.tc>
-Date:   Sun, 14 Jun 2020 11:34:17 +0100
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
+        Sun, 14 Jun 2020 06:44:53 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADFDFC05BD43;
+        Sun, 14 Jun 2020 03:44:53 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id g12so5597125pll.10;
+        Sun, 14 Jun 2020 03:44:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wUcOt819f+ivq40xZB6TcXygEQX1UsKoHGTk/MjKzJU=;
+        b=ePjBDxUn9MITBDP0cVwxArkF7+p30KQt5PvIfsDC3J0xIiaDpKlDvGoGB1Ft5lRS+v
+         bbkXm3tDwD3EumIViK+w0W7ZJn3EayMJYL7Cq0fWjQ2pfl60+aP4S6YRPurlFfnbxY1n
+         5b/CUzlG2WYHjBJTGthjpHL1bYz0zfTloltz8sBV6pTGCGYcgzl6dReqNzA+z4iXJBff
+         fbHwtYjAKfYLiBxxE+SgoVdNTkiKZwVyMCPC8OnLf+uoCt999cpbpqVanC/vF1QNgaiE
+         kJXznFfMNyGs/p+C54ZCeX7xkhVFywdgQTfVp4Ufc+dI1LfYikzWoP2dguNmPe/N0Z9+
+         T25A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wUcOt819f+ivq40xZB6TcXygEQX1UsKoHGTk/MjKzJU=;
+        b=Q0jOUrKzuhJRIwuKc6phtpczziDxpq0ZWL7Hc1VfP6DSGBLNIyoEK/RXXu808SUk45
+         Yol5D8vf4hR7unaGYkij7zuJ98LpKVDGt1h3s5ELP99wewuPy/3k45BWxNHFVxlhYAjg
+         762s4oBTpcFaQSiuBsdGt7M3mAR+OODqZR5Z7iaeXzO1TKvnz84iONEQO8RL4sps/eTX
+         hponN2WEfnPXNpqLMSOpzo6fNOi5Fx6rB+wNpr4EruzW9eSy9ZB7uzj7DfoXqGiwe2nC
+         byIThLCwlD6deY7EVeK5Ozx+wS+aZApSIGikpmbaFgeKt9Ofr+kNiod2Ah1xHvJrXU/E
+         GHBg==
+X-Gm-Message-State: AOAM531iwcACUsdP+DeyZV0xKLy/rvtBlz5GIAHb14WcDPwLhJS9uq23
+        rjKQYVnBcv2yej1v1b+bLksa1243Y6YYuhuI/5s=
+X-Google-Smtp-Source: ABdhPJyEneOgBpKPU02VqOu7ehOjUCszRfNogXdrDsoroRhDEDHiX2u0BSC4LlPgZS77fv2NEI7b29aR2Fh4/J2e5Wc=
+X-Received: by 2002:a17:90a:b30d:: with SMTP id d13mr6965711pjr.181.1592131492548;
+ Sun, 14 Jun 2020 03:44:52 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <alpine.LNX.2.22.394.2006140934520.15@nippy.intranet>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20200614090751.GA2878@kunai> <CAHp75Vc2RV1daOHMM1zAT2P_YpFzYq=_NVXnagq7qBCS9En04g@mail.gmail.com>
+ <CAHp75VdtJN4KbsWgP3G40P4giPGgPE6gdr0CDqOXQjp2wK+i+g@mail.gmail.com>
+ <CAMuHMdUadYRNYdJ9JUX90Z1jvtHZmSS4gM+JKft4x-BK2Ry4zQ@mail.gmail.com> <CAMuHMdVJToSg_a3wQCV3ALyX5bHKsYRjyT1KrCtSgqxDgaFo2g@mail.gmail.com>
+In-Reply-To: <CAMuHMdVJToSg_a3wQCV3ALyX5bHKsYRjyT1KrCtSgqxDgaFo2g@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 14 Jun 2020 13:44:35 +0300
+Message-ID: <CAHp75Vc5DTnERihke4radxjHmRXzpTJGvD+-G1YnRBBnzDALkg@mail.gmail.com>
+Subject: Re: RFC: a failing pm_runtime_get increases the refcnt?
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Wolfram Sang <wsa@kernel.org>, Linux PM <linux-pm@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/06/2020 01:03, Finn Thain wrote:
-> On Sat, 13 Jun 2020, Chris Boot wrote:
-> 
->> I no longer have the time to maintain this subsystem nor the hardware to
->> test patches with. 
-> 
-> Then why not patch MAINTAINERS, and orphan it, as per usual practice?
-> 
-> $ git log --oneline MAINTAINERS | grep -i orphan
+On Sun, Jun 14, 2020 at 1:05 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Sun, Jun 14, 2020 at 12:00 PM Geert Uytterhoeven
+> <geert@linux-m68k.org> wrote:
+> > On Sun, Jun 14, 2020 at 11:43 AM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > > On Sun, Jun 14, 2020 at 12:34 PM Andy Shevchenko
+> > > <andy.shevchenko@gmail.com> wrote:
+> > > >
+> > > > On Sun, Jun 14, 2020 at 12:10 PM Wolfram Sang <wsa@kernel.org> wrote:
+> > > > > both in the I2C subsystem and also for Renesas drivers I maintain, I am
+> > > > > starting to get boilerplate patches doing some pm_runtime_put_* variant
+> > > > > because a failing pm_runtime_get is supposed to increase the ref
+> > > > > counters? Really? This feels wrong and unintuitive to me.
+> > > >
+> > > > Yeah, that is a well known issue with PM (I even have for a long time
+> > > > a coccinelle script, when I realized myself that there are a lot of
+> > > > cases like this, but someone else discovered this recently, like
+> > > > opening a can of worms).
+> > > >
+> > > > > I expect there
+> > > > > has been a discussion around it but I couldn't find it.
+> > > >
+> > > > Rafael explained (again) recently this. I can't find it quickly, unfortunately.
+> > >
+> > > I _think_ this discussion, but may be it's simple another tentacle of
+> > > the same octopus.
+> > > https://patchwork.ozlabs.org/project/linux-tegra/patch/20200520095148.10995-1-dinghao.liu@zju.edu.cn/
+> >
+> > Thanks, hadn't read that one! (so I was still at -1 from
+> > http://sweng.the-davies.net/Home/rustys-api-design-manifesto ;-)
+> >
+> > So "pm_runtime_put_noidle()" is the (definitive?) one to pair with a
+> > pm_runtime_get_sync() failure?
+>
+> My biggest worry here is all those copycats jumping on the bandwagon,
+> and sending untested[*] patches that end up calling the wrong function.
+>
+> [*] Several of them turned out to introduce trivial compile warnings, so
+>     I now consider all patches authored by the same person as untested.
 
-My patch to remove it was in response to:
+That's always a problem with janitors like patches...
+Once I tried to ask them to provide a testing material, but...
+ - some maintainers just accept them without asking questions
+ - some maintainers even defend them that they are doing a good job
+(and LWN top contributor statistics also motivate some of janitors,
+though I consider it not the best metrics)
+ - practically almost no contributor answered to my queries, so, I
+consider all of them are untested independent to the name (if name
+appears in more than dozen patches, esp. in different subsystems)
+ - and yes, it's a trade-off, some of the patches indeed useful.
 
-https://lore.kernel.org/lkml/yq1img99d4k.fsf@ca-mkp.ca.oracle.com/
-
->> It also doesn't appear to have any active users so I doubt anyone will 
->> miss it.
->>
-> 
-> It's not unusual that any Linux driver written more than 5 years ago 
-> "doesn't appear to have any active users".
-> 
-> If a driver has been orphaned and broken in the past, and no-one stepped 
-> up to fix it within a reasonable period, removal would make sense. But 
-> that's not the case here.
-> 
-> I haven't used this driver for a long time, but I still own PowerMacs with 
-> firewire, and I know I'm not the only one.
-
-I expect that if someone finds this useful it can stick around (but
-that's not my call). I just don't have the time or inclination or
-hardware to be able to maintain it anymore, so someone else would have
-to pick it up.
-
-Cheers,
-Chris
 
 -- 
-Chris Boot
-bootc@boo.tc
+With Best Regards,
+Andy Shevchenko
