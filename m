@@ -2,223 +2,172 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFDD1C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 03:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7247FC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 03:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0BD620739
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 03:05:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A97120739
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 03:07:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="jLMIfC3L"
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="KEcU2L6s";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TGEpV4Og"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbgFNDFl (ORCPT
+        id S1726652AbgFNDHz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 23:05:41 -0400
-Received: from mta-p5.oit.umn.edu ([134.84.196.205]:33370 "EHLO
-        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbgFNDFk (ORCPT
+        Sat, 13 Jun 2020 23:07:55 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:35735 "EHLO
+        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726499AbgFNDHz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 23:05:40 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 49kzqQ3dRzz9vYRT
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 03:05:38 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p5.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id dcQVtSrJnP-F for <linux-kernel@vger.kernel.org>;
-        Sat, 13 Jun 2020 22:05:38 -0500 (CDT)
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 49kzqQ1sw0z9vYRS
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 22:05:38 -0500 (CDT)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p5.oit.umn.edu 49kzqQ1sw0z9vYRS
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p5.oit.umn.edu 49kzqQ1sw0z9vYRS
-Received: by mail-io1-f70.google.com with SMTP id v14so8970348iob.11
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 20:05:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6RWcchMQUTnXRjfjU8MBgF+NaxmL7vStwB+9xEzccB8=;
-        b=jLMIfC3LZ8Py+m5+WvjpfVMtIgms+TIjE9xznz3oTHlHIBJPK6CM7jOKCdSCC61UlM
-         siLADkMA/mBmDJSyMe4te30jEuC22gf3CtpjcynC2s9Dx7nqTM8mulR6un1EOuoz0vjC
-         zpSLKTstk5jP9pmgS9JaxjMBlrbaUIhht1611dUyaYpv/cEdes/0U+DnbrWQCOz+zxOP
-         ym4fwA3wOLvT+tklF/ZO1/biKXBih5e0FQb4kxTnriBCq6z45hI+uHQheuT/Y+PsSYGP
-         rbtrry+QcU/9/g7gEvySAgzyye+QjQdkgWp//3aR9zjJxT+pRxQDRIrbbKi3ui8Vt9ex
-         KkZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6RWcchMQUTnXRjfjU8MBgF+NaxmL7vStwB+9xEzccB8=;
-        b=dyYjjFuqh6AM8Z4hYb5hVpDf/umm9qhqqmfAGrI9lL3/jjoOOS4rl8dCd42oFHC1oU
-         Zkq6EvV3K61sM5qyQtEpRgq37473UC2liJpRIVgjcioahhhIHvrAnS+Ne/EVB1W4sPMj
-         EVqXoeAf2LvjXgRBFHSsrFLh72iLCa236zFqGbUbrYrn53ehB+obg4chDAX9J27L8w4q
-         MaO3IM8MWK1kSHSkg3k1bkd8n2W4e6H0zL1Daab4tPQLu7m4ImU4oCDPGfodRQyxb2dS
-         H1ntCV06ClxgSpN4E0aAQOJbmjLV8uhtL6/N8vF7uq8MBx2kEl+NQUoAAGz1enBvC9Da
-         o9Lw==
-X-Gm-Message-State: AOAM533jtP+3wuuaKR3wJFcYEvEGOuw9z0TMyBkWewNp6szfxYh5UoWV
-        PhFGZ/CuO+Yyhn2Fp0e7Y6GxhcxLUjm5HLoC59eyLYDQgOCkI+LMwy2GfCCdrU4+UPaK7AOkAYH
-        Mid0Rgm57ClXg7FQ2PANfiILwBylc
-X-Received: by 2002:a92:7104:: with SMTP id m4mr20895002ilc.87.1592103937847;
-        Sat, 13 Jun 2020 20:05:37 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJy/d2pz6beT8wngqr5vOspHH6/SSx6Djv4sq83HCf0e1WRj4oISMKS0wOWKdfH6MoZQfJ4RDg==
-X-Received: by 2002:a92:7104:: with SMTP id m4mr20894981ilc.87.1592103937588;
-        Sat, 13 Jun 2020 20:05:37 -0700 (PDT)
-Received: from syssec1.cs.umn.edu ([2607:ea00:101:3c74:49fa:9c47:e40b:9c40])
-        by smtp.gmail.com with ESMTPSA id t14sm5501737ilp.73.2020.06.13.20.05.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Jun 2020 20:05:37 -0700 (PDT)
-From:   Aditya Pakki <pakki001@umn.edu>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, wu000273@umn.edu,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Enrico Weigelt <info@metux.net>,
-        "Andrew F. Davis" <afd@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        YueHaibing <yuehaibing@huawei.com>, linux-omap@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Sat, 13 Jun 2020 23:07:55 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailnew.west.internal (Postfix) with ESMTP id E7AD84A2;
+        Sat, 13 Jun 2020 23:07:52 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Sat, 13 Jun 2020 23:07:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
+        rVTXaitnSkKOsrvPXgD4GPCoz8JiwHZXAjq9rig9rYg=; b=KEcU2L6sJVaklxlW
+        ly4adwsoU0jBK+EOoSSsTq6+CKOaXowvcPKf0aXISmGNUW0LksFhkosvOnifDfu+
+        PZG+FX4uyNu3We1xEeBNQJ3z0VLn8BGAJ7StNtvqcS4PWyNuXegbNssG2VAnlC9j
+        pZS9QuikjDTYWQpd3XTbs0fQCdnHOneIVECurAiUGEKCCAZRS9t1sarvpv6926Lv
+        T5VFvlazph9GqI+/wl6/iTYxho6l10nlbPmL3BvtHgFlgKMCj1o/ACHIk5tDJoHm
+        XF5V3NxPwmlonyej1NJx2LPdv1K328yw94HcCzIm6K+KQ7cy+MJRDhbqe5y149+/
+        g9QVKw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=rVTXaitnSkKOsrvPXgD4GPCoz8JiwHZXAjq9rig9r
+        Yg=; b=TGEpV4Og9jfsA7r+RjCnv23FfkIn/3sxhnmH3j9xDi5cnqyVEHyFI3Dbm
+        xojGEebEfw8hY70/4F+KrLYlmp7Uz4GJ7HrFvf8uSP1RJh68jj/QCBU9oR1CumQF
+        mwDZ9CmqiQkqyMx5aLCQ02efEmXJRunJ8xPXK1bJ6cO1s0lYhLBVAhsIZsJ9oZaJ
+        AHC1AosA2cXN5n69gXVuXPJjwZGQ1vgt7VDeYwYXpN8fLJpdN5EWnxKc0UJEVFUY
+        D/yilCxpJfxJXm+9gtqskVryIJEVAO80FI0/kE9E8bs653ODG9PAaahZO7UkL/wl
+        P/lJEeIBXqPCVM6NDGJW3PZ8LO3Lw==
+X-ME-Sender: <xms:h5TlXrN47VIjnvpYDt1eyXdrq3DnyPV_pnqyf1659gacM6f3Ja-sJQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudeigedgjedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepkffuhffvffgjfhgtfggggfesthejredttderjeenucfhrhhomhepkfgrnhcu
+    mfgvnhhtuceorhgrvhgvnhesthhhvghmrgifrdhnvghtqeenucggtffrrghtthgvrhhnpe
+    effeettedvgeduvdevfeevfeettdffudduheeuiefhueevgfevheffledugefgjeenucfk
+    phepheekrdejrddvvddtrdegjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
+X-ME-Proxy: <xmx:h5TlXl9Sh3AqgFvvMfVQwtzxUTnCkpEtv5FmnFHXWxXBB7KmbaLSNg>
+    <xmx:h5TlXqTEk8b_RUqARBhsHqPWg8jBHnwjSq2c8djf3SMJZz8igtqnww>
+    <xmx:h5TlXvt9qROB3b_gmh5oFmhjrlBCq9U9_iM6pVdOjpeZ2luNHDaCDQ>
+    <xmx:iJTlXh3BZUuJwkYXV_cj-Mzzf-CEdSLXHNlvhHM3A3kzixURy582zCRvISE>
+Received: from mickey.themaw.net (58-7-220-47.dyn.iinet.net.au [58.7.220.47])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 062B53280059;
+        Sat, 13 Jun 2020 23:07:45 -0400 (EDT)
+Message-ID: <0991792b6e2af0a5cc1a2c2257b535b5e6b032e4.camel@themaw.net>
+Subject: Re: [PATCH 13/17] watch_queue: Implement mount topology and
+ attribute change notifications [ver #5]
+From:   Ian Kent <raven@themaw.net>
+To:     Miklos Szeredi <miklos@szeredi.hu>,
+        David Howells <dhowells@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>, nicolas.dichtel@6wind.com,
+        Christian Brauner <christian@brauner.io>, andres@anarazel.de,
+        Jeff Layton <jlayton@redhat.com>, dray@redhat.com,
+        Karel Zak <kzak@redhat.com>, keyrings@vger.kernel.org,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        LSM <linux-security-module@vger.kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] omapfb: fix multiple reference count leaks due to pm_runtime_get_sync
-Date:   Sat, 13 Jun 2020 22:05:18 -0500
-Message-Id: <20200614030528.128064-1-pakki001@umn.edu>
-X-Mailer: git-send-email 2.25.1
+Date:   Sun, 14 Jun 2020 11:07:42 +0800
+In-Reply-To: <CAJfpegspWA6oUtdcYvYF=3fij=Bnq03b8VMbU9RNMKc+zzjbag@mail.gmail.com>
+References: <158454378820.2863966.10496767254293183123.stgit@warthog.procyon.org.uk>
+         <158454391302.2863966.1884682840541676280.stgit@warthog.procyon.org.uk>
+         <CAJfpegspWA6oUtdcYvYF=3fij=Bnq03b8VMbU9RNMKc+zzjbag@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On calling pm_runtime_get_sync() the reference count of the device
-is incremented. In case of failure, decrement the
-reference count before returning the error.
+On Thu, 2020-04-02 at 17:19 +0200, Miklos Szeredi wrote:
+> 
+> > Firstly, a watch queue needs to be created:
+> > 
+> >         pipe2(fds, O_NOTIFICATION_PIPE);
+> >         ioctl(fds[1], IOC_WATCH_QUEUE_SET_SIZE, 256);
+> > 
+> > then a notification can be set up to report notifications via that
+> > queue:
+> > 
+> >         struct watch_notification_filter filter = {
+> >                 .nr_filters = 1,
+> >                 .filters = {
+> >                         [0] = {
+> >                                 .type = WATCH_TYPE_MOUNT_NOTIFY,
+> >                                 .subtype_filter[0] = UINT_MAX,
+> >                         },
+> >                 },
+> >         };
+> >         ioctl(fds[1], IOC_WATCH_QUEUE_SET_FILTER, &filter);
+> >         watch_mount(AT_FDCWD, "/", 0, fds[1], 0x02);
+> > 
+> > In this case, it would let me monitor the mount topology subtree
+> > rooted at
+> > "/" for events.  Mount notifications propagate up the tree towards
+> > the
+> > root, so a watch will catch all of the events happening in the
+> > subtree
+> > rooted at the watch.
+> 
+> Does it make sense to watch a single mount?  A set of mounts?   A
+> subtree with an exclusion list (subtrees, types, ???)?
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
----
- drivers/video/fbdev/omap2/omapfb/dss/dispc.c | 7 +++++--
- drivers/video/fbdev/omap2/omapfb/dss/dsi.c   | 7 +++++--
- drivers/video/fbdev/omap2/omapfb/dss/dss.c   | 7 +++++--
- drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c | 5 +++--
- drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c | 5 +++--
- drivers/video/fbdev/omap2/omapfb/dss/venc.c  | 7 +++++--
- 6 files changed, 26 insertions(+), 12 deletions(-)
+Yes, filtering, perhaps, I'm not sure a single mount is useful
+as changes generally need to be monitored for a set of mounts.
 
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dispc.c b/drivers/video/fbdev/omap2/omapfb/dss/dispc.c
-index 4a16798b2ecd..e2b572761bf6 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/dispc.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/dispc.c
-@@ -520,8 +520,11 @@ int dispc_runtime_get(void)
- 	DSSDBG("dispc_runtime_get\n");
- 
- 	r = pm_runtime_get_sync(&dispc.pdev->dev);
--	WARN_ON(r < 0);
--	return r < 0 ? r : 0;
-+	if (WARN_ON(r < 0)) {
-+		pm_runtime_put_sync(&dispc.pdev->dev);
-+		return r;
-+	}
-+	return 0;
- }
- EXPORT_SYMBOL(dispc_runtime_get);
- 
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dsi.c b/drivers/video/fbdev/omap2/omapfb/dss/dsi.c
-index d620376216e1..6f9c25fec994 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/dsi.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/dsi.c
-@@ -1137,8 +1137,11 @@ static int dsi_runtime_get(struct platform_device *dsidev)
- 	DSSDBG("dsi_runtime_get\n");
- 
- 	r = pm_runtime_get_sync(&dsi->pdev->dev);
--	WARN_ON(r < 0);
--	return r < 0 ? r : 0;
-+	if (WARN_ON(r < 0)) {
-+		pm_runtime_put_sync(&dsi->pdev->dev);
-+		return r;
-+	}
-+	return 0;
- }
- 
- static void dsi_runtime_put(struct platform_device *dsidev)
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dss.c b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
-index 7252d22dd117..3586579c838f 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/dss.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
-@@ -768,8 +768,11 @@ int dss_runtime_get(void)
- 	DSSDBG("dss_runtime_get\n");
- 
- 	r = pm_runtime_get_sync(&dss.pdev->dev);
--	WARN_ON(r < 0);
--	return r < 0 ? r : 0;
-+	if (WARN_ON(r < 0)) {
-+		pm_runtime_put_sync(&dss.pdev->dev);
-+		return r;
-+	}
-+	return 0;
- }
- 
- void dss_runtime_put(void)
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c b/drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c
-index 7060ae56c062..4804aab34298 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c
-@@ -39,9 +39,10 @@ static int hdmi_runtime_get(void)
- 	DSSDBG("hdmi_runtime_get\n");
- 
- 	r = pm_runtime_get_sync(&hdmi.pdev->dev);
--	WARN_ON(r < 0);
--	if (r < 0)
-+	if (WARN_ON(r < 0)) {
-+		pm_runtime_put_sync(&hdmi.pdev->dev);
- 		return r;
-+	}
- 
- 	return 0;
- }
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c b/drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c
-index ac49531e4732..a06b6f1355bd 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c
-@@ -43,9 +43,10 @@ static int hdmi_runtime_get(void)
- 	DSSDBG("hdmi_runtime_get\n");
- 
- 	r = pm_runtime_get_sync(&hdmi.pdev->dev);
--	WARN_ON(r < 0);
--	if (r < 0)
-+	if (WARN_ON(r < 0)) {
-+		pm_runtime_put_sync(&hdmi.pdev->dev);
- 		return r;
-+	}
- 
- 	return 0;
- }
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/venc.c b/drivers/video/fbdev/omap2/omapfb/dss/venc.c
-index d5404d56c922..0b0ad20afd63 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/venc.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/venc.c
-@@ -348,8 +348,11 @@ static int venc_runtime_get(void)
- 	DSSDBG("venc_runtime_get\n");
- 
- 	r = pm_runtime_get_sync(&venc.pdev->dev);
--	WARN_ON(r < 0);
--	return r < 0 ? r : 0;
-+	if (WARN_ON(r < 0)) {
-+		pm_runtime_put_sync(&venc.pdev->dev);
-+		return r;
-+	}
-+	return 0;
- }
- 
- static void venc_runtime_put(void)
--- 
-2.25.1
+Monitoring a subtree is obviously possible because the monitor
+path doesn't need to be "/".
+
+Or am I misunderstanding what your trying to get at.
+
+The notion of filtering types and other things is interesting
+but what I've seen that doesn't fit in the current implementation
+so far probably isn't appropriate for kernel implementation.
+
+There's a special case of acquiring a list of mounts where the
+path is not a mount point itself but you need all mount below
+that path prefix.
+
+In this case you get all mounts, including the mounts of the mount
+containing the path, so you still need to traverse the list to match
+the prefix and that can easily mean the whole list of mounts in the
+system.
+
+Point is it leads to multiple traversals of a larger than needed list
+of mounts, one to get the list of mounts to check, and one to filter
+on the prefix.
+
+I've seen this use case with fsinfo() and that's where it's needed
+although it may be useful to carry it through to notifications as
+well.
+
+While this sounds like it isn't such a big deal it can sometimes
+make a considerable difference to the number of mounts you need
+to traverse when there are a large number of mounts in the system.
+
+I didn't consider it appropriate for kernel implementation but
+since you asked here it is. OTOH were checking for connectedness
+in fsinfo() anyway so maybe this is something that could be done
+without undue overhead.
+
+But that's all I've seen so far.
+
+Ian
 
