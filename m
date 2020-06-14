@@ -2,83 +2,100 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7758C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 00:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93BEEC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 00:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A870F20789
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 00:03:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 701A320789
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 00:33:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CbX/GLJ7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726835AbgFNADr (ORCPT
+        id S1726841AbgFNAdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 20:03:47 -0400
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:43952 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726775AbgFNADp (ORCPT
+        Sat, 13 Jun 2020 20:33:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57116 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbgFNAdN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 20:03:45 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 4C7A927E75;
-        Sat, 13 Jun 2020 20:03:43 -0400 (EDT)
-Date:   Sun, 14 Jun 2020 10:03:31 +1000 (AEST)
-From:   Finn Thain <fthain@telegraphics.com.au>
-To:     Chris Boot <bootc@bootc.net>
-cc:     linuxppc-dev@lists.ozlabs.org, target-devel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux1394-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Nicholas Bellinger <nab@linux-iscsi.org>,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>
-Subject: Re: [PATCH] scsi: target/sbp: remove firewire SBP target driver
-In-Reply-To: <01020172acd3d10f-3964f076-a820-43fc-9494-3f3946e9b7b5-000000@eu-west-1.amazonses.com>
-Message-ID: <alpine.LNX.2.22.394.2006140934520.15@nippy.intranet>
-References: <01020172acd3d10f-3964f076-a820-43fc-9494-3f3946e9b7b5-000000@eu-west-1.amazonses.com>
+        Sat, 13 Jun 2020 20:33:13 -0400
+Received: from mail-qk1-x729.google.com (mail-qk1-x729.google.com [IPv6:2607:f8b0:4864:20::729])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1534FC03E96F;
+        Sat, 13 Jun 2020 17:33:13 -0700 (PDT)
+Received: by mail-qk1-x729.google.com with SMTP id v79so12534537qkb.10;
+        Sat, 13 Jun 2020 17:33:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=C/gN5QvuZVItaz+X97RNteBVgSNHJhCVxtlFAT4qa5c=;
+        b=CbX/GLJ7z6qr63wjT6VYP4YyuT3Kls2y8xO6EiGWtDKETU5lYMcCm9w9aY+bLfCdK5
+         dbVewLJr415Kjzr71SrBhtVb4ZiRAMJnRH4sSo+G5LrRtVaf0aXcCL3OhWuHjPuJ0q6q
+         MD/jq7kwE8SHqKAJsn/R+x3C76/lYxWpMkIT+FVat/YWowmxYTl/qj/bMm3TkpJostHK
+         WUUkzeyfI105AL1bTmDr64F+pEzbo9iacO2ek4d7xPiEYbw7Y+bVmFO1ml/73uimDViS
+         Y6jsORc6JRVfidsa+5QC1WAFKR+Ln51vIsRtfYaJFfKUJBn7jPbza1rSLLEX301Q82Y/
+         YLyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=C/gN5QvuZVItaz+X97RNteBVgSNHJhCVxtlFAT4qa5c=;
+        b=QA9S/Fly07x0RNKw1rkUH+y0TpgdiiFbAe4XNbJgM2BHLZwAB4UzvMeBAg3sXQ1BS5
+         FwAo/PwstpgXNXLPn2lpyzjFaRmHQhG5ocuFwxIUvhC3pstNCBVSmlmHqkTgtV2PxSiy
+         Lp2I3tUStvIKwMrXCOP2leVCm9Ugp3wgJ/mYtUseGXkOBnl2f6KmjSBmG3SMCBgRbz/9
+         MABw/CfX0+OwWMh0gPOoJo/HQCSSkzHvnlwY3GtnZYHalHzFn6QqYbBljeG6tcu0fE51
+         z18dWW1ZYH8bKHuhspVjZ8keDKl6vusjmVFWI7LfL8OKDxjVWSrAxdXMIzYlIRnZckbb
+         fbwQ==
+X-Gm-Message-State: AOAM531BKYkWUyk5WrXDVb55kYicaopylyYcvtEG0ZVS8G/Tw/HPQ37u
+        u6vpY1ePx66nUit75ouz2b8nNpkF
+X-Google-Smtp-Source: ABdhPJwFybvKGT3uSa5VzZxPuDOcoZa7kgVrXzgsap1sI7boInmcBGHtZF0T2/TvZHeySs5NMvbVZg==
+X-Received: by 2002:a37:7ac4:: with SMTP id v187mr9875564qkc.65.1592094791538;
+        Sat, 13 Jun 2020 17:33:11 -0700 (PDT)
+Received: from ?IPv6:2601:284:8202:10b0:c0a6:d168:a4bb:a408? ([2601:284:8202:10b0:c0a6:d168:a4bb:a408])
+        by smtp.googlemail.com with ESMTPSA id 124sm7884475qkm.115.2020.06.13.17.33.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 13 Jun 2020 17:33:11 -0700 (PDT)
+Subject: Re: [RFC,net-next, 0/5] Strict mode for VRF
+To:     Dinesh Dutt <didutt@gmail.com>,
+        Andrea Mayer <andrea.mayer@uniroma2.it>
+Cc:     David Ahern <dsahern@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Shrijeet Mukherjee <shrijeet@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Donald Sharp <sharpd@cumulusnetworks.com>,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        Stefano Salsano <stefano.salsano@uniroma2.it>,
+        Paolo Lungaroni <paolo.lungaroni@cnit.it>,
+        Ahmed Abdelsalam <ahabdels@gmail.com>
+References: <20200612164937.5468-1-andrea.mayer@uniroma2.it>
+ <34a020ef-6024-5253-3e14-be865a7f6de1@gmail.com>
+ <20200614002935.3a371a8be63f9424ffdb745c@uniroma2.it>
+ <3099cf72-d54c-494c-b11a-0131138f6d41@Spark>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <920434b5-f557-2ee3-d64a-6aa08d861297@gmail.com>
+Date:   Sat, 13 Jun 2020 18:33:09 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <3099cf72-d54c-494c-b11a-0131138f6d41@Spark>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 13 Jun 2020, Chris Boot wrote:
-
-> I no longer have the time to maintain this subsystem nor the hardware to
-> test patches with. 
-
-Then why not patch MAINTAINERS, and orphan it, as per usual practice?
-
-$ git log --oneline MAINTAINERS | grep -i orphan
-
-> It also doesn't appear to have any active users so I doubt anyone will 
-> miss it.
+On 6/13/20 4:39 PM, Dinesh Dutt wrote:
+> Understand Andrea. I guess I didn't say it well. What I meant to say was
+> that the strict mode is the default expected behavior in a classical router.
 > 
 
-It's not unusual that any Linux driver written more than 5 years ago 
-"doesn't appear to have any active users".
-
-If a driver has been orphaned and broken in the past, and no-one stepped 
-up to fix it within a reasonable period, removal would make sense. But 
-that's not the case here.
-
-I haven't used this driver for a long time, but I still own PowerMacs with 
-firewire, and I know I'm not the only one.
-
-> Signed-off-by: Chris Boot <bootc@bootc.net>
-> ---
->  MAINTAINERS                     |    9 -
->  drivers/target/Kconfig          |    1 -
->  drivers/target/Makefile         |    1 -
->  drivers/target/sbp/Kconfig      |   12 -
->  drivers/target/sbp/Makefile     |    2 -
->  drivers/target/sbp/sbp_target.c | 2350 -------------------------------
->  drivers/target/sbp/sbp_target.h |  243 ----
->  7 files changed, 2618 deletions(-)
->  delete mode 100644 drivers/target/sbp/Kconfig
->  delete mode 100644 drivers/target/sbp/Makefile
->  delete mode 100644 drivers/target/sbp/sbp_target.c
->  delete mode 100644 drivers/target/sbp/sbp_target.h
-> 
+it has to be off by default for backwards compatibility.
