@@ -7,125 +7,132 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A95C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 02:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DD9C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 02:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56E912074D
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 02:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCADC2074D
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 02:40:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="Hj+qKjLq"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="ns2HOH+9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgFNChK (ORCPT
+        id S1726559AbgFNCkJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 22:37:10 -0400
-Received: from mta-p6.oit.umn.edu ([134.84.196.206]:33848 "EHLO
+        Sat, 13 Jun 2020 22:40:09 -0400
+Received: from mta-p6.oit.umn.edu ([134.84.196.206]:35288 "EHLO
         mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726486AbgFNChI (ORCPT
+        with ESMTP id S1726460AbgFNCkI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 22:37:08 -0400
+        Sat, 13 Jun 2020 22:40:08 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 49kzBW0HCYz9vK04
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 02:37:07 +0000 (UTC)
+        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 49kzG01B1hz9vYTm
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 02:40:08 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at umn.edu
 Received: from mta-p6.oit.umn.edu ([127.0.0.1])
         by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id OP8FBSOVnWMj for <linux-kernel@vger.kernel.org>;
-        Sat, 13 Jun 2020 21:37:06 -0500 (CDT)
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+        with ESMTP id lJZTe4lwBqvm for <linux-kernel@vger.kernel.org>;
+        Sat, 13 Jun 2020 21:40:08 -0500 (CDT)
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 49kzBV5k6Bz9vJyw
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 21:37:06 -0500 (CDT)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p6.oit.umn.edu 49kzBV5k6Bz9vJyw
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p6.oit.umn.edu 49kzBV5k6Bz9vJyw
-Received: by mail-il1-f199.google.com with SMTP id q14so9425056ils.18
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 19:37:06 -0700 (PDT)
+        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 49kzFz6Zggz9vYTj
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 21:40:07 -0500 (CDT)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p6.oit.umn.edu 49kzFz6Zggz9vYTj
+DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p6.oit.umn.edu 49kzFz6Zggz9vYTj
+Received: by mail-il1-f200.google.com with SMTP id l11so9508484ils.11
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 19:40:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=RQEF7X2he2CIvCAF0xeze50vGbmiUj8obcSj3YpGnsc=;
-        b=Hj+qKjLqwxKZdFHcqhGL4RCVKHV6fP3Oer7rzrgPPWYbv35lGkAst5QgPc8y3nLRCp
-         vKVaxl7tk1u8PZMNFAetQYQ6NwzqplGIsXILrLiVUysqIKuvbFEb3y0fL7NeZDA6eBqI
-         pO96/Au+eO/frA1E4LLC+lPvS8hR2UvICjeKU9R3le1ae4tglEaeUVDybiZKisk2cU69
-         JZ8sbETmJsW/DFxNKzIkJXdJ9tsV1lNSfpS/+4EkCHBrpLSK44iXq7e4QFYuFza1Hz8M
-         Zi+3fmlSvQPyovl/+DtnyRguBKLN0yPRjqYUnqP4JoEqzyj84WdoVHPHGf9oZzOLGrVX
-         3bdQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cjw2EDUNWQmlGguDj5XMiD/z/+98wuHl/U5yK7YcmK8=;
+        b=ns2HOH+9IxAgXPEwDFxUkuvCgvyKbVXx7DkZfncXFoBThyQnWFmpyp7tbMmE2iCgl3
+         S8oBix/jeQEYV76MhfEOxw8aDjKpcQVZns4CH4CJG+wGRn1agUmbDRQSXkSBoanvB3Uu
+         ZNI13YKN2eqm+598/batBVlAu1fWzLevA6ZitBI7dygE4QWFsHoep7G62Am6OiqYAKRf
+         M1LjrdBSv7cYkk+/1CruR6B5i2dAqUIgDtWGBH/L/PtG7L8D3j8WH22EB32u00mNdfnv
+         Ykyo0/1PgeM0OC1stJsny8PhrYzxaiZT/v5SMml1qqLOEZYdJe4ofRraXBsAPbpS7Wus
+         nJDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=RQEF7X2he2CIvCAF0xeze50vGbmiUj8obcSj3YpGnsc=;
-        b=jkYFTl9ZuWOjfQJoz8/3SfN2zklv8giaKM5bmaRFoWytUp6x2+RmR42sr6cp3omAsB
-         BJXZBtE69utVOryyF6S6vclUIzK6Qk7M1XzpmtDZ/yIZOudEGnUzkVCVpOp3qTpTDOeL
-         mCtiEiYRQzyNFH6xWupoJ6YvrnMWBg12UPAf2I9ioE/JUeRxi/MtUWbeB7b9RJShdbG/
-         firzKuB37ygixuazQkE7VS0h6rUhLT0CW2ZIYL4wZUC8PuhFpcTR5Xq5YvHvd7iIs79t
-         ZcIlMZLZT/tEUYQMUFKxWcMf3TYBYGKU3Z/X2An/l3GDKGkJlJFBaPD8Fo9Vs50tjTT0
-         /tRw==
-X-Gm-Message-State: AOAM532HvoJbaefFBERI1bRWjuNlxk+Qi+7DKGO4xxHiRrVRmKhSnAqU
-        Dn56h5pfwTqYzS4XIgjyFFttEPm6i5Jd7t700KEQN5HGFiqQruvnuf0Oi4mObXFs77jdkE2sm6Z
-        8l28KXTDJjZTTdgLB7B6E198BUDk3
-X-Received: by 2002:a92:cf09:: with SMTP id c9mr19732355ilo.143.1592102226322;
-        Sat, 13 Jun 2020 19:37:06 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxZ86ckYqx5vk+JKvHiE51xf49YXvXEFvQYRO/7UldKAKo+GnZzsRu2IiSnX8jxysU/4zFyPw==
-X-Received: by 2002:a92:cf09:: with SMTP id c9mr19732342ilo.143.1592102226008;
-        Sat, 13 Jun 2020 19:37:06 -0700 (PDT)
-Received: from qiushi.cs.umn.edu ([2607:ea00:101:3c74:4874:45:bcb4:df60])
-        by smtp.gmail.com with ESMTPSA id 18sm5499967ion.17.2020.06.13.19.37.04
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cjw2EDUNWQmlGguDj5XMiD/z/+98wuHl/U5yK7YcmK8=;
+        b=ATJP7M+OxBPV016dYC6sNAv1O57fjxqkVnRyTTeCy/4Htn1bMUtolZYr3RaVK8L8vO
+         /tmIOATIJleDgM/i28tkRy8/rPCC41QPLUzZ7S6ZlxQC2hyxWxPsfYHUZHdLXu69M4Cg
+         b0NsKZ1hcJZNyD8DxFY+KMgZiCf9LfjbcabRSkMJ/b70Xr2BgwgC0vksQagENybGgUJE
+         bCaygHe91iPQYeN0Alp+HQHKvsHXkkp6oJVZLSCDVw4oFw8X5vzvlaX5LEQaDweao3Gs
+         F8NJ2sARQq/2Y6IdCZqH/RrngizeC+uzBzD+C9UCk3hKwyFzHb7vU+o1ztzJxcybNSlK
+         MUOg==
+X-Gm-Message-State: AOAM532t8hQeY8TCqXXXgb9CRkvePia2AKYYJ3ZrmWOAG7ZquJVY6eGl
+        3awsPLjFk2yqOEtSYs+IZ9UH6frP5lKrVUjrng38q+//mZEX839Kd9olkCJ4BDX0HwCSqzHDtum
+        /bjJrDkh9T6wz9W0dhB9py5IUibOD
+X-Received: by 2002:a92:4852:: with SMTP id v79mr19760138ila.172.1592102407585;
+        Sat, 13 Jun 2020 19:40:07 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzLYZiX+rxdPmvbSe+AhVS/yXl4ftp+Ygbnt1X+F2sUaj6fwZpleI680VBHOfDvc36fjxCtPg==
+X-Received: by 2002:a92:4852:: with SMTP id v79mr19760129ila.172.1592102407398;
+        Sat, 13 Jun 2020 19:40:07 -0700 (PDT)
+Received: from syssec1.cs.umn.edu ([2607:ea00:101:3c74:49fa:9c47:e40b:9c40])
+        by smtp.gmail.com with ESMTPSA id c85sm5869099ilg.41.2020.06.13.19.40.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Jun 2020 19:37:05 -0700 (PDT)
-From:   wu000273@umn.edu
-To:     kjlu@umn.edu
-Cc:     wu000273@umn.edu, Hugues Fruchet <hugues.fruchet@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        linux-media@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] media: stm32-dcmi: Fix a reference count leak
-Date:   Sat, 13 Jun 2020 21:36:59 -0500
-Message-Id: <20200614023659.25979-1-wu000273@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        Sat, 13 Jun 2020 19:40:07 -0700 (PDT)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, wu000273@umn.edu,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/bridge: fix reference count leaks due to pm_runtime_get_sync()
+Date:   Sat, 13 Jun 2020 21:40:05 -0500
+Message-Id: <20200614024005.125578-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+On calling pm_runtime_get_sync() the reference count of the device
+is incremented. In case of failure, decrement the
+reference count before returning the error.
 
-Calling pm_runtime_get_sync increments the counter even in case of
-failure, causing incorrect ref count if pm_runtime_put is not
-called in error handling paths. Thus replace the jump target
-"err_release_buffers" by "err_pm_putw".
-
-Fixes: 152e0bf60219 ("media: stm32-dcmi: add power saving support")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
 ---
- drivers/media/platform/stm32/stm32-dcmi.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/gpu/drm/bridge/cdns-dsi.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
-index b8931490b83b..fd1c41cba52f 100644
---- a/drivers/media/platform/stm32/stm32-dcmi.c
-+++ b/drivers/media/platform/stm32/stm32-dcmi.c
-@@ -733,7 +733,7 @@ static int dcmi_start_streaming(struct vb2_queue *vq, unsigned int count)
- 	if (ret < 0) {
- 		dev_err(dcmi->dev, "%s: Failed to start streaming, cannot get sync (%d)\n",
- 			__func__, ret);
--		goto err_release_buffers;
-+		goto err_pm_put;
- 	}
+diff --git a/drivers/gpu/drm/bridge/cdns-dsi.c b/drivers/gpu/drm/bridge/cdns-dsi.c
+index 69c3892caee5..583cb8547106 100644
+--- a/drivers/gpu/drm/bridge/cdns-dsi.c
++++ b/drivers/gpu/drm/bridge/cdns-dsi.c
+@@ -788,8 +788,10 @@ static void cdns_dsi_bridge_enable(struct drm_bridge *bridge)
+ 	u32 tmp, reg_wakeup, div;
+ 	int nlanes;
  
- 	ret = media_pipeline_start(&dcmi->vdev->entity, &dcmi->pipeline);
-@@ -837,8 +837,6 @@ static int dcmi_start_streaming(struct vb2_queue *vq, unsigned int count)
+-	if (WARN_ON(pm_runtime_get_sync(dsi->base.dev) < 0))
++	if (WARN_ON(pm_runtime_get_sync(dsi->base.dev) < 0)) {
++		pm_runtime_put(dsi->base.dev);
+ 		return;
++	}
  
- err_pm_put:
- 	pm_runtime_put(dcmi->dev);
--
--err_release_buffers:
- 	spin_lock_irq(&dcmi->irqlock);
- 	/*
- 	 * Return all buffers to vb2 in QUEUED state.
+ 	mode = &bridge->encoder->crtc->state->adjusted_mode;
+ 	nlanes = output->dev->lanes;
+@@ -1028,8 +1030,10 @@ static ssize_t cdns_dsi_transfer(struct mipi_dsi_host *host,
+ 	int ret, i, tx_len, rx_len;
+ 
+ 	ret = pm_runtime_get_sync(host->dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put(host->dev);
+ 		return ret;
++	}
+ 
+ 	cdns_dsi_init_link(dsi);
+ 
 -- 
-2.17.1
+2.25.1
 
