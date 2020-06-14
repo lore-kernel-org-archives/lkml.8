@@ -2,111 +2,129 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D876C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 11:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0947C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 11:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E786D20714
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 11:18:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592133529;
-	bh=cxDB1FPumFu9taynLLB3wnJOdrr5+Q2VR1Lx3+78SkI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dS1d+H0m9stqiRm5RhJEnTFyeRN/zsx4GRUqhMR4SRc9wWQtkv6GrIaqEi6K11r7M
-	 0o8fJHT+k38egVu5LOWSmXs4GkTb6KlBmK4+4GbZYWjbJ2keNfuMKthrWpQuyeINvE
-	 mBZ+EP5soYIDEAPd5JBT2wQTZISKNZW+nq2o7vjw=
+	by mail.kernel.org (Postfix) with ESMTP id 748B420714
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 11:27:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="aQLFIt1R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbgFNLSs (ORCPT
+        id S1726992AbgFNL10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 07:18:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43808 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726630AbgFNLSr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 07:18:47 -0400
-Received: from localhost (p5486c990.dip0.t-ipconnect.de [84.134.201.144])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 409E22068E;
-        Sun, 14 Jun 2020 11:18:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592133526;
-        bh=cxDB1FPumFu9taynLLB3wnJOdrr5+Q2VR1Lx3+78SkI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fd3cF66raaUz75ozMNM0fhwFlDNkLm798v31XglLCIAT5UccXlB+LzcHx/CB7sQyy
-         X1F46mLkaBmx5Apb789Hv80eNHn9Ob5T2mOX1yzEHi+SwhvM4Li7YbRcf9hJ9IRQHp
-         uGlH26D6WVEdHZ8XmCAN9JU8TCcokz5yk4jw8F1I=
-Date:   Sun, 14 Jun 2020 13:18:39 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Marc Kleine-Budde <mkl@pengutronix.de>, stable@vger.kernel.org
-Subject: Re: [PATCH 2/2] spi: spi-fsl-dspi: Initialize completion before
- possible interrupt
-Message-ID: <20200614111839.GA1883@ninjato>
-References: <1592132154-20175-1-git-send-email-krzk@kernel.org>
- <1592132154-20175-2-git-send-email-krzk@kernel.org>
- <CA+h21ho_pa0H2MG-aAmUCFj37aYW4es-2V75P4KL-Zjq7qtfRQ@mail.gmail.com>
+        Sun, 14 Jun 2020 07:27:26 -0400
+Received: from dvalin.narfation.org ([213.160.73.56]:38648 "EHLO
+        dvalin.narfation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbgFNL1Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 07:27:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
+        s=20121; t=1592134036;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=x3kIWwfoDmasL/x0ySkxgj1UGDL9LlCfFBJO0KTrbPo=;
+        b=aQLFIt1RQ9rvV25ADjA7pqeWdBu/DRerDhscB4xIJc/q8Oj4D1m2ySivivI9EDgIVcAQPA
+        cyC3dXBhYDerQ2/5i3B9hp7QGrBOvG8LpRxJbNkp3G53UB1yAWlLbIgJLicd0YJQqvdpnO
+        CZGL2mRjHkA1fH6cYNxPcPb0hvd/DSA=
+From:   Sven Eckelmann <sven@narfation.org>
+To:     ath10k@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org,
+        Venkateswara Naralasetty <vnaralas@codeaurora.org>,
+        Markus Theil <markus.theil@tu-ilmenau.de>,
+        John Deere <24601deerej@gmail.com>,
+        Sven Eckelmann <sven@narfation.org>
+Subject: [PATCH v5] ath10k: provide survey info as accumulated data
+Date:   Sun, 14 Jun 2020 13:26:44 +0200
+Message-Id: <20200614112644.27284-1-sven@narfation.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="1yeeQ81UyVL57Vl7"
-Content-Disposition: inline
-In-Reply-To: <CA+h21ho_pa0H2MG-aAmUCFj37aYW4es-2V75P4KL-Zjq7qtfRQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Venkateswara Naralasetty <vnaralas@codeaurora.org>
 
---1yeeQ81UyVL57Vl7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It is expected that the returned counters by .get_survey are monotonic
+increasing. But the data from ath10k gets reset to zero regularly. Channel
+active/busy time are then showing incorrect values (less than previous or
+sometimes zero) for the currently active channel during successive survey
+dump commands.
 
+example:
 
-> > If interrupt fires early, the dspi_interrupt() could complete
-> > (dspi->xfer_done) before its initialization happens.
-> >
-> > Fixes: 4f5ee75ea171 ("spi: spi-fsl-dspi: Replace interruptible wait que=
-ue with a simple completion")
-> > Cc: <stable@vger.kernel.org>
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > ---
->=20
-> Why would an interrupt fire before spi_register_controller, therefore
-> before dspi_transfer_one_message could get called?
+  $ iw dev wlan0 survey dump
+  Survey data from wlan0
+  	frequency:                      5180 MHz [in use]
+  	channel active time:            54995 ms
+  	channel busy time:              432 ms
+  	channel receive time:           0 ms
+  	channel transmit time:          59 ms
+  ...
 
-I don't know this HW, but the generic answer usually is: Bootloader used
-SPI and didn't clean up properly.
+  $ iw dev wlan0 survey dump
+  Survey data from wlan0
+  	frequency:                      5180 MHz [in use]
+  	channel active time:            32592 ms
+  	channel busy time:              254 ms
+  	channel receive time:           0 ms
+  	channel transmit time:          0 ms
+  ...
 
+The correct way to handle this is to use the non-clearing
+WMI_BSS_SURVEY_REQ_TYPE_READ wmi_bss_survey_req_type. The firmware will
+then accumulate the survey data and handle wrap arounds.
 
---1yeeQ81UyVL57Vl7
-Content-Type: application/pgp-signature; name="signature.asc"
+Tested on:
 
------BEGIN PGP SIGNATURE-----
+* QCA9984 hw1.0 firmware 10.4-3.5.3-00057
+* QCA988X hw2.0 firmware 10.2.4-1.0-00047
+* QCA9888 hw2.0 firmware 10.4-3.9.0.2-00024
+* QCA4019 hw1.0 firmware 10.4-3.6-00140
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7mB4sACgkQFA3kzBSg
-KbZD0A//bgaXCsITkWj3QldSdnswEWGMLXHbOZ/hiDQDQhdalBXQfKMBPRoVxp0+
-IS/HwMRd/pzggXGJt7tv6LpmZ+eXx1ARmKxPQZBo/+RDF2qLAxKetkU/kX+MDw5K
-wYXFv7bizFqTwTN6uMDfI44EraCHxTqtgQm9wswDCcDXG+WWCPJ4skdU9h+x/HdL
-mQ5XFfFxEGIetUKsKv2AXxNH9Q06+KF4wsXBSL4E3jQjoaahEj2WNyt+FF21/4X0
-gzhWjxa82acwzHHDXyLhyO9MAJOnwKQxfhsWsxsbHKVWLBLBPtNoXac7M4pLPTqK
-DFREw95DQyb/IAL8eOfBokVlxdSrzQo0IrJPUtmfWN3R3ybvNNUePWvJ6udeTHyL
-Wr+LqmEF0jv7+GvhG4orKqInZlaA23PdEZIPrmBaF3vbdiS6RxDTvn13r7uqGXYD
-3GL8lkWzl2MEn69zuklAPAKqyb5a7QzPQkzOG9I1grXRN5ErEU6z06F+Lvngef83
-VqqvQgQTXL73xsvoXysEkOWoLVp4RfSRi6271H5KO0PTGSs6E8W3quNEEAaKlQsD
-jGlkbJZpVtvbgs0+QS4glIt/zCawe+M81vk1lyq0TRrGObOzin8AKVVngMuk6rJ2
-gebkH6HZC8PQEc/8fxEmnUBHgrTtw5nP8qvsm3d9YkME0eG6Vbs=
-=76dA
------END PGP SIGNATURE-----
+Fixes: fa7937e3d5c2 ("ath10k: update bss channel survey information")
+Signed-off-by: Venkateswara Naralasetty <vnaralas@codeaurora.org>
+Tested-by: Markus Theil <markus.theil@tu-ilmenau.de>
+Tested-by: John Deere <24601deerej@gmail.com>
+[sven@narfation.org: adjust commit message]
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+---
+v5:
+* add additional tested devices
+* restructure commit message
 
---1yeeQ81UyVL57Vl7--
+v4:
+ * updated signed-off-by
+
+v3:
+ * Rebased on TOT and added Tested-by
+
+Everything expect QCA9984 hw1.0 firmware 10.4-3.5.3-00057 was also tested
+by me.
+---
+ drivers/net/wireless/ath/ath10k/mac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
+index 919d15584d4a..77daca67a8e1 100644
+--- a/drivers/net/wireless/ath/ath10k/mac.c
++++ b/drivers/net/wireless/ath/ath10k/mac.c
+@@ -7283,7 +7283,7 @@ ath10k_mac_update_bss_chan_survey(struct ath10k *ar,
+ 				  struct ieee80211_channel *channel)
+ {
+ 	int ret;
+-	enum wmi_bss_survey_req_type type = WMI_BSS_SURVEY_REQ_TYPE_READ_CLEAR;
++	enum wmi_bss_survey_req_type type = WMI_BSS_SURVEY_REQ_TYPE_READ;
+ 
+ 	lockdep_assert_held(&ar->conf_mutex);
+ 
+-- 
+2.20.1
+
