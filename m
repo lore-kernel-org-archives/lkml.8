@@ -2,103 +2,119 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CE1C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 13:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECCA2C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 13:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3541620714
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 13:46:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592142382;
-	bh=QbBE4shFaNYjMdGoSGuJ5GF3khrICZukXMlsb5/RyVI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=p+0R89/wRr8I71W0Oi31M+tkZdgZc3btVpf5n6gAjbqWgj/SJtMM+Klztq+e6+aSd
-	 plKGYO8SHGxVbtabJplcQ3S+3YEhLoSWt8pecbeTQ2HAZv4aVwHB42nQ9bA0dzN4qb
-	 nH4jFHZEC4XyBt7SGhlabpSaBY4FyHDnwksCzj3g=
+	by mail.kernel.org (Postfix) with ESMTP id CBCC720714
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 13:47:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="AC10VTLS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727785AbgFNNqU (ORCPT
+        id S1727814AbgFNNrY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 09:46:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40612 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbgFNNqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 09:46:20 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A248520714;
-        Sun, 14 Jun 2020 13:46:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592142379;
-        bh=QbBE4shFaNYjMdGoSGuJ5GF3khrICZukXMlsb5/RyVI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=wQBJOSnZqLXrDdsCeMpoXkSXLbllgtIQ2WhNeu0o3yve6umC++S3ONi1uoQ7wwW2g
-         y/LPVsobpzxDHY0ycaMlYMWU4k5zNYuN30IbuGsKsSLjDWKE8AUiPxNjqfxI8B12es
-         4F5LxM8htSB3pIj733Xq6NlNsaz72Dz3GyBAnQtw=
-Date:   Sun, 14 Jun 2020 14:46:15 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Syed Nayyar Waris <syednwaris@gmail.com>
-Cc:     William Breathitt Gray <vilhelm.gray@gmail.com>,
-        linux-iio@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 2/3] counter: 104-quad-8: Add lock guards -
- differential encoder
-Message-ID: <20200614144615.3d3dbbee@archlinux>
-In-Reply-To: <CACG_h5qwXxA0EthdCjz3jNbW0Lgtdy7ycCvt8xCHLh8dog-Xqw@mail.gmail.com>
-References: <20200316125006.GA415@syed.domain.name>
-        <20200318021802.GB45571@icarus>
-        <CACG_h5qwXxA0EthdCjz3jNbW0Lgtdy7ycCvt8xCHLh8dog-Xqw@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 14 Jun 2020 09:47:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36758 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbgFNNrX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 09:47:23 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6156CC05BD43
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 06:47:23 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 580AFF9;
+        Sun, 14 Jun 2020 15:47:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1592142437;
+        bh=78M8/Iqg3S3zq/AYzhpfmb4A0g++NPy6J82ruz/ctlk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AC10VTLShWRiPx1ZaBkblj33hHeMqBK2vUYAS/uOxQW9wkYL/5Dv7/ssN/BqJQu7c
+         6zK9jfCUqAHe3ByXr31lHTmFQPcf2SbvwrLn08Hc2fetelZJrZ8UsLIJ3W3/eozyqo
+         dEQ/mOKPq7ZIXAgBOZs33tKtudg/Pi0sWHhKSavo=
+Date:   Sun, 14 Jun 2020 16:46:55 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Aditya Pakki <pakki001@umn.edu>
+Cc:     kjlu@umn.edu, wu000273@umn.edu,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH] drm/bridge: fix reference count leaks due to
+ pm_runtime_get_sync()
+Message-ID: <20200614134655.GA5960@pendragon.ideasonboard.com>
+References: <20200614024005.125578-1-pakki001@umn.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200614024005.125578-1-pakki001@umn.edu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 7 Jun 2020 10:52:57 +0530
-Syed Nayyar Waris <syednwaris@gmail.com> wrote:
+Hi Aditya,
 
-> On Wed, Mar 18, 2020 at 7:48 AM William Breathitt Gray
-> <vilhelm.gray@gmail.com> wrote:
-> >
-> > On Mon, Mar 16, 2020 at 06:20:06PM +0530, Syed Nayyar Waris wrote:  
-> > > Add lock protection from race conditions to 104-quad-8 counter driver
-> > > for differential encoder status code changes. Mutex lock calls used for
-> > > protection.
-> > >
-> > > Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
-> > > ---
-> > > Changes in v5:
-> > >  - Change spin lock calls to mutex lock calls.
-> > >  - Modify the title description.  
-> >
-> > Looks like the Fixes tags were dropped in these last two patches. I
-> > suppose they aren't really necessary though since these features haven't
-> > yet made it out of the IIO tree, so no need to backport these fixes.
-> >
-> > Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>  
+(CC'ing Rafael)
+
+Thank you for the patch.
+
+On Sat, Jun 13, 2020 at 09:40:05PM -0500, Aditya Pakki wrote:
+> On calling pm_runtime_get_sync() the reference count of the device
+> is incremented. In case of failure, decrement the
+> reference count before returning the error.
 > 
-> Adding the 'Fixes' tag:
+> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+
+I've seen lots of similar patches recently. Instead of mass-patching the
+drivers this way, shouldn't pm_runtime_get_sync() (and similar
+functions) decrease the refcount on their failure path ? That would
+require patching drivers that already handle this issue, but I believe
+that would cause less churn, and more importantly, avoid the issue once
+and for good for new code.
+
+> ---
+>  drivers/gpu/drm/bridge/cdns-dsi.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
 > 
-> Fixes: bbef69e088c3 ("counter: 104-quad-8: Support Differential
-> Encoder Cable Status")
-That doesn't seem to be the correct hash upstream though it exists in my
-local tree. I'm not sure quite what happened here (and don't care enough
-to try and figure it out), so I've fixed to match the upstream hash.
+> diff --git a/drivers/gpu/drm/bridge/cdns-dsi.c b/drivers/gpu/drm/bridge/cdns-dsi.c
+> index 69c3892caee5..583cb8547106 100644
+> --- a/drivers/gpu/drm/bridge/cdns-dsi.c
+> +++ b/drivers/gpu/drm/bridge/cdns-dsi.c
+> @@ -788,8 +788,10 @@ static void cdns_dsi_bridge_enable(struct drm_bridge *bridge)
+>  	u32 tmp, reg_wakeup, div;
+>  	int nlanes;
+>  
+> -	if (WARN_ON(pm_runtime_get_sync(dsi->base.dev) < 0))
+> +	if (WARN_ON(pm_runtime_get_sync(dsi->base.dev) < 0)) {
+> +		pm_runtime_put(dsi->base.dev);
+>  		return;
+> +	}
+>  
+>  	mode = &bridge->encoder->crtc->state->adjusted_mode;
+>  	nlanes = output->dev->lanes;
+> @@ -1028,8 +1030,10 @@ static ssize_t cdns_dsi_transfer(struct mipi_dsi_host *host,
+>  	int ret, i, tx_len, rx_len;
+>  
+>  	ret = pm_runtime_get_sync(host->dev);
+> -	if (ret < 0)
+> +	if (ret < 0) {
+> +		pm_runtime_put(host->dev);
+>  		return ret;
+> +	}
+>  
+>  	cdns_dsi_init_link(dsi);
+>  
 
-Applied to the fixes-togreg branch of iio.git.
+-- 
+Regards,
 
-Thanks,
-
-Jonathan
-
-> 
-> Regards
-> Syed Nayyar Waris
-
+Laurent Pinchart
