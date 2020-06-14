@@ -4,164 +4,120 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4156CC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 02:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81BEFC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 02:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C0C82074D
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 02:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6071B20789
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 02:56:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="HxATxqIH"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="fneoPuxj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbgFNCpE (ORCPT
+        id S1726617AbgFNC4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Jun 2020 22:45:04 -0400
-Received: from mta-p8.oit.umn.edu ([134.84.196.208]:58584 "EHLO
-        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbgFNCpE (ORCPT
+        Sat, 13 Jun 2020 22:56:15 -0400
+Received: from mta-p5.oit.umn.edu ([134.84.196.205]:58122 "EHLO
+        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726486AbgFNC4O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Jun 2020 22:45:04 -0400
+        Sat, 13 Jun 2020 22:56:14 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 49kzMf5Z3bz9vBtM
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 02:45:02 +0000 (UTC)
+        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 49kzcX6HxZz9vCCQ
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 02:56:12 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p8.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id NLBgI1kOWvXb for <linux-kernel@vger.kernel.org>;
-        Sat, 13 Jun 2020 21:45:02 -0500 (CDT)
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+Received: from mta-p5.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id xc68N0bDF6tJ for <linux-kernel@vger.kernel.org>;
+        Sat, 13 Jun 2020 21:56:12 -0500 (CDT)
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id 49kzMf3k1Yz9vBtD
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 21:45:02 -0500 (CDT)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p8.oit.umn.edu 49kzMf3k1Yz9vBtD
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p8.oit.umn.edu 49kzMf3k1Yz9vBtD
-Received: by mail-io1-f72.google.com with SMTP id h65so8941361ioa.7
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 19:45:02 -0700 (PDT)
+        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 49kzcX4W8Tz9vC9W
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 21:56:12 -0500 (CDT)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p5.oit.umn.edu 49kzcX4W8Tz9vC9W
+DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p5.oit.umn.edu 49kzcX4W8Tz9vC9W
+Received: by mail-io1-f71.google.com with SMTP id m11so8950280ioj.14
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Jun 2020 19:56:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Rd2VjpzQgkEClsEYtAWgC+2Wg7FwSwBjiaqDtTh+S08=;
-        b=HxATxqIHtlr+96w9P6AFy9iierCYkjOYBhGVkz3bOHlbza7ltvrOv7V9YBSd2Cdc4F
-         Mp74lvOSNbVRm8H9OBgbaNPH5K0Z1kX+gIZV+EU0B5qZUtoFIFOxmp0szGFD0LVl54Ib
-         dSHPMvXjTXyREpnowAy2W3xH2T8Qxc8sJVZgGYaCacFTB+g73KBNIbm1irNW48m4kIGC
-         tWYpBr0VIBPuo6QQRprd4Mos/hh1FDaZwntWslyOw0uLdMETUFEXh90klLlvahGT6gLN
-         FnAlQOhrA+RkXDXbfCYueGuXJttoY2MzilHCnxgO7oCt1VXu1hJFFH8ludppnpMYIJ0H
-         sv+Q==
+        h=from:to:cc:subject:date:message-id;
+        bh=sfUbtD+8UmbRScetzBNuWx8h71Z2ueqfA2qMCF+mkCI=;
+        b=fneoPuxjbgjZ20tPjhKit5n/XkQZsnTeVuP6LXEZhSCquYV74bLpfB86eYpxiqKl1H
+         +bGm2eixLjW8kIj/1StBc/qKKa0B08abqZIUobkVEHl3vw0MYz/pxs7Nz8eICXmHDUUL
+         WzTlZnL5OQ+YEJ+CqZ6JgAkc8Mhux56zzUVAsLzLWE6INlUyXlFaRYOXUXjYsjxFRRKn
+         cXlbK+lcdMRTHOih7Qellu48K1ZaeOJbRWBeMXjKM10ChGYcJQ2jsCRfw0p2ztkfz6lj
+         yhrZ4XH2jabr2SK7PdRjAz1FpKkh47t00lln3p1UYGeETuRiMr8MSwhx+IPsuIaZh6q5
+         vv6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Rd2VjpzQgkEClsEYtAWgC+2Wg7FwSwBjiaqDtTh+S08=;
-        b=mnb4hAN2GhrUpWVC87f3WVnS6TMTPsZUG6iISLdvUvh4d0PW/49xnRE8k+KAu1FJoH
-         nHskMq5KQP4gi3qE1P9KRwLowiN3U+DQRTzRoZ2eiv9WrU+o17stltfKEI4Yvw3Y9xl7
-         F9le/FzlnLVypbCznqcpTXD7oPbvmVQO2z7ZpovFpACYl8h+6Mok7vEqPxbIAaktwxn8
-         Hm7xCQOIOu3SXFDK/Z70qm03BxP+eCa2C0Utw3pKvLynLDUioYMtVCjdu5uxntSQL3CA
-         t8BEapmK1B/8MsdXlWSxHDLlcKV+3vq0nWuot+wIGcwMAWp5DvxnECfB4lFNSx9ZO7az
-         m3ZA==
-X-Gm-Message-State: AOAM532ZjSxVwv5ICVew5SfaJsrDktbPVDImMCIVSvhnVDVenZaIPYdT
-        qu+5G9JtcOxzh+igyFU7QjJ7BCZtoCKH4HDAfbrMZTjWe0btt8Gxw07QHghl0VhzIFqz61M/0fq
-        IaFJJdzRkq37cw4gl3iV4GAEWbs26
-X-Received: by 2002:a02:2444:: with SMTP id q4mr15015783jae.29.1592102701783;
-        Sat, 13 Jun 2020 19:45:01 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxGSBps24otpQFtoYYQPeA7t7P0ZZ1AIxnDyr0Ew5+8uROSBa8DH3IN9OjwWqBGbKM1cjqh5g==
-X-Received: by 2002:a02:2444:: with SMTP id q4mr15015776jae.29.1592102701608;
-        Sat, 13 Jun 2020 19:45:01 -0700 (PDT)
-Received: from syssec1.cs.umn.edu ([2607:ea00:101:3c74:49fa:9c47:e40b:9c40])
-        by smtp.gmail.com with ESMTPSA id 13sm5689192ilg.24.2020.06.13.19.45.00
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=sfUbtD+8UmbRScetzBNuWx8h71Z2ueqfA2qMCF+mkCI=;
+        b=QOtUzoH+0DFSt7jByV6etNqHwJkFdWvypwgaD4Gaxwr3jico0d40siTHtpBiSHE0th
+         QwtB11xfH1/tAvy817KF15HO8IE/1+0M7DBq7cthvztY9W6kzVl83FSkR3PD3aQT4YBG
+         YxtyGtp1JvQAc7WKbNL+4tIocbeR/eLDeVvWvmmR+ikDaPgT42E+uIGzotdhaVzjWs/k
+         JcB4ZoNdXA971TQpaow/GzZuD5xK8Sqt1Fdduilh4fqDOEPBAZ9KYLB/TQRJKLYEikgE
+         Xgz+RxZ+76O/xkEu7cUrmkkLYKy2su9V93sMmF5BHbMKJ5rXdkLN9XwA8Nh+rJfYx01i
+         j4fQ==
+X-Gm-Message-State: AOAM530g9iwRox7p4cd+A47IRBgbQurD+599j3PbmhoDW3CXc0Hcy3K/
+        ubskuZ40LdSgoM89lY1ZKnH3IF4pxqDjCV8XAd/O3TTokVPN1/XzTrl+mIGBsqF6iNdY5vh4S5i
+        PQtfUVURhe92a+VDOwbKGUgVkQDml
+X-Received: by 2002:a92:d5c3:: with SMTP id d3mr20318750ilq.51.1592103372127;
+        Sat, 13 Jun 2020 19:56:12 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxT40lgbxZYXXfJLRdJt0H2oqsZMfaaWEzQECLPWBqB3tSO1dB9XwzkOS3idy+ANAfqNQG7Uw==
+X-Received: by 2002:a92:d5c3:: with SMTP id d3mr20318737ilq.51.1592103371890;
+        Sat, 13 Jun 2020 19:56:11 -0700 (PDT)
+Received: from qiushi.cs.umn.edu ([2607:ea00:101:3c74:4874:45:bcb4:df60])
+        by smtp.gmail.com with ESMTPSA id l16sm5565374ilm.58.2020.06.13.19.56.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Jun 2020 19:45:01 -0700 (PDT)
-From:   Aditya Pakki <pakki001@umn.edu>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, wu000273@umn.edu, Eric Anholt <eric@anholt.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/v3d: fix reference count leaks due to pm_runtime_get_sync
-Date:   Sat, 13 Jun 2020 21:44:59 -0500
-Message-Id: <20200614024459.126372-1-pakki001@umn.edu>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sat, 13 Jun 2020 19:56:10 -0700 (PDT)
+From:   wu000273@umn.edu
+To:     kjlu@umn.edu
+Cc:     wu000273@umn.edu, Benoit Parrot <bparrot@ti.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Archit Taneja <archit@ti.com>,
+        Kamil Debski <k.debski@samsung.com>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] media: ti-vpe: Fix a missing check and reference count leak
+Date:   Sat, 13 Jun 2020 21:56:05 -0500
+Message-Id: <20200614025605.27728-1-wu000273@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On calling pm_runtime_get_sync() the reference count of the device
-is incremented. In case of failure, decrement the
-reference count before returning the error.
+From: Qiushi Wu <wu000273@umn.edu>
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+pm_runtime_get_sync() increments the runtime PM usage counter even
+when it returns an error code, causing incorrect ref count if
+pm_runtime_put_noidle() is not called in error handling paths.
+And also, when the call of function vpe_runtime_get() failed,
+we won't call vpe_runtime_put().
+Thus call pm_runtime_put_noidle() if pm_runtime_get_sync() fails
+inside vpe_runtime_get().
+
+Fixes: 4571912743ac ("[media] v4l: ti-vpe: Add VPE mem to mem driver")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
 ---
- drivers/gpu/drm/v3d/v3d_debugfs.c | 8 ++++++--
- drivers/gpu/drm/v3d/v3d_drv.c     | 4 +++-
- drivers/gpu/drm/v3d/v3d_gem.c     | 4 +++-
- 3 files changed, 12 insertions(+), 4 deletions(-)
+ drivers/media/platform/ti-vpe/vpe.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/v3d/v3d_debugfs.c b/drivers/gpu/drm/v3d/v3d_debugfs.c
-index e76b24bb8828..7ceb945e3a31 100644
---- a/drivers/gpu/drm/v3d/v3d_debugfs.c
-+++ b/drivers/gpu/drm/v3d/v3d_debugfs.c
-@@ -133,8 +133,10 @@ static int v3d_v3d_debugfs_ident(struct seq_file *m, void *unused)
- 	int ret, core;
+diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
+index cff2fcd6d812..82d3ee45e2e9 100644
+--- a/drivers/media/platform/ti-vpe/vpe.c
++++ b/drivers/media/platform/ti-vpe/vpe.c
+@@ -2475,6 +2475,8 @@ static int vpe_runtime_get(struct platform_device *pdev)
  
- 	ret = pm_runtime_get_sync(v3d->drm.dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_autosuspend(v3d->drm.dev);
- 		return ret;
-+	}
- 
- 	ident0 = V3D_READ(V3D_HUB_IDENT0);
- 	ident1 = V3D_READ(V3D_HUB_IDENT1);
-@@ -220,8 +222,10 @@ static int v3d_measure_clock(struct seq_file *m, void *unused)
- 	int ret;
- 
- 	ret = pm_runtime_get_sync(v3d->drm.dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_autosuspend(v3d->drm.dev);
- 		return ret;
-+	}
- 
- 	if (v3d->ver >= 40) {
- 		V3D_CORE_WRITE(core, V3D_V4_PCTR_0_SRC_0_3,
-diff --git a/drivers/gpu/drm/v3d/v3d_drv.c b/drivers/gpu/drm/v3d/v3d_drv.c
-index 82a7dfdd14c2..9b0a60b0bc11 100644
---- a/drivers/gpu/drm/v3d/v3d_drv.c
-+++ b/drivers/gpu/drm/v3d/v3d_drv.c
-@@ -106,8 +106,10 @@ static int v3d_get_param_ioctl(struct drm_device *dev, void *data,
- 			return -EINVAL;
- 
- 		ret = pm_runtime_get_sync(v3d->drm.dev);
--		if (ret < 0)
-+		if (ret < 0) {
-+			pm_runtime_put_autosuspend(v3d->drm.dev);
- 			return ret;
-+		}
- 		if (args->param >= DRM_V3D_PARAM_V3D_CORE0_IDENT0 &&
- 		    args->param <= DRM_V3D_PARAM_V3D_CORE0_IDENT2) {
- 			args->value = V3D_CORE_READ(0, offset);
-diff --git a/drivers/gpu/drm/v3d/v3d_gem.c b/drivers/gpu/drm/v3d/v3d_gem.c
-index 09a7639cf161..f2980632896a 100644
---- a/drivers/gpu/drm/v3d/v3d_gem.c
-+++ b/drivers/gpu/drm/v3d/v3d_gem.c
-@@ -440,8 +440,10 @@ v3d_job_init(struct v3d_dev *v3d, struct drm_file *file_priv,
- 	job->free = free;
- 
- 	ret = pm_runtime_get_sync(v3d->drm.dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_autosuspend(v3d->drm.dev);
- 		return ret;
-+	}
- 
- 	xa_init_flags(&job->deps, XA_FLAGS_ALLOC);
+ 	r = pm_runtime_get_sync(&pdev->dev);
+ 	WARN_ON(r < 0);
++	if (r)
++		pm_runtime_put_noidle(&pdev->dev);
+ 	return r < 0 ? r : 0;
+ }
  
 -- 
-2.25.1
+2.17.1
 
