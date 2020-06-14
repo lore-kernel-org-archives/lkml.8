@@ -2,93 +2,101 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B460C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 13:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0537AC433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 13:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A83C20714
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 13:48:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC74D20747
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 13:50:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592142539;
-	bh=5yoevXJYRCKuuT/+Y41FJCPGaXa/Sd/Ms5zHdVfivDY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Ofr8M4N3dmqkilY9xQAIubZlYEFNfML1ffKki6VhHWQgwUst8x6+6omoKIjh3eDQ+
-	 b7twjQUjKCP81zxjBrYLBPZTIp0ddoyNGTtcCZ7xyr/r1VgZZP06v5glOQRIKLLNCS
-	 6UyNS+bdph2TK6F0EbacMHGcmWuJdlA7m9WiHg8M=
+	s=default; t=1592142625;
+	bh=mHHWS5Ej2gJwnTvcmppx1EhA+NuE7bzgO9ms3xfrNhw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=QslQC3QZWxEHI+6pl6WYx45c0nT7TWPPyplcpGVFSarnF71410Pv9UzKhm5hnWzwH
+	 unGrxGMbiSw+QvnPlF19OEcXvhqh+tIvaqMvSnaqsR1B0lRoBGHO/b1ScGwzuVOuRq
+	 LK4AehEeMAjIU893hbEIz3k3AO4xhcMomZU7A18Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbgFNNs6 (ORCPT
+        id S1727825AbgFNNuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 09:48:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41746 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbgFNNs5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 09:48:57 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91FB020714;
-        Sun, 14 Jun 2020 13:48:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592142537;
-        bh=5yoevXJYRCKuuT/+Y41FJCPGaXa/Sd/Ms5zHdVfivDY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=u9b3/yOXFoCOL4soH+aqaYi21GRCuVWErv8RzkUPZFfP+37iqAN5zxz4I0TR4CRgB
-         s+HTRlRJcizoUJsIj03aKt9FfYrnCjv5CNJ33ddQmdJATdYuDT43tWEcEap1kejj61
-         K3K3yCxDBJ3COXC+7HbI85DRelr8/FGpVaKArBl8=
-Date:   Sun, 14 Jun 2020 14:48:53 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Syed Nayyar Waris <syednwaris@gmail.com>
-Cc:     William Breathitt Gray <vilhelm.gray@gmail.com>,
-        linux-iio@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 3/3] counter: 104-quad-8: Add lock guards - filter
- clock prescaler
-Message-ID: <20200614144853.0515cddf@archlinux>
-In-Reply-To: <CACG_h5qvKvs1VdEYBwrcStfoqM16AvGVDhWp_AOeC3Xc3-dL-w@mail.gmail.com>
-References: <20200316125046.GA447@syed.domain.name>
-        <20200318021853.GC45571@icarus>
-        <CACG_h5qvKvs1VdEYBwrcStfoqM16AvGVDhWp_AOeC3Xc3-dL-w@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 14 Jun 2020 09:50:24 -0400
+Received: from mail-oo1-f53.google.com ([209.85.161.53]:43150 "EHLO
+        mail-oo1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727044AbgFNNuY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 09:50:24 -0400
+Received: by mail-oo1-f53.google.com with SMTP id i4so113298ooj.10;
+        Sun, 14 Jun 2020 06:50:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RuiMPD/925GRUxPIwh/HAFgyStseOa7F2neLPlWYn2M=;
+        b=XhMDUcz/HYfUzDKB2ncaGtD6418+PLhlwYfgSS7RBe/u2hOS/f5H/GDY24me0JE6a3
+         Ai2tTl6aq4OCs54d0bTiVVM6qof/DzlunQrp4pZUF9ykRKBNiddZ6xhtzlg1uZQ0NEJl
+         yuTQ+qHO0t9XPSPiCxmUBCgbkk3w2vC/YOx5nIKmMXiSK29Iv7PG/9DAPixbkzFs64L6
+         9ey+iIqCoQL7uwkdOOgHOEE2yrHsJDn99CdO7isPj8UW82gIy4CD0rTg0pe9KG9vs18C
+         CFwzPoIzw5S10qUcMpQmiY/4R2O7FQ7/dPe/lhIkHF8ocuFNXaPIzrLjXPsUzXK0OeGy
+         hD1Q==
+X-Gm-Message-State: AOAM5323FMl+VDkO5AE1YGMGOpnLa9bdynFGbwxSRCDry+ni9R/p6FXI
+        92XqBOl7xbe4ym7/L22Ypn2tLbHm7yw5xvGs8XVMZdy1
+X-Google-Smtp-Source: ABdhPJzqVXu3vZeyVx1Kak6I0WdkwzIvuP8xTo0QW9K5ObbGwLsZAg3/DTHY2haRqgzA7QEnnq4LD9MXtNB2Qx0IpmY=
+X-Received: by 2002:a4a:5744:: with SMTP id u65mr17737133ooa.1.1592142623019;
+ Sun, 14 Jun 2020 06:50:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200614090751.GA2878@kunai>
+In-Reply-To: <20200614090751.GA2878@kunai>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Sun, 14 Jun 2020 15:50:11 +0200
+Message-ID: <CAJZ5v0g0qJDrEvRrxEboc1Bs_9dgqpV47rFOZrJQLvOS44nAXg@mail.gmail.com>
+Subject: Re: RFC: a failing pm_runtime_get increases the refcnt?
+To:     Wolfram Sang <wsa@kernel.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 7 Jun 2020 10:55:08 +0530
-Syed Nayyar Waris <syednwaris@gmail.com> wrote:
+On Sun, Jun 14, 2020 at 11:08 AM Wolfram Sang <wsa@kernel.org> wrote:
+>
+> Hi Linux-PM,
+>
+> both in the I2C subsystem and also for Renesas drivers I maintain, I am
+> starting to get boilerplate patches doing some pm_runtime_put_* variant
+> because a failing pm_runtime_get is supposed to increase the ref
+> counters? Really?
 
-> On Wed, Mar 18, 2020 at 7:48 AM William Breathitt Gray
-> <vilhelm.gray@gmail.com> wrote:
-> >
-> > On Mon, Mar 16, 2020 at 06:20:46PM +0530, Syed Nayyar Waris wrote:  
-> > > Add lock protection from race conditions to the 104-quad-8 counter
-> > > driver for filter clock prescaler code changes. Mutex calls used for
-> > > protection.
-> > >
-> > > Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
-> > > ---
-> > > Changes in v5:
-> > >  - Change spin lock calls to mutex lock calls.
-> > >  - Modify the title description.  
-> >
-> > Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>  
-> 
-> Adding the 'Fixes' tag:
-> 
-> Fixes: 9b74dddf79be ("counter: 104-quad-8: Support Filter Clock Prescaler")
-Replace hash with upstream one and applied to the fixes-togreg branch of iio.git
-Thanks,
+Yes.  Really.
 
-Jonathan
+pm_runtime_get*() have been doing this forever, because the majority
+of their users do something like
 
-> 
-> Regards
-> Syed Nayyar Waris
+pm_runtime_get*()
 
+...
+
+pm_runtime_put*()
+
+without checking the return values and they don't need to worry about
+the refcounts, which wouldn't be possible otherwise.
+
+> This feels wrong and unintuitive to me. I expect there
+> has been a discussion around it but I couldn't find it. I wonder why we
+> don't fix the code where the incremented refcount is expected for some
+> reason.
+>
+> Can I have some pointers please?
+
+The behavior is actually documented in
+Documentation/power/runtime_pm.rst and I'm working on kerneldoc
+comments for runtime PM functions in general to make it a bit more
+clear.
+
+Cheers!
