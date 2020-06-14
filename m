@@ -2,123 +2,102 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E26D9C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 07:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A816FC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 07:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0E6320714
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 07:09:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F2632053B
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 07:10:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Si+mBzty"
+	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="g8wTcgSE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbgFNHJ4 (ORCPT
+        id S1726786AbgFNHKf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 03:09:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60920 "EHLO
+        Sun, 14 Jun 2020 03:10:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725265AbgFNHJz (ORCPT
+        with ESMTP id S1726617AbgFNHKf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 03:09:55 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E97BC03E96F
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 00:09:55 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id r77so14546910ior.3
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 00:09:55 -0700 (PDT)
+        Sun, 14 Jun 2020 03:10:35 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3177BC03E96F
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 00:10:34 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id ga6so5430608pjb.1
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 00:10:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=VPVqWxYm5OyjOv331996CGH9YiPFKfJycn9OwXQfzdE=;
-        b=Si+mBztyXLpNw+lq5vPMpNGKP0EI+ykD3vuqlK8ZNIb6UkkFhoAM75WVjN+g8jSLhX
-         hIJJyaxEmiWwfH5wcCzyDLENdFDvHBlpi1xEwIQ+owxGEDnzX+6UCXw2KWm0RXCVZ8xl
-         LHMyFNVk/L/xf9JlK3iCt3bsP6NN2NR0TYct1K5D9kz23w5XWNCx7UNHpAnA8vWbr1bO
-         h/L769+gQ5P8lKjDPBVsZPQ9y04jqz/kxNXDWf4GQb/M9XwDh944S2JfO/qTQRhvkxcQ
-         fx+jW6EaXGWkKxT8IanPZXM4TtDgFUJrWisoD06Gd19DB3bNP+utRmrfnc9BT4uoeyY9
-         oTOA==
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ryP8cAu4wXnxt+VFYVN54rpFGELZrqJgme1cG9J5OqU=;
+        b=g8wTcgSEiMfnC3eceuFg8o2iLz2trcVbGEeT5fDXa+nd4+w3H8KMZ08t2JmyGvh6H4
+         Hk0GhdgsHbLVd9wSbqTqa43AcP0r3owR8zakL7PR1XpCriBPPKKipezk2LW4Jz2VIOW1
+         ui07vW5/tqW/yCqVJFOO4pM8MRePhCsFSJMMI5hVYsEbuy+jOc91F97aJFkQE2qVjWUs
+         qUNlZ+lPtmtQTurxPTCnOX7rE1b76M2eNAH70O3qltXCWU4L4HO9E9gHePYZpiQ/3VLY
+         qOzDN5numvZJHGIS4miCsRa3aPyFC67LO+u7g8xrNRkjLDzEsTpYiglDUw9ALwdfQ1lI
+         YBXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=VPVqWxYm5OyjOv331996CGH9YiPFKfJycn9OwXQfzdE=;
-        b=Cd+6apZ13h4J4gzVeBIz2vXHmNcgQjt6KyyTu1qup+hJCu5ahS0LjwOXHur+d1L2of
-         KLvOeiVufLXeov9bSg4O+40Ds+9TQjA7JXc6ZjqovSIJnbQLTyhIExtsJbDaN/Row3Wz
-         o/vcbtT1V9PdkLfDWve8DdRDI2/gAZhzXpXNHhuMbUzsdLVaaWxZ/q4QemiMNmdfvBRp
-         /HOVgeBwVmCVKOLPFOJziQSV0SeiRb7L2snKHMaqOqoxBGoGkOR8my9rS6gqt3cE5JII
-         oM72B9GSQ0PvmwTjKrHKBPetQ/1xZXwFPv3UlUF3mKVt/NmGKE7m9lOMC4nJSSeztuCO
-         +oRw==
-X-Gm-Message-State: AOAM531tUmDcEts7XK3UepE3Y5+w+vbSNGA2lchJWXMfB42cQwCJJkpE
-        3S1fXOTm7nL0Ew6c4EGsBlw=
-X-Google-Smtp-Source: ABdhPJzvR4Y9Cg+Ilsim0VN1KWZMeO3R6+hDT2mOL+p/Qnv2PztUdKChVka4CMmVHQj6eU5oQ3nwIA==
-X-Received: by 2002:a05:6602:5ce:: with SMTP id w14mr21839589iox.178.1592118594249;
-        Sun, 14 Jun 2020 00:09:54 -0700 (PDT)
-Received: from cs-u-kase.dtc.umn.edu (cs-u-kase.cs.umn.edu. [160.94.64.2])
-        by smtp.googlemail.com with ESMTPSA id v11sm5944048ile.61.2020.06.14.00.09.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Jun 2020 00:09:53 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-To:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
-        Lyude Paul <lyude@redhat.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Shirish S <shirish.s@amd.com>, yu kuai <yukuai3@huawei.com>,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu
-Subject: [PATCH] drm/amdgpu: fix ref count leak in amdgpu_display_crtc_set_config
-Date:   Sun, 14 Jun 2020 02:09:44 -0500
-Message-Id: <20200614070946.65770-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ryP8cAu4wXnxt+VFYVN54rpFGELZrqJgme1cG9J5OqU=;
+        b=CUaR+ZNTVzCJOaF5pYr8FCpcp2/Vk9hK0Alh3FAtRrh5IosUi0SPgshsu5M3lLEmvs
+         VsChFPWqbCEN6iv03izjPKKCSRD65sYoZRjoc/aLtrWDCRffxdZ0qlAWtq4sHF0bHjnu
+         oJrhmN91Dm1g/zbnZvWyoZOuhtCazQq31nEDoYVSWp7AD7riSK6DwXLKTgdnSVjJBflI
+         ncDk6kEdS40XszFaRjsfrl86R01fumPIF50NLo9rXqDNn0vHxE33WrvbvJ7emnzVv89n
+         UxOUKoVFmKWyYiNGbhtRMXNhYSf1++LXXcumCNiNkKBgxmWDQ7jVOq+jgwTv5r9roKxq
+         2ylQ==
+X-Gm-Message-State: AOAM5334jnMKQEGVWrhkuY7l58rvhUyVxqimQR6dh1GoSOnG9nUAti2c
+        OHFPaUNFj1vOhlbEnmYbb6ds7A==
+X-Google-Smtp-Source: ABdhPJzNVoLlmCiafNPTUNImFxjozsh2/voaziymVaz7SWMkKprBhenAlqpLq+wsa5VwQmkrF+P2QA==
+X-Received: by 2002:a17:90a:32ee:: with SMTP id l101mr6855322pjb.213.1592118633549;
+        Sun, 14 Jun 2020 00:10:33 -0700 (PDT)
+Received: from Smcdef-MBP.lan ([103.136.221.72])
+        by smtp.gmail.com with ESMTPSA id q145sm10483669pfq.128.2020.06.14.00.10.30
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 14 Jun 2020 00:10:33 -0700 (PDT)
+From:   Muchun Song <songmuchun@bytedance.com>
+To:     peterz@infradead.org, tglx@linutronix.de, mingo@kernel.org,
+        bigeasy@linutronix.de, namit@vmware.com
+Cc:     linux-kernel@vger.kernel.org,
+        Muchun Song <songmuchun@bytedance.com>
+Subject: [PATCH] smp: Fix a potential usage of stale nr_cpus
+Date:   Sun, 14 Jun 2020 15:10:20 +0800
+Message-Id: <20200614071020.86037-1-songmuchun@bytedance.com>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-in amdgpu_display_crtc_set_config, the call to pm_runtime_get_sync
-increments the counter even in case of failure, leading to incorrect
-ref count. In case of failure, decrement the ref count before returning.
+The get_option() maybe return 0, it means that the nr_cpus is
+not initialized. Then we will use the stale nr_cpus to initialize
+the nr_cpu_ids. So fix it.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_display.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ kernel/smp.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c
-index f7143d927b6d..5e51f0acf744 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c
-@@ -282,7 +282,7 @@ int amdgpu_display_crtc_set_config(struct drm_mode_set *set,
+diff --git a/kernel/smp.c b/kernel/smp.c
+index 472c2b274c65..2a9a04acf123 100644
+--- a/kernel/smp.c
++++ b/kernel/smp.c
+@@ -634,8 +634,7 @@ static int __init nrcpus(char *str)
+ {
+ 	int nr_cpus;
  
- 	ret = pm_runtime_get_sync(dev->dev);
- 	if (ret < 0)
--		return ret;
-+		goto out;
+-	get_option(&str, &nr_cpus);
+-	if (nr_cpus > 0 && nr_cpus < nr_cpu_ids)
++	if (get_option(&str, &nr_cpus) && nr_cpus > 0 && nr_cpus < nr_cpu_ids)
+ 		nr_cpu_ids = nr_cpus;
  
- 	ret = drm_crtc_helper_set_config(set, ctx);
- 
-@@ -297,7 +297,7 @@ int amdgpu_display_crtc_set_config(struct drm_mode_set *set,
- 	   take the current one */
- 	if (active && !adev->have_disp_power_ref) {
- 		adev->have_disp_power_ref = true;
--		return ret;
-+		goto out;
- 	}
- 	/* if we have no active crtcs, then drop the power ref
- 	   we got before */
-@@ -306,6 +306,7 @@ int amdgpu_display_crtc_set_config(struct drm_mode_set *set,
- 		adev->have_disp_power_ref = false;
- 	}
- 
-+out:
- 	/* drop the power reference we got coming in here */
- 	pm_runtime_put_autosuspend(dev->dev);
- 	return ret;
+ 	return 0;
 -- 
-2.17.1
+2.11.0
 
