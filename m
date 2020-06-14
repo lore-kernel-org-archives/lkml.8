@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93931C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 17:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C56AC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 17:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B12B20776
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 17:23:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46B6420739
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 17:23:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EuuwpiMk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dqy6XNyL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727813AbgFNRXc (ORCPT
+        id S1727823AbgFNRXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 13:23:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41454 "EHLO
+        Sun, 14 Jun 2020 13:23:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727121AbgFNRXX (ORCPT
+        with ESMTP id S1726905AbgFNRXY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 13:23:23 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D43EBC03E969;
-        Sun, 14 Jun 2020 10:23:22 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id w15so8133555lfe.11;
-        Sun, 14 Jun 2020 10:23:22 -0700 (PDT)
+        Sun, 14 Jun 2020 13:23:24 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CCB6C08C5C2;
+        Sun, 14 Jun 2020 10:23:24 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id q19so16427469lji.2;
+        Sun, 14 Jun 2020 10:23:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=AU8aHNXSJicC/3mJ6DI0lDrv2zkNv1iB0kltJtsuQAw=;
-        b=EuuwpiMkbbMKMls8xVM/R+dW4jTSovpLjRK+sPtMRrFMpHoHw/kpM0xivjB5l+3Wu3
-         XcUOjOxZDNoxCm9oFseCYWGMQ4vKztSVSKaiiekr0ZHPjmq71USjRbt3J8TPe3Km7Gqj
-         86xW1PapknQ65as28VSKdVfcrouIaRfG8tcHkG1XO8H0q1TQP2ev6QgYkXmf6yzttsN1
-         3+Qt1QJ4OnQcEEPRzCq/I/qpa7toX5wmOqFyYeMQJA8iqB8HECwkI+b4byv4eW8aSFdx
-         DUVNa2qUVBn5Ue4ihyiX2OKpG5BslNmisbchP8GEm4WR8NFbkSb1bIk8yMxj4seYeMQ+
-         BnOA==
+        bh=a5nZg8KheWIS8ObVaNA2RcCFchGpMXgRR/HHGM1BHBw=;
+        b=Dqy6XNyLSpGzRAK8Mx2BZJwy8mQMfw9cJ4gG2HCuEejoyhoX1igZul80ku4k+6hGxl
+         8UF0ySu37m0omKHX5t0FvsIIflDE1n/SKPlGJyePW22HIzv4iRDLOJPyFfvXBKyjvujP
+         k25eoAezusd38q28urO4RjKuVQX4Rrq0O2LTvI1w/y2EqQ6lXH/S4fguB998BNVhV7Gn
+         dNaOJLhcTmc02Yd91VMo+aIWNUCE6lZ/2duOTdyDWNcS0/HTHIwTcSs+44upBtVIsGOh
+         J37RR8mTcgyTZwF4xdNgqOPk7TPmxB1VvDskyB7acYlPP/eU9hvDbylanZbqTO3PQX/K
+         vQ2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=AU8aHNXSJicC/3mJ6DI0lDrv2zkNv1iB0kltJtsuQAw=;
-        b=eeBSXGKi3DXR/LZf/FiX1GakNu6yNfWK13KXlMNYSgXGJlX3wx6BGj7+egKmpdOo4B
-         zy6HfjhZr5yqUxVCcr8VA55rm5O5Ip+kTn3vIMcibJz3k2f0NuVxJ2p8N13SQ/ZSAzzU
-         auyIIV3tFY1KR/WxUBrUyskPqCKtikPOOAiFraWoF+Z/DNNyh5oHKN/+Gni8LmNaNmP8
-         5Yxz+GUzr4Ixb10sCMm0l9nCY6LvxoPl1wM6fDP1NvLAe3cDiB8TgVSRhHOERTfsd3F8
-         Fyo5JDZdk/lu7zd5dal9zaojMqpTs6hZAkB207Bi/tfC7ikkXjF8mAO5CztyNMe17OXY
-         SAAQ==
-X-Gm-Message-State: AOAM531OAz+w++6CWcD2fL5qXrQ7j2imWHGJEKoKL9PJHsRbj53VV0eD
-        Ay8HmFuRQyLQIx1TDxeaotU=
-X-Google-Smtp-Source: ABdhPJzCKQtPD6hDheFX6eXjxf0eeSg/hLqj0WyObz6WVWCknsTBezAKbLQH2/+sU3UDZqxB0Q3JGg==
-X-Received: by 2002:a19:356:: with SMTP id 83mr11724834lfd.179.1592155399430;
-        Sun, 14 Jun 2020 10:23:19 -0700 (PDT)
+        bh=a5nZg8KheWIS8ObVaNA2RcCFchGpMXgRR/HHGM1BHBw=;
+        b=ope10otpJzB5y1MUcIMzyUyQj53f5ZBWyr/5G7laivYvGLZ8BDLTSX3TGK4kwjU/Zr
+         RkJGlgHew3nYfX/eJcoKsUi8BbouklZnb8KRYioLJkOei+5Lx1MpCQOfGbyLnMeAKyib
+         J4mBBSf8vFLgCU8Ss6+/xteDjCcN8a2eohB5MR7iL/8WoZExkubWgn+yQiZb7D2cYSED
+         RyQq/9XRNu7ftu5PnPp4OKvS8ArgXcPot8i3obD6B7BFaFMfOztCrvEJVyvT+bXNYWx+
+         KvRx84V7WlVlF+k7l9gQmzjU0iySCKi7QuL5jbgNTMWQ1h8DyDHiNeQ/mOP+o2ydcv1Z
+         7t1A==
+X-Gm-Message-State: AOAM533BBdQL9WC36OWtpSFiSnF6oc2tF2IosOM9wzVc/uFH54rLG32R
+        XAQx+1CBEJW0rH05YNzidLw=
+X-Google-Smtp-Source: ABdhPJwSz84D2Xlury2MH6eG3RCGtfat5pMgNh5ZeZ8BdFrpPl/5TrBUHqMqWjoU3cTBnLJPEyUmcw==
+X-Received: by 2002:a2e:b88c:: with SMTP id r12mr11057370ljp.266.1592155402510;
+        Sun, 14 Jun 2020 10:23:22 -0700 (PDT)
 Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.gmail.com with ESMTPSA id m14sm55144lfp.18.2020.06.14.10.23.18
+        by smtp.gmail.com with ESMTPSA id m14sm55144lfp.18.2020.06.14.10.23.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Jun 2020 10:23:18 -0700 (PDT)
+        Sun, 14 Jun 2020 10:23:22 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Sam Ravnborg <sam@ravnborg.org>,
@@ -68,9 +68,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Frank Rowand <frowand.list@gmail.com>
 Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v7 1/6] of_graph: add of_graph_get_local_port()
-Date:   Sun, 14 Jun 2020 20:22:29 +0300
-Message-Id: <20200614172234.8856-2-digetx@gmail.com>
+Subject: [PATCH v7 4/6] drm/tegra: output: Support DRM bridges
+Date:   Sun, 14 Jun 2020 20:22:32 +0300
+Message-Id: <20200614172234.8856-5-digetx@gmail.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200614172234.8856-1-digetx@gmail.com>
 References: <20200614172234.8856-1-digetx@gmail.com>
@@ -81,97 +81,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In some case, like a DRM display code for example, it's useful to silently
-check whether port node exists at all in a device-tree before proceeding
-with parsing the graph.
+Newer Tegra device-trees will specify a video output graph which involves
+a bridge. This patch adds initial support for the DRM bridges to the Tegra
+DRM output.
 
-This patch adds of_graph_get_local_port() which returns pointer to a local
-port node, or NULL if graph isn't specified in a device-tree for a given
-device node.
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/of/property.c    | 32 +++++++++++++++++++++++---------
- include/linux/of_graph.h |  7 +++++++
- 2 files changed, 30 insertions(+), 9 deletions(-)
+ drivers/gpu/drm/tegra/drm.h    |  2 ++
+ drivers/gpu/drm/tegra/output.c | 12 ++++++++++++
+ 2 files changed, 14 insertions(+)
 
-diff --git a/drivers/of/property.c b/drivers/of/property.c
-index 1f2086f4e7ce..05c5f619b8bb 100644
---- a/drivers/of/property.c
-+++ b/drivers/of/property.c
-@@ -608,15 +608,7 @@ struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
- 	 * parent port node.
- 	 */
- 	if (!prev) {
--		struct device_node *node;
--
--		node = of_get_child_by_name(parent, "ports");
--		if (node)
--			parent = node;
--
--		port = of_get_child_by_name(parent, "port");
--		of_node_put(node);
--
-+		port = of_graph_get_local_port(parent);
- 		if (!port) {
- 			pr_err("graph: no port node found in %pOF\n", parent);
- 			return NULL;
-@@ -765,6 +757,28 @@ struct device_node *of_graph_get_remote_port(const struct device_node *node)
- }
- EXPORT_SYMBOL(of_graph_get_remote_port);
+diff --git a/drivers/gpu/drm/tegra/drm.h b/drivers/gpu/drm/tegra/drm.h
+index b25443255be6..f38de08e0c95 100644
+--- a/drivers/gpu/drm/tegra/drm.h
++++ b/drivers/gpu/drm/tegra/drm.h
+@@ -12,6 +12,7 @@
+ #include <linux/gpio/consumer.h>
  
-+/**
-+ * of_graph_get_local_port() - get local port node
-+ * @node: pointer to a local endpoint device_node
-+ *
-+ * Return: First local port node associated with local endpoint node linked
-+ *	   to @node. Use of_node_put() on it when done.
-+ */
-+struct device_node *of_graph_get_local_port(const struct device_node *node)
-+{
-+	struct device_node *ports, *port;
-+
-+	ports = of_get_child_by_name(node, "ports");
-+	if (ports)
-+		node = ports;
-+
-+	port = of_get_child_by_name(node, "port");
-+	of_node_put(ports);
-+
-+	return port;
-+}
-+EXPORT_SYMBOL(of_graph_get_local_port);
-+
- int of_graph_get_endpoint_count(const struct device_node *np)
- {
- 	struct device_node *endpoint;
-diff --git a/include/linux/of_graph.h b/include/linux/of_graph.h
-index 01038a6aade0..1fdeb72c7765 100644
---- a/include/linux/of_graph.h
-+++ b/include/linux/of_graph.h
-@@ -54,6 +54,7 @@ struct device_node *of_graph_get_remote_port_parent(
- struct device_node *of_graph_get_remote_port(const struct device_node *node);
- struct device_node *of_graph_get_remote_node(const struct device_node *node,
- 					     u32 port, u32 endpoint);
-+struct device_node *of_graph_get_local_port(const struct device_node *node);
- #else
+ #include <drm/drm_atomic.h>
++#include <drm/drm_bridge.h>
+ #include <drm/drm_edid.h>
+ #include <drm/drm_encoder.h>
+ #include <drm/drm_fb_helper.h>
+@@ -116,6 +117,7 @@ struct tegra_output {
+ 	struct device_node *of_node;
+ 	struct device *dev;
  
- static inline int of_graph_parse_endpoint(const struct device_node *node,
-@@ -116,6 +117,12 @@ static inline struct device_node *of_graph_get_remote_node(
- 	return NULL;
- }
++	struct drm_bridge *bridge;
+ 	struct drm_panel *panel;
+ 	struct i2c_adapter *ddc;
+ 	const struct edid *edid;
+diff --git a/drivers/gpu/drm/tegra/output.c b/drivers/gpu/drm/tegra/output.c
+index a6a711d54e88..ccd1421f1b24 100644
+--- a/drivers/gpu/drm/tegra/output.c
++++ b/drivers/gpu/drm/tegra/output.c
+@@ -5,6 +5,7 @@
+  */
  
-+static inline struct device_node *of_graph_get_local_port(
-+					const struct device_node *node)
-+{
-+	return NULL;
-+}
+ #include <drm/drm_atomic_helper.h>
++#include <drm/drm_of.h>
+ #include <drm/drm_panel.h>
+ #include <drm/drm_simple_kms_helper.h>
+ 
+@@ -99,8 +100,19 @@ int tegra_output_probe(struct tegra_output *output)
+ 	if (!output->of_node)
+ 		output->of_node = output->dev->of_node;
+ 
++	err = drm_of_find_panel_or_bridge(output->of_node, -1, -1,
++					  &output->panel, &output->bridge);
++	if (err && err != -ENODEV)
++		return err;
 +
- #endif /* CONFIG_OF */
+ 	panel = of_parse_phandle(output->of_node, "nvidia,panel", 0);
+ 	if (panel) {
++		/*
++		 * Don't mix nvidia,panel phandle with the graph in a
++		 * device-tree.
++		 */
++		WARN_ON(output->panel || output->bridge);
++
+ 		output->panel = of_drm_find_panel(panel);
+ 		of_node_put(panel);
  
- #endif /* __LINUX_OF_GRAPH_H */
 -- 
 2.26.0
 
