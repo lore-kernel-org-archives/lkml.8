@@ -2,62 +2,138 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4111C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 23:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E42C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 23:33:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C142206D7
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 23:29:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6651206D7
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 23:33:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LMhTh5pw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728023AbgFNX3A (ORCPT
+        id S1728008AbgFNXdp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 19:29:00 -0400
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:35186 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727928AbgFNX3A (ORCPT
+        Sun, 14 Jun 2020 19:33:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41580 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727928AbgFNXdo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 19:29:00 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by kvm5.telegraphics.com.au (Postfix) with ESMTP id BFEE1272D7;
-        Sun, 14 Jun 2020 19:28:56 -0400 (EDT)
-Date:   Mon, 15 Jun 2020 09:28:56 +1000 (AEST)
-From:   Finn Thain <fthain@telegraphics.com.au>
-To:     Chris Boot <bootc@boo.tc>
-cc:     Chris Boot <bootc@bootc.net>, linuxppc-dev@lists.ozlabs.org,
-        target-devel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux1394-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Nicholas Bellinger <nab@linux-iscsi.org>,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>
-Subject: Re: [PATCH] scsi: target/sbp: remove firewire SBP target driver
-In-Reply-To: <7ad14946-5c25-fc49-1e48-72d37a607832@boo.tc>
-Message-ID: <alpine.LNX.2.22.394.2006150919110.8@nippy.intranet>
-References: <01020172acd3d10f-3964f076-a820-43fc-9494-3f3946e9b7b5-000000@eu-west-1.amazonses.com> <alpine.LNX.2.22.394.2006140934520.15@nippy.intranet> <7ad14946-5c25-fc49-1e48-72d37a607832@boo.tc>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Sun, 14 Jun 2020 19:33:44 -0400
+Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08479C05BD43
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 16:33:43 -0700 (PDT)
+Received: by mail-qv1-xf4a.google.com with SMTP id r15so11813183qvv.5
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 16:33:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=M2MXt5Il/BsNFktk3okT7g4F0dfmoWdEqcRIPAnRbcE=;
+        b=LMhTh5pw/U9JHefpcHbqjU28o+dW5UwGRfLxdZj6h3yircs/tFdPEwuAoVMPym+D2H
+         2nVqctN8LfoUOBk5YighPEV/mCNAC/m1YboG1mSI/PygF7GX0KUSlKJZXLr7d5Tx3yvg
+         rPniKBWfxAa1MuqfBiLu0AOyIGV43+aLyM7wlNDJxTUtDoIkWQrIYz0K0CD+3ow7LZKx
+         ks66+s3dqpIfp8aQCS6H65e7HRt1TqTPDkCz/fqCYsiVgND1dwI88KpYeeUMtEx3pJ0m
+         o8PimNT5CPRZ+qmIpnUfpSd5RG9yRGgZxYxUaZlPQEL0FXkeR3v/oexeUJ1GF1dJMCFQ
+         90Xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=M2MXt5Il/BsNFktk3okT7g4F0dfmoWdEqcRIPAnRbcE=;
+        b=TaN4HT+2JX01RqtTl8DSWjLvtOe1jJmHmMwyTT+KtARSyUOSQ3OX3pzOv0o3XHLPy6
+         MNGOQDGhIzubIjwZ8bTErBYfbQFrMXgKIMMdTVHE7PUc5re4D6Ld+e+uYao203aqFTXn
+         8tExCptAayGQXldMqOSQ5EKhl/VgN0ibz1eYdW1832fQvh9/wus1hz6grqKEAuL0ZLCl
+         aGv9NtKoA0UDHPb1DoA5lqizvYoFeDYQxtHSDUBRqLVdOso1vcaypxdUIOgUuoEHT5tz
+         6d0M2BE3zsdUTn8AM/K4zp+HD7DztkWVN37DjEGezOR4LFnSqnaORu29NDQW1eI9yP3s
+         M/8g==
+X-Gm-Message-State: AOAM533yWlzWU8B8keRMaTwuUryfoxxfiulXfwCfDIKD43k/XOkYQAQI
+        9rJqVg0XQ632IDbx/6+2oP3wbfYYj/7n
+X-Google-Smtp-Source: ABdhPJwcegGqbyBBA1s0w1TiQ5GxpX+dkThjZc32fm5s8iotpcYRgj8qDbwc/HlMdycgbTnpx3KF/RxHIkCj
+X-Received: by 2002:a0c:ee41:: with SMTP id m1mr21625569qvs.95.1592177622244;
+ Sun, 14 Jun 2020 16:33:42 -0700 (PDT)
+Date:   Sun, 14 Jun 2020 16:32:35 -0700
+In-Reply-To: <37af499e-2b8b-7e78-ed4b-0aaf711fcb38@csgroup.eu>
+Message-Id: <20200614233235.121432-1-gthelen@google.com>
+Mime-Version: 1.0
+References: <37af499e-2b8b-7e78-ed4b-0aaf711fcb38@csgroup.eu>
+X-Mailer: git-send-email 2.27.0.290.gba653c62da-goog
+Subject: [PATCH v2] powerpc/powernv/pci: use ifdef to avoid dead code
+From:   Greg Thelen <gthelen@google.com>
+To:     Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "Oliver O'Halloran" <oohall@gmail.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Greg Thelen <gthelen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 14 Jun 2020, Chris Boot wrote:
+Commit dc3d8f85bb57 ("powerpc/powernv/pci: Re-work bus PE
+configuration") removed a couple pnv_ioda_setup_bus_dma() calls.  The
+only remaining calls are behind CONFIG_IOMMU_API.  Thus builds without
+CONFIG_IOMMU_API see:
+  arch/powerpc/platforms/powernv/pci-ioda.c:1888:13: error: 'pnv_ioda_setup_bus_dma' defined but not used
 
-> I expect that if someone finds this useful it can stick around (but 
-> that's not my call).
+Move pnv_ioda_setup_bus_dma() under CONFIG_IOMMU_API to avoid dead code.
 
-Who's call is that? If the patch had said "From: Martin K. Petersen" and 
-"This driver is being removed because it has the following defects..." 
-that would be some indication of a good-faith willingness to accept users 
-as developers in the spirit of the GPL, which is what you seem to be 
-alluding to (?).
+Fixes: dc3d8f85bb57 ("powerpc/powernv/pci: Re-work bus PE configuration")
+Signed-off-by: Greg Thelen <gthelen@google.com>
+---
+ arch/powerpc/platforms/powernv/pci-ioda.c | 26 +++++++++++------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-> I just don't have the time or inclination or hardware to be able to 
-> maintain it anymore, so someone else would have to pick it up.
-> 
+diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+index 73a63efcf855..743d840712da 100644
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -1885,19 +1885,6 @@ static bool pnv_pci_ioda_iommu_bypass_supported(struct pci_dev *pdev,
+ 	return false;
+ }
+ 
+-static void pnv_ioda_setup_bus_dma(struct pnv_ioda_pe *pe, struct pci_bus *bus)
+-{
+-	struct pci_dev *dev;
+-
+-	list_for_each_entry(dev, &bus->devices, bus_list) {
+-		set_iommu_table_base(&dev->dev, pe->table_group.tables[0]);
+-		dev->dev.archdata.dma_offset = pe->tce_bypass_base;
+-
+-		if ((pe->flags & PNV_IODA_PE_BUS_ALL) && dev->subordinate)
+-			pnv_ioda_setup_bus_dma(pe, dev->subordinate);
+-	}
+-}
+-
+ static inline __be64 __iomem *pnv_ioda_get_inval_reg(struct pnv_phb *phb,
+ 						     bool real_mode)
+ {
+@@ -2501,6 +2488,19 @@ static long pnv_pci_ioda2_unset_window(struct iommu_table_group *table_group,
+ #endif
+ 
+ #ifdef CONFIG_IOMMU_API
++static void pnv_ioda_setup_bus_dma(struct pnv_ioda_pe *pe, struct pci_bus *bus)
++{
++	struct pci_dev *dev;
++
++	list_for_each_entry(dev, &bus->devices, bus_list) {
++		set_iommu_table_base(&dev->dev, pe->table_group.tables[0]);
++		dev->dev.archdata.dma_offset = pe->tce_bypass_base;
++
++		if ((pe->flags & PNV_IODA_PE_BUS_ALL) && dev->subordinate)
++			pnv_ioda_setup_bus_dma(pe, dev->subordinate);
++	}
++}
++
+ unsigned long pnv_pci_ioda2_get_table_size(__u32 page_shift,
+ 		__u64 window_size, __u32 levels)
+ {
+-- 
+2.27.0.290.gba653c62da-goog
 
-Which is why most drivers get orphaned, right?
