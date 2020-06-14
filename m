@@ -2,86 +2,155 @@ Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F5B6C433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C6EC433E1
 	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 06:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53F8D20747
+	by mail.kernel.org (Postfix) with ESMTP id 705A42074D
 	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 06:05:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1592114719;
-	bh=gjtaa0VNN3qmgf1nzWIgFU7LxaP664Sux0mY1hwad9U=;
+	bh=2CSDwCSzFnYCIB4Swm1XflYFwYFE1DwSm8DZiH5VAhs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=h1gJSSNI577kCu7vOdQGpD9JECb27JDpNKxh6mg9MGcR8E/eqmzua1CDMz65R7RV1
-	 JuroOGzrB5qIFqyYvG1Ph2fcy2EK/E+RAfbelNaZfTQ5n5uddrbikBQYJwW+XByCCz
-	 ayIY5ap/qrs6se14XTNGARC5hNsMrSRIVf0v68vE=
+	b=cW15BIpLgrqyFfmDZgoR+PWM+281I/v+S17HZDVxuzIEYyRYMmTTTPqmvjPsgpvgD
+	 HV/PdkM666u7aLt6xtU1hbfhByCMhzJStMQQ+PeVa8QnxioMDlEJL+iB7qUJWAWCMn
+	 rqjIuW/3HsK1zR+WoBSRoVW1po8hHTYchRKay+RE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726091AbgFNGEG (ORCPT
+        id S1726542AbgFNGFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 02:04:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38124 "EHLO mail.kernel.org"
+        Sun, 14 Jun 2020 02:05:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725265AbgFNGEG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 02:04:06 -0400
+        id S1725265AbgFNGFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 02:05:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DCFD2068E;
-        Sun, 14 Jun 2020 06:04:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EACD72068E;
+        Sun, 14 Jun 2020 06:05:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592114646;
-        bh=gjtaa0VNN3qmgf1nzWIgFU7LxaP664Sux0mY1hwad9U=;
+        s=default; t=1592114704;
+        bh=2CSDwCSzFnYCIB4Swm1XflYFwYFE1DwSm8DZiH5VAhs=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=g/WYkX3OKj70Bo1wYRWeIfvijunID8FYXL962nn9JUwQO4GcsVykMV6BRcTWuYLIK
-         +HFcuHsMMiCN7oYg9PwLIk9zuHUQkcO4zT4S8/4idvaK4Ger5FD6IfYInHbumF5P0e
-         bIHRVzAsduxwX+JAS8VsNwM1mFr/3W5fKSwbM0RY=
-Date:   Sun, 14 Jun 2020 08:04:01 +0200
+        b=ny5UCHwdApcnokCBTdXFaf8W81qxPwwfMoUizDWdc4hk1khnsFFu242s8gWg2LBnL
+         NbcSXX/Qz90BOZFKIbKeGkAfnjdlPx16AroAv8AuGsA17DOTDChKwppgGzwvldeiRB
+         le2OLPDPpo//8fAVkDlsTYu8lR3OPAd9QVe+yghM=
+Date:   Sun, 14 Jun 2020 08:05:01 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Jim Cromie <jim.cromie@gmail.com>
 Cc:     jbaron@akamai.com, linux-kernel@vger.kernel.org,
-        akpm@linuxfoundation.org, linux@rasmusvillemoes.dk,
-        Jonathan Corbet <corbet@lwn.net>,
-        Will Deacon <will@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Orson Zhai <orson.zhai@unisoc.com>,
-        Petr Mladek <pmladek@suse.com>, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v2 01/24] dyndbg-docs: eschew file /full/path query in
- docs
-Message-ID: <20200614060401.GA2608744@kroah.com>
+        akpm@linuxfoundation.org, linux@rasmusvillemoes.dk
+Subject: Re: [PATCH v2 23/24] kset-example: add pr_debug()s for easy
+ visibility of its operation
+Message-ID: <20200614060501.GB2608744@kroah.com>
 References: <20200613155738.2249399-1-jim.cromie@gmail.com>
- <20200613155738.2249399-2-jim.cromie@gmail.com>
+ <20200613155738.2249399-24-jim.cromie@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200613155738.2249399-2-jim.cromie@gmail.com>
+In-Reply-To: <20200613155738.2249399-24-jim.cromie@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 13, 2020 at 09:57:15AM -0600, Jim Cromie wrote:
-> Regarding:
-> commit 2b6783191da7 ("dynamic_debug: add trim_prefix() to provide source-root relative paths")
-> commit a73619a845d5 ("kbuild: use -fmacro-prefix-map to make __FILE__ a relative path")
+On Sat, Jun 13, 2020 at 09:57:37AM -0600, Jim Cromie wrote:
+> put pr_debug()s into most functions, to easily see code operate when
+> module is loaded and used.
 > 
-> 2nd commit broke dynamic-debug's "file $fullpath" query form, but
-> nobody noticed because 1st commit had trimmed prefixes from
-> control-file output, so the click-copy-pasting of fullpaths into new
-> queries had ceased; that query form became unused.
-> 
-> Removing the function is cleanest, but it could be useful in
-> old-compiler corner cases, where __FILE__ still has /full/path,
-> and it safely does nothing otherwize.
-> 
-> So instead, quietly deprecate "file /full/path" query form, by
-> removing all /full/paths examples in the docs.  I skipped adding a
-> back-compat note.
+>   #> dmesg -w &
+>   #> modprobe kset-example dyndbg=+pfml
+>   #> cat /sys/kernel/kset-example/*/*
 > ---
->  .../admin-guide/dynamic-debug-howto.rst       | 19 +++++++++----------
->  1 file changed, 9 insertions(+), 10 deletions(-)
+>  samples/kobject/kset-example.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/samples/kobject/kset-example.c b/samples/kobject/kset-example.c
+> index c8010f126808..27c9b1beec28 100644
+> --- a/samples/kobject/kset-example.c
+> +++ b/samples/kobject/kset-example.c
+> @@ -56,6 +56,7 @@ static ssize_t foo_attr_show(struct kobject *kobj,
+>  	struct foo_attribute *attribute;
+>  	struct foo_obj *foo;
+>  
+> +	pr_debug("called");
+>  	attribute = to_foo_attr(attr);
+>  	foo = to_foo_obj(kobj);
+>  
+> @@ -76,6 +77,7 @@ static ssize_t foo_attr_store(struct kobject *kobj,
+>  	struct foo_attribute *attribute;
+>  	struct foo_obj *foo;
+>  
+> +	pr_debug("called");
+>  	attribute = to_foo_attr(attr);
+>  	foo = to_foo_obj(kobj);
+>  
+> @@ -102,6 +104,7 @@ static void foo_release(struct kobject *kobj)
+>  {
+>  	struct foo_obj *foo;
+>  
+> +	pr_debug("called");
+>  	foo = to_foo_obj(kobj);
+>  	kfree(foo);
+>  }
+> @@ -112,6 +115,7 @@ static void foo_release(struct kobject *kobj)
+>  static ssize_t foo_show(struct foo_obj *foo_obj, struct foo_attribute *attr,
+>  			char *buf)
+>  {
+> +	pr_debug("called");
+>  	return sprintf(buf, "%d\n", foo_obj->foo);
+>  }
+>  
+> @@ -120,6 +124,7 @@ static ssize_t foo_store(struct foo_obj *foo_obj, struct foo_attribute *attr,
+>  {
+>  	int ret;
+>  
+> +	pr_debug("called");
+>  	ret = kstrtoint(buf, 10, &foo_obj->foo);
+>  	if (ret < 0)
+>  		return ret;
+> @@ -140,6 +145,7 @@ static ssize_t b_show(struct foo_obj *foo_obj, struct foo_attribute *attr,
+>  {
+>  	int var;
+>  
+> +	pr_debug("called");
+>  	if (strcmp(attr->attr.name, "baz") == 0)
+>  		var = foo_obj->baz;
+>  	else
+> @@ -152,6 +158,7 @@ static ssize_t b_store(struct foo_obj *foo_obj, struct foo_attribute *attr,
+>  {
+>  	int var, ret;
+>  
+> +	pr_debug("called");
+>  	ret = kstrtoint(buf, 10, &var);
+>  	if (ret < 0)
+>  		return ret;
+> @@ -201,6 +208,7 @@ static struct foo_obj *create_foo_obj(const char *name)
+>  	struct foo_obj *foo;
+>  	int retval;
+>  
+> +	pr_debug("called");
+>  	/* allocate the memory for the whole object */
+>  	foo = kzalloc(sizeof(*foo), GFP_KERNEL);
+>  	if (!foo)
+> @@ -235,11 +243,13 @@ static struct foo_obj *create_foo_obj(const char *name)
+>  
+>  static void destroy_foo_obj(struct foo_obj *foo)
+>  {
+> +	pr_debug("called");
+>  	kobject_put(&foo->kobj);
+>  }
+>  
+>  static int __init example_init(void)
+>  {
+> +	pr_debug("called");
 
-None of your patches have a signed-off-by line so they can't be applied
-anywhere :(
+Why???  If you want to do something like this, use ftrace, that is what
+it is for.
+
+thanks,
+
+greg k-h
