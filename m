@@ -6,87 +6,75 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2098BC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 21:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4A47C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 21:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07E4D206D7
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 21:08:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9405206D7
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 21:15:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727929AbgFNVIP (ORCPT
+        id S1727894AbgFNVPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 17:08:15 -0400
-Received: from a3.inai.de ([88.198.85.195]:39502 "EHLO a3.inai.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726844AbgFNVIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 17:08:14 -0400
-Received: by a3.inai.de (Postfix, from userid 25121)
-        id 8928C58726429; Sun, 14 Jun 2020 23:08:08 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by a3.inai.de (Postfix) with ESMTP id 70F1D60C2707A;
-        Sun, 14 Jun 2020 23:08:08 +0200 (CEST)
-Date:   Sun, 14 Jun 2020 23:08:08 +0200 (CEST)
-From:   Jan Engelhardt <jengelh@inai.de>
-To:     David Howells <dhowells@redhat.com>
-cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, netdev@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: Re: Good idea to rename files in include/uapi/ ?
-In-Reply-To: <174102.1592165965@warthog.procyon.org.uk>
-Message-ID: <nycvar.YFH.7.77.849.2006142244200.30230@n3.vanv.qr>
-References: <9feded75-4b45-2821-287b-af00ec5f910f@al2klimov.de> <174102.1592165965@warthog.procyon.org.uk>
-User-Agent: Alpine 2.22 (LSU 394 2020-01-19)
+        Sun, 14 Jun 2020 17:15:22 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:46786 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726896AbgFNVPW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 17:15:22 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 6752F1C0BD2; Sun, 14 Jun 2020 23:15:20 +0200 (CEST)
+Date:   Sun, 14 Jun 2020 23:15:19 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     SeongJae Park <sjpark@amazon.com>
+Cc:     akpm@linux-foundation.org, apw@canonical.com, joe@perches.com,
+        colin.king@canonical.com, sj38.park@gmail.com,
+        linux-kernel@vger.kernel.org, SeongJae Park <sjpark@amazon.de>
+Subject: Re: [PATCH v3 0/2] Recommend blocklist/allowlist instead of
+ blacklist/whitelist
+Message-ID: <20200614211519.GA24529@amd>
+References: <20200610065223.29894-1-sjpark@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="3V7upXqbjpZ4EhLz"
+Content-Disposition: inline
+In-Reply-To: <20200610065223.29894-1-sjpark@amazon.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On Sunday 2020-06-14 22:19, David Howells wrote:
->Alexander A. Klimov <grandmaster@al2klimov.de> wrote:
->
->> *Is it a good idea to rename files in include/uapi/ ?*
->
->Very likely not.  If programs out there are going to be built on a
->case-sensitive filesystem (which happens all the time), they're going to break
->if you rename the headers.  We're kind of stuck with them.
+--3V7upXqbjpZ4EhLz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Netfilter has precedent for removing old headers, e.g.
-7200135bc1e61f1437dc326ae2ef2f310c50b4eb's ipt_ULOG.h.
+On Wed 2020-06-10 08:52:21, SeongJae Park wrote:
+> From: SeongJae Park <sjpark@amazon.de>
+>=20
+> This patchset 1) adds support of deprecated terms in the 'checkpatch.pl'
+> and 2) set the 'blacklist' and 'whitelist' as deprecated with
+> replacement suggestion of 'blocklist' and 'allowlist', because the
+> suggestions are incontrovertible, doesn't make people hurt, and more
+> self-explanatory.
 
-Even if kernels would not remove such headers, the iptables userspace
-code wants to be buildable with all kinds of kernels, including past
-releases, which do not have modern headers like xt_l2tp.h.
+I don't think this is good idea.
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-The mantra for userspace programs is therefore "copy the headers" —
-because you never know what /usr/include/linux you get. iptables and
-iproute2 are two example codebases that employ this. And when headers
-do get copied, header removals from the kernel side are no longer a
-big deal either.
+--3V7upXqbjpZ4EhLz
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-A header file rename is no problem. We even have dummy headers
-already because of this... or related changes. Just look at
-xt_MARK.h, all it does is include xt_mark.h. Cf.
-28b949885f80efb87d7cebdcf879c99db12c37bd .
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-The boilerplate for xt_*h is quite high thanks to the miniscule
-splitting of headers. Does not feel right in this day and age.
+iEYEARECAAYFAl7mk2cACgkQMOfwapXb+vLdagCeOR5JKISvWfny5Q5LH9Mf+/9D
+bTUAn2juu4+GYlwTPt3BzAFFY/e08oeD
+=APHk
+-----END PGP SIGNATURE-----
+
+--3V7upXqbjpZ4EhLz--
