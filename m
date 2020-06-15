@@ -4,168 +4,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF557C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EBEEC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF0A620738
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1175120739
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:47:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592203673;
-	bh=fv0MzJ8bIKCwSrIThq9x0hNnlzQ27eGxPFmXO+dIS00=;
+	s=default; t=1592203676;
+	bh=UimGleFre7cAJ8h9wRRa31WiMBn6i+AWxCHOyITNml4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N67uzLGfkAbcsgS7H4s63+IIw+53N11jNRPyk2ag0qgXOT5Oq1nRm407tEI+r4gvk
-	 gA/Dikl19bxDcNBY7el8H53/EAH1BSrR1JIkz1H/DHbHP3UjEqGMl09iQcF2+DKkLS
-	 7d9fbM969Jexpc/l3PlMy7Mb3iNz1Lr8+7CEU0aM=
+	b=UxBHDuFyxM/iu7jOTyTmeNNGfRYL4J+n67gyzMUKyw/OHIrqGWnlnAowtQ9gre+1Y
+	 KIOn+jnvteXhAoANYf3u2YShjYqWriEny8EwaPabxEWqHXre+1A0K5Ojja1FrtUkNv
+	 dVBBgkw/dPGpHeyfD4jEfcAc/y0lvMJO7K8IxO8M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728600AbgFOGrw (ORCPT
+        id S1728591AbgFOGru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 02:47:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60118 "EHLO mail.kernel.org"
+        Mon, 15 Jun 2020 02:47:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728481AbgFOGrP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728480AbgFOGrP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 15 Jun 2020 02:47:15 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E49B2067B;
+        by mail.kernel.org (Postfix) with ESMTPSA id 8349121548;
         Mon, 15 Jun 2020 06:47:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1592203632;
-        bh=fv0MzJ8bIKCwSrIThq9x0hNnlzQ27eGxPFmXO+dIS00=;
+        bh=UimGleFre7cAJ8h9wRRa31WiMBn6i+AWxCHOyITNml4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hzwv+xEXH5jb9Hia7ucOdQ5hRa/40+9UQBu1bs8agR2EBLgoAOHNadiHf4lOkLjOp
-         bynK+1U49kBQ4et91TbnzHpT3uaeIx1IPJUurjfaKrwA6m/YlO3Dh6keJahgaZDEis
-         US0EwvYWYmZ+1G89Kuiqo5T9Gb6tDcR3EuCHeJcs=
+        b=DNvqCAHssrA7jviCYFrWSIirS4eSzhv3WwvKT47LLBz6xHs5C1llthxE/kTtJG99k
+         JXft7cXR3NVFnIphATg3qYJFv96dNcPQYCROayWhuU+vY5HCIuSOQ5uMrmCg7Nc7uz
+         iadIKHtvkalT6HI0nYwFAN8CHj9WP/pJR2YTahNI=
 Received: from mchehab by mail.kernel.org with local (Exim 4.93)
         (envelope-from <mchehab@kernel.org>)
-        id 1jkith-009nmv-RU; Mon, 15 Jun 2020 08:47:09 +0200
+        id 1jkiti-009no3-A3; Mon, 15 Jun 2020 08:47:10 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-spi@vger.kernel.org
-Subject: [PATCH 14/29] dt: Fix broken references to renamed docs
-Date:   Mon, 15 Jun 2020 08:46:53 +0200
-Message-Id: <6866c0d6d10ce36bb151c2d3752a20eb5122c532.1592203542.git.mchehab+huawei@kernel.org>
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Daniel Kiss <daniel.kiss@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH 28/29] docs: fs: proc.rst: fix a warning due to a merge conflict
+Date:   Mon, 15 Jun 2020 08:47:07 +0200
+Message-Id: <7d46aec2cb7a5328d260c7c815b9be9737b43ee1.1592203542.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1592203542.git.mchehab+huawei@kernel.org>
 References: <cover.1592203542.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some files got renamed. Those were all fixed automatically by
+Changeset 424037b77519 ("mm: smaps: Report arm64 guarded pages in smaps")
+added a new parameter to a table. This causes Sphinx warnings,
+because there's now an extra "-" at the wrong place:
 
-	./scripts/documentation-file-ref-check --fix
+	/devel/v4l/docs/Documentation/filesystems/proc.rst:548: WARNING: Malformed table.
+	Text in column margin in table line 29.
 
+	==    =======================================
+	rd    readable
+	...
+	bt  - arm64 BTI guarded page
+	==    =======================================
+
+Fixes: 424037b77519 ("mm: smaps: Report arm64 guarded pages in smaps")
+Fixes: c33e97efa9d9 ("docs: filesystems: convert proc.txt to ReST")
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt   | 2 +-
- Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt | 4 ++--
- Documentation/devicetree/bindings/display/imx/ldb.txt         | 4 ++--
- Documentation/devicetree/bindings/spi/qcom,spi-geni-qcom.txt  | 2 +-
- MAINTAINERS                                                   | 4 ++--
- 5 files changed, 8 insertions(+), 8 deletions(-)
+ Documentation/filesystems/proc.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-index 715047444391..10b8459e49f8 100644
---- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-+++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-@@ -47,7 +47,7 @@ Required properties:
- 			  &lsio_mu1 1 2
- 			  &lsio_mu1 1 3
- 			  &lsio_mu1 3 3>;
--		See Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-+		See Documentation/devicetree/bindings/mailbox/fsl,mu.yaml
- 		for detailed mailbox binding.
+diff --git a/Documentation/filesystems/proc.rst b/Documentation/filesystems/proc.rst
+index 996f3cfe7030..53a0230a08e2 100644
+--- a/Documentation/filesystems/proc.rst
++++ b/Documentation/filesystems/proc.rst
+@@ -545,7 +545,7 @@ encoded manner. The codes are the following:
+     hg    huge page advise flag
+     nh    no huge page advise flag
+     mg    mergable advise flag
+-    bt  - arm64 BTI guarded page
++    bt    arm64 BTI guarded page
+     ==    =======================================
  
- Note: Each mu which supports general interrupt should have an alias correctly
-diff --git a/Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt b/Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt
-index 5bf77f6dd19d..5a99490c17b9 100644
---- a/Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt
-+++ b/Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt
-@@ -68,7 +68,7 @@ Required properties:
-   datasheet
- - clocks : phandle to the PRE axi clock input, as described
-   in Documentation/devicetree/bindings/clock/clock-bindings.txt and
--  Documentation/devicetree/bindings/clock/imx6q-clock.txt.
-+  Documentation/devicetree/bindings/clock/imx6q-clock.yaml.
- - clock-names: should be "axi"
- - interrupts: should contain the PRE interrupt
- - fsl,iram: phandle pointing to the mmio-sram device node, that should be
-@@ -94,7 +94,7 @@ Required properties:
-   datasheet
- - clocks : phandles to the PRG ipg and axi clock inputs, as described
-   in Documentation/devicetree/bindings/clock/clock-bindings.txt and
--  Documentation/devicetree/bindings/clock/imx6q-clock.txt.
-+  Documentation/devicetree/bindings/clock/imx6q-clock.yaml.
- - clock-names: should be "ipg" and "axi"
- - fsl,pres: phandles to the PRE units attached to this PRG, with the fixed
-   PRE as the first entry and the muxable PREs following.
-diff --git a/Documentation/devicetree/bindings/display/imx/ldb.txt b/Documentation/devicetree/bindings/display/imx/ldb.txt
-index 38c637fa39dd..8e6e7d797943 100644
---- a/Documentation/devicetree/bindings/display/imx/ldb.txt
-+++ b/Documentation/devicetree/bindings/display/imx/ldb.txt
-@@ -30,8 +30,8 @@ Required properties:
-                 "di2_sel" - IPU2 DI0 mux
-                 "di3_sel" - IPU2 DI1 mux
-         The needed clock numbers for each are documented in
--        Documentation/devicetree/bindings/clock/imx5-clock.txt, and in
--        Documentation/devicetree/bindings/clock/imx6q-clock.txt.
-+        Documentation/devicetree/bindings/clock/imx5-clock.yaml, and in
-+        Documentation/devicetree/bindings/clock/imx6q-clock.yaml.
- 
- Optional properties:
-  - pinctrl-names : should be "default" on i.MX53, not used on i.MX6q
-diff --git a/Documentation/devicetree/bindings/spi/qcom,spi-geni-qcom.txt b/Documentation/devicetree/bindings/spi/qcom,spi-geni-qcom.txt
-index 790311a42bf1..c8c1e913f4e7 100644
---- a/Documentation/devicetree/bindings/spi/qcom,spi-geni-qcom.txt
-+++ b/Documentation/devicetree/bindings/spi/qcom,spi-geni-qcom.txt
-@@ -19,7 +19,7 @@ Required properties:
- 
- SPI Controller nodes must be child of GENI based Qualcomm Universal
- Peripharal. Please refer GENI based QUP wrapper controller node bindings
--described in Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt.
-+described in Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml.
- 
- SPI slave nodes must be children of the SPI master node and conform to SPI bus
- binding as described in Documentation/devicetree/bindings/spi/spi-bus.txt.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0617dd671c2d..452904d75228 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14561,8 +14561,8 @@ RENESAS R-CAR THERMAL DRIVERS
- M:	Niklas Söderlund <niklas.soderlund@ragnatech.se>
- L:	linux-renesas-soc@vger.kernel.org
- S:	Supported
--F:	Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.txt
--F:	Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-+F:	Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.yaml
-+F:	Documentation/devicetree/bindings/thermal/rcar-thermal.yaml
- F:	drivers/thermal/rcar_gen3_thermal.c
- F:	drivers/thermal/rcar_thermal.c
- 
+ Note that there is no guarantee that every flag and associated mnemonic will
 -- 
 2.26.2
 
