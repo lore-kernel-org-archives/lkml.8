@@ -2,96 +2,123 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C841EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA79C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FFE720738
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 003CE20707
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:23:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xAMaUePf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tuLq/owq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728409AbgFOGXF (ORCPT
+        id S1728418AbgFOGXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 02:23:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47470 "EHLO
+        Mon, 15 Jun 2020 02:23:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728351AbgFOGXE (ORCPT
+        with ESMTP id S1728303AbgFOGXM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 02:23:04 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A996FC03E97C
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 23:23:03 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id ga6so6348068pjb.1
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 23:23:03 -0700 (PDT)
+        Mon, 15 Jun 2020 02:23:12 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB364C061A0E
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 23:23:11 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id g28so14754114qkl.0
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 23:23:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WMjD/jZlOfc+fAUGkEXl65YinbY+zUt21mw95ubF/dE=;
-        b=xAMaUePfDuF1ThufwZJVKKONMJOKTRJMWdqyRex3kVGyC4Ae+LSjrM5isO8bSYG4RC
-         H90sidjDOXbdpTHi+bJcCFM/uOg+r7xBNvV3xd+ZbEbocn7F6U/35rN2V0mUCsXA47By
-         Jdj4o82R9Lo6E1/8vlXj2hzNBto0oz6tcKcpPiX9iHpYNFGss4IfNLZVRLlr0/i93SSg
-         fZHPRAzUXx8wBs1rQ5jNkFR2/8E8bEeicYGHurL5CvDP60rQncwkVmuSc6f9mtIs1mRA
-         bIJIJ/VD3ViU3pSHJZuNRAkSH5ZmAS+Q9xVNNlpXSUMopHnHlq4yszjEgLRsImtd/5rQ
-         2wsQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=u1aMWbf91EME1dQ55dwYmEZLJPJcrTDI7r5Xx36ru2E=;
+        b=tuLq/owqSmSJaSBZ4l9Dt2wlgk2I4yQ5LI0bpu+aIXLb4ixIBhf/e44oRIk/ewJ48U
+         yjPeb9jvqzG/fhWVKf5PaPKJxQ6zq3+tG2DUJCt+R78jDOIzz86TjP2gILlp7YemfrKP
+         eKdf72e1cP9V3bRS4ZkVtKhI1ql2y3WQAa0NTSNRVi2DpVje9SP45YOxf47jbMN7yCiC
+         Gxbj2APayCxKpGtlXV1myMKNR0ZESC1rcTVklf3hfriaWgDSvQ7qqw/J7b2EkFdhoAv/
+         IOoS1rO248NufXvgqRwPhCcikLut9p+j2SUkWPVC43C3C+O83/e2P6IVnXf67xqemAUw
+         dczA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WMjD/jZlOfc+fAUGkEXl65YinbY+zUt21mw95ubF/dE=;
-        b=Pe1walA6Lg1NtRDfyORAnaPpms6tqng20Dg5jdIZ4W0PFa1KAWLv21bDpMsjohKG4/
-         /17u6sphJfiv+s+KRKL3egnTWBKk7Ti25tcm+iEYqYun07J3XUdbcG+LngnZYx7f5q6Q
-         DXTuVGu9S+jqJC2TWZv2S1cspqX9e3xCMehhJ5HR8TDu2rW/Oy7kaVd6kjP4FXzOjjCr
-         UFAbZfVBzRmsriarXaSk4TfMERuy2Ieil3edxU/p+hyW+1X+bYKo6hVk0K+uKac8fKJV
-         7PbMmt5tqCMx9XGnVan6zkKibsJZr8zm7Mo5KGQU1chFnEsWhgxFZJ3hGzc+FsWALDQp
-         hwAg==
-X-Gm-Message-State: AOAM532XRX8tchQHliLPglBI6+n1CNkcyP4iIfs3gygR3bPmCWEDkuoZ
-        lGjS1NOoLHpJgjarpgM/rgrZQg==
-X-Google-Smtp-Source: ABdhPJxwAMo1y8FPHgLT09IPRRljmFY+jBUdhioK1x+wI513O4XnacM1ENl2wrU/w3tubtWxTPXQWw==
-X-Received: by 2002:a17:90a:c797:: with SMTP id gn23mr10283076pjb.165.1592202183152;
-        Sun, 14 Jun 2020 23:23:03 -0700 (PDT)
-Received: from localhost ([122.172.62.209])
-        by smtp.gmail.com with ESMTPSA id a29sm12389483pfg.201.2020.06.14.23.23.02
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 14 Jun 2020 23:23:02 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 11:53:00 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Sharat Masetty <smasetty@codeaurora.org>
-Cc:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jcrouse@codeaurora.org,
-        mka@chromium.org, sibis@codeaurora.org, saravanak@google.com,
-        robdclark@gmail.com
-Subject: Re: [PATCH v3 0/6] Add support for GPU DDR BW scaling
-Message-ID: <20200615062300.3g6rhcovbe6kssag@vireshk-i7>
-References: <1591417551-38051-1-git-send-email-smasetty@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=u1aMWbf91EME1dQ55dwYmEZLJPJcrTDI7r5Xx36ru2E=;
+        b=Oau01sv5U386kzTkSzbSKjKqwSBwmwSNIIaXXjTFG5YDxg3irAcST1TC3khj6DXWXT
+         A9DryHe0nrZFp0xCmDzMYm7nAim5PsWaIEVS3eODktDjLRbnf5UN31Hz5h41s8iPDnEp
+         b99XOVA++9PSd9NVfEUkOMSVDvGjKMRjt+NQfFcyF2Dsg3CI48ftYtGU3O8R/DasHImL
+         pcXEaVg25x8kt3+racPJYJTGni1EOdF+1EpRkVzSdrKoSjmGYdTtg8zEpnXIp/6oxU1/
+         QKp3NO4rP5UQu/7CXwASFhw71BgXKLz/Mwm/BVVlj7lYmK9GGjCnO9Vo03TJOBv2uQnz
+         Kqsg==
+X-Gm-Message-State: AOAM530Zxfsy2BJ90Wo62AGP3Mp/d2RgrEoqx8UXM2NPPAfx3VYBJU1c
+        r3K0Ser1Ikcg1eBnyKCIA3NO6k4c6SvGdib//cM=
+X-Google-Smtp-Source: ABdhPJzaUTyyK3ALiZGwOJyQcjCWf2aYpXazWhwu6aXNXN9yW/ORW1jLgP1ZVK7q5pBHbO8iixryxUhSXUSMbYGRN8Y=
+X-Received: by 2002:a37:624a:: with SMTP id w71mr14168388qkb.452.1592202191135;
+ Sun, 14 Jun 2020 23:23:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1591417551-38051-1-git-send-email-smasetty@codeaurora.org>
-User-Agent: NeoMutt/20180716-391-311a52
+References: <20200614123923.99189-1-songmuchun@bytedance.com> <20200614123923.99189-4-songmuchun@bytedance.com>
+In-Reply-To: <20200614123923.99189-4-songmuchun@bytedance.com>
+From:   Joonsoo Kim <js1304@gmail.com>
+Date:   Mon, 15 Jun 2020 15:23:00 +0900
+Message-ID: <CAAmzW4N1DRBxsMAX2a_jxUW10vOwW1VsGj8ztuvvWT4NB3Ocnw@mail.gmail.com>
+Subject: Re: [PATCH 3/3] mm/slub: Fix release all resources used by a slab cache
+To:     Muchun Song <songmuchun@bytedance.com>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06-06-20, 09:55, Sharat Masetty wrote:
-> This is a respin of [1]. Incorported review feedback and fixed issues observed
-> during testing. Picked up the Georgi's series from opp/linux-next [2], and this
-> series is also dependent on a helper function needed to set and clear ddr
-> bandwidth vote [3]. Patch number 4 in the series adds support for SDM845 as well
-> but its not tested yet(WIP), but the SC7180 patches are well tested now.
-> 
-> [1] https://patchwork.freedesktop.org/series/75291/
-> [2] https://kernel.googlesource.com/pub/scm/linux/kernel/git/vireshk/pm/+log/opp/linux-next/
-> [3] https://patchwork.kernel.org/patch/11590563/
+2020=EB=85=84 6=EC=9B=94 14=EC=9D=BC (=EC=9D=BC) =EC=98=A4=ED=9B=84 9:39, M=
+uchun Song <songmuchun@bytedance.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+>
+> The function of __kmem_cache_shutdown() is that release all resources
+> used by the slab cache, while currently it stop release resources when
+> the preceding node is not empty.
+>
+> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+> ---
+>  mm/slub.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+>
+> diff --git a/mm/slub.c b/mm/slub.c
+> index b73505df3de2..4e477ef0f2b9 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -3839,6 +3839,7 @@ bool __kmem_cache_empty(struct kmem_cache *s)
+>   */
+>  int __kmem_cache_shutdown(struct kmem_cache *s)
+>  {
+> +       int ret =3D 0;
+>         int node;
+>         struct kmem_cache_node *n;
+>
+> @@ -3846,11 +3847,11 @@ int __kmem_cache_shutdown(struct kmem_cache *s)
+>         /* Attempt to free all objects */
+>         for_each_kmem_cache_node(s, node, n) {
+>                 free_partial(s, n);
+> -               if (node_nr_slabs(n))
+> -                       return 1;
+> +               if (!ret && node_nr_slabs(n))
+> +                       ret =3D 1;
+>         }
 
-Had a quick look of the series and looked mostly fine to me.
+I don't think that this is an improvement.
 
--- 
-viresh
+If the shutdown condition isn't met, we don't need to process further.
+Just 'return 1' looks okay to me.
+
+And, with this change, sysfs_slab_remove() is called even if the
+shutdown is failed.
+It's better not to have side effects when failing.
+
+Thanks.
