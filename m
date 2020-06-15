@@ -2,125 +2,90 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 451A5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2665FC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 247672078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:04:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RRk08ULT"
+	by mail.kernel.org (Postfix) with ESMTP id 068542078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:05:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592240711;
+	bh=xY6kxSus6Sx0L2HA9Vh4PYpirsfR00FnKxDECmkc5gM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=duQLzc3fGWpuEGf2M5t/GWntICM5sN2HrX9AR0/+Y5cxZ2ZoIcFsUBxpYlfO0gcZp
+	 x7osByZe27yIp8+VIUnX5TBLHY/zPCznu2YNF9KHyOM1/l34vTyRqpNRRZ5Fpn10AH
+	 Cp+xWwPBumakxgtq9AVkmAQEtSFmnlBQEdvVRKIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731175AbgFOREy (ORCPT
+        id S1731184AbgFORFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 13:04:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33914 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729682AbgFOREw (ORCPT
+        Mon, 15 Jun 2020 13:05:10 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:42525 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729682AbgFORFJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 13:04:52 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 558F6C061A0E;
-        Mon, 15 Jun 2020 10:04:52 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id 10so8064800pfx.8;
-        Mon, 15 Jun 2020 10:04:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3ZukZRysDpxL7fluIxKkVz5UMBr+FzAndpusseTc58o=;
-        b=RRk08ULTO8k9lQEnZPvMHzTmLcBYiBUfQqYtqU0+OXYULw/mQHXm1p+4jWfh6uWqVy
-         XvGa5nV6UfH+8LUhazVxdugNTG+Ig2BKwdEqEvDlKp+/ZHCJfu0qmZmKLctYTHF8/5I0
-         tKl+o71fVnw8sKFXKi9LBaLsLQAg0VW4fo4fxA/NEzSICTJ4lUJMEz4jPFxoW95ow25E
-         evL5iC/gZi8hQ4RGxXqVBGGjY2giAMgQDXVSMfBkvIxaNpr9exnTy8EX3ZWjTPetND+S
-         hghLTzEoONyP3+ZOXHPAA3tt2Kh3xb7m1gs8QFmgOGiEwnmMN1RG6Yle7Zih94TlqQXH
-         gxLQ==
+        Mon, 15 Jun 2020 13:05:09 -0400
+Received: by mail-il1-f194.google.com with SMTP id j19so11839793ilk.9;
+        Mon, 15 Jun 2020 10:05:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3ZukZRysDpxL7fluIxKkVz5UMBr+FzAndpusseTc58o=;
-        b=qWSKX67dhZ1pxb+R28ozD/HrDr+TR7/m0eeVOob1mZ2ThWzp0t3IaZIQV7etTPlwlY
-         BMFBUAVKoJ6WywYc5/laa6BaOOv6HNfR7aj0SLip5eUr/Gn7MFqYA78TwMc/bPAkLHhM
-         LquxJhovgNeZ1wM5gXptIycptNOfjMANyN7oaFZpNh8nar3NnEf3fncvlWUBFCFnpZI6
-         G9CFez/PKWilxvOxV6Yh1Xg5Pdti6MYZ706VUJXhV/I43ql19j0JkUgKh0vpLIKQ0Bm0
-         8JY58uVcNel7Z4fMMfMlCtvU57EpjW7kXhUYEBYRPK6tbIYioZSZgL3EhswusS95WSdG
-         a1aw==
-X-Gm-Message-State: AOAM532uUtSf04wPZWyI/6o/u5qddm2ZX77uzOi/PFfyJa5oeydAUyTz
-        xbiQLYn7zLlPf3nWe4XUYYs=
-X-Google-Smtp-Source: ABdhPJxkrT/eEFR2lr5RpODPo3zO/3YcXLxATPx3PWI7oA17rPMi1gELvyI+TosRvIfdlRhWVQPn9g==
-X-Received: by 2002:a63:c407:: with SMTP id h7mr21679517pgd.174.1592240691842;
-        Mon, 15 Jun 2020 10:04:51 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id b23sm12254427pgs.33.2020.06.15.10.04.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jun 2020 10:04:51 -0700 (PDT)
-Subject: Re: [PATCH v2] spi: bcm2835: Enable shared interrupt support
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Robin Murphy <robin.murphy@arm.com>, lukas@wunner.de,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Scott Branden <sbranden@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org,
-        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        Martin Sperl <kernel@martin.sperl.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-References: <20200604212819.715-1-f.fainelli@gmail.com>
- <142d48ae-2725-1368-3e11-658449662371@arm.com>
- <20200605132037.GF5413@sirena.org.uk>
- <2e371a32-fb52-03a2-82e4-5733d9f139cc@arm.com>
- <06342e88-e130-ad7a-9f97-94f09156f868@arm.com>
- <d3fe8b56-83ef-8ef0-bb05-11c7cb2419f8@gmail.com>
- <a6f158e3-af51-01d9-331c-4bc8b6847abb@arm.com>
- <20200608112840.GC4593@sirena.org.uk>
- <bb9dbf11-9e33-df60-f5ae-f7fdfe8458b4@gmail.com>
- <20200615170031.GA4447@sirena.org.uk>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <692bc94e-d574-e07a-d834-c0d569e87bba@gmail.com>
-Date:   Mon, 15 Jun 2020 10:04:46 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=iil1Ct3yqqoRyLs7AUrfXx88B12vf8Oqs/d10YbLStk=;
+        b=ocIDfO8gwGajAnK52Z1KfIoF28VT2M2o855vTzGDtnA6cI0MLrCEH746r+nQFof/MM
+         YpBK31WIvpmLCK1xegqdZFOPxdcj9hXZv4ZaiYflROyH1Y0z+kIUPounYkAMfdl7+elU
+         ZzCt2vL4iE1Q0SssBhLsBy303vPzu3zek8Jjy4J86zc/e83k42Y0TiapOZ/4I2rtXUda
+         WoyffFCreIUilOQv0s6924vwxRAgOx1Cq46/OIkP//a0NirF+lW6fyv8tf3HpJHB/Vjr
+         +onkvv3ocktNTL0mYW1IXDivd0IAxGvcqdinFwpX6Ta/JrIN7ldjdp9ABzOuueCut+mF
+         cD5g==
+X-Gm-Message-State: AOAM530A1WmkmMAcLoTVcwxaFmzqOm0FQ3KoD60M39PjbAri5C7p9GVg
+        tf2jvFJGBTMqa9Nom3CJLQ==
+X-Google-Smtp-Source: ABdhPJwc1Mh+mwwfssvJd2rCp7WiDQI7C4KOV3xgJBzwmOkCj5D8rBpAuHCNLWKgFfw7tkpvCelglg==
+X-Received: by 2002:a92:244c:: with SMTP id k73mr27644530ilk.292.1592240708523;
+        Mon, 15 Jun 2020 10:05:08 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id c23sm8274077ioc.28.2020.06.15.10.05.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 10:05:07 -0700 (PDT)
+Received: (nullmailer pid 1959366 invoked by uid 1000);
+        Mon, 15 Jun 2020 17:05:06 -0000
+Date:   Mon, 15 Jun 2020 11:05:06 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     s.hauer@pengutronix.de, Linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux@rempel-privat.de, robh+dt@kernel.org, shawnguo@kernel.org,
+        wolfram@the-dreams.de, kernel@pengutronix.de,
+        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        aisheng.dong@nxp.com, festevam@gmail.com
+Subject: Re: [PATCH V2 1/3] dt-bindings: i2c: Convert imx lpi2c to json-schema
+Message-ID: <20200615170506.GA1959153@bogus>
+References: <1591235358-15516-1-git-send-email-Anson.Huang@nxp.com>
+ <1591235358-15516-2-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20200615170031.GA4447@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1591235358-15516-2-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 6/15/2020 10:00 AM, Mark Brown wrote:
-> On Mon, Jun 15, 2020 at 09:34:58AM -0700, Florian Fainelli wrote:
+On Thu, 04 Jun 2020 09:49:16 +0800, Anson Huang wrote:
+> Convert the i.MX LPI2C binding to DT schema format using json-schema
 > 
->> OK, so this has been dropped for spi/for-next right? How do we move from
->> there?
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> Changes since V1:
+> 	- add "additionalProperties: false".
+> ---
+>  .../devicetree/bindings/i2c/i2c-imx-lpi2c.txt      | 20 ---------
+>  .../devicetree/bindings/i2c/i2c-imx-lpi2c.yaml     | 47 ++++++++++++++++++++++
+>  2 files changed, 47 insertions(+), 20 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.txt
+>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.yaml
 > 
-> Well, I actually have it queued up for applying so unless I pull it
-> before my scripts get that far through the stuff I queued over the merge
-> window it'll go in (I dropped it due to it not being a bugfix).  If it
-> were me I'd go with the two instruction hit from checking the flag TBH
-> but otherwise I guess __always_inline should work for compilers that
-> misoptimize.  None of this is getting in the way of the framework so if
-> everyone involved in the driver is happy to spend time optimising it
-> and dealing with the fragility then it's fine by me.
 
-OK, how about I send you an increment patch (would a fixup be okay?)
-that adds __always_inline since we know from this thread that some
-compilers may mis-optimize the function inlining?
--- 
-Florian
+Applied, thanks!
