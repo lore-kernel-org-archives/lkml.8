@@ -2,93 +2,115 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E93C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3733BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E47020644
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:55:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ecmGxFrs"
+	by mail.kernel.org (Postfix) with ESMTP id 154892071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:56:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592232963;
+	bh=2TC//kCSiqr/n1JFxAXwx0DjT4t5nRNJzXNSfvJPnHQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VA41BpjCNnIkH8cKGa9hsi66XQcFz3jlxA1+eKWQMLATvD30gWWBDeN/yKFZ8KUK1
+	 58Fp9Ev6DNLKRrTb14lQjNTWC8JayBr3dQIslL5POHg2mmRrhOvbSsdQ/LYC2BPFW9
+	 aUIjAuW17RdOqZrGxp80x4NLuK9zWlTkGdwbR46U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730832AbgFOOzS (ORCPT
+        id S1730834AbgFOO4A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 10:55:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41996 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730405AbgFOOzR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 10:55:17 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0625C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 07:55:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=4zGfMuE5j27OryPVO0IL9HdYeTzioBh7k+J5vYWJu6A=; b=ecmGxFrsTbQdidZbBn8r7gMJyz
-        3u0f1y1KUxKvAma9auXgAZX1uvUJnS0uswNfPi29xpk5AUCYchyuSTZg4Qo8RlNnr9IobCk9DphEp
-        BQCVVpHX+K3JTBDfCopaBFY3rMuk5iuD2K12uvvaf934nZA6T3arFASL1lbKi0cIYbzw+8zwcGre8
-        F6cFbJIYZ5yDZM6aRjwtozFn7JPGVG+/z6OUEip4dJsYKn3P4UVtBVQxPf0W43+po4zRU75CVudhL
-        mS8GfZvmHf7nJzyh0iZ65A6niEvPJVkFSrXxfOVrazmCVOHesHBwjbbwJxlfT/bSs1+9O7ixM1hxS
-        wQtnf8Vw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jkqVe-00072A-5A; Mon, 15 Jun 2020 14:54:50 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Mon, 15 Jun 2020 10:56:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43552 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730213AbgFOOz7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 10:55:59 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C3DD930604B;
-        Mon, 15 Jun 2020 16:54:48 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id AFEF8203B8070; Mon, 15 Jun 2020 16:54:48 +0200 (CEST)
-Date:   Mon, 15 Jun 2020 16:54:48 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Marco Elver <elver@google.com>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Alexander Potapenko <glider@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [PATCH -tip v3 1/2] kcov: Make runtime functions
- noinstr-compatible
-Message-ID: <20200615145448.GV2531@hirez.programming.kicks-ass.net>
-References: <CAAeHK+zErjaB64bTRqjH3qHyo9QstDSHWiMxqvmNYwfPDWSuXQ@mail.gmail.com>
- <CACT4Y+Zwm47qs8yco0nNoD_hFzHccoGyPznLHkBjAeg9REZ3gA@mail.gmail.com>
- <CANpmjNPNa2f=kAF6c199oYVJ0iSyirQRGxeOBLxa9PmakSXRbA@mail.gmail.com>
- <CACT4Y+Z+FFHFGSgEJGkd+zCBgUOck_odOf9_=5YQLNJQVMGNdw@mail.gmail.com>
- <20200608110108.GB2497@hirez.programming.kicks-ass.net>
- <20200611215538.GE4496@worktop.programming.kicks-ass.net>
- <CACT4Y+aKVKEp1yoBYSH0ebJxeqKj8TPR9MVtHC1Mh=jgX0ZvLw@mail.gmail.com>
- <20200612114900.GA187027@google.com>
- <CACT4Y+bBtCbEk2tg60gn5bgfBjARQFBgtqkQg8VnLLg5JwyL5g@mail.gmail.com>
- <CANpmjNM+Tcn40MsfFKvKxNTtev-TXDsosN+z9ATL8hVJdK1yug@mail.gmail.com>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1B7E20644;
+        Mon, 15 Jun 2020 14:55:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592232958;
+        bh=2TC//kCSiqr/n1JFxAXwx0DjT4t5nRNJzXNSfvJPnHQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WAzQ4fSL7Ni+8MhSFeK+hvrEhia4ExOvj7gnafrN8h09OzqA8zOjGsggpxgqezOZb
+         /FiV+/68Cwz+OQkYgCZvTdup8NA67tIxQiZtGhIeChI9QUQ1HW4FBBZ+bwiaqevDRJ
+         hcqc3jkKbV2Vqns7sVYJ1qD2BUt+qAK841dWOONM=
+Date:   Mon, 15 Jun 2020 15:55:56 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "matthias.schiffer@ew.tq-group.com" 
+        <matthias.schiffer@ew.tq-group.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 RFC 1/2] spi: introduce fallback to pio
+Message-ID: <20200615145556.GY4447@sirena.org.uk>
+References: <20200612101357.GA5396@sirena.org.uk>
+ <VE1PR04MB66384013797FE6B01943F2A889810@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200612141611.GI5396@sirena.org.uk>
+ <VE1PR04MB6638B43E3AC83286946DABCD899F0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200615123553.GP4447@sirena.org.uk>
+ <VE1PR04MB6638C65257F41072C3D61583899C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200615133905.GV4447@sirena.org.uk>
+ <VE1PR04MB6638793C00742D5BA72F8AC2899C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200615143622.GX4447@sirena.org.uk>
+ <VE1PR04MB6638D0C9FE0289FFE13ABA49899C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="lPJ5i9rX1WvdYcWF"
 Content-Disposition: inline
-In-Reply-To: <CANpmjNM+Tcn40MsfFKvKxNTtev-TXDsosN+z9ATL8hVJdK1yug@mail.gmail.com>
+In-Reply-To: <VE1PR04MB6638D0C9FE0289FFE13ABA49899C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+X-Cookie: Offer may end without notice.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 09:53:06AM +0200, Marco Elver wrote:
 
-> For KCSAN the crash still happens in check_preemption_disabled, in the
-> inlined native_save_fl function (apparently on its 'pushf'). If I turn
-> fixup_bad_iret's __this_cpu_read into a raw_cpu_read (to bypass
-> check_preemption_disabled), no more crash with KCSAN.
+--lPJ5i9rX1WvdYcWF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yeah, I can't see anything weird there with KCSAN + KCOV + NOP :-(
+On Mon, Jun 15, 2020 at 02:53:29PM +0000, Robin Gong wrote:
+> On 2020/06/15 22:36 Mark Brown <broonie@kernel.org> wrote:=20
+
+> > We could also pass in a flag that could be set separately to the error =
+code to
+> > indicate that nothing had happened to the hardware yet.
+
+> Do you mean spi-imx.c checking 'ctlr->flags' before return such error cod=
+e?
+> Or just like below done in spi.c.
+
+No, I mean passing in an additional argument which can provide richer
+data than trying to smash things into the return value.
+
+--lPJ5i9rX1WvdYcWF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7ni/sACgkQJNaLcl1U
+h9DpXQf9G2jk6fHADMgZvO5cMWF40DK3HTy0XpAr55BZ3EtoJ9SfnWU4hvTmyvn/
+9gWPmaXi84y5Uq1tvrYZXp70urjy0GAgJD6gpSDPq1PPql9PhVdPtOWg0K9KYt1r
+iGep527JQyKrorlKPIZ1SLN/9qxexF4GMjkyR7Bjx4H9rrSCKyG+TLrNFGQZL0ft
+Z93yp3K+RJb8TfYwIF50LbTix6pY4mTd6kNG7rd4RLinkGjBWZWnbdwKQkgBeffM
+qKVL0ySu1Pgd24bOR6aCKQxdKuCAyxj6dy5Hwya7ZgryKH0eVDdS3P0Vx5pqXS1l
+jXQt7/A7B3EFdjfQTsqDuDAuACaijw==
+=lGYg
+-----END PGP SIGNATURE-----
+
+--lPJ5i9rX1WvdYcWF--
